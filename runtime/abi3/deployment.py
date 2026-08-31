@@ -224,6 +224,141 @@ def staged_objects(table: "DescriptorTable") -> frozenset[int]:
 
 
 # ---------------------------------------------------------------------------
+# Amendment A25: which state resources have a ring for a row axis
+# ---------------------------------------------------------------------------
+#: The derived-constant generator whose result is a ring of destination rows.
+#: ``runtime.sim.generators.ring_indices_v1`` is ``position mod modulus``, and a
+#: movement that addresses its destination with it is writing a ring.
+RING_INDEX_GENERATOR = "ring_indices_v1"
+
+
+def ring_staged_objects(
+    table: "DescriptorTable", objects: Mapping[int, ObjectSource]
+) -> dict[int, frozenset[int]]:
+    """Every memory object a scatter addresses through a ring, and its moduli.
+
+    Wire format section 12.16 (amendment A25).  ``DMA.SCATTER`` is the one
+    movement whose index operand names its *destination* rows -- a gather's
+    index names its source -- so a scatter whose index is a ring table writes a
+    ring, and the ring's size is the table's declared ``modulus``.  Both are
+    facts about the finished deployment: the index is a descriptor's operand
+    and the modulus is a parameter of a generated object whose result digest
+    the manifest binds, so a generator that drifts is caught before the
+    derivation is.
+
+    The value is a *set* because an object addressed through two different
+    moduli has two candidate row axes and is not a resource this amendment can
+    describe.  Returning both lets the caller refuse it by name rather than
+    pick one or, worse, fall quietly back to the span.
+    """
+    from .constants import Dma, Major
+
+    seen: dict[int, set[int]] = {}
+    for descriptor in table.descriptors():
+        if descriptor.descriptor_type != int(ExtendedDescriptorType.OPERATOR):
+            continue
+        payload = descriptor.payload
+        if int(payload["engine_family"]) != int(Major.DMA):
+            continue
+        if int(payload["engine_sub"]) != int(Dma.SCATTER):
+            continue
+        index_object = _view_object(table, int(payload["input_view_0"]))
+        if index_object is None:
+            continue
+        source = objects.get(index_object)
+        if source is None or source.kind != "generated":
+            continue
+        if source.generator != RING_INDEX_GENERATOR:
+            continue
+        modulus = int(source.parameters.get("modulus", 0))
+        if modulus <= 0:
+            continue
+        for slot in ("output_view_0", "output_view_1"):
+            destination = _view_object(table, int(payload[slot]))
+            if destination is None:
+                continue
+            seen.setdefault(destination, set()).add(modulus)
+    return {oid: frozenset(m) for oid, m in seen.items()}
+
+
+def _view_object(table: "DescriptorTable", view_id: int) -> int | None:
+    """The memory object ``view_id`` addresses, or ``None`` if it names none."""
+    if view_id == NO_ID or not 0 <= view_id < len(table):
+        return None
+    view = table[view_id]
+    if view.descriptor_type != int(ExtendedDescriptorType.TENSOR_VIEW):
+        return None
+    oid = int(view.primary_object_id)
+    return None if oid == NO_ID else oid
+
+
+def derive_commit_policies(
+    table: "DescriptorTable", objects: Mapping[int, ObjectSource]
+) -> tuple[dict[int, int], list[str]]:
+    """The ``commit_policy`` every STATE descriptor must declare, and why.
+
+    Wire format sections 12.11 and 12.16.  One rule, three answers, derived
+    from the finished deployment rather than chosen by a backend:
+
+    * the prepared image is no descriptor's destination -> ``UNSTAGED``;
+    * it is a destination, and a scatter addresses it through a ring whose
+      modulus divides ``capacity_rows`` -> ``SATURATING``;
+    * otherwise -> ``REQUEST_SPAN``.
+
+    Returns the mapping and a list of problems.  A problem is a deployment this
+    amendment cannot describe -- a ring that does not divide the capacity it
+    wraps -- and is refused by the builder and reported by the verifier rather
+    than resolved by guessing which of the two numbers is the real row axis.
+    """
+    from .constants import CommitPolicy
+
+    staged = staged_objects(table)
+    rings = ring_staged_objects(table, objects)
+    policies: dict[int, int] = {}
+    problems: list[str] = []
+    for state_id in table.ids_of_type(int(ExtendedDescriptorType.STATE)):
+        payload = table[state_id].payload
+        prepared = int(payload["prepared_object_id"])
+        capacity = int(payload["capacity_rows"])
+        if prepared not in staged:
+            policies[state_id] = int(CommitPolicy.UNSTAGED)
+            continue
+        moduli = rings.get(prepared)
+        if not moduli:
+            policies[state_id] = int(CommitPolicy.REQUEST_SPAN)
+            continue
+        if len(moduli) > 1:
+            problems.append(
+                f"state {state_id}: prepared image {prepared} is staged through "
+                f"rings of {', '.join(str(m) for m in sorted(moduli))} rows; a "
+                "resource with two candidate row axes is not one amendment A25 "
+                "can describe, and it is refused rather than assigned one"
+            )
+            policies[state_id] = int(CommitPolicy.REQUEST_SPAN)
+            continue
+        modulus = next(iter(moduli))
+        if capacity <= 0 or modulus > capacity or capacity % modulus:
+            problems.append(
+                f"state {state_id}: prepared image {prepared} is staged through "
+                f"a ring of {modulus} rows, which is not a whole divisor of its "
+                f"declared capacity_rows {capacity}; the resource's row axis is "
+                "then neither the ring nor the capacity and amendment A25 "
+                "refuses to choose one"
+            )
+            policies[state_id] = int(CommitPolicy.REQUEST_SPAN)
+            continue
+        cursor = int(payload["initial_cursor_rows"])
+        if not 0 <= cursor < capacity:
+            problems.append(
+                f"state {state_id}: initial_cursor_rows {cursor} is not a slot "
+                f"of its own ring of {capacity} rows; a saturating cursor is a "
+                "slot index and has nowhere else to point"
+            )
+        policies[state_id] = int(CommitPolicy.SATURATING)
+    return policies, problems
+
+
+# ---------------------------------------------------------------------------
 # Descriptor table
 # ---------------------------------------------------------------------------
 class DescriptorTable:

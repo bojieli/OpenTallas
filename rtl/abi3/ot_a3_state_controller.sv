@@ -12,8 +12,8 @@
 //
 //   PREPARE             already open              -> trap class 9
 //   COMMIT              no open prepare           -> trap class 9
-//                       row count not positive    -> trap class 9  (REQUEST_SPAN)
-//                       cursor + rows > capacity  -> trap class 4
+//                       span not positive         -> trap class 9  (staged only)
+//                       cursor + rows > capacity  -> trap class 4  (REQUEST_SPAN)
 //   DISCARD             always clears the prepare
 //   READ / GENERATION_ADVANCE  accounted, no state change
 //
@@ -29,6 +29,19 @@
 // leaves the cursor where it was, satisfies the capacity bound by
 // construction, and still closes the prepare and advances the generation,
 // because ADR-003 8.6 makes the whole declared state set one transition.
+//
+// Amendment A25 (wire format section 12.16).  SATURATING is the third value:
+// the resource's row axis is a ring of capacity_rows slots that the token axis
+// maps onto by ``position mod capacity_rows``, so a span longer than the ring
+// does not overflow it -- it wraps onto it.  A saturating commit publishes
+// min(span, capacity) rows, its capacity comparison is skipped because the
+// clamp already satisfies it, and its cursor advances to
+// (cursor + span) mod capacity rather than to cursor + rows.  The span is
+// carried into the staged record beside the row count because the cursor must
+// advance by the positions the request presented and the counters by the rows
+// the ring published, and above the window those are different numbers.  Below
+// the window they are the same number and this block behaves exactly as it did
+// before the amendment.
 //
 // Capacity is checked against the committed cursor, exactly as the golden
 // model does.  That check is per commit, not per staged set: two staged
@@ -94,6 +107,7 @@ module ot_a3_state_controller
 
     reg [SLOT_W-1:0] pending_slot [0:SLOTS-1];
     reg [31:0] pending_rows [0:SLOTS-1];
+    reg [31:0] pending_span [0:SLOTS-1];
     reg [SLOT_W:0] pending_count;
     reg [SLOT_W-1:0] apply_index;
 
@@ -132,14 +146,37 @@ module ot_a3_state_controller
     wire        target_open = hit_found ? slot_open[target] : 1'b0;
     wire [7:0]  target_policy = hit_found ? slot_policy[target] : payload_policy;
     wire        target_unstaged = (target_policy == A3_COMMIT_POLICY_UNSTAGED);
+    wire        target_saturating = (target_policy == A3_COMMIT_POLICY_SATURATING);
+    // The positions the request presented.  A21's zero-count trap is stated on
+    // this and not on the published row count, because zero rows is a
+    // malformed *request* and a saturating commit's row count is the ring's.
+    wire [31:0] commit_span = op_rows_bound ? op_rows : 32'd0;
     // A21: an unstaged resource stages no row, whatever the request's span is.
+    // A25: a saturating one stages its ring, and no more.
     wire [31:0] commit_rows =
-        target_unstaged ? 32'd0 : (op_rows_bound ? op_rows : 32'd0);
+        target_unstaged ? 32'd0
+      : target_saturating ? ((commit_span < target_capacity) ? commit_span
+                                                             : target_capacity)
+      : commit_span;
     wire [32:0] commit_end = {1'b0, target_cursor} + {1'b0, commit_rows};
 
     wire [SLOT_W-1:0] apply_slot = pending_slot[apply_index];
     wire [31:0] apply_rows = pending_rows[apply_index];
+    wire [31:0] apply_span = pending_span[apply_index];
+    wire        apply_saturating =
+        (slot_policy[apply_slot] == A3_COMMIT_POLICY_SATURATING);
     wire [32:0] apply_end = {1'b0, slot_cursor[apply_slot]} + {1'b0, apply_rows};
+    // A25: the ring head, which is the slot the next absolute position writes.
+    wire [32:0] apply_sum = {1'b0, slot_cursor[apply_slot]} + {1'b0, apply_span};
+    wire [32:0] apply_capacity = {1'b0, slot_capacity[apply_slot]};
+    // A remainder modulo a 32-bit capacity is a 32-bit value; the extra bit
+    // the 33-bit divide carries is provably zero and is not read.
+    /* verilator lint_off UNUSED */
+    wire [32:0] apply_remainder = apply_sum % apply_capacity;
+    /* verilator lint_on UNUSED */
+    wire [31:0] apply_wrapped =
+        (apply_saturating && (apply_capacity != 33'd0))
+            ? apply_remainder[31:0] : apply_end[31:0];
 
     integer i;
     always @(posedge clk or negedge rst_n) begin
@@ -153,6 +190,7 @@ module ot_a3_state_controller
                 slot_policy[i] <= A3_COMMIT_POLICY_REQUEST_SPAN;
                 pending_slot[i] <= {SLOT_W{1'b0}};
                 pending_rows[i] <= 32'd0;
+                pending_span[i] <= 32'd0;
             end
             slot_used <= {SLOTS{1'b0}};
             slot_open <= {SLOTS{1'b0}};
@@ -210,14 +248,18 @@ module ot_a3_state_controller
                     apply_index <= {SLOT_W{1'b0}};
                 end
             end else if (apply_busy) begin
-                slot_cursor[apply_slot] <= apply_end[31:0];
+                slot_cursor[apply_slot] <=
+                    apply_saturating ? apply_wrapped : apply_end[31:0];
                 slot_generation[apply_slot] <= slot_generation[apply_slot] + 32'd1;
                 slot_open[apply_slot] <= 1'b0;
                 count_commits_applied <= count_commits_applied + 32'd1;
                 count_rows_committed <= count_rows_committed + apply_rows;
                 count_bytes_written <= count_bytes_written +
                     ({32'd0, apply_rows} * {32'd0, slot_row_bytes[apply_slot]});
-                if (apply_end > {1'b0, slot_capacity[apply_slot]})
+                // A25: a ring cannot be overflowed by a span, so the
+                // divergence flag is a REQUEST_SPAN condition only.
+                if (!apply_saturating &&
+                    (apply_end > {1'b0, slot_capacity[apply_slot]}))
                     apply_overflow <= 1'b1;
                 if (({1'b0, apply_index} + 1'b1) >= pending_count) begin
                     apply_busy <= 1'b0;
@@ -259,12 +301,17 @@ module ot_a3_state_controller
                                 op_ok <= 1'b0;
                                 op_trap_class <= A3_TRAP_STATE;
                             end else if (!target_unstaged &&
-                                         (commit_rows == 32'd0)) begin
+                                         (commit_span == 32'd0)) begin
                                 // A21: zero rows is a malformed request only
                                 // where the request is what supplies them.
                                 op_ok <= 1'b0;
                                 op_trap_class <= A3_TRAP_STATE;
-                            end else if (commit_end > {1'b0, target_capacity}) begin
+                            end else if (!target_saturating &&
+                                         (commit_end >
+                                          {1'b0, target_capacity})) begin
+                                // A25: a saturating commit was clamped to the
+                                // ring, so this comparison can only refuse a
+                                // commit the ring already satisfies.
                                 op_ok <= 1'b0;
                                 op_trap_class <= A3_TRAP_CAPABILITY;
                             end else if (pending_count >= SLOTS[SLOT_W:0]) begin
@@ -273,6 +320,7 @@ module ot_a3_state_controller
                             end else begin
                                 pending_slot[pending_count[SLOT_W-1:0]] <= target;
                                 pending_rows[pending_count[SLOT_W-1:0]] <= commit_rows;
+                                pending_span[pending_count[SLOT_W-1:0]] <= commit_span;
                                 pending_count <= pending_count + 1'b1;
                                 count_commits <= count_commits + 32'd1;
                             end

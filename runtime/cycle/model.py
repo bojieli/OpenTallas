@@ -582,8 +582,14 @@ class TracingDevice(Device):
     def _apply_commit(self, commit: PendingCommit, counters: CounterSet) -> None:  # type: ignore[override]
         before = counters.snapshot()
         resource = commit.resource
-        cursor = resource.cursor_rows
-        nbytes = commit.rows * resource.row_bytes
+        row_bytes = resource.row_bytes
+        # Amendment A25: the runs a commit publishes are the device's to
+        # decide, and above a ring there are two of them at slots the cursor
+        # does not name.  Recording the traffic from the same helper keeps the
+        # cycle model's accesses on the addresses the functional model moved,
+        # rather than on a single run at the cursor that a saturating commit
+        # does not perform.
+        runs = self._commit_runs(commit)
         step = self._new_step(
             "COMMIT",
             major=int(Major.STATE),
@@ -595,15 +601,20 @@ class TracingDevice(Device):
         try:
             super()._apply_commit(commit, counters)
         finally:
-            self._recorder.raw(
-                resource.prepared_object_id, 0, nbytes, write=False
-            )
-            self._recorder.raw(
-                resource.committed_object_id,
-                cursor * resource.row_bytes,
-                nbytes,
-                write=True,
-            )
+            for source_slot, destination_slot, count in runs:
+                nbytes = count * row_bytes
+                self._recorder.raw(
+                    resource.prepared_object_id,
+                    source_slot * row_bytes,
+                    nbytes,
+                    write=False,
+                )
+                self._recorder.raw(
+                    resource.committed_object_id,
+                    destination_slot * row_bytes,
+                    nbytes,
+                    write=True,
+                )
             step.accesses = self._recorder.end()
             step.counter_delta = _delta(before, counters.snapshot())
 

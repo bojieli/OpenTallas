@@ -814,3 +814,59 @@ committed image is a durability record no operator reads. It is the same defect
 class as the one A21 closes and it is not closed. The policy registry is where
 it would be closed, by a third value naming the group divisor, and that should
 be written when a lane needs it rather than guessed at now.
+
+## 22. Amendment A25 — the third row axis is a ring, and it saturates
+
+Wire format section 12.16 assigns `commit_policy = 2`, `SATURATING`. This
+section is what it means for the operators that surround the transaction.
+
+**Which of section 21's three row axes it closes.** The third: a fixed slot
+count that is never the span. A21 closed the sub-case where the deployment
+stages *nothing* into such a resource — the compressor's raw decode window —
+and left the sub-case where it stages *everything into a ring*. That is the
+sliding-window KV cache, and it is the resource both DeepSeek lanes stopped at:
+
+| Resource | Row axis | Rows a transaction stages | Policy |
+|---|---|---|---|
+| KV cache (`kv_cache`) | absolute position | `SPAN_TOKENS`, appended at the cursor | `REQUEST_SPAN` |
+| compressed cache (`compressed_kv`) | completed compression group | one per `ratio` tokens | `REQUEST_SPAN` — **still wrong**, see below |
+| compressor raw window | a fixed slot count | none: no descriptor stages it | `UNSTAGED` (A21) |
+| sliding-window ring (`kv_window`) | slot `position mod W` | `min(span, W)`, in circular slot order | `SATURATING` (A25) |
+
+**The operator already did this; the commit did not.** `KV_APPEND` lowers to
+`DMA.SCATTER` under A11's operand row, and for a ring the index it scatters
+through is `ring_indices_v1` — `position mod window_size` — which is what the
+neutral kernel's `cache_row: absolute_position_mod_window` attribute asks both
+backends for. So the prepared image a ring-staged transaction leaves behind is
+*already in slot order*: prepared row `s` holds absolute row `s mod W`, for a
+prefill and for a decode step alike. A25's commit publishes those slots as they
+stand, which is why its copy is slot-for-slot rather than head-of-image-to-cursor
+as `REQUEST_SPAN`'s is. An exporter that wants a saturating resource writes the
+ring attribute on the append; it does not, and cannot, name the policy.
+
+**What it does not change.** The append itself, and every `REQUEST_SPAN` and
+`UNSTAGED` resource, including both of `REQUEST_SPAN`'s traps. Below the ring a
+saturating commit is byte-identical to the commit that preceded it: same rows,
+same bytes, same cursor. That identity is why the defect survived every
+DeepSeek run before `TA-DS-CTX-129-1` — 104 tokens and 32 tokens are both under
+the 128-row window — and it is checked, not asserted.
+
+**What is still owed, now measured.** Section 21 recorded that a `compressed_kv`
+resource stages one row per completed group and commits `SPAN_TOKENS` of them,
+and judged it harmless because "the resource's capacity … is far above either,
+so nothing is refused". That judgement was bounded by the prompt lengths
+reachable at the time, and A25 moves the bound. With the window no longer
+refusing, the ladder reaches lengths where the compressed caches' capacities
+are *not* far above the span, and the same defect becomes a wall:
+
+| lane | first prompt length that traps | resource | `capacity_rows` |
+|---|---:|---|---:|
+| ROM | 2,049 | state 321 | 2,048 |
+| HBM | 40,961 | state 340 | 40,960 |
+
+A25 deliberately does **not** take the registry value section 21 reserved for
+this. The two cases are different rules — a ring saturates, a group divides —
+and the divisor case needs a number the policy byte cannot carry, so it is a
+further amendment with a field rather than a fourth enumerator squeezed beside
+this one. It should be written when a lane needs it, and a lane needs it at
+2,049 tokens.

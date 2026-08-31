@@ -26,6 +26,7 @@ from runtime.abi3.constants import (
     Permission,
     Selection,
     State,
+    StateClass,
     StorageClass,
     Tensor,
     feature_vector,
@@ -1166,6 +1167,68 @@ def test_a_program_over_the_event_bound_is_rejected() -> None:
 
     deployment = probe_deployment(capability, program=program)
     assert_rejected(deployment, capability, "event")
+
+
+def test_a_program_over_the_event_id_bound_is_rejected() -> None:
+    """Amendment A23.
+
+    ``max_events`` bounds how many distinct events a program signals;
+    ``max_event_id`` bounds the identifiers.  An implementation whose event
+    scoreboard is a bit per ID is bounded by the second, and this program shows
+    why the first does not imply it: four events, well inside a count bound of
+    256, naming IDs a capability with a four-entry ID space cannot address.
+    """
+    capability = probe_capability(max_event_id=1)
+
+    def program(builder: Any, ids: dict[str, int]) -> None:
+        for _ in range(4):
+            builder.emit(
+                Major.TENSOR,
+                Tensor.MATMUL,
+                descriptor_id=ids["matmul"],
+                signal_event_id=builder.new_event(),
+            )
+        default_tail(builder, ids)
+
+    deployment = probe_deployment(capability, program=program)
+    report = verify_deployment(deployment, capability)
+    assert not report.admitted
+    assert report.checks["event_count_bound"], "the count bound is not what refuses it"
+    assert not report.checks["event_id_bound"]
+    assert_rejected(deployment, capability, "capability admits IDs up to 1")
+
+
+def test_a_deployment_over_the_state_resource_bound_is_rejected() -> None:
+    """Amendment A22.
+
+    One ``STATE`` descriptor is one slot in the sequencer's state slot file,
+    held for the whole transaction.  A deployment declaring more resources than
+    the capability has slots for is refused here rather than discovered as a
+    capability trap part-way through a run.
+    """
+    capability = probe_capability(max_state_resources=1)
+
+    def program(builder: Any, ids: dict[str, int]) -> None:
+        builder.state(
+            state_class=StateClass.KV_CACHE,
+            committed_object_id=ids["kv_committed"],
+            prepared_object_id=ids["kv_prepared"],
+            row_bytes=16,
+            capacity_rows=32,
+            element_dtype=DType.BF16,
+        )
+        builder.emit(Major.STATE, State.PREPARE, descriptor_id=ids["state"])
+        builder.emit(Major.TENSOR, Tensor.MATMUL, descriptor_id=ids["matmul"])
+        builder.emit(Major.STATE, State.COMMIT, descriptor_id=ids["state"])
+        default_tail(builder, ids)
+
+    deployment = probe_deployment(capability, program=program)
+    report = verify_deployment(deployment, capability)
+    assert report.state_resources == 2
+    assert not report.checks["state_resource_bound"]
+    assert_rejected(
+        deployment, capability, "declares 2 state resources, capability admits 1"
+    )
 
 
 def test_global_scope_on_a_non_communication_descriptor_is_rejected(

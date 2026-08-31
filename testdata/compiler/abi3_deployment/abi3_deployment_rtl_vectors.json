@@ -8,7 +8,7 @@
     {
       "declared_max_retired_work": 2105,
       "deployment": "qwen3-8b-rom-single-chip",
-      "deployment_sha256": "a60d8500f0e8ad50c469fa1add1c95b865ca5d35dc7ae2db57c2845fc5c1298e",
+      "deployment_sha256": "c71ee77eabd4c83418cf20ab6834ba9d4e902d1afe33127714b4e8e104ca5cbc",
       "depth": {
         "distinct_static_instructions_reached": 28,
         "engine_issues": 693,
@@ -162,7 +162,7 @@
     {
       "declared_max_retired_work": 2105,
       "deployment": "qwen3-8b-rom-single-chip",
-      "deployment_sha256": "a60d8500f0e8ad50c469fa1add1c95b865ca5d35dc7ae2db57c2845fc5c1298e",
+      "deployment_sha256": "c71ee77eabd4c83418cf20ab6834ba9d4e902d1afe33127714b4e8e104ca5cbc",
       "depth": {
         "distinct_static_instructions_reached": 28,
         "engine_issues": 693,
@@ -316,7 +316,7 @@
     {
       "declared_max_retired_work": 22715,
       "deployment": "qwen3-8b-hbm-single-chip",
-      "deployment_sha256": "05bf410b2eb48604cd231c03d56b6d074a35361e47bce0336be74d730f158156",
+      "deployment_sha256": "fb5c66df438576db62e42f3dfc92cf5fe5cdee128829e6d87a2274d2fc2d3c5a",
       "depth": {
         "distinct_static_instructions_reached": 28,
         "engine_issues": 693,
@@ -470,7 +470,7 @@
     {
       "declared_max_retired_work": 22715,
       "deployment": "qwen3-8b-hbm-single-chip",
-      "deployment_sha256": "05bf410b2eb48604cd231c03d56b6d074a35361e47bce0336be74d730f158156",
+      "deployment_sha256": "fb5c66df438576db62e42f3dfc92cf5fe5cdee128829e6d87a2274d2fc2d3c5a",
       "depth": {
         "distinct_static_instructions_reached": 28,
         "engine_issues": 693,
@@ -624,7 +624,7 @@
     {
       "declared_max_retired_work": 4763423,
       "deployment": "deepseek-v4-flash-rom-wafer",
-      "deployment_sha256": "507e0b577cca2aa330c9f49463090458c13eac60f6f29425fa95543fe552a67a",
+      "deployment_sha256": "f5f21bb2421e7c932114c5b13fe0e106206155d9676667eabd567c5ad71ccc96",
       "depth": {
         "distinct_static_instructions_reached": 401,
         "engine_issues": 12657,
@@ -894,7 +894,7 @@
     {
       "declared_max_retired_work": 4763423,
       "deployment": "deepseek-v4-flash-rom-wafer",
-      "deployment_sha256": "507e0b577cca2aa330c9f49463090458c13eac60f6f29425fa95543fe552a67a",
+      "deployment_sha256": "f5f21bb2421e7c932114c5b13fe0e106206155d9676667eabd567c5ad71ccc96",
       "depth": {
         "distinct_static_instructions_reached": 367,
         "engine_issues": 3600,
@@ -1168,18 +1168,18 @@
     {
       "admitted": true,
       "capability": "configs/hardware/abi3_capability/rom_qwen3.json",
-      "capability_digest": "717de6c9f00dadcec0ae32ae33b1d827f95b2af62a43b405e94e586fc8f22dc4",
+      "capability_digest": "38234d6cccbd9c017efa286b67f66b1c21572e206ba71aca874e4f912eb6adbf",
       "co_simulable_within_rtl_bounds": true,
       "declared_max_retired_work": 2105,
       "deployment_dir": "build/abi3/qwen3-8b-rom",
-      "deployment_sha256": "a60d8500f0e8ad50c469fa1add1c95b865ca5d35dc7ae2db57c2845fc5c1298e",
+      "deployment_sha256": "c71ee77eabd4c83418cf20ab6834ba9d4e902d1afe33127714b4e8e104ca5cbc",
       "descriptor_count": 239,
       "descriptor_table_sha256": "637d64f27f3b6b2a133ffcf2a083bcfefd49d4d2cdfc9fe98290321086742623",
       "entrypoint_count": 2,
       "instruction_count": 75,
       "key": "qwen3-8b-rom-single-chip",
       "model_id": "qwen3-8b",
-      "program_sha256": "9f3026d776001f0700502f0519680add4d5a42edb22586117b8e8645de065d92",
+      "program_sha256": "d5e843bbcbd15f8c051e2593790cb1678783009a6fd839f316ef64f564ccaf22",
       "reproduce": "python3 tools/build_rom_deployment.py qwen3-8b --ir build/ir-v3/qwen3-8b/kernel_ir.v3.json --output build/abi3/qwen3-8b-rom",
       "rtl_bound_demands": {
         "A3_EVENT_COUNT": 26,
@@ -1196,18 +1196,18 @@
     {
       "admitted": true,
       "capability": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
-      "capability_digest": "afdb22453043bfc51bb721aea6b69d3f4dec1638888699db8031d75738f5e430",
+      "capability_digest": "dd6500681f334bdb55715b000accd495be7ed927d91d1ed24b54565a0cd57aee",
       "co_simulable_within_rtl_bounds": true,
       "declared_max_retired_work": 22715,
       "deployment_dir": "build/abi3/qwen3-8b-single-chip-w95",
-      "deployment_sha256": "05bf410b2eb48604cd231c03d56b6d074a35361e47bce0336be74d730f158156",
+      "deployment_sha256": "fb5c66df438576db62e42f3dfc92cf5fe5cdee128829e6d87a2274d2fc2d3c5a",
       "descriptor_count": 218,
       "descriptor_table_sha256": "fa0b0a65aa9f56f08738d810c706ecfc8d6bb3886d81454577ed254699283b8f",
       "entrypoint_count": 2,
       "instruction_count": 75,
       "key": "qwen3-8b-hbm-single-chip",
       "model_id": "qwen3-8b",
-      "program_sha256": "498e532e1e135dbab30cf90c49383728395c92ba2595c72fdfdbce293568dc71",
+      "program_sha256": "f053551bc98f3dd13b2d49bc48aece65cb3690b1c7a387dae500f70354738cb8",
       "reproduce": "python3 tools/build_hbm_sram_deployment.py --ir build/ir-v3/qwen3-8b/kernel_ir.v3.json --profile single-chip --out build/abi3/qwen3-8b-single-chip-w95",
       "rtl_bound_demands": {
         "A3_EVENT_COUNT": 26,
@@ -1224,18 +1224,18 @@
     {
       "admitted": true,
       "capability": "configs/hardware/abi3_capability/rom_deepseek_v4.json",
-      "capability_digest": "46ba23388738578592901115ed2f2206f8622028edabd30090584323ff211eb5",
-      "co_simulable_within_rtl_bounds": false,
+      "capability_digest": "91f7e6cc12fc5e226dc3c4ba14f3253744cc91eb92e21200678c558bbfc9c22b",
+      "co_simulable_within_rtl_bounds": true,
       "declared_max_retired_work": 4763423,
       "deployment_dir": "build/abi3/deepseek-v4-flash-rom",
-      "deployment_sha256": "507e0b577cca2aa330c9f49463090458c13eac60f6f29425fa95543fe552a67a",
+      "deployment_sha256": "f5f21bb2421e7c932114c5b13fe0e106206155d9676667eabd567c5ad71ccc96",
       "descriptor_count": 3387,
       "descriptor_table_sha256": "624fdb17cf11692d5880e6d038fbba9d58e4f7afdfc3aa2ba8afab372f8a7e1e",
       "entrypoint_count": 2,
       "instruction_count": 1156,
       "key": "deepseek-v4-flash-rom-wafer",
       "model_id": "deepseek-v4-flash-0731",
-      "program_sha256": "2a2a3c8369b37470aad7e6bd1af1439a0249364464622124a18b2147ea341a16",
+      "program_sha256": "346cc0adf04a765dd6dd92955b98df40627679bee8540eadc3b59014124a44c9",
       "reproduce": "python3 tools/build_rom_deployment.py deepseek-v4-flash --ir build/ir-v3/deepseek-v4-flash-0731/kernel_ir.v3.json --output build/abi3/deepseek-v4-flash-rom",
       "rtl_bound_demands": {
         "A3_EVENT_COUNT": 396,
@@ -1243,22 +1243,7 @@
         "A3_STATE_SLOTS": 10,
         "A3_WAIT_PRODUCERS": 4
       },
-      "rtl_bound_overruns": [
-        {
-          "declared_in": "rtl/abi3/ot_a3_pkg.sv",
-          "deployment_requires": 10,
-          "expressed_by": "nothing. No capability field names a state-slot count and runtime.abi3.verifier has no such check, so no deployment can be refused for exceeding it",
-          "parameter": "A3_STATE_SLOTS",
-          "rtl_bound": 8
-        },
-        {
-          "declared_in": "rtl/abi3/ot_a3_pkg.sv",
-          "deployment_requires": 396,
-          "expressed_by": "limits.max_events -- but the verifier bounds the *number of distinct event IDs* a program signals, and a scoreboard indexed by event ID is bounded by the largest ID plus one. The two coincide only when IDs are dense from zero. The shipped capabilities also disagree with this parameter numerically: rom_deepseek_v4 admits 512 and hbm_sram_single_chip admits 4096",
-          "parameter": "A3_EVENT_COUNT",
-          "rtl_bound": 256
-        }
-      ],
+      "rtl_bound_overruns": [],
       "state_descriptor_count": 10,
       "target_id": "deepseek-v4-flash-rom-wafer",
       "title": "DeepSeek-V4-Flash ROM wafer",
@@ -1286,7 +1271,7 @@
     "a3_deployment_meta.hex": "77e46a58b0f62e41c801b25d39ee1263b9d6a6df75eeb18a2be45f959882de0f",
     "a3_deployment_view.hex": "234f8937964beab4a6d6488871c0047ad8cce4fb09fca0088cf237ee3198203c",
     "a3_descriptor.hex": "3459e26b752990061ddffd90a6feb0cb216d8f01b825e32798da860ee0636ce3",
-    "a3_header.hex": "c855c99310998e6158322616c6b2d5437c8daa9974c7e9a7e12ed2b0fd849348",
+    "a3_header.hex": "1cbcee02883e78fb8201507e2600dab7252a7390caeb3658b240573cae6c1f08",
     "a3_program.hex": "af6e8348f2d8f88ee88f8bd5901546de22ff218c1e690559d8bd03a6e6ecb04a",
     "a3_symbol.hex": "d4c9aabe466c84a9aea82681a87b6990e9611049f3b072f116a7edcca6ea9856"
   },
@@ -1489,35 +1474,18 @@
   "required_marker": "PASS: ABI3 RTL deployment co-simulation deployments=3 cases=6 completions=6 issues=19029 views=58849",
   "rtl_implementation_bounds": {
     "expressed_by": {
-      "A3_EVENT_COUNT": "limits.max_events -- but the verifier bounds the *number of distinct event IDs* a program signals, and a scoreboard indexed by event ID is bounded by the largest ID plus one. The two coincide only when IDs are dense from zero. The shipped capabilities also disagree with this parameter numerically: rom_deepseek_v4 admits 512 and hbm_sram_single_chip admits 4096",
+      "A3_EVENT_COUNT": "limits.max_event_id + 1 (amendment A23) -- runtime.abi3.verifier check event_id_bound and tools/check_abi3_deployment.py refuse a program naming an event ID above the capability's space. Before A23 this parameter was labelled limits.max_events, which bounds the *number of distinct event IDs* a program signals; a scoreboard indexed by event ID is bounded by the largest ID plus one, and the two coincide only when IDs are dense from zero. The four shipped capabilities now agree with this parameter and with each other, because it is storage in the shared microsequencer",
       "A3_LOOP_DEPTH": "limits.max_loop_depth -- expressible, and runtime.abi3.verifier checks it",
-      "A3_STATE_SLOTS": "nothing. No capability field names a state-slot count and runtime.abi3.verifier has no such check, so no deployment can be refused for exceeding it",
+      "A3_STATE_SLOTS": "limits.max_state_resources (amendment A22) -- runtime.abi3.verifier check state_resource_bound and tools/check_abi3_deployment.py refuse a deployment declaring more STATE descriptors than the capability holds slots for. Before A22 no capability field named a state-slot count at all, so no deployment could be refused for exceeding it and the overrun was discovered here as trap class 4",
       "A3_WAIT_PRODUCERS": "runtime.abi3.descriptors.MAX_WAIT_PRODUCERS, a frozen ABI constant the wait-set payload is sized by; the two agree at 12"
     },
     "note": "these four are the sequencer's own bounds. The RTL package calls them capability fields; expressed_by says, per bound, what in a capability or in the frozen ABI actually expresses it. A bound nothing expresses cannot be refused at admission, so a program that exceeds it is admitted and traps in the RTL instead",
-    "overruns": [
-      {
-        "declared_in": "rtl/abi3/ot_a3_pkg.sv",
-        "deployment": "deepseek-v4-flash-rom-wafer",
-        "deployment_requires": 10,
-        "expressed_by": "nothing. No capability field names a state-slot count and runtime.abi3.verifier has no such check, so no deployment can be refused for exceeding it",
-        "parameter": "A3_STATE_SLOTS",
-        "rtl_bound": 8
-      },
-      {
-        "declared_in": "rtl/abi3/ot_a3_pkg.sv",
-        "deployment": "deepseek-v4-flash-rom-wafer",
-        "deployment_requires": 396,
-        "expressed_by": "limits.max_events -- but the verifier bounds the *number of distinct event IDs* a program signals, and a scoreboard indexed by event ID is bounded by the largest ID plus one. The two coincide only when IDs are dense from zero. The shipped capabilities also disagree with this parameter numerically: rom_deepseek_v4 admits 512 and hbm_sram_single_chip admits 4096",
-        "parameter": "A3_EVENT_COUNT",
-        "rtl_bound": 256
-      }
-    ],
+    "overruns": [],
     "source": "rtl/abi3/ot_a3_pkg.sv",
     "values": {
-      "A3_EVENT_COUNT": 256,
+      "A3_EVENT_COUNT": 512,
       "A3_LOOP_DEPTH": 4,
-      "A3_STATE_SLOTS": 8,
+      "A3_STATE_SLOTS": 16,
       "A3_WAIT_PRODUCERS": 12
     }
   },

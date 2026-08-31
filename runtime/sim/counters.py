@@ -110,6 +110,13 @@ COUNTERS: dict[int, str] = dict(
         # Amendment A21: commits that published no row because the
         # deployment stages nothing into the resource.
         _reg(CounterGroup.STATE, 7, "state.unstaged_commits"),
+        # Amendment A25: rows a saturating commit did not publish because the
+        # resource's row axis is a ring shorter than the request's span.  The
+        # clip is counted rather than left silent: a saturating commit that
+        # drops rows is the normal case above the window, and an artifact that
+        # does not say so cannot be told from one that never clipped.
+        _reg(CounterGroup.STATE, 8, "state.rows_clipped"),
+        _reg(CounterGroup.STATE, 9, "state.saturated_commits"),
         # 0x09 selection and EOS
         _reg(CounterGroup.SELECTION_EOS, 1, "selection.tokens_selected"),
         _reg(CounterGroup.SELECTION_EOS, 2, "selection.tokens_appended"),

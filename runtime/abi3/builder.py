@@ -44,7 +44,7 @@ from .deployment import (
     DescriptorTable,
     ObjectSource,
     Segment,
-    staged_objects,
+    derive_commit_policies,
 )
 from .descriptors import (
     Comparison,
@@ -862,30 +862,30 @@ class DeploymentBuilder:
 
     # -- finalisation ----------------------------------------------------
     def _declare_commit_policies(self) -> None:
-        """Amendment A21: say, per state resource, where its commit's rows come from.
+        """Amendments A21 and A25: say, per state resource, what its commit publishes.
 
         ``SPAN_TOKENS`` is a request symbol.  It is a row count only where the
         resource's row axis is the token axis; a fixed recurrent window -- the
-        released DeepSeek compressor's eight-row raw state, the sliding-window
-        ring -- has a row axis the request does not index, and a device that
-        substitutes the span for the count asks such a resource to absorb rows
-        it does not have.
+        released DeepSeek compressor's eight-row raw state -- has a row axis the
+        request does not index, and a device that substitutes the span for the
+        count asks such a resource to absorb rows it does not have.  A sliding
+        window is *both*: its rows are tokens and its row axis is a ring, so it
+        publishes ``min(span, capacity_rows)`` and is ``SATURATING`` (A25).
 
         The policy is not a backend's choice.  It is a fact about the finished
-        descriptor table -- whether any descriptor names the resource's
-        prepared image as a destination -- so it is derived here, in the one
-        builder every backend emits through, and re-derived and checked by the
-        verifier.  A backend cannot get it wrong and two backends cannot
-        disagree about it.
+        deployment -- whether any descriptor names the resource's prepared image
+        as a destination, and whether a scatter addresses that image through a
+        ring -- so it is derived here, in the one builder every backend emits
+        through, and re-derived and checked by the verifier.  A backend cannot
+        get it wrong and two backends cannot disagree about it.
         """
-        staged = staged_objects(self.table)
-        for state_id in self.table.ids_of_type(int(ExtendedDescriptorType.STATE)):
-            descriptor = self.table[state_id]
-            policy = (
-                CommitPolicy.REQUEST_SPAN
-                if int(descriptor.payload["prepared_object_id"]) in staged
-                else CommitPolicy.UNSTAGED
+        policies, problems = derive_commit_policies(self.table, self.objects)
+        if problems:
+            raise BuildError(
+                "commit policy cannot be derived:\n  " + "\n  ".join(problems)
             )
+        for state_id, policy in policies.items():
+            descriptor = self.table[state_id]
             if int(descriptor.payload["commit_policy"]) != int(policy):
                 descriptor.payload["commit_policy"] = int(policy)
                 self.table.rewrite(state_id)

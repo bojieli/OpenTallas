@@ -40,6 +40,13 @@ CONFIG_ROOT = REPO / "configs" / "hardware" / "abi3_capability"
 PUBLISHED: dict[str, tuple[str, str]] = {
     "hbm_sram_single_chip": ("compiler.backends.hbm_sram.capability", "single-chip"),
     "hbm_sram_cluster_32": ("compiler.backends.hbm_sram.capability", "cluster-32"),
+    # The two ROM profiles had the same two sources of truth this tool exists
+    # to remove, and were simply not listed here: the file on disk and
+    # ``qwen3_rom_capability`` / ``deepseek_v4_rom_capability`` happened to
+    # agree, with nothing checking that they did.  Found while adding
+    # amendments A22 and A23, which change all four.
+    "rom_qwen3": ("compiler.backends.rom.qwen3", "rom-qwen3"),
+    "rom_deepseek_v4": ("compiler.backends.rom.deepseek_v4", "rom-deepseek-v4"),
 }
 
 
@@ -72,9 +79,16 @@ def main() -> int:
         if args.check:
             on_disk = "absent"
             if current:
-                from runtime.abi3.capability import Capability
+                from runtime.abi3.capability import Capability, digest_of
 
-                on_disk = Capability.from_dict(json.loads(current)).digest[:16]
+                body = json.loads(current)
+                try:
+                    on_disk = Capability.from_dict(body).digest[:16]
+                except ValueError as exc:
+                    # A published file that no longer validates is exactly the
+                    # drift this tool reports; saying so beats raising out of
+                    # the reporting path.
+                    on_disk = f"{digest_of(body)[:16]} (invalid: {exc})"
             print(
                 f"{stem}: DRIFTED -- profile is {capability.digest[:16]}, "
                 f"published file is {on_disk}"

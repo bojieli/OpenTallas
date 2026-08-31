@@ -244,6 +244,20 @@ def check_capability(
         f"declared maximum retired work {header.max_retired_work} exceeds the "
         f"capability bound {limits['max_retired_work']}",
     )
+    # Amendment A22.  One STATE descriptor is one state resource, and a
+    # transactional-state implementation holds a slot for each declared
+    # resource for the life of a transaction.  Nothing bounded this before
+    # A22, so a deployment declaring more resources than the sequencer has
+    # slots was admitted and the overrun discovered at run time.
+    state_resources = len(
+        deployment.table.ids_of_type(int(ExtendedDescriptorType.STATE))
+    )
+    report.check(
+        "state_resource_bound",
+        state_resources <= limits["max_state_resources"],
+        f"deployment declares {state_resources} state resources, capability "
+        f"admits {limits['max_state_resources']}",
+    )
 
 
 def check_instructions(
@@ -552,6 +566,18 @@ def check_events(
         len(signalled) <= capability.limits["max_events"],
         f"program signals {len(signalled)} distinct events, capability admits "
         f"{capability.limits['max_events']}",
+    )
+    # Amendment A23.  The count is not the identifier.  A scoreboard addressed
+    # by event ID is bounded by the largest ID any instruction or wait set
+    # names, and a program using three IDs numbered 4000, 4001 and 4002 passes
+    # the count check above while indexing past the end of one.
+    named = set(signalled) | waited
+    largest = max(named) if named else 0
+    report.check(
+        "event_id_bound",
+        largest <= capability.limits["max_event_id"],
+        f"program names event ID {largest}, capability admits IDs up to "
+        f"{capability.limits['max_event_id']}",
     )
     return len(signalled)
 

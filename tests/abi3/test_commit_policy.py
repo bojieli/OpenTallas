@@ -31,7 +31,11 @@ from runtime.abi3.constants import (
     StateClass,
     StorageClass,
 )
-from runtime.abi3.deployment import ObjectSource, staged_objects
+from runtime.abi3.deployment import (
+    ObjectSource,
+    ring_staged_objects,
+    staged_objects,
+)
 from runtime.abi3.descriptors import (
     STATE_PAYLOAD,
     ExtendedDescriptorType,
@@ -266,3 +270,308 @@ def test_every_state_descriptor_in_the_suite_declares_a_registered_policy() -> N
         assert deployment.table[state_id].payload["commit_policy"] in {
             int(member) for member in CommitPolicy
         }
+
+
+# ---------------------------------------------------------------------------
+# 4. amendment A25: a ring is both a KV cache and a fixed window
+# ---------------------------------------------------------------------------
+#: The saturating window, and a span more than twice as long as it: the shape
+#: of the wall ``TA-DS-CTX-129-1`` reached, where the span exceeds the ring and
+#: the ring wraps more than once.
+RING_ROWS = 8
+RING_ROW_BYTES = 16
+RING_SPAN = 21
+
+
+def _ring_deployment(
+    *, capacity_rows: int = RING_ROWS, modulus: int = RING_ROWS
+) -> tuple[Capability, object, dict[str, int]]:
+    """One state resource staged by a scatter through a ring index table.
+
+    This is the DeepSeek sliding window's shape, reduced: a ring table of
+    ``position mod modulus``, a ``DMA.SCATTER`` that writes the resource's
+    prepared image through it, and a capacity that is a whole number of rings.
+    """
+    from runtime.sim.generators import digest_of, generate
+
+    captured: dict[str, int] = {}
+
+    def program(builder, ids):
+        rows = capacity_rows
+        window_bytes = rows * RING_ROW_BYTES
+        parameters = {"count": 4 * RING_SPAN, "modulus": modulus}
+        payload = generate("ring_indices_v1", parameters)
+        index_object = builder.memory_object(
+            storage_class=StorageClass.HBM,
+            size_bytes=int(payload.nbytes),
+            source=ObjectSource.generated(
+                "ring_indices_v1", parameters, int(payload.nbytes), digest_of(
+                    "ring_indices_v1", parameters
+                )
+            ),
+            permissions=int(Permission.READ | Permission.IMMUTABLE),
+        )
+        source_object = builder.memory_object(
+            storage_class=StorageClass.SRAM,
+            size_bytes=RING_SPAN * RING_ROW_BYTES,
+            source=ObjectSource.zeros(RING_SPAN * RING_ROW_BYTES),
+            permissions=int(Permission.READ | Permission.WRITE),
+        )
+        committed = builder.memory_object(
+            storage_class=StorageClass.STATE,
+            size_bytes=window_bytes,
+            source=ObjectSource.zeros(window_bytes),
+            permissions=int(Permission.READ | Permission.STATE_COMMIT),
+        )
+        prepared = builder.memory_object(
+            storage_class=StorageClass.STATE,
+            size_bytes=window_bytes,
+            source=ObjectSource.zeros(window_bytes),
+            permissions=int(Permission.READ | Permission.STATE_PREPARE),
+        )
+        index_view = builder.tensor_view(
+            object_id=index_object, dtype=DType.U32, dims=[RING_SPAN]
+        )
+        source_view = builder.tensor_view(
+            object_id=source_object,
+            dtype=DType.BF16,
+            dims=[RING_SPAN, RING_ROW_BYTES // 2],
+            permissions=int(Permission.READ | Permission.WRITE),
+        )
+        window_view = builder.tensor_view(
+            object_id=prepared,
+            dtype=DType.BF16,
+            dims=[rows, RING_ROW_BYTES // 2],
+            permissions=int(Permission.READ | Permission.WRITE),
+        )
+        window = builder.state(
+            state_class=StateClass.KV_CACHE,
+            committed_object_id=committed,
+            prepared_object_id=prepared,
+            row_bytes=RING_ROW_BYTES,
+            capacity_rows=rows,
+            element_dtype=DType.BF16,
+            view_descriptor_id=window_view,
+        )
+        dma_schedule = builder.schedule(
+            engine_family=Major.DMA, tile_rows=8, tile_cols=8, tile_depth=1
+        )
+        stage = builder.operator(
+            engine_family=Major.DMA,
+            engine_sub=Dma.SCATTER,
+            inputs=[index_view, source_view],
+            outputs=[window_view],
+            numeric_profile_id=ids["numeric"],
+            schedule_id=dma_schedule,
+        )
+        captured["window_state"] = window
+        captured["window_prepared"] = prepared
+        captured["index_object"] = index_object
+
+        builder.emit(Major.STATE, State.PREPARE, descriptor_id=window)
+        builder.emit(Major.DMA, Dma.SCATTER, descriptor_id=stage)
+        builder.emit(Major.STATE, State.COMMIT, descriptor_id=window)
+        builder.emit(Major.CONTROL, Control.COMPLETE)
+
+    capability = probe_capability()
+    deployment = probe_deployment(capability, program=program)
+    return capability, deployment, captured
+
+
+def test_the_document_defines_the_saturating_policy() -> None:
+    assert "### 12.16 Amendment A25" in DOC_TEXT
+    assert "| A25 |" in DOC_TEXT, "amendment index section 14 does not list A25"
+
+
+def test_a_ring_staged_resource_declares_saturating() -> None:
+    """The policy is derived, not chosen: the ring table is a fact about the
+    deployment, and a scatter's index names its *destination* rows."""
+    _, deployment, ids = _ring_deployment()
+    rings = ring_staged_objects(deployment.table, deployment.objects)
+    window = deployment.table[ids["window_state"]]
+    assert rings[ids["window_prepared"]] == frozenset({RING_ROWS})
+    assert window.payload["commit_policy"] == int(CommitPolicy.SATURATING)
+
+
+def test_a_ring_that_does_not_divide_its_capacity_is_refused() -> None:
+    """Amendment A25 describes a row axis that is a whole number of rings.  A
+    modulus that is not one leaves the row axis undefined, and the builder
+    refuses rather than picking whichever of the two numbers it prefers."""
+    from runtime.abi3.builder import BuildError
+
+    with pytest.raises(BuildError, match="whole divisor"):
+        _ring_deployment(capacity_rows=RING_ROWS, modulus=RING_ROWS - 3)
+
+
+def test_an_absolute_index_is_not_a_ring() -> None:
+    """A KV cache whose row axis genuinely is the token axis keeps
+    ``REQUEST_SPAN``: the discriminator is the ring, not the merge or the
+    capacity."""
+    _, deployment, ids = _two_state_deployment()
+    assert ring_staged_objects(deployment.table, deployment.objects) == {}
+    assert deployment.table[ids["kv_state"]].payload["commit_policy"] == int(
+        CommitPolicy.REQUEST_SPAN
+    )
+
+
+def test_a_span_longer_than_the_ring_commits_the_ring_and_does_not_trap() -> None:
+    """The wall ``TA-DS-CTX-129-1`` reached, reduced and cleared.
+
+    Before A25 this transaction failed with `committing 21 rows at cursor 0
+    with 0 already staged exceeds capacity 8`, whatever a backend did, because
+    the count came from the request rather than from the resource's ring.
+    """
+    capability, deployment, ids = _ring_deployment()
+    device = Device(deployment, capability, verify=False)
+    session = device.create_session()
+    result = device.run_transaction(
+        session,
+        entrypoint_id=0,
+        symbols={int(Symbol.SPAN_TOKENS): RING_SPAN},
+    )
+
+    assert result.trap_class == 0, result.message
+    counters = result.counters
+    assert counters["state.commits"] == 1
+    assert counters["state.saturated_commits"] == 1
+    # The ring publishes its own rows and says how many it did not.
+    assert counters["state.rows_committed"] == RING_ROWS
+    assert counters["state.rows_clipped"] == RING_SPAN - RING_ROWS
+
+    window = session.states[ids["window_state"]]
+    # The cursor is the ring head: the slot the next absolute position writes.
+    assert window.cursor_rows == RING_SPAN % RING_ROWS
+    assert window.generation == 1
+    assert not window.open_prepare
+
+
+def test_below_the_ring_a_saturating_commit_is_the_pre_a25_commit() -> None:
+    """A25 changes nothing below the window, which is why no run before
+    ``TA-DS-CTX-129-1`` could have found the defect: with a span the ring does
+    not clip, the published rows, the bytes and the cursor are what
+    ``REQUEST_SPAN`` produced."""
+    capability, deployment, ids = _ring_deployment()
+    device = Device(deployment, capability, verify=False)
+    session = device.create_session()
+    span = RING_ROWS - 3
+    result = device.run_transaction(
+        session,
+        entrypoint_id=0,
+        symbols={int(Symbol.SPAN_TOKENS): span},
+    )
+    assert result.trap_class == 0, result.message
+    assert result.counters["state.rows_committed"] == span
+    assert result.counters.get("state.rows_clipped", 0) == 0
+    assert session.states[ids["window_state"]].cursor_rows == span
+
+
+def test_a_saturating_commit_publishes_the_ring_in_slot_order() -> None:
+    """Which rows survive and where they land.
+
+    ``runtime/reference/kv_window.py`` is the authority: a fresh prefill longer
+    than the window "retains only the final ``W`` input rows in circular slot
+    order", absolute position ``p`` at slot ``p mod W``.  The committed image
+    must therefore equal the prepared image slot for slot over the whole ring,
+    and the two runs the wrap splits the copy into must reassemble it.
+    """
+    capability, deployment, ids = _ring_deployment()
+    device = Device(deployment, capability, verify=False)
+    session = device.create_session()
+    resource = session.states[ids["window_state"]]
+    memory = device.node_memories[0]
+    # Distinguish every slot of the prepared image before the commit.
+    prepared = memory[resource.prepared_object_id]
+    prepared.write(0, bytes(range(1, RING_ROWS * RING_ROW_BYTES + 1)))
+
+    device.run_transaction(
+        session,
+        entrypoint_id=0,
+        symbols={int(Symbol.SPAN_TOKENS): RING_SPAN},
+    )
+    committed = memory[resource.committed_object_id]
+    total = RING_ROWS * RING_ROW_BYTES
+    assert bytes(committed.read(0, total)) == bytes(prepared.read(0, total))
+
+
+@pytest.mark.parametrize("window", [4, 8, 128])
+def test_the_published_slots_are_the_reference_operators(window: int) -> None:
+    """A25 describes what the reference already does, and this is the check.
+
+    ``runtime/reference/kv_window.py`` is the frozen reading of the pinned
+    ``inference/model.py``.  Its ``_write_plan`` returns, for a fresh prefill of
+    ``S`` tokens and for a decode step at absolute position ``N``, the exact
+    destination slot ranges the released model assigns.  The device's commit
+    runs must be those ranges, in that order, for every sequence length either
+    side of the window and for a decode step at every slot -- otherwise the ABI
+    has invented a rule beside the operator rather than described it.
+    """
+    from runtime.reference.kv_window import _write_plan
+    from runtime.sim.device import Device, PendingCommit, StateResource
+
+    def runs_for(cursor: int, span: int) -> list[tuple[int, int]]:
+        resource = StateResource(
+            descriptor_id=0,
+            state_class=int(StateClass.KV_CACHE),
+            committed_object_id=0,
+            prepared_object_id=1,
+            row_bytes=2,
+            capacity_rows=window,
+            commit_policy=int(CommitPolicy.SATURATING),
+            cursor_rows=cursor,
+        )
+        commit = PendingCommit(resource, min(span, window), span)
+        return [
+            (slot, slot + count)
+            for _source, slot, count in Device._commit_runs(commit)
+        ]
+
+    for length in range(1, 3 * window + 2):
+        _mode, segments, _rows, _a, _b = _write_plan(
+            start_pos=0, sequence_length=length, window_size=window
+        )
+        expected = [
+            (segment.destination_slot_start, segment.destination_slot_stop)
+            for segment in segments
+        ]
+        assert runs_for(0, length) == expected, f"prefill of {length}"
+
+    for position in range(1, 2 * window + 3):
+        _mode, segments, _rows, _a, _b = _write_plan(
+            start_pos=position, sequence_length=1, window_size=window
+        )
+        expected = [
+            (segment.destination_slot_start, segment.destination_slot_stop)
+            for segment in segments
+        ]
+        # The cursor a prefill of ``position`` tokens leaves behind is the ring
+        # head the reference's decode branch computes independently.
+        assert runs_for(position % window, 1) == expected, f"decode at {position}"
+
+
+def test_the_ring_head_survives_across_transactions() -> None:
+    """The cursor is session state, and a ring's cursor is a slot.
+
+    A prefill of twenty-one positions into an eight-slot ring leaves the head at
+    ``21 mod 8 = 5``; the next transaction's single position must publish slot 5
+    and leave the head at 6.  That is the released model's decode rule --
+    ``start_pos % win`` -- reached by advancing the cursor rather than by a
+    separate decode case, and it only holds if the modular advance persists
+    past the transaction that made it.
+    """
+    capability, deployment, ids = _ring_deployment()
+    device = Device(deployment, capability, verify=False)
+    session = device.create_session()
+    device.run_transaction(
+        session, entrypoint_id=0, symbols={int(Symbol.SPAN_TOKENS): RING_SPAN}
+    )
+    window = session.states[ids["window_state"]]
+    assert window.cursor_rows == RING_SPAN % RING_ROWS
+
+    result = device.run_transaction(
+        session, entrypoint_id=0, symbols={int(Symbol.SPAN_TOKENS): 1}
+    )
+    assert result.trap_class == 0, result.message
+    assert result.counters["state.rows_committed"] == 1
+    assert result.counters.get("state.rows_clipped", 0) == 0
+    assert window.cursor_rows == (RING_SPAN + 1) % RING_ROWS
+    assert window.generation == 2

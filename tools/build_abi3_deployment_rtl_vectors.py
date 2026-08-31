@@ -7,9 +7,9 @@ particular corner of the sequencer.  None of them is a program this project
 claims to run.  This generator closes that gap by taking the three shipped
 deployments themselves --
 
-    Qwen3-8B ROM single chip        a60d8500...  75 instructions, 239 descriptors
-    Qwen3-8B HBM single chip        05bf410b...  75 instructions, 218 descriptors
-    DeepSeek-V4-Flash ROM wafer     507e0b57...  1156 instructions, 3387 descriptors
+    Qwen3-8B ROM single chip        c71ee77e...  75 instructions, 239 descriptors
+    Qwen3-8B HBM single chip        fb5c66df...  75 instructions, 218 descriptors
+    DeepSeek-V4-Flash ROM wafer     f5f21bb2...  1156 instructions, 3387 descriptors
 
 -- and emitting, for each of them, the same four memory images the RTL
 verification top already reads (the 256-byte program header, the 32-byte
@@ -139,7 +139,7 @@ TARGETS = (
             "~/.cache/huggingface/hub/models--Qwen--Qwen3-8B/snapshots/"
             "b968826d9c46dd6066d109eabc6255188de91218"
         ),
-        digest="a60d8500f0e8ad50c469fa1add1c95b865ca5d35dc7ae2db57c2845fc5c1298e",
+        digest="c71ee77eabd4c83418cf20ab6834ba9d4e902d1afe33127714b4e8e104ca5cbc",
         reproduce=(
             "python3 tools/build_rom_deployment.py qwen3-8b --ir "
             "build/ir-v3/qwen3-8b/kernel_ir.v3.json --output build/abi3/qwen3-8b-rom"
@@ -154,7 +154,7 @@ TARGETS = (
             "~/.cache/huggingface/hub/models--Qwen--Qwen3-8B/snapshots/"
             "b968826d9c46dd6066d109eabc6255188de91218"
         ),
-        digest="05bf410b2eb48604cd231c03d56b6d074a35361e47bce0336be74d730f158156",
+        digest="fb5c66df438576db62e42f3dfc92cf5fe5cdee128829e6d87a2274d2fc2d3c5a",
         reproduce=(
             "python3 tools/build_hbm_sram_deployment.py --ir "
             "build/ir-v3/qwen3-8b/kernel_ir.v3.json --profile single-chip "
@@ -170,7 +170,7 @@ TARGETS = (
             "~/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4-Flash-0731/"
             "snapshots/*"
         ),
-        digest="507e0b577cca2aa330c9f49463090458c13eac60f6f29425fa95543fe552a67a",
+        digest="f5f21bb2421e7c932114c5b13fe0e106206155d9676667eabd567c5ad71ccc96",
         reproduce=(
             "python3 tools/build_rom_deployment.py deepseek-v4-flash --ir "
             "build/ir-v3/deepseek-v4-flash-0731/kernel_ir.v3.json --output "
@@ -193,26 +193,34 @@ BOUND_PARAMETERS = (
     "A3_WAIT_PRODUCERS",
 )
 
-# What, if anything, in a capability or in the frozen ABI expresses each bound.
-# A bound with no capability field cannot be refused at admission, which is why
-# a program that exceeds it reaches the RTL and traps there.
+# What in a capability or in the frozen ABI expresses each bound.  A bound with
+# no capability field cannot be refused at admission, which is why a program
+# that exceeds it reaches the RTL and traps there; amendments A22 and A23
+# closed the two that had none, so every entry below now names something a
+# deployment is admitted against.
 BOUND_CAPABILITY_FIELD = {
     "A3_LOOP_DEPTH": (
         "limits.max_loop_depth -- expressible, and runtime.abi3.verifier "
         "checks it"
     ),
     "A3_STATE_SLOTS": (
-        "nothing. No capability field names a state-slot count and "
-        "runtime.abi3.verifier has no such check, so no deployment can be "
-        "refused for exceeding it"
+        "limits.max_state_resources (amendment A22) -- runtime.abi3.verifier "
+        "check state_resource_bound and tools/check_abi3_deployment.py refuse "
+        "a deployment declaring more STATE descriptors than the capability "
+        "holds slots for. Before A22 no capability field named a state-slot "
+        "count at all, so no deployment could be refused for exceeding it and "
+        "the overrun was discovered here as trap class 4"
     ),
     "A3_EVENT_COUNT": (
-        "limits.max_events -- but the verifier bounds the *number of distinct "
-        "event IDs* a program signals, and a scoreboard indexed by event ID is "
-        "bounded by the largest ID plus one. The two coincide only when IDs "
-        "are dense from zero. The shipped capabilities also disagree with this "
-        "parameter numerically: rom_deepseek_v4 admits 512 and "
-        "hbm_sram_single_chip admits 4096"
+        "limits.max_event_id + 1 (amendment A23) -- runtime.abi3.verifier "
+        "check event_id_bound and tools/check_abi3_deployment.py refuse a "
+        "program naming an event ID above the capability's space. Before A23 "
+        "this parameter was labelled limits.max_events, which bounds the "
+        "*number of distinct event IDs* a program signals; a scoreboard "
+        "indexed by event ID is bounded by the largest ID plus one, and the "
+        "two coincide only when IDs are dense from zero. The four shipped "
+        "capabilities now agree with this parameter and with each other, "
+        "because it is storage in the shared microsequencer"
     ),
     "A3_WAIT_PRODUCERS": (
         "runtime.abi3.descriptors.MAX_WAIT_PRODUCERS, a frozen ABI constant "

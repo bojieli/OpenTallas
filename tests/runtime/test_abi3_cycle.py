@@ -351,6 +351,8 @@ def cycle_capability(
             "max_loop_trip": 1 << 20,
             "max_retired_work": 1 << 32,
             "max_events": 256,
+            "max_event_id": 511,
+            "max_state_resources": 16,
             "max_outstanding_per_queue": 4,
             "max_context_positions": CONTEXT,
             "max_expert_ids": 1024,

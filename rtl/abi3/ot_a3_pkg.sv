@@ -103,6 +103,11 @@ package ot_a3_pkg;
     // its commit publishes none.
     localparam [7:0] A3_COMMIT_POLICY_REQUEST_SPAN = 8'h00;
     localparam [7:0] A3_COMMIT_POLICY_UNSTAGED     = 8'h01;
+    // Amendment A25 (wire format section 12.16): the resource's row axis is a
+    // ring of capacity_rows slots.  A commit publishes min(span, capacity)
+    // rows and the cursor advances to (cursor + span) mod capacity, so a span
+    // longer than the ring wraps onto it instead of overflowing it.
+    localparam [7:0] A3_COMMIT_POLICY_SATURATING   = 8'h02;
 
     localparam [7:0] A3_RECOVERY_POISON = 8'h00;
     localparam [7:0] A3_RECOVERY_ABORT  = 8'h01;

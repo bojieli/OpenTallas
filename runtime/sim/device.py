@@ -132,10 +132,17 @@ class Session:
 
 @dataclass
 class PendingCommit:
-    """A staged state commit, applied only when the transaction completes."""
+    """A staged state commit, applied only when the transaction completes.
+
+    ``rows`` is what the commit publishes and ``span`` is what the request
+    presented.  They differ only under amendment A25's ``SATURATING``, where
+    the row axis is a ring: the rows published are the ring's, the cursor
+    advances by the span, and both numbers are needed to place the bytes.
+    """
 
     resource: StateResource
     rows: int
+    span: int = 0
 
 
 # ---------------------------------------------------------------------------
@@ -1016,12 +1023,29 @@ class Device:
                 ctx.counters.add("state.commits")
                 ctx.counters.add("state.unstaged_commits")
                 return
-            rows = int(ctx.symbols.get(int(Symbol.SPAN_TOKENS), 0))
-            if rows <= 0:
+            span = int(ctx.symbols.get(int(Symbol.SPAN_TOKENS), 0))
+            if span <= 0:
                 raise DeviceTrap(
                     "state commit with a non-positive row count",
                     TrapClass.STATE_TRANSACTION,
                 )
+            # Amendment A25 (wire format section 12.16).  A saturating
+            # resource's row axis is a ring of ``capacity_rows`` slots that the
+            # token axis is mapped onto by ``position mod capacity_rows``, so a
+            # span longer than the ring does not overflow it -- it wraps onto
+            # it, and the commit publishes the last ``capacity_rows`` rows of
+            # the span.  The capacity bound is then satisfied by construction
+            # and cannot trap; what would have been an overflow is a clip, and
+            # the clip is counted so an artifact says it happened.
+            if resource.commit_policy == int(CommitPolicy.SATURATING):
+                rows = min(span, resource.capacity_rows)
+                pending.append(PendingCommit(resource, rows, span))
+                ctx.counters.add("state.commits")
+                ctx.counters.add("state.saturated_commits")
+                if span > rows:
+                    ctx.counters.add("state.rows_clipped", span - rows)
+                return
+            rows = span
             # Capacity must be checked against the *staged* total, not the
             # committed cursor: several commits staged in one transaction can
             # each pass individually and still overflow when they are applied.
@@ -1035,7 +1059,7 @@ class Device:
                     f"exceeds capacity {resource.capacity_rows}",
                     TrapClass.CAPABILITY_OR_RESOURCE,
                 )
-            pending.append(PendingCommit(resource, rows))
+            pending.append(PendingCommit(resource, rows, span))
             ctx.counters.add("state.commits")
             return
         if sub is State.DISCARD:
@@ -1060,23 +1084,77 @@ class Device:
         """
         resource = commit.resource
         rows = commit.rows
-        nbytes = rows * resource.row_bytes
+        row_bytes = resource.row_bytes
         # Amendment A21: an unstaged resource publishes no bytes and moves no
         # cursor.  It still closes its prepare and advances its generation,
         # because ADR-003 8.6 makes the *whole* declared state set one
         # architectural transition -- a resource this transaction did not
         # change still took part in the step that happened.
-        if nbytes:
+        #
+        # Amendment A25: a saturating resource's slots are a ring.  Slot ``s``
+        # holds absolute row ``s mod capacity_rows`` on both sides -- that is
+        # what the ring-indexed movement staged into the prepared image -- so
+        # the published run is the circular one of ``rows`` slots ending,
+        # exclusive, at ``(cursor + span) mod capacity_rows``, and each slot is
+        # published from the prepared image's slot of the same index.  Below
+        # the ring this is exactly the pre-A25 copy: ``cursor + span`` does not
+        # wrap, the run starts at the cursor, and the bytes and the cursor are
+        # what ``REQUEST_SPAN`` produced.
+        for source_slot, destination_slot, count in self._commit_runs(commit):
+            nbytes = count * row_bytes
+            if not nbytes:
+                continue
             for memory in self.node_memories:
                 prepared = memory[resource.prepared_object_id]
                 committed = memory[resource.committed_object_id]
-                payload = prepared.read(0, nbytes)
-                committed.write(resource.cursor_rows * resource.row_bytes, payload)
-                counters.add("state.rows_committed", rows)
+                payload = prepared.read(source_slot * row_bytes, nbytes)
+                committed.write(destination_slot * row_bytes, payload)
+                counters.add("state.rows_committed", count)
                 counters.add("state.bytes_written", nbytes)
-        resource.cursor_rows += rows
+        if (
+            resource.commit_policy == int(CommitPolicy.SATURATING)
+            and resource.capacity_rows > 0
+        ):
+            resource.cursor_rows = (
+                resource.cursor_rows + commit.span
+            ) % resource.capacity_rows
+        else:
+            resource.cursor_rows += rows
         resource.generation += 1
         resource.open_prepare = False
+
+    @staticmethod
+    def _commit_runs(commit: PendingCommit) -> list[tuple[int, int, int]]:
+        """The ``(prepared slot, committed slot, row count)`` runs a commit publishes.
+
+        ``REQUEST_SPAN`` is one run and is unchanged by A25: a span-addressed
+        resource stages its rows at the head of the prepared image and they are
+        published at the cursor.
+
+        ``SATURATING`` is one run, or two where the ring wraps.  A ring-indexed
+        movement stages absolute row ``p`` at prepared slot ``p mod capacity``,
+        so the prepared and committed slots of a published row are the *same*
+        slot, and the run is the circular one of ``rows`` slots ending,
+        exclusive, at ``(cursor + span) mod capacity``.  The two-run case is
+        the same split ``runtime/reference/kv_window.py`` makes for a fresh
+        prefill longer than the window: the tail of the ring, then its head.
+        At ``cursor == 0`` with a span that does not exceed the ring, the single
+        run is ``(0, 0, span)`` -- byte-identical to ``REQUEST_SPAN``.
+        """
+        resource = commit.resource
+        rows = commit.rows
+        if rows <= 0:
+            return []
+        capacity = resource.capacity_rows
+        if resource.commit_policy != int(CommitPolicy.SATURATING) or capacity <= 0:
+            return [(0, resource.cursor_rows, rows)]
+        end = (resource.cursor_rows + commit.span) % capacity
+        start = (end - rows) % capacity
+        head = min(rows, capacity - start)
+        runs = [(start, start, head)]
+        if rows > head:
+            runs.append((0, 0, rows - head))
+        return runs
 
     # -- host boundary -----------------------------------------------------
     def host_write(self, object_id: int, byte_offset: int, payload: bytes) -> None:

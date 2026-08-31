@@ -148,6 +148,7 @@ SITE_NAMES = {
     44: "state generation advances",
     45: "state commits applied",
     46: "state rows committed",
+    47: "event signal error (A23/A24: zero on any admitted program)",
 }
 
 CASE_RE = re.compile(
@@ -581,12 +582,18 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
 
     status_bits = {
         "why_they_are_not_correlated": (
-            "event_signal_error and state_apply_overflow are sequencer status "
-            "outputs. runtime.sim.device.Device publishes no counterpart, so "
-            "there is nothing to correlate them against and asserting a value "
-            "would be a hand-written expectation. They are counted, printed by "
-            "both checkers, and required above to agree between the two "
-            "simulators"
+            "state_apply_overflow is a sequencer status output "
+            "runtime.sim.device.Device publishes no counterpart for, so there "
+            "is nothing to correlate it against and asserting a value would be "
+            "a hand-written expectation. It is counted, printed by both "
+            "checkers, and required above to agree between the two simulators. "
+            "event_signal_error is no longer in this class: amendment A24 "
+            "narrowed it to one condition -- a signal naming an event ID "
+            "outside the scoreboard's space -- and amendment A23 makes that "
+            "condition a refusal at admission, so zero is what the ABI says it "
+            "must be on any admitted program and both checkers now assert it "
+            "at divergence site 47 rather than counting it. The count below is "
+            "kept so a regression is visible in the marker as well"
         ),
         "event_signal_error_cases": [
             entry["index"]
@@ -599,17 +606,21 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
             if entry["rtl_state_apply_overflow"]
         ],
         "event_signal_error_note": (
-            "rtl/abi3/ot_a3_event_scoreboard.sv enforces single assignment at "
-            "run time: a second signal of an event ID that is already set "
-            "raises a sticky error bit. runtime.abi3.verifier enforces it "
-            "statically -- at most one *instruction* may name an event ID -- "
-            "and says nothing about how often that instruction runs. Every "
-            "engine instruction in the Qwen program sits inside a loop, so its "
-            "event is signalled once per iteration: 691 signals against 26 "
-            "distinct event IDs. runtime.sim.device.Device holds its signalled "
-            "set idempotently and reports nothing. The bit is therefore set on "
-            "every shipped program the RTL can run, nothing traps on it, and "
-            "no test compared it until this one"
+            "before amendment A24, rtl/abi3/ot_a3_event_scoreboard.sv enforced "
+            "single assignment at run time: a second signal of an event ID "
+            "that was already set raised a sticky error bit. "
+            "runtime.abi3.verifier enforces single assignment statically -- at "
+            "most one *instruction* may name an event ID -- and says nothing "
+            "about how often that instruction runs. Every engine instruction "
+            "in the Qwen program sits inside a loop, so its event was "
+            "signalled once per iteration: 691 signals against 26 distinct "
+            "event IDs, and the bit was set on all four cases that ran. A24 "
+            "settles the semantics the other way, which is the way "
+            "runtime.sim.device.Device has always executed them: an event is a "
+            "level, single assignment is a property of the program text, and "
+            "raising a level that is already raised is the one producer "
+            "running on a later loop trip. The bit now reports only an "
+            "out-of-range ID and is asserted rather than counted"
         ),
     }
 
@@ -698,16 +709,20 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
         "claim_boundary": {
             "establishes": [
                 "the ABI 3.0 sequencer RTL reproduces runtime.sim.device.Device "
-                "exactly on the two Qwen3-8B deployments this program ships -- "
-                "the ROM single chip a60d8500 and the HBM single chip 05bf410b "
-                "-- on both entrypoints, from their own program images, "
+                "exactly on all three deployments this program ships -- the "
+                "Qwen3-8B ROM single chip c71ee77e, the Qwen3-8B HBM single "
+                "chip fb5c66df and the DeepSeek-V4-Flash ROM wafer f5f21bb2 -- "
+                "on both entrypoints, from their own program images, "
                 "descriptor tables and request-bound symbols, with no vector "
                 "written for the occasion",
-                "the depth is the whole transaction on each: 2,105 "
-                "instructions retired, inside the bound the program itself "
-                "declares -- 2,105 for the ROM build and 22,715 for the HBM "
-                "one -- with 693 engine issues and 2,143 resolved operand "
-                "views per case, ending in COMPLETE and not at a bound",
+                "the depth is the whole transaction on every case, ending in "
+                "COMPLETE and not at a bound: 2,105 instructions retired with "
+                "693 engine issues and 2,143 resolved views on each Qwen case, "
+                "inside the bound the program declares (2,105 for the ROM "
+                "build, 22,715 for the HBM one); 29,333 retired with 12,657 "
+                "issues and 39,849 views on the DeepSeek prefill and 11,591 "
+                "retired with 3,600 issues and 10,428 views on its decode, "
+                "inside a declared bound of 4,763,423",
                 "every engine issue is compared by the instruction index that "
                 "issued it as well as by family, subopcode and descriptor ID, "
                 "so a loop trip or a branch that came out differently is "
@@ -718,22 +733,26 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
                 "(A13) and the axis that extent belongs to (A18)",
                 "two independently written checkers, on two simulation "
                 "engines, under two different back-pressure patterns, observed "
-                "the same result on every case -- the divergence included"
+                "the same result on every case, and print byte-identical "
+                "markers",
+                "every deployment's demands fit the bounds "
+                "rtl/abi3/ot_a3_pkg.sv declares, and each of those bounds is "
+                "now named by a capability field a deployment is admitted "
+                "against (amendments A22 and A23), so a program that does not "
+                "fit is refused at admission rather than discovered here"
             ],
             "does_not_establish": {
                 "checkpoint_bytes": "no checkpoint byte is read. The memory "
                 "arenas are mapped so the golden device can be constructed and "
                 "no-op engines never touch them, so this run says nothing "
                 "about the weights, the ROM image, or any value in memory",
-                "deepseek_v4_flash_rom_wafer": "the DeepSeek-V4-Flash ROM "
-                "wafer deployment 507e0b57 is NOT verified. The RTL stops it "
-                "at instruction 8 of 1,156, having retired 8 of the 29,333 "
-                "instructions the golden model retires, because "
-                "rtl/abi3/ot_a3_pkg.sv declares A3_STATE_SLOTS = 8 and the "
-                "deployment prepares 10. A second bound, A3_EVENT_COUNT = 256 "
-                "against 396 event IDs, is latent behind it. No physical "
-                "result may cite this campaign as evidence about the wafer "
-                "part",
+                "deepseek_v4_flash_rom_wafer_arithmetic": "the "
+                "DeepSeek-V4-Flash ROM wafer deployment f5f21bb2 now "
+                "correlates at full depth, but on its *control plane* only, "
+                "for the same reason every other case here does: the engines "
+                "are recording no-ops on the golden side and absent on the "
+                "RTL side. No physical result may cite this campaign as "
+                "evidence about the wafer part's arithmetic",
                 "engine_arithmetic": "every dispatchable engine operation is "
                 "a recording no-op on the golden side and absent on the RTL "
                 "side. The instruction stream is verified; the computation is "
@@ -760,12 +779,13 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
                 "record_integrity": "descriptor record CRC32C and the "
                 "header's SHA-256 digests are not checked in RTL; instruction "
                 "and header CRC32C are",
-                "rtl_status_bits": "event_signal_error and "
-                "state_apply_overflow have no counterpart in the golden model. "
-                "They are counted and required to agree between the two "
-                "simulators; they are not correlated, because there is nothing "
-                "to correlate them against. The event bit is set on all four "
-                "cases that ran -- see "
+                "rtl_status_bits": "state_apply_overflow has no counterpart "
+                "in the golden model. It is counted and required to agree "
+                "between the two simulators; it is not correlated, because "
+                "there is nothing to correlate it against. event_signal_error "
+                "is asserted rather than counted -- amendments A23 and A24 "
+                "make zero the ABI's answer for any admitted program, not a "
+                "hand-written one -- see "
                 "rtl_status_bits_observed_not_correlated",
                 "view_completeness": "view resolution covers the element "
                 "offset and the extent of the one axis amendment A18 lets a "

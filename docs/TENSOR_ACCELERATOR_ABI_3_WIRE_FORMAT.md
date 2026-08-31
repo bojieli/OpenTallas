@@ -1698,6 +1698,298 @@ these amendments. What the campaign still does not establish is unchanged and is
 listed in the artifact: the engines are recording no-ops on both sides, so this
 is the control plane and not the arithmetic.
 
+### 12.16 Amendment A25 — a commit whose row axis is a ring saturates onto it
+
+`commit_policy` gains a third value. A21 gave the byte a registry of two, and
+both of those answers are about a resource whose row axis is *one* thing: the
+token axis (`REQUEST_SPAN`), or nothing a transaction can write (`UNSTAGED`).
+A sliding window is both at once — it is a KV cache, indexed by position, and
+its row axis is a fixed ring of `capacity_rows` slots — and neither answer
+describes it.
+
+| Value | Policy | The commit covers |
+|---:|---|---|
+| 2 | `SATURATING` | `min(SPAN_TOKENS, capacity_rows)` rows: the **last** rows of the span, at the slots `position mod capacity_rows` gives them. The published slots are the circular run of that many slots ending, exclusive, at `(cursor + SPAN_TOKENS) mod capacity_rows`, and the cursor advances to that same value. A non-positive `SPAN_TOKENS` is trap class 9, as under `REQUEST_SPAN`; `cursor + rows > capacity_rows` is unreachable, because a ring cannot be overflowed by a span — the span wraps onto it — so trap class 4 cannot arise from a saturating commit. |
+
+Both of A21's rules are unchanged, byte for byte and rule for rule: zero is
+still `REQUEST_SPAN`, one is still `UNSTAGED`, and no deployment that carries
+either changes.
+
+#### What the amendment says exactly, and why the reference decides it
+
+Three questions have to be answered to make "saturating" mean something, and
+`runtime/reference/kv_window.py` answers all three. It is the frozen reading of
+the pinned `inference/model.py`, SHA-256
+`c0c19e6c9fa439bac7fbb1c5bc1868232dfd5aa2f439a548d0e33dcc2a9edd3f`, and the ABI
+describes what it already does rather than inventing a rule beside it.
+
+**Which rows survive.** A fresh prefill of `S` tokens into a window of `W`
+"retains only the final `W` input rows in circular slot order" — the module's
+own first paragraph. So a commit publishes `min(span, capacity_rows)` rows and
+they are the *last* ones of the span. Rows the ring has already replaced are
+not published, because they are not in the resource any more.
+
+**In what slot order.** The reference's `_write_plan` splits the fresh prefill
+with `S > W` into two assignments — one, where `S` is a whole number of windows
+and the second is empty — and they are the released model's own:
+
+```python
+cutoff = sequence_length % window_size            # runtime/reference/kv_window.py
+# source [S-W, S-W + (W-cutoff))  ->  slots [cutoff, W)
+# source [S-cutoff, S)            ->  slots [0, cutoff)
+```
+
+and the decode branch writes the single slot `start_pos % window_size`. Both
+are one map: **absolute row `r` lives at slot `r mod capacity_rows`**, in the
+prefill direction and in the decode direction. The commit therefore publishes a
+circular run of slots, and the two-run case is the same split for the same
+reason — the ring's tail, then its head.
+
+**How the cursor advances.** To `(cursor + SPAN_TOKENS) mod capacity_rows`,
+which is the slot the next absolute position writes: after a 129-token prefill
+into a 128-row ring the cursor is 1, and the decode step at position 129 writes
+slot `129 mod 128 = 1`, which is the oldest slot and the one the released model
+replaces. The cursor advances by the *span*, not by the rows published, because
+what it tracks is the position, and 129 positions passed. That single rule
+reproduces all three of the reference's cases — `S <= W`, `S > W`, and decode —
+without a case analysis of its own.
+
+One consequence is worth stating because it is what makes the amendment safe to
+apply to a resource that never clips: at `cursor == 0` with a span shorter than
+the ring, the run is `(0, span)` and the cursor becomes `span`. That is
+byte-for-byte the commit `REQUEST_SPAN` performed. Every DeepSeek prefill ever
+run before `TA-DS-CTX-129-1` was in exactly that case.
+
+The agreement with the reference is **checked and not asserted**:
+`tests/abi3/test_commit_policy.py` calls the reference's own `_write_plan` and
+requires the device's published slot runs to equal its destination segments, in
+the same order, for every sequence length from 1 to `3W + 1` and for a decode
+step at every slot, at three window sizes. A rule that agreed with the released
+model only below the window, or only in the count and not in the order, would
+fail there.
+
+#### What was wrong
+
+`TA-DS-CTX-129-1` is 129 prompt tokens, one more than `window_tokens`. On the
+ROM wafer it ran 9,076 seconds of prefill and then refused:
+
+```text
+prefill failed: state 353: committing 129 rows at cursor 0 with 0 already
+staged exceeds capacity 128            (trap CAPABILITY_OR_RESOURCE)
+```
+
+The sparse attention above it was exact — 403,560 context positions, 403,560
+sparse indices, 413,245,440 KV bytes and 355,008 attention heads, every one the
+closed-form model for a 129-token prefill. Only the commit refused, and it
+refused because `STATE.COMMIT` had no way to say `min(span, capacity)`. A21's
+own docstring states the principle it was enforcing: `SPAN_TOKENS` "is a row
+count only where the resource's row axis is the token axis, which is true of a
+KV cache and false of a fixed recurrent window". The DeepSeek sliding window is
+both, and A21's registry had no row for both.
+
+It failed **closed** — it refused rather than wrapping silently or truncating,
+so no wrong token was produced — and A25 keeps that property everywhere it did
+not remove the condition itself. What it removes is a refusal that was wrong:
+the resource was never going to overflow, because a ring cannot.
+
+**Why nothing caught it.** Every DeepSeek prefill ever run was shorter than the
+128-row window, so `span` never exceeded `capacity` and `REQUEST_SPAN` was
+indistinguishable from a saturating policy — the byte-identical case above.
+`TA-DS-CHAT-1` is 104 tokens and its prefix is 32. A prompt that does not exceed
+the window cannot exercise sparsity at all, which is exactly why the reporting
+ladder starts above it, so the first prompt that could ever have found this is
+the first prompt built to test sparse attention.
+
+#### Why the policy is derived, and from what
+
+A21 made `commit_policy` a fact about the finished deployment rather than a
+backend's opinion, "so a backend cannot get it wrong and two backends cannot
+disagree about a fact neither of them states". A25 keeps that and extends the
+derivation with one more observable:
+
+- the prepared image is no descriptor's destination → `UNSTAGED` (A21);
+- it is a destination, **and a `DMA.SCATTER` addresses it through a ring index
+  table whose modulus is a whole divisor of `capacity_rows`** → `SATURATING`;
+- otherwise → `REQUEST_SPAN`.
+
+`DMA.SCATTER` is the one movement whose index operand names its *destination*
+rows — a gather's index names its source (section 3) — so a scatter whose index
+is a ring writes a ring. The ring is not inferred from a name or a shape: it is
+`runtime.sim.generators.ring_indices_v1`, `position mod modulus`, a **generated**
+object whose generator and `modulus` the deployment manifest declares and whose
+result digest the manifest binds, so a generator that drifts is caught before
+the derivation reads it. The whole rule is one shared function,
+`runtime.abi3.deployment.derive_commit_policies`, called by the builder every
+backend emits through and re-derived by the verifier
+(`_verify_commit_policies`, check `commit_policy_declared`).
+
+**Refusals.** Four, all fail-closed, all naming the resource:
+
+- a declared policy outside the registry is refused at admission;
+- a declared policy that disagrees with the derived one is refused at
+  admission, with the reason the derivation reached — no descriptor stages the
+  image, some descriptor does and no ring addresses it, or a ring of *n* rows
+  does;
+- a ring whose modulus is **not** a whole divisor of `capacity_rows` is refused
+  at build and at admission. The row axis is then neither the ring nor the
+  capacity, and the amendment refuses to choose one of two numbers rather than
+  saturating at a length it cannot justify;
+- a saturating resource whose `initial_cursor_rows` is not a slot of its own
+  ring — that is, not less than `capacity_rows` — is refused. A cursor outside
+  the ring has no slot to name.
+
+#### What it says about the two lanes
+
+Every ring-staged resource in both DeepSeek deployments becomes `SATURATING`,
+and nothing else in either lane moves:
+
+| lane | state | class | `capacity_rows` | ring | policy |
+|---|---|---|---:|---:|---|
+| ROM | 353 — sliding-window KV ring | `KV_CACHE` | 128 | 128 | `SATURATING` |
+| ROM | 317, 321, 325 — compressed caches | `COMPRESSED_KV` | 65,536 / 2,048 / 65,536 | — | `REQUEST_SPAN` |
+| ROM | 329, 333, 337, 341, 345, 349 — compressor windows | `COMPRESSED_KV` | 8 / 128 | — | `UNSTAGED` |
+| HBM | 344, 372 — sliding-window KV rings | `KV_CACHE` | 2,560 / 2,944 | 128 | `SATURATING` |
+| HBM | 340, 348, 352 — compressed caches | `COMPRESSED_KV` | 40,960 / 1,376,256 | — | `REQUEST_SPAN` |
+| HBM | 332, 336, 356, 360, 364, 368 — compressor windows | `COMPRESSED_KV` | 168 / 2,560 | — | `UNSTAGED` |
+
+Qwen-3 8B is unaffected in every respect, and this is checked rather than
+asserted: its KV cache is staged by a `DMA.SCATTER` whose index is
+`arange_u32_v1` — absolute positions, not a ring — so it keeps `REQUEST_SPAN`,
+and both Qwen deployments are **byte-identical** with the amendment and without
+it. A KV cache whose row axis genuinely is the token axis is exactly the case
+A25 must not touch, and the discriminator is the ring, not the capacity and not
+the class.
+
+#### What A25 does not decide: the row count is merge-relative
+
+The two lanes merge this resource differently, and A21 recorded that they do:
+ROM declares one 128-row window over a forty-three-window object, HBM splits the
+same forty-three windows into a twenty-window descriptor and a
+twenty-three-window one and declares 2,560 and 2,944. A21's question survived
+the merge because its answer is a *policy*; A25's answer is also a policy, but
+the rows it publishes are counted in the resource's own declared
+`capacity_rows`, and a row count does not survive a merge. So ROM clips at 128
+rows and HBM at 2,560 and 2,944, and above the window the two lanes'
+`state.rows_committed` are not comparable.
+
+That is a property of the merge and not of this amendment, and it is stated
+here rather than hidden: **on neither lane does a merged resource's commit row
+count equal the rows the transaction actually staged.** ROM stages forty-three
+windows and commits one window's worth; HBM stages twenty and commits the span.
+That was already true under `REQUEST_SPAN` below the window — a 32-token
+prefill on ROM staged forty-three windows and committed thirty-two rows — and it
+is visible now only because A25 is the first rule that has to name a number
+above the window. Repairing it means either declaring the ring in the descriptor
+or refusing the merge, and both are a further amendment rather than a repair
+here.
+
+No token depends on it today, and that is a fact about the deployments rather
+than a hope: on both lanes **every** state resource's committed image is named
+by no operator view in either direction — ten of ten on ROM, eleven of eleven on
+HBM — so the committed image is a durability record the forward pass never
+reads. The prepared image is what the attention gathers from, and the
+ring-indexed scatter places it correctly whatever the commit says.
+
+#### What is behind it
+
+A25 opens the ladder's first three rungs and no further. The next wall is the
+same defect one resource over: a **compressed** KV cache's row axis is groups,
+not tokens — a commit of a `compress_ratio` cache publishes `span / ratio` rows
+— and `REQUEST_SPAN` gives it the span. Neither `REQUEST_SPAN` nor `SATURATING`
+expresses that, and the capacity check refuses it, closed, exactly as the
+window refused:
+
+| lane | first span that traps | resource |
+|---|---:|---|
+| ROM | 2,049 | state 321, `COMPRESSED_KV`, `capacity_rows` 2,048 |
+| HBM | 40,961 | state 340, `COMPRESSED_KV`, `capacity_rows` 40,960 |
+
+So `TA-DS-CTX-129-1`, `-160-1` and `-256-1` are reachable on both lanes with
+this amendment and `TA-DS-CTX-2052-1` is not, and the 200,000- and
+1,048,576-token regimes the published ratios are quoted in remain unreachable —
+now for a compressed cache's row axis rather than a window's.
+
+#### RTL 3.0
+
+Involved, for the same reason A21 was: this changes a rule the sequencer
+executes. `ot_a3_state_controller.sv` already latches `commit_policy` into
+`slot_policy` beside the capacity, so A25 adds no field. Three rules move with
+the new value: `commit_rows` is `min(span, capacity)` under `SATURATING`; the
+capacity comparison is skipped, because a ring satisfies it by construction and
+comparing `cursor + rows` against a capacity a saturating commit has already
+been clamped to would refuse a legal commit; and the applied cursor is
+`(cursor + span) mod capacity` rather than `cursor + rows`, which is the one
+piece of arithmetic the block did not already have. The modular reduction is
+the block's only divide and is bounded by the same 32-bit row space every other
+cursor uses. The staged record grows by one 32-bit field per slot, the span,
+because the cursor must advance by the positions the request presented and the
+counters by the rows the ring published, and above the ring those are different
+numbers.
+
+The change is **behaviour-preserving on every vector that exists**, and this is
+executed rather than argued: the microsequencer co-simulation
+(`tools/rtl_abi3_campaign.py`) reproduces its marker unchanged under Icarus
+11.0 and Verilator 5.050 —
+
+```text
+PASS: ABI3 RTL microsequencer cases=64 headers=64 programs=52 issues=182 views=454 traps=11
+```
+
+— with a correlation set that names "state prepare, commit, discard, read and
+advance counts", "state commit applied or discarded, and rows committed" and
+"trap class and first faulting instruction" among the quantities compared. All
+sixty-four vectors carry `REQUEST_SPAN` or `UNSTAGED`, and on both the block
+computes exactly what it computed before.
+
+**The rule is not yet exercised above the ring, and that is owed.** The
+microsequencer vector set is *full*: its header and symbol images hold sixty-four
+words and sixteen words per case against a sixty-four-case set, so a
+sixty-fifth case overflows both, and enlarging them is a change to
+`rtl/test/a3_microsequencer_top.sv` and its harness rather than to this
+amendment. The shipped-deployment co-simulation does run the DeepSeek wafer
+program, whose sliding window now declares `SATURATING`, but it runs it at a
+sixteen-token prompt — below the ring, where a saturating commit is
+byte-identical to the one before it. So the RTL executes the new value and
+agrees with the golden model on every case either side runs, and **no vector
+yet drives a span past the ring**. That is the same shape of gap this amendment
+exists to close one level up, it is stated here rather than left to be
+rediscovered, and the golden model's own conformance suite
+(`tests/abi3/test_commit_policy.py`) does cover the clip, the wrap and the
+slot order.
+
+#### What it costs
+
+One byte per saturating state resource, and the digests that cover it. The
+DeepSeek ROM lane's descriptor table changes in **five** bytes — one
+`commit_policy` and the four-byte record CRC32C that seals it — and the HBM
+lane's in **ten**, for its two rings. Both lanes' descriptor-table and
+deployment digests therefore change, and the pinned DeepSeek digest in
+`tools/build_abi3_deployment_rtl_vectors.py` and the shipped deployment RTL
+vector set must be republished against them, exactly as A20 and A22–A24 were.
+That republication is **not done in this amendment** and is owed: at the time
+of writing those files carry uncommitted changes from the A22–A24
+republication, and re-deriving them here would mix two amendments' digests into
+one set with no way to attribute a later mismatch to either. Until it is done,
+three checks fail, and they fail by design rather than by accident — a stale
+bundle carrying the pre-A25 policy byte is *refused at admission*, which is the
+amendment working:
+
+| check | what it is asking for |
+|---|---|
+| `tests/compiler/test_rtl_abi3.py::test_deployment_vector_set_is_reproducible` | rebuild the three deployment bundles under `build/abi3/`, then regenerate `testdata/compiler/abi3_deployment/` |
+| `tests/compiler/test_rtl_abi3.py::test_a_lowered_work_bound_bounds_both_sides` | the same bundles |
+| `tests/compiler/test_rtl_abi3.py::test_retained_deployment_campaign_is_bound_to_these_sources` | re-run `tools/rtl_abi3_deployment_campaign.py` against them |
+
+The two campaigns that do **not** read a deployment bundle — the microsequencer
+co-simulation and the engine-datapath co-simulation — are re-recorded here, and
+both reproduce their markers unchanged. Both Qwen deployments are
+byte-identical, so neither Qwen digest moves and neither Qwen pin needs
+touching. No capability field is added, no payload field is assigned,
+and
+`spec/abi3/descriptor_payloads.json` is unchanged: A25 assigns a value in a
+registry the frozen layout already carries, which is additive in exactly the way
+A21 was.
+
 ## 13. Amendments made at the architecture freeze
 
 The draft of this document disagreed with `TA-ADR-003` in five places. All five
@@ -1748,6 +2040,7 @@ remain normative.
 | A22 | a deployment's state resources are counted, and the capability bounds them | this document, section 12.12 |
 | A23 | an event ID is bounded by the capability's ID space, not by a count of events | this document, section 12.13 |
 | A24 | an event is a level, and every retiring instruction that names one raises it | this document, section 12.14 |
+| A25 | a commit whose row axis is a ring saturates onto it: the rows published are `min(span, capacity_rows)`, in circular slot order | this document, section 12.16; operator conventions, section 22 |
 
 Two of these carry more weight than the rest. **A4** and **A13** together are
 what make a loop-compressed program possible at all: A4 lets a descriptor be a

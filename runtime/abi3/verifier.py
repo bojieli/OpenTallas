@@ -59,7 +59,8 @@ from .deployment import (
     Deployment,
     DescriptorTable,
     DeploymentError,
-    staged_objects,
+    derive_commit_policies,
+    ring_staged_objects,
 )
 from .descriptors import (
     Descriptor,
@@ -625,44 +626,55 @@ class Verifier:
         )
 
     def _verify_commit_policies(self) -> None:
-        """Wire format section 12.11: a commit's row count is declared, not assumed.
+        """Wire format sections 12.11 and 12.16: a commit's rows are declared.
 
-        ``commit_policy`` says where a ``STATE.COMMIT``'s row count comes from,
-        and it is a fact about the deployment rather than an opinion held by
-        whichever backend emitted it: ``UNSTAGED`` exactly when no descriptor
-        names the resource's prepared image as a destination.  So it is
+        ``commit_policy`` says what a ``STATE.COMMIT`` publishes, and it is a
+        fact about the deployment rather than an opinion held by whichever
+        backend emitted it: ``UNSTAGED`` exactly when no descriptor names the
+        resource's prepared image as a destination, ``SATURATING`` exactly when
+        a scatter addresses that image through a ring whose modulus divides the
+        declared ``capacity_rows``, ``REQUEST_SPAN`` otherwise.  So it is
         re-derived here from the same shared rule the builder used and the two
         must agree.  A hand-edited or mis-emitted declaration is refused with
         the resource named, rather than silently changing how many rows the
         device publishes.
         """
-        staged = staged_objects(self.table)
-        agreed = True
+        registry = {int(member) for member in CommitPolicy}
+        objects = self.deployment.objects
+        policies, problems = derive_commit_policies(self.table, objects)
+        rings = ring_staged_objects(self.table, objects)
+        agreed = not problems
+        for problem in problems:
+            self._fail(problem)
         for state_id in self.table.ids_of_type(ExtendedDescriptorType.STATE):
             descriptor = self.table[state_id]
             declared = int(descriptor.payload["commit_policy"])
-            expected = int(
-                CommitPolicy.REQUEST_SPAN
-                if int(descriptor.payload["prepared_object_id"]) in staged
-                else CommitPolicy.UNSTAGED
-            )
-            if declared not in (
-                int(CommitPolicy.REQUEST_SPAN),
-                int(CommitPolicy.UNSTAGED),
-            ):
+            expected = int(policies[state_id])
+            if declared not in registry:
                 agreed = False
                 self._fail(
                     f"state {state_id} declares commit policy {declared}, which "
-                    "is not in the amendment A21 registry"
+                    "is not in the amendment A21/A25 registry"
                 )
             elif declared != expected:
                 agreed = False
                 prepared = descriptor.payload["prepared_object_id"]
-                reached = (
-                    "is named as a destination by at least one descriptor"
-                    if expected == int(CommitPolicy.REQUEST_SPAN)
-                    else "is named as a destination by no descriptor"
-                )
+                reached = {
+                    int(CommitPolicy.UNSTAGED): (
+                        "is named as a destination by no descriptor"
+                    ),
+                    int(CommitPolicy.REQUEST_SPAN): (
+                        "is named as a destination by at least one descriptor "
+                        "and is addressed by no ring"
+                    ),
+                    int(CommitPolicy.SATURATING): (
+                        "is staged through a ring of "
+                        + ", ".join(
+                            str(m) for m in sorted(rings.get(int(prepared), ()))
+                        )
+                        + " rows"
+                    ),
+                }[expected]
                 self._fail(
                     f"state {state_id} declares commit policy "
                     f"{CommitPolicy(declared).name}, but its prepared image "

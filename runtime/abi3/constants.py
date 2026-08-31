@@ -529,7 +529,17 @@ class CommitPolicy(enum.IntEnum):
     the deployment names the resource's prepared image as no descriptor's
     destination, so no transaction can stage a row into it and its commit
     publishes none.
+
+    ``SATURATING`` (amendment A25, wire format section 12.16) is the third
+    answer, and it is the one a sliding window needs: the resource *is* staged,
+    and its row axis is a ring of ``capacity_rows`` slots that the token axis
+    is mapped onto by ``position mod capacity_rows``.  A commit publishes
+    ``min(SPAN_TOKENS, capacity_rows)`` rows -- the last ones of the span, in
+    circular slot order -- and the cursor advances to
+    ``(cursor + SPAN_TOKENS) mod capacity_rows``.  A KV cache and a fixed
+    recurrent window are both, and the DeepSeek sliding window is both at once.
     """
 
     REQUEST_SPAN = 0
     UNSTAGED = 1
+    SATURATING = 2
