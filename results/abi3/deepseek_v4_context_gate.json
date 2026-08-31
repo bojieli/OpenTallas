@@ -296,6 +296,59 @@
   "total_layer_comparisons": 1204,
   "total_layer_mismatches": 0
  },
+ "discrimination_ladder": {
+  "by_workload": {
+   "TA-DS-CHAT-1-P32": {
+    "correct": 25224,
+    "if_no_compressed_segment_were_attended": 22704,
+    "if_no_compressed_segment_were_attended_margin": -2520,
+    "if_the_window_did_not_clip": 25224,
+    "if_the_window_did_not_clip_margin": 0,
+    "prompt_token_count": 32
+   },
+   "TA-DS-CHAT-1-P8": {
+    "correct": 1674,
+    "if_no_compressed_segment_were_attended": 1548,
+    "if_no_compressed_segment_were_attended_margin": -126,
+    "if_the_window_did_not_clip": 1674,
+    "if_the_window_did_not_clip_margin": 0,
+    "prompt_token_count": 8
+   },
+   "TA-DS-CTX-129-1": {
+    "correct": 403560,
+    "if_no_compressed_segment_were_attended": 360512,
+    "if_no_compressed_segment_were_attended_margin": -43048,
+    "if_the_window_did_not_clip": 403603,
+    "if_the_window_did_not_clip_margin": 43,
+    "prompt_token_count": 129
+   },
+   "TA-DS-CTX-160-1": {
+    "correct": 598156,
+    "if_no_compressed_segment_were_attended": 531136,
+    "if_no_compressed_segment_were_attended_margin": -67020,
+    "if_the_window_did_not_clip": 620860,
+    "if_the_window_did_not_clip_margin": 22704,
+    "prompt_token_count": 160
+   },
+   "TA-DS-CTX-2052-1": {
+    "correct": 22295808,
+    "if_no_compressed_segment_were_attended": 10944704,
+    "if_no_compressed_segment_were_attended_margin": -11351104,
+    "if_the_window_did_not_clip": 101925358,
+    "if_the_window_did_not_clip_margin": 79629550,
+    "prompt_token_count": 2052
+   },
+   "TA-DS-CTX-256-1": {
+    "correct": 1232808,
+    "if_no_compressed_segment_were_attended": 1059520,
+    "if_no_compressed_segment_were_attended_margin": -173288,
+    "if_the_window_did_not_clip": 1587816,
+    "if_the_window_did_not_clip_margin": 355008,
+    "prompt_token_count": 256
+   }
+  },
+  "note": "What the gathered-position counter would be if the sparse path were not doing its job, at every pinned prompt length. An equality check is a gate only where the quantity moves. At 32 prompt tokens -- the length of the only DeepSeek gate that existed -- a sliding window that never clipped produces a bit-identical counter, so no run at that length could have detected one."
+ },
  "model": "deepseek-v4-flash-0731",
  "pins": [
   "results/abi3/deepseek_v4_context_threshold_workload_pins.json",
@@ -313,6 +366,13 @@
    },
    "counters_compared": false,
    "decode_steps": 0,
+   "discrimination": {
+    "correct": 1674,
+    "if_no_compressed_segment_were_attended": 1548,
+    "if_no_compressed_segment_were_attended_margin": -126,
+    "if_the_window_did_not_clip": 1674,
+    "if_the_window_did_not_clip_margin": 0
+   },
    "expected_counters": {
     "attention.context_positions": 1674,
     "attention.heads": 22016,

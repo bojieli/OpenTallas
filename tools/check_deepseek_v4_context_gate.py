@@ -158,6 +158,42 @@ def load_pins(paths: list[Path]) -> tuple[dict, dict]:
     return prompts, gold
 
 
+def discrimination(
+    prompt_tokens: int, decode_steps: int, profile: Path
+) -> dict:
+    """What the counter would be if sparsity were not doing its job.
+
+    An equality check is only a gate if the quantity moves when the thing under
+    test breaks.  These are the two ways the sparse path can fail while still
+    producing a plausible run: the sliding window not clipping, so every query
+    sees its whole history, and the compressed segments never being attended,
+    so the model degenerates to pure sliding-window attention.  The margin is
+    stated here rather than asserted in prose, and it is the reason a short
+    rung is worth running: at 129 prompt tokens an unclipped window is only 43
+    positions away from correct, and at 160 it is 22,704.
+    """
+
+    window, _heads, layers = layer_table(profile)
+    positions = list(range(prompt_tokens)) + [
+        prompt_tokens + step for step in range(decode_steps)
+    ]
+    correct = unclipped = windowed_only = 0
+    for ratio, top_k in layers:
+        for position in positions:
+            correct += gathered_rows_for_query(position, window, ratio, top_k)
+            unclipped += gathered_rows_for_query(
+                position, position + 1, ratio, top_k
+            )
+            windowed_only += gathered_rows_for_query(position, window, 0, 0)
+    return {
+        "correct": correct,
+        "if_the_window_did_not_clip": unclipped,
+        "if_the_window_did_not_clip_margin": unclipped - correct,
+        "if_no_compressed_segment_were_attended": windowed_only,
+        "if_no_compressed_segment_were_attended_margin": windowed_only - correct,
+    }
+
+
 def oracle_decode_cross_check(oracle_path: Path, profile: Path) -> dict:
     """Check the model's *decode* arm against the released implementation.
 
@@ -305,6 +341,11 @@ def check_record(
         "decode_steps": max(0, len(generated) - 1),
         "expected_counters": expected,
         "observed_counters": observed,
+        "discrimination": discrimination(
+            int(workload["prompt_token_count"]),
+            max(0, len(generated) - 1),
+            profile,
+        ),
         "counter_excess_over_model": excess,
         "counters_compared": compared,
         "failure": failure,
@@ -370,6 +411,14 @@ def main() -> int:
     for path in missing:
         print(f"MISSING {path}")
 
+    ladder = {}
+    for workload_id, entry in sorted(prompts.items()):
+        tokens = int(entry["prompt_token_count"])
+        ladder[workload_id] = {
+            "prompt_token_count": tokens,
+            **discrimination(tokens, 0, args.model_profile),
+        }
+
     cross = oracle_decode_cross_check(args.oracle, args.model_profile)
     if cross.get("available"):
         print(
@@ -388,6 +437,18 @@ def main() -> int:
     document = {
         "schema": SCHEMA,
         "decode_arm_cross_check": cross,
+        "discrimination_ladder": {
+            "note": (
+                "What the gathered-position counter would be if the sparse "
+                "path were not doing its job, at every pinned prompt length. "
+                "An equality check is a gate only where the quantity moves. "
+                "At 32 prompt tokens -- the length of the only DeepSeek gate "
+                "that existed -- a sliding window that never clipped produces "
+                "a bit-identical counter, so no run at that length could have "
+                "detected one."
+            ),
+            "by_workload": ladder,
+        },
         "model": "deepseek-v4-flash-0731",
         "pins": [_relative(p) for p in pins if Path(p).exists()],
         "counter_model": (

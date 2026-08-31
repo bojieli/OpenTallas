@@ -155,6 +155,35 @@ implementation* reads per decode step, at the pruning threshold. It says
 nothing about what a backend reads there, because no backend has read anything
 there.
 
+### How much the gate can actually see
+
+An equality check is a gate only where the quantity moves when the thing under
+test breaks, so the checker states the margin instead of asserting the power.
+For each pinned prompt length it computes what the gathered-position counter
+would be under the two ways the sparse path can fail while still producing a
+plausible run — a sliding window that never clips, and compressed segments that
+are never attended.
+
+| prompt tokens | correct | if the window never clipped | margin |
+|---|---|---|---|
+| 32 | 25,224 | 25,224 | **0** |
+| 129 | 403,560 | 403,603 | 43 |
+| 160 | 598,156 | 620,860 | 22,704 |
+| 256 | 1,232,808 | 1,587,816 | 355,008 |
+| 2,052 | 22,295,808 | 101,925,358 | 79,629,550 |
+
+<!-- figure: 0 src="results/abi3/deepseek_v4_context_gate.json#discrimination_ladder.by_workload['TA-DS-CHAT-1-P32'].if_the_window_did_not_clip_margin" name="32-token window discrimination" -->
+**At 32 prompt tokens the margin is 0.** A DeepSeek deployment whose sliding
+window never clipped at all would produce a bit-identical counter at the length
+of the only gate this program had. That is not an argument that the old gate
+was careless; it is arithmetic. A prompt shorter than the window cannot
+distinguish a window from no window, and every DeepSeek gate that existed was
+shorter than the window.
+
+<!-- figure: 22704 src="results/abi3/deepseek_v4_context_gate.json#discrimination_ladder.by_workload['TA-DS-CTX-160-1'].if_the_window_did_not_clip_margin" name="160-token window discrimination" -->
+At 160 tokens the same failure moves the counter by 22,704 positions, and the
+checker requires equality.
+
 ## What the gate found: DeepSeek decode does not run at all
 
 The first thing run through the new gate was the cheapest possible decode: the
