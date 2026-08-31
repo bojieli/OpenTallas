@@ -175,6 +175,8 @@ rom-service:
 
 rom-service-physical:
 	PYTHONPATH=. python3 tools/run_rom_service_physical.py \
+	  --period-ns 20 --utilization 25 --density 0.45 --threads 8 \
+	  --congestion-iterations 80 --droute-end-iter 64 --repair-timing \
 	  --output results/rtl/rom_service_physical.json
 
 abi3-physical:

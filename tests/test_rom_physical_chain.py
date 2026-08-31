@@ -361,6 +361,158 @@ def test_rom_service_physical_uses_the_supported_openroad_database_accessor() ->
     assert "getChain" not in template
 
 
+def test_rom_service_physical_parser_retains_timing_sections_and_path() -> None:
+    """OpenROAD labels max and min identically; section markers disambiguate them."""
+
+    runner = _runner("run_rom_service_physical")
+    log = f"""prefix
+{runner.RESULT_BEGIN}
+Design area 1221010 u^2 33% utilization.
+--- worst setup ---
+worst slack -2.90
+--- worst hold ---
+worst slack -0.07
+--- tns ---
+tns -3517.61
+period_ns 10.0
+--- worst setup path ---
+Startpoint: req_valid (input port clocked by clk)
+Endpoint: state_q (rising edge-triggered flip-flop clocked by clk)
+slack (VIOLATED) -2.900
+die_um 1931.09 1931.09
+core_um 1920.48 1916.46
+instances 754990
+nets 67132
+{runner.RESULT_END}
+suffix
+"""
+
+    parsed = runner.parse_results(log)
+    assert parsed["worst_setup_slack_ns"] == -2.90
+    assert parsed["worst_hold_slack_ns"] == -0.07
+    assert parsed["total_negative_slack_ns"] == -3517.61
+    assert "Startpoint: req_valid" in parsed["worst_setup_path"]
+    assert "slack_parse_failed" not in parsed
+
+
+def test_rom_service_physical_verdict_requires_clean_route_and_timing() -> None:
+    """Neither a dirty DEF nor an unclosed clock may be promoted to PASS."""
+
+    verdict = _runner("run_rom_service_physical").implementation_verdict
+    failing_metrics = {
+        "design_area_um2": 1.0,
+        "worst_setup_slack_ns": -2.90,
+        "worst_hold_slack_ns": -0.07,
+    }
+
+    dirty = verdict(
+        pnr_returncode=0,
+        metrics=failing_metrics,
+        routed_def_written=True,
+        drc_violations=337,
+    )
+    assert dirty["status"] == "fail"
+    assert dirty["route_completed"]
+    assert not dirty["drc_clean_route"]
+    assert not dirty["timing_closed_at_target_period"]
+
+    timing_only = verdict(
+        pnr_returncode=0,
+        metrics=failing_metrics,
+        routed_def_written=True,
+        drc_violations=0,
+    )
+    assert timing_only["status"] == "routed_timing_not_closed"
+    assert timing_only["drc_clean_route"]
+    assert not timing_only["converged"]
+
+    passed = verdict(
+        pnr_returncode=0,
+        metrics={
+            "design_area_um2": 1.0,
+            "worst_setup_slack_ns": 0.01,
+            "worst_hold_slack_ns": 0.02,
+        },
+        routed_def_written=True,
+        drc_violations=0,
+    )
+    assert passed["status"] == "pass"
+    assert passed["converged"]
+
+
+def test_rom_service_physical_flow_models_wires_and_exposes_route_effort() -> None:
+    """The retry controls and timing reports must stay in the generated Tcl."""
+
+    template = _runner("run_rom_service_physical").PNR_TEMPLATE
+    assert "set_wire_rc -signal -layer Metal2" in template
+    assert "set_wire_rc -clock -layer Metal5" in template
+    assert "set_routing_layers -signal Metal2-Metal5 -clock Metal2-Metal5" in template
+    assert "-bottom_routing_layer Metal2 -top_routing_layer Metal5" in template
+    assert "-congestion_iterations {congestion_iterations}" in template
+    assert "-droute_end_iter {droute_end_iter}" in template
+    assert 'puts "--- worst setup path ---"' in template
+    assert "report_checks -path_delay max" in template
+
+
+def test_rom_service_physical_make_target_reproduces_the_canonical_effort() -> None:
+    """The documented Make target must not silently regenerate an older flow."""
+
+    makefile = (ROOT / "Makefile").read_text(encoding="utf-8")
+    recipe = makefile.split("rom-service-physical:", 1)[1].split("\n\n", 1)[0]
+    for option in (
+        "--period-ns 20",
+        "--utilization 25",
+        "--density 0.45",
+        "--threads 8",
+        "--congestion-iterations 80",
+        "--droute-end-iter 64",
+        "--repair-timing",
+    ):
+        assert option in recipe
+
+
+def test_rom_service_physical_artifact_is_source_locked_and_closed() -> None:
+    """The canonical pass must be current, routed, timed, and narrowly scoped."""
+
+    artifact = load("results/rtl/rom_service_physical.json")
+    assert artifact["schema"] == "opentallas.rtl.rom_service_physical.v1"
+    assert artifact["status"] == "pass"
+    for source, digest in artifact["source_sha256"].items():
+        assert digest == sha256(source), f"stale ROM-service physical source: {source}"
+
+    implementation = artifact["implementation"]
+    assert implementation["returncode"] == 0
+    assert implementation["route_completed"]
+    assert implementation["routed_def_written"]
+    assert implementation["detailed_route_drc_violations"] == 0
+    assert implementation["drc_clean_route"]
+    assert implementation["timing_closed_at_target_period"]
+
+    metrics = artifact["metrics"]
+    assert metrics["period_ns"] == 20
+    assert metrics["worst_setup_slack_ns"] >= 0.0
+    assert metrics["worst_hold_slack_ns"] >= 0.0
+    assert metrics["total_negative_slack_ns"] == 0.0
+    assert metrics["worst_setup_path"]
+
+    boundary = artifact["claim_boundary"]
+    assert boundary["open_pdk_rtl_to_routed_feasibility"]
+    assert boundary["routed_not_only_synthesised"]
+    assert boundary["timing_closed_at_target_period"]
+    for excluded in (
+        "contains_rom_array_or_macro",
+        "rom_cell_area_or_density",
+        "rom_read_energy_or_sense_margin",
+        "target_node_area_or_delay",
+        "signoff_drc_or_lvs",
+        "foundry_drc",
+        "gds_generated",
+        "feature_size_scaling_permitted",
+        "enters_iso_node_or_roofline_comparison",
+    ):
+        assert not boundary[excluded]
+
+
 def test_the_macro_contract_refuses_a_missing_or_useless_density_ladder() -> None:
     """Demonstrates the refusal rather than asserting it exists.
 

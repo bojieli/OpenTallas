@@ -94,9 +94,11 @@ set_load 0.006 [all_outputs]
 
 initialize_floorplan -utilization {util} -aspect_ratio 1.0 -core_space 5.0 -site CoreSite
 foreach layer {{Metal1 Metal2 Metal3 Metal4 Metal5}} {{
-    make_tracks $layer -x_offset 0.0 -x_pitch 0.48 -y_offset 0.0 -y_pitch 0.42
+make_tracks $layer -x_offset 0.0 -x_pitch 0.48 -y_offset 0.0 -y_pitch 0.42
 }}
 place_pins -hor_layers Metal3 -ver_layers Metal2
+set_wire_rc -signal -layer Metal2
+set_wire_rc -clock -layer Metal5
 
 add_global_connection -net {{VDD}} -inst_pattern {{.*}} -pin_pattern {{^VDD$}} -power
 add_global_connection -net {{VSS}} -inst_pattern {{.*}} -pin_pattern {{^VSS$}} -ground
@@ -121,10 +123,13 @@ set_propagated_clock [all_clocks]
 estimate_parasitics -placement
 repair_clock_nets
 detailed_placement
+{timing_repair}
 
 set_thread_count {threads}
-global_route -congestion_iterations 40
-detailed_route -output_drc {drc} -droute_end_iter 12 -verbose 0
+set_routing_layers -signal Metal2-Metal5 -clock Metal2-Metal5
+global_route -congestion_iterations {congestion_iterations}
+detailed_route -output_drc {drc} -droute_end_iter {droute_end_iter} -or_seed 42 \
+               -bottom_routing_layer Metal2 -top_routing_layer Metal5 -verbose 0
 
 filler_placement {{sg13g2_fill_1 sg13g2_fill_2}}
 check_placement
@@ -139,6 +144,8 @@ report_worst_slack -min
 puts "--- tns ---"
 report_tns
 puts "period_ns {period}"
+puts "--- worst setup path ---"
+report_checks -path_delay max -group_count 4 -digits 3
 set block [ord::get_db_block]
 set die [$block getDieArea]
 set core [$block getCoreArea]
@@ -181,12 +188,39 @@ def parse_results(log: str) -> dict[str, Any]:
     if area:
         out["design_area_um2"] = float(area.group(1))
         out["utilization_percent"] = float(area.group(2))
-    slacks = re.findall(r"^(-?\d+\.\d+)\s*$", body, re.MULTILINE)
-    if len(slacks) >= 2:
-        out["worst_setup_slack_ns"] = float(slacks[0])
-        out["worst_hold_slack_ns"] = float(slacks[1])
-    if len(slacks) >= 3:
-        out["total_negative_slack_ns"] = float(slacks[2])
+    # OpenROAD prints the same ``worst slack <value>`` label for max and min;
+    # only the explicit section markers distinguish setup from hold.  The old
+    # parser looked for lines containing a bare number and silently omitted
+    # every timing field from a completed run.
+    sections: dict[str, list[str]] = {}
+    current: str | None = None
+    for line in body.splitlines():
+        marker = re.match(r"^---\s*([^-\s].*?)\s*---$", line.strip())
+        if marker:
+            current = marker.group(1)
+            sections[current] = []
+        elif current is not None:
+            sections[current].append(line)
+
+    number = r"[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?"
+
+    def slack_of(name: str) -> float | None:
+        for line in sections.get(name, []):
+            match = re.search(rf"worst slack\s+({number})", line)
+            if match:
+                return float(match.group(1))
+        return None
+
+    out["worst_setup_slack_ns"] = slack_of("worst setup")
+    out["worst_hold_slack_ns"] = slack_of("worst hold")
+    tns = re.search(rf"\btns\s+({number})", body)
+    if tns:
+        out["total_negative_slack_ns"] = float(tns.group(1))
+    out["worst_setup_path"] = "\n".join(
+        sections.get("worst setup path", [])
+    ).strip()[:20000]
+    if out["worst_setup_slack_ns"] is None or out["worst_hold_slack_ns"] is None:
+        out["slack_parse_failed"] = True
     for key, pattern in (
         ("period_ns", r"period_ns (\S+)"),
         ("instances", r"instances (\d+)"),
@@ -207,6 +241,46 @@ def parse_results(log: str) -> dict[str, Any]:
     return out
 
 
+def implementation_verdict(
+    *,
+    pnr_returncode: int,
+    metrics: dict[str, Any],
+    routed_def_written: bool,
+    drc_violations: int | None,
+) -> dict[str, Any]:
+    """Separate command completion, clean routing, and timing closure.
+
+    A DEF with DRC violations is useful failure evidence but not a clean route.
+    A DRC-clean DEF with negative slack is routed evidence but not a passing
+    target-period result.  Keeping those states separate prevents either one
+    from being promoted by a missing parser field.
+    """
+
+    route_completed = (
+        pnr_returncode == 0 and bool(metrics) and routed_def_written
+    )
+    drc_clean_route = route_completed and drc_violations == 0
+    setup = metrics.get("worst_setup_slack_ns")
+    hold = metrics.get("worst_hold_slack_ns")
+    timing_closed = (
+        setup is not None and hold is not None and setup >= 0.0 and hold >= 0.0
+    )
+    converged = drc_clean_route and timing_closed
+    if converged:
+        status = "pass"
+    elif drc_clean_route:
+        status = "routed_timing_not_closed"
+    else:
+        status = "fail"
+    return {
+        "status": status,
+        "route_completed": route_completed,
+        "drc_clean_route": drc_clean_route,
+        "timing_closed_at_target_period": timing_closed,
+        "converged": converged,
+    }
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", default=str(DEFAULT_OUTPUT))
@@ -215,6 +289,13 @@ def main() -> int:
     parser.add_argument("--utilization", type=float, default=30.0)
     parser.add_argument("--density", type=float, default=0.55)
     parser.add_argument("--threads", type=int, default=8)
+    parser.add_argument("--congestion-iterations", type=int, default=40)
+    parser.add_argument("--droute-end-iter", type=int, default=12)
+    parser.add_argument(
+        "--repair-timing",
+        action="store_true",
+        help="run setup and hold repair after CTS before routing",
+    )
     # The instance that is routed.  The shipped Qwen plan needs 16 objects, 14
     # shards, 14 regions and 14 resources; the DeepSeek wafer plan needs 312,
     # 9,527, 228 and 9,300.  This flow routes an instance sized for the Qwen
@@ -293,6 +374,15 @@ def main() -> int:
             util=args.utilization,
             density=args.density,
             threads=args.threads,
+            timing_repair=(
+                "repair_timing -setup -repair_tns 100\n"
+                "repair_timing -hold -allow_setup_violations\n"
+                "detailed_placement"
+                if args.repair_timing
+                else ""
+            ),
+            congestion_iterations=args.congestion_iterations,
+            droute_end_iter=args.droute_end_iter,
             drc=drc,
             routed_def=routed_def,
             begin=RESULT_BEGIN,
@@ -329,17 +419,17 @@ def main() -> int:
             yosys_stat = {}
 
     results = parse_results(log)
-    converged = (
-        pnr.returncode == 0
-        and bool(results)
-        and routed_def.exists()
-        and drc_violations == 0
+    verdict = implementation_verdict(
+        pnr_returncode=pnr.returncode,
+        metrics=results,
+        routed_def_written=routed_def.exists(),
+        drc_violations=drc_violations,
     )
 
     artifact = {
         "schema": "opentallas.rtl.rom_service_physical.v1",
         "campaign": "rom_read_service_physical",
-        "status": "pass" if converged else "fail",
+        "status": verdict["status"],
         "evidence_class": "open_foundry_pdk_digital_implementation",
         "canonical_timestamp_policy": "no timestamp in canonical artifact",
         "design": {
@@ -364,6 +454,11 @@ def main() -> int:
             "target_clock_period_ns": args.period_ns,
             "floorplan_utilization_percent": args.utilization,
             "global_placement_density": args.density,
+            "congestion_iterations": args.congestion_iterations,
+            "detailed_route_end_iteration": args.droute_end_iter,
+            "timing_repair_enabled": args.repair_timing,
+            "signal_wire_rc_layer": "Metal2",
+            "clock_wire_rc_layer": "Metal5",
             "maximum_routing_layer": "Metal5",
             "steps": [
                 "yosys synth + dfflibmap + abc + hilomap",
@@ -407,6 +502,11 @@ def main() -> int:
             "log_sha256": hashlib.sha256(log.encode()).hexdigest(),
             "detailed_route_drc_violations": drc_violations,
             "routed_def_written": routed_def.exists(),
+            "route_completed": verdict["route_completed"],
+            "drc_clean_route": verdict["drc_clean_route"],
+            "timing_closed_at_target_period": verdict[
+                "timing_closed_at_target_period"
+            ],
         },
         "metrics": results,
         "source_sha256": {
@@ -414,8 +514,12 @@ def main() -> int:
             for rel in RTL_SOURCES + ("tools/run_rom_service_physical.py",)
         },
         "claim_boundary": {
-            "open_pdk_rtl_to_routed_feasibility": converged,
-            "routed_not_only_synthesised": converged,
+            "open_pdk_rtl_to_routed_feasibility": verdict["drc_clean_route"],
+            "routed_not_only_synthesised": verdict["drc_clean_route"],
+            "route_command_completed_and_def_written": verdict["route_completed"],
+            "timing_closed_at_target_period": verdict[
+                "timing_closed_at_target_period"
+            ],
             "contains_rom_array_or_macro": False,
             "rom_cell_area_or_density": False,
             "rom_read_energy_or_sense_margin": False,
@@ -454,9 +558,9 @@ def main() -> int:
     print(f"{artifact['status']}: {output}")
     if results:
         print(json.dumps({k: v for k, v in results.items() if k != "raw"}, indent=1))
-    if not converged:
+    if not verdict["converged"]:
         print(scrub(log.strip()[-2000:]))
-    return 0 if converged else 1
+    return 0 if verdict["converged"] else 1
 
 
 if __name__ == "__main__":

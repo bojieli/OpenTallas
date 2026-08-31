@@ -437,14 +437,25 @@ assume: compare `source_sha256` in `results/rtl/rom_service_physical.json`
 against `rtl/rom/ot_rom_read_service.sv`. **At this revision all three recorded
 source digests match.** Yosys completes on the Qwen-sized control instance with
 **56,292 cells** and **1,107,017.6796 µm²** of cell area. <!-- figure: 56,292 src="results/rtl/rom_service_physical.json#design.yosys_statistics.cells" name="ROM service synthesis cells" --> <!-- figure: 1,107,017.6796 src="results/rtl/rom_service_physical.json#design.yosys_statistics.cell_area_um2" name="ROM service synthesis cell area" -->
-OpenROAD completes the flow and writes a routed DEF at **1,221,010 µm²** design area. <!-- figure: 1,221,010 src="results/rtl/rom_service_physical.json#metrics.design_area_um2" name="ROM service routed design area" -->
-The placed design reports **33% utilization**. <!-- figure: 33 src="results/rtl/rom_service_physical.json#metrics.utilization_percent" name="ROM service routed utilization" -->
-Detailed routing nevertheless retains **337 DRC violations**. <!-- figure: 337 src="results/rtl/rom_service_physical.json#implementation.detailed_route_drc_violations" name="ROM service route DRC violations" -->
-The raw timing block also reports negative setup and hold slack at the chosen
-10 ns constraint. The artifact therefore remains `fail`, and both routed
-feasibility claim fields remain false. This is evidence that synthesis and the
-whole routing command complete on the current RTL; it is not evidence of a
-DRC-clean or timing-closed implementation.
+OpenROAD completes the strengthened flow and writes a routed DEF at
+**1,321,515 µm²** design area. <!-- figure: 1,321,515 src="results/rtl/rom_service_physical.json#metrics.design_area_um2" name="ROM service routed design area" -->
+The placed design reports **30% utilization**. <!-- figure: 30 src="results/rtl/rom_service_physical.json#metrics.utilization_percent" name="ROM service routed utilization" -->
+The flow models signal and clock wire RC, repairs setup and hold after CTS,
+restricts routing to Metal2 through Metal5, and finishes detailed routing with
+**0 tool-reported DRC violations**. <!-- figure: 0 src="results/rtl/rom_service_physical.json#implementation.detailed_route_drc_violations" name="ROM service route DRC violations" -->
+At the chosen 20 ns constraint, worst setup slack is **+7.52 ns** <!-- figure: 7.52 src="results/rtl/rom_service_physical.json#metrics.worst_setup_slack_ns" name="ROM service routed setup slack" -->,
+worst hold slack is **+0.01 ns** <!-- figure: 0.01 src="results/rtl/rom_service_physical.json#metrics.worst_hold_slack_ns" name="ROM service routed hold slack" -->,
+and total negative slack is **0.0 ns**. <!-- figure: 0.0 src="results/rtl/rom_service_physical.json#metrics.total_negative_slack_ns" name="ROM service routed total negative slack" -->
+The artifact therefore records `status: pass` for this narrowly bounded open-PDK
+digital implementation.
+
+That pass is not foundry signoff and not a frequency claim. The period was
+chosen for this run; the timing is not SPEF-extracted, the zero count is
+TritonRoute's detailed-route check rather than a foundry signoff deck, and the
+flow performs no LVS or GDS generation. The artifact keeps all of those claim
+fields false. It establishes that this Qwen-sized, flip-flop-table control
+proxy routes cleanly and meets its declared open-flow constraint — still not
+the area, energy, timing, or manufacturability of a ROM array.
 
 ## 8. Reproducing
 
