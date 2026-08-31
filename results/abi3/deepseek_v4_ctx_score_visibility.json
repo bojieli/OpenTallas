@@ -5,100 +5,144 @@
       "by_compress_ratio": {
         "1": {
           "candidate_groups_at_final_query": 129,
+          "candidates_discarded_at_final_query": 0,
           "layers": 2,
+          "prefill_queries_that_prune": 0,
+          "prefill_queries_that_prune_fraction": 0.0,
           "selected_per_query": 129,
           "selection_prunes": false
         },
         "128": {
           "candidate_groups_at_final_query": 1,
+          "candidates_discarded_at_final_query": 0,
           "layers": 20,
+          "prefill_queries_that_prune": 0,
+          "prefill_queries_that_prune_fraction": 0.0,
           "selected_per_query": 1,
           "selection_prunes": false
         },
         "4": {
           "candidate_groups_at_final_query": 32,
+          "candidates_discarded_at_final_query": 0,
           "layers": 21,
+          "prefill_queries_that_prune": 0,
+          "prefill_queries_that_prune_fraction": 0.0,
           "selected_per_query": 32,
           "selection_prunes": false
         }
       },
+      "candidates_discarded_at_final_query": 0,
       "index_score_can_move_the_kv_counter": false,
       "index_score_can_move_the_token": false,
+      "prefill_queries_that_prune": 0,
       "prompt_tokens": 129
     },
     "TA-DS-CTX-160-1": {
       "by_compress_ratio": {
         "1": {
           "candidate_groups_at_final_query": 160,
+          "candidates_discarded_at_final_query": 0,
           "layers": 2,
+          "prefill_queries_that_prune": 0,
+          "prefill_queries_that_prune_fraction": 0.0,
           "selected_per_query": 160,
           "selection_prunes": false
         },
         "128": {
           "candidate_groups_at_final_query": 1,
+          "candidates_discarded_at_final_query": 0,
           "layers": 20,
+          "prefill_queries_that_prune": 0,
+          "prefill_queries_that_prune_fraction": 0.0,
           "selected_per_query": 1,
           "selection_prunes": false
         },
         "4": {
           "candidate_groups_at_final_query": 40,
+          "candidates_discarded_at_final_query": 0,
           "layers": 21,
+          "prefill_queries_that_prune": 0,
+          "prefill_queries_that_prune_fraction": 0.0,
           "selected_per_query": 40,
           "selection_prunes": false
         }
       },
+      "candidates_discarded_at_final_query": 0,
       "index_score_can_move_the_kv_counter": false,
       "index_score_can_move_the_token": false,
+      "prefill_queries_that_prune": 0,
       "prompt_tokens": 160
     },
     "TA-DS-CTX-2052-1": {
       "by_compress_ratio": {
         "1": {
           "candidate_groups_at_final_query": 2052,
+          "candidates_discarded_at_final_query": 0,
           "layers": 2,
+          "prefill_queries_that_prune": 0,
+          "prefill_queries_that_prune_fraction": 0.0,
           "selected_per_query": 2052,
           "selection_prunes": false
         },
         "128": {
           "candidate_groups_at_final_query": 16,
+          "candidates_discarded_at_final_query": 0,
           "layers": 20,
+          "prefill_queries_that_prune": 0,
+          "prefill_queries_that_prune_fraction": 0.0,
           "selected_per_query": 16,
           "selection_prunes": false
         },
         "4": {
           "candidate_groups_at_final_query": 513,
+          "candidates_discarded_at_final_query": 1,
           "layers": 21,
+          "prefill_queries_that_prune": 1,
+          "prefill_queries_that_prune_fraction": 0.0004873294346978557,
           "selected_per_query": 512,
           "selection_prunes": true
         }
       },
+      "candidates_discarded_at_final_query": 1,
       "index_score_can_move_the_kv_counter": false,
       "index_score_can_move_the_token": true,
+      "prefill_queries_that_prune": 1,
       "prompt_tokens": 2052
     },
     "TA-DS-CTX-256-1": {
       "by_compress_ratio": {
         "1": {
           "candidate_groups_at_final_query": 256,
+          "candidates_discarded_at_final_query": 0,
           "layers": 2,
+          "prefill_queries_that_prune": 0,
+          "prefill_queries_that_prune_fraction": 0.0,
           "selected_per_query": 256,
           "selection_prunes": false
         },
         "128": {
           "candidate_groups_at_final_query": 2,
+          "candidates_discarded_at_final_query": 0,
           "layers": 20,
+          "prefill_queries_that_prune": 0,
+          "prefill_queries_that_prune_fraction": 0.0,
           "selected_per_query": 2,
           "selection_prunes": false
         },
         "4": {
           "candidate_groups_at_final_query": 64,
+          "candidates_discarded_at_final_query": 0,
           "layers": 21,
+          "prefill_queries_that_prune": 0,
+          "prefill_queries_that_prune_fraction": 0.0,
           "selected_per_query": 64,
           "selection_prunes": false
         }
       },
+      "candidates_discarded_at_final_query": 0,
       "index_score_can_move_the_kv_counter": false,
       "index_score_can_move_the_token": false,
+      "prefill_queries_that_prune": 0,
       "prompt_tokens": 256
     }
   },

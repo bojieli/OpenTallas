@@ -390,6 +390,28 @@ score blocks produce *different* rows, so the check would fail if
 `ROUTE.INDEX_TOPK` ignored its score input — the only check in this repository
 that would. It passes.
 
+### And the 2,052-token rung would barely be a score gate either
+
+Crossing the threshold is not the same as testing what is past it. A prefill
+query at 0-based `q` sees `(q + 1) // 4` candidates, so it prunes only from
+`q + 1 >= 2052` — at a prompt of exactly 2,052 tokens that is the *last query
+and no other*.
+
+<!-- figure: 1 src="results/abi3/deepseek_v4_ctx_score_visibility.json#by_prompt_length['TA-DS-CTX-2052-1'].prefill_queries_that_prune" name="2052 pruning queries" -->
+<!-- figure: 1 src="results/abi3/deepseek_v4_ctx_score_visibility.json#by_prompt_length['TA-DS-CTX-2052-1'].candidates_discarded_at_final_query" name="2052 candidates discarded" -->
+1 query out of 2,052 prunes, and it discards 1 candidate out of 513. The
+executed experiment shows exactly that: at `prefill_ratio4_2052` a different
+score block moves one row of the emitted array and no other.
+
+So a 2,052-token backend run — about 35 hours of the measured rate, on each
+lane — would buy a token that depends on the index scores through a single
+discarded candidate in a single query. That is a real crossing and it is worth
+almost nothing as a test of the score arithmetic. **The conclusion is that
+lengthening the ladder is the wrong instrument.** A differential on
+`INDEX_SCORE` against the released `Indexer.forward` costs no backend time and
+tests every candidate of every query; the ladder cannot reach that regime at
+any length this program can afford.
+
 <!-- figure: 11 src="results/abi3/deepseek_v4_ctx_score_visibility.json#case_count" name="score visibility case count" -->
 <!-- figure: "True" src="results/abi3/deepseek_v4_ctx_score_visibility.json#all_cases_agree_with_the_position_arithmetic" name="score visibility verdict" -->
 11 cases for Flash, spanning 129 to 1,048,576 tokens, and

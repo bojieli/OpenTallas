@@ -344,12 +344,29 @@ def main() -> int:
         per_group = {}
         for ratio, top_k in sorted(ranking.items()):
             candidates = count // ratio
+            threshold = first_pruning_length(ratio, top_k)
+            # How much of the prompt actually exercises the ranking's order:
+            # a prefill query at 0-based q sees (q + 1) // ratio candidates, so
+            # it prunes only once that exceeds top_k, i.e. from q + 1 >= the
+            # threshold.  A rung that only just crosses the threshold prunes in
+            # one query and discards one candidate, which is a threshold
+            # crossing but a very weak test of the scores.
+            pruning_queries = (
+                0 if threshold is None else max(0, count - threshold + 1)
+            )
             per_group[str(ratio)] = {
                 "candidate_groups_at_final_query": candidates,
                 "selected_per_query": (
                     min(top_k, candidates) if top_k else candidates
                 ),
                 "selection_prunes": bool(top_k and candidates > top_k),
+                "prefill_queries_that_prune": pruning_queries,
+                "prefill_queries_that_prune_fraction": (
+                    pruning_queries / count if count else 0.0
+                ),
+                "candidates_discarded_at_final_query": (
+                    max(0, candidates - top_k) if top_k else 0
+                ),
                 "layers": census.get(ratio, 0),
             }
         visible = any(g["selection_prunes"] for g in per_group.values())
@@ -358,6 +375,17 @@ def main() -> int:
             "by_compress_ratio": per_group,
             "index_score_can_move_the_token": visible,
             "index_score_can_move_the_kv_counter": False,
+            "prefill_queries_that_prune": max(
+                (g["prefill_queries_that_prune"] for g in per_group.values()),
+                default=0,
+            ),
+            "candidates_discarded_at_final_query": max(
+                (
+                    g["candidates_discarded_at_final_query"]
+                    for g in per_group.values()
+                ),
+                default=0,
+            ),
         }
 
     # Executed cases on the device.

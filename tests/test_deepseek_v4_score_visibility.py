@@ -90,3 +90,36 @@ def test_the_committed_artifact_agrees_with_the_operator():
     }
     # Every rung a backend has run is one where the scores cannot be seen.
     assert {129, 160, 256} <= reached
+
+
+def test_the_first_pruning_rung_prunes_in_exactly_one_query():
+    """Crossing the threshold is not the same as testing past it.
+
+    At a prompt of exactly `r * (top_k + 1)` tokens only the final query has
+    more candidates than it can keep, and it has exactly one more.  A rung that
+    only just crosses the threshold is a threshold crossing and a nearly empty
+    test of the scores, and the artifact has to keep saying so -- otherwise the
+    cost of the 2,052-token run reads as buying more than it does.
+    """
+    path = REPO / "results" / "abi3" / "deepseek_v4_ctx_score_visibility.json"
+    body = json.loads(path.read_text())
+    ratio, top_k = _flash_csa()
+    threshold = tool.first_pruning_length(ratio, top_k)
+    entry = next(
+        v
+        for v in body["by_prompt_length"].values()
+        if v["prompt_tokens"] == threshold
+    )
+    assert entry["index_score_can_move_the_token"] is True
+    assert entry["prefill_queries_that_prune"] == 1
+    assert entry["candidates_discarded_at_final_query"] == 1
+
+
+def test_rungs_below_the_threshold_prune_in_no_query_at_all():
+    path = REPO / "results" / "abi3" / "deepseek_v4_ctx_score_visibility.json"
+    body = json.loads(path.read_text())
+    for entry in body["by_prompt_length"].values():
+        if entry["prompt_tokens"] < tool.first_pruning_length(*_flash_csa()):
+            assert entry["prefill_queries_that_prune"] == 0
+            assert entry["candidates_discarded_at_final_query"] == 0
+            assert entry["index_score_can_move_the_token"] is False
