@@ -347,7 +347,9 @@ after this audit was written. That third one is worth naming: `build/` is
 record** of the neutral IR, and both `README.md` and checklist W2.5 were still
 quoting the previous `3,976 / 7,066 / e9b960ffcb19`. The stale value had
 migrated out of the generated file and into two hand-written ones, where nothing
-regenerates it.
+regenerates it. A later phase-extent correction preserved the 3,956 / 7,047 /
+229 census but moved the graph identity again, to `9ef6c3248d23`; the README's
+figure annotation now binds that summary to the generated status artifact.
 
 The Physical table gained **ten rows it had simply been missing** — 14 rows
 before, 24 after: `asap7/ot_ta_matmul_bf16_sram_engine`, and on `sky130hd` the
@@ -493,8 +495,8 @@ not be used for — rather than left to prose.
 
 | number / claim | where it is stated | what produces it | grade | current? |
 |---|---|---|---|---|
-| the ABI 3.0 sequencer RTL reproduces `runtime.sim.device.Device` exactly on the **Qwen3-8B ROM and HBM single-chip deployments**, both entrypoints, at whole-transaction depth — 2,105 instructions retired, 693 engine issues, 2,143 resolved operand views per case | `docs/UNIFIED_EXECUTION_CHECKLIST.md` W8.8, `rtl/RTL_INVENTORY.md` A3-SEQ-001, `docs/ABI3_PROGRAM_REPORT.md` §2.7 | `make abi3-deployment-rtl` → `results/rtl/abi3_deployment_campaign.json` → `what_ran.depth_reached[]`, `correlated_cases` | `executed` | **YES** |
-| **which** shipped deployments that campaign covers | nowhere in prose, deliberately | `results/rtl/abi3_deployment_campaign.json` → `correlated_cases` | `executed` | **by construction** |
+| the ABI 3.0 sequencer RTL reproduces `runtime.sim.device.Device` exactly on the **Qwen3-8B ROM and HBM single-chip deployments and the DeepSeek-V4-Flash ROM wafer deployment**, both entrypoints, at whole-transaction depth — 2,105 instructions / 693 issues / 2,143 views per Qwen case; 29,456 / 11,714 instructions on DeepSeek prefill / decode | `docs/UNIFIED_EXECUTION_CHECKLIST.md` W8.8, `rtl/RTL_INVENTORY.md` A3-SEQ-001, `docs/ABI3_PROGRAM_REPORT.md` §2.7 | `make abi3-deployment-rtl` → `results/rtl/abi3_deployment_campaign.json` → `what_ran.depth_reached[]`, `correlated_cases` | `executed` | **YES** |
+| the authoritative list of **which** shipped deployments that campaign covers | prose summaries defer to this field | `results/rtl/abi3_deployment_campaign.json` → `correlated_cases` | `executed` | **by construction** |
 
 The second row is the point. The first run of this campaign refused the
 DeepSeek-V4-Flash ROM wafer deployment after eight retirements, on

@@ -20,13 +20,14 @@ W8.1 and W8.2 built the ABI 3.0 control plane — microsequencer, loop stack,
 view resolver, event scoreboard, state controller — and W8.6 correlated it
 against the functional simulator over 64 generated programs on two simulators.
 W8.8 then re-ran the same control plane on the **shipped deployment images**
-(`results/rtl/abi3_deployment_campaign.json`), where the two Qwen3-8B
-deployments correlate exactly at whole-transaction depth; which shipped
-deployments that campaign covers is its own `correlated_cases` field.
+(`results/rtl/abi3_deployment_campaign.json`), where both Qwen3-8B deployments
+and the DeepSeek-V4-Flash ROM wafer deployment correlate exactly at
+whole-transaction depth; which shipped deployments that campaign covers is its
+own `correlated_cases` field.
 Both campaigns bind **every engine to a recording no-op**, on purpose, and say
 so in their own limitations: *no engine arithmetic is modelled on either side.*
-So the sequence is verified — on the Qwen deployments, at whole-transaction
-depth — and the arithmetic is not.
+So the sequence is verified — on all three shipped deployments, at
+whole-transaction depth — and the arithmetic is not.
 
 This item is the other half. It does not replace the control-plane campaign and
 it is not wired to it: the two are correlated separately, and **nothing here
@@ -43,10 +44,11 @@ about the sequencer, which has never been synthesised or routed
 (`docs/UNIFIED_EXECUTION_CHECKLIST.md`, [OI-43]). And a number resting on ABI
 3.0 RTL may be presented as the cost of hardware that runs exactly the
 deployments `results/rtl/abi3_deployment_campaign.json` → `correlated_cases`
-records, and no others — as recorded at commit `518260f` that was the two
-Qwen3-8B deployments and not the DeepSeek-V4-Flash ROM wafer one. That is a
-restriction on the sentence a number may appear in, not on the number: every
-measurement below stands exactly as recorded.
+records, and no others. The current artifact records both Qwen3-8B deployments
+and the DeepSeek-V4-Flash ROM wafer deployment; at commit `518260f` it recorded
+only the Qwen builds. That is a restriction on the sentence a number may
+appear in, not on the number: every measurement below stands exactly as
+recorded.
 
 ## 2. Which datapaths, and why these
 

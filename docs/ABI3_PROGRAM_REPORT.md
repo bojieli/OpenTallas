@@ -136,16 +136,17 @@ resolved operand views and 11 traps field-for-field against the functional
 device on two independent simulators, with 17 negative cases
 (`results/rtl/abi3_campaign.json`). Those are programs built for the campaign.
 Run on the **programs this repository actually ships**
-(`results/rtl/abi3_deployment_campaign.json`), the two Qwen3-8B deployments —
-ROM single chip and HBM single chip — correlate exactly on both entrypoints at
-whole-transaction depth: 2,105 instructions retired, 693 engine issues and 2,143
-resolved operand views per case, ending in COMPLETE and not at a work bound,
-identical on Icarus 11.0 and Verilator 5.050. **Which deployments that campaign
-covers is its own `correlated_cases` field rather than a sentence here**, since
-it moves whenever a sequencer bound is raised and the campaign re-run; as
-recorded at commit `518260f` it did not include the DeepSeek-V4-Flash ROM wafer
-deployment, which the RTL trapped after eight retirements on `A3_STATE_SLOTS`, a
-bound nothing expressed at admission.
+(`results/rtl/abi3_deployment_campaign.json`), all three deployments — Qwen3-8B
+ROM single chip, Qwen3-8B HBM single chip and DeepSeek-V4-Flash ROM wafer —
+correlate exactly on both entrypoints at whole-transaction depth. Each Qwen
+case retires 2,105 instructions with 693 engine issues and 2,143 resolved
+operand views; DeepSeek retires 29,456 / 11,714 instructions on prefill /
+decode, with 12,657 / 3,600 issues and 39,849 / 10,428 views. Every case ends
+in COMPLETE rather than at a work bound, identically on Icarus 11.0 and
+Verilator 5.050. **The artifact's `correlated_cases` field remains the
+authority**, since it moves whenever a sequencer bound or shipped image moves.
+At commit `518260f` it did not include DeepSeek: the RTL trapped after eight
+retirements on `A3_STATE_SLOTS`, a bound nothing then expressed at admission.
 
 Both physical views — SKY130 HD at 130 nm and ASAP7 at 7 nm — complete
 synthesis, multi-corner static timing and full place-and-route with zero
@@ -172,11 +173,12 @@ the deployment campaign records correlating — no others.
 - **RTL coverage of the shipped deployments is a list, and it is the
   artifact's.** `results/rtl/abi3_deployment_campaign.json` →
   `correlated_cases` names the deployments the microsequencer RTL is known to
-  reproduce; at commit `518260f` that was the two Qwen3-8B builds and not the
-  DeepSeek-V4-Flash ROM wafer one, which trapped after eight retirements on a
-  sequencer bound (`A3_STATE_SLOTS`) that nothing expressed at admission — so a
-  shipped deployment passed every admission gate and was refused in hardware
-  instead (checklist W8.8/W8.9).
+  reproduce. The current list contains both Qwen3-8B builds and the
+  DeepSeek-V4-Flash ROM wafer build. At commit `518260f` it contained only the
+  Qwen builds: DeepSeek trapped after eight retirements on a sequencer bound
+  (`A3_STATE_SLOTS`) that nothing expressed at admission, so a shipped
+  deployment passed every admission gate and was refused in hardware instead
+  (checklist W8.8/W8.9).
 - **No engine arithmetic under the sequencer.** Both control-plane campaigns
   bind every engine to a recording no-op; the four datapaths that are correlated
   arithmetically are correlated separately and are not wired to the sequencer.

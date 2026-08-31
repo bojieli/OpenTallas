@@ -356,14 +356,16 @@ and 17 negative cases, 4,383 checks per simulator under Icarus and Verilator.
 `results/rtl/abi3_deployment_campaign.json` asks the harder question -- whether
 the same RTL runs the programs this repository actually ships -- by loading the
 three real deployment bundles into the sequencer with no vector written for the
-occasion. **The two Qwen3-8B deployments, the ROM single chip and the HBM
-single chip, correlate exactly**: both entrypoints, whole-transaction depth,
-2,105 instructions retired with 693 engine issues and 2,143 resolved operand
-views per case, ending in COMPLETE and not at a work bound, identical on both
-simulation engines under different back-pressure. Every issue is compared by the
-instruction index that issued it as well as by family, subopcode and descriptor
-ID; every view against `runtime.sim.memory.ViewResolver.resolve` at the loop
-bindings the device recorded.
+occasion. **Both Qwen3-8B deployments and the DeepSeek-V4-Flash ROM wafer
+deployment correlate exactly** on both entrypoints at whole-transaction depth.
+Each Qwen case retires 2,105 instructions with 693 engine issues and 2,143
+resolved operand views; DeepSeek retires 29,456 / 11,714 instructions on
+prefill / decode, with 12,657 / 3,600 issues and 39,849 / 10,428 views. Every
+case ends in COMPLETE rather than at a work bound, identically on both
+simulation engines under different back-pressure. Every issue is compared by
+the instruction index that issued it as well as by family, subopcode and
+descriptor ID; every view against `runtime.sim.memory.ViewResolver.resolve` at
+the loop bindings the device recorded.
 
 **Which deployments this evidence covers is the artifact's `correlated_cases`
 field, not a sentence here.** It moves whenever a sequencer bound is raised and
