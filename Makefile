@@ -1,4 +1,4 @@
-.PHONY: rom-service rom-service-vectors rom-service-physical abi3-rtl-engines check-evidence-grades check-prose-figures check-figures roofline abi3-failclosed abi3-equivalence abi3 abi3-engine-rate abi3-cost-tables abi3-cost-tables-check abi3-spec abi3-test abi3-workloads abi3-oracle abi3-engines abi3-rtl abi3-physical abi3-status abi3-ir profile simulate iso-node model-traffic legacy-sim routing noc sensitivity legacy-sensitivity spec-check formal rtl-sim fault-sim fault-campaign coverage rtl-static rtl pre-synth-verify synth-public spice spice-pdk test verify clean-results
+.PHONY: abi3-tokens abi3-tokens-deepseek abi3-tokens-deepseek-rom abi3-tokens-deepseek-hbm abi3-tokens-qwen-rom abi3-tokens-qwen-hbm abi3-prefix-workloads rom-service rom-service-vectors rom-service-physical abi3-rtl-engines check-evidence-grades check-prose-figures check-figures roofline abi3-failclosed abi3-equivalence abi3 abi3-engine-rate abi3-cost-tables abi3-cost-tables-check abi3-spec abi3-test abi3-workloads abi3-oracle abi3-engines abi3-rtl abi3-physical abi3-status abi3-ir profile simulate iso-node model-traffic legacy-sim routing noc sensitivity legacy-sensitivity spec-check formal rtl-sim fault-sim fault-campaign coverage rtl-static rtl pre-synth-verify synth-public spice spice-pdk test verify clean-results
 
 profile:
 	python3 tools/profile_hf.py --all
@@ -216,3 +216,82 @@ abi3-equivalence:
 
 abi3-failclosed:
 	PYTHONPATH=. python3 tools/run_abi3_failclosed_campaign.py --force
+
+# --- accelerator tokens ----------------------------------------------------
+# The token deliverable: a design is not shown to run the model until it has
+# emitted tokens an external comparator validates.  One tool, one shape of
+# evidence, both backends -- so that a ROM-versus-HBM comparison is between two
+# runs and not between a run and an assertion.
+#
+# The oracle is an external comparator only (ADR-003 section 18): it supplies no
+# activation, weight or token to the accelerator path.  The only values written
+# into the device are the workload's own prompt token ids.
+#
+# The 32-token prefix is the gate because a 104-token DeepSeek run takes about
+# seven hours.  It is a full-depth numeric gate -- all 43 layers, the routed
+# experts, the compressor, RoPE, the FP8 dense path, the float32 head -- and it
+# is *not* a sparsity gate: window_size is 128 and index_topk 512, so at 32
+# tokens (and at TA-DS-CHAT-1's full 104) none of the three thresholds is
+# reached.  Sparse selection under pressure is the TA-DS-CTX-* ladder's job.
+DEEPSEEK_SNAPSHOT ?= $(HOME)/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4-Flash-0731/snapshots/7872f01b1d1fe23eabc4c98b48bffcef5a386062
+QWEN3_SNAPSHOT ?= $(HOME)/.cache/huggingface/hub/models--Qwen--Qwen3-8B/snapshots/b968826d9c46dd6066d109eabc6255188de91218
+#: How many tokens each lane decodes.  One token proves the forward pass and
+#: says nothing about the KV transaction across decode steps, so the default is
+#: more than one.
+DS_TOKENS ?= 4
+
+abi3-prefix-workloads:
+	PYTHONPATH=. python3 tools/build_deepseek_v4_prefix_workloads.py \
+	  --snapshot $(DEEPSEEK_SNAPSHOT)
+
+abi3-tokens-deepseek-rom:
+	PYTHONPATH=. python3 tools/run_accelerator_tokens.py \
+	  --kernel-ir build/ir-v3/deepseek-v4-flash-0731/kernel_ir.v3.json \
+	  --backend rom_deepseek_v4 \
+	  --capability configs/hardware/abi3_capability/rom_deepseek_v4.json \
+	  --workload build/workloads/deepseek-v4-flash-0731-prefix/TA-DS-CHAT-1-P32.json \
+	  --reference results/abi3/deepseek_v4_reference_oracle_prefix.json \
+	  --checkpoint $(DEEPSEEK_SNAPSHOT) \
+	  --publish build/abi3/deepseek-v4-flash-rom-tokens \
+	  --expert-numeric-path fp8 --max-new-tokens $(DS_TOKENS) \
+	  --output results/abi3/accelerator_tokens/deepseek_v4_flash_rom_p32.json --force
+
+abi3-tokens-deepseek-hbm:
+	PYTHONPATH=. python3 tools/run_accelerator_tokens.py \
+	  --kernel-ir build/ir-v3/deepseek-v4-flash-0731/kernel_ir.v3.json \
+	  --backend hbm_sram \
+	  --capability configs/hardware/abi3_capability/hbm_sram_cluster_32.json \
+	  --workload build/workloads/deepseek-v4-flash-0731-prefix/TA-DS-CHAT-1-P32.json \
+	  --reference results/abi3/deepseek_v4_reference_oracle_prefix.json \
+	  --checkpoint $(DEEPSEEK_SNAPSHOT) \
+	  --publish build/abi3/deepseek-v4-flash-hbm-tokens \
+	  --expert-numeric-path fp8 --max-new-tokens $(DS_TOKENS) \
+	  --output results/abi3/accelerator_tokens/deepseek_v4_flash_hbm_p32.json --force
+
+abi3-tokens-deepseek: abi3-tokens-deepseek-rom abi3-tokens-deepseek-hbm
+
+abi3-tokens-qwen-hbm:
+	PYTHONPATH=. python3 tools/run_accelerator_tokens.py \
+	  --kernel-ir build/ir-v3/qwen3-8b/kernel_ir.v3.json \
+	  --backend hbm_sram \
+	  --capability configs/hardware/abi3_capability/hbm_sram_single_chip.json \
+	  --workload build/workloads/qwen3-8b/TA-QW-CHAT-1.json \
+	  --reference results/abi3/qwen3_reference_oracle_short.json \
+	  --checkpoint $(QWEN3_SNAPSHOT) \
+	  --publish build/abi3/qwen3-8b-hbm-tokens \
+	  --max-new-tokens $(DS_TOKENS) \
+	  --output results/abi3/accelerator_tokens/qwen3_8b_hbm_chat1.json --force
+
+abi3-tokens-qwen-rom:
+	PYTHONPATH=. python3 tools/run_accelerator_tokens.py \
+	  --kernel-ir build/ir-v3/qwen3-8b/kernel_ir.v3.json \
+	  --backend rom_qwen3 \
+	  --capability configs/hardware/abi3_capability/rom_qwen3.json \
+	  --workload build/workloads/qwen3-8b/TA-QW-CHAT-1.json \
+	  --reference results/abi3/qwen3_reference_oracle_short.json \
+	  --checkpoint $(QWEN3_SNAPSHOT) \
+	  --publish build/abi3/qwen3-8b-rom-tokens \
+	  --max-new-tokens $(DS_TOKENS) \
+	  --output results/abi3/accelerator_tokens/qwen3_8b_rom_chat1.json --force
+
+abi3-tokens: abi3-tokens-qwen-rom abi3-tokens-qwen-hbm abi3-tokens-deepseek
