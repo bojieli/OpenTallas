@@ -8,8 +8,9 @@ It has since been amended four more times, for the same reason each time.
 Sections 2b through 2f are the amendments, and the largest of them is a
 retraction of this document's own headline, twice over: **the iso-area advantage
 for DeepSeek-V4-Pro at 554,700 mm² was published as 54.2x, was corrected to
-35.4x when the interconnect was rebuilt (section 2c), and is 8.6x now that
-per-user latency has been separated from aggregate throughput (section 2d).**
+35.4x when the interconnect was rebuilt (section 2c), and then to 8.33x after
+per-user latency was separated from aggregate throughput and the links were
+re-graded (sections 2d and 2d-bis).**
 
 ## 1. The anchor
 
@@ -36,7 +37,10 @@ Sources: [ServeTheHome](https://www.servethehome.com/amd-to-acquire-taalas-for-m
 **Any model of a ROM accelerator must reproduce this.** A methodology that
 predicts 2,000 tok/s or 200,000 tok/s for an 8B model on 815 mm² at N6 is wrong,
 however internally consistent it is, because a real part says otherwise. The
-anchor is a test the model must pass, not a datapoint to be averaged in.
+anchor is a test the model must pass, not a datapoint to be averaged in. **The
+current reconstruction does not pass it:** its explicit area allocation cannot
+fit the required ROM and therefore admits zero throughput. That failure is
+retained and quantified below rather than used to revise the published anchor.
 
 ## 2. The iso-area comparison
 
@@ -57,9 +61,9 @@ essentially the same die as HC1, one node apart. That is the comparison:
 | 8B model, batch 1 | **17,000 tok/s** | 254 tok/s (FP8) · 127 (BF16) |
 | ratio | | **67× · 134×** |
 
-The anchor reproduces exactly. Llama 3.1 8B is 8.0300 B parameters from its
-published config, so decode costs `2N` = 16.060 GFLOP/token; times 16,960 tok/s
-is **272.4 TFLOP/s** on 815 mm² at N6.
+The published anchor converts directly into an implied arithmetic rate. Llama
+3.1 8B is 8.0300 B parameters from its published config, so decode costs `2N` =
+16.060 GFLOP/token; times 16,960 tok/s is **272.4 TFLOP/s** on 815 mm² at N6.
 
 **But calling that "GPU-class compute" was wrong, and the error flatters the
 design.** HC1's 272 TFLOP/s is *4-bit* work. An A100 at matched INT4 does 1,248
@@ -227,7 +231,8 @@ NVLink 3 rate is 300 GB/s. Each study now charges one fabric to both sides.
 ## 2d. The pipeline service-time defect is FIXED, and this document's headline falls again
 
 **RETRACTED: 35.4x for DeepSeek-V4-Pro at 1M context, batch 1, at 554,700 mm2.
-The model now says 8.6x.** The previous version of this section named the defect
+This correction first reduced it to 8.6x; section 2d-bis then re-graded the links
+and reduced it to 8.33x.** The previous version of this section named the defect
 and left it open. It is closed here, and closing it was worth more than either
 of the two corrections that preceded it.
 
@@ -262,11 +267,12 @@ user nothing.** Tensor parallelism is different in kind rather than in degree --
 it is the only arrangement that puts the whole machine on one token -- and what
 it pays for that is two all-reduces per layer.
 
-**Both validation gates are unchanged to the digit**: A100 weight-bound at
-253.91 tok/s (ratio 1.0000) and Taalas HC1 at 0.7213x of 16,960. Both are
-single-device machines, `token_slots` is 1 for both, and a correct separation
-cannot reach them. That they did not move is the check that this touched only
-what it claimed to.
+**The pipeline correction itself left both then-current validation gates
+unchanged**, because both are single-device machines and `token_slots` is 1.
+The current evidence refresh still puts the A100 weight-bound gate at 253.91
+tok/s (ratio 1.0000), but the HC1 reconstruction is now explicitly
+area-infeasible and admits 0 of the published 16,960 tok/s. That later failure
+is independent of the pipeline correction and is carried through section 2f.
 
 **It did not cancel in the ratio.** The tempting argument -- that both families
 are pipelines of similar depth at iso-area, so the `N` cancels -- is false, and
@@ -481,7 +487,7 @@ power terms were derived from primitives, adversarially verified, and all six
 refuted -- one of them by re-running the measurement it rested on and finding it
 was the decay tail of a preceding workload rather than a steady state.
 
-## 2f. The power model was rebuilt. It is right on the A100, 2.9-3.6x low on HC1, and the ROM joules here are lower bounds
+## 2f. The power model was rebuilt. It is within 1.15x on the A100, 2.3-2.9x low on HC1, and the ROM joules here are lower bounds
 
 **Superseded.** The previous version of this section said the power numbers in
 this document were wrong by 7-9x, that `thermal_scale` was exactly 1.0 at all
@@ -498,16 +504,16 @@ makes this document's own thesis harder to argue.
 
 | gate | published | modelled | ratio | result |
 |---|---:|---:|---:|---|
-| A100 80GB at its TDP, under a saturating load | 400 W | 389.9 W | 0.97x | PASS (within 2x) | <!-- figure: 0.97 src="results/roofline/n6_vs_a100/analytical.json#validation_gates.a100_tdp_power.ratio" name="A100 TDP power gate ratio" -->
-| Taalas HC1 card power at its published operating point | 200-250 W | 70.2 W | 0.28x | **FAIL** | <!-- figure: 0.28 src="results/roofline/n6_vs_a100/analytical.json#validation_gates.taalas_hc1_card_power.ratio" name="HC1 card power gate ratio" -->
+| A100 80GB at its TDP, under a saturating load | 400 W | 461.7 W | 1.15x | PASS (within 2x) | <!-- figure: 1.15 src="results/roofline/n6_vs_a100/analytical.json#validation_gates.a100_tdp_power.ratio" name="A100 TDP power gate ratio" -->
+| Taalas HC1 card power at its published operating point | 200-250 W | 87.6 W | 0.35x | **FAIL** | <!-- figure: 0.35 src="results/roofline/n6_vs_a100/analytical.json#validation_gates.taalas_hc1_card_power.ratio" name="HC1 card power gate ratio" -->
 
 Reported at both ends of the whole power band, every term moved together:
 
 | power band | A100 | ratio | HC1 | ratio to 250 W | ratio to 200 W |
 |---|---:|---:|---:|---:|---:|
-| low | 267.1 W | 0.67x | 54.3 W | 0.22x | 0.27x | <!-- figure: 267.1 src="results/roofline/n6_vs_a100/analytical.json#validation_gates.power_gate_band.low.a100_tdp_power_w" name="A100 TDP power, band low" -->
-| **stated** | **389.9 W** | **0.97x** | **70.2 W** | **0.28x** | **0.35x** | <!-- figure: 70.2 src="results/roofline/n6_vs_a100/analytical.json#validation_gates.taalas_hc1_card_power.modelled_value" name="HC1 card power, stated" -->
-| high | 626.6 W | 1.57x | 267.1 W | 1.07x | 1.34x | <!-- figure: 1.57 src="results/roofline/n6_vs_a100/analytical.json#validation_gates.power_gate_band.high.a100_ratio_to_published" name="A100 TDP power ratio, band high" -->
+| low | 338.9 W | 0.85x | 63.3 W | 0.25x | 0.32x | <!-- figure: 338.9 src="results/roofline/n6_vs_a100/analytical.json#validation_gates.power_gate_band.low.a100_tdp_power_w" name="A100 TDP power, band low" -->
+| **stated** | **461.7 W** | **1.15x** | **87.6 W** | **0.35x** | **0.44x** | <!-- figure: 87.6 src="results/roofline/n6_vs_a100/analytical.json#validation_gates.taalas_hc1_card_power.modelled_value" name="HC1 card power, stated" -->
+| high | 698.3 W | 1.75x | 374.6 W | 1.50x | 1.87x | <!-- figure: 1.75 src="results/roofline/n6_vs_a100/analytical.json#validation_gates.power_gate_band.high.a100_ratio_to_published" name="A100 TDP power ratio, band high" -->
 
 **The A100 gate is the weaker of the two and this document must not quote it as
 independent.** The clock term inside it was calibrated as 20-45% of a shipping
@@ -522,7 +528,7 @@ other way.** That section said HC1's shortfall could be entirely inside
 250 W needed about 4.6-5.8 pJ/byte from that one term. The evidence moved that
 term to **0.08 pJ/byte**, six times *lower*, which made this gate worse by about
 4x on that term alone. It was adopted anyway. The consequence is that operand
-delivery is now the **largest** dynamic term on HC1 -- 10.0 W against 3.2 W of <!-- figure: 10.0 src="results/roofline/n6_vs_a100/analytical.json#validation_gates.taalas_hc1_card_power.detail.dynamic_power_w_by_term.operand_delivery_j" name="HC1 operand-delivery power" -->
+delivery is now the **largest** dynamic term on HC1 -- 12.1 W against 3.9 W of <!-- figure: 12.1 src="results/roofline/n6_vs_a100/analytical.json#validation_gates.taalas_hc1_card_power.detail.dynamic_power_w_by_term.operand_delivery_j" name="HC1 operand-delivery power" -->
 array read -- which is the physically sensible picture for a mask-ROM array: it
 reads its weights for almost nothing, and what it pays for is getting those
 bytes to the arithmetic.
@@ -535,24 +541,26 @@ now solves `t >= E_dynamic / (cooling_limit - P_static)`, and a part whose
 leakage and clock alone meet its budget does not exist rather than running
 slowly.
 
-<!-- figure: 105 src="results/roofline/n5_vs_b200/analytical.json#power_and_energy.thermally_throttled_points" name="power-limited points, N5/B200" -->
-**105 of 6,108 feasible points are power-limited** -- all of them in the
-N5/B200 study, the worst throttled 1.35x.
+<!-- figure: 231 src="results/roofline/n5_vs_b200/analytical.json#power_and_energy.thermally_throttled_points" name="power-limited points, N5/B200" -->
+**231 of 5,688 feasible points are power-limited** -- all of them in the
+N5/B200 study, the worst throttled 1.44x.
 The prediction this section made under a uniform multiplier half survives:
 
-- **It survives on shape.** Every throttled point is a small or large array.
-  **No wafer is throttled**, and no wafer-scale ROM design exceeds 46% of its
-  cooling budget against a median of 21%. A ROM sweep is a fixed cost spread
+- **It survives for ROM wafers, not for the whole wafer class.** The throttled
+  set contains 93 small-array, 82 large-array and 56 wafer points; those 56
+  wafer points are GPUs. **No wafer-scale ROM design is throttled**, and no
+  wafer-scale ROM design exceeds 47% of its cooling budget against a median of
+  22%. A ROM sweep is a fixed cost spread
   over far more silicon, so wafer-scale is power-sparse -- and that is now an
   argument this document *can* make, from a correct power term rather than from
   a bound.
 - **It does not survive on batch.** A uniform multiplier on a
   traffic-proportional model necessarily peaks at high batch. Static power does
   not scale with traffic, so **batch 1 is throttled too**, and the worst point
-  in either study is at **batch 8**.
+  in either study is now at **batch 256**.
 - **And it produced a design conclusion the bound could not have.** Every one of
-  the 100 throttled points puts its KV in HBM, and the worst point's dynamic
-  energy is **96.8% KV read against 0.5% weight read**. The ROM sweep is not
+  the 231 throttled points puts its KV in HBM, and the worst point's dynamic
+  energy is **95.9% KV read against 0.03% weight read**. The ROM sweep is not
   what melts it. Every SRAM-KV ROM design in both studies stays under budget.
   **Keep the KV on die.**
 
@@ -568,26 +576,27 @@ one that is slow and cool.
 
 | part | J/token | W | tok/s |
 |---|---:|---:|---:|
-| Taalas HC1 (modelled reconstruction) | 0.005736 | 70.2 | 12,232 | <!-- figure: 0.005736 src="results/roofline/n6_vs_a100/analytical.json#validation_gates.taalas_hc1_card_power.detail.energy_j_per_token" name="HC1 J/token" -->
-| A100 80GB, weight-bound gate | 1.462191 | 358.8 | 245 | <!-- figure: 1.462191 src="results/roofline/n6_vs_a100/analytical.json#validation_gates.a100_weight_bound.detail.step.metrics.energy_j_per_token" name="A100 J/token at the weight-bound gate" -->
+| Taalas HC1 (nominal component reconstruction) | 0.005908 | 87.6 | **0 admitted** | <!-- figure: 0.005908 src="results/roofline/n6_vs_a100/analytical.json#validation_gates.taalas_hc1_card_power.detail.energy_j_per_token" name="HC1 J/token" -->
+| A100 80GB, weight-bound gate | 1.465768 | 359.6 | 245 | <!-- figure: 1.465768 src="results/roofline/n6_vs_a100/analytical.json#validation_gates.a100_weight_bound.detail.step.metrics.energy_j_per_token" name="A100 J/token at the weight-bound gate" -->
 
-255x in tokens per joule -- and it is a **ceiling on the ROM advantage, not a
-measurement of it.** The GPU is at batch 1, which is a GPU's worst operating
-point; the ROM read energy is `assumed` over a 17x bracket; and the HC1 power
-gate says the ROM total is 2.9-3.6x below a shipping part, so the ROM joules
-are a lower bound by roughly that factor.
+The component arithmetic alone would imply about 248x in nominal tokens per
+joule, but the current HC1 throughput gate admits **zero**: the reconstructed
+815 mm² die cannot fit the required ROM after SRAM, compute, interconnect and
+overhead. It therefore does not support an achieved tokens-per-joule claim.
+Even as a component lower bound, the ROM read energy is `assumed` over a 17x
+bracket and the HC1 power total is 2.3-2.9x below the shipping card's band.
 
 **At equal area, on the study's own best designs, it is far smaller and it moves
 with batch in the direction the architecture predicts:**
 
 | study | model | batch 1 | batch 256 |
 |---|---|---:|---:|
-| N6 vs A100 | Qwen3-8B (dense) | 19.3x | **1.8x** | <!-- figure: 19.3 src="results/roofline/n6_vs_a100/analytical.json#power_and_energy.energy_per_token[model=Qwen3-8B,batch_size=1].tokens_per_joule_advantage_x" name="Qwen3-8B tokens/joule advantage at batch 1, N6" -->
-| N6 vs A100 | DeepSeek-V4-Flash (sparse) | 17.3x | **55.5x** |
-| N6 vs A100 | DeepSeek-V4-Pro (sparse) | 25.9x | 18.8x |
-| N5 vs B200 | Qwen3-8B (dense) | 5.3x | **2.6x** |
-| N5 vs B200 | DeepSeek-V4-Flash (sparse) | 4.6x | **36.9x** |
-| N5 vs B200 | DeepSeek-V4-Pro (sparse) | 14.3x | 20.9x | <!-- figure: 20.9 src="results/roofline/n5_vs_b200/analytical.json#power_and_energy.energy_per_token[model=DeepSeek-V4-Pro-0813,batch_size=256].tokens_per_joule_advantage_x" name="Pro tokens/joule advantage at batch 256, N5" -->
+| N6 vs A100 | Qwen3-8B (dense) | 13.8x | **1.8x** | <!-- figure: 13.8 src="results/roofline/n6_vs_a100/analytical.json#power_and_energy.energy_per_token[model=Qwen3-8B,batch_size=1].tokens_per_joule_advantage_x" name="Qwen3-8B tokens/joule advantage at batch 1, N6" -->
+| N6 vs A100 | DeepSeek-V4-Flash (sparse) | 15.4x | **37.4x** |
+| N6 vs A100 | DeepSeek-V4-Pro (sparse) | 20.3x | 20.9x |
+| N5 vs B200 | Qwen3-8B (dense) | 5.0x | **1.7x** |
+| N5 vs B200 | DeepSeek-V4-Flash (sparse) | 11.1x | **34.1x** |
+| N5 vs B200 | DeepSeek-V4-Pro (sparse) | 15.1x | 21.5x | <!-- figure: 21.5 src="results/roofline/n5_vs_b200/analytical.json#power_and_energy.energy_per_token[model=DeepSeek-V4-Pro-0813,batch_size=256].tokens_per_joule_advantage_x" name="Pro tokens/joule advantage at batch 256, N5" -->
 
 **A dense model gives the energy advantage back as batch rises; a sparse one
 does not.** A GPU amortises one weight read over the whole batch, so its joules
@@ -604,7 +613,7 @@ SC 2025 measurement puts at a further 6.30 pJ/bit on an A100 for streaming
 traffic. The long-path operand ladder -- the term applied here is the
 *tile-local floor*, and HBM to L2 to register file is 8-10 pJ/B further.
 ROM-array leakage, held at zero because its companion term was refuted as
-underived; at the top of its reconstructed bracket it would add 10.4 W to HC1
+underived; at the top of its reconstructed bracket it would add 11.2 W to HC1
 and still not reach 200 W.
 
 **Every comparison in this program must state the silicon area on both sides.**
@@ -616,9 +625,10 @@ and still not reach 200 W.
 
 ## 2h. The comparison is now read at the design the study recommends, not at a rung of the area ladder
 
-**Everything above this heading is unchanged.** No per-user rate, no step time,
-no feasibility verdict and no binding constraint in this document moved. What
-moved is *which row the headline is read off*.
+The rows below are refreshed from the current artifacts. The governing change
+in this section is still *which row the headline is read off*: the report quotes
+the design selected by the declared frontier rule, not an arbitrary rung of the
+area ladder.
 
 ### The defect
 
@@ -626,8 +636,8 @@ Until now the study named a "best design" with `_pick_best`: rank feasible ROM
 designs by per-user tokens/s, keep everything within 5% of the peak, report the
 smallest silicon in that band. The docstring claims the 5% band stops an 8B model
 being handed a wafer. **It cannot**, and the artifact proves it: for Qwen3-8B at
-batch 1 the per-user peak *is* the wafer at 6,505 tok/s, the 5% floor is 6,180,
-and the best sub-wafer design in the whole study reaches 3,530 — 54% of the peak.
+batch 1 the per-user peak *is* the wafer at 6,464 tok/s, the 5% floor is 6,141,
+and the best sub-wafer frontier design reaches 3,518 — 54% of the peak.
 The band never engages, because **a rate tolerance is orthogonal to area**. It
 shrinks a machine only when a smaller design is already near the peak, which is
 the case nobody was worried about.
@@ -668,48 +678,48 @@ by the ROM side's chosen area, and the cluster free to pick its own parallelism.
 
 | model | ROM design | ROM mm² | user tok/s | tok/s per 1,000 mm² | sessions | GPU | GPU mm² | area ratio | GPU user tok/s | GPU sessions | ratio |
 |---|---|---:|---:|---:|---:|---|---:|---:|---:|---:|---:|
-| Qwen3-8B @8K | array ×3, SRAM KV | 2,445 | 2,791.2 | 1,141.6 | 1 | 3 × A100 tensor | 2,478 | 0.9867 | 258.9 | 165 | **10.78×** | <!-- figure: 2,791.2 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=Qwen3-8B].recommended.per_user_tokens_s" name="Qwen recommended per-user rate, N6" --> <!-- figure: 1,141.6 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=Qwen3-8B].recommended.tokens_s_per_1000mm2" name="Qwen recommended throughput density, N6" --> <!-- figure: 0.9867 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=Qwen3-8B].recommended.iso_area_ratio" name="Qwen iso-area ratio at the chosen area, N6" --> <!-- figure: 10.78 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=Qwen3-8B].recommended.per_user_speed_ratio" name="Qwen recommended-design ratio, N6" -->
-| DeepSeek-Flash @200K | wafer ×1, HBM KV | 46,225 | 4,663.6 | 100.9 | 448 | 56 × A100 tensor | 46,256 | 0.9993 | 544.1 | 2,797 | **8.57×** | <!-- figure: 4,663.6 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=DeepSeek-V4-Flash-0731].recommended.per_user_tokens_s" name="Flash recommended per-user rate, N6" --> <!-- figure: 100.9 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=DeepSeek-V4-Flash-0731].recommended.tokens_s_per_1000mm2" name="Flash recommended throughput density, N6" --> <!-- figure: 0.9993 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=DeepSeek-V4-Flash-0731].recommended.iso_area_ratio" name="Flash iso-area ratio at the chosen area, N6" -->
-| DeepSeek-Pro @1M | wafer ×2, SRAM KV | 92,450 | 2,359.5 | 25.5 | 1 | 112 × A100 tensor | 92,512 | 0.9993 | 274.9 | 727 | **8.58×** | <!-- figure: 2,359.5 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=DeepSeek-V4-Pro-0813].recommended.per_user_tokens_s" name="Pro recommended per-user rate, N6" --> <!-- figure: 8.58 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=DeepSeek-V4-Pro-0813].recommended.per_user_speed_ratio" name="Pro recommended-design ratio, N6" -->
+| Qwen3-8B @8K | array ×7, SRAM KV | 5,705 | 3,517.9 | 616.6 | 1 | 7 × A100 tensor | 5,782 | 0.9867 | 560.0 | 403 | **6.28×** | <!-- figure: 3,517.9 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=Qwen3-8B].recommended.per_user_tokens_s" name="Qwen recommended per-user rate, N6" --> <!-- figure: 616.6 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=Qwen3-8B].recommended.tokens_s_per_1000mm2" name="Qwen recommended throughput density, N6" --> <!-- figure: 0.9867 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=Qwen3-8B].recommended.iso_area_ratio" name="Qwen iso-area ratio at the chosen area, N6" --> <!-- figure: 6.28 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=Qwen3-8B].recommended.per_user_speed_ratio" name="Qwen recommended-design ratio, N6" -->
+| DeepSeek-Flash @200K | wafer ×1, HBM KV | 46,225 | 4,707.9 | 101.8 | 448 | 56 × A100 tensor | 46,256 | 0.9993 | 721.7 | 2,797 | **6.52×** | <!-- figure: 4,707.9 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=DeepSeek-V4-Flash-0731].recommended.per_user_tokens_s" name="Flash recommended per-user rate, N6" --> <!-- figure: 101.8 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=DeepSeek-V4-Flash-0731].recommended.tokens_s_per_1000mm2" name="Flash recommended throughput density, N6" --> <!-- figure: 0.9993 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=DeepSeek-V4-Flash-0731].recommended.iso_area_ratio" name="Flash iso-area ratio at the chosen area, N6" -->
+| DeepSeek-Pro @1M | wafer ×4, SRAM KV | 184,900 | 2,375.7 | 12.8 | 1 | 224 × A100 tensor | 185,024 | 0.9993 | 357.7 | 1,545 | **6.64×** | <!-- figure: 2,375.7 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=DeepSeek-V4-Pro-0813].recommended.per_user_tokens_s" name="Pro recommended per-user rate, N6" --> <!-- figure: 6.64 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=DeepSeek-V4-Pro-0813].recommended.per_user_speed_ratio" name="Pro recommended-design ratio, N6" -->
 
 **N5 ROM against B200:**
 
 | model | ROM design | ROM mm² | user tok/s | tok/s per 1,000 mm² | sessions | GPU | GPU mm² | area ratio | GPU user tok/s | GPU sessions | ratio |
 |---|---|---:|---:|---:|---:|---|---:|---:|---:|---:|---:|
-| Qwen3-8B @8K | array ×3, SRAM KV | 2,445 | 3,795.9 | 1,552.5 | 1 | 2 × B200 tensor | 3,200 | 0.7641 | 660.1 | 254 | **5.75×** | <!-- figure: 3,795.9 src="results/roofline/n5_vs_b200/analytical.json#design_selection.models[model=Qwen3-8B].recommended.per_user_tokens_s" name="Qwen recommended per-user rate, N5" --> <!-- figure: 0.7641 src="results/roofline/n5_vs_b200/analytical.json#design_selection.models[model=Qwen3-8B].recommended.iso_area_ratio" name="Qwen iso-area ratio at the chosen area, N5" --> <!-- figure: 5.75 src="results/roofline/n5_vs_b200/analytical.json#design_selection.models[model=Qwen3-8B].recommended.per_user_speed_ratio" name="Qwen recommended-design ratio, N5" -->
-| DeepSeek-Flash @200K | array ×14, SRAM KV | 11,410 | 2,545.1 | 223.1 | 1 | 7 × B200 tensor | 11,200 | 1.0188 | 1,656.8 | 699 | **1.54×** | <!-- figure: 11,410 src="results/roofline/n5_vs_b200/analytical.json#design_selection.models[model=DeepSeek-V4-Flash-0731].recommended.silicon_area_mm2" name="Flash recommended area, N5" --> <!-- figure: 2,545.1 src="results/roofline/n5_vs_b200/analytical.json#design_selection.models[model=DeepSeek-V4-Flash-0731].recommended.per_user_tokens_s" name="Flash recommended per-user rate, N5" --> <!-- figure: 223.1 src="results/roofline/n5_vs_b200/analytical.json#design_selection.models[model=DeepSeek-V4-Flash-0731].recommended.tokens_s_per_1000mm2" name="Flash recommended throughput density, N5" --> <!-- figure: 1.54 src="results/roofline/n5_vs_b200/analytical.json#design_selection.models[model=DeepSeek-V4-Flash-0731].recommended.per_user_speed_ratio" name="Flash recommended-design ratio, N5" -->
-| DeepSeek-Pro @1M | wafer ×2, SRAM KV | 92,450 | 2,359.5 | 25.5 | 1 | 58 × B200 tensor | 92,800 | 0.9962 | 497.3 | 862 | **4.74×** | <!-- figure: 4.74 src="results/roofline/n5_vs_b200/analytical.json#design_selection.models[model=DeepSeek-V4-Pro-0813].recommended.per_user_speed_ratio" name="Pro recommended-design ratio, N5" -->
+| Qwen3-8B @8K | array ×5, SRAM KV | 4,075 | 4,941.0 | 1,212.5 | 1 | 3 × B200 tensor | 4,800 | 0.8490 | 978.7 | 388 | **5.05×** | <!-- figure: 4,941.0 src="results/roofline/n5_vs_b200/analytical.json#design_selection.models[model=Qwen3-8B].recommended.per_user_tokens_s" name="Qwen recommended per-user rate, N5" --> <!-- figure: 0.8490 src="results/roofline/n5_vs_b200/analytical.json#design_selection.models[model=Qwen3-8B].recommended.iso_area_ratio" name="Qwen iso-area ratio at the chosen area, N5" --> <!-- figure: 5.05 src="results/roofline/n5_vs_b200/analytical.json#design_selection.models[model=Qwen3-8B].recommended.per_user_speed_ratio" name="Qwen recommended-design ratio, N5" -->
+| DeepSeek-Flash @200K | array ×30, SRAM KV | 24,450 | 2,627.4 | 107.5 | 1 | 15 × B200 hybrid | 24,000 | 1.0188 | 1,465.1 | 1,637 | **1.79×** | <!-- figure: 24,450 src="results/roofline/n5_vs_b200/analytical.json#design_selection.models[model=DeepSeek-V4-Flash-0731].recommended.silicon_area_mm2" name="Flash recommended area, N5" --> <!-- figure: 2,627.4 src="results/roofline/n5_vs_b200/analytical.json#design_selection.models[model=DeepSeek-V4-Flash-0731].recommended.per_user_tokens_s" name="Flash recommended per-user rate, N5" --> <!-- figure: 107.5 src="results/roofline/n5_vs_b200/analytical.json#design_selection.models[model=DeepSeek-V4-Flash-0731].recommended.tokens_s_per_1000mm2" name="Flash recommended throughput density, N5" --> <!-- figure: 1.79 src="results/roofline/n5_vs_b200/analytical.json#design_selection.models[model=DeepSeek-V4-Flash-0731].recommended.per_user_speed_ratio" name="Flash recommended-design ratio, N5" -->
+| DeepSeek-Pro @1M | wafer ×3, HBM KV | 138,675 | 2,648.8 | 19.1 | 265 | 87 × B200 tensor | 139,200 | 0.9962 | 746.8 | 1,339 | **3.55×** | <!-- figure: 3.55 src="results/roofline/n5_vs_b200/analytical.json#design_selection.models[model=DeepSeek-V4-Pro-0813].recommended.per_user_speed_ratio" name="Pro recommended-design ratio, N5" -->
 
 **Three things about these tables that must be read before the ratio column.**
 
 *The areas are stated and they do not always match.* A GPU cluster is quantised
-in whole dies and a ROM design is not. At 2,445 mm² the nearest whole number of
-1,600 mm² B200 packages is two, so the N5 Qwen row compares the ROM side against
-**31% more silicon than it has**, which makes that 5.75× conservative. Each
+in whole dies and a ROM design is not. At 4,075 mm² the nearest whole number of
+1,600 mm² B200 packages is three, so the N5 Qwen row compares the ROM side against
+**18% more silicon than it has**, which makes that 5.05× conservative. Each
 report states the direction of the mismatch on the row rather than rounding it
 away.
 
 *The resident-session columns are on the same row as the ratio for a reason.*
-**Five of these six rows divide a one-session machine's rate by a
-several-hundred-session cluster's rate** — every row except DeepSeek-Flash at N6,
-which holds 448. That is a real latency claim: on Qwen3-8B the fastest A100
-cluster anywhere in this study reaches 881.8 tok/s per user, at 224 devices and
-185,024 mm², and the fastest B200 cluster 1,777.0 at 29 packages, so both
+**Four of these six rows divide a one-session machine's rate by a
+several-hundred-session cluster's rate** — the exceptions are DeepSeek-Flash at
+N6, which holds 448 sessions, and DeepSeek-Pro at N5, which holds 265. That is a
+real latency claim: on Qwen3-8B the fastest A100 cluster anywhere in this study
+reaches 1,287.4 tok/s per user, at 224 devices and 185,024 mm², and the fastest
+B200 cluster reaches 1,939.8 at 347 packages, so both
 recommended Qwen machines are above what either GPU family attains at **any**
 silicon budget. But it is not a serving claim, and
 reading it as one is the error the whole of §2d exists to stop being repeated.
 The reports carry the batch-regime table beside the pick for exactly this reason:
-at N6 every serving regime on every model is won by an **HBM-KV** machine, and on
-two of the three the class flips from wafer to array as the batch rises.
+at N6 every batch above one on every model is won by an **HBM-KV** machine.
+Qwen remains an array and Flash remains a wafer; Pro changes from a wafer to an
+array only at batch 256.
 
-*The ratios move in both directions.* Qwen3-8B's N6 ratio rises from 8.24× to
-10.78× because the ROM side dropped from a wafer to three reticles and the GPU
-comparator dropped from 56 A100s to 3, and a 3-GPU tensor group degrades faster
-than a 3-die ROM pipeline. DeepSeek-Flash's N5 ratio **falls from 4.62× to
-1.54×**, because the walk lands it on an 11,410 mm² array whose iso-area B200
-comparator happens to be the GPU's own best machine anywhere in that study. A
-selection rule that only ever moved ratios upward would be a rule worth
-distrusting.
+*The ratios are not a single architecture-wide multiplier.* At the recommended
+batch-1 points they range from 1.79× for N5 DeepSeek-Flash to 6.64× for N6
+DeepSeek-Pro. The selected silicon ranges from a five-die Qwen array to a
+four-wafer Pro system, and the GPU comparator is reselected at each area. Those
+discrete topology and whole-package changes are why the ratio must remain on the
+same row as both areas and both design names.
 
 ### 2h.1 One byte of float, and every SRAM-KV aggregate at batch 1
 
@@ -747,10 +757,10 @@ already shipping mixed FP8/MXFP4 at 4.70 and 4.46.
 
 | study | | design | mm² | user tok/s | tok/s per 1,000 mm² | iso-area GPU | GPU mm² | GPU user tok/s | ratio |
 |---|---|---|---:|---:|---:|---|---:|---:|---:|
-| N6/A100 | **PRIMARY, BF16** | array ×3 | 2,445 | 2,791.2 | 1,141.6 | 3 × A100 | 2,478 | 258.9 | **10.78×** |
-| N6/A100 | variant, 4.25 bits | array ×2 | 1,630 | 5,602.5 | 3,437.1 | 2 × A100 | 1,652 | 489.0 | 11.46× | <!-- figure: 5,602.5 src="results/roofline/quantised_variant/n6_vs_a100/analytical.json#design_selection.models[model=Qwen3-8B].recommended.per_user_tokens_s" name="Qwen variant per-user rate, N6" --> <!-- figure: 3,437.1 src="results/roofline/quantised_variant/n6_vs_a100/analytical.json#design_selection.models[model=Qwen3-8B].recommended.tokens_s_per_1000mm2" name="Qwen variant throughput density, N6" --> <!-- figure: 11.46 src="results/roofline/quantised_variant/n6_vs_a100/analytical.json#design_selection.models[model=Qwen3-8B].recommended.per_user_speed_ratio" name="Qwen variant iso-area ratio, N6" -->
-| N5/B200 | **PRIMARY, BF16** | array ×3 | 2,445 | 3,795.9 | 1,552.5 | 2 × B200 | 3,200 | 660.1 | **5.75×** |
-| N5/B200 | variant, 4.25 bits | array ×1 | 815 | 9,703.7 | 11,906.3 | 1 × B200 | 1,600 | 1,181.2 | 8.21× | <!-- figure: 9,703.7 src="results/roofline/quantised_variant/n5_vs_b200/analytical.json#design_selection.models[model=Qwen3-8B].recommended.per_user_tokens_s" name="Qwen variant per-user rate, N5" --> <!-- figure: 11,906.3 src="results/roofline/quantised_variant/n5_vs_b200/analytical.json#design_selection.models[model=Qwen3-8B].recommended.tokens_s_per_1000mm2" name="Qwen variant throughput density, N5" --> <!-- figure: 8.21 src="results/roofline/quantised_variant/n5_vs_b200/analytical.json#design_selection.models[model=Qwen3-8B].recommended.per_user_speed_ratio" name="Qwen variant iso-area ratio, N5" -->
+| N6/A100 | **PRIMARY, BF16** | array ×7 | 5,705 | 3,517.9 | 616.6 | 7 × A100 | 5,782 | 560.0 | **6.28×** |
+| N6/A100 | variant, 4.25 bits | array ×3 | 2,445 | 7,889.0 | 3,226.6 | 3 × A100 | 2,478 | 701.2 | 11.25× | <!-- figure: 7,889.0 src="results/roofline/quantised_variant/n6_vs_a100/analytical.json#design_selection.models[model=Qwen3-8B].recommended.per_user_tokens_s" name="Qwen variant per-user rate, N6" --> <!-- figure: 3,226.6 src="results/roofline/quantised_variant/n6_vs_a100/analytical.json#design_selection.models[model=Qwen3-8B].recommended.tokens_s_per_1000mm2" name="Qwen variant throughput density, N6" --> <!-- figure: 11.25 src="results/roofline/quantised_variant/n6_vs_a100/analytical.json#design_selection.models[model=Qwen3-8B].recommended.per_user_speed_ratio" name="Qwen variant iso-area ratio, N6" -->
+| N5/B200 | **PRIMARY, BF16** | array ×5 | 4,075 | 4,941.0 | 1,212.5 | 3 × B200 | 4,800 | 978.7 | **5.05×** |
+| N5/B200 | variant, 4.25 bits | array ×2 | 1,630 | 11,817.9 | 7,250.2 | 1 × B200 | 1,600 | 1,180.6 | 10.01× | <!-- figure: 11,817.9 src="results/roofline/quantised_variant/n5_vs_b200/analytical.json#design_selection.models[model=Qwen3-8B].recommended.per_user_tokens_s" name="Qwen variant per-user rate, N5" --> <!-- figure: 7,250.2 src="results/roofline/quantised_variant/n5_vs_b200/analytical.json#design_selection.models[model=Qwen3-8B].recommended.tokens_s_per_1000mm2" name="Qwen variant throughput density, N5" --> <!-- figure: 10.01 src="results/roofline/quantised_variant/n5_vs_b200/analytical.json#design_selection.models[model=Qwen3-8B].recommended.per_user_speed_ratio" name="Qwen variant iso-area ratio, N5" -->
 
 The width is 4.25 bits on both sides — MXFP4 as the OCP Microscaling
 specification defines it, `(32×4 + 8)/32`, within a rounding of the INT4
@@ -763,21 +773,16 @@ and it is why both pairings are published** — reporting only the A100 one woul
 be selecting the study where the GPU is architecturally forbidden from taking the
 credit the ROM side takes.
 
-**The ratio widens, and the mechanism is in the component times.** On the same
-A100 cluster in both artifacts (112 devices, tensor) the GPU gets exactly what it
-should: stored bytes 16,381,470,720 → 4,351,328,160, precisely 4.25/16, and
-weight-read 78.0 µs → 20.7 µs, 3.76×. Its compute term does not move at all,
-because Ampere emulates `w4a8` on the BF16 tensor core. The ROM side gains
-elsewhere: its weight term is a full-array sweep of fixed duration — 76.55 µs at
-any width — so fewer bits buy it a machine needing **two dies instead of three**
-(153.1 µs of sweep against 229.7) rather than a shorter sweep, and its compute
-term falls **312.6 µs → 65.5 µs** because it builds the `w4a8` datapath its
-stored width implies. **Most of the ROM side's gain here is arithmetic density,
-not storage**, and that rests on a `w4a8` compute density which is `derived` from
-published A100 INT4/INT8 roofs scaled by logic density with no silicon behind it
-at N6. Note too that the N5 variant's 815 mm² machine is read against a
-**1,600 mm² B200 package** — roughly twice its silicon — because a cluster is
-quantised in whole dies.
+**The ratio widens in both pairings, but both sides are reselected.** The N6
+recommendation moves from seven BF16 ROM dies against seven A100s to three
+4.25-bit ROM dies against three A100s; N5 moves from five ROM dies against three
+B200 packages to two ROM dies against one B200. Fewer stored bits reduce the
+GPU's weight traffic too, while Ampere emulates `w4a8` on its BF16 tensor core
+and B200 declares it native. The ROM side additionally assumes a purpose-built
+`w4a8` datapath. Its compute density is `derived` from published A100 INT4/INT8
+roofs scaled by logic density, with no fabricated N6 or N5 silicon behind it.
+The N5 variant is close to iso-area — 1,630 mm² of ROM against one 1,600 mm²
+B200 package — but still quantised in whole packages.
 
 **And the sentence that has to sit beside every one of those numbers: no token
 has ever been produced at this precision anywhere in this program, on either
@@ -820,9 +825,9 @@ does not use for that data.
    source.
 4. **Validate against a shipping part** before predicting one that does not
    exist -- and report the gate's outcome rather than tuning to it. There are
-   four gates now: the HC1 throughput gate at 0.72x, the A100 weight-bound gate
-   at 1.000x, the A100 TDP power gate at 0.97x, and the HC1 card-power gate at
-   0.28x, **which fails**. A failing gate that is reported is worth more than a
+   four gates now: the area-infeasible HC1 throughput gate at 0 tok/s, the A100
+   weight-bound gate at 1.000x, the A100 TDP power gate at 1.15x, and the HC1
+   card-power gate at 0.35x, **which fails**. A failing gate that is reported is worth more than a
    passing one that was fitted, and the residual is stated with its size in
    section 2f.
 5. **Compare at equal area**, and say the area on both sides.
