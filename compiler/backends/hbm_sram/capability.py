@@ -116,7 +116,14 @@ SHARED_LIMITS: Mapping[str, int] = {
     "max_loop_depth": 4,
     "max_loop_trip": 1 << 24,
     "max_retired_work": 1 << 46,
-    "max_events": 4096,
+    # A23 lowered this from 4,096.  A scoreboard addressed by event ID holds
+    # max_event_id + 1 entries and cannot carry more distinct signalled events
+    # than that, so 4,096 described a machine no implementation provides.
+    "max_events": 512,
+    # A23: the event ID space the sequencer's scoreboard addresses.  Uniform
+    # across every ABI 3.0 profile because it is a property of the shared
+    # microsequencer, exactly as max_loop_depth is.
+    "max_event_id": 511,
     "max_outstanding_per_queue": 64,
     # 262,144 covers the 8,000-token Qwen acceptance context and the
     # 200,000-token DeepSeek acceptance context on one shared limit.
@@ -126,6 +133,8 @@ SHARED_LIMITS: Mapping[str, int] = {
     "max_vocabulary": 1 << 18,
     "max_sessions": 8,
     "max_nodes": 1,  # replaced per profile
+    # A22: the state slot file the sequencer holds for a transaction.
+    "max_state_resources": 16,
 }
 
 SHARED_ENGINES: Mapping[str, Mapping[str, int]] = {

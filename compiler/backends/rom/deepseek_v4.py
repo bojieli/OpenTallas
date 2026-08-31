@@ -260,6 +260,9 @@ def deepseek_v4_rom_capability(
             "max_loop_trip": 4096,
             "max_retired_work": 1 << 26,
             "max_events": 512,
+            # A23: the event ID space the sequencer's scoreboard addresses.
+            # This lane is the one that needed it: it signals 396 IDs.
+            "max_event_id": 511,
             "max_outstanding_per_queue": 32,
             "max_context_positions": max_context_positions,
             "max_expert_ids": expert_count,
@@ -268,6 +271,9 @@ def deepseek_v4_rom_capability(
             "max_sessions": 16,
             # One wafer-scale logical accelerator is ONE ABI node.
             "max_nodes": 1,
+            # A22: the state slot file the sequencer holds for a transaction.
+            # This lane declares ten STATE resources.
+            "max_state_resources": 16,
         },
         numeric_contracts=NUMERIC_CONTRACTS,
         engines={
@@ -299,6 +305,12 @@ def deepseek_v4_rom_capability(
     )
     capability.validate()
     return capability
+
+
+#: Factories by published profile name.  See the note in
+#: ``compiler/backends/rom/qwen3.py``: one source of truth per published
+#: capability file, checked by ``tools/publish_abi3_capabilities.py --check``.
+PROFILES = {"rom-deepseek-v4": deepseek_v4_rom_capability}
 
 
 # ---------------------------------------------------------------------------

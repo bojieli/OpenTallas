@@ -92,6 +92,7 @@ module tb_a3_deployment;
     localparam integer D_STATE_ADVANCES      = 44;
     localparam integer D_STATE_APPLIED       = 45;
     localparam integer D_STATE_ROWS          = 46;
+    localparam integer D_SIGNAL_ERROR        = 47;
 
     reg [31:0] case_mem  [0:CASE_MEM_WORDS-1];
     reg [31:0] issue_mem [0:ISSUE_MEM_WORDS-1];
@@ -528,15 +529,26 @@ module tb_a3_deployment;
             check_equal(D_VIEW_COUNTER, {32'd0, count_views_resolved},
                         {32'd0, case_mem[base + 33]});
 
-            // -- RTL status bits with no golden counterpart ---------------
-            // event_signal_error and state_apply_overflow are the sequencer's
-            // own status outputs.  runtime.sim.device.Device publishes nothing
-            // to compare them against, so asserting a value here would be a
-            // hand-written expectation -- the one thing this campaign does not
-            // do.  They are counted, printed, and required by
+            // -- RTL status bits ------------------------------------------
+            // event_signal_error is asserted rather than counted, and zero is
+            // not a hand-written expectation: after amendment A24 the bit
+            // reports exactly one condition -- a signal naming an event ID
+            // outside the scoreboard's space -- and amendment A23 makes that
+            // condition a refusal at admission (verifier check
+            // ``event_id_bound``).  A program that reached this point was
+            // admitted, so the ABI says the bit is zero, and a one here is a
+            // divergence from the ABI rather than an unexplained status.
+            //
+            // Before A24 the bit also fired on the second *dynamic* signal of
+            // an event ID, which every loop-compressed program does: it was
+            // set on all four Qwen cases, 691 signals against 26 IDs.
+            //
+            // state_apply_overflow still has no golden counterpart --
+            // runtime.sim.device.Device publishes nothing to compare it
+            // against -- so it stays counted, printed, and required by
             // tools/rtl_abi3_deployment_campaign.py to agree between the two
-            // simulators.  On these programs the event flag is not zero; that
-            // is a reported finding, not a silenced check.
+            // simulators.
+            check_equal(D_SIGNAL_ERROR, {63'd0, event_signal_error}, 64'd0);
             if (event_signal_error) signal_flag_cases = signal_flag_cases + 1;
             if (state_apply_overflow)
                 apply_overflow_cases = apply_overflow_cases + 1;

@@ -161,6 +161,10 @@ def qwen3_rom_capability(
             "max_loop_trip": 4096,
             "max_retired_work": 1 << 24,
             "max_events": 256,
+            # A23: the event ID space the sequencer's scoreboard addresses.
+            # Uniform across every ABI 3.0 profile because it is a property of
+            # the shared microsequencer, exactly as max_loop_depth is.
+            "max_event_id": 511,
             "max_outstanding_per_queue": 16,
             "max_context_positions": max_context_positions,
             "max_expert_ids": 1,
@@ -168,6 +172,8 @@ def qwen3_rom_capability(
             "max_vocabulary": vocabulary_size,
             "max_sessions": 8,
             "max_nodes": 1,
+            # A22: the state slot file the sequencer holds for a transaction.
+            "max_state_resources": 16,
         },
         numeric_contracts=NUMERIC_CONTRACTS,
         engines={
@@ -188,6 +194,14 @@ def qwen3_rom_capability(
     )
     capability.validate()
     return capability
+
+
+#: Factories by published profile name.  ``tools/publish_abi3_capabilities.py``
+#: reads this so ``configs/hardware/abi3_capability/rom_qwen3.json`` has one
+#: source of truth rather than two that can come apart -- the same discipline
+#: the two HBM/SRAM profiles have had since the A8 contract rename moved a
+#: deployment digest through the source nobody had edited.
+PROFILES = {"rom-qwen3": qwen3_rom_capability}
 
 
 def qwen3_layout_policy(*, alignment_bytes: int = ROM_ROW_BYTES) -> RomLayoutPolicy:

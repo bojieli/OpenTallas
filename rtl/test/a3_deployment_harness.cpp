@@ -88,6 +88,7 @@ enum Site : int {
     kStateAdvances = 44,
     kStateApplied = 45,
     kStateRows = 46,
+    kSignalError = 47,
 };
 
 [[noreturn]] void fail(const std::string& message) {
@@ -375,11 +376,15 @@ int main(int argc, char** argv) {
         result.equal(kViewCount, views_seen, view_count);
         result.equal(kViewCounter, model.dut.count_views_resolved, view_count);
 
-        // RTL status bits with no golden counterpart.  See the note in
-        // rtl/test/tb_a3_deployment.sv: runtime.sim.device.Device publishes
-        // nothing to compare them against, so they are counted and printed
-        // rather than asserted against a hand-written constant, and the
-        // campaign requires the two simulators to see the same counts.
+        // RTL status bits.  See the note in rtl/test/tb_a3_deployment.sv:
+        // after amendment A24 event_signal_error reports only an event ID
+        // outside the scoreboard's space, and amendment A23 makes that a
+        // refusal at admission, so zero is the ABI's expectation for any
+        // admitted program rather than a hand-written constant.
+        // state_apply_overflow still has no golden counterpart and stays
+        // counted and printed, with the campaign requiring the two simulators
+        // to see the same counts.
+        result.equal(kSignalError, model.dut.event_signal_error, 0U);
         if (model.dut.event_signal_error) ++signal_flag_cases;
         if (model.dut.state_apply_overflow) ++apply_overflow_cases;
 

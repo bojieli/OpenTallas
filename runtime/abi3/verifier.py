@@ -17,8 +17,11 @@ The proofs performed are:
     bound, which in turn must not exceed the capability;
 6.  forward-only branching inside the authenticated body, so termination follows
     from the loop bounds alone;
-7.  every wait names an event some instruction can signal;
-8.  every prepared state resource has exactly one reachable commit or discard;
+7.  every wait names an event some instruction can signal, and no event ID
+    named by either exceeds the capability's ID space (amendment A23);
+8.  every prepared state resource has exactly one reachable commit or discard,
+    and the deployment declares no more state resources than the capability
+    holds slots for (amendment A22);
 9.  every terminal path reaches exactly one COMPLETE;
 10. permission agreement -- no write to an immutable object, no engine output
     into a read-only object, no ROM write path; and
@@ -63,6 +66,7 @@ from .descriptors import (
     ExtendedDescriptorType,
     MAX_DYNAMIC_TERMS,
     MAX_RANK,
+    MAX_WAIT_PRODUCERS,
     PredicateKind,
     SelectorKind,
     Symbol,
@@ -243,6 +247,46 @@ class Verifier:
             len(events) <= limits["max_events"],
             f"program signals {len(events)} distinct events, capability admits "
             f"{limits['max_events']}",
+        )
+        # Amendment A23.  The count above bounds how many events are live; it
+        # does not bound the *identifiers*.  An implementation whose scoreboard
+        # is a bit per event ID is bounded by the largest ID, and the two
+        # coincide only when IDs are dense from zero -- which no real program's
+        # are.  A program using three IDs numbered 4000, 4001 and 4002 passes
+        # the count check and then indexes past the end of any scoreboard.
+        # Wait-set producers are bounded too: the scoreboard is addressed on
+        # the wait path as well as the signal path.
+        named = set(events)
+        for wait_id in self.table.ids_of_type(
+            ExtendedDescriptorType.EVENT_WAIT_SET
+        ):
+            payload = self.table[wait_id].payload
+            count = int(payload["producer_count"])
+            for slot in range(min(count, MAX_WAIT_PRODUCERS)):
+                producer = payload[f"producer_{slot}"]
+                if producer != NO_ID:
+                    named.add(int(producer))
+        largest = max(named) if named else 0
+        self._check(
+            "event_id_bound",
+            largest <= limits["max_event_id"],
+            f"program names event ID {largest}, capability admits IDs up to "
+            f"{limits['max_event_id']}",
+        )
+        # Amendment A22.  One STATE descriptor is one state resource, and a
+        # transactional-state implementation holds a slot for each declared
+        # resource for the life of a transaction.  Before A22 no capability
+        # field named that slot count, so a deployment declaring more
+        # resources than the sequencer has slots was admitted here and
+        # discovered at run time as a capability trap.
+        state_resources = len(
+            self.table.ids_of_type(ExtendedDescriptorType.STATE)
+        )
+        self._check(
+            "state_resource_bound",
+            state_resources <= limits["max_state_resources"],
+            f"deployment declares {state_resources} state resources, capability "
+            f"admits {limits['max_state_resources']}",
         )
         for did in self.table.ids_of_type(ExtendedDescriptorType.GENERATION_POLICY):
             payload = self.table[did].payload

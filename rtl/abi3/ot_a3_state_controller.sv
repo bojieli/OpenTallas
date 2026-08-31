@@ -151,7 +151,7 @@ module ot_a3_state_controller
                 slot_row_bytes[i] <= 32'd0;
                 slot_generation[i] <= 32'd0;
                 slot_policy[i] <= A3_COMMIT_POLICY_REQUEST_SPAN;
-                pending_slot[i] <= 4'd0;
+                pending_slot[i] <= {SLOT_W{1'b0}};
                 pending_rows[i] <= 32'd0;
             end
             slot_used <= {SLOTS{1'b0}};

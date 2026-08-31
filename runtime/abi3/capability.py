@@ -73,6 +73,12 @@ class Capability:
         "max_loop_trip",
         "max_retired_work",
         "max_events",
+        # Amendment A23.  ``max_events`` counts distinct event IDs; an
+        # implementation whose scoreboard is indexed by event ID is bounded by
+        # the largest ID it must hold, which the count does not express.  Both
+        # are required: the count bounds the scoreboard's occupancy and the ID
+        # bounds its address space.
+        "max_event_id",
         "max_outstanding_per_queue",
         "max_context_positions",
         "max_expert_ids",
@@ -80,6 +86,12 @@ class Capability:
         "max_vocabulary",
         "max_sessions",
         "max_nodes",
+        # Amendment A22.  The number of STATE resources a deployment may
+        # declare.  A transactional-state implementation holds one slot per
+        # declared resource for the life of a transaction, so this is real
+        # storage and, before A22, was the one sequencer bound no capability
+        # field named.
+        "max_state_resources",
     )
 
     def to_dict(self) -> dict[str, Any]:
@@ -115,6 +127,17 @@ class Capability:
         for name, value in self.limits.items():
             if int(value) <= 0:
                 raise ValueError(f"capability limit {name} must be positive")
+        # A22/A23 self-consistency.  A scoreboard addressed by event ID holds
+        # ``max_event_id + 1`` entries, so it cannot carry more distinct
+        # signalled events than that.  A capability claiming otherwise is
+        # describing a machine nothing can build, and before this check it
+        # could: ``hbm_sram_*`` advertised 4,096 distinct events over an ID
+        # space no implementation provides.
+        if self.limits["max_events"] > self.limits["max_event_id"] + 1:
+            raise ValueError(
+                f"capability admits {self.limits['max_events']} distinct events "
+                f"in an event ID space of {self.limits['max_event_id'] + 1}"
+            )
         for bit in self.features:
             Feature(bit)
         mandatory = {

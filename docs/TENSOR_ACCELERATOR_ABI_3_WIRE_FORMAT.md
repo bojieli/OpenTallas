@@ -1360,6 +1360,344 @@ A21 all sixty-three would have become `UNSTAGED` and asserted zero. The
 workspace operator now writes the KV resource's prepared image, which is what
 a real lane emits and what makes those commits mean what they claim.
 
+### 12.12 Amendment A22 — a deployment's state resources are counted, and the capability bounds them
+
+A capability gains one limit:
+
+| Limit | Bounds |
+|---|---|
+| `max_state_resources` | the number of `STATE` descriptors a deployment may declare |
+
+One `STATE` descriptor is one state resource. A transactional-state
+implementation holds a slot per declared resource for the life of a
+transaction — its committed cursor, its capacity, its row stride, its
+generation, its commit policy (A21), and whether a prepare is open — because
+ADR-003 8.6 makes the whole declared state set one architectural transition and
+an abort has to release all of it, not only what this transaction touched. That
+slot file is storage, it is finite, and until this amendment no capability field
+said how deep it was.
+
+A deployment declaring more state resources than the admitting capability holds
+slots for is **refused at admission**, by `runtime.abi3.verifier` check
+`state_resource_bound` and independently by `tools/check_abi3_deployment.py`
+under the same name.
+
+#### What was wrong
+
+`rtl/abi3/ot_a3_pkg.sv` declared
+
+```systemverilog
+localparam integer A3_LOOP_DEPTH   = 4;    // capability max_loop_depth
+localparam integer A3_STATE_SLOTS  = 8;
+localparam integer A3_EVENT_COUNT  = 256;  // capability max_events
+```
+
+Two of those lines name the capability field that expresses them. The middle
+one names nothing, because nothing expressed it: `Capability.REQUIRED_LIMITS`
+had thirteen entries and none of them was a state-slot count, and
+`grep -rn "max_state\|state_slots" runtime/abi3/ configs/` found nothing at
+all. So a deployment with more state resources than the sequencer has slots
+carried only legal values, was admitted by both admission paths, and was
+discovered at run time by the slot file running out:
+
+```systemverilog
+if (!hit_found && !free_found) begin
+    op_ok <= 1'b0;
+    op_trap_class <= A3_TRAP_CAPABILITY;
+```
+
+The DeepSeek-V4-Flash ROM wafer deployment declares **ten** `STATE` descriptors
+— 317, 321, 325, 329, 333, 337, 341, 345, 349 and 353, the compressed caches,
+the ratio-4 and ratio-128 compressor windows and the sliding-window KV ring
+A21 enumerates — and its first ten instructions are ten `STATE.PREPARE`. The
+eighth `STATE.PREPARE` claimed the eighth and last slot; the ninth — the
+instruction at index 8 — found neither a hit nor a free slot and trapped class
+4, eight instructions into the 29,333 the golden model retires. The two Qwen lanes
+declare one state resource each and never came near it, which is why four
+correlating cases said nothing about the bound.
+
+#### What the number is, and why the four profiles agree on it
+
+Sixteen, in every shipped profile. The largest real demand is DeepSeek's ten;
+sixteen is the next power of two and leaves six spare, and the slot file is
+addressed by `$clog2(SLOTS)`, so sixteen is one address bit rather than a
+ragged decoder.
+
+They agree because this is storage in the shared microsequencer, exactly as
+`max_loop_depth` is — four in all four profiles since the freeze, for the same
+reason. A profile is free to differ in what the sequencer *streams* past
+itself, and the four do: `max_instructions` ranges over 4,096, 8,192 and
+65,536, and `max_descriptors` over 16,384 and 65,536, because an instruction
+and a descriptor are read from memory and not held. What the sequencer *holds*
+is one design. A profile that claimed more state slots than the sequencer
+implements would be a claim no implementation of it could honour, which is the
+defect this amendment closes rather than a freedom it should preserve.
+
+#### RTL 3.0
+
+Involved. `A3_STATE_SLOTS` becomes 16, `SLOT_W` becomes 4, and
+`ot_a3_state_controller.sv`'s slot file grows from 1,647 to 3,305 flip-flops
+— +1,658, and the hit/free scan becomes a sixteen-way priority search instead
+of an eight-way one. Nothing else in the block changes: every width in it was
+already derived from `SLOTS` or `SLOT_W`.
+
+Every width except one. The reset loop wrote
+
+```systemverilog
+pending_slot[i] <= 4'd0;
+```
+
+into a `[SLOT_W-1:0]` register — a literal that happened to be right at
+`SLOT_W = 3` by truncation and at `SLOT_W = 4` by luck, and would have been a
+silent width mismatch at any larger slot count. It is now `{SLOT_W{1'b0}}`,
+which is what every other reset in the block already was.
+
+### 12.13 Amendment A23 — an event ID is bounded by the capability's ID space, not by a count of events
+
+A capability gains one limit, and one consistency rule:
+
+| Limit | Bounds |
+|---|---|
+| `max_event_id` | the largest event ID an instruction's signal-event field, or a wait set's producer slot, may name |
+
+and `max_events <= max_event_id + 1`, checked in `Capability.validate`.
+
+`max_events` is unchanged in meaning: it bounds how many *distinct* events a
+program signals. `max_event_id` bounds the *identifiers*. Neither implies the
+other in the direction that matters, and an implementation whose event
+scoreboard is a bit per ID is bounded by the second. Both checks stand —
+`event_count_bound` and `event_id_bound` — in `runtime.abi3.verifier` and
+independently in `tools/check_abi3_deployment.py`.
+
+#### What was wrong
+
+```systemverilog
+localparam integer A3_EVENT_COUNT  = 256;  // capability max_events
+```
+
+The comment was true of exactly one of the four shipped profiles. `rom_qwen3`
+admitted 256, `rom_deepseek_v4` 512, and both HBM/SRAM profiles 4,096. A
+parameter documented as a capability field, disagreeing numerically with three
+of the four capabilities it claims to transcribe, is not a bound anything
+enforces.
+
+And the check it named was the wrong check. `runtime/abi3/verifier.py` proved
+
+```python
+len(events) <= limits["max_events"]
+```
+
+— the *count* of distinct IDs. The scoreboard is addressed by ID:
+
+```systemverilog
+wire signal_in_range = (signal_event_id < EVENTS);
+wire [EVENT_INDEX_W-1:0] signal_index = signal_event_id[EVENT_INDEX_W-1:0];
+```
+
+so what bounds it is the largest ID plus one. The two coincide only when IDs
+are dense from zero. A program signalling three events numbered 4000, 4001 and
+4002 passes the count check against any of the four profiles and then indexes
+past the end of a scoreboard that has no such entries.
+
+The DeepSeek-V4-Flash wafer program is the dense case and still overran it: 396
+distinct IDs, numbered 0 through 395, against `A3_EVENT_COUNT = 256`. IDs 256
+to 395 would have aliased onto 0 to 139 — a wait on one of them would have been
+satisfied by an unrelated producer, or trapped class 13 against one that had
+not run. It never got that far, because A22's slot file stopped the program at
+instruction 8; the aliasing was latent behind it and would have been the next
+divergence.
+
+#### The consistency rule found a third thing
+
+A scoreboard addressed by ID holds `max_event_id + 1` entries and therefore
+cannot carry more than that many distinct signalled events. `max_events` of
+4,096 over an ID space of 512 describes a machine nobody can build. Both
+HBM/SRAM profiles said exactly that, and nothing checked it, because until
+`max_event_id` existed there was nothing to check it against. Their `max_events`
+comes down from 4,096 to 512 with this amendment. That narrows what those
+profiles admit and widens nothing: no program that was refused becomes
+admitted.
+
+#### What the number is
+
+`max_event_id = 511` in every shipped profile, an ID space of 512. The largest
+real demand is DeepSeek's 395, so 116 IDs of margin, and 512 is what
+`rom_deepseek_v4` already advertised for `max_events`. The four agree for A22's
+reason: this is storage in the shared microsequencer.
+
+#### RTL 3.0
+
+Involved. `A3_EVENT_COUNT` becomes 512 and `EVENT_INDEX_W` follows it from 8 to
+9 — the scoreboard already derives its index width from its `EVENTS` parameter,
+with a comment saying why, and that comment is the reason raising the parameter
+is a one-line change instead of an aliasing bug. `signalled` and `published`
+grow from 512 to 1,024 flip-flops, +512.
+
+A23 also narrows what `signal_error` reports; A24 has the rest of that.
+
+### 12.14 Amendment A24 — an event is a level, and every retiring instruction that names one raises it
+
+Two rules, both about when an event becomes signalled.
+
+**Single assignment is a property of the program text.** ADR-003 section 9 says
+"events are single-assignment within one transaction". That is a rule on the
+program: at most one instruction may name a given event ID in its signal-event
+field, which `runtime.abi3.verifier._verify_instructions` proves at admission.
+It is not a rule on the execution. An event is a **level**: its one producer
+raises it when it retires, nothing lowers it before the transaction ends, and
+raising a level that is already raised is idempotent. The publication bit is a
+level for the same reason: once a `SIGNAL_RELEASE` has ordered the producer's
+writes ahead of the signal, a later signal without one does not un-order them.
+
+**No instruction family is exempt from publishing.** Section 3 gives every
+instruction a signal-event ID and says only that `NO_ID` means no publication.
+Section 4 exempts no family. A `CONTROL` instruction that names an event
+publishes it on retirement exactly as an engine instruction does, and a
+`CONTROL.NOP` that names one is a real and useful shape: it publishes "every
+producer named above this point has retired" without dispatching any work.
+
+#### Why the level reading is the only one available
+
+The dynamic reading — an event may be *written* at most once during the
+execution — is not a stricter version of the same rule. It is a different rule,
+and it is unimplementable here:
+
+- It makes every loop-compressed program illegal, and loop-compressed programs
+  are the only kind ABI 3.0 admits. Amendments A4 and A13 exist precisely so a
+  descriptor can be a function of an induction variable and a block loop can
+  state its final iteration; a producer inside a loop body signals once per
+  trip by construction.
+- Satisfying it would need one event ID per loop trip. One DeepSeek prefill
+  retires 29,333 instructions against capability event spaces of hundreds. The
+  ID space would have to scale with retired work, which is the ABI 2.5 failure
+  this version exists to remove.
+- There is no re-arm. No operator in section 4 clears an event and no
+  descriptor field says an event is auto-clearing, so a pulse could never be
+  re-observed and the ABI gives a program no way to ask for one.
+- `_verify_events`' proof that no wait deadlocks is about *program order* — a
+  wait's producers must precede it, and control flow is forward-only apart from
+  `LOOP_NEXT` back edges. That argument is preserved trip to trip by a level
+  and destroyed by a pulse.
+
+`runtime.sim.device.Device` has executed the level reading since the beginning:
+`signalled` is a `set`, `signalled.add` is idempotent, and a re-signal is
+reported nowhere. The reference model is right and this amendment writes down
+what it does.
+
+#### What was wrong
+
+`rtl/abi3/ot_a3_event_scoreboard.sv` implemented the dynamic reading:
+
+```systemverilog
+if (signalled[signal_index])
+    signal_error <= 1'b1;
+signalled[signal_index] <= 1'b1;
+```
+
+Every engine instruction in the Qwen-3 8B program sits inside a loop, so on one
+prefill the sequencer raised **691 signals against 26 distinct event IDs** and
+the sticky error bit was set on all four Qwen cases — 100% of the shipped
+programs the RTL could run at the time. Nothing trapped on it, `Device`
+published no counterpart, and no campaign compared it, so a bit that fired on
+every program the project ships had never been read as a defect.
+
+The second rule was wrong in the other direction. `ot_a3_microsequencer.sv`
+raised `evt_signal_valid` in exactly one place:
+
+```systemverilog
+S_ISSUE: begin
+    ...
+    if (issue_valid && issue_ready) begin
+        issue_valid <= 1'b0;
+        evt_signal_valid <= (ins_signal_event_id != A3_NO_ID);
+```
+
+No `CONTROL` instruction reaches `S_ISSUE`, so a `CONTROL` instruction naming
+an event never published it. `runtime/sim/device.py` had already been repaired
+here — "Nothing in the wire format exempts CONTROL from publishing an event;
+the asymmetry was accidental" — and the RTL had not, with nothing correlating
+the two because no program had exercised it. Qwen has none: all 26 of its
+signalling instructions are `DMA`, `TENSOR`, `VECTOR`, `ATTENTION` or
+`SELECTION`. DeepSeek has five, all `CONTROL.NOP`, at instructions 392, 398,
+661, 964 and 970, signalling events 132, 135, 227, 329 and 332. Wait set 1433
+at instruction 402 declares `ACQUIRE` ordering over producers 95, 132 and 135,
+and two of those three are published by a `CONTROL.NOP`. With A22's and A23's
+bounds raised the RTL reached instruction 402 and trapped class 13 there,
+having retired 1,464 of the 29,333 the golden model retires — a defect that
+only became visible once the two ahead of it were closed.
+
+#### RTL 3.0
+
+Involved, on both rules.
+
+The scoreboard drops the repeat-assignment error. `signal_error` now reports
+exactly one condition, an event ID outside the implemented space, which A23
+makes a refusal at admission — so on any admitted program the bit is zero, and
+that is the ABI's answer rather than a hand-written expectation. Both checkers
+of the deployment co-simulation therefore *assert* it, at divergence site 47,
+instead of counting it.
+
+The microsequencer gains a `publish_signal` task called from every `CONTROL`
+retirement — `NOP`/`WAIT`/`FENCE`/`ASSERT`, `BRANCH`, `COMPLETE`, and the
+shared `S_LOOP_DONE` that retires `LOOP_SETUP` and `LOOP_NEXT`. `CONTROL.TRAP`
+does not retire and does not publish, and neither does a predicated-off
+instruction of any family, which is what `Device` does on both paths.
+
+### 12.15 What A22, A23 and A24 moved, and what they cost
+
+Adding a limit to a capability changes its canonical JSON, which changes its
+digest, which changes the digest of every deployment admitted against it. That
+is done here, once, with the amendments that cause it, in the way A20 did it:
+
+| capability | before | after |
+|---|---|---|
+| `rom_qwen3` | `717de6c9…` | `38234d6c…` |
+| `rom_deepseek_v4` | `46ba2338…` | `91f7e6cc…` |
+| `hbm_sram_single_chip` | `afdb2245…` | `dd650068…` |
+| `hbm_sram_cluster_32` | `c638808c…` | `61d90451…` |
+
+| deployment | before | after |
+|---|---|---|
+| Qwen3-8B ROM single chip | `a60d8500…` | `c71ee77e…` |
+| Qwen3-8B HBM single chip | `05bf410b…` | `fb5c66df…` |
+| DeepSeek-V4-Flash ROM wafer | `507e0b57…` | `f5f21bb2…` |
+
+Nothing else about any of the three programs moves: 75 instructions and 239
+descriptors on the Qwen ROM lane, 75 and 218 on the Qwen HBM lane, 1,156 and
+3,387 on the DeepSeek wafer lane, the same retired work, the same tokens.
+
+The RTL grows by **2,170 flip-flops** — 1,658 in the state slot file (1,647 to
+3,305) and 512 in the event scoreboard (512 to 1,024) — plus the combinational
+widening that goes with them: a sixteen-way slot search instead of an eight-way
+one, and one more bit of event index. That is the whole cost of the three
+amendments and is what the physical lane must re-synthesise against. Nothing
+else in the sequencer changes size: an instruction and a descriptor are
+streamed past it, not held.
+
+`configs/hardware/abi3_capability/*.json` are published from the profiles that
+define them by `tools/publish_abi3_capabilities.py`, which grew two entries
+with this amendment: the two ROM profiles had the same two sources of truth
+that tool exists to remove, and were simply not listed in it. They agreed with
+the code by coincidence, with nothing checking that they did.
+
+#### How far it gets
+
+With A22, A23 and A24 the shipped-deployment co-simulation
+(`tools/rtl_abi3_deployment_campaign.py`) correlates **all three** deployments
+against `runtime.sim.device.Device` at full depth, on both entrypoints, under
+Icarus 11.0 and Verilator 5.050, with both simulators printing the same marker:
+
+```text
+PASS: ABI3 RTL deployment co-simulation deployments=3 cases=6 completions=6 issues=19029 views=58849 signal_flag_cases=0 apply_overflow_cases=0 checks=410331
+```
+
+The DeepSeek-V4-Flash wafer prefill retires 29,333 instructions with 12,657
+engine issues and 39,849 resolved operand views, and its decode 11,591 with
+3,600 and 10,428 — up from 8 retired instructions and 8 engine issues before
+these amendments. What the campaign still does not establish is unchanged and is
+listed in the artifact: the engines are recording no-ops on both sides, so this
+is the control plane and not the arithmetic.
+
 ## 13. Amendments made at the architecture freeze
 
 The draft of this document disagreed with `TA-ADR-003` in five places. All five
@@ -1407,6 +1745,9 @@ remain normative.
 | A19 | a sparse index is produced joined, rebased and compacted | this document, section 12.9; operator conventions, section 19 |
 | A20 | a dense index is a selection with the selection removed; an index family is refused where it is not implemented | this document, section 12.10; operator conventions, section 20 |
 | A21 | a state commit's row count is declared by the resource, not taken from the request span | this document, section 12.11; operator conventions, section 21 |
+| A22 | a deployment's state resources are counted, and the capability bounds them | this document, section 12.12 |
+| A23 | an event ID is bounded by the capability's ID space, not by a count of events | this document, section 12.13 |
+| A24 | an event is a level, and every retiring instruction that names one raises it | this document, section 12.14 |
 
 Two of these carry more weight than the rest. **A4** and **A13** together are
 what make a loop-compressed program possible at all: A4 lets a descriptor be a

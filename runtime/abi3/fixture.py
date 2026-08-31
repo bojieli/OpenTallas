@@ -68,6 +68,8 @@ def fixture_capability(topology: TopologyClass = TopologyClass.SINGLE_CHIP) -> C
             "max_loop_trip": 1 << 20,
             "max_retired_work": 1 << 32,
             "max_events": 256,
+            "max_event_id": 511,
+            "max_state_resources": 16,
             "max_outstanding_per_queue": 8,
             "max_context_positions": 64,
             "max_expert_ids": 1024,

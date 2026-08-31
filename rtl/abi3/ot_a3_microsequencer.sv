@@ -483,6 +483,22 @@ module ot_a3_microsequencer
     wire [15:0] expected_type = a3_family_descriptor_type(ins_major);
     wire work_exceeded = ({32'd0, count_retired} > work_bound);
 
+    // Wire format section 3 gives *every* instruction a signal-event ID and
+    // exempts no family from publishing it; section 4 does not exempt CONTROL
+    // either.  runtime/sim/device.py publishes on the CONTROL path for exactly
+    // that reason ("Nothing in the wire format exempts CONTROL from publishing
+    // an event; the asymmetry was accidental"), and this block did not: it
+    // raised evt_signal_valid only in S_ISSUE, which no CONTROL instruction
+    // reaches.  A CONTROL.NOP that names an event is a real shape -- it is how
+    // a program publishes "everything before this point has retired" without
+    // dispatching work -- and the DeepSeek-V4-Flash wafer program uses it
+    // twice inside one layer.  Called from every CONTROL retirement.
+    task publish_signal;
+        begin
+            evt_signal_valid <= (ins_signal_event_id != A3_NO_ID);
+        end
+    endtask
+
     task raise_trap;
         input [15:0] class_value;
         input [31:0] fault_index;
@@ -778,17 +794,20 @@ module ot_a3_microsequencer
                             A3_CONTROL_FENCE,
                             A3_CONTROL_ASSERT: begin
                                 count_retired <= count_retired + 32'd1;
+                                publish_signal;
                                 pc <= pc + 32'd1;
                                 state <= S_CHECK_PC;
                             end
                             A3_CONTROL_BRANCH: begin
                                 count_retired <= count_retired + 32'd1;
                                 count_branches <= count_branches + 32'd1;
+                                publish_signal;
                                 pc <= ins_control_id;
                                 state <= S_CHECK_PC;
                             end
                             A3_CONTROL_COMPLETE: begin
                                 count_retired <= count_retired + 32'd1;
+                                publish_signal;
                                 complete <= 1'b1;
                                 st_commit_all <= 1'b1;
                                 state <= S_COMMIT;
@@ -859,6 +878,7 @@ module ot_a3_microsequencer
                             raise_trap(loop_trap_class, pc);
                         end else begin
                             count_retired <= count_retired + 32'd1;
+                            publish_signal;
                             pc <= loop_next_pc;
                             state <= S_CHECK_PC;
                         end

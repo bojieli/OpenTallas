@@ -2,14 +2,28 @@
 // ---------------------------------------------------------------------------
 // ABI 3.0 event scoreboard and wait-set evaluation.
 //
-// Events are single assignment: a program may signal an event ID at most once
-// (verifier._verify_instructions proves this at admission, and this block
-// enforces it again at run time rather than trusting the proof).  Two bits are
-// kept per event:
+// Amendment A24.  Events are single assignment, and single assignment is a
+// property of the *program text*: at most one instruction may name an event ID
+// as its signal event, which verifier._verify_instructions proves at
+// admission.  It is not a property of the execution.  A loop-compressed
+// program -- the only kind ABI 3.0 admits, which is what amendments A4 and A13
+// exist for -- re-executes its producer once per trip, so an event inside a
+// loop body is signalled once per trip by the one instruction that owns it.
 //
-//   signalled  the producing instruction retired
+// An event is therefore a **level** that the producer raises and nothing
+// lowers before the transaction ends.  Raising a level that is already raised
+// is idempotent, not an error.  This block used to raise a sticky error bit on
+// the second signal of an ID, which made every one of the shipped programs
+// look defective: Qwen3-8B signals 691 times against 26 IDs on one prefill.
+// runtime.sim.device.Device has always held ``signalled`` as a set, and the
+// set is the reference; A24 writes the rule down and this block implements it.
+// Two bits are kept per event:
+//
+//   signalled  the producing instruction retired, on this trip or an earlier
+//              one; monotone within a transaction
 //   published  its writes are ordered before the signal (SIGNAL_RELEASE, or a
-//              wait-set ordering of RELEASE / ACQUIRE_RELEASE / SEQUENTIAL)
+//              wait-set ordering of RELEASE / ACQUIRE_RELEASE / SEQUENTIAL);
+//              monotone for the same reason
 //
 // A wait set (EVENT_WAIT_SET_PAYLOAD) is evaluated one producer per cycle, in
 // slot order, so the cost is bounded by the frozen twelve-producer maximum and
@@ -19,6 +33,12 @@
 // may not complete against a signal that has not been ordered against its
 // producer's writes.  Waiting on an event that was never signalled is an
 // internal-invariant trap (class 13), matching the golden model.
+//
+// ``signal_error`` therefore reports exactly one condition: a signal naming an
+// event ID outside the implemented space.  Under amendment A23 that condition
+// is refused at admission (verifier check ``event_id_bound``), so on any
+// admitted program the bit is zero -- and the deployment co-simulation now
+// asserts that rather than merely counting it.
 // ---------------------------------------------------------------------------
 module ot_a3_event_scoreboard
     import ot_a3_pkg::*;
@@ -33,7 +53,7 @@ module ot_a3_event_scoreboard
     input  wire         signal_valid,
     input  wire [31:0]  signal_event_id,
     input  wire         signal_release,
-    output reg          signal_error,      // sticky: repeat assignment seen
+    output reg          signal_error,      // sticky: event ID out of range
 
     // wait-set evaluation
     input  wire         wait_start,
@@ -107,10 +127,13 @@ module ot_a3_event_scoreboard
                 if (signal_valid) begin
                     signal_count <= signal_count + 32'd1;
                     if (!signal_in_range) begin
+                        // A23: an ID the scoreboard cannot address.  Admission
+                        // refuses this, so reaching it is an implementation
+                        // fault and the bit is sticky so it cannot be missed.
                         signal_error <= 1'b1;
                     end else begin
-                        if (signalled[signal_index])
-                            signal_error <= 1'b1;
+                        // A24: setting a level that is already set is this
+                        // event's one producer running on a later loop trip.
                         signalled[signal_index] <= 1'b1;
                         if (signal_release)
                             published[signal_index] <= 1'b1;

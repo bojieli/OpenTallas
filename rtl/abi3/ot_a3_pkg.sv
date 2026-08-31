@@ -164,9 +164,21 @@ package ot_a3_pkg;
     localparam [7:0] A3_ORDER_SEQUENTIAL      = 8'd4;
 
     // -- implementation bounds (capability fields, not ABI) -------------
+    // Every one of these is now expressed by something a deployment is
+    // admitted against, so a program that does not fit is refused at
+    // admission rather than discovered here as a trap.  A bound nothing
+    // expresses is a bound nothing can refuse, which is what amendments A22
+    // and A23 exist to close: A3_STATE_SLOTS was named by no capability field
+    // at all, and A3_EVENT_COUNT was labelled with max_events -- a *count* of
+    // distinct IDs, which does not bound an ID-indexed scoreboard.
+    //
+    // These are uniform across all four shipped capability profiles because
+    // they are storage in the shared microsequencer, exactly as
+    // max_loop_depth is; a profile is free to differ in what it streams
+    // (instructions, descriptors) and not in what the sequencer holds.
     localparam integer A3_LOOP_DEPTH   = 4;    // capability max_loop_depth
-    localparam integer A3_STATE_SLOTS  = 8;
-    localparam integer A3_EVENT_COUNT  = 256;  // capability max_events
+    localparam integer A3_STATE_SLOTS  = 16;   // capability max_state_resources (A22)
+    localparam integer A3_EVENT_COUNT  = 512;  // capability max_event_id + 1 (A23)
     localparam integer A3_WAIT_PRODUCERS = 12; // MAX_WAIT_PRODUCERS
 
     // -- decoder error registry (block-local, mapped to trap classes) ---
