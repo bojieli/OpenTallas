@@ -462,7 +462,7 @@
    "problems": [],
    "prompt_token_count": 32,
    "record": "results/abi3/accelerator_tokens/deepseek_v4_flash_hbm_p32.json",
-   "record_sha256": "c5bb49a0210f7f52ea89083ccf953f772ae4ce42053b50ecefb84cc6e94ca24c",
+   "record_sha256": "588331fb4215e17916ffb961b76cddfdc97105bf3c1a330ef1b961e46040f646",
    "status": "pass",
    "workload_id": "TA-DS-CHAT-1-P32"
   }
@@ -475,6 +475,6 @@
   "results/abi3/deepseek_v4_reference_oracle_threshold.json": "60c5118b6062d04e3ead091439f6f56ade9b2e26d62c43c5b7b971fb86bc15e3",
   "runtime/sim/device.py": "b5f74f208bd4e247c342abc2d7eb8e71b61e37c58b76ff0913ba3c93edcc6db9",
   "tools/check_deepseek_v4_context_gate.py": "7cc59339247041ff2f861970f1f924091191642302c1d0d0b9990e0b5f1f34f1",
-  "tools/run_accelerator_tokens.py": "b0a9b6e50222011cf49b1ec73c9aa6d26e282fcc3ed519d2ae30a5b1b0d587b4"
+  "tools/run_accelerator_tokens.py": "d22241a4c8346712c0404185889c2cf681c5238c1972bc824bcd896a8db62c40"
  }
 }

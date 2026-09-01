@@ -20,16 +20,18 @@
 > `results/abi3/comparison_qwen_rom_vs_hbm.json` →
 > `token_agreement {identical: true, common_prefix_length: 24}`. Both real models <!-- figure: 24 src="results/abi3/comparison_qwen_rom_vs_hbm.json#token_agreement.common_prefix_length" name="ROM-vs-HBM token identity horizon" -->
 > compile, and all four deployments are admitted by an independent verifier.
-> **DeepSeek-V4-Flash has now produced a validated token too**, on the ROM
-> backend: token **13806** from a **32**-token prefix of `TA-DS-CHAT-1` <!-- figure: 13806 src="results/abi3/accelerator_tokens/deepseek_v4_flash_rom_p32_raw.json#tokens[0]" name="DeepSeek ROM first validated token, README" --> <!-- figure: 32 src="results/abi3/accelerator_tokens/deepseek_v4_flash_rom_p32_raw.json#prompt_tokens" name="DeepSeek ROM validated-token prompt length, README" -->
-> matching an independent oracle's **13806** for the byte-identical prompt <!-- figure: 13806 src="results/abi3/deepseek_v4_reference_oracle_prefix.json#results['TA-DS-CHAT-1-P32'].generated_token_ids[0]" name="DeepSeek oracle first token, P32 prefix, README" -->
-> ([`results/abi3/accelerator_tokens/`](results/abi3/accelerator_tokens/)). That
-> capture is filed **raw and carries no evidence grade**, because it came from an
-> ad-hoc driver rather than a committed reproducible tool, and one token says
-> nothing about decode across steps; `results/abi3/accelerator_tokens/README.md`
-> states the boundary. So the token deliverable is **three of four** — Qwen HBM,
-> Qwen ROM, DeepSeek ROM — and DeepSeek HBM has produced none, which is why there
-> is still no ROM-versus-HBM comparison for that model.
+> **DeepSeek-V4-Flash now has governed four-token captures on both backends**
+> for the 32-token `TA-DS-CHAT-1-P32` prompt. HBM generates **4** tokens <!-- figure: 4 src="results/abi3/accelerator_tokens/deepseek_v4_flash_hbm_p32.json#generated_token_count" name="DeepSeek HBM governed generated tokens, README" -->
+> — `[13806, 345, 7472, 55560]` — identical to the external oracle. ROM also
+> completes four transactions and starts with the oracle's **13806** <!-- figure: 13806 src="results/abi3/accelerator_tokens/deepseek_v4_flash_rom_p32.json#generated_token_ids[0]" name="DeepSeek ROM first governed token, README" -->,
+> but its sequence `[13806, 334, 305, 13806]` first diverges at index **1** <!-- figure: 1 src="results/abi3/accelerator_tokens/deepseek_v4_flash_rom_p32.json#oracle.first_divergence_index" name="DeepSeek ROM governed first divergence, README" -->.
+> Both records come from the committed `tools/run_accelerator_tokens.py`, and
+> every recorded transaction returns `SUCCESS` with trap `NONE`. All four
+> model/backend targets have therefore produced a reference-validated token,
+> but DeepSeek's cross-backend and oracle-identity horizon remains one token;
+> ROM multi-token correctness is not established. The artifacts and their
+> claim boundary are in
+> [`results/abi3/accelerator_tokens/`](results/abi3/accelerator_tokens/).
 >
 > **Two things that are separately true and must not be blurred.** The above is
 > the functional-simulator path. Whether the *RTL* runs a given shipped
@@ -40,9 +42,10 @@
 > deployments and no others.** A validated token from the golden model is not
 > evidence that the RTL runs the same design.
 >
-> It does **not** yet have accelerator results at the mandatory contexts, a
-> ROM-versus-HBM comparison, a fabricated chip or wafer, a full-chip
-> placed-and-routed netlist, or foundry signoff DRC/LVS. Progress is tracked in
+> It does **not** yet have accelerator results at the mandatory contexts, an
+> oracle-identical DeepSeek ROM continuation, a fabricated chip or wafer, a
+> full-chip placed-and-routed netlist, or foundry signoff DRC/LVS. Progress is
+> tracked in
 > [`docs/UNIFIED_EXECUTION_CHECKLIST.md`](docs/UNIFIED_EXECUTION_CHECKLIST.md),
 > the narrative and judgements in
 > [`docs/ABI3_PROGRAM_REPORT.md`](docs/ABI3_PROGRAM_REPORT.md), and every

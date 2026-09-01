@@ -1288,3 +1288,62 @@ lanes are a precondition for it, not the product. These items are the product.
   constant stays `assumed`. What does transfer is the structural statement:
   the lane's period is set by one unpipelined binary32 addition written as a
   serial shift chain, and that is true at any node.
+
+- **OI-45 — fixed: the diagnostic CLIs allowed blocked-GEMM identity to drift.**
+  The governed DeepSeek token records fix `OMP_NUM_THREADS`,
+  `OPENBLAS_NUM_THREADS`, and `MKL_NUM_THREADS` at eight because the linked
+  BLAS's thread count is part of the blocked binary32 association. A bare
+  operator-bisect invocation inherited none of those variables and therefore
+  produced different layer-0 hashes even though the deployment, workload, and
+  runtime source hashes were unchanged. Repeating it with the governed identity
+  reproduced the retained boundary hash exactly.
+
+  The three accelerator CLIs now establish eight as their default before any
+  NumPy/runtime import, preserve an explicit caller override, and record the
+  implementation identity in diagnostic lanes as well as token captures.
+  `results/abi3/deepseek_v4_layer00_norm_input_bisect.json` records both lanes
+  as NumPy 2.2.6 with scipy-openblas 0.3.29 and all three thread variables at
+  eight; it also records identical RMSNorm inputs, weights, frozen-contract
+  outputs, and layer-1 boundary inputs. Subprocess tests remove the variables
+  and prove the default, then set all three to another value and prove the
+  override remains authoritative.
+
+  **Claim boundary:** this closes replay identity, not DeepSeek ROM numeric
+  correctness. It changes no numeric contract and does not turn a divergent
+  token sequence into a pass.
+
+- **OI-46 — the remaining ROM/HBM prefill difference is one routed expert
+  result, not the expert reducer.** With the OI-45 implementation identity
+  fixed, `results/abi3/deepseek_v4_lane_activation_bisect.json` compares all 44
+  logical P32 boundaries: boundaries 0--31 are byte-identical and boundary 32,
+  the layer-4 input produced by layer 3, is the first difference.
+
+  The early-stop operator trace in
+  `results/abi3/deepseek_v4_boundary32_operator_bisect.json` compares 193
+  terminal layer-3 outputs and first differs at `EXPERT_REDUCE` source kernel
+  331, invocation 2. Its 64 comparable reducer inputs make the direction
+  unambiguous: all 32 shared-expert payloads match, and 31 of 32 routed payloads
+  match. The only divergent routed payload is invocation 2, where leading
+  slice 2 differs and the other five selected-expert slices are identical.
+  Reducer arithmetic therefore cannot be the origin.
+
+  The follow-on `results/abi3/deepseek_v4_routed_chain_input_bisect.json`
+  traces sources 317--324. A shape-normalized inspection aligns ROM's 32 row
+  invocations with HBM's batched leading axis: all 2,368 comparable slices
+  match, including route IDs, normalized inputs, FP8 dispatch/QDQ data,
+  gate/up outputs, SwiGLU and route-weight inputs, weighted activations, and the
+  FP8 activation plus expert IDs entering source 324. The first semantic
+  difference is source 324's routed down-projection output at global selected
+  row 14, the same prompt-row-2 / selected-expert-slice-2 result observed by the
+  reducer.
+
+  HBM realizes source 324 as a `[192,128]` local projection followed by two
+  collection/reshaping operators; ROM computes `[6,4096]` per prompt row. The
+  physically sharded weight views are not directly byte-comparable, so this
+  evidence localizes the next fix to that down-projection/collection path but
+  does not yet distinguish weight-view mapping, shape-dependent blocked-GEMM
+  association, and collection ordering.
+
+  These are functional diagnostic runs. They stop before committing the
+  transaction, make no token claim, and do not change the retained conclusion
+  that DeepSeek ROM multi-token correctness is not established.
