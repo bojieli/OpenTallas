@@ -564,3 +564,51 @@ annotation beside a figure, re-reads the artifact and fails on disagreement,
 over several hundred annotated figures with a per-document coverage floor. That
 is the "one durable fix" §6 names, built. It remains silent about every figure
 nobody annotated, which is why §5 is still the most durable part of this ledger.
+
+---
+
+# 8. Additions of 2026-09-01
+
+## 8a. Four-target ABI 3.0 checkpoint/restart exactness
+
+| number / claim | where it is stated | what produces it | grade | current? |
+|---|---|---|---|---|
+| Qwen3-8B HBM and ROM and DeepSeek-V4-Flash-0731 HBM P32 and ROM P32 each reproduce a three-token uninterrupted baseline exactly when stopped after token two, checkpointed, and resumed for token three in a fresh process | checklist W6.6 and the four `results/abi3/restart_exactness_*.json` artifacts | `make abi3-restart` → `tools/run_abi3_restart_exactness.py` → `runtime/sim/checkpoint.py`; the four target-specific Make recipes remain independently runnable | **`executed`**, functional-simulator evidence only | **YES** |
+| the DeepSeek HBM capture restores all 32 node arenas and ends with the same aggregate counter set and all 32 per-node counter sets, including sticky-overflow state | `results/abi3/restart_exactness_deepseek_hbm_p32.json` → `record.target.node_count`, `record.notes.node_counters_identical`, `record.notes.checkpoint` | the governed HBM P32 restart recipe above | **`executed`**, functional-simulator evidence only | **YES** |
+
+The equality is guarded rather than inferred from two short lists. Each primary
+campaign phase has a distinct PID and records the same deployment digest,
+implementation identity, Python source digest, and node count. The interrupted
+prefix must be non-empty and match the baseline, the fresh process must skip
+prefill and perform real decode work, and token length, retired work, aggregate
+counters, and per-node counters must all match. All four retained artifacts are
+`status: pass`, carry no failed guard, and share source digest
+`71f5f9aaa6b1df1d318dc18d3f15d5dcf39d5f632a325bd32b53056a5cc76ab6`,
+which also matches the tree that was committed with them.
+
+The checkpoint evidence is deliberately complete over the simulator's mutable
+boundary. Schema v2 enumerates every writable zero-source object for every
+node, verifies that exact node/object set before restoring any bytes, and
+retains aggregate counters, every per-node counter set, device/session
+bookkeeping, and sparse object digests. The largest capture is DeepSeek HBM:
+4,032 node/object images representing 5,661,837,527,296 logical mutable bytes
+are encoded in 1,272,545,408 logical payload bytes. This is a lossless sparse
+encoding claim, not a claim that the physical hardware contains a multi-terabyte
+checkpoint store.
+
+The controls establish sensitivity. In every lane, a normal resume exits
+successfully and reproduces the baseline; a second successful resume with every
+STATE-class image erased changes the first resumed token. A complementary
+STATE-only run erases HBM/HOST/SRAM scratch and still reproduces the baseline in
+all four captures. The negative control gates `pass`; the STATE-only result is
+reported as an architectural observation rather than made a validity gate.
+
+**What this does not establish.** The Qwen request is 93 prompt tokens and the
+DeepSeek request is the governed 32-token prefix; both produce three tokens
+split 2+1. No capture reaches a long-context sparse-attention threshold. This
+is functional NumPy execution, not cycle, RTL, physical, or silicon evidence,
+and it makes no latency or throughput claim. Finally, [OI-23] still applies:
+the HBM backend executes from and checkpoints its prepared state image. These
+captures prove exact restart from that complete simulator image; they do not
+silently upgrade the backend's known committed-image layout defect into a
+durability proof.
