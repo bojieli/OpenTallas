@@ -2886,6 +2886,48 @@ def test_alternating_layers_compress_into_one_periodic_loop(tmp_path):
         assert region.slot_count == trips[run_index]
 
 
+def test_periodic_state_views_keep_their_global_starting_slot(tmp_path):
+    """A compressed run advances from its first layer, never from slot zero.
+
+    The loop induction is relative to a run.  The state object is not: it holds
+    every layer in deployment order.  In the alternating body below the two
+    representative operators start at layers 2 and 3, then advance by two
+    layers per iteration.  Their static view offsets must therefore retain
+    slots 2 and 3 before the dynamic term is applied.
+    """
+
+    sequence = ("dense", "dense") + ("moe", "dense") * 4
+    graph = deepseek_shaped_graph(tmp_path, sequence=sequence)
+    capability = deepseek_v4_rom_capability(
+        max_context_positions=16,
+        vocabulary_size=32,
+        expert_count=8,
+        experts_per_token=2,
+        tile_rom_bytes=1 << 16,
+        tiles_per_reticle=8,
+    )
+    deployment, _plan = build_deepseek_v4_rom_deployment(
+        graph,
+        capability=capability,
+        tile_rom_bytes=1 << 16,
+        tiles_per_reticle=8,
+    )
+    slot_elements = graph.states[0].capacity_rows * graph.states[0].row_elements
+    checked_layers = set()
+    for descriptor in deployment.table.descriptors():
+        if descriptor.descriptor_type != ExtendedDescriptorType.OPERATOR:
+            continue
+        kernel = graph.kernels[descriptor.payload["source_kernel_id"]]
+        if kernel.kind != "ATTENTION_SPARSE":
+            continue
+        checked_layers.add(kernel.layer)
+        for operand in ("input_view_1", "input_view_2"):
+            view = deployment.table[descriptor.payload[operand]]
+            assert view.payload["element_offset"] // slot_elements == kernel.layer
+
+    assert any(layer > 0 for layer in checked_layers)
+
+
 def test_non_uniform_weight_sizes_split_a_run(tmp_path):
     """Two layers whose projections differ in size cannot share a body."""
     from compiler.backends.rom.common.program import _kernel_signature

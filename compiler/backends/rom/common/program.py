@@ -2433,7 +2433,15 @@ class RomLowering:
                     "field of ABI 3.0 tensor views"
                 )
             dynamic.append(DynamicTerm.loop(loop, stride))
-            offset = column
+            # The induction value is relative to this compressed run, while a
+            # state slot is deployment-global.  Keep the representative
+            # layer's starting slot as the static base and let the loop term
+            # advance from there.  Dropping the base aliases every later run
+            # onto slot zero (and aliases both halves of a period-2 run onto
+            # the same slots): prefill can survive because each layer writes
+            # immediately before reading, but decode then consumes another
+            # layer's retained history.
+            offset = slot * window + column
         if batch_lead:
             # The inserted axis holds one element, so its stride never moves an
             # address; it takes the whole plane so the view stays row-major and
