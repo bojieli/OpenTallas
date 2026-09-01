@@ -652,7 +652,7 @@ RTL or silicon execution.
 | number / claim | where it is stated | what produces it | grade | current? |
 |---|---|---|---|---|
 | The shipped one-node Qwen HBM deployment passes **18/18** certificate checks, spans **19,670,900,740** of 103,079,215,104 HBM bytes per node across its emitted HBM-plus-state address map, and places **399** authenticated checkpoint ranges exactly once <!-- figure: 18 src="results/abi3/hbm_qwen_deployment_certificate.json#cases[case=qwen3-hbm-single-chip].passed_check_count" name="Qwen HBM deployment certificate checks, ledger" --> <!-- figure: 19670900740 src="results/abi3/hbm_qwen_deployment_certificate.json#cases[case=qwen3-hbm-single-chip].actual.hbm_bytes_per_node" name="Qwen HBM resident bytes, ledger" --> <!-- figure: 399 src="results/abi3/hbm_qwen_deployment_certificate.json#cases[case=qwen3-hbm-single-chip].actual.weight_segments" name="Qwen HBM authenticated ranges, ledger" --> | checklist W4.6 and TA-HBM-3.0 §4.4 | `make abi3-hbm-qwen-deployment` → two clean `lower_with_plan` builds, comparison with the shipped program/table/manifest, emitted-address inventory, `compiler/backends/hbm_sram/check.py`, and the frozen verifier | **`executed`**, deterministic static deployment certificate | **YES** |
-| The current exact-32-node DeepSeek HBM artifact passes **18/26**, while required HBM is **181,687,268,622** bytes per node and eight named placement/traffic/commit checks fail <!-- figure: 18 src="results/abi3/hbm_deepseek_deployment_findings.json#cases[case=deepseek-v4-flash-hbm-cluster].passed_check_count" name="DeepSeek HBM retained deployment checks, ledger" --> <!-- figure: 181687268622 src="results/abi3/hbm_deepseek_deployment_findings.json#cases[case=deepseek-v4-flash-hbm-cluster].actual.hbm_bytes_per_node" name="DeepSeek HBM retained required bytes, ledger" --> | checklist W4.7 and TA-HBM-3.0 §4.4 | the same source-locked tool in `deepseek` mode, run twice with byte-identical failure output (`results/abi3/hbm_deepseek_deployment_findings.json`) | **`executed` retained failure**, not acceptance | **YES — still failing** |
+| The current exact-32-node DeepSeek HBM artifact passes **20/26**, while required HBM is **181,687,268,622** bytes per node and six named placement/traffic checks fail <!-- figure: 20 src="results/abi3/hbm_deepseek_deployment_findings.json#cases[case=deepseek-v4-flash-hbm-cluster].passed_check_count" name="DeepSeek HBM retained deployment checks, ledger" --> <!-- figure: 181687268622 src="results/abi3/hbm_deepseek_deployment_findings.json#cases[case=deepseek-v4-flash-hbm-cluster].actual.hbm_bytes_per_node" name="DeepSeek HBM retained required bytes, ledger" --> | checklist W4.7 and TA-HBM-3.0 §4.4 | the same source-locked tool in `deepseek` mode, run twice with byte-identical failure output (`results/abi3/hbm_deepseek_deployment_findings.json`) | **`executed` retained failure**, not acceptance | **YES — still failing** |
 
 The Qwen certificate does not infer deployment quality from token output. It
 rebuilds the physical plan and ABI bundle twice, requires both to equal the
@@ -668,6 +668,8 @@ its 32-node identity and activation all-gathers are real, and its clean rebuilds
 are deterministic. The W4.7 acceptance layer independently maps graph semantics
 to five route classes and finds no route-0 expert dispatch, route-1 sparse
 gather or route-3 reduction; the deployment itself reports those sites as
-replicated. It also proves that the route-4 barrier has no incoming dependency
-and that state commits do not wait for its event. No later functional execution
-may be cited as resolving those static distributed-schedule defects.
+replicated. The coordinated-commit checks now pass: predicated terminal work
+joins onto a four-event frontier, the route-4 barrier waits for all four events,
+and every one of the 11 state commits waits for the barrier event. No later
+functional execution may be cited as resolving the remaining static
+distributed-placement and traffic defects.

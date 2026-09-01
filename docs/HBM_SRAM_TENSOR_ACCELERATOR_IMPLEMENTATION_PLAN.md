@@ -334,8 +334,10 @@ The same tool's DeepSeek mode is intentionally a retained failure, not a green
 short-run proxy. It passes generic ABI/placement reconstruction after the scale
 fix, but separately refuses W4.7 because the 200K physical plan exceeds
 node-local HBM, required expert/sparse/reduction sites are replicated instead
-of communicated, and the final barrier does not causally gate state commits.
-Those findings are published in
+of communicated. Its coordinated-commit checks now pass: conditional terminal
+work is joined onto a four-event frontier, the final cluster barrier waits for
+that frontier, and all 11 state commits wait for the barrier event. The six
+remaining findings are published in
 `results/abi3/hbm_deepseek_deployment_findings.json` and are the implementation
 inputs for the remaining cluster work.
 
