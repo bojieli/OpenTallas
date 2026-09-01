@@ -2454,7 +2454,29 @@ class _Emitter:
 
         dims = list(extents)
         row_stride = dims[0] * strides[0]
-        if lead_symbolic and "row" in operand.terms:
+        # Cache operators address state in absolute context coordinates, never
+        # in the token block's request-local coordinates.  DMA.SCATTER's index
+        # operand names absolute cache rows (or rows from a generated modulo
+        # table for a ring), while ATTENTION receives CONTEXT_LENGTH separately
+        # and uses it to bound the valid prefix of a capacity-sized KV view.
+        # Applying the ordinary row block to either side both offsets the view
+        # by the request loop and clamps it to the span: a decode at position 93
+        # then either asks a one-row destination for row 93 or presents only one
+        # KV row to attention over a 94-token context.  The ROM lowering already
+        # keeps these cache views whole; do the same here.
+        whole_cache_access = (
+            plan.engine_family == int(Major.DMA)
+            and plan.engine_sub == int(Dma.SCATTER)
+            and operand.direction == "out"
+        ) or (
+            plan.engine_family == int(Major.ATTENTION)
+            and operand.direction == "in"
+        )
+        if (
+            lead_symbolic
+            and "row" in operand.terms
+            and not whole_cache_access
+        ):
             step = self._row_step(plan, operand)
             dims[0] = step + int(operand.extent_bias)
             row_stride = step * strides[0]
@@ -2488,7 +2510,11 @@ class _Emitter:
         loop = loops.get("layer")
         if len(state.members) > 1 and loop is not None:
             terms.append(DynamicTerm.loop(loop, window))
-        row_loop = loops.get("row") if "row" in operand.terms else None
+        row_loop = (
+            loops.get("row")
+            if "row" in operand.terms and not whole_cache_access
+            else None
+        )
         walks_row = row_loop is not None
         if row_loop is not None:
             terms.append(DynamicTerm.loop(row_loop, row_stride))

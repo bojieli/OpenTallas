@@ -48,6 +48,8 @@ from compiler.ir.v3.kernel_ir import (
 )
 from compiler.ir.v3.lowering import engine_for
 from runtime.abi3.constants import (
+    Attention,
+    Dma,
     Major,
     NO_ID,
     Permission,
@@ -1385,6 +1387,104 @@ def test_state_views_bind_the_prepared_image(dense, single_chip):
         "an operator addresses the committed image; the commit publishes it, "
         "execution runs against the prepared one"
     )
+
+
+def _absolute_kv_graph() -> KernelGraph:
+    """A dense graph whose KV tensors expose request-symbolic cache mistakes."""
+
+    graph = dense_graph(layers=1, span_max=1024)
+    positions = Tensor(
+        tensor_id="positions",
+        dtype="u32",
+        shape=(SPAN,),
+        role="input",
+    )
+    tensors = tuple(
+        dataclasses.replace(tensor, shape=(SPAN, 128), role="activation")
+        if tensor.tensor_id in {"kv0k", "kv0v"}
+        else tensor
+        for tensor in graph.tensors
+    ) + (positions,)
+    kernels = tuple(
+        dataclasses.replace(kernel, inputs=(*kernel.inputs, positions.tensor_id))
+        if kernel.kind == "KV_APPEND"
+        else kernel
+        for kernel in graph.kernels
+    )
+    entrypoints = tuple(
+        dataclasses.replace(entrypoint, inputs=(*entrypoint.inputs, positions.tensor_id))
+        for entrypoint in graph.entrypoints
+    )
+    return dataclasses.replace(
+        graph,
+        tensors=tensors,
+        kernels=kernels,
+        entrypoints=entrypoints,
+    )
+
+
+def test_scatter_state_destination_exposes_the_whole_absolute_cache(single_chip):
+    """An absolute position cannot index a request-sized destination view.
+
+    Qwen's decode starts its request at an absolute position greater than zero.
+    The generated index view therefore contains ``POSITION_START``, while the
+    cache destination must expose all capacity rows.  Applying the ordinary row
+    block to both made decode at position 93 ask a one-row view for row 93.
+    """
+
+    graph = _absolute_kv_graph()
+
+    deployment = lower_to_abi3(graph, single_chip)
+    appends = {
+        kernel.index for kernel in graph.kernels if kernel.kind == "KV_APPEND"
+    }
+    operators = [
+        descriptor
+        for descriptor in deployment.table.descriptors()
+        if descriptor.descriptor_type == ExtendedDescriptorType.OPERATOR
+        and descriptor.payload["source_kernel_id"] in appends
+    ]
+    assert len(operators) == 2
+    for operator in operators:
+        assert operator.payload["engine_family"] == int(Major.DMA)
+        assert operator.payload["engine_sub"] == int(Dma.SCATTER)
+        index = deployment.table[operator.payload["input_view_0"]]
+        destination = deployment.table[operator.payload["output_view_0"]]
+        assert index.payload["dim0"] == 512
+        assert any(
+            index.payload[f"term{slot}_kind"]
+            == int(SelectorKind.RUNTIME_SYMBOL)
+            and index.payload[f"term{slot}_index"] == int(Symbol.POSITION_START)
+            for slot in range(index.payload["dynamic_term_count"])
+        )
+        assert destination.payload["dim0"] == 1024
+        assert destination.payload["extent_numerator"] == 0
+        assert destination.payload["dynamic_term_count"] == 0
+
+
+def test_attention_state_sources_expose_the_whole_cache_capacity(single_chip):
+    """CONTEXT_LENGTH, not SPAN_TOKENS, bounds valid KV rows for attention."""
+
+    graph = _absolute_kv_graph()
+    deployment = lower_to_abi3(graph, single_chip)
+    attention_kernels = {
+        kernel.index for kernel in graph.kernels if kernel.kind == "ATTENTION_GQA"
+    }
+    operators = [
+        descriptor
+        for descriptor in deployment.table.descriptors()
+        if descriptor.descriptor_type == ExtendedDescriptorType.OPERATOR
+        and descriptor.payload["source_kernel_id"] in attention_kernels
+    ]
+    assert len(operators) == 1
+    operator = operators[0]
+    assert operator.payload["engine_family"] == int(Major.ATTENTION)
+    assert operator.payload["engine_sub"] == int(Attention.GQA)
+    for slot in (1, 2):
+        source = deployment.table[operator.payload[f"input_view_{slot}"]]
+        assert source.payload["dim0"] == 1024
+        assert source.payload["extent_numerator"] == 0
+        assert source.payload["dynamic_term_count"] == 0
 
 
 def test_the_ring_is_appended_past_the_staged_request(dense, single_chip):
