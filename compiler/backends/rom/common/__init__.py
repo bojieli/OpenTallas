@@ -11,8 +11,13 @@
 
 ``inverse``
     the independent proof.  It deliberately imports neither of the other two.
+
+``check``
+    the independent schedule proof.  It reconstructs the emitted program from
+    frozen graph and ABI contracts and deliberately imports neither the ROM
+    program/image producers nor either product backend.
 """
 
 from __future__ import annotations
 
-__all__ = ["image", "inverse", "program"]
+__all__ = ["check", "image", "inverse", "program"]

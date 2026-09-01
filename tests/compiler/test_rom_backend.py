@@ -9,6 +9,7 @@ rather than trusting a recorded digest.
 from __future__ import annotations
 
 import ast
+import copy
 import dataclasses
 import hashlib
 import json
@@ -29,6 +30,7 @@ from compiler.backends.rom.common.inverse import (
     InverseProofError,
     check_rom_inverse,
 )
+from compiler.backends.rom.common.check import check_rom_schedule
 from compiler.backends.rom.common.program import (
     RomLowering,
     RomLoweringError,
@@ -78,8 +80,13 @@ from runtime.abi3.descriptors import (
     Symbol,
     iteration_extent,
 )
-from runtime.abi3.records import decode_body, split_program
-from runtime.abi3.verifier import VerificationError, require_admitted
+from runtime.abi3.crc import sha256
+from runtime.abi3.records import ProgramHeader, decode_body, split_program
+from runtime.abi3.verifier import (
+    VerificationError,
+    require_admitted,
+    verify_deployment,
+)
 
 DTYPE_BITS_BY_NAME = {
     "bf16": 16,
@@ -1296,6 +1303,42 @@ def _instructions(deployment):
     return decode_body(body)
 
 
+def _restamp(deployment):
+    """Bind an intentionally mutated table into an otherwise valid program.
+
+    These mutations exercise the semantic checker, not CRC or digest refusal.
+    Stamping twice reproduces the deployment-manifest fixed point used by the
+    production builder.
+    """
+
+    old, body = split_program(deployment.program)
+    fields = {
+        "instruction_count": old.instruction_count,
+        "entrypoint_count": old.entrypoint_count,
+        "required_features": old.required_features,
+        "deployment_digest": bytes(32),
+        "descriptor_table_digest": deployment.table.digest,
+        "topology_digest": old.topology_digest,
+        "body_digest": sha256(body),
+        "max_retired_work": old.max_retired_work,
+        "watchdog_class": old.watchdog_class,
+        "entrypoint_table_descriptor": old.entrypoint_table_descriptor,
+        "signature_metadata_descriptor": old.signature_metadata_descriptor,
+    }
+    deployment.program = ProgramHeader(**fields).encode() + body
+    fields["deployment_digest"] = deployment.deployment_digest
+    deployment.program = ProgramHeader(**fields).encode() + body
+    return deployment
+
+
+def _mutate_descriptor(deployment, descriptor_id: int, field: str, value: int):
+    candidate = copy.deepcopy(deployment)
+    descriptor = candidate.table[descriptor_id]
+    descriptor.payload[field] = value
+    candidate.table.rewrite(descriptor_id)
+    return _restamp(candidate)
+
+
 def _lowering(graph, capability) -> RomLowering:
     """A DeepSeek ROM lowering, for the parts of it worth testing alone."""
     lowering = RomLowering(
@@ -1341,6 +1384,184 @@ def test_deepseek_rom_deployment_is_admitted(deepseek_build, deepseek_capability
     report = require_admitted(deployment, deepseek_capability)
     assert report.admitted
     assert report.errors == []
+
+
+# ---------------------------------------------------------------------------
+# Independent schedule proof
+# ---------------------------------------------------------------------------
+def test_independent_schedule_checker_accepts_both_products(
+    qwen_build,
+    qwen_graph,
+    qwen_capability,
+    deepseek_build,
+    deepseek_graph,
+    deepseek_capability,
+):
+    cases = (
+        (qwen_graph, qwen_build[0], qwen_capability),
+        (deepseek_graph, deepseek_build[0], deepseek_capability),
+    )
+    for graph, deployment, capability in cases:
+        report = check_rom_schedule(graph, deployment, capability)
+        assert report["status"] == "pass", report["errors"]
+        assert report["ok"] is True
+        assert report["errors"] == []
+        assert report["expected"]["dependency_edges"] > 0
+        assert report["expected"]["retired_work"] > 0
+        assert report["checks"] and all(report["checks"].values())
+        assert report["verifier"]["admitted"] is True
+    deepseek = check_rom_schedule(
+        deepseek_graph, deepseek_build[0], deepseek_capability
+    )
+    assert deepseek["counter_bounds"]["link_payload_bytes"] > 0
+    assert deepseek["counter_bounds"]["link_flits"] > 0
+
+
+def test_schedule_checker_does_not_import_the_rom_producer():
+    """The checker is a second implementation, not a generator self-check."""
+
+    source = Path("compiler/backends/rom/common/check.py").read_text()
+    tree = ast.parse(source)
+    imported: list[str] = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            imported.extend(alias.name for alias in node.names)
+        elif isinstance(node, ast.ImportFrom):
+            imported.append(f"{'.' * node.level}{node.module or ''}")
+    forbidden = (
+        "compiler.backends.rom.common.program",
+        "compiler.backends.rom.common.image",
+        "compiler.backends.rom.qwen3",
+        "compiler.backends.rom.deepseek_v4",
+    )
+    for name in imported:
+        assert all(blocked not in name for blocked in forbidden), name
+
+
+def test_schedule_checker_rejects_unadvertised_queue(
+    qwen_build, qwen_graph, qwen_capability
+):
+    deployment, _plan = qwen_build
+    schedule = next(
+        descriptor
+        for descriptor in deployment.table.descriptors()
+        if descriptor.descriptor_type == ExtendedDescriptorType.SCHEDULE
+        and descriptor.payload["engine_family"] == int(Major.VECTOR)
+    )
+    queues = qwen_capability.engines["vector"]["queues"]
+    candidate = _mutate_descriptor(
+        deployment, schedule.descriptor_id, "queue_index", queues
+    )
+    # The generic ABI verifier knows the field is a legal byte, but not how
+    # many physical queues this engine advertises.  The independent checker
+    # must close that semantic gap.
+    assert verify_deployment(candidate, qwen_capability).admitted
+    report = check_rom_schedule(qwen_graph, candidate, qwen_capability)
+    assert report["status"] == "fail"
+    assert report["checks"]["queue_index"] is False
+
+
+def test_schedule_checker_rejects_wrong_rom_bank_mask(
+    qwen_build, qwen_graph, qwen_capability
+):
+    deployment, _plan = qwen_build
+    schedule = next(
+        descriptor
+        for descriptor in deployment.table.descriptors()
+        if descriptor.descriptor_type == ExtendedDescriptorType.SCHEDULE
+        and descriptor.payload["bank_mask"]
+    )
+    # The fixture occupies banks 0..13; bank 14 is capability-legal but is not
+    # a shard of this operator's ROM operands.
+    candidate = _mutate_descriptor(
+        deployment,
+        schedule.descriptor_id,
+        "bank_mask",
+        int(schedule.payload["bank_mask"]) | (1 << 14),
+    )
+    assert verify_deployment(candidate, qwen_capability).admitted
+    report = check_rom_schedule(qwen_graph, candidate, qwen_capability)
+    assert report["status"] == "fail"
+    assert report["checks"]["rom_bank_mask"] is False
+
+
+def test_schedule_checker_rejects_tile_wider_than_engine(
+    qwen_build, qwen_graph, qwen_capability
+):
+    deployment, _plan = qwen_build
+    schedule = next(
+        descriptor
+        for descriptor in deployment.table.descriptors()
+        if descriptor.descriptor_type == ExtendedDescriptorType.SCHEDULE
+        and descriptor.payload["engine_family"] == int(Major.TENSOR)
+    )
+    candidate = _mutate_descriptor(
+        deployment,
+        schedule.descriptor_id,
+        "tile_cols",
+        qwen_capability.engines["tensor"]["lanes"] + 1,
+    )
+    assert verify_deployment(candidate, qwen_capability).admitted
+    report = check_rom_schedule(qwen_graph, candidate, qwen_capability)
+    assert report["status"] == "fail"
+    assert report["checks"]["tile_geometry"] is False
+
+
+def test_schedule_checker_rejects_semantically_wrong_wait(
+    qwen_build, qwen_graph, qwen_capability
+):
+    deployment, _plan = qwen_build
+    instructions = _instructions(deployment)
+    signal_index = {
+        instruction.signal_event_id: index
+        for index, instruction in enumerate(instructions)
+        if instruction.signal_event_id != NO_ID
+    }
+    target = None
+    replacement = None
+    for index, instruction in enumerate(instructions):
+        if instruction.wait_set_id == NO_ID:
+            continue
+        wait = deployment.table[instruction.wait_set_id]
+        count = int(wait.payload["producer_count"])
+        named = {int(wait.payload[f"producer_{slot}"]) for slot in range(count)}
+        alternatives = sorted(
+            event
+            for event, producer_index in signal_index.items()
+            if producer_index < index and event not in named
+        )
+        if alternatives:
+            target = wait
+            replacement = alternatives[0]
+            break
+    assert target is not None and replacement is not None
+    candidate = _mutate_descriptor(
+        deployment, target.descriptor_id, "producer_0", replacement
+    )
+    # It is still a unique, earlier, signalled event, so generic deadlock
+    # checks admit it.  It is not the event of the tensor's actual producer.
+    assert verify_deployment(candidate, qwen_capability).admitted
+    report = check_rom_schedule(qwen_graph, candidate, qwen_capability)
+    assert report["status"] == "fail"
+    assert report["checks"]["producer_consumer_wait"] is False
+
+
+def test_schedule_checker_rejects_zero_link_credit(
+    deepseek_build, deepseek_graph, deepseek_capability
+):
+    deployment, _plan = deepseek_build
+    communication = next(
+        descriptor
+        for descriptor in deployment.table.descriptors()
+        if descriptor.descriptor_type == ExtendedDescriptorType.COMMUNICATION
+    )
+    candidate = _mutate_descriptor(
+        deployment, communication.descriptor_id, "credit_bound", 0
+    )
+    assert verify_deployment(candidate, deepseek_capability).admitted
+    report = check_rom_schedule(deepseek_graph, candidate, deepseek_capability)
+    assert report["status"] == "fail"
+    assert report["checks"]["link_flow_control"] is False
 
 
 # ---------------------------------------------------------------------------
