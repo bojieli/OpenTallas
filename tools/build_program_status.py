@@ -323,7 +323,10 @@ def main() -> int:
         lines += ["## Accelerator campaigns", "",
                   "No accelerator campaign has run yet.", ""]
 
-    args.markdown.write_text("\n".join(lines) + "\n")
+    # Sections append an empty separator line for composition.  Strip that
+    # final separator before adding the one canonical newline so regenerated
+    # Markdown also passes ``git diff --check``.
+    args.markdown.write_text("\n".join(lines).rstrip() + "\n")
     print(f"wrote {args.output} and {args.markdown}")
     print(
         f"engines {status['engine_coverage']['implemented']}/"
