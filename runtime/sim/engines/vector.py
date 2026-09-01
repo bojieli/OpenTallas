@@ -94,6 +94,7 @@ from runtime.reference.swiglu import (
     OFFICIAL_SWIGLU_LIMIT_BINARY32,
 )
 from runtime.sim.backend import (
+    CONTRACT_DEEPSEEK_FP8_QDQ_QUANTIZE,
     CONTRACT_DEEPSEEK_FP8_SWIGLU,
     CONTRACT_DEEPSEEK_MXFP4_SWIGLU,
     CONTRACT_DEEPSEEK_RMSNORM,
@@ -424,6 +425,14 @@ _RECIPROCAL_SIX = np.float32(1.0) / np.float32(6.0)
 #: ``max(amax, 6 * 2**-126)``: the floor the pinned kernel applies before the
 #: scale is derived.  ``1.5 * 2**-124`` is a normal binary32 number.
 _FP4_AMAX_FLOOR = np.float32(np.ldexp(6.0, -126))
+#: The compressor's FP8 kernel multiplies by these *binary32 encodings* rather
+#: than evaluating either real-number constant in a wider host format first.
+_RECIPROCAL_448 = np.uint32(
+    exact_quantization._BINARY32_RECIPROCAL_448
+).view(np.float32)
+_FP8_QDQ_AMAX_FLOOR = np.uint32(
+    exact_quantization._FP8_QDQ_AMAX_FLOOR_CODE
+).view(np.float32)
 
 
 def _quantize_fp4_qdq_blocks(
@@ -461,7 +470,9 @@ def _quantize_fp4_qdq_blocks(
     """
     values = widen_bf16(codes)
     if not bool(np.all(np.isfinite(values))):
-        raise exact.NumericReferenceError("activation BF16 element is NaN or infinity")
+        raise exact.NumericReferenceError(
+            "activation BF16 element is NaN or infinity"
+        )
     magnitudes = np.abs(values)
     amax = np.maximum(magnitudes.max(axis=1), _FP4_AMAX_FLOOR)
     ratio = np.multiply(amax, _RECIPROCAL_SIX, dtype=np.float32)
@@ -507,6 +518,78 @@ def _quantize_fp4_qdq_blocks(
     negative = (clamped < 0) & (selected != 0)
     nibbles = np.where(negative, selected | np.uint8(0x8), selected).astype(np.uint8)
     return nibbles, scale_codes.astype(np.uint8), clamps
+
+
+def _quantize_fp8_qdq_blocks(
+    codes: np.ndarray,
+) -> tuple[np.ndarray, np.ndarray, int]:
+    """The pinned block-64 ``FP8_QDQ`` quantise half, code for code.
+
+    ``codes`` is ``[blocks, 64]`` of BF16 encodings.  The result is E4M3FN
+    codes, one E8M0 code per block, and the number of elements the contract's
+    clamp moved.  Unlike NUM-3.3's generic activation quantiser, this rule
+    derives its scale with one binary32 multiply by ``RN(1 / 448)`` and
+    ``ceil(log2)``, applies the released kernel's binary32 ``1e-4`` amax floor,
+    and clamps before E4M3FN rounding.
+
+    Every bulk operation below is exact with respect to the scalar reference:
+    BF16 widens exactly to binary32; max and abs do not round; the ratio is one
+    explicitly binary32 multiply; division by the derived power of two is the
+    reference's binary32 division; and all E4M3FN values and their midpoints
+    are dyadic rationals exactly representable in the binary64 search table.
+    """
+    values = widen_bf16(codes)
+    if not bool(np.all(np.isfinite(values))):
+        raise exact.NumericReferenceError(
+            "activation BF16 element is NaN or infinity"
+        )
+    magnitudes = np.abs(values)
+    amax = np.maximum(magnitudes.max(axis=1), _FP8_QDQ_AMAX_FLOOR)
+    ratio = np.multiply(amax, _RECIPROCAL_448, dtype=np.float32)
+    if not bool(np.all(np.isfinite(ratio) & (ratio > 0))):
+        raise exact.NumericReferenceError("FP8 scale ratio is nonfinite")
+
+    mantissa, exponent = np.frexp(ratio.astype(np.float64))
+    scale_exponent = np.where(mantissa == 0.5, exponent - 1, exponent).astype(
+        np.int64
+    )
+    scale_codes = scale_exponent + 127
+    if not bool(np.all((scale_codes >= 0) & (scale_codes <= 254))):
+        raise exact.NumericReferenceError(
+            "FP8 QDQ requires an unrepresentable E8M0 scale"
+        )
+    scale = np.ldexp(np.float32(1.0), scale_exponent).astype(np.float32)
+    quotient = np.divide(values, scale[:, None], dtype=np.float32)
+    clamped = np.clip(
+        quotient, -np.float32(_E4M3FN_MAXIMUM), np.float32(_E4M3FN_MAXIMUM)
+    )
+    clamps = int(np.count_nonzero(clamped != quotient))
+
+    magnitude = np.abs(clamped).astype(np.float64)
+    index = np.searchsorted(_E4M3FN_TABLE, magnitude, side="left")
+    hit = (index < _E4M3FN_TABLE.size) & (
+        _E4M3FN_TABLE[np.minimum(index, _E4M3FN_TABLE.size - 1)] == magnitude
+    )
+    lower_code = np.clip(index - 1, 0, _E4M3FN_MIDPOINTS.size - 1)
+    midpoint = _E4M3FN_MIDPOINTS[lower_code]
+    upper_code = lower_code + 1
+    rounded = np.where(
+        magnitude < midpoint,
+        lower_code,
+        np.where(
+            magnitude > midpoint,
+            upper_code,
+            np.where(lower_code % 2 == 0, lower_code, upper_code),
+        ),
+    )
+    selected = np.where(
+        hit, np.minimum(index, _E4M3FN_TABLE.size - 1), rounded
+    ).astype(np.uint8)
+    negative = (clamped < 0) & (selected != 0)
+    fp8_codes = np.where(
+        negative, selected | np.uint8(0x80), selected
+    ).astype(np.uint8)
+    return fp8_codes, scale_codes.astype(np.uint8), clamps
 
 
 def _quantize_activation_blocks(
@@ -1379,11 +1462,12 @@ def _convert_quantize(ctx: EngineContext, operator: Descriptor) -> None:
     )
     block = width // blocks
     source = _read_rows(ctx, source_view, width).reshape(rows * blocks, block)
-    # The E4M3FN quantiser searches for the block scale and refuses to saturate;
-    # the pinned FP4 quantiser derives the scale and clamps by contract.  They
-    # are two rules, not one rule over two formats, so the code output's format
-    # selects between them rather than widening a dtype check.
+    # The generic E4M3FN quantiser searches for the block scale and refuses to
+    # saturate.  Both pinned QDQ contracts instead derive a scale and clamp;
+    # FP8 therefore needs its declared contract as well as its output dtype to
+    # distinguish two different rules over the same storage formats.
     fp4 = code_view.dtype == DType.MXFP4_E2M1
+    contract = declared_contract(ctx.table, operator.payload["numeric_profile_id"])
     if fp4:
         _require(
             block == exact_quantization.FP4_QDQ_BLOCK_SIZE,
@@ -1393,6 +1477,15 @@ def _convert_quantize(ctx: EngineContext, operator: Descriptor) -> None:
         )
         with _numeric_guard("quantization_fp4_qdq_bf16_quantize_v1"):
             flat_codes, flat_scales, saturations = _quantize_fp4_qdq_blocks(source)
+    elif contract == CONTRACT_DEEPSEEK_FP8_QDQ_QUANTIZE:
+        _require(
+            block == exact_quantization.FP8_QDQ_BLOCK_SIZE,
+            f"QUANTIZE code view {code_view.descriptor_id} names {contract} with "
+            f"a {block}-element block; the qualified FP8 block is "
+            f"{exact_quantization.FP8_QDQ_BLOCK_SIZE}",
+        )
+        with _numeric_guard(contract):
+            flat_codes, flat_scales, saturations = _quantize_fp8_qdq_blocks(source)
     else:
         with _numeric_guard("block activation quantisation"):
             flat_codes, flat_scales, saturations = _quantize_activation_blocks(source)
@@ -1404,7 +1497,7 @@ def _convert_quantize(ctx: EngineContext, operator: Descriptor) -> None:
     ctx.counters.add("vector.conversions", int(codes.size) + int(scales.size))
     if saturations:
         ctx.counters.add("vector.saturations", int(saturations))
-        if not fp4:
+        if not fp4 and contract != CONTRACT_DEEPSEEK_FP8_QDQ_QUANTIZE:
             raise EngineError(
                 f"QUANTIZE saturated {saturations} E4M3FN block(s)",
                 trap_class=int(TrapClass.NUMERIC_OR_EXCEPTIONAL_VALUE),

@@ -1474,6 +1474,49 @@ def test_convert_quantises_a_bf16_block_exactly(harness: Harness) -> None:
             )
 
 
+def test_convert_dispatches_the_declared_fp8_qdq_contract(harness: Harness) -> None:
+    """The same FP8/E8M0 dtypes carry two intentionally different rules."""
+    from runtime.reference.quantization import fp8_qdq_bf16
+
+    rng = np.random.default_rng(0xF8D0)
+    width, blocks = 128, 2
+    values = random_bf16(rng, (2, width), scale=3.0)
+    # The QDQ amax floor gives an all-zero block scale 2**-22; NUM-3.3 gives
+    # it scale 1.  This makes the dispatch distinction deterministic instead
+    # of relying on a random block landing on a scale-rounding edge.
+    values[0, :64] = 0
+    numeric = harness.numeric(
+        contract="quantization_fp8_qdq_bf16_quantize_v1",
+        input_dtype=DType.BF16,
+        output_dtype=DType.FP8_E4M3FN,
+    )
+    codes = harness.output_view((2, width), DType.FP8_E4M3FN)
+    scales = harness.output_view((2, blocks), DType.E8M0_SCALE)
+    operator = harness.operator(
+        engine_family=Major.VECTOR,
+        engine_sub=Vector.CONVERT,
+        inputs=[harness.const_view(values, DType.BF16)],
+        outputs=[codes, scales],
+        numeric_profile_id=numeric,
+    )
+    harness.run(Major.VECTOR, Vector.CONVERT, operator)
+
+    expected = fp8_qdq_bf16(
+        tuple(tuple(int(code) for code in row) for row in values)
+    )
+    produced_codes = harness.result(codes)
+    produced_scales = harness.result(scales)
+    np.testing.assert_array_equal(
+        produced_codes, np.asarray(expected.e4m3fn_codes, dtype=np.uint8)
+    )
+    np.testing.assert_array_equal(
+        produced_scales, np.asarray(expected.scale_codes, dtype=np.uint8)
+    )
+
+    generic_zero = exact.quantize_bf16_activation_block([0] * 64)
+    assert int(produced_scales[0, 0]) != generic_zero.scale_code
+
+
 def test_convert_quantises_a_bf16_block_into_packed_mxfp4(harness: Harness) -> None:
     """``quantization_fp4_qdq_bf16_quantize_v1`` end to end, including the write.
 

@@ -2406,17 +2406,25 @@ class _Emitter:
         state = self.plan.state(physical_id)
         _committed, prepared = self._state_objects[physical_id]
         window = state.capacity_rows * state.row_elements
-        # The window keeps the rank the graph declared -- ``[context, heads,
-        # head_dim]`` for a KV history -- so an engine that reads heads finds an
-        # axis for them.  Only the leading axis becomes the resource's capacity
-        # and the leading stride the fused row width, which is what turns a
-        # half of a ``key_then_value`` row into a view rather than a copy.
+        # The window keeps the rank and operator-row transformations the graph
+        # declared -- ``[context, heads, head_dim]`` for a KV history, and a
+        # leading unit batch for INDEX_SCORE's ``[B, C, D]`` key.  Its storage
+        # strides differ from an arena view only at the row boundary: the
+        # leading stride is the fused state's row width, which turns one plane
+        # of a ``key_then_value`` row into a view rather than a copy.
         tensor = self.tensors.get(operand.tensor_id)
-        extents = []
+        extents: list[int] = []
         if tensor is not None:
             for axis in tensor.shape:
                 value, _ = _static_extent(axis, self.span_max)
                 extents.append(max(int(value), 1))
+        lead_symbolic = bool(
+            tensor is not None
+            and tensor.shape
+            and isinstance(tensor.shape[0], Symbolic)
+        )
+        if lead_symbolic:
+            extents[0] = _round_up(extents[0], plan.block_rows)
         if len(extents) < 2:
             width = min(
                 self._state_row_width(operand.tensor_id) or state.row_elements,
@@ -2443,6 +2451,31 @@ class _Emitter:
             strides[axis] = running
             running *= extents[axis]
         strides[0] = state.row_elements
+
+        dims = list(extents)
+        row_stride = dims[0] * strides[0]
+        if lead_symbolic and "row" in operand.terms:
+            step = self._row_step(plan, operand)
+            dims[0] = step + int(operand.extent_bias)
+            row_stride = step * strides[0]
+        if operand.context_axis >= 0 and "context" in operand.terms:
+            step = self._context_step(plan, operand)
+            dims[operand.context_axis] = step + int(operand.context_bias)
+
+        # Match the ordinary declared-view path after replacing only its
+        # physical row stride.  In particular INDEX_SCORE inserts the leading
+        # batch axis here; bypassing this sequence made a newly correct state
+        # binding fail as rank two where the frozen operand row requires rank
+        # three.
+        dims, strides = self._drop_unit_row_axis(plan, operand, dims, strides)
+        dims, strides = self._index_matrix(plan, operand, dims, strides)
+        dims, strides = self._insert_broadcast_axis(plan, operand, dims, strides)
+        dims, strides = self._drop_selected_axis(plan, operand, dims, strides)
+        dims, strides = self._broadcast_to_principal(plan, operand, dims, strides)
+        dims, strides = self._insert_batch_axis(plan, operand, dims, strides)
+        dims, strides = self._lead_reduced_axis(plan, operand, dims, strides)
+        dims = self._narrow_partial_quantiser(plan, operand, dims)
+
         terms: list[DynamicTerm] = []
         # The member is the *base* of this operand's own band inside the
         # resource, and the layer loop steps one window per iteration from
@@ -2455,6 +2488,29 @@ class _Emitter:
         loop = loops.get("layer")
         if len(state.members) > 1 and loop is not None:
             terms.append(DynamicTerm.loop(loop, window))
+        row_loop = loops.get("row") if "row" in operand.terms else None
+        walks_row = row_loop is not None
+        if row_loop is not None:
+            terms.append(DynamicTerm.loop(row_loop, row_stride))
+        context_axis = -1
+        context_loop = (
+            loops.get("context") if "context" in operand.terms else None
+        )
+        walks_context = context_loop is not None and operand.context_axis >= 0
+        if walks_context:
+            context_axis = operand.context_axis + self._batch_axis(plan, operand)
+            if not 0 <= context_axis < len(strides):
+                raise LoweringError(
+                    f"kernel {plan.kernel_id}: state operand {operand.tensor_id} "
+                    f"names context axis {operand.context_axis}, which is "
+                    f"outside its presented rank {len(strides)}"
+                )
+            terms.append(
+                DynamicTerm.loop(
+                    context_loop,
+                    int(strides[context_axis]) * self._context_step(plan, operand),
+                )
+            )
         # Both reads and writes name the *prepared* image.  A transaction reads
         # what it has just appended -- attention over a prefill span attends the
         # very rows the append wrote -- and the committed image is the durability
@@ -2464,11 +2520,31 @@ class _Emitter:
         return self._view(
             object_id=prepared,
             dtype=dtype_of(state.dtype),
-            dims=extents,
+            dims=dims,
             strides=strides,
             element_offset=offset,
             dynamic=terms,
             writable=writable,
+            extent_axis=(
+                context_axis
+                if walks_context
+                else (self._batch_axis(plan, operand) if walks_row else 0)
+            ),
+            extent_numerator=(
+                int(operand.context_numerator)
+                if walks_context
+                else (int(operand.extent_numerator) if walks_row else 1)
+            ),
+            extent_unit=(
+                int(operand.context_unit)
+                if walks_context
+                else (int(operand.extent_unit) if walks_row else 1)
+            ),
+            extent_bias=(
+                int(operand.context_bias)
+                if walks_context
+                else (int(operand.extent_bias) if walks_row else 0)
+            ),
         )
 
     def _state_row_width(self, tensor_id: str) -> int:

@@ -31,6 +31,9 @@ from runtime.reference.normalization import (
 from runtime.reference.quantization import (
     FP4_AMAX_FLOOR,
     FP4_MAXIMUM,
+    FP8_QDQ_AMAX_FLOOR,
+    FP8_QDQ_MAXIMUM,
+    _BINARY32_RECIPROCAL_448,
     _BINARY32_RECIPROCAL_SIX,
     _ceil_log2,
     _finite_bf16_matrix,
@@ -41,6 +44,7 @@ from runtime.sim.engines.vector import (
     _head_rms_norm_rows,
     _quantize_activation_blocks,
     _quantize_fp4_qdq_blocks,
+    _quantize_fp8_qdq_blocks,
 )
 
 #: BF16 encodings that are finite: everything but the NaN and infinity band.
@@ -176,6 +180,87 @@ class TestActivationQuantiserExactness:
             )
             assert int(produced_scales[row]) == expected.scale_code
             assert produced_codes[row].tolist() == list(expected.value_codes)
+
+
+def _fp8_quantise_block(values: tuple) -> tuple[int, tuple[int, ...], int]:
+    """The exact reference's FP8 quantise half, leaving reconstruction later."""
+    maximum = max(max(abs(value) for value in values), FP8_QDQ_AMAX_FLOOR)
+    ratio = exact_formats.decode_binary32(
+        exact_formats.binary32_multiply(
+            exact_formats.encode_binary32_rne(maximum),
+            _BINARY32_RECIPROCAL_448,
+        )
+    )
+    exponent = _ceil_log2(ratio.value)
+    scale_code = exponent + 127
+    assert 0 <= scale_code <= 254
+    scale = exact_formats.encode_binary32_rne(_power_of_two(exponent))
+    codes = []
+    clamps = 0
+    for value in values:
+        quotient = exact_formats.decode_binary32(
+            exact_formats.binary32_divide(
+                exact_formats.encode_binary32_rne(value), scale
+            )
+        )
+        clamped = max(-FP8_QDQ_MAXIMUM, min(FP8_QDQ_MAXIMUM, quotient.value))
+        clamps += clamped != quotient.value
+        codes.append(exact_formats.encode_e4m3fn_rne(clamped).code)
+    return scale_code, tuple(codes), clamps
+
+
+class TestFP8QDQQuantiserExactness:
+    """The compressor's block-64 QDQ is not NUM-3.3 quantisation."""
+
+    def _check(self, codes: np.ndarray) -> None:
+        produced, scales, clamps = _quantize_fp8_qdq_blocks(codes)
+        rows = _finite_bf16_matrix(
+            tuple(tuple(int(code) for code in row) for row in codes)
+        )
+        expected_clamps = 0
+        for index, row in enumerate(rows):
+            scale, expected, row_clamps = _fp8_quantise_block(row)
+            assert int(scales[index]) == scale, index
+            assert produced[index].tolist() == list(expected), index
+            expected_clamps += row_clamps
+        assert clamps == expected_clamps
+
+    @pytest.mark.parametrize("blocks", [1, 8, 64])
+    def test_matches_the_reference_on_random_blocks(self, blocks: int) -> None:
+        rng = np.random.default_rng(8008 + blocks)
+        self._check(_finite_bf16_codes(blocks * 64, rng).reshape(blocks, 64))
+
+    def test_matches_the_reference_on_awkward_blocks(self) -> None:
+        extremes = [0x0001, 0x0080, 0x7F7F, 0xFF7F, 0x0000, 0x8000]
+        ties = [0x3F40, 0x3FC0, 0x4020, 0xBF40]
+        rows = [
+            [0] * 64,
+            list(range(0x3F00, 0x3F40)),
+            [0x8000 | code for code in range(0x3F00, 0x3F40)],
+            extremes + ties + [0x3F80] * 54,
+        ]
+        self._check(np.asarray(rows, dtype=np.uint16))
+
+    def test_matches_the_reference_across_the_bf16_exponent_range(self) -> None:
+        rows = []
+        for exponent in range(0xFF):
+            rows.append(
+                [
+                    (exponent << 7) | ((column * 13) % 128)
+                    for column in range(64)
+                ]
+            )
+        self._check(np.asarray(rows, dtype=np.uint16))
+
+    def test_refuses_nonfinite_input(self) -> None:
+        with pytest.raises(NumericReferenceError):
+            _quantize_fp8_qdq_blocks(
+                np.full((1, 64), 0x7F80, dtype=np.uint16)
+            )
+        with pytest.raises(NumericReferenceError):
+            _quantize_fp8_qdq_blocks(
+                np.full((1, 64), 0x7FC0, dtype=np.uint16)
+            )
 
 
 def _fp4_quantise_block(values: tuple) -> tuple[int, tuple[int, ...]]:

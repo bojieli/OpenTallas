@@ -14,6 +14,7 @@ tests below are the machine-checkable form of that claim:
 
 from __future__ import annotations
 
+import dataclasses
 import hashlib
 import json
 from pathlib import Path
@@ -875,6 +876,167 @@ def test_plan_is_deterministic(dense, single_chip):
     first = build_plan(dense, single_chip)
     second = build_plan(dense, single_chip)
     assert first.plan_id == second.plan_id
+
+
+def test_state_read_output_reuses_the_prepared_state_binding(single_chip):
+    """A read-only state view cannot fall back to a recycled arena object.
+
+    DeepSeek writes post-QDQ compressed KV, then ``STATE_READ`` re-presents the
+    valid prefix for the attention join.  The read declares no state write, so
+    it must inherit the append output's resource, member, and fused-row column
+    rather than consume a new state plane or become an ordinary activation.
+    """
+    graph = dense_graph(layers=1)
+    by_id = {tensor.tensor_id: tensor for tensor in graph.tensors}
+    tensors = list(graph.tensors)
+    kernels: list[Kernel] = []
+    view_id = "kv0k.valid_view"
+    context = Symbolic("context_length", 1, 512)
+    tensors.extend(
+        (
+            dataclasses.replace(
+                by_id["kv0k"], tensor_id=view_id, shape=(context, 128)
+            ),
+            Tensor(
+                tensor_id="index.query",
+                dtype="bf16",
+                shape=(SPAN, 2, 128),
+                role="input",
+            ),
+            Tensor(
+                tensor_id="index.weights",
+                dtype="bf16",
+                shape=(SPAN, 2),
+                role="input",
+            ),
+            Tensor(
+                tensor_id="index.scores",
+                dtype="bf16",
+                shape=(SPAN, context),
+                role="activation",
+            ),
+        )
+    )
+    for kernel in graph.kernels:
+        kernels.append(kernel)
+        if kernel.kind == "KV_APPEND" and kernel.outputs == ("kv0k",):
+            kernels.append(
+                Kernel(
+                    index=-1,
+                    kernel_id="l0.key_valid_view",
+                    kind="STATE_READ",
+                    inputs=("kv0k",),
+                    outputs=(view_id,),
+                    numeric_contract="bf16_byte_preserving_state_v1",
+                    state_reads=("kv0k",),
+                    layer=0,
+                )
+            )
+            kernels.append(
+                Kernel(
+                    index=-1,
+                    kernel_id="l0.index_score",
+                    kind="INDEX_SCORE",
+                    inputs=("index.query", view_id, "index.weights"),
+                    outputs=("index.scores",),
+                    numeric_contract="index_score_bf16_v1",
+                    attributes={
+                        "head_dim": 128,
+                        "head_weight_scale_binary32": "0x3c3504f3",
+                        "heads": 2,
+                    },
+                    layer=0,
+                )
+            )
+    kernels = [
+        dataclasses.replace(kernel, index=index)
+        for index, kernel in enumerate(kernels)
+    ]
+    kernels = [
+        dataclasses.replace(
+            kernel,
+            inputs=(kernel.inputs[0], view_id, *kernel.inputs[2:]),
+        )
+        if kernel.kind == "ATTENTION_GQA"
+        else kernel
+        for kernel in kernels
+    ]
+    graph = dataclasses.replace(
+        graph,
+        symbols=(
+            *graph.symbols,
+            RuntimeSymbol("context_length", 1, 512, 1),
+        ),
+        tensors=tuple(tensors),
+        kernels=tuple(kernels),
+        entrypoints=tuple(
+            dataclasses.replace(
+                entrypoint,
+                inputs=(*entrypoint.inputs, "index.query", "index.weights"),
+            )
+            for entrypoint in graph.entrypoints
+        ),
+    )
+
+    plan = build_plan(graph, single_chip)
+    assert plan.state_of_tensor[view_id] == plan.state_of_tensor["kv0k"]
+    assert view_id not in plan.activation_keys
+
+    deployment = lower_to_abi3(graph, single_chip)
+
+    def physical_view(kernel_id: str, field: str) -> tuple[int, tuple[int, ...], int]:
+        source = next(kernel.index for kernel in graph.kernels if kernel.kernel_id == kernel_id)
+        operator = next(
+            descriptor
+            for descriptor in deployment.table.descriptors()
+            if descriptor.descriptor_type == ExtendedDescriptorType.OPERATOR
+            and descriptor.payload["source_kernel_id"] == source
+        )
+        view = deployment.table.get(
+            operator.payload[field], ExtendedDescriptorType.TENSOR_VIEW
+        )
+        rank = view.payload["rank"]
+        return (
+            view.primary_object_id,
+            tuple(view.payload[f"stride{axis}"] for axis in range(rank)),
+            view.payload["element_offset"],
+        )
+
+    write_id = next(
+        kernel.kernel_id
+        for kernel in graph.kernels
+        if kernel.kind == "KV_APPEND" and kernel.outputs == ("kv0k",)
+    )
+    read_id = next(
+        kernel.kernel_id for kernel in graph.kernels if kernel.kind == "ATTENTION_GQA"
+    )
+    written = physical_view(write_id, "output_view_0")
+    read = physical_view(read_id, "input_view_1")
+    assert read == written
+
+    index_id = next(
+        kernel.index for kernel in graph.kernels if kernel.kernel_id == "l0.index_score"
+    )
+    index_operator = next(
+        descriptor
+        for descriptor in deployment.table.descriptors()
+        if descriptor.descriptor_type == ExtendedDescriptorType.OPERATOR
+        and descriptor.payload["source_kernel_id"] == index_id
+    )
+    index_view = deployment.table.get(
+        index_operator.payload["input_view_1"],
+        ExtendedDescriptorType.TENSOR_VIEW,
+    )
+    assert index_view.primary_object_id == written[0]
+    assert index_view.payload["rank"] == 3
+    assert [index_view.payload[f"dim{axis}"] for axis in range(3)] == [
+        1,
+        512,
+        128,
+    ]
+    assert index_view.payload["stride1"] == 128
+    assert index_view.payload["extent_axis"] == 1
+    assert index_view.payload["dynamic_term_count"] == 1
 
 
 # ---------------------------------------------------------------------------

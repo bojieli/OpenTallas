@@ -125,6 +125,13 @@ CONTRACT_DEEPSEEK_MXFP4_SWIGLU = "mxfp4_swiglu_bf16_clamped_silu_product_v1"
 #: seventh leaf mixes it in at the second level and is a different number.
 CONTRACT_DEEPSEEK_EXPERT_SUM = "dispatch_reduce_expert_outputs_bf16_v1"
 
+#: DeepSeek's compressor applies the released block-64 in-place FP8 QDQ rule:
+#: derive a power-of-two E8M0 scale from ``amax * RN(1 / 448)``, clamp the
+#: quotient to E4M3FN's finite range, and round to nearest even.  This is not
+#: NUM-3.3's searched, non-saturating activation quantiser, even though both
+#: contracts produce E4M3FN codes and E8M0 scales.
+CONTRACT_DEEPSEEK_FP8_QDQ_QUANTIZE = "quantization_fp8_qdq_bf16_quantize_v1"
+
 #: Contract names some emitters still spell as the reference owner they pin.
 #: These are aliases, not separate contracts: the arithmetic is identical, so
 #: resolving them here is what stops a DeepSeek deployment from silently
@@ -145,6 +152,7 @@ KNOWN_CONTRACTS: frozenset[str] = frozenset(
         CONTRACT_DEEPSEEK_ROPE,
         CONTRACT_DEEPSEEK_ROPE_INVERSE,
         CONTRACT_DEEPSEEK_EXPERT_SUM,
+        CONTRACT_DEEPSEEK_FP8_QDQ_QUANTIZE,
         CONTRACT_QWEN_SILU_MUL,
         CONTRACT_DEEPSEEK_FP8_SWIGLU,
         CONTRACT_DEEPSEEK_MXFP4_SWIGLU,
@@ -1194,6 +1202,7 @@ __all__ = [
     "BackendError",
     "CONTRACT_ALIASES",
     "CONTRACT_BLOCKED",
+    "CONTRACT_DEEPSEEK_FP8_QDQ_QUANTIZE",
     "CONTRACT_DEEPSEEK_FP8_SWIGLU",
     "CONTRACT_DEEPSEEK_MXFP4_SWIGLU",
     "CONTRACT_DEEPSEEK_RMSNORM",

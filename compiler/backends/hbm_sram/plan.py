@@ -3153,7 +3153,33 @@ def _bind_state_tensors(
                 if writes_state_plane(kernel, tensors, n, consumed)
             ]
         for position, name in enumerate(outs):
-            if not writes or name in bound:
+            if name in bound:
+                continue
+            if kernel.kind == "STATE_READ":
+                # A STATE_READ creates no plane: it re-presents the state view
+                # supplied as its input with a narrower valid-row extent.  Keep
+                # the complete binding, including a fused row's column, rather
+                # than allocating the result in an activation arena.  The
+                # latter can legally reuse the producer's old buffer and turn
+                # a state read into a stale-activation read with no trap.
+                source = (
+                    kernel.inputs[min(position, len(kernel.inputs) - 1)]
+                    if kernel.inputs
+                    else ""
+                )
+                inherited = bound.get(source)
+                if inherited is not None:
+                    bound[name] = list(inherited)
+                    continue
+                if not reads:
+                    continue
+                mapping = state_of_resource.get(
+                    reads[min(position, len(reads) - 1)]
+                )
+                if mapping is not None:
+                    bound[name] = list(mapping)
+                continue
+            if not writes:
                 continue
             resource = writes[min(position, len(writes) - 1)]
             mapping = state_of_resource.get(resource)
