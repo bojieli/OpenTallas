@@ -29,7 +29,7 @@ What it proves
 
 from __future__ import annotations
 
-from typing import Any, Iterable, Mapping, Sequence
+from typing import Any, Mapping, Sequence
 
 from compiler.ir.v3.kernel_ir import (
     CheckpointBinding,
@@ -42,10 +42,7 @@ from compiler.ir.v3.lowering import engine_for
 from runtime.abi3.capability import Capability
 from runtime.abi3.constants import (
     Control,
-    DTYPE_BITS,
-    DType,
     Major,
-    NO_ID,
     Permission,
     State,
     StorageClass,
@@ -55,6 +52,8 @@ from runtime.abi3.deployment import Deployment
 from runtime.abi3.descriptors import ExtendedDescriptorType, SelectorKind, Symbol
 from runtime.abi3.records import decode_body, split_program
 from runtime.abi3.verifier import verify_deployment
+
+HBM_DEPLOYMENT_CHECK_SCHEMA = "opentallas.hbm_sram.deployment_check.v1"
 
 #: Independent copy of the neutral-dtype table.  Duplicated on purpose: a
 #: checker that shares the backend's tables cannot catch the backend's table
@@ -125,7 +124,9 @@ def check_deployment(
     representative = {
         k.index for k in graph.kernels if k.layer is None or k.layer in first_iteration
     }
-    emitted_kernels = {k for k in representative if graph.kernels[k].kind not in _TRANSACTION_KINDS}
+    emitted_kernels = {
+        k for k in representative if graph.kernels[k].kind not in _TRANSACTION_KINDS
+    }
 
     # -- 1. engine mapping ------------------------------------------------
     by_kernel: dict[int, list[Any]] = {}
@@ -143,7 +144,9 @@ def check_deployment(
             f"kernel {index} ({kernel.kernel_id}) reaches no engine operator",
         ):
             continue
-        families = {(d.payload["engine_family"], d.payload["engine_sub"]) for d in found}
+        families = {
+            (d.payload["engine_family"], d.payload["engine_sub"]) for d in found
+        }
         require(
             "engine_mapping",
             (int(engine.family), int(engine.sub)) in families,
@@ -257,7 +260,6 @@ def check_deployment(
         )
 
     # -- 4. loop compression ----------------------------------------------
-    layer_counts = sorted({b["layer_count"] for b in bands})
     band_loops = [
         d
         for d in loops
@@ -331,8 +333,7 @@ def check_deployment(
         require(
             "node_count_matches_capability",
             node_count == expected_nodes,
-            f"topology declares {node_count} nodes, capability admits "
-            f"{expected_nodes}",
+            f"topology declares {node_count} nodes, capability admits {expected_nodes}",
         )
     link_instructions = [i for i in instructions if i.major == int(Major.LINK)]
     require(
@@ -445,10 +446,14 @@ def check_deployment(
     )
 
     return {
+        "schema": HBM_DEPLOYMENT_CHECK_SCHEMA,
+        "status": "pass" if not errors else "fail",
         "ok": not errors,
         "errors": errors,
         "generated_constants": len(generated),
         "warnings": warnings,
+        "check_count": len(checks),
+        "passed_check_count": sum(bool(value) for value in checks.values()),
         "checks": dict(sorted(checks.items())),
         "expected": {
             "weight_objects": len(expected_groups),
@@ -526,7 +531,10 @@ def _ring_moduli(graph: KernelGraph) -> set[int]:
     """
     moduli: set[int] = set()
     for kernel in graph.kernels:
-        if str(kernel.attributes.get("cache_row", "")) != "absolute_position_mod_window":
+        if (
+            str(kernel.attributes.get("cache_row", ""))
+            != "absolute_position_mod_window"
+        ):
             continue
         window = int(kernel.attributes.get("window_size", 0) or 0)
         if window > 0:
@@ -662,7 +670,9 @@ def _extent(value: Any, fallback: int = 1) -> int:
 
 
 def _signature(
-    kernels: Sequence[Kernel], tensors: Mapping[str, Tensor], produced: Mapping[str, int]
+    kernels: Sequence[Kernel],
+    tensors: Mapping[str, Tensor],
+    produced: Mapping[str, int],
 ) -> str:
     parts = []
     for kernel in kernels:
@@ -713,7 +723,7 @@ def _reconstruct_bands(
     if not by_layer:
         return []
     layers = sorted(by_layer)
-    signatures = [_signature(by_layer[l], tensors, produced) for l in layers]
+    signatures = [_signature(by_layer[layer], tensors, produced) for layer in layers]
 
     bands: list[dict[str, Any]] = []
     cursor = 0
@@ -727,7 +737,8 @@ def _reconstruct_bands(
                     break
                 if any(
                     signatures[start + offset] != signatures[cursor + offset]
-                    or layers[start + offset] != layers[cursor + offset] + iterations * period
+                    or layers[start + offset]
+                    != layers[cursor + offset] + iterations * period
                     for offset in range(period)
                 ):
                     break
@@ -836,12 +847,18 @@ def _binding_ranges(binding: CheckpointBinding) -> list[_Range]:
 
 
 def _reconstruct_weight_groups(
-    graph: KernelGraph, tensors: Mapping[str, Tensor], bands: Sequence[Mapping[str, Any]]
+    graph: KernelGraph,
+    tensors: Mapping[str, Tensor],
+    bands: Sequence[Mapping[str, Any]],
 ) -> tuple[dict[str, list[_Range]], dict[str, list[int]]]:
     """Independently recompute the expected weight objects.
 
-    Rule one: one object per weight role, segments in layer order.  Rule two:
-    everything left over grouped by adjacency inside one checkpoint file.
+    Rule one: one object per weight role, segments in layer order.  When every
+    member of that role names a distinct block-scale tensor, the scale tensors
+    form a companion object in the same member order: the frozen block-scale
+    address is the weight element offset divided by its block geometry, so a
+    file-adjacent scale layout would not preserve the layer stride.  Rule two:
+    everything left over is grouped by adjacency inside one checkpoint file.
 
     Returns the ranges each object holds and, for the role objects, the
     per-layer byte extent of each member -- which is what the layer stride is
@@ -892,11 +909,34 @@ def _reconstruct_weight_groups(
                 claimed.update(members)
                 role_key = f"role:{band['first_layer']}.{position}.{slot}"
                 groups[role_key] = [
-                    rng
-                    for m in members
-                    for rng in _binding_ranges(tensors[m].binding)
+                    rng for m in members for rng in _binding_ranges(tensors[m].binding)
                 ]
                 extents[role_key] = [tensors[m].binding.bytes for m in members]
+
+                scale_members: list[str] = []
+                for member in members:
+                    scale_id = tensors[member].scale_tensor_id
+                    scale = tensors.get(scale_id) if scale_id else None
+                    if (
+                        scale is None
+                        or scale.binding is None
+                        or scale.tensor_id in claimed
+                        or scale.tensor_id in scale_members
+                    ):
+                        scale_members = []
+                        break
+                    scale_members.append(scale.tensor_id)
+                if len(scale_members) == len(members):
+                    claimed.update(scale_members)
+                    scale_key = f"{role_key}.scale"
+                    groups[scale_key] = [
+                        rng
+                        for member in scale_members
+                        for rng in _binding_ranges(tensors[member].binding)
+                    ]
+                    extents[scale_key] = [
+                        tensors[member].binding.bytes for member in scale_members
+                    ]
 
     leftovers = sorted(
         (
@@ -920,3 +960,6 @@ def _reconstruct_weight_groups(
         groups.setdefault(f"file:{run_index}", []).extend(_binding_ranges(binding))
         end = binding.offset + binding.bytes
     return groups, extents
+
+
+__all__ = ["HBM_DEPLOYMENT_CHECK_SCHEMA", "check_deployment"]

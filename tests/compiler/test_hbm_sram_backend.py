@@ -1777,6 +1777,15 @@ def test_independent_checker_accepts_the_cluster_build(moe, cluster):
     assert report["actual"]["link_instructions"] > 0
 
 
+def test_independent_checker_reconstructs_block_scale_companion_groups(single_chip):
+    graph = block_scaled_graph()
+    deployment = lower_to_abi3(graph, single_chip)
+    report = check_deployment(graph, deployment, single_chip)
+    assert report["ok"], report["errors"]
+    assert report["checks"]["weight_grouping_agrees"]
+    assert report["expected"]["weight_objects"] == report["actual"]["weight_objects"]
+
+
 def test_independent_checker_rejects_a_tampered_deployment(dense, single_chip):
     deployment = lower_to_abi3(dense, single_chip)
     victim = next(
@@ -1898,6 +1907,47 @@ def test_cli_serves_the_cluster_profile(tmp_path):
     report = json.loads((out / "build_report.json").read_text())
     assert report["node_count"] == 32
     assert report["program"]["link_instructions"] > 0
+
+
+def test_governed_qwen_deployment_certificate(
+    dense, single_chip, cluster, tmp_path
+):
+    from tools.check_hbm_deployments import Case, run_case
+
+    ir = tmp_path / "kernel_ir.v3.json"
+    deployment_root = tmp_path / "deployment"
+    capability_path = tmp_path / "single_chip.json"
+    peer_path = tmp_path / "cluster_32.json"
+    dense.write(ir)
+    lower_to_abi3(dense, single_chip).write(deployment_root)
+    capability_path.write_text(json.dumps(single_chip.to_dict(), sort_keys=True))
+    peer_path.write_text(json.dumps(cluster.to_dict(), sort_keys=True))
+
+    report = run_case(
+        Case(
+            "synthetic-qwen",
+            "qwen",
+            str(ir),
+            str(deployment_root),
+            str(capability_path),
+        ),
+        str(peer_path),
+    )
+    assert report["status"] == "pass", report["errors"]
+    assert report["passed_check_count"] == report["check_count"]
+    assert report["reproducibility"]["clean_build_count"] == 2
+    assert report["reproducibility"]["first_matches_shipped"]
+    assert report["reproducibility"]["second_matches_shipped"]
+    assert report["shared_hardware_profile"]["identical_shared_hardware"]
+    assert report["checks"]["hbm_address_map_disjoint"]
+    assert (
+        report["actual"]["hbm_bytes_per_node"]
+        == report["actual"]["deployed_hbm_address_span"]
+    )
+    assert (
+        report["actual"]["deployed_hbm_payload_bytes"]
+        <= report["actual"]["deployed_hbm_address_span"]
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -2114,7 +2164,6 @@ def test_a_select_whose_result_keeps_the_dropped_axis_is_rejected():
 
 
 def test_a_select_may_not_drop_a_runtime_symbol():
-    span = Symbolic("span_tokens", 1, 64)
     errors = check_neutral(_select_graph(axis=0, index=0, result_shape=(2, 4)))
     assert errors and any("static extent" in e for e in errors)
 
@@ -2620,7 +2669,6 @@ def test_a_quantised_activation_carries_its_scale_into_the_view():
     failure this lane cannot see.
     """
     graph = block_scaled_graph(layers=2)
-    tensors = {t.tensor_id: t for t in graph.tensors}
     # Quantise the layer-0 input and feed the codes to the projection.
     codes = Tensor(
         tensor_id="q.codes",
