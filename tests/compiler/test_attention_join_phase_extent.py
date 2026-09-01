@@ -43,7 +43,7 @@ from runtime.abi3.descriptors import (
     SelectorKind,
     Symbol,
 )
-from runtime.abi3.constants import InstructionFlag, NO_ID
+from runtime.abi3.constants import Control, InstructionFlag, Major, NO_ID
 from runtime.abi3.records import INSTRUCTION, Instruction, split_program
 from runtime.sim.memory import iteration_extent
 
@@ -207,6 +207,18 @@ def _issues(table, instruction: Instruction, symbols: dict[int, int]) -> bool:
     return verdict
 
 
+def _wait_events(table, instruction: Instruction) -> set[int]:
+    if instruction.wait_set_id == NO_ID:
+        return set()
+    wait = table.get(
+        instruction.wait_set_id, ExtendedDescriptorType.EVENT_WAIT_SET
+    ).payload
+    return {
+        int(wait[f"producer_{slot}"])
+        for slot in range(int(wait["producer_count"]))
+    }
+
+
 def _rows(lane: str, graph: KernelGraph) -> dict[str, dict[str, int]]:
     """``phase -> {"join_in", "join_out", "attention_kv"}`` row counts."""
     deployment = _lower(lane, graph)
@@ -295,6 +307,60 @@ def test_both_lanes_size_the_same_resource_the_same(phase, rows):
     comparing anything, whichever of them is right.
     """
     assert rows["rom"][phase] == rows["hbm"][phase]
+
+
+@pytest.mark.parametrize("kernel_id", [JOIN, CONSUMER])
+def test_hbm_conditional_paths_have_a_causal_or_join(kernel_id, graph):
+    """Every mutually exclusive producer is waited under its own predicate."""
+
+    deployment = _lower("hbm", graph)
+    source = next(k.index for k in graph.kernels if k.kernel_id == kernel_id)
+    _header, body = split_program(deployment.program)
+    size = INSTRUCTION.size
+    stream = [
+        Instruction.decode(body[i * size : (i + 1) * size])
+        for i in range(len(body) // size)
+    ]
+    indexed = [
+        (index, instruction)
+        for index, instruction in enumerate(stream)
+        if instruction.source_operation_id == source
+    ]
+    producers = [
+        (index, instruction)
+        for index, instruction in indexed
+        if instruction.major != int(Major.CONTROL)
+        and instruction.predicate_id != NO_ID
+        and instruction.signal_event_id != NO_ID
+    ]
+    waits = [
+        (index, instruction)
+        for index, instruction in indexed
+        if instruction.major == int(Major.CONTROL)
+        and instruction.sub == int(Control.WAIT)
+    ]
+    joins = [
+        (index, instruction)
+        for index, instruction in indexed
+        if instruction.major == int(Major.CONTROL)
+        and instruction.sub == int(Control.NOP)
+        and instruction.signal_event_id != NO_ID
+    ]
+    assert producers
+    assert len(joins) == 1
+    join_index, join = joins[0]
+    assert join.predicate_id == NO_ID
+    for producer_index, producer in producers:
+        matching = [
+            (wait_index, wait)
+            for wait_index, wait in waits
+            if producer.signal_event_id in _wait_events(deployment.table, wait)
+            and wait.predicate_id == producer.predicate_id
+            and bool(wait.flags & InstructionFlag.PREDICATE_INVERT)
+            == bool(producer.flags & InstructionFlag.PREDICATE_INVERT)
+        ]
+        assert len(matching) == 1
+        assert producer_index < matching[0][0] < join_index
 
 
 @pytest.mark.parametrize("lane", ["rom", "hbm"])

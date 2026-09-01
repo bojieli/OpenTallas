@@ -47,8 +47,7 @@ from compiler.backends.numeric_contracts import (
     reduction_order_for,
 )
 from compiler.ir.v3.kernel_ir import Kernel, KernelGraph, Symbolic, Tensor
-from compiler.ir.v3.lowering import engine_for
-from runtime.abi3.builder import BuildError, DeploymentBuilder, DynamicTerm
+from runtime.abi3.builder import DeploymentBuilder, DynamicTerm
 from runtime.abi3.capability import Capability
 from runtime.abi3.constants import (
     Attention,
@@ -59,13 +58,13 @@ from runtime.abi3.constants import (
     DType,
     Feature,
     IntegrityMode,
+    InstructionFlag,
     Link,
     Major,
     NO_ID,
     Ordering,
     Permission,
     ReductionOrder,
-    Selection,
     State,
     StateClass,
     StorageClass,
@@ -81,6 +80,7 @@ from runtime.abi3.descriptors import (
     Comparison,
     LayoutClass,
     MAX_DYNAMIC_TERMS,
+    MAX_WAIT_PRODUCERS,
     Phase,
     PredicateKind,
     SelectionMode,
@@ -95,7 +95,6 @@ from .plan import (
     as_kernel_graph,
     OperandPlan,
     PhysicalPlan,
-    PlanError,
     TileConfig,
     build_plan,
     bytes_for,
@@ -106,7 +105,6 @@ from .plan import (
     ring_modulus,
     round_up as _round_up,
     _abi_input_slots,
-    condition_of,
     join_extent,
     join_extent_under,
     evaluate_comparison,
@@ -421,6 +419,7 @@ class _Emitter:
         self._link_instructions = 0
         self._hoisted: set[str] = set()
         self._transaction_source: dict[tuple[str, str], int] = {}
+        self._commit_frontier: tuple[int, ...] = ()
         self.token_ring_tensor: str | None = None
         self.token_input_tensor: str | None = None
         self._position_inputs = frozenset(position_inputs(graph))
@@ -485,14 +484,29 @@ class _Emitter:
 
         # A cluster commits its state as one coordinated transaction: the
         # barrier is the point at which every node agrees the step happened.
+        commit_barrier = NO_ID
         if self.node_count > 1:
-            self._emit_barrier("coordinated_commit", "commit", wait=None)
+            frontier = self._terminal_work_events()
+            if not frontier:
+                raise LoweringError(
+                    "a cluster transaction reaches coordinated commit without "
+                    "publishing any preceding work event"
+                )
+            self._commit_frontier = tuple(frontier)
+            commit_barrier = self._emit_barrier(
+                "coordinated_commit", "commit", wait=frontier
+            )
         for physical_id in sorted(self._state_descriptor):
             if physical_id not in committed:
                 builder.emit(
                     Major.STATE,
                     State.COMMIT,
                     descriptor_id=self._state_descriptor[physical_id],
+                    wait_set_id=(
+                        self._wait_set([commit_barrier])
+                        if commit_barrier != NO_ID
+                        else NO_ID
+                    ),
                     source_operation_id=self._transaction_source.get(
                         ("STATE_COMMIT", physical_id), NO_ID
                     ),
@@ -523,6 +537,7 @@ class _Emitter:
                 ],
                 "link_instructions": self._link_instructions,
                 "replicated_link_sites": dict(sorted(self._replicated_links.items())),
+                "commit_frontier_events": list(self._commit_frontier),
                 "numeric_contract_substitutions": dict(
                     sorted(self._substitutions.items())
                 ),
@@ -987,7 +1002,7 @@ class _Emitter:
                     continue
                 if kernel.kind == "STATE_PREPARE":
                     prepared.add(physical_id)
-                else:
+                elif self.node_count <= 1:
                     committed.add(physical_id)
         return prepared, committed
 
@@ -1198,7 +1213,11 @@ class _Emitter:
         unique = tuple(sorted({e for e in events if e != NO_ID}))
         if not unique:
             return NO_ID
-        unique = unique[:12]
+        if len(unique) > MAX_WAIT_PRODUCERS:
+            raise LoweringError(
+                f"a wait names {len(unique)} producers, but ABI 3.0 admits "
+                f"at most {MAX_WAIT_PRODUCERS}"
+            )
         if unique in self._waits:
             return self._waits[unique]
         wid = self.builder.wait_set(list(unique), key=f"wait.{len(self._waits)}")
@@ -1527,7 +1546,6 @@ class _Emitter:
         writable: bool,
         narrow: tuple[int, int] | None = None,
     ) -> int:
-        tensor = self.tensors[operand.tensor_id]
         dtype = dtype_of(operand.dtype)
         reading = self._element_reading(plan, operand)
         if reading is not None:
@@ -2822,22 +2840,28 @@ class _Emitter:
 
         family, sub = Major(plan.engine_family), plan.engine_sub
         present_paths = self._phase_present_paths(
-            plan, kernel, loops, condition=condition, declared_output=(
-                outputs[0] if outputs else NO_ID
-            )
+            plan,
+            kernel,
+            loops,
+            condition=condition,
+            declared_output=(outputs[0] if outputs else NO_ID),
         )
+        join_paths: list[tuple[int, int, bool]] = []
         if present_paths is None:
+            present_event = builder.new_event()
             builder.emit(
                 family,
                 sub,
                 descriptor_id=operator(inputs, outputs, f"op.k{plan.index}"),
                 wait_set_id=self._wait_set(self._producer_events(kernel)),
-                signal_event_id=builder.new_event(),
+                signal_event_id=present_event,
                 predicate_id=predicate,
                 source_operation_id=plan.index,
             )
+            join_paths.append((present_event, predicate, False))
         else:
             for phase, path_predicate, path_output in present_paths:
+                present_event = builder.new_event()
                 builder.emit(
                     family,
                     sub,
@@ -2847,15 +2871,17 @@ class _Emitter:
                         f"op.k{plan.index}.{phase}",
                     ),
                     wait_set_id=self._wait_set(self._producer_events(kernel)),
-                    signal_event_id=builder.new_event(),
+                    signal_event_id=present_event,
                     predicate_id=path_predicate,
                     source_operation_id=plan.index,
                 )
+                join_paths.append((present_event, path_predicate, False))
         kept = [
             self._event_of_tensor[name]
             for index, name in enumerate(kernel.inputs)
             if index != absent and name in self._event_of_tensor
         ]
+        absent_event = builder.new_event()
         builder.emit(
             family,
             sub,
@@ -2863,19 +2889,13 @@ class _Emitter:
                 reduced_inputs, reduced_outputs, f"op.k{plan.index}.absent"
             ),
             wait_set_id=self._wait_set(kept),
-            signal_event_id=builder.new_event(),
+            signal_event_id=absent_event,
             predicate_id=predicate,
             invert_predicate=True,
             source_operation_id=plan.index,
         )
-        join = builder.new_event()
-        builder.emit(
-            Major.CONTROL,
-            Control.NOP,
-            signal_event_id=join,
-            source_operation_id=plan.index,
-        )
-        return join
+        join_paths.append((absent_event, predicate, True))
+        return self._emit_predicated_join(join_paths, source=plan.index)
 
     def _declared_join_axis(self, name: str) -> RequestExtent | None:
         """The A18 function the graph declares for one tensor's leading axis."""
@@ -3172,6 +3192,7 @@ class _Emitter:
                     f"kernel {plan.kernel_id} reads two phase-split operands "
                     "that name different phases"
                 )
+        join_paths: list[tuple[int, int, bool]] = []
         for phase in phases:
             row = list(inputs)
             for ir_slot, table in paths.items():
@@ -3194,6 +3215,8 @@ class _Emitter:
                 row[abi_slot] = self._phase_extent_view(
                     plan, operand, loops, extent, writable=False
                 )
+            predicate = self._phase_predicate((phase,))
+            event = builder.new_event()
             builder.emit(
                 Major(plan.engine_family),
                 plan.engine_sub,
@@ -3210,18 +3233,52 @@ class _Emitter:
                     key=f"op.k{plan.index}.{phase}",
                 ),
                 wait_set_id=self._wait_set(self._producer_events(kernel)),
-                signal_event_id=builder.new_event(),
-                predicate_id=self._phase_predicate((phase,)),
+                signal_event_id=event,
+                predicate_id=predicate,
                 source_operation_id=plan.index,
             )
-        join = builder.new_event()
-        builder.emit(
+            join_paths.append((event, predicate, False))
+        return self._emit_predicated_join(join_paths, source=plan.index)
+
+    def _emit_predicated_join(
+        self,
+        paths: Sequence[tuple[int, int, bool]],
+        *,
+        source: int,
+    ) -> int:
+        """Publish one event after the one conditional path that actually ran.
+
+        A wait set is an AND, so waiting unconditionally on mutually exclusive
+        producers deadlocks.  Each producer instead gets a ``CONTROL.WAIT``
+        under the same predicate and inversion as that producer.  Exactly one
+        wait executes; the following unpredicated NOP publishes the common
+        result event.  No event has two producers and no skipped producer is
+        awaited.
+        """
+
+        if len(paths) < 2:
+            raise LoweringError("a conditional join must name at least two paths")
+        for event, predicate, inverted in paths:
+            if event == NO_ID or predicate == NO_ID:
+                raise LoweringError(
+                    "a conditional join path must name both an event and a predicate"
+                )
+            self.builder.emit(
+                Major.CONTROL,
+                Control.WAIT,
+                wait_set_id=self._wait_set([event]),
+                predicate_id=predicate,
+                invert_predicate=inverted,
+                source_operation_id=source,
+            )
+        joined = self.builder.new_event()
+        self.builder.emit(
             Major.CONTROL,
             Control.NOP,
-            signal_event_id=join,
-            source_operation_id=plan.index,
+            signal_event_id=joined,
+            source_operation_id=source,
         )
-        return join
+        return joined
 
     def _reduced_join_output(
         self,
@@ -3405,6 +3462,12 @@ class _Emitter:
             "STATE_READ": State.READ,
         }[kernel.kind]
         for physical_id in physical:
+            if kernel.kind == "STATE_COMMIT" and self.node_count > 1:
+                # A cluster publishes every state resource only after the one
+                # coordinated barrier at the end of the transaction.  The
+                # graph site still supplies source identity, but it cannot
+                # issue a node-local early commit.
+                continue
             if kernel.kind != "STATE_READ" and physical_id in self._hoisted:
                 continue  # hoisted out of the loop; see _state_transaction_sites
             # A state read is one instruction and no operator descriptor, so
@@ -3546,6 +3609,69 @@ class _Emitter:
             for name in kernel.inputs
             if name in self._event_of_tensor
         ]
+
+    def _terminal_work_events(self) -> list[int]:
+        """Return the unconsumed, unconditional completion-event frontier."""
+
+        produced: dict[int, int] = {}
+        consumed: set[int] = set()
+        for index, instruction in enumerate(self.builder.instructions):
+            if instruction.signal_event_id != NO_ID:
+                produced[int(instruction.signal_event_id)] = index
+            if instruction.wait_set_id == NO_ID:
+                continue
+            wait = self.builder.table[instruction.wait_set_id]
+            for slot in range(int(wait.payload["producer_count"])):
+                consumed.add(int(wait.payload[f"producer_{slot}"]))
+        raw_frontier = sorted(set(produced) - consumed)
+        frontier: list[int] = []
+        conditional: dict[tuple[int, bool], list[int]] = {}
+        for event in raw_frontier:
+            instruction = self.builder.instructions[produced[event]]
+            if instruction.predicate_id == NO_ID:
+                frontier.append(event)
+                continue
+            key = (
+                int(instruction.predicate_id),
+                bool(instruction.flags & int(InstructionFlag.PREDICATE_INVERT)),
+            )
+            conditional.setdefault(key, []).append(event)
+        if conditional:
+            for (predicate, inverted), events in sorted(conditional.items()):
+                for offset in range(0, len(events), MAX_WAIT_PRODUCERS):
+                    self.builder.emit(
+                        Major.CONTROL,
+                        Control.WAIT,
+                        wait_set_id=self._wait_set(
+                            events[offset : offset + MAX_WAIT_PRODUCERS]
+                        ),
+                        predicate_id=predicate,
+                        invert_predicate=inverted,
+                    )
+            joined = self.builder.new_event()
+            self.builder.emit(
+                Major.CONTROL,
+                Control.NOP,
+                signal_event_id=joined,
+            )
+            frontier.append(joined)
+        while len(frontier) > MAX_WAIT_PRODUCERS:
+            collapsed: list[int] = []
+            for offset in range(0, len(frontier), MAX_WAIT_PRODUCERS):
+                chunk = frontier[offset : offset + MAX_WAIT_PRODUCERS]
+                if len(chunk) == 1:
+                    collapsed.extend(chunk)
+                    continue
+                joined = self.builder.new_event()
+                self.builder.emit(
+                    Major.CONTROL,
+                    Control.NOP,
+                    wait_set_id=self._wait_set(chunk),
+                    signal_event_id=joined,
+                )
+                collapsed.append(joined)
+            frontier = collapsed
+        return frontier
 
     # -- cluster traffic ---------------------------------------------------
     def _maybe_link(
@@ -3821,7 +3947,7 @@ class _Emitter:
         link_class: str,
         tag: str,
         *,
-        wait: int | None,
+        wait: Sequence[int] | None,
         source: int = NO_ID,
     ) -> int:
         """A costed, payload-free synchronisation of the whole participant set."""
@@ -3853,7 +3979,7 @@ class _Emitter:
             Major.LINK,
             Link.BARRIER,
             descriptor_id=comm,
-            wait_set_id=self._wait_set([wait]) if wait is not None else NO_ID,
+            wait_set_id=self._wait_set(wait) if wait is not None else NO_ID,
             signal_event_id=event,
             source_operation_id=source,
         )

@@ -1145,6 +1145,59 @@ def test_cluster_emits_link_traffic_and_single_chip_does_not(moe, cluster, singl
     assert route_class["coordinated_commit"] in classes
 
 
+def test_cluster_commit_barrier_waits_for_work_and_gates_every_commit(moe, cluster):
+    from runtime.abi3.constants import Link, State
+    from runtime.abi3.records import decode_body, split_program
+
+    deployment = lower_to_abi3(moe, cluster)
+    _, body = split_program(deployment.program)
+    instructions = decode_body(body)
+
+    def waits(instruction):
+        if instruction.wait_set_id == NO_ID:
+            return set()
+        descriptor = deployment.table[instruction.wait_set_id]
+        return {
+            int(descriptor.payload[f"producer_{slot}"])
+            for slot in range(int(descriptor.payload["producer_count"]))
+        }
+
+    barriers = [
+        (index, instruction)
+        for index, instruction in enumerate(instructions)
+        if instruction.major == int(Major.LINK)
+        and instruction.sub == int(Link.BARRIER)
+    ]
+    assert len(barriers) == 1
+    barrier_index, barrier = barriers[0]
+    frontier = waits(barrier)
+    assert frontier
+    assert sorted(frontier) == deployment.notes["commit_frontier_events"]
+
+    producer_index = {
+        instruction.signal_event_id: index
+        for index, instruction in enumerate(instructions)
+        if instruction.signal_event_id != NO_ID
+    }
+    assert all(producer_index[event] < barrier_index for event in frontier)
+
+    commits = [
+        (index, instruction)
+        for index, instruction in enumerate(instructions)
+        if instruction.major == int(Major.STATE)
+        and instruction.sub == int(State.COMMIT)
+    ]
+    assert len(commits) == len(
+        deployment.table.ids_of_type(ExtendedDescriptorType.STATE)
+    )
+    assert barrier.signal_event_id != NO_ID
+    assert all(index > barrier_index for index, _ in commits)
+    assert all(
+        waits(instruction) == {barrier.signal_event_id}
+        for _, instruction in commits
+    )
+
+
 # ---------------------------------------------------------------------------
 # Loop compression -- the reason ABI 3.0 exists
 # ---------------------------------------------------------------------------
