@@ -13,8 +13,6 @@ debugged against a known-good encoder.
 
 from __future__ import annotations
 
-from typing import Any
-
 from .capability import Capability
 from .constants import (
     Control,
@@ -29,7 +27,6 @@ from .constants import (
     StorageClass,
     Tensor,
     TopologyClass,
-    Vector,
     counter_id,
     CounterGroup,
 )
@@ -106,6 +103,7 @@ def build_fixture(
     storage_class: StorageClass,
     capability: Capability | None = None,
     backend: str = "fixture",
+    node_count: int = 1,
 ) -> Deployment:
     """Build the conformance fixture against ``storage_class``.
 
@@ -115,7 +113,6 @@ def build_fixture(
     ROM-versus-HBM comparison protocol depends on.
     """
     capability = capability or fixture_capability()
-    immutable = storage_class in (StorageClass.ROM,)
     builder = DeploymentBuilder(
         target_id=f"fixture-{storage_class.name.lower()}",
         model_id="abi3-fixture",
@@ -125,7 +122,7 @@ def build_fixture(
     builder.require(Feature.BF16_TENSOR)
     builder.topology(
         topology_class=TopologyClass(capability.topology_class),
-        node_count=1,
+        node_count=node_count,
         hbm_bytes_per_node=capability.memory["hbm"]["bytes"],
         sram_bytes_per_node=capability.memory["sram"]["bytes"],
         key="topology",

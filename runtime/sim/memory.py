@@ -20,26 +20,23 @@ second copy, and the bytes the engine reads are the checkpoint bytes.
 from __future__ import annotations
 
 import mmap
+from bisect import bisect_left
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Iterator, Mapping, Sequence
+from typing import Any, Mapping, Sequence
 
 import numpy as np
 
 from runtime.abi3.constants import (
-    DTYPE_BITS,
     NO_ID,
     DType,
     Permission,
     StorageClass,
 )
-from runtime.abi3.crc import sha256_hex
-from runtime.abi3.deployment import Deployment, ObjectSource, Segment, resolve_path
+from runtime.abi3.deployment import Deployment, ObjectSource, resolve_path
 from runtime.abi3.descriptors import (
     Descriptor,
     ExtendedDescriptorType,
-    MAX_DYNAMIC_TERMS,
-    MAX_RANK,
     SelectorKind,
     Symbol,
     iteration_extent,
@@ -95,6 +92,7 @@ class MemoryObject:
         "_segments",
         "_anonymous",
         "_descriptor",
+        "_dirty_ranges",
     )
 
     def __init__(
@@ -116,6 +114,15 @@ class MemoryObject:
         self._descriptor = descriptor
         self._segments: list[_MappedSegment] = []
         self._anonymous: np.ndarray | None = None
+        # Byte intervals written through the architectural memory boundary.
+        # Large deployment arenas are calloc-backed sparse address spaces: a
+        # DeepSeek cluster declares several logical terabytes while touching a
+        # small fraction for a short request.  Checkpointing can therefore walk
+        # these intervals instead of faulting every untouched zero page.  The
+        # intervals are exact for MemoryObject.write and conservative for a
+        # strided tensor view (its complete bounding span), which may retain
+        # extra fill bytes but can never omit a byte the device wrote.
+        self._dirty_ranges: list[tuple[int, int]] = []
         if source.kind == "zero":
             if source.fill:
                 self._anonymous = np.full(self.size_bytes, source.fill, dtype=np.uint8)
@@ -208,6 +215,35 @@ class MemoryObject:
         self._byte_view(offset, len(payload))[:] = np.frombuffer(
             payload, dtype=np.uint8
         )
+        self.mark_dirty(offset, len(payload))
+
+    def mark_dirty(self, offset: int, nbytes: int) -> None:
+        """Record a conservative byte interval changed through the device API."""
+
+        self._check_range(offset, nbytes)
+        if nbytes == 0:
+            return
+        start, stop = int(offset), int(offset + nbytes)
+        ranges = self._dirty_ranges
+        index = bisect_left(ranges, (start, -1))
+        if index and ranges[index - 1][1] >= start:
+            index -= 1
+        end = index
+        while end < len(ranges) and ranges[end][0] <= stop:
+            start = min(start, ranges[end][0])
+            stop = max(stop, ranges[end][1])
+            end += 1
+        ranges[index:end] = [(start, stop)]
+
+    def dirty_ranges(self) -> tuple[tuple[int, int], ...]:
+        """Non-overlapping byte intervals written since construction/reset."""
+
+        return tuple(self._dirty_ranges)
+
+    def clear_dirty_ranges(self) -> None:
+        """Start a new write-tracking epoch after a checkpoint restore reset."""
+
+        self._dirty_ranges.clear()
 
     def _byte_view(self, offset: int, nbytes: int) -> np.ndarray:
         """Return a uint8 view, contiguous when the range is in one segment."""
@@ -840,6 +876,11 @@ class ViewResolver:
             writeable=True,
         )
         target[...] = values
+        # The view may be strided, so the exact writes are a set of sub-ranges.
+        # Tracking its bounding span is conservative and deliberately simple:
+        # checkpoint compaction is allowed to retain unchanged fill bytes, but
+        # it must never skip an element the engine wrote.
+        obj.mark_dirty(view.element_offset * itemsize, (span + 1) * itemsize)
 
 
 def _element_span(dims: Sequence[int], strides: Sequence[int]) -> int:

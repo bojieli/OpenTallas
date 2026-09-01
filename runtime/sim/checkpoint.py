@@ -7,26 +7,34 @@ index tables -- are re-materialised from a named generator and re-checked
 against the digest the deployment binds.  Neither can differ between two
 processes that read the same deployment, so neither belongs in a checkpoint.
 
-What is left is the private byte buffer of every zero-filled object: the KV
-state images, the activation scratch, the token ring and the input window.  That
-set, plus the host-visible session bookkeeping (position, generation, cursor
-rows, the produced tokens), is the entire mutable state of the device.  This
-module writes exactly that set and restores exactly that set, so a process that
-loads a checkpoint is in the state the writing process was in when it stopped --
-not approximately, and not "in the parts we thought mattered".
+What is left is the private byte buffer of every writable object: the KV state
+images, the activation scratch, the token ring and the input window.  A cluster
+owns one private copy per logical node, so the checkpoint names both node and
+object and carries every arena.  That set, the aggregate and per-node counters,
+plus the host-visible session bookkeeping (position, generation, cursor rows,
+the produced tokens), is the entire mutable state of the device.  This module
+writes exactly that set and restores exactly that set, so a process that loads a
+checkpoint is in the state the writing process was in when it stopped -- not
+approximately, and not "in the parts we thought mattered".
 
 Three properties make the claim checkable rather than asserted:
 
 *Completeness is proved, not assumed.*  :func:`save_device_state` refuses to
-write a checkpoint if any writable object is not one it serialises.  A future
-backend that makes a mapped object writable therefore fails loudly here instead
-of silently producing a checkpoint that is missing state.
+write a checkpoint if any writable object on any node is not one it serialises,
+and :func:`restore_device_state` independently reconstructs that expected set
+from the deployment before touching an object.  A future backend that makes a
+mapped object writable, or a manifest with one node/object entry removed,
+therefore fails loudly instead of silently producing a partial restart.
 
 *The payload is compacted losslessly.*  A Qwen deployment's mutable image is
-3.3 GB, almost all of it still at its fill byte; only the byte runs that differ
-from the fill are stored.  This is a storage decision, not a semantic one, and
-it is checked: the manifest binds the SHA-256 of each object's *whole*
-contents, and a restore that does not reproduce that digest raises.
+3.3 GB, almost all of it still at its fill byte; DeepSeek's 32 node deployment
+has several logical terabytes of calloc-backed arena while a short request
+touches only a small fraction.  Small objects are scanned completely.  Large
+objects use byte intervals recorded at every architectural write boundary, and
+the interval is conservative for strided views, so it can retain extra fill but
+cannot omit a device write.  The manifest binds a canonical sparse digest over
+the size, fill, run coordinates and run payloads.  Those fields uniquely
+reconstruct every logical byte without hashing terabytes of untouched fill.
 
 *The target is bound.*  A checkpoint records the deployment and capability
 digests it was taken under and refuses to load into a different one.  Restarting
@@ -48,21 +56,36 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import struct
 from pathlib import Path
-from typing import Any, Mapping
+from typing import Any, Mapping, Sequence
 
 import numpy as np
 
 from runtime.abi3.capability import canonical_json
 from runtime.sim.device import Device, Session, StateResource
+from runtime.sim.counters import CounterSet
 
-SCHEMA = "opentallas.abi3.device_checkpoint.v1"
+SCHEMA = "opentallas.abi3.device_checkpoint.v2"
+LEGACY_SCHEMA = "opentallas.abi3.device_checkpoint.v1"
 
 #: Granularity of the fill-run scan.  Small enough that a KV window written for
 #: a hundred positions does not drag its whole 33 MB plane into the payload,
 #: large enough that the manifest stays short.
 BLOCK_BYTES = 1 << 16
+
+# Below this size, a complete scan also detects callers that deliberately
+# mutate ``anonymous_buffer()`` outside the architectural memory API (useful in
+# focused tests).  Larger objects rely on MemoryObject's complete write ledger;
+# linearly touching a 34 GiB zero arena merely to rediscover that it is a hole
+# defeats the sparse allocation that makes the simulator runnable.
+FULL_SCAN_MAX_BYTES = 1 << 26
+
+IO_CHUNK_BYTES = 1 << 24
+SPARSE_DIGEST_MODE = "sha256_sparse_runs_v1"
+LEGACY_DIGEST_MODE = "sha256_full_contents_v1"
+SPARSE_DIGEST_PREFIX = b"OpenTallas ABI3 sparse checkpoint object v1\0"
 
 #: One stored run: byte offset then byte length, little endian.
 RUN_HEADER = struct.Struct("<QQ")
@@ -90,52 +113,75 @@ def save_device_state(
     device cannot reconstruct it, and a restart that guesses it is not a
     restart.
     """
-    if getattr(device, "node_count", 1) > 1:
-        # Every node of a cluster has its own arena and its own state images,
-        # and this walks one of them.  A checkpoint that saved node zero and
-        # restored thirty-two would resume a generation from thirty-one empty
-        # KV caches and produce tokens from a computation that never happened,
-        # which is exactly what "a checkpoint that omits writable state is not a
-        # checkpoint" already says below.  So it fails closed until it walks
-        # every arena.
-        raise CheckpointError(
-            f"this device has {device.node_count} nodes and this checkpoint "
-            "serialises one arena; a multi-node checkpoint must carry every "
-            "node's state"
-        )
     path = Path(path)
-    (path / "objects").mkdir(parents=True, exist_ok=True)
+    path.mkdir(parents=True, exist_ok=True)
 
-    serialised: set[int] = set()
+    serialised: set[tuple[int, int]] = set()
     objects: list[dict[str, Any]] = []
-    for object_id in sorted(device.memory.objects):
-        obj = device.memory.objects[object_id]
-        source = device.deployment.objects.get(object_id)
-        if source is None:
-            raise CheckpointError(f"object {object_id} has no declared source")
-        if source.kind != "zero":
-            # Mapped and generated objects are re-derived from the deployment
-            # and re-authenticated when the device is built.  They are recorded
-            # in the manifest so the checkpoint states what it relies on.
-            continue
-        buffer = obj.anonymous_buffer()
-        if buffer is None:  # pragma: no cover -- a zero object owns a buffer
-            raise CheckpointError(
-                f"object {object_id} declares a zero source but owns no buffer"
+    payloads: dict[tuple[Any, ...], Path] = {}
+    for node_id, memory in enumerate(device.node_memories):
+        for object_id in sorted(memory.objects):
+            obj = memory.objects[object_id]
+            if not obj.writable:
+                continue
+            source = device.deployment.objects.get(object_id)
+            if source is None:
+                raise CheckpointError(
+                    f"node {node_id} object {object_id} has no declared source"
+                )
+            if source.kind != "zero":
+                raise CheckpointError(
+                    f"node {node_id} object {object_id} is writable but its "
+                    f"source kind is {source.kind!r}; a checkpoint cannot "
+                    "reconstruct a private mapped or generated object"
+                )
+            buffer = obj.anonymous_buffer()
+            if buffer is None:  # pragma: no cover -- a zero object owns a buffer
+                raise CheckpointError(
+                    f"node {node_id} object {object_id} declares a zero source "
+                    "but owns no buffer"
+                )
+            relative = (
+                Path("objects") / f"{object_id:05d}.bin"
+                if device.node_count == 1
+                else Path("nodes")
+                / f"{node_id:05d}"
+                / "objects"
+                / f"{object_id:05d}.bin"
             )
-        objects.append(_write_object(path, object_id, obj, buffer, int(source.fill)))
-        serialised.add(object_id)
+            entry = _write_object(
+                path,
+                relative,
+                node_id,
+                object_id,
+                obj,
+                buffer,
+                int(source.fill),
+            )
+            _deduplicate_payload(path, entry, payloads)
+            objects.append(entry)
+            serialised.add((node_id, object_id))
 
     missing = sorted(
-        object_id
-        for object_id, obj in device.memory.objects.items()
-        if obj.writable and object_id not in serialised
+        (node_id, object_id)
+        for node_id, memory in enumerate(device.node_memories)
+        for object_id, obj in memory.objects.items()
+        if obj.writable and (node_id, object_id) not in serialised
     )
     if missing:
         raise CheckpointError(
-            f"objects {missing} are writable but are not serialised; a "
+            f"node/object pairs {missing} are writable but are not serialised; a "
             "checkpoint that omits writable state is not a checkpoint"
         )
+
+    physical_payload_bytes = 0
+    payload_inodes: set[tuple[int, int]] = set()
+    for entry in objects:
+        stat = (path / entry["file"]).stat()
+        inode = (int(stat.st_dev), int(stat.st_ino))
+        if inode not in payload_inodes:
+            payload_inodes.add(inode)
+            physical_payload_bytes += int(stat.st_size)
 
     body: dict[str, Any] = {
         "schema": SCHEMA,
@@ -148,18 +194,30 @@ def save_device_state(
             "capability_digest": device.capability.digest,
         },
         "device": {
+            "node_count": device.node_count,
             "next_session": device._next_session,
             "device_cycle": device._device_cycle,
-            "counters": device.counters.snapshot(),
+            "counters": device.counters.to_dict(),
+            "node_counters": [counter.to_dict() for counter in device.node_counters],
         },
         "session": _session_to_dict(session),
         "objects": objects,
-        "derived_objects": [
-            {"object_id": object_id, "kind": source.kind}
+        "reconstructed_objects": [
+            {"object_id": object_id, "source_kind": source.kind}
             for object_id, source in sorted(device.deployment.objects.items())
-            if source.kind != "zero"
+            if not device.memory.objects[object_id].writable
         ],
         "block_bytes": BLOCK_BYTES,
+        "encoding": {
+            "digest_mode": SPARSE_DIGEST_MODE,
+            "full_scan_max_bytes": FULL_SCAN_MAX_BYTES,
+            "logical_stored_bytes": sum(
+                int(entry["stored_bytes"]) for entry in objects
+            ),
+            "physical_payload_bytes": physical_payload_bytes,
+            "unique_payload_files": len(payload_inodes),
+            "deduplicated_payload_files": len(objects) - len(payload_inodes),
+        },
         "host_state": dict(host_state or {}),
     }
     (path / "checkpoint.json").write_bytes(canonical_json(body))
@@ -168,28 +226,44 @@ def save_device_state(
 
 def _write_object(
     path: Path,
+    relative: Path,
+    node_id: int,
     object_id: int,
     obj: Any,
     buffer: np.ndarray,
     fill: int,
 ) -> dict[str, Any]:
-    """Store the runs of ``buffer`` that differ from ``fill`` plus its digest."""
-    runs = _fill_runs(buffer, fill)
-    blob = path / "objects" / f"{object_id:05d}.bin"
-    digest = hashlib.sha256()
+    """Store a lossless sparse image and its canonical representation digest."""
+
+    capture_mode = (
+        "full_scan"
+        if int(buffer.size) <= FULL_SCAN_MAX_BYTES
+        else "tracked_writes"
+    )
+    runs = (
+        _fill_runs(buffer, fill)
+        if capture_mode == "full_scan"
+        else _fill_runs(buffer, fill, obj.dirty_ranges())
+    )
+    blob = path / relative
+    blob.parent.mkdir(parents=True, exist_ok=True)
+    digest = _sparse_digest(int(buffer.size), fill, len(runs))
     stored = 0
     with blob.open("wb") as handle:
         handle.write(FILE_MAGIC)
         handle.write(RUN_HEADER.pack(int(buffer.size), len(runs)))
         for start, stop in runs:
-            handle.write(RUN_HEADER.pack(start, stop - start))
-            handle.write(buffer[start:stop].tobytes())
+            header = RUN_HEADER.pack(start, stop - start)
+            handle.write(header)
+            digest.update(header)
+            for begin in range(start, stop, IO_CHUNK_BYTES):
+                end = min(begin + IO_CHUNK_BYTES, stop)
+                payload = buffer[begin:end].tobytes()
+                handle.write(payload)
+                digest.update(payload)
             stored += stop - start
-    # The digest covers the whole object, not the stored runs: it is what makes
-    # the fill-run compaction checkable rather than believed.
-    for begin in range(0, int(buffer.size), 1 << 24):
-        digest.update(buffer[begin : begin + (1 << 24)].tobytes())
     return {
+        "node_id": node_id,
         "object_id": object_id,
         "size_bytes": int(buffer.size),
         "storage_class": obj.storage_class.name,
@@ -197,27 +271,115 @@ def _write_object(
         "fill": fill,
         "run_count": len(runs),
         "stored_bytes": stored,
+        "capture_mode": capture_mode,
+        "digest_mode": SPARSE_DIGEST_MODE,
         "sha256": digest.hexdigest(),
-        "file": f"objects/{object_id:05d}.bin",
+        "file": relative.as_posix(),
     }
 
 
-def _fill_runs(buffer: np.ndarray, fill: int) -> list[tuple[int, int]]:
-    """Byte ranges that differ from ``fill``, snapped to the block grid."""
+def _deduplicate_payload(
+    path: Path,
+    entry: dict[str, Any],
+    payloads: dict[tuple[Any, ...], Path],
+) -> None:
+    """Hard-link byte-identical node payloads after authenticating their image."""
+
+    key = (
+        entry["digest_mode"],
+        entry["sha256"],
+        int(entry["size_bytes"]),
+        int(entry["fill"]),
+        int(entry["run_count"]),
+        int(entry["stored_bytes"]),
+    )
+    relative = Path(entry["file"])
+    existing = payloads.get(key)
+    if existing is None:
+        payloads[key] = relative
+        return
+    blob = path / relative
+    blob.unlink()
+    try:
+        os.link(path / existing, blob)
+    except OSError:
+        # Cross-device or link-policy failures do not weaken correctness; they
+        # only forgo a disk optimisation.  Recreate the file from its already
+        # authenticated peer without holding the payload in memory.
+        import shutil
+
+        shutil.copyfile(path / existing, blob)
+        return
+    entry["payload_hardlink_of"] = existing.as_posix()
+
+
+def _fill_runs(
+    buffer: np.ndarray,
+    fill: int,
+    candidates: Sequence[tuple[int, int]] | None = None,
+) -> list[tuple[int, int]]:
+    """Non-fill blocks in the whole object or only tracked candidate ranges."""
+
     size = int(buffer.size)
     runs: list[tuple[int, int]] = []
-    start: int | None = None
-    for begin in range(0, size, BLOCK_BYTES):
-        end = min(begin + BLOCK_BYTES, size)
-        if bool(np.any(buffer[begin:end] != fill)):
-            if start is None:
-                start = begin
-        elif start is not None:
-            runs.append((start, begin))
-            start = None
-    if start is not None:
-        runs.append((start, size))
+    regions = (
+        [(0, size)] if candidates is None else _snap_ranges(candidates, size)
+    )
+    for region_start, region_stop in regions:
+        start: int | None = None
+        for begin in range(region_start, region_stop, BLOCK_BYTES):
+            end = min(begin + BLOCK_BYTES, region_stop)
+            if bool(np.any(buffer[begin:end] != fill)):
+                if start is None:
+                    start = begin
+            elif start is not None:
+                runs.append((start, begin))
+                start = None
+        if start is not None:
+            runs.append((start, region_stop))
     return runs
+
+
+def _snap_ranges(
+    ranges: Sequence[tuple[int, int]], size: int
+) -> list[tuple[int, int]]:
+    """Snap tracked writes to the payload block grid and coalesce neighbours."""
+
+    snapped: list[tuple[int, int]] = []
+    for raw_start, raw_stop in ranges:
+        start = max((int(raw_start) // BLOCK_BYTES) * BLOCK_BYTES, 0)
+        stop = min(
+            ((int(raw_stop) + BLOCK_BYTES - 1) // BLOCK_BYTES) * BLOCK_BYTES,
+            int(size),
+        )
+        if stop <= start:
+            continue
+        if snapped and start <= snapped[-1][1]:
+            snapped[-1] = (snapped[-1][0], max(snapped[-1][1], stop))
+        else:
+            snapped.append((start, stop))
+    return snapped
+
+
+def _sparse_digest(size: int, fill: int, run_count: int) -> Any:
+    digest = hashlib.sha256()
+    digest.update(SPARSE_DIGEST_PREFIX)
+    digest.update(RUN_HEADER.pack(int(size), int(run_count)))
+    digest.update(bytes([int(fill)]))
+    return digest
+
+
+def sparse_object_digest(
+    size: int, fill: int, runs: Sequence[tuple[int, bytes]] = ()
+) -> str:
+    """Digest one canonical sparse object; exposed for checkpoint controls."""
+
+    digest = _sparse_digest(size, fill, len(runs))
+    for start, payload in runs:
+        header = RUN_HEADER.pack(int(start), len(payload))
+        digest.update(header)
+        digest.update(payload)
+    return digest.hexdigest()
 
 
 def _session_to_dict(session: Session) -> dict[str, Any]:
@@ -260,13 +422,17 @@ def restore_device_state(
     """Put ``device`` into the state the checkpoint under ``path`` records.
 
     Returns the restored session and the checkpoint manifest.  Every restored
-    object's whole-contents SHA-256 is re-checked against the manifest, so a
-    silent partial restore is not possible.
+    object's canonical sparse SHA-256 is re-checked against the manifest, so a
+    silent partial restore is not possible without linearly reading untouched
+    fill regions.
     """
     path = Path(path)
     body = read_manifest(path)
-    if body.get("schema") != SCHEMA:
-        raise CheckpointError(f"checkpoint schema {body.get('schema')!r} is not {SCHEMA}")
+    schema = body.get("schema")
+    if schema not in {SCHEMA, LEGACY_SCHEMA}:
+        raise CheckpointError(
+            f"checkpoint schema {schema!r} is neither {SCHEMA} nor {LEGACY_SCHEMA}"
+        )
 
     declared = body["deployment"]
     actual_deployment = device.deployment.deployment_digest.hex()
@@ -284,62 +450,263 @@ def restore_device_state(
     if int(body.get("block_bytes", 0)) <= 0:
         raise CheckpointError("checkpoint declares no block size")
 
+    declared_nodes = int(body.get("device", {}).get("node_count", 1))
+    if declared_nodes != device.node_count:
+        raise CheckpointError(
+            f"checkpoint carries {declared_nodes} node arenas, this device "
+            f"declares {device.node_count}"
+        )
+    _validate_object_manifest(device, path, body["objects"])
     for entry in body["objects"]:
         _restore_object(device, path, entry)
 
     device._next_session = int(body["device"]["next_session"])
     device._device_cycle = int(body["device"]["device_cycle"])
-    device.counters.reset()
-    for name, value in body["device"]["counters"].items():
-        device.counters.add(name, int(value))
+    _restore_counter_set(device.counters, body["device"]["counters"])
+    node_counter_states = body["device"].get("node_counters")
+    if node_counter_states is None:
+        # Additive compatibility with the original single-node manifest.  It
+        # did not retain the per-node split, so there is nothing truthful to
+        # reconstruct there.  A multi-node manifest is never accepted without
+        # all node counter sets.
+        if device.node_count != 1:
+            raise CheckpointError(
+                "a multi-node checkpoint carries no per-node counter state"
+            )
+        device.node_counters[0].reset()
+    else:
+        if len(node_counter_states) != device.node_count:
+            raise CheckpointError(
+                f"checkpoint carries {len(node_counter_states)} per-node counter "
+                f"sets for {device.node_count} nodes"
+            )
+        for counter, state in zip(device.node_counters, node_counter_states):
+            _restore_counter_set(counter, state)
 
     session = _session_from_dict(device, body["session"])
     device.sessions = {session.session_id: session}
     return session, body
 
 
+def _validate_object_manifest(
+    device: Device, path: Path, entries: list[Mapping[str, Any]]
+) -> None:
+    """Prove the manifest names every mutable node/object exactly once.
+
+    Save-side completeness is not enough: removing a complete entry from a JSON
+    manifest used to make restore silently leave that object at its fresh fill
+    value.  Reconstructing the expected set from the admitted deployment makes
+    omission, duplication, a wrong node, and a storage/fill substitution all
+    fail before any destination buffer is touched.
+    """
+
+    expected = {
+        (node_id, object_id)
+        for node_id, memory in enumerate(device.node_memories)
+        for object_id, obj in memory.objects.items()
+        if obj.writable
+    }
+    found: set[tuple[int, int]] = set()
+    for index, entry in enumerate(entries):
+        node_id = int(entry.get("node_id", 0))
+        object_id = int(entry["object_id"])
+        key = (node_id, object_id)
+        if key in found:
+            raise CheckpointError(
+                f"checkpoint repeats node/object pair {key} at entry {index}"
+            )
+        found.add(key)
+        if not 0 <= node_id < device.node_count:
+            raise CheckpointError(
+                f"checkpoint object {object_id} names node {node_id}, but the "
+                f"device has nodes 0..{device.node_count - 1}"
+            )
+        obj = device.node_memories[node_id].objects.get(object_id)
+        if obj is None:
+            raise CheckpointError(
+                f"checkpoint names node {node_id} object {object_id}, which "
+                "does not exist"
+            )
+        source = device.deployment.objects.get(object_id)
+        if not obj.writable or source is None or source.kind != "zero":
+            raise CheckpointError(
+                f"checkpoint names node {node_id} object {object_id}, which is "
+                "not a writable zero-source object"
+            )
+        if entry.get("storage_class") != obj.storage_class.name:
+            raise CheckpointError(
+                f"node {node_id} object {object_id}: checkpoint storage class "
+                f"{entry.get('storage_class')!r} does not match "
+                f"{obj.storage_class.name!r}"
+            )
+        if int(entry.get("fill", -1)) != int(source.fill):
+            raise CheckpointError(
+                f"node {node_id} object {object_id}: checkpoint fill "
+                f"{entry.get('fill')!r} does not match {source.fill}"
+            )
+        digest_mode = entry.get("digest_mode", LEGACY_DIGEST_MODE)
+        if digest_mode not in {SPARSE_DIGEST_MODE, LEGACY_DIGEST_MODE}:
+            raise CheckpointError(
+                f"node {node_id} object {object_id}: unknown checkpoint digest "
+                f"mode {digest_mode!r}"
+            )
+        if capture_mode := entry.get("capture_mode"):
+            if capture_mode not in {"full_scan", "tracked_writes"}:
+                raise CheckpointError(
+                    f"node {node_id} object {object_id}: unknown capture mode "
+                    f"{capture_mode!r}"
+                )
+        relative = Path(str(entry.get("file", "")))
+        if (
+            not relative.parts
+            or relative.is_absolute()
+            or ".." in relative.parts
+            or relative.as_posix() != str(entry.get("file", ""))
+        ):
+            raise CheckpointError(
+                f"node {node_id} object {object_id} has unsafe payload path "
+                f"{entry.get('file')!r}"
+            )
+        if not (path / relative).is_file():
+            raise CheckpointError(
+                f"node {node_id} object {object_id} payload is missing: "
+                f"{relative}"
+            )
+
+    missing = sorted(expected - found)
+    unexpected = sorted(found - expected)
+    if missing or unexpected:
+        raise CheckpointError(
+            "checkpoint mutable-object coverage differs from the deployment: "
+            f"missing={missing}, unexpected={unexpected}"
+        )
+
+
+def _restore_counter_set(counter: CounterSet, state: Mapping[str, Any]) -> None:
+    """Restore values and sticky-overflow state, accepting the original shape."""
+
+    if "counters" in state:
+        values = state["counters"]
+        overflow = state.get("sticky_overflow", [])
+    else:
+        # The first checkpoint format stored only the value mapping.  It is
+        # still readable for the retained single-node artifact, but new writes
+        # retain the sticky architectural state as well.
+        values = state
+        overflow = []
+    counter.reset()
+    for name, value in values.items():
+        counter.add(str(name), int(value))
+    unknown = sorted(set(str(name) for name in overflow) - set(values))
+    if unknown:
+        raise CheckpointError(
+            f"sticky-overflow counters have no stored value: {unknown}"
+        )
+    counter._overflow.update(str(name) for name in overflow)
+
+
 def _restore_object(device: Device, path: Path, entry: Mapping[str, Any]) -> None:
+    node_id = int(entry.get("node_id", 0))
     object_id = int(entry["object_id"])
-    obj = device.memory.objects.get(object_id)
+    obj = device.node_memories[node_id].objects.get(object_id)
     if obj is None:
-        raise CheckpointError(f"checkpoint names object {object_id}, which does not exist")
+        raise CheckpointError(
+            f"checkpoint names node {node_id} object {object_id}, which does not exist"
+        )
     buffer = obj.anonymous_buffer()
     if buffer is None:
         raise CheckpointError(
-            f"object {object_id} is mapped in this device but was a private "
+            f"node {node_id} object {object_id} is mapped in this device but was a private "
             "buffer when the checkpoint was written"
         )
     if int(buffer.size) != int(entry["size_bytes"]):
         raise CheckpointError(
-            f"object {object_id} is {buffer.size} bytes here and "
+            f"node {node_id} object {object_id} is {buffer.size} bytes here and "
             f"{entry['size_bytes']} bytes in the checkpoint"
         )
     blob = path / entry["file"]
+    digest_mode = str(entry.get("digest_mode", LEGACY_DIGEST_MODE))
     with blob.open("rb") as handle:
         if handle.read(len(FILE_MAGIC)) != FILE_MAGIC:
             raise CheckpointError(f"{blob} is not a checkpoint object payload")
-        size, run_count = RUN_HEADER.unpack(handle.read(RUN_HEADER.size))
+        header = handle.read(RUN_HEADER.size)
+        if len(header) != RUN_HEADER.size:
+            raise CheckpointError(f"{blob} is truncated before its object header")
+        size, run_count = RUN_HEADER.unpack(header)
         if size != int(entry["size_bytes"]):
             raise CheckpointError(f"{blob} declares {size} bytes, manifest says {entry['size_bytes']}")
+        if run_count != int(entry.get("run_count", run_count)):
+            raise CheckpointError(
+                f"{blob} carries {run_count} runs, manifest says "
+                f"{entry.get('run_count')}"
+            )
         # Start from the declared fill so that a byte the writing process left
         # at its fill value is restored as that value even if this process's
-        # buffer has been touched.
-        buffer[:] = np.uint8(int(entry["fill"]))
+        # buffer has been touched.  A large fresh arena is already all fill;
+        # resetting only its own tracked writes preserves the sparse virtual
+        # allocation instead of committing several logical terabytes merely to
+        # write zero over zero.
+        fill = int(entry["fill"])
+        if int(buffer.size) <= FULL_SCAN_MAX_BYTES or digest_mode == LEGACY_DIGEST_MODE:
+            buffer[:] = np.uint8(fill)
+        else:
+            for start, stop in obj.dirty_ranges():
+                buffer[start:stop] = np.uint8(fill)
+        obj.clear_dirty_ranges()
+
+        sparse_digest = (
+            _sparse_digest(int(size), fill, int(run_count))
+            if digest_mode == SPARSE_DIGEST_MODE
+            else None
+        )
+        last_stop = 0
+        restored_bytes = 0
         for _ in range(run_count):
-            start, length = RUN_HEADER.unpack(handle.read(RUN_HEADER.size))
-            payload = handle.read(length)
-            if len(payload) != length:
-                raise CheckpointError(f"{blob} is truncated inside a run at {start}")
-            buffer[start : start + length] = np.frombuffer(payload, dtype=np.uint8)
+            run_header = handle.read(RUN_HEADER.size)
+            if len(run_header) != RUN_HEADER.size:
+                raise CheckpointError(f"{blob} is truncated before a run header")
+            start, length = RUN_HEADER.unpack(run_header)
+            stop = start + length
+            if length <= 0 or start < last_stop or stop > size:
+                raise CheckpointError(
+                    f"{blob} has invalid or overlapping run [{start}, {stop}) "
+                    f"after byte {last_stop} of a {size}-byte object"
+                )
+            if sparse_digest is not None:
+                sparse_digest.update(run_header)
+            cursor = start
+            while cursor < stop:
+                take = min(IO_CHUNK_BYTES, stop - cursor)
+                payload = handle.read(take)
+                if len(payload) != take:
+                    raise CheckpointError(
+                        f"{blob} is truncated inside a run at {cursor}"
+                    )
+                if sparse_digest is not None:
+                    sparse_digest.update(payload)
+                obj.write(cursor, payload)
+                cursor += take
+            restored_bytes += length
+            last_stop = stop
         if handle.read(1):
             raise CheckpointError(f"{blob} has trailing bytes after its last run")
-
-    digest = hashlib.sha256()
-    for begin in range(0, int(buffer.size), 1 << 24):
-        digest.update(buffer[begin : begin + (1 << 24)].tobytes())
-    if digest.hexdigest() != entry["sha256"]:
+    if restored_bytes != int(entry.get("stored_bytes", restored_bytes)):
         raise CheckpointError(
-            f"object {object_id} restored to digest {digest.hexdigest()[:16]}, the "
+            f"{blob} restores {restored_bytes} payload bytes, manifest says "
+            f"{entry.get('stored_bytes')}"
+        )
+
+    if sparse_digest is not None:
+        actual_digest = sparse_digest.hexdigest()
+    else:
+        legacy_digest = hashlib.sha256()
+        for begin in range(0, int(buffer.size), IO_CHUNK_BYTES):
+            legacy_digest.update(buffer[begin : begin + IO_CHUNK_BYTES].tobytes())
+        actual_digest = legacy_digest.hexdigest()
+    if actual_digest != entry["sha256"]:
+        raise CheckpointError(
+            f"node {node_id} object {object_id} restored to digest "
+            f"{actual_digest[:16]}, the "
             f"checkpoint binds {entry['sha256'][:16]}"
         )
 
@@ -403,9 +770,13 @@ __all__ = [
     "BLOCK_BYTES",
     "CheckpointError",
     "FILE_MAGIC",
+    "LEGACY_DIGEST_MODE",
+    "LEGACY_SCHEMA",
     "RUN_HEADER",
     "SCHEMA",
+    "SPARSE_DIGEST_MODE",
     "read_manifest",
     "restore_device_state",
     "save_device_state",
+    "sparse_object_digest",
 ]
