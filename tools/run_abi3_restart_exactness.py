@@ -61,6 +61,16 @@ import time
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
+# The blocked GEMM association is part of the execution identity.  Match the
+# governed DeepSeek token path unless the caller has deliberately fixed another
+# value before launching the campaign; every phase records the resulting flags.
+for _thread_variable in (
+    "OMP_NUM_THREADS",
+    "OPENBLAS_NUM_THREADS",
+    "MKL_NUM_THREADS",
+):
+    os.environ.setdefault(_thread_variable, "8")
+
 REPO = Path(__file__).resolve().parents[1]
 if str(REPO) not in sys.path:
     sys.path.insert(0, str(REPO))
@@ -77,15 +87,18 @@ from runtime.evidence import (  # noqa: E402
 )
 from runtime.sim.checkpoint import (  # noqa: E402
     FILE_MAGIC,
+    LEGACY_DIGEST_MODE,
     RUN_HEADER,
+    SPARSE_DIGEST_MODE,
     read_manifest,
     restore_device_state,
     save_device_state,
+    sparse_object_digest,
 )
 from runtime.sim.device import Device  # noqa: E402
 from runtime.sim.engines import load_engines  # noqa: E402
 
-SCHEMA = "opentallas.abi3.restart_exactness.v1"
+SCHEMA = "opentallas.abi3.restart_exactness.v2"
 
 #: Backend name -> "module:function" producing a Deployment.  Same table as the
 #: campaign: a target is a set of descriptors, not a code path.
@@ -154,10 +167,13 @@ def _source_identity() -> dict[str, Any]:
     refuses to conclude anything if the three disagree.
     """
     files = sorted(
-        path
-        for root in ("runtime", "compiler")
-        for path in (REPO / root).rglob("*.py")
-        if "__pycache__" not in path.parts
+        {
+            path
+            for root in ("runtime", "compiler")
+            for path in (REPO / root).rglob("*.py")
+            if "__pycache__" not in path.parts
+        }
+        | {Path(__file__).resolve()}
     )
     digest = hashlib.sha256()
     for path in files:
@@ -187,9 +203,11 @@ def _phase_envelope(
         "target_id": device.deployment.target_id,
         "deployment_backend": device.deployment.backend,
         "topology_class": int(device.deployment.topology_class),
+        "node_count": device.node_count,
         "technology_view": device.capability.technology_view,
         "implementation_identity": _implementation_identity(),
         "source_identity": _source_identity(),
+        "node_counters": [counter.to_dict() for counter in device.node_counters],
         **extra,
     }
 
@@ -197,6 +215,7 @@ def _phase_envelope(
 def _driver_identity(driver: GenerationDriver) -> dict[str, Any]:
     return {
         "generation_policy_digest": digest_of(driver.policy),
+        "generation_policy": dict(driver.policy),
         "vocabulary_size": driver.vocabulary_size,
         "eos_token_ids": list(driver.eos_token_ids),
     }
@@ -342,10 +361,12 @@ def run_interrupt(args: argparse.Namespace) -> int:
     seconds = time.perf_counter() - started
     stored = sum(int(o["stored_bytes"]) for o in manifest["objects"])
     total = sum(int(o["size_bytes"]) for o in manifest["objects"])
+    physical = int(manifest.get("encoding", {}).get("physical_payload_bytes", stored))
     print(
         f"interrupt produced {len(result.generated_token_ids)} tokens, "
         f"stop={result.stop_reason}; checkpointed {len(manifest['objects'])} "
-        f"mutable objects ({stored / 1e6:.1f} MB stored of {total / 1e6:.1f} MB) "
+        f"mutable objects ({stored / 1e6:.1f} MB logical, "
+        f"{physical / 1e6:.1f} MB physical payload of {total / 1e6:.1f} MB) "
         f"in {seconds:.1f}s",
         flush=True,
     )
@@ -361,9 +382,12 @@ def run_interrupt(args: argparse.Namespace) -> int:
                 "checkpoint": {
                     "path": str(args.checkpoint),
                     "seconds": round(seconds, 3),
+                    "node_count": int(manifest["device"].get("node_count", 1)),
                     "object_count": len(manifest["objects"]),
                     "mutable_bytes": total,
                     "stored_bytes": stored,
+                    "physical_payload_bytes": physical,
+                    "encoding": manifest.get("encoding", {}),
                     "session": manifest["session"],
                     "objects": manifest["objects"],
                 },
@@ -488,7 +512,9 @@ def _launch(
     return body
 
 
-def _blind_checkpoint(source: Path, target: Path, classes: set[str]) -> list[int]:
+def _blind_checkpoint(
+    source: Path, target: Path, classes: set[str]
+) -> list[dict[str, int]]:
     """Copy a checkpoint with the named storage classes reset to their fill.
 
     This is the experiment's negative control.  A restart test that cannot fail
@@ -501,28 +527,91 @@ def _blind_checkpoint(source: Path, target: Path, classes: set[str]) -> list[int
     """
     if target.exists():
         shutil.rmtree(target)
-    shutil.copytree(source, target)
+
+    # A DeepSeek cluster carries one mutable arena per node.  Copying its exact
+    # checkpoint once for each control can triple the campaign's disk use even
+    # though each control changes only one storage-class subset.  Link payloads
+    # on the same filesystem (falling back to a normal copy), then atomically
+    # replace only the blinded files; the source checkpoint's links and bytes
+    # remain untouched and each target manifest is independently verified.
+    def link_or_copy(src: str, dst: str) -> str:
+        try:
+            os.link(src, dst)
+            return dst
+        except OSError:
+            return shutil.copy2(src, dst)
+
+    shutil.copytree(source, target, copy_function=link_or_copy)
     body = json.loads((target / "checkpoint.json").read_text())
-    blinded: list[int] = []
+    blinded: list[dict[str, int]] = []
+    fill_digests: dict[tuple[int, int, str], str] = {}
     for entry in body["objects"]:
         if entry["storage_class"] not in classes:
             continue
         blob = target / entry["file"]
-        with blob.open("wb") as handle:
+        replacement = blob.with_name(f".{blob.name}.blinded")
+        with replacement.open("wb") as handle:
             handle.write(FILE_MAGIC)
             handle.write(RUN_HEADER.pack(int(entry["size_bytes"]), 0))
-        digest = hashlib.sha256()
-        block = bytes([int(entry["fill"])]) * (1 << 22)
-        remaining = int(entry["size_bytes"])
-        while remaining > 0:
-            take = min(remaining, len(block))
-            digest.update(block[:take])
-            remaining -= take
+        os.replace(replacement, blob)
+        digest_mode = entry.get("digest_mode", LEGACY_DIGEST_MODE)
+        digest_key = (
+            int(entry["fill"]),
+            int(entry["size_bytes"]),
+            str(digest_mode),
+        )
+        digest_hex = fill_digests.get(digest_key)
+        if digest_hex is None:
+            if digest_mode == SPARSE_DIGEST_MODE:
+                digest_hex = sparse_object_digest(digest_key[1], digest_key[0])
+            elif digest_mode == LEGACY_DIGEST_MODE:
+                digest = hashlib.sha256()
+                block = bytes([digest_key[0]]) * (1 << 22)
+                remaining = digest_key[1]
+                while remaining > 0:
+                    take = min(remaining, len(block))
+                    digest.update(block[:take])
+                    remaining -= take
+                digest_hex = digest.hexdigest()
+            else:
+                raise ExactnessError(
+                    f"object {entry['object_id']} uses unknown checkpoint digest "
+                    f"mode {digest_mode!r}"
+                )
+            fill_digests[digest_key] = digest_hex
         entry["run_count"] = 0
         entry["stored_bytes"] = 0
-        entry["sha256"] = digest.hexdigest()
-        blinded.append(int(entry["object_id"]))
-    (target / "checkpoint.json").write_bytes(canonical_json(body))
+        entry["sha256"] = digest_hex
+        entry.pop("payload_hardlink_of", None)
+        blinded.append(
+            {
+                "node_id": int(entry.get("node_id", 0)),
+                "object_id": int(entry["object_id"]),
+            }
+        )
+    if "encoding" in body:
+        inodes: set[tuple[int, int]] = set()
+        physical_payload_bytes = 0
+        for entry in body["objects"]:
+            stat = (target / entry["file"]).stat()
+            inode = (int(stat.st_dev), int(stat.st_ino))
+            if inode not in inodes:
+                inodes.add(inode)
+                physical_payload_bytes += int(stat.st_size)
+        body["encoding"].update(
+            {
+                "logical_stored_bytes": sum(
+                    int(entry["stored_bytes"]) for entry in body["objects"]
+                ),
+                "physical_payload_bytes": physical_payload_bytes,
+                "unique_payload_files": len(inodes),
+                "deduplicated_payload_files": len(body["objects"]) - len(inodes),
+            }
+        )
+    manifest = target / "checkpoint.json"
+    replacement_manifest = target / ".checkpoint.json.blinded"
+    replacement_manifest.write_bytes(canonical_json(body))
+    os.replace(replacement_manifest, manifest)
     return blinded
 
 
@@ -542,6 +631,46 @@ def _compare(
         if left != right:
             return False, index
     return True, None
+
+
+def _node_counter_differences(
+    baseline: Sequence[Mapping[str, Any]],
+    restarted: Sequence[Mapping[str, Any]],
+) -> dict[str, Any]:
+    """Exact per-node counter-state differences, including sticky overflow."""
+
+    if len(baseline) != len(restarted):
+        return {
+            "node_count": {
+                "baseline": len(baseline),
+                "restarted": len(restarted),
+            }
+        }
+    differences: dict[str, Any] = {}
+    for node_id, (left, right) in enumerate(zip(baseline, restarted)):
+        if left == right:
+            continue
+        left_values = left.get("counters", left)
+        right_values = right.get("counters", right)
+        counter_differences = {
+            name: {
+                "baseline": left_values.get(name),
+                "restarted": right_values.get(name),
+            }
+            for name in sorted(set(left_values) | set(right_values))
+            if left_values.get(name) != right_values.get(name)
+        }
+        left_overflow = sorted(left.get("sticky_overflow", []))
+        right_overflow = sorted(right.get("sticky_overflow", []))
+        differences[str(node_id)] = {
+            "counter_differences": counter_differences,
+            "sticky_overflow": (
+                None
+                if left_overflow == right_overflow
+                else {"baseline": left_overflow, "restarted": right_overflow}
+            ),
+        }
+    return differences
 
 
 def orchestrate(args: argparse.Namespace) -> int:
@@ -634,6 +763,7 @@ def orchestrate(args: argparse.Namespace) -> int:
     pids = [phases[phase]["pid"] for phase in PHASES]
     identities = [phases[phase]["implementation_identity"] for phase in PHASES]
     digests = [phases[phase]["deployment_digest"] for phase in PHASES]
+    node_counts = [int(phases[phase]["node_count"]) for phase in PHASES]
     sources = [
         phases[phase]["source_identity"]["python_source_digest"] for phase in PHASES
     ]
@@ -645,6 +775,7 @@ def orchestrate(args: argparse.Namespace) -> int:
     guards = {
         "three_distinct_processes": len(set(pids)) == 3,
         "same_deployment_digest": len(set(digests)) == 1,
+        "same_node_count": len(set(node_counts)) == 1,
         "same_implementation_identity": all(
             digest_of(identity) == digest_of(identities[0]) for identity in identities
         ),
@@ -710,6 +841,10 @@ def orchestrate(args: argparse.Namespace) -> int:
         if baseline_counters.get(name) != restarted_counters.get(name)
     }
     counters_identical = not counter_differences
+    node_counter_differences = _node_counter_differences(
+        baseline["node_counters"], resume["node_counters"]
+    )
+    node_counters_identical = not node_counter_differences
 
     legitimacy = check_token_legitimacy(
         restarted_tokens,
@@ -800,6 +935,11 @@ def orchestrate(args: argparse.Namespace) -> int:
             f"{len(counter_differences)} architectural counters differ: "
             + ", ".join(sorted(counter_differences)[:6])
         )
+    if not node_counters_identical:
+        reasons.append(
+            f"per-node architectural counter state differs on "
+            f"{len(node_counter_differences)} node entries"
+        )
     if legitimacy:
         reasons.append(f"token legitimacy: {legitimacy}")
 
@@ -815,12 +955,13 @@ def orchestrate(args: argparse.Namespace) -> int:
             numeric_profile=baseline["numeric_profile"],
             graph_id=baseline["graph_id"],
             tokenizer_sha256=_tokenizer_digest(args.workload, workload),
+            generation_policy=baseline["generation_policy"],
         ),
         target=TargetIdentity(
             target_id=baseline["target_id"],
             backend=baseline["deployment_backend"],
             topology_class=int(baseline["topology_class"]),
-            node_count=1,
+            node_count=int(baseline["node_count"]),
             capability_digest=baseline["capability_digest"],
             deployment_digest=baseline["deployment_digest"],
             technology_view=baseline["technology_view"],
@@ -860,6 +1001,9 @@ def orchestrate(args: argparse.Namespace) -> int:
             "state_only_control": state_only_control,
             "counters_identical": counters_identical,
             "counter_differences": counter_differences,
+            "node_counters_identical": node_counters_identical,
+            "node_counter_differences": node_counter_differences,
+            "node_counters": resume["node_counters"],
             "token_legitimacy_problems": legitimacy,
             "guards": guards,
             "failed_guards": failed_guards,
@@ -881,6 +1025,7 @@ def orchestrate(args: argparse.Namespace) -> int:
             },
             "checkpoint": {
                 "schema": read_manifest(args.checkpoint)["schema"],
+                "node_count": checkpoint["node_count"],
                 "object_count": checkpoint["object_count"],
                 "mutable_bytes": checkpoint["mutable_bytes"],
                 "stored_bytes": checkpoint["stored_bytes"],
@@ -913,6 +1058,7 @@ def orchestrate(args: argparse.Namespace) -> int:
     print(f"token identical: {token_identical}")
     print(f"retired work identical: {work_identical}")
     print(f"counters identical: {counters_identical}")
+    print(f"per-node counters identical: {node_counters_identical}")
     if negative_control is not None:
         print(
             f"negative control ({len(negative_tokens)} tokens): {negative_tokens} "

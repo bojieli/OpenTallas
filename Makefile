@@ -1,4 +1,4 @@
-.PHONY: abi3-tokens abi3-tokens-deepseek abi3-tokens-deepseek-rom abi3-tokens-deepseek-hbm abi3-tokens-qwen-rom abi3-tokens-qwen-hbm abi3-context-gate abi3-prefix-workloads rom-service rom-service-vectors rom-service-physical abi3-rtl-engines check-evidence-grades check-prose-figures check-figures roofline abi3-failclosed abi3-equivalence abi3 abi3-engine-rate abi3-cost-tables abi3-cost-tables-check abi3-spec abi3-test abi3-workloads abi3-oracle abi3-engines abi3-rtl abi3-physical abi3-status abi3-ir profile simulate iso-node model-traffic legacy-sim routing noc sensitivity legacy-sensitivity spec-check formal rtl-sim fault-sim fault-campaign coverage rtl-static rtl pre-synth-verify synth-public spice spice-pdk test verify clean-results
+.PHONY: abi3-tokens abi3-tokens-deepseek abi3-tokens-deepseek-rom abi3-tokens-deepseek-hbm abi3-tokens-qwen-rom abi3-tokens-qwen-hbm abi3-restart abi3-restart-qwen-hbm abi3-restart-qwen-rom abi3-restart-deepseek-hbm abi3-restart-deepseek-rom abi3-context-gate abi3-prefix-workloads rom-service rom-service-vectors rom-service-physical abi3-rtl-engines check-evidence-grades check-prose-figures check-figures roofline abi3-failclosed abi3-equivalence abi3 abi3-engine-rate abi3-cost-tables abi3-cost-tables-check abi3-spec abi3-test abi3-workloads abi3-oracle abi3-engines abi3-rtl abi3-physical abi3-status abi3-ir profile simulate iso-node model-traffic legacy-sim routing noc sensitivity legacy-sensitivity spec-check formal rtl-sim fault-sim fault-campaign coverage rtl-static rtl pre-synth-verify synth-public spice spice-pdk test verify clean-results
 
 profile:
 	python3 tools/profile_hf.py --all
@@ -302,3 +302,58 @@ abi3-tokens-qwen-rom:
 	  --output results/abi3/accelerator_tokens/qwen3_8b_rom_chat1.json --force
 
 abi3-tokens: abi3-tokens-qwen-rom abi3-tokens-qwen-hbm abi3-tokens-deepseek
+
+# --- checkpoint/restart exactness ------------------------------------------
+# Each target runs an uninterrupted comparator, an interrupted prefix, and a
+# fresh-process resume.  The state-erased negative control and complementary
+# state-only control are enabled by default.  Three generated tokens split 2+1
+# put the checkpoint after a real decode transaction while keeping the governed
+# DeepSeek campaign tractable.
+RESTART_TOKENS ?= 3
+RESTART_STOP_AFTER ?= 2
+
+abi3-restart-qwen-hbm:
+	PYTHONPATH=. python3 tools/run_abi3_restart_exactness.py \
+	  --kernel-ir build/ir-v3/qwen3-8b/kernel_ir.v3.json \
+	  --backend hbm_sram \
+	  --capability configs/hardware/abi3_capability/hbm_sram_single_chip.json \
+	  --workload build/workloads/qwen3-8b/TA-QW-CHAT-1.json \
+	  --deployment-root $(QWEN3_SNAPSHOT) \
+	  --max-new-tokens $(RESTART_TOKENS) --stop-after $(RESTART_STOP_AFTER) \
+	  --work-dir build/restart/qwen3-hbm \
+	  --output results/abi3/restart_exactness_qwen3_hbm.json --force
+
+abi3-restart-qwen-rom:
+	PYTHONPATH=. python3 tools/run_abi3_restart_exactness.py \
+	  --kernel-ir build/ir-v3/qwen3-8b/kernel_ir.v3.json \
+	  --backend rom_qwen3 \
+	  --capability configs/hardware/abi3_capability/rom_qwen3.json \
+	  --workload build/workloads/qwen3-8b/TA-QW-CHAT-1.json \
+	  --deployment-root $(QWEN3_SNAPSHOT) \
+	  --max-new-tokens $(RESTART_TOKENS) --stop-after $(RESTART_STOP_AFTER) \
+	  --work-dir build/restart/qwen3-rom \
+	  --output results/abi3/restart_exactness_qwen3_rom.json --force
+
+abi3-restart-deepseek-hbm:
+	PYTHONPATH=. python3 tools/run_abi3_restart_exactness.py \
+	  --kernel-ir build/ir-v3/deepseek-v4-flash-0731/kernel_ir.v3.json \
+	  --backend hbm_sram \
+	  --capability configs/hardware/abi3_capability/hbm_sram_cluster_32.json \
+	  --workload build/workloads/deepseek-v4-flash-0731-prefix/TA-DS-CHAT-1-P32.json \
+	  --deployment-root $(DEEPSEEK_SNAPSHOT) \
+	  --max-new-tokens $(RESTART_TOKENS) --stop-after $(RESTART_STOP_AFTER) \
+	  --work-dir build/restart/deepseek-hbm \
+	  --output results/abi3/restart_exactness_deepseek_hbm_p32.json --force
+
+abi3-restart-deepseek-rom:
+	PYTHONPATH=. python3 tools/run_abi3_restart_exactness.py \
+	  --kernel-ir build/ir-v3/deepseek-v4-flash-0731/kernel_ir.v3.json \
+	  --backend rom_deepseek_v4 \
+	  --capability configs/hardware/abi3_capability/rom_deepseek_v4.json \
+	  --workload build/workloads/deepseek-v4-flash-0731-prefix/TA-DS-CHAT-1-P32.json \
+	  --deployment-root $(DEEPSEEK_SNAPSHOT) \
+	  --max-new-tokens $(RESTART_TOKENS) --stop-after $(RESTART_STOP_AFTER) \
+	  --work-dir build/restart/deepseek-rom \
+	  --output results/abi3/restart_exactness_deepseek_rom_p32.json --force
+
+abi3-restart: abi3-restart-qwen-hbm abi3-restart-qwen-rom abi3-restart-deepseek-hbm abi3-restart-deepseek-rom
