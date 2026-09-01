@@ -57,3 +57,16 @@ def test_compare_boundaries_fails_closed_on_a_missing_boundary() -> None:
     assert comparison["all_boundaries_equal"] is False
     assert comparison["first_divergent_boundary"] == 1
     assert comparison["first_divergence"] == {"rom": left[1], "hbm": None}
+
+
+def test_compare_boundaries_includes_transaction_and_phase_identity() -> None:
+    rom = _row(0, "same") | {"transaction": 0, "phase": "prefill"}
+    hbm = _row(0, "same") | {"transaction": 1, "phase": "decode"}
+
+    comparison = compare_boundaries(
+        {"boundaries": [rom]}, {"boundaries": [hbm]}
+    )
+
+    assert comparison["all_boundaries_equal"] is False
+    assert comparison["first_divergent_boundary"] == 0
+    assert comparison["first_divergence"] == {"rom": rom, "hbm": hbm}

@@ -42,10 +42,21 @@ import argparse
 import hashlib
 import importlib
 import json
+import os
 import sys
 import time
 from pathlib import Path
 from typing import Any
+
+# The blocked GEMM association is part of the numeric implementation identity.
+# Establish the governed default before any runtime module imports NumPy; an
+# explicit caller setting remains authoritative and is recorded in the result.
+for _thread_variable in (
+    "OMP_NUM_THREADS",
+    "OPENBLAS_NUM_THREADS",
+    "MKL_NUM_THREADS",
+):
+    os.environ.setdefault(_thread_variable, "8")
 
 REPO = Path(__file__).resolve().parents[1]
 if str(REPO) not in sys.path:
