@@ -331,12 +331,13 @@ checks, including an independent disjointness and capacity proof over the
 emitted HBM-plus-state address map, and closes checklist W4.6.
 
 The same tool's DeepSeek mode is intentionally a retained failure, not a green
-short-run proxy. It passes generic ABI/placement reconstruction after the scale
-fix, but separately refuses W4.7 because the 200K physical plan exceeds
-node-local HBM, required expert/sparse/reduction sites are replicated instead
-of communicated. Its coordinated-commit checks now pass: conditional terminal
+short-run proxy. It passes generic ABI/placement reconstruction and the 200K
+node-local HBM capacity check after six expert/index pipelines were changed to
+bounded rolling arenas, but still refuses W4.7 because required
+expert/sparse/reduction sites are replicated instead of communicated. Its
+coordinated-commit checks pass: conditional terminal
 work is joined onto a four-event frontier, the final cluster barrier waits for
-that frontier, and all 11 state commits wait for the barrier event. The six
+that frontier, and all 11 state commits wait for the barrier event. The five
 remaining findings are published in
 `results/abi3/hbm_deepseek_deployment_findings.json` and are the implementation
 inputs for the remaining cluster work.

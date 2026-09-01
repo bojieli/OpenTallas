@@ -131,7 +131,7 @@ state open. All eight refused.
 
 ### 2.7 RTL and physical
 
-RTL 3.0 correlates 52 programs over 64 cases, 182 engine-issue events, 454
+RTL 3.0 correlates 53 programs over 65 cases, 185 engine-issue events, 460
 resolved operand views and 11 traps field-for-field against the functional
 device on two independent simulators, with 17 negative cases
 (`results/rtl/abi3_campaign.json`). Those are programs built for the campaign.
