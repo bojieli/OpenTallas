@@ -5,7 +5,9 @@ The residual-boundary diagnostic can identify the layer that creates a lane
 difference, but a complete P32 transaction is expensive and activation buffers
 are reused after the layer.  This tool observes operator outputs in flight and
 raises a private completion signal as soon as the next layer consumes the
-result.  No transaction is committed and no token claim is made.
+result.  The target transaction is not committed and no token claim is made;
+when tracing decode, earlier transactions necessarily commit so the target sees
+the real session state.
 
 HBM may lower one graph kernel to several operators around a collective.  The
 comparison therefore uses the final lowered descriptor for each
@@ -104,6 +106,7 @@ def _run_lane(
     graph: KernelGraph,
     snapshot: Path,
     prompt: list[int],
+    max_new_tokens: int,
     layer: int,
     stop_boundary: int,
     trace_output_boundary: int | None,
@@ -206,7 +209,9 @@ def _run_lane(
     stopped = False
     result = None
     try:
-        result = GenerationDriver(device).generate(prompt, max_new_tokens=1)
+        result = GenerationDriver(device).generate(
+            prompt, max_new_tokens=max_new_tokens
+        )
     except _TraceComplete:
         stopped = True
     wall = time.perf_counter() - started
@@ -218,6 +223,7 @@ def _run_lane(
         "capability": str(capability_path.relative_to(REPO)),
         "capability_digest": capability.digest,
         "node_count": device.node_count,
+        "requested_token_count": max_new_tokens,
         "stopped_at_requested_boundary": stopped,
         "wall_seconds": round(wall, 6),
         "boundary_count": len(boundaries),
@@ -250,6 +256,7 @@ def _run_lane_from_paths(
     ir_path: Path,
     snapshot: Path,
     prompt: list[int],
+    max_new_tokens: int,
     layer: int,
     stop_boundary: int,
     trace_output_boundary: int | None,
@@ -266,6 +273,7 @@ def _run_lane_from_paths(
         graph,
         snapshot,
         prompt,
+        max_new_tokens,
         layer,
         stop_boundary,
         trace_output_boundary,
@@ -440,6 +448,15 @@ def main() -> int:
     parser.add_argument("--ir", type=Path, default=DEFAULT_IR)
     parser.add_argument("--snapshot", type=Path, default=DEFAULT_SNAPSHOT)
     parser.add_argument("--workload", type=Path, default=DEFAULT_WORKLOAD)
+    parser.add_argument(
+        "--max-new-tokens",
+        type=int,
+        default=1,
+        help=(
+            "number of transactions to permit; use 2 to reach the first "
+            "decode transaction"
+        ),
+    )
     parser.add_argument("--layer", type=int, default=2)
     parser.add_argument("--stop-boundary", type=int, default=3)
     parser.add_argument(
@@ -475,6 +492,9 @@ def main() -> int:
     if not args.snapshot.is_dir():
         print(f"snapshot is not a directory: {args.snapshot}", file=sys.stderr)
         return 1
+    if args.max_new_tokens < 1:
+        print("--max-new-tokens must be positive", file=sys.stderr)
+        return 1
     if args.trace_output_boundary is not None and not (
         1 <= args.trace_output_boundary <= args.stop_boundary
     ):
@@ -492,6 +512,20 @@ def main() -> int:
         return 1
 
     graph = KernelGraph.read(args.ir)
+    boundaries_per_transaction = sum(
+        _boundary_kind(kernel) is not None for kernel in graph.kernels
+    )
+    last_reachable_boundary = (
+        boundaries_per_transaction * args.max_new_tokens - 1
+    )
+    if args.stop_boundary > last_reachable_boundary:
+        print(
+            f"--stop-boundary {args.stop_boundary} is not reachable with "
+            f"--max-new-tokens {args.max_new_tokens}; the last reachable "
+            f"boundary is {last_reachable_boundary}",
+            file=sys.stderr,
+        )
+        return 1
     trace_input_sources = frozenset(args.trace_input_sources or (196,))
     job_args = {
         name: (
@@ -500,6 +534,7 @@ def main() -> int:
             args.ir,
             args.snapshot,
             prompt,
+            args.max_new_tokens,
             args.layer,
             args.stop_boundary,
             args.trace_output_boundary,
@@ -550,6 +585,8 @@ def main() -> int:
         "evidence_class": "functional_diagnostic_early_stop",
         "graph_id": graph.graph_id,
         "layer": args.layer,
+        "max_new_tokens": args.max_new_tokens,
+        "boundaries_per_transaction": boundaries_per_transaction,
         "stop_boundary": args.stop_boundary,
         "trace_output_boundary": args.trace_output_boundary,
         "trace_input_sources": sorted(trace_input_sources),
@@ -581,8 +618,15 @@ def main() -> int:
             "transport_shape_policy": "ignore_shape_only_when_dtype_and_element_count_match",
         },
         "claim_boundary": {
-            "transaction_committed": False,
-            "generated_tokens": False,
+            "target_transaction_committed": False,
+            "prior_transactions_may_commit": (
+                args.stop_boundary >= boundaries_per_transaction
+            ),
+            "target_transaction_generated_token": False,
+            "prior_tokens_may_be_generated": (
+                args.stop_boundary >= boundaries_per_transaction
+            ),
+            "token_correctness": False,
             "external_reference_comparator": False,
             "rtl": False,
             "cycles_or_performance": False,

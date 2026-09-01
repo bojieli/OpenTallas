@@ -19,7 +19,6 @@ import argparse
 import json
 import sys
 from pathlib import Path
-from typing import Any
 
 REPO = Path(__file__).resolve().parents[1]
 if str(REPO) not in sys.path:
@@ -40,15 +39,52 @@ from runtime.evidence import (  # noqa: E402
 
 
 def load_record(path: Path) -> ExecutionRecord:
-    """Rebuild an ExecutionRecord from a campaign or cycle report."""
+    """Rebuild an ExecutionRecord from a campaign, cycle, or token report.
+
+    Campaign records carry the canonical identity objects directly.  Governed
+    token captures retain a richer execution schema: model identity is in the
+    top-level ``model`` object and workload/target objects include diagnostic
+    fields that are not constructor arguments.  Read the common identity
+    explicitly so adding evidence fields never makes an otherwise comparable
+    capture unreadable.
+    """
     body = json.loads(path.read_text())
     record = body.get("record", body)
     workload = record["workload"]
+    model = record.get("model", {})
     target = record["target"]
     return ExecutionRecord(
         evidence_class=EvidenceClass(record["evidence_class"]),
-        workload=WorkloadIdentity(**workload),
-        target=TargetIdentity(**target),
+        workload=WorkloadIdentity(
+            model_id=str(workload.get("model_id", model.get("model_id", ""))),
+            workload_id=str(workload["workload_id"]),
+            workload_digest=str(workload["workload_digest"]),
+            prompt_token_count=int(workload["prompt_token_count"]),
+            max_new_tokens=int(workload["max_new_tokens"]),
+            generation_policy_digest=str(
+                workload.get(
+                    "generation_policy_digest",
+                    record.get("generation_policy_digest", ""),
+                )
+            ),
+            numeric_profile=str(
+                workload.get("numeric_profile", model.get("numeric_profile", ""))
+            ),
+            graph_id=str(workload.get("graph_id", model.get("graph_id", ""))),
+            tokenizer_sha256=str(workload.get("tokenizer_sha256", "")),
+            generation_policy=workload.get(
+                "generation_policy", record.get("generation_policy", {})
+            ),
+        ),
+        target=TargetIdentity(
+            target_id=str(target["target_id"]),
+            backend=str(target["backend"]),
+            topology_class=int(target["topology_class"]),
+            node_count=int(target["node_count"]),
+            capability_digest=str(target["capability_digest"]),
+            deployment_digest=str(target["deployment_digest"]),
+            technology_view=str(target.get("technology_view", "uncharacterized")),
+        ),
         generated_token_ids=tuple(record["generated_token_ids"]),
         stop_reason=record["stop_reason"],
         counters=record.get("counters", {}),
@@ -64,6 +100,7 @@ def load_record(path: Path) -> ExecutionRecord:
         ),
         notes=record.get("notes", {}),
         failure=record.get("failure"),
+        implementation_identity=record.get("implementation_identity", {}),
     )
 
 
