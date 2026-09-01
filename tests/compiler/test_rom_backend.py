@@ -76,6 +76,7 @@ from runtime.abi3.descriptors import (
     ExtendedDescriptorType,
     SelectorKind,
     Symbol,
+    iteration_extent,
 )
 from runtime.abi3.records import decode_body, split_program
 from runtime.abi3.verifier import VerificationError, require_admitted
@@ -2212,6 +2213,125 @@ def test_routed_matmul_declares_its_expert_count(deepseek_build):
         assert descriptor.payload["aux_id_0"] == 8
 
 
+def test_multiplied_routed_span_stays_one_request_wide_batch(
+    deepseek_graph, deepseek_capability
+):
+    """A18 presents ``top_k * span`` directly instead of looping per token.
+
+    The released graph flattens each token's routed rows into a multiplied
+    symbolic leading axis.  Keeping that axis in one request-wide block is a
+    numeric property, not just an addressing optimisation: routed matmul
+    groups all rows selecting an expert into one blocked contraction, matching
+    the neutral and HBM executions.  This fixture normally spells the same
+    shape as ``[span, top_k, ...]``; flatten its routed values here so the
+    production convention is covered without depending on a generated IR.
+    """
+
+    tensors = {tensor.tensor_id: tensor for tensor in deepseek_graph.tensors}
+    replacements: dict[str, Tensor] = {}
+    for kernel in deepseek_graph.kernels:
+        if kernel.kind != "EXPERT_DISPATCH":
+            continue
+        token_axis = tensors[kernel.inputs[0]].shape[0]
+        assert isinstance(token_axis, Symbolic)
+        top_k = int(tensors[kernel.inputs[1]].shape[1])
+        routed_axis = Symbolic(
+            token_axis.symbol,
+            top_k,
+            token_axis.maximum * top_k,
+        )
+        for name in kernel.outputs:
+            tensor = tensors[name]
+            assert tensor.shape[1] == top_k
+            replacements[name] = dataclasses.replace(
+                tensor, shape=(routed_axis, *tensor.shape[2:])
+            )
+    for kernel in deepseek_graph.kernels:
+        if kernel.kind != "ROUTED_MATMUL":
+            continue
+        tensor = tensors[kernel.outputs[0]]
+        routed_axis = replacements[kernel.inputs[0]].shape[0]
+        assert isinstance(routed_axis, Symbolic)
+        assert tensor.shape[1] == routed_axis.multiplier
+        replacements[kernel.outputs[0]] = dataclasses.replace(
+            tensor, shape=(routed_axis, *tensor.shape[2:])
+        )
+    graph = dataclasses.replace(
+        deepseek_graph,
+        tensors=tuple(
+            replacements.get(tensor.tensor_id, tensor)
+            for tensor in deepseek_graph.tensors
+        ),
+    )
+    deployment, _plan = build_deepseek_v4_rom_deployment(
+        graph,
+        capability=deepseek_capability,
+        tile_rom_bytes=1 << 16,
+        tiles_per_reticle=8,
+    )
+    require_admitted(deployment, deepseek_capability)
+
+    dispatch = next(
+        kernel for kernel in graph.kernels if kernel.kind == "EXPERT_DISPATCH"
+    )
+    dispatch_operators = [
+        descriptor
+        for descriptor in deployment.table.descriptors()
+        if descriptor.descriptor_type == ExtendedDescriptorType.OPERATOR
+        and descriptor.payload["source_kernel_id"] == dispatch.index
+    ]
+    identity = next(
+        descriptor
+        for descriptor in dispatch_operators
+        if descriptor.payload["engine_family"] == int(Major.DMA)
+    )
+    routed = next(
+        descriptor
+        for descriptor in dispatch_operators
+        if descriptor.payload["engine_family"] == int(Major.ROUTE)
+    )
+
+    def view(descriptor, field):
+        return deployment.table.get(
+            int(descriptor.payload[field]),
+            ExtendedDescriptorType.TENSOR_VIEW,
+        ).payload
+
+    selected_ids = view(routed, "input_view_0")
+    dispatched = view(routed, "output_view_0")
+    dispatched_ids = view(routed, "output_view_1")
+    copied_ids = view(identity, "output_view_0")
+    assert (selected_ids["dim0"], selected_ids["dim1"]) == (16, 2)
+    for payload, width in (
+        (dispatched, 64),
+        (dispatched_ids, None),
+        (copied_ids, None),
+    ):
+        assert payload["dim0"] == 32
+        assert payload["extent_numerator"] == 2
+        if width is not None:
+            assert payload["dim1"] == width
+        loop = deployment.table.get(
+            int(payload["term0_index"]),
+            ExtendedDescriptorType.LOOP_CONTROL,
+        ).payload
+        assert loop["bound_divisor"] == 16
+        assert loop["upper_bound"] == 1
+
+    projection = next(
+        kernel for kernel in graph.kernels if kernel.kind == "ROUTED_MATMUL"
+    )
+    operator = next(
+        descriptor
+        for descriptor in deployment.table.descriptors()
+        if descriptor.descriptor_type == ExtendedDescriptorType.OPERATOR
+        and descriptor.payload["source_kernel_id"] == projection.index
+    )
+    output = view(operator, "output_view_0")
+    assert (output["dim0"], output["dim1"]) == (32, 96)
+    assert output["extent_numerator"] == 2
+
+
 def test_the_derived_group_names_resolve_to_a_symbol_and_a_ratio() -> None:
     """Amendment A18: a group count is a registered symbol divided by a ratio.
 
@@ -2325,15 +2445,14 @@ def test_every_declared_request_extent_has_a_term_that_walks_it(
     """Amendment A18's walk test is an identity the backend has to maintain.
 
     A view naming an axis and a unit is resolved only by a term for which
-    ``term_stride * unit == stride[axis] * bound_divisor``; the loop counts the
-    symbol's units and the axis counts its own.  Get the conversion wrong and
-    nothing shortens the operand -- it silently keeps its declared maximum,
-    which is the 65,536-candidate failure the amendment exists to remove.  The
-    verifier refuses such a view, so this asserts the arithmetic directly rather
-    than relying on the refusal to be reached.
+    ``term_stride == stride[axis] * iteration_extent``; the loop counts the
+    symbol's units and the axis may count a numerator-multiplied or divided
+    image of them.  Get the conversion wrong and nothing shortens the operand
+    -- it silently keeps its declared maximum, which is the 65,536-candidate
+    failure the amendment exists to remove.  The verifier refuses such a view,
+    so this asserts the arithmetic directly rather than relying on the refusal
+    to be reached.
     """
-    from runtime.abi3.descriptors import SelectorKind
-
     for deployment, _plan in (qwen_build, deepseek_build):
         checked = 0
         for descriptor in deployment.table.descriptors():
@@ -2342,6 +2461,8 @@ def test_every_declared_request_extent_has_a_term_that_walks_it(
             payload = descriptor.payload
             axis = int(payload["extent_axis"])
             unit = max(int(payload["extent_unit"]), 1)
+            numerator = max(int(payload["extent_numerator"]), 1)
+            bias = int(payload["extent_bias"])
             assert axis < int(payload["rank"])
             assert int(payload["extent_unit"]) != 1, "a unit of one encodes as zero"
             walked = False
@@ -2355,18 +2476,29 @@ def test_every_declared_request_extent_has_a_term_that_walks_it(
                 if loop.payload["bound_selector_kind"] != SelectorKind.RUNTIME_SYMBOL:
                     continue
                 divisor = max(int(loop.payload["bound_divisor"]), 1)
-                if divisor % unit:
+                step = iteration_extent(divisor, numerator, unit)
+                if step is None:
                     continue
-                if int(payload[f"term{slot}_stride"]) * unit == (
-                    int(payload[f"stride{axis}"]) * divisor
+                if int(payload[f"term{slot}_stride"]) == (
+                    int(payload[f"stride{axis}"]) * step
                 ):
                     walked = True
                     # Iteration i covers [i*block, (i+1)*block) of that axis.
-                    assert int(payload[f"dim{axis}"]) <= divisor // unit
-            if axis or int(payload["extent_unit"]):
+                    assert int(payload[f"dim{axis}"]) <= step + bias
+            declared = any(
+                int(payload[name])
+                for name in (
+                    "extent_axis",
+                    "extent_unit",
+                    "extent_numerator",
+                    "extent_bias",
+                )
+            )
+            if declared:
                 assert walked, (
-                    f"view {descriptor.descriptor_id} declares axis {axis} in "
-                    f"units of {unit} and no term walks it"
+                    f"view {descriptor.descriptor_id} declares axis {axis} as "
+                    f"{numerator} * symbol / {unit} + {bias} and no term "
+                    "walks it"
                 )
                 checked += 1
         # Qwen states every extent in tokens, so it declares none of this and

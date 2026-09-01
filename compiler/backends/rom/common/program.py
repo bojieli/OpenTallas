@@ -366,6 +366,23 @@ TOKEN_AS_BATCH_KINDS = frozenset({"HYPER_CONNECT_POST", "COMPRESS_PROJECT"})
 #: See :meth:`_batch_leads`.
 BATCH_LEADS_KINDS = frozenset({"COMPRESS_POOL", "COMPRESS_STATE_UPDATE"})
 
+#: The released routed pipeline carries ``top_k * span_tokens`` as one leading
+#: symbolic extent.  A13 could clamp only ``span_tokens`` itself, so the first
+#: ROM lowering represented these rows one token at a time.  That changes a
+#: blocked contraction's matrix shape: the HBM lane groups every request row
+#: selecting the same expert while ROM groups only one token's selections, and
+#: NumPy/OpenBLAS is allowed to choose a different binary32 association for the
+#: two shapes.  A18 now states the multiplied extent directly, so this complete
+#: producer chain can retain the neutral graph's whole-span batch.
+#:
+#: The set is deliberately closed over the chain.  Batching only
+#: ``ROUTED_MATMUL`` would make it consume rows its per-token producer had not
+#: written yet; batching an unrelated multiplied-symbol operator would change
+#: its schedule without an operand-convention proof.
+MULTIPLIED_SPAN_BATCH_KINDS = frozenset(
+    {"EXPERT_DISPATCH", "QUANTIZE", "ROUTED_MATMUL", "SWIGLU", "MUL"}
+)
+
 MHC_SUBCASE: Mapping[str, int] = {
     "HYPER_CONNECT_PRE": 0,
     "HYPER_CONNECT_POST": 1,
@@ -559,6 +576,10 @@ class KernelShape:
     #: multiple of a token it holds -- six routed copies for a dispatched
     #: activation, one for the token that produced them.  See ``_shape_of``.
     per_token: bool = False
+    #: Multiplier of a whole-span leading axis retained through A18.  One is
+    #: the ordinary token-block case; values above one mean ``rows`` and the
+    #: clamped view extent are this many axis elements per bound-symbol unit.
+    batch_multiplier: int = 1
     #: Amendment A18's affine description of the *principal's* leading axis.
     #: ``rows``, ``block`` and every view extent are in an axis's own elements;
     #: ``divisor`` is the loop's block in the bound symbol's units, and each
@@ -2518,17 +2539,22 @@ class RomLowering:
             if principal is not None
             else (None, 1, IDENTITY_AXIS)
         )
-        # A13 states the resolved leading extent as ``symbol - iteration *
-        # bound_divisor``, so a *multiplied* symbolic extent -- six routed
-        # copies of a span -- cannot be a token block: no static block and no
-        # single clamp presents ``6 * span`` rows.  One token at a time does
-        # present it, and exactly: iteration ``t`` covers routed rows
-        # ``6t .. 6t+5`` and the token ``t`` they came from, so each operand
-        # shows whatever multiple of a token it holds and the loop bound is the
-        # span itself.  Leaving the extent unblocked instead is what made the
-        # routed path address 1,572,864 rows of a 104-token request.
-        per_token = symbol is not None and multiplier > 1
-        row_symbolic = symbol is not None and (multiplier == 1 or per_token)
+        # A18 can state a multiplied request extent directly.  Keep the whole
+        # routed producer chain at ``top_k * span`` so every blocked routed
+        # contraction sees the neutral graph's request-wide row grouping.
+        # Other multiplied-symbol operations retain the older exact fallback:
+        # iteration ``t`` presents precisely that token's multiplied rows.
+        batch_multiplier = (
+            multiplier
+            if symbol is not None
+            and multiplier > 1
+            and kernel.kind in MULTIPLIED_SPAN_BATCH_KINDS
+            else 1
+        )
+        per_token = (
+            symbol is not None and multiplier > 1 and batch_multiplier == 1
+        )
+        row_symbolic = symbol is not None
         # The rows a block loop may walk are bounded by the *smallest* extent
         # any of the kernel's symbolic-leading operands declares.  A graph may
         # give one operand a shorter maximum than the capability's context
@@ -2548,7 +2574,10 @@ class RomLowering:
         # stride fits.  Halving costs iterations, never correctness; refusing
         # would cost the whole compression.
         widest = self._widest_row(kernel)
-        while divisor > 1 and divisor * widest > 0xFFFFFFFF:
+        while (
+            divisor > 1
+            and divisor * widest * max(batch_multiplier, 1) > 0xFFFFFFFF
+        ):
             divisor //= 2
         declared_rows = principal_dims[0] if principal_dims else 1
         trip = max(-(-symbol_max // divisor), 1) if row_symbolic else 1
@@ -2564,12 +2593,15 @@ class RomLowering:
         probe = KernelShape(
             contraction=False, rows=1, cols=1, depth=0, transposed=False,
             row_symbolic=row_symbolic, block=1, trip=trip, symbol=0,
-            principal=(), per_token=per_token, axis=axis, divisor=divisor,
+            principal=(), per_token=per_token,
+            batch_multiplier=batch_multiplier, axis=axis, divisor=divisor,
         )
         block = self._axis_block(probe, axis) if row_symbolic else 1
         rows = min(block, declared_rows) if row_symbolic else max(declared_rows, 1)
         if per_token:
             rows = multiplier
+        elif batch_multiplier > 1:
+            rows = min(block * batch_multiplier, declared_rows)
 
         cols = principal_dims[-1] if len(principal_dims) > 1 else 1
         depth = 0
@@ -2634,6 +2666,7 @@ class RomLowering:
             symbol=symbol if symbol is not None else int(Symbol.SPAN_TOKENS),
             principal=principal_dims,
             per_token=per_token,
+            batch_multiplier=batch_multiplier,
             axis=axis,
             divisor=divisor,
         )
@@ -2906,7 +2939,11 @@ class RomLowering:
         if loop is None or not shape.row_symbolic:
             return None
         symbol, multiplier, axis = self._leading_symbol(tensor)
-        if symbol is None or (multiplier != 1 and not shape.per_token):
+        if symbol is None or (
+            multiplier != 1
+            and not shape.per_token
+            and shape.batch_multiplier == 1
+        ):
             return None
         width = 1
         for extent in self._dims(tensor)[1:]:
@@ -2914,7 +2951,11 @@ class RomLowering:
         # The *step*, not the block: A18's walk test reads what one iteration
         # advances, and a bias advances nothing.
         step = self._axis_step(shape, axis)
-        stride = step * width * (multiplier if shape.per_token else 1)
+        stride = step * width * (
+            multiplier
+            if shape.per_token or shape.batch_multiplier > 1
+            else 1
+        )
         if stride > 0xFFFFFFFF:
             raise RomLoweringError(
                 f"tensor {tensor.tensor_id!r} needs a token-block element stride "
@@ -2972,9 +3013,18 @@ class RomLowering:
             # By default the declared extent is the tensor's *leading* axis, in
             # that axis's own unit, resolved by the row term.  A view with no
             # term declares nothing: A18 refuses a declaration nothing resolves.
-            _symbol, _multiplier, declared = self._leading_symbol(tensor)
+            _symbol, tensor_multiplier, declared = self._leading_symbol(tensor)
             extent_unit = declared.unit if terms else 0
-            extent_numerator = declared.numerator if terms else 0
+            extent_numerator = (
+                declared.numerator
+                * (
+                    tensor_multiplier
+                    if shape.batch_multiplier > 1 and tensor_multiplier > 1
+                    else 1
+                )
+                if terms
+                else 0
+            )
             extent_bias = declared.bias if terms else 0
             if not terms:
                 extent_axis = 0
@@ -3085,6 +3135,11 @@ class RomLowering:
         if shape.per_token:
             # One token's worth of *this* operand: six routed rows, or the one
             # token they came from.
+            dims[0] = min(block * multiplier, dims[0])
+        elif shape.batch_multiplier > 1:
+            # The complete routed batch: each bound-symbol unit contributes
+            # ``multiplier`` physical rows to this operand.  A18 carries the
+            # same multiplier as the view's extent numerator.
             dims[0] = min(block * multiplier, dims[0])
         elif multiplier == 1:
             dims[0] = min(block, dims[0])
@@ -3245,9 +3300,15 @@ class RomLowering:
         """
         principal = list(shape.principal)
         if shape.row_symbolic and principal:
-            block = shape.rows if shape.per_token else shape.block
+            block = (
+                shape.rows
+                if shape.per_token or shape.batch_multiplier > 1
+                else shape.block
+            )
             principal[0] = min(block, principal[0])
-        if (shape.per_token or scale_factor) and len(principal) > 1:
+        if (
+            shape.per_token or shape.batch_multiplier > 1 or scale_factor
+        ) and len(principal) > 1:
             elements = 1
             for extent in dims:
                 elements *= extent
@@ -3485,37 +3546,48 @@ class RomLowering:
 
         It is a movement, not a computation: routed row ``6t + k`` belongs to
         expert ``ids[t, k]``, which is the dispatch's own ID operand read in
-        routed-row order, the same bytes in the same order.  One
-        ``DMA.TRANSFER`` per token says exactly that.
+        routed-row order, the same bytes in the same order.  Flattening the
+        request's whole ID matrix says exactly that and preserves the same
+        whole-span routed batch as the dispatch output it describes.
         """
         ids = self.tensors[kernel.inputs[1]]
         routed = self.tensors[kernel.outputs[1]]
         slots = 1
         for extent in self._dims(ids)[1:]:
             slots *= extent
+        rows = shape.rows
+        step = self._axis_step(shape, shape.axis) * slots
+        multiplied = shape.batch_multiplier > 1 and loop is not None
 
-        def per_token(tensor: Tensor, *, writable: bool) -> int:
+        def flattened(tensor: Tensor, *, writable: bool) -> int:
             return self._buffer_view(
                 tensor,
-                dims=[slots],
+                dims=[rows],
                 strides=[1],
                 shape=shape,
                 loop=loop,
                 writable=writable,
                 blocked=False,
                 term=(
-                    DynamicTerm.loop(loop, slots) if loop is not None else None
+                    DynamicTerm.loop(loop, step) if loop is not None else None
                 ),
+                extent_unit=shape.axis.unit if multiplied else 0,
+                extent_numerator=(
+                    shape.axis.numerator * shape.batch_multiplier
+                    if multiplied
+                    else 0
+                ),
+                extent_bias=shape.axis.bias if multiplied else 0,
             )
 
         self._emit_operator(
             kernel,
             Major.DMA,
             int(Dma.TRANSFER),
-            [per_token(ids, writable=False)],
-            [per_token(routed, writable=True)],
+            [flattened(ids, writable=False)],
+            [flattened(routed, writable=True)],
             loop=None,
-            schedule_rows=1,
+            schedule_rows=rows,
             suffix=".ids",
         )
 
@@ -3823,6 +3895,13 @@ class RomLowering:
             )
         else:
             broadcast_dims, broadcast_strides = dims, None
+        multiplied_broadcast = (
+            shape.batch_multiplier > 1
+            and broadcast_strides is not None
+            and bool(dims)
+            and bool(broadcast_dims)
+            and broadcast_dims[0] != dims[0]
+        )
         return self._buffer_view(
             tensor,
             dims=broadcast_dims,
@@ -3831,6 +3910,18 @@ class RomLowering:
             shape=shape,
             loop=loop,
             writable=writable,
+            # A routed weight is stored as ``[span, top_k]`` but presented as
+            # one value per row of ``[top_k * span, width]``.  The clamped axis
+            # belongs to that presented view, so its affine numerator is
+            # ``top_k`` even though the underlying tensor leads with plain
+            # ``span``.  Its row term already advances by ``top_k`` values.
+            extent_unit=shape.axis.unit if multiplied_broadcast else None,
+            extent_numerator=(
+                shape.axis.numerator * shape.batch_multiplier
+                if multiplied_broadcast
+                else 0
+            ),
+            extent_bias=shape.axis.bias if multiplied_broadcast else 0,
         )
 
     def _region_object(self, tensor_id: str) -> int:
