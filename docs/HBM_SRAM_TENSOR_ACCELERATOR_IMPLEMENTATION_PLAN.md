@@ -320,6 +320,25 @@ code. It independently:
 - rejects out-of-range, overlap, missing-work, unknown-feature, and corrupted
   artifacts.
 
+**Implementation status (2026-09-01).** The independent checker now also
+reconstructs the frozen companion-object rule for block-scaled layer weights;
+without that rule it falsely split DeepSeek scale runs by checkpoint adjacency
+and reported 322 expected objects against the correct 224. The governed
+`tools/check_hbm_deployments.py` source-locks that checker, the planner/lowering,
+the graph, both shared-chip capability profiles, and the shipped ABI bytes, then
+performs two clean rebuilds. Its Qwen certificate passes all 18 deployment
+checks, including an independent disjointness and capacity proof over the
+emitted HBM-plus-state address map, and closes checklist W4.6.
+
+The same tool's DeepSeek mode is intentionally a retained failure, not a green
+short-run proxy. It passes generic ABI/placement reconstruction after the scale
+fix, but separately refuses W4.7 because the 200K physical plan exceeds
+node-local HBM, required expert/sparse/reduction sites are replicated instead
+of communicated, and the final barrier does not causally gate state commits.
+Those findings are published in
+`results/abi3/hbm_deepseek_deployment_findings.json` and are the implementation
+inputs for the remaining cluster work.
+
 ## 5. Simulator implementation
 
 ### 5.1 Four distinct boundaries
