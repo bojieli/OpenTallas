@@ -22,15 +22,16 @@
 > compile, and all four deployments are admitted by an independent verifier.
 > **DeepSeek-V4-Flash now has governed four-token captures on both backends**
 > for the 32-token `TA-DS-CHAT-1-P32` prompt. HBM generates **4** tokens <!-- figure: 4 src="results/abi3/accelerator_tokens/deepseek_v4_flash_hbm_p32.json#generated_token_count" name="DeepSeek HBM governed generated tokens, README" -->
-> — `[13806, 345, 7472, 55560]` — identical to the external oracle. ROM also
-> completes four transactions and starts with the oracle's **13806** <!-- figure: 13806 src="results/abi3/accelerator_tokens/deepseek_v4_flash_rom_p32.json#generated_token_ids[0]" name="DeepSeek ROM first governed token, README" -->,
-> but its sequence `[13806, 334, 305, 13806]` first diverges at index **1** <!-- figure: 1 src="results/abi3/accelerator_tokens/deepseek_v4_flash_rom_p32.json#oracle.first_divergence_index" name="DeepSeek ROM governed first divergence, README" -->.
+> — `[13806, 345, 7472, 55560]` — identical to the external oracle. ROM now
+> generates the same **4** tokens <!-- figure: 4 src="results/abi3/accelerator_tokens/deepseek_v4_flash_rom_p32.json#generated_token_count" name="DeepSeek ROM governed generated tokens, README" -->,
+> and the governed pairwise report records a common prefix of **4** <!-- figure: 4 src="results/abi3/comparison_deepseek_rom_vs_hbm.json#token_agreement.common_prefix_length" name="DeepSeek ROM-vs-HBM token identity horizon, README" -->
+> with no divergence.
 > Both records come from the committed `tools/run_accelerator_tokens.py`, and
 > every recorded transaction returns `SUCCESS` with trap `NONE`. All four
-> model/backend targets have therefore produced a reference-validated token,
-> but DeepSeek's cross-backend and oracle-identity horizon remains one token;
-> ROM multi-token correctness is not established. The artifacts and their
-> claim boundary are in
+> model/backend targets have therefore produced a reference-validated
+> continuation. DeepSeek's established cross-backend and oracle-identity
+> horizon is four tokens; behavior beyond that horizon is not established.
+> The artifacts and their claim boundary are in
 > [`results/abi3/accelerator_tokens/`](results/abi3/accelerator_tokens/).
 >
 > **Two things that are separately true and must not be blurred.** The above is
@@ -42,8 +43,8 @@
 > deployments and no others.** A validated token from the golden model is not
 > evidence that the RTL runs the same design.
 >
-> It does **not** yet have accelerator results at the mandatory contexts, an
-> oracle-identical DeepSeek ROM continuation, a fabricated chip or wafer, a
+> It does **not** yet have accelerator results at the mandatory contexts, a
+> fabricated chip or wafer, a
 > full-chip placed-and-routed netlist, or foundry signoff DRC/LVS. Progress is
 > tracked in
 > [`docs/UNIFIED_EXECUTION_CHECKLIST.md`](docs/UNIFIED_EXECUTION_CHECKLIST.md),

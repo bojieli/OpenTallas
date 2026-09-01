@@ -239,14 +239,13 @@ declares `context / 4 + 129`; the chosen extent is propagated to the
 assumed. No ABI field was approximated and no two-symbol expression was forced
 into A18.
 
-The current governed HBM capture executes one prefill and three decode
-transactions, all `SUCCESS`/`NONE`, and produces the oracle prefix
-`[13806, 345, 7472, 55560]`. The ROM capture also executes all four
-transactions; it diverges numerically at token index 1, which is a separate
-open correctness defect rather than the old structural trap. Therefore the
-former sentence "DeepSeek decode does not run" is retracted. What remains true
-is narrower and important: these are contexts 32 through 35, still below the
-first window-clipping threshold at 129.
+The current governed HBM and ROM captures each execute one prefill and three
+decode transactions, all `SUCCESS`/`NONE`, and both produce the oracle prefix
+`[13806, 345, 7472, 55560]`. The routed-span and compressed-state-slot defects
+that followed the old structural trap are fixed. Therefore the former sentence
+"DeepSeek decode does not run" is retracted. What remains true is narrower and
+important: these are contexts 32 through 35, still below the first
+window-clipping threshold at 129.
 
 ## The regime no end-to-end run reaches, and what does cover it
 
@@ -474,7 +473,8 @@ cover.
   sparsity threshold.** A25 makes the first three rungs reachable, but they
   have not been rerun; 2,052 and the quoted long contexts remain blocked by
   the compressed-cache row-count gap. Below the thresholds HBM is
-  oracle-identical for four tokens and ROM diverges at its second.
+  oracle-identical for four tokens, and the corrected ROM lane now matches the
+  same four-token sequence. Neither capture exercises sparse row selection.
 - **No RTL vector crosses the window.** RTL implements A25 and the shipped
   DeepSeek co-simulation executes its policy below the ring, where saturating
   and request-span commits are byte-identical. The counter evidence here is

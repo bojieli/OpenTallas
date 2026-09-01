@@ -85,7 +85,7 @@ verification claim until that audit is clean.
 - [x] W6.1 Qwen-HBM: short prompt → prefill → decode → real tokens — **token-identical to the reference oracle**, and **decode reaches a real EOS**. `TA-QW-AGENT-1` ran 112 prompt tokens to the natural stop at token 151645 after 23 tokens (`results/abi3/qwen3_hbm_ta-qw-agent-1_execution.json`) <!-- figure: 112 src="results/abi3/qwen3_hbm_ta-qw-agent-1_execution.json#record.workload.prompt_token_count" name="TA-QW-AGENT-1 prompt tokens" --> <!-- figure: 23 src="results/abi3/qwen3_hbm_ta-qw-agent-1_execution.json#record.generated_token_count" name="TA-QW-AGENT-1 decoded tokens" --> <!-- figure: 151645 src="results/abi3/qwen3_hbm_ta-qw-agent-1_execution.json#record.generated_token_ids[22]" name="TA-QW-AGENT-1 final token is EOS" -->, `TA-QW-CHAT-1` ran 24 tokens (`..._ta-qw-chat-1_...`); both agree with the oracle at every position, with no legitimacy problems and every admission check passing — 27 of them on the agent record and 29 on the chat record, whose set is the agent's plus `block_extent` and `block_scale`, so it is a check set that grew between the two runs and not a run that skipped two
 - [x] W6.2 Qwen-ROM: identical token sequence from the ROM deployment — **re-verified with evidence in the repository** (`results/abi3/qwen3_rom_ta-qw-chat-1_execution.json`, status pass, 24 tokens, `reference_agreement` true, no divergence index). The 24 tokens are identical to `qwen3_hbm_ta-qw-chat-1_execution.json` position for position, which is the claim this item makes. Both admit at 75 instructions; the ROM lane emits 239 descriptors against HBM's 218 and declares 2,105 retired work against 22,715, because the two lanes block the token loop differently — see [OI-19] — 75 instructions, 239 descriptors, admitted; **24 tokens token-for-token identical to the external oracle and to the HBM target**. All 27 distinct prefill kernels diffed kernel-by-kernel against HBM through the `on_issue` hook: bit-identical, output hash for output hash, including the KV window and the final logits. Storage-class equivalence re-proved after every change: 17 descriptors differ, all `MEMORY_OBJECT`, all 17 ROM→HBM, none beyond storage class <!-- figure: 17 src="results/abi3/storage_class_equivalence_qwen3.json#differing_descriptor_count" name="Qwen storage-class differing descriptors" --> <!-- figure: 17 src="results/abi3/storage_class_equivalence_qwen3.json#storage_class_transitions['ROM->HBM']" name="Qwen ROM to HBM transitions" --> <!-- figure: 75 src="results/abi3/qwen3_rom_ta-qw-chat-1_execution.json#record.notes.verification.instruction_count" name="Qwen ROM instructions, TA-QW-CHAT-1" --> <!-- figure: 239 src="results/abi3/qwen3_rom_ta-qw-chat-1_execution.json#record.notes.verification.descriptor_count" name="Qwen ROM descriptors" --> <!-- figure: 218 src="results/abi3/qwen3_hbm_ta-qw-chat-1_execution.json#record.notes.verification.descriptor_count" name="Qwen HBM descriptors" --> <!-- figure: 2,105 src="results/abi3/qwen3_rom_ta-qw-chat-1_execution.json#record.notes.verification.declared_retired_work" name="Qwen ROM declared retired work" --> <!-- figure: 22,715 src="results/abi3/qwen3_hbm_ta-qw-chat-1_execution.json#record.notes.verification.declared_retired_work" name="Qwen HBM declared retired work" -->
 - [x] W6.3 DeepSeek-HBM (32 node): short prompt → real tokens — **fresh post-`77f847c` multi-token execution is oracle-identical.** `make abi3-tokens-deepseek-hbm` admitted the current 32-node deployment through its complete recorded check set, executed the **32**-token prompt <!-- figure: 32 src="results/abi3/accelerator_tokens/deepseek_v4_flash_hbm_p32.json#workload.prompt_token_count" name="DeepSeek HBM token-capture prompt length" -->, and completed one prefill plus three decode transactions with `SUCCESS`/`NONE` status/trap throughout. It generated **4** tokens <!-- figure: 4 src="results/abi3/accelerator_tokens/deepseek_v4_flash_hbm_p32.json#generated_token_count" name="DeepSeek HBM generated-token count" --> — `[13806, 345, 7472, 55560]` — all identical to the independent 16-token oracle, `first_divergence_index: null` and no legitimacy problems. Prefill retired **26,191** instructions and each decode retired **12,566**, so the old 636-instruction phase-extent trap is gone <!-- figure: 26,191 src="results/abi3/accelerator_tokens/deepseek_v4_flash_hbm_p32.json#per_step[step=0].instructions_retired" name="DeepSeek HBM prefill retired instructions" --> <!-- figure: 12,566 src="results/abi3/accelerator_tokens/deepseek_v4_flash_hbm_p32.json#per_step[step=1].instructions_retired" name="DeepSeek HBM decode retired instructions" -->. The v2 context gate checks each of **32** retained node-counter sets <!-- figure: 32 src="results/abi3/deepseek_v4_context_gate.json#results[0].node_count" name="DeepSeek HBM counter sets checked, W6.3" --> rather than dividing an aggregate: per-node/cluster `attention.context_positions` are **30,114 / 963,648** <!-- figure: 30114 src="results/abi3/deepseek_v4_context_gate.json#results[0].expected_counters_per_node['attention.context_positions']" name="DeepSeek HBM context positions per node, W6.3" --> <!-- figure: 963648 src="results/abi3/deepseek_v4_context_gate.json#results[0].observed_aggregate_counters['attention.context_positions']" name="DeepSeek HBM context positions cluster total, W6.3" --> and KV bytes are **30,836,736 / 986,775,552** <!-- figure: 30836736 src="results/abi3/deepseek_v4_context_gate.json#results[0].expected_counters_per_node['attention.kv_bytes_read']" name="DeepSeek HBM KV bytes per node, W6.3" --> <!-- figure: 986775552 src="results/abi3/deepseek_v4_context_gate.json#results[0].observed_aggregate_counters['attention.kv_bytes_read']" name="DeepSeek HBM KV bytes cluster total, W6.3" -->, with zero node or aggregate mismatches. Its maximum checked accelerator context is **35** <!-- figure: 35 src="results/abi3/deepseek_v4_context_gate.json#claim_boundary.maximum_accelerator_context_tokens_checked" name="DeepSeek HBM maximum counter-gated context, W6.3" -->, below both the 129-token window clipping and 2,052-token pruning thresholds; this closes counter scope, not long-context sparsity.
-- [~] W6.4 DeepSeek-ROM (wafer): identical token sequence — **four transactions execute, but oracle identity stops after the first token.** The committed `make abi3-tokens-deepseek-rom` capture executes one prefill plus three decode transactions without a functional trap, generates **4** tokens <!-- figure: 4 src="results/abi3/accelerator_tokens/deepseek_v4_flash_rom_p32.json#generated_token_count" name="DeepSeek ROM generated-token count" -->, and retires **83,142** instructions <!-- figure: 83,142 src="results/abi3/accelerator_tokens/deepseek_v4_flash_rom_p32.json#counters['instructions.retired']" name="DeepSeek ROM token-capture retired instructions" -->. Token 0 is the oracle's **13806** <!-- figure: 13806 src="results/abi3/accelerator_tokens/deepseek_v4_flash_rom_p32.json#generated_token_ids[0]" name="DeepSeek ROM first generated token" -->; the first divergence is index **1** <!-- figure: 1 src="results/abi3/accelerator_tokens/deepseek_v4_flash_rom_p32.json#oracle.first_divergence_index" name="DeepSeek ROM first divergence index" -->, accelerator 334 versus oracle 345. This proves reproducible multi-token execution and state updates, not a validated multi-token sequence, so the item remains partial.
+- [x] W6.4 DeepSeek-ROM (wafer): identical token sequence — **one prefill plus three decode transactions are oracle-identical and HBM-identical.** The committed `make abi3-tokens-deepseek-rom` capture executes all four transactions with `SUCCESS`/`NONE` status/trap, generates **4** tokens <!-- figure: 4 src="results/abi3/accelerator_tokens/deepseek_v4_flash_rom_p32.json#generated_token_count" name="DeepSeek ROM generated-token count" -->, and retires **60,481** instructions <!-- figure: 60,481 src="results/abi3/accelerator_tokens/deepseek_v4_flash_rom_p32.json#counters['instructions.retired']" name="DeepSeek ROM token-capture retired instructions" -->. Its `[13806, 345, 7472, 55560]` sequence compares all **4** retained oracle positions <!-- figure: 4 src="results/abi3/accelerator_tokens/deepseek_v4_flash_rom_p32.json#oracle.compared_tokens" name="DeepSeek ROM oracle-compared tokens" --> with `agreement: true`, no divergence and no legitimacy problem, and equals the authoritative HBM sequence position for position. `results/abi3/comparison_deepseek_rom_vs_hbm.json` records that common four-token prefix without assumptions and retains the one-wafer-versus-32-node topology difference; its boundary is functional execution, not timing or performance.
 - [x] W6.5 Independent reference oracle per model (from official modeling code) — external oracle: `tools/run_qwen3_reference_oracle.py`— token-level match
 - [~] W6.6 Checkpoint/restart exactness on all four — **Qwen-HBM proven; Qwen-ROM and both DeepSeek lanes still lack restart captures.** `tools/run_abi3_restart_exactness.py` runs one workload three times in three separate OS processes: uninterrupted; interrupted after N tokens with the device state serialised by `runtime/sim/checkpoint.py`; and finished in a fresh process that loads only that checkpoint. `TA-QW-CHAT-1` on `torch_cpu`, 93 prompt tokens, 6 new tokens split 3+3: both runs give `[1654, 525, 2661, 1447, 12, 3070]`, with identical retired work in every transaction and identical values for all 42 architectural counters (`results/abi3/restart_exactness.json`). Fifteen guards stand between the run and the word *pass* — three distinct PIDs, one deployment digest, one implementation identity, one runtime source digest, and explicit non-emptiness and length checks, because two empty lists are not a match. Two controls make the pass mean something: erasing the KV STATE images from the checkpoint diverges at the first resumed token, and erasing everything **except** the STATE images still reproduces the sequence, so what carries the generation is the STATE resources and the cursor, not activation scratch. The source-digest guard earned itself on its first run, refusing a token-identical result because a concurrent commit changed `runtime/` between two phases
 - [x] W6.7 Fail-closed campaigns — `tools/run_abi3_failclosed_campaign.py`, 8/8 refused against the **real** Qwen deployment: six corruption classes refused at admission, a mid-transaction fault leaving cursor and generation unchanged, and no prepared state left open. Found and fixed a real defect on its first run
@@ -170,7 +170,7 @@ that, the position is:
 - [x] W13.2 Qwen3-8B **ROM** lane — 24 tokens, oracle-identical, and identical to <!-- figure: 24 src="results/abi3/qwen3_rom_ta-qw-chat-1_execution.json#record.generated_token_count" name="Qwen ROM generated tokens, TA-QW-CHAT-1" -->
   the HBM lane position for position
 - [x] W13.3 DeepSeek-V4-Flash **HBM** (32 node) — **one prefill plus three decode transactions, four oracle-identical tokens.** The fresh governed capture generates `[13806, 345, 7472, 55560]`, compares all **4** positions <!-- figure: 4 src="results/abi3/accelerator_tokens/deepseek_v4_flash_hbm_p32.json#oracle.compared_tokens" name="DeepSeek HBM oracle-compared tokens, W13.3" -->, reports `agreement: true`, no divergence and no legitimacy problems. All four transactions return `SUCCESS` with trap `NONE`; this is the current post-phase-split deployment, not the superseded one-token failure. Its measured per-node and cluster-total attention counters pass the v2 context gate, with an explicit 35-token claim boundary; W6.3 records the values and the still-unreached sparsity thresholds.
-- [~] W13.4 DeepSeek-V4-Flash **ROM** (wafer) — **multi-token execution is reproducible; multi-token correctness is not.** One prefill and three decode transactions succeed, producing **4** tokens <!-- figure: 4 src="results/abi3/accelerator_tokens/deepseek_v4_flash_rom_p32.json#generated_token_count" name="DeepSeek ROM generated tokens, W13.4" -->. The first matches the oracle and the sequence first diverges at index **1** <!-- figure: 1 src="results/abi3/accelerator_tokens/deepseek_v4_flash_rom_p32.json#oracle.first_divergence_index" name="DeepSeek ROM first divergence, W13.4" -->. The committed Make target and capture close the former reproducibility gap, but numeric divergence and the unrun reasoning/agentic accelerator workloads keep this partial.
+- [~] W13.4 DeepSeek-V4-Flash **ROM** (wafer) — **the P32 multi-token correctness spine is closed; DeepSeek reasoning/agentic workload coverage is not.** One prefill and three decode transactions succeed, producing **4** oracle-identical tokens <!-- figure: 4 src="results/abi3/accelerator_tokens/deepseek_v4_flash_rom_p32.json#oracle.compared_tokens" name="DeepSeek ROM oracle-identical tokens, W13.4" -->, exactly the HBM sequence. The governed pairwise artifact records a four-token common prefix and no assumptions. This remains partial only because W13 asks for reasoning and agentic tasks too, and neither has a DeepSeek accelerator capture.
 - [x] W13.5 Qwen **reasoning** generation with thinking enabled — **closed.**
   `TA-QW-REASON-1` is the chat question rendered with thinking enabled, and the
   accelerator decoded **512** tokens of the model's own `<think>` block on the HBM <!-- figure: 512 src="results/abi3/qwen3_hbm_ta-qw-reason-1_execution.json#record.generated_token_count" name="TA-QW-REASON-1 tokens" -->
@@ -195,13 +195,15 @@ that, the position is:
   reaching the same command and the same answer. The closed loop is what closes;
   the oracle-identity claim at this length does not, and W11.1 states that horizon
 
-W13.4 is the remaining open design lane. The honest summary is that **three of
-four designs run the model end to end with a multi-token oracle-identical
-capture** — both Qwen lanes at 24 tokens and DeepSeek HBM at 4; the Qwen ROM lane
+W13.4 is the remaining open workload-coverage lane. The honest summary is that
+**all four designs run the model end to end with a multi-token oracle-identical
+capture** — both Qwen lanes at 24 tokens and both DeepSeek lanes at 4; the Qwen
+ROM lane
 is also oracle-identical over **192** tokens at the 8,000-token context <!-- figure: 192 src="results/abi3/qwen3_rom_ta-qw-8k-1_execution.json#record.generated_token_count" name="Qwen ROM 8K tokens" -->.
-DeepSeek ROM executes four transactions but diverges at token index 1, so the
-DeepSeek storage-class comparison remains gated on W13.4 rather than being
-inferred from the now-closed HBM lane.
+The governed DeepSeek ROM/HBM pairwise artifact is now admissible and records
+the exact four-token agreement. W13.4 remains partial because the DeepSeek
+reasoning and agentic accelerator workloads have not run, not because its chat
+capture diverges.
 
 ## Findings of 2026-08-30 — three defects that passed every check
 
@@ -477,7 +479,7 @@ lanes are a precondition for it, not the product. These items are the product.
   validates against both at ratio 1.0000 on KV traffic and causal pairs.
 
   The original 24-token result stands as recorded: **produced, and it is the
-  storage-class thesis in executed counters** (`results/abi3/comparison_qwen_rom_vs_hbm.json`). Both lanes decoded 24 tokens matching the oracle, the two token sequences are identical, evidence class `functional_artifact_only`, `depends_on_assumption` false. **Five counters differ and all five are memory traffic**: the ROM target reads 363,485,791,728 B from ROM and the HBM target reads 366,294,894,160 B from HBM <!-- figure: 363,485,791,728 src="results/abi3/comparison_qwen_rom_vs_hbm.json#counter_deltas['rom.bytes_read'].left" name="ROM target ROM bytes read" --> <!-- figure: 366,294,894,160 src="results/abi3/comparison_qwen_rom_vs_hbm.json#counter_deltas['hbm.bytes_read'].right" name="HBM target HBM bytes read" -->, and the ROM target moves 437 MB / 61 MB through SRAM where the HBM target moves none. Nothing else in the 121-counter registry differs. That is the claim — *the two deployments differ only in where the bytes live* — demonstrated on executed counters rather than argued. The DeepSeek HBM lane now has four oracle-identical tokens; the DeepSeek comparison waits only on W6.4's ROM divergence and on a governed pairwise comparison artifact.
+  storage-class thesis in executed counters** (`results/abi3/comparison_qwen_rom_vs_hbm.json`). Both lanes decoded 24 tokens matching the oracle, the two token sequences are identical, evidence class `functional_artifact_only`, `depends_on_assumption` false. **Five counters differ and all five are memory traffic**: the ROM target reads 363,485,791,728 B from ROM and the HBM target reads 366,294,894,160 B from HBM <!-- figure: 363,485,791,728 src="results/abi3/comparison_qwen_rom_vs_hbm.json#counter_deltas['rom.bytes_read'].left" name="ROM target ROM bytes read" --> <!-- figure: 366,294,894,160 src="results/abi3/comparison_qwen_rom_vs_hbm.json#counter_deltas['hbm.bytes_read'].right" name="HBM target HBM bytes read" -->, and the ROM target moves 437 MB / 61 MB through SRAM where the HBM target moves none. Nothing else in the 121-counter registry differs. That is the claim — *the two deployments differ only in where the bytes live* — demonstrated on executed counters rather than argued. DeepSeek now has its own governed functional pair: `results/abi3/comparison_deepseek_rom_vs_hbm.json` records an identical **4**-token prefix <!-- figure: 4 src="results/abi3/comparison_deepseek_rom_vs_hbm.json#token_agreement.common_prefix_length" name="DeepSeek ROM/HBM common token prefix" --> with `depends_on_assumption: false`, while explicitly retaining the wafer's one logical node and HBM's **32** nodes <!-- figure: 32 src="results/abi3/comparison_deepseek_rom_vs_hbm.json#topology_cost.right.node_count" name="DeepSeek HBM comparison node count" -->. Its 66 counter deltas include topology-scaled work and backend control differences, so it is a correctness/topology comparison and must not be relabelled as the Qwen five-memory-counter equivalence result.
 - [ ] W11.2 TA-CMP-7-ASAP7: same, predictive view, no cross-view mixing
 - [~] W11.3 Evidence ledger: every number traced to executed counters or labeled external
 - [ ] W11.4 Final status report and README update
@@ -1309,14 +1311,14 @@ lanes are a precondition for it, not the product. These items are the product.
   override remains authoritative.
 
   **Claim boundary:** this closes replay identity, not DeepSeek ROM numeric
-  correctness. It changes no numeric contract and does not turn a divergent
-  token sequence into a pass.
+  correctness. It changed no numeric contract and did not by itself turn the
+  then-divergent token sequence into a pass.
 
-- **OI-46 — the remaining ROM/HBM prefill difference is one routed expert
-  result, not the expert reducer.** With the OI-45 implementation identity
-  fixed, `results/abi3/deepseek_v4_lane_activation_bisect.json` compares all 44
-  logical P32 boundaries: boundaries 0--31 are byte-identical and boundary 32,
-  the layer-4 input produced by layer 3, is the first difference.
+- **OI-46 — fixed: ROM discarded routed span batching.** With the OI-45
+  implementation identity fixed, the historical
+  `results/abi3/deepseek_v4_lane_activation_bisect.json` compares all 44
+  logical P32 prefill boundaries: boundaries 0--31 are byte-identical and
+  boundary 32, the layer-4 input produced by layer 3, is the first difference.
 
   The early-stop operator trace in
   `results/abi3/deepseek_v4_boundary32_operator_bisect.json` compares 193
@@ -1338,12 +1340,41 @@ lanes are a precondition for it, not the product. These items are the product.
   reducer.
 
   HBM realizes source 324 as a `[192,128]` local projection followed by two
-  collection/reshaping operators; ROM computes `[6,4096]` per prompt row. The
-  physically sharded weight views are not directly byte-comparable, so this
-  evidence localizes the next fix to that down-projection/collection path but
-  does not yet distinguish weight-view mapping, shape-dependent blocked-GEMM
-  association, and collection ordering.
+  collection/reshaping operators; the old ROM program computed `[6,4096]` once
+  per prompt row. The defect was the batching, not the reducer or weight map:
+  ROM retained the six selected experts but dropped the request's 32-row span
+  across `EXPERT_DISPATCH`, QDQ, routed GEMMs, SwiGLU and route weighting. The
+  fixed lowering carries `top_k * span_tokens` as one affine leading extent,
+  broadcasts route weights across it, and copies selected expert IDs once for
+  the complete request. The rebuilt source-324 result and every source-331
+  reducer row match HBM, including the formerly divergent row 14; boundary 32
+  is now the HBM hash `91a6ccd7…`.
 
-  These are functional diagnostic runs. They stop before committing the
-  transaction, make no token claim, and do not change the retained conclusion
-  that DeepSeek ROM multi-token correctness is not established.
+  The retained bisectors remain useful causal evidence but are pre-fix
+  artifacts. They stop before commit and make no token claim. The governed
+  capture in W6.4 is the authority for the fixed program's tokens.
+
+- **OI-47 — fixed: compressed ROM state views discarded their global base
+  slot.** Each physical ROM state object pools congruent resources from all 43
+  layers. Its dynamic loop term correctly advanced by one slot for the first
+  run and by two for the period-2 body, but `_state_view` reset the static
+  element offset to the row column whenever a loop existed. Layer 2 therefore
+  started at cache slot 0 instead of 2, and the layer-3 and layer-4
+  representatives both started at slot 0 instead of 3 and 4. Prefill survived
+  because each layer wrote immediately before reading its current rows; decode
+  consumed aliased history from another layer.
+
+  The lowering now keeps `slot * window + column` as the static base and adds
+  the loop induction stride to it. The alternating-stack regression checks
+  each emitted sparse-attention representative against its deployment-global
+  state slot. The production deployment independently admits with 1,171
+  instructions and 3,403 descriptors; its window-cache representatives have
+  bases 0, 2, 3 and 4, with the latter pair advancing by two. The governed run
+  then produces `[13806, 345, 7472, 55560]`, compares all four oracle positions
+  with no divergence, and matches the HBM capture. The governed pairwise report
+  records the same four-token common prefix and `depends_on_assumption: false`.
+
+  **Claim boundary:** this is full-depth functional execution over the
+  32-token prompt plus three decode steps. It is not long-context threshold,
+  timing, RTL arithmetic, physical or silicon evidence, and it says nothing
+  about token 5.

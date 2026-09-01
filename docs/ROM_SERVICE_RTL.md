@@ -134,10 +134,11 @@ so a deployment with a quarantined resource in its own plan cannot be built.
 
 The DeepSeek wafer lane had produced no tokens when this set was built
 (checklist W6.4), so there is no executed read stream to record. It has since
-produced one validated token from a 32-token prefix, filed raw and ungraded
-under `results/abi3/accelerator_tokens/`; that is a single forward pass on the
-golden model, not a recorded ROM read stream, and it does not change what this
-set is. Its requests come from the compiled plan's own
+completed one prefill plus three decode transactions from a 32-token prefix,
+matching the oracle and HBM on all four generated tokens under
+`results/abi3/accelerator_tokens/`; that functional run did not retain a ROM
+read stream, so it does not change what this set is. Its requests come from the
+compiled plan's own
 read unit — a region *slot* is what one iteration of a compressed loop reads —
 and from **every shard boundary the plan declares**, each crossed by one
 request. That is derived evidence about addressing, and the artifact says so

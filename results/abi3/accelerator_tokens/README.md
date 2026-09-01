@@ -21,21 +21,20 @@ recorded implementation identity and therefore a different evidence run.
 |---|---|---|---:|---|---|---:|
 | `qwen3_8b_rom_chat1` | Qwen3-8B ROM | TA-QW-CHAT-1 | 93 | `[1654, 525, 2661, 1447]` | **match** | 124.7 s |
 | `qwen3_8b_hbm_chat1` | Qwen3-8B HBM | TA-QW-CHAT-1 | 93 | `[1654, 525, 2661, 1447]` | **match** | 129.6 s |
-| `deepseek_v4_flash_rom_p32` | DeepSeek-V4-Flash ROM wafer | TA-DS-CHAT-1-P32 | 32 | `[13806, 334, 305, 13806]` | **diverges at index 1** | 1,347.3 s |
+| `deepseek_v4_flash_rom_p32` | DeepSeek-V4-Flash ROM wafer | TA-DS-CHAT-1-P32 | 32 | `[13806, 345, 7472, 55560]` | **match** | 649.9 s |
 | `deepseek_v4_flash_hbm_p32` | DeepSeek-V4-Flash HBM | TA-DS-CHAT-1-P32 | 32 | `[13806, 345, 7472, 55560]` | **match** | 4,476.3 s |
 
 All four deployments have produced at least one token the model's own reference
 implementation produces for the same prompt. Both Qwen deployments decode four
-tokens and agree with gold on all four, and with each other exactly. DeepSeek
-HBM likewise completes four transactions and agrees with gold on all four.
-DeepSeek ROM completes four transactions but diverges on its second generated
-token.
+tokens and agree with gold on all four, and with each other exactly. Both
+DeepSeek deployments likewise complete four transactions, agree with gold on
+all four, and agree with each other position for position.
 
-## Current numeric localization
+## Historical numeric localization and closure
 
-The retained bisectors are diagnostic early-stop runs: they commit no
-transaction and establish no generated-token result.  Every ROM/HBM lane below
-records NumPy 2.2.6, scipy-openblas 0.3.29, and
+The retained bisectors are historical diagnostic early-stop runs from before
+the two ROM fixes: they commit no transaction and establish no generated-token
+result. Every ROM/HBM lane below records NumPy 2.2.6, scipy-openblas 0.3.29, and
 `OMP_NUM_THREADS=OPENBLAS_NUM_THREADS=MKL_NUM_THREADS=8`, matching the governed
 token captures' blocked-GEMM identity.
 
@@ -66,10 +65,20 @@ token captures' blocked-GEMM identity.
   projection.  The first semantic difference is its output at global selected
   row 14 (prompt row 2, selected-expert slice 2).  HBM lowers that source to a
   `[192,128]` local projection plus collection operators while ROM emits
-  `[6,4096]` per prompt row.  The trace localizes the remaining fault boundary
-  to that down-projection/collection path; its physically sharded weight views
-  do not directly distinguish weight mapping, shape-dependent GEMM association,
-  and collection ordering.
+  `[6,4096]` per prompt row. That localization led to the routed-span fix: ROM
+  now preserves the full `top_k * span_tokens` batch through dispatch, QDQ,
+  routed GEMMs, SwiGLU and route weighting. The fixed ROM source-324/reducer
+  result matches HBM at the formerly divergent row.
+
+The first post-routed-fix four-token run then isolated a decode-only state
+addressing defect. A compressed layer loop used the correct per-iteration state
+stride but discarded its deployment-global starting slot, aliasing layer 2 and
+both representatives of the period-2 body onto earlier cache slots. The ROM
+lowering now retains that static base. A synthetic alternating-stack regression
+checks the representative layer against the state-view slot, and the production
+deployment admits with layer-state bases 0, 2, 3 and 4 for its three compressed
+runs. The governed token capture is the end-to-end closure: all four tokens now
+match the oracle and HBM.
 
 `deepseek_v4_reference_boundaries_p32.json` independently links the refreshed
 lane artifact by SHA-256 and records the vendor comparison and layer-0 audit.
@@ -78,20 +87,21 @@ contract.
 
 ## What is NOT established
 
-**DeepSeek ROM multi-token correctness is not established.**
+**DeepSeek ROM correctness is established only through the governed four-token
+horizon.**
 
 The current ROM capture completes prefill and all three decode transactions
-without a trap, but its tokens are `[13806, 334, 305, 13806]` against oracle
-prefix `[13806, 345, 7472, 55560]`: the first divergence is index 1. This is
-now a numeric-correlation problem, not the old structural-decode failure.
+without a trap and produces `[13806, 345, 7472, 55560]`, identical to the
+oracle prefix and the retained HBM capture. It compares four positions, reports
+`agreement: true`, and has no divergence index or legitimacy problem.
 
 The fresh HBM capture uses deployment digest
 `45e2b872b4db5ded09e580774bd413f5daa0a9f3c4608f1aa222f9323a259dcf`.
 It completes prefill plus three decode transactions with `SUCCESS`/`NONE`
 status and trap, producing `[13806, 345, 7472, 55560]` exactly. It closes the
-former phase-extent failure; it does not make the numerically divergent ROM
-continuation correct. The corresponding ROM deployment digest is
-`c438881661300ba53d0432fa5d87a0b9f631671fef165a828123ac0b53815650`.
+former phase-extent failure. The corresponding now-matching ROM deployment
+digest is
+`c8c03f1a7f579e8dfb892626cd2842ef88d624f086a5b55bd0b245f1ca515824`.
 
 That HBM record declares its actual `target.node_count` as 32. Its top-level
 `counters` are cluster totals; `node_counters` retains the engine work measured
@@ -107,8 +117,8 @@ Also not established:
   window clipping at 129 nor the first index pruning at 2,052 was executed on
   the accelerator. The pass validates short-context counter scope and decode;
   it is not threshold evidence. The `TA-DS-CTX-*` ladder defines that regime.
-- **Oracle-identical DeepSeek ROM generation beyond one token.** ROM executes
-  the transactions but diverges numerically; HBM now matches all four retained
-  oracle positions.
+- **Oracle-identical DeepSeek generation beyond four tokens.** Both accelerator
+  targets match all four retained positions, but this capture says nothing
+  about token 5 or later.
 - **RTL.** These are functional-simulator runs. The shipped-deployment RTL
   co-simulation is `results/rtl/abi3_deployment_campaign.json`.

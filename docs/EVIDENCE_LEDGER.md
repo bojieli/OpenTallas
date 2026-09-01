@@ -529,16 +529,16 @@ rather than a generated one.
 
 | number / claim | where it is stated | what produces it | grade | current? |
 |---|---|---|---|---|
-| DeepSeek-V4-Flash-0731 HBM emits `[13806, 345, 7472, 55560]`, identical to the independent oracle; ROM emits `[13806, 334, 305, 13806]` and first diverges at index 1 | `results/abi3/accelerator_tokens/README.md`, checklist W6.3/W6.4 and W13.3/W13.4, `docs/ABI3_PROGRAM_REPORT.md` §3 | `tools/run_accelerator_tokens.py`, the two governed `deepseek_v4_flash_{hbm,rom}_p32.json` captures, and `deepseek_v4_reference_oracle_prefix.json` | **`executed`**, functional-simulator and external-comparator evidence only | **YES** |
+| DeepSeek-V4-Flash-0731 HBM and ROM both emit `[13806, 345, 7472, 55560]`, identical to the independent oracle and to each other over the governed four-token horizon | `results/abi3/accelerator_tokens/README.md`, checklist W6.3/W6.4 and W13.3/W13.4, `docs/ABI3_PROGRAM_REPORT.md` §3 | `tools/run_accelerator_tokens.py`, the two governed `deepseek_v4_flash_{hbm,rom}_p32.json` captures, `deepseek_v4_reference_oracle_prefix.json`, and `comparison_deepseek_rom_vs_hbm.json` | **`executed`**, functional-simulator and external-comparator evidence only | **YES** |
 
 `executed` in this repository's vocabulary means *obtained by running something
 in this repository, with the artifact committed*. The governed tool lowers the
 pinned graph, admits the deployment, executes prefill and decode, checks token
 legitimacy, and compares only against the byte-matched external oracle. The old
 `deepseek_v4_flash_rom_p32_raw.json` remains as historical evidence but no
-current claim depends on it. Execution does not promote either capture to cycle,
-RTL, physical or silicon evidence, and the ROM divergence remains an open
-functional failure.
+current claim depends on it. Execution does not promote either capture or their
+pairwise report to cycle, RTL, physical or silicon evidence, and the
+four-token horizon does not establish token 5 or a long-context threshold.
 
 **A correction this milestone forces on existing prose.** The 104-token
 `TA-DS-CHAT-1` run has been described as the real gate for DeepSeek execution.
