@@ -880,6 +880,68 @@ def test_plan_is_deterministic(dense, single_chip):
     assert first.plan_id == second.plan_id
 
 
+def test_expert_pipeline_uses_one_shared_loop_and_fixed_address_blocks(
+    moe, single_chip
+):
+    """A full-span MoE intermediate is not resident between whole kernels."""
+    from runtime.abi3.records import decode_body, split_program
+
+    deployment, plan = lower_with_plan(moe, single_chip)
+    groups: dict[str, list[int]] = {}
+    for kernel in plan.kernels:
+        if kernel.stream_group:
+            groups.setdefault(kernel.stream_group, []).append(kernel.index)
+    expert = {
+        name: indices for name, indices in groups.items() if ".expert_stream." in name
+    }
+    assert expert
+    assert all(len(indices) >= 3 for indices in expert.values())
+
+    rolling = [slot for slot in plan.arena_slots if slot.rolling_group]
+    assert rolling
+    assert all(slot.rows <= plan.tile.block for slot in rolling)
+    assert all(len(slot.tenants) == 1 for slot in rolling)
+
+    edge_views = [
+        descriptor
+        for descriptor in deployment.table.descriptors()
+        if descriptor.descriptor_type == ExtendedDescriptorType.TENSOR_VIEW
+        and int(descriptor.payload["edge_mask_id"]) != NO_ID
+    ]
+    assert edge_views
+    for view in edge_views:
+        edge = int(view.payload["edge_mask_id"])
+        assert deployment.table.get(
+            edge, ExtendedDescriptorType.LOOP_CONTROL
+        ).payload["bound_selector_kind"] == int(SelectorKind.RUNTIME_SYMBOL)
+        # Fixed address is the point: the edge loop may clamp the final block
+        # but must not also appear as an offset-producing dynamic term.
+        assert edge not in {
+            int(view.payload[f"term{slot}_index"])
+            for slot in range(int(view.payload["dynamic_term_count"]))
+            if int(view.payload[f"term{slot}_kind"])
+            == int(SelectorKind.LOOP_INDUCTION)
+        }
+
+    _, body = split_program(deployment.program)
+    instructions = decode_body(body)
+    loop_bodies = []
+    for descriptor in deployment.table.descriptors():
+        if descriptor.descriptor_type != ExtendedDescriptorType.LOOP_CONTROL:
+            continue
+        start = int(descriptor.payload["body_start"])
+        end = int(descriptor.payload["body_end"])
+        loop_bodies.append(
+            {
+                int(instruction.source_operation_id)
+                for instruction in instructions[start : end + 1]
+                if int(instruction.source_operation_id) != NO_ID
+            }
+        )
+    for indices in expert.values():
+        assert any(set(indices) <= body for body in loop_bodies)
+
+
 def test_state_read_output_reuses_the_prepared_state_binding(single_chip):
     """A read-only state view cannot fall back to a recycled arena object.
 
@@ -2913,25 +2975,72 @@ def test_a_window_index_carries_the_window_the_graph_declared():
 REAL_DEEPSEEK_IR = Path("build/ir-v3/deepseek-v4-flash-0731/kernel_ir.v3.json")
 
 
-def _block_scale_census(deployment) -> dict[tuple[int, int], int]:
-    """``(scale_block_elements, scale_block_rows) -> views``, for one build.
+@pytest.mark.skipif(
+    not (Path(__file__).resolve().parents[2] / REAL_DEEPSEEK_IR).exists(),
+    reason="DeepSeek IR not built",
+)
+def test_real_deepseek_rolling_plan_fits_hbm_and_is_admitted():
+    """The product graph, not only the MoE fixture, closes the capacity wall."""
+    from runtime.abi3.capability import Capability
 
-    Read off the emitted descriptors and nothing else.  A declared numeric
-    contract is a claim about intent; only a view's ``scale_object_id`` and its
-    two block extents are a claim about the arithmetic an engine will perform.
+    root = Path(__file__).resolve().parents[2]
+    graph = read_kernel_graph(root / REAL_DEEPSEEK_IR)
+    capability = Capability.from_dict(
+        json.loads(
+            (root / "configs/hardware/abi3_capability/hbm_sram_cluster_32.json")
+            .read_text()
+        )
+    )
+    deployment, plan = lower_with_plan(graph, capability)
+    require_admitted(deployment, capability)
+
+    assert plan.proofs["hbm_fits"]
+    assert plan.proofs["hbm_bytes_per_node"] <= plan.proofs[
+        "hbm_available_per_node"
+    ]
+    rolling = [slot for slot in plan.arena_slots if slot.rolling_group]
+    assert rolling
+    groups = {slot.rolling_group for slot in rolling}
+    assert any(".expert_stream." in group for group in groups)
+    assert any(".index_stream." in group for group in groups)
+    assert sum(slot.size_bytes for slot in rolling) < 1_000_000_000
+
+
+def _block_scale_census(deployment) -> dict[tuple[int, int], int]:
+    """``(scale_block_elements, scale_block_rows) -> operand bindings``.
+
+    Read off the emitted operators and their views, and nothing else. A declared
+    numeric contract is a claim about intent; only an operand view's
+    ``scale_object_id`` and its two block extents are a claim about the
+    arithmetic an engine will perform. Count bindings rather than unique view
+    descriptors: descriptor interning may legally let two operator slots share
+    one byte-identical view, and that does not make either operand unscaled.
     """
     census: dict[tuple[int, int], int] = {}
-    for descriptor in deployment.table.descriptors():
-        if descriptor.descriptor_type != ExtendedDescriptorType.TENSOR_VIEW:
+    for operator in deployment.table.descriptors():
+        if operator.descriptor_type != ExtendedDescriptorType.OPERATOR:
             continue
-        payload = descriptor.payload
-        if payload["scale_object_id"] == NO_ID:
-            continue
-        key = (
-            int(payload["scale_block_elements"]),
-            max(int(payload["scale_block_rows"]), 1),
-        )
-        census[key] = census.get(key, 0) + 1
+        for field in (
+            "input_view_0",
+            "input_view_1",
+            "input_view_2",
+            "input_view_3",
+            "output_view_0",
+            "output_view_1",
+        ):
+            view_id = int(operator.payload[field])
+            if view_id == NO_ID:
+                continue
+            payload = deployment.table.get(
+                view_id, ExtendedDescriptorType.TENSOR_VIEW
+            ).payload
+            if payload["scale_object_id"] == NO_ID:
+                continue
+            key = (
+                int(payload["scale_block_elements"]),
+                max(int(payload["scale_block_rows"]), 1),
+            )
+            census[key] = census.get(key, 0) + 1
     return census
 
 

@@ -799,6 +799,92 @@ def test_a_view_term_naming_a_loop_that_is_never_set_up_is_rejected(
     )
 
 
+def test_a_symbol_bounded_edge_mask_is_admitted(capability: Capability) -> None:
+    """A26 clamps a fixed-address block without adding a dynamic term."""
+
+    def program(builder: Any, ids: dict[str, int]) -> None:
+        loop = builder.loop_control(
+            lower_bound=0,
+            upper_bound=8,
+            step=1,
+            bound_symbol=Symbol.SPAN_TOKENS,
+            bound_divisor=4,
+            max_iterations=8,
+        )
+        builder.open_loop(loop)
+        builder.tensor_view(
+            object_id=ids["weights"],
+            dtype=DType.BF16,
+            dims=[4, 8],
+            edge_mask_id=loop,
+        )
+        builder.emit(Major.TENSOR, Tensor.MATMUL, descriptor_id=ids["matmul"])
+        builder.close_loop()
+        default_tail(builder, ids)
+
+    deployment = probe_deployment(capability, program=program)
+    report = verify_deployment(deployment, capability)
+    assert report.admitted, report.errors
+    assert report.checks["edge_mask"] is True
+
+
+def test_an_edge_mask_naming_a_loop_that_is_never_set_up_is_rejected(
+    capability: Capability,
+) -> None:
+    def program(builder: Any, ids: dict[str, int]) -> None:
+        loop = builder.loop_control(
+            lower_bound=0,
+            upper_bound=8,
+            step=1,
+            bound_symbol=Symbol.SPAN_TOKENS,
+            bound_divisor=4,
+            max_iterations=8,
+        )
+        builder.tensor_view(
+            object_id=ids["weights"],
+            dtype=DType.BF16,
+            dims=[4, 8],
+            edge_mask_id=loop,
+        )
+        default_tail(builder, ids)
+
+    assert_rejected(
+        probe_deployment(capability, program=program),
+        capability,
+        "edge-mask descriptor .* is not a verified loop",
+    )
+
+
+def test_an_edge_mask_cannot_claim_more_than_one_loop_block(
+    capability: Capability,
+) -> None:
+    def program(builder: Any, ids: dict[str, int]) -> None:
+        loop = builder.loop_control(
+            lower_bound=0,
+            upper_bound=8,
+            step=1,
+            bound_symbol=Symbol.SPAN_TOKENS,
+            bound_divisor=2,
+            max_iterations=8,
+        )
+        builder.open_loop(loop)
+        builder.tensor_view(
+            object_id=ids["weights"],
+            dtype=DType.BF16,
+            dims=[4, 8],
+            edge_mask_id=loop,
+        )
+        builder.emit(Major.TENSOR, Tensor.MATMUL, descriptor_id=ids["matmul"])
+        builder.close_loop()
+        default_tail(builder, ids)
+
+    assert_rejected(
+        probe_deployment(capability, program=program),
+        capability,
+        "edge-masked axis-0 extent 4 exceeds the 2 elements",
+    )
+
+
 def test_axes_beyond_the_declared_rank_must_be_zero(capability: Capability) -> None:
     deployment = probe_deployment(capability)
     view = deployment.notes["probe_ids"]["weight_view"]

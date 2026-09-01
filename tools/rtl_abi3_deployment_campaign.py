@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Run and record the two-simulator RTL co-simulation of the shipped deployments.
 
-``tools/rtl_abi3_campaign.py`` correlates the ABI 3.0 control plane against 64
+``tools/rtl_abi3_campaign.py`` correlates the ABI 3.0 control plane against 65
 vectors that are real programs *written for the campaign*.  This campaign
 correlates it against the three programs this project claims to run: Qwen3-8B on
 ROM, Qwen3-8B on HBM and DeepSeek-V4-Flash on the wafer, on both entrypoints,
@@ -39,6 +39,7 @@ older than the pinned 5.050 or an Icarus older than 11.0 is refused.
 from __future__ import annotations
 
 import argparse
+from concurrent.futures import ThreadPoolExecutor
 import hashlib
 import json
 import os
@@ -512,22 +513,28 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
             "-CFLAGS",
             "-std=c++17",
         ]
-        cases = [
-            simulator_case(
-                "iverilog",
-                iverilog_compile,
-                [str(executables["vvp"]), "a3_deploy.vvp"],
-                build,
-                marker,
-            ),
-            simulator_case(
-                "verilator",
-                verilator_compile,
-                ["./obj_a3_deploy/Vot_a3_microsequencer_top"],
-                build,
-                marker,
-            ),
-        ]
+        # The two builds use disjoint outputs, so compile and replay them in
+        # parallel. Resolve in a fixed order to keep the retained JSON stable.
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            futures = [
+                pool.submit(
+                    simulator_case,
+                    "iverilog",
+                    iverilog_compile,
+                    [str(executables["vvp"]), "a3_deploy.vvp"],
+                    build,
+                    marker,
+                ),
+                pool.submit(
+                    simulator_case,
+                    "verilator",
+                    verilator_compile,
+                    ["./obj_a3_deploy/Vot_a3_microsequencer_top"],
+                    build,
+                    marker,
+                ),
+            ]
+            cases = [future.result() for future in futures]
 
     sources = {
         path: sha256_file(ROOT / path)

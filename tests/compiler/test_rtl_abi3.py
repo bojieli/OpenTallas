@@ -207,7 +207,7 @@ def test_issue_events_are_legal_opcodes_and_counted() -> None:
             if family is not Major.RECOVERY:
                 assert issue["descriptor_id"] != NO_ID
             total += 1
-    assert total == vectors["issue_event_count"] == 182
+    assert total == vectors["issue_event_count"] == 185
     assert vectors["case_count"] == len(vectors["cases"])
     assert vectors["program_run_count"] == sum(
         1 for case in vectors["cases"] if case["runs_program"]
@@ -496,6 +496,30 @@ def test_a18_vectors_reach_a_non_leading_axis_and_a_group_unit() -> None:
         assert any(reason in error for error in report.errors), (name, report.errors)
 
 
+def test_a26_edge_mask_reuses_one_offset_and_clamps_only_the_tail() -> None:
+    """The RTL and functional resolver see a 4, 4, 2 rolling-buffer extent."""
+    case = next(
+        case
+        for case in _vectors()["cases"]
+        if case["name"] == "a26_edge_mask_partial"
+    )
+    assert case["admitted"] is True
+    source = [
+        view
+        for view in case["expected_views"]
+        if view["slot"] == 0 and view["loops"]
+    ]
+    destination = [
+        view
+        for view in case["expected_views"]
+        if view["slot"] == 4 and view["loops"]
+    ]
+    assert [view["extent"] for view in source] == [4, 4, 2]
+    assert [view["extent"] for view in destination] == [4, 4, 2]
+    assert {view["element_offset"] for view in source} == {0}
+    assert len({view["element_offset"] for view in destination}) == 1
+
+
 def test_a18_leaves_every_pre_amendment_view_where_it_was() -> None:
     """A13 is the ``extent_axis = 0, extent_unit = 1`` case, checked not asserted.
 
@@ -557,8 +581,9 @@ def test_a18_vector_images_move_no_pre_amendment_extent() -> None:
 
     Later amendments that add a non-A18 case add to the non-A18 side of the
     count, and the number below moves with them: A21's ``a21_unstaged_commit``
-    resolves three, taking 401 to 404.  What the assertion pins is the extent
-    rule, which is checked view by view below and has not moved.
+    resolves three, taking 401 to 404, and A26's fixed-edge transfer resolves
+    six, taking it to 410. What the assertion pins is the extent rule, which is
+    checked view by view below and has not moved.
     """
     recorded = _vectors()
     views = [
@@ -575,7 +600,7 @@ def test_a18_vector_images_move_no_pre_amendment_extent() -> None:
         if not case["name"].startswith("a18")
         for view in case["expected_views"]
     ]
-    assert len(legacy) == 404
+    assert len(legacy) == 410
     assert all(view["extent_axis"] == 0 for view in legacy)
     assert all(view["extent"] == view["dim0"] for view in legacy)
     # And the A18 cases are the only place a non-zero axis appears at all.
@@ -946,7 +971,7 @@ def test_campaign_replays_both_simulators(tmp_path: Path) -> None:
         assert "/tmp/" not in case["compile_command"]
     assert "Verilator 5.05" in summary["tools"]["verilator"]["version"]
     assert "version 11.0" in summary["tools"]["iverilog"]["version"]
-    assert summary["correlation"]["issue_event_count"] == 182
+    assert summary["correlation"]["issue_event_count"] == 185
     assert summary["correlation"]["reference"] == "runtime.sim.device.Device"
     # A view comparison that compared nothing would be a vacuous pass.
     assert summary["correlation"]["view_resolution_count"] == (
@@ -980,7 +1005,7 @@ def test_retained_campaign_artifact_is_bound_to_these_sources() -> None:
 # ---------------------------------------------------------------------------
 # 4. the deployments this program ships, co-simulated
 # ---------------------------------------------------------------------------
-# The 64 vectors above are real ABI 3.0 programs written *for* the campaign.
+# The 65 vectors above are real ABI 3.0 programs written *for* the campaign.
 # These bind the separate campaign that replays the three programs the project
 # claims to run.  The deployment bundles live under the ignored build/ tree, so
 # anything that needs one skips; everything that can be checked from the

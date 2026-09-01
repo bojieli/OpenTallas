@@ -9,7 +9,8 @@
 // predicated-off, issued, loop-iteration, branch, wait and state counts; the
 // engine-issue sequence (family, subopcode, descriptor ID) in order; the
 // resolved operand tensor views (descriptor, operand slot, leading extent and
-// element offset) in order, which is where amendments A4 and A13 are checked;
+// element offset) in order, which is where amendments A4, A13, A18 and A26 are
+// checked;
 // whether the staged state commit was applied or discarded; and the trap class
 // and first faulting instruction.
 //
@@ -214,7 +215,7 @@ module tb_a3_microsequencer;
         end
     end
 
-    // -- resolved operand views (amendments A4, A13 and A18) -------------
+    // -- resolved operand views (amendments A4, A13, A18 and A26) ---------
     // The view port is an observation pulse, not a handshake, so every
     // assertion is one event.  Order is program order, then operand order.
     always @(posedge clk) begin
@@ -238,7 +239,7 @@ module tb_a3_microsequencer;
                 $display("FAIL: view %0d (descriptor %0d) resolved extent %0d expected %0d",
                          view_seen, view_descriptor_id, view_extent,
                          view_mem[view_slot_base + 2]);
-                $fatal(1, "A13/A18 resolved extent mismatch");
+                $fatal(1, "A13/A18/A26 resolved extent mismatch");
             end
             if (view_element_offset !== {view_mem[view_slot_base + 4],
                                          view_mem[view_slot_base + 3]}) begin

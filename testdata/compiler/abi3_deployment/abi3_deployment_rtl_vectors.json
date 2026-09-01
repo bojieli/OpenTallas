@@ -1258,12 +1258,12 @@
     "descriptor_prefix_bytes": 192,
     "descriptor_words": 4096,
     "descriptor_words_used": 3866,
-    "header_words": 4096,
+    "header_words": 8192,
     "header_words_used": 192,
     "issue_stride": 3,
     "program_words": 2048,
     "program_words_used": 1321,
-    "symbol_words": 1024,
+    "symbol_words": 2048,
     "symbol_words_used": 96,
     "view_stride": 7
   },
@@ -1273,9 +1273,9 @@
     "a3_deployment_meta.hex": "77e46a58b0f62e41c801b25d39ee1263b9d6a6df75eeb18a2be45f959882de0f",
     "a3_deployment_view.hex": "ead1b29bcbb078eb123a7590b023c2425a40d2dfd168dd3b4a434f658a9df201",
     "a3_descriptor.hex": "ed6ccb6d17e8fa2313ea8d8eee248741ecd6836b6cda02ddd6b778bb768ac03e",
-    "a3_header.hex": "77ad4ee94064de9d8abd298f187a174e8a49bb9bbec8a0d02c42c8e659758a39",
+    "a3_header.hex": "16e90910199141fe24aea33ee9055b31ea04e98d3ca8fea74b45072c6fabceb7",
     "a3_program.hex": "334ed334f03b4e25c4c4e00cb9fb8cb7037caabe7dd7da62178ff31d79b5e7b2",
-    "a3_symbol.hex": "d4c9aabe466c84a9aea82681a87b6990e9611049f3b072f116a7edcca6ea9856"
+    "a3_symbol.hex": "90fdf0b8b0eb717d85ba1124804e10e0fa6e93cd5fa821749bdd571d119582c2"
   },
   "issue_event_count": 19029,
   "issue_reference": "runtime.sim.device.Device's own trace: for every engine issue the family, subopcode, descriptor ID and the instruction index that issued it, in program order",

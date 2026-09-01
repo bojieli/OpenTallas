@@ -539,6 +539,31 @@ class ViewResolver:
                 leading_loop = self._remaining_extent(
                     index, value, symbols, numerator, unit, bias, leading_loop
                 )
+        # Amendment A26: ``edge_mask_id`` names an active symbol-bounded loop
+        # whose remaining extent clamps this view without advancing its base
+        # address.  A rolling activation buffer is exactly that shape: every
+        # iteration reuses element zero of one block-sized object, while the
+        # final iteration must still expose only the request's remaining rows.
+        # A LOOP_INDUCTION dynamic term cannot express it because its stride is
+        # also the address advance; keeping the two meanings separate is why
+        # the tensor-view record has an edge-mask field.
+        edge_mask = int(payload["edge_mask_id"])
+        if edge_mask != NO_ID:
+            try:
+                iteration = loops[edge_mask]
+            except KeyError:
+                raise MemoryError_(
+                    f"view {view_id}: edge-mask loop {edge_mask} is not active"
+                ) from None
+            leading_loop = self._remaining_extent(
+                edge_mask,
+                int(iteration),
+                symbols,
+                numerator,
+                unit,
+                bias,
+                leading_loop,
+            )
         dims = [payload[f"dim{a}"] for a in range(rank)]
         if leading_loop is not None and dims:
             # A symbol-bounded loop's final iteration is partial: a block of 512

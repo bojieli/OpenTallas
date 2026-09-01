@@ -1934,21 +1934,19 @@ executed rather than argued: the microsequencer co-simulation
 11.0 and Verilator 5.050 —
 
 ```text
-PASS: ABI3 RTL microsequencer cases=64 headers=64 programs=52 issues=182 views=454 traps=11
+PASS: ABI3 RTL microsequencer cases=65 headers=65 programs=53 issues=185 views=460 traps=11
 ```
 
 — with a correlation set that names "state prepare, commit, discard, read and
 advance counts", "state commit applied or discarded, and rows committed" and
 "trap class and first faulting instruction" among the quantities compared. All
-sixty-four vectors carry `REQUEST_SPAN` or `UNSTAGED`, and on both the block
+sixty-five vectors carry `REQUEST_SPAN` or `UNSTAGED`, and on both the block
 computes exactly what it computed before.
 
-**The rule is not yet exercised above the ring, and that is owed.** The
-microsequencer vector set is *full*: its header and symbol images hold sixty-four
-words and sixteen words per case against a sixty-four-case set, so a
-sixty-fifth case overflows both, and enlarging them is a change to
-`rtl/test/a3_microsequencer_top.sv` and its harness rather than to this
-amendment. The shipped-deployment co-simulation does run the DeepSeek wafer
+**The rule is not yet exercised above the ring, and that is owed.** Amendment
+A26 enlarged the microsequencer campaign's header and symbol memories and added
+its sixty-fifth case, but that case exercises a fixed-address view edge rather
+than a saturating state commit. The shipped-deployment co-simulation does run the DeepSeek wafer
 program, whose sliding window now declares `SATURATING`, but it runs it at a
 sixteen-token prompt — below the ring, where a saturating commit is
 byte-identical to the one before it. So the RTL executes the new value and
@@ -1991,6 +1989,45 @@ and
 `spec/abi3/descriptor_payloads.json` is unchanged: A25 assigns a value in a
 registry the frozen layout already carries, which is additive in exactly the way
 A21 was.
+
+### 12.17 Amendment A26 — an edge mask clamps without advancing an address
+
+`TENSOR_VIEW.edge_mask_id`, at payload offset 12, names a `LOOP_CONTROL`
+descriptor. The field was present in the frozen 128-byte layout but had no
+resolution or admission semantics; `NO_ID` continues to mean no edge mask.
+
+An edge-masked view uses A18's declared axis and affine extent exactly as a
+dynamic `LOOP_INDUCTION` term does, with one deliberate difference: the loop
+contributes **no element-offset term**. Writing `i` for the named loop's active
+induction value, `d` for its bound divisor and `S` for its bound symbol, the
+resolver computes
+
+```
+step   = extent_numerator * d / extent_unit
+remain = extent_numerator * (S - i*d) / extent_unit + extent_bias
+dim[extent_axis] = remain if 0 < remain < dim[extent_axis]
+                   else dim[extent_axis]
+element_offset   = element_offset       # unchanged by the edge mask
+```
+
+The division, bias and zero-extent rules are A18's. The named loop must be
+active at resolution, verified at admission, runtime-symbol bounded, and form a
+whole axis step; the declared extent may not exceed `step + extent_bias`.
+Unlike an A4 term, no stride test is needed because an edge mask states that it
+bounds the axis rather than that it walks the axis.
+
+This is the rolling-buffer form. A producer and its consumers may execute
+inside one block loop while reusing element zero of one block-sized activation
+object on every iteration. The final iteration still presents only the rows the
+request owns, but no later iteration can address beyond the physical block.
+Using an ordinary dynamic term cannot state that: a zero stride preserves the
+address but does not walk and therefore cannot clamp, while a block stride
+clamps but requires a full-context object.
+
+The change is additive. Every released view already carries `NO_ID` in the
+field and keeps its old meaning and bytes. The functional resolver, independent
+verifier and RTL view resolver all implement the same rule; an inactive edge
+loop is a memory trap rather than a silent full-extent fallback.
 
 ## 13. Amendments made at the architecture freeze
 
@@ -2043,6 +2080,7 @@ remain normative.
 | A23 | an event ID is bounded by the capability's ID space, not by a count of events | this document, section 12.13 |
 | A24 | an event is a level, and every retiring instruction that names one raises it | this document, section 12.14 |
 | A25 | a commit whose row axis is a ring saturates onto it: the rows published are `min(span, capacity_rows)`, in circular slot order | this document, section 12.16; operator conventions, section 22 |
+| A26 | an edge mask clamps a rolling tensor view at the final partial loop iteration without advancing its element offset | this document, section 12.17 |
 
 Two of these carry more weight than the rest. **A4** and **A13** together are
 what make a loop-compressed program possible at all: A4 lets a descriptor be a

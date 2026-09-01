@@ -402,6 +402,9 @@ class ArenaSlot:
     dtype: str
     symbolic_rows: bool
     tenants: tuple[str, ...]
+    #: The producer/consumer pipeline that reuses this fixed-address block.
+    #: Empty on every ordinary full-span arena.
+    rolling_group: str = ""
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -412,6 +415,7 @@ class ArenaSlot:
             "dtype": self.dtype,
             "symbolic_rows": self.symbolic_rows,
             "tenants": list(self.tenants),
+            **({"rolling_group": self.rolling_group} if self.rolling_group else {}),
         }
 
 
@@ -620,6 +624,8 @@ class OperandPlan:
     context_numerator: int = 1
     context_unit: int = 1
     context_bias: int = 0
+    #: The tensor lives in one fixed-address block reused by a shared row loop.
+    rolling: bool = False
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -651,6 +657,7 @@ class OperandPlan:
                 != (1, 1, 0)
                 else {}
             ),
+            **({"rolling": True} if self.rolling else {}),
             # And for the context axis: stated only by an operand that has one,
             # so no plan written before the context loop existed moves.
             **(
@@ -699,6 +706,9 @@ class KernelPlan:
     link_class: str
     shard_columns: int
     depth: int
+    #: Consecutive kernels with the same non-empty ID execute inside one shared
+    #: token-block loop. Empty on ordinary producer-then-consumer schedules.
+    stream_group: str = ""
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -730,6 +740,7 @@ class KernelPlan:
             "link_class": self.link_class,
             "shard_columns": self.shard_columns,
             "depth": self.depth,
+            **({"stream_group": self.stream_group} if self.stream_group else {}),
         }
 
 
@@ -1720,6 +1731,9 @@ def build_plan(
     )
     warnings.extend(warn_state)
     state_of_tensor = _bind_state_tensors(graph, tensors, state_of_resource)
+    stream_kernels, rolling_tensors = _streaming_schedule(
+        graph, tensors, body_position, band_of_kernel, block
+    )
     activation_keys, arena_slots, arena_of_key, host_objects = _place_activations(
         graph,
         tensors,
@@ -1730,6 +1744,7 @@ def build_plan(
         span_max,
         block,
         state_of_tensor,
+        rolling_tensors,
         reuse_arenas,
     )
 
@@ -1747,6 +1762,8 @@ def build_plan(
         block,
         node_count,
         capability,
+        stream_kernels,
+        rolling_tensors,
     )
     warnings.extend(warn_kernels)
 
@@ -2608,6 +2625,104 @@ def _emission_order(
     return tuple(units), body_position, band_of_kernel
 
 
+# -- bounded activation pipelines ------------------------------------------
+def _streaming_schedule(
+    graph: KernelGraph,
+    tensors: Mapping[str, Tensor],
+    body_position: Mapping[int, int],
+    band_of_kernel: Mapping[int, int],
+    block: int,
+) -> tuple[dict[int, tuple[str, int]], dict[str, tuple[str, int]]]:
+    """Find producer/consumer runs that may reuse one fixed-address block.
+
+    A rolling arena is legal only when every consumer of the value executes in
+    the same shared row loop as its producer.  Two released DeepSeek structures
+    have that property and account for the maximum-context placement failure:
+
+    * ``INDEX_SCORE`` immediately followed by the ``INDEX_TOPK`` that consumes
+      its score plane, one query token at a time; and
+    * ``EXPERT_DISPATCH`` through the first following ``EXPERT_REDUCE`` in the
+      same layer, one ordinary token block at a time.
+
+    The recognition is structural and closed. A value with an external
+    consumer stays full-span, and a group that crosses a layer/band boundary is
+    refused by omission rather than guessed into a pipeline.
+    """
+    by_layer: dict[int | None, list[Kernel]] = {}
+    for kernel in graph.kernels:
+        by_layer.setdefault(kernel.layer, []).append(kernel)
+    consumers: dict[str, list[int]] = {}
+    for kernel in graph.kernels:
+        for name in kernel.inputs:
+            consumers.setdefault(name, []).append(kernel.index)
+            scale = tensors[name].scale_tensor_id
+            if scale:
+                # A block-scaled operand consumes its scale view implicitly;
+                # it is not a separate operator slot, but its lifetime and
+                # rolling legality are the data operand's exactly.
+                consumers.setdefault(scale, []).append(kernel.index)
+
+    members: dict[int, tuple[str, int]] = {}
+
+    def group_id(start: Kernel, end: Kernel, kind: str) -> str | None:
+        start_band = band_of_kernel.get(start.index)
+        if start_band != band_of_kernel.get(end.index):
+            return None
+        if start.layer != end.layer:
+            return None
+        if start_band is None:
+            return f"k{start.index}.{kind}.{end.index}"
+        return (
+            f"b{start_band}.{kind}.p{body_position[start.index]}-"
+            f"{body_position[end.index]}"
+        )
+
+    for layer, kernels in by_layer.items():
+        if layer is None:
+            continue
+        for position, kernel in enumerate(kernels):
+            if kernel.kind == "INDEX_SCORE" and position + 1 < len(kernels):
+                end = kernels[position + 1]
+                if end.kind != "INDEX_TOPK" or not any(
+                    name in end.inputs for name in kernel.outputs
+                ):
+                    continue
+                gid = group_id(kernel, end, "index_stream")
+                if gid is None:
+                    continue
+                for member in (kernel, end):
+                    members[member.index] = (gid, 1)
+            if kernel.kind != "EXPERT_DISPATCH":
+                continue
+            end = next(
+                (candidate for candidate in kernels[position + 1 :]
+                 if candidate.kind == "EXPERT_REDUCE"),
+                None,
+            )
+            if end is None:
+                continue
+            gid = group_id(kernel, end, "expert_stream")
+            if gid is None:
+                continue
+            end_position = kernels.index(end)
+            for member in kernels[position : end_position + 1]:
+                members[member.index] = (gid, block)
+
+    rolling: dict[str, tuple[str, int]] = {}
+    for producer in graph.kernels:
+        spec = members.get(producer.index)
+        if spec is None:
+            continue
+        for name in producer.outputs:
+            tensor = tensors[name]
+            uses = consumers.get(name, ())
+            if not uses or tensor.role in {"input", "output", "weight", "constant", "state"}:
+                continue
+            if all(members.get(index) == spec for index in uses):
+                rolling[name] = spec
+    return members, rolling
+
+
 # -- activations ------------------------------------------------------------
 def _place_activations(
     graph: KernelGraph,
@@ -2619,6 +2734,7 @@ def _place_activations(
     span_max: int,
     block: int,
     state_of_tensor: Mapping[str, Sequence[Any]],
+    rolling_tensors: Mapping[str, tuple[str, int]],
     reuse_arenas: bool = True,
 ) -> tuple[
     dict[str, str], tuple[ArenaSlot, ...], dict[str, str], dict[str, dict[str, Any]]
@@ -2676,7 +2792,7 @@ def _place_activations(
         _unify_loop_carried(graph, bands, keys)
 
     # Size and liveness.
-    sizes: dict[str, tuple[int, int, int, str, bool]] = {}
+    sizes: dict[str, tuple[int, int, int, str, bool, str]] = {}
     first_use: dict[str, int] = {}
     last_use: dict[str, int] = {}
     carried: set[str] = set()
@@ -2690,12 +2806,26 @@ def _place_activations(
                 continue
             tensor = tensors[name]
             rows, cols, symbolic = matrix_shape(tensor, span_max)
-            if symbolic:
+            rolling_group = ""
+            rolling = rolling_tensors.get(name)
+            if rolling is not None:
+                rolling_group, rolling_block = rolling
+                extent = request_extent_of(tensor, span_max)
+                step = extent.step(rolling_block)
+                if step is None:
+                    raise PlanError(
+                        f"rolling tensor {name!r} cannot form a whole row step "
+                        f"from block {rolling_block}"
+                    )
+                rows = step + extent.bias
+            elif symbolic:
                 rows = round_up(rows, block)
             size = bytes_for(rows * cols, tensor.dtype)
             previous = sizes.get(key)
             if previous is None or size > previous[0]:
-                sizes[key] = (size, rows, cols, tensor.dtype, symbolic)
+                sizes[key] = (
+                    size, rows, cols, tensor.dtype, symbolic, rolling_group
+                )
             first_use.setdefault(key, pos)
             last_use[key] = max(last_use.get(key, pos), pos)
         for name in kernel.inputs:
@@ -2708,7 +2838,19 @@ def _place_activations(
             if key not in sizes:
                 tensor = tensors[name]
                 rows, cols, symbolic = matrix_shape(tensor, span_max)
-                if symbolic:
+                rolling_group = ""
+                rolling = rolling_tensors.get(name)
+                if rolling is not None:
+                    rolling_group, rolling_block = rolling
+                    extent = request_extent_of(tensor, span_max)
+                    step = extent.step(rolling_block)
+                    if step is None:
+                        raise PlanError(
+                            f"rolling tensor {name!r} cannot form a whole row "
+                            f"step from block {rolling_block}"
+                        )
+                    rows = step + extent.bias
+                elif symbolic:
                     rows = round_up(rows, block)
                 sizes[key] = (
                     bytes_for(rows * cols, tensor.dtype),
@@ -2716,6 +2858,7 @@ def _place_activations(
                     cols,
                     tensor.dtype,
                     symbolic,
+                    rolling_group,
                 )
                 first_use.setdefault(key, pos)
 
@@ -2736,10 +2879,21 @@ def _place_activations(
     slots: list[dict[str, Any]] = []
     arena_of_key: dict[str, str] = {}
     for key in arena_keys:
-        size, rows, cols, dtype, symbolic = sizes[key]
+        size, rows, cols, dtype, symbolic, rolling_group = sizes[key]
         chosen = None
-        for slot in slots if reuse_arenas else ():
-            if slot["size_bytes"] != size or slot["dtype"] != dtype:
+        # A rolling pipeline keeps one explicit buffer per value.  Reusing a
+        # second stage's object merely because the liveness intervals do not
+        # overlap would make two numerically distinct operand bindings collapse
+        # to one descriptor under the shared edge loop, and it leaves no
+        # physical separation for an asynchronous producer/consumer fence to
+        # protect. The buffers are block-sized; clarity costs megabytes here,
+        # while the eliminated full-context planes are tens of gigabytes.
+        for slot in slots if reuse_arenas and not rolling_group else ():
+            if (
+                slot["size_bytes"] != size
+                or slot["dtype"] != dtype
+                or slot["rolling_group"] != rolling_group
+            ):
                 continue
             if slot["free_at"] <= first_use.get(key, 0):
                 chosen = slot
@@ -2752,6 +2906,7 @@ def _place_activations(
                 "cols": cols,
                 "dtype": dtype,
                 "symbolic": symbolic,
+                "rolling_group": rolling_group,
                 "tenants": [],
                 "free_at": 0,
             }
@@ -2761,7 +2916,7 @@ def _place_activations(
         arena_of_key[key] = chosen["slot_id"]
 
     for key in host_keys:
-        size, rows, cols, dtype, symbolic = sizes[key]
+        size, rows, cols, dtype, symbolic, _rolling_group = sizes[key]
         host_objects[key] = {
             "key": key,
             "size_bytes": size,
@@ -2780,6 +2935,7 @@ def _place_activations(
             dtype=slot["dtype"],
             symbolic_rows=slot["symbolic"],
             tenants=tuple(slot["tenants"]),
+            rolling_group=slot["rolling_group"],
         )
         for slot in slots
     )
@@ -3839,6 +3995,8 @@ def _plan_kernels(
     block: int,
     node_count: int,
     capability: Capability,
+    stream_kernels: Mapping[int, tuple[str, int]],
+    rolling_tensors: Mapping[str, tuple[str, int]],
 ) -> tuple[tuple[KernelPlan, ...], list[str]]:
     """Plan one engine operation per kernel.
 
@@ -3954,6 +4112,14 @@ def _plan_kernels(
             # the expert reduction already make -- and it is bounded by the
             # capability's own loop trip rather than by the context.
             kernel_block = 1
+        stream_spec = stream_kernels.get(kernel.index)
+        if stream_spec is not None:
+            # Every member of a fixed-address pipeline shares one loop
+            # divisor. In particular this makes INDEX_TOPK one-token like its
+            # score producer, and lets EXPERT_SUM reduce six contribution
+            # planes for a whole token block rather than materialising the
+            # complete context.
+            kernel_block = int(stream_spec[1])
 
         out_name = kernel.outputs[0] if kernel.outputs else None
         if out_name is not None:
@@ -4160,6 +4326,7 @@ def _plan_kernels(
                     depth=depth,
                     bank=bank,
                     context=context_loop is not None,
+                    rolling=kernel.inputs[ir_slot] in rolling_tensors,
                 )
             )
         for abi_slot, name in enumerate(kernel.outputs):
@@ -4184,6 +4351,7 @@ def _plan_kernels(
                     depth=depth,
                     bank=bank,
                     context=context_loop is not None,
+                    rolling=name in rolling_tensors,
                 )
             )
 
@@ -4228,6 +4396,7 @@ def _plan_kernels(
                 link_class=link_class,
                 shard_columns=shard_columns,
                 depth=depth,
+                stream_group=stream_spec[0] if stream_spec is not None else "",
             )
         )
     if arity_faults:
@@ -4270,6 +4439,7 @@ def _operand_plan(
     depth: int,
     bank: int = 0,
     context: bool = False,
+    rolling: bool = False,
 ) -> OperandPlan:
     tensor = tensors[name]
     rows, cols, symbolic = matrix_shape(tensor, span_max)
@@ -4369,6 +4539,7 @@ def _operand_plan(
         context_numerator=context_extent.numerator,
         context_unit=context_extent.unit,
         context_bias=context_extent.bias,
+        rolling=rolling,
     )
 
 

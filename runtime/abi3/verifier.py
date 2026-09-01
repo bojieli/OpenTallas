@@ -801,6 +801,10 @@ class Verifier:
                     or payload[f"term{slot}_stride"]
                 ):
                     self._fail(f"view {vid}: dynamic term beyond declared count")
+            edge_mask = int(payload["edge_mask_id"])
+            if edge_mask != NO_ID:
+                if self._verify_edge_mask(vid, edge_mask, payload):
+                    walked = True
             self._verify_extent_reachable(vid, payload, walked)
             obj = self._descriptor(
                 descriptor.primary_object_id,
@@ -822,6 +826,67 @@ class Verifier:
         self.checks.setdefault("block_extent", True)
         self.checks.setdefault("block_scale", True)
         self.checks.setdefault("extent_axis", True)
+        self.checks.setdefault("edge_mask", True)
+
+    def _verify_edge_mask(
+        self,
+        vid: int,
+        loop_id: int,
+        payload: Mapping[str, Any],
+    ) -> bool:
+        """Verify A26's fixed-address loop-tail clamp.
+
+        The mask names the same bounded loop geometry A13/A18 already use, but
+        deliberately contributes no dynamic address term.  Its declared axis
+        therefore has to fit in one affine loop block, and the descriptor must
+        be a verified, runtime-symbol-bounded LOOP_CONTROL record.
+        """
+        trip = self._loop_trip.get(loop_id)
+        if trip is None:
+            self._fail(
+                f"view {vid}: edge-mask descriptor {loop_id} is not a verified loop"
+            )
+            self.checks["edge_mask"] = False
+            return False
+        try:
+            loop = self.deployment.table.get(
+                loop_id, ExtendedDescriptorType.LOOP_CONTROL
+            )
+        except Exception:
+            self._fail(
+                f"view {vid}: edge-mask descriptor {loop_id} is not LOOP_CONTROL"
+            )
+            self.checks["edge_mask"] = False
+            return False
+        loop_payload = loop.payload
+        if loop_payload["bound_selector_kind"] != SelectorKind.RUNTIME_SYMBOL:
+            self._fail(
+                f"view {vid}: edge-mask loop {loop_id} is not runtime-symbol bounded"
+            )
+            self.checks["edge_mask"] = False
+            return False
+        divisor = int(loop_payload["bound_divisor"])
+        axis = int(payload["extent_axis"])
+        unit = max(int(payload["extent_unit"]), 1)
+        numerator = max(int(payload["extent_numerator"]), 1)
+        bias = int(payload["extent_bias"])
+        step = iteration_extent(divisor, numerator, unit)
+        if step is None:
+            self._fail(
+                f"view {vid}: edge-mask loop {loop_id}'s divisor {divisor} does "
+                f"not form a whole axis-{axis} step under {numerator}/{unit}"
+            )
+            self.checks["edge_mask"] = False
+            return False
+        block = step + bias
+        extent = int(payload[f"dim{axis}"])
+        if extent > block:
+            self._fail(
+                f"view {vid}: edge-masked axis-{axis} extent {extent} exceeds "
+                f"the {block} elements one iteration of loop {loop_id} covers"
+            )
+            self.checks["edge_mask"] = False
+        return True
 
     def _verify_block_scale(self, vid: int, payload: Mapping[str, Any]) -> None:
         """A block-scaled view's geometry must admit an exact scale index.
@@ -1269,6 +1334,20 @@ class Verifier:
         """
         if int(payload["extent_axis"]) != axis:
             return False
+        edge_mask = int(payload["edge_mask_id"])
+        if edge_mask != NO_ID:
+            try:
+                loop = self.deployment.table.get(
+                    edge_mask, ExtendedDescriptorType.LOOP_CONTROL
+                )
+            except Exception:
+                return False
+            if loop.payload["bound_selector_kind"] != SelectorKind.RUNTIME_SYMBOL:
+                return False
+            unit = max(int(payload["extent_unit"]), 1)
+            numerator = max(int(payload["extent_numerator"]), 1)
+            divisor = int(loop.payload["bound_divisor"])
+            return divisor > 0 and iteration_extent(divisor, numerator, unit) is not None
         unit = max(int(payload["extent_unit"]), 1)
         numerator = max(int(payload["extent_numerator"]), 1)
         for slot in range(int(payload["dynamic_term_count"])):

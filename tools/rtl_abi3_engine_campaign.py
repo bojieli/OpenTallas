@@ -24,6 +24,7 @@ silently accepted.
 from __future__ import annotations
 
 import argparse
+from concurrent.futures import ThreadPoolExecutor
 import hashlib
 import json
 import os
@@ -297,22 +298,28 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
             "-CFLAGS",
             "-std=c++17",
         ]
-        cases = [
-            simulator_case(
-                "iverilog",
-                iverilog_compile,
-                [str(executables["vvp"]), "e3_sim.vvp"],
-                build,
-                marker,
-            ),
-            simulator_case(
-                "verilator",
-                verilator_compile,
-                ["./obj_e3/Vot_a3_engine_top"],
-                build,
-                marker,
-            ),
-        ]
+        # Each simulator writes a distinct executable/build tree. Run both in
+        # parallel, then resolve them in canonical order for stable evidence.
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            futures = [
+                pool.submit(
+                    simulator_case,
+                    "iverilog",
+                    iverilog_compile,
+                    [str(executables["vvp"]), "e3_sim.vvp"],
+                    build,
+                    marker,
+                ),
+                pool.submit(
+                    simulator_case,
+                    "verilator",
+                    verilator_compile,
+                    ["./obj_e3/Vot_a3_engine_top"],
+                    build,
+                    marker,
+                ),
+            ]
+            cases = [future.result() for future in futures]
 
     sources = {
         path: sha256_file(ROOT / path)

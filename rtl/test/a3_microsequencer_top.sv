@@ -27,9 +27,9 @@ module ot_a3_microsequencer_top
     import ot_a3_pkg::*;
 #(
     parameter integer PROGRAM_WORDS = 2048,
-    parameter integer HEADER_WORDS  = 4096,
+    parameter integer HEADER_WORDS  = 8192,
     parameter integer DESC_WORDS    = 4096,
-    parameter integer SYMBOL_WORDS  = 1024
+    parameter integer SYMBOL_WORDS  = 2048
 ) (
     input  wire        clk,
     input  wire        rst_n,

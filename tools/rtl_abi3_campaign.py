@@ -18,6 +18,7 @@ silently accepted.
 from __future__ import annotations
 
 import argparse
+from concurrent.futures import ThreadPoolExecutor
 import hashlib
 import json
 import os
@@ -287,22 +288,29 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
             "-CFLAGS",
             "-std=c++17",
         ]
-        cases = [
-            simulator_case(
-                "iverilog",
-                iverilog_compile,
-                [str(executables["vvp"]), "a3_sim.vvp"],
-                build,
-                marker,
-            ),
-            simulator_case(
-                "verilator",
-                verilator_compile,
-                ["./obj_a3/Vot_a3_microsequencer_top"],
-                build,
-                marker,
-            ),
-        ]
+        # The simulators write disjoint outputs (a3_sim.vvp and obj_a3), so
+        # compile and replay them concurrently.  Resolve the futures in this
+        # fixed order to keep the canonical evidence deterministic.
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            futures = [
+                pool.submit(
+                    simulator_case,
+                    "iverilog",
+                    iverilog_compile,
+                    [str(executables["vvp"]), "a3_sim.vvp"],
+                    build,
+                    marker,
+                ),
+                pool.submit(
+                    simulator_case,
+                    "verilator",
+                    verilator_compile,
+                    ["./obj_a3/Vot_a3_microsequencer_top"],
+                    build,
+                    marker,
+                ),
+            ]
+            cases = [future.result() for future in futures]
 
     sources = {
         path: sha256_file(ROOT / path)
@@ -343,8 +351,9 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
                 "resolved operand tensor views in operand order: descriptor, "
                 "slot, resolved extent, element offset, rank and the axis that "
                 "extent belongs to -- amendment A4 dynamic index terms, "
-                "amendment A13 partial final extent and amendment A18 extent "
-                "axis and unit, against runtime.sim.memory.ViewResolver.resolve",
+                "amendment A13 partial final extent, amendment A18 extent "
+                "axis and unit, and amendment A26 fixed-offset tail masking, "
+                "against runtime.sim.memory.ViewResolver.resolve",
                 "state prepare, commit, discard, read and advance counts",
                 "state commit applied or discarded, and rows committed",
                 "trap class and first faulting instruction",

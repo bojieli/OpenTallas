@@ -4,7 +4,7 @@
     "minor": 0
   },
   "capability_digest": "1c6c4dd347f06b589b030ef7f17fc7affad0a6583e91f7ae13c13b147dd955e4",
-  "case_count": 64,
+  "case_count": 65,
   "cases": [
     {
       "admitted": true,
@@ -14097,6 +14097,229 @@
     },
     {
       "admitted": true,
+      "declared_retired_work": 8,
+      "descriptor_count": 21,
+      "descriptor_table_sha256": "8f0d8ba945adc7c9f43b04a19f33765ecb08376ecc07768c3833519e0cb270c2",
+      "device_executed": true,
+      "entrypoint_id": 0,
+      "expected": {
+        "branches": 0,
+        "complete": true,
+        "fetched": 8,
+        "first_fault": 4294967295,
+        "issued": 3,
+        "loop_iterations": 3,
+        "predicated_off": 0,
+        "retired": 8,
+        "state_commits": 0,
+        "state_commits_applied": 0,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 0,
+        "state_reads": 0,
+        "state_rows_committed": 0,
+        "status": 0,
+        "trap_class": 0,
+        "wait_events": 0
+      },
+      "expected_header_legal": true,
+      "expected_header_trap_class": 0,
+      "expected_issues": [
+        {
+          "descriptor_id": 19,
+          "family": 16,
+          "index": 1,
+          "mnemonic": "DMA.TRANSFER",
+          "sub": 0
+        },
+        {
+          "descriptor_id": 19,
+          "family": 16,
+          "index": 1,
+          "mnemonic": "DMA.TRANSFER",
+          "sub": 0
+        },
+        {
+          "descriptor_id": 19,
+          "family": 16,
+          "index": 1,
+          "mnemonic": "DMA.TRANSFER",
+          "sub": 0
+        }
+      ],
+      "expected_views": [
+        {
+          "descriptor_id": 16,
+          "dim0": 4,
+          "dims": [
+            4,
+            4
+          ],
+          "element_offset": 0,
+          "extent": 4,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
+          "index": 1,
+          "loops": {
+            "15": 0
+          },
+          "operand": "input_view_0",
+          "rank": 2,
+          "slot": 0
+        },
+        {
+          "descriptor_id": 17,
+          "dim0": 4,
+          "dims": [
+            4,
+            4
+          ],
+          "element_offset": 16,
+          "extent": 4,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
+          "index": 1,
+          "loops": {
+            "15": 0
+          },
+          "operand": "output_view_0",
+          "rank": 2,
+          "slot": 4
+        },
+        {
+          "descriptor_id": 16,
+          "dim0": 4,
+          "dims": [
+            4,
+            4
+          ],
+          "element_offset": 0,
+          "extent": 4,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
+          "index": 1,
+          "loops": {
+            "15": 1
+          },
+          "operand": "input_view_0",
+          "rank": 2,
+          "slot": 0
+        },
+        {
+          "descriptor_id": 17,
+          "dim0": 4,
+          "dims": [
+            4,
+            4
+          ],
+          "element_offset": 16,
+          "extent": 4,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
+          "index": 1,
+          "loops": {
+            "15": 1
+          },
+          "operand": "output_view_0",
+          "rank": 2,
+          "slot": 4
+        },
+        {
+          "descriptor_id": 16,
+          "dim0": 2,
+          "dims": [
+            2,
+            4
+          ],
+          "element_offset": 0,
+          "extent": 2,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
+          "index": 1,
+          "loops": {
+            "15": 2
+          },
+          "operand": "input_view_0",
+          "rank": 2,
+          "slot": 0
+        },
+        {
+          "descriptor_id": 17,
+          "dim0": 2,
+          "dims": [
+            2,
+            4
+          ],
+          "element_offset": 16,
+          "extent": 2,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
+          "index": 1,
+          "loops": {
+            "15": 2
+          },
+          "operand": "output_view_0",
+          "rank": 2,
+          "slot": 4
+        }
+      ],
+      "golden": {
+        "branches": 0,
+        "complete": true,
+        "fetched": 8,
+        "first_fault": 4294967295,
+        "issued": 3,
+        "loop_iterations": 3,
+        "message": "",
+        "predicated_off": 0,
+        "retired": 8,
+        "state_commits": 0,
+        "state_commits_applied": 0,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 0,
+        "state_reads": 0,
+        "state_rows_committed": 0,
+        "status": 0,
+        "trap_class": 0,
+        "wait_events": 0
+      },
+      "golden_counters": {
+        "control.loop_iterations": 3,
+        "engine.dma.descriptors": 3,
+        "instructions.fetched": 8,
+        "instructions.issued": 3,
+        "instructions.retired": 8
+      },
+      "instruction_count": 4,
+      "name": "a26_edge_mask_partial",
+      "note": "ten rows in four-row blocks: all three DMA issues reuse the same source and destination offsets, while A26 resolves their extents to 4, 4 and 2; the edge loop is not an A4 address term",
+      "phase": 0,
+      "program_sha256": "696ee65a336701ae17d6b8ab80a6136223af9573e30298a7820851a89141c93b",
+      "python_rejects_image": null,
+      "runs_program": true,
+      "state_descriptor_count": 1,
+      "symbols": {
+        "0": 10,
+        "4": 0,
+        "5": 0
+      },
+      "verifier_errors": []
+    },
+    {
+      "admitted": true,
       "declared_retired_work": 2,
       "descriptor_count": 16,
       "descriptor_table_sha256": "176d2982b51412eeac7dc1b5b78951b135686ecd77ba7c50eeb0eeb7ce185681",
@@ -15635,31 +15858,31 @@
     "case_words": 4096,
     "descriptor_prefix_bytes": 192,
     "descriptor_words": 4096,
-    "header_words": 4096,
+    "header_words": 8192,
     "issue_words": 2048,
     "program_words": 2048,
-    "symbol_words": 1024,
+    "symbol_words": 2048,
     "view_stride": 7,
     "view_words": 8192
   },
-  "header_admission_count": 64,
+  "header_admission_count": 65,
   "image_sha256": {
-    "a3_case.hex": "8de8e6482120b995699dcdd17566c58aa372f14b519c30e60697802136b39e64",
-    "a3_descriptor.hex": "e786c6bca52ef8e3a964fe1e7bece1f08a2b9063f3edbb265f481bf46efbfb17",
-    "a3_header.hex": "4ac31ca6620603fb345f73cfc8ea3ad7c52268288ae12d65955ffcf63c95ded9",
-    "a3_issue.hex": "517c5bd3ed2b1e188e836d23cf6eb86e492bcb063c7cf64559fef8638bc88b47",
-    "a3_meta.hex": "e5fe4ac943cd76e93a141d5bdab16b5591b8df209e1371a699587ef64e9a57ae",
-    "a3_program.hex": "82be908f9af16239dee9f13cc01387311f9aff87008b8d15a244f9e3832b28cf",
-    "a3_symbol.hex": "b9aaee8c8ed085f33f7fd92af914b98c005d34916593a321c39ece4f04a5be20",
-    "a3_view.hex": "e82bc3c2207a71107cab9862336cd848f6732acc531e3733e7df7364edc330be"
+    "a3_case.hex": "cedd167968baaf07fee93f66388bf2067f143e69c07452d65d2bce883a00e640",
+    "a3_descriptor.hex": "1f70e08132b5e12f9c8d167205ca38dc4e00078eeb6c663ac7cf47d595d5c3f6",
+    "a3_header.hex": "7a41271c1629b1e704a7c31044f00b8a959e78419f5d1b259e88344cc8db0b63",
+    "a3_issue.hex": "6288c2f15f9280adbd90575ae9b6341158df845f0194fbecc5bed487b8064ec5",
+    "a3_meta.hex": "7cc399f6383ef85363dea061d181c54ae3d60a7e5edf996598565c76e693fb10",
+    "a3_program.hex": "a47a7d05eb95ca78775799ec8e6f07e1e85e09fa4781e5fe22fba83d99fef9dd",
+    "a3_symbol.hex": "c63f50b11fd82703a75b8963d66b0f00ceed34cc72ea05cb3558655a412bb353",
+    "a3_view.hex": "5c7db34ba641a629439b1d569e40ec4867cb15262a60c4f85857abf8e3dff190"
   },
-  "issue_event_count": 182,
+  "issue_event_count": 185,
   "negative_case_count": 17,
-  "positive_case_count": 47,
-  "program_run_count": 52,
-  "required_marker": "PASS: ABI3 RTL microsequencer cases=64 headers=64 programs=52 issues=182 views=454 traps=11",
+  "positive_case_count": 48,
+  "program_run_count": 53,
+  "required_marker": "PASS: ABI3 RTL microsequencer cases=65 headers=65 programs=53 issues=185 views=460 traps=11",
   "schema": "opentallas.rtl.abi3_vectors.v1",
   "trap_count": 11,
-  "view_reference": "runtime.sim.memory.ViewResolver.resolve, evaluated against the loop bindings runtime.sim.device.Device recorded at each issue; amendments A4 (dynamic index terms), A13 (partial final iteration of a block loop) and A18 (the axis that iteration is partial in, and the unit it counts)",
-  "view_resolution_count": 454
+  "view_reference": "runtime.sim.memory.ViewResolver.resolve, evaluated against the loop bindings runtime.sim.device.Device recorded at each issue; amendments A4 (dynamic index terms), A13 (partial final iteration of a block loop), A18 (the axis that iteration is partial in, and the unit it counts) and A26 (tail masking without changing the view's fixed element offset)",
+  "view_resolution_count": 460
 }

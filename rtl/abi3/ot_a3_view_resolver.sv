@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 // ---------------------------------------------------------------------------
-// ABI 3.0 tensor-view resolver: amendments A4, A13 and A18.
+// ABI 3.0 tensor-view resolver: amendments A4, A13, A18 and A26.
 //
 // This block is the RTL transcription of runtime/sim/memory.ViewResolver.resolve
 // and its helpers _walks_extent_axis and _remaining_extent.  Those functions are
@@ -134,10 +134,14 @@ module ot_a3_view_resolver
     // dtype@0 rank@1 layout_class@2 dynamic_term_count@3, element_offset@16,
     // dim{i}@24+4i, stride{i}@48+4i, term{i} = {kind u16, index u16,
     // stride u32}@72+8i, extent_unit@108, extent_numerator@112, extent_bias@116,
-    // extent_axis@120.
+    // edge_mask_id@12, extent_axis@120.
     wire [7:0]  view_dtype       = payload[7:0];
     wire [7:0]  view_rank        = payload[15:8];
     wire [7:0]  view_terms       = payload[31:24];
+    // Amendment A26: an edge mask names an active loop whose final partial
+    // extent clamps the view but whose induction contributes no address
+    // offset.  This is the fixed-address rolling-buffer form.
+    wire [31:0] view_edge_mask   = payload[127:96];
     wire [63:0] view_offset      = payload[191:128];
     // Amendment A18: the unit at byte 108, the numerator at 112, the bias at
     // 116 and the axis at 120.  All four are zero on every view written before
@@ -239,6 +243,7 @@ module ot_a3_view_resolver
     localparam [3:0] S_DIV_EXT   = 4'd12;
     localparam [3:0] S_FOLD      = 4'd13;
     localparam [3:0] S_FINISH    = 4'd14;
+    localparam [3:0] S_EDGE_READ = 4'd15;
 
     reg [3:0]  state;
     reg [31:0] value;            // the selector's resolved value
@@ -251,6 +256,8 @@ module ot_a3_view_resolver
     reg [63:0] axis_extent;      // n * tokens / unit + bias, elements of the axis
     reg        remain_valid;     // "leading_loop is not None"
     reg [31:0] remain;           // the smallest resolved extent so far
+    reg        edge_phase;       // resolving edge_mask_id, not a dynamic term
+    reg        edge_done;
 
     // -- one shared 32x32 product ------------------------------------------
     reg  [31:0] mul_a;
@@ -364,6 +371,8 @@ module ot_a3_view_resolver
             axis_extent <= 64'd0;
             remain_valid <= 1'b0;
             remain <= 32'd0;
+            edge_phase <= 1'b0;
+            edge_done <= 1'b0;
             mul_a <= 32'd0;
             mul_b <= 32'd0;
             product <= 64'd0;
@@ -388,6 +397,8 @@ module ot_a3_view_resolver
                             slot <= 3'd0;
                             remain_valid <= 1'b0;
                             remain <= 32'd0;
+                            edge_phase <= 1'b0;
+                            edge_done <= 1'b0;
                             // "amendment A18 extent axis A is outside the
                             // rank-R view that declares it".  Rank zero has no
                             // axes at all, which the reference guards with
@@ -403,11 +414,49 @@ module ot_a3_view_resolver
                     // reads are combinational and are consumed next cycle.
                     S_SELECT: begin
                         if ({5'd0, slot} >= view_terms) begin
-                            state <= S_FINISH;
+                            if (!edge_done && (view_edge_mask != A3_NO_ID)) begin
+                                // The same loop-stack query used by an A4 term,
+                                // but A26 deliberately skips S_OFFSET.
+                                loop_query_id <= view_edge_mask;
+                                edge_phase <= 1'b1;
+                                state <= S_EDGE_READ;
+                            end else begin
+                                state <= S_FINISH;
+                            end
                         end else begin
+                            edge_phase <= 1'b0;
                             loop_query_id <= {16'd0, term_index};
                             sym_index <= term_index[3:0];
                             state <= S_READ;
+                        end
+                    end
+                    S_EDGE_READ: begin
+                        if (!loop_query_active) begin
+                            // "view N: edge-mask loop M is not active"
+                            fail_closed(A3_TRAP_MEMORY);
+                        end else begin
+                            value <= loop_query_value;
+                            loop_symbolic <= loop_query_symbol_bounded;
+                            loop_divisor <= loop_query_divisor;
+                            loop_bound <= loop_query_bound_value;
+                            edge_done <= 1'b1;
+                            if (!loop_query_symbol_bounded) begin
+                                // The functional resolver gives a non-symbolic
+                                // loop no partial extent.  Admission rejects
+                                // this form, but the resolver still fails
+                                // closed to the declared dimension if reached.
+                                state <= S_SELECT;
+                            end else if (view_identity) begin
+                                axis_step <= {32'd0, loop_query_divisor};
+                                unit_divides <= 1'b1;
+                                mul_a <= loop_query_value;
+                                mul_b <= loop_query_divisor;
+                                state <= S_REMAIN;
+                            end else begin
+                                mul_a <= view_numerator;
+                                mul_b <= loop_query_divisor;
+                                state <= S_NUM_STEP;
+                            end
                         end
                     end
                     S_READ: begin
@@ -484,7 +533,19 @@ module ot_a3_view_resolver
                             // iteration is not a whole number of this axis's
                             // elements, so the term walks nothing.
                             unit_divides <= (div_remainder == 64'd0);
-                            state <= S_AXIS_MUL;
+                            if (edge_phase) begin
+                                if (div_remainder == 64'd0) begin
+                                    mul_a <= value;
+                                    mul_b <= loop_divisor;
+                                    state <= S_REMAIN;
+                                end else begin
+                                    // iteration_extent() is undefined: no
+                                    // clamp, matching _remaining_extent.
+                                    state <= S_SELECT;
+                                end
+                            end else begin
+                                state <= S_AXIS_MUL;
+                            end
                         end
                     end
                     S_AXIS_MUL: begin
@@ -564,7 +625,8 @@ module ot_a3_view_resolver
                             remain <= axis_extent[31:0];
                             remain_valid <= 1'b1;
                         end
-                        slot <= slot + 3'd1;
+                        if (!edge_phase)
+                            slot <= slot + 3'd1;
                         state <= S_SELECT;
                     end
                     S_FINISH: begin

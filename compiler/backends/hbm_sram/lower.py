@@ -460,7 +460,7 @@ class _Emitter:
 
         for unit in self.plan.units:
             if unit.kind == "kernel":
-                self._emit_kernel(self.plan.kernel_plan(unit.index))
+                self._emit_sequence([self.plan.kernel_plan(unit.index)])
                 continue
             band = self.plan.band(unit.index)
             body = [self.plan.kernel_plan(i) for i in band.body_kernels]
@@ -474,13 +474,11 @@ class _Emitter:
                 )
                 builder.open_loop(loop)
                 self._layer_loop = loop
-                for kernel_plan in body:
-                    self._emit_kernel(kernel_plan)
+                self._emit_sequence(body)
                 builder.close_loop()
                 self._layer_loop = None
             else:
-                for kernel_plan in body:
-                    self._emit_kernel(kernel_plan)
+                self._emit_sequence(body)
 
         # A cluster commits its state as one coordinated transaction: the
         # barrier is the point at which every node agrees the step happened.
@@ -1302,6 +1300,7 @@ class _Emitter:
         extent_numerator: int = 1,
         extent_unit: int = 1,
         extent_bias: int = 0,
+        edge_mask_id: int = NO_ID,
     ) -> int:
         layout = (
             LayoutClass.BLOCK_SCALED if scale_object_id != NO_ID else LayoutClass.DENSE
@@ -1334,6 +1333,7 @@ class _Emitter:
             numerator,
             unit,
             bias,
+            int(edge_mask_id),
         )
         if key in self._views:
             return self._views[key]
@@ -1364,6 +1364,7 @@ class _Emitter:
             extent_numerator=numerator,
             extent_unit=unit,
             extent_bias=bias,
+            edge_mask_id=edge_mask_id,
             permissions=int(
                 Permission.READ | Permission.WRITE if writable else Permission.READ
             ),
@@ -1686,6 +1687,10 @@ class _Emitter:
                 loop = loops.get("row")
                 if loop is None:
                     continue
+                if operand.rolling:
+                    # A26's edge mask carries the tail bound while this fixed-
+                    # address block deliberately contributes no row offset.
+                    continue
                 terms.append(DynamicTerm.loop(loop, row_stride))
             elif term == "context":
                 loop = loops.get("context")
@@ -1700,10 +1705,25 @@ class _Emitter:
         # start: the host writes the prompt for a prefill and the one selected
         # token for a decode step at element zero.  Offsetting the read by
         # POSITION_START would look for the token where nothing was written.
-        walks_row = any(t == "row" for t in operand.terms) and any(
-            term.kind == int(SelectorKind.LOOP_INDUCTION) for term in terms
+        rolling_edge = bool(
+            operand.rolling
+            and plan.block_rows > 1
+            and "row" in operand.terms
+            and loops.get("row") is not None
+        )
+        walks_row = any(t == "row" for t in operand.terms) and (
+            rolling_edge
+            or any(
+                term.kind == int(SelectorKind.LOOP_INDUCTION) for term in terms
+            )
         )
         walks_context = context_axis >= 0 and "context" in operand.terms
+        if rolling_edge and walks_context:
+            raise LoweringError(
+                f"kernel {plan.kernel_id}: rolling operand {operand.tensor_id} "
+                "needs both a row edge mask and a context-axis extent; one "
+                "tensor view names only one request-dependent axis"
+            )
         offset = base + self._select_offset(plan, operand)
         if reading is not None:
             # Same bytes, narrower element: every stride and the base are
@@ -1754,6 +1774,9 @@ class _Emitter:
                 operand.context_bias
                 if walks_context
                 else (operand.extent_bias if walks_row else 0)
+            ),
+            edge_mask_id=(
+                int(loops["row"]) if rolling_edge else NO_ID
             ),
         )
 
@@ -2067,6 +2090,33 @@ class _Emitter:
         axis = int(
             self.kernels[plan.index].attributes.get("reduction_axis", 0) or 0
         )
+        if (
+            axis == 0
+            and plan.kind == "EXPERT_REDUCE"
+            and plan.block_rows > 1
+        ):
+            # The neutral contribution plane is token-major
+            # ``[tokens * experts, width]``. EXPERT_SUM reduces its leading
+            # axis, so a block pipeline presents the same storage as
+            # ``[experts, tokens, width]``: expert slot varies by one row and
+            # token varies by ``experts`` rows. The output is then
+            # ``[tokens, width]`` and one shared loop may reduce a whole block
+            # without changing any arithmetic association.
+            block = int(plan.block_rows)
+            if not dims or int(dims[0]) % block:
+                raise LoweringError(
+                    f"kernel {plan.kernel_id}: {dims[0] if dims else 0} "
+                    f"contribution rows do not contain whole {block}-token blocks"
+                )
+            experts = int(dims[0]) // block
+            if experts <= 0:
+                raise LoweringError(
+                    f"kernel {plan.kernel_id}: expert block has no contributions"
+                )
+            return (
+                [experts, block, *dims[1:]],
+                [strides[0], experts * strides[0], *strides[1:]],
+            )
         if axis == 0:
             return dims, strides
         if axis >= len(dims):
@@ -2662,7 +2712,54 @@ class _Emitter:
             self.builder.require(feature)
 
     # -- kernel emission --------------------------------------------------
-    def _emit_kernel(self, plan: KernelPlan) -> None:
+    def _emit_sequence(self, plans: Sequence[KernelPlan]) -> None:
+        """Emit ordinary kernels or maximal consecutive rolling pipelines."""
+        cursor = 0
+        while cursor < len(plans):
+            first = plans[cursor]
+            if not first.stream_group:
+                self._emit_kernel(first)
+                cursor += 1
+                continue
+            end = cursor + 1
+            while (
+                end < len(plans)
+                and plans[end].stream_group == first.stream_group
+            ):
+                end += 1
+            group = plans[cursor:end]
+            if len(group) < 2:
+                raise LoweringError(
+                    f"stream group {first.stream_group!r} has only one emitted "
+                    "kernel; a fixed-address arena needs its producer and consumer"
+                )
+            specs = {
+                (p.row_loop.trip, p.row_loop.divisor)
+                for p in group
+                if p.row_loop is not None
+            }
+            if len(specs) != 1 or any(p.row_loop is None for p in group):
+                raise LoweringError(
+                    f"stream group {first.stream_group!r} does not share one "
+                    "symbol-bounded row loop"
+                )
+            row_loop = self._open_row_loop(first)
+            assert row_loop is not None
+            # Events are architectural levels (A24), not per-iteration pulses.
+            # A fence at entry and after each stage makes completion local to
+            # this iteration: a signal left high by iteration i-1 cannot admit
+            # a consumer of iteration i, and LOOP_NEXT cannot overwrite the
+            # rolling block while its final consumer is still active.
+            self.builder.emit(Major.CONTROL, Control.FENCE)
+            for plan in group:
+                self._emit_kernel(plan, shared_row_loop=row_loop)
+                self.builder.emit(Major.CONTROL, Control.FENCE)
+            self.builder.close_loop()
+            cursor = end
+
+    def _emit_kernel(
+        self, plan: KernelPlan, *, shared_row_loop: int | None = None
+    ) -> None:
         kernel = self.kernels[plan.index]
         self._emitted_kernels.add(plan.index)
         if kernel.kind in _TRANSACTION_KINDS:
@@ -2674,7 +2771,8 @@ class _Emitter:
             return
 
         builder = self.builder
-        loops = self._open_loops(plan)
+        loops = self._open_loops(plan, shared_row_loop=shared_row_loop)
+        close_row = shared_row_loop is None
         # Positional, not packed: an operand carries the ABI slot the operand
         # convention gives it, and a slot the convention requires to stay
         # ``NO_ID`` -- ``VECTOR.COMPRESS`` sub-case 2's projection matrix -- is
@@ -2702,7 +2800,9 @@ class _Emitter:
                 condition=present[1],
             )
             event = self._maybe_link(plan, event, loops)
-            self._close_loops(loops, ["context", "row"])
+            self._close_loops(
+                loops, ["context", *( ["row"] if close_row else [] )]
+            )
             for name in kernel.outputs:
                 self._event_of_tensor[name] = event
             return
@@ -2712,7 +2812,9 @@ class _Emitter:
                 plan, kernel, loops, inputs, outputs, consumer_paths
             )
             event = self._maybe_link(plan, event, loops)
-            self._close_loops(loops, ["context", "row"])
+            self._close_loops(
+                loops, ["context", *( ["row"] if close_row else [] )]
+            )
             for name in kernel.outputs:
                 self._event_of_tensor[name] = event
             return
@@ -2744,7 +2846,9 @@ class _Emitter:
         # that a runtime symbol sizes is to exchange it one block at a time, and
         # the block is what the loop already iterates.
         event = self._maybe_link(plan, event, loops)
-        self._close_loops(loops, ["context", "row"])
+        self._close_loops(
+            loops, ["context", *( ["row"] if close_row else [] )]
+        )
         for name in kernel.outputs:
             self._event_of_tensor[name] = event
 
@@ -3484,27 +3588,13 @@ class _Emitter:
                 source_operation_id=plan.index,
             )
 
-    def _open_loops(self, plan: KernelPlan) -> dict[str, int]:
-        """Open this kernel's token-block loop and return the live loops.
-
-        Layers are carried by the enclosing band loop and tiles by the schedule
-        descriptor, so the only per-kernel loop is the token block -- the one
-        extent that is a runtime symbol rather than a static shape.
-        """
-        loops: dict[str, int] = {}
-        if self._layer_loop is not None:
-            loops["layer"] = self._layer_loop
+    def _open_row_loop(self, plan: KernelPlan) -> int | None:
+        """Open the plan's symbol-bounded token loop, if it has one."""
         spec = plan.row_loop
         if spec is None:
-            return loops
+            return None
         loop = self.builder.loop_control(
             lower_bound=0,
-            # The induction variable counts *blocks*, not rows, so the step is
-            # one.  Device._loop_trip already divides the symbol by
-            # bound_divisor: trip = ceil(ceil(span / divisor) / step).  A step
-            # of divisor divides twice, which yields one iteration at any span
-            # -- correct only while the whole prompt fits in a single block,
-            # and silently dropping every token past the first block above it.
             upper_bound=spec.trip,
             step=1,
             max_iterations=spec.trip,
@@ -3514,7 +3604,25 @@ class _Emitter:
             key=f"loop.{spec.loop_key}",
         )
         self.builder.open_loop(loop)
-        loops["row"] = loop
+        return loop
+
+    def _open_loops(
+        self, plan: KernelPlan, *, shared_row_loop: int | None = None
+    ) -> dict[str, int]:
+        """Open this kernel's token-block loop and return the live loops.
+
+        Layers are carried by the enclosing band loop and tiles by the schedule
+        descriptor, so the only per-kernel loop is the token block -- the one
+        extent that is a runtime symbol rather than a static shape.
+        """
+        loops: dict[str, int] = {}
+        if self._layer_loop is not None:
+            loops["layer"] = self._layer_loop
+        loop = shared_row_loop
+        if loop is None:
+            loop = self._open_row_loop(plan)
+        if loop is not None:
+            loops["row"] = loop
         context = plan.context_loop
         if context is not None:
             # Innermost, and it runs once.  Amendment A18 shortens an axis only
@@ -3799,7 +3907,17 @@ class _Emitter:
         block = max(out.tile_rows, 1)
         nodes = self.node_count
         exchange = self._participant_array(nodes * block * shard, out.dtype)
-        row_loop = loops.get("row") if "row" in out.terms else None
+        # A rolling output is the one-block object itself.  The shared row loop
+        # selects which logical block is being computed, but every iteration
+        # packs from and unpacks to element zero of that physical buffer.  A
+        # row term here would reintroduce the full-context address progression
+        # that the rolling placement removed and would exceed the object on the
+        # second iteration.  Ordinary full-span activations keep their term.
+        row_loop = (
+            loops.get("row")
+            if "row" in out.terms and not out.rolling
+            else None
+        )
         row_term = (
             [DynamicTerm.loop(row_loop, cols * block)] if row_loop is not None else []
         )

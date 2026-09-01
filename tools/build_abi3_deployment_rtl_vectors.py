@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Build ABI 3.0 RTL correlation vectors from the deployments this program ships.
 
-``tools/build_abi3_rtl_vectors.py`` builds 64 vectors that are *real* ABI 3.0
+``tools/build_abi3_rtl_vectors.py`` builds 65 vectors that are *real* ABI 3.0
 programs but are written for the campaign: each one is constructed to reach a
 particular corner of the sequencer.  None of them is a program this project
 claims to run.  This generator closes that gap by taking the three shipped
@@ -86,9 +86,9 @@ OUTPUT_DIR = ROOT / "testdata/compiler/abi3_deployment"
 # initialised memory.  A deployment that does not fit is refused rather than
 # quietly truncated.
 PROGRAM_WORDS = 2048      # 256-bit instruction records
-HEADER_WORDS = 4096       # 32-bit words, 64 per deployment
+HEADER_WORDS = 8192       # 32-bit words, 64 per deployment
 DESC_WORDS = 4096         # 1536-bit descriptor prefixes
-SYMBOL_WORDS = 1024       # 32-bit words, 16 per case
+SYMBOL_WORDS = 2048       # 32-bit words, 16 per case
 DESCRIPTOR_PREFIX_BYTES = 192
 
 CASE_STRIDE = 38

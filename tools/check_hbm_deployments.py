@@ -372,6 +372,14 @@ def run_case(
         if case.product == "qwen"
         else plan_hbm_required
     )
+    rolling_slots = [
+        slot for slot in first_plan.arena_slots if slot.rolling_group
+    ]
+    stream_groups = {
+        kernel.stream_group
+        for kernel in first_plan.kernels
+        if kernel.stream_group
+    }
     require(
         "hbm_capacity",
         hbm_required <= hbm_available,
@@ -540,7 +548,22 @@ def run_case(
             "deployed_hbm_payload_bytes": int(hbm_inventory["payload_bytes"]),
             "hbm_bytes_per_node": hbm_required,
             "hbm_available_per_node": hbm_available,
+            "hbm_headroom_per_node": hbm_available - hbm_required,
             "plan_hbm_bytes_per_node": plan_hbm_required,
+            "activation_arena_bytes": int(
+                first_plan.proofs["activation_arena_bytes"]
+            ),
+            "activation_arena_slots": int(
+                first_plan.proofs["activation_arena_slots"]
+            ),
+            "rolling_activation_bytes": sum(
+                int(slot.size_bytes) for slot in rolling_slots
+            ),
+            "rolling_activation_slots": len(rolling_slots),
+            "stream_group_count": len(stream_groups),
+            "stream_kernel_count": sum(
+                bool(kernel.stream_group) for kernel in first_plan.kernels
+            ),
             "sram_bytes_per_node": int(first_plan.proofs["sram_bytes"]),
             "sram_available_per_node": int(first_plan.proofs["sram_available"]),
             "weight_segments": int(first_plan.proofs["weight_segments"]),

@@ -21,8 +21,8 @@ the control plane: the same instruction stream, the same issue order, the same
 descriptor IDs, with no engine arithmetic on either side.
 
 *Resolved operand views* are the one thing beyond the raw issue that the RTL
-must reproduce, because amendments A4 and A13 make a view's element offset and
-its leading extent functions of the loop and symbol bindings live at the
+must reproduce, because amendments A4, A13, A18 and A26 make a view's element
+offset and resolved extent functions of the loop and symbol bindings live at the
 dispatch.  The golden value is not written here: for every issue the generator
 calls ``runtime.sim.memory.ViewResolver.resolve`` -- the *same* resolver the
 functional device uses -- with the loop bindings the device recorded in its own
@@ -94,9 +94,9 @@ OUTPUT_DIR = ROOT / "testdata/compiler/abi3"
 # RTL memory geometry.  The images are padded to these sizes so that both
 # simulators read a fully initialised memory.
 PROGRAM_WORDS = 2048      # 256-bit instruction records
-HEADER_WORDS = 4096       # 32-bit words, 64 per case
+HEADER_WORDS = 8192       # 32-bit words, 64 per case
 DESC_WORDS = 4096         # 1536-bit descriptor prefixes
-SYMBOL_WORDS = 1024       # 32-bit words, 16 per case
+SYMBOL_WORDS = 2048       # 32-bit words, 16 per case
 CASE_WORDS = 4096         # 32-bit words, CASE_STRIDE per case
 ISSUE_WORDS = 2048        # 32-bit words, 2 per issue
 VIEW_WORDS = 8192         # 32-bit words, VIEW_STRIDE per resolved view
@@ -1536,6 +1536,74 @@ def case_a18_unit_does_not_divide_block(cap: Capability) -> Case:
     )
 
 
+def case_a26_edge_mask_partial(cap: Capability) -> Case:
+    """A fixed-address four-row buffer exposes two rows on its last turn."""
+    w = BlockWorkspace("a3-a26-edge", cap)
+    b = w.builder
+    rows, width, block, span = 4, 4, 4, 10
+    elements = rows * width
+    pool = b.memory_object(
+        storage_class=StorageClass.SRAM,
+        size_bytes=2 * elements * 4,
+        source=ObjectSource.zeros(2 * elements * 4),
+        permissions=int(Permission.READ | Permission.WRITE),
+        key="obj.edge.pool",
+    )
+    loop = b.loop_control(
+        lower_bound=0,
+        upper_bound=3,
+        step=1,
+        bound_symbol=Symbol.SPAN_TOKENS,
+        bound_divisor=block,
+        max_iterations=3,
+        key="loop.edge",
+    )
+    source = b.tensor_view(
+        object_id=pool,
+        dtype=DType.FP32,
+        dims=[rows, width],
+        strides=[width, 1],
+        edge_mask_id=loop,
+        key="view.edge.in",
+    )
+    destination = b.tensor_view(
+        object_id=pool,
+        dtype=DType.FP32,
+        dims=[rows, width],
+        strides=[width, 1],
+        element_offset=elements,
+        edge_mask_id=loop,
+        permissions=int(Permission.READ | Permission.WRITE),
+        key="view.edge.out",
+    )
+    operator = b.operator(
+        engine_family=Major.DMA,
+        engine_sub=Dma.TRANSFER,
+        inputs=[source],
+        outputs=[destination],
+        numeric_profile_id=w.numeric,
+        schedule_id=w.schedule_for(Major.DMA),
+        counter_class_id=w.counters,
+        source_kernel_id=0,
+        key="op.edge",
+    )
+    b.open_loop(loop)
+    b.emit(Major.DMA, Dma.TRANSFER, descriptor_id=operator, source_operation_id=0)
+    b.close_loop()
+    b.emit(Major.CONTROL, Control.COMPLETE)
+    b.entrypoint(entrypoint_id=0, first_instruction=0, phase=Phase.PREFILL)
+    return Case(
+        name="a26_edge_mask_partial",
+        deployment=w.finish(),
+        symbols={int(Symbol.SPAN_TOKENS): span},
+        note=(
+            "ten rows in four-row blocks: all three DMA issues reuse the same "
+            "source and destination offsets, while A26 resolves their extents "
+            "to 4, 4 and 2; the edge loop is not an A4 address term"
+        ),
+    )
+
+
 # ---------------------------------------------------------------------------
 # Amendment A14 - the scope of a collective's participants
 # ---------------------------------------------------------------------------
@@ -2944,6 +3012,7 @@ def build(argv: list[str] | None = None) -> int:
         case_a18_numerator_and_bias(capability),
         case_a18_axis_beyond_rank(capability),
         case_a18_unit_does_not_divide_block(capability),
+        case_a26_edge_mask_partial(capability),
     ]
     positives = len(cases)
     cases.extend(negative_instruction_cases(capability))
@@ -3194,8 +3263,9 @@ def build(argv: list[str] | None = None) -> int:
             "runtime.sim.memory.ViewResolver.resolve, evaluated against the "
             "loop bindings runtime.sim.device.Device recorded at each issue; "
             "amendments A4 (dynamic index terms), A13 (partial final "
-            "iteration of a block loop) and A18 (the axis that iteration is "
-            "partial in, and the unit it counts)"
+            "iteration of a block loop), A18 (the axis that iteration is "
+            "partial in, and the unit it counts) and A26 (tail masking "
+            "without changing the view's fixed element offset)"
         ),
         "header_admission_count": len(cases),
         "program_run_count": program_runs,

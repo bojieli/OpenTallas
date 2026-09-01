@@ -142,6 +142,98 @@ def _a18_case(*, dims, strides, axis, unit, numerator, bias, divisor, symbol,
     return resolved.dims[axis]
 
 
+def test_a26_edge_mask_clamps_a_rolling_buffer_without_advancing_it():
+    """One block-sized object is reused at offset zero on every loop turn."""
+    from runtime.abi3.builder import DeploymentBuilder
+    from runtime.abi3.constants import DType, Permission, TopologyClass
+    from runtime.abi3.deployment import ObjectSource
+    from runtime.abi3.descriptors import Symbol
+
+    from runtime.abi3.fixture import fixture_capability
+
+    builder = DeploymentBuilder(
+        target_id="a26",
+        model_id="a26",
+        backend="test",
+        capability=fixture_capability(),
+    )
+    builder.topology(topology_class=TopologyClass.SINGLE_CHIP, node_count=1)
+    obj = builder.memory_object(
+        storage_class=StorageClass.SRAM,
+        size_bytes=4 * 8 * 2,
+        source=ObjectSource.zeros(4 * 8 * 2),
+        permissions=int(Permission.READ | Permission.WRITE),
+    )
+    loop = builder.loop_control(
+        lower_bound=0,
+        upper_bound=3,
+        step=1,
+        bound_symbol=Symbol.SPAN_TOKENS,
+        bound_divisor=4,
+        max_iterations=3,
+    )
+    view = builder.tensor_view(
+        object_id=obj,
+        dtype=DType.BF16,
+        dims=[4, 8],
+        strides=[8, 1],
+        edge_mask_id=loop,
+        permissions=int(Permission.READ | Permission.WRITE),
+    )
+
+    resolved = _resolve_view(
+        builder,
+        view,
+        {loop: 2},
+        {int(Symbol.SPAN_TOKENS): 10},
+    )
+    assert resolved.dims == (2, 8)
+    assert resolved.element_offset == 0
+
+
+def test_a26_edge_mask_requires_its_loop_to_be_active():
+    from runtime.abi3.builder import DeploymentBuilder
+    from runtime.abi3.constants import DType, TopologyClass
+    from runtime.abi3.descriptors import Symbol
+    from runtime.abi3.fixture import fixture_capability
+    from runtime.sim.memory import MemoryError_
+
+    builder = DeploymentBuilder(
+        target_id="a26",
+        model_id="a26",
+        backend="test",
+        capability=fixture_capability(),
+    )
+    builder.topology(topology_class=TopologyClass.SINGLE_CHIP, node_count=1)
+    obj = builder.memory_object(
+        storage_class=StorageClass.SRAM,
+        size_bytes=64,
+        source=ObjectSource.zeros(64),
+        permissions=int(Permission.READ),
+    )
+    loop = builder.loop_control(
+        lower_bound=0,
+        upper_bound=2,
+        step=1,
+        bound_symbol=Symbol.SPAN_TOKENS,
+        bound_divisor=4,
+        max_iterations=2,
+    )
+    view = builder.tensor_view(
+        object_id=obj,
+        dtype=DType.BF16,
+        dims=[4, 8],
+        edge_mask_id=loop,
+    )
+    with pytest.raises(MemoryError_, match="edge-mask loop .* is not active"):
+        _resolve_view(
+            builder,
+            view,
+            {},
+            {int(Symbol.SPAN_TOKENS): 7},
+        )
+
+
 def test_a18_states_the_attention_kv_join_at_its_released_size():
     """OI-26: the join's extent is ``span + 128``, and a clamp only shortens.
 
