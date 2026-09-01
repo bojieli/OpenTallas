@@ -612,3 +612,37 @@ the HBM backend executes from and checkpoints its prepared state image. These
 captures prove exact restart from that complete simulator image; they do not
 silently upgrade the backend's known committed-image layout defect into a
 durability proof.
+
+## 8b. Independent immutable-ROM schedule certificates
+
+| number / claim | where it is stated | what produces it | grade | current? |
+|---|---|---|---|---|
+| The shipped Qwen ROM deployment passes **62** independent semantic schedule checks over **75** instructions and **26** schedule descriptors <!-- figure: 62 src="results/abi3/rom_schedule_checks.json#cases[case=qwen3-rom-single-chip].passed_check_count" name="Qwen ROM independent schedule checks, ledger" --> <!-- figure: 75 src="results/abi3/rom_schedule_checks.json#cases[case=qwen3-rom-single-chip].actual.instructions" name="Qwen ROM independent schedule instructions, ledger" --> <!-- figure: 26 src="results/abi3/rom_schedule_checks.json#cases[case=qwen3-rom-single-chip].actual.schedules" name="Qwen ROM independent schedules, ledger" --> | checklist W5.5 and `results/abi3/rom_schedule_checks.json` | `make abi3-rom-schedule-check` → `tools/check_rom_schedules.py` → `compiler/backends/rom/common/check.py` | **`executed`**, static artifact-semantic proof | **YES** |
+| The shipped DeepSeek ROM wafer deployment passes **83** independent checks over **1,171** instructions, **372** schedules, **519** reconstructed direct dependency edges, and **18** communication descriptors <!-- figure: 83 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-wafer].passed_check_count" name="DeepSeek ROM independent schedule checks, ledger" --> <!-- figure: 1171 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-wafer].actual.instructions" name="DeepSeek ROM independent schedule instructions, ledger" --> <!-- figure: 372 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-wafer].actual.schedules" name="DeepSeek ROM independent schedules, ledger" --> <!-- figure: 519 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-wafer].expected.dependency_edges" name="DeepSeek ROM reconstructed dependencies, ledger" --> <!-- figure: 18 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-wafer].actual.communications" name="DeepSeek ROM checked communications, ledger" --> | checklist W5.5, the implementation-plan §6.3 status note, and the same campaign artifact | the parallel DeepSeek campaign case, reading the shipped graph, capability, deployment manifest, descriptor table, program, and embedded ROM plan | **`executed`**, static artifact-semantic proof | **YES** |
+
+This evidence is independent in the source-code sense the plan requires. An
+AST gate rejects any checker import of the ROM program generator, image planner,
+or either product backend. The checker instead consumes frozen graph/ABI
+contracts and emitted bytes. It separately factors the layer signature stream,
+maps representative kernels to frozen engine operations, expands nested loop
+intervals, traces producer events, reconstructs ROM shards and resource masks,
+checks mutable ports and queue capacity, binds the wafer coordinate table back
+to its topology digest, validates collective participant arrays and flow-control
+bounds, and closes every state transaction. The campaign runs the Qwen and
+DeepSeek cases in separate worker processes and records the input and checker
+digests in the result.
+
+The mutation controls distinguish this proof from another call to the generic
+ABI verifier. Tests restamp each altered descriptor table into an internally
+consistent deployment; the generic verifier admits the wrong-but-wire-valid
+queue, bank, tile width, earlier event, and link-credit cases, while the ROM
+checker refuses each at its reconstructed semantic invariant. Running the
+campaign twice without a source or input change produces byte-identical JSON.
+
+**Boundary.** `counter_bounds` contains maximum-trip descriptor-derived work,
+memory-byte, flit, queue-pressure and potential-port-contention bounds. They are
+not measured functional or cycle counters. The route proof binds and checks the
+complete emitted shard-coordinate table and its slots; it does not claim that a
+physical wire meets timing, power, signal-integrity, or congestion targets.
+Those remain W8/W9 evidence, and this static certificate must not be cited as
+RTL or silicon execution.

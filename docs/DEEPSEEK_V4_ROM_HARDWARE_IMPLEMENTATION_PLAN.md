@@ -373,6 +373,26 @@ The schedule checker reconstructs:
 
 It does not call the schedule generator.
 
+**Implementation status (2026-09-01).** This checker is now
+`compiler/backends/rom/common/check.py`, governed by
+`make abi3-rom-schedule-check`. The committed two-product artifact is
+`results/abi3/rom_schedule_checks.json`; it binds the checker, campaign tool,
+neutral IR, capability, deployment manifest, descriptor table, and program by
+SHA-256. The checker parses the emitted ROM plan as data and reconstructs the
+wafer coordinate table and its topology digest without importing
+`compiler.backends.rom.common.program`, `.image`, `qwen3`, or `deepseek_v4`.
+Focused mutations keep the descriptor table and program digest-consistent and
+are admitted by the generic ABI verifier, then demonstrate that the independent
+checker refuses a wrong queue, ROM bank, tile width, producer event, or credit
+bound.
+
+The certificate is static and artifact-semantic. Its byte/flit/stall quantities
+are conservative bounds over maximum loop trips, not observed cycle counters;
+it proves that the published route-coordinate table is complete, disjoint, and
+digest-bound, not that a physical link closes timing. Cycle contention and
+physical implementation remain the later RTL/physical gates rather than being
+silently promoted here.
+
 ## 7. Functional simulator
 
 ### 7.1 Artifact-only target device
