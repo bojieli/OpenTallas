@@ -1,4 +1,4 @@
-.PHONY: abi3-tokens abi3-tokens-deepseek abi3-tokens-deepseek-rom abi3-tokens-deepseek-hbm abi3-tokens-qwen-rom abi3-tokens-qwen-hbm abi3-restart abi3-restart-qwen-hbm abi3-restart-qwen-rom abi3-restart-deepseek-hbm abi3-restart-deepseek-rom abi3-context-gate abi3-prefix-workloads abi3-hbm-qwen-deployment abi3-hbm-deepseek-deployment abi3-rom-schedule-check rom-service rom-service-vectors rom-service-physical abi3-rtl-engines check-evidence-grades check-prose-figures check-figures roofline abi3-failclosed abi3-equivalence abi3 abi3-engine-rate abi3-cost-tables abi3-cost-tables-check abi3-spec abi3-test abi3-workloads abi3-oracle abi3-engines abi3-rtl abi3-physical abi3-status abi3-ir profile simulate iso-node model-traffic legacy-sim routing noc sensitivity legacy-sensitivity spec-check formal rtl-sim fault-sim fault-campaign coverage rtl-static rtl pre-synth-verify synth-public spice spice-pdk test verify clean-results
+.PHONY: abi3-tokens abi3-tokens-deepseek abi3-tokens-deepseek-rom abi3-tokens-deepseek-hbm abi3-tokens-qwen-rom abi3-tokens-qwen-hbm abi3-restart abi3-restart-qwen-hbm abi3-restart-qwen-rom abi3-restart-deepseek-hbm abi3-restart-deepseek-rom abi3-context-gate abi3-prefix-workloads abi3-hbm-qwen-deployment abi3-hbm-deepseek-deployment abi3-rom-schedule-check abi3-rom-qwen-degraded-build rom-service rom-service-vectors rom-service-physical abi3-rtl-engines check-evidence-grades check-prose-figures check-figures roofline abi3-failclosed abi3-equivalence abi3 abi3-engine-rate abi3-cost-tables abi3-cost-tables-check abi3-spec abi3-test abi3-workloads abi3-oracle abi3-engines abi3-rtl abi3-physical abi3-status abi3-ir profile simulate iso-node model-traffic legacy-sim routing noc sensitivity legacy-sensitivity spec-check formal rtl-sim fault-sim fault-campaign coverage rtl-static rtl pre-synth-verify synth-public spice spice-pdk test verify clean-results
 .PHONY: abi3-rom-qwen-build abi3-rom-deepseek-build abi3-hbm-qwen-build abi3-hbm-deepseek-build abi3-comparison-deepseek abi3-evidence-source-current abi3-rtl-vectors abi3-rtl-deployment-vectors abi3-rtl-deployment
 
 profile:
@@ -155,12 +155,14 @@ abi3-rtl-engines:
 rom-service-vectors:
 	PYTHONPATH=. python3 tools/build_rom_service_vectors.py \
 	  --deployment build/abi3/qwen3-8b-rom --product qwen3-chip --scenario nominal \
+	  --checkpoint-root $(QWEN3_SNAPSHOT) \
 	  --output-dir testdata/compiler/rom_service/qwen_chip --beat-budget 2500000 \
 	  --executed --capability configs/hardware/abi3_capability/rom_qwen3.json \
 	  --workload build/workloads/qwen3-8b/TA-QW-CHAT-1.json \
 	  --prompt-tokens 16 --max-new-tokens 1
 	PYTHONPATH=. python3 tools/build_rom_service_vectors.py \
 	  --deployment build/abi3/qwen3-8b-rom-degraded --product qwen3-chip --scenario degraded \
+	  --checkpoint-root $(QWEN3_SNAPSHOT) \
 	  --output-dir testdata/compiler/rom_service/qwen_chip_degraded --beat-budget 600000 \
 	  --executed --capability configs/hardware/abi3_capability/rom_qwen3.json \
 	  --workload build/workloads/qwen3-8b/TA-QW-CHAT-1.json \
@@ -238,6 +240,14 @@ abi3-rom-qwen-build:
 	PYTHONPATH=. python3 tools/build_rom_deployment.py qwen3-8b \
 	  --ir build/ir-v3/qwen3-8b/kernel_ir.v3.json \
 	  --output build/abi3/qwen3-8b-rom \
+	  --checkpoint-root $(QWEN3_SNAPSHOT) \
+	  --verify --inverse --determinism
+
+abi3-rom-qwen-degraded-build:
+	PYTHONPATH=. python3 tools/build_rom_deployment.py qwen3-8b \
+	  --ir build/ir-v3/qwen3-8b/kernel_ir.v3.json \
+	  --defects testdata/compiler/rom_service/qwen_bist_defects.json \
+	  --output build/abi3/qwen3-8b-rom-degraded \
 	  --checkpoint-root $(QWEN3_SNAPSHOT) \
 	  --verify --inverse --determinism
 

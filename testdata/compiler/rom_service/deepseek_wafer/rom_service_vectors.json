@@ -1,7 +1,7 @@
 {
   "deployment": {
     "deployment_id": 1,
-    "deployment_sha256": "507e0b577cca2aa330c9f49463090458c13eac60f6f29425fa95543fe552a67a",
+    "deployment_sha256": "fa907792d8eb73ec1237525468581e47945a9077e5a247f4f88c43fbb5042394",
     "model_id": "deepseek-v4-flash-0731",
     "plan_id": "376a6f68dc78d56314d739faa9f868d08040a0e40dac74ce3f3a4a11ae655d37",
     "target_id": "deepseek-v4-flash-rom-wafer"
@@ -19,7 +19,7 @@
     "rom_meta.hex": "320483c1df13b094bcc847e1e880d9bb261481225b826e009005cdc6185d6390",
     "rom_object.hex": "8471dfabd503c8554191c8c4dbf706ed966c6794bc81f2a1ca0ef3e583bc73a2",
     "rom_repair.hex": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-    "rom_request.hex": "b59226e0732cff4cbfaaa3a9cc1a42726aa4723c16a3ee676ac19af1307b9503",
+    "rom_request.hex": "bdaadb42d29fb460cfc29523d754fc814807e05a10693071f4bc4adde6ae5828",
     "rom_shard.hex": "236ae4253c90a8633a588a12bb581b3d8fc7a51271b89af2bf3e9a09fe2c6631",
     "rom_window.hex": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
   },
@@ -71,7 +71,7 @@
         "declared_bank_or_tile": 65535,
         "declared_base_address": 0,
         "generator": "constant_u32_v1",
-        "object_id": 1401,
+        "object_id": 1395,
         "size_bytes": 4,
         "source_kind": "generated"
       },
@@ -79,7 +79,7 @@
         "declared_bank_or_tile": 65535,
         "declared_base_address": 0,
         "generator": "constant_u32_v1",
-        "object_id": 2083,
+        "object_id": 2085,
         "size_bytes": 4,
         "source_kind": "generated"
       }
@@ -140804,8 +140804,8 @@
       "beats": 0,
       "fault": 1,
       "length": 4,
-      "note": "ROM object 1401 is in no region (source constant_u32_v1)",
-      "object_id": 1401,
+      "note": "ROM object 1395 is in no region (source constant_u32_v1)",
+      "object_id": 1395,
       "offset": 0,
       "origin": "negative_unplaced",
       "status": 2,
@@ -140817,8 +140817,8 @@
       "beats": 0,
       "fault": 1,
       "length": 4,
-      "note": "ROM object 2083 is in no region (source constant_u32_v1)",
-      "object_id": 2083,
+      "note": "ROM object 2085 is in no region (source constant_u32_v1)",
+      "object_id": 2085,
       "offset": 0,
       "origin": "negative_unplaced",
       "status": 2,

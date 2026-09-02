@@ -56,7 +56,11 @@ TESTBENCH_SOURCES = (
 # hashed so that a change to the ROM plan or the wire format invalidates this
 # evidence instead of silently outdating it.
 CONTRACT_SOURCES = (
+    "compiler/backends/rom/qwen3.py",
+    "compiler/backends/rom/deepseek_v4.py",
     "compiler/backends/rom/common/image.py",
+    "compiler/backends/rom/common/program.py",
+    "compiler/ir/v3/kernel_ir.py",
     "runtime/abi3/descriptors.py",
     "runtime/abi3/deployment.py",
     "runtime/abi3/constants.py",
@@ -74,6 +78,30 @@ IMAGE_FILES = (
     "rom_expect.hex",
     "rom_window.hex",
     "rom_meta.hex",
+)
+
+# An executed vector set is not allowed to define its own conveniently narrow
+# provenance boundary.  The generator records a larger complete map; this is
+# the irreducible admission/decode/memory/engine minimum the consumer requires
+# before it will treat that map as an executed-stream identity.
+REQUIRED_EXECUTED_SOURCE_PATHS = (
+    "runtime/abi3/capability.py",
+    "runtime/abi3/deployment.py",
+    "runtime/abi3/descriptors.py",
+    "runtime/abi3/records.py",
+    "runtime/abi3/verifier.py",
+    "runtime/driver.py",
+    "runtime/sim/backend.py",
+    "runtime/sim/counters.py",
+    "runtime/sim/device.py",
+    "runtime/sim/engine.py",
+    "runtime/sim/generators.py",
+    "runtime/sim/memory.py",
+    "runtime/sim/engines/attention.py",
+    "runtime/sim/engines/dma.py",
+    "runtime/sim/engines/selection.py",
+    "runtime/sim/engines/tensor.py",
+    "runtime/sim/engines/vector.py",
 )
 
 # The refusal classes ot_rom_pkg names, spelled out.  A bare "1" in an
@@ -198,14 +226,77 @@ def load_vector_set(directory: Path) -> dict[str, Any]:
     # produced it.  If the functional device has moved since, the stream is
     # about an implementation that no longer exists, and saying so beats
     # publishing it under the current one's name.
-    recorded = vectors.get("executed_source", {}).get("runtime_source_sha256")
+    executed_source = vectors.get("executed_source", {})
+    recorded = executed_source.get("runtime_source_sha256")
     drift: list[str] = []
+    missing: list[str] = []
+    integrity_problems: list[str] = []
+    if executed_source:
+        missing = sorted(set(REQUIRED_EXECUTED_SOURCE_PATHS) - set(recorded or {}))
     if recorded:
         for rel, digest in sorted(recorded.items()):
             path = ROOT / rel
             if not path.exists() or sha256_file(path) != digest:
                 drift.append(rel)
+    if executed_source:
+        loaded_inputs = executed_source.get("loaded_inputs")
+        if not isinstance(loaded_inputs, dict):
+            integrity_problems.append("executed source records no loaded_inputs map")
+            loaded_inputs = {}
+        for name in ("capability", "workload"):
+            record = loaded_inputs.get(name)
+            if not isinstance(record, dict):
+                integrity_problems.append(f"loaded input {name} is missing")
+                continue
+            rel = record.get("path")
+            digest = record.get("sha256")
+            if (
+                not isinstance(rel, str)
+                or not rel
+                or Path(rel).is_absolute()
+                or not isinstance(digest, str)
+                or len(digest) != 64
+            ):
+                integrity_problems.append(
+                    f"loaded input {name} has malformed path or SHA-256"
+                )
+                continue
+            path = (ROOT / rel).resolve()
+            try:
+                path.relative_to(ROOT.resolve())
+            except ValueError:
+                integrity_problems.append(
+                    f"loaded input {name} escapes the repository: {rel}"
+                )
+                continue
+            if not path.is_file():
+                integrity_problems.append(f"loaded input {name} is missing: {rel}")
+            elif sha256_file(path) != digest:
+                integrity_problems.append(f"loaded input {name} moved: {rel}")
+        checkpoint = executed_source.get("checkpoint_binding")
+        if (
+            not isinstance(checkpoint, dict)
+            or not checkpoint.get("verified_on_device_activation")
+            or not isinstance(checkpoint.get("authenticated_range_count"), int)
+            or checkpoint.get("authenticated_range_count", 0) <= 0
+            or not isinstance(checkpoint.get("range_map_sha256"), str)
+            or len(checkpoint.get("range_map_sha256", "")) != 64
+        ):
+            integrity_problems.append(
+                "executed source lacks a valid device-authenticated checkpoint "
+                "range-map identity"
+            )
+        if executed_source.get("deployment_admitted") is not True:
+            integrity_problems.append("executed source was not admitted")
+        if executed_source.get("events_not_expressible_as_contiguous_ranges") != 0:
+            integrity_problems.append(
+                "executed source omitted ROM reads not expressible as ranges"
+            )
+        if executed_source.get("failure") is not None:
+            integrity_problems.append("executed source records a device failure")
     vectors["_runtime_source_drift"] = drift
+    vectors["_runtime_source_missing"] = missing
+    vectors["_executed_source_integrity_problems"] = integrity_problems
     return vectors
 
 
@@ -489,11 +580,30 @@ def run(build_root: Path | None, sets: list[str], timeout: int) -> dict[str, Any
             sources[f"testdata/compiler/rom_service/{name}/{image}"] = sha256_file(
                 directory / image
             )
+        for record in vector_sets[name].get("executed_source", {}).get(
+            "loaded_inputs", {}
+        ).values():
+            # load_vector_set already required a repository-relative path and
+            # checked this exact digest.  Carry it into the campaign's direct
+            # source map as well so --verify repeats the check without running
+            # a simulator.
+            rel = record["path"]
+            sources[rel] = sha256_file(ROOT / rel)
 
     drift = {
         name: vectors["_runtime_source_drift"]
         for name, vectors in vector_sets.items()
         if vectors.get("_runtime_source_drift")
+    }
+    missing = {
+        name: vectors["_runtime_source_missing"]
+        for name, vectors in vector_sets.items()
+        if vectors.get("_runtime_source_missing")
+    }
+    integrity_problems = {
+        name: vectors["_executed_source_integrity_problems"]
+        for name, vectors in vector_sets.items()
+        if vectors.get("_executed_source_integrity_problems")
     }
     compositions = {
         name: origin_composition(vectors) for name, vectors in vector_sets.items()
@@ -503,6 +613,8 @@ def run(build_root: Path | None, sets: list[str], timeout: int) -> dict[str, Any
         and bool(cases)
         and all(case["status"] == "pass" for case in cases)
         and not drift
+        and not missing
+        and not integrity_problems
         and all(entry["margins_agree"] for entry in compositions.values())
     )
 
@@ -550,6 +662,10 @@ def run(build_root: Path | None, sets: list[str], timeout: int) -> dict[str, Any
                 "runtime_health": vectors["runtime_health"],
                 "executed_source": vectors["executed_source"],
                 "runtime_source_drift": vectors["_runtime_source_drift"],
+                "runtime_source_missing": vectors["_runtime_source_missing"],
+                "executed_source_integrity_problems": vectors[
+                    "_executed_source_integrity_problems"
+                ],
                 "required_marker": vectors["required_marker"],
             }
             for name, vectors in vector_sets.items()
@@ -566,6 +682,8 @@ def run(build_root: Path | None, sets: list[str], timeout: int) -> dict[str, Any
         "compile_stages": compile_stages,
         "correlation": correlation,
         "executed_stream_source_drift": drift,
+        "executed_stream_source_missing": missing,
+        "executed_stream_integrity_problems": integrity_problems,
         "tools": tools,
         "source_sha256": sources,
         "cases": cases,
@@ -605,6 +723,8 @@ def run(build_root: Path | None, sets: list[str], timeout: int) -> dict[str, Any
             "operand_data_checked_against_checkpoint_bytes_on_a_window_only": True,
             "view_to_byte_range_walk_in_scope": False,
             "descriptor_or_program_admission_in_scope": False,
+            "deployment_bundle_revalidated_by_retained_campaign": False,
+            "deployment_digest_is_the_retained_content_addressed_boundary": True,
             "executed_request_stream_for_the_wafer_product": False,
             "dual_simulator_agreement": True,
             "physical_implementation_claimed": False,
@@ -641,10 +761,12 @@ def run(build_root: Path | None, sets: list[str], timeout: int) -> dict[str, Any
             "reference computes the same sum in arbitrary precision and was "
             "always exact, so the fix moved the RTL onto the reference rather "
             "than the reference onto the RTL",
-            "the DeepSeek wafer set has no executed request stream: that lane "
-            "has produced no tokens (checklist W6.4). Its requests come from "
-            "the compiled plan's own read unit and from every shard boundary "
-            "the plan declares, which is derived evidence about addressing",
+            "the DeepSeek wafer set has no executed request stream. The "
+            "separate governed token lane now completes (checklist W6.4), but "
+            "no request trace from it is retained here. This set's requests "
+            "come from the compiled plan's own read unit and from every shard "
+            "boundary the plan declares, which is derived evidence about "
+            "addressing and must not be relabelled as executed traffic",
             "column redundancy is refused, not implemented. A read reaching a "
             "resource with an activated column repair fails closed with a "
             "distinct class rather than returning the unrepaired column",
@@ -655,6 +777,14 @@ def run(build_root: Path | None, sets: list[str], timeout: int) -> dict[str, Any
             "no descriptor CRC, program header or admission check is performed "
             "here; the tables arrive over the configuration channel already "
             "admitted",
+            "the ignored deployment bundles are consumed when vectors are "
+            "built, not retained or reopened by this RTL campaign. Each set "
+            "therefore names the ABI deployment SHA-256 it was derived from; "
+            "that content-addressed digest binds the instruction body, "
+            "descriptor table, object source map, topology, capability digest "
+            "and ROM plan. The campaign binds the vector to that exact "
+            "identity, but does not claim that an arbitrary current build/ "
+            "directory still contains it",
             "quarantine is a comparator list, not a bit per placement resource. "
             "No published vector set withdraws more than one resource, so the "
             "list-depth capacity refusal is a guard on a bound nothing here "

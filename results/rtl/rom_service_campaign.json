@@ -8,7 +8,7 @@
       "marker_present": true,
       "name": "deepseek_wafer.iverilog",
       "required_marker": "ROM-SERVICE-OK requests=10833 beats=1219199 bytes=77408968 activations=38219 masked=135 faults=13 marker=b6b576c71d05d5f5",
-      "run_command": "/usr/bin/vvp /tmp/opentallas-rom-rtl-tj7se4gr/rom_service.vvp",
+      "run_command": "/usr/bin/vvp /tmp/opentallas-rom-rtl-mi993uga/rom_service.vvp",
       "run_log": "ROM-SERVICE-OK requests=10833 beats=1219199 bytes=77408968 activations=38219 masked=135 faults=13 marker=b6b576c71d05d5f5\nchecks=108357\n",
       "run_returncode": 0,
       "simulator": "iverilog",
@@ -21,7 +21,7 @@
       "marker_present": true,
       "name": "deepseek_wafer.verilator",
       "required_marker": "ROM-SERVICE-OK requests=10833 beats=1219199 bytes=77408968 activations=38219 masked=135 faults=13 marker=b6b576c71d05d5f5",
-      "run_command": "/tmp/opentallas-rom-rtl-tj7se4gr/obj_rom/Vrom_service_top",
+      "run_command": "/tmp/opentallas-rom-rtl-mi993uga/obj_rom/Vrom_service_top",
       "run_log": "ROM-SERVICE-OK requests=10833 beats=1219199 bytes=77408968 activations=38219 masked=135 faults=13 marker=b6b576c71d05d5f5\nchecks=260019\n",
       "run_returncode": 0,
       "simulator": "verilator",
@@ -34,7 +34,7 @@
       "marker_present": true,
       "name": "qwen_chip.iverilog",
       "required_marker": "ROM-SERVICE-OK requests=349 beats=2499996 bytes=159997856 activations=39213 masked=0 faults=117 marker=39817fd2c3017914",
-      "run_command": "/usr/bin/vvp /tmp/opentallas-rom-rtl-tj7se4gr/rom_service.vvp",
+      "run_command": "/usr/bin/vvp /tmp/opentallas-rom-rtl-mi993uga/rom_service.vvp",
       "run_log": "ROM-SERVICE-OK requests=349 beats=2499996 bytes=159997856 activations=39213 masked=0 faults=117 marker=39817fd2c3017914\nchecks=3517\n",
       "run_returncode": 0,
       "simulator": "iverilog",
@@ -47,7 +47,7 @@
       "marker_present": true,
       "name": "qwen_chip.verilator",
       "required_marker": "ROM-SERVICE-OK requests=349 beats=2499996 bytes=159997856 activations=39213 masked=0 faults=117 marker=39817fd2c3017914",
-      "run_command": "/tmp/opentallas-rom-rtl-tj7se4gr/obj_rom/Vrom_service_top",
+      "run_command": "/tmp/opentallas-rom-rtl-mi993uga/obj_rom/Vrom_service_top",
       "run_log": "ROM-SERVICE-OK requests=349 beats=2499996 bytes=159997856 activations=39213 masked=0 faults=117 marker=39817fd2c3017914\nchecks=8403\n",
       "run_returncode": 0,
       "simulator": "verilator",
@@ -60,7 +60,7 @@
       "marker_present": true,
       "name": "qwen_chip_degraded.iverilog",
       "required_marker": "ROM-SERVICE-OK requests=363 beats=536110 bytes=34309592 activations=8475 masked=7 faults=168 marker=cded9cf9f877aaed",
-      "run_command": "/usr/bin/vvp /tmp/opentallas-rom-rtl-tj7se4gr/rom_service.vvp",
+      "run_command": "/usr/bin/vvp /tmp/opentallas-rom-rtl-mi993uga/rom_service.vvp",
       "run_log": "ROM-SERVICE-OK requests=363 beats=536110 bytes=34309592 activations=8475 masked=7 faults=168 marker=cded9cf9f877aaed\nchecks=3657\n",
       "run_returncode": 0,
       "simulator": "iverilog",
@@ -73,7 +73,7 @@
       "marker_present": true,
       "name": "qwen_chip_degraded.verilator",
       "required_marker": "ROM-SERVICE-OK requests=363 beats=536110 bytes=34309592 activations=8475 masked=7 faults=168 marker=cded9cf9f877aaed",
-      "run_command": "/tmp/opentallas-rom-rtl-tj7se4gr/obj_rom/Vrom_service_top",
+      "run_command": "/tmp/opentallas-rom-rtl-mi993uga/obj_rom/Vrom_service_top",
       "run_log": "ROM-SERVICE-OK requests=363 beats=536110 bytes=34309592 activations=8475 masked=7 faults=168 marker=cded9cf9f877aaed\nchecks=8739\n",
       "run_returncode": 0,
       "simulator": "verilator",
@@ -85,6 +85,8 @@
     "addressing_correlated_over_the_whole_address_space": true,
     "column_redundancy_implemented": false,
     "column_redundancy_refused_rather_than_ignored": true,
+    "deployment_bundle_revalidated_by_retained_campaign": false,
+    "deployment_digest_is_the_retained_content_addressed_boundary": true,
     "descriptor_or_program_admission_in_scope": false,
     "dual_simulator_agreement": true,
     "every_published_origin_and_class_margin_reconciled": true,
@@ -119,14 +121,14 @@
     },
     {
       "command": "<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator --cc --exe --build -Wall -Wno-DECLFILENAME --top-module rom_service_top --Mdir obj_rom <ROOT>/rtl/rom/ot_rom_pkg.sv <ROOT>/rtl/rom/ot_rom_read_service.sv <ROOT>/rtl/test/rom_service_top.sv <ROOT>/rtl/test/rom_service_harness.cpp -CFLAGS -std=c++17",
-      "log": "make: Entering directory '<BUILD>/obj_rom'\ng++  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -Os  -c -o rom_service_harness.o <ROOT>/rtl/test/rom_service_harness.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -c -o verilated.o <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -c -o verilated_threads.o <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp\npython3 <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/bin/verilator_includer -DVL_INCLUDE_OPT=include Vrom_service_top.cpp Vrom_service_top___024root__0.cpp Vrom_service_top__ConstPool__0__Slow.cpp Vrom_service_top___024root__Slow.cpp Vrom_service_top___024root__0__Slow.cpp Vrom_service_top__Syms__Slow.cpp > Vrom_service_top__ALL.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -c -o Vrom_service_top__ALL.o Vrom_service_top__ALL.cpp\ng++    rom_service_harness.o verilated.o verilated_threads.o Vrom_service_top__ALL.a    -pthread -lpthread -latomic   -o Vrom_service_top\nrm Vrom_service_top__ALL.verilator_deplist.tmp\nmake: Leaving directory '<BUILD>/obj_rom'\n- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.155 MB sources in 4 modules, into 0.554 MB in 6 C++ files needing 0.002 MB\n- Verilator: Walltime 10.465 s (elab=0.011, cvt=0.110, bld=10.315); cpu 0.074 s on 1 threads; allocated 41.191 MB\n",
+      "log": "make: Entering directory '<BUILD>/obj_rom'\ng++  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -Os  -c -o rom_service_harness.o <ROOT>/rtl/test/rom_service_harness.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -c -o verilated.o <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -c -o verilated_threads.o <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp\npython3 <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/bin/verilator_includer -DVL_INCLUDE_OPT=include Vrom_service_top.cpp Vrom_service_top___024root__0.cpp Vrom_service_top__ConstPool__0__Slow.cpp Vrom_service_top___024root__Slow.cpp Vrom_service_top___024root__0__Slow.cpp Vrom_service_top__Syms__Slow.cpp > Vrom_service_top__ALL.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -c -o Vrom_service_top__ALL.o Vrom_service_top__ALL.cpp\ng++    rom_service_harness.o verilated.o verilated_threads.o Vrom_service_top__ALL.a    -pthread -lpthread -latomic   -o Vrom_service_top\nrm Vrom_service_top__ALL.verilator_deplist.tmp\nmake: Leaving directory '<BUILD>/obj_rom'\n- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.155 MB sources in 4 modules, into 0.554 MB in 6 C++ files needing 0.002 MB\n- Verilator: Walltime 4.134 s (elab=0.005, cvt=0.031, bld=4.086); cpu 0.048 s on 1 threads; allocated 41.184 MB\n",
       "name": "verilator.compile",
       "returncode": 0
     },
     {
       "command": "<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator --lint-only -Wall -Wno-fatal -Wno-DECLFILENAME -Wno-UNUSEDPARAM --top-module ot_rom_bank_array <ROOT>/rtl/rom/ot_rom_pkg.sv <ROOT>/rtl/rom/ot_rom_bank_array.sv",
       "evidence_present": true,
-      "log": "%Warning-UNDRIVEN: <ROOT>/rtl/rom/ot_rom_bank_array.sv:55:42: Signal is not driven: 'rom_cell'\n                                                                             : ... note: In instance 'ot_rom_bank_array'\n   55 |     reg [ot_rom_pkg::ROM_SENSE_BITS-1:0] rom_cell [0:CELLS-1];\n      |                                          ^~~~~~~~\n                   ... For warning description see https://verilator.org/warn/UNDRIVEN?v=5.050\n                   ... Use \"/* verilator lint_off UNDRIVEN */\" and lint_on around source to disable this message.\n- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.062 MB sources in 3 modules, into 0.027 MB in 3 C++ files needing 0.000 MB\n- Verilator: Walltime 0.016 s (elab=0.001, cvt=0.006, bld=0.000); cpu 0.008 s on 1 threads; allocated 33.148 MB\n",
+      "log": "%Warning-UNDRIVEN: <ROOT>/rtl/rom/ot_rom_bank_array.sv:55:42: Signal is not driven: 'rom_cell'\n                                                                             : ... note: In instance 'ot_rom_bank_array'\n   55 |     reg [ot_rom_pkg::ROM_SENSE_BITS-1:0] rom_cell [0:CELLS-1];\n      |                                          ^~~~~~~~\n                   ... For warning description see https://verilator.org/warn/UNDRIVEN?v=5.050\n                   ... Use \"/* verilator lint_off UNDRIVEN */\" and lint_on around source to disable this message.\n- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.062 MB sources in 3 modules, into 0.027 MB in 3 C++ files needing 0.000 MB\n- Verilator: Walltime 0.006 s (elab=0.001, cvt=0.003, bld=0.000); cpu 0.005 s on 1 threads; allocated 33.148 MB\n",
       "name": "verilator.array_lint",
       "other_warnings": [],
       "required_evidence": "Signal is not driven: 'rom_cell'",
@@ -151,12 +153,13 @@
       "deepseek_wafer": {
         "deployment": {
           "deployment_id": 1,
-          "deployment_sha256": "507e0b577cca2aa330c9f49463090458c13eac60f6f29425fa95543fe552a67a",
+          "deployment_sha256": "fa907792d8eb73ec1237525468581e47945a9077e5a247f4f88c43fbb5042394",
           "model_id": "deepseek-v4-flash-0731",
           "plan_id": "376a6f68dc78d56314d739faa9f868d08040a0e40dac74ce3f3a4a11ae655d37",
           "target_id": "deepseek-v4-flash-rom-wafer"
         },
         "executed_source": {},
+        "executed_source_integrity_problems": [],
         "origin_composition": {
           "disagreements": [],
           "margins_agree": true,
@@ -307,7 +310,7 @@
               "declared_bank_or_tile": 65535,
               "declared_base_address": 0,
               "generator": "constant_u32_v1",
-              "object_id": 1401,
+              "object_id": 1395,
               "size_bytes": 4,
               "source_kind": "generated"
             },
@@ -315,7 +318,7 @@
               "declared_bank_or_tile": 65535,
               "declared_base_address": 0,
               "generator": "constant_u32_v1",
-              "object_id": 2083,
+              "object_id": 2085,
               "size_bytes": 4,
               "source_kind": "generated"
             }
@@ -366,6 +369,7 @@
           ]
         },
         "runtime_source_drift": [],
+        "runtime_source_missing": [],
         "scenario": "nominal",
         "totals": {
           "activations": 38219,
@@ -406,35 +410,83 @@
       "qwen_chip": {
         "deployment": {
           "deployment_id": 1,
-          "deployment_sha256": "a60d8500f0e8ad50c469fa1add1c95b865ca5d35dc7ae2db57c2845fc5c1298e",
+          "deployment_sha256": "925351080448450ee4b14a0e3260001dbac9aeafc582fd3202d53a0a379b9c91",
           "model_id": "qwen3-8b",
           "plan_id": "7d323d48fe3e68545aa724ea7fa024b779f9e5359e8b631f335daf7926844d2b",
           "target_id": "qwen3-8b-rom-single-chip"
         },
         "executed_source": {
+          "checkpoint_binding": {
+            "authenticated_range_count": 399,
+            "range_map_sha256": "636454e4e7ca0a01ddff51dafb7d7b168497e4265f029f3c6d0831b471b42cc3",
+            "verified_on_device_activation": true
+          },
+          "deployment_admitted": true,
           "events_not_expressible_as_contiguous_ranges": 0,
           "failure": null,
           "generated_token_count": 1,
+          "loaded_inputs": {
+            "capability": {
+              "path": "configs/hardware/abi3_capability/rom_qwen3.json",
+              "sha256": "38234d6cccbd9c017efa286b67f66b1c21572e206ba71aca874e4f912eb6adbf"
+            },
+            "workload": {
+              "path": "build/workloads/qwen3-8b/TA-QW-CHAT-1.json",
+              "sha256": "7c9ed26eee61816f10a66ae2a73a2172def627b4ba7cebd08832c607653c5f0f"
+            }
+          },
           "prompt_token_count": 16,
           "requests_derived": 525,
           "rom_bytes_read_counter": 15145337668,
           "rom_read_events": 510,
           "runtime_source_sha256": {
-            "runtime/abi3/deployment.py": "21dd833051691cad64f34ce422708ad4b11a8c447b123fd513d23e5a9900fb16",
+            "runtime/abi3/builder.py": "3ec59acade3a0fa85e3c63f7c8ca2a95eece98420e0c5cdb25cb6e5b6039fe7c",
+            "runtime/abi3/capability.py": "a8641dd79a8e169f1121c9b436a3f9d33e21fd438708f6ecf55214c1325e1a79",
+            "runtime/abi3/constants.py": "a97b329b38a5bfb6438924e34b26c6f70b8e068026c685a29ec9b1ff0b8c1e4a",
+            "runtime/abi3/crc.py": "d47b2c45f250b438d3cbc04eef2dd3c1ab68b771392cbe16de78a1238439e27e",
+            "runtime/abi3/deployment.py": "e7aeac69a74590ded75ba34b603b23aa071f58ef7965e2f8f93d72a82dc35b61",
             "runtime/abi3/descriptors.py": "fd60c52ee2117016a8faa644cdaebe1e95ad003535576bec241f7d9c6018993e",
+            "runtime/abi3/layout.py": "6862c48ef1c596421a91dad9c2a1f87c88eaf289c1a49af1bc366ab5e97bdb8e",
+            "runtime/abi3/records.py": "18140e2a382dd4d515da33ccf2c5a08c203bcb36ae9e3e86747265346d4ad7ca",
+            "runtime/abi3/verifier.py": "9ac35c1de37996ca98ee2db9e1edb0a1ba9263ede2dbe3049bf51b45f218723d",
             "runtime/driver.py": "cf53554f3ac2b706119700929b1c51dce98d720da4dacca42ce59c0859c5e8bf",
-            "runtime/sim/backend.py": "9b798e9882d51c539f1862cb00b553766680c6de76bb1d1ac1ceb54ac29173fa",
-            "runtime/sim/device.py": "8278011c9f5543bffe6d13702ff999053ce3dbfa94934138dd4a6cde9ed8d37a",
-            "runtime/sim/engine.py": "2cc6c81d4eb808795cddfbfbd5500e8fc3641512a871edc3140c115b07d7d8c9",
+            "runtime/reference/compression_pool.py": "11a4f10f4f845d746cf25691e7f84e56d988a6d782a5becff8add6239c1d55af",
+            "runtime/reference/formats.py": "74a3254c7a1dba9ad3bf07a5c793cb2ec1766f953b48ec4c782391f757290aa2",
+            "runtime/reference/hadamard.py": "2d432fa289214cce5db6090c23c898ba9b13c75517190ec22b709be6d1ea2a34",
+            "runtime/reference/hyper_connection.py": "08876748899568abd7ad58ba33e734e381ed9a65a79419bc7b65b070284113f1",
+            "runtime/reference/normalization.py": "de04abe88b769d9e9332d5050b15a4b278eff7dff18d1d51100b13d61012527e",
+            "runtime/reference/quantization.py": "f9241d8c9674b1f9ac72d44f570a1b7291635f2ec62883d74a8f555e1644cd67",
+            "runtime/reference/sparse_attention.py": "b4b16d9583ab8fc9ff50d96cc6e94b4469f54de37f62dea07333353d995306ef",
+            "runtime/reference/sqrt_softplus.py": "bbb91122078c983abd6ba8e233e1fc9573ad6ddb12c0f47e19a6fd9af2957562",
+            "runtime/reference/swiglu.py": "8a2b6821f42a438da1b34ab78e76d317d00fc2fd2bbb16deed315d77e09246d4",
+            "runtime/reference/transcendental.py": "bb26b68fbebc2ef48bdc44deb58163b73f38fd33bac8f4d9662e6d10c2822394",
+            "runtime/sim/backend.py": "e91b9dc70de0bbf310e5d542a84b05d7ea6a1b828e73a9dcfe5b20b31a48b008",
+            "runtime/sim/counters.py": "dab7458cb196b94b710566e8478d0c2a4b5511a54903d1c0c0edaa1afd9f3c0a",
+            "runtime/sim/device.py": "89ff77990fee791a5cb7b46e28a2efab36c66e253c52e9cd0929673607b9178c",
+            "runtime/sim/engine.py": "31f826fb02f5c483cd04d7c3118eabe0cfd72f9b51584a9322d44d787acdbccb",
+            "runtime/sim/engines/__init__.py": "251d9b7d848311209b978ff083f9c3a0de896833d6317df7bb9cb17d8ee7d12f",
             "runtime/sim/engines/attention.py": "47755eded70c9255dfaa22628d569cd299daa95d96c3e0e451675706aec13dde",
-            "runtime/sim/engines/dma.py": "2d747f9430f098c14305f63229646e49bd4c729e2bbfe7e97b5867b5f3c78f67",
+            "runtime/sim/engines/deepseek_vector.py": "70906c8ca19545a7d6219da6837d9afa40a34a1a357b3c098b00e0334368178e",
+            "runtime/sim/engines/dma.py": "92ed01711032c0a2e1d9e4ca4c7e1eee735475246d4c30aa8621d05d1767fc45",
+            "runtime/sim/engines/link.py": "086af2f3f501b180821ae6130abd6aeefe78172199a86066cb01583699aa208e",
+            "runtime/sim/engines/reduction.py": "16ed4dfafe72d5d77dd8c472f09e33c3708acb3dd9b7f8130f2c931746f9b639",
+            "runtime/sim/engines/route.py": "3e27e1a7705ce34e817c1d12b9092871644382cede262e259ed6c431333a2269",
             "runtime/sim/engines/selection.py": "98215d7b484067f882dc77de573ac8d7a5926c53edbb41a7a2b10ad6a94f53b9",
-            "runtime/sim/engines/tensor.py": "17499435d7ed1e3f554a617dd941ce68664d2ad037dfad7400f9229122f9d8f6",
-            "runtime/sim/engines/vector.py": "04b850538a956a875e4351ad143174b131e008ea3aa387fe188b9f21b06e0ab8",
-            "runtime/sim/memory.py": "75bd31c2ff724154117eb1303dbdfd1cd7edd9b8f8193e81d31640e277bb0bd5"
+            "runtime/sim/engines/tensor.py": "91d67e776fd65bcc1fceba67445a1b54e090bee09f4ec7efd7fd9c12c2238e00",
+            "runtime/sim/engines/vector.py": "b394bc9c04cee5e4f679b5ba1aebc3d2389591fd9c4cbdc93d60c3daeef26d5f",
+            "runtime/sim/formats.py": "f2c9d1e2a6c13eb1961e4d156a7a28fd0ee03e1bdb47018b8cb1d79c89448385",
+            "runtime/sim/generators.py": "3606d968996078bbaee9d694645f8b285861968aa671100d5141d5cafe5f5356",
+            "runtime/sim/memory.py": "4b959c863b0fb44db064b2e39a1d40408022f86a80c3b146d185d501c8820308",
+            "runtime/tensor_accelerator/attention.py": "275859fcb1a1e951cbd40c207d50a4de011637bb10d6a3788d223d743565e5f5",
+            "runtime/tensor_accelerator/bf16.py": "75543479efffeb7a6806dd44178c8af1844276f87e3d01366b21e1cbccf68a34",
+            "runtime/tensor_accelerator/elementwise.py": "64877e0af6d47a695dd650a1d3912d2e1ed508d425b90babb89c4ce931fa4e26",
+            "runtime/tensor_accelerator/rmsnorm.py": "a4cd12f16bfc9419681cff8b4065a14f4af3778fae3866b79f7db93a46351e29",
+            "runtime/tensor_accelerator/rope.py": "bc15648eed4d94136561db5c602b7b38fbd1fa71feba5ea2be9c740f9808cf56",
+            "runtime/tensor_accelerator/sparse_attention.py": "5972c0ffe5714e774a1702f311352e22ff1a7d0d3feb0f614669ee08eb8c0562"
           },
           "stop_reason": "max_new_tokens"
         },
+        "executed_source_integrity_problems": [],
         "origin_composition": {
           "disagreements": [],
           "margins_agree": true,
@@ -581,11 +633,8 @@
           "masked_regions": [],
           "quarantined_resources": []
         },
-        "runtime_source_drift": [
-          "runtime/abi3/deployment.py",
-          "runtime/sim/device.py",
-          "runtime/sim/engine.py"
-        ],
+        "runtime_source_drift": [],
+        "runtime_source_missing": [],
         "scenario": "nominal",
         "totals": {
           "activations": 39213,
@@ -619,35 +668,83 @@
       "qwen_chip_degraded": {
         "deployment": {
           "deployment_id": 1,
-          "deployment_sha256": "084d3043661d4d8ee68c45ff4818e74b2d1526059feeef5f57797d36e81cd89d",
+          "deployment_sha256": "811aa10723368a2b0b2dffc1fad49e107737bf16f789adfdb2153d898b9e4612",
           "model_id": "qwen3-8b",
           "plan_id": "2397761924f0d1f99739d61a7ebfa9dfb78a46d21883feada4739fed83e10135",
           "target_id": "qwen3-8b-rom-single-chip"
         },
         "executed_source": {
+          "checkpoint_binding": {
+            "authenticated_range_count": 399,
+            "range_map_sha256": "636454e4e7ca0a01ddff51dafb7d7b168497e4265f029f3c6d0831b471b42cc3",
+            "verified_on_device_activation": true
+          },
+          "deployment_admitted": true,
           "events_not_expressible_as_contiguous_ranges": 0,
           "failure": null,
           "generated_token_count": 1,
+          "loaded_inputs": {
+            "capability": {
+              "path": "configs/hardware/abi3_capability/rom_qwen3.json",
+              "sha256": "38234d6cccbd9c017efa286b67f66b1c21572e206ba71aca874e4f912eb6adbf"
+            },
+            "workload": {
+              "path": "build/workloads/qwen3-8b/TA-QW-CHAT-1.json",
+              "sha256": "7c9ed26eee61816f10a66ae2a73a2172def627b4ba7cebd08832c607653c5f0f"
+            }
+          },
           "prompt_token_count": 16,
           "requests_derived": 525,
           "rom_bytes_read_counter": 15145337668,
           "rom_read_events": 510,
           "runtime_source_sha256": {
-            "runtime/abi3/deployment.py": "21dd833051691cad64f34ce422708ad4b11a8c447b123fd513d23e5a9900fb16",
+            "runtime/abi3/builder.py": "3ec59acade3a0fa85e3c63f7c8ca2a95eece98420e0c5cdb25cb6e5b6039fe7c",
+            "runtime/abi3/capability.py": "a8641dd79a8e169f1121c9b436a3f9d33e21fd438708f6ecf55214c1325e1a79",
+            "runtime/abi3/constants.py": "a97b329b38a5bfb6438924e34b26c6f70b8e068026c685a29ec9b1ff0b8c1e4a",
+            "runtime/abi3/crc.py": "d47b2c45f250b438d3cbc04eef2dd3c1ab68b771392cbe16de78a1238439e27e",
+            "runtime/abi3/deployment.py": "e7aeac69a74590ded75ba34b603b23aa071f58ef7965e2f8f93d72a82dc35b61",
             "runtime/abi3/descriptors.py": "fd60c52ee2117016a8faa644cdaebe1e95ad003535576bec241f7d9c6018993e",
+            "runtime/abi3/layout.py": "6862c48ef1c596421a91dad9c2a1f87c88eaf289c1a49af1bc366ab5e97bdb8e",
+            "runtime/abi3/records.py": "18140e2a382dd4d515da33ccf2c5a08c203bcb36ae9e3e86747265346d4ad7ca",
+            "runtime/abi3/verifier.py": "9ac35c1de37996ca98ee2db9e1edb0a1ba9263ede2dbe3049bf51b45f218723d",
             "runtime/driver.py": "cf53554f3ac2b706119700929b1c51dce98d720da4dacca42ce59c0859c5e8bf",
-            "runtime/sim/backend.py": "9b798e9882d51c539f1862cb00b553766680c6de76bb1d1ac1ceb54ac29173fa",
-            "runtime/sim/device.py": "8278011c9f5543bffe6d13702ff999053ce3dbfa94934138dd4a6cde9ed8d37a",
-            "runtime/sim/engine.py": "2cc6c81d4eb808795cddfbfbd5500e8fc3641512a871edc3140c115b07d7d8c9",
+            "runtime/reference/compression_pool.py": "11a4f10f4f845d746cf25691e7f84e56d988a6d782a5becff8add6239c1d55af",
+            "runtime/reference/formats.py": "74a3254c7a1dba9ad3bf07a5c793cb2ec1766f953b48ec4c782391f757290aa2",
+            "runtime/reference/hadamard.py": "2d432fa289214cce5db6090c23c898ba9b13c75517190ec22b709be6d1ea2a34",
+            "runtime/reference/hyper_connection.py": "08876748899568abd7ad58ba33e734e381ed9a65a79419bc7b65b070284113f1",
+            "runtime/reference/normalization.py": "de04abe88b769d9e9332d5050b15a4b278eff7dff18d1d51100b13d61012527e",
+            "runtime/reference/quantization.py": "f9241d8c9674b1f9ac72d44f570a1b7291635f2ec62883d74a8f555e1644cd67",
+            "runtime/reference/sparse_attention.py": "b4b16d9583ab8fc9ff50d96cc6e94b4469f54de37f62dea07333353d995306ef",
+            "runtime/reference/sqrt_softplus.py": "bbb91122078c983abd6ba8e233e1fc9573ad6ddb12c0f47e19a6fd9af2957562",
+            "runtime/reference/swiglu.py": "8a2b6821f42a438da1b34ab78e76d317d00fc2fd2bbb16deed315d77e09246d4",
+            "runtime/reference/transcendental.py": "bb26b68fbebc2ef48bdc44deb58163b73f38fd33bac8f4d9662e6d10c2822394",
+            "runtime/sim/backend.py": "e91b9dc70de0bbf310e5d542a84b05d7ea6a1b828e73a9dcfe5b20b31a48b008",
+            "runtime/sim/counters.py": "dab7458cb196b94b710566e8478d0c2a4b5511a54903d1c0c0edaa1afd9f3c0a",
+            "runtime/sim/device.py": "89ff77990fee791a5cb7b46e28a2efab36c66e253c52e9cd0929673607b9178c",
+            "runtime/sim/engine.py": "31f826fb02f5c483cd04d7c3118eabe0cfd72f9b51584a9322d44d787acdbccb",
+            "runtime/sim/engines/__init__.py": "251d9b7d848311209b978ff083f9c3a0de896833d6317df7bb9cb17d8ee7d12f",
             "runtime/sim/engines/attention.py": "47755eded70c9255dfaa22628d569cd299daa95d96c3e0e451675706aec13dde",
-            "runtime/sim/engines/dma.py": "2d747f9430f098c14305f63229646e49bd4c729e2bbfe7e97b5867b5f3c78f67",
+            "runtime/sim/engines/deepseek_vector.py": "70906c8ca19545a7d6219da6837d9afa40a34a1a357b3c098b00e0334368178e",
+            "runtime/sim/engines/dma.py": "92ed01711032c0a2e1d9e4ca4c7e1eee735475246d4c30aa8621d05d1767fc45",
+            "runtime/sim/engines/link.py": "086af2f3f501b180821ae6130abd6aeefe78172199a86066cb01583699aa208e",
+            "runtime/sim/engines/reduction.py": "16ed4dfafe72d5d77dd8c472f09e33c3708acb3dd9b7f8130f2c931746f9b639",
+            "runtime/sim/engines/route.py": "3e27e1a7705ce34e817c1d12b9092871644382cede262e259ed6c431333a2269",
             "runtime/sim/engines/selection.py": "98215d7b484067f882dc77de573ac8d7a5926c53edbb41a7a2b10ad6a94f53b9",
-            "runtime/sim/engines/tensor.py": "17499435d7ed1e3f554a617dd941ce68664d2ad037dfad7400f9229122f9d8f6",
-            "runtime/sim/engines/vector.py": "04b850538a956a875e4351ad143174b131e008ea3aa387fe188b9f21b06e0ab8",
-            "runtime/sim/memory.py": "75bd31c2ff724154117eb1303dbdfd1cd7edd9b8f8193e81d31640e277bb0bd5"
+            "runtime/sim/engines/tensor.py": "91d67e776fd65bcc1fceba67445a1b54e090bee09f4ec7efd7fd9c12c2238e00",
+            "runtime/sim/engines/vector.py": "b394bc9c04cee5e4f679b5ba1aebc3d2389591fd9c4cbdc93d60c3daeef26d5f",
+            "runtime/sim/formats.py": "f2c9d1e2a6c13eb1961e4d156a7a28fd0ee03e1bdb47018b8cb1d79c89448385",
+            "runtime/sim/generators.py": "3606d968996078bbaee9d694645f8b285861968aa671100d5141d5cafe5f5356",
+            "runtime/sim/memory.py": "4b959c863b0fb44db064b2e39a1d40408022f86a80c3b146d185d501c8820308",
+            "runtime/tensor_accelerator/attention.py": "275859fcb1a1e951cbd40c207d50a4de011637bb10d6a3788d223d743565e5f5",
+            "runtime/tensor_accelerator/bf16.py": "75543479efffeb7a6806dd44178c8af1844276f87e3d01366b21e1cbccf68a34",
+            "runtime/tensor_accelerator/elementwise.py": "64877e0af6d47a695dd650a1d3912d2e1ed508d425b90babb89c4ce931fa4e26",
+            "runtime/tensor_accelerator/rmsnorm.py": "a4cd12f16bfc9419681cff8b4065a14f4af3778fae3866b79f7db93a46351e29",
+            "runtime/tensor_accelerator/rope.py": "bc15648eed4d94136561db5c602b7b38fbd1fa71feba5ea2be9c740f9808cf56",
+            "runtime/tensor_accelerator/sparse_attention.py": "5972c0ffe5714e774a1702f311352e22ff1a7d0d3feb0f614669ee08eb8c0562"
           },
           "stop_reason": "max_new_tokens"
         },
+        "executed_source_integrity_problems": [],
         "origin_composition": {
           "disagreements": [],
           "margins_agree": true,
@@ -849,11 +946,8 @@
             12
           ]
         },
-        "runtime_source_drift": [
-          "runtime/abi3/deployment.py",
-          "runtime/sim/device.py",
-          "runtime/sim/engine.py"
-        ],
+        "runtime_source_drift": [],
+        "runtime_source_missing": [],
         "scenario": "degraded",
         "totals": {
           "activations": 8475,
@@ -896,28 +990,20 @@
     }
   },
   "evidence_class": "public_open_tool_rtl_simulation",
-  "executed_stream_source_drift": {
-    "qwen_chip": [
-      "runtime/abi3/deployment.py",
-      "runtime/sim/device.py",
-      "runtime/sim/engine.py"
-    ],
-    "qwen_chip_degraded": [
-      "runtime/abi3/deployment.py",
-      "runtime/sim/device.py",
-      "runtime/sim/engine.py"
-    ]
-  },
+  "executed_stream_integrity_problems": {},
+  "executed_stream_source_drift": {},
+  "executed_stream_source_missing": {},
   "limitations": [
     "there is no ROM array in the RTL under test. The array sits behind the sense request/response interface and is supplied by the testbench top, so this campaign establishes addressing, ordering, masking, repair translation and operand alignment, and establishes nothing about cell area, read energy, sense margin, wordline or bitline delay, retention or defect rate",
     "the sense granule is a declared parameter of this block (ROM_SENSE_BYTES = 64), not a macro property read out of any collateral in this repository. Row activations and sense accesses are therefore counted, and are never converted into an energy here",
     "a decode step of the Qwen ROM deployment reads about fifteen gigabytes and no open-tool simulator will replay that beat by beat. Each vector set replays real requests up to a published beat budget and covers the rest of the address space with single-granule probes at every object, region, row and placement resource boundary. The requests dropped for budget, and the largest one dropped, are published in the vector set",
     "operand data is checked against authenticated checkpoint bytes only for the granules in the published window. Outside it the array returns a deterministic function of its own address, so what is checked there is conveyance and ordering, not weight content",
     "the request-extent bounds test was evaluated at 64 bits and a 64-bit sum wraps, so a byte offset within 2**32 of 2**64 passed an in-range test and was then served from the middle of the object. It is now evaluated at 65 bits and cannot wrap. Nothing here exercises the fixed guard: the widest byte offset any published vector set carries is below 2**35, which is also why two simulators and two checkers never disagreed over it. The Python reference computes the same sum in arbitrary precision and was always exact, so the fix moved the RTL onto the reference rather than the reference onto the RTL",
-    "the DeepSeek wafer set has no executed request stream: that lane has produced no tokens (checklist W6.4). Its requests come from the compiled plan's own read unit and from every shard boundary the plan declares, which is derived evidence about addressing",
+    "the DeepSeek wafer set has no executed request stream. The separate governed token lane now completes (checklist W6.4), but no request trace from it is retained here. This set's requests come from the compiled plan's own read unit and from every shard boundary the plan declares, which is derived evidence about addressing and must not be relabelled as executed traffic",
     "column redundancy is refused, not implemented. A read reaching a resource with an activated column repair fails closed with a distinct class rather than returning the unrepaired column",
     "the walk from a resolved tensor view to contiguous byte ranges is not in this block. Requests arrive as contiguous byte ranges and the campaign derives those ranges from the views the functional device resolved",
     "no descriptor CRC, program header or admission check is performed here; the tables arrive over the configuration channel already admitted",
+    "the ignored deployment bundles are consumed when vectors are built, not retained or reopened by this RTL campaign. Each set therefore names the ABI deployment SHA-256 it was derived from; that content-addressed digest binds the instruction body, descriptor table, object source map, topology, capability digest and ROM plan. The campaign binds the vector to that exact identity, but does not claim that an arbitrary current build/ directory still contains it",
     "quarantine is a comparator list, not a bit per placement resource. No published vector set withdraws more than one resource, so the list-depth capacity refusal is a guard on a bound nothing here approaches: required_capacity.quarantine_entries is 0 or 1 against a bench depth of 32. What is exercised is the service's refusal of an out-of-range configuration slot -- the bench top issues one deliberately out-of-range quarantine write per run, after the plan is loaded, and both checkers require the sticky cfg_error to be 0 before it, 1 after it, and the marker unchanged, which is what shows the write was dropped rather than folded onto slot 0",
     "the depth at which a comparator list stops being cheaper than a bit per resource is not established here. It is chosen for a wafer plan of 9,300 placement resources; at the 16-resource instance the physical view routes, the list is the larger of the two"
   ],
@@ -927,7 +1013,13 @@
     "verilator_cpp_executable"
   ],
   "source_sha256": {
-    "compiler/backends/rom/common/image.py": "a7aa1f293a4dd98fe72976ca1855cbb2c8d46446fc4d340c8e3a7ef14b53b49c",
+    "build/workloads/qwen3-8b/TA-QW-CHAT-1.json": "7c9ed26eee61816f10a66ae2a73a2172def627b4ba7cebd08832c607653c5f0f",
+    "compiler/backends/rom/common/image.py": "5923c03d6f598dc7dae2706dfbb1e4eca837692d42d5edf27a2af1b5f379e8c5",
+    "compiler/backends/rom/common/program.py": "7928bbd4b08da9437e19c5fd97a4137102c2f1f5ab21b0d412a64f95546bbb5a",
+    "compiler/backends/rom/deepseek_v4.py": "e58a487de562b9a62a0a59edd594389f0a8e4f90a60989206f9c84a28490ae3c",
+    "compiler/backends/rom/qwen3.py": "3b82155808bd962d81ba2a9b0a089222caaaac1701cc48588c5412e017d51263",
+    "compiler/ir/v3/kernel_ir.py": "2ebeb29caa6e1c3683b0877df2960d7f661dd35bb6c1379c682d7781f62fb795",
+    "configs/hardware/abi3_capability/rom_qwen3.json": "38234d6cccbd9c017efa286b67f66b1c21572e206ba71aca874e4f912eb6adbf",
     "rtl/rom/ot_rom_bank_array.sv": "69c16973bcfb96a7fefee454773f2bbe37a5815a0c1f21c07cb2f23b9c2e1921",
     "rtl/rom/ot_rom_pkg.sv": "d42315047ec5cdde55b7a81cf50024b97eb59a53f637fa889593ecbf0e8cea3b",
     "rtl/rom/ot_rom_read_service.sv": "b7f0dedf7e731ff65af2690a33c30dba7e750c981679f8f8432e66a430befb51",
@@ -935,15 +1027,15 @@
     "rtl/test/rom_service_top.sv": "559c0a9383cc064ab147bca54a27527bc5594d0fe819bbf20d49d72789074594",
     "rtl/test/tb_rom_service.sv": "56c78c82079a94fd3fd6403a659109a0f0cbe10eae97d26678097f6e03ffdb43",
     "runtime/abi3/constants.py": "a97b329b38a5bfb6438924e34b26c6f70b8e068026c685a29ec9b1ff0b8c1e4a",
-    "runtime/abi3/deployment.py": "5e9c3fd58a6077489cb7409403829130b3f32ec3e89cbd2c333ba943235db98c",
+    "runtime/abi3/deployment.py": "e7aeac69a74590ded75ba34b603b23aa071f58ef7965e2f8f93d72a82dc35b61",
     "runtime/abi3/descriptors.py": "fd60c52ee2117016a8faa644cdaebe1e95ad003535576bec241f7d9c6018993e",
     "testdata/compiler/rom_service/deepseek_wafer/rom_expect.hex": "b3be1967902402aa68950bf6436b7ee10f2f9238a24c14f4c641c7b7055558a3",
     "testdata/compiler/rom_service/deepseek_wafer/rom_mask.hex": "df6bbc678b81527de980bb6bc6b002ac1c7f11c377c9bf2ba223dee51ae55d1f",
     "testdata/compiler/rom_service/deepseek_wafer/rom_meta.hex": "320483c1df13b094bcc847e1e880d9bb261481225b826e009005cdc6185d6390",
     "testdata/compiler/rom_service/deepseek_wafer/rom_object.hex": "8471dfabd503c8554191c8c4dbf706ed966c6794bc81f2a1ca0ef3e583bc73a2",
     "testdata/compiler/rom_service/deepseek_wafer/rom_repair.hex": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-    "testdata/compiler/rom_service/deepseek_wafer/rom_request.hex": "b59226e0732cff4cbfaaa3a9cc1a42726aa4723c16a3ee676ac19af1307b9503",
-    "testdata/compiler/rom_service/deepseek_wafer/rom_service_vectors.json": "2a0da6bcc181a71b561b7396e844fbd66edc18f8818f05b1d944b3e423680e17",
+    "testdata/compiler/rom_service/deepseek_wafer/rom_request.hex": "bdaadb42d29fb460cfc29523d754fc814807e05a10693071f4bc4adde6ae5828",
+    "testdata/compiler/rom_service/deepseek_wafer/rom_service_vectors.json": "4f28ffaf27752f5cffe953942164f00b8d0c3413d5b31746de22e7b986901b42",
     "testdata/compiler/rom_service/deepseek_wafer/rom_shard.hex": "236ae4253c90a8633a588a12bb581b3d8fc7a51271b89af2bf3e9a09fe2c6631",
     "testdata/compiler/rom_service/deepseek_wafer/rom_window.hex": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "testdata/compiler/rom_service/qwen_chip/rom_expect.hex": "b5b50be644f61b75b0b3335dc4e5c488f45c8a712cc0080019667e45c4240f22",
@@ -952,7 +1044,7 @@
     "testdata/compiler/rom_service/qwen_chip/rom_object.hex": "c56b8e05ab6a26f1a755a975485e8f79a77875e4a5979eb5d2577b56ff223f13",
     "testdata/compiler/rom_service/qwen_chip/rom_repair.hex": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "testdata/compiler/rom_service/qwen_chip/rom_request.hex": "730c5c22be8476c616cd7a5a6ac22e02e527074b116339bdcd2b9664b360861d",
-    "testdata/compiler/rom_service/qwen_chip/rom_service_vectors.json": "87fa3ee1d0770ea06643f69563e462103794c13f31f60a625d6853f066a58fda",
+    "testdata/compiler/rom_service/qwen_chip/rom_service_vectors.json": "954e04530f58239f9009553731da74a6a24333e90035871ca74429378f92d696",
     "testdata/compiler/rom_service/qwen_chip/rom_shard.hex": "e3b3f322071983ad40ee5141b35c11273d6e5c6f9c96bfe3215aeb86ae827290",
     "testdata/compiler/rom_service/qwen_chip/rom_window.hex": "e584ba0f7aedd0c4580fad11f2d63f8210b7b87d5bb866ac4b742f1f651b82a6",
     "testdata/compiler/rom_service/qwen_chip_degraded/rom_expect.hex": "66c83ef8131e01f43d9aa3bf3e49cbcc2613c6b0f1e9c2649e17a86bf8ec9c64",
@@ -961,13 +1053,13 @@
     "testdata/compiler/rom_service/qwen_chip_degraded/rom_object.hex": "c56b8e05ab6a26f1a755a975485e8f79a77875e4a5979eb5d2577b56ff223f13",
     "testdata/compiler/rom_service/qwen_chip_degraded/rom_repair.hex": "1f3f24c7ff6bcf01a175ccf64902175e73223f14789aa7ae729abd2d2ff07f82",
     "testdata/compiler/rom_service/qwen_chip_degraded/rom_request.hex": "b431d908eefaee4e6cd6b5cd1409d7005af8a44c71d4899412e3de355facab6a",
-    "testdata/compiler/rom_service/qwen_chip_degraded/rom_service_vectors.json": "6a098139df0f6367ec3e01671a3485e86c74e228a5f7ac5405be236cf6efabcf",
+    "testdata/compiler/rom_service/qwen_chip_degraded/rom_service_vectors.json": "216cc4b9c46315361bb625be3d1be22d0bde36a9ee68b61ac592fe50e51b180b",
     "testdata/compiler/rom_service/qwen_chip_degraded/rom_shard.hex": "e3b3f322071983ad40ee5141b35c11273d6e5c6f9c96bfe3215aeb86ae827290",
     "testdata/compiler/rom_service/qwen_chip_degraded/rom_window.hex": "9ff0ecdc1157ce4edb19f80f36a4ae0bdd8bb891a9b94c2037155d2e32e5a88f",
-    "tools/build_rom_service_vectors.py": "22fe10a8c0bcb6ab6ef2a36f44235f835f3955e10f2dd78ae02d4b9e096ec045",
-    "tools/rtl_rom_service_campaign.py": "febc6e2752517a0819ce9a95e29cf4e513f3dba6356dc13991ece4177924efda"
+    "tools/build_rom_service_vectors.py": "e0c8ae86951544564433954cf1225ba97284a4e5e10cad82410df96275d20d8b",
+    "tools/rtl_rom_service_campaign.py": "053abb594d3f75e2421b823d88a2dcfc40d11eb28bbdd0787f54e9a2df376fa7"
   },
-  "status": "fail",
+  "status": "pass",
   "tools": {
     "cxx": {
       "executable": "/usr/bin/g++",

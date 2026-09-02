@@ -132,13 +132,12 @@ so a deployment with a quarantined resource in its own plan cannot be built.
 
 ### `deepseek_wafer` — derived, not executed, and labelled so
 
-The DeepSeek wafer lane had produced no tokens when this set was built
-(checklist W6.4), so there is no executed read stream to record. It has since
-completed one prefill plus three decode transactions from a 32-token prefix,
-matching the oracle and HBM on all four generated tokens under
-`results/abi3/accelerator_tokens/`; that functional run did not retain a ROM
-read stream, so it does not change what this set is. Its requests come from the
-compiled plan's own
+This campaign retains no executed DeepSeek read stream. The governed token lane
+does complete one prefill plus three decode transactions from a 32-token
+prefix, matching the oracle and HBM on all four generated tokens under
+`results/abi3/accelerator_tokens/`; that functional run does not retain a ROM
+read stream, so it cannot be substituted for one here. This set is therefore
+deliberately rebuilt as plan-derived evidence. Its requests come from the compiled plan's own
 read unit — a region *slot* is what one iteration of a compressed loop reads —
 and from **every shard boundary the plan declares**, each crossed by one
 request. That is derived evidence about addressing, and the artifact says so
@@ -147,9 +146,9 @@ rather than letting it read as an executed stream.
 It is also the set that exercises what the Qwen chip cannot: **88** of its **228** regions are distributed across more than one placement resource, one across **1,281** of them, so the shard walk is the thing being tested rather than a degenerate single-entry lookup. <!-- figure: 88 src="results/rtl/rom_service_campaign.json#correlation.vector_sets.deepseek_wafer.plan.distributed_region_count" name="DeepSeek wafer distributed regions, ROM service" --> <!-- figure: 228 src="results/rtl/rom_service_campaign.json#correlation.vector_sets.deepseek_wafer.plan.region_count" name="DeepSeek wafer regions, ROM service" --> <!-- figure: 1,281 src="results/rtl/rom_service_campaign.json#correlation.vector_sets.deepseek_wafer.plan.max_shards_in_one_region" name="DeepSeek wafer largest region shard count, ROM service" -->
 **9,172** of the plan's **9,300** placement resources are entered by a served read; the 128 that are not are the 127 owned only by the deliberately masked expert bank plus the one deliberately quarantined tile, and that is checked arithmetically rather than asserted. <!-- figure: 9,172 src="results/rtl/rom_service_campaign.json#correlation.vector_sets.deepseek_wafer.totals.placement_resources_entered" name="DeepSeek wafer resources entered, ROM service" --> <!-- figure: 9,300 src="results/rtl/rom_service_campaign.json#correlation.vector_sets.deepseek_wafer.plan.resource_count" name="DeepSeek wafer placement resources, ROM service" -->
 
-**This set is still not evidence that the wafer product runs, and the reason
-has changed.** It was derived rather than executed because the wafer lane had
-produced no tokens when it was built. Separately,
+**This set is still not evidence that the wafer product runs.** It is derived
+rather than executed because no read trace from the successful governed token
+lane is retained by this campaign. Separately,
 `results/rtl/abi3_deployment_campaign.json` (checklist W8.8) answers a sharper
 question about a *different* block: whether the ABI 3.0 microsequencer executes
 a shipped deployment's **program**. That campaign's `correlated_cases` field is
@@ -375,44 +374,38 @@ and three vector sets ran across this for as long as the block has existed
 without one disagreement. It also means **nothing in this campaign exercises the
 fixed guard**; §9 says so.
 
-### 6e. The campaign's own status is `fail`, and the RTL is not why
+### 6e. The campaign is source-current and passes without relaxing provenance
 
 Read the artifact's `status` before anything else in this section: it is
-**`fail`**. Every one of the six simulator cases passes — three vector
-sets on two simulators, each reproducing its set's marker exactly, the largest
-of them at **108,357** individual checks <!-- figure: 108,357 src="results/rtl/rom_service_campaign.json#cases[0].checks" name="DeepSeek wafer Icarus check count" --> — and the campaign still refuses, on
-`executed_stream_source_drift`.
+**`pass`**. <!-- figure: "pass" src="results/rtl/rom_service_campaign.json#status" name="ROM service campaign status, RTL report" --> Every one of the six simulator cases passes — three vector sets on
+two simulators, each reproducing its set's marker exactly, the largest of them
+at **108,357** individual checks <!-- figure: 108,357 src="results/rtl/rom_service_campaign.json#cases[0].checks" name="DeepSeek wafer Icarus check count" --> — and all three campaign-level executed-stream
+problem maps are empty: source drift, missing required pins, and input/integrity
+problems.
 
 A vector set that replays an **executed** read stream records the SHA-256 of
-every runtime source the functional device was built from when the stream was
-recorded, and the campaign re-hashes them. Both Qwen sets record
-`runtime/sim/engine.py` at the revision they were recorded against; commit
-`a826c6c` changed that file about twenty minutes later, adding
-`snapshot_registry()` and `restore_registry()`. The check is a hash, so it
-cannot tell an additive change from a behavioural one, and it should not try:
-an executed read stream is evidence about the device that produced it, and that
-device's source has moved.
+the complete runtime boundary the functional device was built from,
+including admission, decoding, memory, numeric helpers, and every registered
+engine. The campaign re-hashes the entire recorded map, requires an irreducible
+critical-source minimum, re-hashes the repo-relative capability and workload
+inputs, and requires successful deployment admission, a device-verified
+**399**-range checkpoint-map identity <!-- figure: 399 src="results/rtl/rom_service_campaign.json#correlation.vector_sets.qwen_chip.executed_source.checkpoint_binding.authenticated_range_count" name="Qwen authenticated checkpoint ranges, ROM service" -->, zero device failure, and zero ROM read events
+omitted as inexpressible byte ranges. Both Qwen sets were re-executed through
+that path against deployment `925351…` (nominal) or the verified degraded
+rebuild `811aa1…`; no recorded hash was edited into agreement.
 
-**The honest repair is to re-record the stream, and this environment cannot.**
-Re-recording means re-executing the Qwen ROM deployment on
-`runtime.sim.device.Device`, which needs the authenticated checkpoint reachable
-from the deployment root. It is not: `build/abi3/qwen3-8b-rom/` holds only
-`deployment.json`, `descriptors.bin` and `program.bin`, and the generator stops
-with `object source file is missing: .../model-00001-of-00005.safetensors`. The
-degraded deployment `build/abi3/qwen3-8b-rom-degraded/` does not exist at all.
-So the failing status is committed as it stands.
-
-What was deliberately **not** done: the drift check was not relaxed, not
-narrowed to a subset of runtime files, and the recorded hashes were not edited
-to agree with the tree. Any of those would have turned a true statement about
-provenance into a passing run, which is the failure mode this whole document is
-about. The two facts a reader needs are both in the artifact and neither is
-inferred from the other — `cases[*].status` is `pass` six times and `status` is
-`fail`.
+The ignored deployment bundle is consumed when the vector is generated and is
+not a retained campaign input. Its ABI deployment SHA-256 is the durable
+content-addressed boundary: it binds the instruction body, descriptor table,
+object source map, topology, capability digest, and ROM plan. The campaign
+therefore establishes correlation for exactly that named deployment identity;
+it does not assert that an arbitrary present or future `build/` directory still
+contains the same bundle.
 
 The `deepseek_wafer` set is unaffected: it is derived from the compiled plan and
-records no executed source, so there is nothing for the drift check to
-invalidate.
+records no executed source. It is refreshed to deployment `fa9077…` and keeps a
+zero-byte checkpoint window because this plan-only generator did not activate
+the 156 GiB device and therefore did not authenticate its source ranges.
 
 ## 7. Physical view
 
@@ -482,9 +475,10 @@ make rom-service-physical
 PYTHONPATH=. python3 tools/rtl_rom_service_campaign.py --verify
 ```
 
-`--verify` runs no simulator. It re-hashes every file
-`results/rtl/rom_service_campaign.json` names in its own `source_sha256` and
-fails if any has moved. That check did not exist until this revision, and the
+`--verify` runs no simulator. It re-hashes every file the current
+`results/rtl/rom_service_campaign.json` names in its own `source_sha256`,
+including the executed stream's capability and workload inputs, and fails if
+any has moved. That check did not exist until this revision, and the
 first thing it found was the artifact committed at `518260f`, which disagreed
 with **eleven** of the thirty-nine files it named — including the RTL under test
 and both checkers — `rtl/rom/ot_rom_read_service.sv`,
@@ -506,9 +500,11 @@ committed into, and the same staleness is possible in every one of them. That
 is a finding this track reports and does not own; the count of affected
 artifacts is not stated here because nothing in this repository computes it.
 
-The executed sets need the authenticated Qwen checkpoint reachable from the
-deployment root; without it the generator still runs and publishes an empty
-real-byte window rather than pretending otherwise.
+The executed sets need the authenticated Qwen checkpoint passed explicitly as
+`--checkpoint-root`; the Make recipe does so. Without it device activation
+fails closed rather than publishing an executed stream whose inputs were not
+authenticated. The plan-derived DeepSeek set deliberately omits the root and
+therefore publishes a zero-byte real-data window.
 
 ## 9. The boundary, stated once
 
@@ -564,10 +560,8 @@ reference decode written from the compiled ROM region plan and not from the RTL.
 - **That the bytes are the model's bytes, outside the window.** Operand data is
   compared against authenticated checkpoint bytes only for the granules in the
   published window. Elsewhere what is checked is conveyance and ordering.
-- **That the Qwen executed stream is a stream of the device as it stands
-  today.** It was recorded from a functional device whose `runtime/sim/engine.py`
-  has since changed, and the campaign's status is `fail` because of it (§6e).
-  What the six passing cases establish is that the RTL and the reference agree
-  on that recorded stream; whether the current device would produce the same
-  stream is a question this artifact deliberately reports as open rather than
-  assumes.
+- **That the ignored deployment bundle was revalidated by the retained
+  campaign.** Vector generation admitted and executed the exact Qwen deployment
+  identities it records; the retained RTL campaign consumes only their derived
+  vectors. The content-addressed deployment digest is the boundary, not the
+  mutable contents of a local `build/` directory (§6e).

@@ -16,12 +16,12 @@ smoothed over:
     covers.  This is an executed read stream.
 
 ``deepseek-wafer``
-    The DeepSeek wafer ROM deployment has produced no tokens (checklist W6.4),
-    so there is no executed read stream to record.  Its requests are derived
-    from the compiled plan's own read unit -- a region slot is what one
-    iteration of a compressed loop reads -- plus every shard boundary the plan
-    declares.  That is derived evidence about addressing, not an executed
-    program, and the artifact says so.
+    This campaign retains no executed DeepSeek request stream.  Its requests
+    are derived from the compiled plan's own read unit -- a region slot is what
+    one iteration of a compressed loop reads -- plus every shard boundary the
+    plan declares.  That is derived evidence about addressing, not an executed
+    program, and the artifact says so.  The separate governed token lane now
+    completes; that does not retroactively make this plan-derived set executed.
 
 The reference decode in this file is written against the plan, independently of
 the RTL: it is what the RTL is correlated against, and it is the second
@@ -34,7 +34,6 @@ import argparse
 import collections
 import hashlib
 import json
-import os
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -266,6 +265,44 @@ def load_plan(deployment: Deployment) -> Plan:
             raise SystemExit(
                 f"object {object_id} descriptor names bank_or_tile {declared} "
                 f"but the plan places its first shard on {actual}"
+            )
+
+    # The byte-window reader addresses the region members, while DeviceMemory
+    # authenticates the deployment object's segments.  Prove those are the
+    # same ranges before calling a window "authenticated"; otherwise two
+    # independently digest-bound manifest fields could name different bytes.
+    for region in plan["regions"]:
+        object_id = region["object_id"]
+        if object_id == NO_ID or region["payload_bytes"] == 0:
+            continue
+        source = deployment.objects.get(object_id)
+        if source is None or source.kind not in {"file", "segments"}:
+            raise SystemExit(
+                f"region {region['key']!r} payload object {object_id} is not "
+                "backed by shared authenticated segments"
+            )
+        expected = [
+            {
+                "path": segment.path,
+                "offset": segment.offset,
+                "bytes": segment.bytes,
+                "sha256": segment.sha256,
+            }
+            for segment in source.segments
+        ]
+        actual = [
+            {
+                "path": member["source_path"],
+                "offset": member["source_offset"],
+                "bytes": member["bytes"],
+                "sha256": member.get("source_sha256"),
+            }
+            for member in region["members"]
+        ]
+        if actual != expected:
+            raise SystemExit(
+                f"region {region['key']!r} member ranges do not match object "
+                f"{object_id}'s authenticated source map"
             )
 
     repair = []
@@ -591,34 +628,122 @@ class Request:
 #: are digested before and after the run: a concurrent edit between the two
 #: makes the stream a mixture of two implementations, and this refuses rather
 #: than publishing it.
+# Keep this boundary aligned with the modules that can determine an executed
+# request stream.  A deployment digest binds the already-lowered program, so
+# compiler lowering is deliberately outside this list; admission, decoding,
+# memory materialisation, numeric helpers and every registered engine are not.
 RUNTIME_SOURCES = (
+    "runtime/abi3/builder.py",
+    "runtime/abi3/capability.py",
+    "runtime/abi3/constants.py",
+    "runtime/abi3/crc.py",
+    "runtime/abi3/deployment.py",
+    "runtime/abi3/descriptors.py",
+    "runtime/abi3/layout.py",
+    "runtime/abi3/records.py",
+    "runtime/abi3/verifier.py",
+    "runtime/driver.py",
+    "runtime/reference/compression_pool.py",
+    "runtime/reference/formats.py",
+    "runtime/reference/hadamard.py",
+    "runtime/reference/hyper_connection.py",
+    "runtime/reference/normalization.py",
+    "runtime/reference/quantization.py",
+    "runtime/reference/sparse_attention.py",
+    "runtime/reference/sqrt_softplus.py",
+    "runtime/reference/swiglu.py",
+    "runtime/reference/transcendental.py",
+    "runtime/sim/backend.py",
+    "runtime/sim/counters.py",
     "runtime/sim/device.py",
     "runtime/sim/engine.py",
+    "runtime/sim/formats.py",
+    "runtime/sim/generators.py",
     "runtime/sim/memory.py",
-    "runtime/sim/backend.py",
-    "runtime/sim/engines/tensor.py",
-    "runtime/sim/engines/vector.py",
-    "runtime/sim/engines/dma.py",
-    "runtime/sim/engines/selection.py",
-    "runtime/sim/engines/attention.py",
-    "runtime/sim/engines/state.py",
-    "runtime/driver.py",
-    "runtime/abi3/descriptors.py",
-    "runtime/abi3/deployment.py",
+    "runtime/tensor_accelerator/attention.py",
+    "runtime/tensor_accelerator/bf16.py",
+    "runtime/tensor_accelerator/elementwise.py",
+    "runtime/tensor_accelerator/rmsnorm.py",
+    "runtime/tensor_accelerator/rope.py",
+    "runtime/tensor_accelerator/sparse_attention.py",
 )
 
 
+def runtime_source_paths() -> tuple[Path, ...]:
+    """Return the complete, fail-closed functional source boundary."""
+
+    paths = {
+        *(REPO / rel for rel in RUNTIME_SOURCES),
+        *(REPO / "runtime" / "sim" / "engines").glob("*.py"),
+    }
+    missing = sorted(str(path.relative_to(REPO)) for path in paths if not path.is_file())
+    if missing:
+        raise SystemExit(
+            "the executed-stream source boundary names missing files: "
+            + ", ".join(missing)
+        )
+    return tuple(sorted(paths))
+
+
 def runtime_digests() -> dict[str, str]:
-    out: dict[str, str] = {}
-    for rel in RUNTIME_SOURCES:
-        path = REPO / rel
-        if path.exists():
-            out[rel] = hashlib.sha256(path.read_bytes()).hexdigest()
-    return out
+    return {
+        str(path.relative_to(REPO)): hashlib.sha256(path.read_bytes()).hexdigest()
+        for path in runtime_source_paths()
+    }
+
+
+def input_identity(path: Path) -> dict[str, str]:
+    """Stable identity of an exact non-checkpoint input loaded by the run."""
+
+    resolved = path.resolve()
+    try:
+        recorded_path = str(resolved.relative_to(REPO))
+    except ValueError:
+        recorded_path = str(resolved)
+    return {
+        "path": recorded_path,
+        "sha256": hashlib.sha256(resolved.read_bytes()).hexdigest(),
+    }
+
+
+def checkpoint_binding_identity(deployment: Deployment) -> dict[str, Any]:
+    """Summarise the authenticated external ranges DeviceMemory verifies.
+
+    The root is intentionally not identity: moving an identical checkpoint may
+    not change evidence.  The ordered object/range map, including every
+    declared range digest, is identity and is already transitively bound by the
+    deployment digest.  Publishing it explicitly makes the loaded-input scope
+    auditable without embedding host-specific paths.
+    """
+
+    rows: list[dict[str, Any]] = []
+    range_count = 0
+    for object_id, source in sorted(deployment.objects.items()):
+        maps = (
+            source.node_segments
+            if source.kind == "node_segments"
+            else (source.segments,) if source.kind in {"file", "segments"} else ()
+        )
+        for node_id, segments in enumerate(maps):
+            for segment in segments:
+                rows.append(
+                    {
+                        "object_id": object_id,
+                        "node_id": node_id if source.kind == "node_segments" else None,
+                        **segment.to_dict(),
+                    }
+                )
+                range_count += 1
+    encoded = json.dumps(rows, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    return {
+        "authenticated_range_count": range_count,
+        "range_map_sha256": hashlib.sha256(encoded).hexdigest(),
+    }
 
 
 def executed_qwen_requests(
     deployment_dir: Path,
+    checkpoint_root: Path | None,
     capability_path: Path,
     workload_path: Path,
     prompt_tokens: int,
@@ -646,6 +771,10 @@ def executed_qwen_requests(
 
     load_engines()
     before = runtime_digests()
+    input_before = {
+        "capability": input_identity(capability_path),
+        "workload": input_identity(workload_path),
+    }
     events: list[dict[str, Any]] = []
     gather_rows: list[list[int]] = []
 
@@ -715,7 +844,10 @@ def executed_qwen_requests(
             json.loads(capability_path.read_text(encoding="utf-8"))
         )
         deployment = Deployment.read(deployment_dir)
-        device = Device(deployment, capability, verify=False)
+        # Admission is part of the evidence, and the explicit checkpoint root
+        # is the missing link between an ignored three-file deployment bundle
+        # and the authenticated source ranges it names.
+        device = Device(deployment, capability, root=checkpoint_root)
         driver = GenerationDriver(device)
         workload = json.loads(workload_path.read_text(encoding="utf-8"))
         prompt = workload["token_ids"][:prompt_tokens]
@@ -735,6 +867,15 @@ def executed_qwen_requests(
             "the functional device's sources changed while the request stream "
             f"was being recorded ({', '.join(changed)}); the stream would be a "
             "mixture of two implementations"
+        )
+    input_after = {
+        "capability": input_identity(capability_path),
+        "workload": input_identity(workload_path),
+    }
+    if input_before != input_after:
+        raise SystemExit(
+            "the capability or workload changed while the request stream was "
+            "being recorded; the stream would have mixed input identities"
         )
 
     recorded = sum(event["bytes"] for event in events)
@@ -785,8 +926,19 @@ def executed_qwen_requests(
                 note=f"descriptor {event['descriptor_id']}",
             )
         )
+    if skipped:
+        raise SystemExit(
+            f"{skipped} ROM read events cannot be expressed as exact contiguous "
+            "ranges; publishing the executed stream would omit device traffic"
+        )
     summary = {
         "runtime_source_sha256": after,
+        "loaded_inputs": input_after,
+        "checkpoint_binding": {
+            **checkpoint_binding_identity(deployment),
+            "verified_on_device_activation": True,
+        },
+        "deployment_admitted": bool(device.report and device.report.admitted),
         "generated_token_count": len(result.generated_token_ids),
         "stop_reason": result.stop_reason,
         "prompt_token_count": len(prompt),
@@ -974,6 +1126,7 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
     if args.executed:
         executed, executed_summary = executed_qwen_requests(
             args.deployment,
+            args.checkpoint_root,
             args.capability,
             args.workload,
             args.prompt_tokens,
