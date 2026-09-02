@@ -150,8 +150,9 @@ state open. All eight refused.
 
 ### 2.7 Checkpoint/restart exactness
 
-Three of the four governed restart lanes are now source-current and passing:
-Qwen HBM (`8e1185…`), Qwen ROM (`925351…`) and DeepSeek ROM (`fa9077…`). Each
+All four governed restart lanes are source-current and passing: Qwen HBM
+(`8e1185…`), Qwen ROM (`925351…`), DeepSeek ROM (`fa9077…`) and DeepSeek HBM
+(`a72c87…`). Each
 runs a three-token uninterrupted baseline, interrupts another process after two
 tokens, and reproduces the final token in a fresh process loaded only from the
 checkpoint. Tokens, retired work, aggregate counters and all per-node counters
@@ -163,15 +164,17 @@ Every phase and control is a distinct process bound to the same deployment,
 implementation, node count and complete 288-file source map over `compiler/`,
 `runtime/` and the restart driver, digest `ee08b43d…`; all 27 guards pass. The
 current DeepSeek ROM checkpoint represents 1,078,248,644,744 logical mutable
-bytes in 143,255,560 logical stored payload bytes. Those are sparse simulator
-checkpoint quantities, not physical storage. The current DeepSeek HBM rerun is
-the sole remaining W6.6 lane and is executing serially because it is the
-high-memory case. Its uninterrupted comparator has passed all three generated
-tokens in 3,961.6 seconds. The interrupted process is now executing the
-32-token prefill without an observed error; checkpoint at token two, fresh
-resume, STATE-erased and STATE-only controls, aggregate artifact assembly, and
-the independent 27-guard/source/deployment/PID/counter audit remain. The
-checklist stays at 82/94 until that retained artifact passes.
+bytes in 143,255,560 logical stored payload bytes. The 32-node DeepSeek HBM
+checkpoint represents 2,447,390,804,224 logical mutable bytes in 5,136,187,520
+logical stored payload bytes across 8,992 writable objects. It writes in 24.53
+seconds and restores normally in 99.724 seconds. Those are sparse simulator
+checkpoint quantities, not physical storage or performance evidence. The HBM
+baseline and fresh resume both produce `[13806, 345, 7472]`; the STATE-erased
+negative produces `[13806, 345, 7249]` and diverges at index two, while the
+reported-only state-only control matches. The complete 2:56:39 campaign and
+independent artifact audit pass source, deployment, five-PID, exactness,
+all-32-node counter and 27-guard checks. The four-artifact source-current
+regression also passes. W6.6 is closed, taking the checklist to 83/94.
 
 This is a 93-token Qwen / 32-token DeepSeek, 2+1 generated-token functional
 restart result. It is not long-context, performance, RTL, physical, silicon or

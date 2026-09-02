@@ -19,7 +19,8 @@ that produces it.
 **2026-09-02 reconciliation.** The paragraph above is retained as the discovery
 state, not a current status claim. `PROGRAM_STATUS.md` has since been generated;
 its current retained snapshot binds clean commit `3891fa4…` and is now
-historical again while W6.6 is in flight. `tools/check_prose_figures.py` now
+historical after W6.6 closed at 83/10/1; a clean companion regeneration is the
+next publication step. `tools/check_prose_figures.py` now
 checks hundreds of explicit provenance annotations, but unannotated figures
 remain outside its visibility, which is why W11.3 is still partial.
 
@@ -587,10 +588,10 @@ is still the most durable part of this ledger.
 
 | number / claim | where it is stated | what produces it | grade | current? |
 |---|---|---|---|---|
-| Qwen3-8B HBM and ROM and DeepSeek-V4-Flash-0731 ROM P32 each reproduce a three-token uninterrupted baseline exactly when stopped after token two, checkpointed, and resumed for token three in a fresh process | checklist W6.6 and `results/abi3/restart_exactness_{qwen3_hbm,qwen3_rom,deepseek_rom_p32}.json` | the three target-specific `make abi3-restart-*` recipes → `tools/run_abi3_restart_exactness.py` → `runtime/sim/checkpoint.py` | **`executed`**, source-current within the recorded 288-file governed Python scope; functional-simulator evidence only | **YES for these three lanes** |
-| DeepSeek HBM restores all 32 node arenas and ends with the same aggregate counter set and all 32 per-node counter sets, including sticky-overflow state | `results/abi3/restart_exactness_deepseek_hbm_p32.json` and checklist W6.6 | the serialized governed HBM P32 restart recipe above | **`executing`** against current deployment `294319…`; the uninterrupted comparator passed 3/3 tokens in 3,961.6 seconds, while interrupt/checkpoint, fresh resume, both controls, artifact assembly, and the independent final audit remain; the previously retained artifact predates that deployment and is not admissible as current evidence | **NO — final source-current artifact pending** |
+| Qwen3-8B HBM and ROM plus DeepSeek-V4-Flash-0731 ROM and HBM P32 each reproduce a three-token uninterrupted baseline exactly when stopped after token two, checkpointed, and resumed for token three in a fresh process | checklist W6.6 and `results/abi3/restart_exactness_{qwen3_hbm,qwen3_rom,deepseek_rom_p32,deepseek_hbm_p32}.json` | the four target-specific `make abi3-restart-*` recipes → `tools/run_abi3_restart_exactness.py` → `runtime/sim/checkpoint.py` | **`executed`**, source-current within the recorded 288-file governed Python scope; functional-simulator evidence only | **YES for all four lanes** |
+| DeepSeek HBM restores all 32 node arenas and ends with the same aggregate counter set and all 32 per-node counter sets, including sticky-overflow state | `results/abi3/restart_exactness_deepseek_hbm_p32.json` and checklist W6.6 | the serialized governed HBM P32 restart recipe above | **`executed`** against current deployment `294319…`; baseline and fresh resume both produce `[13806, 345, 7472]`, the STATE-erased control diverges at index 2 with `[13806, 345, 7249]`, and the reported-only state-only control matches. The artifact carries 8,992 writable objects across all 32 nodes, passes 27/27 guards, and passed an independent source/deployment/five-PID/token/work/counter/control audit plus the four-artifact retained-evidence regression | **YES — final source-current artifact retained** |
 
-The three current equalities are guarded rather than inferred from two short
+The four current equalities are guarded rather than inferred from two short
 lists. Baseline, interrupted, resumed, negative-control and state-only-control
 processes are distinct. Each records the same deployment digest,
 implementation identity, node count, and complete per-file source map: 288
@@ -599,8 +600,9 @@ digest `ee08b43d87bf6edbcd7b241e7c15a2c4c1a9cb180992dd2eeeee337902a18faf`.
 All 27 guards pass in each current artifact. The interrupted prefix is non-empty
 and matches the baseline; the fresh process skips prefill and performs real
 decode work; and token length, retired work, aggregate counters and all per-node
-counters match. W6.6 remains partial because the same facts must still be
-retained for current DeepSeek HBM rather than inferred from the other lanes.
+counters match. W6.6 is closed because the same facts are now retained and
+independently validated for current DeepSeek HBM rather than inferred from the
+other lanes.
 
 The checkpoint evidence is deliberately complete over the simulator's mutable
 boundary. Schema v2 enumerates every writable zero-source object for every
@@ -609,8 +611,11 @@ retains aggregate counters, every per-node counter set, device/session
 bookkeeping, and sparse object digests. The current DeepSeek ROM capture covers
 438 images representing 1,078,248,644,744 logical mutable bytes in 143,255,560
 logical stored payload bytes. These are sparse-encoding quantities, not physical
-disk usage. The corresponding 32-node HBM quantities will be published only
-from its final current artifact.
+disk usage. The corresponding 32-node HBM artifact covers 8,992 objects
+representing 2,447,390,804,224 logical mutable bytes in 5,136,187,520 logical
+stored payload bytes; it records a 24.53-second write and 99.724-second normal
+restore. Those are likewise sparse simulator quantities, not disk footprint or
+performance claims.
 
 The controls establish sensitivity. In every lane, a normal resume exits
 successfully and reproduces the baseline; a second successful resume with every

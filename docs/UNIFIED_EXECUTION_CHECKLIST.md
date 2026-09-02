@@ -6,40 +6,36 @@
 **Issue date:** 2026-08-29
 **Last reconciled:** 2026-09-02 — recounted all 94 top-level markers, audited
 every remaining exit against its retained evidence, refreshed the source-locked
-link campaign and participant-scope regression, and completed three of the four
-source-current W6.6 restart lanes. The final serialized DeepSeek HBM lane is
-running against the current node-local deployment. Its uninterrupted baseline
-has passed all three generated tokens in 3,961.6 seconds and its interrupted
-process is now executing the 32-token prefill without an observed error. W6.6
-remains partial until the interrupted process, fresh resume, STATE-erased
-negative control, STATE-only control, artifact assembly, and full guard audit
-all pass.
-**Top-level progress:** **82/94 complete (87.2%)**, **11 partial**, **1 open**,
+link campaign and participant-scope regression, and completed all four
+source-current W6.6 restart lanes. The final serialized DeepSeek HBM campaign
+passed in 2:56:39 against the current 32-node deployment; its retained artifact
+passed the independent source, deployment, process-identity, exactness,
+all-node counter, control, and 27-guard audit, plus the four-artifact
+source-current regression.
+**Top-level progress:** **83/94 complete (88.3%)**, **10 partial**, **1 open**,
 and **0 blocked**, counting only the `Wn.m` rows below.
-**Remaining top-level rows:** partial — W6.6, W8.3, W8.4, W8.5, W9.4,
-W9.5, W10.1, W10.2, W11.1, W11.3, W13.4; open — W11.2.
-**Active certification:** Qwen HBM, Qwen ROM, and DeepSeek ROM restart are
-source-current and passing; DeepSeek HBM is the sole remaining W6.6 lane. Its
-baseline phase is complete; interrupt/checkpoint, both resume controls, and the
-independent final validation are still in flight and are not counted as
-evidence until the retained aggregate artifact passes.
+**Remaining top-level rows:** partial — W8.3, W8.4, W8.5, W9.4, W9.5,
+W10.1, W10.2, W11.1, W11.3, W13.4; open — W11.2.
+**Active certification:** Qwen HBM, Qwen ROM, DeepSeek ROM, and DeepSeek HBM
+restart are source-current and passing. Every retained artifact binds the same
+governed 288-file restart scope and passes all 27 guards; W6.6 is closed.
 **Generated companion:** `docs/PROGRAM_STATUS.md` and its JSON currently retain
-the clean `3891fa4…` snapshot. Their 82/11/1 marker arithmetic remains correct,
-but their repository identity is historical; regenerate them from the final
-clean documentation commit after W6.6, not from this in-flight tree.
+the clean `3891fa4…` snapshot. Their repository identity and 82/11/1 marker
+arithmetic are now historical; regenerate them from the clean W6.6 closure
+commit before publishing the final 83/10/1 companion snapshot.
 **Dependency spine:** W10.1 → W11.1; W10.2 is a parallel mandatory Phase-F
 acceptance lane. W8.3/W8.4/W8.5/W9.4 → W9.5. W11.1 and W9.5, the DeepSeek
 200K accelerator pair, and W11.2-specific capability, cycle, physical, fabric,
-area/energy and uncertainty prerequisites all feed W11.2. W6.6, W10.2, W11.3
-and W13.4 can otherwise proceed independently.
-**Remaining-work order:** (1) finish and audit the final W6.6 lane; (2) freeze
-the current-capability EOS/numeric acceptance and rerun W10.1, while completing
-both-backend W10.2 stress acceptance; (3) use W10.1 to close W11.1 and fill the
-six missing W13.4 reasoning/agentic workload cells; (4) complete the missing
+area/energy and uncertainty prerequisites all feed W11.2. W10.2, W11.3 and
+W13.4 can otherwise proceed independently.
+**Remaining-work order:** (1) freeze the current-capability EOS/numeric
+acceptance and rerun W10.1, while completing both-backend W10.2 stress
+acceptance; (2) use W10.1 to close W11.1 and fill the six missing W13.4
+reasoning/agentic workload cells; (3) complete the missing
 engine, fabric, ROM-service, and same-view macro evidence in
 W8.3/W8.4/W8.5/W9.4, then perform the four-target characterized rerun in W9.5;
-(5) close W11.2 only after its functional, cycle, physical, fabric,
-area/energy, and uncertainty prerequisites are jointly admissible; and (6)
+(4) close W11.2 only after its functional, cycle, physical, fabric,
+area/energy, and uncertainty prerequisites are jointly admissible; and (5)
 continue W11.3 provenance coverage alongside those lanes. This ordering names
 dependencies, not a claim that independent rows must run serially.
 **Freshness boundary:** the marker count records milestones closed with retained
@@ -147,21 +143,21 @@ historical evidence and must not be presented as current-source reruns.
 - [x] W6.3 DeepSeek-HBM (32 node): short prompt → real tokens — **fresh post-A28 multi-token execution is oracle-identical.** `make abi3-tokens-deepseek-hbm` admitted the current 32-node deployment through its complete recorded check set, executed the **32**-token prompt <!-- figure: 32 src="results/abi3/accelerator_tokens/deepseek_v4_flash_hbm_p32.json#workload.prompt_token_count" name="DeepSeek HBM token-capture prompt length" -->, and completed one prefill plus three decode transactions with `SUCCESS`/`NONE` status/trap throughout. It generated **4** tokens <!-- figure: 4 src="results/abi3/accelerator_tokens/deepseek_v4_flash_hbm_p32.json#generated_token_count" name="DeepSeek HBM generated-token count" --> — `[13806, 345, 7472, 55560]` — all identical to the independent 16-token oracle, `first_divergence_index: null` and no legitimacy problems. Prefill retired **26,095** instructions and each decode retired **11,229**, so the old 636-instruction phase-extent trap is gone <!-- figure: 26,095 src="results/abi3/accelerator_tokens/deepseek_v4_flash_hbm_p32.json#per_step[step=0].instructions_retired" name="DeepSeek HBM prefill retired instructions" --> <!-- figure: 11,229 src="results/abi3/accelerator_tokens/deepseek_v4_flash_hbm_p32.json#per_step[step=1].instructions_retired" name="DeepSeek HBM decode retired instructions" -->. The v2 context gate checks each of **32** retained node-counter sets <!-- figure: 32 src="results/abi3/deepseek_v4_context_gate.json#results[0].node_count" name="DeepSeek HBM counter sets checked, W6.3" --> rather than dividing an aggregate: per-node/cluster `attention.context_positions` are **30,114 / 963,648** <!-- figure: 30114 src="results/abi3/deepseek_v4_context_gate.json#results[0].expected_counters_per_node['attention.context_positions']" name="DeepSeek HBM context positions per node, W6.3" --> <!-- figure: 963648 src="results/abi3/deepseek_v4_context_gate.json#results[0].observed_aggregate_counters['attention.context_positions']" name="DeepSeek HBM context positions cluster total, W6.3" --> and KV bytes are **30,836,736 / 986,775,552** <!-- figure: 30836736 src="results/abi3/deepseek_v4_context_gate.json#results[0].expected_counters_per_node['attention.kv_bytes_read']" name="DeepSeek HBM KV bytes per node, W6.3" --> <!-- figure: 986775552 src="results/abi3/deepseek_v4_context_gate.json#results[0].observed_aggregate_counters['attention.kv_bytes_read']" name="DeepSeek HBM KV bytes cluster total, W6.3" -->, with zero node or aggregate mismatches. Its maximum checked accelerator context is **35** <!-- figure: 35 src="results/abi3/deepseek_v4_context_gate.json#claim_boundary.maximum_accelerator_context_tokens_checked" name="DeepSeek HBM maximum counter-gated context, W6.3" -->, below both the 129-token window clipping and 2,052-token pruning thresholds; this closes counter scope, not long-context sparsity.
 - [x] W6.4 DeepSeek-ROM (wafer): identical token sequence — **one prefill plus three decode transactions are oracle-identical and HBM-identical.** The committed `make abi3-tokens-deepseek-rom` capture executes all four transactions with `SUCCESS`/`NONE` status/trap, generates **4** tokens <!-- figure: 4 src="results/abi3/accelerator_tokens/deepseek_v4_flash_rom_p32.json#generated_token_count" name="DeepSeek ROM generated-token count" -->, and retires **60,481** instructions <!-- figure: 60,481 src="results/abi3/accelerator_tokens/deepseek_v4_flash_rom_p32.json#counters['instructions.retired']" name="DeepSeek ROM token-capture retired instructions" -->. Its `[13806, 345, 7472, 55560]` sequence compares all **4** retained oracle positions <!-- figure: 4 src="results/abi3/accelerator_tokens/deepseek_v4_flash_rom_p32.json#oracle.compared_tokens" name="DeepSeek ROM oracle-compared tokens" --> with `agreement: true`, no divergence and no legitimacy problem, and equals the authoritative HBM sequence position for position. `results/abi3/comparison_deepseek_rom_vs_hbm.json` records that common four-token prefix without assumptions and retains the one-wafer-versus-32-node topology difference; its boundary is functional execution, not timing or performance.
 - [x] W6.5 Independent reference oracle per model (from official modeling code) — external oracle: `tools/run_qwen3_reference_oracle.py`— token-level match
-- [~] W6.6 Checkpoint/restart exactness on all four — **three of four
-  source-current lanes pass; DeepSeek HBM is the sole remaining lane.** Qwen
-  HBM (`8e1185…`), Qwen ROM (`925351…`), and DeepSeek ROM (`fa9077…`) all bind
-  the same governed **288-file** Python scope <!-- figure: 288 src="results/abi3/restart_exactness_deepseek_rom_p32.json#record.notes.source_identity.baseline.python_file_count" name="restart governed Python file count" --> covering `compiler/`, `runtime/`, and
+- [x] W6.6 Checkpoint/restart exactness on all four — **all four
+  source-current lanes pass.** Qwen HBM (`8e1185…`), Qwen ROM (`925351…`),
+  DeepSeek ROM (`fa9077…`), and DeepSeek HBM (`a72c87…`) all bind the same
+  governed **288-file** Python scope <!-- figure: 288 src="results/abi3/restart_exactness_deepseek_hbm_p32.json#record.notes.source_identity.baseline.python_file_count" name="restart governed Python file count" --> covering `compiler/`, `runtime/`, and
   `tools/run_abi3_restart_exactness.py`, with aggregate source digest
   `ee08b43d87bf6edbcd7b241e7c15a2c4c1a9cb180992dd2eeeee337902a18faf`.
   Every baseline, interrupt, fresh resume, negative control, and state-only
-  control in those three artifacts carries that complete per-file map, the
-  current deployment, node count, and implementation identity; all **27/27**
-  guards pass and the five phase/control PIDs are distinct.
+  control carries that complete per-file map, the current deployment, node
+  count, and implementation identity; all **27/27** guards pass and the five
+  phase/control PIDs are distinct in every artifact.
 
   The method runs an uninterrupted comparator and stops a second process after
   **2** generated tokens <!-- figure: 2 src="results/abi3/restart_exactness_qwen3_hbm.json#record.notes.stop_after_tokens" name="restart interruption token count" -->; it serialises the complete mutable simulator boundary and
   finishes the final token in a fresh process that loads only that checkpoint.
-  Each current lane reaches **3** generated tokens <!-- figure: 3 src="results/abi3/restart_exactness_deepseek_rom_p32.json#record.generated_token_count" name="restart generated-token horizon" --> with identical token
+  Each lane reaches **3** generated tokens <!-- figure: 3 src="results/abi3/restart_exactness_deepseek_hbm_p32.json#record.generated_token_count" name="restart generated-token horizon" --> with identical token
   sequence, retired work, aggregate architectural counters, every per-node
   counter, and sticky-overflow state. Erasing every STATE image changes the
   first resumed token; erasing HBM/HOST/SRAM scratch while retaining STATE
@@ -170,22 +166,25 @@ historical evidence and must not be presented as current-source reruns.
   **438** mutable images <!-- figure: 438 src="results/abi3/restart_exactness_deepseek_rom_p32.json#record.notes.checkpoint.object_count" name="DeepSeek ROM restart object count" -->, **1,078,248,644,744** logical mutable bytes <!-- figure: 1,078,248,644,744 src="results/abi3/restart_exactness_deepseek_rom_p32.json#record.notes.checkpoint.mutable_bytes" name="DeepSeek ROM restart logical mutable bytes" -->,
   and **143,255,560** logical stored payload bytes <!-- figure: 143,255,560 src="results/abi3/restart_exactness_deepseek_rom_p32.json#record.notes.checkpoint.stored_bytes" name="DeepSeek ROM restart stored payload bytes" -->.
 
-  **Remaining closure:** the serialized DeepSeek HBM recipe is now executing
-  against deployment `294319…`. Its uninterrupted comparator has passed the
-  governed three-token horizon in 3,961.6 seconds; the interrupted process is
-  executing the 32-token prefill, with no observed error at this reconciliation
-  point. It must still stop after token two and write the checkpoint, complete
-  a fresh normal resume, complete the STATE-erased negative and STATE-only
-  controls, assemble the aggregate artifact, and pass the independent source,
-  deployment, process-identity, exactness, all-32-node counter, and **27/27**
-  guard audit. Do not mark this row complete before all of those gates pass.
-  The checkpoint writer now replaces stale
-  hardlinked payload paths atomically before current-run deduplication, with a
-  deterministic overwrite-after-hardlink regression in
-  `tests/sim/test_checkpoint.py`. Evidence:
-  `results/abi3/restart_exactness_{qwen3_hbm,qwen3_rom,deepseek_rom_p32}.json`;
-  pending final evidence:
-  `results/abi3/restart_exactness_deepseek_hbm_p32.json`.
+  The final 32-node HBM artifact binds deployment `2943197b…` and records the
+  baseline and fresh-resume sequence `[13806, 345, 7472]`. The STATE-erased
+  negative produces `[13806, 345, 7249]` and diverges at index **2** <!-- figure: 2 src="results/abi3/restart_exactness_deepseek_hbm_p32.json#record.notes.negative_control.first_divergence_index" name="DeepSeek HBM restart negative divergence index" -->; the state-only control matches and remains reported-only. Its schema-v2
+  checkpoint spans **32** nodes <!-- figure: 32 src="results/abi3/restart_exactness_deepseek_hbm_p32.json#record.notes.checkpoint.node_count" name="DeepSeek HBM restart node count" --> and **8,992** writable objects <!-- figure: 8992 src="results/abi3/restart_exactness_deepseek_hbm_p32.json#record.notes.checkpoint.object_count" name="DeepSeek HBM restart object count" --> representing
+  **2,447,390,804,224** logical mutable bytes <!-- figure: 2,447,390,804,224 src="results/abi3/restart_exactness_deepseek_hbm_p32.json#record.notes.checkpoint.mutable_bytes" name="DeepSeek HBM restart logical mutable bytes" --> in **5,136,187,520** logical stored payload bytes <!-- figure: 5,136,187,520 src="results/abi3/restart_exactness_deepseek_hbm_p32.json#record.notes.checkpoint.stored_bytes" name="DeepSeek HBM restart logical stored payload bytes" -->;
+  checkpoint write and normal restore take **24.53** s <!-- figure: 24.53 src="results/abi3/restart_exactness_deepseek_hbm_p32.json#record.notes.checkpoint.write_seconds" name="DeepSeek HBM restart checkpoint write seconds" --> and **99.724** s <!-- figure: 99.724 src="results/abi3/restart_exactness_deepseek_hbm_p32.json#record.notes.checkpoint.restore_seconds" name="DeepSeek HBM restart checkpoint restore seconds" -->. The complete campaign records **10,599.7** s <!-- figure: 10599.7 src="results/abi3/restart_exactness_deepseek_hbm_p32.json#record.notes.wall_seconds" name="DeepSeek HBM restart campaign wall seconds" -->. These
+  are sparse simulator-checkpoint quantities, not physical storage or
+  performance evidence.
+
+  The independent audit rehashed the exact 288-file set, all five phase
+  identities, all 32 node-counter maps, every aggregate counter, process IDs,
+  controls, and guards. The retained-artifact regression then passed all four
+  current artifacts:
+  `PYTHONPATH=. python3 -m pytest -q tests/test_abi3_restart_exactness.py -k
+  retained_restart_artifacts_are_source_current_and_fully_gated`. The
+  checkpoint writer replaces stale hardlinked payload paths atomically before
+  current-run deduplication; its deterministic overwrite-after-hardlink
+  regression remains in `tests/sim/test_checkpoint.py`. Evidence:
+  `results/abi3/restart_exactness_{qwen3_hbm,qwen3_rom,deepseek_rom_p32,deepseek_hbm_p32}.json`.
 
   **Claim boundary:** this is functional NumPy restart over a **93**-token Qwen request <!-- figure: 93 src="results/abi3/restart_exactness_qwen3_hbm.json#record.workload.prompt_token_count" name="restart Qwen prompt length" -->
   and a 32-token DeepSeek prefix, split 2+1 generated tokens. It
@@ -636,9 +635,10 @@ lanes are a precondition for it, not the product. These items are the product.
   `docs/EVIDENCE_LEDGER.md` now separate source-current evidence from retained
   historical horizons and state every cycle/performance non-claim. The final
   clean-tree `make abi3-status` snapshot at `3891fa4…` republishes the current
-  82/11/1 top-level milestone arithmetic in `docs/PROGRAM_STATUS.md` and
-  `results/abi3/program_status.json`; its commit/worktree identity is retained
-  historical evidence and must be regenerated after the in-flight W6.6 closure
+  historical 82/11/1 top-level milestone arithmetic in `docs/PROGRAM_STATUS.md`
+  and `results/abi3/program_status.json`; its commit/worktree identity is
+  retained historical evidence and will be regenerated from the clean W6.6
+  closure commit before publishing the 83/10/1 companion snapshot
 
 ---
 
