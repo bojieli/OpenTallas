@@ -33,13 +33,14 @@ The core Python package requires Python 3.10 or newer:
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-python3 -m pip install -e ".[test]"
+python3 -m pip install -e ".[test,compiler]"
 ```
 
-Install only the optional dependencies needed for your work:
+That combination is the minimum for collecting the repository's full Python
+test suite. Install the other optional dependencies only when your work needs
+them:
 
 ```bash
-python3 -m pip install -e ".[compiler]"       # compiler utilities
 python3 -m pip install -e ".[plot]"           # rendered plots/assets
 python3 -m pip install -e ".[qwen3]"          # local Qwen execution work
 ```
