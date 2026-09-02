@@ -6,6 +6,8 @@ import copy
 import hashlib
 import importlib.util
 import json
+import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -18,6 +20,17 @@ _spec = importlib.util.spec_from_file_location(
 tool = importlib.util.module_from_spec(_spec)
 assert _spec.loader is not None
 _spec.loader.exec_module(tool)
+
+
+def test_cli_help_renders_for_the_fixed_record_pair() -> None:
+    completed = subprocess.run(
+        [sys.executable, str(REPO / "tools/check_qwen3_w10_acceptance.py"), "--help"],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    assert completed.returncode == 0
+    assert "{natural,stress} RECORD RECORD" in completed.stdout
 
 
 def _identity(path: Path) -> dict:

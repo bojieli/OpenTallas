@@ -622,7 +622,13 @@ def validate(mode: str, paths: Sequence[Path]) -> dict[str, Any]:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("mode", choices=("natural", "stress"))
-    parser.add_argument("records", type=Path, nargs=2, metavar=("FIRST", "SECOND"), help="natural: HBM run 1/run 2; stress: HBM/ROM")
+    parser.add_argument(
+        "records",
+        type=Path,
+        nargs=2,
+        metavar="RECORD",
+        help="natural: HBM run 1/run 2; stress: HBM/ROM",
+    )
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
     try:
