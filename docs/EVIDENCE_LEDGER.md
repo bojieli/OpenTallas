@@ -25,6 +25,19 @@ commit changes only the companion files and these identity pointers.
 checks hundreds of explicit provenance annotations, but unannotated figures
 remain outside its visibility, which is why W11.3 is still partial.
 
+`tools/audit_prose_figure_coverage.py` now records the complete Markdown census
+under schema v2 and applies the separate, reviewable
+`configs/evidence/prose_figure_triage.json` policy.  A rule identifies an exact
+document, section, literal, and optional source-line context; it carries a
+disposition and rationale, declares how many candidates it must match, and the
+audit refuses stale or overlapping rules.  The first deliberately small pass
+classifies **8** candidates as ABI norms or examples. <!-- figure: 8 src="results/abi3/prose_figure_coverage.json#totals.unbound_triage.normative_or_example" name="explicitly triaged normative/example prose candidates" -->
+It leaves **2,714** explicitly untriaged. <!-- figure: 2714 src="results/abi3/prose_figure_coverage.json#totals.unbound_triage.untriaged" name="prose candidates still awaiting triage" -->
+No document-wide default is allowed, and neither the new classification nor a
+snapshot entry is evidence that a result is correct.  Produced figures still
+need resolving `figure:` annotations; external values need named sources; and
+load-bearing calculations without artifacts remain `missing_producer` work.
+
 The storage-equivalence rows in §3a are also reconciled beyond the discovery
 snapshot: the overwritten artifacts now use the explicit v2
 storage-and-placement schema and current neutral graphs. Their current numbers

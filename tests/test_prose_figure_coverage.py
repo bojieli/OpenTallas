@@ -1,4 +1,4 @@
-"""The W11.3 census keeps unannotated prose figures visible."""
+"""The W11.3 census and explicit triage keep prose figures visible."""
 
 from __future__ import annotations
 
@@ -48,10 +48,10 @@ def test_report_covers_and_classifies_the_whole_markdown_corpus() -> None:
         ]
     )
 
-    assert report["schema"] == "opentallas.prose_figure_coverage.v1"
+    assert report["schema"] == "opentallas.prose_figure_coverage.v2"
     assert [document["path"] for document in report["documents"]] == expected_paths
     assert report["totals"]["documents"] == 56
-    assert report["totals"]["annotations"] == 805
+    assert report["totals"]["annotations"] == 809
     assert report["totals"]["zero_candidate_documents"] > 0
     assert report["totals"]["classifications"]["unbound"] > 0
 
@@ -69,6 +69,14 @@ def test_report_covers_and_classifies_the_whole_markdown_corpus() -> None:
 
     totals = report["totals"]
     assert sum(totals["classifications"].values()) == totals["candidates"]
+    assert sum(totals["unbound_triage"].values()) == totals["classifications"][
+        "unbound"
+    ]
+    assert report["triage_policy"]["schema"] == (
+        "opentallas.prose_figure_triage_policy.v1"
+    )
+    assert report["triage_policy"]["rule_count"] > 0
+    assert report["triage_policy"]["sha256"]
     assert (
         report["corpus_digest"]
         == hashlib.sha256(AUDIT.canonical_json(report["documents"])).hexdigest()
@@ -99,6 +107,7 @@ def test_structural_classification_keeps_exclusions_and_unbound_claims_explicit(
         "excluded_context",
     ]
     assert candidates[0]["annotation_lines"] == [3]
+    assert candidates[1]["triage"] == {"disposition": "untriaged"}
     assert candidates[2]["exclusion"] == "fenced_code"
     assert candidates[3]["exclusion"] == "html_comment"
     empty = next(
@@ -112,6 +121,104 @@ def test_checked_in_snapshot_is_exact_canonical_report() -> None:
     expected = AUDIT.canonical_json(AUDIT.build_report(ROOT))
     assert SNAPSHOT.read_bytes() == expected
     assert json.loads(expected)["totals"]["classifications"]["unbound"] > 0
+    triage = json.loads(expected)["totals"]["unbound_triage"]
+    assert triage["normative_or_example"] == 8
+    assert triage["untriaged"] > 0
+
+
+def test_explicit_triage_rule_records_disposition_and_provenance(tmp_path: Path) -> None:
+    (tmp_path / "docs").mkdir()
+    (tmp_path / "README.md").write_text(
+        "# Contract example\n\nA shape is `1 x 64`.\n", encoding="utf-8"
+    )
+    policy = tmp_path / "triage.json"
+    policy.write_text(
+        json.dumps(
+            {
+                "schema": "opentallas.prose_figure_triage_policy.v1",
+                "rules": [
+                    {
+                        "id": "shape-separator",
+                        "disposition": "normative_or_example",
+                        "rationale": "x separates dimensions in this example",
+                        "expected_matches": 1,
+                        "match": {
+                            "path": "README.md",
+                            "heading_contains": "Contract example",
+                            "literal": "1 x",
+                            "line_contains": "shape",
+                        },
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    report = AUDIT.build_report(tmp_path, policy)
+    readme = next(item for item in report["documents"] if item["path"] == "README.md")
+    candidate = readme["candidates"][0]
+    assert candidate["heading_path"] == ["Contract example"]
+    assert candidate["triage"] == {
+        "disposition": "normative_or_example",
+        "rule": "shape-separator",
+        "rationale": "x separates dimensions in this example",
+    }
+    assert report["totals"]["unbound_triage"]["normative_or_example"] == 1
+    assert report["totals"]["unbound_triage"]["untriaged"] == 0
+
+
+def test_triage_policy_fails_closed_on_stale_or_ambiguous_rules(
+    tmp_path: Path,
+) -> None:
+    (tmp_path / "docs").mkdir()
+    (tmp_path / "README.md").write_text("# Claim\n\nPower is 5 W.\n", encoding="utf-8")
+    policy = tmp_path / "triage.json"
+
+    stale_rule = {
+        "id": "stale",
+        "disposition": "missing_producer",
+        "rationale": "no machine producer exists",
+        "expected_matches": 1,
+        "match": {"path": "README.md", "literal": "6 W"},
+    }
+    policy.write_text(
+        json.dumps(
+            {
+                "schema": "opentallas.prose_figure_triage_policy.v1",
+                "rules": [stale_rule],
+            }
+        ),
+        encoding="utf-8",
+    )
+    try:
+        AUDIT.build_report(tmp_path, policy)
+    except ValueError as exc:
+        assert "matched 0 candidates; expected 1" in str(exc)
+    else:
+        raise AssertionError("stale triage selector was accepted")
+
+    broad = {
+        **stale_rule,
+        "id": "broad-a",
+        "match": {"path": "README.md", "literal": "5 W"},
+    }
+    duplicate = {**broad, "id": "broad-b"}
+    policy.write_text(
+        json.dumps(
+            {
+                "schema": "opentallas.prose_figure_triage_policy.v1",
+                "rules": [broad, duplicate],
+            }
+        ),
+        encoding="utf-8",
+    )
+    try:
+        AUDIT.build_report(tmp_path, policy)
+    except ValueError as exc:
+        assert "ambiguous prose triage" in str(exc)
+    else:
+        raise AssertionError("ambiguous triage selectors were accepted")
 
 
 def test_check_fails_when_a_new_unbound_claim_is_not_snapshotted(

@@ -249,7 +249,7 @@ REQUIRED_COVERAGE: dict[str, int] = {
     "docs/ABI3_ENGINE_DATAPATH_RTL.md": 64,
     "docs/ABI3_PROGRAM_REPORT.md": 17,
     "docs/DEEPSEEK_SPARSE_ATTENTION_GATE.md": 55,
-    "docs/EVIDENCE_LEDGER.md": 40,
+    "docs/EVIDENCE_LEDGER.md": 42,
     "docs/FIRST_PRINCIPLES_MEMORY_DESIGN.md": 25,
     "docs/ISO_AREA_COMPARISON_AND_THE_TAALAS_ANCHOR.md": 34,
     "docs/OVERVIEW.md": 22,
@@ -259,7 +259,7 @@ REQUIRED_COVERAGE: dict[str, int] = {
     "docs/ROM_SERVICE_RTL.md": 39,
     "docs/SOURCES.md": 6,
     "docs/TECHNICAL_DIRECTION_RECOMMENDATION.md": 54,
-    "docs/UNIFIED_EXECUTION_CHECKLIST.md": 237,
+    "docs/UNIFIED_EXECUTION_CHECKLIST.md": 239,
     "docs/VISION.md": 1,
     "docs/WAFER_VERSUS_ARRAY_LATENCY.md": 67,
 }

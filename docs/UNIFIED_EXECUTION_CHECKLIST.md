@@ -675,11 +675,17 @@ lanes are a precondition for it, not the product. These items are the product.
   `results/abi3/prose_figure_coverage.json` now census every Markdown document
   under the release-prose boundary and retain every candidate matching the
   evidence-ledger unit rule as provenance-bound, unbound, or explicitly
-  excluded context. `make check-figures` fails on either annotation drift or
-  census drift. This remains partial: the snapshot deliberately exposes a
-  large unbound population, which must be triaged into produced/external,
-  normative/example, or missing-producer classes before the original
-  every-number requirement can close.
+  excluded context. Its v2 report also records the live Markdown heading path
+  and applies `configs/evidence/prose_figure_triage.json`: every explicit rule
+  has an exact expected match count and the audit refuses stale or ambiguous
+  selectors. The initial conservative pass resolves **8** <!-- figure: 8 src="results/abi3/prose_figure_coverage.json#totals.unbound_triage.normative_or_example" name="W11.3 explicitly triaged normative/example candidates" --> ABI shape/algebraic
+  examples and rejected legacy proxies as `normative_or_example`.
+  **2,714** candidates remain explicitly `untriaged`. <!-- figure: 2714 src="results/abi3/prose_figure_coverage.json#totals.unbound_triage.untriaged" name="W11.3 candidates still awaiting triage" -->
+  `make check-figures` fails on annotation, census, policy, or classification
+  drift. This remains partial: triage is not proof, produced figures still need
+  resolving annotations, and the remaining population must be classified as
+  produced/external, normative/example, or missing-producer before the
+  original every-number requirement can close.
 - [x] W11.4 Final status report and README update — `README.md`,
   `docs/README.md`, this checklist, `docs/ABI3_PROGRAM_REPORT.md`, and
   `docs/EVIDENCE_LEDGER.md` now separate source-current evidence from retained

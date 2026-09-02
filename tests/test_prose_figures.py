@@ -98,7 +98,7 @@ def test_every_annotated_release_document_carries_pinned_provenance() -> None:
         if CPF.scan(document)
     }
     assert annotated_documents == CPF.REQUIRED_COVERAGE
-    assert sum(CPF.REQUIRED_COVERAGE.values()) == 805
+    assert sum(CPF.REQUIRED_COVERAGE.values()) == 809
     for document in CPF.REQUIRED_COVERAGE:
         assert document in out, f"{document} reports no annotated figures"
 
