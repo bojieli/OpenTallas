@@ -1087,7 +1087,12 @@ def test_deployment_campaign_has_four_targets_and_private_memory_geometry() -> N
     assert hbm.capability == (
         "configs/hardware/abi3_capability/hbm_sram_cluster_32.json"
     )
-    assert re.fullmatch(r"[0-9a-f]{64}", hbm.digest)
+    assert hbm.kernel_ir == (
+        "build/ir-v3/deepseek-v4-flash-0731/kernel_ir.v3.json"
+    )
+    assert hbm.evidence.artifact == (
+        "results/abi3/hbm_deepseek_deployment_certificate.json"
+    )
 
     assert deployment_generator.PROGRAM_WORDS == 4096
     assert deployment_generator.DESC_WORDS == 8192
@@ -1113,30 +1118,71 @@ def test_deployment_campaign_has_four_targets_and_private_memory_geometry() -> N
     assert '"-GDESC_WORDS=8192"' in deployment_campaign
 
 
+def test_deployment_target_identities_come_from_retained_certificates() -> None:
+    """A passing retained certificate, rather than a copied hash, selects each image."""
+    from tools import build_abi3_deployment_rtl_vectors as deployment_generator
+
+    for target in deployment_generator.TARGETS:
+        identity = deployment_generator.certified_deployment_identity(
+            target, verify_inputs=False
+        )
+        assert re.fullmatch(r"[0-9a-f]{64}", identity.deployment_sha256)
+        assert identity.evidence_artifact == target.evidence.artifact
+        assert identity.evidence_case == target.evidence_case
+        assert re.fullmatch(r"[0-9a-f]{64}", identity.evidence_artifact_sha256)
+
+
+@pytest.mark.skipif(
+    not _deployment_bundles_present(),
+    reason="the deployment bundles are not built (build/ is ignored)",
+)
+def test_deployment_target_certificates_match_every_current_input() -> None:
+    """The producer refuses a stale source map, IR, capability, or bundle file."""
+    from tools import build_abi3_deployment_rtl_vectors as deployment_generator
+
+    for target in deployment_generator.TARGETS:
+        deployment_generator.certified_deployment_identity(target)
+
+
+def test_deployment_identity_evidence_fails_closed_on_source_drift(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from tools import build_abi3_deployment_rtl_vectors as deployment_generator
+
+    target = deployment_generator.TARGETS[0]
+    real_sha256_file = deployment_generator._sha256_file
+
+    def changed_digest(path: Path) -> str:
+        if path.name == "check_rom_schedules.py":
+            return "0" * 64
+        return real_sha256_file(path)
+
+    monkeypatch.setattr(deployment_generator, "_sha256_file", changed_digest)
+    with pytest.raises(SystemExit, match="not source-current"):
+        deployment_generator.certified_deployment_identity(target, verify_inputs=False)
+
+
 def test_deployment_vector_set_names_the_programs_this_program_ships() -> None:
-    """The digests are the contract: a rebuilt deployment is a different one."""
+    """The committed vectors name exactly the deployments the certificates promote."""
+    from tools import build_abi3_deployment_rtl_vectors as deployment_generator
+
     vectors = _deployment_vectors()
-    shipped = {
-        entry["key"]: entry for entry in vectors["deployments"]
-    }
-    assert shipped["qwen3-8b-rom-single-chip"]["deployment_sha256"].startswith(
-        "92535108"
-    )
+    shipped = {entry["key"]: entry for entry in vectors["deployments"]}
+    targets = {target.key: target for target in deployment_generator.TARGETS}
+    assert set(shipped) == set(targets)
+    for key, target in targets.items():
+        identity = deployment_generator.certified_deployment_identity(
+            target, verify_inputs=False
+        )
+        assert shipped[key]["deployment_sha256"] == identity.deployment_sha256
+        assert shipped[key]["deployment_identity_evidence"] == identity.record()
+
     assert shipped["qwen3-8b-rom-single-chip"]["instruction_count"] == 75
     assert shipped["qwen3-8b-rom-single-chip"]["descriptor_count"] == 239
-    assert shipped["qwen3-8b-hbm-single-chip"]["deployment_sha256"].startswith(
-        "8e1185ea"
-    )
     assert shipped["qwen3-8b-hbm-single-chip"]["instruction_count"] == 75
     assert shipped["qwen3-8b-hbm-single-chip"]["descriptor_count"] == 218
-    assert shipped["deepseek-v4-flash-rom-wafer"][
-        "deployment_sha256"
-    ].startswith("fa907792")
     assert shipped["deepseek-v4-flash-rom-wafer"]["instruction_count"] == 1171
     assert shipped["deepseek-v4-flash-rom-wafer"]["descriptor_count"] == 3403
-    assert shipped["deepseek-v4-flash-hbm-cluster"][
-        "deployment_sha256"
-    ].startswith("2943197b")
     assert shipped["deepseek-v4-flash-hbm-cluster"]["instruction_count"] == 1146
     assert shipped["deepseek-v4-flash-hbm-cluster"]["descriptor_count"] == 2953
     for entry in shipped.values():

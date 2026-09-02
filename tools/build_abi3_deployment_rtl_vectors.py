@@ -7,10 +7,10 @@ particular corner of the sequencer.  None of them is a program this project
 claims to run.  This generator closes that gap by taking the four shipped
 deployments themselves --
 
-    Qwen3-8B ROM single chip        92535108...  75 instructions, 239 descriptors
-    Qwen3-8B HBM single chip        8e1185ea...  75 instructions, 218 descriptors
-    DeepSeek-V4-Flash ROM wafer     fa907792...  1171 instructions, 3403 descriptors
-    DeepSeek-V4-Flash HBM cluster   2943197b...  1146 instructions, 2953 descriptors
+    Qwen3-8B ROM single chip        75 instructions, 239 descriptors
+    Qwen3-8B HBM single chip        75 instructions, 218 descriptors
+    DeepSeek-V4-Flash ROM wafer     1171 instructions, 3403 descriptors
+    DeepSeek-V4-Flash HBM cluster   1146 instructions, 2953 descriptors
 
 -- and emitting, for each of them, the same four memory images the RTL
 verification top already reads (the 256-byte program header, the 32-byte
@@ -19,11 +19,13 @@ symbols) together with the golden control-plane observation
 ``runtime.sim.device.Device`` produces for the same request.
 
 Nothing is transcribed.  The deployment is read from its build directory with
-``runtime.abi3.deployment.Deployment.read``; its digest is checked against the
-digest this repository ships, so a rebuilt or edited deployment is refused
-rather than silently correlated; the runtime symbols a request does not carry
-come from ``runtime.driver.GenerationDriver``, which is the code the service
-uses; and every expected number comes from executing the program.
+``runtime.abi3.deployment.Deployment.read``; its identity is taken from the
+source-current retained ROM-schedule or HBM-deployment certificate and every
+recorded certificate input is re-hashed before the deployment is accepted.
+Thus a rebuilt deployment, a stale certificate, or a changed certificate input
+is refused rather than silently correlated.  The runtime symbols a request
+does not carry come from ``runtime.driver.GenerationDriver``, which is the code
+the service uses; and every expected number comes from executing the program.
 
 Depth.  Each deployment is run to its own COMPLETE, not to a chosen prefix
 length: at a sixteen-token prompt the whole transaction fits in the declared
@@ -43,6 +45,7 @@ and the resolved operand views -- the control plane -- and not the arithmetic.
 from __future__ import annotations
 
 import argparse
+from collections.abc import Mapping
 import glob
 import hashlib
 import json
@@ -118,17 +121,69 @@ OPERAND_FIELDS = (
 
 
 # ---------------------------------------------------------------------------
-# The deployments, and the digests that say which ones they are
+# The deployments, and the retained evidence that says which ones they are
 # ---------------------------------------------------------------------------
+@dataclass(frozen=True)
+class DeploymentEvidence:
+    artifact: str
+    campaign_schema: str
+    case_schema: str
+    identity_path: tuple[str, ...]
+    admission_path: tuple[str, ...]
+    input_layout: str
+
+
+@dataclass(frozen=True)
+class CertifiedDeploymentIdentity:
+    deployment_sha256: str
+    capability_sha256: str
+    graph_id: str
+    model_id: str
+    evidence_artifact: str
+    evidence_artifact_sha256: str
+    evidence_case: str
+
+    def record(self) -> dict[str, str]:
+        """The durable certificate link written into the vector manifest."""
+        return {
+            "artifact": self.evidence_artifact,
+            "artifact_sha256": self.evidence_artifact_sha256,
+            "case": self.evidence_case,
+        }
+
+
 @dataclass(frozen=True)
 class Target:
     key: str
     title: str
     deployment: str
     capability: str
+    kernel_ir: str
     checkpoint: str
-    digest: str
+    evidence: DeploymentEvidence
+    evidence_case: str
     reproduce: str
+
+
+ROM_SCHEDULE_EVIDENCE = DeploymentEvidence(
+    artifact="results/abi3/rom_schedule_checks.json",
+    campaign_schema="opentallas.rom.schedule_campaign.v1",
+    case_schema="opentallas.rom.schedule_check.v1",
+    identity_path=(),
+    admission_path=("verifier", "admitted"),
+    input_layout="rom",
+)
+
+
+def hbm_deployment_evidence(artifact: str) -> DeploymentEvidence:
+    return DeploymentEvidence(
+        artifact=artifact,
+        campaign_schema="opentallas.hbm_sram.deployment_campaign.v1",
+        case_schema="opentallas.hbm_sram.deployment_certificate.v1",
+        identity_path=("identity",),
+        admission_path=("independent_checker", "verifier", "admitted"),
+        input_layout="hbm",
+    )
 
 
 TARGETS = (
@@ -137,11 +192,13 @@ TARGETS = (
         title="Qwen3-8B ROM single chip",
         deployment="build/abi3/qwen3-8b-rom",
         capability="configs/hardware/abi3_capability/rom_qwen3.json",
+        kernel_ir="build/ir-v3/qwen3-8b/kernel_ir.v3.json",
         checkpoint=(
             "~/.cache/huggingface/hub/models--Qwen--Qwen3-8B/snapshots/"
             "b968826d9c46dd6066d109eabc6255188de91218"
         ),
-        digest="925351080448450ee4b14a0e3260001dbac9aeafc582fd3202d53a0a379b9c91",
+        evidence=ROM_SCHEDULE_EVIDENCE,
+        evidence_case="qwen3-rom-single-chip",
         reproduce="make abi3-rom-qwen-build",
     ),
     Target(
@@ -149,27 +206,29 @@ TARGETS = (
         title="Qwen3-8B HBM single chip",
         deployment="build/abi3/qwen3-8b-hbm-tokens",
         capability="configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+        kernel_ir="build/ir-v3/qwen3-8b/kernel_ir.v3.json",
         checkpoint=(
             "~/.cache/huggingface/hub/models--Qwen--Qwen3-8B/snapshots/"
             "b968826d9c46dd6066d109eabc6255188de91218"
         ),
-        digest="8e1185ea1aef360efcdb101379fc40e22658bfd81edd970dc8cfdd29c6c8ff0c",
-        reproduce=(
-            "python3 tools/build_hbm_sram_deployment.py --ir "
-            "build/ir-v3/qwen3-8b/kernel_ir.v3.json --profile single-chip "
-            "--out build/abi3/qwen3-8b-hbm-tokens"
+        evidence=hbm_deployment_evidence(
+            "results/abi3/hbm_qwen_deployment_certificate.json"
         ),
+        evidence_case="qwen3-hbm-single-chip",
+        reproduce="make abi3-hbm-qwen-build",
     ),
     Target(
         key="deepseek-v4-flash-rom-wafer",
         title="DeepSeek-V4-Flash ROM wafer",
         deployment="build/abi3/deepseek-v4-flash-rom",
         capability="configs/hardware/abi3_capability/rom_deepseek_v4.json",
+        kernel_ir="build/ir-v3/deepseek-v4-flash-0731/kernel_ir.v3.json",
         checkpoint=(
             "~/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4-Flash-0731/"
             "snapshots/7872f01b1d1fe23eabc4c98b48bffcef5a386062"
         ),
-        digest="fa907792d8eb73ec1237525468581e47945a9077e5a247f4f88c43fbb5042394",
+        evidence=ROM_SCHEDULE_EVIDENCE,
+        evidence_case="deepseek-v4-flash-rom-wafer",
         reproduce="make abi3-rom-deepseek-build",
     ),
     Target(
@@ -177,19 +236,282 @@ TARGETS = (
         title="DeepSeek-V4-Flash HBM 32-node cluster",
         deployment="build/abi3/deepseek-v4-flash-hbm-tokens",
         capability="configs/hardware/abi3_capability/hbm_sram_cluster_32.json",
+        kernel_ir="build/ir-v3/deepseek-v4-flash-0731/kernel_ir.v3.json",
         checkpoint=(
             "~/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4-Flash-0731/"
             "snapshots/7872f01b1d1fe23eabc4c98b48bffcef5a386062"
         ),
-        digest="2943197b3055d6198899d402efd927810cd307c09287f9d250b1b1afb2695275",
-        reproduce=(
-            "python3 tools/build_hbm_sram_deployment.py --ir "
-            "build/ir-v3/deepseek-v4-flash-0731/kernel_ir.v3.json "
-            "--profile cluster-32 --out "
-            "build/abi3/deepseek-v4-flash-hbm-tokens"
+        evidence=hbm_deployment_evidence(
+            "results/abi3/hbm_deepseek_deployment_certificate.json"
         ),
+        evidence_case="deepseek-v4-flash-hbm-cluster",
+        reproduce="make abi3-hbm-deepseek-build",
     ),
 )
+
+
+def _fail(message: str) -> None:
+    raise SystemExit(message)
+
+
+def _mapping(value: Any, label: str) -> Mapping[str, Any]:
+    if not isinstance(value, Mapping):
+        _fail(f"{label} must be a JSON object")
+    return value
+
+
+def _nested(value: Any, fields: tuple[str, ...], label: str) -> Any:
+    current = value
+    for field in fields:
+        current = _mapping(current, label)
+        if field not in current:
+            _fail(f"{label} has no {'.'.join(fields)!r} field")
+        current = current[field]
+    return current
+
+
+def _repository_file(root: Path, relative: Any, label: str) -> Path:
+    if not isinstance(relative, str) or not relative:
+        _fail(f"{label}.path must be a nonempty repository-relative path")
+    candidate = Path(relative)
+    if candidate.is_absolute():
+        _fail(f"{label}.path is absolute: {relative}")
+    repository = root.resolve()
+    resolved = (root / candidate).resolve()
+    try:
+        resolved.relative_to(repository)
+    except ValueError:
+        _fail(f"{label}.path escapes the repository: {relative}")
+    if not resolved.is_file():
+        _fail(f"{label} is missing at {relative}")
+    return resolved
+
+
+def _sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        while block := handle.read(1 << 20):
+            digest.update(block)
+    return digest.hexdigest()
+
+
+def _validate_file_identity(
+    root: Path,
+    value: Any,
+    label: str,
+    *,
+    expected_path: str | None = None,
+) -> str:
+    identity = _mapping(value, label)
+    relative = identity.get("path")
+    if expected_path is not None and relative != expected_path:
+        _fail(
+            f"{label}.path is {relative!r}, expected {expected_path!r}; "
+            "refresh the retained certificate"
+        )
+    path = _repository_file(root, relative, label)
+    recorded_digest = identity.get("sha256")
+    if (
+        not isinstance(recorded_digest, str)
+        or re.fullmatch(r"[0-9a-f]{64}", recorded_digest) is None
+    ):
+        _fail(f"{label}.sha256 is not a lowercase SHA-256 digest")
+    recorded_bytes = identity.get("bytes")
+    if recorded_bytes is not None:
+        if (
+            not isinstance(recorded_bytes, int)
+            or isinstance(recorded_bytes, bool)
+            or recorded_bytes < 0
+        ):
+            _fail(f"{label}.bytes is not a nonnegative integer")
+        actual_bytes = path.stat().st_size
+        if actual_bytes != recorded_bytes:
+            _fail(
+                f"{label} is not source-current: {actual_bytes} bytes, "
+                f"certificate records {recorded_bytes}"
+            )
+    actual_digest = _sha256_file(path)
+    if actual_digest != recorded_digest:
+        _fail(
+            f"{label} is not source-current: SHA-256 is {actual_digest}, "
+            f"certificate records {recorded_digest}"
+        )
+    return actual_digest
+
+
+def _validate_deployment_inputs(
+    root: Path,
+    target: Target,
+    inputs: Mapping[str, Any],
+) -> None:
+    deployment = _mapping(
+        inputs.get("deployment"),
+        f"{target.evidence.artifact}:{target.key}.inputs.deployment",
+    )
+    label = f"{target.evidence.artifact}:{target.evidence_case}.inputs.deployment"
+    if deployment.get("path") != target.deployment:
+        _fail(
+            f"{label}.path is {deployment.get('path')!r}, expected "
+            f"{target.deployment!r}"
+        )
+    expected_files = {
+        "manifest": f"{target.deployment}/deployment.json",
+        "descriptors": f"{target.deployment}/descriptors.bin",
+        "program": f"{target.deployment}/program.bin",
+    }
+    if target.evidence.input_layout == "hbm":
+        for name, expected_path in expected_files.items():
+            _validate_file_identity(
+                root,
+                deployment.get(name),
+                f"{label}.{name}",
+                expected_path=expected_path,
+            )
+        return
+    if target.evidence.input_layout != "rom":
+        _fail(
+            f"{target.key}: unknown certificate input layout "
+            f"{target.evidence.input_layout!r}"
+        )
+    for name, expected_path in expected_files.items():
+        digest_key = f"{name}_sha256"
+        _validate_file_identity(
+            root,
+            {"path": expected_path, "sha256": deployment.get(digest_key)},
+            f"{label}.{name}",
+            expected_path=expected_path,
+        )
+
+
+def certified_deployment_identity(
+    target: Target,
+    *,
+    root: Path = ROOT,
+    verify_inputs: bool = True,
+) -> CertifiedDeploymentIdentity:
+    """Resolve one target through a passing, source-current certificate.
+
+    The certificate is the retained promotion boundary.  Its own source map is
+    checked on every call.  The producer additionally verifies all ignored
+    build inputs by default, so neither editing a bundle nor merely changing a
+    digest in the certificate can select a new shipped image.
+    """
+    evidence = target.evidence
+    artifact_path = _repository_file(root, evidence.artifact, target.key)
+    payload = artifact_path.read_bytes()
+    try:
+        campaign = _mapping(json.loads(payload), evidence.artifact)
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        _fail(f"{evidence.artifact} is not valid JSON: {exc}")
+    if campaign.get("schema") != evidence.campaign_schema:
+        _fail(
+            f"{evidence.artifact} schema is {campaign.get('schema')!r}, "
+            f"expected {evidence.campaign_schema!r}"
+        )
+    if campaign.get("status") != "pass":
+        _fail(f"{evidence.artifact} does not retain status pass")
+    cases = campaign.get("cases")
+    if not isinstance(cases, list):
+        _fail(f"{evidence.artifact}.cases must be a JSON array")
+    if campaign.get("case_count") != len(cases):
+        _fail(f"{evidence.artifact}.case_count does not match its cases")
+    case_names = [
+        case.get("case") if isinstance(case, Mapping) else None for case in cases
+    ]
+    if len(case_names) != len(set(case_names)):
+        _fail(f"{evidence.artifact} contains duplicate case names")
+    matches = [
+        case for case, name in zip(cases, case_names) if name == target.evidence_case
+    ]
+    if len(matches) != 1:
+        _fail(
+            f"{evidence.artifact} must contain exactly one "
+            f"{target.evidence_case!r} case"
+        )
+    case_label = f"{evidence.artifact}:{target.evidence_case}"
+    case = _mapping(matches[0], case_label)
+    if case.get("schema") != evidence.case_schema:
+        _fail(
+            f"{case_label} schema is "
+            f"{case.get('schema')!r}, expected {evidence.case_schema!r}"
+        )
+    if case.get("status") != "pass" or case.get("ok") is not True:
+        _fail(f"{case_label} is not a passing case")
+    if _nested(case, evidence.admission_path, case_label) is not True:
+        _fail(f"{case_label} was not admitted")
+
+    sources = _mapping(campaign.get("source"), f"{evidence.artifact}.source")
+    if not sources:
+        _fail(f"{evidence.artifact}.source is empty")
+    for name, source in sorted(sources.items()):
+        _validate_file_identity(root, source, f"{evidence.artifact}.source.{name}")
+
+    inputs = _mapping(case.get("inputs"), f"{case_label}.inputs")
+    capability_digest = _validate_file_identity(
+        root,
+        inputs.get("capability"),
+        f"{case_label}.inputs.capability",
+        expected_path=target.capability,
+    )
+    if verify_inputs:
+        _validate_file_identity(
+            root,
+            inputs.get("kernel_ir"),
+            f"{case_label}.inputs.kernel_ir",
+            expected_path=target.kernel_ir,
+        )
+        _validate_deployment_inputs(root, target, inputs)
+
+    identity = _mapping(
+        _nested(case, evidence.identity_path, case_label),
+        f"{case_label}.identity",
+    )
+    deployment_digest = identity.get("deployment_sha256")
+    graph_id = identity.get("graph_id")
+    recorded_capability = identity.get("capability_sha256")
+    model_id = identity.get("model_id")
+    for label, digest in (
+        ("deployment_sha256", deployment_digest),
+        ("graph_id", graph_id),
+        ("capability_sha256", recorded_capability),
+    ):
+        if not isinstance(digest, str) or re.fullmatch(r"[0-9a-f]{64}", digest) is None:
+            _fail(f"{case_label}.{label} is not a lowercase SHA-256 digest")
+    if recorded_capability != capability_digest:
+        _fail(
+            f"{case_label} capability identity does not "
+            "match its recorded capability input"
+        )
+    if not isinstance(model_id, str) or not model_id:
+        _fail(f"{case_label}.model_id is empty")
+    if verify_inputs:
+        kernel_ir_path = _repository_file(
+            root, target.kernel_ir, f"{case_label}.inputs.kernel_ir"
+        )
+        try:
+            kernel_ir = _mapping(
+                json.loads(kernel_ir_path.read_bytes()),
+                f"{case_label}.inputs.kernel_ir",
+            )
+        except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+            _fail(f"{target.kernel_ir} is not valid JSON: {exc}")
+        if kernel_ir.get("schema") != "opentallas.tensor_kernel_ir.v3":
+            _fail(f"{target.kernel_ir} is not Kernel IR v3")
+        if kernel_ir.get("graph_id") != graph_id:
+            _fail(f"{case_label}.graph_id does not match {target.kernel_ir}")
+        if kernel_ir.get("model_id") != model_id:
+            _fail(f"{case_label}.model_id does not match {target.kernel_ir}")
+    if evidence.input_layout == "rom" and case.get("target_id") != target.key:
+        _fail(f"{case_label}.target_id is {case.get('target_id')!r}")
+    return CertifiedDeploymentIdentity(
+        deployment_sha256=deployment_digest,
+        capability_sha256=recorded_capability,
+        graph_id=graph_id,
+        model_id=model_id,
+        evidence_artifact=evidence.artifact,
+        evidence_artifact_sha256=hashlib.sha256(payload).hexdigest(),
+        evidence_case=target.evidence_case,
+    )
 
 
 RTL_PACKAGE = ROOT / "rtl/abi3/ot_a3_pkg.sv"
@@ -630,14 +952,6 @@ def build(argv: list[str] | None = None) -> int:
             "deployment was built against"
         ),
     )
-    parser.add_argument(
-        "--allow-digest-drift",
-        action="store_true",
-        help=(
-            "emit vectors for a deployment whose digest is not the one this "
-            "repository ships (for bisecting a rebuild; never for evidence)"
-        ),
-    )
     args = parser.parse_args(argv)
     out = args.output
     out.mkdir(parents=True, exist_ok=True)
@@ -663,17 +977,36 @@ def build(argv: list[str] | None = None) -> int:
                 f"{target.key}: deployment is missing at {target.deployment}; "
                 f"build it with:\n    {target.reproduce}"
             )
+        expected_identity = certified_deployment_identity(target)
         deployment = Deployment.read(directory)
         actual = deployment.deployment_digest.hex()
-        if actual != target.digest and not args.allow_digest_drift:
+        if actual != expected_identity.deployment_sha256:
             raise SystemExit(
                 f"{target.key}: deployment digest is {actual}, this campaign "
-                f"correlates {target.digest}. The vector set names the program "
-                "it ran; re-record rather than accepting a different one."
+                f"requires {expected_identity.deployment_sha256} from "
+                f"{expected_identity.evidence_artifact} case "
+                f"{expected_identity.evidence_case!r}; rebuild the bundle or "
+                "refresh its certificate before recording vectors"
             )
         capability = Capability.from_dict(
             json.loads((ROOT / target.capability).read_text(encoding="utf-8"))
         )
+        if capability.digest != expected_identity.capability_sha256:
+            raise SystemExit(
+                f"{target.key}: capability digest is {capability.digest}, "
+                f"certificate requires {expected_identity.capability_sha256}"
+            )
+        if deployment.capability_digest != expected_identity.capability_sha256:
+            raise SystemExit(
+                f"{target.key}: deployment binds capability "
+                f"{deployment.capability_digest}, certificate requires "
+                f"{expected_identity.capability_sha256}"
+            )
+        if deployment.model_id != expected_identity.model_id:
+            raise SystemExit(
+                f"{target.key}: deployment model is {deployment.model_id!r}, "
+                f"certificate requires {expected_identity.model_id!r}"
+            )
         report = verify_deployment(deployment, capability)
         if not report.admitted:
             raise SystemExit(
@@ -713,6 +1046,7 @@ def build(argv: list[str] | None = None) -> int:
             "title": target.title,
             "deployment_dir": target.deployment,
             "deployment_sha256": actual,
+            "deployment_identity_evidence": expected_identity.record(),
             "descriptor_table_sha256": hashlib.sha256(table.encode()).hexdigest(),
             "program_sha256": hashlib.sha256(image).hexdigest(),
             "target_id": deployment.target_id,

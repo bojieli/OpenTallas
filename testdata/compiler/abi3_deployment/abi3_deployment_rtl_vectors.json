@@ -6,9 +6,9 @@
   "case_count": 8,
   "cases": [
     {
-      "declared_max_retired_work": 2105,
+      "declared_max_retired_work": 24089,
       "deployment": "qwen3-8b-rom-single-chip",
-      "deployment_sha256": "925351080448450ee4b14a0e3260001dbac9aeafc582fd3202d53a0a379b9c91",
+      "deployment_sha256": "274e4bc4664817be07ed97479c6bd77555e494d294a0b6f692ff4ac6195bbaed",
       "depth": {
         "distinct_static_instructions_reached": 28,
         "engine_issues": 693,
@@ -158,14 +158,14 @@
       },
       "view_base": 0,
       "view_count": 2143,
-      "view_stream_sha256": "dcb43659bc63130b505966cf6c93971de9a0adc84fb9e662d3c63930c50f4dba",
-      "work_bound": 2105,
+      "view_stream_sha256": "877a7d0aca17e7c7a9c0edb93c2092ced25c05a81bb76e04dd4705c9a6e82dc5",
+      "work_bound": 24089,
       "work_bound_lowered_for_cosimulation": false
     },
     {
-      "declared_max_retired_work": 2105,
+      "declared_max_retired_work": 24089,
       "deployment": "qwen3-8b-rom-single-chip",
-      "deployment_sha256": "925351080448450ee4b14a0e3260001dbac9aeafc582fd3202d53a0a379b9c91",
+      "deployment_sha256": "274e4bc4664817be07ed97479c6bd77555e494d294a0b6f692ff4ac6195bbaed",
       "depth": {
         "distinct_static_instructions_reached": 28,
         "engine_issues": 693,
@@ -315,14 +315,14 @@
       },
       "view_base": 2143,
       "view_count": 2143,
-      "view_stream_sha256": "f169293aa2b972d7cc947f080478900b4d4edf450bd4e599a69b2354dd1fa2e6",
-      "work_bound": 2105,
+      "view_stream_sha256": "3e17159f5263709f07c95e2935940f46897c66a8fd896f8a17377d2ba817a583",
+      "work_bound": 24089,
       "work_bound_lowered_for_cosimulation": false
     },
     {
-      "declared_max_retired_work": 22715,
+      "declared_max_retired_work": 24089,
       "deployment": "qwen3-8b-hbm-single-chip",
-      "deployment_sha256": "8e1185ea1aef360efcdb101379fc40e22658bfd81edd970dc8cfdd29c6c8ff0c",
+      "deployment_sha256": "679a41be63817459bacc61a7cdbdfb5793f034e82d5c51f66d0e2f9345bd25b3",
       "depth": {
         "distinct_static_instructions_reached": 28,
         "engine_issues": 693,
@@ -472,14 +472,14 @@
       },
       "view_base": 4286,
       "view_count": 2143,
-      "view_stream_sha256": "7c6d334bccd440172f1c11c5530997d90a55e8a9e5dfb6d637e63b9cd5e86d3e",
-      "work_bound": 22715,
+      "view_stream_sha256": "48c38e9e69745a33b08e9cdd939d03424377da267d180f31ae1806ffdb2a0cd3",
+      "work_bound": 24089,
       "work_bound_lowered_for_cosimulation": false
     },
     {
-      "declared_max_retired_work": 22715,
+      "declared_max_retired_work": 24089,
       "deployment": "qwen3-8b-hbm-single-chip",
-      "deployment_sha256": "8e1185ea1aef360efcdb101379fc40e22658bfd81edd970dc8cfdd29c6c8ff0c",
+      "deployment_sha256": "679a41be63817459bacc61a7cdbdfb5793f034e82d5c51f66d0e2f9345bd25b3",
       "depth": {
         "distinct_static_instructions_reached": 28,
         "engine_issues": 693,
@@ -629,8 +629,8 @@
       },
       "view_base": 6429,
       "view_count": 2143,
-      "view_stream_sha256": "7f9bda3780c76ae4fdfa81571d92563c10da339f7f8613e154b8b6c3822c6e0c",
-      "work_bound": 22715,
+      "view_stream_sha256": "882a8cabc835fca1214e185c4dd4c7837c668868cc72670a1c261c9858555979",
+      "work_bound": 24089,
       "work_bound_lowered_for_cosimulation": false
     },
     {
@@ -1706,18 +1706,23 @@
     {
       "admitted": true,
       "capability": "configs/hardware/abi3_capability/rom_qwen3.json",
-      "capability_digest": "38234d6cccbd9c017efa286b67f66b1c21572e206ba71aca874e4f912eb6adbf",
+      "capability_digest": "f109651defbd04655cd5603c4f118a8c428651f470baada1f2d2b70912eb06d5",
       "co_simulable_within_rtl_bounds": true,
-      "declared_max_retired_work": 2105,
+      "declared_max_retired_work": 24089,
       "deployment_dir": "build/abi3/qwen3-8b-rom",
-      "deployment_sha256": "925351080448450ee4b14a0e3260001dbac9aeafc582fd3202d53a0a379b9c91",
+      "deployment_identity_evidence": {
+        "artifact": "results/abi3/rom_schedule_checks.json",
+        "artifact_sha256": "ff6c2616198dbbd05f0b201ff4e99b75f36673cae404939cffe240d45a179b76",
+        "case": "qwen3-rom-single-chip"
+      },
+      "deployment_sha256": "274e4bc4664817be07ed97479c6bd77555e494d294a0b6f692ff4ac6195bbaed",
       "descriptor_count": 239,
-      "descriptor_table_sha256": "cd423c55e1b4669d659ea33f9493ba738ae52320906f3e7e99e93562f725c072",
+      "descriptor_table_sha256": "4f569369d8ff4bafd8548144d952b73ffed0ea6d0ceb9d265bd44313a34902e1",
       "entrypoint_count": 2,
       "instruction_count": 75,
       "key": "qwen3-8b-rom-single-chip",
       "model_id": "qwen3-8b",
-      "program_sha256": "238b71aa5ff1a87444426da381035838d4ab96f4fed83ac92a60fa62f9c2f02c",
+      "program_sha256": "d46efe8aa39ed19bacad68b62e3b4a02f0747fb73473cbcc7ca73e348c5dafda",
       "reproduce": "make abi3-rom-qwen-build",
       "rtl_bound_demands": {
         "A3_EVENT_COUNT": 26,
@@ -1736,17 +1741,22 @@
       "capability": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
       "capability_digest": "dd6500681f334bdb55715b000accd495be7ed927d91d1ed24b54565a0cd57aee",
       "co_simulable_within_rtl_bounds": true,
-      "declared_max_retired_work": 22715,
+      "declared_max_retired_work": 24089,
       "deployment_dir": "build/abi3/qwen3-8b-hbm-tokens",
-      "deployment_sha256": "8e1185ea1aef360efcdb101379fc40e22658bfd81edd970dc8cfdd29c6c8ff0c",
+      "deployment_identity_evidence": {
+        "artifact": "results/abi3/hbm_qwen_deployment_certificate.json",
+        "artifact_sha256": "1077110b6f258a449f9ce79b830b991127b7450a8b39bc6f254af1d7457fe32f",
+        "case": "qwen3-hbm-single-chip"
+      },
+      "deployment_sha256": "679a41be63817459bacc61a7cdbdfb5793f034e82d5c51f66d0e2f9345bd25b3",
       "descriptor_count": 218,
-      "descriptor_table_sha256": "fa0b0a65aa9f56f08738d810c706ecfc8d6bb3886d81454577ed254699283b8f",
+      "descriptor_table_sha256": "e28f99d62586a9bcb2ddba29d1eea1fc259820768cffd1dfe2d6dd06da249c14",
       "entrypoint_count": 2,
       "instruction_count": 75,
       "key": "qwen3-8b-hbm-single-chip",
       "model_id": "qwen3-8b",
-      "program_sha256": "c5a8c0a4e33334dc7cfa5ba83b265113b7fa6efa6c005590e4f9ff37965ec53f",
-      "reproduce": "python3 tools/build_hbm_sram_deployment.py --ir build/ir-v3/qwen3-8b/kernel_ir.v3.json --profile single-chip --out build/abi3/qwen3-8b-hbm-tokens",
+      "program_sha256": "3b5c00f943257312533f61387ac45d6b822c67b2a6af60813aa91514d5fcd1f3",
+      "reproduce": "make abi3-hbm-qwen-build",
       "rtl_bound_demands": {
         "A3_EVENT_COUNT": 26,
         "A3_LOOP_DEPTH": 2,
@@ -1766,6 +1776,11 @@
       "co_simulable_within_rtl_bounds": true,
       "declared_max_retired_work": 1771148,
       "deployment_dir": "build/abi3/deepseek-v4-flash-rom",
+      "deployment_identity_evidence": {
+        "artifact": "results/abi3/rom_schedule_checks.json",
+        "artifact_sha256": "ff6c2616198dbbd05f0b201ff4e99b75f36673cae404939cffe240d45a179b76",
+        "case": "deepseek-v4-flash-rom-wafer"
+      },
       "deployment_sha256": "fa907792d8eb73ec1237525468581e47945a9077e5a247f4f88c43fbb5042394",
       "descriptor_count": 3403,
       "descriptor_table_sha256": "9fcc12ee836a158928b6de0fa449e188dfb550b689f790600626aee62d5b2952",
@@ -1794,6 +1809,11 @@
       "co_simulable_within_rtl_bounds": true,
       "declared_max_retired_work": 138518749,
       "deployment_dir": "build/abi3/deepseek-v4-flash-hbm-tokens",
+      "deployment_identity_evidence": {
+        "artifact": "results/abi3/hbm_deepseek_deployment_certificate.json",
+        "artifact_sha256": "b5b45fd8123b343fb43623de02b6a5fb8b42fcb87419c6f892fde0efdf8351e4",
+        "case": "deepseek-v4-flash-hbm-cluster"
+      },
       "deployment_sha256": "2943197b3055d6198899d402efd927810cd307c09287f9d250b1b1afb2695275",
       "descriptor_count": 2953,
       "descriptor_table_sha256": "eb5e7dc52b5ee4a0bd65331bddd7d318e0680c040c9b7c261be4f18d6b348cdd",
@@ -1802,7 +1822,7 @@
       "key": "deepseek-v4-flash-hbm-cluster",
       "model_id": "deepseek-v4-flash-0731",
       "program_sha256": "dbbccb1e4f5f3f57752b6d0a7cb24375d5f2216502e895225b00a5f67bf6eaff",
-      "reproduce": "python3 tools/build_hbm_sram_deployment.py --ir build/ir-v3/deepseek-v4-flash-0731/kernel_ir.v3.json --profile cluster-32 --out build/abi3/deepseek-v4-flash-hbm-tokens",
+      "reproduce": "make abi3-hbm-deepseek-build",
       "rtl_bound_demands": {
         "A3_EVENT_COUNT": 493,
         "A3_LOOP_DEPTH": 3,
@@ -1832,12 +1852,12 @@
     "view_stride": 7
   },
   "image_sha256": {
-    "a3_deployment_case.hex": "35ef8267234040794b852c9211dd0c4b833a58233c08433fafdb29fa4a78e926",
+    "a3_deployment_case.hex": "55a1f3e4dcc411989d441bd7ce82d8d915f58f79f63b559584dd20cd08da59d7",
     "a3_deployment_issue.hex": "6fd9c31526c8dff51d062310a73c958d0f3d95505c17f60976e093b7d7588612",
     "a3_deployment_meta.hex": "04d0ad7d8ffba162dd93ee9ac0a41bd42dbc57e6c56a4cee004ee83773ebc1bd",
-    "a3_deployment_view.hex": "6137fa5c3bb3b11b61212f092a6effa30f693c7f853babaf67998461d2f7ac36",
-    "a3_descriptor.hex": "e9e7b20d72fa2ca8f8c50ed98a999ea62cac153f5bbaccccede5f358a11f0c57",
-    "a3_header.hex": "e36e4130cfe147edd3cee5a25b253014b30942a0a52a1f8e94205688350f3b4a",
+    "a3_deployment_view.hex": "065f97af46c1950a186f6e1d7236893cf898adbc971de75e68157b9be33f0e16",
+    "a3_descriptor.hex": "bbcb29e63befa8401f5b8a9ce1208be15f417993aa01097de374604f198763a8",
+    "a3_header.hex": "b0529190303c23b1c0c56deb47379f6f9fe00cc1515ff08c5ef254bd8176d703",
     "a3_program.hex": "9ffb8aa1486fb541b644c523f2c635ee644ae46363ada05705e7a20ddf9077eb",
     "a3_symbol.hex": "aefea5f803c69340757eed992d1f3e691d4ca2f0b610256864a5bf1d0f757f38"
   },
