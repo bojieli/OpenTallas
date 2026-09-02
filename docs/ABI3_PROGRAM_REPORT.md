@@ -1,7 +1,7 @@
 # ABI 3.0 program report
 
 **Report ID:** TA-ABI3-REPORT-1
-**Date:** 2026-08-29
+**Date:** 2026-09-02
 **Baseline:** `main` at the commit this document is committed with
 **Generated companion:** [`PROGRAM_STATUS.md`](PROGRAM_STATUS.md) is regenerated
 from artifacts on disk; this document is the narrative and the judgement.
@@ -23,21 +23,30 @@ claim below rests on that.
 
 ### 2.1 The Qwen accelerator produces correct tokens
 
-The pinned chat workload — rendered through the official template, tokenized by
-the pinned tokenizer — is compiled from the neutral IR into a 75-instruction
-ABI 3.0 deployment, admitted by the independent verifier, and executed entirely
-by the microsequencer and engines: embedding, thirty-six layers, GQA attention,
-transactional KV state, vocabulary projection, and **on-device argmax and token
-append**. Its output is token-identical to a reference the accelerator did not
-compute, over 24 tokens, with no divergence at any index:
+The source-current pinned chat workload — rendered through the official
+template and tokenized by the pinned tokenizer — is compiled from the neutral
+IR into both current 75-instruction Qwen deployments, admitted by the
+independent verifier, and executed entirely by the microsequencer and engines:
+embedding, thirty-six layers, GQA attention, transactional KV state, vocabulary
+projection, and **on-device argmax and token append**. Qwen ROM (`925351…`) and
+HBM (`8e1185…`) each reproduce the same four-token oracle prefix:
+
+```
+(1654, 525, 2661, 1447)
+```
+
+The hardened records bind the exact deployment, checkpoint ranges, source
+files, tokenizer artifacts, workload and oracle. A retained historical capture
+extends the match to 24 tokens:
 
 ```
 (1654, 525, 2661, 1447, 12, 3070, 29624, 220, 16, 334, 320, 1499,
  5776, 362, 8, 10901, 518, 3070, 15, 21, 25, 15, 15, 334)
 ```
 
-Three independent runs agree, two of them from a different process than the one
-that built the deployment.
+That longer record predates the current deployment identities and hardened
+source-map schema. It remains milestone evidence, not a source-current
+24-token claim.
 
 Host software tokenizes, stages a bounded input span, submits real 128-byte ABI
 records, and reads token IDs back. It does not sequence device operations,
@@ -56,9 +65,9 @@ tokens.
 The property the comparison rests on has two halves, and only the first is
 proven. This section reports the first and is explicit about the second.
 
-**Proven: within one backend, storage class changes nothing else.** The same
-graph built twice through the ROM backend, varying only where the immutable
-weights live:
+**Retained proof: within one backend, storage class changed nothing else.** A
+historical equivalence build lowered the same graph twice through the ROM
+backend, varying only where the immutable weights lived:
 
 | | Qwen3-8B | DeepSeek-V4-Flash |
 |---|---|---|
@@ -69,21 +78,21 @@ weights live:
 | Transitions | all ROM→HBM | all ROM→HBM |
 | **Differing beyond storage class** | **0** | **0** |
 
-Not one operand view, numeric profile, schedule or operator differs.
+Not one operand view, numeric profile, schedule or operator differed in that
+artifact. It predates the current source-lock schema and is not a current
+rebuild.
 
-**Not proven: that the two backends emit the same program.** The table above
-varies storage class inside a single backend. The ROM-versus-HBM comparison
-needs more than that — it needs `rom_qwen3` and `hbm_sram` to lower the same
-graph to the same program — and today they do not: 31 instructions and 210
-descriptors from the ROM lowering against 75 and 218 from the HBM lowering. The
-two figures appear in adjacent sections of this report and it would be easy to
-read the 75-instruction program as the one covered by the table. It is not.
+**Not proven: that the two product backends emit the same program.** The table
+above varies storage class inside one equivalence backend. The current shipped
+Qwen programs each contain 75 instructions, but ROM emits 239 descriptors and
+HBM emits 218. The separate equivalence-only build emits 31 instructions and
+210 descriptors on both storage classes; it is not either shipped program.
 
-Until the counts agree, a measured gap between the two targets is partly a
-measurement of the compiler rather than of the memory technology, which is
-precisely the failure the property exists to exclude. Tracked as OI-19. The
-numbers here are also from a build predating the A13 loop-compression change to
-the HBM lowering, so the proof must be re-run once the ROM lane lands.
+Until product lowering agrees, a measured gap between the two targets is partly
+a measurement of the compiler rather than of memory technology, which is
+precisely the failure this property exists to exclude. Tracked as OI-19. The
+equivalence build must also be regenerated under the current source and
+provenance rules before it can support a release-current claim.
 
 ### 2.3 Loop compression
 
@@ -107,10 +116,11 @@ normatively. With it: about 700 dispatches and 22,715 retired work.
 
 No weight image is written anywhere. A memory object references authenticated
 byte ranges of the locked checkpoint, and tiling is expressed by view strides.
-The Qwen deployment bundle is 223 KB addressing 16.38 GB; the DeepSeek bundle is
-30.9 MB addressing 156.0 GB. Twelve tensors across three layers were read back
-through the device at their placement offsets and matched the checkpoint
-byte for byte.
+The deployment directories contain only manifests, programs, and descriptors;
+checkpoint bytes stay external and authenticated. Exact serialized bundle size
+is not a retained program claim because no committed artifact publishes that
+aggregate. Twelve tensors across three layers were read back through the device
+at their placement offsets and matched the checkpoint byte for byte.
 
 ### 2.5 DeepSeek-V4-Flash executes
 
@@ -120,6 +130,15 @@ chat workload runs to a real EOS in 333 tokens and reaches the correct answer;
 the agent workload emits a well-formed tool call. Both agree completely with the
 vendor's own temperature-zero argmax and reproduce byte-identically across
 processes.
+
+The two current accelerator deployments also execute the governed 32-token
+prefix through one prefill and three decode transactions. ROM (`fa9077…`) and
+the 32-node HBM cluster (`294319…`) both produce
+`[13806, 345, 7472, 55560]`, matching the external oracle at all four positions
+and each other. These hardened captures bind the exact deployment, checkpoint
+content, source files, workload, tokenizer and oracle. They establish the
+current short correctness spine; they do not extend the accelerator claim to
+the longer reference-only EOS or agentic runs.
 
 ### 2.6 Fail-closed behaviour
 
@@ -136,14 +155,15 @@ resolved operand views and 11 traps field-for-field against the functional
 device on two independent simulators, with 17 negative cases
 (`results/rtl/abi3_campaign.json`). Those are programs built for the campaign.
 Run on the **programs this repository actually ships**
-(`results/rtl/abi3_deployment_campaign.json`), all three deployments — Qwen3-8B
-ROM single chip, Qwen3-8B HBM single chip and DeepSeek-V4-Flash ROM wafer —
-correlate exactly on both entrypoints at whole-transaction depth. Each Qwen
-case retires 2,105 instructions with 693 engine issues and 2,143 resolved
-operand views; DeepSeek retires 29,456 / 11,714 instructions on prefill /
-decode, with 12,657 / 3,600 issues and 39,849 / 10,428 views. Every case ends
-in COMPLETE rather than at a work bound, identically on Icarus 11.0 and
-Verilator 5.050. **The artifact's `correlated_cases` field remains the
+(`results/rtl/abi3_deployment_campaign.json`), all four deployments — Qwen3-8B
+ROM single chip, Qwen3-8B HBM single chip, DeepSeek-V4-Flash ROM wafer, and
+DeepSeek-V4-Flash HBM 32-node cluster — correlate exactly on both entrypoints
+at whole-transaction depth. Each Qwen case retires 2,105 instructions with 693
+engine issues and 2,143 resolved operand views. DeepSeek ROM retires 18,491 /
+11,714 instructions on prefill / decode, with 6,852 / 3,600 issues and 20,499 /
+10,428 views; DeepSeek HBM retires 18,607 / 11,229 instructions, with 7,376 /
+4,454 issues and 21,114 / 11,718 views. Every case ends in COMPLETE rather than
+at a work bound, identically on Icarus 11.0 and Verilator 5.050. **The artifact's `correlated_cases` field remains the
 authority**, since it moves whenever a sequencer bound or shipped image moves.
 At commit `518260f` it did not include DeepSeek: the RTL trapped after eight
 retirements on `A3_STATE_SLOTS`, a bound nothing then expressed at admission.
@@ -159,24 +179,31 @@ the deployment campaign records correlating — no others.
 
 ## 3. What is not established
 
-- **No accelerator result at the mandatory contexts.** The Qwen 8,000-token
-  campaign and the DeepSeek long-context campaign have not run on the
-  accelerator. The reference oracle has reached 8,000 tokens for both models.
-- **No DeepSeek timing or performance comparison yet.** The governed functional
-  ROM-versus-HBM comparison now exists: both DeepSeek targets execute one
+- **Mandatory-context accelerator coverage is incomplete.** The Qwen HBM lane
+  did execute the 8,000-token prompt, but diverged from the oracle at generated
+  token 137 and stopped at its 193-token bound without EOS; the matched ROM lane
+  completed its 192-token comparison horizon and matched the oracle throughout.
+  DeepSeek's 200,000-token rung remains reference-oracle GPU evidence: the
+  governed accelerator context gate currently reaches only 35 tokens, below
+  both sparse-attention thresholds.
+- **No characterized DeepSeek performance comparison yet.** The governed
+  functional ROM-versus-HBM comparison now exists: both DeepSeek targets execute one
   prefill plus three decode transactions and produce
   `[13806, 345, 7472, 55560]`, identical to the oracle and to each other.
   `results/abi3/comparison_deepseek_rom_vs_hbm.json` records that four-token
   common prefix, no assumptions, and the one-wafer-versus-32-node topology
   difference. Its own claim boundary says `timing_or_performance: false`; no
-  cycle-model or characterised performance pair follows from it.
+  characterized ROM/HBM performance pair follows from it. A separate governed
+  HBM-only P32 prefill cycle artifact now exists, but it depends predominantly
+  on assumed machine values and cannot supply that comparison.
 - **No silicon, no full-chip place-and-route, no foundry signoff DRC or LVS.**
   The physical evidence covers representative blocks.
 - **RTL coverage of the shipped deployments is a list, and it is the
   artifact's.** `results/rtl/abi3_deployment_campaign.json` →
   `correlated_cases` names the deployments the microsequencer RTL is known to
-  reproduce. The current list contains both Qwen3-8B builds and the
-  DeepSeek-V4-Flash ROM wafer build. At commit `518260f` it contained only the
+  reproduce. The current list contains both Qwen3-8B builds, the
+  DeepSeek-V4-Flash ROM wafer build, and the DeepSeek-V4-Flash HBM 32-node
+  cluster build. At commit `518260f` it contained only the
   Qwen builds: DeepSeek trapped after eight retirements on a sequencer bound
   (`A3_STATE_SLOTS`) that nothing expressed at admission, so a shipped
   deployment passed every admission gate and was refused in hardware instead
@@ -184,9 +211,18 @@ the deployment campaign records correlating — no others.
 - **No engine arithmetic under the sequencer.** Both control-plane campaigns
   bind every engine to a recording no-op; the four datapaths that are correlated
   arithmetically are correlated separately and are not wired to the sequencer.
-- **No governed cycle result on a real model.** The cycle model agrees with the
-  functional device on every architectural counter, but its machine parameters
-  are overwhelmingly `assumed`, and every report says so at the top level.
+- **The governed real-deployment cycle result is schedule/counter evidence, not
+  token or performance evidence.**
+  `results/abi3/deepseek_v4_flash_hbm_p32_prefill_cycle.json` executes the
+  shipped 32-node HBM deployment for one 32-token prefill, exits `SUCCESS` /
+  `NONE`, agrees with an independently rerun functional device on all **66** <!-- figure: 66 src="results/abi3/deepseek_v4_flash_hbm_p32_prefill_cycle.json#functional_agreement.counters_compared" name="DeepSeek HBM cycle counters reconciled, report" -->
+  compared architectural counters, and completes its **447** <!-- figure: 447 src="results/abi3/deepseek_v4_flash_hbm_p32_prefill_cycle.json#schedule_audit.operators_checked" name="DeepSeek HBM cycle operators audited, report" -->-operator schedule
+  audit with no findings or contract gaps. Its **244,691,019,251** <!-- figure: 244,691,019,251 src="results/abi3/deepseek_v4_flash_hbm_p32_prefill_cycle.json#timing.total_cycles" name="DeepSeek HBM modeled prefill cycles, report" -->-cycle result is
+  governed by **124** <!-- figure: 124 src="results/abi3/deepseek_v4_flash_hbm_p32_prefill_cycle.json#provenance.counts.assumed" name="DeepSeek HBM assumed cycle parameters, report" --> assumed and **5** <!-- figure: 5 src="results/abi3/deepseek_v4_flash_hbm_p32_prefill_cycle.json#provenance.counts.characterized" name="DeepSeek HBM characterized cycle parameters, report" --> characterized parameters, so the artifact
+  class is `assumed` and the reported **244.691** <!-- figure: 244.691 src="results/abi3/deepseek_v4_flash_hbm_p32_prefill_cycle.json#timing.seconds" name="DeepSeek HBM modeled prefill seconds, report" --> seconds is not a performance
+  claim. The cycle request does not stage the governed prompt payload or compare
+  its produced token with the external oracle, and the artifact binds the
+  deployment, capability and cost table but carries no full Python source map.
 
 ## 4. Judgements worth recording
 
@@ -273,9 +309,11 @@ bisection tool now samples in flight, at the moment the producing engine writes.
 
 ## 6. Open issues
 
-Fifteen are tracked in [`UNIFIED_EXECUTION_CHECKLIST.md`](UNIFIED_EXECUTION_CHECKLIST.md).
-The two that gate results are OI-15, where every operation is wrapped in a
-per-token loop so a 93-token prefill issues roughly 63,600 engine dispatches,
-and OI-4, where no governed stochastic sampling contract exists — deliberately
-left open, because inventing an RNG to close it would make every future result
-irreproducible.
+The authoritative status is the top-level marker table in
+[`UNIFIED_EXECUTION_CHECKLIST.md`](UNIFIED_EXECUTION_CHECKLIST.md): 11 partial
+rows and 2 open rows. Its 53 `OI-*` headings are a durable findings log, not a
+count of currently open defects; many are explicitly closed and retained to
+record what invalidated earlier evidence. OI-15's per-token loop, for example,
+is closed by A13 block extents. OI-4's lack of a governed stochastic sampling
+contract remains deliberate: inventing an RNG merely to close it would make
+future results irreproducible.

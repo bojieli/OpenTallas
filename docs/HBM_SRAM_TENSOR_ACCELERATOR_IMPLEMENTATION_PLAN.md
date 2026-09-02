@@ -2,7 +2,7 @@
 
 **Plan ID:** TA-HBM-3.0
 
-**Status:** implementation blocked on TA-A3-ARCH-0
+**Status:** active implementation; TA-A3-ARCH-0 accepted
 
 **Hardware product:** one programmable conventional accelerator chip
 
@@ -63,9 +63,11 @@ The merged main branch provides:
 - existing HBM, SRAM-boundary, stage, RAS, power, link, and physical-methodology
   RTL blocks.
 
-### 2.2 Boundaries that remain open
+### 2.2 Boundaries that were open at plan start
 
-The current implementation is not the target system:
+This section records the baseline gaps that motivated the plan. Several are
+closed by the dated execution record and checklist; they are retained here as
+historical plan inputs rather than presented as current repository state:
 
 - Qwen ABI 2.5 expands one forward step into 924,386 commands and relies on
   software sequencing;
@@ -326,21 +328,41 @@ without that rule it falsely split DeepSeek scale runs by checkpoint adjacency
 and reported 322 expected objects against the correct 224. The governed
 `tools/check_hbm_deployments.py` source-locks that checker, the planner/lowering,
 the graph, both shared-chip capability profiles, and the shipped ABI bytes, then
-performs two clean rebuilds. Its Qwen certificate passes all 18 deployment
+performs two clean rebuilds. Its Qwen certificate passes all 21 deployment
 checks, including an independent disjointness and capacity proof over the
 emitted HBM-plus-state address map, and closes checklist W4.6.
 
-The same tool's DeepSeek mode is intentionally a retained failure, not a green
-short-run proxy. It passes generic ABI/placement reconstruction and the 200K
-node-local HBM capacity check after six expert/index pipelines were changed to
-bounded rolling arenas, but still refuses W4.7 because required
-expert/sparse/reduction sites are replicated instead of communicated. Its
-coordinated-commit checks pass: conditional terminal
-work is joined onto a four-event frontier, the final cluster barrier waits for
-that frontier, and all 11 state commits wait for the barrier event. The five
-remaining findings are published in
-`results/abi3/hbm_deepseek_deployment_findings.json` and are the implementation
-inputs for the remaining cluster work.
+The same tool's DeepSeek mode now closes W4.7 with a 34/34 certificate rather
+than treating a short functional run as a proxy for placement. The 256-expert
+banks are split into eight consecutive experts per node. Route class 0 scatters
+each bounded dispatch block to those owners, route class 1 all-gathers distinct
+16-column fused-KV bands, route class 2 reconstructs column-sharded activation
+outputs, and route class 3 sums the disjoint routed-expert contributions before
+`EXPERT_REDUCE` reads them. For every data-bearing link, the certificate
+reconstructs the producer DMA, endpoint object, receive/unpack DMA, consumer
+object and consumer wait; mutation tests sever both sides and require rejection.
+Route class 4 retains the coordinated commit: conditional terminal work joins
+onto a four-event frontier, the final cluster barrier waits for that frontier,
+and all 11 state commits wait for the barrier event.
+
+Query-B and attention/output-projection runs now execute as structurally closed
+token-block pipelines, so their wide intermediates reuse fixed-address rolling
+arenas rather than retaining a maximum-context plane. All exchanges reuse one
+805,306,368-byte capacity-proved scratch object through 36 complete
+pack/LINK/unpack triples on a dedicated one-outstanding DMA queue; the governed
+checker rejects queue, credit, predicate, event-chain, loop-boundary and
+interleaving mutations. The capacity proof no longer divides every weight by
+32: it reconstructs replica/shard ownership from the node-selected views and
+charges 13,445,013,724 weight bytes per node, including an 8,569,523,157-byte
+replication premium over an ideal even split. Of the logically sharded weights,
+4,583,010,304 bytes fall back to replication where authenticated scale-tile
+geometry cannot be evenly segmented. The proof also includes 272,629,772 bytes
+of generated constants plus every 4 KiB alignment gap. Including those
+reservations, the maximum-context plan needs 90,163,253,248 of 103,079,215,104
+HBM bytes per node. Two clean rebuilds reproduce the shipped bundle
+byte-for-byte, the independent checker passes its 49 generic invariants, and
+the source-locked acceptance record is
+`results/abi3/hbm_deepseek_deployment_certificate.json`.
 
 ## 5. Simulator implementation
 

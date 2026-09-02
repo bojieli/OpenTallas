@@ -495,7 +495,7 @@ not be used for — rather than left to prose.
 
 | number / claim | where it is stated | what produces it | grade | current? |
 |---|---|---|---|---|
-| the ABI 3.0 sequencer RTL reproduces `runtime.sim.device.Device` exactly on the **Qwen3-8B ROM and HBM single-chip deployments and the DeepSeek-V4-Flash ROM wafer deployment**, both entrypoints, at whole-transaction depth — 2,105 instructions / 693 issues / 2,143 views per Qwen case; 29,456 / 11,714 instructions on DeepSeek prefill / decode | `docs/UNIFIED_EXECUTION_CHECKLIST.md` W8.8, `rtl/RTL_INVENTORY.md` A3-SEQ-001, `docs/ABI3_PROGRAM_REPORT.md` §2.7 | `make abi3-deployment-rtl` → `results/rtl/abi3_deployment_campaign.json` → `what_ran.depth_reached[]`, `correlated_cases` | `executed` | **YES** |
+| the ABI 3.0 sequencer RTL reproduces `runtime.sim.device.Device` exactly on the **Qwen3-8B ROM and HBM single-chip deployments, the DeepSeek-V4-Flash ROM wafer deployment, and the DeepSeek-V4-Flash HBM 32-node cluster deployment**, both entrypoints, at whole-transaction depth — 2,105 instructions / 693 issues / 2,143 views per Qwen case; 18,491 / 11,714 instructions on DeepSeek ROM prefill / decode; and 18,607 / 11,229 instructions on DeepSeek HBM prefill / decode | `docs/UNIFIED_EXECUTION_CHECKLIST.md` W8.8, `rtl/RTL_INVENTORY.md` A3-SEQ-001, `docs/ABI3_PROGRAM_REPORT.md` §2.7 | `make abi3-rtl-deployment` → `results/rtl/abi3_deployment_campaign.json` → `what_ran.depth_reached[]`, `correlated_cases` | `executed` | **YES** |
 | the authoritative list of **which** shipped deployments that campaign covers | prose summaries defer to this field | `results/rtl/abi3_deployment_campaign.json` → `correlated_cases` | `executed` | **by construction** |
 
 The second row is the point. The first run of this campaign refused the
@@ -525,20 +525,24 @@ refused in hardware. That is the failure signature the fail-closed design exists
 to prevent, and it was invisible until the RTL was asked to run a real program
 rather than a generated one.
 
-## 7b. Governed DeepSeek token captures
+## 7b. Governed source-current token captures
 
 | number / claim | where it is stated | what produces it | grade | current? |
 |---|---|---|---|---|
-| DeepSeek-V4-Flash-0731 HBM and ROM both emit `[13806, 345, 7472, 55560]`, identical to the independent oracle and to each other over the governed four-token horizon | `results/abi3/accelerator_tokens/README.md`, checklist W6.3/W6.4 and W13.3/W13.4, `docs/ABI3_PROGRAM_REPORT.md` §3 | `tools/run_accelerator_tokens.py`, the two governed `deepseek_v4_flash_{hbm,rom}_p32.json` captures, `deepseek_v4_reference_oracle_prefix.json`, and `comparison_deepseek_rom_vs_hbm.json` | **`executed`**, functional-simulator and external-comparator evidence only | **YES** |
+| Qwen3-8B ROM (`925351…`) and HBM (`8e1185…`) both emit `[1654, 525, 2661, 1447]`, identical to the independent oracle and to each other over the governed four-token horizon | `results/abi3/accelerator_tokens/README.md`, checklist freshness boundary, `docs/ABI3_PROGRAM_REPORT.md` §2.1 | `tools/run_accelerator_tokens.py`, the two governed `qwen3_8b_{rom,hbm}_chat1.json` captures, and their byte-matched oracle input | **`executed`**, functional-simulator and external-comparator evidence only | **YES** |
+| DeepSeek-V4-Flash-0731 HBM (`294319…`, post-A28) and ROM both emit `[13806, 345, 7472, 55560]`, identical to the independent oracle and to each other over the governed four-token horizon | `results/abi3/accelerator_tokens/README.md`, checklist W6.3/W6.4 and W13.3/W13.4, `docs/ABI3_PROGRAM_REPORT.md` §3 | `tools/run_accelerator_tokens.py`, the two governed `deepseek_v4_flash_{hbm,rom}_p32.json` captures, `deepseek_v4_reference_oracle_prefix.json`, and `comparison_deepseek_rom_vs_hbm.json` | **`executed`**, functional-simulator and external-comparator evidence only | **YES** |
 
 `executed` in this repository's vocabulary means *obtained by running something
 in this repository, with the artifact committed*. The governed tool lowers the
 pinned graph, admits the deployment, executes prefill and decode, checks token
 legitimacy, and compares only against the byte-matched external oracle. The old
 `deepseek_v4_flash_rom_p32_raw.json` remains as historical evidence but no
-current claim depends on it. Execution does not promote either capture or their
-pairwise report to cycle, RTL, physical or silicon evidence, and the
-four-token horizon does not establish token 5 or a long-context threshold.
+current claim depends on it. The longer Qwen 24/192-token, EOS, reasoning and
+agentic records likewise remain historical: they predate the current deployment
+identities and hardened source maps, so no source-current claim beyond four
+tokens depends on them. Execution does not promote any capture or pairwise
+report to cycle, RTL, physical or silicon evidence, and the four-token horizon
+does not establish token 5 or a long-context threshold.
 
 **A correction this milestone forces on existing prose.** The 104-token
 `TA-DS-CHAT-1` run has been described as the real gate for DeepSeek execution.
@@ -573,8 +577,8 @@ nobody annotated, which is why §5 is still the most durable part of this ledger
 
 | number / claim | where it is stated | what produces it | grade | current? |
 |---|---|---|---|---|
-| Qwen3-8B HBM and ROM and DeepSeek-V4-Flash-0731 HBM P32 and ROM P32 each reproduce a three-token uninterrupted baseline exactly when stopped after token two, checkpointed, and resumed for token three in a fresh process | checklist W6.6 and the four `results/abi3/restart_exactness_*.json` artifacts | `make abi3-restart` → `tools/run_abi3_restart_exactness.py` → `runtime/sim/checkpoint.py`; the four target-specific Make recipes remain independently runnable | **`executed`**, functional-simulator evidence only | **YES** |
-| the DeepSeek HBM capture restores all 32 node arenas and ends with the same aggregate counter set and all 32 per-node counter sets, including sticky-overflow state | `results/abi3/restart_exactness_deepseek_hbm_p32.json` → `record.target.node_count`, `record.notes.node_counters_identical`, `record.notes.checkpoint` | the governed HBM P32 restart recipe above | **`executed`**, functional-simulator evidence only | **YES** |
+| Qwen3-8B HBM and ROM and DeepSeek-V4-Flash-0731 HBM P32 and ROM P32 each reproduce a three-token uninterrupted baseline exactly when stopped after token two, checkpointed, and resumed for token three in a fresh process | checklist W6.6 and the four `results/abi3/restart_exactness_*.json` artifacts | `make abi3-restart` → `tools/run_abi3_restart_exactness.py` → `runtime/sim/checkpoint.py`; the four target-specific Make recipes remain independently runnable | **`executed-historical`**, functional-simulator evidence only; all four captures record the same historical Python source identity, while the working tree has since changed | **NO — stable-tree source-current rerun pending** |
+| the DeepSeek HBM capture restores all 32 node arenas and ends with the same aggregate counter set and all 32 per-node counter sets, including sticky-overflow state | `results/abi3/restart_exactness_deepseek_hbm_p32.json` → `record.target.node_count`, `record.notes.node_counters_identical`, `record.notes.checkpoint` | the governed HBM P32 restart recipe above | **`executed-historical`**, functional-simulator evidence only; the capture also predates the node-local deployment | **NO — current-deployment rerun pending** |
 
 The equality is guarded rather than inferred from two short lists. Each primary
 campaign phase has a distinct PID and records the same deployment digest,
@@ -651,8 +655,8 @@ RTL or silicon execution.
 
 | number / claim | where it is stated | what produces it | grade | current? |
 |---|---|---|---|---|
-| The shipped one-node Qwen HBM deployment passes **18/18** certificate checks, spans **19,670,900,740** of 103,079,215,104 HBM bytes per node across its emitted HBM-plus-state address map, and places **399** authenticated checkpoint ranges exactly once <!-- figure: 18 src="results/abi3/hbm_qwen_deployment_certificate.json#cases[case=qwen3-hbm-single-chip].passed_check_count" name="Qwen HBM deployment certificate checks, ledger" --> <!-- figure: 19670900740 src="results/abi3/hbm_qwen_deployment_certificate.json#cases[case=qwen3-hbm-single-chip].actual.hbm_bytes_per_node" name="Qwen HBM resident bytes, ledger" --> <!-- figure: 399 src="results/abi3/hbm_qwen_deployment_certificate.json#cases[case=qwen3-hbm-single-chip].actual.weight_segments" name="Qwen HBM authenticated ranges, ledger" --> | checklist W4.6 and TA-HBM-3.0 §4.4 | `make abi3-hbm-qwen-deployment` → two clean `lower_with_plan` builds, comparison with the shipped program/table/manifest, emitted-address inventory, `compiler/backends/hbm_sram/check.py`, and the frozen verifier | **`executed`**, deterministic static deployment certificate | **YES** |
-| The current exact-32-node DeepSeek HBM artifact passes **21/26**; its bounded activation plan needs **102,141,195,534** of 103,079,215,104 HBM bytes per node, and five named distributed-traffic checks remain open <!-- figure: 21 src="results/abi3/hbm_deepseek_deployment_findings.json#cases[case=deepseek-v4-flash-hbm-cluster].passed_check_count" name="DeepSeek HBM retained deployment checks, ledger" --> <!-- figure: 102141195534 src="results/abi3/hbm_deepseek_deployment_findings.json#cases[case=deepseek-v4-flash-hbm-cluster].actual.hbm_bytes_per_node" name="DeepSeek HBM retained required bytes, ledger" --> | checklist W4.7 and TA-HBM-3.0 §4.4 | the same source-locked tool in `deepseek` mode, run twice with byte-identical failure output (`results/abi3/hbm_deepseek_deployment_findings.json`) | **`executed` retained failure**, not acceptance | **YES — capacity current; traffic still failing** |
+| The shipped one-node Qwen HBM deployment passes **21/21** certificate checks, spans **19,670,900,740** of 103,079,215,104 HBM bytes per node across its emitted HBM-plus-state address map, and places **399** authenticated checkpoint ranges exactly once <!-- figure: 21 src="results/abi3/hbm_qwen_deployment_certificate.json#cases[case=qwen3-hbm-single-chip].passed_check_count" name="Qwen HBM deployment certificate checks, ledger" --> <!-- figure: 19670900740 src="results/abi3/hbm_qwen_deployment_certificate.json#cases[case=qwen3-hbm-single-chip].actual.hbm_bytes_per_node" name="Qwen HBM resident bytes, ledger" --> <!-- figure: 399 src="results/abi3/hbm_qwen_deployment_certificate.json#cases[case=qwen3-hbm-single-chip].actual.weight_segments" name="Qwen HBM authenticated ranges, ledger" --> | checklist W4.6 and TA-HBM-3.0 §4.4 | `make abi3-hbm-qwen-deployment` → two clean `lower_with_plan` builds, comparison with the shipped program/table/manifest, emitted-address inventory, `compiler/backends/hbm_sram/check.py`, and the frozen verifier | **`executed`**, deterministic static deployment certificate | **YES** |
+| The shipped exact-32-node DeepSeek HBM deployment passes **34/34** certificate checks; its 37 communications cover all five ordered route classes, and its replica-aware capacity proof includes **13,445,013,724** weight bytes plus **805,306,368** bytes of shared communication scratch inside **90,163,253,248** of 103,079,215,104 HBM bytes per node <!-- figure: 34 src="results/abi3/hbm_deepseek_deployment_certificate.json#cases[case=deepseek-v4-flash-hbm-cluster].passed_check_count" name="DeepSeek HBM deployment certificate checks, ledger" --> <!-- figure: 37 src="results/abi3/hbm_deepseek_deployment_certificate.json#cases[case=deepseek-v4-flash-hbm-cluster].actual.communications" name="DeepSeek HBM communications, ledger" --> <!-- figure: 13445013724 src="results/abi3/hbm_deepseek_deployment_certificate.json#cases[case=deepseek-v4-flash-hbm-cluster].actual.weight_bytes_per_node" name="DeepSeek HBM weight bytes per node, ledger" --> <!-- figure: 805306368 src="results/abi3/hbm_deepseek_deployment_certificate.json#cases[case=deepseek-v4-flash-hbm-cluster].actual.communication_scratch_bytes" name="DeepSeek HBM communication scratch, ledger" --> <!-- figure: 90163253248 src="results/abi3/hbm_deepseek_deployment_certificate.json#cases[case=deepseek-v4-flash-hbm-cluster].actual.hbm_bytes_per_node" name="DeepSeek HBM required bytes, ledger" --> | checklist W4.7 and TA-HBM-3.0 §4.4 | `make abi3-hbm-deepseek-deployment` → two clean builds compared byte-for-byte with the shipped bundle, the frozen verifier, the independent 49-check HBM checker, causal producer/receive/consumer reconstruction, independently reconstructed replica/shard ownership and generated-constant/alignment accounting, serialized scratch proof, plus digest-restamped wrong-stride, unreachable-decoy, source-map and schedule mutations | **`executed`**, deterministic static deployment certificate | **YES** |
 
 The Qwen certificate does not infer deployment quality from token output. It
 rebuilds the physical plan and ABI bundle twice, requires both to equal the
@@ -663,15 +667,47 @@ only topology class, node count, peers, route groups and bisection-link count to
 differ; engines, features, memory and numeric contracts remain identical, so
 the one-node profile has not silently removed the shared chip's endpoint.
 
-The DeepSeek artifact is evidence of non-closure. Its generic checker passes,
-its 32-node identity and activation all-gathers are real, and its clean rebuilds
-are deterministic. Six expert/index pipelines now use 78 block-sized rolling
-activation slots, so maximum-context placement passes with 938,019,570 bytes
-of node-local HBM headroom. The W4.7 acceptance layer independently maps graph
-semantics to five route classes and still finds no route-0 expert dispatch,
-route-1 sparse gather or route-3 reduction; the deployment itself reports those
-sites as replicated. The coordinated-commit checks pass: predicated terminal work
-joins onto a four-event frontier, the route-4 barrier waits for all four events,
-and every one of the 11 state commits waits for the barrier event. No later
-functional execution may be cited as resolving the remaining static
-distributed-placement and traffic defects.
+The DeepSeek certificate closes placement independently of token output. Its
+hybrid plan keeps output-column sharding where scale tiles permit it and assigns
+each routed bank's consecutive expert slices to node-local views. The causal
+checker does not accept a route-class label alone: each data-bearing link must
+wait for a producer DMA into its endpoint object, and its completion must reach
+a DMA that writes an object read by a waiting non-DMA consumer. Route classes
+zero through three satisfy that chain; route class four remains the final
+cluster barrier, and every state commit waits for it. The shared exchange object
+is included in the HBM capacity result rather than appearing only after the
+planner's proof. The capacity checker also reconstructs the residency of each
+weight tensor from its node-selected views, conservatively charges any tensor
+with a replicated use, includes generated constants and 4 KiB alignment, and
+compares that independent packing with the planner's result. This is
+deterministic static deployment evidence, not cycle, RTL, physical or
+long-context numeric evidence.
+
+---
+
+# 9. Additions of 2026-09-02
+
+## 9a. Governed DeepSeek HBM real-deployment cycle reconciliation
+
+| number / claim | where it is stated | what produces it | grade | current? |
+|---|---|---|---|---|
+| One 32-token prefill over shipped DeepSeek HBM deployment `294319…` exits `SUCCESS` / `NONE`; an independent functional rerun agrees on all **66** compared architectural counters with no differences <!-- figure: 66 src="results/abi3/deepseek_v4_flash_hbm_p32_prefill_cycle.json#functional_agreement.counters_compared" name="DeepSeek HBM cycle counters reconciled, ledger" --> | checklist W7.5 and `docs/ABI3_PROGRAM_REPORT.md` | `PYTHONPATH=. python3 tools/run_abi3_cycle.py --deployment build/abi3/deepseek-v4-flash-hbm-tokens --capability configs/hardware/abi3_capability/hbm_sram_cluster_32.json --cost-table configs/hardware/abi3_cost_cluster32_v2.json --entrypoint 0 --transactions 1 --symbol SPAN_TOKENS=32 --symbol POSITION_START=0 --symbol POSITION_END=32 --symbol CONTEXT_LENGTH=32 --symbol PHASE=0 --symbol GENERATION_INDEX=0 --symbol MAX_NEW_TOKENS=16 --symbol BATCH=1 --symbol SPAN_LAST_INDEX=31 --check-functional-agreement --out results/abi3/deepseek_v4_flash_hbm_p32_prefill_cycle.json` | **`executed`**, current-tree functional/cycle counter reconciliation | **QUALIFIED YES** — exact deployment, capability and cost-table digests are bound; the artifact carries no full Python source map |
+| The schedule audit is complete over **447** operators with no findings or contract gaps <!-- figure: 447 src="results/abi3/deepseek_v4_flash_hbm_p32_prefill_cycle.json#schedule_audit.operators_checked" name="DeepSeek HBM cycle operators audited, ledger" --> | the same artifact → `schedule_audit` and `gaps` | the same governed command; strict schedule admission is the default | **`executed`**, schedule-contract evidence | **YES for the bound deployment/request** |
+| The model reports **244,691,019,251** cycles <!-- figure: 244,691,019,251 src="results/abi3/deepseek_v4_flash_hbm_p32_prefill_cycle.json#timing.total_cycles" name="DeepSeek HBM modeled prefill cycles, ledger" --> from **124** assumed and **5** characterized parameters <!-- figure: 124 src="results/abi3/deepseek_v4_flash_hbm_p32_prefill_cycle.json#provenance.counts.assumed" name="DeepSeek HBM assumed cycle parameters, ledger" --> <!-- figure: 5 src="results/abi3/deepseek_v4_flash_hbm_p32_prefill_cycle.json#provenance.counts.characterized" name="DeepSeek HBM characterized cycle parameters, ledger" --> | the same artifact → `timing.total_cycles` and `provenance` | the cycle model plus `configs/hardware/abi3_cost_cluster32_v2.json` | **`assumed`**, not measured or characterized performance | **CURRENT INPUTS, NOT A PERFORMANCE CLAIM** |
+
+This is the first retained governed cycle result over a shipped real-model
+deployment rather than a fixture. It exercises the admitted 32-node program,
+node-indexed communication, queues, barriers, schedule descriptors and memory
+traffic, then runs a separate functional device for the counter comparison.
+The result has an empty `differences` map, a complete schedule audit, and an
+empty `gaps` list.
+
+**Boundary.** The artifact's own provenance class is `assumed` and
+`depends_on_assumed_values` is true. Its modeled 244.691 seconds is therefore
+not latency, throughput, projection, or silicon evidence. The input record
+binds the deployment, capability, cost table and request symbols, but not a
+workload/prompt artifact or a full Python source map. `functional_agreement`
+compares architectural counters; it does not compare the `produced_tokens`
+field with the external oracle. Token correctness remains the job of the
+hardened four-token capture, and RTL remains the separately bounded W8.8
+control-plane campaign.
