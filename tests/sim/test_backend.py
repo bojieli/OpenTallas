@@ -23,10 +23,12 @@ global switch, decides which path runs -- and that both paths are reachable.
 
 from __future__ import annotations
 
+import hashlib
+import json
 import os
 import sys
 from pathlib import Path
-from typing import Any, Sequence
+from typing import Sequence
 
 import numpy as np
 import pytest
@@ -323,6 +325,56 @@ def test_the_implementation_identity_names_library_version_and_device(
     assert identity["backend"] == name
     assert identity["blocked_association"]
     assert isinstance(identity["flags"], dict)
+
+
+def test_executed_association_manifest_binds_shapes_counts_and_identity() -> None:
+    backend = NumpyBackend()
+    backend.reset_executed_associations()
+    left = backend.widen_bf16(np.zeros((3, 7), dtype=np.uint16))
+    weights_a = backend.widen_bf16(np.zeros((5, 7), dtype=np.uint16))
+    weights_b = backend.widen_bf16(np.zeros((2, 7), dtype=np.uint16))
+    for _ in range(2):
+        backend.matmul_binary32(left, weights_a, contract=CONTRACT_BLOCKED)
+    backend.matmul_binary32(left, weights_b, contract=CONTRACT_BLOCKED)
+    # The portable sequential contract is not an implementation-defined
+    # association and therefore does not enter the blocked manifest.
+    backend.matmul_binary32(left, weights_b, contract=CONTRACT_SEQUENTIAL)
+
+    manifest = backend.executed_association_manifest()
+    assert manifest["schema"] == "opentallas.abi3.executed_association.v1"
+    assert manifest["association_policy"] == (
+        "implementation_and_executed_shape_pinned"
+    )
+    assert manifest["blocked_call_count"] == 3
+    assert manifest["distinct_association_count"] == 2
+    assert manifest["implementation_identity"]["backend"] == "numpy"
+    assert manifest["entries"] == [
+        {
+            "numeric_contract": CONTRACT_BLOCKED,
+            "activation_shape": [3, 7],
+            "weight_shape": [2, 7],
+            "output_shape": [3, 2],
+            "call_count": 1,
+        },
+        {
+            "numeric_contract": CONTRACT_BLOCKED,
+            "activation_shape": [3, 7],
+            "weight_shape": [5, 7],
+            "output_shape": [3, 5],
+            "call_count": 2,
+        },
+    ]
+    unsigned = dict(manifest)
+    digest = unsigned.pop("manifest_sha256")
+    encoded = json.dumps(
+        unsigned, sort_keys=True, separators=(",", ":"), ensure_ascii=True
+    ).encode("ascii")
+    assert digest == hashlib.sha256(encoded).hexdigest()
+
+    backend.reset_executed_associations()
+    empty = backend.executed_association_manifest()
+    assert empty["entries"] == []
+    assert empty["blocked_call_count"] == 0
 
 
 def test_the_cuda_identity_records_the_device_it_ran_on() -> None:

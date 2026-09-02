@@ -109,6 +109,89 @@ def test_a_divergence_names_the_step_and_both_tokens():
     }
 
 
+def _steps(tokens: list[int]) -> list[dict]:
+    return [
+        {
+            "step": index,
+            "transaction_id": index + 1,
+            "produced_tokens": [token],
+            "final_token_id": token,
+            "status": "SUCCESS",
+            "trap": "NONE",
+        }
+        for index, token in enumerate(tokens)
+    ]
+
+
+def test_exact_cap_terminal_contract_refuses_a_matching_short_prefix():
+    body = tool._terminal_acceptance(
+        contract="exact_cap",
+        got=[10, 11],
+        gold=[10, 11, 12],
+        stop_reason="max_new_tokens",
+        gold_stop_reason="max_new_tokens",
+        limit=3,
+        eos_token_ids=[99],
+        per_step=_steps([10, 11]),
+    )
+    assert body["accepted"] is False
+    assert "terminal_reason_allowed" in body["failed_checks"]
+    assert "oracle_horizon_exact" in body["failed_checks"]
+
+
+def test_exact_cap_terminal_contract_accepts_only_the_complete_oracle_horizon():
+    tokens = [10, 11, 12]
+    body = tool._terminal_acceptance(
+        contract="exact_cap",
+        got=tokens,
+        gold=tokens,
+        stop_reason="max_new_tokens",
+        gold_stop_reason="max_new_tokens",
+        limit=3,
+        eos_token_ids=[99],
+        per_step=_steps(tokens),
+    )
+    assert body["accepted"] is True
+    assert body["terminal_kind"] == "cap"
+    assert body["failed_checks"] == []
+
+
+def test_eos_or_cap_contract_accepts_the_same_first_oracle_eos():
+    tokens = [10, 99]
+    body = tool._terminal_acceptance(
+        contract="exact_eos_or_cap",
+        got=tokens,
+        gold=tokens,
+        stop_reason="eos",
+        gold_stop_reason="eos",
+        limit=256,
+        eos_token_ids=[98, 99],
+        per_step=_steps(tokens),
+    )
+    assert body["accepted"] is True
+    assert body["terminal_kind"] == "eos"
+
+
+def test_eos_or_cap_contract_refuses_post_eos_or_bad_step_evidence():
+    tokens = [10, 99, 12]
+    steps = _steps(tokens)
+    steps[-1]["transaction_id"] = steps[-2]["transaction_id"]
+    body = tool._terminal_acceptance(
+        contract="exact_eos_or_cap",
+        got=tokens,
+        gold=tokens,
+        stop_reason="eos",
+        gold_stop_reason="eos",
+        limit=256,
+        eos_token_ids=[99],
+        per_step=steps,
+    )
+    assert body["accepted"] is False
+    assert "terminal_reason_allowed" in body["failed_checks"]
+    assert "no_post_eos_transaction" in body["failed_checks"]
+    assert "transaction_ids_strictly_increasing" in body["failed_checks"]
+
+
 def test_counter_evidence_retains_measured_node_splits_without_division():
     class Counters:
         def __init__(self, values):

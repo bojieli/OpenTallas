@@ -1,6 +1,7 @@
 .PHONY: abi3-tokens abi3-tokens-deepseek abi3-tokens-deepseek-rom abi3-tokens-deepseek-hbm abi3-tokens-qwen-rom abi3-tokens-qwen-hbm abi3-restart abi3-restart-qwen-hbm abi3-restart-qwen-rom abi3-restart-deepseek-hbm abi3-restart-deepseek-rom abi3-context-gate abi3-prefix-workloads abi3-hbm-qwen-deployment abi3-hbm-deepseek-deployment abi3-rom-schedule-check abi3-rom-qwen-degraded-build rom-service rom-service-vectors rom-service-physical abi3-rtl-engines check-evidence-grades check-prose-figures check-figures roofline abi3-failclosed abi3-equivalence abi3 abi3-engine-rate abi3-cost-tables abi3-cost-tables-check abi3-spec abi3-test abi3-workloads abi3-oracle abi3-engines abi3-rtl abi3-physical abi3-status abi3-ir profile simulate iso-node model-traffic world-model world-model-landscape legacy-sim routing noc sensitivity legacy-sensitivity spec-check formal rtl-sim fault-sim fault-campaign coverage rtl-static rtl pre-synth-verify synth-public spice spice-pdk test verify clean-results
 .PHONY: abi3-rom-qwen-build abi3-rom-deepseek-build abi3-hbm-qwen-build abi3-hbm-deepseek-build abi3-comparison-deepseek abi3-evidence-source-current abi3-rtl-vectors abi3-rtl-deployment-vectors abi3-rtl-deployment
 .PHONY: abi3-comparison-asap7-readiness abi3-comparison-asap7-gate
+.PHONY: abi3-w10-natural-hbm-a abi3-w10-natural-hbm-b abi3-w10-natural-check abi3-w10-stress-hbm abi3-w10-stress-rom abi3-w10-stress-check
 
 profile:
 	python3 tools/profile_hf.py --all
@@ -380,6 +381,73 @@ abi3-tokens-qwen-rom:
 	  --output results/abi3/accelerator_tokens/qwen3_8b_rom_chat1.json --force
 
 abi3-tokens: abi3-tokens-qwen-rom abi3-tokens-qwen-hbm abi3-tokens-deepseek
+
+# W10 long-form acceptance lanes.  These targets are deliberately atomic and
+# have no execution prerequisites: invoking a checker never starts several
+# hours of simulation.  Build `abi3-ir` and `abi3-workloads` explicitly before
+# launching them.  The first complete 8K lane remains serialized and timed;
+# only measured resource headroom may justify overlapping later lanes.
+W10_ENV = env PYTHONPATH=. OPENTALLAS_ABI3_BACKEND=numpy OMP_NUM_THREADS=8 OPENBLAS_NUM_THREADS=8 MKL_NUM_THREADS=8 NUMEXPR_NUM_THREADS=8 VECLIB_MAXIMUM_THREADS=8
+
+abi3-w10-natural-hbm-a:
+	$(W10_ENV) /usr/bin/time -v python3 tools/run_accelerator_tokens.py \
+	  --kernel-ir build/ir-v3/qwen3-8b/kernel_ir.v3.json \
+	  --backend hbm_sram \
+	  --capability configs/hardware/abi3_capability/hbm_sram_single_chip.json \
+	  --workload build/workloads/qwen3-8b/TA-QW-8K-1.json \
+	  --reference results/abi3/qwen3_reference_oracle_long.json \
+	  --checkpoint $(QWEN3_SNAPSHOT) \
+	  --publish build/abi3/qwen3-8b-hbm-w10-natural-a \
+	  --max-new-tokens 256 --terminal-contract exact_eos_or_cap \
+	  --output results/abi3/w10/qwen3_8b_hbm_natural_a.json --force
+
+abi3-w10-natural-hbm-b:
+	$(W10_ENV) /usr/bin/time -v python3 tools/run_accelerator_tokens.py \
+	  --kernel-ir build/ir-v3/qwen3-8b/kernel_ir.v3.json \
+	  --backend hbm_sram \
+	  --capability configs/hardware/abi3_capability/hbm_sram_single_chip.json \
+	  --workload build/workloads/qwen3-8b/TA-QW-8K-1.json \
+	  --reference results/abi3/qwen3_reference_oracle_long.json \
+	  --checkpoint $(QWEN3_SNAPSHOT) \
+	  --publish build/abi3/qwen3-8b-hbm-w10-natural-b \
+	  --max-new-tokens 256 --terminal-contract exact_eos_or_cap \
+	  --output results/abi3/w10/qwen3_8b_hbm_natural_b.json --force
+
+abi3-w10-natural-check:
+	PYTHONPATH=. python3 tools/check_qwen3_w10_acceptance.py natural \
+	  results/abi3/w10/qwen3_8b_hbm_natural_a.json \
+	  results/abi3/w10/qwen3_8b_hbm_natural_b.json \
+	  --output results/abi3/w10/qwen3_8b_natural_acceptance.json
+
+abi3-w10-stress-hbm:
+	$(W10_ENV) /usr/bin/time -v python3 tools/run_accelerator_tokens.py \
+	  --kernel-ir build/ir-v3/qwen3-8b/kernel_ir.v3.json \
+	  --backend hbm_sram \
+	  --capability configs/hardware/abi3_capability/hbm_sram_single_chip.json \
+	  --workload build/workloads/qwen3-8b/TA-QW-STRESS-1.json \
+	  --reference results/abi3/qwen3_reference_oracle_long.json \
+	  --checkpoint $(QWEN3_SNAPSHOT) \
+	  --publish build/abi3/qwen3-8b-hbm-w10-stress \
+	  --max-new-tokens 32 --terminal-contract exact_cap \
+	  --output results/abi3/w10/qwen3_8b_hbm_stress.json --force
+
+abi3-w10-stress-rom:
+	$(W10_ENV) /usr/bin/time -v python3 tools/run_accelerator_tokens.py \
+	  --kernel-ir build/ir-v3/qwen3-8b/kernel_ir.v3.json \
+	  --backend rom_qwen3 \
+	  --capability configs/hardware/abi3_capability/rom_qwen3.json \
+	  --workload build/workloads/qwen3-8b/TA-QW-STRESS-1.json \
+	  --reference results/abi3/qwen3_reference_oracle_long.json \
+	  --checkpoint $(QWEN3_SNAPSHOT) \
+	  --publish build/abi3/qwen3-8b-rom-w10-stress \
+	  --max-new-tokens 32 --terminal-contract exact_cap \
+	  --output results/abi3/w10/qwen3_8b_rom_stress.json --force
+
+abi3-w10-stress-check:
+	PYTHONPATH=. python3 tools/check_qwen3_w10_acceptance.py stress \
+	  results/abi3/w10/qwen3_8b_hbm_stress.json \
+	  results/abi3/w10/qwen3_8b_rom_stress.json \
+	  --output results/abi3/w10/qwen3_8b_stress_acceptance.json
 
 # Atomic promotion of the two already-produced, governed DeepSeek captures.
 # No token prerequisite is attached: a comparison request must never

@@ -35,9 +35,12 @@ Three rules hold everywhere in this module.
 which TF32 is enabled raises :class:`BackendError`.  Nothing silently degrades
 to a different association or a lower mantissa precision.
 
-*One backend per execution.*  Every target of a comparison must run on the same
-backend, so that a ROM-versus-HBM token difference is a real difference and
-never an artifact of association.  The selection is process-wide and explicit.
+*One backend plus an executed-shape manifest per execution.*  A comparison must
+run both targets on the same backend and retain every blocked contraction
+shape.  Backend identity alone is necessary but not sufficient: different
+target schedules can present different shapes to the same library and thereby
+select different associations.  The selection is process-wide and explicit;
+the manifest makes the remaining shape dependence testable.
 
 *TF32 is off.*  NVIDIA's TF32 mode silently truncates the binary32 significand
 to 10 bits inside the matmul.  That would break the "exact products, binary32
@@ -48,6 +51,7 @@ and re-check the flag before every contraction.
 from __future__ import annotations
 
 import hashlib
+import json
 import os
 import platform
 import warnings
@@ -377,9 +381,89 @@ class Backend(ABC):
     def implementation_identity(self) -> dict[str, Any]:
         """Library, version, device and flags that fix the blocked association.
 
-        Every execution report records this.  Two runs of the same identity are
-        bit-identical; two different identities make no compatibility claim.
+        This is the implementation half of the identity.  Governed execution
+        also records :meth:`executed_association_manifest`, because operand and
+        output shapes are part of a blocked library matmul's association.  Two
+        runs make a bit-identity claim only when both records agree.
         """
+
+    def reset_executed_associations(self) -> None:
+        """Begin a new governed association-observation interval.
+
+        Backends are cached process-wide.  Without an explicit reset, a second
+        campaign in the same process could inherit shapes executed by setup or
+        by an earlier campaign and publish a manifest that did not describe its
+        own run.  The token runner resets immediately before device execution.
+        """
+
+        self._executed_blocked_associations: dict[
+            tuple[str, tuple[int, ...], tuple[int, ...], tuple[int, ...]], int
+        ] = {}
+
+    def _record_executed_association(
+        self,
+        *,
+        contract: str,
+        activation_shape: tuple[int, ...],
+        weight_shape: tuple[int, ...],
+        output_shape: tuple[int, ...],
+    ) -> None:
+        """Count one blocked contraction under its complete shape tuple."""
+
+        if contract != CONTRACT_BLOCKED:
+            return
+        counts = getattr(self, "_executed_blocked_associations", None)
+        if counts is None:
+            self.reset_executed_associations()
+            counts = self._executed_blocked_associations
+        key = (
+            contract,
+            tuple(int(value) for value in activation_shape),
+            tuple(int(value) for value in weight_shape),
+            tuple(int(value) for value in output_shape),
+        )
+        counts[key] = counts.get(key, 0) + 1
+
+    def executed_association_manifest(self) -> dict[str, Any]:
+        """Canonical counted shape manifest for blocked contractions executed.
+
+        Counts retain repeated calls without emitting one row per layer/token.
+        Association depends on the implementation and each contraction shape,
+        not on a wall-clock observation such as currently free device memory;
+        the latter is therefore excluded from the identity bound by the digest.
+        """
+
+        counts = getattr(self, "_executed_blocked_associations", {})
+        entries = [
+            {
+                "numeric_contract": contract,
+                "activation_shape": list(activation_shape),
+                "weight_shape": list(weight_shape),
+                "output_shape": list(output_shape),
+                "call_count": int(call_count),
+            }
+            for (
+                contract,
+                activation_shape,
+                weight_shape,
+                output_shape,
+            ), call_count in sorted(counts.items())
+        ]
+        identity = dict(self.implementation_identity())
+        identity.pop("device_memory_bytes", None)
+        body: dict[str, Any] = {
+            "schema": "opentallas.abi3.executed_association.v1",
+            "association_policy": "implementation_and_executed_shape_pinned",
+            "implementation_identity": identity,
+            "entries": entries,
+            "distinct_association_count": len(entries),
+            "blocked_call_count": sum(entry["call_count"] for entry in entries),
+        }
+        encoded = json.dumps(
+            body, sort_keys=True, separators=(",", ":"), ensure_ascii=True
+        ).encode("ascii")
+        body["manifest_sha256"] = hashlib.sha256(encoded).hexdigest()
+        return body
 
     # -- placement -------------------------------------------------------
     @abstractmethod
@@ -567,6 +651,17 @@ class NumpyBackend(Backend):
         right = np.ascontiguousarray(self.fetch(w), dtype=np.float32)
         if contract == CONTRACT_SEQUENTIAL:
             return sequential_matmul_binary32(left, right)
+        if left.ndim != 2 or right.ndim != 2 or left.shape[1] != right.shape[1]:
+            raise BackendError(
+                f"blocked contraction shapes {left.shape} and {right.shape} do "
+                "not contract as [M,K] x [N,K]^T"
+            )
+        self._record_executed_association(
+            contract=contract,
+            activation_shape=tuple(left.shape),
+            weight_shape=tuple(right.shape),
+            output_shape=(int(left.shape[0]), int(right.shape[0])),
+        )
         previous = np.seterr(over="ignore", invalid="ignore", under="ignore")
         try:
             out = np.matmul(left, right.T, dtype=np.float32)
@@ -881,6 +976,12 @@ class TorchBackend(Backend):
                 f"blocked contraction shapes {tuple(left.shape)} and "
                 f"{tuple(right.shape)} do not contract as [M,K] x [N,K]^T"
             )
+        self._record_executed_association(
+            contract=contract,
+            activation_shape=tuple(int(value) for value in left.shape),
+            weight_shape=tuple(int(value) for value in right.shape),
+            output_shape=(int(left.shape[0]), int(right.shape[0])),
+        )
         out = torch.matmul(left, right.transpose(0, 1))
         if not bool(torch.isfinite(out).all()):
             raise BackendError("contraction left the binary32 range")

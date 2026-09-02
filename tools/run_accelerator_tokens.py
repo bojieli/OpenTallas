@@ -68,11 +68,17 @@ from runtime.abi3.verifier import verify_deployment  # noqa: E402
 from runtime.driver import GenerationDriver, validate_token_ids  # noqa: E402
 from runtime.evidence import check_token_legitimacy  # noqa: E402
 from runtime.abi3.constants import DType  # noqa: E402
+from runtime.sim.backend import get_backend  # noqa: E402
 from runtime.sim.device import Device  # noqa: E402
 from runtime.sim.engines import load_engines  # noqa: E402
 from runtime.sim.formats import widen  # noqa: E402
 
 SCHEMA = "opentallas.abi3.accelerator_tokens.v1"
+TERMINAL_CONTRACTS = (
+    "oracle_prefix",
+    "exact_eos_or_cap",
+    "exact_cap",
+)
 
 #: Storage formats whose codes are not their values.  An integer view -- a
 #: token id, an index -- is already its value and must not be widened.
@@ -303,6 +309,108 @@ def _compare(got: list[int], gold: list[int]) -> dict[str, Any]:
     return body
 
 
+def _terminal_acceptance(
+    *,
+    contract: str,
+    got: list[int],
+    gold: list[int],
+    stop_reason: str,
+    gold_stop_reason: str,
+    limit: int,
+    eos_token_ids: list[int],
+    per_step: list[dict[str, Any]],
+) -> dict[str, Any]:
+    """Assess the complete terminal sequence, not merely an oracle prefix.
+
+    ``oracle_prefix`` preserves the short diagnostic behavior existing callers
+    use.  W10 uses one of the two strict contracts: natural generation closes
+    at the same first official EOS or the exact declared cap, while the stress
+    fixture closes only at its separately frozen cap.
+    """
+
+    if contract not in TERMINAL_CONTRACTS:
+        raise ValueError(f"unknown terminal contract {contract!r}")
+    eos = {int(token) for token in eos_token_ids}
+    comparison = _compare(got, gold)
+    checks: dict[str, bool] = {
+        "nonempty_sequences": bool(got) and bool(gold),
+        "oracle_token_identity": bool(comparison["agreement"]),
+    }
+    if contract == "oracle_prefix":
+        checks["prefix_contract_selected"] = True
+        return {
+            "contract": contract,
+            "accepted": all(checks.values()),
+            "checks": checks,
+            "failed_checks": [name for name, value in checks.items() if not value],
+        }
+
+    checks.update(
+        {
+            "declared_limit_positive": limit > 0,
+            "accelerator_within_limit": 0 < len(got) <= limit,
+            "per_step_count_exact": len(per_step) == len(got),
+            "per_step_tokens_exact": len(per_step) == len(got)
+            and all(
+                step.get("step") == index
+                and step.get("produced_tokens") == [got[index]]
+                and step.get("final_token_id") == got[index]
+                for index, step in enumerate(per_step)
+            ),
+            "per_step_success": len(per_step) == len(got)
+            and all(
+                step.get("status") == "SUCCESS" and step.get("trap") == "NONE"
+                for step in per_step
+            ),
+            "transaction_ids_strictly_increasing": len(per_step) == len(got)
+            and all(
+                isinstance(step.get("transaction_id"), int)
+                for step in per_step
+            )
+            and all(
+                per_step[index - 1]["transaction_id"]
+                < per_step[index]["transaction_id"]
+                for index in range(1, len(per_step))
+            ),
+        }
+    )
+
+    accelerator_eos = stop_reason == "eos"
+    accelerator_cap = stop_reason == "max_new_tokens"
+    eos_terminal = (
+        contract == "exact_eos_or_cap"
+        and accelerator_eos
+        and bool(got)
+        and got[-1] in eos
+        and not any(token in eos for token in got[:-1])
+        and gold_stop_reason == "eos"
+        and len(gold) == len(got)
+        and gold[-1] == got[-1]
+    )
+    cap_terminal = (
+        accelerator_cap
+        and len(got) == limit
+        and len(gold) == limit
+        and gold_stop_reason == "max_new_tokens"
+        and not any(token in eos for token in got)
+    )
+    checks.update(
+        {
+            "terminal_reason_allowed": eos_terminal or cap_terminal,
+            "no_post_eos_transaction": not any(token in eos for token in got[:-1])
+            and (not accelerator_eos or (bool(got) and got[-1] in eos)),
+            "oracle_horizon_exact": len(gold) == len(got),
+        }
+    )
+    return {
+        "contract": contract,
+        "accepted": all(checks.values()),
+        "terminal_kind": "eos" if eos_terminal else ("cap" if cap_terminal else None),
+        "checks": checks,
+        "failed_checks": [name for name, value in checks.items() if not value],
+    }
+
+
 def _counter_evidence(device: Device) -> dict[str, Any]:
     """Publish cluster totals beside the simulator's measured per-node split.
 
@@ -381,6 +489,15 @@ def main() -> int:
         ),
     )
     parser.add_argument("--max-new-tokens", type=int, default=None)
+    parser.add_argument(
+        "--terminal-contract",
+        choices=TERMINAL_CONTRACTS,
+        default="oracle_prefix",
+        help=(
+            "oracle_prefix preserves diagnostic prefix comparison; W10 natural "
+            "uses exact_eos_or_cap and W10 stress uses exact_cap"
+        ),
+    )
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--force", action="store_true")
     parser.add_argument(
@@ -491,6 +608,8 @@ def main() -> int:
         )
         return 2
 
+    numeric_backend = get_backend()
+    numeric_backend.reset_executed_associations()
     device = Device(deployment, capability, root=args.checkpoint, verify=False)
     trace = None if args.no_head_trace else HeadTrace(graph)
     if trace is not None:
@@ -527,13 +646,26 @@ def main() -> int:
 
     comparison = _compare(got, gold_tokens)
     print(f"oracle: {json.dumps(comparison)}", flush=True)
+    terminal = _terminal_acceptance(
+        contract=args.terminal_contract,
+        got=got,
+        gold=gold_tokens,
+        stop_reason=str(result.stop_reason),
+        gold_stop_reason=str(gold_result.get("stop_reason", "")),
+        limit=limit,
+        eos_token_ids=[int(token) for token in driver.eos_token_ids],
+        per_step=list(result.per_step),
+    )
+    print(f"terminal acceptance: {json.dumps(terminal)}", flush=True)
 
     if result.failure or legitimacy:
         status = "failed"
     elif not gold_tokens:
         status = "reference_empty"
-    elif comparison["agreement"]:
+    elif comparison["agreement"] and terminal["accepted"]:
         status = "pass"
+    elif comparison["agreement"]:
+        status = "failed_terminal_acceptance"
     else:
         status = "diverged"
 
@@ -580,6 +712,7 @@ def main() -> int:
             "missing": list(coverage["missing"]),
         },
         "implementation_identity": _implementation_identity(),
+        "executed_association": numeric_backend.executed_association_manifest(),
         "inputs": loaded_inputs,
         "source_sha256": functional_sources,
         "generated_token_ids": got,
@@ -601,6 +734,7 @@ def main() -> int:
             ),
             **comparison,
         },
+        "terminal_acceptance": terminal,
         "counters": dict(sorted(result.counters.items())),
         **_counter_evidence(device),
         "per_step": result.per_step,
