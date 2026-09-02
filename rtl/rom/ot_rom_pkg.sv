@@ -72,6 +72,11 @@ package ot_rom_pkg;
     // it refuses rather than returning the unrepaired column.
     localparam [3:0] ROM_FAULT_COLUMN_REPAIR   = 4'd5;
     localparam [3:0] ROM_FAULT_ZERO_LENGTH     = 4'd6;
+    // The independently supplied MEMORY_OBJECT record and ROM plan do not
+    // name the same placement.  This is distinct from a gap inside an
+    // otherwise admitted shard list: no descriptor/plan disagreement may
+    // reach the sense interface at all.
+    localparam [3:0] ROM_FAULT_DESCRIPTOR_PLAN = 4'd7;
 
     // -- configuration channel selectors ---------------------------------
     localparam [3:0] ROM_CFG_OBJECT     = 4'd0;
@@ -87,6 +92,14 @@ package ot_rom_pkg;
     localparam [3:0] ROM_CFG_RESOURCE   = 4'd4;
     localparam [3:0] ROM_CFG_OBJECT_N   = 4'd5;  // index = populated object count
     localparam [3:0] ROM_CFG_CLEAR      = 4'd6;  // clear counters and row buffer
+
+    // Sticky configuration-refusal reasons.  They are kept separate so the
+    // verification loader can make every guard fire independently and prove a
+    // malformed descriptor was not mistaken for a mere table-capacity error.
+    localparam [3:0] ROM_CFG_ERR_SLOT        = 4'b0001;
+    localparam [3:0] ROM_CFG_ERR_DESCRIPTOR  = 4'b0010;
+    localparam [3:0] ROM_CFG_ERR_BINDING     = 4'b0100;
+    localparam [3:0] ROM_CFG_ERR_PLAN        = 4'b1000;
 
     // -- correlation digest ----------------------------------------------
     // A 64-bit Galois LFSR step, used to compare a beat stream that is far too

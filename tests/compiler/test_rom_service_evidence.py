@@ -2,8 +2,11 @@ from __future__ import annotations
 
 import hashlib
 import json
+import subprocess
 from pathlib import Path
 from types import SimpleNamespace
+
+import pytest
 
 from runtime.abi3.deployment import ObjectSource, Segment
 from tools import build_rom_service_vectors as vectors
@@ -32,6 +35,7 @@ def test_campaign_rejects_an_executed_stream_missing_required_source_pins(
     for name in campaign.IMAGE_FILES:
         (tmp_path / name).write_bytes(b"")
     manifest = {
+        "schema": campaign.VECTOR_SCHEMA,
         "image_sha256": {
             name: hashlib.sha256(b"").hexdigest() for name in campaign.IMAGE_FILES
         },
@@ -60,6 +64,7 @@ def test_plan_derived_set_does_not_invent_an_executed_source_requirement(
     for name in campaign.IMAGE_FILES:
         (tmp_path / name).write_bytes(b"")
     manifest = {
+        "schema": campaign.VECTOR_SCHEMA,
         "image_sha256": {
             name: hashlib.sha256(b"").hexdigest() for name in campaign.IMAGE_FILES
         },
@@ -88,6 +93,7 @@ def test_campaign_rehashes_repo_relative_loaded_inputs(
     capability.write_bytes(b"capability\n")
     workload.write_bytes(b"workload\n")
     manifest = {
+        "schema": campaign.VECTOR_SCHEMA,
         "image_sha256": {
             name: hashlib.sha256(b"").hexdigest() for name in campaign.IMAGE_FILES
         },
@@ -156,3 +162,40 @@ def test_checkpoint_binding_identity_is_range_bound_and_location_independent() -
         "authenticated_range_count": 1,
         "range_map_sha256": hashlib.sha256(expected).hexdigest(),
     }
+
+
+def test_campaign_requires_the_exact_v2_image_set(
+    tmp_path: Path, monkeypatch
+) -> None:
+    for name in campaign.IMAGE_FILES:
+        (tmp_path / name).write_bytes(b"")
+    manifest = {
+        "schema": campaign.VECTOR_SCHEMA,
+        "image_sha256": {
+            name: hashlib.sha256(b"").hexdigest()
+            for name in campaign.IMAGE_FILES
+            if name != "rom_descriptor.hex"
+        },
+        "executed_source": {},
+    }
+    (tmp_path / "rom_service_vectors.json").write_text(
+        json.dumps(manifest), encoding="utf-8"
+    )
+
+    with pytest.raises(SystemExit, match="wrong image set"):
+        campaign.load_vector_set(tmp_path)
+
+
+def test_timed_out_stage_is_a_deterministic_failure_record(
+    tmp_path: Path, monkeypatch
+) -> None:
+    def timeout(*args, **kwargs):
+        raise subprocess.TimeoutExpired(args[0], kwargs["timeout"], output="partial")
+
+    monkeypatch.setattr(campaign.subprocess, "run", timeout)
+    record = campaign.run_stage("sim.run", ["sim", "arg"], tmp_path, 7)
+
+    assert record["returncode"] == 124
+    assert record["timed_out"] is True
+    assert record["timeout_seconds"] == 7
+    assert record["log"] == "partial\nTIMEOUT: stage exceeded 7 seconds\n"

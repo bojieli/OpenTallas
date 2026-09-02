@@ -94,8 +94,11 @@ struct Check {
     template <typename Wide>
     void equal_wide(const char* label, long index, const Wide& actual,
                     const std::vector<uint32_t>& words, size_t base) {
+        // Match the independently written SV checker's accounting unit: one
+        // semantic 256-bit comparison is one check, even though this harness
+        // performs it lane by lane to report the exact failing word.
+        ++count;
         for (unsigned lane = 0; lane < 8; ++lane) {
-            ++count;
             if (actual[lane] != words[base + lane]) {
                 char buffer[256];
                 std::snprintf(buffer, sizeof(buffer),
@@ -163,17 +166,16 @@ int main(int argc, char** argv) {
             fail(buffer);
         }
     }
-    // The capacities above are this checker's own arithmetic on the vector
-    // set.  These two are the service's own verdict on the writes it was
-    // given.  Every slot the compiled plan named exists, so the sticky bit is
-    // 0 after the plan is loaded; the bench top then makes it fire, with one
-    // write naming a quarantine slot one past the end of the list that asks to
-    // withdraw placement resource 0.  The marker below is reproduced anyway,
-    // which is what proves the service dropped that write instead of folding
-    // it onto slot 0 -- a fold would withdraw a resource this set reads from,
-    // and no set's marker survives that.
+    // Every real plan write must be admitted.  Four subsequent probes make
+    // the independent slot, descriptor, descriptor/plan-binding and plan-
+    // structure guards sticky; reproducing the marker then proves none of the
+    // rejected writes changed a populated entry.
     check.equal("cfg_error_after_plan", -1, model.dut.cfg_error_plan, 0);
+    check.equal("cfg_flags_after_plan", -1,
+                model.dut.cfg_error_plan_flags, 0);
     check.equal("cfg_error_after_probe", -1, model.dut.cfg_error, 1);
+    check.equal("cfg_flags_after_probes", -1,
+                model.dut.cfg_error_flags, 0xf);
 
     uint64_t sum_beats = 0, sum_bytes = 0, sum_acts = 0;
     uint64_t sum_masked = 0, sum_faults = 0;

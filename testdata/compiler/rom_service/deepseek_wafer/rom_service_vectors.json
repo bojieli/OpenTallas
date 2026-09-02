@@ -14,18 +14,25 @@
     "subwords_per_row": 64
   },
   "image_sha256": {
-    "rom_expect.hex": "b3be1967902402aa68950bf6436b7ee10f2f9238a24c14f4c641c7b7055558a3",
+    "rom_descriptor.hex": "f55823bf0065e121916f71acda5d1c432a3fdc130223b4a13d1d04668a717285",
+    "rom_expect.hex": "d087ac286e6e468c74ff693a2eac1f646ab3e03231c986de5eef93048aa02683",
     "rom_mask.hex": "df6bbc678b81527de980bb6bc6b002ac1c7f11c377c9bf2ba223dee51ae55d1f",
-    "rom_meta.hex": "320483c1df13b094bcc847e1e880d9bb261481225b826e009005cdc6185d6390",
-    "rom_object.hex": "8471dfabd503c8554191c8c4dbf706ed966c6794bc81f2a1ca0ef3e583bc73a2",
+    "rom_meta.hex": "225bf86562ba5bcf284ed973cf4483b3ec75e837388e844972bc960e9302798f",
+    "rom_object.hex": "1a17aedfab3d4eceb5a38f6e1a5bcffab92b3540b5d8337513bd5e46b2b840c1",
     "rom_repair.hex": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-    "rom_request.hex": "bdaadb42d29fb460cfc29523d754fc814807e05a10693071f4bc4adde6ae5828",
+    "rom_request.hex": "c284caebd702575707a52348a572dda015f51c96a76ad7b2f2868d474b7f512b",
     "rom_shard.hex": "236ae4253c90a8633a588a12bb581b3d8fc7a51271b89af2bf3e9a09fe2c6631",
     "rom_window.hex": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
   },
   "plan": {
     "distributed_region_count": 88,
     "max_shards_in_one_region": 1281,
+    "memory_object_wire_records": {
+      "bytes_per_record": 128,
+      "count": 312,
+      "paired_by_descriptor_table_index": true,
+      "source": "exact admitted descriptor-table bytes"
+    },
     "placed_rom_object_count": 312,
     "region_count": 228,
     "repair_column_entries": 0,
@@ -34,6 +41,12 @@
     "resource_count": 9300,
     "rom_object_count": 318,
     "shard_count": 9527,
+    "synthetic_descriptor_plan_probe": {
+      "changed_field": "base_address",
+      "descriptor_crc_valid": true,
+      "expected_fault": 7,
+      "object_id": 4294967294
+    },
     "unplaced_rom_objects": [
       {
         "declared_bank_or_tile": 65535,
@@ -140867,6 +140880,32 @@
     {
       "activations": 0,
       "beats": 0,
+      "fault": 2,
+      "length": 64,
+      "note": "64-bit offset plus length carries into bit 64",
+      "object_id": 1,
+      "offset": 18446744073709551584,
+      "origin": "negative_range_wrap",
+      "status": 2,
+      "tag": 10829,
+      "windowed": false
+    },
+    {
+      "activations": 0,
+      "beats": 0,
+      "fault": 7,
+      "length": 64,
+      "note": "valid descriptor base disagrees with the first plan shard",
+      "object_id": 4294967294,
+      "offset": 0,
+      "origin": "negative_descriptor_plan",
+      "status": 2,
+      "tag": 10830,
+      "windowed": false
+    },
+    {
+      "activations": 0,
+      "beats": 0,
       "fault": 1,
       "length": 64,
       "note": "an object id no descriptor declares",
@@ -140874,7 +140913,7 @@
       "offset": 0,
       "origin": "negative_unknown",
       "status": 2,
-      "tag": 10829,
+      "tag": 10831,
       "windowed": false
     },
     {
@@ -140887,7 +140926,7 @@
       "offset": 0,
       "origin": "masked",
       "status": 1,
-      "tag": 10830,
+      "tag": 10832,
       "windowed": false
     },
     {
@@ -140900,7 +140939,7 @@
       "offset": 0,
       "origin": "masked",
       "status": 1,
-      "tag": 10831,
+      "tag": 10833,
       "windowed": false
     },
     {
@@ -140913,7 +140952,7 @@
       "offset": 7820955648,
       "origin": "quarantined",
       "status": 2,
-      "tag": 10832,
+      "tag": 10834,
       "windowed": false
     }
   ],
@@ -140921,7 +140960,9 @@
     "beat_budget": 1200000,
     "by_origin": {
       "masked": 2,
+      "negative_descriptor_plan": 1,
       "negative_range": 2,
+      "negative_range_wrap": 1,
       "negative_unknown": 1,
       "negative_unplaced": 6,
       "negative_zero": 1,
@@ -140931,8 +140972,8 @@
       "probe_unaligned": 301,
       "quarantined": 1
     },
-    "count": 10833,
-    "distinct_shapes": 748,
+    "count": 10835,
+    "distinct_shapes": 749,
     "dropped_beat_estimate": 255661640,
     "dropped_for_beat_budget": 100,
     "largest_dropped_request_bytes": 1073741824,
@@ -140940,15 +140981,15 @@
   },
   "required_capacity": {
     "masks": 2,
-    "objects": 312,
+    "objects": 313,
     "quarantine_entries": 1,
     "regions": 228,
     "repair_entries": 0,
-    "requests": 10833,
+    "requests": 10835,
     "shards": 9527,
     "window_entries": 0
   },
-  "required_marker": "ROM-SERVICE-OK requests=10833 beats=1219199 bytes=77408968 activations=38219 masked=135 faults=13 marker=b6b576c71d05d5f5",
+  "required_marker": "ROM-SERVICE-OK requests=10835 beats=1219199 bytes=77408968 activations=38219 masked=135 faults=15 marker=f492c69d91c94277",
   "runtime_health": {
     "masked_region_keys": [
       "rom.r0.p058.s1"
@@ -140961,18 +141002,19 @@
     ]
   },
   "scenario": "nominal",
-  "schema": "opentallas.rtl.rom_service_vectors.v1",
+  "schema": "opentallas.rtl.rom_service_vectors.v2",
   "totals": {
     "activations": 38219,
     "beats": 1219199,
     "bytes": 77408968,
     "fault_classes": {
       "1": 7,
-      "2": 2,
+      "2": 3,
       "4": 3,
-      "6": 1
+      "6": 1,
+      "7": 1
     },
-    "faults": 13,
+    "faults": 15,
     "masked": 135,
     "masked_by_origin": {
       "masked": 2,
@@ -140983,7 +141025,9 @@
     "placement_resources_entered": 9172,
     "placement_resources_in_plan": 9300,
     "refusals_by_origin": {
+      "negative_descriptor_plan": 1,
       "negative_range": 2,
+      "negative_range_wrap": 1,
       "negative_unknown": 1,
       "negative_unplaced": 6,
       "negative_zero": 1,

@@ -44,6 +44,7 @@ if str(REPO) not in sys.path:
     sys.path.insert(0, str(REPO))
 
 from runtime.abi3.constants import DTYPE_BITS, DType, StorageClass  # noqa: E402
+from runtime.abi3.crc import record_crc  # noqa: E402
 from runtime.abi3.deployment import Deployment  # noqa: E402
 from runtime.abi3.descriptors import ExtendedDescriptorType  # noqa: E402
 
@@ -54,6 +55,7 @@ SUBWORDS_PER_ROW = ROW_BYTES // SENSE_BYTES
 DIGEST_POLY = 0x42F0E1EBA9EA3693
 MASK64 = (1 << 64) - 1
 NO_ID = 0xFFFFFFFF
+DESCRIPTOR_PLAN_PROBE_ID = 0xFFFFFFFE
 
 STATUS_OK, STATUS_MASKED, STATUS_FAULT = 0, 1, 2
 (
@@ -64,7 +66,8 @@ STATUS_OK, STATUS_MASKED, STATUS_FAULT = 0, 1, 2
     FAULT_QUARANTINED,
     FAULT_COLUMN_REPAIR,
     FAULT_ZERO_LENGTH,
-) = range(7)
+    FAULT_DESCRIPTOR_PLAN,
+) = range(8)
 
 
 def digest_step(state: int, value: int) -> int:
@@ -123,6 +126,7 @@ class ObjectEntry:
 @dataclass
 class Plan:
     objects: dict[int, ObjectEntry]
+    descriptors: dict[int, bytes]
     shards: list[Shard]
     regions: list[dict[str, Any]]
     resources: list[tuple[int, int, int, int]]
@@ -225,7 +229,30 @@ def load_plan(deployment: Deployment) -> Plan:
             )
 
     table = deployment.table
+    # Keep the exact admitted wire records, not a second convenient rendering
+    # of their decoded fields.  DescriptorTable.encode() returns the bytes
+    # whose digest Deployment.read() has already checked against the manifest;
+    # walk that variable-length stream once so the object image below can pair
+    # each plan entry with the actual 128-byte MEMORY_OBJECT record at its
+    # descriptor-table index.
+    descriptor_records: list[bytes] = []
+    table_blob = table.encode()
+    cursor = 0
+    while cursor < len(table_blob):
+        if cursor + 12 > len(table_blob):
+            raise SystemExit("admitted descriptor table ends inside a header")
+        total = int.from_bytes(table_blob[cursor + 8 : cursor + 12], "little")
+        if total <= 0 or cursor + total > len(table_blob):
+            raise SystemExit("admitted descriptor table has an invalid record span")
+        descriptor_records.append(table_blob[cursor : cursor + total])
+        cursor += total
+    if len(descriptor_records) != len(table):
+        raise SystemExit(
+            "descriptor-table record walk disagrees with the admitted table length"
+        )
+
     rom_ids: list[int] = []
+    placed_descriptors: dict[int, bytes] = {}
     unplaced: list[dict[str, Any]] = []
     for object_id in sorted(table.ids_of_type(ExtendedDescriptorType.MEMORY_OBJECT)):
         payload = table.get(object_id, ExtendedDescriptorType.MEMORY_OBJECT).payload
@@ -246,6 +273,13 @@ def load_plan(deployment: Deployment) -> Plan:
                 }
             )
             continue
+        record = descriptor_records[object_id]
+        if len(record) != 128:
+            raise SystemExit(
+                f"placed ROM object {object_id} has a {len(record)}-byte "
+                "MEMORY_OBJECT record; the RTL configuration contract is 128 bytes"
+            )
+        placed_descriptors[object_id] = record
         if payload["size_bytes"] != entry.size_bytes:
             raise SystemExit(
                 f"object {object_id} descriptor size {payload['size_bytes']} "
@@ -319,6 +353,7 @@ def load_plan(deployment: Deployment) -> Plan:
 
     return Plan(
         objects=object_of,
+        descriptors=placed_descriptors,
         shards=shards,
         regions=plan["regions"],
         resources=resources,
@@ -434,6 +469,16 @@ class Reference:
         hundred-megabyte read touches a million and a half granules and they are
         not kept.
         """
+        # One explicit campaign-only entry is appended after the genuine plan
+        # objects.  It carries a well-formed, valid-CRC MEMORY_OBJECT record
+        # whose base is deliberately one declared alignment unit away from the
+        # first shard.  The service must detect that independent disagreement
+        # before sensing.  It is not treated as an ordinary unplaced object,
+        # because doing so would never exercise the descriptor/shard binding.
+        if object_id == DESCRIPTOR_PLAN_PROBE_ID:
+            return RequestResult(
+                STATUS_FAULT, FAULT_DESCRIPTOR_PLAN, 0, 0, 0, 0, 0, 0, 0
+            )
         entry = self.plan.objects.get(object_id)
         if entry is None:
             return RequestResult(
@@ -1060,6 +1105,29 @@ def negative_requests(plan: Plan) -> list[Request]:
         requests.append(
             Request(first.object_id, 0, 0, "negative_zero", "zero length")
         )
+        # This is the request that distinguishes the RTL's 65-bit extent
+        # check from a wrapped 64-bit sum.  At 64 bits, offset + length is 32
+        # and could look in range for almost every object; at 65 bits it is
+        # unambiguously beyond the descriptor's size and must be refused
+        # before any shard or sense access.
+        requests.append(
+            Request(
+                first.object_id,
+                (1 << 64) - 32,
+                64,
+                "negative_range_wrap",
+                "64-bit offset plus length carries into bit 64",
+            )
+        )
+        requests.append(
+            Request(
+                DESCRIPTOR_PLAN_PROBE_ID,
+                0,
+                min(SENSE_BYTES, first.size_bytes),
+                "negative_descriptor_plan",
+                "valid descriptor base disagrees with the first plan shard",
+            )
+        )
     requests.append(
         Request(0xDEADBEEF, 0, 64, "negative_unknown",
                 "an object id no descriptor declares")
@@ -1301,14 +1369,63 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
     out.mkdir(parents=True, exist_ok=True)
 
     object_words: list[int] = []
-    for entry in plan.sorted_objects():
+    sorted_objects = plan.sorted_objects()
+    if not sorted_objects:
+        raise SystemExit("ROM plan has no placed object for the binding probe")
+    if DESCRIPTOR_PLAN_PROBE_ID in plan.objects:
+        raise SystemExit("the reserved descriptor/plan probe ID is a real plan object")
+    for entry in sorted_objects:
         lo, hi = split64(entry.region_offset)
         slo, shi = split64(entry.size_bytes)
         object_words += [
             entry.object_id, entry.region_id, entry.shard_first,
             entry.shard_count, lo, hi, slo, shi,
         ]
+    # A final high-ID object is loaded into the first otherwise-unused table
+    # slot by the verification top.  Its compact plan entry is a genuine copy;
+    # only the independently supplied descriptor base below is changed.
+    probe_entry = sorted_objects[0]
+    probe_region_lo, probe_region_hi = split64(probe_entry.region_offset)
+    probe_size_lo, probe_size_hi = split64(probe_entry.size_bytes)
+    object_words += [
+        DESCRIPTOR_PLAN_PROBE_ID,
+        probe_entry.region_id,
+        probe_entry.shard_first,
+        probe_entry.shard_count,
+        probe_region_lo,
+        probe_region_hi,
+        probe_size_lo,
+        probe_size_hi,
+    ]
     write_words(out / "rom_object.hex", object_words, 8)
+
+    descriptor_words: list[int] = []
+    for entry in sorted_objects:
+        record = plan.descriptors[entry.object_id]
+        descriptor_words.append(entry.object_id)
+        descriptor_words.extend(
+            int.from_bytes(record[offset : offset + 4], "little")
+            for offset in range(0, len(record), 4)
+        )
+    probe_descriptor = bytearray(plan.descriptors[probe_entry.object_id])
+    alignment_log2 = probe_descriptor[66]
+    if alignment_log2 >= 64:
+        raise SystemExit("binding-probe source descriptor has invalid alignment")
+    probe_base = int.from_bytes(probe_descriptor[72:80], "little")
+    changed_base = probe_base + (1 << alignment_log2)
+    if changed_base >= (1 << 64):
+        raise SystemExit("binding-probe descriptor base would overflow")
+    probe_descriptor[72:80] = changed_base.to_bytes(8, "little")
+    probe_descriptor[48:52] = bytes(4)
+    probe_descriptor[48:52] = record_crc(
+        bytes(probe_descriptor), 48
+    ).to_bytes(4, "little")
+    descriptor_words.append(DESCRIPTOR_PLAN_PROBE_ID)
+    descriptor_words.extend(
+        int.from_bytes(probe_descriptor[offset : offset + 4], "little")
+        for offset in range(0, len(probe_descriptor), 4)
+    )
+    write_words(out / "rom_descriptor.hex", descriptor_words, 33)
 
     shard_words: list[int] = []
     for shard in plan.shards:
@@ -1434,7 +1551,9 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
     # this whole campaign exists to catch; both checkers compare these against
     # the parameters the top was actually elaborated with.
     required = {
-        "objects": len(plan.objects),
+        # One object slot after the real plan is occupied by the explicit
+        # descriptor/first-shard mismatch probe.
+        "objects": len(plan.objects) + 1,
         "shards": len(plan.shards),
         "regions": max((r["region_id"] for r in plan.regions), default=-1) + 1,
         # The service holds a quarantine LIST, so what constrains it is how many
@@ -1472,7 +1591,7 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
         result.fault for _, result in kept if result.status == STATUS_FAULT
     )
     vectors = {
-        "schema": "opentallas.rtl.rom_service_vectors.v1",
+        "schema": "opentallas.rtl.rom_service_vectors.v2",
         "product": args.product,
         "scenario": args.scenario,
         "deployment": {
@@ -1508,6 +1627,18 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
             "max_shards_in_one_region": max(
                 (len(r["shards"]) for r in plan.regions), default=0
             ),
+            "memory_object_wire_records": {
+                "count": len(plan.descriptors),
+                "bytes_per_record": 128,
+                "source": "exact admitted descriptor-table bytes",
+                "paired_by_descriptor_table_index": True,
+            },
+            "synthetic_descriptor_plan_probe": {
+                "object_id": DESCRIPTOR_PLAN_PROBE_ID,
+                "descriptor_crc_valid": True,
+                "changed_field": "base_address",
+                "expected_fault": FAULT_DESCRIPTOR_PLAN,
+            },
         },
         "runtime_health": {
             "masked_regions": sorted(masked_regions),
@@ -1554,6 +1685,7 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
             for name in sorted(
                 [
                     "rom_object.hex",
+                    "rom_descriptor.hex",
                     "rom_shard.hex",
                     "rom_repair.hex",
                     "rom_mask.hex",

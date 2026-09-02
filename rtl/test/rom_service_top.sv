@@ -11,8 +11,10 @@
 // ABI 3.0 ROM deployments built by compiler/backends/rom, and from the ROM read
 // stream the real program actually issues on runtime.sim.device.Device:
 //
-//   rom_object.hex   8 words per ROM MEMORY_OBJECT (rom_plan regions + the
-//                    MEMORY_OBJECT descriptors that name them)
+//   rom_object.hex   8 words per compact notes.rom_plan object entry
+//   rom_descriptor.hex
+//                    descriptor-table ID plus the exact 32 words of its
+//                    admitted 128-byte MEMORY_OBJECT wire record
 //   rom_shard.hex   12 words per RomShard (placement resource and address)
 //   rom_repair.hex   4 words per activated spare (RepairMap.entries)
 //   rom_mask.hex     2 words per masked region / quarantined resource
@@ -114,21 +116,22 @@ module rom_service_top
     output wire [31:0] req_window_entries,
     output wire [31:0] req_masks,
 
-    // The service's sticky refusal of a configuration write that named a slot
-    // outside a table, sampled twice.
+    // The service's sticky refusal of invalid configuration writes, sampled
+    // before and after four isolated negative probes.
     //
     //   cfg_error_plan  the value after the whole compiled plan has been
     //                   streamed in and before the negative probe below.  It
     //                   must be 0: every slot the loader named exists.
     //   cfg_error       the value after the probe.  It must be 1.
     //
-    // The probe is one deliberately out-of-range write, described at C_PROBE.
-    // Requiring the marker to be reproduced anyway is what proves the service
-    // DROPPED it rather than folding it onto a legal slot -- a fold would have
-    // quarantined placement resource 0 in every set, and no set's marker
-    // survives that.  A guard that is never made to fire is not evidence.
+    // The four reason bits distinguish an out-of-range slot, a malformed/CRC-
+    // bad descriptor, a descriptor/plan mismatch and a malformed plan entry.
+    // Requiring the marker to be reproduced anyway proves every write was
+    // dropped rather than folded into a legal populated slot.
     output wire        cfg_error,
-    output reg         cfg_error_plan
+    output wire [3:0]  cfg_error_flags,
+    output reg         cfg_error_plan,
+    output reg  [3:0]  cfg_error_plan_flags
 );
     assign cap_objects        = OBJECTS;
     assign cap_shards         = SHARDS;
@@ -139,6 +142,7 @@ module rom_service_top
     assign cap_window_entries = WINDOW_ENTRIES;
     assign cap_masks          = MASKS;
     reg [31:0] object_mem  [0:OBJECTS*8-1];
+    reg [31:0] descriptor_mem [0:OBJECTS*33-1];
     reg [31:0] shard_mem   [0:SHARDS*12-1];
     reg [31:0] repair_mem  [0:REPAIR_ENTRIES*4-1];
     reg [31:0] mask_mem    [0:MASKS*2-1];
@@ -152,14 +156,19 @@ module rom_service_top
     integer zi;
     initial begin
         for (zi = 0; zi < OBJECTS*8; zi = zi + 1)        object_mem[zi]  = 32'd0;
+        for (zi = 0; zi < OBJECTS*33; zi = zi + 1)       descriptor_mem[zi] = 32'd0;
         for (zi = 0; zi < SHARDS*12; zi = zi + 1)        shard_mem[zi]   = 32'd0;
         for (zi = 0; zi < REPAIR_ENTRIES*4; zi = zi + 1) repair_mem[zi]  = 32'd0;
         for (zi = 0; zi < MASKS*2; zi = zi + 1)          mask_mem[zi]    = 32'd0;
         for (zi = 0; zi < REQUESTS*8; zi = zi + 1)       request_mem[zi] = 32'd0;
         for (zi = 0; zi < WINDOW_ENTRIES*20; zi = zi + 1)window_mem[zi]  = 32'd0;
         $readmemh("rom_meta.hex", meta_mem);
-        if (meta_mem[0] > 0)
-            $readmemh("rom_object.hex",  object_mem,  0, meta_mem[0]*8  - 1);
+        if ((meta_mem[0] > 0) && (meta_mem[0] < OBJECTS))
+            $readmemh("rom_object.hex",  object_mem,
+                      0, (meta_mem[0]+1)*8  - 1);
+        if ((meta_mem[0] > 0) && (meta_mem[0] < OBJECTS))
+            $readmemh("rom_descriptor.hex", descriptor_mem,
+                      0, (meta_mem[0]+1)*33 - 1);
         if (meta_mem[1] > 0)
             $readmemh("rom_shard.hex",   shard_mem,   0, meta_mem[1]*12 - 1);
         if (meta_mem[2] > 0)
@@ -198,8 +207,11 @@ module rom_service_top
     // Configuration sequencer: streams the compiled plan into the service.
     // -----------------------------------------------------------------
     localparam [3:0] C_IDLE = 4'd0, C_OBJ = 4'd1, C_SHD = 4'd2, C_REP = 4'd3,
-                     C_MSK = 4'd4, C_CNT = 4'd5, C_CLR = 4'd6, C_PROBE = 4'd7,
-                     C_DONE = 4'd8;
+                     C_MSK = 4'd4, C_CNT = 4'd5, C_CLR = 4'd6,
+                     C_SAMPLE = 4'd7, C_PROBE_SLOT = 4'd8,
+                     C_PROBE_DESC = 4'd9, C_PROBE_BIND = 4'd10,
+                     C_PROBE_PLAN = 4'd11, C_DONE = 4'd12,
+                     C_BIND_OBJECT = 4'd13;
     // The quarantine list depth at the width cfg_index is driven at.
     localparam [31:0] QUARANTINE_SLOTS = QUARANTINE_ENTRIES;
     reg [3:0]  cstate;
@@ -209,6 +221,32 @@ module rom_service_top
     reg [3:0]  cfg_sel;
     reg [31:0] cfg_index;
     reg [319:0] cfg_data;
+    reg [31:0] cfg_descriptor_id;
+    reg [1023:0] cfg_descriptor_data;
+
+    // Turn the little-endian word image back into the byte-ordered record the
+    // service validates.  Keep a separate copy of slot zero for rejected-write
+    // probes after ccursor has moved on to the shard population.
+    wire [31:0] descriptor_cursor = (ccursor < OBJECTS) ? ccursor : 32'd0;
+    wire [31:0] probe_descriptor_slot = (meta_object_count < OBJECTS)
+                                                ? meta_object_count : 32'd0;
+    reg [1023:0] descriptor_at_cursor;
+    reg [1023:0] descriptor_zero;
+    reg [1023:0] descriptor_probe;
+    integer dword;
+    always @* begin
+        descriptor_at_cursor = 1024'd0;
+        descriptor_zero = 1024'd0;
+        descriptor_probe = 1024'd0;
+        for (dword = 0; dword < 32; dword = dword + 1) begin
+            descriptor_at_cursor[dword*32 +: 32]
+                = descriptor_mem[descriptor_cursor*33 + 1 + dword];
+            descriptor_zero[dword*32 +: 32]
+                = descriptor_mem[1 + dword];
+            descriptor_probe[dword*32 +: 32]
+                = descriptor_mem[probe_descriptor_slot*33 + 1 + dword];
+        end
+    end
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -219,8 +257,11 @@ module rom_service_top
             cfg_sel   <= 4'd0;
             cfg_index <= 32'd0;
             cfg_data  <= 320'd0;
+            cfg_descriptor_id   <= 32'd0;
+            cfg_descriptor_data <= 1024'd0;
             cfg_done  <= 1'b0;
             cfg_error_plan <= 1'b0;
+            cfg_error_plan_flags <= 4'd0;
         end else begin
             cfg_valid <= 1'b0;
             case (cstate)
@@ -243,6 +284,8 @@ module rom_service_top
                                   object_mem[ccursor*8+5], object_mem[ccursor*8+4],
                                   object_mem[ccursor*8+3], object_mem[ccursor*8+2],
                                   object_mem[ccursor*8+1], object_mem[ccursor*8+0]};
+                    cfg_descriptor_id   <= descriptor_mem[ccursor*33];
+                    cfg_descriptor_data <= descriptor_at_cursor;
                     ccursor   <= ccursor + 32'd1;
                 end
             end
@@ -288,7 +331,7 @@ module rom_service_top
             end
             C_MSK: begin
                 if (ccursor >= meta_mask_count) begin
-                    cstate <= C_CNT;
+                    cstate <= C_BIND_OBJECT;
                 end else begin
                     cfg_valid <= 1'b1;
                     if (mask_mem[ccursor*2+0] == 32'd0) begin
@@ -306,33 +349,90 @@ module rom_service_top
                     ccursor   <= ccursor + 32'd1;
                 end
             end
+            // Append one campaign-only, high-ID object after every genuine
+            // plan object.  Its descriptor is structurally valid and has a
+            // correct CRC, but its base address deliberately disagrees with
+            // the copied plan entry's first shard.  A request to it must reach
+            // the service's request-time binding check and fail before sense.
+            C_BIND_OBJECT: begin
+                cfg_valid <= 1'b1;
+                cfg_sel   <= ROM_CFG_OBJECT;
+                cfg_index <= meta_object_count;
+                cfg_data  <= {64'd0,
+                              object_mem[meta_object_count*8+7],
+                              object_mem[meta_object_count*8+6],
+                              object_mem[meta_object_count*8+5],
+                              object_mem[meta_object_count*8+4],
+                              object_mem[meta_object_count*8+3],
+                              object_mem[meta_object_count*8+2],
+                              object_mem[meta_object_count*8+1],
+                              object_mem[meta_object_count*8+0]};
+                cfg_descriptor_id <= descriptor_mem[meta_object_count*33];
+                cfg_descriptor_data <= descriptor_probe;
+                cstate <= C_CNT;
+            end
             C_CNT: begin
                 cfg_valid <= 1'b1;
                 cfg_sel   <= ROM_CFG_OBJECT_N;
-                cfg_index <= meta_object_count;
+                cfg_index <= meta_object_count + 32'd1;
                 cstate    <= C_CLR;
             end
             C_CLR: begin
                 cfg_valid <= 1'b1;
                 cfg_sel   <= ROM_CFG_CLEAR;
                 cfg_index <= 32'd0;
-                cstate    <= C_PROBE;
+                cstate    <= C_SAMPLE;
             end
-            // One deliberately out-of-range configuration write, issued after
-            // the whole plan is loaded so that folding it would be visible.
-            // It names quarantine slot QUARANTINE_ENTRIES -- one past the last
-            // slot there is -- and asks to withdraw placement resource 0,
-            // which every plan here places weights on.  If the service folded
-            // the slot index instead of refusing it, slot 0 would now withdraw
-            // resource 0 and the run's marker would not be reproduced.  The
-            // plan-load value of the sticky bit is captured first, because
-            // after this write the bit is 1 by construction.
-            C_PROBE: begin
+            C_SAMPLE: begin
                 cfg_error_plan <= cfg_error;
+                cfg_error_plan_flags <= cfg_error_flags;
+                cstate <= C_PROBE_SLOT;
+            end
+            // Four rejected writes make each configuration guard fire.  The
+            // object probes target the synthetic binding-test slot and the
+            // malformed shard targets populated slot zero, so the unchanged
+            // request marker also proves the writes were dropped.  All four
+            // reason bits must be sticky by C_DONE.
+            C_PROBE_SLOT: begin
                 cfg_valid <= 1'b1;
                 cfg_sel   <= ROM_CFG_RESOURCE;
                 cfg_index <= QUARANTINE_SLOTS;
                 cfg_data  <= {287'd0, 1'b1, 32'd0};
+                cstate    <= C_PROBE_DESC;
+            end
+            C_PROBE_DESC: begin
+                cfg_valid <= 1'b1;
+                cfg_sel   <= ROM_CFG_OBJECT;
+                cfg_index <= meta_object_count;
+                cfg_data  <= {64'd0,
+                              object_mem[7], object_mem[6], object_mem[5],
+                              object_mem[4], object_mem[3], object_mem[2],
+                              object_mem[1], object_mem[0]};
+                cfg_descriptor_id <= descriptor_mem[0];
+                // Corrupt only the stored CRC field.  Every other ABI field
+                // and the plan join remains genuine.
+                cfg_descriptor_data <= descriptor_zero ^ (1024'd1 << 384);
+                cstate <= C_PROBE_BIND;
+            end
+            C_PROBE_BIND: begin
+                cfg_valid <= 1'b1;
+                cfg_sel   <= ROM_CFG_OBJECT;
+                cfg_index <= meta_object_count;
+                cfg_data  <= {64'd0,
+                              object_mem[7], object_mem[6], object_mem[5],
+                              object_mem[4], object_mem[3], object_mem[2],
+                              object_mem[1], object_mem[0]};
+                // The wire record is valid, but its external table index no
+                // longer equals the plan object's ID.
+                cfg_descriptor_id <= descriptor_mem[0] ^ 32'h8000_0000;
+                cfg_descriptor_data <= descriptor_zero;
+                cstate <= C_PROBE_PLAN;
+            end
+            C_PROBE_PLAN: begin
+                cfg_valid <= 1'b1;
+                cfg_sel   <= ROM_CFG_SHARD;
+                cfg_index <= 32'd0;
+                cfg_data  <= 320'd0; // zero-byte shard is structurally invalid
                 cstate    <= C_DONE;
             end
             C_DONE: begin
@@ -560,8 +660,11 @@ module rom_service_top
         .cfg_sel           (cfg_sel),
         .cfg_index         (cfg_index),
         .cfg_data          (cfg_data),
+        .cfg_descriptor_id (cfg_descriptor_id),
+        .cfg_descriptor_data(cfg_descriptor_data),
         .cfg_ready         (svc_cfg_ready),
         .cfg_error         (cfg_error),
+        .cfg_error_flags   (cfg_error_flags),
         .req_valid         (req_valid),
         .req_ready         (req_ready),
         .req_object_id     (req_object_id),

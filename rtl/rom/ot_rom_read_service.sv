@@ -92,6 +92,13 @@ module ot_rom_read_service #(
     input  wire [3:0]                cfg_sel,
     input  wire [31:0]               cfg_index,
     input  wire [319:0]              cfg_data,
+    // An object write carries two independent inputs: the plan's compact
+    // addressing entry in cfg_data and the actual admitted 128-byte ABI 3.0
+    // MEMORY_OBJECT record at its descriptor-table index.  The descriptor ID
+    // is not encoded in that record, so it is a separate field as it is in the
+    // ABI descriptor table itself.
+    input  wire [31:0]               cfg_descriptor_id,
+    input  wire [1023:0]             cfg_descriptor_data,
     output wire                      cfg_ready,
     // Sticky until reset.  A configuration write that named a slot outside the
     // table it selects, or a selector this block does not implement, is
@@ -100,7 +107,8 @@ module ot_rom_read_service #(
     // placement resource, and the read that follows serves it.  That is
     // fail-open, and it is the failure signature this whole campaign exists to
     // catch, so the block refuses instead of the loader being trusted to count.
-    output reg                       cfg_error,
+    output wire                      cfg_error,
+    output reg  [3:0]                cfg_error_flags,
 
     // -- request --------------------------------------------------------
     input  wire                      req_valid,
@@ -174,6 +182,12 @@ module ot_rom_read_service #(
     // with, and a block that only elaborates under the newer one is not a
     // portable implementation.
     reg [255:0] object_table [0:OBJECTS-1];
+    // Fields retained from the independently validated wire descriptor:
+    // [63:0] base_address, [79:64] node_id, [95:80] bank_or_tile.  The raw
+    // record is consumed and checked at configuration time; keeping its
+    // digest and reserved bytes in a request-path table would add storage
+    // without adding a decision the request path can make.
+    reg [95:0]  descriptor_table [0:OBJECTS-1];
     reg [319:0] shard_table  [0:SHARDS-1];
     reg [95:0]  repair_table [0:REPAIR_ENTRIES-1];
     reg [REPAIR_ENTRIES-1:0] repair_valid;
@@ -190,6 +204,7 @@ module ot_rom_read_service #(
     reg [31:0]  object_count;
 
     assign cfg_ready = 1'b1;
+    assign cfg_error = |cfg_error_flags;
 
     // The table depths at the width cfg_index is compared at.  Written once
     // each, because a bound written twice is a bound that can differ once.
@@ -208,25 +223,140 @@ module ot_rom_read_service #(
     // walks.  Those are payload, not slot, and an out-of-range one is the same
     // silent fold by a different door -- a masked region read as an unmasked
     // one, or a shard search that walks entries belonging to another region.
-    wire [32:0] obj_shard_end = {1'b0, cfg_data[95:64]} + {1'b0, cfg_data[127:96]};
+    wire [32:0] obj_shard_end = {1'b0, cfg_data[95:64]}
+                                   + {1'b0, cfg_data[127:96]};
+    wire        obj_region_wrap = (cfg_data[191:128] + cfg_data[255:192])
+                                < cfg_data[191:128];
     wire        obj_payload_bad = (cfg_data[63:32] >= N_REGIONS)
-                                  || (obj_shard_end > {1'b0, N_SHARDS});
+                                  || (cfg_data[127:96] == 32'd0)
+                                  || (cfg_data[255:192] == 64'd0)
+                                  || (obj_shard_end > {1'b0, N_SHARDS})
+                                  || obj_region_wrap;
 
-    reg cfg_slot_bad;
+    wire        shard_region_wrap = (cfg_data[191:128] + cfg_data[255:192])
+                                  < cfg_data[191:128];
+    wire        shard_resource_wrap = (cfg_data[319:256] + cfg_data[255:192])
+                                    < cfg_data[319:256];
+    wire        shard_payload_bad = (cfg_data[31:0] >= N_REGIONS)
+                                    || (cfg_data[255:192] == 64'd0)
+                                    || shard_region_wrap
+                                    || shard_resource_wrap;
+
+    // Reflected CRC32C (Castagnoli), exactly TA-ABI3-WIRE-1: initial and final
+    // XOR 0xffffffff, polynomial 0x82f63b78, and record bytes 48..51 treated
+    // as zero while the record checksums itself.  The descriptor arrives in
+    // little-endian byte order: byte zero is cfg_descriptor_data[7:0].
+    function automatic [31:0] memory_object_crc32c;
+        input [1023:0] record;
+        integer byte_index;
+        integer bit_index;
+        reg [31:0] crc;
+        reg [7:0] octet;
+        begin
+            crc = 32'hffff_ffff;
+            for (byte_index = 0; byte_index < 128; byte_index = byte_index + 1) begin
+                if ((byte_index >= 48) && (byte_index < 52))
+                    octet = 8'd0;
+                else
+                    octet = record[byte_index*8 +: 8];
+                crc = crc ^ {24'd0, octet};
+                for (bit_index = 0; bit_index < 8; bit_index = bit_index + 1)
+                    crc = crc[0] ? ((crc >> 1) ^ 32'h82f6_3b78)
+                                 :  (crc >> 1);
+            end
+            memory_object_crc32c = crc ^ 32'hffff_ffff;
+        end
+    endfunction
+
+    function automatic memory_object_alignment_bad;
+        input [7:0] alignment_log2;
+        input [63:0] base_address;
+        reg [63:0] low_mask;
+        begin
+            if (alignment_log2 > 8'd63) begin
+                memory_object_alignment_bad = 1'b1;
+            end else begin
+                low_mask = (alignment_log2 == 8'd0)
+                         ? 64'd0
+                         : ~(64'hffff_ffff_ffff_ffff << alignment_log2);
+                memory_object_alignment_bad = |(base_address & low_mask);
+            end
+        end
+    endfunction
+
+    wire [31:0] descriptor_crc = memory_object_crc32c(cfg_descriptor_data);
+    wire descriptor_format_bad =
+           (cfg_descriptor_data[31:0]    != 32'h4433_4154) // "TA3D"
+        || (cfg_descriptor_data[47:32]   != 16'd1)         // MEMORY_OBJECT
+        || (cfg_descriptor_data[55:48]   != 8'd1)
+        || (cfg_descriptor_data[63:56]   != 8'd0)
+        || (cfg_descriptor_data[95:64]   != 32'd128)
+        || (cfg_descriptor_data[127:96]  != 32'd0)         // flags
+        || (cfg_descriptor_data[159:128] != 32'hffff_ffff)
+        || (cfg_descriptor_data[191:160] != 32'hffff_ffff)
+        || (cfg_descriptor_data[223:192] != 32'hffff_ffff)
+        || (cfg_descriptor_data[255:224] != 32'hffff_ffff)
+        || (cfg_descriptor_data[287:256] != 32'h0000_0081) // READ|IMMUTABLE
+        || (cfg_descriptor_data[319:288] != 32'd0)
+        || (cfg_descriptor_data[351:320] != 32'd64)
+        || (cfg_descriptor_data[383:352] != 32'd64)
+        || (cfg_descriptor_data[415:384] != descriptor_crc)
+        || (cfg_descriptor_data[511:416] != 96'd0)
+        || (cfg_descriptor_data[519:512] != 8'd3)          // ROM
+        || (cfg_descriptor_data[527:520] != 8'd3)          // CRC_AND_ECC
+        || (cfg_descriptor_data[543:536] != 8'd0)
+        || memory_object_alignment_bad(cfg_descriptor_data[535:528],
+                                       cfg_descriptor_data[639:576])
+        || (cfg_descriptor_data[735:704] != 32'hffff_ffff)
+        || (cfg_descriptor_data[767:736] != 32'd0);
+
+    wire descriptor_plan_bad =
+           (cfg_descriptor_id != cfg_data[31:0])
+        || (cfg_descriptor_data[703:640] != cfg_data[255:192]);
+
+    reg [3:0] cfg_reject_flags;
     always @* begin
+        cfg_reject_flags = 4'd0;
         case (cfg_sel)
-            ot_rom_pkg::ROM_CFG_OBJECT:    cfg_slot_bad = (cfg_index >= N_OBJECTS)
-                                                          || obj_payload_bad;
-            ot_rom_pkg::ROM_CFG_SHARD:     cfg_slot_bad = (cfg_index >= N_SHARDS);
-            ot_rom_pkg::ROM_CFG_REPAIR:    cfg_slot_bad = (cfg_index >= N_REPAIR);
-            ot_rom_pkg::ROM_CFG_REGION_EN: cfg_slot_bad = (cfg_index >= N_REGIONS);
-            ot_rom_pkg::ROM_CFG_RESOURCE:  cfg_slot_bad = (cfg_index >= N_QUARANTINE);
+            ot_rom_pkg::ROM_CFG_OBJECT: begin
+                if (cfg_index >= N_OBJECTS)
+                    cfg_reject_flags = cfg_reject_flags
+                                     | ot_rom_pkg::ROM_CFG_ERR_SLOT;
+                else begin
+                    if (obj_payload_bad)
+                        cfg_reject_flags = cfg_reject_flags
+                                         | ot_rom_pkg::ROM_CFG_ERR_PLAN;
+                    if (descriptor_format_bad)
+                        cfg_reject_flags = cfg_reject_flags
+                                         | ot_rom_pkg::ROM_CFG_ERR_DESCRIPTOR;
+                    else if (descriptor_plan_bad)
+                        cfg_reject_flags = cfg_reject_flags
+                                         | ot_rom_pkg::ROM_CFG_ERR_BINDING;
+                end
+            end
+            ot_rom_pkg::ROM_CFG_SHARD: begin
+                if (cfg_index >= N_SHARDS)
+                    cfg_reject_flags = ot_rom_pkg::ROM_CFG_ERR_SLOT;
+                else if (shard_payload_bad)
+                    cfg_reject_flags = ot_rom_pkg::ROM_CFG_ERR_PLAN;
+            end
+            ot_rom_pkg::ROM_CFG_REPAIR:
+                if (cfg_index >= N_REPAIR)
+                    cfg_reject_flags = ot_rom_pkg::ROM_CFG_ERR_SLOT;
+            ot_rom_pkg::ROM_CFG_REGION_EN:
+                if (cfg_index >= N_REGIONS)
+                    cfg_reject_flags = ot_rom_pkg::ROM_CFG_ERR_SLOT;
+            ot_rom_pkg::ROM_CFG_RESOURCE:
+                if (cfg_index >= N_QUARANTINE)
+                    cfg_reject_flags = ot_rom_pkg::ROM_CFG_ERR_SLOT;
             // The populated object count is the binary search's upper bound.
             // A count past the table depth walks entries that were never
             // written, so it is a bound, not a slot: equal is legal.
-            ot_rom_pkg::ROM_CFG_OBJECT_N:  cfg_slot_bad = (cfg_index > N_OBJECTS);
-            ot_rom_pkg::ROM_CFG_CLEAR:     cfg_slot_bad = 1'b0;
-            default:                       cfg_slot_bad = 1'b1;
+            ot_rom_pkg::ROM_CFG_OBJECT_N:
+                if (cfg_index > N_OBJECTS)
+                    cfg_reject_flags = ot_rom_pkg::ROM_CFG_ERR_SLOT;
+            ot_rom_pkg::ROM_CFG_CLEAR: ;
+            default: cfg_reject_flags = ot_rom_pkg::ROM_CFG_ERR_SLOT;
         endcase
     end
 
@@ -237,13 +367,19 @@ module ot_rom_read_service #(
             repair_column   <= '0;
             region_masked   <= '0;
             quarantine_valid <= '0;
-            cfg_error       <= 1'b0;
-        end else if (cfg_valid && cfg_slot_bad) begin
-            cfg_error <= 1'b1;
+            cfg_error_flags <= 4'd0;
         end else if (cfg_valid) begin
+            cfg_error_flags <= cfg_error_flags | cfg_reject_flags;
+            if (cfg_reject_flags == 4'd0) begin
             case (cfg_sel)
-                ot_rom_pkg::ROM_CFG_OBJECT:
+                ot_rom_pkg::ROM_CFG_OBJECT: begin
                     object_table[cfg_index[OBJ_IDX_W-1:0]] <= cfg_data[255:0];
+                    descriptor_table[cfg_index[OBJ_IDX_W-1:0]] <= {
+                        cfg_descriptor_data[575:560],
+                        cfg_descriptor_data[559:544],
+                        cfg_descriptor_data[639:576]
+                    };
+                end
                 ot_rom_pkg::ROM_CFG_SHARD:
                     shard_table[cfg_index[SHD_IDX_W-1:0]] <= cfg_data;
                 ot_rom_pkg::ROM_CFG_REPAIR: begin
@@ -263,6 +399,7 @@ module ot_rom_read_service #(
                     object_count <= cfg_index;
                 default: ;
             endcase
+            end
         end
     end
 
@@ -276,10 +413,12 @@ module ot_rom_read_service #(
     // cycle, so every table lookup below spends a state waiting for it rather
     // than assuming a combinational table.
     reg [255:0] obj_rd;
+    reg [95:0]  descriptor_rd;
     reg [319:0] shd_rd;
     reg         mask_rd;
     always @(posedge clk) begin
         obj_rd  <= object_table[obj_index];
+        descriptor_rd <= descriptor_table[obj_index];
         shd_rd  <= shard_table[shd_index];
         mask_rd <= region_masked[reg_index];
     end
@@ -298,32 +437,38 @@ module ot_rom_read_service #(
     // -----------------------------------------------------------------
     // Request state
     // -----------------------------------------------------------------
-    localparam [3:0] S_IDLE       = 4'd0;
-    localparam [3:0] S_OBJ_STEP   = 4'd1;
-    localparam [3:0] S_OBJ_RD     = 4'd2;
-    localparam [3:0] S_OBJ_CMP    = 4'd3;
-    localparam [3:0] S_OBJ_CHECK  = 4'd4;
-    localparam [3:0] S_MASK_WAIT  = 4'd5;
-    localparam [3:0] S_SHD_STEP   = 4'd6;
-    localparam [3:0] S_SHD_RD     = 4'd7;
-    localparam [3:0] S_SHD_CMP    = 4'd8;
-    localparam [3:0] S_RES_RD     = 4'd9;
-    localparam [3:0] S_RES_WAIT   = 4'd10;
-    localparam [3:0] S_BEAT_ISSUE = 4'd11;
-    localparam [3:0] S_BEAT_WAIT  = 4'd12;
-    localparam [3:0] S_BEAT_PUSH  = 4'd13;
-    localparam [3:0] S_DONE       = 4'd14;
+    localparam [4:0] S_IDLE       = 5'd0;
+    localparam [4:0] S_OBJ_STEP   = 5'd1;
+    localparam [4:0] S_OBJ_RD     = 5'd2;
+    localparam [4:0] S_OBJ_CMP    = 5'd3;
+    localparam [4:0] S_OBJ_CHECK  = 5'd4;
+    localparam [4:0] S_BIND_RD    = 5'd5;
+    localparam [4:0] S_BIND_CHECK = 5'd6;
+    localparam [4:0] S_MASK_WAIT  = 5'd7;
+    localparam [4:0] S_SHD_STEP   = 5'd8;
+    localparam [4:0] S_SHD_RD     = 5'd9;
+    localparam [4:0] S_SHD_CMP    = 5'd10;
+    localparam [4:0] S_RES_RD     = 5'd11;
+    localparam [4:0] S_RES_WAIT   = 5'd12;
+    localparam [4:0] S_BEAT_ISSUE = 5'd13;
+    localparam [4:0] S_BEAT_WAIT  = 5'd14;
+    localparam [4:0] S_BEAT_PUSH  = 5'd15;
+    localparam [4:0] S_DONE       = 5'd16;
 
-    reg [3:0]  state;
+    reg [4:0]  state;
     reg [31:0] r_object_id;
     reg [63:0] r_offset;
     reg [63:0] r_length;
     reg [TAG_W-1:0] r_tag;
 
     reg [63:0] r_size;
+    reg [31:0] r_region_id;
     reg [63:0] r_obj_region_offset;
     reg [31:0] r_shard_first;
     reg [31:0] r_shard_count;
+    reg [63:0] r_descriptor_base;
+    reg [15:0] r_descriptor_node;
+    reg [15:0] r_descriptor_bank;
 
     // The end of the requested extent, at 65 bits.
     //
@@ -337,11 +482,9 @@ module ot_rom_read_service #(
     //
     // The Python reference this campaign compares against computes the same
     // sum in arbitrary precision and never wrapped, so the two sides were
-    // never equivalent -- they simply never disagreed, because the widest
-    // offset any published vector set carries is 21 GiB.  This makes the RTL
-    // side exact rather than making the reference wrap.  No vector set reaches
-    // the wrap, so nothing here exercises this guard, and §9 of
-    // docs/ROM_SERVICE_RTL.md says so rather than letting it read as tested.
+    // never equivalent.  This makes the RTL side exact rather than making the
+    // reference wrap, and every retained set now carries a request whose
+    // offset is 2**64-32 and whose 64-byte extent must fire this guard.
     wire [64:0] r_extent_end = {1'b0, r_offset} + {1'b0, r_length};
 
     reg [31:0] lo;
@@ -356,6 +499,7 @@ module ot_rom_read_service #(
     wire [31:0] mid_next = (lo + hi) >> 1;
 
     reg [31:0] s_resource;
+    reg [31:0] s_region_id;
     reg [63:0] s_region_offset;
     reg [63:0] s_bytes;
     reg [63:0] s_resource_address;
@@ -396,6 +540,22 @@ module ot_rom_read_service #(
 
     reg [1:0]  r_status;
     reg [3:0]  r_fault;
+
+    // The descriptor names the first placement of the object independently
+    // of notes.rom_plan.  Its base is the first shard's resource address plus
+    // the object's offset within the region; ABI MEMORY_OBJECT has no reticle
+    // field and names the tile when nonzero, otherwise the bank.
+    wire [64:0] bind_base = {1'b0, shd_rd[319:256]}
+                            + {1'b0, r_obj_region_offset};
+    wire [15:0] bind_bank_or_tile = (shd_rd[79:64] != 16'd0)
+                                  ? shd_rd[79:64] : shd_rd[95:80];
+    wire bind_bad = (shd_rd[31:0] != r_region_id)
+                 || (shd_rd[191:128] != 64'd0)
+                 || (r_obj_region_offset >= shd_rd[255:192])
+                 || bind_base[64]
+                 || (bind_base[63:0] != r_descriptor_base)
+                 || (shd_rd[47:32] != r_descriptor_node)
+                 || (bind_bank_or_tile != r_descriptor_bank);
 
     assign req_ready = (state == S_IDLE);
 
@@ -528,20 +688,14 @@ module ot_rom_read_service #(
     end
 
     reg [63:0] next_data_digest;
-    // Fields the tables carry that this block does not fully consult: the
-    // shard's node/reticle/tile/bank coordinate (it addresses by the flat
-    // resource index the plan assigns), the high halves of the row and granule
-    // indices, which a legal address cannot reach, and the object entry's
-    // 32-bit region_id, of which only the low REG_IDX_W bits are read -- how
-    // many that is depends on the REGIONS parameter, so the whole field is
-    // named here rather than a slice that would be right for one elaboration
-    // and wrong for another.  An object entry whose region_id does not fit
-    // REGIONS is refused at configuration by cfg_error, so what reaches this
-    // select is never a truncation.
+    // Fields the tables carry that this block does not otherwise consult: the
+    // shard's reticle (ABI MEMORY_OBJECT has no reticle field), and the high
+    // halves of the row and granule indices, which a legal address cannot
+    // reach.  Region, node, tile/bank and descriptor base are all consumed by
+    // the independent descriptor/first-shard binding check above.
     // Named so the reader knows they were considered rather than overlooked.
     wire _unused_ok = &{1'b0,
-                        obj_rd[63:32],
-                        shd_rd[95:0],
+                        shd_rd[63:48],
                         g_row64[63:32],
                         g_subword64[63:8],
                         1'b0};
@@ -597,13 +751,18 @@ module ot_rom_read_service #(
             r_length           <= 64'd0;
             r_tag              <= {TAG_W{1'b0}};
             r_size             <= 64'd0;
+            r_region_id        <= 32'd0;
             r_obj_region_offset<= 64'd0;
             r_shard_first      <= 32'd0;
             r_shard_count      <= 32'd0;
+            r_descriptor_base  <= 64'd0;
+            r_descriptor_node  <= 16'd0;
+            r_descriptor_bank  <= 16'd0;
             lo                 <= 32'd0;
             hi                 <= 32'd0;
             mid                <= 32'd0;
             s_resource         <= 32'd0;
+            s_region_id        <= 32'd0;
             s_region_offset    <= 64'd0;
             s_bytes            <= 64'd0;
             s_resource_address <= 64'd0;
@@ -687,11 +846,16 @@ module ot_rom_read_service #(
             S_OBJ_RD: state <= S_OBJ_CMP;
             S_OBJ_CMP: begin
                 if (obj_rd[31:0] == r_object_id) begin
+                    r_region_id         <= obj_rd[63:32];
                     r_shard_first       <= obj_rd[95:64];
                     r_shard_count       <= obj_rd[127:96];
                     r_obj_region_offset <= obj_rd[191:128];
                     r_size              <= obj_rd[255:192];
+                    r_descriptor_base   <= descriptor_rd[63:0];
+                    r_descriptor_node   <= descriptor_rd[79:64];
+                    r_descriptor_bank   <= descriptor_rd[95:80];
                     reg_index           <= obj_rd[32 +: REG_IDX_W];
+                    shd_index           <= obj_rd[64 +: SHD_IDX_W];
                     state               <= S_OBJ_CHECK;
                 end else if (obj_rd[31:0] < r_object_id) begin
                     lo    <= mid + 32'd1;
@@ -714,7 +878,20 @@ module ot_rom_read_service #(
                     region_byte  <= r_obj_region_offset + r_offset;
                     r_start_byte <= r_obj_region_offset + r_offset;
                     r_end_byte   <= r_obj_region_offset + r_offset + r_length;
-                    state        <= S_MASK_WAIT;
+                    state        <= S_BIND_RD;
+                end
+            end
+            // The first shard is read independently of the ordinary search so
+            // a legal-looking convenience object entry cannot redirect an
+            // admitted descriptor to another region, node, tile/bank or base.
+            S_BIND_RD: state <= S_BIND_CHECK;
+            S_BIND_CHECK: begin
+                if (bind_bad) begin
+                    r_status <= ot_rom_pkg::ROM_STATUS_FAULT;
+                    r_fault  <= ot_rom_pkg::ROM_FAULT_DESCRIPTOR_PLAN;
+                    state    <= S_DONE;
+                end else begin
+                    state <= S_MASK_WAIT;
                 end
             end
             S_MASK_WAIT: begin
@@ -740,6 +917,14 @@ module ot_rom_read_service #(
                         r_status <= ot_rom_pkg::ROM_STATUS_FAULT;
                         r_fault  <= ot_rom_pkg::ROM_FAULT_SHARD_GAP;
                         state    <= S_DONE;
+                    end else if (s_region_id != r_region_id) begin
+                        // The object range may name only shards belonging to
+                        // its own region.  Without this check a malformed span
+                        // can still find a numerically covering shard and read
+                        // a legal row from another object.
+                        r_status <= ot_rom_pkg::ROM_STATUS_FAULT;
+                        r_fault  <= ot_rom_pkg::ROM_FAULT_DESCRIPTOR_PLAN;
+                        state    <= S_DONE;
                     end else begin
                         state     <= S_RES_RD;
                     end
@@ -752,6 +937,7 @@ module ot_rom_read_service #(
             S_SHD_RD: state <= S_SHD_CMP;
             S_SHD_CMP: begin
                 if (shd_rd[191:128] <= region_byte) begin
+                    s_region_id        <= shd_rd[31:0];
                     s_resource         <= shd_rd[127:96];
                     s_region_offset    <= shd_rd[191:128];
                     s_bytes            <= shd_rd[255:192];

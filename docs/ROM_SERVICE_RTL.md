@@ -8,8 +8,9 @@ retained simulator case passes and the source-current campaign reports
 **`status: pass`**. <!-- figure: "pass" src="results/rtl/rom_service_campaign.json#status" name="ROM service campaign status, report header" -->
 This closes the bounded control/addressing correlation described below; W8.5
 remains partial because there is no ROM array or macro in the block.
-**Evidence class:** `public_open_tool_rtl_simulation` (functional), plus a
-separate open-PDK physical view that carries its own boundary
+**Evidence class:** `public_open_tool_rtl_simulation` (functional). The
+previously recorded open-PDK control view predates the descriptor-bound RTL and
+is not source-current evidence for this revision; §7 states that boundary.
 **Product scope:** the Qwen chip sets replay an **executed** read stream; the
 DeepSeek wafer set is **derived from the compiled plan**. Whether the wafer
 deployment's program runs in the ABI 3.0 sequencer RTL is a separate question
@@ -17,8 +18,9 @@ about a separate block, answered by `correlated_cases` in
 `results/rtl/abi3_deployment_campaign.json` — see §4
 **Primary artifacts:**
 `results/rtl/rom_service_campaign.json`,
-`results/rtl/rom_service_physical.json`,
-`testdata/compiler/rom_service/*/rom_service_vectors.json`
+`testdata/compiler/rom_service/*/rom_service_vectors.json`; the historical,
+non-source-current `results/rtl/rom_service_physical.json` is discussed only to
+prevent its earlier result from being applied to this RTL.
 
 ---
 
@@ -58,7 +60,8 @@ real ABI 3.0 ROM deployment built by `compiler/backends/rom`:
 
 | Table | Producer | What it decides |
 |---|---|---|
-| object | `MEMORY_OBJECT` descriptors with `storage_class = ROM`, joined to `notes.rom_plan.regions` | which region an object belongs to, its byte offset inside it, its size, and which shard-table entries that region owns |
+| object plan | `notes.rom_plan.regions`, independently paired by descriptor-table index | which region an object belongs to, its byte offset inside it, its size, and which shard-table entries that region owns |
+| object descriptor | the exact admitted 128-byte `MEMORY_OBJECT` wire record, plus its external descriptor-table index | whether the ABI header, type/version/lengths, reserved fields, reflected CRC32C, ROM class, read-only immutable permissions and alignment are valid; and the independently declared size, base, node and tile/bank |
 | shard | `RomShard` records in `notes.rom_plan.regions[].shards` | the placement resource `(node, reticle, tile, bank)`, the region byte offset the shard starts at, its length, and its address inside the resource |
 | repair | `notes.rom_plan.repair_map.entries` | which logical row is served by which spare |
 | region mask | runtime health input | which regions are masked off, one bit per region |
@@ -69,7 +72,12 @@ against the other place it appears rather than trusting it once — a region's
 base address against its first shard, an object's descriptor base address
 against its offset inside its region, every shard coordinate against the repair
 map's bank inventory, and every region's shard list against the requirement that
-it tile the region without gap or overlap. It refuses rather than repairs.
+it tile the region without gap or overlap. It emits the exact bytes from the
+deployment's already-admitted descriptor table, not a Python-prejoined
+replacement. The RTL then repeats the boundary independently: it validates the
+wire record at configuration and, before any sense request, compares its
+base/node/tile-or-bank with the plan entry's first shard. It refuses rather than
+repairs.
 
 ## 3. What the correlation compares
 
@@ -81,7 +89,14 @@ other's code. Per request they require exact agreement on:
 
 - completion status: served, **masked**, or **refused**;
 - refusal class: unplaced ROM object, out of range, shard gap, quarantined
-  resource, activated column repair, zero length;
+  resource, activated column repair, zero length, or descriptor/plan mismatch;
+- configuration admission of each exact 128-byte placed-object record: ABI
+  header and payload shape, reserved fields, ROM/read-only semantics, declared
+  alignment and reflected CRC32C, with the external descriptor-table index and
+  size independently matched to the plan entry;
+- request-time binding of descriptor base/node/tile-or-bank to the plan's first
+  shard, including an explicit valid-CRC wrong-base negative request that must
+  complete with zero sense beats;
 - sense-beat count and served-byte count;
 - row-activation count, against a row buffer that persists across requests;
 - the first and last beat record — placement resource, resource address, region
@@ -195,8 +210,12 @@ to answer the other one, in either direction.
   operand fetcher; the campaign derives them from the views the functional
   device actually resolved, and reports any read it could not express as
   contiguous ranges rather than dropping it silently.
-- **No descriptor CRC, program header or admission check.** The tables arrive
-  over the configuration channel already admitted.
+- **A bounded descriptor check, not whole-deployment admission.** Each placed
+  object's exact `MEMORY_OBJECT` record is checked here, including its CRC and
+  the fields that can authorize a ROM read. The block still does not consume a
+  descriptor-table envelope, `OPERATOR`, `TENSOR_VIEW`, program header,
+  signature, or instruction stream. Resolving a view into the contiguous byte
+  range presented on this block's request port remains outside this boundary.
 - **Whole-decode-step replay.** A Qwen decode step reads about fifteen gigabytes
   and no open-tool simulator will replay that beat by beat. Each set replays
   real requests up to a published beat budget and covers the rest of the address
@@ -302,7 +321,7 @@ directly — **265** is the denominator this section uses to bound the 111, and
 until this revision it was a number no tool had ever compared against the
 requests the set actually contains.
 
-### 6c. A configuration write could name a table slot that did not exist
+### 6c. The configuration boundary needed four fail-closed reasons
 
 Every table in this block is written over one configuration channel that carries
 a 32-bit slot index, and every write then indexed its table with that value
@@ -318,28 +337,38 @@ a tile that was taken out of service. Legal values, no trap, nothing refused,
 wrong answer, and the answer is weights from a resource the health input said
 not to use.
 
-The block now decides at full width whether the slot exists, **drops** the write
-if it does not, and latches a sticky `cfg_error`. The same check covers the two
-indices an object entry *carries* rather than is addressed by — its `region_id`,
-which selects the mask bit, and its shard range, which bounds the shard search —
-because those were truncated in exactly the same way.
+The block now decides at full width whether the slot exists and **drops** the
+write if it does not. The same check covers the two indices an object entry
+*carries* rather than is addressed by — its `region_id`, which selects the mask
+bit, and its shard range, which bounds the shard search — because those were
+truncated in exactly the same way.
 
-Being able to fire a guard is not the same as firing it, so the bench top now
-does. After the whole compiled plan is loaded it samples the sticky bit (it must
-be 0: every slot the plan named exists), then issues one deliberately
-out-of-range write — quarantine slot `QUARANTINE_ENTRIES`, one past the last
-slot there is, asking to withdraw placement resource 0, which every plan here
-reads weights from. Both checkers then require the sticky bit to be 1 **and**
-the run's marker to be reproduced unchanged. The marker is what proves the write
-was dropped rather than folded: a fold would have withdrawn resource 0, and no
-set's marker survives that.
+One scalar cannot distinguish that capacity error from three other ways a load
+must fail. The service therefore latches four sticky reason bits in
+`cfg_error_flags`; the legacy scalar `cfg_error` is their OR. After loading the
+compiled plan and every real wire descriptor, both checkers require the scalar
+and all four bits to be zero. The bench then issues these four isolated rejected
+writes:
 
-That last sentence is a claim, so it was made to fail. Reinstating the fold in a
-scratch copy of the RTL — accepting the out-of-range write and truncating its
-slot index, which is what the block did before this revision — and replaying the
-unchanged images under Icarus makes **all three** sets fail, each at the first
-request that reads from placement resource 0 and each with the same signature,
-a served read turning into a refusal:
+| Sticky bit | Deliberate write | What accepting it would corrupt |
+|---|---|---|
+| slot/select | quarantine slot `QUARANTINE_ENTRIES`, one beyond the table, naming resource 0 | slot 0 through index truncation, overwriting an entry where present or otherwise creating a resource-0 withdrawal |
+| malformed descriptor | a real `MEMORY_OBJECT` record with only its stored CRC bit flipped | the synthetic object's populated table slot |
+| descriptor/plan mismatch | the same valid record and plan entry with a deliberately wrong external descriptor-table ID | the synthetic object's populated table slot |
+| malformed plan entry | a zero-byte shard written over populated shard slot 0 | the first real shard |
+
+Both checkers require the final reason vector to be `4'hf`, the scalar to be
+one, and the run's marker to be reproduced unchanged. The marker makes every
+probe externally load bearing: each rejected write targets data that later
+requests use, so accepting any one of them changes a completion instead of
+merely setting the expected diagnostic.
+
+The slot/select probe's load-bearing effect was also made to fail directly.
+Reinstating the fold in a scratch copy of the RTL — accepting the out-of-range
+write and truncating its slot index, which is what the block did before this
+revision — and replaying the unchanged images under Icarus makes **all three**
+sets fail, each at the first request that reads from placement resource 0 and
+each with the same signature, a served read turning into a refusal:
 
 | Set | First failing request | Symptom |
 |---|---|---|
@@ -348,10 +377,11 @@ a served read turning into a refusal:
 | `deepseek_wafer` | 128 | `status: 2 expected 0` |
 
 Each set's shard table places exactly one shard on resource 0, and every set
-reaches it. The guard is therefore load bearing on all three and not decoration.
-That experiment is a one-off run against a deliberately broken scratch copy, so
-it is reported here and not committed as an artifact; what the committed
-campaign checks is the sticky bit and the unchanged marker.
+reaches it. The slot guard is therefore load bearing on all three and not
+decoration. That experiment is a one-off run against a deliberately broken
+scratch copy, so it is reported here and not committed as an artifact; what the
+committed campaign checks is the zero pre-probe reason vector, the final `4'hf`,
+the scalar OR, and the unchanged marker.
 
 ### 6d. A 64-bit range check that a 64-bit offset could wrap past
 
@@ -369,19 +399,68 @@ The two sides of the comparison were never equivalent here. The reference model
 in `tools/build_rom_service_vectors.py` computes `offset + length >
 entry.size_bytes` in Python, in arbitrary precision, and never wrapped. It is
 the RTL that was inexact, and the fix makes the RTL exact — the comparison is
-now carried out at 65 bits — rather than teaching the reference to wrap. The
-widest offset any published vector set carries is below `2**35`, while the wrap
-needs one within `2**32` of `2**64`, which is why two simulators, two checkers
-and three vector sets ran across this for as long as the block has existed
-without one disagreement. It also means **nothing in this campaign exercises the
-fixed guard**; §9 says so.
+now carried out at 65 bits — rather than teaching the reference to wrap.
 
-### 6e. The campaign is source-current and passes without relaxing provenance
+Every vector set now contains one `negative_range_wrap` request at byte offset
+`2**64 - 32` with length 64. The mathematical end is `2**64 + 32`, while the
+old 64-bit expression produced 32. Both checkers require fault class 2,
+`ROM_FAULT_OUT_OF_RANGE`, with zero sense beats and zero operand bytes. Thus the
+carry bit that distinguishes the fixed expression from the old one is exercised
+once per set, not inferred from ordinary offsets.
+
+### 6e. The old evidence never put a `MEMORY_OBJECT` record into the RTL
+
+The earlier object image was a 256-bit convenience entry assembled in Python by
+joining fields from `notes.rom_plan` and the descriptor. The RTL saw only that
+already-joined result. It could not independently reject a bad ABI header,
+reserved field, CRC, permission, storage or integrity class, alignment, external
+descriptor-table ID, or size; more importantly, it could not tell whether the
+descriptor and plan independently named the same placement. Passing that image
+therefore established the Python join, not admission of the wire record that a
+loader would actually supply.
+
+The configuration interface now receives three separate things: the compact
+plan entry, its external descriptor-table ID, and the exact 1,024-bit
+`MEMORY_OBJECT` record. It checks `TA3D`, type 1, version 1.0, the 128/64-byte
+record and payload lengths, header and payload reserved fields, reflected
+CRC32C with bytes 48–51 zeroed, ROM plus CRC-and-ECC storage semantics, exact
+`READ | IMMUTABLE` permissions, the base against its declared alignment, and
+the shipped header ownership/replica fields. The descriptor ID and size must
+equal the independently loaded plan entry. The descriptor's base, node and
+tile-or-bank are retained separately; before sensing, the first shard must name
+the same region, start at region offset zero, contain the object's start, and
+agree on base, node and tile-or-bank. Selected shards must remain in that
+region.
+
+There is one directed request-time discriminator per set. Synthetic object
+`0xfffffffe` copies a real plan entry but shifts the descriptor base by one
+declared alignment unit and recomputes a valid CRC. It therefore passes record
+format and CRC validation and can fail only when the independently retained
+descriptor is bound to the plan's first shard. Both checkers require fault class
+7, `ROM_FAULT_DESCRIPTOR_PLAN`, and zero sense beats. The synthetic record is a
+negative probe. The Qwen plan retains **16** exact placed-object records. <!-- figure: 16 src="results/rtl/rom_service_campaign.json#correlation.vector_sets.qwen_chip.plan.memory_object_wire_records.count" name="Qwen exact MEMORY_OBJECT records" -->
+Those records are the bytes admitted from its shipped descriptor table.
+The DeepSeek plan likewise retains **312** exact placed-object records. <!-- figure: 312 src="results/rtl/rom_service_campaign.json#correlation.vector_sets.deepseek_wafer.plan.memory_object_wire_records.count" name="DeepSeek exact MEMORY_OBJECT records" -->
+
+This closes the descriptor/plan evidence hole for this block's bounded read
+boundary. It is not admission of the whole descriptor table or program: no
+table envelope, `OPERATOR`, `TENSOR_VIEW`, signature, instruction, or
+view-to-range resolution is consumed here.
+
+### 6f. The campaign is source-current and passes without relaxing provenance
 
 Read the artifact's `status` before anything else in this section: it is
 **`pass`**. <!-- figure: "pass" src="results/rtl/rom_service_campaign.json#status" name="ROM service campaign status, RTL report" --> Every retained simulator case passes — three vector sets on
-two simulators, each reproducing its set's marker exactly, the largest of them
-at **108,357** individual checks <!-- figure: 108,357 src="results/rtl/rom_service_campaign.json#cases[0].checks" name="DeepSeek wafer Icarus check count" --> — and all three campaign-level executed-stream
+two simulators, each reproducing its set's marker exactly and with the same
+non-null semantic-check count in both simulators:
+
+| Set | Requests | Refusals | Checks per simulator |
+|---|---:|---:|---:|
+| `qwen_chip` | **351** <!-- figure: 351 src="results/rtl/rom_service_campaign.json#correlation.vector_sets.qwen_chip.requests.count" name="Qwen nominal ROM requests" --> | **119** <!-- figure: 119 src="results/rtl/rom_service_campaign.json#correlation.vector_sets.qwen_chip.totals.faults" name="Qwen nominal ROM refusals" --> | **3,539** <!-- figure: 3,539 src="results/rtl/rom_service_campaign.json#cases[2].checks" name="Qwen nominal Icarus check count" --> |
+| `qwen_chip_degraded` | **365** <!-- figure: 365 src="results/rtl/rom_service_campaign.json#correlation.vector_sets.qwen_chip_degraded.requests.count" name="Qwen degraded ROM requests" --> | **170** <!-- figure: 170 src="results/rtl/rom_service_campaign.json#correlation.vector_sets.qwen_chip_degraded.totals.faults" name="Qwen degraded ROM refusals" --> | **3,679** <!-- figure: 3,679 src="results/rtl/rom_service_campaign.json#cases[4].checks" name="Qwen degraded Icarus check count" --> |
+| `deepseek_wafer` | **10,835** <!-- figure: 10,835 src="results/rtl/rom_service_campaign.json#correlation.vector_sets.deepseek_wafer.requests.count" name="DeepSeek wafer ROM requests" --> | **15** <!-- figure: 15 src="results/rtl/rom_service_campaign.json#correlation.vector_sets.deepseek_wafer.totals.faults" name="DeepSeek wafer ROM refusals" --> | **108,379** <!-- figure: 108,379 src="results/rtl/rom_service_campaign.json#cases[0].checks" name="DeepSeek wafer Icarus check count" --> |
+
+All three campaign-level executed-stream
 problem maps are empty: source drift, missing required pins, and input/integrity
 problems.
 
@@ -411,47 +490,28 @@ the DeepSeek checkpoint and therefore did not authenticate its source ranges.
 
 ## 7. Physical view
 
-`tools/run_rom_service_physical.py` runs the full open flow — yosys through
-OpenROAD floorplan, PDN, placement, clock tree, global route and TritonRoute
-detailed route — against the exact installed IHP Open PDK v0.3.0 collateral, and
-records whether it converged.
+`results/rtl/rom_service_physical.json` is retained as a historical artifact,
+not as evidence for the descriptor-bound RTL in this report. It was produced
+before the service accepted and validated the 1,024-bit `MEMORY_OBJECT` record,
+kept descriptor placement fields separately, exposed reason-coded
+configuration failures, and added the request-time binding states. Its recorded
+SHA-256 values for both `rtl/rom/ot_rom_pkg.sv` and
+`rtl/rom/ot_rom_read_service.sv` no longer match those files. The physical flow
+was **not rerun** for this repair.
 
-IHP SG13G2 is a 130-nm open foundry PDK. Nothing from that run may be scaled to
-N6, N5, N7 or N4 by any feature-size, gate-pitch or density ratio;
-`docs/OPEN_PDK_SELECTION.md` forbids it and `docs/METHODOLOGY.md` section 9
-makes it a rule. No number from it enters the iso-node or roofline comparison.
+Consequently, the historical artifact's own `status: pass`, cell count, area,
+route, DRC and timing fields describe only its predecessor RTL. They establish
+no synthesis, placement, routing, timing, area, or DRC closure for the current
+descriptor-bound service and must not be quoted as though they do. There is no
+current physical implementation result for this revision.
 
-Two further boundaries specific to this block: the routed design **contains no
-ROM array**, so it is the cost of the control that reads a mask ROM and not the
-cost of the mask ROM; and its object, shard, repair and quarantine tables are
-flip-flops because that is the only storage this open flow can build, so the
-area over-counts them by an amount the run does not establish.
-
-The artifact records the SHA-256 of the RTL it was produced from, so whether it
-is a view of the RTL beside it is a question a reader can settle rather than
-assume: compare `source_sha256` in `results/rtl/rom_service_physical.json`
-against `rtl/rom/ot_rom_read_service.sv`. **At this revision all three recorded
-source digests match.** Yosys completes on the Qwen-sized control instance with
-**56,292 cells** and **1,107,017.6796 µm²** of cell area. <!-- figure: 56,292 src="results/rtl/rom_service_physical.json#design.yosys_statistics.cells" name="ROM service synthesis cells" --> <!-- figure: 1,107,017.6796 src="results/rtl/rom_service_physical.json#design.yosys_statistics.cell_area_um2" name="ROM service synthesis cell area" -->
-OpenROAD completes the strengthened flow and writes a routed DEF at
-**1,321,515 µm²** design area. <!-- figure: 1,321,515 src="results/rtl/rom_service_physical.json#metrics.design_area_um2" name="ROM service routed design area" -->
-The placed design reports **30% utilization**. <!-- figure: 30 src="results/rtl/rom_service_physical.json#metrics.utilization_percent" name="ROM service routed utilization" -->
-The flow models signal and clock wire RC, repairs setup and hold after CTS,
-restricts routing to Metal2 through Metal5, and finishes detailed routing with
-**0 tool-reported DRC violations**. <!-- figure: 0 src="results/rtl/rom_service_physical.json#implementation.detailed_route_drc_violations" name="ROM service route DRC violations" -->
-At the chosen 20 ns constraint, worst setup slack is **+7.52 ns** <!-- figure: 7.52 src="results/rtl/rom_service_physical.json#metrics.worst_setup_slack_ns" name="ROM service routed setup slack" -->,
-worst hold slack is **+0.01 ns** <!-- figure: 0.01 src="results/rtl/rom_service_physical.json#metrics.worst_hold_slack_ns" name="ROM service routed hold slack" -->,
-and total negative slack is **0.0 ns**. <!-- figure: 0.0 src="results/rtl/rom_service_physical.json#metrics.total_negative_slack_ns" name="ROM service routed total negative slack" -->
-The artifact therefore records `status: pass` <!-- figure: "pass" src="results/rtl/rom_service_physical.json#status" name="ROM service physical status" --> for this narrowly bounded open-PDK
-digital implementation.
-
-That pass is not foundry signoff and not a frequency claim. The period was
-chosen for this run; the timing is not SPEF-extracted, the zero count is
-TritonRoute's detailed-route check rather than a foundry signoff deck, and the
-flow performs no LVS or GDS generation. The artifact keeps all of those claim
-fields false. It establishes that this Qwen-sized, flip-flop-table control
-proxy routes cleanly and meets its declared open-flow constraint — still not
-the area, energy, timing, or manufacturability of a ROM array.
+Even for the predecessor, the routed design contained **no ROM array**. Its
+object, shard, repair and quarantine tables were flip-flops because that was the
+storage the open flow could build, and the IHP SG13G2 result was a 130-nm
+control proxy that could not be scaled to a leading node. Nothing from that
+historical result enters the iso-node or roofline comparison. This revision
+therefore makes no ROM macro, cell area, read-energy, sense-margin, wordline,
+bitline, timing, manufacturability, defect-rate, or yield claim.
 
 ## 8. Reproducing
 
@@ -467,10 +527,9 @@ python3 tools/build_rom_deployment.py deepseek-v4-flash \
     --ir build/ir-v3/deepseek-v4-flash-0731/kernel_ir.v3.json \
     --output build/abi3/deepseek-v4-flash-rom
 
-# vectors, then the two-simulator campaign
+# vectors, then the two-simulator functional campaign used by this revision
 make rom-service-vectors
 make rom-service
-make rom-service-physical
 
 # and, separately from producing it, check that the recorded artifact is still
 # evidence about the tree it sits in
@@ -488,9 +547,9 @@ and both checkers — `rtl/rom/ot_rom_read_service.sv`,
 `rtl/test/rom_service_harness.cpp`, `tools/build_rom_service_vectors.py`, and
 all three vector sets' `rom_service_vectors.json` and `rom_meta.hex`. The only
 visible symptom was a check count eight lower than the testbench committed
-beside it produces. Against *this* revision the gap reads as ten, because §6c
-added two checks to each checker since; the eight is the gap that existed at
-`518260f`, and both simulators showed it on all three sets.
+beside it produced. That eight is the historical gap at `518260f`; the current
+counts are recorded directly in the table in §6f and are not reconstructed by
+adding later checks to it.
 
 Most campaign tools in this repository write a `source_sha256` block
 (`grep -rl source_sha256 tools/`). Two of them read one back —
@@ -508,6 +567,10 @@ fails closed rather than publishing an executed stream whose inputs were not
 authenticated. The plan-derived DeepSeek set deliberately omits the root and
 therefore publishes a zero-byte real-data window.
 
+The physical command is intentionally absent from this reproduction record.
+`make rom-service-physical` was not run for the descriptor-bound repair, and the
+older physical JSON is not source-current evidence (§7).
+
 ## 9. The boundary, stated once
 
 **What the ROM read service RTL establishes.** For three vector sets built from
@@ -516,6 +579,12 @@ simulators agree, request by request, on: which placement resource and which
 physical row after repair translation each sense granule comes from, in what
 order, how many rows are activated, how many bytes reach the operand bus and
 after what column alignment, and which reads are refused and with which class.
+At configuration, the service validates each placed object's exact 128-byte
+`MEMORY_OBJECT` record and binds its external descriptor ID and size to the plan;
+at request time it binds the retained descriptor placement to the first shard.
+Each set separately exercises a valid-CRC descriptor/plan disagreement and a
+64-bit extent whose mathematical end carries into bit 64; both refuse with zero
+sense beats.
 Across each run the service's own counters, the array's independent activation
 and sense counts, and an observer's count of what actually crossed the operand
 bus all reconcile. Both simulators print the same marker, derived from a
@@ -530,31 +599,27 @@ reference decode written from the compiled ROM region plan and not from the RTL.
   entry §4 transcribes is checked directly against that artifact, and even the
   wafer entries are about that block's execution of a program, not about the
   reads described here.
-- **Anything physical about a ROM.** There is no array in the RTL under test —
-  no cell area, no read energy, no sense margin, no wordline or bitline delay,
-  no retention, no defect or yield rate. The sense granule is a declared
-  parameter of this block. Row activations are counted and never priced.
+- **Anything physical about this RTL or a ROM.** The current descriptor-bound
+  RTL has no source-current synthesis, placement, route, timing, area or DRC
+  result. The retained physical artifact predates it and was not rerun (§7).
+  There is also no array in the RTL under test — no ROM macro or cell area, no
+  read energy, no sense margin, no wordline or bitline delay, no retention, and
+  no defect or yield rate. The sense granule is a declared parameter of this
+  block. Row activations are counted and never priced.
 - **That the wafer product's reads are these reads.** The `deepseek_wafer` set
   is derived from the compiled plan, not recorded from an execution. Only the
   Qwen chip sets replay reads a functional device actually issued, and of the
   Qwen chip set's class-1 refusals only **111** are a statement about the shipped deployment (§6b). <!-- figure: 111 src="results/rtl/rom_service_campaign.json#correlation.vector_sets.qwen_chip.origin_composition.refusals.classes.unplaced_rom_object.by_origin.executed" name="Qwen executed-origin class-1 refusals, boundary section" -->
-- **That the routed instance is a product's instance.** The physical view holds
-  the object, shard and repair tables in flip-flops because the open flow can
-  build nothing else, at 130 nm, for a chip-sized plan. Nothing from it may be
-  scaled to a leading node, and nothing from it enters the iso-node or roofline
-  comparison.
+- **Whole descriptor-table or program admission, or view/operator
+  resolution.** This block validates the one `MEMORY_OBJECT` record associated
+  with each configured plan object. It does not consume the descriptor-table
+  envelope, `OPERATOR`, `TENSOR_VIEW`, program header, signature, or instruction
+  stream, and it does not derive a contiguous request from a view.
 - **That the quarantine list is deep enough.** No published set withdraws more
   than one placement resource, so the list-depth refusal is a guard on a bound
-  nothing here approaches. What *is* exercised is the service's refusal of an
-  out-of-range configuration slot, once per run, checked by both checkers
-  (§6c).
-- **That the 65-bit range check works on a request that needs it.** The
-  wrapping bounds test of §6d is fixed, and the fix is exact, but the widest
-  byte offset any published vector set carries is below `2**35` and the wrap
-  needs one within `2**32` of `2**64`. No set reaches it, so this guard is
-  reasoned and reviewed rather than exercised. Adding a probe that reaches it means
-  regenerating all three vector sets from their deployments, which is the
-  generator's track and not this one.
+  nothing here approaches. What *is* exercised is the service's refusal of four
+  distinct malformed configuration writes per run, with reason vector `4'hf`,
+  checked independently by both checkers (§6c).
 - **That the whole address space was replayed.** Each set replays real requests
   to a published beat budget and covers the rest with single-granule probes at
   every boundary. What was dropped for budget, and the largest thing dropped,
@@ -566,4 +631,4 @@ reference decode written from the compiled ROM region plan and not from the RTL.
   campaign.** Vector generation admitted and executed the exact Qwen deployment
   identities it records; the retained RTL campaign consumes only their derived
   vectors. The content-addressed deployment digest is the boundary, not the
-  mutable contents of a local `build/` directory (§6e).
+  mutable contents of a local `build/` directory (§6f).

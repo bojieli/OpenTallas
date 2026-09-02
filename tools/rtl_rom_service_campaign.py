@@ -64,6 +64,9 @@ CONTRACT_SOURCES = (
     "runtime/abi3/descriptors.py",
     "runtime/abi3/deployment.py",
     "runtime/abi3/constants.py",
+    "docs/TENSOR_ACCELERATOR_ABI_3_WIRE_FORMAT.md",
+    "docs/TENSOR_ACCELERATOR_ABI_3_OPERATOR_CONVENTIONS.md",
+    "spec/abi3/descriptor_payloads.json",
 )
 TOOL_SOURCES = (
     "tools/build_rom_service_vectors.py",
@@ -71,6 +74,7 @@ TOOL_SOURCES = (
 )
 IMAGE_FILES = (
     "rom_object.hex",
+    "rom_descriptor.hex",
     "rom_shard.hex",
     "rom_repair.hex",
     "rom_mask.hex",
@@ -79,6 +83,7 @@ IMAGE_FILES = (
     "rom_window.hex",
     "rom_meta.hex",
 )
+VECTOR_SCHEMA = "opentallas.rtl.rom_service_vectors.v2"
 
 # An executed vector set is not allowed to define its own conveniently narrow
 # provenance boundary.  The generator records a larger complete map; this is
@@ -115,6 +120,7 @@ FAULT_CLASS_NAMES = {
     4: "quarantined_resource",
     5: "activated_column_repair",
     6: "zero_length",
+    7: "descriptor_plan_mismatch",
 }
 STATUS_MASKED = 1
 STATUS_FAULT = 2
@@ -190,19 +196,35 @@ def require_versions(tools: dict[str, dict[str, Any]]) -> None:
 def run_stage(
     name: str, command: list[str], cwd: Path, timeout: int
 ) -> dict[str, Any]:
-    result = subprocess.run(
-        command,
-        cwd=cwd,
-        text=True,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT,
-        check=False,
-        timeout=timeout,
-    )
+    try:
+        result = subprocess.run(
+            command,
+            cwd=cwd,
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            check=False,
+            timeout=timeout,
+        )
+    except subprocess.TimeoutExpired as exc:
+        captured = exc.stdout or ""
+        if isinstance(captured, bytes):
+            captured = captured.decode("utf-8", errors="replace")
+        return {
+            "name": name,
+            "command": canonical(shlex.join(command), cwd),
+            "returncode": 124,
+            "timed_out": True,
+            "timeout_seconds": timeout,
+            "log": canonical(captured, cwd)
+            + f"\nTIMEOUT: stage exceeded {timeout} seconds\n",
+        }
     return {
         "name": name,
         "command": canonical(shlex.join(command), cwd),
         "returncode": result.returncode,
+        "timed_out": False,
+        "timeout_seconds": timeout,
         "log": canonical(result.stdout, cwd),
     }
 
@@ -215,7 +237,29 @@ def load_vector_set(directory: Path) -> dict[str, Any]:
             "tools/build_rom_service_vectors.py first"
         )
     vectors = json.loads(manifest.read_text(encoding="utf-8"))
-    for name, digest in vectors["image_sha256"].items():
+    if vectors.get("schema") != VECTOR_SCHEMA:
+        raise SystemExit(
+            f"vector set {manifest} has schema {vectors.get('schema')!r}; "
+            f"expected {VECTOR_SCHEMA!r}"
+        )
+    image_sha256 = vectors.get("image_sha256")
+    if not isinstance(image_sha256, dict):
+        raise SystemExit(f"vector set {manifest} has no image_sha256 map")
+    image_names = set(image_sha256)
+    expected_names = set(IMAGE_FILES)
+    if image_names != expected_names:
+        missing_images = sorted(expected_names - image_names)
+        extra_images = sorted(image_names - expected_names)
+        raise SystemExit(
+            f"vector set {manifest} has the wrong image set; "
+            f"missing={missing_images}, extra={extra_images}"
+        )
+    for name in IMAGE_FILES:
+        digest = image_sha256[name]
+        if not isinstance(digest, str) or len(digest) != 64:
+            raise SystemExit(f"image {name} has a malformed SHA-256 in {manifest}")
+        if not (directory / name).is_file():
+            raise SystemExit(f"vector image is missing: {directory / name}")
         actual = sha256_file(directory / name)
         if actual != digest:
             raise SystemExit(
@@ -551,6 +595,7 @@ def run(build_root: Path | None, sets: list[str], timeout: int) -> dict[str, Any
                             "status": "pass" if passed else "fail",
                             "run_command": executed["command"],
                             "run_returncode": executed["returncode"],
+                            "timed_out": executed["timed_out"],
                             "run_log": executed["log"],
                             "log_sha256": hashlib.sha256(
                                 executed["log"].encode("utf-8")
@@ -608,10 +653,102 @@ def run(build_root: Path | None, sets: list[str], timeout: int) -> dict[str, Any
     compositions = {
         name: origin_composition(vectors) for name, vectors in vector_sets.items()
     }
+    simulator_agreement: dict[str, dict[str, Any]] = {}
+    for name in sets:
+        set_cases = [case for case in cases if case["vector_set"] == name]
+        simulator_counts = {
+            simulator: sum(
+                1 for case in set_cases if case["simulator"] == simulator
+            )
+            for simulator in ("iverilog", "verilator")
+        }
+        check_counts = {
+            case["simulator"]: case["checks"] for case in set_cases
+        }
+        exact_cardinality = (
+            len(set_cases) == 2
+            and simulator_counts == {"iverilog": 1, "verilator": 1}
+        )
+        simulator_agreement[name] = {
+            "case_count": len(set_cases),
+            "simulator_case_counts": simulator_counts,
+            "exactly_one_case_per_simulator": exact_cardinality,
+            "both_passed": exact_cardinality
+            and all(case["status"] == "pass" for case in set_cases),
+            "check_counts": check_counts,
+            "check_counts_equal": exact_cardinality
+            and len(set(check_counts.values())) == 1
+            and None not in check_counts.values(),
+            "required_markers_equal": exact_cardinality
+            and len({case["required_marker"] for case in set_cases}) == 1,
+        }
+    dual_simulator_agreement = all(
+        entry["both_passed"]
+        and entry["check_counts_equal"]
+        and entry["required_markers_equal"]
+        for entry in simulator_agreement.values()
+    )
+
+    def matching_requests(
+        *, origin: str | None = None, status: int | None = None,
+        fault: int | None = None, zero_beats: bool = False,
+    ) -> list[dict[str, Any]]:
+        found: list[dict[str, Any]] = []
+        for vectors in vector_sets.values():
+            for record in vectors["request_index"]:
+                if origin is not None and record["origin"] != origin:
+                    continue
+                if status is not None and record["status"] != status:
+                    continue
+                if fault is not None and record["fault"] != fault:
+                    continue
+                if zero_beats and record["beats"] != 0:
+                    continue
+                found.append(record)
+        return found
+
+    all_cases_pass = bool(cases) and all(
+        case["status"] == "pass" for case in cases
+    )
+    request_guards = {
+        "wrap_extent": matching_requests(
+            origin="negative_range_wrap", status=STATUS_FAULT,
+            fault=2, zero_beats=True,
+        ),
+        "masked": matching_requests(
+            origin="masked", status=STATUS_MASKED, fault=0, zero_beats=True,
+        ),
+        "quarantined": matching_requests(
+            origin="quarantined", status=STATUS_FAULT,
+            fault=4, zero_beats=True,
+        ),
+        "unplaced": matching_requests(
+            origin="negative_unplaced", status=STATUS_FAULT,
+            fault=1, zero_beats=True,
+        ),
+        "column_repair": matching_requests(
+            status=STATUS_FAULT, fault=5, zero_beats=True,
+        ),
+        "row_repair": matching_requests(origin="repaired_row", status=0),
+        "descriptor_plan": matching_requests(
+            origin="negative_descriptor_plan", status=STATUS_FAULT,
+            fault=7, zero_beats=True,
+        ),
+    }
+    descriptor_sets_valid = all(
+        vectors["plan"].get("memory_object_wire_records")
+        == {
+            "count": vectors["plan"]["placed_rom_object_count"],
+            "bytes_per_record": 128,
+            "source": "exact admitted descriptor-table bytes",
+            "paired_by_descriptor_table_index": True,
+        }
+        for vectors in vector_sets.values()
+    )
     passed = (
         compiled
-        and bool(cases)
-        and all(case["status"] == "pass" for case in cases)
+        and all_cases_pass
+        and dual_simulator_agreement
         and not drift
         and not missing
         and not integrity_problems
@@ -624,7 +761,13 @@ def run(build_root: Path | None, sets: list[str], timeout: int) -> dict[str, Any
         "compared": [
             "completion status: served, masked, or refused",
             "refusal class: unplaced ROM object, out of range, shard gap, "
-            "quarantined resource, activated column repair, zero length",
+            "quarantined resource, activated column repair, zero length, or "
+            "descriptor/plan mismatch",
+            "the exact admitted 128-byte MEMORY_OBJECT record at each placed "
+            "descriptor-table index: header/type/version/lengths, reserved "
+            "fields, read-only immutable ROM semantics and reflected CRC32C",
+            "the descriptor's size and external table index against the plan "
+            "object, then its base/node/tile-or-bank against the first shard",
             "sense-beat count and served-byte count per request",
             "row-activation count per request, against a row buffer that "
             "persists across requests",
@@ -667,6 +810,7 @@ def run(build_root: Path | None, sets: list[str], timeout: int) -> dict[str, Any
                     "_executed_source_integrity_problems"
                 ],
                 "required_marker": vectors["required_marker"],
+                "simulator_agreement": simulator_agreement[name],
             }
             for name, vectors in vector_sets.items()
         },
@@ -697,36 +841,54 @@ def run(build_root: Path | None, sets: list[str], timeout: int) -> dict[str, Any
             "row_activation_counted_not_priced": True,
             "sense_granule_width_is_a_declared_parameter": True,
             "column_redundancy_implemented": False,
-            "column_redundancy_refused_rather_than_ignored": True,
-            "row_redundancy_implemented_and_exercised": True,
-            "region_mask_performs_no_array_access": True,
-            "quarantined_resource_fails_closed": True,
-            "unplaced_rom_object_fails_closed": True,
-            "out_of_range_configuration_slot_refused": True,
-            "out_of_range_configuration_slot_refusal_exercised": True,
-            # The request-extent bounds test is carried out at 65 bits, so a
-            # 64-bit byte offset cannot wrap past it.  It is NOT exercised:
-            # every published set's widest offset is below 2**35 and the wrap
-            # needs one within 2**32 of 2**64.  Recorded as two separate
-            # booleans on purpose -- "the guard exists" and "the guard fired"
-            # are different claims and this repository has confused them.
+            "column_redundancy_refused_rather_than_ignored": all_cases_pass
+            and bool(request_guards["column_repair"]),
+            "row_redundancy_implemented_and_exercised": all_cases_pass
+            and bool(request_guards["row_repair"]),
+            "region_mask_performs_no_array_access": all_cases_pass
+            and bool(request_guards["masked"]),
+            "quarantined_resource_fails_closed": all_cases_pass
+            and bool(request_guards["quarantined"]),
+            "unplaced_rom_object_fails_closed": all_cases_pass
+            and bool(request_guards["unplaced"]),
+            "out_of_range_configuration_slot_refused": all_cases_pass,
+            "out_of_range_configuration_slot_refusal_exercised": all_cases_pass,
+            "malformed_descriptor_crc_refusal_exercised": all_cases_pass,
+            "descriptor_plan_configuration_refusal_exercised": all_cases_pass,
+            "malformed_plan_entry_refusal_exercised": all_cases_pass,
+            "raw_memory_object_record_validation_in_scope": descriptor_sets_valid
+            and all_cases_pass,
+            "memory_object_to_first_shard_binding_in_scope": descriptor_sets_valid
+            and all_cases_pass
+            and len(request_guards["descriptor_plan"]) == len(vector_sets),
             "request_extent_bounds_checked_without_truncation": True,
-            "request_extent_bounds_refusal_exercised": False,
+            "request_extent_bounds_refusal_exercised": all_cases_pass
+            and len(request_guards["wrap_extent"]) == len(vector_sets),
             # Derived, not asserted: the joint table this campaign builds
             # from the per-request index, against the two margins the
             # vector set publishes.
             "every_published_origin_and_class_margin_reconciled": all(
                 entry["margins_agree"] for entry in compositions.values()
             ),
-            "addressing_correlated_over_the_whole_address_space": True,
+            "addressing_correlated_over_the_whole_address_space": all(
+                vectors["totals"]["placement_resources_entered"]
+                == vectors["totals"]["placement_resources_in_plan"]
+                for vectors in vector_sets.values()
+            ),
             "whole_decode_step_replayed_beat_by_beat": False,
-            "operand_data_checked_against_checkpoint_bytes_on_a_window_only": True,
+            "operand_data_checked_against_checkpoint_bytes_on_a_window_only": any(
+                vectors["window"]["checkpoint_available"]
+                and vectors["window"]["real_bytes"] > 0
+                for vectors in vector_sets.values()
+            ),
             "view_to_byte_range_walk_in_scope": False,
-            "descriptor_or_program_admission_in_scope": False,
+            "descriptor_record_validation_in_scope": descriptor_sets_valid
+            and all_cases_pass,
+            "whole_descriptor_table_or_program_admission_in_scope": False,
             "deployment_bundle_revalidated_by_retained_campaign": False,
             "deployment_digest_is_the_retained_content_addressed_boundary": True,
             "executed_request_stream_for_the_wafer_product": False,
-            "dual_simulator_agreement": True,
+            "dual_simulator_agreement": dual_simulator_agreement,
             "physical_implementation_claimed": False,
         },
         "limitations": [
@@ -751,16 +913,13 @@ def run(build_root: Path | None, sets: list[str], timeout: int) -> dict[str, Any
             "only for the granules in the published window. Outside it the "
             "array returns a deterministic function of its own address, so what "
             "is checked there is conveyance and ordering, not weight content",
-            "the request-extent bounds test was evaluated at 64 bits and a "
-            "64-bit sum wraps, so a byte offset within 2**32 of 2**64 passed an "
-            "in-range test and was then served from the middle of the object. "
-            "It is now evaluated at 65 bits and cannot wrap. Nothing here "
-            "exercises the fixed guard: the widest byte offset any published "
-            "vector set carries is below 2**35, which is also why two "
-            "simulators and two checkers never disagreed over it. The Python "
-            "reference computes the same sum in arbitrary precision and was "
-            "always exact, so the fix moved the RTL onto the reference rather "
-            "than the reference onto the RTL",
+            "the request-extent bounds test was once evaluated at 64 bits and "
+            "could wrap. It is now evaluated at 65 bits, and every vector set "
+            "contains a request at byte offset 2**64-32 for 64 bytes. Both "
+            "checkers require that request to fail out-of-range with zero "
+            "sense beats; this exercises the carry rather than inferring it "
+            "from ordinary offsets. The Python reference computes the same "
+            "sum in arbitrary precision",
             "the DeepSeek wafer set has no executed request stream. The "
             "separate governed token lane now completes (checklist W6.4), but "
             "no request trace from it is retained here. This set's requests "
@@ -774,9 +933,14 @@ def run(build_root: Path | None, sets: list[str], timeout: int) -> dict[str, Any
             "not in this block. Requests arrive as contiguous byte ranges and "
             "the campaign derives those ranges from the views the functional "
             "device resolved",
-            "no descriptor CRC, program header or admission check is performed "
-            "here; the tables arrive over the configuration channel already "
-            "admitted",
+            "each placed object's exact 128-byte MEMORY_OBJECT record is now "
+            "validated at the configuration boundary, including its reflected "
+            "CRC32C, header, reserved fields, ROM/read-only semantics, size and "
+            "external descriptor-table ID. The retained base/node/tile-or-bank "
+            "fields are checked against the plan's first shard before sensing. "
+            "This is not admission of the whole descriptor table or program: "
+            "no OPERATOR or TENSOR_VIEW resolution, program header, signature, "
+            "or instruction stream is consumed by this block",
             "the ignored deployment bundles are consumed when vectors are "
             "built, not retained or reopened by this RTL campaign. Each set "
             "therefore names the ABI deployment SHA-256 it was derived from; "

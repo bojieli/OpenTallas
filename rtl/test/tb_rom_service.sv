@@ -78,6 +78,8 @@ module tb_rom_service;
     wire [31:0]  req_repair_entries, req_requests, req_window_entries, req_masks;
     wire         cfg_error;
     wire         cfg_error_plan;
+    wire [3:0]   cfg_error_flags;
+    wire [3:0]   cfg_error_plan_flags;
 
     rom_service_top #(
         .OBJECTS(OBJECTS), .SHARDS(SHARDS), .REGIONS(REGIONS),
@@ -121,7 +123,9 @@ module tb_rom_service;
         .req_regions(req_regions), .req_quarantine_entries(req_quarantine_entries),
         .req_repair_entries(req_repair_entries), .req_requests(req_requests),
         .req_window_entries(req_window_entries), .req_masks(req_masks),
-        .cfg_error(cfg_error), .cfg_error_plan(cfg_error_plan)
+        .cfg_error(cfg_error), .cfg_error_flags(cfg_error_flags),
+        .cfg_error_plan(cfg_error_plan),
+        .cfg_error_plan_flags(cfg_error_plan_flags)
     );
 
     reg [31:0] expect_mem [0:REQUESTS*EXPECT_STRIDE-1];
@@ -228,17 +232,16 @@ module tb_rom_service;
         capacity_ok("requests", req_requests, cap_requests);
         capacity_ok("window_entries", req_window_entries, cap_window_entries);
         capacity_ok("masks", req_masks, cap_masks);
-        // The capacities above are this bench's own arithmetic on the vector
-        // set.  These two are the service's own verdict on the writes it was
-        // given.  Every slot the compiled plan named exists, so the sticky bit
-        // is 0 after the plan is loaded; the bench then makes it fire, with one
-        // write naming a quarantine slot one past the end of the list that asks
-        // to withdraw placement resource 0.  The marker below is reproduced
-        // anyway, which is what proves the service dropped that write instead
-        // of folding it onto slot 0 -- a fold would withdraw a resource this
-        // set reads from, and no set's marker survives that.
+        // Every real plan write must be admitted.  Four subsequent probes make
+        // the independent slot, descriptor, descriptor/plan-binding and plan-
+        // structure guards sticky; reproducing the marker then proves none of
+        // those rejected writes changed a populated entry.
         expect_eq("cfg_error_after_plan", -1, {63'd0, cfg_error_plan}, 64'd0);
+        expect_eq("cfg_flags_after_plan", -1,
+                  {60'd0, cfg_error_plan_flags}, 64'd0);
         expect_eq("cfg_error_after_probe", -1, {63'd0, cfg_error}, 64'd1);
+        expect_eq("cfg_flags_after_probes", -1,
+                  {60'd0, cfg_error_flags}, 64'hf);
 
         for (i = 0; i < meta_request_count; i = i + 1) begin
             exp_beats = word64(i*EXPECT_STRIDE + 2);
