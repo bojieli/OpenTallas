@@ -22,8 +22,8 @@
 
 namespace {
 
-constexpr int kCaseStride = 32;
-constexpr int kArithStride = 8;
+constexpr int kCaseStride = 80;
+constexpr int kArithStride = 12;
 constexpr uint32_t kUnwritten = 0xdeadbeefu;
 constexpr uint32_t kErrNone = 0;
 constexpr uint32_t kErrShape = 7;
@@ -165,6 +165,43 @@ int main(int argc, char** argv) {
         dut.cfg_slots = field[20];
         dut.cfg_trailing = field[21];
         dut.cfg_extent = field[22];
+        dut.cfg_input_valid = static_cast<uint8_t>(field[32] & 0xfu);
+        dut.cfg_output_valid = static_cast<uint8_t>(field[33] & 0x3u);
+        dut.cfg_input_dtypes = field[34];
+        dut.cfg_output_dtypes = static_cast<uint16_t>(field[35]);
+        dut.cfg_view_ranks = field[36] & 0xffffffu;
+        dut.cfg_view_scaled = static_cast<uint8_t>(field[37] & 0x3fu);
+        dut.cfg_profile_dtypes = field[38];
+        dut.cfg_rounding_mode = static_cast<uint8_t>(field[39]);
+        dut.cfg_reduction_order = static_cast<uint8_t>(field[39] >> 8);
+        dut.cfg_profile_valid = static_cast<uint8_t>((field[39] >> 16) & 1u);
+        dut.cfg_profile_saturate =
+            static_cast<uint8_t>((field[39] >> 17) & 1u);
+        dut.cfg_nan_policy = static_cast<uint8_t>(field[39] >> 24);
+        for (int limb = 0; limb < 4; ++limb) {
+            dut.cfg_input0_dims[limb] = field[40 + limb];
+            dut.cfg_input1_dims[limb] = field[44 + limb];
+            dut.cfg_input2_dims[limb] = field[48 + limb];
+            dut.cfg_input3_dims[limb] = field[52 + limb];
+            dut.cfg_output0_dims[limb] = field[56 + limb];
+            dut.cfg_output1_dims[limb] = field[60 + limb];
+        }
+        dut.cfg_contract_0 = field[64];
+        dut.cfg_contract_1 = field[65];
+        dut.cfg_contract_2 = field[66];
+        dut.cfg_contract_3 = field[67];
+        dut.cfg_contract_4 = field[68];
+        dut.cfg_contract_5 = field[69];
+        dut.cfg_contract_6 = field[70];
+        dut.cfg_contract_7 = field[71];
+        dut.cfg_aux_valid = static_cast<uint8_t>(field[72] & 0xfu);
+        dut.cfg_aux0 = field[73];
+        dut.cfg_aux1 = field[74];
+        dut.cfg_aux2 = field[75];
+        dut.cfg_aux3 = field[76];
+        dut.cfg_profile_scale_bits = field[77];
+        dut.cfg_epsilon_bits = field[78];
+        dut.cfg_profile_flags = field[79];
 
         launch(dut);
 
@@ -248,9 +285,12 @@ int main(int argc, char** argv) {
         const uint32_t base = entry * kArithStride;
         dut.arith_a = arith.at(base);
         dut.arith_b = arith.at(base + 1);
+        dut.arith_accumulator = arith.at(base + 8);
+        dut.arith_left_bf16 = static_cast<uint16_t>(arith.at(base + 9));
+        dut.arith_right_bf16 = static_cast<uint16_t>(arith.at(base + 9) >> 16);
         settle(dut);
         ++counted_arith;
-        checks += 3;
+        checks += 4;
         const uint64_t sum = dut.arith_add;
         const uint32_t sum_error = static_cast<uint32_t>((sum >> 32) & 0x3u);
         const uint32_t sum_value = static_cast<uint32_t>(sum & 0xffffffffu);
@@ -285,6 +325,22 @@ int main(int argc, char** argv) {
                 std::printf("FAIL: bf16 %u a=%08x got %u:%04x want %u:%04x\n",
                             entry, dut.arith_a, bf_field, bf_value,
                             arith.at(base + 6), arith.at(base + 7));
+            }
+        }
+        const uint64_t fused = dut.arith_product_add;
+        const uint32_t fused_error =
+            static_cast<uint32_t>((fused >> 32) & 0x3u);
+        const uint32_t fused_value = static_cast<uint32_t>(fused & 0xffffffffu);
+        if (fused_error != arith.at(base + 10) ||
+            (arith.at(base + 10) == 0 && fused_value != arith.at(base + 11))) {
+            ++failures;
+            if (failures < 20) {
+                std::printf(
+                    "FAIL: product-add %u acc=%08x lhs=%04x rhs=%04x "
+                    "got %u:%08x want %u:%08x\n",
+                    entry, dut.arith_accumulator, dut.arith_left_bf16,
+                    dut.arith_right_bf16, fused_error, fused_value,
+                    arith.at(base + 10), arith.at(base + 11));
             }
         }
     }

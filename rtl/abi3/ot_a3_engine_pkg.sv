@@ -37,6 +37,12 @@ package ot_a3_engine_pkg;
     localparam [7:0] DMA_SCATTER      = 8'h03;
     localparam [7:0] TENSOR_MATMUL    = 8'h00;
     localparam [7:0] VECTOR_ADD       = 8'h03;
+    localparam [7:0] VECTOR_CONVERT   = 8'h05;
+    localparam [7:0] VECTOR_SCALE     = 8'h06;
+    localparam [7:0] VECTOR_COMPRESS  = 8'h08;
+    localparam [7:0] VECTOR_MHC       = 8'h09;
+    localparam [7:0] VECTOR_HADAMARD  = 8'h0a;
+    localparam [7:0] VECTOR_INDEX_SCORE = 8'h0b;
     localparam [7:0] SELECTION_ARGMAX = 8'h00;
 
     // Order-preserving key for a finite binary32 comparison.  Sign-magnitude

@@ -41,6 +41,7 @@ ROOT = Path(__file__).resolve().parents[1]
 VECTOR_DIR = ROOT / "testdata/compiler/abi3_engine"
 VECTOR_JSON = VECTOR_DIR / "abi3_engine_vectors.json"
 DEFAULT_OUTPUT = ROOT / "results/rtl/abi3_engine_campaign.json"
+VECTOR_SCHEMA = "opentallas.rtl.abi3_engine_vectors.v2"
 
 PINNED_VERILATOR_VERSION = "5.050"
 PINNED_IVERILOG_VERSION = "11.0"
@@ -56,6 +57,12 @@ RTL_SOURCES = (
     "rtl/abi3/ot_a3_selection_argmax.sv",
     "rtl/abi3/ot_a3_dma_index_mover.sv",
     "rtl/abi3/ot_a3_vector_add.sv",
+    "rtl/abi3/ot_a3_vector_convert.sv",
+    "rtl/abi3/ot_a3_vector_scale.sv",
+    "rtl/abi3/ot_a3_vector_hadamard.sv",
+    "rtl/abi3/ot_a3_vector_index_score.sv",
+    "rtl/abi3/ot_a3_vector_compress_project.sv",
+    "rtl/abi3/ot_a3_vector_mhc_post.sv",
     "rtl/abi3/ot_a3_engine_array.sv",
 )
 TESTBENCH_SOURCES = (
@@ -76,9 +83,14 @@ CONTRACT_SOURCES = (
     "runtime/sim/engines/tensor.py",
     "runtime/sim/engines/dma.py",
     "runtime/sim/engines/vector.py",
+    "runtime/sim/engines/deepseek_vector.py",
     "runtime/sim/engines/selection.py",
+    "runtime/reference/compression.py",
     "runtime/tensor_accelerator/bf16.py",
     "runtime/tensor_accelerator/elementwise.py",
+    "runtime/reference/hadamard.py",
+    "runtime/reference/index_score.py",
+    "runtime/reference/vector.py",
 )
 TOOL_SOURCES = (
     "tools/build_abi3_engine_vectors.py",
@@ -99,6 +111,92 @@ VECTOR_FILES = (
 CHECKS_RE = re.compile(r"checks=(\d+)")
 VERILATOR_VERSION_RE = re.compile(r"Verilator (\d+)\.(\d+)")
 IVERILOG_VERSION_RE = re.compile(r"Icarus Verilog version (\d+)\.(\d+)")
+
+# Deliberate, single-source arithmetic defects.  A campaign is sensitive only
+# if the modified RTL still compiles and both independently written checkers
+# reject its output.  Exact source strings make each mutation reproducible and
+# prevent an edit around the intended site from silently turning the mutation
+# into a no-op.
+MUTATIONS: tuple[dict[str, str], ...] = (
+    {
+        "id": "convert_narrowed_lsb",
+        "source": "rtl/abi3/ot_a3_vector_convert.sv",
+        "description": "invert the low bit of every converted BF16 result",
+        "before": "out_data <= {16'b0, narrowed[15:0]};",
+        "after": "out_data <= {16'b0, narrowed[15:1], ~narrowed[0]};",
+    },
+    {
+        "id": "scale_multiply_to_add",
+        "source": "rtl/abi3/ot_a3_vector_scale.sv",
+        "description": "replace the SCALE product with a binary32 addition",
+        "before": (
+            "ot_fp32_rne_pkg::fp32_mul_rne(decoded_a[31:0], right_value);"
+        ),
+        "after": (
+            "ot_fp32_rne_pkg::fp32_add_rne(decoded_a[31:0], right_value);"
+        ),
+    },
+    {
+        "id": "hadamard_remove_normalization",
+        "source": "rtl/abi3/ot_a3_vector_hadamard.sv",
+        "description": "replace 1/sqrt(128) with 1.0",
+        "before": "localparam [31:0] HADAMARD_SCALE = 32'h3db5_04f3;",
+        "after": "localparam [31:0] HADAMARD_SCALE = 32'h3f80_0000;",
+    },
+    {
+        "id": "index_score_remove_relu",
+        "source": "rtl/abi3/ot_a3_vector_index_score.sv",
+        "description": "propagate negative rounded head scores through ReLU",
+        "before": (
+            "relu_value <= dot_narrowed[15]\n"
+            "                                    ? 32'b0 : "
+            "{dot_narrowed[15:0], 16'b0};"
+        ),
+        "after": "relu_value <= {dot_narrowed[15:0], 16'b0};",
+    },
+    {
+        "id": "compress_swap_output_planes",
+        "source": "rtl/abi3/ot_a3_vector_compress_project.sv",
+        "description": "store gate outputs before KV outputs",
+        "before": "(plane ? {16'b0, cfg_cols} : 0) + {16'b0, col}",
+        "after": "(plane ? 0 : {16'b0, cfg_cols}) + {16'b0, col}",
+    },
+    {
+        "id": "compress_split_product_add_rounding",
+        "source": "rtl/abi3/ot_a3_vector_compress_project.sv",
+        "description": (
+            "replace the exact-product single-rounded dot step with a "
+            "separately rounded binary32 multiply followed by add"
+        ),
+        "before": (
+            "wire [33:0] accumulated =\n"
+            "        ot_fp32_rne_pkg::bf16_bf16_fp32_product_add_rne(\n"
+            "            accumulator, h_rd_data[15:0], weight_code\n"
+            "        );"
+        ),
+        "after": (
+            "wire [33:0] split_product = ot_fp32_rne_pkg::fp32_mul_rne(\n"
+            "        decoded_hidden[31:0], decoded_weight[31:0]\n"
+            "    );\n"
+            "    wire [33:0] accumulated = ot_fp32_rne_pkg::fp32_add_rne(\n"
+            "        accumulator, split_product[31:0]\n"
+            "    );"
+        ),
+    },
+    {
+        "id": "mhc_transpose_combination",
+        "source": "rtl/abi3/ot_a3_vector_mhc_post.sv",
+        "description": "address comb[destination][source] instead of source/dest",
+        "before": (
+            "({30'b0, source} * MULTIPLIER) +\n"
+            "                        {30'b0, destination};"
+        ),
+        "after": (
+            "({30'b0, destination} * MULTIPLIER) +\n"
+            "                        {30'b0, source};"
+        ),
+    },
+)
 
 
 def sha256_file(path: Path) -> str:
@@ -220,6 +318,64 @@ def simulator_case(
     }
 
 
+def mutation_simulator_case(
+    name: str,
+    compile_command: list[str],
+    run_command: list[str],
+    build: Path,
+    marker: str,
+) -> dict[str, Any]:
+    """Compile one arithmetic mutation and require its checker to reject it.
+
+    A syntax or elaboration failure is not sensitivity to arithmetic, so it is
+    explicitly not counted as caught.  Mutation logs are represented by stable
+    hashes and the first mismatch instead of being duplicated six times in the
+    retained artifact.
+    """
+    compiled = run_stage(f"{name}.compile", compile_command, build, timeout=1800)
+    executed: dict[str, Any] | None = None
+    if compiled["returncode"] == 0:
+        executed = run_stage(f"{name}.run", run_command, build, timeout=3600)
+    compile_log = compiled["log"]
+    run_log = executed["log"] if executed else ""
+    marker_present = bool(executed and marker in run_log)
+    caught = (
+        compiled["returncode"] == 0
+        and executed is not None
+        and executed["returncode"] != 0
+        and not marker_present
+    )
+    mismatch = next(
+        (
+            line.strip()
+            for line in run_log.splitlines()
+            if line.strip().startswith("FAIL:")
+            or line.strip().startswith("FAILURES:")
+        ),
+        None,
+    )
+    checks = CHECKS_RE.search(run_log) if executed else None
+    combined = compile_log + run_log
+    return {
+        "name": name,
+        "status": "caught" if caught else "missed",
+        "caught": caught,
+        "compile_command": compiled["command"],
+        "compile_returncode": compiled["returncode"],
+        "compile_log_sha256": hashlib.sha256(
+            compile_log.encode("utf-8")
+        ).hexdigest(),
+        "run_command": executed["command"] if executed else None,
+        "run_returncode": executed["returncode"] if executed else None,
+        "run_log_sha256": hashlib.sha256(run_log.encode("utf-8")).hexdigest(),
+        "log_sha256": hashlib.sha256(combined.encode("utf-8")).hexdigest(),
+        "required_marker": marker,
+        "marker_present": marker_present,
+        "first_mismatch": mismatch,
+        "checks_before_rejection": int(checks.group(1)) if checks else None,
+    }
+
+
 def load_vectors() -> dict[str, Any]:
     if not VECTOR_JSON.exists():
         raise SystemExit(
@@ -227,6 +383,26 @@ def load_vectors() -> dict[str, Any]:
             "tools/build_abi3_engine_vectors.py first"
         )
     vectors = json.loads(VECTOR_JSON.read_text(encoding="utf-8"))
+    if vectors.get("schema") != VECTOR_SCHEMA:
+        raise SystemExit(
+            "the retained engine vectors predate descriptor-correlated "
+            "fail-closed admission and exact-product product-add coverage; "
+            "they are stale evidence and must not be replayed as a passing "
+            "W8.3 campaign. Regenerate only after the frozen INDEX_SCORE "
+            "Device implementation agrees with runtime.reference.index_score"
+        )
+    admission = vectors.get("descriptor_admission", {})
+    if admission.get("schema") != "operator_view_numeric_exact_v1":
+        raise SystemExit(
+            "the engine vector set lacks the required descriptor-admission "
+            "binding"
+        )
+    geometry = vectors.get("geometry", {})
+    if geometry.get("case_stride") != 80 or geometry.get("arith_stride") != 12:
+        raise SystemExit(
+            "the engine vector record geometry lacks W8.3 admission or "
+            "product-add fields"
+        )
     for name, digest in vectors["image_sha256"].items():
         actual = sha256_file(VECTOR_DIR / name)
         if actual != digest:
@@ -240,6 +416,7 @@ def load_vectors() -> dict[str, Any]:
 def run(build_root: Path | None = None) -> dict[str, Any]:
     vectors = load_vectors()
     marker = vectors["required_marker"]
+    mutations: list[dict[str, Any]] = []
 
     executables = {
         "iverilog": resolve("iverilog", None),
@@ -321,6 +498,95 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
             ]
             cases = [future.result() for future in futures]
 
+        for spec in MUTATIONS:
+            source = ROOT / spec["source"]
+            original = source.read_text(encoding="utf-8")
+            occurrences = original.count(spec["before"])
+            if occurrences != 1:
+                raise SystemExit(
+                    f"mutation {spec['id']} expected one exact replacement in "
+                    f"{spec['source']}, found {occurrences}"
+                )
+            mutated = original.replace(spec["before"], spec["after"], 1)
+            mutated_path = build / f"mutation_{spec['id']}_{source.name}"
+            mutated_path.write_text(mutated, encoding="utf-8")
+            mutated_rtl = [
+                str(mutated_path) if path == spec["source"] else str(ROOT / path)
+                for path in RTL_SOURCES
+            ]
+            vvp_name = f"e3_mutation_{spec['id']}.vvp"
+            obj_name = f"obj_e3_mutation_{spec['id']}"
+            mutation_iverilog_compile = [
+                str(executables["iverilog"]),
+                "-g2012",
+                "-s",
+                "tb_a3_engine",
+                "-o",
+                vvp_name,
+                *mutated_rtl,
+                str(ROOT / "rtl/test/a3_engine_top.sv"),
+                str(ROOT / "rtl/test/tb_a3_engine.sv"),
+            ]
+            mutation_verilator_compile = [
+                str(executables["verilator"]),
+                "--cc",
+                "--exe",
+                "--build",
+                "-Wall",
+                "-Wno-fatal",
+                "-Wno-DECLFILENAME",
+                "--top-module",
+                "ot_a3_engine_top",
+                "--Mdir",
+                obj_name,
+                *mutated_rtl,
+                str(ROOT / "rtl/test/a3_engine_top.sv"),
+                str(ROOT / "rtl/test/a3_engine_harness.cpp"),
+                "-CFLAGS",
+                "-std=c++17",
+            ]
+            with ThreadPoolExecutor(max_workers=2) as pool:
+                futures = [
+                    pool.submit(
+                        mutation_simulator_case,
+                        "iverilog",
+                        mutation_iverilog_compile,
+                        [str(executables["vvp"]), vvp_name],
+                        build,
+                        marker,
+                    ),
+                    pool.submit(
+                        mutation_simulator_case,
+                        "verilator",
+                        mutation_verilator_compile,
+                        [f"./{obj_name}/Vot_a3_engine_top"],
+                        build,
+                        marker,
+                    ),
+                ]
+                simulator_results = [future.result() for future in futures]
+            mutations.append(
+                {
+                    "id": spec["id"],
+                    "source": spec["source"],
+                    "description": spec["description"],
+                    "exact_replacement": {
+                        "before": spec["before"],
+                        "after": spec["after"],
+                    },
+                    "source_sha256": hashlib.sha256(
+                        original.encode("utf-8")
+                    ).hexdigest(),
+                    "mutated_source_sha256": hashlib.sha256(
+                        mutated.encode("utf-8")
+                    ).hexdigest(),
+                    "simulators": simulator_results,
+                    "caught_by_both": all(
+                        result["caught"] for result in simulator_results
+                    ),
+                }
+            )
+
     sources = {
         path: sha256_file(ROOT / path)
         for path in sorted(
@@ -335,7 +601,9 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
             VECTOR_DIR / name
         )
 
+    all_mutations_caught = all(item["caught_by_both"] for item in mutations)
     passed = all(case["status"] == "pass" for case in cases)
+    passed = passed and all_mutations_caught
     check_counts = {case["name"]: case["checks"] for case in cases}
     if passed and len({value for value in check_counts.values()}) != 1:
         # Two checkers that print the same marker but ran a different number of
@@ -351,6 +619,16 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
         "simulators_counted": ["iverilog_vvp", "verilator_cpp_executable"],
         "required_marker": marker,
         "checks_per_simulator": check_counts,
+        "mutation_sensitivity": {
+            "policy": (
+                "a mutation is caught only when its modified RTL compiles, "
+                "the checker executes and returns failure, and the baseline "
+                "PASS marker is absent"
+            ),
+            "mutation_count": len(mutations),
+            "all_caught_by_both_simulators": all_mutations_caught,
+            "mutations": mutations,
+        },
         "correlation": {
             "reference": "runtime.sim.device.Device with runtime.sim.engines",
             "engine_policy": vectors["engine_policy"],
@@ -366,6 +644,7 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
             "arith_probe_count": vectors["arith_probe_count"],
             "arith_reference": vectors["arith_reference"],
             "numeric_reference": vectors["numeric_reference"],
+            "vector_rtl_scope": vectors["vector_rtl_scope"],
             "compared": [
                 "every element the functional engine wrote, word for word, in "
                 "the view's own logical order",
@@ -376,7 +655,13 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
                 "failure rather than a pass",
                 "TENSOR.MATMUL output element count and BF16 output saturation "
                 "count, against tensor.output_elements and tensor.saturations",
-                "VECTOR.ADD element count and saturation count",
+                "VECTOR.ADD, CONVERT, SCALE and HADAMARD element counts and "
+                "the saturation counts published where their contracts do",
+                "VECTOR.INDEX_SCORE output count separately from its full "
+                "site-by-head-by-candidate-by-depth vector.elements work count",
+                "VECTOR.COMPRESS/COMPRESS_PROJECT packed KV-then-gate FP32 "
+                "output and VECTOR.MHC/HYPER_CONNECT_POST source/destination "
+                "matrix orientation, result count and vector.elements count",
                 "SELECTION.ARGMAX selected token, vocabulary elements read and "
                 "tie multiplicity, against selection.vocabulary_elements and "
                 "selection.tie_multiplicity",
@@ -399,10 +684,18 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
         "cases": cases,
         "claim_boundary": {
             "establishes": [
-                "the four engine datapaths in rtl/abi3/ produce bit-identical "
-                "results to the functional simulator's engines on every case "
-                "of this vector set, under two independently written checkers "
-                "on two simulators",
+                "the eleven integrated engine opcode pairs in rtl/abi3/ "
+                "produce bit-identical results to the functional simulator's "
+                "engines on every case of this vector set, under two "
+                "independently written checkers on two simulators",
+                "bounded CONVERT, SCALE, HADAMARD, INDEX_SCORE, "
+                "COMPRESS_PROJECT and HYPER_CONNECT_POST RTL agrees in output, "
+                "fault class and architectural counters within the exact "
+                "vector_rtl_scope published beside this claim",
+                "six independent source mutations -- conversion rounding, "
+                "scaling arithmetic, Hadamard normalization, INDEX_SCORE "
+                "ReLU, compressor plane order and MHC matrix orientation -- "
+                "all compile and are rejected by both simulators",
                 "the storage-format decoders are exhaustively correct over "
                 "E4M3FN, E2M1 and E8M0 against the exact Fraction reference",
                 "the sequential contraction contract is reproduced for "
@@ -424,14 +717,14 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
                     "implementation and is not made"
                 ),
                 "fault_position": (
-                    "the functional engine validates a whole operand before it "
-                    "writes anything, and this RTL stops at the first faulting "
-                    "reduction index. Every fault case here is constructed so "
-                    "the first offending element is the first output element, "
-                    "which is where the two orders coincide. A fault later in "
-                    "the walk would leave this RTL's earlier output elements "
-                    "written and the functional engine's destination "
-                    "untouched, and that difference is NOT correlated here"
+                    "the new CONVERT, SCALE, HADAMARD, INDEX_SCORE, "
+                    "COMPRESS_PROJECT and HYPER_CONNECT_POST blocks preflight "
+                    "or buffer the whole bounded operation, and late-poison "
+                    "cases prove their destinations stay untouched. Legacy "
+                    "TENSOR.MATMUL and VECTOR.ADD stop at the first faulting "
+                    "output; their fault cases place the first offender in "
+                    "the first output, so atomicity after a later legacy "
+                    "fault is NOT established"
                 ),
                 "throughput_or_latency": (
                     "the lane computes one multiply-accumulate every five "
@@ -441,10 +734,15 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
                 ),
                 "other_engine_families": (
                     "ATTENTION, ROUTE, REDUCTION, LINK and STATE have no "
-                    "datapath RTL. Twelve of the thirteen VECTOR subopcodes "
-                    "are absent -- RMS_NORM, HEAD_RMS_NORM, ROPE, SILU_MUL, "
-                    "SOFTMAX, CONVERT, SCALE, HADAMARD, SQRT_SOFTPLUS, "
-                    "COMPRESS, INDEX_SCORE and MHC -- and so are "
+                    "datapath in this engine array. SILU_MUL, SOFTMAX and "
+                    "SQRT_SOFTPLUS are wholly absent because their correctly "
+                    "rounded transcendental RTL does not exist; SCALE.SIGMOID, "
+                    "CONVERT block-dequantize/two-output-quantize, "
+                    "COMPRESS_POOL/STATE_UPDATE, MHC_PRE/HEAD, non-unit-scale "
+                    "or non-four-head INDEX_SCORE and trailing-axis SCALE "
+                    "broadcasting are not covered. Standalone RMS_NORM, "
+                    "HEAD_RMS_NORM and ROPE RTL remains outside this integrated "
+                    "campaign. Also absent are "
                     "TENSOR.GROUPED_MATMUL, ROUTED_MATMUL and EMBED_LOOKUP, "
                     "DMA.TRANSFER and FILL, and SELECTION.TOKEN_APPEND. "
                     "SELECTION.SAMPLE has no governed contract on either side"

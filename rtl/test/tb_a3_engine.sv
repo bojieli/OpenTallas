@@ -18,8 +18,8 @@ module tb_a3_engine;
     localparam integer RESULT_WORDS = 40960;
     localparam integer DECODE_WORDS = 16384;
     localparam integer ARITH_WORDS  = 65536;
-    localparam integer ARITH_STRIDE = 8;
-    localparam integer CASE_STRIDE  = 32;
+    localparam integer ARITH_STRIDE = 12;
+    localparam integer CASE_STRIDE  = 80;
     localparam [31:0]  UNWRITTEN    = 32'hdead_beef;
 
     localparam [7:0] ERR_NONE  = 8'd0;
@@ -58,6 +58,40 @@ module tb_a3_engine;
     reg [31:0] cfg_slots = 32'b0;
     reg [31:0] cfg_trailing = 32'b0;
     reg [31:0] cfg_extent = 32'b0;
+    reg [3:0]  cfg_input_valid = 4'b0;
+    reg [1:0]  cfg_output_valid = 2'b0;
+    reg [31:0] cfg_input_dtypes = 32'b0;
+    reg [15:0] cfg_output_dtypes = 16'b0;
+    reg [23:0] cfg_view_ranks = 24'b0;
+    reg [5:0]  cfg_view_scaled = 6'b0;
+    reg        cfg_profile_valid = 1'b0;
+    reg [31:0] cfg_profile_dtypes = 32'b0;
+    reg [7:0]  cfg_rounding_mode = 8'b0;
+    reg [7:0]  cfg_reduction_order = 8'b0;
+    reg        cfg_profile_saturate = 1'b0;
+    reg [7:0]  cfg_nan_policy = 8'b0;
+    reg [31:0] cfg_profile_scale_bits = 32'b0;
+    reg [31:0] cfg_epsilon_bits = 32'b0;
+    reg [31:0] cfg_profile_flags = 32'b0;
+    reg [127:0] cfg_input0_dims = 128'b0;
+    reg [127:0] cfg_input1_dims = 128'b0;
+    reg [127:0] cfg_input2_dims = 128'b0;
+    reg [127:0] cfg_input3_dims = 128'b0;
+    reg [127:0] cfg_output0_dims = 128'b0;
+    reg [127:0] cfg_output1_dims = 128'b0;
+    reg [31:0] cfg_contract_0 = 32'b0;
+    reg [31:0] cfg_contract_1 = 32'b0;
+    reg [31:0] cfg_contract_2 = 32'b0;
+    reg [31:0] cfg_contract_3 = 32'b0;
+    reg [31:0] cfg_contract_4 = 32'b0;
+    reg [31:0] cfg_contract_5 = 32'b0;
+    reg [31:0] cfg_contract_6 = 32'b0;
+    reg [31:0] cfg_contract_7 = 32'b0;
+    reg [3:0]  cfg_aux_valid = 4'b0;
+    reg [31:0] cfg_aux0 = 32'b0;
+    reg [31:0] cfg_aux1 = 32'b0;
+    reg [31:0] cfg_aux2 = 32'b0;
+    reg [31:0] cfg_aux3 = 32'b0;
 
     wire        busy;
     wire        done;
@@ -79,8 +113,12 @@ module tb_a3_engine;
     wire [33:0] probe_result;
     reg  [31:0] arith_a = 32'b0;
     reg  [31:0] arith_b = 32'b0;
+    reg  [31:0] arith_accumulator = 32'b0;
+    reg  [15:0] arith_left_bf16 = 16'b0;
+    reg  [15:0] arith_right_bf16 = 16'b0;
     wire [33:0] arith_add;
     wire [33:0] arith_mul;
+    wire [33:0] arith_product_add;
     wire [18:0] arith_bf16;
 
     ot_a3_engine_top dut (
@@ -100,6 +138,34 @@ module tb_a3_engine;
         .cfg_scale_b_base(cfg_scale_b_base),
         .cfg_slots(cfg_slots), .cfg_trailing(cfg_trailing),
         .cfg_extent(cfg_extent),
+        .cfg_input_valid(cfg_input_valid),
+        .cfg_output_valid(cfg_output_valid),
+        .cfg_input_dtypes(cfg_input_dtypes),
+        .cfg_output_dtypes(cfg_output_dtypes),
+        .cfg_view_ranks(cfg_view_ranks),
+        .cfg_view_scaled(cfg_view_scaled),
+        .cfg_profile_valid(cfg_profile_valid),
+        .cfg_profile_dtypes(cfg_profile_dtypes),
+        .cfg_rounding_mode(cfg_rounding_mode),
+        .cfg_reduction_order(cfg_reduction_order),
+        .cfg_profile_saturate(cfg_profile_saturate),
+        .cfg_nan_policy(cfg_nan_policy),
+        .cfg_profile_scale_bits(cfg_profile_scale_bits),
+        .cfg_epsilon_bits(cfg_epsilon_bits),
+        .cfg_profile_flags(cfg_profile_flags),
+        .cfg_input0_dims(cfg_input0_dims),
+        .cfg_input1_dims(cfg_input1_dims),
+        .cfg_input2_dims(cfg_input2_dims),
+        .cfg_input3_dims(cfg_input3_dims),
+        .cfg_output0_dims(cfg_output0_dims),
+        .cfg_output1_dims(cfg_output1_dims),
+        .cfg_contract_0(cfg_contract_0), .cfg_contract_1(cfg_contract_1),
+        .cfg_contract_2(cfg_contract_2), .cfg_contract_3(cfg_contract_3),
+        .cfg_contract_4(cfg_contract_4), .cfg_contract_5(cfg_contract_5),
+        .cfg_contract_6(cfg_contract_6), .cfg_contract_7(cfg_contract_7),
+        .cfg_aux_valid(cfg_aux_valid),
+        .cfg_aux0(cfg_aux0), .cfg_aux1(cfg_aux1),
+        .cfg_aux2(cfg_aux2), .cfg_aux3(cfg_aux3),
         .busy(busy), .done(done), .error_code(error_code),
         .result_count(result_count), .saturation_count(saturation_count),
         .work_count(work_count), .token(token),
@@ -111,6 +177,10 @@ module tb_a3_engine;
         .probe_result(probe_result),
         .arith_a(arith_a), .arith_b(arith_b),
         .arith_add(arith_add), .arith_mul(arith_mul),
+        .arith_accumulator(arith_accumulator),
+        .arith_left_bf16(arith_left_bf16),
+        .arith_right_bf16(arith_right_bf16),
+        .arith_product_add(arith_product_add),
         .arith_bf16(arith_bf16)
     );
 
@@ -208,6 +278,34 @@ module tb_a3_engine;
             cfg_slots        = record[20];
             cfg_trailing     = record[21];
             cfg_extent       = record[22];
+            cfg_input_valid  = record[32][3:0];
+            cfg_output_valid = record[33][1:0];
+            cfg_input_dtypes = record[34];
+            cfg_output_dtypes = record[35][15:0];
+            cfg_view_ranks = record[36][23:0];
+            cfg_view_scaled = record[37][5:0];
+            cfg_profile_dtypes = record[38];
+            cfg_rounding_mode = record[39][7:0];
+            cfg_reduction_order = record[39][15:8];
+            cfg_profile_valid = record[39][16];
+            cfg_profile_saturate = record[39][17];
+            cfg_nan_policy = record[39][31:24];
+            cfg_input0_dims = {record[43], record[42], record[41], record[40]};
+            cfg_input1_dims = {record[47], record[46], record[45], record[44]};
+            cfg_input2_dims = {record[51], record[50], record[49], record[48]};
+            cfg_input3_dims = {record[55], record[54], record[53], record[52]};
+            cfg_output0_dims = {record[59], record[58], record[57], record[56]};
+            cfg_output1_dims = {record[63], record[62], record[61], record[60]};
+            cfg_contract_0 = record[64]; cfg_contract_1 = record[65];
+            cfg_contract_2 = record[66]; cfg_contract_3 = record[67];
+            cfg_contract_4 = record[68]; cfg_contract_5 = record[69];
+            cfg_contract_6 = record[70]; cfg_contract_7 = record[71];
+            cfg_aux_valid = record[72][3:0];
+            cfg_aux0 = record[73]; cfg_aux1 = record[74];
+            cfg_aux2 = record[75]; cfg_aux3 = record[76];
+            cfg_profile_scale_bits = record[77];
+            cfg_epsilon_bits = record[78];
+            cfg_profile_flags = record[79];
         end
     endtask
 
@@ -328,9 +426,12 @@ module tb_a3_engine;
         for (entry = 0; entry < meta_arith; entry = entry + 1) begin
             arith_a = arith_mem[entry * ARITH_STRIDE];
             arith_b = arith_mem[entry * ARITH_STRIDE + 1];
+            arith_accumulator = arith_mem[entry * ARITH_STRIDE + 8];
+            arith_left_bf16 = arith_mem[entry * ARITH_STRIDE + 9][15:0];
+            arith_right_bf16 = arith_mem[entry * ARITH_STRIDE + 9][31:16];
             #1;
             counted_arith = counted_arith + 1;
-            checks = checks + 3;
+            checks = checks + 4;
             if (arith_add[33:32] !== arith_mem[entry * ARITH_STRIDE + 2][1:0] ||
                 ((arith_mem[entry * ARITH_STRIDE + 2] == 0) &&
                  (arith_add[31:0] !== arith_mem[entry * ARITH_STRIDE + 3]))) begin
@@ -360,6 +461,20 @@ module tb_a3_engine;
                              entry, arith_a, arith_bf16[18:16], arith_bf16[15:0],
                              arith_mem[entry * ARITH_STRIDE + 6],
                              arith_mem[entry * ARITH_STRIDE + 7]);
+            end
+            if (arith_product_add[33:32] !==
+                    arith_mem[entry * ARITH_STRIDE + 10][1:0] ||
+                ((arith_mem[entry * ARITH_STRIDE + 10] == 0) &&
+                 (arith_product_add[31:0] !==
+                    arith_mem[entry * ARITH_STRIDE + 11]))) begin
+                failures = failures + 1;
+                if (failures < 20)
+                    $display("FAIL: product-add %0d acc=%08x lhs=%04x rhs=%04x got %0d:%08x want %0d:%08x",
+                             entry, arith_accumulator, arith_left_bf16,
+                             arith_right_bf16, arith_product_add[33:32],
+                             arith_product_add[31:0],
+                             arith_mem[entry * ARITH_STRIDE + 10],
+                             arith_mem[entry * ARITH_STRIDE + 11]);
             end
         end
 

@@ -76,7 +76,7 @@ passed the whole set until ``matmul_bf16_reduction_order`` and
 from __future__ import annotations
 
 import argparse
-from dataclasses import dataclass, field as dc_field
+from dataclasses import dataclass, field as dc_field, replace as dc_replace
 import hashlib
 import json
 from pathlib import Path
@@ -110,14 +110,22 @@ from runtime.abi3.constants import (  # noqa: E402
     counter_id,
 )
 from runtime.abi3.deployment import Deployment, ObjectSource, Segment  # noqa: E402
-from runtime.abi3.descriptors import LayoutClass, Phase  # noqa: E402
+from runtime.abi3.descriptors import (  # noqa: E402
+    ExtendedDescriptorType,
+    LayoutClass,
+    Phase,
+)
+from runtime.reference.compression import compress_project_bf16  # noqa: E402
 from runtime.abi3.verifier import verify_deployment  # noqa: E402
 from runtime.reference import formats as exact_formats  # noqa: E402
+from runtime.reference.index_score import index_score_bf16  # noqa: E402
+from runtime.reference.vector import hc_post_bf16  # noqa: E402
 from runtime.sim import formats as sim_formats  # noqa: E402
 from runtime.sim.device import Device  # noqa: E402
 from runtime.sim.engines import load_engines  # noqa: E402
 
 OUTPUT_DIR = ROOT / "testdata/compiler/abi3_engine"
+VECTOR_SCHEMA = "opentallas.rtl.abi3_engine_vectors.v2"
 
 READ = int(Permission.READ)
 IMMUTABLE = int(Permission.READ | Permission.IMMUTABLE)
@@ -132,12 +140,12 @@ M1_WORDS = 40960
 M2_WORDS = 4096
 M3_WORDS = 4096
 RESULT_WORDS = 40960
-CASE_WORDS = 4096
+CASE_WORDS = 16384
 DECODE_WORDS = 16384
 ARITH_WORDS = 65536
-ARITH_STRIDE = 8
+ARITH_STRIDE = 12
 META_WORDS = 8
-CASE_STRIDE = 32
+CASE_STRIDE = 80
 
 # Fault codes, transcribed from rtl/abi3/ot_a3_engine_pkg.sv.
 ERR_NONE = 0
@@ -169,6 +177,33 @@ FAULT_SIGNATURES: tuple[tuple[str, int], ...] = (
 
 
 def classify_fault(message: str) -> int:
+    # Selection and VECTOR operands use similar English around non-finites,
+    # but they are different architectural refusals.  Resolve the explicitly
+    # named VECTOR kernels before the legacy generic selection signatures.
+    vector_labels = (
+        "CONVERT source",
+        "SCALE source",
+        "SCALE factor",
+        "HADAMARD source",
+        "INDEX_SCORE query",
+        "INDEX_SCORE key",
+        "INDEX_SCORE head weight",
+        "COMPRESS_PROJECT hidden",
+        "COMPRESS_PROJECT KV projection",
+        "COMPRESS_PROJECT gate projection",
+        "HYPER_CONNECT_POST branch",
+        "HYPER_CONNECT_POST residual",
+        "HYPER_CONNECT_POST post",
+        "HYPER_CONNECT_POST combination",
+    )
+    if any(label in message for label in vector_labels) and (
+        "NaN" in message or "infinite" in message or "infinity" in message
+    ):
+        return ERR_OPERAND_NONFINITE
+    if "qualified transform" in message:
+        return ERR_SHAPE
+    if "SCALE product" in message:
+        return ERR_PRODUCT_RANGE
     for needle, code in FAULT_SIGNATURES:
         if needle in message:
             return code
@@ -211,8 +246,17 @@ def engine_capability() -> Capability:
             "max_nodes": 1,
         },
         numeric_contracts=(
+            "identity_storage_v1",
             "bf16_bf16_fp32_sequential_rne_v1",
             "bf16_add_rne_v1",
+            "bf16_mul_rne_v1",
+            "bf16_scale_rne_v1",
+            "bf16_to_fp32_exact_v1",
+            "fp32_to_bf16_rne_v1",
+            "fp8_e4m3fn_to_bf16_rne_v1",
+            "deepseek_v4_hadamard_128_bf16_v1",
+            "deepseek_v4_index_score_bf16_v1",
+            "deepseek_v4_compress_project_binary32_v1",
             "exact_index_select_v1",
         ),
         engines={
@@ -249,7 +293,10 @@ class Case:
     # Views the RTL reads and the view it must reproduce.
     operand0_view: int
     operand1_view: int = NO_ID
+    operand2_view: int = NO_ID
+    operand3_view: int = NO_ID
     output_view: int = NO_ID
+    output_dtype: int = 0
     prior_view: int = NO_ID
     scale0_object: int = NO_ID
     scale1_object: int = NO_ID
@@ -266,8 +313,22 @@ class Case:
     block_b: int = 0
     block_rows_a: int = 1
     block_rows_b: int = 1
+    #: When present, this literal occupies case-record field 10 instead of a
+    #: scatter prior-image base.  SCALE and INDEX_SCORE use it for scale_bits.
+    scalar_bits: int | None = None
+    #: Human-readable, explicit documentation of every generic case-record
+    #: field repurposed by a bounded VECTOR datapath.
+    rtl_config: dict[str, Any] = dc_field(default_factory=dict)
     expect_admitted: bool = True
     expect_fault: bool = False
+    #: A bounded RTL profile may intentionally refuse a deployment the
+    #: general functional engine accepts (for example CONVERT count 513).
+    #: This is distinct from ``expect_fault``, which describes Device.
+    rtl_expected_fault_code: int | None = None
+    #: Corrupt one independently derived descriptor-admission field while
+    #: retaining the valid deployment and operands.  Every such case must be
+    #: refused with ERR_SHAPE before an operand read or destination write.
+    rtl_descriptor_overrides: dict[str, Any] = dc_field(default_factory=dict)
     #: Scatter only: what the destination held *before* the transaction.  The
     #: post-run contents are read back out of device memory, but the prior ones
     #: cannot be, so they are kept from construction.
@@ -431,6 +492,7 @@ ELEMENT_BYTES = {
     int(DType.BF16): 2,
     int(DType.FP32): 4,
     int(DType.U32): 4,
+    int(DType.U16): 2,
     int(DType.U8): 1,
     int(DType.FP8_E4M3FN): 1,
     int(DType.E8M0_SCALE): 1,
@@ -656,6 +718,643 @@ def vector_add_case(
         expect_fault=expect_fault,
         counter_names=("vector.elements", "vector.saturations"),
     )
+
+
+def _storage_payload(values: np.ndarray, dtype: DType) -> bytes:
+    """Dense row-major bytes for one of the bounded VECTOR case operands."""
+    array = np.ascontiguousarray(values)
+    if dtype == DType.BF16:
+        return array.astype(np.uint16, copy=False).tobytes()
+    if dtype == DType.FP32:
+        if array.dtype == np.uint32:
+            return array.tobytes()
+        return array.astype(np.float32, copy=False).tobytes()
+    if dtype in (DType.FP8_E4M3FN, DType.U8, DType.E8M0_SCALE):
+        return array.astype(np.uint8, copy=False).tobytes()
+    if dtype == DType.U32:
+        return array.astype(np.uint32, copy=False).tobytes()
+    if dtype == DType.U16:
+        return array.astype(np.uint16, copy=False).tobytes()
+    if dtype == DType.MXFP4_E2M1:
+        return pack_nibbles(array)
+    raise SystemExit(f"no bounded VECTOR payload encoder for {dtype.name}")
+
+
+def vector_convert_case(
+    name: str,
+    note: str,
+    capability: Capability,
+    root: Path,
+    *,
+    source: np.ndarray,
+    input_dtype: DType,
+    output_dtype: DType,
+    contract: str,
+    expect_fault: bool = False,
+    rtl_expected_fault_code: int | None = None,
+) -> Case:
+    """Unscaled one-input/one-output VECTOR.CONVERT."""
+    w = Workspace(name, capability, root)
+    dims = list(source.shape)
+    count = int(source.size)
+    source_view = w.const_view(
+        _storage_payload(source, input_dtype), input_dtype, dims, key="view.source"
+    )
+    output_view = w.scratch_view(output_dtype, dims, key="view.out")
+    numeric = w.builder.numeric(
+        contract=contract,
+        input_dtype=input_dtype,
+        output_dtype=output_dtype,
+        key="num.convert",
+    )
+    operator = w.operator(
+        engine_family=Major.VECTOR,
+        engine_sub=int(Vector.CONVERT),
+        inputs=[source_view],
+        outputs=[output_view],
+        numeric_profile_id=numeric,
+        counter_class_id=w.counters(CounterGroup.VECTOR_REDUCTION, "ctr.vector"),
+        source_kernel_id=0,
+        key="op.convert",
+    )
+    deployment = build_program(w, Major.VECTOR, int(Vector.CONVERT), operator)
+    return Case(
+        name=name,
+        note=note,
+        family=int(Major.VECTOR),
+        sub=int(Vector.CONVERT),
+        deployment=deployment,
+        root=root,
+        operand0_view=source_view,
+        output_view=output_view,
+        output_dtype=int(output_dtype),
+        count=count,
+        block_a=int(output_dtype),
+        expect_fault=expect_fault,
+        rtl_expected_fault_code=rtl_expected_fault_code,
+        counter_names=("vector.elements", "vector.saturations"),
+        rtl_config={
+            "covered_form": "unscaled_one_input_one_output",
+            "cfg_block_a": "output_dtype",
+            "output_dtype": int(output_dtype),
+        },
+    )
+
+
+def vector_scale_case(
+    name: str,
+    note: str,
+    capability: Capability,
+    root: Path,
+    *,
+    source: np.ndarray,
+    factors: np.ndarray | None = None,
+    scale_bits: int = 0,
+    expect_fault: bool = False,
+) -> Case:
+    """BF16 VECTOR.SCALE constant or same-shape elementwise form."""
+    w = Workspace(name, capability, root)
+    dims = list(source.shape)
+    count = int(source.size)
+    source_view = w.const_view(
+        _storage_payload(source, DType.BF16), DType.BF16, dims, key="view.source"
+    )
+    if factors is None:
+        factor_view = NO_ID
+        inputs = [source_view]
+        aux0 = 0
+        contract = "bf16_scale_rne_v1"
+    else:
+        if factors.shape != source.shape:
+            raise SystemExit(
+                f"{name}: bounded elementwise SCALE requires a full-shape factor"
+            )
+        factor_view = w.const_view(
+            _storage_payload(factors, DType.BF16),
+            DType.BF16,
+            dims,
+            key="view.factor",
+        )
+        inputs = [source_view, factor_view]
+        aux0 = 1
+        contract = "bf16_mul_rne_v1"
+    output_view = w.scratch_view(DType.BF16, dims, key="view.out")
+    numeric = w.builder.numeric(
+        contract=contract,
+        input_dtype=DType.BF16,
+        second_input_dtype=DType.BF16,
+        output_dtype=DType.BF16,
+        scale_bits=int(scale_bits),
+        key="num.scale",
+    )
+    operator = w.operator(
+        engine_family=Major.VECTOR,
+        engine_sub=int(Vector.SCALE),
+        inputs=inputs,
+        outputs=[output_view],
+        aux=[aux0, NO_ID, NO_ID, NO_ID],
+        numeric_profile_id=numeric,
+        counter_class_id=w.counters(CounterGroup.VECTOR_REDUCTION, "ctr.vector"),
+        source_kernel_id=0,
+        key="op.scale",
+    )
+    deployment = build_program(w, Major.VECTOR, int(Vector.SCALE), operator)
+    return Case(
+        name=name,
+        note=note,
+        family=int(Major.VECTOR),
+        sub=int(Vector.SCALE),
+        deployment=deployment,
+        root=root,
+        operand0_view=source_view,
+        operand1_view=factor_view,
+        output_view=output_view,
+        output_dtype=int(DType.BF16),
+        count=count,
+        block_a=aux0,
+        scalar_bits=int(scale_bits),
+        expect_fault=expect_fault,
+        counter_names=("vector.elements", "vector.saturations"),
+        rtl_config={
+            "covered_form": "constant" if aux0 == 0 else "elementwise_full_shape",
+            "cfg_block_a": "aux_id_0",
+            "aux_id_0": aux0,
+            "cfg_c_base": "scale_bits",
+            "scale_bits": int(scale_bits),
+        },
+    )
+
+
+def vector_hadamard_case(
+    name: str,
+    note: str,
+    capability: Capability,
+    root: Path,
+    *,
+    source: np.ndarray,
+    expect_fault: bool = False,
+    rtl_expected_fault_code: int | None = None,
+) -> Case:
+    w = Workspace(name, capability, root)
+    if source.ndim != 2:
+        raise SystemExit(f"{name}: bounded HADAMARD source must be rank two")
+    rows, width = source.shape
+    source_view = w.const_view(
+        _storage_payload(source, DType.BF16),
+        DType.BF16,
+        [rows, width],
+        key="view.source",
+    )
+    output_view = w.scratch_view(DType.BF16, [rows, width], key="view.out")
+    numeric = w.builder.numeric(
+        contract="deepseek_v4_hadamard_128_bf16_v1",
+        input_dtype=DType.BF16,
+        output_dtype=DType.BF16,
+        key="num.hadamard",
+    )
+    operator = w.operator(
+        engine_family=Major.VECTOR,
+        engine_sub=int(Vector.HADAMARD),
+        inputs=[source_view],
+        outputs=[output_view],
+        numeric_profile_id=numeric,
+        counter_class_id=w.counters(CounterGroup.VECTOR_REDUCTION, "ctr.vector"),
+        source_kernel_id=0,
+        key="op.hadamard",
+    )
+    deployment = build_program(w, Major.VECTOR, int(Vector.HADAMARD), operator)
+    return Case(
+        name=name,
+        note=note,
+        family=int(Major.VECTOR),
+        sub=int(Vector.HADAMARD),
+        deployment=deployment,
+        root=root,
+        operand0_view=source_view,
+        output_view=output_view,
+        output_dtype=int(DType.BF16),
+        rows=int(rows),
+        cols=int(width),
+        count=int(source.size),
+        expect_fault=expect_fault,
+        rtl_expected_fault_code=rtl_expected_fault_code,
+        counter_names=("vector.elements", "vector.saturations"),
+        rtl_config={
+            "covered_form": "normalized_128_point",
+            "maximum_rows": 4,
+            "width": 128,
+        },
+    )
+
+
+def vector_index_score_case(
+    name: str,
+    note: str,
+    capability: Capability,
+    root: Path,
+    *,
+    query: np.ndarray,
+    keys: np.ndarray,
+    weights: np.ndarray,
+    scale_bits: int = 0x3F800000,
+    expect_fault: bool = False,
+) -> Case:
+    w = Workspace(name, capability, root)
+    batch, span, heads, depth = query.shape
+    key_batch, candidates, key_depth = keys.shape
+    if batch != 1 or key_batch != batch or key_depth != depth:
+        raise SystemExit(f"{name}: bounded INDEX_SCORE requires batch one")
+    query_view = w.const_view(
+        _storage_payload(query, DType.BF16),
+        DType.BF16,
+        list(query.shape),
+        key="view.query",
+    )
+    key_view = w.const_view(
+        _storage_payload(keys, DType.BF16),
+        DType.BF16,
+        list(keys.shape),
+        key="view.keys",
+    )
+    weight_view = w.const_view(
+        _storage_payload(weights, DType.BF16),
+        DType.BF16,
+        list(weights.shape),
+        key="view.head_weights",
+    )
+    output_view = w.scratch_view(
+        DType.BF16, [batch, span, candidates], key="view.out"
+    )
+    numeric = w.builder.numeric(
+        contract="deepseek_v4_index_score_bf16_v1",
+        input_dtype=DType.BF16,
+        output_dtype=DType.BF16,
+        scale_bits=int(scale_bits),
+        key="num.index_score",
+    )
+    operator = w.operator(
+        engine_family=Major.VECTOR,
+        engine_sub=int(Vector.INDEX_SCORE),
+        inputs=[query_view, key_view, weight_view],
+        outputs=[output_view],
+        numeric_profile_id=numeric,
+        counter_class_id=w.counters(CounterGroup.VECTOR_REDUCTION, "ctr.vector"),
+        source_kernel_id=0,
+        key="op.index_score",
+    )
+    deployment = build_program(w, Major.VECTOR, int(Vector.INDEX_SCORE), operator)
+    return Case(
+        name=name,
+        note=note,
+        family=int(Major.VECTOR),
+        sub=int(Vector.INDEX_SCORE),
+        deployment=deployment,
+        root=root,
+        operand0_view=query_view,
+        operand1_view=key_view,
+        operand2_view=weight_view,
+        output_view=output_view,
+        output_dtype=int(DType.BF16),
+        rows=int(span),
+        cols=int(candidates),
+        depth=int(depth),
+        count=int(batch * span * candidates),
+        slots=int(heads),
+        scalar_bits=int(scale_bits),
+        expect_fault=expect_fault,
+        counter_names=("vector.elements", "vector.saturations"),
+        rtl_config={
+            "covered_form": "batch1_four_heads_scale_one",
+            "batch": 1,
+            "cfg_rows": "flattened_batch_times_span",
+            "cfg_cols": "candidates",
+            "cfg_depth": "head_dimension",
+            "cfg_slots": "heads",
+            "cfg_c_base": "scale_bits",
+            "scale_bits": int(scale_bits),
+            "cfg_scale_a_base": "operand2_head_weights_base",
+        },
+    )
+
+
+def vector_compress_project_case(
+    name: str,
+    note: str,
+    capability: Capability,
+    root: Path,
+    *,
+    hidden: np.ndarray,
+    kv_weights: np.ndarray,
+    gate_weights: np.ndarray,
+    expect_fault: bool = False,
+) -> Case:
+    w = Workspace(name, capability, root)
+    batch, span, depth = hidden.shape
+    cols, weight_depth = kv_weights.shape
+    if weight_depth != depth or gate_weights.shape != kv_weights.shape:
+        raise SystemExit(f"{name}: compressor projection shapes disagree")
+    hidden_view = w.const_view(
+        _storage_payload(hidden, DType.BF16),
+        DType.BF16,
+        list(hidden.shape),
+        key="view.hidden",
+    )
+    kv_view = w.const_view(
+        _storage_payload(kv_weights, DType.BF16),
+        DType.BF16,
+        list(kv_weights.shape),
+        key="view.kv_weights",
+    )
+    gate_view = w.const_view(
+        _storage_payload(gate_weights, DType.BF16),
+        DType.BF16,
+        list(gate_weights.shape),
+        key="view.gate_weights",
+    )
+    output_view = w.scratch_view(
+        DType.FP32, [batch, span, 2, cols], key="view.out"
+    )
+    numeric = w.builder.numeric(
+        contract="deepseek_v4_compress_project_binary32_v1",
+        input_dtype=DType.BF16,
+        output_dtype=DType.FP32,
+        reduction_order=ReductionOrder.SEQUENTIAL_ASCENDING,
+        key="num.compress_project",
+    )
+    operator = w.operator(
+        engine_family=Major.VECTOR,
+        engine_sub=int(Vector.COMPRESS),
+        inputs=[hidden_view, kv_view, gate_view],
+        outputs=[output_view],
+        aux=[0, NO_ID, NO_ID, NO_ID],
+        numeric_profile_id=numeric,
+        counter_class_id=w.counters(CounterGroup.VECTOR_REDUCTION, "ctr.vector"),
+        source_kernel_id=0,
+        key="op.compress_project",
+    )
+    deployment = build_program(w, Major.VECTOR, int(Vector.COMPRESS), operator)
+    rows = int(batch * span)
+    return Case(
+        name=name,
+        note=note,
+        family=int(Major.VECTOR),
+        sub=int(Vector.COMPRESS),
+        deployment=deployment,
+        root=root,
+        operand0_view=hidden_view,
+        operand1_view=kv_view,
+        operand2_view=gate_view,
+        output_view=output_view,
+        output_dtype=int(DType.FP32),
+        rows=rows,
+        cols=int(cols),
+        depth=int(depth),
+        count=rows * 2 * int(cols),
+        block_a=0,
+        expect_fault=expect_fault,
+        counter_names=("vector.elements", "vector.saturations"),
+        rtl_config={
+            "covered_form": "COMPRESS_PROJECT",
+            "cfg_block_a": "aux_id_0",
+            "aux_id_0": 0,
+            "cfg_rows": "flattened_batch_times_span",
+            "cfg_scale_a_base": "operand2_gate_weights_base",
+            "projection_order": "kv_then_gate",
+        },
+    )
+
+
+def vector_mhc_post_case(
+    name: str,
+    note: str,
+    capability: Capability,
+    root: Path,
+    *,
+    branch: np.ndarray,
+    residual: np.ndarray,
+    post: np.ndarray,
+    combination: np.ndarray,
+    expect_fault: bool = False,
+) -> Case:
+    w = Workspace(name, capability, root)
+    batch, span, hidden = branch.shape
+    multiplier = int(residual.shape[2])
+    branch_view = w.const_view(
+        _storage_payload(branch, DType.BF16),
+        DType.BF16,
+        list(branch.shape),
+        key="view.branch",
+    )
+    residual_view = w.const_view(
+        _storage_payload(residual, DType.BF16),
+        DType.BF16,
+        list(residual.shape),
+        key="view.residual",
+    )
+    post_view = w.const_view(
+        _storage_payload(post, DType.FP32),
+        DType.FP32,
+        list(post.shape),
+        key="view.post",
+    )
+    combination_view = w.const_view(
+        _storage_payload(combination, DType.FP32),
+        DType.FP32,
+        list(combination.shape),
+        key="view.combination",
+    )
+    output_view = w.scratch_view(
+        DType.BF16, list(residual.shape), key="view.out"
+    )
+    operator = w.operator(
+        engine_family=Major.VECTOR,
+        engine_sub=int(Vector.MHC),
+        inputs=[branch_view, residual_view, post_view, combination_view],
+        outputs=[output_view],
+        aux=[1, NO_ID, multiplier, NO_ID],
+        counter_class_id=w.counters(CounterGroup.VECTOR_REDUCTION, "ctr.vector"),
+        source_kernel_id=0,
+        key="op.mhc_post",
+    )
+    deployment = build_program(w, Major.VECTOR, int(Vector.MHC), operator)
+    sites = int(batch * span)
+    return Case(
+        name=name,
+        note=note,
+        family=int(Major.VECTOR),
+        sub=int(Vector.MHC),
+        deployment=deployment,
+        root=root,
+        operand0_view=branch_view,
+        operand1_view=residual_view,
+        operand2_view=post_view,
+        operand3_view=combination_view,
+        output_view=output_view,
+        output_dtype=int(DType.BF16),
+        rows=sites,
+        cols=int(hidden),
+        count=int(residual.size),
+        slots=multiplier,
+        block_a=1,
+        block_b=multiplier,
+        expect_fault=expect_fault,
+        counter_names=("vector.elements", "vector.saturations"),
+        rtl_config={
+            "covered_form": "HYPER_CONNECT_POST",
+            "cfg_block_a": "aux_id_0",
+            "aux_id_0": 1,
+            "cfg_block_b": "aux_id_2",
+            "aux_id_2": multiplier,
+            "cfg_slots": "multiplier",
+            "cfg_scale_a_base": "operand2_post_base",
+            "cfg_scale_b_base": "operand3_combination_base",
+            "combination_order": "source_then_destination",
+        },
+    )
+
+
+def _rtl_negative_cases(positive: dict[str, Case]) -> list[Case]:
+    """Descriptor-corruption matrix for every bounded VECTOR admission rule."""
+    specs: list[tuple[str, str, str, dict[str, Any]]] = [
+        # CONVERT: arity, scaling, shape identity, output dtype and bound.
+        ("convert_extra_input", "convert", "second input is forbidden",
+         {"input_valid": 0b0011}),
+        ("convert_extra_output", "convert", "second output is forbidden",
+         {"output_valid": 0b11}),
+        ("convert_scaled_source", "convert", "source must be unscaled",
+         {"input0_scaled": 1}),
+        ("convert_scaled_output", "convert", "output must be unscaled",
+         {"output0_scaled": 1}),
+        ("convert_same_count_different_shape", "convert",
+         "equal element counts do not prove equal shapes",
+         {"output0_dims": (2, 3, 0, 0)}),
+        ("convert_wrong_output_dtype", "convert", "output dtype is checked",
+         {"output0_dtype": int(DType.BF16)}),
+        ("convert_profile_mismatch", "convert", "profile dtype is checked",
+         {"profile_output_dtype": int(DType.BF16)}),
+        ("convert_non_rne", "convert", "rounding mode is checked",
+         {"rounding_mode": 1}),
+        ("convert_wrong_contract", "convert", "contract digest is checked",
+         {"contract_digest": bytes(32)}),
+        # SCALE: exact arity and complete shape/profile correlation.
+        ("scale_constant_extra_operand", "scale_constant",
+         "constant scale has one input", {"input_valid": 0b0011}),
+        ("scale_elementwise_missing_operand", "scale_elementwise",
+         "elementwise scale requires input 1", {"input_valid": 0b0001}),
+        ("scale_trailing_broadcast", "scale_elementwise",
+         "bounded RTL excludes trailing broadcast",
+         {"input1_rank": 1, "input1_dims": (8, 0, 0, 0)}),
+        ("scale_same_count_different_factor_shape", "scale_elementwise",
+         "same count is not the same full shape",
+         {"input1_dims": (8, 3, 0, 0)}),
+        ("scale_wrong_output_dtype", "scale_constant", "output dtype is checked",
+         {"output0_dtype": int(DType.FP32)}),
+        ("scale_profile_input_mismatch", "scale_constant",
+         "numeric input dtype is checked", {"profile_input_dtype": int(DType.FP32)}),
+        ("scale_profile_second_mismatch", "scale_elementwise",
+         "numeric second dtype is checked",
+         {"profile_second_dtype": int(DType.FP32)}),
+        ("scale_profile_output_mismatch", "scale_constant",
+         "numeric output dtype is checked",
+         {"profile_output_dtype": int(DType.FP32)}),
+        ("scale_profile_accumulator_mismatch", "scale_constant",
+         "numeric accumulator dtype is checked",
+         {"profile_accumulator_dtype": int(DType.BF16)}),
+        ("scale_profile_saturate", "scale_constant",
+         "numeric saturate control is checked", {"profile_saturate": 1}),
+        ("scale_profile_nan_policy", "scale_constant",
+         "numeric NaN policy is checked", {"profile_nan_policy": 1}),
+        ("scale_profile_epsilon", "scale_constant",
+         "numeric epsilon is checked", {"profile_epsilon_bits": 1}),
+        ("scale_profile_flags", "scale_constant",
+         "numeric flags are checked", {"profile_flags": 1}),
+        ("scale_non_rne", "scale_constant", "rounding mode is checked",
+         {"rounding_mode": 1}),
+        ("scale_wrong_contract", "scale_constant", "contract digest is checked",
+         {"contract_digest": bytes(32)}),
+        # HADAMARD: dtype/profile/rank/bounds.
+        ("hadamard_wrong_output_dtype", "hadamard", "output dtype is checked",
+         {"output0_dtype": int(DType.FP32)}),
+        ("hadamard_profile_mismatch", "hadamard", "profile dtype is checked",
+         {"profile_output_dtype": int(DType.FP32)}),
+        ("hadamard_non_rne", "hadamard", "rounding mode is checked",
+         {"rounding_mode": 1}),
+        ("hadamard_rank_mismatch", "hadamard", "output rank is checked",
+         {"output0_rank": 1, "output0_dims": (128, 0, 0, 0)}),
+        ("hadamard_wrong_contract", "hadamard", "contract digest is checked",
+         {"contract_digest": bytes(32)}),
+        # INDEX: all operand dtypes, output, batch/head/scale/rank/relations.
+        ("index_wrong_operand2_dtype", "index", "head-weight dtype is checked",
+         {"input2_dtype": int(DType.FP32)}),
+        ("index_wrong_output_dtype", "index", "output dtype is checked",
+         {"output0_dtype": int(DType.FP32)}),
+        ("index_profile_mismatch", "index", "profile dtype is checked",
+         {"profile_input_dtype": int(DType.FP32)}),
+        ("index_non_rne", "index", "rounding mode is checked",
+         {"rounding_mode": 1}),
+        ("index_non_unit_scale", "index", "scale one is checked",
+         {"profile_scale_bits": 0x3F000000}),
+        ("index_batch_two_flattened_rows", "index",
+         "batch two cannot hide in a legal flattened row count",
+         {"input0_dims": (2, 1, 4, 2), "input1_dims": (2, 1, 2, 0),
+          "input2_dims": (2, 1, 4, 0), "output0_dims": (2, 1, 1, 0)}),
+        ("index_wrong_head_count", "index", "four heads are required",
+         {"input0_dims": (1, 1, 3, 2), "input2_dims": (1, 1, 3, 0)}),
+        ("index_rank_mismatch", "index", "query rank is checked",
+         {"input0_rank": 3, "input0_dims": (1, 4, 2, 0)}),
+        ("index_key_shape_mismatch", "index", "key depth relation is checked",
+         {"input1_dims": (1, 1, 3, 0)}),
+        ("index_wrong_contract", "index", "contract digest is checked",
+         {"contract_digest": bytes(32)}),
+        # COMPRESS: operand/output dtype, profile/order, aux and projections.
+        ("compress_wrong_operand2_dtype", "compress", "gate dtype is checked",
+         {"input2_dtype": int(DType.FP32)}),
+        ("compress_wrong_output_dtype", "compress", "output dtype is checked",
+         {"output0_dtype": int(DType.BF16)}),
+        ("compress_profile_mismatch", "compress", "profile dtype is checked",
+         {"profile_output_dtype": int(DType.BF16)}),
+        ("compress_non_rne", "compress", "rounding mode is checked",
+         {"rounding_mode": 1}),
+        ("compress_nonsequential", "compress", "reduction order is checked",
+         {"reduction_order": 1}),
+        ("compress_aux1", "compress", "aux1 must be absent",
+         {"aux_valid": 0b0011, "aux1": 4}),
+        ("compress_aux2", "compress", "aux2 must be absent",
+         {"aux_valid": 0b0101, "aux2": 4}),
+        ("compress_projection_shape", "compress",
+         "projection depths must match hidden", {"input2_dims": (2, 3, 0, 0)}),
+        ("compress_wrong_contract", "compress", "contract digest is checked",
+         {"contract_digest": bytes(32)}),
+        # MHC_POST: operand/output dtypes, aux/multiplier, ranks and relations.
+        ("mhc_wrong_operand2_dtype", "mhc", "post dtype is checked",
+         {"input2_dtype": int(DType.BF16)}),
+        ("mhc_wrong_operand3_dtype", "mhc", "combination dtype is checked",
+         {"input3_dtype": int(DType.BF16)}),
+        ("mhc_wrong_output_dtype", "mhc", "output dtype is checked",
+         {"output0_dtype": int(DType.FP32)}),
+        ("mhc_wrong_aux0", "mhc", "POST selector is checked", {"aux0": 0}),
+        ("mhc_missing_aux2", "mhc", "multiplier aux is required",
+         {"aux_valid": 0b0001, "aux2": NO_ID}),
+        ("mhc_wrong_multiplier", "mhc", "multiplier four is checked",
+         {"aux2": 3}),
+        ("mhc_rank_mismatch", "mhc", "residual rank is checked",
+         {"input1_rank": 3, "input1_dims": (1, 1, 20, 0)}),
+        ("mhc_shape_mismatch", "mhc", "post shape relation is checked",
+         {"input2_dims": (1, 1, 3, 0)}),
+        ("mhc_wrong_contract", "mhc", "contract digest is checked",
+         {"contract_digest": bytes(32)}),
+    ]
+    cases: list[Case] = []
+    for suffix, base_name, note, overrides in specs:
+        base = positive[base_name]
+        cases.append(dc_replace(
+            base,
+            name=f"vector_descriptor_refusal_{suffix}",
+            note=f"fail-closed descriptor admission: {note}",
+            rtl_expected_fault_code=ERR_SHAPE,
+            rtl_descriptor_overrides=overrides,
+        ))
+    return cases
 
 
 def selection_case(
@@ -1277,6 +1976,536 @@ def build_cases(capability: Capability, root: Path) -> list[Case]:
         payload_codes=random_bf16(rng, (6, 4)), prior_codes=prior,
         expect_fault=True,
     ))
+
+    # -- VECTOR.CONVERT, unscaled one-input/one-output ------------------
+    cases.append(vector_convert_case(
+        "vector_convert_bf16_to_fp32",
+        "exact BF16 widening, including both signed-zero encodings and a "
+        "subnormal; storage conversion must not inherit the arithmetic "
+        "decoder's positive-zero canonicalisation",
+        capability,
+        root,
+        source=np.array(
+            [[0x3F80, 0xBF80, 0x0000, 0x8000, 0x3F81, 0x0001]],
+            dtype=np.uint16,
+        ),
+        input_dtype=DType.BF16,
+        output_dtype=DType.FP32,
+        contract="bf16_to_fp32_exact_v1",
+    ))
+    cases.append(vector_convert_case(
+        "vector_convert_fp32_to_bf16_rounding",
+        "binary32-to-BF16 ties-to-even, ordinary rounding and a finite value "
+        "that saturates at the BF16 storage boundary",
+        capability,
+        root,
+        source=np.array(
+            [[0x3F808000, 0x3F818000, 0xBF808001, 0x7F7F8000]],
+            dtype=np.uint32,
+        ),
+        input_dtype=DType.FP32,
+        output_dtype=DType.BF16,
+        contract="fp32_to_bf16_rne_v1",
+    ))
+    cases.append(vector_convert_case(
+        "vector_convert_fp8_to_bf16",
+        "E4M3FN codes widen through the exhaustive format decoder and cross "
+        "one BF16 boundary",
+        capability,
+        root,
+        source=np.array([[0x00, 0x01, 0x38, 0x40, 0x7E, 0xB8]], dtype=np.uint8),
+        input_dtype=DType.FP8_E4M3FN,
+        output_dtype=DType.BF16,
+        contract="fp8_e4m3fn_to_bf16_rne_v1",
+    ))
+    convert_poison = np.array(
+        [[0x3F800000, 0x40000000, 0xBF000000, 0x7F800000]], dtype=np.uint32
+    )
+    cases.append(vector_convert_case(
+        "vector_convert_late_nonfinite",
+        "the final binary32 source is infinity: the complete preflight must "
+        "leave every earlier destination word untouched",
+        capability,
+        root,
+        source=convert_poison,
+        input_dtype=DType.FP32,
+        output_dtype=DType.BF16,
+        contract="fp32_to_bf16_rne_v1",
+        expect_fault=True,
+    ))
+    # The general Device legitimately supports this view, while the bounded
+    # RTL profile is explicitly 1..512.  Keep the Device execution successful
+    # and require the RTL's independent MAX_ELEMENTS gate to refuse it.
+    cases.append(vector_convert_case(
+        "vector_convert_count_513_refused_by_rtl",
+        "one element beyond the bounded RTL profile is refused before any "
+        "destination word is written",
+        capability,
+        root,
+        source=np.arange(513, dtype=np.uint16).reshape(3, 171),
+        input_dtype=DType.U16,
+        output_dtype=DType.U16,
+        contract="identity_storage_v1",
+        rtl_expected_fault_code=ERR_SHAPE,
+    ))
+
+    # -- VECTOR.SCALE, constant and same-shape elementwise --------------
+    cases.append(vector_scale_case(
+        "vector_scale_constant_eighth",
+        "BF16 values multiplied by the profile's exact binary32 0.125 "
+        "constant, with one binary32 product and one BF16 rounding",
+        capability,
+        root,
+        source=random_bf16(rng, (3, 9), scale=2.0),
+        scale_bits=0x3E000000,
+    ))
+    cases.append(vector_scale_case(
+        "vector_scale_constant_zero",
+        "a zero scale remains the constant-scale sub-case because aux0, not "
+        "scale_bits, selects the operation",
+        capability,
+        root,
+        source=random_bf16(rng, (2, 7), scale=3.0),
+        scale_bits=0,
+    ))
+    cases.append(vector_scale_case(
+        "vector_scale_elementwise",
+        "same-shape BF16 factors exercise signed products, cancellation and "
+        "the elementwise aux0 selector",
+        capability,
+        root,
+        source=random_bf16(rng, (3, 8), scale=2.0),
+        factors=random_bf16(rng, (3, 8), scale=0.75),
+    ))
+    cases.append(vector_scale_case(
+        "vector_scale_saturating",
+        "finite binary32 products beyond the BF16 range saturate and are "
+        "counted instead of being mistaken for arithmetic overflow",
+        capability,
+        root,
+        source=np.array([[0x7F7F, 0xFF7F, 0x3F80, 0xBF80]], dtype=np.uint16),
+        scale_bits=0x3F804040,
+    ))
+    scale_poison = random_bf16(rng, (2, 8))
+    scale_poison[-1, -1] = 0x7F80
+    cases.append(vector_scale_case(
+        "vector_scale_late_nonfinite",
+        "a BF16 infinity in the final source position proves that buffered "
+        "SCALE does not commit its valid prefix",
+        capability,
+        root,
+        source=scale_poison,
+        scale_bits=0x3F000000,
+        expect_fault=True,
+    ))
+    cases.append(vector_scale_case(
+        "vector_scale_late_nonfinite_after_saturation",
+        "the first finite result saturates but the final source is infinity; "
+        "the refusal exposes neither writes nor the speculative saturation",
+        capability,
+        root,
+        source=np.array([[0x7F7F, 0x3F80, 0x7F80]], dtype=np.uint16),
+        scale_bits=0x3F808000,
+        expect_fault=True,
+    ))
+
+    # -- VECTOR.HADAMARD, qualified 128-point transform -----------------
+    cases.append(vector_hadamard_case(
+        "vector_hadamard_random_rows",
+        "two seeded 128-wide BF16 rows cover every ascending-stride "
+        "butterfly stage and the exact 1/sqrt(128) normalisation",
+        capability,
+        root,
+        source=random_bf16(rng, (2, 128), scale=0.5),
+    ))
+    hadamard_directed = np.zeros((1, 128), dtype=np.uint16)
+    hadamard_directed[0, :8] = np.array(
+        [0x3F80, 0xBF80, 0x4000, 0xC000, 0x4080, 0xBF00, 0x3E80, 0x8000],
+        dtype=np.uint16,
+    )
+    cases.append(vector_hadamard_case(
+        "vector_hadamard_directed",
+        "an impulse-and-cancellation row makes butterfly signs, zero "
+        "canonicalisation and the normalisation constant independently visible",
+        capability,
+        root,
+        source=hadamard_directed,
+    ))
+    cases.append(vector_hadamard_case(
+        "vector_hadamard_wrong_width",
+        "a 64-point row is not silently treated as half a qualified transform",
+        capability,
+        root,
+        source=random_bf16(rng, (1, 64), scale=0.5),
+        expect_fault=True,
+    ))
+    hadamard_poison = random_bf16(rng, (2, 128), scale=0.5)
+    hadamard_poison[-1, -1] = 0x7FC0
+    cases.append(vector_hadamard_case(
+        "vector_hadamard_late_nonfinite",
+        "a NaN in the final element is found during the load preflight before "
+        "any transformed row is committed",
+        capability,
+        root,
+        source=hadamard_poison,
+        expect_fault=True,
+    ))
+    cases.append(vector_hadamard_case(
+        "vector_hadamard_five_rows_refused_by_rtl",
+        "one row above the bounded four-row profile is refused",
+        capability,
+        root,
+        source=random_bf16(rng, (5, 128), scale=0.25),
+        rtl_expected_fault_code=ERR_SHAPE,
+    ))
+
+    # -- VECTOR.INDEX_SCORE, batch one / four heads / scale one ----------
+    cases.append(vector_index_score_case(
+        "vector_index_score_seeded",
+        "the functional-test shape: two sites, four heads, five candidates "
+        "and eight head channels, with every intermediate BF16 boundary",
+        capability,
+        root,
+        query=random_bf16(rng, (1, 2, 4, 8), scale=1.5),
+        keys=random_bf16(rng, (1, 5, 8), scale=1.25),
+        weights=random_bf16(rng, (1, 2, 4), scale=2.0),
+    ))
+    directed_query = np.zeros((1, 1, 4, 4), dtype=np.uint16)
+    directed_query[0, 0, :, 0] = np.array(
+        [0x3F80, 0xBF80, 0x4000, 0xC000], dtype=np.uint16
+    )
+    directed_keys = np.zeros((1, 3, 4), dtype=np.uint16)
+    directed_keys[0, :, 0] = np.array([0x3F80, 0xBF80, 0x4000], dtype=np.uint16)
+    directed_weights = np.array(
+        [[[0x3F80, 0xC000, 0x4000, 0xBF00]]], dtype=np.uint16
+    )
+    cases.append(vector_index_score_case(
+        "vector_index_score_relu_tree",
+        "directed positive and negative head dots expose the post-rounding "
+        "ReLU and the balanced four-head reduction",
+        capability,
+        root,
+        query=directed_query,
+        keys=directed_keys,
+        weights=directed_weights,
+    ))
+    fused_index_query = np.zeros((1, 1, 4, 2), dtype=np.uint16)
+    fused_index_query[0, 0, 0] = np.array([0x2A7E, 0x1B83], dtype=np.uint16)
+    fused_index_weights = np.zeros((1, 1, 4), dtype=np.uint16)
+    fused_index_weights[0, 0, 0] = 0x3F80
+    cases.append(vector_index_score_case(
+        "vector_index_score_exact_product_add",
+        "the low exact-product bits of the second depth step round the head "
+        "dot to 0x02be8001 and therefore BF16 0x02bf; a multiply-then-add "
+        "implementation instead produces BF16 0x02be",
+        capability,
+        root,
+        query=fused_index_query,
+        keys=np.array([[[0x17C0, 0x1A83]]], dtype=np.uint16),
+        weights=fused_index_weights,
+    ))
+    index_weighted_sat_query = np.zeros((1, 1, 4, 1), dtype=np.uint16)
+    index_weighted_sat_query[0, 0, 0, 0] = 0x7F7E
+    index_weighted_sat_weights = np.zeros((1, 1, 4), dtype=np.uint16)
+    index_weighted_sat_weights[0, 0, 0] = 0x3F81
+    cases.append(vector_index_score_case(
+        "vector_index_score_weighted_saturation",
+        "a finite weighted head score crosses the BF16 boundary and must "
+        "increment the architectural vector.saturations event",
+        capability,
+        root,
+        query=index_weighted_sat_query,
+        keys=np.array([[[0x3F80]]], dtype=np.uint16),
+        weights=index_weighted_sat_weights,
+    ))
+    index_qk_sat_query = np.zeros((1, 1, 4, 2), dtype=np.uint16)
+    index_qk_sat_query[0, 0, 0] = np.array([0x7F7F, 0x7B00], dtype=np.uint16)
+    index_qk_sat_weights = np.zeros((1, 1, 4), dtype=np.uint16)
+    index_qk_sat_weights[0, 0, 0] = 0x3F80
+    cases.append(vector_index_score_case(
+        "vector_index_score_qk_saturation",
+        "the ordered QK dot remains finite but its BF16 boundary saturates "
+        "and increments vector.saturations",
+        capability,
+        root,
+        query=index_qk_sat_query,
+        keys=np.array([[[0x3F80, 0x3F80]]], dtype=np.uint16),
+        weights=index_qk_sat_weights,
+    ))
+    index_output_sat_query = np.zeros((1, 1, 4, 1), dtype=np.uint16)
+    index_output_sat_query[0, 0, 0, 0] = 0x7F7F
+    index_output_sat_query[0, 0, 1, 0] = 0x7B00
+    index_output_sat_weights = np.zeros((1, 1, 4), dtype=np.uint16)
+    index_output_sat_weights[0, 0, :2] = 0x3F80
+    cases.append(vector_index_score_case(
+        "vector_index_score_output_saturation",
+        "the balanced head sum remains binary32-finite but the final BF16 "
+        "output boundary saturates and increments vector.saturations",
+        capability,
+        root,
+        query=index_output_sat_query,
+        keys=np.array([[[0x3F80]]], dtype=np.uint16),
+        weights=index_output_sat_weights,
+    ))
+    index_query = random_bf16(rng, (1, 2, 4, 8))
+    index_keys = random_bf16(rng, (1, 5, 8))
+    index_keys[-1, -1, -1] = 0x7F80
+    cases.append(vector_index_score_case(
+        "vector_index_score_late_nonfinite",
+        "the last key channel is infinity; the three-operand preflight leaves "
+        "all site/candidate scores untouched",
+        capability,
+        root,
+        query=index_query,
+        keys=index_keys,
+        weights=random_bf16(rng, (1, 2, 4)),
+        expect_fault=True,
+    ))
+
+    # -- VECTOR.COMPRESS / COMPRESS_PROJECT -----------------------------
+    cases.append(vector_compress_project_case(
+        "vector_compress_project_seeded",
+        "three hidden rows project into distinct KV and gate planes under "
+        "strictly ascending reduction order",
+        capability,
+        root,
+        hidden=random_bf16(rng, (1, 3, 8), scale=1.5),
+        kv_weights=random_bf16(rng, (5, 8), scale=0.75),
+        gate_weights=random_bf16(rng, (5, 8), scale=1.25),
+    ))
+    compress_hidden = np.array(
+        [[[0x3F80, 0x4F00, 0x4F00, 0x4000]]], dtype=np.uint16
+    )
+    compress_kv = np.array(
+        [[0x3F80, 0x4F00, 0xCF00, 0x0000],
+         [0x4000, 0x3F80, 0xBF80, 0x3F00]],
+        dtype=np.uint16,
+    )
+    compress_gate = np.array(
+        [[0xBF80, 0x3F00, 0x3F00, 0x4000],
+         [0x4040, 0xBF80, 0x3F80, 0xBF00]],
+        dtype=np.uint16,
+    )
+    cases.append(vector_compress_project_case(
+        "vector_compress_project_order",
+        "catastrophic cancellation makes ascending reduction visible while "
+        "deliberately different matrices make KV-then-gate plane order visible",
+        capability,
+        root,
+        hidden=compress_hidden,
+        kv_weights=compress_kv,
+        gate_weights=compress_gate,
+    ))
+    cases.append(vector_compress_project_case(
+        "vector_compress_project_exact_product_add",
+        "a depth-two projection whose exact-product single-rounded result is "
+        "0x0131b843; rounding the second product before adding produces the "
+        "adjacent but incorrect 0x0131b842",
+        capability,
+        root,
+        hidden=np.array([[[0xBFED, 0x8483]]], dtype=np.uint16),
+        kv_weights=np.array([[0x80C0, 0x35F2]], dtype=np.uint16),
+        gate_weights=np.zeros((1, 2), dtype=np.uint16),
+    ))
+    compress_gate_poison = random_bf16(rng, (4, 8))
+    compress_gate_poison[-1, -1] = 0x7FC0
+    cases.append(vector_compress_project_case(
+        "vector_compress_project_late_nonfinite",
+        "a NaN in the final gate-weight element is rejected before either "
+        "projection plane is committed",
+        capability,
+        root,
+        hidden=random_bf16(rng, (1, 2, 8)),
+        kv_weights=random_bf16(rng, (4, 8)),
+        gate_weights=compress_gate_poison,
+        expect_fault=True,
+    ))
+
+    # -- VECTOR.MHC / HYPER_CONNECT_POST --------------------------------
+    mhc_branch = random_bf16(rng, (1, 2, 6), scale=1.25)
+    mhc_residual = random_bf16(rng, (1, 2, 4, 6), scale=1.5)
+    mhc_post = rng.uniform(0.0, 2.0, size=(1, 2, 4)).astype(np.float32)
+    mhc_combination = rng.uniform(-1.0, 1.0, size=(1, 2, 4, 4)).astype(np.float32)
+    cases.append(vector_mhc_post_case(
+        "vector_mhc_post_seeded",
+        "two sites and four streams exercise the branch product, every "
+        "combination coefficient and the balanced residual tree",
+        capability,
+        root,
+        branch=mhc_branch,
+        residual=mhc_residual,
+        post=mhc_post,
+        combination=mhc_combination,
+    ))
+    directed_combination = np.array(
+        [[[[1.0, 2.0, 3.0, 4.0],
+           [-0.5, 0.25, 1.5, -2.0],
+           [0.75, -1.25, 0.5, 2.5],
+           [3.0, 0.125, -0.75, 1.25]]]],
+        dtype=np.float32,
+    )
+    cases.append(vector_mhc_post_case(
+        "vector_mhc_post_matrix_order",
+        "a nonsymmetric combination matrix distinguishes architectural "
+        "comb[source][destination] addressing from its transpose",
+        capability,
+        root,
+        branch=random_bf16(rng, (1, 1, 5)),
+        residual=random_bf16(rng, (1, 1, 4, 5), scale=1.25),
+        post=np.array([[[0.25, 0.5, 0.75, 1.0]]], dtype=np.float32),
+        combination=directed_combination,
+    ))
+    cases.append(vector_mhc_post_case(
+        "vector_mhc_post_output_saturation",
+        "one finite post-scaled branch crosses the BF16 output boundary; the "
+        "output saturates to 0x7f7f and vector.saturations increments once",
+        capability,
+        root,
+        branch=np.array([[[0x7F7F]]], dtype=np.uint16),
+        residual=np.zeros((1, 1, 4, 1), dtype=np.uint16),
+        post=np.array(
+            [[[0x3F808000, 0x00000000, 0x00000000, 0x00000000]]],
+            dtype=np.uint32,
+        ),
+        combination=np.zeros((1, 1, 4, 4), dtype=np.uint32),
+    ))
+    mhc_combination_poison = rng.uniform(
+        -1.0, 1.0, size=(1, 2, 4, 4)
+    ).astype(np.float32)
+    mhc_combination_poison[-1, -1, -1, -1] = np.nan
+    cases.append(vector_mhc_post_case(
+        "vector_mhc_post_late_nonfinite",
+        "the last combination coefficient is NaN; four-operand preflight "
+        "must preserve the entire residual-shaped destination",
+        capability,
+        root,
+        branch=random_bf16(rng, (1, 2, 6)),
+        residual=random_bf16(rng, (1, 2, 4, 6)),
+        post=rng.uniform(0.0, 1.0, size=(1, 2, 4)).astype(np.float32),
+        combination=mhc_combination_poison,
+        expect_fault=True,
+    ))
+
+    # One-above-bound cases use otherwise valid descriptors and operands.  The
+    # general Device can execute them; only the explicitly bounded RTL profile
+    # must refuse them, before reading or writing anything.
+    cases.append(dc_replace(vector_scale_case(
+        "vector_scale_count_513_refused_by_rtl",
+        "one element above SCALE's bounded element count",
+        capability,
+        root,
+        source=random_bf16(rng, (513,), scale=0.25),
+        scale_bits=0x3F800000,
+    ), rtl_expected_fault_code=ERR_SHAPE))
+    cases.append(dc_replace(vector_index_score_case(
+        "vector_index_score_span_5_refused_by_rtl",
+        "one site above INDEX_SCORE's bounded site count",
+        capability,
+        root,
+        query=random_bf16(rng, (1, 5, 4, 2), scale=0.25),
+        keys=random_bf16(rng, (1, 1, 2), scale=0.25),
+        weights=random_bf16(rng, (1, 5, 4), scale=0.25),
+    ), rtl_expected_fault_code=ERR_SHAPE))
+    cases.append(dc_replace(vector_index_score_case(
+        "vector_index_score_candidates_9_refused_by_rtl",
+        "one candidate above INDEX_SCORE's bounded candidate count",
+        capability,
+        root,
+        query=random_bf16(rng, (1, 1, 4, 2), scale=0.25),
+        keys=random_bf16(rng, (1, 9, 2), scale=0.25),
+        weights=random_bf16(rng, (1, 1, 4), scale=0.25),
+    ), rtl_expected_fault_code=ERR_SHAPE))
+    cases.append(dc_replace(vector_index_score_case(
+        "vector_index_score_depth_17_refused_by_rtl",
+        "one channel above INDEX_SCORE's bounded reduction depth",
+        capability,
+        root,
+        query=random_bf16(rng, (1, 1, 4, 17), scale=0.25),
+        keys=random_bf16(rng, (1, 1, 17), scale=0.25),
+        weights=random_bf16(rng, (1, 1, 4), scale=0.25),
+    ), rtl_expected_fault_code=ERR_SHAPE))
+    cases.append(dc_replace(vector_compress_project_case(
+        "vector_compress_project_rows_9_refused_by_rtl",
+        "one flattened row above COMPRESS_PROJECT's bound",
+        capability,
+        root,
+        hidden=random_bf16(rng, (1, 9, 2), scale=0.25),
+        kv_weights=random_bf16(rng, (1, 2), scale=0.25),
+        gate_weights=random_bf16(rng, (1, 2), scale=0.25),
+    ), rtl_expected_fault_code=ERR_SHAPE))
+    cases.append(dc_replace(vector_compress_project_case(
+        "vector_compress_project_cols_17_refused_by_rtl",
+        "one output feature above COMPRESS_PROJECT's bound",
+        capability,
+        root,
+        hidden=random_bf16(rng, (1, 1, 2), scale=0.25),
+        kv_weights=random_bf16(rng, (17, 2), scale=0.25),
+        gate_weights=random_bf16(rng, (17, 2), scale=0.25),
+    ), rtl_expected_fault_code=ERR_SHAPE))
+    cases.append(dc_replace(vector_compress_project_case(
+        "vector_compress_project_depth_65_refused_by_rtl",
+        "one reduction channel above COMPRESS_PROJECT's bound",
+        capability,
+        root,
+        hidden=random_bf16(rng, (1, 1, 65), scale=0.25),
+        kv_weights=random_bf16(rng, (1, 65), scale=0.25),
+        gate_weights=random_bf16(rng, (1, 65), scale=0.25),
+    ), rtl_expected_fault_code=ERR_SHAPE))
+    cases.append(dc_replace(vector_mhc_post_case(
+        "vector_mhc_post_sites_5_refused_by_rtl",
+        "one flattened site above HYPER_CONNECT_POST's bound",
+        capability,
+        root,
+        branch=random_bf16(rng, (1, 5, 1), scale=0.25),
+        residual=random_bf16(rng, (1, 5, 4, 1), scale=0.25),
+        post=np.ones((1, 5, 4), dtype=np.float32),
+        combination=np.zeros((1, 5, 4, 4), dtype=np.float32),
+    ), rtl_expected_fault_code=ERR_SHAPE))
+    cases.append(dc_replace(vector_mhc_post_case(
+        "vector_mhc_post_hidden_33_refused_by_rtl",
+        "one hidden channel above HYPER_CONNECT_POST's bound",
+        capability,
+        root,
+        branch=random_bf16(rng, (1, 1, 33), scale=0.25),
+        residual=random_bf16(rng, (1, 1, 4, 33), scale=0.25),
+        post=np.ones((1, 1, 4), dtype=np.float32),
+        combination=np.zeros((1, 1, 4, 4), dtype=np.float32),
+    ), rtl_expected_fault_code=ERR_SHAPE))
+    positive = {
+        "convert": next(
+            case for case in cases if case.name == "vector_convert_bf16_to_fp32"
+        ),
+        "scale_constant": next(
+            case for case in cases if case.name == "vector_scale_constant_eighth"
+        ),
+        "scale_elementwise": next(
+            case for case in cases if case.name == "vector_scale_elementwise"
+        ),
+        "hadamard": next(
+            case for case in cases if case.name == "vector_hadamard_directed"
+        ),
+        "index": next(
+            case for case in cases if case.name == "vector_index_score_relu_tree"
+        ),
+        "compress": next(
+            case for case in cases if case.name == "vector_compress_project_order"
+        ),
+        "mhc": next(
+            case for case in cases if case.name == "vector_mhc_post_matrix_order"
+        ),
+    }
+    for label, base in positive.items():
+        cases.append(dc_replace(
+            base,
+            name=f"vector_descriptor_refusal_{label}_inconsistent_count",
+            note=(
+                "fail-closed descriptor admission: cfg_count disagrees with "
+                "the independently resolved output shape"
+            ),
+            count=base.count + 1,
+            rtl_expected_fault_code=ERR_SHAPE,
+        ))
+    cases.extend(_rtl_negative_cases(positive))
     return cases
 
 
@@ -1316,6 +2545,8 @@ def run_golden(case: Case, capability: Capability) -> dict[str, Any]:
         "counters": counters,
         "operand0": read(case.operand0_view),
         "operand1": read(case.operand1_view),
+        "operand2": read(case.operand2_view),
+        "operand3": read(case.operand3_view),
         "output": read(case.output_view),
         "scale0": (
             None if case.scale0_object == NO_ID
@@ -1405,9 +2636,124 @@ ARITH_CORNERS: tuple[int, ...] = (
     0x7E800000, 0xFE800000,
 )
 
+# Exact halfway cases found by a deterministic rational search.  They are
+# fixed here so the primitive's tie-to-even decision remains directly visible
+# even if the surrounding random distribution changes.
+PRODUCT_ADD_TIES: tuple[tuple[int, int, int], ...] = (
+    (0x90F0CD7E, 0x837D, 0xCDF9),
+    (0x3BE9002E, 0x3872, 0xBD91),
+    (0x288142A9, 0x2D53, 0xB61D),
+    (0xAB4C8472, 0x0C63, 0x5985),
+    (0x13141ACA, 0x900C, 0x43A9),
+    (0x16473E71, 0x182A, 0x3811),
+    (0xCA183697, 0xD02F, 0xB44A),
+    (0x7081A22A, 0xB9FF, 0x7146),
+)
 
-def arith_probe_entries() -> list[tuple[int, int, int, int, int, int, int, int]]:
-    """``(a, b, add_err, add, mul_err, mul, bf16_err_sat, bf16)`` exactly.
+
+def product_add_probe_inputs() -> list[tuple[int, int, int]]:
+    """Stratified and deterministic-random finite ordered-dot steps.
+
+    The tuples are ``(binary32 accumulator, BF16 lhs, BF16 rhs)``.  They cover
+    both signs of zero, exact cancellation, BF16 and binary32 subnormal/normal
+    boundaries, exact halfway results, finite overflow, and a broad seeded
+    sample over every finite exponent band.  No host floating operation is
+    used to construct or judge an expected result.
+    """
+    entries: list[tuple[int, int, int]] = [
+        # The two observed split-rounding failures, at their second step.
+        (0x0131C000, 0x8483, 0x35F2),
+        (0x02BE8000, 0x1B83, 0x1A83),
+        # Signed-zero products and accumulators all canonicalise to +0.
+        (0x00000000, 0x0000, 0x3F80),
+        (0x80000000, 0x8000, 0xBF80),
+        (0x80000000, 0x0000, 0xFF7F),
+        # Exact signed cancellations.
+        (0x3F800000, 0xBF80, 0x3F80),
+        (0xBF800000, 0x3F80, 0x3F80),
+        (0xC0400000, 0x3FC0, 0x4000),
+        # Direct underflow and both finite-overflow signs.
+        (0x00000000, 0x0001, 0x0001),
+        (0x7F7FFFFF, 0x7F7F, 0x7F7F),
+        (0xFF7FFFFF, 0xFF7F, 0x7F7F),
+        *PRODUCT_ADD_TIES,
+    ]
+    bf16_strata = (
+        0x0000, 0x8000, 0x0001, 0x8001, 0x007F, 0x807F,
+        0x0080, 0x8080, 0x0081, 0x8081, 0x3E80, 0xBE80,
+        0x3F00, 0xBF00, 0x3F7F, 0xBF7F, 0x3F80, 0xBF80,
+        0x3F81, 0xBF81, 0x4000, 0xC000, 0x7F7F, 0xFF7F,
+    )
+    accumulator_strata = tuple(
+        code for code in ARITH_CORNERS
+        if ((code >> 23) & 0xFF) != 0xFF
+    )
+    for left_index, lhs in enumerate(bf16_strata):
+        for right_index, rhs in enumerate(bf16_strata):
+            selector = left_index * len(bf16_strata) + right_index
+            entries.extend((
+                (0, lhs, rhs),
+                (accumulator_strata[selector % len(accumulator_strata)], lhs, rhs),
+                (accumulator_strata[
+                    (selector * 17 + 5) % len(accumulator_strata)
+                ], lhs, rhs),
+            ))
+
+    # Add exact cancellations for representative normal BF16 products.  Only
+    # products exactly representable in binary32 qualify, checked rationally.
+    for lhs, rhs in (
+        (0x3F80, 0x4000), (0xBF80, 0x4040), (0x3FC0, 0xBF00),
+        (0x4120, 0x3D80), (0x0080, 0x3F80), (0x8080, 0xBF80),
+    ):
+        left_value = exact_formats.decode_bf16(lhs).value
+        right_value = exact_formats.decode_bf16(rhs).value
+        assert left_value is not None and right_value is not None
+        exact_accumulator = -(left_value * right_value)
+        accumulator = exact_formats.encode_binary32_rne(exact_accumulator)
+        decoded = exact_formats.decode_binary32(accumulator).value
+        if decoded != exact_accumulator:
+            raise RuntimeError("product-add cancellation vector is not exact")
+        entries.append((accumulator, lhs, rhs))
+
+    # Deterministic random coverage across all *finite* exponent fields.
+    rng = np.random.default_rng(0xA383F00D)
+    while len(entries) < 5200:
+        accumulator = (
+            (int(rng.integers(0, 2)) << 31)
+            | (int(rng.integers(0, 255)) << 23)
+            | int(rng.integers(0, 1 << 23))
+        )
+        lhs = (
+            (int(rng.integers(0, 2)) << 15)
+            | (int(rng.integers(0, 255)) << 7)
+            | int(rng.integers(0, 1 << 7))
+        )
+        rhs = (
+            (int(rng.integers(0, 2)) << 15)
+            | (int(rng.integers(0, 255)) << 7)
+            | int(rng.integers(0, 1 << 7))
+        )
+        entries.append((accumulator, lhs, rhs))
+    return entries
+
+
+def product_add_probe_entries() -> list[tuple[int, int, int, int, int]]:
+    """Return primitive inputs followed by exact error class and result."""
+    return [
+        (accumulator, lhs, rhs, *(_exact_product_add(accumulator, lhs, rhs)))
+        for accumulator, lhs, rhs in product_add_probe_inputs()
+    ]
+
+
+def arith_probe_entries() -> list[tuple[int, ...]]:
+    """Binary32 operations plus exact BF16-product accumulator steps.
+
+    Each entry is ``(a, b, add_err, add, mul_err, mul, bf16_err_sat,
+    bf16, accumulator, lhs_bf16 | rhs_bf16<<16, product_add_err,
+    product_add)``.  The last operation is governed by
+    :func:`runtime.reference.formats.binary32_product_add`; its first two
+    entries are the concrete COMPRESS_PROJECT and INDEX_SCORE values that a
+    separately rounded multiply/add gets wrong.
 
     The engine cases exercise the binary32 adder and multiplier on the value
     distribution real operands produce -- normals of moderate exponent, mostly
@@ -1444,8 +2790,15 @@ def arith_probe_entries() -> list[tuple[int, int, int, int, int, int, int, int]]
     left.extend(int(v) for v in subnormal)
     right.extend(int(v) for v in subnormal[::-1])
 
-    entries: list[tuple[int, int, int, int, int, int, int, int]] = []
-    for a, b in zip(left, right):
+    fused_inputs = product_add_probe_inputs()
+    while len(left) < len(fused_inputs):
+        left.append(int(rng.integers(0, 1 << 32, dtype=np.uint64)))
+        right.append(int(rng.integers(0, 1 << 32, dtype=np.uint64)))
+
+    entries: list[tuple[int, ...]] = []
+    for (a, b), (accumulator, lhs_bf16, rhs_bf16) in zip(
+        zip(left, right, strict=True), fused_inputs, strict=True
+    ):
         add_err, add_value = _exact_binary(exact_formats.binary32_add, a, b)
         mul_err, mul_value = _exact_binary(exact_formats.binary32_multiply, a, b)
         try:
@@ -1455,9 +2808,13 @@ def arith_probe_entries() -> list[tuple[int, int, int, int, int, int, int, int]]
         else:
             bf_field = 1 if narrowed.saturated else 0
             bf_value = int(narrowed.code)
-        entries.append(
-            (a, b, add_err, add_value, mul_err, mul_value, bf_field, bf_value)
+        fused_err, fused_value = _exact_product_add(
+            accumulator, lhs_bf16, rhs_bf16
         )
+        entries.append((
+            a, b, add_err, add_value, mul_err, mul_value, bf_field, bf_value,
+            accumulator, lhs_bf16 | (rhs_bf16 << 16), fused_err, fused_value,
+        ))
     return entries
 
 
@@ -1474,6 +2831,27 @@ def _exact_binary(operation: Any, a: int, b: int) -> tuple[int, int]:
         return 1, 0
     try:
         return 0, int(operation(a, b))
+    except exact_formats.NumericReferenceError:
+        return 2, 0
+
+
+def _exact_product_add(
+    accumulator: int, lhs_bf16: int, rhs_bf16: int
+) -> tuple[int, int]:
+    nonfinite = (
+        ((accumulator >> 23) & 0xFF) == 0xFF
+        or ((lhs_bf16 >> 7) & 0xFF) == 0xFF
+        or ((rhs_bf16 >> 7) & 0xFF) == 0xFF
+    )
+    if nonfinite:
+        return 1, 0
+    lhs = exact_formats.decode_bf16(lhs_bf16).value
+    rhs = exact_formats.decode_bf16(rhs_bf16).value
+    assert lhs is not None and rhs is not None
+    try:
+        return 0, int(
+            exact_formats.binary32_product_add(accumulator, lhs, rhs)
+        )
     except exact_formats.NumericReferenceError:
         return 2, 0
 
@@ -1533,6 +2911,7 @@ def emit(
     records: list[dict[str, Any]] = []
 
     for case in cases:
+        descriptor_words, descriptor_metadata = descriptor_admission(case)
         report = verify_deployment(case.deployment, capability)
         if report.admitted != case.expect_admitted:
             raise SystemExit(
@@ -1548,6 +2927,41 @@ def emit(
                 f"{case.expect_fault}"
             )
 
+        exact_words, exact_authority, exact_saturations = (
+            _independent_exact_result(case, golden)
+        )
+        if exact_words is not None:
+            device_words = as_words(golden["output"])
+            if device_words != exact_words:
+                mismatch = next(
+                    index
+                    for index, (device, exact) in enumerate(
+                        zip(device_words, exact_words, strict=True)
+                    )
+                    if device != exact
+                )
+                raise SystemExit(
+                    f"{case.name}: pending frozen-source repair: Device output "
+                    f"word {mismatch} is 0x{device_words[mismatch]:08x}, but "
+                    f"{exact_authority} requires 0x{exact_words[mismatch]:08x}. "
+                    "Do not regenerate the canonical RTL campaign until the "
+                    "runtime.sim implementation uses the exact-product, "
+                    "single-rounded product-add contract."
+                )
+            if exact_saturations is not None:
+                device_saturations = int(
+                    golden["counters"].get("vector.saturations", 0)
+                )
+                if device_saturations != exact_saturations:
+                    raise SystemExit(
+                        f"{case.name}: pending frozen-source repair: Device "
+                        f"reports vector.saturations={device_saturations}, but "
+                        f"{exact_authority} requires {exact_saturations}. The "
+                        "VECTOR_REDUCTION event-11 counter is architectural; "
+                        "do not regenerate the canonical RTL campaign until "
+                        "runtime.sim publishes every retained saturation."
+                    )
+
         a_base = len(m0_words)
         m0_words.extend(as_words(golden["operand0"]))
         b_base = len(m1_words)
@@ -1556,22 +2970,53 @@ def emit(
         c_base = len(m1_words)
         if case.prior_payload is not None:
             m1_words.extend(as_words(case.prior_payload))
-        scale_a_base = len(m2_words)
-        if golden["scale0"] is not None:
+        operand2_base = len(m2_words)
+        if golden["operand2"] is not None and golden["scale0"] is not None:
+            raise SystemExit(
+                f"{case.name}: m2 cannot carry operand2 and MATMUL scales"
+            )
+        if golden["operand2"] is not None:
+            m2_words.extend(as_words(golden["operand2"]))
+        elif golden["scale0"] is not None:
             m2_words.extend(as_words(golden["scale0"]))
-        scale_b_base = len(m3_words)
-        if golden["scale1"] is not None:
+        operand3_base = len(m3_words)
+        if golden["operand3"] is not None and golden["scale1"] is not None:
+            raise SystemExit(
+                f"{case.name}: m3 cannot carry operand3 and MATMUL scales"
+            )
+        if golden["operand3"] is not None:
+            m3_words.extend(as_words(golden["operand3"]))
+        elif golden["scale1"] is not None:
             m3_words.extend(as_words(golden["scale1"]))
 
         # Where this case's results live in the shared result memory, and what
         # the checkers must find there.
         out_base = len(expect_words)
-        if faulted:
-            fault_code = classify_fault(golden["message"])
+        rtl_fault_code = case.rtl_expected_fault_code
+        if case.rtl_descriptor_overrides:
+            if rtl_fault_code not in (None, ERR_SHAPE):
+                raise SystemExit(
+                    f"{case.name}: descriptor corruption must map to ERR_SHAPE"
+                )
+            rtl_fault_code = ERR_SHAPE
+        if faulted and rtl_fault_code is not None:
+            raise SystemExit(
+                f"{case.name}: one case cannot mix a Device fault and an "
+                "RTL-only bounded/admission refusal"
+            )
+        expected_refusal = faulted or rtl_fault_code is not None
+        if expected_refusal:
+            fault_code = (
+                classify_fault(golden["message"])
+                if faulted else int(rtl_fault_code)
+            )
             # The whole destination window must still hold the unwritten
             # sentinel: a refusal that left part of a result behind is a
             # different refusal.
-            window = destination_window(case)
+            window = (
+                destination_window(case)
+                if faulted else len(as_words(golden["output"]))
+            )
             expect_words.extend([UNWRITTEN] * window)
             expect_count = window
             result_count = 0
@@ -1579,7 +3024,9 @@ def emit(
             work = 0
             token = 0
             ties = 0
-            flags = FLAG_EXPECT_UNTOUCHED
+            # Counters are architectural only for engines that publish them,
+            # but a refused operation must never leak a speculative count.
+            flags = FLAG_EXPECT_UNTOUCHED | FLAG_COMPARE_SATURATION
         else:
             fault_code = ERR_NONE
             output_words = as_words(golden["output"])
@@ -1600,7 +3047,7 @@ def emit(
             view_dtype(case.deployment, case.operand1_view),
             a_base,
             b_base,
-            c_base,
+            c_base if case.scalar_bits is None else int(case.scalar_bits),
             out_base,
             1 if case.scale0_object != NO_ID else 0,
             1 if case.scale1_object != NO_ID else 0,
@@ -1608,8 +3055,8 @@ def emit(
             case.block_b,
             case.block_rows_a,
             case.block_rows_b,
-            scale_a_base,
-            scale_b_base,
+            operand2_base,
+            operand3_base,
             case.slots,
             case.trailing,
             case.extent,
@@ -1622,6 +3069,7 @@ def emit(
             out_base,
             expect_count,
             flags,
+            *descriptor_words,
         ]
         if len(record_words) != CASE_STRIDE:
             raise SystemExit(
@@ -1638,6 +3086,18 @@ def emit(
             "golden_trap_class": golden["trap_class"],
             "golden_message": golden["message"],
             "golden_counters": golden["counters"],
+            "expectation_source": (
+                "device_fault" if faulted
+                else "rtl_descriptor_admission"
+                if case.rtl_descriptor_overrides
+                else "rtl_bounded_profile"
+                if rtl_fault_code is not None
+                else "device_and_independent_exact_reference"
+                if exact_authority is not None
+                else "device"
+            ),
+            "independent_exact_reference": exact_authority,
+            "independent_exact_saturations": exact_saturations,
             "expected_fault_code": fault_code,
             "expected_result_count": result_count,
             "expected_saturations": saturations,
@@ -1655,10 +3115,35 @@ def emit(
             "extent": case.extent,
             "operand0_dtype": view_dtype(case.deployment, case.operand0_view),
             "operand1_dtype": view_dtype(case.deployment, case.operand1_view),
+            "operand2_dtype": view_dtype(case.deployment, case.operand2_view),
+            "operand3_dtype": view_dtype(case.deployment, case.operand3_view),
+            "output_dtype": (
+                case.output_dtype
+                or view_dtype(case.deployment, case.output_view)
+            ),
             "block_a": case.block_a,
             "block_b": case.block_b,
             "block_rows_a": case.block_rows_a,
             "block_rows_b": case.block_rows_b,
+            "scalar_bits": case.scalar_bits,
+            "rtl_config": {
+                **case.rtl_config,
+                "record": {
+                    "cfg_rows": case.rows,
+                    "cfg_cols": case.cols,
+                    "cfg_depth": case.depth,
+                    "cfg_count": case.count,
+                    "cfg_c_base": (
+                        c_base if case.scalar_bits is None else int(case.scalar_bits)
+                    ),
+                    "cfg_block_a": case.block_a,
+                    "cfg_block_b": case.block_b,
+                    "cfg_slots": case.slots,
+                    "cfg_scale_a_base": operand2_base,
+                    "cfg_scale_b_base": operand3_base,
+                },
+                "descriptor_admission": descriptor_metadata,
+            },
             "program_sha256": hashlib.sha256(case.deployment.program).hexdigest(),
             "descriptor_table_sha256": hashlib.sha256(
                 case.deployment.table.encode()
@@ -1667,6 +3152,14 @@ def emit(
             "operand1_sha256": (
                 "" if golden["operand1"] is None
                 else words_digest(as_words(golden["operand1"]))
+            ),
+            "operand2_sha256": (
+                "" if golden["operand2"] is None
+                else words_digest(as_words(golden["operand2"]))
+            ),
+            "operand3_sha256": (
+                "" if golden["operand3"] is None
+                else words_digest(as_words(golden["operand3"]))
             ),
             "expected_sha256": words_digest(
                 expect_words[out_base : out_base + expect_count]
@@ -1692,10 +3185,284 @@ def words_digest(words: Sequence[int]) -> str:
 def view_dtype(deployment: Deployment, view_id: int) -> int:
     if view_id == NO_ID:
         return 0
-    from runtime.abi3.descriptors import ExtendedDescriptorType
-
     descriptor = deployment.table.get(view_id, ExtendedDescriptorType.TENSOR_VIEW)
     return int(descriptor.payload["dtype"])
+
+
+def _operator_descriptor(case: Case) -> Any:
+    """Return the sole operator the one-operation campaign case executes."""
+    matches = [
+        descriptor
+        for descriptor in case.deployment.table.descriptors()
+        if descriptor.descriptor_type == int(ExtendedDescriptorType.OPERATOR)
+        and int(descriptor.payload["engine_family"]) == case.family
+        and int(descriptor.payload["engine_sub"]) == case.sub
+    ]
+    if len(matches) != 1:
+        raise SystemExit(
+            f"{case.name}: expected one matching OPERATOR descriptor, found "
+            f"{len(matches)}"
+        )
+    return matches[0]
+
+
+def _view_admission(case: Case, view_id: int) -> dict[str, Any]:
+    if view_id == NO_ID:
+        return {"dtype": 0, "rank": 0, "dims": (0, 0, 0, 0), "scaled": 0}
+    view = case.deployment.table.get(view_id, ExtendedDescriptorType.TENSOR_VIEW)
+    rank = int(view.payload["rank"])
+    if case.family == int(Major.VECTOR) and case.sub in {
+        int(Vector.CONVERT), int(Vector.SCALE), int(Vector.HADAMARD),
+        int(Vector.INDEX_SCORE), int(Vector.COMPRESS), int(Vector.MHC),
+    } and rank > 4:
+        raise SystemExit(
+            f"{case.name}: bounded VECTOR admission cannot encode rank {rank}"
+        )
+    dims = tuple(
+        int(view.payload[f"dim{axis}"]) if axis < rank else 0
+        for axis in range(4)
+    )
+    return {
+        "dtype": int(view.payload["dtype"]),
+        "rank": rank,
+        "dims": dims,
+        "scaled": int(int(view.payload["scale_object_id"]) != NO_ID),
+    }
+
+
+def descriptor_admission(case: Case) -> tuple[list[int], dict[str, Any]]:
+    """Serialize independently derived descriptor metadata for RTL admission.
+
+    The legacy geometry fields are convenient datapath controls; they are not
+    proof of the issuing OPERATOR/TENSOR_VIEW/NUMERIC records.  This adapter
+    therefore derives arity, every view's dtype/rank/dimensions/scaled state,
+    the numeric profile, its complete contract digest, and every aux binding
+    directly from the deployment table.  Negative cases override one derived
+    field only after this derivation, so they exercise the RTL boundary rather
+    than teaching the expected result to the functional Device.
+    """
+    operator = _operator_descriptor(case)
+    inputs = [
+        _view_admission(case, int(operator.payload[f"input_view_{slot}"]))
+        for slot in range(4)
+    ]
+    outputs = [
+        _view_admission(case, int(operator.payload[f"output_view_{slot}"]))
+        for slot in range(2)
+    ]
+    input_valid = sum(
+        (int(operator.payload[f"input_view_{slot}"]) != NO_ID) << slot
+        for slot in range(4)
+    )
+    output_valid = sum(
+        (int(operator.payload[f"output_view_{slot}"]) != NO_ID) << slot
+        for slot in range(2)
+    )
+    aux = [int(operator.payload[f"aux_id_{slot}"]) for slot in range(4)]
+    aux_valid = sum((value != NO_ID) << slot for slot, value in enumerate(aux))
+
+    numeric_id = int(operator.payload["numeric_profile_id"])
+    if numeric_id == NO_ID:
+        profile_valid = 0
+        profile_input = profile_second = profile_output = 0
+        profile_accumulator = rounding = reduction = scale_bits = 0
+        saturate = nan_policy = epsilon_bits = profile_flags = 0
+        # HYPER_CONNECT_POST has no NUMERIC descriptor by architectural
+        # design.  Bind the selected operator form itself instead of accepting
+        # an uncorrelated all-zero digest as a generic "valid" signal.
+        contract_digest = (
+            hashlib.sha256(b"HYPER_CONNECT_POST").digest()
+            if case.family == int(Major.VECTOR)
+            and case.sub == int(Vector.MHC)
+            and aux[0] == 1
+            else bytes(32)
+        )
+    else:
+        profile = case.deployment.table.get(
+            numeric_id, ExtendedDescriptorType.NUMERIC
+        )
+        profile_valid = 1
+        profile_input = int(profile.payload["input_dtype"])
+        profile_second = int(profile.payload["second_input_dtype"])
+        profile_output = int(profile.payload["output_dtype"])
+        profile_accumulator = int(profile.payload["accumulator_dtype"])
+        rounding = int(profile.payload["rounding_mode"])
+        reduction = int(profile.payload["reduction_order"])
+        scale_bits = int(profile.payload["scale_bits"])
+        saturate = int(profile.payload["saturate"])
+        nan_policy = int(profile.payload["nan_policy"])
+        epsilon_bits = int(profile.payload["epsilon_bits"])
+        profile_flags = int(profile.payload["flags"])
+        contract_digest = bytes(profile.payload["contract_digest"])
+
+    fields: dict[str, Any] = {
+        "input_valid": input_valid,
+        "output_valid": output_valid,
+        "profile_valid": profile_valid,
+        "profile_input_dtype": profile_input,
+        "profile_second_dtype": profile_second,
+        "profile_output_dtype": profile_output,
+        "profile_accumulator_dtype": profile_accumulator,
+        "rounding_mode": rounding,
+        "reduction_order": reduction,
+        "profile_scale_bits": scale_bits,
+        "profile_saturate": saturate,
+        "profile_nan_policy": nan_policy,
+        "profile_epsilon_bits": epsilon_bits,
+        "profile_flags": profile_flags,
+        "contract_digest": contract_digest,
+        "aux_valid": aux_valid,
+    }
+    for slot, metadata in enumerate(inputs):
+        for name, value in metadata.items():
+            fields[f"input{slot}_{name}"] = value
+    for slot, metadata in enumerate(outputs):
+        for name, value in metadata.items():
+            fields[f"output{slot}_{name}"] = value
+    for slot, value in enumerate(aux):
+        fields[f"aux{slot}"] = value
+
+    unknown = set(case.rtl_descriptor_overrides) - set(fields)
+    if unknown:
+        raise SystemExit(
+            f"{case.name}: unknown RTL descriptor override(s): {sorted(unknown)}"
+        )
+    fields.update(case.rtl_descriptor_overrides)
+
+    digest = fields["contract_digest"]
+    if isinstance(digest, str):
+        digest = bytes.fromhex(digest)
+    if not isinstance(digest, bytes) or len(digest) != 32:
+        raise SystemExit(f"{case.name}: contract digest must contain 32 bytes")
+    contract_words = [
+        int.from_bytes(digest[offset : offset + 4], "big")
+        for offset in range(0, 32, 4)
+    ]
+    input_dtypes = sum(
+        (int(fields[f"input{slot}_dtype"]) & 0xFF) << (8 * slot)
+        for slot in range(4)
+    )
+    output_dtypes = sum(
+        (int(fields[f"output{slot}_dtype"]) & 0xFF) << (8 * slot)
+        for slot in range(2)
+    )
+    ranks = sum(
+        (int(fields[f"input{slot}_rank"]) & 0xF) << (4 * slot)
+        for slot in range(4)
+    ) | sum(
+        (int(fields[f"output{slot}_rank"]) & 0xF) << (16 + 4 * slot)
+        for slot in range(2)
+    )
+    scaled = sum(
+        (int(fields[f"input{slot}_scaled"]) & 1) << slot
+        for slot in range(4)
+    ) | sum(
+        (int(fields[f"output{slot}_scaled"]) & 1) << (4 + slot)
+        for slot in range(2)
+    )
+    profile_dtypes = (
+        (int(fields["profile_input_dtype"]) & 0xFF)
+        | ((int(fields["profile_second_dtype"]) & 0xFF) << 8)
+        | ((int(fields["profile_output_dtype"]) & 0xFF) << 16)
+        | ((int(fields["profile_accumulator_dtype"]) & 0xFF) << 24)
+    )
+    shape_words: list[int] = []
+    for prefix in (
+        "input0", "input1", "input2", "input3", "output0", "output1"
+    ):
+        dims = tuple(int(value) for value in fields[f"{prefix}_dims"])
+        if len(dims) != 4 or any(not 0 <= value < 1 << 32 for value in dims):
+            raise SystemExit(f"{case.name}: {prefix} dimensions do not fit")
+        shape_words.extend(dims)
+    words = [
+        int(fields["input_valid"]),
+        int(fields["output_valid"]),
+        input_dtypes,
+        output_dtypes,
+        ranks,
+        scaled,
+        profile_dtypes,
+        (int(fields["rounding_mode"]) & 0xFF)
+        | ((int(fields["reduction_order"]) & 0xFF) << 8)
+        | ((int(fields["profile_valid"]) & 1) << 16)
+        | ((int(fields["profile_saturate"]) & 1) << 17)
+        | ((int(fields["profile_nan_policy"]) & 0xFF) << 24),
+        *shape_words,
+        *contract_words,
+        int(fields["aux_valid"]),
+        *(int(fields[f"aux{slot}"]) & 0xFFFFFFFF for slot in range(4)),
+        int(fields["profile_scale_bits"]) & 0xFFFFFFFF,
+        int(fields["profile_epsilon_bits"]) & 0xFFFFFFFF,
+        int(fields["profile_flags"]) & 0xFFFFFFFF,
+    ]
+    if len(words) != CASE_STRIDE - 32:
+        raise SystemExit(
+            f"{case.name}: descriptor extension is {len(words)} words, "
+            f"expected {CASE_STRIDE - 32}"
+        )
+    published = {
+        **fields,
+        "contract_digest": digest.hex(),
+        "record_words": words,
+    }
+    return words, published
+
+
+def _independent_exact_result(
+    case: Case, golden: dict[str, Any]
+) -> tuple[list[int] | None, str | None, int | None]:
+    """Return exact-reference output for governed ordered-dot VECTOR forms."""
+    if golden["status"] != 0 or case.family != int(Major.VECTOR):
+        return None, None, None
+    if case.sub == int(Vector.COMPRESS):
+        result = compress_project_bf16(
+            golden["operand0"].astype(np.uint16).tolist(),
+            golden["operand1"].astype(np.uint16).tolist(),
+            golden["operand2"].astype(np.uint16).tolist(),
+        )
+        kv = np.asarray(result.kv, dtype=np.uint32)
+        gate = np.asarray(result.scores, dtype=np.uint32)
+        packed = np.stack((kv, gate), axis=2)
+        return (
+            as_words(packed),
+            "runtime.reference.compression.compress_project_bf16",
+            0,
+        )
+    if case.sub == int(Vector.INDEX_SCORE):
+        result = index_score_bf16(
+            golden["operand0"].astype(np.uint16).tolist(),
+            golden["operand1"].astype(np.uint16).tolist(),
+            golden["operand2"].astype(np.uint16).tolist(),
+            scale_binary32=int(case.scalar_bits or 0),
+        )
+        return (
+            as_words(np.asarray(result.values, dtype=np.uint16)),
+            "runtime.reference.index_score.index_score_bf16",
+            int(result.qk_saturated_element_count)
+            + int(result.scaled_weight_saturated_element_count)
+            + int(result.weighted_score_saturated_element_count)
+            + int(result.output_saturated_element_count),
+        )
+    if case.sub == int(Vector.MHC):
+        post_codes = np.ascontiguousarray(
+            golden["operand2"], dtype=np.float32
+        ).view(np.uint32)
+        comb_codes = np.ascontiguousarray(
+            golden["operand3"], dtype=np.float32
+        ).view(np.uint32)
+        result = hc_post_bf16(
+            golden["operand0"].astype(np.uint16).tolist(),
+            golden["operand1"].astype(np.uint16).tolist(),
+            post_codes.tolist(),
+            comb_codes.tolist(),
+            hc_multiplier=int(case.slots),
+        )
+        return (
+            as_words(np.asarray(result.output_codes, dtype=np.uint16)),
+            "runtime.reference.vector.hc_post_bf16",
+            int(result.output_saturation_count),
+        )
+    return None, None, None
 
 
 def destination_window(case: Case) -> int:
@@ -1754,6 +3521,17 @@ def expectations(
         )
     if case.family == int(Major.VECTOR):
         elements = require("vector.elements")
+        if case.sub == int(Vector.INDEX_SCORE):
+            # INDEX_SCORE counts the query/key multiply-add work across heads,
+            # candidates and depth, while it writes one score per candidate.
+            return (
+                written,
+                int(counters.get("vector.saturations", 0)),
+                elements,
+                0,
+                0,
+                FLAG_COMPARE_WORK | FLAG_COMPARE_SATURATION,
+            )
         if elements != written:
             # The engine's element counter and the view it wrote must agree, or
             # one of the two is not describing this operation.
@@ -1811,7 +3589,7 @@ def publish(
         for case in cases
         if case.family == int(Major.TENSOR)
     )
-    fault_count = sum(1 for case in cases if case.expect_fault)
+    fault_count = sum(1 for record in records if record["expected_fault_code"])
     result_words = len(images["expect"])
     meta = [
         len(cases), len(families), result_words, mac_count,
@@ -1833,7 +3611,7 @@ def publish(
         (out / name).write_text(payload, encoding="ascii")
 
     summary = {
-        "schema": "opentallas.rtl.abi3_engine_vectors.v1",
+        "schema": VECTOR_SCHEMA,
         "abi": {"major": 3, "minor": 0},
         "capability_digest": capability.digest,
         "engine_policy": (
@@ -1855,9 +3633,25 @@ def publish(
         "arith_probe_count": len(arith),
         "arith_reference": (
             "runtime.reference.formats binary32_add, binary32_multiply and "
-            "binary32_bits_to_bf16_rne, which compute with fractions.Fraction "
-            "and round once, so no host floating-point mode participates"
+            "binary32_bits_to_bf16_rne, plus binary32_product_add for exact "
+            "BF16 products accumulated with one final binary32 RNE rounding; "
+            "all compute with fractions.Fraction, so no host floating-point "
+            "mode participates"
         ),
+        "descriptor_admission": {
+            "schema": "operator_view_numeric_exact_v1",
+            "derivation": (
+                "each case record derives arity, every input/output dtype, "
+                "rank and dimension, scaled state, numeric profile fields, "
+                "complete contract digest and aux bindings independently "
+                "from the admitted deployment descriptors"
+            ),
+            "negative_policy": (
+                "negative cases alter one derived record field after "
+                "derivation and require ERR_SHAPE with no result or "
+                "speculative saturation count"
+            ),
+        },
         "decode_reference": (
             "runtime.sim.formats E4M3FN_VALUES, MXFP4_VALUES and E8M0_VALUES, "
             "enumerated at import time from the exact fractions.Fraction "
@@ -1873,10 +3667,122 @@ def publish(
             "bf16_add_rne_v1": (
                 "runtime.tensor_accelerator.elementwise.bf16_add_rne"
             ),
+            "unscaled_convert_one_input_one_output": (
+                "runtime.sim.engines.vector._vector_convert using "
+                "runtime.sim.formats widen/narrow; identity dtypes are copied"
+            ),
+            "bf16_mul_rne_v1_and_bf16_scale_rne_v1": (
+                "runtime.sim.engines.vector._vector_scale using the selected "
+                "backend's binary32 multiply and one output conversion"
+            ),
+            "deepseek_v4_hadamard_128_bf16_v1": (
+                "runtime.sim.engines.vector._vector_hadamard and "
+                "runtime.reference.hadamard"
+            ),
+            "deepseek_v4_index_score_bf16_v1": (
+                "runtime.sim.engines.deepseek_vector.index_score and "
+                "runtime.reference.index_score"
+            ),
+            "deepseek_v4_compress_project_binary32_v1": (
+                "runtime.sim.engines.deepseek_vector._compress_project and "
+                "runtime.reference.compression.compress_project_bf16"
+            ),
+            "HYPER_CONNECT_POST": (
+                "runtime.sim.engines.deepseek_vector._mhc_post and "
+                "runtime.reference.vector.hc_post_bf16"
+            ),
             "greedy_lowest_token_id_argmax": (
                 "runtime.sim.engines.selection.argmax"
             ),
             "exact_index_select_v1": "runtime.sim.engines.dma gather and scatter",
+        },
+        "vector_rtl_scope": {
+            "newly_integrated": [
+                {
+                    "opcode": "CONVERT",
+                    "sub": int(Vector.CONVERT),
+                    "covered": "unscaled one-input/one-output form",
+                    "bounds": "1..512 elements; supported identity formats or finite numeric input to BF16/FP32",
+                    "uncovered_forms": [
+                        "block dequantization",
+                        "two-output block quantization",
+                    ],
+                },
+                {
+                    "opcode": "SCALE",
+                    "sub": int(Vector.SCALE),
+                    "covered": "aux0 0 constant and aux0 1 same-shape elementwise BF16-to-BF16",
+                    "bounds": "1..512 elements",
+                    "uncovered_forms": [
+                        "aux0 2 logistic sigmoid",
+                        "general trailing-axis factor broadcasting",
+                    ],
+                },
+                {
+                    "opcode": "HADAMARD",
+                    "sub": int(Vector.HADAMARD),
+                    "covered": "normalized 128-point BF16 transform",
+                    "bounds": "1..4 rows, width exactly 128",
+                    "uncovered_forms": [],
+                },
+                {
+                    "opcode": "INDEX_SCORE",
+                    "sub": int(Vector.INDEX_SCORE),
+                    "covered": "batch one, four-head BF16 learned-index score at scale exactly 1.0",
+                    "bounds": "1..4 sites, 1..8 candidates, 1..16 head channels",
+                    "uncovered_forms": [
+                        "non-unit learned-index scales",
+                        "head counts other than four",
+                        "batches greater than one",
+                    ],
+                },
+                {
+                    "opcode": "COMPRESS",
+                    "sub": int(Vector.COMPRESS),
+                    "covered": "aux0 0 COMPRESS_PROJECT with KV-then-gate FP32 output",
+                    "bounds": "1..8 flattened rows, 1..16 outputs, 1..64 reduction channels",
+                    "uncovered_forms": [
+                        "aux0 1 COMPRESS_POOL",
+                        "aux0 2 COMPRESS_STATE_UPDATE",
+                    ],
+                },
+                {
+                    "opcode": "MHC",
+                    "sub": int(Vector.MHC),
+                    "covered": "aux0 1 HYPER_CONNECT_POST with four streams",
+                    "bounds": "1..4 flattened sites, 1..32 hidden channels, multiplier exactly four",
+                    "uncovered_forms": [
+                        "aux0 0 HYPER_CONNECT_PRE",
+                        "aux0 2 HYPER_CONNECT_HEAD",
+                    ],
+                },
+            ],
+            "wholly_deferred_transcendental": [
+                {
+                    "opcode": "SILU_MUL",
+                    "sub": int(Vector.SILU_MUL),
+                    "reason": "needs correctly rounded sigmoid/exponential RTL",
+                },
+                {
+                    "opcode": "SOFTMAX",
+                    "sub": int(Vector.SOFTMAX),
+                    "reason": "needs correctly rounded exponential and reciprocal RTL",
+                },
+                {
+                    "opcode": "SQRT_SOFTPLUS",
+                    "sub": int(Vector.SQRT_SOFTPLUS),
+                    "reason": "needs correctly rounded exponential/logarithm/square-root RTL",
+                },
+            ],
+            "standalone_outside_engine_array": [
+                "RMS_NORM",
+                "HEAD_RMS_NORM",
+                "ROPE",
+            ],
+            "unsupported_policy": (
+                "unsupported sub-cases and out-of-bound shapes raise ERR_SHAPE; "
+                "no transcendental behavior is approximated or emulated"
+            ),
         },
         "required_marker": (
             f"PASS: ABI3 RTL engine datapaths cases={len(cases)} "

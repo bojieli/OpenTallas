@@ -16,6 +16,12 @@
 //   TENSOR.MATMUL      every contraction in both models
 //   DMA.GATHER/SCATTER every weight and every KV byte that moves
 //   VECTOR.ADD         the residual, at every layer boundary
+//   VECTOR.CONVERT     unscaled one-input/one-output storage conversion
+//   VECTOR.SCALE       bounded constant and elementwise BF16 scaling
+//   VECTOR.HADAMARD    the qualified 128-point BF16 rotation
+//   VECTOR.INDEX_SCORE bounded four-head learned-index scoring at scale 1.0
+//   VECTOR.COMPRESS    the bounded COMPRESS_PROJECT sub-case
+//   VECTOR.MHC         the bounded HYPER_CONNECT_POST sub-case
 //   SELECTION.ARGMAX   the token itself
 //
 // Dispatch is fail-closed: a (family, subopcode) pair this block does not
@@ -50,6 +56,45 @@ module ot_a3_engine_array (
     input  wire [31:0] cfg_slots,
     input  wire [31:0] cfg_trailing,
     input  wire [31:0] cfg_extent,
+
+    // Correlated descriptor admission.  These fields are resolved from the
+    // issuing OPERATOR, TENSOR_VIEW and NUMERIC descriptors before dispatch;
+    // datapath convenience fields above are checked against them rather than
+    // being trusted as a substitute for the descriptors.
+    input  wire [3:0]  cfg_input_valid,
+    input  wire [1:0]  cfg_output_valid,
+    input  wire [31:0] cfg_input_dtypes,
+    input  wire [15:0] cfg_output_dtypes,
+    input  wire [23:0] cfg_view_ranks,
+    input  wire [5:0]  cfg_view_scaled,
+    input  wire        cfg_profile_valid,
+    input  wire [31:0] cfg_profile_dtypes,
+    input  wire [7:0]  cfg_rounding_mode,
+    input  wire [7:0]  cfg_reduction_order,
+    input  wire        cfg_profile_saturate,
+    input  wire [7:0]  cfg_nan_policy,
+    input  wire [31:0] cfg_profile_scale_bits,
+    input  wire [31:0] cfg_epsilon_bits,
+    input  wire [31:0] cfg_profile_flags,
+    input  wire [127:0] cfg_input0_dims,
+    input  wire [127:0] cfg_input1_dims,
+    input  wire [127:0] cfg_input2_dims,
+    input  wire [127:0] cfg_input3_dims,
+    input  wire [127:0] cfg_output0_dims,
+    input  wire [127:0] cfg_output1_dims,
+    input  wire [31:0] cfg_contract_0,
+    input  wire [31:0] cfg_contract_1,
+    input  wire [31:0] cfg_contract_2,
+    input  wire [31:0] cfg_contract_3,
+    input  wire [31:0] cfg_contract_4,
+    input  wire [31:0] cfg_contract_5,
+    input  wire [31:0] cfg_contract_6,
+    input  wire [31:0] cfg_contract_7,
+    input  wire [3:0]  cfg_aux_valid,
+    input  wire [31:0] cfg_aux0,
+    input  wire [31:0] cfg_aux1,
+    input  wire [31:0] cfg_aux2,
+    input  wire [31:0] cfg_aux3,
 
     // operand image ports -- one element per 32-bit word, one cycle latency
     output wire        m0_rd_en,
@@ -106,6 +151,112 @@ module ot_a3_engine_array (
     localparam [7:0] DMA_SCATTER = ot_a3_engine_pkg::DMA_SCATTER;
     localparam [7:0] TENSOR_MATMUL = ot_a3_engine_pkg::TENSOR_MATMUL;
     localparam [7:0] VECTOR_ADD = ot_a3_engine_pkg::VECTOR_ADD;
+    localparam [7:0] VECTOR_CONVERT = ot_a3_engine_pkg::VECTOR_CONVERT;
+    localparam [7:0] VECTOR_SCALE = ot_a3_engine_pkg::VECTOR_SCALE;
+    localparam [7:0] VECTOR_COMPRESS = ot_a3_engine_pkg::VECTOR_COMPRESS;
+    localparam [7:0] VECTOR_MHC = ot_a3_engine_pkg::VECTOR_MHC;
+    localparam [7:0] VECTOR_HADAMARD = ot_a3_engine_pkg::VECTOR_HADAMARD;
+    localparam [7:0] VECTOR_INDEX_SCORE =
+        ot_a3_engine_pkg::VECTOR_INDEX_SCORE;
+
+    localparam [7:0] FMT_BF16 = 8'h10;
+    localparam [7:0] FMT_FP32 = 8'h12;
+    localparam [7:0] FMT_FP8_E4M3FN = 8'h20;
+    localparam [7:0] ROUND_NEAREST_EVEN = 8'd0;
+    localparam [7:0] REDUCTION_SEQUENTIAL_ASCENDING = 8'd0;
+    localparam [31:0] NO_ID = 32'hffff_ffff;
+
+    // SHA-256 bindings of the qualified contract names.  The descriptor
+    // adapter transports all eight words; accepting a familiar dtype tuple
+    // with an unrelated numeric contract would otherwise recreate the same
+    // fail-open hole at a different boundary.
+    localparam [255:0] CONTRACT_IDENTITY_STORAGE =
+        256'hfcce0ffdec1b5dcaeba8810794676dda167456ed9ddf550db02a2dc195d14a94;
+    localparam [255:0] CONTRACT_BF16_TO_FP32 =
+        256'hcd40eba301e7a13bba0d52a947fec7564130f0d511730707bec1cce325323c75;
+    localparam [255:0] CONTRACT_FP32_TO_BF16 =
+        256'h158efe6079f1decd2fa6be3c4ec14b93a64eb8198313e6005adfe3d7661f1107;
+    localparam [255:0] CONTRACT_FP8_TO_BF16 =
+        256'hb2c7323162059eafc71474d1814b37e2bb5fb5063e75b7f7236e79a00d8116d8;
+    localparam [255:0] CONTRACT_BF16_SCALE =
+        256'h53e7793e7377e53bba6af04bfabc087891c2b420f4c7281d54ca239eaa665f51;
+    localparam [255:0] CONTRACT_BF16_MUL =
+        256'he330ed15a75c287342bba73aea069f79357229bdbd5af4422e8f7144dc190509;
+    localparam [255:0] CONTRACT_HADAMARD =
+        256'hb678c78bea1ea6afb9081ceb646020175c0fa7bdcf7c18f5ca6a7f0e4c7c8d8f;
+    localparam [255:0] CONTRACT_INDEX_SCORE =
+        256'haec57536aad948c4312f15f779dec61b441d713e33a3ffee9091719318369d27;
+    localparam [255:0] CONTRACT_COMPRESS_PROJECT =
+        256'h0dd119f04b6a544c42f760e974a87748cf0ce8f762adfa3b879c9680fa04c652;
+    localparam [255:0] CONTRACT_MHC_POST =
+        256'habb4df2b8a31bcd33aa62e69c58254be8de1bb7cac8463d4adec85f1dc50fc5e;
+
+    wire [255:0] cfg_contract_digest = {
+        cfg_contract_0, cfg_contract_1, cfg_contract_2, cfg_contract_3,
+        cfg_contract_4, cfg_contract_5, cfg_contract_6, cfg_contract_7
+    };
+    wire [7:0] desc_in0_dtype = cfg_input_dtypes[7:0];
+    wire [7:0] desc_in1_dtype = cfg_input_dtypes[15:8];
+    wire [7:0] desc_in2_dtype = cfg_input_dtypes[23:16];
+    wire [7:0] desc_in3_dtype = cfg_input_dtypes[31:24];
+    wire [7:0] desc_out0_dtype = cfg_output_dtypes[7:0];
+    wire [7:0] desc_out1_dtype = cfg_output_dtypes[15:8];
+    wire [3:0] desc_in0_rank = cfg_view_ranks[3:0];
+    wire [3:0] desc_in1_rank = cfg_view_ranks[7:4];
+    wire [3:0] desc_in2_rank = cfg_view_ranks[11:8];
+    wire [3:0] desc_in3_rank = cfg_view_ranks[15:12];
+    wire [3:0] desc_out0_rank = cfg_view_ranks[19:16];
+    wire [3:0] desc_out1_rank = cfg_view_ranks[23:20];
+    wire [7:0] profile_input_dtype = cfg_profile_dtypes[7:0];
+    wire [7:0] profile_second_dtype = cfg_profile_dtypes[15:8];
+    wire [7:0] profile_output_dtype = cfg_profile_dtypes[23:16];
+    wire [7:0] profile_accumulator_dtype = cfg_profile_dtypes[31:24];
+
+    function automatic shape_well_formed;
+        input [3:0] rank;
+        input [127:0] dims;
+        integer axis;
+        begin
+            shape_well_formed = (rank != 0) && (rank <= 4);
+            for (axis = 0; axis < 4; axis = axis + 1) begin
+                if ((axis < rank) && (dims[axis*32 +: 32] == 0))
+                    shape_well_formed = 1'b0;
+                if ((axis >= rank) && (dims[axis*32 +: 32] != 0))
+                    shape_well_formed = 1'b0;
+            end
+        end
+    endfunction
+
+    function automatic [63:0] shape_elements;
+        input [3:0] rank;
+        input [127:0] dims;
+        integer axis;
+        reg [63:0] product;
+        begin
+            product = 64'd1;
+            if (!shape_well_formed(rank, dims))
+                product = 0;
+            else
+                for (axis = 0; axis < 4; axis = axis + 1)
+                    if (axis < rank)
+                        product = product * dims[axis*32 +: 32];
+            shape_elements = product;
+        end
+    endfunction
+
+    function automatic [31:0] shape_last;
+        input [3:0] rank;
+        input [127:0] dims;
+        begin
+            case (rank)
+                1: shape_last = dims[31:0];
+                2: shape_last = dims[63:32];
+                3: shape_last = dims[95:64];
+                4: shape_last = dims[127:96];
+                default: shape_last = 0;
+            endcase
+        end
+    endfunction
     localparam [7:0] SELECTION_ARGMAX = ot_a3_engine_pkg::SELECTION_ARGMAX;
 
     wire dma_is_scatter = (cfg_sub == DMA_SCATTER);
@@ -116,7 +267,245 @@ module ot_a3_engine_array (
     wire select_dma = (cfg_family == FAMILY_DMA) &&
                       ((cfg_sub == DMA_GATHER) || dma_is_scatter);
     wire select_add = (cfg_family == FAMILY_VECTOR) && (cfg_sub == VECTOR_ADD);
-    wire implemented = select_mac | select_sel | select_dma | select_add;
+    wire select_convert = (cfg_family == FAMILY_VECTOR) &&
+                          (cfg_sub == VECTOR_CONVERT);
+    wire select_scale = (cfg_family == FAMILY_VECTOR) &&
+                        (cfg_sub == VECTOR_SCALE);
+    wire select_compress = (cfg_family == FAMILY_VECTOR) &&
+                           (cfg_sub == VECTOR_COMPRESS);
+    wire select_mhc = (cfg_family == FAMILY_VECTOR) &&
+                      (cfg_sub == VECTOR_MHC);
+    wire select_hadamard = (cfg_family == FAMILY_VECTOR) &&
+                           (cfg_sub == VECTOR_HADAMARD);
+    wire select_index = (cfg_family == FAMILY_VECTOR) &&
+                        (cfg_sub == VECTOR_INDEX_SCORE);
+    wire implemented = select_mac | select_sel | select_dma | select_add |
+                       select_convert | select_scale | select_compress |
+                       select_mhc | select_hadamard | select_index;
+
+    wire profile_rne = cfg_rounding_mode == ROUND_NEAREST_EVEN;
+    wire profile_sequential =
+        cfg_reduction_order == REDUCTION_SEQUENTIAL_ASCENDING;
+    wire bounded_profile_controls =
+        (profile_accumulator_dtype == FMT_FP32) &&
+        !cfg_profile_saturate && (cfg_nan_policy == 0) &&
+        (cfg_epsilon_bits == 0) && (cfg_profile_flags == 0);
+    wire all_views_unscaled = cfg_view_scaled == 6'b0;
+
+    wire convert_contract_supported =
+        ((desc_in0_dtype == desc_out0_dtype) &&
+         (cfg_contract_digest == CONTRACT_IDENTITY_STORAGE)) ||
+        ((desc_in0_dtype == FMT_BF16) &&
+         (desc_out0_dtype == FMT_FP32) &&
+         (cfg_contract_digest == CONTRACT_BF16_TO_FP32)) ||
+        ((desc_in0_dtype == FMT_FP32) &&
+         (desc_out0_dtype == FMT_BF16) &&
+         (cfg_contract_digest == CONTRACT_FP32_TO_BF16)) ||
+        ((desc_in0_dtype == FMT_FP8_E4M3FN) &&
+         (desc_out0_dtype == FMT_BF16) &&
+         (cfg_contract_digest == CONTRACT_FP8_TO_BF16));
+    wire convert_descriptor_supported =
+        (cfg_input_valid == 4'b0001) &&
+        (cfg_output_valid == 2'b01) &&
+        all_views_unscaled && (cfg_aux_valid == 0) &&
+        shape_well_formed(desc_in0_rank, cfg_input0_dims) &&
+        (desc_out0_rank == desc_in0_rank) &&
+        (cfg_output0_dims == cfg_input0_dims) &&
+        (shape_elements(desc_in0_rank, cfg_input0_dims) == cfg_count) &&
+        (cfg_count != 0) &&
+        (cfg_dtype_a == desc_in0_dtype) &&
+        (cfg_block_a[7:0] == desc_out0_dtype) &&
+        cfg_profile_valid &&
+        (profile_input_dtype == desc_in0_dtype) &&
+        (profile_second_dtype == desc_in0_dtype) &&
+        (profile_output_dtype == desc_out0_dtype) &&
+        profile_rne && profile_sequential && bounded_profile_controls &&
+        (cfg_profile_scale_bits == 0) && convert_contract_supported;
+
+    wire scale_elementwise = cfg_aux0 == 32'd1;
+    wire scale_contract_supported =
+        ((!scale_elementwise &&
+          (cfg_contract_digest == CONTRACT_BF16_SCALE)) ||
+         (scale_elementwise &&
+          (cfg_contract_digest == CONTRACT_BF16_MUL)));
+    wire scale_descriptor_supported =
+        (cfg_output_valid == 2'b01) &&
+        (cfg_input_valid == (scale_elementwise ? 4'b0011 : 4'b0001)) &&
+        (cfg_aux_valid == 4'b0001) &&
+        ((cfg_aux0 == 0) || scale_elementwise) &&
+        (cfg_aux1 == NO_ID) && (cfg_aux2 == NO_ID) && (cfg_aux3 == NO_ID) &&
+        all_views_unscaled &&
+        (desc_in0_dtype == FMT_BF16) &&
+        (!scale_elementwise || (desc_in1_dtype == FMT_BF16)) &&
+        (desc_out0_dtype == FMT_BF16) &&
+        shape_well_formed(desc_in0_rank, cfg_input0_dims) &&
+        (desc_out0_rank == desc_in0_rank) &&
+        (cfg_output0_dims == cfg_input0_dims) &&
+        (!scale_elementwise ||
+         ((desc_in1_rank == desc_in0_rank) &&
+          (cfg_input1_dims == cfg_input0_dims))) &&
+        (shape_elements(desc_in0_rank, cfg_input0_dims) == cfg_count) &&
+        (cfg_count != 0) && (cfg_count <= 512) &&
+        (cfg_dtype_a == desc_in0_dtype) &&
+        (!scale_elementwise || (cfg_dtype_b == desc_in1_dtype)) &&
+        (cfg_block_a == cfg_aux0[15:0]) &&
+        cfg_profile_valid &&
+        (profile_input_dtype == FMT_BF16) &&
+        (profile_second_dtype == FMT_BF16) &&
+        (profile_output_dtype == FMT_BF16) &&
+        profile_rne && profile_sequential && bounded_profile_controls &&
+        (cfg_c_base == cfg_profile_scale_bits) && scale_contract_supported;
+
+    wire hadamard_descriptor_supported =
+        (cfg_input_valid == 4'b0001) &&
+        (cfg_output_valid == 2'b01) && (cfg_aux_valid == 0) &&
+        all_views_unscaled &&
+        (desc_in0_dtype == FMT_BF16) &&
+        (desc_out0_dtype == FMT_BF16) &&
+        shape_well_formed(desc_in0_rank, cfg_input0_dims) &&
+        (desc_out0_rank == desc_in0_rank) &&
+        (cfg_output0_dims == cfg_input0_dims) &&
+        (shape_last(desc_in0_rank, cfg_input0_dims) == 128) &&
+        (shape_elements(desc_in0_rank, cfg_input0_dims) == cfg_count) &&
+        (cfg_count >= 128) && (cfg_count <= 512) &&
+        (cfg_rows == (cfg_count >> 7)) && (cfg_cols == 128) &&
+        (cfg_dtype_a == desc_in0_dtype) && cfg_profile_valid &&
+        (profile_input_dtype == FMT_BF16) &&
+        (profile_second_dtype == FMT_BF16) &&
+        (profile_output_dtype == FMT_BF16) &&
+        profile_rne && profile_sequential && bounded_profile_controls &&
+        (cfg_profile_scale_bits == 0) &&
+        (cfg_contract_digest == CONTRACT_HADAMARD);
+
+    wire index_descriptor_supported =
+        (cfg_input_valid == 4'b0111) &&
+        (cfg_output_valid == 2'b01) && (cfg_aux_valid == 0) &&
+        all_views_unscaled &&
+        (desc_in0_dtype == FMT_BF16) &&
+        (desc_in1_dtype == FMT_BF16) &&
+        (desc_in2_dtype == FMT_BF16) &&
+        (desc_out0_dtype == FMT_BF16) &&
+        (desc_in0_rank == 4) && (desc_in1_rank == 3) &&
+        (desc_in2_rank == 3) && (desc_out0_rank == 3) &&
+        shape_well_formed(desc_in0_rank, cfg_input0_dims) &&
+        shape_well_formed(desc_in1_rank, cfg_input1_dims) &&
+        shape_well_formed(desc_in2_rank, cfg_input2_dims) &&
+        shape_well_formed(desc_out0_rank, cfg_output0_dims) &&
+        (cfg_input0_dims[31:0] == 1) &&
+        (cfg_input0_dims[31:0] == cfg_input1_dims[31:0]) &&
+        (cfg_input0_dims[31:0] == cfg_input2_dims[31:0]) &&
+        (cfg_input0_dims[31:0] == cfg_output0_dims[31:0]) &&
+        (cfg_input0_dims[63:32] == cfg_input2_dims[63:32]) &&
+        (cfg_input0_dims[63:32] == cfg_output0_dims[63:32]) &&
+        (cfg_input0_dims[95:64] == 4) &&
+        (cfg_input0_dims[95:64] == cfg_input2_dims[95:64]) &&
+        (cfg_input0_dims[127:96] == cfg_input1_dims[95:64]) &&
+        (cfg_input1_dims[63:32] == cfg_output0_dims[95:64]) &&
+        (cfg_rows == cfg_input0_dims[63:32]) &&
+        (cfg_cols == cfg_input1_dims[63:32]) &&
+        (cfg_depth == cfg_input0_dims[127:96]) &&
+        (cfg_slots == cfg_input0_dims[95:64]) &&
+        (cfg_count == shape_elements(desc_out0_rank, cfg_output0_dims)) &&
+        (cfg_dtype_a == desc_in0_dtype) &&
+        (cfg_dtype_b == desc_in1_dtype) && cfg_profile_valid &&
+        (profile_input_dtype == FMT_BF16) &&
+        (profile_second_dtype == FMT_BF16) &&
+        (profile_output_dtype == FMT_BF16) &&
+        profile_rne && profile_sequential && bounded_profile_controls &&
+        (cfg_profile_scale_bits == 32'h3f80_0000) &&
+        (cfg_c_base == cfg_profile_scale_bits) &&
+        (cfg_contract_digest == CONTRACT_INDEX_SCORE);
+
+    wire compress_descriptor_supported =
+        (cfg_input_valid == 4'b0111) &&
+        (cfg_output_valid == 2'b01) &&
+        (cfg_aux_valid == 4'b0001) && (cfg_aux0 == 0) &&
+        (cfg_aux1 == NO_ID) && (cfg_aux2 == NO_ID) && (cfg_aux3 == NO_ID) &&
+        all_views_unscaled &&
+        (desc_in0_dtype == FMT_BF16) &&
+        (desc_in1_dtype == FMT_BF16) &&
+        (desc_in2_dtype == FMT_BF16) &&
+        (desc_out0_dtype == FMT_FP32) &&
+        (desc_in0_rank == 3) && (desc_in1_rank == 2) &&
+        (desc_in2_rank == 2) && (desc_out0_rank == 4) &&
+        shape_well_formed(desc_in0_rank, cfg_input0_dims) &&
+        shape_well_formed(desc_in1_rank, cfg_input1_dims) &&
+        shape_well_formed(desc_in2_rank, cfg_input2_dims) &&
+        shape_well_formed(desc_out0_rank, cfg_output0_dims) &&
+        (cfg_input0_dims[95:64] == cfg_input1_dims[63:32]) &&
+        (cfg_input0_dims[95:64] == cfg_input2_dims[63:32]) &&
+        (cfg_input1_dims[31:0] == cfg_input2_dims[31:0]) &&
+        (cfg_output0_dims[31:0] == cfg_input0_dims[31:0]) &&
+        (cfg_output0_dims[63:32] == cfg_input0_dims[63:32]) &&
+        (cfg_output0_dims[95:64] == 2) &&
+        (cfg_output0_dims[127:96] == cfg_input1_dims[31:0]) &&
+        (cfg_rows == (cfg_input0_dims[31:0] * cfg_input0_dims[63:32])) &&
+        (cfg_cols == cfg_input1_dims[31:0]) &&
+        (cfg_depth == cfg_input0_dims[95:64]) &&
+        (cfg_count == shape_elements(desc_out0_rank, cfg_output0_dims)) &&
+        (cfg_block_a == cfg_aux0[15:0]) &&
+        (cfg_dtype_a == desc_in0_dtype) &&
+        (cfg_dtype_b == desc_in1_dtype) && cfg_profile_valid &&
+        (profile_input_dtype == FMT_BF16) &&
+        (profile_second_dtype == FMT_BF16) &&
+        (profile_output_dtype == FMT_FP32) &&
+        profile_rne && profile_sequential && bounded_profile_controls &&
+        (cfg_profile_scale_bits == 0) &&
+        (cfg_contract_digest == CONTRACT_COMPRESS_PROJECT);
+
+    wire mhc_descriptor_supported =
+        (cfg_input_valid == 4'b1111) &&
+        (cfg_output_valid == 2'b01) &&
+        (cfg_aux_valid == 4'b0101) &&
+        (cfg_aux0 == 1) && (cfg_aux1 == NO_ID) &&
+        (cfg_aux2 == 4) && (cfg_aux3 == NO_ID) &&
+        all_views_unscaled &&
+        (desc_in0_dtype == FMT_BF16) &&
+        (desc_in1_dtype == FMT_BF16) &&
+        (desc_in2_dtype == FMT_FP32) &&
+        (desc_in3_dtype == FMT_FP32) &&
+        (desc_out0_dtype == FMT_BF16) &&
+        (desc_in0_rank == 3) && (desc_in1_rank == 4) &&
+        (desc_in2_rank == 3) && (desc_in3_rank == 4) &&
+        (desc_out0_rank == 4) &&
+        shape_well_formed(desc_in0_rank, cfg_input0_dims) &&
+        shape_well_formed(desc_in1_rank, cfg_input1_dims) &&
+        shape_well_formed(desc_in2_rank, cfg_input2_dims) &&
+        shape_well_formed(desc_in3_rank, cfg_input3_dims) &&
+        shape_well_formed(desc_out0_rank, cfg_output0_dims) &&
+        (cfg_input1_dims == cfg_output0_dims) &&
+        (cfg_input1_dims[31:0] == cfg_input0_dims[31:0]) &&
+        (cfg_input1_dims[63:32] == cfg_input0_dims[63:32]) &&
+        (cfg_input1_dims[127:96] == cfg_input0_dims[95:64]) &&
+        (cfg_input1_dims[95:64] == 4) &&
+        (cfg_input2_dims[31:0] == cfg_input0_dims[31:0]) &&
+        (cfg_input2_dims[63:32] == cfg_input0_dims[63:32]) &&
+        (cfg_input2_dims[95:64] == 4) &&
+        (cfg_input3_dims[31:0] == cfg_input0_dims[31:0]) &&
+        (cfg_input3_dims[63:32] == cfg_input0_dims[63:32]) &&
+        (cfg_input3_dims[95:64] == 4) &&
+        (cfg_input3_dims[127:96] == 4) &&
+        (cfg_rows == (cfg_input0_dims[31:0] * cfg_input0_dims[63:32])) &&
+        (cfg_cols == cfg_input0_dims[95:64]) && (cfg_slots == 4) &&
+        (cfg_count == shape_elements(desc_out0_rank, cfg_output0_dims)) &&
+        (cfg_block_a == cfg_aux0[15:0]) &&
+        (cfg_block_b == cfg_aux2[15:0]) &&
+        (cfg_dtype_a == desc_in0_dtype) &&
+        (cfg_dtype_b == desc_in1_dtype) && !cfg_profile_valid &&
+        (cfg_profile_dtypes == 0) &&
+        (cfg_rounding_mode == 0) && (cfg_reduction_order == 0) &&
+        !cfg_profile_saturate && (cfg_nan_policy == 0) &&
+        (cfg_profile_scale_bits == 0) && (cfg_epsilon_bits == 0) &&
+        (cfg_profile_flags == 0) &&
+        (cfg_contract_digest == CONTRACT_MHC_POST);
+
+    wire descriptor_admitted = select_convert ? convert_descriptor_supported
+                             : select_scale ? scale_descriptor_supported
+                             : select_hadamard ? hadamard_descriptor_supported
+                             : select_index ? index_descriptor_supported
+                             : select_compress ? compress_descriptor_supported
+                             : select_mhc ? mhc_descriptor_supported
+                             : 1'b1;
 
     // -- TENSOR.MATMUL ---------------------------------------------------
     wire        mac_a_en, mac_b_en, mac_s_en, mac_t_en, mac_we, mac_busy, mac_done;
@@ -204,31 +593,209 @@ module ot_a3_engine_array (
         .out_count(add_out_count), .saturation_count(add_sat)
     );
 
+    // -- VECTOR.CONVERT --------------------------------------------------
+    // cfg_block_a carries the destination dtype for this bounded form.
+    wire        convert_a_en, convert_we, convert_busy, convert_done;
+    wire [31:0] convert_a_addr, convert_addr, convert_data;
+    wire [31:0] convert_out_count, convert_sat;
+    wire [7:0]  convert_error;
+
+    ot_a3_vector_convert converter (
+        .clk(clk), .rst_n(rst_n),
+        .start(start & select_convert & descriptor_admitted),
+        .cfg_count(cfg_count),
+        .cfg_input_dtype(cfg_dtype_a),
+        .cfg_output_dtype(cfg_block_a[7:0]),
+        .cfg_input_base(cfg_a_base), .cfg_output_base(cfg_out_base),
+        .a_rd_en(convert_a_en), .a_rd_addr(convert_a_addr),
+        .a_rd_data(m0_rd_data),
+        .out_we(convert_we), .out_addr(convert_addr), .out_data(convert_data),
+        .busy(convert_busy), .done(convert_done), .error_code(convert_error),
+        .out_count(convert_out_count), .saturation_count(convert_sat)
+    );
+
+    // -- VECTOR.SCALE ----------------------------------------------------
+    // cfg_block_a is aux0 and cfg_c_base carries the profile's scale_bits.
+    wire        scale_a_en, scale_b_en, scale_we, scale_busy, scale_done;
+    wire [31:0] scale_a_addr, scale_b_addr, scale_addr, scale_data;
+    wire [31:0] scale_out_count, scale_sat;
+    wire [7:0]  scale_error;
+
+    ot_a3_vector_scale scaler (
+        .clk(clk), .rst_n(rst_n),
+        .start(start & select_scale & descriptor_admitted),
+        .cfg_count(cfg_count),
+        .cfg_dtype_a(cfg_dtype_a), .cfg_dtype_b(cfg_dtype_b),
+        .cfg_aux0(cfg_block_a), .cfg_scale_bits(cfg_c_base),
+        .cfg_a_base(cfg_a_base), .cfg_b_base(cfg_b_base),
+        .cfg_out_base(cfg_out_base),
+        .a_rd_en(scale_a_en), .a_rd_addr(scale_a_addr), .a_rd_data(m0_rd_data),
+        .b_rd_en(scale_b_en), .b_rd_addr(scale_b_addr), .b_rd_data(m1_rd_data),
+        .out_we(scale_we), .out_addr(scale_addr), .out_data(scale_data),
+        .busy(scale_busy), .done(scale_done), .error_code(scale_error),
+        .out_count(scale_out_count), .saturation_count(scale_sat)
+    );
+
+    // -- VECTOR.HADAMARD -------------------------------------------------
+    wire        had_a_en, had_we, had_busy, had_done;
+    wire [31:0] had_a_addr, had_addr, had_data, had_out_count;
+    wire [7:0]  had_error;
+
+    ot_a3_vector_hadamard hadamard (
+        .clk(clk), .rst_n(rst_n),
+        .start(start & select_hadamard & descriptor_admitted),
+        .cfg_rows(cfg_rows), .cfg_cols(cfg_cols), .cfg_count(cfg_count),
+        .cfg_dtype_a(cfg_dtype_a),
+        .cfg_a_base(cfg_a_base), .cfg_out_base(cfg_out_base),
+        .a_rd_en(had_a_en), .a_rd_addr(had_a_addr), .a_rd_data(m0_rd_data),
+        .out_we(had_we), .out_addr(had_addr), .out_data(had_data),
+        .busy(had_busy), .done(had_done), .error_code(had_error),
+        .out_count(had_out_count)
+    );
+
+    // -- VECTOR.INDEX_SCORE ---------------------------------------------
+    // cfg_slots is the head count, cfg_c_base the profile scale_bits and
+    // cfg_scale_a_base the third operand's image base.
+    wire        index_q_en, index_k_en, index_w_en;
+    wire        index_we, index_busy, index_done;
+    wire [31:0] index_q_addr, index_k_addr, index_w_addr;
+    wire [31:0] index_addr, index_data, index_out_count, index_work, index_sat;
+    wire [7:0]  index_error;
+
+    ot_a3_vector_index_score index_scorer (
+        .clk(clk), .rst_n(rst_n),
+        .start(start & select_index & descriptor_admitted),
+        .cfg_rows(cfg_rows), .cfg_cols(cfg_cols), .cfg_depth(cfg_depth),
+        .cfg_count(cfg_count), .cfg_heads(cfg_slots),
+        .cfg_scale_bits(cfg_c_base),
+        .cfg_dtype_a(cfg_dtype_a), .cfg_dtype_b(cfg_dtype_b),
+        .cfg_query_base(cfg_a_base), .cfg_key_base(cfg_b_base),
+        .cfg_weight_base(cfg_scale_a_base), .cfg_out_base(cfg_out_base),
+        .q_rd_en(index_q_en), .q_rd_addr(index_q_addr), .q_rd_data(m0_rd_data),
+        .k_rd_en(index_k_en), .k_rd_addr(index_k_addr), .k_rd_data(m1_rd_data),
+        .w_rd_en(index_w_en), .w_rd_addr(index_w_addr), .w_rd_data(m2_rd_data),
+        .out_we(index_we), .out_addr(index_addr), .out_data(index_data),
+        .busy(index_busy), .done(index_done), .error_code(index_error),
+        .out_count(index_out_count), .work_count(index_work),
+        .saturation_count(index_sat)
+    );
+
+    // -- VECTOR.COMPRESS / COMPRESS_PROJECT -----------------------------
+    // cfg_block_a is aux0 and cfg_scale_a_base is the gate-weight base.
+    wire        compress_h_en, compress_kv_en, compress_gate_en;
+    wire        compress_we, compress_busy, compress_done;
+    wire [31:0] compress_h_addr, compress_kv_addr, compress_gate_addr;
+    wire [31:0] compress_addr, compress_data, compress_out_count, compress_work;
+    wire [7:0]  compress_error;
+
+    ot_a3_vector_compress_project compressor (
+        .clk(clk), .rst_n(rst_n),
+        .start(start & select_compress & descriptor_admitted),
+        .cfg_rows(cfg_rows), .cfg_cols(cfg_cols), .cfg_depth(cfg_depth),
+        .cfg_count(cfg_count), .cfg_aux0(cfg_block_a),
+        .cfg_dtype_a(cfg_dtype_a), .cfg_dtype_b(cfg_dtype_b),
+        .cfg_hidden_base(cfg_a_base), .cfg_kv_base(cfg_b_base),
+        .cfg_gate_base(cfg_scale_a_base), .cfg_out_base(cfg_out_base),
+        .h_rd_en(compress_h_en), .h_rd_addr(compress_h_addr),
+        .h_rd_data(m0_rd_data),
+        .kv_rd_en(compress_kv_en), .kv_rd_addr(compress_kv_addr),
+        .kv_rd_data(m1_rd_data),
+        .gate_rd_en(compress_gate_en), .gate_rd_addr(compress_gate_addr),
+        .gate_rd_data(m2_rd_data),
+        .out_we(compress_we), .out_addr(compress_addr), .out_data(compress_data),
+        .busy(compress_busy), .done(compress_done),
+        .error_code(compress_error), .out_count(compress_out_count),
+        .work_count(compress_work)
+    );
+
+    // -- VECTOR.MHC / HYPER_CONNECT_POST --------------------------------
+    // cfg_block_a is aux0, cfg_block_b is aux2/hc_mult, cfg_slots repeats the
+    // operand multiplier, and m2/m3 carry post/combination respectively.
+    wire        mhc_branch_en, mhc_residual_en, mhc_post_en, mhc_comb_en;
+    wire        mhc_we, mhc_busy, mhc_done;
+    wire [31:0] mhc_branch_addr, mhc_residual_addr, mhc_post_addr, mhc_comb_addr;
+    wire [31:0] mhc_addr, mhc_data, mhc_out_count, mhc_work, mhc_sat;
+    wire [7:0]  mhc_error;
+
+    ot_a3_vector_mhc_post mhc_post (
+        .clk(clk), .rst_n(rst_n),
+        .start(start & select_mhc & descriptor_admitted),
+        .cfg_sites(cfg_rows), .cfg_hidden(cfg_cols), .cfg_count(cfg_count),
+        .cfg_multiplier(cfg_slots), .cfg_aux0(cfg_block_a),
+        .cfg_aux2(cfg_block_b),
+        .cfg_dtype_a(cfg_dtype_a), .cfg_dtype_b(cfg_dtype_b),
+        .cfg_branch_base(cfg_a_base), .cfg_residual_base(cfg_b_base),
+        .cfg_post_base(cfg_scale_a_base), .cfg_comb_base(cfg_scale_b_base),
+        .cfg_out_base(cfg_out_base),
+        .branch_rd_en(mhc_branch_en), .branch_rd_addr(mhc_branch_addr),
+        .branch_rd_data(m0_rd_data),
+        .residual_rd_en(mhc_residual_en), .residual_rd_addr(mhc_residual_addr),
+        .residual_rd_data(m1_rd_data),
+        .post_rd_en(mhc_post_en), .post_rd_addr(mhc_post_addr),
+        .post_rd_data(m2_rd_data),
+        .comb_rd_en(mhc_comb_en), .comb_rd_addr(mhc_comb_addr),
+        .comb_rd_data(m3_rd_data),
+        .out_we(mhc_we), .out_addr(mhc_addr), .out_data(mhc_data),
+        .busy(mhc_busy), .done(mhc_done), .error_code(mhc_error),
+        .out_count(mhc_out_count), .work_count(mhc_work),
+        .saturation_count(mhc_sat)
+    );
+
     // -- operand and result port arbitration -----------------------------
-    assign m0_rd_en = mac_a_en | sel_a_en | dma_idx_en | add_a_en;
+    assign m0_rd_en = mac_a_en | sel_a_en | dma_idx_en | add_a_en |
+                      convert_a_en | scale_a_en | had_a_en | index_q_en |
+                      compress_h_en | mhc_branch_en;
     assign m0_rd_addr = select_mac ? mac_a_addr
                       : select_sel ? sel_a_addr
                       : select_dma ? dma_idx_addr
-                      : add_a_addr;
-    assign m1_rd_en = mac_b_en | dma_src_en | add_b_en;
+                      : select_add ? add_a_addr
+                      : select_convert ? convert_a_addr
+                      : select_scale ? scale_a_addr
+                      : select_hadamard ? had_a_addr
+                      : select_index ? index_q_addr
+                      : select_compress ? compress_h_addr
+                      : mhc_branch_addr;
+    assign m1_rd_en = mac_b_en | dma_src_en | add_b_en | scale_b_en |
+                      index_k_en | compress_kv_en | mhc_residual_en;
     assign m1_rd_addr = select_mac ? mac_b_addr
                       : select_dma ? dma_src_addr
-                      : add_b_addr;
-    assign m2_rd_en = mac_s_en;
-    assign m2_rd_addr = mac_s_addr;
-    assign m3_rd_en = mac_t_en;
-    assign m3_rd_addr = mac_t_addr;
+                      : select_add ? add_b_addr
+                      : select_scale ? scale_b_addr
+                      : select_index ? index_k_addr
+                      : select_compress ? compress_kv_addr
+                      : mhc_residual_addr;
+    assign m2_rd_en = mac_s_en | index_w_en | compress_gate_en | mhc_post_en;
+    assign m2_rd_addr = select_mac ? mac_s_addr
+                      : select_index ? index_w_addr
+                      : select_compress ? compress_gate_addr
+                      : mhc_post_addr;
+    assign m3_rd_en = mac_t_en | mhc_comb_en;
+    assign m3_rd_addr = select_mac ? mac_t_addr : mhc_comb_addr;
 
-    assign out_we = mac_we | sel_we | dma_we | add_we;
+    assign out_we = mac_we | sel_we | dma_we | add_we | convert_we |
+                    scale_we | had_we | index_we | compress_we | mhc_we;
     assign out_addr = select_mac ? mac_addr
                     : select_sel ? sel_addr
                     : select_dma ? dma_addr
-                    : add_addr;
+                    : select_add ? add_addr
+                    : select_convert ? convert_addr
+                    : select_scale ? scale_addr
+                    : select_hadamard ? had_addr
+                    : select_index ? index_addr
+                    : select_compress ? compress_addr
+                    : mhc_addr;
     assign out_data = select_mac ? mac_data
                     : select_sel ? sel_data
                     : select_dma ? dma_data
-                    : add_data;
-    assign busy = mac_busy | sel_busy | dma_busy | add_busy;
+                    : select_add ? add_data
+                    : select_convert ? convert_data
+                    : select_scale ? scale_data
+                    : select_hadamard ? had_data
+                    : select_index ? index_data
+                    : select_compress ? compress_data
+                    : mhc_data;
+    assign busy = mac_busy | sel_busy | dma_busy | add_busy | convert_busy |
+                  scale_busy | had_busy | index_busy | compress_busy | mhc_busy;
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -241,8 +808,9 @@ module ot_a3_engine_array (
             tie_multiplicity <= 32'b0;
         end else begin
             done <= 1'b0;
-            if (start && !implemented) begin
-                // Fail closed on an operation this array does not implement.
+            if (start && (!implemented || !descriptor_admitted)) begin
+                // Fail closed on an unimplemented operation or on descriptor
+                // metadata that does not prove the selected bounded profile.
                 error_code <= ERR_SHAPE;
                 result_count <= 32'b0;
                 saturation_count <= 32'b0;
@@ -279,6 +847,59 @@ module ot_a3_engine_array (
                 result_count <= add_out_count;
                 saturation_count <= add_sat;
                 work_count <= add_out_count;
+                token <= 32'b0;
+                tie_multiplicity <= 32'b0;
+                done <= 1'b1;
+            end else if (convert_done) begin
+                error_code <= convert_error;
+                result_count <= convert_out_count;
+                saturation_count <= convert_sat;
+                work_count <= (convert_error == ERR_NONE)
+                            ? convert_out_count : 32'b0;
+                token <= 32'b0;
+                tie_multiplicity <= 32'b0;
+                done <= 1'b1;
+            end else if (scale_done) begin
+                error_code <= scale_error;
+                result_count <= scale_out_count;
+                saturation_count <= scale_sat;
+                work_count <= (scale_error == ERR_NONE)
+                            ? scale_out_count : 32'b0;
+                token <= 32'b0;
+                tie_multiplicity <= 32'b0;
+                done <= 1'b1;
+            end else if (had_done) begin
+                error_code <= had_error;
+                result_count <= had_out_count;
+                saturation_count <= 32'b0;
+                work_count <= (had_error == ERR_NONE)
+                            ? had_out_count : 32'b0;
+                token <= 32'b0;
+                tie_multiplicity <= 32'b0;
+                done <= 1'b1;
+            end else if (index_done) begin
+                error_code <= index_error;
+                result_count <= index_out_count;
+                saturation_count <= index_sat;
+                work_count <= (index_error == ERR_NONE)
+                            ? index_work : 32'b0;
+                token <= 32'b0;
+                tie_multiplicity <= 32'b0;
+                done <= 1'b1;
+            end else if (compress_done) begin
+                error_code <= compress_error;
+                result_count <= compress_out_count;
+                saturation_count <= 32'b0;
+                work_count <= (compress_error == ERR_NONE)
+                            ? compress_work : 32'b0;
+                token <= 32'b0;
+                tie_multiplicity <= 32'b0;
+                done <= 1'b1;
+            end else if (mhc_done) begin
+                error_code <= mhc_error;
+                result_count <= mhc_out_count;
+                saturation_count <= mhc_sat;
+                work_count <= (mhc_error == ERR_NONE) ? mhc_work : 32'b0;
                 token <= 32'b0;
                 tie_multiplicity <= 32'b0;
                 done <= 1'b1;

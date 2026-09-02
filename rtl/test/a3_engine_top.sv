@@ -22,7 +22,7 @@
 //   e3_m2.hex      operand-0 E8M0 block scales
 //   e3_m3.hex      operand-1 E8M0 block scales
 //   e3_expect.hex  the elements the functional engine wrote
-//   e3_case.hex    one 32-word record per case
+//   e3_case.hex    one descriptor-correlated record per case
 //   e3_meta.hex    case count and the campaign totals
 //
 // Every image carries one element per 32-bit word whatever the storage format
@@ -36,7 +36,7 @@ module ot_a3_engine_top #(
     parameter integer M2_WORDS     = 4096,
     parameter integer M3_WORDS     = 4096,
     parameter integer RESULT_WORDS = 40960,
-    parameter integer CASE_WORDS   = 4096,
+    parameter integer CASE_WORDS   = 16384,
     parameter integer META_WORDS   = 8
 ) (
     input  wire        clk,
@@ -66,6 +66,40 @@ module ot_a3_engine_top #(
     input  wire [31:0] cfg_slots,
     input  wire [31:0] cfg_trailing,
     input  wire [31:0] cfg_extent,
+    input  wire [3:0]  cfg_input_valid,
+    input  wire [1:0]  cfg_output_valid,
+    input  wire [31:0] cfg_input_dtypes,
+    input  wire [15:0] cfg_output_dtypes,
+    input  wire [23:0] cfg_view_ranks,
+    input  wire [5:0]  cfg_view_scaled,
+    input  wire        cfg_profile_valid,
+    input  wire [31:0] cfg_profile_dtypes,
+    input  wire [7:0]  cfg_rounding_mode,
+    input  wire [7:0]  cfg_reduction_order,
+    input  wire        cfg_profile_saturate,
+    input  wire [7:0]  cfg_nan_policy,
+    input  wire [31:0] cfg_profile_scale_bits,
+    input  wire [31:0] cfg_epsilon_bits,
+    input  wire [31:0] cfg_profile_flags,
+    input  wire [127:0] cfg_input0_dims,
+    input  wire [127:0] cfg_input1_dims,
+    input  wire [127:0] cfg_input2_dims,
+    input  wire [127:0] cfg_input3_dims,
+    input  wire [127:0] cfg_output0_dims,
+    input  wire [127:0] cfg_output1_dims,
+    input  wire [31:0] cfg_contract_0,
+    input  wire [31:0] cfg_contract_1,
+    input  wire [31:0] cfg_contract_2,
+    input  wire [31:0] cfg_contract_3,
+    input  wire [31:0] cfg_contract_4,
+    input  wire [31:0] cfg_contract_5,
+    input  wire [31:0] cfg_contract_6,
+    input  wire [31:0] cfg_contract_7,
+    input  wire [3:0]  cfg_aux_valid,
+    input  wire [31:0] cfg_aux0,
+    input  wire [31:0] cfg_aux1,
+    input  wire [31:0] cfg_aux2,
+    input  wire [31:0] cfg_aux3,
 
     output wire        busy,
     output wire        done,
@@ -104,8 +138,12 @@ module ot_a3_engine_top #(
     // point at all.
     input  wire [31:0] arith_a,
     input  wire [31:0] arith_b,
+    input  wire [31:0] arith_accumulator,
+    input  wire [15:0] arith_left_bf16,
+    input  wire [15:0] arith_right_bf16,
     output wire [33:0] arith_add,
     output wire [33:0] arith_mul,
+    output wire [33:0] arith_product_add,
     output wire [18:0] arith_bf16
 );
     reg [31:0] m0_mem   [0:M0_WORDS-1];
@@ -119,6 +157,10 @@ module ot_a3_engine_top #(
     assign probe_result = ot_a3_format_pkg::decode_element(probe_format, probe_word);
     assign arith_add  = ot_fp32_rne_pkg::fp32_add_rne(arith_a, arith_b);
     assign arith_mul  = ot_fp32_rne_pkg::fp32_mul_rne(arith_a, arith_b);
+    assign arith_product_add =
+        ot_fp32_rne_pkg::bf16_bf16_fp32_product_add_rne(
+            arith_accumulator, arith_left_bf16, arith_right_bf16
+        );
     assign arith_bf16 = ot_fp32_rne_pkg::fp32_to_bf16_rne(arith_a);
 
     integer clear_index;
@@ -192,6 +234,38 @@ module ot_a3_engine_top #(
         .cfg_slots(cfg_slots),
         .cfg_trailing(cfg_trailing),
         .cfg_extent(cfg_extent),
+        .cfg_input_valid(cfg_input_valid),
+        .cfg_output_valid(cfg_output_valid),
+        .cfg_input_dtypes(cfg_input_dtypes),
+        .cfg_output_dtypes(cfg_output_dtypes),
+        .cfg_view_ranks(cfg_view_ranks),
+        .cfg_view_scaled(cfg_view_scaled),
+        .cfg_profile_valid(cfg_profile_valid),
+        .cfg_profile_dtypes(cfg_profile_dtypes),
+        .cfg_rounding_mode(cfg_rounding_mode),
+        .cfg_reduction_order(cfg_reduction_order),
+        .cfg_profile_saturate(cfg_profile_saturate),
+        .cfg_nan_policy(cfg_nan_policy),
+        .cfg_profile_scale_bits(cfg_profile_scale_bits),
+        .cfg_epsilon_bits(cfg_epsilon_bits),
+        .cfg_profile_flags(cfg_profile_flags),
+        .cfg_input0_dims(cfg_input0_dims),
+        .cfg_input1_dims(cfg_input1_dims),
+        .cfg_input2_dims(cfg_input2_dims),
+        .cfg_input3_dims(cfg_input3_dims),
+        .cfg_output0_dims(cfg_output0_dims),
+        .cfg_output1_dims(cfg_output1_dims),
+        .cfg_contract_0(cfg_contract_0),
+        .cfg_contract_1(cfg_contract_1),
+        .cfg_contract_2(cfg_contract_2),
+        .cfg_contract_3(cfg_contract_3),
+        .cfg_contract_4(cfg_contract_4),
+        .cfg_contract_5(cfg_contract_5),
+        .cfg_contract_6(cfg_contract_6),
+        .cfg_contract_7(cfg_contract_7),
+        .cfg_aux_valid(cfg_aux_valid),
+        .cfg_aux0(cfg_aux0), .cfg_aux1(cfg_aux1),
+        .cfg_aux2(cfg_aux2), .cfg_aux3(cfg_aux3),
         .m0_rd_en(m0_rd_en), .m0_rd_addr(m0_rd_addr), .m0_rd_data(m0_rd_data),
         .m1_rd_en(m1_rd_en), .m1_rd_addr(m1_rd_addr), .m1_rd_data(m1_rd_data),
         .m2_rd_en(m2_rd_en), .m2_rd_addr(m2_rd_addr), .m2_rd_data(m2_rd_data),

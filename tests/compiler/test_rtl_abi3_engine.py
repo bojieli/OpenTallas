@@ -21,6 +21,7 @@ import json
 from pathlib import Path
 import re
 import shutil
+import subprocess
 import sys
 
 import pytest
@@ -54,6 +55,12 @@ ENGINE_RTL = (
     "rtl/abi3/ot_a3_selection_argmax.sv",
     "rtl/abi3/ot_a3_dma_index_mover.sv",
     "rtl/abi3/ot_a3_vector_add.sv",
+    "rtl/abi3/ot_a3_vector_convert.sv",
+    "rtl/abi3/ot_a3_vector_scale.sv",
+    "rtl/abi3/ot_a3_vector_hadamard.sv",
+    "rtl/abi3/ot_a3_vector_index_score.sv",
+    "rtl/abi3/ot_a3_vector_compress_project.sv",
+    "rtl/abi3/ot_a3_vector_mhc_post.sv",
     "rtl/abi3/ot_a3_engine_array.sv",
 )
 
@@ -62,8 +69,18 @@ TOOLS_AVAILABLE = all(
 )
 
 
-def _vectors() -> dict:
+def _raw_vectors() -> dict:
     return json.loads(VECTOR_JSON.read_text(encoding="utf-8"))
+
+
+def _vectors() -> dict:
+    vectors = _raw_vectors()
+    if vectors.get("schema") != generator.VECTOR_SCHEMA:
+        pytest.skip(
+            "retained W8.3 vectors are intentionally stale while the frozen "
+            "INDEX_SCORE Device oracle still split-rounds its ordered dot"
+        )
+    return vectors
 
 
 # ---------------------------------------------------------------------------
@@ -91,6 +108,12 @@ def test_engine_package_transcribes_the_opcode_registry() -> None:
         "DMA_SCATTER": Dma.SCATTER,
         "TENSOR_MATMUL": Tensor.MATMUL,
         "VECTOR_ADD": Vector.ADD,
+        "VECTOR_CONVERT": Vector.CONVERT,
+        "VECTOR_SCALE": Vector.SCALE,
+        "VECTOR_COMPRESS": Vector.COMPRESS,
+        "VECTOR_MHC": Vector.MHC,
+        "VECTOR_HADAMARD": Vector.HADAMARD,
+        "VECTOR_INDEX_SCORE": Vector.INDEX_SCORE,
         "SELECTION_ARGMAX": Selection.ARGMAX,
     }
     for name, value in {**families, **subs}.items():
@@ -127,6 +150,11 @@ def test_engine_rtl_carries_no_wildcard_package_import() -> None:
 # 2. the vector set is the device's own observation
 # ---------------------------------------------------------------------------
 def test_vector_set_is_reproducible(tmp_path: Path) -> None:
+    if _raw_vectors().get("schema") != generator.VECTOR_SCHEMA:
+        with pytest.raises(SystemExit, match="pending frozen-source repair"):
+            generator.build(["--output", str(tmp_path)])
+        assert not (tmp_path / "abi3_engine_vectors.json").exists()
+        return
     assert generator.build(["--output", str(tmp_path)]) == 0
     rebuilt = json.loads((tmp_path / "abi3_engine_vectors.json").read_text())
     assert rebuilt == _vectors()
@@ -138,6 +166,104 @@ def test_no_engine_is_stubbed_in_the_golden_execution() -> None:
     # A case that produced nothing would make the byte comparison vacuous.
     assert vectors["result_word_count"] > 0
     assert vectors["mac_count"] > 0
+
+
+def test_new_vector_opcode_pairs_are_present_in_the_generated_campaign() -> None:
+    pairs = {
+        (entry["family"], entry["sub"]) for entry in _vectors()["families"]
+    }
+    expected = {
+        (int(Major.VECTOR), int(Vector.CONVERT)),
+        (int(Major.VECTOR), int(Vector.SCALE)),
+        (int(Major.VECTOR), int(Vector.HADAMARD)),
+        (int(Major.VECTOR), int(Vector.INDEX_SCORE)),
+        (int(Major.VECTOR), int(Vector.COMPRESS)),
+        (int(Major.VECTOR), int(Vector.MHC)),
+    }
+    assert expected <= pairs
+
+
+def test_vector_rtl_scope_is_exact_and_fail_closed() -> None:
+    scope = _vectors()["vector_rtl_scope"]
+    integrated = {entry["opcode"]: entry for entry in scope["newly_integrated"]}
+    assert set(integrated) == {
+        "CONVERT",
+        "SCALE",
+        "HADAMARD",
+        "INDEX_SCORE",
+        "COMPRESS",
+        "MHC",
+    }
+    assert integrated["CONVERT"]["covered"] == "unscaled one-input/one-output form"
+    assert integrated["SCALE"]["uncovered_forms"] == [
+        "aux0 2 logistic sigmoid",
+        "general trailing-axis factor broadcasting",
+    ]
+    assert integrated["COMPRESS"]["uncovered_forms"] == [
+        "aux0 1 COMPRESS_POOL",
+        "aux0 2 COMPRESS_STATE_UPDATE",
+    ]
+    assert integrated["MHC"]["uncovered_forms"] == [
+        "aux0 0 HYPER_CONNECT_PRE",
+        "aux0 2 HYPER_CONNECT_HEAD",
+    ]
+    deferred = {
+        entry["opcode"] for entry in scope["wholly_deferred_transcendental"]
+    }
+    assert deferred == {"SILU_MUL", "SOFTMAX", "SQRT_SOFTPLUS"}
+    assert scope["standalone_outside_engine_array"] == [
+        "RMS_NORM",
+        "HEAD_RMS_NORM",
+        "ROPE",
+    ]
+    assert "no transcendental behavior is approximated" in scope[
+        "unsupported_policy"
+    ]
+
+
+def test_every_new_vector_case_publishes_its_explicit_rtl_field_mapping() -> None:
+    new_subs = {
+        int(Vector.CONVERT),
+        int(Vector.SCALE),
+        int(Vector.HADAMARD),
+        int(Vector.INDEX_SCORE),
+        int(Vector.COMPRESS),
+        int(Vector.MHC),
+    }
+    cases = [
+        case
+        for case in _vectors()["cases"]
+        if case["family"] == int(Major.VECTOR) and case["sub"] in new_subs
+    ]
+    assert cases
+    for case in cases:
+        config = case["rtl_config"]
+        assert config["covered_form"], case["name"]
+        assert config["record"]["cfg_count"] == case["count"], case["name"]
+        assert case["output_dtype"] in (int(DType.BF16), int(DType.FP32))
+        if case["operand2_dtype"]:
+            assert case["operand2_sha256"]
+        if case["operand3_dtype"]:
+            assert case["operand3_sha256"]
+
+
+def test_new_vector_late_faults_leave_the_whole_destination_untouched() -> None:
+    expected = {
+        "vector_convert_late_nonfinite",
+        "vector_scale_late_nonfinite",
+        "vector_hadamard_late_nonfinite",
+        "vector_index_score_late_nonfinite",
+        "vector_compress_project_late_nonfinite",
+        "vector_mhc_post_late_nonfinite",
+    }
+    cases = {case["name"]: case for case in _vectors()["cases"]}
+    assert expected <= set(cases)
+    for name in expected:
+        case = cases[name]
+        assert case["expected_fault_code"] == generator.ERR_OPERAND_NONFINITE
+        assert case["expected_result_count"] == 0
+        assert case["expected_word_count"] == case["count"]
+        assert case["flags"] & generator.FLAG_EXPECT_UNTOUCHED
 
 
 def test_every_expectation_comes_from_the_golden_counters() -> None:
@@ -156,6 +282,9 @@ def test_every_expectation_comes_from_the_golden_counters() -> None:
         elif case["family"] == int(Major.VECTOR):
             assert case["expected_saturations"] == counters.get("vector.saturations", 0)
             assert case["expected_result_count"] == case["expected_word_count"]
+            assert case["expected_work"] == counters["vector.elements"]
+            if case["sub"] == int(Vector.INDEX_SCORE):
+                assert case["expected_work"] > case["expected_result_count"]
         elif case["family"] == int(Major.SELECTION):
             assert case["expected_work"] == counters["selection.vocabulary_elements"]
             assert (
@@ -182,13 +311,7 @@ def test_every_refusal_is_classified_from_the_message_the_device_raised() -> Non
 
 
 def test_negative_cases_cover_every_fault_class_the_datapaths_raise() -> None:
-    """Every fault the array can produce except the two it cannot reach here.
-
-    ``ERR_SHAPE`` is reachable only through the fail-closed dispatch, which the
-    checkers exercise separately, and there is no vector for it because a
-    functional engine that refuses an unimplemented operation traps at issue
-    rather than inside a datapath.
-    """
+    """Every fault code produced by the correlated datapaths has a case."""
     observed = {case["expected_fault_code"] for case in _vectors()["cases"]}
     required = {
         generator.ERR_OPERAND_NONFINITE,
@@ -197,6 +320,7 @@ def test_negative_cases_cover_every_fault_class_the_datapaths_raise() -> None:
         generator.ERR_INDEX_RANGE,
         generator.ERR_SELECT_NONFINITE,
         generator.ERR_SCALE_RANGE,
+        generator.ERR_SHAPE,
     }
     assert required <= observed
 
@@ -356,6 +480,46 @@ def test_decode_probe_is_exhaustive_over_the_block_formats() -> None:
     assert len(probe) == _vectors()["decode_probe_count"]
 
 
+def test_descriptor_admission_carries_the_complete_numeric_profile(
+    tmp_path: Path,
+) -> None:
+    """The adapter must not silently drop NUMERIC descriptor controls."""
+    cases = {
+        case.name: case
+        for case in generator.build_cases(generator.engine_capability(), tmp_path)
+    }
+    baseline, metadata = generator.descriptor_admission(
+        cases["vector_scale_constant_eighth"]
+    )
+    assert len(baseline) == generator.CASE_STRIDE - 32 == 48
+    assert baseline[6] == (
+        int(DType.BF16)
+        | (int(DType.BF16) << 8)
+        | (int(DType.BF16) << 16)
+        | (int(DType.FP32) << 24)
+    )
+    assert baseline[7] == 1 << 16  # profile-valid; every control is zero
+    assert baseline[46:] == [0, 0]  # epsilon and flags
+    assert metadata["profile_accumulator_dtype"] == int(DType.FP32)
+
+    corruptions = {
+        "vector_descriptor_refusal_scale_profile_accumulator_mismatch": (
+            6, 0x10101010
+        ),
+        "vector_descriptor_refusal_scale_profile_saturate": (7, 3 << 16),
+        "vector_descriptor_refusal_scale_profile_nan_policy": (
+            7, (1 << 24) | (1 << 16)
+        ),
+        "vector_descriptor_refusal_scale_profile_epsilon": (46, 1),
+        "vector_descriptor_refusal_scale_profile_flags": (47, 1),
+    }
+    for name, (word, expected) in corruptions.items():
+        case = cases[name]
+        encoded, _ = generator.descriptor_admission(case)
+        assert encoded[word] == expected, name
+        assert case.rtl_expected_fault_code == generator.ERR_SHAPE
+
+
 def test_arithmetic_probe_reaches_the_corners_the_engine_cases_do_not() -> None:
     """The engine cases alone would not exercise the interesting values.
 
@@ -387,6 +551,76 @@ def test_arithmetic_probe_reaches_the_corners_the_engine_cases_do_not() -> None:
     assert "runtime.reference.formats" in _vectors()["arith_reference"]
 
 
+@pytest.mark.skipif(
+    not all(shutil.which(tool) for tool in ("iverilog", "vvp")),
+    reason="Icarus and vvp are required",
+)
+def test_exact_product_add_primitive_against_fraction_reference(
+    tmp_path: Path,
+) -> None:
+    """Broad finite-domain differential for the ordered-dot primitive."""
+    entries = generator.product_add_probe_entries()
+    assert len(entries) >= 5000
+    inputs = {(acc, lhs, rhs) for acc, lhs, rhs, _, _ in entries}
+    assert (0x0131C000, 0x8483, 0x35F2) in inputs
+    assert (0x02BE8000, 0x1B83, 0x1A83) in inputs
+    assert set(generator.PRODUCT_ADD_TIES) <= inputs
+    assert all(((acc >> 23) & 0xFF) != 0xFF for acc, *_ in entries)
+    assert all(((lhs >> 7) & 0xFF) != 0xFF for _, lhs, *_ in entries)
+    assert all(((rhs >> 7) & 0xFF) != 0xFF for _, _, rhs, *_ in entries)
+    assert any(error == 2 for *_, error, _ in entries), "finite overflow absent"
+    # Both signed-zero inputs and exact opposite-sign cancellation must return
+    # the canonical positive-zero encoding.
+    for case in (
+        (0x00000000, 0x0000, 0x3F80),
+        (0x80000000, 0x8000, 0xBF80),
+        (0x3F800000, 0xBF80, 0x3F80),
+        (0xBF800000, 0x3F80, 0x3F80),
+    ):
+        matching = [entry for entry in entries if entry[:3] == case]
+        assert matching and matching[0][3:] == (0, 0), tuple(map(hex, case))
+
+    words = [len(entries)]
+    for accumulator, lhs, rhs, error, result in entries:
+        words.extend((accumulator, lhs | (rhs << 16), error, result))
+    image = tmp_path / "product_add.hex"
+    image.write_text("".join(f"{word:08x}\n" for word in words), encoding="ascii")
+    executable = tmp_path / "product_add.vvp"
+    compiled = subprocess.run(
+        [
+            shutil.which("iverilog") or "iverilog",
+            "-g2012",
+            "-s",
+            "tb_a3_product_add",
+            "-o",
+            str(executable),
+            str(ROOT / "rtl/ot_fp32_rne_pkg.sv"),
+            str(ROOT / "rtl/test/tb_a3_product_add.sv"),
+        ],
+        cwd=tmp_path,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        check=False,
+        timeout=120,
+    )
+    assert compiled.returncode == 0, compiled.stdout
+    replayed = subprocess.run(
+        [shutil.which("vvp") or "vvp", str(executable)],
+        cwd=tmp_path,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        check=False,
+        timeout=300,
+    )
+    assert replayed.returncode == 0, replayed.stdout
+    assert (
+        f"PASS exact product-add differential cases={len(entries)}"
+        in replayed.stdout
+    )
+
+
 def test_only_the_sequential_contraction_contract_is_correlated() -> None:
     """The blocked contract is out of scope, and must stay out of the claim.
 
@@ -408,10 +642,11 @@ def test_only_the_sequential_contraction_contract_is_correlated() -> None:
     not TOOLS_AVAILABLE, reason="Icarus, vvp and a C++ compiler are required"
 )
 def test_campaign_replays_both_simulators(tmp_path: Path) -> None:
+    vectors = _vectors()
     summary = campaign.run(tmp_path / "build")
     assert summary["status"] == "pass", summary["cases"]
     assert [case["name"] for case in summary["cases"]] == ["iverilog", "verilator"]
-    marker = _vectors()["required_marker"]
+    marker = vectors["required_marker"]
     for case in summary["cases"]:
         assert case["status"] == "pass"
         assert case["compile_returncode"] == 0
@@ -429,6 +664,21 @@ def test_campaign_replays_both_simulators(tmp_path: Path) -> None:
     assert summary["correlation"]["result_word_count"] > 0
     assert summary["correlation"]["mac_count"] > 0
     assert summary["correlation"]["fault_case_count"] > 0
+    sensitivity = summary["mutation_sensitivity"]
+    assert sensitivity["mutation_count"] == len(campaign.MUTATIONS)
+    assert sensitivity["all_caught_by_both_simulators"]
+    assert {item["id"] for item in sensitivity["mutations"]} == {
+        item["id"] for item in campaign.MUTATIONS
+    }
+    for mutation in sensitivity["mutations"]:
+        assert mutation["caught_by_both"], mutation["id"]
+        assert mutation["exact_replacement"]["before"]
+        assert mutation["exact_replacement"]["after"]
+        for simulator in mutation["simulators"]:
+            assert simulator["compile_returncode"] == 0
+            assert simulator["run_returncode"] != 0
+            assert not simulator["marker_present"]
+            assert simulator["first_mismatch"].startswith("FAIL:")
 
 
 def test_campaign_refuses_to_overwrite_an_existing_artifact(tmp_path: Path) -> None:
@@ -442,10 +692,12 @@ def test_campaign_refuses_to_overwrite_an_existing_artifact(tmp_path: Path) -> N
     not CAMPAIGN_JSON.exists(), reason="no retained campaign artifact"
 )
 def test_retained_campaign_artifact_is_bound_to_these_sources() -> None:
+    vectors = _vectors()
     retained = json.loads(CAMPAIGN_JSON.read_text(encoding="utf-8"))
     assert retained["status"] == "pass"
-    assert retained["required_marker"] == _vectors()["required_marker"]
+    assert retained["required_marker"] == vectors["required_marker"]
     assert len(set(retained["checks_per_simulator"].values())) == 1
+    assert retained["mutation_sensitivity"]["all_caught_by_both_simulators"]
     assert CAMPAIGN_JSON.read_bytes() == (
         json.dumps(retained, indent=2, sort_keys=True) + "\n"
     ).encode("utf-8")

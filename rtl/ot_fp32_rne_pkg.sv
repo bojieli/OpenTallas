@@ -448,6 +448,191 @@ package ot_fp32_rne_pkg;
         end
     endfunction
 
+    // One NUM-4.1 ordered-dot step.  The BF16 product is kept exact and is
+    // added to the exact value of the binary32 accumulator before the single
+    // binary32 round-to-nearest-even boundary.  In particular, this is not
+    // equivalent to composing fp32_mul_rne with fp32_add_rne: a BF16 product
+    // can carry fourteen fraction bits, seven more than either operand, and
+    // those low bits can decide the final accumulator rounding.
+    //
+    // Every finite BF16 product and binary32 accumulator is an integer
+    // multiple of 2**-266.  The 524-bit magnitudes below cover bit 0 at that
+    // common exponent through the largest finite BF16 product at bit 521,
+    // plus the carry needed by same-sign addition.  The packed return remains
+    // {error[1:0], value}; a nonfinite input is error 1 and a finite exact sum
+    // outside binary32 is error 2.
+    function automatic [33:0] bf16_bf16_fp32_product_add_rne;
+        input [31:0] accumulator_code;
+        input [15:0] left_code;
+        input [15:0] right_code;
+        reg [1:0] error;
+        reg [31:0] result;
+        reg accumulator_sign;
+        reg product_sign;
+        reg result_sign;
+        reg [7:0] accumulator_field;
+        reg [7:0] left_field;
+        reg [7:0] right_field;
+        reg [23:0] accumulator_mantissa;
+        reg [7:0] left_mantissa;
+        reg [7:0] right_mantissa;
+        reg [15:0] product_mantissa;
+        reg [523:0] accumulator_magnitude;
+        reg [523:0] product_magnitude;
+        reg [523:0] exact_magnitude;
+        reg [23:0] main_mantissa;
+        reg [24:0] rounded_mantissa;
+        reg round_bit;
+        reg sticky;
+        integer accumulator_power;
+        integer left_power;
+        integer right_power;
+        integer accumulator_shift;
+        integer product_shift;
+        integer sum_msb;
+        integer floor_exponent;
+        integer shift_distance;
+        integer bit_index;
+        begin
+            error = FP_ERR_NONE;
+            result = 0;
+            accumulator_sign = accumulator_code[31];
+            product_sign = left_code[15] ^ right_code[15];
+            result_sign = 0;
+            accumulator_field = accumulator_code[30:23];
+            left_field = left_code[14:7];
+            right_field = right_code[14:7];
+            accumulator_mantissa = accumulator_field == 0
+                ? {1'b0, accumulator_code[22:0]}
+                : {1'b1, accumulator_code[22:0]};
+            left_mantissa = left_field == 0
+                ? {1'b0, left_code[6:0]}
+                : {1'b1, left_code[6:0]};
+            right_mantissa = right_field == 0
+                ? {1'b0, right_code[6:0]}
+                : {1'b1, right_code[6:0]};
+            product_mantissa = 0;
+            accumulator_magnitude = 0;
+            product_magnitude = 0;
+            exact_magnitude = 0;
+            main_mantissa = 0;
+            rounded_mantissa = 0;
+            round_bit = 0;
+            sticky = 0;
+            accumulator_power = 0;
+            left_power = 0;
+            right_power = 0;
+            accumulator_shift = 0;
+            product_shift = 0;
+            sum_msb = -1;
+            floor_exponent = 0;
+            shift_distance = 0;
+
+            if ((accumulator_field == 8'hff) ||
+                (left_field == 8'hff) || (right_field == 8'hff)) begin
+                error = FP_ERR_NONFINITE;
+            end else begin
+                // value = integer significand * 2**power.
+                accumulator_power = accumulator_field == 0
+                    ? -149 : ({24'b0, accumulator_field} - 150);
+                left_power = left_field == 0
+                    ? -133 : ({24'b0, left_field} - 134);
+                right_power = right_field == 0
+                    ? -133 : ({24'b0, right_field} - 134);
+                accumulator_shift = accumulator_power + 266;
+                product_shift = left_power + right_power + 266;
+                product_mantissa = left_mantissa * right_mantissa;
+                accumulator_magnitude =
+                    {{500{1'b0}}, accumulator_mantissa} << accumulator_shift;
+                product_magnitude =
+                    {{508{1'b0}}, product_mantissa} << product_shift;
+
+                if (accumulator_mantissa == 0) begin
+                    exact_magnitude = product_magnitude;
+                    result_sign = product_sign;
+                end else if (product_mantissa == 0) begin
+                    exact_magnitude = accumulator_magnitude;
+                    result_sign = accumulator_sign;
+                end else if (accumulator_sign == product_sign) begin
+                    exact_magnitude = accumulator_magnitude + product_magnitude;
+                    result_sign = accumulator_sign;
+                end else if (accumulator_magnitude >= product_magnitude) begin
+                    exact_magnitude = accumulator_magnitude - product_magnitude;
+                    result_sign = accumulator_sign;
+                end else begin
+                    exact_magnitude = product_magnitude - accumulator_magnitude;
+                    result_sign = product_sign;
+                end
+
+                for (bit_index = 0; bit_index < 524;
+                     bit_index = bit_index + 1)
+                    if (exact_magnitude[bit_index])
+                        sum_msb = bit_index;
+
+                if (sum_msb < 0) begin
+                    result = 0;
+                end else begin
+                    floor_exponent = sum_msb - 266;
+                    if (floor_exponent >= -126) begin
+                        shift_distance = sum_msb - 23;
+                        for (bit_index = 0; bit_index < 24;
+                             bit_index = bit_index + 1)
+                            if ((bit_index + shift_distance >= 0) &&
+                                (bit_index + shift_distance < 524))
+                                main_mantissa[bit_index] =
+                                    exact_magnitude[bit_index + shift_distance];
+                        if (shift_distance > 0)
+                            round_bit = exact_magnitude[shift_distance-1];
+                        for (bit_index = 0; bit_index < 524;
+                             bit_index = bit_index + 1)
+                            if (bit_index < shift_distance-1)
+                                sticky = sticky | exact_magnitude[bit_index];
+                        rounded_mantissa = {1'b0, main_mantissa};
+                        if (round_bit && (sticky || main_mantissa[0]))
+                            rounded_mantissa = rounded_mantissa + 1'b1;
+                        if (rounded_mantissa[24]) begin
+                            rounded_mantissa = rounded_mantissa >> 1;
+                            floor_exponent = floor_exponent + 1;
+                        end
+                        if (floor_exponent > 127) begin
+                            error = FP_ERR_OVERFLOW;
+                            result = 0;
+                        end else begin
+                            result = {result_sign, 8'b0,
+                                      rounded_mantissa[22:0]};
+                            result[30:23] = floor_exponent + 127;
+                        end
+                    end else begin
+                        // The shared unit is 2**-266 and the binary32
+                        // subnormal unit is 2**-149, hence this fixed shift.
+                        shift_distance = 117;
+                        for (bit_index = 0; bit_index < 24;
+                             bit_index = bit_index + 1)
+                            main_mantissa[bit_index] =
+                                exact_magnitude[bit_index + shift_distance];
+                        round_bit = exact_magnitude[shift_distance-1];
+                        for (bit_index = 0; bit_index < shift_distance-1;
+                             bit_index = bit_index + 1)
+                            sticky = sticky | exact_magnitude[bit_index];
+                        rounded_mantissa = {1'b0, main_mantissa};
+                        if (round_bit && (sticky || main_mantissa[0]))
+                            rounded_mantissa = rounded_mantissa + 1'b1;
+                        if (rounded_mantissa >= 25'h0800000)
+                            result = {result_sign, 8'h01, 23'b0};
+                        else
+                            result = {
+                                result_sign, 8'h00,
+                                rounded_mantissa[22:0]
+                            };
+                    end
+                    if (result[30:0] == 0)
+                        result = 0;
+                end
+            end
+            bf16_bf16_fp32_product_add_rne = {error, result};
+        end
+    endfunction
+
     // Return {error[1:0], saturated, bf16_code}.  Finite binary32 values that
     // round beyond the BF16 finite range saturate as required by the target
     // contract; nonfinite binary32 input remains an error.
