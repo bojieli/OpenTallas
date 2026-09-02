@@ -28,9 +28,7 @@ from runtime.sim.device import Device
 def _device(
     storage_class: StorageClass = StorageClass.HBM, *, nodes: int = 1
 ) -> Device:
-    topology = (
-        TopologyClass.SINGLE_CHIP if nodes == 1 else TopologyClass.CLUSTER_32
-    )
+    topology = TopologyClass.SINGLE_CHIP if nodes == 1 else TopologyClass.CLUSTER_32
     capability = fixture_capability(topology)
     return Device(
         build_fixture(
@@ -131,9 +129,7 @@ def test_a_truncated_payload_is_refused(tmp_path):
     device = _device()
     _dirty(device, seed=19)
     manifest = save_device_state(device, device.create_session(), tmp_path / "ckpt")
-    victim = next(
-        entry for entry in manifest["objects"] if entry["stored_bytes"] > 0
-    )
+    victim = next(entry for entry in manifest["objects"] if entry["stored_bytes"] > 0)
     blob = tmp_path / "ckpt" / victim["file"]
     blob.write_bytes(blob.read_bytes()[:-16])
     with pytest.raises(CheckpointError):
@@ -144,9 +140,7 @@ def test_a_payload_that_does_not_match_its_digest_is_refused(tmp_path):
     device = _device()
     _dirty(device, seed=23)
     manifest = save_device_state(device, device.create_session(), tmp_path / "ckpt")
-    victim = next(
-        entry for entry in manifest["objects"] if entry["stored_bytes"] > 0
-    )
+    victim = next(entry for entry in manifest["objects"] if entry["stored_bytes"] > 0)
     blob = tmp_path / "ckpt" / victim["file"]
     data = bytearray(blob.read_bytes())
     data[-1] ^= 0xFF
@@ -161,9 +155,7 @@ def test_every_writable_object_is_serialised(tmp_path):
     manifest = save_device_state(device, device.create_session(), tmp_path / "ckpt")
     serialised = {int(entry["object_id"]) for entry in manifest["objects"]}
     writable = {
-        object_id
-        for object_id, obj in device.memory.objects.items()
-        if obj.writable
+        object_id for object_id, obj in device.memory.objects.items() if obj.writable
     }
     assert writable, "a device with no writable object cannot test this"
     assert writable <= serialised
@@ -172,7 +164,7 @@ def test_every_writable_object_is_serialised(tmp_path):
 def test_cluster_round_trip_restores_every_node_arena_and_counter_set(tmp_path):
     """A cluster checkpoint is the cross product of nodes and mutable objects."""
 
-    nodes = 3
+    nodes = 32
     device = _device(nodes=nodes)
     session = device.create_session()
     expected: dict[tuple[int, int], bytes] = {}
@@ -183,7 +175,7 @@ def test_cluster_round_trip_restores_every_node_arena_and_counter_set(tmp_path):
             buffer = obj.anonymous_buffer()
             assert buffer is not None
             count = min(int(buffer.size), 128)
-            value = np.uint8(1 + node_id * 17 + object_id % 13)
+            value = np.uint8((1 + node_id * 17 + object_id % 13) % 256)
             buffer[:count] = value
             expected[(node_id, object_id)] = bytes(buffer)
         device.node_counters[node_id].add("dma.transfers", node_id + 1)
@@ -215,7 +207,8 @@ def test_cluster_round_trip_restores_every_node_arena_and_counter_set(tmp_path):
 
 
 def test_restore_refuses_a_manifest_missing_one_node_object(tmp_path):
-    device = _device(nodes=2)
+    nodes = 32
+    device = _device(nodes=nodes)
     save_device_state(device, device.create_session(), tmp_path / "cluster")
     manifest_path = tmp_path / "cluster" / "checkpoint.json"
     body = json.loads(manifest_path.read_text())
@@ -223,12 +216,13 @@ def test_restore_refuses_a_manifest_missing_one_node_object(tmp_path):
     manifest_path.write_text(json.dumps(body))
 
     with pytest.raises(CheckpointError, match="coverage differs.*missing"):
-        restore_device_state(_device(nodes=2), tmp_path / "cluster")
-    assert removed["node_id"] == 1
+        restore_device_state(_device(nodes=nodes), tmp_path / "cluster")
+    assert removed["node_id"] == nodes - 1
 
 
 def test_restore_refuses_a_duplicate_node_object_entry(tmp_path):
-    device = _device(nodes=2)
+    nodes = 32
+    device = _device(nodes=nodes)
     save_device_state(device, device.create_session(), tmp_path / "cluster")
     manifest_path = tmp_path / "cluster" / "checkpoint.json"
     body = json.loads(manifest_path.read_text())
@@ -236,7 +230,7 @@ def test_restore_refuses_a_duplicate_node_object_entry(tmp_path):
     manifest_path.write_text(json.dumps(body))
 
     with pytest.raises(CheckpointError, match="repeats node/object pair"):
-        restore_device_state(_device(nodes=2), tmp_path / "cluster")
+        restore_device_state(_device(nodes=nodes), tmp_path / "cluster")
 
 
 def test_tracked_capture_restores_sparse_ranges_without_scanning_holes(
@@ -282,17 +276,50 @@ def test_tracked_capture_restores_sparse_ranges_without_scanning_holes(
 def test_cluster_checkpoint_hardlinks_identical_node_payloads(tmp_path):
     """Node-identical sparse images consume one physical payload, not N copies."""
 
-    device = _device(nodes=3)
+    nodes = 32
+    device = _device(nodes=nodes)
     manifest = save_device_state(device, device.create_session(), tmp_path / "cluster")
     object_id = int(manifest["objects"][0]["object_id"])
     entries = [
-        entry
-        for entry in manifest["objects"]
-        if int(entry["object_id"]) == object_id
+        entry for entry in manifest["objects"] if int(entry["object_id"]) == object_id
     ]
-    assert len(entries) == 3
-    inodes = {
-        (tmp_path / "cluster" / entry["file"]).stat().st_ino for entry in entries
-    }
+    assert len(entries) == nodes
+    inodes = {(tmp_path / "cluster" / entry["file"]).stat().st_ino for entry in entries}
     assert len(inodes) == 1
     assert manifest["encoding"]["deduplicated_payload_files"] > 0
+
+
+def test_resaving_checkpoint_does_not_mutate_old_hardlinked_payloads(tmp_path):
+    """Overwriting one old link must not rewrite a different object in place."""
+
+    device = _device()
+    checkpoint = tmp_path / "checkpoint"
+    first = save_device_state(device, device.create_session(), checkpoint)
+    entries_by_inode: dict[int, list[dict]] = {}
+    for entry in first["objects"]:
+        inode = (checkpoint / entry["file"]).stat().st_ino
+        entries_by_inode.setdefault(inode, []).append(entry)
+    linked = next(entries for entries in entries_by_inode.values() if len(entries) > 1)
+    left, right = linked[:2]
+
+    changed = device.memory.objects[int(right["object_id"])]
+    changed.write(0, b"\xa5")
+    expected = {
+        int(entry["object_id"]): bytes(
+            device.memory.objects[int(entry["object_id"])].anonymous_buffer()
+        )
+        for entry in (left, right)
+    }
+    second = save_device_state(device, device.create_session(), checkpoint)
+    second_entries = {int(entry["object_id"]): entry for entry in second["objects"]}
+
+    left_path = checkpoint / second_entries[int(left["object_id"])]["file"]
+    right_path = checkpoint / second_entries[int(right["object_id"])]["file"]
+    assert left_path.stat().st_ino != right_path.stat().st_ino
+
+    fresh = _device()
+    restore_device_state(fresh, checkpoint)
+    for object_id, payload in expected.items():
+        restored = fresh.memory.objects[object_id].anonymous_buffer()
+        assert restored is not None
+        assert bytes(restored) == payload

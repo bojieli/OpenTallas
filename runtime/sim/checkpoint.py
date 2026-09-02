@@ -58,6 +58,7 @@ import hashlib
 import json
 import os
 import struct
+import tempfile
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
@@ -236,9 +237,7 @@ def _write_object(
     """Store a lossless sparse image and its canonical representation digest."""
 
     capture_mode = (
-        "full_scan"
-        if int(buffer.size) <= FULL_SCAN_MAX_BYTES
-        else "tracked_writes"
+        "full_scan" if int(buffer.size) <= FULL_SCAN_MAX_BYTES else "tracked_writes"
     )
     runs = (
         _fill_runs(buffer, fill)
@@ -249,19 +248,37 @@ def _write_object(
     blob.parent.mkdir(parents=True, exist_ok=True)
     digest = _sparse_digest(int(buffer.size), fill, len(runs))
     stored = 0
-    with blob.open("wb") as handle:
-        handle.write(FILE_MAGIC)
-        handle.write(RUN_HEADER.pack(int(buffer.size), len(runs)))
-        for start, stop in runs:
-            header = RUN_HEADER.pack(start, stop - start)
-            handle.write(header)
-            digest.update(header)
-            for begin in range(start, stop, IO_CHUNK_BYTES):
-                end = min(begin + IO_CHUNK_BYTES, stop)
-                payload = buffer[begin:end].tobytes()
-                handle.write(payload)
-                digest.update(payload)
-            stored += stop - start
+    temporary: Path | None = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            mode="wb",
+            dir=blob.parent,
+            prefix=f".{blob.name}.",
+            suffix=".tmp",
+            delete=False,
+        ) as handle:
+            temporary = Path(handle.name)
+            handle.write(FILE_MAGIC)
+            handle.write(RUN_HEADER.pack(int(buffer.size), len(runs)))
+            for start, stop in runs:
+                header = RUN_HEADER.pack(start, stop - start)
+                handle.write(header)
+                digest.update(header)
+                for begin in range(start, stop, IO_CHUNK_BYTES):
+                    end = min(begin + IO_CHUNK_BYTES, stop)
+                    payload = buffer[begin:end].tobytes()
+                    handle.write(payload)
+                    digest.update(payload)
+                stored += stop - start
+        # A previous checkpoint may have hard-linked this path to another
+        # payload.  Replacing the directory entry, rather than truncating that
+        # shared inode in place, keeps every sibling image intact until this
+        # run's own authenticated deduplication decides they are identical.
+        os.replace(temporary, blob)
+        temporary = None
+    finally:
+        if temporary is not None:
+            temporary.unlink(missing_ok=True)
     return {
         "node_id": node_id,
         "object_id": object_id,
@@ -322,9 +339,7 @@ def _fill_runs(
 
     size = int(buffer.size)
     runs: list[tuple[int, int]] = []
-    regions = (
-        [(0, size)] if candidates is None else _snap_ranges(candidates, size)
-    )
+    regions = [(0, size)] if candidates is None else _snap_ranges(candidates, size)
     for region_start, region_stop in regions:
         start: int | None = None
         for begin in range(region_start, region_stop, BLOCK_BYTES):
@@ -340,9 +355,7 @@ def _fill_runs(
     return runs
 
 
-def _snap_ranges(
-    ranges: Sequence[tuple[int, int]], size: int
-) -> list[tuple[int, int]]:
+def _snap_ranges(ranges: Sequence[tuple[int, int]], size: int) -> list[tuple[int, int]]:
     """Snap tracked writes to the payload block grid and coalesce neighbours."""
 
     snapped: list[tuple[int, int]] = []
@@ -416,9 +429,7 @@ def read_manifest(path: Path) -> dict[str, Any]:
     return json.loads((Path(path) / "checkpoint.json").read_text())
 
 
-def restore_device_state(
-    device: Device, path: Path
-) -> tuple[Session, dict[str, Any]]:
+def restore_device_state(device: Device, path: Path) -> tuple[Session, dict[str, Any]]:
     """Put ``device`` into the state the checkpoint under ``path`` records.
 
     Returns the restored session and the checkpoint manifest.  Every restored
@@ -569,8 +580,7 @@ def _validate_object_manifest(
             )
         if not (path / relative).is_file():
             raise CheckpointError(
-                f"node {node_id} object {object_id} payload is missing: "
-                f"{relative}"
+                f"node {node_id} object {object_id} payload is missing: {relative}"
             )
 
     missing = sorted(expected - found)
@@ -634,7 +644,9 @@ def _restore_object(device: Device, path: Path, entry: Mapping[str, Any]) -> Non
             raise CheckpointError(f"{blob} is truncated before its object header")
         size, run_count = RUN_HEADER.unpack(header)
         if size != int(entry["size_bytes"]):
-            raise CheckpointError(f"{blob} declares {size} bytes, manifest says {entry['size_bytes']}")
+            raise CheckpointError(
+                f"{blob} declares {size} bytes, manifest says {entry['size_bytes']}"
+            )
         if run_count != int(entry.get("run_count", run_count)):
             raise CheckpointError(
                 f"{blob} carries {run_count} runs, manifest says "
@@ -756,9 +768,7 @@ def _session_from_dict(device: Device, body: Mapping[str, Any]) -> Session:
             prepared_object_id=int(state["prepared_object_id"]),
             row_bytes=int(state["row_bytes"]),
             capacity_rows=int(state["capacity_rows"]),
-            commit_policy=int(
-                state.get("commit_policy", fresh.commit_policy)
-            ),
+            commit_policy=int(state.get("commit_policy", fresh.commit_policy)),
             cursor_rows=int(state["cursor_rows"]),
             generation=int(state["generation"]),
             open_prepare=bool(state["open_prepare"]),
