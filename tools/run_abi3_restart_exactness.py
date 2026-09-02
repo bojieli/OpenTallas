@@ -144,20 +144,25 @@ def _build_device(args: argparse.Namespace) -> tuple[Device, Any, Any, dict[str,
         )
     device = Device(deployment, capability, root=args.deployment_root, verify=False)
     body = graph.to_dict()
-    return device, capability, graph, {
-        "verification": report.to_dict(),
-        "engine_coverage": {
-            "implemented_count": coverage["implemented_count"],
-            "missing_count": coverage["missing_count"],
+    return (
+        device,
+        capability,
+        graph,
+        {
+            "verification": report.to_dict(),
+            "engine_coverage": {
+                "implemented_count": coverage["implemented_count"],
+                "missing_count": coverage["missing_count"],
+            },
+            "graph_id": graph.graph_id,
+            "numeric_profile": body.get("numeric_profile", ""),
+            "model_id": body.get("model_id", ""),
         },
-        "graph_id": graph.graph_id,
-        "numeric_profile": body.get("numeric_profile", ""),
-        "model_id": body.get("model_id", ""),
-    }
+    )
 
 
 def _source_identity() -> dict[str, Any]:
-    """A digest over the Python that will execute, so drift is not silent.
+    """Auditable hashes of the Python that will execute, so drift is not silent.
 
     Three processes minutes apart are three chances for the runtime to change
     underneath the experiment -- this repository is worked on concurrently, and
@@ -175,13 +180,18 @@ def _source_identity() -> dict[str, Any]:
         }
         | {Path(__file__).resolve()}
     )
+    source_sha256: dict[str, str] = {}
     digest = hashlib.sha256()
     for path in files:
-        digest.update(str(path.relative_to(REPO)).encode())
-        digest.update(hashlib.sha256(path.read_bytes()).digest())
+        relative = str(path.relative_to(REPO))
+        file_digest = hashlib.sha256(path.read_bytes()).hexdigest()
+        source_sha256[relative] = file_digest
+        digest.update(relative.encode())
+        digest.update(bytes.fromhex(file_digest))
     return {
         "python_source_digest": digest.hexdigest(),
         "python_file_count": len(files),
+        "python_source_sha256": source_sha256,
     }
 
 
@@ -264,12 +274,13 @@ def run_baseline(args: argparse.Namespace) -> int:
     prompt = [int(t) for t in workload["token_ids"]]
     limit = args.max_new_tokens or workload["max_new_tokens"]
     print(
-        f"baseline: {len(prompt)} prompt tokens, max_new={limit}, "
-        f"pid={os.getpid()}",
+        f"baseline: {len(prompt)} prompt tokens, max_new={limit}, pid={os.getpid()}",
         flush=True,
     )
     started = time.perf_counter()
-    result = driver.generate(prompt, max_new_tokens=limit, progress=_progress("baseline"))
+    result = driver.generate(
+        prompt, max_new_tokens=limit, progress=_progress("baseline")
+    )
     print(
         f"baseline produced {len(result.generated_token_ids)} tokens in "
         f"{time.perf_counter() - started:.1f}s, stop={result.stop_reason}",
@@ -332,9 +343,7 @@ def run_interrupt(args: argparse.Namespace) -> int:
             f"{session.position}; the checkpoint would restart at the wrong place"
         )
     open_prepares = sorted(
-        state.descriptor_id
-        for state in session.states.values()
-        if state.open_prepare
+        state.descriptor_id for state in session.states.values() if state.open_prepare
     )
     if open_prepares:
         raise ExactnessError(
@@ -481,16 +490,26 @@ def _launch(
     command = [
         sys.executable,
         str(Path(__file__).resolve()),
-        "--phase", phase,
-        "--kernel-ir", str(args.kernel_ir),
-        "--backend", args.backend,
-        "--capability", str(args.capability),
-        "--workload", str(args.workload),
-        "--deployment-root", str(args.deployment_root),
-        "--checkpoint", str(checkpoint or args.checkpoint),
-        "--phase-output", str(output),
-        "--stop-after", str(args.stop_after),
-        "--output", str(args.output),
+        "--phase",
+        phase,
+        "--kernel-ir",
+        str(args.kernel_ir),
+        "--backend",
+        args.backend,
+        "--capability",
+        str(args.capability),
+        "--workload",
+        str(args.workload),
+        "--deployment-root",
+        str(args.deployment_root),
+        "--checkpoint",
+        str(checkpoint or args.checkpoint),
+        "--phase-output",
+        str(output),
+        "--stop-after",
+        str(args.stop_after),
+        "--output",
+        str(args.output),
     ]
     if args.max_new_tokens is not None:
         command += ["--max-new-tokens", str(args.max_new_tokens)]
@@ -510,6 +529,17 @@ def _launch(
     body = json.loads(output.read_text())
     body["exit_status"] = completed.returncode
     return body
+
+
+def _retained_control_identity(phase: Mapping[str, Any]) -> dict[str, Any]:
+    """Keep enough identity to audit a control as a real peer process."""
+
+    return {
+        "deployment_digest": phase["deployment_digest"],
+        "node_count": int(phase["node_count"]),
+        "implementation_identity": phase["implementation_identity"],
+        "source_identity": phase["source_identity"],
+    }
 
 
 def _blind_checkpoint(
@@ -693,9 +723,7 @@ def orchestrate(args: argparse.Namespace) -> int:
     print(f"work directory: {work}", flush=True)
 
     started = time.perf_counter()
-    phases = {
-        phase: _launch(phase, args, work / f"{phase}.json") for phase in PHASES
-    }
+    phases = {phase: _launch(phase, args, work / f"{phase}.json") for phase in PHASES}
 
     # The negative control runs the *same* resumed decode from a checkpoint
     # whose KV state images have been reset to their fill value.  If that run
@@ -755,7 +783,7 @@ def orchestrate(args: argparse.Namespace) -> int:
     baseline_tokens = [int(t) for t in baseline["result"]["generated_token_ids"]]
     interrupt_tokens = [int(t) for t in interrupt["result"]["generated_token_ids"]]
     restarted_tokens = [int(t) for t in resume["result"]["generated_token_ids"]]
-    tail = restarted_tokens[len(interrupt_tokens):]
+    tail = restarted_tokens[len(interrupt_tokens) :]
 
     # -- guards.  Every one of these must hold before an equality claim is
     # -- allowed to mean anything.  A vacuous pass is the failure mode this
@@ -764,13 +792,9 @@ def orchestrate(args: argparse.Namespace) -> int:
     identities = [phases[phase]["implementation_identity"] for phase in PHASES]
     digests = [phases[phase]["deployment_digest"] for phase in PHASES]
     node_counts = [int(phases[phase]["node_count"]) for phase in PHASES]
-    sources = [
-        phases[phase]["source_identity"]["python_source_digest"] for phase in PHASES
-    ]
+    sources = [phases[phase]["source_identity"] for phase in PHASES]
     expected_length = (
-        len(baseline_tokens)
-        if baseline["result"]["stop_reason"] == "eos"
-        else limit
+        len(baseline_tokens) if baseline["result"]["stop_reason"] == "eos" else limit
     )
     guards = {
         "three_distinct_processes": len(set(pids)) == 3,
@@ -779,7 +803,7 @@ def orchestrate(args: argparse.Namespace) -> int:
         "same_implementation_identity": all(
             digest_of(identity) == digest_of(identities[0]) for identity in identities
         ),
-        "same_runtime_source_tree": len(set(sources)) == 1,
+        "same_runtime_source_tree": all(source == sources[0] for source in sources),
         "baseline_non_empty": len(baseline_tokens) > 0,
         "baseline_reached_expected_length": len(baseline_tokens) == expected_length,
         "interrupt_produced_expected_prefix_length": (
@@ -800,13 +824,44 @@ def orchestrate(args: argparse.Namespace) -> int:
         "restarted_length_matches_baseline": (
             len(restarted_tokens) == len(baseline_tokens)
         ),
-        "restarted_reached_expected_length": (
-            len(restarted_tokens) == expected_length
-        ),
+        "restarted_reached_expected_length": (len(restarted_tokens) == expected_length),
         "no_phase_failed": all(
             phases[phase]["result"]["failure"] is None for phase in PHASES
         ),
     }
+
+    enabled_controls = {
+        "negative_control": negative,
+        "state_only_control": state_only,
+    }
+    enabled_pids = list(pids)
+    for label, control in enabled_controls.items():
+        if control is None:
+            continue
+        enabled_pids.append(control["pid"])
+        guards.update(
+            {
+                f"{label}_completed": (
+                    control["exit_status"] == 0 and control["result"]["failure"] is None
+                ),
+                f"{label}_same_deployment_digest": (
+                    control["deployment_digest"] == baseline["deployment_digest"]
+                ),
+                f"{label}_same_node_count": (
+                    int(control["node_count"]) == int(baseline["node_count"])
+                ),
+                f"{label}_same_implementation_identity": (
+                    digest_of(control["implementation_identity"])
+                    == digest_of(baseline["implementation_identity"])
+                ),
+                f"{label}_same_runtime_source_tree": (
+                    control["source_identity"] == baseline["source_identity"]
+                ),
+            }
+        )
+    guards["all_enabled_processes_distinct"] = len(enabled_pids) == len(
+        set(enabled_pids)
+    )
     failed_guards = sorted(name for name, ok in guards.items() if not ok)
 
     matched, divergence = _compare(baseline_tokens, restarted_tokens)
@@ -852,9 +907,7 @@ def orchestrate(args: argparse.Namespace) -> int:
         eos_token_ids=[int(t) for t in baseline["eos_token_ids"]],
         stop_reason=resume["result"]["stop_reason"],
     )
-    legitimacy += validate_token_ids(
-        restarted_tokens, int(baseline["vocabulary_size"])
-    )
+    legitimacy += validate_token_ids(restarted_tokens, int(baseline["vocabulary_size"]))
     checkpoint = interrupt["checkpoint"]
 
     negative_tokens = (
@@ -873,6 +926,7 @@ def orchestrate(args: argparse.Namespace) -> int:
         else {
             "erased_objects": negative["erased_objects"],
             "erased_storage_classes": ["STATE"],
+            "identity": _retained_control_identity(negative),
             "pid": negative["pid"],
             "token_ids": negative_tokens,
             "diverged_from_baseline": not negative_matched,
@@ -904,6 +958,7 @@ def orchestrate(args: argparse.Namespace) -> int:
             ),
             "erased_objects": state_only["erased_objects"],
             "erased_storage_classes": state_only["erased_storage_classes"],
+            "identity": _retained_control_identity(state_only),
             "pid": state_only["pid"],
             "token_ids": state_only_tokens,
             "matches_baseline": state_only_matched and bool(state_only_tokens),
@@ -1073,7 +1128,9 @@ def orchestrate(args: argparse.Namespace) -> int:
             f"(reported, not gated)"
         )
     for name, values in counter_differences.items():
-        print(f"  counter {name}: baseline={values['baseline']} restarted={values['restarted']}")
+        print(
+            f"  counter {name}: baseline={values['baseline']} restarted={values['restarted']}"
+        )
     for problem in legitimacy:
         print(f"  TOKEN LEGITIMACY {problem}")
     if divergence is not None:
