@@ -241,13 +241,26 @@ REPO = Path(__file__).resolve().parents[1]
 #: Documents whose annotations must not silently disappear. A floor, not a
 #: target: raise it when you annotate more. The audit's finding was structural
 #: -- provenance is what made the difference between a caught error and a live
-#: one -- so losing coverage on these five is the regression to catch.
+#: one -- so every document that currently publishes checked figures belongs in
+#: this map. Otherwise a whole evidence section can quietly lose its annotations
+#: while the aggregate checker remains green.
 REQUIRED_COVERAGE: dict[str, int] = {
-    "docs/OVERVIEW.md": 18,
-    "README.md": 24,
-    "docs/FIRST_PRINCIPLES_MEMORY_DESIGN.md": 22,
-    "docs/WAFER_VERSUS_ARRAY_LATENCY.md": 45,
-    "docs/UNIFIED_EXECUTION_CHECKLIST.md": 108,
+    "README.md": 54,
+    "docs/ABI3_ENGINE_DATAPATH_RTL.md": 64,
+    "docs/ABI3_PROGRAM_REPORT.md": 6,
+    "docs/DEEPSEEK_SPARSE_ATTENTION_GATE.md": 55,
+    "docs/EVIDENCE_LEDGER.md": 21,
+    "docs/FIRST_PRINCIPLES_MEMORY_DESIGN.md": 25,
+    "docs/ISO_AREA_COMPARISON_AND_THE_TAALAS_ANCHOR.md": 34,
+    "docs/OVERVIEW.md": 22,
+    "docs/PER_REGION_COMPUTE_IN_ROM_DESIGN.md": 2,
+    "docs/ROM_DENSITY_NODE_TRANSFER.md": 24,
+    "docs/ROM_PHYSICAL_METHODOLOGY.md": 64,
+    "docs/ROM_SERVICE_RTL.md": 27,
+    "docs/TECHNICAL_DIRECTION_RECOMMENDATION.md": 54,
+    "docs/UNIFIED_EXECUTION_CHECKLIST.md": 216,
+    "docs/VISION.md": 1,
+    "docs/WAFER_VERSUS_ARRAY_LATENCY.md": 67,
 }
 
 ANNOTATION = re.compile(r"<!--\s*figure:\s*(?P<body>.*?)-->", re.S)

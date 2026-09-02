@@ -81,12 +81,23 @@ def test_the_committed_tree_passes() -> None:
     assert "every annotated figure still matches" in out
 
 
-def test_the_priority_documents_carry_provenance() -> None:
-    """The audit measured `results/` references per document and found the three
-    worst-affected files carried zero. Coverage is the finding, so it is pinned."""
+def test_every_annotated_release_document_carries_pinned_provenance() -> None:
+    """Every document publishing checked figures has a non-regressing floor.
+
+    The original audit pinned only the worst-affected files. That still allowed
+    all annotations to disappear from a later evidence document without making
+    the aggregate checker fail. Coverage is the finding, so all current
+    annotated release documents are pinned.
+    """
 
     code, out = _run()
     assert code == 0, out
+    annotated_documents = {
+        str(document.resolve().relative_to(ROOT))
+        for document in CPF.documents([Path("README.md"), Path("docs")])
+        if CPF.scan(document)
+    }
+    assert annotated_documents == set(CPF.REQUIRED_COVERAGE)
     for document in CPF.REQUIRED_COVERAGE:
         assert document in out, f"{document} reports no annotated figures"
 
@@ -135,14 +146,14 @@ def test_a_stale_digest_is_rejected(tmp_path) -> None:
     """A graph id is quoted truncated in prose, so it is checked as a prefix.
     `docs/PROGRAM_STATUS.md` shipped a stale one for 100+ commits."""
 
-    readme = ROOT / "README.md"
-    broken = _copy(tmp_path, readme,
+    checklist = ROOT / "docs" / "UNIFIED_EXECUTION_CHECKLIST.md"
+    broken = _copy(tmp_path, checklist,
                    ("`88496d70b772…`", "`65eb209fdead…`"),
                    ('figure: "88496d70b772…"', 'figure: "65eb209fdead…"'))
     code, out = _run(broken)
 
     assert code == 2
-    assert "Qwen IR graph id" in out
+    assert "Qwen graph id" in out
     assert "65eb209fdead" in out and "88496d70b772" in out
 
 

@@ -565,9 +565,12 @@ the RTL runs that design.
 §6 records that **nothing** enforces `docs/*.md` prose. Since the audit,
 `tools/check_prose_figures.py` does: it reads a machine-resolvable provenance
 annotation beside a figure, re-reads the artifact and fails on disagreement,
-over several hundred annotated figures with a per-document coverage floor. That
-is the "one durable fix" §6 names, built. It remains silent about every figure
-nobody annotated, which is why §5 is still the most durable part of this ledger.
+over several hundred annotated figures. Its non-regression map now pins every
+release document that currently publishes checked annotations, and
+`tests/test_prose_figures.py` proves that removing a whole document's coverage
+fails the gate. That is the "one durable fix" §6 names, built. It remains silent
+about every figure nobody annotated, which is why W11.3 remains partial and §5
+is still the most durable part of this ledger.
 
 ---
 
