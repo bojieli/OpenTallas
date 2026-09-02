@@ -12,7 +12,8 @@ mandatory and non-interchangeable:
   bandwidth and latency class, congestion, and *bounded* global barriers.
 
 They are two realisations of one architectural contract, so both expose the same
-interface (:meth:`unicast`, :meth:`collective`, :meth:`barrier`) and both feed
+interface (:meth:`unicast`, :meth:`collective`, :meth:`scatter`,
+:meth:`barrier`) and both feed
 the same frozen counter registry.  ADR-003 section 9 is explicit that neither
 simulator may model a global barrier or collective as zero-latency; every method
 here therefore costs at least one endpoint latency, and
@@ -258,10 +259,13 @@ class _FabricBase:
         )
         if nbytes <= 0 or src == dst:
             # A zero-byte or loopback message still costs the endpoint: an
-            # architecturally visible message is never free.
+            # architecturally visible message is never free.  A loopback has
+            # no wire traffic, but its logical payload still moved through the
+            # endpoint and must agree with the functional link counters.
             timing.end_cycle = start_cycle + self.endpoint_latency_cycles
             timing.endpoint_cycles = self.endpoint_latency_cycles
             timing.messages = 1
+            timing.bytes_moved = max(int(nbytes), 0)
             return timing
         route = self.route(src, dst)
         packets = max(1, math.ceil(nbytes / self.payload_bytes))
@@ -418,7 +422,7 @@ class _FabricBase:
         algorithm: str,
     ) -> FabricTiming:
         count = len(members)
-        per_step = max(1, math.ceil(nbytes / count))
+        per_step = math.ceil(nbytes / count) if nbytes > 0 else 0
         total = FabricTiming(
             operation=operation,
             start_cycle=start_cycle,
@@ -493,7 +497,7 @@ class _FabricBase:
         algorithm: str,
     ) -> FabricTiming:
         count = len(members)
-        per_member = max(1, math.ceil(nbytes / count))
+        per_member = math.ceil(nbytes / count) if nbytes > 0 else 0
         total = FabricTiming(
             operation=operation,
             start_cycle=start_cycle,
@@ -510,6 +514,58 @@ class _FabricBase:
             total.merge(step)
             end = max(end, step.end_cycle)
         total.steps = count - 1
+        total.start_cycle = start_cycle
+        total.end_cycle = max(end, start_cycle + self.endpoint_latency_cycles)
+        return total
+
+    def scatter(
+        self,
+        participants: Sequence[int],
+        nbytes: int,
+        *,
+        source: int,
+        start_cycle: int = 0,
+    ) -> FabricTiming:
+        """Send one distinct ``nbytes`` slot from ``source`` to every peer.
+
+        ``LINK.SCATTER`` is not ``REDUCE_SCATTER``: it has one root, performs
+        no arithmetic, and moves one independently addressed slot to each
+        non-root participant.  Model it explicitly so the cycle path uses the
+        same ``P-1`` messages and ``(P-1)*nbytes`` payload as the functional
+        link engine instead of borrowing an unrelated ring algorithm.
+        """
+
+        members = list(
+            dict.fromkeys(int(participant) for participant in participants)
+        )
+        if not members:
+            raise FabricError("a scatter needs at least one participant")
+        root = int(source)
+        if root not in members:
+            raise FabricError(
+                f"scatter source {root} is not in participant set {members}"
+            )
+        total = FabricTiming(
+            operation="scatter",
+            start_cycle=start_cycle,
+            end_cycle=start_cycle + self.endpoint_latency_cycles,
+            participants=len(members),
+            algorithm="root_scatter",
+        )
+        end = start_cycle
+        for node in members:
+            if node == root:
+                continue
+            step = self.unicast(
+                root,
+                node,
+                nbytes,
+                start_cycle=start_cycle,
+                operation="scatter",
+            )
+            total.merge(step)
+            end = max(end, step.end_cycle)
+        total.steps = max(len(members) - 1, 0)
         total.start_cycle = start_cycle
         total.end_cycle = max(end, start_cycle + self.endpoint_latency_cycles)
         return total
@@ -547,6 +603,9 @@ class _FabricBase:
             total.steps += 1
         total.start_cycle = start_cycle
         total.end_cycle = max(cursor, start_cycle + self.endpoint_latency_cycles)
+        # Barrier packets contain protocol headers, not architectural operand
+        # bytes. ``wire_bytes`` retains their physical cost.
+        total.bytes_moved = 0
         return total
 
     def _barrier_round_cycles(self) -> int:  # pragma: no cover - abstract
@@ -828,6 +887,8 @@ class WaferFabric(_FabricBase):
                 total.steps += 1
         total.start_cycle = start_cycle
         total.end_cycle = max(cursor, start_cycle + self.endpoint_latency_cycles)
+        # The routed messages above contain synchronization headers only.
+        total.bytes_moved = 0
         return total
 
     def _all_ports(self) -> list[_Port]:

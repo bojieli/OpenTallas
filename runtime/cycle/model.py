@@ -59,6 +59,8 @@ from runtime.abi3.constants import (
     Link,
     Major,
     NO_ID,
+    NO_NODE,
+    ParticipantScope,
     StorageClass,
     TopologyClass,
     TrapClass,
@@ -67,7 +69,6 @@ from runtime.abi3.crc import sha256
 from runtime.abi3.deployment import Deployment
 from runtime.abi3.descriptors import (
     CollectiveOp,
-    Descriptor,
     ExtendedDescriptorType,
     SelectorKind,
     Symbol,
@@ -209,6 +210,35 @@ class TraceStep:
     @property
     def bytes_transferred(self) -> int:
         return sum(access.transferred_bytes for access in self.accesses)
+
+
+@dataclass(frozen=True, slots=True)
+class LinkResolution:
+    """One LINK instruction resolved against its admitted physical fabric.
+
+    Participant scope, route-group partitioning and wafer tile numbering are
+    architectural facts.  Resolve them once and carry both the logical and
+    physical identities so scheduling, root validation, subgroup readiness and
+    reporting cannot each invent a subtly different participant set.
+    """
+
+    descriptor_id: int
+    sub: Link
+    payload: Mapping[str, Any]
+    scope: ParticipantScope
+    logical_members: tuple[int, ...]
+    physical_members: tuple[int, ...]
+    logical_to_physical: Mapping[int, int]
+    source: int | None
+    destination: int | None
+
+
+@dataclass(frozen=True, slots=True)
+class ScheduledLink:
+    """The one canonical physical reservation for a cluster-wide LINK."""
+
+    resolution: LinkResolution
+    timing: FabricTiming
 
 
 def effective_symbols(
@@ -1539,21 +1569,73 @@ class CycleModel:
         if record not in self.gaps:
             self.gaps.append(record)
 
-    # -- one node --------------------------------------------------------
-    def run_node(
+    # -- functional trace collection -----------------------------------
+    def _collect_trace(
         self,
         request: CycleRequest,
         *,
         node_id: int = 0,
         node_count: int = 1,
-        fabric: ClusterFabric | WaferFabric | None = None,
     ) -> dict[str, Any]:
-        """Execute and time one logical node's share of ``request``."""
+        """Execute the functional device once and retain transaction boundaries.
+
+        A cluster transaction already fans every compute instruction over all
+        admitted nodes and tags each :class:`TraceStep` with the node that
+        executed it.  Keeping the boundaries lets the timing side replay that
+        one authoritative trace for each node while still clearing events at
+        exactly the same transaction boundaries as the old combined path.
+        """
+
         device = TracingDevice(
             self.deployment, self.capability, root=self.root, verify=self.verify
         )
         session = device.create_session()
         symbols = effective_symbols(request, node_id=node_id, node_count=node_count)
+        architectural = CounterSet()
+        results: list[TransactionResult] = []
+        produced: list[int] = []
+        step_cursor = 0
+        transaction_steps: list[tuple[TraceStep, ...]] = []
+
+        for _ in range(max(1, request.transactions)):
+            if session.finished:
+                break
+            result = device.run_transaction(
+                session,
+                entrypoint_id=request.entrypoint_id,
+                symbols=symbols,
+                generation_policy_id=effective_generation_policy(device, request),
+            )
+            results.append(result)
+            produced.extend(result.produced_tokens)
+            for name, value in result.counters.items():
+                architectural.add(name, value)
+            transaction_steps.append(tuple(device.steps[step_cursor:]))
+            step_cursor = len(device.steps)
+            if result.status != CompletionStatus.SUCCESS:
+                break
+
+        return {
+            "device": device,
+            "session": session,
+            "results": results,
+            "produced_tokens": produced,
+            "architectural": architectural,
+            "transaction_steps": tuple(transaction_steps),
+        }
+
+    # -- one node's timing replay ---------------------------------------
+    def _time_trace_node(
+        self,
+        trace: Mapping[str, Any],
+        *,
+        node_id: int,
+        node_count: int,
+        fabric: ClusterFabric | WaferFabric | None,
+        global_links: Mapping[int, ScheduledLink] | None = None,
+        global_link_readiness: dict[int, int] | None = None,
+    ) -> dict[str, Any]:
+        """Time one node's tagged share of an already executed trace."""
 
         queues: dict[str, _Queue] = {}
         for name, params in sorted(self.engine_params.items()):
@@ -1569,9 +1651,6 @@ class CycleModel:
         }
         memory = MemorySystem(self.memory_params)
         counters = CounterSet()
-        architectural = CounterSet()
-
-        seq = self.sequencer
         seq_free = 0
         events: dict[int, int] = {}
         totals = {
@@ -1589,34 +1668,15 @@ class CycleModel:
         }
         tiles_seen: dict[str, list[TileMapping]] = {}
         fabric_timings: list[FabricTiming] = []
-        results: list[TransactionResult] = []
-        produced: list[int] = []
         end_cycle = 0
-        step_cursor = 0
 
-        for _ in range(max(1, request.transactions)):
-            if session.finished:
-                break
+        for recorded in trace["transaction_steps"]:
             transaction_start = seq_free
-            result = device.run_transaction(
-                session,
-                entrypoint_id=request.entrypoint_id,
-                symbols=symbols,
-                generation_policy_id=effective_generation_policy(device, request),
-            )
-            results.append(result)
-            produced.extend(result.produced_tokens)
-            for name, value in result.counters.items():
-                architectural.add(name, value)
-            # The device replays every compute instruction once per logical
-            # node inside one transaction; this model times one node at a
-            # time, so it reads that node's steps and the cluster-wide ones.
             steps = [
                 step
-                for step in device.steps[step_cursor:]
+                for step in recorded
                 if step.node in (CLUSTER_WIDE, node_id)
             ]
-            step_cursor = len(device.steps)
             events.clear()  # events are single-assignment *within* a transaction
             seq_free, end_cycle = self._time_steps(
                 steps,
@@ -1632,19 +1692,23 @@ class CycleModel:
                 tiles_seen=tiles_seen,
                 node_id=node_id,
                 node_count=node_count,
+                global_links=global_links,
+                global_link_readiness=global_link_readiness,
             )
             totals["transaction_cycles"] += max(0, end_cycle - transaction_start)
-            if result.status != CompletionStatus.SUCCESS:
-                break
 
         span = max(end_cycle, seq_free, 1)
         engine_busy = sum(unit.busy_cycles for unit in engines.values())
         link_cycles = sum(
-            t.cycles for t in fabric_timings if not t.operation.startswith("collective")
-            and t.operation != "barrier"
+            t.cycles
+            for t in fabric_timings
+            if not t.operation.startswith("collective")
+            and t.operation not in ("barrier", "scatter")
         )
         collective_cycles = sum(
-            t.cycles for t in fabric_timings if t.operation.startswith("collective")
+            t.cycles
+            for t in fabric_timings
+            if t.operation.startswith("collective") or t.operation == "scatter"
         )
         barrier_cycles = sum(t.cycles for t in fabric_timings if t.operation == "barrier")
 
@@ -1700,27 +1764,57 @@ class CycleModel:
 
         return {
             "node_id": node_id,
-            "device": device,
-            "session": session,
-            "results": results,
-            "produced_tokens": produced,
             "span": span,
             "end_cycle": end_cycle,
             "queues": queues,
             "engines": engines,
             "memory": memory,
             "counters": counters,
-            "architectural": architectural,
             "totals": totals,
             "fabric_timings": fabric_timings,
             "link_cycles": link_cycles,
             "collective_cycles": collective_cycles,
             "barrier_cycles": barrier_cycles,
             "engine_busy": engine_busy,
-            "addresses": device.addresses,
             "queue_max_occupancy": occupancy,
             "tiles_seen": tiles_seen,
         }
+
+    # -- one logical device ---------------------------------------------
+    def run_node(
+        self,
+        request: CycleRequest,
+        *,
+        node_id: int = 0,
+        node_count: int = 1,
+        fabric: ClusterFabric | WaferFabric | None = None,
+    ) -> dict[str, Any]:
+        """Execute and time one logical node's share of ``request``."""
+
+        active_fabric = fabric if fabric is not None else self.fabric
+        if active_fabric is not None:
+            self._validate_fabric_topology(active_fabric)
+        trace = self._collect_trace(
+            request, node_id=node_id, node_count=node_count
+        )
+        node = self._time_trace_node(
+            trace,
+            node_id=node_id,
+            node_count=node_count,
+            fabric=active_fabric,
+        )
+        device = trace["device"]
+        node.update(
+            {
+                "device": device,
+                "session": trace["session"],
+                "results": trace["results"],
+                "produced_tokens": trace["produced_tokens"],
+                "architectural": trace["architectural"],
+                "addresses": device.addresses,
+            }
+        )
+        return node
 
     # -- the event loop ---------------------------------------------------
     def _time_steps(
@@ -1739,6 +1833,8 @@ class CycleModel:
         tiles_seen: dict[str, list["TileMapping"]],
         node_id: int,
         node_count: int,
+        global_links: Mapping[int, ScheduledLink] | None = None,
+        global_link_readiness: dict[int, int] | None = None,
     ) -> tuple[int, int]:
         """Advance the machine over one transaction's architectural steps."""
         seq = self.sequencer
@@ -1793,6 +1889,44 @@ class CycleModel:
                     events[step.signal_event_id] = seq_free
                 end_cycle = max(end_cycle, seq_free)
                 continue
+
+            scheduled_link: ScheduledLink | None = None
+            if (
+                step.family == "link"
+                and step.node == CLUSTER_WIDE
+                and isinstance(fabric, ClusterFabric)
+                and not step.trapped
+            ):
+                if global_links is not None:
+                    try:
+                        scheduled_link = global_links[step.index]
+                    except KeyError as exc:
+                        raise ScheduleError(
+                            f"cluster-wide LINK trace step {step.index} has no "
+                            "coordinated fabric schedule"
+                        ) from exc
+                    resolution = scheduled_link.resolution
+                else:
+                    resolution = self._resolve_link(
+                        step.descriptor_id, Link(step.sub), fabric
+                    )
+                if node_id not in resolution.physical_members:
+                    # The instruction belongs to the one shared control stream,
+                    # so an excluded node still fetches, decodes and issues a
+                    # local no-op.  It neither occupies a LINK queue nor delays
+                    # the participant-ready bound.  A signalled event retains
+                    # the canonical shared completion so an explicit later wait
+                    # still observes the collective dependency.
+                    seq_free = arrival + seq.issue_cycles
+                    totals["issue_cycles"] += seq.issue_cycles
+                    if step.signal_event_id != NO_ID:
+                        events[step.signal_event_id] = (
+                            scheduled_link.timing.end_cycle
+                            if scheduled_link is not None
+                            else seq_free
+                        )
+                    end_cycle = max(end_cycle, seq_free)
+                    continue
 
             if step.family not in queues:
                 # OBSERVATION and RECOVERY retire in the microsequencer itself:
@@ -1852,16 +1986,37 @@ class CycleModel:
                 totals["tile_issue"] += tile_issue
                 totals["tile_padding"] += mapping.padding_work
                 tiles_seen.setdefault(family, []).append(mapping)
+            scheduled_link_finish: int | None = None
             if family == "link" and fabric is not None:
-                timing = self._time_link(step, fabric, start, node_id, node_count)
-                if timing is not None:
-                    fabric_timings.append(timing)
-                    # Only the *timing* half of the fabric's counters is
-                    # applied.  Architectural link counters (group 0x0a) come
-                    # from the functional engine, never from the fabric model,
-                    # so the two models cannot disagree on a non-timing counter.
-                    service = max(service, timing.cycles)
-            unit.free_at = start + service
+                timing: FabricTiming
+                if global_links is not None and step.node == CLUSTER_WIDE:
+                    # A coordinated cluster pass scheduled this one physical
+                    # operation at the maximum participant-ready cycle.  Every
+                    # node records its own earliest arrival, then waits for the
+                    # shared completion; no replay reserves the fabric again.
+                    if global_link_readiness is None:
+                        raise ScheduleError(
+                            "a coordinated cluster LINK replay has no readiness "
+                            "collector"
+                        )
+                    global_link_readiness[step.index] = max(
+                        global_link_readiness.get(step.index, 0), start
+                    )
+                    assert scheduled_link is not None
+                    timing = scheduled_link.timing
+                    scheduled_link_finish = timing.end_cycle
+                else:
+                    timing = self._time_link(step, fabric, start)
+                fabric_timings.append(timing)
+                # Only the *timing* half of the fabric's counters is applied.
+                # Architectural link counters (group 0x0a) come from the
+                # functional engine, never from the fabric model, so the two
+                # models cannot disagree on a non-timing counter.
+                service = max(service, timing.cycles)
+            unit_finish = start + service
+            if scheduled_link_finish is not None:
+                unit_finish = max(unit_finish, scheduled_link_finish)
+            unit.free_at = unit_finish
             unit.busy_cycles += service
             unit.operations += 1
             unit.compute_cycles += compute
@@ -1871,7 +2026,7 @@ class CycleModel:
             unit.transferred_bytes += step.bytes_transferred
             totals["compute"] += compute
             totals["memory_stall"] += max(0, memory_span - compute)
-            finish = start + service + unit.params.fixed_latency_cycles
+            finish = unit_finish + unit.params.fixed_latency_cycles
             queue.push(finish)
             if step.signal_event_id != NO_ID:
                 events[step.signal_event_id] = finish
@@ -1893,7 +2048,16 @@ class CycleModel:
         if mapping is None:
             return family
         indexed = f"{family}.{mapping.queue_index}"
-        return indexed if indexed in queues else family
+        if indexed not in queues:
+            configured = sorted(
+                name for name in queues if name.startswith(f"{family}.")
+            )
+            raise ScheduleError(
+                f"SCHEDULE descriptor {mapping.schedule_id} selects {family} "
+                f"queue_index {mapping.queue_index}, but the cycle model has "
+                f"only {configured or ['no indexed queues']} configured"
+            )
+        return indexed
 
     def _compute_cycles(
         self,
@@ -1930,49 +2094,483 @@ class CycleModel:
         cycles = mapping.tiles * max(per_tile, params.tile_issue_cycles)
         return max(cycles, params.minimum_cycles), tile_issue
 
+    def _topology_payload(self) -> Mapping[str, Any]:
+        ids = self.deployment.table.ids_of_type(ExtendedDescriptorType.TOPOLOGY)
+        if len(ids) != 1:
+            raise ScheduleError(
+                "cycle timing requires exactly one TOPOLOGY descriptor; "
+                f"deployment declares {len(ids)}"
+            )
+        return self.deployment.table[ids[0]].payload
+
+    def _validate_fabric_topology(
+        self, fabric: ClusterFabric | WaferFabric
+    ) -> None:
+        """Refuse a topology the selected cost-table fabric cannot express."""
+
+        topology = self._topology_payload()
+        try:
+            declared_class = TopologyClass(int(topology["topology_class"]))
+        except ValueError as exc:
+            raise ScheduleError(
+                "TOPOLOGY declares unknown topology class "
+                f"{topology['topology_class']}"
+            ) from exc
+        if declared_class is not self.topology_class:
+            raise ScheduleError(
+                f"TOPOLOGY declares {declared_class.name}, deployment manifest "
+                f"declares {self.topology_class.name}"
+            )
+        if fabric.topology_class is not declared_class:
+            raise ScheduleError(
+                f"TOPOLOGY declares {declared_class.name}, selected fabric is "
+                f"{fabric.topology_class.name}"
+            )
+        if isinstance(fabric, ClusterFabric):
+            declared = int(topology["node_count"])
+            if declared != fabric.endpoints():
+                raise ScheduleError(
+                    f"TOPOLOGY declares {declared} cluster nodes, selected "
+                    f"fabric has {fabric.endpoints()} endpoints"
+                )
+            return
+
+        declared_reticles = int(topology["reticle_count"])
+        declared_tiles = int(topology["tiles_per_reticle"])
+        physical_reticles = fabric.params.reticle_rows * fabric.params.reticle_cols
+        physical_tiles = fabric.params.tile_rows * fabric.params.tile_cols
+        geometry_keys = ("reticle_rows", "reticle_columns", "tiles_per_reticle")
+        present = [key for key in geometry_keys if key in self.capability.link]
+        if present and len(present) != len(geometry_keys):
+            missing = sorted(set(geometry_keys) - set(present))
+            raise ScheduleError(
+                "wafer capability has incomplete physical geometry; missing "
+                + ", ".join(missing)
+            )
+        if present:
+            capability_geometry = (
+                int(self.capability.link["reticle_rows"]),
+                int(self.capability.link["reticle_columns"]),
+                int(self.capability.link["tiles_per_reticle"]),
+            )
+            fabric_geometry = (
+                fabric.params.reticle_rows,
+                fabric.params.reticle_cols,
+                physical_tiles,
+            )
+            if capability_geometry != fabric_geometry:
+                raise ScheduleError(
+                    "wafer capability/cost-table physical geometry mismatch: "
+                    f"capability declares {capability_geometry[0]}x"
+                    f"{capability_geometry[1]} reticles with "
+                    f"{capability_geometry[2]} tiles each, selected fabric has "
+                    f"{fabric_geometry[0]}x{fabric_geometry[1]} reticles with "
+                    f"{fabric_geometry[2]} tiles each"
+                )
+        if not 1 <= declared_reticles <= physical_reticles:
+            raise ScheduleError(
+                "wafer TOPOLOGY/cost-table geometry mismatch: deployment "
+                f"declares {declared_reticles} reticles, selected fabric capacity "
+                f"is {physical_reticles}"
+            )
+        if declared_tiles != physical_tiles:
+            raise ScheduleError(
+                "wafer TOPOLOGY/cost-table geometry mismatch: deployment "
+                f"declares {declared_tiles} tiles per reticle, selected fabric "
+                f"has {physical_tiles}"
+            )
+        declared_endpoints = declared_reticles * declared_tiles
+        active_resources = int(topology["active_resource_count"])
+        if not 0 <= active_resources <= declared_endpoints:
+            raise ScheduleError(
+                "wafer TOPOLOGY active-resource count is outside its declared "
+                f"endpoint prefix: {active_resources} > {declared_endpoints}"
+            )
+
+    def _wafer_geometry_report(self, fabric: WaferFabric) -> dict[str, Any]:
+        """Describe physical capacity separately from the active ABI prefix."""
+
+        topology = self._topology_payload()
+        physical_reticles = fabric.params.reticle_rows * fabric.params.reticle_cols
+        physical_tiles = fabric.params.tile_rows * fabric.params.tile_cols
+        declared_reticles = int(topology["reticle_count"])
+        declared_tiles = int(topology["tiles_per_reticle"])
+        return {
+            "mapping": "row-major active reticle prefix",
+            "physical": {
+                "reticle_rows": fabric.params.reticle_rows,
+                "reticle_columns": fabric.params.reticle_cols,
+                "reticle_count": physical_reticles,
+                "tile_rows_per_reticle": fabric.params.tile_rows,
+                "tile_columns_per_reticle": fabric.params.tile_cols,
+                "tiles_per_reticle": physical_tiles,
+                "endpoint_count": physical_reticles * physical_tiles,
+            },
+            "declared": {
+                "reticle_count": declared_reticles,
+                "tiles_per_reticle": declared_tiles,
+                "endpoint_count": declared_reticles * declared_tiles,
+                "active_resource_count": int(topology["active_resource_count"]),
+            },
+        }
+
+    def _wafer_tile_endpoint(self, logical_tile: int, fabric: WaferFabric) -> int:
+        """Map reticle-major ABI tile numbering to global mesh row-major."""
+
+        topology = self._topology_payload()
+        tiles_per_reticle = int(topology["tiles_per_reticle"])
+        reticles = int(topology["reticle_count"])
+        logical_tile = int(logical_tile)
+        if not 0 <= logical_tile < reticles * tiles_per_reticle:
+            raise ScheduleError(
+                f"logical tile {logical_tile} is outside the TOPOLOGY's "
+                f"{reticles * tiles_per_reticle} tiles"
+            )
+        reticle = int(logical_tile) // tiles_per_reticle
+        local = int(logical_tile) % tiles_per_reticle
+        reticle_row, reticle_col = divmod(reticle, fabric.params.reticle_cols)
+        local_row, local_col = divmod(local, fabric.params.tile_cols)
+        return (
+            (reticle_row * fabric.params.tile_rows + local_row) * fabric.cols
+            + reticle_col * fabric.params.tile_cols
+            + local_col
+        )
+
+    def _communication_participants(
+        self,
+        payload: Mapping[str, Any],
+        fabric: ClusterFabric | WaferFabric,
+    ) -> tuple[list[int], dict[int, int]]:
+        """Derive ABI members, then map them onto physical fabric endpoints."""
+
+        self._validate_fabric_topology(fabric)
+        topology = self._topology_payload()
+        try:
+            scope = ParticipantScope(int(payload["participant_scope"]))
+        except ValueError as exc:
+            raise ScheduleError(
+                "COMMUNICATION declares unknown participant scope "
+                f"{payload['participant_scope']}"
+            ) from exc
+        if scope is ParticipantScope.NODE:
+            count = int(topology["node_count"])
+        elif scope is ParticipantScope.RETICLE:
+            count = int(topology["reticle_count"])
+        else:
+            count = int(topology["reticle_count"]) * int(
+                topology["tiles_per_reticle"]
+            )
+        if count < 1:
+            raise ScheduleError(
+                f"COMMUNICATION scope {scope.name} has no topology participants"
+            )
+
+        groups = int(topology["route_group_count"])
+        group_id = int(payload["group_id"])
+        if group_id == NO_ID or groups <= 1:
+            logical = list(range(count))
+        else:
+            if not 0 <= group_id < groups:
+                raise ScheduleError(
+                    f"COMMUNICATION route group {group_id} is outside {groups} groups"
+                )
+            if count % groups:
+                raise ScheduleError(
+                    f"{count} {scope.name} participants cannot be partitioned "
+                    f"equally into {groups} route groups"
+                )
+            size = count // groups
+            logical = list(range(group_id * size, (group_id + 1) * size))
+        declared = int(payload["participant_count"])
+        if declared != len(logical):
+            raise ScheduleError(
+                f"COMMUNICATION declares {declared} participants, selected "
+                f"route group has {len(logical)}"
+            )
+
+        if isinstance(fabric, ClusterFabric):
+            if scope is not ParticipantScope.NODE:
+                raise ScheduleError(
+                    f"cluster fabric cannot time {scope.name}-scoped participants"
+                )
+            mapping = {member: member for member in logical}
+        else:
+            self._validate_fabric_topology(fabric)
+            if scope is ParticipantScope.RETICLE:
+                raise ScheduleError(
+                    "RETICLE-scoped timing has no declared physical tile endpoint; "
+                    "the cost table must name a reticle controller before it can "
+                    "be priced"
+                )
+            if scope is ParticipantScope.NODE:
+                if logical != [0]:
+                    raise ScheduleError(
+                        "wafer logical-device NODE scope must contain only node zero"
+                    )
+                mapping = {0: 0}
+            else:
+                mapping = {
+                    member: self._wafer_tile_endpoint(member, fabric)
+                    for member in logical
+                }
+        physical = [mapping[member] for member in logical]
+        if any(not 0 <= endpoint < fabric.endpoints() for endpoint in physical):
+            raise ScheduleError(
+                f"COMMUNICATION maps to endpoints {physical[:8]} outside the "
+                f"{fabric.endpoints()}-endpoint fabric"
+            )
+        if len(set(physical)) != len(physical):
+            raise ScheduleError(
+                "COMMUNICATION participant mapping is not injective: "
+                f"{len(physical)} logical members map to "
+                f"{len(set(physical))} physical endpoints"
+            )
+        return physical, mapping
+
+    def _physical_endpoint(
+        self,
+        logical: int,
+        scope: ParticipantScope,
+        fabric: ClusterFabric | WaferFabric,
+        *,
+        role: str,
+    ) -> int:
+        if logical == NO_NODE:
+            raise ScheduleError(f"COMMUNICATION declares no {role} endpoint")
+        if isinstance(fabric, ClusterFabric):
+            self._validate_fabric_topology(fabric)
+            if scope is not ParticipantScope.NODE:
+                raise ScheduleError(
+                    f"cluster fabric cannot map {scope.name}-scoped {role} "
+                    f"endpoint {logical}"
+                )
+            endpoint = int(logical)
+        else:
+            self._validate_fabric_topology(fabric)
+            if scope is ParticipantScope.TILE:
+                endpoint = self._wafer_tile_endpoint(int(logical), fabric)
+            elif scope is ParticipantScope.NODE and int(logical) == 0:
+                endpoint = 0
+            else:
+                raise ScheduleError(
+                    f"cannot map {scope.name} {role} {logical} to a wafer tile"
+                )
+        if not 0 <= endpoint < fabric.endpoints():
+            raise ScheduleError(
+                f"COMMUNICATION {role} endpoint {logical} maps outside the "
+                f"{fabric.endpoints()}-endpoint fabric"
+            )
+        return endpoint
+
+    def _resolve_link(
+        self,
+        descriptor_id: int,
+        sub: Link,
+        fabric: ClusterFabric | WaferFabric,
+    ) -> LinkResolution:
+        """Resolve one LINK use into a checked logical/physical binding."""
+
+        try:
+            descriptor = self.deployment.table.get(
+                descriptor_id, ExtendedDescriptorType.COMMUNICATION
+            )
+        except Exception as exc:
+            raise ScheduleError(
+                f"LINK.{sub.name} does not reference a COMMUNICATION descriptor "
+                f"({descriptor_id})"
+            ) from exc
+        payload = descriptor.payload
+        try:
+            scope = ParticipantScope(int(payload["participant_scope"]))
+        except ValueError as exc:
+            raise ScheduleError(
+                "COMMUNICATION declares unknown participant scope "
+                f"{payload['participant_scope']}"
+            ) from exc
+
+        collective_subs = {
+            Link.COLLECTIVE,
+            Link.MULTICAST,
+            Link.GATHER,
+            Link.SCATTER,
+            Link.BARRIER,
+        }
+        if sub in collective_subs:
+            physical, mapping = self._communication_participants(payload, fabric)
+            logical = tuple(mapping)
+            physical_members = tuple(physical)
+            if sub is not Link.BARRIER and len(logical) < 2:
+                raise ScheduleError(
+                    f"LINK.{sub.name} over {len(logical)} participant(s) is "
+                    "degenerate; use a point-to-point LINK operation"
+                )
+
+            def mapped_member(raw: int, role: str) -> int | None:
+                if raw == NO_NODE:
+                    return None
+                if raw not in mapping:
+                    raise ScheduleError(
+                        f"COMMUNICATION {role} {raw} is not in selected logical "
+                        f"participant set {logical}"
+                    )
+                return mapping[raw]
+
+            source = mapped_member(int(payload["source_node"]), "source")
+            destination = mapped_member(
+                int(payload["destination_node"]), "destination"
+            )
+            op = CollectiveOp(int(payload["collective_op"]))
+            needs_source = (
+                sub in (Link.MULTICAST, Link.SCATTER)
+                or (sub is Link.COLLECTIVE and op is CollectiveOp.BROADCAST)
+            )
+            needs_destination = sub is Link.GATHER or (
+                sub is Link.COLLECTIVE
+                and op is CollectiveOp.REDUCE_SCATTER
+                and isinstance(fabric, WaferFabric)
+            )
+            if needs_source and source is None:
+                raise ScheduleError(
+                    f"LINK.{sub.name} requires a source root in its participant set"
+                )
+            if needs_destination and destination is None:
+                raise ScheduleError(
+                    f"LINK.{sub.name} requires a destination root in its "
+                    "participant set"
+                )
+            if sub is Link.COLLECTIVE and op is CollectiveOp.POINT_TO_POINT:
+                raise ScheduleError(
+                    "LINK.COLLECTIVE names POINT_TO_POINT; use SEND, RECEIVE or "
+                    "REMOTE_DMA"
+                )
+        else:
+            source_logical = int(payload["source_node"])
+            destination_logical = int(payload["destination_node"])
+            source = self._physical_endpoint(
+                source_logical, scope, fabric, role="source"
+            )
+            destination = self._physical_endpoint(
+                destination_logical, scope, fabric, role="destination"
+            )
+            logical = tuple(dict.fromkeys((source_logical, destination_logical)))
+            physical_members = tuple(dict.fromkeys((source, destination)))
+            mapping = {
+                source_logical: source,
+                destination_logical: destination,
+            }
+
+        return LinkResolution(
+            descriptor_id=descriptor_id,
+            sub=sub,
+            payload=payload,
+            scope=scope,
+            logical_members=logical,
+            physical_members=physical_members,
+            logical_to_physical=dict(mapping),
+            source=source,
+            destination=destination,
+        )
+
+    @staticmethod
+    def _collective_fabric_bytes(
+        op: int, participant_count: int, byte_extent: int
+    ) -> int:
+        """Translate ABI per-participant extent to the fabric payload.
+
+        ``COMMUNICATION.byte_extent`` is always one participant's slot.  The
+        fabric ring and gather algorithms take the whole logical payload for
+        gather-shaped operations and divide it by the participant count.  A
+        reduction or broadcast instead carries one slot as its total payload.
+        Keeping this translation next to the timing call prevents a silent
+        factor-of-P undercount.
+        """
+
+        collective = CollectiveOp(int(op))
+        if collective in (
+            CollectiveOp.CONCAT,
+            CollectiveOp.ALL_GATHER,
+            CollectiveOp.REDUCE_SCATTER,
+        ):
+            return int(participant_count) * int(byte_extent)
+        return int(byte_extent)
+
+    @staticmethod
+    def _root_first(participants: Sequence[int], root: int) -> list[int]:
+        """Order a rooted collective without changing its participant set."""
+
+        members = list(participants)
+        if int(root) not in members:
+            raise ScheduleError(
+                f"collective root {root} is not in physical participant set "
+                f"{members}"
+            )
+        return [int(root), *(member for member in members if member != int(root))]
+
+    @staticmethod
+    def _reported_members(members: Sequence[int]) -> list[int] | dict[str, Any]:
+        """Keep small bindings explicit without exploding wafer reports."""
+
+        values = [int(member) for member in members]
+        if len(values) <= 64:
+            return values
+        encoded = ",".join(str(value) for value in values).encode("ascii")
+        return {
+            "count": len(values),
+            "first": values[0],
+            "last": values[-1],
+            "sha256": sha256(encoded).hex(),
+        }
+
     def _time_link(
         self,
         step: TraceStep,
         fabric: ClusterFabric | WaferFabric,
         start: int,
-        node_id: int,
-        node_count: int,
-    ) -> FabricTiming | None:
+        resolution: LinkResolution | None = None,
+    ) -> FabricTiming:
         """Time one executed LINK operation on the physical fabric."""
-        try:
-            descriptor = self.deployment.table.get(
-                step.descriptor_id, ExtendedDescriptorType.COMMUNICATION
-            )
-        except Exception:
-            self._gap(
-                "LINK instruction",
-                "the LINK instruction does not reference a COMMUNICATION "
-                "descriptor, so the fabric has nothing to time",
-            )
-            return None
-        payload = descriptor.payload
-        endpoints = fabric.endpoints()
-        source = int(payload["source_node"])
-        destination = int(payload["destination_node"])
-        if source >= endpoints:
-            source = node_id % endpoints
-        if destination >= endpoints:
-            destination = (node_id + 1) % endpoints
-        nbytes = int(payload["byte_extent"])
-        sub = Link(step.sub)
-        participants = list(
-            range(min(max(int(payload["participant_count"]), 1), endpoints))
+        resolved = resolution or self._resolve_link(
+            step.descriptor_id, Link(step.sub), fabric
         )
+        payload = resolved.payload
+        byte_extent = int(payload["byte_extent"])
+        sub = resolved.sub
+        participants = list(resolved.physical_members)
         if sub is Link.BARRIER:
             return fabric.barrier(participants, start_cycle=start)
         if sub in (Link.COLLECTIVE, Link.MULTICAST, Link.GATHER, Link.SCATTER):
             op = int(payload["collective_op"])
             if sub is Link.MULTICAST:
                 op = int(CollectiveOp.BROADCAST)
+                assert resolved.source is not None
+                participants = self._root_first(participants, resolved.source)
             elif sub is Link.GATHER:
                 op = int(CollectiveOp.CONCAT)
+                assert resolved.destination is not None
+                participants = self._root_first(
+                    participants, resolved.destination
+                )
             elif sub is Link.SCATTER:
-                op = int(CollectiveOp.REDUCE_SCATTER)
+                assert resolved.source is not None
+                return fabric.scatter(
+                    participants,
+                    byte_extent,
+                    source=resolved.source,
+                    start_cycle=start,
+                )
+            elif CollectiveOp(op) is CollectiveOp.BROADCAST:
+                assert resolved.source is not None
+                participants = self._root_first(participants, resolved.source)
+            elif (
+                CollectiveOp(op) is CollectiveOp.CONCAT
+                and resolved.destination is not None
+            ):
+                participants = self._root_first(
+                    participants, resolved.destination
+                )
+            nbytes = self._collective_fabric_bytes(
+                op, len(participants), byte_extent
+            )
             return fabric.collective(
                 op,
                 participants,
@@ -1980,10 +2578,12 @@ class CycleModel:
                 start_cycle=start,
                 chunk_bytes=int(payload["chunk_bytes"]),
             )
+        assert resolved.source is not None
+        assert resolved.destination is not None
         return fabric.unicast(
-            source,
-            destination,
-            nbytes,
+            resolved.source,
+            resolved.destination,
+            byte_extent,
             start_cycle=start,
             operation=f"link.{sub.name}",
         )
@@ -1995,51 +2595,171 @@ class CycleModel:
         """Time every COMMUNICATION descriptor the deployment declares.
 
         This is *not* an execution result.  It is what the fabric would cost if
-        every declared transfer ran once, and it exists so that a topology cost
-        is visible even before the link engine is implemented.  It is reported
-        under its own key and is never folded into the executed timing.
+        every distinct declared LINK use ran once in isolation, and it exists
+        so that a topology cost is visible even before a particular path is
+        executed.  It is reported under its own key and is never folded into
+        executed timing.
         """
+        self._validate_fabric_topology(fabric)
+        uses: dict[int, dict[Link, list[int]]] = {}
+        for pc, instruction in enumerate(self._instructions()):
+            if int(instruction.major) != int(Major.LINK):
+                continue
+            sub = Link(int(instruction.sub))
+            uses.setdefault(instruction.descriptor_id, {}).setdefault(
+                sub, []
+            ).append(pc)
+
         entries: list[dict[str, Any]] = []
         total = 0
-        for did in self.deployment.table.ids_of_type(
+        descriptor_ids = self.deployment.table.ids_of_type(
             ExtendedDescriptorType.COMMUNICATION
-        ):
-            descriptor = self.deployment.table[did]
-            payload = descriptor.payload
-            endpoints = fabric.endpoints()
-            participants = list(
-                range(min(max(int(payload["participant_count"]), 1), endpoints))
-            )
-            op = int(payload["collective_op"])
-            nbytes = int(payload["byte_extent"])
-            if CollectiveOp(op) is CollectiveOp.POINT_TO_POINT:
-                source = int(payload["source_node"])
-                destination = int(payload["destination_node"])
-                timing = fabric.unicast(
-                    source if source < endpoints else 0,
-                    destination if destination < endpoints else min(1, endpoints - 1),
-                    nbytes,
-                    operation="declared.unicast",
-                )
-            else:
-                timing = fabric.collective(op, participants, nbytes)
-            total += timing.cycles
-            entries.append({"descriptor_id": did, **timing.to_dict()})
+        )
+        baseline = fabric.snapshot()
+        try:
+            for did in descriptor_ids:
+                payload = self.deployment.table[did].payload
+                descriptor_uses = uses.get(did, {})
+                if descriptor_uses:
+                    variants = [
+                        (sub, pcs, "instruction_subopcode")
+                        for sub, pcs in sorted(
+                            descriptor_uses.items(), key=lambda item: int(item[0])
+                        )
+                    ]
+                else:
+                    fallback = (
+                        Link.SEND
+                        if CollectiveOp(int(payload["collective_op"]))
+                        is CollectiveOp.POINT_TO_POINT
+                        else Link.COLLECTIVE
+                    )
+                    variants = [(fallback, [], "descriptor_only_fallback")]
+
+                for sub, pcs, binding_mode in variants:
+                    # Restore the exact same empty-fabric baseline before each
+                    # catalog probe.  Cross-descriptor contention is not a
+                    # declared inventory cost, while contention *inside* one
+                    # collective remains fully modelled.
+                    fabric.restore(baseline)
+                    step = TraceStep(
+                        index=pcs[0] if pcs else NO_ID,
+                        kind="ENGINE",
+                        major=int(Major.LINK),
+                        sub=int(sub),
+                        mnemonic=f"LINK.{sub.name}",
+                        family="link",
+                        descriptor_id=did,
+                    )
+                    resolution = self._resolve_link(did, sub, fabric)
+                    timing = self._time_link(
+                        step, fabric, 0, resolution=resolution
+                    )
+                    total += timing.cycles
+                    entries.append(
+                        {
+                            "descriptor_id": did,
+                            "binding_mode": binding_mode,
+                            "instruction_pcs": pcs,
+                            "link_subopcode": sub.name,
+                            "participant_scope": resolution.scope.name,
+                            "group_id": int(payload["group_id"]),
+                            "logical_members": self._reported_members(
+                                resolution.logical_members
+                            ),
+                            "physical_endpoints": self._reported_members(
+                                resolution.physical_members
+                            ),
+                            "source_endpoint": resolution.source,
+                            "destination_endpoint": resolution.destination,
+                            **timing.to_dict(),
+                        }
+                    )
+        finally:
+            fabric.restore(baseline)
+
         return {
             "status": "declared_not_executed",
             "note": (
-                "cost of every COMMUNICATION descriptor in the deployment, timed "
-                "once on this fabric; it is not an execution measurement and is "
-                "not included in the executed timing"
+                "sum of isolated costs for each distinct effective LINK "
+                "subopcode bound to a COMMUNICATION descriptor; repeated uses "
+                "of the same descriptor/subopcode are priced once, unused "
+                "descriptors use an explicitly labelled descriptor-only "
+                "fallback, no mutual contention is included, and the sum is "
+                "not a schedule makespan or execution measurement"
             ),
-            "descriptor_count": len(entries),
+            "descriptor_count": len(descriptor_ids),
+            "priced_entry_count": len(entries),
             "total_cycles": total,
             "entries": entries,
         }
 
+    def _schedule_cluster_links(
+        self,
+        trace: Mapping[str, Any],
+        readiness: Mapping[int, int],
+        fabric: ClusterFabric,
+    ) -> dict[int, ScheduledLink]:
+        """Reserve every global LINK once at its participant-ready bound.
+
+        The functional trace contains one LINK step for the whole cluster.  A
+        node timing replay supplies the earliest cycle at which that node can
+        issue the step; the physical operation starts at the maximum of those
+        arrivals.  Independent subgroups can reach later trace steps first, so
+        operations within one transaction reserve the fabric in participant-
+        ready order, with trace index as the deterministic tie-break.  This
+        prevents a future reservation from blocking an operation that can use
+        the otherwise-idle fabric now.  Transaction order remains authoritative.
+        Rebuilding this schedule from a fresh fabric while the bounds grow
+        yields an exact monotone fixed point without executing the collective
+        once per node.
+        """
+
+        scheduled: dict[int, ScheduledLink] = {}
+        for transaction in trace["transaction_steps"]:
+            ready_links: list[tuple[int, int, TraceStep, LinkResolution]] = []
+            for step in transaction:
+                if (
+                    step.kind != "ENGINE"
+                    or step.family != "link"
+                    or step.node != CLUSTER_WIDE
+                    or step.trapped
+                ):
+                    continue
+                resolution = self._resolve_link(
+                    step.descriptor_id, Link(step.sub), fabric
+                )
+                ready_links.append(
+                    (
+                        int(readiness.get(step.index, 0)),
+                        step.index,
+                        step,
+                        resolution,
+                    )
+                )
+            for ready, _index, step, resolution in sorted(ready_links):
+                timing = self._time_link(
+                    step,
+                    fabric,
+                    ready,
+                    resolution,
+                )
+                scheduled[step.index] = ScheduledLink(
+                    resolution=resolution,
+                    timing=timing,
+                )
+        return scheduled
+
     # -- public entry points ---------------------------------------------
     def run(self, request: CycleRequest) -> CycleResult:
         """Run ``request`` on this deployment's own topology class."""
+        # Fabrics contain mutable port occupancy.  A CycleModel is reusable, so
+        # every public run starts with a new execution fabric and a new gap set;
+        # otherwise the second run observes contention left by the first.
+        self.fabric = build_fabric(self.machine, self.topology_class)
+        self.gaps.clear()
+        if self.fabric is not None:
+            self._validate_fabric_topology(self.fabric)
         if self.topology_class is TopologyClass.CLUSTER_32:
             return self._run_cluster(request)
         return self._run_single(request)
@@ -2064,8 +2784,14 @@ class CycleModel:
         body["rates"] = self._rate_block(node, span)
         if self.fabric is not None:
             body["fabric"] = self.fabric.to_dict()
+            if isinstance(self.fabric, WaferFabric):
+                body["fabric"]["geometry"] = self._wafer_geometry_report(self.fabric)
             body["fabric"]["executed"] = self._fabric_block(node)
-            body["fabric"]["declared"] = self.declared_communication(self.fabric)
+            declared_fabric = build_fabric(self.machine, self.topology_class)
+            assert declared_fabric is not None
+            body["fabric"]["declared"] = self.declared_communication(
+                declared_fabric
+            )
         body["gaps"] = list(self.gaps)
         body["provenance"] = self.machine.provenance_report()
         return CycleResult(body)
@@ -2074,34 +2800,108 @@ class CycleModel:
     def _run_cluster(self, request: CycleRequest) -> CycleResult:
         assert isinstance(self.fabric, ClusterFabric)
         nodes = self.fabric.endpoints()
-        topology_nodes = self._topology_node_count()
-        if topology_nodes and topology_nodes != nodes:
-            self._gap(
-                "topology descriptor vs capability",
-                f"the topology descriptor declares {topology_nodes} nodes but the "
-                f"capability admits {nodes}; the fabric was built for {nodes}",
-            )
         spmd = self._node_invariant()
         replays = 1 if spmd else nodes
+        trace = self._collect_trace(request, node_id=0, node_count=nodes)
+        global_link_count = sum(
+            1
+            for transaction in trace["transaction_steps"]
+            for step in transaction
+            if step.kind == "ENGINE"
+            and step.family == "link"
+            and step.node == CLUSTER_WIDE
+            and not step.trapped
+        )
+        readiness: dict[int, int] = {}
+        primary: dict[str, Any] | None = None
         per_node: list[dict[str, Any]] = []
-        for index in range(replays):
-            per_node.append(
-                self.run_node(
-                    request, node_id=index, node_count=nodes, fabric=self.fabric
+        schedule_iterations = 0
+        global_links: dict[int, ScheduledLink] = {}
+
+        # Link completion can move a later participant-ready cycle, so solve
+        # the ordered global schedule to a monotone fixed point.  At most one
+        # new LINK boundary can be pushed through the trace per iteration.
+        for schedule_iterations in range(1, max(2, global_link_count + 2) + 1):
+            execution_fabric = build_fabric(self.machine, self.topology_class)
+            assert isinstance(execution_fabric, ClusterFabric)
+            global_links = self._schedule_cluster_links(
+                trace, readiness, execution_fabric
+            )
+            observed_readiness: dict[int, int] = {}
+            timed_nodes: list[dict[str, Any]] = []
+            for index in range(replays):
+                timed_nodes.append(
+                    self._time_trace_node(
+                        trace,
+                        node_id=index,
+                        node_count=nodes,
+                        fabric=execution_fabric,
+                        global_links=global_links,
+                        global_link_readiness=observed_readiness,
+                    )
                 )
+            next_readiness = {
+                step: max(readiness.get(step, 0), observed_readiness.get(step, 0))
+                for step in set(readiness) | set(observed_readiness)
+            }
+            if next_readiness == readiness:
+                self.fabric = execution_fabric
+                primary = timed_nodes[0]
+                per_node = [
+                    {
+                        "node": timed["node_id"],
+                        "compute_cycles": timed["totals"]["compute"],
+                        "engine_busy_cycles": timed["engine_busy"],
+                        "memory_stall_cycles": timed["totals"]["memory_stall"],
+                        "issue_cycles": timed["totals"]["issue_cycles"],
+                        "queue_stall_cycles": timed["totals"]["queue_stall"],
+                        "wait_stall_cycles": timed["totals"]["wait_stall"],
+                        "link_cycles": timed["link_cycles"],
+                        "collective_cycles": timed["collective_cycles"],
+                        "barrier_cycles": timed["barrier_cycles"],
+                        "end_cycle": timed["end_cycle"],
+                        "engine_idle_cycles": max(
+                            0,
+                            timed["end_cycle"] * len(timed["engines"])
+                            - timed["engine_busy"],
+                        ),
+                    }
+                    for timed in timed_nodes
+                ]
+                break
+            readiness = next_readiness
+        else:
+            raise ScheduleError(
+                "cluster-wide LINK synchronization did not converge after "
+                f"{max(2, global_link_count + 2)} fixed-point iterations"
             )
         if spmd and nodes > 1:
             # Every node executes the identical instruction stream: the model
             # replays one and states that it did, rather than pretending to 32
             # independent measurements of the same thing.
-            per_node = [dict(per_node[0], node_id=n) for n in range(nodes)]
+            per_node = [dict(per_node[0], node=n) for n in range(nodes)]
+
+        assert primary is not None
+        device = trace["device"]
+        primary.update(
+            {
+                "device": device,
+                "session": trace["session"],
+                "results": trace["results"],
+                "produced_tokens": trace["produced_tokens"],
+                "architectural": trace["architectural"],
+                "addresses": device.addresses,
+            }
+        )
 
         ends = [node["end_cycle"] for node in per_node]
         critical = max(ends) if ends else 0
         slowest = min(ends) if ends else 0
-        body = self._common_body(request, per_node)
+        for node in per_node:
+            node["skew_cycles"] = critical - node["end_cycle"]
+
+        body = self._common_body(request, [primary])
         span = max(critical, 1)
-        primary = per_node[0]
         body["timing"] = self._timing_block(primary, span)
         body["timing"]["cluster_critical_path_cycles"] = critical
         body["engines"] = {
@@ -2117,12 +2917,28 @@ class CycleModel:
         body["proofs"] = self._proof_block(primary)
         body["rates"] = self._rate_block(primary, span)
         body["fabric"] = self.fabric.to_dict()
-        body["fabric"]["executed"] = self._fabric_block(primary)
-        body["fabric"]["declared"] = self.declared_communication(self.fabric)
+        body["fabric"]["executed"] = self._scheduled_fabric_block(global_links)
+        declared_fabric = build_fabric(self.machine, self.topology_class)
+        assert isinstance(declared_fabric, ClusterFabric)
+        body["fabric"]["declared"] = self.declared_communication(declared_fabric)
         body["cluster"] = {
             "nodes": nodes,
             "replay_mode": "spmd_identical" if spmd else "per_node",
             "replays_executed": replays,
+            "global_link_schedule": {
+                "operations": len(global_links),
+                "fixed_point_iterations": schedule_iterations,
+                "synchronized": True,
+                "rule": (
+                    "each cluster-wide LINK starts no earlier than the maximum "
+                    "participant-ready cycle; ready operations within one "
+                    "transaction reserve the physical fabric once in readiness "
+                    "order with trace index breaking ties; participating nodes "
+                    "observe the shared completion, while excluded nodes charge "
+                    "only local instruction issue and block only if a later wait "
+                    "names its completion event"
+                ),
+            },
             "blended_total_reported": False,
             "note": (
                 "per-node compute, link, collective and idle/skew are reported "
@@ -2143,38 +2959,13 @@ class CycleModel:
                     "memory-traffic figure is one node's share"
                 ),
             },
-            "per_node": [
-                {
-                    "node": node["node_id"],
-                    "compute_cycles": node["totals"]["compute"],
-                    "engine_busy_cycles": node["engine_busy"],
-                    "memory_stall_cycles": node["totals"]["memory_stall"],
-                    "issue_cycles": node["totals"]["issue_cycles"],
-                    "queue_stall_cycles": node["totals"]["queue_stall"],
-                    "wait_stall_cycles": node["totals"]["wait_stall"],
-                    "link_cycles": node["link_cycles"],
-                    "collective_cycles": node["collective_cycles"],
-                    "barrier_cycles": node["barrier_cycles"],
-                    "end_cycle": node["end_cycle"],
-                    # Idle is summed over the node's engines, so it is directly
-                    # comparable with engine_busy_cycles; skew is what this node
-                    # waits for the slowest node, which is a different cost with
-                    # a different cause and is never folded into idle.
-                    "engine_idle_cycles": max(
-                        0,
-                        node["end_cycle"] * len(node["engines"])
-                        - node["engine_busy"],
-                    ),
-                    "skew_cycles": critical - node["end_cycle"],
-                }
-                for node in per_node
-            ],
+            "per_node": per_node,
             "aggregate": {
                 "critical_path_cycles": critical,
                 "earliest_node_end_cycle": slowest,
                 "skew_cycles": critical - slowest,
                 "compute_cycles_total": sum(
-                    n["totals"]["compute"] for n in per_node
+                    n["compute_cycles"] for n in per_node
                 ),
                 "link_cycles_total": sum(n["link_cycles"] for n in per_node),
                 "collective_cycles_total": sum(
@@ -2196,13 +2987,37 @@ class CycleModel:
         return CycleResult(body)
 
     # -- report blocks ----------------------------------------------------
-    def _topology_node_count(self) -> int:
-        for did in self.deployment.table.ids_of_type(ExtendedDescriptorType.TOPOLOGY):
-            return int(self.deployment.table[did].payload["node_count"])
-        return 0
-
     def _node_invariant(self) -> bool:
-        """True when no descriptor makes the program depend on ``NODE_ID``."""
+        """True when every node has the same data-plane timing trace.
+
+        A node-indexed object source is a real per-node input even when every
+        tensor view has the same offset, so it always requires per-node replay.
+        Runtime-symbol predicates and loop bounds are deliberately *not* used as
+        evidence of per-node control flow: the functional device evaluates one
+        control stream for the whole logical device.  Claiming 32 control paths
+        from the one node-zero trace would invent executions that never ran.
+        """
+        if any(
+            source.kind == "node_segments"
+            for source in self.deployment.objects.values()
+        ):
+            return False
+        if isinstance(self.fabric, ClusterFabric):
+            all_nodes = set(range(self.fabric.endpoints()))
+            for instruction in self._instructions():
+                if int(instruction.major) != int(Major.LINK):
+                    continue
+                resolution = self._resolve_link(
+                    instruction.descriptor_id,
+                    Link(int(instruction.sub)),
+                    self.fabric,
+                )
+                if set(resolution.physical_members) != all_nodes:
+                    # A subgroup or point-to-point LINK gives participants and
+                    # excluded nodes different queue, busy and completion
+                    # timelines.  Replaying node zero and cloning it would hide
+                    # that difference, especially when group zero is not used.
+                    return False
         node_symbol = int(Symbol.NODE_ID)
         for descriptor in self.deployment.table.descriptors():
             kind = descriptor.descriptor_type
@@ -2214,12 +3029,6 @@ class CycleModel:
                         and payload[f"term{slot}_index"] == node_symbol
                     ):
                         return False
-            elif kind == ExtendedDescriptorType.PREDICATE:
-                if payload["selector_index"] == node_symbol:
-                    return False
-            elif kind == ExtendedDescriptorType.LOOP_CONTROL:
-                if payload["bound_symbol_id"] == node_symbol:
-                    return False
         return True
 
     def _timing_block(self, node: dict[str, Any], span: int) -> dict[str, Any]:
@@ -2370,6 +3179,58 @@ class CycleModel:
             "collective_cycles": node["collective_cycles"],
             "barrier_cycles": node["barrier_cycles"],
             "detail": [timing.to_dict() for timing in timings],
+        }
+
+    def _scheduled_fabric_block(
+        self, scheduled: Mapping[int, ScheduledLink]
+    ) -> dict[str, Any]:
+        """Canonical cluster-global LINK evidence, independent of node zero."""
+
+        values = [scheduled[index] for index in sorted(scheduled)]
+        timings = [entry.timing for entry in values]
+        link_cycles = sum(
+            timing.cycles
+            for timing in timings
+            if not timing.operation.startswith("collective")
+            and timing.operation not in ("barrier", "scatter")
+        )
+        collective_cycles = sum(
+            timing.cycles
+            for timing in timings
+            if timing.operation.startswith("collective")
+            or timing.operation == "scatter"
+        )
+        barrier_cycles = sum(
+            timing.cycles for timing in timings if timing.operation == "barrier"
+        )
+        detail: list[dict[str, Any]] = []
+        for trace_step in sorted(scheduled):
+            entry = scheduled[trace_step]
+            resolution = entry.resolution
+            detail.append(
+                {
+                    "trace_step": trace_step,
+                    "descriptor_id": resolution.descriptor_id,
+                    "link_subopcode": resolution.sub.name,
+                    "participant_scope": resolution.scope.name,
+                    "group_id": int(resolution.payload["group_id"]),
+                    "logical_members": self._reported_members(
+                        resolution.logical_members
+                    ),
+                    "physical_endpoints": self._reported_members(
+                        resolution.physical_members
+                    ),
+                    "source_endpoint": resolution.source,
+                    "destination_endpoint": resolution.destination,
+                    **entry.timing.to_dict(),
+                }
+            )
+        return {
+            "operations": len(timings),
+            "link_cycles": link_cycles,
+            "collective_cycles": collective_cycles,
+            "barrier_cycles": barrier_cycles,
+            "detail": detail,
         }
 
     def _rate_block(self, node: dict[str, Any], span: int) -> list[dict[str, Any]]:

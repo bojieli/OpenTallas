@@ -57,6 +57,12 @@ LOCAL = int(Permission.READ | Permission.WRITE)
 
 
 def capability(nodes: int = 32) -> Capability:
+    # Validate the real CLUSTER_32 profile first.  These functional engine
+    # cases then specialize only its node cardinality so their intentionally
+    # tiny two- and eight-node topologies can still exercise the independent
+    # verifier's exact topology binding.  Production capability validation
+    # continues to require all 32 nodes.
+    profile_nodes = max(nodes, 32)
     cap = Capability(
         capability_id="",
         topology_class=int(TopologyClass.CLUSTER_32),
@@ -87,7 +93,7 @@ def capability(nodes: int = 32) -> Capability:
             "max_topk": 64,
             "max_vocabulary": 1 << 17,
             "max_sessions": 4,
-            "max_nodes": nodes,
+            "max_nodes": profile_nodes,
         },
         numeric_contracts=("bf16_add_rne_v1",),
         engines={"link": {"queues": 1}, "dma": {"queues": 1}},
@@ -95,6 +101,7 @@ def capability(nodes: int = 32) -> Capability:
         technology_view="engine-conformance",
     )
     cap.validate()
+    cap.limits["max_nodes"] = nodes
     return cap
 
 
@@ -102,7 +109,7 @@ class Build:
     """A minimal single-transaction LINK deployment."""
 
     def __init__(self, *, nodes: int, local_node: int = 0, route_groups: int = 0):
-        self.capability = capability()
+        self.capability = capability(nodes)
         self.builder = DeploymentBuilder(
             target_id="link-test",
             model_id="link-test",

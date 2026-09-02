@@ -14,6 +14,7 @@ from __future__ import annotations
 import json
 import subprocess
 import sys
+from hashlib import sha256 as hashlib_sha256
 from pathlib import Path
 
 import pytest
@@ -32,7 +33,9 @@ from runtime.abi3.constants import (
     Link,
     Major,
     NO_ID,
+    NO_NODE,
     Observation,
+    ParticipantScope,
     Permission,
     Recovery,
     State,
@@ -42,11 +45,12 @@ from runtime.abi3.constants import (
     counter_id,
 )
 from runtime.abi3.builder import DeploymentBuilder, DynamicTerm
-from runtime.abi3.deployment import Deployment, ObjectSource
+from runtime.abi3.deployment import Deployment, ObjectSource, Segment
 from runtime.abi3.descriptors import (
     CollectiveOp,
     ExtendedDescriptorType,
     Phase,
+    PredicateKind,
     SelectionMode,
     Symbol,
 )
@@ -60,7 +64,6 @@ from runtime.cycle.fabric import (
     assert_no_zero_latency_global_operations,
 )
 from runtime.cycle.machine import (
-    CostTable,
     MachineError,
     MachineModel,
     Provenance,
@@ -78,6 +81,7 @@ from runtime.cycle.model import (
     timing_counters,
 )
 from runtime.sim.engines import load_engines
+from runtime.sim.engines.link import collective_traffic
 
 #: The engine implementations register themselves on import; a driver loads
 #: them, so the tests do too.  Without them every engine operation traps in
@@ -138,7 +142,14 @@ def request(**kwargs) -> CycleRequest:
 # counter agreement is checked on a transaction that actually completes and
 # actually moves bytes.
 # ---------------------------------------------------------------------------
-def _state_builder(capability: Capability, *, target: str) -> DeploymentBuilder:
+def _state_builder(
+    capability: Capability,
+    *,
+    target: str,
+    route_group_count: int = 0,
+    reticle_count: int = 0,
+    tiles_per_reticle: int = 0,
+) -> DeploymentBuilder:
     builder = DeploymentBuilder(
         target_id=target,
         model_id="abi3-cycle-synthetic",
@@ -148,8 +159,11 @@ def _state_builder(capability: Capability, *, target: str) -> DeploymentBuilder:
     builder.topology(
         topology_class=TopologyClass(capability.topology_class),
         node_count=capability.limits["max_nodes"],
+        reticle_count=reticle_count,
+        tiles_per_reticle=tiles_per_reticle,
         hbm_bytes_per_node=capability.memory["hbm"]["bytes"],
         sram_bytes_per_node=capability.memory["sram"]["bytes"],
+        route_group_count=route_group_count,
         key="topology",
     )
     return builder
@@ -161,10 +175,17 @@ def synthetic_state_deployment(
     tiles: int = 4,
     with_communication: bool = False,
     target: str = "cycle-synthetic",
+    reticle_count: int = 0,
+    tiles_per_reticle: int = 0,
 ) -> tuple[Deployment, Capability]:
     """A deployment that completes on today's device and commits real bytes."""
     capability = capability or fixture_capability()
-    builder = _state_builder(capability, target=target)
+    builder = _state_builder(
+        capability,
+        target=target,
+        reticle_count=reticle_count,
+        tiles_per_reticle=tiles_per_reticle,
+    )
     row_bytes = ROW_ELEMS * 2
     committed = builder.memory_object(
         storage_class=StorageClass.STATE,
@@ -398,6 +419,8 @@ def synthetic_tiled_deployment(
     schedule_reduction: bool = True,
     layers: int = 1,
     independent_matmuls: int = 0,
+    tensor_queue_index: int = 0,
+    node_sharded_weights: bool = False,
 ) -> tuple[Deployment, Capability]:
     """A completing deployment whose every operator carries a tile mapping.
 
@@ -408,7 +431,10 @@ def synthetic_tiled_deployment(
     builder = _state_builder(capability, target="cycle-tiled")
     builder.require(Feature.BF16_TENSOR)
 
-    weight_bytes = VOCAB * TILE_DEPTH * 2
+    weight_shards = (
+        capability.limits["max_nodes"] if node_sharded_weights else 1
+    )
+    weight_bytes = weight_shards * VOCAB * TILE_DEPTH * 2
     weights = builder.memory_object(
         storage_class=storage_class,
         size_bytes=weight_bytes,
@@ -483,7 +509,7 @@ def synthetic_tiled_deployment(
         issue_window=2,
         bank_mask=bank_mask,
         port_mask=port_mask,
-        queue_index=0,
+        queue_index=tensor_queue_index,
         key="sched.tensor",
     )
     vector_schedule = builder.schedule(
@@ -524,6 +550,11 @@ def synthetic_tiled_deployment(
         object_id=weights,
         dtype=DType.BF16,
         dims=[VOCAB, TILE_DEPTH],
+        dynamic=(
+            [DynamicTerm.symbol(Symbol.NODE_ID, VOCAB * TILE_DEPTH)]
+            if node_sharded_weights
+            else []
+        ),
         key="view.weights",
     )
     output_view = builder.tensor_view(
@@ -785,6 +816,187 @@ def synthetic_link_deployment() -> tuple[Deployment, Capability]:
         key="comm.allreduce",
     )
     builder.emit(Major.LINK, Link.COLLECTIVE, descriptor_id=comm)
+    builder.emit(Major.CONTROL, Control.COMPLETE)
+    builder.entrypoint(entrypoint_id=0, first_instruction=0, phase=Phase.PREFILL)
+    return builder.finish(), capability
+
+
+def synthetic_timed_cluster_link_deployment(
+    *,
+    link_sub: Link = Link.COLLECTIVE,
+    collective_op: CollectiveOp = CollectiveOp.ALL_GATHER,
+    route_group_count: int = 0,
+    group_id: int = NO_ID,
+    second_group_id: int | None = None,
+    second_byte_extent: int | None = None,
+    source_node: int | None = None,
+    destination_node: int | None = None,
+    byte_extent: int = 64,
+) -> tuple[Deployment, Capability]:
+    """A completing, node-dependent DMA followed by valid cluster links."""
+    capability = cycle_capability(TopologyClass.CLUSTER_32)
+    builder = _state_builder(
+        capability,
+        target="cycle-timed-cluster-link",
+        route_group_count=route_group_count,
+    )
+    builder.require(Feature.INTER_CHIP_ENDPOINT)
+    nodes = capability.limits["max_nodes"]
+    if group_id == NO_ID or route_group_count <= 1:
+        selected_first = 0
+        selected_count = nodes
+    else:
+        assert nodes % route_group_count == 0
+        selected_count = nodes // route_group_count
+        selected_first = group_id * selected_count
+    if source_node is None:
+        source_node = (
+            selected_first
+            if link_sub in (Link.MULTICAST, Link.SCATTER)
+            else NO_NODE
+        )
+    if destination_node is None:
+        destination_node = selected_first if link_sub is Link.GATHER else NO_NODE
+    slot_bytes = 64
+    total_bytes = nodes * slot_bytes
+    source = builder.memory_object(
+        storage_class=StorageClass.SRAM,
+        size_bytes=total_bytes,
+        source=ObjectSource.zeros(total_bytes),
+        permissions=int(Permission.READ | Permission.WRITE),
+        key="obj.link.source",
+    )
+    exchange = builder.memory_object(
+        storage_class=StorageClass.SRAM,
+        size_bytes=total_bytes,
+        source=ObjectSource.zeros(total_bytes),
+        permissions=int(Permission.READ | Permission.WRITE | Permission.REMOTE),
+        key="obj.link.exchange",
+    )
+    dynamic = [DynamicTerm.symbol(Symbol.NODE_ID, slot_bytes)]
+    source_view = builder.tensor_view(
+        object_id=source,
+        dtype=DType.U8,
+        dims=[1, slot_bytes],
+        dynamic=dynamic,
+        key="view.link.source",
+    )
+    exchange_view = builder.tensor_view(
+        object_id=exchange,
+        dtype=DType.U8,
+        dims=[1, slot_bytes],
+        dynamic=dynamic,
+        permissions=int(Permission.READ | Permission.WRITE),
+        key="view.link.exchange",
+    )
+    schedule = builder.schedule(
+        engine_family=Major.DMA,
+        tile_rows=1,
+        tile_cols=slot_bytes,
+        tile_depth=1,
+        max_outstanding=1,
+        key="sched.link.pack",
+    )
+    pack = builder.operator(
+        engine_family=Major.DMA,
+        engine_sub=Dma.TRANSFER,
+        inputs=[source_view],
+        outputs=[exchange_view],
+        schedule_id=schedule,
+        key="op.link.pack",
+    )
+    packed = builder.new_event()
+    builder.emit(
+        Major.DMA,
+        Dma.TRANSFER,
+        descriptor_id=pack,
+        signal_event_id=packed,
+    )
+    gathered = builder.new_event()
+    communication = builder.communication(
+        collective_op=collective_op,
+        local_object_id=exchange,
+        remote_object_id=exchange,
+        source_node=source_node,
+        destination_node=destination_node,
+        group_id=group_id,
+        byte_extent=byte_extent,
+        participant_count=selected_count,
+        participant_scope=ParticipantScope.NODE,
+        completion_event_id=gathered,
+        key="comm.link.all_gather",
+    )
+    builder.emit(
+        Major.LINK,
+        link_sub,
+        descriptor_id=communication,
+        wait_set_id=builder.wait_set([packed], key="wait.link.pack"),
+        signal_event_id=gathered,
+    )
+    if second_group_id is not None:
+        assert route_group_count > 1
+        second_gathered = builder.new_event()
+        second_communication = builder.communication(
+            collective_op=collective_op,
+            local_object_id=exchange,
+            remote_object_id=exchange,
+            group_id=second_group_id,
+            byte_extent=(
+                byte_extent
+                if second_byte_extent is None
+                else second_byte_extent
+            ),
+            participant_count=selected_count,
+            participant_scope=ParticipantScope.NODE,
+            completion_event_id=second_gathered,
+            key="comm.link.second_all_gather",
+        )
+        builder.emit(
+            Major.LINK,
+            link_sub,
+            descriptor_id=second_communication,
+            wait_set_id=builder.wait_set([packed], key="wait.link.second_pack"),
+            signal_event_id=second_gathered,
+        )
+    builder.emit(Major.CONTROL, Control.COMPLETE)
+    builder.entrypoint(entrypoint_id=0, first_instruction=0, phase=Phase.PREFILL)
+    return builder.finish(), capability
+
+
+def synthetic_wafer_tile_communication_deployment(
+    *, reticle_count: int, tiles_per_reticle: int
+) -> tuple[Deployment, Capability]:
+    """A bounded TILE-scoped barrier used to validate wafer geometry binding."""
+
+    capability = Capability.from_dict(
+        json.loads(
+            (HARDWARE / "abi3_capability" / "rom_deepseek_v4.json").read_text()
+        )
+    )
+    builder = _state_builder(
+        capability,
+        target="cycle-wafer-tile-communication",
+        reticle_count=reticle_count,
+        tiles_per_reticle=tiles_per_reticle,
+    )
+    builder.require(Feature.WAFER_ENDPOINT)
+    token = builder.memory_object(
+        storage_class=StorageClass.SRAM,
+        size_bytes=1,
+        source=ObjectSource.zeros(1),
+        permissions=int(Permission.READ | Permission.WRITE | Permission.REMOTE),
+        key="obj.wafer.token",
+    )
+    communication = builder.communication(
+        collective_op=CollectiveOp.SUM,
+        local_object_id=token,
+        remote_object_id=token,
+        byte_extent=0,
+        participant_count=reticle_count * tiles_per_reticle,
+        participant_scope=ParticipantScope.TILE,
+        key="comm.wafer.barrier",
+    )
+    builder.emit(Major.LINK, Link.BARRIER, descriptor_id=communication)
     builder.emit(Major.CONTROL, Control.COMPLETE)
     builder.entrypoint(entrypoint_id=0, first_instruction=0, phase=Phase.PREFILL)
     return builder.finish(), capability
@@ -1482,6 +1694,49 @@ def test_schedule_max_outstanding_produces_real_queue_stalls():
     assert narrow_result.architectural == wide_result.architectural
 
 
+def test_loop_reuses_one_credit_queue_without_exceeding_one_outstanding():
+    """The schedule credit applies again at every loop backedge."""
+    deployment, capability = synthetic_tiled_deployment(
+        layers=4, independent_matmuls=1, max_outstanding=1
+    )
+    body = CycleModel(
+        deployment, capability, load_cost_table(BASELINE)
+    ).run(request()).to_dict()
+    queue = body["queues"]["tensor.0"]
+    assert queue["admitted"] == 8
+    assert queue["observed_max_occupancy"] == 1
+    assert queue["credit_stall_cycles"] > 0
+    assert body["timing"]["queue_stall_cycles"] >= queue["credit_stall_cycles"]
+
+
+def test_schedule_selects_an_advertised_nonzero_queue():
+    deployment, capability = synthetic_tiled_deployment(tensor_queue_index=1)
+    body = CycleModel(
+        deployment, capability, load_cost_table(BASELINE)
+    ).run(request()).to_dict()
+    assert body["queues"]["tensor.0"]["admitted"] == 0
+    assert body["queues"]["tensor.1"]["admitted"] == 1
+
+
+def test_cycle_model_rejects_an_invalid_schedule_queue_without_verifier():
+    capability = cycle_capability()
+    invalid_index = capability.engines["tensor"]["queues"]
+    deployment, _ = synthetic_tiled_deployment(
+        capability, tensor_queue_index=invalid_index
+    )
+    model = CycleModel(
+        deployment,
+        capability,
+        load_cost_table(BASELINE),
+        verify=False,
+    )
+    with pytest.raises(
+        ScheduleError,
+        match=rf"selects tensor queue_index {invalid_index}.*only .*tensor\.0.*tensor\.1",
+    ):
+        model.run(request())
+
+
 def test_program_loops_over_layers_and_the_schedule_owns_the_tiles():
     deployment, capability = synthetic_tiled_deployment(layers=4)
     req = request()
@@ -1701,7 +1956,22 @@ def test_single_chip_has_no_zero_latency_global_operation_to_model():
 )
 def test_global_operations_are_never_zero_latency(topology, table):
     capability = fixture_capability(topology)
-    deployment, _ = synthetic_state_deployment(capability)
+    geometry = (
+        {"reticle_count": 1, "tiles_per_reticle": 256}
+        if topology is TopologyClass.WAFER_LOGICAL_DEVICE
+        else {}
+    )
+    if topology is TopologyClass.WAFER_LOGICAL_DEVICE:
+        capability.link.update(
+            {
+                # WAFER's physical capacity is 6x8 reticles; this fixture
+                # activates the first reticle of that admitted prefix.
+                "reticle_rows": 6,
+                "reticle_columns": 8,
+                "tiles_per_reticle": geometry["tiles_per_reticle"],
+            }
+        )
+    deployment, _ = synthetic_state_deployment(capability, **geometry)
     result = CycleModel(deployment, capability, load_cost_table(table)).run(request())
     proof = result.to_dict()["proofs"]["no_zero_latency_global_operations"]
     assert proof["proved"]
@@ -1977,6 +2247,15 @@ def test_cluster_unicast_costs_at_least_one_endpoint_latency():
     assert empty.messages == 1
 
 
+def test_cluster_loopback_preserves_logical_payload_without_wire_traffic():
+    timing = cluster_fabric().unicast(3, 3, 16)
+    assert timing.cycles > 0
+    assert timing.messages == 1
+    assert timing.bytes_moved == 16
+    assert timing.wire_bytes == 0
+    assert timing.packets == 0
+
+
 def test_cluster_switch_contention_is_reported_separately():
     fabric = cluster_fabric()
     # Every node in a different leaf group sends through the one spine port.
@@ -2015,6 +2294,28 @@ def test_cluster_collective_runs_an_algorithm_not_a_penalty():
     assert all_reduce.bytes_moved > 0
 
 
+@pytest.mark.parametrize(
+    "op",
+    [
+        CollectiveOp.CONCAT,
+        CollectiveOp.ALL_GATHER,
+        CollectiveOp.REDUCE_SCATTER,
+        CollectiveOp.SUM,
+    ],
+)
+def test_zero_byte_collectives_preserve_messages_without_inventing_payload(
+    op: CollectiveOp,
+):
+    members = list(range(4))
+    timing = cluster_fabric().collective(int(op), members, 0)
+    expected_messages, expected_bytes = collective_traffic(
+        int(op), len(members), 0
+    )
+    assert timing.cycles > 0
+    assert timing.messages == expected_messages
+    assert timing.bytes_moved == expected_bytes == 0
+
+
 def test_cluster_broadcast_is_a_tree():
     fabric = cluster_fabric()
     members = list(range(32))
@@ -2030,6 +2331,8 @@ def test_cluster_barrier_is_bounded_and_never_free():
     assert barrier.cycles > 0
     assert barrier.steps == 5
     assert barrier.messages == 5 * 32
+    assert barrier.bytes_moved == 0
+    assert barrier.wire_bytes > 0
 
 
 def test_cluster_collective_grows_with_participants():
@@ -2058,6 +2361,55 @@ def test_wafer_routing_is_dimension_ordered_and_counts_hops():
     assert "XY" in route.description
 
 
+def test_wafer_tile_ids_map_from_reticle_major_to_global_mesh_order():
+    deployment, capability = synthetic_wafer_tile_communication_deployment(
+        reticle_count=48,
+        tiles_per_reticle=256,
+    )
+    model = CycleModel(deployment, capability, load_cost_table(WAFER))
+    assert isinstance(model.fabric, WaferFabric)
+    model._validate_fabric_topology(model.fabric)
+    # Six-by-eight reticles, each containing a sixteen-by-sixteen tile mesh.
+    # Logical IDs exhaust one reticle before moving right; physical IDs exhaust
+    # one global mesh row before moving down.
+    assert model._wafer_tile_endpoint(0, model.fabric) == 0
+    assert model._wafer_tile_endpoint(255, model.fabric) == 1935
+    assert model._wafer_tile_endpoint(256, model.fabric) == 16
+    assert model._wafer_tile_endpoint(8 * 256, model.fabric) == 2048
+
+
+def test_wafer_accepts_an_authenticated_active_reticle_prefix():
+    deployment, capability = synthetic_wafer_tile_communication_deployment(
+        reticle_count=37,
+        tiles_per_reticle=256,
+    )
+    model = CycleModel(deployment, capability, load_cost_table(WAFER))
+    assert isinstance(model.fabric, WaferFabric)
+    model._validate_fabric_topology(model.fabric)
+    assert model._wafer_tile_endpoint(37 * 256 - 1, model.fabric) == 10191
+
+
+@pytest.mark.parametrize("reticles,tiles", [(49, 256), (48, 64)])
+def test_wafer_geometry_mismatch_fails_before_functional_execution(
+    monkeypatch: pytest.MonkeyPatch, reticles: int, tiles: int
+):
+    deployment, capability = synthetic_wafer_tile_communication_deployment(
+        reticle_count=reticles,
+        tiles_per_reticle=tiles,
+    )
+    model = CycleModel(deployment, capability, load_cost_table(WAFER))
+
+    def should_not_execute(*_args, **_kwargs):
+        raise AssertionError("functional trace ran before topology validation")
+
+    monkeypatch.setattr(model, "_collect_trace", should_not_execute)
+    with pytest.raises(
+        ScheduleError,
+        match="wafer TOPOLOGY/cost-table geometry mismatch",
+    ):
+        model.run(request())
+
+
 def test_wafer_reticle_stitch_costs_more_than_a_local_hop():
     fabric = wafer_fabric()
     params = fabric.params
@@ -2077,6 +2429,8 @@ def test_wafer_barrier_is_hierarchical_bounded_and_nonzero():
     # 2 * ceil(log2(64)) tree levels, not O(participants) rounds.
     assert barrier.steps == 2 * 6
     assert barrier.messages == 2 * (64 - 1)
+    assert barrier.bytes_moved == 0
+    assert barrier.wire_bytes > 0
 
 
 def test_wafer_barrier_scales_logarithmically_not_linearly():
@@ -2164,6 +2518,418 @@ def test_cluster_per_node_compute_is_nonzero_for_a_contracting_program():
     )
 
 
+def test_node_dependent_cluster_collects_one_trace_and_replays_every_node(
+    monkeypatch: pytest.MonkeyPatch,
+):
+    """One complete functional trace supplies all exact per-node timing shares.
+
+    The functional device already fans each compute instruction over all 32
+    nodes and tags the resulting steps. Re-executing that full cluster once per
+    timing share is both redundant and catastrophically memory hungry. This
+    fixture puts NODE_ID in an executed weight view, runs two transactions, and
+    proves the optimized path still performs 32 ordered timing replays from one
+    admitted functional trace.
+    """
+
+    capability = cycle_capability(TopologyClass.CLUSTER_32)
+    deployment, _ = synthetic_tiled_deployment(
+        capability, node_sharded_weights=True
+    )
+    model = CycleModel(deployment, capability, load_cost_table(CLUSTER32_V2))
+    assert model._node_invariant() is False
+
+    collections = 0
+    collect = model._collect_trace
+
+    def counted(*args, **kwargs):
+        nonlocal collections
+        collections += 1
+        return collect(*args, **kwargs)
+
+    monkeypatch.setattr(model, "_collect_trace", counted)
+    req = request(transactions=2)
+    result = model.run(req)
+    body = result.to_dict()
+
+    assert collections == 1
+    assert body["execution"]["transactions"] == 2
+    assert body["execution"]["trace_steps"] > 0
+    assert body["cluster"]["replay_mode"] == "per_node"
+    assert body["cluster"]["replays_executed"] == 32
+    assert [node["node"] for node in body["cluster"]["per_node"]] == list(
+        range(32)
+    )
+    assert result.architectural == functional_counters(
+        deployment, capability, req, node_count=32
+    )
+
+
+def test_cluster_wide_link_reserves_the_fabric_once_and_model_reuse_is_exact():
+    deployment, capability = synthetic_timed_cluster_link_deployment()
+    model = CycleModel(deployment, capability, load_cost_table(CLUSTER32_V2))
+    first = model.run(request()).to_dict()
+    second = model.run(request()).to_dict()
+
+    # One final physical all-gather schedule per run, even though all 32
+    # scoreboards consume its completion. Port occupancy is therefore exactly
+    # one operation's serialization, not 32 sequential reservations.
+    assert first == second
+    assert first["cluster"]["replay_mode"] == "per_node"
+    schedule = first["cluster"]["global_link_schedule"]
+    assert schedule["operations"] == 1
+    assert schedule["fixed_point_iterations"] >= 2
+    assert schedule["synchronized"] is True
+    detail = first["fabric"]["executed"]["detail"]
+    assert len(detail) == 1
+    assert first["fabric"]["ports"]["total_busy_cycles"] == detail[0][
+        "serialization_cycles"
+    ]
+    collective_cycles = detail[0]["cycles"]
+    assert {
+        node["collective_cycles"] for node in first["cluster"]["per_node"]
+    } == {collective_cycles}
+    # The hypothetical descriptor inventory is timed on a separate fabric and
+    # cannot leave occupancy behind in the executed fabric after run() returns.
+    assert model.fabric is not None
+    assert model.fabric.port_report() == second["fabric"]["ports"]
+
+
+@pytest.mark.parametrize(
+    "link_sub,collective_op",
+    [
+        (Link.COLLECTIVE, CollectiveOp.ALL_GATHER),
+        (Link.GATHER, CollectiveOp.CONCAT),
+        (Link.SCATTER, CollectiveOp.CONCAT),
+    ],
+)
+def test_cluster_link_fabric_traffic_matches_functional_slot_semantics(
+    link_sub: Link, collective_op: CollectiveOp
+):
+    """Cycle timing consumes the ABI's per-participant byte extent exactly."""
+
+    deployment, capability = synthetic_timed_cluster_link_deployment(
+        link_sub=link_sub, collective_op=collective_op
+    )
+    body = CycleModel(
+        deployment, capability, load_cost_table(CLUSTER32_V2)
+    ).run(request()).to_dict()
+    participants = capability.limits["max_nodes"]
+    slot_bytes = 64
+    expected_messages, expected_bytes = collective_traffic(
+        int(collective_op), participants, slot_bytes
+    )
+
+    architectural = body["counters"]["architectural"]
+    assert architectural["link.messages_sent"] == expected_messages
+    assert architectural["link.bytes_sent"] == expected_bytes
+    detail = body["fabric"]["executed"]["detail"]
+    assert len(detail) == 1
+    assert detail[0]["messages"] == expected_messages
+    assert detail[0]["bytes_moved"] == expected_bytes
+    if link_sub is Link.SCATTER:
+        assert detail[0]["operation"] == "scatter"
+        assert detail[0]["algorithm"] == "root_scatter"
+
+
+def test_cluster_link_waits_for_the_slowest_node_before_releasing_participants(
+    monkeypatch: pytest.MonkeyPatch,
+):
+    deployment, capability = synthetic_timed_cluster_link_deployment()
+    model = CycleModel(deployment, capability, load_cost_table(CLUSTER32_V2))
+    compute_cycles = model._compute_cycles
+
+    def skew_one_node(step, params, mapping):
+        cycles, tile_issue = compute_cycles(step, params, mapping)
+        if step.family == "dma" and step.node == 1:
+            cycles += 1
+        return cycles, tile_issue
+
+    monkeypatch.setattr(model, "_compute_cycles", skew_one_node)
+    body = model.run(request()).to_dict()
+    schedule = body["cluster"]["global_link_schedule"]
+    assert schedule["operations"] == 1
+    assert schedule["fixed_point_iterations"] >= 2
+    # Node 1 reaches the collective one cycle later. The shared completion
+    # synchronizes both timelines, so neither node can run past it early.
+    assert len({node["end_cycle"] for node in body["cluster"]["per_node"]}) == 1
+
+
+@pytest.mark.parametrize(
+    "link_sub,collective_op,byte_extent,operation,algorithm,cycle_field",
+    [
+        (
+            Link.GATHER,
+            CollectiveOp.CONCAT,
+            64,
+            "collective.CONCAT",
+            "root_gather",
+            "collective_cycles",
+        ),
+        (
+            Link.SCATTER,
+            CollectiveOp.CONCAT,
+            64,
+            "scatter",
+            "root_scatter",
+            "collective_cycles",
+        ),
+        (
+            Link.BARRIER,
+            CollectiveOp.SUM,
+            0,
+            "barrier",
+            "dissemination",
+            "barrier_cycles",
+        ),
+    ],
+)
+def test_cluster_group_one_binds_only_nodes_16_through_31(
+    link_sub: Link,
+    collective_op: CollectiveOp,
+    byte_extent: int,
+    operation: str,
+    algorithm: str,
+    cycle_field: str,
+):
+    deployment, capability = synthetic_timed_cluster_link_deployment(
+        link_sub=link_sub,
+        collective_op=collective_op,
+        route_group_count=2,
+        group_id=1,
+        byte_extent=byte_extent,
+    )
+    model = CycleModel(deployment, capability, load_cost_table(CLUSTER32_V2))
+    assert model._node_invariant() is False
+    body = model.run(request()).to_dict()
+
+    detail = body["fabric"]["executed"]["detail"]
+    assert len(detail) == 1
+    assert detail[0]["logical_members"] == list(range(16, 32))
+    assert detail[0]["physical_endpoints"] == list(range(16, 32))
+    assert detail[0]["operation"] == operation
+    assert detail[0]["algorithm"] == algorithm
+    per_node = body["cluster"]["per_node"]
+    assert all(node[cycle_field] == 0 for node in per_node[:16])
+    assert all(node[cycle_field] > 0 for node in per_node[16:])
+
+
+def test_slow_excluded_node_does_not_delay_a_subgroup_collective(
+    monkeypatch: pytest.MonkeyPatch,
+):
+    deployment, capability = synthetic_timed_cluster_link_deployment(
+        route_group_count=2,
+        group_id=1,
+    )
+    baseline = CycleModel(
+        deployment, capability, load_cost_table(CLUSTER32_V2)
+    ).run(request()).to_dict()["fabric"]["executed"]["detail"][0]
+
+    model = CycleModel(deployment, capability, load_cost_table(CLUSTER32_V2))
+    compute_cycles = model._compute_cycles
+
+    def skew_excluded_node(step, params, mapping):
+        cycles, tile_issue = compute_cycles(step, params, mapping)
+        if step.family == "dma" and step.node == 0:
+            cycles += 10_000
+        return cycles, tile_issue
+
+    monkeypatch.setattr(model, "_compute_cycles", skew_excluded_node)
+    skewed = model.run(request()).to_dict()["fabric"]["executed"]["detail"][0]
+    assert skewed["physical_endpoints"] == list(range(16, 32))
+    assert skewed["start_cycle"] == baseline["start_cycle"]
+    assert skewed["end_cycle"] == baseline["end_cycle"]
+
+
+def test_disjoint_subgroup_links_reserve_fabric_in_participant_ready_order(
+    monkeypatch: pytest.MonkeyPatch,
+):
+    """A later trace step may be the first physically ready collective.
+
+    Group zero's pack is deliberately slow while group one's is not.  The two
+    LINK instructions share one control stream, but each instruction waits only
+    for its own participants: reserving the future group-zero operation first
+    must not prevent the already-ready group-one operation from using otherwise
+    idle ports before it.
+    """
+
+    deployment, capability = synthetic_timed_cluster_link_deployment(
+        route_group_count=2,
+        group_id=0,
+        byte_extent=128,
+        second_group_id=1,
+        second_byte_extent=64,
+    )
+    model = CycleModel(deployment, capability, load_cost_table(CLUSTER32_V2))
+    compute_cycles = model._compute_cycles
+
+    def delay_group_zero_pack(step, params, mapping):
+        cycles, tile_issue = compute_cycles(step, params, mapping)
+        if step.family == "dma" and 0 <= step.node < 16:
+            cycles += 1_000_000
+        return cycles, tile_issue
+
+    monkeypatch.setattr(model, "_compute_cycles", delay_group_zero_pack)
+    first = model.run(request()).to_dict()
+    second = model.run(request()).to_dict()
+    assert first == second
+
+    schedule = first["cluster"]["global_link_schedule"]
+    assert schedule["operations"] == 2
+    assert schedule["fixed_point_iterations"] >= 2
+    detail = first["fabric"]["executed"]["detail"]
+    assert [entry["logical_members"] for entry in detail] == [
+        list(range(16)),
+        list(range(16, 32)),
+    ]
+    assert [entry["physical_endpoints"] for entry in detail] == [
+        list(range(16)),
+        list(range(16, 32)),
+    ]
+    group_zero, group_one = detail
+    assert group_one["start_cycle"] < group_zero["start_cycle"]
+    assert group_one["end_cycle"] < group_zero["start_cycle"]
+
+    # Every node participates in exactly one operation.  Its local accounting
+    # is that operation's span, not the sum of both cluster-global operations.
+    per_node = first["cluster"]["per_node"]
+    assert {node["collective_cycles"] for node in per_node[:16]} == {
+        group_zero["cycles"]
+    }
+    assert {node["collective_cycles"] for node in per_node[16:]} == {
+        group_one["cycles"]
+    }
+
+    messages = 16 * 15
+    assert group_zero["messages"] == group_one["messages"] == messages
+    assert group_zero["bytes_moved"] == messages * 128
+    assert group_one["bytes_moved"] == messages * 64
+    architectural = first["counters"]["architectural"]
+    assert architectural["link.messages_sent"] == 2 * messages
+    assert architectural["link.bytes_sent"] == messages * (128 + 64)
+    assert first["fabric"]["ports"]["total_busy_cycles"] == sum(
+        entry["serialization_cycles"] for entry in detail
+    )
+
+
+def test_cluster_subgroup_refuses_a_root_outside_the_selected_group():
+    deployment, capability = synthetic_timed_cluster_link_deployment(
+        link_sub=Link.SCATTER,
+        collective_op=CollectiveOp.CONCAT,
+        route_group_count=2,
+        group_id=1,
+        source_node=0,
+    )
+    model = CycleModel(deployment, capability, load_cost_table(CLUSTER32_V2))
+    assert isinstance(model.fabric, ClusterFabric)
+    descriptor_id = deployment.table.ids_of_type(
+        ExtendedDescriptorType.COMMUNICATION
+    )[0]
+    with pytest.raises(
+        ScheduleError,
+        match="source 0 is not in selected logical participant set",
+    ):
+        model._resolve_link(descriptor_id, Link.SCATTER, model.fabric)
+
+
+@pytest.mark.parametrize(
+    "link_sub,collective_op,byte_extent,operation,algorithm",
+    [
+        (Link.GATHER, CollectiveOp.CONCAT, 64, "collective.CONCAT", "root_gather"),
+        (Link.SCATTER, CollectiveOp.CONCAT, 64, "scatter", "root_scatter"),
+        (Link.BARRIER, CollectiveOp.SUM, 0, "barrier", "dissemination"),
+    ],
+)
+def test_declared_communication_uses_instruction_subopcode_semantics(
+    link_sub: Link,
+    collective_op: CollectiveOp,
+    byte_extent: int,
+    operation: str,
+    algorithm: str,
+):
+    deployment, capability = synthetic_timed_cluster_link_deployment(
+        link_sub=link_sub,
+        collective_op=collective_op,
+        byte_extent=byte_extent,
+    )
+    model = CycleModel(deployment, capability, load_cost_table(CLUSTER32_V2))
+    assert isinstance(model.fabric, ClusterFabric)
+    before = model.fabric.port_report()
+    declared = model.declared_communication(model.fabric)
+    assert model.fabric.port_report() == before
+    assert declared["descriptor_count"] == 1
+    assert declared["priced_entry_count"] == 1
+    entry = declared["entries"][0]
+    assert entry["binding_mode"] == "instruction_subopcode"
+    assert entry["instruction_pcs"]
+    assert entry["link_subopcode"] == link_sub.name
+    assert entry["operation"] == operation
+    assert entry["algorithm"] == algorithm
+
+
+def test_node_segment_sources_force_per_node_replay_without_a_node_id_view(
+    tmp_path: Path,
+):
+    capability = cycle_capability(TopologyClass.CLUSTER_32)
+    builder = _state_builder(capability, target="cycle-node-segment-classifier")
+    local_bytes = 64
+    maps = []
+    for node in range(capability.limits["max_nodes"]):
+        payload = bytes([node]) * local_bytes
+        path = tmp_path / f"node-{node}.bin"
+        path.write_bytes(payload)
+        maps.append(
+            (
+                Segment(
+                    path=path.name,
+                    offset=0,
+                    bytes=local_bytes,
+                    sha256=hashlib_sha256(payload).hexdigest(),
+                ),
+            )
+        )
+    source = ObjectSource(
+        "node_segments", local_bytes, node_segments=tuple(maps)
+    )
+    builder.memory_object(
+        storage_class=StorageClass.HBM,
+        size_bytes=local_bytes,
+        source=source,
+        permissions=int(Permission.READ | Permission.IMMUTABLE),
+        content_digest=source.authenticated_content_digest(),
+        key="obj.node.local",
+    )
+    builder.emit(Major.CONTROL, Control.COMPLETE)
+    builder.entrypoint(entrypoint_id=0, first_instruction=0, phase=Phase.PREFILL)
+    deployment = builder.finish()
+
+    body = CycleModel(
+        deployment,
+        capability,
+        load_cost_table(CLUSTER32_V2),
+        root=tmp_path,
+    ).run(request()).to_dict()
+    assert body["cluster"]["replay_mode"] == "per_node"
+    assert body["cluster"]["replays_executed"] == 32
+
+
+def test_node_id_control_is_one_cluster_control_stream_not_32_claimed_paths():
+    capability = cycle_capability(TopologyClass.CLUSTER_32)
+    builder = _state_builder(capability, target="cycle-node-id-control")
+    predicate = builder.predicate(
+        kind=PredicateKind.COMPARE_SYMBOL,
+        selector_index=int(Symbol.NODE_ID),
+        immediate=0,
+    )
+    builder.emit(Major.CONTROL, Control.NOP, predicate_id=predicate)
+    builder.emit(Major.CONTROL, Control.COMPLETE)
+    builder.entrypoint(entrypoint_id=0, first_instruction=0, phase=Phase.PREFILL)
+    body = CycleModel(
+        builder.finish(), capability, load_cost_table(CLUSTER32_V2)
+    ).run(request()).to_dict()
+    assert body["cluster"]["replay_mode"] == "spmd_identical"
+    assert body["cluster"]["replays_executed"] == 1
+
+
 def test_cluster_declared_communication_is_timed_and_labelled():
     capability = fixture_capability(TopologyClass.CLUSTER_32)
     deployment, _ = synthetic_state_deployment(capability, with_communication=True)
@@ -2181,7 +2947,7 @@ def test_cluster_declared_communication_is_timed_and_labelled():
     assert body["timing"]["link_cycles"] == 0
 
 
-def test_cluster_notes_a_topology_descriptor_mismatch_as_a_gap():
+def test_cluster_refuses_a_topology_descriptor_mismatch_before_execution():
     capability = cycle_capability(TopologyClass.CLUSTER_32)
     deployment, _ = synthetic_tiled_deployment(capability)
     # The tiled builder declares the capability's node count in its topology
@@ -2190,23 +2956,34 @@ def test_cluster_notes_a_topology_descriptor_mismatch_as_a_gap():
     descriptor = deployment.table[topology_id]
     descriptor.payload["node_count"] = 1
     deployment.table._records[topology_id] = descriptor.encode()  # noqa: SLF001
-    body = CycleModel(
+    model = CycleModel(
         deployment, capability, load_cost_table(CLUSTER32), verify=False
-    ).run(request()).to_dict()
-    wheres = [gap["where"] for gap in body["gaps"]]
-    assert "topology descriptor vs capability" in wheres
+    )
+    with pytest.raises(
+        ScheduleError,
+        match="TOPOLOGY declares 1 cluster nodes.*32 endpoints",
+    ):
+        model.run(request())
 
 
 def test_wafer_result_carries_the_on_wafer_fabric():
-    capability = fixture_capability(TopologyClass.WAFER_LOGICAL_DEVICE)
-    deployment, _ = synthetic_state_deployment(capability)
+    capability = Capability.from_dict(
+        json.loads(
+            (HARDWARE / "abi3_capability" / "rom_deepseek_v4.json").read_text()
+        )
+    )
+    deployment, _ = synthetic_state_deployment(
+        capability, reticle_count=1, tiles_per_reticle=256
+    )
     body = CycleModel(deployment, capability, load_cost_table(WAFER)).run(
         request()
     ).to_dict()
     fabric = body["fabric"]
     assert fabric["kind"] == "wafer"
     assert fabric["topology_class"] == "WAFER_LOGICAL_DEVICE"
-    assert fabric["parameters"]["tiles"] == 8 * 8 * 8 * 8
+    assert fabric["parameters"]["tiles"] == 6 * 8 * 16 * 16
+    assert fabric["geometry"]["physical"]["endpoint_count"] == 12_288
+    assert fabric["geometry"]["declared"]["endpoint_count"] == 256
     assert "cluster" not in body
 
 
