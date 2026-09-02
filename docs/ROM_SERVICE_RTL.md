@@ -2,14 +2,12 @@
 
 **Checklist item:** W8.5
 **Status:** the read path from a deployment-named ROM object through bank and
-region addressing, repair translation, region masking and the sense interface to
-the operand bus is implemented and correlated on two simulators — all six
-simulator cases pass. **The committed campaign's overall `status` is
-nevertheless `fail`**, on a provenance check the RTL has nothing to do with:
-the Qwen sets' executed read stream was recorded from a functional device whose
-source has since moved, and this environment cannot re-record it. §6e says
-exactly what failed, why it was not repaired by relaxing the check, and what it
-does and does not put in doubt. **There is no ROM array in it.**
+region addressing, repair translation, region masking, and the sense interface
+to the operand bus is implemented and correlated on two simulators. Every
+retained simulator case passes and the source-current campaign reports
+**`status: pass`**. <!-- figure: "pass" src="results/rtl/rom_service_campaign.json#status" name="ROM service campaign status, report header" -->
+This closes the bounded control/addressing correlation described below; W8.5
+remains partial because there is no ROM array or macro in the block.
 **Evidence class:** `public_open_tool_rtl_simulation` (functional), plus a
 separate open-PDK physical view that carries its own boundary
 **Product scope:** the Qwen chip sets replay an **executed** read stream; the
@@ -153,8 +151,8 @@ lane is retained by this campaign. Separately,
 question about a *different* block: whether the ABI 3.0 microsequencer executes
 a shipped deployment's **program**. That campaign's `correlated_cases` field is
 the authority on which shipped deployments the sequencer RTL reproduces, and
-nothing in this document may be read as adding to it. It records exactly six
-entries, and here they all are:
+nothing in this document may be read as adding to it. Its entries are
+transcribed exhaustively below:
 
 | # | `correlated_cases` entry |
 |---|---|
@@ -164,9 +162,13 @@ entries, and here they all are:
 | 3 | `qwen3-8b-hbm-single-chip/decode` <!-- figure: "qwen3-8b-hbm-single-chip/decode" src="results/rtl/abi3_deployment_campaign.json#correlated_cases[3]" name="deployment co-simulation correlated case 3" --> |
 | 4 | `deepseek-v4-flash-rom-wafer/prefill` <!-- figure: "deepseek-v4-flash-rom-wafer/prefill" src="results/rtl/abi3_deployment_campaign.json#correlated_cases[4]" name="deployment co-simulation correlated case 4" --> |
 | 5 | `deepseek-v4-flash-rom-wafer/decode` <!-- figure: "deepseek-v4-flash-rom-wafer/decode" src="results/rtl/abi3_deployment_campaign.json#correlated_cases[5]" name="deployment co-simulation correlated case 5" --> |
+| 6 | `deepseek-v4-flash-hbm-cluster/prefill` <!-- figure: "deepseek-v4-flash-hbm-cluster/prefill" src="results/rtl/abi3_deployment_campaign.json#correlated_cases[6]" name="deployment co-simulation correlated case 6" --> |
+| 7 | `deepseek-v4-flash-hbm-cluster/decode` <!-- figure: "deepseek-v4-flash-hbm-cluster/decode" src="results/rtl/abi3_deployment_campaign.json#correlated_cases[7]" name="deployment co-simulation correlated case 7" --> |
 
-All six are checked against that artifact index by index on every prose-figure
-run, so this list cannot drift from it in either direction. An earlier revision
+Every listed entry is checked against that artifact index by index on every
+prose-figure run, so a named entry cannot silently move or disappear. A newly
+appended artifact entry still requires an explicit documentation audit. An
+earlier revision
 of this document said the wafer deployment was *not* among them, and named the
 `A3_STATE_SLOTS` trap that stopped it after eight retirements. That was true
 when it was written and false by the time it was read: amendments A22-A24 lifted
@@ -377,7 +379,7 @@ fixed guard**; §9 says so.
 ### 6e. The campaign is source-current and passes without relaxing provenance
 
 Read the artifact's `status` before anything else in this section: it is
-**`pass`**. <!-- figure: "pass" src="results/rtl/rom_service_campaign.json#status" name="ROM service campaign status, RTL report" --> Every one of the six simulator cases passes — three vector sets on
+**`pass`**. <!-- figure: "pass" src="results/rtl/rom_service_campaign.json#status" name="ROM service campaign status, RTL report" --> Every retained simulator case passes — three vector sets on
 two simulators, each reproducing its set's marker exactly, the largest of them
 at **108,357** individual checks <!-- figure: 108,357 src="results/rtl/rom_service_campaign.json#cases[0].checks" name="DeepSeek wafer Icarus check count" --> — and all three campaign-level executed-stream
 problem maps are empty: source drift, missing required pins, and input/integrity
@@ -389,10 +391,10 @@ including admission, decoding, memory, numeric helpers, and every registered
 engine. The campaign re-hashes the entire recorded map, requires an irreducible
 critical-source minimum, re-hashes the repo-relative capability and workload
 inputs, and requires successful deployment admission, a device-verified
-**399**-range checkpoint-map identity <!-- figure: 399 src="results/rtl/rom_service_campaign.json#correlation.vector_sets.qwen_chip.executed_source.checkpoint_binding.authenticated_range_count" name="Qwen authenticated checkpoint ranges, ROM service" -->, zero device failure, and zero ROM read events
-omitted as inexpressible byte ranges. Both Qwen sets were re-executed through
-that path against deployment `925351…` (nominal) or the verified degraded
-rebuild `811aa1…`; no recorded hash was edited into agreement.
+**399**-range checkpoint-map identity <!-- figure: 399 src="results/rtl/rom_service_campaign.json#correlation.vector_sets.qwen_chip.executed_source.checkpoint_binding.authenticated_range_count" name="Qwen authenticated checkpoint ranges, ROM service" -->, zero device failure, and
+**0** ROM read events omitted as inexpressible byte ranges <!-- figure: 0 src="results/rtl/rom_service_campaign.json#correlation.vector_sets.qwen_chip.executed_source.events_not_expressible_as_contiguous_ranges" name="Qwen unexpressible ROM reads, ROM service report" --> <!-- figure: 0 src="results/rtl/rom_service_campaign.json#correlation.vector_sets.qwen_chip_degraded.executed_source.events_not_expressible_as_contiguous_ranges" name="Qwen degraded unexpressible ROM reads, ROM service report" -->. Both Qwen sets were re-executed through
+that path against deployment `925351…` <!-- figure: "925351…" src="results/rtl/rom_service_campaign.json#correlation.vector_sets.qwen_chip.deployment.deployment_sha256" name="Qwen nominal deployment, ROM service report" --> (nominal) or the verified degraded
+rebuild `811aa1…` <!-- figure: "811aa1…" src="results/rtl/rom_service_campaign.json#correlation.vector_sets.qwen_chip_degraded.deployment.deployment_sha256" name="Qwen degraded deployment, ROM service report" -->; no recorded hash was edited into agreement.
 
 The ignored deployment bundle is consumed when the vector is generated and is
 not a retained campaign input. Its ABI deployment SHA-256 is the durable
@@ -403,9 +405,9 @@ it does not assert that an arbitrary present or future `build/` directory still
 contains the same bundle.
 
 The `deepseek_wafer` set is unaffected: it is derived from the compiled plan and
-records no executed source. It is refreshed to deployment `fa9077…` and keeps a
-zero-byte checkpoint window because this plan-only generator did not activate
-the 156 GiB device and therefore did not authenticate its source ranges.
+records no executed source. It is refreshed to deployment `fa9077…` <!-- figure: "fa9077…" src="results/rtl/rom_service_campaign.json#correlation.vector_sets.deepseek_wafer.deployment.deployment_sha256" name="DeepSeek deployment, ROM service report" --> and keeps a
+**0**-byte checkpoint window <!-- figure: 0 src="results/rtl/rom_service_campaign.json#correlation.vector_sets.deepseek_wafer.window.real_bytes" name="DeepSeek authenticated bytes, ROM service report" --> because this plan-only generator did not activate
+the DeepSeek checkpoint and therefore did not authenticate its source ranges.
 
 ## 7. Physical view
 
@@ -440,7 +442,7 @@ restricts routing to Metal2 through Metal5, and finishes detailed routing with
 At the chosen 20 ns constraint, worst setup slack is **+7.52 ns** <!-- figure: 7.52 src="results/rtl/rom_service_physical.json#metrics.worst_setup_slack_ns" name="ROM service routed setup slack" -->,
 worst hold slack is **+0.01 ns** <!-- figure: 0.01 src="results/rtl/rom_service_physical.json#metrics.worst_hold_slack_ns" name="ROM service routed hold slack" -->,
 and total negative slack is **0.0 ns**. <!-- figure: 0.0 src="results/rtl/rom_service_physical.json#metrics.total_negative_slack_ns" name="ROM service routed total negative slack" -->
-The artifact therefore records `status: pass` for this narrowly bounded open-PDK
+The artifact therefore records `status: pass` <!-- figure: "pass" src="results/rtl/rom_service_physical.json#status" name="ROM service physical status" --> for this narrowly bounded open-PDK
 digital implementation.
 
 That pass is not foundry signoff and not a frequency claim. The period was
@@ -524,8 +526,8 @@ reference decode written from the compiled ROM region plan and not from the RTL.
 - **That the product runs.** This is one block. Whether the ABI 3.0 sequencer
   executes a shipped deployment's program is a different question about a
   different block, and `correlated_cases` in
-  `results/rtl/abi3_deployment_campaign.json` is its only authority. The six
-  entries §4 transcribes are the six this document may name, and even those two
+  `results/rtl/abi3_deployment_campaign.json` is its only authority. Every
+  entry §4 transcribes is checked directly against that artifact, and even the
   wafer entries are about that block's execution of a program, not about the
   reads described here.
 - **Anything physical about a ROM.** There is no array in the RTL under test —

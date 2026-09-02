@@ -168,12 +168,21 @@ authority**, since it moves whenever a sequencer bound or shipped image moves.
 At commit `518260f` it did not include DeepSeek: the RTL trapped after eight
 retirements on `A3_STATE_SLOTS`, a bound nothing then expressed at admission.
 
+The separate source-current ROM read-service campaign reports `status: pass` <!-- figure: "pass" src="results/rtl/rom_service_campaign.json#status" name="ROM service campaign status, program report" -->
+for nominal and degraded executed Qwen streams and plan-derived DeepSeek
+boundary coverage on Icarus and Verilator. It correlates object/shard lookup,
+addressing, masking, repair translation, refusal classes, sense beats, operand
+alignment, and accounting. It contains no ROM array and establishes no cell
+area, read energy, sense margin, retention, defect, or macro-timing evidence.
+
 Both physical views — SKY130 HD at 130 nm and ASAP7 at 7 nm — complete
 synthesis, multi-corner static timing and full place-and-route with zero
 detailed-route DRC and zero antenna violations. The archived ASAP7 case was
 reproduced bit-for-bit. **The routed blocks are the ABI 2.5 engines, the four
-ABI 3.0 datapaths and the numeric probes; no block of the ABI 3.0 control plane
-has been synthesised or routed at all.** And a physical number resting on this
+ABI 3.0 datapaths and the numeric probes.** The ABI 3.0 microsequencer/control
+plane has not been synthesised or routed. A separate ROM read-service
+addressing/control proxy has been routed in IHP SG13G2, but it contains no ROM
+array and is not full-target or ASAP7 evidence. A physical number resting on this
 RTL may be presented as the cost of hardware that runs exactly the deployments
 the deployment campaign records correlating — no others.
 
@@ -198,6 +207,12 @@ the deployment campaign records correlating — no others.
   on assumed machine values and cannot supply that comparison.
 - **No silicon, no full-chip place-and-route, no foundry signoff DRC or LVS.**
   The physical evidence covers representative blocks.
+- **The ROM read-service pass is a bounded control/addressing claim.** The
+  correlated block contains no ROM array or macro and therefore supplies no
+  cell area, read energy, sense margin, retention, wordline/bitline timing, or
+  defect evidence. Column repair is refused, the resolved-view-to-byte-range
+  walk is outside the block, full decode traffic is not replayed, and the
+  DeepSeek request set remains plan-derived rather than executed.
 - **RTL coverage of the shipped deployments is a list, and it is the
   artifact's.** `results/rtl/abi3_deployment_campaign.json` →
   `correlated_cases` names the deployments the microsequencer RTL is known to
