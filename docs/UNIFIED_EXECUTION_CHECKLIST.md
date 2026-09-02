@@ -8,14 +8,21 @@
 every remaining exit against its retained evidence, refreshed the source-locked
 link campaign and participant-scope regression, and completed three of the four
 source-current W6.6 restart lanes. The final serialized DeepSeek HBM lane is
-running against the current node-local deployment; W6.6 remains partial until
-that retained artifact passes its full guard set.
+running against the current node-local deployment. Its uninterrupted baseline
+has passed all three generated tokens in 3,961.6 seconds and its interrupted
+process is now executing the 32-token prefill without an observed error. W6.6
+remains partial until the interrupted process, fresh resume, STATE-erased
+negative control, STATE-only control, artifact assembly, and full guard audit
+all pass.
 **Top-level progress:** **82/94 complete (87.2%)**, **11 partial**, **1 open**,
 and **0 blocked**, counting only the `Wn.m` rows below.
 **Remaining top-level rows:** partial — W6.6, W8.3, W8.4, W8.5, W9.4,
 W9.5, W10.1, W10.2, W11.1, W11.3, W13.4; open — W11.2.
 **Active certification:** Qwen HBM, Qwen ROM, and DeepSeek ROM restart are
-source-current and passing; DeepSeek HBM is the sole remaining W6.6 lane.
+source-current and passing; DeepSeek HBM is the sole remaining W6.6 lane. Its
+baseline phase is complete; interrupt/checkpoint, both resume controls, and the
+independent final validation are still in flight and are not counted as
+evidence until the retained aggregate artifact passes.
 **Generated companion:** `docs/PROGRAM_STATUS.md` and its JSON currently retain
 the clean `3891fa4…` snapshot. Their 82/11/1 marker arithmetic remains correct,
 but their repository identity is historical; regenerate them from the final
@@ -25,6 +32,16 @@ acceptance lane. W8.3/W8.4/W8.5/W9.4 → W9.5. W11.1 and W9.5, the DeepSeek
 200K accelerator pair, and W11.2-specific capability, cycle, physical, fabric,
 area/energy and uncertainty prerequisites all feed W11.2. W6.6, W10.2, W11.3
 and W13.4 can otherwise proceed independently.
+**Remaining-work order:** (1) finish and audit the final W6.6 lane; (2) freeze
+the current-capability EOS/numeric acceptance and rerun W10.1, while completing
+both-backend W10.2 stress acceptance; (3) use W10.1 to close W11.1 and fill the
+six missing W13.4 reasoning/agentic workload cells; (4) complete the missing
+engine, fabric, ROM-service, and same-view macro evidence in
+W8.3/W8.4/W8.5/W9.4, then perform the four-target characterized rerun in W9.5;
+(5) close W11.2 only after its functional, cycle, physical, fabric,
+area/energy, and uncertainty prerequisites are jointly admissible; and (6)
+continue W11.3 provenance coverage alongside those lanes. This ordering names
+dependencies, not a claim that independent rows must run serially.
 **Freshness boundary:** the marker count records milestones closed with retained
 evidence; it is not a count of source-current evidence horizons. The four
 current deployments each have a hardened four-token capture, while the longer
@@ -154,9 +171,15 @@ historical evidence and must not be presented as current-source reruns.
   and **143,255,560** logical stored payload bytes <!-- figure: 143,255,560 src="results/abi3/restart_exactness_deepseek_rom_p32.json#record.notes.checkpoint.stored_bytes" name="DeepSeek ROM restart stored payload bytes" -->.
 
   **Remaining closure:** the serialized DeepSeek HBM recipe is now executing
-  against deployment `294319…`; do not mark this row complete until its final
-  retained artifact passes the same source, identity, control, exactness, and
-  all-32-node counter gates. The checkpoint writer now replaces stale
+  against deployment `294319…`. Its uninterrupted comparator has passed the
+  governed three-token horizon in 3,961.6 seconds; the interrupted process is
+  executing the 32-token prefill, with no observed error at this reconciliation
+  point. It must still stop after token two and write the checkpoint, complete
+  a fresh normal resume, complete the STATE-erased negative and STATE-only
+  controls, assemble the aggregate artifact, and pass the independent source,
+  deployment, process-identity, exactness, all-32-node counter, and **27/27**
+  guard audit. Do not mark this row complete before all of those gates pass.
+  The checkpoint writer now replaces stale
   hardlinked payload paths atomically before current-run deduplication, with a
   deterministic overwrite-after-hardlink regression in
   `tests/sim/test_checkpoint.py`. Evidence:

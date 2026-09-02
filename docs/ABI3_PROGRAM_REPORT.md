@@ -166,7 +166,12 @@ current DeepSeek ROM checkpoint represents 1,078,248,644,744 logical mutable
 bytes in 143,255,560 logical stored payload bytes. Those are sparse simulator
 checkpoint quantities, not physical storage. The current DeepSeek HBM rerun is
 the sole remaining W6.6 lane and is executing serially because it is the
-high-memory case; the checklist remains at 82/94 until that artifact passes.
+high-memory case. Its uninterrupted comparator has passed all three generated
+tokens in 3,961.6 seconds. The interrupted process is now executing the
+32-token prefill without an observed error; checkpoint at token two, fresh
+resume, STATE-erased and STATE-only controls, aggregate artifact assembly, and
+the independent 27-guard/source/deployment/PID/counter audit remain. The
+checklist stays at 82/94 until that retained artifact passes.
 
 This is a 93-token Qwen / 32-token DeepSeek, 2+1 generated-token functional
 restart result. It is not long-context, performance, RTL, physical, silicon or
