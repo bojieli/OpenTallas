@@ -592,6 +592,16 @@ def validate(mode: str, paths: Sequence[Path]) -> dict[str, Any]:
     if len(rows) == 2:
         left, right = rows[0]["record"], rows[1]["record"]
         pair_checks = {
+            # A repeatability gate needs two independently materialised
+            # captures.  Without these checks, passing the same path twice (or
+            # copying one JSON byte-for-byte under a second name) satisfies
+            # every semantic comparison below while providing no repeat-run
+            # evidence at all.  Distinct digests are expected because the
+            # producer records observed wall times for the run and each step;
+            # those timing fields are deliberately removed only from the
+            # architectural equality comparison.
+            "capture_paths_distinct": paths[0].resolve() != paths[1].resolve(),
+            "capture_artifacts_distinct": rows[0]["sha256"] != rows[1]["sha256"],
             "full_token_sequences_identical": rows[0]["generated_token_ids"] == rows[1]["generated_token_ids"] == gold,
             "executed_association_manifests_identical": left.get("executed_association") == right.get("executed_association"),
             "implementation_identities_identical": left.get("implementation_identity") == right.get("implementation_identity"),

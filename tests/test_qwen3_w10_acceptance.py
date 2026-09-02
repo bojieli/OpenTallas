@@ -253,9 +253,33 @@ def _write_pair(tmp_path: Path, left: dict, right: dict) -> list[Path]:
 def test_two_complete_natural_hbm_records_pass(tmp_path):
     left = _record("natural", "hbm_sram")
     right = copy.deepcopy(left)
+    # Independent captures have distinct observed timings even though all
+    # architecture and token evidence must agree.
+    right["per_step"][0]["wall_seconds"] = 1.25
     result = tool.validate("natural", _write_pair(tmp_path, left, right))
     assert result["status"] == "pass"
     assert all(result["pair_checks"].values())
+
+
+def test_same_capture_path_cannot_satisfy_natural_repeatability(tmp_path):
+    record = _record("natural", "hbm_sram")
+    path = _write_pair(tmp_path, record, copy.deepcopy(record))[0]
+    result = tool.validate("natural", [path, path])
+    assert result["status"] == "fail"
+    assert result["pair_checks"]["capture_paths_distinct"] is False
+    assert result["pair_checks"]["capture_artifacts_distinct"] is False
+
+
+def test_byte_identical_capture_copy_cannot_satisfy_natural_repeatability(
+    tmp_path,
+):
+    record = _record("natural", "hbm_sram")
+    result = tool.validate(
+        "natural", _write_pair(tmp_path, record, copy.deepcopy(record))
+    )
+    assert result["status"] == "fail"
+    assert result["pair_checks"]["capture_paths_distinct"] is True
+    assert result["pair_checks"]["capture_artifacts_distinct"] is False
 
 
 def test_complete_stress_hbm_rom_pair_passes_with_storage_counter_differences(tmp_path):
