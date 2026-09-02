@@ -224,8 +224,16 @@ the deployment campaign records correlating — no others.
 - **Mandatory-context accelerator coverage is incomplete.** The Qwen HBM lane
   did execute the 8,000-token prompt, but diverged from the oracle at generated
   token 137 and failed at its historical context boundary after token 193
-  without EOS; the matched ROM lane
-  completed its 192-token comparison horizon and matched the oracle throughout.
+  without EOS. The HBM capability now advertises 262,144 positions, but the
+  source adapter, neutral IR, KV resources and RoPE qualification remain fixed
+  at 8,192, so that failure would recur on a source-current build. The frozen
+  natural terminal rule is first official EOS or exactly 256 oracle-identical
+  generated tokens; satisfying it requires a program-wide Qwen bound of at
+  least 8,256. The matched historical ROM lane completed its 192-token
+  comparison horizon and matched the oracle throughout. The separate stress
+  lane also remains open: its historical HBM record diverges at token two, no
+  ROM record exists, and current evidence omits the executed shapes A7 makes
+  part of association identity while HBM and ROM use different token blocks.
   DeepSeek's 200,000-token rung remains reference-oracle GPU evidence: the
   governed accelerator context gate currently reaches only 35 tokens, below
   both sparse-attention thresholds.
@@ -342,10 +350,14 @@ nothing was failing when they were found:
   pass every liveness check it had, so an unchecked decode reported as `pass` is
   the exact shape of a miss. `pass` is now reserved for a run compared against
   the oracle and matching; a run with no reference is `executed_unverified`.
-- **The implementation identity did not identify the implementation.** A7 says
-  two runs of one identity are bit-identical. Thread count was not in it, and at
-  Qwen shapes 1, 4 and 16 threads give three different results. Two runs could
-  have declared the same identity and disagreed.
+- **The implementation identity still does not fully identify the
+  implementation.** A7 says two runs of one identity are bit-identical. Thread
+  count was originally absent; it is now retained after Qwen measurements at
+  1, 4 and 16 threads produced three different results. The W10 preflight found
+  the remaining gap: A7 also makes executed shape part of association identity,
+  but the retained identity does not carry an executed-shape manifest. Current
+  HBM and ROM token-block schedules differ, so equal library/thread dictionaries
+  do not establish equal blocked association.
 - **The storage-class proof was narrower than the sentence built on it.** It
   varies storage class within one backend; the comparison needs the two backends
   to emit the same program, and they do not (§2.2).
@@ -364,7 +376,7 @@ bisection tool now samples in flight, at the moment the producing engine writes.
 
 The authoritative status is the top-level marker table in
 [`UNIFIED_EXECUTION_CHECKLIST.md`](UNIFIED_EXECUTION_CHECKLIST.md); the generated
-companion republishes those marker counts. Its 53 `OI-*` headings are a durable
+companion republishes those marker counts. Its 54 `OI-*` headings are a durable
 findings log, not a count of currently open defects; many are explicitly closed
 and retained to record what invalidated earlier evidence. OI-15's per-token
 loop, for example, is closed by A13 block extents. OI-4's lack of a governed

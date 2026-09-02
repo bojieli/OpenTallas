@@ -218,11 +218,11 @@ simulation speed.
     blocked association, one RNE output rounding. Used for **execution**.
 
 The blocked contract's association is fixed by an *implementation identity* —
-library, version, device, shape **and thread count** — which every execution
-report records. Two runs of the same implementation are bit-identical; the
-contract does not claim portability across implementations. That is a weaker
-guarantee than the sequential contract and is stated as such wherever it is
-used.
+library, version, device, executed operand/output shape **and thread count**.
+Every governed execution report must bind all of them. Two runs of the same
+complete identity are bit-identical; the contract does not claim portability
+across implementations or associations. That is a weaker guarantee than the
+sequential contract and is stated as such wherever it is used.
 
 Thread count was not in the identity when A7 was first written, and leaving it
 out made the amendment's own guarantee false. A threaded library parallelises a
@@ -251,11 +251,25 @@ before this change is *incomplete*, not wrong: its tokens are what that machine
 produced, but the record does not pin down the configuration well enough to
 guarantee a rerun reproduces them.
 
+The W10 acceptance preflight found that the thread correction was not the last
+identity gap. The current evidence dictionary names the library, device and
+thread environment, but it does not retain the executed contraction shapes.
+That omission is material: current HBM lowering uses 512-token blocks while ROM
+lowering's zero block setting resolves to a whole-context contraction. A
+governed capture using the blocked contract must therefore include an
+executed-association manifest (or its canonical digest plus retained manifest)
+over each contract and operand/output-shape tuple. Until that exists, equal
+top-level implementation dictionaries do not establish equal association.
+
 Three consequences make it sound for this program's purposes:
 
-1. **ROM versus HBM stays bit-exact.** Both targets execute on the same
-   implementation with the same descriptors, so a token difference between them
-   is a real difference, never an artifact of association.
+1. **ROM versus HBM bit-exactness requires an association decision.** Under the
+   current Phase-F same-policy wording, the two targets must harmonize the
+   blocked contraction association and prove that through equal executed
+   manifests. A future target-specific policy may instead pin two different
+   manifests and require exact external-oracle agreement independently, but it
+   must be a versioned A7/Phase-F amendment and cannot support a storage-only
+   equivalence claim.
 2. **Correctness is still checked against something we did not compute.** The
    acceptance gate is token-level agreement with the external reference oracle,
    which runs the vendor modelling code.

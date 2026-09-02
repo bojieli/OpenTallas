@@ -110,7 +110,9 @@ or internal pipeline region is not a separate chip or cluster node.
 
 - seeded or stochastic sampling;
 - batch greater than one;
-- contexts beyond the separately tested 8,192 capacity boundary;
+- contexts beyond the release session bound, which Phase F must qualify at no
+  less than 8,256 positions; the separately retained 8,192 case is a legacy
+  boundary fixture inside that release bound;
 - speculative decoding;
 - multimodal front ends;
 - fleet/API scheduling; and
@@ -182,8 +184,11 @@ HBM/SRAM holds:
 - program/session metadata where configured; and
 - trace/checkpoint state.
 
-State capacity includes the exact 8,000 workload and separately reported 8,192
-boundary. Failure before terminal commit cannot expose partial KV advancement.
+State capacity must include the exact 8,000-token prompt plus the frozen
+256-token generation maximum, or at least 8,256 session positions. The
+separately reported 8,192 case remains a legacy boundary fixture rather than
+the release maximum. Failure before terminal commit cannot expose partial KV
+advancement.
 
 ### 4.4 Compute specialization
 
@@ -331,7 +336,7 @@ them causally.
 Two separate 8,000-token runs are required:
 
 1. a natural official-template context, followed by frozen greedy decode through
-   first EOS or the declared maximum; and
+   first official EOS or the declared 256-token maximum; and
 2. repeated-special-token stress, followed by the separately frozen decode
    length.
 
@@ -346,6 +351,12 @@ The natural run retains:
 - comparison with the common Qwen reference and Qwen HBM result.
 
 The stress run supports only capacity, boundary, and robustness claims.
+
+The current ROM capability, source adapter, neutral IR, KV resources and RoPE
+qualification still stop at 8,192 positions. They must be qualified and
+regenerated at no less than 8,256 before this natural lane can satisfy the
+declared maximum; reducing the natural cap to 192 would weaken the frozen
+workload and is not an accepted closure route.
 
 ### 8.3 Agentic execution
 

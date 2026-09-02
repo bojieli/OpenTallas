@@ -450,9 +450,11 @@ architectural state, faults, and counters for representative complete programs.
 ### Phase F — mandatory contexts
 
 **Qwen:** exactly 8,000 natural prompt tokens followed by ordinary decode to
-first EOS, plus a separate repeated-special-token stress run. Chat and agentic
-outputs retain rendered context, generated token IDs, decoded text, tool actions,
-and no post-EOS execution.
+the first official EOS or the frozen 256-token maximum, plus a separate
+repeated-special-token stress run. EOS is retained as the final generated token
+when reached; a cap stop makes no EOS claim. Chat and agentic outputs retain
+rendered context, generated token IDs, decoded text, tool actions, and no
+post-EOS execution.
 
 **DeepSeek:** exactly 200,000 natural prompt tokens followed by ordinary
 target-model decode to first EOS or the frozen maximum bound. A separate short
@@ -495,7 +497,9 @@ A target is functionally complete only when:
 - prefill and every decode step execute causally;
 - token selection occurs through the declared accelerator selection operation;
 - every produced ID is legal and decodes under the pinned tokenizer;
-- the first official EOS is returned and stops execution;
+- the first official EOS, when reached before the declared cap, is returned and
+  stops execution; otherwise the exact frozen cap is reached and reported
+  without an EOS claim;
 - raw IDs, raw decoded text, visible decoded text, and input context are retained;
 - chat responses pass question-specific checks;
 - agent actions are model-generated, parsed fail-closed, executed in the frozen

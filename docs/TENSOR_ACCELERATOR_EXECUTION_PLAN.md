@@ -2093,6 +2093,13 @@ before the first generated token. A separate 8,192-token capacity-boundary test
 is retained because existing OpenTallas studies use that boundary. The two
 numbers must never be conflated in reports.
 
+The natural fixture declares `max_new_tokens = 256`. Its only accepted terminal
+outcomes are the first official EOS, retained as the last accelerator and
+oracle token with no later model transaction, or exactly 256 accelerator tokens
+identical to the 256-token oracle with both reporting `max_new_tokens`. A
+shorter capacity stop is not the separate 8,192-token boundary test and cannot
+pass this gate.
+
 The initial acceptance manifest freezes:
 
 - model repository, revision, configuration, tokenizer, and every payload hash;
@@ -2771,8 +2778,9 @@ For every release golden run:
 - prefill and every decode step complete through the accelerator command path;
 - logits match the target reference exactly at the declared output boundary;
 - selected token IDs and decoded text match the frozen golden result;
-- EOS is recorded as the terminal generated token and no subsequent
-  model-forward request exists;
+- EOS, when reached before the declared cap, is recorded as the terminal
+  generated token and no subsequent model-forward request exists; otherwise
+  the exact frozen cap is reached and reported without an EOS claim;
 - no selected padded output-head row is accepted as a token, and tokenizer-valid
   gibberish cannot satisfy a natural-language gate;
 - KV, compressor, route, sparse-index, and session state hashes match;

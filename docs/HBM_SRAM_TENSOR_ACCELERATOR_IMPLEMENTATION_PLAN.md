@@ -524,7 +524,9 @@ Qwen closure requires:
 - short one-token and 32-decision exact differential;
 - six natural chat/reasoning prompts through first EOS;
 - both simple bash-agent tasks with causal tool turns and withheld tests;
-- exactly 8,000 natural prompt tokens followed by frozen ordinary decode;
+- exactly 8,000 natural prompt tokens followed by the first official EOS or
+  the frozen 256-token maximum, with exact oracle identity over the complete
+  terminal sequence;
 - a separate exactly 8,000 repeated-special-token stress run;
 - the separate 8,192 capacity boundary; and
 - legitimate token IDs, retained rendered context, decoded text, EOS, state,
@@ -532,6 +534,12 @@ Qwen closure requires:
 
 Only the natural run supports language-quality claims. Repeated-special input is
 capacity/stress evidence.
+
+The retained 8,192 test is a legacy boundary fixture, not enough capacity for
+the natural acceptance workload: 8,000 prompt positions plus the frozen
+256-token maximum require at least 8,256 qualified session positions. The HBM
+capability already advertises more, but the Qwen source adapter, IR, KV state
+and RoPE qualification must be extended and regenerated before the long run.
 
 All Qwen acceptance evidence uses exactly one conventional accelerator node.
 Cluster resources may not be credited to the Qwen chip-versus-chip comparison.
