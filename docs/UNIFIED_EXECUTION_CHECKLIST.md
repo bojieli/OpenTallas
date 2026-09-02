@@ -5,32 +5,36 @@
 **Baseline commit:** c83e543
 **Issue date:** 2026-08-29
 **Last reconciled:** 2026-09-02 — recounted all 94 top-level markers, audited
-every remaining exit against its retained evidence, refreshed the source-locked
-link campaign and participant-scope regression, and completed all four
-source-current W6.6 restart lanes. The final serialized DeepSeek HBM campaign
-passed in 2:56:39 against the current 32-node deployment; its retained artifact
-passed the independent source, deployment, process-identity, exactness,
-all-node counter, control, and 27-guard audit, plus the four-artifact
-source-current regression.
-**Current execution checkpoint (2026-09-02):** the W10.1 natural-context,
-W10.2 stress, and compiler-regression preflights have completed; no new long
-campaign has been launched and no top-level marker moves in this checkpoint.
-The audit found that the Qwen source adapter, neutral IR, KV state and RoPE
-qualification are still bounded at 8,192 positions even though the HBM
-capability advertises 262,144. It also found that A7 says blocked association
-identity includes executed shape, while the current evidence identity omits
-shape and the current HBM and ROM schedules use different token blocks (512
-versus whole-context). Both defects must be resolved before another 8K
-acceptance run. The focused compiler failures are stale test/proof assumptions,
-not evidence of an inference-semantic defect, but their gates must be repaired
-before W10/W11 closure is certified; see [OI-51].
+every remaining exit against its retained evidence, completed all four W6.6
+restart lanes, and then completed the implementation half of the W10.1/W10.2
+preflight. The final serialized DeepSeek HBM restart campaign passed in 2:56:39
+against its governed 32-node deployment; the later W10 tranche deliberately
+does not reuse that source identity as evidence for changed code.
+**Current execution checkpoint (2026-09-02):** no new long campaign has been
+launched and no top-level marker moves in this checkpoint. The focused compiler
+preflight is repaired, including transitive ATTENTION.SPARSE causality and the
+current v2 storage-and-placement proof. Qwen now carries one shared 8,256-row
+session bound through the source adapter, neutral IR, all 36 KV states, RoPE,
+workload validation and ROM capability; the HBM capability retains its larger
+262,144-row endpoint. Both product schedules now use 512-row token blocks, and
+the ROM allocator covers the 8,704-row padded final-block extent without
+changing the logical 8,256-row contract. The token runner records a canonical
+executed-association manifest and enforces exact EOS-or-cap termination, and an
+independent W10 validator fails closed on stale inputs, prefix-only agreement,
+malformed transactions, or unequal association manifests. Fresh temporary
+one-token HBM and ROM diagnostics both produced token 1654 and the same
+five-shape/253-call association digest; those diagnostics are preflight
+observations, not retained W10 closure evidence.
 **Top-level progress:** **83/94 complete (88.3%)**, **10 partial**, **1 open**,
 and **0 blocked**, counting only the `Wn.m` rows below.
 **Remaining top-level rows:** partial — W8.3, W8.4, W8.5, W9.4, W9.5,
 W10.1, W10.2, W11.1, W11.3, W13.4; open — W11.2.
-**Active certification:** Qwen HBM, Qwen ROM, DeepSeek ROM, and DeepSeek HBM
-restart are source-current and passing. Every retained artifact binds the same
-governed 288-file restart scope and passes all 27 guards; W6.6 is closed.
+**Certification freshness:** the four published W6.6 restart artifacts remain
+passing closure evidence for the exact 288-file source map each artifact binds.
+This W10 tranche changes governed compiler and runtime files, so those records
+must not be called source-current relative to the new head. W6.6 remains a
+completed evidenced milestone; all four restart lanes must be refreshed before
+the changed head is promoted as a new source-current restart baseline.
 **Generated companion:** `docs/PROGRAM_STATUS.md` and its JSON now retain the
 clean W6.6 closure snapshot at `0a5bc1f…`: 83/10/1 marker arithmetic on `main`,
 with `worktree_dirty: false`. The companion files are published in the
@@ -41,15 +45,13 @@ acceptance lane. W8.3/W8.4/W8.5/W9.4 → W9.5. W11.1 and W9.5, the DeepSeek
 200K accelerator pair, and W11.2-specific capability, cycle, physical, fabric,
 area/energy and uncertainty prerequisites all feed W11.2. W10.2, W11.3 and
 W13.4 can otherwise proceed independently.
-**Remaining-work order:** (1) repair the focused compiler/proof preflight;
-freeze the EOS-or-256 terminal rule; qualify at least 8,256 Qwen session
-positions across the shared source/IR/state/RoPE and both capabilities; and add
-an executed-shape association manifest, then either harmonize the current HBM
-512-row and ROM whole-context schedules or explicitly amend A7 and Phase F;
-(2) refresh numeric qualification and deployment certificates, pass short
-source-current smoke captures, then run two clean W10.1 HBM natural captures
-and the W10.2 HBM/ROM stress captures against the frozen external oracle;
-(3) use accepted W10.1 evidence to close W11.1 and fill the six missing W13.4
+**Remaining-work order:** (1) rebuild the standard ignored Qwen HBM/ROM bundles
+from the 8,256-row graph and refresh the retained deployment, ROM-schedule,
+numeric-contract and source-lock certificates; (2) run two clean W10.1 HBM
+natural captures and the W10.2 HBM/ROM stress captures against the frozen
+external oracle, then pass the independent exact-sequence/association gates;
+(3) refresh all four W6.6 restart lanes against the changed governed source and
+use accepted W10.1 evidence to close W11.1 and fill the six missing W13.4
 reasoning/agentic workload cells; (4) complete the missing
 engine, fabric, ROM-service, and same-view macro evidence in
 W8.3/W8.4/W8.5/W9.4, then perform the four-target characterized rerun in W9.5;
@@ -57,19 +59,33 @@ W8.3/W8.4/W8.5/W9.4, then perform the four-target characterized rerun in W9.5;
 area/energy, and uncertainty prerequisites are jointly admissible; and (6)
 continue W11.3 provenance coverage alongside those lanes. This ordering names
 dependencies, not a claim that independent rows must run serially.
+**Current W10 preflight checklist:**
+
+- [x] P10.1 Freeze exact first-EOS-or-256 natural and exact-32 stress terminal rules.
+- [x] P10.2 Repair the attention and storage/placement compiler proof gates.
+- [x] P10.3 Qualify the 8,256-row source/IR/KV/RoPE/workload/capability boundary.
+- [x] P10.4 Harmonize both products at 512 rows and prove verifier-safe final-block padding.
+- [x] P10.5 Record executed shapes and add independent natural/stress acceptance validators.
+- [x] P10.6 Pass fresh temporary one-token HBM/ROM smoke with identical association manifests.
+- [~] P10.7 Rebuild standard bundles and refresh retained deployment, schedule and numeric evidence.
+- [ ] P10.8 Produce and accept two complete W10.1 HBM natural captures.
+- [ ] P10.9 Produce and accept the complete W10.2 HBM/ROM stress pair.
+- [ ] P10.10 Refresh the four restart-exactness lanes against the changed source map.
+
 **Execution concurrency:** requirement audits, dry lowerings, focused tests,
-validators and documentation run in parallel. Data-bearing 8K Qwen lanes remain
-serialized until the first source-current run records trustworthy peak RSS and
-I/O headroom with `/usr/bin/time -v`; subsequent clean runs may overlap only in
-distinct publish/output paths and only when measured resource margin makes that
-safe. This preserves speed without turning resource contention into another
-uncontrolled execution variable.
+validators and documentation run in parallel. Each short source-current Qwen
+smoke peaked near 18.5 GiB RSS and the two were safe to run independently. The
+data-bearing 8K lanes remain serialized until the first complete source-current
+run records trustworthy peak RSS and I/O headroom with `/usr/bin/time -v`;
+subsequent clean runs may overlap only in distinct publish/output paths and only
+when measured resource margin makes that safe. This preserves speed without
+turning resource contention into another uncontrolled execution variable.
 **Freshness boundary:** the marker count records milestones closed with retained
-evidence; it is not a count of source-current evidence horizons. The four
-current deployments each have a hardened four-token capture, while the longer
-Qwen EOS, 24/192-token, reasoning, and closed-loop agentic records predate the
-current deployment identities and source-lock schema. Those records remain
-historical evidence and must not be presented as current-source reruns.
+evidence; it is not a count of source-current evidence horizons. The longer
+Qwen EOS, 24/192-token, reasoning, closed-loop agentic and historical 8K records
+remain historical evidence. The previously current short token and restart
+records bind the pre-W10 source map and become retained prior-head evidence when
+this tranche lands. None may be presented as a rerun of the changed source.
 **Status legend:** `[ ]` not started · `[~]` in progress · `[x]` done and evidenced · `[!]` blocked/deferred with reason
 
 > This checklist is the single source of truth for program progress. It supersedes
@@ -151,7 +167,7 @@ historical evidence and must not be presented as current-source reruns.
 ## W5 — ROM backends
 
 - [x] W5.1 Common ROM contracts (immutable regions, repair map, inverse reconstruction) — `compiler/backends/rom/common/image.py` incl. repair map
-- [x] W5.2 Qwen conventional single-chip ROM partition + images + schedules + deployment — the deployed Qwen ROM program admits at 75 instructions and 239 descriptors (`results/abi3/qwen3_rom_ta-qw-chat-1_execution.json`), while the storage-class equivalence build lowers the same graph to 31 instructions and 210 descriptors on both storage classes (`results/abi3/storage_class_equivalence_qwen3.json`) — two different builds, and [OI-19] is the distance between them; 14 role-striped banks, 16,381,470,720 B <!-- figure: 75 src="results/abi3/qwen3_rom_ta-qw-chat-1_execution.json#record.notes.verification.instruction_count" name="Qwen ROM deployed instructions" --> <!-- figure: 239 src="results/abi3/qwen3_rom_ta-qw-chat-1_execution.json#record.notes.verification.descriptor_count" name="Qwen ROM deployed descriptors" --> <!-- figure: 31 src="results/abi3/storage_class_equivalence_qwen3.json#instruction_count.rom" name="Qwen ROM equivalence-build instructions" --> <!-- figure: 210 src="results/abi3/storage_class_equivalence_qwen3.json#descriptor_count.rom" name="Qwen ROM equivalence-build descriptors" -->
+- [x] W5.2 Qwen conventional single-chip ROM partition + images + schedules + deployment — the retained deployed Qwen ROM execution record admits at 75 instructions and 239 descriptors (`results/abi3/qwen3_rom_ta-qw-chat-1_execution.json`). Separately, the current-source v2 storage-and-placement proof lowers the current graph twice through the ROM backend and emits 75 instructions and 239 descriptors on both its ROM and comparison-HBM sides (`results/abi3/storage_class_equivalence_qwen3.json`). Its matching counts do not turn that comparison-HBM build into the shipped 75-instruction/218-descriptor HBM product deployment; [OI-19] remains the cross-backend gap. The ROM deployment retains 14 role-striped banks and 16,381,470,720 B <!-- figure: 75 src="results/abi3/qwen3_rom_ta-qw-chat-1_execution.json#record.notes.verification.instruction_count" name="Qwen ROM deployed instructions" --> <!-- figure: 239 src="results/abi3/qwen3_rom_ta-qw-chat-1_execution.json#record.notes.verification.descriptor_count" name="Qwen ROM deployed descriptors" --> <!-- figure: 75 src="results/abi3/storage_class_equivalence_qwen3.json#instruction_count.rom" name="Qwen ROM v2 equivalence-build instructions" --> <!-- figure: 239 src="results/abi3/storage_class_equivalence_qwen3.json#descriptor_count.rom" name="Qwen ROM v2 equivalence-build descriptors" -->
 - [x] W5.3 DeepSeek wafer-scale reticle/tile ROM placement + on-wafer fabric + distributed HBM state + deployment — DeepSeek ROM wafer 322 instructions, 172 regions, 9,300 tiles of 37 reticles, 18 link instructions. *(Those four are the wafer build as it stood when this item closed and nothing republishes them: the region count is stated as 228 in the segmented-binding finding below, and the wafer program in the executed record carries 881 instructions and 13 link descriptors.)* <!-- figure: 881 src="results/abi3/deepseek_v4_rom_ta-ds-chat-1_execution.json#record.notes.verification.instruction_count" name="DeepSeek ROM wafer instructions, recorded" --> <!-- figure: 13 src="results/abi3/deepseek_v4_rom_ta-ds-chat-1_execution.json#record.counters['engine.link.descriptors']" name="DeepSeek ROM link descriptors, recorded" -->
 - [x] W5.4 Inverse proof: ROM image → original weights bit-exact — inverse proof passes bit-identically over 16.4 GB and 156 GB
 - [x] W5.5 Independent schedule checker — `compiler/backends/rom/common/check.py` is a second implementation that imports neither the ROM program/image producer nor either product backend. It independently reconstructs layer bands, frozen engine mappings, ROM shard/bank and visible mutable-port use, queue/tile/resource bounds, direct producer events and loop-boundary dependencies, state transactions, wafer participants/endpoints/traffic classes, the per-tile route-table digest, non-overlapping resource slots, exact worst-case retired work, and descriptor-derived byte/flit/stall bounds; the frozen ABI verifier is only its final supplemental gate. `make abi3-rom-schedule-check` runs the two shipped products in parallel and publishes `results/abi3/rom_schedule_checks.json`: Qwen passes **62/62** checks <!-- figure: 62 src="results/abi3/rom_schedule_checks.json#cases[case=qwen3-rom-single-chip].passed_check_count" name="Qwen independent ROM schedule checks passed" --> over **75** instructions and **26** schedules <!-- figure: 75 src="results/abi3/rom_schedule_checks.json#cases[case=qwen3-rom-single-chip].actual.instructions" name="Qwen ROM schedule-checked instructions" --> <!-- figure: 26 src="results/abi3/rom_schedule_checks.json#cases[case=qwen3-rom-single-chip].actual.schedules" name="Qwen ROM schedule descriptors checked" -->; DeepSeek passes **83/83** <!-- figure: 83 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-wafer].passed_check_count" name="DeepSeek independent ROM schedule checks passed" --> over **1,171** instructions, **372** schedules, and **18** on-wafer communications <!-- figure: 1171 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-wafer].actual.instructions" name="DeepSeek ROM schedule-checked instructions" --> <!-- figure: 372 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-wafer].actual.schedules" name="DeepSeek ROM schedule descriptors checked" --> <!-- figure: 18 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-wafer].actual.communications" name="DeepSeek ROM communications checked" -->. Mutation tests prove independence: capability-valid wrong banks/tiles, a wrong-but-earlier producer event, and zero link credit remain ABI-well-formed yet are rejected here; an unadvertised queue is now rejected by both this checker and generic ABI admission. This is an artifact-semantic schedule certificate, not cycle timing or physical-route evidence; cycle evidence remains W7, while RTL/physical-route evidence remains W8/W9.
@@ -165,7 +181,7 @@ historical evidence and must not be presented as current-source reruns.
 > historical EOS and 24-token horizons have not been rerun on these identities.
 
 - [x] W6.1 Qwen-HBM: short prompt → prefill → decode → real tokens — **token-identical to the reference oracle**, and **decode reaches a real EOS**. `TA-QW-AGENT-1` ran 112 prompt tokens to the natural stop at token 151645 after 23 tokens (`results/abi3/qwen3_hbm_ta-qw-agent-1_execution.json`) <!-- figure: 112 src="results/abi3/qwen3_hbm_ta-qw-agent-1_execution.json#record.workload.prompt_token_count" name="TA-QW-AGENT-1 prompt tokens" --> <!-- figure: 23 src="results/abi3/qwen3_hbm_ta-qw-agent-1_execution.json#record.generated_token_count" name="TA-QW-AGENT-1 decoded tokens" --> <!-- figure: 151645 src="results/abi3/qwen3_hbm_ta-qw-agent-1_execution.json#record.generated_token_ids[22]" name="TA-QW-AGENT-1 final token is EOS" -->, `TA-QW-CHAT-1` ran 24 tokens (`..._ta-qw-chat-1_...`); both agree with the oracle at every position, with no legitimacy problems and every admission check passing — 27 of them on the agent record and 29 on the chat record, whose set is the agent's plus `block_extent` and `block_scale`, so it is a check set that grew between the two runs and not a run that skipped two
-- [x] W6.2 Qwen-ROM: identical token sequence from the ROM deployment — **re-verified with evidence in the repository** (`results/abi3/qwen3_rom_ta-qw-chat-1_execution.json`, status pass, 24 tokens, `reference_agreement` true, no divergence index). The 24 tokens are identical to `qwen3_hbm_ta-qw-chat-1_execution.json` position for position, which is the claim this item makes. Both admit at 75 instructions; the ROM lane emits 239 descriptors against HBM's 218 and declares 2,105 retired work against 22,715, because the two lanes block the token loop differently — see [OI-19] — 75 instructions, 239 descriptors, admitted; **24 tokens token-for-token identical to the external oracle and to the HBM target**. All 27 distinct prefill kernels diffed kernel-by-kernel against HBM through the `on_issue` hook: bit-identical, output hash for output hash, including the KV window and the final logits. The retained historical storage-class equivalence artifact reports 17 descriptors differing, all `MEMORY_OBJECT`, all 17 ROM→HBM, and none beyond storage class; it is not a current-source rebuild <!-- figure: 17 src="results/abi3/storage_class_equivalence_qwen3.json#differing_descriptor_count" name="Qwen storage-class differing descriptors" --> <!-- figure: 17 src="results/abi3/storage_class_equivalence_qwen3.json#storage_class_transitions['ROM->HBM']" name="Qwen ROM to HBM transitions" --> <!-- figure: 75 src="results/abi3/qwen3_rom_ta-qw-chat-1_execution.json#record.notes.verification.instruction_count" name="Qwen ROM instructions, TA-QW-CHAT-1" --> <!-- figure: 239 src="results/abi3/qwen3_rom_ta-qw-chat-1_execution.json#record.notes.verification.descriptor_count" name="Qwen ROM descriptors" --> <!-- figure: 218 src="results/abi3/qwen3_hbm_ta-qw-chat-1_execution.json#record.notes.verification.descriptor_count" name="Qwen HBM descriptors" --> <!-- figure: 2,105 src="results/abi3/qwen3_rom_ta-qw-chat-1_execution.json#record.notes.verification.declared_retired_work" name="Qwen ROM declared retired work" --> <!-- figure: 22,715 src="results/abi3/qwen3_hbm_ta-qw-chat-1_execution.json#record.notes.verification.declared_retired_work" name="Qwen HBM declared retired work" -->
+- [x] W6.2 Qwen-ROM: identical token sequence from the ROM deployment — **re-verified with retained execution evidence in the repository** (`results/abi3/qwen3_rom_ta-qw-chat-1_execution.json`, status pass, 24 tokens, `reference_agreement` true, no divergence index). The 24 tokens are identical to `qwen3_hbm_ta-qw-chat-1_execution.json` position for position, which is the claim this item makes. Both retained execution lanes admit at 75 instructions; the ROM lane emits 239 descriptors against HBM's 218 and declares 2,105 retired work against 22,715, because the two product backends block the token loop differently — see [OI-19] — 75 instructions, 239 descriptors, admitted; **24 tokens token-for-token identical to the external oracle and to the HBM target**. All 27 distinct prefill kernels diffed kernel-by-kernel against HBM through the `on_issue` hook: bit-identical, output hash for output hash, including the KV window and the final logits. Separately, the source-current static v2 storage-and-placement certificate reports 18 differing descriptors, all `MEMORY_OBJECT` and all ROM→HBM: 16 replace ROM-local placement with the required unplaced-HBM sentinel and 2 were already unplaced. Both generated builds admit, `holds` is true, and the residual-violation list is empty. That proof does not rerun or refresh the historical 24-token execution horizon, and its HBM-labelled member is not the shipped HBM product deployment <!-- figure: 18 src="results/abi3/storage_class_equivalence_qwen3.json#differing_descriptor_count" name="Qwen v2 differing descriptors" --> <!-- figure: 18 src="results/abi3/storage_class_equivalence_qwen3.json#storage_class_transitions['ROM->HBM']" name="Qwen v2 ROM to HBM transitions" --> <!-- figure: 16 src="results/abi3/storage_class_equivalence_qwen3.json#placement_transitions.rom_placement_to_hbm_unplaced" name="Qwen v2 placed to unplaced transitions" --> <!-- figure: 2 src="results/abi3/storage_class_equivalence_qwen3.json#placement_transitions.already_unplaced_to_hbm_unplaced" name="Qwen v2 already-unplaced transitions" --> <!-- figure: 75 src="results/abi3/qwen3_rom_ta-qw-chat-1_execution.json#record.notes.verification.instruction_count" name="Qwen ROM instructions, TA-QW-CHAT-1" --> <!-- figure: 239 src="results/abi3/qwen3_rom_ta-qw-chat-1_execution.json#record.notes.verification.descriptor_count" name="Qwen ROM descriptors" --> <!-- figure: 218 src="results/abi3/qwen3_hbm_ta-qw-chat-1_execution.json#record.notes.verification.descriptor_count" name="Qwen HBM descriptors" --> <!-- figure: 2,105 src="results/abi3/qwen3_rom_ta-qw-chat-1_execution.json#record.notes.verification.declared_retired_work" name="Qwen ROM declared retired work" --> <!-- figure: 22,715 src="results/abi3/qwen3_hbm_ta-qw-chat-1_execution.json#record.notes.verification.declared_retired_work" name="Qwen HBM declared retired work" -->
 - [x] W6.3 DeepSeek-HBM (32 node): short prompt → real tokens — **fresh post-A28 multi-token execution is oracle-identical.** `make abi3-tokens-deepseek-hbm` admitted the current 32-node deployment through its complete recorded check set, executed the **32**-token prompt <!-- figure: 32 src="results/abi3/accelerator_tokens/deepseek_v4_flash_hbm_p32.json#workload.prompt_token_count" name="DeepSeek HBM token-capture prompt length" -->, and completed one prefill plus three decode transactions with `SUCCESS`/`NONE` status/trap throughout. It generated **4** tokens <!-- figure: 4 src="results/abi3/accelerator_tokens/deepseek_v4_flash_hbm_p32.json#generated_token_count" name="DeepSeek HBM generated-token count" --> — `[13806, 345, 7472, 55560]` — all identical to the independent 16-token oracle, `first_divergence_index: null` and no legitimacy problems. Prefill retired **26,095** instructions and each decode retired **11,229**, so the old 636-instruction phase-extent trap is gone <!-- figure: 26,095 src="results/abi3/accelerator_tokens/deepseek_v4_flash_hbm_p32.json#per_step[step=0].instructions_retired" name="DeepSeek HBM prefill retired instructions" --> <!-- figure: 11,229 src="results/abi3/accelerator_tokens/deepseek_v4_flash_hbm_p32.json#per_step[step=1].instructions_retired" name="DeepSeek HBM decode retired instructions" -->. The v2 context gate checks each of **32** retained node-counter sets <!-- figure: 32 src="results/abi3/deepseek_v4_context_gate.json#results[0].node_count" name="DeepSeek HBM counter sets checked, W6.3" --> rather than dividing an aggregate: per-node/cluster `attention.context_positions` are **30,114 / 963,648** <!-- figure: 30114 src="results/abi3/deepseek_v4_context_gate.json#results[0].expected_counters_per_node['attention.context_positions']" name="DeepSeek HBM context positions per node, W6.3" --> <!-- figure: 963648 src="results/abi3/deepseek_v4_context_gate.json#results[0].observed_aggregate_counters['attention.context_positions']" name="DeepSeek HBM context positions cluster total, W6.3" --> and KV bytes are **30,836,736 / 986,775,552** <!-- figure: 30836736 src="results/abi3/deepseek_v4_context_gate.json#results[0].expected_counters_per_node['attention.kv_bytes_read']" name="DeepSeek HBM KV bytes per node, W6.3" --> <!-- figure: 986775552 src="results/abi3/deepseek_v4_context_gate.json#results[0].observed_aggregate_counters['attention.kv_bytes_read']" name="DeepSeek HBM KV bytes cluster total, W6.3" -->, with zero node or aggregate mismatches. Its maximum checked accelerator context is **35** <!-- figure: 35 src="results/abi3/deepseek_v4_context_gate.json#claim_boundary.maximum_accelerator_context_tokens_checked" name="DeepSeek HBM maximum counter-gated context, W6.3" -->, below both the 129-token window clipping and 2,052-token pruning thresholds; this closes counter scope, not long-context sparsity.
 - [x] W6.4 DeepSeek-ROM (wafer): identical token sequence — **one prefill plus three decode transactions are oracle-identical and HBM-identical.** The committed `make abi3-tokens-deepseek-rom` capture executes all four transactions with `SUCCESS`/`NONE` status/trap, generates **4** tokens <!-- figure: 4 src="results/abi3/accelerator_tokens/deepseek_v4_flash_rom_p32.json#generated_token_count" name="DeepSeek ROM generated-token count" -->, and retires **60,481** instructions <!-- figure: 60,481 src="results/abi3/accelerator_tokens/deepseek_v4_flash_rom_p32.json#counters['instructions.retired']" name="DeepSeek ROM token-capture retired instructions" -->. Its `[13806, 345, 7472, 55560]` sequence compares all **4** retained oracle positions <!-- figure: 4 src="results/abi3/accelerator_tokens/deepseek_v4_flash_rom_p32.json#oracle.compared_tokens" name="DeepSeek ROM oracle-compared tokens" --> with `agreement: true`, no divergence and no legitimacy problem, and equals the authoritative HBM sequence position for position. `results/abi3/comparison_deepseek_rom_vs_hbm.json` records that common four-token prefix without assumptions and retains the one-wafer-versus-32-node topology difference; its boundary is functional execution, not timing or performance.
 - [x] W6.5 Independent reference oracle per model (from official modeling code) — external oracle: `tools/run_qwen3_reference_oracle.py`— token-level match
@@ -284,8 +300,8 @@ historical evidence and must not be presented as current-source reruns.
 
 ## W10 — Mandatory workload campaigns
 
-- [~] W10.1 Qwen exactly 8,000 natural prompt tokens → first official EOS or the frozen 256-token cap (HBM) — **historically executed, source-current acceptance still open**: 8,000 prompt tokens, 193 decoded in 14,982 s (`results/abi3/qwen3_hbm_ta-qw-8k-1_execution.json`). <!-- figure: 8,000 src="results/abi3/qwen3_hbm_ta-qw-8k-1_execution.json#record.workload.prompt_token_count" name="TA-QW-8K-1 prompt tokens" --> <!-- figure: 193 src="results/abi3/qwen3_hbm_ta-qw-8k-1_execution.json#record.generated_token_count" name="TA-QW-8K-1 decoded tokens" --> <!-- figure: 137 src="results/abi3/qwen3_hbm_ta-qw-8k-1_execution.json#record.notes.first_divergence_index" name="TA-QW-8K-1 first divergence" --> The first **137 tokens are identical to the reference oracle**, and the continuation is coherent Melville pastiche. It did not reach an admissible terminal state for two separate reasons: one argmax flip at index 137 (see [OI-33]) and a capacity failure at decode step 193 (see [OI-34]). **The historical ROM lane completed the matched 192-token horizon**, the largest decode budget that fits after an 8,000-token prompt inside its declared 8,192-position context, and all **192** tokens match the oracle <!-- figure: 192 src="results/abi3/qwen3_rom_ta-qw-8k-1_execution.json#record.generated_token_count" name="Qwen ROM completed 8K comparison horizon" -->; W11.1 reports that qualified historical comparison. The frozen W10.1 terminal rule is now explicit: run the exact pinned workload with declared `max_new_tokens = 256`; accept only either the first official EOS, included as the final accelerator and oracle token with no post-EOS transaction, or exactly 256 accelerator tokens identical to the 256-token oracle with both stopping at `max_new_tokens`. A shorter capacity stop, prefix-only agreement, any divergence, or plausible but mismatched text fails. The current HBM capability advertises 262,144 positions, but the source adapter, neutral IR, 36-layer KV state, and RoPE qualification remain bounded at 8,192, so a source-current rerun would still fail at step 193. W10.1 remains partial until the program-wide Qwen bound is qualified at **at least 8,256**, both deployments and the independent checker are regenerated, and two clean source-current HBM captures satisfy the frozen terminal/oracle rule.
-- [~] W10.2 Qwen repeated-special-token stress run — **historically executed, and it diverged**: 8,000 prompt tokens (one distinct id), 32 decoded in 11,942 s, recorded `status: diverged` at index 2 (`results/abi3/qwen3_hbm_ta-qw-stress-1_execution.json`). <!-- figure: 32 src="results/abi3/qwen3_hbm_ta-qw-stress-1_execution.json#record.generated_token_count" name="TA-QW-STRESS-1 decoded tokens" --> <!-- figure: 2 src="results/abi3/qwen3_hbm_ta-qw-stress-1_execution.json#record.notes.first_divergence_index" name="TA-QW-STRESS-1 first divergence" --> <!-- figure: "diverged" src="results/abi3/qwen3_hbm_ta-qw-stress-1_execution.json#status" name="TA-QW-STRESS-1 status" --> The frozen workload remains exactly 8,000 copies of token id 151644 followed by exactly 32 greedy tokens; only capacity, boundary and robustness claims may use it. The historical structured divergence does **not** waive A7's external-oracle gate. Source-current preflight found a stronger prerequisite: A7 defines blocked association identity using library, version, device, thread count **and executed shape**, but retained implementation identities omit executed contraction shapes; current HBM uses 512-token blocks while ROM uses a whole-context block. Before either roughly four-hour lane runs, add and validate an executed-association manifest/digest and either harmonize the two schedules (preferred under the current same-policy wording) or amend A7/Phase F to permit separately frozen target associations while preserving exact per-target oracle agreement and withdrawing storage-only equivalence. Then refresh numeric qualification and run distinct source-current HBM and ROM captures. W10.2 closes only if both produce exactly 32 oracle-identical and mutually identical tokens, stop at `max_new_tokens`, pass admission/legitimacy/state/counter/source/input checks, and pass an independent strict pair validator with no token-divergence override. See [OI-33].
+- [~] W10.1 Qwen exactly 8,000 natural prompt tokens → first official EOS or the frozen 256-token cap (HBM) — **historically executed; the capacity and acceptance preflight is repaired, but source-current full-horizon acceptance remains open**. The retained HBM record decoded 193 tokens in 14,982 s (`results/abi3/qwen3_hbm_ta-qw-8k-1_execution.json`): its first **137 tokens match the reference oracle**, then one argmax flips and the historical 8,192-row build reaches its capacity boundary at decode step 193 ([OI-33], [OI-34]). <!-- figure: 8,000 src="results/abi3/qwen3_hbm_ta-qw-8k-1_execution.json#record.workload.prompt_token_count" name="TA-QW-8K-1 prompt tokens" --> <!-- figure: 193 src="results/abi3/qwen3_hbm_ta-qw-8k-1_execution.json#record.generated_token_count" name="TA-QW-8K-1 decoded tokens" --> <!-- figure: 137 src="results/abi3/qwen3_hbm_ta-qw-8k-1_execution.json#record.notes.first_divergence_index" name="TA-QW-8K-1 first divergence" --> The historical ROM lane completed the matched 192-token horizon and all **192** tokens match the oracle <!-- figure: 192 src="results/abi3/qwen3_rom_ta-qw-8k-1_execution.json#record.generated_token_count" name="Qwen ROM completed 8K comparison horizon" -->; that is prior-build evidence only. The current source adapter, neutral IR, 36 KV states, RoPE table and every published workload now share an exact **8,256-position** session contract; workload generation rejects 8,000+257 and stale retained metadata. The ROM capability is exactly 8,256, the HBM profile's 262,144 endpoint admits it, both temporary product deployments lower deterministically, and the final 512-row block has verifier-safe padded backing. `run_accelerator_tokens.py` now accepts `exact_eos_or_cap` only when accelerator and oracle share the complete first-EOS sequence with no post-EOS transaction, or both produce exactly 256 identical cap tokens. `check_qwen3_w10_acceptance.py natural` independently requires two source-current HBM records with identical complete tokens, transactions, architectural counters and nonempty executed-association manifests. The one-token smoke does not satisfy that horizon. W10.1 remains partial until the standard bundle/certificates are refreshed and two clean full captures pass this gate.
+- [~] W10.2 Qwen repeated-special-token stress run — **historically executed and divergent; same-association preflight is now implemented, but the source-current 32-token pair remains open**. The retained HBM record ran 8,000 copies of token id 151644 followed by 32 decoded tokens in 11,942 s and diverged at index 2 (`results/abi3/qwen3_hbm_ta-qw-stress-1_execution.json`). <!-- figure: 32 src="results/abi3/qwen3_hbm_ta-qw-stress-1_execution.json#record.generated_token_count" name="TA-QW-STRESS-1 decoded tokens" --> <!-- figure: 2 src="results/abi3/qwen3_hbm_ta-qw-stress-1_execution.json#record.notes.first_divergence_index" name="TA-QW-STRESS-1 first divergence" --> <!-- figure: "diverged" src="results/abi3/qwen3_hbm_ta-qw-stress-1_execution.json#status" name="TA-QW-STRESS-1 status" --> That structured divergence does not waive A7's external-oracle gate. The runtime now records each blocked numeric contract with implementation identity, activation/weight/output shapes and call counts under a canonical digest. Qwen HBM and ROM both use 512-row token blocks; ROM's static buffers and generated ranges cover the 8,704-row padded final-block extent while the logical session remains 8,256. Fresh temporary one-token HBM/ROM diagnostics produced the same token and byte-identical manifests (five shapes, 253 calls), proving the short executed association is harmonized without claiming the long stress result. `check_qwen3_w10_acceptance.py stress` independently requires source-current HBM and ROM records with nonempty identical manifests, exactly 32 oracle-identical and mutually identical tokens at `max_new_tokens`, exact admission/transaction/state/counter/input/source evidence, and no override. Refreshing numeric qualification and the standard deployment/schedule evidence, then producing that full pair, are still pending. See [OI-33].
 - [x] W10.3 Qwen chat workload (pinned template) — `TA-QW-CHAT-1`, 93 prompt tokens, 24 decoded tokens, token-identical to the oracle; <!-- figure: 93 src="results/abi3/qwen3_hbm_ta-qw-chat-1_execution.json#record.workload.prompt_token_count" name="TA-QW-CHAT-1 prompt tokens" --> <!-- figure: 24 src="results/abi3/qwen3_hbm_ta-qw-chat-1_execution.json#record.generated_token_count" name="TA-QW-CHAT-1 decoded tokens, W10.3" --> the model is mid-derivation at the token cap (`We are given:\n\n- **Ship 1** (from Port A) leaves at **06:00**`), so this record proves token fidelity, not answer correctness; W10.1 owns the still-open exact EOS-or-256 natural-context requirement
 - [x] W10.4 Qwen agentic workload — `TA-QW-AGENT-1` decoded a **complete, well-formed tool call and stopped at a real EOS** entirely on the accelerator: ```bash / awk -F',' '{sum += $2} END {print sum}' inventory.txt / ```. Token-identical to the oracle. Feeding the result back through the sandbox loop is `tools/run_qwen3_agent_episode.py`
 - [x] W10.5 DeepSeek long-context campaign — **all five declared rungs have executed** — 1,000 / 8,000 / 32,000 / 128,000 / 200,000 tokens — so the largest context actually executed is **200,000** tokens (`results/abi3/deepseek_v4_reference_oracle_context_ladder.json`). <!-- figure: 200,000 src="results/abi3/deepseek_v4_reference_oracle_context_ladder.json#context_ladder_summary.largest_context_executed" name="largest DeepSeek context executed" --> The three upper rungs needed exactly the chunked prefill the projection called for and record `prefill_tiled` true; at 200,000 tokens peak device memory is **9.27** GB, the measured KV read is **317,435,904** B per decode step, and that is **0.9999** of the corrected profile's prediction. <!-- figure: 9.27 src="results/abi3/deepseek_v4_reference_oracle_context_ladder.json#context_ladder_summary.rungs[workload=TA-DS-CTX-200K-1].peak_device_bytes" scale="1e-9" name="200K rung peak device GB" --> <!-- figure: 317,435,904 src="results/abi3/deepseek_v4_reference_oracle_context_ladder.json#context_ladder_summary.rungs[workload=TA-DS-CTX-200K-1].measured_kv_bytes_per_decode_step" name="200K rung measured KV bytes per step" --> <!-- figure: 0.9999 src="results/abi3/deepseek_v4_reference_oracle_context_ladder.json#context_ladder_summary.rungs[workload=TA-DS-CTX-200K-1].measured_over_predicted" name="200K rung measured over predicted" --> The projection that motivated the rewrite stands as recorded and is why it was needed: unchunked, `hc_post` alone is **48.8** GiB at that context and the indexer term **2.33** TiB, while persistent KV state is only **2.32** GiB (`results/abi3/deepseek_v4_long_context_projection.json`). <!-- figure: 48.8 src="results/abi3/deepseek_v4_long_context_projection.json#derived.memory.hc_post_mix_intermediate_bytes" scale="0.000000000931322574615478515625" name="hc_post intermediate, GiB" --> <!-- figure: 2.33 src="results/abi3/deepseek_v4_long_context_projection.json#derived.memory.indexer_score_unchunked_bytes" scale="0.0000000000009094947017729282379150390625" name="unchunked indexer score, TiB" --> <!-- figure: 2.32 src="results/abi3/deepseek_v4_long_context_projection.json#derived.memory.persistent_kv_and_rope_bytes_measured" scale="0.000000000931322574615478515625" name="persistent KV and rope, GiB" --> *(This is the reference-oracle GPU lane, not the accelerator.)*
@@ -873,18 +889,25 @@ lanes are a precondition for it, not the product. These items are the product.
   event chain to appear directly in the terminal wait; it must instead prove
   transitive reachability to that waited event.
 
-  The four storage-equivalence assertions are also reporting drift. Commit
-  `e932d92` intentionally lets comparison-HBM objects replace ROM-local
-  placement with `bank_or_tile = NO_NODE` and `base_address = 0`, while the
-  proof still normalizes storage class alone. Current exact differences are
-  confined to storage class and that coupled placement transition: 18 Qwen and
-  318 DeepSeek objects, all ROM→HBM, with no residual payload difference after
-  the permitted fields are removed. Update the proof schema and negative tests,
-  regenerate `make abi3-equivalence`, and repair the attention fixtures before
-  treating the broad regression or governed equivalence certificate as green.
-  Fresh temporary Qwen and DeepSeek IR exports are byte-identical to the build
-  artifacts, so generated-state contamination is ruled out. This triage does
-  not justify changing inference code or rerunning a high-memory campaign.
+  The storage-equivalence half of this finding is now repaired and regenerated.
+  Commit `e932d92` intentionally lets comparison-HBM objects replace ROM-local
+  placement with `bank_or_tile = NO_NODE` and `base_address = 0`; schema
+  `opentallas.abi3.storage_and_placement_equivalence.v2` names that exact
+  coupled transition rather than silently normalizing it. It also fails closed
+  on descriptor-header drift, any payload drift outside `storage_class`,
+  `bank_or_tile`, `base_address` and the explicit historical `integrity_mode`
+  exception, any non-derived program-header drift, unequal object sources,
+  entrypoints or required features, admission failure, or a descriptor present
+  on only one side. The regenerated current-graph certificates admit both
+  builds and report `holds: true`: Qwen has 75 instructions, 239 descriptors
+  and 18 permitted transitions (16 placed-to-unplaced plus 2 already-unplaced);
+  DeepSeek has 1,171 instructions, 3,403 descriptors and 318 (312 plus 6), with
+  zero residual violations in both.
+  This closes the proof-tool/artifact portion of OI-51, not the product-backend
+  gap in OI-19 and not, by itself, the attention-fixture and transitive-causality
+  portions above. Fresh temporary Qwen and DeepSeek IR exports were
+  byte-identical to the build artifacts, so generated-state contamination is
+  ruled out. This triage does not justify rerunning a high-memory campaign.
 
 - **OI-34 — the retained Qwen HBM run reached its historical 8,192-position
   capability boundary, and the device said so exactly where it should.**
@@ -897,22 +920,13 @@ lanes are a precondition for it, not the product. These items are the product.
   row. It failed closed at precisely the right position rather than wrapping,
   truncating or quietly computing against stale rows.
 
-  The workload contract is now frozen as 8,000 natural prompt tokens followed
-  by the first official EOS or exactly 256 generated tokens, whichever happens
+  The workload contract is frozen as 8,000 natural prompt tokens followed by
+  the first official EOS or exactly 256 generated tokens, whichever happens
   first, with exact external-oracle identity over the complete terminal
-  sequence. The current HBM capability declares **262,144** positions <!-- figure: 262,144 src="configs/hardware/abi3_capability/hbm_sram_single_chip.json#limits.max_context_positions" name="current Qwen HBM maximum context" -->,
-  but capability is not the only bound. `compiler/frontends/v3/qwen3.py` still
-  fixes `MAX_CONTEXT_TOKENS = 8192`; the checked-in neutral IR gives every token
-  and context symbol that maximum, sizes all 36 KV resources to it, and
-  qualifies RoPE only through position 8,191. HBM lowering chooses the smaller
-  graph maximum. Therefore the historical artifact is not source-current
-  identity evidence, but its exact capacity failure **would recur** on a
-  source-current build. The ROM capability also still declares **8,192** <!-- figure: 8,192 src="configs/hardware/abi3_capability/rom_qwen3.json#limits.max_context_positions" name="current Qwen ROM maximum context" -->.
-  Before another long run, qualify a shared Qwen session bound of at least
-  8,256 across the source adapter, IR, state, RoPE, workload validation and both
-  capabilities, regenerate both deployments, and prove that an early EOS or
-  the exact 256-token cap—not a capacity trap—is the only accepted terminal
-  outcome.
+  sequence. The implementation-level capacity repair is now complete. The
+  source adapter, neutral IR symbols, all 36 KV resources, RoPE qualification
+  and workload metadata share **8,256** positions; the current HBM capability
+  declares **262,144** positions <!-- figure: 262,144 src="configs/hardware/abi3_capability/hbm_sram_single_chip.json#limits.max_context_positions" name="current Qwen HBM maximum context" --> and the ROM capability declares exactly **8,256** <!-- figure: 8,256 src="configs/hardware/abi3_capability/rom_qwen3.json#limits.max_context_positions" name="current Qwen ROM maximum context" -->. Both fresh temporary deployments admit, and the HBM and ROM short smokes reach a normal token-cap stop rather than a capacity trap. The ROM/HBM planners also allocate the otherwise easy-to-miss padded final block. Thus the historical failure remains correctly diagnosed evidence for its old build, but it is no longer the expected result of current source. OI-34's implementation defect is repaired; W10.1 remains partial because no retained complete current-source EOS-or-256 capture has yet passed the independent acceptance gate.
 
 - **OI-33 — the accelerator's tokens diverge from the oracle on the
   repeated-token stress workload, and this is the first token divergence this
@@ -1273,20 +1287,24 @@ lanes are a precondition for it, not the product. These items are the product.
   an operator. The remaining 43 are the `attention_kv_view` row-space
   compositions, which are a different problem entirely — see OI-26.
 
-- **OI-19 — the storage-class equivalence proof is narrower than the claim
-  resting on it.** `tools/prove_storage_class_equivalence.py` builds the same
-  graph twice *through one backend*, varying only the weight storage class, and
-  showed nothing else differed in its historical artifact: its equivalence-only
-  Qwen build emitted 31 instructions and 210 descriptors on both storage
-  classes. That is not either current shipped product. Current Qwen ROM is
-  75/239 and HBM is 75/218, so the stronger property—that the two product
-  backends lower the graph to the same program—still does not hold. Until it
-  does, a measured ROM-versus-HBM difference is partly a difference between two
-  compilers. The README and `ABI3_PROGRAM_REPORT.md` §2.2 previously implied
-  the broader result and are corrected. Two things remain: regenerate the
-  narrow equivalence proof under the current source/provenance rules, and keep
-  the cross-backend comparison explicit about every program/descriptor
-  difference rather than treating it as pure storage-class evidence.
+- **OI-19 — the storage-and-placement equivalence proof remains narrower than
+  the product-backend claim resting on it.**
+  `tools/prove_storage_class_equivalence.py` builds the same current graph twice
+  *through the ROM backend*, varying immutable weights from ROM-local placement
+  to HBM with the required unplaced sentinel. The regenerated v2 certificates
+  are current and hold: Qwen emits 75 instructions and 239 descriptors on both
+  sides, with 18 governed transitions; DeepSeek emits 1,171 and 3,403, with 318.
+  No descriptor-header or non-permitted payload difference remains, both sides
+  admit, and object sources, entrypoints, required features and instruction
+  bodies are identical. This closes the stale-certificate half of OI-19.
+
+  The stronger property—that the two *product backends* lower the graph to the
+  same program—still does not hold. Current Qwen ROM is 75/239 and shipped HBM
+  is 75/218; the proof's HBM-labelled member is a ROM-backend comparison build,
+  not that shipped HBM deployment. Until product lowering agrees, a measured
+  ROM-versus-HBM difference is partly a difference between two compilers. Keep
+  every cross-backend comparison explicit about program and descriptor
+  differences rather than treating it as pure storage evidence.
 
 - **OI-35 — the DeepSeek compressor's decode position is off by `ratio - 1`, and
   the descriptor has no way to say otherwise.** The released compressor pools
@@ -1385,7 +1403,11 @@ lanes are a precondition for it, not the product. These items are the product.
   merely hashed. Re-derived at 200 decimal digits over the whole extended domain,
   **8,000..8,191 introduces no fifth correction**; and 8,191 is not a position
   these vectors can hold, because the deployed coefficient table is 8,000 rows
-  and 7,999 remains its edge.
+  and 7,999 remains its edge. The present 8,192→8,256 RoPE-source extension
+  intentionally makes that retained vector source binding stale again. The
+  legacy 8,000- and 8,192-row prefixes remain byte-identical and the new
+  8,192..8,255 interval adds no correction, but the RTL vector artifact must be
+  regenerated before it is described as source-current for this head.
 
 - **OI-41 — CLOSED. `ATTENTION.SPARSE` was made data-bearing at `97c5fb6`, and
   this entry asserted otherwise for fourteen hours afterwards.**

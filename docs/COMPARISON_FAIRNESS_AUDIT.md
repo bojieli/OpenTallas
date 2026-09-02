@@ -870,11 +870,17 @@ RTL: the roofline model reads technology constants only."*
     is itself evidence for the claim's own thesis, that the token block and not
     the storage class is the operative variable.
 24. *"`prove_storage_class_equivalence.py` hides that the two backends emit
-    different programs."* Disclosed at length in `README.md:101-107`,
-    `docs/ABI3_PROGRAM_REPORT.md:73-80` and `:225-227`, in OI-19, and in the
-    tool's own docstring. Residual defect: the artifact's 31/210 figures are
-    stale against the executed lane's 75/239 and are quoted as current in four
-    places.
+    different programs."* The boundary is now stated in
+    `docs/ABI3_PROGRAM_REPORT.md` §2.2, checklist OI-19 and the tool's own
+    docstring: the tool lowers twice through the ROM backend, so its
+    HBM-labelled member is not the shipped HBM product program. The stale
+    31-instruction/210-descriptor artifact has been replaced by current schema
+    `opentallas.abi3.storage_and_placement_equivalence.v2`. Qwen now proves
+    75 instructions and 239 descriptors on each side with 18 governed
+    ROM→unplaced-HBM transitions (16 placement changes plus 2 already
+    unplaced); DeepSeek proves 1,171/3,403 with 318 (312 plus 6). Both pairs
+    admit and hold with no residual violation. This resolves stale proof
+    publication, not the disclosed cross-product-backend gap.
 
 ---
 

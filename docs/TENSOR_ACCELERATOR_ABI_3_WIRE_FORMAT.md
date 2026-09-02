@@ -1138,13 +1138,23 @@ moves — 75 instructions, 218 descriptors, 22,715 retired work, the same eight
 tokens, and the ROM lane untouched at `a60d8500…`, because the ROM capability
 does not read this union.
 
-**How far it gets.** The ROM backend's refusal stops firing on its own: with
+**How far it gets.** At this amendment checkpoint the ROM backend's refusal
+stops firing on its own: with
 nothing emitting `causal_compressed_dense`, `IMPLEMENTED_INDEX_FAMILIES` has
 nothing to reject, the DeepSeek-V4-Flash graph builds on both storage classes at
 1,156 instructions and 3,389 descriptors, and the ROM-versus-HBM storage-class
 equivalence proof — skipped since the refusal landed — holds again for DeepSeek:
-318 descriptors differ, all `MEMORY_OBJECT`, all ROM to HBM, nothing beyond
-storage class.
+318 descriptors differ, all `MEMORY_OBJECT`, all ROM to HBM, with nothing
+beyond the fields normalized by that then-current proof.
+
+Those 1,156/3,389 figures are historical amendment-state evidence, not the
+current certificate. The source-current proof is schema
+`opentallas.abi3.storage_and_placement_equivalence.v2`: it emits 1,171
+instructions and 3,403 descriptors on each generated DeepSeek side, and its
+same 318 ROM→HBM objects divide into 312 ROM-local-placement→HBM-unplaced and
+6 already-unplaced→HBM-unplaced transitions, with no residual violation. It
+still compares two builds through the ROM backend rather than the shipped ROM
+and HBM product backends.
 
 What it then stops on is the backend obligation above, and it stops loudly,
 which is the property the amendment is for. Neither backend yet reads

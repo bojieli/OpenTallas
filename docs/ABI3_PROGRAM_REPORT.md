@@ -23,9 +23,9 @@ claim below rests on that.
 
 ### 2.1 The Qwen accelerator produces correct tokens
 
-The source-current pinned chat workload — rendered through the official
-template and tokenized by the pinned tokenizer — is compiled from the neutral
-IR into both current 75-instruction Qwen deployments, admitted by the
+The last retained source-locked pinned chat workload — rendered through the
+official template and tokenized by the pinned tokenizer — was compiled from the
+neutral IR into both 75-instruction Qwen deployments, admitted by the
 independent verifier, and executed entirely by the microsequencer and engines:
 embedding, thirty-six layers, GQA attention, transactional KV state, vocabulary
 projection, and **on-device argmax and token append**. Qwen ROM (`925351…`) and
@@ -36,8 +36,11 @@ HBM (`8e1185…`) each reproduce the same four-token oracle prefix:
 ```
 
 The hardened records bind the exact deployment, checkpoint ranges, source
-files, tokenizer artifacts, workload and oracle. A retained historical capture
-extends the match to 24 tokens:
+files, tokenizer artifacts, workload and oracle. They bind the pre-W10 source
+map: the later 8,256-position and association-manifest tranche changes governed
+files, so these records remain prior-head milestone evidence rather than a
+current-source claim for the new head. A retained historical capture extends
+the match to 24 tokens:
 
 ```
 (1654, 525, 2661, 1447, 12, 3070, 29624, 220, 16, 334, 320, 1499,
@@ -60,39 +63,50 @@ reads went to the *committed* image, which is empty mid-transaction, so
 attention was attending to a context that did not yet contain the current
 tokens.
 
-### 2.2 Storage class is separable from the program
+### 2.2 The governed storage-and-placement transition is separable within one backend
 
 The property the comparison rests on has two halves, and only the first is
 proven. This section reports the first and is explicit about the second.
 
-**Retained proof: within one backend, storage class changed nothing else.** A
-historical equivalence build lowered the same graph twice through the ROM
-backend, varying only where the immutable weights lived:
+**Current-source proof: within one backend, only the governed storage and
+placement fields change.** The v2 equivalence builder lowers each current
+neutral graph twice through the ROM product backend, once with immutable
+weights in ROM and once with them in HBM. ROM-local bank addresses are not
+valid flat-HBM addresses, so every comparison-HBM object must use the ABI's
+unplaced sentinel (`bank_or_tile = NO_NODE`, `base_address = 0`). The proof
+normalizes exactly that coupled transition plus the pre-existing explicit
+`integrity_mode` exception; it permits no other descriptor-header or payload
+change:
 
 | | Qwen3-8B | DeepSeek-V4-Flash |
-|---|---|---|
-| Instruction bytes identical | yes | yes |
-| Descriptors | 210 each | 2,206 each |
-| Differing | 17 | 225 |
+|---|---:|---:|
+| Instructions, each build | 75 | 1,171 | <!-- figure: 75 src="results/abi3/storage_class_equivalence_qwen3.json#instruction_count.rom" name="Qwen v2 equivalence instructions" --> <!-- figure: 1171 src="results/abi3/storage_class_equivalence_deepseek_v4.json#instruction_count.rom" name="DeepSeek v2 equivalence instructions" -->
+| Descriptors, each build | 239 | 3,403 | <!-- figure: 239 src="results/abi3/storage_class_equivalence_qwen3.json#descriptor_count.rom" name="Qwen v2 equivalence descriptors" --> <!-- figure: 3403 src="results/abi3/storage_class_equivalence_deepseek_v4.json#descriptor_count.rom" name="DeepSeek v2 equivalence descriptors" -->
+| Differing descriptors | 18 | 318 | <!-- figure: 18 src="results/abi3/storage_class_equivalence_qwen3.json#differing_descriptor_count" name="Qwen v2 differing descriptors" --> <!-- figure: 318 src="results/abi3/storage_class_equivalence_deepseek_v4.json#differing_descriptor_count" name="DeepSeek v2 differing descriptors" -->
+| ROM-local placement → HBM unplaced | 16 | 312 | <!-- figure: 16 src="results/abi3/storage_class_equivalence_qwen3.json#placement_transitions.rom_placement_to_hbm_unplaced" name="Qwen v2 placed to unplaced transitions" --> <!-- figure: 312 src="results/abi3/storage_class_equivalence_deepseek_v4.json#placement_transitions.rom_placement_to_hbm_unplaced" name="DeepSeek v2 placed to unplaced transitions" -->
+| Already-unplaced ROM → HBM unplaced | 2 | 6 | <!-- figure: 2 src="results/abi3/storage_class_equivalence_qwen3.json#placement_transitions.already_unplaced_to_hbm_unplaced" name="Qwen v2 already-unplaced transitions" --> <!-- figure: 6 src="results/abi3/storage_class_equivalence_deepseek_v4.json#placement_transitions.already_unplaced_to_hbm_unplaced" name="DeepSeek v2 already-unplaced transitions" -->
 | Differing by type | all `MEMORY_OBJECT` | all `MEMORY_OBJECT` |
-| Transitions | all ROM→HBM | all ROM→HBM |
-| **Differing beyond storage class** | **0** | **0** |
+| Storage transition | all ROM→HBM | all ROM→HBM |
+| **Outside the permitted transition** | **0** | **0** |
 
-Not one operand view, numeric profile, schedule or operator differed in that
-artifact. It predates the current source-lock schema and is not a current
-rebuild.
+Both generated deployments admit and each certificate reports `holds: true`.
+Instruction bodies, decoded instructions, object sources, entrypoints and
+required features are identical; the only program-header differences are the
+two derived deployment/descriptor-table digests. Neither run exercised a
+model: these are current static build proofs, not token-execution evidence.
 
 **Not proven: that the two product backends emit the same program.** The table
-above varies storage class inside one equivalence backend. The current shipped
-Qwen programs each contain 75 instructions, but ROM emits 239 descriptors and
-HBM emits 218. The separate equivalence-only build emits 31 instructions and
-210 descriptors on both storage classes; it is not either shipped program.
+above varies storage and placement inside one equivalence backend. The current
+shipped Qwen programs each contain 75 instructions, but ROM emits 239
+descriptors and HBM emits 218. The v2 equivalence pair emits 75 instructions
+and 239 descriptors on both sides; its HBM-labelled member is the ROM backend's
+comparison build, not the shipped HBM-backend program.
 
 Until product lowering agrees, a measured gap between the two targets is partly
 a measurement of the compiler rather than of memory technology, which is
 precisely the failure this property exists to exclude. Tracked as OI-19. The
-equivalence build must also be regenerated under the current source and
-provenance rules before it can support a release-current claim.
+current v2 certificates close the stale-proof problem, but not this
+cross-product-backend comparability gap.
 
 ### 2.3 Loop compression
 
@@ -150,7 +164,8 @@ state open. All eight refused.
 
 ### 2.7 Checkpoint/restart exactness
 
-All four governed restart lanes are source-current and passing: Qwen HBM
+All four governed restart lanes passed against their retained prior-head source
+map: Qwen HBM
 (`8e1185…`), Qwen ROM (`925351…`), DeepSeek ROM (`fa9077…`) and DeepSeek HBM
 (`a72c87…`). Each
 runs a three-token uninterrupted baseline, interrupts another process after two
@@ -174,7 +189,10 @@ negative produces `[13806, 345, 7249]` and diverges at index two, while the
 reported-only state-only control matches. The complete 2:56:39 campaign and
 independent artifact audit pass source, deployment, five-PID, exactness,
 all-32-node counter and 27-guard checks. The four-artifact source-current
-regression also passes. W6.6 is closed, taking the checklist to 83/94.
+regression also passed at that head. W6.6 is closed, taking the checklist to
+83/94. The later W10 compiler and runtime changes intentionally make all four
+records non-current for the new head; refreshing them is an explicit remaining
+task, not an implied extension of their evidence horizon.
 
 This is a 93-token Qwen / 32-token DeepSeek, 2+1 generated-token functional
 restart result. It is not long-context, performance, RTL, physical, silicon or
@@ -200,7 +218,7 @@ authority**, since it moves whenever a sequencer bound or shipped image moves.
 At commit `518260f` it did not include DeepSeek: the RTL trapped after eight
 retirements on `A3_STATE_SLOTS`, a bound nothing then expressed at admission.
 
-The separate source-current ROM read-service campaign reports `status: pass` <!-- figure: "pass" src="results/rtl/rom_service_campaign.json#status" name="ROM service campaign status, program report" -->
+The separate retained ROM read-service campaign reports `status: pass` <!-- figure: "pass" src="results/rtl/rom_service_campaign.json#status" name="ROM service campaign status, program report" -->
 for nominal and degraded executed Qwen streams and plan-derived DeepSeek
 boundary coverage on Icarus and Verilator. It correlates object/shard lookup,
 addressing, masking, repair translation, refusal classes, sense beats, operand
@@ -224,16 +242,19 @@ the deployment campaign records correlating — no others.
 - **Mandatory-context accelerator coverage is incomplete.** The Qwen HBM lane
   did execute the 8,000-token prompt, but diverged from the oracle at generated
   token 137 and failed at its historical context boundary after token 193
-  without EOS. The HBM capability now advertises 262,144 positions, but the
-  source adapter, neutral IR, KV resources and RoPE qualification remain fixed
-  at 8,192, so that failure would recur on a source-current build. The frozen
+  without EOS. That capacity cause is repaired in current source: the adapter,
+  neutral IR, KV resources, RoPE, workload validation and ROM capability now
+  share 8,256 positions, while HBM retains its 262,144-position endpoint. Both
+  products use 512-row blocks; the ROM allocator covers the padded 8,704-row
+  final block, and fresh temporary one-token HBM/ROM diagnostics admit, match
+  the oracle and record byte-identical executed-shape manifests. The frozen
   natural terminal rule is first official EOS or exactly 256 oracle-identical
-  generated tokens; satisfying it requires a program-wide Qwen bound of at
-  least 8,256. The matched historical ROM lane completed its 192-token
-  comparison horizon and matched the oracle throughout. The separate stress
-  lane also remains open: its historical HBM record diverges at token two, no
-  ROM record exists, and current evidence omits the executed shapes A7 makes
-  part of association identity while HBM and ROM use different token blocks.
+  generated tokens, enforced by the producer and an independent two-record
+  validator. The matched historical ROM lane completed its 192-token comparison
+  horizon and matched the oracle throughout, but neither historical record is
+  current-source acceptance. The stress lane likewise remains open: its old HBM
+  record diverges at token two, and no retained source-current HBM/ROM 32-token
+  pair has passed the new same-association gate.
   DeepSeek's 200,000-token rung remains reference-oracle GPU evidence: the
   governed accelerator context gate currently reaches only 35 tokens, below
   both sparse-attention thresholds.
@@ -350,17 +371,19 @@ nothing was failing when they were found:
   pass every liveness check it had, so an unchecked decode reported as `pass` is
   the exact shape of a miss. `pass` is now reserved for a run compared against
   the oracle and matching; a run with no reference is `executed_unverified`.
-- **The implementation identity still does not fully identify the
-  implementation.** A7 says two runs of one identity are bit-identical. Thread
-  count was originally absent; it is now retained after Qwen measurements at
-  1, 4 and 16 threads produced three different results. The W10 preflight found
-  the remaining gap: A7 also makes executed shape part of association identity,
-  but the retained identity does not carry an executed-shape manifest. Current
-  HBM and ROM token-block schedules differ, so equal library/thread dictionaries
-  do not establish equal blocked association.
-- **The storage-class proof was narrower than the sentence built on it.** It
-  varies storage class within one backend; the comparison needs the two backends
-  to emit the same program, and they do not (§2.2).
+- **The implementation identity gap is repaired in the producer, not yet in a
+  retained long pair.** A7 says two runs of one identity are bit-identical.
+  Thread count was added after Qwen measurements at 1, 4 and 16 threads produced
+  three different results. The W10 preflight then found and repaired the
+  remaining gap: each run now publishes a canonical counted manifest of the
+  implementation plus every executed activation/weight/output shape, and both
+  product schedules use 512-row blocks. The independent gate requires two
+  nonempty manifests to be byte-identical. Short HBM/ROM diagnostics satisfy
+  it; the mandatory 8K natural and stress captures have not yet run under it.
+- **The storage-and-placement proof is narrower than the sentence once built on
+  it.** It varies governed storage and placement within one backend; the
+  comparison needs the two product backends to emit the same program, and they
+  do not (§2.2).
 
 None of the three would have produced a failing test. All three would have
 produced a confident number in a report.
