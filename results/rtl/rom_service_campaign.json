@@ -8,7 +8,7 @@
       "marker_present": true,
       "name": "deepseek_wafer.iverilog",
       "required_marker": "ROM-SERVICE-OK requests=10833 beats=1219199 bytes=77408968 activations=38219 masked=135 faults=13 marker=b6b576c71d05d5f5",
-      "run_command": "/usr/bin/vvp /tmp/opentallas-rom-rtl-mi993uga/rom_service.vvp",
+      "run_command": "/usr/bin/vvp /tmp/opentallas-rom-rtl-s7vk8a3v/rom_service.vvp",
       "run_log": "ROM-SERVICE-OK requests=10833 beats=1219199 bytes=77408968 activations=38219 masked=135 faults=13 marker=b6b576c71d05d5f5\nchecks=108357\n",
       "run_returncode": 0,
       "simulator": "iverilog",
@@ -21,7 +21,7 @@
       "marker_present": true,
       "name": "deepseek_wafer.verilator",
       "required_marker": "ROM-SERVICE-OK requests=10833 beats=1219199 bytes=77408968 activations=38219 masked=135 faults=13 marker=b6b576c71d05d5f5",
-      "run_command": "/tmp/opentallas-rom-rtl-mi993uga/obj_rom/Vrom_service_top",
+      "run_command": "/tmp/opentallas-rom-rtl-s7vk8a3v/obj_rom/Vrom_service_top",
       "run_log": "ROM-SERVICE-OK requests=10833 beats=1219199 bytes=77408968 activations=38219 masked=135 faults=13 marker=b6b576c71d05d5f5\nchecks=260019\n",
       "run_returncode": 0,
       "simulator": "verilator",
@@ -34,7 +34,7 @@
       "marker_present": true,
       "name": "qwen_chip.iverilog",
       "required_marker": "ROM-SERVICE-OK requests=349 beats=2499996 bytes=159997856 activations=39213 masked=0 faults=117 marker=39817fd2c3017914",
-      "run_command": "/usr/bin/vvp /tmp/opentallas-rom-rtl-mi993uga/rom_service.vvp",
+      "run_command": "/usr/bin/vvp /tmp/opentallas-rom-rtl-s7vk8a3v/rom_service.vvp",
       "run_log": "ROM-SERVICE-OK requests=349 beats=2499996 bytes=159997856 activations=39213 masked=0 faults=117 marker=39817fd2c3017914\nchecks=3517\n",
       "run_returncode": 0,
       "simulator": "iverilog",
@@ -47,7 +47,7 @@
       "marker_present": true,
       "name": "qwen_chip.verilator",
       "required_marker": "ROM-SERVICE-OK requests=349 beats=2499996 bytes=159997856 activations=39213 masked=0 faults=117 marker=39817fd2c3017914",
-      "run_command": "/tmp/opentallas-rom-rtl-mi993uga/obj_rom/Vrom_service_top",
+      "run_command": "/tmp/opentallas-rom-rtl-s7vk8a3v/obj_rom/Vrom_service_top",
       "run_log": "ROM-SERVICE-OK requests=349 beats=2499996 bytes=159997856 activations=39213 masked=0 faults=117 marker=39817fd2c3017914\nchecks=8403\n",
       "run_returncode": 0,
       "simulator": "verilator",
@@ -60,7 +60,7 @@
       "marker_present": true,
       "name": "qwen_chip_degraded.iverilog",
       "required_marker": "ROM-SERVICE-OK requests=363 beats=536110 bytes=34309592 activations=8475 masked=7 faults=168 marker=cded9cf9f877aaed",
-      "run_command": "/usr/bin/vvp /tmp/opentallas-rom-rtl-mi993uga/rom_service.vvp",
+      "run_command": "/usr/bin/vvp /tmp/opentallas-rom-rtl-s7vk8a3v/rom_service.vvp",
       "run_log": "ROM-SERVICE-OK requests=363 beats=536110 bytes=34309592 activations=8475 masked=7 faults=168 marker=cded9cf9f877aaed\nchecks=3657\n",
       "run_returncode": 0,
       "simulator": "iverilog",
@@ -73,7 +73,7 @@
       "marker_present": true,
       "name": "qwen_chip_degraded.verilator",
       "required_marker": "ROM-SERVICE-OK requests=363 beats=536110 bytes=34309592 activations=8475 masked=7 faults=168 marker=cded9cf9f877aaed",
-      "run_command": "/tmp/opentallas-rom-rtl-mi993uga/obj_rom/Vrom_service_top",
+      "run_command": "/tmp/opentallas-rom-rtl-s7vk8a3v/obj_rom/Vrom_service_top",
       "run_log": "ROM-SERVICE-OK requests=363 beats=536110 bytes=34309592 activations=8475 masked=7 faults=168 marker=cded9cf9f877aaed\nchecks=8739\n",
       "run_returncode": 0,
       "simulator": "verilator",
@@ -121,14 +121,14 @@
     },
     {
       "command": "<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator --cc --exe --build -Wall -Wno-DECLFILENAME --top-module rom_service_top --Mdir obj_rom <ROOT>/rtl/rom/ot_rom_pkg.sv <ROOT>/rtl/rom/ot_rom_read_service.sv <ROOT>/rtl/test/rom_service_top.sv <ROOT>/rtl/test/rom_service_harness.cpp -CFLAGS -std=c++17",
-      "log": "make: Entering directory '<BUILD>/obj_rom'\ng++  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -Os  -c -o rom_service_harness.o <ROOT>/rtl/test/rom_service_harness.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -c -o verilated.o <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -c -o verilated_threads.o <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp\npython3 <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/bin/verilator_includer -DVL_INCLUDE_OPT=include Vrom_service_top.cpp Vrom_service_top___024root__0.cpp Vrom_service_top__ConstPool__0__Slow.cpp Vrom_service_top___024root__Slow.cpp Vrom_service_top___024root__0__Slow.cpp Vrom_service_top__Syms__Slow.cpp > Vrom_service_top__ALL.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -c -o Vrom_service_top__ALL.o Vrom_service_top__ALL.cpp\ng++    rom_service_harness.o verilated.o verilated_threads.o Vrom_service_top__ALL.a    -pthread -lpthread -latomic   -o Vrom_service_top\nrm Vrom_service_top__ALL.verilator_deplist.tmp\nmake: Leaving directory '<BUILD>/obj_rom'\n- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.155 MB sources in 4 modules, into 0.554 MB in 6 C++ files needing 0.002 MB\n- Verilator: Walltime 4.134 s (elab=0.005, cvt=0.031, bld=4.086); cpu 0.048 s on 1 threads; allocated 41.184 MB\n",
+      "log": "make[1]: Entering directory '<BUILD>/obj_rom'\ng++  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -Os  -c -o rom_service_harness.o <ROOT>/rtl/test/rom_service_harness.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -c -o verilated.o <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -c -o verilated_threads.o <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp\npython3 <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/bin/verilator_includer -DVL_INCLUDE_OPT=include Vrom_service_top.cpp Vrom_service_top___024root__0.cpp Vrom_service_top__ConstPool__0__Slow.cpp Vrom_service_top___024root__Slow.cpp Vrom_service_top___024root__0__Slow.cpp Vrom_service_top__Syms__Slow.cpp > Vrom_service_top__ALL.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -c -o Vrom_service_top__ALL.o Vrom_service_top__ALL.cpp\ng++    rom_service_harness.o verilated.o verilated_threads.o Vrom_service_top__ALL.a    -pthread -lpthread -latomic   -o Vrom_service_top\nrm Vrom_service_top__ALL.verilator_deplist.tmp\nmake[1]: Leaving directory '<BUILD>/obj_rom'\n- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.155 MB sources in 4 modules, into 0.554 MB in 6 C++ files needing 0.002 MB\n- Verilator: Walltime 4.156 s (elab=0.004, cvt=0.029, bld=4.113); cpu 0.041 s on 1 threads; allocated 41.188 MB\n",
       "name": "verilator.compile",
       "returncode": 0
     },
     {
       "command": "<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator --lint-only -Wall -Wno-fatal -Wno-DECLFILENAME -Wno-UNUSEDPARAM --top-module ot_rom_bank_array <ROOT>/rtl/rom/ot_rom_pkg.sv <ROOT>/rtl/rom/ot_rom_bank_array.sv",
       "evidence_present": true,
-      "log": "%Warning-UNDRIVEN: <ROOT>/rtl/rom/ot_rom_bank_array.sv:55:42: Signal is not driven: 'rom_cell'\n                                                                             : ... note: In instance 'ot_rom_bank_array'\n   55 |     reg [ot_rom_pkg::ROM_SENSE_BITS-1:0] rom_cell [0:CELLS-1];\n      |                                          ^~~~~~~~\n                   ... For warning description see https://verilator.org/warn/UNDRIVEN?v=5.050\n                   ... Use \"/* verilator lint_off UNDRIVEN */\" and lint_on around source to disable this message.\n- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.062 MB sources in 3 modules, into 0.027 MB in 3 C++ files needing 0.000 MB\n- Verilator: Walltime 0.006 s (elab=0.001, cvt=0.003, bld=0.000); cpu 0.005 s on 1 threads; allocated 33.148 MB\n",
+      "log": "%Warning-UNDRIVEN: <ROOT>/rtl/rom/ot_rom_bank_array.sv:55:42: Signal is not driven: 'rom_cell'\n                                                                             : ... note: In instance 'ot_rom_bank_array'\n   55 |     reg [ot_rom_pkg::ROM_SENSE_BITS-1:0] rom_cell [0:CELLS-1];\n      |                                          ^~~~~~~~\n                   ... For warning description see https://verilator.org/warn/UNDRIVEN?v=5.050\n                   ... Use \"/* verilator lint_off UNDRIVEN */\" and lint_on around source to disable this message.\n- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.062 MB sources in 3 modules, into 0.027 MB in 3 C++ files needing 0.000 MB\n- Verilator: Walltime 0.005 s (elab=0.001, cvt=0.003, bld=0.000); cpu 0.005 s on 1 threads; allocated 33.148 MB\n",
       "name": "verilator.array_lint",
       "other_warnings": [],
       "required_evidence": "Signal is not driven: 'rom_cell'",
@@ -410,7 +410,7 @@
       "qwen_chip": {
         "deployment": {
           "deployment_id": 1,
-          "deployment_sha256": "925351080448450ee4b14a0e3260001dbac9aeafc582fd3202d53a0a379b9c91",
+          "deployment_sha256": "274e4bc4664817be07ed97479c6bd77555e494d294a0b6f692ff4ac6195bbaed",
           "model_id": "qwen3-8b",
           "plan_id": "7d323d48fe3e68545aa724ea7fa024b779f9e5359e8b631f335daf7926844d2b",
           "target_id": "qwen3-8b-rom-single-chip"
@@ -428,16 +428,16 @@
           "loaded_inputs": {
             "capability": {
               "path": "configs/hardware/abi3_capability/rom_qwen3.json",
-              "sha256": "38234d6cccbd9c017efa286b67f66b1c21572e206ba71aca874e4f912eb6adbf"
+              "sha256": "f109651defbd04655cd5603c4f118a8c428651f470baada1f2d2b70912eb06d5"
             },
             "workload": {
               "path": "build/workloads/qwen3-8b/TA-QW-CHAT-1.json",
-              "sha256": "7c9ed26eee61816f10a66ae2a73a2172def627b4ba7cebd08832c607653c5f0f"
+              "sha256": "32d418aa24d00d4bd5c009e299902ad868d19d6dc482d540fa128f723c6bbaf1"
             }
           },
           "prompt_token_count": 16,
           "requests_derived": 525,
-          "rom_bytes_read_counter": 15145337668,
+          "rom_bytes_read_counter": 15145403204,
           "rom_read_events": 510,
           "runtime_source_sha256": {
             "runtime/abi3/builder.py": "3ec59acade3a0fa85e3c63f7c8ca2a95eece98420e0c5cdb25cb6e5b6039fe7c",
@@ -460,7 +460,7 @@
             "runtime/reference/sqrt_softplus.py": "bbb91122078c983abd6ba8e233e1fc9573ad6ddb12c0f47e19a6fd9af2957562",
             "runtime/reference/swiglu.py": "8a2b6821f42a438da1b34ab78e76d317d00fc2fd2bbb16deed315d77e09246d4",
             "runtime/reference/transcendental.py": "bb26b68fbebc2ef48bdc44deb58163b73f38fd33bac8f4d9662e6d10c2822394",
-            "runtime/sim/backend.py": "e91b9dc70de0bbf310e5d542a84b05d7ea6a1b828e73a9dcfe5b20b31a48b008",
+            "runtime/sim/backend.py": "0841204d2d42212285707c3137b143f785d41b11c46a840508ad15181c147e26",
             "runtime/sim/counters.py": "dab7458cb196b94b710566e8478d0c2a4b5511a54903d1c0c0edaa1afd9f3c0a",
             "runtime/sim/device.py": "89ff77990fee791a5cb7b46e28a2efab36c66e253c52e9cd0929673607b9178c",
             "runtime/sim/engine.py": "31f826fb02f5c483cd04d7c3118eabe0cfd72f9b51584a9322d44d787acdbccb",
@@ -481,7 +481,7 @@
             "runtime/tensor_accelerator/bf16.py": "75543479efffeb7a6806dd44178c8af1844276f87e3d01366b21e1cbccf68a34",
             "runtime/tensor_accelerator/elementwise.py": "64877e0af6d47a695dd650a1d3912d2e1ed508d425b90babb89c4ce931fa4e26",
             "runtime/tensor_accelerator/rmsnorm.py": "a4cd12f16bfc9419681cff8b4065a14f4af3778fae3866b79f7db93a46351e29",
-            "runtime/tensor_accelerator/rope.py": "bc15648eed4d94136561db5c602b7b38fbd1fa71feba5ea2be9c740f9808cf56",
+            "runtime/tensor_accelerator/rope.py": "86dabd538f77a9e7ff96a21f44bb14e1c3ef8176059c3e6d7cf05270131d265d",
             "runtime/tensor_accelerator/sparse_attention.py": "5972c0ffe5714e774a1702f311352e22ff1a7d0d3feb0f614669ee08eb8c0562"
           },
           "stop_reason": "max_new_tokens"
@@ -585,7 +585,7 @@
               "declared_base_address": 0,
               "generator": "arange_u32_v1",
               "object_id": 27,
-              "size_bytes": 65536,
+              "size_bytes": 67840,
               "source_kind": "generated"
             },
             {
@@ -593,7 +593,7 @@
               "declared_base_address": 0,
               "generator": "rope_coefficients_v1",
               "object_id": 29,
-              "size_bytes": 8388608,
+              "size_bytes": 8454144,
               "source_kind": "generated"
             }
           ]
@@ -668,7 +668,7 @@
       "qwen_chip_degraded": {
         "deployment": {
           "deployment_id": 1,
-          "deployment_sha256": "811aa10723368a2b0b2dffc1fad49e107737bf16f789adfdb2153d898b9e4612",
+          "deployment_sha256": "ee47f849ec5d8872ac4f9b08f0d02eec8fbda0420e531150890553d7aa8058cb",
           "model_id": "qwen3-8b",
           "plan_id": "2397761924f0d1f99739d61a7ebfa9dfb78a46d21883feada4739fed83e10135",
           "target_id": "qwen3-8b-rom-single-chip"
@@ -686,16 +686,16 @@
           "loaded_inputs": {
             "capability": {
               "path": "configs/hardware/abi3_capability/rom_qwen3.json",
-              "sha256": "38234d6cccbd9c017efa286b67f66b1c21572e206ba71aca874e4f912eb6adbf"
+              "sha256": "f109651defbd04655cd5603c4f118a8c428651f470baada1f2d2b70912eb06d5"
             },
             "workload": {
               "path": "build/workloads/qwen3-8b/TA-QW-CHAT-1.json",
-              "sha256": "7c9ed26eee61816f10a66ae2a73a2172def627b4ba7cebd08832c607653c5f0f"
+              "sha256": "32d418aa24d00d4bd5c009e299902ad868d19d6dc482d540fa128f723c6bbaf1"
             }
           },
           "prompt_token_count": 16,
           "requests_derived": 525,
-          "rom_bytes_read_counter": 15145337668,
+          "rom_bytes_read_counter": 15145403204,
           "rom_read_events": 510,
           "runtime_source_sha256": {
             "runtime/abi3/builder.py": "3ec59acade3a0fa85e3c63f7c8ca2a95eece98420e0c5cdb25cb6e5b6039fe7c",
@@ -718,7 +718,7 @@
             "runtime/reference/sqrt_softplus.py": "bbb91122078c983abd6ba8e233e1fc9573ad6ddb12c0f47e19a6fd9af2957562",
             "runtime/reference/swiglu.py": "8a2b6821f42a438da1b34ab78e76d317d00fc2fd2bbb16deed315d77e09246d4",
             "runtime/reference/transcendental.py": "bb26b68fbebc2ef48bdc44deb58163b73f38fd33bac8f4d9662e6d10c2822394",
-            "runtime/sim/backend.py": "e91b9dc70de0bbf310e5d542a84b05d7ea6a1b828e73a9dcfe5b20b31a48b008",
+            "runtime/sim/backend.py": "0841204d2d42212285707c3137b143f785d41b11c46a840508ad15181c147e26",
             "runtime/sim/counters.py": "dab7458cb196b94b710566e8478d0c2a4b5511a54903d1c0c0edaa1afd9f3c0a",
             "runtime/sim/device.py": "89ff77990fee791a5cb7b46e28a2efab36c66e253c52e9cd0929673607b9178c",
             "runtime/sim/engine.py": "31f826fb02f5c483cd04d7c3118eabe0cfd72f9b51584a9322d44d787acdbccb",
@@ -739,7 +739,7 @@
             "runtime/tensor_accelerator/bf16.py": "75543479efffeb7a6806dd44178c8af1844276f87e3d01366b21e1cbccf68a34",
             "runtime/tensor_accelerator/elementwise.py": "64877e0af6d47a695dd650a1d3912d2e1ed508d425b90babb89c4ce931fa4e26",
             "runtime/tensor_accelerator/rmsnorm.py": "a4cd12f16bfc9419681cff8b4065a14f4af3778fae3866b79f7db93a46351e29",
-            "runtime/tensor_accelerator/rope.py": "bc15648eed4d94136561db5c602b7b38fbd1fa71feba5ea2be9c740f9808cf56",
+            "runtime/tensor_accelerator/rope.py": "86dabd538f77a9e7ff96a21f44bb14e1c3ef8176059c3e6d7cf05270131d265d",
             "runtime/tensor_accelerator/sparse_attention.py": "5972c0ffe5714e774a1702f311352e22ff1a7d0d3feb0f614669ee08eb8c0562"
           },
           "stop_reason": "max_new_tokens"
@@ -889,7 +889,7 @@
               "declared_base_address": 0,
               "generator": "arange_u32_v1",
               "object_id": 27,
-              "size_bytes": 65536,
+              "size_bytes": 67840,
               "source_kind": "generated"
             },
             {
@@ -897,7 +897,7 @@
               "declared_base_address": 0,
               "generator": "rope_coefficients_v1",
               "object_id": 29,
-              "size_bytes": 8388608,
+              "size_bytes": 8454144,
               "source_kind": "generated"
             }
           ]
@@ -1013,13 +1013,13 @@
     "verilator_cpp_executable"
   ],
   "source_sha256": {
-    "build/workloads/qwen3-8b/TA-QW-CHAT-1.json": "7c9ed26eee61816f10a66ae2a73a2172def627b4ba7cebd08832c607653c5f0f",
+    "build/workloads/qwen3-8b/TA-QW-CHAT-1.json": "32d418aa24d00d4bd5c009e299902ad868d19d6dc482d540fa128f723c6bbaf1",
     "compiler/backends/rom/common/image.py": "5923c03d6f598dc7dae2706dfbb1e4eca837692d42d5edf27a2af1b5f379e8c5",
-    "compiler/backends/rom/common/program.py": "7928bbd4b08da9437e19c5fd97a4137102c2f1f5ab21b0d412a64f95546bbb5a",
+    "compiler/backends/rom/common/program.py": "ff4f8ffd1349ffa23f6bea49f33732eb1a3bea1432a15163418dae119aa33222",
     "compiler/backends/rom/deepseek_v4.py": "e58a487de562b9a62a0a59edd594389f0a8e4f90a60989206f9c84a28490ae3c",
-    "compiler/backends/rom/qwen3.py": "3b82155808bd962d81ba2a9b0a089222caaaac1701cc48588c5412e017d51263",
+    "compiler/backends/rom/qwen3.py": "30cd5c4d747a06492f6774324490da69dc405004eacac33cd257f9e6c688ad79",
     "compiler/ir/v3/kernel_ir.py": "2ebeb29caa6e1c3683b0877df2960d7f661dd35bb6c1379c682d7781f62fb795",
-    "configs/hardware/abi3_capability/rom_qwen3.json": "38234d6cccbd9c017efa286b67f66b1c21572e206ba71aca874e4f912eb6adbf",
+    "configs/hardware/abi3_capability/rom_qwen3.json": "f109651defbd04655cd5603c4f118a8c428651f470baada1f2d2b70912eb06d5",
     "rtl/rom/ot_rom_bank_array.sv": "69c16973bcfb96a7fefee454773f2bbe37a5815a0c1f21c07cb2f23b9c2e1921",
     "rtl/rom/ot_rom_pkg.sv": "d42315047ec5cdde55b7a81cf50024b97eb59a53f637fa889593ecbf0e8cea3b",
     "rtl/rom/ot_rom_read_service.sv": "b7f0dedf7e731ff65af2690a33c30dba7e750c981679f8f8432e66a430befb51",
@@ -1043,8 +1043,8 @@
     "testdata/compiler/rom_service/qwen_chip/rom_meta.hex": "cd9d6d591b74046db5f73fa0cef8e869cecc08ae326da254ca037f6e556ab56f",
     "testdata/compiler/rom_service/qwen_chip/rom_object.hex": "c56b8e05ab6a26f1a755a975485e8f79a77875e4a5979eb5d2577b56ff223f13",
     "testdata/compiler/rom_service/qwen_chip/rom_repair.hex": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-    "testdata/compiler/rom_service/qwen_chip/rom_request.hex": "730c5c22be8476c616cd7a5a6ac22e02e527074b116339bdcd2b9664b360861d",
-    "testdata/compiler/rom_service/qwen_chip/rom_service_vectors.json": "954e04530f58239f9009553731da74a6a24333e90035871ca74429378f92d696",
+    "testdata/compiler/rom_service/qwen_chip/rom_request.hex": "9203e0241a4f99be1f5a89520abc02227de6c9e798af52b77d6995d206bce1cd",
+    "testdata/compiler/rom_service/qwen_chip/rom_service_vectors.json": "dd787f2bc1e3dee9cf247f75846cd9a222538cd240bf0bbc6c376d559e891bb9",
     "testdata/compiler/rom_service/qwen_chip/rom_shard.hex": "e3b3f322071983ad40ee5141b35c11273d6e5c6f9c96bfe3215aeb86ae827290",
     "testdata/compiler/rom_service/qwen_chip/rom_window.hex": "e584ba0f7aedd0c4580fad11f2d63f8210b7b87d5bb866ac4b742f1f651b82a6",
     "testdata/compiler/rom_service/qwen_chip_degraded/rom_expect.hex": "66c83ef8131e01f43d9aa3bf3e49cbcc2613c6b0f1e9c2649e17a86bf8ec9c64",
@@ -1052,8 +1052,8 @@
     "testdata/compiler/rom_service/qwen_chip_degraded/rom_meta.hex": "783683c5a6f1fbce60596093a5ce6c1a884e6a5245d45f2de48b12991eec480c",
     "testdata/compiler/rom_service/qwen_chip_degraded/rom_object.hex": "c56b8e05ab6a26f1a755a975485e8f79a77875e4a5979eb5d2577b56ff223f13",
     "testdata/compiler/rom_service/qwen_chip_degraded/rom_repair.hex": "1f3f24c7ff6bcf01a175ccf64902175e73223f14789aa7ae729abd2d2ff07f82",
-    "testdata/compiler/rom_service/qwen_chip_degraded/rom_request.hex": "b431d908eefaee4e6cd6b5cd1409d7005af8a44c71d4899412e3de355facab6a",
-    "testdata/compiler/rom_service/qwen_chip_degraded/rom_service_vectors.json": "216cc4b9c46315361bb625be3d1be22d0bde36a9ee68b61ac592fe50e51b180b",
+    "testdata/compiler/rom_service/qwen_chip_degraded/rom_request.hex": "790144e7d184ba9211aec530e0a24c5899fb6928bebcdb0f63fad29af2b516f4",
+    "testdata/compiler/rom_service/qwen_chip_degraded/rom_service_vectors.json": "9beb194b53c40a83fbc9b797efc47cc0f91b9f6a25edb2bf6b0c3c1e920d6b89",
     "testdata/compiler/rom_service/qwen_chip_degraded/rom_shard.hex": "e3b3f322071983ad40ee5141b35c11273d6e5c6f9c96bfe3215aeb86ae827290",
     "testdata/compiler/rom_service/qwen_chip_degraded/rom_window.hex": "9ff0ecdc1157ce4edb19f80f36a4ae0bdd8bb891a9b94c2037155d2e32e5a88f",
     "tools/build_rom_service_vectors.py": "e0c8ae86951544564433954cf1225ba97284a4e5e10cad82410df96275d20d8b",

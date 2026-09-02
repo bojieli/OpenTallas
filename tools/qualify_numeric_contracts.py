@@ -47,6 +47,8 @@ by the recorded implementation identity, which was shared with other tenants.
 from __future__ import annotations
 
 import argparse
+import hashlib
+import json
 import sys
 import time
 from pathlib import Path
@@ -76,6 +78,8 @@ from runtime.tensor_accelerator.rmsnorm import (  # noqa: E402
 DEFAULT_OUTPUT = REPO / "results/abi3/numeric_contract_qualification.json"
 
 SCHEMA = "opentallas.abi3.numeric_contract_qualification.v1"
+ASSOCIATION_SCHEMA = "opentallas.abi3.executed_association.v1"
+ASSOCIATION_POLICY = "implementation_and_executed_shape_pinned"
 
 #: Qwen3-8B, from ``configs/models/qwen3-8b.json`` and the frozen adapter:
 #: hidden 4096, intermediate 12288, 32 query heads and 8 key/value heads of
@@ -235,6 +239,162 @@ def _difference(left: np.ndarray, right: np.ndarray, width: int) -> dict[str, An
 DEFAULT_COLUMN_TILE = 8192
 
 
+def _association_manifest_digest(manifest: dict[str, Any]) -> str:
+    """Recompute the backend manifest digest independently of its producer."""
+
+    body = {key: value for key, value in manifest.items() if key != "manifest_sha256"}
+    encoded = json.dumps(
+        body,
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=True,
+        allow_nan=False,
+    ).encode("ascii")
+    return hashlib.sha256(encoded).hexdigest()
+
+
+def _positive_integer(value: object) -> bool:
+    """Whether ``value`` is a positive JSON integer rather than a boolean."""
+
+    return isinstance(value, int) and not isinstance(value, bool) and value > 0
+
+
+def _stable_implementation_identity(backend) -> dict[str, Any]:
+    """Return the implementation fields that are allowed to bind arithmetic."""
+
+    identity = dict(backend.implementation_identity())
+    # Free memory is an observation of another tenant, not an arithmetic
+    # implementation choice.  Backend.executed_association_manifest applies
+    # the same exclusion before hashing its identity.
+    identity.pop("device_memory_bytes", None)
+    return identity
+
+
+def _validate_association_manifest(
+    manifest: object, *, expected_identity: dict[str, Any]
+) -> dict[str, Any]:
+    """Fail closed on a malformed or internally inconsistent shape manifest."""
+
+    if not isinstance(manifest, dict):
+        raise BackendError("numeric qualification association manifest is not an object")
+    problems: list[str] = []
+    if manifest.get("schema") != ASSOCIATION_SCHEMA:
+        problems.append("unknown schema")
+    if manifest.get("association_policy") != ASSOCIATION_POLICY:
+        problems.append("association is not shape-pinned")
+
+    entries = manifest.get("entries")
+    if not isinstance(entries, list) or not entries:
+        problems.append("executed no blocked contraction")
+        entries = []
+
+    call_total = 0
+    canonical_keys: list[tuple[str, tuple[int, ...], tuple[int, ...], tuple[int, ...]]] = []
+    all_entries_valid = True
+    for index, entry in enumerate(entries):
+        if not isinstance(entry, dict):
+            problems.append(f"entry {index} is not an object")
+            all_entries_valid = False
+            continue
+        contract = entry.get("numeric_contract")
+        activation = entry.get("activation_shape")
+        weight = entry.get("weight_shape")
+        output = entry.get("output_shape")
+        if contract != CONTRACT_BLOCKED:
+            problems.append(f"entry {index} uses the wrong contract")
+            all_entries_valid = False
+        shapes_valid = all(
+            isinstance(shape, list)
+            and len(shape) == 2
+            and all(_positive_integer(dimension) for dimension in shape)
+            for shape in (activation, weight, output)
+        )
+        if not shapes_valid:
+            problems.append(f"entry {index} has invalid shapes")
+            all_entries_valid = False
+        elif activation[1] != weight[1] or output != [activation[0], weight[0]]:
+            problems.append(f"entry {index} shapes do not contract")
+            all_entries_valid = False
+        call_count = entry.get("call_count")
+        if not _positive_integer(call_count):
+            problems.append(f"entry {index} has invalid call_count")
+            all_entries_valid = False
+        else:
+            call_total += int(call_count)
+        if contract == CONTRACT_BLOCKED and shapes_valid:
+            canonical_keys.append(
+                (
+                    contract,
+                    tuple(int(value) for value in activation),
+                    tuple(int(value) for value in weight),
+                    tuple(int(value) for value in output),
+                )
+            )
+
+    if all_entries_valid and (
+        len(canonical_keys) != len(set(canonical_keys))
+        or canonical_keys != sorted(canonical_keys)
+    ):
+        problems.append("entries are not unique canonical order")
+    distinct_count = manifest.get("distinct_association_count")
+    if not _positive_integer(distinct_count) or distinct_count != len(entries):
+        problems.append("distinct association count is inconsistent")
+    blocked_count = manifest.get("blocked_call_count")
+    if (
+        not _positive_integer(blocked_count)
+        or blocked_count != call_total
+        or call_total <= 0
+    ):
+        problems.append("blocked call count is inconsistent or empty")
+    if not expected_identity or "unavailable" in expected_identity:
+        problems.append("implementation identity is unavailable")
+    if manifest.get("implementation_identity") != expected_identity:
+        problems.append("implementation identity differs from the selected backend")
+    try:
+        digest_valid = manifest.get("manifest_sha256") == _association_manifest_digest(
+            manifest
+        )
+    except (TypeError, ValueError):
+        digest_valid = False
+    if not digest_valid:
+        problems.append("invalid manifest digest")
+    if problems:
+        raise BackendError(
+            "numeric qualification association manifest failed validation: "
+            + "; ".join(problems)
+        )
+    return manifest
+
+
+def _begin_association_phase(backend) -> None:
+    """Discard shapes from setup or a preceding qualification phase."""
+
+    backend.reset_executed_associations()
+
+
+def _association_provenance(backend, phase: str) -> dict[str, Any]:
+    """Return one validated association manifest for a named report phase.
+
+    A high-level case shape is not the shape seen by a blocked library call:
+    vocabulary columns and prefill rows are tiled.  The backend observes those
+    actual calls.  Resetting before each phase and retaining its counted
+    manifest prevents setup, warmup, or a previous case from being mistaken
+    for the association that produced the phase's measurements.
+    """
+
+    if not phase:
+        raise BackendError("numeric qualification association phase is empty")
+    manifest = _validate_association_manifest(
+        backend.executed_association_manifest(),
+        expected_identity=_stable_implementation_identity(backend),
+    )
+    return {
+        "phase": phase,
+        "manifest": manifest,
+        "manifest_sha256": manifest["manifest_sha256"],
+    }
+
+
 def _run(
     backend,
     activations: np.ndarray,
@@ -287,6 +447,8 @@ def _case_report(
     activations, weights = _operands(rows, depth, cols, seed)
     macs = rows * depth * cols
 
+    phase = f"case:{case['model']}:{case['operation']}"
+    _begin_association_phase(backend)
     sequential_acc, sequential_codes, sequential_sat, sequential_s = _run(
         backend, activations, weights, CONTRACT_SEQUENTIAL, column_tile=column_tile
     )
@@ -318,6 +480,7 @@ def _case_report(
             "sequential": round(_rate(macs, sequential_s), 4),
             "blocked": round(_rate(macs, blocked_s), 4),
         },
+        "executed_association": _association_provenance(backend, phase),
     }
     if argmax:
         body["argmax"] = _argmax_report(sequential_acc, blocked_acc, sequential_codes, blocked_codes)
@@ -370,7 +533,7 @@ def _argmax_report(
     return out
 
 
-def _rmsnorm_report(rows: int) -> dict[str, Any]:
+def _rmsnorm_report(rows: int, backend) -> dict[str, Any]:
     """Measure the gap between the two RMSNorm contracts (amendment A8).
 
     They are the same computation apart from one BF16 materialisation: the Qwen
@@ -382,25 +545,33 @@ def _rmsnorm_report(rows: int) -> dict[str, Any]:
     one.  The fraction is measured here, not quoted.
     """
     cases = []
-    for label, width in (
-        ("qwen3-8b hidden", 4096),
-        ("qwen3-8b head_dim", 128),
-        ("deepseek-v4 hidden", 4096),
-        ("deepseek-v4 head_dim", 128),
-    ):
-        values = _bf16_normal((rows, width), 1.0, seed=5100 + width)
-        gains = _bf16_normal((1, width), 0.5, seed=5200 + width)[0]
-        qwen = qwen_rms_norm_bf16(values, gains, epsilon_code=EPSILON_CODE).values
-        deepseek, _ = deepseek_rms_norm_binary32(
-            values, gains, epsilon_bits=EPSILON_CODE
-        )
-        cases.append(
-            {
-                "label": label,
-                "shape": {"rows": rows, "width": width},
-                "difference": _difference(qwen, deepseek, 16),
-            }
-        )
+    # deepseek_rms_norm_binary32 resolves the selected backend internally.  A
+    # scope is therefore required: merely constructing ``backend`` in main()
+    # would otherwise leave this measurement on the process default.
+    with backends.backend_scope(backend.name) as scoped_backend:
+        if scoped_backend is not backend:
+            raise BackendError("RMSNorm backend scope resolved another instance")
+        for label, width in (
+            ("qwen3-8b hidden", 4096),
+            ("qwen3-8b head_dim", 128),
+            ("deepseek-v4 hidden", 4096),
+            ("deepseek-v4 head_dim", 128),
+        ):
+            values = _bf16_normal((rows, width), 1.0, seed=5100 + width)
+            gains = _bf16_normal((1, width), 0.5, seed=5200 + width)[0]
+            qwen = qwen_rms_norm_bf16(
+                values, gains, epsilon_code=EPSILON_CODE
+            ).values
+            deepseek, _ = deepseek_rms_norm_binary32(
+                values, gains, epsilon_bits=EPSILON_CODE
+            )
+            cases.append(
+                {
+                    "label": label,
+                    "shape": {"rows": rows, "width": width},
+                    "difference": _difference(qwen, deepseek, 16),
+                }
+            )
     return {
         "contracts": {
             "qwen": CONTRACT_QWEN_RMSNORM,
@@ -410,12 +581,23 @@ def _rmsnorm_report(rows: int) -> dict[str, Any]:
             "one BF16 materialisation of the normalised value before the gain "
             "multiply; a double rounding, so at most one ulp per element"
         ),
+        "execution_provenance": {
+            "qwen_implementation": (
+                "runtime.tensor_accelerator.rmsnorm.rms_norm_bf16; fixed NumPy "
+                "binary32 operations plus the shared exact integer rsqrt"
+            ),
+            "deepseek_implementation_identity": _stable_implementation_identity(
+                backend
+            ),
+            "backend_scope_enforced": True,
+        },
         "cases": cases,
     }
 
 
 def _determinism(backend, repeats: int, column_tile: int = 0) -> dict[str, Any]:
     """Whether repeating the blocked contract reproduces itself bit for bit."""
+    _begin_association_phase(backend)
     activations, weights = _operands(8, 4096, 4096, seed=99)
     reference = None
     identical = True
@@ -434,6 +616,9 @@ def _determinism(backend, repeats: int, column_tile: int = 0) -> dict[str, Any]:
         "claim": (
             "two runs of one implementation identity are bit-identical; the "
             "blocked contract makes no claim across implementations"
+        ),
+        "executed_association": _association_provenance(
+            backend, "blocked_determinism"
         ),
     }
 
@@ -479,6 +664,8 @@ def _throughput(names: Sequence[str], rows: int) -> dict[str, Any]:
             continue
         # One untimed pass: the first call on a device pays for its context.
         _run(backend, activations, weights, CONTRACT_BLOCKED)
+        # Warmup is not one of the timed calls whose rates are reported.
+        _begin_association_phase(backend)
         _, _, _, blocked_s = _run(backend, activations, weights, CONTRACT_BLOCKED)
         _, _, _, sequential_s = _run(backend, activations, weights, CONTRACT_SEQUENTIAL)
         blocked_only = _contraction_only(backend, activations, weights, CONTRACT_BLOCKED)
@@ -502,6 +689,9 @@ def _throughput(names: Sequence[str], rows: int) -> dict[str, Any]:
                 "sequential_contraction_only": round(sequential_only, 6),
                 "blocked_contraction_only": round(blocked_only, 6),
             },
+            "executed_association": _association_provenance(
+                backend, f"throughput:{name}"
+            ),
         }
     return out
 
@@ -544,6 +734,7 @@ def _forward_contractions(
     row_tile: int,
     contract: str,
     column_tile: int = DEFAULT_COLUMN_TILE,
+    association_phase: str = "qwen_forward_contractions",
 ) -> dict[str, Any]:
     """Time every contraction of one Qwen3-8B forward pass, for real.
 
@@ -560,6 +751,7 @@ def _forward_contractions(
     re-uploads the whole 15 GB per tile -- and it is why ``row_tile`` matters
     for prefill and not for decode.
     """
+    _begin_association_phase(backend)
     geometries = sorted({(depth, cols) for _n, depth, cols in QWEN_LAYER_CONTRACTIONS})
     weights = {
         (depth, cols): _bf16_buffer((cols, depth), 1.0 / np.sqrt(depth), 7000 + index)
@@ -616,6 +808,9 @@ def _forward_contractions(
         "gmac_per_second": round(_rate(macs, seconds), 4),
         "weight_stream_gigabytes_per_second": round(weight_bytes / seconds / 1e9, 4),
         "measured": True,
+        "executed_association": _association_provenance(
+            backend, association_phase
+        ),
     }
 
 
@@ -743,6 +938,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             row_tile=1,
             contract=CONTRACT_BLOCKED,
             column_tile=args.column_tile,
+            association_phase="qwen_forward:decode_one_token",
         )
         forward["prefill"] = _forward_contractions(
             backend,
@@ -750,6 +946,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             row_tile=int(args.row_tile),
             contract=CONTRACT_BLOCKED,
             column_tile=args.column_tile,
+            association_phase=f"qwen_forward:prefill_{int(args.forward_tokens)}",
         )
 
     changed = sum(
@@ -766,11 +963,23 @@ def main(argv: Sequence[str] | None = None) -> int:
             "sequential": CONTRACT_SEQUENTIAL,
             "blocked": CONTRACT_BLOCKED,
         },
+        "association_provenance": {
+            "schema": ASSOCIATION_SCHEMA,
+            "policy": ASSOCIATION_POLICY,
+            "phase_isolation": (
+                "the backend observation interval is reset before every "
+                "reported case, determinism, throughput, and forward phase; "
+                "each phase retains the counted shapes actually presented to "
+                "the blocked library contraction"
+            ),
+            "throughput_context_warmup_included": False,
+            "phase_internal_calibration_calls_included": True,
+        },
         "backend": backend.name,
         "implementation_identity": backend.implementation_identity(),
         "backend_availability": backends.backend_availability(),
         "determinism": _determinism(backend, args.repeats, args.column_tile),
-        "rmsnorm_contracts": _rmsnorm_report(max(args.rows, 8)),
+        "rmsnorm_contracts": _rmsnorm_report(max(args.rows, 8), backend),
         "cases": cases,
         "vocabulary_argmax_changes": changed,
         "throughput": throughput,

@@ -1,7 +1,7 @@
 {
   "deployment": {
     "deployment_id": 1,
-    "deployment_sha256": "811aa10723368a2b0b2dffc1fad49e107737bf16f789adfdb2153d898b9e4612",
+    "deployment_sha256": "ee47f849ec5d8872ac4f9b08f0d02eec8fbda0420e531150890553d7aa8058cb",
     "model_id": "qwen3-8b",
     "plan_id": "2397761924f0d1f99739d61a7ebfa9dfb78a46d21883feada4739fed83e10135",
     "target_id": "qwen3-8b-rom-single-chip"
@@ -19,16 +19,16 @@
     "loaded_inputs": {
       "capability": {
         "path": "configs/hardware/abi3_capability/rom_qwen3.json",
-        "sha256": "38234d6cccbd9c017efa286b67f66b1c21572e206ba71aca874e4f912eb6adbf"
+        "sha256": "f109651defbd04655cd5603c4f118a8c428651f470baada1f2d2b70912eb06d5"
       },
       "workload": {
         "path": "build/workloads/qwen3-8b/TA-QW-CHAT-1.json",
-        "sha256": "7c9ed26eee61816f10a66ae2a73a2172def627b4ba7cebd08832c607653c5f0f"
+        "sha256": "32d418aa24d00d4bd5c009e299902ad868d19d6dc482d540fa128f723c6bbaf1"
       }
     },
     "prompt_token_count": 16,
     "requests_derived": 525,
-    "rom_bytes_read_counter": 15145337668,
+    "rom_bytes_read_counter": 15145403204,
     "rom_read_events": 510,
     "runtime_source_sha256": {
       "runtime/abi3/builder.py": "3ec59acade3a0fa85e3c63f7c8ca2a95eece98420e0c5cdb25cb6e5b6039fe7c",
@@ -51,7 +51,7 @@
       "runtime/reference/sqrt_softplus.py": "bbb91122078c983abd6ba8e233e1fc9573ad6ddb12c0f47e19a6fd9af2957562",
       "runtime/reference/swiglu.py": "8a2b6821f42a438da1b34ab78e76d317d00fc2fd2bbb16deed315d77e09246d4",
       "runtime/reference/transcendental.py": "bb26b68fbebc2ef48bdc44deb58163b73f38fd33bac8f4d9662e6d10c2822394",
-      "runtime/sim/backend.py": "e91b9dc70de0bbf310e5d542a84b05d7ea6a1b828e73a9dcfe5b20b31a48b008",
+      "runtime/sim/backend.py": "0841204d2d42212285707c3137b143f785d41b11c46a840508ad15181c147e26",
       "runtime/sim/counters.py": "dab7458cb196b94b710566e8478d0c2a4b5511a54903d1c0c0edaa1afd9f3c0a",
       "runtime/sim/device.py": "89ff77990fee791a5cb7b46e28a2efab36c66e253c52e9cd0929673607b9178c",
       "runtime/sim/engine.py": "31f826fb02f5c483cd04d7c3118eabe0cfd72f9b51584a9322d44d787acdbccb",
@@ -72,7 +72,7 @@
       "runtime/tensor_accelerator/bf16.py": "75543479efffeb7a6806dd44178c8af1844276f87e3d01366b21e1cbccf68a34",
       "runtime/tensor_accelerator/elementwise.py": "64877e0af6d47a695dd650a1d3912d2e1ed508d425b90babb89c4ce931fa4e26",
       "runtime/tensor_accelerator/rmsnorm.py": "a4cd12f16bfc9419681cff8b4065a14f4af3778fae3866b79f7db93a46351e29",
-      "runtime/tensor_accelerator/rope.py": "bc15648eed4d94136561db5c602b7b38fbd1fa71feba5ea2be9c740f9808cf56",
+      "runtime/tensor_accelerator/rope.py": "86dabd538f77a9e7ff96a21f44bb14e1c3ef8176059c3e6d7cf05270131d265d",
       "runtime/tensor_accelerator/sparse_attention.py": "5972c0ffe5714e774a1702f311352e22ff1a7d0d3feb0f614669ee08eb8c0562"
     },
     "stop_reason": "max_new_tokens"
@@ -89,7 +89,7 @@
     "rom_meta.hex": "783683c5a6f1fbce60596093a5ce6c1a884e6a5245d45f2de48b12991eec480c",
     "rom_object.hex": "c56b8e05ab6a26f1a755a975485e8f79a77875e4a5979eb5d2577b56ff223f13",
     "rom_repair.hex": "1f3f24c7ff6bcf01a175ccf64902175e73223f14789aa7ae729abd2d2ff07f82",
-    "rom_request.hex": "b431d908eefaee4e6cd6b5cd1409d7005af8a44c71d4899412e3de355facab6a",
+    "rom_request.hex": "790144e7d184ba9211aec530e0a24c5899fb6928bebcdb0f63fad29af2b516f4",
     "rom_shard.hex": "e3b3f322071983ad40ee5141b35c11273d6e5c6f9c96bfe3215aeb86ae827290",
     "rom_window.hex": "9ff0ecdc1157ce4edb19f80f36a4ae0bdd8bb891a9b94c2037155d2e32e5a88f"
   },
@@ -110,7 +110,7 @@
         "declared_base_address": 0,
         "generator": "arange_u32_v1",
         "object_id": 27,
-        "size_bytes": 65536,
+        "size_bytes": 67840,
         "source_kind": "generated"
       },
       {
@@ -118,7 +118,7 @@
         "declared_base_address": 0,
         "generator": "rope_coefficients_v1",
         "object_id": 29,
-        "size_bytes": 8388608,
+        "size_bytes": 8454144,
         "source_kind": "generated"
       }
     ]
@@ -142,7 +142,7 @@
       "activations": 0,
       "beats": 0,
       "fault": 1,
-      "length": 8388608,
+      "length": 8454144,
       "note": "descriptor 30",
       "object_id": 29,
       "offset": 0,

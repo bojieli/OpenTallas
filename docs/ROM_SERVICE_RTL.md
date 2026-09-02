@@ -393,8 +393,8 @@ critical-source minimum, re-hashes the repo-relative capability and workload
 inputs, and requires successful deployment admission, a device-verified
 **399**-range checkpoint-map identity <!-- figure: 399 src="results/rtl/rom_service_campaign.json#correlation.vector_sets.qwen_chip.executed_source.checkpoint_binding.authenticated_range_count" name="Qwen authenticated checkpoint ranges, ROM service" -->, zero device failure, and
 **0** ROM read events omitted as inexpressible byte ranges <!-- figure: 0 src="results/rtl/rom_service_campaign.json#correlation.vector_sets.qwen_chip.executed_source.events_not_expressible_as_contiguous_ranges" name="Qwen unexpressible ROM reads, ROM service report" --> <!-- figure: 0 src="results/rtl/rom_service_campaign.json#correlation.vector_sets.qwen_chip_degraded.executed_source.events_not_expressible_as_contiguous_ranges" name="Qwen degraded unexpressible ROM reads, ROM service report" -->. Both Qwen sets were re-executed through
-that path against deployment `925351…` <!-- figure: "925351…" src="results/rtl/rom_service_campaign.json#correlation.vector_sets.qwen_chip.deployment.deployment_sha256" name="Qwen nominal deployment, ROM service report" --> (nominal) or the verified degraded
-rebuild `811aa1…` <!-- figure: "811aa1…" src="results/rtl/rom_service_campaign.json#correlation.vector_sets.qwen_chip_degraded.deployment.deployment_sha256" name="Qwen degraded deployment, ROM service report" -->; no recorded hash was edited into agreement.
+that path against deployment `274e4b…` <!-- figure: "274e4b…" src="results/rtl/rom_service_campaign.json#correlation.vector_sets.qwen_chip.deployment.deployment_sha256" name="Qwen nominal deployment, ROM service report" --> (nominal) or the verified degraded
+rebuild `ee47f8…` <!-- figure: "ee47f8…" src="results/rtl/rom_service_campaign.json#correlation.vector_sets.qwen_chip_degraded.deployment.deployment_sha256" name="Qwen degraded deployment, ROM service report" -->; no recorded hash was edited into agreement.
 
 The ignored deployment bundle is consumed when the vector is generated and is
 not a retained campaign input. Its ABI deployment SHA-256 is the durable
