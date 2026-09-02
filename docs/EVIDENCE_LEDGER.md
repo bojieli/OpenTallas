@@ -16,6 +16,13 @@ numeric tokens. Exactly one file in `docs/` is generated
 in 108 commits. Nothing anywhere checks a number in prose against the artifact
 that produces it.
 
+**2026-09-02 reconciliation.** The paragraph above is retained as the discovery
+state, not a current status claim. `PROGRAM_STATUS.md` has since been generated;
+its current retained snapshot binds clean commit `3891fa4…` and is now
+historical again while W6.6 is in flight. `tools/check_prose_figures.py` now
+checks hundreds of explicit provenance annotations, but unannotated figures
+remain outside its visibility, which is why W11.3 is still partial.
+
 ## How to read this
 
 **"What produces it"** is a runnable command plus a named artifact field, or it
@@ -264,21 +271,21 @@ a headline.
 | `[ ]` W6.4 *"retires 5,883 instructions (2,974 issued) … the residual-add wall **is gone**"* | `:83` | `results/abi3/deepseek_v4_rom_ta-ds-chat-1_execution.json` = **5,789 / 2,952**, failure = *"the residual add contract is BF16 in and BF16 out"* — **the wall it says is gone** | `executed` | **NO** |
 | OI-26 / OI-28 *"reduction output view 413"* | `:842–844`, `:930` | artifact says **view 2327** | `executed` | **NO — stale view id** |
 | W12 correction table, all six rows | `:266–273` | 54.2→35.4→**8.6×**; 113.2→**35.3**; 58.9→**18.0**; 116,278→**5,000–9,000**; 27.3→**4.62×**; 27→**3.57×** | `derived` | **YES — the only place in the repository where all five corrections land correctly** |
-| `[~]` W11.1, the 24-vs-192 token horizon | `:392–417` | `results/abi3/comparison_qwen_rom_vs_hbm.json` → `token_agreement {identical: true, common_prefix_length: 24}`; `results/abi3/qwen3_hbm_ta-qw-8k-1_execution_192.json` → `status: "diverged"`, `notes.first_divergence_index: 137`, `reference_agreement: false` | `executed` | **YES — the model entry in the file** |
+| `[~]` W11.1, the 24-vs-192 token horizon | `docs/UNIFIED_EXECUTION_CHECKLIST.md` W11.1 | `results/abi3/comparison_qwen_rom_vs_hbm.json` → `token_agreement {identical: true, common_prefix_length: 24}`; `results/abi3/qwen3_hbm_ta-qw-8k-1_execution_192.json` → `status: "diverged"`, `notes.first_divergence_index: 137`, `reference_agreement: false` | `executed` | **YES — the model entry in the file** |
 
 ## 3b. Token-identity claims that are true but unscoped
 
 The retraction is *"the two lanes produce identical tokens" — true at 24 tokens,
-false at 192*. `docs/UNIFIED_EXECUTION_CHECKLIST.md:411` states the rule:
+false at 192*. `docs/UNIFIED_EXECUTION_CHECKLIST.md` W11.1 states the rule:
 *"A token-identity claim between two backends has a horizon and the horizon must
 be stated."* Three summary-level claims state the identity without the horizon.
 
 | number | where it is stated | what produces it | grade | current? |
 |---|---|---|---|---|
 | *"**The Qwen3-8B accelerator produces output token-identical to an independent reference** over the pinned chat workload"* | `README.md:9` (research-status banner) | true for `TA-QW-CHAT-1` (24 tokens). At 192 tokens on `TA-QW-8K-1` the HBM lane diverges from the oracle at index **137** (`results/abi3/qwen3_hbm_ta-qw-8k-1_execution_192.json`) | `executed` | **narrowly YES; the scope qualifier is load-bearing and the horizon is not stated** |
-| `[x]` W13.2 *"24 tokens, oracle-identical, and identical to the HBM lane position for position"*, under a heading *"stated plainly"* | `docs/UNIFIED_EXECUTION_CHECKLIST.md:130–131` | same | `executed` | **YES at 24; should carry W11.1's "false at 192"** |
-| `[x]` W6.2 *"The 24 tokens are identical … which is the claim this item makes"* | `docs/UNIFIED_EXECUTION_CHECKLIST.md:81` | same | `executed` | **YES — correctly scoped, but carries no pointer to the horizon** |
-| *"the horizon must be stated: 137 tokens here, **286 on the agentic workload**"* | `docs/UNIFIED_EXECUTION_CHECKLIST.md:411` | `results/abi3/qwen3_hbm_ta-qw-agent-2_episode.json` → `oracle_comparison.first_generated_divergence_index: 286` — an **accelerator-vs-oracle** divergence on an **HBM-only** episode. There is no ROM agentic record, so it is not a two-backend horizon | `executed` | **misattributed** |
+| `[x]` W13.2 *"24 tokens, oracle-identical, and identical to the HBM lane position for position"*, under a heading *"stated plainly"* | `docs/UNIFIED_EXECUTION_CHECKLIST.md` W13.2 | same | `executed` | **YES at 24; should carry W11.1's "false at 192"** |
+| `[x]` W6.2 *"The 24 tokens are identical … which is the claim this item makes"* | `docs/UNIFIED_EXECUTION_CHECKLIST.md` W6.2 | same | `executed` | **YES — correctly scoped, but carries no pointer to the horizon** |
+| historical checklist wording: *"the horizon must be stated: 137 tokens here, **286 on the agentic workload**"* | `docs/UNIFIED_EXECUTION_CHECKLIST.md` W11.1 before the 2026-09-02 reconciliation | `results/abi3/qwen3_hbm_ta-qw-agent-2_episode.json` → `oracle_comparison.first_generated_divergence_index: 286` — an **accelerator-vs-oracle** divergence on an **HBM-only** episode. There is no ROM agentic record, so it is not a two-backend horizon | `executed` | **CORRECTED — W11.1 now distinguishes the 137-token ROM/HBM horizon from the HBM-only 286-token oracle divergence** |
 | *"the weight side comes in at **1.007–1.008×** of prediction on those lanes"* | `docs/TECHNICAL_DIRECTION_RECOMMENDATION.md:56–58` | `results/roofline/qwen3_execution_validation.json` (24 tokens) = 1.00829 / 1.00709 ✓. The newer `results/roofline/qwen3_8k_execution_validation.json` (192 tokens) reports **1.0235 (ROM)** and **1.1059 (HBM, `status: diverged`)**, and is cited nowhere in the document | `executed` | **YES at 24; the 192-token artifact is uncited** |
 
 ## 3c. `docs/ISO_AREA_COMPARISON_AND_THE_TAALAS_ANCHOR.md` §2e — a table labelled "after" that predates §2d of the same file
@@ -580,28 +587,30 @@ is still the most durable part of this ledger.
 
 | number / claim | where it is stated | what produces it | grade | current? |
 |---|---|---|---|---|
-| Qwen3-8B HBM and ROM and DeepSeek-V4-Flash-0731 HBM P32 and ROM P32 each reproduce a three-token uninterrupted baseline exactly when stopped after token two, checkpointed, and resumed for token three in a fresh process | checklist W6.6 and the four `results/abi3/restart_exactness_*.json` artifacts | `make abi3-restart` → `tools/run_abi3_restart_exactness.py` → `runtime/sim/checkpoint.py`; the four target-specific Make recipes remain independently runnable | **`executed-historical`**, functional-simulator evidence only; all four captures record the same historical Python source identity, while the working tree has since changed | **NO — stable-tree source-current rerun pending** |
-| the DeepSeek HBM capture restores all 32 node arenas and ends with the same aggregate counter set and all 32 per-node counter sets, including sticky-overflow state | `results/abi3/restart_exactness_deepseek_hbm_p32.json` → `record.target.node_count`, `record.notes.node_counters_identical`, `record.notes.checkpoint` | the governed HBM P32 restart recipe above | **`executed-historical`**, functional-simulator evidence only; the capture also predates the node-local deployment | **NO — current-deployment rerun pending** |
+| Qwen3-8B HBM and ROM and DeepSeek-V4-Flash-0731 ROM P32 each reproduce a three-token uninterrupted baseline exactly when stopped after token two, checkpointed, and resumed for token three in a fresh process | checklist W6.6 and `results/abi3/restart_exactness_{qwen3_hbm,qwen3_rom,deepseek_rom_p32}.json` | the three target-specific `make abi3-restart-*` recipes → `tools/run_abi3_restart_exactness.py` → `runtime/sim/checkpoint.py` | **`executed`**, source-current within the recorded 288-file governed Python scope; functional-simulator evidence only | **YES for these three lanes** |
+| DeepSeek HBM restores all 32 node arenas and ends with the same aggregate counter set and all 32 per-node counter sets, including sticky-overflow state | `results/abi3/restart_exactness_deepseek_hbm_p32.json` and checklist W6.6 | the serialized governed HBM P32 restart recipe above | **`executing`** against current deployment `294319…`; the previously retained artifact predates that deployment and is not admissible as current evidence | **NO — final source-current artifact pending** |
 
-The equality is guarded rather than inferred from two short lists. Each primary
-campaign phase has a distinct PID and records the same deployment digest,
-implementation identity, Python source digest, and node count. The interrupted
-prefix must be non-empty and match the baseline, the fresh process must skip
-prefill and perform real decode work, and token length, retired work, aggregate
-counters, and per-node counters must all match. All four retained artifacts are
-`status: pass`, carry no failed guard, and share source digest
-`71f5f9aaa6b1df1d318dc18d3f15d5dcf39d5f632a325bd32b53056a5cc76ab6`,
-which also matches the tree that was committed with them.
+The three current equalities are guarded rather than inferred from two short
+lists. Baseline, interrupted, resumed, negative-control and state-only-control
+processes are distinct. Each records the same deployment digest,
+implementation identity, node count, and complete per-file source map: 288
+Python files under `compiler/`, `runtime/`, plus the restart driver, aggregate
+digest `ee08b43d87bf6edbcd7b241e7c15a2c4c1a9cb180992dd2eeeee337902a18faf`.
+All 27 guards pass in each current artifact. The interrupted prefix is non-empty
+and matches the baseline; the fresh process skips prefill and performs real
+decode work; and token length, retired work, aggregate counters and all per-node
+counters match. W6.6 remains partial because the same facts must still be
+retained for current DeepSeek HBM rather than inferred from the other lanes.
 
 The checkpoint evidence is deliberately complete over the simulator's mutable
 boundary. Schema v2 enumerates every writable zero-source object for every
 node, verifies that exact node/object set before restoring any bytes, and
 retains aggregate counters, every per-node counter set, device/session
-bookkeeping, and sparse object digests. The largest capture is DeepSeek HBM:
-4,032 node/object images representing 5,661,837,527,296 logical mutable bytes
-are encoded in 1,272,545,408 logical payload bytes. This is a lossless sparse
-encoding claim, not a claim that the physical hardware contains a multi-terabyte
-checkpoint store.
+bookkeeping, and sparse object digests. The current DeepSeek ROM capture covers
+438 images representing 1,078,248,644,744 logical mutable bytes in 143,255,560
+logical stored payload bytes. These are sparse-encoding quantities, not physical
+disk usage. The corresponding 32-node HBM quantities will be published only
+from its final current artifact.
 
 The controls establish sensitivity. In every lane, a normal resume exits
 successfully and reproduces the baseline; a second successful resume with every
@@ -613,7 +622,7 @@ reported as an architectural observation rather than made a validity gate.
 **What this does not establish.** The Qwen request is 93 prompt tokens and the
 DeepSeek request is the governed 32-token prefix; both produce three tokens
 split 2+1. No capture reaches a long-context sparse-attention threshold. This
-is functional NumPy execution, not cycle, RTL, physical, or silicon evidence,
+is functional NumPy execution, not cycle, RTL, physical or silicon evidence,
 and it makes no latency or throughput claim. Finally, [OI-23] still applies:
 the HBM backend executes from and checkpoints its prepared state image. These
 captures prove exact restart from that complete simulator image; they do not

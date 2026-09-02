@@ -148,7 +148,31 @@ completion are all refused at admission; a mid-transaction fault leaves the
 committed cursor and generation exactly where they were and leaves no prepared
 state open. All eight refused.
 
-### 2.7 RTL and physical
+### 2.7 Checkpoint/restart exactness
+
+Three of the four governed restart lanes are now source-current and passing:
+Qwen HBM (`8e1185…`), Qwen ROM (`925351…`) and DeepSeek ROM (`fa9077…`). Each
+runs a three-token uninterrupted baseline, interrupts another process after two
+tokens, and reproduces the final token in a fresh process loaded only from the
+checkpoint. Tokens, retired work, aggregate counters and all per-node counters
+match exactly. STATE erasure changes the resumed token, while the complementary
+STATE-only checkpoint still matches and is reported separately rather than
+used as a pass gate.
+
+Every phase and control is a distinct process bound to the same deployment,
+implementation, node count and complete 288-file source map over `compiler/`,
+`runtime/` and the restart driver, digest `ee08b43d…`; all 27 guards pass. The
+current DeepSeek ROM checkpoint represents 1,078,248,644,744 logical mutable
+bytes in 143,255,560 logical stored payload bytes. Those are sparse simulator
+checkpoint quantities, not physical storage. The current DeepSeek HBM rerun is
+the sole remaining W6.6 lane and is executing serially because it is the
+high-memory case; the checklist remains at 82/94 until that artifact passes.
+
+This is a 93-token Qwen / 32-token DeepSeek, 2+1 generated-token functional
+restart result. It is not long-context, performance, RTL, physical, silicon or
+committed-durability evidence; OI-23 remains in force.
+
+### 2.8 RTL and physical
 
 RTL 3.0 correlates 53 programs over 65 cases, 185 engine-issue events, 460
 resolved operand views and 11 traps field-for-field against the functional
@@ -175,12 +199,13 @@ addressing, masking, repair translation, refusal classes, sense beats, operand
 alignment, and accounting. It contains no ROM array and establishes no cell
 area, read energy, sense margin, retention, defect, or macro-timing evidence.
 
-Both physical views — SKY130 HD at 130 nm and ASAP7 at 7 nm — complete
-synthesis, multi-corner static timing and full place-and-route with zero
-detailed-route DRC and zero antenna violations. The archived ASAP7 case was
-reproduced bit-for-bit. **The routed blocks are the ABI 2.5 engines, the four
-ABI 3.0 datapaths and the numeric probes.** The ABI 3.0 microsequencer/control
-plane has not been synthesised or routed. A separate ROM read-service
+Individual retained block cases in SKY130 HD at 130 nm and predictive ASAP7 at
+7 nm complete synthesis, static timing and place-and-route; these are not two
+matched, complete target implementations. The archived ASAP7 case was
+reproduced bit-for-bit. **The routed blocks comprise ABI 2.5 engines, three ABI
+3.0 datapaths in SKY130, and numeric probes.** The fourth ABI 3.0 datapath, the
+MAC lane, is pre-layout/unrouted and did not meet its 60 ns constraint. The ABI
+3.0 microsequencer/control plane has not been synthesised or routed. A separate ROM read-service
 addressing/control proxy has been routed in IHP SG13G2, but it contains no ROM
 array and is not full-target or ASAP7 evidence. A physical number resting on this
 RTL may be presented as the cost of hardware that runs exactly the deployments
@@ -190,11 +215,16 @@ the deployment campaign records correlating — no others.
 
 - **Mandatory-context accelerator coverage is incomplete.** The Qwen HBM lane
   did execute the 8,000-token prompt, but diverged from the oracle at generated
-  token 137 and stopped at its 193-token bound without EOS; the matched ROM lane
+  token 137 and failed at its historical context boundary after token 193
+  without EOS; the matched ROM lane
   completed its 192-token comparison horizon and matched the oracle throughout.
   DeepSeek's 200,000-token rung remains reference-oracle GPU evidence: the
   governed accelerator context gate currently reaches only 35 tokens, below
   both sparse-attention thresholds.
+- **Every-design reasoning and agentic coverage is incomplete.** Retained Qwen
+  reasoning and closed-loop agentic captures exercise the HBM backend only.
+  Qwen ROM lacks both cells, and neither DeepSeek accelerator backend has a
+  reasoning or agentic capture. W13.4 owns these six missing cells.
 - **No characterized DeepSeek performance comparison yet.** The governed
   functional ROM-versus-HBM comparison now exists: both DeepSeek targets execute one
   prefill plus three decode transactions and produce
@@ -325,10 +355,10 @@ bisection tool now samples in flight, at the moment the producing engine writes.
 ## 6. Open issues
 
 The authoritative status is the top-level marker table in
-[`UNIFIED_EXECUTION_CHECKLIST.md`](UNIFIED_EXECUTION_CHECKLIST.md): 11 partial
-rows and 2 open rows. Its 53 `OI-*` headings are a durable findings log, not a
-count of currently open defects; many are explicitly closed and retained to
-record what invalidated earlier evidence. OI-15's per-token loop, for example,
-is closed by A13 block extents. OI-4's lack of a governed stochastic sampling
-contract remains deliberate: inventing an RNG merely to close it would make
-future results irreproducible.
+[`UNIFIED_EXECUTION_CHECKLIST.md`](UNIFIED_EXECUTION_CHECKLIST.md); the generated
+companion republishes those marker counts. Its 53 `OI-*` headings are a durable
+findings log, not a count of currently open defects; many are explicitly closed
+and retained to record what invalidated earlier evidence. OI-15's per-token
+loop, for example, is closed by A13 block extents. OI-4's lack of a governed
+stochastic sampling contract remains deliberate: inventing an RNG merely to
+close it would make future results unreproducible.
