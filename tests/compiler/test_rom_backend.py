@@ -3581,6 +3581,40 @@ def test_token_block_loop_carries_the_request_span(
     assert leading <= {1, 5, 16}, leading
 
 
+def test_partial_final_token_block_has_verifier_safe_backing_objects(
+    tmp_path: Path,
+) -> None:
+    """An 8,256-row graph blocked by 512 has an unreachable 448-row tail."""
+
+    from compiler.backends.rom.qwen3 import qwen3_rom_policy
+
+    graph = qwen_shaped_graph(tmp_path, layers=1, hidden=64, span_max=8256)
+    capability = qwen3_rom_capability(
+        max_context_positions=8256, vocabulary_size=32
+    )
+    policy = dataclasses.replace(qwen3_rom_policy(), token_block_rows=512)
+    lowering = RomLowering(graph, capability, policy)
+    deployment = lowering.build()
+
+    require_admitted(deployment, capability)
+    position_sources = [
+        source
+        for source in deployment.objects.values()
+        if source.generator == "arange_u32_v1"
+    ]
+    assert len(position_sources) == 1
+    assert position_sources[0].parameters == {"count": 16960}
+
+    residual = lowering._buffer_place[
+        lowering._buffer_key("sequence.embedding")
+    ]
+    rope_rows = lowering._buffer_place[
+        lowering._buffer_key("rope.coefficient_rows")
+    ]
+    assert residual.size_bytes == 8704 * 64 * 2
+    assert rope_rows.size_bytes == 8704 * 32 * 4
+
+
 def test_prefill_issues_one_dispatch_per_kernel_per_layer(
     execution_graph, execution_workspace, qwen_capability
 ):

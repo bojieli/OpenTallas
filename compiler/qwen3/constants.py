@@ -36,6 +36,14 @@ TRANSFORMERS_CONFIG_SOURCE_SHA256 = (
 )
 
 TARGET_CONTEXT_TOKENS = 8_000
+#: One source-current Qwen session must hold the mandatory 8,000-token prompt
+#: and all 256 tokens in its frozen decode budget.  The older 8,192-position
+#: physical campaign remains a separate retained boundary fixture.
+SESSION_CONTEXT_CAPACITY = 8_256
+#: Frozen token-row association for both Qwen ABI 3.0 storage targets.  Keeping
+#: the ROM and HBM schedules on the same 512-row block makes their executed
+#: numeric associations directly comparable under amendment A7.
+TOKEN_BLOCK_ROWS = 512
 TENSOR_COUNT = 399
 PAYLOAD_BYTES = 16_381_470_720
 PARAMETER_COUNT = 8_190_735_360

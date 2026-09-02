@@ -1753,10 +1753,18 @@ def build_plan(
         )
     groups, placements = _place_weights(graph, bands, span_max)
     positions = position_inputs(graph)
+    # One token block for the whole plan: the arena padding, the loop divisor,
+    # every row-tiled view, and the generated position range must agree on it.
+    block = max(min(int(tile.block), span_max), 1)
     generated = _generated_constants(
         graph,
         int(capability.limits["max_context_positions"]),
-        headroom=max(min(tile.block, round_up(span_max, tile.rows)), tile.rows, span_max),
+        headroom=max(
+            min(tile.block, round_up(span_max, tile.rows)),
+            tile.rows,
+            span_max,
+            round_up(span_max, block),
+        ),
     )
     for name in positions:
         warnings.append(
@@ -1766,9 +1774,6 @@ def build_plan(
         )
 
     units, body_position, band_of_kernel = _emission_order(graph, bands)
-    # One token block for the whole plan: the arena padding, the loop divisor
-    # and every row-tiled view must agree on it.
-    block = max(min(int(tile.block), span_max), 1)
     states, state_of_resource, warn_state = _place_states(
         graph, bands, band_of_kernel, span_max
     )

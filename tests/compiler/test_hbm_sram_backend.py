@@ -1584,10 +1584,10 @@ def test_state_views_bind_the_prepared_image(dense, single_chip):
     )
 
 
-def _absolute_kv_graph() -> KernelGraph:
+def _absolute_kv_graph(*, span_max: int = 1024) -> KernelGraph:
     """A dense graph whose KV tensors expose request-symbolic cache mistakes."""
 
-    graph = dense_graph(layers=1, span_max=1024)
+    graph = dense_graph(layers=1, span_max=span_max)
     positions = Tensor(
         tensor_id="positions",
         dtype="u32",
@@ -1616,6 +1616,21 @@ def _absolute_kv_graph() -> KernelGraph:
         kernels=kernels,
         entrypoints=entrypoints,
     )
+
+
+def test_generated_positions_cover_a_partial_final_token_block(single_chip):
+    """A non-multiple capacity still reserves the final padded block's indices."""
+
+    graph = _absolute_kv_graph(span_max=8256)
+    deployment = lower_to_abi3(graph, single_chip)
+    positions = [
+        source
+        for source in deployment.objects.values()
+        if source.generator == "arange_u32_v1"
+    ]
+    assert len(positions) == 1
+    assert positions[0].parameters == {"count": 270848}
+    require_admitted(deployment, single_chip)
 
 
 def test_scatter_state_destination_exposes_the_whole_absolute_cache(single_chip):

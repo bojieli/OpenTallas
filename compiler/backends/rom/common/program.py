@@ -1118,6 +1118,7 @@ class RomLowering:
         self._buffer_object: dict[str, int] = {}
         self._buffer_place: dict[str, BufferPlacement] = {}
         self._buffer_root: dict[str, str] = {}
+        self._buffer_size: dict[str, int] = {}
         self._sram_used = 0
         self._numeric_cache: dict[tuple[Any, ...], int] = {}
         self._schedule_cache: dict[tuple[int, int], int] = {}
@@ -1191,6 +1192,47 @@ class RomLowering:
     def _bytes(self, tensor: Tensor) -> int:
         elements = 1
         for dim in self._dims(tensor):
+            elements *= dim
+        bits = DTYPE_BITS[self._dtype(tensor.dtype)]
+        return (elements * bits + 7) // 8
+
+    def _padded_symbol_bound(self) -> int:
+        """Rows covered by all token blocks, including a partial final block."""
+
+        bound = int(self.capability.limits["max_context_positions"])
+        configured = int(self.policy.token_block_rows or 0)
+        block = max(min(configured or bound, bound), 1)
+        return -(-bound // block) * block
+
+    def _padded_bytes(self, tensor: Tensor) -> int:
+        """Allocate a symbolic-leading buffer through its final padded block.
+
+        A13 clamps the final iteration to the request's real rows at execution,
+        but the frozen verifier proves every tensor view over the loop's static
+        block.  When the architectural bound is not a multiple of that block,
+        the backing zero buffer therefore carries an unreachable padded tail.
+        Token-blocking disabled (zero) leaves every existing allocation exact.
+        """
+
+        dims = list(self._dims(tensor))
+        symbol, multiplier, axis = self._leading_symbol(tensor)
+        if symbol not in {int(Symbol.SPAN_TOKENS), int(Symbol.CONTEXT_LENGTH)}:
+            return self._bytes(tensor)
+        bound = int(self.capability.limits["max_context_positions"])
+        padded = self._padded_symbol_bound()
+        if padded == bound:
+            return self._bytes(tensor)
+        logical_axis = (
+            bound * int(axis.numerator) // max(int(axis.unit), 1)
+            + int(axis.bias)
+        ) * max(int(multiplier), 1)
+        padded_axis = (
+            padded * int(axis.numerator) // max(int(axis.unit), 1)
+            + int(axis.bias)
+        ) * max(int(multiplier), 1)
+        dims[0] += max(padded_axis - logical_axis, 0)
+        elements = 1
+        for dim in dims:
             elements *= dim
         bits = DTYPE_BITS[self._dtype(tensor.dtype)]
         return (elements * bits + 7) // 8
@@ -2000,6 +2042,7 @@ class RomLowering:
             for other in keys[1:]:
                 union(keys[0], other)
         sizes: dict[str, int] = {}
+        padded_sizes: dict[str, int] = {}
         for tensor in self.graph.tensors:
             if tensor.role in WEIGHT_ROLES or tensor.role == "state":
                 continue
@@ -2011,11 +2054,15 @@ class RomLowering:
                     f"bytes at {root!r}; the layer body is not uniform"
                 )
             sizes[root] = size
+            padded_sizes[root] = max(
+                padded_sizes.get(root, 0), self._padded_bytes(tensor)
+            )
         self._buffer_root = {
             self._base_buffer_key(t.tensor_id): find(self._base_buffer_key(t.tensor_id))
             for t in self.graph.tensors
             if t.role not in WEIGHT_ROLES and t.role != "state"
         }
+        self._buffer_size = padded_sizes
 
     def _buffer_key(self, tensor_id: str) -> str:
         base = self._base_buffer_key(tensor_id)
@@ -2026,7 +2073,7 @@ class RomLowering:
         if key in self._buffer_object:
             return self._buffer_object[key]
         tensor = self.tensors[tensor_id]
-        size = self._bytes(tensor)
+        size = self._buffer_size.get(key, self._padded_bytes(tensor))
         if tensor.role in {"input", "output"}:
             storage = StorageClass.HOST
             permissions = int(
@@ -2890,7 +2937,10 @@ class RomLowering:
         from runtime.sim.generators import GeneratorError, digest_of, generate
 
         span_max = int(self.capability.limits["max_context_positions"])
-        parameters = {"count": max(2 * span_max, 1), "modulus": int(modulus)}
+        parameters = {
+            "count": max(span_max + self._padded_symbol_bound(), 1),
+            "modulus": int(modulus),
+        }
         try:
             payload = generate("ring_indices_v1", parameters)
             digest = digest_of("ring_indices_v1", parameters)
@@ -2919,7 +2969,7 @@ class RomLowering:
         from runtime.sim.generators import GeneratorError, digest_of, generate
 
         span_max = int(self.capability.limits["max_context_positions"])
-        parameters = {"count": max(2 * span_max, 1)}
+        parameters = {"count": max(span_max + self._padded_symbol_bound(), 1)}
         try:
             payload = generate("arange_u32_v1", parameters)
             digest = digest_of("arange_u32_v1", parameters)
@@ -6552,7 +6602,7 @@ class RomLowering:
         # into it and on-device selection appends each new token to it.  The
         # graph's token-stream input is a view of that window, not a second
         # buffer -- a separate object would be one nothing could fill.
-        token_bytes = max((span_max + max_new) * 4, 4096)
+        token_bytes = max((self._padded_symbol_bound() + max_new) * 4, 4096)
         token_ring = builder.memory_object(
             storage_class=StorageClass.HOST,
             size_bytes=token_bytes,

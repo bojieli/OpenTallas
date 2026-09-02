@@ -72,6 +72,7 @@ from __future__ import annotations
 from typing import Any, Mapping, Sequence
 
 from compiler.ir.v3.kernel_ir import KernelGraph
+from compiler.qwen3.constants import SESSION_CONTEXT_CAPACITY, TOKEN_BLOCK_ROWS
 from runtime.abi3.capability import Capability
 from runtime.abi3.constants import Feature, StorageClass, TopologyClass
 from runtime.abi3.deployment import Deployment
@@ -145,7 +146,7 @@ class Qwen3RomError(ValueError):
 
 def qwen3_rom_capability(
     *,
-    max_context_positions: int = 8192,
+    max_context_positions: int = SESSION_CONTEXT_CAPACITY,
     vocabulary_size: int = 151936,
     rom_bytes: int = ROM_CAPACITY_BYTES,
 ) -> Capability:
@@ -292,6 +293,7 @@ def qwen3_rom_policy(
         topology_class=TopologyClass.SINGLE_CHIP,
         layout=qwen3_layout_policy(alignment_bytes=alignment_bytes),
         sram_budget_bytes=sram_budget_bytes,
+        token_block_rows=TOKEN_BLOCK_ROWS,
         tile_rows=128,
         tile_cols=128,
         tile_depth=128,

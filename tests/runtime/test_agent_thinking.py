@@ -108,20 +108,28 @@ def test_pinned_workloads_render_the_thinking_mode_they_declare(
 
 
 @pytest.mark.parametrize(
-    "workload_id", ["TA-QW-CHAT-1", "TA-QW-AGENT-1", "TA-QW-REASON-1", "TA-QW-AGENT-2"]
+    "workload_id",
+    [
+        "TA-QW-CHAT-1",
+        "TA-QW-AGENT-1",
+        "TA-QW-8K-1",
+        "TA-QW-STRESS-1",
+        "TA-QW-REASON-1",
+        "TA-QW-AGENT-2",
+    ],
 )
 def test_a_workload_can_decode_every_token_it_asks_for(workload_id: str) -> None:
     """OI-34: ``prompt + max_new`` must fit the declared session context.
 
-    The mandatory 8,000-token workload asks for 256 decode tokens against an
-    8,192-position context, which leaves the last 64 steps nowhere to write.
-    Every workload authored since is checked here so the error is not repeated.
+    The mandatory 8,000-token workload asks for 256 decode tokens.  Every
+    source-current workload, including that frozen long-context contract, must
+    declare enough session capacity to finish its complete decode budget.
     """
     path = WORKLOADS / f"{workload_id}.json"
     if not path.exists():
         pytest.skip(f"{workload_id} has not been built")
     body = json.loads(path.read_text())
-    capacity = int(body.get("metadata", {}).get("session_context_capacity", 8192))
+    capacity = int(body["metadata"]["session_context_capacity"])
     total = int(body["prompt_token_count"]) + int(body["max_new_tokens"])
     assert total <= capacity, (
         f"{workload_id}: {body['prompt_token_count']} prompt + "

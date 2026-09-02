@@ -17,6 +17,7 @@ REPO = Path(__file__).resolve().parents[1]
 if str(REPO) not in sys.path:
     sys.path.insert(0, str(REPO))
 
+from compiler.qwen3.constants import SESSION_CONTEXT_CAPACITY  # noqa: E402
 from compiler.workloads.qwen3 import (  # noqa: E402
     AGENT_SANDBOX_FILES,
     AGENT_SYSTEM,
@@ -37,12 +38,10 @@ DEFAULT_SNAPSHOT = Path(
 #: ``session_context_capacity`` from the pinned Qwen3-8B kernel IR.  Every
 #: workload this module authors must satisfy
 #: ``prompt_token_count + max_new_tokens <= SESSION_CONTEXT_CAPACITY``.
-#: OI-34 records what happens when it does not: the mandatory 8,000-token
-#: workload asks for 256 decode tokens against an 8,192-position context, so
-#: the last 64 decode steps have nowhere to write and the contract is
-#: arithmetically unsatisfiable.  The check below is why that error is not
-#: reproduced here.
-SESSION_CONTEXT_CAPACITY = 8192
+#: OI-34 records the retired failure mode: the mandatory 8,000-token workload
+#: asked for 256 decode tokens against an 8,192-position context, so the last
+#: 64 decode steps had nowhere to write.  The shared 8,256-position product
+#: bound and the check below keep the frozen workload satisfiable.
 
 
 def _check_context_budget(workload: "Workload") -> None:
@@ -54,6 +53,56 @@ def _check_context_budget(workload: "Workload") -> None:
             f"max_new {workload.max_new_tokens} = {total} exceeds the "
             f"{SESSION_CONTEXT_CAPACITY}-position session context (OI-34)"
         )
+
+
+def _validated_body(workload: "Workload") -> dict:
+    """Return one publishable workload only after enforcing its full budget."""
+
+    _check_context_budget(workload)
+    body = workload.to_dict()
+    body["metadata"] = dict(body["metadata"])
+    body["metadata"]["session_context_capacity"] = SESSION_CONTEXT_CAPACITY
+    return body
+
+
+def _validate_retained_workloads(output: Path, records: dict) -> None:
+    """Fail closed on base workloads retained by ``--reasoning-only``."""
+
+    for workload_id, record in sorted(records.items()):
+        try:
+            path = output / str(record["path"])
+            body = json.loads(path.read_text())
+            prompt_tokens = int(body["prompt_token_count"])
+            actual_prompt_tokens = len(body["token_ids"])
+            max_new_tokens = int(body["max_new_tokens"])
+            declared_capacity = int(
+                body["metadata"]["session_context_capacity"]
+            )
+        except (KeyError, TypeError, ValueError, OSError, json.JSONDecodeError) as exc:
+            raise ValueError(
+                f"retained workload {workload_id} has no valid capacity contract"
+            ) from exc
+        if body.get("workload_id") != workload_id:
+            raise ValueError(
+                f"retained workload {workload_id} has a different document identity"
+            )
+        if prompt_tokens != actual_prompt_tokens:
+            raise ValueError(
+                f"retained workload {workload_id} declares {prompt_tokens} prompt "
+                f"tokens but carries {actual_prompt_tokens}"
+            )
+        if declared_capacity != SESSION_CONTEXT_CAPACITY:
+            raise ValueError(
+                f"retained workload {workload_id} declares session capacity "
+                f"{declared_capacity}, expected {SESSION_CONTEXT_CAPACITY}"
+            )
+        total = prompt_tokens + max_new_tokens
+        if total > SESSION_CONTEXT_CAPACITY:
+            raise ValueError(
+                f"retained workload {workload_id}: prompt {prompt_tokens} + "
+                f"max_new {max_new_tokens} = {total} exceeds the "
+                f"{SESSION_CONTEXT_CAPACITY}-position session context"
+            )
 
 
 def build_reasoning_workloads(
@@ -216,6 +265,7 @@ def main() -> int:
     existing: dict = {}
     if args.reasoning_only and index_path.exists():
         existing = json.loads(index_path.read_text()).get("workloads", {})
+        _validate_retained_workloads(args.output, existing)
     index = {
         "schema": "opentallas.abi3.workload_index.v1",
         "model_id": "qwen3-8b",
@@ -224,7 +274,7 @@ def main() -> int:
         "workloads": dict(existing),
     }
     for wid, workload in sorted(workloads.items()):
-        body = workload.to_dict()
+        body = _validated_body(workload)
         path = args.output / f"{wid}.json"
         path.write_bytes(canonical_json(body))
         index["workloads"][wid] = {

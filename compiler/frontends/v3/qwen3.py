@@ -58,7 +58,6 @@ from compiler.ir.v3.kernel_ir import (
 from compiler.ir.v3.lowering import KERNEL_TO_ENGINE
 from compiler.qwen3.adapter import (
     Qwen3AdapterError,
-    TensorSpec,
     build_tensor_specs,
     load_official_config,
 )
@@ -71,6 +70,7 @@ from compiler.qwen3.constants import (
     PAYLOAD_BYTES,
     REPOSITORY,
     REVISION,
+    SESSION_CONTEXT_CAPACITY,
     TARGET_CONTEXT_TOKENS,
     TENSOR_COUNT,
     TRANSFORMERS_VERSION,
@@ -90,7 +90,7 @@ DEFAULT_CHECKPOINT_LOCK = (
 
 #: Architectural capacity of one session, separate from the 8,000-token
 #: acceptance boundary in ``TARGET_CONTEXT_TOKENS``.
-MAX_CONTEXT_TOKENS = 8192
+MAX_CONTEXT_TOKENS = SESSION_CONTEXT_CAPACITY
 
 NUMERIC_PROFILE = "qwen3_bf16_gqa_target_v1"
 
@@ -607,8 +607,6 @@ def export_qwen3_kernel_graph(
     vocabulary = int(config["vocab_size"])
     epsilon = float(config["rms_norm_eps"])
     rope_theta = int(config["rope_theta"])
-    query_width = query_heads * head_dim
-    kv_width = kv_heads * head_dim
 
     span = Symbolic("span_tokens", 1, MAX_CONTEXT_TOKENS)
     context = Symbolic("context_tokens", 1, MAX_CONTEXT_TOKENS)
