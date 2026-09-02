@@ -19,6 +19,7 @@ second copy, and the bytes the engine reads are the checkpoint bytes.
 
 from __future__ import annotations
 
+import hashlib
 import mmap
 from bisect import bisect_left
 from dataclasses import dataclass
@@ -33,7 +34,12 @@ from runtime.abi3.constants import (
     Permission,
     StorageClass,
 )
-from runtime.abi3.deployment import Deployment, ObjectSource, resolve_path
+from runtime.abi3.deployment import (
+    Deployment,
+    DeploymentError,
+    ObjectSource,
+    resolve_path,
+)
 from runtime.abi3.descriptors import (
     Descriptor,
     ExtendedDescriptorType,
@@ -67,6 +73,14 @@ NUMPY_DTYPE: dict[int, np.dtype] = {
 }
 
 SUB_BYTE_DTYPES = frozenset({int(DType.MXFP4_E2M1)})
+
+# Authentication must be bounded independently of checkpoint size.  Feeding a
+# complete 156 GB memmap to OpenSSL in one call leaves every faulted page in the
+# process RSS until memory pressure reclaims it, which can consume the entire
+# machine before the first instruction executes.  Chunked hashing plus
+# MADV_DONTNEED retains the exact mmap bytes and digest while bounding resident
+# file-backed pages.
+_DIGEST_CHUNK_BYTES = 64 << 20
 
 
 @dataclass(slots=True)
@@ -104,6 +118,8 @@ class MemoryObject:
         *,
         writable_override: bool = False,
         mappings: dict[Path, np.ndarray] | None = None,
+        verified_segments: set[tuple[str, int, int, str]] | None = None,
+        source_node_id: int = 0,
     ) -> None:
         payload = descriptor.payload
         self.object_id = object_id
@@ -159,9 +175,24 @@ class MemoryObject:
             self._anonymous = np.frombuffer(payload, dtype=np.uint8).copy()
         else:
             cursor = 0
-            for segment in source.segments:
+            try:
+                source_segments = source.segments_for_node(source_node_id)
+            except DeploymentError as exc:
+                raise MemoryError_(
+                    f"object {object_id}: cannot select source for node "
+                    f"{source_node_id}: {exc}"
+                ) from None
+            for segment in source_segments:
                 path = resolve_path(root, segment.path)
                 array = _map_range(path, segment.offset, segment.bytes, mappings)
+                _verify_segment_digest(
+                    path,
+                    segment.offset,
+                    segment.bytes,
+                    segment.sha256,
+                    array,
+                    verified_segments,
+                )
                 self._segments.append(
                     _MappedSegment(
                         start=cursor,
@@ -332,6 +363,12 @@ def _map_range(
     ``None`` maps this one file on its own, which is what a caller wanting a
     single range should do.
     """
+    if offset < 0:
+        raise MemoryError_(f"segment offset must be non-negative, got {offset}")
+    if nbytes < 0:
+        raise MemoryError_(
+            f"segment byte count must be non-negative, got {nbytes}"
+        )
     if not path.exists():
         raise MemoryError_(f"object source file is missing: {path}")
     size = path.stat().st_size
@@ -356,17 +393,96 @@ def _map_range(
     return whole[offset : offset + nbytes]
 
 
+def _verify_segment_digest(
+    path: Path,
+    offset: int,
+    nbytes: int,
+    expected: str | None,
+    array: np.ndarray,
+    verified: set[tuple[str, int, int, str]] | None,
+) -> None:
+    """Authenticate one mapped byte range, once per activated deployment.
+
+    The manifest and MEMORY_OBJECT root authenticate the *declared* range
+    digests.  This check closes the other half of that statement by comparing
+    the actual mmap bytes with the declared digest before an engine can read
+    them.  Cluster siblings share ``verified`` so a replicated range is hashed
+    once rather than once per logical node.
+
+    Legacy/test segment sources may omit a digest; their descriptor carries no
+    byte-authentication claim and they retain the previous mapping behaviour.
+    Governed node-indexed sources cannot take that path because generic
+    admission requires every range digest before memory activation.
+    """
+
+    if expected is None:
+        return
+    expected = str(expected).lower()
+    try:
+        decoded = bytes.fromhex(expected)
+    except ValueError:
+        decoded = b""
+    if len(decoded) != 32:
+        raise MemoryError_(
+            f"segment {path}[{offset}:{offset + nbytes}] declares an invalid "
+            "SHA-256 digest"
+        )
+    identity = (str(path.resolve()), int(offset), int(nbytes), expected)
+    if verified is not None and identity in verified:
+        return
+    digest = hashlib.sha256()
+    for start in range(0, int(nbytes), _DIGEST_CHUNK_BYTES):
+        stop = min(start + _DIGEST_CHUNK_BYTES, int(nbytes))
+        digest.update(memoryview(array[start:stop]))
+        _discard_mapped_pages(array)
+    actual = digest.hexdigest()
+    if actual != expected:
+        raise MemoryError_(
+            f"segment {path}[{offset}:{offset + nbytes}] content digest "
+            f"{actual[:16]} does not match declared {expected[:16]}"
+        )
+    if verified is not None:
+        verified.add(identity)
+
+
+def _discard_mapped_pages(array: np.ndarray) -> None:
+    """Release file-backed pages faulted solely for source authentication.
+
+    Activation is single-threaded and happens before an engine can observe the
+    mapping.  Dropping resident pages here therefore changes no bytes and no
+    ordering; a later engine access simply faults the authenticated page back
+    from the same mmap.  Platforms without ``madvise`` retain correct hashing
+    and fall back to the kernel's ordinary page reclamation.
+    """
+
+    if not isinstance(array, np.memmap):
+        return
+    mapping = getattr(array, "_mmap", None)
+    advice = getattr(mmap, "MADV_DONTNEED", None)
+    if mapping is None or advice is None or not hasattr(mapping, "madvise"):
+        return
+    try:
+        mapping.madvise(advice)
+    except (BufferError, OSError, ValueError):
+        # This is a residency optimization, never an authentication bypass.
+        # The digest has already consumed the chunk; an unsupported advisory
+        # operation may cost memory but cannot change acceptance.
+        return
+
+
 class DeviceMemory:
     """All memory objects of one activated deployment, on one node.
 
     A cluster deployment has one of these per logical node.  ``share_from``
     builds a sibling arena against an existing one: an object with no write
-    permission is *shared* by reference, because it is immutable and every node
-    addresses its own shard of it through the view's ``NODE_ID`` term, so a
-    private copy would be thirty-two identical mappings of the same checkpoint
-    bytes.  Everything writable -- the activation arena, the state images, the
-    host windows -- is built fresh, which is what makes a node's activations
-    node-local and a collective the only way one node can see another's.
+    permission and one shared source is *shared* by reference.  A
+    ``node_segments`` source instead gets a small node-specific mapping object
+    over the same whole-file mmap cache: the descriptor and local byte extent
+    remain symmetric, but node 7's logical byte zero can name a different
+    authenticated checkpoint range from node 0's.  Everything writable -- the
+    activation arena, the state images, the host windows -- is built fresh,
+    which is what makes a node's activations node-local and a collective the
+    only way one node can see another's.
     """
 
     def __init__(
@@ -375,9 +491,11 @@ class DeviceMemory:
         *,
         root: Path | None = None,
         share_from: "DeviceMemory | None" = None,
+        node_id: int = 0,
     ) -> None:
         self.deployment = deployment
         self.root = root if root is not None else deployment.root
+        self.node_id = int(node_id)
         self.objects: dict[int, MemoryObject] = {}
         # One whole-file mapping shared by every object that reads from it.
         # Held on the instance so the mappings outlive the loop below and die
@@ -385,6 +503,11 @@ class DeviceMemory:
         # shares the cache: the checkpoint is mapped once for the cluster.
         self._mappings: dict[Path, np.ndarray] = (
             share_from._mappings if share_from is not None else {}
+        )
+        # Actual range digests are checked once per activated deployment.  A
+        # cluster sibling shares this cache along with the whole-file mappings.
+        self._verified_segments: set[tuple[str, int, int, str]] = (
+            share_from._verified_segments if share_from is not None else set()
         )
         for descriptor in deployment.table.descriptors():
             if descriptor.descriptor_type != ExtendedDescriptorType.MEMORY_OBJECT:
@@ -396,16 +519,23 @@ class DeviceMemory:
             if share_from is not None:
                 existing = share_from.objects[oid]
                 if not existing.writable:
-                    self.objects[oid] = existing
-                    continue
-                if existing._segments:
+                    if source.kind != "node_segments":
+                        self.objects[oid] = existing
+                        continue
+                elif existing._segments:
                     raise MemoryError_(
                         f"object {oid} is writable and file-backed; a per-node "
                         "private copy of a mapped object is not expressible "
                         "without relaying out the checkpoint"
                     )
             self.objects[oid] = MemoryObject(
-                oid, descriptor, source, self.root, mappings=self._mappings
+                oid,
+                descriptor,
+                source,
+                self.root,
+                mappings=self._mappings,
+                verified_segments=self._verified_segments,
+                source_node_id=self.node_id,
             )
 
     def __getitem__(self, object_id: int) -> MemoryObject:

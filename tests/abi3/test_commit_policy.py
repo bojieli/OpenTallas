@@ -301,15 +301,15 @@ def _ring_deployment(
         window_bytes = rows * RING_ROW_BYTES
         parameters = {"count": 4 * RING_SPAN, "modulus": modulus}
         payload = generate("ring_indices_v1", parameters)
+        payload_digest = digest_of("ring_indices_v1", parameters)
         index_object = builder.memory_object(
             storage_class=StorageClass.HBM,
             size_bytes=int(payload.nbytes),
             source=ObjectSource.generated(
-                "ring_indices_v1", parameters, int(payload.nbytes), digest_of(
-                    "ring_indices_v1", parameters
-                )
+                "ring_indices_v1", parameters, int(payload.nbytes), payload_digest
             ),
             permissions=int(Permission.READ | Permission.IMMUTABLE),
+            content_digest=bytes.fromhex(payload_digest),
         )
         source_object = builder.memory_object(
             storage_class=StorageClass.SRAM,

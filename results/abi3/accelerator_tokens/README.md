@@ -19,10 +19,10 @@ recorded implementation identity and therefore a different evidence run.
 
 | capture | deployment | workload | prompt | generated | gold prefix | wall |
 |---|---|---|---:|---|---|---:|
-| `qwen3_8b_rom_chat1` | Qwen3-8B ROM | TA-QW-CHAT-1 | 93 | `[1654, 525, 2661, 1447]` | **match** | 124.7 s |
-| `qwen3_8b_hbm_chat1` | Qwen3-8B HBM | TA-QW-CHAT-1 | 93 | `[1654, 525, 2661, 1447]` | **match** | 129.6 s |
-| `deepseek_v4_flash_rom_p32` | DeepSeek-V4-Flash ROM wafer | TA-DS-CHAT-1-P32 | 32 | `[13806, 345, 7472, 55560]` | **match** | 649.9 s |
-| `deepseek_v4_flash_hbm_p32` | DeepSeek-V4-Flash HBM | TA-DS-CHAT-1-P32 | 32 | `[13806, 345, 7472, 55560]` | **match** | 4,476.3 s |
+| `qwen3_8b_rom_chat1` | Qwen3-8B ROM | TA-QW-CHAT-1 | 93 | `[1654, 525, 2661, 1447]` | **match** | 54.5 s |
+| `qwen3_8b_hbm_chat1` | Qwen3-8B HBM | TA-QW-CHAT-1 | 93 | `[1654, 525, 2661, 1447]` | **match** | 50.0 s |
+| `deepseek_v4_flash_rom_p32` | DeepSeek-V4-Flash ROM wafer | TA-DS-CHAT-1-P32 | 32 | `[13806, 345, 7472, 55560]` | **match** | 684.4 s |
+| `deepseek_v4_flash_hbm_p32` | DeepSeek-V4-Flash HBM | TA-DS-CHAT-1-P32 | 32 | `[13806, 345, 7472, 55560]` | **match** | 4,887.9 s |
 
 All four deployments have produced at least one token the model's own reference
 implementation produces for the same prompt. Both Qwen deployments decode four
@@ -96,12 +96,12 @@ oracle prefix and the retained HBM capture. It compares four positions, reports
 `agreement: true`, and has no divergence index or legitimacy problem.
 
 The fresh HBM capture uses deployment digest
-`45e2b872b4db5ded09e580774bd413f5daa0a9f3c4608f1aa222f9323a259dcf`.
+`2943197b3055d6198899d402efd927810cd307c09287f9d250b1b1afb2695275`.
 It completes prefill plus three decode transactions with `SUCCESS`/`NONE`
 status and trap, producing `[13806, 345, 7472, 55560]` exactly. It closes the
 former phase-extent failure. The corresponding now-matching ROM deployment
 digest is
-`c8c03f1a7f579e8dfb892626cd2842ef88d624f086a5b55bd0b245f1ca515824`.
+`fa907792d8eb73ec1237525468581e47945a9077e5a247f4f88c43fbb5042394`.
 
 That HBM record declares its actual `target.node_count` as 32. Its top-level
 `counters` are cluster totals; `node_counters` retains the engine work measured

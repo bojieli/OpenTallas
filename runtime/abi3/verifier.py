@@ -26,15 +26,19 @@ The proofs performed are:
 10. permission agreement -- no write to an immutable object, no engine output
     into a read-only object, no ROM write path; and
 11. tensor-view bounds under the maximum value of every dynamic index term;
-    and
 12. the join axis and operand geometry of every ``REDUCTION.GROUPED_CONCAT``
-    (amendment A17).
+    (amendment A17); and
+13. the authenticated topology exactly matches the admitting capability; and
+14. every manifest object source is content-bound by its MEMORY_OBJECT
+    descriptor; and
+15. every node-indexed object source has exactly one immutable, symmetric
+    memory-object image per admitted topology node.
 """
 
 from __future__ import annotations
 
 from dataclasses import dataclass, field as dc_field
-from typing import Any, Iterable, Mapping, Sequence
+from typing import Any, Mapping, Sequence
 
 from .capability import Capability
 from .constants import (
@@ -52,23 +56,21 @@ from .constants import (
     Selection,
     State,
     StorageClass,
-    SUBOPCODES,
     TopologyClass,
 )
 from .deployment import (
     Deployment,
-    DescriptorTable,
     DeploymentError,
     derive_commit_policies,
     ring_staged_objects,
 )
+from .crc import sha256
 from .descriptors import (
     Descriptor,
     ExtendedDescriptorType,
     MAX_DYNAMIC_TERMS,
     MAX_RANK,
     MAX_WAIT_PRODUCERS,
-    PredicateKind,
     SelectorKind,
     Symbol,
     decode_entrypoint_table,
@@ -328,6 +330,112 @@ class Verifier:
             self.checks["capability_identity"] = False
         else:
             self.checks.setdefault("capability_identity", True)
+
+    def _verify_topology_binding(self) -> None:
+        """Bind the authenticated topology exactly to the capability.
+
+        ``max_nodes`` is a physical-profile cardinality, not permission to
+        shrink a named topology.  In particular, ``CLUSTER_32`` denotes the
+        complete 32-node accelerator.  Accepting any smaller positive count
+        lets a restamped deployment omit node-local images while retaining a
+        capability digest for a machine it no longer describes.
+        """
+
+        topology_ids = self.table.ids_of_type(ExtendedDescriptorType.TOPOLOGY)
+        exactly_one = len(topology_ids) == 1
+        self._check(
+            "topology_descriptor_count",
+            exactly_one,
+            "deployment must declare exactly one TOPOLOGY descriptor; "
+            f"found {len(topology_ids)}",
+        )
+        if not exactly_one:
+            return
+
+        descriptor = self.table[topology_ids[0]]
+        payload = descriptor.payload
+        described_class = int(payload["topology_class"])
+        manifest_class = int(self.deployment.topology_class)
+        capability_class = int(self.capability.topology_class)
+        self._check(
+            "topology_class_identity",
+            described_class == manifest_class == capability_class,
+            "topology class mismatch: descriptor declares "
+            f"{described_class}, manifest declares {manifest_class}, and "
+            f"capability admits {capability_class}",
+        )
+
+        described_nodes = int(payload["node_count"])
+        expected_nodes = int(self.capability.limits["max_nodes"])
+        self._check(
+            "topology_node_count_identity",
+            described_nodes == expected_nodes,
+            f"topology declares {described_nodes} nodes, capability "
+            f"requires {expected_nodes}",
+        )
+        if described_class == int(TopologyClass.WAFER_LOGICAL_DEVICE):
+            self._verify_wafer_topology_geometry(payload)
+        self._check(
+            "topology_digest",
+            self.header.topology_digest == sha256(descriptor.encode()),
+            "program header does not bind the admitted TOPOLOGY descriptor",
+        )
+
+    def _verify_wafer_topology_geometry(self, payload: Mapping[str, Any]) -> None:
+        """Bind a wafer's active prefix to its capability's physical geometry."""
+
+        keys = ("reticle_rows", "reticle_columns", "tiles_per_reticle")
+        missing = [key for key in keys if key not in self.capability.link]
+        self._check(
+            "wafer_capability_geometry_complete",
+            not missing,
+            "wafer capability must declare complete physical geometry; missing "
+            + ", ".join(missing),
+        )
+        if missing:
+            return
+        rows, columns, capability_tiles = (
+            int(self.capability.link[key]) for key in keys
+        )
+        positive = rows > 0 and columns > 0 and capability_tiles > 0
+        self._check(
+            "wafer_capability_geometry_positive",
+            positive,
+            "wafer capability physical geometry must be positive; declares "
+            f"{rows}x{columns} reticles with {capability_tiles} tiles each",
+        )
+        if not positive:
+            return
+
+        reticles = int(payload["reticle_count"])
+        tiles = int(payload["tiles_per_reticle"])
+        active = int(payload["active_resource_count"])
+        communications = self.table.ids_of_type(ExtendedDescriptorType.COMMUNICATION)
+        node_only = all(
+            int(self.table[did].payload["participant_scope"])
+            == int(ParticipantScope.NODE)
+            for did in communications
+        )
+        legacy_empty = reticles == tiles == active == 0 and node_only
+        self._check(
+            "wafer_topology_active_prefix",
+            legacy_empty or 1 <= reticles <= rows * columns,
+            "wafer topology reticle_count must be a nonempty active prefix no "
+            f"larger than physical capacity {rows * columns}; declares {reticles}",
+        )
+        self._check(
+            "wafer_topology_tiles_per_reticle",
+            legacy_empty or tiles == capability_tiles,
+            "wafer topology tiles_per_reticle must exactly match capability "
+            f"value {capability_tiles}; declares {tiles}",
+        )
+        endpoints = reticles * tiles
+        self._check(
+            "wafer_topology_active_resources",
+            legacy_empty or 0 <= active <= endpoints,
+            "wafer topology active_resource_count must fit its declared endpoint "
+            f"prefix of {endpoints}; declares {active}",
+        )
 
     # -- 2/3. instruction and descriptor legality -------------------------
     def _verify_instructions(self) -> None:
@@ -721,6 +829,214 @@ class Verifier:
                 )
         self.checks.setdefault("permissions", True)
 
+    def _verify_object_source_content_digests(self) -> None:
+        """Bind every manifest source to its wire-visible content identity.
+
+        Deployment bundle read/write fail fast on these same disagreements.
+        Admission operates on in-memory deployments too, so it consumes the
+        non-raising error list and records malformed hashes as verification
+        failures instead of allowing ``DeploymentError`` to escape.
+        """
+
+        errors = self.deployment.object_content_digest_errors()
+        if not errors:
+            self.checks.setdefault("object_source_content_digest", True)
+            return
+        for error in errors:
+            self._check("object_source_content_digest", False, error)
+
+    def _verify_memory_placement(self) -> None:
+        """Bound every declared physical range and explicit packed address map.
+
+        ``base_address`` zero is retained as the legacy "placement not
+        assigned" convention used by generic fixtures and ROM-local arenas.
+        Once a physical space carries more than one distinct base, however, it
+        is an explicit packed map: every interval must then be disjoint.  HBM
+        and transactional STATE share the node-local HBM address space in the
+        shipped HBM/SRAM backend, so their intervals are checked together.
+        """
+
+        spaces: dict[str, list[tuple[int, int, int]]] = {
+            "hbm": [],
+            "sram": [],
+        }
+        memory_key = {
+            StorageClass.HBM: "hbm",
+            StorageClass.STATE: "hbm",
+            StorageClass.SRAM: "sram",
+            StorageClass.ROM: "rom",
+        }
+        for descriptor in self.table.descriptors():
+            if descriptor.descriptor_type != ExtendedDescriptorType.MEMORY_OBJECT:
+                continue
+            payload = descriptor.payload
+            object_id = int(descriptor.descriptor_id)
+            try:
+                storage = StorageClass(int(payload["storage_class"]))
+            except ValueError:
+                continue  # _verify_permissions reports the registry failure
+            base = int(payload["base_address"])
+            size = int(payload["size_bytes"])
+            alignment_log2 = int(payload["alignment_log2"])
+            alignment_ok = alignment_log2 < 64 and base % (1 << alignment_log2) == 0
+            self._check(
+                "memory_object_alignment",
+                alignment_ok,
+                f"object {object_id}: base address {base} is not aligned to "
+                f"2**{alignment_log2} bytes",
+            )
+
+            key = memory_key.get(storage)
+            if key is None or key not in self.capability.memory:
+                continue
+            capacity = int(self.capability.memory[key]["bytes"])
+            self._check(
+                "memory_object_capacity",
+                base + size <= capacity,
+                f"object {object_id}: {storage.name} range [{base}, "
+                f"{base + size}) exceeds the {capacity}-byte {key.upper()} "
+                "physical space",
+            )
+            if key in spaces:
+                spaces[key].append((base, base + size, object_id))
+
+        for key, intervals in spaces.items():
+            # All-zero bases mean the backend intentionally left placement to
+            # activation.  Any nonzero base switches the whole space to the
+            # explicit packed-address interpretation.  Counting distinct bases
+            # is insufficient: several objects placed at the same nonzero base
+            # are precisely the overlapping map this proof must reject.
+            explicit = any(start != 0 for start, _stop, _oid in intervals)
+            overlaps: list[tuple[int, int]] = []
+            if explicit:
+                ordered = sorted(intervals)
+                for left, right in zip(ordered, ordered[1:]):
+                    if left[1] > right[0]:
+                        overlaps.append((left[2], right[2]))
+            self._check(
+                f"{key}_address_map_disjoint",
+                not overlaps,
+                f"explicit {key.upper()} address map contains overlapping "
+                f"object pairs {overlaps}",
+            )
+
+    def _verify_node_sources(self) -> None:
+        """Fail closed on manifest-side node-indexed object images.
+
+        ``node_segments`` does not add a wire descriptor: one symmetric
+        MEMORY_OBJECT descriptor names a different authenticated source map at
+        each logical node.  Consequently the manifest is usable only when the
+        authenticated table declares exactly one topology, that topology's
+        node count is itself within the admitting capability, and the source
+        supplies exactly that many equal-sized immutable images.  Checking
+        only at memory construction would turn a malformed admitted bundle
+        into a node-dependent activation trap.
+        """
+        node_sources = [
+            (int(object_id), source)
+            for object_id, source in self.deployment.objects.items()
+            if source.kind == "node_segments"
+        ]
+        if not node_sources:
+            for check in (
+                "node_source_binding",
+                "node_source_content_digest",
+                "node_source_count",
+                "node_source_immutable",
+                "node_source_symmetry",
+                "node_source_topology",
+            ):
+                self.checks.setdefault(check, True)
+            return
+
+        topology_ids = self.table.ids_of_type(ExtendedDescriptorType.TOPOLOGY)
+        topology_ok = len(topology_ids) == 1
+        self._check(
+            "node_source_topology",
+            topology_ok,
+            "node-segments sources require exactly one admitted TOPOLOGY "
+            f"descriptor; deployment declares {len(topology_ids)}",
+        )
+        node_count: int | None = None
+        if topology_ok:
+            node_count = int(self.table[topology_ids[0]].payload["node_count"])
+            max_nodes = int(self.capability.limits["max_nodes"])
+            self._check(
+                "node_source_topology",
+                node_count == max_nodes,
+                f"node-segments sources name a {node_count}-node topology; "
+                f"capability requires exactly {max_nodes} nodes",
+            )
+
+        for object_id, source in node_sources:
+            if node_count is not None:
+                self._check(
+                    "node_source_count",
+                    len(source.node_segments) == node_count,
+                    f"object {object_id}: node-segments source declares "
+                    f"{len(source.node_segments)} node maps, admitted topology "
+                    f"declares {node_count} nodes",
+                )
+            bound = 0 <= object_id < len(self.table)
+            descriptor = self.table[object_id] if bound else None
+            bound = bool(
+                bound
+                and descriptor is not None
+                and descriptor.descriptor_type
+                == ExtendedDescriptorType.MEMORY_OBJECT
+            )
+            self._check(
+                "node_source_binding",
+                bound,
+                f"manifest object {object_id}: node-segments source does not "
+                "name a MEMORY_OBJECT descriptor",
+            )
+            if not bound or descriptor is None:
+                continue
+
+            try:
+                expected_digest = source.authenticated_content_digest()
+            except DeploymentError as exc:
+                self._check(
+                    "node_source_content_digest",
+                    False,
+                    f"object {object_id}: invalid node-segments content identity: "
+                    f"{exc}",
+                )
+            else:
+                self._check(
+                    "node_source_content_digest",
+                    descriptor.payload["content_digest"] == expected_digest,
+                    f"object {object_id}: node-segments content digest does not "
+                    "match its MEMORY_OBJECT descriptor",
+                )
+
+            self._check(
+                "node_source_immutable",
+                bool(descriptor.permissions & Permission.IMMUTABLE),
+                f"object {object_id}: node-segments source must name an "
+                "IMMUTABLE memory object",
+            )
+            expected_bytes = int(descriptor.payload["size_bytes"])
+            map_bytes = tuple(
+                sum(int(segment.bytes) for segment in segments)
+                for segments in source.node_segments
+            )
+            self._check(
+                "node_source_symmetry",
+                source.size_bytes == expected_bytes
+                and all(size == expected_bytes for size in map_bytes),
+                f"object {object_id}: node-segments source maps cover "
+                f"{list(map_bytes)} bytes, expected one symmetric "
+                f"{expected_bytes}-byte image per node",
+            )
+
+        self.checks.setdefault("node_source_binding", True)
+        self.checks.setdefault("node_source_content_digest", True)
+        self.checks.setdefault("node_source_count", topology_ok)
+        self.checks.setdefault("node_source_immutable", True)
+        self.checks.setdefault("node_source_symmetry", True)
+
     # -- 11. tensor-view bounds -------------------------------------------
     def _verify_views(self) -> None:
         symbol_max = {
@@ -1108,10 +1424,67 @@ class Verifier:
             if schedule is None:
                 continue
             payload = schedule.payload
-            if payload["engine_family"] != int(family):
+            schedule_family_value = int(payload["engine_family"])
+            try:
+                schedule_family = Major(schedule_family_value)
+            except ValueError:
+                self._fail(
+                    f"instruction {index}: schedule {schedule_id} names unknown "
+                    f"engine family {schedule_family_value}"
+                )
+                continue
+            if schedule_family != family:
                 self._fail(
                     f"instruction {index}: schedule {schedule_id} is for "
-                    f"{Major(payload['engine_family']).name}, not {family.name}"
+                    f"{schedule_family.name}, not {family.name}"
+                )
+
+            engine_name = schedule_family.name.lower()
+            engine_spec = self.capability.engines.get(engine_name, {})
+            # Early ABI 3 capabilities did not advertise every engine's queue
+            # count.  Queue zero is their only backwards-compatible mapping;
+            # a non-zero index needs an explicit structural capability value.
+            queue_count = int(engine_spec.get("queues", 1))
+            queue_index = int(payload["queue_index"])
+            if queue_count <= 0:
+                self._fail(
+                    f"instruction {index}: schedule {schedule_id} selects "
+                    f"{engine_name} queue {queue_index}, but the capability "
+                    "advertises no queues for that engine"
+                )
+            elif not 0 <= queue_index < queue_count:
+                self._fail(
+                    f"instruction {index}: schedule {schedule_id} queue_index "
+                    f"{queue_index} is outside the {queue_count} advertised "
+                    f"{engine_name} queues"
+                )
+
+            outstanding_limits = [
+                (
+                    "capability.limits.max_outstanding_per_queue",
+                    int(self.capability.limits["max_outstanding_per_queue"]),
+                )
+            ]
+            # A family may advertise a narrower implementation-specific credit
+            # or physical queue-depth bound.  Neither can widen the global ABI
+            # limit, but either must narrow admission when present.
+            for limit_name in ("max_outstanding_per_queue", "queue_depth"):
+                if limit_name in engine_spec:
+                    outstanding_limits.append(
+                        (
+                            f"capability.engines.{engine_name}.{limit_name}",
+                            int(engine_spec[limit_name]),
+                        )
+                    )
+            bound_name, outstanding_bound = min(
+                outstanding_limits, key=lambda item: item[1]
+            )
+            max_outstanding = int(payload["max_outstanding"])
+            if max_outstanding > outstanding_bound:
+                self._fail(
+                    f"instruction {index}: schedule {schedule_id} "
+                    f"max_outstanding {max_outstanding} exceeds {bound_name} "
+                    f"bound {outstanding_bound}"
                 )
             # tile_depth is required too: the cycle model decomposes an
             # operation into tiles of (rows, cols, depth), and a zero in any of
@@ -1128,12 +1501,135 @@ class Verifier:
                     f"{zeroed} at zero; a tile mapping with a zero extent "
                     "cannot be evaluated"
                 )
-            if payload["max_outstanding"] == 0:
+            if max_outstanding == 0:
                 self._fail(
                     f"instruction {index}: schedule {schedule_id} admits zero "
                     "outstanding operations"
                 )
         self.checks.setdefault("schedule_completeness", True)
+
+    def _verify_hbm_exchange_schedule(self) -> None:
+        """Protect the HBM backend's single shared communication buffer.
+
+        Its capacity proof reserves one maximum-sized exported HBM exchange
+        object, not one per communication site.  That remains true only while
+        every DMA touching the object uses the reserved final DMA queue with a
+        one-entry issue window and one outstanding request, and no unrelated
+        DMA uses that queue.
+        """
+
+        check_names = (
+            "hbm_exchange_dma_capability",
+            "hbm_exchange_queue",
+            "hbm_exchange_one_outstanding",
+            "hbm_exchange_issue_window",
+            "hbm_exchange_queue_dedicated",
+        )
+        if (
+            self.deployment.backend != "hbm-sram-abi3"
+            or int(self.deployment.topology_class)
+            != int(TopologyClass.CLUSTER_32)
+        ):
+            for name in check_names:
+                self.checks.setdefault(name, True)
+            return
+
+        exchanges = {
+            descriptor.descriptor_id
+            for descriptor in self.table.descriptors()
+            if descriptor.descriptor_type == ExtendedDescriptorType.MEMORY_OBJECT
+            and int(descriptor.payload["storage_class"]) == int(StorageClass.HBM)
+            and int(descriptor.permissions) & int(Permission.REMOTE)
+        }
+        scratch_schedules: list[tuple[int, Mapping[str, Any]]] = []
+        other_schedules: list[tuple[int, Mapping[str, Any]]] = []
+
+        def io_objects(operator: Descriptor) -> set[int]:
+            objects: set[int] = set()
+            for prefix, count in (("input", 4), ("output", 2)):
+                for slot in range(count):
+                    view_id = int(operator.payload[f"{prefix}_view_{slot}"])
+                    if view_id == NO_ID or not 0 <= view_id < len(self.table):
+                        continue
+                    view = self.table[view_id]
+                    if view.descriptor_type == ExtendedDescriptorType.TENSOR_VIEW:
+                        objects.add(int(view.primary_object_id))
+            return objects
+
+        for index, instruction in enumerate(self.instructions):
+            if int(instruction.major) != int(Major.DMA):
+                continue
+            operator_id = int(instruction.descriptor_id)
+            if operator_id == NO_ID or not 0 <= operator_id < len(self.table):
+                continue
+            operator = self.table[operator_id]
+            if operator.descriptor_type != ExtendedDescriptorType.OPERATOR:
+                continue
+            schedule_id = int(operator.payload["schedule_id"])
+            if schedule_id == NO_ID or not 0 <= schedule_id < len(self.table):
+                continue
+            schedule = self.table[schedule_id]
+            if schedule.descriptor_type != ExtendedDescriptorType.SCHEDULE:
+                continue
+            row = (index, schedule.payload)
+            if io_objects(operator) & exchanges:
+                scratch_schedules.append(row)
+            else:
+                other_schedules.append(row)
+
+        queues = {int(payload["queue_index"]) for _index, payload in scratch_schedules}
+        outstanding = {
+            int(payload["max_outstanding"])
+            for _index, payload in scratch_schedules
+        }
+        windows = {
+            int(payload["issue_window"]) for _index, payload in scratch_schedules
+        }
+        dma_spec = self.capability.engines.get("dma")
+        dma_capability_ok = bool(
+            isinstance(dma_spec, Mapping) and "queues" in dma_spec
+        )
+        self._check(
+            "hbm_exchange_dma_capability",
+            dma_capability_ok,
+            "cluster HBM exchange scheduling requires an explicit "
+            "capability.engines.dma.queues value",
+        )
+        dma_queue_count = (
+            int(dma_spec["queues"])
+            if dma_capability_ok and dma_spec is not None
+            else 0
+        )
+        expected_queue = dma_queue_count - 1
+        self._check(
+            "hbm_exchange_queue",
+            bool(scratch_schedules) and queues == {expected_queue},
+            "HBM communication scratch DMAs use queues "
+            f"{sorted(queues)}, expected reserved queue {expected_queue}",
+        )
+        self._check(
+            "hbm_exchange_one_outstanding",
+            outstanding == {1},
+            "HBM communication scratch DMA max_outstanding values are "
+            f"{sorted(outstanding)}, expected [1]",
+        )
+        self._check(
+            "hbm_exchange_issue_window",
+            windows == {1},
+            "HBM communication scratch DMA issue_window values are "
+            f"{sorted(windows)}, expected [1]",
+        )
+        intruders = [
+            index
+            for index, payload in other_schedules
+            if int(payload["queue_index"]) == expected_queue
+        ]
+        self._check(
+            "hbm_exchange_queue_dedicated",
+            not intruders,
+            f"non-exchange DMA instructions {intruders} use reserved HBM "
+            f"scratch queue {expected_queue}",
+        )
 
     # -- engine write paths ------------------------------------------------
     def _verify_engine_write_paths(self) -> None:
@@ -1570,13 +2066,18 @@ class Verifier:
     def verify(self) -> VerificationReport:
         self._state_resources = 0
         self._verify_admission()
+        self._verify_topology_binding()
         self._verify_instructions()
         self._verify_control_flow()
         self._verify_events()
         self._verify_state()
         self._verify_permissions()
+        self._verify_object_source_content_digests()
+        self._verify_memory_placement()
+        self._verify_node_sources()
         self._verify_engine_write_paths()
         self._verify_schedules()
+        self._verify_hbm_exchange_schedule()
         self._verify_flags()
         self._verify_views()
         self._verify_join_axis()

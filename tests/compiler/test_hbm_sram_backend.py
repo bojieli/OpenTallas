@@ -33,7 +33,13 @@ from compiler.backends.hbm_sram.lower import (
     lower_with_plan,
     shares_an_axis,
 )
-from compiler.backends.hbm_sram.plan import PLAN_SCHEMA, build_plan, read_kernel_graph
+from compiler.backends.hbm_sram.plan import (
+    PLAN_SCHEMA,
+    PlanError,
+    _streaming_schedule,
+    build_plan,
+    read_kernel_graph,
+)
 from compiler.ir.v3.kernel_ir import (
     BindingSegment,
     CheckpointBinding,
@@ -755,6 +761,66 @@ def alternating_graph(*, pairs: int = 4, hidden: int = 256, span_max: int = 512)
     )
 
 
+def test_index_stream_keeps_one_row_for_the_two_dynamic_score_axes():
+    """A18 leaves the query axis static and the candidate axis dynamic.
+
+    The joined WINDOW_INDEX row carries the absolute prefill coordinate under
+    A27; widening this stream instead makes both score axes request-dependent,
+    which one tensor view cannot encode.
+    """
+
+    tensors = {
+        tensor.tensor_id: tensor
+        for tensor in (
+            Tensor("query", "bf16", (SPAN, 8), "activation"),
+            Tensor("scores", "bf16", (SPAN, 16), "activation"),
+            Tensor("indices", "u32", (SPAN, 8), "activation"),
+        )
+    }
+    kernels = (
+        Kernel(
+            index=0,
+            kernel_id="layer0.index_score",
+            kind="INDEX_SCORE",
+            inputs=("query",),
+            outputs=("scores",),
+            numeric_contract="index_score_bf16_v1",
+            layer=0,
+        ),
+        Kernel(
+            index=1,
+            kernel_id="layer0.index_topk",
+            kind="INDEX_TOPK",
+            inputs=("scores",),
+            outputs=("indices",),
+            numeric_contract="selection_index_topk_indices_masked_topk_v1",
+            layer=0,
+        ),
+    )
+    graph = KernelGraph(
+        model_id="index-stream-block",
+        source={"family": "test"},
+        symbols=(RuntimeSymbol("span_tokens", 1, 512, 1),),
+        tensors=tuple(tensors.values()),
+        states=(),
+        kernels=kernels,
+        entrypoints=(),
+        generation_policy={},
+    )
+
+    members, rolling = _streaming_schedule(
+        graph,
+        tensors,
+        body_position={0: 0, 1: 1},
+        band_of_kernel={0: 0, 1: 0},
+        block=512,
+    )
+
+    assert members[0] == members[1]
+    assert members[0][1] == 1
+    assert rolling["scores"] == members[0]
+
+
 # ---------------------------------------------------------------------------
 # Fixtures
 # ---------------------------------------------------------------------------
@@ -843,6 +909,22 @@ def test_plan_bands_the_layers(dense, single_chip):
     assert plan.proofs["hbm_fits"]
     assert plan.proofs["sram_banks_disjoint"]
     assert plan.proofs["max_loop_depth"] <= plan.proofs["capability_loop_depth"]
+
+
+def test_plan_refuses_a_capability_that_cannot_hold_its_hbm_image(dense):
+    capability = capability_for("single-chip")
+    capability.memory["hbm"]["bytes"] = 1
+    capability.validate()
+    with pytest.raises(PlanError, match="physical HBM plan requires"):
+        build_plan(dense, capability)
+
+
+def test_plan_refuses_a_capability_that_cannot_hold_its_sram_regions(dense):
+    capability = capability_for("single-chip")
+    capability.memory["sram"]["bytes"] = 1
+    capability.validate()
+    with pytest.raises(PlanError, match="SRAM region|physical SRAM plan requires"):
+        build_plan(dense, capability)
 
 
 def test_plan_weight_objects_are_role_stacks(dense, single_chip):
@@ -1178,18 +1260,16 @@ def test_cluster_emits_link_traffic_and_single_chip_does_not(moe, cluster, singl
         assert descriptor.descriptor_type == ExtendedDescriptorType.COMMUNICATION
         classes.add(descriptor.payload["route_class"])
         assert descriptor.payload["participant_count"] == 32
-    # Every traffic class the plan declares is accounted for, and a class is
-    # accounted for in one of two ways: it emitted a transfer, or the kernels
-    # that named it turned out to be replicated on every node and had nothing
-    # to move.  The second is not silence -- the deployment says so, with a
-    # count -- because "this cluster performs no expert-dispatch transfer" is a
-    # fact a comparison of two machines has to be able to read off.
+    # Every traffic class this *placement* declares emits a transfer.  A kernel
+    # name alone no longer creates a pretend class: this eight-expert diagnostic
+    # graph cannot split an expert bank over 32 nodes, so it retains ordinary
+    # output-column sharding and declares no expert-dispatch class at all.
     from compiler.backends.hbm_sram.lower import _LINK_OP
     from compiler.backends.hbm_sram.plan import build_plan
 
     route_class = {name: spec[2] for name, spec in _LINK_OP.items()}
     replicated = clustered.notes["replicated_link_sites"]
-    assert replicated, "a plan that shards only output columns replicates most kernels"
+    assert replicated == {}
     declared = {
         plan.link_class
         for plan in build_plan(moe, cluster).kernels
@@ -1198,11 +1278,11 @@ def test_cluster_emits_link_traffic_and_single_chip_does_not(moe, cluster, singl
     unaccounted = {
         name
         for name in declared
-        if route_class[name] not in classes and name not in replicated
+        if route_class[name] not in classes
     }
     assert not unaccounted, sorted(unaccounted)
-    # The transfer that does happen is the one that has to: a node-sharded
-    # contraction's output columns, gathered back into a whole row.
+    # The transfers that do happen are the ones this graph's placement needs:
+    # node-sharded output columns and the coordinated commit.
     assert route_class["activation_transfer"] in classes
     assert route_class["coordinated_commit"] in classes
 
@@ -2975,16 +3055,16 @@ def test_a_window_index_carries_the_window_the_graph_declared():
 REAL_DEEPSEEK_IR = Path("build/ir-v3/deepseek-v4-flash-0731/kernel_ir.v3.json")
 
 
-@pytest.mark.skipif(
-    not (Path(__file__).resolve().parents[2] / REAL_DEEPSEEK_IR).exists(),
-    reason="DeepSeek IR not built",
-)
-def test_real_deepseek_rolling_plan_fits_hbm_and_is_admitted():
-    """The product graph, not only the MoE fixture, closes the capacity wall."""
+@pytest.fixture(scope="module")
+def real_deepseek_build():
+    """One shared product build for the checker and capacity assertions."""
     from runtime.abi3.capability import Capability
 
     root = Path(__file__).resolve().parents[2]
-    graph = read_kernel_graph(root / REAL_DEEPSEEK_IR)
+    ir = root / REAL_DEEPSEEK_IR
+    if not ir.exists():
+        pytest.skip("DeepSeek IR not built")
+    graph = read_kernel_graph(ir)
     capability = Capability.from_dict(
         json.loads(
             (root / "configs/hardware/abi3_capability/hbm_sram_cluster_32.json")
@@ -2992,7 +3072,21 @@ def test_real_deepseek_rolling_plan_fits_hbm_and_is_admitted():
         )
     )
     deployment, plan = lower_with_plan(graph, capability)
+    return graph, capability, deployment, plan
+
+
+@pytest.mark.skipif(
+    not (Path(__file__).resolve().parents[2] / REAL_DEEPSEEK_IR).exists(),
+    reason="DeepSeek IR not built",
+)
+def test_real_deepseek_rolling_plan_fits_hbm_and_is_admitted(
+    real_deepseek_build,
+):
+    """The product graph, not only the MoE fixture, closes the capacity wall."""
+    graph, capability, deployment, plan = real_deepseek_build
     require_admitted(deployment, capability)
+    checker = check_deployment(graph, deployment, capability)
+    assert checker["ok"], checker["errors"]
 
     assert plan.proofs["hbm_fits"]
     assert plan.proofs["hbm_bytes_per_node"] <= plan.proofs[
@@ -3003,7 +3097,214 @@ def test_real_deepseek_rolling_plan_fits_hbm_and_is_admitted():
     groups = {slot.rolling_group for slot in rolling}
     assert any(".expert_stream." in group for group in groups)
     assert any(".index_stream." in group for group in groups)
-    assert sum(slot.size_bytes for slot in rolling) < 1_000_000_000
+    assert any(".query_stream." in group for group in groups)
+    assert any(".attention_output_stream." in group for group in groups)
+    # More block-local buffers are intentional: they replace two 17 GiB
+    # full-context wide-activation slots and reduce the complete arena by over
+    # 20 GiB.  Bound the rolling side as well as the aggregate result so a
+    # future change cannot call unbounded placement "streaming".
+    assert sum(slot.size_bytes for slot in rolling) < 1_500_000_000
+    assert plan.proofs["activation_arena_bytes"] < 72_000_000_000
+
+
+def _restamp_deployment_digest(deployment):
+    """Restamp a deliberately changed but internally consistent manifest."""
+    from runtime.abi3.records import split_program
+
+    header, body = split_program(deployment.program)
+    deployment.program = (
+        dataclasses.replace(
+            header, deployment_digest=deployment.deployment_digest
+        ).encode()
+        + body
+    )
+    stamped, _ = split_program(deployment.program)
+    assert stamped.deployment_digest == deployment.deployment_digest
+    return deployment
+
+
+def _restamp_descriptor_table_and_deployment(deployment):
+    """Restamp both bindings after a digest-consistent descriptor mutation."""
+    from runtime.abi3.records import split_program
+
+    header, body = split_program(deployment.program)
+    deployment.program = (
+        dataclasses.replace(
+            header, descriptor_table_digest=deployment.table.digest
+        ).encode()
+        + body
+    )
+    _restamp_deployment_digest(deployment)
+    stamped, _ = split_program(deployment.program)
+    assert stamped.descriptor_table_digest == deployment.table.digest
+    return deployment
+
+
+def test_checker_rejects_digest_consistent_node_segment_reordering(
+    real_deepseek_build,
+):
+    """A node may not read the right ranges in the wrong expert order."""
+    import copy
+
+    from runtime.abi3.deployment import ObjectSource
+
+    graph, capability, deployment, _plan = real_deepseek_build
+    mutated = copy.deepcopy(deployment)
+    object_id, source = next(
+        (object_id, source)
+        for object_id, source in mutated.objects.items()
+        if source.kind == "node_segments" and len(source.node_segments[0]) >= 2
+    )
+    node_maps = [list(segments) for segments in source.node_segments]
+    node_maps[0][0], node_maps[0][1] = node_maps[0][1], node_maps[0][0]
+    objects = dict(mutated.objects)
+    objects[object_id] = ObjectSource(
+        kind="node_segments",
+        size_bytes=source.size_bytes,
+        node_segments=tuple(tuple(segments) for segments in node_maps),
+    )
+    mutated.objects = objects
+    descriptor = mutated.table[object_id]
+    descriptor.payload["content_digest"] = objects[
+        object_id
+    ].authenticated_content_digest()
+    mutated.table.rewrite(object_id)
+    mutated = _restamp_descriptor_table_and_deployment(mutated)
+
+    assert verify_deployment(mutated, capability).admitted
+    report = check_deployment(graph, mutated, capability)
+    assert not report["ok"]
+    assert not report["checks"]["authenticated_segment_order"]
+    assert any("per-node authenticated segment order" in e for e in report["errors"])
+
+
+def test_checker_rejects_digest_consistent_weight_and_scale_stride_mutation(
+    real_deepseek_build,
+):
+    """A self-consistent plan may not redirect every later folded layer."""
+    graph, capability, _deployment, plan = real_deepseek_build
+    tensors = {tensor.tensor_id: tensor for tensor in graph.tensors}
+    weight_id = "layers.0.ffn.experts.w1.weight"
+    weight_tensor = tensors[weight_id]
+    scale_id = weight_tensor.scale_tensor_id
+    assert scale_id is not None
+    weight = plan.placement(weight_id)
+    scale = plan.placement(scale_id)
+    assert weight.materialization == scale.materialization == "node_sharded"
+
+    block = int(weight_tensor.scale_block_elements)
+    cols = int(weight_tensor.shape[-1])
+    placements = []
+    for placement in plan.weight_placements:
+        if placement.tensor_id == weight_id:
+            placement = dataclasses.replace(
+                placement,
+                layer_stride_elements=placement.layer_stride_elements - block,
+            )
+        elif placement.tensor_id == scale_id:
+            placement = dataclasses.replace(
+                placement,
+                layer_stride_elements=(
+                    placement.layer_stride_elements - cols // block
+                ),
+            )
+        placements.append(placement)
+    mutated_plan = dataclasses.replace(
+        plan, weight_placements=tuple(placements)
+    )
+    mutated = lower_to_abi3(graph, capability, plan=mutated_plan)
+
+    from runtime.abi3.records import split_program
+
+    header, _body = split_program(mutated.program)
+    assert header.deployment_digest == mutated.deployment_digest
+    assert verify_deployment(mutated, capability).admitted
+    report = check_deployment(graph, mutated, capability)
+    assert not report["ok"]
+    assert not report["checks"]["weight_view_layer_strides"]
+    assert any("must carry layer stride" in e for e in report["errors"])
+
+
+def test_checker_rejects_wrong_reachable_stride_despite_unreachable_decoy(
+    real_deepseek_build,
+):
+    """Only an executed operator may witness a weight view's semantics.
+
+    The mutation keeps every digest internally consistent.  Its executed view
+    walks later layers at the wrong offset, while an unreferenced operator and
+    view retain the correct stride and claim the same source kernel.  A checker
+    that scans the whole descriptor table accepts the decoy; the independent
+    lane must follow the instruction stream and reject the executed slot.
+    """
+    import copy
+
+    from runtime.abi3.records import decode_body, split_program
+
+    graph, capability, deployment, _plan = real_deepseek_build
+    assert check_deployment(graph, deployment, capability)["ok"]
+    mutated = copy.deepcopy(deployment)
+
+    weight_id = "layers.0.ffn.experts.w1.weight"
+    kernel = next(
+        kernel
+        for kernel in graph.kernels
+        if kernel.kind == "ROUTED_MATMUL"
+        and kernel.layer == 0
+        and len(kernel.inputs) > 1
+        and kernel.inputs[1] == weight_id
+    )
+    _header, body = split_program(mutated.program)
+    instructions = decode_body(body)
+    executed_ids = {
+        int(instruction.descriptor_id)
+        for instruction in instructions
+        if int(instruction.source_operation_id) == kernel.index
+    }
+    operator = next(
+        mutated.table[descriptor_id]
+        for descriptor_id in executed_ids
+        if 0 <= descriptor_id < len(mutated.table)
+        and mutated.table[descriptor_id].descriptor_type
+        == ExtendedDescriptorType.OPERATOR
+        and int(mutated.table[descriptor_id].payload["engine_family"])
+        == int(Major.TENSOR)
+        and int(mutated.table[descriptor_id].payload["engine_sub"])
+        == int(engine_for(kernel.kind).sub)
+    )
+    view_id = int(operator.payload["input_view_1"])
+    view = mutated.table[view_id]
+    correct_view = copy.deepcopy(view)
+    term = next(
+        index
+        for index in range(int(view.payload["dynamic_term_count"]))
+        if int(view.payload[f"term{index}_kind"])
+        == int(SelectorKind.LOOP_INDUCTION)
+    )
+    stride_field = f"term{term}_stride"
+    correct_stride = int(view.payload[stride_field])
+    assert correct_stride > 32
+    view.payload[stride_field] = correct_stride - 32
+    mutated.table.rewrite(view_id)
+
+    correct_view.descriptor_id = NO_ID
+    decoy_view_id = mutated.table.add(correct_view)
+    decoy_operator = copy.deepcopy(operator)
+    decoy_operator.descriptor_id = NO_ID
+    decoy_operator.payload["input_view_1"] = decoy_view_id
+    decoy_operator_id = mutated.table.add(decoy_operator)
+    assert decoy_operator_id not in executed_ids
+
+    _restamp_descriptor_table_and_deployment(mutated)
+    assert verify_deployment(mutated, capability).admitted
+    report = check_deployment(graph, mutated, capability)
+    assert not report["ok"]
+    assert not report["checks"]["weight_view_layer_strides"]
+    assert not report["checks"]["weight_view_exact"]
+    assert any(
+        f"reachable operator {operator.descriptor_id}" in error
+        and "must carry layer stride" in error
+        for error in report["errors"]
+    )
 
 
 def _block_scale_census(deployment) -> dict[tuple[int, int], int]:

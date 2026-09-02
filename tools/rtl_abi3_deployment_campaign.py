@@ -3,23 +3,24 @@
 
 ``tools/rtl_abi3_campaign.py`` correlates the ABI 3.0 control plane against 65
 vectors that are real programs *written for the campaign*.  This campaign
-correlates it against the three programs this project claims to run: Qwen3-8B on
-ROM, Qwen3-8B on HBM and DeepSeek-V4-Flash on the wafer, on both entrypoints,
-from their own deployment images.
+correlates it against the four deployments this project claims to run:
+Qwen3-8B on ROM and HBM, and DeepSeek-V4-Flash on the ROM wafer and HBM
+32-node cluster, on both entrypoints, from their own deployment images.
 
 The shape is the sibling campaign's, deliberately: the same RTL, the same
-verification top with the same parameters, two independently written checkers,
-one under Icarus and one as a separately compiled Verilator executable, and a
-marker derived from a golden execution on ``runtime.sim.device.Device`` rather
-than written by hand.  A run counts only if both simulators print that marker
-exactly.
+verification top with deployment-only memory-depth overrides, two independently
+written checkers, one under Icarus and one as a separately compiled Verilator
+executable, and a marker derived from a golden execution on
+``runtime.sim.device.Device`` rather than written by hand.  The shared top's
+defaults and the production RTL geometry remain unchanged.  A run counts only
+if both simulators print that marker exactly.
 
 Two things are different, and both are consequences of correlating real
 programs rather than constructed ones:
 
 *The checkers do not stop at the first divergence.*  Each case records its first
 disagreement with a numeric site code and the next case starts clean, so one
-defect in one deployment does not hide the state of the other two.  This tool
+defect in one deployment does not hide the state of the other three.  This tool
 parses those per-case and per-deployment lines out of both logs and requires the
 two simulators to have seen the *same* thing, divergences included.  Two
 simulators agreeing that the RTL is wrong is a stronger statement than one
@@ -505,6 +506,8 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
             "-Wno-DECLFILENAME",
             "--top-module",
             "ot_a3_microsequencer_top",
+            "-GPROGRAM_WORDS=4096",
+            "-GDESC_WORDS=8192",
             "--Mdir",
             "obj_a3_deploy",
             *rtl,
@@ -716,24 +719,27 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
         "claim_boundary": {
             "establishes": [
                 "the ABI 3.0 sequencer RTL reproduces runtime.sim.device.Device "
-                "exactly on all three deployments this program ships -- the "
-                "Qwen3-8B ROM single chip c71ee77e, the Qwen3-8B HBM single "
-                "chip fb5c66df and the DeepSeek-V4-Flash ROM wafer 27dd5f55 -- "
-                "on both entrypoints, from their own program images, "
-                "descriptor tables and request-bound symbols, with no vector "
-                "written for the occasion",
+                "exactly on all four deployments this program ships -- the "
+                "Qwen3-8B ROM and HBM single-chip deployments and the "
+                "DeepSeek-V4-Flash ROM-wafer and HBM 32-node-cluster "
+                "deployments -- on both entrypoints, from their own program "
+                "images, descriptor tables and request-bound symbols, with no "
+                "vector written for the occasion; what_ran.deployments binds "
+                "each statement to its full deployment digest",
                 "the depth is the whole transaction on every case, ending in "
-                "COMPLETE and not at a bound: 2,105 instructions retired with "
-                "693 engine issues and 2,143 resolved views on each Qwen case, "
-                "inside the bound the program declares (2,105 for the ROM "
-                "build, 22,715 for the HBM one); 29,456 retired with 12,657 "
-                "issues and 39,849 views on the DeepSeek prefill and 11,714 "
-                "retired with 3,600 issues and 10,428 views on its decode, "
-                "inside a declared bound of 4,764,120",
+                "COMPLETE and not at a lowered co-simulation bound; each "
+                "case's exact retired-instruction, engine-issue and resolved-"
+                "view totals are recorded in what_ran.depth_reached rather "
+                "than copied into this prose",
                 "every engine issue is compared by the instruction index that "
                 "issued it as well as by family, subopcode and descriptor ID, "
                 "so a loop trip or a branch that came out differently is "
                 "caught at the next issue rather than at the end",
+                "one verification-top instance represents one sequencer node; "
+                "its resolved views are compared with golden node zero and its "
+                "state rows with the exact symmetric per-node commit run. The "
+                "vector artifact separately retains each deployment's node "
+                "count and Device's cluster-total committed rows",
                 "every resolved operand view is compared against "
                 "runtime.sim.memory.ViewResolver.resolve at the loop bindings "
                 "the device recorded: element offset (A4), resolved extent "
@@ -753,13 +759,13 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
                 "arenas are mapped so the golden device can be constructed and "
                 "no-op engines never touch them, so this run says nothing "
                 "about the weights, the ROM image, or any value in memory",
-                "deepseek_v4_flash_rom_wafer_arithmetic": "the "
-                "DeepSeek-V4-Flash ROM wafer deployment 27dd5f55 now "
-                "correlates at full depth, but on its *control plane* only, "
-                "for the same reason every other case here does: the engines "
-                "are recording no-ops on the golden side and absent on the "
-                "RTL side. No physical result may cite this campaign as "
-                "evidence about the wafer part's arithmetic",
+                "deepseek_v4_flash_arithmetic": "the DeepSeek-V4-Flash ROM-"
+                "wafer and HBM-cluster deployments correlate at full depth, "
+                "but on their *control planes* only, for the same reason every "
+                "other case here does: the engines are recording no-ops on "
+                "the golden side and absent on the RTL side. No physical "
+                "result may cite this campaign as evidence about either "
+                "deployment's arithmetic",
                 "engine_arithmetic": "every dispatchable engine operation is "
                 "a recording no-op on the golden side and absent on the RTL "
                 "side. The instruction stream is verified; the computation is "
@@ -813,7 +819,7 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
             "predicate kinds that require an engine or a memory read "
             "(ENGINE_STATUS, ROUTE_VALID, BOOLEAN_OBJECT, EOS_MEMBER) fail "
             "closed with trap class 4 instead of being evaluated. None of the "
-            "three shipped deployments uses one: the only predicates any of "
+            "four shipped deployments uses one: the only predicates any of "
             "them carries are COMPARE_SYMBOL",
             "the deployment bundles are built outside this repository's "
             "tracked tree (build/ is ignored), so the vector set binds them by "

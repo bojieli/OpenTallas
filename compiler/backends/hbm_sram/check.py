@@ -38,15 +38,21 @@ from compiler.ir.v3.kernel_ir import (
     Symbolic,
     Tensor,
 )
-from compiler.ir.v3.lowering import engine_for
+from compiler.ir.v3.lowering import ABSENT_OPERANDS, abi_input_slots, engine_for
 from runtime.abi3.capability import Capability
 from runtime.abi3.constants import (
     Control,
+    Dma,
     Major,
+    NO_ID,
     Permission,
+    Route,
+    Selection,
     State,
     StorageClass,
+    Tensor as TensorOp,
     TopologyClass,
+    Vector,
 )
 from runtime.abi3.deployment import Deployment
 from runtime.abi3.descriptors import ExtendedDescriptorType, SelectorKind, Symbol
@@ -83,6 +89,223 @@ _MERGE_SLACK = 4096
 _TRANSACTION_KINDS = frozenset({"STATE_PREPARE", "STATE_COMMIT", "STATE_READ"})
 
 
+def _wait_events(table: Any, wait_set_id: int) -> set[int]:
+    if wait_set_id == NO_ID or not 0 <= wait_set_id < len(table):
+        return set()
+    descriptor = table[wait_set_id]
+    if descriptor.descriptor_type != ExtendedDescriptorType.EVENT_WAIT_SET:
+        return set()
+    count = int(descriptor.payload["producer_count"])
+    return {
+        int(descriptor.payload[f"producer_{slot}"]) for slot in range(count)
+    }
+
+
+def _operator_io_objects(table: Any, instruction: Any) -> tuple[set[int], set[int]]:
+    descriptor_id = int(instruction.descriptor_id)
+    if descriptor_id == NO_ID or not 0 <= descriptor_id < len(table):
+        return set(), set()
+    operator = table[descriptor_id]
+    if operator.descriptor_type != ExtendedDescriptorType.OPERATOR:
+        return set(), set()
+
+    def collect(prefix: str, count: int) -> set[int]:
+        objects: set[int] = set()
+        for slot in range(count):
+            view_id = int(operator.payload[f"{prefix}_view_{slot}"])
+            if view_id == NO_ID or not 0 <= view_id < len(table):
+                continue
+            view = table[view_id]
+            if view.descriptor_type == ExtendedDescriptorType.TENSOR_VIEW:
+                objects.add(int(view.primary_object_id))
+        return objects
+
+    return collect("input", 4), collect("output", 2)
+
+
+def _check_shared_exchange_schedule(
+    deployment: Deployment,
+    capability: Capability,
+    instructions: Sequence[Any],
+) -> dict[str, Any]:
+    """Independently prove the one-buffer cluster exchange is serialized.
+
+    The physical plan reserves only the largest communication array.  That is
+    sound only when every pack/LINK/unpack use of the exported HBM object is a
+    complete causal triple on one dedicated DMA queue with one outstanding
+    request.  Reconstruct the invariant from emitted records rather than
+    trusting the planner or the deployment-certificate tool.
+    """
+
+    table = deployment.table
+    errors: list[str] = []
+    object_rows = [_operator_io_objects(table, item) for item in instructions]
+    remote_hbm = {
+        object_id
+        for object_id in table.ids_of_type(ExtendedDescriptorType.MEMORY_OBJECT)
+        if int(table[object_id].payload["storage_class"]) == int(StorageClass.HBM)
+        and int(table[object_id].permissions) & int(Permission.REMOTE)
+    }
+    dma_objects = set().union(
+        *(
+            inputs | outputs
+            for item, (inputs, outputs) in zip(instructions, object_rows)
+            if int(item.major) == int(Major.DMA)
+        )
+    ) if instructions else set()
+    communication_objects: set[int] = set()
+    for descriptor_id in table.ids_of_type(ExtendedDescriptorType.COMMUNICATION):
+        payload = table[descriptor_id].payload
+        communication_objects.update(
+            int(payload[name])
+            for name in ("local_object_id", "remote_object_id")
+            if int(payload[name]) != NO_ID
+        )
+    candidates = sorted(remote_hbm & dma_objects & communication_objects)
+    if len(candidates) != 1:
+        errors.append(
+            "expected one REMOTE HBM exchange object shared by DMA and LINK, "
+            f"found {candidates}"
+        )
+        return {"ok": False, "errors": errors, "exchange_object_ids": candidates}
+
+    exchange = candidates[0]
+    scratch_dmas = {
+        index
+        for index, (item, (inputs, outputs)) in enumerate(
+            zip(instructions, object_rows)
+        )
+        if int(item.major) == int(Major.DMA) and exchange in (inputs | outputs)
+    }
+    links: list[int] = []
+    for index, item in enumerate(instructions):
+        if int(item.major) != int(Major.LINK):
+            continue
+        descriptor_id = int(item.descriptor_id)
+        if descriptor_id == NO_ID or not 0 <= descriptor_id < len(table):
+            continue
+        descriptor = table[descriptor_id]
+        if descriptor.descriptor_type != ExtendedDescriptorType.COMMUNICATION:
+            continue
+        endpoints = {
+            int(descriptor.payload[name])
+            for name in ("local_object_id", "remote_object_id")
+            if int(descriptor.payload[name]) != NO_ID
+        }
+        if exchange in endpoints:
+            links.append(index)
+
+    expected_touches: set[int] = set()
+    for link_index in links:
+        if link_index == 0 or link_index + 1 >= len(instructions):
+            errors.append(f"exchange LINK {link_index} has no adjacent pack/unpack")
+            continue
+        pack_index, unpack_index = link_index - 1, link_index + 1
+        pack, link, unpack = (
+            instructions[pack_index],
+            instructions[link_index],
+            instructions[unpack_index],
+        )
+        pack_inputs, pack_outputs = object_rows[pack_index]
+        unpack_inputs, unpack_outputs = object_rows[unpack_index]
+        if (
+            int(pack.major) != int(Major.DMA)
+            or exchange not in pack_outputs
+            or exchange in pack_inputs
+        ):
+            errors.append(f"exchange LINK {link_index} has no adjacent DMA pack")
+        if (
+            int(unpack.major) != int(Major.DMA)
+            or exchange not in unpack_inputs
+            or exchange in unpack_outputs
+        ):
+            errors.append(f"exchange LINK {link_index} has no adjacent DMA unpack")
+        pack_event = int(pack.signal_event_id)
+        link_event = int(link.signal_event_id)
+        if pack_event == NO_ID or pack_event not in _wait_events(
+            table, int(link.wait_set_id)
+        ):
+            errors.append(f"exchange LINK {link_index} does not wait for its pack")
+        if link_event == NO_ID or link_event not in _wait_events(
+            table, int(unpack.wait_set_id)
+        ):
+            errors.append(f"exchange unpack {unpack_index} does not wait for LINK")
+        expected_touches.update((pack_index, unpack_index))
+
+    if scratch_dmas != expected_touches:
+        errors.append(
+            "exchange-object DMA accesses are not complete adjacent "
+            "pack/LINK/unpack triples"
+        )
+
+    schedules: dict[int, Mapping[str, Any]] = {}
+    for index in sorted(scratch_dmas):
+        operator_id = int(instructions[index].descriptor_id)
+        if not 0 <= operator_id < len(table):
+            errors.append(f"exchange DMA {index} names no operator")
+            continue
+        operator = table[operator_id]
+        if operator.descriptor_type != ExtendedDescriptorType.OPERATOR:
+            errors.append(f"exchange DMA {index} names no OPERATOR")
+            continue
+        schedule_id = int(operator.payload["schedule_id"])
+        if not 0 <= schedule_id < len(table):
+            errors.append(f"exchange DMA {index} names no schedule")
+            continue
+        schedule = table[schedule_id]
+        if schedule.descriptor_type != ExtendedDescriptorType.SCHEDULE:
+            errors.append(f"exchange DMA {index} names no SCHEDULE")
+            continue
+        schedules[index] = schedule.payload
+
+    queue_indices = {int(p["queue_index"]) for p in schedules.values()}
+    issue_windows = {int(p["issue_window"]) for p in schedules.values()}
+    outstanding = {int(p["max_outstanding"]) for p in schedules.values()}
+    dma_queues = int(capability.engines.get("dma", {}).get("queues", 0))
+    queue_index = next(iter(queue_indices)) if len(queue_indices) == 1 else None
+    if len(schedules) != len(scratch_dmas):
+        errors.append("some exchange DMA has no valid schedule")
+    if queue_index is None or queue_index != dma_queues - 1:
+        errors.append(
+            f"exchange DMAs use queues {sorted(queue_indices)}, expected the "
+            f"dedicated last DMA queue {dma_queues - 1}"
+        )
+    if issue_windows != {1}:
+        errors.append(f"exchange DMA issue_window values are {sorted(issue_windows)}")
+    if outstanding != {1}:
+        errors.append(
+            f"exchange DMA max_outstanding values are {sorted(outstanding)}"
+        )
+    if queue_index is not None:
+        for index, item in enumerate(instructions):
+            if int(item.major) != int(Major.DMA) or index in scratch_dmas:
+                continue
+            operator_id = int(item.descriptor_id)
+            if not 0 <= operator_id < len(table):
+                continue
+            operator = table[operator_id]
+            if operator.descriptor_type != ExtendedDescriptorType.OPERATOR:
+                continue
+            schedule = table[int(operator.payload["schedule_id"])]
+            if (
+                schedule.descriptor_type == ExtendedDescriptorType.SCHEDULE
+                and int(schedule.payload["queue_index"]) == queue_index
+            ):
+                errors.append(
+                    f"non-exchange DMA {index} uses reserved queue {queue_index}"
+                )
+    return {
+        "ok": not errors,
+        "errors": errors,
+        "exchange_object_ids": candidates,
+        "link_count": len(links),
+        "scratch_dma_count": len(scratch_dmas),
+        "queue_index": queue_index,
+        "issue_window": next(iter(issue_windows)) if len(issue_windows) == 1 else None,
+        "max_outstanding": next(iter(outstanding)) if len(outstanding) == 1 else None,
+    }
+
+
 def check_deployment(
     graph: KernelGraph, deployment: Deployment, capability: Capability
 ) -> dict[str, Any]:
@@ -115,7 +338,7 @@ def check_deployment(
 
     tensors = {t.tensor_id: t for t in graph.tensors}
     bands = _reconstruct_bands(graph, tensors)
-    expected_groups, expected_extents = _reconstruct_weight_groups(
+    expected_groups, expected_extents, expected_members = _reconstruct_weight_groups(
         graph, tensors, bands
     )
     first_iteration = {
@@ -129,11 +352,54 @@ def check_deployment(
     }
 
     # -- 1. engine mapping ------------------------------------------------
+    # Only an operator named by an instruction can witness a graph kernel's
+    # lowering.  Descriptor tables may legitimately contain unreferenced
+    # records, and accepting one of those here lets a digest-consistent decoy
+    # hide a malformed view on the operator the program actually executes.
+    # Bind both provenance fields and the executed opcode before admitting the
+    # descriptor to the witness set; the generic verifier checks the same wire
+    # structure, while this check gives the independent semantic lane a
+    # fail-closed association with the neutral graph.
     by_kernel: dict[int, list[Any]] = {}
-    for descriptor in operators:
-        by_kernel.setdefault(descriptor.payload["source_kernel_id"], []).append(
-            descriptor
+    reachable_ids: set[int] = set()
+    graph_kernel_ids = {kernel.index for kernel in graph.kernels}
+    for instruction_index, instruction in enumerate(instructions):
+        descriptor_id = int(instruction.descriptor_id)
+        if descriptor_id == NO_ID or not 0 <= descriptor_id < len(table):
+            continue
+        descriptor = table[descriptor_id]
+        if descriptor.descriptor_type != ExtendedDescriptorType.OPERATOR:
+            continue
+        instruction_source = int(instruction.source_operation_id)
+        descriptor_source = int(descriptor.payload["source_kernel_id"])
+        source_ok = (
+            instruction_source in graph_kernel_ids
+            and instruction_source == descriptor_source
         )
+        require(
+            "reachable_operator_source_binding",
+            source_ok,
+            f"instruction {instruction_index} executes operator {descriptor_id} "
+            f"with source operation {instruction_source}, but the descriptor "
+            f"names source kernel {descriptor_source}",
+        )
+        engine_ok = (
+            int(instruction.major) == int(descriptor.payload["engine_family"])
+            and int(instruction.sub) == int(descriptor.payload["engine_sub"])
+        )
+        require(
+            "reachable_operator_engine_binding",
+            engine_ok,
+            f"instruction {instruction_index} executes "
+            f"{int(instruction.major):#x}.{int(instruction.sub):#x}, but operator "
+            f"{descriptor_id} declares "
+            f"{int(descriptor.payload['engine_family']):#x}."
+            f"{int(descriptor.payload['engine_sub']):#x}",
+        )
+        if not source_ok or not engine_ok or descriptor_id in reachable_ids:
+            continue
+        reachable_ids.add(descriptor_id)
+        by_kernel.setdefault(instruction_source, []).append(descriptor)
     for index in sorted(emitted_kernels):
         kernel = graph.kernels[index]
         engine = engine_for(kernel.kind)
@@ -182,19 +448,61 @@ def check_deployment(
     )
     immutable = [d for d in immutable if d not in generated]
     actual_groups: list[list[tuple[str, int, int, str | None]]] = []
+    actual_group_ids: list[int] = []
     seen_ranges: dict[tuple[str, int, int], int] = {}
     for descriptor in immutable:
         source = deployment.objects.get(descriptor.descriptor_id)
-        if source is None or source.kind != "segments":
+        if source is None or source.kind not in {"segments", "node_segments"}:
             errors.append(
                 f"object {descriptor.descriptor_id} holds weights but is not a "
-                "zero-copy segments source"
+                "zero-copy shared or node-indexed segments source"
             )
             checks["zero_copy_weights"] = False
             continue
-        group: list[tuple[str, int, int, str | None]] = []
-        for segment in source.segments:
-            key = (segment.path, segment.offset, segment.bytes)
+        maps = (
+            source.node_segments
+            if source.kind == "node_segments"
+            else (source.segments,)
+        )
+        if source.kind == "node_segments" and len(topologies) == 1:
+            require(
+                "node_source_count",
+                len(maps) == int(topologies[0].payload["node_count"]),
+                f"object {descriptor.descriptor_id} declares {len(maps)} node "
+                f"source maps for a {topologies[0].payload['node_count']}-node "
+                "topology",
+            )
+        group_ranges: dict[tuple[str, int, int], str | None] = {}
+        for node_id, segments in enumerate(maps):
+            require(
+                "object_size_matches_segments",
+                sum(segment.bytes for segment in segments)
+                == descriptor.payload["size_bytes"],
+                f"object {descriptor.descriptor_id} node {node_id} declares "
+                f"{descriptor.payload['size_bytes']} bytes but its segments "
+                f"cover {sum(segment.bytes for segment in segments)}",
+            )
+            node_seen: set[tuple[str, int, int]] = set()
+            for segment in segments:
+                key = (segment.path, segment.offset, segment.bytes)
+                if key in node_seen:
+                    errors.append(
+                        f"checkpoint range {key} occurs twice in object "
+                        f"{descriptor.descriptor_id}'s node {node_id} map"
+                    )
+                    checks["zero_copy_weights"] = False
+                node_seen.add(key)
+                prior_digest = group_ranges.get(key)
+                if prior_digest is not None and prior_digest != segment.sha256:
+                    errors.append(
+                        f"checkpoint range {key} has inconsistent digests in "
+                        f"object {descriptor.descriptor_id}'s node maps"
+                    )
+                    checks["zero_copy_weights"] = False
+                group_ranges[key] = segment.sha256
+        group = [(*key, digest) for key, digest in group_ranges.items()]
+        for path, offset, size, _digest in group:
+            key = (path, offset, size)
             if key in seen_ranges:
                 errors.append(
                     f"checkpoint range {key} is materialised twice (objects "
@@ -203,15 +511,8 @@ def check_deployment(
                 )
                 checks["zero_copy_weights"] = False
             seen_ranges[key] = descriptor.descriptor_id
-            group.append((segment.path, segment.offset, segment.bytes, segment.sha256))
         actual_groups.append(group)
-        require(
-            "object_size_matches_segments",
-            sum(s.bytes for s in source.segments) == descriptor.payload["size_bytes"],
-            f"object {descriptor.descriptor_id} declares "
-            f"{descriptor.payload['size_bytes']} bytes but its segments cover "
-            f"{sum(s.bytes for s in source.segments)}",
-        )
+        actual_group_ids.append(descriptor.descriptor_id)
     checks.setdefault("zero_copy_weights", True)
 
     declared = {
@@ -243,6 +544,56 @@ def check_deployment(
         expected_sets == actual_sets,
         f"weight grouping disagrees: the checker reconstructs "
         f"{len(expected_sets)} objects, the deployment declares {len(actual_sets)}",
+    )
+
+    # Match a reconstructed logical group to its descriptor by the complete
+    # authenticated inventory.  The inventory is only the join key: source
+    # order and view addresses are checked below from the graph, never inferred
+    # from the deployment's ordering or offsets.
+    object_for_group: dict[str, int] = {}
+    for group_key, expected in expected_groups.items():
+        matches = [
+            object_id
+            for object_id, actual in zip(actual_group_ids, actual_groups)
+            if sorted(tuple(item) for item in actual)
+            == sorted(tuple(item) for item in expected)
+        ]
+        require(
+            "weight_group_identity",
+            len(matches) == 1,
+            f"weight group {group_key} matches {len(matches)} immutable objects, "
+            "expected exactly one",
+        )
+        if len(matches) == 1:
+            object_for_group[group_key] = matches[0]
+
+    node_count_for_weights = (
+        int(topologies[0].payload["node_count"]) if len(topologies) == 1 else 1
+    )
+    expected_layout = _reconstruct_weight_layout(
+        graph,
+        tensors,
+        expected_groups,
+        expected_members,
+        node_count_for_weights,
+    )
+    _check_weight_sources(
+        deployment,
+        table,
+        expected_layout,
+        object_for_group,
+        require,
+    )
+    _check_weight_views(
+        graph,
+        tensors,
+        table,
+        by_kernel,
+        expected_layout,
+        object_for_group,
+        emitted_kernels,
+        node_count_for_weights,
+        require,
     )
 
     for role_key, extents in expected_extents.items():
@@ -355,6 +706,7 @@ def check_deployment(
             descriptor.payload["participant_count"] == node_count,
             "a collective must name every participating node",
         )
+    scratch_schedule: dict[str, Any] | None = None
     if node_count > 1:
         classes = {d.payload["route_class"] for d in communications}
         require(
@@ -375,6 +727,16 @@ def check_deployment(
             "work_is_sharded",
             bool(sharded_views),
             "a 32-node deployment must shard work by node",
+        )
+        scratch_schedule = _check_shared_exchange_schedule(
+            deployment, capability, instructions
+        )
+        require(
+            "communication_scratch_serialized",
+            bool(scratch_schedule["ok"]),
+            "shared communication scratch is not serialized on one dedicated "
+            "one-outstanding DMA queue: "
+            + "; ".join(scratch_schedule["errors"]),
         )
 
     # -- 6. states ---------------------------------------------------------
@@ -479,6 +841,7 @@ def check_deployment(
             "node_count": node_count,
             "declared_retired_work": header.max_retired_work,
         },
+        "communication_scratch": scratch_schedule,
         "verifier": verifier.to_dict(),
     }
 
@@ -846,11 +1209,622 @@ def _binding_ranges(binding: CheckpointBinding) -> list[_Range]:
     return [(binding.path, binding.offset, binding.bytes, binding.sha256)]
 
 
+def _elements_in_bytes(size: int, dtype: str) -> int:
+    bits = _bits(dtype)
+    if int(size) * 8 % bits:
+        raise ValueError(f"{size} bytes do not hold a whole number of {dtype} elements")
+    return int(size) * 8 // bits
+
+
+def _matrix_shape(tensor: Tensor) -> tuple[int, int]:
+    """Independently flatten one neutral tensor to its matrix presentation."""
+    if not tensor.shape:
+        return 1, 1
+    if isinstance(tensor.shape[0], Symbolic):
+        rows = _extent(tensor.shape[0])
+        cols = 1
+        for axis in tensor.shape[1:]:
+            cols *= max(_extent(axis), 1)
+        return max(rows, 1), max(cols, 1)
+    rows = 1
+    for axis in tensor.shape[:-1]:
+        rows *= max(_extent(axis), 1)
+    return max(rows, 1), max(_extent(tensor.shape[-1]), 1)
+
+
+def _scale_row_block(tensor: Tensor, tensors: Mapping[str, Tensor]) -> int:
+    """Leading-axis rows represented by one block-scale code."""
+    scale = tensors.get(tensor.scale_tensor_id or "")
+    if scale is None or int(tensor.scale_block_elements or 0) <= 0:
+        return 1
+    rows = 1
+    for axis in tensor.shape[:-1]:
+        rows *= max(_extent(axis), 1)
+    scale_rows = 1
+    for axis in scale.shape[:-1]:
+        scale_rows *= max(_extent(axis), 1)
+    if scale_rows <= 0 or rows % scale_rows:
+        return 1
+    return max(rows // scale_rows, 1)
+
+
+def _domain_extent(kernel: Kernel, graph: KernelGraph) -> int:
+    symbols = {symbol.name: symbol.maximum for symbol in graph.symbols}
+    for key in ("reduction_width", "reduction", "depth"):
+        value = kernel.iteration_domain.get(key)
+        if value is None:
+            continue
+        if isinstance(value, str):
+            return int(symbols.get(value, 0))
+        return _extent(value, 0)
+    return 0
+
+
+def _logical_weight_use(
+    graph: KernelGraph,
+    kernel: Kernel,
+    tensor_id: str,
+    tensors: Mapping[str, Tensor],
+    node_count: int,
+) -> tuple[bool, bool, int]:
+    """Return ``(node selected, physically contiguous, node stride)``.
+
+    This is reconstructed from the neutral contraction geometry.  In
+    particular it does not inspect a tensor-view term: that term is one of the
+    claims this checker is meant to verify.  Routed banks are owned in
+    consecutive expert runs; ordinary contractions own output-column runs.
+    """
+    if node_count <= 1 or len(kernel.inputs) < 2 or kernel.inputs[1] != tensor_id:
+        return False, True, 0
+    engine = engine_for(kernel.kind)
+    if int(engine.family) != int(Major.TENSOR) or int(engine.sub) not in {
+        int(TensorOp.MATMUL),
+        int(TensorOp.GROUPED_MATMUL),
+        int(TensorOp.ROUTED_MATMUL),
+    }:
+        return False, True, 0
+    if not kernel.outputs:
+        return False, True, 0
+
+    weight = tensors[tensor_id]
+    weight_rows, weight_cols = _matrix_shape(weight)
+    _out_rows, output_cols = _matrix_shape(tensors[kernel.outputs[0]])
+    _activation_rows, activation_cols = _matrix_shape(tensors[kernel.inputs[0]])
+
+    declared_experts = int(kernel.attributes.get("expert_count", 0) or 0)
+    bank = 0
+    if (
+        declared_experts > 1
+        and len(weight.shape) == 3
+        and _extent(weight.shape[0]) == declared_experts
+    ):
+        bank = declared_experts
+        weight_rows //= bank
+    bank_shard = (
+        bank // node_count
+        if bank >= node_count and bank % node_count == 0
+        else 0
+    )
+
+    depth = _domain_extent(kernel, graph) or activation_cols
+    if weight_cols == depth:
+        transposed = False
+    elif weight_rows == depth:
+        transposed = True
+    elif depth and weight_cols % depth == 0:
+        transposed = False
+    elif depth and weight_rows % depth == 0:
+        transposed = True
+    else:
+        return False, True, 0
+
+    if bank_shard:
+        expert_stride = weight_rows * weight_cols
+        return True, True, bank_shard * expert_stride
+
+    row_block = _scale_row_block(weight, tensors)
+    if (
+        output_cols <= node_count
+        or output_cols % node_count
+        or (output_cols // node_count) % row_block
+    ):
+        return False, True, 0
+    shard_columns = output_cols // node_count
+    node_stride = shard_columns if transposed else shard_columns * weight_cols
+    return True, not transposed, node_stride
+
+
+def _partition_ranges(
+    ranges: Sequence[_Range],
+    size_bytes: int,
+    dtype: str,
+    node_count: int,
+) -> tuple[tuple[_Range, ...], ...] | None:
+    """Split complete authenticated ranges into equal consecutive node runs."""
+    if node_count <= 1 or size_bytes <= 0 or size_bytes % node_count:
+        return None
+    elements = _elements_in_bytes(size_bytes, dtype)
+    if elements % node_count:
+        return None
+    per_node = size_bytes // node_count
+    out: list[tuple[_Range, ...]] = []
+    current: list[_Range] = []
+    current_bytes = 0
+    for item in ranges:
+        extent = int(item[2])
+        if extent <= 0 or current_bytes + extent > per_node:
+            return None
+        current.append(item)
+        current_bytes += extent
+        if current_bytes == per_node:
+            out.append(tuple(current))
+            current = []
+            current_bytes = 0
+    if current or len(out) != node_count:
+        return None
+    return tuple(out)
+
+
+def _reconstruct_weight_layout(
+    graph: KernelGraph,
+    tensors: Mapping[str, Tensor],
+    groups: Mapping[str, Sequence[_Range]],
+    members_by_group: Mapping[str, Sequence[str]],
+    node_count: int,
+) -> dict[str, Any]:
+    """Rebuild node sources, tensor origins and induction strides from the IR."""
+    group_of = {
+        tensor_id: group_key
+        for group_key, members in members_by_group.items()
+        for tensor_id in members
+    }
+    ranges_by_tensor = {
+        tensor_id: tuple(_binding_ranges(tensors[tensor_id].binding))
+        for tensor_id in group_of
+        if tensors[tensor_id].binding is not None
+    }
+
+    modes: dict[str, set[bool]] = {}
+    contiguous: dict[str, bool] = {}
+    for kernel in graph.kernels:
+        for tensor_id in kernel.inputs:
+            if tensor_id not in group_of:
+                continue
+            selected, safe, _stride = _logical_weight_use(
+                graph, kernel, tensor_id, tensors, node_count
+            )
+            modes.setdefault(tensor_id, set()).add(selected)
+            if selected:
+                contiguous[tensor_id] = contiguous.get(tensor_id, True) and safe
+
+    logical = {tensor_id: values == {True} for tensor_id, values in modes.items()}
+    # A folded role has one placement decision.  Members outside the emitted
+    # first iteration inherit the decision reconstructed from all peers.
+    for group_key, members in members_by_group.items():
+        if not group_key.startswith("role:") or group_key.endswith(".scale"):
+            continue
+        role_modes = {
+            mode for tensor_id in members for mode in modes.get(tensor_id, ())
+        }
+        selected = role_modes == {True}
+        for tensor_id in members:
+            logical[tensor_id] = selected
+    # Scale tensors have no explicit operator slot.  Their ownership is the
+    # weight's ownership because the weight view is their sole address.
+    for tensor in tensors.values():
+        scale_id = tensor.scale_tensor_id
+        if tensor.tensor_id in group_of and scale_id in group_of:
+            logical[scale_id] = logical.get(tensor.tensor_id, False)
+            contiguous[scale_id] = contiguous.get(tensor.tensor_id, True)
+
+    partitions: dict[str, tuple[tuple[_Range, ...], ...]] = {}
+    eligible: dict[str, bool] = {}
+    for tensor_id in group_of:
+        tensor = tensors[tensor_id]
+        binding = tensor.binding
+        assert binding is not None
+        pieces = (
+            _partition_ranges(
+                ranges_by_tensor[tensor_id], binding.bytes, tensor.dtype, node_count
+            )
+            if logical.get(tensor_id, False)
+            and contiguous.get(tensor_id, True)
+            else None
+        )
+        eligible[tensor_id] = pieces is not None
+        if pieces is not None:
+            partitions[tensor_id] = pieces
+
+    role_groups = [
+        tuple(members)
+        for group_key, members in members_by_group.items()
+        if group_key.startswith("role:")
+    ]
+    changed = True
+    while changed:
+        changed = False
+        for members in role_groups:
+            shared = all(eligible.get(tensor_id, False) for tensor_id in members)
+            for tensor_id in members:
+                if eligible.get(tensor_id, False) != shared:
+                    eligible[tensor_id] = shared
+                    changed = True
+        for tensor in tensors.values():
+            scale_id = tensor.scale_tensor_id
+            if tensor.tensor_id not in eligible or scale_id not in eligible:
+                continue
+            shared = eligible[tensor.tensor_id] and eligible[scale_id]
+            if eligible[tensor.tensor_id] != shared:
+                eligible[tensor.tensor_id] = shared
+                changed = True
+            if eligible[scale_id] != shared:
+                eligible[scale_id] = shared
+                changed = True
+
+    expected_groups: dict[str, dict[str, Any]] = {}
+    placements: dict[str, dict[str, Any]] = {}
+    for group_key, members in members_by_group.items():
+        node_indexed = any(eligible.get(tensor_id, False) for tensor_id in members)
+        node_maps: list[list[_Range]] = [[] for _ in range(node_count)]
+        cursor_bytes = 0
+        for tensor_id in members:
+            tensor = tensors[tensor_id]
+            binding = tensor.binding
+            assert binding is not None
+            if node_indexed:
+                maps = (
+                    partitions[tensor_id]
+                    if eligible.get(tensor_id, False)
+                    else tuple(ranges_by_tensor[tensor_id] for _ in range(node_count))
+                )
+                local_bytes = sum(item[2] for item in maps[0])
+                for node_id, source_ranges in enumerate(maps):
+                    node_maps[node_id].extend(source_ranges)
+            else:
+                local_bytes = binding.bytes
+            placements[tensor_id] = {
+                "group_key": group_key,
+                "element_offset": _elements_in_bytes(cursor_bytes, tensor.dtype),
+                "layer_stride_elements": 0,
+                "logical_node_sharded": logical.get(tensor_id, False),
+                "materialization": (
+                    "node_sharded" if eligible.get(tensor_id, False) else "replicated"
+                ),
+            }
+            cursor_bytes += local_bytes
+
+        expected_groups[group_key] = {
+            "kind": "node_segments" if node_indexed else "segments",
+            "size_bytes": cursor_bytes,
+            "ranges": tuple(groups[group_key]),
+            "node_maps": tuple(tuple(items) for items in node_maps),
+            "members": tuple(members),
+        }
+
+    for group_key, members in members_by_group.items():
+        if not group_key.startswith("role:") or len(members) < 2:
+            continue
+        offsets = [placements[tensor_id]["element_offset"] for tensor_id in members]
+        deltas = {right - left for left, right in zip(offsets, offsets[1:])}
+        stride = next(iter(deltas)) if len(deltas) == 1 else -1
+        for tensor_id in members:
+            placements[tensor_id]["layer_stride_elements"] = stride
+
+    return {"groups": expected_groups, "placements": placements}
+
+
+def _source_ranges(source: Any) -> tuple[_Range, ...]:
+    return tuple(
+        (segment.path, segment.offset, segment.bytes, segment.sha256)
+        for segment in source
+    )
+
+
+def _check_weight_sources(
+    deployment: Deployment,
+    table: Any,
+    layout: Mapping[str, Any],
+    object_for_group: Mapping[str, int],
+    require: Any,
+) -> None:
+    """Verify exact authenticated byte order for every reconstructed source."""
+    for group_key, expected in layout["groups"].items():
+        object_id = object_for_group.get(group_key)
+        if object_id is None:
+            continue
+        source = deployment.objects.get(object_id)
+        if not require(
+            "authenticated_segment_order",
+            source is not None and source.kind == expected["kind"],
+            f"weight group {group_key} object {object_id} must use an exact "
+            f"{expected['kind']} source",
+        ):
+            continue
+        descriptor = table[object_id]
+        require(
+            "weight_object_local_extent",
+            int(descriptor.payload["size_bytes"]) == int(expected["size_bytes"]),
+            f"weight group {group_key} object {object_id} has local extent "
+            f"{descriptor.payload['size_bytes']}, expected {expected['size_bytes']}",
+        )
+        if source.kind == "segments":
+            actual = _source_ranges(source.segments)
+            wanted = expected["ranges"]
+        else:
+            actual = tuple(_source_ranges(items) for items in source.node_segments)
+            wanted = expected["node_maps"]
+        require(
+            "authenticated_segment_order",
+            actual == wanted,
+            f"weight group {group_key} object {object_id} does not preserve the "
+            "graph's exact per-node authenticated segment order",
+        )
+
+
+def _view_terms(view: Any, kind: SelectorKind) -> list[tuple[int, int]]:
+    return [
+        (
+            int(view.payload[f"term{index}_index"]),
+            int(view.payload[f"term{index}_stride"]),
+        )
+        for index in range(int(view.payload["dynamic_term_count"]))
+        if int(view.payload[f"term{index}_kind"]) == int(kind)
+    ]
+
+
+def _presented_element_factor(kernel: Kernel, tensor_id: str, tensor: Tensor) -> int:
+    """Element-address multiplier for an explicitly declared narrow reading."""
+    if (
+        len(kernel.inputs) > 1
+        and kernel.inputs[1] == tensor_id
+        and tensor.dtype == "i64"
+        and str(kernel.attributes.get("table_element_reading", "") or "")
+        == "low_u32_of_i64"
+    ):
+        return 2
+    return 1
+
+
+def _checker_input_slots(
+    kernel: Kernel, tensors: Mapping[str, Tensor]
+) -> list[str | None]:
+    """Reconstruct TA-ABI3 operand slots without consulting backend plans.
+
+    The neutral lowering module owns declared holes.  The few frozen operand
+    conventions layered on top are re-stated here so a view is checked in the
+    slot that gives it meaning, rather than merely matched to some view of the
+    same memory object.
+    """
+    names = list(kernel.inputs)
+    permutation = {
+        "HYPER_CONNECT_PRE": (0, 1, 3, 2),
+        "HYPER_CONNECT_HEAD": (0, 1, 3, 2),
+    }.get(kernel.kind)
+    if permutation is not None and len(names) == len(permutation):
+        names = [names[index] for index in permutation]
+
+    engine = engine_for(kernel.kind)
+    index_first = (int(engine.family), int(engine.sub)) in {
+        (int(Major.TENSOR), int(TensorOp.EMBED_LOOKUP)),
+        (int(Major.DMA), int(Dma.GATHER)),
+        (int(Major.DMA), int(Dma.SCATTER)),
+        (int(Major.ROUTE), int(Route.EXPERT_DISPATCH)),
+    }
+    if index_first and len(names) >= 2:
+        integer = {"u32", "i32", "u64", "i64"}
+        if tensors[names[0]].dtype not in integer:
+            for position, name in enumerate(names):
+                if tensors[name].dtype in integer:
+                    names.insert(0, names.pop(position))
+                    break
+
+    if kernel.kind == "EXPERT_REDUCE" and "base_operand_index" in kernel.attributes:
+        base = int(kernel.attributes["base_operand_index"])
+        return [kernel.inputs[0], None, kernel.inputs[base]]
+
+    limit = {
+        (int(Major.VECTOR), int(Vector.SILU_MUL)): 2,
+        (int(Major.SELECTION), int(Selection.ARGMAX)): 1,
+        (int(Major.SELECTION), int(Selection.TOKEN_APPEND)): 1,
+    }.get((int(engine.family), int(engine.sub)), 4)
+    names = names[:limit]
+    attributes = kernel.attributes
+    if kernel.kind == "COMPRESS_STATE_UPDATE" and ABSENT_OPERANDS not in attributes:
+        attributes = {**attributes, ABSENT_OPERANDS: [1]}
+    return abi_input_slots(kernel.kind, names, attributes)
+
+
+def _check_weight_views(
+    graph: KernelGraph,
+    tensors: Mapping[str, Tensor],
+    table: Any,
+    by_kernel: Mapping[int, Sequence[Any]],
+    layout: Mapping[str, Any],
+    object_for_group: Mapping[str, int],
+    emitted_kernels: set[int],
+    node_count: int,
+    require: Any,
+) -> None:
+    """Bind every reachable weight slot to one exact reconstructed local view.
+
+    The unit of proof is an executed operator slot, not the set of views that
+    happen to claim the same ``source_kernel_id``.  Requiring each property on
+    each slot both excludes unreachable decoys and prevents two reachable views
+    from splitting the proof (one with the right stride, another with the right
+    node selector).
+    """
+    placements = layout["placements"]
+    for kernel_index in sorted(emitted_kernels):
+        kernel = graph.kernels[kernel_index]
+        input_slots = _checker_input_slots(kernel, tensors)
+        engine = engine_for(kernel.kind)
+        kernel_operators = [
+            operator
+            for operator in by_kernel.get(kernel_index, ())
+            if int(operator.payload["engine_family"]) == int(engine.family)
+            and int(operator.payload["engine_sub"]) == int(engine.sub)
+        ]
+        for slot, tensor_id in enumerate(input_slots[:4]):
+            if tensor_id is None:
+                continue
+            expected = placements.get(tensor_id)
+            if expected is None:
+                continue
+            object_id = object_for_group.get(expected["group_key"])
+            if object_id is None:
+                continue
+            factor = _presented_element_factor(
+                kernel, tensor_id, tensors[tensor_id]
+            )
+            expected_offset = int(expected["element_offset"]) * factor
+            expected_stride = int(expected["layer_stride_elements"]) * factor
+            selected, _safe, expected_node_stride = _logical_weight_use(
+                graph, kernel, tensor_id, tensors, node_count
+            )
+            expected_node_stride *= factor
+            tensor = tensors[tensor_id]
+            scale_id = tensor.scale_tensor_id
+            scale_placement = placements.get(scale_id or "")
+            scale_object_id = (
+                object_for_group.get(scale_placement["group_key"])
+                if scale_placement is not None
+                else None
+            )
+            block = int(tensor.scale_block_elements or 0)
+            row_block = _scale_row_block(tensor, tensors)
+            cols = _matrix_shape(tensor)[1]
+
+            def scale_code(elements: int) -> int:
+                return (int(elements) // cols // row_block) * (cols // block)
+
+            companion_layout_ok = True
+            if scale_placement is not None:
+                physical_offset = int(expected["element_offset"])
+                physical_stride = int(expected["layer_stride_elements"])
+                companion_layout_ok = (
+                    block > 0
+                    and cols % block == 0
+                    and int(scale_placement["element_offset"])
+                    == scale_code(physical_offset)
+                    and int(scale_placement["layer_stride_elements"])
+                    == scale_code(physical_stride)
+                )
+                require(
+                    "weight_scale_companion_layout",
+                    companion_layout_ok,
+                    f"weight {tensor_id} and scale {scale_id} do not have the "
+                    "independently derived block-code origin and layer stride",
+                )
+
+            for operator in kernel_operators:
+                view_id = int(operator.payload[f"input_view_{slot}"])
+                view = (
+                    table[view_id]
+                    if view_id != NO_ID and 0 <= view_id < len(table)
+                    else None
+                )
+                bound_ok = bool(
+                    view is not None
+                    and view.descriptor_type == ExtendedDescriptorType.TENSOR_VIEW
+                    and int(view.primary_object_id) == object_id
+                )
+                require(
+                    "weight_view_bound",
+                    bound_ok,
+                    f"reachable operator {operator.descriptor_id} for kernel "
+                    f"{kernel.kernel_id} slot {slot} has no tensor view over "
+                    f"object {object_id} for weight {tensor_id}",
+                )
+                if not bound_ok or view is None:
+                    continue
+
+                offset_ok = int(view.payload["element_offset"]) == expected_offset
+                require(
+                    "weight_view_offsets",
+                    offset_ok,
+                    f"reachable operator {operator.descriptor_id} kernel "
+                    f"{kernel.kernel_id} weight {tensor_id} must start at element "
+                    f"{expected_offset} in object {object_id}",
+                )
+
+                loop_terms = _view_terms(view, SelectorKind.LOOP_INDUCTION)
+                stride_ok = (
+                    len(loop_terms) == 1
+                    and loop_terms[0][1] == expected_stride
+                    if expected_stride > 0
+                    else not loop_terms
+                )
+                require(
+                    "weight_view_layer_strides",
+                    stride_ok,
+                    f"reachable operator {operator.descriptor_id} kernel "
+                    f"{kernel.kernel_id} weight {tensor_id} must carry layer "
+                    f"stride {expected_stride} from element {expected_offset}",
+                )
+
+                node_terms = [
+                    term
+                    for term in _view_terms(view, SelectorKind.RUNTIME_SYMBOL)
+                    if term[0] == int(Symbol.NODE_ID)
+                ]
+                physically_sharded = expected["materialization"] == "node_sharded"
+                node_ok = (
+                    len(node_terms) == 1
+                    and node_terms[0][1] == expected_node_stride
+                    if selected and not physically_sharded
+                    else not node_terms
+                )
+                require(
+                    "weight_view_node_selection",
+                    node_ok,
+                    f"reachable operator {operator.descriptor_id} kernel "
+                    f"{kernel.kernel_id} weight {tensor_id} has the wrong NODE_ID "
+                    "selection for its reconstructed physical materialization",
+                )
+
+                if scale_placement is None:
+                    scale_ok = int(view.payload["scale_object_id"]) == NO_ID
+                    scale_message = (
+                        f"reachable operator {operator.descriptor_id} kernel "
+                        f"{kernel.kernel_id} weight {tensor_id} names an undeclared "
+                        "block-scale companion"
+                    )
+                else:
+                    scale_ok = bool(
+                        scale_object_id is not None
+                        and int(view.payload["scale_object_id"]) == scale_object_id
+                        and int(view.payload["scale_block_elements"]) == block
+                        and max(int(view.payload["scale_block_rows"]), 1)
+                        == row_block
+                    )
+                    scale_message = (
+                        f"reachable operator {operator.descriptor_id} kernel "
+                        f"{kernel.kernel_id} weight {tensor_id} does not bind scale "
+                        f"{scale_id} with its declared block geometry"
+                    )
+                require("weight_scale_view_binding", scale_ok, scale_message)
+                require(
+                    "weight_view_exact",
+                    offset_ok
+                    and stride_ok
+                    and node_ok
+                    and companion_layout_ok
+                    and scale_ok,
+                    f"reachable operator {operator.descriptor_id} kernel "
+                    f"{kernel.kernel_id} slot {slot} is not the exact independently "
+                    f"reconstructed view for weight {tensor_id}",
+                )
+
+
 def _reconstruct_weight_groups(
     graph: KernelGraph,
     tensors: Mapping[str, Tensor],
     bands: Sequence[Mapping[str, Any]],
-) -> tuple[dict[str, list[_Range]], dict[str, list[int]]]:
+) -> tuple[
+    dict[str, list[_Range]],
+    dict[str, list[int]],
+    dict[str, tuple[str, ...]],
+]:
     """Independently recompute the expected weight objects.
 
     Rule one: one object per weight role, segments in layer order.  When every
@@ -872,6 +1846,7 @@ def _reconstruct_weight_groups(
 
     groups: dict[str, list[_Range]] = {}
     extents: dict[str, list[int]] = {}
+    members_by_group: dict[str, tuple[str, ...]] = {}
     claimed: set[str] = set()
     for band in bands:
         period = band["period"]
@@ -912,6 +1887,7 @@ def _reconstruct_weight_groups(
                     rng for m in members for rng in _binding_ranges(tensors[m].binding)
                 ]
                 extents[role_key] = [tensors[m].binding.bytes for m in members]
+                members_by_group[role_key] = tuple(members)
 
                 scale_members: list[str] = []
                 for member in members:
@@ -937,6 +1913,7 @@ def _reconstruct_weight_groups(
                     extents[scale_key] = [
                         tensors[member].binding.bytes for member in scale_members
                     ]
+                    members_by_group[scale_key] = tuple(scale_members)
 
     leftovers = sorted(
         (
@@ -957,9 +1934,14 @@ def _reconstruct_weight_groups(
         if path != binding.path or not 0 <= binding.offset - end <= _MERGE_SLACK:
             run_index += 1
             path = binding.path
-        groups.setdefault(f"file:{run_index}", []).extend(_binding_ranges(binding))
+        group_key = f"file:{run_index}"
+        groups.setdefault(group_key, []).extend(_binding_ranges(binding))
+        members_by_group[group_key] = (
+            *members_by_group.get(group_key, ()),
+            tensor.tensor_id,
+        )
         end = binding.offset + binding.bytes
-    return groups, extents
+    return groups, extents, members_by_group
 
 
 __all__ = ["HBM_DEPLOYMENT_CHECK_SCHEMA", "check_deployment"]

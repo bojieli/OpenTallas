@@ -92,8 +92,10 @@ def transfer(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
     _same_codes(source, destination, "DMA.TRANSFER")
     _require(
         source.element_count == destination.element_count,
-        f"DMA.TRANSFER moves {source.element_count} elements into a view of "
-        f"{destination.element_count}",
+        f"DMA.TRANSFER operator {descriptor.descriptor_id} moves "
+        f"{source.element_count} elements from view {source.descriptor_id} "
+        f"into view {destination.descriptor_id} with "
+        f"{destination.element_count} elements",
     )
     payload = np.array(ctx.read(source)).reshape(destination.dims)
     ctx.write(destination, payload)

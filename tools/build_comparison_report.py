@@ -16,9 +16,12 @@ comparison's job.
 from __future__ import annotations
 
 import argparse
+from dataclasses import dataclass
+import hashlib
 import json
 import sys
 from pathlib import Path
+from typing import Any, Mapping
 
 REPO = Path(__file__).resolve().parents[1]
 if str(REPO) not in sys.path:
@@ -38,18 +41,87 @@ from runtime.evidence import (  # noqa: E402
 )
 
 
-def load_record(path: Path) -> ExecutionRecord:
-    """Rebuild an ExecutionRecord from a campaign, cycle, or token report.
+COMPARISON_SOURCE_PATHS = (
+    "runtime/abi3/capability.py",
+    "runtime/abi3/crc.py",
+    "runtime/evidence.py",
+    "tools/build_comparison_report.py",
+)
 
-    Campaign records carry the canonical identity objects directly.  Governed
-    token captures retain a richer execution schema: model identity is in the
-    top-level ``model`` object and workload/target objects include diagnostic
-    fields that are not constructor arguments.  Read the common identity
-    explicitly so adding evidence fields never makes an otherwise comparable
-    capture unreadable.
-    """
-    body = json.loads(path.read_text())
+REQUIRED_EXECUTION_SOURCE_PATHS = (
+    "tools/run_accelerator_tokens.py",
+    "compiler/backends/numeric_contracts.py",
+    "compiler/ir/v3/kernel_ir.py",
+    "compiler/ir/v3/lowering.py",
+    "compiler/ir/v3/numeric.py",
+    "runtime/abi3/builder.py",
+    "runtime/abi3/capability.py",
+    "runtime/abi3/constants.py",
+    "runtime/abi3/crc.py",
+    "runtime/abi3/deployment.py",
+    "runtime/abi3/descriptors.py",
+    "runtime/abi3/layout.py",
+    "runtime/abi3/records.py",
+    "runtime/abi3/verifier.py",
+    "runtime/driver.py",
+    "runtime/evidence.py",
+    "runtime/sim/backend.py",
+    "runtime/sim/counters.py",
+    "runtime/sim/device.py",
+    "runtime/sim/engine.py",
+    "runtime/sim/formats.py",
+    "runtime/sim/memory.py",
+    "runtime/sim/engines/__init__.py",
+    "runtime/sim/engines/attention.py",
+    "runtime/sim/engines/deepseek_vector.py",
+    "runtime/sim/engines/dma.py",
+    "runtime/sim/engines/link.py",
+    "runtime/sim/engines/reduction.py",
+    "runtime/sim/engines/route.py",
+    "runtime/sim/engines/selection.py",
+    "runtime/sim/engines/tensor.py",
+    "runtime/sim/engines/vector.py",
+)
+
+BACKEND_EXECUTION_SOURCE_PATHS = {
+    "hbm_sram": (
+        "compiler/backends/hbm_sram/lower.py",
+        "compiler/backends/hbm_sram/plan.py",
+    ),
+    "rom_qwen3": (
+        "compiler/backends/rom/qwen3.py",
+        "compiler/backends/rom/common/image.py",
+        "compiler/backends/rom/common/program.py",
+    ),
+    "rom_deepseek_v4": (
+        "compiler/backends/rom/deepseek_v4.py",
+        "compiler/backends/rom/common/image.py",
+        "compiler/backends/rom/common/program.py",
+    ),
+}
+
+
+class InputRefusal(ValueError):
+    """A purported execution artifact is not promotable into a comparison."""
+
+
+@dataclass(frozen=True, slots=True)
+class GovernedInput:
+    path: Path
+    artifact_sha256: str
+    source_sha256: Mapping[str, str]
+    record: ExecutionRecord
+
+    def identity(self) -> dict[str, str]:
+        return {"path": str(self.path), "sha256": self.artifact_sha256}
+
+
+def _execution_record(body: Mapping[str, Any]) -> ExecutionRecord:
+    """Normalize the execution portion of a supported evidence document."""
+
     record = body.get("record", body)
+    if not isinstance(record, Mapping):
+        raise ValueError("execution record is not an object")
     workload = record["workload"]
     model = record.get("model", {})
     target = record["target"]
@@ -104,6 +176,150 @@ def load_record(path: Path) -> ExecutionRecord:
     )
 
 
+def load_record(path: Path) -> ExecutionRecord:
+    """Rebuild an ExecutionRecord from a campaign, cycle, or token report.
+
+    Campaign records carry the canonical identity objects directly.  Governed
+    token captures retain a richer execution schema: model identity is in the
+    top-level ``model`` object and workload/target objects include diagnostic
+    fields that are not constructor arguments.  Read the common identity
+    explicitly so adding evidence fields never makes an otherwise comparable
+    capture unreadable.
+    """
+    return _execution_record(json.loads(path.read_text()))
+
+
+def _source_lock_problems(source_sha256: object) -> list[str]:
+    if not isinstance(source_sha256, Mapping) or not source_sha256:
+        return ["record has no non-empty source_sha256 map"]
+
+    problems: list[str] = []
+    repo = REPO.resolve()
+    for relative, expected in sorted(source_sha256.items(), key=lambda item: str(item[0])):
+        if not isinstance(relative, str) or not relative:
+            problems.append("record source path is not a non-empty string")
+            continue
+        candidate = Path(relative)
+        source = (REPO / candidate).resolve()
+        try:
+            source.relative_to(repo)
+        except ValueError:
+            problems.append(f"record source path escapes the repository: {relative}")
+            continue
+        if candidate.is_absolute() or relative != candidate.as_posix():
+            problems.append(
+                f"record source path is not normalized repository-relative: "
+                f"{relative}"
+            )
+            continue
+        if (
+            not isinstance(expected, str)
+            or len(expected) != 64
+            or any(character not in "0123456789abcdef" for character in expected)
+        ):
+            problems.append(f"record source {relative} has no valid SHA-256")
+        elif not source.is_file():
+            problems.append(f"record source {relative} does not exist")
+        elif hashlib.sha256(source.read_bytes()).hexdigest() != expected:
+            problems.append(
+                f"record source {relative} does not match the current source"
+            )
+    for relative in REQUIRED_EXECUTION_SOURCE_PATHS:
+        if relative not in source_sha256:
+            problems.append(f"record does not bind required source {relative}")
+    return problems
+
+
+def _governance_problems(body: Mapping[str, Any]) -> list[str]:
+    record = body.get("record", body)
+    if not isinstance(record, Mapping):
+        return ["execution record is not an object"]
+
+    problems: list[str] = []
+    status = body.get("status", record.get("status"))
+    if status != "pass":
+        problems.append(f"status is {status!r}, expected 'pass'")
+
+    verification = record.get("verification", body.get("verification"))
+    if not isinstance(verification, Mapping) or verification.get("admitted") is not True:
+        problems.append("verification.admitted is not true")
+
+    oracle = record.get("oracle", body.get("oracle"))
+    if not isinstance(oracle, Mapping) or oracle.get("agreement") is not True:
+        problems.append("oracle.agreement is not true")
+
+    legitimacy = record.get(
+        "token_legitimacy_problems", body.get("token_legitimacy_problems")
+    )
+    if not isinstance(legitimacy, list):
+        problems.append("token_legitimacy_problems is not a recorded list")
+    elif legitimacy:
+        problems.append(
+            "token legitimacy problems are present: "
+            + "; ".join(str(problem) for problem in legitimacy)
+        )
+
+    if record.get("failure") is not None:
+        problems.append("execution failure is not null")
+
+    workload = record.get("workload")
+    tokenizer_sha256 = (
+        workload.get("tokenizer_sha256") if isinstance(workload, Mapping) else None
+    )
+    if (
+        not isinstance(tokenizer_sha256, str)
+        or len(tokenizer_sha256) != 64
+        or any(
+            character not in "0123456789abcdef"
+            for character in tokenizer_sha256
+        )
+    ):
+        problems.append("workload.tokenizer_sha256 is not a valid SHA-256")
+
+    source_sha256 = record.get("source_sha256", body.get("source_sha256"))
+    problems.extend(_source_lock_problems(source_sha256))
+    backend = record.get("backend", body.get("backend"))
+    backend_sources = BACKEND_EXECUTION_SOURCE_PATHS.get(str(backend))
+    if backend_sources is None:
+        problems.append(f"record backend {backend!r} has no governed source boundary")
+    elif isinstance(source_sha256, Mapping):
+        for relative in backend_sources:
+            if relative not in source_sha256:
+                problems.append(
+                    f"record does not bind backend source {relative}"
+                )
+    return problems
+
+
+def load_governed_input(path: Path) -> GovernedInput:
+    """Load an execution only after every promotion precondition is proved."""
+
+    payload = path.read_bytes()
+    body = json.loads(payload)
+    if not isinstance(body, Mapping):
+        raise InputRefusal(f"{path}: document is not an object")
+    problems = _governance_problems(body)
+    if problems:
+        raise InputRefusal(f"{path}:\n  " + "\n  ".join(problems))
+    record_body = body.get("record", body)
+    source_sha256 = record_body.get(
+        "source_sha256", body.get("source_sha256", {})
+    )
+    return GovernedInput(
+        path=path,
+        artifact_sha256=hashlib.sha256(payload).hexdigest(),
+        source_sha256=dict(source_sha256),
+        record=_execution_record(body),
+    )
+
+
+def _comparison_source_sha256() -> dict[str, str]:
+    return {
+        relative: hashlib.sha256((REPO / relative).read_bytes()).hexdigest()
+        for relative in COMPARISON_SOURCE_PATHS
+    }
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--rom", type=Path, required=True, help="ROM target report")
@@ -125,8 +341,15 @@ def main() -> int:
         print(f"refusing to overwrite {args.output}; pass --force", file=sys.stderr)
         return 1
 
-    rom = load_record(args.rom)
-    hbm = load_record(args.hbm)
+    try:
+        rom_input = load_governed_input(args.rom)
+        hbm_input = load_governed_input(args.hbm)
+    except (InputRefusal, KeyError, OSError, TypeError, ValueError) as exc:
+        print(f"comparison refused: {exc}", file=sys.stderr)
+        return 2
+
+    rom = rom_input.record
+    hbm = hbm_input.record
 
     problems = check_comparable(rom, hbm)
     if problems:
@@ -146,7 +369,11 @@ def main() -> int:
         print(f"comparison refused: {exc}", file=sys.stderr)
         return 3
 
-    body["sources"] = {"rom": str(args.rom), "hbm": str(args.hbm)}
+    body["sources"] = {
+        "rom": rom_input.identity(),
+        "hbm": hbm_input.identity(),
+    }
+    body["source_sha256"] = _comparison_source_sha256()
     if args.allow_token_divergence and not body["token_agreement"]["identical"]:
         body["claim_boundary"]["performance_comparison"] = False
         body["claim_boundary"]["note"] = (

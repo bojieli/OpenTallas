@@ -1,13 +1,13 @@
 // ---------------------------------------------------------------------------
-// Verilator harness: the three deployments this program ships, co-simulated.
+// Verilator harness: the four deployments this program ships, co-simulated.
 //
 // The second, independent checker of the deployment campaign.  It elaborates
 // and simulates the same RTL through a different engine, parses the generated
 // vector files itself, and applies a different back-pressure pattern to the
 // engine issue port.  It shares no checking code with
 // rtl/test/tb_a3_deployment.sv -- only the vectors, which are the real
-// Qwen3-8B ROM, Qwen3-8B HBM and DeepSeek-V4-Flash wafer deployments executed
-// by runtime.sim.device.Device.
+// Qwen3-8B ROM and HBM, plus DeepSeek-V4-Flash ROM-wafer and HBM-cluster
+// deployments executed by runtime.sim.device.Device.
 //
 // Required agreement, per case: program-header admission, trap class,
 // instruction and entrypoint counts and the declared retired-work bound; every

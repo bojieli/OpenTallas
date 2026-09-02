@@ -980,6 +980,64 @@ def test_index_topk_joins_rebases_and_compacts_under_a19():
     )
 
 
+def test_index_topk_streamed_prefill_uses_the_joined_absolute_query_position():
+    """A27 keeps causal position across a one-row rolling score view.
+
+    The physical operator sees one row and the request-level POSITION_START is
+    still zero, but this is logical prefill query 31.  The joined WINDOW_INDEX
+    row is the device-resident proof of that position, so all eight completed
+    ratio-four groups must be considered rather than none.
+    """
+
+    ratio, context, window, top_k = 4, 32, 128, 8
+    scores = np.arange(top_k, dtype=np.float32).reshape(1, top_k)
+    window_block = np.full((1, window), NO_ID, dtype=np.uint32)
+    window_block[0, :context] = np.arange(context, dtype=np.uint32)
+
+    build = Build()
+    src = build.input_view(scores, DType.FP32)
+    win = build.input_view(window_block, DType.U32)
+    ratio_view = build.input_view(np.array([ratio], dtype=np.uint32), DType.U32)
+    out = build.output_view((1, window + top_k), DType.U32, 4)
+    emit_op(
+        build,
+        Major.ROUTE,
+        Route.INDEX_TOPK,
+        [src, win, ratio_view],
+        [out],
+        aux=[top_k, 0, int(Symbol.CONTEXT_LENGTH), int(Symbol.POSITION_START)],
+    )
+    device = build.finish()
+    result = run(
+        device,
+        symbols={
+            int(Symbol.CONTEXT_LENGTH): context,
+            int(Symbol.POSITION_START): 0,
+        },
+    )
+    assert result.status == CompletionStatus.SUCCESS, result.message
+
+    expected = np.full((1, window + top_k), NO_ID, dtype=np.uint32)
+    rows = list(range(context)) + list(
+        range(context + window, context + window + top_k)
+    )
+    expected[0, : len(rows)] = rows
+    assert np.array_equal(read(device, out), expected)
+    assert result.counters["route.topk_candidates"] == top_k
+
+
+def _qualified_index_window(window: int, span: int, base: int) -> np.ndarray:
+    """Released window rows, expanded to the ABI operator's physical span."""
+
+    from runtime.reference.indexing import window_indices
+
+    (rows,) = window_indices(window, 1, span, base)
+    values = np.asarray(rows, dtype=np.int64)
+    if values.shape[0] == 1 and span > 1:
+        values = np.tile(values, (span, 1))
+    return np.where(values < 0, np.uint32(NO_ID), values.astype(np.uint32))
+
+
 @pytest.mark.parametrize(
     "base,span,context",
     [(0, 24, 24), (0, 104, 104), (37, 1, 38), (511, 1, 512)],
@@ -1001,9 +1059,8 @@ def test_index_topk_matches_the_qualified_selection_reference(base, span, contex
 
     build = Build()
     src = build.input_view(narrow(scores), DType.BF16)
-    win = build.input_view(
-        np.tile(np.arange(window, dtype=np.uint32), (span, 1)), DType.U32
-    )
+    window_block = _qualified_index_window(window, span, base)
+    win = build.input_view(window_block, DType.U32)
     ratio_view = build.input_view(np.array([ratio], dtype=np.uint32), DType.U32)
     out = build.output_view((span, window + top_k), DType.U32, 4)
     emit_op(
@@ -1036,7 +1093,7 @@ def test_index_topk_matches_the_qualified_selection_reference(base, span, contex
     for token in range(span):
         rows = sorted(int(v) for v in got[token] if v != NO_ID)
         expected = sorted(
-            [int(v) for v in range(window)]
+            [int(v) for v in window_block[token] if v != NO_ID]
             + [g for g in reference[token] if g != -1]
         )
         assert rows == expected, token
@@ -1065,9 +1122,8 @@ def test_index_topk_with_no_score_operand_is_the_released_dense_family(
     capacity = context // ratio
 
     build = Build()
-    win = build.input_view(
-        np.tile(np.arange(window, dtype=np.uint32), (span, 1)), DType.U32
-    )
+    window_block = _qualified_index_window(window, span, base)
+    win = build.input_view(window_block, DType.U32)
     ratio_view = build.input_view(np.array([ratio], dtype=np.uint32), DType.U32)
     out = build.output_view((span, window + capacity), DType.U32, 4)
     emit_op(
@@ -1102,7 +1158,8 @@ def test_index_topk_with_no_score_operand_is_the_released_dense_family(
         )
         reference = matrix[0] if len(matrix) == 1 else matrix[position]
         expected = sorted(
-            list(range(window)) + [g for g in reference if g != -1]
+            [int(v) for v in window_block[token] if v != NO_ID]
+            + [g for g in reference if g != -1]
         )
         rows = sorted(int(v) for v in got[token] if v != NO_ID)
         assert rows == expected, (token, position)

@@ -16,27 +16,20 @@ from __future__ import annotations
 import time
 from dataclasses import dataclass, field as dc_field
 from pathlib import Path
-from typing import Any, Iterable, Mapping, Sequence
+from typing import Any, Mapping, Sequence
 
-import numpy as np
 
 from runtime.abi3.capability import Capability
 from runtime.abi3.constants import (
     CommitPolicy,
     Control,
     CompletionStatus,
-    DType,
     HostOpcode,
     InstructionFlag,
     Major,
     NO_ID,
-    Observation,
     Recovery,
-    Selection,
     State,
-    StorageClass,
-    SubmissionFlag,
-    CompletionFlag,
     TrapClass,
 )
 from runtime.abi3.deployment import Deployment
@@ -44,7 +37,6 @@ from runtime.abi3.descriptors import (
     Comparison,
     Descriptor,
     ExtendedDescriptorType,
-    Phase,
     PredicateKind,
     SelectorKind,
     Symbol,
@@ -340,19 +332,23 @@ class Device:
         coherent global address space.  So each node gets its own arena, its own
         activation buffers and its own state images, and the *only* way bytes
         cross from one to another is a LINK instruction naming a COMMUNICATION
-        descriptor.  Immutable objects -- the mapped checkpoint above all -- are
-        shared by reference, because they are the same bytes on every node and
-        each node addresses its own shard of them through the ``NODE_ID`` term
-        of a tensor view.  A private copy would be thirty-two mappings of one
-        156 GB checkpoint and would prove nothing.
+        descriptor.  Immutable replicated objects are shared by reference.  A
+        node-indexed weight object gets one small logical segment map per node
+        over a shared whole-file mmap cache, so the 32 local images can name
+        different authenticated checkpoint ranges without copying payload.
         """
-        base = DeviceMemory(self.deployment, root=root)
+        base = DeviceMemory(self.deployment, root=root, node_id=0)
         if self.node_count == 1:
             return (base,)
         arenas = [base]
-        for _node in range(1, self.node_count):
+        for node_id in range(1, self.node_count):
             arenas.append(
-                DeviceMemory(self.deployment, root=root, share_from=base)
+                DeviceMemory(
+                    self.deployment,
+                    root=root,
+                    share_from=base,
+                    node_id=node_id,
+                )
             )
         return tuple(arenas)
 
@@ -666,6 +662,14 @@ class Device:
                         pc,
                     )
         except DeviceTrap as trap:
+            # This API converts the internal exception into a TransactionResult;
+            # no caller can observe or use its Python traceback.  Retaining that
+            # traceback here would create a cycle back to this frame, whose
+            # locals include ``self`` and ``ctx`` and therefore every activated
+            # memory arena.  Large, sparsely allocated deployments must become
+            # collectible as soon as their ordinary owners release them, without
+            # waiting for cyclic GC after a failed transaction.
+            trap.__traceback__ = None
             fault = trap
         except (EngineError, MemoryError_) as exc:
             trap_class = getattr(exc, "trap_class", TrapClass.ENGINE)
@@ -1185,7 +1189,7 @@ class Device:
         """
         try:
             request = Submission.decode(record)
-        except Exception as exc:
+        except Exception:
             return Completion(
                 status=CompletionStatus.FAILED,
                 transaction_id=0,

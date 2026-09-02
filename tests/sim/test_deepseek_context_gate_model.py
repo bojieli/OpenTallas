@@ -16,6 +16,8 @@ import hashlib
 import importlib.util
 import json
 from pathlib import Path
+import subprocess
+import sys
 
 REPO = Path(__file__).resolve().parents[2]
 RECORD = (
@@ -136,6 +138,60 @@ def test_an_aggregate_only_cluster_record_is_refused_not_divided():
         "aggregate division is not accepted" in problem
         for problem in checked["problems"]
     )
+
+
+def test_source_gate_checks_every_recorded_source_not_only_the_required_subset():
+    module = _checker()
+    source_map = {
+        relative: hashlib.sha256((REPO / relative).read_bytes()).hexdigest()
+        for relative in module.REQUIRED_FUNCTIONAL_SOURCES
+    }
+    extra = "runtime/sim/engines/deepseek_vector.py"
+    source_map[extra] = "0" * 64
+
+    problems = module._source_lock_problems(source_map)
+
+    assert problems == [
+        f"record source {extra} does not match the current implementation"
+    ]
+
+
+def test_source_gate_requires_the_non_removable_minimum_and_safe_paths():
+    module = _checker()
+    problems = module._source_lock_problems(
+        {"../outside.py": "0" * 64}
+    )
+    assert "record source path escapes the repository: ../outside.py" in problems
+    assert any(
+        problem == "record does not bind required source runtime/abi3/verifier.py"
+        for problem in problems
+    )
+
+
+def test_missing_explicit_pin_is_reported_and_fails_closed(tmp_path):
+    missing_pin = tmp_path / "missing-pin.json"
+    output = tmp_path / "gate.json"
+    completed = subprocess.run(
+        [
+            sys.executable,
+            str(REPO / "tools/check_deepseek_v4_context_gate.py"),
+            str(TOKEN_RECORD),
+            "--pin",
+            str(missing_pin),
+            "--output",
+            str(output),
+        ],
+        cwd=REPO,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+
+    assert completed.returncode == 1
+    report = json.loads(output.read_text())
+    assert report["pins_missing"] == [str(missing_pin)]
+    assert report["claim_boundary"]["all_required_pins_present"] is False
+    assert report["all_pass"] is False
 
 
 def test_malformed_counter_values_fail_closed_instead_of_raising():
@@ -263,6 +319,17 @@ def test_governed_v2_report_binds_sources_and_stays_below_the_thresholds():
     assert boundary["functional_simulator_only"] is True
     assert boundary["rtl"] is False
     assert boundary["cycles_or_performance"] is False
+
+    required_sources = {
+        "tools/run_accelerator_tokens.py",
+        "runtime/sim/device.py",
+        "runtime/sim/engine.py",
+        "runtime/sim/memory.py",
+        "runtime/sim/counters.py",
+        "runtime/sim/engines/route.py",
+        "runtime/sim/engines/attention.py",
+    }
+    assert required_sources <= set(report["source_sha256"])
 
     record_path = REPO / result["record"]
     assert result["record_sha256"] == hashlib.sha256(

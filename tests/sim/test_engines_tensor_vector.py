@@ -35,7 +35,7 @@ from runtime.abi3.constants import (
     Vector,
 )
 from runtime.abi3.deployment import Deployment, ObjectSource, Segment
-from runtime.abi3.descriptors import LayoutClass, Phase
+from runtime.abi3.descriptors import LayoutClass, Phase, Symbol
 from runtime.abi3.fixture import fixture_capability
 from runtime.reference import formats as exact
 from runtime.reference.hadamard import HADAMARD_WIDTH, hadamard_rotate_128_bf16
@@ -813,7 +813,7 @@ def test_routed_matmul_reads_only_the_experts_it_uses(harness: Harness) -> None:
     block, one per distinct expert the routing selected, and never the stack.
     """
     rng = np.random.default_rng(0x5241)
-    rows, experts, cols, depth, topk = 3, 8, 2, 8, 2
+    rows, experts, cols, depth = 3, 8, 2, 8
     activations = random_bf16(rng, (rows, depth))
     weights = random_bf16(rng, (experts, cols, depth))
     identifiers = np.array([[0, 3], [1, 1], [2, 0]], dtype=np.uint32)
@@ -869,6 +869,50 @@ def test_routed_matmul_rejects_an_unknown_expert(harness: Harness) -> None:
     )
     with pytest.raises(EngineError, match="expert ID outside"):
         harness.run(Major.TENSOR, Tensor.ROUTED_MATMUL, operator)
+
+
+def test_routed_matmul_computes_only_the_current_nodes_expert_shard(
+    harness: Harness,
+) -> None:
+    """Global IDs are rebased into one consecutive node-local expert bank."""
+
+    activations = bf16(
+        np.array([[2.0, 3.0], [5.0, 7.0]], dtype=np.float32)
+    )
+    # NODE_ID 1 owns global experts 2 and 3.  Expert 2 selects x0 and expert 3
+    # selects x1, making the owner contribution visible without a shared oracle.
+    local_weights = bf16(
+        np.array([[[1.0, 0.0]], [[0.0, 1.0]]], dtype=np.float32)
+    )
+    identifiers = np.array([[0, 3], [2, 1]], dtype=np.uint32)
+    output = harness.output_view((2, 1), DType.BF16)
+    operator = harness.operator(
+        engine_family=Major.TENSOR,
+        engine_sub=Tensor.ROUTED_MATMUL,
+        inputs=[
+            harness.const_view(activations, DType.BF16),
+            harness.const_view(local_weights, DType.BF16),
+            harness.const_view(identifiers, DType.U32),
+        ],
+        outputs=[output],
+        aux=[4],
+        numeric_profile_id=matmul_numeric(harness),
+    )
+    harness.bind()
+    harness.ctx.node_memories = (harness.memory, harness.memory)
+    harness.ctx.symbols[int(Symbol.NODE_ID)] = 1
+    harness.run(Major.TENSOR, Tensor.ROUTED_MATMUL, operator)
+
+    # Row 0's expert 0 is another node's and contributes zero; expert 3 owns
+    # the second activation.  Row 1 is the converse for expert 2 / expert 1.
+    np.testing.assert_array_equal(
+        harness.result(output),
+        bf16(np.array([[3.0], [5.0]], dtype=np.float32)),
+    )
+    assert harness.counters["tensor.routed_launches"] == 2
+    assert harness.counters["tensor.multiplications"] == 2 * 1 * 2
+    # Two length-2 contractions plus the two top-k partial combinations.
+    assert harness.counters["tensor.additions"] == 2 * 1 * (2 - 1) + 2 * 1 * (2 - 1)
 
 
 # ---------------------------------------------------------------------------

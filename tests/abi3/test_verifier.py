@@ -29,13 +29,18 @@ from runtime.abi3.constants import (
     StateClass,
     StorageClass,
     Tensor,
+    TopologyClass,
     feature_vector,
 )
-from runtime.abi3.deployment import ObjectSource
+from runtime.abi3.crc import sha256
+from runtime.abi3.deployment import ObjectSource, Segment
 from runtime.abi3.descriptors import (
     LOOP_CONTROL_PAYLOAD,
     MEMORY_OBJECT_PAYLOAD,
+    SCHEDULE_PAYLOAD,
     TENSOR_VIEW_PAYLOAD,
+    TOPOLOGY_PAYLOAD,
+    ExtendedDescriptorType,
     Phase,
     Symbol,
 )
@@ -120,6 +125,394 @@ def test_require_admitted_raises_with_every_error(capability: Capability) -> Non
     with pytest.raises(VerificationError, match="proved retired work"):
         require_admitted(deployment, capability)
     assert require_admitted(probe_deployment(capability), capability).admitted
+
+
+def _source_probe(
+    capability: Capability, source: ObjectSource, content_digest: bytes
+) -> Any:
+    deployment = probe_deployment(capability)
+    weights = deployment.notes["probe_ids"]["weights"]
+    deployment.objects[weights] = source
+    deployment.table[weights].payload["content_digest"] = content_digest
+    deployment.table.rewrite(weights)
+    return restamp(deployment)
+
+
+@pytest.mark.parametrize("kind", ["file", "segments"])
+def test_complete_shared_sources_are_bound_during_in_memory_admission(
+    capability: Capability, kind: str
+) -> None:
+    segments = (
+        (Segment("weights.bin", 0, 128, sha256(b"weights").hex()),)
+        if kind == "file"
+        else (
+            Segment("weights.bin", 0, 64, sha256(b"weights-0").hex()),
+            Segment("weights.bin", 64, 64, sha256(b"weights-1").hex()),
+        )
+    )
+    source = ObjectSource(kind=kind, size_bytes=128, segments=segments)
+    deployment = _source_probe(
+        capability, source, source.authenticated_content_digest()
+    )
+
+    report = verify_deployment(deployment, capability)
+    assert report.admitted, report.errors
+    assert report.checks["object_source_content_digest"] is True
+
+    weights = deployment.notes["probe_ids"]["weights"]
+    deployment.table[weights].payload["content_digest"] = bytes(32)
+    deployment.table.rewrite(weights)
+    report = verify_deployment(restamp(deployment), capability)
+    assert not report.admitted
+    assert report.checks["object_source_content_digest"] is False
+    assert any(
+        f"{kind} content digest does not match" in error for error in report.errors
+    )
+
+
+def test_incomplete_shared_source_is_legacy_only_with_zero_sentinel(
+    capability: Capability,
+) -> None:
+    source = ObjectSource(
+        kind="segments",
+        size_bytes=128,
+        segments=(
+            Segment("weights.bin", 0, 64),
+            Segment("weights.bin", 64, 64, sha256(b"weights-1").hex()),
+        ),
+    )
+    deployment = _source_probe(capability, source, bytes(32))
+    report = verify_deployment(deployment, capability)
+    assert report.admitted, report.errors
+
+    weights = deployment.notes["probe_ids"]["weights"]
+    deployment.table[weights].payload["content_digest"] = sha256(b"claimed")
+    deployment.table.rewrite(weights)
+    report = verify_deployment(restamp(deployment), capability)
+    assert not report.admitted
+    assert report.checks["object_source_content_digest"] is False
+    assert any(
+        "requires the all-zero MEMORY_OBJECT content digest sentinel" in error
+        for error in report.errors
+    )
+
+
+@pytest.mark.parametrize("malformed", ["not-a-sha256", "00 " * 32])
+def test_malformed_shared_hash_cannot_hide_behind_legacy_sentinel(
+    capability: Capability,
+    malformed: str,
+) -> None:
+    source = ObjectSource(
+        kind="segments",
+        size_bytes=128,
+        segments=(
+            Segment("weights.bin", 0, 64),
+            Segment("weights.bin", 64, 64, malformed),
+        ),
+    )
+    report = verify_deployment(_source_probe(capability, source, bytes(32)), capability)
+
+    assert not report.admitted
+    assert report.checks["object_source_content_digest"] is False
+    assert any(
+        "must carry a 64-hex SHA-256 digest" in error for error in report.errors
+    )
+
+
+@pytest.mark.parametrize(
+    ("source", "expected"),
+    [
+        (ObjectSource.zeros(128), bytes(32)),
+        (
+            ObjectSource.generated(
+                "fixture_v1", {"size": 128}, 128, sha256(b"generated").hex()
+            ),
+            sha256(b"generated"),
+        ),
+    ],
+    ids=["zero", "generated"],
+)
+def test_exact_source_digest_semantics_are_enforced(
+    capability: Capability, source: ObjectSource, expected: bytes
+) -> None:
+    deployment = _source_probe(capability, source, expected)
+    report = verify_deployment(deployment, capability)
+    assert report.admitted, report.errors
+
+    wrong = bytearray(expected)
+    wrong[0] ^= 0xFF
+    weights = deployment.notes["probe_ids"]["weights"]
+    deployment.table[weights].payload["content_digest"] = bytes(wrong)
+    deployment.table.rewrite(weights)
+    report = verify_deployment(restamp(deployment), capability)
+    assert not report.admitted
+    assert report.checks["object_source_content_digest"] is False
+
+
+def test_malformed_generated_digest_returns_a_failed_report(
+    capability: Capability,
+) -> None:
+    source = ObjectSource.generated("fixture_v1", {}, 128, "z" * 64)
+    report = verify_deployment(_source_probe(capability, source, bytes(32)), capability)
+
+    assert not report.admitted
+    assert report.checks["object_source_content_digest"] is False
+    assert any("generated result must carry" in error for error in report.errors)
+
+
+def _node_segment_probe(
+    capability: Capability,
+    *,
+    node_map_count: int = 32,
+    topology_node_count: int = 32,
+) -> Any:
+    """A digest-consistent cluster probe with node-indexed immutable weights."""
+    capability.topology_class = int(TopologyClass.CLUSTER_32)
+    capability.features = tuple(
+        sorted({*capability.features, int(Feature.INTER_CHIP_ENDPOINT)})
+    )
+    capability.limits["max_nodes"] = 32
+    capability.validate()
+
+    deployment = probe_deployment(capability)
+    topology_id = deployment.table.ids_of_type(ExtendedDescriptorType.TOPOLOGY)[0]
+    deployment.table = patched_payload(
+        deployment.table,
+        topology_id,
+        TOPOLOGY_PAYLOAD,
+        "topology_class",
+        int(TopologyClass.CLUSTER_32),
+    )
+    deployment.table = patched_payload(
+        deployment.table,
+        topology_id,
+        TOPOLOGY_PAYLOAD,
+        "node_count",
+        topology_node_count,
+    )
+
+    weights = deployment.notes["probe_ids"]["weights"]
+    source = ObjectSource(
+        kind="node_segments",
+        size_bytes=128,
+        node_segments=tuple(
+            (
+                Segment(
+                    path=f"weights-node-{node_id}.bin",
+                    offset=0,
+                    bytes=128,
+                    sha256=sha256(f"node-{node_id}".encode()).hex(),
+                ),
+            )
+            for node_id in range(node_map_count)
+        ),
+    )
+    deployment.objects[weights] = source
+    descriptor = deployment.table[weights]
+    descriptor.payload["content_digest"] = source.authenticated_content_digest()
+    deployment.table.rewrite(weights)
+    return restamp(
+        deployment,
+        topology_digest=sha256(deployment.table[topology_id].encode()),
+    )
+
+
+def test_node_segment_map_count_must_match_admitted_topology(
+    capability: Capability,
+) -> None:
+    baseline = _node_segment_probe(capability)
+    report = verify_deployment(baseline, capability)
+    assert report.admitted, report.errors
+    assert report.checks["node_source_count"] is True
+    assert report.checks["node_source_content_digest"] is True
+    assert report.checks["object_source_content_digest"] is True
+
+    mutated = _node_segment_probe(capability, node_map_count=31)
+    report = verify_deployment(mutated, capability)
+    assert report.checks["deployment_digest"] is True
+    assert report.checks["descriptor_table_digest"] is True
+    assert report.checks["node_source_count"] is False
+    assert not report.admitted
+    assert any(
+        "node-segments source declares 31 node maps, admitted topology declares "
+        "32 nodes" in error
+        for error in report.errors
+    ), report.errors
+
+
+def test_cluster_topology_cannot_shrink_below_the_capability(
+    capability: Capability,
+) -> None:
+    deployment = _node_segment_probe(
+        capability, node_map_count=16, topology_node_count=16
+    )
+    report = verify_deployment(deployment, capability)
+    assert not report.admitted
+    assert report.checks["topology_node_count_identity"] is False
+    assert report.checks["node_source_topology"] is False
+    assert any(
+        "topology declares 16 nodes" in error for error in report.errors
+    ), report.errors
+
+
+def test_topology_class_must_match_the_admitting_capability(
+    capability: Capability,
+) -> None:
+    deployment = _node_segment_probe(capability)
+    topology_id = deployment.table.ids_of_type(ExtendedDescriptorType.TOPOLOGY)[0]
+    deployment.table = patched_payload(
+        deployment.table,
+        topology_id,
+        TOPOLOGY_PAYLOAD,
+        "topology_class",
+        int(TopologyClass.WAFER_LOGICAL_DEVICE),
+    )
+    deployment.topology_class = int(TopologyClass.WAFER_LOGICAL_DEVICE)
+    deployment = restamp(
+        deployment,
+        topology_digest=sha256(deployment.table[topology_id].encode()),
+    )
+
+    report = verify_deployment(deployment, capability)
+    assert not report.admitted
+    assert report.checks["topology_class_identity"] is False
+    assert any("topology class mismatch" in error for error in report.errors)
+
+
+def test_node_segment_source_must_name_an_immutable_object(
+    capability: Capability,
+) -> None:
+    deployment = _node_segment_probe(capability)
+    activations = deployment.notes["probe_ids"]["activations"]
+    deployment.objects[activations] = deployment.objects[
+        deployment.notes["probe_ids"]["weights"]
+    ]
+    deployment = restamp(deployment)
+
+    assert_rejected(
+        deployment,
+        capability,
+        rf"object {activations}: node-segments source must name an IMMUTABLE "
+        rf"memory object",
+    )
+
+
+def test_node_segment_content_digest_is_checked_during_generic_admission(
+    capability: Capability,
+) -> None:
+    deployment = _node_segment_probe(capability)
+    weights = deployment.notes["probe_ids"]["weights"]
+    deployment.table[weights].payload["content_digest"] = bytes(32)
+    deployment.table.rewrite(weights)
+    deployment = restamp(deployment)
+
+    report = verify_deployment(deployment, capability)
+    assert not report.admitted
+    assert report.checks["node_source_content_digest"] is False
+    assert report.checks["object_source_content_digest"] is False
+    assert any(
+        "node-segments content digest does not match" in error
+        for error in report.errors
+    )
+
+
+def test_node_segment_ranges_require_digests_during_generic_admission(
+    capability: Capability,
+) -> None:
+    deployment = _node_segment_probe(capability)
+    weights = deployment.notes["probe_ids"]["weights"]
+    source = deployment.objects[weights]
+    maps = list(source.node_segments)
+    first = maps[0][0]
+    maps[0] = (
+        Segment(first.path, first.offset, first.bytes),
+        *maps[0][1:],
+    )
+    deployment.objects[weights] = ObjectSource(
+        kind="node_segments",
+        size_bytes=source.size_bytes,
+        node_segments=tuple(maps),
+    )
+    deployment = restamp(deployment)
+
+    report = verify_deployment(deployment, capability)
+    assert not report.admitted
+    assert report.checks["node_source_content_digest"] is False
+    assert any(
+        "no authenticated content digest" in error for error in report.errors
+    )
+
+
+# ---------------------------------------------------------------------------
+# schedules
+# ---------------------------------------------------------------------------
+def test_schedule_queue_zero_remains_admitted(capability: Capability) -> None:
+    deployment = probe_deployment(capability)
+    schedule_id = deployment.notes["probe_ids"]["tensor_schedule"]
+    assert deployment.table[schedule_id].payload["queue_index"] == 0
+    report = verify_deployment(deployment, capability)
+    assert report.admitted, report.errors
+
+
+def test_schedule_queue_index_must_name_an_advertised_queue(
+    capability: Capability,
+) -> None:
+    deployment = probe_deployment(capability)
+    schedule_id = deployment.notes["probe_ids"]["tensor_schedule"]
+    queue_count = capability.engines["tensor"]["queues"]
+    deployment.table = patched_payload(
+        deployment.table,
+        schedule_id,
+        SCHEDULE_PAYLOAD,
+        "queue_index",
+        queue_count,
+    )
+    assert_rejected(
+        restamp(deployment),
+        capability,
+        rf"schedule {schedule_id} queue_index {queue_count} is outside the "
+        rf"{queue_count} advertised tensor queues",
+    )
+
+
+def test_schedule_outstanding_must_not_exceed_the_global_queue_limit(
+    capability: Capability,
+) -> None:
+    deployment = probe_deployment(capability)
+    schedule_id = deployment.notes["probe_ids"]["tensor_schedule"]
+    limit = capability.limits["max_outstanding_per_queue"]
+    deployment.table = patched_payload(
+        deployment.table,
+        schedule_id,
+        SCHEDULE_PAYLOAD,
+        "max_outstanding",
+        limit + 1,
+    )
+    assert_rejected(
+        restamp(deployment),
+        capability,
+        rf"schedule {schedule_id} max_outstanding {limit + 1} exceeds "
+        rf"capability\.limits\.max_outstanding_per_queue bound {limit}",
+    )
+
+
+@pytest.mark.parametrize(
+    "limit_name", ["queue_depth", "max_outstanding_per_queue"]
+)
+def test_schedule_outstanding_honours_a_narrower_engine_limit(
+    limit_name: str,
+) -> None:
+    capability = probe_capability()
+    capability.engines["tensor"][limit_name] = 1
+    capability.validate()
+    deployment = probe_deployment(capability)
+    schedule_id = deployment.notes["probe_ids"]["tensor_schedule"]
+    assert_rejected(
+        deployment,
+        capability,
+        rf"schedule {schedule_id} max_outstanding 2 exceeds "
+        rf"capability\.engines\.tensor\.{limit_name} bound 1",
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -1002,6 +1395,101 @@ def test_a_header_that_does_not_bind_the_descriptor_table_is_rejected(
         deployment.table, weights, MEMORY_OBJECT_PAYLOAD, "alignment_log2", 7
     )
     assert_rejected(deployment, capability, "does not bind the descriptor table")
+
+
+def test_memory_object_range_must_fit_the_capability_address_space(
+    capability: Capability,
+) -> None:
+    deployment = probe_deployment(capability)
+    weights = deployment.notes["probe_ids"]["weights"]
+    deployment.table = patched_payload(
+        deployment.table,
+        weights,
+        MEMORY_OBJECT_PAYLOAD,
+        "base_address",
+        int(capability.memory["hbm"]["bytes"]),
+    )
+    deployment = restamp(deployment)
+
+    report = verify_deployment(deployment, capability)
+    assert not report.admitted
+    assert report.checks["memory_object_capacity"] is False
+    assert any("exceeds the" in error and "HBM" in error for error in report.errors)
+
+
+def test_explicit_hbm_and_state_address_ranges_cannot_overlap(
+    capability: Capability,
+) -> None:
+    deployment = probe_deployment(capability)
+    ids = deployment.notes["probe_ids"]
+    deployment.table = patched_payload(
+        deployment.table,
+        ids["weights"],
+        MEMORY_OBJECT_PAYLOAD,
+        "base_address",
+        4096,
+    )
+    deployment.table = patched_payload(
+        deployment.table,
+        ids["kv_committed"],
+        MEMORY_OBJECT_PAYLOAD,
+        "base_address",
+        4096,
+    )
+    deployment = restamp(deployment)
+
+    report = verify_deployment(deployment, capability)
+    assert not report.admitted
+    assert report.checks["hbm_address_map_disjoint"] is False
+    assert any("overlapping object pairs" in error for error in report.errors)
+
+
+def test_same_nonzero_base_for_every_hbm_and_state_object_is_explicit_overlap(
+    capability: Capability,
+) -> None:
+    """Equal nonzero bases may not masquerade as implicit placement."""
+
+    deployment = probe_deployment(capability)
+    for descriptor in list(deployment.table.descriptors()):
+        if descriptor.descriptor_type != ExtendedDescriptorType.MEMORY_OBJECT:
+            continue
+        storage = StorageClass(int(descriptor.payload["storage_class"]))
+        if storage not in (StorageClass.HBM, StorageClass.STATE):
+            continue
+        deployment.table = patched_payload(
+            deployment.table,
+            descriptor.descriptor_id,
+            MEMORY_OBJECT_PAYLOAD,
+            "base_address",
+            4096,
+        )
+    deployment = restamp(deployment)
+
+    report = verify_deployment(deployment, capability)
+    assert not report.admitted
+    assert report.checks["hbm_address_map_disjoint"] is False
+    assert any("overlapping object pairs" in error for error in report.errors)
+
+
+def test_missing_hbm_dma_queue_capability_returns_a_rejection_report(
+    capability: Capability,
+) -> None:
+    """A sparse capability must not turn verification into a KeyError."""
+
+    deployment = probe_deployment(capability)
+    deployment.backend = "hbm-sram-abi3"
+    deployment.topology_class = int(TopologyClass.CLUSTER_32)
+    capability.engines = {
+        name: spec for name, spec in capability.engines.items() if name != "dma"
+    }
+
+    report = verify_deployment(deployment, capability)
+
+    assert not report.admitted
+    assert report.checks["hbm_exchange_dma_capability"] is False
+    assert any(
+        "capability.engines.dma.queues" in error for error in report.errors
+    )
 
 
 def test_a_header_that_does_not_bind_the_manifest_is_rejected(

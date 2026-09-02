@@ -1680,25 +1680,34 @@ with this amendment: the two ROM profiles had the same two sources of truth
 that tool exists to remove, and were simply not listed in it. They agreed with
 the code by coincidence, with nothing checking that they did.
 
-#### How far it gets
+#### How far it got at the A24 milestone
 
-With A22, A23 and A24 the shipped-deployment co-simulation
-(`tools/rtl_abi3_deployment_campaign.py`) correlates **all three** deployments
-against `runtime.sim.device.Device` at full depth, on both entrypoints, under
-Icarus 11.0 and Verilator 5.050, with both simulators printing the same marker:
+With A22, A23 and A24 the then-current shipped-deployment co-simulation
+(`tools/rtl_abi3_deployment_campaign.py`) correlated **all three deployments
+that existed at that milestone** against `runtime.sim.device.Device` at full
+depth, on both entrypoints, under Icarus 11.0 and Verilator 5.050. Both
+simulators printed this historical marker:
 
 ```text
 PASS: ABI3 RTL deployment co-simulation deployments=3 cases=6 completions=6 issues=19029 views=58849 signal_flag_cases=0 apply_overflow_cases=0 checks=410331
 ```
 
-The retained campaign has since moved with A25 and the phase-extent correction:
-the current DeepSeek image is `27dd5f55…`, with 1,171 instructions and 3,409
-descriptors. Its wafer prefill retires 29,456 instructions with 12,657 engine
-issues and 39,849 resolved operand views, and its decode 11,714 with 3,600 and
+The retained campaign has since moved with A25--A28 and the fourth shipped
+image. Its current authoritative marker is:
+
+```text
+PASS: ABI3 RTL deployment co-simulation deployments=4 cases=8 completions=8 issues=25054 views=72331
+```
+
+The current DeepSeek wafer image is `fa907792…`, with 1,171 instructions and 3,403
+descriptors. Its wafer prefill retires 18,491 instructions with 6,852 engine
+issues and 20,499 resolved operand views, and its decode 11,714 with 3,600 and
 10,428 — up from 8 retired instructions and 8 engine issues before these
-amendments. What the campaign still does not establish is unchanged and is
-listed in the artifact: the engines are recording no-ops on both sides, so this
-is the control plane and not the arithmetic.
+amendments. The current campaign also includes the DeepSeek HBM cluster; the
+artifact's deployment inventory and `correlated_cases` remain authoritative.
+What the campaign still does not establish is unchanged and is listed in the
+artifact: the engines are recording no-ops on both sides, so this is the
+control plane and not the arithmetic.
 
 ### 12.16 Amendment A25 — a commit whose row axis is a ring saturates onto it
 
@@ -1976,7 +1985,7 @@ amendment working:
 
 | check | what it is asking for |
 |---|---|
-| `tests/compiler/test_rtl_abi3.py::test_deployment_vector_set_is_reproducible` | rebuild the three deployment bundles under `build/abi3/`, then regenerate `testdata/compiler/abi3_deployment/` |
+| `tests/compiler/test_rtl_abi3.py::test_deployment_vector_set_is_reproducible` | rebuild the four deployment bundles under `build/abi3/`, then regenerate `testdata/compiler/abi3_deployment/` |
 | `tests/compiler/test_rtl_abi3.py::test_a_lowered_work_bound_bounds_both_sides` | the same bundles |
 | `tests/compiler/test_rtl_abi3.py::test_retained_deployment_campaign_is_bound_to_these_sources` | re-run `tools/rtl_abi3_deployment_campaign.py` against them |
 
@@ -2028,6 +2037,65 @@ The change is additive. Every released view already carries `NO_ID` in the
 field and keeps its old meaning and bytes. The functional resolver, independent
 verifier and RTL view resolver all implement the same rule; an inactive edge
 loop is a memory trap rather than a silent full-extent fallback.
+
+### 12.18 Amendment A27 — a zero-base joined prefill carries its logical row
+
+No field is assigned by this amendment. It fixes how `ROUTE.INDEX_TOPK` reads
+the fields A19 already assigned when A26 makes the score and selection views a
+fixed-address one-row stream.
+
+`aux_id_3` remains the **request** position-base symbol. A prefill request binds
+it to zero once; a physical row-loop iteration does not rewrite a runtime
+symbol. For a causal `INDEX_TOPK` with a joined window and a zero base, the last
+non-pad entry of `input_view_1` is therefore the absolute position `p` used for
+the compressed-candidate horizon. The row must be non-empty, strictly ascending
+and inside the context or the engine traps. Its selected compressed group `g`
+also names KV row `context + window + g`, because the request's complete current
+rows precede the window and compressed segments; the physical one-row score
+slice is not that request span. For an unjoined operator, full visibility, or a
+nonzero base, the existing `p = base + row` and A19 rebase rules are unchanged.
+
+This composes the existing records rather than extending them: A19's window
+operand already carries the prefill absolute interval, A26 already carries the
+fixed-address loop slice, and `aux_id_2`/`aux_id_3` remain the context and
+request-base symbol IDs at payload bytes 56 and 60. Descriptor payloads,
+capabilities, decoders and pre-A27 nonzero-base deployments are byte-identical.
+Operator conventions section 23 defines the resulting causal rule and its
+fail-closed checks.
+
+### 12.19 Amendment A28 — node-indexed authenticated object sources
+
+No wire field is assigned by this amendment. It defines the deployment-v1
+manifest extension used when one symmetric `MEMORY_OBJECT` descriptor names a
+different authenticated local image on each cluster node.
+
+An object source of kind `node_segments` carries consecutive node IDs starting
+at zero and one non-empty ordered segment list per admitted topology node. Every
+list must cover exactly the descriptor's `size_bytes`; the object must be
+immutable. The generic verifier rejects a missing topology, a map-count
+mismatch, a writable object, a missing object binding, or asymmetric coverage.
+There is no fallback to node zero or to a shared source.
+
+The existing 32-byte `MEMORY_OBJECT.content_digest` binds the complete node map.
+For one node, the local image digest is
+`SHA256(concat(segment_sha256[0], ..., segment_sha256[n-1]))`, where every
+segment digest is a required decoded 32-byte SHA-256 value in manifest order.
+The descriptor root is the SHA-256 of canonical JSON containing:
+
+```text
+schema = "opentallas.abi3.node-segments-content.v1"
+size_bytes = the symmetric local object extent
+node_count = the number of ordered node maps
+nodes = [{node_id, content_sha256}, ...]
+```
+
+The deployment-manifest digest separately authenticates segment paths, byte
+offsets and lengths; the content root binds ordered bytes and node ownership.
+Publication and disk loading both recompute the root and reject a stale
+descriptor. Shared `segments` sources retain their existing digest bytes, so
+old deployment-v1 manifests remain readable and byte-identical. A reader that
+does not implement the new tagged source kind fails closed rather than treating
+it as a shared image.
 
 ## 13. Amendments made at the architecture freeze
 
@@ -2081,6 +2149,8 @@ remain normative.
 | A24 | an event is a level, and every retiring instruction that names one raises it | this document, section 12.14 |
 | A25 | a commit whose row axis is a ring saturates onto it: the rows published are `min(span, capacity_rows)`, in circular slot order | this document, section 12.16; operator conventions, section 22 |
 | A26 | an edge mask clamps a rolling tensor view at the final partial loop iteration without advancing its element offset | this document, section 12.17 |
+| A27 | a joined zero-base prefill row carries the logical query position across a fixed-address stream | this document, section 12.18; operator conventions, section 23 |
+| A28 | a symmetric cluster object may bind one ordered authenticated local image per node through a domain-separated manifest content root | this document, section 12.19; `runtime/abi3/deployment.py` |
 
 Two of these carry more weight than the rest. **A4** and **A13** together are
 what make a loop-compressed program possible at all: A4 lets a descriptor be a

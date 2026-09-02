@@ -1,4 +1,5 @@
-.PHONY: abi3-tokens abi3-tokens-deepseek abi3-tokens-deepseek-rom abi3-tokens-deepseek-hbm abi3-tokens-qwen-rom abi3-tokens-qwen-hbm abi3-restart abi3-restart-qwen-hbm abi3-restart-qwen-rom abi3-restart-deepseek-hbm abi3-restart-deepseek-rom abi3-context-gate abi3-prefix-workloads abi3-hbm-qwen-deployment abi3-rom-schedule-check rom-service rom-service-vectors rom-service-physical abi3-rtl-engines check-evidence-grades check-prose-figures check-figures roofline abi3-failclosed abi3-equivalence abi3 abi3-engine-rate abi3-cost-tables abi3-cost-tables-check abi3-spec abi3-test abi3-workloads abi3-oracle abi3-engines abi3-rtl abi3-physical abi3-status abi3-ir profile simulate iso-node model-traffic legacy-sim routing noc sensitivity legacy-sensitivity spec-check formal rtl-sim fault-sim fault-campaign coverage rtl-static rtl pre-synth-verify synth-public spice spice-pdk test verify clean-results
+.PHONY: abi3-tokens abi3-tokens-deepseek abi3-tokens-deepseek-rom abi3-tokens-deepseek-hbm abi3-tokens-qwen-rom abi3-tokens-qwen-hbm abi3-restart abi3-restart-qwen-hbm abi3-restart-qwen-rom abi3-restart-deepseek-hbm abi3-restart-deepseek-rom abi3-context-gate abi3-prefix-workloads abi3-hbm-qwen-deployment abi3-hbm-deepseek-deployment abi3-rom-schedule-check rom-service rom-service-vectors rom-service-physical abi3-rtl-engines check-evidence-grades check-prose-figures check-figures roofline abi3-failclosed abi3-equivalence abi3 abi3-engine-rate abi3-cost-tables abi3-cost-tables-check abi3-spec abi3-test abi3-workloads abi3-oracle abi3-engines abi3-rtl abi3-physical abi3-status abi3-ir profile simulate iso-node model-traffic legacy-sim routing noc sensitivity legacy-sensitivity spec-check formal rtl-sim fault-sim fault-campaign coverage rtl-static rtl pre-synth-verify synth-public spice spice-pdk test verify clean-results
+.PHONY: abi3-rom-qwen-build abi3-rom-deepseek-build abi3-hbm-qwen-build abi3-hbm-deepseek-build abi3-comparison-deepseek abi3-evidence-source-current abi3-rtl-vectors abi3-rtl-deployment-vectors abi3-rtl-deployment
 
 profile:
 	python3 tools/profile_hf.py --all
@@ -133,7 +134,10 @@ abi3-oracle:
 abi3-rtl:
 	PYTHONPATH=. python3 tools/rtl_abi3_campaign.py --output results/rtl/abi3_campaign.json --force
 
-# The three deployments this program ships, co-simulated against
+abi3-rtl-vectors:
+	PYTHONPATH=. python3 tools/build_abi3_rtl_vectors.py
+
+# The four deployments this program ships, co-simulated against
 # runtime.sim.device.Device.  The vector set is built from the deployment
 # bundles under build/ (ignored), so `abi3-rtl-deployment-vectors` needs them
 # built first; the campaign itself reads only the committed vector images.
@@ -219,8 +223,46 @@ abi3-equivalence:
 abi3-failclosed:
 	PYTHONPATH=. python3 tools/run_abi3_failclosed_campaign.py --force
 
+# Build and check remain separate atomic operations.  In particular, invoking
+# a certificate target below does not start a token simulation or rebuild an
+# ignored deployment bundle; the ordered umbrella target does that explicitly.
+abi3-rom-qwen-build:
+	PYTHONPATH=. python3 tools/build_rom_deployment.py qwen3-8b \
+	  --ir build/ir-v3/qwen3-8b/kernel_ir.v3.json \
+	  --output build/abi3/qwen3-8b-rom \
+	  --checkpoint-root $(QWEN3_SNAPSHOT) \
+	  --verify --inverse --determinism
+
+abi3-rom-deepseek-build:
+	PYTHONPATH=. python3 tools/build_rom_deployment.py deepseek-v4-flash \
+	  --ir build/ir-v3/deepseek-v4-flash-0731/kernel_ir.v3.json \
+	  --output build/abi3/deepseek-v4-flash-rom \
+	  --checkpoint-root $(DEEPSEEK_SNAPSHOT) \
+	  --verify --inverse --determinism
+
+abi3-hbm-qwen-build:
+	PYTHONPATH=. python3 tools/build_hbm_sram_deployment.py \
+	  --ir build/ir-v3/qwen3-8b/kernel_ir.v3.json \
+	  --profile single-chip --out build/abi3/qwen3-8b-hbm-tokens \
+	  --check-determinism
+
+abi3-hbm-deepseek-build:
+	PYTHONPATH=. python3 tools/build_hbm_sram_deployment.py \
+	  --ir build/ir-v3/deepseek-v4-flash-0731/kernel_ir.v3.json \
+	  --profile cluster-32 --out build/abi3/deepseek-v4-flash-hbm-tokens \
+	  --check-determinism
+
 abi3-hbm-qwen-deployment:
 	PYTHONPATH=. python3 tools/check_hbm_deployments.py --jobs 1 --force
+
+abi3-hbm-deepseek-deployment:
+	PYTHONPATH=. python3 tools/check_hbm_deployments.py \
+	  --case deepseek-v4-flash-hbm-cluster deepseek \
+	  build/ir-v3/deepseek-v4-flash-0731/kernel_ir.v3.json \
+	  build/abi3/deepseek-v4-flash-hbm-tokens \
+	  configs/hardware/abi3_capability/hbm_sram_cluster_32.json \
+	  --output results/abi3/hbm_deepseek_deployment_certificate.json \
+	  --jobs 1 --force
 
 abi3-rom-schedule-check:
 	PYTHONPATH=. python3 tools/check_rom_schedules.py --jobs 2 --force
@@ -308,6 +350,43 @@ abi3-tokens-qwen-rom:
 	  --output results/abi3/accelerator_tokens/qwen3_8b_rom_chat1.json --force
 
 abi3-tokens: abi3-tokens-qwen-rom abi3-tokens-qwen-hbm abi3-tokens-deepseek
+
+# Atomic promotion of the two already-produced, governed DeepSeek captures.
+# No token prerequisite is attached: a comparison request must never
+# unexpectedly turn into hours of model execution.
+abi3-comparison-deepseek:
+	PYTHONPATH=. python3 tools/build_comparison_report.py \
+	  --rom results/abi3/accelerator_tokens/deepseek_v4_flash_rom_p32.json \
+	  --hbm results/abi3/accelerator_tokens/deepseek_v4_flash_hbm_p32.json \
+	  --comparison-id deepseek-v4-flash-rom-vs-hbm-p32 \
+	  --output results/abi3/comparison_deepseek_rom_vs_hbm.json --force
+
+# Source-current evidence regeneration has explicit barriers.  All four
+# canonical bundles are rebuilt before consumers inspect them.  Token lanes and
+# HBM certificates stay sequential: the DeepSeek checkpoint is about 156 GB and
+# this host has no demonstrated headroom for two numerical lanes or certificate
+# rebuilds at once.  Bounded JSON consumers, the schedule checker's own workers,
+# and the RTL campaigns' Icarus/Verilator pair retain safe internal parallelism.
+# The atomic targets above remain independently invocable; only this umbrella
+# opts into the long-running token work.
+abi3-evidence-source-current:
+	$(MAKE) abi3-rom-qwen-build
+	$(MAKE) abi3-hbm-qwen-build
+	$(MAKE) abi3-rom-deepseek-build
+	$(MAKE) abi3-hbm-deepseek-build
+	$(MAKE) abi3-tokens-qwen-rom
+	$(MAKE) abi3-tokens-qwen-hbm
+	$(MAKE) abi3-tokens-deepseek-rom
+	$(MAKE) abi3-tokens-deepseek-hbm
+	$(MAKE) abi3-hbm-qwen-deployment
+	$(MAKE) abi3-hbm-deepseek-deployment
+	$(MAKE) abi3-rom-schedule-check
+	$(MAKE) -j2 abi3-context-gate abi3-comparison-deepseek
+	$(MAKE) abi3-rtl-vectors
+	$(MAKE) abi3-rtl
+	$(MAKE) abi3-rtl-engines
+	$(MAKE) abi3-rtl-deployment-vectors
+	$(MAKE) abi3-rtl-deployment
 
 # --- checkpoint/restart exactness ------------------------------------------
 # Each target runs an uninterrupted comparator, an interrupted prefix, and a

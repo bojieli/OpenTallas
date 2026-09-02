@@ -1,19 +1,19 @@
 `timescale 1ns/1ps
 // ---------------------------------------------------------------------------
-// Icarus testbench: the three deployments this program ships, co-simulated.
+// Icarus testbench: the four deployments this program ships, co-simulated.
 //
 // rtl/test/tb_a3_microsequencer.sv replays 64 vectors that are real ABI 3.0
 // programs *written for the campaign*.  This one replays the programs the
-// project claims to run -- Qwen3-8B on ROM, Qwen3-8B on HBM, DeepSeek-V4-Flash
-// on the wafer -- from their own deployment images, on both entrypoints.
+// project claims to run -- Qwen3-8B on ROM and HBM, and DeepSeek-V4-Flash on
+// the ROM wafer and HBM 32-node cluster -- from their own deployment images,
+// on both entrypoints.
 //
-// It instantiates the same verification top, unmodified and with the same
-// parameters, that the microsequencer campaign drives, so no bespoke wrapper
-// stands between the real program and the RTL.  Only the memory images differ:
-// tools/build_abi3_deployment_rtl_vectors.py writes the real 256-byte program
-// headers, the real 32-byte instruction records, the real descriptor records
-// and the request-bound runtime symbols into exactly the four files that top
-// reads.
+// It instantiates the same verification top the microsequencer campaign drives,
+// with deployment-only memory-depth overrides; the shared top's defaults and
+// production RTL geometry remain unchanged.  No bespoke wrapper stands between
+// the real program and the RTL.  The vector builder writes the real 256-byte
+// program headers, 32-byte instruction records, descriptor records and
+// request-bound runtime symbols into exactly the four files that top reads.
 //
 // What has to agree, per case, with runtime.sim.device.Device:
 //   * program-header admission, its trap class, the instruction and entrypoint
@@ -40,9 +40,11 @@
 // the instruction stream and not the arithmetic.
 // ---------------------------------------------------------------------------
 module tb_a3_deployment;
+    localparam integer PROGRAM_WORDS   = 4096;
+    localparam integer DESC_WORDS      = 8192;
     localparam integer CASE_MEM_WORDS  = 512;
-    localparam integer ISSUE_MEM_WORDS = 65536;
-    localparam integer VIEW_MEM_WORDS  = 524288;
+    localparam integer ISSUE_MEM_WORDS = 131072;
+    localparam integer VIEW_MEM_WORDS  = 1048576;
     localparam integer META_WORDS      = 8;
     localparam integer CASE_STRIDE     = 38;
     localparam integer ISSUE_STRIDE    = 3;
@@ -168,7 +170,10 @@ module tb_a3_deployment;
     wire        event_signal_error;
     wire        state_apply_overflow;
 
-    ot_a3_microsequencer_top dut (
+    ot_a3_microsequencer_top #(
+        .PROGRAM_WORDS(PROGRAM_WORDS),
+        .DESC_WORDS(DESC_WORDS)
+    ) dut (
         .clk(clk),
         .rst_n(rst_n),
         .header_start(header_start),

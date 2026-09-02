@@ -17,6 +17,7 @@ import json
 from pathlib import Path
 import re
 import shutil
+import subprocess
 import sys
 
 import pytest
@@ -726,6 +727,15 @@ def test_a14_scope_byte_is_encoded_and_changes_nothing_the_rtl_sees() -> None:
     wafer = generator.case_a14_link_wafer_scopes(capability)
     refused = generator.case_a14_scope_unsupported(capability)
 
+    assert wafer.capability is not None
+    assert wafer.capability.link == {
+        "reticle_rows": generator.A14_RETICLE_ROWS,
+        "reticle_columns": generator.A14_RETICLE_COLUMNS,
+        "tiles_per_reticle": generator.A14_TILES_PER_RETICLE,
+    }
+    wafer_report = verify_deployment(wafer.deployment, wafer.capability)
+    assert wafer_report.admitted, wafer_report.errors
+
     # The scopes are really in the payload, at the offset the amendment names.
     assert _communication_scopes(node) == [0, 0]
     assert _communication_scopes(wafer) == [2, 1]
@@ -1006,7 +1016,7 @@ def test_retained_campaign_artifact_is_bound_to_these_sources() -> None:
 # 4. the deployments this program ships, co-simulated
 # ---------------------------------------------------------------------------
 # The 65 vectors above are real ABI 3.0 programs written *for* the campaign.
-# These bind the separate campaign that replays the three programs the project
+# These bind the separate campaign that replays the four deployments the project
 # claims to run.  The deployment bundles live under the ignored build/ tree, so
 # anything that needs one skips; everything that can be checked from the
 # committed vector images and the retained artifact runs unconditionally.
@@ -1028,6 +1038,81 @@ def _deployment_bundles_present() -> bool:
     )
 
 
+def _run_deployment_generator(output: Path, *extra: str) -> None:
+    """Run each real-deployment rebuild in an isolated address space.
+
+    Activating the four shipped deployments maps multi-terabyte logical arenas.
+    A single CLI invocation keeps their resident footprint bounded, but running
+    two rebuilds back-to-back inside the long-lived pytest interpreter lets the
+    allocator reuse previously dirtied anonymous pages while zero-initialising
+    the next sparse arena.  That defeats the sparse-allocation premise and can
+    consume the host before the second case starts.  The governed producer is a
+    CLI, so reproduce it through that same boundary and let process exit release
+    every mapping before another heavyweight case runs.
+    """
+
+    result = subprocess.run(
+        [
+            sys.executable,
+            str(ROOT / "tools" / "build_abi3_deployment_rtl_vectors.py"),
+            "--output",
+            str(output),
+            *extra,
+        ],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+
+
+def test_deployment_campaign_has_four_targets_and_private_memory_geometry() -> None:
+    """The larger real-image memories must not alter the shared top defaults."""
+    from tools import build_abi3_deployment_rtl_vectors as deployment_generator
+
+    targets = {target.key: target for target in deployment_generator.TARGETS}
+    assert set(targets) == {
+        "qwen3-8b-rom-single-chip",
+        "qwen3-8b-hbm-single-chip",
+        "deepseek-v4-flash-rom-wafer",
+        "deepseek-v4-flash-hbm-cluster",
+    }
+    assert (
+        targets["qwen3-8b-hbm-single-chip"].deployment
+        == "build/abi3/qwen3-8b-hbm-tokens"
+    )
+    hbm = targets["deepseek-v4-flash-hbm-cluster"]
+    assert hbm.deployment == "build/abi3/deepseek-v4-flash-hbm-tokens"
+    assert hbm.capability == (
+        "configs/hardware/abi3_capability/hbm_sram_cluster_32.json"
+    )
+    assert re.fullmatch(r"[0-9a-f]{64}", hbm.digest)
+
+    assert deployment_generator.PROGRAM_WORDS == 4096
+    assert deployment_generator.DESC_WORDS == 8192
+    assert deployment_generator.ISSUE_MEM_WORDS == 131072
+    assert deployment_generator.VIEW_MEM_WORDS == 1048576
+
+    shared_top = (ROOT / "rtl/test/a3_microsequencer_top.sv").read_text(
+        encoding="utf-8"
+    )
+    assert re.search(r"parameter integer PROGRAM_WORDS\s*=\s*2048", shared_top)
+    assert re.search(r"parameter integer DESC_WORDS\s*=\s*4096", shared_top)
+
+    deployment_tb = (ROOT / "rtl/test/tb_a3_deployment.sv").read_text(
+        encoding="utf-8"
+    )
+    assert ".PROGRAM_WORDS(PROGRAM_WORDS)" in deployment_tb
+    assert ".DESC_WORDS(DESC_WORDS)" in deployment_tb
+
+    deployment_campaign = (
+        ROOT / "tools/rtl_abi3_deployment_campaign.py"
+    ).read_text(encoding="utf-8")
+    assert '"-GPROGRAM_WORDS=4096"' in deployment_campaign
+    assert '"-GDESC_WORDS=8192"' in deployment_campaign
+
+
 def test_deployment_vector_set_names_the_programs_this_program_ships() -> None:
     """The digests are the contract: a rebuilt deployment is a different one."""
     vectors = _deployment_vectors()
@@ -1035,20 +1120,25 @@ def test_deployment_vector_set_names_the_programs_this_program_ships() -> None:
         entry["key"]: entry for entry in vectors["deployments"]
     }
     assert shipped["qwen3-8b-rom-single-chip"]["deployment_sha256"].startswith(
-        "c71ee77e"
+        "92535108"
     )
     assert shipped["qwen3-8b-rom-single-chip"]["instruction_count"] == 75
     assert shipped["qwen3-8b-rom-single-chip"]["descriptor_count"] == 239
     assert shipped["qwen3-8b-hbm-single-chip"]["deployment_sha256"].startswith(
-        "fb5c66df"
+        "8e1185ea"
     )
     assert shipped["qwen3-8b-hbm-single-chip"]["instruction_count"] == 75
     assert shipped["qwen3-8b-hbm-single-chip"]["descriptor_count"] == 218
     assert shipped["deepseek-v4-flash-rom-wafer"][
         "deployment_sha256"
-    ].startswith("27dd5f55")
+    ].startswith("fa907792")
     assert shipped["deepseek-v4-flash-rom-wafer"]["instruction_count"] == 1171
-    assert shipped["deepseek-v4-flash-rom-wafer"]["descriptor_count"] == 3409
+    assert shipped["deepseek-v4-flash-rom-wafer"]["descriptor_count"] == 3403
+    assert shipped["deepseek-v4-flash-hbm-cluster"][
+        "deployment_sha256"
+    ].startswith("2943197b")
+    assert shipped["deepseek-v4-flash-hbm-cluster"]["instruction_count"] == 1146
+    assert shipped["deepseek-v4-flash-hbm-cluster"]["descriptor_count"] == 2953
     for entry in shipped.values():
         assert entry["admitted"], (entry["key"], entry["verifier_errors"])
 
@@ -1094,14 +1184,23 @@ def test_deployment_depth_is_recorded_per_case_not_assumed() -> None:
     )
 
 
+def test_deployment_state_rows_compare_one_rtl_node_at_an_explicit_scope() -> None:
+    """A single verification top must not be compared with a cluster total."""
+    for record in _deployment_vectors()["cases"]:
+        golden = record["golden"]
+        assert golden["state_row_scope"] == "per_node_symmetric_commit_run"
+        assert (
+            golden["state_rows_committed"] * golden["node_count"]
+            == golden["state_rows_committed_cluster_total"]
+        )
+
+
 @pytest.mark.skipif(
     not _deployment_bundles_present(),
     reason="the deployment bundles are not built (build/ is ignored)",
 )
 def test_deployment_vector_set_is_reproducible(tmp_path: Path) -> None:
-    from tools import build_abi3_deployment_rtl_vectors as deployment_generator
-
-    assert deployment_generator.build(["--output", str(tmp_path)]) == 0
+    _run_deployment_generator(tmp_path)
     for name in sorted(_deployment_vectors()["image_sha256"]):
         assert (tmp_path / name).read_bytes() == (
             DEPLOYMENT_VECTOR_DIR / name
@@ -1119,20 +1218,13 @@ def test_deployment_vector_set_is_reproducible(tmp_path: Path) -> None:
 def test_a_lowered_work_bound_bounds_both_sides(tmp_path: Path) -> None:
     """The knob that would bound a prefix, exercised rather than advertised.
 
-    None of the six cases needs it -- every one reaches COMPLETE inside its own
+    None of the eight cases needs it -- every one reaches COMPLETE inside its own
     declared bound -- but a bounding mechanism nobody runs is a bounding
     mechanism nobody knows works.  Lowering it must stop the golden model at
     the bound, leave the *declared* header bound untouched so header admission
     still checks the real program, and say so per case.
     """
-    from tools import build_abi3_deployment_rtl_vectors as deployment_generator
-
-    assert (
-        deployment_generator.build(
-            ["--output", str(tmp_path), "--max-retired-work", "1000"]
-        )
-        == 0
-    )
+    _run_deployment_generator(tmp_path, "--max-retired-work", "1000")
     bounded = json.loads(
         (tmp_path / "abi3_deployment_rtl_vectors.json").read_text(encoding="utf-8")
     )

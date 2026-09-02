@@ -4,12 +4,13 @@
 ``tools/build_abi3_rtl_vectors.py`` builds 65 vectors that are *real* ABI 3.0
 programs but are written for the campaign: each one is constructed to reach a
 particular corner of the sequencer.  None of them is a program this project
-claims to run.  This generator closes that gap by taking the three shipped
+claims to run.  This generator closes that gap by taking the four shipped
 deployments themselves --
 
-    Qwen3-8B ROM single chip        c71ee77e...  75 instructions, 239 descriptors
-    Qwen3-8B HBM single chip        fb5c66df...  75 instructions, 218 descriptors
-    DeepSeek-V4-Flash ROM wafer     27dd5f55...  1171 instructions, 3409 descriptors
+    Qwen3-8B ROM single chip        92535108...  75 instructions, 239 descriptors
+    Qwen3-8B HBM single chip        8e1185ea...  75 instructions, 218 descriptors
+    DeepSeek-V4-Flash ROM wafer     fa907792...  1171 instructions, 3403 descriptors
+    DeepSeek-V4-Flash HBM cluster   2943197b...  1146 instructions, 2953 descriptors
 
 -- and emitting, for each of them, the same four memory images the RTL
 verification top already reads (the 256-byte program header, the 32-byte
@@ -79,15 +80,16 @@ from runtime.sim.device import Device  # noqa: E402
 
 OUTPUT_DIR = ROOT / "testdata/compiler/abi3_deployment"
 
-# The RTL verification top this campaign drives is
-# rtl/test/a3_microsequencer_top.sv -- the *same* module, with the same
-# parameters, that the microsequencer campaign instantiates.  Its memories are
-# these sizes, and every image below is padded to them so the DUT reads a fully
-# initialised memory.  A deployment that does not fit is refused rather than
-# quietly truncated.
-PROGRAM_WORDS = 2048      # 256-bit instruction records
+# The RTL verification top this campaign drives is the shared
+# rtl/test/a3_microsequencer_top.sv module.  The deployment campaign overrides
+# only its memory geometry so all four shipped images fit; the module's defaults
+# and the production RTL geometry remain unchanged.  Every image below is
+# padded to these deployment-only bounds so the DUT reads fully initialised
+# memory.  A deployment that does not fit is refused rather than quietly
+# truncated.
+PROGRAM_WORDS = 4096      # 256-bit instruction records
 HEADER_WORDS = 8192       # 32-bit words, 64 per deployment
-DESC_WORDS = 4096         # 1536-bit descriptor prefixes
+DESC_WORDS = 8192         # 1536-bit descriptor prefixes
 SYMBOL_WORDS = 2048       # 32-bit words, 16 per case
 DESCRIPTOR_PREFIX_BYTES = 192
 
@@ -95,8 +97,8 @@ CASE_STRIDE = 38
 # Checker-side array sizes, transcribed in rtl/test/tb_a3_deployment.sv and
 # rtl/test/a3_deployment_harness.cpp.
 CASE_MEM_WORDS = 512
-ISSUE_MEM_WORDS = 65536
-VIEW_MEM_WORDS = 524288
+ISSUE_MEM_WORDS = 131072
+VIEW_MEM_WORDS = 1048576
 SYMBOL_STRIDE = 16
 HEADER_STRIDE = 64
 ISSUE_STRIDE = 3          # opcode, descriptor ID, instruction index
@@ -139,26 +141,23 @@ TARGETS = (
             "~/.cache/huggingface/hub/models--Qwen--Qwen3-8B/snapshots/"
             "b968826d9c46dd6066d109eabc6255188de91218"
         ),
-        digest="c71ee77eabd4c83418cf20ab6834ba9d4e902d1afe33127714b4e8e104ca5cbc",
-        reproduce=(
-            "python3 tools/build_rom_deployment.py qwen3-8b --ir "
-            "build/ir-v3/qwen3-8b/kernel_ir.v3.json --output build/abi3/qwen3-8b-rom"
-        ),
+        digest="925351080448450ee4b14a0e3260001dbac9aeafc582fd3202d53a0a379b9c91",
+        reproduce="make abi3-rom-qwen-build",
     ),
     Target(
         key="qwen3-8b-hbm-single-chip",
         title="Qwen3-8B HBM single chip",
-        deployment="build/abi3/qwen3-8b-single-chip-w95",
+        deployment="build/abi3/qwen3-8b-hbm-tokens",
         capability="configs/hardware/abi3_capability/hbm_sram_single_chip.json",
         checkpoint=(
             "~/.cache/huggingface/hub/models--Qwen--Qwen3-8B/snapshots/"
             "b968826d9c46dd6066d109eabc6255188de91218"
         ),
-        digest="fb5c66df438576db62e42f3dfc92cf5fe5cdee128829e6d87a2274d2fc2d3c5a",
+        digest="8e1185ea1aef360efcdb101379fc40e22658bfd81edd970dc8cfdd29c6c8ff0c",
         reproduce=(
             "python3 tools/build_hbm_sram_deployment.py --ir "
             "build/ir-v3/qwen3-8b/kernel_ir.v3.json --profile single-chip "
-            "--out build/abi3/qwen3-8b-single-chip-w95"
+            "--out build/abi3/qwen3-8b-hbm-tokens"
         ),
     ),
     Target(
@@ -168,13 +167,26 @@ TARGETS = (
         capability="configs/hardware/abi3_capability/rom_deepseek_v4.json",
         checkpoint=(
             "~/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4-Flash-0731/"
-            "snapshots/*"
+            "snapshots/7872f01b1d1fe23eabc4c98b48bffcef5a386062"
         ),
-        digest="27dd5f558e8994de344063332a8b767ce3f1a741071e4d7196061c600ba66e17",
+        digest="fa907792d8eb73ec1237525468581e47945a9077e5a247f4f88c43fbb5042394",
+        reproduce="make abi3-rom-deepseek-build",
+    ),
+    Target(
+        key="deepseek-v4-flash-hbm-cluster",
+        title="DeepSeek-V4-Flash HBM 32-node cluster",
+        deployment="build/abi3/deepseek-v4-flash-hbm-tokens",
+        capability="configs/hardware/abi3_capability/hbm_sram_cluster_32.json",
+        checkpoint=(
+            "~/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4-Flash-0731/"
+            "snapshots/7872f01b1d1fe23eabc4c98b48bffcef5a386062"
+        ),
+        digest="2943197b3055d6198899d402efd927810cd307c09287f9d250b1b1afb2695275",
         reproduce=(
-            "python3 tools/build_rom_deployment.py deepseek-v4-flash --ir "
-            "build/ir-v3/deepseek-v4-flash-0731/kernel_ir.v3.json --output "
-            "build/abi3/deepseek-v4-flash-rom"
+            "python3 tools/build_hbm_sram_deployment.py --ir "
+            "build/ir-v3/deepseek-v4-flash-0731/kernel_ir.v3.json "
+            "--profile cluster-32 --out "
+            "build/abi3/deepseek-v4-flash-hbm-tokens"
         ),
     ),
 )
@@ -322,10 +334,11 @@ def bound_overruns(
 def checkpoint_root(target: "Target", override: Path | None) -> Path:
     """Where the deployment's object segments are read from.
 
-    Nothing is read from it -- every engine is a no-op -- but the arena is
-    *mapped*, so the files a MEMORY_OBJECT names have to exist and be at least
-    as long as the segments the deployment declares.  Refusing here, with the
-    path in the message, is better than a MemoryError four frames deep.
+    Engine datapaths are no-ops, but activation still authenticates every
+    declared mapped range before an instruction can observe it.  The files a
+    MEMORY_OBJECT names therefore have to exist, be large enough, and contain
+    the bytes whose SHA-256 the deployment binds.  Refusing a missing root here,
+    with the path in the message, is better than a MemoryError four frames deep.
     """
     if override is not None:
         return override
@@ -334,8 +347,8 @@ def checkpoint_root(target: "Target", override: Path | None) -> Path:
     if not matches:
         raise SystemExit(
             f"{target.key}: no checkpoint at {pattern}; the deployment's "
-            "memory objects are file-backed and the arena has to be mappable "
-            "even though this campaign reads none of it"
+            "memory objects are file-backed and activation must authenticate "
+            "their declared ranges"
         )
     return Path(matches[0])
 
@@ -351,8 +364,9 @@ def install_engine_stubs() -> None:
     so a golden model that *did* compute would trap on data the RTL never sees
     and the comparison would not be well posed.  Binding every dispatchable
     ``(family, subopcode)`` to a no-op makes the two sides differ in nothing but
-    the datapath neither is exercising.  It also means no checkpoint byte is
-    read: the arena is mapped and never touched.
+    the datapath neither is exercising.  No checkpoint byte reaches an engine;
+    Device activation still reads every mapped range once to authenticate its
+    declared digest.
 
     ``runtime.sim.engine.register`` refuses to replace an existing
     implementation, so the binding is written directly; the result does not
@@ -501,6 +515,12 @@ def run_golden(
     )
     trace = device.trace[mark:]
     counters = result.counters
+    cluster_state_rows = int(counters.get("state.rows_committed", 0))
+    if cluster_state_rows % max(int(device.node_count), 1):
+        raise SystemExit(
+            f"state.rows_committed={cluster_state_rows} is not symmetric over "
+            f"the deployment's {device.node_count} nodes"
+        )
     issues: list[dict[str, Any]] = []
     views: list[dict[str, Any]] = []
     for entry in trace:
@@ -535,7 +555,15 @@ def run_golden(
         "state_commits_applied": (
             int(counters.get("state.commits", 0)) if success else 0
         ),
-        "state_rows_committed": int(counters.get("state.rows_committed", 0)),
+        # One verification top is one sequencer/node instance.  Device reports
+        # state bytes/rows as cluster totals because a commit copies the same
+        # run into every node-local state image.  Compare RTL with the exact
+        # per-node run; retain the cluster total beside it so the scope cannot
+        # be mistaken or silently divided by a later consumer.
+        "state_rows_committed": cluster_state_rows // max(device.node_count, 1),
+        "state_rows_committed_cluster_total": cluster_state_rows,
+        "state_row_scope": "per_node_symmetric_commit_run",
+        "node_count": int(device.node_count),
         "message": result.message,
         "symbols": symbols,
         "issues": issues,
@@ -942,15 +970,20 @@ def build(argv: list[str] | None = None) -> int:
         },
         "abi": {"major": 3, "minor": 0},
         "what_is_correlated": (
-            "the three deployments this program ships, executed on the RTL "
+            "the four deployments this program ships, executed on the RTL "
             "control plane and on runtime.sim.device.Device from the same "
             "program image, the same descriptor table and the same runtime "
-            "symbols"
+            "symbols; one verification top is compared with node zero's "
+            "resolved views and the exact per-node state commit run, while "
+            "the vector record separately retains the cluster node count and "
+            "cluster-total committed rows"
         ),
         "engine_stub_policy": (
             "every dispatchable engine operation is a recording no-op: RTL 3.0 "
             "implements the control plane, so the comparison is the control "
-            "plane and no checkpoint byte is read on either side"
+            "plane and no checkpoint byte reaches an engine on either side; "
+            "the golden Device still authenticates all mapped source ranges "
+            "before execution"
         ),
         "prompt_tokens": args.prompt_tokens,
         "requested_max_retired_work": args.max_retired_work,

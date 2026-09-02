@@ -67,6 +67,7 @@ from runtime.abi3.constants import (
     Link,
     Major,
     NO_ID,
+    NO_NODE,
     ParticipantScope,
     Permission,
     Route,
@@ -1452,10 +1453,18 @@ def test_schedule_checker_rejects_unadvertised_queue(
     candidate = _mutate_descriptor(
         deployment, schedule.descriptor_id, "queue_index", queues
     )
-    # The generic ABI verifier knows the field is a legal byte, but not how
-    # many physical queues this engine advertises.  The independent checker
-    # must close that semantic gap.
-    assert verify_deployment(candidate, qwen_capability).admitted
+    # Queue cardinality is now part of generic ABI admission as well as the
+    # independent ROM schedule proof.  Keep both assertions: agreement here
+    # guards either implementation from silently relaxing the physical bound,
+    # while the bank/tile/dependency mutations below still exercise properties
+    # that only the independent checker reconstructs.
+    verification = verify_deployment(candidate, qwen_capability)
+    assert not verification.admitted
+    assert any(
+        f"queue_index {queues} is outside the {queues} advertised vector queues"
+        in error
+        for error in verification.errors
+    )
     report = check_rom_schedule(qwen_graph, candidate, qwen_capability)
     assert report["status"] == "fail"
     assert report["checks"]["queue_index"] is False
@@ -1943,6 +1952,33 @@ def test_qwen_inverse_proof_passes(qwen_build, workspace):
     assert report["placed_tensor_count"] == sum(len(r.members) for r in plan.regions)
 
 
+def test_padded_rom_objects_use_the_zero_source_content_sentinel(
+    qwen_build, qwen_capability
+):
+    deployment, plan = qwen_build
+    padded = [region for region in plan.regions if region.pad_bytes]
+    assert padded, "the fixture must exercise alignment padding"
+
+    for region in plan.regions:
+        source = deployment.objects[region.object_id]
+        descriptor = deployment.table[region.object_id]
+        assert source.kind == "segments"
+        assert descriptor.payload["content_digest"] == (
+            source.authenticated_content_digest()
+        )
+
+    for region in padded:
+        source = deployment.objects[region.pad_object_id]
+        descriptor = deployment.table[region.pad_object_id]
+        assert source.kind == "zero"
+        assert source.authenticated_content_digest() == bytes(32)
+        assert descriptor.payload["content_digest"] == bytes(32)
+
+    report = verify_deployment(deployment, qwen_capability)
+    assert report.admitted, report.errors
+    assert report.checks["object_source_content_digest"] is True
+
+
 def test_deepseek_inverse_proof_passes(deepseek_build, workspace):
     deployment, plan = deepseek_build
     report = check_rom_inverse(deployment, reader=_reader(workspace))
@@ -2169,8 +2205,16 @@ def test_rom_and_hbm_differ_only_in_storage_class_and_placement(
             continue
         assert a.payload["storage_class"] == int(StorageClass.ROM)
         assert b.payload["storage_class"] == int(StorageClass.HBM)
-        for field in ("size_bytes", "base_address", "bank_or_tile", "node_id"):
+        for field in (
+            "size_bytes",
+            "node_id",
+            "alignment_log2",
+            "integrity_mode",
+        ):
             assert a.payload[field] == b.payload[field]
+        assert a.permissions == b.permissions
+        assert b.payload["bank_or_tile"] == NO_NODE
+        assert b.payload["base_address"] == 0
         assert a.payload["content_digest"] == b.payload["content_digest"]
     assert rom.objects.keys() == hbm.objects.keys()
     for oid in rom.objects:

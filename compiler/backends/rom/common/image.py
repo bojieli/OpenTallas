@@ -947,26 +947,35 @@ def emit_rom_objects(
     ``storage_class`` is a parameter for exactly one reason: it lets a test
     build the identical program against HBM and diff the two deployments, which
     is the mechanical form of the "differ only in storage class, placement and
-    topology" requirement.  Production ROM builds always pass ``ROM``.
+    topology" requirement.  Production ROM builds always pass ``ROM``.  The
+    comparison HBM image deliberately leaves physical placement unresolved:
+    ROM bank-local addresses overlap when flattened into one HBM address space,
+    so copying those addresses would describe an invalid HBM allocation.  Zero
+    plus ``NO_NODE`` is the ABI's explicit legacy/unplaced sentinel and keeps
+    this functional comparison from making a fabricated placement claim.
     """
     if permissions & (Permission.WRITE | Permission.STATE_PREPARE | Permission.STATE_COMMIT):
         raise RomImageError(
             "an immutable ROM object must not declare a write permission"
         )
     alignment_log2 = plan.policy.alignment_bytes.bit_length() - 1
+    placed_in_rom = storage_class == StorageClass.ROM
     ids: dict[str, int] = {}
     for region in plan.regions:
+        source = region_object_source(region)
         object_id = builder.memory_object(
             storage_class=storage_class,
             size_bytes=region.payload_bytes,
-            source=region_object_source(region),
+            source=source,
             permissions=permissions,
             node_id=region.coordinate.node_id,
-            bank_or_tile=_bank_or_tile(region.coordinate),
-            base_address=region.base_address,
+            bank_or_tile=(
+                _bank_or_tile(region.coordinate) if placed_in_rom else NO_NODE
+            ),
+            base_address=region.base_address if placed_in_rom else 0,
             alignment_log2=alignment_log2,
             integrity_mode=IntegrityMode.CRC_AND_ECC,
-            content_digest=region.content_digest,
+            content_digest=source.authenticated_content_digest(),
             key=region.key,
         )
         region.object_id = object_id
@@ -978,11 +987,17 @@ def emit_rom_objects(
                 source=ObjectSource.zeros(region.pad_bytes),
                 permissions=permissions,
                 node_id=region.coordinate.node_id,
-                bank_or_tile=_bank_or_tile(region.coordinate),
-                base_address=region.base_address + region.payload_bytes,
+                bank_or_tile=(
+                    _bank_or_tile(region.coordinate) if placed_in_rom else NO_NODE
+                ),
+                base_address=(
+                    region.base_address + region.payload_bytes
+                    if placed_in_rom
+                    else 0
+                ),
                 alignment_log2=0,
                 integrity_mode=IntegrityMode.CRC_AND_ECC,
-                content_digest=region.pad_digest,
+                content_digest=bytes(32),
                 key=f"{region.key}.pad",
             )
             region.pad_object_id = pad_id

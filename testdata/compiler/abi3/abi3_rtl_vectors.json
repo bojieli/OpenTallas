@@ -10966,7 +10966,7 @@
       "name": "a14_link_wafer_scopes",
       "note": "the same LINK program on a WAFER_LOGICAL_DEVICE with a TILE-scoped collective over 32 participants and a RETICLE-scoped barrier over four: participant_scope holds 2 and 1 at payload offset 80, a byte that was reserved-zero before A14.  The issue sequence must match a14_link_node_scope exactly, because the RTL admits a LINK on its descriptor type and hands the payload to the fabric",
       "phase": 0,
-      "program_sha256": "5d21b6c2c4d791835f238d79998a02ec61548db05431631414c3fb6ed1392bce",
+      "program_sha256": "938eab417ecf7ed6ffad8ee9a1da7dca37e513abaf4f16f3848eb16ca17394e1",
       "python_rejects_image": null,
       "runs_program": true,
       "state_descriptor_count": 0,
@@ -15869,7 +15869,7 @@
   "image_sha256": {
     "a3_case.hex": "cedd167968baaf07fee93f66388bf2067f143e69c07452d65d2bce883a00e640",
     "a3_descriptor.hex": "1f70e08132b5e12f9c8d167205ca38dc4e00078eeb6c663ac7cf47d595d5c3f6",
-    "a3_header.hex": "7a41271c1629b1e704a7c31044f00b8a959e78419f5d1b259e88344cc8db0b63",
+    "a3_header.hex": "1edf7f975054499c26b91c1ee6dec7a4f8732deaeeb2791beac923ce0c00a8f6",
     "a3_issue.hex": "6288c2f15f9280adbd90575ae9b6341158df845f0194fbecc5bed487b8064ec5",
     "a3_meta.hex": "7cc399f6383ef85363dea061d181c54ae3d60a7e5edf996598565c76e693fb10",
     "a3_program.hex": "a47a7d05eb95ca78775799ec8e6f07e1e85e09fa4781e5fe22fba83d99fef9dd",

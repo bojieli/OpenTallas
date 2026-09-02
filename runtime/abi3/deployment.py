@@ -19,35 +19,42 @@ pass.  Copying either image once per backend, per target, per rebuild would cost
 more storage than the machine has and would prove nothing extra: the manifest
 binds each segment's SHA-256, so the bytes the device reads are exactly the
 bytes the checkpoint lock authenticated.
+
+A symmetric cluster object may instead carry one equal-sized ordered segment
+list per node.  This remains a manifest-side source declaration -- no wire
+descriptor changes -- and lets every node's local byte zero name its own
+authenticated expert shard without copying or slicing a digest-bound range.
 """
 
 from __future__ import annotations
 
 import json
-import os
 from dataclasses import dataclass, field as dc_field
 from pathlib import Path
-from typing import Any, Iterable, Mapping, Sequence
+from typing import Any, Mapping, Sequence
 
-from .capability import canonical_json, digest_of
+from .capability import canonical_json
 from .constants import (
     ABI_MAJOR,
     ABI_MINOR,
     DESCRIPTOR_ALIGNMENT,
     NO_ID,
-    StorageClass,
-    TopologyClass,
 )
 from .crc import sha256, sha256_hex
 from .descriptors import (
     Descriptor,
     ExtendedDescriptorType,
-    decode_entrypoint_table,
 )
-from .layout import RecordError
-from .records import ProgramHeader, split_program
+from .records import split_program
 
 DEPLOYMENT_SCHEMA = "opentallas.abi3.deployment.v1"
+
+#: Domain of the canonical digest carried by a MEMORY_OBJECT whose manifest
+#: source is node-indexed.  ``node_segments`` is a deployment-v1 manifest
+#: extension, not a wire-format extension: the descriptor's existing
+#: ``content_digest`` field carries this root and therefore needs no schema or
+#: descriptor-layout amendment.
+NODE_SEGMENTS_CONTENT_SCHEMA = "opentallas.abi3.node-segments-content.v1"
 
 
 class DeploymentError(ValueError):
@@ -66,6 +73,26 @@ class Segment:
     bytes: int
     sha256: str | None = None
 
+    def __post_init__(self) -> None:
+        """Refuse ranges that Python slicing would otherwise reinterpret.
+
+        A negative offset is meaningful to ``numpy`` as an index from the end
+        of a mapping, while a negative byte count can cancel a positive range
+        in an object's aggregate coverage check.  Neither is an ABI byte
+        range.  Validate each segment before ``ObjectSource`` totals it so a
+        digest-consistent manifest cannot turn arithmetic cancellation into an
+        admitted out-of-bounds source map.
+        """
+
+        if self.offset < 0:
+            raise DeploymentError(
+                f"segment offset must be non-negative, got {self.offset}"
+            )
+        if self.bytes < 0:
+            raise DeploymentError(
+                f"segment byte count must be non-negative, got {self.bytes}"
+            )
+
     def to_dict(self) -> dict[str, Any]:
         body: dict[str, Any] = {
             "path": self.path,
@@ -82,8 +109,11 @@ class ObjectSource:
     """How a memory object's bytes are materialised.
 
     ``kind`` is ``"zero"`` (mutable state and scratch), ``"file"`` (a whole
-    authenticated file) or ``"segments"`` (an ordered concatenation of byte
-    ranges).  ``fill`` applies to ``"zero"`` only.
+    authenticated file), ``"segments"`` (one ordered concatenation of byte
+    ranges shared by every node), or ``"node_segments"`` (one ordered,
+    equally-sized concatenation per logical node).  The last form extends the
+    manifest only; the symmetric MEMORY_OBJECT wire descriptor remains one
+    node-local size and one object ID.  ``fill`` applies to ``"zero"`` only.
     """
 
     kind: str
@@ -93,9 +123,16 @@ class ObjectSource:
     generator: str = ""
     parameters: Mapping[str, Any] = dc_field(default_factory=dict)
     digest: str = ""
+    node_segments: tuple[tuple[Segment, ...], ...] = ()
 
     def __post_init__(self) -> None:
-        if self.kind not in {"zero", "file", "segments", "generated"}:
+        if self.kind not in {
+            "zero",
+            "file",
+            "segments",
+            "node_segments",
+            "generated",
+        }:
             raise DeploymentError(f"unknown object source kind {self.kind!r}")
         if self.size_bytes < 0:
             raise DeploymentError("object size must be non-negative")
@@ -115,13 +152,42 @@ class ObjectSource:
                 )
             if self.segments:
                 raise DeploymentError("a generated object cannot declare segments")
+            if self.node_segments:
+                raise DeploymentError(
+                    "a generated object cannot declare node segments"
+                )
             return
         if self.kind == "zero":
-            if self.segments:
+            if self.segments or self.node_segments:
                 raise DeploymentError("a zero object cannot declare segments")
             if not 0 <= self.fill <= 255:
                 raise DeploymentError("fill byte out of range")
+        elif self.kind == "node_segments":
+            if self.segments:
+                raise DeploymentError(
+                    "a node-segments object cannot declare shared segments"
+                )
+            if not self.node_segments:
+                raise DeploymentError(
+                    "a node-segments object declares no node source maps"
+                )
+            for node_id, segments in enumerate(self.node_segments):
+                if not segments:
+                    raise DeploymentError(
+                        f"node-segments object declares no segments for node "
+                        f"{node_id}"
+                    )
+                total = sum(segment.bytes for segment in segments)
+                if total != self.size_bytes:
+                    raise DeploymentError(
+                        f"node {node_id} segments cover {total} bytes, size is "
+                        f"{self.size_bytes}"
+                    )
         else:
+            if self.node_segments:
+                raise DeploymentError(
+                    f"a {self.kind} object cannot declare node segments"
+                )
             if not self.segments:
                 raise DeploymentError(f"{self.kind} object declares no segments")
             total = sum(seg.bytes for seg in self.segments)
@@ -140,6 +206,14 @@ class ObjectSource:
             body["generator"] = self.generator
             body["parameters"] = {k: v for k, v in sorted(self.parameters.items())}
             body["digest"] = self.digest
+        elif self.kind == "node_segments":
+            body["node_segments"] = [
+                {
+                    "node_id": node_id,
+                    "segments": [segment.to_dict() for segment in segments],
+                }
+                for node_id, segments in enumerate(self.node_segments)
+            ]
         else:
             body["segments"] = [seg.to_dict() for seg in self.segments]
         return body
@@ -157,6 +231,32 @@ class ObjectSource:
                 parameters=dict(body.get("parameters", {})),
                 digest=str(body["digest"]),
             )
+        if kind == "node_segments":
+            entries = sorted(
+                body["node_segments"], key=lambda entry: int(entry["node_id"])
+            )
+            ids = [int(entry["node_id"]) for entry in entries]
+            if ids != list(range(len(entries))):
+                raise DeploymentError(
+                    "node-segments source IDs must be consecutive from zero"
+                )
+            node_segments = tuple(
+                tuple(
+                    Segment(
+                        path=str(segment["path"]),
+                        offset=int(segment["offset"]),
+                        bytes=int(segment["bytes"]),
+                        sha256=segment.get("sha256"),
+                    )
+                    for segment in entry["segments"]
+                )
+                for entry in entries
+            )
+            return cls(
+                "node_segments",
+                int(body["size_bytes"]),
+                node_segments=node_segments,
+            )
         segments = tuple(
             Segment(
                 path=str(s["path"]),
@@ -167,6 +267,66 @@ class ObjectSource:
             for s in body["segments"]
         )
         return cls(kind, int(body["size_bytes"]), segments)
+
+    def segments_for_node(self, node_id: int) -> tuple[Segment, ...]:
+        """The ordered source map visible to ``node_id``.
+
+        Existing manifests keep the shared ``segments`` form and therefore
+        return the same tuple for every node.  A node-indexed source refuses an
+        undeclared node rather than silently falling back to another shard.
+        """
+
+        if self.kind != "node_segments":
+            return self.segments
+        if not 0 <= int(node_id) < len(self.node_segments):
+            raise DeploymentError(
+                f"node-segments source has {len(self.node_segments)} maps; "
+                f"node {node_id} is not declared"
+            )
+        return self.node_segments[int(node_id)]
+
+    def authenticated_content_digest(self) -> bytes:
+        """Return the reproducible digest for an authenticated source.
+
+        A shared segment source retains the ABI's established content identity:
+        SHA-256 of the ordered concatenation of its 32-byte range digests.  A
+        node-indexed source first derives that same identity for each node-local
+        image, then hashes a canonical, domain-separated record containing the
+        local object size and the ordered ``(node_id, image_digest)`` map.  The
+        result commits both node ownership and each node's segment order while
+        leaving paths and offsets to the deployment manifest digest, where
+        provenance belongs.
+
+        Zero sources use the all-zero descriptor sentinel.  Generated sources
+        already declare the SHA-256 of their deterministic result.  Calling
+        this method for a file or segment source requires every byte range to
+        carry its own SHA-256; an unauthenticated range has no honest content
+        identity to derive.
+        """
+
+        if self.kind == "zero":
+            return bytes(32)
+        if self.kind == "generated":
+            return _digest_bytes(self.digest, "generated result")
+        if self.kind != "node_segments":
+            return _ordered_segment_content_digest(self.segments, self.kind)
+
+        nodes = [
+            {
+                "node_id": node_id,
+                "content_sha256": _ordered_segment_content_digest(
+                    segments, f"node {node_id}"
+                ).hex(),
+            }
+            for node_id, segments in enumerate(self.node_segments)
+        ]
+        root = {
+            "schema": NODE_SEGMENTS_CONTENT_SCHEMA,
+            "size_bytes": self.size_bytes,
+            "node_count": len(nodes),
+            "nodes": nodes,
+        }
+        return sha256(canonical_json(root))
 
     @staticmethod
     def zeros(size_bytes: int) -> "ObjectSource":
@@ -183,6 +343,59 @@ class ObjectSource:
             parameters=dict(parameters),
             digest=digest,
         )
+
+
+def _digest_bytes(value: str, label: str) -> bytes:
+    """Decode one required SHA-256 value with a source-specific error."""
+
+    if not isinstance(value, str) or len(value) != 64:
+        raise DeploymentError(f"{label} must carry a 64-hex SHA-256 digest")
+    try:
+        digest = bytes.fromhex(value)
+    except (TypeError, ValueError):
+        digest = b""
+    if len(digest) != 32:
+        raise DeploymentError(f"{label} must carry a 64-hex SHA-256 digest")
+    return digest
+
+
+def _ordered_segment_content_digest(
+    segments: Sequence[Segment], label: str
+) -> bytes:
+    """The established content identity of one ordered segmented image."""
+
+    digest = _complete_ordered_segment_content_digest(segments, label)
+    if digest is not None:
+        return digest
+    missing = next(
+        index for index, segment in enumerate(segments) if segment.sha256 is None
+    )
+    raise DeploymentError(
+        f"{label} segment {missing} has no authenticated content digest"
+    )
+
+
+def _complete_ordered_segment_content_digest(
+    segments: Sequence[Segment], label: str
+) -> bytes | None:
+    """Return the ordered digest, or ``None`` for an incomplete legacy map.
+
+    Every digest that *is* present is decoded even when another range omitted
+    its digest.  Thus the shared-source compatibility path can distinguish a
+    genuinely old, unauthenticated range map from a malformed authentication
+    claim and never lets the latter hide behind the all-zero sentinel.
+    """
+
+    digests: list[bytes] = []
+    missing = False
+    for index, segment in enumerate(segments):
+        if segment.sha256 is None:
+            missing = True
+            continue
+        digests.append(_digest_bytes(segment.sha256, f"{label} segment {index}"))
+    if missing:
+        return None
+    return sha256(b"".join(digests))
 
 
 # ---------------------------------------------------------------------------
@@ -527,8 +740,78 @@ class Deployment:
         """SHA-256 of the canonical digest body (see :meth:`digest_body`)."""
         return sha256(canonical_json(self.digest_body()))
 
+    def object_content_digest_errors(self) -> tuple[str, ...]:
+        """Return every manifest-source/MEMORY_OBJECT identity disagreement.
+
+        ``file`` and shared ``segments`` sources existed before range hashes
+        were mandatory.  An incomplete legacy map therefore remains admissible
+        only while its descriptor carries the historical all-zero sentinel.
+        Once every range supplies a valid hash, the descriptor must carry the
+        ordered composite digest.  All other source kinds have unambiguous
+        digest semantics and are always checked exactly.
+
+        This non-raising form is shared with the in-memory verifier so malformed
+        supplied hashes become an ordinary failed admission report.  Bundle
+        read/write use :meth:`validate_object_content_digests` below to retain
+        their fail-fast boundary.
+        """
+
+        errors: list[str] = []
+        for object_id, source in sorted(self.objects.items()):
+            label = source.kind.replace("_", "-")
+            try:
+                descriptor = self.table[object_id]
+            except DeploymentError:
+                errors.append(f"{label} source names missing object {object_id}")
+                continue
+            if descriptor.descriptor_type != int(
+                ExtendedDescriptorType.MEMORY_OBJECT
+            ):
+                errors.append(
+                    f"{label} source {object_id} does not name a "
+                    "MEMORY_OBJECT descriptor"
+                )
+                continue
+
+            recorded = descriptor.payload["content_digest"]
+            try:
+                if source.kind in {"file", "segments"}:
+                    expected = _complete_ordered_segment_content_digest(
+                        source.segments, source.kind
+                    )
+                    if expected is None:
+                        if recorded != bytes(32):
+                            errors.append(
+                                f"object {object_id}: legacy {label} source with "
+                                "an unauthenticated range requires the all-zero "
+                                "MEMORY_OBJECT content digest sentinel"
+                            )
+                        continue
+                else:
+                    expected = source.authenticated_content_digest()
+            except DeploymentError as exc:
+                errors.append(
+                    f"object {object_id}: invalid {label} content identity: {exc}"
+                )
+                continue
+
+            if recorded != expected:
+                errors.append(
+                    f"object {object_id} {label} content digest does not match "
+                    "its MEMORY_OBJECT descriptor"
+                )
+        return tuple(errors)
+
+    def validate_object_content_digests(self) -> None:
+        """Fail when any object source is not bound by its wire descriptor."""
+
+        errors = self.object_content_digest_errors()
+        if errors:
+            raise DeploymentError(errors[0])
+
     # -- publication -----------------------------------------------------
     def write(self, root: Path) -> Path:
+        self.validate_object_content_digests()
         root = Path(root)
         root.mkdir(parents=True, exist_ok=True)
         (root / "descriptors.bin").write_bytes(self.table.encode())
@@ -572,6 +855,7 @@ class Deployment:
             notes=manifest.get("notes", {}),
             root=root,
         )
+        deployment.validate_object_content_digests()
         recorded = manifest.get("deployment_sha256")
         if recorded is not None and deployment.deployment_digest.hex() != recorded:
             raise DeploymentError("deployment manifest digest mismatch")

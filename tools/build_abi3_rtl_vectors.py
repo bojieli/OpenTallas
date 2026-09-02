@@ -70,7 +70,7 @@ from runtime.abi3.constants import (  # noqa: E402
     counter_id,
 )
 from runtime.abi3.builder import DeploymentBuilder, DynamicTerm  # noqa: E402
-from runtime.abi3.crc import record_crc, sha256  # noqa: E402
+from runtime.abi3.crc import record_crc  # noqa: E402
 from runtime.abi3.deployment import Deployment, ObjectSource  # noqa: E402
 from runtime.abi3.descriptors import (  # noqa: E402
     CollectiveOp,
@@ -81,7 +81,7 @@ from runtime.abi3.descriptors import (  # noqa: E402
     SelectorKind,
     Symbol,
 )
-from runtime.abi3.records import Instruction, decode_body, split_program  # noqa: E402
+from runtime.abi3.records import decode_body, split_program  # noqa: E402
 from runtime.abi3.verifier import (  # noqa: E402
     _FAMILY_DESCRIPTOR as FAMILY_DESCRIPTOR,
     verify_deployment,
@@ -406,6 +406,7 @@ class Case:
 
     name: str
     deployment: Deployment
+    capability: Capability | None = None
     entrypoint_id: int = 0
     symbols: dict[int, int] = dc_field(default_factory=dict)
     run_program: bool = True
@@ -1626,6 +1627,8 @@ def case_a26_edge_mask_partial(cap: Capability) -> Case:
 # read; it is not elided by the prefix.
 A14_RETICLES = 4
 A14_TILES_PER_RETICLE = 8
+A14_RETICLE_ROWS = 2
+A14_RETICLE_COLUMNS = 2
 A14_LINK_BYTES = 256
 A14_LINK_EXTENT = 64
 
@@ -1711,15 +1714,22 @@ def case_a14_link_wafer_scopes(cap: Capability) -> Case:
     issue sequence, which is the whole claim: the scope byte reaches the
     fabric, not the microsequencer.
     """
+    capability_body = cap.to_dict()
+    capability_body["topology_class"] = int(TopologyClass.WAFER_LOGICAL_DEVICE)
+    capability_body["features"] = sorted(
+        {*cap.features, int(Feature.WAFER_ENDPOINT)}
+    )
+    capability_body["link"] = {
+        "reticle_rows": A14_RETICLE_ROWS,
+        "reticle_columns": A14_RETICLE_COLUMNS,
+        "tiles_per_reticle": A14_TILES_PER_RETICLE,
+    }
+    wafer_capability = Capability.from_dict(capability_body)
     b = DeploymentBuilder(
         target_id="a3-a14-wafer",
         model_id="abi3-rtl3",
         backend="rtl3",
-        capability=cap,
-        # The deployment's own class, not the capability's.  Section 12.5's
-        # admission rules read the TOPOLOGY descriptor the deployment carries,
-        # and this one carries a wafer; the capability describes the machine
-        # that admits it and is not an input to those two rules.
+        capability=wafer_capability,
         topology_class=int(TopologyClass.WAFER_LOGICAL_DEVICE),
     )
     b.require(Feature.BF16_TENSOR)
@@ -1728,8 +1738,8 @@ def case_a14_link_wafer_scopes(cap: Capability) -> Case:
         node_count=1,
         reticle_count=A14_RETICLES,
         tiles_per_reticle=A14_TILES_PER_RETICLE,
-        hbm_bytes_per_node=cap.memory["hbm"]["bytes"],
-        sram_bytes_per_node=cap.memory["sram"]["bytes"],
+        hbm_bytes_per_node=wafer_capability.memory["hbm"]["bytes"],
+        sram_bytes_per_node=wafer_capability.memory["sram"]["bytes"],
         key="topology",
     )
     buf = _a14_link_object(b)
@@ -1821,6 +1831,7 @@ def case_a14_link_wafer_scopes(cap: Capability) -> Case:
     return Case(
         name="a14_link_wafer_scopes",
         deployment=b.finish(),
+        capability=wafer_capability,
         symbols={int(Symbol.SPAN_TOKENS): 4},
         note=(
             "the same LINK program on a WAFER_LOGICAL_DEVICE with a TILE-scoped "
@@ -3034,6 +3045,7 @@ def build(argv: list[str] | None = None) -> int:
     records: list[dict[str, Any]] = []
 
     for case in cases:
+        case_capability = case.capability or capability
         image = case.deployment.program
         header_blob = image[:256]
         body = image[256:]
@@ -3044,7 +3056,7 @@ def build(argv: list[str] | None = None) -> int:
             image = case.corrupt_header(image)
             header_blob = image[:256]
 
-        report = verify_deployment(case.deployment, capability)
+        report = verify_deployment(case.deployment, case_capability)
         if report.admitted != case.expect_admitted:
             raise SystemExit(
                 f"{case.name}: verifier admitted={report.admitted}, expected "
@@ -3063,7 +3075,7 @@ def build(argv: list[str] | None = None) -> int:
                 raise SystemExit(f"{case.name}: corrupted image was accepted")
 
         if case.device_runs:
-            golden = run_golden(case, capability)
+            golden = run_golden(case, case_capability)
         else:
             golden = dict(IDLE_OBSERVATION)
             golden.update(case.reference)
@@ -3123,7 +3135,6 @@ def build(argv: list[str] | None = None) -> int:
         )
         header = case.deployment.program[:256]
         instruction_count = int.from_bytes(header[16:20], "little")
-        entrypoint_count = int.from_bytes(header[20:24], "little")
         work = int.from_bytes(header[184:192], "little")
 
         flags = 0

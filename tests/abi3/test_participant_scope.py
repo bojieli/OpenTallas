@@ -32,6 +32,7 @@ import pytest
 
 from runtime.abi3.capability import Capability
 from runtime.abi3.constants import (
+    Feature,
     NO_ID,
     IntegrityMode,
     Major,
@@ -46,6 +47,7 @@ from runtime.abi3.descriptors import (
     Descriptor,
     ExtendedDescriptorType,
 )
+from runtime.abi3.crc import sha256
 from runtime.abi3.layout import Field, Layout, RecordError
 from runtime.abi3.verifier import verify_deployment
 
@@ -247,8 +249,33 @@ def link_program(scope: ParticipantScope) -> Any:
     return program
 
 
-def as_wafer(deployment: Any, *, reticles: int, tiles: int) -> Any:
-    """Re-stamp the probe's TOPOLOGY as a wafer with the given fabric."""
+def as_wafer(
+    deployment: Any,
+    capability: Capability,
+    *,
+    reticles: int,
+    tiles: int,
+    active_resources: int = 0,
+    capability_link: dict[str, int] | None = None,
+) -> tuple[Any, Capability]:
+    """Bind the probe and a matching capability to one genuine wafer topology."""
+
+    capability_body = capability.to_dict()
+    capability_body["topology_class"] = int(TopologyClass.WAFER_LOGICAL_DEVICE)
+    capability_body["features"] = sorted(
+        {*capability.features, int(Feature.WAFER_ENDPOINT)}
+    )
+    capability_body["link"] = (
+        capability_link
+        if capability_link is not None
+        else {
+            "reticle_rows": 6,
+            "reticle_columns": 8,
+            "tiles_per_reticle": 16,
+        }
+    )
+    wafer_capability = Capability.from_dict(capability_body)
+
     topology = deployment.table.ids_of_type(int(ExtendedDescriptorType.TOPOLOGY))[0]
     table = patched_payload(
         deployment.table,
@@ -261,8 +288,18 @@ def as_wafer(deployment: Any, *, reticles: int, tiles: int) -> Any:
     table = patched_payload(
         table, topology, TOPOLOGY_PAYLOAD, "tiles_per_reticle", tiles
     )
+    table = patched_payload(
+        table,
+        topology,
+        TOPOLOGY_PAYLOAD,
+        "active_resource_count",
+        active_resources,
+    )
     deployment.table = table
-    return restamp(deployment)
+    deployment.topology_class = int(TopologyClass.WAFER_LOGICAL_DEVICE)
+    deployment.capability_digest = wafer_capability.digest
+    topology_digest = sha256(deployment.table[topology].encode())
+    return restamp(deployment, topology_digest=topology_digest), wafer_capability
 
 
 def errors_of(deployment: Any, capability: Capability) -> list[str]:
@@ -291,15 +328,20 @@ def test_a_node_scoped_collective_is_admitted_on_chip_and_on_wafer(capability) -
     reticle or tile counts at all -- otherwise the amendment would refuse
     programs that were legal before it existed.
     """
-    for build in (
-        lambda: probe_deployment(capability, program=link_program(ParticipantScope.NODE)),
-        lambda: as_wafer(
-            probe_deployment(capability, program=link_program(ParticipantScope.NODE)),
-            reticles=0,
-            tiles=0,
-        ),
+    chip_deployment = probe_deployment(
+        capability, program=link_program(ParticipantScope.NODE)
+    )
+    wafer_deployment = as_wafer(
+        probe_deployment(capability, program=link_program(ParticipantScope.NODE)),
+        capability,
+        reticles=0,
+        tiles=0,
+    )
+    for deployment, admitted_capability in (
+        (chip_deployment, capability),
+        wafer_deployment,
     ):
-        report = verify_deployment(build(), capability)
+        report = verify_deployment(deployment, admitted_capability)
         assert report.admitted, report.errors
         assert report.checks["participant_scope_supported"]
         assert report.checks["participant_scope_topology_class"]
@@ -307,34 +349,100 @@ def test_a_node_scoped_collective_is_admitted_on_chip_and_on_wafer(capability) -
 
 def test_a_reticle_scope_against_a_zero_reticle_count_is_refused(capability) -> None:
     """First admission rule: a scope the topology cannot support."""
-    deployment = as_wafer(
+    deployment, wafer_capability = as_wafer(
         probe_deployment(capability, program=link_program(ParticipantScope.RETICLE)),
+        capability,
         reticles=0,
         tiles=16,
     )
-    assert_refused(deployment, capability, "no reticle fabric to address")
+    assert_refused(deployment, wafer_capability, "no reticle fabric to address")
 
 
 def test_a_tile_scope_against_a_zero_tiles_per_reticle_is_refused(capability) -> None:
     """Same rule, the other fabric: reticles exist, tiles do not."""
-    deployment = as_wafer(
+    deployment, wafer_capability = as_wafer(
         probe_deployment(capability, program=link_program(ParticipantScope.TILE)),
+        capability,
         reticles=4,
         tiles=0,
     )
-    assert_refused(deployment, capability, "no tile fabric to address")
+    assert_refused(deployment, wafer_capability, "no tile fabric to address")
 
 
 def test_a_supported_scope_on_a_wafer_is_admitted(capability) -> None:
     """The rule refuses an absent fabric, not the scope itself."""
     for scope in (ParticipantScope.RETICLE, ParticipantScope.TILE):
-        deployment = as_wafer(
+        deployment, wafer_capability = as_wafer(
             probe_deployment(capability, program=link_program(scope)),
+            capability,
             reticles=4,
             tiles=16,
         )
-        report = verify_deployment(deployment, capability)
+        report = verify_deployment(deployment, wafer_capability)
         assert report.admitted, (scope, report.errors)
+
+
+def test_wafer_topology_admits_an_active_prefix(capability) -> None:
+    deployment, wafer_capability = as_wafer(
+        probe_deployment(capability, program=link_program(ParticipantScope.NODE)),
+        capability,
+        reticles=37,
+        tiles=16,
+        active_resources=37 * 16,
+    )
+    report = verify_deployment(deployment, wafer_capability)
+    assert report.admitted, report.errors
+    assert report.checks["wafer_topology_active_prefix"]
+    assert report.checks["wafer_topology_tiles_per_reticle"]
+    assert report.checks["wafer_topology_active_resources"]
+
+
+@pytest.mark.parametrize(
+    "reticles,tiles,active,pattern",
+    [
+        (49, 16, 0, "larger than physical capacity 48"),
+        (48, 8, 0, "exactly match capability value 16"),
+        (1, 16, 17, "fit its declared endpoint prefix of 16"),
+    ],
+)
+def test_wafer_topology_refuses_geometry_outside_the_capability(
+    capability, reticles: int, tiles: int, active: int, pattern: str
+) -> None:
+    deployment, wafer_capability = as_wafer(
+        probe_deployment(capability, program=link_program(ParticipantScope.NODE)),
+        capability,
+        reticles=reticles,
+        tiles=tiles,
+        active_resources=active,
+    )
+    assert_refused(deployment, wafer_capability, pattern)
+
+
+@pytest.mark.parametrize(
+    "capability_link,pattern",
+    [
+        ({"reticle_rows": 6}, "complete physical geometry"),
+        (
+            {
+                "reticle_rows": 0,
+                "reticle_columns": 8,
+                "tiles_per_reticle": 16,
+            },
+            "physical geometry must be positive",
+        ),
+    ],
+)
+def test_wafer_capability_requires_complete_positive_geometry(
+    capability, capability_link: dict[str, int], pattern: str
+) -> None:
+    deployment, wafer_capability = as_wafer(
+        probe_deployment(capability, program=link_program(ParticipantScope.NODE)),
+        capability,
+        reticles=1,
+        tiles=16,
+        capability_link=capability_link,
+    )
+    assert_refused(deployment, wafer_capability, pattern)
 
 
 def test_a_single_chip_topology_admits_only_node(capability) -> None:

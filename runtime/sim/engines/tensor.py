@@ -80,7 +80,7 @@ from runtime.abi3.constants import (
     Tensor,
     TrapClass,
 )
-from runtime.abi3.descriptors import Descriptor
+from runtime.abi3.descriptors import Descriptor, Symbol
 from runtime.sim.backend import (
     CONTRACT_BLOCKED,
     CONTRACT_SEQUENTIAL,
@@ -92,7 +92,6 @@ from runtime.sim.backend import (
 )
 from runtime.sim.engine import EngineContext, EngineError, NumericProfile, register
 from runtime.sim.formats import (
-    FormatError,
     decode_e8m0,
     narrow,
     widen,
@@ -807,6 +806,29 @@ def _tensor_routed_matmul(
         f"{len(weight_view.dims)}; expected [E, N, K]",
     )
     experts, cols, depth = weight_view.dims
+    declared_global = int(operator.payload["aux_id_0"])
+    global_experts = experts if declared_global == NO_ID else declared_global
+    _require(
+        global_experts >= experts,
+        f"ROUTED_MATMUL declares {global_experts} global experts but its "
+        f"weight view holds {experts}",
+    )
+    distributed = global_experts > experts
+    if distributed:
+        _require(
+            ctx.node_count > 1 and global_experts == experts * ctx.node_count,
+            f"ROUTED_MATMUL presents {experts} local experts out of "
+            f"{global_experts} across {ctx.node_count} node(s); exact "
+            "contiguous ownership is required",
+        )
+        node = int(ctx.symbols.get(int(Symbol.NODE_ID), 0))
+        _require(
+            0 <= node < ctx.node_count,
+            f"ROUTED_MATMUL sees NODE_ID {node} outside {ctx.node_count} nodes",
+        )
+        expert_base = node * experts
+    else:
+        expert_base = 0
     _require(
         len(activation_view.dims) == 2 and activation_view.dims[1] == depth,
         f"ROUTED_MATMUL activation view {activation_view.descriptor_id} is "
@@ -832,10 +854,11 @@ def _tensor_routed_matmul(
 
     identifiers = np.asarray(ctx.read(id_view)).astype(np.int64, copy=False)
     if identifiers.size and (
-        int(identifiers.min()) < 0 or int(identifiers.max()) >= experts
+        int(identifiers.min()) < 0
+        or int(identifiers.max()) >= global_experts
     ):
         raise EngineError(
-            f"ROUTED_MATMUL expert ID outside [0, {experts})",
+            f"ROUTED_MATMUL expert ID outside [0, {global_experts})",
             trap_class=int(TrapClass.DESCRIPTOR_OR_ADDRESS),
         )
     routing = None
@@ -856,13 +879,19 @@ def _tensor_routed_matmul(
     launches = 0
     for slot in range(topk):
         partial = np.zeros((rows, cols), dtype=np.float32)
-        for expert in np.unique(identifiers[:, slot]):
-            selected = np.flatnonzero(identifiers[:, slot] == expert)
+        for global_expert in np.unique(identifiers[:, slot]):
+            if not expert_base <= int(global_expert) < expert_base + experts:
+                # This row belongs to another node's consecutive expert shard.
+                # It remains exact positive zero here and is filled by the
+                # route-class-3 all-reduce before EXPERT_REDUCE consumes it.
+                continue
+            expert = int(global_expert) - expert_base
+            selected = np.flatnonzero(identifiers[:, slot] == global_expert)
             _account_read(
                 ctx, weight_view, _element_bytes(weight_view, cols * depth)
             )
             expert_view, expert_weights = _stack_slice(
-                ctx, weight_view, (cols, depth), int(expert), slices
+                ctx, weight_view, (cols, depth), expert, slices
             )
             values, _, group_scale = _contract(
                 ctx,
@@ -889,7 +918,12 @@ def _tensor_routed_matmul(
         )
 
     saturations, conversions = _write_result(ctx, output_view, accumulator)
-    _account_contraction(ctx, rows * topk, cols, depth, scale_multiplications)
+    # Each selected row is contracted only on the node that owns its expert.
+    # ``rows * topk`` is the global route-slot count and would charge every
+    # node for work it deliberately skipped above.  Routing-scale operations
+    # remain in ``scale_multiplications`` because this node actually applies
+    # those multiplications to its (possibly zero) partials.
+    _account_contraction(ctx, launches, cols, depth, scale_multiplications)
     ctx.counters.add("tensor.additions", rows * cols * max(topk - 1, 0))
     ctx.counters.add("tensor.output_elements", rows * cols)
     ctx.counters.add("tensor.conversions", conversions)

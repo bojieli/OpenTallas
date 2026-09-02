@@ -100,7 +100,7 @@ that a consumer can check what reaches it.
 | `BIASED_TOPK` | scores | selection bias | — | selected IDs | weights | `aux0` `k` |
 | `WEIGHT_NORMALIZE` | weights | — | — | normalised | — | — |
 | `EXPERT_DISPATCH` | activations | selected IDs | — | dispatched `[groups * k, width]` in `(group, slot)` order | — | `aux0` expert count, **required** |
-| `INDEX_TOPK` | scores, or `NO_ID` for the dense form (A20) | window index (A19) | compression ratio (A19) | joined KV rows, compacted and ascending | — | `aux0` `k`, `aux1` mask mode, `aux2` context *symbol*, `aux3` position-base *symbol* |
+| `INDEX_TOPK` | scores, or `NO_ID` for the dense form (A20) | window index (A19, A27) | compression ratio (A19) | joined KV rows, compacted and ascending | — | `aux0` `k`, `aux1` mask mode, `aux2` context *symbol*, `aux3` request position-base *symbol* (A27) |
 | `HASH_ROUTE` | token IDs | hash table | — | expert IDs | — | — |
 | `WINDOW_INDEX` | positions | — | — | ascending indices | — | `aux0` window, `aux1` mask mode, `aux2` context *symbol* |
 
@@ -108,6 +108,10 @@ that a consumer can check what reaches it.
 of a causal window and nothing else. Amendment A20 (section 20) makes that a
 checkable claim rather than a description: a neutral kernel that names an
 `index_family` this operator does not produce is refused at admission.
+For a zero-base causal prefill, amendment A27 makes the last non-pad entry of
+that row the logical query position consumed by a joined `INDEX_TOPK`; this is
+what preserves the position when the physical score view is streamed one row
+at a time.
 
 `EXPERT_DISPATCH` requires `aux0`: an engine that cannot state the expert bound
 cannot prove a routed ID is inside it, and an unbounded expert ID is a memory
@@ -870,3 +874,52 @@ and the divisor case needs a number the policy byte cannot carry, so it is a
 further amendment with a field rather than a fourth enumerator squeezed beside
 this one. It should be written when a lane needs it, and a lane needs it at
 2,049 tokens.
+
+## 23. Amendment A27 — a joined prefill window carries the streamed query position
+
+`ROUTE.INDEX_TOPK` has two request-dependent score axes: query rows and
+compressed candidates. A18 can resolve one affine request extent on a tensor
+view, not two. The HBM backend therefore streams `INDEX_SCORE` and its joined
+`INDEX_TOPK` one query at a time: the physical score view is `[1, C]`, while
+the candidate axis remains the view's one dynamic extent.
+
+That physical slice does not change `POSITION_START`. A prefill submission has
+request base zero for every loop iteration, so the pre-A27 rule
+`p = POSITION_START + physical_row` treated every streamed query as query zero.
+At the 32-token governed prefix it emitted the sliding-window rows but omitted
+exactly
+
+```
+21 ratio-four layers * sum(floor((p + 1) / 4), p = 0..31) = 2,520
+```
+
+compressed rows per node. The four tokens still matched because the 128-row
+window already contained the whole prompt; the independent context-counter
+gate, not token identity, exposed the missing work.
+
+A27 fixes the logical coordinate without adding an operand or widening a
+rolling allocation. For a **causal, joined, zero-base** `INDEX_TOPK` row:
+
+```
+valid = window_row without trailing 0xffffffff entries
+require valid is non-empty, strictly ascending, and valid[-1] < context
+p = valid[-1]
+visible_compressed_groups = min((p + 1) // ratio, candidates)
+compressed_kv_row(g) = context + window + g
+```
+
+The prefill `WINDOW_INDEX` row is an absolute ascending interval ending at the
+query, so this is device-resident data already required by A19 rather than a
+host-supplied side channel. The same physical slice cannot rebase A19's
+compressed segment by its one-row `span`: the compressed rows follow the
+request's complete current context and the fixed window, so the request-level
+`context` in `aux2` supplies that base too. With no joined window, with full
+visibility, or with a nonzero `POSITION_START`, the existing
+`p = base + row` and `compressed_kv_row(g) = span + window + g` rules remain.
+In particular decode keeps its explicit nonzero time coordinate; its window
+operand is a KV-row address list, not a replacement for that coordinate.
+
+Nothing on the wire changes. The same input and auxiliary descriptor IDs retain
+their assigned meanings, no capability bit moves, and no pre-A27 unjoined or
+nonzero-base operator changes result. This amendment fixes how an already
+assigned request-level base composes with A26's fixed-address rolling slice.

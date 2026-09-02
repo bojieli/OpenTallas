@@ -8,19 +8,22 @@ costs address space, not resident memory, until a request writes to it.
 
 from __future__ import annotations
 
+import hashlib
 import sys
 
 import pytest
 
 from runtime.abi3.constants import NO_ID, Permission, StorageClass
-from runtime.abi3.deployment import ObjectSource
+from runtime.abi3.deployment import ObjectSource, Segment
 from runtime.abi3.descriptors import Descriptor, ExtendedDescriptorType
-from runtime.sim.memory import MemoryObject
+from runtime.sim.memory import MemoryError_, MemoryObject, _map_range
 
 GIB = 1 << 30
 
 
-def _object(size_bytes: int, source: ObjectSource) -> MemoryObject:
+def _object(
+    size_bytes: int, source: ObjectSource, *, source_node_id: int = 0
+) -> MemoryObject:
     descriptor = Descriptor(
         descriptor_id=1,
         descriptor_type=int(ExtendedDescriptorType.MEMORY_OBJECT),
@@ -37,7 +40,9 @@ def _object(size_bytes: int, source: ObjectSource) -> MemoryObject:
         permissions=int(Permission.READ | Permission.WRITE),
         primary_object_id=NO_ID,
     )
-    return MemoryObject(1, descriptor, source, None)
+    return MemoryObject(
+        1, descriptor, source, None, source_node_id=source_node_id
+    )
 
 
 def _resident_bytes() -> int:
@@ -73,6 +78,181 @@ def test_a_nonzero_fill_is_still_written():
     """Only a zero fill is free; a declared pattern is still materialised."""
     obj = _object(4096, ObjectSource("zero", 4096, fill=0xA5))
     assert obj.read(0, 8) == bytes([0xA5] * 8)
+
+
+@pytest.mark.parametrize(
+    ("offset", "nbytes", "message"),
+    [
+        (-1, 1, "offset must be non-negative"),
+        (0, -1, "byte count must be non-negative"),
+    ],
+)
+def test_file_mapping_rejects_negative_ranges_before_slicing(
+    tmp_path, offset: int, nbytes: int, message: str
+):
+    source = tmp_path / "source.bin"
+    source.write_bytes(b"01234567")
+    with pytest.raises(MemoryError_, match=message):
+        _map_range(source, offset, nbytes)
+
+
+def test_file_mapping_rejects_bytes_that_do_not_match_the_segment_digest(
+    tmp_path,
+):
+    checkpoint = tmp_path / "tampered.bin"
+    checkpoint.write_bytes(b"tampered")
+    source = ObjectSource(
+        "segments",
+        8,
+        segments=(
+            Segment(
+                str(checkpoint),
+                0,
+                8,
+                hashlib.sha256(b"expected").hexdigest(),
+            ),
+        ),
+    )
+    with pytest.raises(MemoryError_, match="content digest .* does not match"):
+        _object(8, source)
+
+
+def test_segment_authentication_hashes_in_bounded_chunks(monkeypatch, tmp_path):
+    import runtime.sim.memory as memory_module
+
+    payload = bytes(range(64))
+    checkpoint = tmp_path / "chunked.bin"
+    checkpoint.write_bytes(payload)
+    array = _map_range(checkpoint, 0, len(payload))
+    expected = hashlib.sha256(payload).hexdigest()
+    original_sha256 = hashlib.sha256
+    update_sizes: list[int] = []
+
+    class RecordingDigest:
+        def __init__(self):
+            self.inner = original_sha256()
+
+        def update(self, chunk):
+            update_sizes.append(len(chunk))
+            self.inner.update(chunk)
+
+        def hexdigest(self):
+            return self.inner.hexdigest()
+
+    monkeypatch.setattr(memory_module, "_DIGEST_CHUNK_BYTES", 7)
+    monkeypatch.setattr(memory_module.hashlib, "sha256", RecordingDigest)
+    memory_module._verify_segment_digest(
+        checkpoint,
+        0,
+        len(payload),
+        expected,
+        array,
+        set(),
+    )
+    assert sum(update_sizes) == len(payload)
+    assert max(update_sizes) <= 7
+
+
+def test_node_indexed_segments_select_one_symmetric_local_image(tmp_path):
+    checkpoint = tmp_path / "weights.bin"
+    checkpoint.write_bytes(b"nodezeroNODEone!")
+    source = ObjectSource(
+        "node_segments",
+        8,
+        node_segments=(
+            (
+                Segment(
+                    str(checkpoint),
+                    0,
+                    8,
+                    hashlib.sha256(b"nodezero").hexdigest(),
+                ),
+            ),
+            (
+                Segment(
+                    str(checkpoint),
+                    8,
+                    8,
+                    hashlib.sha256(b"NODEone!").hexdigest(),
+                ),
+            ),
+        ),
+    )
+
+    assert ObjectSource.from_dict(source.to_dict()) == source
+    assert _object(8, source, source_node_id=0).read(0, 8) == b"nodezero"
+    assert _object(8, source, source_node_id=1).read(0, 8) == b"NODEone!"
+    with pytest.raises(MemoryError_, match="node 2 is not declared"):
+        _object(8, source, source_node_id=2)
+
+
+def test_sibling_device_memories_share_files_but_select_distinct_node_maps(
+    tmp_path,
+):
+    from runtime.abi3.builder import DeploymentBuilder
+    from runtime.abi3.constants import TopologyClass
+    from runtime.abi3.deployment import Deployment
+    from runtime.abi3.fixture import fixture_capability
+    from runtime.sim.memory import DeviceMemory
+
+    checkpoint = tmp_path / "cluster-weights.bin"
+    checkpoint.write_bytes(b"nodezeroNODEone!")
+    source = ObjectSource(
+        "node_segments",
+        8,
+        node_segments=(
+            (
+                Segment(
+                    str(checkpoint),
+                    0,
+                    8,
+                    hashlib.sha256(b"nodezero").hexdigest(),
+                ),
+            ),
+            (
+                Segment(
+                    str(checkpoint),
+                    8,
+                    8,
+                    hashlib.sha256(b"NODEone!").hexdigest(),
+                ),
+            ),
+        ),
+    )
+    capability = fixture_capability()
+    builder = DeploymentBuilder(
+        target_id="node-sources",
+        model_id="node-sources",
+        backend="test",
+        capability=capability,
+    )
+    object_id = builder.memory_object(
+        storage_class=StorageClass.HBM,
+        size_bytes=8,
+        source=source,
+        permissions=int(Permission.READ | Permission.IMMUTABLE),
+    )
+    deployment = Deployment(
+        deployment_id=1,
+        generation=1,
+        target_id="node-sources",
+        model_id="node-sources",
+        backend="test",
+        topology_class=int(TopologyClass.CLUSTER_32),
+        capability_digest=capability.digest,
+        table=builder.table,
+        program=b"",
+        objects=dict(builder.objects),
+        entrypoints=(),
+        required_features=bytes(32),
+    )
+
+    node0 = DeviceMemory(deployment, node_id=0)
+    node1 = DeviceMemory(deployment, share_from=node0, node_id=1)
+    assert node0[object_id].read(0, 8) == b"nodezero"
+    assert node1[object_id].read(0, 8) == b"NODEone!"
+    assert node0[object_id] is not node1[object_id]
+    assert node0._mappings is node1._mappings
 
 
 # ---------------------------------------------------------------------------

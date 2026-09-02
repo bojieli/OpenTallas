@@ -203,7 +203,7 @@ _ELEMENT_READING: Mapping[str, tuple[str, DType, int]] = {
 #: TA-HBM-3.0 section 3.6's ordered traffic classes, one virtual channel each.
 _LINK_OP: Mapping[str, tuple[Link, CollectiveOp, int]] = {
     "expert_dispatch": (Link.SCATTER, CollectiveOp.CONCAT, 0),
-    "sparse_gather": (Link.GATHER, CollectiveOp.ALL_GATHER, 1),
+    "sparse_gather": (Link.COLLECTIVE, CollectiveOp.ALL_GATHER, 1),
     "activation_transfer": (Link.COLLECTIVE, CollectiveOp.ALL_GATHER, 2),
     "reduction": (Link.COLLECTIVE, CollectiveOp.SUM, 3),
     "coordinated_commit": (Link.BARRIER, CollectiveOp.SUM, 4),
@@ -425,10 +425,11 @@ class _Emitter:
         self._position_inputs = frozenset(position_inputs(graph))
         self.token_ring_object: int = NO_ID
         self.commit_token_object: int = NO_ID
-        #: Participant arrays for the cluster's all-gathers, one per distinct
-        #: ``(dtype, element count)`` shape.  A site's array is dead the moment
-        #: its unpack has run, and the program is sequential, so sites of the
-        #: same shape share one.
+        #: One capacity-proved symmetric participant array shared by every
+        #: cluster exchange.  Communication is emitted inside the dependency
+        #: chain and each site's unpack ends the array's live range; reserving
+        #: the maximum fixed block once is both bounded and substantially
+        #: smaller than one object per transfer shape.
         self._exchange_object: dict[tuple[str, int], int] = {}
         #: Traffic classes whose kernels turned out to be replicated, counted so
         #: that "this cluster performs no expert-dispatch transfer" is a fact
@@ -737,28 +738,44 @@ class _Emitter:
     def _declare_objects(self) -> None:
         builder = self.builder
         for group in self.plan.weight_groups:
-            segments = tuple(
-                Segment(
-                    path=s.path, offset=s.file_offset, bytes=s.bytes, sha256=s.sha256
+            def source_segments(placed: Sequence[Any]) -> tuple[Segment, ...]:
+                return tuple(
+                    Segment(
+                        path=segment.path,
+                        offset=segment.file_offset,
+                        bytes=segment.bytes,
+                        sha256=segment.sha256,
+                    )
+                    for segment in placed
                 )
-                for s in group.segments
-            )
-            digest = sha256(
-                b"".join(bytes.fromhex(s.sha256) for s in group.segments if s.sha256)
+
+            segments = source_segments(group.segments)
+            size_bytes = group.materialized_size_bytes
+            source = (
+                ObjectSource(
+                    kind="node_segments",
+                    size_bytes=size_bytes,
+                    node_segments=tuple(
+                        source_segments(node_map)
+                        for node_map in group.node_segments
+                    ),
+                )
+                if group.node_segments
+                else ObjectSource(
+                    kind="segments", size_bytes=size_bytes, segments=segments
+                )
             )
             base, channel = self._address(f"weight.{group.group_id}")
             self._weight_object[group.group_id] = builder.memory_object(
                 storage_class=StorageClass.HBM,
-                size_bytes=group.size_bytes,
-                source=ObjectSource(
-                    kind="segments", size_bytes=group.size_bytes, segments=segments
-                ),
+                size_bytes=size_bytes,
+                source=source,
                 permissions=int(Permission.READ | Permission.IMMUTABLE),
                 base_address=base,
                 bank_or_tile=channel,
                 alignment_log2=12,
                 integrity_mode=IntegrityMode.CRC_AND_ECC,
-                content_digest=digest,
+                content_digest=source.authenticated_content_digest(),
                 key=f"obj.weight.{group.group_id}",
             )
 
@@ -1191,6 +1208,63 @@ class _Emitter:
             noc_route_class=0,
             resource_bound=lanes,
             max_outstanding=int(self.capability.limits["max_outstanding_per_queue"]),
+            priority=0,
+            key=f"sched.{len(self._schedule)}",
+        )
+        self._schedule[key] = sid
+        return sid
+
+    def _scratch_schedule_for(self, plan: KernelPlan) -> int:
+        """A one-credit DMA queue shared by every exchange-buffer transfer.
+
+        Cluster pack/LINK/unpack sites deliberately reuse one symmetric HBM
+        object sized for the largest exchange.  Events order the three steps
+        *within* a site, but they do not prevent the next site's pack (or the
+        next loop trip's pack) from being submitted while the preceding unpack
+        is still in flight.  Put every DMA that touches that shared object on
+        one physical queue whose architectural outstanding bound is one.  The
+        ordinary DMA schedule remains on queue zero; using the last advertised
+        queue makes this queue dedicated on the cluster profile.
+
+        ``issue_window=1`` also disables intra-operation prefetch overlap.  It
+        is conservative, but ``max_outstanding=1`` is the property that proves
+        cross-instruction and loop-carried serialization.
+        """
+
+        family = int(Major.DMA)
+        mask, ports = self._bank_and_port_mask(family)
+        engine = dict(self.capability.engines.get("dma", {}))
+        queues = int(engine.get("queues", 0))
+        if queues < 2:
+            raise LoweringError(
+                "cluster exchange scratch requires a dedicated DMA queue, but "
+                f"the capability advertises {queues} queue(s)"
+            )
+        queue_index = queues - 1
+        key = (
+            "exchange",
+            family,
+            plan.tile_rows,
+            plan.tile_cols,
+            plan.tile_depth,
+            mask,
+            ports,
+            queue_index,
+        )
+        if key in self._schedule:
+            return self._schedule[key]
+        sid = self.builder.schedule(
+            engine_family=Major.DMA,
+            queue_index=queue_index,
+            issue_window=1,
+            tile_rows=plan.tile_rows,
+            tile_cols=plan.tile_cols,
+            tile_depth=plan.tile_depth,
+            bank_mask=mask,
+            port_mask=ports,
+            noc_route_class=0,
+            resource_bound=max(int(engine.get("lanes", 1)), 1),
+            max_outstanding=1,
             priority=0,
             key=f"sched.{len(self._schedule)}",
         )
@@ -1630,8 +1704,15 @@ class _Emitter:
                 # whichever way that matrix itself is stored -- and the engine
                 # selects along it at runtime rather than the program looping
                 # over it.
-                strides = [operand.rows // operand.bank * operand.cols, *strides]
-                dims = [operand.bank, *dims]
+                expert_stride = operand.rows // operand.bank * operand.cols
+                strides = [expert_stride, *strides]
+                dims = [operand.bank_shard or operand.bank, *dims]
+                if operand.bank_shard:
+                    # Consecutive expert ownership: node k sees exactly
+                    # ``[k*local_E, (k+1)*local_E)`` of the global bank.  The
+                    # routed engine retains the global bound through aux0 and
+                    # rebases a selected global ID into this local view.
+                    node_stride = operand.bank_shard * expert_stride
         else:
             # Everything else keeps the rank the graph declared.  An engine that
             # reads ``[.., heads, dim]`` or one gain per reduction element
@@ -1658,6 +1739,20 @@ class _Emitter:
         dims, strides, numerator, row_stride = self._row_broadcast(
             plan, operand, dims, strides, numerator, row_stride
         )
+        if self._expert_block_reduction(plan, operand):
+            # ``_lead_reduced_axis`` rewrites the flattened
+            # ``[tokens * experts, hidden]`` plane as
+            # ``[experts, tokens, hidden]``.  The request now determines axis
+            # one in token units; retaining the flattened numerator would try
+            # to clamp the six-entry expert axis to ``6 * span`` and leave the
+            # token axis at its maximum block size.
+            experts = max(int(dims[0]), 1)
+            if numerator % experts:
+                raise LoweringError(
+                    f"kernel {plan.kernel_id}: folded row numerator {numerator} "
+                    f"is not divisible by its {experts} expert contributions"
+                )
+            numerator //= experts
         # The context axis, once a leading batch axis has displaced it.  Its
         # term steps by one whole block of that axis, which is what makes A18's
         # walk test recognise it -- the same derivation the row term satisfies,
@@ -1699,6 +1794,18 @@ class _Emitter:
                 terms.append(DynamicTerm.loop(loop, context_stride))
             elif term == "node":
                 if self.node_count <= 1:
+                    continue
+                if (
+                    operand.residence == "weight"
+                    and self.plan.placement(operand.tensor_id).materialization
+                    == "node_sharded"
+                ):
+                    # The node-indexed object source already begins at this
+                    # node's authenticated shard.  Applying NODE_ID again
+                    # would skip past the local image (and node 31 would walk
+                    # almost one whole global tensor beyond it).  Replicated
+                    # dense fallbacks retain this term and select their logical
+                    # slice exactly as before.
                     continue
                 terms.append(DynamicTerm.symbol(Symbol.NODE_ID, node_stride))
         # A host input window is staged for *this* request and read from its
@@ -2272,9 +2379,23 @@ class _Emitter:
 
     def _batch_axis(self, plan: KernelPlan, operand: OperandPlan) -> int:
         """The axis A18 declares, once a leading batch axis has displaced it."""
+        if self._expert_block_reduction(plan, operand):
+            return 1
         if plan.kind in _BATCH_LEADING and self._request_sized(operand):
             return 1
         return 0
+
+    @staticmethod
+    def _expert_block_reduction(plan: KernelPlan, operand: OperandPlan) -> bool:
+        """Whether the reduction convention moved the token axis behind experts."""
+
+        return bool(
+            plan.engine_family == int(Major.REDUCTION)
+            and plan.kind == "EXPERT_REDUCE"
+            and plan.block_rows > 1
+            and operand.direction == "in"
+            and operand.slot == 0
+        )
 
     def _row_broadcast(
         self,
@@ -2767,7 +2888,9 @@ class _Emitter:
             return
 
         if self._is_fused_state_append(plan, kernel):
-            self._emit_state_append(plan, kernel)
+            self._emit_state_append(
+                plan, kernel, shared_row_loop=shared_row_loop
+            )
             return
 
         builder = self.builder
@@ -2788,6 +2911,63 @@ class _Emitter:
             for o in plan.operands
             if o.direction == "out"
         ]
+        consumer_paths = self._phase_consumer_paths(plan, kernel)
+        producer_events = self._producer_events(kernel)
+        if plan.link_class == "sparse_gather" and consumer_paths is None:
+            kv_operand = next(
+                (
+                    operand
+                    for operand in in_operands
+                    if operand.slot == 1 and operand.direction == "in"
+                ),
+                None,
+            )
+            if kv_operand is None or kv_operand.tensor_id not in self._event_of_tensor:
+                raise LoweringError(
+                    f"kernel {plan.kernel_id}: sparse gather has no "
+                    "event-bound fused-KV operand in slot 1"
+                )
+            source_event = self._event_of_tensor[kv_operand.tensor_id]
+            gathered = self._emit_sparse_input(
+                plan,
+                kv_operand,
+                loops,
+                source_event,
+            )
+            producer_events = [
+                self._event_of_tensor[name]
+                for name in kernel.inputs
+                if name in self._event_of_tensor and name != kv_operand.tensor_id
+            ]
+            producer_events.append(gathered)
+        elif plan.link_class == "reduction":
+            contribution = next(
+                (
+                    operand
+                    for operand in in_operands
+                    if operand.slot == 0 and operand.direction == "in"
+                ),
+                None,
+            )
+            if contribution is None or contribution.tensor_id not in self._event_of_tensor:
+                raise LoweringError(
+                    f"kernel {plan.kernel_id}: distributed reduction has no "
+                    "event-bound contribution operand in slot 0"
+                )
+            source_event = self._event_of_tensor[contribution.tensor_id]
+            reduced = self._emit_reduction_input(
+                plan,
+                contribution,
+                inputs[contribution.slot],
+                loops,
+                source_event,
+            )
+            producer_events = [
+                self._event_of_tensor[name]
+                for name in kernel.inputs
+                if name in self._event_of_tensor and name != contribution.tensor_id
+            ]
+            producer_events.append(reduced)
         if (int(plan.engine_family), int(plan.engine_sub)) == (
             int(Major.REDUCTION),
             int(Reduction.GROUPED_CONCAT),
@@ -2806,10 +2986,15 @@ class _Emitter:
             for name in kernel.outputs:
                 self._event_of_tensor[name] = event
             return
-        consumer_paths = self._phase_consumer_paths(plan, kernel)
         if consumer_paths is not None:
             event = self._emit_phase_consumer(
-                plan, kernel, loops, inputs, outputs, consumer_paths
+                plan,
+                kernel,
+                loops,
+                inputs,
+                outputs,
+                consumer_paths,
+                producer_events=producer_events,
             )
             event = self._maybe_link(plan, event, loops)
             self._close_loops(
@@ -2835,7 +3020,7 @@ class _Emitter:
             Major(plan.engine_family),
             plan.engine_sub,
             descriptor_id=operator,
-            wait_set_id=self._wait_set(self._producer_events(kernel)),
+            wait_set_id=self._wait_set(producer_events),
             signal_event_id=event,
             predicate_id=self._kernel_predicate(plan),
             source_operation_id=plan.index,
@@ -3285,6 +3470,8 @@ class _Emitter:
         inputs: Sequence[int],
         outputs: Sequence[int],
         paths: Mapping[int, Mapping[str, RequestExtent]],
+        *,
+        producer_events: Sequence[int],
     ) -> int:
         """One instruction per phase, each stating that phase's row space."""
         builder = self.builder
@@ -3320,6 +3507,42 @@ class _Emitter:
                     plan, operand, loops, extent, writable=False
                 )
             predicate = self._phase_predicate((phase,))
+            path_events = list(producer_events)
+            if plan.link_class == "sparse_gather":
+                kv_operand = next(
+                    (
+                        operand
+                        for operand in plan.operands
+                        if operand.direction == "in" and operand.slot == 1
+                    ),
+                    None,
+                )
+                kv_ir_slot = slots[1] if len(slots) > 1 else None
+                if (
+                    kv_operand is None
+                    or kv_ir_slot is None
+                    or kv_ir_slot not in paths
+                    or kv_operand.tensor_id not in self._event_of_tensor
+                ):
+                    raise LoweringError(
+                        f"kernel {plan.kernel_id}: phase-split sparse gather "
+                        "cannot identify its fused-KV extent and producer"
+                    )
+                gathered = self._emit_sparse_input(
+                    plan,
+                    kv_operand,
+                    loops,
+                    self._event_of_tensor[kv_operand.tensor_id],
+                    extent=paths[kv_ir_slot][phase],
+                    predicate_id=predicate,
+                )
+                path_events = [
+                    self._event_of_tensor[name]
+                    for name in kernel.inputs
+                    if name in self._event_of_tensor
+                    and name != kv_operand.tensor_id
+                ]
+                path_events.append(gathered)
             event = builder.new_event()
             builder.emit(
                 Major(plan.engine_family),
@@ -3336,7 +3559,7 @@ class _Emitter:
                     source_kernel_id=plan.index,
                     key=f"op.k{plan.index}.{phase}",
                 ),
-                wait_set_id=self._wait_set(self._producer_events(kernel)),
+                wait_set_id=self._wait_set(path_events),
                 signal_event_id=event,
                 predicate_id=predicate,
                 source_operation_id=plan.index,
@@ -3450,10 +3673,16 @@ class _Emitter:
         widths = [self._state_row_width(o.tensor_id) for o in sources]
         return bool(row) and all(widths) and sum(widths) == row
 
-    def _emit_state_append(self, plan: KernelPlan, kernel: Kernel) -> None:
+    def _emit_state_append(
+        self,
+        plan: KernelPlan,
+        kernel: Kernel,
+        *,
+        shared_row_loop: int | None = None,
+    ) -> None:
         """Emit one write per source into its column range of the state row."""
         builder = self.builder
-        loops = self._open_loops(plan)
+        loops = self._open_loops(plan, shared_row_loop=shared_row_loop)
         numeric = self._kernel_numeric(plan)
         schedule = self._schedule_for(plan)
         counter = self._counter_class(plan.engine_family)
@@ -3491,7 +3720,10 @@ class _Emitter:
                 source_operation_id=plan.index,
             )
             column += self._state_row_width(operand.tensor_id)
-        self._close_loops(loops, ["context", "row"])
+        self._close_loops(
+            loops,
+            ["context", *([] if shared_row_loop is not None else ["row"])],
+        )
         for name in kernel.outputs:
             self._event_of_tensor[name] = event
 
@@ -3787,52 +4019,39 @@ class _Emitter:
     ) -> int:
         """Emit this kernel's cluster traffic, if it has any.
 
-        Two kinds of kernel declare a traffic class and they need opposite
-        things.
+        Column shards use the existing pack/all-gather/unpack path.  An
+        expert-sharded layer uses scatter: node zero's bounded dispatch block is
+        sent to every expert owner, landed in that node's private participant
+        slot, and unpacked over the activation the routed contractions read.
+        The routed engine then evaluates only IDs in its consecutive local
+        expert range.  The corresponding reduction is emitted *before* the
+        EXPERT_REDUCE operator by :meth:`_emit_reduction_input`, because the
+        received sum is that operator's input rather than its output.
 
-        A **node-sharded contraction** really does have to move bytes: node *k*
-        computed columns ``[k*S, (k+1)*S)`` of the result and nothing else, and
-        every consumer wants the whole row.  That is an all-gather, and
-        :meth:`_emit_all_gather` emits it as one.
-
-        Every **other** class -- expert dispatch, sparse gather, the ordered
-        sums -- names a kernel this plan *replicates*: every node holds the same
-        operands and computes the same result, because the plan's only shard
-        axis is a contraction's output columns.  Such a kernel moves nothing and
-        waits for nothing: its inputs are node-local and so are its outputs.  So
-        it emits no traffic, and the site is recorded in
-        ``replicated_link_sites`` instead.
-
-        Emitting a collective there would gather thirty-two identical buffers
-        into a destination nothing reads, and emitting a barrier would cost the
-        fabric's barrier messages for a synchronisation the dependency has
-        already provided.  Either would put bytes and messages into a comparison
-        that no operand needed, which is the failure this program exists to
-        remove -- and the number of transfers a machine performs is one of the
-        two numbers the whole comparison turns on.
-
-        The gap this leaves is worth stating plainly: a 256-expert MoE whose
-        experts are *not* distributed across the cluster has no expert-dispatch
-        traffic, and that is a property of this plan's sharding, not of the
-        model.  Declaring dispatch traffic that no operand needs would hide it.
+        Sparse gather likewise runs before ATTENTION.SPARSE.  Those two
+        pre-consumer classes return unchanged here; reaching this method does
+        not turn them back into post-hoc traffic.
         """
         if self.node_count <= 1 or not plan.link_class:
+            return event
+        if plan.link_class in {"reduction", "sparse_gather"}:
             return event
         out = next(
             (o for o in plan.operands if o.direction == "out" and o.slot == 0), None
         )
-        sharded = (
-            plan.contraction
-            and out is not None
-            and out.residence == "arena"
-            and plan.shard_columns not in (0, out.cols)
-        )
-        if sharded:
+        if out is None or out.residence != "arena":
+            raise LoweringError(
+                f"kernel {plan.kernel_id}: {plan.link_class} has no arena output "
+                "to bind to the fabric"
+            )
+        if plan.link_class == "activation_transfer":
             return self._emit_all_gather(plan, out, loops, event)
-        self._replicated_links[plan.link_class] = (
-            self._replicated_links.get(plan.link_class, 0) + 1
+        if plan.link_class == "expert_dispatch":
+            return self._emit_expert_scatter(plan, out, loops, event)
+        raise LoweringError(
+            f"kernel {plan.kernel_id}: no lowering for traffic class "
+            f"{plan.link_class!r}"
         )
-        return event
 
     def _participant_array(self, elements: int, dtype: str) -> int:
         """The symmetric receive buffer of an ``elements``-element exchange.
@@ -3844,11 +4063,18 @@ class _Emitter:
         k * byte_extent`` name participant *k*'s contribution on a distributed
         device exactly as it does on a single one.
         """
-        key = (dtype, int(elements))
+        requested = bytes_for(elements, dtype)
+        reserved = int(self.plan.proofs.get("communication_scratch_bytes", 0))
+        if requested > reserved:
+            raise LoweringError(
+                f"cluster exchange needs {requested} bytes, but the physical "
+                f"plan reserved {reserved} bytes of communication scratch"
+            )
+        key = ("shared", reserved)
         existing = self._exchange_object.get(key)
         if existing is not None:
             return existing
-        size = bytes_for(elements, dtype)
+        size = max(reserved, 1)
         oid = self.builder.memory_object(
             storage_class=StorageClass.HBM,
             size_bytes=size,
@@ -3861,10 +4087,511 @@ class _Emitter:
             base_address=self._extra_hbm(size),
             bank_or_tile=0,
             alignment_log2=12,
-            key=f"obj.exchange.{dtype}.{elements}",
+            key="obj.exchange.shared",
         )
         self._exchange_object[key] = oid
         return oid
+
+    def _emit_expert_scatter(
+        self,
+        plan: KernelPlan,
+        out: OperandPlan,
+        loops: Mapping[str, int],
+        wait: int,
+    ) -> int:
+        """Scatter one bounded dispatch block and bind it back to its consumer.
+
+        The graph's dispatch row is ``[token, selected-slot, hidden]``.  Node
+        zero posts one copy of that fixed block for each consecutive expert
+        owner; LINK.SCATTER delivers slot ``k`` into node ``k``'s private HBM,
+        and an unpack overwrites the activation read by the routed matmuls.
+        The expert-ID vector stays node-local (every node selected the same
+        IDs); the routed engine uses it to retain only IDs in its owned range.
+
+        Copying the block per owner is intentionally conservative bandwidth,
+        but it is not replicated execution: the received bytes are the routed
+        contraction's activation operand and each owner computes a disjoint
+        expert subset.  Dropping the scatter, changing its endpoint, or
+        severing the unpack therefore changes the result.
+        """
+
+        row_loop = loops.get("row")
+        if not out.rolling or row_loop is None:
+            raise LoweringError(
+                f"kernel {plan.kernel_id}: expert dispatch must use the "
+                "fixed-address token-block arena"
+            )
+        builder = self.builder
+        dtype = dtype_of(out.dtype)
+        object_id, base = self._object_for(out)
+        rows = max(out.tile_rows, 1)
+        cols = max(out.tile_cols, 1)
+        slot_elements = rows * cols
+        exchange = self._participant_array(
+            self.node_count * slot_elements, out.dtype
+        )
+        edge = int(row_loop)
+        extent_numerator = max(int(out.extent_numerator), 1)
+        extent_unit = max(int(out.extent_unit), 1)
+        extent_bias = int(out.extent_bias)
+        numeric = self._kernel_numeric(plan)
+        schedule = self._scratch_schedule_for(plan)
+        counter = self._counter_class(int(Major.DMA))
+        predicate = self._phase_predicate(plan.phases)
+
+        # Read the one dispatch block as a broadcast along the owner axis, then
+        # materialise the root's N slot array.  A read-only zero stride is the
+        # descriptor-level statement of that broadcast; writable views remain
+        # ordinary non-overlapping dense arrays.
+        pack_source = self._view(
+            object_id=object_id,
+            dtype=dtype,
+            dims=[self.node_count, rows, cols],
+            strides=[0, cols, 1],
+            element_offset=base,
+            extent_axis=1,
+            extent_numerator=extent_numerator,
+            extent_unit=extent_unit,
+            extent_bias=extent_bias,
+            edge_mask_id=edge,
+        )
+        pack_destination = self._view(
+            object_id=exchange,
+            dtype=dtype,
+            dims=[self.node_count, rows, cols],
+            strides=[slot_elements, cols, 1],
+            writable=True,
+            extent_axis=1,
+            extent_numerator=extent_numerator,
+            extent_unit=extent_unit,
+            extent_bias=extent_bias,
+            edge_mask_id=edge,
+        )
+        packed = builder.new_event()
+        self._emit_move(
+            plan,
+            pack_source,
+            pack_destination,
+            numeric,
+            schedule,
+            counter,
+            predicate,
+            wait,
+            packed,
+            "expert_pack",
+        )
+
+        _sub, collective, route_class = _LINK_OP["expert_dispatch"]
+        scattered = builder.new_event()
+        comm = builder.communication(
+            collective_op=collective,
+            local_object_id=exchange,
+            remote_object_id=exchange,
+            source_node=0,
+            local_offset=0,
+            remote_offset=0,
+            byte_extent=bytes_for(slot_elements, out.dtype),
+            group_id=NO_ID,
+            route_class=route_class,
+            credit_bound=self.plan.topology.credit_bound,
+            retry_bound=self.plan.topology.retry_bound,
+            completion_event_id=scattered,
+            counter_class_id=self._counter_class(int(Major.LINK)),
+            participant_count=self.node_count,
+            chunk_bytes=self.plan.topology.chunk_bytes,
+            ordering=Ordering.ACQUIRE_RELEASE,
+            integrity_mode=IntegrityMode.CRC32C,
+            virtual_channel=route_class
+            % max(self.plan.topology.virtual_channels, 1),
+            key=f"comm.expert_dispatch.k{plan.index}",
+        )
+        builder.require(Feature.INTER_CHIP_ENDPOINT)
+        builder.emit(
+            Major.LINK,
+            Link.SCATTER,
+            descriptor_id=comm,
+            wait_set_id=self._wait_set([packed]),
+            signal_event_id=scattered,
+            predicate_id=predicate,
+            source_operation_id=plan.index,
+        )
+        self._link_instructions += 1
+
+        unpack_source = self._view(
+            object_id=exchange,
+            dtype=dtype,
+            dims=[rows, cols],
+            strides=[cols, 1],
+            dynamic=[DynamicTerm.symbol(Symbol.NODE_ID, slot_elements)],
+            extent_axis=0,
+            extent_numerator=extent_numerator,
+            extent_unit=extent_unit,
+            extent_bias=extent_bias,
+            edge_mask_id=edge,
+        )
+        unpack_destination = self._operand_view(
+            plan, out, loops, writable=True
+        )
+        unpacked = builder.new_event()
+        self._emit_move(
+            plan,
+            unpack_source,
+            unpack_destination,
+            numeric,
+            schedule,
+            counter,
+            predicate,
+            scattered,
+            unpacked,
+            "expert_unpack",
+        )
+        return unpacked
+
+    def _emit_reduction_input(
+        self,
+        plan: KernelPlan,
+        contribution: OperandPlan,
+        source_view: int,
+        loops: Mapping[str, int],
+        wait: int,
+    ) -> int:
+        """All-reduce expert-owner partial rows before EXPERT_REDUCE reads them."""
+
+        row_loop = loops.get("row")
+        if not contribution.rolling or row_loop is None:
+            raise LoweringError(
+                f"kernel {plan.kernel_id}: distributed expert reduction must "
+                "consume a fixed-address token-block contribution"
+            )
+        builder = self.builder
+        dtype = dtype_of(contribution.dtype)
+        rows = max(contribution.tile_rows, 1)
+        cols = max(contribution.tile_cols, 1)
+        slot_elements = rows * cols
+        exchange = self._participant_array(
+            self.node_count * slot_elements, contribution.dtype
+        )
+        edge = int(row_loop)
+        extent_numerator = max(int(contribution.extent_numerator), 1)
+        extent_unit = max(int(contribution.extent_unit), 1)
+        extent_bias = int(contribution.extent_bias)
+        numeric = self._kernel_numeric(plan)
+        schedule = self._scratch_schedule_for(plan)
+        counter = self._counter_class(int(Major.DMA))
+        predicate = self._phase_predicate(plan.phases)
+
+        pack_destination = self._view(
+            object_id=exchange,
+            dtype=dtype,
+            dims=[rows, cols],
+            strides=[cols, 1],
+            dynamic=[DynamicTerm.symbol(Symbol.NODE_ID, slot_elements)],
+            writable=True,
+            extent_axis=0,
+            extent_numerator=extent_numerator,
+            extent_unit=extent_unit,
+            extent_bias=extent_bias,
+            edge_mask_id=edge,
+        )
+        packed = builder.new_event()
+        self._emit_move(
+            plan,
+            source_view,
+            pack_destination,
+            numeric,
+            schedule,
+            counter,
+            predicate,
+            wait,
+            packed,
+            "reduction_pack",
+        )
+
+        _sub, collective, route_class = _LINK_OP["reduction"]
+        reduced = builder.new_event()
+        comm = builder.communication(
+            collective_op=collective,
+            local_object_id=exchange,
+            remote_object_id=exchange,
+            local_offset=0,
+            remote_offset=0,
+            byte_extent=bytes_for(slot_elements, contribution.dtype),
+            group_id=NO_ID,
+            route_class=route_class,
+            credit_bound=self.plan.topology.credit_bound,
+            retry_bound=self.plan.topology.retry_bound,
+            completion_event_id=reduced,
+            reduction_numeric_id=numeric,
+            counter_class_id=self._counter_class(int(Major.LINK)),
+            participant_count=self.node_count,
+            chunk_bytes=self.plan.topology.chunk_bytes,
+            ordering=Ordering.ACQUIRE_RELEASE,
+            integrity_mode=IntegrityMode.CRC32C,
+            virtual_channel=route_class
+            % max(self.plan.topology.virtual_channels, 1),
+            key=f"comm.reduction.k{plan.index}",
+        )
+        builder.require(Feature.INTER_CHIP_ENDPOINT)
+        builder.emit(
+            Major.LINK,
+            Link.COLLECTIVE,
+            descriptor_id=comm,
+            wait_set_id=self._wait_set([packed]),
+            signal_event_id=reduced,
+            predicate_id=predicate,
+            source_operation_id=plan.index,
+        )
+        self._link_instructions += 1
+
+        unpack_source = self._view(
+            object_id=exchange,
+            dtype=dtype,
+            dims=[rows, cols],
+            strides=[cols, 1],
+            extent_axis=0,
+            extent_numerator=extent_numerator,
+            extent_unit=extent_unit,
+            extent_bias=extent_bias,
+            edge_mask_id=edge,
+        )
+        unpack_destination = self._operand_view(
+            plan, contribution, loops, writable=True
+        )
+        unpacked = builder.new_event()
+        self._emit_move(
+            plan,
+            unpack_source,
+            unpack_destination,
+            numeric,
+            schedule,
+            counter,
+            predicate,
+            reduced,
+            unpacked,
+            "reduction_unpack",
+        )
+        return unpacked
+
+    def _emit_sparse_input(
+        self,
+        plan: KernelPlan,
+        kv: OperandPlan,
+        loops: Mapping[str, int],
+        wait: int,
+        *,
+        extent: RequestExtent | None = None,
+        predicate_id: int | None = None,
+    ) -> int:
+        """Gather disjoint fused-KV bands and rebuild the consumer's row space.
+
+        Each node contributes one consecutive 1/N band of every fused KV row.
+        LINK.COLLECTIVE ALL_GATHER concatenates those distinct bands directly
+        into every participant's symmetric receive buffer, and the final DMA
+        writes it over the exact operand ATTENTION.SPARSE reads.  The
+        participant array is the reconstructed block itself -- no second copy
+        per node -- so even a maximum decode context remains below the shared
+        fixed communication-arena bound.
+        """
+
+        if kv.rolling:
+            raise LoweringError(
+                f"kernel {plan.kernel_id}: sparse gather cannot source a "
+                "rolling fused-KV row space"
+            )
+        cols = max(kv.tile_cols, 1)
+        if cols % self.node_count:
+            raise LoweringError(
+                f"kernel {plan.kernel_id}: fused-KV width {cols} is not "
+                f"divisible by {self.node_count} nodes"
+            )
+        context_bound = extent is not None and extent.symbol != "span_tokens"
+        if context_bound:
+            context = plan.context_loop
+            context_loop = loops.get("context")
+            if context is None or context_loop is None:
+                raise LoweringError(
+                    f"kernel {plan.kernel_id}: phase-bound sparse gather has "
+                    "no context loop"
+                )
+            step = extent.step(int(context.divisor))
+            if step is None:
+                raise LoweringError(
+                    f"kernel {plan.kernel_id}: context block {context.divisor} "
+                    f"does not resolve {extent.numerator}/{extent.unit} KV rows"
+                )
+            rows = max(int(step) + int(extent.bias), 1)
+            extent_numerator = max(int(extent.numerator), 1)
+            extent_unit = max(int(extent.unit), 1)
+            extent_bias = int(extent.bias)
+            walk_loop = int(context_loop)
+            walk_step = int(step)
+            fixed_edge = NO_ID
+        else:
+            row_loop = loops.get("row")
+            if row_loop is None or "row" not in kv.terms:
+                raise LoweringError(
+                    f"kernel {plan.kernel_id}: sparse gather needs a walked "
+                    "fused-KV block"
+                )
+            if extent is None:
+                rows = max(kv.tile_rows, 1)
+                extent_numerator = max(int(kv.extent_numerator), 1)
+                extent_unit = max(int(kv.extent_unit), 1)
+                extent_bias = int(kv.extent_bias)
+                walk_step = self._row_step(plan, kv)
+            else:
+                step = extent.step(int(plan.block_rows))
+                if step is None:
+                    raise LoweringError(
+                        f"kernel {plan.kernel_id}: token block "
+                        f"{plan.block_rows} does not resolve "
+                        f"{extent.numerator}/{extent.unit} KV rows"
+                    )
+                rows = max(int(step) + int(extent.bias), 1)
+                extent_numerator = max(int(extent.numerator), 1)
+                extent_unit = max(int(extent.unit), 1)
+                extent_bias = int(extent.bias)
+                walk_step = int(step)
+            walk_loop = int(row_loop)
+            fixed_edge = int(row_loop)
+
+        shard = cols // self.node_count
+        slot_elements = rows * shard
+        gathered_elements = self.node_count * slot_elements
+        exchange = self._participant_array(gathered_elements, kv.dtype)
+        builder = self.builder
+        dtype = dtype_of(kv.dtype)
+        object_id, base = self._object_for(kv)
+        source_term = DynamicTerm.loop(walk_loop, walk_step * cols)
+        scratch_term = DynamicTerm.loop(walk_loop, walk_step * shard)
+        numeric = self._kernel_numeric(plan)
+        schedule = self._scratch_schedule_for(plan)
+        counter = self._counter_class(int(Major.DMA))
+        predicate = (
+            self._phase_predicate(plan.phases)
+            if predicate_id is None
+            else int(predicate_id)
+        )
+
+        pack_source = self._view(
+            object_id=object_id,
+            dtype=dtype,
+            dims=[rows, shard],
+            strides=[cols, 1],
+            element_offset=base,
+            dynamic=[
+                DynamicTerm.symbol(Symbol.NODE_ID, shard),
+                source_term,
+            ],
+            extent_axis=0,
+            extent_numerator=extent_numerator,
+            extent_unit=extent_unit,
+            extent_bias=extent_bias,
+        )
+        pack_destination = self._view(
+            object_id=exchange,
+            dtype=dtype,
+            dims=[rows, shard],
+            strides=[shard, 1],
+            dynamic=[
+                DynamicTerm.symbol(Symbol.NODE_ID, slot_elements),
+                *([scratch_term] if context_bound else []),
+            ],
+            writable=True,
+            extent_axis=0,
+            extent_numerator=extent_numerator,
+            extent_unit=extent_unit,
+            extent_bias=extent_bias,
+            edge_mask_id=fixed_edge,
+        )
+        packed = builder.new_event()
+        self._emit_move(
+            plan,
+            pack_source,
+            pack_destination,
+            numeric,
+            schedule,
+            counter,
+            predicate,
+            wait,
+            packed,
+            "sparse_pack",
+        )
+
+        _sub, collective, route_class = _LINK_OP["sparse_gather"]
+        gathered = builder.new_event()
+        gather_comm = builder.communication(
+            collective_op=collective,
+            local_object_id=exchange,
+            remote_object_id=exchange,
+            local_offset=0,
+            remote_offset=0,
+            byte_extent=bytes_for(slot_elements, kv.dtype),
+            group_id=NO_ID,
+            route_class=route_class,
+            credit_bound=self.plan.topology.credit_bound,
+            retry_bound=self.plan.topology.retry_bound,
+            completion_event_id=gathered,
+            counter_class_id=self._counter_class(int(Major.LINK)),
+            participant_count=self.node_count,
+            chunk_bytes=self.plan.topology.chunk_bytes,
+            ordering=Ordering.ACQUIRE_RELEASE,
+            integrity_mode=IntegrityMode.CRC32C,
+            virtual_channel=route_class
+            % max(self.plan.topology.virtual_channels, 1),
+            key=f"comm.sparse_gather.k{plan.index}",
+        )
+        builder.require(Feature.INTER_CHIP_ENDPOINT)
+        builder.emit(
+            Major.LINK,
+            Link.COLLECTIVE,
+            descriptor_id=gather_comm,
+            wait_set_id=self._wait_set([packed]),
+            signal_event_id=gathered,
+            predicate_id=predicate,
+            source_operation_id=plan.index,
+        )
+        self._link_instructions += 1
+
+        unpack_source = self._view(
+            object_id=exchange,
+            dtype=dtype,
+            dims=[self.node_count, rows, shard],
+            strides=[slot_elements, shard, 1],
+            dynamic=([scratch_term] if context_bound else []),
+            extent_axis=1,
+            extent_numerator=extent_numerator,
+            extent_unit=extent_unit,
+            extent_bias=extent_bias,
+            edge_mask_id=fixed_edge,
+        )
+        unpack_destination = self._view(
+            object_id=object_id,
+            dtype=dtype,
+            dims=[self.node_count, rows, shard],
+            strides=[shard, cols, 1],
+            element_offset=base,
+            dynamic=[source_term],
+            writable=True,
+            extent_axis=1,
+            extent_numerator=extent_numerator,
+            extent_unit=extent_unit,
+            extent_bias=extent_bias,
+        )
+        unpacked = builder.new_event()
+        self._emit_move(
+            plan,
+            unpack_source,
+            unpack_destination,
+            numeric,
+            schedule,
+            counter,
+            predicate,
+            gathered,
+            unpacked,
+            "sparse_unpack",
+        )
+        return unpacked
 
     def _emit_all_gather(
         self,
@@ -3922,7 +4649,7 @@ class _Emitter:
             [DynamicTerm.loop(row_loop, cols * block)] if row_loop is not None else []
         )
         numeric = self._kernel_numeric(plan)
-        schedule = self._schedule_for(plan, int(Major.DMA))
+        schedule = self._scratch_schedule_for(plan)
         counter = self._counter_class(int(Major.DMA))
         predicate = self._phase_predicate(plan.phases)
 

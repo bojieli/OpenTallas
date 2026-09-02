@@ -55,18 +55,13 @@ contraction, and the plan records which collectives must reassemble it.
 
 from __future__ import annotations
 
-import json
-from dataclasses import dataclass, field as dc_field
+from dataclasses import dataclass, replace
 from pathlib import Path
-from typing import Any, Container, Iterable, Mapping, Sequence
+from typing import Any, Container, Mapping, Sequence
 
 from compiler.ir.v3.kernel_ir import (
-    CheckpointBinding,
-    Entrypoint,
     Kernel,
     KernelGraph,
-    RuntimeSymbol,
-    StateResource,
     Symbolic,
     Tensor,
     require_neutral,
@@ -88,12 +83,11 @@ from runtime.abi3.constants import (
     Reduction,
     Route,
     Selection,
-    StateClass,
     Tensor as TensorOp,
     TopologyClass,
     Vector,
 )
-from runtime.abi3.descriptors import Comparison, PredicateKind, Symbol
+from runtime.abi3.descriptors import Comparison, Symbol
 
 PLAN_SCHEMA = "opentallas.hbm_sram.physical_plan.v3"
 PLAN_VERSION = "3.0.0"
@@ -129,17 +123,16 @@ _CONTRACTION_SUBOPS = frozenset(
     {int(TensorOp.MATMUL), int(TensorOp.GROUPED_MATMUL), int(TensorOp.ROUTED_MATMUL)}
 )
 
-#: Kernel kinds that produce cluster traffic, and the traffic class each one
-#: belongs to.  The classes are TA-HBM-3.0 section 3.6's ordered list.
+#: Kernel kinds that can anchor a distributed transfer.  Whether a particular
+#: site actually gets the class is decided in :func:`_plan_kernels`, after the
+#: placement is known.  A coefficient-table GATHER and a hyper-connection
+#: EXPERT_REDUCE are node-local operations despite sharing an ABI subopcode with
+#: genuinely distributed sparse and MoE work; assigning traffic from the name
+#: alone was the source of the old ``replicated_link_sites`` fiction.
 LINK_CLASS_BY_KIND: Mapping[str, str] = {
     "EXPERT_DISPATCH": "expert_dispatch",
-    "GATHER": "sparse_gather",
-    "WINDOW_INDEX": "sparse_gather",
-    "INDEX_TOPK": "sparse_gather",
     "ATTENTION_SPARSE": "sparse_gather",
     "EXPERT_REDUCE": "reduction",
-    "ORDERED_SUM": "reduction",
-    "PARTITION_SUM": "reduction",
 }
 
 LINK_CLASSES = (
@@ -292,10 +285,25 @@ class WeightGroup:
     file_start: int
     file_end: int
     segments: tuple[PlacedSegment, ...]
-    residency: str = "replicated"  # or "node_sharded"
+    residency: str = "replicated"  # replicated | node_sharded | mixed
+    # A cluster memory-object descriptor is symmetric: every node sees the
+    # same object ID and the same local byte extent.  When complete
+    # authenticated segments can be partitioned across nodes, these are the
+    # node-local source maps for that one descriptor.  ``segments`` remains the
+    # logical/global checkpoint inventory used to prove that every binding is
+    # present exactly once.
+    local_size_bytes: int = 0
+    node_segments: tuple[tuple[PlacedSegment, ...], ...] = ()
+    materialization: str = "replicated"  # replicated | node_sharded | mixed
+
+    @property
+    def materialized_size_bytes(self) -> int:
+        """The bytes the symmetric object occupies in one node's HBM."""
+
+        return self.local_size_bytes if self.node_segments else self.size_bytes
 
     def to_dict(self) -> dict[str, Any]:
-        return {
+        body: dict[str, Any] = {
             "group_id": self.group_id,
             "path": self.path,
             "size_bytes": self.size_bytes,
@@ -305,6 +313,21 @@ class WeightGroup:
             "segments": [s.to_dict() for s in self.segments],
             "residency": self.residency,
         }
+        if self.node_segments:
+            body.update(
+                {
+                    "local_size_bytes": self.local_size_bytes,
+                    "node_segments": [
+                        {
+                            "node_id": node_id,
+                            "segments": [segment.to_dict() for segment in segments],
+                        }
+                        for node_id, segments in enumerate(self.node_segments)
+                    ],
+                    "materialization": self.materialization,
+                }
+            )
+        return body
 
 
 @dataclass(frozen=True, slots=True)
@@ -348,9 +371,17 @@ class WeightPlacement:
     layer: int | None
     role_key: str
     layer_stride_elements: int
+    residency: str = "replicated"
+    shard_count: int = 1
+    # ``residency`` describes how the emitted computation selects this tensor.
+    # ``materialization`` says whether the local object already starts at that
+    # node's selected slice.  A dense one-segment tensor cannot be split while
+    # retaining its binding digest, so it remains replicated and keeps the
+    # NODE_ID view term even when its computation is column-sharded.
+    materialization: str = "replicated"
 
     def to_dict(self) -> dict[str, Any]:
-        return {
+        body: dict[str, Any] = {
             "tensor_id": self.tensor_id,
             "group_id": self.group_id,
             "element_offset": self.element_offset,
@@ -361,7 +392,12 @@ class WeightPlacement:
             "layer": self.layer,
             "role_key": self.role_key,
             "layer_stride_elements": self.layer_stride_elements,
+            "residency": self.residency,
+            "shard_count": self.shard_count,
         }
+        if self.materialization != "replicated":
+            body["materialization"] = self.materialization
+        return body
 
 
 @dataclass(frozen=True, slots=True)
@@ -607,6 +643,12 @@ class OperandPlan:
     #: runtime expert ID inside the view, so the expert is an addressing
     #: dimension and folding it into the rows loses 255 of 256 experts.
     bank: int = 0
+    #: Node-local leading extent of an expert-sharded bank.  ``bank`` remains
+    #: the graph's global expert count; this field says how many consecutive
+    #: expert matrices this node owns.  Keeping both numbers is necessary to
+    #: derive the NODE_ID stride without weakening the routed operator's global
+    #: expert-ID bound.
+    bank_shard: int = 0
     #: Amendment A18's affine function of the row loop's bound symbol, for an
     #: operand that carries the ``row`` term.  The default is A13 exactly --
     #: the symbol's own value, no bias -- and encodes as four zero fields, so
@@ -645,6 +687,7 @@ class OperandPlan:
             # deployment manifest by digest, so a field every operand carries
             # would rewrite every existing plan to say "not a bank".
             **({"bank": self.bank} if self.bank else {}),
+            **({"bank_shard": self.bank_shard} if self.bank_shard else {}),
             # Same rule for A18: an operand whose extent is the symbol's own
             # value states nothing, so no pre-amendment plan digest moves.
             **(
@@ -1766,6 +1809,12 @@ def build_plan(
         rolling_tensors,
     )
     warnings.extend(warn_kernels)
+    groups, placements = _assign_weight_residency(
+        groups, placements, kernel_plans, node_count
+    )
+    groups, placements = _materialize_node_local_weights(
+        graph, groups, placements, kernel_plans, node_count
+    )
 
     sram_regions = _allocate_sram(kernel_plans, capability, node_count, tile)
     hbm_map = _allocate_hbm(
@@ -1776,7 +1825,7 @@ def build_plan(
     topology_plan = TopologyPlan(
         topology_class=int(topology_class),
         node_count=node_count,
-        shard_axis="output_columns" if node_count > 1 else "none",
+        shard_axis="hybrid_output_columns_experts" if node_count > 1 else "none",
         link_classes=LINK_CLASSES if node_count > 1 else (),
         hbm_bytes_per_node=int(capability.memory["hbm"]["bytes"]),
         sram_bytes_per_node=int(capability.memory["sram"]["bytes"]),
@@ -1790,6 +1839,8 @@ def build_plan(
     proofs = _prove(
         capability,
         groups,
+        placements,
+        generated,
         arena_slots,
         sram_regions,
         states,
@@ -1799,6 +1850,21 @@ def build_plan(
         host_objects,
         hbm_map,
     )
+    if not bool(proofs["hbm_fits"]):
+        raise PlanError(
+            "physical HBM plan requires "
+            f"{proofs['hbm_bytes_per_node']} bytes per node, capability "
+            f"provides {proofs['hbm_available_per_node']}"
+        )
+    if not bool(proofs["sram_fits"]):
+        raise PlanError(
+            f"physical SRAM plan requires {proofs['sram_bytes']} bytes per "
+            f"node, capability provides {proofs['sram_available']}"
+        )
+    if not bool(proofs["sram_banks_disjoint"]):
+        raise PlanError(
+            "physical SRAM plan assigns overlapping bank masks to live regions"
+        )
 
     plan = PhysicalPlan(
         model_id=graph.model_id,
@@ -2584,7 +2650,6 @@ def _emission_order(
     band_of_kernel: dict[int, int] = {}
     body_position: dict[int, int] = {}
     band_layers: dict[int, set[int]] = {}
-    by_index = {k.index: k for k in graph.kernels}
     by_layer: dict[int, list[Kernel]] = {}
     for kernel in graph.kernels:
         if kernel.layer is not None:
@@ -2636,11 +2701,23 @@ def _streaming_schedule(
     """Find producer/consumer runs that may reuse one fixed-address block.
 
     A rolling arena is legal only when every consumer of the value executes in
-    the same shared row loop as its producer.  Two released DeepSeek structures
-    have that property and account for the maximum-context placement failure:
+    the same shared row loop as its producer.  Four released DeepSeek
+    structures have that property and account for the maximum-context placement
+    failure:
 
     * ``INDEX_SCORE`` immediately followed by the ``INDEX_TOPK`` that consumes
-      its score plane, one query token at a time; and
+      its score plane, one query token at a time.  The score tensor has both a
+      request-sized query axis and an independently request-sized candidate
+      axis, while A18 can name only one dynamic extent on a view.  A one-row
+      stream makes the query axis static and leaves the candidate axis as the
+      one dynamic extent.  The joined window row carries the absolute prefill
+      query position across that physical slice (A27); and
+    * the query-B ``MATMUL -> HEAD_RMS_NORM -> ROPE`` chain, one ordinary token
+      block at a time.  Only its first two intermediate values roll; the ROPE
+      result remains full-span because sparse attention consumes it later; and
+    * ``ATTENTION_SPARSE`` through the following ``HYPER_CONNECT_POST``, which
+      keeps the wide attention/output-projection intermediates to one ordinary
+      token block while retaining the final residual result; and
     * ``EXPERT_DISPATCH`` through the first following ``EXPERT_REDUCE`` in the
       same layer, one ordinary token block at a time.
 
@@ -2681,6 +2758,35 @@ def _streaming_schedule(
         if layer is None:
             continue
         for position, kernel in enumerate(kernels):
+            if kernel.kind == "MATMUL" and position + 2 < len(kernels):
+                middle = kernels[position + 1]
+                end = kernels[position + 2]
+                query_chain = (
+                    middle.kind == "HEAD_RMS_NORM"
+                    and end.kind == "ROPE"
+                    and any(name in middle.inputs for name in kernel.outputs)
+                    and any(name in end.inputs for name in middle.outputs)
+                )
+                if query_chain:
+                    gid = group_id(kernel, end, "query_stream")
+                    if gid is not None:
+                        for member in (kernel, middle, end):
+                            members[member.index] = (gid, block)
+            if kernel.kind == "ATTENTION_SPARSE":
+                end = next(
+                    (
+                        candidate
+                        for candidate in kernels[position + 1 :]
+                        if candidate.kind == "HYPER_CONNECT_POST"
+                    ),
+                    None,
+                )
+                if end is not None:
+                    gid = group_id(kernel, end, "attention_output_stream")
+                    if gid is not None:
+                        end_position = kernels.index(end)
+                        for member in kernels[position : end_position + 1]:
+                            members[member.index] = (gid, block)
             if kernel.kind == "INDEX_SCORE" and position + 1 < len(kernels):
                 end = kernels[position + 1]
                 if end.kind != "INDEX_TOPK" or not any(
@@ -2748,7 +2854,6 @@ def _place_activations(
     """
     keys: dict[str, str] = {}
     host_objects: dict[str, dict[str, Any]] = {}
-    ordinal: dict[str, int] = {}
     band_span: dict[int, tuple[int, int]] = {}
 
     # Assign one emission ordinal per kernel in program order.
@@ -2763,7 +2868,6 @@ def _place_activations(
             band_span[band.band_id] = (start, len(order) - 1)
     position_of = {index: pos for pos, index in enumerate(order)}
 
-    by_index = {k.index: k for k in graph.kernels}
     for kernel in graph.kernels:
         band_id = band_of_kernel.get(kernel.index)
         for slot, name in enumerate(kernel.outputs):
@@ -3032,7 +3136,6 @@ def _place_states(
     """
     warnings: list[str] = []
     resources = {s.state_id: s for s in graph.states}
-    by_index = {k.index: k for k in graph.kernels}
 
     # Which states does each *iteration* of each band touch, in kernel order?
     by_layer: dict[int, list[Kernel]] = {}
@@ -4031,6 +4134,20 @@ def _plan_kernels(
         if kernel.attributes.get("phase_symbol_binding")
         for name in kernel.outputs
     }
+    # Expert ownership is a placement property, not a spelling convention.
+    # A layer is expert-sharded only when its routed bank divides exactly over
+    # the admitted nodes; smaller diagnostic MoEs keep the existing column
+    # sharding and must not acquire a reduction that would sum replicas.
+    expert_sharded_layers: set[int | None] = set()
+    if node_count > 1:
+        for routed in graph.kernels:
+            if routed.kind != "ROUTED_MATMUL" or len(routed.inputs) < 2:
+                continue
+            bank_extent = expert_bank_extent(
+                routed, tensors[routed.inputs[1]], span_max
+            )
+            if bank_extent >= node_count and bank_extent % node_count == 0:
+                expert_sharded_layers.add(routed.layer)
     plans: list[KernelPlan] = []
     # The emitted body is the *first iteration* of each band, which spans the
     # band's period rather than a single layer.
@@ -4150,6 +4267,7 @@ def _plan_kernels(
         groups = 1
         transposed = False
         bank = 0
+        bank_shard = 0
         if contraction and len(kernel.inputs) >= 2:
             a_rows, a_cols, _ = matrix_shape(tensors[kernel.inputs[0]], span_max)
             w_rows, w_cols, _ = matrix_shape(tensors[kernel.inputs[1]], span_max)
@@ -4160,6 +4278,8 @@ def _plan_kernels(
             bank = expert_bank_extent(kernel, tensors[kernel.inputs[1]], span_max)
             if bank:
                 w_rows //= bank
+                if kernel.layer in expert_sharded_layers:
+                    bank_shard = bank // node_count
             # The iteration domain is the authority on contraction geometry when
             # the graph states it.  A grouped projection contracts one group's
             # reduction width at a time, so inferring the depth from the folded
@@ -4210,7 +4330,13 @@ def _plan_kernels(
             # Replication is the existing answer to a column count a node count
             # cannot cut, and it is the answer here too.
             row_block = _scale_row_block(tensors, kernel.inputs[1])
-            if node_count > 1 and cols % node_count == 0 and cols > node_count:
+            if bank_shard:
+                # Routed banks are partitioned on their expert axis.  Each
+                # owner needs every output column of its local experts, and the
+                # partial rows are joined by the explicit route-class-3 sum
+                # before EXPERT_REDUCE consumes them.
+                shard_columns = cols
+            elif node_count > 1 and cols % node_count == 0 and cols > node_count:
                 if (cols // node_count) % row_block:
                     warnings.append(
                         f"kernel {kernel.kernel_id}: {cols} output columns over "
@@ -4325,6 +4451,7 @@ def _plan_kernels(
                     sharded=shard_columns != cols,
                     depth=depth,
                     bank=bank,
+                    bank_shard=bank_shard,
                     context=context_loop is not None,
                     rolling=kernel.inputs[ir_slot] in rolling_tensors,
                 )
@@ -4350,6 +4477,7 @@ def _plan_kernels(
                     sharded=shard_columns != cols,
                     depth=depth,
                     bank=bank,
+                    bank_shard=bank_shard,
                     context=context_loop is not None,
                     rolling=name in rolling_tensors,
                 )
@@ -4357,7 +4485,18 @@ def _plan_kernels(
 
         link_class = ""
         if node_count > 1:
-            if kernel.kind in LINK_CLASS_BY_KIND:
+            if (
+                kernel.kind == "EXPERT_DISPATCH"
+                and kernel.layer in expert_sharded_layers
+            ):
+                link_class = LINK_CLASS_BY_KIND[kernel.kind]
+            elif (
+                kernel.kind == "EXPERT_REDUCE"
+                and kernel.layer in expert_sharded_layers
+                and int(kernel.attributes.get("top_k", 0) or 0) > 0
+            ):
+                link_class = LINK_CLASS_BY_KIND[kernel.kind]
+            elif kernel.kind == "ATTENTION_SPARSE":
                 link_class = LINK_CLASS_BY_KIND[kernel.kind]
             elif contraction and shard_columns != cols:
                 link_class = "activation_transfer"
@@ -4418,6 +4557,322 @@ def _plan_kernels(
     return tuple(plans), warnings
 
 
+def _assign_weight_residency(
+    groups: Sequence[WeightGroup],
+    placements: Sequence[WeightPlacement],
+    kernels: Sequence[KernelPlan],
+    node_count: int,
+) -> tuple[tuple[WeightGroup, ...], tuple[WeightPlacement, ...]]:
+    """Bind every authenticated weight range to replica or shard ownership.
+
+    A logical weight object can span many layers and, for leftovers, several
+    unrelated tensors.  Residency is therefore decided per tensor from the
+    views that can address it, then summarized on the containing object.  A
+    tensor is node-sharded only when *every* emitted use carries the ``node``
+    selector; one replicated use conservatively makes the whole tensor
+    replicated.  Layer-loop representatives propagate their decision through
+    ``role_key`` to the other layers in the same role.  A block-scale role is
+    implicit in its data operand and inherits exactly the data role's decision.
+    """
+    placement_by_tensor = {placement.tensor_id: placement for placement in placements}
+    tensor_modes: dict[str, set[str]] = {}
+    role_modes: dict[str, set[str]] = {}
+
+    for kernel in kernels:
+        for operand in kernel.operands:
+            if operand.residence != "weight":
+                continue
+            mode = (
+                "node_sharded"
+                if node_count > 1 and "node" in operand.terms
+                else "replicated"
+            )
+            tensor_modes.setdefault(operand.tensor_id, set()).add(mode)
+            placement = placement_by_tensor[operand.tensor_id]
+            if placement.role_key:
+                role_modes.setdefault(placement.role_key, set()).add(mode)
+
+    updated_placements: list[WeightPlacement] = []
+    for placement in placements:
+        modes = set(tensor_modes.get(placement.tensor_id, ()))
+        if not modes and placement.role_key:
+            modes.update(role_modes.get(placement.role_key, ()))
+            if placement.role_key.endswith(".scale"):
+                modes.update(role_modes.get(placement.role_key[:-6], ()))
+        residency = (
+            "node_sharded" if modes == {"node_sharded"} else "replicated"
+        )
+        updated_placements.append(
+            replace(
+                placement,
+                residency=residency,
+                shard_count=node_count if residency == "node_sharded" else 1,
+            )
+        )
+
+    updated_by_tensor = {
+        placement.tensor_id: placement for placement in updated_placements
+    }
+    updated_groups: list[WeightGroup] = []
+    for group in groups:
+        modes = {
+            (
+                updated_by_tensor[segment.tensor_id].residency
+                if segment.tensor_id in updated_by_tensor
+                else "replicated"
+            )
+            for segment in group.segments
+        }
+        residency = next(iter(modes)) if len(modes) == 1 else "mixed"
+        updated_groups.append(replace(group, residency=residency))
+    return tuple(updated_groups), tuple(updated_placements)
+
+
+def _materialize_node_local_weights(
+    graph: KernelGraph,
+    groups: Sequence[WeightGroup],
+    placements: Sequence[WeightPlacement],
+    kernels: Sequence[KernelPlan],
+    node_count: int,
+) -> tuple[tuple[WeightGroup, ...], tuple[WeightPlacement, ...]]:
+    """Turn logical shard ownership into authenticated node-local sources.
+
+    The checkpoint lock authenticates complete binding segments, not arbitrary
+    byte slices.  A tensor is therefore materialised as a physical per-node
+    shard only when its ordered segment list divides into ``node_count`` equal
+    byte runs *at segment boundaries*.  Dense one-segment tensors conservatively
+    remain fully replicated; their existing ``NODE_ID`` tensor-view term still
+    selects the node's logical column slice from that local replica.  A
+    transposed dense contraction also remains replicated because its node
+    selection is a strided column set rather than one contiguous source run.
+
+    Weight and block-scale companion objects are an ABI-coupled pair: the
+    scale address is derived from the weight view's element offset and has no
+    independent offset field.  Likewise, a folded role needs one constant
+    layer stride.  Eligibility is consequently all-or-nothing across every
+    member of a role and across its data/scale pairs.
+    """
+
+    if node_count <= 1:
+        return tuple(groups), tuple(placements)
+
+    placement_by_tensor = {
+        placement.tensor_id: placement for placement in placements
+    }
+    segments_by_tensor: dict[str, tuple[PlacedSegment, ...]] = {}
+    for group in groups:
+        ordered: dict[str, list[PlacedSegment]] = {}
+        for segment in group.segments:
+            ordered.setdefault(segment.tensor_id, []).append(segment)
+        segments_by_tensor.update(
+            (tensor_id, tuple(segments))
+            for tensor_id, segments in ordered.items()
+        )
+
+    def partition(
+        tensor_id: str,
+    ) -> tuple[tuple[PlacedSegment, ...], ...] | None:
+        """Equal consecutive runs whose boundaries are authenticated."""
+
+        segments = segments_by_tensor.get(tensor_id, ())
+        total = sum(int(segment.bytes) for segment in segments)
+        if not segments or total <= 0 or total % node_count:
+            return None
+        per_node = total // node_count
+        if per_node <= 0:
+            return None
+        out: list[tuple[PlacedSegment, ...]] = []
+        current: list[PlacedSegment] = []
+        current_bytes = 0
+        for segment in segments:
+            size = int(segment.bytes)
+            if size <= 0 or current_bytes + size > per_node:
+                return None
+            current.append(segment)
+            current_bytes += size
+            if current_bytes == per_node:
+                out.append(tuple(current))
+                current = []
+                current_bytes = 0
+        if current or len(out) != node_count:
+            return None
+        placement = placement_by_tensor[tensor_id]
+        if placement.elements % node_count:
+            return None
+        if bytes_for(placement.elements // node_count, placement.dtype) != per_node:
+            return None
+        return tuple(out)
+
+    partitions: dict[str, tuple[tuple[PlacedSegment, ...], ...]] = {}
+    contiguous_slice: dict[str, bool] = {}
+    for kernel in kernels:
+        for operand in kernel.operands:
+            if operand.residence != "weight" or "node" not in operand.terms:
+                continue
+            # A normal [N,K] shard is one consecutive row-major byte run.  A
+            # transposed [K,N] view selects strided columns and cannot become a
+            # compact local object without a forbidden relayout.  Routed banks
+            # split their outer expert dimension, which remains consecutive
+            # regardless of the inner matrix's presentation.
+            safe = not operand.transposed or operand.bank_shard > 0
+            contiguous_slice[operand.tensor_id] = (
+                contiguous_slice.get(operand.tensor_id, True) and safe
+            )
+    eligible: dict[str, bool] = {}
+    for placement in placements:
+        pieces = (
+            partition(placement.tensor_id)
+            if placement.residency == "node_sharded"
+            and contiguous_slice.get(placement.tensor_id, True)
+            else None
+        )
+        eligible[placement.tensor_id] = pieces is not None
+        if pieces is not None:
+            partitions[placement.tensor_id] = pieces
+
+    role_members: dict[str, list[str]] = {}
+    for placement in placements:
+        if placement.role_key:
+            role_members.setdefault(placement.role_key, []).append(
+                placement.tensor_id
+            )
+    tensor_by_id = {tensor.tensor_id: tensor for tensor in graph.tensors}
+
+    # Propagate one failed member through its folded role and its block-scale
+    # pair.  The small fixed point makes the rule independent of traversal
+    # order (data role -> one scale -> the whole scale role, and vice versa).
+    changed = True
+    while changed:
+        changed = False
+        for members in role_members.values():
+            shared = all(eligible.get(tensor_id, False) for tensor_id in members)
+            for tensor_id in members:
+                if eligible.get(tensor_id, False) != shared:
+                    eligible[tensor_id] = shared
+                    changed = True
+        for tensor_id, tensor in tensor_by_id.items():
+            scale_id = tensor.scale_tensor_id
+            if tensor_id not in eligible or not scale_id or scale_id not in eligible:
+                continue
+            shared = eligible[tensor_id] and eligible[scale_id]
+            if eligible[tensor_id] != shared:
+                eligible[tensor_id] = shared
+                changed = True
+            if eligible[scale_id] != shared:
+                eligible[scale_id] = shared
+                changed = True
+
+    updated: dict[str, WeightPlacement] = {
+        placement.tensor_id: replace(
+            placement,
+            materialization=(
+                "node_sharded"
+                if eligible.get(placement.tensor_id, False)
+                else "replicated"
+            ),
+        )
+        for placement in placements
+    }
+    updated_groups: list[WeightGroup] = []
+
+    for group in groups:
+        tensor_order = tuple(dict.fromkeys(s.tensor_id for s in group.segments))
+        if not any(eligible.get(tensor_id, False) for tensor_id in tensor_order):
+            updated_groups.append(replace(group, materialization="replicated"))
+            continue
+
+        node_maps: list[list[PlacedSegment]] = [
+            [] for _ in range(node_count)
+        ]
+        cursor = 0
+        physical_modes: set[str] = set()
+        for tensor_id in tensor_order:
+            placement = updated[tensor_id]
+            sharded = eligible.get(tensor_id, False)
+            physical_modes.add("node_sharded" if sharded else "replicated")
+            maps = (
+                partitions[tensor_id]
+                if sharded
+                else tuple(segments_by_tensor[tensor_id] for _ in range(node_count))
+            )
+            local_bytes = sum(int(segment.bytes) for segment in maps[0])
+            for node_id, source_segments in enumerate(maps):
+                node_cursor = cursor
+                if sum(int(segment.bytes) for segment in source_segments) != local_bytes:
+                    raise PlanError(
+                        f"weight {tensor_id}: node-local authenticated segments "
+                        "do not have one symmetric byte extent"
+                    )
+                for segment in source_segments:
+                    node_maps[node_id].append(
+                        replace(
+                            segment,
+                            element_offset=elements_in(node_cursor, segment.dtype),
+                        )
+                    )
+                    node_cursor += int(segment.bytes)
+            updated[tensor_id] = replace(
+                placement,
+                element_offset=elements_in(cursor, placement.dtype),
+                elements=(
+                    placement.elements // node_count
+                    if sharded
+                    else placement.elements
+                ),
+            )
+            cursor += local_bytes
+
+        # Re-derive the induction stride from the physical offsets.  This is
+        # smaller by N for sharded expert roles and unchanged for replicated
+        # fallbacks, including their block-scale companion roles.
+        roles = {
+            updated[tensor_id].role_key
+            for tensor_id in tensor_order
+            if updated[tensor_id].role_key
+        }
+        for role_key in roles:
+            members = sorted(
+                (
+                    updated[tensor_id]
+                    for tensor_id in tensor_order
+                    if updated[tensor_id].role_key == role_key
+                ),
+                key=lambda item: int(item.layer or 0),
+            )
+            stride = 0
+            if len(members) > 1:
+                strides = {
+                    right.element_offset - left.element_offset
+                    for left, right in zip(members, members[1:])
+                }
+                if len(strides) != 1:
+                    raise PlanError(
+                        f"weight role {role_key}: node-local materialization "
+                        "does not have one constant layer stride"
+                    )
+                stride = next(iter(strides))
+            for member in members:
+                updated[member.tensor_id] = replace(
+                    updated[member.tensor_id], layer_stride_elements=stride
+                )
+
+        materialization = (
+            next(iter(physical_modes)) if len(physical_modes) == 1 else "mixed"
+        )
+        updated_groups.append(
+            replace(
+                group,
+                local_size_bytes=cursor,
+                node_segments=tuple(tuple(segments) for segments in node_maps),
+                materialization=materialization,
+            )
+        )
+
+    return tuple(updated_groups), tuple(
+        updated[placement.tensor_id] for placement in placements
+    )
+
+
 def _operand_plan(
     slot: int,
     direction: str,
@@ -4438,6 +4893,7 @@ def _operand_plan(
     sharded: bool,
     depth: int,
     bank: int = 0,
+    bank_shard: int = 0,
     context: bool = False,
     rolling: bool = False,
 ) -> OperandPlan:
@@ -4462,6 +4918,7 @@ def _operand_plan(
     terms: list[str] = []
     view_rows, view_cols = rows, cols
     weight_bank = 0
+    weight_bank_shard = 0
     # Amendment A18.  The question the token-block loop asks of an operand is
     # not "is your declared maximum the kernel's?" -- which compares two
     # numbers that a *join* is entitled to disagree on, and which left the
@@ -4487,11 +4944,12 @@ def _operand_plan(
         # in1 is the weight, presented n-major as ``[N, K]`` -- or ``[E, N, K]``
         # when it is a routed bank, whose expert axis the engine addresses.
         weight_bank = bank
+        weight_bank_shard = bank_shard
         view_rows = shard_columns
         view_cols = depth or cols
         if placement is not None and placement.layer_stride_elements:
             terms.append("layer")
-        if sharded:
+        if sharded or bank_shard:
             terms.append("node")
     elif contraction and direction == "out" and slot == 0:
         view_cols = shard_columns
@@ -4530,6 +4988,7 @@ def _operand_plan(
         transposed=transposed and contraction and direction == "in" and slot == 1,
         terms=tuple(terms),
         bank=weight_bank,
+        bank_shard=weight_bank_shard,
         # Declared only where a term resolves it: A18's third admission rule
         # refuses a view that names a function nothing can walk.
         extent_numerator=extent.numerator if "row" in terms else 1,
@@ -4714,7 +5173,7 @@ def _allocate_hbm(
     # Immutable first: weights and derived constants are resident for the life
     # of the deployment, so they never fragment the mutable region.
     for group in groups:
-        place(f"weight.{group.group_id}", group.size_bytes, 12)
+        place(f"weight.{group.group_id}", group.materialized_size_bytes, 12)
     for constant in generated:
         place(f"generated.{constant.tensor_id}", constant.size_bytes, 12)
     for state in states:
@@ -4744,6 +5203,8 @@ def _allocate_hbm(
 def _prove(
     capability: Capability,
     groups: Sequence[WeightGroup],
+    placements: Sequence[WeightPlacement],
+    generated: Sequence[GeneratedConstant],
     arenas: Sequence[ArenaSlot],
     sram_regions: Sequence[SramRegion],
     states: Sequence[StatePlacement],
@@ -4754,13 +5215,72 @@ def _prove(
     hbm_map: Mapping[str, HbmPlacement],
 ) -> dict[str, Any]:
     weight_bytes = sum(g.size_bytes for g in groups)
+    placement_by_tensor = {
+        placement.tensor_id: placement for placement in placements
+    }
+    group_tensor_bytes: dict[str, dict[str, int]] = {}
+    for group in groups:
+        members = group_tensor_bytes.setdefault(group.group_id, {})
+        for segment in group.segments:
+            members[segment.tensor_id] = (
+                members.get(segment.tensor_id, 0) + segment.bytes
+            )
+
+    replicated_weight_bytes = 0
+    node_sharded_weight_bytes = 0
+    materialized_node_sharded_weight_bytes = 0
+    fallback_replicated_weight_bytes = 0
+    for group in groups:
+        for tensor_id, size in group_tensor_bytes[group.group_id].items():
+            placement = placement_by_tensor.get(tensor_id)
+            shard_count = (
+                max(int(placement.shard_count), 1) if placement is not None else 1
+            )
+            if shard_count > 1:
+                node_sharded_weight_bytes += size
+            else:
+                replicated_weight_bytes += size
+            if placement is not None and placement.materialization == "node_sharded":
+                materialized_node_sharded_weight_bytes += size
+            elif shard_count > 1:
+                fallback_replicated_weight_bytes += size
+    weight_bytes_per_node = sum(group.materialized_size_bytes for group in groups)
+    generated_constant_bytes = sum(constant.size_bytes for constant in generated)
     arena_bytes = sum(a.size_bytes for a in arenas)
     state_bytes = sum(s.size_bytes * 2 for s in states)  # committed + prepared
     host_bytes = sum(int(o["size_bytes"]) for o in host_objects.values())
     sram_bytes = sum(r.size_bytes for r in sram_regions)
+    communication_scratch_bytes = _communication_scratch_bytes(kernels, node_count)
     hbm_available = int(capability.memory["hbm"]["bytes"])
     sram_available = int(capability.memory["sram"]["bytes"])
-    resident = weight_bytes // max(node_count, 1) + arena_bytes + state_bytes
+    cluster_control_bytes = 64 if node_count > 1 else 0
+
+    # Capacity is a node-local physical packing, not the span of the logical
+    # global object namespace.  Reserve each local payload at the same 4 KiB
+    # granularity the lowering declares, including generated constants and the
+    # two cluster-only objects allocated after the planned address map.
+    resident = 0
+    resident_payload = 0
+
+    def reserve(size: int) -> None:
+        nonlocal resident, resident_payload
+        if size <= 0:
+            return
+        resident = round_up(resident, 4096) + size
+        resident_payload += size
+
+    for group in groups:
+        reserve(group.materialized_size_bytes)
+    for constant in generated:
+        reserve(constant.size_bytes)
+    for state in states:
+        reserve(state.size_bytes)
+        reserve(state.size_bytes)
+    for arena in arenas:
+        reserve(arena.size_bytes)
+    reserve(cluster_control_bytes)
+    reserve(communication_scratch_bytes)
+    hbm_alignment_bytes = resident - resident_payload
 
     masks: list[int] = []
     overlap = False
@@ -4779,11 +5299,32 @@ def _prove(
         ),
         "hbm_channels": int(capability.memory["hbm"].get("channels", 1)),
         "weight_bytes": weight_bytes,
+        "replicated_weight_bytes": replicated_weight_bytes,
+        "node_sharded_weight_bytes": node_sharded_weight_bytes,
+        "materialized_node_sharded_weight_bytes": (
+            materialized_node_sharded_weight_bytes
+        ),
+        "fallback_replicated_weight_bytes": fallback_replicated_weight_bytes,
+        "weight_bytes_per_node": weight_bytes_per_node,
+        "weight_replication_overhead_per_node": (
+            weight_bytes_per_node
+            - (weight_bytes + max(node_count, 1) - 1) // max(node_count, 1)
+        ),
         "weight_objects": len(groups),
         "weight_segments": sum(len(g.segments) for g in groups),
+        "weight_segments_per_node": sum(
+            len(group.node_segments[0])
+            if group.node_segments
+            else len(group.segments)
+            for group in groups
+        ),
+        "generated_constant_bytes": generated_constant_bytes,
         "activation_arena_bytes": arena_bytes,
         "activation_arena_slots": len(arenas),
         "state_bytes": state_bytes,
+        "communication_scratch_bytes": communication_scratch_bytes,
+        "cluster_control_bytes": cluster_control_bytes,
+        "hbm_alignment_bytes": hbm_alignment_bytes,
         "host_bytes": host_bytes,
         "sram_bytes": sram_bytes,
         "sram_available": sram_available,
@@ -4809,3 +5350,73 @@ def _prove(
         "capability_loop_depth": int(capability.limits["max_loop_depth"]),
         "zero_copy_weights": True,
     }
+
+
+def _communication_scratch_bytes(
+    kernels: Sequence[KernelPlan], node_count: int
+) -> int:
+    """Maximum symmetric participant array needed by one in-flight exchange.
+
+    The lowering serially reuses one exported HBM object: every pack and unpack
+    is assigned to the same dedicated DMA queue with ``max_outstanding=1``, and
+    the deployment certificate reconstructs that schedule from the emitted
+    descriptors.  Capacity therefore owes the largest array, not the sum of
+    every communication site and not zero (the old proof counted lowerer-
+    created exchange objects nowhere).
+    Every extent here is a fixed token block; no maximum-context activation is
+    reintroduced by the fabric schedule.
+    """
+
+    if node_count <= 1:
+        return 0
+    largest = 0
+    for kernel in kernels:
+        operand: OperandPlan | None = None
+        if kernel.link_class in {"activation_transfer", "expert_dispatch"}:
+            operand = next(
+                (
+                    item
+                    for item in kernel.operands
+                    if item.direction == "out" and item.slot == 0
+                ),
+                None,
+            )
+        elif kernel.link_class == "reduction":
+            operand = next(
+                (
+                    item
+                    for item in kernel.operands
+                    if item.direction == "in" and item.slot == 0
+                ),
+                None,
+            )
+        elif kernel.link_class == "sparse_gather":
+            operand = next(
+                (
+                    item
+                    for item in kernel.operands
+                    if item.direction == "in" and item.slot == 1
+                ),
+                None,
+            )
+        if operand is None:
+            continue
+        columns = (
+            kernel.shard_columns
+            if kernel.link_class == "activation_transfer"
+            else operand.tile_cols
+        )
+        participants = node_count
+        if kernel.link_class == "sparse_gather":
+            # Each node contributes one disjoint 1/N feature band.  The N
+            # participant slots therefore hold exactly one reconstructed KV
+            # block in total, which ALL_GATHER leaves on every node.
+            columns //= node_count
+        largest = max(
+            largest,
+            bytes_for(
+                participants * max(operand.tile_rows, 1) * max(columns, 1),
+                operand.dtype,
+            ),
+        )
+    return round_up(largest, 4096)

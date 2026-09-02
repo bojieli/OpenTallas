@@ -9,6 +9,7 @@ than a footnote.
 
 from __future__ import annotations
 
+import hashlib
 import importlib.util
 import json
 from pathlib import Path
@@ -137,4 +138,75 @@ def test_counter_evidence_retains_measured_node_splits_without_division():
     assert evidence["node_counters"] == [
         {"attention.context_positions": 7, "dma.transfers": 3},
         {"attention.context_positions": 7, "dma.transfers": 5},
+    ]
+
+
+def test_functional_source_lock_accepts_a_relative_script_path(monkeypatch):
+    """The Make target invokes the tool as ``python3 tools/...``.
+
+    Python may therefore expose a relative ``__file__``.  Provenance is written
+    only after the expensive model run, so resolving that path is a release
+    requirement rather than a cosmetic convenience.
+    """
+
+    monkeypatch.setattr(tool, "__file__", "tools/run_accelerator_tokens.py")
+    sources = tool._functional_source_sha256()
+    relative = "tools/run_accelerator_tokens.py"
+    assert sources[relative] == hashlib.sha256(
+        (REPO / relative).read_bytes()
+    ).hexdigest()
+    assert "runtime/sim/engines/tensor.py" in sources
+
+
+def test_functional_source_lock_covers_admission_driver_and_selected_lowering():
+    sources = tool._functional_source_sha256("hbm_sram")
+    required = {
+        "compiler/backends/hbm_sram/lower.py",
+        "compiler/backends/hbm_sram/plan.py",
+        "compiler/ir/v3/kernel_ir.py",
+        "runtime/abi3/deployment.py",
+        "runtime/abi3/records.py",
+        "runtime/abi3/verifier.py",
+        "runtime/driver.py",
+        "runtime/evidence.py",
+        "runtime/sim/backend.py",
+        "runtime/sim/formats.py",
+        "runtime/sim/generators.py",
+    }
+    assert required <= set(sources)
+    assert "compiler/backends/rom/qwen3.py" not in sources
+    for relative, digest in sources.items():
+        assert digest == hashlib.sha256((REPO / relative).read_bytes()).hexdigest()
+
+
+def test_loaded_input_identities_hash_files_and_state_checkpoint_boundary(tmp_path):
+    files = {}
+    for name in ("kernel", "capability", "workload", "reference"):
+        path = tmp_path / f"{name}.json"
+        path.write_bytes(name.encode())
+        files[name] = path
+    checkpoint = tmp_path / "checkpoint"
+    checkpoint.mkdir()
+
+    identities = tool._loaded_input_identities(
+        kernel_ir=files["kernel"],
+        capability=files["capability"],
+        workload=files["workload"],
+        reference=files["reference"],
+        checkpoint=checkpoint,
+    )
+
+    for key, source in (
+        ("kernel_ir", files["kernel"]),
+        ("capability", files["capability"]),
+        ("workload", files["workload"]),
+        ("reference", files["reference"]),
+    ):
+        assert identities[key]["sha256"] == hashlib.sha256(
+            source.read_bytes()
+        ).hexdigest()
+        assert identities[key]["bytes"] == source.stat().st_size
+    assert identities["checkpoint_root"]["path"] == str(checkpoint.resolve())
+    assert "deployment object segment" in identities["checkpoint_root"][
+        "content_binding"
     ]

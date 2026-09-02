@@ -27,9 +27,11 @@ What it proves
     standard the checkpoint-backed regions are held to.
 5.  Every padding byte is zero.  Padding is a declared, addressable, immutable
     zero-source ROM object; the checker materialises it and inspects every byte,
-    and confirms its content digest.
-6.  Each region's content digest recomputes under an independently written
-    implementation of the binding rule.
+    confirms its plan digest, and requires the wire descriptor's zero-source
+    sentinel.
+6.  Each region's plan digest recomputes under an independently written
+    implementation of the placement binding rule, while its wire descriptor
+    binds the ordered source-segment digests.
 7.  Placement is unique: no two regions overlap in any physical resource, every
     weight tensor is placed exactly once, and no region sits on a quarantined
     resource.
@@ -288,6 +290,12 @@ def check_rom_inverse(
             f"{declared_payload}",
         )
         segments = _object_segments(source)
+        source_digest = hashlib.sha256()
+        for index, segment in enumerate(segments):
+            segment_digest = _hex(
+                segment.sha256, f"{key} source segment {index} digest"
+            )
+            source_digest.update(bytes.fromhex(segment_digest))
 
         members = record["members"]
         _require(isinstance(members, list) and bool(members), f"region {key!r} is empty")
@@ -398,8 +406,9 @@ def check_rom_inverse(
                 f"region {key!r} pad digest does not match its plan record",
             )
             _require(
-                pad_descriptor.payload["content_digest"].hex() == digest.hexdigest(),
-                f"region {key!r} pad descriptor digest does not bind zero bytes",
+                pad_descriptor.payload["content_digest"] == bytes(32),
+                f"region {key!r} pad descriptor does not carry the zero-source "
+                "content sentinel",
             )
             padding_bytes += pad
         else:
@@ -416,8 +425,9 @@ def check_rom_inverse(
             f"region {key!r} content digest does not recompute independently",
         )
         _require(
-            descriptor.payload["content_digest"].hex() == recomputed,
-            f"region {key!r} descriptor does not bind the recomputed content digest",
+            descriptor.payload["content_digest"].hex() == source_digest.hexdigest(),
+            f"region {key!r} descriptor does not bind its ordered source "
+            "segment digests",
         )
 
         # --- placement -------------------------------------------------

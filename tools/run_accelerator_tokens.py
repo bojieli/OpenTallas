@@ -97,6 +97,68 @@ BACKENDS = {
     "rom_deepseek_v4": "compiler.backends.rom.deepseek_v4:lower_to_abi3",
 }
 
+# Sources shared by every governed token capture.  This is intentionally a
+# dependency boundary, not merely the files under ``runtime/sim/engines``:
+# compiler lowering, ABI decoding/admission, the host driver and the numeric
+# helpers all determine the token that is eventually recorded.
+FUNCTIONAL_SOURCE_PATHS = (
+    "compiler/backends/numeric_contracts.py",
+    "compiler/ir/v3/kernel_ir.py",
+    "compiler/ir/v3/lowering.py",
+    "compiler/ir/v3/numeric.py",
+    "runtime/abi3/builder.py",
+    "runtime/abi3/capability.py",
+    "runtime/abi3/constants.py",
+    "runtime/abi3/crc.py",
+    "runtime/abi3/deployment.py",
+    "runtime/abi3/descriptors.py",
+    "runtime/abi3/layout.py",
+    "runtime/abi3/records.py",
+    "runtime/abi3/verifier.py",
+    "runtime/driver.py",
+    "runtime/evidence.py",
+    "runtime/reference/compression_pool.py",
+    "runtime/reference/formats.py",
+    "runtime/reference/hadamard.py",
+    "runtime/reference/hyper_connection.py",
+    "runtime/reference/normalization.py",
+    "runtime/reference/quantization.py",
+    "runtime/reference/sparse_attention.py",
+    "runtime/reference/sqrt_softplus.py",
+    "runtime/reference/swiglu.py",
+    "runtime/reference/transcendental.py",
+    "runtime/sim/backend.py",
+    "runtime/sim/counters.py",
+    "runtime/sim/device.py",
+    "runtime/sim/engine.py",
+    "runtime/sim/formats.py",
+    "runtime/sim/generators.py",
+    "runtime/sim/memory.py",
+    "runtime/tensor_accelerator/attention.py",
+    "runtime/tensor_accelerator/bf16.py",
+    "runtime/tensor_accelerator/elementwise.py",
+    "runtime/tensor_accelerator/rmsnorm.py",
+    "runtime/tensor_accelerator/rope.py",
+    "runtime/tensor_accelerator/sparse_attention.py",
+)
+
+BACKEND_FUNCTIONAL_SOURCE_PATHS = {
+    "hbm_sram": (
+        "compiler/backends/hbm_sram/lower.py",
+        "compiler/backends/hbm_sram/plan.py",
+    ),
+    "rom_qwen3": (
+        "compiler/backends/rom/qwen3.py",
+        "compiler/backends/rom/common/image.py",
+        "compiler/backends/rom/common/program.py",
+    ),
+    "rom_deepseek_v4": (
+        "compiler/backends/rom/deepseek_v4.py",
+        "compiler/backends/rom/common/image.py",
+        "compiler/backends/rom/common/program.py",
+    ),
+}
+
 
 def _resolve(spec: str):
     module_name, _, attribute = spec.partition(":")
@@ -334,6 +396,18 @@ def main() -> int:
     if not args.checkpoint.is_dir():
         raise SystemExit(f"checkpoint root {args.checkpoint} is not a directory")
 
+    # Capture the identities before the long lowering/execution phase.  These
+    # are the files this process is about to load, rather than hashes collected
+    # only after a multi-hour run has finished.
+    functional_sources = _functional_source_sha256(args.backend)
+    loaded_inputs = _loaded_input_identities(
+        kernel_ir=args.kernel_ir,
+        capability=args.capability,
+        workload=args.workload,
+        reference=args.reference,
+        checkpoint=args.checkpoint,
+    )
+
     coverage = load_engines()
     print(
         f"engines: {coverage['implemented_count']} implemented, "
@@ -343,8 +417,33 @@ def main() -> int:
 
     capability = Capability.from_dict(json.loads(args.capability.read_text()))
     workload = json.loads(args.workload.read_text())
+    reference_body = json.loads(args.reference.read_text())
     gold_result = _load_gold(args.reference, workload, args.expert_numeric_path)
     gold_tokens = [int(t) for t in gold_result["generated_token_ids"]]
+    workload_tokenizer = str(workload.get("tokenizer_sha256", ""))
+    reference_tokenizer = str(reference_body.get("tokenizer_sha256", ""))
+    if workload_tokenizer and reference_tokenizer != workload_tokenizer:
+        raise SystemExit(
+            "workload and reference bind different tokenizer SHA-256 values: "
+            f"{workload_tokenizer!r} vs {reference_tokenizer!r}"
+        )
+    tokenizer_sha256 = workload_tokenizer or reference_tokenizer
+    if (
+        len(tokenizer_sha256) != 64
+        or any(character not in "0123456789abcdef" for character in tokenizer_sha256)
+    ):
+        raise SystemExit(
+            "the workload/reference pair does not bind a valid tokenizer SHA-256"
+        )
+    loaded_inputs["workload"].update(
+        {
+            "declared_workload_digest": str(workload["digest"]),
+            "prompt_token_ids_sha256": digest_of(
+                [int(token) for token in workload["token_ids"]]
+            ),
+            "tokenizer_sha256": tokenizer_sha256,
+        }
+    )
 
     from compiler.ir.v3.kernel_ir import KernelGraph
 
@@ -362,7 +461,13 @@ def main() -> int:
     if args.publish is not None:
         deployment.write(args.publish)
         deployment = Deployment.read(args.publish)
+        loaded_inputs["published_deployment"] = _deployment_file_identities(
+            args.publish
+        )
         print(f"published deployment to {args.publish}", flush=True)
+    loaded_inputs["checkpoint_root"]["deployment_digest_binding"] = (
+        deployment.deployment_digest.hex()
+    )
 
     report = verify_deployment(deployment, capability)
     print(
@@ -379,6 +484,8 @@ def main() -> int:
             {
                 "schema": SCHEMA,
                 "status": "rejected_at_admission",
+                "inputs": loaded_inputs,
+                "source_sha256": functional_sources,
                 "verification": report.to_dict(),
             },
         )
@@ -455,6 +562,8 @@ def main() -> int:
             "prompt_token_count": len(prompt),
             "max_new_tokens": limit,
             "rendered_text_sha256": workload.get("rendered_text_sha256", ""),
+            "prompt_token_ids_sha256": digest_of(prompt),
+            "tokenizer_sha256": tokenizer_sha256,
         },
         "model": {
             "model_id": graph.model_id,
@@ -471,6 +580,8 @@ def main() -> int:
             "missing": list(coverage["missing"]),
         },
         "implementation_identity": _implementation_identity(),
+        "inputs": loaded_inputs,
+        "source_sha256": functional_sources,
         "generated_token_ids": got,
         "generated_token_count": len(got),
         "stop_reason": result.stop_reason,
@@ -516,6 +627,101 @@ def _implementation_identity() -> dict[str, Any]:
         return dict(get_backend().implementation_identity())
     except Exception as exc:  # a missing backend must be visible, not silent
         return {"unavailable": f"{type(exc).__name__}: {exc}"}
+
+
+def _functional_source_sha256(backend: str | None = None) -> dict[str, str]:
+    """Bind the simulator sources that produced the functional record.
+
+    A deployment digest identifies the program being executed; it does not
+    identify the engine implementation that interpreted it.  Keep that second
+    identity in the record itself so a later gate can prove that an amendment
+    such as A27 was present when the run happened, rather than merely hashing
+    whatever source happens to be in the worktree when the gate is rebuilt.
+    """
+
+    if backend is not None and backend not in BACKEND_FUNCTIONAL_SOURCE_PATHS:
+        raise ValueError(f"unknown backend source boundary {backend!r}")
+    backend_paths = (
+        BACKEND_FUNCTIONAL_SOURCE_PATHS[backend]
+        if backend is not None
+        else tuple(
+            relative
+            for paths in BACKEND_FUNCTIONAL_SOURCE_PATHS.values()
+            for relative in paths
+        )
+    )
+    paths = {
+        Path(__file__).resolve(),
+        *(REPO / relative for relative in FUNCTIONAL_SOURCE_PATHS),
+        *(REPO / relative for relative in backend_paths),
+        *(REPO / "runtime" / "sim" / "engines").glob("*.py"),
+    }
+    return {
+        str(path.relative_to(REPO)): hashlib.sha256(path.read_bytes()).hexdigest()
+        for path in sorted(paths)
+    }
+
+
+def _record_path(path: Path) -> str:
+    resolved = path.resolve()
+    try:
+        return str(resolved.relative_to(REPO))
+    except ValueError:
+        return str(resolved)
+
+
+def _file_identity(path: Path) -> dict[str, Any]:
+    """Identity of one exact file loaded by the token runner."""
+
+    resolved = path.resolve()
+    return {
+        "path": _record_path(resolved),
+        "bytes": resolved.stat().st_size,
+        "sha256": hashlib.sha256(resolved.read_bytes()).hexdigest(),
+    }
+
+
+def _deployment_file_identities(root: Path) -> dict[str, Any]:
+    """Bind the bundle that was written and then read back for execution."""
+
+    return {
+        "path": _record_path(root),
+        "manifest": _file_identity(root / "deployment.json"),
+        "descriptors": _file_identity(root / "descriptors.bin"),
+        "program": _file_identity(root / "program.bin"),
+    }
+
+
+def _loaded_input_identities(
+    *,
+    kernel_ir: Path,
+    capability: Path,
+    workload: Path,
+    reference: Path,
+    checkpoint: Path,
+) -> dict[str, Any]:
+    """Record every directly loaded file and the checkpoint binding boundary.
+
+    Hashing a multi-hundred-gigabyte checkpoint directory a second time would
+    neither be cheap nor identify which byte ranges the deployment used.  The
+    deployment manifest already binds those ranges and their SHA-256 values;
+    the record therefore names that mechanism explicitly and, once lowering
+    completes, adds the deployment digest that authenticates it.
+    """
+
+    return {
+        "kernel_ir": _file_identity(kernel_ir),
+        "capability": _file_identity(capability),
+        "workload": _file_identity(workload),
+        "reference": _file_identity(reference),
+        "checkpoint_root": {
+            "path": _record_path(checkpoint),
+            "kind": "directory",
+            "content_binding": (
+                "authenticated deployment object segment SHA-256 values"
+            ),
+        },
+    }
 
 
 def _write(path: Path, body: dict[str, Any]) -> None:

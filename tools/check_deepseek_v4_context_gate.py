@@ -75,6 +75,64 @@ DEFAULT_PREFIX_PIN = (
 #: own attention_groups entry_bytes.
 KV_ROW_BYTES = 1024
 
+# A context record is evidence from these engines, not merely from this
+# checker.  The token runner embeds their digests in every new functional
+# artifact; this gate requires them so a record cannot be relabelled
+# "post-amendment" after the simulator source changed underneath it.
+REQUIRED_FUNCTIONAL_SOURCES = (
+    "tools/run_accelerator_tokens.py",
+    "compiler/backends/hbm_sram/lower.py",
+    "compiler/backends/hbm_sram/plan.py",
+    "compiler/backends/numeric_contracts.py",
+    "compiler/ir/v3/kernel_ir.py",
+    "compiler/ir/v3/lowering.py",
+    "compiler/ir/v3/numeric.py",
+    "runtime/abi3/builder.py",
+    "runtime/abi3/capability.py",
+    "runtime/abi3/constants.py",
+    "runtime/abi3/crc.py",
+    "runtime/abi3/deployment.py",
+    "runtime/abi3/descriptors.py",
+    "runtime/abi3/layout.py",
+    "runtime/abi3/records.py",
+    "runtime/abi3/verifier.py",
+    "runtime/driver.py",
+    "runtime/evidence.py",
+    "runtime/reference/compression_pool.py",
+    "runtime/reference/formats.py",
+    "runtime/reference/hadamard.py",
+    "runtime/reference/hyper_connection.py",
+    "runtime/reference/normalization.py",
+    "runtime/reference/quantization.py",
+    "runtime/reference/sparse_attention.py",
+    "runtime/reference/sqrt_softplus.py",
+    "runtime/reference/swiglu.py",
+    "runtime/reference/transcendental.py",
+    "runtime/sim/backend.py",
+    "runtime/sim/device.py",
+    "runtime/sim/engine.py",
+    "runtime/sim/memory.py",
+    "runtime/sim/counters.py",
+    "runtime/sim/formats.py",
+    "runtime/sim/generators.py",
+    "runtime/sim/engines/__init__.py",
+    "runtime/sim/engines/deepseek_vector.py",
+    "runtime/sim/engines/dma.py",
+    "runtime/sim/engines/link.py",
+    "runtime/sim/engines/reduction.py",
+    "runtime/sim/engines/route.py",
+    "runtime/sim/engines/attention.py",
+    "runtime/sim/engines/selection.py",
+    "runtime/sim/engines/tensor.py",
+    "runtime/sim/engines/vector.py",
+    "runtime/tensor_accelerator/attention.py",
+    "runtime/tensor_accelerator/bf16.py",
+    "runtime/tensor_accelerator/elementwise.py",
+    "runtime/tensor_accelerator/rmsnorm.py",
+    "runtime/tensor_accelerator/rope.py",
+    "runtime/tensor_accelerator/sparse_attention.py",
+)
+
 
 def _relative(path: Path) -> str:
     try:
@@ -85,6 +143,63 @@ def _relative(path: Path) -> str:
 
 def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _source_lock_problems(source_sha256: object) -> list[str]:
+    """Validate the complete recorded map and the non-removable minimum.
+
+    Checking only a hand-picked subset lets a producer record a changed source
+    and have the consumer silently ignore it.  Every entry is therefore a
+    promise the gate verifies, while ``REQUIRED_FUNCTIONAL_SOURCES`` prevents a
+    producer from evading the check by deleting a critical entry.
+    """
+
+    problems: list[str] = []
+    if not isinstance(source_sha256, dict):
+        problems.append(
+            "record has no functional source_sha256 map; its simulator "
+            "implementation cannot be source-locked"
+        )
+        source_sha256 = {}
+
+    repo = REPO.resolve()
+    for relative, expected in sorted(
+        source_sha256.items(), key=lambda item: str(item[0])
+    ):
+        if not isinstance(relative, str) or not relative:
+            problems.append("record source path is not a non-empty string")
+            continue
+        candidate = Path(relative)
+        source = (REPO / candidate).resolve()
+        try:
+            source.relative_to(repo)
+        except ValueError:
+            problems.append(f"record source path escapes the repository: {relative}")
+            continue
+        if candidate.is_absolute() or relative != candidate.as_posix():
+            problems.append(
+                f"record source path is not normalized repository-relative: "
+                f"{relative}"
+            )
+            continue
+        if (
+            not isinstance(expected, str)
+            or len(expected) != 64
+            or any(character not in "0123456789abcdef" for character in expected)
+        ):
+            problems.append(f"record source {relative} has no valid SHA-256")
+        elif not source.is_file():
+            problems.append(f"record source {relative} does not exist")
+        elif _sha256(source) != expected:
+            problems.append(
+                f"record source {relative} does not match the current "
+                "implementation"
+            )
+
+    for relative in REQUIRED_FUNCTIONAL_SOURCES:
+        if relative not in source_sha256:
+            problems.append(f"record does not bind required source {relative}")
+    return problems
 
 
 def layer_table(profile: Path) -> tuple[int, int, list[tuple[int, int]]]:
@@ -455,6 +570,8 @@ def check_record(
     workload_id = workload["workload_id"]
     problems: list[str] = []
 
+    problems.extend(_source_lock_problems(record.get("source_sha256")))
+
     pinned = prompts.get(workload_id)
     gold = golds.get(workload_id)
     if pinned is None:
@@ -552,7 +669,8 @@ def main() -> int:
     args = parser.parse_args()
 
     pins = args.pin or [DEFAULT_PIN, DEFAULT_PREFIX_PIN]
-    prompts, golds = load_pins([p for p in pins if p.exists()])
+    missing_pins = [_relative(path) for path in pins if not path.is_file()]
+    prompts, golds = load_pins([path for path in pins if path.is_file()])
     results = [
         check_record(path, prompts, golds, args.model_profile)
         for path in args.records
@@ -603,6 +721,8 @@ def main() -> int:
             print(f"     PROBLEM {problem}")
     for path in missing:
         print(f"MISSING {path}")
+    for path in missing_pins:
+        print(f"MISSING PIN {path}")
 
     ladder = {}
     for workload_id, entry in sorted(prompts.items()):
@@ -641,7 +761,12 @@ def main() -> int:
     first_pruning_context = min(pruning_thresholds) if pruning_thresholds else None
     checked_records_pass = bool(results) and all(r["passes"] for r in results)
     cross_check_pass = bool(cross.get("available")) and bool(cross.get("all_agree"))
-    all_pass = checked_records_pass and not missing and cross_check_pass
+    all_pass = (
+        checked_records_pass
+        and not missing
+        and not missing_pins
+        and cross_check_pass
+    )
     document = {
         "schema": SCHEMA,
         "decode_arm_cross_check": cross,
@@ -659,16 +784,16 @@ def main() -> int:
             "by_workload": ladder,
         },
         "model": "deepseek-v4-flash-0731",
-        "pins": [_relative(p) for p in pins if Path(p).exists()],
+        "pins": [_relative(path) for path in pins],
+        "pins_missing": missing_pins,
         "source_sha256": {
             _relative(path): _sha256(path)
             for path in [
                 Path(__file__),
-                REPO / "tools" / "run_accelerator_tokens.py",
-                REPO / "runtime" / "sim" / "device.py",
+                *(REPO / relative for relative in REQUIRED_FUNCTIONAL_SOURCES),
                 args.model_profile,
                 args.oracle,
-                *[Path(p) for p in pins if Path(p).exists()],
+                *[path for path in pins if path.is_file()],
             ]
             if path.exists()
         },
@@ -684,6 +809,7 @@ def main() -> int:
         "claim_boundary": {
             "all_checked_records_pass": checked_records_pass,
             "all_required_records_present": not missing,
+            "all_required_pins_present": not missing_pins,
             "decode_arm_cross_check_pass": cross_check_pass,
             "maximum_accelerator_context_tokens_checked": maximum_record_context,
             "first_window_clipping_context_tokens": window + 1,
