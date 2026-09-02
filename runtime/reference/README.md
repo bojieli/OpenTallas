@@ -1,5 +1,8 @@
 # Independent target-format reference
 
+[Project home](../../README.md) · [Documentation](../../docs/README.md) ·
+[Compiler guide](../../compiler/README.md) · [Specification](../../spec/README.md)
+
 This directory is outside compiler lowering and RTL. Its implementations may
 share versioned interface definitions, but they do not call compiler image,
 placement, microcode, schedule, or service-engine algorithms to calculate an

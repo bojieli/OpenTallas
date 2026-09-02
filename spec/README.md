@@ -1,5 +1,8 @@
 # OpenTallas architecture and specification baseline
 
+[Project home](../README.md) · [Documentation](../docs/README.md) ·
+[Contributing](../CONTRIBUTING.md)
+
 Version 1.1 retains the version-1.0 public-reference architecture and adds the
 deterministic DeepSeek V4 `HC_PRE` numeric contract required by the executable
 compiler recovery program. The package may be implemented with non-NDA tools.

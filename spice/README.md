@@ -1,5 +1,9 @@
 # ROM read-path circuit evidence
 
+[Project home](../README.md) · [Documentation](../docs/README.md) ·
+[Physical methodology](../docs/ROM_PHYSICAL_METHODOLOGY.md) ·
+[Contributing](../CONTRIBUTING.md)
+
 The circuit work is intentionally split into evidence levels. Passing a later
 level does not turn SKY130 into an N7/N4 scaling anchor.
 

@@ -1,5 +1,8 @@
 # Public-reference RTL inventory
 
+[Project home](../README.md) · [Documentation](../docs/README.md) ·
+[Specification](../spec/README.md) · [Contributing](../CONTRIBUTING.md)
+
 This directory is the technology-independent digital reference for the frozen
 OpenTallas architecture. It is suitable for public-tool lint, simulation, formal
 checks, synthesis, and methodology proxies. It is not target-node RTL signoff and

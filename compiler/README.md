@@ -1,5 +1,8 @@
 # OpenTallas compiler and executable fixture
 
+[Project home](../README.md) · [Documentation](../docs/README.md) ·
+[Specification](../spec/README.md) · [Contributing](../CONTRIBUTING.md)
+
 This directory starts the `COMP-01` executable model-mapping path defined in
 [`docs/EXECUTABLE_SYSTEM_RECOVERY_PLAN.md`](../docs/EXECUTABLE_SYSTEM_RECOVERY_PLAN.md).
 It is deliberately separate from the analytical simulator in `src/opentallas`.

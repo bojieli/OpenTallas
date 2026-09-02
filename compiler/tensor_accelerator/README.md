@@ -1,5 +1,8 @@
 # Tensor-accelerator compiler and simulator vertical slice
 
+[Project home](../../README.md) · [Documentation](../../docs/README.md) ·
+[Compiler guide](../README.md) · [Specification](../../spec/README.md)
+
 This package is the additive production-path foundation for the programmable
 HBM-plus-SRAM tensor accelerator. It does not modify or generalize the older
 ROM-bound exact-integer fixture.
