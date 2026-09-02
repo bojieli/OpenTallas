@@ -7386,7 +7386,7 @@
   },
   "input_identity": {
     "h3_inventory": {
-      "path": "data/inventory/minimax-h3-transformer.json",
+      "path": "data/world-model/minimax-h3-transformer.json",
       "sha256": "1f175454aa47ef3ff26c9811968df17e815b4f545129166f63e09baa71a0bfee"
     },
     "hardware": {
@@ -7394,7 +7394,7 @@
       "sha256": "84269513500d590fb74c68c777419ee2e011b44113a372ce868ab6ce63f3b407"
     },
     "oasis_inventory": {
-      "path": "data/inventory/oasis-500m-code.json",
+      "path": "data/world-model/oasis-500m-code.json",
       "sha256": "818f3d82ce2a4ac7705cd784e397394ab7f7a4bcc2d71f041cf1e268cc6998f3"
     },
     "source_pins": {
@@ -7418,7 +7418,7 @@
     },
     "study_config": {
       "path": "configs/studies/world_model_rom.json",
-      "sha256": "d8176cf3f53d19a10b1a71e78e82d69eebeeef6c8c68f46b41cf767b62ed56ba"
+      "sha256": "22325f29fd76b6ecfcf03d317cc5b40de2db869f04f66e0f1e344a8d6477d567"
     }
   },
   "oasis_cache_effects": [
@@ -7650,11 +7650,11 @@
   "producer": {
     "analytical_module": {
       "path": "src/opentallas/world_model.py",
-      "sha256": "24ec92c70668ae033d3581cfff82aa53ddc9c1d91b405c3ff3dabe891b1062ac"
+      "sha256": "95694e6c2e6779449b4bc7f28c0ba6ed8d7c6e026cf64afcdc36bc5534c882a9"
     },
     "runner": {
       "path": "tools/run_world_model_study.py",
-      "sha256": "e994af4b78e4625eb41b5d735ce7b0bd149c03cf11f0c16ae61fb0ab439059c2"
+      "sha256": "e6d54b7811e5f00cbd354ab0e0ac77e58fd65bc0abf1f2959f2e191549384b12"
     },
     "schema_module": {
       "path": "src/opentallas/schema.py",

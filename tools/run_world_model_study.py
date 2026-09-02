@@ -77,17 +77,14 @@ def _load_pinned(entry: dict[str, Any]) -> tuple[Path, dict[str, Any]]:
     actual = _sha256(path)
     if actual != entry["sha256"]:
         raise RuntimeError(
-            f"input drift for {entry['path']}: expected {entry['sha256']}, "
-            f"got {actual}"
+            f"input drift for {entry['path']}: expected {entry['sha256']}, got {actual}"
         )
     return path, _load_json(path)
 
 
 def _profile_map(hardware: dict[str, Any]) -> dict[str, ArchitectureProfile]:
     entries = hardware["wafer_architectures"] + hardware["gpu_architectures"]
-    return {
-        entry["name"]: ArchitectureProfile.from_dict(entry) for entry in entries
-    }
+    return {entry["name"]: ArchitectureProfile.from_dict(entry) for entry in entries}
 
 
 def _assumed_value(entry: dict[str, Any]) -> Any:
@@ -247,9 +244,7 @@ def _csv_row(study_slice: str, item: dict[str, Any]) -> dict[str, Any]:
         "main_immutable_service_s": main["weight_service_s"],
         "main_mutable_service_s": main["mutable_service_s"],
         "main_storage_service_s": main["storage_service_s"],
-        "main_noc_serialization_floor_s": main[
-            "noc_serialization_floor_s"
-        ],
+        "main_noc_serialization_floor_s": main["noc_serialization_floor_s"],
         "main_largest_modeled_term": main["largest_modeled_term"],
     }
 
@@ -262,14 +257,11 @@ def _assert_inventory(oasis: OasisSpec, h3: H3Spec, oi: dict, hi: dict) -> None:
         "dit_token_row_parameters": oasis.dit_token_row_parameters,
         "dit_weight_bytes_bf16_equivalent": oasis.dit_weight_bytes,
         "static_dit_plus_complete_vae_bytes_bf16_equivalent": (
-            oasis.static_model_parameters
-            * oasis.runtime_weight_bytes_per_parameter
+            oasis.static_model_parameters * oasis.runtime_weight_bytes_per_parameter
         ),
         "static_dit_plus_complete_vae_parameters": oasis.static_model_parameters,
         "vae_decoder_parameters": oasis.vae_decoder_parameters,
-        "vae_decoder_weight_bytes_bf16_equivalent": (
-            oasis.vae_decoder_weight_bytes
-        ),
+        "vae_decoder_weight_bytes_bf16_equivalent": (oasis.vae_decoder_weight_bytes),
     }
     if expected_oasis != derived:
         raise RuntimeError(
@@ -316,9 +308,7 @@ def _assert_source_pin_alignment(
 def build(config_path: Path = CONFIG_PATH) -> dict[str, Any]:
     config = _load_json(config_path)
     hardware_path, hardware = _load_pinned(config["inputs"]["hardware"])
-    oasis_path, oasis_inventory = _load_pinned(
-        config["inputs"]["oasis_inventory"]
-    )
+    oasis_path, oasis_inventory = _load_pinned(config["inputs"]["oasis_inventory"])
     h3_path, h3_inventory = _load_pinned(config["inputs"]["h3_inventory"])
     _assert_source_pin_alignment(config, oasis_inventory, h3_inventory)
     profiles = _profile_map(hardware)
@@ -336,14 +326,10 @@ def build(config_path: Path = CONFIG_PATH) -> dict[str, Any]:
         mlp_ratio=oasis_arch["mlp_ratio"],
         max_frames=oasis_arch["max_frames"],
         action_dim=oasis_arch["action_dim"],
-        diffusion_steps=oasis_arch[
-            "diffusion_forward_calls_per_generated_frame"
-        ],
+        diffusion_steps=oasis_arch["diffusion_forward_calls_per_generated_frame"],
         context_timestep=oasis_arch["context_timestep"],
         runtime_weight_bytes_per_parameter=_assumed_value(
-            config["assumptions"]["oasis"][
-                "runtime_weight_bytes_per_parameter"
-            ]
+            config["assumptions"]["oasis"]["runtime_weight_bytes_per_parameter"]
         ),
         vae_encoder_layers=oasis_arch["vae_encoder_layers"],
         vae_decoder_layers=oasis_arch["vae_decoder_layers"],
@@ -355,18 +341,12 @@ def build(config_path: Path = CONFIG_PATH) -> dict[str, Any]:
         layers=h3_arch["num_layers"],
         attention_inner_dim=h3_arch["attention_inner_dim"],
         ffn_hidden_size=h3_arch["ffn_dim"],
-        denoise_calls=_assumed_value(
-            config["assumptions"]["h3"]["base_denoise_calls"]
-        ),
+        denoise_calls=_assumed_value(config["assumptions"]["h3"]["base_denoise_calls"]),
         active_transformer_weight_bytes=h3_active[
             "active_transformer_weight_bytes_per_call"
         ],
-        full_transformer_weight_bytes=h3_active[
-            "full_transformer_weight_bytes"
-        ],
-        text_tokens=_assumed_value(
-            config["assumptions"]["h3"]["text_tokens"]
-        ),
+        full_transformer_weight_bytes=h3_active["full_transformer_weight_bytes"],
+        text_tokens=_assumed_value(config["assumptions"]["h3"]["text_tokens"]),
         video_tokens_per_latent_frame=(1344 // 32) * (768 // 32),
         sequence_parallel_degree=_assumed_value(
             config["assumptions"]["h3"]["sequence_parallel_degree"]
@@ -383,12 +363,8 @@ def build(config_path: Path = CONFIG_PATH) -> dict[str, Any]:
     noc_cut = _assumed_value(
         config["assumptions"]["noc"]["baseline_critical_cut_fraction"]
     )
-    target_fps = _assumed_value(
-        config["assumptions"]["oasis"]["target_fps"]
-    )
-    cache_fill = _assumed_value(
-        config["assumptions"]["oasis"]["cache_fill_passes"]
-    )
+    target_fps = _assumed_value(config["assumptions"]["oasis"]["target_fps"])
+    cache_fill = _assumed_value(config["assumptions"]["oasis"]["cache_fill_passes"])
 
     baseline_points: list[dict[str, Any]] = []
     rom_attribution: list[dict[str, Any]] = []
@@ -429,9 +405,9 @@ def build(config_path: Path = CONFIG_PATH) -> dict[str, Any]:
                 )
                 baseline_points.extend((rom_point, hbm_point))
                 oasis_point_map[(window, mode, rom_arch.name, "rom")] = rom_point
-                oasis_point_map[
-                    (window, mode, rom_arch.name, "same_compute_hbm")
-                ] = hbm_point
+                oasis_point_map[(window, mode, rom_arch.name, "same_compute_hbm")] = (
+                    hbm_point
+                )
                 compared = _comparison(workload, rom_point, hbm_point)
                 rom_attribution.append(compared)
                 sweep_rows.append(_csv_row("baseline", compared))
@@ -448,9 +424,7 @@ def build(config_path: Path = CONFIG_PATH) -> dict[str, Any]:
             reference = oasis_point_map[
                 (window, "reference_recompute", architecture, policy)
             ]
-            cached = oasis_point_map[
-                (window, "causal_kv_cache", architecture, policy)
-            ]
+            cached = oasis_point_map[(window, "causal_kv_cache", architecture, policy)]
             cache_effects.append(
                 {
                     "window_frames": window,
@@ -471,13 +445,9 @@ def build(config_path: Path = CONFIG_PATH) -> dict[str, Any]:
         (
             "accelerated_best_case",
             _assumed_value(
-                config["assumptions"]["h3"][
-                    "accelerated_attention_density"
-                ]
+                config["assumptions"]["h3"]["accelerated_attention_density"]
             ),
-            _assumed_value(
-                config["assumptions"]["h3"]["accelerated_denoise_calls"]
-            ),
+            _assumed_value(config["assumptions"]["h3"]["accelerated_denoise_calls"]),
         ),
     )
     for case in h3_inventory["sequence_cases"]:
@@ -499,9 +469,7 @@ def build(config_path: Path = CONFIG_PATH) -> dict[str, Any]:
                 noc_cut=noc_cut,
             )
             baseline_points.append(gpu_point)
-            h3_point_map[(case["label"], variant, b300_x8.name, "gpu_hbm")] = (
-                gpu_point
-            )
+            h3_point_map[(case["label"], variant, b300_x8.name, "gpu_hbm")] = gpu_point
             for rom_arch in rom_profiles:
                 rom_point = _evaluate(
                     workload,
@@ -516,9 +484,7 @@ def build(config_path: Path = CONFIG_PATH) -> dict[str, Any]:
                     noc_cut=noc_cut,
                 )
                 baseline_points.extend((rom_point, hbm_point))
-                h3_point_map[(case["label"], variant, rom_arch.name, "rom")] = (
-                    rom_point
-                )
+                h3_point_map[(case["label"], variant, rom_arch.name, "rom")] = rom_point
                 h3_point_map[
                     (case["label"], variant, rom_arch.name, "same_compute_hbm")
                 ] = hbm_point
@@ -528,9 +494,7 @@ def build(config_path: Path = CONFIG_PATH) -> dict[str, Any]:
 
     oasis_sensitivity: list[dict[str, Any]] = []
     cached_w32 = oasis_workloads[(32, "causal_kv_cache")]
-    for remote in config["assumptions"]["noc"][
-        "cache_remote_fraction_sweep"
-    ]["values"]:
+    for remote in config["assumptions"]["noc"]["cache_remote_fraction_sweep"]["values"]:
         hbm_point = _evaluate(
             cached_w32,
             central,
@@ -554,9 +518,9 @@ def build(config_path: Path = CONFIG_PATH) -> dict[str, Any]:
     noc_sensitivity: list[dict[str, Any]] = []
     for mode in ("reference_recompute", "causal_kv_cache"):
         workload = oasis_workloads[(32, mode)]
-        for cut in config["assumptions"]["noc"][
-            "critical_cut_fraction_sweep"
-        ]["values"]:
+        for cut in config["assumptions"]["noc"]["critical_cut_fraction_sweep"][
+            "values"
+        ]:
             rom_point = _evaluate(
                 workload,
                 central,
@@ -612,8 +576,7 @@ def build(config_path: Path = CONFIG_PATH) -> dict[str, Any]:
     local_per_stream = next(
         item
         for item in oasis_sensitivity
-        if item["cache_remote_fraction"] == 0.0
-        and item["rom_row_reuse"] == 1
+        if item["cache_remote_fraction"] == 0.0 and item["rom_row_reuse"] == 1
     )
     remote_whole_call = next(
         item
@@ -634,9 +597,7 @@ def build(config_path: Path = CONFIG_PATH) -> dict[str, Any]:
         if item["model"] == "MiniMax-H3"
     ]
 
-    h3_b300_model = h3_point_map[
-        ("5.17s", "base_dense", b300_x8.name, "gpu_hbm")
-    ]
+    h3_b300_model = h3_point_map[("5.17s", "base_dense", b300_x8.name, "gpu_hbm")]
     oasis_b300_model = oasis_point_map[
         (32, "reference_recompute", b300_x1.name, "gpu_hbm")
     ]
@@ -654,10 +615,7 @@ def build(config_path: Path = CONFIG_PATH) -> dict[str, Any]:
             "required_fraction_of_raw_bf16_roof": (
                 h3_b300_model["tensor_operations"]
                 / h3_published["latency_s"]
-                / (
-                    b300_x8.device_count
-                    * b300_x8.compute_roof("bf16_x_bf16")
-                )
+                / (b300_x8.device_count * b300_x8.compute_roof("bf16_x_bf16"))
             ),
             "source": h3_published["source"],
             "interpretation": (
@@ -687,7 +645,10 @@ def build(config_path: Path = CONFIG_PATH) -> dict[str, Any]:
     for profile in rom_profiles:
         for model, required in (
             ("Oasis DiT + complete VAE BF16-equivalent", oasis_static_bytes),
-            ("MiniMax-H3 complete transformer payload", h3.full_transformer_weight_bytes),
+            (
+                "MiniMax-H3 complete transformer payload",
+                h3.full_transformer_weight_bytes,
+            ),
         ):
             capacity.append(
                 {
@@ -745,9 +706,7 @@ def build(config_path: Path = CONFIG_PATH) -> dict[str, Any]:
             "oasis_full_attention_per_call": (
                 "4*L*D*(F*S^2 + S*F*(F+1)/2), with causal temporal attention"
             ),
-            "oasis_cached_temporal_kv_bytes": (
-                "2(K,V)*L*F*S*D*2 BF16 bytes"
-            ),
+            "oasis_cached_temporal_kv_bytes": ("2(K,V)*L*F*S*D*2 BF16 bytes"),
             "h3_linear_operations_per_call": "2*N*P_main_matrix",
             "h3_attention_operations_per_call": "4*L*N^2*I_attention",
             "phase_time": (
@@ -884,17 +843,11 @@ def _find_point(
 def render_report(result: dict[str, Any]) -> str:
     central = "ROM-wafer-N4-class-HBM3e-central"
     findings = result["findings"]
-    reference_work = _find_point(
-        result, "reference_recompute-W32", central, "rom"
-    )
+    reference_work = _find_point(result, "reference_recompute-W32", central, "rom")
     cached_work = _find_point(result, "causal_kv_cache-W32", central, "rom")
-    cached_hbm = _find_point(
-        result, "causal_kv_cache-W32", central, "same_compute_hbm"
-    )
+    cached_hbm = _find_point(result, "causal_kv_cache-W32", central, "same_compute_hbm")
     h3_base = _find_attr(result, "5.17s-base_dense", central)
-    h3_fast_long = _find_attr(
-        result, "14.38s-accelerated_best_case", central
-    )
+    h3_fast_long = _find_attr(result, "14.38s-accelerated_best_case", central)
     oasis_b300 = _find_point(
         result, "reference_recompute-W32", "NVIDIA-B300-x1", "gpu_hbm"
     )
@@ -932,8 +885,8 @@ def render_report(result: dict[str, Any]) -> str:
         f"  crosses the global bisection, that falls to {_fmt_x(findings['central_oasis_w32_cached_rom_storage_speedup_remote_cache'])};",
         "  under a one-row/per-stream ROM service proxy it falls to",
         f"  {_fmt_x(findings['central_oasis_w32_cached_rom_storage_speedup_per_stream_proxy'])}.",
-            "- A recent public full-clip model such as MiniMax-H3 is much",
-            "  less favorable. Even after giving it the official",
+        "- A recent public full-clip model such as MiniMax-H3 is much",
+        "  less favorable. Even after giving it the official",
         "  inference-only AdaLN precompute and a deliberately favorable four-call,",
         "  90%-sparse control, its ROM-storage attribution stays in",
         f"  {_fmt_x(findings['h3_rom_storage_speedup_min'])}–{_fmt_x(findings['h3_rom_storage_speedup_max'])}.",
@@ -1188,8 +1141,7 @@ def render_report(result: dict[str, Any]) -> str:
         whole_call = next(
             item
             for item in result["sensitivities"]["h3_row_reuse"]
-            if item["scenario"] == scenario
-            and item["rom_row_reuse"] == "whole_call"
+            if item["scenario"] == scenario and item["rom_row_reuse"] == "whole_call"
         )
         per_row = next(
             item
@@ -1309,8 +1261,8 @@ def render_report(result: dict[str, Any]) -> str:
             "```",
             "",
             "Inputs: [study config](../../configs/studies/world_model_rom.json),",
-            "[Oasis inventory](../../data/inventory/oasis-500m-code.json),",
-            "[H3 inventory](../../data/inventory/minimax-h3-transformer.json), and",
+            "[Oasis inventory](../../data/world-model/oasis-500m-code.json),",
+            "[H3 inventory](../../data/world-model/minimax-h3-transformer.json), and",
             "[analytical implementation](../../src/opentallas/world_model.py).",
             "",
             "## Evidence boundary",

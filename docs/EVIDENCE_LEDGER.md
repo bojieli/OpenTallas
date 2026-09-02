@@ -738,3 +738,24 @@ diffusion scheduler, causal frame-state backend, RTL, cycle model, physical
 implementation, or silicon result. The integer ROM row-reuse law is a
 service-byte sensitivity rather than validated compute-in-ROM timing. None of
 these figures is a video throughput or implementation claim.
+
+## 9c. Recent world-model decode-shape ROM screen
+
+| number / claim | where it is stated | what produces it | grade | current? |
+|---|---|---|---|---|
+| In the central same-compute envelope, the BF16 and matched-FP8 HBM weight/compute ridge is **373.272 fresh rows per dominant matrix call** <!-- figure: 373.272 src="results/world-model-landscape/analytical.json#hardware_formats[label=BF16].same_compute_hbm_ridge_rows" name="Recent world-model central HBM row ridge, ledger" -->; the B300 BF16 control ridge is **174.194 rows** <!-- figure: 174.194 src="results/world-model-landscape/analytical.json#hardware_formats[label=BF16].gpu_hbm_ridge_rows" name="Recent world-model B300 HBM row ridge, ledger" --> | `results/world-model-landscape/REPORT.md`, hardware-ridge section | `make world-model-landscape`, using the existing leading-node compute and storage envelopes and the closed-form dominant-linear row roofline | **`simulated/derived`** | **YES, analytical only** |
+| Four source-derived open paths plus EVOKE's explicitly assumed temporal window carry **1,560–8,800 fresh current rows** before favorable exclusions and therefore each has **1.000×** standard roofline ROM attribution. Even a deliberately impossible, fully serial endpoint with all ROM weight service set to zero gives dominant-linear ceilings of only **1.239×** for WorldPlay, **1.183×** for AlayaWorld, **1.080×** for LingBot, **1.043×** for EVOKE, and **1.042×** for Matrix-Game 3.0 <!-- figure: 1.080 src="results/world-model-landscape/analytical.json#model_screens[model=LingBot-World-Infinity 14B causal-fast].zero_cost_rom_additive_upper_bound" name="LingBot dominant-linear zero-ROM-cost ceiling, ledger" --> | the same report, row sweep and model-by-model screen | Commit-pinned official repositories/configurations determine four current-query geometries; EVOKE's spatial factors are pinned but its nine-latent-frame current window is an explicit favorable assumption. A one-billion-active-matrix-parameter normalization demonstrates that parameter count and denoiser-call count cancel from the weight/compute balance | **source-derived/assumed geometry plus `simulated/derived` roofline** | **YES, as a favorable screen—not a whole-model bound** |
+| Atlas and RTFM are structurally more promising than full-clip H3 because they expose autoregressive elements and reusable history, but their public material does not disclose enough latent geometry, denoiser calls, active matrices/dtypes, cache bytes, or measured latency/hardware to assign a numerical OpenTallas speedup. Cosmos 3 separately shows a narrow causal next-token Reasoner path and a broad full-attention diffusion Generator path, so the family label alone is insufficient. | the same report, Atlas/RTFM and Cosmos sections | Primary World Labs launch posts and pinned NVIDIA report/repository; missing numerical inputs are retained as null rather than imputed | **source audit / conditional inference** | **YES** |
+
+**Boundary.** Fresh-row counts are lower bounds for the dominant high-resolution
+linear path, not full execution traces. Four surveyed row geometries are
+source-derived; EVOKE's nine-latent-frame temporal factor is an explicit
+favorable assumption, and MiniMax-H3's 512 text rows are also assumed. The
+zero-ROM-cost values are ceilings only for that isolated dominant-linear path;
+unmodeled narrow-row branches could have a larger ROM-attributable fraction,
+while attention, cache construction, KV traffic, collectives, VAE work, and
+runtime overhead can alter the end-to-end result. Atlas and RTFM rely on mutable
+dated pages and have no numerical result. No surveyed model was run on
+OpenTallas, and OpenTallas still has no video ABI, compiler, diffusion
+scheduler, causal-frame backend, RTL, physical implementation, or silicon
+result.

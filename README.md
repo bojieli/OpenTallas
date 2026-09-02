@@ -109,8 +109,11 @@ That shift creates room for:
   frames per second. The checked [Oasis/H3 analytical
   study](results/world-model/REPORT.md) finds a conditional ROM opportunity only
   after causal frame-state caching; full-clip video DiTs such as MiniMax-H3 are
-  much less favorable. OpenTallas still does not implement either model, so this
-  remains analytical research rather than a video-system result.
+  much less favorable. The [recent-model landscape
+  audit](results/world-model-landscape/REPORT.md) extends that test to World
+  Labs Atlas/RTFM, EVOKE, AlayaWorld, LingBot, WorldPlay, Matrix-Game 3.0, and
+  Cosmos 3. OpenTallas still does not implement these models, so this remains
+  analytical research rather than a video-system result.
 
 Read [Why instantaneous inference matters](docs/VISION.md) for the fuller product
 and systems argument, including the conditions under which throughput does *not*

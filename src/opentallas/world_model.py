@@ -249,16 +249,14 @@ class OasisSpec:
         block_adaln = 2 * self.layers * 12 * d * d * frames
         # Spatial attention is dense within each frame. Temporal SDPA is
         # causal, so only F(F+1)/2 query/key pairs are semantically active.
-        attention = 4 * self.layers * d * (
-            frames * s * s + s * frames * (frames + 1) // 2
+        attention = (
+            4 * self.layers * d * (frames * s * s + s * frames * (frames + 1) // 2)
         )
         patch_embed = 2 * rows * d * self.latent_channels * self.dit_patch_size**2
         timestep = 2 * frames * (256 * d + d * d)
         action = 2 * frames * self.action_dim * d
         final_adaln = 2 * frames * 2 * d * d
-        final_projection = (
-            2 * rows * d * self.latent_channels * self.dit_patch_size**2
-        )
+        final_projection = 2 * rows * d * self.latent_channels * self.dit_patch_size**2
         return (
             block_linears
             + block_adaln
@@ -284,9 +282,7 @@ class OasisSpec:
         timestep = 2 * (256 * d + d * d)
         action = 2 * self.action_dim * d
         final_adaln = 4 * d * d
-        final_projection = (
-            2 * rows * d * self.latent_channels * self.dit_patch_size**2
-        )
+        final_projection = 2 * rows * d * self.latent_channels * self.dit_patch_size**2
         return (
             block_linears
             + block_adaln
@@ -356,9 +352,7 @@ class H3Spec:
             4 * d * self.attention_inner_dim + 3 * d * self.ffn_hidden_size
         )
 
-    def sequence_tokens(
-        self, *, latent_video_frames: int, audio_tokens: int
-    ) -> int:
+    def sequence_tokens(self, *, latent_video_frames: int, audio_tokens: int) -> int:
         return (
             self.text_tokens
             + latent_video_frames * self.video_tokens_per_latent_frame
@@ -367,12 +361,7 @@ class H3Spec:
 
     def operations_per_call(self, sequence_tokens: int) -> tuple[float, float]:
         linear = 2 * self.main_matrix_parameters * sequence_tokens
-        attention = (
-            4
-            * self.layers
-            * sequence_tokens**2
-            * self.attention_inner_dim
-        )
+        attention = 4 * self.layers * sequence_tokens**2 * self.attention_inner_dim
         return float(linear), float(attention)
 
     def qkv_materialization_floor_bytes(self, sequence_tokens: int) -> int:
@@ -422,24 +411,18 @@ def oasis_frame_workload(
         frame_rows = window_frames
         dit = WorkPhase(
             name="dit",
-            tensor_operations=(
-                calls * spec.full_window_call_operations(window_frames)
-            ),
+            tensor_operations=(calls * spec.full_window_call_operations(window_frames)),
             weight_read_bytes=calls * spec.dit_weight_bytes,
             mutable_hbm_bytes=0.0,
-            noc_tensor_injected_bytes=(
-                calls * spec.attention_tensor_bytes(token_rows)
-            ),
+            noc_tensor_injected_bytes=(calls * spec.attention_tensor_bytes(token_rows)),
             calls=calls,
             token_rows_per_call=token_rows,
             frame_rows_per_call=frame_rows,
             token_weight_bytes_per_call=(
-                spec.dit_token_row_parameters
-                * spec.runtime_weight_bytes_per_parameter
+                spec.dit_token_row_parameters * spec.runtime_weight_bytes_per_parameter
             ),
             frame_weight_bytes_per_call=(
-                spec.dit_frame_row_parameters
-                * spec.runtime_weight_bytes_per_parameter
+                spec.dit_frame_row_parameters * spec.runtime_weight_bytes_per_parameter
             ),
         )
         metadata = {
@@ -463,25 +446,19 @@ def oasis_frame_workload(
         write_once = spec.temporal_kv_bytes(1)
         dit = WorkPhase(
             name="dit",
-            tensor_operations=(
-                calls * spec.cached_frame_call_operations(past)
-            ),
+            tensor_operations=(calls * spec.cached_frame_call_operations(past)),
             weight_read_bytes=calls * spec.dit_weight_bytes,
             mutable_hbm_bytes=calls * read_per_call + write_once,
-            noc_tensor_injected_bytes=(
-                calls * spec.attention_tensor_bytes(s)
-            ),
+            noc_tensor_injected_bytes=(calls * spec.attention_tensor_bytes(s)),
             noc_cache_injected_bytes=calls * read_per_call,
             calls=calls,
             token_rows_per_call=s,
             frame_rows_per_call=1,
             token_weight_bytes_per_call=(
-                spec.dit_token_row_parameters
-                * spec.runtime_weight_bytes_per_parameter
+                spec.dit_token_row_parameters * spec.runtime_weight_bytes_per_parameter
             ),
             frame_weight_bytes_per_call=(
-                spec.dit_frame_row_parameters
-                * spec.runtime_weight_bytes_per_parameter
+                spec.dit_frame_row_parameters * spec.runtime_weight_bytes_per_parameter
             ),
         )
         metadata = {
@@ -490,9 +467,7 @@ def oasis_frame_workload(
             "past_frames": past,
             "dit_calls_per_frame": calls,
             "cache_fill_passes": cache_fill_passes,
-            "persistent_temporal_kv_bytes": spec.temporal_kv_bytes(
-                window_frames
-            ),
+            "persistent_temporal_kv_bytes": spec.temporal_kv_bytes(window_frames),
             "temporal_kv_read_bytes_per_frame": calls * read_per_call,
             "temporal_kv_write_bytes_per_frame": write_once,
             "cache_validity": (
@@ -520,8 +495,7 @@ def oasis_frame_workload(
             "vae_tokens_per_frame": spec.vae_tokens_per_frame,
             "target_fps": target_fps,
             "static_model_bytes_bf16_equivalent": (
-                spec.static_model_parameters
-                * spec.runtime_weight_bytes_per_parameter
+                spec.static_model_parameters * spec.runtime_weight_bytes_per_parameter
             ),
             "auxiliary_work_status": (
                 "norm_softmax_rope_gelu_scheduler_and_io_unpriced"
@@ -595,8 +569,7 @@ def h3_clip_workload(
             "dense_attention_operations_per_call": attention,
             "attention_density": attention_density,
             "attention_operation_share": (
-                attention_density * attention
-                / (linear + attention_density * attention)
+                attention_density * attention / (linear + attention_density * attention)
             ),
             "qkv_materialization_floor_bytes": qkv_floor,
             "persistent_kv_cache_bytes": 0,
@@ -613,11 +586,7 @@ def h3_clip_workload(
 
 def effective_compute_ops_s(arch: ArchitectureProfile) -> float:
     clock = arch.clock_efficiency * arch.defect_repair_efficiency
-    return (
-        arch.compute_roof("bf16_x_bf16")
-        * arch.compute_efficiency
-        * clock
-    )
+    return arch.compute_roof("bf16_x_bf16") * arch.compute_efficiency * clock
 
 
 def effective_weight_bytes_s(arch: ArchitectureProfile) -> float:
@@ -650,6 +619,151 @@ def effective_wafer_bisection_bytes_s(arch: ArchitectureProfile) -> float:
         * comm.frequency_hz
         * comm.payload_efficiency
     )
+
+
+def linear_row_storage_roofline(
+    *,
+    rows_per_call: int,
+    active_matrix_parameters: float,
+    calls: int,
+    weight_bytes_per_parameter: float,
+    compute_ops_s: float,
+    hbm_weight_bytes_s: float,
+    rom_weight_bytes_s: float,
+) -> dict[str, float | int | str]:
+    """Screen immutable-weight benefit for a matrix-heavy model call.
+
+    The screen deliberately contains only the dominant dense linear algebra.
+    If ``P`` active matrix parameters consume ``R`` activation rows in each of
+    ``K`` calls, the work is ``2*K*P*R`` operations and a conventional device
+    reads ``K*P*bw`` immutable bytes.  Consequently ``P`` and ``K`` cancel from
+    the compute/weight balance.  Attention, mutable KV, collectives, codecs,
+    and launch overhead are omitted. An identical nonnegative serialized term
+    reduces the reported ratio only when the ROM path is no slower than the HBM
+    path; architecture-dependent mutable or communication terms are outside
+    this row-only screen.
+
+    ``roofline_storage_attribution`` uses the same overlapped ``max(compute,
+    storage)`` law as :func:`evaluate_video_workload`.  The additive result is
+    a separate no-overlap sensitivity, not additional evidence under the
+    roofline law. ``zero_cost_rom_additive_upper_bound`` is the deliberately
+    impossible endpoint in which the entire HBM weight time serializes and ROM
+    weight service costs zero.
+    """
+
+    numeric_inputs = {
+        "rows_per_call": rows_per_call,
+        "active_matrix_parameters": active_matrix_parameters,
+        "calls": calls,
+        "weight_bytes_per_parameter": weight_bytes_per_parameter,
+        "compute_ops_s": compute_ops_s,
+        "hbm_weight_bytes_s": hbm_weight_bytes_s,
+        "rom_weight_bytes_s": rom_weight_bytes_s,
+    }
+    for name, value in numeric_inputs.items():
+        try:
+            valid = (
+                not isinstance(value, bool)
+                and isinstance(value, (int, float))
+                and math.isfinite(value)
+                and value > 0
+            )
+        except (OverflowError, TypeError):
+            valid = False
+        if not valid:
+            raise ValueError(f"{name} must be a finite positive number")
+    if not isinstance(rows_per_call, int):
+        raise ValueError("rows_per_call must be an integer")
+    if not isinstance(calls, int):
+        raise ValueError("calls must be an integer")
+
+    try:
+        scale = calls * active_matrix_parameters
+        operations = scale * (2.0 * rows_per_call)
+        weight_bytes = scale * weight_bytes_per_parameter
+    except OverflowError as exc:
+        raise ValueError("derived work and byte quantities must be finite") from exc
+    if not all(
+        math.isfinite(value) and value > 0
+        for value in (scale, operations, weight_bytes)
+    ):
+        raise ValueError("derived work and byte quantities must be finite and positive")
+
+    # Evaluate the three services per parameter/call before restoring the
+    # requested normalizer. This keeps the algebraic cancellation explicit and
+    # avoids losing a valid attribution ratio merely because P*K is large.
+    try:
+        compute_s_per_parameter_call = 2.0 * rows_per_call / compute_ops_s
+        hbm_weight_s_per_parameter_call = (
+            weight_bytes_per_parameter / hbm_weight_bytes_s
+        )
+        rom_weight_s_per_parameter_call = (
+            weight_bytes_per_parameter / rom_weight_bytes_s
+        )
+        compute_s = scale * compute_s_per_parameter_call
+        hbm_weight_s = scale * hbm_weight_s_per_parameter_call
+        rom_weight_s = scale * rom_weight_s_per_parameter_call
+    except (OverflowError, ZeroDivisionError) as exc:
+        raise ValueError("derived service times must be finite and positive") from exc
+    if not all(
+        math.isfinite(value) and value > 0
+        for value in (compute_s, hbm_weight_s, rom_weight_s)
+    ):
+        raise ValueError("derived service times must be finite and positive")
+    hbm_roofline_s = max(compute_s, hbm_weight_s)
+    rom_roofline_s = max(compute_s, rom_weight_s)
+    hbm_additive_s = compute_s + hbm_weight_s
+    rom_additive_s = compute_s + rom_weight_s
+    roofline_attribution = max(
+        compute_s_per_parameter_call, hbm_weight_s_per_parameter_call
+    ) / max(compute_s_per_parameter_call, rom_weight_s_per_parameter_call)
+    additive_attribution = (
+        compute_s_per_parameter_call + hbm_weight_s_per_parameter_call
+    ) / (compute_s_per_parameter_call + rom_weight_s_per_parameter_call)
+    zero_cost_upper_bound = (
+        compute_s_per_parameter_call + hbm_weight_s_per_parameter_call
+    ) / compute_s_per_parameter_call
+    if not all(
+        math.isfinite(value) and value > 0
+        for value in (
+            hbm_roofline_s,
+            rom_roofline_s,
+            hbm_additive_s,
+            rom_additive_s,
+            roofline_attribution,
+            additive_attribution,
+            zero_cost_upper_bound,
+        )
+    ):
+        raise ValueError(
+            "derived service totals and ratios must be finite and positive"
+        )
+
+    return {
+        "rows_per_call": rows_per_call,
+        "active_matrix_parameters": active_matrix_parameters,
+        "calls": calls,
+        "weight_bytes_per_parameter": weight_bytes_per_parameter,
+        "operations": operations,
+        "weight_read_bytes": weight_bytes,
+        "arithmetic_intensity_ops_per_weight_byte": operations / weight_bytes,
+        "compute_service_s": compute_s,
+        "hbm_weight_service_s": hbm_weight_s,
+        "rom_weight_service_s": rom_weight_s,
+        "hbm_roofline_s": hbm_roofline_s,
+        "rom_roofline_s": rom_roofline_s,
+        "hbm_additive_s": hbm_additive_s,
+        "rom_additive_s": rom_additive_s,
+        "roofline_storage_attribution": roofline_attribution,
+        "additive_storage_attribution": additive_attribution,
+        "zero_cost_rom_additive_upper_bound": zero_cost_upper_bound,
+        "hbm_binding_term": (
+            "compute" if compute_s >= hbm_weight_s else "immutable_weight"
+        ),
+        "rom_binding_term": (
+            "compute" if compute_s >= rom_weight_s else "immutable_weight"
+        ),
+    }
 
 
 def evaluate_video_workload(
@@ -751,9 +865,7 @@ def evaluate_video_workload(
                     "compute" if compute_s >= storage_s else "storage"
                 ),
                 "binding_storage_term": (
-                    "mutable"
-                    if mutable_s > weight_s
-                    else "immutable_weight"
+                    "mutable" if mutable_s > weight_s else "immutable_weight"
                 ),
                 "largest_modeled_term": max(
                     {

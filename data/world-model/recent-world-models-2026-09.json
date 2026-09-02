@@ -1,0 +1,393 @@
+{
+  "as_of_date": "2026-09-02",
+  "evidence_policy": "Surveyed releases use primary vendor pages, technical reports, and official source repositories. The two governed local controls cite their existing source-bound OpenTallas study. Published facts are separated from derived or assumed row arithmetic; unknown quantities remain null.",
+  "inventory_id": "recent-world-models-2026-09",
+  "models": [
+    {
+      "architecture": "multimodal autoregressive rectified-flow transformer; video is a sequence of image elements",
+      "cache_semantics": "Vendor says the autoregressive architecture can use KV caching, cache-aware routing, and disaggregated serving; exact released cache tensors and schedule are not disclosed.",
+      "current_rows_per_call": null,
+      "current_rows_status": "unknown",
+      "model": "World Labs Atlas",
+      "open_release_status": "early access to select partners; the checked vendor page links no public weights, code, or technical report",
+      "published_runtime": "Up to one minute of 1440p output is advertised; no generation latency, hardware, model size, tokenizer geometry, or denoising-step count is published.",
+      "release_date": "2026-09-01",
+      "release_date_precision": "day",
+      "record_role": "surveyed_release",
+      "rom_screen": "conditional_only",
+      "sources": [
+        {
+          "checked_date": "2026-09-02",
+          "grade": "published",
+          "source": "https://www.worldlabs.ai/blog/atlas",
+          "stability": "mutable_live_vendor_page_no_retained_snapshot"
+        }
+      ]
+    },
+    {
+      "architecture": "autoregressive diffusion transformer predicting one frame conditioned on previous posed frames",
+      "cache_semantics": "Input frames are explicitly converted to a KV cache; nearby posed frames are retrieved through context juggling to bound history.",
+      "current_rows_per_call": null,
+      "current_rows_status": "unknown",
+      "model": "World Labs RTFM",
+      "open_release_status": "research preview; the checked vendor page links no public weights, code, parameter count, latent grid, or denoising schedule",
+      "published_runtime": "Interactive frame rates on one H100; no exact fps or latency table is published.",
+      "release_date": "2025-10-16",
+      "release_date_precision": "day",
+      "record_role": "surveyed_release",
+      "rom_screen": "conditional_only",
+      "sources": [
+        {
+          "checked_date": "2026-09-02",
+          "grade": "published",
+          "source": "https://www.worldlabs.ai/blog/rtfm",
+          "stability": "mutable_live_vendor_page_no_retained_snapshot"
+        }
+      ]
+    },
+    {
+      "architecture": "14B, three-stage/three-call CFG-free autoregressive latent-video world model with an external camera-indexed state bank",
+      "cache_semantics": "The released post-distillation launcher pins restrict_self_attn=false and use_kv_cache=false. Bounded external world state is not a persistent DiT history-KV cache.",
+      "current_rows_derivation": "9 latent frames * (384 / 8 / 2) * (640 / 8 / 2) = 8,640 current high-resolution patch rows",
+      "current_rows_factors": [
+        9,
+        24,
+        40
+      ],
+      "current_rows_per_call": 8640,
+      "current_rows_status": "assumed_temporal_compression_current_block_lower_bound",
+      "model": "Alaya-EVOKE",
+      "open_release_status": "code and weights released",
+      "published_runtime": "1.5 seconds (36 frames) of 384x640 video in 2.11 seconds on one H200",
+      "release_date": "2026-08-13",
+      "release_date_precision": "day",
+      "record_role": "surveyed_release",
+      "rom_screen": "quantified_row_screen",
+      "row_evidence": {
+        "grade": "assumed",
+        "source": "The pinned launcher and loader support the spatial factors; the 36-output-frame to 9-latent-frame temporal factor remains an explicit favorable assumption."
+      },
+      "row_scope": "current_high_resolution_visual_patch_rows_lower_bound",
+      "sources": [
+        {
+          "commit": "4d588f8711793982bfb6db07f70c0dc6e3dc9066",
+          "grade": "published",
+          "files": [
+            {
+              "path": "README.md",
+              "sha256": "a262c1651ac3c2c80bd246ca2bdc228805dc23620eaf4530b663d21fc1b56ef3"
+            },
+            {
+              "path": "scripts/inference/infer_post_distill.sh",
+              "sha256": "5ccd048df89beef794b574f743297de983d46657cf18de6b5fc91a2b18f57e42"
+            },
+            {
+              "path": "evoke/modules/evoke_teacher/loader.py",
+              "sha256": "34b93a06fd91be746d68048566246bc9e949f2233038fbe6e68ec8f34c06406d"
+            }
+          ],
+          "source": "https://github.com/AlayaLab/Evoke/tree/4d588f8711793982bfb6db07f70c0dc6e3dc9066"
+        }
+      ]
+    },
+    {
+      "architecture": "LTX-2.3 22B-based, four-step autoregressive latent-chunk world model with explicit 3D and compressed history memory",
+      "cache_semantics": "No persistent DiT history-KV decode path appears in the three pinned files checked; the KV objects in those files belong to the ViGeo geometry subsystem.",
+      "current_rows_derivation": "4 output latent frames * (544 / 32) * (960 / 32) = 2,040 current rows; history, sink, and 1,369 spatial-memory tokens are excluded favorably",
+      "current_rows_factors": [
+        4,
+        17,
+        30
+      ],
+      "current_rows_per_call": 2040,
+      "current_rows_status": "derived_current_block_lower_bound",
+      "model": "AlayaWorld v1.1",
+      "open_release_status": "training/inference code and v1.1 weights released",
+      "published_runtime": "Described as real-time interactive; the pinned README does not provide a hardware-normalized latency table for this path.",
+      "release_date": "2026-08-17",
+      "release_date_precision": "day",
+      "record_role": "surveyed_release",
+      "rom_screen": "quantified_row_screen",
+      "row_evidence": {
+        "grade": "derived",
+        "source": "The current-row factors are arithmetic from the pinned inference config and LTX-2.3 model config listed below."
+      },
+      "row_scope": "current_output_visual_rows_lower_bound_excludes_history",
+      "sources": [
+        {
+          "commit": "ea03cfbb2e4c4e9102ed8ea8562e0b5370ca9b79",
+          "grade": "published",
+          "files": [
+            {
+              "path": "README.md",
+              "sha256": "eff2b2f1da6f1d2d612e6e1d7d8979e01dd44bdf4453c4caf91acad23106739d"
+            },
+            {
+              "path": "configs/infer_i2v_camera.yaml",
+              "sha256": "623ab2a8a3f3b119fbcb327d5de337a81e990542ff38958ca20d7772d748620a"
+            },
+            {
+              "path": "ltx2/configs/ltx2_config.py",
+              "sha256": "73ec283c2bfaa94638931b957396949b93838ec1e3d30305d20c375966389deb"
+            }
+          ],
+          "source": "https://github.com/AlayaLab/AlayaWorld/tree/ea03cfbb2e4c4e9102ed8ea8562e0b5370ca9b79"
+        }
+      ]
+    },
+    {
+      "architecture": "14B Wan2.2-based causal few-step video world model",
+      "cache_semantics": "Released causal inference uses a per-layer KV cache with an 18-latent-frame local window and six sink frames; each step still queries a three-latent-frame current block, followed by a clean cache-install pass.",
+      "current_rows_derivation": "3 latent frames * (480 / 8 / 2) * (832 / 8 / 2) = 4,680 current query rows",
+      "current_rows_factors": [
+        3,
+        30,
+        52
+      ],
+      "current_rows_per_call": 4680,
+      "current_rows_status": "derived_exact_released_current_block",
+      "model": "LingBot-World-Infinity 14B causal-fast",
+      "open_release_status": "causal-fast inference code and model released; production deployment code withheld",
+      "published_runtime": "Official materials describe real-time deployments; the released reference command uses eight GPUs and does not publish a reproducible fps/latency result.",
+      "release_date": "2026-07-09",
+      "release_date_precision": "day",
+      "record_role": "surveyed_release",
+      "rom_screen": "quantified_row_screen",
+      "row_evidence": {
+        "grade": "derived",
+        "source": "The current-query row factors are arithmetic from the pinned causal-fast implementation and configuration listed below."
+      },
+      "row_scope": "exact_released_current_visual_query_block",
+      "sources": [
+        {
+          "commit": "2648877f763a06cc743bcd919936da4d25f12e7b",
+          "grade": "published",
+          "files": [
+            {
+              "path": "README.md",
+              "sha256": "c0439dae354628f79e9b7f360e4bef54437f3d8347635a8b764b23470d642df8"
+            },
+            {
+              "path": "wan/image2video.py",
+              "sha256": "d52cb8f1c0c70faa9e650118db6acf4836562a1f6664390b01000fdea9962dd4"
+            },
+            {
+              "path": "wan/configs/wan_i2v_A14B.py",
+              "sha256": "bd0e70fb7a04a457b0a584b6b3214d0cab1d1a2d0ed77cd6f15aa8dcec899691"
+            }
+          ],
+          "source": "https://github.com/Robbyant/lingbot-world-v2/tree/2648877f763a06cc743bcd919936da4d25f12e7b"
+        }
+      ]
+    },
+    {
+      "architecture": "8B HunyuanVideo-1.5-based, four-step autoregressive chunk model with reconstituted context memory",
+      "cache_semantics": "Text K/V is cached. Selected visual history is recomputed into a per-layer K/V cache at each chunk and reused across current-chunk denoising; it is not an ever-growing free history cache.",
+      "current_rows_derivation": "4 current latent frames * (480 / 16 / 2) * (832 / 16 / 2) = 1,560 current rows in the documented 480x832 setting; selected-history cache construction is excluded favorably",
+      "current_rows_factors": [
+        4,
+        15,
+        26
+      ],
+      "current_rows_per_call": 1560,
+      "current_rows_status": "derived_current_block_lower_bound",
+      "model": "HY-World 1.5 WorldPlay 8B distilled",
+      "open_release_status": "code and checkpoints released",
+      "published_runtime": "Claims 24-fps streaming; the reference launcher uses up to eight inference GPUs.",
+      "release_date": "2025-12-17",
+      "release_date_precision": "day",
+      "record_role": "surveyed_release",
+      "rom_screen": "quantified_row_screen",
+      "row_evidence": {
+        "grade": "derived",
+        "source": "The current-row factors are arithmetic from the pinned launcher, pipeline, and transformer files listed below."
+      },
+      "row_scope": "current_visual_rows_lower_bound_excludes_selected_history",
+      "sources": [
+        {
+          "commit": "1588e1336e842b03b0a7860c654ebd7c46bb065e",
+          "grade": "published",
+          "files": [
+            {
+              "path": "README.md",
+              "sha256": "b0bafe8e1efd47f997e1f9bf0e9d22deea1c23c8439f1a4ba2e3f2ac744b1088"
+            },
+            {
+              "path": "run.sh",
+              "sha256": "938ddc02d60fc55da875f133a402b07f867a1a0ac441a5b043f54edd0de2bc13"
+            },
+            {
+              "path": "hyvideo/pipelines/worldplay_video_pipeline.py",
+              "sha256": "18e3237b261557e785c42fdfc01b66d2c3b5e420ad34c45dc846f89732cf6586"
+            },
+            {
+              "path": "hyvideo/models/transformers/worldplay_1_5_transformer.py",
+              "sha256": "93d77acfd7e308949a1bf1a9e0fe59aa5b5c6ec0caab62c87b094d7d065721c8"
+            }
+          ],
+          "source": "https://github.com/Tencent-Hunyuan/HY-WorldPlay/tree/1588e1336e842b03b0a7860c654ebd7c46bb065e"
+        }
+      ]
+    },
+    {
+      "architecture": "5B memory-augmented bidirectional DiT with outer multi-segment autoregression, three-step DMD, INT8 weights, and a streamed VAE",
+      "cache_semantics": "Past/current/memory latent rows are jointly reprocessed by the released bidirectional denoiser; camera-selected memory is frame reinjection, not persistent transformer K/V decode.",
+      "current_rows_derivation": "10 newly emitted latent frames * (704 / 16 / 2) * (1280 / 16 / 2) = 8,800 fresh-row lower bound per later segment; the actual denoiser also processes four overlap and five memory latent frames",
+      "current_rows_factors": [
+        10,
+        22,
+        40
+      ],
+      "current_rows_per_call": 8800,
+      "current_rows_status": "derived_fresh_row_lower_bound",
+      "model": "Matrix-Game 3.0 5B distilled",
+      "open_release_status": "code and two 5B checkpoints released",
+      "published_runtime": "Up to 40 fps at 720p is reported; the public inference command generates 704x1280 segments with three steps.",
+      "release_date": "2026-03-27",
+      "release_date_precision": "day",
+      "record_role": "surveyed_release",
+      "rom_screen": "quantified_row_screen",
+      "row_evidence": {
+        "grade": "derived",
+        "source": "The fresh-row factors are arithmetic from the pinned report, inference pipeline, and configuration listed below."
+      },
+      "row_scope": "fresh_visual_rows_lower_bound_excludes_overlap_and_memory",
+      "sources": [
+        {
+          "commit": "71c3cd7f741311f8100f6cf9cde942b6c1378d11",
+          "grade": "published",
+          "files": [
+            {
+              "path": "Matrix-Game-3/README.md",
+              "sha256": "3e78cee8e91fbf016778f3be756dfbcb51f96472927a2945aaafd484828cdf5f"
+            },
+            {
+              "path": "Matrix-Game-3/pipeline/inference_pipeline.py",
+              "sha256": "ab61fc1597cf8b1700a9ab5b9ecda80a468b70dd01798996bd49c871509e5c07"
+            },
+            {
+              "path": "Matrix-Game-3/wan/configs/config.py",
+              "sha256": "0f15f32dee00e8141d2363799e3e12207babafa82cc1a5bd7dec31cbe95124f2"
+            },
+            {
+              "path": "Matrix-Game-3/assets/pdf/report.pdf",
+              "sha256": "38d22e340d59efa0f11a1f326ef0d84af308d1973741ad9004bffa0de003a558"
+            }
+          ],
+          "source": "https://github.com/SkyworkAI/Matrix-Game/tree/71c3cd7f741311f8100f6cf9cde942b6c1378d11/Matrix-Game-3"
+        }
+      ]
+    },
+    {
+      "architecture": "unified Mixture-of-Transformers with a causal AR reasoner tower and a full-attention diffusion generator tower",
+      "cache_semantics": "The reasoner is ordinary next-token causal decode and is a candidate for a separate language-style screen. Generator diffusion queries bidirectional noisy visual/audio/action blocks; the reasoner cache does not turn generator output into tokenwise decode.",
+      "current_rows_per_call": null,
+      "current_rows_status": "generator_geometry_varies_by_mode",
+      "model": "NVIDIA Cosmos 3",
+      "open_release_status": "code and model family released",
+      "published_runtime": "Official generator benchmarks report mode/resolution/hardware-specific latency; reasoner benchmarks separately report output-token serving.",
+      "release_date": "2026-05-31",
+      "release_date_precision": "day",
+      "record_role": "surveyed_release",
+      "rom_screen": "split_by_runtime_surface",
+      "sources": [
+        {
+          "commit": "9aa98e5a0773a5558f07d2699e640858f7ca8827",
+          "grade": "published",
+          "files": [
+            {
+              "path": "README.md",
+              "sha256": "b467f991c02107a6f0b66ee98536fdebf1df0ba64820d83d58a206a76340422f"
+            }
+          ],
+          "source": "https://github.com/NVIDIA/cosmos/tree/9aa98e5a0773a5558f07d2699e640858f7ca8827"
+        },
+        {
+          "content_sha256": "d8f554d76b37d8c2ba504c628d7814176d7b0383c6c3bfa9f8389decda228d6e",
+          "grade": "published",
+          "source": "https://research.nvidia.com/labs/cosmos-lab/cosmos3/technical-report.pdf"
+        }
+      ]
+    },
+    {
+      "architecture": "500M axial DiT after a proposed exact causal temporal-KV transformation",
+      "cache_semantics": "OpenTallas proposal, not released Oasis behavior; current-frame temporal queries read cached past-frame K/V.",
+      "current_rows_derivation": "one current frame * 144 spatial patches",
+      "current_rows_factors": [
+        1,
+        144
+      ],
+      "current_rows_per_call": 144,
+      "current_rows_status": "derived_candidate_transformation",
+      "model": "Oasis causal-cache candidate",
+      "open_release_status": "public Oasis code; cache transformation remains unimplemented",
+      "published_runtime": "Existing OpenTallas study only; not a product result",
+      "release_date": "2024-10-31",
+      "release_date_precision": "day",
+      "record_role": "existing_control",
+      "rom_screen": "existing_quantified_study",
+      "row_evidence": {
+        "grade": "derived",
+        "source": "results/world-model/analytical.json and its pinned Oasis inventory"
+      },
+      "row_scope": "one_current_candidate_visual_frame_after_unimplemented_cache_transformation",
+      "sources": [
+        {
+          "evidence": "governed local analytical control",
+          "grade": "derived",
+          "path": "results/world-model/analytical.json",
+          "sha256": "6a8316cd5ef566224632dcd7cdd967598588e86737386be8fb80a841241c31d8"
+        },
+        {
+          "evidence": "source-bound local Oasis inventory",
+          "grade": "derived",
+          "path": "data/world-model/oasis-500m-code.json",
+          "sha256": "818f3d82ce2a4ac7705cd784e397394ab7f7a4bcc2d71f041cf1e268cc6998f3"
+        }
+      ]
+    },
+    {
+      "architecture": "33B-class full-clip bidirectional audio/video DiT",
+      "cache_semantics": "No persistent autoregressive K/V: noisy packed positions are recomputed on every denoising call.",
+      "current_rows_addends": [
+        414,
+        512
+      ],
+      "current_rows_derivation": "37 latent video frames * (1344 / 32) * (768 / 32) + 414 audio rows + an assumed 512 text rows = 38,222 packed rows",
+      "current_rows_factors": [
+        37,
+        42,
+        24
+      ],
+      "current_rows_per_call": 38222,
+      "current_rows_status": "derived_existing_study",
+      "model": "MiniMax-H3 dense 5.17-second control",
+      "open_release_status": "code and weights released",
+      "published_runtime": "Existing OpenTallas study calibrates against a published 8xB300 software result",
+      "release_date": "2026",
+      "release_date_precision": "year",
+      "record_role": "existing_control",
+      "rom_screen": "existing_quantified_study",
+      "row_evidence": {
+        "grade": "assumed",
+        "source": "results/world-model/analytical.json; the 512 text-row component remains an explicit assumption in its pinned configuration"
+      },
+      "row_scope": "full_packed_video_audio_and_assumed_text_rows",
+      "sources": [
+        {
+          "evidence": "governed local analytical control",
+          "grade": "derived",
+          "path": "results/world-model/analytical.json",
+          "sha256": "6a8316cd5ef566224632dcd7cdd967598588e86737386be8fb80a841241c31d8"
+        },
+        {
+          "evidence": "source-bound local MiniMax-H3 inventory",
+          "grade": "derived",
+          "path": "data/world-model/minimax-h3-transformer.json",
+          "sha256": "1f175454aa47ef3ff26c9811968df17e815b4f545129166f63e09baa71a0bfee"
+        }
+      ]
+    }
+  ],
+  "schema_version": 1
+}

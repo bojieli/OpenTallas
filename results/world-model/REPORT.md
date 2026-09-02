@@ -308,8 +308,8 @@ PYTHONPATH=src pytest -q tests/test_world_model_study.py
 ```
 
 Inputs: [study config](../../configs/studies/world_model_rom.json),
-[Oasis inventory](../../data/inventory/oasis-500m-code.json),
-[H3 inventory](../../data/inventory/minimax-h3-transformer.json), and
+[Oasis inventory](../../data/world-model/oasis-500m-code.json),
+[H3 inventory](../../data/world-model/minimax-h3-transformer.json), and
 [analytical implementation](../../src/opentallas/world_model.py).
 
 ## Evidence boundary

@@ -1,0 +1,89 @@
+{
+  "active_matrix_parameters_normalizer": 1000000000,
+  "as_of_date": "2026-09-02",
+  "calls_normalizer": 1,
+  "comparison_architectures": {
+    "gpu": "NVIDIA-B300-x1",
+    "rom": "ROM-wafer-N4-class-HBM3e-central"
+  },
+  "comparison_contract": {
+    "actual_architecture_ratio_is_storage_attribution": false,
+    "active_parameter_and_call_counts_are_normalizers": true,
+    "current_rows_are_model_specific": true,
+    "same_compute_storage_attribution": "same ROM-wafer compute and pipeline; immutable weights move between that profile's HBM service and ROM service",
+    "shared_omission_condition": "An identical nonnegative serialized term can only reduce attribution when ROM weight service is no slower than HBM; architecture-dependent mutable and communication costs are outside this row-only screen."
+  },
+  "evidence": {
+    "hardware": {
+      "grade": "assumed",
+      "source": "configs/hardware/leading_node_market.json; its per-field evidence and uncertainty remain authoritative"
+    },
+    "model_rows": {
+      "grade": "derived",
+      "source": "data/world-model/recent-world-models-2026-09.json; four surveyed row screens and the Oasis control are derived from cited records, while EVOKE and H3 assumptions are separated below"
+    },
+    "row_assumptions": {
+      "grade": "assumed",
+      "source": "EVOKE's nine-latent-frame temporal factor and MiniMax-H3's 512 text-row component are explicit favorable assumptions in data/world-model/recent-world-models-2026-09.json"
+    },
+    "results": {
+      "grade": "derived",
+      "source": "tools/run_world_model_landscape_study.py deterministic normalized arithmetic"
+    }
+  },
+  "existing_world_model_study": {
+    "path": "results/world-model/analytical.json",
+    "sha256": "6a8316cd5ef566224632dcd7cdd967598588e86737386be8fb80a841241c31d8"
+  },
+  "hardware_config": {
+    "path": "configs/hardware/leading_node_market.json",
+    "sha256": "84269513500d590fb74c68c777419ee2e011b44113a372ce868ab6ce63f3b407"
+  },
+  "inventory": {
+    "path": "data/world-model/recent-world-models-2026-09.json",
+    "sha256": "aac44db6349b3e2100d1e7239de5baf68ad23a95c22e32be7615afde578d9530"
+  },
+  "remote_source_policy": "Pinned commit and file hashes are retained citation metadata. The deterministic offline runner validates their shape but does not claim to re-fetch remote repositories.",
+  "numeric_format_sweeps": [
+    {
+      "compute_format": "bf16_x_bf16",
+      "weight_bytes_per_parameter": 2.0
+    },
+    {
+      "compute_format": "fp8_e4m3_x_fp8_e4m3",
+      "weight_bytes_per_parameter": 1.0
+    }
+  ],
+  "row_sweep": [
+    1,
+    3,
+    4,
+    16,
+    64,
+    144,
+    174,
+    175,
+    186,
+    187,
+    256,
+    339,
+    340,
+    373,
+    374,
+    512,
+    960,
+    1560,
+    2040,
+    4680,
+    8640,
+    8800,
+    38222
+  ],
+  "schema_version": 1,
+  "study_id": "world_model_landscape_rom",
+  "target_storage_attribution_thresholds": [
+    1.1,
+    2.0
+  ],
+  "threshold_metric": "roofline_storage_attribution"
+}

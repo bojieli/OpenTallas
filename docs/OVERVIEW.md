@@ -60,7 +60,13 @@ If the same architectural principle transfers to video and world models, it
 could also support continuously generated interactive environments rather than
 offline clips. These applications depend on end-to-end latency, quality, safety,
 and system integration—not tokens per second alone. The detailed argument and
-its limits are in [Why instantaneous inference matters](VISION.md).
+its limits are in [Why instantaneous inference matters](VISION.md). The
+[recent-world-model decode-shape audit](../results/world-model-landscape/REPORT.md)
+tests that transfer against dated Atlas/RTFM source records and commit-pinned
+open implementations;
+it finds that causal history reuse helps algorithmically, but current spatial
+query blocks generally remain compute-bound and therefore hide ROM weight
+service.
 
 ### A small glossary
 

@@ -40,9 +40,7 @@ def generated(tmp_path_factory: pytest.TempPathFactory):
     return runner, result, first, second
 
 
-def _attribute(
-    result: dict, scenario: str, architecture: str
-) -> dict:
+def _attribute(result: dict, scenario: str, architecture: str) -> dict:
     return next(
         item
         for item in result["rom_attribution"]
@@ -54,9 +52,7 @@ def test_world_model_study_is_byte_deterministic_and_checked_in(generated) -> No
     _, _, first, second = generated
     for artifact in ARTIFACTS:
         assert (first / artifact).read_bytes() == (second / artifact).read_bytes()
-        assert (first / artifact).read_bytes() == (
-            CHECKED_IN / artifact
-        ).read_bytes()
+        assert (first / artifact).read_bytes() == (CHECKED_IN / artifact).read_bytes()
 
 
 def test_json_csv_and_report_share_one_result(generated) -> None:
@@ -66,9 +62,7 @@ def test_json_csv_and_report_share_one_result(generated) -> None:
     body = (generated_root / "analytical.json").read_text()
     assert "NaN" not in body
     assert "Infinity" not in body
-    rows = list(
-        csv.DictReader(io.StringIO((generated_root / "sweep.csv").read_text()))
-    )
+    rows = list(csv.DictReader(io.StringIO((generated_root / "sweep.csv").read_text())))
     assert len(rows) == len(result["sweep_rows"]) == 90
     assert tuple(rows[0]) == runner.CSV_FIELDS
     assert (generated_root / "REPORT.md").read_text() == (
@@ -138,8 +132,7 @@ def test_h3_checkpoint_header_and_operation_identities(generated) -> None:
         point = next(
             item
             for item in result["baseline_points"]
-            if item["scenario"] == scenario
-            and item["architecture"] == "NVIDIA-B300-x8"
+            if item["scenario"] == scenario and item["architecture"] == "NVIDIA-B300-x8"
         )
         assert point["metadata"]["sequence_tokens"] == tokens
         assert point["tensor_operations"] == operations
@@ -162,23 +155,19 @@ def test_causal_cache_exposes_a_conditional_rom_storage_gain(generated) -> None:
         > finding["central_oasis_w32_cached_rom_storage_speedup_remote_cache"]
     )
     assert (
-        finding[
-            "central_oasis_w32_cached_rom_storage_speedup_per_stream_proxy"
-        ]
-        < 1.1
+        finding["central_oasis_w32_cached_rom_storage_speedup_per_stream_proxy"] < 1.1
     )
 
 
 def test_h3_remains_compute_or_noc_bound_under_favorable_controls(generated) -> None:
     _, result, _, _ = generated
-    h3 = [
-        item for item in result["rom_attribution"] if item["model"] == "MiniMax-H3"
-    ]
+    h3 = [item for item in result["rom_attribution"] if item["model"] == "MiniMax-H3"]
     assert len(h3) == 3 * 2 * 3
     assert all(item["rom_storage_speedup"] == pytest.approx(1.0) for item in h3)
-    assert {
-        item["rom_main_phase"]["largest_modeled_term"] for item in h3
-    } <= {"compute", "noc_serialization_floor"}
+    assert {item["rom_main_phase"]["largest_modeled_term"] for item in h3} <= {
+        "compute",
+        "noc_serialization_floor",
+    }
     accelerated = [
         item for item in h3 if item["scenario"].endswith("accelerated_best_case")
     ]
@@ -190,9 +179,7 @@ def test_h3_remains_compute_or_noc_bound_under_favorable_controls(generated) -> 
 def test_noc_and_rom_row_service_sensitivities_are_explicit(generated) -> None:
     _, result, _, _ = generated
     noc = result["sensitivities"]["oasis_noc_critical_cut"]
-    cached = [
-        item for item in noc if item["scenario"] == "causal_kv_cache-W32"
-    ]
+    cached = [item for item in noc if item["scenario"] == "causal_kv_cache-W32"]
     assert [item["noc_critical_cut_fraction"] for item in cached] == [
         0,
         0.25,
@@ -200,19 +187,14 @@ def test_noc_and_rom_row_service_sensitivities_are_explicit(generated) -> None:
         1,
     ]
     assert [item["rom_storage_speedup"] for item in cached] == pytest.approx(
-        [4.286428749520691, 2.784636875632276, 2.2248980146944204,
-         1.7527244853864332]
+        [4.286428749520691, 2.784636875632276, 2.2248980146944204, 1.7527244853864332]
     )
 
     h3 = result["sensitivities"]["h3_row_reuse"]
     accelerated = [
-        item
-        for item in h3
-        if item["scenario"].endswith("accelerated_best_case")
+        item for item in h3 if item["scenario"].endswith("accelerated_best_case")
     ]
-    whole_call = [
-        item for item in accelerated if item["rom_row_reuse"] == "whole_call"
-    ]
+    whole_call = [item for item in accelerated if item["rom_row_reuse"] == "whole_call"]
     per_row = [item for item in accelerated if item["rom_row_reuse"] == 1]
     assert all(item["rom_storage_speedup"] == pytest.approx(1.0) for item in whole_call)
     assert [item["rom_storage_speedup"] for item in per_row] == pytest.approx(
