@@ -30,7 +30,6 @@ from runtime.abi3.constants import (
     Major,
     NO_ID,
     ParticipantScope,
-    Permission,
     StorageClass,
     TopologyClass,
     TrapClass,
@@ -62,7 +61,9 @@ import runtime.sim.engines.link  # noqa: F401
 SLOT_BYTES = 16
 
 
-def wafer_capability(nodes: int = 1) -> Capability:
+def wafer_capability(
+    *, nodes: int = 1, reticles: int, tiles_per_reticle: int
+) -> Capability:
     """A wafer-scale logical device: bit 9, and one node unless told otherwise."""
     cap = Capability(
         capability_id="",
@@ -100,6 +101,11 @@ def wafer_capability(nodes: int = 1) -> Capability:
         numeric_contracts=("bf16_add_rne_v1",),
         engines={"link": {"queues": 1}, "dma": {"queues": 1}},
         memory={"sram": {"bytes": 1 << 24}},
+        link={
+            "reticle_rows": reticles,
+            "reticle_columns": 1,
+            "tiles_per_reticle": tiles_per_reticle,
+        },
         technology_view="engine-conformance",
     )
     cap.validate()
@@ -117,7 +123,11 @@ class WaferBuild:
         route_groups: int = 0,
         node_count: int = 1,
     ):
-        self.capability = wafer_capability(nodes=node_count)
+        self.capability = wafer_capability(
+            nodes=node_count,
+            reticles=reticles,
+            tiles_per_reticle=tiles_per_reticle,
+        )
         self.builder = DeploymentBuilder(
             target_id="wafer-link-test",
             model_id="wafer-link-test",
