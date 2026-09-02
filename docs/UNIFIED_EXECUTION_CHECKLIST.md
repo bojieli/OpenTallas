@@ -670,10 +670,16 @@ lanes are a precondition for it, not the product. These items are the product.
   against its producing JSON, CSV, or generated Markdown value, and its
   non-regression map now covers every release document that currently carries
   checked annotations. `tests/test_prose_figures.py` proves the committed tree,
-  provenance-binding mutations, and whole-document coverage loss. This remains
-  partial because prose figures that have never been annotated are still
-  invisible to the checker; the gate prevents regression of covered evidence,
-  not completion of the original whole-corpus audit.
+  provenance-binding mutations, exact per-document floors, and whole-document
+  coverage loss. `tools/audit_prose_figure_coverage.py` and the canonical
+  `results/abi3/prose_figure_coverage.json` now census every Markdown document
+  under the release-prose boundary and retain every candidate matching the
+  evidence-ledger unit rule as provenance-bound, unbound, or explicitly
+  excluded context. `make check-figures` fails on either annotation drift or
+  census drift. This remains partial: the snapshot deliberately exposes a
+  large unbound population, which must be triaged into produced/external,
+  normative/example, or missing-producer classes before the original
+  every-number requirement can close.
 - [x] W11.4 Final status report and README update — `README.md`,
   `docs/README.md`, this checklist, `docs/ABI3_PROGRAM_REPORT.md`, and
   `docs/EVIDENCE_LEDGER.md` now separate source-current evidence from retained

@@ -247,9 +247,9 @@ REPO = Path(__file__).resolve().parents[1]
 REQUIRED_COVERAGE: dict[str, int] = {
     "README.md": 54,
     "docs/ABI3_ENGINE_DATAPATH_RTL.md": 64,
-    "docs/ABI3_PROGRAM_REPORT.md": 7,
+    "docs/ABI3_PROGRAM_REPORT.md": 17,
     "docs/DEEPSEEK_SPARSE_ATTENTION_GATE.md": 55,
-    "docs/EVIDENCE_LEDGER.md": 21,
+    "docs/EVIDENCE_LEDGER.md": 40,
     "docs/FIRST_PRINCIPLES_MEMORY_DESIGN.md": 25,
     "docs/ISO_AREA_COMPARISON_AND_THE_TAALAS_ANCHOR.md": 34,
     "docs/OVERVIEW.md": 22,
@@ -257,8 +257,9 @@ REQUIRED_COVERAGE: dict[str, int] = {
     "docs/ROM_DENSITY_NODE_TRANSFER.md": 24,
     "docs/ROM_PHYSICAL_METHODOLOGY.md": 64,
     "docs/ROM_SERVICE_RTL.md": 39,
+    "docs/SOURCES.md": 6,
     "docs/TECHNICAL_DIRECTION_RECOMMENDATION.md": 54,
-    "docs/UNIFIED_EXECUTION_CHECKLIST.md": 226,
+    "docs/UNIFIED_EXECUTION_CHECKLIST.md": 237,
     "docs/VISION.md": 1,
     "docs/WAFER_VERSUS_ARRAY_LATENCY.md": 67,
 }
@@ -375,6 +376,8 @@ class Annotation:
     attrs: dict[str, str]
     scope: str
     raw: str
+    scope_start_line: int = 0
+    scope_end_line: int = 0
 
     @property
     def label(self) -> str:
@@ -463,21 +466,27 @@ def scan(document: Path, max_block_lines: int = 60) -> list[Annotation]:
         )
         if own:
             scope = own
+            scope_start_line = first + 1
+            scope_end_line = min(last, len(stripped) - 1) + 1
         else:
             index = last + 1
             while index < len(stripped) and not stripped[index].strip():
                 index += 1
+            scope_start_line = index + 1
             block: list[str] = []
             while (index < len(stripped) and stripped[index].strip()
                    and len(block) < max_block_lines):
                 block.append(stripped[index].strip())
                 index += 1
             scope = " ".join(block)
+            scope_end_line = index
 
         value, is_string, attrs = parse_body(match.group("body"))
         found.append(Annotation(document=document, line=first + 1, value=value,
                                 is_string=is_string, attrs=attrs, scope=scope,
-                                raw=match.group(0)))
+                                raw=match.group(0),
+                                scope_start_line=scope_start_line,
+                                scope_end_line=scope_end_line))
     return found
 
 
