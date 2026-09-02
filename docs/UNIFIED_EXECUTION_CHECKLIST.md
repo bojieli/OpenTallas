@@ -19,10 +19,11 @@ W10.1, W10.2, W11.1, W11.3, W13.4; open — W11.2.
 **Active certification:** Qwen HBM, Qwen ROM, DeepSeek ROM, and DeepSeek HBM
 restart are source-current and passing. Every retained artifact binds the same
 governed 288-file restart scope and passes all 27 guards; W6.6 is closed.
-**Generated companion:** `docs/PROGRAM_STATUS.md` and its JSON currently retain
-the clean `3891fa4…` snapshot. Their repository identity and 82/11/1 marker
-arithmetic are now historical; regenerate them from the clean W6.6 closure
-commit before publishing the final 83/10/1 companion snapshot.
+**Generated companion:** `docs/PROGRAM_STATUS.md` and its JSON now retain the
+clean W6.6 closure snapshot at `0a5bc1f…`: 83/10/1 marker arithmetic on `main`,
+with `worktree_dirty: false`. The companion files are published in the
+follow-on status commit so their recorded identity remains the clean closure
+commit they summarize.
 **Dependency spine:** W10.1 → W11.1; W10.2 is a parallel mandatory Phase-F
 acceptance lane. W8.3/W8.4/W8.5/W9.4 → W9.5. W11.1 and W9.5, the DeepSeek
 200K accelerator pair, and W11.2-specific capability, cycle, physical, fabric,
@@ -634,11 +635,11 @@ lanes are a precondition for it, not the product. These items are the product.
   `docs/README.md`, this checklist, `docs/ABI3_PROGRAM_REPORT.md`, and
   `docs/EVIDENCE_LEDGER.md` now separate source-current evidence from retained
   historical horizons and state every cycle/performance non-claim. The final
-  clean-tree `make abi3-status` snapshot at `3891fa4…` republishes the current
-  historical 82/11/1 top-level milestone arithmetic in `docs/PROGRAM_STATUS.md`
-  and `results/abi3/program_status.json`; its commit/worktree identity is
-  retained historical evidence and will be regenerated from the clean W6.6
-  closure commit before publishing the 83/10/1 companion snapshot
+  clean-tree `make abi3-status` snapshot at `0a5bc1f…` republishes the current
+  83/10/1 top-level milestone arithmetic in `docs/PROGRAM_STATUS.md` and
+  `results/abi3/program_status.json`, with `worktree_dirty: false`; its recorded
+  identity is the clean W6.6 closure commit summarized by the follow-on status
+  publication commit
 
 ---
 

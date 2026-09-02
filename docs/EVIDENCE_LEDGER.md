@@ -18,9 +18,10 @@ that produces it.
 
 **2026-09-02 reconciliation.** The paragraph above is retained as the discovery
 state, not a current status claim. `PROGRAM_STATUS.md` has since been generated;
-its current retained snapshot binds clean commit `3891fa4…` and is now
-historical after W6.6 closed at 83/10/1; a clean companion regeneration is the
-next publication step. `tools/check_prose_figures.py` now
+its current retained snapshot binds clean W6.6 closure commit `0a5bc1f…`,
+records 83/10/1, and carries `worktree_dirty: false`. The follow-on publication
+commit changes only the companion files and these identity pointers.
+`tools/check_prose_figures.py` now
 checks hundreds of explicit provenance annotations, but unannotated figures
 remain outside its visibility, which is why W11.3 is still partial.
 
@@ -358,6 +359,15 @@ migrated out of the generated file and into two hand-written ones, where nothing
 regenerates it. A later phase-extent correction preserved the 3,956 / 7,047 /
 229 census but moved the graph identity again, to `9ef6c3248d23`; the README's
 figure annotation now binds that summary to the generated status artifact.
+
+**Update 2026-09-02.** After W6.6 closed, `make abi3-status` ran from clean
+commit `0a5bc1f284af`. The retained Markdown and JSON now report **83 complete,
+10 in progress, 1 not started, 0 blocked**, branch `main`, and
+`worktree_dirty: false`. The generated files are committed in the follow-on
+status publication commit; their embedded identity deliberately remains the
+clean closure commit whose artifacts and checklist they summarize. The older
+table above is retained as the original stale-status finding, not as current
+status.
 
 The Physical table gained **ten rows it had simply been missing** — 14 rows
 before, 24 after: `asap7/ot_ta_matmul_bf16_sram_engine`, and on `sky130hd` the
