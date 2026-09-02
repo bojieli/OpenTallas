@@ -1,0 +1,195 @@
+{
+  "assumptions": {
+    "h3": {
+      "accelerated_attention_density": {
+        "grade": "assumed",
+        "note": "Applies 10% density to every attention pair, even though FastH3 keeps text/audio paths dense; intentionally favorable to H3.",
+        "source": "90% video-video sparsity published at https://haoailab.com/blogs/fasth3-preview/",
+        "value": 0.1
+      },
+      "accelerated_denoise_calls": {
+        "grade": "published",
+        "source": "https://github.com/hao-ai-lab/FastVideo/blob/40b93784d25cf21174e7db54bb11826e514bab4d/examples/inference/lora/minimax_h3_lora_inference.py",
+        "value": 4
+      },
+      "base_denoise_calls": {
+        "grade": "derived",
+        "note": "Fifty sigma grid points execute N-1 transformer forwards.",
+        "source": "pinned Diffusers denoise schedule and FastVideo code",
+        "value": 49
+      },
+      "sequence_parallel_degree": {
+        "grade": "assumed",
+        "note": "Matches the published eight-GPU Ulysses benchmark topology.",
+        "source": "https://docs.sglang.io/cookbook/diffusion/MiniMax/MiniMax-H3",
+        "value": 8
+      },
+      "text_tokens": {
+        "grade": "assumed",
+        "note": "Video rows dominate; prompt-dependent packed text length is not fixed by the release.",
+        "source": "explicit study input",
+        "value": 512
+      }
+    },
+    "noc": {
+      "baseline_critical_cut_fraction": {
+        "grade": "assumed",
+        "note": "Fraction of attention tensor injection serialized across the modeled global bisection.",
+        "source": "explicit sensitivity input; no Oasis/OpenTallas floorplan exists",
+        "value": 0.5
+      },
+      "cache_remote_fraction_sweep": {
+        "grade": "assumed",
+        "note": "Zero means spatially sharded temporal KV remains local; one means every cache byte crosses the global bisection.",
+        "source": "explicit placement sensitivity",
+        "values": [
+          0.0,
+          0.25,
+          0.5,
+          1.0
+        ]
+      },
+      "critical_cut_fraction_sweep": {
+        "grade": "assumed",
+        "source": "explicit topology sensitivity",
+        "values": [
+          0.0,
+          0.25,
+          0.5,
+          1.0
+        ]
+      }
+    },
+    "oasis": {
+      "cache_fill_passes": {
+        "grade": "derived",
+        "note": "The completed frame needs one pass at the fixed context timestep before its temporal K/V can be installed.",
+        "source": "pinned open-oasis generate.py denoising schedule",
+        "value": 1
+      },
+      "runtime_weight_bytes_per_parameter": {
+        "grade": "assumed",
+        "note": "Checkpoint headers were inaccessible; the code-derived model is evaluated as BF16-equivalent.",
+        "source": "explicit favorable deployment assumption",
+        "value": 2
+      },
+      "target_fps": {
+        "grade": "published",
+        "source": "https://oasis-model.github.io/",
+        "value": 20.0
+      },
+      "window_frames": [
+        1,
+        8,
+        16,
+        32
+      ]
+    },
+    "rom_row_reuse": {
+      "baseline": "whole_call",
+      "interpretation": "whole_call is the current batched ROM-as-storage semantics; integer R re-serves a matrix after R activation rows and is a service-byte proxy, not validated compute-in-ROM timing",
+      "sweep": [
+        "whole_call",
+        64,
+        8,
+        1
+      ]
+    }
+  },
+  "calibration_points": {
+    "fast_h3_b200": {
+      "cases": [
+        {
+          "duration_label": "5.17s",
+          "latency_s": 6.84,
+          "output_frames": 124
+        },
+        {
+          "duration_label": "10.12s",
+          "latency_s": 11.66,
+          "output_frames": 243
+        },
+        {
+          "duration_label": "14.38s",
+          "latency_s": 12.88,
+          "output_frames": 345
+        }
+      ],
+      "grade": "published",
+      "hardware": "8x NVIDIA B200",
+      "source": "https://haoailab.com/blogs/fasth3-preview/",
+      "workload": "FastH3 Preview v1, four DiT calls, 90% sparse video-video attention, 1344x768 at 24 fps, median of three after warmup"
+    },
+    "h3_b300": {
+      "grade": "published",
+      "hardware": "8x NVIDIA B300 SXM6",
+      "latency_s": 19.04,
+      "precision": "BF16",
+      "source": "https://docs.sglang.io/cookbook/diffusion/MiniMax/MiniMax-H3",
+      "workload": "FL2VA, 1344x768, 124 frames, 24 fps, 50 scheduler grid points, one warm request"
+    },
+    "oasis_demo": {
+      "grade": "published",
+      "reported_fps": 20.0,
+      "source": "https://oasis-model.github.io/",
+      "workload": "proprietary interactive demo; hardware/model-size/runtime details are insufficient for numerical calibration of the public 500M code"
+    }
+  },
+  "comparison_contract": {
+    "gpu": "Existing B300 profiles price immutable and mutable bytes in shared HBM and use aggregate configured BF16 compute.",
+    "overlap": "Within a phase compute overlaps storage; ROM immutable and mutable services overlap; critical-cut NoC serialization is then added. Phases serialize.",
+    "rom": "One model fits one ROM wafer stage. The profile device_count is a maximum pipeline depth and does not multiply one-stage wafer compute.",
+    "same_compute_hbm": "Counterfactual keeps the selected ROM wafer's compute, efficiency, pipeline, and NoC identical, but moves immutable weights to that wafer's HBM. This isolates storage placement from the wafer compute envelope."
+  },
+  "inputs": {
+    "hardware": {
+      "path": "configs/hardware/leading_node_market.json",
+      "sha256": "84269513500d590fb74c68c777419ee2e011b44113a372ce868ab6ce63f3b407",
+      "selected_gpu_profiles": [
+        "NVIDIA-B300-x1",
+        "NVIDIA-B300-x8"
+      ],
+      "selected_rom_profiles": [
+        "ROM-wafer-N4-class-HBM3e-conservative",
+        "ROM-wafer-N4-class-HBM3e-central",
+        "ROM-wafer-N4-class-HBM3e-aggressive"
+      ]
+    },
+    "h3_inventory": {
+      "path": "data/inventory/minimax-h3-transformer.json",
+      "sha256": "1f175454aa47ef3ff26c9811968df17e815b4f545129166f63e09baa71a0bfee"
+    },
+    "oasis_inventory": {
+      "path": "data/inventory/oasis-500m-code.json",
+      "sha256": "818f3d82ce2a4ac7705cd784e397394ab7f7a4bcc2d71f041cf1e268cc6998f3"
+    }
+  },
+  "methodology": "docs/METHODOLOGY.md",
+  "questions": [
+    "Does full-window Oasis benefit from immutable ROM service, or is it prefill-like?",
+    "Can an exact causal temporal-KV transformation lower row reuse enough for ROM to matter?",
+    "When do compute, mutable KV, or communication erase that benefit?",
+    "Why is a full-clip bidirectional video DiT such as MiniMax-H3 less favorable?"
+  ],
+  "schema_version": 1,
+  "source_pins": {
+    "fastvideo": {
+      "inference_example_sha256": "8d4d40578829feb8440128e9102578c64a76ac4d0e2ac04daa2a536ac021980e",
+      "repo": "hao-ai-lab/FastVideo",
+      "revision": "40b93784d25cf21174e7db54bb11826e514bab4d"
+    },
+    "minimax_h3": {
+      "huggingface_repo": "MiniMaxAI/MiniMax-H3",
+      "huggingface_revision": "42ed227ee7df40d41602854ae760620d6eb651fe",
+      "repo": "MiniMax-AI/MiniMax-H3",
+      "revision": "d21241f0a4b3acbb34c97dae47fa417b7065e438"
+    },
+    "oasis": {
+      "huggingface_repo": "Etched/oasis-500m",
+      "huggingface_revision": "4ca7d2d811f4f0c6fd1d5719bf83f14af3446c0c",
+      "repo": "etched-ai/open-oasis",
+      "revision": "f59deef2c019c212bd0c5a3a5b986a51f3701847"
+    }
+  },
+  "study_id": "world_model_rom"
+}

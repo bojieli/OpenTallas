@@ -151,7 +151,11 @@ requesting a clip to inhabiting a continuously generated environment.
 This repository does not implement a video generator, a world model, or an
 Oasis-like system. Video architectures also have different bandwidth, state,
 quality, and temporal-consistency requirements. The example defines a research
-horizon, not a current OpenTallas claim.
+horizon, not a current OpenTallas claim. The reproducible [Oasis causal-state
+and MiniMax-H3 study](../results/world-model/REPORT.md) makes the architectural
+boundary concrete: causal next-frame state can conditionally expose immutable
+weight service, while a full-clip bidirectional DiT is much less favorable to
+ROM and remains compute/communication dominated.
 
 ## What throughput does not solve
 

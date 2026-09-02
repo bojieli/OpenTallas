@@ -249,7 +249,7 @@ REQUIRED_COVERAGE: dict[str, int] = {
     "docs/ABI3_ENGINE_DATAPATH_RTL.md": 64,
     "docs/ABI3_PROGRAM_REPORT.md": 6,
     "docs/DEEPSEEK_SPARSE_ATTENTION_GATE.md": 55,
-    "docs/EVIDENCE_LEDGER.md": 21,
+    "docs/EVIDENCE_LEDGER.md": 27,
     "docs/FIRST_PRINCIPLES_MEMORY_DESIGN.md": 25,
     "docs/ISO_AREA_COMPARISON_AND_THE_TAALAS_ANCHOR.md": 34,
     "docs/OVERVIEW.md": 22,

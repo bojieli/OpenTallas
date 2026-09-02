@@ -106,8 +106,11 @@ That shift creates room for:
   language to video, systems could generate responsive virtual environments
   instead of offline clips. [Oasis](https://oasis-model.github.io/) demonstrated
   the shape of this experience with an interactive AI-generated world at 20
-  frames per second. OpenTallas does not yet implement a video or world model;
-  this is a research direction, not a repository result.
+  frames per second. The checked [Oasis/H3 analytical
+  study](results/world-model/REPORT.md) finds a conditional ROM opportunity only
+  after causal frame-state caching; full-clip video DiTs such as MiniMax-H3 are
+  much less favorable. OpenTallas still does not implement either model, so this
+  remains analytical research rather than a video-system result.
 
 Read [Why instantaneous inference matters](docs/VISION.md) for the fuller product
 and systems argument, including the conditions under which throughput does *not*

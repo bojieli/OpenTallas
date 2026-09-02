@@ -1,4 +1,4 @@
-.PHONY: abi3-tokens abi3-tokens-deepseek abi3-tokens-deepseek-rom abi3-tokens-deepseek-hbm abi3-tokens-qwen-rom abi3-tokens-qwen-hbm abi3-restart abi3-restart-qwen-hbm abi3-restart-qwen-rom abi3-restart-deepseek-hbm abi3-restart-deepseek-rom abi3-context-gate abi3-prefix-workloads abi3-hbm-qwen-deployment abi3-hbm-deepseek-deployment abi3-rom-schedule-check abi3-rom-qwen-degraded-build rom-service rom-service-vectors rom-service-physical abi3-rtl-engines check-evidence-grades check-prose-figures check-figures roofline abi3-failclosed abi3-equivalence abi3 abi3-engine-rate abi3-cost-tables abi3-cost-tables-check abi3-spec abi3-test abi3-workloads abi3-oracle abi3-engines abi3-rtl abi3-physical abi3-status abi3-ir profile simulate iso-node model-traffic legacy-sim routing noc sensitivity legacy-sensitivity spec-check formal rtl-sim fault-sim fault-campaign coverage rtl-static rtl pre-synth-verify synth-public spice spice-pdk test verify clean-results
+.PHONY: abi3-tokens abi3-tokens-deepseek abi3-tokens-deepseek-rom abi3-tokens-deepseek-hbm abi3-tokens-qwen-rom abi3-tokens-qwen-hbm abi3-restart abi3-restart-qwen-hbm abi3-restart-qwen-rom abi3-restart-deepseek-hbm abi3-restart-deepseek-rom abi3-context-gate abi3-prefix-workloads abi3-hbm-qwen-deployment abi3-hbm-deepseek-deployment abi3-rom-schedule-check abi3-rom-qwen-degraded-build rom-service rom-service-vectors rom-service-physical abi3-rtl-engines check-evidence-grades check-prose-figures check-figures roofline abi3-failclosed abi3-equivalence abi3 abi3-engine-rate abi3-cost-tables abi3-cost-tables-check abi3-spec abi3-test abi3-workloads abi3-oracle abi3-engines abi3-rtl abi3-physical abi3-status abi3-ir profile simulate iso-node model-traffic world-model legacy-sim routing noc sensitivity legacy-sensitivity spec-check formal rtl-sim fault-sim fault-campaign coverage rtl-static rtl pre-synth-verify synth-public spice spice-pdk test verify clean-results
 .PHONY: abi3-rom-qwen-build abi3-rom-deepseek-build abi3-hbm-qwen-build abi3-hbm-deepseek-build abi3-comparison-deepseek abi3-evidence-source-current abi3-rtl-vectors abi3-rtl-deployment-vectors abi3-rtl-deployment
 
 profile:
@@ -7,6 +7,7 @@ profile:
 simulate:
 	$(MAKE) iso-node
 	$(MAKE) model-traffic
+	$(MAKE) world-model
 
 iso-node:
 	python3 tools/build_iso_node_studies.py --write
@@ -17,6 +18,9 @@ roofline:
 
 model-traffic:
 	python3 tools/run_model_traffic_screen.py
+
+world-model:
+	PYTHONPATH=src python3 tools/run_world_model_study.py
 
 legacy-sim:
 	python3 run.py --standard
@@ -43,6 +47,7 @@ spec-check:
 # 108 load-bearing figures went stale unnoticed (docs/EVIDENCE_LEDGER.md).
 check-evidence-grades:
 	python3 tools/check_evidence_grades.py \
+	  --also configs/studies/world_model_rom.json \
 	  --also results/abi3/deepseek_v4_prefix_workload_pins.json \
 	  --also results/abi3/deepseek_v4_context_threshold_workload_pins.json
 

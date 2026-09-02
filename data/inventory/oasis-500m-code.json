@@ -1,0 +1,54 @@
+{
+  "architecture": {
+    "action_dim": 25,
+    "context_timestep": 14,
+    "dit_patch_size": 2,
+    "diffusion_forward_calls_per_generated_frame": 10,
+    "heads": 16,
+    "hidden_size": 1024,
+    "latent_channels": 16,
+    "layers": 16,
+    "max_frames": 32,
+    "mlp_ratio": 4,
+    "output_height": 360,
+    "output_width": 640,
+    "spatial_tokens_per_frame": 144,
+    "vae_decoder_layers": 12,
+    "vae_encoder_layers": 6,
+    "vae_patch_size": 20,
+    "vae_tokens_per_frame": 576
+  },
+  "checkpoint_access": {
+    "checkpoint_profiled": false,
+    "reason": "The pinned Hugging Face files required authentication during this study, so no checkpoint tensor-header claim is made.",
+    "runtime_storage_policy": "BF16-equivalent deployment assumption derived from public code shapes"
+  },
+  "code_derived_inventory": {
+    "dit_frame_row_parameters": 204961792,
+    "dit_parameters": 607943744,
+    "dit_token_row_parameters": 402981952,
+    "dit_weight_bytes_bf16_equivalent": 1215887488,
+    "static_dit_plus_complete_vae_bytes_bf16_equivalent": 1674379808,
+    "static_dit_plus_complete_vae_parameters": 837189904,
+    "vae_decoder_parameters": 152404144,
+    "vae_decoder_weight_bytes_bf16_equivalent": 304808288
+  },
+  "evidence_boundary": [
+    "Dimensions and schedules are extracted from pinned public source; parameter counts are exact algebra over those source declarations.",
+    "The released checkpoint payload was not inspected, so code/checkpoint identity and stored dtype remain unverified.",
+    "The public generator recomputes the full frame window on every denoising call and contains no persistent temporal KV cache.",
+    "A causal cache is a derived source transformation, not released Oasis behavior and not implemented by OpenTallas."
+  ],
+  "huggingface_repo": "Etched/oasis-500m",
+  "huggingface_revision": "4ca7d2d811f4f0c6fd1d5719bf83f14af3446c0c",
+  "model": "Oasis-500M-public-code",
+  "repo": "etched-ai/open-oasis",
+  "revision": "f59deef2c019c212bd0c5a3a5b986a51f3701847",
+  "schema_version": 1,
+  "source_files": {
+    "attention.py": "9714a7948bc3671c3b13697df28ff331992b744086d8e1593204fb21c2668ae5",
+    "dit.py": "5b76f1c85acd9b88878b71f2267b76a1a811763b31e90f485767da3031e3faaf",
+    "generate.py": "9ba707750f54b67a3ee53d0403406102bb46c7e56ef04973139dc02cf35cc417",
+    "vae.py": "3d7035488fafe32adf6675cdd4484af282996514f41ba23d2893a831e8fe16ac"
+  }
+}

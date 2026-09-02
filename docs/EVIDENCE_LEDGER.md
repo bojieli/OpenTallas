@@ -714,3 +714,18 @@ compares architectural counters; it does not compare the `produced_tokens`
 field with the external oracle. Token correctness remains the job of the
 hardened four-token capture, and RTL remains the separately bounded W8.8
 control-plane campaign.
+
+## 9b. Oasis causal-state and MiniMax-H3 ROM attribution
+
+| number / claim | where it is stated | what produces it | grade | current? |
+|---|---|---|---|---|
+| At the central W32 envelope, the proposed Oasis causal cache is a **25.618×** algorithmic change <!-- figure: 25.618 src="results/world-model/analytical.json#findings.central_oasis_w32_cache_algorithmic_speedup" name="Oasis W32 causal-cache algorithmic speedup, ledger" -->; with whole-call weight reuse and local temporal state, immutable ROM contributes **2.225×** over same-compute HBM <!-- figure: 2.225 src="results/world-model/analytical.json#findings.central_oasis_w32_cached_rom_storage_speedup_local_cache" name="Oasis W32 local-cache ROM attribution, ledger" -->, falling to **1.128×** when all cache bytes cross the modeled global cut <!-- figure: 1.128 src="results/world-model/analytical.json#findings.central_oasis_w32_cached_rom_storage_speedup_remote_cache" name="Oasis W32 remote-cache ROM attribution, ledger" --> and **1.086×** under the one-row service proxy <!-- figure: 1.086 src="results/world-model/analytical.json#findings.central_oasis_w32_cached_rom_storage_speedup_per_stream_proxy" name="Oasis W32 per-stream ROM attribution, ledger" --> | `results/world-model/REPORT.md` | `make world-model` from hash-locked source inventories, the existing leading-node hardware envelope, explicit cache-placement/NoC/reuse sweeps, and a same-compute HBM counterfactual | **`simulated/derived`** | **YES, analytical only** |
+| Across the baseline dense and deliberately favorable four-call/sparse MiniMax-H3 controls, ROM storage attribution is **1.000×–1.000×** <!-- figure: 1.000 src="results/world-model/analytical.json#findings.h3_rom_storage_speedup_min" name="H3 ROM attribution minimum, ledger" --> <!-- figure: 1.000 src="results/world-model/analytical.json#findings.h3_rom_storage_speedup_max" name="H3 ROM attribution maximum, ledger" --> because modeled full-clip compute/NoC hides both ROM and HBM weight service | the same report, H3 control section | pinned public H3 config/checkpoint headers/Diffusers graph, with official AdaLN precomputation credited and both QKV HBM service and precomputed AdaLN output-table service omitted favorably | **`simulated/derived`** | **YES, analytical only** |
+
+**Boundary.** The Oasis cache is a source-derived transformation, not released or
+executed behavior; exactness through dynamic noising and sliding-window rollover
+is open. MiniMax-H3 was not executed. OpenTallas has no video ABI, compiler,
+diffusion scheduler, causal frame-state backend, RTL, cycle model, physical
+implementation, or silicon result. The integer ROM row-reuse law is a
+service-byte sensitivity rather than validated compute-in-ROM timing. None of
+these figures is a video throughput or implementation claim.

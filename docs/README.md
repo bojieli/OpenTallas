@@ -20,6 +20,7 @@ document roles rather than by moving active working documents.
 | Understand why 10,000+ tokens/s matters | [Why instantaneous inference matters](VISION.md) | [OpenTallas in plain English](OVERVIEW.md) and the [root performance guide](../README.md#performance-comparison) |
 | Understand the architecture | [OpenTallas in plain English](OVERVIEW.md) | [Compute-in-ROM mechanism](COMPUTE_IN_ROM_MECHANISM.md) and [first-principles memory design](FIRST_PRINCIPLES_MEMORY_DESIGN.md) |
 | Audit the performance claim | [Root README performance guide](../README.md#performance-comparison) | [Methodology](METHODOLOGY.md), [assumptions](ASSUMPTIONS.md), and the [iso-node](../results/iso-node/) / [area-constrained](../results/roofline/) reports |
+| Evaluate ROM for video/world models | [Oasis causal-state and H3 study](../results/world-model/REPORT.md) | [Compute-in-ROM mechanism](COMPUTE_IN_ROM_MECHANISM.md), [source register](SOURCES.md), and the [pinned study config](../configs/studies/world_model_rom.json) |
 | See what works today | [ABI 3.0 program report](ABI3_PROGRAM_REPORT.md) | [Generated status](PROGRAM_STATUS.md) and [execution checklist](UNIFIED_EXECUTION_CHECKLIST.md) |
 | Implement software or hardware | [Specification index](../spec/README.md) | [ABI architecture decision](TENSOR_ACCELERATOR_ABI_3_ARCHITECTURE_DECISION.md), [wire format](TENSOR_ACCELERATOR_ABI_3_WIRE_FORMAT.md), and [operator conventions](TENSOR_ACCELERATOR_ABI_3_OPERATOR_CONVENTIONS.md) |
 | Work on the compiler/runtime | [Compiler guide](../compiler/README.md) | [Execution plan](TENSOR_ACCELERATOR_EXECUTION_PLAN.md) and [independent numeric reference](../runtime/reference/README.md) |
@@ -199,6 +200,7 @@ prose and plans:
 | Result family | Contents |
 |---|---|
 | [`results/model-traffic/`](../results/model-traffic/) | Hardware-independent active-weight and mutable-KV traffic |
+| [`results/world-model/`](../results/world-model/) | Oasis causal-state/KV and MiniMax-H3 ROM-attribution study |
 | [`results/iso-node/`](../results/iso-node/) | N7/A100 architecture attribution and N4-class/B300 market-generation studies |
 | [`results/roofline/`](../results/roofline/) | Area-constrained N6/A100 and N5/B200 comparisons, plus declared variants |
 | [`results/abi3/`](../results/abi3/) | Deployments, executions, comparisons, certificates, and ABI program records |
