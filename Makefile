@@ -210,6 +210,14 @@ abi3-cost-tables:
 abi3-cost-tables-check:
 	PYTHONPATH=. python3 tools/build_abi3_cost_tables.py --check
 
+# W11.2. Generation produces an honest audit even while evidence is missing;
+# the separate strict gate fails closed until every same-view input exists.
+abi3-comparison-asap7-readiness:
+	PYTHONPATH=. python3 tools/audit_abi3_asap7_comparison_readiness.py
+
+abi3-comparison-asap7-gate:
+	PYTHONPATH=. python3 tools/audit_abi3_asap7_comparison_readiness.py --check --require-ready
+
 abi3: abi3-spec abi3-test abi3-engines abi3-status abi3-cost-tables-check
 
 abi3-equivalence:
