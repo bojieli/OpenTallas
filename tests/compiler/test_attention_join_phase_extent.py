@@ -43,7 +43,7 @@ from runtime.abi3.descriptors import (
     SelectorKind,
     Symbol,
 )
-from runtime.abi3.constants import Control, InstructionFlag, Major, NO_ID
+from runtime.abi3.constants import Attention, Control, InstructionFlag, Major, NO_ID
 from runtime.abi3.records import INSTRUCTION, Instruction, split_program
 from runtime.sim.memory import iteration_extent
 
@@ -219,6 +219,60 @@ def _wait_events(table, instruction: Instruction) -> set[int]:
     }
 
 
+def _event_reaches_wait(
+    table,
+    stream: list[Instruction],
+    source_event: int,
+    wait_index: int,
+    wait: Instruction,
+    predicate_id: int,
+    predicate_invert: bool,
+) -> bool:
+    """Whether ``source_event`` causally reaches ``wait`` on one branch.
+
+    HBM may stage one logical operator as DMA -> LINK -> DMA -> engine work.
+    The branch-closing wait names the engine event, so an earlier stage reaches
+    it through the wait sets of the intervening instructions rather than by a
+    direct edge.  Walk that event graph backwards, admitting only producers
+    earlier than their consumer and carrying the same branch predicate.
+    """
+
+    producers = {
+        instruction.signal_event_id: (index, instruction)
+        for index, instruction in enumerate(stream)
+        if instruction.signal_event_id != NO_ID
+    }
+    pending = [
+        (event_id, wait_index) for event_id in _wait_events(table, wait)
+    ]
+    visited: set[tuple[int, int]] = set()
+    while pending:
+        event_id, consumer_index = pending.pop()
+        if event_id == source_event:
+            return True
+        edge = (event_id, consumer_index)
+        if edge in visited:
+            continue
+        visited.add(edge)
+        producer = producers.get(event_id)
+        if producer is None:
+            continue
+        producer_index, instruction = producer
+        if producer_index >= consumer_index:
+            continue
+        if instruction.predicate_id != predicate_id:
+            continue
+        if bool(instruction.flags & InstructionFlag.PREDICATE_INVERT) != (
+            predicate_invert
+        ):
+            continue
+        pending.extend(
+            (dependency, producer_index)
+            for dependency in _wait_events(table, instruction)
+        )
+    return False
+
+
 def _rows(lane: str, graph: KernelGraph) -> dict[str, dict[str, int]]:
     """``phase -> {"join_in", "join_out", "attention_kv"}`` row counts."""
     deployment = _lower(lane, graph)
@@ -229,7 +283,13 @@ def _rows(lane: str, graph: KernelGraph) -> dict[str, dict[str, int]]:
         if descriptor.descriptor_type != ExtendedDescriptorType.OPERATOR:
             continue
         name = kernel_of.get(descriptor.payload["source_kernel_id"], "")
-        if name in (JOIN, CONSUMER):
+        if name == JOIN:
+            operators[index] = (descriptor.payload, name)
+        elif (
+            name == CONSUMER
+            and descriptor.payload["engine_family"] == int(Major.ATTENTION)
+            and descriptor.payload["engine_sub"] == int(Attention.SPARSE)
+        ):
             operators[index] = (descriptor.payload, name)
     _header, body = split_program(deployment.program)
     size = INSTRUCTION.size
@@ -311,7 +371,7 @@ def test_both_lanes_size_the_same_resource_the_same(phase, rows):
 
 @pytest.mark.parametrize("kernel_id", [JOIN, CONSUMER])
 def test_hbm_conditional_paths_have_a_causal_or_join(kernel_id, graph):
-    """Every mutually exclusive producer is waited under its own predicate."""
+    """Every mutually exclusive producer reaches a wait on its own branch."""
 
     deployment = _lower("hbm", graph)
     source = next(k.index for k in graph.kernels if k.kernel_id == kernel_id)
@@ -354,10 +414,18 @@ def test_hbm_conditional_paths_have_a_causal_or_join(kernel_id, graph):
         matching = [
             (wait_index, wait)
             for wait_index, wait in waits
-            if producer.signal_event_id in _wait_events(deployment.table, wait)
-            and wait.predicate_id == producer.predicate_id
+            if wait.predicate_id == producer.predicate_id
             and bool(wait.flags & InstructionFlag.PREDICATE_INVERT)
             == bool(producer.flags & InstructionFlag.PREDICATE_INVERT)
+            and _event_reaches_wait(
+                deployment.table,
+                stream,
+                producer.signal_event_id,
+                wait_index,
+                wait,
+                producer.predicate_id,
+                bool(producer.flags & InstructionFlag.PREDICATE_INVERT),
+            )
         ]
         assert len(matching) == 1
         assert producer_index < matching[0][0] < join_index

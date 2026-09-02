@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Prove that a ROM and an HBM deployment differ only in storage class.
+"""Prove the governed ROM-to-HBM storage-and-placement transition.
 
 The whole ROM-versus-HBM comparison rests on one property: for the same model,
 the two backends must produce the same *program* and differ only in where the
@@ -10,7 +10,12 @@ rather than the memory technology.
 
 This tool asserts it mechanically rather than by inspection, by building the
 same graph twice through one backend with only the weight storage class
-changed, and reporting exactly what differs.
+changed.  The comparison-HBM build deliberately replaces ROM-local placement
+with the ABI's unplaced sentinel (``bank_or_tile = NO_NODE`` and
+``base_address = 0``), because bank-local ROM addresses are not a valid flat
+HBM allocation.  That coupled transition, plus the pre-existing integrity-mode
+exception, is the complete normalization boundary.  Every other wire field,
+object source, entrypoint and instruction must remain identical.
 """
 
 from __future__ import annotations
@@ -18,6 +23,7 @@ from __future__ import annotations
 import argparse
 import sys
 from collections import Counter
+from dataclasses import fields
 from pathlib import Path
 from typing import Any
 
@@ -27,9 +33,47 @@ if str(REPO) not in sys.path:
 
 from compiler.ir.v3.kernel_ir import KernelGraph  # noqa: E402
 from runtime.abi3.capability import canonical_json  # noqa: E402
-from runtime.abi3.constants import StorageClass  # noqa: E402
+from runtime.abi3.constants import NO_NODE, StorageClass  # noqa: E402
+from runtime.abi3.descriptors import Descriptor  # noqa: E402
 from runtime.abi3.records import decode_body, split_program  # noqa: E402
 from runtime.abi3.verifier import verify_deployment  # noqa: E402
+
+SCHEMA = "opentallas.abi3.storage_and_placement_equivalence.v2"
+CONTRACT_NAME = "rom_to_unplaced_hbm_storage_and_placement.v1"
+
+# ``integrity_mode`` is the exception admitted by the original proof.  Keep it
+# explicit rather than silently discarding an open-ended set of payload fields.
+NORMALIZED_MEMORY_OBJECT_FIELDS = (
+    "storage_class",
+    "bank_or_tile",
+    "base_address",
+    "integrity_mode",
+)
+
+# These fields are the complete common descriptor header represented by the
+# decoded Descriptor object.  None is normalized: even a permission-bit change
+# is semantic drift and must make the certificate fail.
+DESCRIPTOR_HEADER_FIELDS = (
+    "descriptor_id",
+    "descriptor_type",
+    "flags",
+    "primary_object_id",
+    "secondary_object_id",
+    "numeric_profile_id",
+    "schedule_id",
+    "permissions",
+    "owner_scope_id",
+    "type_major",
+    "type_minor",
+    "raw_payload",
+)
+
+# These two header values are authenticated consequences of the permitted
+# descriptor transition.  All other ProgramHeader fields must remain equal.
+DERIVED_PROGRAM_HEADER_FIELDS = {
+    "deployment_digest",
+    "descriptor_table_digest",
+}
 
 PRODUCTS = {
     "qwen3": (
@@ -43,6 +87,117 @@ PRODUCTS = {
         "deepseek_v4_rom_capability",
     ),
 }
+
+
+def _storage_name(value: Any) -> str:
+    """Return a stable label without letting a malformed value crash proofing."""
+
+    try:
+        return StorageClass(int(value)).name
+    except (TypeError, ValueError):
+        return f"INVALID({value!r})"
+
+
+def assess_memory_object_transition(
+    rom_descriptor: Descriptor,
+    hbm_descriptor: Descriptor,
+) -> dict[str, Any]:
+    """Assess one differing descriptor against the exact permitted transition.
+
+    The helper is intentionally public to make the fail-closed boundary easy to
+    exercise with negative tests.  A result is permitted only when both records
+    are MEMORY_OBJECT descriptors, every common-header field is identical, the
+    storage transition is exactly ROM->HBM, the HBM placement is the ABI's
+    unplaced sentinel, and payloads become identical after normalizing only the
+    three transition fields and ``integrity_mode``.
+    """
+
+    rom_payload = dict(rom_descriptor.payload)
+    hbm_payload = dict(hbm_descriptor.payload)
+    changed_header_fields = [
+        name
+        for name in DESCRIPTOR_HEADER_FIELDS
+        if getattr(rom_descriptor, name) != getattr(hbm_descriptor, name)
+    ]
+    changed_payload_fields = sorted(
+        name
+        for name in set(rom_payload) | set(hbm_payload)
+        if name not in rom_payload
+        or name not in hbm_payload
+        or rom_payload[name] != hbm_payload[name]
+    )
+    unexpected_payload_fields = sorted(
+        set(changed_payload_fields) - set(NORMALIZED_MEMORY_OBJECT_FIELDS)
+    )
+
+    reasons: list[str] = []
+    if (
+        rom_descriptor.type_name != "MEMORY_OBJECT"
+        or hbm_descriptor.type_name != "MEMORY_OBJECT"
+    ):
+        reasons.append("descriptor_type_not_memory_object_on_both_sides")
+    if changed_header_fields:
+        reasons.append("descriptor_header_drift")
+
+    missing_transition_fields = sorted(
+        name
+        for name in NORMALIZED_MEMORY_OBJECT_FIELDS
+        if name not in rom_payload or name not in hbm_payload
+    )
+    if missing_transition_fields:
+        reasons.append("required_transition_field_missing")
+
+    rom_storage = rom_payload.get("storage_class")
+    hbm_storage = hbm_payload.get("storage_class")
+    if (
+        rom_storage != int(StorageClass.ROM)
+        or hbm_storage != int(StorageClass.HBM)
+    ):
+        reasons.append("storage_transition_not_rom_to_hbm")
+    if hbm_payload.get("bank_or_tile") != NO_NODE:
+        reasons.append("hbm_bank_or_tile_not_no_node")
+    if hbm_payload.get("base_address") != 0:
+        reasons.append("hbm_base_address_not_zero")
+
+    normalized_rom = {
+        key: value
+        for key, value in rom_payload.items()
+        if key not in NORMALIZED_MEMORY_OBJECT_FIELDS
+    }
+    normalized_hbm = {
+        key: value
+        for key, value in hbm_payload.items()
+        if key not in NORMALIZED_MEMORY_OBJECT_FIELDS
+    }
+    if normalized_rom != normalized_hbm:
+        reasons.append("payload_drift_outside_permitted_fields")
+
+    placement_changed = any(
+        rom_payload.get(name) != hbm_payload.get(name)
+        for name in ("bank_or_tile", "base_address")
+    )
+    integrity_mode_changed = (
+        rom_payload.get("integrity_mode") != hbm_payload.get("integrity_mode")
+    )
+    return {
+        "permitted": not reasons,
+        "reasons": reasons,
+        "rom_type": rom_descriptor.type_name,
+        "hbm_type": hbm_descriptor.type_name,
+        "storage_transition": (
+            f"{_storage_name(rom_storage)}->{_storage_name(hbm_storage)}"
+        ),
+        "changed_header_fields": changed_header_fields,
+        "changed_payload_fields": changed_payload_fields,
+        "unexpected_payload_fields": unexpected_payload_fields,
+        "missing_transition_fields": missing_transition_fields,
+        "hbm_unplaced": (
+            hbm_payload.get("bank_or_tile") == NO_NODE
+            and hbm_payload.get("base_address") == 0
+        ),
+        "placement_changed": placement_changed,
+        "integrity_mode_changed": integrity_mode_changed,
+    }
 
 
 def prove(graph: KernelGraph, product: str) -> dict[str, Any]:
@@ -65,33 +220,69 @@ def prove(graph: KernelGraph, product: str) -> dict[str, Any]:
     differing = [i for i in shared if table_rom[i].encode() != table_hbm[i].encode()]
 
     transitions: Counter[str] = Counter()
-    non_storage: list[dict[str, Any]] = []
+    placement_transitions: Counter[str] = Counter()
+    integrity_mode_exception_count = 0
+    permitted_transition_count = 0
+    violations: list[dict[str, Any]] = []
     for index in differing:
         left, right = table_rom[index], table_hbm[index]
-        if left.type_name != "MEMORY_OBJECT":
-            non_storage.append({"descriptor_id": index, "type": left.type_name})
+        assessment = assess_memory_object_transition(left, right)
+        transitions[assessment["storage_transition"]] += 1
+        if not assessment["permitted"]:
+            violations.append({"descriptor_id": index, **assessment})
             continue
-        payload_left = dict(left.payload)
-        payload_right = dict(right.payload)
-        moved = payload_left.pop("storage_class"), payload_right.pop("storage_class")
-        transitions[
-            f"{StorageClass(moved[0]).name}->{StorageClass(moved[1]).name}"
-        ] += 1
-        # Permissions may legitimately differ with the storage class; nothing
-        # else in the payload may.
-        payload_left.pop("integrity_mode", None)
-        payload_right.pop("integrity_mode", None)
-        if payload_left != payload_right:
-            non_storage.append(
-                {
-                    "descriptor_id": index,
-                    "type": left.type_name,
-                    "reason": "memory object differs beyond its storage class",
-                }
+        permitted_transition_count += 1
+        placement_transitions[
+            (
+                "rom_placement_to_hbm_unplaced"
+                if assessment["placement_changed"]
+                else "already_unplaced_to_hbm_unplaced"
             )
+        ] += 1
+        if assessment["integrity_mode_changed"]:
+            integrity_mode_exception_count += 1
+
+    program_header_differences = sorted(
+        field.name
+        for field in fields(rom_header)
+        if getattr(rom_header, field.name) != getattr(hbm_header, field.name)
+    )
+    unexpected_program_header_differences = sorted(
+        set(program_header_differences) - DERIVED_PROGRAM_HEADER_FIELDS
+    )
+    decoded_instructions_equal = decode_body(rom_body) == decode_body(hbm_body)
+    object_sources_identical = rom.object_table() == hbm.object_table()
+    entrypoints_identical = rom.entrypoints == hbm.entrypoints
+    required_features_identical = rom.required_features == hbm.required_features
+    admitted = {
+        "rom": verify_deployment(rom, capability).admitted,
+        "hbm": verify_deployment(hbm, capability).admitted,
+    }
+    descriptors_only_in_one_build = {
+        "rom": sorted(set(table_rom) - set(table_hbm)),
+        "hbm": sorted(set(table_hbm) - set(table_rom)),
+    }
 
     return {
-        "schema": "opentallas.abi3.storage_class_equivalence.v1",
+        "schema": SCHEMA,
+        "contract": {
+            "name": CONTRACT_NAME,
+            "required_storage_transition": "ROM->HBM",
+            "required_hbm_placement": {
+                "bank_or_tile": NO_NODE,
+                "base_address": 0,
+            },
+            "normalized_memory_object_fields": list(
+                NORMALIZED_MEMORY_OBJECT_FIELDS
+            ),
+            "integrity_mode_exception": (
+                "integrity_mode may differ; no descriptor-header field or "
+                "other payload field may differ"
+            ),
+            "derived_program_header_fields": sorted(
+                DERIVED_PROGRAM_HEADER_FIELDS
+            ),
+        },
         "product": product,
         "model_id": graph.model_id,
         "graph_id": graph.graph_id,
@@ -100,24 +291,39 @@ def prove(graph: KernelGraph, product: str) -> dict[str, Any]:
             "hbm": hbm_header.instruction_count,
         },
         "instruction_body_identical": rom_body == hbm_body,
-        "decoded_instructions_equal": decode_body(rom_body) == decode_body(hbm_body),
+        "decoded_instructions_equal": decoded_instructions_equal,
+        "program_header_differences": program_header_differences,
+        "unexpected_program_header_differences": (
+            unexpected_program_header_differences
+        ),
+        "program_header_identical_except_derived_digests": (
+            not unexpected_program_header_differences
+        ),
+        "object_sources_identical": object_sources_identical,
+        "entrypoints_identical": entrypoints_identical,
+        "required_features_identical": required_features_identical,
         "descriptor_count": {"rom": len(table_rom), "hbm": len(table_hbm)},
-        "descriptors_only_in_one_build": {
-            "rom": sorted(set(table_rom) - set(table_hbm)),
-            "hbm": sorted(set(table_hbm) - set(table_rom)),
-        },
+        "descriptors_only_in_one_build": descriptors_only_in_one_build,
         "differing_descriptor_count": len(differing),
         "differing_by_type": dict(Counter(table_rom[i].type_name for i in differing)),
         "storage_class_transitions": dict(transitions),
-        "differences_beyond_storage_class": non_storage,
-        "admitted": {
-            "rom": verify_deployment(rom, capability).admitted,
-            "hbm": verify_deployment(hbm, capability).admitted,
-        },
+        "permitted_transition_count": permitted_transition_count,
+        "hbm_unplaced_transition_count": permitted_transition_count,
+        "placement_transitions": dict(placement_transitions),
+        "integrity_mode_exception_count": integrity_mode_exception_count,
+        "differences_beyond_permitted_transition": violations,
+        "admitted": admitted,
         "holds": (
             rom_body == hbm_body
-            and not non_storage
-            and not (set(table_rom) ^ set(table_hbm))
+            and decoded_instructions_equal
+            and not unexpected_program_header_differences
+            and object_sources_identical
+            and entrypoints_identical
+            and required_features_identical
+            and not violations
+            and not descriptors_only_in_one_build["rom"]
+            and not descriptors_only_in_one_build["hbm"]
+            and admitted == {"rom": True, "hbm": True}
         ),
     }
 
@@ -147,7 +353,11 @@ def main() -> int:
           f"{body['differing_descriptor_count']} differing")
     print(f"differing by type    {body['differing_by_type']}")
     print(f"transitions          {body['storage_class_transitions']}")
-    print(f"beyond storage class {len(body['differences_beyond_storage_class'])}")
+    print(f"placement            {body['placement_transitions']}")
+    print(
+        "beyond contract      "
+        f"{len(body['differences_beyond_permitted_transition'])}"
+    )
     print(f"HOLDS                {body['holds']}")
     return 0 if body["holds"] else 2
 
