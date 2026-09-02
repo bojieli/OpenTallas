@@ -175,6 +175,9 @@ module ot_a3_collective_engine #(
     wire [33:0] add_result = ot_fp32_rne_pkg::fp32_add_rne(
         order_low ? acc[comb_idx[VW-1:0]] : peer_word,
         order_low ? peer_word : acc[comb_idx[VW-1:0]]);
+    wire reduction_operand_nonfinite =
+        (acc[comb_idx[VW-1:0]][30:23] == 8'hff) ||
+        (peer_word[30:23] == 8'hff);
 
     // partner rank for the current step, decomposed onto the mesh
     reg [7:0] peer_rank;
@@ -432,15 +435,38 @@ module ot_a3_collective_engine #(
                         end
                     end else begin
                         if (comb_idx < keep_hi) begin
-                            case (cur_op)
-                                ot_a3_link_pkg::COLL_SUM: acc[comb_idx[VW-1:0]] <= add_result[31:0];
-                                ot_a3_link_pkg::COLL_MAX: acc[comb_idx[VW-1:0]] <=
-                                    ot_a3_link_pkg::fp32_max(acc[comb_idx[VW-1:0]], peer_word);
-                                ot_a3_link_pkg::COLL_MIN: acc[comb_idx[VW-1:0]] <=
-                                    ot_a3_link_pkg::fp32_min(acc[comb_idx[VW-1:0]], peer_word);
-                                default:  acc[comb_idx[VW-1:0]] <= acc[comb_idx[VW-1:0]];
-                            endcase
-                            comb_idx <= comb_idx + 1'b1;
+                            // No exceptional arithmetic result is allowed to
+                            // reach architectural state.  fp32_add_rne reports
+                            // both a nonfinite operand and finite overflow in
+                            // bits 33:32; MAX/MIN have no arithmetic helper, so
+                            // their operands are checked explicitly here.
+                            if (((cur_op == ot_a3_link_pkg::COLL_SUM) &&
+                                 (add_result[33:32] != 2'd0)) ||
+                                (((cur_op == ot_a3_link_pkg::COLL_MAX) ||
+                                  (cur_op == ot_a3_link_pkg::COLL_MIN)) &&
+                                 reduction_operand_nonfinite)) begin
+                                trap <= 1'b1;
+                                trap_class <=
+                                    ot_a3_link_pkg::TRAP_NUMERIC_OR_EXCEPTIONAL_VALUE;
+                                state <= S_TRAP;
+                            end else begin
+                                case (cur_op)
+                                    ot_a3_link_pkg::COLL_SUM:
+                                        acc[comb_idx[VW-1:0]] <= add_result[31:0];
+                                    ot_a3_link_pkg::COLL_MAX:
+                                        acc[comb_idx[VW-1:0]] <=
+                                            ot_a3_link_pkg::fp32_max(
+                                                acc[comb_idx[VW-1:0]], peer_word);
+                                    ot_a3_link_pkg::COLL_MIN:
+                                        acc[comb_idx[VW-1:0]] <=
+                                            ot_a3_link_pkg::fp32_min(
+                                                acc[comb_idx[VW-1:0]], peer_word);
+                                    default:
+                                        acc[comb_idx[VW-1:0]] <=
+                                            acc[comb_idx[VW-1:0]];
+                                endcase
+                                comb_idx <= comb_idx + 1'b1;
+                            end
                         end else begin
                             state <= S_ADVANCE;
                         end
@@ -527,10 +553,14 @@ module ot_a3_collective_engine #(
 
 `ifndef SYNTHESIS
     initial begin
+        if (MESH_X < 1 || MESH_Y < 1 || MESH_X > 16 || MESH_Y > 16)
+            $error("ot_a3_collective_engine: mesh geometry is outside the 4-bit coordinate range");
         if ((MESH_X & (MESH_X-1)) != 0 || (MESH_Y & (MESH_Y-1)) != 0)
             $error("ot_a3_collective_engine: mesh extents must be powers of two");
-        if (VEC_LEN % P != 0)
-            $error("ot_a3_collective_engine: VEC_LEN must be a whole number of participant shards");
+        if (P < 2 || P > 256)
+            $error("ot_a3_collective_engine: participant ranks must fit 8 bits");
+        if (VEC_LEN < 1 || VEC_LEN > 256)
+            $error("ot_a3_collective_engine: VEC_LEN is outside local index capacity");
     end
 `endif
 endmodule

@@ -19,6 +19,7 @@ module a3_link_mesh_top #(
     parameter integer VEC_LEN     = 16,
     parameter integer CREDITS     = 8,
     parameter integer RETRY_MAX   = 3,
+    parameter integer TIMEOUT_CLASS = 1,
     parameter integer ACK_TIMEOUT = 512,
     parameter integer HOP_CYCLES  = 1
 ) (
@@ -26,11 +27,77 @@ module a3_link_mesh_top #(
     input  wire        rst_n,
 
     input  wire        start,
-    input  wire [7:0]  op,
+    input  wire [1535:0] communication_descriptor,
+    input  wire [1023:0] numeric_descriptor,
+    input  wire [7:0]  instruction_subopcode,
     input  wire [1:0]  alg,
-    input  wire [7:0]  reduction_order,
-    input  wire [3:0]  root_x,
-    input  wire [3:0]  root_y,
+    input  wire [31:0] numeric_descriptor_id,
+    input  wire [7:0]  numeric_reduction_order,
+
+    output wire        descriptor_valid,
+    output wire        numeric_descriptor_valid,
+    output wire        numeric_semantics_supported,
+    output wire [7:0]  numeric_refusal_reason,
+    output wire        command_admitted,
+    output wire [7:0]  refusal_reason,
+    output wire [31:0] decoded_magic,
+    output wire [15:0] decoded_descriptor_type,
+    output wire [7:0]  decoded_type_major,
+    output wire [7:0]  decoded_type_minor,
+    output wire [31:0] decoded_total_bytes,
+    output wire [31:0] decoded_flags,
+    output wire [31:0] decoded_primary_object_id,
+    output wire [31:0] decoded_secondary_object_id,
+    output wire [31:0] decoded_numeric_profile_id,
+    output wire [31:0] decoded_schedule_id,
+    output wire [31:0] decoded_permissions,
+    output wire [31:0] decoded_owner_scope_id,
+    output wire [31:0] decoded_payload_offset,
+    output wire [31:0] decoded_payload_bytes,
+    output wire [31:0] decoded_supplied_crc,
+    output wire [31:0] decoded_calculated_crc,
+    output wire [7:0]  decoded_collective_op,
+    output wire [7:0]  decoded_ordering,
+    output wire [7:0]  decoded_integrity_mode,
+    output wire [7:0]  decoded_virtual_channel,
+    output wire [15:0] decoded_source_node,
+    output wire [15:0] decoded_destination_node,
+    output wire [31:0] decoded_group_id,
+    output wire [31:0] decoded_route_class,
+    output wire [31:0] decoded_local_object_id,
+    output wire [31:0] decoded_remote_object_id,
+    output wire [63:0] decoded_local_offset,
+    output wire [63:0] decoded_remote_offset,
+    output wire [63:0] decoded_byte_extent,
+    output wire [31:0] decoded_credit_bound,
+    output wire [31:0] decoded_retry_bound,
+    output wire [31:0] decoded_timeout_class,
+    output wire [31:0] decoded_completion_event_id,
+    output wire [31:0] decoded_reduction_numeric_id,
+    output wire [31:0] decoded_counter_class_id,
+    output wire [31:0] decoded_participant_count,
+    output wire [31:0] decoded_chunk_bytes,
+    output wire [7:0]  decoded_participant_scope,
+    output wire [15:0] decoded_numeric_descriptor_type,
+    output wire [31:0] decoded_numeric_total_bytes,
+    output wire [31:0] decoded_numeric_payload_bytes,
+    output wire [31:0] decoded_numeric_supplied_crc,
+    output wire [31:0] decoded_numeric_calculated_crc,
+    output wire [7:0]  decoded_numeric_input_dtype,
+    output wire [7:0]  decoded_numeric_second_input_dtype,
+    output wire [7:0]  decoded_numeric_accumulator_dtype,
+    output wire [7:0]  decoded_numeric_output_dtype,
+    output wire [7:0]  decoded_numeric_rounding_mode,
+    output wire [7:0]  decoded_numeric_reduction_order,
+    output wire [7:0]  decoded_numeric_saturate,
+    output wire [7:0]  decoded_numeric_nan_policy,
+    output wire [31:0] decoded_numeric_epsilon_bits,
+    output wire [31:0] decoded_numeric_scale_bits,
+    output wire [31:0] decoded_numeric_flags,
+    output wire        decoded_numeric_contract_digest_zero,
+    output wire [7:0]  decoded_engine_op,
+    output wire [3:0]  decoded_root_x,
+    output wire [3:0]  decoded_root_y,
 
     output wire        all_done,
     output wire        any_busy,
@@ -65,6 +132,90 @@ module a3_link_mesh_top #(
     output wire        any_misroute
 );
     localparam integer NODES = MESH_X * MESH_Y;
+
+    wire [15:0] decoder_trap_class;
+    wire [7:0] engine_reduction_order;
+    ot_a3_communication_decoder #(
+        .MESH_X(MESH_X), .MESH_Y(MESH_Y), .VEC_LEN(VEC_LEN),
+        .CREDITS(CREDITS), .RETRY_MAX(RETRY_MAX),
+        .TIMEOUT_CLASS(TIMEOUT_CLASS)
+    ) u_communication_decoder (
+        .descriptor_record(communication_descriptor),
+        .numeric_descriptor_record(numeric_descriptor),
+        .instruction_subopcode(instruction_subopcode),
+        .algorithm(alg),
+        .numeric_descriptor_id(numeric_descriptor_id),
+        .numeric_reduction_order(numeric_reduction_order),
+        .record_valid(descriptor_valid),
+        .numeric_record_valid(numeric_descriptor_valid),
+        .numeric_semantics_supported(numeric_semantics_supported),
+        .numeric_refusal_reason(numeric_refusal_reason),
+        .command_admitted(command_admitted),
+        .refusal_reason(refusal_reason),
+        .trap_class(decoder_trap_class),
+        .magic(decoded_magic),
+        .descriptor_type(decoded_descriptor_type),
+        .type_major(decoded_type_major),
+        .type_minor(decoded_type_minor),
+        .total_bytes(decoded_total_bytes),
+        .flags(decoded_flags),
+        .primary_object_id(decoded_primary_object_id),
+        .secondary_object_id(decoded_secondary_object_id),
+        .numeric_profile_id(decoded_numeric_profile_id),
+        .schedule_id(decoded_schedule_id),
+        .permissions(decoded_permissions),
+        .owner_scope_id(decoded_owner_scope_id),
+        .payload_offset(decoded_payload_offset),
+        .payload_bytes(decoded_payload_bytes),
+        .supplied_crc(decoded_supplied_crc),
+        .calculated_crc(decoded_calculated_crc),
+        .collective_op(decoded_collective_op),
+        .ordering(decoded_ordering),
+        .integrity_mode(decoded_integrity_mode),
+        .virtual_channel(decoded_virtual_channel),
+        .source_node(decoded_source_node),
+        .destination_node(decoded_destination_node),
+        .group_id(decoded_group_id),
+        .route_class(decoded_route_class),
+        .local_object_id(decoded_local_object_id),
+        .remote_object_id(decoded_remote_object_id),
+        .local_offset(decoded_local_offset),
+        .remote_offset(decoded_remote_offset),
+        .byte_extent(decoded_byte_extent),
+        .credit_bound(decoded_credit_bound),
+        .retry_bound(decoded_retry_bound),
+        .timeout_class(decoded_timeout_class),
+        .completion_event_id(decoded_completion_event_id),
+        .reduction_numeric_id(decoded_reduction_numeric_id),
+        .counter_class_id(decoded_counter_class_id),
+        .participant_count(decoded_participant_count),
+        .chunk_bytes(decoded_chunk_bytes),
+        .participant_scope(decoded_participant_scope),
+        .numeric_descriptor_type(decoded_numeric_descriptor_type),
+        .numeric_total_bytes(decoded_numeric_total_bytes),
+        .numeric_payload_bytes(decoded_numeric_payload_bytes),
+        .numeric_supplied_crc(decoded_numeric_supplied_crc),
+        .numeric_calculated_crc(decoded_numeric_calculated_crc),
+        .numeric_input_dtype(decoded_numeric_input_dtype),
+        .numeric_second_input_dtype(decoded_numeric_second_input_dtype),
+        .numeric_accumulator_dtype(decoded_numeric_accumulator_dtype),
+        .numeric_output_dtype(decoded_numeric_output_dtype),
+        .numeric_rounding_mode(decoded_numeric_rounding_mode),
+        .numeric_decoded_reduction_order(decoded_numeric_reduction_order),
+        .numeric_saturate(decoded_numeric_saturate),
+        .numeric_nan_policy(decoded_numeric_nan_policy),
+        .numeric_epsilon_bits(decoded_numeric_epsilon_bits),
+        .numeric_scale_bits(decoded_numeric_scale_bits),
+        .numeric_flags(decoded_numeric_flags),
+        .numeric_contract_digest_zero(
+            decoded_numeric_contract_digest_zero),
+        .engine_op(decoded_engine_op),
+        .engine_reduction_order(engine_reduction_order),
+        .engine_root_x(decoded_root_x),
+        .engine_root_y(decoded_root_y)
+    );
+
+    wire engine_start = start && command_admitted;
 
     wire [3:0]          o_valid  [0:NODES-1];
     wire [4*FLIT_W-1:0] o_flit   [0:NODES-1];
@@ -122,10 +273,11 @@ module a3_link_mesh_top #(
     reg [NODES-1:0] linkerr_flags;
     reg [NODES-1:0] misroute_flags;
     reg [15:0] trap_class_latched;
+    reg decode_refused_latched;
 
-    assign all_done = &done_latched;
+    assign all_done = decode_refused_latched || (&done_latched);
     assign any_busy = |busy_flags;
-    assign any_trap = |trap_flags;
+    assign any_trap = decode_refused_latched || (|trap_flags);
     assign first_trap_class = trap_class_latched;
     assign any_link_error = |linkerr_flags;
     assign any_misroute = |misroute_flags;
@@ -147,9 +299,9 @@ module a3_link_mesh_top #(
                     .ACK_TIMEOUT(ACK_TIMEOUT)
                 ) u_node (
                     .clk(clk), .rst_n(rst_n),
-                    .start(start), .op(op), .alg(alg),
-                    .reduction_order(reduction_order),
-                    .root_x(root_x), .root_y(root_y),
+                    .start(engine_start), .op(decoded_engine_op), .alg(alg),
+                    .reduction_order(engine_reduction_order),
+                    .root_x(decoded_root_x), .root_y(decoded_root_y),
                     .busy(n_busy_f[NI]), .done(n_done[NI]),
                     .trap(n_trap[NI]), .trap_class(n_trapcls[NI]),
                     .load_valid(load_valid && (load_node == NI[7:0])),
@@ -294,6 +446,7 @@ module a3_link_mesh_top #(
             linkerr_flags <= {NODES{1'b0}};
             misroute_flags <= {NODES{1'b0}};
             trap_class_latched <= 16'd0;
+            decode_refused_latched <= 1'b0;
         end else begin
             if (start) begin
                 done_latched <= {NODES{1'b0}};
@@ -301,7 +454,9 @@ module a3_link_mesh_top #(
                 // flag that outlived its case would make every later case
                 // report the first case's refusal.
                 trap_flags <= {NODES{1'b0}};
-                trap_class_latched <= 16'd0;
+                decode_refused_latched <= !command_admitted;
+                trap_class_latched <= command_admitted ? 16'd0 :
+                                      decoder_trap_class;
             end
             for (k = 0; k < NODES; k = k + 1) begin
                 if (n_done[k])
@@ -335,18 +490,20 @@ module a3_link_mesh_top #(
         for (a = 0; a < NODES; a = a + 1) begin
             busy_flags[a] = n_busy_f[a];
             total_wire_flits = total_wire_flits + n_txflits[a];
-            total_hop_distance = total_hop_distance + n_hopdist[a];
-            total_engine_flits_sent = total_engine_flits_sent + n_esent[a];
             total_replayed_flits = total_replayed_flits + n_replay[a];
             total_retry_events = total_retry_events + n_retry[a];
             total_credit_stall_cycles = total_credit_stall_cycles + n_stall[a];
             total_crc_errors = total_crc_errors + n_crcerr[a];
             total_sequence_errors = total_sequence_errors + n_seqerr[a];
-            total_steps = total_steps + n_steps[a];
-            if (n_busy[a] > max_busy_cycles)
-                max_busy_cycles = n_busy[a];
-            if (n_serial[a] > max_serial_traversals)
-                max_serial_traversals = n_serial[a];
+            if (!decode_refused_latched) begin
+                total_hop_distance = total_hop_distance + n_hopdist[a];
+                total_engine_flits_sent = total_engine_flits_sent + n_esent[a];
+                total_steps = total_steps + n_steps[a];
+                if (n_busy[a] > max_busy_cycles)
+                    max_busy_cycles = n_busy[a];
+                if (n_serial[a] > max_serial_traversals)
+                    max_serial_traversals = n_serial[a];
+            end
         end
     end
 endmodule
