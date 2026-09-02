@@ -1,13 +1,20 @@
-# OpenTallas, in plain language
+# OpenTallas, in plain English
 
-OpenTallas asks a narrow but important hardware question: **if a successful LLM
-checkpoint stays fixed for long enough, can its immutable weights become part of
-the inference machine instead of being fetched from external memory for every
-new token?** The proposed machine stores those weights in mask-programmed ROM
-distributed beside arithmetic, keeps changing KV-cache and session state in HBM,
-and moves activations through statically scheduled stages. The project is an
-open, evidence-graded investigation of that idea—not a fabricated chip, a
-tapeout-ready floorplan, or a measured product.
+[Why speed matters](VISION.md) · [Performance results](../README.md#performance-comparison) ·
+[Documentation map](README.md) · [Specification](../spec/README.md)
+
+Taalas reports that its fabricated HC1 accelerator generates **16,960 tokens/s** <!-- figure: 16,960 src="configs/hardware/technology.json#reference_parts.taalas_hc1.published_tokens_s_per_user.value" name="Taalas HC1 published per-user rate, overview" -->
+per user on Llama 3.1 8B at batch one.
+The result is first-party rather than independently benchmarked, but it makes
+the central opportunity concrete: model-specific inference hardware can deliver
+an order-of-magnitude change in interactive generation speed.
+
+OpenTallas is an independent open research project that investigates how such
+an architecture works, where its advantage comes from, and what would have to be
+true for it to scale to larger models and longer contexts. It connects model
+accounting, architecture studies, compiler/runtime semantics, public-reference
+RTL, and circuit experiments. It is not a fabricated chip, a tapeout-ready
+floorplan, or a measured product.
 
 ![Conceptual OpenTallas architecture](assets/architecture-overview.svg)
 
@@ -17,21 +24,21 @@ tapeout-ready floorplan, or a measured product.
 > ROM macro, full physical stage, package, target numerical implementation, and
 > OpenTallas silicon do not.
 
-## The idea in thirty seconds
+## The core idea in thirty seconds
 
-An LLM generates one token by applying mostly the same matrices again and again.
-The activations and KV cache change; the trained weights normally do not. On a
-general-purpose accelerator, both weights and mutable state live in a limited
-external-memory system. At small batch sizes, repeatedly moving the active
-weights can cost more time and energy than the arithmetic itself.
+An LLM generates each new token by reusing the same trained weight values with
+new activations and an updated KV cache. GPUs keep the weights in writable HBM
+because a general-purpose accelerator must be able to load a different model.
+At low batch sizes, however, moving those weights from HBM again for every token
+can take more time and energy than the arithmetic.
 
-OpenTallas trades flexibility for locality:
+OpenTallas trades some of that flexibility for locality:
 
 - **A conventional GPU** can load many models and update them freely, but must
   repeatedly service model-weight traffic from HBM.
-- **An OpenTallas image** is manufactured for a specific model representation.
-  Its weight bits and scales are local ROM data; HBM remains available for the
-  KV cache and sessions.
+- **An OpenTallas deployment** encodes one model representation's immutable
+  weight bits and scales in local mask ROM. HBM remains available for the KV
+  cache, activations, routing, and session state.
 - **The computation still happens.** ROM does not remove attention, matrix
   multiplication, KV traffic, reductions, synchronization, power, or cooling.
 - **Changing the checkpoint is expensive.** A materially different weight image
@@ -39,6 +46,21 @@ OpenTallas trades flexibility for locality:
 
 OpenTallas is therefore aimed at mature, high-volume inference checkpoints—not
 training, rapid fine-tuning, or a general replacement for GPUs.
+
+## Why the speed matters
+
+The objective is not speed for its own sake. A high token rate can spread fixed
+infrastructure cost across more useful output, lowering the modeled cost per
+token when utilization and system assumptions hold. It can also move reasoning
+into the interactive loop: agentic projects can compress from minutes toward
+seconds, and computer-use, robotics, voice, and generative interfaces can react
+while their environment is still current.
+
+If the same architectural principle transfers to video and world models, it
+could also support continuously generated interactive environments rather than
+offline clips. These applications depend on end-to-end latency, quality, safety,
+and system integration—not tokens per second alone. The detailed argument and
+its limits are in [Why instantaneous inference matters](VISION.md).
 
 ### A small glossary
 
@@ -54,11 +76,10 @@ training, rapid fine-tuning, or a general replacement for GPUs.
 | DRC / LVS / PEX | Checks that geometry obeys layout rules, matches its circuit schematic, and yields an extracted circuit including parasitics. |
 | Per-user tokens/s | The generation rate seen by one active sequence. It is different from aggregate service throughput across many users. |
 
-## Why an LLM workload is interesting here
+## Why language-model inference fits this architecture
 
-The project does not use an LLM to design the circuit. It uses a trained LLM as
-the fixed data image of a model-specific inference engine. Autoregressive decode
-has three properties that make the experiment worthwhile:
+Autoregressive decode has three properties that make the architecture worth
+investigating:
 
 1. **The same large weight set is reused for every generated token.** A busy
    service can reuse it billions of times over a checkpoint's useful life.

@@ -4,18 +4,22 @@
 [Compiler](../compiler/README.md) · [RTL](../rtl/README.md) ·
 [Circuit evidence](../spice/README.md) · [Contributing](../CONTRIBUTING.md)
 
-OpenTallas spans architecture research, model compilation, runtime semantics,
-digital implementation, physical methodology, and circuit evidence. This page
-is the map across those layers. Existing technical records keep stable paths so
-that citations, checklists, and in-flight work do not break; organization is
-provided through clear entry points and explicit document roles.
+OpenTallas is a technical library, not a sequence of lab notes. It connects the
+motivation for instant inference to architecture research, model compilation,
+runtime semantics, digital implementation, physical methodology, and circuit
+evidence. Use this page to choose the level of detail that matches your question.
+
+Technical records keep stable paths so citations, checklists, and in-flight work
+do not break. The library is organized through reading paths and explicit
+document roles rather than by moving active working documents.
 
 ## Start with the question you have
 
 | I want to… | Read first | Then continue with… |
 |---|---|---|
-| Understand the central idea | [OpenTallas in plain language](OVERVIEW.md) | [Compute-in-ROM mechanism](COMPUTE_IN_ROM_MECHANISM.md) and [first-principles memory design](FIRST_PRINCIPLES_MEMORY_DESIGN.md) |
-| Understand the performance claim | [Root README performance guide](../README.md#performance-at-a-glance) | [Methodology](METHODOLOGY.md), [assumptions](ASSUMPTIONS.md), and the [iso-node](../results/iso-node/) / [area-constrained](../results/roofline/) reports |
+| Understand why 10,000+ tokens/s matters | [Why instantaneous inference matters](VISION.md) | [OpenTallas in plain English](OVERVIEW.md) and the [root performance guide](../README.md#performance-comparison) |
+| Understand the architecture | [OpenTallas in plain English](OVERVIEW.md) | [Compute-in-ROM mechanism](COMPUTE_IN_ROM_MECHANISM.md) and [first-principles memory design](FIRST_PRINCIPLES_MEMORY_DESIGN.md) |
+| Audit the performance claim | [Root README performance guide](../README.md#performance-comparison) | [Methodology](METHODOLOGY.md), [assumptions](ASSUMPTIONS.md), and the [iso-node](../results/iso-node/) / [area-constrained](../results/roofline/) reports |
 | See what works today | [ABI 3.0 program report](ABI3_PROGRAM_REPORT.md) | [Generated status](PROGRAM_STATUS.md) and [execution checklist](UNIFIED_EXECUTION_CHECKLIST.md) |
 | Implement software or hardware | [Specification index](../spec/README.md) | [ABI architecture decision](TENSOR_ACCELERATOR_ABI_3_ARCHITECTURE_DECISION.md), [wire format](TENSOR_ACCELERATOR_ABI_3_WIRE_FORMAT.md), and [operator conventions](TENSOR_ACCELERATOR_ABI_3_OPERATOR_CONVENTIONS.md) |
 | Work on the compiler/runtime | [Compiler guide](../compiler/README.md) | [Execution plan](TENSOR_ACCELERATOR_EXECUTION_PLAN.md) and [independent numeric reference](../runtime/reference/README.md) |
@@ -26,7 +30,7 @@ provided through clear entry points and explicit document roles.
 ## How the documentation fits together
 
 ```text
-README + OVERVIEW                    orientation and current headline
+README + VISION + OVERVIEW           motivation, orientation, and headline
         │
         ├── spec/                    normative system and implementation contract
         ├── methodology + configs/   comparison rules and declared inputs
@@ -77,7 +81,10 @@ owns the question:
 
 ## Program orientation and status
 
-- [OpenTallas in plain language](OVERVIEW.md) — concept, one-token walkthrough,
+- [Why instantaneous inference matters](VISION.md) — economic and product
+  reasons for high per-user throughput, future application directions, and
+  system-level qualifications.
+- [OpenTallas in plain English](OVERVIEW.md) — concept, one-token walkthrough,
   performance derivation, evidence ladder, and suggested reading paths.
 - [ABI 3.0 program report](ABI3_PROGRAM_REPORT.md) — current narrative across the
   unified executable program.
