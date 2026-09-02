@@ -47,7 +47,7 @@ the match to 24 tokens:
  5776, 362, 8, 10901, 518, 3070, 15, 21, 25, 15, 15, 334)
 ```
 
-That longer record predates the current deployment identities and hardened
+That longer record predates those four-token deployment identities and hardened
 source-map schema. It remains milestone evidence, not a source-current
 24-token claim.
 
