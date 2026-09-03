@@ -104,6 +104,9 @@ owns the question:
 
 - [ABI 3.0 architecture decision](TENSOR_ACCELERATOR_ABI_3_ARCHITECTURE_DECISION.md)
   — unified program, runtime, verifier, and RTL direction.
+- [ABI 3.0 tensor-datapath decode-utilization decision](ABI3_TENSOR_DATAPATH_DECODE_UTILIZATION_ADR.md)
+  — shared lane architecture, correctness-first token gate, production
+  simulation tiers, and correctness-qualified TPOT plan.
 - [ABI 3.0 wire format](TENSOR_ACCELERATOR_ABI_3_WIRE_FORMAT.md) — frozen binary
   records, descriptors, validation, and compatibility contract.
 - [ABI 3.0 operator conventions](TENSOR_ACCELERATOR_ABI_3_OPERATOR_CONVENTIONS.md)
