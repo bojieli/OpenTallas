@@ -85,13 +85,31 @@ At the 2026-09-03 integration checkpoint, all four current deployment
 certificates report zero ABI `STATE` resources. The shared simulator has
 host-only performance observations and an opt-in decoded immutable-weight cache
 whose default is disabled. The Qwen long-run checker independently authenticates
-and admits the serialized deployment and verifies token text. The first bounded
-RTL integration slice now drives six real `DMA.GATHER` launches from the four
-shipped decode images through the engine array, compares 1,024 result words on
-Icarus and Verilator, and fails closed at the next unsupported operator. The
-remaining critical path is operator-complete RTL integration, fresh exact-length
-accelerator runs, and complete same-view SKY130/ASAP7 characterization; it is
-not another ABI revision.
+and admits the serialized deployment and verifies token text. Qwen HBM natural
+capture A is now running from its frozen committed identity; it remains an
+in-flight exact-8K prefill, not acceptance evidence, until all output and W10
+checks pass. Capture B may start only after A completes and demonstrates
+resource headroom.
+
+The bounded RTL integration slice now drives six real `DMA.GATHER` launches and
+four exact BF16 `TENSOR.EMBED_LOOKUP` launches from the four shipped decode
+images through the engine array. Icarus and Verilator each check 17,408 result
+words through 40 resolved views with 50,427 checks. The token-zero embedding
+row is a bounded synthetic probe, not a decoded model token, and the campaign
+rehashes only the four selected 8 KiB ranges rather than their complete
+segments. Its next fail-closed boundaries are Qwen `VECTOR.RMS_NORM` at PC 8
+and DeepSeek `DMA.TRANSFER` at PC 10.
+
+The exact-200K external-oracle tooling now has one fail-closed
+`--gate-b-production` profile. It fixes the exact prompt, EOS-or-256 horizon,
+200,320-position KV allocation, tiled-prefill geometry, source/input identities,
+full-checkpoint pre-run hash, qualified package/device/numeric stack, and
+completion rehash. This is launch readiness at tooling scope only: the full
+166.9 GB hash and production model run have not occurred, and the retained
+eight-token oracle remains rejected. The remaining critical path is completion
+of Qwen captures A/B, execution of DeepSeek Gate B, operator-complete RTL
+integration, both mandatory exact-length accelerator pairs, and complete
+same-view SKY130/ASAP7 characterization; it is not another ABI revision.
 
 The authoritative requirement-by-requirement progress ledger is
 [the unified execution checklist](UNIFIED_EXECUTION_CHECKLIST.md). Sections 2,
@@ -533,6 +551,13 @@ physical schedules.
 architectural live-buffer contents, faults, and counters for representative
 complete programs.
 
+**Current boundary:** generated-RoPE gather and one exact embedding-row lookup
+execute in each shipped decode image. Extend Qwen next through
+`VECTOR.RMS_NORM` and DeepSeek next through `DMA.TRANSFER`; then continue across
+the remaining required memory, tensor, vector, attention, route, reduction,
+communication, selection, token-append, and EOS operations. A synthetic
+token-zero embedding prefix does not satisfy this phase's complete-program exit.
+
 ### Phase F — mandatory contexts
 
 **Qwen:** exactly 8,000 natural prompt tokens followed by ordinary decode to
@@ -543,9 +568,11 @@ rendered context, generated token IDs, decoded text, tool actions, and no
 post-EOS execution.
 
 **DeepSeek:** exactly 200,000 natural prompt tokens followed by ordinary
-target-model decode to first EOS or the frozen maximum bound. A separate short
-agentic scenario validates the tool protocol; smaller long-context tests remain
-diagnostics.
+target-model decode to first official EOS, included in the result, or exactly
+256 generated tokens when EOS is not reached. The external oracle must first be
+produced by the fail-closed Gate-B profile with complete pre-run and completion
+identity checks. A separate short agentic scenario validates the tool protocol;
+smaller long-context tests remain diagnostics.
 
 **Exit:** TA-QW-8K-5 and TA-DS-200K-5 for both backends. Same-model ROM and HBM
 outputs meet the frozen numerical/token policy.

@@ -269,8 +269,14 @@ def rtl_shipped_prefix_correlation() -> dict[str, Any]:
         "evidence_class": body.get("evidence_class"),
         "cases": body.get("case_count"),
         "real_engine_launches": body.get("real_engine_launch_count"),
+        "dma_gather_launches": body.get("dma_gather_launch_count"),
+        "embedding_launches": body.get("embedding_launch_count"),
         "result_words": body.get("result_word_count"),
+        "rope_result_words": body.get("rope_result_word_count"),
+        "embedding_result_words": body.get("embedding_result_word_count"),
         "resolved_views": body.get("resolved_view_count"),
+        "selected_checkpoint_bytes": body.get("selected_checkpoint_byte_count"),
+        "selected_checkpoint_rows": len(body.get("checkpoint_rows", [])),
         "capability_faults": body.get("capability_fault_count"),
         "simulator_checks": body.get("simulator_checks", {}),
         "simulators_agree": body.get("simulators_agree"),
@@ -473,7 +479,8 @@ def main() -> int:
             if isinstance(count, int)
         )
         fault_sites = ", ".join(
-            f"{site.get('case')} PC {site.get('pc')}"
+            f"{site.get('case')} {site.get('opcode')} PC {site.get('pc')} "
+            f"descriptor {site.get('descriptor_id')}"
             for site in prefix_rtl["fault_sites"]
         )
         lines += [
@@ -481,9 +488,21 @@ def main() -> int:
             "",
             f"{prefix_rtl['cases']} shipped decode cases launched "
             f"{prefix_rtl['real_engine_launches']} real engine operations, "
-            f"compared {prefix_rtl['result_words']:,} result words and resolved "
-            f"{prefix_rtl['resolved_views']} views. The simulators agree = "
-            f"{prefix_rtl['simulators_agree']} ({checks}).",
+            f"split into {prefix_rtl['dma_gather_launches']} FP32 `DMA.GATHER` "
+            f"launches and {prefix_rtl['embedding_launches']} exact BF16 "
+            "`TENSOR.EMBED_LOOKUP` launches. They compared "
+            f"{prefix_rtl['result_words']:,} result words "
+            f"({prefix_rtl['rope_result_words']:,} generated-RoPE FP32 words "
+            f"and {prefix_rtl['embedding_result_words']:,} BF16 embedding "
+            f"codes) and resolved {prefix_rtl['resolved_views']} views. The "
+            f"simulators agree = {prefix_rtl['simulators_agree']} ({checks}).",
+            "",
+            f"Embedding reads cover {prefix_rtl['selected_checkpoint_rows']} "
+            f"selected checkpoint rows and {prefix_rtl['selected_checkpoint_bytes']:,} "
+            "bytes. Legal token ID 0 is a bounded synthetic address probe, not "
+            "a natural-language decoded token. Each selected range is rehashed "
+            "and bound to its certified deployment and declared segment; the "
+            "complete segment is not rehashed in this campaign.",
             "",
             f"Precise capability boundaries: {fault_sites}. Production "
             f"`STATE_COMPAT={prefix_rtl['state_compat']}`; post-fault writes = "

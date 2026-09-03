@@ -2,14 +2,15 @@
 
 **Checklist item:** W8.3
 **Status:** eleven `(family, subopcode)` pairs are implemented and correlated,
-including six bounded VECTOR additions. One exact `DMA.GATHER` profile is now
-wired to the microsequencer for a bounded prefix of all four shipped decode
-images; the rest of the engine surface and full-model integration are not
+including six bounded VECTOR additions. Exact `DMA.GATHER` and
+`TENSOR.EMBED_LOOKUP` profiles are now wired to the microsequencer for a bounded
+prefix of all four shipped decode images; the rest of the engine surface and
+full-model integration are not complete.
 **Evidence class:** `public_open_tool_rtl_simulation` (functional), plus a
 separate open-PDK physical view that carries its own boundary
 **Primary artifacts:**
 `results/rtl/abi3_engine_campaign.json` (functional correlation),
-`results/rtl/abi3_shipped_prefix_campaign.json` (first integrated prefix),
+`results/rtl/abi3_shipped_prefix_campaign.json` (integrated decode prefix),
 `testdata/compiler/abi3_engine/abi3_engine_vectors.json` (the vector set),
 `results/physical_abi3/sky130hd/{a3_selection_argmax,a3_vector_add,a3_dma_index_mover}/physical.json`
 (routed), `results/physical_abi3/sky130hd/a3_mac_lane/prelayout.json`,
@@ -38,9 +39,15 @@ separately. A third, narrower campaign now closes the first real connection.
 `results/rtl/abi3_shipped_prefix_campaign.json` loads the four shipped decode
 images, lets the sequencer resolve their real views, validates the referenced
 operator/view/numeric descriptors, and launches six dense FP32 `DMA.GATHER`
-operations through `ot_a3_engine_array`. Both simulators compare all 1,024
-result words before the bridge precisely refuses the next unsupported
-`TENSOR.EMBED_LOOKUP`.
+operations followed by four exact BF16 `TENSOR.EMBED_LOOKUP` operations through
+`ot_a3_engine_array`. Both simulators compare all 17,408 result words—1,024
+generated-RoPE FP32 words and 16,384 BF16 embedding codes—through 40 resolved
+views, with 50,427 checks per simulator. Each embedding uses legal token ID 0
+as a deterministic synthetic probe and reads one bounded 8 KiB checkpoint row.
+The campaign binds and rehashes those exact ranges plus their certified
+deployment/segment identities; it does not rehash a complete segment or claim
+natural-language token generation. The bridge then precisely refuses Qwen
+`VECTOR.RMS_NORM` at PC 8 or DeepSeek `DMA.TRANSFER` at PC 10.
 
 That witness proves the handshake, descriptor admission, resolved addressing,
 engine completion, and precise fail-stop boundary for this one prefix only. It
@@ -95,11 +102,15 @@ The boundary is still substantial. `SILU_MUL`, `SOFTMAX` and
 `SQRT_SOFTPLUS` are wholly deferred because correctly rounded
 exponential/logarithm/square-root RTL does not exist here; no approximation is
 substituted. Standalone `RMS_NORM`, `HEAD_RMS_NORM` and `ROPE` RTL exists but
-remains outside this engine array and this correlation. ATTENTION, ROUTE,
-REDUCTION, LINK and STATE have no datapath here. Within otherwise covered
-families, `TENSOR.GROUPED_MATMUL`, `ROUTED_MATMUL` and `EMBED_LOOKUP`,
-`DMA.TRANSFER` and `FILL`, and `SELECTION.TOKEN_APPEND` are also absent.
-`SELECTION.SAMPLE` has no governed contract on either side.
+remains outside this engine array and the standalone correlation. ATTENTION,
+ROUTE, REDUCTION, LINK and STATE have no datapath here. Within otherwise
+covered families, `TENSOR.GROUPED_MATMUL`, `ROUTED_MATMUL`, general
+`EMBED_LOOKUP` shapes, `DMA.TRANSFER` and `FILL`, and
+`SELECTION.TOKEN_APPEND` remain absent. The shipped-prefix campaign separately
+admits exactly one BF16 embedding form: one U32 token index selecting a
+4,096-code row, with no scale or auxiliary operand. It does not broaden the
+standalone vector-set claim. `SELECTION.SAMPLE` has no governed contract on
+either side.
 
 ## 3. What the correlation actually compares
 
@@ -535,10 +546,13 @@ It does **not** establish any of the following:
 * **the contraction lane's routed area, timing or power, or physical
   characterisation of the six new VECTOR blocks.** Three legacy blocks are
   routed; `ot_a3_mac_lane` and all six additions are not — see 5.3;
-* **integration beyond the shipped gather prefix.** The source-bound prefix
-  campaign now wires the sequencer to dense FP32 `DMA.GATHER`, but every later
-  required model operator, complete transaction, and token-producing path
-  remains unwired;
+* **integration beyond the shipped gather-and-embedding prefix.** The
+  source-bound prefix campaign now wires the sequencer to dense FP32
+  `DMA.GATHER` and the exact BF16 token-zero `TENSOR.EMBED_LOOKUP` form. Qwen
+  `VECTOR.RMS_NORM`, DeepSeek `DMA.TRANSFER`, every later required model
+  operator, a complete transaction, and the token-producing path remain
+  unwired. The embedding value is a selected checkpoint-row probe, not a
+  decoded output token;
 * **memory macros.** Operand and result memories are behavioural arrays in the
   verification top. No SRAM or ROM macro, no bank conflict, no ECC, no
   arbitration, no backpressure from a real memory;

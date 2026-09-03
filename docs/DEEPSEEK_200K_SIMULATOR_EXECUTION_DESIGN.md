@@ -2,10 +2,10 @@
 
 **Design ID:** `TA-DS-200K-SIM-1`
 
-**Status:** ABI 3.0 live-buffer Gate A is closed; WP-C/WP-D implementation is
-complete at bounded-test scope; final execution and comparison remain blocked
-by Gate B, source-current exact-200K accelerator runs, integrated RTL, and the
-physical comparison gates
+**Status:** ABI 3.0 live-buffer Gate A is closed; the Gate-B launcher is
+fail-closed and focused-test complete; WP-C/WP-D implementation is complete at
+bounded-test scope; the Gate-B production run, source-current exact-200K
+accelerator runs, integrated RTL, and physical comparison gates remain open
 
 **Issued:** 2026-09-03
 
@@ -102,11 +102,29 @@ or exactly 256 tokens with the same model revision, tokenizer, workload digest,
 numeric path disclosure, greedy selection rule, and source hashes. The campaign
 must not be redefined to stop after eight tokens.
 
-The source-current Gate-B checker is now implemented in
+The source-current Gate-B checker is implemented in
 [`check_deepseek_v4_200k_oracle.py`](../tools/check_deepseek_v4_200k_oracle.py),
-and the oracle runner records its repository-owned producer map plus immutable
-input identities at start; it rehashes the producer source map at completion so
-a source edit during the long run invalidates the result. The retained result is
+and commit `9303615` makes the production runner fail closed behind one
+`--gate-b-production` switch. That profile:
+
+- selects only `TA-DS-CTX-200K-1` and rejects an alternate snapshot, workload
+  root, workload index, or stale source hash before model construction;
+- requires exactly 200,000 prompt tokens and first official EOS or exactly 256
+  generated tokens;
+- allocates 200,320 aligned KV positions and forces the qualified tiled-prefill
+  geometry and declared host adaptations;
+- hashes all 74 checkpoint files, totaling 166,898,661,074 bytes, before
+  `torch` import or engine construction;
+- validates exact package versions, CUDA 12.8, `sm_120`, TF32 disabled, the
+  qualified Hadamard implementation, bitwise 16-head splitting, and the measured
+  FP4-fail/FP8-pass expert fallback before workload execution; and
+- records normalized launch provenance, then rehashes the producer map,
+  checkpoint manifest, workload index, and workload source at completion.
+
+An invalid override such as an eight-token generation cap exits before model
+import. Focused runner/checker tests pass, so this is production-launch readiness
+at tooling scope. The complete checkpoint hash and actual EOS-or-256 model run
+have not been performed; Gate B therefore remains open. The retained result is
 deliberately captured as a rejected
 [`preflight artifact`](../results/abi3/deepseek_v4_200k_oracle_acceptance_preflight.json):
 the exact prompt and tokenizer round trip pass, 74/74 checkpoint file sizes and
@@ -114,13 +132,12 @@ the exact prompt and tokenizer round trip pass, 74/74 checkpoint file sizes and
 separation passes, but the eight-token horizon, invalid EOS-or-256 terminal
 condition, insufficient prompt-plus-cap KV allocation, missing source-current
 producer identity, missing explicit tiled-prefill enablement, and omitted
-full-byte checkpoint hash keep `accepted = false`.
+full-byte checkpoint hash contribute to 41 reported problems and keep
+`accepted = false`.
 
-Acceptance also locks the exact qualified execution stack: tile geometry and
-declared adaptations, bitwise 16-head sparse-attention splitting, the measured
-FP4-fail/FP8-pass expert fallback, exact package versions, CUDA 12.8 on
-`sm_120`, TF32 disabled, and the qualified Hadamard extension. A fluent token
-sequence from an unqualified or undisclosed path does not close Gate B.
+The checker independently requires those same launch and completion identities.
+A fluent token sequence from an unqualified or undisclosed path does not close
+Gate B.
 
 The contract's target capability, cost-lock, and full-workload deployment
 digests are also pending. The source-locked final package must populate them for
@@ -361,14 +378,22 @@ performance-oriented simulator work starts at WP-B.
 
 ### 6.1 WP-B — oracle and final provenance package
 
+**Status.** Production launcher and strict acceptance checker are implemented
+and focused-test complete. The full checkpoint hash, production GPU execution,
+and accepted oracle package remain pending.
+
 **Goal.** Close Gate B and make the eventual result reproducible.
 
-**Implementation.** Extend `TA-DS-CTX-200K-1` through official EOS or 256
-tokens. Record model repository/revision, tokenizer digest, complete workload
-identity, oracle tool/source hashes, numeric-path disclosure, generated token
-IDs, EOS reason, and wall/footprint observations. After ABI 3.0 rebuilds, bind
-the exact ROM and HBM program, descriptor, deployment, capability, cost, and A28
-source-map digests in the comparison contract.
+**Implementation.** Run
+`python3 tools/run_deepseek_v4_reference_oracle.py --gate-b-production` to
+extend `TA-DS-CTX-200K-1` through official EOS or 256 tokens. The command must
+complete its pre-run full-byte hash, qualified-stack validation, model run, and
+completion rehash without an intervening source/input change. Retain model
+repository/revision, tokenizer digest, complete workload identity, oracle
+tool/source hashes, numeric-path disclosure, generated token IDs, EOS reason,
+and wall/footprint observations. After ABI 3.0 rebuilds, bind the exact ROM and
+HBM program, descriptor, deployment, capability, cost, and A28 source-map
+digests in the comparison contract.
 
 **Boundary.** The external comparator supplies expected tokens only. It supplies
 no activation, route, weight, live-buffer, or timing value to simulator execution.
