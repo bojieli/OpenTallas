@@ -44,7 +44,23 @@ The design is called a tensor accelerator. It is not a GPU, does not implement
 SIMT threads or warps, and is not represented as a reproduction of an NVIDIA
 product.
 
-### 1.1 ABI and live-buffer scope
+### 1.1 Priority acceptance gates
+
+Correct output tokens are Gate 1; desired TPOT is Gate 2. A result cannot enter
+the performance comparison until the same source-bound execution proves legal
+token IDs, exact oracle equality, decoded text, first-EOS-included or exact-cap
+stopping, and no post-EOS model step. Only then may it report prefill/TTFT, raw
+decode-step latency, steady-state TPOT, and aggregate throughput.
+
+Every batch-size point must retain prompt and generated counts per sequence,
+correct-token count, first divergence, stop reason, and complete topology,
+process, capability, deployment, workload, oracle, source, and implementation
+identities. Existing roofline and cycle batch sweeps produce no model tokens and
+remain projections. The numerical TPOT acceptance budgets must be frozen in the
+Qwen and DeepSeek comparison contracts before a run can claim it achieved the
+"desired" performance; neither current contract contains such a threshold.
+
+### 1.2 ABI and live-buffer scope
 
 ABI 3.0 is the final interface for this plan. ABI 3.1 is not required or in
 scope. Model KV caches, compressor histories, tokens, and intermediate values
@@ -557,9 +573,10 @@ capacity/stress evidence.
 
 The retained 8,192 test is a legacy boundary fixture, not enough capacity for
 the natural acceptance workload: 8,000 prompt positions plus the frozen
-256-token maximum require at least 8,256 qualified session positions. The HBM
-capability already advertises more, but the Qwen source adapter, IR, KV buffers
-and RoPE qualification must be extended and regenerated before the long run.
+256-token maximum require at least 8,256 qualified session positions. The
+current source adapter, IR, KV buffers, RoPE qualification, and ROM capability
+now share an 8,256-position contract, while HBM admits more. Fresh full-horizon
+execution rather than capacity repair is the remaining acceptance gate.
 
 All Qwen acceptance evidence uses exactly one conventional accelerator node.
 Cluster resources may not be credited to the Qwen chip-versus-chip comparison.

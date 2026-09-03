@@ -57,9 +57,10 @@ ordered implementation packages are:
 2. lower mutable KV, compressed-KV, ring, and compressor tensors explicitly as
    ordinary HBM/SRAM buffers, decomposing a complex update into existing
    operations and scratch views when one operator record is insufficient;
-3. remove `TRANSACTIONAL_STATE` from every production deployment's required
-   features and require `INTEGRITY_RETRY` only for a deployment with a real
-   packet link, where its scope is packet-local;
+3. preserve the integrated operation-derived feature rule:
+   `TRANSACTIONAL_STATE` is absent from every production program and
+   `INTEGRITY_RETRY` is required only by a deployment with a real packet link,
+   where its scope is packet-local;
 4. execute those operations directly against simulator HBM/SRAM buffers and
    enforce a fence after all memory and communication work for one token;
 5. correlate the same ABI 3.0 program, addresses, counters, and completion
@@ -85,20 +86,24 @@ At the 2026-09-03 integration checkpoint, all four current deployment
 certificates report zero ABI `STATE` resources. The shared simulator has
 host-only performance observations and an opt-in decoded immutable-weight cache
 whose default is disabled. The Qwen long-run checker independently authenticates
-and admits the serialized deployment and verifies token text. Qwen HBM natural
-capture A is now running from its frozen committed identity; it remains an
-in-flight exact-8K prefill, not acceptance evidence, until all output and W10
-checks pass. Capture B may start only after A completes and demonstrates
-resource headroom.
+and admits the serialized deployment and verifies token text. The first Qwen
+HBM natural capture A terminated without a result after it had been observed
+healthy for at least 2:28:07 while still in exact-8K prefill. It establishes no
+token, acceptance verdict, exact timing, peak RSS, TPOT, or resource headroom.
+A fresh capture A must use a durable detached service and the final frozen
+source/deployment identity. Capture B may start only after that A completes,
+passes, and demonstrates resource headroom.
 
-The bounded RTL integration slice now drives six real `DMA.GATHER` launches and
-four exact BF16 `TENSOR.EMBED_LOOKUP` launches from the four shipped decode
-images through the engine array. Icarus and Verilator each check 17,408 result
-words through 40 resolved views with 50,427 checks. The token-zero embedding
-row is a bounded synthetic probe, not a decoded model token, and the campaign
-rehashes only the four selected 8 KiB ranges rather than their complete
-segments. Its next fail-closed boundaries are Qwen `VECTOR.RMS_NORM` at PC 8
-and DeepSeek `DMA.TRANSFER` at PC 10.
+The bounded RTL integration slice now drives 6 real `DMA.GATHER`, 4 exact BF16
+`TENSOR.EMBED_LOOKUP`, 2 Qwen BF16 `VECTOR.RMS_NORM`, and 2 DeepSeek
+stride-zero BF16 `DMA.TRANSFER` launches from the four shipped decode images.
+Icarus and Verilator each check 58,368 result words through 52 resolved views
+with 124,189 checks. The token-zero embedding row is a bounded synthetic probe,
+not a decoded model token, and the campaign authenticates four selected 8 KiB
+embedding rows plus two selected 8 KiB RMS gain ranges rather than their
+complete segments. Its next fail-closed boundaries are Qwen `TENSOR.MATMUL` at
+PC 11, DeepSeek ROM `LINK.MULTICAST` at PC 13, and DeepSeek HBM `VECTOR.MHC`
+at PC 14.
 
 The exact-200K external-oracle tooling now has one fail-closed
 `--gate-b-production` profile. It fixes the exact prompt, EOS-or-256 horizon,
@@ -110,6 +115,14 @@ eight-token oracle remains rejected. The remaining critical path is completion
 of Qwen captures A/B, execution of DeepSeek Gate B, operator-complete RTL
 integration, both mandatory exact-length accelerator pairs, and complete
 same-view SKY130/ASAP7 characterization; it is not another ABI revision.
+
+The final DeepSeek accelerator-pair checker is also implemented and covered by
+26 focused tests. It independently authenticates the future one-wafer ROM and
+exactly-32-node HBM records and enforces exact-200K input, first-EOS-included or
+exactly-256 output, oracle-identical tokens/text, per-step success, zero
+production `STATE`, counters, implementation identity, and association equality
+after node normalization. Tooling readiness does not close the still-unrun
+pair.
 
 The authoritative requirement-by-requirement progress ledger is
 [the unified execution checklist](UNIFIED_EXECUTION_CHECKLIST.md). Sections 2,
@@ -552,11 +565,12 @@ architectural live-buffer contents, faults, and counters for representative
 complete programs.
 
 **Current boundary:** generated-RoPE gather and one exact embedding-row lookup
-execute in each shipped decode image. Extend Qwen next through
-`VECTOR.RMS_NORM` and DeepSeek next through `DMA.TRANSFER`; then continue across
-the remaining required memory, tensor, vector, attention, route, reduction,
+execute in every shipped decode image, followed by Qwen RMSNorm or DeepSeek
+stride-zero transfer. Extend Qwen next from `TENSOR.MATMUL`, DeepSeek ROM from
+`LINK.MULTICAST`, and DeepSeek HBM from `VECTOR.MHC`; then continue across the
+remaining required memory, tensor, vector, attention, route, reduction,
 communication, selection, token-append, and EOS operations. A synthetic
-token-zero embedding prefix does not satisfy this phase's complete-program exit.
+token-zero prefix does not satisfy this phase's complete-program exit.
 
 ### Phase F — mandatory contexts
 
@@ -575,7 +589,9 @@ identity checks. A separate short agentic scenario validates the tool protocol;
 smaller long-context tests remain diagnostics.
 
 **Exit:** TA-QW-8K-5 and TA-DS-200K-5 for both backends. Same-model ROM and HBM
-outputs meet the frozen numerical/token policy.
+outputs meet the frozen numerical/token policy. The DeepSeek pair must pass
+`tools/check_deepseek_v4_200k_accelerator_acceptance.py`; the checker's
+existence and synthetic fixtures do not close this exit.
 
 ### Phase G — SKY130 and ASAP7 convergence
 
@@ -625,6 +641,32 @@ A target is functionally complete only when:
 Artifact-only functional execution is full numerical model execution at the
 functional-simulator boundary. It is not an RTL or timing claim. Cycle, RTL,
 post-layout, and silicon completion are separate rows in every status report.
+
+### 11.1 Correct-token gate before TPOT
+
+The program's two highest-priority outcomes are correct output tokens and the
+desired time per output token (TPOT), in that order. No latency or throughput
+number is promotable until the exact same execution has passed all functional
+acceptance checks above. In particular, the result must retain the complete
+input context, legal generated IDs, raw and visible decoded text, exact oracle
+agreement, first-EOS-included-or-exact-cap termination, and proof that no model
+step ran after EOS.
+
+For each accepted batch point, retain together in one source-bound result:
+
+- batch size and prompt-token count per sequence;
+- generated tokens per sequence and in aggregate;
+- correct-token count, first divergence index, and stop reason per sequence;
+- prefill latency and time to first token;
+- every decode-step latency, or raw samples plus a lossless declared summary;
+- warm and steady-state TPOT, and aggregate tokens per second; and
+- topology, process view, clock/cost table, capability, deployment, workload,
+  oracle, source, and implementation identities.
+
+Analytical roofline and cycle-model batch sweeps do not execute the language
+model and therefore do not verify tokens. They remain in explicitly projected
+columns. Executed TPOT is reported only from a token-correct run; a projected
+TPOT may be compared with it but never relabeled as it.
 
 ## 12. Comparison protocol
 

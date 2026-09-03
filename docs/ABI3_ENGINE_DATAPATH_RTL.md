@@ -1,11 +1,12 @@
 # ABI 3.0 engine datapaths in RTL
 
 **Checklist item:** W8.3
-**Status:** eleven `(family, subopcode)` pairs are implemented and correlated,
-including six bounded VECTOR additions. Exact `DMA.GATHER` and
-`TENSOR.EMBED_LOOKUP` profiles are now wired to the microsequencer for a bounded
-prefix of all four shipped decode images; the rest of the engine surface and
-full-model integration are not complete.
+**Status:** eleven `(family, subopcode)` pairs are implemented and correlated in
+the standalone engine campaign, including six bounded VECTOR additions. A
+separate narrow shipped-prefix campaign wires exact `DMA.GATHER`,
+`TENSOR.EMBED_LOOKUP`, Qwen `VECTOR.RMS_NORM`, and DeepSeek `DMA.TRANSFER`
+profiles to the microsequencer; the rest of the engine surface and full-model
+integration are not complete.
 **Evidence class:** `public_open_tool_rtl_simulation` (functional), plus a
 separate open-PDK physical view that carries its own boundary
 **Primary artifacts:**
@@ -38,16 +39,19 @@ control-plane campaign, and its generated programs still correlate arithmetic
 separately. A third, narrower campaign now closes the first real connection.
 `results/rtl/abi3_shipped_prefix_campaign.json` loads the four shipped decode
 images, lets the sequencer resolve their real views, validates the referenced
-operator/view/numeric descriptors, and launches six dense FP32 `DMA.GATHER`
-operations followed by four exact BF16 `TENSOR.EMBED_LOOKUP` operations through
-`ot_a3_engine_array`. Both simulators compare all 17,408 result words—1,024
-generated-RoPE FP32 words and 16,384 BF16 embedding codes—through 40 resolved
-views, with 50,427 checks per simulator. Each embedding uses legal token ID 0
-as a deterministic synthetic probe and reads one bounded 8 KiB checkpoint row.
-The campaign binds and rehashes those exact ranges plus their certified
-deployment/segment identities; it does not rehash a complete segment or claim
-natural-language token generation. The bridge then precisely refuses Qwen
-`VECTOR.RMS_NORM` at PC 8 or DeepSeek `DMA.TRANSFER` at PC 10.
+operator/view/numeric descriptors, and launches 6 dense FP32 `DMA.GATHER`, 4
+exact BF16 `TENSOR.EMBED_LOOKUP`, 2 Qwen BF16 `VECTOR.RMS_NORM`, and 2
+DeepSeek stride-zero BF16 `DMA.TRANSFER` operations. Both simulators compare all
+58,368 result words—1,024 generated-RoPE FP32 words and 16,384 embedding,
+8,192 RMSNorm, and 32,768 transfer BF16 codes—through 52 resolved views, with
+124,189 checks per simulator. Each embedding uses legal token ID 0 as a
+deterministic synthetic probe and reads one bounded 8 KiB checkpoint row; each
+Qwen RMSNorm reads one bounded 8 KiB gain range. The campaign binds and rehashes
+those 49,152 selected-range bytes plus their certified deployment/segment
+identities; it does not rehash a complete segment or claim natural-language
+token generation. The bridge then precisely refuses Qwen `TENSOR.MATMUL` at PC
+11, DeepSeek ROM `LINK.MULTICAST` at PC 13, or DeepSeek HBM `VECTOR.MHC` at PC
+14.
 
 That witness proves the handshake, descriptor admission, resolved addressing,
 engine completion, and precise fail-stop boundary for this one prefix only. It
@@ -105,12 +109,11 @@ substituted. Standalone `RMS_NORM`, `HEAD_RMS_NORM` and `ROPE` RTL exists but
 remains outside this engine array and the standalone correlation. ATTENTION,
 ROUTE, REDUCTION, LINK and STATE have no datapath here. Within otherwise
 covered families, `TENSOR.GROUPED_MATMUL`, `ROUTED_MATMUL`, general
-`EMBED_LOOKUP` shapes, `DMA.TRANSFER` and `FILL`, and
+`EMBED_LOOKUP` shapes, general `DMA.TRANSFER` and `FILL`, and
 `SELECTION.TOKEN_APPEND` remain absent. The shipped-prefix campaign separately
-admits exactly one BF16 embedding form: one U32 token index selecting a
-4,096-code row, with no scale or auxiliary operand. It does not broaden the
-standalone vector-set claim. `SELECTION.SAMPLE` has no governed contract on
-either side.
+admits exactly one BF16 embedding form, one Qwen BF16 RMSNorm form, and one
+DeepSeek stride-zero BF16 transfer form. These do not broaden the standalone
+vector-set claim. `SELECTION.SAMPLE` has no governed contract on either side.
 
 ## 3. What the correlation actually compares
 
@@ -546,13 +549,14 @@ It does **not** establish any of the following:
 * **the contraction lane's routed area, timing or power, or physical
   characterisation of the six new VECTOR blocks.** Three legacy blocks are
   routed; `ot_a3_mac_lane` and all six additions are not — see 5.3;
-* **integration beyond the shipped gather-and-embedding prefix.** The
-  source-bound prefix campaign now wires the sequencer to dense FP32
-  `DMA.GATHER` and the exact BF16 token-zero `TENSOR.EMBED_LOOKUP` form. Qwen
-  `VECTOR.RMS_NORM`, DeepSeek `DMA.TRANSFER`, every later required model
-  operator, a complete transaction, and the token-producing path remain
-  unwired. The embedding value is a selected checkpoint-row probe, not a
-  decoded output token;
+* **integration beyond the shipped gather/embedding/RMSNorm-or-transfer
+  prefix.** The source-bound prefix campaign now wires the sequencer to dense
+  FP32 `DMA.GATHER`, exact BF16 token-zero `TENSOR.EMBED_LOOKUP`, Qwen BF16
+  `VECTOR.RMS_NORM`, and DeepSeek stride-zero BF16 `DMA.TRANSFER`. Qwen
+  `TENSOR.MATMUL`, DeepSeek ROM `LINK.MULTICAST`, DeepSeek HBM `VECTOR.MHC`,
+  every later required model operator, a complete transaction, and the
+  token-producing path remain unwired. The embedding value is a selected
+  checkpoint-row probe, not a decoded output token;
 * **memory macros.** Operand and result memories are behavioural arrays in the
   verification top. No SRAM or ROM macro, no bank conflict, no ECC, no
   arbitration, no backpressure from a real memory;

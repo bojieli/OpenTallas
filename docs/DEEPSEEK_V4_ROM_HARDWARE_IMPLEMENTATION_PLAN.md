@@ -50,6 +50,18 @@ The lane is complete only when:
 - separate SKY130 and ASAP7 wafer reports can be compared with the DeepSeek
   32-node HBM deployment in the matching technology view.
 
+Correct output tokens are the first acceptance gate and desired TPOT is the
+second. No wafer performance point is promotable until the same exact-200K
+execution passes the independent accelerator-pair checker against the complete
+Gate-B oracle, including legal IDs/text, first-EOS-included-or-exact-256
+stopping, and no post-EOS step. Each accepted batch point must retain
+prompt/generated counts, correct-token count, first divergence, stop reason,
+TTFT, raw decode-step latencies, steady-state TPOT, aggregate throughput, and
+complete process, topology, deployment, workload, oracle, source, and
+implementation identities. Analytical batch sweeps remain projected. A
+numerical TPOT budget must be frozen in the comparison contract before this lane
+can claim the desired performance is achieved.
+
 ## 2. Retained baseline
 
 ### 2.1 Closed semantic and checkpoint work

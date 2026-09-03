@@ -4,10 +4,11 @@
 
 **Status date:** 2026-09-03
 
-**Input baseline:** `main == origin/main` at `79dafa7` before this report
-refresh; this includes the Qwen W10 provenance repair, the fail-closed DeepSeek
-exact-200K production-oracle launcher, and the shipped-program RTL gather plus
-embedding prefix
+**Input baseline:** `main` through `35884c9` before this report refresh; this
+includes the fail-closed DeepSeek exact-200K oracle and accelerator-pair
+checkers, operation-derived ABI feature requirements, refreshed zero-`STATE`
+deployments, and the shipped-program RTL prefix through Qwen RMSNorm and
+DeepSeek transfer
 
 **Role:** current narrative status and handoff report. Machine-readable result
 artifacts and the [unified execution checklist](UNIFIED_EXECUTION_CHECKLIST.md)
@@ -32,12 +33,13 @@ The present boundary is therefore:
 
 - compiler and deployment architecture: implemented and independently checked;
 - full-model functional simulator: implemented, with prior short token evidence;
-- production acceptance validators: implemented for Qwen and for the DeepSeek
-  exact-200K external oracle; both still reject the incomplete current evidence;
+- production acceptance validators: implemented for Qwen, the DeepSeek
+  exact-200K external oracle, and the final DeepSeek ROM/HBM accelerator pair;
+  all still reject the incomplete current evidence;
 - RTL control plane and bounded arithmetic blocks: independently correlated;
-- sequencer-to-arithmetic integration: the exact shipped-program
-  `DMA.GATHER` plus `TENSOR.EMBED_LOOKUP` prefix is closed; complete operator
-  RTL remains open;
+- sequencer-to-arithmetic integration: the exact shipped-program prefix through
+  `DMA.GATHER`, `TENSOR.EMBED_LOOKUP`, and then Qwen `VECTOR.RMS_NORM` or
+  DeepSeek `DMA.TRANSFER` is closed; complete operator RTL remains open;
 - exact mandatory long executions: open; and
 - final process-specific performance comparison: open.
 
@@ -54,43 +56,41 @@ the remaining cost.
 | Architecture and ABI 3.0 | closed | frozen live-buffer/fence profile; zero `STATE` in all four deployments | no ABI 3.1 work is required |
 | Common IR and four backend builds | closed for current graphs | Qwen and DeepSeek lower through the shared Model Graph and Tensor Kernel IR into HBM and ROM bundles | rebuild whenever an execution-authoritative source changes |
 | Functional short execution | partial | complete functional engine exists; retained short token prefixes and historical workload evidence | current DeepSeek arithmetic repair and Qwen source profile make the retained captures non-promotable |
-| RTL 3.0 | partial | shipped control replay and 11 bounded arithmetic pairs independently correlate; a source-bound prefix campaign now drives six real gathers and four exact embedding lookups from all four decode images through the engine array on Icarus and Verilator | the witness next stops at Qwen RMS norm or DeepSeek DMA transfer; the full operator set and whole-token path are incomplete |
+| RTL 3.0 | partial | shipped control replay and 11 bounded arithmetic pairs independently correlate; a source-bound prefix campaign now drives 6 gathers, 4 embedding lookups, 2 Qwen RMSNorms, and 2 DeepSeek transfers from all four decode images on Icarus and Verilator | the witness next stops at Qwen MATMUL, DeepSeek ROM LINK.MULTICAST, or DeepSeek HBM VECTOR.MHC; the full operator set and whole-token path are incomplete |
 | Mandatory workloads | open | exact prompt artifacts and tokenizer/oracle machinery exist | fresh Qwen exact-8K pairs and both DeepSeek exact-200K executions are absent; the DeepSeek oracle stops after eight tokens |
 | SKY130 and ASAP7 | partial | several bounded blocks have process-specific reports | neither view characterizes a complete target; ASAP7 readiness has 15 fail-closed blockers |
 | Governed comparison | partial | short historical ROM/HBM comparisons retain topology and counter evidence | no source-current mandatory-workload pair or complete same-view system cost exists |
 
 ### 1.2 Source-current execution readiness
 
-At this checkpoint one Qwen natural capture is active, but no long accelerator
-campaign is being promoted as complete. Long jobs are serialized until their
-source and output identities are committed and one measured run establishes
-memory and I/O headroom.
+At this checkpoint no long accelerator capture is active or accepted. Long jobs
+are serialized until their source and output identities are committed and one
+measured run establishes memory and I/O headroom.
 
-- Qwen natural capture A launched from committed and pushed source
-  `b27dc801e171` after an empty source-diff preflight. Its serialized deployment
-  independently passed 54/54 W10 admission checks, exactly matched the standard
-  HBM bundle, and contained zero `STATE` descriptors, instructions, storage
-  objects, permissions, or verifier resources. At report time it was still in
-  the exact-8,000 prefill at the 2026-09-03 14:16 UTC observation point, after
-  1 hour 54 minutes at about 120% host CPU and 10.2 GiB RSS, with zero major
-  page faults. It had produced no output token and its result JSON correctly
-  remained absent; this is execution in progress, not acceptance or throughput
-  evidence.
+- Qwen natural capture A launched from committed source `b27dc801e171` after an
+  empty source-diff preflight. It was last observed healthy after at least
+  2:28:07 at about 120% host CPU and 13.4 GB RSS, with zero major faults, while
+  still in exact-8,000 prefill. The attached process later disappeared: stdout
+  ends at the execution-start line, the timing file is empty, and no result JSON
+  exists. No accessible kernel or journal record identifies an OOM or signal.
+  This incomplete attempt establishes no token, verdict, exact wall time, peak
+  RSS, resource headroom, or TPOT. A fresh capture A must use the final frozen
+  identity and a durable detached service; capture B remains gated on A passing.
 
 - Qwen HBM deployment `a6d98d47ff80…` passes its 21/21 certificate and the
   independent 43/43 admission checks. It spans 18.53 GB of admitted HBM and has
   exact prefill/decode entrypoints, 215 descriptors, 74 instructions, and zero
   `STATE` records. A source-map audit found that `runtime/sim/weight_cache.py`
   participates in execution but was not mandatory in the W10 checker. It is now
-  part of the required source map, and the active capture A binds that committed
-  checker identity.
-- Qwen ROM deployment `f8505cb6f702…` passes 61/61 schedule checks with 236
-  descriptors, 74 instructions, and zero `STATE` records. Both current ROM
-  bundles still require unused legacy transactional-state/integrity-retry
-  feature bits even though neither emits a `STATE` record and model-operation
-  retry is forbidden. This does not add ABI 3.1 machinery, but it is unnecessary
-  profile surface. The next ROM rebuild must remove those required bits while
-  retaining packet-local integrity only where a real link exists.
+  part of the required source map. The terminated attempt bound that committed
+  checker identity, but subsequent mandatory builder changes make a fresh
+  final-identity capture necessary regardless of how it terminated.
+- Qwen ROM deployment `d8a6f8edaaac…` passes 61/61 schedule checks with 236
+  descriptors, 74 instructions, and zero `STATE` records. Operation-derived
+  feature cleanup is integrated: every production program omits
+  `TRANSACTIONAL_STATE`, Qwen also omits `INTEGRITY_RETRY`, and only actual
+  DeepSeek link descriptors request packet-local integrity/replay. Capability
+  compatibility bits remain unchanged.
 - DeepSeek prompt/source/checkpoint preflight confirms the pinned exact-200,000
   prompt identity and checkpoint topology/size boundary. Commit `9303615` adds
   one fail-closed `--gate-b-production` launch profile. It admits only
@@ -105,20 +105,29 @@ memory and I/O headroom.
   preflight still correctly reports 41 problems and rejects the eight-token
   record; no 200K accelerator job should start before a replacement oracle
   passes.
-- Commit `79dafa7` extends the retained, source-bound RTL milestone. All four
-  shipped decode images enter the real sequencer. Six dense FP32 `DMA.GATHER`
-  launches reproduce 1,024 generated-RoPE words, then four exact BF16
-  `TENSOR.EMBED_LOOKUP` launches reproduce 16,384 checkpoint codes from four
-  bounded 8 KiB row reads: 10 launches, 17,408 checked result words, 40 resolved
-  views, and 50,427 checks in each independently written Icarus and Verilator
-  checker. The legal token ID 0 is a deliberately bounded synthetic address
-  probe, not natural-language decoding, and only each selected range—not the
-  complete checkpoint segment—is rehashed in this RTL campaign. Qwen next
-  refuses `VECTOR.RMS_NORM` at PC 8 (descriptors 50/64); DeepSeek next refuses
-  `DMA.TRANSFER` at PC 10 (descriptors 363/532). Each is a precise `CAPABILITY`
-  trap without unsupported retirement, event publication, compatibility-state
-  activity, or post-fault write. This remains a decode-prefix witness, not
-  prefill, a whole transaction or token, EOS, timing, area, or power evidence.
+- `check_deepseek_v4_200k_accelerator_acceptance.py` now provides the final
+  fail-closed accelerator-pair gate, covered by 26 focused tests. After an
+  accepted Gate-B oracle, it independently authenticates one exact ROM-wafer
+  record and one exact 32-node-HBM record, requires the exact 200,000-token
+  prompt and first-EOS-included-or-256 termination, checks zero `STATE`, current
+  identities, exact token IDs/text, per-step semantics, counters, implementation
+  identity, and association equality after 32-node normalization. Its presence
+  is tooling readiness only; no production exact-200K pair exists.
+- Commit `f7d78d4` extends the retained, source-bound RTL milestone. All four
+  shipped decode images enter the real sequencer. The campaign launches 6 FP32
+  `DMA.GATHER`, 4 BF16 `TENSOR.EMBED_LOOKUP`, 2 Qwen BF16
+  `VECTOR.RMS_NORM`, and 2 DeepSeek stride-zero BF16 `DMA.TRANSFER`
+  operations. It compares 58,368 exact result words—1,024 RoPE, 16,384
+  embedding, 8,192 RMSNorm, and 32,768 transfer—through 52 resolved views and
+  authenticates 49,152 selected-range checkpoint bytes: four 8 KiB embedding
+  rows and two 8 KiB RMS gain ranges. Icarus and Verilator each pass 124,189
+  checks. Qwen next refuses `TENSOR.MATMUL` at PC 11 (descriptors 59/72);
+  DeepSeek ROM next refuses `LINK.MULTICAST` at PC 13 (descriptor 368), and
+  DeepSeek HBM next refuses `VECTOR.MHC` at PC 14 (descriptor 546). Each is a
+  precise `CAPABILITY` trap without unsupported retirement, event publication,
+  compatibility-state activity, or post-fault write. This remains a decode
+  prefix witness, not prefill, a whole transaction or token, EOS, timing, area,
+  or power evidence.
 
 ## 2. Frozen ABI 3.0 execution profile
 
@@ -214,11 +223,12 @@ arithmetic, cycle performance, or physical closure.
   tiling and qualified execution stack before construction, then checks the
   same source and inputs again at completion. This makes an invalid launch fail
   early; it does not make the still-unrun external oracle complete.
-- The shipped RTL bridge now uses the existing index mover for exact BF16
-  embedding lookup as well as generated-RoPE gather. Its four selected 8 KiB
-  checkpoint rows are individually authenticated and tied to certified
-  deployments. This is deliberately smaller than full-segment or full-shard
-  authentication and deliberately uses synthetic token ID 0.
+- The shipped RTL bridge now executes generated-RoPE gather, exact BF16
+  embedding lookup, Qwen RMSNorm, and DeepSeek stride-zero transfer. Its four
+  selected 8 KiB embedding rows and two selected 8 KiB RMS gain ranges are
+  individually authenticated and tied to certified deployments. This is
+  deliberately smaller than full-segment or full-shard authentication and the
+  embedding lookup deliberately uses synthetic token ID 0.
 
 ## 5. RTL status
 
@@ -257,19 +267,20 @@ this boundary.
 The separate shipped-prefix campaign closes one narrow connection between the
 two evidence classes above. It validates the real operator, tensor-view, dtype,
 permission, geometry, and numeric descriptors before allowing the sequencer's
-initial generated-RoPE gathers and embedding lookups to launch the existing DMA
-index datapath. Six gathers and four embeddings produce 17,408 checked words
-through 40 resolved views, with 50,427 checks per simulator. Engine faults are
-precise: a failed operation neither retires nor publishes its completion event.
+initial generated-RoPE gathers, embedding lookups, Qwen RMSNorms, and DeepSeek
+transfers to launch the bounded datapaths. The 14 launches produce 58,368
+checked words through 52 resolved views, with 124,189 checks per simulator.
+Engine faults are precise: a failed operation neither retires nor publishes its
+completion event.
 
 The campaign intentionally refuses the next operation rather than simulating it
-as a no-op: Qwen stops at `VECTOR.RMS_NORM`, while DeepSeek stops at
-`DMA.TRANSFER`. Its embedding index is legal token ID 0, selected solely as a
-bounded deterministic probe; it is not a tokenizer-driven model output and
-does not establish even one whole token step. It therefore establishes the
-sequencer/view/engine handshake and real data movement only for that prefix. No
-current RTL simulation executes a whole model or produces an accepted output
-token.
+as a no-op: Qwen stops at `TENSOR.MATMUL`; DeepSeek ROM stops at
+`LINK.MULTICAST`; and DeepSeek HBM stops at `VECTOR.MHC`. Its embedding index
+is legal token ID 0, selected solely as a bounded deterministic probe; it is not
+a tokenizer-driven model output and does not establish even one whole token
+step. It therefore establishes the sequencer/view/engine handshake and real
+data movement only for that prefix. No current RTL simulation executes a whole
+model or produces an accepted output token.
 
 ## 6. What “full execution” means
 
@@ -304,12 +315,12 @@ tokenizer round trips, no post-EOS model step, and two independent HBM
 captures. The required chat/reasoning and simple agentic workload matrix must
 also be source-current on the target to which each claim is assigned.
 
-The checker is ready and HBM natural capture A is running from its frozen,
-committed source and deployment identity. It remains in prefill with no output
-token at this report boundary, so neither capture A nor the required independent
-capture B is accepted. Existing older local W10 captures are diagnostic because
-they bind the superseded pre-live-buffer/runtime source identity. The older
-stress capture also diverges and there is no accepted ROM stress partner.
+The checker is ready, but HBM natural capture A terminated without a result
+after at least 2:28:07 while still in prefill. It produced no output token or
+timing footer, so neither capture A nor the required independent capture B is
+accepted. Existing older local W10 captures are diagnostic because they bind
+the superseded pre-live-buffer/runtime source identity. The older stress capture
+also diverges and there is no accepted ROM stress partner.
 
 ### 7.2 DeepSeek
 
@@ -321,12 +332,11 @@ artifact currently executes that full prompt. Neither can close acceptance.
 
 The immediate DeepSeek blockers are execution of the new fail-closed production
 oracle through complete EOS-or-256, including its pre-run and completion
-full-byte/input checks; source-current deployments bound to the final runtime;
-and two genuine long-context accelerator executions. The launcher itself is
-implemented and focused-test complete, but neither its full checkpoint hash nor
-the model run has occurred. Performance instrumentation and decoded weight
-caching make those runs more tractable but do not reduce the workload or the
-required arithmetic.
+full-byte/input checks, followed by two genuine long-context accelerator
+executions. The launcher and final pair checker are implemented and focused-test
+complete, but neither the full oracle run nor either accelerator run has
+occurred. Performance instrumentation and decoded weight caching make those
+runs more tractable but do not reduce the workload or the required arithmetic.
 
 ### 7.3 Tokens, stopping, and speed actually established
 
@@ -354,6 +364,16 @@ tokens-per-second figure. Functional host time, cycle-model time, RTL simulator
 throughput, projected target cycles, and post-layout frequency will remain
 separate fields; none will be converted into another by implication.
 
+Correct tokens and TPOT are the two highest-priority acceptance gates, in that
+order. A performance point is admissible only if the same execution first
+passes exact oracle token equality, legal-ID and decoded-text checks,
+first-EOS-included-or-exact-cap stopping, and no-post-EOS execution. Its measured
+record must then retain prefill latency/TTFT, each decode-step latency (or a
+lossless distribution plus raw samples), warm and steady-state TPOT, aggregate
+throughput, and all workload/topology/process/capability/deployment/source
+identities. Existing batch-size roofline tables generate no tokens; they remain
+projections and cannot be presented as executed TPOT or correctness evidence.
+
 The 2026-09-03 launch preflight observed 202.4 GB host RAM with 165.1 GB
 available, 99.4 GB free filesystem space, and an RTX PRO 6000 with 97,887 MiB
 total but only 12,353 MiB free. Swap was effectively full. The DeepSeek
@@ -379,35 +399,42 @@ is not foundry signoff.
 ## 9. Critical path from here
 
 1. Keep ABI 3.0 frozen and retain the zero-`STATE`, live-buffer admission gates.
-2. Monitor Qwen HBM exact-8K natural capture A without modifying its frozen
-   sources or inputs. When it finishes, require legal IDs, exact tokenizer and
-   text round trips, exact external-oracle equality, correct first-EOS-or-256
+2. Freeze the final source/deployment identity and relaunch Qwen HBM exact-8K
+   natural capture A as a durable detached service with a unique result, log,
+   timing, and deployment path. Require legal IDs, exact tokenizer and text
+   round trips, exact external-oracle equality, correct first-EOS-or-256
    stopping, complete provenance, and a strict W10 checker pass.
-3. Only after capture A establishes resource headroom and passes, launch the
+3. Only after the fresh capture A establishes resource headroom and passes,
+   launch the
    independent capture B. Then complete the assigned source-current Qwen ROM,
    reasoning/chat, stress, and closed-loop agentic cells.
 4. Execute the DeepSeek `--gate-b-production` external oracle when the required
    GPU, checkpoint I/O, and host-memory resources are available. Require both
    the pre-run full-byte hash and the completion identity rehash; do not promote
    the retained eight-token prefix.
-5. Remove unused production feature requirements: `TRANSACTIONAL_STATE`
-   everywhere and `INTEGRITY_RETRY` from single-chip Qwen ROM. Retain
-   integrity/replay only for packets on real DeepSeek links.
-6. Extend the proven RTL prefix next through Qwen `VECTOR.RMS_NORM` and
-   DeepSeek `DMA.TRANSFER`, then continue through every required operator,
-   memory service, communication primitive, argmax, token append, and EOS path.
+5. Preserve the integrated operation-derived feature invariant:
+   `TRANSACTIONAL_STATE` in no production program and `INTEGRITY_RETRY` only
+   for actual DeepSeek communication descriptors.
+6. Extend the proven RTL prefix from Qwen `TENSOR.MATMUL`, DeepSeek ROM
+   `LINK.MULTICAST`, and DeepSeek HBM `VECTOR.MHC`, then continue through every
+   required operator, memory service, communication primitive, argmax, token
+   append, and EOS path.
 7. Run short integrated token diagnostics on all four targets; then run exact
    200K accelerator execution on one DeepSeek ROM wafer and exactly 32 shared
    HBM/SRAM chips, publishing complete tokens, text, counters, topology, and
-   source identities.
-8. Complete separate SKY130 and ASAP7 full-system characterization and feed
+   source identities and passing the exact-200K accelerator-pair checker.
+8. Only after a run is token-correct, measure and report its TPOT. For every
+   later batch point, require correct-token count, first divergence, stop
+   reason, TTFT, per-step latency, steady-state TPOT, and aggregate throughput
+   from the same execution; keep analytical projections separate.
+9. Complete separate SKY130 and ASAP7 full-system characterization and feed
    measured limits back into the cycle model before publishing the same-view
    ROM-versus-HBM comparison.
 
 Every new long simulation must start from one frozen, committed source,
-deployment, workload, oracle, topology, and output identity. The already-active
-Qwen capture A remains valid under its own launch identity and must not be
-restarted merely because documentation or unrelated RTL changed afterward.
+deployment, workload, oracle, topology, and output identity. The terminated
+Qwen attempt is retained only as diagnostic provenance and must not be promoted
+or used to derive TPOT.
 
 ## 10. Bottom line
 

@@ -2,10 +2,11 @@
 
 **Design ID:** `TA-DS-200K-SIM-1`
 
-**Status:** ABI 3.0 live-buffer Gate A is closed; the Gate-B launcher is
-fail-closed and focused-test complete; WP-C/WP-D implementation is complete at
-bounded-test scope; the Gate-B production run, source-current exact-200K
-accelerator runs, integrated RTL, and physical comparison gates remain open
+**Status:** ABI 3.0 live-buffer Gate A is closed; the Gate-B launcher and the
+exact-200K accelerator-pair checker are fail-closed and focused-test complete;
+WP-C/WP-D implementation is complete at bounded-test scope; the Gate-B
+production run, source-current exact-200K accelerator runs, integrated RTL, and
+physical comparison gates remain open
 
 **Issued:** 2026-09-03
 
@@ -149,7 +150,10 @@ both targets before a comparison is published.
 emit zero `STATE` resources and use direct live buffers. No optimization is
 admissible as a DeepSeek 200K result, and no final ROM-wafer versus 32-node-HBM
 comparison is admissible, before Gate B closes and both full accelerator
-executions pass.**
+executions pass
+`tools/check_deepseek_v4_200k_accelerator_acceptance.py`.** The checker must
+consume the two future records after the accepted Gate-B oracle exists; its
+synthetic tests are tooling evidence, not production execution.
 
 ## 3. Audited execution identities
 
@@ -692,7 +696,7 @@ architectural destination or live-buffer update.
 | ABI 3.0 direct live buffers | Compression boundaries, ordinary mutable-object addresses, token-step fence, and fail-stop fault cases | Reference, compiler checker, functional simulator, cycle trace, and RTL address/control correlation agree without a new wire value |
 | Historical state walls | ROM 2,048/2,049 and HBM 40,960/40,961 | The obsolete request-span shadow copy is absent and cannot cause a capacity refusal |
 | Deployment trace | Regenerated P32 route traces with the current manifest-emitting runner | Baseline and WP-C/D/E results match bitwise before longer runs |
-| Final workload | Exact 200K on rebuilt ROM and HBM deployments through first EOS or 256 | ROM/HBM agree with each other and the complete external oracle |
+| Final workload | Exact 200K on rebuilt ROM and HBM deployments through first EOS or 256 | `check_deepseek_v4_200k_accelerator_acceptance.py` accepts the independently authenticated ROM-wafer/HBM-32 pair against the complete external oracle |
 
 ## 10. Benchmark and promotion criteria
 
@@ -733,6 +737,16 @@ A package is promoted only when:
 8. topology, LINK, A28 source, and provenance checks remain admitted; and
 9. the result artifact contains no null association or source identity.
 
+For the final exact-200K package, the independent pair checker is mandatory. It
+first requires an accepted full-byte Gate-B oracle, independently reopens and
+authenticates both serialized deployments, requires one ROM-wafer logical
+device and exactly 32 HBM/SRAM nodes, exact 200,000-token input,
+first-EOS-included or exactly-256 termination, legal and oracle-identical token
+IDs and decoded text, per-step success/trap semantics, zero ABI `STATE`
+surface, counters, current source/input and implementation identities, and
+association equality after 32-node normalization. Its 26 focused tests and
+synthetic passing fixtures do not constitute either production execution.
+
 For the final cross-target result, the ROM and HBM artifacts must name the same
 qualified backend/association identity as well as their target-specific
 deployment identities.
@@ -742,6 +756,12 @@ materialization and `A - 1` hits. This per-key reconciliation is required; a
 single aggregate hit-rate number is insufficient.
 
 ### 10.3 Performance promotion gates
+
+Token correctness is Gate 1 and TPOT is Gate 2. A TPOT value is promotable only
+when it comes from the same exact execution that passed Section 10.2, including
+oracle-identical IDs/text and correct first-EOS-or-cap behavior. Modelled or
+roofline latency remains explicitly projected and is never reported as executed
+TPOT.
 
 Each work package declares its performance threshold before measuring. Unless a
 package records a stricter target, the default promotion threshold is:
@@ -767,7 +787,8 @@ The final result runs both source-locked, ABI 3.0 live-buffer targets on the exa
 200,000-token workload and continues until first official EOS or 256 generated
 tokens. It retains the exact tails, all provenance and association manifests,
 per-node/cluster counters, cache state, memory/fault observations, and the
-complete external comparison.
+complete external comparison, then passes the exact-200K accelerator-pair
+checker.
 
 P32 timings, eight-token oracle prefixes, static route bounds, projected 200K
 times, or a successful allocation/capacity check are not substitutes for this

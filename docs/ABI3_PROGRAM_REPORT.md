@@ -27,7 +27,7 @@ The last retained source-locked pinned chat workload — rendered through the
 official template and tokenized by the pinned tokenizer — was compiled from the
 neutral IR into both 75-instruction Qwen deployments, admitted by the
 independent verifier, and executed entirely by the microsequencer and engines:
-embedding, thirty-six layers, GQA attention, transactional KV state, vocabulary
+embedding, thirty-six layers, GQA attention, mutable KV buffers, vocabulary
 projection, and **on-device argmax and token append**. Qwen ROM (`925351…`) and
 HBM (`8e1185…`) each reproduce the same four-token oracle prefix:
 
@@ -208,11 +208,11 @@ Run on the **programs this repository actually ships**
 (`results/rtl/abi3_deployment_campaign.json`), all four deployments — Qwen3-8B
 ROM single chip, Qwen3-8B HBM single chip, DeepSeek-V4-Flash ROM wafer, and
 DeepSeek-V4-Flash HBM 32-node cluster — correlate exactly on both entrypoints
-at whole-transaction depth. Each Qwen case retires 2,105 instructions with 693
-engine issues and 2,143 resolved operand views. DeepSeek ROM retires 18,491 /
-11,714 instructions on prefill / decode, with 6,852 / 3,600 issues and 20,499 /
-10,428 views; DeepSeek HBM retires 18,607 / 11,229 instructions, with 7,376 /
-4,454 issues and 21,114 / 11,718 views. Every case ends in COMPLETE rather than
+at whole-transaction depth. Each Qwen case retires 2,104 instructions with 691
+engine issues and 2,143 resolved operand views. DeepSeek ROM retires 19,999 /
+12,929 instructions on prefill / decode, with 7,866 / 4,490 issues and 23,395 /
+13,221 views; DeepSeek HBM retires 20,048 / 12,379 instructions, with 8,388 /
+5,342 issues and 24,010 / 14,511 views. Every case ends in COMPLETE rather than
 at a work bound, identically on Icarus 11.0 and Verilator 5.050. **The artifact's `correlated_cases` field remains the
 authority**, since it moves whenever a sequencer bound or shipped image moves.
 At commit `518260f` it did not include DeepSeek: the RTL trapped after eight
@@ -224,6 +224,17 @@ boundary coverage on Icarus and Verilator. It correlates object/shard lookup,
 addressing, masking, repair translation, refusal classes, sense beats, operand
 alignment, and accounting. It contains no ROM array and establishes no cell
 area, read energy, sense margin, retention, defect, or macro-timing evidence.
+
+A third, source-bound shipped-prefix campaign is the current narrow exception
+to the control campaign's recording-no-op boundary. Across the four decode
+images, it executes 6 FP32 `DMA.GATHER`, 4 BF16 `TENSOR.EMBED_LOOKUP`, 2 Qwen
+BF16 `VECTOR.RMS_NORM`, and 2 DeepSeek stride-zero BF16 `DMA.TRANSFER`
+operations. Icarus and Verilator each compare 58,368 exact words through 52
+resolved views with 124,189 checks, while authenticating four selected 8 KiB
+embedding rows and two selected 8 KiB RMS gain ranges. It next traps precisely
+at Qwen `TENSOR.MATMUL` PC 11, DeepSeek ROM `LINK.MULTICAST` PC 13, or DeepSeek
+HBM `VECTOR.MHC` PC 14. This is a data-bearing decode prefix, not a whole
+transaction, model token, EOS, timing, or performance result.
 
 Individual retained block cases in SKY130 HD at 130 nm and predictive ASAP7 at
 7 nm complete synthesis, static timing and place-and-route; these are not two
@@ -255,9 +266,16 @@ the deployment campaign records correlating — no others.
   current-source acceptance. The stress lane likewise remains open: its old HBM
   record diverges at token two, and no retained source-current HBM/ROM 32-token
   pair has passed the new same-association gate.
+  A replacement natural capture A was attempted from a later frozen identity,
+  observed healthy for at least 2:28:07 while still in prefill, and then
+  terminated with no result JSON or timing footer. It establishes no token,
+  acceptance verdict, exact wall time, peak RSS, TPOT, or resource headroom; a
+  fresh durable capture A and independent B remain open.
   DeepSeek's 200,000-token rung remains reference-oracle GPU evidence: the
   governed accelerator context gate currently reaches only 35 tokens, below
-  both sparse-attention thresholds.
+  both sparse-attention thresholds. The exact-200K accelerator-pair checker is
+  implemented and covered by 26 focused tests, but no production ROM-wafer or
+  exactly-32-node HBM record exists for it to accept.
 - **Every-design reasoning and agentic coverage is incomplete.** Retained Qwen
   reasoning and closed-loop agentic captures exercise the HBM backend only.
   Qwen ROM lacks both cells, and neither DeepSeek accelerator backend has a
@@ -272,6 +290,13 @@ the deployment campaign records correlating — no others.
   characterized ROM/HBM performance pair follows from it. A separate governed
   HBM-only P32 prefill cycle artifact now exists, but it depends predominantly
   on assumed machine values and cannot supply that comparison.
+- **No correctness-qualified executed TPOT sweep yet.** Correct output tokens
+  are the first acceptance gate and desired TPOT is the second. Existing
+  multi-batch rate tables are analytical projections and generate no model
+  tokens. A future TPOT point counts only when the same execution records
+  oracle-identical legal IDs and decoded text, correct first-EOS-or-cap behavior,
+  no post-EOS step, TTFT, raw decode-step latencies, and complete execution and
+  implementation identities.
 - **No silicon, no full-chip place-and-route, no foundry signoff DRC or LVS.**
   The physical evidence covers representative blocks.
 - **The ROM read-service pass is a bounded control/addressing claim.** The
@@ -290,9 +315,12 @@ the deployment campaign records correlating — no others.
   (`A3_STATE_SLOTS`) that nothing expressed at admission, so a shipped
   deployment passed every admission gate and was refused in hardware instead
   (checklist W8.8/W8.9).
-- **No engine arithmetic under the sequencer.** Both control-plane campaigns
-  bind every engine to a recording no-op; the four datapaths that are correlated
-  arithmetically are correlated separately and are not wired to the sequencer.
+- **No complete engine arithmetic under the sequencer.** Both control-plane
+  campaigns bind every engine to a recording no-op, and the standalone bounded
+  datapaths remain separately correlated. The shipped-prefix campaign is a
+  narrow data-bearing exception through gather, embedding, Qwen RMSNorm, and
+  DeepSeek transfer. Every later operator and the complete token path remain
+  unwired.
 - **The governed real-deployment cycle result is schedule/counter evidence, not
   token or performance evidence.**
   `results/abi3/deepseek_v4_flash_hbm_p32_prefill_cycle.json` executes the

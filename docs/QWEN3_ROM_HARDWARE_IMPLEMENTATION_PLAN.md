@@ -48,6 +48,17 @@ Completion means:
 - separate SKY130 and ASAP7 physical reports can be compared with the one-node
   Qwen HBM/SRAM reports in the matching technology view.
 
+Correct output tokens are the first acceptance gate and desired TPOT is the
+second. No Qwen ROM performance point is promotable until the same execution
+passes legal-ID, decoded-text, exact-oracle, first-EOS-or-cap, and no-post-EOS
+checks. Each accepted batch point must retain prompt/generated counts,
+correct-token count, first divergence, stop reason, TTFT, raw decode-step
+latencies, steady-state TPOT, aggregate throughput, and complete process,
+deployment, workload, oracle, source, and implementation identities. Analytical
+batch sweeps remain projected and do not establish token correctness or
+executed TPOT. A numerical TPOT budget must be frozen in the comparison contract
+before this lane can claim the desired performance is achieved.
+
 ## 2. Retained baseline and exact limitations
 
 ### 2.1 What is already valuable

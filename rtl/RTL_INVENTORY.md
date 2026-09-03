@@ -19,6 +19,7 @@ integrity, reset, poison, and test contracts remain equivalent.
 | ABI 3.0 tensor contraction lane | `abi3/ot_a3_mac_lane.sv`, `ot_fp32_rne_pkg.sv` | `bf16_bf16_fp32_sequential_rne_v1`: exact widening, one binary32 RNE block-scale multiply, one binary32 RNE product with canonicalized zero, strictly ascending-K binary32 accumulation, one RNE output rounding with counted saturation, and fail-closed operand/product/accumulation/scale faults | A3-ENG-001 |
 | ABI 3.0 on-device selection | `abi3/ot_a3_selection_argmax.sv` | `greedy_lowest_token_id_argmax`: signed-zero-canonical binary32 ordering, lowest token ID among the maxima by construction, published tie multiplicity, nonfinite logit refused | A3-ENG-001 |
 | ABI 3.0 indexed movement | `abi3/ot_a3_dma_index_mover.sv` | GATHER/SCATTER of storage codes with every index validated before anything moves, destination read back so unnamed rows survive, and ascending slot order making a repeated index resolve to the later write | A3-ENG-001 |
+| ABI 3.0 exact Qwen RMSNorm slice | `abi3/ot_a3_vector_rms_norm.sv`, `ot_fp32_rne_pkg.sv`, `ot_fp32_rsqrt_rne.sv` | One 4,096-element BF16 row under the Qwen numeric contract: balanced binary32 reduction, correctly rounded reciprocal square root, normalization-before-gain BF16 boundaries, complete-result buffering, exact counts, and fail-closed numeric refusal | A3-SHIP-PREFIX-001 |
 | ABI 3.0 residual add | `abi3/ot_a3_vector_add.sv`, `ot_fp32_rne_pkg.sv` | `bf16_add_rne_v1`: exact BF16 widening, one binary32 RNE add, one RNE BF16 conversion with counted saturation, nonfinite and overflow refused | A3-ENG-001 |
 | ABI 3.0 bounded conversion | `abi3/ot_a3_vector_convert.sv` | Unscaled one-input/one-output conversion, at most 512 elements, over supported identity formats or finite numeric input to BF16/FP32; complete operand preflight before writeback | A3-ENG-001 |
 | ABI 3.0 bounded scale | `abi3/ot_a3_vector_scale.sv`, `ot_fp32_rne_pkg.sv` | Constant or same-shape elementwise BF16 scaling, at most 512 elements, with one binary32 RNE multiply and one RNE BF16 conversion; complete operand preflight before writeback | A3-ENG-001 |
@@ -27,6 +28,7 @@ integrity, reset, poison, and test contracts remain equivalent.
 | ABI 3.0 bounded compressor projection | `abi3/ot_a3_vector_compress_project.sv`, `ot_fp32_rne_pkg.sv` | `COMPRESS_PROJECT` only, at most eight flattened rows, sixteen outputs and 64 reduction channels, with packed KV-then-gate FP32 output and buffered complete result | A3-ENG-001 |
 | ABI 3.0 bounded hyper-connection post | `abi3/ot_a3_vector_mhc_post.sv`, `ot_fp32_rne_pkg.sv` | Four-stream `HYPER_CONNECT_POST` only, at most four flattened sites and 32 hidden channels, with explicit source/destination combination-matrix orientation and buffered complete result | A3-ENG-001 |
 | ABI 3.0 engine dispatch | `abi3/ot_a3_engine_array.sv`, `abi3/ot_a3_engine_pkg.sv` | Fail-closed dispatch on (family, subopcode); an operation the array does not implement is refused rather than routed to another datapath | A3-ENG-001 |
+| ABI 3.0 shipped-prefix issue bridge | `abi3/ot_a3_engine_issue_bridge.sv` | Descriptor- and view-checked connection from the real microsequencer to the exact shipped dense gather, BF16 embedding, Qwen RMSNorm, and DeepSeek stride-zero transfer profiles; completion only after datapath finish and precise descriptor/capability/engine traps for every refusal | A3-SHIP-PREFIX-001 |
 | Tile | `ot_tile.sv`, `opentallas_tile.sv` | route-before-activation and result alignment | DV-TILE-004 |
 | Static schedule | `ot_schedule_controller.sv`, `static_timeslot_switch.sv` | fully rewritten shadow bank, typed schedule-ID/epoch atomic commit, and slot transport | DV-NOC-001 |
 | Credits | `ot_credit_manager.sv` | atomic reservation and conservation | DV-NOC-004 |
@@ -360,9 +362,12 @@ bounds. The six new blocks preflight or buffer the whole operation, and
 late-poison cases prove destination atomicity; later-output fault atomicity is
 still unproved for legacy MATMUL and ADD.
 
-This is standalone datapath correlation only. It does not wire these blocks to
-the ABI 3.0 microsequencer, and the separately promoted shipped-deployment
-campaign uses recording no-op engines rather than this arithmetic. It does not
+This is standalone datapath correlation only. That campaign does not wire these
+blocks to the ABI 3.0 microsequencer, and the separately promoted
+shipped-deployment campaign uses recording no-op engines rather than this
+arithmetic. The narrow shipped-prefix campaign is the explicit exception: it
+wires gather, embedding, Qwen RMSNorm, and DeepSeek transfer through
+`ot_a3_engine_issue_bridge.sv`; it does not broaden the standalone campaign. It does not
 model an SRAM or ROM macro, cover the blocked contraction contract, or supply
 correctly rounded transcendental RTL for `SILU_MUL`, `SOFTMAX` or
 `SQRT_SOFTPLUS`. SCALE sigmoid/general broadcast, CONVERT block forms,
@@ -413,11 +418,13 @@ failures remain useful history in the unified checklist, but they do not
 describe the current zero-`STATE` production elaboration.
 
 This evidence covers the instruction stream and operand addressing, at complete
-program depth, on the deployments the artifact lists. **It does not establish
-engine arithmetic** -- every dispatchable operation is a recording no-op on
-both sides, and the datapaths A3-ENG-001 correlates are not wired to this
-sequencer, so nothing shows that a resolved view drives the operand addresses an
-engine reads. It reads no checkpoint byte, exercises one request shape per
+program depth, on the deployments the artifact lists. **This deployment-control
+campaign does not establish engine arithmetic** -- every dispatchable operation
+is a recording no-op on both sides. The separate shipped-prefix campaign is a
+narrow data-bearing exception through gather, embedding, Qwen RMSNorm, and
+DeepSeek transfer; it shows those resolved views drive engine operands but does
+not complete a transaction or token. The deployment-control campaign reads no
+checkpoint byte and exercises one request shape per
 entrypoint (a sixteen-token prefill and a one-token decode at position sixteen),
 checks neither descriptor record CRC32C nor the header's SHA-256, and establishes
 no area, timing or power quantity of any kind: **no block of this control plane
