@@ -246,7 +246,7 @@ REPO = Path(__file__).resolve().parents[1]
 #: while the aggregate checker remains green.
 REQUIRED_COVERAGE: dict[str, int] = {
     "README.md": 54,
-    "docs/ABI3_ENGINE_DATAPATH_RTL.md": 64,
+    "docs/ABI3_ENGINE_DATAPATH_RTL.md": 67,
     "docs/ABI3_PROGRAM_REPORT.md": 17,
     "docs/DEEPSEEK_SPARSE_ATTENTION_GATE.md": 55,
     "docs/EVIDENCE_LEDGER.md": 42,
@@ -256,7 +256,7 @@ REQUIRED_COVERAGE: dict[str, int] = {
     "docs/PER_REGION_COMPUTE_IN_ROM_DESIGN.md": 2,
     "docs/ROM_DENSITY_NODE_TRANSFER.md": 24,
     "docs/ROM_PHYSICAL_METHODOLOGY.md": 64,
-    "docs/ROM_SERVICE_RTL.md": 39,
+    "docs/ROM_SERVICE_RTL.md": 40,
     "docs/SOURCES.md": 6,
     "docs/TECHNICAL_DIRECTION_RECOMMENDATION.md": 54,
     "docs/UNIFIED_EXECUTION_CHECKLIST.md": 239,

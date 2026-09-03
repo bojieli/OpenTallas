@@ -50,8 +50,8 @@ def test_report_covers_and_classifies_the_whole_markdown_corpus() -> None:
 
     assert report["schema"] == "opentallas.prose_figure_coverage.v2"
     assert [document["path"] for document in report["documents"]] == expected_paths
-    assert report["totals"]["documents"] == 56
-    assert report["totals"]["annotations"] == 809
+    assert report["totals"]["documents"] == 59
+    assert report["totals"]["annotations"] == 813
     assert report["totals"]["zero_candidate_documents"] > 0
     assert report["totals"]["classifications"]["unbound"] > 0
 
