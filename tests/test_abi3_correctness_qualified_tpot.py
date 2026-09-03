@@ -32,6 +32,11 @@ REQUEST_SCHEMA = json.loads(
 TRACE_SCHEMA = json.loads(
     (REPO / "schemas/abi3/target_timing_trace_v1.schema.json").read_text()
 )
+COSIM_PROOF_SCHEMA = json.loads(
+    (
+        REPO / "schemas/abi3/rtl_bound_accelerated_cosimulation_proof_v1.schema.json"
+    ).read_text()
+)
 REPORT_SCHEMA = json.loads(
     (REPO / "schemas/abi3/correctness_qualified_tpot_report_v1.schema.json").read_text()
 )
@@ -112,6 +117,30 @@ class Bundle:
     acceptance_path: Path
     record_paths: list[Path]
     trace_path: Path
+    cosimulation_proof_path: Path | None = None
+
+
+def _rewrite_trace(bundle: Bundle, mutator: Callable[[dict[str, Any]], None]) -> None:
+    trace = json.loads(bundle.trace_path.read_text())
+    mutator(trace)
+    _write(bundle.trace_path, trace)
+    bundle.request["points"][0]["target_timing_trace"] = _ref(bundle.trace_path)
+
+
+def _rewrite_cosimulation_proof(
+    bundle: Bundle, mutator: Callable[[dict[str, Any]], None]
+) -> None:
+    assert bundle.cosimulation_proof_path is not None
+    proof = json.loads(bundle.cosimulation_proof_path.read_text())
+    mutator(proof)
+    _write(bundle.cosimulation_proof_path, proof)
+    proof_ref = _ref(bundle.cosimulation_proof_path)
+    bundle.request["points"][0]["rtl_bound_accelerated_cosimulation_proof"] = proof_ref
+
+    def bind_proof(trace: dict[str, Any]) -> None:
+        trace["rtl_bound_accelerated_cosimulation_proof"] = proof_ref
+
+    _rewrite_trace(bundle, bind_proof)
 
 
 def _text_evidence(
@@ -166,6 +195,11 @@ def _make_bundle(
     role_thresholds: dict[str, float] | None = None,
     record_mutator: Callable[[dict[str, Any]], None] | None = None,
 ) -> Bundle:
+    if (
+        required_tier == tool.COSIM_TIER
+        and measurement_class == "abi3_cycle_model_execution"
+    ):
+        measurement_class = tool.COSIM_TIER
     root.mkdir(parents=True)
     prompt = [1, 2]
     generated = list(generated_tokens) if generated_tokens is not None else [3, 4, 5]
@@ -522,6 +556,156 @@ def _make_bundle(
     acceptance_path = root / "correctness-acceptance.json"
     _write(acceptance_path, acceptance)
 
+    cosimulation_proof_path: Path | None = None
+    cosimulation_execution_id = "8" * 64
+    if required_tier == tool.COSIM_TIER:
+        cosimulation_producer = root / "cosimulation-proof-tool.py"
+        characterization = root / "timing-characterization.json"
+        cosimulation_producer.write_text(
+            "# synthetic co-simulation proof producer\n", encoding="utf-8"
+        )
+        _write(
+            characterization,
+            {
+                "class": "synthetic characterized timing",
+                "clock_frequency_hz": 10,
+                "implementation_identity_sha256": tool.digest_of(implementation),
+            },
+        )
+        engine_proofs: list[dict[str, Any]] = []
+        for family in ("tensor", "vector"):
+            model_source = root / f"{family}-accelerated-model.py"
+            rtl_manifest = root / f"{family}-rtl-manifest.json"
+            mode_manifest = root / f"{family}-executed-modes.json"
+            bit_proof = root / f"{family}-bit-equivalence.json"
+            cycle_proof = root / f"{family}-cycle-equivalence.json"
+            model_source.write_text(
+                f"# synthetic {family} accelerated model\n", encoding="utf-8"
+            )
+            _write(rtl_manifest, {"engine_family": family, "synthesizable": True})
+            _write(mode_manifest, {"engine_family": family, "modes": ["synthetic"]})
+            _write(bit_proof, {"engine_family": family, "bit_exact": True})
+            _write(cycle_proof, {"engine_family": family, "cycle_exact": True})
+            engine_proofs.append(
+                {
+                    "accelerated_model_id": f"synthetic-{family}-model-v1",
+                    "accelerated_model_source": _ref(model_source),
+                    "bit_equivalence_proof": _ref(bit_proof),
+                    "cycle_equivalence_proof": _ref(cycle_proof),
+                    "engine_family": family,
+                    "equivalence": {
+                        "all_executed_modes_covered": True,
+                        "architectural_counters_exact": True,
+                        "backpressure_and_stalls_exact": True,
+                        "completion_cycle_exact": True,
+                        "fault_and_refusal_exact": True,
+                        "memory_transactions_exact": True,
+                        "result_bits_exact": True,
+                        "start_cycle_exact": True,
+                    },
+                    "executed_mode_manifest": _ref(mode_manifest),
+                    "problems": [],
+                    "status": "pass",
+                    "synthesizable_rtl_manifest": _ref(rtl_manifest),
+                }
+            )
+        cosimulation_proof = {
+            "schema": ("opentallas.abi3.rtl_bound_accelerated_cosimulation_proof.v1"),
+            "status": "pass",
+            "problems": [],
+            "evidence_tier": tool.COSIM_TIER,
+            "monolithic_full_rtl": False,
+            "full_workload_execution": True,
+            "token_source": "rtl_selection_token_append_eos_path",
+            "cosimulation_execution_id": cosimulation_execution_id,
+            "producer": _ref(cosimulation_producer),
+            "execution_identity": {
+                "batch_execution_id": batch_execution_id,
+                "batch_size": batch_size,
+                "comparison_contract_sha256": _hash(contract_path),
+                "comparison_id": "synthetic_rom_vs_hbm",
+                "concurrency": batch_size,
+                "correctness_acceptance_sha256": _hash(acceptance_path),
+                "external_oracle_sha256": _hash(oracle),
+                "graph_id": graph_id,
+                "kernel_ir_source_sha256": _hash(ir),
+                "latency_boundary": "request-to-token-commit",
+                "model_id": "synthetic-model",
+                "numeric_profile": "synthetic-numeric-profile",
+                "pvt": {
+                    "corner_id": "synthetic-tt",
+                    "process": "TT",
+                    "temperature_c": 25,
+                    "voltage_v": 0.7,
+                },
+                "target": {
+                    "target_id": selected_target["target_id"],
+                    "backend": selected_target["backend"],
+                    "node_count": selected_target["node_count"],
+                    "topology_class": selected_target["topology_class"],
+                    "capability_digest": capability_digest,
+                    "deployment_digest": deployment_digest,
+                    "technology_view": "asap7",
+                    "source_manifest_sha256": tool.digest_of(source_map),
+                    "implementation_identity_sha256": tool.digest_of(implementation),
+                },
+                "tokenizer_sha256": tokenizer_sha,
+                "workload_digest": workload_digest,
+                "workload_id": "SYNTHETIC-WORKLOAD",
+            },
+            "execution_records": [
+                {
+                    "sequence_index": index,
+                    "path": str(path.resolve()),
+                    "sha256": _hash(path),
+                }
+                for index, path in enumerate(record_paths)
+            ],
+            "sequences": [
+                {
+                    "sequence_index": index,
+                    "generated_token_ids": list(generated),
+                    "generated_token_ids_sha256": tool.digest_of(generated),
+                    "generated_token_count": len(generated),
+                    "terminal_kind": terminal_kind,
+                    "first_eos_index": first_eos,
+                    "no_post_eos_execution": True,
+                    "token_source": "rtl_selection_token_append_eos_path",
+                }
+                for index in range(batch_size)
+            ],
+            "rtl_owned_components": sorted(tool.REQUIRED_COSIM_RTL_COMPONENTS),
+            "accelerated_engine_families": ["tensor", "vector"],
+            "engine_equivalence_proofs": engine_proofs,
+            "injection_policy": {
+                "accelerated_models_can_read_oracle": False,
+                "harness_only_transports_handshakes": True,
+                "host_tensor_or_result_injection": False,
+                "oracle_tensor_or_result_injection": False,
+                "precomputed_activations_logits_routes_or_tokens": False,
+            },
+            "timing_qualification": {
+                "characterization_artifact": _ref(characterization),
+                "clock_frequency_hz": 10,
+                "cost_table_sha256": _hash(cost_table),
+                "depends_on_assumed_values": False,
+                "implementation_identity_sha256": tool.digest_of(implementation),
+                "measurement_class": tool.COSIM_TIER,
+                "pvt": {
+                    "corner_id": "synthetic-tt",
+                    "process": "TT",
+                    "temperature_c": 25,
+                    "voltage_v": 0.7,
+                },
+                "simulator_wall_time_used_as_target_time": False,
+                "status": "characterized",
+                "target_cycles_from_architectural_events": True,
+                "technology_view": "asap7",
+            },
+        }
+        cosimulation_proof_path = root / "cosimulation-proof.json"
+        _write(cosimulation_proof_path, cosimulation_proof)
+
     trace: dict[str, Any] = {
         "schema": "opentallas.abi3.target_timing_trace.v1",
         "evidence_class": "executed_target_timing_trace",
@@ -601,6 +785,18 @@ def _make_bundle(
             for index in range(batch_size)
         ],
     }
+    if required_tier == tool.COSIM_TIER:
+        assert cosimulation_proof_path is not None
+        trace.update(
+            {
+                "cosimulation_execution_id": cosimulation_execution_id,
+                "execution_tier": tool.COSIM_TIER,
+                "rtl_bound_accelerated_cosimulation_proof": _ref(
+                    cosimulation_proof_path
+                ),
+                "simulator_wall_time_used_as_target_time": False,
+            }
+        )
     trace_path = root / "target-timing.json"
     _write(trace_path, trace)
     request = {
@@ -618,7 +814,18 @@ def _make_bundle(
             }
         ],
     }
-    return Bundle(request, contract_path, acceptance_path, record_paths, trace_path)
+    if cosimulation_proof_path is not None:
+        request["points"][0]["rtl_bound_accelerated_cosimulation_proof"] = _ref(
+            cosimulation_proof_path
+        )
+    return Bundle(
+        request,
+        contract_path,
+        acceptance_path,
+        record_paths,
+        trace_path,
+        cosimulation_proof_path,
+    )
 
 
 def _assert_report_schema(report: dict[str, Any]) -> None:
@@ -626,7 +833,13 @@ def _assert_report_schema(report: dict[str, Any]) -> None:
 
 
 def test_new_schemas_are_valid_and_current_contracts_remain_valid() -> None:
-    for schema in (REQUEST_SCHEMA, TRACE_SCHEMA, REPORT_SCHEMA, CONTRACT_SCHEMA):
+    for schema in (
+        REQUEST_SCHEMA,
+        TRACE_SCHEMA,
+        COSIM_PROOF_SCHEMA,
+        REPORT_SCHEMA,
+        CONTRACT_SCHEMA,
+    ):
         Draft202012Validator.check_schema(schema)
     validator = Draft202012Validator(CONTRACT_SCHEMA)
     for name in (
@@ -862,12 +1075,325 @@ def test_functional_acceptance_does_not_satisfy_required_full_rtl_gate(
     tier = report["points"][0]["correctness_gate"]["evidence_tier"]
     assert report["status"] == "rejected"
     assert tier == {
+        "cosimulation_execution_id": None,
+        "cosimulation_proof_path": None,
+        "cosimulation_proof_sha256": None,
         "required": "full_rtl_generated_tokens",
         "observed": "functional_accelerator_execution",
         "functional_accelerator_tokens": True,
+        "rtl_bound_accelerated_cosimulation": False,
         "full_rtl_generated_tokens": False,
         "satisfies_required_tier": False,
     }
+
+
+def test_qualified_cosimulation_passes_correctness_and_target_timing_without_slo(
+    tmp_path: Path,
+) -> None:
+    bundle = _make_bundle(
+        tmp_path / "qualified-cosimulation",
+        threshold=None,
+        required_tier=tool.COSIM_TIER,
+        generated_tokens=[3, 4, 9],
+    )
+    assert bundle.cosimulation_proof_path is not None
+    Draft202012Validator(REQUEST_SCHEMA).validate(bundle.request)
+    Draft202012Validator(COSIM_PROOF_SCHEMA).validate(
+        json.loads(bundle.cosimulation_proof_path.read_text())
+    )
+    Draft202012Validator(TRACE_SCHEMA).validate(
+        json.loads(bundle.trace_path.read_text())
+    )
+
+    report = tool.validate(bundle.request)
+    _assert_report_schema(report)
+    point = report["points"][0]
+    tier = point["correctness_gate"]["evidence_tier"]
+    assert report["status"] == "not_evaluable"
+    assert point["correctness_gate"]["status"] == "pass"
+    assert tier["observed"] == tool.COSIM_TIER
+    assert tier["rtl_bound_accelerated_cosimulation"] is True
+    assert tier["full_rtl_generated_tokens"] is False
+    assert tier["satisfies_required_tier"] is True
+    assert point["correctness_gate"]["sequences"][0]["generated_token_ids"] == [
+        3,
+        4,
+        9,
+    ]
+    assert point["correctness_gate"]["sequences"][0]["terminal_kind"] == "eos"
+    assert point["target_timing"]["status"] == "accepted"
+    assert point["target_timing"]["measurement_class"] == tool.COSIM_TIER
+    assert point["target_timing"]["production_high_fidelity"] is True
+    assert point["tpot_budget"]["status"] == "budget_missing"
+    assert point["performance_verdict"]["status"] == "budget_missing"
+    assert point["performance_verdict"]["observed_seconds"] is None
+    assert point["performance_verdict"]["production_gate_closed"] is False
+    assert point["claim_boundary"]["no_numeric_slo_invented"] is True
+
+
+@pytest.mark.parametrize(
+    ("threshold", "expected_status", "meets_budget", "production_gate_closed"),
+    [
+        (3.1, "pass", True, True),
+        (2.5, "fail", False, False),
+    ],
+)
+def test_qualified_cosimulation_enforces_the_frozen_tpot_budget(
+    tmp_path: Path,
+    threshold: float,
+    expected_status: str,
+    meets_budget: bool,
+    production_gate_closed: bool,
+) -> None:
+    bundle = _make_bundle(
+        tmp_path / expected_status,
+        threshold=threshold,
+        required_tier=tool.COSIM_TIER,
+    )
+    report = tool.validate(bundle.request)
+    _assert_report_schema(report)
+    point = report["points"][0]
+    assert report["status"] == expected_status
+    assert point["correctness_gate"]["status"] == "pass"
+    assert point["target_timing"]["status"] == "accepted"
+    assert point["performance_verdict"]["observed_seconds"] == 3.0
+    assert point["performance_verdict"]["maximum_seconds"] == threshold
+    assert point["performance_verdict"]["meets_budget"] is meets_budget
+    assert (
+        point["performance_verdict"]["production_gate_closed"] is production_gate_closed
+    )
+
+
+def test_wrong_cosimulation_output_token_blocks_all_tpot_derivation(
+    tmp_path: Path,
+) -> None:
+    def corrupt_token(record: dict[str, Any]) -> None:
+        record["generated_token_ids"][1] = 8
+
+    bundle = _make_bundle(
+        tmp_path / "wrong-token",
+        required_tier=tool.COSIM_TIER,
+        record_mutator=corrupt_token,
+    )
+    report = tool.validate(bundle.request)
+    _assert_report_schema(report)
+    point = report["points"][0]
+    assert report["status"] == "rejected"
+    assert point["correctness_gate"]["status"] == "rejected"
+    assert point["correctness_gate"]["sequences"][0]["first_divergence_index"] == 1
+    assert point["target_timing"] == {
+        "status": "not_evaluated_gate1_failed",
+        "metrics": None,
+    }
+    assert point["performance_verdict"]["status"] == "gate1_failed"
+    assert point["performance_verdict"]["observed_seconds"] is None
+    assert point["performance_verdict"]["production_gate_closed"] is False
+
+
+def test_cosimulation_proof_cannot_be_attached_or_relabelled_as_full_rtl(
+    tmp_path: Path,
+) -> None:
+    attached = _make_bundle(
+        tmp_path / "attached-as-full-rtl", required_tier=tool.COSIM_TIER
+    )
+    attached.request["points"][0]["required_correctness_tier"] = (
+        "full_rtl_generated_tokens"
+    )
+    attached_report = tool.validate(attached.request)
+    _assert_report_schema(attached_report)
+    assert attached_report["status"] == "rejected"
+    assert attached_report["points"] == []
+    assert any(
+        "rtl_bound_accelerated_cosimulation_proof" in problem
+        for problem in attached_report["request_problems"]
+    )
+
+    relabelled = _make_bundle(
+        tmp_path / "proof-relabelled", required_tier=tool.COSIM_TIER
+    )
+    _rewrite_cosimulation_proof(
+        relabelled,
+        lambda proof: proof.__setitem__("evidence_tier", "full_rtl_generated_tokens"),
+    )
+    relabelled_report = tool.validate(relabelled.request)
+    _assert_report_schema(relabelled_report)
+    assert relabelled_report["status"] == "rejected"
+    assert any(
+        "cannot be relabeled as full RTL-generated tokens" in problem
+        for problem in relabelled_report["points"][0]["problems"]
+    )
+
+
+@pytest.mark.parametrize(
+    "field",
+    ["host_tensor_or_result_injection", "oracle_tensor_or_result_injection"],
+)
+def test_cosimulation_rejects_host_or_oracle_result_injection(
+    tmp_path: Path, field: str
+) -> None:
+    bundle = _make_bundle(tmp_path / field, required_tier=tool.COSIM_TIER)
+
+    def permit_injection(proof: dict[str, Any]) -> None:
+        proof["injection_policy"][field] = True
+
+    _rewrite_cosimulation_proof(bundle, permit_injection)
+    report = tool.validate(bundle.request)
+    _assert_report_schema(report)
+    assert report["status"] == "rejected"
+    assert report["points"][0]["correctness_gate"]["status"] == "rejected"
+    assert any(
+        "permits host/oracle tensor or model-result injection" in problem
+        for problem in report["points"][0]["problems"]
+    )
+
+
+def test_cosimulation_rejects_missing_raw_token_commit_ticks(tmp_path: Path) -> None:
+    bundle = _make_bundle(
+        tmp_path / "missing-token-commits", required_tier=tool.COSIM_TIER
+    )
+
+    def remove_commits(trace: dict[str, Any]) -> None:
+        del trace["sequences"][0]["token_commit_ticks"]
+
+    _rewrite_trace(bundle, remove_commits)
+    report = tool.validate(bundle.request)
+    _assert_report_schema(report)
+    point = report["points"][0]
+    assert report["status"] == "rejected"
+    assert point["correctness_gate"]["status"] == "pass"
+    assert point["target_timing"]["status"] == "rejected"
+    assert point["performance_verdict"]["status"] == "timing_evidence_rejected"
+    assert any("token_commit_ticks" in problem for problem in point["problems"])
+
+
+def test_cosimulation_rejects_wrong_proof_execution_identity(tmp_path: Path) -> None:
+    bundle = _make_bundle(
+        tmp_path / "wrong-proof-identity", required_tier=tool.COSIM_TIER
+    )
+
+    def change_model(proof: dict[str, Any]) -> None:
+        proof["execution_identity"]["model_id"] = "different-model"
+
+    _rewrite_cosimulation_proof(bundle, change_model)
+    report = tool.validate(bundle.request)
+    _assert_report_schema(report)
+    assert report["status"] == "rejected"
+    assert any(
+        "execution identity model_id is not exact" in problem
+        for problem in report["points"][0]["problems"]
+    )
+
+
+def test_cosimulation_rejects_wrong_timing_execution_identity(tmp_path: Path) -> None:
+    bundle = _make_bundle(
+        tmp_path / "wrong-timing-identity", required_tier=tool.COSIM_TIER
+    )
+    _rewrite_trace(
+        bundle,
+        lambda trace: trace.__setitem__("cosimulation_execution_id", "9" * 64),
+    )
+    report = tool.validate(bundle.request)
+    _assert_report_schema(report)
+    point = report["points"][0]
+    assert report["status"] == "rejected"
+    assert point["correctness_gate"]["status"] == "pass"
+    assert point["target_timing"]["status"] == "rejected"
+    assert any(
+        "does not bind the exact co-simulation execution proof" in problem
+        for problem in point["problems"]
+    )
+
+
+def test_cosimulation_rejects_simulator_wall_time_as_target_time(
+    tmp_path: Path,
+) -> None:
+    bundle = _make_bundle(
+        tmp_path / "simulator-wall-time", required_tier=tool.COSIM_TIER
+    )
+    _rewrite_trace(
+        bundle,
+        lambda trace: trace.__setitem__(
+            "simulator_wall_time_used_as_target_time", True
+        ),
+    )
+    report = tool.validate(bundle.request)
+    _assert_report_schema(report)
+    point = report["points"][0]
+    assert report["status"] == "rejected"
+    assert point["correctness_gate"]["status"] == "pass"
+    assert point["target_timing"]["status"] == "rejected"
+    assert any(
+        "simulator_wall_time_used_as_target_time" in problem
+        for problem in point["problems"]
+    )
+
+
+@pytest.mark.parametrize(
+    ("provenance_class", "depends_on_assumptions"),
+    [("assumed", True), ("mixed", False)],
+)
+def test_cosimulation_rejects_uncharacterized_timing(
+    tmp_path: Path,
+    provenance_class: str,
+    depends_on_assumptions: bool,
+) -> None:
+    bundle = _make_bundle(tmp_path / provenance_class, required_tier=tool.COSIM_TIER)
+
+    def weaken_provenance(trace: dict[str, Any]) -> None:
+        trace["provenance"] = {
+            "class": provenance_class,
+            "depends_on_assumed_values": depends_on_assumptions,
+        }
+
+    _rewrite_trace(bundle, weaken_provenance)
+    report = tool.validate(bundle.request)
+    _assert_report_schema(report)
+    point = report["points"][0]
+    assert report["status"] == "rejected"
+    assert point["correctness_gate"]["status"] == "pass"
+    assert point["target_timing"]["status"] == "rejected"
+    assert any(
+        "co-simulation timing is not characterized" in problem
+        for problem in point["problems"]
+    )
+
+
+def test_cosimulation_rejects_missing_engine_bit_equivalence_proof(
+    tmp_path: Path,
+) -> None:
+    bundle = _make_bundle(tmp_path / "missing-bit-proof", required_tier=tool.COSIM_TIER)
+
+    def remove_bit_proof(proof: dict[str, Any]) -> None:
+        del proof["engine_equivalence_proofs"][0]["bit_equivalence_proof"]
+
+    _rewrite_cosimulation_proof(bundle, remove_bit_proof)
+    report = tool.validate(bundle.request)
+    _assert_report_schema(report)
+    assert report["status"] == "rejected"
+    assert any(
+        "bit_equivalence_proof" in problem
+        for problem in report["points"][0]["problems"]
+    )
+
+
+def test_cosimulation_rejects_stale_engine_cycle_equivalence_proof(
+    tmp_path: Path,
+) -> None:
+    bundle = _make_bundle(tmp_path / "stale-cycle-proof", required_tier=tool.COSIM_TIER)
+    assert bundle.cosimulation_proof_path is not None
+    proof = json.loads(bundle.cosimulation_proof_path.read_text())
+    cycle_path = Path(
+        proof["engine_equivalence_proofs"][0]["cycle_equivalence_proof"]["path"]
+    )
+    cycle_path.write_text("stale after proof publication\n", encoding="utf-8")
+
+    report = tool.validate(bundle.request)
+    _assert_report_schema(report)
+    assert report["status"] == "rejected"
+    assert any(
+        "cycle_equivalence_proof SHA-256 mismatch" in problem
+        for problem in report["points"][0]["problems"]
+    )
 
 
 @pytest.mark.parametrize(

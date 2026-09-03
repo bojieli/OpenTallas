@@ -2,6 +2,42 @@
   "$id": "https://opentallas.org/schemas/abi3/target_timing_trace_v1.schema.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "measurement_class": {
+            "const": "rtl_bound_accelerated_cosimulation"
+          }
+        },
+        "required": ["measurement_class"]
+      },
+      "then": {
+        "properties": {
+          "execution_tier": {
+            "const": "rtl_bound_accelerated_cosimulation"
+          },
+          "simulator_wall_time_used_as_target_time": {"const": false}
+        },
+        "required": [
+          "cosimulation_execution_id",
+          "execution_tier",
+          "rtl_bound_accelerated_cosimulation_proof",
+          "simulator_wall_time_used_as_target_time"
+        ]
+      },
+      "else": {
+        "not": {
+          "anyOf": [
+            {"required": ["cosimulation_execution_id"]},
+            {"required": ["execution_tier"]},
+            {"required": ["rtl_bound_accelerated_cosimulation_proof"]},
+            {"required": ["simulator_wall_time_used_as_target_time"]}
+          ]
+        }
+      }
+    }
+  ],
   "properties": {
     "batch_execution_id": {
       "oneOf": [
@@ -14,9 +50,13 @@
     "comparison_id": {"$ref": "#/$defs/identifier"},
     "concurrency": {"minimum": 1, "type": "integer"},
     "correctness_acceptance_sha256": {"$ref": "#/$defs/sha256"},
+    "cosimulation_execution_id": {"$ref": "#/$defs/sha256"},
     "cost_table": {"$ref": "#/$defs/costTable"},
     "counterfactual_or_extrapolated": {"const": false},
     "evidence_class": {"const": "executed_target_timing_trace"},
+    "execution_tier": {
+      "enum": ["rtl_bound_accelerated_cosimulation"]
+    },
     "full_workload_execution": {"const": true},
     "graph_id": {"$ref": "#/$defs/sha256"},
     "latency_boundary": {"$ref": "#/$defs/identifier"},
@@ -24,6 +64,7 @@
       "enum": [
         "abi3_cycle_model_execution",
         "post_layout_timing_simulation",
+        "rtl_bound_accelerated_cosimulation",
         "rtl_cycle_simulation",
         "silicon_measurement"
       ]
@@ -34,6 +75,7 @@
     "provenance": {"$ref": "#/$defs/provenance"},
     "pvt": {"$ref": "#/$defs/pvt"},
     "schema": {"const": "opentallas.abi3.target_timing_trace.v1"},
+    "rtl_bound_accelerated_cosimulation_proof": {"$ref": "#/$defs/file"},
     "sequences": {
       "items": {"$ref": "#/$defs/timeline"},
       "minItems": 1,
@@ -43,6 +85,7 @@
     "target": {"$ref": "#/$defs/target"},
     "technology_view": {"$ref": "#/$defs/identifier"},
     "timebase": {"$ref": "#/$defs/timebase"},
+    "simulator_wall_time_used_as_target_time": {"const": false},
     "token_commits_from_execution": {"const": true},
     "execution_records": {
       "items": {"$ref": "#/$defs/recordBinding"},
@@ -93,6 +136,15 @@
         "sha256": {"$ref": "#/$defs/sha256"}
       },
       "required": ["cost_table_id", "path", "sha256"],
+      "type": "object"
+    },
+    "file": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {"minLength": 1, "type": "string"},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      },
+      "required": ["path", "sha256"],
       "type": "object"
     },
     "identifier": {

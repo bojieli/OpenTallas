@@ -166,7 +166,13 @@
           "oneOf": [{"type": "boolean"}, {"type": "null"}]
         },
         "correctness_uses_exact_independent_oracle_tokens": {"const": true},
+        "cosimulation_token_acceptance_is_full_rtl_token_acceptance": {
+          "const": false
+        },
         "cycle_model_target_tpot_is_silicon_measurement": {"const": false},
+        "accelerated_engine_models_require_digest_bound_bit_cycle_equivalence": {
+          "const": true
+        },
         "functional_host_wall_time_is_target_tpot": {"const": false},
         "functional_token_acceptance_is_full_rtl_token_acceptance": {
           "const": false
@@ -175,7 +181,7 @@
         "per_sequence_tpot_is_aggregate_throughput": {"const": false},
         "production_high_fidelity_timing": {"type": "boolean"},
         "production_tpot_gate_closed": {"type": "boolean"},
-        "production_tpot_requires_full_rtl_tokens_and_characterized_timing": {
+        "production_tpot_requires_rtl_bound_tokens_and_characterized_timing": {
           "const": true
         },
         "roofline_or_analytical_projection_is_target_tpot": {"const": false},
@@ -185,7 +191,9 @@
       },
       "required": [
         "assumption_dependent_target_timing",
+        "accelerated_engine_models_require_digest_bound_bit_cycle_equivalence",
         "correctness_uses_exact_independent_oracle_tokens",
+        "cosimulation_token_acceptance_is_full_rtl_token_acceptance",
         "cycle_model_target_tpot_is_silicon_measurement",
         "functional_host_wall_time_is_target_tpot",
         "functional_token_acceptance_is_full_rtl_token_acceptance",
@@ -193,7 +201,7 @@
         "per_sequence_tpot_is_aggregate_throughput",
         "production_high_fidelity_timing",
         "production_tpot_gate_closed",
-        "production_tpot_requires_full_rtl_tokens_and_characterized_timing",
+        "production_tpot_requires_rtl_bound_tokens_and_characterized_timing",
         "roofline_or_analytical_projection_is_target_tpot",
         "rtl_simulator_wall_time_is_target_tpot",
         "target_tpot_uses_bound_token_commit_ticks_only",
@@ -311,25 +319,51 @@
       "properties": {
         "full_rtl_generated_tokens": {"type": "boolean"},
         "functional_accelerator_tokens": {"type": "boolean"},
+        "rtl_bound_accelerated_cosimulation": {"type": "boolean"},
+        "cosimulation_execution_id": {
+          "oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]
+        },
+        "cosimulation_proof_path": {
+          "oneOf": [{"type": "string"}, {"type": "null"}]
+        },
+        "cosimulation_proof_sha256": {
+          "oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]
+        },
         "observed": {
           "oneOf": [
-            {"enum": ["functional_accelerator_execution", "full_rtl_generated_tokens"]},
+            {
+              "enum": [
+                "functional_accelerator_execution",
+                "rtl_bound_accelerated_cosimulation",
+                "full_rtl_generated_tokens"
+              ]
+            },
             {"type": "null"}
           ]
         },
         "required": {
           "oneOf": [
-            {"enum": ["functional_accelerator_execution", "full_rtl_generated_tokens"]},
+            {
+              "enum": [
+                "functional_accelerator_execution",
+                "rtl_bound_accelerated_cosimulation",
+                "full_rtl_generated_tokens"
+              ]
+            },
             {"type": "null"}
           ]
         },
         "satisfies_required_tier": {"type": "boolean"}
       },
       "required": [
+        "cosimulation_execution_id",
+        "cosimulation_proof_path",
+        "cosimulation_proof_sha256",
         "full_rtl_generated_tokens",
         "functional_accelerator_tokens",
         "observed",
         "required",
+        "rtl_bound_accelerated_cosimulation",
         "satisfies_required_tier"
       ],
       "type": "object"
@@ -348,6 +382,7 @@
       "enum": [
         "abi3_cycle_model_execution",
         "post_layout_timing_simulation",
+        "rtl_bound_accelerated_cosimulation",
         "rtl_cycle_simulation",
         "silicon_measurement"
       ]
@@ -424,11 +459,15 @@
       "properties": {
         "abi_version": {"const": "3.0"},
         "correct_tokens_are_gate_1": {"const": true},
+        "cosimulation_is_monolithic_full_rtl": {"const": false},
         "desired_tpot_is_gate_2": {"const": true},
         "exact_independent_oracle_equality_required": {"const": true},
         "functional_host_wall_time_eligible": {"const": false},
         "projection_only_artifacts_eligible": {"const": false},
         "rtl_simulator_wall_time_eligible": {"const": false},
+        "rtl_bound_accelerated_cosimulation_requires_explicit_proof": {
+          "const": true
+        },
         "same_bound_execution_required_for_tpot": {"const": true},
         "unprovenanced_target_cycles_eligible": {"const": false},
         "thresholds_are_contract_supplied_only": {"const": true}
@@ -436,11 +475,13 @@
       "required": [
         "abi_version",
         "correct_tokens_are_gate_1",
+        "cosimulation_is_monolithic_full_rtl",
         "desired_tpot_is_gate_2",
         "exact_independent_oracle_equality_required",
         "functional_host_wall_time_eligible",
         "projection_only_artifacts_eligible",
         "rtl_simulator_wall_time_eligible",
+        "rtl_bound_accelerated_cosimulation_requires_explicit_proof",
         "same_bound_execution_required_for_tpot",
         "unprovenanced_target_cycles_eligible",
         "thresholds_are_contract_supplied_only"
@@ -575,6 +616,12 @@
       "additionalProperties": false,
       "properties": {
         "claim_class": {"oneOf": [{"type": "string"}, {"type": "null"}]},
+        "cosimulation_execution_id": {
+          "oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]
+        },
+        "cosimulation_proof_sha256": {
+          "oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]
+        },
         "measurement_class": {
           "oneOf": [{"$ref": "#/$defs/measurementClass"}, {"type": "null"}]
         },

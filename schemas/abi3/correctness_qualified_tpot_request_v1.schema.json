@@ -50,8 +50,12 @@
         "required_correctness_tier": {
           "enum": [
             "functional_accelerator_execution",
+            "rtl_bound_accelerated_cosimulation",
             "full_rtl_generated_tokens"
           ]
+        },
+        "rtl_bound_accelerated_cosimulation_proof": {
+          "$ref": "#/$defs/file"
         },
         "target_role": {"enum": ["hbm", "rom"]},
         "target_timing_trace": {
@@ -69,6 +73,26 @@
         "required_correctness_tier",
         "target_role",
         "target_timing_trace"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "required_correctness_tier": {
+                "const": "rtl_bound_accelerated_cosimulation"
+              }
+            },
+            "required": ["required_correctness_tier"]
+          },
+          "then": {
+            "required": ["rtl_bound_accelerated_cosimulation_proof"]
+          },
+          "else": {
+            "not": {
+              "required": ["rtl_bound_accelerated_cosimulation_proof"]
+            }
+          }
+        }
       ],
       "type": "object"
     },

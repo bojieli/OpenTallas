@@ -9,11 +9,15 @@ artifact.  Target timing is optional, but when present it must be a raw
 tool derives TTFT and TPOT from those ticks; it never accepts precomputed rate
 fields.
 
-Host functional-simulator wall time is retained as a diagnostic observation
-only.  Analytical/roofline artifacts, extrapolated rows, and host wall time
-are categorically ineligible as target TPOT.  A numeric TPOT threshold is
-never invented: if ``execution.tpot_acceptance`` is absent from the comparison
-contract, the explicit verdict is ``budget_missing`` / ``not_evaluable``.
+Host functional-simulator and RTL-simulator wall time are retained as campaign
+diagnostics only.  Analytical/roofline artifacts, extrapolated rows, and those
+wall times are categorically ineligible as target TPOT.  Production-simulation
+closure may use an explicitly labeled RTL-bound accelerated co-simulation only
+when its token path, execution identity, characterized target cycles, and every
+accelerated engine's bit/cycle equivalence are digest-bound.  It is never
+reported as monolithic full RTL.  A numeric TPOT threshold is never invented:
+if ``execution.tpot_acceptance`` is absent from the comparison contract, the
+explicit verdict is ``budget_missing`` / ``not_evaluable``.
 """
 
 from __future__ import annotations
@@ -39,8 +43,10 @@ from runtime.abi3.capability import canonical_json, digest_of  # noqa: E402
 REQUEST_SCHEMA = "opentallas.abi3.correctness_qualified_tpot_request.v1"
 REPORT_SCHEMA = "opentallas.abi3.correctness_qualified_tpot_report.v1"
 TRACE_SCHEMA = "opentallas.abi3.target_timing_trace.v1"
+COSIM_PROOF_SCHEMA = "opentallas.abi3.rtl_bound_accelerated_cosimulation_proof.v1"
 RECORD_SCHEMA = "opentallas.abi3.accelerator_tokens.v1"
 CONTRACT_SCHEMA = "opentallas.abi3.comparison_contract.v1"
+COSIM_TIER = "rtl_bound_accelerated_cosimulation"
 
 REQUEST_SCHEMA_PATH = (
     REPO / "schemas/abi3/correctness_qualified_tpot_request_v1.schema.json"
@@ -49,6 +55,9 @@ REPORT_SCHEMA_PATH = (
     REPO / "schemas/abi3/correctness_qualified_tpot_report_v1.schema.json"
 )
 TRACE_SCHEMA_PATH = REPO / "schemas/abi3/target_timing_trace_v1.schema.json"
+COSIM_PROOF_SCHEMA_PATH = (
+    REPO / "schemas/abi3/rtl_bound_accelerated_cosimulation_proof_v1.schema.json"
+)
 CONTRACT_SCHEMA_PATH = REPO / "schemas/abi3/comparison_contract_v1.schema.json"
 
 ACCEPTANCE_SCHEMAS = {
@@ -57,6 +66,7 @@ ACCEPTANCE_SCHEMAS = {
 }
 TARGET_MEASUREMENT_CLASSES = {
     "abi3_cycle_model_execution": "cycle_model_target_tpot",
+    COSIM_TIER: "rtl_bound_accelerated_cosimulation_target_tpot",
     "rtl_cycle_simulation": "rtl_simulated_target_tpot",
     "post_layout_timing_simulation": "post_layout_simulated_target_tpot",
     "silicon_measurement": "silicon_measured_target_tpot",
@@ -67,6 +77,19 @@ PROJECTION_SCHEMAS = {
     "opentallas.iso_node.study.v1",
 }
 SHA256_CHARS = frozenset("0123456789abcdef")
+REQUIRED_COSIM_RTL_COMPONENTS = frozenset(
+    {
+        "abi3_microsequencer",
+        "address_generator",
+        "descriptor_view_resolver",
+        "dma_memory_transaction_path",
+        "link_fabric",
+        "queue_event_fence_control",
+        "selection",
+        "token_append_eos",
+        "token_commit_counter",
+    }
+)
 
 
 class EvidenceError(ValueError):
@@ -1021,6 +1044,339 @@ def _acceptance_binds_records(
                     )
 
 
+def _check_cosimulation_proof(
+    raw_ref: object,
+    contract: Mapping[str, Any],
+    contract_sha256: str,
+    acceptance_sha256: str,
+    role: str,
+    rows: Sequence[Mapping[str, Any]],
+    batch_size: int,
+    concurrency: int,
+    batch_execution_id: str | None,
+) -> tuple[dict[str, Any], list[str]]:
+    """Authenticate the distinct RTL-bound accelerated co-simulation tier.
+
+    The ordinary accelerator-token records remain the independently
+    oracle-qualified numerical evidence. This proof binds the same token
+    sequences and execution identity to an RTL-owned system run, and binds each
+    accelerated engine to current bit- and cycle-equivalence artifacts. It is
+    intentionally not a way to rename that run as monolithic full RTL.
+    """
+
+    problems: list[str] = []
+    empty = {
+        "status": "missing",
+        "path": None,
+        "sha256": None,
+        "cosimulation_execution_id": None,
+        "accelerated_engine_families": [],
+        "engine_proof_count": 0,
+        "proof": {},
+    }
+    path, artifact_sha = _file_ref(
+        raw_ref,
+        "rtl_bound_accelerated_cosimulation_proof",
+        problems,
+    )
+    if path is None or not path.is_file() or artifact_sha is None:
+        return {**empty, "status": "rejected"}, problems
+    try:
+        proof = _load(path)
+    except (OSError, EvidenceError) as exc:
+        problems.append(
+            "RTL-bound accelerated co-simulation proof is not valid governed "
+            f"JSON: {exc}"
+        )
+        return {
+            **empty,
+            "status": "rejected",
+            "path": _display(path),
+            "sha256": artifact_sha,
+        }, problems
+
+    problems.extend(
+        _schema_problems(
+            proof,
+            COSIM_PROOF_SCHEMA_PATH,
+            "RTL-bound accelerated co-simulation proof",
+        )
+    )
+    if proof.get("schema") != COSIM_PROOF_SCHEMA:
+        problems.append("unsupported RTL-bound co-simulation proof schema")
+    if proof.get("evidence_tier") != COSIM_TIER:
+        problems.append(
+            "co-simulation evidence cannot be relabeled as full RTL-generated tokens"
+        )
+    if proof.get("monolithic_full_rtl") is not False:
+        problems.append(
+            "RTL-bound accelerated co-simulation is not monolithic full RTL"
+        )
+    if (
+        proof.get("status") != "pass"
+        or proof.get("problems") != []
+        or proof.get("full_workload_execution") is not True
+        or proof.get("token_source") != "rtl_selection_token_append_eos_path"
+    ):
+        problems.append("co-simulation proof is not a passing full-workload proof")
+
+    injection = _mapping(proof.get("injection_policy"))
+    if (
+        injection.get("host_tensor_or_result_injection") is not False
+        or injection.get("oracle_tensor_or_result_injection") is not False
+        or injection.get("precomputed_activations_logits_routes_or_tokens") is not False
+        or injection.get("accelerated_models_can_read_oracle") is not False
+        or injection.get("harness_only_transports_handshakes") is not True
+    ):
+        problems.append(
+            "co-simulation proof permits host/oracle tensor or model-result injection"
+        )
+
+    _file_ref(proof.get("producer"), "co-simulation proof producer", problems)
+
+    model = _mapping(contract.get("model"))
+    workload = _mapping(contract.get("workload"))
+    policy = _mapping(contract.get("policy"))
+    target_contract = _target_for_role(contract, role)
+
+    def one_identity(name: str, values: set[object]) -> object:
+        if len(values) != 1 or None in values:
+            problems.append(
+                f"co-simulation proof cannot bind one {name} execution identity"
+            )
+            return None
+        return next(iter(values))
+
+    capability_digest = one_identity(
+        "capability",
+        {
+            _mapping(_mapping(row.get("record")).get("target")).get("capability_digest")
+            for row in rows
+        },
+    )
+    deployment_digest = one_identity(
+        "deployment",
+        {
+            _mapping(_mapping(row.get("record")).get("target")).get("deployment_digest")
+            for row in rows
+        },
+    )
+    source_manifest = one_identity(
+        "source manifest", {row.get("source_manifest_sha256") for row in rows}
+    )
+    implementation_identity = one_identity(
+        "implementation", {row.get("implementation_identity_sha256") for row in rows}
+    )
+    expected_target = {
+        "target_id": target_contract.get("target_id"),
+        "backend": target_contract.get("backend"),
+        "node_count": target_contract.get("node_count"),
+        "topology_class": target_contract.get("topology_class"),
+        "capability_digest": capability_digest,
+        "deployment_digest": deployment_digest,
+        "technology_view": policy.get("technology_view"),
+        "source_manifest_sha256": source_manifest,
+        "implementation_identity_sha256": implementation_identity,
+    }
+    expected_identity = {
+        "batch_execution_id": batch_execution_id,
+        "batch_size": batch_size,
+        "comparison_contract_sha256": contract_sha256,
+        "comparison_id": contract.get("comparison_id"),
+        "concurrency": concurrency,
+        "correctness_acceptance_sha256": acceptance_sha256,
+        "external_oracle_sha256": _mapping(contract.get("external_oracle")).get(
+            "source_sha256"
+        ),
+        "graph_id": model.get("graph_id"),
+        "kernel_ir_source_sha256": model.get("kernel_ir_source_sha256"),
+        "latency_boundary": policy.get("latency_boundary"),
+        "model_id": model.get("model_id"),
+        "numeric_profile": model.get("numeric_profile"),
+        "pvt": policy.get("pvt"),
+        "target": expected_target,
+        "tokenizer_sha256": workload.get("tokenizer_sha256"),
+        "workload_digest": workload.get("digest"),
+        "workload_id": workload.get("workload_id"),
+    }
+    identity = _mapping(proof.get("execution_identity"))
+    for name, expected in expected_identity.items():
+        if identity.get(name) != expected:
+            problems.append(
+                f"co-simulation proof execution identity {name} is not exact"
+            )
+
+    bindings = proof.get("execution_records")
+    expected_bindings = [
+        {
+            "sequence_index": row.get("sequence_index"),
+            "path": row.get("path"),
+            "sha256": row.get("sha256"),
+        }
+        for row in rows
+    ]
+    normalized: list[dict[str, Any]] = []
+    if isinstance(bindings, list):
+        for binding in bindings:
+            if not isinstance(binding, dict):
+                continue
+            binding_path = _resolve(binding.get("path"))
+            normalized.append(
+                {
+                    "sequence_index": binding.get("sequence_index"),
+                    "path": _display(binding_path)
+                    if binding_path is not None
+                    else None,
+                    "sha256": binding.get("sha256"),
+                }
+            )
+    if sorted(normalized, key=lambda item: str(item.get("sequence_index"))) != sorted(
+        expected_bindings, key=lambda item: str(item.get("sequence_index"))
+    ):
+        problems.append("co-simulation proof accelerator-record bindings are not exact")
+
+    sequence_rows = proof.get("sequences")
+    sequence_by_index = (
+        {
+            item.get("sequence_index"): item
+            for item in sequence_rows
+            if isinstance(item, dict) and _integer(item.get("sequence_index"))
+        }
+        if isinstance(sequence_rows, list)
+        else {}
+    )
+    if len(sequence_by_index) != len(rows):
+        problems.append(
+            "co-simulation proof sequence identities are not unique and complete"
+        )
+    for row in rows:
+        sequence_index = row.get("sequence_index")
+        sequence = _mapping(sequence_by_index.get(sequence_index))
+        expected_sequence = {
+            "sequence_index": sequence_index,
+            "generated_token_ids": row.get("generated"),
+            "generated_token_ids_sha256": row.get("generated_token_ids_sha256"),
+            "generated_token_count": len(row.get("generated", [])),
+            "terminal_kind": row.get("terminal_kind"),
+            "first_eos_index": row.get("first_eos_index"),
+            "no_post_eos_execution": row.get("no_post_eos_step"),
+            "token_source": "rtl_selection_token_append_eos_path",
+        }
+        for name, expected in expected_sequence.items():
+            if sequence.get(name) != expected:
+                problems.append(
+                    f"co-simulation sequence {sequence_index} {name} is not exact"
+                )
+
+    rtl_components = proof.get("rtl_owned_components")
+    rtl_component_set = (
+        {value for value in rtl_components if isinstance(value, str)}
+        if isinstance(rtl_components, list)
+        else set()
+    )
+    if (
+        not isinstance(rtl_components, list)
+        or len(rtl_components) != len(rtl_component_set)
+        or rtl_component_set != REQUIRED_COSIM_RTL_COMPONENTS
+    ):
+        problems.append(
+            "co-simulation proof does not bind every required RTL-owned system component"
+        )
+
+    declared_families = proof.get("accelerated_engine_families")
+    declared_set = (
+        {value for value in declared_families if isinstance(value, str)}
+        if isinstance(declared_families, list)
+        else set()
+    )
+    engine_rows = proof.get("engine_equivalence_proofs")
+    engine_rows = engine_rows if isinstance(engine_rows, list) else []
+    proved_families = [
+        engine.get("engine_family")
+        for engine in engine_rows
+        if isinstance(engine, dict)
+    ]
+    proved_set = {value for value in proved_families if isinstance(value, str)}
+    if (
+        not declared_set
+        or len(proved_families) != len(proved_set)
+        or proved_set != declared_set
+    ):
+        problems.append(
+            "accelerated engine families do not have one proof row per engine"
+        )
+    equivalence_fields = {
+        "all_executed_modes_covered",
+        "architectural_counters_exact",
+        "backpressure_and_stalls_exact",
+        "completion_cycle_exact",
+        "fault_and_refusal_exact",
+        "memory_transactions_exact",
+        "result_bits_exact",
+        "start_cycle_exact",
+    }
+    for index, raw_engine in enumerate(engine_rows):
+        engine = _mapping(raw_engine)
+        label = f"engine_equivalence_proofs[{index}]"
+        for name in (
+            "accelerated_model_source",
+            "bit_equivalence_proof",
+            "cycle_equivalence_proof",
+            "executed_mode_manifest",
+            "synthesizable_rtl_manifest",
+        ):
+            _file_ref(engine.get(name), f"{label}.{name}", problems)
+        equivalence = _mapping(engine.get("equivalence"))
+        if (
+            engine.get("status") != "pass"
+            or engine.get("problems") != []
+            or any(equivalence.get(name) is not True for name in equivalence_fields)
+        ):
+            problems.append(f"{label} is not a complete bit/cycle equivalence proof")
+
+    timing = _mapping(proof.get("timing_qualification"))
+    _file_ref(
+        timing.get("characterization_artifact"),
+        "co-simulation timing characterization",
+        problems,
+    )
+    cost_lock = _mapping(_mapping(target_contract.get("cost_policy")).get("lock"))
+    expected_timing = {
+        "clock_frequency_hz": _mapping(policy.get("clock")).get(
+            "comparison_frequency_hz"
+        ),
+        "cost_table_sha256": cost_lock.get("source_sha256"),
+        "depends_on_assumed_values": False,
+        "implementation_identity_sha256": implementation_identity,
+        "measurement_class": COSIM_TIER,
+        "pvt": policy.get("pvt"),
+        "simulator_wall_time_used_as_target_time": False,
+        "status": "characterized",
+        "target_cycles_from_architectural_events": True,
+        "technology_view": policy.get("technology_view"),
+    }
+    for name, expected in expected_timing.items():
+        if timing.get(name) != expected:
+            problems.append(
+                f"co-simulation timing qualification {name} is not characterized "
+                "for the exact execution"
+            )
+
+    return {
+        "status": "accepted" if not problems else "rejected",
+        "path": _display(path),
+        "sha256": artifact_sha,
+        "cosimulation_execution_id": proof.get("cosimulation_execution_id")
+        if _is_sha256(proof.get("cosimulation_execution_id"))
+        else None,
+        "accelerated_engine_families": sorted(
+            str(value) for value in declared_set if isinstance(value, str)
+        ),
+        "engine_proof_count": len(engine_rows),
+        "proof": proof,
+    }, problems
+
+
 def _budget(contract: Mapping[str, Any], role: str | None) -> dict[str, Any]:
     execution = contract.get("execution")
     raw = execution.get("tpot_acceptance") if isinstance(execution, dict) else None
@@ -1328,6 +1684,8 @@ def _check_timing(
     role: str,
     rows: Sequence[Mapping[str, Any]],
     budget: Mapping[str, Any],
+    required_tier: str,
+    cosimulation: Mapping[str, Any],
 ) -> tuple[dict[str, Any], list[str]]:
     problems: list[str] = []
     if raw_ref is None:
@@ -1390,6 +1748,40 @@ def _check_timing(
     measurement_class = trace.get("measurement_class")
     if measurement_class not in TARGET_MEASUREMENT_CLASSES:
         problems.append("target timing measurement class is absent or ineligible")
+    if measurement_class == COSIM_TIER:
+        if required_tier != COSIM_TIER:
+            problems.append(
+                "RTL-bound accelerated co-simulation timing cannot qualify a "
+                "different correctness tier"
+            )
+        if cosimulation.get("status") != "accepted":
+            problems.append(
+                "RTL-bound accelerated co-simulation timing has no accepted proof"
+            )
+        trace_proof = _mapping(trace.get("rtl_bound_accelerated_cosimulation_proof"))
+        trace_proof_path = _resolve(trace_proof.get("path"))
+        expected_proof_path = _resolve(cosimulation.get("path"))
+        if (
+            trace.get("execution_tier") != COSIM_TIER
+            or trace.get("cosimulation_execution_id")
+            != cosimulation.get("cosimulation_execution_id")
+            or trace_proof.get("sha256") != cosimulation.get("sha256")
+            or trace_proof_path is None
+            or expected_proof_path is None
+            or trace_proof_path != expected_proof_path
+        ):
+            problems.append(
+                "target timing does not bind the exact co-simulation execution proof"
+            )
+        if trace.get("simulator_wall_time_used_as_target_time") is not False:
+            problems.append(
+                "co-simulation simulator wall time is ineligible as target timing"
+            )
+    elif required_tier == COSIM_TIER:
+        problems.append(
+            "RTL-bound accelerated co-simulation correctness requires its explicit "
+            "co-simulation timing class"
+        )
     if (
         trace.get("evidence_class") != "executed_target_timing_trace"
         or trace.get("projection_only") is not False
@@ -1412,6 +1804,13 @@ def _check_timing(
         "measured",
     } or not isinstance(provenance.get("depends_on_assumed_values"), bool):
         problems.append("target timing provenance is absent or invalid")
+    if measurement_class == COSIM_TIER and (
+        provenance.get("class") not in {"characterized", "measured"}
+        or provenance.get("depends_on_assumed_values") is not False
+    ):
+        problems.append(
+            "RTL-bound accelerated co-simulation timing is not characterized"
+        )
     timebase = trace.get("timebase") if isinstance(trace.get("timebase"), dict) else {}
     if measurement_class == "silicon_measurement":
         if (
@@ -1568,7 +1967,11 @@ def _check_timing(
             and (
                 (
                     measurement_class
-                    in {"rtl_cycle_simulation", "post_layout_timing_simulation"}
+                    in {
+                        COSIM_TIER,
+                        "rtl_cycle_simulation",
+                        "post_layout_timing_simulation",
+                    }
                     and provenance.get("class") in {"characterized", "measured"}
                 )
                 or (
@@ -1576,6 +1979,16 @@ def _check_timing(
                     and provenance.get("class") == "measured"
                 )
             )
+        ),
+        "cosimulation_execution_id": trace.get("cosimulation_execution_id")
+        if measurement_class == COSIM_TIER
+        else None,
+        "cosimulation_proof_sha256": (
+            _mapping(trace.get("rtl_bound_accelerated_cosimulation_proof")).get(
+                "sha256"
+            )
+            if measurement_class == COSIM_TIER
+            else None
         ),
         "metrics": metrics or None,
     }, problems
@@ -1643,6 +2056,7 @@ def _point(raw: Mapping[str, Any]) -> dict[str, Any]:
     required_tier = raw.get("required_correctness_tier")
     if required_tier not in {
         "functional_accelerator_execution",
+        COSIM_TIER,
         "full_rtl_generated_tokens",
     }:
         problems.append("required_correctness_tier is absent or unsupported")
@@ -1680,11 +2094,54 @@ def _point(raw: Mapping[str, Any]) -> dict[str, Any]:
             )
         _acceptance_binds_records(acceptance, rows, problems)
 
+    cosimulation: dict[str, Any] = {
+        "status": "not_requested",
+        "path": None,
+        "sha256": None,
+        "cosimulation_execution_id": None,
+        "accelerated_engine_families": [],
+        "engine_proof_count": 0,
+        "proof": {},
+    }
+    if required_tier == COSIM_TIER:
+        if (
+            contract_sha is not None
+            and acceptance_sha is not None
+            and len(rows) == batch_size
+            and _integer(concurrency, minimum=1)
+        ):
+            cosimulation, cosimulation_problems = _check_cosimulation_proof(
+                raw.get("rtl_bound_accelerated_cosimulation_proof"),
+                contract,
+                contract_sha,
+                acceptance_sha,
+                str(role),
+                rows,
+                int(batch_size),
+                int(concurrency),
+                str(batch_execution_id) if batch_execution_id else None,
+            )
+            problems.extend(cosimulation_problems)
+        else:
+            problems.append(
+                "RTL-bound accelerated co-simulation proof cannot be checked "
+                "without exact execution identities"
+            )
+    elif raw.get("rtl_bound_accelerated_cosimulation_proof") is not None:
+        problems.append(
+            "co-simulation proof cannot be relabeled as a different correctness tier"
+        )
+
     observed_tier = (
-        "functional_accelerator_execution"
-        if acceptance.get("schema") in ACCEPTANCE_SCHEMAS
-        else None
+        COSIM_TIER
+        if cosimulation.get("status") == "accepted"
+        else (
+            "functional_accelerator_execution"
+            if acceptance.get("schema") in ACCEPTANCE_SCHEMAS
+            else None
+        )
     )
+    rtl_bound_accelerated_cosimulation = observed_tier == COSIM_TIER
     full_rtl_generated_tokens = False
     if required_tier == "full_rtl_generated_tokens" and not full_rtl_generated_tokens:
         problems.append(
@@ -1709,6 +2166,8 @@ def _point(raw: Mapping[str, Any]) -> dict[str, Any]:
             str(role),
             rows,
             budget,
+            str(required_tier),
+            cosimulation,
         )
         problems.extend(timing_problems)
 
@@ -1780,7 +2239,7 @@ def _point(raw: Mapping[str, Any]) -> dict[str, Any]:
     verdict["production_gate_closed"] = bool(
         point_status == "pass"
         and timing.get("production_high_fidelity") is True
-        and full_rtl_generated_tokens
+        and (rtl_bound_accelerated_cosimulation or full_rtl_generated_tokens)
     )
 
     sequence_summaries = [
@@ -1848,11 +2307,27 @@ def _point(raw: Mapping[str, Any]) -> dict[str, Any]:
                 "required": required_tier,
                 "observed": observed_tier,
                 "functional_accelerator_tokens": observed_tier
-                == "functional_accelerator_execution",
+                in {"functional_accelerator_execution", COSIM_TIER},
+                "rtl_bound_accelerated_cosimulation": (
+                    rtl_bound_accelerated_cosimulation
+                ),
                 "full_rtl_generated_tokens": full_rtl_generated_tokens,
+                "cosimulation_proof_path": cosimulation.get("path"),
+                "cosimulation_proof_sha256": cosimulation.get("sha256"),
+                "cosimulation_execution_id": cosimulation.get(
+                    "cosimulation_execution_id"
+                ),
                 "satisfies_required_tier": (
-                    required_tier == "functional_accelerator_execution"
-                    and observed_tier == "functional_accelerator_execution"
+                    (
+                        required_tier == "functional_accelerator_execution"
+                        and observed_tier
+                        in {"functional_accelerator_execution", COSIM_TIER}
+                    )
+                    or (required_tier == COSIM_TIER and observed_tier == COSIM_TIER)
+                    or (
+                        required_tier == "full_rtl_generated_tokens"
+                        and full_rtl_generated_tokens
+                    )
                 ),
             },
             "sequences": sequence_summaries,
@@ -1869,6 +2344,8 @@ def _point(raw: Mapping[str, Any]) -> dict[str, Any]:
         "problems": problems,
         "claim_boundary": {
             "correctness_uses_exact_independent_oracle_tokens": True,
+            "accelerated_engine_models_require_digest_bound_bit_cycle_equivalence": True,
+            "cosimulation_token_acceptance_is_full_rtl_token_acceptance": False,
             "functional_host_wall_time_is_target_tpot": False,
             "functional_token_acceptance_is_full_rtl_token_acceptance": False,
             "roofline_or_analytical_projection_is_target_tpot": False,
@@ -1886,7 +2363,7 @@ def _point(raw: Mapping[str, Any]) -> dict[str, Any]:
                 "production_high_fidelity", False
             ),
             "production_tpot_gate_closed": verdict["production_gate_closed"],
-            "production_tpot_requires_full_rtl_tokens_and_characterized_timing": True,
+            "production_tpot_requires_rtl_bound_tokens_and_characterized_timing": True,
             "no_numeric_slo_invented": budget["status"] == "budget_missing",
         },
     }
@@ -1932,11 +2409,13 @@ def _finalize_report(
         "claim_boundary": {
             "abi_version": "3.0",
             "correct_tokens_are_gate_1": True,
+            "cosimulation_is_monolithic_full_rtl": False,
             "exact_independent_oracle_equality_required": True,
             "desired_tpot_is_gate_2": True,
             "projection_only_artifacts_eligible": False,
             "functional_host_wall_time_eligible": False,
             "rtl_simulator_wall_time_eligible": False,
+            "rtl_bound_accelerated_cosimulation_requires_explicit_proof": True,
             "same_bound_execution_required_for_tpot": True,
             "unprovenanced_target_cycles_eligible": False,
             "thresholds_are_contract_supplied_only": True,

@@ -1,0 +1,342 @@
+{
+  "$id": "https://opentallas.org/schemas/abi3/rtl_bound_accelerated_cosimulation_proof_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "accelerated_engine_families": {
+      "items": {"$ref": "#/$defs/engineFamily"},
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "cosimulation_execution_id": {"$ref": "#/$defs/sha256"},
+    "engine_equivalence_proofs": {
+      "items": {"$ref": "#/$defs/engineProof"},
+      "minItems": 1,
+      "type": "array"
+    },
+    "evidence_tier": {"const": "rtl_bound_accelerated_cosimulation"},
+    "execution_identity": {"$ref": "#/$defs/executionIdentity"},
+    "execution_records": {
+      "items": {"$ref": "#/$defs/recordBinding"},
+      "minItems": 1,
+      "type": "array"
+    },
+    "full_workload_execution": {"const": true},
+    "injection_policy": {"$ref": "#/$defs/injectionPolicy"},
+    "monolithic_full_rtl": {"const": false},
+    "problems": {
+      "items": {"type": "string"},
+      "maxItems": 0,
+      "type": "array"
+    },
+    "producer": {"$ref": "#/$defs/file"},
+    "rtl_owned_components": {
+      "items": {"$ref": "#/$defs/rtlComponent"},
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "schema": {
+      "const": "opentallas.abi3.rtl_bound_accelerated_cosimulation_proof.v1"
+    },
+    "sequences": {
+      "items": {"$ref": "#/$defs/sequence"},
+      "minItems": 1,
+      "type": "array"
+    },
+    "status": {"const": "pass"},
+    "timing_qualification": {"$ref": "#/$defs/timingQualification"},
+    "token_source": {"const": "rtl_selection_token_append_eos_path"}
+  },
+  "required": [
+    "accelerated_engine_families",
+    "cosimulation_execution_id",
+    "engine_equivalence_proofs",
+    "evidence_tier",
+    "execution_identity",
+    "execution_records",
+    "full_workload_execution",
+    "injection_policy",
+    "monolithic_full_rtl",
+    "problems",
+    "producer",
+    "rtl_owned_components",
+    "schema",
+    "sequences",
+    "status",
+    "timing_qualification",
+    "token_source"
+  ],
+  "title": "ABI 3.0 RTL-bound accelerated full-system co-simulation proof v1",
+  "type": "object",
+  "$defs": {
+    "engineFamily": {
+      "enum": ["attention", "reduction", "route", "tensor", "vector"]
+    },
+    "engineProof": {
+      "additionalProperties": false,
+      "properties": {
+        "accelerated_model_id": {"$ref": "#/$defs/identifier"},
+        "accelerated_model_source": {"$ref": "#/$defs/file"},
+        "bit_equivalence_proof": {"$ref": "#/$defs/file"},
+        "cycle_equivalence_proof": {"$ref": "#/$defs/file"},
+        "engine_family": {"$ref": "#/$defs/engineFamily"},
+        "equivalence": {
+          "additionalProperties": false,
+          "properties": {
+            "all_executed_modes_covered": {"const": true},
+            "architectural_counters_exact": {"const": true},
+            "backpressure_and_stalls_exact": {"const": true},
+            "completion_cycle_exact": {"const": true},
+            "fault_and_refusal_exact": {"const": true},
+            "memory_transactions_exact": {"const": true},
+            "result_bits_exact": {"const": true},
+            "start_cycle_exact": {"const": true}
+          },
+          "required": [
+            "all_executed_modes_covered",
+            "architectural_counters_exact",
+            "backpressure_and_stalls_exact",
+            "completion_cycle_exact",
+            "fault_and_refusal_exact",
+            "memory_transactions_exact",
+            "result_bits_exact",
+            "start_cycle_exact"
+          ],
+          "type": "object"
+        },
+        "executed_mode_manifest": {"$ref": "#/$defs/file"},
+        "problems": {
+          "items": {"type": "string"},
+          "maxItems": 0,
+          "type": "array"
+        },
+        "status": {"const": "pass"},
+        "synthesizable_rtl_manifest": {"$ref": "#/$defs/file"}
+      },
+      "required": [
+        "accelerated_model_id",
+        "accelerated_model_source",
+        "bit_equivalence_proof",
+        "cycle_equivalence_proof",
+        "engine_family",
+        "equivalence",
+        "executed_mode_manifest",
+        "problems",
+        "status",
+        "synthesizable_rtl_manifest"
+      ],
+      "type": "object"
+    },
+    "executionIdentity": {
+      "additionalProperties": false,
+      "properties": {
+        "batch_execution_id": {
+          "oneOf": [
+            {"$ref": "#/$defs/sha256"},
+            {"type": "null"}
+          ]
+        },
+        "batch_size": {"minimum": 1, "type": "integer"},
+        "comparison_contract_sha256": {"$ref": "#/$defs/sha256"},
+        "comparison_id": {"$ref": "#/$defs/identifier"},
+        "concurrency": {"minimum": 1, "type": "integer"},
+        "correctness_acceptance_sha256": {"$ref": "#/$defs/sha256"},
+        "external_oracle_sha256": {"$ref": "#/$defs/sha256"},
+        "graph_id": {"$ref": "#/$defs/sha256"},
+        "kernel_ir_source_sha256": {"$ref": "#/$defs/sha256"},
+        "latency_boundary": {"$ref": "#/$defs/identifier"},
+        "model_id": {"$ref": "#/$defs/identifier"},
+        "numeric_profile": {"$ref": "#/$defs/identifier"},
+        "pvt": {"$ref": "#/$defs/pvt"},
+        "target": {"$ref": "#/$defs/target"},
+        "tokenizer_sha256": {"$ref": "#/$defs/sha256"},
+        "workload_digest": {"$ref": "#/$defs/sha256"},
+        "workload_id": {"$ref": "#/$defs/identifier"}
+      },
+      "required": [
+        "batch_execution_id",
+        "batch_size",
+        "comparison_contract_sha256",
+        "comparison_id",
+        "concurrency",
+        "correctness_acceptance_sha256",
+        "external_oracle_sha256",
+        "graph_id",
+        "kernel_ir_source_sha256",
+        "latency_boundary",
+        "model_id",
+        "numeric_profile",
+        "pvt",
+        "target",
+        "tokenizer_sha256",
+        "workload_digest",
+        "workload_id"
+      ],
+      "type": "object"
+    },
+    "file": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {"minLength": 1, "type": "string"},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      },
+      "required": ["path", "sha256"],
+      "type": "object"
+    },
+    "identifier": {
+      "maxLength": 192,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$",
+      "type": "string"
+    },
+    "injectionPolicy": {
+      "additionalProperties": false,
+      "properties": {
+        "accelerated_models_can_read_oracle": {"const": false},
+        "harness_only_transports_handshakes": {"const": true},
+        "host_tensor_or_result_injection": {"const": false},
+        "oracle_tensor_or_result_injection": {"const": false},
+        "precomputed_activations_logits_routes_or_tokens": {"const": false}
+      },
+      "required": [
+        "accelerated_models_can_read_oracle",
+        "harness_only_transports_handshakes",
+        "host_tensor_or_result_injection",
+        "oracle_tensor_or_result_injection",
+        "precomputed_activations_logits_routes_or_tokens"
+      ],
+      "type": "object"
+    },
+    "pvt": {
+      "additionalProperties": false,
+      "properties": {
+        "corner_id": {"$ref": "#/$defs/identifier"},
+        "process": {"$ref": "#/$defs/identifier"},
+        "temperature_c": {"type": "number"},
+        "voltage_v": {"exclusiveMinimum": 0, "type": "number"}
+      },
+      "required": ["corner_id", "process", "temperature_c", "voltage_v"],
+      "type": "object"
+    },
+    "recordBinding": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {"minLength": 1, "type": "string"},
+        "sequence_index": {"minimum": 0, "type": "integer"},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      },
+      "required": ["path", "sequence_index", "sha256"],
+      "type": "object"
+    },
+    "rtlComponent": {
+      "enum": [
+        "abi3_microsequencer",
+        "address_generator",
+        "descriptor_view_resolver",
+        "dma_memory_transaction_path",
+        "link_fabric",
+        "queue_event_fence_control",
+        "selection",
+        "token_append_eos",
+        "token_commit_counter"
+      ]
+    },
+    "sequence": {
+      "additionalProperties": false,
+      "properties": {
+        "first_eos_index": {
+          "oneOf": [
+            {"minimum": 0, "type": "integer"},
+            {"type": "null"}
+          ]
+        },
+        "generated_token_count": {"minimum": 1, "type": "integer"},
+        "generated_token_ids": {
+          "items": {"minimum": 0, "type": "integer"},
+          "minItems": 1,
+          "type": "array"
+        },
+        "generated_token_ids_sha256": {"$ref": "#/$defs/sha256"},
+        "no_post_eos_execution": {"const": true},
+        "sequence_index": {"minimum": 0, "type": "integer"},
+        "terminal_kind": {"enum": ["cap", "eos"]},
+        "token_source": {"const": "rtl_selection_token_append_eos_path"}
+      },
+      "required": [
+        "first_eos_index",
+        "generated_token_count",
+        "generated_token_ids",
+        "generated_token_ids_sha256",
+        "no_post_eos_execution",
+        "sequence_index",
+        "terminal_kind",
+        "token_source"
+      ],
+      "type": "object"
+    },
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "target": {
+      "additionalProperties": false,
+      "properties": {
+        "backend": {"$ref": "#/$defs/identifier"},
+        "capability_digest": {"$ref": "#/$defs/sha256"},
+        "deployment_digest": {"$ref": "#/$defs/sha256"},
+        "implementation_identity_sha256": {"$ref": "#/$defs/sha256"},
+        "node_count": {"minimum": 1, "type": "integer"},
+        "source_manifest_sha256": {"$ref": "#/$defs/sha256"},
+        "target_id": {"$ref": "#/$defs/identifier"},
+        "technology_view": {"$ref": "#/$defs/identifier"},
+        "topology_class": {"maximum": 2, "minimum": 0, "type": "integer"}
+      },
+      "required": [
+        "backend",
+        "capability_digest",
+        "deployment_digest",
+        "implementation_identity_sha256",
+        "node_count",
+        "source_manifest_sha256",
+        "target_id",
+        "technology_view",
+        "topology_class"
+      ],
+      "type": "object"
+    },
+    "timingQualification": {
+      "additionalProperties": false,
+      "properties": {
+        "characterization_artifact": {"$ref": "#/$defs/file"},
+        "clock_frequency_hz": {"minimum": 1, "type": "integer"},
+        "cost_table_sha256": {"$ref": "#/$defs/sha256"},
+        "depends_on_assumed_values": {"const": false},
+        "implementation_identity_sha256": {"$ref": "#/$defs/sha256"},
+        "measurement_class": {
+          "const": "rtl_bound_accelerated_cosimulation"
+        },
+        "pvt": {"$ref": "#/$defs/pvt"},
+        "simulator_wall_time_used_as_target_time": {"const": false},
+        "status": {"const": "characterized"},
+        "target_cycles_from_architectural_events": {"const": true},
+        "technology_view": {"$ref": "#/$defs/identifier"}
+      },
+      "required": [
+        "characterization_artifact",
+        "clock_frequency_hz",
+        "cost_table_sha256",
+        "depends_on_assumed_values",
+        "implementation_identity_sha256",
+        "measurement_class",
+        "pvt",
+        "simulator_wall_time_used_as_target_time",
+        "status",
+        "target_cycles_from_architectural_events",
+        "technology_view"
+      ],
+      "type": "object"
+    }
+  }
+}
