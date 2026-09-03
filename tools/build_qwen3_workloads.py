@@ -18,6 +18,14 @@ if str(REPO) not in sys.path:
     sys.path.insert(0, str(REPO))
 
 from compiler.qwen3.constants import SESSION_CONTEXT_CAPACITY  # noqa: E402
+from compiler.tensor_accelerator.common import load_strict_json  # noqa: E402
+from compiler.tensor_accelerator.qwen_chat import (  # noqa: E402
+    QwenChatTokenizer,
+    SOURCE_FILES,
+)
+from compiler.tensor_accelerator.qwen_workload import (  # noqa: E402
+    load_shared_workload,
+)
 from compiler.workloads.qwen3 import (  # noqa: E402
     AGENT_SANDBOX_FILES,
     AGENT_SYSTEM,
@@ -27,11 +35,27 @@ from compiler.workloads.qwen3 import (  # noqa: E402
     Workload,
     build_workloads,
 )
+from compiler.workloads.qwen3_exact_8k import (  # noqa: E402
+    AuthenticatedWorkloadTokenizer,
+    build_exact_8k_workload,
+    load_construction,
+)
 from runtime.abi3.capability import canonical_json  # noqa: E402
 
 DEFAULT_SNAPSHOT = Path(
     "/home/ubuntu/.cache/huggingface/hub/models--Qwen--Qwen3-8B/snapshots/"
     "b968826d9c46dd6066d109eabc6255188de91218"
+)
+DEFAULT_CHECKPOINT_LOCK = (
+    REPO
+    / "results/tensor_accelerator/qwen3_full_model_physical/source/"
+    "checkpoint.lock.json"
+)
+DEFAULT_SHARED_SEMANTICS = (
+    REPO / "testdata/compiler/tensor_accelerator_qwen_natural/workload.json"
+)
+DEFAULT_EXACT_8K_CONSTRUCTION = (
+    REPO / "configs/abi3/workloads/qwen3_exact_8k_chat_v1.json"
 )
 
 
@@ -220,6 +244,17 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--snapshot", type=Path, default=DEFAULT_SNAPSHOT)
     parser.add_argument(
+        "--checkpoint-lock", type=Path, default=DEFAULT_CHECKPOINT_LOCK
+    )
+    parser.add_argument(
+        "--shared-semantics", type=Path, default=DEFAULT_SHARED_SEMANTICS
+    )
+    parser.add_argument(
+        "--exact-8k-construction",
+        type=Path,
+        default=DEFAULT_EXACT_8K_CONSTRUCTION,
+    )
+    parser.add_argument(
         "--output", type=Path, default=REPO / "build" / "workloads" / "qwen3-8b"
     )
     parser.add_argument("--max-new-tokens", type=int, default=256)
@@ -236,14 +271,24 @@ def main() -> int:
     parser.add_argument("--agent-max-new-tokens", type=int, default=512)
     args = parser.parse_args()
 
-    from transformers import AutoTokenizer
-
-    tokenizer = AutoTokenizer.from_pretrained(
-        str(args.snapshot), local_files_only=True, trust_remote_code=False
-    )
+    checkpoint_lock = load_strict_json(args.checkpoint_lock)
+    chat = QwenChatTokenizer(args.snapshot, checkpoint_lock)
+    # This also authenticates every reused ROM prompt, decode and agent turn.
+    # It is intentionally done even though exact-8K selects only the arithmetic
+    # query: the construction source must remain the canonical shared suite.
+    load_shared_workload(args.shared_semantics, chat=chat)
+    construction = load_construction(args.exact_8k_construction)
+    tokenizer = AuthenticatedWorkloadTokenizer(chat)
     tokenizer_sha = hashlib.sha256(
-        (args.snapshot / "tokenizer.json").read_bytes()
+        (args.snapshot / SOURCE_FILES["tokenizer"]["path"]).read_bytes()
     ).hexdigest()
+    if tokenizer_sha != SOURCE_FILES["tokenizer"]["sha256"]:
+        raise ValueError("authenticated Qwen tokenizer digest differs")
+    exact_8k = build_exact_8k_workload(
+        tokenizer,
+        construction,
+        construction_path=args.exact_8k_construction,
+    )
 
     if args.reasoning_only:
         workloads = build_reasoning_workloads(
@@ -252,7 +297,11 @@ def main() -> int:
             agent_max_new_tokens=args.agent_max_new_tokens,
         )
     else:
-        workloads = build_workloads(tokenizer, max_new_tokens=args.max_new_tokens)
+        workloads = build_workloads(
+            tokenizer,
+            exact_8k_workload=exact_8k,
+            max_new_tokens=args.max_new_tokens,
+        )
         workloads.update(
             build_reasoning_workloads(
                 tokenizer,

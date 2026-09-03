@@ -7,11 +7,12 @@ the same prompt token IDs.  A comparison between two backends is only meaningful
 if the prompt is byte-identical on both sides, so the workload is an artifact
 with an identity, not a string literal in a runner.
 
-The long-context prompt is drawn from a public-domain source (Project Gutenberg
-eBook 2701, *Moby Dick*) rather than synthesised, because the contract requires
-*natural* prompt tokens; a repeated-token filler would exercise neither the
-tokenizer nor the attention distribution realistically.  The repeated-special
-stress workload exists separately and is explicitly not a substitute.
+The long-context prompt is supplied by the governed exact-8K constructor.  It
+combines a public-domain source (Project Gutenberg eBook 2701, *Moby Dick*)
+with a canonical ROM-authenticated query through the official Qwen chat
+template.  A repeated-token filler would exercise neither the tokenizer nor the
+attention distribution realistically; the repeated-special stress workload
+exists separately and is explicitly not a substitute.
 """
 
 from __future__ import annotations
@@ -187,7 +188,12 @@ def exact_token_window(
     return window, ids
 
 
-def build_workloads(tokenizer, *, max_new_tokens: int = 256) -> dict[str, Workload]:
+def build_workloads(
+    tokenizer,
+    *,
+    exact_8k_workload: Workload,
+    max_new_tokens: int = 256,
+) -> dict[str, Workload]:
     """Build all four pinned Qwen workloads against a loaded tokenizer.
 
     ``tokenizer`` must expose ``apply_chat_template`` and ``encode`` compatible
@@ -236,20 +242,16 @@ def build_workloads(tokenizer, *, max_new_tokens: int = 256) -> dict[str, Worklo
         },
     )
 
-    body = natural_body(load_corpus())
-    window, long_ids = exact_token_window(encode, body, LONG_PROMPT_TOKENS)
-    long = Workload(
-        workload_id="TA-QW-8K-1",
-        kind="long_natural",
-        description=(
-            f"Exactly {LONG_PROMPT_TOKENS} natural prompt tokens of public-domain "
-            "prose, the mandatory Qwen context."
-        ),
-        rendered_text=window,
-        token_ids=long_ids,
-        max_new_tokens=max_new_tokens,
-        metadata={"corpus": CORPUS_SOURCE, "corpus_sha256": CORPUS_SHA256},
-    )
+    if (
+        exact_8k_workload.workload_id != "TA-QW-8K-1"
+        or exact_8k_workload.kind != "long_natural_chat"
+        or len(exact_8k_workload.token_ids) != LONG_PROMPT_TOKENS
+        or exact_8k_workload.max_new_tokens != max_new_tokens
+    ):
+        raise ValueError(
+            "the mandatory Qwen long workload must be the governed exact-8K "
+            "official-chat construction"
+        )
 
     # Repeated-special-token stress: a legal but pathological token stream.
     special = tokenizer.encode("<|im_start|>", add_special_tokens=False)
@@ -269,4 +271,6 @@ def build_workloads(tokenizer, *, max_new_tokens: int = 256) -> dict[str, Worklo
         metadata={"special_token_id": special[0]},
     )
 
-    return {w.workload_id: w for w in (chat, agent, long, stress)}
+    return {
+        w.workload_id: w for w in (chat, agent, exact_8k_workload, stress)
+    }

@@ -20,7 +20,7 @@ _spec = importlib.util.spec_from_file_location(
 tool = importlib.util.module_from_spec(_spec)
 assert _spec.loader is not None
 _spec.loader.exec_module(tool)
-FROZEN_ORACLE = tool.ORACLE
+FROZEN_STRESS_ORACLE = tool.STRESS_ORACLE
 
 
 def _prefill_association(prompt_token_count: int) -> dict:
@@ -101,24 +101,50 @@ def _prefill_association(prompt_token_count: int) -> dict:
 
 @pytest.fixture(autouse=True)
 def _oracle_with_prefill_provenance(tmp_path, monkeypatch) -> None:
-    oracle = json.loads(FROZEN_ORACLE.read_text())
+    stress_oracle = json.loads(FROZEN_STRESS_ORACLE.read_text())
     frozen_tokens = {
         workload_id: copy.deepcopy(result["generated_token_ids"])
-        for workload_id, result in oracle["results"].items()
+        for workload_id, result in stress_oracle["results"].items()
     }
-    oracle["transformers_version"] = "4.57.1"
-    oracle["attention_implementation"] = "sdpa"
-    for result in oracle["results"].values():
+    stress_oracle["transformers_version"] = "4.57.1"
+    stress_oracle["attention_implementation"] = "sdpa"
+    for result in stress_oracle["results"].values():
         result["prefill_association"] = _prefill_association(
             result["prompt_token_count"]
         )
     assert {
         workload_id: result["generated_token_ids"]
-        for workload_id, result in oracle["results"].items()
+        for workload_id, result in stress_oracle["results"].items()
     } == frozen_tokens
-    oracle_path = tmp_path / FROZEN_ORACLE.name
-    oracle_path.write_text(json.dumps(oracle))
-    monkeypatch.setattr(tool, "ORACLE", oracle_path)
+    stress_path = tmp_path / FROZEN_STRESS_ORACLE.name
+    stress_path.write_text(json.dumps(stress_oracle))
+
+    # Structural acceptance tests use a small synthetic independent-oracle
+    # record.  No release artifact receives these tokens; the governed natural
+    # oracle remains absent until an actual vendor-model run is performed.
+    natural_oracle = {
+        **{key: value for key, value in stress_oracle.items() if key != "results"},
+        "results": {
+            tool.NATURAL.workload_id: {
+                "kind": "long_natural_chat",
+                "workload_digest": tool.NATURAL.workload_digest,
+                "prompt_token_count": tool.NATURAL.prompt_count,
+                "generated_token_ids": [18, 24, 16, 151645],
+                "generated_token_count": 4,
+                "stop_reason": "eos",
+                "raw_decoded_text": "391<|im_end|>",
+                "visible_decoded_text": "391",
+                "wall_seconds": 1.0,
+                "prefill_association": _prefill_association(
+                    tool.NATURAL.prompt_count
+                ),
+            }
+        },
+    }
+    natural_path = tmp_path / "qwen3_reference_oracle_exact_8k_chat.json"
+    natural_path.write_text(json.dumps(natural_oracle))
+    monkeypatch.setattr(tool.NATURAL, "oracle_path", natural_path)
+    monkeypatch.setattr(tool.STRESS, "oracle_path", stress_path)
 
 
 def test_cli_help_renders_for_the_fixed_record_pair() -> None:
@@ -129,7 +155,7 @@ def test_cli_help_renders_for_the_fixed_record_pair() -> None:
         text=True,
     )
     assert completed.returncode == 0
-    assert "{natural,stress} RECORD RECORD" in completed.stdout
+    assert "{natural,stress} RECORD [RECORD ...]" in completed.stdout
 
 
 def test_oracle_cli_help_exposes_association_controls() -> None:
@@ -176,7 +202,7 @@ def _association(implementation: dict, *, calls: int = 1) -> dict:
 def _record(mode: str, backend: str, deployment_root: Path) -> dict:
     spec = tool.NATURAL if mode == "natural" else tool.STRESS
     workload = json.loads(spec.workload_path.read_text())
-    oracle_body = json.loads(tool.ORACLE.read_text())
+    oracle_body = json.loads(spec.oracle_path.read_text())
     oracle = oracle_body["results"][spec.workload_id]
     prompt = list(workload["token_ids"])
     generated = list(oracle["generated_token_ids"])
@@ -227,6 +253,7 @@ def _record(mode: str, backend: str, deployment_root: Path) -> dict:
         "counter_class_id": 1,
         "token_ring_object_id": 1,
     }
+    terminal = oracle["stop_reason"]
     steps = [
         {
             "step": index,
@@ -236,7 +263,9 @@ def _record(mode: str, backend: str, deployment_root: Path) -> dict:
             "trap": "NONE",
             "produced_tokens": [token],
             "final_token_id": token,
-            "eos_reason": 0,
+            "eos_reason": (
+                1 if terminal == "eos" and index == len(generated) - 1 else 0
+            ),
             "instructions_retired": 7,
             "retired_work": 7,
             "instructions_predicated_off": 0,
@@ -307,7 +336,7 @@ def _record(mode: str, backend: str, deployment_root: Path) -> dict:
                 "prompt_token_ids_sha256": prompt_digest,
                 "tokenizer_sha256": tool.TOKENIZER_SHA256,
             },
-            "reference": _identity(tool.ORACLE),
+            "reference": _identity(spec.oracle_path),
             "checkpoint_root": {
                 "path": tool._relative(checkpoint_root),
                 "kind": "directory",
@@ -327,12 +356,14 @@ def _record(mode: str, backend: str, deployment_root: Path) -> dict:
         },
         "generated_token_ids": generated,
         "generated_token_count": len(generated),
-        "stop_reason": "max_new_tokens",
+        "stop_reason": terminal,
         "failure": None,
         "token_legitimacy_problems": [],
         "oracle": {
-            "artifact": tool._relative(tool.ORACLE),
-            "artifact_sha256": hashlib.sha256(tool.ORACLE.read_bytes()).hexdigest(),
+            "artifact": tool._relative(spec.oracle_path),
+            "artifact_sha256": hashlib.sha256(
+                spec.oracle_path.read_bytes()
+            ).hexdigest(),
             "evidence_class": "external_reference_comparator",
             "generated_token_ids": generated,
             "agreement": True,
@@ -343,7 +374,7 @@ def _record(mode: str, backend: str, deployment_root: Path) -> dict:
         "terminal_acceptance": {
             "contract": spec.terminal_contract,
             "accepted": True,
-            "terminal_kind": "cap",
+            "terminal_kind": "eos" if terminal == "eos" else "cap",
             "failed_checks": [],
         },
         "counters": counters,
@@ -364,20 +395,32 @@ def _record(mode: str, backend: str, deployment_root: Path) -> dict:
     }
 
 
-def _write_pair(tmp_path: Path, left: dict, right: dict) -> list[Path]:
-    paths = [tmp_path / "left.json", tmp_path / "right.json"]
-    for path, body in zip(paths, (left, right)):
+def _write_records(tmp_path: Path, *bodies: dict) -> list[Path]:
+    paths = [tmp_path / f"record-{index}.json" for index in range(len(bodies))]
+    for path, body in zip(paths, bodies, strict=True):
         path.write_text(json.dumps(body))
     return paths
 
 
-def test_two_complete_natural_hbm_records_pass(tmp_path):
-    left = _record("natural", "hbm_sram", tmp_path / "hbm-deployment")
-    right = copy.deepcopy(left)
-    # Independent captures have distinct observed timings even though all
-    # architecture and token evidence must agree.
-    right["per_step"][0]["wall_seconds"] = 1.25
-    result = tool.validate("natural", _write_pair(tmp_path, left, right))
+def _write_pair(tmp_path: Path, left: dict, right: dict) -> list[Path]:
+    return _write_records(tmp_path, left, right)
+
+
+def _natural_triplet(tmp_path: Path) -> tuple[dict, dict, dict]:
+    first = _record("natural", "hbm_sram", tmp_path / "hbm-deployment-a")
+    second = copy.deepcopy(first)
+    # A repeat capture must be a distinct observation even when its
+    # architecture and complete token sequence are identical.
+    second["per_step"][0]["wall_seconds"] = 1.25
+    rom = _record("natural", "rom_qwen3", tmp_path / "rom-deployment")
+    return first, second, rom
+
+
+def test_complete_natural_hbm_repeat_and_rom_records_pass(tmp_path):
+    hbm_a, hbm_b, rom = _natural_triplet(tmp_path)
+    result = tool.validate(
+        "natural", _write_records(tmp_path, hbm_a, hbm_b, rom)
+    )
     assert result["status"] == "pass"
     assert all(result["pair_checks"].values())
     assert result["abi_profile"] == {
@@ -392,7 +435,7 @@ def test_two_complete_natural_hbm_records_pass(tmp_path):
         tool.NATURAL.workload_path.read_text()
     )["rendered_text"]
     assert result["text_evidence"]["output"]["raw_decoded_text"] == json.loads(
-        tool.ORACLE.read_text()
+        tool.NATURAL.oracle_path.read_text()
     )["results"][tool.NATURAL.workload_id]["raw_decoded_text"]
     assert result["claim_boundary"]["acceptance_established"] is True
     assert all(
@@ -401,10 +444,34 @@ def test_two_complete_natural_hbm_records_pass(tmp_path):
     )
 
 
+@pytest.mark.parametrize(
+    ("field", "value", "expected"),
+    [
+        ("kind", "long_natural", "oracle workload kind differs"),
+        ("prompt_token_count", 7_999, "oracle prompt token count differs"),
+        ("generated_token_count", 3, "oracle generated token count is inconsistent"),
+    ],
+)
+def test_natural_refuses_inconsistent_oracle_result_metadata(
+    tmp_path, field, value, expected
+):
+    oracle = json.loads(tool.NATURAL.oracle_path.read_text())
+    oracle["results"][tool.NATURAL.workload_id][field] = value
+    tool.NATURAL.oracle_path.write_text(json.dumps(oracle))
+    hbm_a, hbm_b, rom = _natural_triplet(tmp_path)
+
+    result = tool.validate(
+        "natural", _write_records(tmp_path, hbm_a, hbm_b, rom)
+    )
+
+    assert result["status"] == "fail"
+    assert any(expected in problem for problem in result["problems"])
+
+
 def test_same_capture_path_cannot_satisfy_natural_repeatability(tmp_path):
-    record = _record("natural", "hbm_sram", tmp_path / "hbm-deployment")
-    path = _write_pair(tmp_path, record, copy.deepcopy(record))[0]
-    result = tool.validate("natural", [path, path])
+    hbm_a, _hbm_b, rom = _natural_triplet(tmp_path)
+    hbm_path, rom_path = _write_records(tmp_path, hbm_a, rom)
+    result = tool.validate("natural", [hbm_path, hbm_path, rom_path])
     assert result["status"] == "fail"
     assert result["pair_checks"]["capture_paths_distinct"] is False
     assert result["pair_checks"]["capture_artifacts_distinct"] is False
@@ -414,8 +481,9 @@ def test_byte_identical_capture_copy_cannot_satisfy_natural_repeatability(
     tmp_path,
 ):
     record = _record("natural", "hbm_sram", tmp_path / "hbm-deployment")
+    rom = _record("natural", "rom_qwen3", tmp_path / "rom-deployment")
     result = tool.validate(
-        "natural", _write_pair(tmp_path, record, copy.deepcopy(record))
+        "natural", _write_records(tmp_path, record, copy.deepcopy(record), rom)
     )
     assert result["status"] == "fail"
     assert result["pair_checks"]["capture_paths_distinct"] is True
@@ -431,19 +499,19 @@ def test_complete_stress_hbm_rom_pair_passes_with_storage_counter_differences(tm
 
 
 def _rewrite_stress_prefill_association(mutator) -> None:
-    oracle = json.loads(tool.ORACLE.read_text())
+    oracle = json.loads(tool.STRESS.oracle_path.read_text())
     association = oracle["results"][tool.STRESS.workload_id][
         "prefill_association"
     ]
     mutator(association)
     association["identity_sha256"] = tool._prefill_association_digest(association)
-    tool.ORACLE.write_text(json.dumps(oracle))
+    tool.STRESS.oracle_path.write_text(json.dumps(oracle))
 
 
 def test_stress_refuses_oracle_without_prefill_provenance(tmp_path):
-    oracle = json.loads(tool.ORACLE.read_text())
+    oracle = json.loads(tool.STRESS.oracle_path.read_text())
     del oracle["results"][tool.STRESS.workload_id]["prefill_association"]
-    tool.ORACLE.write_text(json.dumps(oracle))
+    tool.STRESS.oracle_path.write_text(json.dumps(oracle))
     left = _record("stress", "hbm_sram", tmp_path / "hbm-deployment")
     right = _record("stress", "rom_qwen3", tmp_path / "rom-deployment")
     result = tool.validate("stress", _write_pair(tmp_path, left, right))
@@ -515,12 +583,13 @@ def test_single_record_mutations_fail_closed(tmp_path, mutate, expected):
 
 
 def test_short_oracle_prefix_is_not_natural_acceptance(tmp_path):
-    left = _record("natural", "hbm_sram", tmp_path / "hbm-deployment")
-    right = copy.deepcopy(left)
-    for body in (left, right):
+    hbm_a, hbm_b, rom = _natural_triplet(tmp_path)
+    for body in (hbm_a, hbm_b, rom):
         body["generated_token_ids"].pop()
         body["generated_token_count"] -= 1
-    result = tool.validate("natural", _write_pair(tmp_path, left, right))
+    result = tool.validate(
+        "natural", _write_records(tmp_path, hbm_a, hbm_b, rom)
+    )
     assert result["status"] == "fail"
     assert any("not exactly the frozen oracle" in problem for problem in result["problems"])
 
@@ -558,10 +627,11 @@ def test_stress_token_divergence_is_refused_even_when_metadata_claims_agreement(
 
 
 def test_natural_repeat_requires_architectural_counter_equality(tmp_path):
-    left = _record("natural", "hbm_sram", tmp_path / "hbm-deployment")
-    right = copy.deepcopy(left)
-    right["counters"]["tensor.multiplications"] += 1
-    result = tool.validate("natural", _write_pair(tmp_path, left, right))
+    hbm_a, hbm_b, rom = _natural_triplet(tmp_path)
+    hbm_b["counters"]["tensor.multiplications"] += 1
+    result = tool.validate(
+        "natural", _write_records(tmp_path, hbm_a, hbm_b, rom)
+    )
     assert result["status"] == "fail"
     assert "pair check failed: architectural_counters_identical" in result["problems"]
 
@@ -628,9 +698,9 @@ def test_stale_checkpoint_tokenizer_is_refused(tmp_path):
 
 
 def test_oracle_decoded_text_mismatch_is_refused(tmp_path):
-    oracle = json.loads(tool.ORACLE.read_text())
+    oracle = json.loads(tool.STRESS.oracle_path.read_text())
     oracle["results"][tool.STRESS.workload_id]["raw_decoded_text"] += " altered"
-    tool.ORACLE.write_text(json.dumps(oracle))
+    tool.STRESS.oracle_path.write_text(json.dumps(oracle))
     left = _record("stress", "hbm_sram", tmp_path / "hbm-deployment")
     right = _record("stress", "rom_qwen3", tmp_path / "rom-deployment")
 
@@ -735,14 +805,15 @@ def test_serialized_state_descriptor_regression_is_refused(tmp_path):
 
 
 def test_invalid_eos_placement_is_refused(tmp_path):
-    left = _record("natural", "hbm_sram", tmp_path / "hbm-deployment")
-    right = copy.deepcopy(left)
-    right["per_step"][0]["wall_seconds"] = 1.25
-    for body in (left, right):
-        body["stop_reason"] = "eos"
-        body["terminal_acceptance"]["terminal_kind"] = "eos"
+    hbm_a, hbm_b, rom = _natural_triplet(tmp_path)
+    for body in (hbm_a, hbm_b, rom):
+        body["generated_token_ids"][-1] = 1
+        body["per_step"][-1]["produced_tokens"] = [1]
+        body["per_step"][-1]["final_token_id"] = 1
 
-    result = tool.validate("natural", _write_pair(tmp_path, left, right))
+    result = tool.validate(
+        "natural", _write_records(tmp_path, hbm_a, hbm_b, rom)
+    )
 
     assert result["status"] == "fail"
     assert any("first-EOS-or-exact-cap" in p for p in result["problems"])
@@ -757,11 +828,11 @@ def test_prompt_decode_and_encode_round_trip_are_required(tmp_path, monkeypatch)
     path = tmp_path / "changed-natural-workload.json"
     path.write_text(json.dumps(workload))
     monkeypatch.setattr(tool.NATURAL, "workload_path", path)
-    left = _record("natural", "hbm_sram", tmp_path / "hbm-deployment")
-    right = copy.deepcopy(left)
-    right["per_step"][0]["wall_seconds"] = 1.25
+    hbm_a, hbm_b, rom = _natural_triplet(tmp_path)
 
-    result = tool.validate("natural", _write_pair(tmp_path, left, right))
+    result = tool.validate(
+        "natural", _write_records(tmp_path, hbm_a, hbm_b, rom)
+    )
 
     assert result["status"] == "fail"
     assert any("decoded prompt" in p for p in result["problems"])
@@ -771,8 +842,11 @@ def test_prompt_decode_and_encode_round_trip_are_required(tmp_path, monkeypatch)
 def test_natural_output_encode_round_trip_is_required(tmp_path):
     from tokenizers import Tokenizer
 
-    oracle = json.loads(tool.ORACLE.read_text())
-    stress = oracle["results"][tool.STRESS.workload_id]["generated_token_ids"]
+    oracle = json.loads(tool.NATURAL.oracle_path.read_text())
+    stress_oracle = json.loads(tool.STRESS.oracle_path.read_text())
+    stress = stress_oracle["results"][tool.STRESS.workload_id][
+        "generated_token_ids"
+    ]
     generated = (stress * 8)[: tool.NATURAL.cap]
     tokenizer = Tokenizer.from_file(
         str(REPO / "build/qwen3-8b/deployment-final/tokenizer/tokenizer.json")
@@ -786,12 +860,13 @@ def test_natural_output_encode_round_trip_is_required(tmp_path):
     result_body["visible_decoded_text"] = tokenizer.decode(
         generated, skip_special_tokens=True
     )
-    tool.ORACLE.write_text(json.dumps(oracle))
-    left = _record("natural", "hbm_sram", tmp_path / "hbm-deployment")
-    right = copy.deepcopy(left)
-    right["per_step"][0]["wall_seconds"] = 1.25
+    result_body["stop_reason"] = "max_new_tokens"
+    tool.NATURAL.oracle_path.write_text(json.dumps(oracle))
+    hbm_a, hbm_b, rom = _natural_triplet(tmp_path)
 
-    result = tool.validate("natural", _write_pair(tmp_path, left, right))
+    result = tool.validate(
+        "natural", _write_records(tmp_path, hbm_a, hbm_b, rom)
+    )
 
     assert result["status"] == "fail"
     assert any("natural decoded output" in p for p in result["problems"])

@@ -18,14 +18,14 @@
   },
   "external_oracle": {
     "evidence_class": "external_reference_comparator",
-    "path": "results/abi3/qwen3_reference_oracle_long.json",
+    "path": "results/abi3/qwen3_reference_oracle_exact_8k_chat.json",
     "producer": {
-      "source_sha256": "915218f347ed5ad1aea48d37c16ab2b0cf2c5b4894fb8c63b60e719c45c3db44",
+      "source_sha256": null,
       "tool": "tools/run_qwen3_reference_oracle.py"
     },
     "schema": "opentallas.abi3.reference_oracle.v1",
-    "source_sha256": "e43e88e27d08804e5c0cfbc869b504acd51dcf03113377b30c4d921e49984a7f",
-    "status": "locked"
+    "source_sha256": null,
+    "status": "pending"
   },
   "model": {
     "graph_id": "84bb97dd1243553f170fde014c15c76c6adf0b80f0ef3bdad27a015577b6c24b",
@@ -117,23 +117,23 @@
       "topology_class": 0
     }
   },
-  "version": "1.1.0",
+  "version": "1.2.0",
   "workload": {
-    "digest": "a25704db14fb0d0d888cf5e076b43bcf94a7713e4dd06ee150bc2304e130c6a5",
+    "digest": "5c8fce7d61afd1e06b7a061133c0a6d639fac7d65739227f84e199d6c870297e",
     "index_path": "build/workloads/qwen3-8b/index.json",
     "index_schema": "opentallas.abi3.workload_index.v1",
-    "index_source_sha256": "ffd0c0f52c6d96f172ad5318f157eddd352907e35bc46bee01e098d1b98ec065",
-    "kind": "long_natural",
+    "index_source_sha256": "ce7ec985a65017e692013f056828adf16695d6ecb7747eb90970cd64978c2ee9",
+    "kind": "long_natural_chat",
     "max_new_tokens": 256,
     "path": "build/workloads/qwen3-8b/TA-QW-8K-1.json",
     "prompt_token_count": 8000,
-    "rendered_text_sha256": "9627a47653bb9956e3b452b45f036352a44e3cf74ebc1a686ae5382a17cab75d",
-    "source_sha256": "9284b85b721d109d0d17c2fe3bc7187ebeca4e65fa90290c5de69270d217e9fc",
+    "rendered_text_sha256": "1b85b8c0264a0f26054d69cbc1ffc076ba3971ecd91ad39e8ba51cd1820647cb",
+    "source_sha256": "4bd1ca5cad91a6006383c4470a16fd803e18bbfad9ec19fe8ed01373da118217",
     "template": {
-      "mode": "none_plain_text",
-      "path": null,
-      "source_sha256": null,
-      "template_id": "none_plain_text"
+      "mode": "source_file",
+      "path": "configs/abi3/workloads/qwen3_exact_8k_chat_v1.json",
+      "source_sha256": "38e4a9acc569fff5ffc23ed2187cb71a551133691acac7131f4b6a7d3c8909ca",
+      "template_id": "qwen3_official_chat_template"
     },
     "tokenizer_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
     "workload_id": "TA-QW-8K-1"

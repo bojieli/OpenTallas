@@ -2,11 +2,12 @@
 """Fail-closed acceptance gate for the two mandatory Qwen W10 campaigns.
 
 The token producer is deliberately useful for short diagnostic prefixes.  W10
-is stricter: it requires two complete natural HBM captures, or a complete HBM
-and ROM stress pair, against the source-current frozen inputs.  This checker is
-the independent consumer which refuses prefix agreement, stale sources,
-incomplete admission proofs, malformed transaction evidence, and association
-manifests that are empty or differ between the compared executions.
+is stricter: it requires two complete natural HBM captures plus a complete ROM
+capture, or a complete HBM and ROM stress pair, against the source-current
+frozen inputs.  This checker is the independent consumer which refuses prefix
+agreement, stale sources, incomplete admission proofs, malformed transaction
+evidence, and association manifests that are empty or differ between the
+compared executions.
 """
 
 from __future__ import annotations
@@ -35,6 +36,18 @@ from runtime.abi3.deployment import Deployment  # noqa: E402
 from runtime.abi3.descriptors import ExtendedDescriptorType  # noqa: E402
 from runtime.abi3.records import decode_body, split_program  # noqa: E402
 from runtime.abi3.verifier import VerificationReport, verify_deployment  # noqa: E402
+from compiler.tensor_accelerator.common import load_strict_json  # noqa: E402
+from compiler.tensor_accelerator.qwen_chat import (  # noqa: E402
+    EXPLICIT_VOCABULARY_SIZE,
+    QwenChatTokenizer,
+)
+from compiler.workloads.qwen3_exact_8k import (  # noqa: E402
+    AuthenticatedWorkloadTokenizer,
+    EXPECTED_VISIBLE_ANSWER,
+    QwenExact8KError,
+    load_construction,
+    validate_materialized_workload,
+)
 
 SCHEMA = "opentallas.abi3.qwen3_w10_acceptance.v1"
 RECORD_SCHEMA = "opentallas.abi3.accelerator_tokens.v1"
@@ -53,9 +66,24 @@ BLOCKED_CONTRACT = "bf16_bf16_fp32_blocked_rne_v1"
 ABI_STATE_PERMISSIONS = int(Permission.STATE_PREPARE | Permission.STATE_COMMIT)
 
 KERNEL_IR = REPO / "build/ir-v3/qwen3-8b/kernel_ir.v3.json"
-ORACLE = REPO / "results/abi3/qwen3_reference_oracle_long.json"
+NATURAL_ORACLE = (
+    REPO / "results/abi3/qwen3_reference_oracle_exact_8k_chat.json"
+)
+STRESS_ORACLE = REPO / "results/abi3/qwen3_reference_oracle_long.json"
 NATURAL_WORKLOAD = REPO / "build/workloads/qwen3-8b/TA-QW-8K-1.json"
 STRESS_WORKLOAD = REPO / "build/workloads/qwen3-8b/TA-QW-STRESS-1.json"
+NATURAL_CONSTRUCTION = (
+    REPO / "configs/abi3/workloads/qwen3_exact_8k_chat_v1.json"
+)
+QWEN_CHECKPOINT_LOCK = (
+    REPO
+    / "results/tensor_accelerator/qwen3_full_model_physical/source/"
+    "checkpoint.lock.json"
+)
+QWEN_SNAPSHOT = Path(
+    "/home/ubuntu/.cache/huggingface/hub/models--Qwen--Qwen3-8B/snapshots/"
+    "b968826d9c46dd6066d109eabc6255188de91218"
+)
 CAPABILITIES = {
     "hbm_sram": REPO / "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
     "rom_qwen3": REPO / "configs/hardware/abi3_capability/rom_qwen3.json",
@@ -81,6 +109,7 @@ class WorkloadSpec:
         workload_path: Path,
         terminal_contract: str,
         repeated_token: int | None = None,
+        oracle_path: Path = NATURAL_ORACLE,
     ) -> None:
         self.mode = mode
         self.workload_id = workload_id
@@ -90,12 +119,13 @@ class WorkloadSpec:
         self.workload_path = workload_path
         self.terminal_contract = terminal_contract
         self.repeated_token = repeated_token
+        self.oracle_path = oracle_path
 
 
 NATURAL = WorkloadSpec(
     "natural",
     "TA-QW-8K-1",
-    "a25704db14fb0d0d888cf5e076b43bcf94a7713e4dd06ee150bc2304e130c6a5",
+    "5c8fce7d61afd1e06b7a061133c0a6d639fac7d65739227f84e199d6c870297e",
     8000,
     256,
     NATURAL_WORKLOAD,
@@ -110,6 +140,7 @@ STRESS = WorkloadSpec(
     STRESS_WORKLOAD,
     "exact_cap",
     151644,
+    STRESS_ORACLE,
 )
 
 # Independent non-removable minimum for a governed token capture.  Every extra
@@ -456,6 +487,8 @@ def _check_source_lock(record: Mapping[str, Any], backend: str) -> list[str]:
 def _check_file_identity(
     identity: object, expected_path: Path, label: str
 ) -> list[str]:
+    if not expected_path.is_file():
+        return [f"source-current {label} is unavailable: {_relative(expected_path)}"]
     if not isinstance(identity, dict):
         return [f"inputs.{label} is not an object"]
     problems: list[str] = []
@@ -479,7 +512,9 @@ def _check_inputs(
     problems += _check_file_identity(inputs.get("kernel_ir"), KERNEL_IR, "kernel_ir")
     problems += _check_file_identity(inputs.get("capability"), CAPABILITIES[backend], "capability")
     problems += _check_file_identity(inputs.get("workload"), spec.workload_path, "workload")
-    problems += _check_file_identity(inputs.get("reference"), ORACLE, "reference")
+    problems += _check_file_identity(
+        inputs.get("reference"), spec.oracle_path, "reference"
+    )
     workload_identity = inputs.get("workload")
     if isinstance(workload_identity, dict):
         if workload_identity.get("declared_workload_digest") != spec.workload_digest:
@@ -749,7 +784,31 @@ def _check_association(record: Mapping[str, Any]) -> list[str]:
 def _frozen_inputs(spec: WorkloadSpec) -> tuple[dict[str, Any], dict[str, Any], list[int], list[int], list[str]]:
     problems: list[str] = []
     workload = _load(spec.workload_path)
-    oracle = _load(ORACLE)
+    if spec is NATURAL:
+        try:
+            construction = load_construction(NATURAL_CONSTRUCTION)
+            chat = QwenChatTokenizer(
+                QWEN_SNAPSHOT, load_strict_json(QWEN_CHECKPOINT_LOCK)
+            )
+            validate_materialized_workload(
+                workload,
+                AuthenticatedWorkloadTokenizer(chat),
+                construction,
+                construction_path=NATURAL_CONSTRUCTION,
+            )
+        except (OSError, QwenExact8KError, ValueError) as exc:
+            problems.append(
+                "frozen natural workload is not the canonical exact-8K "
+                f"official-chat construction: {exc}"
+            )
+    try:
+        oracle = _load(spec.oracle_path)
+    except (OSError, ValueError, json.JSONDecodeError) as exc:
+        oracle = {}
+        problems.append(
+            "external exact-8K oracle is pending or unavailable: "
+            f"{type(exc).__name__}: {exc}"
+        )
     prompt = workload.get("token_ids")
     if not isinstance(prompt, list) or not all(_integer(token) for token in prompt):
         prompt = []
@@ -776,11 +835,19 @@ def _frozen_inputs(spec: WorkloadSpec) -> tuple[dict[str, Any], dict[str, Any], 
         result = {}
     problems += _check_prefill_association(oracle, result, spec)
     gold = result.get("generated_token_ids") if isinstance(result, dict) else None
-    if not isinstance(gold, list) or not all(_integer(token) for token in gold):
+    if not isinstance(gold, list) or not all(
+        _integer(token) and token < EXPLICIT_VOCABULARY_SIZE for token in gold
+    ):
         gold = []
-        problems.append("frozen oracle has no valid gold sequence")
+        problems.append("frozen oracle has no legal explicit-vocabulary gold sequence")
     if result.get("workload_digest") != spec.workload_digest:
         problems.append("frozen oracle workload digest differs from W10")
+    if result.get("kind") != workload.get("kind"):
+        problems.append("frozen oracle workload kind differs from W10")
+    if result.get("prompt_token_count") != spec.prompt_count:
+        problems.append("frozen oracle prompt token count differs from W10")
+    if result.get("generated_token_count") != len(gold):
+        problems.append("frozen oracle generated token count is inconsistent")
     if spec is STRESS and (len(gold) != spec.cap or result.get("stop_reason") != "max_new_tokens"):
         problems.append("frozen stress oracle is not the exact 32-token cap sequence")
     return workload, result, list(prompt), list(gold), problems
@@ -868,6 +935,11 @@ def _check_token_text(
         problems.append("decoded visible output does not equal the frozen oracle text")
     if spec is NATURAL and list(output_round_trip) != list(generated):
         problems.append("natural decoded output does not round-trip to generated IDs")
+    if spec is NATURAL and visible_output.strip() != EXPECTED_VISIBLE_ANSWER:
+        problems.append(
+            "natural decoded output does not answer the canonical arithmetic "
+            f"query with {EXPECTED_VISIBLE_ANSWER!r}"
+        )
     if not visible_output.strip():
         problems.append("decoded visible output is empty or whitespace-only")
     if "\ufffd" in raw_output or "\ufffd" in visible_output:
@@ -1135,7 +1207,10 @@ def _check_record(
     ):
         problems.append("model checkpoint root differs from the loaded input boundary")
     generated = record.get("generated_token_ids")
-    if not isinstance(generated, list) or not generated or not all(_integer(token) and token < 151936 for token in generated):
+    if not isinstance(generated, list) or not generated or not all(
+        _integer(token) and token < EXPLICIT_VOCABULARY_SIZE
+        for token in generated
+    ):
         generated = []
         problems.append("generated token sequence is empty or illegitimate")
     if record.get("generated_token_count") != len(generated):
@@ -1145,7 +1220,10 @@ def _check_record(
     if record.get("failure") is not None or record.get("token_legitimacy_problems") != []:
         problems.append("record carries a failure or legitimacy problem")
     oracle = record.get("oracle")
-    if not isinstance(oracle, dict) or oracle.get("artifact_sha256") != _sha256(ORACLE) or _resolved_record_path(oracle.get("artifact")) != ORACLE.resolve() or oracle.get("evidence_class") != "external_reference_comparator" or oracle.get("generated_token_ids") != list(gold) or oracle.get("agreement") is not True or oracle.get("first_divergence_index") is not None or oracle.get("compared_tokens") != len(generated) or oracle.get("oracle_token_count") != len(gold):
+    oracle_sha256 = (
+        _sha256(spec.oracle_path) if spec.oracle_path.is_file() else None
+    )
+    if not isinstance(oracle, dict) or oracle.get("artifact_sha256") != oracle_sha256 or _resolved_record_path(oracle.get("artifact")) != spec.oracle_path.resolve() or oracle.get("evidence_class") != "external_reference_comparator" or oracle.get("generated_token_ids") != list(gold) or oracle.get("agreement") is not True or oracle.get("first_divergence_index") is not None or oracle.get("compared_tokens") != len(generated) or oracle.get("oracle_token_count") != len(gold):
         problems.append("oracle evidence is not exact and source-current")
     terminal, terminal_problems = _terminal_kind(record, spec, generated, gold, oracle_result)
     problems += terminal_problems
@@ -1205,17 +1283,41 @@ def _non_storage(counters: Mapping[str, Any]) -> dict[str, Any]:
 def validate(mode: str, paths: Sequence[Path]) -> dict[str, Any]:
     spec = NATURAL if mode == "natural" else STRESS
     workload, oracle_result, prompt, gold, problems = _frozen_inputs(spec)
-    if len(paths) != 2:
-        problems.append(f"{mode} acceptance requires exactly two records")
+    required_records = 3 if mode == "natural" else 2
+    if len(paths) != required_records:
+        problems.append(
+            f"{mode} acceptance requires exactly {required_records} records"
+        )
         rows: list[dict[str, Any]] = []
     else:
-        backends = ["hbm_sram", "hbm_sram"] if mode == "natural" else ["hbm_sram", "rom_qwen3"]
+        backends = (
+            ["hbm_sram", "hbm_sram", "rom_qwen3"]
+            if mode == "natural"
+            else ["hbm_sram", "rom_qwen3"]
+        )
         rows = [_check_record(path, spec, backend, workload, oracle_result, prompt, gold) for path, backend in zip(paths, backends)]
         for row in rows:
             problems.extend(f"{Path(row['path']).name}: {problem}" for problem in row["problems"])
     pair_checks: dict[str, bool] = {}
-    if len(rows) == 2:
-        left, right = rows[0]["record"], rows[1]["record"]
+    if len(rows) == required_records:
+        records = [row["record"] for row in rows]
+        left, right = records[0], records[1]
+        all_associations = [record.get("executed_association") for record in records]
+        all_implementations = [record.get("implementation_identity") for record in records]
+        all_text = [row["text_evidence"] for row in rows]
+        all_sequences = [row["generated_token_ids"] for row in rows]
+        all_steps = [_without_timing(record.get("per_step")) for record in records]
+        counters_match = (
+            left.get("counters") == right.get("counters")
+            and all(
+                _non_storage(record.get("counters") or {})
+                == _non_storage(left.get("counters") or {})
+                for record in records[1:]
+            )
+            if mode == "natural"
+            else _non_storage(left.get("counters") or {})
+            == _non_storage(right.get("counters") or {})
+        )
         pair_checks = {
             # A repeatability gate needs two independently materialised
             # captures.  Without these checks, passing the same path twice (or
@@ -1225,15 +1327,28 @@ def validate(mode: str, paths: Sequence[Path]) -> dict[str, Any]:
             # producer records observed wall times for the run and each step;
             # those timing fields are deliberately removed only from the
             # architectural equality comparison.
-            "capture_paths_distinct": paths[0].resolve() != paths[1].resolve(),
-            "capture_artifacts_distinct": rows[0]["sha256"] != rows[1]["sha256"],
-            "full_token_sequences_identical": rows[0]["generated_token_ids"] == rows[1]["generated_token_ids"] == gold,
-            "decoded_text_evidence_identical": rows[0]["text_evidence"]
-            == rows[1]["text_evidence"],
-            "executed_association_manifests_identical": left.get("executed_association") == right.get("executed_association"),
-            "implementation_identities_identical": left.get("implementation_identity") == right.get("implementation_identity"),
-            "architectural_counters_identical": (left.get("counters") == right.get("counters") if mode == "natural" else _non_storage(left.get("counters") or {}) == _non_storage(right.get("counters") or {})),
-            "per_step_architecture_identical": _without_timing(left.get("per_step")) == _without_timing(right.get("per_step")),
+            "capture_paths_distinct": len({path.resolve() for path in paths})
+            == required_records,
+            "capture_artifacts_distinct": len({row["sha256"] for row in rows})
+            == required_records,
+            "full_token_sequences_identical": all(
+                sequence == list(gold) for sequence in all_sequences
+            ),
+            "decoded_text_evidence_identical": all(
+                evidence == all_text[0] for evidence in all_text[1:]
+            ),
+            "executed_association_manifests_identical": all(
+                association == all_associations[0]
+                for association in all_associations[1:]
+            ),
+            "implementation_identities_identical": all(
+                identity == all_implementations[0]
+                for identity in all_implementations[1:]
+            ),
+            "architectural_counters_identical": counters_match,
+            "per_step_architecture_identical": all(
+                steps == all_steps[0] for steps in all_steps[1:]
+            ),
         }
         for name, passed in pair_checks.items():
             if not passed:
@@ -1284,9 +1399,9 @@ def main() -> int:
     parser.add_argument(
         "records",
         type=Path,
-        nargs=2,
+        nargs="+",
         metavar="RECORD",
-        help="natural: HBM run 1/run 2; stress: HBM/ROM",
+        help="natural: HBM run 1/run 2/ROM; stress: HBM/ROM",
     )
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
