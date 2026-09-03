@@ -541,14 +541,14 @@ now solves `t >= E_dynamic / (cooling_limit - P_static)`, and a part whose
 leakage and clock alone meet its budget does not exist rather than running
 slowly.
 
-<!-- figure: 231 src="results/roofline/n5_vs_b200/analytical.json#power_and_energy.thermally_throttled_points" name="power-limited points, N5/B200" -->
-**231 of 5,688 feasible points are power-limited** -- all of them in the
-N5/B200 study, the worst throttled 1.44x.
+<!-- figure: 387 src="results/roofline/n5_vs_b200/analytical.json#power_and_energy.thermally_throttled_points" name="power-limited points, N5/B200" -->
+**387 of 9,306 feasible points are power-limited** -- all of them in the
+N5/B200 study, the worst throttled 1.53x.
 The prediction this section made under a uniform multiplier half survives:
 
 - **It survives for ROM wafers, not for the whole wafer class.** The throttled
-  set contains 93 small-array, 82 large-array and 56 wafer points; those 56
-  wafer points are GPUs. **No wafer-scale ROM design is throttled**, and no
+  set contains 285 ROM reticle-array points and 102 GPU points; no wafer-class
+  point of either family is throttled. **No wafer-scale ROM design is throttled**, and no
   wafer-scale ROM design exceeds 47% of its cooling budget against a median of
   22%. A ROM sweep is a fixed cost spread
   over far more silicon, so wafer-scale is power-sparse -- and that is now an
@@ -679,7 +679,7 @@ by the ROM side's chosen area, and the cluster free to pick its own parallelism.
 
 | model | ROM design | ROM mm² | user tok/s | tok/s per 1,000 mm² | sessions | GPU | GPU mm² | area ratio | GPU user tok/s | GPU sessions | ratio |
 |---|---|---:|---:|---:|---:|---|---:|---:|---:|---:|---:|
-| Qwen3-8B @8K | array ×7, SRAM KV | 5,705 | 3,517.9 | 616.6 | 1 | 7 × A100 tensor | 5,782 | 0.9867 | 560.0 | 403 | **6.28×** | <!-- figure: 3,517.9 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=Qwen3-8B].recommended.per_user_tokens_s" name="Qwen recommended per-user rate, N6" --> <!-- figure: 616.6 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=Qwen3-8B].recommended.tokens_s_per_1000mm2" name="Qwen recommended throughput density, N6" --> <!-- figure: 0.9867 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=Qwen3-8B].recommended.iso_area_ratio" name="Qwen iso-area ratio at the chosen area, N6" --> <!-- figure: 6.28 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=Qwen3-8B].recommended.per_user_speed_ratio" name="Qwen recommended-design ratio, N6" -->
+| Qwen3-8B @8K | array ×6, SRAM KV | 4,890 | 3,110.4 | 636.1 | 1 | 6 × A100 tensor | 4,956 | 0.9867 | 494.8 | 344 | **6.29×** | <!-- figure: 3,110.4 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=Qwen3-8B].recommended.per_user_tokens_s" name="Qwen recommended per-user rate, N6" --> <!-- figure: 636.1 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=Qwen3-8B].recommended.tokens_s_per_1000mm2" name="Qwen recommended throughput density, N6" --> <!-- figure: 0.9867 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=Qwen3-8B].recommended.iso_area_ratio" name="Qwen iso-area ratio at the chosen area, N6" --> <!-- figure: 6.29 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=Qwen3-8B].recommended.per_user_speed_ratio" name="Qwen recommended-design ratio, N6" -->
 | DeepSeek-Flash @200K | wafer ×1, HBM KV | 46,225 | 4,707.9 | 101.8 | 448 | 56 × A100 tensor | 46,256 | 0.9993 | 721.7 | 2,797 | **6.52×** | <!-- figure: 4,707.9 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=DeepSeek-V4-Flash-0731].recommended.per_user_tokens_s" name="Flash recommended per-user rate, N6" --> <!-- figure: 101.8 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=DeepSeek-V4-Flash-0731].recommended.tokens_s_per_1000mm2" name="Flash recommended throughput density, N6" --> <!-- figure: 0.9993 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=DeepSeek-V4-Flash-0731].recommended.iso_area_ratio" name="Flash iso-area ratio at the chosen area, N6" -->
 | DeepSeek-Pro @1M | wafer ×4, SRAM KV | 184,900 | 2,375.7 | 12.8 | 1 | 224 × A100 tensor | 185,024 | 0.9993 | 357.7 | 1,545 | **6.64×** | <!-- figure: 2,375.7 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=DeepSeek-V4-Pro-0813].recommended.per_user_tokens_s" name="Pro recommended per-user rate, N6" --> <!-- figure: 6.64 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=DeepSeek-V4-Pro-0813].recommended.per_user_speed_ratio" name="Pro recommended-design ratio, N6" -->
 
@@ -758,8 +758,8 @@ already shipping mixed FP8/MXFP4 at 4.70 and 4.46.
 
 | study | | design | mm² | user tok/s | tok/s per 1,000 mm² | iso-area GPU | GPU mm² | GPU user tok/s | ratio |
 |---|---|---|---:|---:|---:|---|---:|---:|---:|
-| N6/A100 | **PRIMARY, BF16** | array ×7 | 5,705 | 3,517.9 | 616.6 | 7 × A100 | 5,782 | 560.0 | **6.28×** |
-| N6/A100 | variant, 4.25 bits | array ×3 | 2,445 | 7,889.0 | 3,226.6 | 3 × A100 | 2,478 | 701.2 | 11.25× | <!-- figure: 7,889.0 src="results/roofline/quantised_variant/n6_vs_a100/analytical.json#design_selection.models[model=Qwen3-8B].recommended.per_user_tokens_s" name="Qwen variant per-user rate, N6" --> <!-- figure: 3,226.6 src="results/roofline/quantised_variant/n6_vs_a100/analytical.json#design_selection.models[model=Qwen3-8B].recommended.tokens_s_per_1000mm2" name="Qwen variant throughput density, N6" --> <!-- figure: 11.25 src="results/roofline/quantised_variant/n6_vs_a100/analytical.json#design_selection.models[model=Qwen3-8B].recommended.per_user_speed_ratio" name="Qwen variant iso-area ratio, N6" -->
+| N6/A100 | **PRIMARY, BF16** | array ×6 | 4,890 | 3,110.4 | 636.1 | 6 × A100 | 4,956 | 494.8 | **6.29×** |
+| N6/A100 | variant, 4.25 bits | array ×3 | 2,445 | 9,106.2 | 3,724.4 | 3 × A100 | 2,478 | 701.2 | 12.99× | <!-- figure: 9,106.2 src="results/roofline/quantised_variant/n6_vs_a100/analytical.json#design_selection.models[model=Qwen3-8B].recommended.per_user_tokens_s" name="Qwen variant per-user rate, N6" --> <!-- figure: 3,724.4 src="results/roofline/quantised_variant/n6_vs_a100/analytical.json#design_selection.models[model=Qwen3-8B].recommended.tokens_s_per_1000mm2" name="Qwen variant throughput density, N6" --> <!-- figure: 12.99 src="results/roofline/quantised_variant/n6_vs_a100/analytical.json#design_selection.models[model=Qwen3-8B].recommended.per_user_speed_ratio" name="Qwen variant iso-area ratio, N6" -->
 | N5/B200 | **PRIMARY, BF16** | array ×5 | 4,075 | 4,941.0 | 1,212.5 | 3 × B200 | 4,800 | 978.7 | **5.05×** |
 | N5/B200 | variant, 4.25 bits | array ×2 | 1,630 | 11,817.9 | 7,250.2 | 1 × B200 | 1,600 | 1,180.6 | 10.01× | <!-- figure: 11,817.9 src="results/roofline/quantised_variant/n5_vs_b200/analytical.json#design_selection.models[model=Qwen3-8B].recommended.per_user_tokens_s" name="Qwen variant per-user rate, N5" --> <!-- figure: 7,250.2 src="results/roofline/quantised_variant/n5_vs_b200/analytical.json#design_selection.models[model=Qwen3-8B].recommended.tokens_s_per_1000mm2" name="Qwen variant throughput density, N5" --> <!-- figure: 10.01 src="results/roofline/quantised_variant/n5_vs_b200/analytical.json#design_selection.models[model=Qwen3-8B].recommended.per_user_speed_ratio" name="Qwen variant iso-area ratio, N5" -->
 

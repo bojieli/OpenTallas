@@ -59,6 +59,12 @@ DEFAULT_CASES = (
         "build/abi3/deepseek-v4-flash-rom",
         "configs/hardware/abi3_capability/rom_deepseek_v4.json",
     ),
+    Case(
+        "deepseek-v4-flash-rom-array-32",
+        "build/ir-v3/deepseek-v4-flash-0731/kernel_ir.v3.json",
+        "build/abi3/deepseek-v4-flash-rom-array-32",
+        "configs/hardware/abi3_capability/rom_deepseek_v4_array_32.json",
+    ),
 )
 
 

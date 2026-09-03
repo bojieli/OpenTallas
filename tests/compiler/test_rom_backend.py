@@ -772,15 +772,20 @@ def deepseek_shaped_graph(
     hidden: int = 64,
     span_max: int = 16,
     sequence: tuple[str, ...] | None = None,
+    experts: int = 8,
 ) -> KernelGraph:
     """An MoE DeepSeek-shaped block: two layer classes, routed experts, sparse
-    attention, FP8 dense weights and MXFP4 expert weights with E8M0 scales."""
-    kv_width, experts, expert_width, vocabulary = 32, 8, 96, 32
+    attention, FP8 dense weights and MXFP4 expert weights with E8M0 scales.
+
+    ``experts`` is a parameter so the ROM array backend can be exercised at a
+    node count that divides it: a 32-node ``CLUSTER_32`` needs at least 32
+    experts to give every node one."""
+    kv_width, expert_width, vocabulary = 32, 96, 32
     if sequence is None:
         sequence = ("dense",) * dense_layers + ("moe",) * moe_layers
     tag = "".join(kind[0] for kind in sequence)
     builder = _GraphBuilder(
-        root / f"deepseek-checkpoint-{tag}-h{hidden}.bin", seed=97
+        root / f"deepseek-checkpoint-{tag}-h{hidden}-e{experts}.bin", seed=97
     )
     span = Symbolic("span_tokens", 1, span_max)
     context = Symbolic("context_tokens", 1, span_max)

@@ -3485,10 +3485,19 @@ def test_dark_silicon_hits_dense_rom_arrays_and_not_rom_wafers(generated) -> Non
     assert throttled
     rom_throttled = [row for row in throttled if row["family"] == "rom"]
     assert rom_throttled
-    assert all(row["silicon_area_mm2"] < 40_000 for row in rom_throttled), (
+    # A ROM *wafer* is the topology kind, not an area: since 2026-09-03 the
+    # array ladder samples reticle arrays at every wafer area, and a 57-die
+    # array is wafer-sized silicon that is throttled exactly like the smaller
+    # arrays are -- it is the wafer's stitched mesh and single power domain
+    # the power-sparse reading is about.
+    assert all(row["topology_kind"] != "wafer" for row in rom_throttled), (
         "a ROM wafer is now power-limited, which reverses the study's stated "
         "power-sparse result. Say why before accepting it."
     )
+    assert any(
+        row["family"] == "rom" and row["silicon_area_mm2"] >= 40_000
+        for row in throttled
+    ), "the wafer-area reticle arrays the ladder emits should throttle like arrays"
     # "46,225 mm2" on the GPU side is a many-package CLUSTER, not one piece of
     # silicon, and every package carries its own published cooling budget. Keep
     # a witness so this distinction cannot silently collapse back into an
@@ -3503,7 +3512,7 @@ def test_dark_silicon_hits_dense_rom_arrays_and_not_rom_wafers(generated) -> Non
         for row in result["points"]
         if row["feasible"]
         and row["family"] == "rom"
-        and row["silicon_area_mm2"] >= 40_000
+        and row["topology_kind"] == "wafer"
     )
     assert wafer_headroom < 0.75, (
         f"a wafer-scale ROM design now reaches {wafer_headroom:.0%} of its "

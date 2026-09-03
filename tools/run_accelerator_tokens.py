@@ -101,6 +101,7 @@ BACKENDS = {
     "hbm_sram": "compiler.backends.hbm_sram.lower:lower_to_abi3",
     "rom_qwen3": "compiler.backends.rom.qwen3:lower_to_abi3",
     "rom_deepseek_v4": "compiler.backends.rom.deepseek_v4:lower_to_abi3",
+    "rom_deepseek_v4_array": "compiler.backends.rom.deepseek_v4_array:lower_to_abi3",
 }
 
 # Sources shared by every governed token capture.  This is intentionally a
@@ -161,6 +162,12 @@ BACKEND_FUNCTIONAL_SOURCE_PATHS = {
         "compiler/backends/rom/common/program.py",
     ),
     "rom_deepseek_v4": (
+        "compiler/backends/rom/deepseek_v4.py",
+        "compiler/backends/rom/common/image.py",
+        "compiler/backends/rom/common/program.py",
+    ),
+    "rom_deepseek_v4_array": (
+        "compiler/backends/rom/deepseek_v4_array.py",
         "compiler/backends/rom/deepseek_v4.py",
         "compiler/backends/rom/common/image.py",
         "compiler/backends/rom/common/program.py",

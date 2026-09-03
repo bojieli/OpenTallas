@@ -261,6 +261,19 @@ The historical 8-by-8 reticle and 4,096-tile public proxy in
 `spec/ARCHITECTURE.md` remains historical evidence. It does not silently define
 the new wafer dimensions, tile count, bandwidth, latency, or physical closure.
 
+**Amendment of 2026-09-03: a fourth physical profile.** An N-node
+conventional-chip cluster whose nodes hold their weight shard in mask ROM is
+admitted as the profile of TA-DS-ROM-ARRAY (Flash at exactly 32 nodes under
+`CLUSTER_32`; Pro at a derived node count under the proposed `CLUSTER_N`).
+It obeys the 32-node HBM cluster contract above in full, with "node-local
+HBM" read as "node-local memory" wherever weights are concerned, and it adds
+nothing to the wafer contract. The storage class of a cluster node's weight
+objects is not a topology property: `CLUSTER_32` admits ROM-resident and
+HBM-resident weights alike, and no validator, verifier, fabric model, or
+device may branch on the combination. A `CLUSTER_32` capability declares
+exactly 32 nodes. The plan is
+[`DEEPSEEK_V4_ROM_ARRAY_IMPLEMENTATION_PLAN.md`](DEEPSEEK_V4_ROM_ARRAY_IMPLEMENTATION_PLAN.md).
+
 ### 3.4 ROM specialization
 
 Qwen-ROM and DeepSeek-ROM separately own:

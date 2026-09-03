@@ -940,3 +940,68 @@ The first tranche, in order, none of it waiting on the others' results:
 Then WP-D, which is the first tranche that produces an artifact the wafer
 plan does not already have: a 32-node ROM image set whose descriptor multiset
 equals the HBM cluster's.
+
+## 17. Status as built, 2026-09-03
+
+Every row below is read from an artifact on disk; nothing here is a claim
+about silicon. The gate letters are section 12's.
+
+| Gate | Status | Evidence |
+|---|---|---|
+| DRA-A0 | **closed** | Master plan section 3 carries the three array rows and section 12 the iso-area rule; ADR-003 section 3.3 admits the fourth profile; `runtime/abi3/capability.py` requires exactly 32 nodes of a `CLUSTER_32`; `tests/abi3/test_cluster_storage_neutrality.py` proves a 32-node ROM-weight cluster is admitted, runs to `SUCCESS` on 32 node-private memories, and differs from the HBM build only in memory-traffic counters |
+| DRA-R1 | **closed** | `tools/run_roofline_studies.py` samples the array class on an explicit device-count ladder (multiples of its floor and the counts whose silicon equals each wafer rung), publishes a three-class iso-area table per batch, and runs six context-ladder rungs per study under `results/roofline/context_ladder/`; the primary studies were regenerated (`make roofline`, 8m44s) and every document-bound figure re-synced |
+| DRA-C2 | **closed** | `configs/hardware/abi3_capability/rom_deepseek_v4_array_32.json` (published from `compiler/backends/rom/deepseek_v4_array.py`, the cluster chip's topology class, link record and engine lane mix); `configs/hardware/abi3_cost_rom_array_v{1,2}.json` (the cluster table verbatim, v2 with the measured engine rates) |
+| DRA-P3 | **closed for Flash** | `build/abi3/deepseek-v4-flash-rom-array-32`: 1,329 instructions <!-- figure: 1,329 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-array-32].actual.instructions" name="array deployment instructions" -->, 3,875 descriptors <!-- figure: 3,875 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-array-32].actual.descriptors" name="array deployment descriptors" -->, admitted by the ABI verifier, byte-identical on a second clean build; the independent schedule checker passes **130/130** <!-- figure: 130 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-array-32].passed_check_count" name="array schedule checks passed" --> checks including the new data-bearing-reduction and cluster-placement rules; the inverse proof reconstructs all **156,015,698,140** <!-- figure: 156,015,698,140 src="results/abi3/deepseek_v4_rom_array_inverse.json#report.payload_bytes" name="array inverse payload bytes" --> payload bytes bit-identically from the 32 node-sharded images (`results/abi3/deepseek_v4_rom_array_inverse.json`) |
+| DRA-S4 | **in flight** | `tools/run_accelerator_tokens.py --backend rom_deepseek_v4_array` on `TA-DS-CTX-129-1` lowers, publishes and is admitted; the 32-node functional execution of the 129-token prefill was running when this section was written and its record is not yet an artifact. No token claim is made here |
+| DRA-Y5 | **in flight** | `tools/run_abi3_cycle.py` on the published array deployment with the HBM cluster's own 32-token prefill request and `--check-functional-agreement` was running when this section was written |
+| DRA-X6 | open | the array-versus-HBM contract is written (`configs/abi3/comparison_contracts/deepseek_v4_rom_array_32_vs_hbm_cluster_32_v1.json`); the wafer-versus-array contract needs a schema that admits two ROM roles and is not written; no comparison artifact exists |
+| DRA-R6 | open | no array RTL elaboration profile |
+| DRA-PRO7 | open | the 892.7 GB Pro checkpoint is not on this host and 91 GB of disk is free; nothing beyond the analytical inventory exists for Pro |
+| DRA-N8, DRA-H8, DRA-PRO9, DRA-PHY10, DRA-REL11 | open | not started |
+
+### What the built array is, exactly
+
+The controlled variant of section 6, as shipped: expert-parallel with
+consecutive ownership (**8 experts per node** <!-- figure: 8 src="build/abi3/deepseek-v4-flash-rom-array-32/deployment.json#notes.array_placement.experts_per_node" name="array experts per node" -->), routed expert banks and their block-scale banks node-sharded as A28 `node_segments` images, every routed view presenting eight local experts against the global bound of 256, and one data-bearing `LINK.COLLECTIVE SUM` over the 32 nodes per routed group ahead of `EXPERT_REDUCE`. Dense, attention, indexer, hyper-connection, embedding and vocabulary weights are replicated on every node.
+
+The per-node bytes, from the deployment's own notes:
+
+| Quantity | Bytes | Source |
+|---|---:|---|
+| sharded routed ROM per node | 4,599,054,336 | `notes.array_placement.sharded_rom_bytes_per_node` |
+| replicated dense ROM per node | 8,846,229,504 | `notes.array_placement.replicated_dense_rom_bytes_per_node` |
+| ROM per node | 13,445,283,840 | `notes.array_placement.rom_bytes_per_node` |
+| unique ROM in the plan | 156,015,968,256 | `notes.array_placement.rom_bytes_plan_unique` |
+| physical ROM across 32 nodes | 430,249,082,880 | `notes.array_placement.rom_bytes_array_physical` |
+
+That is the density-reconciliation gate of section 6.4 answered with numbers rather than an estimate: the replicated dense store costs 2.76x the unique checkpoint in physical ROM, and the per-node ROM implies **1,109 mm²** at the wafer backend's usable density and **1,533 mm²** at the roofline's N5 array density, both above one 815 mm² reticle. Under section 3.5 the iso-area comparator for *this* build is derived from those bytes, not from 32 x 815 mm². The column-sharded dense partition (WP-D2) is what brings the node back to one reticle.
+
+### Two boundaries the build declares rather than hides
+
+1. **Live state is replicated and declared at the IR horizon.** The ROM program allocates every state plane and live activation at the model's 1,048,576-position horizon, 1.08 TB for one session, on every node. A five-HBM3e-stack die (the beachfront rule's 180 GB) does not hold it, so the capability declares the replicated live set (1.2 TB) and records the physical five-stack figure beside it (`array_geometry.hbm_bytes_per_node_physical`, `hbm_stacks_per_node_implied_by_declaration`). Clamping the IR's symbolic maxima to a smaller context was implemented and withdrawn: it breaks the additive window biases the IR bakes into them. Sharding KV and activations across the 32 nodes, the HBM cluster's own partition, is WP-D2 and is the precondition for the mandatory 200,000-token workload on a physically five-stack node.
+2. **The reduction's route class is the ROM lowering's, not the HBM cluster's numbering.** The ROM traffic semantics assign every collective route class 2; the execution design's "route class 3" is the HBM backend's own table. The meaning, the owner-partial sum before `EXPERT_REDUCE`, is what the checker proves.
+
+### Analytical results at iso-area, the deliverable of DRA-R1
+
+Read from `results/roofline/n5_vs_b200/analytical.json` and the context-ladder rungs, `design_selection.models[...].iso_area_by_batch`. Each ROM class enters at its fastest feasible design for the batch; the GPU beside it is the B200 comparator at that design's own silicon. "array @ wafer area" is the fastest reticle array within 5% of the wafer's silicon.
+
+| Model, context | Batch | Class | Design | mm² | user tok/s | resident sessions | vs iso-area GPU | J/token adv. |
+|---|---:|---|---|---:|---:|---:|---:|---:|
+| Flash, 200K | 1 | array | `array-hybrid-x30` | 24,450 | 2,627.4 | 1 | 1.79x | 5.2x |
+| Flash, 200K | 1 | wafer | `wafer-tensor-x1-romfill` | 46,225 | 4,850.6 | 1 | 3.73x | 11.1x |
+| Flash, 200K | 8 | array | `HBMKV-array-hybrid-x37` | 30,155 | 2,365.6 | 2,711 | 2.76x | 9.4x |
+| Flash, 200K | 8 | wafer | `HBMKV-wafer-hybrid-x2-romfill` | 92,450 | 4,553.2 | 1,260 | 5.47x | 13.4x |
+| Flash, 200K | 8 | array @ wafer area | `HBMKV-array-hybrid-x116-romfill` | 94,540 | 2,009.0 | 8,500 | wafer/array 2.27x on rate; array/wafer 6.75x on sessions | |
+| Flash, 200K | 64 | array | `HBMKV-array-hybrid-x87-romfill` | 70,905 | 1,994.8 | 6,375 | 5.54x | 11.5x |
+| Flash, 200K | 64 | wafer | `HBMKV-wafer-hybrid-x12-romfill` | 554,700 | 3,511.7 | 7,562 | 12.95x | 28.3x |
+| Pro, 200K | 1 | array | `SRAMKV-array-tensor-x340-romfill` | 277,100 | 1,062.6 | 1 | 1.37x | 3.7x |
+| Pro, 200K | 1 | wafer | `SRAMKV-wafer-hybrid-x3` | 138,675 | 2,648.8 | 1 | 3.54x | 14.6x |
+| Pro, 200K | 8 | array | `HBMKV-array-hybrid-x161` | 131,215 | 857.6 | 8,242 | 2.27x | 19.1x |
+| Pro, 200K | 8 | wafer | `HBMKV-wafer-hybrid-x3` | 138,675 | 2,646.5 | 1,320 | 6.95x | 25.1x |
+| Pro, 200K | 8 | array @ wafer area | `HBMKV-array-hybrid-x170` | 138,550 | 828.7 | 8,703 | wafer/array 3.19x on rate; array/wafer 6.59x on sessions | |
+| Pro, 200K | 64 | array | `HBMKV-array-hybrid-x193` | 157,295 | 742.3 | 9,881 | 7.26x | 17.8x |
+| Pro, 200K | 64 | wafer | `HBMKV-wafer-hybrid-x6-romfill` | 277,350 | 2,219.3 | 2,641 | 20.86x | 42.3x |
+
+The shape is the same at 8K, 32K and 1M for Flash and at 1M for Pro (the rung reports carry the full tables): the wafer holds 2.2x to 3.8x the per-user rate of an array of the same silicon, the array holds about 6.6x the resident sessions at batch 8, and both beat the iso-area B200 comparator on per-user rate and by a larger factor on energy per token. The Pro array is the only ROM class of Pro with a packaging path that does not wait for wafer-scale HBM; at 200K it is 1.4x to 7.3x the GPU on per-user rate at equal silicon and 3.7x to 17.8x on tokens per joule, at 131,215 to 277,100 mm² of silicon. Every number in this table is a deterministic model output under the graded inputs of `docs/ASSUMPTIONS.md`, with the two most load-bearing ROM constants unverified (`EVIDENCE_LEDGER.md`).
+
+One correction the ladder forced: at N6 the Qwen3-8B recommendation moved from a 7-die array to a denser 6-die array (4,890 mm², 636.1 tok/s per 1,000 mm²) that the previous sampling never emitted. The bound figures in the README, the technical direction, the iso-area anchor and the wafer-versus-array documents were re-synced to the regenerated artifacts.

@@ -252,6 +252,21 @@ DERIVED: dict[str, dict[str, str]] = {
             "been routed or simulated at cycle level."
         ),
     },
+    "rom_array": {
+        "base": "abi3_cost_rom_array_v1.json",
+        "out": "abi3_cost_rom_array_v2.json",
+        "cost_table_id": "abi3-cost-rom-array-v2",
+        "version": "2.0.0",
+        "routed_clock": False,
+        "lineage": (
+            "32-node reticle-class ROM array, v2.  Supersedes "
+            "abi3-cost-rom-array-v1 in its engine rates only, exactly as the "
+            "cluster table does: the tensor, vector and reduction rates are "
+            "measured, and every fabric parameter, the clock, and the whole "
+            "memory hierarchy remain assumptions.  The fabric section is the "
+            "32-node HBM cluster's, on purpose."
+        ),
+    },
     "wafer": {
         "base": "abi3_cost_wafer_v1.json",
         "out": "abi3_cost_wafer_v2.json",

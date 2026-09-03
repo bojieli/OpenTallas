@@ -151,8 +151,15 @@ class Capability:
         if absent:
             raise ValueError(f"capability omits mandatory feature bits {absent}")
         if self.topology_class == TopologyClass.CLUSTER_32:
-            if self.limits.get("max_nodes", 0) < 32:
-                raise ValueError("CLUSTER_32 capability must admit 32 nodes")
+            # Exactly 32, not at least 32.  ``>= 32`` let a 48-node capability
+            # pass under the wrong class name; a cluster of another size is a
+            # different topology class (the proposed CLUSTER_N), not a larger
+            # CLUSTER_32.  Found while planning the ROM array target.
+            if self.limits.get("max_nodes", 0) != 32:
+                raise ValueError(
+                    "CLUSTER_32 capability must declare exactly 32 nodes; "
+                    f"declares {self.limits.get('max_nodes', 0)}"
+                )
             if Feature.INTER_CHIP_ENDPOINT not in self.features:
                 raise ValueError("CLUSTER_32 capability must advertise bit 8")
         if self.topology_class == TopologyClass.WAFER_LOGICAL_DEVICE:

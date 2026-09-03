@@ -48,6 +48,8 @@ an HBM deployment of the same graph differ in nothing else.
 
 from __future__ import annotations
 
+import math
+
 from dataclasses import dataclass, field as dc_field
 from typing import Any, Callable, Iterable, Mapping, Sequence
 
@@ -1058,6 +1060,14 @@ class LinkStep:
     #: names one; a movement collective needs none.
     reduction_contract: str = ""
     reduction_dtype: str = "bf16"
+    #: A **data-bearing** all-reduce.  The step reduces, across the admitted
+    #: participant set, the output tensor of the most recent kernel of this
+    #: kind in the run body ahead of the step's position, and rebinds that
+    #: tensor's producer event to the reduced result.  The empty string is the
+    #: traffic-modelling step every wafer plan issues.  A node-sharded expert
+    #: bank needs the data-bearing form: each node computes only its owned
+    #: experts, and the partial rows are summed here before EXPERT_REDUCE.
+    data_from_kind: str = ""
 
 
 @dataclass(slots=True)
@@ -1090,6 +1100,20 @@ class RomTargetPolicy:
     emit_topology: Callable[[DeploymentBuilder, RomImagePlan], int] | None = None
     #: Returns the on-fabric steps for one compressed body.
     link_plan: Callable[[LayerRun, Sequence[str]], Sequence[LinkStep]] | None = None
+    #: Equal node shards each region whose role is in ``node_sharded_roles``
+    #: is split into.  One means every node holds the whole region: a wafer,
+    #: a single chip, or a replicated dense operand.  ``N`` means node ``k``
+    #: holds members ``[k*E/N, (k+1)*E/N)`` of every slot, the emitted object
+    #: is node-local (A28 ``node_segments``), and every routed view over the
+    #: bank presents ``E/N`` local experts against the global expert bound.
+    bank_shards: int = 1
+    node_sharded_roles: tuple[str, ...] = ("expert_bank", "expert_bank_scale")
+    #: An explicit cap on the decode budget the emitted generation policy
+    #: admits.  The IR states the model's own budget; a target whose declared
+    #: context is smaller than that budget cannot honour it and, rather than
+    #: refusing every build, states the smaller budget it does honour.  The
+    #: clamp is recorded in the deployment notes.  ``None`` keeps the IR's.
+    new_token_budget_cap: int | None = None
     notes: dict[str, Any] = dc_field(default_factory=dict)
 
 
@@ -2023,6 +2047,7 @@ class RomLowering:
         extent_numerator: int = 0,
         extent_bias: int = 0,
         label: str = "view",
+        edge_mask_id: int = NO_ID,
     ) -> int:
         # Amendment A8 freezes block-scale addressing: one scale byte per
         # ``scale_block_elements`` in the view's logical row-major order.
@@ -2047,6 +2072,7 @@ class RomLowering:
             extent_unit,
             extent_numerator,
             extent_bias,
+            int(edge_mask_id),
         )
         if key in self._view_cache:
             return self._view_cache[key]
@@ -2071,6 +2097,7 @@ class RomLowering:
             extent_numerator=extent_numerator,
             extent_bias=extent_bias,
             permissions=permissions,
+            edge_mask_id=edge_mask_id,
             key=f"{label}.{len(self._view_cache):05d}",
         )
         self._view_cache[key] = descriptor
@@ -4422,6 +4449,15 @@ class RomLowering:
         dims: Sequence[int] = self._dims(tensor)
         strides: Sequence[int] | None = None
         group_offset = 0
+        # A node-sharded region presents its local image: ``E/N`` experts of
+        # every slot, at a local slot stride.  The global expert bound stays
+        # in the operator's ``aux0`` (``_aux``), which is what makes the
+        # routed engine apply consecutive ownership rather than read past the
+        # local bank.
+        region_shards = 1
+        placed_at = self._region_of_tensor.get(tensor_id)
+        if placed_at is not None:
+            region_shards = self._node_shards_of(self.plan.region(placed_at[0])) or 1
         if int(row_step) < 1:
             raise RomLoweringError(
                 f"weight {tensor_id!r} row step {row_step} is not positive"
@@ -4452,7 +4488,12 @@ class RomLowering:
                 # The expert is the outermost axis of the stack, so its stride
                 # is the whole matrix each expert holds -- whichever way that
                 # matrix itself is stored.
-                dims = [bank, *dims]
+                if bank % region_shards:
+                    raise RomLoweringError(
+                        f"weight {tensor_id!r} is a bank of {bank} experts, which "
+                        f"does not divide into {region_shards} node shards"
+                    )
+                dims = [bank // region_shards, *dims]
                 strides = [shape.cols * shape.depth, *strides]
         if int(row_step) != 1:
             if len(dims) < 2:
@@ -4513,7 +4554,12 @@ class RomLowering:
                     f"{key!r} but is read outside a compressed layer body"
                 )
             loop = self._loop_of_run[run.index]
-            stride = region.slot_element_stride * ratio
+            if region.slot_element_stride % region_shards:
+                raise RomLoweringError(
+                    f"region {key!r} slot stride {region.slot_element_stride} does "
+                    f"not divide into {region_shards} node shards"
+                )
+            stride = region.slot_element_stride // region_shards * ratio
             if stride > 0xFFFFFFFF:
                 raise RomLoweringError(
                     f"region {key!r} needs a per-layer element stride of {stride}, "
@@ -4522,7 +4568,9 @@ class RomLowering:
                 )
             dynamic.append(DynamicTerm.loop(loop, stride))
         else:
-            element_offset = region_slot * region.slot_element_stride * ratio
+            element_offset = (
+                region_slot * (region.slot_element_stride // region_shards) * ratio
+            )
         element_offset += group_offset
         scale_object, block, row_block = self._scale_binding(key)
         return self._view(
@@ -7782,15 +7830,24 @@ class RomLowering:
             count //= groups
         return count
 
-    def _emit_links(self, run: LayerRun, steps: Iterable[LinkStep]) -> None:
+    def _emit_links(
+        self, run: LayerRun, steps: Iterable[LinkStep], *, position: int = 0
+    ) -> None:
         """Issue one compressed body's on-fabric steps.
 
         ``participant_scope`` states which fabric each step addresses and the
         count follows from the topology (:meth:`_participant_count`), so a
         wafer's tile-scoped collectives now say what they mean instead of
         borrowing the one node a ``WAFER_LOGICAL_DEVICE`` declares.
+
+        ``position`` is the body index the steps sit ahead of; a data-bearing
+        step (``data_from_kind``) reduces the output of the most recent kernel
+        of that kind emitted before it.
         """
         for step in steps:
+            if step.data_from_kind:
+                self._emit_data_bearing_reduction(run, step, position)
+                continue
             count = self._participant_count(step)
             local, remote = self._link_endpoints(count, step.byte_extent)
             communication = self.builder.communication(
@@ -7820,6 +7877,211 @@ class RomLowering:
                 signal_event_id=self.builder.new_event(),
             )
             self._link_instruction_count += 1
+
+    def _copy_numeric(self, dtype: DType) -> int:
+        """A byte-preserving move contract for the pack/unpack DMAs."""
+        key = ("copy", int(dtype))
+        cached = self._link_numeric.get(key)
+        if cached is not None:
+            return cached
+        if dtype is not DType.BF16:
+            raise RomLoweringError(
+                "a data-bearing all-reduce moves BF16 partial rows; the routed "
+                f"output is {dtype.name}"
+            )
+        descriptor = self.builder.numeric(
+            contract="bf16_byte_preserving_state_v1",
+            input_dtype=dtype,
+            output_dtype=dtype,
+            accumulator_dtype=DType.FP32,
+            reduction_order=ReductionOrder.SEQUENTIAL_ASCENDING,
+            key=f"numeric.link.copy.{len(self._link_numeric):02d}",
+        )
+        self._link_numeric[key] = descriptor
+        return descriptor
+
+    def _emit_data_bearing_reduction(
+        self, run: LayerRun, step: LinkStep, position: int
+    ) -> None:
+        """Sum one tensor's partial rows across the participant set, in place.
+
+        Three instructions, per token block of the producing kernel:
+
+        * **pack** -- ``DMA.TRANSFER`` the local partial into slot ``NODE_ID``
+          of the participant array (the ``REMOTE`` staging object);
+        * **reduce** -- ``LINK.COLLECTIVE SUM`` over the participants under the
+          step's reduction contract; the reduced value lands in the local
+          staging object;
+        * **unpack** -- ``DMA.TRANSFER`` the reduced rows back over the tensor.
+
+        The tensor's producer event becomes the unpack, so every consumer --
+        ``EXPERT_REDUCE`` first among them -- waits for the reduced rows.  This
+        is the route-class-3 expert all-reduce the 32-node HBM cluster issues
+        (``DEEPSEEK_200K_SIMULATOR_EXECUTION_DESIGN.md`` section 7, invariant
+        4), expressed on the ROM lowering's own views.
+        """
+        kernel: Kernel | None = None
+        for column in reversed(run.body[:position]):
+            if column[0].kind == step.data_from_kind:
+                kernel = column[0]
+                break
+        if kernel is None:
+            raise RomLoweringError(
+                f"data-bearing step {step.label!r} names kind "
+                f"{step.data_from_kind!r}, which no kernel ahead of body position "
+                f"{position} of run {run.index} has"
+            )
+        if not kernel.outputs:
+            raise RomLoweringError(
+                f"kernel {kernel.kernel_id!r} has no output to reduce"
+            )
+        name = kernel.outputs[0]
+        tensor = self.tensors[name]
+        engine = ENGINE_OVERRIDE.get(kernel.kind, KERNEL_TO_ENGINE[kernel.kind])
+        shape = self._shape_of(kernel, engine)
+        dtype = self._dtype(tensor.dtype)
+        itemsize = DTYPE_BITS[dtype] // 8
+        # One block per participant slot.  The pack and unpack walk the tensor
+        # block by block through the producing kernel's own row loop; the slot
+        # is reused every iteration, so it carries no loop term of its own and
+        # instead names that loop as its edge mask (amendment A26), which clamps
+        # the final partial block without advancing the slot's address.  A
+        # whole-buffer slot would put the 32-bit NODE_ID stride out of range on
+        # a 200K-context routed output and cost 32 copies of it in HBM.
+        dims = self._blocked_dims(tensor, shape)
+        elements = 1
+        for extent in dims:
+            elements *= int(extent)
+        loop = self._open_row_loop(kernel, shape)
+        term = self._row_term(tensor, shape, loop)
+        slot_elements = elements
+        slot_bytes = slot_elements * itemsize
+        count = self._participant_count(step)
+        local, remote = self._link_endpoints(count, slot_bytes)
+        strides = self._row_major_strides(dims)
+        extent_unit = extent_numerator = extent_bias = 0
+        if term is not None:
+            _symbol, multiplier, declared = self._leading_symbol(tensor)
+            extent_unit = declared.unit
+            extent_numerator = declared.numerator * (
+                multiplier
+                if shape.batch_multiplier > 1 and multiplier > 1
+                else 1
+            )
+            extent_bias = declared.bias
+        common = dict(
+            dtype=dtype,
+            dims=dims,
+            strides=strides,
+            extent_axis=0,
+            extent_unit=extent_unit,
+            extent_numerator=extent_numerator,
+            extent_bias=extent_bias,
+        )
+        edge = loop if (loop is not None and term is not None) else NO_ID
+        source = self._buffer_view(
+            tensor, dims=dims, strides=None, shape=shape, loop=loop, writable=False
+        )
+        slot = self._view(
+            object_id=remote,
+            dynamic=[DynamicTerm.symbol(Symbol.NODE_ID, slot_elements)],
+            permissions=int(Permission.READ | Permission.WRITE),
+            label="view.link.slot",
+            edge_mask_id=edge,
+            **common,
+        )
+        reduced = self._view(
+            object_id=local,
+            permissions=int(Permission.READ),
+            label="view.link.reduced",
+            edge_mask_id=edge,
+            **common,
+        )
+        destination = self._buffer_view(
+            tensor, dims=dims, strides=None, shape=shape, loop=loop, writable=True
+        )
+        numeric = self._copy_numeric(dtype)
+        counter = self._counter_class("", Major.DMA)
+        producers = [self._event_of_tensor[name]] if name in self._event_of_tensor else []
+        packed = self.builder.new_event()
+        pack = self.builder.operator(
+            engine_family=Major.DMA,
+            engine_sub=int(Dma.TRANSFER),
+            inputs=[source],
+            outputs=[slot],
+            numeric_profile_id=numeric,
+            schedule_id=self._schedule(
+                kernel,
+                Major.DMA,
+                int(Dma.TRANSFER),
+                placement_views=([source], [slot]),
+            ),
+            counter_class_id=counter,
+            source_kernel_id=kernel.index,
+            key=f"op.k{kernel.index:05d}.{step.label}.pack",
+        )
+        self.builder.emit(
+            Major.DMA,
+            Dma.TRANSFER,
+            descriptor_id=pack,
+            wait_set_id=self._wait_set(producers) if producers else NO_ID,
+            signal_event_id=packed,
+            source_operation_id=kernel.index,
+        )
+        communication = self.builder.communication(
+            collective_op=step.collective_op,
+            local_object_id=local,
+            remote_object_id=remote,
+            source_node=0,
+            destination_node=0,
+            group_id=step.group_id,
+            route_class=step.route_class,
+            byte_extent=slot_bytes,
+            participant_count=count,
+            participant_scope=ParticipantScope(int(step.participant_scope)),
+            reduction_numeric_id=self._link_reduction_numeric(step),
+            virtual_channel=step.virtual_channel,
+            counter_class_id=self._counter_class("communication", Major.LINK),
+            key=f"comm.r{run.index}.{step.label}",
+        )
+        self._communications.append((step.label, communication))
+        summed = self.builder.new_event()
+        self.builder.emit(
+            Major.LINK,
+            step.link_sub,
+            descriptor_id=communication,
+            wait_set_id=self._wait_set([packed]),
+            signal_event_id=summed,
+        )
+        self._link_instruction_count += 1
+        unpacked = self.builder.new_event()
+        unpack = self.builder.operator(
+            engine_family=Major.DMA,
+            engine_sub=int(Dma.TRANSFER),
+            inputs=[reduced],
+            outputs=[destination],
+            numeric_profile_id=numeric,
+            schedule_id=self._schedule(
+                kernel,
+                Major.DMA,
+                int(Dma.TRANSFER),
+                placement_views=([reduced], [destination]),
+            ),
+            counter_class_id=counter,
+            source_kernel_id=kernel.index,
+            key=f"op.k{kernel.index:05d}.{step.label}.unpack",
+        )
+        self.builder.emit(
+            Major.DMA,
+            Dma.TRANSFER,
+            descriptor_id=unpack,
+            wait_set_id=self._wait_set([summed]),
+            signal_event_id=unpacked,
+            source_operation_id=kernel.index,
+        )
+        if loop is not None:
+            self.builder.close_loop()
+        self._event_of_tensor[name] = unpacked
 
     def _collapse_event_frontier(self, events: Sequence[int]) -> list[int]:
         """Reduce an event frontier until one ABI wait set can name it."""
@@ -7995,10 +8257,12 @@ class RomLowering:
                 (before if step.where == "before" else after)[step.position].append(step)
             self.builder.open_loop(self._loop_of_run[run.index])
             for position, column in enumerate(run.body):
-                self._emit_links(run, before.get(position, ()))
+                self._emit_links(run, before.get(position, ()), position=position)
                 emitted.append(column[0])
                 self._emit_kernel(column[0], run=run)
-                self._emit_links(run, after.get(position, ()))
+                self._emit_links(
+                    run, after.get(position, ()), position=position + 1
+                )
             self.builder.close_loop()
         for kernel in analysis.epilogue:
             emitted.append(kernel)
@@ -8072,6 +8336,13 @@ class RomLowering:
             "used": used,
         }
 
+    def _node_shards_of(self, region: RomRegion) -> int | None:
+        """How many node shards ``region`` is split into, or ``None`` for whole."""
+        shards = int(self.policy.bank_shards or 1)
+        if shards > 1 and region.role in self.policy.node_sharded_roles:
+            return shards
+        return None
+
     def build(self) -> Deployment:
         builder = self.builder
         builder.require(*self.policy.features)
@@ -8084,7 +8355,12 @@ class RomLowering:
             )
         else:
             self.policy.emit_topology(builder, plan)
-        emit_rom_objects(builder, plan, storage_class=self.weight_storage_class)
+        emit_rom_objects(
+            builder,
+            plan,
+            storage_class=self.weight_storage_class,
+            node_shards=self._node_shards_of,
+        )
         self.emit_states()
         for run in self.analysis.runs:
             self._loop_of_run[run.index] = builder.loop_control(
@@ -8096,6 +8372,20 @@ class RomLowering:
             )
         policy_body = dict(self.graph.generation_policy)
         span_max = int(self.capability.limits["max_context_positions"])
+        cap = self.policy.new_token_budget_cap
+        if cap is not None and policy_body.get("maximum_new_tokens") is not None:
+            declared = int(policy_body["maximum_new_tokens"])
+            if int(cap) < declared:
+                builder.notes["generation_budget_clamp"] = {
+                    "ir_maximum_new_tokens": declared,
+                    "emitted_maximum_new_tokens": int(cap),
+                    "reason": (
+                        "the target's declared context is smaller than the IR's "
+                        "decode budget; the emitted policy admits the budget the "
+                        "target holds"
+                    ),
+                }
+                policy_body["maximum_new_tokens"] = int(cap)
         max_new = _declared_new_token_budget(policy_body, span_max)
         # One host window serves both directions: the host stages the prompt
         # into it and on-device selection appends each new token to it.  The

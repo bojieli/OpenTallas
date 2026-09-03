@@ -19,8 +19,11 @@ artifact-driven simulator, cycle model, RTL hierarchy, and physical plan. It may
 use a different tensor-lane mix, wafer partition, netlist, and masks from the
 Qwen ROM product. It does not need to run Qwen dynamically.
 
-Wafer scale is mandatory for this lane, not one candidate discovered after
-compilation. The complete ordinary model is distributed across a reticle/tile
+Wafer scale is mandatory for this lane (TA-DS-ROM, the wafer target), not one
+candidate discovered after compilation. The sibling array lane,
+TA-DS-ROM-ARRAY, is a separate target with its own plan
+([`DEEPSEEK_V4_ROM_ARRAY_IMPLEMENTATION_PLAN.md`](DEEPSEEK_V4_ROM_ARRAY_IMPLEMENTATION_PLAN.md));
+neither lane may report the other's results. The complete ordinary model is distributed across a reticle/tile
 hierarchy with a very-low-latency, very-high-bandwidth on-wafer fabric and
 distributed HBM attachment for mutable buffers. The host sees one logical
 accelerator and does not sequence a pipeline of conventional chips. If this

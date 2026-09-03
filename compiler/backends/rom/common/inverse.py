@@ -198,7 +198,35 @@ def _zero_stream(size: int) -> Iterator[bytes]:
         remaining -= step
 
 
-def _object_segments(source: ObjectSource) -> tuple[_Segment, ...]:
+def _object_segments(
+    source: ObjectSource, slot_count: int = 1
+) -> tuple[_Segment, ...]:
+    """The region's byte ranges in region order.
+
+    A shared ``segments`` source is already in region order.  A node-sharded
+    ``node_segments`` source holds, per node, that node's owner range of every
+    slot in slot order; the region order is slot-major and owner-minor, so the
+    per-node lists are interleaved slot by slot.
+    """
+    if source.kind == "node_segments":
+        shards = len(source.node_segments)
+        per_node = len(source.node_segments[0]) if shards else 0
+        if any(len(n) != per_node for n in source.node_segments):
+            raise InverseProofError("node images declare unequal segment counts")
+        if slot_count <= 0 or per_node % slot_count:
+            raise InverseProofError(
+                f"node images of {per_node} segments do not divide into "
+                f"{slot_count} slots"
+            )
+        owned = per_node // slot_count
+        ordered: list[_Segment] = []
+        for slot in range(slot_count):
+            for node in range(shards):
+                for s in source.node_segments[node][slot * owned : (slot + 1) * owned]:
+                    ordered.append(
+                        _Segment(path=s.path, offset=s.offset, bytes=s.bytes, sha256=s.sha256)
+                    )
+        return tuple(ordered)
     return tuple(
         _Segment(path=s.path, offset=s.offset, bytes=s.bytes, sha256=s.sha256)
         for s in source.segments
@@ -272,24 +300,35 @@ def check_rom_inverse(
         descriptor = rom_objects[object_id]
         declared_payload = _integer(record.get("payload_bytes"), f"{key} payload", 1)
         pad = _integer(record.get("pad_bytes"), f"{key} pad")
-        _require(
-            descriptor.payload["size_bytes"] == declared_payload,
-            f"region {key!r} is {declared_payload} bytes in the plan and "
-            f"{descriptor.payload['size_bytes']} in the descriptor",
-        )
         source = deployment.objects.get(object_id)
         _require(source is not None, f"region {key!r} has no manifest object source")
         _require(
-            source.kind == "segments",
+            source.kind in ("segments", "node_segments"),
             f"region {key!r} has a {source.kind!r} source; a zero-copy ROM region "
             "must reference authenticated checkpoint byte ranges",
         )
+        # A node-sharded object is node-local: the descriptor and the source
+        # state one node's image, and ``shards`` of them make the region.
+        shards = len(source.node_segments) if source.kind == "node_segments" else 1
         _require(
-            source.size_bytes == declared_payload,
-            f"region {key!r} source covers {source.size_bytes} bytes, plan says "
-            f"{declared_payload}",
+            shards >= 1 and declared_payload % shards == 0,
+            f"region {key!r} of {declared_payload} bytes does not split into "
+            f"{shards} equal node images",
         )
-        segments = _object_segments(source)
+        _require(
+            descriptor.payload["size_bytes"] * shards == declared_payload,
+            f"region {key!r} is {declared_payload} bytes in the plan and "
+            f"{descriptor.payload['size_bytes']} x {shards} node image(s) in the "
+            "descriptor",
+        )
+        _require(
+            source.size_bytes * shards == declared_payload,
+            f"region {key!r} source covers {source.size_bytes} x {shards} bytes, "
+            f"plan says {declared_payload}",
+        )
+        segments = _object_segments(
+            source, _integer(record.get("slot_count", 1), f"{key} slot count", 1)
+        )
         source_digest = hashlib.sha256()
         for index, segment in enumerate(segments):
             segment_digest = _hex(
@@ -424,8 +463,19 @@ def check_rom_inverse(
             recomputed == _hex(record["content_sha256"], f"{key} content digest"),
             f"region {key!r} content digest does not recompute independently",
         )
+        if source.kind == "node_segments":
+            # A node-sharded object commits node ownership and each node's
+            # segment order through the ABI's node-keyed identity (the
+            # ``authenticated_content_digest`` rule), not the flat ordered
+            # digest a shared object carries.  The per-range digests that
+            # identity is built from are the ones this proof has just
+            # reconstructed from the checkpoint, so the check is the same
+            # bytes under the other frozen derivation.
+            expected_digest = source.authenticated_content_digest().hex()
+        else:
+            expected_digest = source_digest.hexdigest()
         _require(
-            descriptor.payload["content_digest"].hex() == source_digest.hexdigest(),
+            descriptor.payload["content_digest"].hex() == expected_digest,
             f"region {key!r} descriptor does not bind its ordered source "
             "segment digests",
         )

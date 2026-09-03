@@ -37,6 +37,10 @@ from compiler.backends.rom.deepseek_v4 import (  # noqa: E402
     build_deepseek_v4_rom_deployment,
     deepseek_v4_rom_capability,
 )
+from compiler.backends.rom.deepseek_v4_array import (  # noqa: E402
+    build_deepseek_v4_array_rom_deployment,
+    deepseek_v4_array_rom_capability,
+)
 from compiler.backends.rom.qwen3 import (  # noqa: E402
     build_qwen3_rom_deployment,
     qwen3_rom_capability,
@@ -49,7 +53,7 @@ from runtime.abi3.descriptors import ExtendedDescriptorType  # noqa: E402
 from runtime.abi3.records import decode_body, split_program  # noqa: E402
 from runtime.abi3.verifier import verify_deployment  # noqa: E402
 
-PRODUCTS = ("qwen3-8b", "deepseek-v4-flash")
+PRODUCTS = ("qwen3-8b", "deepseek-v4-flash", "deepseek-v4-flash-array")
 
 
 # ---------------------------------------------------------------------------
@@ -176,6 +180,15 @@ def build(product: str, graph: KernelGraph, args) -> tuple[Deployment, Any, Any]
             capability=capability,
             defects=defects,
             weight_storage_class=storage,
+        )
+    elif product == "deepseek-v4-flash-array":
+        capability = deepseek_v4_array_rom_capability()
+        deployment, plan = build_deepseek_v4_array_rom_deployment(
+            graph,
+            capability=capability,
+            defects=defects,
+            weight_storage_class=storage,
+            epoch=args.epoch,
         )
     else:
         capability = deepseek_v4_rom_capability()

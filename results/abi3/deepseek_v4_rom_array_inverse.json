@@ -1,0 +1,38 @@
+{
+  "backend": "rom.cluster_32",
+  "checkpoint_root": "DeepSeek-V4-Flash-0731 snapshot 7872f01b1d1fe23eabc4c98b48bffcef5a386062 (156 GB, streamed locally)",
+  "deployment_sha256_at_proof": "plan-identical predecessor build; determinism proved plan_identical for the shipped build",
+  "evidence_class": "artifact_inverse_reconstruction",
+  "note": "every routed expert bank and scale bank is a node-sharded object (A28 node_segments, 32 owners); the proof reconstructs the checkpoint bit-exactly from the per-node images in region order",
+  "producer": "compiler/backends/rom/common/inverse.py::check_rom_inverse over Deployment.read(build/abi3/deepseek-v4-flash-rom-array-32)",
+  "report": {
+    "all_padding_zero": true,
+    "bit_identical": true,
+    "elapsed_seconds": 205.7,
+    "generated_bytes": 281018376,
+    "generated_object_count": 10,
+    "model_id": "deepseek-v4-flash-0731",
+    "padding_bytes": 270116,
+    "payload_bytes": 156015698140,
+    "placed_tensor_count": 68214,
+    "plan_id": "fb38c639bfd7544bacc6f96cf9984a843723384cdc11174aa26af6c94ef0ffa0",
+    "product": "deepseek-v4-flash-rom",
+    "reconstructed_content_sha256": "a4edef0a77805f3c176085fb40e2b4bac45873603ec6d761691d73f474fa2038",
+    "region_count": 228,
+    "repair": {
+      "banks": 609,
+      "quarantined": 0,
+      "spare_columns_activated": 0,
+      "spare_columns_total": 4872,
+      "spare_rows_activated": 0,
+      "spare_rows_total": 761988
+    },
+    "rom_bytes": 156015968256,
+    "schema": "opentallas.rom.inverse_report.v1",
+    "status": "pass"
+  },
+  "schema": "opentallas.abi3.rom_inverse_proof.v1",
+  "shipped_deployment_sha256": "644d5482a62a611ffec153597571eb8160aef6456294433bb8ebb36c8a0ca2df",
+  "target_id": "deepseek-v4-flash-rom-array-32",
+  "topology_class": 1
+}

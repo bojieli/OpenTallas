@@ -379,6 +379,14 @@ def check_rom_schedule(
             f"{sorted(_mnemonic(pair) for pair in pairs)}",
         )
         permitted = {expected} | set(_AUXILIARY_ENGINE_OPS.get(kernel.kind, ()))
+        if kernel.kind == "ROUTED_MATMUL" and int(topology.get("node_count", 1)) > 1:
+            # On a multi-node topology a routed contraction's owner-partial
+            # rows are packed, all-reduced and unpacked by a data-bearing
+            # reduction.  Those two DMA.TRANSFER operations are admitted here
+            # only because ``data_bearing_expert_reduction`` below proves the
+            # whole chain -- its shape, its waits and its buffers -- for every
+            # such kernel; an unproven move still fails there.
+            permitted = permitted | {(int(Major.DMA), int(Dma.TRANSFER))}
         require(
             "no_private_engine_ops",
             pairs <= permitted,
@@ -543,15 +551,27 @@ def check_rom_schedule(
             )
             reticle_count = max(int(topology.get("reticle_count", 0)), 1)
             tiles_per_reticle = max(int(topology.get("tiles_per_reticle", 0)), 1)
+            if topology_class == int(TopologyClass.CLUSTER_32):
+                # A conventional-chip cluster places by (node, bank): every
+                # node is a placement target and the reticle/tile axes are
+                # unused.  Node identity is what the array's expert ownership
+                # rests on, so a shard on a node the topology does not declare
+                # is refused outright.
+                node_count = max(int(topology.get("node_count", 0)), 1)
+                inside = 0 <= node < node_count and reticle == 0 and tile == 0
+            else:
+                inside = (
+                    node == int(topology.get("local_node_id", 0))
+                    and 0 <= reticle < reticle_count
+                    and 0 <= tile < reticle_count * tiles_per_reticle
+                    and (
+                        topology_class == int(TopologyClass.SINGLE_CHIP)
+                        or tile // tiles_per_reticle == reticle
+                    )
+                )
             require(
                 "rom_shard_topology",
-                node == int(topology.get("local_node_id", 0))
-                and 0 <= reticle < reticle_count
-                and 0 <= tile < reticle_count * tiles_per_reticle
-                and (
-                    topology_class == int(TopologyClass.SINGLE_CHIP)
-                    or tile // tiles_per_reticle == reticle
-                ),
+                inside,
                 f"ROM region {region.get('region_id')} shard coordinate "
                 f"{(node, reticle, tile, bank)} is outside the admitted topology",
             )
@@ -787,8 +807,38 @@ def check_rom_schedule(
     producer = {
         tensor: kernel.index for kernel in graph.kernels for tensor in kernel.outputs
     }
+    # -- data-bearing expert reductions (multi-node ROM) --------------------
+    # For every ROUTED_MATMUL on a multi-node topology, the chain
+    #   pack (DMA.TRANSFER, source K) -> LINK.COLLECTIVE SUM over all the
+    #   nodes -> unpack (DMA.TRANSFER, source K)
+    # must exist exactly once per body position, each link waiting on the one
+    # before, the pack reading the tensor the unpack writes, and the pack
+    # writing a REMOTE participant array.  Its consumers then have to wait on
+    # the unpack: a wait on the contraction's own event would read the
+    # owner-partial rows before the other 31 owners' contributions arrived.
+    reductions = _data_bearing_reductions(
+        graph=graph,
+        instructions=instructions,
+        operators=operators,
+        communications=communications,
+        views=views,
+        objects=objects,
+        waits=waits,
+        topology=topology,
+        representative_ids=representative_ids,
+        require=require,
+    )
+    reduction_moves: set[int] = set()
+    for source_kernel, (unpack_events, explained) in reductions.items():
+        signals_by_source[source_kernel] = set(unpack_events)
+        reduction_moves.update(explained)
     dependency_edges = 0
     for index, instruction, operator in instruction_operators:
+        if index in reduction_moves:
+            # The pack and the unpack wait on the contraction and on the
+            # all-reduce respectively; ``_data_bearing_reductions`` proved that
+            # chain.  Their producers are not the kernel's IR inputs.
+            continue
         source = int(operator.payload["source_kernel_id"])
         kernel = graph.kernels[source]
         actual_wait = _wait_events(instruction, waits, require)
@@ -1067,9 +1117,23 @@ def check_rom_schedule(
             expected_subs = [int(Link.MULTICAST), int(Link.GATHER)]
             if any(kernel.kind == "EXPERT_DISPATCH" for kernel in band.body):
                 expected_subs.append(int(Link.SCATTER))
-            expected_subs.extend(
-                [int(Link.COLLECTIVE), int(Link.SEND), int(Link.BARRIER)]
-            )
+            collectives = 1
+            if topology_class == int(TopologyClass.CLUSTER_32):
+                # A multi-node ROM sums owner partials once per routed group:
+                # every EXPERT_REDUCE fed by a routed contraction is one
+                # data-bearing collective, and a band with none keeps the
+                # wafer's single traffic-modelling collective.
+                fed = 0
+                pending = False
+                for kernel in band.body:
+                    if kernel.kind == "ROUTED_MATMUL":
+                        pending = True
+                    elif kernel.kind == "EXPERT_REDUCE":
+                        fed += 1 if pending else 0
+                        pending = False
+                collectives = max(fed, 1)
+            expected_subs.extend([int(Link.COLLECTIVE)] * collectives)
+            expected_subs.extend([int(Link.SEND), int(Link.BARRIER)])
             require(
                 "wafer_band_path",
                 actual_subs == expected_subs,
@@ -2734,6 +2798,203 @@ def _link_route_contract(sub: int) -> tuple[int, int] | None:
         int(Link.SEND): (0, 3),
         int(Link.BARRIER): (1, 3),
     }.get(int(sub))
+
+
+def _data_bearing_reductions(
+    *,
+    graph: KernelGraph,
+    instructions: Sequence[Any],
+    operators: Mapping[int, Any],
+    communications: Mapping[int, Any],
+    views: Mapping[int, Any],
+    objects: Mapping[int, Any],
+    waits: Mapping[int, Any],
+    topology: Mapping[str, Any],
+    representative_ids: Any,
+    require: Callable[..., bool],
+) -> dict[int, tuple[set[int], set[int]]]:
+    """Reconstruct every data-bearing expert reduction and prove its chain.
+
+    Returns ``{routed kernel index: ({unpack signal events}, {instruction
+    indices the chain explains})}``.  On a one-node topology there are none and
+    nothing is required.
+    """
+    node_count = int(topology.get("node_count", 1))
+    if node_count <= 1:
+        return {}
+    # Only representative kernels have instructions; a compressed run's later
+    # layers ride the representative's body and its reduction.
+    routed = {
+        kernel.index
+        for kernel in graph.kernels
+        if kernel.kind == "ROUTED_MATMUL" and kernel.index in representative_ids
+    }
+    if not routed:
+        return {}
+    signal_of: dict[int, int] = {}
+    for index, instruction in enumerate(instructions):
+        event = int(instruction.signal_event_id)
+        if event != NO_ID:
+            signal_of[index] = event
+    found: dict[int, tuple[set[int], set[int]]] = {}
+    # walk the program: every DMA.TRANSFER attributed to a routed kernel must
+    # be the pack or the unpack of one chain
+    pending: dict[int, tuple[int, int]] = {}  # kernel -> (pack index, pack event)
+    for index, instruction in enumerate(instructions):
+        if instruction.major == int(Major.DMA) and instruction.sub == int(Dma.TRANSFER):
+            operator = operators.get(instruction.descriptor_id)
+            if operator is None:
+                continue
+            source = int(operator.payload["source_kernel_id"])
+            if source not in routed:
+                continue
+            if source not in pending:
+                # the pack: it must wait on the contraction's own event and
+                # write a REMOTE participant array
+                own = {
+                    signal_of[i]
+                    for i, ins in enumerate(instructions)
+                    if i < index
+                    and ins.source_operation_id == source
+                    and i in signal_of
+                    and ins.major == int(Major.TENSOR)
+                }
+                actual = _wait_events(instruction, waits, require)
+                require(
+                    "reduction_pack_waits_for_contraction",
+                    bool(own & actual),
+                    f"reduction pack at {index} for kernel {source} does not wait "
+                    f"for the contraction's events {sorted(own)}; waits {sorted(actual)}",
+                )
+                out_view = views.get(int(operator.payload["output_view_0"]))
+                pack_target = (
+                    int(out_view.primary_object_id) if out_view is not None else NO_ID
+                )
+                pending[source] = (index, signal_of.get(index, NO_ID), pack_target)
+                continue
+            pack_index, pack_event, pack_target = pending.pop(source)
+            # between the pack and this unpack: exactly one LINK.COLLECTIVE SUM
+            # at route class 3 over all the nodes, waiting on the pack
+            links = [
+                (i, ins)
+                for i, ins in enumerate(instructions)
+                if pack_index < i < index and ins.major == int(Major.LINK)
+            ]
+            summing = []
+            for i, ins in links:
+                comm = communications.get(ins.descriptor_id)
+                if comm is None:
+                    continue
+                payload = comm.payload
+                if (
+                    int(payload["collective_op"]) == int(CollectiveOp.SUM)
+                    and int(payload["participant_scope"]) == int(ParticipantScope.NODE)
+                    and int(payload["participant_count"]) == node_count
+                ):
+                    summing.append((i, ins))
+            require(
+                "reduction_collective_present",
+                len(summing) == 1,
+                f"kernel {source}: {len(summing)} node-scoped SUM collectives "
+                f"over {node_count} nodes between pack {pack_index} and unpack "
+                f"{index}; expected exactly one",
+            )
+            if len(summing) != 1:
+                continue
+            link_index, link = summing[0]
+            endpoints = communications[link.descriptor_id].payload
+            unpack_in = views.get(int(operator.payload["input_view_0"]))
+            unpack_source = (
+                int(unpack_in.primary_object_id) if unpack_in is not None else NO_ID
+            )
+            # The pack writes the collective's participant array and the
+            # unpack reads its local buffer: the moves are bound to the very
+            # endpoints the collective names, not to any staging object.
+            require(
+                "reduction_pack_targets_participant_array",
+                pack_target != NO_ID
+                and pack_target == int(endpoints["remote_object_id"]),
+                f"kernel {source}: the pack writes object {pack_target}, the "
+                f"all-reduce's participant array is {endpoints['remote_object_id']}",
+            )
+            require(
+                "reduction_unpack_reads_reduced_buffer",
+                unpack_source != NO_ID
+                and unpack_source == int(endpoints["local_object_id"]),
+                f"kernel {source}: the unpack reads object {unpack_source}, the "
+                f"all-reduce's local buffer is {endpoints['local_object_id']}",
+            )
+            link_wait = _wait_events(link, waits, require)
+            require(
+                "reduction_collective_waits_for_pack",
+                pack_event != NO_ID and pack_event in link_wait,
+                f"kernel {source}: the all-reduce at {link_index} does not wait "
+                f"for pack event {pack_event}; waits {sorted(link_wait)}",
+            )
+            link_event = signal_of.get(link_index, NO_ID)
+            unpack_wait = _wait_events(instruction, waits, require)
+            require(
+                "reduction_unpack_waits_for_collective",
+                link_event != NO_ID and link_event in unpack_wait,
+                f"kernel {source}: the unpack at {index} does not wait for the "
+                f"all-reduce event {link_event}; waits {sorted(unpack_wait)}",
+            )
+            pack_op = operators.get(instructions[pack_index].descriptor_id)
+            pack_in = views.get(int(pack_op.payload["input_view_0"])) if pack_op else None
+            unpack_out = views.get(int(operator.payload["output_view_0"]))
+            same_buffer = (
+                pack_in is not None
+                and unpack_out is not None
+                and int(pack_in.primary_object_id) == int(unpack_out.primary_object_id)
+            )
+            require(
+                "reduction_round_trips_the_tensor",
+                same_buffer,
+                f"kernel {source}: the pack reads and the unpack writes different "
+                "objects; the reduced rows must land where the partial rows were",
+            )
+            events, explained = found.setdefault(source, (set(), set()))
+            events.add(signal_of.get(index, NO_ID))
+            explained.update((pack_index, index))
+    for source, (pack_index, _event, _target) in pending.items():
+        require(
+            "reduction_unpack_present",
+            False,
+            f"kernel {source}: pack at {pack_index} has no unpack",
+        )
+    # Which routed contractions must be reduced: the one whose output leaves
+    # the expert chain.  A DeepSeek expert is gate, up and down contractions
+    # with a per-expert SwiGLU between them; the gate and up outputs feed only
+    # per-expert elementwise work and the down contraction on the same node,
+    # so they stay owner-local, and it is the down output -- the last routed
+    # contraction before EXPERT_REDUCE -- whose partial rows every node needs.
+    required: set[int] = set()
+    last_routed: int | None = None
+    for kernel in graph.kernels:
+        if kernel.index not in representative_ids:
+            continue
+        if kernel.kind == "ROUTED_MATMUL":
+            last_routed = kernel.index
+        elif kernel.kind == "EXPERT_REDUCE" and last_routed is not None:
+            required.add(last_routed)
+            last_routed = None
+    for source in sorted(required):
+        require(
+            "data_bearing_expert_reduction",
+            source in found,
+            f"ROUTED_MATMUL kernel {source} feeds EXPERT_REDUCE on a {node_count}-node "
+            "topology and has no data-bearing expert reduction; its owner-partial "
+            "rows would never be summed",
+        )
+    for source in sorted(set(found) - required):
+        require(
+            "reduction_only_where_rows_leave_the_expert_chain",
+            False,
+            f"ROUTED_MATMUL kernel {source} is reduced although its output stays "
+            "inside the expert chain; a needless all-reduce is fabric traffic the "
+            "wafer does not pay",
+        )
+    return found
 
 
 def _participant_count(

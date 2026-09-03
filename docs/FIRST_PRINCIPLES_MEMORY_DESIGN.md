@@ -201,7 +201,7 @@ their work". Wafer = 46,225 mm², reticle = 815 mm² <!-- figure: 46,225 src="co
 > would produce different tokens by an unmeasured amount. Half of every feasible
 > Qwen comparison was being won by such a design, the best at **30.79×**; with
 > the option removed and the corrected physical inputs applied, the Qwen
-> batch-1 `smallest silicon` iso-area ratio is **4.54×** <!-- figure: 4.54 src="results/roofline/n6_vs_a100/REPORT.md#Per-user ratio" table="Iso-area comparison" where="Model=Qwen3-8B;B=1;Pick=smallest silicon" name="best Qwen batch-1 iso-area ratio" -->
+> batch-1 `smallest silicon` iso-area ratio is **5.00×** <!-- figure: 5.00 src="results/roofline/n6_vs_a100/REPORT.md#Per-user ratio" table="Iso-area comparison" where="Model=Qwen3-8B;B=1;Pick=smallest silicon" name="best Qwen batch-1 iso-area ratio" -->
 > (`n6_vs_a100/REPORT.md`, iso-area table, row `Qwen3-8B | 1 | smallest silicon`).
 > The rule is pinned by
 > `tests/test_roofline.py::test_no_design_stores_weights_at_a_precision_the_release_does_not_have`.

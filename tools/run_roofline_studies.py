@@ -140,6 +140,43 @@ STUDY_MODELS: tuple[tuple[str, Path, int], ...] = (
         1_000_000,
     ),
 )
+CONTEXT_LADDER: dict[str, tuple[int, ...]] = {
+    "DeepSeek-V4-Flash-0731": (8_192, 32_768, 1_000_000),
+    "DeepSeek-V4-Pro-0813": (8_192, 32_768, 200_000),
+}
+"""The other contexts each DeepSeek model is run at, in its own artifact tree.
+
+The primary studies run each model at one context, and every figure a release
+document binds is read from those two artifacts, so adding contexts to them
+would move the byte-identity of every bound figure.  The ladder rungs are
+therefore separate single-model studies, selected by the same rule on the same
+code path, written under ``results/roofline/context_ladder/<study>/<rung>/``.
+``ASSUMPTIONS.md`` states the authoritative contexts as 8,192 / 32,768 /
+200,000 / 1,000,000; the primary context of each model is excluded here
+because it is the primary artifact."""
+
+
+def context_ladder_output_root(output_root: Path) -> Path:
+    return output_root / "context_ladder"
+
+
+def context_rung_label(model_name: str, context: int) -> str:
+    """``flash-8k``, ``pro-200k``, ``flash-1m``: a path segment, not a title."""
+
+    short = model_name.split("-")
+    family = next(
+        (part.lower() for part in short if part.lower() in ("flash", "pro")),
+        short[0].lower(),
+    )
+    if context >= 1_000_000 and context % 1_000_000 == 0:
+        span = f"{context // 1_000_000}m"
+    elif context % 1024 == 0:
+        span = f"{context // 1024}k"
+    else:
+        span = f"{context // 1000}k"
+    return f"{family}-{span}"
+
+
 BATCHES = (1, 2, 4, 8, 16, 32, 64, 256)
 """Doubling from 1 to 64, then 256.
 
@@ -368,6 +405,19 @@ whole range, they include every area the published headline was read at, and the
 artifact is a checked-in file whose size is a real cost."""
 
 GPU_AREA_LADDER: tuple[int, ...] = ROM_AREA_LADDER
+
+ARRAY_DEVICE_LADDER_MULTIPLIERS: tuple[float, ...] = (1.25, 1.5, 2.0, 3.0, 4.0)
+"""Where the reticle-array class is sampled beyond its own sizing choice.
+
+Until 2026-09-03 ``ROM_AREA_LADDER`` was applied where ``plan.kind == "wafer"``
+and nowhere else, so an array existed at an area only if some sizing sweep
+landed there, and the report said so in its own closing paragraph.  Two rung
+families close that hole.  Multiples of the smallest machine that physically
+holds the design sample the array's own curve between its floor and four times
+it.  The device counts whose silicon equals each wafer rung of
+``ROM_AREA_LADDER`` put an array at every area a wafer design is emitted at,
+which is the row the wafer-versus-array comparison is read on.  Both are capped
+by ``ARRAY_SWEEP_CAP`` like every other array."""
 """The GPU baseline is evaluated at the same wafer-equivalents of silicon
 whatever the ROM sizing sweep chooses, so the iso-area curve is sampled over the
 whole range this study spans rather than only where a ROM design lands."""
@@ -559,6 +609,28 @@ def _hbm_stacks_for(
 # --------------------------------------------------------------------------
 # design construction
 # --------------------------------------------------------------------------
+
+
+def _array_device_ladder(
+    floor: int, *, wafer_area: float, reticle_area: float
+) -> set[int]:
+    """The device counts an array is emitted at beyond its sizing sweep's pick.
+
+    ``floor`` is the smallest device count that physically holds the design.
+    The multiplier rungs sample the array's own curve above it; the wafer-area
+    rungs are the counts whose silicon equals ``k`` wafers for each ``k`` in
+    ``ROM_AREA_LADDER``, so that every wafer design has an array at the same
+    area.  Nothing below the floor is emitted -- the design does not fit there
+    -- and nothing above ``ARRAY_SWEEP_CAP``.
+    """
+
+    rungs: set[int] = set()
+    for multiplier in ARRAY_DEVICE_LADDER_MULTIPLIERS:
+        rungs.add(int(math.ceil(floor * multiplier)))
+    dies_per_wafer = wafer_area / reticle_area
+    for wafers in ROM_AREA_LADDER:
+        rungs.add(int(round(wafers * dies_per_wafer)))
+    return {count for count in rungs if floor <= count <= ARRAY_SWEEP_CAP}
 
 
 def _regions_for(
@@ -2053,6 +2125,104 @@ def _selection_row(
     return record
 
 
+ISO_AREA_MATCH_TOLERANCE = 0.05
+"""An array counts as "at the wafer's area" within this fraction of it."""
+
+
+def _iso_area_by_batch(
+    points: list[dict[str, Any]],
+    comparisons: dict[tuple[str, int], dict[str, Any]],
+    model_name: str,
+) -> list[dict[str, Any]]:
+    """The three classes read at iso-area, batch by batch.
+
+    For every batch the study evaluates, each ROM class (reticle array, wafer)
+    enters at its own optimum -- its fastest feasible design and its densest --
+    and each is paired with the GPU comparator at *its own* silicon area, which
+    is the ``iso_area_gpu_*`` row the comparison table already carries for that
+    design and batch.  A third row reads the array at the wafer's area: the
+    fastest array design whose silicon is within ``ISO_AREA_MATCH_TOLERANCE``
+    of the fastest wafer's, which exists because the array ladder samples the
+    device counts whose silicon equals each wafer rung.
+
+    Resident sessions, power and energy ride on every row, because a per-user
+    rate divided by a per-user rate is a latency claim and a latency claim from
+    a one-session machine against a thousand-session machine is not the trade
+    it looks like.
+    """
+
+    rows: list[dict[str, Any]] = []
+    for batch in BATCHES:
+        candidates = _selection_candidates(points, model_name, batch)
+        record: dict[str, Any] = {"batch_size": batch, "classes": []}
+        by_kind: dict[str, list[dict[str, Any]]] = {}
+        for row in candidates:
+            by_kind.setdefault(row["topology_kind"], []).append(row)
+        for kind in ("array", "wafer"):
+            in_class = by_kind.get(kind, [])
+            if not in_class:
+                continue
+            fastest = max(
+                in_class,
+                key=lambda row: (row["per_user_tokens_s"], -row["silicon_area_mm2"]),
+            )
+            densest = max(
+                in_class,
+                key=lambda row: (_selection_density(row), -row["silicon_area_mm2"]),
+            )
+            record["classes"].append(
+                {
+                    "topology_kind": kind,
+                    "designs_evaluated": len(in_class),
+                    "fastest": _selection_row(
+                        fastest, comparisons.get((fastest["design"], batch))
+                    ),
+                    "densest": _selection_row(
+                        densest, comparisons.get((densest["design"], batch))
+                    ),
+                }
+            )
+        wafers = by_kind.get("wafer", [])
+        arrays = by_kind.get("array", [])
+        record["array_at_wafer_area"] = None
+        if wafers and arrays:
+            wafer = max(
+                wafers,
+                key=lambda row: (row["per_user_tokens_s"], -row["silicon_area_mm2"]),
+            )
+            target = wafer["silicon_area_mm2"]
+            matched = [
+                row
+                for row in arrays
+                if abs(row["silicon_area_mm2"] - target) <= ISO_AREA_MATCH_TOLERANCE * target
+            ]
+            if matched:
+                best = max(
+                    matched,
+                    key=lambda row: (row["per_user_tokens_s"], -row["silicon_area_mm2"]),
+                )
+                paired = _selection_row(best, comparisons.get((best["design"], batch)))
+                paired["wafer_reference_design"] = wafer["design"]
+                paired["wafer_reference_silicon_area_mm2"] = target
+                paired["wafer_reference_per_user_tokens_s"] = wafer["per_user_tokens_s"]
+                paired["wafer_reference_max_resident_users"] = wafer["max_resident_users"]
+                paired["wafer_reference_energy_j_per_token"] = wafer["energy_j_per_token"]
+                paired["area_ratio_to_wafer"] = best["silicon_area_mm2"] / target
+                paired["per_user_ratio_wafer_over_array"] = (
+                    wafer["per_user_tokens_s"] / best["per_user_tokens_s"]
+                    if best["per_user_tokens_s"] > 0
+                    else None
+                )
+                paired["resident_sessions_ratio_array_over_wafer"] = (
+                    best["max_resident_users"] / wafer["max_resident_users"]
+                    if wafer["max_resident_users"]
+                    else None
+                )
+                record["array_at_wafer_area"] = paired
+        rows.append(record)
+    return rows
+
+
 def _design_selection(
     result: dict[str, Any], study_models: tuple[tuple[str, Path, int], ...]
 ) -> dict[str, Any]:
@@ -2208,6 +2378,9 @@ def _design_selection(
                 "regime_count": len(regimes),
                 "best_design_differs_by_batch": len(regimes) > 1,
                 "class_comparison": class_comparison,
+                "iso_area_by_batch": _iso_area_by_batch(
+                    points, comparisons, model_name
+                ),
                 "rejected_per_user_maximum": (
                     _selection_row(fastest, comparisons.get((fastest["design"], 1)))
                     if fastest
@@ -2408,6 +2581,14 @@ def _simulate_study(
                         if plan.kind == "wafer" and amortization == "batched":
                             bucket.update(
                                 count for count in ROM_AREA_LADDER if count >= floor
+                            )
+                        if plan.kind == "array" and amortization == "batched":
+                            bucket.update(
+                                _array_device_ladder(
+                                    floor,
+                                    wafer_area=wafer_area,
+                                    reticle_area=reticle_area,
+                                )
                             )
                     for plan, area_per_device in fabric_plans:
                         topology_name = plan.label
@@ -3194,6 +3375,14 @@ def _simulate_study(
             "reticle_area_mm2": reticle_area,
             "rom_area_ladder_wafers": list(ROM_AREA_LADDER),
             "gpu_area_ladder_wafers": list(GPU_AREA_LADDER),
+            "array_device_ladder_multipliers": list(
+                ARRAY_DEVICE_LADDER_MULTIPLIERS
+            ),
+            "array_device_ladder_note": (
+                "arrays are also emitted at the device counts whose silicon "
+                "equals each wafer rung, so every wafer design has an array at "
+                "the same area"
+            ),
             "counting_convention": (
                 "one multiply plus one add equals two operations"
             ),
@@ -3337,10 +3526,14 @@ def _power_and_energy(result: dict[str, Any]) -> dict[str, Any]:
     # Wafer-scale ROM silicon specifically.  "46,225 mm2" on the GPU side is a
     # 56-die CLUSTER, each die at its own published TDP, so including it here
     # would answer a different question.
+    # ``topology_kind`` rather than an area threshold: since the array ladder
+    # samples reticle arrays at every wafer area, a 57-die array is wafer-sized
+    # silicon but not a wafer, and it is exactly the class the paragraph this
+    # metric feeds contrasts wafers against.
     wafer_rom = [
         row
         for row in feasible
-        if row["family"] == "rom" and row["silicon_area_mm2"] >= 40_000
+        if row["family"] == "rom" and row.get("topology_kind") == "wafer"
     ]
     wafer_rom_headroom = (
         max(row["power_headroom_fraction"] or 0.0 for row in wafer_rom)
@@ -5290,6 +5483,10 @@ def _render_design_selection(result: dict[str, Any]) -> list[str]:
                     )
             lines.append("")
 
+        iso_rows = entry.get("iso_area_by_batch") or []
+        if iso_rows:
+            lines.extend(_render_iso_area_by_batch(iso_rows))
+
         regimes = entry.get("regimes") or []
         lines.extend(
             [
@@ -5336,35 +5533,92 @@ def _render_design_selection(result: dict[str, Any]) -> list[str]:
 
     lines.extend(
         [
-            "**What this section does not fix, and which recommendations it "
-            "leaves exposed.** The ROM array class is sampled only at the device "
-            "counts each floorplan's own sizing sweep chose: `ROM_AREA_LADDER` is "
-            "applied where `plan.kind == \"wafer\"` and nowhere else, so a "
-            "reticle array exists at an area only if some sweep landed there. The "
-            "counts this study actually emitted, per model and per "
-            "`(kv_store, spare_area_policy)` combination, are printed below so the "
-            "holes are visible rather than described:",
+            "**Where the array class is sampled, so the reader can see the "
+            "rungs rather than take them on trust.** Until 2026-09-03 the ROM "
+            "array class was sampled only at the device counts each floorplan's "
+            "own sizing sweep chose. It is now emitted on an explicit ladder: "
+            "multiples of the smallest machine that holds the design "
+            f"({', '.join(f'{m:g}x' for m in ARRAY_DEVICE_LADDER_MULTIPLIERS)}) "
+            "and the device counts whose silicon equals each wafer rung of "
+            "`ROM_AREA_LADDER`, so every wafer design has an array at the same "
+            "area. The counts this study actually emitted, per model and per "
+            "`(kv_store, spare_area_policy)` combination, are printed below:",
             "",
             *_array_sampling_lines(result),
-            "The omission runs **against** the array class, so the published ROM "
-            "curve is a lower bound on the ROM curve rather than an upper one.",
-            "",
-            "That splits the recommendations above into two kinds, and the split "
-            "should be stated rather than left for a reader to work out. **Where "
-            "the winner is the smallest feasible machine, the gap cannot touch "
-            "it**: no rung exists below the minimum area, so nothing denser can be "
-            "hiding there. **Where the winner is a wafer chosen over the array "
-            "class, the gap is live**: the wafer is being compared against an "
-            "array curve that is sampled at a handful of counts, and a rung the "
-            "sweep never visited could in principle beat it on throughput density. "
-            "Those are the weakest results on this page and they should be "
-            "re-derived once the array class is emitted on the same explicit "
-            "ladder the wafer class already gets. Either way, the curve BETWEEN "
-            "rungs is not evidence and must not be read as any.",
+            "A wafer chosen over the array class is now compared against an "
+            "array sampled at the wafer's own area and at four rungs above the "
+            "array's floor; the `array @ wafer area` rows in the iso-area "
+            "table above are that comparison. The curve BETWEEN rungs is still "
+            "not evidence and must not be read as any.",
             "",
         ]
     )
     return lines
+
+
+def _render_iso_area_by_batch(rows: list[dict[str, Any]]) -> list[str]:
+    """The three classes at iso-area, batch by batch, resident sessions on every row."""
+
+    lines = [
+        "**Three classes at iso-area, batch by batch.** Each ROM class enters "
+        "at its fastest feasible design for that batch and is read against the "
+        "GPU comparator at *its own* silicon area (the area ratio is stated). "
+        "The `array @ wafer area` row is the fastest reticle array within "
+        f"{ISO_AREA_MATCH_TOLERANCE:.0%} of the wafer's silicon, which is the "
+        "wafer-versus-array comparison at iso-area. Read resident sessions "
+        "before the ratio.",
+        "",
+        "| batch | class | design | mm2 | user tok/s | aggregate tok/s | "
+        "resident sessions | W | mJ/token | binds on | iso-area GPU | GPU user "
+        "tok/s | GPU sessions | GPU mJ/token | area ratio | speed ratio | "
+        "J/token ratio |",
+        "| ---: | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- | "
+        "--- | ---: | ---: | ---: | ---: | ---: | ---: |",
+    ]
+    for record in rows:
+        batch = record["batch_size"]
+        emitted = False
+        for klass in record["classes"]:
+            row = klass["fastest"]
+            emitted = True
+            lines.append(_iso_area_line(batch, klass["topology_kind"], row))
+        paired = record.get("array_at_wafer_area")
+        if paired:
+            emitted = True
+            lines.append(_iso_area_line(batch, "array @ wafer area", paired))
+            lines.append(
+                f"| {batch} | wafer reference | "
+                f"`{paired['wafer_reference_design'].split('/')[-1]}` | "
+                f"{paired['wafer_reference_silicon_area_mm2']:,.0f} | "
+                f"{paired['wafer_reference_per_user_tokens_s']:,.1f} | -- | "
+                f"{_cell(paired['wafer_reference_max_resident_users'])} | -- | "
+                f"{paired['wafer_reference_energy_j_per_token'] * 1e3:,.1f} | -- | "
+                f"-- | -- | -- | -- | {paired['area_ratio_to_wafer']:.3f} | "
+                f"{_cell(paired.get('per_user_ratio_wafer_over_array'), ',.2f')}x "
+                f"wafer/array | -- |"
+            )
+        if not emitted:
+            lines.append(f"| {batch} | -- | *no feasible ROM design* | | | | | | | | | | | | | | |")
+    lines.append("")
+    return lines
+
+
+def _iso_area_line(batch: int, label: str, row: dict[str, Any]) -> str:
+    gpu = row.get("iso_area_gpu_design")
+    return (
+        f"| {batch} | {label} | `{row['design'].split('/')[-1]}` | "
+        f"{row['silicon_area_mm2']:,.0f} | {row['per_user_tokens_s']:,.1f} | "
+        f"{row['aggregate_tokens_s']:,.0f} | {_cell(row['max_resident_users'])} | "
+        f"{row['power_w']:,.0f} | {row['energy_j_per_token'] * 1e3:,.1f} | "
+        f"`{row['binding_constraint']}` | "
+        f"`{str(gpu or '--').split('/')[-1]}` | "
+        f"{_cell(row.get('iso_area_gpu_per_user_tokens_s'), ',.1f')} | "
+        f"{_cell(row.get('iso_area_gpu_max_resident_users'))} | "
+        f"{_cell((row.get('iso_area_gpu_energy_j_per_token') or 0) * 1e3 if row.get('iso_area_gpu_energy_j_per_token') is not None else None, ',.1f')} | "
+        f"{_cell(row.get('iso_area_ratio'), '.3f')} | "
+        f"{_cell(row.get('per_user_speed_ratio'), ',.2f')}x | "
+        f"{_cell(row.get('tokens_per_joule_advantage_x'), ',.1f')}x |"
+    )
 
 
 def _render_hc1_residual(hc1: dict[str, Any]) -> list[str]:
@@ -7502,6 +7756,53 @@ def run_all(
             )
         )
 
+    # --- the context ladder, in its own tree ------------------------------
+    # One single-model study per (model, context) that is not the primary
+    # context, selected by the same rule on the same code path.  Kept out of
+    # ``results`` for the same reason the quantised variant is: a rung sitting
+    # in that mapping is one loop away from being read as the primary.
+    for study_id in STUDIES:
+        for model_name, model_path, primary_context in STUDY_MODELS:
+            for context in CONTEXT_LADDER.get(model_name, ()):
+                if context == primary_context:
+                    continue
+                config = dict(STUDIES[study_id])
+                config["models"] = ((model_name, model_path, context),)
+                config["contract"] = (
+                    f"CONTEXT-LADDER RUNG of {study_id}: {model_name} at "
+                    f"{context:,} tokens. "
+                    + str(STUDIES[study_id]["contract"])
+                    + " Same rule, same code path as the primary; only the "
+                    "context differs, and the primary artifact is unchanged."
+                )
+                rung = _simulate_study(
+                    study_id, technology, with_sensitivity=False, config=config
+                )
+                label = context_rung_label(model_name, context)
+                rung["study_id"] = f"{study_id}-{label}"
+                rung["primary_study_id"] = study_id
+                rung["context_ladder"] = {
+                    "model": model_name,
+                    "context_tokens": context,
+                    "primary_context_tokens": primary_context,
+                    "label": label,
+                }
+                rung["validation_gates"] = anchors
+                destination = context_ladder_output_root(output_root) / study_id / label
+                planned.append(
+                    (
+                        destination / "analytical.json",
+                        json.dumps(rung, indent=2, sort_keys=True, allow_nan=False)
+                        + "\n",
+                    )
+                )
+                planned.append(
+                    (
+                        destination / "REPORT.md",
+                        render_report(rung, anchors).rstrip() + "\n",
+                    )
+                )
+
     existing = [path for path, _ in planned if path.exists()]
     if existing and not force:
         raise SystemExit(
@@ -7553,6 +7854,23 @@ def main(argv: list[str] | None = None) -> int:
                 ).resolve()
             )
         )
+    for study_id in STUDIES:
+        for model_name, _path, primary_context in STUDY_MODELS:
+            for context in CONTEXT_LADDER.get(model_name, ()):
+                if context == primary_context:
+                    continue
+                label = context_rung_label(model_name, context)
+                print(
+                    f"context-ladder rung {study_id}/{label}: "
+                    + str(
+                        (
+                            context_ladder_output_root(args.output)
+                            / study_id
+                            / label
+                            / "REPORT.md"
+                        ).resolve()
+                    )
+                )
     gates = next(iter(results.values()))["validation_gates"]
     for name in (
         "taalas_hc1",

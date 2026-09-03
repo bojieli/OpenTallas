@@ -47,6 +47,10 @@ PUBLISHED: dict[str, tuple[str, str]] = {
     # amendments A22 and A23, which change all four.
     "rom_qwen3": ("compiler.backends.rom.qwen3", "rom-qwen3"),
     "rom_deepseek_v4": ("compiler.backends.rom.deepseek_v4", "rom-deepseek-v4"),
+    "rom_deepseek_v4_array_32": (
+        "compiler.backends.rom.deepseek_v4_array",
+        "rom-deepseek-v4-array-32",
+    ),
 }
 
 

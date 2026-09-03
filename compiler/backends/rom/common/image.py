@@ -112,6 +112,22 @@ class RomLayoutPolicy:
     #: The default walks banks on a conventional chip; the wafer product
     #: supplies one that walks tiles and wraps into the next reticle.
     advance_resource: "Callable[[RomCoordinate], RomCoordinate] | None" = None
+    #: Optional per-request shard stride: the most bytes one shard of the
+    #: request may take before the walker moves to the next resource.  The
+    #: array product sets it to exactly one owner's experts, so every shard of
+    #: an expert bank is one node's contiguous expert range.
+    shard_bytes: "Callable[[RegionRequest], int | None] | None" = None
+    #: Optional explicit placement of shard ``k`` of a request.  It receives
+    #: the request, the shard index and the walker's live cursor (resource id
+    #: -> bytes used) and returns the resource that shard lands on, which must
+    #: have room; with it set, ``advance_resource`` is not consulted for that
+    #: request.  The array product uses it to put shard ``k`` on node ``k mod
+    #: N`` -- consecutive expert ownership -- on that node's first bank with
+    #: room.
+    place_shard: (
+        "Callable[[RegionRequest, int, Mapping[tuple[int, int, int, int], int]],"
+        " RomCoordinate] | None"
+    ) = None
 
     def validate(self) -> None:
         for name in ("alignment_bytes", "row_bytes", "resource_bytes"):
@@ -867,20 +883,31 @@ def _shard(
     remaining = total_bytes
     offset = 0
     advance = policy.advance_resource or _next_resource
+    stride = policy.shard_bytes(request) if policy.shard_bytes is not None else None
+    if stride is not None and stride <= 0:
+        raise RomImageError(f"ROM region {request.key!r} declares a non-positive shard stride")
+    placer = policy.place_shard
     here = hint
     guard = 0
     while remaining:
         guard += 1
         if guard > 1 << 22:
             raise RomImageError(f"ROM region {request.key!r} failed to place")
+        if placer is not None:
+            here = placer(request, len(shards), cursor)
         rid = here.resource_id
         resources.setdefault(rid, here)
         start = _align_up(cursor.get(rid, policy.base_address), policy.alignment_bytes)
         room = policy.base_address + policy.resource_bytes - start
         if room <= 0:
+            if placer is not None:
+                raise RomImageError(
+                    f"ROM region {request.key!r} shard {len(shards)} was placed on "
+                    f"resource {rid}, which has no room"
+                )
             here = advance(here)
             continue
-        take = min(room, remaining)
+        take = min(room, remaining) if stride is None else min(room, remaining, stride)
         if not shards:
             coordinate = here
         shards.append(
@@ -894,7 +921,7 @@ def _shard(
         cursor[rid] = start + take
         offset += take
         remaining -= take
-        if remaining:
+        if remaining and placer is None:
             here = advance(here)
     # The trailing pad belongs to the last shard; the payload never straddles
     # the pad boundary because the pad is always the region tail.
@@ -935,12 +962,63 @@ def region_object_source(region: RomRegion) -> ObjectSource:
     return ObjectSource("segments", region.payload_bytes, segments)
 
 
+def node_sharded_region_source(region: RomRegion, shards: int) -> ObjectSource:
+    """A28 ``node_segments`` source for a region split ``shards`` ways by owner.
+
+    Node ``k`` holds members ``[k*E/N, (k+1)*E/N)`` of *every* slot, in slot
+    order: the node-local image is the region with the other nodes' experts
+    removed, so a local slot stride is the global one divided by ``shards`` and
+    the routed engine's consecutive-ownership rule (local expert ``e`` is global
+    ``k*E/N + e``) reads it directly.  Every node's image is the same size.
+    """
+    if shards <= 1:
+        return region_object_source(region)
+    per_slot = len(region.members) // max(region.slot_count, 1)
+    if per_slot * region.slot_count != len(region.members) or per_slot % shards:
+        raise RomImageError(
+            f"ROM region {region.key!r} has {len(region.members)} members over "
+            f"{region.slot_count} slots and cannot be split {shards} ways by owner"
+        )
+    if region.payload_bytes % shards:
+        raise RomImageError(
+            f"ROM region {region.key!r} payload {region.payload_bytes} is not "
+            f"divisible into {shards} equal node images"
+        )
+    owned = per_slot // shards
+    ordered = sorted(region.members, key=lambda m: m.offset_bytes)
+    node_segments: list[tuple[Segment, ...]] = []
+    for node in range(shards):
+        segments: list[Segment] = []
+        for slot in range(region.slot_count):
+            base = slot * per_slot + node * owned
+            for member in ordered[base : base + owned]:
+                segments.append(
+                    Segment(
+                        path=member.source_path,
+                        offset=member.source_offset,
+                        bytes=member.bytes,
+                        sha256=member.source_sha256,
+                    )
+                )
+        node_segments.append(tuple(segments))
+    local = region.payload_bytes // shards
+    for node, segments in enumerate(node_segments):
+        if sum(s.bytes for s in segments) != local:
+            raise RomImageError(
+                f"ROM region {region.key!r} node {node} image covers "
+                f"{sum(s.bytes for s in segments)} bytes, expected {local}; the "
+                "members of one slot are not equal-sized"
+            )
+    return ObjectSource("node_segments", local, node_segments=tuple(node_segments))
+
+
 def emit_rom_objects(
     builder: DeploymentBuilder,
     plan: RomImagePlan,
     *,
     storage_class: StorageClass = StorageClass.ROM,
     permissions: int = ROM_PERMISSIONS,
+    node_shards: "Callable[[RomRegion], int | None] | None" = None,
 ) -> dict[str, int]:
     """Emit one immutable memory object per region, plus its zero pad object.
 
@@ -962,13 +1040,24 @@ def emit_rom_objects(
     placed_in_rom = storage_class == StorageClass.ROM
     ids: dict[str, int] = {}
     for region in plan.regions:
-        source = region_object_source(region)
+        shards = node_shards(region) if node_shards is not None else None
+        if shards and shards > 1 and placed_in_rom:
+            # One node-local object: node ``k`` materialises its own owner
+            # range and every node sees the same local size.  The physical
+            # per-node shard coordinates live in the region plan.
+            source = node_sharded_region_source(region, shards)
+            size_bytes = region.payload_bytes // shards
+            node_id = NO_NODE
+        else:
+            source = region_object_source(region)
+            size_bytes = region.payload_bytes
+            node_id = region.coordinate.node_id
         object_id = builder.memory_object(
             storage_class=storage_class,
-            size_bytes=region.payload_bytes,
+            size_bytes=size_bytes,
             source=source,
             permissions=permissions,
-            node_id=region.coordinate.node_id,
+            node_id=node_id,
             bank_or_tile=(
                 _bank_or_tile(region.coordinate) if placed_in_rom else NO_NODE
             ),

@@ -268,6 +268,28 @@ evidence. None may be presented as a rerun of the current source.
   artifact-semantic schedule certificate, not cycle timing or physical-route
   evidence.
 
+- [x] W5.6 DeepSeek 32-node reticle-class ROM **array** (TA-DS-ROM-ARRAY-FLASH,
+  `compiler/backends/rom/deepseek_v4_array.py`, plan
+  `docs/DEEPSEEK_V4_ROM_ARRAY_IMPLEMENTATION_PLAN.md`) — the same neutral graph
+  on the HBM cluster's `CLUSTER_32` topology, link record and engine lane mix,
+  with the routed expert banks node-sharded by consecutive ownership (eight
+  experts per node, A28 `node_segments` images) and a data-bearing
+  `LINK.COLLECTIVE SUM` per routed group ahead of `EXPERT_REDUCE`. The
+  independent schedule checker admits **1,329** instructions <!-- figure: 1,329 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-array-32].actual.instructions" name="array ROM instructions, W5.6" -->,
+  **3,875** descriptors <!-- figure: 3,875 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-array-32].actual.descriptors" name="array ROM descriptors, W5.6" -->
+  and **19** cluster communication records <!-- figure: 19 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-array-32].actual.communications" name="array ROM communications, W5.6" -->
+  with **0** `STATE` resources <!-- figure: 0 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-array-32].actual.states" name="array ROM STATE resources, W5.6" -->,
+  passing **130/130** checks <!-- figure: 130 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-array-32].passed_check_count" name="array independent ROM schedule checks passed" -->
+  including the new data-bearing-reduction and cluster-placement rules; the
+  inverse proof reconstructs all **156,015,698,140** payload bytes <!-- figure: 156,015,698,140 src="results/abi3/deepseek_v4_rom_array_inverse.json#report.payload_bytes" name="array inverse payload bytes, W5.6" -->
+  bit-identically from the node-sharded images
+  (`results/abi3/deepseek_v4_rom_array_inverse.json`). Dense weights are
+  replicated per node and the live state is declared at the IR horizon rather
+  than at a five-stack die's capacity; both boundaries are stated in the
+  deployment notes and in the plan's section 17. This is an
+  artifact-semantic certificate, not cycle timing or a token result; the
+  array's functional and cycle runs are tracked in the plan.
+
 ## W6 — Real end-to-end execution (the correctness spine)
 
 > **Retained evidence freshness.** Every token record in W6 is prior-build
@@ -694,7 +716,7 @@ by measuring rather than by arguing.**
 magnitudes:
 
 - *"The ROM advantage erodes with batch"* holds only for the **dense** model.
-  Qwen goes 5.83× at batch 1 to **0.94× at 256** — the GPU wins outright. Both <!-- figure: 5.83 src="results/roofline/n6_vs_a100/REPORT.md#Per-user ratio" table="Iso-area comparison" where="Model=Qwen3-8B;B=1;Pick=fastest" name="Qwen per-user iso-area ratio at B=1" --> <!-- figure: 0.94 src="results/roofline/n6_vs_a100/REPORT.md#Per-user ratio" table="Iso-area comparison" where="Model=Qwen3-8B;B=256;Pick=fastest" name="Qwen per-user iso-area ratio at B=256" -->
+  Qwen goes 5.83× at batch 1 to **2.72× at 256** — more than half the lead is gone, though it no longer inverts now that the array class is sampled on its own device-count ladder. Both <!-- figure: 5.83 src="results/roofline/n6_vs_a100/REPORT.md#Per-user ratio" table="Iso-area comparison" where="Model=Qwen3-8B;B=1;Pick=fastest" name="Qwen per-user iso-area ratio at B=1" --> <!-- figure: 2.72 src="results/roofline/n6_vs_a100/REPORT.md#Per-user ratio" table="Iso-area comparison" where="Model=Qwen3-8B;B=256;Pick=fastest" name="Qwen per-user iso-area ratio at B=256" -->
   sparse models now **rise**: Flash 6.52× → **35.09×**, because a GPU's per-user <!-- figure: 6.52 src="results/roofline/n6_vs_a100/REPORT.md#Per-user ratio" table="Iso-area comparison" where="Model=DeepSeek-V4-Flash-0731;B=1;Pick=fastest" name="Flash per-user iso-area ratio at B=1" --> <!-- figure: 35.09 src="results/roofline/n6_vs_a100/REPORT.md#Per-user ratio" table="Iso-area comparison" where="Model=DeepSeek-V4-Flash-0731;B=256;Pick=fastest" name="Flash per-user iso-area ratio at B=256" -->
   rate collapses faster than a ROM machine's once KV dominates. The original
   thesis — that sparsity is what makes ROM worth building — survives in a
@@ -873,7 +895,7 @@ lanes are a precondition for it, not the product. These items are the product.
   has an exact expected match count and the audit refuses stale or ambiguous
   selectors. The initial conservative pass resolves **8** <!-- figure: 8 src="results/abi3/prose_figure_coverage.json#totals.unbound_triage.normative_or_example" name="W11.3 explicitly triaged normative/example candidates" --> ABI shape/algebraic
   examples and rejected legacy proxies as `normative_or_example`.
-  **2,771** candidates remain explicitly `untriaged`. <!-- figure: 2771 src="results/abi3/prose_figure_coverage.json#totals.unbound_triage.untriaged" name="W11.3 candidates still awaiting triage" -->
+  **2,817** candidates remain explicitly `untriaged`. <!-- figure: 2817 src="results/abi3/prose_figure_coverage.json#totals.unbound_triage.untriaged" name="W11.3 candidates still awaiting triage" -->
   `make check-figures` fails on annotation, census, policy, or classification
   drift. This remains partial: triage is not proof, produced figures still need
   resolving annotations, and the remaining population must be classified as

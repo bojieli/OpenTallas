@@ -85,13 +85,13 @@ The areas match to within 2%, so no granularity correction is needed on this row
 
 **Read the resident-session row before the ratio row.** A per-user rate divided by a per-user rate is a latency claim, and a latency claim taken from a machine that holds 1 session against one that holds 130 is not the trade it looks like. Where those two numbers are far apart the honest reading is the batch-regime table below, not this row.
 
-The GPU's own best machine at **any** area is `b200_sxm-x29-hybrid` at 46,400 mm2 and 3,342.0 tok/s per user, which is the area-free bound and is quoted so the iso-area row is not the only comparison on the page.
+The GPU's own best machine at **any** area is `b200_sxm-x8-tensor` at 12,800 mm2 and 3,543.5 tok/s per user, which is the area-free bound and is quoted so the iso-area row is not the only comparison on the page.
 
 **Headline before and after.**
 
 | rule | design | mm2 | user tok/s | tok/s per 1,000 mm2 | resident sessions | iso-area ratio |
 | --- | --- | ---: | ---: | ---: | ---: | ---: |
-| before -- smallest within 5% of peak rate | `ROM-N5-q4p25-SRAMKV-array-pipeline-x4-romfill` | 3,260 | 13,440.0 | 4,122.7 | 1 | 7.85x |
+| before -- smallest within 5% of peak rate | `ROM-N5-q4p25-SRAMKV-array-pipeline-x3-romfill` | 2,445 | 13,132.9 | 5,371.3 | 1 | 7.67x |
 | rank on per-user rate alone | `ROM-N5-q4p25-SRAMKV-array-pipeline-x5-romfill` | 4,075 | 13,519.8 | 3,317.7 | 1 | 6.08x |
 | smallest feasible machine | `ROM-N5-q4p25-SRAMKV-array-pipeline-x2` | 1,630 | 11,817.9 | 7,250.2 | 1 | 10.01x |
 | **after -- this report's rule** | `ROM-N5-q4p25-SRAMKV-array-pipeline-x2` | 1,630 | 11,817.9 | 7,250.2 | 1 | 10.01x |
@@ -101,6 +101,7 @@ The GPU's own best machine at **any** area is `b200_sxm-x29-hybrid` at 46,400 mm
 | design | mm2 | user tok/s | tok/s per 1,000 mm2 | marginal | incumbent average | verdict |
 | --- | ---: | ---: | ---: | ---: | ---: | --- |
 | `ROM-N5-q4p25-SRAMKV-array-pipeline-x2` | 1,630 | 11,817.9 | 7,250.2 | -- | 7,250.2 | ACCEPT |
+| `ROM-N5-q4p25-SRAMKV-array-pipeline-x3-romfill` | 2,445 | 13,132.9 | 5,371.3 | 1,613.5 | 7,250.2 | stop |
 | `ROM-N5-q4p25-SRAMKV-array-pipeline-x4-romfill` | 3,260 | 13,440.0 | 4,122.7 | 995.2 | 7,250.2 | stop |
 | `ROM-N5-q4p25-SRAMKV-array-pipeline-x5-romfill` | 4,075 | 13,519.8 | 3,317.7 | 696.1 | 7,250.2 | stop |
 
@@ -109,6 +110,7 @@ The GPU's own best machine at **any** area is `b200_sxm-x29-hybrid` at 46,400 mm
 | design | mm2 | devices | user tok/s | aggregate tok/s | tok/s per 1,000 mm2 | resident sessions | binds on | W | mJ/token | iso-area GPU | ratio |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- | ---: | ---: | --- | ---: |
 | `ROM-N5-q4p25-SRAMKV-array-pipeline-x2` **<-- recommended** | 1,630 | 2 | 11,817.9 | 11,818 | 7,250.2 | 1 | `weight_read` | 200 | 17.0 | `b200_sxm-x1` | 10.01x |
+| `ROM-N5-q4p25-SRAMKV-array-pipeline-x3-romfill` | 2,445 | 3 | 13,132.9 | 13,133 | 5,371.3 | 1 | `compute` | 261 | 19.9 | `b200_sxm-x2-tensor` | 7.67x |
 | `ROM-N5-q4p25-SRAMKV-array-pipeline-x4-romfill` | 3,260 | 4 | 13,440.0 | 13,440 | 4,122.7 | 1 | `compute` | 332 | 24.7 | `b200_sxm-x2-tensor` | 7.85x |
 | `ROM-N5-q4p25-SRAMKV-array-pipeline-x5-romfill` | 4,075 | 5 | 13,519.8 | 13,520 | 3,317.7 | 1 | `compute` | 402 | 29.7 | `b200_sxm-x3-tensor` | 6.08x |
 
@@ -116,12 +118,39 @@ The GPU's own best machine at **any** area is `b200_sxm-x29-hybrid` at 46,400 mm
 
 | class | designs | pick | design | mm2 | user tok/s | tok/s per 1,000 mm2 | resident sessions |
 | --- | ---: | --- | --- | ---: | ---: | ---: | ---: |
-| array | 14 | densest | `ROM-N5-q4p25-SRAMKV-array-pipeline-x2` | 1,630 | 11,817.9 | 7,250.2 | 1 |
-| array | 14 | fastest | `ROM-N5-q4p25-SRAMKV-array-pipeline-x5-romfill` | 4,075 | 13,519.8 | 3,317.7 | 1 |
-| array | 14 | smallest | `ROM-N5-q4p25-SRAMKV-array-pipeline-x2` | 1,630 | 11,817.9 | 7,250.2 | 1 |
+| array | 110 | densest | `ROM-N5-q4p25-SRAMKV-array-pipeline-x2` | 1,630 | 11,817.9 | 7,250.2 | 1 |
+| array | 110 | fastest | `ROM-N5-q4p25-SRAMKV-array-pipeline-x5-romfill` | 4,075 | 13,519.8 | 3,317.7 | 1 |
+| array | 110 | smallest | `ROM-N5-q4p25-SRAMKV-array-pipeline-x2` | 1,630 | 11,817.9 | 7,250.2 | 1 |
 | wafer | 80 | densest | `ROM-N5-q4p25-SRAMKV-wafer-tensor-x1-romfill` | 46,225 | 6,464.4 | 139.8 | 1 |
 | wafer | 80 | fastest | `ROM-N5-q4p25-SRAMKV-wafer-tensor-x1-romfill` | 46,225 | 6,464.4 | 139.8 | 1 |
 | wafer | 80 | smallest | `ROM-N5-q4p25-SRAMKV-wafer-tensor-x1-romfill` | 46,225 | 6,464.4 | 139.8 | 1 |
+
+**Three classes at iso-area, batch by batch.** Each ROM class enters at its fastest feasible design for that batch and is read against the GPU comparator at *its own* silicon area (the area ratio is stated). The `array @ wafer area` row is the fastest reticle array within 5% of the wafer's silicon, which is the wafer-versus-array comparison at iso-area. Read resident sessions before the ratio.
+
+| batch | class | design | mm2 | user tok/s | aggregate tok/s | resident sessions | W | mJ/token | binds on | iso-area GPU | GPU user tok/s | GPU sessions | GPU mJ/token | area ratio | speed ratio | J/token ratio |
+| ---: | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| 1 | array | `ROM-N5-q4p25-SRAMKV-array-pipeline-x5-romfill` | 4,075 | 13,519.8 | 13,520 | 1 | 402 | 29.7 | `compute` | `b200_sxm-x3-tensor` | 2,222.7 | 398 | 1,023.2 | 0.849 | 6.08x | 34.4x |
+| 1 | wafer | `ROM-N5-q4p25-SRAMKV-wafer-tensor-x1-romfill` | 46,225 | 6,464.4 | 6,464 | 1 | 3,965 | 613.4 | `link_latency` | `b200_sxm-x29-hybrid` | 3,342.0 | 3,885 | 1,310.4 | 0.996 | 1.93x | 2.1x |
+| 1 | array @ wafer area | `ROM-N5-q4p25-HBMKV-array-hybrid-x57-romfill` | 46,455 | 4,191.8 | 33,534 | 4,777 | 9,293 | 277.1 | `link_latency` | `b200_sxm-x29-hybrid` | 3,342.0 | 3,885 | 1,310.4 | 1.001 | 1.25x | 4.7x |
+| 1 | wafer reference | `ROM-N5-q4p25-SRAMKV-wafer-tensor-x1-romfill` | 46,225 | 6,464.4 | -- | 1 | -- | 613.4 | -- | -- | -- | -- | -- | 1.005 | 1.54x wafer/array | -- |
+| 2 | array | `ROM-N5-q4p25-HBMKV-array-hybrid-x16-romfill` | 13,040 | 4,528.6 | 9,057 | 1,341 | 2,563 | 282.9 | `link_latency` | `b200_sxm-x8-tensor` | 3,254.9 | 1,069 | 769.5 | 1.019 | 1.39x | 2.7x |
+| 2 | wafer | `ROM-N5-q4p25-HBMKV-wafer-hybrid-x2-romfill` | 92,450 | 5,400.8 | 10,802 | 1,441 | 9,591 | 888.0 | `link_latency` | `b200_sxm-x58-hybrid` | 3,246.8 | 7,774 | 1,332.7 | 0.996 | 1.66x | 1.5x |
+| 2 | array @ wafer area | `ROM-N5-q4p25-HBMKV-array-hybrid-x113-romfill` | 92,095 | 3,973.8 | 59,607 | 9,471 | 17,537 | 294.2 | `link_latency` | `b200_sxm-x58-hybrid` | 3,246.8 | 7,774 | 1,332.7 | 0.992 | 1.22x | 4.5x |
+| 2 | wafer reference | `ROM-N5-q4p25-HBMKV-wafer-hybrid-x2-romfill` | 92,450 | 5,400.8 | -- | 1,441 | -- | 888.0 | -- | -- | -- | -- | -- | 0.996 | 1.36x wafer/array | -- |
+| 4 | array | `ROM-N5-q4p25-HBMKV-array-hybrid-x57-romfill` | 46,455 | 4,191.8 | 33,534 | 4,777 | 9,293 | 277.1 | `link_latency` | `b200_sxm-x29-hybrid` | 3,342.0 | 3,885 | 1,310.4 | 1.001 | 1.25x | 4.7x |
+| 4 | wafer | `ROM-N5-q4p25-HBMKV-wafer-hybrid-x4-romfill` | 184,900 | 5,121.2 | 20,485 | 2,883 | 19,038 | 929.4 | `link_latency` | `b200_sxm-x116-hybrid` | 3,160.6 | 15,553 | 1,407.6 | 0.996 | 1.62x | 1.5x |
+| 4 | array @ wafer area | `ROM-N5-q4p25-HBMKV-array-hybrid-x227-romfill` | 185,005 | 3,560.3 | 103,249 | 19,026 | 33,105 | 320.6 | `link_latency` | `b200_sxm-x116-hybrid` | 3,160.6 | 15,553 | 1,407.6 | 0.997 | 1.13x | 4.4x |
+| 4 | wafer reference | `ROM-N5-q4p25-HBMKV-wafer-hybrid-x4-romfill` | 184,900 | 5,121.2 | -- | 2,883 | -- | 929.4 | -- | -- | -- | -- | -- | 1.001 | 1.44x wafer/array | -- |
+| 8 | array | `ROM-N5-q4p25-HBMKV-array-hybrid-x57-romfill` | 46,455 | 4,191.8 | 33,534 | 4,777 | 9,293 | 277.1 | `link_latency` | `b200_sxm-x29-hybrid` | 3,056.7 | 3,885 | 754.5 | 1.001 | 1.37x | 2.7x |
+| 8 | wafer | `ROM-N5-q4p25-HBMKV-wafer-hybrid-x8-romfill` | 369,800 | 4,640.7 | 37,125 | 5,766 | 37,582 | 1,012.3 | `link_latency` | `b200_sxm-x231-hybrid` | 2,906.4 | 30,975 | 1,510.6 | 1.001 | 1.60x | 1.5x |
+| 16 | array | `ROM-N5-q4p25-HBMKV-array-hybrid-x113-romfill` | 92,095 | 3,928.4 | 62,854 | 9,471 | 17,951 | 285.6 | `link_latency` | `b200_sxm-x58-hybrid` | 2,971.1 | 7,774 | 766.5 | 0.992 | 1.32x | 2.7x |
+| 16 | wafer | `ROM-N5-q4p25-HBMKV-wafer-hybrid-x12-romfill` | 554,700 | 4,040.9 | 64,655 | 8,650 | 57,507 | 889.5 | `link_latency` | `b200_sxm-x347-hybrid` | 2,774.4 | 46,532 | 1,546.3 | 0.999 | 1.46x | 1.7x |
+| 32 | array | `ROM-N5-q4p25-HBMKV-array-hybrid-x227-romfill` | 185,005 | 3,503.0 | 112,096 | 19,026 | 34,232 | 305.4 | `link_latency` | `b200_sxm-x116-hybrid` | 2,871.4 | 15,553 | 768.1 | 0.997 | 1.22x | 2.5x |
+| 32 | wafer | `ROM-N5-q4p25-HBMKV-wafer-hybrid-x12-romfill` | 554,700 | 3,395.4 | 108,653 | 8,650 | 63,111 | 580.8 | `link_latency` | `b200_sxm-x347-hybrid` | 2,774.4 | 46,532 | 1,546.3 | 0.999 | 1.22x | 2.7x |
+| 64 | array | `ROM-N5-q4p25-HBMKV-array-hybrid-x340-romfill` | 277,100 | 3,145.5 | 201,312 | 28,498 | 55,514 | 275.8 | `link_latency` | `b200_sxm-x173-hybrid` | 2,596.5 | 23,197 | 637.7 | 1.001 | 1.21x | 2.3x |
+| 64 | wafer | `ROM-N5-q4p25-HBMKV-wafer-hybrid-x12-romfill` | 554,700 | 2,573.2 | 164,688 | 8,650 | 70,247 | 426.5 | `link_latency` | `b200_sxm-x347-hybrid` | 2,669.7 | 46,532 | 1,129.8 | 0.999 | 0.96x | 2.6x |
+| 256 | array | `ROM-N5-q4p25-HBMKV-array-pipeline-x340-romfill` | 277,100 | 2,486.0 | 845,256 | 28,498 | 138,550 | 163.9 | `thermal` | `b200_sxm-x173-hybrid` | 1,569.6 | 23,197 | 314.8 | 1.001 | 1.58x | 1.9x |
+| 256 | wafer | `ROM-N5-q4p25-HBMKV-wafer-hybrid-x12` | 554,700 | 1,049.1 | 268,569 | 8,650 | 116,096 | 432.3 | `kv_read` | `b200_sxm-x347-hybrid` | 1,959.8 | 46,532 | 442.6 | 0.999 | 0.54x | 1.0x |
 
 **The best design differs by batch, and here is where it changes.**
 
@@ -130,23 +159,22 @@ The GPU's own best machine at **any** area is `b200_sxm-x29-hybrid` at 46,400 mm
 | 1 | `ROM-N5-q4p25-SRAMKV-array-pipeline-x2` | 1,630 | array | SRAM | 1 |
 | 2 | `ROM-N5-q4p25-HBMKV-array-tensor-x4` | 3,260 | array | HBM | 335 |
 | 4 | `ROM-N5-q4p25-HBMKV-array-pipeline-x4-romfill` | 3,260 | array | HBM | 335 |
-| 8-16 | `ROM-N5-q4p25-HBMKV-array-tensor-x4-romfill` | 3,260 | array | HBM | 335 |
+| 8 | `ROM-N5-q4p25-HBMKV-array-tensor-x4-romfill` | 3,260 | array | HBM | 335 |
+| 16 | `ROM-N5-q4p25-HBMKV-array-tensor-x6-romfill` | 4,890 | array | HBM | 502 |
 | 32-256 | `ROM-N5-q4p25-HBMKV-array-tensor-x8-romfill` | 6,520 | array | HBM | 670 |
 
 Per-user rate falls as the batch rises on a fixed machine, so `tok/s per 1,000 mm2` at batch B is the same ordering as `delivered tok/s per 1,000 mm2` at batch B -- delivered is exactly B times per-user. The rule is therefore the same rule at every batch, and the design moving is the study telling you the answer genuinely depends on the operating point, not the metric changing under it.
 
-**What this section does not fix, and which recommendations it leaves exposed.** The ROM array class is sampled only at the device counts each floorplan's own sizing sweep chose: `ROM_AREA_LADDER` is applied where `plan.kind == "wafer"` and nowhere else, so a reticle array exists at an area only if some sweep landed there. The counts this study actually emitted, per model and per `(kv_store, spare_area_policy)` combination, are printed below so the holes are visible rather than described:
+**Where the array class is sampled, so the reader can see the rungs rather than take them on trust.** Until 2026-09-03 the ROM array class was sampled only at the device counts each floorplan's own sizing sweep chose. It is now emitted on an explicit ladder: multiples of the smallest machine that holds the design (1.25x, 1.5x, 2x, 3x, 4x) and the device counts whose silicon equals each wafer rung of `ROM_AREA_LADDER`, so every wafer design has an array at the same area. The counts this study actually emitted, per model and per `(kv_store, spare_area_policy)` combination, are printed below:
 
 | model | KV store | spare silicon | reticle counts emitted |
 | --- | --- | --- | --- |
-| Qwen3-8B | HBM | rom | 4, 8 |
-| Qwen3-8B | HBM | sram | 4, 7 |
-| Qwen3-8B | SRAM | rom | 4, 5 |
-| Qwen3-8B | SRAM | sram | 2 |
+| Qwen3-8B | HBM | rom | 4, 5, 6, 8, 12, 16, 57, 113, 170, 227, 340 |
+| Qwen3-8B | HBM | sram | 4, 5, 6, 7, 8, 12, 16, 57, 113, 170, 227, 340 |
+| Qwen3-8B | SRAM | rom | 3, 4, 5, 6, 8, 57, 113, 170, 227, 340 |
+| Qwen3-8B | SRAM | sram | 2, 3, 4, 6, 8, 57, 113, 170, 227, 340 |
 
-The omission runs **against** the array class, so the published ROM curve is a lower bound on the ROM curve rather than an upper one.
-
-That splits the recommendations above into two kinds, and the split should be stated rather than left for a reader to work out. **Where the winner is the smallest feasible machine, the gap cannot touch it**: no rung exists below the minimum area, so nothing denser can be hiding there. **Where the winner is a wafer chosen over the array class, the gap is live**: the wafer is being compared against an array curve that is sampled at a handful of counts, and a rung the sweep never visited could in principle beat it on throughput density. Those are the weakest results on this page and they should be re-derived once the array class is emitted on the same explicit ladder the wafer class already gets. Either way, the curve BETWEEN rungs is not evidence and must not be read as any.
+A wafer chosen over the array class is now compared against an array sampled at the wafer's own area and at four rungs above the array's floor; the `array @ wafer area` rows in the iso-area table above are that comparison. The curve BETWEEN rungs is still not evidence and must not be read as any.
 
 ## What is wrong with these numbers, stated before anyone quotes them
 

@@ -211,6 +211,9 @@ bounded Qwen operations, not a complete controller.
 | TA-DS-HBM | DeepSeek-V4 Flash | node-local external HBM with SRAM tiling | exactly 32 accelerator nodes over an NVLink-class fabric | 32 copies of the identical TA-QW-HBM chip/netlist | exactly 200,000 natural prompt tokens |
 | TA-QW-ROM | Qwen3-8B | mask ROM plus HBM/SRAM KV | one conventional chip/package | Qwen-specific conventional netlist and masks | the same Qwen workload contract |
 | TA-DS-ROM | DeepSeek-V4 Flash | distributed mask ROM plus live HBM/SRAM buffers | one wafer-scale logical accelerator | DeepSeek-specific wafer-scale netlist, stitching, and masks | the same DeepSeek workload contract |
+| TA-DS-ROM-ARRAY-FLASH | DeepSeek-V4 Flash | mask ROM plus node-local HBM/SRAM buffers | exactly 32 reticle-class ROM chips over the TA-DS-HBM NVLink-class fabric | DeepSeek-specific conventional ROM netlist and masks, one die replicated | the same DeepSeek workload contract |
+| TA-DS-HBM-PRO | DeepSeek-V4 Pro | node-local external HBM with SRAM tiling | N accelerator nodes over a two-level fabric (`CLUSTER_N`) | N copies of the identical TA-QW-HBM chip/netlist | exactly 200,000 natural prompt tokens |
+| TA-DS-ROM-ARRAY-PRO | DeepSeek-V4 Pro | mask ROM plus node-local HBM/SRAM buffers | N reticle-class ROM chips over a two-level fabric (`CLUSTER_N`) | DeepSeek-Pro-specific conventional ROM netlist and masks, one die replicated | the same Pro workload contract |
 
 The two HBM rows use one conventional accelerator-chip design. Qwen uses one
 node; DeepSeek uses exactly 32 identical nodes. The chip therefore contains the
@@ -220,11 +223,16 @@ A model may select programs, descriptors, numeric profiles, memory images, and
 a one-node or 32-node topology. It may not select a different chip elaboration
 or netlist.
 
-The two ROM rows are separate physical products and scale classes. Qwen-ROM is
-the conventional chip-versus-chip comparison. DeepSeek-ROM is mandatory
-wafer-scale and is compared with the 32-node HBM cluster. It is not legal to
-replace the DeepSeek ROM wafer with a conventional multi-chip stage pipeline or
-to describe the HBM cluster as one oversized chip.
+The ROM rows are separate physical products and scale classes. Qwen-ROM is
+the conventional chip-versus-chip comparison. TA-DS-ROM (the wafer) is
+compared with the 32-node HBM cluster and with TA-DS-ROM-ARRAY-FLASH, which is
+its packaging control: the same ROM tile on the cluster fabric. The array rows
+were added on 2026-09-03 by
+[`DEEPSEEK_V4_ROM_ARRAY_IMPLEMENTATION_PLAN.md`](DEEPSEEK_V4_ROM_ARRAY_IMPLEMENTATION_PLAN.md);
+they do not retire the wafer row. It remains illegal to *relabel* the wafer
+target as a multi-chip stage pipeline or to describe any cluster as one
+oversized chip: a result carries the `topology_class` and `node_count` of the
+target that produced it.
 
 Every row has two separately reported physical verification views: SKY130 is
 the mature open 130-nm baseline, and ASAP7 is an academic predictive 7-nm
@@ -672,8 +680,21 @@ TPOT may be compared with it but never relabeled as it.
 
 Only same-model pairs are compared:
 
-- TA-QW-ROM versus TA-QW-HBM; and
-- TA-DS-ROM versus TA-DS-HBM.
+- TA-QW-ROM versus TA-QW-HBM;
+- TA-DS-ROM versus TA-DS-HBM;
+- TA-DS-ROM-ARRAY-FLASH versus TA-DS-HBM (the storage-class comparison at
+  equal node count and, when the two dies match in area, at iso-area);
+- TA-DS-ROM versus TA-DS-ROM-ARRAY-FLASH (the packaging comparison); and
+- TA-DS-ROM-ARRAY-PRO versus TA-DS-HBM-PRO.
+
+**Every pair is read at iso-area.** Area is accelerator die area per node
+times node count; HBM stacks, package, switch silicon, and board are reported
+beside it and never in the denominator. The comparator's node count is
+derived from the ROM side's silicon and the area ratio is stated on the
+artifact, within 2% or with a stated granularity correction. Iso-area is not
+iso-cost. The rule is stated in full in
+[`DEEPSEEK_V4_ROM_ARRAY_IMPLEMENTATION_PLAN.md`](DEEPSEEK_V4_ROM_ARRAY_IMPLEMENTATION_PLAN.md)
+section 3.5.
 
 Each pair freezes:
 

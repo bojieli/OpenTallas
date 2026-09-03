@@ -16,3 +16,8 @@ results/tensor_accelerator/qwen3_full_model_physical/memory/
 results/tensor_accelerator/qwen3_full_model_physical/program/commands.bin
 results/tensor_accelerator/qwen3_long_acceptance_physical_v1/memory/
 results/tensor_accelerator/qwen3_long_acceptance_physical_v1/program/commands.bin
+
+# Roofline context-ladder rungs: the REPORT.md of each rung is committed; the
+# 25-30 MB analytical.json per rung is regenerated deterministically by
+# `make roofline` (about nine minutes) and is not committed.
+results/roofline/context_ladder/*/*/analytical.json
