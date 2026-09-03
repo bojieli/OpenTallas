@@ -260,9 +260,10 @@ def deepseek_v4_rom_capability(
             "max_loop_trip": 4096,
             "max_retired_work": 1 << 26,
             "max_events": 512,
-            # A23: the event ID space the sequencer's scoreboard addresses.
-            # This lane is the one that needed it: it signals 396 IDs.
-            "max_event_id": 511,
+            # Shared RTL 3.0 implements a 1,024-entry event scoreboard.  This
+            # program still admits at most 512 distinct IDs, but its legal ID
+            # space matches the common microsequencer implementation.
+            "max_event_id": 1023,
             "max_outstanding_per_queue": 32,
             "max_context_positions": max_context_positions,
             "max_expert_ids": expert_count,
@@ -334,7 +335,6 @@ def _wafer_topology_factory(
 ):
     def emit(builder, plan: RomImagePlan) -> int:
         repair = plan.repair_map
-        tiles = sorted({shard.coordinate.tile for r in plan.regions for shard in r.shards})
         reticles = sorted(
             {shard.coordinate.reticle for r in plan.regions for shard in r.shards}
         )
@@ -344,7 +344,6 @@ def _wafer_topology_factory(
                 f"the region plan needs {reticle_count} reticle fields but the "
                 f"wafer stitches {MAX_RETICLES}"
             )
-        tile_count = len(tiles)
         # Intra-reticle mesh plus the stitched inter-reticle mesh.  A 16x16 tile
         # mesh has 2*16*15 = 480 internal links; the reticle grid adds its own.
         side = int(round(tiles_per_reticle**0.5)) or 1

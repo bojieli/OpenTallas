@@ -29,7 +29,7 @@ from __future__ import annotations
 from typing import Any, Mapping
 
 from compiler.ir.v3.numeric import canonical_contract_id, union_contract_ids
-from runtime.abi3.capability import Capability, digest_of
+from runtime.abi3.capability import Capability
 from runtime.abi3.constants import Feature, TopologyClass
 
 TECHNOLOGY_VIEW = "shared-hbm-sram-chip-v3"
@@ -116,14 +116,15 @@ SHARED_LIMITS: Mapping[str, int] = {
     "max_loop_depth": 4,
     "max_loop_trip": 1 << 24,
     "max_retired_work": 1 << 46,
-    # A23 lowered this from 4,096.  A scoreboard addressed by event ID holds
-    # max_event_id + 1 entries and cannot carry more distinct signalled events
-    # than that, so 4,096 described a machine no implementation provides.
-    "max_events": 512,
+    # The explicit ABI-3.0 rolling-compressor lowering needs 596 distinct
+    # completion levels in the full 32-node DeepSeek program.  Round the
+    # implementation scoreboard to the next power of two; this is a hardware
+    # capacity parameter, not an ABI field or instruction-set extension.
+    "max_events": 1024,
     # A23: the event ID space the sequencer's scoreboard addresses.  Uniform
     # across every ABI 3.0 profile because it is a property of the shared
     # microsequencer, exactly as max_loop_depth is.
-    "max_event_id": 511,
+    "max_event_id": 1023,
     "max_outstanding_per_queue": 64,
     # 262,144 covers the 8,000-token Qwen acceptance context and the
     # 200,000-token DeepSeek acceptance context on one shared limit.

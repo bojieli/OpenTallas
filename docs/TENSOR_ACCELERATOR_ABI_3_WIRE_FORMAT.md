@@ -1530,18 +1530,26 @@ admitted.
 
 #### What the number is
 
-`max_event_id = 511` in every shipped profile, an ID space of 512. The largest
-real demand is DeepSeek's 395, so 116 IDs of margin, and 512 is what
-`rom_deepseek_v4` already advertised for `max_events`. The four agree for A22's
-reason: this is storage in the shared microsequencer.
+At A23's original closure, `max_event_id = 511` in every shipped profile, an ID
+space of 512. The then-largest real demand was DeepSeek ROM's 396 IDs. The
+explicit ABI-3.0 rolling-compressor lowering subsequently made the full
+DeepSeek HBM program require 596 distinct completion levels. The current RTL
+3.0 implementation therefore has `max_event_id = 1023`, an ID space of 1,024,
+in every shipped profile. A profile may advertise a smaller `max_events` count
+when its own program family needs less (`256` for Qwen ROM and `512` for
+DeepSeek ROM); both fields remain checked and `max_events <= max_event_id + 1`.
+
+This is a capability increase, not an ABI change: neither field layout nor any
+opcode, descriptor, predicate, or execution rule changed. The HBM profiles
+advertise `max_events = 1024`, leaving 428 IDs above the measured 596-event
+program.
 
 #### RTL 3.0
 
-Involved. `A3_EVENT_COUNT` becomes 512 and `EVENT_INDEX_W` follows it from 8 to
-9 — the scoreboard already derives its index width from its `EVENTS` parameter,
-with a comment saying why, and that comment is the reason raising the parameter
-is a one-line change instead of an aliasing bug. `signalled` and `published`
-grow from 512 to 1,024 flip-flops, +512.
+Involved. `A3_EVENT_COUNT` is 1,024 and `EVENT_INDEX_W` follows it at 10 bits —
+the scoreboard already derives its index width from its `EVENTS` parameter.
+Relative to the 512-entry implementation, the `signalled` and `published`
+vectors each gain 512 bits, for 1,024 additional scoreboard flip-flops total.
 
 A23 also narrows what `signal_error` reports; A24 has the rest of that.
 

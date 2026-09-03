@@ -1175,10 +1175,10 @@ def test_target_profiles_are_exactly_the_four_governed_lanes() -> None:
     assert {
         profile.capability_sha256 for profile in runner.TARGET_PROFILES.values()
     } == {
-        "dd6500681f334bdb55715b000accd495be7ed927d91d1ed24b54565a0cd57aee",
-        "f109651defbd04655cd5603c4f118a8c428651f470baada1f2d2b70912eb06d5",
-        "61d90451ca8c4f9faf68d7225dab6c79c5bd11fc98681c28d4afc870d757d4cb",
-        "91f7e6cc12fc5e226dc3c4ba14f3253744cc91eb92e21200678c558bbfc9c22b",
+        "fa70dd44a1b532a99d103968b31b743bbed324d002fbe0214c9541fb1687e23d",
+        "5b5770fa766cd89d7a236a62722ef33d1db9f87be7403a8f8c55fc9ec8c8458e",
+        "1eb2e92dac1d9fb8937b7724953d2f65993bd56e342e9058569442eb61d74bad",
+        "5abf26b4ef235d6083c6f6dbe48d7021068c59ecb451238569a2f660303d26b6",
     }
 
 

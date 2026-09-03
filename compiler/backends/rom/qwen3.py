@@ -165,7 +165,7 @@ def qwen3_rom_capability(
             # A23: the event ID space the sequencer's scoreboard addresses.
             # Uniform across every ABI 3.0 profile because it is a property of
             # the shared microsequencer, exactly as max_loop_depth is.
-            "max_event_id": 511,
+            "max_event_id": 1023,
             "max_outstanding_per_queue": 16,
             "max_context_positions": max_context_positions,
             "max_expert_ids": 1,

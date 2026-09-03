@@ -183,7 +183,7 @@ package ot_a3_pkg;
     // (instructions, descriptors) and not in what the sequencer holds.
     localparam integer A3_LOOP_DEPTH   = 4;    // capability max_loop_depth
     localparam integer A3_STATE_SLOTS  = 16;   // capability max_state_resources (A22)
-    localparam integer A3_EVENT_COUNT  = 512;  // capability max_event_id + 1 (A23)
+    localparam integer A3_EVENT_COUNT  = 1024; // capability max_event_id + 1 (A23)
     localparam integer A3_WAIT_PRODUCERS = 12; // MAX_WAIT_PRODUCERS
 
     // -- decoder error registry (block-local, mapped to trap classes) ---
