@@ -17,8 +17,10 @@ import argparse
 import hashlib
 import json
 import os
+import platform
 import sys
 import time
+from collections.abc import Mapping
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
@@ -39,6 +41,207 @@ DEFAULT_SNAPSHOT = Path(
     "b968826d9c46dd6066d109eabc6255188de91218"
 )
 
+PREFILL_ASSOCIATION_SCHEMA = "opentallas.qwen3.prefill_association.v1"
+PREFILL_ASSOCIATION_POLICY = (
+    "tool_framework_attention_device_backend_and_chunk_pinned_v1"
+)
+ORACLE_TOOL = "tools/run_qwen3_reference_oracle.py"
+ORACLE_TOOL_VERSION = "qwen3_reference_oracle.py:v1"
+
+
+def _prefill_association_digest(association: Mapping[str, object]) -> str:
+    """Canonical identity of the association-affecting oracle configuration."""
+    body = {
+        key: value
+        for key, value in association.items()
+        if key != "identity_sha256"
+    }
+    return hashlib.sha256(canonical_json(body)).hexdigest()
+
+
+def _backend_flag(owner, name: str) -> bool | str:
+    """Read one optional PyTorch backend flag without silently inventing it."""
+    value = getattr(owner, name, None)
+    if value is None:
+        return "unavailable"
+    try:
+        return bool(value() if callable(value) else value)
+    except (RuntimeError, TypeError):
+        return "unavailable"
+
+
+def _model_device_map(model) -> dict[str, str]:
+    """The actual module placement, normalized to stable JSON strings."""
+    declared = getattr(model, "hf_device_map", None)
+    if isinstance(declared, Mapping) and declared:
+        return {
+            str(name): str(device)
+            for name, device in sorted(declared.items(), key=lambda item: str(item[0]))
+        }
+    return {"": str(model.device)}
+
+
+def _oracle_execution_identity(
+    model,
+    torch,
+    transformers,
+    *,
+    cpu_only: bool,
+    attention_implementation: str,
+) -> dict[str, object]:
+    """Identity of choices which may change a BF16 reduction association.
+
+    A vendor-model token sequence is not independent of how its 8,000-token
+    prefill was evaluated.  In particular, PyTorch and Transformers versions,
+    SDPA's selected kernels, device placement, and CPU thread/BLAS build can all
+    change the legal BF16 association.  Record them rather than letting a gold
+    sequence appear implementation-free.
+    """
+    cuda = getattr(torch.backends, "cuda", None)
+    sdpa_flags = {
+        name: _backend_flag(cuda, name)
+        for name in (
+            "flash_sdp_enabled",
+            "math_sdp_enabled",
+            "mem_efficient_sdp_enabled",
+            "cudnn_sdp_enabled",
+        )
+    }
+    hardware: list[dict[str, object]] = [
+        {
+            "type": "cpu",
+            "name": platform.processor() or platform.machine() or "unknown",
+            "machine": platform.machine() or "unknown",
+        }
+    ]
+    if not cpu_only and torch.cuda.is_available():
+        for index in range(torch.cuda.device_count()):
+            hardware.append(
+                {
+                    "type": "cuda",
+                    "index": index,
+                    "name": str(torch.cuda.get_device_name(index)),
+                    "compute_capability": list(
+                        torch.cuda.get_device_capability(index)
+                    ),
+                }
+            )
+    cpu_backend = getattr(torch.backends, "cpu", None)
+    cpu_capability = getattr(cpu_backend, "get_cpu_capability", None)
+    cpu_capability_name = (
+        str(cpu_capability()) if callable(cpu_capability) else "unavailable"
+    )
+    cudnn = getattr(torch.backends, "cudnn", None)
+    cudnn_version_fn = getattr(cudnn, "version", None)
+    cudnn_version = cudnn_version_fn() if callable(cudnn_version_fn) else None
+    cuda_matmul = getattr(cuda, "matmul", None)
+    allow_tf32 = getattr(cuda_matmul, "allow_tf32", "unavailable")
+    if not isinstance(allow_tf32, bool):
+        allow_tf32 = "unavailable"
+    matmul_precision_fn = getattr(torch, "get_float32_matmul_precision", None)
+    matmul_precision = (
+        str(matmul_precision_fn())
+        if callable(matmul_precision_fn)
+        else "unavailable"
+    )
+    actual_attention = str(
+        getattr(model.config, "_attn_implementation", attention_implementation)
+    )
+    return {
+        "producer": {
+            "tool": ORACLE_TOOL,
+            "tool_version": ORACLE_TOOL_VERSION,
+            "source_sha256": hashlib.sha256(
+                (REPO / ORACLE_TOOL).read_bytes()
+            ).hexdigest(),
+        },
+        "framework": {
+            "python_version": platform.python_version(),
+            "torch_version": str(torch.__version__),
+            "transformers_version": str(transformers.__version__),
+        },
+        "attention": {
+            "requested_implementation": attention_implementation,
+            "model_config_implementation": actual_attention,
+            "sdpa_kernel_flags": sdpa_flags,
+        },
+        "device": {
+            "placement_policy": "cpu" if cpu_only else "auto",
+            "model_device": str(model.device),
+            "model_device_map": _model_device_map(model),
+            "hardware": hardware,
+        },
+        "backend": {
+            "cuda_runtime_version": (
+                str(torch.version.cuda) if torch.version.cuda is not None else "none"
+            ),
+            "cudnn_version": (
+                str(cudnn_version) if cudnn_version is not None else "none"
+            ),
+            "cpu_capability": cpu_capability_name,
+            "torch_build_config_sha256": hashlib.sha256(
+                torch.__config__.show().encode("utf-8")
+            ).hexdigest(),
+            "torch_num_threads": int(torch.get_num_threads()),
+            "torch_num_interop_threads": int(torch.get_num_interop_threads()),
+            "thread_environment": {
+                name: os.environ.get(name, "unset")
+                for name in (
+                    "OMP_NUM_THREADS",
+                    "OPENBLAS_NUM_THREADS",
+                    "MKL_NUM_THREADS",
+                )
+            },
+        },
+        "numeric": {
+            "dtype": "bfloat16",
+            "allow_tf32": allow_tf32,
+            "float32_matmul_precision": matmul_precision,
+        },
+        "model_class": (
+            f"{model.__class__.__module__}.{model.__class__.__qualname__}"
+        ),
+    }
+
+
+def _prefill_association(
+    execution_identity: Mapping[str, object],
+    *,
+    prompt_token_count: int,
+    configured_chunk_tokens: int,
+    mode: str,
+) -> dict[str, object]:
+    """Bind one result to the exact prefill partition and execution identity."""
+    if mode == "chunked_forward_kv_cache":
+        effective = min(configured_chunk_tokens, prompt_token_count)
+        chunks = (
+            prompt_token_count + configured_chunk_tokens - 1
+        ) // configured_chunk_tokens
+        cache_transport = "past_key_values"
+    else:
+        effective = prompt_token_count
+        chunks = 1
+        cache_transport = (
+            "transformers_generate_cache"
+            if mode == "generate_single_prefill"
+            else "past_key_values"
+        )
+    association: dict[str, object] = {
+        "schema": PREFILL_ASSOCIATION_SCHEMA,
+        "association_policy": PREFILL_ASSOCIATION_POLICY,
+        **execution_identity,
+        "prefill": {
+            "mode": mode,
+            "configured_chunk_tokens": configured_chunk_tokens,
+            "effective_chunk_tokens": effective,
+            "chunk_count": chunks,
+            "prompt_token_count": prompt_token_count,
+            "cache_transport": cache_transport,
+        },
+    }
+    association["identity_sha256"] = _prefill_association_digest(association)
+    return association
+
 
 
 def _chunked_greedy(model, input_ids, *, max_new_tokens, chunk, eos_ids):
@@ -47,8 +250,9 @@ def _chunked_greedy(model, input_ids, *, max_new_tokens, chunk, eos_ids):
     Feeding an 8,000-token prompt in one pass materialises an activation
     working set this GPU does not have spare beside its other tenants.  Chunking
     carries the KV cache forward instead, which bounds the working set to one
-    chunk while producing exactly the same result: attention still attends over
-    the full accumulated cache.
+    chunk while attention still sees the full accumulated cache.  The BF16
+    reduction association can nevertheless change with the chunk partition,
+    so the oracle records that partition as part of its numerical identity.
     """
     import torch
 
@@ -273,16 +477,32 @@ def main() -> int:
             "Feed the prompt in chunks of this many tokens, carrying the KV "
             "cache between chunks. Zero uses one pass. Chunking bounds the "
             "activation working set, which is what makes an 8,000-token "
-            "prefill fit beside other tenants on this GPU."
+            "prefill fit beside other tenants on this GPU. The configured and "
+            "effective chunk geometry is recorded as association provenance "
+            "because it can change BF16 reduction order."
+        ),
+    )
+    parser.add_argument(
+        "--attention-implementation",
+        choices=("sdpa", "eager"),
+        default="sdpa",
+        help=(
+            "Transformers attention implementation. The requested and effective "
+            "values, SDPA backend flags, framework versions, and device identity "
+            "are recorded with every result."
         ),
     )
     args = parser.parse_args()
+
+    if args.prefill_chunk < 0:
+        parser.error("--prefill-chunk must be zero or a positive token count")
 
     if args.output.exists() and not args.force:
         print(f"refusing to overwrite {args.output}; pass --force", file=sys.stderr)
         return 1
 
     import torch
+    import transformers
     from transformers import AutoModelForCausalLM, AutoTokenizer
 
     from compiler.workloads.qwen3 import AGENT_SYSTEM, AGENT_TASK  # noqa: E402
@@ -312,10 +532,18 @@ def main() -> int:
         **placement,
         local_files_only=True,
         trust_remote_code=False,
-        attn_implementation="sdpa",
+        attn_implementation=args.attention_implementation,
     )
     model.eval()
     print(f"loaded in {time.perf_counter() - started:.1f}s", flush=True)
+
+    execution_identity = _oracle_execution_identity(
+        model,
+        torch,
+        transformers,
+        cpu_only=args.cpu_only,
+        attention_implementation=args.attention_implementation,
+    )
 
     report = {
         "schema": "opentallas.abi3.reference_oracle.v1",
@@ -329,9 +557,11 @@ def main() -> int:
         "snapshot": str(args.snapshot),
         "tokenizer_sha256": index["tokenizer_sha256"],
         "torch_version": torch.__version__,
+        "transformers_version": transformers.__version__,
         "dtype": "bfloat16",
         "selection": "greedy_lowest_token_id_argmax",
         "device_map": "cpu bfloat16" if args.cpu_only else "auto (gpu+cpu bfloat16)",
+        "attention_implementation": args.attention_implementation,
         "results": {},
     }
 
@@ -384,6 +614,15 @@ def main() -> int:
                 "wall_seconds": round(elapsed, 3),
                 "episode": episode,
                 "enable_thinking": bool(metadata.get("enable_thinking", False)),
+                "prefill_association": _prefill_association(
+                    execution_identity,
+                    prompt_token_count=len(ids),
+                    # run_agent_episode_oracle uses _greedy: one unchunked
+                    # forward pass per turn.  Record the path actually run,
+                    # irrespective of a chunk option used by other workloads.
+                    configured_chunk_tokens=0,
+                    mode="single_forward_kv_cache",
+                ),
             }
             print(
                 f"episode: {episode['turn_count']} turns in {elapsed:.1f}s, "
@@ -434,6 +673,16 @@ def main() -> int:
             "raw_decoded_text": text,
             "visible_decoded_text": visible,
             "wall_seconds": round(elapsed, 3),
+            "prefill_association": _prefill_association(
+                execution_identity,
+                prompt_token_count=len(ids),
+                configured_chunk_tokens=args.prefill_chunk,
+                mode=(
+                    "chunked_forward_kv_cache"
+                    if args.prefill_chunk
+                    else "generate_single_prefill"
+                ),
+            ),
         }
         print(f"generated {len(generated)} tokens in {elapsed:.1f}s, stop={stop}")
         print(f"first 24 ids: {generated[:24]}")

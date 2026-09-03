@@ -20,6 +20,105 @@ _spec = importlib.util.spec_from_file_location(
 tool = importlib.util.module_from_spec(_spec)
 assert _spec.loader is not None
 _spec.loader.exec_module(tool)
+FROZEN_ORACLE = tool.ORACLE
+
+
+def _prefill_association(prompt_token_count: int) -> dict:
+    configured_chunk_tokens = 512
+    association = {
+        "schema": tool.PREFILL_ASSOCIATION_SCHEMA,
+        "association_policy": tool.PREFILL_ASSOCIATION_POLICY,
+        "producer": {
+            "tool": tool.ORACLE_TOOL,
+            "tool_version": tool.ORACLE_TOOL_VERSION,
+            "source_sha256": hashlib.sha256(
+                (REPO / tool.ORACLE_TOOL).read_bytes()
+            ).hexdigest(),
+        },
+        "framework": {
+            "python_version": "3.12.3",
+            "torch_version": "2.10.0+cu128",
+            "transformers_version": "4.57.1",
+        },
+        "attention": {
+            "requested_implementation": "sdpa",
+            "model_config_implementation": "sdpa",
+            "sdpa_kernel_flags": {
+                "flash_sdp_enabled": True,
+                "math_sdp_enabled": True,
+                "mem_efficient_sdp_enabled": True,
+                "cudnn_sdp_enabled": True,
+            },
+        },
+        "device": {
+            "placement_policy": "auto",
+            "model_device": "cuda:0",
+            "model_device_map": {"": "cuda:0"},
+            "hardware": [
+                {"type": "cpu", "name": "test-cpu", "machine": "x86_64"},
+                {
+                    "type": "cuda",
+                    "index": 0,
+                    "name": "test-gpu",
+                    "compute_capability": [8, 0],
+                },
+            ],
+        },
+        "backend": {
+            "cuda_runtime_version": "12.8",
+            "cudnn_version": "90000",
+            "cpu_capability": "AVX512",
+            "torch_build_config_sha256": "1" * 64,
+            "torch_num_threads": 8,
+            "torch_num_interop_threads": 1,
+            "thread_environment": {
+                "OMP_NUM_THREADS": "8",
+                "OPENBLAS_NUM_THREADS": "8",
+                "MKL_NUM_THREADS": "8",
+            },
+        },
+        "numeric": {
+            "dtype": "bfloat16",
+            "allow_tf32": False,
+            "float32_matmul_precision": "highest",
+        },
+        "model_class": "transformers.Qwen3ForCausalLM",
+        "prefill": {
+            "mode": "chunked_forward_kv_cache",
+            "configured_chunk_tokens": configured_chunk_tokens,
+            "effective_chunk_tokens": configured_chunk_tokens,
+            "chunk_count": (
+                prompt_token_count + configured_chunk_tokens - 1
+            )
+            // configured_chunk_tokens,
+            "prompt_token_count": prompt_token_count,
+            "cache_transport": "past_key_values",
+        },
+    }
+    association["identity_sha256"] = tool._prefill_association_digest(association)
+    return association
+
+
+@pytest.fixture(autouse=True)
+def _oracle_with_prefill_provenance(tmp_path, monkeypatch) -> None:
+    oracle = json.loads(FROZEN_ORACLE.read_text())
+    frozen_tokens = {
+        workload_id: copy.deepcopy(result["generated_token_ids"])
+        for workload_id, result in oracle["results"].items()
+    }
+    oracle["transformers_version"] = "4.57.1"
+    oracle["attention_implementation"] = "sdpa"
+    for result in oracle["results"].values():
+        result["prefill_association"] = _prefill_association(
+            result["prompt_token_count"]
+        )
+    assert {
+        workload_id: result["generated_token_ids"]
+        for workload_id, result in oracle["results"].items()
+    } == frozen_tokens
+    oracle_path = tmp_path / FROZEN_ORACLE.name
+    oracle_path.write_text(json.dumps(oracle))
+    monkeypatch.setattr(tool, "ORACLE", oracle_path)
 
 
 def test_cli_help_renders_for_the_fixed_record_pair() -> None:
@@ -33,9 +132,21 @@ def test_cli_help_renders_for_the_fixed_record_pair() -> None:
     assert "{natural,stress} RECORD RECORD" in completed.stdout
 
 
+def test_oracle_cli_help_exposes_association_controls() -> None:
+    completed = subprocess.run(
+        [sys.executable, str(REPO / tool.ORACLE_TOOL), "--help"],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    assert completed.returncode == 0
+    assert "--attention-implementation {sdpa,eager}" in completed.stdout
+    assert "association provenance" in " ".join(completed.stdout.split())
+
+
 def _identity(path: Path) -> dict:
     return {
-        "path": str(path.resolve().relative_to(REPO)),
+        "path": tool._relative(path),
         "bytes": path.stat().st_size,
         "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
     }
@@ -211,7 +322,7 @@ def _record(mode: str, backend: str) -> dict:
         "failure": None,
         "token_legitimacy_problems": [],
         "oracle": {
-            "artifact": str(tool.ORACLE.relative_to(REPO)),
+            "artifact": tool._relative(tool.ORACLE),
             "artifact_sha256": hashlib.sha256(tool.ORACLE.read_bytes()).hexdigest(),
             "evidence_class": "external_reference_comparator",
             "generated_token_ids": generated,
@@ -288,6 +399,68 @@ def test_complete_stress_hbm_rom_pair_passes_with_storage_counter_differences(tm
     result = tool.validate("stress", _write_pair(tmp_path, left, right))
     assert result["status"] == "pass"
     assert result["pair_checks"]["architectural_counters_identical"] is True
+
+
+def _rewrite_stress_prefill_association(mutator) -> None:
+    oracle = json.loads(tool.ORACLE.read_text())
+    association = oracle["results"][tool.STRESS.workload_id][
+        "prefill_association"
+    ]
+    mutator(association)
+    association["identity_sha256"] = tool._prefill_association_digest(association)
+    tool.ORACLE.write_text(json.dumps(oracle))
+
+
+def test_stress_refuses_oracle_without_prefill_provenance(tmp_path):
+    oracle = json.loads(tool.ORACLE.read_text())
+    del oracle["results"][tool.STRESS.workload_id]["prefill_association"]
+    tool.ORACLE.write_text(json.dumps(oracle))
+    left = _record("stress", "hbm_sram")
+    right = _record("stress", "rom_qwen3")
+    result = tool.validate("stress", _write_pair(tmp_path, left, right))
+    assert result["status"] == "fail"
+    assert "frozen oracle lacks required prefill association provenance" in result[
+        "problems"
+    ]
+
+
+def test_stress_refuses_inconsistent_prefill_chunk_geometry(tmp_path):
+    _rewrite_stress_prefill_association(
+        lambda association: association["prefill"].__setitem__("chunk_count", 1)
+    )
+    left = _record("stress", "hbm_sram")
+    right = _record("stress", "rom_qwen3")
+    result = tool.validate("stress", _write_pair(tmp_path, left, right))
+    assert result["status"] == "fail"
+    assert "frozen oracle chunked-prefill identity is inconsistent" in result[
+        "problems"
+    ]
+
+
+@pytest.mark.parametrize(
+    ("section", "field", "expected"),
+    [
+        ("framework", "transformers_version", "framework versions are missing"),
+        ("attention", None, "attention identity is missing"),
+        ("device", "hardware", "hardware identity is missing"),
+        ("backend", "torch_build_config_sha256", "PyTorch build identity is missing"),
+    ],
+)
+def test_stress_refuses_incomplete_oracle_execution_identity(
+    tmp_path, section, field, expected
+):
+    def remove_field(association):
+        if field is None:
+            association.pop(section)
+        else:
+            association[section].pop(field)
+
+    _rewrite_stress_prefill_association(remove_field)
+    left = _record("stress", "hbm_sram")
+    right = _record("stress", "rom_qwen3")
+    result = tool.validate("stress", _write_pair(tmp_path, left, right))
+    assert result["status"] == "fail"
+    assert any(expected in problem for problem in result["problems"])
 
 
 @pytest.mark.parametrize(

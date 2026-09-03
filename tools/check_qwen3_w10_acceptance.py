@@ -29,6 +29,12 @@ RECORD_SCHEMA = "opentallas.abi3.accelerator_tokens.v1"
 ASSOCIATION_SCHEMA = "opentallas.abi3.executed_association.v1"
 ASSOCIATION_POLICY = "implementation_and_executed_shape_pinned"
 PAIR_POLICY = "same_implementation_and_executed_shape_manifest_v1"
+PREFILL_ASSOCIATION_SCHEMA = "opentallas.qwen3.prefill_association.v1"
+PREFILL_ASSOCIATION_POLICY = (
+    "tool_framework_attention_device_backend_and_chunk_pinned_v1"
+)
+ORACLE_TOOL = "tools/run_qwen3_reference_oracle.py"
+ORACLE_TOOL_VERSION = "qwen3_reference_oracle.py:v1"
 TOKENIZER_SHA256 = "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4"
 BLOCKED_CONTRACT = "bf16_bf16_fp32_blocked_rne_v1"
 
@@ -176,6 +182,227 @@ def _load(path: Path) -> dict[str, Any]:
     if not isinstance(body, dict):
         raise ValueError(f"{path} is not a JSON object")
     return body
+
+
+def _sha256_string(value: object) -> bool:
+    return (
+        isinstance(value, str)
+        and len(value) == 64
+        and all(character in "0123456789abcdef" for character in value)
+    )
+
+
+def _nonempty_string(value: object) -> bool:
+    return isinstance(value, str) and bool(value)
+
+
+def _available_boolean(value: object) -> bool:
+    return isinstance(value, bool) or value == "unavailable"
+
+
+def _prefill_association_digest(association: Mapping[str, Any]) -> str:
+    body = {
+        key: value
+        for key, value in association.items()
+        if key != "identity_sha256"
+    }
+    return hashlib.sha256(canonical_json(body)).hexdigest()
+
+
+def _check_prefill_association(
+    oracle: Mapping[str, Any],
+    result: Mapping[str, Any],
+    spec: WorkloadSpec,
+) -> list[str]:
+    """Require the oracle's association-affecting prefill provenance.
+
+    The expected token list remains the acceptance oracle, but an 8,000-token
+    BF16 prefill is not implementation-independent: changing its chunking,
+    PyTorch/Transformers implementation, SDPA backend, device, or thread/TF32
+    settings can change a legal reduction association and therefore the gold
+    sequence.  W10 accepts the sequence only with those choices attached.
+    """
+    association = result.get("prefill_association")
+    if not isinstance(association, dict):
+        return ["frozen oracle lacks required prefill association provenance"]
+
+    problems: list[str] = []
+    if association.get("schema") != PREFILL_ASSOCIATION_SCHEMA:
+        problems.append("frozen oracle prefill association schema is not governed v1")
+    if association.get("association_policy") != PREFILL_ASSOCIATION_POLICY:
+        problems.append("frozen oracle prefill association policy is not pinned")
+    try:
+        expected_digest = _prefill_association_digest(association)
+    except (TypeError, ValueError):
+        expected_digest = None
+    if association.get("identity_sha256") != expected_digest:
+        problems.append("frozen oracle prefill association digest is invalid")
+
+    producer = association.get("producer")
+    if not isinstance(producer, dict):
+        problems.append("frozen oracle prefill association producer is missing")
+    else:
+        if producer.get("tool") != ORACLE_TOOL:
+            problems.append("frozen oracle association names the wrong producer")
+        if producer.get("tool_version") != ORACLE_TOOL_VERSION:
+            problems.append("frozen oracle association tool version is not pinned")
+        tool_path = REPO / ORACLE_TOOL
+        if producer.get("source_sha256") != _sha256(tool_path):
+            problems.append("frozen oracle association producer is not source-current")
+
+    framework = association.get("framework")
+    framework_fields = ("python_version", "torch_version", "transformers_version")
+    if not isinstance(framework, dict) or any(
+        not _nonempty_string(framework.get(name)) for name in framework_fields
+    ):
+        problems.append("frozen oracle framework versions are missing")
+    elif (
+        oracle.get("torch_version") != framework.get("torch_version")
+        or oracle.get("transformers_version") != framework.get("transformers_version")
+    ):
+        problems.append("frozen oracle framework identity is internally inconsistent")
+
+    attention = association.get("attention")
+    if not isinstance(attention, dict):
+        problems.append("frozen oracle attention identity is missing")
+    else:
+        requested = attention.get("requested_implementation")
+        actual = attention.get("model_config_implementation")
+        if requested not in {"sdpa", "eager"} or actual != requested:
+            problems.append("frozen oracle attention implementation is not pinned")
+        if oracle.get("attention_implementation") != requested:
+            problems.append("frozen oracle attention identity is internally inconsistent")
+        flags = attention.get("sdpa_kernel_flags")
+        required_flags = {
+            "flash_sdp_enabled",
+            "math_sdp_enabled",
+            "mem_efficient_sdp_enabled",
+            "cudnn_sdp_enabled",
+        }
+        if (
+            not isinstance(flags, dict)
+            or set(flags) != required_flags
+            or any(not _available_boolean(value) for value in flags.values())
+        ):
+            problems.append("frozen oracle SDPA backend identity is incomplete")
+
+    device = association.get("device")
+    if not isinstance(device, dict):
+        problems.append("frozen oracle device identity is missing")
+    else:
+        device_map = device.get("model_device_map")
+        hardware = device.get("hardware")
+        if device.get("placement_policy") not in {"cpu", "auto"}:
+            problems.append("frozen oracle device placement policy is invalid")
+        if not _nonempty_string(device.get("model_device")):
+            problems.append("frozen oracle model device is missing")
+        if (
+            not isinstance(device_map, dict)
+            or not device_map
+            or any(
+                not isinstance(name, str) or not _nonempty_string(value)
+                for name, value in device_map.items()
+            )
+        ):
+            problems.append("frozen oracle model device map is missing")
+        if not isinstance(hardware, list) or not hardware:
+            problems.append("frozen oracle hardware identity is missing")
+        else:
+            for index, entry in enumerate(hardware):
+                valid = (
+                    isinstance(entry, dict)
+                    and entry.get("type") in {"cpu", "cuda"}
+                    and _nonempty_string(entry.get("name"))
+                )
+                if valid and entry["type"] == "cpu":
+                    valid = _nonempty_string(entry.get("machine"))
+                elif valid:
+                    capability = entry.get("compute_capability")
+                    valid = _integer(entry.get("index")) and (
+                        isinstance(capability, list)
+                        and len(capability) == 2
+                        and all(_integer(value) for value in capability)
+                    )
+                if not valid:
+                    problems.append(
+                        f"frozen oracle hardware identity {index} is invalid"
+                    )
+
+    backend = association.get("backend")
+    if not isinstance(backend, dict):
+        problems.append("frozen oracle backend identity is missing")
+    else:
+        for name in ("cuda_runtime_version", "cudnn_version", "cpu_capability"):
+            if not _nonempty_string(backend.get(name)):
+                problems.append(f"frozen oracle backend {name} is missing")
+        if not _sha256_string(backend.get("torch_build_config_sha256")):
+            problems.append("frozen oracle PyTorch build identity is missing")
+        for name in ("torch_num_threads", "torch_num_interop_threads"):
+            if not _integer(backend.get(name), minimum=1):
+                problems.append(f"frozen oracle backend {name} is invalid")
+        environment = backend.get("thread_environment")
+        required_environment = {
+            "OMP_NUM_THREADS",
+            "OPENBLAS_NUM_THREADS",
+            "MKL_NUM_THREADS",
+        }
+        if (
+            not isinstance(environment, dict)
+            or set(environment) != required_environment
+            or any(not isinstance(value, str) for value in environment.values())
+        ):
+            problems.append("frozen oracle backend thread environment is incomplete")
+
+    numeric = association.get("numeric")
+    if (
+        not isinstance(numeric, dict)
+        or numeric.get("dtype") != "bfloat16"
+        or not _available_boolean(numeric.get("allow_tf32"))
+        or not _nonempty_string(numeric.get("float32_matmul_precision"))
+    ):
+        problems.append("frozen oracle numeric backend identity is incomplete")
+    elif oracle.get("dtype") != numeric.get("dtype"):
+        problems.append("frozen oracle numeric identity is internally inconsistent")
+    if not _nonempty_string(association.get("model_class")):
+        problems.append("frozen oracle model implementation class is missing")
+
+    prefill = association.get("prefill")
+    if not isinstance(prefill, dict):
+        problems.append("frozen oracle prefill chunk identity is missing")
+    else:
+        mode = prefill.get("mode")
+        configured = prefill.get("configured_chunk_tokens")
+        effective = prefill.get("effective_chunk_tokens")
+        chunks = prefill.get("chunk_count")
+        prompt = prefill.get("prompt_token_count")
+        if prompt != spec.prompt_count:
+            problems.append("frozen oracle prefill prompt extent differs from W10")
+        if not _integer(configured) or not _integer(effective, minimum=1):
+            problems.append("frozen oracle prefill chunk extent is invalid")
+        elif mode == "generate_single_prefill":
+            if (
+                configured != 0
+                or effective != spec.prompt_count
+                or chunks != 1
+                or prefill.get("cache_transport") != "transformers_generate_cache"
+            ):
+                problems.append("frozen oracle single-prefill identity is inconsistent")
+        elif mode == "chunked_forward_kv_cache":
+            expected_chunks = (
+                (spec.prompt_count + configured - 1) // configured
+                if configured
+                else 0
+            )
+            if (
+                configured < 1
+                or effective != min(configured, spec.prompt_count)
+                or chunks != expected_chunks
+                or prefill.get("cache_transport") != "past_key_values"
+            ):
+                problems.append("frozen oracle chunked-prefill identity is inconsistent")
+        else:
+            problems.append("frozen oracle prefill call path is not a W10 path")
+    return problems
 
 
 def _expected_sources(backend: str) -> set[str]:
@@ -360,6 +587,9 @@ def _frozen_inputs(spec: WorkloadSpec) -> tuple[dict[str, Any], dict[str, Any], 
     if oracle.get("tokenizer_sha256") != TOKENIZER_SHA256:
         problems.append("frozen oracle tokenizer is not the pinned tokenizer")
     result = (oracle.get("results") or {}).get(spec.workload_id, {})
+    if not isinstance(result, dict):
+        result = {}
+    problems += _check_prefill_association(oracle, result, spec)
     gold = result.get("generated_token_ids") if isinstance(result, dict) else None
     if not isinstance(gold, list) or not all(_integer(token) for token in gold):
         gold = []
