@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Run the focused ABI 3.0 shipped-prefix integration witness.
 
-The complete source-bound Qwen PC-11 projection.MATMUL is intentionally executed once
-under Verilator.  Interpreted Icarus needs several hours for the 167,772,160
-cycles of the two single-lane launches, so this campaign does not imply that
+The complete source-bound Qwen layer-zero query/key/value MATMUL family is
+intentionally executed under Verilator.  Interpreted Icarus needs several
+hours for these single-lane launches, so this campaign does not imply that
 Icarus ran the complete integrated transaction.  Instead it fail-closed binds
 the unchanged ``ot_a3_mac_lane`` source to the retained dual-simulator engine
 qualification and records that evidence as compositional, not integrated.
@@ -210,7 +210,7 @@ def load_lane_qualification() -> dict[str, Any]:
             "completely in the integrated Verilator replay; the retained "
             "Icarus evidence qualifies that unchanged lane arithmetic on its "
             "bounded sequential-contract vectors, not the full shipped "
-            "program, exact 4096x4096 shape, or blocked descriptor"
+            "program, exact query/key/value shapes, or blocked descriptors"
         ),
     }
 
@@ -243,20 +243,18 @@ def load_vectors() -> dict[str, Any]:
 def stage_matmul_weight(
     vectors: dict[str, Any], destination: Path
 ) -> dict[str, Any]:
-    """Stage the one complete Qwen matrix both shipped targets consume."""
+    """Stage the three complete matrices both shipped Qwen targets consume."""
 
-    sources = []
-    for case in vectors["cases"][:2]:
-        matches = [
-            operation["weight_source"]
+    operations = [
+        [
+            operation
             for operation in case["supported_prefix"]
             if operation["kind"] == "tensor_matmul"
         ]
-        if len(matches) != 1:
-            raise SystemExit(
-                f"{case['name']}: expected one staged MATMUL weight source"
-            )
-        sources.append(matches[0])
+        for case in vectors["cases"][:2]
+    ]
+    if any(len(group) != 3 for group in operations):
+        raise SystemExit("each Qwen case must stage three MATMUL matrices")
     identity_fields = (
         "checkpoint",
         "checkpoint_revision",
@@ -266,44 +264,93 @@ def stage_matmul_weight(
         "declared_segment_sha256",
         "selected_matrix_sha256",
     )
-    if any(
-        sources[0][field] != sources[1][field] for field in identity_fields
-    ):
-        raise SystemExit("Qwen ROM/HBM PC-11 weight identities disagree")
-    source = sources[0]
-    checkpoint = Path(source["checkpoint"]).expanduser()
-    if checkpoint.name != source["checkpoint_revision"]:
-        raise SystemExit("Qwen checkpoint revision path disagrees")
-    shard = checkpoint / source["shard"]
-    offset = int(source["declared_segment_offset"])
-    byte_count = int(source["declared_segment_bytes"])
-    digest = hashlib.sha256()
-    remaining = byte_count
-    with shard.open("rb") as input_handle, destination.open("xb") as output_handle:
-        input_handle.seek(offset)
-        while remaining:
-            chunk = input_handle.read(min(1 << 20, remaining))
-            if not chunk:
-                raise SystemExit("Qwen PC-11 MATMUL weight segment is truncated")
-            output_handle.write(chunk)
-            digest.update(chunk)
-            remaining -= len(chunk)
+    combined_digest = hashlib.sha256()
+    staged_matrices = []
+    with destination.open("xb") as output_handle:
+        for index, operation in enumerate(operations[0]):
+            peer = operations[1][index]
+            source = operation["weight_source"]
+            peer_source = peer["weight_source"]
+            if (
+                int(operation["pc"]) != int(peer["pc"])
+                or any(
+                    source[field] != peer_source[field]
+                    for field in identity_fields
+                )
+            ):
+                raise SystemExit(
+                    f"Qwen ROM/HBM PC-{operation['pc']} weight identities "
+                    "disagree"
+                )
+            checkpoint = Path(source["checkpoint"]).expanduser()
+            if checkpoint.name != source["checkpoint_revision"]:
+                raise SystemExit("Qwen checkpoint revision path disagrees")
+            shard = checkpoint / source["shard"]
+            source_offset = int(source["declared_segment_offset"])
+            byte_count = int(source["declared_segment_bytes"])
+            base_words = int(operation["staged_weight_base_words"])
+            if int(peer["staged_weight_base_words"]) != base_words:
+                raise SystemExit("Qwen MATMUL staged-base identities disagree")
+            if output_handle.tell() != base_words * 2:
+                raise SystemExit("Qwen MATMUL staged layout is not contiguous")
+            segment_digest = hashlib.sha256()
+            remaining = byte_count
+            with shard.open("rb") as input_handle:
+                input_handle.seek(source_offset)
+                while remaining:
+                    chunk = input_handle.read(min(1 << 20, remaining))
+                    if not chunk:
+                        raise SystemExit(
+                            f"Qwen PC-{operation['pc']} MATMUL segment is "
+                            "truncated"
+                        )
+                    output_handle.write(chunk)
+                    segment_digest.update(chunk)
+                    combined_digest.update(chunk)
+                    remaining -= len(chunk)
+            observed = segment_digest.hexdigest()
+            if (
+                observed != source["declared_segment_sha256"]
+                or observed != source["selected_matrix_sha256"]
+            ):
+                raise SystemExit(
+                    f"Qwen PC-{operation['pc']} MATMUL matrix identity differs"
+                )
+            staged_matrices.append(
+                {
+                    "pc": int(operation["pc"]),
+                    "base_words": base_words,
+                    "bytes": byte_count,
+                    "sha256": observed,
+                    "source_checkpoint_revision": source[
+                        "checkpoint_revision"
+                    ],
+                    "source_shard": source["shard"],
+                    "source_offset": source_offset,
+                }
+            )
         output_handle.flush()
         os.fsync(output_handle.fileno())
-    observed = digest.hexdigest()
-    if (
-        destination.stat().st_size != byte_count
-        or observed != source["declared_segment_sha256"]
-        or observed != source["selected_matrix_sha256"]
-    ):
-        raise SystemExit("Qwen PC-11 MATMUL weight segment identity differs")
+    byte_count = destination.stat().st_size
+    vector_layout = vectors["staged_matmul_weight_layout"]
+    compact_layout = {
+        "bytes": byte_count,
+        "matrices": [
+            {
+                "base_words": matrix["base_words"],
+                "bytes": matrix["bytes"],
+                "sha256": matrix["sha256"],
+            }
+            for matrix in staged_matrices
+        ],
+    }
+    if compact_layout != vector_layout:
+        raise SystemExit("staged MATMUL layout differs from vector manifest")
     return {
         "path": "generated/p3_matmul_weight.bin",
         "bytes": byte_count,
-        "sha256": observed,
-        "source_checkpoint_revision": source["checkpoint_revision"],
-        "source_shard": source["shard"],
-        "source_offset": offset,
+        "sha256": combined_digest.hexdigest(),
+        "matrices": staged_matrices,
     }
 
 
@@ -459,7 +506,7 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
         len(cases) == 1
         and cases[0]["status"] == "pass"
         and cases[0]["observed_cases"] == expected_cases
-        and cases[0]["checks"] == 136_496
+        and cases[0]["checks"] == 144_708
     )
     source_paths = (*RTL_SOURCES, *TEST_SOURCES, *CONTRACT_SOURCES, *TOOL_SOURCES)
     sources = {
@@ -594,21 +641,21 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
                 "four exact BF16 TENSOR.EMBED_LOOKUP operations execute through the existing index mover and reproduce 16,384 checkpoint codes from four bounded 8 KiB selected-row reads",
                 "two exact Qwen BF16 VECTOR.RMS_NORM operations consume the prior embedding result and authenticated layer-zero gain, reproducing all 8,192 retained output codes",
                 "two DeepSeek stride-zero DMA.TRANSFER operations consume the prior embedding result and reproduce all 32,768 output codes through a four-zero-index mover lowering",
-                "two complete Qwen layer-zero query TENSOR.MATMUL operations consume the prior RMSNorm result and every code of an authenticated 32 MiB weight matrix through ot_a3_mac_lane, reproducing all 8,192 output codes after 33,554,432 MACs",
-                "the blocked MATMUL contract is bound to the explicit ot_a3_mac_lane single-lane ascending-K association, executed 1x4096-by-4096x4096 shape, per-product and per-add binary32 RNE, and one final BF16 RNE",
+                "six complete Qwen layer-zero query/key/value TENSOR.MATMUL operations consume the prior RMSNorm result and every code of three authenticated matrices through one descriptor-driven ot_a3_mac_lane path, reproducing all 12,288 output codes after 50,331,648 MACs",
+                "the blocked MATMUL contract is bound to the explicit ot_a3_mac_lane single-lane ascending-K association, executed for 1x4096 by 4096x4096 and two 1024x4096 shapes per deployment, with per-product and per-add binary32 RNE and one final BF16 RNE",
                 "each selected checkpoint range is bound to its certified deployment, checkpoint revision, shard, declared segment digest, exact byte range, and selected-range SHA-256 without claiming a complete-shard rehash",
-                "Qwen next refuses the second TENSOR.MATMUL at PC 14; DeepSeek ROM refuses LINK.MULTICAST at PC 13 and DeepSeek HBM refuses VECTOR.MHC at PC 14, each with a precise CAPABILITY trap, no retirement, no event publication, and no later write",
+                "Qwen next refuses VECTOR.HEAD_RMS_NORM at PC 20; DeepSeek ROM refuses LINK.MULTICAST at PC 13 and DeepSeek HBM refuses VECTOR.MHC at PC 14, each with a precise CAPABILITY trap, no retirement, no event publication, and no later write",
                 "the production profile elaborates STATE_COMPAT=0 and every compatibility-state counter and overflow output remains zero",
                 "Verilator executes the complete integrated shipped-prefix cases and its independent C++ checker reproduces every retained observation and result word",
                 "the unchanged ot_a3_mac_lane source is bound by SHA-256 to its retained Icarus-plus-Verilator engine qualification; that compositional campaign contributes 40,878 checks per simulator over 59,868 MACs",
             ],
             "does_not_establish": [
                 "prefill execution",
-                "any TENSOR.MATMUL after the first Qwen query projection, LINK.MULTICAST, VECTOR.MHC, or any later model operator",
+                "Qwen VECTOR.HEAD_RMS_NORM, LINK.MULTICAST, VECTOR.MHC, or any later model operator",
                 "a whole transaction, token selection, decoding, EOS, or model correctness",
                 "complete checkpoint-segment reauthentication during this bounded run",
                 "memory-macro timing, SRAM/HBM arbitration, physical timing, area, or power",
-                "a complete integrated shipped-prefix execution under Icarus; Icarus coverage is compositional qualification of the unchanged MAC lane, not execution of this full 4096x4096 blocked-contract operation or its control path",
+                "a complete integrated shipped-prefix execution under Icarus; Icarus coverage is compositional qualification of the unchanged MAC lane, not execution of these full query/key/value blocked-contract operations or their control paths",
                 "dual-simulator agreement on this complete integrated transaction",
             ],
         },

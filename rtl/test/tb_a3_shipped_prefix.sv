@@ -8,14 +8,14 @@
 // ---------------------------------------------------------------------------
 module tb_a3_shipped_prefix;
     localparam integer CASES = 4;
-    localparam integer CASE_STRIDE = 56;
+    localparam integer CASE_STRIDE = 64;
     localparam integer ISSUE_STRIDE = 4;
-    localparam integer RESULT_WORDS = 69632;
+    localparam integer RESULT_WORDS = 73728;
     localparam [31:0] UNWRITTEN = 32'hdead_beef;
 
     reg [31:0] case_mem [0:CASES*CASE_STRIDE-1];
-    reg [31:0] issue_mem [0:79];
-    reg [31:0] expect_mem [0:66559];
+    reg [31:0] issue_mem [0:95];
+    reg [31:0] expect_mem [0:70655];
     reg [31:0] meta_mem [0:19];
     initial begin
         $readmemh("p3_case.hex", case_mem);
@@ -47,7 +47,12 @@ module tb_a3_shipped_prefix;
     reg [31:0] cfg_transfer_index_base = 0;
     reg [31:0] cfg_transfer_source_base = 0;
     reg [31:0] cfg_matmul_input_base = 0;
-    reg [31:0] cfg_matmul_weight_base = 0;
+    reg [31:0] cfg_matmul_weight_object_0 = 32'hffff_ffff;
+    reg [31:0] cfg_matmul_weight_base_0 = 0;
+    reg [31:0] cfg_matmul_weight_object_1 = 32'hffff_ffff;
+    reg [31:0] cfg_matmul_weight_base_1 = 0;
+    reg [31:0] cfg_matmul_weight_object_2 = 32'hffff_ffff;
+    reg [31:0] cfg_matmul_weight_base_2 = 0;
     reg [31:0] cfg_output_base = 0;
 
     wire busy, done, complete, trapped;
@@ -97,7 +102,12 @@ module tb_a3_shipped_prefix;
         .cfg_transfer_index_base(cfg_transfer_index_base),
         .cfg_transfer_source_base(cfg_transfer_source_base),
         .cfg_matmul_input_base(cfg_matmul_input_base),
-        .cfg_matmul_weight_base(cfg_matmul_weight_base),
+        .cfg_matmul_weight_object_0(cfg_matmul_weight_object_0),
+        .cfg_matmul_weight_base_0(cfg_matmul_weight_base_0),
+        .cfg_matmul_weight_object_1(cfg_matmul_weight_object_1),
+        .cfg_matmul_weight_base_1(cfg_matmul_weight_base_1),
+        .cfg_matmul_weight_object_2(cfg_matmul_weight_object_2),
+        .cfg_matmul_weight_base_2(cfg_matmul_weight_base_2),
         .cfg_output_base(cfg_output_base),
         .busy(busy), .done(done), .complete(complete), .trapped(trapped),
         .trap_class(trap_class),
@@ -220,15 +230,15 @@ module tb_a3_shipped_prefix;
         check_equal("meta DMA gathers", meta_mem[8], 6);
         check_equal("meta embedding launches", meta_mem[9], 4);
         check_equal("meta RoPE words", meta_mem[10], 1024);
-        check_equal("meta selected checkpoint bytes", meta_mem[11], 67158016);
+        check_equal("meta selected checkpoint bytes", meta_mem[11], 100712448);
         check_equal("meta RMSNorm launches", meta_mem[12], 2);
         check_equal("meta transfer launches", meta_mem[13], 2);
         check_equal("meta RMSNorm words", meta_mem[14], 8192);
         check_equal("meta transfer words", meta_mem[15], 32768);
-        check_equal("meta MATMUL launches", meta_mem[16], 2);
-        check_equal("meta MATMUL words", meta_mem[17], 8192);
-        check_equal("meta MATMUL MACs", meta_mem[18], 33554432);
-        check_equal("meta MATMUL checkpoint bytes", meta_mem[19], 67108864);
+        check_equal("meta MATMUL launches", meta_mem[16], 6);
+        check_equal("meta MATMUL words", meta_mem[17], 12288);
+        check_equal("meta MATMUL MACs", meta_mem[18], 50331648);
+        check_equal("meta MATMUL checkpoint bytes", meta_mem[19], 100663296);
 
         for (case_index = 0; case_index < CASES;
              case_index = case_index + 1) begin
@@ -251,7 +261,12 @@ module tb_a3_shipped_prefix;
             cfg_transfer_index_base = record[42];
             cfg_transfer_source_base = record[43];
             cfg_matmul_input_base = record[48];
-            cfg_matmul_weight_base = record[49];
+            cfg_matmul_weight_object_0 = record[49];
+            cfg_matmul_weight_base_0 = record[50];
+            cfg_matmul_weight_object_1 = record[51];
+            cfg_matmul_weight_base_1 = record[52];
+            cfg_matmul_weight_object_2 = record[53];
+            cfg_matmul_weight_base_2 = record[54];
             cfg_output_base = record[13];
             response_expected = record[21];
             response_base = record[31];
@@ -266,7 +281,7 @@ module tb_a3_shipped_prefix;
             @(negedge clk); start = 1'b1;
             @(negedge clk); start = 1'b0;
             guard = 0;
-            while (!done && guard < 100000000) begin
+            while (!done && guard < 150000000) begin
                 @(negedge clk);
                 guard = guard + 1;
             end
@@ -299,7 +314,7 @@ module tb_a3_shipped_prefix;
                         record[44]);
             check_equal("DMA transfer launches", dma_transfer_launch_count,
                         record[45]);
-            check_equal("MATMUL launches", matmul_launch_count, record[50]);
+            check_equal("MATMUL launches", matmul_launch_count, record[55]);
             check_equal("capability responses", capability_fault_count,
                         record[29]);
             check_equal("descriptor faults", descriptor_fault_count, 0);
@@ -312,10 +327,10 @@ module tb_a3_shipped_prefix;
                         last_response_descriptor_id, record[18]);
             check_equal("engine error", engine_error_code, 0);
             check_equal("last engine result count", engine_result_count,
-                        record[50] != 0 ? record[51]
+                        record[55] != 0 ? record[56]
                         : (record[44] != 0 ? record[46] : record[47]));
             check_equal("last engine work count", engine_work_count,
-                        record[50] != 0 ? record[52]
+                        record[55] != 0 ? record[57]
                         : (record[44] != 0 ? 4096 : 4));
             check_equal("result write count", output_write_count, record[15]);
             check_equal("writes after capability fault", writes_after_fault, 0);
@@ -378,7 +393,7 @@ module tb_a3_shipped_prefix;
             $display("FAILURES: %0d checks=%0d", failures, checks);
             $fatal(1, "ABI3 shipped-prefix engine integration failed");
         end
-        $display("PASS: ABI3 shipped-prefix engine integration cases=4 launches=16 words=66560 capability_faults=4 checks=%0d", checks);
+        $display("PASS: ABI3 shipped-prefix engine integration cases=4 launches=20 words=70656 capability_faults=4 checks=%0d", checks);
         $finish;
     end
 endmodule

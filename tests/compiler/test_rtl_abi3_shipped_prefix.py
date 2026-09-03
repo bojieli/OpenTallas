@@ -50,24 +50,24 @@ def test_witness_is_exactly_the_small_abi3_fail_stop_prefix() -> None:
     assert vectors["abi"] == {"major": 3, "minor": 0}
     assert vectors["state_compat"] == 0
     assert vectors["case_count"] == 4
-    assert vectors["real_engine_launch_count"] == 16
+    assert vectors["real_engine_launch_count"] == 20
     assert vectors["dma_gather_launch_count"] == 6
     assert vectors["embedding_launch_count"] == 4
     assert vectors["rms_norm_launch_count"] == 2
     assert vectors["dma_transfer_launch_count"] == 2
-    assert vectors["matmul_launch_count"] == 2
+    assert vectors["matmul_launch_count"] == 6
     assert vectors["rope_result_word_count"] == 1_024
     assert vectors["embedding_result_word_count"] == 16_384
     assert vectors["rms_norm_result_word_count"] == 8_192
     assert vectors["dma_transfer_result_word_count"] == 32_768
-    assert vectors["matmul_result_word_count"] == 8_192
-    assert vectors["matmul_mac_count"] == 33_554_432
+    assert vectors["matmul_result_word_count"] == 12_288
+    assert vectors["matmul_mac_count"] == 50_331_648
     assert vectors["selected_embedding_checkpoint_byte_count"] == 32_768
     assert vectors["selected_rms_checkpoint_byte_count"] == 16_384
-    assert vectors["selected_matmul_checkpoint_byte_count"] == 67_108_864
-    assert vectors["selected_checkpoint_byte_count"] == 67_158_016
-    assert vectors["result_word_count"] == 66_560
-    assert vectors["resolved_view_count"] == 58
+    assert vectors["selected_matmul_checkpoint_byte_count"] == 100_663_296
+    assert vectors["selected_checkpoint_byte_count"] == 100_712_448
+    assert vectors["result_word_count"] == 70_656
+    assert vectors["resolved_view_count"] == 70
     assert vectors["capability_fault_count"] == 4
     assert [case["name"] for case in vectors["cases"]] == [
         "qwen3-8b-rom-single-chip/decode",
@@ -77,19 +77,19 @@ def test_witness_is_exactly_the_small_abi3_fail_stop_prefix() -> None:
     ]
     assert [case["first_unsupported"] for case in vectors["cases"]] == [
         {
-            "pc": 14,
-            "family": 32,
-            "sub": 0,
-            "opcode": "TENSOR.MATMUL",
-            "descriptor_id": 67,
+            "pc": 20,
+            "family": 48,
+            "sub": 1,
+            "opcode": "VECTOR.HEAD_RMS_NORM",
+            "descriptor_id": 81,
             "trap_class": 4,
         },
         {
-            "pc": 14,
-            "family": 32,
-            "sub": 0,
-            "opcode": "TENSOR.MATMUL",
-            "descriptor_id": 78,
+            "pc": 20,
+            "family": 48,
+            "sub": 1,
+            "opcode": "VECTOR.HEAD_RMS_NORM",
+            "descriptor_id": 88,
             "trap_class": 4,
         },
         {
@@ -115,10 +115,10 @@ def test_witness_is_exactly_the_small_abi3_fail_stop_prefix() -> None:
         assert case["expected"]["embedding_launches"] == 1
         assert case["expected"]["embedding_result_words"] == 4_096
         assert case["expected"]["selected_checkpoint_bytes"] == (
-            33_570_816 if case_index < 2 else 8_192
+            50_348_032 if case_index < 2 else 8_192
         )
         assert case["expected"]["wait_events"] == (
-            3 if case_index < 2 else (1 if case_index == 2 else 2)
+            5 if case_index < 2 else (1 if case_index == 2 else 2)
         )
         assert case["expected"]["retired"] + 1 == case["expected"]["fetched"]
 
@@ -144,7 +144,10 @@ def test_witness_is_exactly_the_small_abi3_fail_stop_prefix() -> None:
             "authentication_boundary"
         ]
         if case_index < 2:
-            assert case["bank_mapping"]["matmul_weight_base"] == 0
+            assert [
+                entry["base_words"]
+                for entry in case["bank_mapping"]["matmul_weight_objects"]
+            ] == [0, 16_777_216, 20_971_520]
             rms_norm = next(
                 operation
                 for operation in case["supported_prefix"]
@@ -170,36 +173,46 @@ def test_witness_is_exactly_the_small_abi3_fail_stop_prefix() -> None:
             assert gain["selected_row_sha256"] == (
                 "00695bad97c2abc77a9d1ce57e4d4a5e5c2b574387fcb4029ef5ce12239b2530"
             )
-            matmul = next(
+            matmuls = [
                 operation
                 for operation in case["supported_prefix"]
                 if operation["kind"] == "tensor_matmul"
-            )
-            weight = matmul["weight_source"]
-            assert case["expected"]["matmul_launches"] == 1
-            assert case["expected"]["matmul_result_words"] == 4_096
-            assert case["expected"]["matmul_mac_count"] == 16_777_216
-            assert matmul["input_source"] == "prior_rms_norm_result_bank"
-            assert matmul["contract_sha256"] == (
-                "7550dc6a773fd9d5773b46182887613fb777bb8e4f01652321c4d93ca0765aa1"
-            )
-            assert matmul["executed_association"] == (
-                "ot_a3_mac_lane_single_lane_ascending_k_v1"
-            )
-            assert matmul["expected_row_sha256"] == (
-                "b900b79fd38ff6a9bff470ac27e9672b0c3724b84f6a1f7e964c2ec0918ea0ff"
-            )
-            assert weight["declared_segment_bytes"] == 33_554_432
-            assert weight["declared_segment_sha256"] == (
-                "fd56b85bf301661c8655ed517928304d25df7d6b3ea3d9be85c021159d61bad8"
-            )
-            assert weight["selected_matrix_shape"] == [4_096, 4_096]
-            assert weight["selected_matrix_sha256"] == weight[
-                "declared_segment_sha256"
             ]
-            assert "complete selected source segment" in weight[
-                "authentication_boundary"
+            assert case["expected"]["matmul_launches"] == 3
+            assert case["expected"]["matmul_result_words"] == 6_144
+            assert case["expected"]["matmul_mac_count"] == 25_165_824
+            assert [matmul["pc"] for matmul in matmuls] == [11, 14, 17]
+            assert [matmul["association_scope"]["columns"] for matmul in matmuls] == [
+                4_096,
+                1_024,
+                1_024,
             ]
+            assert [matmul["expected_row_sha256"] for matmul in matmuls] == [
+                "b900b79fd38ff6a9bff470ac27e9672b0c3724b84f6a1f7e964c2ec0918ea0ff",
+                "dd690fbd9886a0af94cc6b2477ef5bfcc84fe66cac66f345f2ec654a83b28403",
+                "b07011da7a3d58dcccceb91e596ceebc2084ab3c2fc9d0b6a9a8704e91ef8dc5",
+            ]
+            assert [matmul["staged_weight_base_words"] for matmul in matmuls] == [
+                0,
+                16_777_216,
+                20_971_520,
+            ]
+            for matmul in matmuls:
+                weight = matmul["weight_source"]
+                assert matmul["input_source"] == "prior_rms_norm_result_bank"
+                assert matmul["contract_sha256"] == (
+                    "7550dc6a773fd9d5773b46182887613fb"
+                    "777bb8e4f01652321c4d93ca0765aa1"
+                )
+                assert matmul["executed_association"] == (
+                    "ot_a3_mac_lane_single_lane_ascending_k_v1"
+                )
+                assert weight["selected_matrix_sha256"] == weight[
+                    "declared_segment_sha256"
+                ]
+                assert "complete selected source segment" in weight[
+                    "authentication_boundary"
+                ]
         else:
             transfer = next(
                 operation
@@ -265,7 +278,7 @@ def test_retained_campaign_is_current_and_states_the_simple_boundary() -> None:
     assert retained["integrated_replay_passed"]
     assert retained["integrated_simulators"] == ["verilator"]
     assert retained["integrated_simulator_checks"] == {
-        "verilator": 136_496,
+        "verilator": 144_708,
     }
     assert "simulators_agree" not in retained
     assert "simulator_checks" not in retained
@@ -296,16 +309,16 @@ def test_retained_campaign_is_current_and_states_the_simple_boundary() -> None:
         "complete integrated shipped-prefix execution under Icarus" in item
         for item in retained["scope"]["does_not_establish"]
     )
-    assert [site["pc"] for site in retained["fault_sites"]] == [14, 14, 13, 14]
+    assert [site["pc"] for site in retained["fault_sites"]] == [20, 20, 13, 14]
     assert [site["descriptor_id"] for site in retained["fault_sites"]] == [
-        67,
-        78,
+        81,
+        88,
         368,
         546,
     ]
     assert [site["opcode"] for site in retained["fault_sites"]] == [
-        "TENSOR.MATMUL",
-        "TENSOR.MATMUL",
+        "VECTOR.HEAD_RMS_NORM",
+        "VECTOR.HEAD_RMS_NORM",
         "LINK.MULTICAST",
         "VECTOR.MHC",
     ]
@@ -313,14 +326,14 @@ def test_retained_campaign_is_current_and_states_the_simple_boundary() -> None:
     assert retained["embedding_launch_count"] == 4
     assert retained["rms_norm_launch_count"] == 2
     assert retained["dma_transfer_launch_count"] == 2
-    assert retained["matmul_launch_count"] == 2
-    assert retained["real_engine_launch_count"] == 16
-    assert retained["result_word_count"] == 66_560
-    assert retained["resolved_view_count"] == 58
-    assert retained["matmul_result_word_count"] == 8_192
-    assert retained["matmul_mac_count"] == 33_554_432
-    assert retained["selected_matmul_checkpoint_byte_count"] == 67_108_864
-    assert retained["selected_checkpoint_byte_count"] == 67_158_016
+    assert retained["matmul_launch_count"] == 6
+    assert retained["real_engine_launch_count"] == 20
+    assert retained["result_word_count"] == 70_656
+    assert retained["resolved_view_count"] == 70
+    assert retained["matmul_result_word_count"] == 12_288
+    assert retained["matmul_mac_count"] == 50_331_648
+    assert retained["selected_matmul_checkpoint_byte_count"] == 100_663_296
+    assert retained["selected_checkpoint_byte_count"] == 100_712_448
     assert len(retained["checkpoint_rows"]) == 4
     for row in retained["checkpoint_rows"]:
         assert len(row["deployment_sha256"]) == 64
@@ -335,34 +348,62 @@ def test_retained_campaign_is_current_and_states_the_simple_boundary() -> None:
         assert gain["numeric_contract_sha256"] == (
             "999ef86bc4d4c36dfd57db84d49618af46bed2e6c1f0b1bf031a27b5b8c03fda"
         )
-    assert len(retained["checkpoint_matrices"]) == 2
+    assert len(retained["checkpoint_matrices"]) == 6
     for matrix in retained["checkpoint_matrices"]:
-        assert matrix["operator_pc"] == 11
+        assert matrix["operator_pc"] in {11, 14, 17}
         assert matrix["numeric_contract_sha256"] == (
             "7550dc6a773fd9d5773b46182887613fb777bb8e4f01652321c4d93ca0765aa1"
         )
         assert matrix["executed_association"] == (
             "ot_a3_mac_lane_single_lane_ascending_k_v1"
         )
-        assert matrix["expected_row_sha256"] == (
-            "b900b79fd38ff6a9bff470ac27e9672b0c3724b84f6a1f7e964c2ec0918ea0ff"
+        assert matrix["expected_row_sha256"] in {
+            "b900b79fd38ff6a9bff470ac27e9672b0c3724b84f6a1f7e964c2ec0918ea0ff",
+            "dd690fbd9886a0af94cc6b2477ef5bfcc84fe66cac66f345f2ec654a83b28403",
+            "b07011da7a3d58dcccceb91e596ceebc2084ab3c2fc9d0b6a9a8704e91ef8dc5",
+        }
+        assert matrix["source"]["declared_segment_bytes"] in {
+            33_554_432,
+            8_388_608,
+        }
+    staged = retained["staged_matmul_weight"]
+    assert staged["path"] == "generated/p3_matmul_weight.bin"
+    assert staged["bytes"] == 50_331_648
+    assert staged["sha256"] == (
+        "2c8696111937aa85197cd2042dfed6cb3c5ef7f03fb80eba1fe3b93d40c1b87e"
+    )
+    assert [
+        (
+            matrix["pc"],
+            matrix["base_words"],
+            matrix["bytes"],
+            matrix["sha256"],
+            matrix["source_offset"],
         )
-        assert matrix["source"]["declared_segment_bytes"] == 33_554_432
-        assert matrix["source"]["declared_segment_sha256"] == (
-            "fd56b85bf301661c8655ed517928304d25df7d6b3ea3d9be85c021159d61bad8"
-        )
-    assert retained["staged_matmul_weight"] == {
-        "path": "generated/p3_matmul_weight.bin",
-        "bytes": 33_554_432,
-        "sha256": (
-            "fd56b85bf301661c8655ed517928304d25df7d6b3ea3d9be85c021159d61bad8"
+        for matrix in staged["matrices"]
+    ] == [
+        (
+            11,
+            0,
+            33_554_432,
+            "fd56b85bf301661c8655ed517928304d25df7d6b3ea3d9be85c021159d61bad8",
+            1_588_618_872,
         ),
-        "source_checkpoint_revision": (
-            "b968826d9c46dd6066d109eabc6255188de91218"
+        (
+            14,
+            16_777_216,
+            8_388_608,
+            "3ce9fdf6ee30ef2f24ad3629b506415ca91fe40f790e568a9ea3fea2978feee0",
+            1_546_675_576,
         ),
-        "source_shard": "model-00001-of-00005.safetensors",
-        "source_offset": 1_588_618_872,
-    }
+        (
+            17,
+            20_971_520,
+            8_388_608,
+            "767a6c48457974bb02dd90aeec270f4d68289527a353c3c28964ab2069a966ee",
+            1_622_173_304,
+        ),
+    ]
     for path, record in retained["source"].items():
         source_path = ROOT / path
         assert source_path.stat().st_size == record["bytes"]
@@ -391,7 +432,7 @@ def test_focused_campaign_replays_verilator_and_binds_mac_lane(
     assert summary["integrated_replay_passed"]
     assert summary["integrated_simulators"] == ["verilator"]
     assert summary["integrated_simulator_checks"] == {
-        "verilator": 136_496,
+        "verilator": 144_708,
     }
     assert "simulators_agree" not in summary
     assert "simulator_checks" not in summary

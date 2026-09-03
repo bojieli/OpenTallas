@@ -14,8 +14,8 @@ module ot_a3_shipped_prefix_top #(
     parameter integer SYMBOL_WORDS = 2048,
     parameter integer INDEX_WORDS = 64,
     parameter integer SOURCE_WORDS = 65536,
-    parameter integer RESULT_WORDS = 69632,
-    parameter integer MATMUL_WEIGHT_BYTES = 33554432
+    parameter integer RESULT_WORDS = 73728,
+    parameter integer MATMUL_WEIGHT_BYTES = 50331648
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -38,7 +38,12 @@ module ot_a3_shipped_prefix_top #(
     input  wire [31:0] cfg_transfer_index_base,
     input  wire [31:0] cfg_transfer_source_base,
     input  wire [31:0] cfg_matmul_input_base,
-    input  wire [31:0] cfg_matmul_weight_base,
+    input  wire [31:0] cfg_matmul_weight_object_0,
+    input  wire [31:0] cfg_matmul_weight_base_0,
+    input  wire [31:0] cfg_matmul_weight_object_1,
+    input  wire [31:0] cfg_matmul_weight_base_1,
+    input  wire [31:0] cfg_matmul_weight_object_2,
+    input  wire [31:0] cfg_matmul_weight_base_2,
     input  wire [31:0] cfg_output_base,
 
     output wire        busy,
@@ -422,7 +427,12 @@ module ot_a3_shipped_prefix_top #(
         .cfg_transfer_index_base(cfg_transfer_index_base),
         .cfg_transfer_source_base(cfg_transfer_source_base),
         .cfg_matmul_input_base(cfg_matmul_input_base),
-        .cfg_matmul_weight_base(cfg_matmul_weight_base),
+        .cfg_matmul_weight_object_0(cfg_matmul_weight_object_0),
+        .cfg_matmul_weight_base_0(cfg_matmul_weight_base_0),
+        .cfg_matmul_weight_object_1(cfg_matmul_weight_object_1),
+        .cfg_matmul_weight_base_1(cfg_matmul_weight_base_1),
+        .cfg_matmul_weight_object_2(cfg_matmul_weight_object_2),
+        .cfg_matmul_weight_base_2(cfg_matmul_weight_base_2),
         .cfg_output_base(cfg_output_base),
         .m0_rd_en(m0_rd_en),
         .m0_rd_addr(m0_rd_addr),

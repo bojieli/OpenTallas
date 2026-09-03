@@ -15,9 +15,9 @@
 namespace {
 
 constexpr std::size_t kCases = 4;
-constexpr std::size_t kCaseStride = 56;
+constexpr std::size_t kCaseStride = 64;
 constexpr std::size_t kIssueStride = 4;
-constexpr std::size_t kResultWords = 69632;
+constexpr std::size_t kResultWords = 73728;
 constexpr std::uint32_t kUnwritten = 0xdeadbeefU;
 
 std::vector<std::uint32_t> read_hex(const std::string& path) {
@@ -78,7 +78,12 @@ struct Model {
         dut.cfg_transfer_index_base = 0;
         dut.cfg_transfer_source_base = 0;
         dut.cfg_matmul_input_base = 0;
-        dut.cfg_matmul_weight_base = 0;
+        dut.cfg_matmul_weight_object_0 = UINT32_MAX;
+        dut.cfg_matmul_weight_base_0 = 0;
+        dut.cfg_matmul_weight_object_1 = UINT32_MAX;
+        dut.cfg_matmul_weight_base_1 = 0;
+        dut.cfg_matmul_weight_object_2 = UINT32_MAX;
+        dut.cfg_matmul_weight_base_2 = 0;
         dut.cfg_output_base = 0;
         dut.result_read_addr = 0;
         dut.eval();
@@ -113,8 +118,8 @@ int main(int argc, char** argv) {
         const auto issues = read_hex("p3_issue.hex");
         const auto expected = read_hex("p3_expect.hex");
         const auto meta = read_hex("p3_meta.hex");
-        if (cases.size() != kCases * kCaseStride || issues.size() != 80 ||
-            expected.size() != 66560 || meta.size() != 20)
+        if (cases.size() != kCases * kCaseStride || issues.size() != 96 ||
+            expected.size() != 70656 || meta.size() != 20)
             throw std::runtime_error("shipped-prefix vector geometry mismatch");
 
         Checker check;
@@ -126,15 +131,15 @@ int main(int argc, char** argv) {
         check.equal("meta DMA gathers", meta[8], 6);
         check.equal("meta embedding launches", meta[9], 4);
         check.equal("meta RoPE words", meta[10], 1024);
-        check.equal("meta selected checkpoint bytes", meta[11], 67158016);
+        check.equal("meta selected checkpoint bytes", meta[11], 100712448);
         check.equal("meta RMSNorm launches", meta[12], 2);
         check.equal("meta transfer launches", meta[13], 2);
         check.equal("meta RMSNorm words", meta[14], 8192);
         check.equal("meta transfer words", meta[15], 32768);
-        check.equal("meta MATMUL launches", meta[16], 2);
-        check.equal("meta MATMUL words", meta[17], 8192);
-        check.equal("meta MATMUL MACs", meta[18], 33554432);
-        check.equal("meta MATMUL checkpoint bytes", meta[19], 67108864);
+        check.equal("meta MATMUL launches", meta[16], 6);
+        check.equal("meta MATMUL words", meta[17], 12288);
+        check.equal("meta MATMUL MACs", meta[18], 50331648);
+        check.equal("meta MATMUL checkpoint bytes", meta[19], 100663296);
 
         std::uint64_t total_responses = 0;
         std::uint64_t total_launches = 0;
@@ -167,7 +172,12 @@ int main(int argc, char** argv) {
             model.dut.cfg_transfer_index_base = record[42];
             model.dut.cfg_transfer_source_base = record[43];
             model.dut.cfg_matmul_input_base = record[48];
-            model.dut.cfg_matmul_weight_base = record[49];
+            model.dut.cfg_matmul_weight_object_0 = record[49];
+            model.dut.cfg_matmul_weight_base_0 = record[50];
+            model.dut.cfg_matmul_weight_object_1 = record[51];
+            model.dut.cfg_matmul_weight_base_1 = record[52];
+            model.dut.cfg_matmul_weight_object_2 = record[53];
+            model.dut.cfg_matmul_weight_base_2 = record[54];
             model.dut.cfg_output_base = record[13];
 
             model.dut.result_read_addr = record[13];
@@ -212,7 +222,7 @@ int main(int argc, char** argv) {
             model.cycle(observe);
             model.dut.start = 0;
             std::uint32_t guard = 0;
-            while (!model.dut.done && guard < 100000000) {
+            while (!model.dut.done && guard < 150000000) {
                 model.cycle(observe);
                 ++guard;
             }
@@ -251,7 +261,7 @@ int main(int argc, char** argv) {
             check.equal("DMA transfer launches",
                         model.dut.dma_transfer_launch_count, record[45]);
             check.equal("MATMUL launches", model.dut.matmul_launch_count,
-                        record[50]);
+                        record[55]);
             check.equal("capability responses",
                         model.dut.capability_fault_count, record[29]);
             check.equal("descriptor faults", model.dut.descriptor_fault_count,
@@ -270,11 +280,11 @@ int main(int argc, char** argv) {
             check.equal("engine error", model.dut.engine_error_code, 0);
             check.equal("last engine result count",
                         model.dut.engine_result_count,
-                        record[50] != 0 ? record[51]
+                        record[55] != 0 ? record[56]
                                         : (record[44] != 0 ? record[46]
                                                            : record[47]));
             check.equal("last engine work count", model.dut.engine_work_count,
-                        record[50] != 0 ? record[52]
+                        record[55] != 0 ? record[57]
                                         : (record[44] != 0 ? 4096 : 4));
             check.equal("result write count", model.dut.output_write_count,
                         record[15]);
@@ -357,7 +367,7 @@ int main(int argc, char** argv) {
         }
         std::cout
             << "PASS: ABI3 shipped-prefix engine integration cases=4 "
-               "launches=16 words=66560 capability_faults=4 checks="
+               "launches=20 words=70656 capability_faults=4 checks="
             << check.checks << "\n";
         return 0;
     } catch (const std::exception& exc) {

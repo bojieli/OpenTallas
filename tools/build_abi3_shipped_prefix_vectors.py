@@ -5,7 +5,8 @@ The four shipped ABI 3.0 decode entrypoints all begin with a bounded sequence
 that the RTL can execute without pretending an unsupported model operator
 exists: generated-row ``DMA.GATHER`` operations, one checkpoint-backed
 ``TENSOR.EMBED_LOOKUP``, then Qwen ``VECTOR.RMS_NORM`` and the complete
-layer-zero query ``TENSOR.MATMUL``, or DeepSeek stride-zero ``DMA.TRANSFER``.
+layer-zero query, key, and value ``TENSOR.MATMUL`` family, or DeepSeek
+stride-zero ``DMA.TRANSFER``.
 Row movement lowers to the existing index mover; RMSNorm uses the independently
 correlated exact arithmetic slice and MATMUL uses the existing ABI 3.0 MAC
 lane's deterministic ascending-K association.
@@ -14,8 +15,8 @@ This generator retains those exact program and descriptor identities, resolves
 their real views for the same 16-token decode request used by the deployment
 campaign, materialises only the selected generated RoPE rows, and performs
 bounded reads of token zero's BF16 checkpoint row and Qwen's layer-zero gain.
-The complete 32 MiB query-weight segment is re-read and authenticated because
-every one of its 16,777,216 BF16 codes is consumed.  The hardware must produce
+The complete 32 MiB query and two 8 MiB KV projection segments are re-read and
+authenticated because every BF16 code is consumed.  The hardware must produce
 every retained result word, then fail closed at the exact next unsupported
 instruction.  It does not claim a whole model, prefill, token selection, or
 decoding result.
@@ -74,15 +75,16 @@ DEPLOYMENT_VECTOR_JSON = (
 )
 
 VECTOR_SCHEMA = "opentallas.rtl.abi3_shipped_prefix_vectors.v1"
-CASE_STRIDE = 56
+CASE_STRIDE = 64
 META_WORDS = 20
 INDEX_WORDS = 64
 SOURCE_WORDS = 65536
-RESULT_WORDS = 69632
+RESULT_WORDS = 73728
 PROMPT_TOKENS = 16
 INDEX_VALUE = 16
 EMBED_TOKEN = 0
 EMBED_WIDTH = 4096
+KV_WIDTH = 1024
 EXACT_INDEX_SELECT = hashlib.sha256(b"exact_index_select_v1").digest()
 QWEN_EMBED_CONTRACT = hashlib.sha256(b"bf16_payload_lookup_v1").digest()
 DEEPSEEK_EMBED_CONTRACT = hashlib.sha256(
@@ -100,10 +102,16 @@ QWEN_MATMUL_CONTRACT = hashlib.sha256(
 EMBED_DESCRIPTOR_IDS = (41, 54, 356, 527)
 RMS_DESCRIPTOR_IDS = (50, 64)
 TRANSFER_DESCRIPTOR_IDS = (363, 532)
-MATMUL_DESCRIPTOR_IDS = (59, 72)
+MATMUL_PCS = (11, 14, 17)
+MATMUL_DESCRIPTOR_IDS = ((59, 67, 74), (72, 78, 83))
+MATMUL_OUTPUT_SHA256 = {
+    11: "b900b79fd38ff6a9bff470ac27e9672b0c3724b84f6a1f7e964c2ec0918ea0ff",
+    14: "dd690fbd9886a0af94cc6b2477ef5bfcc84fe66cac66f345f2ec654a83b28403",
+    17: "b07011da7a3d58dcccceb91e596ceebc2084ab3c2fc9d0b6a9a8704e91ef8dc5",
+}
 NEXT_BOUNDARIES = (
-    (14, int(Major.TENSOR), int(Tensor.MATMUL), 67, "TENSOR.MATMUL"),
-    (14, int(Major.TENSOR), int(Tensor.MATMUL), 78, "TENSOR.MATMUL"),
+    (20, int(Major.VECTOR), int(Vector.HEAD_RMS_NORM), 81, "VECTOR.HEAD_RMS_NORM"),
+    (20, int(Major.VECTOR), int(Vector.HEAD_RMS_NORM), 88, "VECTOR.HEAD_RMS_NORM"),
     (13, int(Major.LINK), 3, 368, "LINK.MULTICAST"),
     (14, int(Major.VECTOR), int(Vector.MHC), 546, "VECTOR.MHC"),
 )
@@ -425,12 +433,12 @@ def _checkpoint_matrix(
 ) -> tuple[bytes, dict[str, Any]]:
     """Read and authenticate one complete BF16 matrix source segment.
 
-    The PC-11 Qwen query projection consumes every weight in the first
-    4096-by-4096 segment.  Unlike the bounded embedding and RMS gain probes,
+    Each admitted Qwen projection consumes every weight in its selected
+    layer-zero segment.  Unlike the bounded embedding and RMS gain probes,
     retaining only a row would not cover the operation.  The complete segment
     is therefore read, its declared digest is independently recomputed, and
     replay stages those same bytes from the checkpoint rather than committing
-    a duplicate 32 MiB model-weight artifact to Git.
+    duplicate model-weight artifacts to Git.
     """
 
     source = deployment.objects[object_id]
@@ -488,7 +496,8 @@ def _checkpoint_matrix(
         "selected_matrix_sha256": hashlib.sha256(payload).hexdigest(),
         "authentication_boundary": (
             "the complete selected source segment was re-read and hashed; "
-            "all 16,777,216 BF16 codes are consumed by the RTL operation"
+            f"all {rows * columns:,} BF16 codes are consumed by the RTL "
+            "operation"
         ),
     }
 
@@ -513,6 +522,8 @@ def build(argv: list[str] | None = None) -> int:
     records: list[dict[str, Any]] = []
     row_cache: dict[tuple[str, int, int], bytes] = {}
     matrix_cache: dict[str, bytes] = {}
+    matrix_staging: dict[str, dict[str, int | str]] = {}
+    staged_matmul_bytes = 0
     total_launches = 0
     total_gathers = 0
     total_embeddings = 0
@@ -980,15 +991,18 @@ def build(argv: list[str] | None = None) -> int:
                 pc += 1
                 continue
 
-            if (
-                major == int(Major.TENSOR)
-                and sub == int(Tensor.MATMUL)
-                and pc == 11
-            ):
+            if major == int(Major.TENSOR) and sub == int(Tensor.MATMUL):
+                matmul_index = len(matmuls)
                 if target_index >= 2 or len(rms_norms) != 1:
                     raise SystemExit(
-                        f"{target.key}: PC-11 MATMUL appeared outside the "
+                        f"{target.key}: MATMUL appeared outside the "
                         "Qwen post-RMSNorm prefix"
+                    )
+                if matmul_index >= len(MATMUL_PCS) or pc != MATMUL_PCS[
+                    matmul_index
+                ]:
+                    raise SystemExit(
+                        f"{target.key}: Qwen MATMUL sequence changed at PC {pc}"
                     )
                 operator = deployment.table.get(
                     int(instruction.descriptor_id),
@@ -997,7 +1011,7 @@ def build(argv: list[str] | None = None) -> int:
                 payload = operator.payload
                 if (
                     int(instruction.descriptor_id)
-                    != MATMUL_DESCRIPTOR_IDS[target_index]
+                    != MATMUL_DESCRIPTOR_IDS[target_index][matmul_index]
                     or int(payload["engine_family"]) != major
                     or int(payload["engine_sub"]) != sub
                     or int(payload["numeric_profile_id"]) == NO_ID
@@ -1016,13 +1030,14 @@ def build(argv: list[str] | None = None) -> int:
                     )
                 ):
                     raise SystemExit(
-                        f"{target.key}: PC-11 MATMUL operator profile changed"
+                        f"{target.key}: PC-{pc} MATMUL operator profile changed"
                     )
                 by_slot = {int(view["slot"]): view for view in resolved}
                 input_view = by_slot[0]
                 weight_view = by_slot[1]
                 output_view = by_slot[4]
                 rms_norm = rms_norms[0]
+                output_columns = EMBED_WIDTH if matmul_index == 0 else KV_WIDTH
                 if (
                     input_view["dtype"] != int(DType.BF16)
                     or input_view["dims"] != [1, EMBED_WIDTH]
@@ -1031,17 +1046,17 @@ def build(argv: list[str] | None = None) -> int:
                     or input_view["object_id"]
                     != rms_norm["output_view"]["object_id"]
                     or weight_view["dtype"] != int(DType.BF16)
-                    or weight_view["dims"] != [EMBED_WIDTH, EMBED_WIDTH]
+                    or weight_view["dims"] != [output_columns, EMBED_WIDTH]
                     or weight_view["strides"] != [EMBED_WIDTH, 1]
                     or weight_view["element_offset"] != 0
                     or output_view["dtype"] != int(DType.BF16)
-                    or output_view["dims"] != [1, EMBED_WIDTH]
-                    or output_view["strides"] != [EMBED_WIDTH, 1]
+                    or output_view["dims"] != [1, output_columns]
+                    or output_view["strides"] != [output_columns, 1]
                     or output_view["element_offset"] != 0
                     or any(view["extent_axis"] != 0 for view in resolved)
                 ):
                     raise SystemExit(
-                        f"{target.key}: PC-11 MATMUL view profile changed"
+                        f"{target.key}: PC-{pc} MATMUL view profile changed"
                     )
                 numeric_id = int(payload["numeric_profile_id"])
                 numeric = deployment.table.get(
@@ -1067,22 +1082,36 @@ def build(argv: list[str] | None = None) -> int:
                     != QWEN_MATMUL_CONTRACT
                 ):
                     raise SystemExit(
-                        f"{target.key}: PC-11 MATMUL numeric profile changed"
+                        f"{target.key}: PC-{pc} MATMUL numeric profile changed"
                     )
                 weight_payload, weight_identity = _checkpoint_matrix(
                     target,
                     deployment,
                     int(weight_view["object_id"]),
-                    rows=EMBED_WIDTH,
+                    rows=output_columns,
                     columns=EMBED_WIDTH,
                     cache=matrix_cache,
                 )
+                weight_digest = str(weight_identity["declared_segment_sha256"])
+                staged = matrix_staging.get(weight_digest)
+                if staged is None:
+                    staged = {
+                        "base_words": staged_matmul_bytes // 2,
+                        "bytes": int(weight_identity["declared_segment_bytes"]),
+                        "sha256": weight_digest,
+                    }
+                    matrix_staging[weight_digest] = staged
+                    staged_matmul_bytes += int(staged["bytes"])
+                elif int(staged["bytes"]) != int(
+                    weight_identity["declared_segment_bytes"]
+                ):
+                    raise SystemExit("staged MATMUL matrix size disagreement")
                 input_codes = np.asarray(
                     rms_norm["_expected_words"], dtype=np.uint16
                 ).reshape(1, EMBED_WIDTH)
                 weight_codes = np.frombuffer(
                     weight_payload, dtype="<u2"
-                ).reshape(EMBED_WIDTH, EMBED_WIDTH)
+                ).reshape(output_columns, EMBED_WIDTH)
                 result = dense_bf16_linear_bf16(input_codes, weight_codes)
                 result_words = [int(code) for code in result.values[0]]
                 result_bytes = np.ascontiguousarray(
@@ -1091,11 +1120,10 @@ def build(argv: list[str] | None = None) -> int:
                 result_sha256 = hashlib.sha256(result_bytes).hexdigest()
                 if (
                     result.output_saturated_element_count != 0
-                    or result_sha256
-                    != "b900b79fd38ff6a9bff470ac27e9672b0c3724b84f6a1f7e964c2ec0918ea0ff"
+                    or result_sha256 != MATMUL_OUTPUT_SHA256[pc]
                 ):
                     raise SystemExit(
-                        f"{target.key}: exact PC-11 MATMUL oracle changed"
+                        f"{target.key}: exact PC-{pc} MATMUL oracle changed"
                     )
                 matmuls.append(
                     {
@@ -1113,7 +1141,7 @@ def build(argv: list[str] | None = None) -> int:
                         ),
                         "association_scope": {
                             "rows": 1,
-                            "columns": EMBED_WIDTH,
+                            "columns": output_columns,
                             "reduction": EMBED_WIDTH,
                             "lane_count": 1,
                             "reduction_order": "ascending_k",
@@ -1122,7 +1150,8 @@ def build(argv: list[str] | None = None) -> int:
                         },
                         "input_source": "prior_rms_norm_result_bank",
                         "weight_source": weight_identity,
-                        "mac_count": EMBED_WIDTH * EMBED_WIDTH,
+                        "staged_weight_base_words": int(staged["base_words"]),
+                        "mac_count": output_columns * EMBED_WIDTH,
                         "output_saturated_element_count": (
                             result.output_saturated_element_count
                         ),
@@ -1280,10 +1309,10 @@ def build(argv: list[str] | None = None) -> int:
                 f"{target.key}: expected one embedding, found {len(embeddings)}"
             )
         if target_index < 2:
-            if len(rms_norms) != 1 or len(matmuls) != 1 or transfers:
+            if len(rms_norms) != 1 or len(matmuls) != 3 or transfers:
                 raise SystemExit(
-                    f"{target.key}: expected one RMSNorm, one PC-11 MATMUL, "
-                    "and no transfer"
+                    f"{target.key}: expected one RMSNorm, three reusable "
+                    "MATMUL launches, and no transfer"
                 )
         elif len(transfers) != 1 or rms_norms or matmuls:
             raise SystemExit(
@@ -1321,9 +1350,11 @@ def build(argv: list[str] | None = None) -> int:
         case_rms_words = 0
         case_transfer_words = 0
         matmul_input_base = 0
-        matmul_weight_base = 0
+        matmul_weight_mappings = [(NO_ID, 0), (NO_ID, 0), (NO_ID, 0)]
         case_matmul_words = 0
         case_matmul_macs = 0
+        last_matmul_words = 0
+        last_matmul_macs = 0
         if rms_norms:
             rms_norm = rms_norms[0]
             rms_weight_base = len(source_words)
@@ -1331,13 +1362,21 @@ def build(argv: list[str] | None = None) -> int:
             rms_expected = rms_norm.pop("_expected_words")
             expected_words.extend(rms_expected)
             case_rms_words = len(rms_expected)
-            matmul = matmuls[0]
             matmul_input_base = output_base + case_rope_words + case_embedding_words
-            matmul_weight_base = 0
-            matmul_expected = matmul.pop("_expected_words")
-            expected_words.extend(matmul_expected)
-            case_matmul_words = len(matmul_expected)
-            case_matmul_macs = int(matmul["mac_count"])
+            matmul_weight_mappings = [
+                (
+                    int(matmul["weight_view"]["object_id"]),
+                    int(matmul["staged_weight_base_words"]),
+                )
+                for matmul in matmuls
+            ]
+            last_matmul_words = len(matmuls[-1]["_expected_words"])
+            last_matmul_macs = int(matmuls[-1]["mac_count"])
+            for matmul in matmuls:
+                matmul_expected = matmul.pop("_expected_words")
+                expected_words.extend(matmul_expected)
+                case_matmul_words += len(matmul_expected)
+                case_matmul_macs += int(matmul["mac_count"])
         else:
             transfer = transfers[0]
             transfer_index_base = len(index_words)
@@ -1360,13 +1399,13 @@ def build(argv: list[str] | None = None) -> int:
         expected_boundary = NEXT_BOUNDARIES[target_index]
         if target_index < 2:
             expected_counts = {
-                "fetched": 15,
-                "retired": 14,
-                "issued": 5,
-                "loop_iterations": 4,
-                "wait_events": 3,
-                "signals": 4,
-                "views": 15,
+                "fetched": 21,
+                "retired": 20,
+                "issued": 7,
+                "loop_iterations": 6,
+                "wait_events": 5,
+                "signals": 6,
+                "views": 21,
             }
         elif target_index == 2:
             expected_counts = {
@@ -1465,10 +1504,18 @@ def build(argv: list[str] | None = None) -> int:
             case_rms_words,
             case_transfer_words,
             matmul_input_base,
-            matmul_weight_base,
+            matmul_weight_mappings[0][0],
+            matmul_weight_mappings[0][1],
+            matmul_weight_mappings[1][0],
+            matmul_weight_mappings[1][1],
+            matmul_weight_mappings[2][0],
+            matmul_weight_mappings[2][1],
             len(matmuls),
-            case_matmul_words,
-            case_matmul_macs,
+            last_matmul_words,
+            last_matmul_macs,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -1503,15 +1550,15 @@ def build(argv: list[str] | None = None) -> int:
                     0,
                 ]
             )
-            matmul = matmuls[0]
-            issue_words.extend(
-                [
-                    (int(Major.TENSOR) << 8) | int(Tensor.MATMUL),
-                    int(matmul["descriptor_id"]),
-                    int(matmul["pc"]),
-                    0,
-                ]
-            )
+            for matmul in matmuls:
+                issue_words.extend(
+                    [
+                        (int(Major.TENSOR) << 8) | int(Tensor.MATMUL),
+                        int(matmul["descriptor_id"]),
+                        int(matmul["pc"]),
+                        0,
+                    ]
+                )
         else:
             transfer = transfers[0]
             issue_words.extend(
@@ -1551,10 +1598,9 @@ def build(argv: list[str] | None = None) -> int:
         )
         total_embedding_checkpoint_bytes += embedding_checkpoint_bytes
         total_rms_checkpoint_bytes += rms_checkpoint_bytes
-        matmul_checkpoint_bytes = (
-            int(matmuls[0]["weight_source"]["declared_segment_bytes"])
-            if matmuls
-            else 0
+        matmul_checkpoint_bytes = sum(
+            int(matmul["weight_source"]["declared_segment_bytes"])
+            for matmul in matmuls
         )
         total_matmul_checkpoint_bytes += matmul_checkpoint_bytes
         total_checkpoint_bytes += (
@@ -1592,7 +1638,13 @@ def build(argv: list[str] | None = None) -> int:
                     "transfer_index_base": transfer_index_base,
                     "transfer_source_base": transfer_source_base,
                     "matmul_input_base": matmul_input_base,
-                    "matmul_weight_base": matmul_weight_base,
+                    "matmul_weight_objects": [
+                        {
+                            "object_id": object_id,
+                            "base_words": base_words,
+                        }
+                        for object_id, base_words in matmul_weight_mappings
+                    ],
                     "output_base": output_base,
                 },
                 "expected": {
@@ -1642,23 +1694,24 @@ def build(argv: list[str] | None = None) -> int:
         )
 
     if (
-        total_launches != 16
+        total_launches != 20
         or total_gathers != 6
         or total_embeddings != 4
         or total_rms_norms != 2
         or total_transfers != 2
-        or total_matmuls != 2
+        or total_matmuls != 6
         or total_rope_words != 1_024
         or total_rms_words != 8_192
         or total_transfer_words != 32_768
-        or total_matmul_words != 8_192
-        or total_matmul_macs != 33_554_432
-        or len(expected_words) != 66_560
+        or total_matmul_words != 12_288
+        or total_matmul_macs != 50_331_648
+        or len(expected_words) != 70_656
         or total_embedding_checkpoint_bytes != 32_768
         or total_rms_checkpoint_bytes != 16_384
-        or total_matmul_checkpoint_bytes != 67_108_864
-        or total_checkpoint_bytes != 67_158_016
-        or total_views != 58
+        or total_matmul_checkpoint_bytes != 100_663_296
+        or total_checkpoint_bytes != 100_712_448
+        or staged_matmul_bytes != 50_331_648
+        or total_views != 70
     ):
         raise SystemExit(
             "witness depth changed: "
@@ -1737,18 +1790,20 @@ def build(argv: list[str] | None = None) -> int:
             "VECTOR.RMS_NORM launches produce 8,192 BF16 codes using two "
             "bounded gain reads, and two DeepSeek stride-zero DMA.TRANSFER "
             "launches produce 32,768 BF16 codes from the prior embedding "
-            "result; two complete Qwen layer-zero query TENSOR.MATMUL launches "
-            "consume 33,554,432 authenticated BF16 weights and MACs and produce "
-            "8,192 BF16 codes; Qwen then fails closed at the next "
-            "TENSOR.MATMUL and DeepSeek at "
+            "result; six complete Qwen layer-zero query/key/value "
+            "TENSOR.MATMUL launches consume 100,663,296 authenticated BF16 "
+            "weight bytes, execute 50,331,648 MACs, and produce 12,288 BF16 "
+            "codes; Qwen then fails closed at VECTOR.HEAD_RMS_NORM and "
+            "DeepSeek at "
             "LINK.MULTICAST or VECTOR.MHC; this is not a whole-model, "
             "prefill, token-selection, or decoding claim"
         ),
         "supported_profile": (
             "dense one-index FP32 DMA.GATHER plus exact token-zero BF16 "
             "TENSOR.EMBED_LOOKUP with 4,096-code rows, exact one-row Qwen "
-            "BF16 RMSNorm, one complete Qwen 1x4096-by-4096x4096 query "
-            "MATMUL through the declared single-lane ascending-K association, "
+            "BF16 RMSNorm, three descriptor-driven Qwen 1x4096 query/key/value "
+            "MATMUL launches with 4,096/1,024/1,024 output columns through the "
+            "declared single-lane ascending-K association, "
             "and DeepSeek four-copy stride-zero BF16 transfer; "
             "resolved views, unscaled operands, and numeric contracts are "
             "bound before each launch"
@@ -1778,6 +1833,12 @@ def build(argv: list[str] | None = None) -> int:
             total_matmul_checkpoint_bytes
         ),
         "selected_checkpoint_byte_count": total_checkpoint_bytes,
+        "staged_matmul_weight_layout": {
+            "bytes": staged_matmul_bytes,
+            "matrices": sorted(
+                matrix_staging.values(), key=lambda item: int(item["base_words"])
+            ),
+        },
         "result_word_count": len(expected_words),
         "resolved_view_count": total_views,
         "capability_fault_count": len(records),
