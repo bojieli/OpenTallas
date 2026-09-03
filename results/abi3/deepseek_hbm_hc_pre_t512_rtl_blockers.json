@@ -1,0 +1,68 @@
+{
+  "schema": "opentallas.abi3.deepseek_hbm_hc_pre_t512_rtl_blockers.v1",
+  "status": "open",
+  "boundary": "production RTL execution of DeepSeek HBM PC 14 descriptor 546 VECTOR.MHC/HYPER_CONNECT_PRE",
+  "functional_qualification": "results/abi3/deepseek_hbm_hc_pre_t512_functional_qualification.json",
+  "shipped_deployment_sha256": "2380c602842f716f1fcdc277751b6243e0e9610bfccdcc7ed9f9c27ef478aff7",
+  "shipped_capability_sha256": "1eb2e92dac1d9fb8937b7724953d2f65993bd56e342e9058569442eb61d74bad",
+  "descriptor_id": 546,
+  "program_counter": 14,
+  "first_issue_geometry": {
+    "hidden_bf16": [512, 4, 4096],
+    "projection_fp32": [24, 16384],
+    "weights_fp32": [512, 2, 4],
+    "combination_fp32": [512, 4, 4],
+    "ordered_projection_fused_product_adds": 201326592
+  },
+  "blockers": [
+    {
+      "id": "RTL-HCPRE-CR32-EXP",
+      "status": "open",
+      "requirement": "A reusable finite-binary32 correctly-rounded exponential datapath for every nonpositive HC_PRE softmax argument, with ready/valid backpressure and fail-closed exceptional-value behavior.",
+      "acceptance": "Independent exact-code differential vectors cover normals, subnormals, underflow ties, signed zero, and the complete HC_PRE reachable-domain corpus; Icarus and pinned Verilator agree bit-for-bit.",
+      "blocks": ["stable softmax", "production numeric completeness"]
+    },
+    {
+      "id": "RTL-HCPRE-CR32-SIGMOID",
+      "status": "open",
+      "requirement": "A reusable finite-binary32 correctly-rounded logistic-sigmoid datapath for the eight HC_PRE coefficient fields per token.",
+      "acceptance": "Independent exact-code differential vectors cover sign symmetry, saturation boundaries, ties, normals, subnormals, and the complete HC_PRE reachable-domain corpus on both RTL simulators.",
+      "blocks": ["pre coefficients", "post coefficients", "production numeric completeness"]
+    },
+    {
+      "id": "RTL-HCPRE-RN32-DIVIDE",
+      "status": "open",
+      "requirement": "A reusable correctly-rounded finite binary32 divider with explicit zero-denominator, nonfinite-input, overflow, underflow, and poison behavior.",
+      "acceptance": "Independent rational-oracle differentials cover all HC_PRE softmax and Sinkhorn denominator classes, adversarial rounding boundaries, and backpressure on Icarus and pinned Verilator.",
+      "blocks": ["stable softmax", "Sinkhorn row normalization", "Sinkhorn column normalization"]
+    },
+    {
+      "id": "RTL-HCPRE-SINKHORN20",
+      "status": "open",
+      "requirement": "A controller/datapath that performs the frozen source-major 4x4 stable softmax, one initial column normalization, and exactly 19 further row-then-column pairs without reassociation.",
+      "acceptance": "Stage-index and matrix-orientation sentinels distinguish 19 from 20 stages and source-major from transposed execution; final 8192 output words match the functional qualification exactly.",
+      "blocks": ["combination matrix", "descriptor 546 retirement"]
+    },
+    {
+      "id": "RTL-HCPRE-PROJECTION-SCHEDULE",
+      "status": "open",
+      "requirement": "A bounded parallel schedule and physical lane organization for 512x24x16384 increasing-K fused product-adds that preserves each row's exact association while meeting declared resource, queue, SRAM-bank, and counter contracts.",
+      "acceptance": "The schedule accounts for all 201326592 fused product-adds, exposes deterministic issue/commit cycles under backpressure, proves no omitted or duplicated K term, and is parameterized for the final 320-token block and one-token decode.",
+      "blocks": ["practical full-shape RTL simulation", "cycle fidelity", "future TPOT accounting"]
+    },
+    {
+      "id": "RTL-HCPRE-PC14-INTEGRATION",
+      "status": "open",
+      "requirement": "Integrate the reusable numeric blocks and parallel projection schedule behind the ordinary ABI 3.0 VECTOR.MHC issue path for descriptor 546, including wait event 3, signal event 4, counter class 536, views 538-543, and schedule 545.",
+      "acceptance": "The authentic T=512 vector retires through the shipped bridge on Icarus and pinned Verilator, writes all and only 12288 expected FP32 words, matches the retained functional vectors exactly, and writes zero output bytes for every admitted fail-stop mutation.",
+      "blocks": ["shipped prefix beyond PC 14", "RTL operator qualification"]
+    }
+  ],
+  "forbidden_shortcuts": [
+    "No input-vector-indexed or output-vector-indexed lookup table may stand in for reusable arithmetic.",
+    "No host precomputation may inject pre, post, softmax, Sinkhorn, or projection results into RTL.",
+    "No reduced hidden width, reduced token count, sparse projection, fewer Sinkhorn stages, relaxed comparison, or altered reduction association may be called full-shape qualification.",
+    "The functional result must not be represented as RTL execution, model-token generation, EOS evidence, architectural latency, or TPOT."
+  ],
+  "completion_rule": "status may become closed only when every blocker is closed by cited dual-simulator reusable-RTL evidence and the authentic first T=512 issue matches all 12288 retained output words"
+}
