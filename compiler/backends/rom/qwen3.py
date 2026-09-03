@@ -129,7 +129,10 @@ NUMERIC_CONTRACTS = (
     "qwen3_silu_mul_bf16_v1",
 )
 
-FEATURES = (
+# The hardware capability retains ABI 3.0 compatibility engines.  A program
+# requires only the subset its descriptors actually use; in particular the
+# production Qwen program has neither STATE nor link records.
+CAPABILITY_FEATURES = (
     Feature.HOST_QUEUE_ABI,
     Feature.DEPLOYMENT_DESCRIPTOR_ABI,
     Feature.DETERMINISTIC_MICROSEQUENCER,
@@ -137,6 +140,14 @@ FEATURES = (
     Feature.TRANSACTIONAL_STATE,
     Feature.ON_DEVICE_SELECTION,
     Feature.INTEGRITY_RETRY,
+)
+
+PROGRAM_FEATURES = (
+    Feature.HOST_QUEUE_ABI,
+    Feature.DEPLOYMENT_DESCRIPTOR_ABI,
+    Feature.DETERMINISTIC_MICROSEQUENCER,
+    Feature.BF16_TENSOR,
+    Feature.ON_DEVICE_SELECTION,
 )
 
 
@@ -154,7 +165,7 @@ def qwen3_rom_capability(
     capability = Capability(
         capability_id="",
         topology_class=int(TopologyClass.SINGLE_CHIP),
-        features=tuple(int(f) for f in FEATURES),
+        features=tuple(int(f) for f in CAPABILITY_FEATURES),
         limits={
             "max_instructions": 4096,
             "max_descriptors": 16384,
@@ -298,7 +309,7 @@ def qwen3_rom_policy(
         tile_cols=128,
         tile_depth=128,
         defects=tuple(defects),
-        features=FEATURES,
+        features=PROGRAM_FEATURES,
         place_region=_place_region,
         emit_topology=_topology,
         link_plan=None,

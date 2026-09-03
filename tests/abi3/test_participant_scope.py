@@ -317,7 +317,12 @@ def assert_refused(deployment: Any, capability: Capability, pattern: str) -> Non
 
 @pytest.fixture()
 def capability() -> Capability:
-    return probe_capability()
+    value = probe_capability()
+    value.features = tuple(
+        sorted({*value.features, int(Feature.INTEGRITY_RETRY)})
+    )
+    value.validate()
+    return value
 
 
 def test_a_node_scoped_collective_is_admitted_on_chip_and_on_wafer(capability) -> None:

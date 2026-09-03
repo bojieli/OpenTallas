@@ -79,6 +79,7 @@ def wafer_capability(
                 Feature.ON_DEVICE_SELECTION,
                 Feature.INTER_CHIP_ENDPOINT,
                 Feature.WAFER_ENDPOINT,
+                Feature.INTEGRITY_RETRY,
             )
         ),
         limits={

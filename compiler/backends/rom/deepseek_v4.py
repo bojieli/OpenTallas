@@ -112,7 +112,11 @@ HBM_BYTES = 1536 << 30
 #: HBM-attachment ring at the wafer/package boundary.
 LINK_CLASS_COUNT = 3
 
-FEATURES = (
+# Compatibility support advertised by the wafer capability is distinct from
+# the feature vector required by one program.  STATE is unused by the direct
+# live-buffer profile, while packet integrity is required automatically when
+# the builder sees the wafer's actual COMMUNICATION descriptors.
+CAPABILITY_FEATURES = (
     Feature.HOST_QUEUE_ABI,
     Feature.DEPLOYMENT_DESCRIPTOR_ABI,
     Feature.DETERMINISTIC_MICROSEQUENCER,
@@ -123,6 +127,17 @@ FEATURES = (
     Feature.ON_DEVICE_SELECTION,
     Feature.WAFER_ENDPOINT,
     Feature.INTEGRITY_RETRY,
+)
+
+PROGRAM_FEATURES = (
+    Feature.HOST_QUEUE_ABI,
+    Feature.DEPLOYMENT_DESCRIPTOR_ABI,
+    Feature.DETERMINISTIC_MICROSEQUENCER,
+    Feature.BF16_TENSOR,
+    Feature.FP8_E4M3FN_TENSOR,
+    Feature.MXFP4_E2M1_E8M0,
+    Feature.ON_DEVICE_SELECTION,
+    Feature.WAFER_ENDPOINT,
 )
 
 NUMERIC_CONTRACTS = (
@@ -252,7 +267,7 @@ def deepseek_v4_rom_capability(
     capability = Capability(
         capability_id="",
         topology_class=int(TopologyClass.WAFER_LOGICAL_DEVICE),
-        features=tuple(int(f) for f in FEATURES),
+        features=tuple(int(f) for f in CAPABILITY_FEATURES),
         limits={
             "max_instructions": 8192,
             "max_descriptors": 65536,
@@ -571,7 +586,7 @@ def deepseek_v4_rom_policy(
         tile_cols=128,
         tile_depth=256,
         defects=tuple(defects),
-        features=FEATURES,
+        features=PROGRAM_FEATURES,
         place_region=_WaferPlacer(
             tile_rom_bytes=tile_rom_bytes,
             tiles_per_reticle=tiles_per_reticle,

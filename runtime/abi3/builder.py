@@ -473,6 +473,17 @@ class DeploymentBuilder:
         virtual_channel: int = 0,
         key: str | None = None,
     ) -> int:
+        # Bit 10 is a requirement of a data-bearing link descriptor, not a
+        # blanket property of every deployment produced by a link-capable
+        # backend.  A one-chip Qwen program has no link operation and must not
+        # inherit packet retry machinery merely because the shared chip also
+        # serves a clustered product.  Conversely, a descriptor that requests
+        # integrity checking or replay must bind that requirement into the
+        # program header automatically; relying on each backend to remember it
+        # lets two programs with the same wire record advertise different
+        # requirements.
+        if integrity_mode != IntegrityMode.NONE or retry_bound:
+            self.require(Feature.INTEGRITY_RETRY)
         descriptor = Descriptor(
             descriptor_id=NO_ID,
             descriptor_type=ExtendedDescriptorType.COMMUNICATION,

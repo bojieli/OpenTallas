@@ -120,7 +120,11 @@ the models without a host-compute fallback:
 The frozen ABI 3.0 wire registry still describes `STATE` records for backward
 compatibility, but the four required acceptance deployments emit zero `STATE`
 descriptors and zero `STATE` instructions. Their absence is a structural
-certificate condition. The state controller, checkpoint/restart, durable
+certificate condition. A production program therefore does not require feature
+bit 6 merely because its capability retains compatibility support. Feature bit
+10 is likewise required by the builder only when a communication descriptor
+actually requests packet integrity or replay; it is absent from a single-chip
+program with no link traffic. The state controller, checkpoint/restart, durable
 publication, and recovery protocol are therefore not dependencies of model
 correctness, RTL correlation, long-context acceptance, or the ROM-versus-HBM
 comparison.

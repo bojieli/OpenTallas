@@ -304,7 +304,11 @@ The program-header feature vector assigns:
 
 Unassigned bits are reserved. Qwen HBM still advertises bit 8 because the same
 chip/netlist is used in the 32-node DeepSeek system, although a one-node Qwen
-deployment does not require link instructions.
+deployment does not require link instructions. Program requirements are
+operation-derived: declaring a `STATE` descriptor requires bit 6, and declaring
+a communication descriptor with nonzero integrity or replay requires bit 10.
+A backend capability may advertise either compatibility feature without forcing
+an otherwise unrelated program to require it.
 
 ## 10. Counter namespaces
 

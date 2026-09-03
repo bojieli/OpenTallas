@@ -76,6 +76,7 @@ def capability(nodes: int = 32) -> Capability:
                 Feature.TRANSACTIONAL_STATE,
                 Feature.ON_DEVICE_SELECTION,
                 Feature.INTER_CHIP_ENDPOINT,
+                Feature.INTEGRITY_RETRY,
             )
         ),
         limits={

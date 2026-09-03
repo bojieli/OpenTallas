@@ -58,6 +58,7 @@ from runtime.abi3.constants import (
     Attention,
     Control,
     Dma,
+    Feature,
     Major,
     NO_ID,
     Permission,
@@ -66,6 +67,7 @@ from runtime.abi3.constants import (
     Route,
     StorageClass,
     TopologyClass,
+    feature_bits,
 )
 from runtime.abi3.descriptors import ExtendedDescriptorType, SelectorKind, Symbol
 from runtime.sim.device import loop_trip_count
@@ -1444,6 +1446,22 @@ def test_cluster_emits_link_traffic_and_single_chip_does_not(moe, cluster, singl
     # node-sharded output columns and the coordinated commit.
     assert route_class["activation_transfer"] in classes
     assert route_class["coordinated_commit"] in classes
+
+
+def test_hbm_program_features_follow_emitted_operations(moe, cluster, single_chip):
+    from runtime.abi3.records import split_program
+
+    alone = lower_to_abi3(moe, single_chip)
+    clustered = lower_to_abi3(moe, cluster)
+    alone_header, _ = split_program(alone.program)
+    clustered_header, _ = split_program(clustered.program)
+    alone_features = feature_bits(alone_header.required_features)
+    clustered_features = feature_bits(clustered_header.required_features)
+
+    assert int(Feature.TRANSACTIONAL_STATE) not in alone_features
+    assert int(Feature.INTEGRITY_RETRY) not in alone_features
+    assert int(Feature.TRANSACTIONAL_STATE) not in clustered_features
+    assert int(Feature.INTEGRITY_RETRY) in clustered_features
 
 
 def test_cluster_completion_barrier_waits_for_work_and_gates_token_append(

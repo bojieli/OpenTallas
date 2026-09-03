@@ -64,6 +64,7 @@ from compiler.ir.v3.kernel_ir import (
 )
 from compiler.ir.v3.lowering import KERNEL_TO_ENGINE
 from runtime.abi3.constants import (
+    Feature,
     Link,
     Major,
     NO_ID,
@@ -74,6 +75,7 @@ from runtime.abi3.constants import (
     StorageClass,
     Tensor as TensorOp,
     TopologyClass,
+    feature_bits,
 )
 from runtime.abi3.descriptors import (
     ExtendedDescriptorType,
@@ -1948,6 +1950,20 @@ def test_deepseek_links_are_inside_the_layer_loop(deepseek_build):
 def test_qwen_single_chip_emits_no_link_traffic(qwen_build):
     deployment, _plan = qwen_build
     assert not [i for i in _instructions(deployment) if i.major == Major.LINK]
+
+
+def test_program_feature_requirements_follow_the_emitted_rom_operations(
+    qwen_build, deepseek_build
+):
+    qwen_header, _ = split_program(qwen_build[0].program)
+    deepseek_header, _ = split_program(deepseek_build[0].program)
+    qwen_features = feature_bits(qwen_header.required_features)
+    deepseek_features = feature_bits(deepseek_header.required_features)
+
+    assert int(Feature.TRANSACTIONAL_STATE) not in qwen_features
+    assert int(Feature.INTEGRITY_RETRY) not in qwen_features
+    assert int(Feature.TRANSACTIONAL_STATE) not in deepseek_features
+    assert int(Feature.INTEGRITY_RETRY) in deepseek_features
 
 
 # ---------------------------------------------------------------------------
