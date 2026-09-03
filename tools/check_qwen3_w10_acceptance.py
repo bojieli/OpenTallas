@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.metadata
 import json
 import sys
 from pathlib import Path
@@ -23,6 +24,17 @@ if str(REPO) not in sys.path:
     sys.path.insert(0, str(REPO))
 
 from runtime.abi3.capability import Capability, canonical_json, digest_of  # noqa: E402
+from runtime.abi3.constants import (  # noqa: E402
+    ABI_MAJOR,
+    ABI_MINOR,
+    Major,
+    Permission,
+    StorageClass,
+)
+from runtime.abi3.deployment import Deployment  # noqa: E402
+from runtime.abi3.descriptors import ExtendedDescriptorType  # noqa: E402
+from runtime.abi3.records import decode_body, split_program  # noqa: E402
+from runtime.abi3.verifier import VerificationReport, verify_deployment  # noqa: E402
 
 SCHEMA = "opentallas.abi3.qwen3_w10_acceptance.v1"
 RECORD_SCHEMA = "opentallas.abi3.accelerator_tokens.v1"
@@ -36,7 +48,9 @@ PREFILL_ASSOCIATION_POLICY = (
 ORACLE_TOOL = "tools/run_qwen3_reference_oracle.py"
 ORACLE_TOOL_VERSION = "qwen3_reference_oracle.py:v1"
 TOKENIZER_SHA256 = "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4"
+TOKENIZERS_VERSION = "0.22.2"
 BLOCKED_CONTRACT = "bf16_bf16_fp32_blocked_rne_v1"
+ABI_STATE_PERMISSIONS = int(Permission.STATE_PREPARE | Permission.STATE_COMMIT)
 
 KERNEL_IR = REPO / "build/ir-v3/qwen3-8b/kernel_ir.v3.json"
 ORACLE = REPO / "results/abi3/qwen3_reference_oracle_long.json"
@@ -135,6 +149,7 @@ COMMON_SOURCES = (
     "runtime/sim/formats.py",
     "runtime/sim/generators.py",
     "runtime/sim/memory.py",
+    "runtime/sim/performance.py",
     "runtime/tensor_accelerator/attention.py",
     "runtime/tensor_accelerator/bf16.py",
     "runtime/tensor_accelerator/elementwise.py",
@@ -483,24 +498,186 @@ def _check_inputs(
         target = record.get("target") if isinstance(record.get("target"), dict) else {}
         if checkpoint.get("deployment_digest_binding") != target.get("deployment_digest"):
             problems.append("checkpoint deployment binding differs from target deployment")
-    # If a published deployment is retained, every byte named by its identity
-    # must still be present and current.  It is optional at producer level.
+    # W10 is an artifact-execution claim, so the exact bundle that was written,
+    # read back, admitted, and executed is mandatory evidence.  A producer may
+    # omit --publish for a diagnostic prefix; that diagnostic is intentionally
+    # ineligible for W10.
     published = inputs.get("published_deployment")
-    if published is not None:
-        if not isinstance(published, dict):
-            problems.append("inputs.published_deployment is not an object")
-        else:
-            root = _resolved_record_path(published.get("path"))
-            for name, filename in (("manifest", "deployment.json"), ("descriptors", "descriptors.bin"), ("program", "program.bin")):
-                if root is None:
-                    problems.append("published deployment has no path")
-                    break
-                path = root / filename
-                if not path.is_file():
-                    problems.append(f"published deployment is missing {filename}")
-                else:
-                    problems += _check_file_identity(published.get(name), path, f"published_deployment.{name}")
+    if not isinstance(published, dict):
+        problems.append("inputs.published_deployment is required for W10")
+    else:
+        root = _resolved_record_path(published.get("path"))
+        for name, filename in (("manifest", "deployment.json"), ("descriptors", "descriptors.bin"), ("program", "program.bin")):
+            if root is None:
+                problems.append("published deployment has no path")
+                break
+            path = root / filename
+            if not path.is_file():
+                problems.append(f"published deployment is missing {filename}")
+            else:
+                problems += _check_file_identity(published.get(name), path, f"published_deployment.{name}")
     return problems
+
+
+def _check_published_deployment(
+    record: Mapping[str, Any],
+    backend: str,
+    capability: Capability,
+    graph: Mapping[str, Any],
+) -> tuple[Deployment | None, VerificationReport | None, list[str]]:
+    """Reopen and independently admit the exact serialized W10 bundle.
+
+    This is deliberately stricter than trusting the producer's verification
+    dictionary.  ``Deployment.read`` re-decodes ``program.bin`` and
+    ``descriptors.bin`` and checks every digest edge.  We then inspect the
+    decoded ABI surface and run the independent verifier again.
+
+    Qwen's live KV cache is an ordinary read/write HBM object in the final,
+    simple ABI 3.0 design.  A STATE descriptor, STATE instruction, STATE
+    storage object, or prepare/commit permission is therefore a regression to
+    the superseded transactional representation, not additional robustness.
+    """
+
+    inputs = record.get("inputs")
+    published = inputs.get("published_deployment") if isinstance(inputs, dict) else None
+    root = (
+        _resolved_record_path(published.get("path"))
+        if isinstance(published, dict)
+        else None
+    )
+    if root is None:
+        return None, None, ["serialized deployment cannot be reopened"]
+
+    problems: list[str] = []
+    try:
+        manifest = _load(root / "deployment.json")
+    except (OSError, ValueError, KeyError, TypeError, json.JSONDecodeError) as exc:
+        return None, None, [
+            f"serialized deployment manifest cannot be decoded: {type(exc).__name__}: {exc}"
+        ]
+    if manifest.get("abi") != {"major": ABI_MAJOR, "minor": ABI_MINOR}:
+        problems.append("serialized deployment is not ABI 3.0")
+
+    try:
+        deployment = Deployment.read(root)
+    except (OSError, ValueError, KeyError, TypeError, json.JSONDecodeError) as exc:
+        return None, None, problems + [
+            f"serialized deployment failed authenticated readback: {type(exc).__name__}: {exc}"
+        ]
+
+    target = record.get("target") if isinstance(record.get("target"), dict) else {}
+    source_identity = (
+        deployment.source_identity
+        if isinstance(deployment.source_identity, Mapping)
+        else {}
+    )
+    identity_checks = {
+        "digest": deployment.deployment_digest.hex()
+        == target.get("deployment_digest"),
+        "target id": deployment.target_id == TARGET_IDS[backend],
+        "backend": deployment.backend == TARGET_BACKENDS[backend],
+        "model id": deployment.model_id == "qwen3-8b",
+        "capability digest": deployment.capability_digest == capability.digest,
+        "topology class": deployment.topology_class == 0,
+        "graph id": source_identity.get("graph_id") == graph.get("graph_id"),
+    }
+    for name, passed in identity_checks.items():
+        if not passed:
+            problems.append(f"serialized deployment {name} differs from the W10 record")
+
+    try:
+        header, body = split_program(deployment.program)
+        instructions = decode_body(body)
+    except (ValueError, KeyError, TypeError) as exc:
+        return deployment, None, problems + [
+            f"serialized deployment program cannot be decoded: {type(exc).__name__}: {exc}"
+        ]
+    if header.abi_major != ABI_MAJOR or header.abi_minor != ABI_MINOR:
+        problems.append("serialized program header is not ABI 3.0")
+    if manifest.get("descriptor_count") != len(deployment.table):
+        problems.append("serialized manifest descriptor count is inconsistent")
+    if manifest.get("instruction_count") != len(instructions):
+        problems.append("serialized manifest instruction count is inconsistent")
+    if manifest.get("entrypoints") != [dict(entry) for entry in deployment.entrypoints]:
+        problems.append("serialized manifest entrypoints are inconsistent")
+    if header.entrypoint_count != len(deployment.entrypoints):
+        problems.append("serialized program entrypoint count is inconsistent")
+
+    entrypoints = list(deployment.entrypoints)
+    entries_are_mappings = all(isinstance(entry, Mapping) for entry in entrypoints)
+    phases = [entry.get("phase") for entry in entrypoints] if entries_are_mappings else []
+    ids = [entry.get("entrypoint_id") for entry in entrypoints] if entries_are_mappings else []
+    valid_entrypoint_identity = (
+        len(entrypoints) == 2
+        and entries_are_mappings
+        and all(type(value) is int for value in phases + ids)
+        and sorted(phases) == [0, 1]
+        and sorted(ids) == [0, 1]
+    )
+    if not valid_entrypoint_identity:
+        problems.append("serialized deployment lacks exact prefill/decode entrypoints")
+    for entry in entrypoints if entries_are_mappings else ():
+        policy_id = entry.get("generation_policy_id")
+        if not _integer(policy_id) or policy_id >= len(deployment.table):
+            problems.append("serialized entrypoint has an invalid generation policy")
+            continue
+        if (
+            deployment.table[int(policy_id)].descriptor_type
+            != int(ExtendedDescriptorType.GENERATION_POLICY)
+        ):
+            problems.append("serialized entrypoint does not name a generation policy")
+
+    state_descriptors = deployment.table.ids_of_type(ExtendedDescriptorType.STATE)
+    state_instructions = [
+        instruction for instruction in instructions if instruction.major == int(Major.STATE)
+    ]
+    memory_objects = [
+        descriptor
+        for descriptor in deployment.table.descriptors()
+        if descriptor.descriptor_type == int(ExtendedDescriptorType.MEMORY_OBJECT)
+    ]
+    state_storage = [
+        descriptor
+        for descriptor in memory_objects
+        if int(descriptor.payload["storage_class"]) == int(StorageClass.STATE)
+    ]
+    state_permissions = [
+        descriptor
+        for descriptor in deployment.table.descriptors()
+        if int(descriptor.permissions) & ABI_STATE_PERMISSIONS
+    ]
+    live_hbm = [
+        descriptor
+        for descriptor in memory_objects
+        if int(descriptor.payload["storage_class"]) == int(StorageClass.HBM)
+        and int(descriptor.permissions) & int(Permission.READ)
+        and int(descriptor.permissions) & int(Permission.WRITE)
+    ]
+    if state_descriptors:
+        problems.append("Qwen deployment contains an ABI STATE descriptor")
+    if state_instructions:
+        problems.append("Qwen deployment contains an ABI STATE instruction")
+    if state_storage:
+        problems.append("Qwen deployment contains a STATE storage object")
+    if state_permissions:
+        problems.append("Qwen deployment contains prepare/commit permissions")
+    if not live_hbm:
+        problems.append("Qwen deployment contains no ordinary read/write HBM buffer")
+
+    try:
+        independent = verify_deployment(deployment, capability)
+    except (ValueError, KeyError, TypeError) as exc:
+        return deployment, None, problems + [
+            f"serialized deployment independent admission failed: {type(exc).__name__}: {exc}"
+        ]
+    if not independent.admitted:
+        problems.append("serialized deployment fails independent admission")
+    if independent.state_resources != 0:
+        problems.append("independent admission found nonzero ABI STATE resources")
+    producer_report = record.get("verification")
+    if producer_report != independent.to_dict():
+        problems.append("producer verification differs from independent readback admission")
+    return deployment, independent, problems
 
 
 def _association_without_digest(manifest: Mapping[str, Any]) -> dict[str, Any]:
@@ -580,6 +757,13 @@ def _frozen_inputs(spec: WorkloadSpec) -> tuple[dict[str, Any], dict[str, Any], 
         problems.append("frozen workload id/digest differs from the W10 contract")
     if len(prompt) != spec.prompt_count or workload.get("max_new_tokens") != spec.cap:
         problems.append("frozen workload length/budget differs from the W10 contract")
+    rendered = workload.get("rendered_text")
+    if not isinstance(rendered, str) or not rendered:
+        problems.append("frozen workload has no rendered input text")
+    elif hashlib.sha256(rendered.encode("utf-8")).hexdigest() != workload.get(
+        "rendered_text_sha256"
+    ):
+        problems.append("frozen workload rendered input text digest is invalid")
     if spec.repeated_token is not None and prompt != [spec.repeated_token] * spec.prompt_count:
         problems.append("frozen stress prompt is not 8,000 copies of token 151644")
     if oracle.get("schema") != "opentallas.abi3.reference_oracle.v1" or oracle.get("model_id") != "qwen3-8b":
@@ -601,6 +785,126 @@ def _frozen_inputs(spec: WorkloadSpec) -> tuple[dict[str, Any], dict[str, Any], 
     return workload, result, list(prompt), list(gold), problems
 
 
+def _text_sha256(value: str) -> str:
+    return hashlib.sha256(value.encode("utf-8")).hexdigest()
+
+
+def _check_token_text(
+    record: Mapping[str, Any],
+    spec: WorkloadSpec,
+    workload: Mapping[str, Any],
+    oracle_result: Mapping[str, Any],
+    prompt: Sequence[int],
+    generated: Sequence[int],
+) -> tuple[dict[str, Any], list[str]]:
+    """Decode token IDs independently and publish human-auditable text.
+
+    The functional simulator returns IDs, which is the architectural output.
+    This independent pass uses the checkpoint's hash-pinned tokenizer to prove
+    those IDs are also a legitimate continuation of the exact displayed input.
+    No decoded string is fed back into execution.
+    """
+
+    problems: list[str] = []
+    inputs = record.get("inputs") if isinstance(record.get("inputs"), dict) else {}
+    checkpoint = (
+        inputs.get("checkpoint_root")
+        if isinstance(inputs.get("checkpoint_root"), dict)
+        else {}
+    )
+    root = _resolved_record_path(checkpoint.get("path"))
+    tokenizer_path = root / "tokenizer.json" if root is not None else None
+    evidence: dict[str, Any] = {
+        "tokenizer": {
+            "path": _relative(tokenizer_path) if tokenizer_path is not None else None,
+            "sha256": None,
+            "library": "tokenizers",
+            "library_version": None,
+        }
+    }
+    if tokenizer_path is None or not tokenizer_path.is_file():
+        return evidence, ["checkpoint tokenizer.json is unavailable"]
+    actual_hash = _sha256(tokenizer_path)
+    evidence["tokenizer"]["sha256"] = actual_hash
+    if actual_hash != TOKENIZER_SHA256:
+        problems.append("checkpoint tokenizer.json is not the pinned Qwen tokenizer")
+
+    try:
+        library_version = importlib.metadata.version("tokenizers")
+    except importlib.metadata.PackageNotFoundError:
+        return evidence, problems + ["pinned tokenizers library is unavailable"]
+    evidence["tokenizer"]["library_version"] = library_version
+    if library_version != TOKENIZERS_VERSION:
+        problems.append(
+            f"tokenizers library is {library_version}, expected {TOKENIZERS_VERSION}"
+        )
+    try:
+        from tokenizers import Tokenizer
+
+        tokenizer = Tokenizer.from_file(str(tokenizer_path))
+        prompt_text = tokenizer.decode(list(prompt), skip_special_tokens=False)
+        raw_output = tokenizer.decode(list(generated), skip_special_tokens=False)
+        visible_output = tokenizer.decode(list(generated), skip_special_tokens=True)
+        prompt_round_trip = tokenizer.encode(
+            str(workload.get("rendered_text", "")), add_special_tokens=False
+        ).ids
+        output_round_trip = tokenizer.encode(
+            raw_output, add_special_tokens=False
+        ).ids
+    except (OSError, TypeError, ValueError) as exc:
+        return evidence, problems + [
+            f"checkpoint tokenizer cannot decode W10 tokens: {type(exc).__name__}: {exc}"
+        ]
+
+    rendered = workload.get("rendered_text")
+    if prompt_text != rendered:
+        problems.append("decoded prompt does not equal the frozen rendered input text")
+    if list(prompt_round_trip) != list(prompt):
+        problems.append("rendered input text does not round-trip to the frozen prompt IDs")
+    if raw_output != oracle_result.get("raw_decoded_text"):
+        problems.append("decoded raw output does not equal the frozen oracle text")
+    if visible_output != oracle_result.get("visible_decoded_text"):
+        problems.append("decoded visible output does not equal the frozen oracle text")
+    if spec is NATURAL and list(output_round_trip) != list(generated):
+        problems.append("natural decoded output does not round-trip to generated IDs")
+    if not visible_output.strip():
+        problems.append("decoded visible output is empty or whitespace-only")
+    if "\ufffd" in raw_output or "\ufffd" in visible_output:
+        problems.append("decoded output contains a Unicode replacement character")
+
+    evidence.update(
+        {
+            "input": {
+                "token_count": len(prompt),
+                "token_ids_sha256": digest_of(list(prompt)),
+                "rendered_text": prompt_text,
+                "rendered_text_sha256": _text_sha256(prompt_text),
+                "decode_matches_frozen_text": prompt_text == rendered,
+                "encode_round_trip_matches_ids": list(prompt_round_trip)
+                == list(prompt),
+            },
+            "output": {
+                "token_count": len(generated),
+                "token_ids_sha256": digest_of(list(generated)),
+                "raw_decoded_text": raw_output,
+                "raw_decoded_text_sha256": _text_sha256(raw_output),
+                "visible_decoded_text": visible_output,
+                "visible_decoded_text_sha256": _text_sha256(visible_output),
+                "raw_matches_frozen_oracle": raw_output
+                == oracle_result.get("raw_decoded_text"),
+                "visible_matches_frozen_oracle": visible_output
+                == oracle_result.get("visible_decoded_text"),
+                "encode_round_trip_matches_ids": (
+                    list(output_round_trip) == list(generated)
+                    if spec is NATURAL
+                    else "not_required_for_stress"
+                ),
+            },
+        }
+    )
+    return evidence, problems
+
+
 def _check_verification(record: Mapping[str, Any]) -> list[str]:
     report = record.get("verification")
     if not isinstance(report, dict):
@@ -616,11 +920,13 @@ def _check_verification(record: Mapping[str, Any]) -> list[str]:
     proved, declared = report.get("proved_retired_work"), report.get("declared_retired_work")
     if not _integer(proved, minimum=1) or proved != declared:
         problems.append("admission did not exactly prove the declared retired work")
+    if report.get("state_resources") != 0:
+        problems.append("Qwen admission reports nonzero ABI STATE resources")
     return problems
 
 
 def _check_steps_and_counters(
-    record: Mapping[str, Any], generated: Sequence[int], prompt_count: int, terminal: str
+    record: Mapping[str, Any], generated: Sequence[int], terminal: str
 ) -> list[str]:
     problems: list[str] = []
     steps = record.get("per_step")
@@ -655,9 +961,6 @@ def _check_steps_and_counters(
         "selection.tokens_selected": len(generated),
         "selection.tokens_appended": len(generated),
         "selection.vocabulary_elements": len(generated) * 151936,
-        "state.prepares": len(generated),
-        "state.commits": len(generated),
-        "state.rows_committed": prompt_count + max(0, len(generated) - 1),
         "instructions.retired": retired,
     }
     for name, expected in required.items():
@@ -665,9 +968,19 @@ def _check_steps_and_counters(
             problems.append(f"counter {name} is {counters.get(name)!r}, expected {expected}")
     if counters.get("selection.invalid_tokens", 0) != 0:
         problems.append("selection.invalid_tokens is nonzero")
-    for name in ("state.bytes_read", "state.bytes_written", "instructions.issued"):
+    for name in (
+        "instructions.issued",
+        "dma.scatter_elements",
+        "attention.kv_bytes_read",
+        "hbm.bytes_written",
+    ):
         if not _integer(counters.get(name), minimum=1):
             problems.append(f"counter {name} is missing or not positive")
+    for name, value in counters.items():
+        if (name.startswith("state.") or name == "engine.state.descriptors") and value != 0:
+            problems.append(
+                f"counter {name} is nonzero in the ordinary live-buffer design"
+            )
     scope, nodes = record.get("counter_scope"), record.get("node_counters")
     if not isinstance(scope, dict) or scope.get("aggregate") != "cluster_total" or scope.get("per_node") != "engine_work_by_node_id" or scope.get("node_count") != 1 or scope.get("node_counters_index") != "NODE_ID":
         problems.append("counter scope is not an explicit measured one-node split")
@@ -678,6 +991,52 @@ def _check_steps_and_counters(
             if nodes[0].get(name) != len(generated):
                 problems.append(f"node counter {name} is inconsistent")
     return problems
+
+
+def _host_functional_performance(
+    record: Mapping[str, Any], generated: Sequence[int]
+) -> tuple[dict[str, Any], list[str]]:
+    """Summarise measured host execution speed without implying RTL speed."""
+
+    problems: list[str] = []
+    wall = record.get("wall_seconds")
+    steps = record.get("per_step")
+    valid_wall = (
+        isinstance(wall, (int, float)) and not isinstance(wall, bool) and wall > 0
+    )
+    if not valid_wall:
+        problems.append("host functional-simulator wall_seconds is missing or invalid")
+        wall = 0.0
+    step_walls: list[float] = []
+    if isinstance(steps, list):
+        for index, step in enumerate(steps):
+            value = step.get("wall_seconds") if isinstance(step, dict) else None
+            if (
+                not isinstance(value, (int, float))
+                or isinstance(value, bool)
+                or value <= 0
+            ):
+                problems.append(f"per_step[{index}] host wall_seconds is invalid")
+            else:
+                step_walls.append(float(value))
+    first = step_walls[0] if len(step_walls) == len(generated) and step_walls else 0.0
+    decode_walls = step_walls[1:] if len(step_walls) == len(generated) else []
+    decode_wall = sum(decode_walls)
+    return {
+        "measurement_class": "host_functional_simulator_observation",
+        "not_rtl_or_hardware_performance": True,
+        "wall_seconds": float(wall),
+        "prompt_plus_first_token_seconds": first,
+        "generated_token_count": len(generated),
+        "generated_tokens_per_wall_second": (
+            len(generated) / float(wall) if valid_wall else None
+        ),
+        "post_prefill_decode_token_count": max(len(generated) - 1, 0),
+        "post_prefill_decode_seconds": decode_wall,
+        "post_prefill_decode_tokens_per_second": (
+            len(decode_walls) / decode_wall if decode_wall > 0 else None
+        ),
+    }, problems
 
 
 def _terminal_kind(
@@ -762,6 +1121,18 @@ def _check_record(
     model, graph = record.get("model"), _load(KERNEL_IR)
     if not isinstance(model, dict) or model.get("model_id") != "qwen3-8b" or model.get("numeric_profile") != "qwen3_bf16_gqa_target_v1" or model.get("graph_id") != graph.get("graph_id"):
         problems.append("model identity is not the source-current Qwen graph")
+    inputs = record.get("inputs") if isinstance(record.get("inputs"), dict) else {}
+    checkpoint = (
+        inputs.get("checkpoint_root")
+        if isinstance(inputs.get("checkpoint_root"), dict)
+        else {}
+    )
+    if (
+        not isinstance(model, dict)
+        or _resolved_record_path(model.get("checkpoint_root"))
+        != _resolved_record_path(checkpoint.get("path"))
+    ):
+        problems.append("model checkpoint root differs from the loaded input boundary")
     generated = record.get("generated_token_ids")
     if not isinstance(generated, list) or not generated or not all(_integer(token) and token < 151936 for token in generated):
         generated = []
@@ -779,9 +1150,25 @@ def _check_record(
     problems += terminal_problems
     problems += _check_verification(record)
     problems += _check_inputs(record, spec, expected_backend, prompt_digest)
+    _deployment, _independent_report, deployment_problems = (
+        _check_published_deployment(
+            record, expected_backend, capability, graph
+        )
+    )
+    problems += deployment_problems
     problems += _check_source_lock(record, expected_backend)
     problems += _check_association(record)
-    problems += _check_steps_and_counters(record, generated, spec.prompt_count, terminal or "invalid")
+    problems += _check_steps_and_counters(
+        record, generated, terminal or "invalid"
+    )
+    text_evidence, text_problems = _check_token_text(
+        record, spec, workload, oracle_result, prompt, generated
+    )
+    problems += text_problems
+    performance, performance_problems = _host_functional_performance(
+        record, generated
+    )
+    problems += performance_problems
     return {
         "path": _relative(path),
         "sha256": _sha256(path),
@@ -789,6 +1176,8 @@ def _check_record(
         "generated_token_ids": generated,
         "terminal_kind": terminal,
         "association_manifest_sha256": (record.get("executed_association") or {}).get("manifest_sha256"),
+        "text_evidence": text_evidence,
+        "host_functional_simulator": performance,
         "record": record,
         "problems": problems,
         "passes": not problems,
@@ -833,6 +1222,8 @@ def validate(mode: str, paths: Sequence[Path]) -> dict[str, Any]:
             "capture_paths_distinct": paths[0].resolve() != paths[1].resolve(),
             "capture_artifacts_distinct": rows[0]["sha256"] != rows[1]["sha256"],
             "full_token_sequences_identical": rows[0]["generated_token_ids"] == rows[1]["generated_token_ids"] == gold,
+            "decoded_text_evidence_identical": rows[0]["text_evidence"]
+            == rows[1]["text_evidence"],
             "executed_association_manifests_identical": left.get("executed_association") == right.get("executed_association"),
             "implementation_identities_identical": left.get("implementation_identity") == right.get("implementation_identity"),
             "architectural_counters_identical": (left.get("counters") == right.get("counters") if mode == "natural" else _non_storage(left.get("counters") or {}) == _non_storage(right.get("counters") or {})),
@@ -841,19 +1232,41 @@ def validate(mode: str, paths: Sequence[Path]) -> dict[str, Any]:
         for name, passed in pair_checks.items():
             if not passed:
                 problems.append(f"pair check failed: {name}")
+    accepted = not problems
     document = {
         "schema": SCHEMA,
-        "status": "pass" if not problems else "fail",
+        "status": "pass" if accepted else "fail",
         "mode": mode,
         "workload_id": spec.workload_id,
         "association_pair_policy": PAIR_POLICY,
         "records": [{key: row[key] for key in ("path", "sha256", "backend", "terminal_kind", "association_manifest_sha256", "passes", "problems")} for row in rows],
         "pair_checks": pair_checks,
+        "abi_profile": {
+            "version": "3.0",
+            "execution_state": "ordinary_live_hbm_sram_buffers",
+            "abi_state_descriptors": 0,
+            "abi_state_instructions": 0,
+            "durable_journal_or_rollback": False,
+            "run_failure_model": "uninterrupted_fail_stop",
+        },
+        "text_evidence": rows[0]["text_evidence"] if rows else {},
+        "host_functional_simulator": [
+            {
+                "record": row["path"],
+                **row["host_functional_simulator"],
+            }
+            for row in rows
+        ],
         "problems": problems,
         "claim_boundary": {
-            "functional_execution_only": True,
-            "timing_or_performance": False,
-            "rtl_or_silicon": False,
+            "acceptance_established": accepted,
+            "required_execution_scope": (
+                "full_causal_model_execution_from_serialized_abi3_artifacts"
+            ),
+            "oracle_token_injection": False,
+            "host_functional_timing_reported": True,
+            "cycle_accurate_rtl_timing_or_hardware_performance": False,
+            "rtl_or_silicon_correctness": False,
         },
     }
     return document

@@ -173,7 +173,7 @@ def _association(implementation: dict, *, calls: int = 1) -> dict:
     return body
 
 
-def _record(mode: str, backend: str) -> dict:
+def _record(mode: str, backend: str, deployment_root: Path) -> dict:
     spec = tool.NATURAL if mode == "natural" else tool.STRESS
     workload = json.loads(spec.workload_path.read_text())
     oracle_body = json.loads(tool.ORACLE.read_text())
@@ -183,6 +183,16 @@ def _record(mode: str, backend: str) -> dict:
     capability_path = tool.CAPABILITIES[backend]
     capability = tool.Capability.from_dict(json.loads(capability_path.read_text()))
     graph = json.loads(tool.KERNEL_IR.read_text())
+    if backend == "hbm_sram":
+        from compiler.backends.hbm_sram.lower import lower_to_abi3
+    else:
+        from compiler.backends.rom.qwen3 import lower_to_abi3
+    from compiler.ir.v3.kernel_ir import KernelGraph
+    from runtime.abi3.verifier import verify_deployment
+
+    serialized = lower_to_abi3(KernelGraph.read(tool.KERNEL_IR), capability)
+    serialized.write(deployment_root)
+    verification = verify_deployment(serialized, capability).to_dict()
     implementation = {
         "backend": "numpy",
         "library": "numpy",
@@ -235,20 +245,19 @@ def _record(mode: str, backend: str) -> dict:
         for index, token in enumerate(generated)
     ]
     prompt_digest = tool.digest_of(prompt)
-    deployment = ("1" if backend == "hbm_sram" else "2") * 64
+    deployment = serialized.deployment_digest.hex()
+    checkpoint_root = REPO / "build/qwen3-8b/deployment-final/tokenizer"
     counters = {
         "selection.tokens_selected": len(generated),
         "selection.tokens_appended": len(generated),
         "selection.vocabulary_elements": len(generated) * 151936,
-        "state.prepares": len(generated),
-        "state.commits": len(generated),
-        "state.rows_committed": len(prompt) + len(generated) - 1,
-        "state.bytes_read": 10,
-        "state.bytes_written": 10,
+        "dma.scatter_elements": len(prompt) + len(generated),
+        "attention.kv_bytes_read": 10 * len(generated),
         "instructions.issued": len(generated),
         "instructions.retired": len(generated) * 7,
         "tensor.multiplications": 99,
         "hbm.bytes_read": 100 if backend == "hbm_sram" else 2,
+        "hbm.bytes_written": 64,
         "rom.bytes_read": 0 if backend == "hbm_sram" else 100,
         "sram.bytes_read": 0 if backend == "hbm_sram" else 3,
     }
@@ -282,17 +291,11 @@ def _record(mode: str, backend: str) -> dict:
             "model_id": "qwen3-8b",
             "graph_id": graph["graph_id"],
             "numeric_profile": "qwen3_bf16_gqa_target_v1",
-            "checkpoint_root": "/checkpoint",
+            "checkpoint_root": tool._relative(checkpoint_root),
         },
         "generation_policy": policy,
         "generation_policy_digest": tool.digest_of(policy),
-        "verification": {
-            "admitted": True,
-            "checks": {"deployment_digest": True, "proved_work_bound": True},
-            "errors": [],
-            "proved_retired_work": 42,
-            "declared_retired_work": 42,
-        },
+        "verification": verification,
         "implementation_identity": implementation,
         "executed_association": _association(implementation),
         "inputs": {
@@ -306,10 +309,16 @@ def _record(mode: str, backend: str) -> dict:
             },
             "reference": _identity(tool.ORACLE),
             "checkpoint_root": {
-                "path": "/checkpoint",
+                "path": tool._relative(checkpoint_root),
                 "kind": "directory",
                 "content_binding": "authenticated deployment object segment SHA-256 values",
                 "deployment_digest_binding": deployment,
+            },
+            "published_deployment": {
+                "path": tool._relative(deployment_root),
+                "manifest": _identity(deployment_root / "deployment.json"),
+                "descriptors": _identity(deployment_root / "descriptors.bin"),
+                "program": _identity(deployment_root / "program.bin"),
             },
         },
         "source_sha256": {
@@ -351,6 +360,7 @@ def _record(mode: str, backend: str) -> dict:
             }
         ],
         "per_step": steps,
+        "wall_seconds": float(len(generated) * 2),
     }
 
 
@@ -362,7 +372,7 @@ def _write_pair(tmp_path: Path, left: dict, right: dict) -> list[Path]:
 
 
 def test_two_complete_natural_hbm_records_pass(tmp_path):
-    left = _record("natural", "hbm_sram")
+    left = _record("natural", "hbm_sram", tmp_path / "hbm-deployment")
     right = copy.deepcopy(left)
     # Independent captures have distinct observed timings even though all
     # architecture and token evidence must agree.
@@ -370,10 +380,29 @@ def test_two_complete_natural_hbm_records_pass(tmp_path):
     result = tool.validate("natural", _write_pair(tmp_path, left, right))
     assert result["status"] == "pass"
     assert all(result["pair_checks"].values())
+    assert result["abi_profile"] == {
+        "version": "3.0",
+        "execution_state": "ordinary_live_hbm_sram_buffers",
+        "abi_state_descriptors": 0,
+        "abi_state_instructions": 0,
+        "durable_journal_or_rollback": False,
+        "run_failure_model": "uninterrupted_fail_stop",
+    }
+    assert result["text_evidence"]["input"]["rendered_text"] == json.loads(
+        tool.NATURAL.workload_path.read_text()
+    )["rendered_text"]
+    assert result["text_evidence"]["output"]["raw_decoded_text"] == json.loads(
+        tool.ORACLE.read_text()
+    )["results"][tool.NATURAL.workload_id]["raw_decoded_text"]
+    assert result["claim_boundary"]["acceptance_established"] is True
+    assert all(
+        row["generated_tokens_per_wall_second"] > 0
+        for row in result["host_functional_simulator"]
+    )
 
 
 def test_same_capture_path_cannot_satisfy_natural_repeatability(tmp_path):
-    record = _record("natural", "hbm_sram")
+    record = _record("natural", "hbm_sram", tmp_path / "hbm-deployment")
     path = _write_pair(tmp_path, record, copy.deepcopy(record))[0]
     result = tool.validate("natural", [path, path])
     assert result["status"] == "fail"
@@ -384,7 +413,7 @@ def test_same_capture_path_cannot_satisfy_natural_repeatability(tmp_path):
 def test_byte_identical_capture_copy_cannot_satisfy_natural_repeatability(
     tmp_path,
 ):
-    record = _record("natural", "hbm_sram")
+    record = _record("natural", "hbm_sram", tmp_path / "hbm-deployment")
     result = tool.validate(
         "natural", _write_pair(tmp_path, record, copy.deepcopy(record))
     )
@@ -394,8 +423,8 @@ def test_byte_identical_capture_copy_cannot_satisfy_natural_repeatability(
 
 
 def test_complete_stress_hbm_rom_pair_passes_with_storage_counter_differences(tmp_path):
-    left = _record("stress", "hbm_sram")
-    right = _record("stress", "rom_qwen3")
+    left = _record("stress", "hbm_sram", tmp_path / "hbm-deployment")
+    right = _record("stress", "rom_qwen3", tmp_path / "rom-deployment")
     result = tool.validate("stress", _write_pair(tmp_path, left, right))
     assert result["status"] == "pass"
     assert result["pair_checks"]["architectural_counters_identical"] is True
@@ -415,8 +444,8 @@ def test_stress_refuses_oracle_without_prefill_provenance(tmp_path):
     oracle = json.loads(tool.ORACLE.read_text())
     del oracle["results"][tool.STRESS.workload_id]["prefill_association"]
     tool.ORACLE.write_text(json.dumps(oracle))
-    left = _record("stress", "hbm_sram")
-    right = _record("stress", "rom_qwen3")
+    left = _record("stress", "hbm_sram", tmp_path / "hbm-deployment")
+    right = _record("stress", "rom_qwen3", tmp_path / "rom-deployment")
     result = tool.validate("stress", _write_pair(tmp_path, left, right))
     assert result["status"] == "fail"
     assert "frozen oracle lacks required prefill association provenance" in result[
@@ -428,8 +457,8 @@ def test_stress_refuses_inconsistent_prefill_chunk_geometry(tmp_path):
     _rewrite_stress_prefill_association(
         lambda association: association["prefill"].__setitem__("chunk_count", 1)
     )
-    left = _record("stress", "hbm_sram")
-    right = _record("stress", "rom_qwen3")
+    left = _record("stress", "hbm_sram", tmp_path / "hbm-deployment")
+    right = _record("stress", "rom_qwen3", tmp_path / "rom-deployment")
     result = tool.validate("stress", _write_pair(tmp_path, left, right))
     assert result["status"] == "fail"
     assert "frozen oracle chunked-prefill identity is inconsistent" in result[
@@ -456,8 +485,8 @@ def test_stress_refuses_incomplete_oracle_execution_identity(
             association[section].pop(field)
 
     _rewrite_stress_prefill_association(remove_field)
-    left = _record("stress", "hbm_sram")
-    right = _record("stress", "rom_qwen3")
+    left = _record("stress", "hbm_sram", tmp_path / "hbm-deployment")
+    right = _record("stress", "rom_qwen3", tmp_path / "rom-deployment")
     result = tool.validate("stress", _write_pair(tmp_path, left, right))
     assert result["status"] == "fail"
     assert any(expected in problem for problem in result["problems"])
@@ -469,13 +498,16 @@ def test_stress_refuses_incomplete_oracle_execution_identity(
         (lambda body: body["source_sha256"].__setitem__("runtime/sim/backend.py", "0" * 64), "source is not current"),
         (lambda body: body["verification"].__setitem__("proved_retired_work", 41), "exactly prove"),
         (lambda body: body["per_step"][3].__setitem__("status", "FAILED"), "did not complete successfully"),
-        (lambda body: body["counters"].__setitem__("state.commits", 31), "state.commits"),
+        (
+            lambda body: body["counters"].__setitem__("state.prepares", 1),
+            "ordinary live-buffer design",
+        ),
         (lambda body: body["workload"]["prompt_token_ids"].__setitem__(0, 7), "frozen prompt"),
     ],
 )
 def test_single_record_mutations_fail_closed(tmp_path, mutate, expected):
-    left = _record("stress", "hbm_sram")
-    right = _record("stress", "rom_qwen3")
+    left = _record("stress", "hbm_sram", tmp_path / "hbm-deployment")
+    right = _record("stress", "rom_qwen3", tmp_path / "rom-deployment")
     mutate(left)
     result = tool.validate("stress", _write_pair(tmp_path, left, right))
     assert result["status"] == "fail"
@@ -483,7 +515,7 @@ def test_single_record_mutations_fail_closed(tmp_path, mutate, expected):
 
 
 def test_short_oracle_prefix_is_not_natural_acceptance(tmp_path):
-    left = _record("natural", "hbm_sram")
+    left = _record("natural", "hbm_sram", tmp_path / "hbm-deployment")
     right = copy.deepcopy(left)
     for body in (left, right):
         body["generated_token_ids"].pop()
@@ -494,8 +526,8 @@ def test_short_oracle_prefix_is_not_natural_acceptance(tmp_path):
 
 
 def test_empty_association_manifest_is_refused(tmp_path):
-    left = _record("stress", "hbm_sram")
-    right = _record("stress", "rom_qwen3")
+    left = _record("stress", "hbm_sram", tmp_path / "hbm-deployment")
+    right = _record("stress", "rom_qwen3", tmp_path / "rom-deployment")
     left["executed_association"]["entries"] = []
     left["executed_association"]["distinct_association_count"] = 0
     left["executed_association"]["blocked_call_count"] = 0
@@ -506,8 +538,8 @@ def test_empty_association_manifest_is_refused(tmp_path):
 
 
 def test_individually_valid_but_different_association_manifests_are_refused(tmp_path):
-    left = _record("stress", "hbm_sram")
-    right = _record("stress", "rom_qwen3")
+    left = _record("stress", "hbm_sram", tmp_path / "hbm-deployment")
+    right = _record("stress", "rom_qwen3", tmp_path / "rom-deployment")
     right["executed_association"] = _association(right["implementation_identity"], calls=2)
     result = tool.validate("stress", _write_pair(tmp_path, left, right))
     assert result["status"] == "fail"
@@ -515,8 +547,8 @@ def test_individually_valid_but_different_association_manifests_are_refused(tmp_
 
 
 def test_stress_token_divergence_is_refused_even_when_metadata_claims_agreement(tmp_path):
-    left = _record("stress", "hbm_sram")
-    right = _record("stress", "rom_qwen3")
+    left = _record("stress", "hbm_sram", tmp_path / "hbm-deployment")
+    right = _record("stress", "rom_qwen3", tmp_path / "rom-deployment")
     right["generated_token_ids"][2] += 1
     right["per_step"][2]["produced_tokens"] = [right["generated_token_ids"][2]]
     right["per_step"][2]["final_token_id"] = right["generated_token_ids"][2]
@@ -526,9 +558,240 @@ def test_stress_token_divergence_is_refused_even_when_metadata_claims_agreement(
 
 
 def test_natural_repeat_requires_architectural_counter_equality(tmp_path):
-    left = _record("natural", "hbm_sram")
+    left = _record("natural", "hbm_sram", tmp_path / "hbm-deployment")
     right = copy.deepcopy(left)
     right["counters"]["tensor.multiplications"] += 1
     result = tool.validate("natural", _write_pair(tmp_path, left, right))
     assert result["status"] == "fail"
     assert "pair check failed: architectural_counters_identical" in result["problems"]
+
+
+def test_missing_serialized_deployment_is_not_w10_evidence(tmp_path):
+    left = _record("stress", "hbm_sram", tmp_path / "hbm-deployment")
+    right = _record("stress", "rom_qwen3", tmp_path / "rom-deployment")
+    del left["inputs"]["published_deployment"]
+
+    result = tool.validate("stress", _write_pair(tmp_path, left, right))
+
+    assert result["status"] == "fail"
+    assert any("published_deployment is required" in p for p in result["problems"])
+
+
+def test_corrupted_serialized_program_is_refused_on_readback(tmp_path):
+    root = tmp_path / "hbm-deployment"
+    left = _record("stress", "hbm_sram", root)
+    right = _record("stress", "rom_qwen3", tmp_path / "rom-deployment")
+    program = root / "program.bin"
+    body = bytearray(program.read_bytes())
+    body[-1] ^= 1
+    program.write_bytes(body)
+
+    result = tool.validate("stress", _write_pair(tmp_path, left, right))
+
+    assert result["status"] == "fail"
+    assert any("authenticated readback" in p for p in result["problems"])
+
+
+def test_substituted_serialized_deployment_is_refused(tmp_path):
+    left = _record("stress", "hbm_sram", tmp_path / "hbm-deployment")
+    right = _record("stress", "rom_qwen3", tmp_path / "rom-deployment")
+    rom_root = tmp_path / "rom-deployment"
+    left["inputs"]["published_deployment"] = {
+        "path": tool._relative(rom_root),
+        "manifest": _identity(rom_root / "deployment.json"),
+        "descriptors": _identity(rom_root / "descriptors.bin"),
+        "program": _identity(rom_root / "program.bin"),
+    }
+
+    result = tool.validate("stress", _write_pair(tmp_path, left, right))
+
+    assert result["status"] == "fail"
+    assert any("serialized deployment digest" in p for p in result["problems"])
+    assert any("serialized deployment backend" in p for p in result["problems"])
+
+
+def test_stale_checkpoint_tokenizer_is_refused(tmp_path):
+    left = _record("stress", "hbm_sram", tmp_path / "hbm-deployment")
+    right = _record("stress", "rom_qwen3", tmp_path / "rom-deployment")
+    source = REPO / "build/qwen3-8b/deployment-final/tokenizer/tokenizer.json"
+    bad_root = tmp_path / "bad-checkpoint"
+    bad_root.mkdir()
+    (bad_root / "tokenizer.json").write_bytes(source.read_bytes() + b"\n")
+    for body in (left, right):
+        body["inputs"]["checkpoint_root"]["path"] = tool._relative(bad_root)
+        body["model"]["checkpoint_root"] = tool._relative(bad_root)
+
+    result = tool.validate("stress", _write_pair(tmp_path, left, right))
+
+    assert result["status"] == "fail"
+    assert any("not the pinned Qwen tokenizer" in p for p in result["problems"])
+
+
+def test_oracle_decoded_text_mismatch_is_refused(tmp_path):
+    oracle = json.loads(tool.ORACLE.read_text())
+    oracle["results"][tool.STRESS.workload_id]["raw_decoded_text"] += " altered"
+    tool.ORACLE.write_text(json.dumps(oracle))
+    left = _record("stress", "hbm_sram", tmp_path / "hbm-deployment")
+    right = _record("stress", "rom_qwen3", tmp_path / "rom-deployment")
+
+    result = tool.validate("stress", _write_pair(tmp_path, left, right))
+
+    assert result["status"] == "fail"
+    assert any("decoded raw output" in p for p in result["problems"])
+
+
+def test_producer_state_resource_claim_is_refused(tmp_path):
+    left = _record("stress", "hbm_sram", tmp_path / "hbm-deployment")
+    right = _record("stress", "rom_qwen3", tmp_path / "rom-deployment")
+    left["verification"]["state_resources"] = 1
+
+    result = tool.validate("stress", _write_pair(tmp_path, left, right))
+
+    assert result["status"] == "fail"
+    assert any("nonzero ABI STATE resources" in p for p in result["problems"])
+
+
+def test_serialized_state_descriptor_regression_is_refused(tmp_path):
+    from runtime.abi3.constants import (
+        CommitPolicy,
+        DType,
+        NO_ID,
+        Permission,
+        StateClass,
+        StorageClass,
+    )
+    from runtime.abi3.deployment import Deployment
+    from runtime.abi3.descriptors import Descriptor, ExtendedDescriptorType
+    from runtime.abi3.verifier import verify_deployment
+
+    helper_spec = importlib.util.spec_from_file_location(
+        "abi3_test_helpers", REPO / "tests/abi3/__init__.py"
+    )
+    helpers = importlib.util.module_from_spec(helper_spec)
+    assert helper_spec.loader is not None
+    helper_spec.loader.exec_module(helpers)
+
+    root = tmp_path / "hbm-deployment"
+    left = _record("stress", "hbm_sram", root)
+    right = _record("stress", "rom_qwen3", tmp_path / "rom-deployment")
+    capability = tool.Capability.from_dict(
+        json.loads(tool.CAPABILITIES["hbm_sram"].read_text())
+    )
+    deployment = Deployment.read(root)
+    live_object = next(
+        descriptor.descriptor_id
+        for descriptor in deployment.table.descriptors()
+        if descriptor.descriptor_type == int(ExtendedDescriptorType.MEMORY_OBJECT)
+        and descriptor.payload["storage_class"] == int(StorageClass.HBM)
+        and descriptor.permissions & int(Permission.WRITE)
+    )
+    deployment.table.add(
+        Descriptor(
+            descriptor_id=NO_ID,
+            descriptor_type=ExtendedDescriptorType.STATE,
+            payload={
+                "state_class": int(StateClass.KV_CACHE),
+                "commit_policy": int(CommitPolicy.UNSTAGED),
+                "element_dtype": int(DType.BF16),
+                "session_binding_id": 0,
+                "committed_object_id": live_object,
+                "prepared_object_id": live_object,
+                "row_bytes": 2,
+                "capacity_rows": 1,
+                "initial_cursor_rows": 0,
+                "generation_bits": 64,
+                "counter_class_id": NO_ID,
+                "view_descriptor_id": NO_ID,
+                "node_id": 0,
+                "initial_digest": bytes(32),
+            },
+            primary_object_id=live_object,
+            secondary_object_id=live_object,
+            permissions=int(
+                Permission.READ
+                | Permission.STATE_PREPARE
+                | Permission.STATE_COMMIT
+            ),
+        )
+    )
+    helpers.restamp(deployment)
+    deployment.write(root)
+    left["target"]["deployment_digest"] = deployment.deployment_digest.hex()
+    left["inputs"]["checkpoint_root"]["deployment_digest_binding"] = (
+        deployment.deployment_digest.hex()
+    )
+    left["inputs"]["published_deployment"] = {
+        "path": tool._relative(root),
+        "manifest": _identity(root / "deployment.json"),
+        "descriptors": _identity(root / "descriptors.bin"),
+        "program": _identity(root / "program.bin"),
+    }
+    left["verification"] = verify_deployment(deployment, capability).to_dict()
+
+    result = tool.validate("stress", _write_pair(tmp_path, left, right))
+
+    assert result["status"] == "fail"
+    assert any("contains an ABI STATE descriptor" in p for p in result["problems"])
+
+
+def test_invalid_eos_placement_is_refused(tmp_path):
+    left = _record("natural", "hbm_sram", tmp_path / "hbm-deployment")
+    right = copy.deepcopy(left)
+    right["per_step"][0]["wall_seconds"] = 1.25
+    for body in (left, right):
+        body["stop_reason"] = "eos"
+        body["terminal_acceptance"]["terminal_kind"] = "eos"
+
+    result = tool.validate("natural", _write_pair(tmp_path, left, right))
+
+    assert result["status"] == "fail"
+    assert any("first-EOS-or-exact-cap" in p for p in result["problems"])
+
+
+def test_prompt_decode_and_encode_round_trip_are_required(tmp_path, monkeypatch):
+    workload = json.loads(tool.NATURAL.workload_path.read_text())
+    workload["rendered_text"] = "X" + workload["rendered_text"]
+    workload["rendered_text_sha256"] = hashlib.sha256(
+        workload["rendered_text"].encode("utf-8")
+    ).hexdigest()
+    path = tmp_path / "changed-natural-workload.json"
+    path.write_text(json.dumps(workload))
+    monkeypatch.setattr(tool.NATURAL, "workload_path", path)
+    left = _record("natural", "hbm_sram", tmp_path / "hbm-deployment")
+    right = copy.deepcopy(left)
+    right["per_step"][0]["wall_seconds"] = 1.25
+
+    result = tool.validate("natural", _write_pair(tmp_path, left, right))
+
+    assert result["status"] == "fail"
+    assert any("decoded prompt" in p for p in result["problems"])
+    assert any("round-trip to the frozen prompt" in p for p in result["problems"])
+
+
+def test_natural_output_encode_round_trip_is_required(tmp_path):
+    from tokenizers import Tokenizer
+
+    oracle = json.loads(tool.ORACLE.read_text())
+    stress = oracle["results"][tool.STRESS.workload_id]["generated_token_ids"]
+    generated = (stress * 8)[: tool.NATURAL.cap]
+    tokenizer = Tokenizer.from_file(
+        str(REPO / "build/qwen3-8b/deployment-final/tokenizer/tokenizer.json")
+    )
+    result_body = oracle["results"][tool.NATURAL.workload_id]
+    result_body["generated_token_ids"] = generated
+    result_body["generated_token_count"] = len(generated)
+    result_body["raw_decoded_text"] = tokenizer.decode(
+        generated, skip_special_tokens=False
+    )
+    result_body["visible_decoded_text"] = tokenizer.decode(
+        generated, skip_special_tokens=True
+    )
+    tool.ORACLE.write_text(json.dumps(oracle))
+    left = _record("natural", "hbm_sram", tmp_path / "hbm-deployment")
+    right = copy.deepcopy(left)
+    right["per_step"][0]["wall_seconds"] = 1.25
+
+    result = tool.validate("natural", _write_pair(tmp_path, left, right))
+
+    assert result["status"] == "fail"
+    assert any("natural decoded output" in p for p in result["problems"])
