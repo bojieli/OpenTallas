@@ -9,6 +9,26 @@
     {
       "bank_mapping": {
         "embedding_source_base": 4352,
+        "head_input_objects": [
+          {
+            "base_words": 8448,
+            "object_id": 55
+          },
+          {
+            "base_words": 12544,
+            "object_id": 64
+          }
+        ],
+        "head_weight_objects": [
+          {
+            "base_words": 12544,
+            "object_id": 8
+          },
+          {
+            "base_words": 12672,
+            "object_id": 10
+          }
+        ],
         "index_base": 0,
         "matmul_input_base": 4352,
         "matmul_weight_objects": [
@@ -36,7 +56,7 @@
       "deployment": "qwen3-8b-rom-single-chip",
       "deployment_identity_evidence": {
         "artifact": "results/abi3/rom_schedule_checks.json",
-        "artifact_sha256": "c68d5016347b60418a012d14bc1e126237ef52ec5eefa9533448d10f7e8559b0",
+        "artifact_sha256": "42ab1b3196c45d587815d93c8f4ebd2f4374ccfb248741935ea8341121233e0a",
         "case": "qwen3-rom-single-chip"
       },
       "deployment_sha256": "d8a6f8edaaac8617261d5c85a9a79b0829cf9f4435ca269e50dd15cc68756a9b",
@@ -47,35 +67,38 @@
         "dma_transfer_result_words": 0,
         "embedding_launches": 1,
         "embedding_result_words": 4096,
-        "fetched": 21,
-        "first_fault_instruction": 20,
-        "issued": 7,
-        "loop_iterations": 6,
+        "fetched": 27,
+        "first_fault_instruction": 26,
+        "head_rms_norm_launches": 2,
+        "head_rms_norm_result_words": 5120,
+        "issued": 9,
+        "loop_iterations": 8,
         "matmul_launches": 3,
         "matmul_mac_count": 25165824,
         "matmul_result_words": 6144,
-        "real_engine_launches": 6,
-        "result_words": 14592,
-        "retired": 20,
+        "real_engine_launches": 8,
+        "result_words": 19712,
+        "retired": 26,
         "rms_norm_launches": 1,
         "rms_norm_result_words": 4096,
         "rope_result_words": 256,
-        "selected_checkpoint_bytes": 50348032,
+        "selected_checkpoint_bytes": 50348544,
         "selected_embedding_checkpoint_bytes": 8192,
+        "selected_head_rms_checkpoint_bytes": 512,
         "selected_matmul_checkpoint_bytes": 50331648,
         "selected_rms_checkpoint_bytes": 8192,
-        "signals": 6,
+        "signals": 8,
         "state_compat": 0,
         "trap_class": 4,
-        "views": 21,
-        "wait_events": 5
+        "views": 27,
+        "wait_events": 7
       },
       "first_unsupported": {
-        "descriptor_id": 81,
+        "descriptor_id": 98,
         "family": 48,
-        "opcode": "VECTOR.HEAD_RMS_NORM",
-        "pc": 20,
-        "sub": 1,
+        "opcode": "VECTOR.ROPE",
+        "pc": 26,
+        "sub": 2,
         "trap_class": 4
       },
       "input_deployment_vector_case": 1,
@@ -473,6 +496,122 @@
           "extent_axis": 0,
           "object_id": 78,
           "pc": 20,
+          "slot": 4,
+          "strides": [
+            4096,
+            128,
+            1
+          ]
+        },
+        {
+          "descriptor_id": 84,
+          "dims": [
+            1,
+            8,
+            128
+          ],
+          "dtype": 16,
+          "element_offset": 0,
+          "extent": 1,
+          "extent_axis": 0,
+          "object_id": 64,
+          "pc": 23,
+          "slot": 0,
+          "strides": [
+            1024,
+            128,
+            1
+          ]
+        },
+        {
+          "descriptor_id": 85,
+          "dims": [
+            128
+          ],
+          "dtype": 16,
+          "element_offset": 0,
+          "extent": 128,
+          "extent_axis": 0,
+          "object_id": 10,
+          "pc": 23,
+          "slot": 1,
+          "strides": [
+            1
+          ]
+        },
+        {
+          "descriptor_id": 87,
+          "dims": [
+            1,
+            8,
+            128
+          ],
+          "dtype": 16,
+          "element_offset": 0,
+          "extent": 1,
+          "extent_axis": 0,
+          "object_id": 86,
+          "pc": 23,
+          "slot": 4,
+          "strides": [
+            1024,
+            128,
+            1
+          ]
+        },
+        {
+          "descriptor_id": 92,
+          "dims": [
+            1,
+            32,
+            128
+          ],
+          "dtype": 16,
+          "element_offset": 0,
+          "extent": 1,
+          "extent_axis": 0,
+          "object_id": 78,
+          "pc": 26,
+          "slot": 0,
+          "strides": [
+            4096,
+            128,
+            1
+          ]
+        },
+        {
+          "descriptor_id": 93,
+          "dims": [
+            1,
+            32,
+            256
+          ],
+          "dtype": 18,
+          "element_offset": 0,
+          "extent": 1,
+          "extent_axis": 0,
+          "object_id": 27,
+          "pc": 26,
+          "slot": 1,
+          "strides": [
+            256,
+            0,
+            1
+          ]
+        },
+        {
+          "descriptor_id": 95,
+          "dims": [
+            1,
+            32,
+            128
+          ],
+          "dtype": 16,
+          "element_offset": 0,
+          "extent": 1,
+          "extent_axis": 0,
+          "object_id": 94,
+          "pc": 26,
           "slot": 4,
           "strides": [
             4096,
@@ -1001,14 +1140,214 @@
               1
             ]
           }
+        },
+        {
+          "contract": "qwen3_rmsnorm_fp32_bf16_v1",
+          "contract_sha256": "999ef86bc4d4c36dfd57db84d49618af46bed2e6c1f0b1bf031a27b5b8c03fda",
+          "descriptor_id": 81,
+          "expected_payload_sha256": "bf01d5254a7616bfffac6f789fbae1b94c68c5201944c8faf297b803987a401c",
+          "input_source": "prior_query_projection_result_bank",
+          "input_view": {
+            "descriptor_id": 76,
+            "dims": [
+              1,
+              32,
+              128
+            ],
+            "dtype": 16,
+            "element_offset": 0,
+            "extent": 1,
+            "extent_axis": 0,
+            "object_id": 55,
+            "slot": 0,
+            "strides": [
+              4096,
+              128,
+              1
+            ]
+          },
+          "inverse_rms_payload_sha256": "12a8e58463d481658ffee21140fd06ecc6ff799fcd27b2cab650aa7508f89aa9",
+          "kind": "vector_head_rms_norm",
+          "mean_square_payload_sha256": "e10c17ec2a238ecebbad32e5c85a6822babfec8ac7650eb7bba2a67fc0003cb2",
+          "normalized_saturated_element_count": 0,
+          "numeric_profile_id": 47,
+          "operator_aux_id_0": 32,
+          "output_saturated_element_count": 0,
+          "output_view": {
+            "descriptor_id": 79,
+            "dims": [
+              1,
+              32,
+              128
+            ],
+            "dtype": 16,
+            "element_offset": 0,
+            "extent": 1,
+            "extent_axis": 0,
+            "object_id": 78,
+            "slot": 4,
+            "strides": [
+              4096,
+              128,
+              1
+            ]
+          },
+          "pc": 20,
+          "row_count": 32,
+          "row_width": 128,
+          "weight_source": {
+            "authentication_boundary": "only this selected byte range was re-read and hashed; complete segment identity and its declared SHA-256 are bound by the certified deployment but the complete segment was not rehashed",
+            "checkpoint_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+            "declared_segment_bytes": 256,
+            "declared_segment_offset": 1588618616,
+            "declared_segment_sha256": "ad88a3013b2d8ecd138c36460751296c56bed2eff2d5d3a66377db04fd9e0799",
+            "object_content_sha256": "cfa42893a601d392d2ecf8f6e71dcc2e6c0b807d4dbcd9d585d8a74bb6f62389",
+            "object_id": 8,
+            "selected_row_bytes": 256,
+            "selected_row_file_offset": 1588618616,
+            "selected_row_file_range": {
+              "start": 1588618616,
+              "stop_exclusive": 1588618872
+            },
+            "selected_row_logical_offset": 0,
+            "selected_row_segment_offset": 0,
+            "selected_row_sha256": "ad88a3013b2d8ecd138c36460751296c56bed2eff2d5d3a66377db04fd9e0799",
+            "selected_token_id": 0,
+            "shard": "model-00001-of-00005.safetensors"
+          },
+          "weight_view": {
+            "descriptor_id": 77,
+            "dims": [
+              128
+            ],
+            "dtype": 16,
+            "element_offset": 0,
+            "extent": 128,
+            "extent_axis": 0,
+            "object_id": 8,
+            "slot": 1,
+            "strides": [
+              1
+            ]
+          }
+        },
+        {
+          "contract": "qwen3_rmsnorm_fp32_bf16_v1",
+          "contract_sha256": "999ef86bc4d4c36dfd57db84d49618af46bed2e6c1f0b1bf031a27b5b8c03fda",
+          "descriptor_id": 89,
+          "expected_payload_sha256": "71af5033456b74d137d248f4019f848aedb8c8f758f952612082ad48d50f6a66",
+          "input_source": "prior_key_projection_result_bank",
+          "input_view": {
+            "descriptor_id": 84,
+            "dims": [
+              1,
+              8,
+              128
+            ],
+            "dtype": 16,
+            "element_offset": 0,
+            "extent": 1,
+            "extent_axis": 0,
+            "object_id": 64,
+            "slot": 0,
+            "strides": [
+              1024,
+              128,
+              1
+            ]
+          },
+          "inverse_rms_payload_sha256": "b088f0e2a9c0cb618be3df9e9752be637198b2eb8e1a457fa7862a12691f1d71",
+          "kind": "vector_head_rms_norm",
+          "mean_square_payload_sha256": "b1d45efa4ea83b59c1638bf041adc2e30dfb98c8b4ea2d156c247213ff05f065",
+          "normalized_saturated_element_count": 0,
+          "numeric_profile_id": 47,
+          "operator_aux_id_0": 8,
+          "output_saturated_element_count": 0,
+          "output_view": {
+            "descriptor_id": 87,
+            "dims": [
+              1,
+              8,
+              128
+            ],
+            "dtype": 16,
+            "element_offset": 0,
+            "extent": 1,
+            "extent_axis": 0,
+            "object_id": 86,
+            "slot": 4,
+            "strides": [
+              1024,
+              128,
+              1
+            ]
+          },
+          "pc": 23,
+          "row_count": 8,
+          "row_width": 128,
+          "weight_source": {
+            "authentication_boundary": "only this selected byte range was re-read and hashed; complete segment identity and its declared SHA-256 are bound by the certified deployment but the complete segment was not rehashed",
+            "checkpoint_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+            "declared_segment_bytes": 256,
+            "declared_segment_offset": 1546675320,
+            "declared_segment_sha256": "aaf5042c20082b5c13daed62ad9627f426cda5edc38eca48bd3f956da4eb05cd",
+            "object_content_sha256": "5e788860c8b531b7750b4f62e429a59196309749b59e671667ee21a113f3348d",
+            "object_id": 10,
+            "selected_row_bytes": 256,
+            "selected_row_file_offset": 1546675320,
+            "selected_row_file_range": {
+              "start": 1546675320,
+              "stop_exclusive": 1546675576
+            },
+            "selected_row_logical_offset": 0,
+            "selected_row_segment_offset": 0,
+            "selected_row_sha256": "aaf5042c20082b5c13daed62ad9627f426cda5edc38eca48bd3f956da4eb05cd",
+            "selected_token_id": 0,
+            "shard": "model-00001-of-00005.safetensors"
+          },
+          "weight_view": {
+            "descriptor_id": 85,
+            "dims": [
+              128
+            ],
+            "dtype": 16,
+            "element_offset": 0,
+            "extent": 128,
+            "extent_axis": 0,
+            "object_id": 10,
+            "slot": 1,
+            "strides": [
+              1
+            ]
+          }
         }
       ]
     },
     {
       "bank_mapping": {
-        "embedding_source_base": 16896,
+        "embedding_source_base": 17152,
+        "head_input_objects": [
+          {
+            "base_words": 28160,
+            "object_id": 20
+          },
+          {
+            "base_words": 32256,
+            "object_id": 21
+          }
+        ],
+        "head_weight_objects": [
+          {
+            "base_words": 25344,
+            "object_id": 5
+          },
+          {
+            "base_words": 25472,
+            "object_id": 6
+          }
+        ],
         "index_base": 2,
-        "matmul_input_base": 18944,
+        "matmul_input_base": 24064,
         "matmul_weight_objects": [
           {
             "base_words": 0,
@@ -1023,21 +1362,21 @@
             "object_id": 4
           }
         ],
-        "output_base": 14592,
-        "rms_input_base": 14848,
-        "rms_weight_base": 20992,
-        "source_base": 12544,
+        "output_base": 19712,
+        "rms_input_base": 19968,
+        "rms_weight_base": 21248,
+        "source_base": 12800,
         "source_launch_stride": 4352,
         "transfer_index_base": 0,
-        "transfer_source_base": 14848
+        "transfer_source_base": 19968
       },
       "deployment": "qwen3-8b-hbm-single-chip",
       "deployment_identity_evidence": {
         "artifact": "results/abi3/hbm_qwen_deployment_certificate.json",
-        "artifact_sha256": "becc8693717d59cec947488fe51d086eef9d6aa8d4dad1ff7251f098f3596121",
+        "artifact_sha256": "6d8978f9819bb0c2c355215c4f4c565d77235c91d08314b2bf4ac86809fb9509",
         "case": "qwen3-hbm-single-chip"
       },
-      "deployment_sha256": "a6d98d47ff80acaed81b78c9bab7616ae0950302c66b04405fc6ef57414b84c6",
+      "deployment_sha256": "0d7897457e14666fc057ea6223cc32e65c61e39bfe5b2ff675c3b5585fe2ce8e",
       "expected": {
         "complete": false,
         "dma_gather_launches": 1,
@@ -1045,35 +1384,38 @@
         "dma_transfer_result_words": 0,
         "embedding_launches": 1,
         "embedding_result_words": 4096,
-        "fetched": 21,
-        "first_fault_instruction": 20,
-        "issued": 7,
-        "loop_iterations": 6,
+        "fetched": 27,
+        "first_fault_instruction": 26,
+        "head_rms_norm_launches": 2,
+        "head_rms_norm_result_words": 5120,
+        "issued": 9,
+        "loop_iterations": 8,
         "matmul_launches": 3,
         "matmul_mac_count": 25165824,
         "matmul_result_words": 6144,
-        "real_engine_launches": 6,
-        "result_words": 14592,
-        "retired": 20,
+        "real_engine_launches": 8,
+        "result_words": 19712,
+        "retired": 26,
         "rms_norm_launches": 1,
         "rms_norm_result_words": 4096,
         "rope_result_words": 256,
-        "selected_checkpoint_bytes": 50348032,
+        "selected_checkpoint_bytes": 50348544,
         "selected_embedding_checkpoint_bytes": 8192,
+        "selected_head_rms_checkpoint_bytes": 512,
         "selected_matmul_checkpoint_bytes": 50331648,
         "selected_rms_checkpoint_bytes": 8192,
-        "signals": 6,
+        "signals": 8,
         "state_compat": 0,
         "trap_class": 4,
-        "views": 21,
-        "wait_events": 5
+        "views": 27,
+        "wait_events": 7
       },
       "first_unsupported": {
-        "descriptor_id": 88,
+        "descriptor_id": 101,
         "family": 48,
-        "opcode": "VECTOR.HEAD_RMS_NORM",
-        "pc": 20,
-        "sub": 1,
+        "opcode": "VECTOR.ROPE",
+        "pc": 26,
+        "sub": 2,
         "trap_class": 4
       },
       "input_deployment_vector_case": 3,
@@ -1471,6 +1813,122 @@
           "extent_axis": 0,
           "object_id": 19,
           "pc": 20,
+          "slot": 4,
+          "strides": [
+            4096,
+            128,
+            1
+          ]
+        },
+        {
+          "descriptor_id": 91,
+          "dims": [
+            1,
+            8,
+            128
+          ],
+          "dtype": 16,
+          "element_offset": 0,
+          "extent": 1,
+          "extent_axis": 0,
+          "object_id": 21,
+          "pc": 23,
+          "slot": 0,
+          "strides": [
+            1024,
+            128,
+            1
+          ]
+        },
+        {
+          "descriptor_id": 92,
+          "dims": [
+            128
+          ],
+          "dtype": 16,
+          "element_offset": 0,
+          "extent": 128,
+          "extent_axis": 0,
+          "object_id": 6,
+          "pc": 23,
+          "slot": 1,
+          "strides": [
+            1
+          ]
+        },
+        {
+          "descriptor_id": 93,
+          "dims": [
+            1,
+            8,
+            128
+          ],
+          "dtype": 16,
+          "element_offset": 0,
+          "extent": 1,
+          "extent_axis": 0,
+          "object_id": 23,
+          "pc": 23,
+          "slot": 4,
+          "strides": [
+            1024,
+            128,
+            1
+          ]
+        },
+        {
+          "descriptor_id": 97,
+          "dims": [
+            1,
+            32,
+            128
+          ],
+          "dtype": 16,
+          "element_offset": 0,
+          "extent": 1,
+          "extent_axis": 0,
+          "object_id": 19,
+          "pc": 26,
+          "slot": 0,
+          "strides": [
+            4096,
+            128,
+            1
+          ]
+        },
+        {
+          "descriptor_id": 98,
+          "dims": [
+            1,
+            32,
+            256
+          ],
+          "dtype": 18,
+          "element_offset": 0,
+          "extent": 1,
+          "extent_axis": 0,
+          "object_id": 17,
+          "pc": 26,
+          "slot": 1,
+          "strides": [
+            256,
+            0,
+            1
+          ]
+        },
+        {
+          "descriptor_id": 99,
+          "dims": [
+            1,
+            32,
+            128
+          ],
+          "dtype": 16,
+          "element_offset": 0,
+          "extent": 1,
+          "extent_axis": 0,
+          "object_id": 20,
+          "pc": 26,
           "slot": 4,
           "strides": [
             4096,
@@ -1999,12 +2457,212 @@
               1
             ]
           }
+        },
+        {
+          "contract": "qwen3_rmsnorm_fp32_bf16_v1",
+          "contract_sha256": "999ef86bc4d4c36dfd57db84d49618af46bed2e6c1f0b1bf031a27b5b8c03fda",
+          "descriptor_id": 88,
+          "expected_payload_sha256": "bf01d5254a7616bfffac6f789fbae1b94c68c5201944c8faf297b803987a401c",
+          "input_source": "prior_query_projection_result_bank",
+          "input_view": {
+            "descriptor_id": 85,
+            "dims": [
+              1,
+              32,
+              128
+            ],
+            "dtype": 16,
+            "element_offset": 0,
+            "extent": 1,
+            "extent_axis": 0,
+            "object_id": 20,
+            "slot": 0,
+            "strides": [
+              4096,
+              128,
+              1
+            ]
+          },
+          "inverse_rms_payload_sha256": "12a8e58463d481658ffee21140fd06ecc6ff799fcd27b2cab650aa7508f89aa9",
+          "kind": "vector_head_rms_norm",
+          "mean_square_payload_sha256": "e10c17ec2a238ecebbad32e5c85a6822babfec8ac7650eb7bba2a67fc0003cb2",
+          "normalized_saturated_element_count": 0,
+          "numeric_profile_id": 62,
+          "operator_aux_id_0": 32,
+          "output_saturated_element_count": 0,
+          "output_view": {
+            "descriptor_id": 87,
+            "dims": [
+              1,
+              32,
+              128
+            ],
+            "dtype": 16,
+            "element_offset": 0,
+            "extent": 1,
+            "extent_axis": 0,
+            "object_id": 19,
+            "slot": 4,
+            "strides": [
+              4096,
+              128,
+              1
+            ]
+          },
+          "pc": 20,
+          "row_count": 32,
+          "row_width": 128,
+          "weight_source": {
+            "authentication_boundary": "only this selected byte range was re-read and hashed; complete segment identity and its declared SHA-256 are bound by the certified deployment but the complete segment was not rehashed",
+            "checkpoint_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+            "declared_segment_bytes": 256,
+            "declared_segment_offset": 1588618616,
+            "declared_segment_sha256": "ad88a3013b2d8ecd138c36460751296c56bed2eff2d5d3a66377db04fd9e0799",
+            "object_content_sha256": "cfa42893a601d392d2ecf8f6e71dcc2e6c0b807d4dbcd9d585d8a74bb6f62389",
+            "object_id": 5,
+            "selected_row_bytes": 256,
+            "selected_row_file_offset": 1588618616,
+            "selected_row_file_range": {
+              "start": 1588618616,
+              "stop_exclusive": 1588618872
+            },
+            "selected_row_logical_offset": 0,
+            "selected_row_segment_offset": 0,
+            "selected_row_sha256": "ad88a3013b2d8ecd138c36460751296c56bed2eff2d5d3a66377db04fd9e0799",
+            "selected_token_id": 0,
+            "shard": "model-00001-of-00005.safetensors"
+          },
+          "weight_view": {
+            "descriptor_id": 86,
+            "dims": [
+              128
+            ],
+            "dtype": 16,
+            "element_offset": 0,
+            "extent": 128,
+            "extent_axis": 0,
+            "object_id": 5,
+            "slot": 1,
+            "strides": [
+              1
+            ]
+          }
+        },
+        {
+          "contract": "qwen3_rmsnorm_fp32_bf16_v1",
+          "contract_sha256": "999ef86bc4d4c36dfd57db84d49618af46bed2e6c1f0b1bf031a27b5b8c03fda",
+          "descriptor_id": 94,
+          "expected_payload_sha256": "71af5033456b74d137d248f4019f848aedb8c8f758f952612082ad48d50f6a66",
+          "input_source": "prior_key_projection_result_bank",
+          "input_view": {
+            "descriptor_id": 91,
+            "dims": [
+              1,
+              8,
+              128
+            ],
+            "dtype": 16,
+            "element_offset": 0,
+            "extent": 1,
+            "extent_axis": 0,
+            "object_id": 21,
+            "slot": 0,
+            "strides": [
+              1024,
+              128,
+              1
+            ]
+          },
+          "inverse_rms_payload_sha256": "b088f0e2a9c0cb618be3df9e9752be637198b2eb8e1a457fa7862a12691f1d71",
+          "kind": "vector_head_rms_norm",
+          "mean_square_payload_sha256": "b1d45efa4ea83b59c1638bf041adc2e30dfb98c8b4ea2d156c247213ff05f065",
+          "normalized_saturated_element_count": 0,
+          "numeric_profile_id": 62,
+          "operator_aux_id_0": 8,
+          "output_saturated_element_count": 0,
+          "output_view": {
+            "descriptor_id": 93,
+            "dims": [
+              1,
+              8,
+              128
+            ],
+            "dtype": 16,
+            "element_offset": 0,
+            "extent": 1,
+            "extent_axis": 0,
+            "object_id": 23,
+            "slot": 4,
+            "strides": [
+              1024,
+              128,
+              1
+            ]
+          },
+          "pc": 23,
+          "row_count": 8,
+          "row_width": 128,
+          "weight_source": {
+            "authentication_boundary": "only this selected byte range was re-read and hashed; complete segment identity and its declared SHA-256 are bound by the certified deployment but the complete segment was not rehashed",
+            "checkpoint_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+            "declared_segment_bytes": 256,
+            "declared_segment_offset": 1546675320,
+            "declared_segment_sha256": "aaf5042c20082b5c13daed62ad9627f426cda5edc38eca48bd3f956da4eb05cd",
+            "object_content_sha256": "5e788860c8b531b7750b4f62e429a59196309749b59e671667ee21a113f3348d",
+            "object_id": 6,
+            "selected_row_bytes": 256,
+            "selected_row_file_offset": 1546675320,
+            "selected_row_file_range": {
+              "start": 1546675320,
+              "stop_exclusive": 1546675576
+            },
+            "selected_row_logical_offset": 0,
+            "selected_row_segment_offset": 0,
+            "selected_row_sha256": "aaf5042c20082b5c13daed62ad9627f426cda5edc38eca48bd3f956da4eb05cd",
+            "selected_token_id": 0,
+            "shard": "model-00001-of-00005.safetensors"
+          },
+          "weight_view": {
+            "descriptor_id": 92,
+            "dims": [
+              128
+            ],
+            "dtype": 16,
+            "element_offset": 0,
+            "extent": 128,
+            "extent_axis": 0,
+            "object_id": 6,
+            "slot": 1,
+            "strides": [
+              1
+            ]
+          }
         }
       ]
     },
     {
       "bank_mapping": {
-        "embedding_source_base": 29440,
+        "embedding_source_base": 29952,
+        "head_input_objects": [
+          {
+            "base_words": 0,
+            "object_id": 4294967295
+          },
+          {
+            "base_words": 0,
+            "object_id": 4294967295
+          }
+        ],
+        "head_weight_objects": [
+          {
+            "base_words": 0,
+            "object_id": 4294967295
+          },
+          {
+            "base_words": 0,
+            "object_id": 4294967295
+          }
+        ],
         "index_base": 4,
         "matmul_input_base": 0,
         "matmul_weight_objects": [
@@ -2021,18 +2679,18 @@
             "object_id": 4294967295
           }
         ],
-        "output_base": 29184,
-        "rms_input_base": 29440,
+        "output_base": 39424,
+        "rms_input_base": 39680,
         "rms_weight_base": 0,
-        "source_base": 25088,
+        "source_base": 25600,
         "source_launch_stride": 2176,
         "transfer_index_base": 7,
-        "transfer_source_base": 29440
+        "transfer_source_base": 39680
       },
       "deployment": "deepseek-v4-flash-rom-wafer",
       "deployment_identity_evidence": {
         "artifact": "results/abi3/rom_schedule_checks.json",
-        "artifact_sha256": "c68d5016347b60418a012d14bc1e126237ef52ec5eefa9533448d10f7e8559b0",
+        "artifact_sha256": "42ab1b3196c45d587815d93c8f4ebd2f4374ccfb248741935ea8341121233e0a",
         "case": "deepseek-v4-flash-rom-wafer"
       },
       "deployment_sha256": "f239f8fede6963d3daebfe19e8771afad69cf09992e339a0191a1983518ae8a7",
@@ -2045,6 +2703,8 @@
         "embedding_result_words": 4096,
         "fetched": 14,
         "first_fault_instruction": 13,
+        "head_rms_norm_launches": 0,
+        "head_rms_norm_result_words": 0,
         "issued": 5,
         "loop_iterations": 4,
         "matmul_launches": 0,
@@ -2058,6 +2718,7 @@
         "rope_result_words": 256,
         "selected_checkpoint_bytes": 8192,
         "selected_embedding_checkpoint_bytes": 8192,
+        "selected_head_rms_checkpoint_bytes": 0,
         "selected_matmul_checkpoint_bytes": 0,
         "selected_rms_checkpoint_bytes": 0,
         "signals": 4,
@@ -2595,7 +3256,27 @@
     },
     {
       "bank_mapping": {
-        "embedding_source_base": 37888,
+        "embedding_source_base": 38400,
+        "head_input_objects": [
+          {
+            "base_words": 0,
+            "object_id": 4294967295
+          },
+          {
+            "base_words": 0,
+            "object_id": 4294967295
+          }
+        ],
+        "head_weight_objects": [
+          {
+            "base_words": 0,
+            "object_id": 4294967295
+          },
+          {
+            "base_words": 0,
+            "object_id": 4294967295
+          }
+        ],
         "index_base": 11,
         "matmul_input_base": 0,
         "matmul_weight_objects": [
@@ -2612,21 +3293,21 @@
             "object_id": 4294967295
           }
         ],
-        "output_base": 49920,
-        "rms_input_base": 50176,
+        "output_base": 60160,
+        "rms_input_base": 60416,
         "rms_weight_base": 0,
-        "source_base": 33536,
+        "source_base": 34048,
         "source_launch_stride": 2176,
         "transfer_index_base": 14,
-        "transfer_source_base": 50176
+        "transfer_source_base": 60416
       },
       "deployment": "deepseek-v4-flash-hbm-cluster",
       "deployment_identity_evidence": {
         "artifact": "results/abi3/hbm_deepseek_deployment_certificate.json",
-        "artifact_sha256": "9b9d58bafac7bcabbcc8c644dd56da8a87d9e03d523d91b4881c5345e6b4d46a",
+        "artifact_sha256": "c91afccce67e903e49ea06eac302330afd0c24bac34ddf374e514f43a044d197",
         "case": "deepseek-v4-flash-hbm-cluster"
       },
-      "deployment_sha256": "2380c602842f716f1fcdc277751b6243e0e9610bfccdcc7ed9f9c27ef478aff7",
+      "deployment_sha256": "e887bb184c4b682b00bd36189c924ef534ce84a90fa09125a248cb33b810eef1",
       "expected": {
         "complete": false,
         "dma_gather_launches": 2,
@@ -2636,6 +3317,8 @@
         "embedding_result_words": 4096,
         "fetched": 15,
         "first_fault_instruction": 14,
+        "head_rms_norm_launches": 0,
+        "head_rms_norm_result_words": 0,
         "issued": 5,
         "loop_iterations": 4,
         "matmul_launches": 0,
@@ -2649,6 +3332,7 @@
         "rope_result_words": 256,
         "selected_checkpoint_bytes": 8192,
         "selected_embedding_checkpoint_bytes": 8192,
+        "selected_head_rms_checkpoint_bytes": 0,
         "selected_matmul_checkpoint_bytes": 0,
         "selected_rms_checkpoint_bytes": 0,
         "signals": 4,
@@ -3295,45 +3979,47 @@
       ]
     }
   ],
-  "claim": "exact shipped decode-program prefixes: six real DMA.GATHER launches copy 1,024 authentic generated RoPE words and four TENSOR.EMBED_LOOKUP launches copy 16,384 BF16 codes from four bounded, authenticated checkpoint-row reads; two exact Qwen VECTOR.RMS_NORM launches produce 8,192 BF16 codes using two bounded gain reads, and two DeepSeek stride-zero DMA.TRANSFER launches produce 32,768 BF16 codes from the prior embedding result; six complete Qwen layer-zero query/key/value TENSOR.MATMUL launches consume 100,663,296 authenticated BF16 weight bytes, execute 50,331,648 MACs, and produce 12,288 BF16 codes; Qwen then fails closed at VECTOR.HEAD_RMS_NORM and DeepSeek at LINK.MULTICAST or VECTOR.MHC; this is not a whole-model, prefill, token-selection, or decoding claim",
+  "claim": "exact shipped decode-program prefixes: six real DMA.GATHER launches copy 1,024 authentic generated RoPE words and four TENSOR.EMBED_LOOKUP launches copy 16,384 BF16 codes from four bounded, authenticated checkpoint-row reads; two exact Qwen VECTOR.RMS_NORM launches produce 8,192 BF16 codes using two bounded gain reads, and two DeepSeek stride-zero DMA.TRANSFER launches produce 32,768 BF16 codes from the prior embedding result; six complete Qwen layer-zero query/key/value TENSOR.MATMUL launches consume 100,663,296 authenticated BF16 weight bytes, execute 50,331,648 MACs, and produce 12,288 BF16 codes; four Qwen weighted VECTOR.HEAD_RMS_NORM launches then normalize 40 independent 128-code heads and produce 10,240 BF16 codes from four bounded authenticated gain reads; Qwen then fails closed at VECTOR.ROPE and DeepSeek at LINK.MULTICAST or VECTOR.MHC; this is not a whole-model, prefill, token-selection, or decoding claim",
   "dma_gather_launch_count": 6,
   "dma_transfer_launch_count": 2,
   "dma_transfer_result_word_count": 32768,
   "embedding_launch_count": 4,
   "embedding_result_word_count": 16384,
   "geometry": {
-    "case_stride": 64,
-    "case_words_used": 256,
-    "expected_words_used": 70656,
+    "case_stride": 72,
+    "case_words_used": 288,
+    "expected_words_used": 80896,
     "index_words": 64,
     "index_words_used": 18,
     "issue_stride": 4,
-    "issue_words_used": 96,
-    "result_words": 73728,
+    "issue_words_used": 112,
+    "result_words": 81920,
     "source_words": 65536,
-    "source_words_used": 41984
+    "source_words_used": 42496
   },
+  "head_rms_norm_launch_count": 4,
+  "head_rms_norm_result_word_count": 10240,
   "image_sha256": {
-    "p3_case.hex": "d685a48b3775950e6035ad0b2e2a34384c740d2a8cb658480f84ce52ed0307c4",
-    "p3_expect.hex": "f58921f18248a20538f8e26c860c82d0040cab5b959f658995633c528814aa60",
+    "p3_case.hex": "520e3660bdcf41fd67b8aafeb277d10de8494fc798672f26b5ca24f0a2a7740e",
+    "p3_expect.hex": "a353ea447ab333973da13230f061f93cc3df6704177ca7d94318cc1bf286ac4a",
     "p3_index.hex": "3782c32630334de6249983b67fe2fe6198815a3435ef977a8512dacb2292b2e0",
-    "p3_issue.hex": "d2d9e8f33e05352408387586e242f995b93e240e969b3998da04823c396ab365",
-    "p3_meta.hex": "2e4a8cdaa83a08d37d82fd94ca09dc1188d350e753178f0b72f6fab28a63a24f",
-    "p3_source.hex": "8a682b59efbd2f77db8b3ec1d93a2c2cfc56e07c62b5975d470831a0a82b4050"
+    "p3_issue.hex": "e2e0f948d9bd0ed25c1a204d506b1709293c2f3e6722f514f1af7c659c5508ee",
+    "p3_meta.hex": "d88be8927dd1eeb95c5b6a6d9b342382503043a87d5f1fe5dc10164afb2ec37f",
+    "p3_source.hex": "20eabb96e15b766c00e965e566021ef3f8944b823e26a15c46db6398d399e0b9"
   },
   "input_deployment_vectors": {
     "images": {
-      "a3_descriptor.hex": "10de04b94615be70192538c8764f40a1d3c3cf87a6b7a1483240c4d29d274ace",
+      "a3_descriptor.hex": "73a3796cef4ab56d8b9be148f9a006fb78d04f365898229b9663e192722e0f44",
       "a3_program.hex": "3342d7729996bb1d4a2d2447f77d1254c73e94b1b55f20a532e1fe4a9d523f78",
       "a3_symbol.hex": "aefea5f803c69340757eed992d1f3e691d4ca2f0b610256864a5bf1d0f757f38"
     },
     "path": "testdata/compiler/abi3_deployment/abi3_deployment_rtl_vectors.json",
-    "sha256": "036c28d07e9de30930e4640c85a757e094b8ebb974ef1877b3d961eaa765bc3f"
+    "sha256": "be5ffff67d78779b98edc8cdafa77332ada2ebbd3e70cb582cd2b5b3d972a9f4"
   },
   "matmul_launch_count": 6,
   "matmul_mac_count": 50331648,
   "matmul_result_word_count": 12288,
-  "real_engine_launch_count": 20,
+  "real_engine_launch_count": 24,
   "request_scope": {
     "embedding_probe_scope": "bounded synthetic legal-vocabulary probe; not a natural-language or end-to-end model claim",
     "embedding_token_id": 0,
@@ -3341,15 +4027,16 @@
     "position_start": 16,
     "prompt_tokens": 16
   },
-  "required_marker": "PASS: ABI3 shipped-prefix engine integration cases=4 launches=20 words=70656 capability_faults=4",
-  "resolved_view_count": 70,
-  "result_word_count": 70656,
+  "required_marker": "PASS: ABI3 shipped-prefix engine integration cases=4 launches=24 words=80896 capability_faults=4",
+  "resolved_view_count": 82,
+  "result_word_count": 80896,
   "rms_norm_launch_count": 2,
   "rms_norm_result_word_count": 8192,
   "rope_result_word_count": 1024,
   "schema": "opentallas.rtl.abi3_shipped_prefix_vectors.v1",
-  "selected_checkpoint_byte_count": 100712448,
+  "selected_checkpoint_byte_count": 100713472,
   "selected_embedding_checkpoint_byte_count": 32768,
+  "selected_head_rms_checkpoint_byte_count": 1024,
   "selected_matmul_checkpoint_byte_count": 100663296,
   "selected_rms_checkpoint_byte_count": 16384,
   "staged_matmul_weight_layout": {
@@ -3373,6 +4060,6 @@
     ]
   },
   "state_compat": 0,
-  "supported_profile": "dense one-index FP32 DMA.GATHER plus exact token-zero BF16 TENSOR.EMBED_LOOKUP with 4,096-code rows, exact one-row Qwen BF16 RMSNorm, three descriptor-driven Qwen 1x4096 query/key/value MATMUL launches with 4,096/1,024/1,024 output columns through the declared single-lane ascending-K association, and DeepSeek four-copy stride-zero BF16 transfer; resolved views, unscaled operands, and numeric contracts are bound before each launch",
+  "supported_profile": "dense one-index FP32 DMA.GATHER plus exact token-zero BF16 TENSOR.EMBED_LOOKUP with 4,096-code rows, exact one-row Qwen BF16 RMSNorm, three descriptor-driven Qwen 1x4096 query/key/value MATMUL launches with 4,096/1,024/1,024 output columns through the declared single-lane ascending-K association, plus weighted Qwen head RMSNorm over descriptor-selected 32x128 and 8x128 row sets, and DeepSeek four-copy stride-zero BF16 transfer; resolved views, unscaled operands, and numeric contracts are bound before each launch",
   "unsupported_policy": "every other family/subopcode returns CAPABILITY before any engine launch, result write, retirement, or signal publication"
 }

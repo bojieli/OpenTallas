@@ -302,7 +302,7 @@
     {
       "declared_max_retired_work": 24088,
       "deployment": "qwen3-8b-hbm-single-chip",
-      "deployment_sha256": "a6d98d47ff80acaed81b78c9bab7616ae0950302c66b04405fc6ef57414b84c6",
+      "deployment_sha256": "0d7897457e14666fc057ea6223cc32e65c61e39bfe5b2ff675c3b5585fe2ce8e",
       "depth": {
         "data_dependent_predicate_reads": 0,
         "distinct_static_instructions_reached": 26,
@@ -449,7 +449,7 @@
     {
       "declared_max_retired_work": 24088,
       "deployment": "qwen3-8b-hbm-single-chip",
-      "deployment_sha256": "a6d98d47ff80acaed81b78c9bab7616ae0950302c66b04405fc6ef57414b84c6",
+      "deployment_sha256": "0d7897457e14666fc057ea6223cc32e65c61e39bfe5b2ff675c3b5585fe2ce8e",
       "depth": {
         "data_dependent_predicate_reads": 0,
         "distinct_static_instructions_reached": 26,
@@ -8625,7 +8625,7 @@
     {
       "declared_max_retired_work": 139260696,
       "deployment": "deepseek-v4-flash-hbm-cluster",
-      "deployment_sha256": "2380c602842f716f1fcdc277751b6243e0e9610bfccdcc7ed9f9c27ef478aff7",
+      "deployment_sha256": "e887bb184c4b682b00bd36189c924ef534ce84a90fa09125a248cb33b810eef1",
       "depth": {
         "data_dependent_predicate_reads": 750,
         "distinct_static_instructions_reached": 543,
@@ -12627,7 +12627,7 @@
     {
       "declared_max_retired_work": 139260696,
       "deployment": "deepseek-v4-flash-hbm-cluster",
-      "deployment_sha256": "2380c602842f716f1fcdc277751b6243e0e9610bfccdcc7ed9f9c27ef478aff7",
+      "deployment_sha256": "e887bb184c4b682b00bd36189c924ef534ce84a90fa09125a248cb33b810eef1",
       "depth": {
         "data_dependent_predicate_reads": 750,
         "distinct_static_instructions_reached": 499,
@@ -16634,7 +16634,7 @@
       "deployment_dir": "build/abi3/qwen3-8b-rom",
       "deployment_identity_evidence": {
         "artifact": "results/abi3/rom_schedule_checks.json",
-        "artifact_sha256": "c68d5016347b60418a012d14bc1e126237ef52ec5eefa9533448d10f7e8559b0",
+        "artifact_sha256": "42ab1b3196c45d587815d93c8f4ebd2f4374ccfb248741935ea8341121233e0a",
         "case": "qwen3-rom-single-chip"
       },
       "deployment_sha256": "d8a6f8edaaac8617261d5c85a9a79b0829cf9f4435ca269e50dd15cc68756a9b",
@@ -16667,17 +16667,17 @@
       "deployment_dir": "build/abi3/qwen3-8b-hbm-tokens",
       "deployment_identity_evidence": {
         "artifact": "results/abi3/hbm_qwen_deployment_certificate.json",
-        "artifact_sha256": "becc8693717d59cec947488fe51d086eef9d6aa8d4dad1ff7251f098f3596121",
+        "artifact_sha256": "6d8978f9819bb0c2c355215c4f4c565d77235c91d08314b2bf4ac86809fb9509",
         "case": "qwen3-hbm-single-chip"
       },
-      "deployment_sha256": "a6d98d47ff80acaed81b78c9bab7616ae0950302c66b04405fc6ef57414b84c6",
+      "deployment_sha256": "0d7897457e14666fc057ea6223cc32e65c61e39bfe5b2ff675c3b5585fe2ce8e",
       "descriptor_count": 215,
-      "descriptor_table_sha256": "a522ef5845ba4385fa5368817dd194425213d8a61753370bdfdda442f3b3baf3",
+      "descriptor_table_sha256": "98bb1b8f2c43f071bd4e04ea965bcb151aeabc7a30b56b5848c1afb4140a0589",
       "entrypoint_count": 2,
       "instruction_count": 74,
       "key": "qwen3-8b-hbm-single-chip",
       "model_id": "qwen3-8b",
-      "program_sha256": "cd16e13b174f0ee7882c62b082091e6b25f8b576f8ffbd5ca6e98d0f1389e3e4",
+      "program_sha256": "260062c29551952f348a747f8d9d4f69db3e142671cd4f1a84fed894490f678b",
       "reproduce": "make abi3-hbm-qwen-build",
       "rtl_bound_demands": {
         "A3_EVENT_COUNT": 27,
@@ -16700,7 +16700,7 @@
       "deployment_dir": "build/abi3/deepseek-v4-flash-rom",
       "deployment_identity_evidence": {
         "artifact": "results/abi3/rom_schedule_checks.json",
-        "artifact_sha256": "c68d5016347b60418a012d14bc1e126237ef52ec5eefa9533448d10f7e8559b0",
+        "artifact_sha256": "42ab1b3196c45d587815d93c8f4ebd2f4374ccfb248741935ea8341121233e0a",
         "case": "deepseek-v4-flash-rom-wafer"
       },
       "deployment_sha256": "f239f8fede6963d3daebfe19e8771afad69cf09992e339a0191a1983518ae8a7",
@@ -16733,17 +16733,17 @@
       "deployment_dir": "build/abi3/deepseek-v4-flash-hbm-tokens",
       "deployment_identity_evidence": {
         "artifact": "results/abi3/hbm_deepseek_deployment_certificate.json",
-        "artifact_sha256": "9b9d58bafac7bcabbcc8c644dd56da8a87d9e03d523d91b4881c5345e6b4d46a",
+        "artifact_sha256": "c91afccce67e903e49ea06eac302330afd0c24bac34ddf374e514f43a044d197",
         "case": "deepseek-v4-flash-hbm-cluster"
       },
-      "deployment_sha256": "2380c602842f716f1fcdc277751b6243e0e9610bfccdcc7ed9f9c27ef478aff7",
+      "deployment_sha256": "e887bb184c4b682b00bd36189c924ef534ce84a90fa09125a248cb33b810eef1",
       "descriptor_count": 3272,
-      "descriptor_table_sha256": "91191d6702e8555eb67310d3b6331c7ed20bd85352ebce075344fa1311b3c753",
+      "descriptor_table_sha256": "c7aa83fef478c037be2e7360e52bf66ef4f14d9957e5adcb91bdde74b74e48fb",
       "entrypoint_count": 2,
       "instruction_count": 1267,
       "key": "deepseek-v4-flash-hbm-cluster",
       "model_id": "deepseek-v4-flash-0731",
-      "program_sha256": "0f5f87529f036c6bfb0f8c12bbc84fb38c5900b6e533540235bdc1315b77c075",
+      "program_sha256": "ee2a005e35afa8f39d7cf4a5ae1cf053aa354d1c6b9d4fc2d14048e767073c2c",
       "reproduce": "make abi3-hbm-deepseek-build",
       "rtl_bound_demands": {
         "A3_EVENT_COUNT": 596,
@@ -16781,8 +16781,8 @@
     "a3_deployment_meta.hex": "bf3385cc7aee42739ff5fdbe45ef2cf28903aa06b9b71e06b8be31afe45d23fb",
     "a3_deployment_predicate.hex": "51595a1047e5510c763a7dfe0b0ca90c5e70b22575f07e6c8159669d8092c88b",
     "a3_deployment_view.hex": "35ab33560b0be8061abb17573130457eb6c0158d6f9f777263a1cf751e54d605",
-    "a3_descriptor.hex": "10de04b94615be70192538c8764f40a1d3c3cf87a6b7a1483240c4d29d274ace",
-    "a3_header.hex": "e99f0d006722fd84e233bb53e29dd1527dafe5f9acbcc87c267aa891cb93cd63",
+    "a3_descriptor.hex": "73a3796cef4ab56d8b9be148f9a006fb78d04f365898229b9663e192722e0f44",
+    "a3_header.hex": "4a58250743bac04e3807abb3d6aa05f9e86d70c1a0c57456944520d385d30c3e",
     "a3_program.hex": "3342d7729996bb1d4a2d2447f77d1254c73e94b1b55f20a532e1fe4a9d523f78",
     "a3_symbol.hex": "aefea5f803c69340757eed992d1f3e691d4ca2f0b610256864a5bf1d0f757f38"
   },

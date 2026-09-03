@@ -36,9 +36,7 @@ def _retained_campaign() -> dict:
 
 def test_vector_builder_reproduces_every_retained_image(tmp_path: Path) -> None:
     assert generator.build(["--output", str(tmp_path)]) == 0
-    rebuilt = json.loads(
-        (tmp_path / VECTOR_JSON.name).read_text(encoding="utf-8")
-    )
+    rebuilt = json.loads((tmp_path / VECTOR_JSON.name).read_text(encoding="utf-8"))
     assert rebuilt == _vectors()
     for name in sorted(rebuilt["image_sha256"]):
         assert (tmp_path / name).read_bytes() == (VECTOR_DIR / name).read_bytes()
@@ -50,24 +48,27 @@ def test_witness_is_exactly_the_small_abi3_fail_stop_prefix() -> None:
     assert vectors["abi"] == {"major": 3, "minor": 0}
     assert vectors["state_compat"] == 0
     assert vectors["case_count"] == 4
-    assert vectors["real_engine_launch_count"] == 20
+    assert vectors["real_engine_launch_count"] == 24
     assert vectors["dma_gather_launch_count"] == 6
     assert vectors["embedding_launch_count"] == 4
     assert vectors["rms_norm_launch_count"] == 2
+    assert vectors["head_rms_norm_launch_count"] == 4
     assert vectors["dma_transfer_launch_count"] == 2
     assert vectors["matmul_launch_count"] == 6
     assert vectors["rope_result_word_count"] == 1_024
     assert vectors["embedding_result_word_count"] == 16_384
     assert vectors["rms_norm_result_word_count"] == 8_192
+    assert vectors["head_rms_norm_result_word_count"] == 10_240
     assert vectors["dma_transfer_result_word_count"] == 32_768
     assert vectors["matmul_result_word_count"] == 12_288
     assert vectors["matmul_mac_count"] == 50_331_648
     assert vectors["selected_embedding_checkpoint_byte_count"] == 32_768
     assert vectors["selected_rms_checkpoint_byte_count"] == 16_384
+    assert vectors["selected_head_rms_checkpoint_byte_count"] == 1_024
     assert vectors["selected_matmul_checkpoint_byte_count"] == 100_663_296
-    assert vectors["selected_checkpoint_byte_count"] == 100_712_448
-    assert vectors["result_word_count"] == 70_656
-    assert vectors["resolved_view_count"] == 70
+    assert vectors["selected_checkpoint_byte_count"] == 100_713_472
+    assert vectors["result_word_count"] == 80_896
+    assert vectors["resolved_view_count"] == 82
     assert vectors["capability_fault_count"] == 4
     assert [case["name"] for case in vectors["cases"]] == [
         "qwen3-8b-rom-single-chip/decode",
@@ -77,19 +78,19 @@ def test_witness_is_exactly_the_small_abi3_fail_stop_prefix() -> None:
     ]
     assert [case["first_unsupported"] for case in vectors["cases"]] == [
         {
-            "pc": 20,
+            "pc": 26,
             "family": 48,
-            "sub": 1,
-            "opcode": "VECTOR.HEAD_RMS_NORM",
-            "descriptor_id": 81,
+            "sub": 2,
+            "opcode": "VECTOR.ROPE",
+            "descriptor_id": 98,
             "trap_class": 4,
         },
         {
-            "pc": 20,
+            "pc": 26,
             "family": 48,
-            "sub": 1,
-            "opcode": "VECTOR.HEAD_RMS_NORM",
-            "descriptor_id": 88,
+            "sub": 2,
+            "opcode": "VECTOR.ROPE",
+            "descriptor_id": 101,
             "trap_class": 4,
         },
         {
@@ -115,10 +116,10 @@ def test_witness_is_exactly_the_small_abi3_fail_stop_prefix() -> None:
         assert case["expected"]["embedding_launches"] == 1
         assert case["expected"]["embedding_result_words"] == 4_096
         assert case["expected"]["selected_checkpoint_bytes"] == (
-            50_348_032 if case_index < 2 else 8_192
+            50_348_544 if case_index < 2 else 8_192
         )
         assert case["expected"]["wait_events"] == (
-            5 if case_index < 2 else (1 if case_index == 2 else 2)
+            7 if case_index < 2 else (1 if case_index == 2 else 2)
         )
         assert case["expected"]["retired"] + 1 == case["expected"]["fetched"]
 
@@ -140,9 +141,10 @@ def test_witness_is_exactly_the_small_abi3_fail_stop_prefix() -> None:
         }
         assert len(source["declared_segment_sha256"]) == 64
         assert len(source["selected_row_sha256"]) == 64
-        assert "only this selected byte range was re-read and hashed" in source[
-            "authentication_boundary"
-        ]
+        assert (
+            "only this selected byte range was re-read and hashed"
+            in source["authentication_boundary"]
+        )
         if case_index < 2:
             assert [
                 entry["base_words"]
@@ -155,6 +157,7 @@ def test_witness_is_exactly_the_small_abi3_fail_stop_prefix() -> None:
             )
             gain = rms_norm["weight_source"]
             assert case["expected"]["rms_norm_launches"] == 1
+            assert case["expected"]["head_rms_norm_launches"] == 2
             assert case["expected"]["dma_transfer_launches"] == 0
             assert rms_norm["input_source"] == "prior_embedding_result_bank"
             assert rms_norm["contract_sha256"] == (
@@ -201,18 +204,69 @@ def test_witness_is_exactly_the_small_abi3_fail_stop_prefix() -> None:
                 weight = matmul["weight_source"]
                 assert matmul["input_source"] == "prior_rms_norm_result_bank"
                 assert matmul["contract_sha256"] == (
-                    "7550dc6a773fd9d5773b46182887613fb"
-                    "777bb8e4f01652321c4d93ca0765aa1"
+                    "7550dc6a773fd9d5773b46182887613fb777bb8e4f01652321c4d93ca0765aa1"
                 )
                 assert matmul["executed_association"] == (
                     "ot_a3_mac_lane_single_lane_ascending_k_v1"
                 )
-                assert weight["selected_matrix_sha256"] == weight[
-                    "declared_segment_sha256"
-                ]
-                assert "complete selected source segment" in weight[
-                    "authentication_boundary"
-                ]
+                assert (
+                    weight["selected_matrix_sha256"]
+                    == weight["declared_segment_sha256"]
+                )
+                assert (
+                    "complete selected source segment"
+                    in weight["authentication_boundary"]
+                )
+            head_rms_norms = [
+                operation
+                for operation in case["supported_prefix"]
+                if operation["kind"] == "vector_head_rms_norm"
+            ]
+            assert case["expected"]["head_rms_norm_result_words"] == 5_120
+            assert case["expected"]["selected_head_rms_checkpoint_bytes"] == 512
+            assert [operation["pc"] for operation in head_rms_norms] == [20, 23]
+            assert [
+                (operation["row_count"], operation["row_width"])
+                for operation in head_rms_norms
+            ] == [(32, 128), (8, 128)]
+            assert [
+                operation["expected_payload_sha256"] for operation in head_rms_norms
+            ] == [
+                "bf01d5254a7616bfffac6f789fbae1b94c68c5201944c8faf297b803987a401c",
+                "71af5033456b74d137d248f4019f848aedb8c8f758f952612082ad48d50f6a66",
+            ]
+            assert [
+                operation["mean_square_payload_sha256"] for operation in head_rms_norms
+            ] == [
+                "e10c17ec2a238ecebbad32e5c85a6822babfec8ac7650eb7bba2a67fc0003cb2",
+                "b1d45efa4ea83b59c1638bf041adc2e30dfb98c8b4ea2d156c247213ff05f065",
+            ]
+            assert [
+                operation["inverse_rms_payload_sha256"] for operation in head_rms_norms
+            ] == [
+                "12a8e58463d481658ffee21140fd06ecc6ff799fcd27b2cab650aa7508f89aa9",
+                "b088f0e2a9c0cb618be3df9e9752be637198b2eb8e1a457fa7862a12691f1d71",
+            ]
+            assert [
+                operation["weight_source"]["selected_row_file_offset"]
+                for operation in head_rms_norms
+            ] == [1_588_618_616, 1_546_675_320]
+            assert [
+                operation["weight_source"]["selected_row_sha256"]
+                for operation in head_rms_norms
+            ] == [
+                "ad88a3013b2d8ecd138c36460751296c56bed2eff2d5d3a66377db04fd9e0799",
+                "aaf5042c20082b5c13daed62ad9627f426cda5edc38eca48bd3f956da4eb05cd",
+            ]
+            assert all(
+                operation["contract_sha256"]
+                == "999ef86bc4d4c36dfd57db84d49618af46bed2e6c1f0b1bf031a27b5b8c03fda"
+                for operation in head_rms_norms
+            )
+            assert [
+                mapping["base_words"]
+                for mapping in case["bank_mapping"]["head_input_objects"]
+            ] == ([8_448, 12_544] if case_index == 0 else [28_160, 32_256])
         else:
             transfer = next(
                 operation
@@ -220,6 +274,7 @@ def test_witness_is_exactly_the_small_abi3_fail_stop_prefix() -> None:
                 if operation["kind"] == "dma_transfer"
             )
             assert case["expected"]["rms_norm_launches"] == 0
+            assert case["expected"]["head_rms_norm_launches"] == 0
             assert case["expected"]["dma_transfer_launches"] == 1
             assert transfer["contract_sha256"] == (
                 "4ae1e59ac03a9c23abf11fe7e8193a6496e2dd4169e9369260202d2a7a0f1894"
@@ -253,9 +308,7 @@ def test_retained_campaign_is_current_and_states_the_simple_boundary() -> None:
         json.dumps(retained, indent=2, sort_keys=True) + "\n"
     ).encode("utf-8")
     assert retained["status"] == "pass"
-    assert retained["evidence_class"] == (
-        "public_open_tool_rtl_simulation_composite"
-    )
+    assert retained["evidence_class"] == ("public_open_tool_rtl_simulation_composite")
     assert retained["evidence_mode"] == (
         "full_integrated_verilator_plus_dual_simulator_mac_lane_composition"
     )
@@ -278,15 +331,13 @@ def test_retained_campaign_is_current_and_states_the_simple_boundary() -> None:
     assert retained["integrated_replay_passed"]
     assert retained["integrated_simulators"] == ["verilator"]
     assert retained["integrated_simulator_checks"] == {
-        "verilator": 144_708,
+        "verilator": campaign.EXPECTED_INTEGRATED_CHECKS,
     }
     assert "simulators_agree" not in retained
     assert "simulator_checks" not in retained
     lane = retained["compositional_mac_lane_qualification"]
     assert lane["artifact"] == "results/rtl/abi3_engine_campaign.json"
-    assert lane["artifact_sha256"] == campaign.sha256_file(
-        campaign.ENGINE_CAMPAIGN
-    )
+    assert lane["artifact_sha256"] == campaign.sha256_file(campaign.ENGINE_CAMPAIGN)
     assert lane["status"] == "pass"
     assert lane["simulators_counted"] == [
         "iverilog_vvp",
@@ -301,53 +352,91 @@ def test_retained_campaign_is_current_and_states_the_simple_boundary() -> None:
     assert lane["lane_source_sha256"] == campaign.sha256_file(
         ROOT / lane["lane_source"]
     )
-    assert lane["qualification_contract"] == (
-        "bf16_bf16_fp32_sequential_rne_v1"
-    )
+    assert lane["qualification_contract"] == ("bf16_bf16_fp32_sequential_rne_v1")
     assert "not the full shipped program" in lane["composition_boundary"]
     assert any(
         "complete integrated shipped-prefix execution under Icarus" in item
         for item in retained["scope"]["does_not_establish"]
     )
-    assert [site["pc"] for site in retained["fault_sites"]] == [20, 20, 13, 14]
+    assert any(
+        "output-token correctness" in item and "correctness-qualified TPOT" in item
+        for item in retained["scope"]["does_not_establish"]
+    )
+    assert [site["pc"] for site in retained["fault_sites"]] == [26, 26, 13, 14]
     assert [site["descriptor_id"] for site in retained["fault_sites"]] == [
-        81,
-        88,
+        98,
+        101,
         368,
         546,
     ]
     assert [site["opcode"] for site in retained["fault_sites"]] == [
-        "VECTOR.HEAD_RMS_NORM",
-        "VECTOR.HEAD_RMS_NORM",
+        "VECTOR.ROPE",
+        "VECTOR.ROPE",
         "LINK.MULTICAST",
         "VECTOR.MHC",
     ]
     assert retained["dma_gather_launch_count"] == 6
     assert retained["embedding_launch_count"] == 4
     assert retained["rms_norm_launch_count"] == 2
+    assert retained["head_rms_norm_launch_count"] == 4
     assert retained["dma_transfer_launch_count"] == 2
     assert retained["matmul_launch_count"] == 6
-    assert retained["real_engine_launch_count"] == 20
-    assert retained["result_word_count"] == 70_656
-    assert retained["resolved_view_count"] == 70
+    assert retained["real_engine_launch_count"] == 24
+    assert retained["result_word_count"] == 80_896
+    assert retained["resolved_view_count"] == 82
+    assert retained["head_rms_norm_result_word_count"] == 10_240
     assert retained["matmul_result_word_count"] == 12_288
     assert retained["matmul_mac_count"] == 50_331_648
     assert retained["selected_matmul_checkpoint_byte_count"] == 100_663_296
-    assert retained["selected_checkpoint_byte_count"] == 100_712_448
+    assert retained["selected_head_rms_checkpoint_byte_count"] == 1_024
+    assert retained["selected_checkpoint_byte_count"] == 100_713_472
     assert len(retained["checkpoint_rows"]) == 4
     for row in retained["checkpoint_rows"]:
         assert len(row["deployment_sha256"]) == 64
         assert row["deployment_identity_evidence"]["artifact"]
         assert row["source"]["selected_row_bytes"] == 8_192
-        assert row["source"]["selected_row_file_range"]["stop_exclusive"] - row[
-            "source"
-        ]["selected_row_file_range"]["start"] == 8_192
+        assert (
+            row["source"]["selected_row_file_range"]["stop_exclusive"]
+            - row["source"]["selected_row_file_range"]["start"]
+            == 8_192
+        )
     assert len(retained["checkpoint_gains"]) == 2
     for gain in retained["checkpoint_gains"]:
         assert gain["source"]["selected_row_bytes"] == 8_192
         assert gain["numeric_contract_sha256"] == (
             "999ef86bc4d4c36dfd57db84d49618af46bed2e6c1f0b1bf031a27b5b8c03fda"
         )
+    assert len(retained["checkpoint_head_gains"]) == 4
+    for head_gain in retained["checkpoint_head_gains"]:
+        assert head_gain["operator_pc"] in {20, 23}
+        assert (head_gain["row_count"], head_gain["row_width"]) in {
+            (32, 128),
+            (8, 128),
+        }
+        assert head_gain["source"]["selected_row_bytes"] == 256
+        assert head_gain["numeric_contract_sha256"] == (
+            "999ef86bc4d4c36dfd57db84d49618af46bed2e6c1f0b1bf031a27b5b8c03fda"
+        )
+        if head_gain["operator_pc"] == 20:
+            assert head_gain["expected_payload_sha256"] == (
+                "bf01d5254a7616bfffac6f789fbae1b94c68c5201944c8faf297b803987a401c"
+            )
+            assert head_gain["mean_square_payload_sha256"] == (
+                "e10c17ec2a238ecebbad32e5c85a6822babfec8ac7650eb7bba2a67fc0003cb2"
+            )
+            assert head_gain["inverse_rms_payload_sha256"] == (
+                "12a8e58463d481658ffee21140fd06ecc6ff799fcd27b2cab650aa7508f89aa9"
+            )
+        else:
+            assert head_gain["expected_payload_sha256"] == (
+                "71af5033456b74d137d248f4019f848aedb8c8f758f952612082ad48d50f6a66"
+            )
+            assert head_gain["mean_square_payload_sha256"] == (
+                "b1d45efa4ea83b59c1638bf041adc2e30dfb98c8b4ea2d156c247213ff05f065"
+            )
+            assert head_gain["inverse_rms_payload_sha256"] == (
+                "b088f0e2a9c0cb618be3df9e9752be637198b2eb8e1a457fa7862a12691f1d71"
+            )
     assert len(retained["checkpoint_matrices"]) == 6
     for matrix in retained["checkpoint_matrices"]:
         assert matrix["operator_pc"] in {11, 14, 17}
@@ -432,13 +521,14 @@ def test_focused_campaign_replays_verilator_and_binds_mac_lane(
     assert summary["integrated_replay_passed"]
     assert summary["integrated_simulators"] == ["verilator"]
     assert summary["integrated_simulator_checks"] == {
-        "verilator": 144_708,
+        "verilator": campaign.EXPECTED_INTEGRATED_CHECKS,
     }
     assert "simulators_agree" not in summary
     assert "simulator_checks" not in summary
-    assert summary["compositional_mac_lane_qualification"][
-        "simulators_counted"
-    ] == ["iverilog_vvp", "verilator_cpp_executable"]
+    assert summary["compositional_mac_lane_qualification"]["simulators_counted"] == [
+        "iverilog_vvp",
+        "verilator_cpp_executable",
+    ]
     assert summary["post_fault_write_count"] == 0
     assert [case["name"] for case in summary["cases"]] == ["verilator"]
     for simulator in summary["cases"]:

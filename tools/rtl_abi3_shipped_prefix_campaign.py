@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 """Run the focused ABI 3.0 shipped-prefix integration witness.
 
-The complete source-bound Qwen layer-zero query/key/value MATMUL family is
-intentionally executed under Verilator.  Interpreted Icarus needs several
-hours for these single-lane launches, so this campaign does not imply that
-Icarus ran the complete integrated transaction.  Instead it fail-closed binds
-the unchanged ``ot_a3_mac_lane`` source to the retained dual-simulator engine
-qualification and records that evidence as compositional, not integrated.
+The complete source-bound Qwen layer-zero query/key/value MATMUL family and
+the two descriptor-sized query/key head RMSNorm operations are intentionally
+executed under Verilator.  Interpreted Icarus needs several hours for these
+single-lane launches, so this campaign does not imply that Icarus ran the
+complete integrated transaction.  Instead it fail-closed binds the unchanged
+``ot_a3_mac_lane`` source to the retained dual-simulator engine qualification
+and records that evidence as compositional, not integrated.
 """
 
 from __future__ import annotations
@@ -32,6 +33,7 @@ DEFAULT_OUTPUT = ROOT / "results/rtl/abi3_shipped_prefix_campaign.json"
 ENGINE_CAMPAIGN = ROOT / "results/rtl/abi3_engine_campaign.json"
 
 PINNED_VERILATOR_VERSION = "5.050"
+EXPECTED_INTEGRATED_CHECKS = 163_169
 TOOLS_ROOT = Path(
     os.environ.get("OPENTALLAS_TOOL_ROOT", Path.home() / ".local/opentallas-tools")
 )
@@ -158,9 +160,7 @@ def tool_record(executable: Path, version_args: list[str]) -> dict[str, str]:
 def require_versions(tools: dict[str, dict[str, str]]) -> None:
     match = VERILATOR_VERSION_RE.search(tools["verilator"]["version"])
     if match is None or (int(match.group(1)), int(match.group(2))) < (5, 50):
-        raise SystemExit(
-            f"Verilator {PINNED_VERILATOR_VERSION} or newer is required"
-        )
+        raise SystemExit(f"Verilator {PINNED_VERILATOR_VERSION} or newer is required")
 
 
 def load_lane_qualification() -> dict[str, Any]:
@@ -171,9 +171,11 @@ def load_lane_qualification() -> dict[str, Any]:
     body = json.loads(ENGINE_CAMPAIGN.read_text(encoding="utf-8"))
     source_path = "rtl/abi3/ot_a3_mac_lane.sv"
     source_sha256 = sha256_file(ROOT / source_path)
-    blocked_limit = body.get("claim_boundary", {}).get(
-        "does_not_establish", {}
-    ).get("blocked_contraction_contract")
+    blocked_limit = (
+        body.get("claim_boundary", {})
+        .get("does_not_establish", {})
+        .get("blocked_contraction_contract")
+    )
     expected_simulators = ["iverilog_vvp", "verilator_cpp_executable"]
     expected_checks = {"iverilog": 40_878, "verilator": 40_878}
     if (
@@ -185,12 +187,9 @@ def load_lane_qualification() -> dict[str, Any]:
         or body.get("source_sha256", {}).get(source_path) != source_sha256
         or body.get("correlation", {}).get("mac_count") != 59_868
         or not isinstance(blocked_limit, str)
-        or "only bf16_bf16_fp32_sequential_rne_v1 is correlated"
-        not in blocked_limit
+        or "only bf16_bf16_fp32_sequential_rne_v1 is correlated" not in blocked_limit
     ):
-        raise SystemExit(
-            "the retained dual-simulator MAC-lane qualification changed"
-        )
+        raise SystemExit("the retained dual-simulator MAC-lane qualification changed")
     return {
         "artifact": str(ENGINE_CAMPAIGN.relative_to(ROOT)),
         "artifact_sha256": sha256_file(ENGINE_CAMPAIGN),
@@ -240,9 +239,7 @@ def load_vectors() -> dict[str, Any]:
     return vectors
 
 
-def stage_matmul_weight(
-    vectors: dict[str, Any], destination: Path
-) -> dict[str, Any]:
+def stage_matmul_weight(vectors: dict[str, Any], destination: Path) -> dict[str, Any]:
     """Stage the three complete matrices both shipped Qwen targets consume."""
 
     operations = [
@@ -271,16 +268,11 @@ def stage_matmul_weight(
             peer = operations[1][index]
             source = operation["weight_source"]
             peer_source = peer["weight_source"]
-            if (
-                int(operation["pc"]) != int(peer["pc"])
-                or any(
-                    source[field] != peer_source[field]
-                    for field in identity_fields
-                )
+            if int(operation["pc"]) != int(peer["pc"]) or any(
+                source[field] != peer_source[field] for field in identity_fields
             ):
                 raise SystemExit(
-                    f"Qwen ROM/HBM PC-{operation['pc']} weight identities "
-                    "disagree"
+                    f"Qwen ROM/HBM PC-{operation['pc']} weight identities disagree"
                 )
             checkpoint = Path(source["checkpoint"]).expanduser()
             if checkpoint.name != source["checkpoint_revision"]:
@@ -301,8 +293,7 @@ def stage_matmul_weight(
                     chunk = input_handle.read(min(1 << 20, remaining))
                     if not chunk:
                         raise SystemExit(
-                            f"Qwen PC-{operation['pc']} MATMUL segment is "
-                            "truncated"
+                            f"Qwen PC-{operation['pc']} MATMUL segment is truncated"
                         )
                     output_handle.write(chunk)
                     segment_digest.update(chunk)
@@ -322,9 +313,7 @@ def stage_matmul_weight(
                     "base_words": base_words,
                     "bytes": byte_count,
                     "sha256": observed,
-                    "source_checkpoint_revision": source[
-                        "checkpoint_revision"
-                    ],
+                    "source_checkpoint_revision": source["checkpoint_revision"],
                     "source_shard": source["shard"],
                     "source_offset": source_offset,
                 }
@@ -456,8 +445,7 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
         "cxx": resolve("g++", None),
     }
     tools = {
-        name: tool_record(path, ["--version"])
-        for name, path in executables.items()
+        name: tool_record(path, ["--version"]) for name, path in executables.items()
     }
     require_versions(tools)
 
@@ -506,7 +494,7 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
         len(cases) == 1
         and cases[0]["status"] == "pass"
         and cases[0]["observed_cases"] == expected_cases
-        and cases[0]["checks"] == 144_708
+        and cases[0]["checks"] == EXPECTED_INTEGRATED_CHECKS
     )
     source_paths = (*RTL_SOURCES, *TEST_SOURCES, *CONTRACT_SOURCES, *TOOL_SOURCES)
     sources = {
@@ -520,20 +508,17 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
         {
             "case": vector_case["name"],
             "pc": int(vector_case["first_unsupported"]["pc"]),
-            "descriptor_id": int(
-                vector_case["first_unsupported"]["descriptor_id"]
-            ),
+            "descriptor_id": int(vector_case["first_unsupported"]["descriptor_id"]),
             "family": int(vector_case["first_unsupported"]["family"]),
             "sub": int(vector_case["first_unsupported"]["sub"]),
             "opcode": str(vector_case["first_unsupported"]["opcode"]),
-            "trap_class": int(
-                vector_case["first_unsupported"]["trap_class"]
-            ),
+            "trap_class": int(vector_case["first_unsupported"]["trap_class"]),
         }
         for vector_case in vectors["cases"]
     ]
     checkpoint_rows = []
     checkpoint_gains = []
+    checkpoint_head_gains = []
     checkpoint_matrices = []
     for vector_case in vectors["cases"]:
         embedding = next(
@@ -563,17 +548,36 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
             checkpoint_gains.append(
                 {
                     "case": vector_case["name"],
-                    "deployment_sha256": vector_case[
-                        "deployment_sha256"
-                    ],
+                    "deployment_sha256": vector_case["deployment_sha256"],
                     "operator_pc": int(rms_norm["pc"]),
-                    "operator_descriptor_id": int(
-                        rms_norm["descriptor_id"]
-                    ),
-                    "numeric_contract_sha256": rms_norm[
-                        "contract_sha256"
-                    ],
+                    "operator_descriptor_id": int(rms_norm["descriptor_id"]),
+                    "numeric_contract_sha256": rms_norm["contract_sha256"],
                     "source": rms_norm["weight_source"],
+                }
+            )
+        head_rms_operations = [
+            operation
+            for operation in vector_case["supported_prefix"]
+            if operation["kind"] == "vector_head_rms_norm"
+        ]
+        for head_rms_norm in head_rms_operations:
+            checkpoint_head_gains.append(
+                {
+                    "case": vector_case["name"],
+                    "deployment_sha256": vector_case["deployment_sha256"],
+                    "operator_pc": int(head_rms_norm["pc"]),
+                    "operator_descriptor_id": int(head_rms_norm["descriptor_id"]),
+                    "numeric_contract_sha256": head_rms_norm["contract_sha256"],
+                    "row_count": int(head_rms_norm["row_count"]),
+                    "row_width": int(head_rms_norm["row_width"]),
+                    "expected_payload_sha256": head_rms_norm["expected_payload_sha256"],
+                    "mean_square_payload_sha256": head_rms_norm[
+                        "mean_square_payload_sha256"
+                    ],
+                    "inverse_rms_payload_sha256": head_rms_norm[
+                        "inverse_rms_payload_sha256"
+                    ],
+                    "source": head_rms_norm["weight_source"],
                 }
             )
         matmul_operations = [
@@ -585,23 +589,13 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
             checkpoint_matrices.append(
                 {
                     "case": vector_case["name"],
-                    "deployment_sha256": vector_case[
-                        "deployment_sha256"
-                    ],
+                    "deployment_sha256": vector_case["deployment_sha256"],
                     "operator_pc": int(matmul["pc"]),
-                    "operator_descriptor_id": int(
-                        matmul["descriptor_id"]
-                    ),
-                    "numeric_contract_sha256": matmul[
-                        "contract_sha256"
-                    ],
-                    "executed_association": matmul[
-                        "executed_association"
-                    ],
+                    "operator_descriptor_id": int(matmul["descriptor_id"]),
+                    "numeric_contract_sha256": matmul["contract_sha256"],
+                    "executed_association": matmul["executed_association"],
                     "association_scope": matmul["association_scope"],
-                    "expected_row_sha256": matmul[
-                        "expected_row_sha256"
-                    ],
+                    "expected_row_sha256": matmul["expected_row_sha256"],
                     "source": matmul["weight_source"],
                 }
             )
@@ -643,16 +637,19 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
                 "two DeepSeek stride-zero DMA.TRANSFER operations consume the prior embedding result and reproduce all 32,768 output codes through a four-zero-index mover lowering",
                 "six complete Qwen layer-zero query/key/value TENSOR.MATMUL operations consume the prior RMSNorm result and every code of three authenticated matrices through one descriptor-driven ot_a3_mac_lane path, reproducing all 12,288 output codes after 50,331,648 MACs",
                 "the blocked MATMUL contract is bound to the explicit ot_a3_mac_lane single-lane ascending-K association, executed for 1x4096 by 4096x4096 and two 1024x4096 shapes per deployment, with per-product and per-add binary32 RNE and one final BF16 RNE",
+                "four Qwen VECTOR.HEAD_RMS_NORM operations consume the exact prior query/key projection result banks and authenticated 128-code gains through one descriptor-sized buffered datapath, reproducing 10,240 output codes for two 32x128 and two 8x128 row sets",
+                "the head-normalization datapath applies the declared qwen3_rmsnorm_fp32_bf16_v1 contract independently to every descriptor-selected head row and buffers every output before its first destination write",
                 "each selected checkpoint range is bound to its certified deployment, checkpoint revision, shard, declared segment digest, exact byte range, and selected-range SHA-256 without claiming a complete-shard rehash",
-                "Qwen next refuses VECTOR.HEAD_RMS_NORM at PC 20; DeepSeek ROM refuses LINK.MULTICAST at PC 13 and DeepSeek HBM refuses VECTOR.MHC at PC 14, each with a precise CAPABILITY trap, no retirement, no event publication, and no later write",
+                "Qwen next refuses VECTOR.ROPE at PC 26; DeepSeek ROM refuses LINK.MULTICAST at PC 13 and DeepSeek HBM refuses VECTOR.MHC at PC 14, each with a precise CAPABILITY trap, no retirement, no event publication, and no later write",
                 "the production profile elaborates STATE_COMPAT=0 and every compatibility-state counter and overflow output remains zero",
                 "Verilator executes the complete integrated shipped-prefix cases and its independent C++ checker reproduces every retained observation and result word",
                 "the unchanged ot_a3_mac_lane source is bound by SHA-256 to its retained Icarus-plus-Verilator engine qualification; that compositional campaign contributes 40,878 checks per simulator over 59,868 MACs",
             ],
             "does_not_establish": [
                 "prefill execution",
-                "Qwen VECTOR.HEAD_RMS_NORM, LINK.MULTICAST, VECTOR.MHC, or any later model operator",
+                "Qwen VECTOR.ROPE, LINK.MULTICAST, VECTOR.MHC, or any later model operator",
                 "a whole transaction, token selection, decoding, EOS, or model correctness",
+                "output-token correctness, legitimate decoded text, or correctness-qualified TPOT",
                 "complete checkpoint-segment reauthentication during this bounded run",
                 "memory-macro timing, SRAM/HBM arbitration, physical timing, area, or power",
                 "a complete integrated shipped-prefix execution under Icarus; Icarus coverage is compositional qualification of the unchanged MAC lane, not execution of these full query/key/value blocked-contract operations or their control paths",
@@ -666,18 +663,14 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
         "dma_gather_launch_count": vectors["dma_gather_launch_count"],
         "embedding_launch_count": vectors["embedding_launch_count"],
         "rms_norm_launch_count": vectors["rms_norm_launch_count"],
+        "head_rms_norm_launch_count": vectors["head_rms_norm_launch_count"],
         "dma_transfer_launch_count": vectors["dma_transfer_launch_count"],
         "matmul_launch_count": vectors["matmul_launch_count"],
         "rope_result_word_count": vectors["rope_result_word_count"],
-        "embedding_result_word_count": vectors[
-            "embedding_result_word_count"
-        ],
-        "rms_norm_result_word_count": vectors[
-            "rms_norm_result_word_count"
-        ],
-        "dma_transfer_result_word_count": vectors[
-            "dma_transfer_result_word_count"
-        ],
+        "embedding_result_word_count": vectors["embedding_result_word_count"],
+        "rms_norm_result_word_count": vectors["rms_norm_result_word_count"],
+        "head_rms_norm_result_word_count": vectors["head_rms_norm_result_word_count"],
+        "dma_transfer_result_word_count": vectors["dma_transfer_result_word_count"],
         "matmul_result_word_count": vectors["matmul_result_word_count"],
         "matmul_mac_count": vectors["matmul_mac_count"],
         "selected_embedding_checkpoint_byte_count": vectors[
@@ -686,24 +679,24 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
         "selected_rms_checkpoint_byte_count": vectors[
             "selected_rms_checkpoint_byte_count"
         ],
+        "selected_head_rms_checkpoint_byte_count": vectors[
+            "selected_head_rms_checkpoint_byte_count"
+        ],
         "selected_matmul_checkpoint_byte_count": vectors[
             "selected_matmul_checkpoint_byte_count"
         ],
-        "selected_checkpoint_byte_count": vectors[
-            "selected_checkpoint_byte_count"
-        ],
+        "selected_checkpoint_byte_count": vectors["selected_checkpoint_byte_count"],
         "result_word_count": vectors["result_word_count"],
         "resolved_view_count": vectors["resolved_view_count"],
         "capability_fault_count": vectors["capability_fault_count"],
         "fault_sites": fault_sites,
         "checkpoint_rows": checkpoint_rows,
         "checkpoint_gains": checkpoint_gains,
+        "checkpoint_head_gains": checkpoint_head_gains,
         "checkpoint_matrices": checkpoint_matrices,
         "post_fault_write_count": 0,
         "required_marker": marker,
-        "integrated_simulator_checks": {
-            case["name"]: case["checks"] for case in cases
-        },
+        "integrated_simulator_checks": {case["name"]: case["checks"] for case in cases},
         "integrated_simulators": [case["name"] for case in cases],
         "integrated_replay_passed": integrated_replay_passed,
         "expected_cases": expected_cases,
