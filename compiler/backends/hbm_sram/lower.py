@@ -379,6 +379,13 @@ class _Emitter:
         self._predicate_values, self._unrepresentable_predicates = (
             predicate_conditions(graph)
         )
+        self._compressor_predicates = self._discover_compressor_predicates()
+        # The generic predicate parser quite deliberately cannot encode a
+        # modulus comparison.  Rolling compression does not leave that form
+        # unresolved: it is lowered below through an authenticated ring-index
+        # table and a normal ABI-3.0 BOOLEAN_OBJECT predicate.
+        for name in self._compressor_predicates:
+            self._unrepresentable_predicates.pop(name, None)
         self._predicate_cache: dict[tuple[int, int, int], int] = {}
         self._predicated_operators: dict[str, str] = {}
         self._operand_alternatives: dict[str, str] = {}
@@ -423,6 +430,15 @@ class _Emitter:
         self._hoisted: set[str] = set()
         self._transaction_source: dict[tuple[str, str], int] = {}
         self._commit_frontier: tuple[int, ...] = ()
+        # DeepSeek compressor boundaries are ordinary data-dependent control in
+        # ABI 3.0.  One U32 word per ratio is refreshed from the authenticated
+        # ring-index table before the corresponding BOOLEAN_OBJECT predicate is
+        # evaluated.  Zero means the just-appended position completed a group.
+        self._compress_boundary_object: dict[int, int] = {}
+        self._compress_boundary_predicate: dict[int, int] = {}
+        self._compress_prefill_predicate: dict[int, int] = {}
+        self._compressor_transition_ratios: set[int] = set()
+        self._compressor_path_events: dict[str, dict[str, int]] = {}
         self._defer_token_append = any(
             is_direct_buffer_state(state.state_class) for state in plan.states
         )
@@ -595,6 +611,14 @@ class _Emitter:
         predicates = self._predicate_report()
         if predicates:
             builder.notes["predicates"] = predicates
+        if self._compressor_transition_ratios:
+            builder.notes["rolling_compressor"] = {
+                "abi": "3.0",
+                "boundary": "ring_indices_v1(POSITION_END) == 0",
+                "history": "ordinary_hbm_circular_absolute_position",
+                "ratios": sorted(self._compressor_transition_ratios),
+                "roll_copy": False,
+            }
         # Same rule as the predicate report: emitted only when non-empty, so a
         # graph whose every state class is exact says nothing here and its
         # manifest is unchanged.
@@ -958,6 +982,28 @@ class _Emitter:
                 bank_or_tile=0,
                 alignment_log2=12,
                 key="obj.commit_token",
+            )
+
+        for ratio in sorted(
+            {
+                int(kernel.attributes.get("ratio", 0) or 0)
+                for kernel in self.graph.kernels
+                if kernel.kind == "COMPRESS_STATE_UPDATE"
+            }
+        ):
+            if ratio <= 0:
+                raise LoweringError(
+                    f"a COMPRESS_STATE_UPDATE declares invalid ratio {ratio}"
+                )
+            self._compress_boundary_object[ratio] = builder.memory_object(
+                storage_class=StorageClass.HBM,
+                size_bytes=4,
+                source=ObjectSource.zeros(4),
+                permissions=int(Permission.READ | Permission.WRITE),
+                base_address=self._extra_hbm(4),
+                bank_or_tile=0,
+                alignment_log2=12,
+                key=f"obj.compress.boundary.r{ratio}",
             )
 
     def _extra_hbm(self, size_bytes: int) -> int:
@@ -1386,6 +1432,86 @@ class _Emitter:
         self._waits[unique] = wid
         return wid
 
+    def _discover_compressor_predicates(self) -> dict[str, dict[str, Any]]:
+        """Index the released compressor's exact prefill/decode conditions.
+
+        Prefill is a normal symbol comparison.  Decode is the one supported
+        non-affine form: ``POSITION_END % ratio == 0``.  It is accepted only
+        for the pinned rolling-compressor kernel and is materialised later from
+        ``ring_indices_v1``; arbitrary modulus expressions remain outside the
+        frozen ABI 3.0 predicate set.
+        """
+
+        found: dict[str, dict[str, Any]] = {}
+        for kernel in self.graph.kernels:
+            if kernel.kind != "COMPRESS_STATE_UPDATE":
+                continue
+            name = str(kernel.attributes.get("predicate_output", ""))
+            if not name:
+                continue
+            ratio = int(kernel.attributes.get("ratio", 0) or 0)
+            if ratio not in (4, 128):
+                raise LoweringError(
+                    f"kernel {kernel.kernel_id}: compressor predicate names "
+                    f"unsupported ratio {ratio}"
+                )
+            conditions = kernel.attributes.get("predicate_condition")
+            if not isinstance(conditions, Mapping):
+                raise LoweringError(
+                    f"kernel {kernel.kernel_id}: rolling compression requires "
+                    "separate prefill and decode predicate conditions"
+                )
+            prefill = str(conditions.get("prefill", ""))
+            decode = str(conditions.get("decode", ""))
+            symbol_condition(prefill)
+            if decode.split() != ["context_length", "%", str(ratio), "==", "0"]:
+                raise LoweringError(
+                    f"kernel {kernel.kernel_id}: decode predicate {decode!r} "
+                    f"is not the exact POSITION_END modulo {ratio} boundary"
+                )
+            spec = {
+                "name": name,
+                "ratio": ratio,
+                "prefill": prefill,
+                "decode": decode,
+            }
+            previous = found.get(name)
+            if previous is not None and previous != spec:
+                raise LoweringError(
+                    f"compressor predicate {name!r} has conflicting declarations"
+                )
+            found[name] = spec
+        return found
+
+    def _compressor_predicate_of(
+        self, kernel: Kernel
+    ) -> dict[str, Any] | None:
+        """Return the rolling predicate consumed or produced by ``kernel``."""
+
+        names: set[str] = set()
+        output = kernel.attributes.get("predicate_output")
+        if output:
+            names.add(str(output))
+        execution = kernel.attributes.get("execution_predicate")
+        if execution:
+            names.add(str(execution))
+        conditional = kernel.attributes.get("conditional_outputs")
+        if conditional:
+            names.update(str(value) for value in dict(conditional).values())
+        matched = [
+            self._compressor_predicates[name]
+            for name in names
+            if name in self._compressor_predicates
+        ]
+        if not matched:
+            return None
+        if len({entry["name"] for entry in matched}) != 1:
+            raise LoweringError(
+                f"kernel {kernel.kernel_id}: names multiple rolling-compressor "
+                "predicates"
+            )
+        return matched[0]
+
     def _predicate_descriptor(self, condition: str) -> int:
         symbol, comparison, immediate = symbol_condition(condition)
         key = (int(symbol), int(comparison), int(immediate))
@@ -1405,6 +1531,91 @@ class _Emitter:
         )
         self._predicate_cache[key] = pid
         return pid
+
+    def _emit_compress_boundary_flag(
+        self, plan: KernelPlan, kernel: Kernel, ratio: int
+    ) -> int:
+        """Materialise and return the ratio's decode-boundary predicate once.
+
+        The decode path copies
+        ``ring_indices_v1(modulus=ratio)[POSITION_END]`` into a four-byte HBM
+        word.  The prefill path writes one, which keeps the inverted predicate
+        false even when the prompt happens to end on a group boundary.  Guarded
+        CONTROL.WAIT instructions acquire the selected write before any later
+        BOOLEAN_OBJECT evaluation; no synthetic join event is necessary.
+        """
+
+        cached = self._compress_boundary_predicate.get(int(ratio))
+        if cached is not None:
+            return cached
+        object_id = self._compress_boundary_object.get(int(ratio))
+        if object_id is None:
+            raise LoweringError(
+                f"compressor ratio {ratio} has no boundary-control object"
+            )
+        flag_view = self._view(
+            object_id=object_id,
+            dtype=DType.U32,
+            dims=[1],
+            strides=[1],
+            writable=True,
+        )
+        ring_word = self._compress_ring_index_view(
+            ratio, count=1, symbol=Symbol.POSITION_END
+        )
+        prefill_phase = self._phase_predicate(("prefill",))
+        decode_phase = self._phase_predicate(("decode",))
+        decoded = self._emit_operator_instruction(
+            plan=plan,
+            family=Major.DMA,
+            sub=Dma.TRANSFER,
+            inputs=[ring_word],
+            outputs=[flag_view],
+            predicate_id=decode_phase,
+            key=f"op.k{plan.index}.compress.boundary.r{ratio}.decode",
+        )
+        prefilled = self._emit_operator_instruction(
+            plan=plan,
+            family=Major.DMA,
+            sub=Dma.FILL,
+            inputs=[],
+            outputs=[flag_view],
+            predicate_id=prefill_phase,
+            aux=[1],
+            key=f"op.k{plan.index}.compress.boundary.r{ratio}.prefill",
+        )
+        for event, predicate in (
+            (decoded, decode_phase),
+            (prefilled, prefill_phase),
+        ):
+            self.builder.emit(
+                Major.CONTROL,
+                Control.WAIT,
+                wait_set_id=self._wait_set([event]),
+                predicate_id=predicate,
+                source_operation_id=plan.index,
+            )
+        predicate = self.builder.predicate(
+            kind=PredicateKind.BOOLEAN_OBJECT,
+            comparison=Comparison.EQ,
+            object_id=object_id,
+            element_index=0,
+            key=f"pred.compress.boundary.r{int(ratio)}",
+        )
+        self._compress_boundary_predicate[int(ratio)] = predicate
+        return predicate
+
+    def _compress_prefill_descriptor(self, ratio: int) -> int:
+        """The existing symbol comparison for a nonempty prefill group set."""
+
+        cached = self._compress_prefill_predicate.get(int(ratio))
+        if cached is not None:
+            return cached
+        predicate = self._predicate_descriptor(
+            f"span_groups_ratio{int(ratio)} > 0"
+        )
+        self._compress_prefill_predicate[int(ratio)] = predicate
+        return predicate
 
     def _kernel_predicate(self, plan: KernelPlan) -> int:
         """This kernel's one predicate: its phase, or its declared condition.
@@ -1710,6 +1921,7 @@ class _Emitter:
         *,
         writable: bool,
         narrow: tuple[int, int] | None = None,
+        leading_extent: int | None = None,
     ) -> int:
         dtype = dtype_of(operand.dtype)
         reading = self._element_reading(plan, operand)
@@ -1751,7 +1963,13 @@ class _Emitter:
             )
         generated = self._generated_object.get(operand.tensor_id)
         if generated is not None and operand.tensor_id in self._position_inputs:
-            return self._position_view(plan, operand, loops, generated)
+            return self._position_view(
+                plan,
+                operand,
+                loops,
+                generated,
+                leading_extent=leading_extent,
+            )
         if operand.residence == "state" or writes_state:
             # A declared state effect is the authority: a kernel that writes a
             # state resource writes into that resource's prepared image, even
@@ -1825,6 +2043,15 @@ class _Emitter:
                 )
             dims = list(dims)
             dims[axis] = max(min(int(extent), int(dims[axis])), 1)
+        if leading_extent is not None and self._request_sized(operand):
+            axis = self._batch_axis(plan, operand)
+            if not 0 <= axis < len(dims):
+                raise LoweringError(
+                    f"kernel {plan.kernel_id}: decode extent axis {axis} is "
+                    f"outside rank-{len(dims)} operand {operand.tensor_id}"
+                )
+            dims = list(dims)
+            dims[axis] = max(min(int(leading_extent), int(dims[axis])), 1)
         numerator = int(operand.extent_numerator)
         dims, strides, numerator, row_stride = self._row_broadcast(
             plan, operand, dims, strides, numerator, row_stride
@@ -2007,6 +2234,8 @@ class _Emitter:
         operand: OperandPlan,
         loops: Mapping[str, int],
         object_id: int,
+        *,
+        leading_extent: int | None = None,
     ) -> int:
         """The request's positions, as many as the movement addresses.
 
@@ -2058,6 +2287,8 @@ class _Emitter:
         if addressed is not None:
             dims, _, _ = self._declared_view(plan, addressed)
             count = max(dims[0], 1)
+        if leading_extent is not None:
+            count = max(min(int(leading_extent), count), 1)
         # How many positions one row of the movement advances.  It is one
         # wherever a movement touches consecutive rows; a *pooled* row stands
         # for several positions and the graph declares how many.  The
@@ -2999,12 +3230,19 @@ class _Emitter:
         self, plan: KernelPlan, *, shared_row_loop: int | None = None
     ) -> None:
         kernel = self.kernels[plan.index]
+        compressor_spec = self._compressor_predicate_of(kernel)
         self._emitted_kernels.add(plan.index)
         if kernel.kind in _TRANSACTION_KINDS:
             self._emit_state_kernel(plan, kernel)
             return
 
-        if self._is_fused_state_append(plan, kernel):
+        if kernel.kind == "COMPRESS_STATE_UPDATE" and compressor_spec is not None:
+            self._emit_compressor_transition(
+                plan, kernel, shared_row_loop=shared_row_loop
+            )
+            return
+
+        if self._is_fused_state_append(plan, kernel) and compressor_spec is None:
             self._emit_state_append(
                 plan, kernel, shared_row_loop=shared_row_loop
             )
@@ -3097,6 +3335,22 @@ class _Emitter:
         ):
             self._check_join_extent(plan, kernel)
         present = operand_present(self._predicate_values, kernel)
+        if compressor_spec is not None:
+            if present is not None or consumer_paths is not None:
+                raise LoweringError(
+                    f"kernel {plan.kernel_id}: a rolling-compressor path cannot "
+                    "also carry an independent optional/phase split"
+                )
+            self._emit_compressor_paths(
+                plan,
+                kernel,
+                loops,
+                inputs,
+                outputs,
+                compressor_spec,
+                close_row=close_row,
+            )
+            return
         if present is not None:
             event = self._emit_alternative_paths(
                 plan, kernel, loops, inputs, outputs, absent=present[0],
@@ -3159,6 +3413,846 @@ class _Emitter:
         )
         for name in kernel.outputs:
             self._event_of_tensor[name] = event
+
+    def _state_member_view(
+        self,
+        plan: KernelPlan,
+        resource_id: str,
+        *,
+        dims: Sequence[int],
+        strides: Sequence[int],
+        writable: bool,
+        element_offset: int = 0,
+        dynamic: Sequence[DynamicTerm] = (),
+    ) -> int:
+        """A direct-HBM view of one compressor resource in a folded layer band."""
+
+        mapping = self.plan.state_of_resource.get(resource_id)
+        if mapping is None:
+            raise LoweringError(
+                f"compressor resource {resource_id!r} has no physical placement"
+            )
+        physical_id, member = str(mapping[0]), int(mapping[1])
+        state = self.plan.state(physical_id)
+        if not is_direct_buffer_state(state.state_class):
+            raise LoweringError(
+                f"compressor resource {resource_id!r} is not an ordinary HBM buffer"
+            )
+        _committed, direct = self._state_objects[physical_id]
+        window = state.capacity_rows * state.row_elements
+        terms = list(dynamic)
+        loop = self._layer_loop
+        if len(state.members) > 1 and loop is not None:
+            terms.append(DynamicTerm.loop(loop, window))
+        return self._view(
+            object_id=direct,
+            dtype=dtype_of(state.dtype),
+            dims=dims,
+            strides=strides,
+            element_offset=member * window + int(element_offset),
+            dynamic=terms,
+            writable=writable,
+        )
+
+    def _compress_scratch_view(
+        self,
+        plan: KernelPlan,
+        operand: OperandPlan,
+        loops: Mapping[str, int],
+        *,
+        dims: Sequence[int],
+        strides: Sequence[int],
+        element_offset: int = 0,
+        writable: bool,
+        extent_axis: int | None = None,
+    ) -> int:
+        """Reuse a state-update output arena as bounded transition scratch."""
+
+        object_id, base = self._object_for(operand)
+        terms: list[DynamicTerm] = []
+        if "row" in operand.terms and loops.get("row") is not None:
+            # One compressor block occupies exactly the pool arena's ordinary
+            # row-loop window.  Scratch lives at its beginning and consumers
+            # overwrite it with the final prefill/decode pool operands.
+            _dims, _strides, step = self._declared_view(plan, operand)
+            terms.append(DynamicTerm.loop(int(loops["row"]), int(step)))
+        return self._view(
+            object_id=object_id,
+            dtype=dtype_of(operand.dtype),
+            dims=dims,
+            strides=strides,
+            element_offset=base + int(element_offset),
+            dynamic=terms,
+            writable=writable,
+            extent_axis=int(extent_axis or 0),
+            extent_numerator=1 if extent_axis is not None else 0,
+            extent_unit=1 if extent_axis is not None else 0,
+        )
+
+    def _compress_ring_index_view(
+        self,
+        modulus: int,
+        *,
+        count: int,
+        symbol: Symbol,
+        static_offset: int = 0,
+        loop: int | None = None,
+        loop_stride: int = 0,
+    ) -> int:
+        object_id = self._generated_object.get(f"{RING_INDEX_PREFIX}{int(modulus)}")
+        if object_id is None:
+            raise LoweringError(
+                f"compressor needs ring_indices_v1 modulus {modulus}, but the "
+                "physical plan materialised no such authenticated table"
+            )
+        terms = [DynamicTerm.symbol(symbol, 1)]
+        if loop is not None:
+            terms.append(DynamicTerm.loop(loop, int(loop_stride)))
+        return self._view(
+            object_id=object_id,
+            dtype=DType.U32,
+            dims=[int(count)],
+            strides=[1],
+            element_offset=int(static_offset),
+            dynamic=terms,
+            extent_axis=0,
+            extent_numerator=1 if loop is not None else 0,
+            extent_unit=1 if loop is not None else 0,
+        )
+
+    def _emit_operator_instruction(
+        self,
+        *,
+        plan: KernelPlan,
+        family: Major,
+        sub: int,
+        inputs: Sequence[int],
+        outputs: Sequence[int],
+        waits: Sequence[int] = (),
+        predicate_id: int = NO_ID,
+        invert_predicate: bool = False,
+        aux: Sequence[int] = (),
+        numeric_profile_id: int = NO_ID,
+        key: str,
+    ) -> int:
+        """Emit one explicit ABI-3 transition operation and return its event."""
+
+        operator = self.builder.operator(
+            engine_family=family,
+            engine_sub=int(sub),
+            inputs=list(inputs),
+            outputs=list(outputs),
+            aux=list(aux),
+            numeric_profile_id=numeric_profile_id,
+            schedule_id=self._schedule_for(plan, int(family)),
+            counter_class_id=self._counter_class(int(family)),
+            source_kernel_id=plan.index,
+            key=key,
+        )
+        event = self.builder.new_event()
+        self.builder.emit(
+            family,
+            int(sub),
+            descriptor_id=operator,
+            wait_set_id=self._wait_set(waits),
+            signal_event_id=event,
+            predicate_id=predicate_id,
+            invert_predicate=invert_predicate,
+            source_operation_id=plan.index,
+        )
+        return event
+
+    def _emit_compressor_transition(
+        self,
+        plan: KernelPlan,
+        kernel: Kernel,
+        *,
+        shared_row_loop: int | None,
+    ) -> None:
+        """Lower the complete DeepSeek rolling compressor with ABI 3.0 only.
+
+        The source's fixed previous/current halves are represented as a
+        circular raw-history ring.  This removes the post-pool physical copy:
+        chronological prior/current candidates are reconstructed by an indexed
+        gather only on a decode boundary.  All persistent bytes remain in the
+        graph-declared ordinary HBM state objects; no simulator-private state
+        participates.
+        """
+
+        ratio = int(kernel.attributes.get("ratio", 0) or 0)
+        overlap = bool(kernel.attributes.get("overlap"))
+        slots = 2 * ratio if overlap else ratio
+        if ratio not in (4, 128) or overlap != (ratio == 4):
+            raise LoweringError(
+                f"kernel {plan.kernel_id}: unsupported compressor geometry "
+                f"ratio={ratio}, overlap={overlap}"
+            )
+        if len(kernel.state_reads) != 2 or tuple(kernel.state_reads) != tuple(
+            kernel.state_writes
+        ):
+            raise LoweringError(
+                f"kernel {plan.kernel_id}: compressor must read and write the "
+                "same KV and score HBM resources"
+            )
+
+        loops = self._open_loops(plan, shared_row_loop=shared_row_loop)
+        close_row = shared_row_loop is None
+        row_loop = loops.get("row")
+        in_operands = {o.slot: o for o in plan.operands if o.direction == "in"}
+        out_operands = {o.slot: o for o in plan.operands if o.direction == "out"}
+        packed_operand = in_operands[0]
+        ape_operand = in_operands[2]
+        pool_kv_operand = out_operands[0]
+        pool_score_operand = out_operands[1]
+        packed_dims, packed_strides, _ = self._declared_view(plan, packed_operand)
+        if len(packed_dims) != 4 or packed_dims[0] != 1 or packed_dims[2] != 2:
+            raise LoweringError(
+                f"kernel {plan.kernel_id}: packed compressor view has geometry "
+                f"{packed_dims}, expected [1, span, 2, width]"
+            )
+        span = int(packed_dims[1])
+        width = int(packed_dims[3])
+        head_dim = width // (2 if overlap else 1)
+        if head_dim <= 0 or int(kernel.attributes.get("head_dim", 0)) != head_dim:
+            raise LoweringError(
+                f"kernel {plan.kernel_id}: projected width {width} disagrees "
+                f"with head_dim {kernel.attributes.get('head_dim')}"
+            )
+
+        packed = self._operand_view(plan, packed_operand, loops, writable=False)
+        packed_base = self.builder.table[packed].payload
+        packed_object = self.builder.table[packed].primary_object_id
+        packed_terms = [
+            DynamicTerm(
+                int(packed_base[f"term{i}_kind"]),
+                int(packed_base[f"term{i}_index"]),
+                int(packed_base[f"term{i}_stride"]),
+            )
+            for i in range(int(packed_base["dynamic_term_count"]))
+        ]
+        kv_values = self._view(
+            object_id=packed_object,
+            dtype=DType.FP32,
+            dims=[span, width],
+            strides=[int(packed_base["stride1"]), 1],
+            element_offset=int(packed_base["element_offset"]),
+            dynamic=packed_terms,
+            extent_axis=0,
+            extent_numerator=1,
+            extent_unit=1,
+        )
+        score_values = self._view(
+            object_id=packed_object,
+            dtype=DType.FP32,
+            dims=[span, width],
+            strides=[int(packed_base["stride1"]), 1],
+            element_offset=(
+                int(packed_base["element_offset"])
+                + int(packed_base["stride2"])
+            ),
+            dynamic=packed_terms,
+            extent_axis=0,
+            extent_numerator=1,
+            extent_unit=1,
+        )
+        state_indices = self._compress_ring_index_view(
+            slots,
+            count=span,
+            symbol=Symbol.POSITION_START,
+            loop=row_loop,
+            loop_stride=span,
+        )
+        ape_indices = self._compress_ring_index_view(
+            ratio,
+            count=span,
+            symbol=Symbol.POSITION_START,
+            loop=row_loop,
+            loop_stride=span,
+        )
+
+        ape_object, ape_base = self._object_for(ape_operand)
+        ape_terms: list[DynamicTerm] = []
+        if "layer" in ape_operand.terms and self._layer_loop is not None:
+            placement = self.plan.placement(ape_operand.tensor_id)
+            ape_terms.append(
+                DynamicTerm.loop(self._layer_loop, placement.layer_stride_elements)
+            )
+        ape_source = self._view(
+            object_id=ape_object,
+            dtype=DType.FP32,
+            dims=[ratio, width],
+            strides=[width, 1],
+            element_offset=ape_base,
+            dynamic=ape_terms,
+        )
+        ape_scratch = self._compress_scratch_view(
+            plan,
+            pool_kv_operand,
+            loops,
+            dims=[span, width],
+            strides=[width, 1],
+            writable=True,
+            extent_axis=0,
+        )
+        biased_scores = self._compress_scratch_view(
+            plan,
+            pool_score_operand,
+            loops,
+            dims=[span, width],
+            strides=[width, 1],
+            writable=True,
+            extent_axis=0,
+        )
+        producer_events = self._producer_events(kernel)
+        ape_event = self._emit_operator_instruction(
+            plan=plan,
+            family=Major.DMA,
+            sub=Dma.GATHER,
+            inputs=[ape_indices, ape_source],
+            outputs=[ape_scratch],
+            waits=producer_events,
+            key=f"op.k{plan.index}.compress.ape",
+        )
+        # ORDERED_SUM's optional base enters first.  With one gathered APE term
+        # this is exactly one FP32 RNE addition: raw score + APE.
+        ape_term = self._compress_scratch_view(
+            plan,
+            pool_kv_operand,
+            loops,
+            dims=[1, span, width],
+            strides=[0, width, 1],
+            writable=False,
+            extent_axis=1,
+        )
+        score_numeric = self._numeric_profile(
+            kernel.numeric_contract,
+            DType.FP32,
+            DType.FP32,
+            DType.FP32,
+            reduction_order=ReductionOrder.SEQUENTIAL_ASCENDING,
+        )
+        bias_event = self._emit_operator_instruction(
+            plan=plan,
+            family=Major.REDUCTION,
+            sub=Reduction.ORDERED_SUM,
+            inputs=[ape_term, score_values],
+            outputs=[biased_scores],
+            waits=[ape_event, *producer_events],
+            numeric_profile_id=score_numeric,
+            key=f"op.k{plan.index}.compress.bias",
+        )
+
+        state_rows = [slots, width]
+        state_strides = [width, 1]
+        kv_history = self._state_member_view(
+            plan,
+            kernel.state_writes[0],
+            dims=state_rows,
+            strides=state_strides,
+            writable=True,
+        )
+        score_history = self._state_member_view(
+            plan,
+            kernel.state_writes[1],
+            dims=state_rows,
+            strides=state_strides,
+            writable=True,
+        )
+        phase_prefill = self._phase_predicate(("prefill",))
+        reset_kv = self._emit_operator_instruction(
+            plan=plan,
+            family=Major.DMA,
+            sub=Dma.FILL,
+            inputs=[],
+            outputs=[kv_history],
+            predicate_id=phase_prefill,
+            aux=[0],
+            key=f"op.k{plan.index}.compress.history_reset.kv",
+        )
+        reset_scores = self._emit_operator_instruction(
+            plan=plan,
+            family=Major.DMA,
+            sub=Dma.FILL,
+            inputs=[],
+            outputs=[score_history],
+            predicate_id=phase_prefill,
+            aux=[0xFF800000],
+            key=f"op.k{plan.index}.compress.history_reset.scores",
+        )
+        # Both fills issue only for fresh prefill.  Guard-matched waits acquire
+        # them there and retire as no-ops on decode.  Because the control
+        # sequencer is in order, the following scatters need no synthetic join
+        # event merely to restate that these WAIT instructions came first.
+        for reset_event in (reset_kv, reset_scores):
+            self.builder.emit(
+                Major.CONTROL,
+                Control.WAIT,
+                wait_set_id=self._wait_set([reset_event]),
+                predicate_id=phase_prefill,
+                source_operation_id=plan.index,
+            )
+        kv_event = self._emit_operator_instruction(
+            plan=plan,
+            family=Major.DMA,
+            sub=Dma.SCATTER,
+            inputs=[state_indices, kv_values],
+            outputs=[kv_history],
+            waits=producer_events,
+            key=f"op.k{plan.index}.compress.kv_append",
+        )
+        score_event = self._emit_operator_instruction(
+            plan=plan,
+            family=Major.DMA,
+            sub=Dma.SCATTER,
+            inputs=[state_indices, biased_scores],
+            outputs=[score_history],
+            waits=[bias_event, kv_event],
+            key=f"op.k{plan.index}.compress.score_append",
+        )
+
+        boundary_predicate = self._emit_compress_boundary_flag(
+            plan, kernel, ratio
+        )
+
+        prefill_predicate = self._compress_prefill_descriptor(ratio)
+        prefill_event = self._emit_operator_instruction(
+            plan=plan,
+            family=Major.VECTOR,
+            sub=Vector.COMPRESS,
+            inputs=[packed, NO_ID, self._operand_view(
+                plan, ape_operand, loops, writable=False
+            )],
+            outputs=[
+                self._operand_view(plan, pool_kv_operand, loops, writable=True),
+                self._operand_view(plan, pool_score_operand, loops, writable=True),
+            ],
+            waits=producer_events,
+            predicate_id=prefill_predicate,
+            aux=list(plan.aux),
+            numeric_profile_id=self._kernel_numeric(plan),
+            key=f"op.k{plan.index}.compress.prefill",
+        )
+
+        chronological = self._compress_ring_index_view(
+            slots,
+            count=slots,
+            symbol=Symbol.POSITION_END,
+        )
+        if overlap:
+            kv_candidates = self._compress_scratch_view(
+                plan,
+                pool_kv_operand,
+                loops,
+                dims=[slots, head_dim],
+                strides=[head_dim, 1],
+                writable=True,
+            )
+            score_candidates = self._compress_scratch_view(
+                plan,
+                pool_score_operand,
+                loops,
+                dims=[slots, head_dim],
+                strides=[head_dim, 1],
+                writable=True,
+            )
+            kv_gather_source = self._state_member_view(
+                plan,
+                kernel.state_reads[0],
+                dims=[slots, head_dim],
+                strides=[width, 1],
+                writable=False,
+            )
+            score_gather_source = self._state_member_view(
+                plan,
+                kernel.state_reads[1],
+                dims=[slots, head_dim],
+                strides=[width, 1],
+                writable=False,
+            )
+            # The chronological index order is previous then current.  The
+            # first half reads columns 0:D and the second half D:2D.
+            first_indices = self._compress_ring_index_view(
+                slots, count=ratio, symbol=Symbol.POSITION_END
+            )
+            second_indices = self._compress_ring_index_view(
+                slots,
+                count=ratio,
+                symbol=Symbol.POSITION_END,
+                static_offset=ratio,
+            )
+            first_kv = self._compress_scratch_view(
+                plan,
+                pool_kv_operand,
+                loops,
+                dims=[ratio, head_dim],
+                strides=[head_dim, 1],
+                writable=True,
+            )
+            second_kv = self._compress_scratch_view(
+                plan,
+                pool_kv_operand,
+                loops,
+                dims=[ratio, head_dim],
+                strides=[head_dim, 1],
+                element_offset=ratio * head_dim,
+                writable=True,
+            )
+            first_scores = self._compress_scratch_view(
+                plan,
+                pool_score_operand,
+                loops,
+                dims=[ratio, head_dim],
+                strides=[head_dim, 1],
+                writable=True,
+            )
+            second_scores = self._compress_scratch_view(
+                plan,
+                pool_score_operand,
+                loops,
+                dims=[ratio, head_dim],
+                strides=[head_dim, 1],
+                element_offset=ratio * head_dim,
+                writable=True,
+            )
+            kv_current_source = self._state_member_view(
+                plan,
+                kernel.state_reads[0],
+                dims=[slots, head_dim],
+                strides=[width, 1],
+                element_offset=head_dim,
+                writable=False,
+            )
+            score_current_source = self._state_member_view(
+                plan,
+                kernel.state_reads[1],
+                dims=[slots, head_dim],
+                strides=[width, 1],
+                element_offset=head_dim,
+                writable=False,
+            )
+            decode_tail = self._emit_operator_instruction(
+                plan=plan, family=Major.DMA, sub=Dma.GATHER,
+                inputs=[first_indices, kv_gather_source], outputs=[first_kv],
+                waits=[kv_event, score_event], predicate_id=boundary_predicate,
+                invert_predicate=True,
+                key=f"op.k{plan.index}.compress.decode.kv_previous",
+            )
+            decode_tail = self._emit_operator_instruction(
+                plan=plan, family=Major.DMA, sub=Dma.GATHER,
+                inputs=[second_indices, kv_current_source], outputs=[second_kv],
+                waits=[decode_tail], predicate_id=boundary_predicate,
+                invert_predicate=True,
+                key=f"op.k{plan.index}.compress.decode.kv_current",
+            )
+            decode_tail = self._emit_operator_instruction(
+                plan=plan, family=Major.DMA, sub=Dma.GATHER,
+                inputs=[first_indices, score_gather_source], outputs=[first_scores],
+                waits=[decode_tail], predicate_id=boundary_predicate,
+                invert_predicate=True,
+                key=f"op.k{plan.index}.compress.decode.score_previous",
+            )
+            decode_tail = self._emit_operator_instruction(
+                plan=plan, family=Major.DMA, sub=Dma.GATHER,
+                inputs=[second_indices, score_current_source], outputs=[second_scores],
+                waits=[decode_tail], predicate_id=boundary_predicate,
+                invert_predicate=True,
+                key=f"op.k{plan.index}.compress.decode.score_current",
+            )
+        else:
+            kv_candidates = self._compress_scratch_view(
+                plan, pool_kv_operand, loops,
+                dims=[slots, head_dim], strides=[head_dim, 1], writable=True,
+            )
+            score_candidates = self._compress_scratch_view(
+                plan, pool_score_operand, loops,
+                dims=[slots, head_dim], strides=[head_dim, 1], writable=True,
+            )
+            kv_source = self._state_member_view(
+                plan, kernel.state_reads[0], dims=[slots, head_dim],
+                strides=[head_dim, 1], writable=False,
+            )
+            score_source = self._state_member_view(
+                plan, kernel.state_reads[1], dims=[slots, head_dim],
+                strides=[head_dim, 1], writable=False,
+            )
+            decode_tail = self._emit_operator_instruction(
+                plan=plan, family=Major.DMA, sub=Dma.GATHER,
+                inputs=[chronological, kv_source], outputs=[kv_candidates],
+                waits=[kv_event, score_event], predicate_id=boundary_predicate,
+                invert_predicate=True,
+                key=f"op.k{plan.index}.compress.decode.kv",
+            )
+            decode_tail = self._emit_operator_instruction(
+                plan=plan, family=Major.DMA, sub=Dma.GATHER,
+                inputs=[chronological, score_source], outputs=[score_candidates],
+                waits=[decode_tail], predicate_id=boundary_predicate,
+                invert_predicate=True,
+                key=f"op.k{plan.index}.compress.decode.score",
+            )
+
+        self._close_loops(
+            loops, ["context", *(["row"] if close_row else [])]
+        )
+        for name in kernel.outputs:
+            self._event_of_tensor.pop(name, None)
+            self._compressor_path_events[name] = {
+                "prefill": prefill_event,
+                "decode": decode_tail,
+            }
+        self._predicated_operators[kernel.kernel_id] = (
+            f"prefill:span_groups_ratio{ratio}>0;"
+            f"decode:POSITION_END%{ratio}==0"
+        )
+        self._compressor_transition_ratios.add(ratio)
+
+    def _compressed_rope_decode_views(
+        self,
+        plan: KernelPlan,
+        kernel: Kernel,
+        loops: Mapping[str, int],
+        ratio: int,
+    ) -> tuple[list[int], list[int]]:
+        """Views selecting the first position of one completed decode group.
+
+        At a boundary the just-completed token has position ``p`` and the
+        compressed row represents ``p + 1 - ratio``.  Reading
+        ``floor_div_indices_v1[POSITION_START]`` yields ``floor(p / ratio)``;
+        presenting the immutable coefficient table with a ratio-row stride
+        maps that ordinal to physical row ``ratio * floor(p / ratio)``, which
+        is exactly ``p + 1 - ratio`` at the admitted boundary.
+        """
+
+        in_operands = {
+            operand.slot: operand
+            for operand in plan.operands
+            if operand.direction == "in"
+        }
+        if sorted(in_operands) != [0, 1]:
+            raise LoweringError(
+                f"kernel {plan.kernel_id}: compressed RoPE gather must bind "
+                "index slot 0 and coefficient slot 1"
+            )
+        index_operand = in_operands[0]
+        coefficient = in_operands[1]
+        if index_operand.tensor_id not in self._position_inputs:
+            raise LoweringError(
+                f"kernel {plan.kernel_id}: compressed RoPE selector is not a "
+                "declared position input"
+            )
+        floor_object = self._generated_object.get(
+            f"{FLOOR_DIV_INDEX_PREFIX}{ratio}"
+        )
+        if floor_object is None:
+            raise LoweringError(
+                f"kernel {plan.kernel_id}: decode needs floor-div table {ratio}"
+            )
+        index_view = self._view(
+            object_id=floor_object,
+            dtype=DType.U32,
+            dims=[1],
+            strides=[1],
+            dynamic=[DynamicTerm.symbol(Symbol.POSITION_START, 1)],
+        )
+
+        coefficient_object, coefficient_base = self._object_for(coefficient)
+        dims, strides, _row_stride = self._declared_view(plan, coefficient)
+        if len(dims) != 2 or int(dims[0]) < ratio:
+            raise LoweringError(
+                f"kernel {plan.kernel_id}: coefficient table has geometry "
+                f"{dims}, expected a rank-two position table"
+            )
+        coefficient_view = self._view(
+            object_id=coefficient_object,
+            dtype=dtype_of(coefficient.dtype),
+            dims=[(int(dims[0]) + ratio - 1) // ratio, int(dims[1])],
+            strides=[int(strides[0]) * ratio, int(strides[1])],
+            element_offset=coefficient_base,
+        )
+        decode_loops = {name: value for name, value in loops.items() if name != "row"}
+        outputs = [
+            self._operand_view(
+                plan,
+                operand,
+                decode_loops,
+                writable=True,
+                leading_extent=1,
+            )
+            for operand in plan.operands
+            if operand.direction == "out"
+        ]
+        return [index_view, coefficient_view], outputs
+
+    def _emit_compressor_paths(
+        self,
+        plan: KernelPlan,
+        kernel: Kernel,
+        loops: Mapping[str, int],
+        inputs: Sequence[int],
+        outputs: Sequence[int],
+        spec: Mapping[str, Any],
+        *,
+        close_row: bool,
+    ) -> int | None:
+        """Emit the prefill-many and boundary-decode-one forms of a pipeline.
+
+        The graph exposes one logical ``should_compress`` value, but its two
+        physical conditions and shapes differ.  ABI 3.0 therefore carries two
+        guarded instructions through the pipeline: the normal prefill view and
+        a one-group decode view.  They converge only after the compressed-cache
+        append, where later state reads must observe either the newly written
+        cache or the unchanged cache on a non-boundary decode.
+        """
+
+        ratio = int(spec["ratio"])
+        boundary = self._compress_boundary_predicate.get(ratio)
+        if boundary is None:
+            raise LoweringError(
+                f"kernel {plan.kernel_id}: ratio-{ratio} boundary predicate "
+                "was not emitted before its consumer"
+            )
+        if plan.link_class:
+            raise LoweringError(
+                f"kernel {plan.kernel_id}: a rolling-compressor conditional "
+                f"path cannot also carry link class {plan.link_class!r}"
+            )
+        prefill = self._compress_prefill_descriptor(ratio)
+        base_events = [
+            self._event_of_tensor[name]
+            for name in kernel.inputs
+            if name in self._event_of_tensor
+        ]
+        path_events = {
+            phase: [
+                self._compressor_path_events[name][phase]
+                for name in kernel.inputs
+                if name in self._compressor_path_events
+            ]
+            for phase in ("prefill", "decode")
+        }
+
+        def emit(
+            row_inputs: Sequence[int],
+            row_outputs: Sequence[int],
+            *,
+            phase: str,
+            predicate: int,
+            inverted: bool,
+        ) -> int:
+            operator = self.builder.operator(
+                engine_family=Major(plan.engine_family),
+                engine_sub=plan.engine_sub,
+                inputs=list(row_inputs),
+                outputs=list(row_outputs),
+                aux=list(plan.aux),
+                numeric_profile_id=self._kernel_numeric(plan),
+                schedule_id=self._schedule_for(plan),
+                counter_class_id=self._counter_class(plan.engine_family),
+                source_kernel_id=plan.index,
+                key=f"op.k{plan.index}.compress.{phase}",
+            )
+            event = self.builder.new_event()
+            self.builder.emit(
+                Major(plan.engine_family),
+                plan.engine_sub,
+                descriptor_id=operator,
+                wait_set_id=self._wait_set([*base_events, *path_events[phase]]),
+                signal_event_id=event,
+                predicate_id=predicate,
+                invert_predicate=inverted,
+                source_operation_id=plan.index,
+            )
+            return event
+
+        prefill_event = emit(
+            inputs,
+            outputs,
+            phase="prefill",
+            predicate=prefill,
+            inverted=False,
+        )
+
+        compressed_rope = bool(
+            plan.engine_family == int(Major.DMA)
+            and plan.engine_sub == int(Dma.GATHER)
+            and kernel.attributes.get("compressed", False)
+        )
+        if compressed_rope:
+            stride = int(kernel.attributes.get("position_stride", 0) or 0)
+            if stride != ratio:
+                raise LoweringError(
+                    f"kernel {plan.kernel_id}: compressed RoPE stride {stride} "
+                    f"does not match ratio {ratio}"
+                )
+            decode_inputs, decode_outputs = self._compressed_rope_decode_views(
+                plan, kernel, loops, ratio
+            )
+        else:
+            decode_loops = {
+                name: value for name, value in loops.items() if name != "row"
+            }
+            in_operands = [
+                operand
+                for operand in plan.operands
+                if operand.direction == "in"
+            ]
+            decode_inputs = [NO_ID] * (
+                max((operand.slot for operand in in_operands), default=-1) + 1
+            )
+            for operand in in_operands:
+                decode_inputs[operand.slot] = self._operand_view(
+                    plan,
+                    operand,
+                    decode_loops,
+                    writable=False,
+                    leading_extent=1,
+                )
+            decode_outputs = [
+                self._operand_view(
+                    plan,
+                    operand,
+                    decode_loops,
+                    writable=True,
+                    leading_extent=1,
+                )
+                for operand in plan.operands
+                if operand.direction == "out"
+            ]
+        decode_event = emit(
+            decode_inputs,
+            decode_outputs,
+            phase="decode",
+            predicate=boundary,
+            inverted=True,
+        )
+
+        self._predicated_operators[kernel.kernel_id] = (
+            f"prefill:span_groups_ratio{ratio}>0;"
+            f"decode:POSITION_END%{ratio}==0"
+        )
+        if kernel.kind == "KV_APPEND":
+            joined = self._emit_predicated_join(
+                [
+                    (prefill_event, prefill, False),
+                    (decode_event, boundary, True),
+                ],
+                source=plan.index,
+            )
+            for name in kernel.outputs:
+                self._compressor_path_events.pop(name, None)
+                self._event_of_tensor[name] = joined
+            result: int | None = joined
+        else:
+            for name in kernel.outputs:
+                self._event_of_tensor.pop(name, None)
+                self._compressor_path_events[name] = {
+                    "prefill": prefill_event,
+                    "decode": decode_event,
+                }
+            result = None
+        self._close_loops(
+            loops, ["context", *(["row"] if close_row else [])]
+        )
+        return result
 
     def _emit_alternative_paths(
         self,
@@ -4163,25 +5257,40 @@ class _Emitter:
         ]
 
     def _terminal_work_events(self) -> list[int]:
-        """Return the unconsumed, unconditional completion-event frontier."""
+        """Acquire all issued work and return one ABI-sized terminal frontier.
 
-        produced: dict[int, int] = {}
-        consumed: set[int] = set()
-        for index, instruction in enumerate(self.builder.instructions):
-            if instruction.signal_event_id != NO_ID:
-                produced[int(instruction.signal_event_id)] = index
-            if instruction.wait_set_id == NO_ID:
+        An unconditional event is transitively covered only when a later
+        *unconditional signaller* waits on it.  A predicated consumer cannot
+        remove its producer from the terminal frontier: on the path where that
+        consumer is skipped, the producer still has to finish before token
+        publication.  Conditional producers are acquired by guard-matched
+        CONTROL.WAITs in program order and need no synthetic event afterward.
+        """
+
+        work = tuple(self.builder.instructions)
+        acquired_by_unconditional_signal: set[int] = set()
+        for instruction in work:
+            if (
+                instruction.predicate_id != NO_ID
+                or instruction.signal_event_id == NO_ID
+                or instruction.wait_set_id == NO_ID
+            ):
                 continue
-            wait = self.builder.table[instruction.wait_set_id]
-            for slot in range(int(wait.payload["producer_count"])):
-                consumed.add(int(wait.payload[f"producer_{slot}"]))
-        raw_frontier = sorted(set(produced) - consumed)
+            wait = self.builder.table[int(instruction.wait_set_id)].payload
+            acquired_by_unconditional_signal.update(
+                int(wait[f"producer_{slot}"])
+                for slot in range(int(wait["producer_count"]))
+            )
+
         frontier: list[int] = []
         conditional: dict[tuple[int, bool], list[int]] = {}
-        for event in raw_frontier:
-            instruction = self.builder.instructions[produced[event]]
+        for instruction in work:
+            event = int(instruction.signal_event_id)
+            if event == NO_ID:
+                continue
             if instruction.predicate_id == NO_ID:
-                frontier.append(event)
+                if event not in acquired_by_unconditional_signal:
+                    frontier.append(event)
                 continue
             key = (
                 int(instruction.predicate_id),
@@ -4200,13 +5309,6 @@ class _Emitter:
                         predicate_id=predicate,
                         invert_predicate=inverted,
                     )
-            joined = self.builder.new_event()
-            self.builder.emit(
-                Major.CONTROL,
-                Control.NOP,
-                signal_event_id=joined,
-            )
-            frontier.append(joined)
         while len(frontier) > MAX_WAIT_PRODUCERS:
             collapsed: list[int] = []
             for offset in range(0, len(frontier), MAX_WAIT_PRODUCERS):

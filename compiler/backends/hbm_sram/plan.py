@@ -1379,15 +1379,15 @@ def predicate_conditions(graph: KernelGraph) -> tuple[
     state the *condition* the value stands for, and only where a frozen
     predicate kind states it.
 
-    The released compressor's condition has two phases and only one of them is
-    expressible.  Prefill is ``span_groups_ratioN > 0`` -- a comparison over a
-    declared symbol, which ``COMPARE_SYMBOL`` states exactly.  Decode is
-    ``(start_pos + 1) % ratio == 0``, and the frozen ``comparisons`` registry
-    has no modulus, no masking and no arithmetic; ``BOOLEAN_OBJECT`` reads a
-    *statically* indexed word, so it cannot read ``ring[start_pos]`` either.
-    Inventing a predicate kind for it would be an ABI change and is not a
-    backend's to make, so the decode form is recorded as unrepresentable and
-    reported in the deployment notes rather than approximated.
+    The released compressor's condition has two phases and only its prefill
+    form is affine: ``span_groups_ratioN > 0`` maps directly to
+    ``COMPARE_SYMBOL``.  The generic parser records the decode modulus form as
+    unresolved because the frozen comparison registry has no arithmetic.
+    Both production backends subsequently discharge that one exact,
+    source-declared form by copying an authenticated ``ring_indices_v1`` word
+    into an ordinary HBM object and testing it with ``BOOLEAN_OBJECT``.  This
+    helper remains deliberately unaware of that lowering so an arbitrary
+    modulus expression cannot become silently accepted as equivalent.
     """
     values: dict[str, str] = {}
     refused_values: dict[str, dict[str, str]] = {}
@@ -2126,8 +2126,30 @@ def floor_divisor(kernel: Kernel) -> int:
 
 
 def ring_moduli(graph: KernelGraph) -> set[int]:
-    """Every distinct ring capacity the graph's cache writes address."""
-    return {m for m in (ring_modulus(k) for k in graph.kernels) if m}
+    """Every distinct modulo table the executable program addresses.
+
+    Cache appends name their ring directly through ``cache_row``.  A
+    DeepSeek compressor names the same physical operation through its frozen
+    state-update contract: the APE phase is ``position % ratio`` and the raw
+    history is an eight-row ring for the overlap compressor, otherwise a
+    ``ratio``-row ring.  Materialising both tables here keeps that arithmetic
+    in the existing authenticated ``ring_indices_v1`` generator rather than
+    hiding it in a backend or adding an ABI operation.
+    """
+
+    moduli = {m for m in (ring_modulus(k) for k in graph.kernels) if m}
+    for kernel in graph.kernels:
+        if kernel.kind != "COMPRESS_STATE_UPDATE":
+            continue
+        ratio = int(kernel.attributes.get("ratio", 0) or 0)
+        if ratio <= 0:
+            raise PlanError(
+                f"kernel {kernel.kernel_id}: compressor ratio {ratio} is not "
+                "a positive ring modulus"
+            )
+        moduli.add(ratio)
+        moduli.add(2 * ratio if bool(kernel.attributes.get("overlap")) else ratio)
+    return moduli
 
 
 def floor_divisors(graph: KernelGraph) -> set[int]:
