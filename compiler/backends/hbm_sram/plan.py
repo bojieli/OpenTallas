@@ -4034,7 +4034,16 @@ def _aux_ids(
         if sub == int(Vector.ROPE):
             aux = [int(attributes.get("rotary_width", in_cols(1)))]
         elif sub == int(Vector.HEAD_RMS_NORM):
-            aux = [int(attributes.get("head_count", 1))]
+            head_count = int(attributes.get("head_count", 0)) or _domain_extent(
+                kernel, ("heads",), span_max
+            )
+            if head_count <= 0:
+                raise PlanError(
+                    f"kernel {kernel.kernel_id}: HEAD_RMS_NORM must declare "
+                    "its head count in aux0; the engine cannot infer a "
+                    "missing count from a flattened physical operand"
+                )
+            aux = [head_count]
         elif sub == int(Vector.SOFTMAX):
             aux = [int(attributes.get("axis", 1))]
         elif sub == int(Vector.HADAMARD):

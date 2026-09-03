@@ -37,6 +37,7 @@ from compiler.backends.hbm_sram.lower import (
 from compiler.backends.hbm_sram.plan import (
     PLAN_SCHEMA,
     PlanError,
+    _aux_ids,
     _streaming_schedule,
     build_plan,
     read_kernel_graph,
@@ -67,6 +68,7 @@ from runtime.abi3.constants import (
     Route,
     StorageClass,
     TopologyClass,
+    Vector,
     feature_bits,
 )
 from runtime.abi3.descriptors import ExtendedDescriptorType, SelectorKind, Symbol
@@ -81,6 +83,9 @@ from runtime.abi3.verifier import require_admitted, verify_deployment
 #: workload, and "the real 36-layer graph lowers and is admitted" is the claim
 #: itself rather than a way of reaching some other property.
 REAL_QWEN_IR = Path("build/ir-v3/qwen3-8b/kernel_ir.v3.json")
+REAL_DEEPSEEK_IR = Path(
+    "build/ir-v3/deepseek-v4-flash-0731/kernel_ir.v3.json"
+)
 
 
 # ---------------------------------------------------------------------------
@@ -2430,6 +2435,97 @@ def test_real_qwen_ir_lowers_and_is_admitted():
             indent=2,
         )
     )
+
+
+@pytest.mark.skipif(not REAL_QWEN_IR.exists(), reason="Qwen IR not published yet")
+def test_real_qwen_head_rms_norm_aux0_is_the_declared_head_count():
+    """The ABI aux field must survive flattening into the physical plan."""
+
+    graph = read_kernel_graph(REAL_QWEN_IR)
+    deployment = lower_to_abi3(graph, single_chip_capability())
+    kernels = {kernel.index: kernel for kernel in graph.kernels}
+    operators = [
+        descriptor
+        for descriptor in deployment.table.descriptors()
+        if descriptor.descriptor_type == ExtendedDescriptorType.OPERATOR
+        and descriptor.payload["engine_family"] == int(Major.VECTOR)
+        and descriptor.payload["engine_sub"] == int(Vector.HEAD_RMS_NORM)
+    ]
+    assert len(operators) == 2
+    observed = set()
+    for operator in operators:
+        kernel = kernels[operator.payload["source_kernel_id"]]
+        declared = int(kernel.iteration_domain["heads"])
+        observed.add(declared)
+        assert operator.payload["aux_id_0"] == declared
+    assert observed == {8, 32}
+
+
+@pytest.mark.skipif(
+    not REAL_DEEPSEEK_IR.exists(), reason="DeepSeek IR not published yet"
+)
+def test_real_deepseek_head_rms_norm_aux0_is_the_declared_head_count():
+    """Every compressed layer band must retain DeepSeek's 64 head rows."""
+
+    graph = read_kernel_graph(REAL_DEEPSEEK_IR)
+    deployment = lower_to_abi3(graph, cluster32_capability())
+    kernels = {kernel.index: kernel for kernel in graph.kernels}
+    operators = [
+        descriptor
+        for descriptor in deployment.table.descriptors()
+        if descriptor.descriptor_type == ExtendedDescriptorType.OPERATOR
+        and descriptor.payload["engine_family"] == int(Major.VECTOR)
+        and descriptor.payload["engine_sub"] == int(Vector.HEAD_RMS_NORM)
+    ]
+    assert len(operators) == 4
+    for operator in operators:
+        kernel = kernels[operator.payload["source_kernel_id"]]
+        assert int(kernel.iteration_domain["heads"]) == 64
+        assert operator.payload["aux_id_0"] == 64
+
+
+@pytest.mark.parametrize("iteration_domain", ({}, {"heads": 0}))
+def test_head_rms_norm_rejects_missing_or_zero_declared_head_count(
+    iteration_domain,
+):
+    """Flattened physical operands are not authority for the logical rows."""
+
+    tensors = {
+        tensor.tensor_id: tensor
+        for tensor in (
+            Tensor("head_input", "bf16", (1, 32, 128), "activation"),
+            Tensor("head_gain", "bf16", (128,), "weight"),
+            Tensor("head_output", "bf16", (1, 32, 128), "activation"),
+        )
+    }
+    kernel = Kernel(
+        index=0,
+        kernel_id="head_norm_without_rows",
+        kind="HEAD_RMS_NORM",
+        inputs=("head_input", "head_gain"),
+        outputs=("head_output",),
+        numeric_contract="qwen3_rmsnorm_fp32_bf16_v1",
+        iteration_domain=iteration_domain,
+    )
+    graph = KernelGraph(
+        model_id="head-norm-missing-rows",
+        source={"family": "test"},
+        symbols=(),
+        tensors=tuple(tensors.values()),
+        states=(),
+        kernels=(kernel,),
+        entrypoints=(),
+    )
+
+    with pytest.raises(PlanError, match="must declare its head count in aux0"):
+        _aux_ids(
+            kernel,
+            engine_for(kernel.kind),
+            tensors,
+            graph,
+            span_max=1,
+            groups=1,
+        )
 
 
 @pytest.mark.skipif(not REAL_QWEN_IR.exists(), reason="Qwen IR not published yet")
