@@ -66,6 +66,7 @@ class GenerationResult:
     prefill_tokens: int
     decode_steps: int
     counters: dict[str, int]
+    request_start_tick: int | None = None
     per_step: list[dict[str, Any]] = dc_field(default_factory=list)
     wall_seconds: float = 0.0
     failure: str | None = None
@@ -86,6 +87,7 @@ class GenerationResult:
             "prefill_tokens": self.prefill_tokens,
             "decode_steps": self.decode_steps,
             "counters": dict(sorted(self.counters.items())),
+            "request_start_tick": self.request_start_tick,
             "per_step": self.per_step,
             "wall_seconds": round(self.wall_seconds, 6),
             "failure": self.failure,
@@ -435,6 +437,12 @@ class GenerationDriver:
         started = time.perf_counter()
         if not prompt_token_ids:
             raise DriverError("prompt is empty")
+        # Capture the target counter immediately before this fresh request is
+        # staged.  Host staging consumes no target cycles in the functional
+        # device, so this is the causal request-start boundary paired with the
+        # completion timestamps returned by the ABI queue below.  A resumed
+        # segment deliberately does not invent the original request start.
+        request_start_tick = int(self.device._device_cycle)
         limit = (
             self.policy["max_new_tokens"]
             if max_new_tokens is None
@@ -473,12 +481,14 @@ class GenerationDriver:
             return self._finish(
                 prompt, generated, "failed", None, transactions, len(prompt), 0,
                 per_step, started, f"prefill failed: {result.message}",
+                request_start_tick=request_start_tick,
             )
         generated.extend(result.produced_tokens)
         if result.eos_reason == EosReason.OFFICIAL_EOS:
             return self._finish(
                 prompt, generated, "eos", result.selected_token, transactions,
                 len(prompt), 0, per_step, started, None,
+                request_start_tick=request_start_tick,
             )
 
         return self._decode(
@@ -493,6 +503,7 @@ class GenerationDriver:
             prefill_tokens=len(prompt),
             started=started,
             progress=progress,
+            request_start_tick=request_start_tick,
         )
 
     def resume(
@@ -551,6 +562,7 @@ class GenerationDriver:
             prefill_tokens=0,
             started=started,
             progress=progress,
+            request_start_tick=None,
         )
 
     def _decode(
@@ -567,6 +579,7 @@ class GenerationDriver:
         prefill_tokens: int,
         started: float,
         progress: Callable[[int, int], None] | None,
+        request_start_tick: int | None,
     ) -> GenerationResult:
         """The decode loop, shared by a fresh generation and a resumed one."""
         decode_steps = 0
@@ -577,6 +590,7 @@ class GenerationDriver:
             return self._finish(
                 prompt, generated, "stopped", None, transactions, prefill_tokens,
                 decode_steps, per_step, started, None,
+                request_start_tick=request_start_tick,
             )
         while len(generated) < limit:
             if not generated:
@@ -633,6 +647,7 @@ class GenerationDriver:
         return self._finish(
             prompt, generated, stop_reason, eos_token, transactions, prefill_tokens,
             decode_steps, per_step, started, failure,
+            request_start_tick=request_start_tick,
         )
 
     def _finish(
@@ -647,6 +662,8 @@ class GenerationDriver:
         per_step: list[dict[str, Any]],
         started: float,
         failure: str | None,
+        *,
+        request_start_tick: int | None,
     ) -> GenerationResult:
         return GenerationResult(
             prompt_token_ids=prompt,
@@ -657,6 +674,7 @@ class GenerationDriver:
             prefill_tokens=prefill_tokens,
             decode_steps=decode_steps,
             counters=self.device.counters.snapshot(),
+            request_start_tick=request_start_tick,
             per_step=per_step,
             wall_seconds=time.perf_counter() - started,
             failure=failure,
@@ -712,6 +730,11 @@ def _step_record(
             None if completion.final_token_id == NO_ID else completion.final_token_id
         ),
         "eos_reason": completion.eos_reason,
+        # This is the timestamp carried by the decoded 128-byte ABI 3.0
+        # completion record, not host wall time.  Retaining it is what lets a
+        # later TPOT gate prove that its raw token-commit ticks came from the
+        # same transactions that produced the accepted token IDs.
+        "completion_timestamp": completion.completion_timestamp,
         "instructions_retired": result.retired,
         "instructions_predicated_off": result.predicated_off,
         "wall_seconds": round(result.wall_seconds, 6),

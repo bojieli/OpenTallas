@@ -203,6 +203,10 @@ def _make_bundle(
     root.mkdir(parents=True)
     prompt = [1, 2]
     generated = list(generated_tokens) if generated_tokens is not None else [3, 4, 5]
+    token_commit_ticks = [
+        100 if index == 0 else (120 if index == 1 else 150 + 30 * (index - 2))
+        for index in range(len(generated))
+    ]
     rendered = "synthetic input context"
     rendered_sha = hashlib.sha256(rendered.encode()).hexdigest()
     tokenizer_sha = "1" * 64
@@ -440,6 +444,7 @@ def _make_bundle(
                 ),
                 "instructions_retired": 10,
                 "retired_work": 10,
+                "completion_timestamp": token_commit_ticks[offset],
                 "wall_seconds": 1000.0 + offset,
             }
             for offset, token in enumerate(generated)
@@ -508,6 +513,21 @@ def _make_bundle(
                 "checks": {"exact_cap": True, "no_post_eos": True},
             },
             "per_step": steps,
+            "execution_timing": {
+                "schema": "opentallas.abi3.execution_token_commit_timing.v1",
+                "unit": "cycles",
+                "clock_domain": "abi3_device_cycle_counter",
+                "request_start_tick": 0,
+                "request_start_source": (
+                    "driver_counter_before_fresh_prefill_submission"
+                ),
+                "token_commit_ticks": token_commit_ticks,
+                "token_commit_source": (
+                    "decoded_abi3_completion.completion_timestamp"
+                ),
+                "token_commits_from_execution": True,
+                "problems": [],
+            },
             "wall_seconds": 9999.0,
         }
         if batch_size > 1:
@@ -780,7 +800,7 @@ def _make_bundle(
             {
                 "sequence_index": index,
                 "request_start_tick": 0,
-                "token_commit_ticks": [100, 120, 150],
+                "token_commit_ticks": token_commit_ticks,
             }
             for index in range(batch_size)
         ],
@@ -1264,6 +1284,48 @@ def test_cosimulation_rejects_missing_raw_token_commit_ticks(tmp_path: Path) -> 
     assert point["target_timing"]["status"] == "rejected"
     assert point["performance_verdict"]["status"] == "timing_evidence_rejected"
     assert any("token_commit_ticks" in problem for problem in point["problems"])
+
+
+def test_target_ticks_must_match_the_bound_token_execution(tmp_path: Path) -> None:
+    bundle = _make_bundle(tmp_path / "different-token-commits")
+
+    def change_commits(trace: dict[str, Any]) -> None:
+        trace["sequences"][0]["token_commit_ticks"][-1] += 1
+
+    _rewrite_trace(bundle, change_commits)
+    report = tool.validate(bundle.request)
+    _assert_report_schema(report)
+    point = report["points"][0]
+    assert report["status"] == "rejected"
+    assert point["correctness_gate"]["status"] == "pass"
+    assert point["target_timing"]["status"] == "rejected"
+    assert point["performance_verdict"]["status"] == "timing_evidence_rejected"
+    assert any(
+        "differs from the raw timeline retained by its token-producing execution"
+        in problem
+        for problem in point["problems"]
+    )
+
+
+def test_target_timing_requires_raw_events_in_the_execution_record(
+    tmp_path: Path,
+) -> None:
+    def remove_execution_events(record: dict[str, Any]) -> None:
+        del record["execution_timing"]
+
+    bundle = _make_bundle(
+        tmp_path / "missing-execution-events", record_mutator=remove_execution_events
+    )
+    report = tool.validate(bundle.request)
+    _assert_report_schema(report)
+    point = report["points"][0]
+    assert report["status"] == "rejected"
+    assert point["correctness_gate"]["status"] == "pass"
+    assert point["target_timing"]["status"] == "rejected"
+    assert any(
+        "execution record has no raw token-commit timing binding" in problem
+        for problem in point["problems"]
+    )
 
 
 def test_cosimulation_rejects_wrong_proof_execution_identity(tmp_path: Path) -> None:

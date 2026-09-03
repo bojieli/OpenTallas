@@ -45,6 +45,7 @@ REPORT_SCHEMA = "opentallas.abi3.correctness_qualified_tpot_report.v1"
 TRACE_SCHEMA = "opentallas.abi3.target_timing_trace.v1"
 COSIM_PROOF_SCHEMA = "opentallas.abi3.rtl_bound_accelerated_cosimulation_proof.v1"
 RECORD_SCHEMA = "opentallas.abi3.accelerator_tokens.v1"
+EXECUTION_TIMING_SCHEMA = "opentallas.abi3.execution_token_commit_timing.v1"
 CONTRACT_SCHEMA = "opentallas.abi3.comparison_contract.v1"
 COSIM_TIER = "rtl_bound_accelerated_cosimulation"
 
@@ -580,6 +581,80 @@ def _terminal_kind(
     ):
         problems.append("producer terminal acceptance is absent or inconsistent")
     return terminal, first_eos, problems
+
+
+def _record_execution_timing(
+    record: Mapping[str, Any], generated: Sequence[int]
+) -> tuple[dict[str, Any], list[str]]:
+    """Authenticate raw commit events retained by the token-producing run.
+
+    Binding a timing JSON to an execution-record hash proves which token file
+    it cites, but it does not prove that the timeline inside the timing JSON
+    came from that execution.  The accelerator record therefore retains the
+    decoded ABI completion timestamps themselves; this consumer independently
+    reconciles the compact list against every per-step completion.
+    """
+
+    evidence = record.get("execution_timing")
+    if not isinstance(evidence, dict):
+        return {}, ["execution record has no raw token-commit timing binding"]
+    problems: list[str] = []
+    if evidence.get("schema") != EXECUTION_TIMING_SCHEMA:
+        problems.append("execution timing schema is not governed v1")
+    if evidence.get("unit") not in {"cycles", "nanoseconds"}:
+        problems.append("execution timing unit is absent or unsupported")
+    if evidence.get("token_commits_from_execution") is not True:
+        problems.append("execution timing is not marked as captured from execution")
+    if evidence.get("problems") != []:
+        problems.append("execution timing producer reported problems")
+    if (
+        evidence.get("request_start_source")
+        != "driver_counter_before_fresh_prefill_submission"
+    ):
+        problems.append("execution request-start source is not the fresh request")
+    if (
+        evidence.get("token_commit_source")
+        != "decoded_abi3_completion.completion_timestamp"
+    ):
+        problems.append("execution token-commit source is not the ABI completion")
+
+    request_start = evidence.get("request_start_tick")
+    commits = evidence.get("token_commit_ticks")
+    if not _integer(request_start):
+        problems.append("execution request-start tick is invalid")
+    if (
+        not isinstance(commits, list)
+        or len(commits) != len(generated)
+        or any(not _integer(value, minimum=1) for value in commits)
+    ):
+        problems.append("execution token-commit ticks are incomplete or invalid")
+        commits = []
+
+    steps = record.get("per_step")
+    step_ticks = (
+        [
+            step.get("completion_timestamp")
+            if isinstance(step, dict)
+            else None
+            for step in steps
+        ]
+        if isinstance(steps, list)
+        else []
+    )
+    if step_ticks != commits:
+        problems.append(
+            "execution token-commit ticks differ from per-step ABI completions"
+        )
+    if commits and _integer(request_start):
+        if commits[0] <= int(request_start) or any(
+            right <= left for left, right in zip(commits, commits[1:])
+        ):
+            problems.append("execution token-commit timing is not strictly causal")
+    return {
+        "unit": evidence.get("unit"),
+        "request_start_tick": request_start,
+        "token_commit_ticks": list(commits),
+    }, problems
 
 
 def _check_text_evidence(
@@ -1563,6 +1638,15 @@ def _timing_metrics(
         if not isinstance(timing, dict):
             problems.append(f"target timing has no sequence {index}")
             continue
+        execution_timing, execution_timing_problems = _record_execution_timing(
+            row["record"], row["generated"]
+        )
+        if execution_timing_problems:
+            problems.extend(
+                f"sequence {index}: {problem}"
+                for problem in execution_timing_problems
+            )
+            continue
         request_start = timing.get("request_start_tick")
         commits = timing.get("token_commit_ticks")
         if (
@@ -1578,6 +1662,16 @@ def _timing_metrics(
             problems.append(f"target timing sequence {index} has invalid commit ticks")
             continue
         values = [int(value) for value in commits]
+        if (
+            execution_timing.get("unit") != timebase.get("unit")
+            or execution_timing.get("request_start_tick") != request_start
+            or execution_timing.get("token_commit_ticks") != values
+        ):
+            problems.append(
+                f"target timing sequence {index} differs from the raw timeline "
+                "retained by its token-producing execution"
+            )
+            continue
         if values[0] <= int(request_start) or any(
             values[offset] <= values[offset - 1] for offset in range(1, len(values))
         ):

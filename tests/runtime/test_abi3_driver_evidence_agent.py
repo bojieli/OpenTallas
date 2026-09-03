@@ -191,6 +191,27 @@ def test_driver_binds_every_frozen_runtime_symbol():
     assert len(request) == 15
 
 
+def test_driver_retains_raw_completion_ticks_with_the_token_result():
+    """Gate-2 timing must originate in the Gate-1 token transactions."""
+
+    from runtime.sim.engines import load_engines
+
+    load_engines()
+    device, _ = _fixture_device()
+    result = GenerationDriver(device).generate([1, 2, 3], max_new_tokens=3)
+
+    assert result.failure is None
+    assert result.request_start_tick == 0
+    assert len(result.per_step) == len(result.generated_token_ids)
+    commits = [step["completion_timestamp"] for step in result.per_step]
+    assert commits
+    assert commits[0] > result.request_start_tick
+    assert all(right > left for left, right in zip(commits, commits[1:]))
+    body = result.to_dict()
+    assert body["request_start_tick"] == result.request_start_tick
+    assert [step["completion_timestamp"] for step in body["per_step"]] == commits
+
+
 def test_driver_reads_the_deployment_scalars_rather_than_inventing_them():
     """The six a request does not carry come off the deployment's descriptors.
 

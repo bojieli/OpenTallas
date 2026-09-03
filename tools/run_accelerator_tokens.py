@@ -74,6 +74,7 @@ from runtime.sim.engines import load_engines  # noqa: E402
 from runtime.sim.formats import widen  # noqa: E402
 
 SCHEMA = "opentallas.abi3.accelerator_tokens.v1"
+EXECUTION_TIMING_SCHEMA = "opentallas.abi3.execution_token_commit_timing.v1"
 TERMINAL_CONTRACTS = (
     "oracle_prefix",
     "exact_eos_or_cap",
@@ -455,6 +456,52 @@ def _counter_evidence(device: Device) -> dict[str, Any]:
     }
 
 
+def _execution_timing_evidence(result: Any) -> dict[str, Any]:
+    """Retain the ABI completion ticks from this exact token execution.
+
+    This record intentionally makes no clock-frequency or TPOT claim.  It is
+    only the raw causal event binding: the request-start device counter and the
+    ``completion_timestamp`` decoded from every successful token-producing ABI
+    completion.  A later timing artifact may characterize those ticks, but it
+    must reproduce this exact timeline before the TPOT checker will use it.
+    """
+
+    problems: list[str] = []
+    start = result.request_start_tick
+    if not isinstance(start, int) or isinstance(start, bool) or start < 0:
+        problems.append("fresh request-start tick is unavailable")
+
+    commits: list[int] = []
+    steps = result.per_step if isinstance(result.per_step, list) else []
+    generated = list(result.generated_token_ids)
+    if len(steps) != len(generated):
+        problems.append("per-step count differs from the generated-token count")
+    for index, step in enumerate(steps):
+        tick = step.get("completion_timestamp") if isinstance(step, dict) else None
+        if not isinstance(tick, int) or isinstance(tick, bool) or tick < 1:
+            problems.append(f"per_step[{index}] has no positive completion tick")
+            continue
+        commits.append(tick)
+    if len(commits) != len(generated):
+        problems.append("token-commit tick count differs from generated tokens")
+    if commits and isinstance(start, int) and commits[0] <= start:
+        problems.append("first token commit is not after request start")
+    if any(right <= left for left, right in zip(commits, commits[1:])):
+        problems.append("token-commit ticks are not strictly increasing")
+
+    return {
+        "schema": EXECUTION_TIMING_SCHEMA,
+        "unit": "cycles",
+        "clock_domain": "abi3_device_cycle_counter",
+        "request_start_tick": start,
+        "request_start_source": "driver_counter_before_fresh_prefill_submission",
+        "token_commit_ticks": commits,
+        "token_commit_source": "decoded_abi3_completion.completion_timestamp",
+        "token_commits_from_execution": not problems,
+        "problems": problems,
+    }
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--kernel-ir", type=Path, required=True)
@@ -795,6 +842,7 @@ def main() -> int:
         "counters": dict(sorted(result.counters.items())),
         **_counter_evidence(device),
         "per_step": result.per_step,
+        "execution_timing": _execution_timing_evidence(result),
         "lowering_seconds": round(lowering_seconds, 3),
         "wall_seconds": round(result.wall_seconds, 3),
     }

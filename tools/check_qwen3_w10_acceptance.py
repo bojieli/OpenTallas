@@ -1187,7 +1187,12 @@ def _check_record(
 
 def _without_timing(value: Any) -> Any:
     if isinstance(value, dict):
-        return {key: _without_timing(item) for key, item in value.items() if key not in {"wall_seconds", "lowering_seconds"}}
+        return {
+            key: _without_timing(item)
+            for key, item in value.items()
+            if key
+            not in {"wall_seconds", "lowering_seconds", "completion_timestamp"}
+        }
     if isinstance(value, list):
         return [_without_timing(item) for item in value]
     return value
