@@ -15,7 +15,7 @@ identical HBM/SRAM accelerator chips
 
 This document defines how to make the mandatory DeepSeek-V4 Flash 200,000-token
 simulator executions tractable without weakening their numerical, state,
-transactional, topology, provenance, or oracle contracts. It records the exact
+ordering, topology, provenance, or oracle contracts. It records the exact
 routed-expert work implied by the currently emitted programs, identifies the
 host-side materialization bottleneck, and divides implementation into independently
 reviewable work packages.
@@ -32,11 +32,13 @@ The required execution remains:
 - the exact ROM-wafer and 32-node HBM topology, object-source, numerical,
   counter, and transaction contracts.
 
-This document does **not** define ABI state encoding. The compressed-KV commit
-repair is normative ABI 3.1 work and remains in its separate amendment. This
-design consumes the admitted ABI 3.1 semantics after that amendment closes; it
-does not anticipate, restate, or silently implement them in a simulator-only
-path.
+This document does **not** define a new ABI state encoding. ABI 3.0 is
+sufficient. Mutable KV, compressed-KV, sliding-window, and compressor buffers
+are ordinary HBM/SRAM memory objects with compiler-emitted ABI 3.0 tensor views
+and operations. The implementation may decompose a complex state transition
+into multiple existing operations and scratch views. A token-step fence, plus
+the existing cluster communication barriers, is the visibility boundary. A
+failed run stops; no durable publication or retry protocol is required.
 
 The implementation may remove host overhead. It may not shorten the workload,
 replace execution with extrapolation, import values from a framework model,
@@ -49,12 +51,12 @@ than the admitted program performs.
 Both gates are mandatory. They are independent, and closing one does not relax
 the other.
 
-### 2.1 Gate A — admitted ABI 3.1 compressed-KV commits
+### 2.1 Gate A — ABI 3.0 direct mutable-state execution
 
-Current ABI 3.0 authority ends at amendment A28. A21 and A25 explicitly record
-that a compressed KV cache is indexed in completed compression groups while its
-commit still claims request-token rows. The resulting capacity check makes both
-mandatory 200K paths unreachable:
+The current deployments route a compressed-KV buffer through a `STATE.COMMIT`
+copy whose row count is `SPAN_TOKENS`, although the buffer is indexed in
+completed compression groups. That unnecessary shadow-copy capacity check
+makes both mandatory 200K paths unreachable:
 
 | Lane | First prompt span that traps | Resource | Capacity rows |
 |---|---:|---|---:|
@@ -68,12 +70,21 @@ The current STATE payload contains `commit_policy` but no group divisor, and the
 simulator consequently falls through to `rows = span` in
 [`Device._execute_state`](../runtime/sim/device.py).
 
-Gate A closes only when the separate ABI 3.1 amendment is normative and its
-descriptor, builder, verifier, compiler, simulator, checkpoint/restart, counter,
-and RTL behavior are mutually correlated. Both target deployments must then be
-rebuilt and rebound by digest. Simulator performance work may be developed and
-tested on bounded diagnostic inputs before that point, but it is not admissible
-as a 200K result.
+The model operators do not read that committed shadow; uninterrupted execution
+uses the mutable working buffer. The ABI 3.0 repair is therefore to lower these
+buffers as execution-authoritative mutable HBM/SRAM objects, address completed
+groups with existing tensor views and loops, and order their writes with
+existing events and fences. No state member, descriptor minor, feature bit, or
+new commit policy is introduced. If one existing operator record lacks enough
+operands, the compiler emits multiple existing operations and scratch views.
+
+Gate A closes when both backends rebuild as ABI 3.0, the independent checker
+proves that no request-span state copy can reject a group-indexed buffer, the
+functional simulator matches the source-locked compression reference across
+prefill and decode boundaries, and cycle/RTL traces execute the same addresses
+and token-step fence. Simulator performance work may be developed and tested on
+bounded diagnostic inputs before that point, but it is not admissible as a
+200K result.
 
 ### 2.2 Gate B — complete external EOS-or-256 oracle
 
@@ -95,8 +106,8 @@ both targets before a comparison is published.
 ### 2.3 Absolute promotion rule
 
 **No optimization is admissible as a DeepSeek 200K result, and no final
-ROM-wafer versus 32-node-HBM comparison is admissible, before both the ABI 3.1
-state gate and the complete 256-or-EOS external-oracle gate close.**
+ROM-wafer versus 32-node-HBM comparison is admissible, before both the ABI 3.0
+direct-state gate and the complete 256-or-EOS external-oracle gate close.**
 
 ## 3. Audited execution identities
 
@@ -117,7 +128,7 @@ The static audit used the following exact identities:
 | Audited ROM bundle | `build/abi3/deepseek-v4-flash-rom-tokens` |
 
 The audited bundles establish the program structure and counts below. They are
-not replacements for the pending, ABI-3.1-rebuilt, full-workload deployment
+not replacements for the pending, ABI-3.0-rebuilt, full-workload deployment
 paths named by the comparison contract.
 
 ## 4. Exact routed-expert work model
@@ -316,9 +327,11 @@ but cannot serve as the final performance baseline.
 
 ## 6. Work packages
 
-WP-A is intentionally absent from this document. It is the separate normative
-ABI 3.1 compressed-state amendment required by Gate A. The simulator work starts
-at WP-B and may not invent an interim state rule.
+WP-A is the ABI 3.0 direct-state lowering required by Gate A: remove the
+unnecessary request-span shadow commit from group-indexed state, bind all
+mutable buffers through existing memory objects and views, and fence them at
+the token boundary. It introduces no wire or descriptor revision. The
+performance-oriented simulator work starts at WP-B.
 
 ### 6.1 WP-B — oracle and final provenance package
 
@@ -327,7 +340,7 @@ at WP-B and may not invent an interim state rule.
 **Implementation.** Extend `TA-DS-CTX-200K-1` through official EOS or 256
 tokens. Record model repository/revision, tokenizer digest, complete workload
 identity, oracle tool/source hashes, numeric-path disclosure, generated token
-IDs, EOS reason, and wall/footprint observations. After ABI 3.1 rebuilds, bind
+IDs, EOS reason, and wall/footprint observations. After ABI 3.0 rebuilds, bind
 the exact ROM and HBM program, descriptor, deployment, capability, cost, and A28
 source-map digests in the comparison contract.
 
@@ -454,15 +467,16 @@ eligible routed issue rather than once per node.
 **Goal.** Reuse a decoded expert matrix over several original blocks without
 changing the original blocked contraction segments.
 
-**Start condition.** ABI 3.1 Gate A is closed, and WP-C through WP-E are
+**Start condition.** ABI 3.0 Gate A is closed, and WP-C through WP-E are
 qualified.
 
 **Implementation.** The compiler chooses a bounded window and allocates distinct
 lifetimes for every activation, ID, gate/up/down intermediate, shared-expert
 value, output, and communication scratch object in the window. It proves arena
-capacity, non-aliasing, event dependencies, queue bounds, tail masks, first-fault
-order, and atomic completion. LINK participant sets and collective order remain
-explicit. The HBM 320-token and ROM 68,928-token final tails remain exact.
+capacity, non-aliasing, event dependencies, queue bounds, tail masks,
+first-fault order, and token-step completion. LINK participant sets and
+collective order remain explicit. The HBM 320-token and ROM 68,928-token final
+tails remain exact.
 
 Expert-outer execution may hold one 32 MiB decoded weight while performing each
 original per-block call separately. It may not concatenate rows or change the
@@ -580,8 +594,8 @@ Every work package carries these invariants:
 - destination untouched on operator failure;
 - architectural reads, multiplications, additions, conversions, saturations,
   output elements, and routed-launch counters unchanged by host cache reuse;
-- admitted ABI 3.1 prepared/committed state, cursor, tail, restart, generation,
-  and atomic completion behavior;
+- ABI 3.0 mutable-state addresses, completed-group boundaries, token-step
+  fences, cursor, and tail behavior;
 - exact HBM 391-block/320-token tail and ROM two-chunk/68,928-token tail;
 - complete LINK order and participant scope; and
 - an association manifest naming the operations and implementation actually
@@ -609,11 +623,11 @@ architectural destination or state transition.
 | Cache budgets | Zero, one entry, below reuse distance, protected subset, full layer; forced eviction, bypass, and allocation failure | Same architecture/association; live bytes at or below the single Device ceiling |
 | Cache lifetime | New session, device reactivation, deployment/source/backend/materializer change | Reuse only inside the admitted epoch; mandatory invalidation at every identity change |
 | Route sharing | Certified-identical and deliberately different per-node ID buffers | One plan only when certified; otherwise node-local; unchanged backend calls |
-| Superblock liveness | Window sizes one, two, several, final partial window; injected fault in each stage | Capacity proof, no alias, original fault priority, LINK order, and atomic completion |
+| Superblock liveness | Window sizes one, two, several, final partial window; injected fault in each stage | Capacity proof, no alias, original fault priority, LINK order, and completed-step fencing |
 | Segmented primitive | Random segment partitions and every deployment-derived activation/weight/output shape | Bitwise equality per original segment and identical ordered semantic manifest |
 | Node concurrency | Worker counts one through bound; fixed and changed BLAS thread counts; faults on different nodes | Qualified identities only; sequential-equivalent output, fault priority, and counter reconciliation |
-| ABI 3.1 state | Amendment-owned compression-boundary, capacity, restart, multi-pending, and fault cases | Separate ABI 3.1 reference, verifier, simulator, and RTL correlation all agree |
-| Historical state walls | ROM 2,048/2,049 and HBM 40,960/40,961 | False request-span overflow is gone under admitted ABI 3.1 semantics |
+| ABI 3.0 direct state | Compression boundaries, ordinary mutable-object addresses, token-step fence, and fail-stop fault cases | Reference, compiler checker, functional simulator, cycle trace, and RTL address/control correlation agree without a new wire value |
+| Historical state walls | ROM 2,048/2,049 and HBM 40,960/40,961 | The obsolete request-span shadow copy is absent and cannot cause a capacity refusal |
 | Deployment trace | Regenerated P32 route traces with the current manifest-emitting runner | Baseline and WP-C/D/E results match bitwise before longer runs |
 | Final workload | Exact 200K on rebuilt ROM and HBM deployments through first EOS or 256 | ROM/HBM agree with each other and the complete external oracle |
 
@@ -621,7 +635,7 @@ architectural destination or state transition.
 
 ### 10.1 Baselines
 
-The production baseline is the ABI-3.1-rebuilt deployment with WP-C
+The production baseline is the ABI-3.0-rebuilt deployment with WP-C
 instrumentation enabled, cache disabled, original route scans, original
 contractions, and sequential node issue. It must retain:
 
@@ -686,7 +700,7 @@ show that its gain is not oversubscription noise.
 
 ### 10.4 Final comparison gate
 
-The final result runs both source-locked, ABI-3.1-rebuilt targets on the exact
+The final result runs both source-locked, ABI-3.0-rebuilt targets on the exact
 200,000-token workload and continues until first official EOS or 256 generated
 tokens. It retains the exact tails, all provenance and association manifests,
 per-node/cluster counters, cache state, memory/fault observations, and the
@@ -700,7 +714,7 @@ execution.
 
 This design does not authorize:
 
-- any ABI 3.1 wire value, payload offset, formula, counter rule, or RTL behavior;
+- any program or descriptor ABI other than frozen ABI 3.0;
 - context truncation, prompt tiling that changes semantics, or an eight-token
   final comparison;
 - a shared-address-space model for the 32 chips;

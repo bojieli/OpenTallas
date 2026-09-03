@@ -2,24 +2,32 @@
 
 **Decision ID:** TA-ADR-003
 
-**Status:** accepted foundation; ABI 3.1 state amendment controls the current
-implementation gate
+**Status:** accepted and controlling at ABI 3.0
 
 **Issue date:** 2026-08-29
 **Applies to:** the shared HBM/SRAM tensor-accelerator chip and cluster
 profiles, their compiler and simulator, and the Qwen3 conventional and
 DeepSeek-V4 wafer-scale ROM families
 
-**Normative minor-version amendment (2026-09-03):**
-[the ABI 3.1 state and compressed-context amendment](TENSOR_ACCELERATOR_ABI_3_1_STATE_AMENDMENT.md)
-extends this decision for grouped transactional state, quotient-addressed
-compressed caches, persistent compressor windows, transaction-private working
-images, and atomic generation-root publication. The host submission and
-completion record ABI remains 3.0. All four production deployment programs
-must be rebuilt as ABI 3.1; grouped ABI 3.0 artifacts and their execution
-evidence are historical and cannot close a production gate. Unaffected ABI 3.0
-contracts below remain in force, and an ABI 3.1 implementation must retain the
-amendment's genuine-3.0 compatibility path.
+**ABI scope decision (2026-09-03):** ABI 3.0 is sufficient for this RTL and
+architecture-simulation program and remains the sole required program and host
+ABI. The proposed
+[ABI 3.1 state amendment](TENSOR_ACCELERATOR_ABI_3_1_STATE_AMENDMENT.md) is
+withdrawn and MUST NOT be implemented or used as an execution gate. Mutable KV,
+compressed-KV, ring, and compressor data are ordinary compiler-allocated
+HBM/SRAM tensors addressed by existing ABI 3.0 memory objects, tensor views,
+loops, predicates, DMA, and engine operations. Program ordering and a
+token-step fence make completed writes visible before the next token. A failed
+functional, cycle, cluster, or RTL simulation stops; durable root publication,
+outcome journals, idempotent retry, crash recovery, anti-rollback persistence,
+and concurrent-serving isolation are outside the required claim boundary.
+
+No new wire field, descriptor minor, feature bit, or state-member abstraction
+may be introduced unless a focused implementation proof first demonstrates
+that the required model operation cannot be lowered into the frozen ABI 3.0
+instruction and descriptor set. Increased instruction count or compiler effort
+alone is not such a proof. The default remedy is explicit compiler lowering
+using existing primitives.
 
 The mandatory DeepSeek execution and promotion boundary is specified by
 [the exact-200K simulator execution design](DEEPSEEK_200K_SIMULATOR_EXECUTION_DESIGN.md).
@@ -53,9 +61,8 @@ ABI 3.0 is split into three separately versioned but release-bound interfaces:
 | Deployment and Descriptor ABI | authenticated objects, shapes, numerics, schedules, memory windows, programs, and state resources | compiler, firmware, simulator, and microsequencer |
 | Device Micro-ISA | loops, predicates, events, fences, engine launch, transactional state, completion, and traps | hardware microsequencer |
 
-“RTL 3.0” names the hardware family initially defined by these ABI 3.0
-contracts. An ABI 3.1-capable revision also implements the normative minor
-extension identified above; RTL 3.0 is not a separate ISA version.
+“RTL 3.0” names the hardware family defined by these ABI 3.0 contracts; RTL
+3.0 is not a separate ISA version.
 
 The product topology is:
 
@@ -542,11 +549,14 @@ selection. Actual deployments may use smaller declared subsets.
 
 ### 8.6 State
 
-State engines own session-bound KV, compressor, compressed-KV, and other mutable
-resources. Writes occur in private prepared extents. A successful commit is one
-atomic architectural transition over the request's declared state set. Abort,
-timeout, reset, or engine error discards prepared state and cannot expose a
-partially advanced token position.
+KV, compressor, compressed-KV, ring, and other mutable resources are ordinary
+compiler-allocated HBM/SRAM tensors. Existing memory objects and tensor views
+carry their bases, strides, extents, and dynamic layer/position terms. Engines
+write those tensors directly. Existing events order producer and consumer
+operations, and a token-step fence must complete every required state and
+communication write before the next token begins. If an engine, link, or
+address operation fails, the simulation stops; partially written state is never
+consumed by another token in that failed run.
 
 ### 8.7 Selection and EOS
 
@@ -554,7 +564,7 @@ The selection engine performs vocabulary reduction and deterministic tie
 handling according to a numeric/profile descriptor. TOKEN_APPEND validates the
 selected ID against the tokenizer vocabulary contract, writes it to the output
 token ring and next-token input, tests the authenticated EOS set, and advances
-the generation cursor only within the same successful transaction.
+the generation cursor only after the token-step fence succeeds.
 
 A GENERATE request stops on the first official EOS token or the declared
 maximum-new-token bound. EOS is included in the returned token sequence. No
@@ -579,13 +589,14 @@ set, reduction numeric contract and order, tree/route class, buffer ownership,
 and terminal completion.
 
 The 32-node HBM cluster must execute DeepSeek sharding, expert dispatch, sparse
-gather, activation transfer, reductions, vocabulary aggregation, coordinated
-state commit, argmax, token append, and EOS without a host per-layer loop. The
+gather, activation transfer, reductions, vocabulary aggregation, the
+token-step state/communication fence, argmax, token append, and EOS without a
+host per-layer loop. The
 wafer-scale ROM fabric implements the same architectural communication meaning
 with a separate on-wafer physical endpoint. Link CRC/error, duplicate packet,
 retry exhaustion, credit loss, node reset, stale epoch, and timeout all produce
-declared fail-stop or recovery behavior and cannot commit partial generation
-state.
+declared fail-stop behavior; the failed run cannot start another generation
+step.
 
 ## 9. Events, queues, and memory ordering
 
@@ -619,7 +630,7 @@ The following state is architecturally visible or reconstructable:
 - session ID, generation, model, phase, position, context bound, and state map;
 - transaction ID, program counter, loop stack, predicates, events, pending
   engines, poison, and first fault;
-- prepared and committed state generations;
+- current mutable state tensors and their completed token position;
 - selected token, EOS status, and output-token extent; and
 - all mandatory counters and sticky overflow flags.
 
@@ -647,14 +658,13 @@ Trap classes are stable ABI values:
 Synchronous decode/admission traps are precise and issue no engine work.
 Asynchronous engine faults record the first failing instruction and engine,
 poison the transaction, block new model work, cancel work that is explicitly
-cancellable, drain non-cancellable writes, discard prepared state, and publish
-one failed completion. A retry requires the same idempotency key and a session
-generation that has not advanced.
+cancellable, drain non-cancellable writes, and publish one failed completion.
+The required simulator profile is fail-stop: the
+campaign records the failure and does not retry that model step.
 
-Warm reset does not guess transaction outcome. Firmware either proves the
-transaction committed from persistent retirement metadata or reports it aborted.
-Late responses carry deployment, session-generation, transaction, and engine
-tags and cannot update reused state.
+Warm-reset recovery and reuse of a failed session are outside the required
+simulation profile. A new run begins from freshly initialized state. Late
+responses are ignored after the failed run terminates.
 
 ## 12. Security and integrity
 
@@ -843,7 +853,7 @@ characterization:
 These are capability values, not ABI semantics. Changing them within advertised
 bounds does not change the model programming contract.
 
-## 20. Architecture freeze gate
+## 20. Architecture freeze gate (closed)
 
 TA-A3-ARCH-0 closes only when review records confirm:
 
@@ -871,6 +881,8 @@ TA-A3-ARCH-0 closes only when review records confirm:
   and
 - no unresolved decision can change an externally visible ABI semantic.
 
-Until TA-A3-ARCH-0 closes, compiler, simulator, and RTL implementation of ABI
-3.0 remains paused. Documentation audits, independent reference work, and
-non-mutating evidence preservation may continue.
+The pre-closure rule was that compiler, simulator, and RTL implementation of
+ABI 3.0 remained paused while documentation audits, independent reference
+work, and non-mutating evidence preservation continued. TA-A3-ARCH-0 has since
+closed. Implementation and focused conformance continue directly on ABI 3.0;
+there is no minor-version gate.

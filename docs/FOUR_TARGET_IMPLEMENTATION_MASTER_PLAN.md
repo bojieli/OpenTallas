@@ -2,12 +2,11 @@
 
 **Plan ID:** TA-MASTER-3.0
 
-**Status:** active execution baseline; ABI 3.1 state implementation is the
-current shared gate
+**Status:** active execution baseline; ABI 3.0 is frozen and sufficient
 
 **Original planning baseline:** main at b6c38ee74b695145898c54c65a2a0f9eec3c281c
 
-**Current contract refresh:** 2026-09-03, ABI 3.1 grouped-state amendment
+**Current contract refresh:** 2026-09-03, ABI 3.0 simulation-scope decision
 
 **Issue date:** 2026-08-29
 **Program owner:** integration and evidence owner
@@ -29,17 +28,14 @@ acceptance evidence so that parallel work does not fork the architecture or
 overwrite another lane.
 
 It is governed by
-[the ABI 3.0 architecture decision](TENSOR_ACCELERATOR_ABI_3_ARCHITECTURE_DECISION.md)
-as normatively extended by
-[the ABI 3.1 state and compressed-context amendment](TENSOR_ACCELERATOR_ABI_3_1_STATE_AMENDMENT.md).
-The host submission/completion records remain ABI 3.0, but all four grouped
-production deployment programs must be rebuilt as ABI 3.1. Earlier grouped
-ABI 3.0 deployments and token/restart evidence are historical inputs only and
-must not be promoted as source-current evidence.
+[the ABI 3.0 architecture decision](TENSOR_ACCELERATOR_ABI_3_ARCHITECTURE_DECISION.md).
+ABI 3.0 is the sole required program and host ABI for all four targets. The
+[withdrawn ABI 3.1 proposal](TENSOR_ACCELERATOR_ABI_3_1_STATE_AMENDMENT.md) is
+an historical design record and is not an implementation or evidence gate.
 
 The DeepSeek end-to-end implementation additionally follows
 [the exact-200K simulator execution design](DEEPSEEK_200K_SIMULATOR_EXECUTION_DESIGN.md).
-Its two independent hard gates are a mutually correlated ABI 3.1
+Its two independent hard gates are a mutually correlated ABI 3.0
 compiler/runtime/simulator/RTL implementation and an external oracle continued
 through first official EOS or exactly 256 generated tokens. Neither an
 eight-token oracle prefix nor an artifact-only structural replay is a full
@@ -47,29 +43,37 @@ execution.
 
 ### 1.1 Current execution override
 
-TA-A3-ARCH-0 is no longer awaiting an initial ABI definition. The released
-ABI 3.0 foundation remains the compatibility baseline, while the ABI 3.1
-amendment is the sole authority for the affected state paths. The ordered
-implementation packages are:
+TA-A3-ARCH-0 is closed and the released ABI 3.0 contract is sufficient. The
+ordered implementation packages are:
 
-1. versioned codecs, registries, capabilities, and admission;
-2. common HBM/ROM compiler grouping, quotient predicates/views, and stateful
-   compression lowering;
-3. transaction-private simulator images, atomic root publication,
-   checkpointing, and idempotent recovery;
-4. RTL descriptor-minor admission, grouped-member walking, quotient/full-image
-   policies, counters, and root-interface properties; and
-5. focused conformance closure followed by rebuilding and re-executing all
-   four target deployments.
+1. audit each remaining Qwen and DeepSeek state transition against existing
+   ABI 3.0 memory objects, tensor views, loops, predicates, and operations;
+2. lower mutable KV, compressed-KV, ring, and compressor tensors explicitly,
+   decomposing a complex transition into existing operations and scratch views
+   when one operator record is insufficient;
+3. execute those operations directly against simulator HBM/SRAM state and
+   enforce a fence after all state and communication work for one token;
+4. correlate the same ABI 3.0 program, addresses, counters, and completion
+   boundary through the cycle model and RTL; and
+5. run focused conformance checks, then rebuild and re-execute all four target
+   deployments.
 
-These packages share one amendment and one integration owner. A lane may not
-invent a private ABI, IR operation, state convention, or evidence exception.
+The required profile is uninterrupted and fail-stop. A failed model step ends
+the run; durable roots, outcome journals, idempotent replay, power-loss
+recovery, anti-rollback persistence, and concurrent-session isolation are not
+part of the accelerator or comparison claim. Optional long-campaign
+checkpointing is host-side simulator tooling performed only after a completed
+token step. A lane may not invent a private ABI, IR operation, state
+convention, or evidence exception.
 Long-running immutable campaigns may execute concurrently only after their
 source digest, deployment digest, workload, oracle, topology, and output path
-are frozen. Until the in-progress W10 ABI 3.0 stress milestone finishes, its
-functional compiler/runtime/simulator source boundary remains locked; the
-milestone will be retained as historical evidence and then regenerated under
-ABI 3.1.
+are frozen. The W10 ABI 3.0 HBM stress run completed on 2026-09-03 after
+10,879.2 seconds but failed exact token identity at generated-token index 2
+(`279` versus oracle `264`). Its artifact is retained as diagnostic evidence,
+not acceptance. The paired ROM stress run must not be launched from that failed
+HBM baseline. The former W10 source lock is released; diagnosis and the simple
+ABI 3.0 direct-state lowering may now modify the governed implementation before
+both stress lanes are rebuilt and rerun.
 
 The authoritative requirement-by-requirement progress ledger is
 [the unified execution checklist](UNIFIED_EXECUTION_CHECKLIST.md). Sections 2,
@@ -91,7 +95,7 @@ the detailed DeepSeek ROM recovery ledger. Where their old concurrency or ABI
 language conflicts with this post-unification plan, this document and
 TA-ADR-003 control new work.
 
-## 2. Current unified baseline
+## 2. Original unified baseline (historical snapshot)
 
 The authoritative checkout was fast-forward checked against origin/main on
 2026-08-29. The stopped colleague handoffs were unified at 39a607e, including
@@ -194,7 +198,7 @@ source + checkpoint + tokenizer + generation policy
      |                               |
 HBM/SRAM chip/cluster Plan IR   ROM chip/wafer Plan IR
      |                               |
-ABI 3.1 deployment/program      ABI 3.1 program + ROM image/schedule
+ABI 3.0 deployment/program      ABI 3.0 program + ROM image/schedule
      |                               |
 functional + cycle simulator     functional + cycle simulator
      |                               |
@@ -212,9 +216,8 @@ copied into the other merely to make counters comparable.
 Every agent and lane must preserve these invariants:
 
 - “tensor accelerator” is the programmable HBM/SRAM product name;
-- “RTL 3.0” is the shared hardware family, not a model or separate ISA, and its
-  production revision admits both genuine ABI 3.0 and the required ABI 3.1
-  programs;
+- “RTL 3.0” is the shared hardware family, not a model or separate ISA, and it
+  executes the frozen ABI 3.0 program contract;
 - HBM Qwen uses one node and HBM DeepSeek uses exactly 32 nodes of one identical
   conventional chip capability/netlist without resynthesis;
 - every HBM/SRAM chip includes the digital inter-chip endpoint, remote DMA,
@@ -244,7 +247,10 @@ Every agent and lane must preserve these invariants:
 
 ## 6. Dependency and parallelism policy
 
-### 6.1 Architecture barrier
+### 6.1 Original architecture barrier (closed)
+
+This subsection records the issuance-time barrier. W0 closed it; the current
+ABI 3.0 execution order is in Section 1.1 and the unified checklist.
 
 TA-A3-ARCH-0 is a serial barrier. Before it closes, agents may:
 
@@ -590,7 +596,10 @@ reproduction of a commercial GPU. Public NVIDIA NVLink/NVL72-class data must be
 a source-locked link-envelope reference, and measured NVIDIA hardware remains a
 separate external comparator.
 
-## 13. Current schedule
+## 13. Original schedule (superseded)
+
+This table is the issuance-time dependency snapshot. It is retained for
+provenance and is not a statement of current completion.
 
 | Order | Work package | Current status | Start condition |
 |---:|---|---|---|
@@ -605,7 +614,10 @@ separate external comparator.
 | 9 | exact Qwen 8K and DeepSeek 200K | blocked | short closure and scalability proof |
 | 10 | SKY130/ASAP7 convergence and comparison | blocked | correct cycle and RTL execution |
 
-## 14. Immediate next decision
+## 14. Original immediate decision (completed)
+
+This was the review packet that closed W0. It is retained to show what was
+accepted, not as a request for another architecture-freeze review.
 
 The next user/reviewer action is to review TA-ADR-003, especially:
 
@@ -624,7 +636,7 @@ review either accepts the decision or records specific changes. Once accepted,
 the common ABI/IR agent starts Phase B. The three backend lanes then consume
 that released contract without modifying it privately.
 
-## 15. Agent launch matrix
+## 15. Original agent launch matrix (superseded)
 
 Use four active roles in total:
 

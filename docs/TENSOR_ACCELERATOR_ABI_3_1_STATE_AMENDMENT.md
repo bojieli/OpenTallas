@@ -1,21 +1,54 @@
-# Tensor Accelerator ABI 3.1 State and Compressed-Context Amendment
+# Withdrawn ABI 3.1 State and Compressed-Context Proposal
 
-Status: normative architecture contract for the ABI 3.1 implementation and
-deployment refresh. This document specifies the target contract; it does not
-claim that the current compiler, runtime, simulator, RTL, or retained evidence
-already implements that contract.
+**Withdrawn proposal ID:** `TA-ABI3-STATE-3.1`
 
-## 1. Conformance language and scope
+**Status:** withdrawn on 2026-09-03; non-normative historical design record
 
-The key words **MUST**, **MUST NOT**, **REQUIRED**, **SHALL**, **SHALL NOT**,
-**SHOULD**, **SHOULD NOT**, and **MAY** in this document are normative. Sections
-explicitly labelled "non-normative" describe recommended implementation
-mechanics or rationale and do not constrain an otherwise conforming
-implementation.
+ABI 3.0 remains the sole required program and host ABI under `TA-ADR-003`. No
+compiler, simulator, firmware, cycle-model, or RTL implementation may emit or
+admit the descriptor minors, feature bits, policies, state classes, durable
+roots, journals, or recovery behavior proposed below. The proposal is retained
+only to preserve the reasoning that was reviewed before the scope was reduced
+to uninterrupted, fail-stop RTL and architecture simulation.
+
+Mutable model state is implemented as ordinary compiler-allocated ABI 3.0
+memory objects and tensor views. Existing loops, predicates, DMA/engine
+operations, and token-step fences carry the required addresses and ordering.
+If a complex state transition cannot fit one existing operator record, the
+compiler decomposes it into multiple existing operations and scratch views.
+Simulator checkpointing, when useful for a long campaign, is host tooling and
+is not an accelerator ABI or RTL persistence contract.
+
+All normative terms in the remainder of this file describe the rejected
+proposal and have no authority over ABI 3.0 or project acceptance.
+
+**Proposed dependencies:** `TA-ADR-003`, `TA-ABI3-WIRE-1`, and
+`TA-ABI3-OPCONV-1`.
+
+**Proposed amendment:** the program/deployment/descriptor and device-micro-ISA portions of
+ABI 3.0. It does not amend the independently versioned host queue ABI 3.0.
+
+**Proposed supersession scope:** for a program header with `abi_major = 3` and
+`abi_minor = 1`, and only for the affected descriptor versions and constructs
+named here, this contract supersedes conflicting ABI 3.0 rules for feature and
+capability registries, A18 tensor-view resolution, A21/A25 state commit and
+staging derivation, the `VECTOR.COMPRESS` operand row, counter interpretation,
+and post-commit replay. Program ABI 3.0 and descriptor type 1.0 retain their
+historical byte and execution semantics. The governing ABI index, ADR, and
+operator-conventions document still must cite this contract before a release is
+declared frozen.
+
+## 1. Historical proposal language and scope
+
+Within the rejected proposal, the key words **MUST**, **MUST NOT**,
+**REQUIRED**, **SHALL**, **SHALL NOT**, **SHOULD**, **SHOULD NOT**, and **MAY**
+recorded the rules under review. They are retained verbatim for provenance and
+are not normative project requirements.
 
 This amendment defines:
 
-- program ABI minor 3.1 and its relationship to program ABI 3.0;
+- program ABI version 3.1 (`abi_major = 3`, `abi_minor = 1`) and its
+  relationship to program ABI 3.0;
 - versioned `STATE`, `PREDICATE`, `TENSOR_VIEW`, and `OPERATOR` descriptors;
 - homogeneous, lockstep members within one transactional state resource;
 - quotient-addressed compressed-cache publication;
@@ -55,6 +88,19 @@ copy-on-written from the committed image.
 
 **Root flip** is the single durable transition that makes all results of a
 transaction authoritative.
+
+**Inactive generation** is implementation-private persistence that can hold the
+next complete image of a committed logical state object. It has no
+program-visible address or descriptor ID and cannot be named by a tensor view.
+
+**Transaction-generation root** is implementation-private authenticated
+persistent metadata selecting one complete transaction outcome and the exact
+node-local state generations that belong to it.
+
+**Outcome journal** is implementation-private authenticated persistent metadata
+that binds a validated request identity to its terminal completion and root. It
+exists to distinguish an all-old abort from an all-new completion after reset
+or completion loss; it is not a new program or host wire record.
 
 ## 2. Versioning and compatibility
 
@@ -160,7 +206,15 @@ Capabilities supporting grouped state MUST declare:
 |---|---|
 | `max_state_resources` | Maximum number of `STATE` descriptors in a deployment |
 | `max_state_members_per_resource` | Maximum `member_count` in one `STATE 1.1` descriptor |
-| `max_state_members_per_transaction` | Maximum sum of `member_count` over state resources that can participate in one transaction; admission uses all deployment state descriptors unless it proves a narrower participant set |
+| `max_state_members_per_transaction` | Maximum semantic member count summed over every `STATE` descriptor declared by the deployment |
+
+For this accounting, a `STATE 1.0` descriptor has semantic `member_count = 1`
+and a `STATE 1.1` descriptor has its authenticated `member_count`. Every
+declared state resource participates in the architectural transaction and MUST
+be included in the sum. Admission and execution MUST NOT infer or accept a
+narrower participant set from an entrypoint, predicate, phase, or observed
+control-flow path. This is the ABI 3.1 participant-accounting rule; A22's slot
+for every declared resource remains in force.
 
 The shared production implementation profiles SHALL advertise at least:
 
@@ -171,7 +225,8 @@ max_state_members_per_transaction = 256
 ```
 
 Admission MUST reject a deployment exceeding any limit. The sum for
-`max_state_members_per_transaction` MUST use checked arithmetic.
+`max_state_members_per_transaction` MUST use checked arithmetic over the
+complete declared state set.
 
 ## 4. Exact `STATE 1.1` wire layout
 
@@ -185,13 +240,13 @@ payload, not the descriptor header.
 | 1 | 1 | U8 | `commit_policy` | Commit-policy registry value |
 | 2 | 1 | U8 | `element_dtype` | Element storage dtype |
 | 3 | 1 | reserved | `reserved_0` | MUST be zero |
-| 4 | 4 | U32 | `session_binding_id` | Bound session descriptor or identifier |
+| 4 | 4 | U32 | `session_binding_id` | Session-binding selector; value zero means `CURRENT_SUBMISSION_SESSION` |
 | 8 | 4 | U32 | `committed_object_id` | Logical committed memory object |
 | 12 | 4 | U32 | `prepared_object_id` | Logical transaction-private prepared object |
 | 16 | 8 | U64 | `row_bytes` | Bytes in one row of one member |
 | 24 | 8 | U64 | `capacity_rows` | Row capacity of each member |
 | 32 | 8 | U64 | `initial_cursor_rows` | Common initial per-member cursor; policy determines whether it is a row, ring slot, quotient row, or absolute token position |
-| 40 | 4 | U32 | `generation_bits` | Width of the architectural generation field |
+| 40 | 4 | U32 | `generation_bits` | Width, 1 through 64 bits, of the resource generation |
 | 44 | 4 | U32 | `counter_class_id` | State counter-class descriptor |
 | 48 | 4 | U32 | `view_descriptor_id` | Canonical state view descriptor |
 | 52 | 4 | U32 | `node_id` | Bound node identifier |
@@ -204,6 +259,26 @@ payload, not the descriptor header.
 
 The descriptor header for this payload MUST declare `type_major = 1` and
 `type_minor = 1`.
+
+For `STATE 1.1`, `session_binding_id = 0` is the sole assigned value and means
+`CURRENT_SUBMISSION_SESSION`. The state resource dynamically binds each
+transaction to the `session_id` in that transaction's validated host
+submission. The field is not a host session ID, does not name a descriptor, and
+is not resolved through the descriptor table. Every nonzero value, including
+`NO_ID`, is reserved and MUST fail admission until a later descriptor minor
+assigns it. This selector permits one deployment to serve multiple isolated
+runtime sessions without rebuilding its descriptor table.
+
+For `generation_bits = G`, the resource generation is an unsigned integer in
+`[0, 2^G - 1]`. Values of `G` outside `[1, 64]` fail descriptor admission. A
+transaction that would advance a resource at `2^G - 1` MUST fail with
+`STATE_TRANSACTION` before root publication; generation never wraps. The host
+completion's U64 committed-state-generation field carries the zero-extended
+authoritative transaction-generation-root value. All state resources and that
+root in a newly created session begin at generation zero and, because every
+declared resource participates and advances once per successful publication,
+remain at that same numeric value. The root itself is U64 and MUST also refuse,
+rather than wrap, when exhausted.
 
 ### 4.1 `STATE 1.0` isolation
 
@@ -238,6 +313,11 @@ S == C * B
 committed_object.size_bytes == M * S
 prepared_object.size_bytes  == M * S
 ```
+
+Those equalities describe the two program-visible logical objects. An
+implementation's inactive-generation persistence is separate private backing;
+it MUST NOT be exposed by enlarging either object, placing a second generation
+after `M * S`, or manufacturing an address that a descriptor can name.
 
 Every multiplication and addition MUST be checked for U64 overflow before an
 address or size is accepted.
@@ -316,7 +396,7 @@ Logical states MAY share one `STATE 1.1` descriptor only when they agree on:
 - ring modulus, where applicable;
 - update predicate and update cadence;
 - phase set;
-- session, node, participant scope, and owner binding;
+- session, node, and owner binding;
 - generation width; and
 - initialization, including zero versus negative-infinity padding.
 
@@ -394,16 +474,26 @@ For every commit run `(source_row, destination_row, count)` and every member
 `m`, the implementation SHALL publish:
 
 ```text
-source = prepared.base
-       + m * member_stride_bytes
-       + source_row * row_bytes
+source_offset = m * member_stride_bytes
+              + source_row * row_bytes
 
-destination = committed.inactive_generation_base
-            + m * member_stride_bytes
-            + destination_row * row_bytes
+destination_offset = m * member_stride_bytes
+                   + destination_row * row_bytes
 
-bytes = count * row_bytes
+source = prepared_object.base_address + source_offset
+bytes  = count * row_bytes
 ```
+
+`destination_offset` is an offset in the next logical image of
+`committed_object_id`, not a program-visible address. The state controller
+copies `bytes` from `source` into implementation-private inactive-generation
+backing selected by `(state_descriptor_id, next_resource_generation)` at that
+offset, where `next_resource_generation` is the checked current generation plus
+one. Using checked arithmetic, it MUST prove `source_offset + bytes` and
+`destination_offset + bytes` are at most `M * member_stride_bytes`, and MUST
+preserve every destination byte outside the commit runs from the prior committed
+generation. The private backing and its metadata are integrity- and
+ownership-protected at least as strongly as the logical committed object.
 
 `REQUEST_SPAN` publishes prepared rows starting at zero to committed rows
 starting at the common cursor. `SATURATING` publishes the canonical one- or
@@ -501,21 +591,202 @@ window rows. `UNSTAGED` cannot preserve an update. `SATURATING` describes a
 token-indexed modulo ring and does not describe the ratio-4 two-half
 overlap/roll transition or its reset and padding rules.
 
-For `FULL_IMAGE`:
+For `FULL_IMAGE`, the working image begins as a complete copy-on-write image of
+committed state, the entire logical image of every member is published
+same-slot, and the cursor is an absolute next-token position rather than a row
+count. The implementation MUST require `cursor == P0`, set the cursor to `P1`,
+and MUST NOT compare absolute token position with raw-slot capacity.
 
-- the working image begins as a complete copy-on-write image of committed
-  state;
-- the entire logical image of every member is published same-slot;
-- the cursor is an absolute next-token position, not a row count;
-- the implementation MUST require `cursor == P0` and set the cursor to `P1`;
-- absolute token position MUST NOT be compared with raw-slot capacity;
-- ratio-4 raw capacity is exactly `2D`, which is eight slots for `D = 4`;
-- ratio-128 raw capacity is exactly `D`, which is 128 slots; and
-- all paired operators and grouped members MUST use the same ratio.
+### 8.1 Source lock, ratio binding, and logical shapes
 
-The exact transition includes fresh-request reset, ratio-4 half-window overlap
-and roll, ratio-128 behavior, APE phase, zero KV padding, and negative-infinity
-score padding.
+The immutable transition profile is
+`opentallas.deepseek_v4_compress_state_update.v2`, derived from upstream
+revision `7872f01b1d1fe23eabc4c98b48bffcef5a386062`, model-source SHA-256
+`c0c19e6c9fa439bac7fbb1c5bc1868232dfd5aa2f439a548d0e33dcc2a9edd3f`, and
+inference-configuration SHA-256
+`c90861f3d10a9e4ef5954f8f1a34c529d480da1c5799f84660028f4e38e14e71`.
+The mathematical definition below is normative and immutable for this profile.
+`runtime/reference/compression_state.py` is a conformance oracle for it, not a
+mutable source of additional semantics; disagreement with these equations is a
+release failure and MUST NOT be resolved by silently following the code.
+
+Let `R` be the paired `OPERATOR 1.1` mode-3 `aux_id_1`. `R` MUST be exactly 4
+or 128. A `COMPRESSOR_WINDOW/FULL_IMAGE` resource does not carry `R` in
+`row_position_unit`, which remains zero; the resource obtains `R` only through
+its authenticated object/view binding to that operator. Define:
+
+```text
+c = 2 if R == 4 else 1
+P = c * R                         raw state slots: 8 or 128
+W = c * H                         projected feature width
+```
+
+This profile requires `1 <= B <= B_capacity <= 4`, `1 <= H <= 512`,
+`T = P1 - P0`, and `P1 <= 1,048,576`, additionally bounded by the admitted
+capability. `input_view_0` MUST be one packed `FP32`
+rank-4 logical view with resolved extents `[B,T,2,W]`. Plane 0 is projected KV
+and plane 1 is projected score, exactly:
+
+```text
+XK[b,t,w] = input_view_0[b,t,0,w]
+XS[b,t,w] = input_view_0[b,t,1,w]
+```
+
+`input_view_2` MUST be an `FP32` rank-2 APE view `A[p,w]` with extents `[R,W]`.
+Both use otherwise ordinary `TENSOR_VIEW` stride and bounds legality; packing
+the two input planes does not authorize an implicit relayout. All `XK`, `XS`,
+and `A` elements MUST be finite binary32 values.
+
+For each grouped state member, the prepared raw-KV `input_view_1` and raw-score
+`input_view_3` expose `FP32` rank-3 logical arrays `K[b,s,w]` and `Z[b,s,w]`
+with extents `[B_capacity,P,W]`. Physical state rows are slot-major: row `s` is
+the concatenation of `[b,w]` in increasing `b`, then increasing `w`. Therefore
+the canonical logical view has element strides `[W, B_capacity*W, 1]`, and each
+paired `STATE` descriptor MUST have:
+
+```text
+capacity_rows = P
+row_bytes     = B_capacity * W * 4
+element_dtype = FP32
+```
+
+All products and view bounds are checked under the normal `TENSOR_VIEW` and
+member-geometry rules.
+
+Write `x (+32) y` for exact real addition of two finite binary32 inputs followed
+by one round-to-nearest, ties-to-even binary32 rounding. A non-finite projected
+input or APE value, or an addition that cannot produce the required finite
+binary32 result, is a numeric fault. Define the APE-biased projected score:
+
+```text
+Y[b,t,w] = XS[b,t,w] (+32) A[t mod R,w]
+```
+
+All stateful operators, their two raw windows, quotient cache states,
+quotient-mode views, boundary predicates, and group consumers in one transition
+MUST bind the same `R`. In particular, the corresponding quotient state's
+`row_position_unit`, each quotient view's semantic `extent_unit`, and the
+predicate divisor MUST equal the operator's `aux_id_1`. A mismatch fails
+admission.
+
+The mode-3 outputs defined below are the exact pre-softmax pool operands. The
+operator does not itself perform softmax pooling, normalization, RoPE, QDQ, or
+compressed-cache publication. `PoolK` is written to `output_view_0` and `PoolZ`
+to `output_view_1`; both are `FP32` rank-4 logical arrays whose produced extent
+is `[B,N,P,H]`. Their backing descriptors are capacity views large enough for
+the admitted maximum, while quotient-mode consumer views expose exactly the
+produced `N` groups.
+
+### 8.2 Fresh-session prefill transition
+
+Prefill requires `P0 == 0`, `T = P1 > 0`, and a fresh session binding. Reuse of
+the same session identity as an already initialized raw window fails before any
+write. Define:
+
+```text
+Q = floor(T / R)
+E = T mod R
+C = Q * R
+```
+
+The transition first resets every slot of every active batch lane to binary32
+positive zero for `K` and the exact binary32 negative-infinity encoding
+`0xFF800000` for `Z`. It then emits exactly `Q` pool groups. For `R == 128`, for
+`0 <= g < Q`, `0 <= p < R`, and `0 <= h < H`:
+
+```text
+PoolK[b,g,p,h] = XK[b,g*R+p,h]
+PoolZ[b,g,p,h] = Y [b,g*R+p,h]
+```
+
+For overlapping `R == 4`, every pool group has `2R = 8` phases. For
+`0 <= p < R` and `0 <= h < H`:
+
+```text
+PoolK[b,0,p,h] = +0.0f
+PoolZ[b,0,p,h] = -infinity (0xFF800000)
+
+PoolK[b,g,p,h] = XK[b,(g-1)*R+p,h]       for 1 <= g < Q
+PoolZ[b,g,p,h] = Y [b,(g-1)*R+p,h]       for 1 <= g < Q
+
+PoolK[b,g,R+p,h] = XK[b,g*R+p,H+h]       for 0 <= g < Q
+PoolZ[b,g,R+p,h] = Y [b,g*R+p,H+h]       for 0 <= g < Q
+```
+
+After forming the pool operands, the active raw state is the reset image plus
+only these assignments:
+
+```text
+R == 4 and C >= R:
+    K[b,p,:] = XK[b,C-R+p,:]              for 0 <= p < R
+    Z[b,p,:] = Y [b,C-R+p,:]
+
+R == 4:
+    K[b,R+p,:] = XK[b,C+p,:]              for 0 <= p < E
+    Z[b,R+p,:] = Y [b,C+p,:]
+
+R == 128:
+    K[b,p,:] = XK[b,C+p,:]                for 0 <= p < E
+    Z[b,p,:] = Y [b,C+p,:]
+```
+
+Thus a ratio-4 state retains the last complete projected group in its previous
+half and the incomplete suffix in its current half; a ratio-128 state retains
+only its incomplete suffix. Slots not assigned above remain at their exact
+reset values. Inactive batch lanes remain bit-for-bit unchanged. A grouped
+member not targeted by the current operator invocation retains its working
+baseline until its ordered member invocation; before commit, every member of
+the group MUST have undergone the same transition for the same request.
+
+### 8.3 Decode transition and overlap roll
+
+Decode requires `P0 > 0`, `T = P1 - P0 == 1`, an exact session-binding match,
+and `cursor == P0`. Define:
+
+```text
+p = P0 mod R
+d = R + p if R == 4 else p
+complete = (P1 mod R) == 0
+N = 1 if complete else 0
+```
+
+For every active batch lane, first perform:
+
+```text
+K[b,d,:] = XK[b,0,:]
+Z[b,d,:] = XS[b,0,:] (+32) A[p,:]
+```
+
+If `complete` is false, the operator emits no pool group and makes no other raw
+state change. If `complete` is true and `R == 128`, it emits the single group:
+
+```text
+PoolK[b,0,p,h] = K[b,p,h]
+PoolZ[b,0,p,h] = Z[b,p,h]                 for 0 <= p < R, 0 <= h < H
+```
+
+If `complete` is true and `R == 4`, it first emits:
+
+```text
+PoolK[b,0,p,h]   = K[b,p,h]
+PoolZ[b,0,p,h]   = Z[b,p,h]
+PoolK[b,0,R+p,h] = K[b,R+p,H+h]
+PoolZ[b,0,R+p,h] = Z[b,R+p,H+h]           for 0 <= p < R, 0 <= h < H
+```
+
+and only after capturing that pool group rolls the complete current half into
+the previous half:
+
+```text
+K[b,p,:] = K[b,R+p,:]
+Z[b,p,:] = Z[b,R+p,:]                     for 0 <= p < R
+```
+
+The current half is not cleared by the roll. Inactive batch lanes and bytes not
+assigned by these equations remain bit-for-bit equal to the working image's
+committed baseline. Every successful prefill or decode transition sets the
+absolute cursor to `P1`; its raw-window state and any emitted pool operands
+become authoritative only through the common transaction root.
 
 ## 9. `PREDICATE 1.1`
 
@@ -578,6 +849,18 @@ Modes 1 and 2 are legal only with descriptor `type_major = 1`,
 `type_minor = 1`, beneath a program ABI 3.1 header. In `TENSOR_VIEW 1.0`, byte
 121 remains reserved-zero and has no selectable mode semantics.
 
+### 10.1 Version-scoped replacement of A18
+
+For `request_row_mode = 0`, A18 remains unchanged, including its positive-only
+clamp and term-that-walks-the-axis admission rule. For modes 1 and 2, the
+resolution equations in this section replace A18's extent formula,
+positive-only clamp, and requirement that a dynamic term walk `extent_axis`.
+The verifier MUST require that no dynamic term walks the quotient axis and MUST
+assign `q1 - q0` even when that value is zero. Dynamic terms on other axes
+continue to use their existing rules. This override is selected only by a
+`TENSOR_VIEW 1.1` descriptor beneath a program 3.1 header and MUST NOT alter the
+resolution of any 1.0 view.
+
 For modes 1 and 2, the canonical existing extent fields are:
 
 | Payload offset | Field | Required value |
@@ -633,6 +916,11 @@ aux_id_3 = POSITION_END symbol ID, 2
 Mode 3 is legal only with descriptor `type_major = 1`, `type_minor = 1`,
 beneath a program ABI 3.1 header.
 
+For that exact version-and-mode tuple, the operand row below supersedes the
+ABI 3.0 `VECTOR.COMPRESS` row in `TA-ABI3-OPCONV-1`. Modes 0 through 2 retain
+their historical mappings and behavior; in particular, this amendment does not
+reinterpret legacy mode 2's prefill-only transition.
+
 The exact relevant payload slots are:
 
 | Offset | Field | Binding |
@@ -640,9 +928,9 @@ The exact relevant payload slots are:
 | 0 | `engine_family` | `VECTOR` = `0x30` |
 | 1 | `engine_sub` | `COMPRESS` = `0x08` |
 | 24 | `input_view_0` | Projected packed KV/score input |
-| 28 | `input_view_1` | Prepared raw-KV window, `READ|WRITE` |
+| 28 | `input_view_1` | Prepared raw-KV window, `READ\|WRITE` |
 | 32 | `input_view_2` | APE input |
-| 36 | `input_view_3` | Prepared raw-score window, `READ|WRITE` |
+| 36 | `input_view_3` | Prepared raw-score window, `READ\|WRITE` |
 | 40 | `output_view_0` | Pool-KV backing |
 | 44 | `output_view_1` | Pool-score backing |
 | 48 | `aux_id_0` | 3 |
@@ -660,10 +948,16 @@ expose only the active `N` rows. Pooling, normalization, RoPE, QDQ, compressed
 cache scatter/append, and other group consumers MUST carry the exact quotient
 predicate.
 
-For this mode only, deployment staging analysis MUST count `input_view_1` and
-`input_view_3` as destinations in addition to ordinary operator outputs. Both
-must resolve to prepared `COMPRESSOR_WINDOW` resources using `FULL_IMAGE`.
-Every paired window and consumer MUST declare the same ratio.
+For this mode only, this is a version-scoped replacement of A21's exhaustive
+staging-source list: deployment staging analysis MUST count `input_view_1` and
+`input_view_3` as both sources and destinations in addition to ordinary
+operator outputs and communication endpoints. Both view descriptors MUST grant
+`READ` and `WRITE`, must resolve to transaction-private prepared
+`COMPRESSOR_WINDOW` resources using `FULL_IMAGE`, and must be included in
+producer/fence analysis. No other input slot becomes a destination. Builder and
+verifier MUST derive and check this fact from the completed authenticated
+descriptor table. Every paired window and consumer MUST declare the same ratio
+under Section 8.1.
 
 Legacy `aux_id_0 = 2` behavior remains a legacy prefill-only transition. It is
 not legal for the corrected DeepSeek decode path.
@@ -696,6 +990,12 @@ by correctly ordered same-transaction consumers until completion.
 
 `STATE.DISCARD` destroys the transaction's right to access the working image.
 It leaves committed bytes, cursor, and generation unchanged.
+
+A successful `CONTROL.COMPLETE` requires a commit intent for every declared
+state resource. `STATE.DISCARD` is an abort/failure-path resolution: if any
+resource is discarded, the transaction follows the all-old rule, publishes no
+new transaction root, and cannot return `SUCCESS`. This is what preserves one
+session-wide numeric generation across resources of different classes.
 
 An implementation that reuses prepared backing storage MUST use a fresh clone,
 copy-on-write map, or generation/epoch tags. Merely clearing an `open_prepare`
@@ -740,6 +1040,33 @@ entire transaction. The durable global root MUST identify a complete set of
 node-local generations. Checkpoint and restore MUST follow that root rather
 than select independently advanced node roots.
 
+The inactive-generation map, node-local roots, global transaction-generation
+root, and outcome journal are implementation-private persistence. They are not
+ABI descriptors, memory objects, tensor-view addresses, or additions to the
+host record layout. Their physical encoding MAY vary, but firmware MUST
+authenticate their integrity and freshness and MUST reject a torn, replayed,
+cross-session, cross-deployment, or mixed-node record. The durable metadata for
+one outcome MUST bind at least:
+
+- deployment ID and generation, capability digest, program digest, and
+  descriptor-table digest;
+- session ID, submitted and resulting session generations, transaction ID, and
+  idempotency key;
+- every participating state descriptor ID, its old and new generation and
+  cursor, and the integrity identity of its complete inactive image;
+- the complete ordered node-generation set for a global transaction;
+- selected token, committed position, counters including sticky overflow, and
+  the terminal completion fields; and
+- a monotonically protected persistence epoch or equivalent anti-rollback
+  value.
+
+Firmware MUST validate the complete bound set before selecting a root. The
+single durable selection of that authenticated root is the architectural root
+flip; writing an image or journal body alone is not publication. A private
+encoding change that can alter checkpoint/recovery interoperability requires a
+firmware persistence-format version, but does not create a program-visible
+address.
+
 ### 13.1 Failure boundary and retry
 
 A failure before the durable root flip leaves all authoritative state old:
@@ -759,6 +1086,27 @@ aborted all-old transaction. Recovery and a retry using the same transaction
 identity MUST return or replay the recorded committed outcome and MUST NOT
 execute the model transition again.
 
+For this replay, “the same transaction identity” means an exact match of the
+original validated request's ABI version, host opcode, all semantic flags,
+deployment ID and generation, session ID and submitted session generation,
+request-descriptor ID, transaction ID, idempotency key, input and output window
+identities and ranges, entrypoint, generation-policy ID, watchdog class,
+deadline, and every other field that can affect execution or returned bytes.
+Only the `RETRY` flag and consequently the record CRC may differ. Reserved and
+constant framing fields remain canonical. A mismatch is not a replay and MUST
+fail closed before work.
+
+This lookup occurs before ordinary stale-session-generation rejection. It is
+the sole exception to the ABI 3.0 rule that a retry requires a session
+generation that has not advanced: a matching post-root request may carry the
+original submitted generation because it performs no work and returns the
+journaled terminal outcome. A pre-root retry still requires the session
+generation to be unchanged. A post-root request not found in authenticated
+retained outcome metadata MUST NOT be guessed committed or re-executed.
+The authenticated outcome record MUST remain available for the lifetime of the
+session and travel in its checkpoint; authenticated session destruction may
+retire it.
+
 This post-root rule is required to prevent duplicated compressed groups,
 duplicated output tokens, and divergent session position.
 
@@ -773,7 +1121,7 @@ The following classifications are REQUIRED:
 | Unsupported program/descriptor version, hidden 1.1 construct under a 3.0 header | 1, `ADMISSION_OR_VERSION` |
 | Malformed descriptor field, address overflow, illegal view/member range | 3, `DESCRIPTOR_OR_ADDRESS` |
 | Capability-limit violation or quotient capacity overflow | 4, `CAPABILITY_OR_RESOURCE` |
-| Duplicate prepare/resolution, missing prepare, unresolved prepare, stale/gapped/replayed cursor, write after resolution | 9, `STATE_TRANSACTION` |
+| Duplicate prepare/resolution, missing prepare, unresolved prepare, stale/gapped/replayed cursor, generation overflow, write after resolution | 9, `STATE_TRANSACTION` |
 
 Memory, engine, link, timeout, integrity, and internal faults retain their
 existing trap classes. Any pre-root fault, regardless of its class, aborts the
@@ -783,8 +1131,17 @@ rolls back the root.
 
 ### 14.2 Counter semantics
 
-Let `M = member_count`, `R` be rows published per member, and `B = row_bytes`.
-On successful root publication, per-node data-volume counters SHALL add:
+The existing counter IDs and event names are retained. Their ABI 3.1 meaning is
+a backward-compatible generalization: one counter row is one row of one
+semantic state member. For a `STATE 1.0` descriptor, define semantic `M = 1`
+regardless of how application data happens to be packed inside its logical
+row; therefore every genuine 1.0 program produces exactly its historical
+counter values. For a `STATE 1.1` descriptor, `M = member_count`. This rule does
+not renumber an event or reinterpret a 1.0 descriptor. A mixed-version program
+sums each descriptor's contribution using its own semantic `M`.
+
+Let `R` be rows published per member and `B = row_bytes`. On successful root
+publication, per-node data-volume counters SHALL add:
 
 ```text
 state.rows_committed += M * R
@@ -817,7 +1174,7 @@ descriptor commit. `state.rows_clipped` counts unpublished physical member
 rows and adds:
 
 ```text
-member_count * (SPAN_TOKENS - min(SPAN_TOKENS, capacity_rows))
+M * (SPAN_TOKENS - min(SPAN_TOKENS, capacity_rows))
 ```
 
 `FULL_IMAGE` counters describe the logical image published even when an
@@ -840,6 +1197,16 @@ A checkpoint MUST NOT read an arbitrary prepared object or inactive generation.
 Restore MUST select one complete committed root and restore all members and
 metadata from that root. It MUST NOT combine state from different generations
 or nodes.
+
+Checkpoint firmware MUST first authenticate the selected root and every bound
+image and outcome record. The checkpoint serializes the logical committed
+member bytes and the architectural metadata listed above; it MUST NOT serialize
+or expose an inactive-generation physical address, private root pointer, or
+implementation-local journal address as an ABI identity. Restore may allocate
+different private backing, but it MUST reconstruct and authenticate one
+equivalent complete root before admitting a new transaction. Authentication,
+anti-rollback, or version failure makes restore fail closed rather than select a
+best-effort subset.
 
 After restore, the quotient cursor and session position originate from the
 same committed transaction. Therefore the next boundary group cannot be
@@ -959,17 +1326,17 @@ structure, and whether a proof is dynamic or formal are implementation choices.
 | Area | Required positive closure | Required negative/fault closure |
 |---|---|---|
 | Versioning | Genuine header 3.0/type 1.0 package runs on the dual-admission implementation; header 3.1 selectively uses affected 1.1 layouts | 3.0 header plus any 1.1 descriptor/new construct fails; 1.0 former-reserved fields remain rejected; unsupported minor fails before work |
-| Wire identity | New fields round-trip with exact little-endian bytes, record CRC, descriptor-table digest, deployment digest, and program-header binding | One-bit mutations in each new field, feature vector, or bound fail the appropriate integrity/admission check |
+| Wire identity | New fields round-trip with exact little-endian bytes, record CRC, descriptor-table digest, deployment digest, and program-header binding; session selector zero resolves independently for two runtime sessions | One-bit mutations in each new field, feature vector, or bound fail the appropriate integrity/admission check; reject nonzero `session_binding_id` and generation widths 0 and 65 |
 | Member geometry | Unique sentinels survive prepare, update, commit, checkpoint, and restore for member counts 1, 20, 21, 23, 36, and 43 | Reject counts 0 and 65, total 257, stride mismatch, multiplication overflow, undersized/oversized objects, aliasing, out-of-range member selection, and a view crossing members |
 | Lockstep proof | Every member follows the same update cadence and one grouped generation transition | Reject mismatched class, dtype, capacity, policy, divisor, ring modulus, phase set, predicate, initialization, session/node binding, or partial group resolution |
 | Quotient arithmetic | Properties around `D-1`, `D`, `D+1`, 127/128/129, 2047/2048/2049/2051/2052, 200000, 200256, and 262144; a 256-decode horizon ends at cursors 50064 and 1564 | Reject zero divisor, stale/gapped/replayed cursor, inconsistent request symbols, and quotient capacity overflow |
 | Zero-group decode | Raw compressor windows change; compressed-cache commit closes and advances generation with zero rows/bytes; no group consumer executes | Reject a missing/unresolved compressed-cache commit and any unpredicated quotient-view consumer |
 | Boundary decode | Exactly one group is produced, written at row `q0`, committed for every member, and visible to ordered same-transaction consumers | Discard/retry and injected faults prove no duplicate or omitted group |
-| Full image | Ratio-4 and ratio-128 state matches the reference transition across reset, prefill, nonboundary decode, boundary roll, APE phase, and padding | Reject `FULL_IMAGE` on another state class, wrong raw capacity, mixed ratios, or an operator not bound to both prepared read/write windows |
-| Counters | Rows and bytes equal `member_count * per_member_rows` and `* row_bytes`, then node multiplication where applicable; descriptor-operation counters remain one | Overflow is sticky; aborted work does not appear as committed rows/bytes; zero-group adds zero data volume |
+| Full image | Ratio-4 and ratio-128 state and pool operands match Sections 8.1 through 8.3 and the independent oracle across reset, prefill, nonboundary decode, boundary roll, one-round-RNE APE phase, and exact padding | Reject `FULL_IMAGE` on another state class, wrong raw capacity, mixed ratios, malformed packed input planes, wrong APE shape, or an operator not bound to both prepared read/write windows |
+| Counters | Rows and bytes equal semantic `M * per_member_rows` and `* row_bytes`, then node multiplication where applicable; 1.0 uses `M = 1`; descriptor-operation counters remain one | Overflow is sticky; aborted work does not appear as committed rows/bytes; zero-group adds zero data volume; generation overflow is refused rather than wrapped |
 | Working visibility | Prepared views see committed baseline plus ordered same-transaction writes; committed views remain old before root | Reused prepared storage after abort cannot reveal dirty bytes; read-after-discard and write-after-resolution trap |
 | Atomic publication | Successful completion exposes all members, resources, token, position, counters, and all 32 nodes at one generation | Faults after prepare, state write, intent, each inactive member copy, and immediately before root flip are all-old; one-node failure aborts all nodes |
-| Post-root recovery | Fault immediately after durable root flip recovers the all-new recorded result; same transaction ID is idempotent | Recovery must never rerun a post-root committed transition or classify it as aborted |
+| Post-root recovery | Fault immediately after durable root flip recovers the all-new recorded result; an exactly matching original request is idempotent despite its submitted generation now being stale | Recovery must never rerun a post-root committed transition or classify it as aborted; changed transaction ID, idempotency key, session/deployment identity, entrypoint, policy, or window range fails closed |
 | Qwen durability | All 36 layer-member images survive committed-image restart and subsequent execution | A member-erased or member-swapped checkpoint control is detected even if a short token sequence happens to match |
 | Differential compression | Raw state and pool outputs match `runtime/reference/compression_state.py` for both ratios | Perturbed overlap, roll, padding, APE phase, or score initialization is detected |
 | RTL/formal | Properties cover descriptor-minor gating, nested member walker, quotient calculation, zero-row commit, full-image publication, counters, and root atomicity | Prove no partial member/node publication and no transition from aborted inactive data to an authoritative root |
