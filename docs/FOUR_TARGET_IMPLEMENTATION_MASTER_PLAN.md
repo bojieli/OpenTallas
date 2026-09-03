@@ -69,11 +69,11 @@ the run; durable roots, outcome journals, idempotent replay, power-loss
 recovery, anti-rollback persistence, and concurrent-session isolation are not
 part of the accelerator or comparison claim. Optional long-campaign
 checkpointing is host-side simulator tooling performed only after a completed
-token step. A lane may not invent a private ABI, IR operation, state
+token step. A lane may not invent a private ABI, IR operation, live-buffer
 convention, or evidence exception.
-Long-running immutable campaigns may execute concurrently only after their
+Long-running campaigns may execute concurrently only after their
 source digest, deployment digest, workload, oracle, topology, and output path
-are frozen. Historical local W10 captures bind an obsolete state-based source
+are frozen. Historical local W10 captures bind an obsolete pre-live-buffer source
 identity and are diagnostic only; one stress capture also diverges from its
 oracle. They are not committed acceptance evidence and must not seed a paired
 run. Fresh captures start only from one committed live-buffer source identity.
@@ -173,14 +173,15 @@ bounded Qwen operations, not a complete controller.
 | TA-QW-HBM | Qwen3-8B | external HBM with SRAM tiling | one conventional chip/package | shared HBM/SRAM chip RTL 3.0 and netlist | exactly 8,000 natural prompt tokens; separate repeated-special stress |
 | TA-DS-HBM | DeepSeek-V4 Flash | node-local external HBM with SRAM tiling | exactly 32 accelerator nodes over an NVLink-class fabric | 32 copies of the identical TA-QW-HBM chip/netlist | exactly 200,000 natural prompt tokens |
 | TA-QW-ROM | Qwen3-8B | mask ROM plus HBM/SRAM KV | one conventional chip/package | Qwen-specific conventional netlist and masks | the same Qwen workload contract |
-| TA-DS-ROM | DeepSeek-V4 Flash | distributed mask ROM plus HBM/SRAM mutable state | one wafer-scale logical accelerator | DeepSeek-specific wafer-scale netlist, stitching, and masks | the same DeepSeek workload contract |
+| TA-DS-ROM | DeepSeek-V4 Flash | distributed mask ROM plus live HBM/SRAM buffers | one wafer-scale logical accelerator | DeepSeek-specific wafer-scale netlist, stitching, and masks | the same DeepSeek workload contract |
 
 The two HBM rows use one conventional accelerator-chip design. Qwen uses one
 node; DeepSeek uses exactly 32 identical nodes. The chip therefore contains the
-DeepSeek-capable tensor/vector/route/state modes and a production inter-chip
-fabric endpoint even when a Qwen deployment does not exercise them. A model may
-select programs, descriptors, numeric profiles, memory images, and a one-node or
-32-node topology. It may not select a different chip elaboration or netlist.
+DeepSeek-capable tensor/vector/route/buffer-management modes and a production
+inter-chip fabric endpoint even when a Qwen deployment does not exercise them.
+A model may select programs, descriptors, numeric profiles, memory images, and
+a one-node or 32-node topology. It may not select a different chip elaboration
+or netlist.
 
 The two ROM rows are separate physical products and scale classes. Qwen-ROM is
 the conventional chip-versus-chip comparison. DeepSeek-ROM is mandatory
@@ -242,7 +243,7 @@ Every agent and lane must preserve these invariants:
 - DeepSeek acceptance uses exactly 200,000 natural prompt tokens;
 - smaller contexts are diagnostics and never substitute for those targets;
 - decode returns legitimate tokenizer tokens, includes the first official EOS,
-  and performs no post-EOS model transaction;
+  and performs no post-EOS model step;
 - chat and agentic prompts use pinned official templates and retained rendered
   context;
 - exact failures remain failures even when output text is semantically plausible;
@@ -250,10 +251,10 @@ Every agent and lane must preserve these invariants:
   labeled;
 - no framework fallback, injected activation, precomputed route/logit, host
   argmax, or Python per-command sequencing closes production execution;
-- HBM and ROM comparisons use the same model, prompt IDs, numerics, state,
-  generation policy, technology view, PVT scope, external-memory assumptions,
-  and measurement boundary; topology cost remains explicit rather than forced
-  equal; and
+- HBM and ROM comparisons use the same model, prompt IDs, numerics, initial
+  live-buffer contents, generation policy, technology view, PVT scope,
+  external-memory assumptions, and measurement boundary; topology cost remains
+  explicit rather than forced equal; and
 - SKY130 implementation evidence and ASAP7 predictive evidence remain separate;
 - no performance claim precedes correct end-to-end execution.
 
@@ -294,7 +295,7 @@ fit one model.
 ### 6.3 Contract-change rule
 
 If a lane discovers that a shared contract cannot represent a required
-operation, state, numeric rule, or bound:
+operation, live-buffer update, numeric rule, or bound:
 
 1. preserve the failing artifact;
 2. stop at the shared boundary;
@@ -344,7 +345,7 @@ identical nodes without chip resynthesis.
 **Owns after the common schema release:**
 
 - HBM/SRAM Physical Plan IR;
-- weight/state allocation, tiling, DMA, schedule, and descriptor lowering;
+- weight/live-buffer allocation, tiling, DMA, schedule, and descriptor lowering;
 - common functional and cycle simulator;
 - management/microsequencer and HBM/SRAM engine RTL;
 - synthesizable inter-chip endpoint, remote DMA, packet/collective engines,
@@ -385,7 +386,8 @@ ledger through a causal DeepSeek-specific wafer-scale ROM hardware path.
 
 **Owns:** DeepSeek target-only graph export, wafer reticle/tile ROM
 placement/images/repair, on-wafer schedules and service lowering,
-mixed-format/MoE/sparse/compressor/mHC ROM integration, distributed-HBM state,
+mixed-format/MoE/sparse/compressor/mHC ROM integration, distributed-HBM live
+buffers,
 wafer-fabric simulation and RTL, and DeepSeek ROM workload results.
 
 **Must not own:** shared schemas, Qwen semantics, HBM backend lowering, or
@@ -470,7 +472,8 @@ Every handoff names:
 ### Phase A — architecture and target freeze
 
 **Work:** review TA-ADR-003, freeze ordinary-path model profiles, exact workload
-boundaries, ABI layering, control responsibilities, state, EOS, traps, counters,
+boundaries, ABI layering, control responsibilities, live-buffer behavior, EOS,
+traps, counters,
 minimum capability union, one-node/32-node HBM topology, inter-chip endpoint,
 DeepSeek ROM wafer boundary, and dual technology-view policy.
 
@@ -490,9 +493,9 @@ neutral IR.
 
 ### Phase C — legacy equivalence and real vertical slices
 
-**Work:** establish Qwen ABI 2.5-to-3.0 semantic/state equivalence; lower one
+**Work:** establish Qwen ABI 2.5-to-3.0 semantic/live-buffer equivalence; lower one
 connected Qwen layer and representative DeepSeek dense, route, sparse-attention,
-state, remote-DMA, and collective slices. In parallel, ROM lanes map the same
+live-buffer, remote-DMA, and collective slices. In parallel, ROM lanes map the same
 source/kernel boundaries to conventional Qwen and wafer-scale DeepSeek plans.
 
 **Exit:** TA-A3-SLICE-2. Independent references, artifact-only execution,
@@ -518,7 +521,8 @@ and backpressure. ROM lanes integrate their model-specific weight service and
 physical schedules.
 
 **Exit:** TA-RTL-4 for each hardware family. Simulator and RTL agree on results,
-architectural state, faults, and counters for representative complete programs.
+architectural live-buffer contents, faults, and counters for representative
+complete programs.
 
 ### Phase F — mandatory contexts
 
@@ -578,8 +582,9 @@ A target is functionally complete only when:
 - agent actions are model-generated, parsed fail-closed, executed in the frozen
   sandbox, and returned in the next rendered context;
 - independent reference/golden comparisons meet the predeclared policy;
-- state, operation, memory, queue, and token counters reconcile; and
-- a failure cannot commit partial state or be promoted by semantic plausibility.
+- live-buffer, operation, memory, queue, and token counters reconcile; and
+- a failed run is never promoted by semantic plausibility; its partially written
+  buffers, if any, are discarded with that run rather than rolled back or reused.
 
 Artifact-only functional execution is full numerical model execution at the
 functional-simulator boundary. It is not an RTL or timing claim. Cycle, RTL,
@@ -771,11 +776,11 @@ Use this task statement:
 > Act as the DeepSeek-V4 Flash ROM hardware owner. Build the ordinary target-only
 > wafer-scale immutable-weight path first; keep DSpark/speculative execution
 > separate. The critical model path must use a causal on-wafer fabric and
-> distributed HBM state, with topology, collectives, repair, quarantine, and
+> distributed HBM live buffers, with topology, collectives, repair, quarantine, and
 > yield-aware recompilation. Work only in allocated DeepSeek-ROM paths. Export
 > complete ordinary semantics into released common contracts without
 > model-specific shared opcodes. Begin with one checkpoint-derived connected
-> route/state/communication vertical slice, then follow the lane gates toward
+> route/live-buffer/communication vertical slice, then follow the lane gates toward
 > exact 200,000-token execution.
 
 ### 15.6 Required per-agent scope declaration

@@ -20,7 +20,7 @@ not need to run DeepSeek and must not be reported as the shared programmable
 HBM/SRAM tensor accelerator.
 
 The first release is exactly one conventional reticle-bounded ROM accelerator
-chip/package with external HBM for mutable state. It is the chip-versus-chip
+chip/package with external HBM for live mutable buffers. It is the chip-versus-chip
 peer of one conventional Qwen HBM/SRAM accelerator node. Wafer-scale or
 multi-accelerator execution may not be credited to the Qwen comparison. If the
 complete immutable payload cannot close the one-chip capacity, repair, power,
@@ -101,7 +101,7 @@ or internal pipeline region is not a separate chip or cluster node.
 - GQA causal attention;
 - BF16 residual and SiLU-gated MLP;
 - immutable token embedding and vocabulary weights;
-- HBM/SRAM KV state;
+- HBM/SRAM KV buffers;
 - on-device deterministic argmax, token append, and EOS;
 - pinned chat and simple tool-use templates;
 - fail-stop error completion, fresh-run reset, counters, and trace; and
@@ -136,7 +136,7 @@ one conventional reticle-bounded Qwen ROM chip
 | immutable BF16 ROM tensor regions       |
 | BF16/FP32 tensor lanes                  |
 | RMSNorm/RoPE/vector service             |
-| GQA attention and HBM KV state          |
+| GQA attention and HBM KV buffers        |
 | SRAM activation/accumulator banks       |
 | vocabulary reduction, argmax, and EOS   |
 +-------------------+---------------------+
@@ -287,7 +287,7 @@ The cycle model adds:
 - SRAM ports, banking, arbitration, ECC, and occupancy;
 - actual GQA KV HBM traffic and response timing;
 - on-chip NoC transfers, credits, and HBM-interface traffic;
-- microprogram/events/state retirement;
+- microprogram/event/fence retirement;
 - selection/EOS latency; and
 - activity-derived counters for physical feedback.
 
@@ -312,7 +312,7 @@ The sequence is:
 11. reset, repair, fault, power, CDC/RDC, formal, and coverage closure.
 
 Existing general ROM shell blocks may be reused only when their command,
-session, schedule, integrity, and state behavior maps explicitly to the new
+session, schedule, integrity, and live-buffer behavior maps explicitly to the new
 contract. Existing Qwen HBM ot_ta_* arithmetic slices remain independent
 differential evidence, not automatic ROM RTL.
 

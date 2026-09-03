@@ -452,7 +452,7 @@ on arithmetic, memory responses, selection, and live buffers.
 Before launching the exact Qwen 8K or DeepSeek 200K campaign, the simulator must
 publish:
 
-- measured transactions per host second by phase and context;
+- measured model steps per host second by phase and context;
 - host memory, temporary disk, trace, and report growth;
 - the maximum uninterrupted host runtime and resource reservation;
 - projected completion time from at least three increasing natural contexts;
@@ -517,7 +517,7 @@ RTL bring-up proceeds through:
 7. two-node remote-DMA and collective slice with link stalls/faults;
 8. 32-node DeepSeek route/reduce/barrier slice;
 9. on-device vocabulary argmax, token append, and EOS;
-10. one complete short generation transaction;
+10. one complete short generation run;
 11. multi-session backpressure, fail-stop error, reset, and packet replay; and
 12. representative layer/program cycle correlation.
 

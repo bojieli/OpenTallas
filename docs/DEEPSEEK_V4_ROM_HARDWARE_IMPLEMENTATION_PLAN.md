@@ -61,8 +61,8 @@ The unified repository retains:
 - a complete 77,116-assignment MP=4 canonical application and independent replay;
 - a source-mapped graph with 2,136 nodes and 46 operator kinds;
 - qualified target-precision reference owners for all 46 kinds;
-- explicit phase, predicate, guarded-output, tensor-role, and mutable-state
-  contracts;
+- explicit phase, predicate, guarded-output, tensor-role, and legacy
+  mutable-buffer contracts;
 - qualified BF16, FP8 E4M3FN, FP4/MXFP4 E2M1, E8M0, conversion, reduction,
   routing, sparse-attention, compressor, mHC, KV, vocabulary, and selection
   semantics; and
@@ -80,12 +80,12 @@ Current executable slices include combinations of:
 - selected and complete-output Query-A FP8 projection;
 - HC_PRE to Query-A;
 - grouped output;
-- a controlled compressor/state harness;
+- a controlled legacy compressor-buffer harness;
 - LM-head selected-row evidence;
 - a five-step Markov microprogram; and
 - operator-local schedule and service paths.
 
-These slices are valuable numerical, artifact, state, and failure oracles.
+These slices are valuable numerical, artifact, buffer, and failure oracles.
 
 ### 2.3 Open system boundary
 
@@ -190,7 +190,7 @@ still:
 Neither management firmware nor Python may compute an omitted operator, route,
 logit, or token.
 
-Global control uses one deployment/session/transaction namespace. Reticle-local
+Global control uses one deployment/session/execution-ID namespace. Reticle-local
 sequencers may issue admitted subprograms, but no firmware or host loop may
 sequence model layers, experts, or collectives across the wafer.
 
@@ -218,7 +218,7 @@ static, but selection cannot be compile-time constant.
 The design must:
 
 - validate expert count, range, duplicates, and ordering;
-- broadcast or distribute route records with transaction identity;
+- broadcast or distribute route records with execution-step identity;
 - enable only selected expert ROM regions;
 - apply routed weights/scales exactly once;
 - gather/reduce results in the frozen order;
@@ -451,7 +451,7 @@ The returned sequence includes EOS. No post-EOS request executes.
 
 Before 200K, execute increasing natural contexts and publish:
 
-- functional and cycle transactions per host second;
+- functional and cycle model steps per host second;
 - time by tensor, vector, attention, route, buffer access, and selection class;
 - host RAM, accelerator-memory image, temporary disk, and trace growth;
 - actual sparse/routed work distributions;
@@ -493,7 +493,7 @@ RTL integration proceeds vertically:
 4. MXFP4/E8M0 routed tensor slice with runtime expert IDs;
 5. vector/RMSNorm/conversion and ordered reduction;
 6. sparse-index/attention and HBM buffers;
-7. compressor and mHC representative transactions;
+7. compressor and mHC representative steps;
 8. target vocabulary gather/argmax/token/EOS;
 9. one complete checkpoint-derived transformer block;
 10. reticle-local and cross-reticle generated schedules with backpressure;
@@ -520,7 +520,7 @@ Before the mandatory context:
   EOS;
 - retain every token ID and decoded fragment;
 - verify tokenizer legality and no post-EOS execution;
-- compare logits, routes, sparse indices, states, and tokens at frozen
+- compare logits, routes, sparse indices, live buffers, and tokens at frozen
   boundaries; and
 - run a simple pinned agentic/tool context through causal environment turns.
 

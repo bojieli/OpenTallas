@@ -143,7 +143,7 @@ paths named by the comparison contract.
 Let:
 
 - `S` be prompt tokens, exactly 200,000 for the governed workload;
-- `D` be post-prefill one-token decode transactions;
+- `D` be post-prefill one-token decode steps;
 - `L = 43` be routed layers;
 - `M = 3` be routed contractions per layer: gate, up, and down;
 - `P = L * M = 129` be routed operator issues per non-empty block or chunk;
@@ -165,7 +165,7 @@ I_hbm(S, D) = P * (B_hbm(S) + D)
 I_rom(S, D) = P * (B_rom(S) + D)
 ```
 
-Every non-LINK/non-STATE compute instruction is invoked on every HBM node, so
+Every non-LINK compute instruction is invoked on every HBM node, so
 the routed node-handler counts are
 
 ```text
@@ -183,7 +183,7 @@ RoutedLaunches(S, D) = P * R * (S + D)
 It is independent of physical ownership because exactly one HBM node contracts
 each selected row.
 
-The generation driver counts the token selected by the prefill transaction as
+The generation driver counts the token selected by the prefill step as
 the first generated token. The governed no-EOS 256-output campaign therefore
 has `D = 255`, not 256. `D = 256` is retained below only as a separately labelled
 conservative stress envelope for capacity/performance planning.
@@ -226,8 +226,8 @@ realistic saturation bound rather than an impossible corner.
 |---|---:|---:|---:|---:|---:|
 | HBM prefill | 391 | 50,439 | 1,614,048 | 302,634–12,912,384 | 154,800,000 |
 | ROM prefill | 2 | 258 | 258 | 1,548–66,048 | 154,800,000 |
-| HBM, each post-prefill decode transaction | 1 | 129 | 4,128 | exactly 774 | 774 |
-| ROM, each post-prefill decode transaction | 1 | 129 | 129 | exactly 774 | 774 |
+| HBM, each post-prefill decode step | 1 | 129 | 4,128 | exactly 774 | 774 |
+| ROM, each post-prefill decode step | 1 | 129 | 129 | exactly 774 | 774 |
 | HBM, governed no-EOS 256-output campaign (`D = 255`) | 646 iterations | 83,334 | 2,666,688 | 500,004–13,109,754 | 154,997,370 |
 | ROM, governed no-EOS 256-output campaign (`D = 255`) | 257 iterations | 33,153 | 33,153 | 198,918–263,418 | 154,997,370 |
 | HBM, conservative prefill + 256-post-prefill-decode stress envelope | 647 iterations | 83,463 | 2,670,816 | 500,778–13,110,528 | 154,998,144 |
@@ -235,7 +235,7 @@ realistic saturation bound rather than an impossible corner.
 
 In the campaign and stress-envelope rows, “iterations” is only a compact count
 of one prefill's block/chunk iterations plus the stated one-token decode
-transactions. It does not mean the prefill is submitted 391 or two times.
+steps. It does not mean the prefill is submitted 391 or two times.
 
 ## 5. Bottleneck and hazards
 
@@ -351,7 +351,7 @@ the exact ROM and HBM program, descriptor, deployment, capability, cost, and A28
 source-map digests in the comparison contract.
 
 **Boundary.** The external comparator supplies expected tokens only. It supplies
-no activation, route, weight, state, or timing value to simulator execution.
+no activation, route, weight, live-buffer, or timing value to simulator execution.
 
 **Exit.** The contract is non-pending and the oracle contains the complete
 EOS-or-256 sequence for the exact workload digest.
@@ -417,7 +417,7 @@ backend implementation identity and device
 ```
 
 Both weight and scale objects must be verified immutable. Mutable activation and
-state objects are never cacheable. Object ID alone is never sufficient.
+other live-buffer objects are never cacheable. Object ID alone is never sufficient.
 
 **Lifetime and ownership.** One thread-safe manager belongs to one activated
 `Device` or explicit deployment epoch and covers all node resolvers. It is
@@ -441,7 +441,7 @@ Cache statistics are separate host-performance observations.
 failure evicts or bypasses and invokes the existing uncached path; it never
 creates or suppresses an architectural trap. A failed or poisoned
 materialization is never inserted. Cache eviction changes no architectural
-state.
+result or live-buffer content.
 
 **Affected paths.** `runtime/sim/weight_cache.py`, `runtime/sim/device.py`, and
 the routed operand/materialization path in `runtime/sim/engines/tensor.py`.
@@ -545,8 +545,8 @@ path is stable and measured.
 
 **Implementation.** Run instances of one instruction on a bounded worker pool,
 then join deterministically before the next dependent instruction and always
-before LINK or STATE. Preserve lowest-node fault priority, per-node counters,
-cluster-counter reconciliation, and no-publication-on-peer-failure behavior.
+before LINK. Preserve lowest-node fault priority, per-node counters,
+cluster-counter reconciliation, and fail-stop behavior.
 
 The retained NumPy/OpenBLAS identity uses eight threads. Thirty-two simultaneous
 workers would request 256 BLAS threads, change scheduling/RSS, and may change
@@ -555,7 +555,7 @@ library version, and device are therefore one qualified identity. A different
 thread configuration needs new association evidence.
 
 **Affected paths.** `Device._issue_nodes`, backend thread/identity capture,
-transaction fault staging, node counter aggregation, and LINK barrier tests.
+step fault handling, node counter aggregation, and LINK barrier tests.
 
 **Exit.** Bounded concurrency is bit-identical and deterministically fault
 equivalent to sequential node issue, respects the memory ceiling, and produces
@@ -568,29 +568,28 @@ same admitted chip. It is neither 32 independent model requests nor one shared
 memory machine.
 
 1. Every chip executes the same program and numeric implementation against its
-   own node-private activation and state arenas.
+   own node-private activation and live-buffer arenas.
 2. The 256-expert bank is split into exactly eight consecutive experts per
    node. Global expert `e` is owned by node `floor(e / 8)`.
-3. A node cannot read another node's activation or state implicitly. LINK is the
-   only cross-node data path.
+3. A node cannot read another node's activation or live buffers implicitly.
+   LINK is the only cross-node data path.
 4. A non-owning routed node contributes exact positive zero until the declared
    route-class-3 expert all-reduce.
 5. A28 `node_segments` binds a distinct authenticated local object image to each
    consecutive node ID. There is no fallback to node zero or to a shared source.
    “Identical chip” does not mean identical weight bytes.
-6. Compute instructions issue per node. LINK and STATE issue once for the
-   logical cluster; state bytes are still moved and counted per node where the
-   ABI requires it.
+6. Compute instructions issue per node. LINK instructions issue once for the
+   logical cluster and explicitly move bytes between node-private memories.
 7. Cluster counters equal the sum of node engine work plus cluster-only
-   LINK/STATE/control work. Dividing a cluster total by 32 is not a substitute
+   LINK/control work. Dividing a cluster total by 32 is not a substitute
    for the recorded node counters.
 8. The 37 communication descriptors remain four expert scatters, seven
    sparse-KV all-gathers, 21 activation all-gathers, four expert all-reduces,
-   and one coordinated-commit barrier. Producer pack, endpoint, route,
+   and one final synchronization barrier. Producer pack, endpoint, route,
    receive/unpack, consumer wait, ordering, integrity, and counters remain
    connected.
-9. All nodes must agree on selected token and EOS reason before the transaction
-   becomes visible.
+9. All nodes must agree on selected token and EOS reason before the terminal
+   token-step fence completes.
 10. Any concurrency or superblock implementation retains exact participant
     sets and instruction-level collective barriers.
 
@@ -611,7 +610,7 @@ Every work package carries these invariants:
 - destination untouched on operator failure;
 - architectural reads, multiplications, additions, conversions, saturations,
   output elements, and routed-launch counters unchanged by host cache reuse;
-- ABI 3.0 mutable-state addresses, completed-group boundaries, token-step
+- ABI 3.0 live-buffer addresses, completed-group boundaries, token-step
   fences, cursor, and tail behavior;
 - exact HBM 391-block/320-token tail and ROM two-chunk/68,928-token tail;
 - complete LINK order and participant scope; and
@@ -632,7 +631,7 @@ architectural destination or live-buffer update.
 | Surface | Required cases | Acceptance oracle |
 |---|---|---|
 | Routed operator | Random rows, `topk`, expert counts, duplicates, skew, all-expert occupancy, routing weights | Cache/bucket off versus on: bit-identical output, counters, traps, and destinations |
-| Exceptional inputs | IDs below zero and at/above 256, reserved encodings, NaNs, poisoned scales, late poison, overflow | Same trap class and first-fault PC; output and committed state untouched |
+| Exceptional inputs | IDs below zero and at/above 256, reserved encodings, NaNs, poisoned scales, late poison, overflow | Same trap class and first-fault PC; no success/token publication; the failed run's buffers are discarded |
 | HBM ownership | 32 nodes; IDs 0, 7, 8, 255; routes spanning owners; deliberately distinct node weights | Exactly one owner contracts each selected row; remote contribution is positive zero until LINK |
 | A28 source safety | Missing, swapped, duplicated, and changed node maps/content roots | Admission fails or cache keys remain distinct; no cross-node alias/fallback |
 | HBM tails | 511, 512, 513 and governed final block of 320 | Exact loop count, view extent, tail mask, route rows, counters, and no phantom row |
