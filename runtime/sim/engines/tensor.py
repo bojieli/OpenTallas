@@ -67,6 +67,7 @@ raise :class:`EngineError` rather than producing a substituted value.
 from __future__ import annotations
 
 import contextlib
+import time
 from typing import Iterator, Sequence
 
 import numpy as np
@@ -75,12 +76,13 @@ from runtime.abi3.constants import (
     NO_ID,
     DType,
     Major,
+    Permission,
     ReductionOrder,
     RoundingMode,
     Tensor,
     TrapClass,
 )
-from runtime.abi3.descriptors import Descriptor, Symbol
+from runtime.abi3.descriptors import Descriptor, ExtendedDescriptorType, Symbol
 from runtime.sim.backend import (
     CONTRACT_BLOCKED,
     CONTRACT_SEQUENTIAL,
@@ -97,6 +99,7 @@ from runtime.sim.formats import (
     widen,
 )
 from runtime.sim.memory import ResolvedView
+from runtime.sim.weight_cache import backend_identity_digest
 from runtime.tensor_accelerator.bf16 import dense_bf16_linear_bf16
 
 #: Storage-class to counter name for reads this engine performs itself.
@@ -111,6 +114,11 @@ _READ_COUNTER = {
 #: Bounded work tile, matching the frozen dense BF16 kernel.
 _ROW_TILE = 8
 _COL_TILE = 64
+
+# Changing widening, E8M0 application, or output contiguity changes the cached
+# value even when every ABI descriptor stays the same.  Bind that implementation
+# boundary explicitly rather than trusting an object ID to mean decoded bytes.
+_DECODED_WEIGHT_MATERIALIZER = "abi3_widen_e8m0_fp32_v1"
 
 
 # ---------------------------------------------------------------------------
@@ -405,6 +413,123 @@ def _operand(
     return scaled.reshape(values.shape), int(values.size)
 
 
+def _decoded_weight_source_bytes(view: ResolvedView) -> int:
+    """Architectural bytes consumed to materialise one complete weight view."""
+
+    source = _element_bytes(view, view.element_count)
+    if view.scale_object_id == NO_ID:
+        return source
+    block = int(view.scale_block_elements)
+    row_block = max(int(view.scale_block_rows), 1)
+    if block <= 0 or not view.dims:
+        return source
+    width = int(view.dims[-1])
+    leading = 1
+    for extent in view.dims[:-1]:
+        leading *= int(extent)
+    # One E8M0 byte per declared two-dimensional scale tile.
+    return source + (leading // row_block) * (width // block)
+
+
+def _scale_range(view: ResolvedView) -> tuple[int, int]:
+    """First E8M0 byte and byte count read for one complete weight view."""
+
+    if view.scale_object_id == NO_ID:
+        return 0, 0
+    block = int(view.scale_block_elements)
+    row_block = max(int(view.scale_block_rows), 1)
+    width = int(view.dims[-1])
+    row_origin, column_origin = divmod(int(view.element_offset), width)
+    per_row = width // block
+    leading = 1
+    for extent in view.dims[:-1]:
+        leading *= int(extent)
+    return (
+        (row_origin // row_block) * per_row + column_origin // block,
+        (leading // row_block) * per_row,
+    )
+
+
+def _cached_scale_accounting(ctx: EngineContext, view: ResolvedView) -> int:
+    """Charge immutable scale reads/work that a cache hit still performs."""
+
+    if view.scale_object_id == NO_ID:
+        return 0
+    _offset, count = _scale_range(view)
+    obj = ctx.memory[view.scale_object_id]
+    ctx.counters.add(_READ_COUNTER[obj.storage_class.name], count)
+    return int(view.element_count)
+
+
+def _immutable_content_identity(
+    ctx: EngineContext, object_id: int
+) -> str | None:
+    """Authenticated object identity, or ``None`` when caching is forbidden."""
+
+    obj = ctx.memory[object_id]
+    if obj.writable or not (int(obj.permissions) & int(Permission.IMMUTABLE)):
+        return None
+    descriptor = ctx.table.get(object_id, ExtendedDescriptorType.MEMORY_OBJECT)
+    recorded = descriptor.payload["content_digest"]
+    if not isinstance(recorded, bytes) or len(recorded) != 32 or not any(recorded):
+        return None
+    deployment = getattr(ctx.device, "deployment", None)
+    source = None if deployment is None else deployment.objects.get(object_id)
+    if source is None:
+        return None
+    try:
+        expected = source.authenticated_content_digest()
+    except Exception:
+        return None
+    if expected != recorded:
+        return None
+    return recorded.hex()
+
+
+def _decoded_weight_cache_key(
+    ctx: EngineContext,
+    view: ResolvedView,
+    *,
+    contract: str,
+    backend_identity: dict[str, object],
+) -> tuple[object, ...] | None:
+    """Complete immutable identity for one decoded routed weight slice."""
+
+    weight_identity = _immutable_content_identity(ctx, view.object_id)
+    if weight_identity is None:
+        return None
+    scale_identity = ""
+    if view.scale_object_id != NO_ID:
+        found = _immutable_content_identity(ctx, view.scale_object_id)
+        if found is None:
+            return None
+        scale_identity = found
+    deployment = ctx.device.deployment
+    node_id = int(ctx.symbols.get(int(Symbol.NODE_ID), 0))
+    backend_key = backend_identity_digest(backend_identity)
+    scale_offset, scale_bytes = _scale_range(view)
+    return (
+        deployment.deployment_digest.hex(),
+        int(deployment.generation),
+        node_id,
+        int(view.object_id),
+        weight_identity,
+        int(view.element_offset),
+        tuple(int(value) for value in view.dims),
+        tuple(int(value) for value in view.strides),
+        int(view.dtype),
+        int(view.scale_object_id),
+        scale_identity,
+        scale_offset,
+        scale_bytes,
+        int(view.scale_block_elements),
+        int(view.scale_block_rows),
+        _DECODED_WEIGHT_MATERIALIZER,
+        str(contract),
+        backend_key,
+    )
+
+
 # ---------------------------------------------------------------------------
 # Contraction
 # ---------------------------------------------------------------------------
@@ -446,6 +571,8 @@ def _contract(
     *,
     contract: str,
     activation_rows: Sequence[int] | None = None,
+    observation_scope: str | None = None,
+    cache_scope: tuple[object, ...] | None = None,
 ) -> tuple[np.ndarray, int, int]:
     """Execute one contraction under the named numeric contract.
 
@@ -461,6 +588,7 @@ def _contract(
     """
     backend = get_backend()
     if _uses_bf16_kernel(activation_view, weight_view, output_dtype):
+        contraction_started = time.perf_counter_ns()
         if contract == CONTRACT_SEQUENTIAL:
             with _numeric_guard(CONTRACT_SEQUENTIAL):
                 result = dense_bf16_linear_bf16(
@@ -469,6 +597,18 @@ def _contract(
                     input_tile_rows=_ROW_TILE,
                     output_tile_rows=_COL_TILE,
                 )
+            if observation_scope == "routed":
+                ctx.observe_host_duration(
+                    "routed_contraction",
+                    time.perf_counter_ns() - contraction_started,
+                )
+                ctx.observe_host_total("routed_semantic_segments")
+                ctx.observe_host_total("routed_physical_backend_calls")
+                ctx.observe_host_total("routed_selected_rows", len(activations))
+                ctx.observe_host_total(
+                    "routed_weight_source_bytes",
+                    _decoded_weight_source_bytes(weight_view),
+                )
             return result.values, result.output_saturated_element_count, 0
         # Blocked: widen, contract and round on the backend's own device, so
         # the only host traffic is the BF16 codes in and the BF16 codes out.
@@ -476,9 +616,27 @@ def _contract(
             left = backend.widen_bf16(activations)
             right = backend.widen_bf16(weights)
             accumulator = backend.matmul_binary32(left, right, contract=contract)
+            ctx.observe_blocked_association(
+                contract=contract,
+                activation_shape=tuple(int(value) for value in left.shape),
+                weight_shape=tuple(int(value) for value in right.shape),
+                output_shape=tuple(int(value) for value in accumulator.shape),
+            )
             narrowed = backend.narrow_rne(accumulator)
             codes = np.ascontiguousarray(
                 backend.fetch(narrowed.codes), dtype=np.uint16
+            )
+        if observation_scope == "routed":
+            ctx.observe_host_duration(
+                "routed_contraction",
+                time.perf_counter_ns() - contraction_started,
+            )
+            ctx.observe_host_total("routed_semantic_segments")
+            ctx.observe_host_total("routed_physical_backend_calls")
+            ctx.observe_host_total("routed_selected_rows", len(codes))
+            ctx.observe_host_total(
+                "routed_weight_source_bytes",
+                _decoded_weight_source_bytes(weight_view),
             )
         return codes, narrowed.saturations, 0
     left_values, left_scale = _operand(
@@ -488,9 +646,76 @@ def _contract(
         "activation",
         rows=activation_rows,
     )
-    right_values, right_scale = _operand(
-        ctx, weight_view, _host(backend, weights), "weight"
-    )
+    right_values: np.ndarray | None = None
+    right_scale = 0
+    cache = getattr(ctx.device, "decoded_weight_cache", None)
+    cache_key: tuple[object, ...] | None = None
+    cache_admissible = False
+    cache_admission_epoch = 0
+    backend_identity: dict[str, object] | None = None
+    if cache_scope is not None and cache is not None:
+        # Caching is a host implementation detail.  Failure to identify or
+        # operate it must leave the architectural uncached path unchanged.
+        try:
+            backend_identity = backend.implementation_identity()
+            cache_key = _decoded_weight_cache_key(
+                ctx,
+                weight_view,
+                contract=contract,
+                backend_identity=backend_identity,
+            )
+            if cache_key is None:
+                cache.bypass(
+                    scope=cache_scope, backend_identity=backend_identity
+                )
+            else:
+                node_id = int(ctx.symbols.get(int(Symbol.NODE_ID), 0))
+                probe = cache.probe(
+                    scope=cache_scope,
+                    key=cache_key,
+                    node_id=node_id,
+                    backend_identity=backend_identity,
+                )
+                right_values = probe.value
+                cache_admissible = probe.admissible
+                cache_admission_epoch = probe.admission_epoch
+                if right_values is not None:
+                    right_scale = _cached_scale_accounting(ctx, weight_view)
+        except Exception:
+            # Do not turn an optional cache bookkeeping defect into an ABI
+            # trap.  The normal decoder below retains every numeric check.
+            right_values = None
+            cache_key = None
+            cache_admissible = False
+    if right_values is None:
+        materialization_started = time.perf_counter_ns()
+        right_values, right_scale = _operand(
+            ctx, weight_view, _host(backend, weights), "weight"
+        )
+        if observation_scope == "routed":
+            ctx.observe_host_total("decoded_weight_materializations")
+            source_bytes = _decoded_weight_source_bytes(weight_view)
+            ctx.observe_host_total("decoded_weight_source_bytes", source_bytes)
+            ctx.observe_host_total(
+                "decoded_weight_result_bytes", int(right_values.nbytes)
+            )
+            ctx.observe_host_duration(
+                "decoded_weight_materialization",
+                time.perf_counter_ns() - materialization_started,
+            )
+        if cache_admissible and cache_key is not None:
+            try:
+                node_id = int(ctx.symbols.get(int(Symbol.NODE_ID), 0))
+                right_values = cache.admit(
+                    key=cache_key,
+                    node_id=node_id,
+                    value=right_values,
+                    admission_epoch=cache_admission_epoch,
+                )
+            except Exception:
+                # The already validated uncached value remains authoritative.
+                pass
+    contraction_started = time.perf_counter_ns()
     with _numeric_guard(contract):
         accumulator = backend.fetch(
             backend.matmul_binary32(
@@ -498,6 +723,23 @@ def _contract(
                 np.ascontiguousarray(right_values),
                 contract=contract,
             )
+        )
+    if contract == CONTRACT_BLOCKED:
+        ctx.observe_blocked_association(
+            contract=contract,
+            activation_shape=tuple(int(value) for value in left_values.shape),
+            weight_shape=tuple(int(value) for value in right_values.shape),
+            output_shape=tuple(int(value) for value in accumulator.shape),
+        )
+    if observation_scope == "routed":
+        ctx.observe_host_duration(
+            "routed_contraction", time.perf_counter_ns() - contraction_started
+        )
+        ctx.observe_host_total("routed_semantic_segments")
+        ctx.observe_host_total("routed_physical_backend_calls")
+        ctx.observe_host_total("routed_selected_rows", len(left_values))
+        ctx.observe_host_total(
+            "routed_weight_source_bytes", _decoded_weight_source_bytes(weight_view)
         )
     return (
         np.ascontiguousarray(accumulator, dtype=np.float32),
@@ -791,6 +1033,9 @@ def _tensor_routed_matmul(
     slots are combined in ascending slot order, so the output boundary is the
     only rounding to the output format.
     """
+    operator_started = time.perf_counter_ns()
+    ctx.observe_host_total("routed_operator_issues")
+    ctx.observe_host_total("route_organization_passes")
     profile = _profile(ctx, operator)
     activation_view = ctx.input_view(operator, 0)
     weight_view = ctx.input_view(operator, 1)
@@ -873,20 +1118,37 @@ def _tensor_routed_matmul(
 
     activations = ctx.read(activation_view)
     slices: dict[int, tuple[ResolvedView, np.ndarray]] = {}
+    cache_scope = (
+        int(operator.descriptor_id),
+        int(weight_view.descriptor_id),
+        int(weight_view.object_id),
+        int(weight_view.element_offset),
+    )
 
     accumulator = np.zeros((rows, cols), dtype=np.float32)
     scale_multiplications = 0
     launches = 0
     for slot in range(topk):
         partial = np.zeros((rows, cols), dtype=np.float32)
-        for global_expert in np.unique(identifiers[:, slot]):
+        route_started = time.perf_counter_ns()
+        occupied = np.unique(identifiers[:, slot])
+        ctx.observe_host_duration(
+            "route_organization", time.perf_counter_ns() - route_started
+        )
+        ctx.observe_host_total("route_unique_scans")
+        for global_expert in occupied:
             if not expert_base <= int(global_expert) < expert_base + experts:
                 # This row belongs to another node's consecutive expert shard.
                 # It remains exact positive zero here and is filled by the
                 # route-class-3 all-reduce before EXPERT_REDUCE consumes it.
                 continue
             expert = int(global_expert) - expert_base
+            route_started = time.perf_counter_ns()
             selected = np.flatnonzero(identifiers[:, slot] == global_expert)
+            ctx.observe_host_duration(
+                "route_organization", time.perf_counter_ns() - route_started
+            )
+            ctx.observe_host_total("route_row_selection_scans")
             _account_read(
                 ctx, weight_view, _element_bytes(weight_view, cols * depth)
             )
@@ -902,6 +1164,8 @@ def _tensor_routed_matmul(
                 DType.FP32,
                 contract=profile.contract,
                 activation_rows=selected,
+                observation_scope="routed",
+                cache_scope=cache_scope,
             )
             partial[selected] = values
             scale_multiplications += group_scale
@@ -929,6 +1193,9 @@ def _tensor_routed_matmul(
     ctx.counters.add("tensor.conversions", conversions)
     ctx.counters.add("tensor.saturations", saturations)
     ctx.counters.add("tensor.routed_launches", launches)
+    ctx.observe_host_duration(
+        "routed_operator", time.perf_counter_ns() - operator_started
+    )
 
 
 # ---------------------------------------------------------------------------

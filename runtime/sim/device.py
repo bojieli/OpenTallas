@@ -54,6 +54,8 @@ from runtime.abi3.verifier import require_admitted, VerificationReport
 from runtime.sim.counters import CounterSet
 from runtime.sim.engine import EngineContext, EngineError, dispatch
 from runtime.sim.memory import DeviceMemory, MemoryError_, ViewResolver
+from runtime.sim.performance import HostPerformanceObservations, sample_process
+from runtime.sim.weight_cache import DecodedWeightCache
 
 
 class DeviceTrap(Exception):
@@ -166,6 +168,9 @@ class TransactionResult:
     node_counters: tuple[dict[str, int], ...] = ()
     message: str = ""
     wall_seconds: float = 0.0
+    #: Host-only measurements for this transaction.  These are not ABI
+    #: counters and are never consumed by the simulated program.
+    host_performance: dict[str, Any] = dc_field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         """The recorded form of one transaction.
@@ -191,6 +196,7 @@ class TransactionResult:
             "produced_tokens": list(self.produced_tokens),
             "message": self.message,
             "counters": dict(sorted(self.counters.items())),
+            "host_performance": self.host_performance,
         }
 
 
@@ -249,6 +255,8 @@ class Device:
         verify: bool = True,
         trace: bool = False,
         on_issue: Any = None,
+        decoded_weight_cache_bytes: int = 0,
+        decoded_weight_cache_working_reserve_bytes: int = 64 << 20,
     ) -> None:
         self.deployment = deployment
         self.capability = capability
@@ -279,6 +287,15 @@ class Device:
         self.node_counters: tuple[CounterSet, ...] = tuple(
             CounterSet() for _ in range(self.node_count)
         )
+        # One central owner across all node memories/resolvers.  Host cache and
+        # materialization budgets must not be multiplied by a 32-node topology.
+        self.host_performance = HostPerformanceObservations()
+        self.decoded_weight_cache = DecodedWeightCache(
+            budget_bytes=decoded_weight_cache_bytes,
+            working_reserve_bytes=decoded_weight_cache_working_reserve_bytes,
+            node_count=self.node_count,
+            observations=self.host_performance,
+        )
         self.sessions: dict[int, Session] = {}
         self.trace_enabled = trace
         self.trace: list[dict[str, Any]] = []
@@ -295,6 +312,13 @@ class Device:
         self._entrypoints = self._load_entrypoints()
         self._next_session = 1
         self._device_cycle = 0
+
+    def host_performance_snapshot(self) -> dict[str, Any]:
+        """Complete host-only observations for this activated device epoch."""
+
+        snapshot = self.host_performance.snapshot()
+        snapshot["decoded_weight_cache"] = self.decoded_weight_cache.configuration()
+        return snapshot
 
     # -- setup -----------------------------------------------------------
     def _declared_node_count(self) -> int:
@@ -490,18 +514,28 @@ class Device:
         fault can never expose a partially advanced token position.
         """
         started = time.perf_counter()
+        performance_before = self.host_performance.checkpoint()
+        process_before = sample_process()
+
+        def host_performance_delta() -> dict[str, Any]:
+            return self.host_performance.transaction_delta(
+                performance_before, process_before, sample_process()
+            )
+
         entry = self._entrypoints.get(entrypoint_id)
         if entry is None:
             return TransactionResult(
                 status=CompletionStatus.FAILED,
                 trap_class=TrapClass.ADMISSION_OR_VERSION,
                 message=f"unknown entrypoint {entrypoint_id}",
+                host_performance=host_performance_delta(),
             )
         if session.finished:
             return TransactionResult(
                 status=CompletionStatus.FAILED,
                 trap_class=TrapClass.STATE_TRANSACTION,
                 message="session already returned EOS; no post-EOS transaction",
+                host_performance=host_performance_delta(),
             )
         symbols = dict(symbols)
         symbols.setdefault(int(Symbol.PHASE), entry["phase"])
@@ -718,6 +752,7 @@ class Device:
                 node_counters=shares,
                 message=str(fault),
                 wall_seconds=wall,
+                host_performance=host_performance_delta(),
             )
 
         # -- every node must have selected the same token
@@ -741,6 +776,7 @@ class Device:
                     node_counters=shares,
                     message=fault,
                     wall_seconds=wall,
+                    host_performance=host_performance_delta(),
                 )
 
         # -- atomic commit of the whole declared state set
@@ -770,6 +806,7 @@ class Device:
             counters=counters.snapshot(),
             node_counters=shares,
             wall_seconds=wall,
+            host_performance=host_performance_delta(),
         )
 
     # -- control ----------------------------------------------------------

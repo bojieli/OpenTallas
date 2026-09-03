@@ -26,11 +26,8 @@ from typing import Any, Callable, Mapping, Protocol
 import numpy as np
 
 from runtime.abi3.constants import (
-    DType,
     Major,
     NO_ID,
-    ReductionOrder,
-    RoundingMode,
 )
 from runtime.abi3.deployment import DescriptorTable
 from runtime.abi3.descriptors import Descriptor, ExtendedDescriptorType
@@ -203,6 +200,40 @@ class EngineContext:
             "STATE": "state.bytes_written",
         }[obj.storage_class.name]
         self.counters.add(key, nbytes)
+
+    # -- non-architectural host observations ----------------------------
+    def observe_host_total(self, name: str, amount: int = 1) -> None:
+        """Record simulator work without touching the ABI counter registry."""
+
+        recorder = getattr(self.device, "host_performance", None)
+        if recorder is not None:
+            recorder.add(name, amount)
+
+    def observe_host_duration(self, name: str, duration_ns: int) -> None:
+        """Record host time separately from modeled/architectural latency."""
+
+        recorder = getattr(self.device, "host_performance", None)
+        if recorder is not None:
+            recorder.add_duration_ns(name, duration_ns)
+
+    def observe_blocked_association(
+        self,
+        *,
+        contract: str,
+        activation_shape: tuple[int, ...],
+        weight_shape: tuple[int, ...],
+        output_shape: tuple[int, ...],
+    ) -> None:
+        """Append one actually executed blocked contraction in program order."""
+
+        recorder = getattr(self.device, "host_performance", None)
+        if recorder is not None:
+            recorder.record_association(
+                contract=contract,
+                activation_shape=activation_shape,
+                weight_shape=weight_shape,
+                output_shape=output_shape,
+            )
 
     # -- symbols ----------------------------------------------------------
     def symbol(self, symbol_id: int) -> int:

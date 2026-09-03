@@ -10,8 +10,10 @@ the engines are allowed to use.
 
 from __future__ import annotations
 
+import hashlib
 from dataclasses import dataclass, field
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any, Sequence
 
 import numpy as np
@@ -55,10 +57,13 @@ from runtime.reference.tensor_accelerator_elementwise import (
     qwen3_silu_mul_bf16 as exact_silu_mul,
 )
 from runtime.sim.counters import CounterSet
+from runtime.sim.backend import CONTRACT_BLOCKED, get_backend
 from runtime.sim.device import Device
 from runtime.sim.engine import EngineContext, EngineError, dispatch
 from runtime.sim.formats import narrow_bf16_rne, widen_bf16
 from runtime.sim.memory import DeviceMemory, ViewResolver
+from runtime.sim.performance import HostPerformanceObservations
+from runtime.sim.weight_cache import DecodedWeightCache
 
 READ = int(Permission.READ)
 IMMUTABLE = int(Permission.READ | Permission.IMMUTABLE)
@@ -97,18 +102,32 @@ class Harness:
 
     # -- objects ---------------------------------------------------------
     def constant(
-        self, payload: bytes, storage_class: StorageClass = StorageClass.HBM
+        self,
+        payload: bytes,
+        storage_class: StorageClass = StorageClass.HBM,
+        *,
+        authenticated: bool = False,
     ) -> int:
         self.files += 1
         name = f"object{self.files}.bin"
         (self.root / name).write_bytes(payload)
+        segment = Segment(
+            name,
+            0,
+            len(payload),
+            hashlib.sha256(payload).hexdigest() if authenticated else None,
+        )
+        source = ObjectSource("segments", len(payload), (segment,))
         return self.builder.memory_object(
             storage_class=storage_class,
             size_bytes=len(payload),
-            source=ObjectSource(
-                "segments", len(payload), (Segment(name, 0, len(payload)),)
-            ),
+            source=source,
             permissions=IMMUTABLE,
+            content_digest=(
+                source.authenticated_content_digest()
+                if authenticated
+                else bytes(32)
+            ),
         )
 
     def scratch(
@@ -132,9 +151,12 @@ class Harness:
         scale_object_id: int = NO_ID,
         scale_block_elements: int = 0,
         scale_block_rows: int = 0,
+        authenticated: bool = False,
     ) -> int:
         payload = np.ascontiguousarray(array).tobytes()
-        object_id = self.constant(payload, storage_class)
+        object_id = self.constant(
+            payload, storage_class, authenticated=authenticated
+        )
         return self.builder.tensor_view(
             object_id=object_id,
             dtype=dtype,
@@ -776,6 +798,10 @@ def test_routed_matmul_combines_slots_in_ascending_order(harness: Harness) -> No
         outputs=[output],
         numeric_profile_id=matmul_numeric(harness),
     )
+    harness.bind()
+    harness.ctx.device = type(
+        "ObservedDevice", (), {"host_performance": HostPerformanceObservations()}
+    )()
     harness.run(Major.TENSOR, Tensor.ROUTED_MATMUL, operator)
 
     expected = np.empty((rows, cols), dtype=np.uint16)
@@ -794,6 +820,21 @@ def test_routed_matmul_combines_slots_in_ascending_order(harness: Harness) -> No
             expected[row, col] = exact.binary32_bits_to_bf16_rne(accumulator).code
     np.testing.assert_array_equal(harness.result(output), expected)
     assert harness.counters["tensor.routed_launches"] == rows * topk
+    observed = harness.ctx.device.host_performance.snapshot()
+    totals = observed["totals"]
+    assert totals["routed_operator_issues"] == 1
+    assert totals["route_organization_passes"] == 1
+    assert totals["route_unique_scans"] == topk
+    assert totals["route_row_selection_scans"] == 6
+    assert totals["routed_semantic_segments"] == 6
+    assert totals["routed_physical_backend_calls"] == 6
+    assert totals["routed_selected_rows"] == rows * topk
+    assert totals["decoded_weight_materializations"] == 6
+    assert totals["decoded_weight_source_bytes"] == 6 * cols * depth * 2
+    assert totals["decoded_weight_result_bytes"] == 6 * cols * depth * 4
+    assert totals["routed_weight_source_bytes"] == 6 * cols * depth * 2
+    assert observed["durations"]["routed_operator_seconds"] > 0
+    assert observed["durations"]["decoded_weight_materialization_seconds"] > 0
 
 
 def test_routed_matmul_reads_only_the_experts_it_uses(harness: Harness) -> None:
@@ -913,6 +954,298 @@ def test_routed_matmul_computes_only_the_current_nodes_expert_shard(
     assert harness.counters["tensor.multiplications"] == 2 * 1 * 2
     # Two length-2 contractions plus the two top-k partial combinations.
     assert harness.counters["tensor.additions"] == 2 * 1 * (2 - 1) + 2 * 1 * (2 - 1)
+
+
+def _attach_weight_cache(
+    harness: Harness, budget_bytes: int
+) -> SimpleNamespace:
+    observations = HostPerformanceObservations()
+    source = harness.ctx.views.deployment
+    deployment = SimpleNamespace(
+        objects=source.objects,
+        generation=1,
+        deployment_digest=hashlib.sha256(b"engine-cache-test").digest(),
+    )
+    device = SimpleNamespace(
+        deployment=deployment,
+        host_performance=observations,
+        decoded_weight_cache=DecodedWeightCache(
+            budget_bytes=budget_bytes,
+            working_reserve_bytes=0,
+            node_count=harness.ctx.node_count,
+            observations=observations,
+        ),
+    )
+    harness.ctx.device = device
+    return device
+
+
+def _cached_routed_fixture(harness: Harness) -> tuple[int, int, int]:
+    rng = np.random.default_rng(0xCA5E)
+    rows, experts, cols, depth, block = 3, 4, 2, 8, 4
+    activations = random_bf16(rng, (rows, depth), scale=0.25)
+    weights = rng.integers(
+        0, 0x7E, size=(experts, cols, depth), dtype=np.uint8
+    )
+    scales = rng.integers(
+        120,
+        130,
+        size=(experts * cols, depth // block),
+        dtype=np.uint8,
+    )
+    scale_object = harness.constant(scales.tobytes(), authenticated=True)
+    weight_view = harness.const_view(
+        weights,
+        DType.FP8_E4M3FN,
+        scale_object_id=scale_object,
+        scale_block_elements=block,
+        authenticated=True,
+    )
+    identifiers = np.array([[0, 3], [1, 1], [2, 0]], dtype=np.uint32)
+    output = harness.output_view((rows, cols), DType.BF16)
+    operator = harness.operator(
+        engine_family=Major.TENSOR,
+        engine_sub=Tensor.ROUTED_MATMUL,
+        inputs=[
+            harness.const_view(activations, DType.BF16),
+            weight_view,
+            harness.const_view(identifiers, DType.U32),
+        ],
+        outputs=[output],
+        numeric_profile_id=matmul_numeric(
+            harness,
+            contract=CONTRACT_BLOCKED,
+            second_input_dtype=DType.FP8_E4M3FN,
+        ),
+    )
+    return operator, output, weight_view
+
+
+def test_routed_decoded_weight_cache_is_architecturally_transparent(
+    harness: Harness,
+) -> None:
+    operator, output, _weight_view = _cached_routed_fixture(harness)
+    backend = get_backend()
+
+    harness.bind()
+    cache_off = _attach_weight_cache(harness, 0)
+    backend.reset_executed_associations()
+    for _ in range(2):
+        harness.run(Major.TENSOR, Tensor.ROUTED_MATMUL, operator)
+    output_off = np.array(harness.result(output), copy=True)
+    counters_off = harness.counters.snapshot()
+    aggregate_off = backend.executed_association_manifest()
+    observed_off = cache_off.host_performance.snapshot()
+
+    harness.bind()
+    decoded_working_set = 4 * 2 * 8 * np.dtype(np.float32).itemsize
+    cache_on = _attach_weight_cache(harness, decoded_working_set)
+    backend.reset_executed_associations()
+    for _ in range(2):
+        harness.run(Major.TENSOR, Tensor.ROUTED_MATMUL, operator)
+    output_on = np.array(harness.result(output), copy=True)
+    counters_on = harness.counters.snapshot()
+    aggregate_on = backend.executed_association_manifest()
+    observed_on = cache_on.host_performance.snapshot()
+
+    np.testing.assert_array_equal(output_on, output_off)
+    assert counters_on == counters_off
+    assert aggregate_on == aggregate_off
+    assert (
+        observed_on["ordered_executed_associations"]
+        == observed_off["ordered_executed_associations"]
+    )
+
+    off = observed_off["totals"]
+    on = observed_on["totals"]
+    assert off["decoded_weight_materializations"] == 12
+    assert off["decoded_weight_cache_bypasses"] == 12
+    assert on["decoded_weight_materializations"] == 4
+    assert on["decoded_weight_cache_misses"] == 4
+    assert on["decoded_weight_cache_admissions"] == 4
+    assert on["decoded_weight_cache_hits"] == 8
+    assert on["routed_physical_backend_calls"] == 12
+    assert on["routed_physical_backend_calls"] == off["routed_physical_backend_calls"]
+    assert on["routed_weight_source_bytes"] == off["routed_weight_source_bytes"]
+    assert on["decoded_weight_cache_live_bytes"] == decoded_working_set
+    assert on["decoded_weight_cache_high_water_bytes"] == decoded_working_set
+
+
+def test_routed_cache_key_refuses_mutable_or_unauthenticated_content(
+    harness: Harness,
+) -> None:
+    _operator, _output, authenticated_view = _cached_routed_fixture(harness)
+    unauthenticated_view = harness.const_view(
+        np.ones((1, 2, 8), dtype=np.uint8), DType.FP8_E4M3FN
+    )
+    unauthenticated_scale = harness.constant(bytes([127, 127]))
+    untrusted_scale_view = harness.const_view(
+        np.ones((1, 2, 8), dtype=np.uint8),
+        DType.FP8_E4M3FN,
+        scale_object_id=unauthenticated_scale,
+        scale_block_elements=8,
+        authenticated=True,
+    )
+    mutable_object = harness.scratch(16, StorageClass.HBM)
+    mutable_view = harness.builder.tensor_view(
+        object_id=mutable_object,
+        dtype=DType.FP8_E4M3FN,
+        dims=[1, 2, 8],
+        permissions=READ_WRITE,
+    )
+
+    harness.bind()
+    device = _attach_weight_cache(harness, 1024)
+    identity = get_backend().implementation_identity()
+
+    authenticated = tensor_engine._slice_view(
+        harness.ctx.view(authenticated_view), (2, 8), 0
+    )
+    key = tensor_engine._decoded_weight_cache_key(
+        harness.ctx,
+        authenticated,
+        contract=CONTRACT_BLOCKED,
+        backend_identity=identity,
+    )
+    assert key is not None
+
+    second_slice = tensor_engine._slice_view(
+        harness.ctx.view(authenticated_view), (2, 8), 1
+    )
+    offset_key = tensor_engine._decoded_weight_cache_key(
+        harness.ctx,
+        second_slice,
+        contract=CONTRACT_BLOCKED,
+        backend_identity=identity,
+    )
+    assert offset_key is not None and offset_key != key
+
+    harness.ctx.symbols[int(Symbol.NODE_ID)] = 1
+    node_key = tensor_engine._decoded_weight_cache_key(
+        harness.ctx,
+        authenticated,
+        contract=CONTRACT_BLOCKED,
+        backend_identity=identity,
+    )
+    assert node_key is not None and node_key != key
+    harness.ctx.symbols[int(Symbol.NODE_ID)] = 0
+
+    device.deployment.generation = 2
+    generation_key = tensor_engine._decoded_weight_cache_key(
+        harness.ctx,
+        authenticated,
+        contract=CONTRACT_BLOCKED,
+        backend_identity=identity,
+    )
+    assert generation_key is not None and generation_key != key
+    device.deployment.generation = 1
+
+    contract_key = tensor_engine._decoded_weight_cache_key(
+        harness.ctx,
+        authenticated,
+        contract="different-contract",
+        backend_identity=identity,
+    )
+    assert contract_key is not None and contract_key != key
+    backend_key = tensor_engine._decoded_weight_cache_key(
+        harness.ctx,
+        authenticated,
+        contract=CONTRACT_BLOCKED,
+        backend_identity={**identity, "test_identity_field": True},
+    )
+    assert backend_key is not None and backend_key != key
+
+    for view_id in (unauthenticated_view, untrusted_scale_view, mutable_view):
+        candidate = tensor_engine._slice_view(
+            harness.ctx.view(view_id), (2, 8), 0
+        )
+        assert (
+            tensor_engine._decoded_weight_cache_key(
+                harness.ctx,
+                candidate,
+                contract=CONTRACT_BLOCKED,
+                backend_identity=identity,
+            )
+            is None
+        )
+
+
+def test_routed_cache_failure_uses_the_unchanged_uncached_path(
+    harness: Harness,
+) -> None:
+    operator, output, _weight_view = _cached_routed_fixture(harness)
+
+    harness.bind()
+    _attach_weight_cache(harness, 0)
+    harness.run(Major.TENSOR, Tensor.ROUTED_MATMUL, operator)
+    expected = np.array(harness.result(output), copy=True)
+    expected_counters = harness.counters.snapshot()
+
+    harness.bind()
+    device = _attach_weight_cache(harness, 1024)
+
+    class FailingCache:
+        @staticmethod
+        def probe(**_kwargs):
+            raise RuntimeError("injected cache failure")
+
+    device.decoded_weight_cache = FailingCache()
+    harness.run(Major.TENSOR, Tensor.ROUTED_MATMUL, operator)
+    np.testing.assert_array_equal(harness.result(output), expected)
+    assert harness.counters.snapshot() == expected_counters
+    assert device.host_performance.snapshot()["totals"][
+        "decoded_weight_materializations"
+    ] == 6
+
+
+def test_routed_cache_preserves_late_poison_fault_and_output_atomicity(
+    harness: Harness,
+) -> None:
+    rng = np.random.default_rng(0xFA017)
+    rows, experts, cols, depth, block = 2, 2, 2, 8, 4
+    weights = rng.integers(
+        0, 0x7E, size=(experts, cols, depth), dtype=np.uint8
+    )
+    scales = np.full((experts * cols, depth // block), 127, dtype=np.uint8)
+    scales[cols, 0] = 0xFF
+    scale_object = harness.constant(scales.tobytes(), authenticated=True)
+    weight_view = harness.const_view(
+        weights,
+        DType.FP8_E4M3FN,
+        scale_object_id=scale_object,
+        scale_block_elements=block,
+        authenticated=True,
+    )
+    output = harness.output_view((rows, cols), DType.BF16)
+    operator = harness.operator(
+        engine_family=Major.TENSOR,
+        engine_sub=Tensor.ROUTED_MATMUL,
+        inputs=[
+            harness.const_view(random_bf16(rng, (rows, depth)), DType.BF16),
+            weight_view,
+            harness.const_view(
+                np.array([[0], [1]], dtype=np.uint32), DType.U32
+            ),
+        ],
+        outputs=[output],
+        numeric_profile_id=matmul_numeric(
+            harness,
+            second_input_dtype=DType.FP8_E4M3FN,
+        ),
+    )
+    harness.bind()
+    device = _attach_weight_cache(harness, experts * cols * depth * 4)
+
+    with pytest.raises(EngineError, match="reserved E8M0 code"):
+        harness.run(Major.TENSOR, Tensor.ROUTED_MATMUL, operator)
+    np.testing.assert_array_equal(
+        harness.result(output), np.zeros((rows, cols), dtype=np.uint16)
+    )
+    # Expert zero completed and entered the cache before expert one's scale
+    # poisoned the instruction.  No partial accumulator reached device memory.
+    assert device.host_performance.snapshot()["totals"][
+        "decoded_weight_cache_admissions"
+    ] == 1
 
 
 # ---------------------------------------------------------------------------

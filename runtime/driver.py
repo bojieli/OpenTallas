@@ -715,6 +715,7 @@ def _step_record(
         "instructions_retired": result.retired,
         "instructions_predicated_off": result.predicated_off,
         "wall_seconds": round(result.wall_seconds, 6),
+        "host_performance": result.host_performance,
     }
 
 

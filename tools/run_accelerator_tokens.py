@@ -140,6 +140,8 @@ FUNCTIONAL_SOURCE_PATHS = (
     "runtime/sim/formats.py",
     "runtime/sim/generators.py",
     "runtime/sim/memory.py",
+    "runtime/sim/performance.py",
+    "runtime/sim/weight_cache.py",
     "runtime/tensor_accelerator/attention.py",
     "runtime/tensor_accelerator/bf16.py",
     "runtime/tensor_accelerator/elementwise.py",
@@ -490,6 +492,24 @@ def main() -> int:
     )
     parser.add_argument("--max-new-tokens", type=int, default=None)
     parser.add_argument(
+        "--decoded-weight-cache-bytes",
+        type=int,
+        default=0,
+        help=(
+            "one central host-byte ceiling across every logical node; zero "
+            "keeps the required cache-off baseline"
+        ),
+    )
+    parser.add_argument(
+        "--decoded-weight-cache-working-reserve-bytes",
+        type=int,
+        default=64 << 20,
+        help=(
+            "bytes held out of the central ceiling for one uncached "
+            "contraction; ignored when the cache ceiling is zero"
+        ),
+    )
+    parser.add_argument(
         "--terminal-contract",
         choices=TERMINAL_CONTRACTS,
         default="oracle_prefix",
@@ -512,6 +532,12 @@ def main() -> int:
         return 1
     if not args.checkpoint.is_dir():
         raise SystemExit(f"checkpoint root {args.checkpoint} is not a directory")
+    if args.decoded_weight_cache_bytes < 0:
+        raise SystemExit("--decoded-weight-cache-bytes must be non-negative")
+    if args.decoded_weight_cache_working_reserve_bytes < 0:
+        raise SystemExit(
+            "--decoded-weight-cache-working-reserve-bytes must be non-negative"
+        )
 
     # Capture the identities before the long lowering/execution phase.  These
     # are the files this process is about to load, rather than hashes collected
@@ -610,7 +636,16 @@ def main() -> int:
 
     numeric_backend = get_backend()
     numeric_backend.reset_executed_associations()
-    device = Device(deployment, capability, root=args.checkpoint, verify=False)
+    device = Device(
+        deployment,
+        capability,
+        root=args.checkpoint,
+        verify=False,
+        decoded_weight_cache_bytes=args.decoded_weight_cache_bytes,
+        decoded_weight_cache_working_reserve_bytes=(
+            args.decoded_weight_cache_working_reserve_bytes
+        ),
+    )
     trace = None if args.no_head_trace else HeadTrace(graph)
     if trace is not None:
         device.on_issue = trace
@@ -669,6 +704,20 @@ def main() -> int:
     else:
         status = "diverged"
 
+    implementation_identity = _implementation_identity()
+    executed_association = numeric_backend.executed_association_manifest()
+    host_performance = device.host_performance_snapshot()
+    ordered_calls = int(
+        host_performance["ordered_executed_associations"]["blocked_call_count"]
+    )
+    aggregated_calls = int(executed_association["blocked_call_count"])
+    host_performance["implementation_identity"] = dict(implementation_identity)
+    host_performance["association_reconciliation"] = {
+        "ordered_blocked_call_count": ordered_calls,
+        "aggregated_blocked_call_count": aggregated_calls,
+        "counts_equal": ordered_calls == aggregated_calls,
+    }
+
     body = {
         "schema": SCHEMA,
         "status": status,
@@ -711,8 +760,9 @@ def main() -> int:
             "missing_count": coverage["missing_count"],
             "missing": list(coverage["missing"]),
         },
-        "implementation_identity": _implementation_identity(),
-        "executed_association": numeric_backend.executed_association_manifest(),
+        "implementation_identity": implementation_identity,
+        "executed_association": executed_association,
+        "host_performance": host_performance,
         "inputs": loaded_inputs,
         "source_sha256": functional_sources,
         "generated_token_ids": got,
