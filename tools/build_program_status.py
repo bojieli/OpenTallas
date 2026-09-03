@@ -271,12 +271,23 @@ def rtl_shipped_prefix_correlation() -> dict[str, Any]:
         "real_engine_launches": body.get("real_engine_launch_count"),
         "dma_gather_launches": body.get("dma_gather_launch_count"),
         "embedding_launches": body.get("embedding_launch_count"),
+        "rms_norm_launches": body.get("rms_norm_launch_count"),
+        "dma_transfer_launches": body.get("dma_transfer_launch_count"),
         "result_words": body.get("result_word_count"),
         "rope_result_words": body.get("rope_result_word_count"),
         "embedding_result_words": body.get("embedding_result_word_count"),
+        "rms_norm_result_words": body.get("rms_norm_result_word_count"),
+        "dma_transfer_result_words": body.get("dma_transfer_result_word_count"),
         "resolved_views": body.get("resolved_view_count"),
         "selected_checkpoint_bytes": body.get("selected_checkpoint_byte_count"),
+        "selected_embedding_checkpoint_bytes": body.get(
+            "selected_embedding_checkpoint_byte_count"
+        ),
+        "selected_rms_checkpoint_bytes": body.get(
+            "selected_rms_checkpoint_byte_count"
+        ),
         "selected_checkpoint_rows": len(body.get("checkpoint_rows", [])),
+        "selected_checkpoint_gains": len(body.get("checkpoint_gains", [])),
         "capability_faults": body.get("capability_fault_count"),
         "simulator_checks": body.get("simulator_checks", {}),
         "simulators_agree": body.get("simulators_agree"),
@@ -490,16 +501,25 @@ def main() -> int:
             f"{prefix_rtl['real_engine_launches']} real engine operations, "
             f"split into {prefix_rtl['dma_gather_launches']} FP32 `DMA.GATHER` "
             f"launches and {prefix_rtl['embedding_launches']} exact BF16 "
-            "`TENSOR.EMBED_LOOKUP` launches. They compared "
+            f"`TENSOR.EMBED_LOOKUP`, {prefix_rtl['rms_norm_launches']} exact "
+            f"BF16 `VECTOR.RMS_NORM`, and "
+            f"{prefix_rtl['dma_transfer_launches']} stride-zero BF16 "
+            "`DMA.TRANSFER` launches. They compared "
             f"{prefix_rtl['result_words']:,} result words "
             f"({prefix_rtl['rope_result_words']:,} generated-RoPE FP32 words "
-            f"and {prefix_rtl['embedding_result_words']:,} BF16 embedding "
+            f"plus {prefix_rtl['embedding_result_words']:,} embedding, "
+            f"{prefix_rtl['rms_norm_result_words']:,} RMSNorm, and "
+            f"{prefix_rtl['dma_transfer_result_words']:,} transfer BF16 "
             f"codes) and resolved {prefix_rtl['resolved_views']} views. The "
             f"simulators agree = {prefix_rtl['simulators_agree']} ({checks}).",
             "",
             f"Embedding reads cover {prefix_rtl['selected_checkpoint_rows']} "
-            f"selected checkpoint rows and {prefix_rtl['selected_checkpoint_bytes']:,} "
-            "bytes. Legal token ID 0 is a bounded synthetic address probe, not "
+            f"selected checkpoint rows "
+            f"({prefix_rtl['selected_embedding_checkpoint_bytes']:,} bytes); "
+            f"RMSNorm reads {prefix_rtl['selected_checkpoint_gains']} selected "
+            f"gain ranges ({prefix_rtl['selected_rms_checkpoint_bytes']:,} bytes), "
+            f"for {prefix_rtl['selected_checkpoint_bytes']:,} authenticated bytes "
+            "in total. Legal token ID 0 is a bounded synthetic address probe, not "
             "a natural-language decoded token. Each selected range is rehashed "
             "and bound to its certified deployment and declared segment; the "
             "complete segment is not rehashed in this campaign.",
