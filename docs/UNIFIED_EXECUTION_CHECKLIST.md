@@ -275,20 +275,19 @@ evidence. None may be presented as a rerun of the current source.
   with the routed expert banks node-sharded by consecutive ownership (eight
   experts per node, A28 `node_segments` images) and a data-bearing
   `LINK.COLLECTIVE SUM` per routed group ahead of `EXPERT_REDUCE`. The
-  independent schedule checker admits **1,329** instructions <!-- figure: 1,329 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-array-32].actual.instructions" name="array ROM instructions, W5.6" -->,
-  **3,875** descriptors <!-- figure: 3,875 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-array-32].actual.descriptors" name="array ROM descriptors, W5.6" -->
-  and **19** cluster communication records <!-- figure: 19 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-array-32].actual.communications" name="array ROM communications, W5.6" -->
-  with **0** `STATE` resources <!-- figure: 0 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-array-32].actual.states" name="array ROM STATE resources, W5.6" -->,
-  passing **130/130** checks <!-- figure: 130 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-array-32].passed_check_count" name="array independent ROM schedule checks passed" -->
-  including the new data-bearing-reduction and cluster-placement rules; the
-  inverse proof reconstructs all **156,015,698,140** payload bytes <!-- figure: 156,015,698,140 src="results/abi3/deepseek_v4_rom_array_inverse.json#report.payload_bytes" name="array inverse payload bytes, W5.6" -->
-  bit-identically from the node-sharded images
-  (`results/abi3/deepseek_v4_rom_array_inverse.json`). Dense weights are
-  replicated per node and the live state is declared at the IR horizon rather
-  than at a five-stack die's capacity; both boundaries are stated in the
-  deployment notes and in the plan's section 17. This is an
-  artifact-semantic certificate, not cycle timing or a token result; the
-  array's functional and cycle runs are tracked in the plan.
+  source-current sparse-corrected build admits **1,346** instructions,
+  **3,429** descriptors, **19** cluster communication records, and **0**
+  `STATE` resources, and is byte-identical on a second clean build. Its shared
+  liveness allocator reduces 1,073,359,364,104 logical activation bytes to an
+  83-slot, 172,292,907,016-byte arena; total per-node HBM use is
+  178,281,603,216 bytes against the physical five-stack 180,000,000,000-byte
+  declaration. `results/abi3/deepseek_v4_activation_liveness_capacity.json`
+  retains the source identities, admission result, capacity arithmetic, and
+  HBM-planner equivalence. The older 130/130 schedule certificate and inverse
+  reconstruction remain useful prior-build evidence but must be regenerated
+  against this deployment identity before release. This is compiler/capacity
+  evidence, not cycle timing or a token result; the array's functional and
+  cycle runs are tracked in the plan.
 
 ## W6 — Real end-to-end execution (the correctness spine)
 

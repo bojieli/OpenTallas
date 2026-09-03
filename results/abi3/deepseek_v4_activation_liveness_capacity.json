@@ -1,0 +1,92 @@
+{
+  "allocator": {
+    "arena_bytes": 172292907016,
+    "arena_slots": 83,
+    "identity": "backend_neutral_exact_size_dtype_closed_interval_v1",
+    "logical_buffer_bytes": 1073359364104,
+    "logical_buffer_count": 407,
+    "reclaimed_bytes": 901066457088,
+    "unpooled_buffer_bytes": 1565704,
+    "unpooled_buffer_count": 4
+  },
+  "claim_boundary": {
+    "correct_output_tokens": false,
+    "description": "Compiler placement and capacity evidence only. No checkpoint-backed model transaction was executed, no output token or EOS decision was produced, and no TPOT value is eligible.",
+    "desired_tpot": false,
+    "full_model_execution": false
+  },
+  "generated_at_utc": "2026-09-03T23:31:34Z",
+  "graph": {
+    "artifact_sha256": "b92fadb125d43e451b3aa39669489671efe7e07bd3d8612169ebaaec067ac034",
+    "graph_id": "6c281c3b7f1bcf3366b9e572c553b6bddae8d13a6ac8056676a2a70166898834",
+    "kernel_count": 3956,
+    "path": "build/ir-v3/deepseek-v4-flash-0731/kernel_ir.v3.json"
+  },
+  "hbm_cluster_32": {
+    "activation_arena_bytes": 71727210504,
+    "activation_arena_slots": 247,
+    "capability_digest": "1eb2e92dac1d9fb8937b7724953d2f65993bd56e342e9058569442eb61d74bad",
+    "checker_errors": [],
+    "deployment_digest": "ec7cff231a7df4e1a652d421c81b853f0b1809b4fa5f0d197231f9e72da9f341",
+    "hbm_bytes_per_node": 88080248832,
+    "new_and_prior_allocator_plan_bytes_identical": true,
+    "node_count": 32,
+    "physical_plan_sha256": "c9e32781c4675d5c268cd3e154a2f616a60d4155628552916af021e1d7e522fe",
+    "plan_id": "b496a302fea178a99f1930aa5e96f2c632f7cbf5e36ebbf643bc83fc021b0e3b",
+    "state_bytes_per_node": 1821392896,
+    "verifier_errors": []
+  },
+  "model_id": "deepseek-v4-flash-0731",
+  "rom_array_32": {
+    "capability_digest": "414793fdd02d60d5cf60d11dfde3a0b656f3bb76af4a5ab4f63b7b1d4148bb84",
+    "declared_hbm_bytes_per_node": 180000000000,
+    "deployment_artifact_sha256": "3f1d36fd37220a66da50f1ef8acf68941daf184aa7b31a5507ded14d79d71cd2",
+    "deployment_digest": "8966eba6b1ca28e33a169095d58c534bb4132fe9c66a9bebacd01aef19e2ea4e",
+    "descriptor_count": 3429,
+    "determinism": {
+      "descriptor_table_identical": true,
+      "manifest_identical": true,
+      "plan_identical": true,
+      "program_identical": true
+    },
+    "hbm_headroom_bytes_per_node": 1718396784,
+    "hbm_used_bytes_per_node": 178281603216,
+    "host_used_bytes": 2097152,
+    "instruction_count": 1346,
+    "node_count": 32,
+    "plan_id": "b4113d1f558dffb90fadaeca746fea6d44e8e622be7e27e31525e0fc1358f17a",
+    "rom_used_bytes_per_node": 13726302216,
+    "sram_used_bytes_per_node": 268435456,
+    "state_resources": 0,
+    "technology_view": "rom_array_cluster_32_physical_v1",
+    "verification_admitted": true,
+    "verification_errors": []
+  },
+  "rom_wafer": {
+    "capability_digest": "5abf26b4ef235d6083c6f6dbe48d7021068c59ecb451238569a2f660303d26b6",
+    "deployment_digest": "0ff114455ebf1bff85eee246e42db4067eb2ccb1666a60af3b04ef94a98a1bfc",
+    "descriptor_count": 3411,
+    "hbm_used_bytes": 166773145736,
+    "instruction_count": 1329,
+    "plan_id": "376a6f68dc78d56314d739faa9f868d08040a0e40dac74ce3f3a4a11ae655d37",
+    "sram_used_bytes": 8585027592,
+    "state_resources": 0,
+    "verification_admitted": true,
+    "verification_errors": []
+  },
+  "schema": "opentallas.abi3.activation_liveness_capacity.v1",
+  "source_files": {
+    "compiler/backends/activation_liveness.py": "14ca5743603cb84897217dea46623c2484d0cefb9846eda7006097fb32f3507e",
+    "compiler/backends/hbm_sram/plan.py": "cdf7e9212a74eb90726a7d3df1308031b8708ff230c5a1ccd2c534d60eddec96",
+    "compiler/backends/rom/common/program.py": "6cc14c4215f78f2dbe1f1dbdae524c1c9aa4c2d82124b543c00adc7f7615591a",
+    "compiler/backends/rom/deepseek_v4_array.py": "295ecfa95b3a61b02d9535b253268c6fb694a2caa4a418ac3f4c6667e7994133",
+    "configs/hardware/abi3_capability/rom_deepseek_v4_array_32.json": "414793fdd02d60d5cf60d11dfde3a0b656f3bb76af4a5ab4f63b7b1d4148bb84"
+  },
+  "verification": {
+    "array_backend": "10 passed, 2 skipped",
+    "focused_allocator_hbm_rom": "12 passed, 1 skipped",
+    "hbm_plan_equivalence": "byte-identical",
+    "real_array_build": "admitted and deterministic",
+    "real_wafer_build": "admitted and deterministic"
+  }
+}

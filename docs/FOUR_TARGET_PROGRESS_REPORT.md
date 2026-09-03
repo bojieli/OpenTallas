@@ -4,9 +4,10 @@
 
 **Status date:** 2026-09-03
 
-**Input baseline:** `main` through `1c699a1`; this includes the fail-closed
+**Input baseline:** `main` through `c4ff3a5`; this includes the fail-closed
 DeepSeek exact-200K oracle and accelerator-pair checkers, the DeepSeek
-phase-selected sparse-KV layout repair, and refreshed
+phase-selected sparse-KV layout repair, the shared activation-liveness
+allocator and physical 180-GB ROM-array capacity boundary, and refreshed
 zero-`STATE` deployments, the correctness-qualified TPOT and RTL-bound
 co-simulation evidence gates, the exact DeepSeek wafer multicast, the
 shipped-program Qwen prefix through all three real checkpoint-backed
@@ -287,11 +288,23 @@ mandatory run establishes memory and I/O headroom.
   all be confirmed before even this short diagnostic may be cited.
 - The first 32-node DeepSeek ROM-array cycle attempt was admitted, then killed
   by the kernel OOM killer after about 155 min wall time and 29 CPU-hours at
-  84 GB RSS. It produced no cycle artifact. The deployment allocates node-local
-  arenas at the IR's 1,048,576-position horizon; replicating those live arenas
-  across all 32 nodes is not hostable on this 188 GiB machine. WP-D2-style KV
-  and activation sharding is required before this path can support the
-  mandatory exact-200K workload or a correctness-qualified TPOT capture.
+  84 GB RSS. It produced no cycle artifact. That historical deployment assigned
+  a distinct physical object to every logical activation and declared 1.2 TB
+  of HBM per node, so its failure does not characterize the current build.
+- The source-current backend-neutral liveness allocator preserves every IR
+  extent but reuses exact-size, exact-dtype mutable buffers whose closed
+  program-order lifetimes do not overlap. On the sparse-corrected 3,956-kernel
+  graph it reduces 1,073,359,364,104 logical activation bytes to an
+  83-slot, 172,292,907,016-byte arena. The 32-node ROM array now uses
+  178,281,603,216 of its physically declared 180,000,000,000 HBM bytes per
+  node, leaving 1,718,396,784 bytes, and admits deterministically with 1,346
+  instructions, 3,429 descriptors, and zero `STATE` resources. The wafer build
+  also admits, and the HBM planner's refactor is byte-identical to its prior
+  placement for the same graph. The retained evidence is
+  `results/abi3/deepseek_v4_activation_liveness_capacity.json`. This closes the
+  artificial capacity declaration, not Gate 1: no new full-model token or
+  cycle/TPOT result was produced, and host-resident behavior still needs a new
+  measured run.
 
 ## 2. Frozen ABI 3.0 execution profile
 
@@ -660,12 +673,13 @@ is not foundry signoff.
    source. Require a clean pushed source, host-exclusive execution, at least
    100 GiB available memory, reclaimed swap headroom, and unique result/log/time
    paths before relaunching exact-8K natural capture A.
-5. Inspect capture A's complete 256-token cap result against the external
-   oracle: legal IDs, exact token and text equality, no EOS for this oracle,
-   exact-cap stop, no post-cap transaction, provenance, and a strict W10 pass.
-   Only after A passes, launch independent capture B. Then complete the
-   source-current Qwen ROM, reasoning/chat, stress, and closed-loop agentic
-   cells.
+5. Generate the external oracle for the governed exact-8K official-chat
+   workload, then inspect capture A against it: legal IDs, exact token and text
+   equality, first official EOS included with immediate stop or exactly the
+   256-token cap, no post-terminal transaction, provenance, and a strict W10
+   pass. Only after A passes, launch independent capture B and the ROM capture.
+   Then complete the source-current reasoning/chat, stress, and closed-loop
+   agentic cells.
 6. Execute the DeepSeek `--gate-b-production` external oracle when the required
    GPU, checkpoint I/O, and host-memory resources are available. Require both
    the pre-run full-byte hash and the completion identity rehash; do not promote
@@ -674,7 +688,9 @@ is not foundry signoff.
    compiler and interacting-operator scope by `a877cfe`. Carry that repair into
    the next checkpoint-backed integrated run and require exact generated-token
    equality before closing Gate 1; the 30-case bounded matrix is not a token
-   substitute. Preserve the operation-derived feature invariant:
+   substitute. Carry the admitted 180-GB liveness placement with it and measure
+   host-resident behavior afresh; the prior 1.2-TB-declaration OOM is not a
+   result for the new deployment. Preserve the operation-derived feature invariant:
    `TRANSACTIONAL_STATE` in no production program and `INTEGRITY_RETRY` only
    for actual DeepSeek communication descriptors.
 8. Integrate the proven active-row/folding mapper with the selected production
