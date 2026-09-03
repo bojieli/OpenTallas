@@ -1098,6 +1098,7 @@ def test_deployment_campaign_has_four_targets_and_private_memory_geometry() -> N
     assert deployment_generator.DESC_WORDS == 8192
     assert deployment_generator.ISSUE_MEM_WORDS == 131072
     assert deployment_generator.VIEW_MEM_WORDS == 1048576
+    assert deployment_generator.PREDICATE_MEM_WORDS == 65536
 
     shared_top = (ROOT / "rtl/test/a3_microsequencer_top.sv").read_text(
         encoding="utf-8"
@@ -1177,14 +1178,14 @@ def test_deployment_vector_set_names_the_programs_this_program_ships() -> None:
         assert shipped[key]["deployment_sha256"] == identity.deployment_sha256
         assert shipped[key]["deployment_identity_evidence"] == identity.record()
 
-    assert shipped["qwen3-8b-rom-single-chip"]["instruction_count"] == 75
-    assert shipped["qwen3-8b-rom-single-chip"]["descriptor_count"] == 239
-    assert shipped["qwen3-8b-hbm-single-chip"]["instruction_count"] == 75
-    assert shipped["qwen3-8b-hbm-single-chip"]["descriptor_count"] == 218
-    assert shipped["deepseek-v4-flash-rom-wafer"]["instruction_count"] == 1171
-    assert shipped["deepseek-v4-flash-rom-wafer"]["descriptor_count"] == 3403
-    assert shipped["deepseek-v4-flash-hbm-cluster"]["instruction_count"] == 1146
-    assert shipped["deepseek-v4-flash-hbm-cluster"]["descriptor_count"] == 2953
+    assert shipped["qwen3-8b-rom-single-chip"]["instruction_count"] == 74
+    assert shipped["qwen3-8b-rom-single-chip"]["descriptor_count"] == 236
+    assert shipped["qwen3-8b-hbm-single-chip"]["instruction_count"] == 74
+    assert shipped["qwen3-8b-hbm-single-chip"]["descriptor_count"] == 215
+    assert shipped["deepseek-v4-flash-rom-wafer"]["instruction_count"] == 1312
+    assert shipped["deepseek-v4-flash-rom-wafer"]["descriptor_count"] == 3841
+    assert shipped["deepseek-v4-flash-hbm-cluster"]["instruction_count"] == 1267
+    assert shipped["deepseek-v4-flash-hbm-cluster"]["descriptor_count"] == 3272
     for entry in shipped.values():
         assert entry["admitted"], (entry["key"], entry["verifier_errors"])
 
@@ -1228,6 +1229,12 @@ def test_deployment_depth_is_recorded_per_case_not_assumed() -> None:
     assert vectors["issue_event_count"] == sum(
         record["issue_count"] for record in vectors["cases"]
     )
+    assert vectors["predicate_read_count"] == sum(
+        record["predicate_count"] for record in vectors["cases"]
+    )
+    for record in vectors["cases"]:
+        expected = 0 if record["deployment"].startswith("qwen3-") else 750
+        assert record["predicate_count"] == expected, record["name"]
 
 
 def test_deployment_state_rows_compare_one_rtl_node_at_an_explicit_scope() -> None:
@@ -1363,6 +1370,7 @@ def test_deployment_campaign_states_what_it_does_not_establish() -> None:
     assert boundary["establishes"]
     prose = " ".join(boundary["does_not_establish"].values())
     assert "engine_arithmetic" in boundary["does_not_establish"]
+    assert "predicate_service_integration" in boundary["does_not_establish"]
     assert "no checkpoint byte is read" in prose
     for deployment in retained["what_ran"]["deployments"]:
         if not deployment["co_simulable_within_rtl_bounds"]:
@@ -1396,11 +1404,9 @@ def test_deployment_campaign_refuses_to_overwrite_an_artifact(
 def test_deployment_campaign_replays_both_simulators(tmp_path: Path) -> None:
     """Both simulators, on the real programs, seeing the same thing.
 
-    The run is expected to be red while a shipped deployment exceeds an RTL
-    bound, so what is asserted is not a pass: it is that both engines compiled
-    and ran, that they observed the *same* cases -- including the same
-    divergence, at the same instruction, with the same values -- and that the
-    two Qwen deployments correlated in full.
+    Both engines must compile and run, observe the same cases and compare the
+    same number of predicate requests. Any divergence must be identical in
+    site, instruction and values under both simulators.
     """
     from tools import rtl_abi3_deployment_campaign as deployment_campaign
 
@@ -1422,6 +1428,11 @@ def test_deployment_campaign_replays_both_simulators(tmp_path: Path) -> None:
         summary["cases"][0]["signal_flag_cases"]
         == summary["cases"][1]["signal_flag_cases"]
     )
+    for case in summary["cases"]:
+        assert sum(
+            record["predicates_compared"]
+            for record in case["observed_cases"]
+        ) == _deployment_vectors()["predicate_read_count"]
     correlated = set(summary["correlated_cases"])
     for record in _deployment_vectors()["cases"]:
         deployment = next(

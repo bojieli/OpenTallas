@@ -27,6 +27,10 @@
 // Engine datapaths are out of scope: the issue port is a ready/valid interface
 // carrying (family, subopcode, descriptor ID) and nothing else.  This block
 // therefore models the control plane exactly and the data plane not at all.
+// Data-dependent BOOLEAN_OBJECT and EOS_MEMBER predicates use a separate
+// request/response port.  The memory/selection integration owns the read (and,
+// for a cluster, the node-consensus check); the sequencer owns only the
+// authenticated predicate descriptor and the resulting control decision.
 //
 // The one thing an engine cannot be handed as a raw descriptor ID is its
 // operands' *extents*, because amendments A4 and A13 make those a function of
@@ -82,6 +86,14 @@ module ot_a3_microsequencer
     output wire [3:0]    sym_index,
     input  wire [31:0]   sym_value,
     input  wire          sym_bound,
+
+    // -- data-dependent predicate result -------------------------------
+    output reg           predicate_read_req,
+    output reg  [31:0]   predicate_read_object_id,
+    output reg  [31:0]   predicate_read_element_index,
+    input  wire          predicate_read_valid,
+    input  wire          predicate_read_value,
+    input  wire [15:0]   predicate_read_trap_class,
 
     // -- engine issue --------------------------------------------------
     output reg           issue_valid,
@@ -161,6 +173,7 @@ module ot_a3_microsequencer
     localparam [4:0] S_VIEW_WAIT   = 5'd27;
     localparam [4:0] S_VIEW_RES    = 5'd28;
     localparam [4:0] S_VIEW_EMIT   = 5'd29;
+    localparam [4:0] S_PRED_OBJECT = 5'd30;
 
     reg [4:0]  state;
     reg [31:0] pc;
@@ -450,6 +463,8 @@ module ot_a3_microsequencer
     wire [7:0]  pred_comparison = pred_payload[15:8];
     wire [31:0] pred_selector   = pred_payload[63:32];
     wire [63:0] pred_immediate  = pred_payload[127:64];
+    wire [31:0] pred_object_id  = pred_payload[159:128];
+    wire [31:0] pred_element    = pred_payload[191:160];
 
     wire [63:0] pred_left = {32'd0, sym_value};
     reg  pred_compare_result;
@@ -507,6 +522,7 @@ module ot_a3_microsequencer
             first_fault_instruction <= fault_index;
             trapped <= 1'b1;
             st_discard_all <= 1'b1;
+            predicate_read_req <= 1'b0;
             state <= S_DISCARD;
         end
     endtask
@@ -532,6 +548,9 @@ module ot_a3_microsequencer
             desc_req <= 1'b0;
             desc_id <= A3_NO_ID;
             sym_index_q <= 4'd0;
+            predicate_read_req <= 1'b0;
+            predicate_read_object_id <= A3_NO_ID;
+            predicate_read_element_index <= 32'd0;
             issue_valid <= 1'b0;
             issue_family <= 8'd0;
             issue_sub <= 8'd0;
@@ -611,6 +630,9 @@ module ot_a3_microsequencer
                         count_issued <= 32'd0;
                         count_branches <= 32'd0;
                         count_views_resolved <= 32'd0;
+                        predicate_read_req <= 1'b0;
+                        predicate_read_object_id <= A3_NO_ID;
+                        predicate_read_element_index <= 32'd0;
                         xact_clear <= 1'b1;
                         state <= S_CHECK_PC;
                     end
@@ -743,14 +765,33 @@ module ot_a3_microsequencer
                                 state <= S_CHECK_PC;
                             end
                         end
+                        A3_PRED_BOOLEAN_OBJECT, A3_PRED_EOS_MEMBER: begin
+                            predicate_read_object_id <= pred_object_id;
+                            predicate_read_element_index <= pred_element;
+                            predicate_read_req <= 1'b1;
+                            state <= S_PRED_OBJECT;
+                        end
                         default: begin
-                            // ENGINE_STATUS, ROUTE_VALID, BOOLEAN_OBJECT and
-                            // EOS_MEMBER need an engine or a memory read that
-                            // this block does not have.  Fail closed on the
-                            // capability, never guess a predicate value.
+                            // ENGINE_STATUS and ROUTE_VALID require an engine
+                            // status interface this controller does not have.
+                            // Fail closed on the capability, never guess.
                             raise_trap(A3_TRAP_CAPABILITY, pc);
                         end
                     endcase
+                end
+                S_PRED_OBJECT: begin
+                    if (predicate_read_valid) begin
+                        predicate_read_req <= 1'b0;
+                        if (predicate_read_trap_class != A3_TRAP_NONE) begin
+                            raise_trap(predicate_read_trap_class, pc);
+                        end else if (predicate_read_value ^ invert) begin
+                            state <= S_WAIT_REQ;
+                        end else begin
+                            count_predicated_off <= count_predicated_off + 32'd1;
+                            pc <= pc + 32'd1;
+                            state <= S_CHECK_PC;
+                        end
+                    end
                 end
 
                 // -- wait -------------------------------------------------

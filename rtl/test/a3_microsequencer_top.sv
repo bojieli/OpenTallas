@@ -65,6 +65,14 @@ module ot_a3_microsequencer_top
     output wire [15:0] trap_class,
     output wire [31:0] first_fault_instruction,
 
+    // -- data-dependent predicate result ------------------------------
+    output wire        predicate_read_req,
+    output wire [31:0] predicate_read_object_id,
+    output wire [31:0] predicate_read_element_index,
+    input  wire        predicate_read_valid,
+    input  wire        predicate_read_value,
+    input  wire [15:0] predicate_read_trap_class,
+
     // -- engine issue ---------------------------------------------------
     input  wire        issue_ready,
     output wire        issue_valid,
@@ -250,6 +258,12 @@ module ot_a3_microsequencer_top
         .sym_index(sym_index),
         .sym_value(sym_value),
         .sym_bound(sym_bound),
+        .predicate_read_req(predicate_read_req),
+        .predicate_read_object_id(predicate_read_object_id),
+        .predicate_read_element_index(predicate_read_element_index),
+        .predicate_read_valid(predicate_read_valid),
+        .predicate_read_value(predicate_read_value),
+        .predicate_read_trap_class(predicate_read_trap_class),
         .issue_valid(issue_valid),
         .issue_ready(issue_ready),
         .issue_family(issue_family),

@@ -98,7 +98,7 @@ TOOL_SOURCES = (
 )
 # Four are read by the DUT under the names rtl/test/a3_microsequencer_top.sv
 # hardcodes -- that top is shared with the microsequencer campaign and is not
-# forked for this one -- and four are read only by the checkers.
+# forked for this one -- and five are read only by the checkers.
 VECTOR_FILES = (
     "a3_program.hex",
     "a3_header.hex",
@@ -107,6 +107,7 @@ VECTOR_FILES = (
     "a3_deployment_case.hex",
     "a3_deployment_issue.hex",
     "a3_deployment_view.hex",
+    "a3_deployment_predicate.hex",
     "a3_deployment_meta.hex",
 )
 
@@ -128,6 +129,10 @@ SITE_NAMES = {
     12: "resolved view overflow",
     13: "resolved view count",
     14: "views-resolved counter",
+    15: "predicate object ID",
+    16: "predicate element index",
+    17: "predicate response overflow",
+    18: "predicate response count",
     20: "program header legality",
     21: "program header trap class",
     22: "program header instruction count",
@@ -158,13 +163,15 @@ CASE_RE = re.compile(
     r"code=(?P<code>\d+) rtl=(?P<rtl>\d+) golden=(?P<golden>\d+) "
     r"issues=(?P<issues>\d+)/(?P<issues_expected>\d+) "
     r"views=(?P<views>\d+)/(?P<views_expected>\d+) "
+    r"predicates=(?P<predicates>\d+)/(?P<predicates_expected>\d+) "
     r"fetched=(?P<fetched>\d+) retired=(?P<retired>\d+) trap=(?P<trap>\d+) "
     r"fault=(?P<fault>\d+) sigerr=(?P<sigerr>\d+) applyovf=(?P<applyovf>\d+)$",
     re.MULTILINE,
 )
 DEPLOY_RE = re.compile(
     r"^DEPLOY (?P<index>\d+) cases=(?P<cases>\d+) diverged=(?P<diverged>\d+) "
-    r"issues=(?P<issues>\d+) views=(?P<views>\d+)$",
+    r"issues=(?P<issues>\d+) views=(?P<views>\d+) "
+    r"predicates=(?P<predicates>\d+)$",
     re.MULTILINE,
 )
 CHECKS_RE = re.compile(r"checks=(\d+)")
@@ -279,6 +286,8 @@ def parse_observation(log: str) -> dict[str, Any]:
             "issues_expected": int(m.group("issues_expected")),
             "views_compared": int(m.group("views")),
             "views_expected": int(m.group("views_expected")),
+            "predicates_compared": int(m.group("predicates")),
+            "predicates_expected": int(m.group("predicates_expected")),
             "rtl_fetched": int(m.group("fetched")),
             "rtl_retired": int(m.group("retired")),
             "rtl_trap_class": int(m.group("trap")),
@@ -295,6 +304,7 @@ def parse_observation(log: str) -> dict[str, Any]:
             "diverged": int(m.group("diverged")),
             "issues_compared": int(m.group("issues")),
             "views_compared": int(m.group("views")),
+            "predicates_compared": int(m.group("predicates")),
         }
         for m in DEPLOY_RE.finditer(log)
     ]
@@ -357,13 +367,15 @@ def compare_simulators(cases: list[dict[str, Any]]) -> dict[str, Any]:
     """Require the two simulators to have observed the same thing.
 
     Not only the same verdict: the same divergence site, the same values on
-    both sides of it, and the same number of issues and views reached before
-    it.  Two engines agreeing on where the RTL stopped is what makes a
-    divergence a finding rather than one simulator's opinion.
+    both sides of it, and the same number of issues, views and data-dependent
+    predicate reads reached before it.  Two engines agreeing on where the RTL
+    stopped is what makes a divergence a finding rather than one simulator's
+    opinion.
     """
     keys = (
         "index", "tag", "verdict", "divergence_code", "rtl_value",
-        "golden_value", "issues_compared", "views_compared", "rtl_fetched",
+        "golden_value", "issues_compared", "views_compared",
+        "predicates_compared", "predicates_expected", "rtl_fetched",
         "rtl_retired", "rtl_trap_class", "rtl_first_fault",
         "rtl_event_signal_error", "rtl_state_apply_overflow",
     )
@@ -585,6 +597,10 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
             ),
             "engine_issues_agreeing_before_divergence": entry["issues_compared"],
             "engine_issues_expected": entry["issues_expected"],
+            "predicate_reads_agreeing_before_divergence": entry[
+                "predicates_compared"
+            ],
+            "predicate_reads_expected": entry["predicates_expected"],
         }
         for index, entry in sorted(by_case.items())
         if entry["verdict"] == "DIVERGE"
@@ -680,6 +696,9 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
                     "golden_resolved_views": record["depth"][
                         "resolved_operand_views"
                     ],
+                    "golden_data_dependent_predicate_reads": record["depth"][
+                        "data_dependent_predicate_reads"
+                    ],
                     "ran_to_completion_on_the_golden_model": record[
                         "ran_to_completion"
                     ],
@@ -699,6 +718,9 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
                 "operand order: descriptor, slot, resolved extent, the axis "
                 "that extent belongs to (A18), element offset (A4) and rank, "
                 "against runtime.sim.memory.ViewResolver.resolve",
+                "every BOOLEAN_OBJECT and EOS_MEMBER predicate read in "
+                "program order: authenticated object ID, element index and "
+                "raw Boolean response before instruction-level inversion",
                 "instructions fetched, retired, predicated off and issued",
                 "loop iterations, branches taken and wait-set evaluations",
                 "state prepare, commit, discard, read and advance counts, "
@@ -744,6 +766,11 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
                 "runtime.sim.memory.ViewResolver.resolve at the loop bindings "
                 "the device recorded: element offset (A4), resolved extent "
                 "(A13) and the axis that extent belongs to (A18)",
+                "every data-dependent BOOLEAN_OBJECT or EOS_MEMBER predicate "
+                "requests the object ID and element index in its authenticated "
+                "descriptor, and the sequencer applies the supplied raw "
+                "Boolean value and instruction-level inversion identically "
+                "to runtime.sim.device.Device",
                 "two independently written checkers, on two simulation "
                 "engines, under two different back-pressure patterns, observed "
                 "the same result on every case, and print byte-identical "
@@ -804,7 +831,12 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
                 "offset and the extent of the one axis amendment A18 lets a "
                 "view name. The view's other extents, its strides and its "
                 "scale binding are copied from the descriptor unchanged and "
-                "are not republished"
+                "are not republished",
+                "predicate_service_integration": "the checker supplies each "
+                "raw Boolean response recorded by the golden Device run. The "
+                "campaign verifies the sequencer request address and branch "
+                "decision, but it does not connect that request to HBM, SRAM, "
+                "the selection engine, or the 32-node agreement logic"
             }
         },
         "limitations": [
@@ -816,11 +848,12 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
             "one axis amendment A18 lets a view name. The view's other "
             "extents, its strides and its scale binding are copied from the "
             "descriptor unchanged and are not republished",
-            "predicate kinds that require an engine or a memory read "
-            "(ENGINE_STATUS, ROUTE_VALID, BOOLEAN_OBJECT, EOS_MEMBER) fail "
-            "closed with trap class 4 instead of being evaluated. None of the "
-            "four shipped deployments uses one: the only predicates any of "
-            "them carries are COMPARE_SYMBOL",
+            "BOOLEAN_OBJECT and EOS_MEMBER use the explicit predicate service "
+            "port. ENGINE_STATUS and ROUTE_VALID still fail closed with trap "
+            "class 4 because no engine-status integration port exists",
+            "the predicate service is a verification responder in this "
+            "campaign, not a memory or selection datapath; it replays the raw "
+            "Device value only after checking the requested object and element",
             "the deployment bundles are built outside this repository's "
             "tracked tree (build/ is ignored), so the vector set binds them by "
             "deployment digest and refuses any other program rather than "

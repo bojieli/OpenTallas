@@ -77,6 +77,9 @@ class Model {
         dut.cfg_symbol_mask = 0;
         dut.cfg_max_retired_work = 0;
         dut.cfg_state_count = 0;
+        dut.predicate_read_valid = 0;
+        dut.predicate_read_value = 0;
+        dut.predicate_read_trap_class = 0;
         for (unsigned cycle = 0; cycle < 6; ++cycle) step();
         dut.rst_n = 1;
         for (unsigned cycle = 0; cycle < 2; ++cycle) step();

@@ -7,10 +7,10 @@ particular corner of the sequencer.  None of them is a program this project
 claims to run.  This generator closes that gap by taking the four shipped
 deployments themselves --
 
-    Qwen3-8B ROM single chip        75 instructions, 239 descriptors
-    Qwen3-8B HBM single chip        75 instructions, 218 descriptors
-    DeepSeek-V4-Flash ROM wafer     1171 instructions, 3403 descriptors
-    DeepSeek-V4-Flash HBM cluster   1146 instructions, 2953 descriptors
+    Qwen3-8B ROM single chip        74 instructions, 236 descriptors
+    Qwen3-8B HBM single chip        74 instructions, 215 descriptors
+    DeepSeek-V4-Flash ROM wafer     1312 instructions, 3841 descriptors
+    DeepSeek-V4-Flash HBM cluster   1267 instructions, 3272 descriptors
 
 -- and emitting, for each of them, the same four memory images the RTL
 verification top already reads (the 256-byte program header, the 32-byte
@@ -70,6 +70,7 @@ from runtime.abi3.deployment import Deployment  # noqa: E402
 from runtime.abi3.descriptors import (  # noqa: E402
     ExtendedDescriptorType,
     Phase,
+    PredicateKind,
     Symbol,
 )
 from runtime.abi3.records import decode_body, split_program  # noqa: E402
@@ -96,16 +97,18 @@ DESC_WORDS = 8192         # 1536-bit descriptor prefixes
 SYMBOL_WORDS = 2048       # 32-bit words, 16 per case
 DESCRIPTOR_PREFIX_BYTES = 192
 
-CASE_STRIDE = 38
+CASE_STRIDE = 40
 # Checker-side array sizes, transcribed in rtl/test/tb_a3_deployment.sv and
 # rtl/test/a3_deployment_harness.cpp.
 CASE_MEM_WORDS = 512
 ISSUE_MEM_WORDS = 131072
 VIEW_MEM_WORDS = 1048576
+PREDICATE_MEM_WORDS = 65536
 SYMBOL_STRIDE = 16
 HEADER_STRIDE = 64
 ISSUE_STRIDE = 3          # opcode, descriptor ID, instruction index
 VIEW_STRIDE = 7
+PREDICATE_STRIDE = 3     # object ID, element index, raw boolean value
 META_WORDS = 8
 
 # OPERATOR operand slots in the order the golden model and the RTL both walk
@@ -144,7 +147,7 @@ class CertifiedDeploymentIdentity:
     evidence_case: str
 
     def record(self) -> dict[str, str]:
-        """The durable certificate link written into the vector manifest."""
+        """The certificate link written into the vector manifest."""
         return {
             "artifact": self.evidence_artifact,
             "artifact_sha256": self.evidence_artifact_sha256,
@@ -830,11 +833,34 @@ def run_golden(
     session = device.create_session()
     mark = len(device.trace)
     symbols = effective_symbols(driver, device, request)
-    result = device.run_transaction(
-        session,
-        entrypoint_id=request.entrypoint_id,
-        symbols={**driver.deployment_symbols, **request.symbols()},
-    )
+    predicate_reads: list[dict[str, int]] = []
+    evaluate_predicate = device._evaluate_predicate  # noqa: SLF001
+
+    def recording_predicate(descriptor, loops, bound_symbols):  # noqa: ANN001
+        value = bool(evaluate_predicate(descriptor, loops, bound_symbols))
+        kind = PredicateKind(int(descriptor.payload["predicate_kind"]))
+        if kind in (PredicateKind.BOOLEAN_OBJECT, PredicateKind.EOS_MEMBER):
+            predicate_reads.append(
+                {
+                    "object_id": int(descriptor.payload["object_id"]),
+                    "element_index": int(descriptor.payload["element_index"]),
+                    # The instruction's PREDICATE_INVERT flag is applied by
+                    # the sequencer, so the response carries the raw object
+                    # value exactly as the memory/selection service returns it.
+                    "value": int(value),
+                }
+            )
+        return value
+
+    device._evaluate_predicate = recording_predicate  # type: ignore[method-assign]  # noqa: SLF001
+    try:
+        result = device.run_transaction(
+            session,
+            entrypoint_id=request.entrypoint_id,
+            symbols={**driver.deployment_symbols, **request.symbols()},
+        )
+    finally:
+        device._evaluate_predicate = evaluate_predicate  # type: ignore[method-assign]  # noqa: SLF001
     trace = device.trace[mark:]
     counters = result.counters
     cluster_state_rows = int(counters.get("state.rows_committed", 0))
@@ -888,6 +914,7 @@ def run_golden(
         "node_count": int(device.node_count),
         "message": result.message,
         "symbols": symbols,
+        "predicate_reads": predicate_reads,
         "issues": issues,
         "views": views,
         "counters": {k: int(v) for k, v in sorted(counters.items())},
@@ -967,6 +994,7 @@ def build(argv: list[str] | None = None) -> int:
     case_words: list[int] = []
     issue_words: list[int] = []
     view_words: list[int] = []
+    predicate_words: list[int] = []
     records: list[dict[str, Any]] = []
     deployments: list[dict[str, Any]] = []
 
@@ -1117,6 +1145,12 @@ def build(argv: list[str] | None = None) -> int:
                 view_words.append(view["rank"])
                 view_words.append(view["extent_axis"])
 
+            predicate_base = len(predicate_words) // PREDICATE_STRIDE
+            for predicate in golden["predicate_reads"]:
+                predicate_words.append(predicate["object_id"] & 0xFFFFFFFF)
+                predicate_words.append(predicate["element_index"] & 0xFFFFFFFF)
+                predicate_words.append(predicate["value"] & 1)
+
             entry = next(
                 e for e in deployment.entrypoints
                 if e["entrypoint_id"] == request.entrypoint_id
@@ -1166,6 +1200,8 @@ def build(argv: list[str] | None = None) -> int:
                 # that the RTL reads the real header correctly.
                 declared_work & 0xFFFFFFFF,
                 (declared_work >> 32) & 0xFFFFFFFF,
+                predicate_base,
+                len(golden["predicate_reads"]),
             ]
             if len(words) != CASE_STRIDE:
                 raise SystemExit(
@@ -1180,6 +1216,12 @@ def build(argv: list[str] | None = None) -> int:
             view_blob = b"".join(
                 int(word).to_bytes(4, "little")
                 for word in view_words[view_base * VIEW_STRIDE :]
+            )
+            predicate_blob = b"".join(
+                int(word).to_bytes(4, "little")
+                for word in predicate_words[
+                    predicate_base * PREDICATE_STRIDE :
+                ]
             )
             records.append({
                 "name": f"{target.key}/{request.name}",
@@ -1203,10 +1245,20 @@ def build(argv: list[str] | None = None) -> int:
                     "instructions_retired": int(golden["retired"]),
                     "engine_issues": len(golden["issues"]),
                     "resolved_operand_views": len(golden["views"]),
+                    "data_dependent_predicate_reads": len(
+                        golden["predicate_reads"]
+                    ),
                 },
                 "golden": {
                     key: value for key, value in sorted(golden.items())
-                    if key not in {"issues", "views", "counters", "symbols"}
+                    if key
+                    not in {
+                        "issues",
+                        "views",
+                        "predicate_reads",
+                        "counters",
+                        "symbols",
+                    }
                 },
                 "golden_counters": golden["counters"],
                 "issued_opcodes": [
@@ -1219,6 +1271,12 @@ def build(argv: list[str] | None = None) -> int:
                 "view_base": view_base,
                 "view_count": len(golden["views"]),
                 "view_stream_sha256": hashlib.sha256(view_blob).hexdigest(),
+                "predicate_base": predicate_base,
+                "predicate_count": len(golden["predicate_reads"]),
+                "predicate_reads": golden["predicate_reads"],
+                "predicate_stream_sha256": hashlib.sha256(
+                    predicate_blob
+                ).hexdigest(),
             })
 
     opcode_union: dict[tuple[int, int], int] = {}
@@ -1229,6 +1287,7 @@ def build(argv: list[str] | None = None) -> int:
 
     total_issues = sum(r["issue_count"] for r in records)
     total_views = sum(r["view_count"] for r in records)
+    total_predicates = sum(r["predicate_count"] for r in records)
     completions = sum(1 for r in records if r["ran_to_completion"])
     if total_views == 0:
         raise SystemExit(
@@ -1246,7 +1305,7 @@ def build(argv: list[str] | None = None) -> int:
 
     meta = [
         len(records), total_issues, total_views, completions, len(TARGETS),
-        0, 0, 0,
+        total_predicates, 0, 0,
     ]
 
     # The two checkers hold these images in fixed-size arrays; a vector set that
@@ -1255,6 +1314,7 @@ def build(argv: list[str] | None = None) -> int:
         ("case", len(case_words), CASE_MEM_WORDS),
         ("issue", len(issue_words), ISSUE_MEM_WORDS),
         ("view", len(view_words), VIEW_MEM_WORDS),
+        ("predicate", len(predicate_words), PREDICATE_MEM_WORDS),
     ):
         if used > limit:
             raise SystemExit(
@@ -1276,6 +1336,7 @@ def build(argv: list[str] | None = None) -> int:
         "a3_deployment_case.hex": hex_lines(case_words, 32),
         "a3_deployment_issue.hex": hex_lines(issue_words, 32),
         "a3_deployment_view.hex": hex_lines(view_words, 32),
+        "a3_deployment_predicate.hex": hex_lines(predicate_words, 32),
         "a3_deployment_meta.hex": hex_lines(meta, 32),
     }
     for name, payload in files.items():
@@ -1284,7 +1345,7 @@ def build(argv: list[str] | None = None) -> int:
     marker = (
         f"PASS: ABI3 RTL deployment co-simulation deployments={len(TARGETS)} "
         f"cases={len(records)} completions={completions} "
-        f"issues={total_issues} views={total_views}"
+        f"issues={total_issues} views={total_views} predicates={total_predicates}"
     )
     summary = {
         "schema": "opentallas.rtl.abi3_deployment_vectors.v1",
@@ -1326,6 +1387,7 @@ def build(argv: list[str] | None = None) -> int:
         "completion_count": completions,
         "issue_event_count": total_issues,
         "view_resolution_count": total_views,
+        "predicate_read_count": total_predicates,
         "issued_opcodes": [
             {"family": family, "sub": sub, "issues": count}
             for (family, sub), count in sorted(opcode_union.items())
@@ -1341,6 +1403,12 @@ def build(argv: list[str] | None = None) -> int:
             "amendments A4 (dynamic index terms), A13 (partial final iteration "
             "of a block loop) and A18 (the axis that iteration is partial in)"
         ),
+        "predicate_reference": (
+            "the raw BOOLEAN_OBJECT or EOS_MEMBER value returned by "
+            "runtime.sim.device.Device for each dynamic predicate evaluation, "
+            "together with the object ID and element index requested by the "
+            "RTL; instruction-level inversion remains inside the sequencer"
+        ),
         "required_marker": marker,
         "geometry": {
             "program_words": PROGRAM_WORDS,
@@ -1350,11 +1418,13 @@ def build(argv: list[str] | None = None) -> int:
             "case_stride": CASE_STRIDE,
             "issue_stride": ISSUE_STRIDE,
             "view_stride": VIEW_STRIDE,
+            "predicate_stride": PREDICATE_STRIDE,
             "descriptor_prefix_bytes": DESCRIPTOR_PREFIX_BYTES,
             "program_words_used": len(program_words),
             "header_words_used": len(header_words),
             "descriptor_words_used": len(desc_words),
             "symbol_words_used": len(symbol_words),
+            "predicate_words_used": len(predicate_words),
         },
         "image_sha256": {
             name: hashlib.sha256(payload.encode("ascii")).hexdigest()
@@ -1376,7 +1446,7 @@ def build(argv: list[str] | None = None) -> int:
     print(
         f"abi3 deployment rtl vectors: deployments={len(TARGETS)} "
         f"cases={len(records)} completions={completions} "
-        f"issues={total_issues} views={total_views}"
+        f"issues={total_issues} views={total_views} predicates={total_predicates}"
     )
     for record in records:
         depth = record["depth"]
@@ -1385,6 +1455,7 @@ def build(argv: list[str] | None = None) -> int:
             f"of a {depth['static_instructions_in_program']}-instruction "
             f"program, issues={depth['engine_issues']}, "
             f"views={depth['resolved_operand_views']}, "
+            f"predicates={depth['data_dependent_predicate_reads']}, "
             f"complete={record['ran_to_completion']}"
         )
     return 0

@@ -40,9 +40,10 @@
 
 namespace {
 
-constexpr unsigned kCaseStride = 38;
+constexpr unsigned kCaseStride = 40;
 constexpr unsigned kIssueStride = 3;
 constexpr unsigned kViewStride = 7;
+constexpr unsigned kPredicateStride = 3;
 // A whole DeepSeek prefill is 29,595 fetched instructions; the guard catches a
 // hang without mistaking a long real program for one.
 constexpr unsigned kRunGuard = 40000000u;
@@ -66,6 +67,10 @@ enum Site : int {
     kViewOverflow = 12,
     kViewCount = 13,
     kViewCounter = 14,
+    kPredicateObject = 15,
+    kPredicateElement = 16,
+    kPredicateOverflow = 17,
+    kPredicateCount = 18,
     kHeaderLegal = 20,
     kHeaderTrap = 21,
     kHeaderInstructions = 22,
@@ -135,6 +140,9 @@ class Model {
         dut.cfg_symbol_mask = 0;
         dut.cfg_max_retired_work = 0;
         dut.cfg_state_count = 0;
+        dut.predicate_read_valid = 0;
+        dut.predicate_read_value = 0;
+        dut.predicate_read_trap_class = 0;
         for (unsigned cycle = 0; cycle < 6; ++cycle) step();
         dut.rst_n = 1;
         for (unsigned cycle = 0; cycle < 2; ++cycle) step();
@@ -179,14 +187,17 @@ int main(int argc, char** argv) {
     const std::vector<uint32_t> cases = load_words("a3_deployment_case.hex");
     const std::vector<uint32_t> issues = load_words("a3_deployment_issue.hex");
     const std::vector<uint32_t> views = load_words("a3_deployment_view.hex");
+    const std::vector<uint32_t> predicates =
+        load_words("a3_deployment_predicate.hex");
     const std::vector<uint32_t> meta = load_words("a3_deployment_meta.hex");
-    if (meta.size() < 5) fail("a3_deployment_meta.hex is short");
+    if (meta.size() < 6) fail("a3_deployment_meta.hex is short");
 
     const unsigned case_count = meta[0];
     const unsigned expected_issue_total = meta[1];
     const unsigned expected_view_total = meta[2];
     const unsigned expected_completions = meta[3];
     const unsigned deployment_count = meta[4];
+    const unsigned expected_predicate_total = meta[5];
     if (cases.size() < case_count * kCaseStride)
         fail("a3_deployment_case.hex is short");
 
@@ -195,6 +206,7 @@ int main(int argc, char** argv) {
 
     unsigned total_issues = 0;
     unsigned total_views = 0;
+    unsigned total_predicates = 0;
     unsigned total_completions = 0;
     unsigned diverged_cases = 0;
     unsigned signal_flag_cases = 0;
@@ -205,13 +217,15 @@ int main(int argc, char** argv) {
     unsigned deploy_cases = 0;
     unsigned deploy_issues = 0;
     unsigned deploy_views = 0;
+    unsigned deploy_predicates = 0;
     unsigned deploy_diverged = 0;
 
     auto close_deployment = [&]() {
         if (deploy_cases > 0) {
-            std::printf("DEPLOY %ld cases=%u diverged=%u issues=%u views=%u\n",
+            std::printf(
+                "DEPLOY %ld cases=%u diverged=%u issues=%u views=%u predicates=%u\n",
                         deploy_index, deploy_cases, deploy_diverged,
-                        deploy_issues, deploy_views);
+                        deploy_issues, deploy_views, deploy_predicates);
         }
     };
 
@@ -232,6 +246,7 @@ int main(int argc, char** argv) {
             deploy_cases = 0;
             deploy_issues = 0;
             deploy_views = 0;
+            deploy_predicates = 0;
             deploy_diverged = 0;
         }
         ++deploy_cases;
@@ -278,6 +293,12 @@ int main(int argc, char** argv) {
         if (static_cast<size_t>(view_base + view_count) * kViewStride >
             views.size())
             fail("view image is short");
+        const unsigned predicate_base = word[38];
+        const unsigned predicate_count = word[39];
+        if (static_cast<size_t>(predicate_base + predicate_count) *
+                kPredicateStride >
+            predicates.size())
+            fail("predicate image is short");
 
         model.dut.start = 1;
         model.step();
@@ -285,11 +306,36 @@ int main(int argc, char** argv) {
 
         unsigned seen = 0;
         unsigned views_seen = 0;
+        unsigned predicates_seen = 0;
         unsigned tick = 0;
         guard = 0;
         while (!model.dut.done && guard < kRunGuard) {
             model.dut.issue_ready = model.ready_now(tick, index) ? 1 : 0;
+            model.dut.predicate_read_valid = 0;
+            model.dut.predicate_read_trap_class = 0;
             model.settle();
+            if (model.dut.predicate_read_req) {
+                if (predicates_seen >= predicate_count) {
+                    result.record(kPredicateOverflow, predicates_seen,
+                                  predicate_count);
+                    model.dut.predicate_read_value = 0;
+                } else {
+                    const uint32_t* expect =
+                        predicates.data() +
+                        static_cast<size_t>(predicate_base + predicates_seen) *
+                            kPredicateStride;
+                    result.equal(kPredicateObject,
+                                 model.dut.predicate_read_object_id, expect[0]);
+                    result.equal(kPredicateElement,
+                                 model.dut.predicate_read_element_index,
+                                 expect[1]);
+                    model.dut.predicate_read_value = expect[2] & 1U;
+                    ++predicates_seen;
+                    ++total_predicates;
+                    ++deploy_predicates;
+                }
+                model.dut.predicate_read_valid = 1;
+            }
             const bool fire = model.dut.issue_valid && model.dut.issue_ready;
             const uint32_t family = model.dut.issue_family;
             const uint32_t sub = model.dut.issue_sub;
@@ -375,6 +421,7 @@ int main(int argc, char** argv) {
         result.equal(kIssueCount, seen, issue_count);
         result.equal(kViewCount, views_seen, view_count);
         result.equal(kViewCounter, model.dut.count_views_resolved, view_count);
+        result.equal(kPredicateCount, predicates_seen, predicate_count);
 
         // RTL status bits.  See the note in rtl/test/tb_a3_deployment.sv:
         // after amendment A24 event_signal_error reports only an event ID
@@ -395,12 +442,13 @@ int main(int argc, char** argv) {
         }
         std::printf(
             "CASE %u tag=%04x %s code=%d rtl=%llu golden=%llu issues=%u/%u "
-            "views=%u/%u fetched=%u retired=%u trap=%u fault=%u sigerr=%u "
-            "applyovf=%u\n",
+            "views=%u/%u predicates=%u/%u fetched=%u retired=%u trap=%u "
+            "fault=%u sigerr=%u applyovf=%u\n",
             index, tag, result.agreeing() ? "OK" : "DIVERGE", result.code,
             static_cast<unsigned long long>(result.rtl),
             static_cast<unsigned long long>(result.golden), seen, issue_count,
-            views_seen, view_count, model.dut.count_fetched,
+            views_seen, view_count, predicates_seen, predicate_count,
+            model.dut.count_fetched,
             model.dut.count_retired, model.dut.trap_class,
             model.dut.first_fault_instruction, model.dut.event_signal_error,
             model.dut.state_apply_overflow);
@@ -416,23 +464,26 @@ int main(int argc, char** argv) {
             fail("resolved view total differs from the vector set");
         if (total_completions != expected_completions)
             fail("completion total differs from the vector set");
+        if (total_predicates != expected_predicate_total)
+            fail("predicate total differs from the vector set");
         // A comparison that compared nothing is a defect, not a pass.
         if (total_views == 0)
             fail("no operand view was resolved; the comparison is vacuous");
         std::printf(
             "PASS: ABI3 RTL deployment co-simulation deployments=%u cases=%u "
-            "completions=%u issues=%u views=%u signal_flag_cases=%u "
-            "apply_overflow_cases=%u checks=%lu\n",
+            "completions=%u issues=%u views=%u predicates=%u "
+            "signal_flag_cases=%u apply_overflow_cases=%u checks=%lu\n",
             deployment_count, case_count, total_completions, total_issues,
-            total_views, signal_flag_cases, apply_overflow_cases, checks);
+            total_views, total_predicates, signal_flag_cases,
+            apply_overflow_cases, checks);
         return 0;
     }
     std::printf(
         "FAIL: ABI3 RTL deployment co-simulation diverged_cases=%u of %u "
-        "deployments=%u issues=%u views=%u signal_flag_cases=%u "
-        "apply_overflow_cases=%u checks=%lu\n",
+        "deployments=%u issues=%u views=%u predicates=%u "
+        "signal_flag_cases=%u apply_overflow_cases=%u checks=%lu\n",
         diverged_cases, case_count, deployment_count, total_issues, total_views,
-        signal_flag_cases, apply_overflow_cases, checks);
+        total_predicates, signal_flag_cases, apply_overflow_cases, checks);
     std::cerr << "FAIL: the RTL and runtime.sim.device.Device disagree on a "
                  "shipped program\n";
     return 1;

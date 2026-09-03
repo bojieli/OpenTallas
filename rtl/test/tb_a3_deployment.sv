@@ -46,9 +46,11 @@ module tb_a3_deployment;
     localparam integer ISSUE_MEM_WORDS = 131072;
     localparam integer VIEW_MEM_WORDS  = 1048576;
     localparam integer META_WORDS      = 8;
-    localparam integer CASE_STRIDE     = 38;
+    localparam integer CASE_STRIDE     = 40;
     localparam integer ISSUE_STRIDE    = 3;
     localparam integer VIEW_STRIDE     = 7;
+    localparam integer PREDICATE_STRIDE = 3;
+    localparam integer PREDICATE_MEM_WORDS = 65536;
     // A whole DeepSeek prefill is 29,595 fetched instructions and 39,849
     // resolved views; the guard is generous enough that a real hang is still
     // caught but a long real program is not mistaken for one.
@@ -72,6 +74,10 @@ module tb_a3_deployment;
     localparam integer D_VIEW_OVERFLOW       = 12;
     localparam integer D_VIEW_COUNT          = 13;
     localparam integer D_VIEW_COUNTER        = 14;
+    localparam integer D_PREDICATE_OBJECT    = 15;
+    localparam integer D_PREDICATE_ELEMENT   = 16;
+    localparam integer D_PREDICATE_OVERFLOW  = 17;
+    localparam integer D_PREDICATE_COUNT     = 18;
     localparam integer D_HEADER_LEGAL        = 20;
     localparam integer D_HEADER_TRAP         = 21;
     localparam integer D_HEADER_INSTRUCTIONS = 22;
@@ -99,6 +105,7 @@ module tb_a3_deployment;
     reg [31:0] case_mem  [0:CASE_MEM_WORDS-1];
     reg [31:0] issue_mem [0:ISSUE_MEM_WORDS-1];
     reg [31:0] view_mem  [0:VIEW_MEM_WORDS-1];
+    reg [31:0] predicate_mem [0:PREDICATE_MEM_WORDS-1];
     reg [31:0] meta_mem  [0:META_WORDS-1];
 
     reg clk = 1'b0;
@@ -133,6 +140,13 @@ module tb_a3_deployment;
     wire        trapped;
     wire [15:0] trap_class;
     wire [31:0] first_fault_instruction;
+
+    wire        predicate_read_req;
+    wire [31:0] predicate_read_object_id;
+    wire [31:0] predicate_read_element_index;
+    reg         predicate_read_valid = 1'b0;
+    reg         predicate_read_value = 1'b0;
+    reg  [15:0] predicate_read_trap_class = 16'd0;
 
     reg         issue_ready = 1'b1;
     wire        issue_valid;
@@ -202,6 +216,12 @@ module tb_a3_deployment;
         .trapped(trapped),
         .trap_class(trap_class),
         .first_fault_instruction(first_fault_instruction),
+        .predicate_read_req(predicate_read_req),
+        .predicate_read_object_id(predicate_read_object_id),
+        .predicate_read_element_index(predicate_read_element_index),
+        .predicate_read_valid(predicate_read_valid),
+        .predicate_read_value(predicate_read_value),
+        .predicate_read_trap_class(predicate_read_trap_class),
         .issue_ready(issue_ready),
         .issue_valid(issue_valid),
         .issue_family(issue_family),
@@ -248,6 +268,10 @@ module tb_a3_deployment;
     integer    expect_view_base;
     integer    expect_view_count;
     integer    view_word_base;
+    integer    predicate_seen;
+    integer    expect_predicate_base;
+    integer    expect_predicate_count;
+    integer    predicate_word_base;
 
     integer    case_code;          // divergence site, D_NONE while agreeing
     reg [63:0] case_rtl;
@@ -255,6 +279,7 @@ module tb_a3_deployment;
 
     integer    total_issues;
     integer    total_views;
+    integer    total_predicates;
     integer    total_completions;
     integer    diverged_cases;
     integer    signal_flag_cases;
@@ -265,6 +290,7 @@ module tb_a3_deployment;
     integer    deploy_cases;
     integer    deploy_issues;
     integer    deploy_views;
+    integer    deploy_predicates;
     integer    deploy_diverged;
 
     // -- engine issue consumer with pseudo-random back-pressure ----------
@@ -362,6 +388,41 @@ module tb_a3_deployment;
         end
     end
 
+    // -- data-dependent predicate service -------------------------------
+    // The control RTL requests one raw Boolean word.  The checker supplies
+    // the value observed by the independent Device execution and separately
+    // verifies that the RTL requested the authenticated object and element.
+    always @(posedge clk) begin
+        predicate_read_valid <= 1'b0;
+        predicate_read_trap_class <= 16'd0;
+        if (rst_n && capture && predicate_read_req && !predicate_read_valid) begin
+            if (predicate_seen >= expect_predicate_count) begin
+                record(D_PREDICATE_OVERFLOW, predicate_seen,
+                       expect_predicate_count);
+                predicate_read_value <= 1'b0;
+            end else begin
+                predicate_word_base =
+                    (expect_predicate_base + predicate_seen) * PREDICATE_STRIDE;
+                checks = checks + 2;
+                if (predicate_read_object_id !==
+                    predicate_mem[predicate_word_base])
+                    record(D_PREDICATE_OBJECT,
+                           {32'd0, predicate_read_object_id},
+                           {32'd0, predicate_mem[predicate_word_base]});
+                else if (predicate_read_element_index !==
+                         predicate_mem[predicate_word_base + 1])
+                    record(D_PREDICATE_ELEMENT,
+                           {32'd0, predicate_read_element_index},
+                           {32'd0, predicate_mem[predicate_word_base + 1]});
+                predicate_read_value <= predicate_mem[predicate_word_base + 2][0];
+                predicate_seen = predicate_seen + 1;
+                total_predicates = total_predicates + 1;
+                deploy_predicates = deploy_predicates + 1;
+            end
+            predicate_read_valid <= 1'b1;
+        end
+    end
+
     integer case_index;
     integer base;
     integer guard;
@@ -372,9 +433,9 @@ module tb_a3_deployment;
     task close_deployment;
         begin
             if (deploy_cases > 0)
-                $display("DEPLOY %0d cases=%0d diverged=%0d issues=%0d views=%0d",
+                $display("DEPLOY %0d cases=%0d diverged=%0d issues=%0d views=%0d predicates=%0d",
                          deploy_index, deploy_cases, deploy_diverged,
-                         deploy_issues, deploy_views);
+                         deploy_issues, deploy_views, deploy_predicates);
         end
     endtask
 
@@ -382,9 +443,11 @@ module tb_a3_deployment;
         $readmemh("a3_deployment_case.hex", case_mem);
         $readmemh("a3_deployment_issue.hex", issue_mem);
         $readmemh("a3_deployment_view.hex", view_mem);
+        $readmemh("a3_deployment_predicate.hex", predicate_mem);
         $readmemh("a3_deployment_meta.hex", meta_mem);
         total_issues = 0;
         total_views = 0;
+        total_predicates = 0;
         total_completions = 0;
         diverged_cases = 0;
         signal_flag_cases = 0;
@@ -398,6 +461,10 @@ module tb_a3_deployment;
         expect_view_base = 0;
         expect_view_count = 0;
         view_word_base = 0;
+        predicate_seen = 0;
+        expect_predicate_base = 0;
+        expect_predicate_count = 0;
+        predicate_word_base = 0;
         case_code = D_NONE;
         case_rtl = 64'd0;
         case_golden = 64'd0;
@@ -407,6 +474,7 @@ module tb_a3_deployment;
         deploy_cases = 0;
         deploy_issues = 0;
         deploy_views = 0;
+        deploy_predicates = 0;
         deploy_diverged = 0;
         case_count = meta_mem[0];
         deployment_count = meta_mem[4];
@@ -427,6 +495,7 @@ module tb_a3_deployment;
                 deploy_cases = 0;
                 deploy_issues = 0;
                 deploy_views = 0;
+                deploy_predicates = 0;
                 deploy_diverged = 0;
             end
             deploy_cases = deploy_cases + 1;
@@ -473,8 +542,14 @@ module tb_a3_deployment;
             expect_issue_count = case_mem[base + 31];
             expect_view_base = case_mem[base + 32];
             expect_view_count = case_mem[base + 33];
+            expect_predicate_base = case_mem[base + 38];
+            expect_predicate_count = case_mem[base + 39];
             issue_seen = 0;
             view_seen = 0;
+            predicate_seen = 0;
+            predicate_read_valid = 1'b0;
+            predicate_read_value = 1'b0;
+            predicate_read_trap_class = 16'd0;
             capture = 1'b1;
             @(negedge clk);
             start = 1'b1;
@@ -533,6 +608,8 @@ module tb_a3_deployment;
                         {32'd0, case_mem[base + 33]});
             check_equal(D_VIEW_COUNTER, {32'd0, count_views_resolved},
                         {32'd0, case_mem[base + 33]});
+            check_equal(D_PREDICATE_COUNT, {32'd0, predicate_seen[31:0]},
+                        {32'd0, case_mem[base + 39]});
 
             // -- RTL status bits ------------------------------------------
             // event_signal_error is asserted rather than counted, and zero is
@@ -562,12 +639,13 @@ module tb_a3_deployment;
                 diverged_cases = diverged_cases + 1;
                 deploy_diverged = deploy_diverged + 1;
             end
-            $display("CASE %0d tag=%04x %0s code=%0d rtl=%0d golden=%0d issues=%0d/%0d views=%0d/%0d fetched=%0d retired=%0d trap=%0d fault=%0d sigerr=%0d applyovf=%0d",
+            $display("CASE %0d tag=%04x %0s code=%0d rtl=%0d golden=%0d issues=%0d/%0d views=%0d/%0d predicates=%0d/%0d fetched=%0d retired=%0d trap=%0d fault=%0d sigerr=%0d applyovf=%0d",
                      case_index, case_mem[base + 35][15:0],
                      (case_code == D_NONE) ? "OK" : "DIVERGE",
                      case_code, case_rtl, case_golden,
                      issue_seen, case_mem[base + 31],
                      view_seen, case_mem[base + 33],
+                     predicate_seen, case_mem[base + 39],
                      count_fetched, count_retired, trap_class,
                      first_fault_instruction, event_signal_error,
                      state_apply_overflow);
@@ -591,20 +669,25 @@ module tb_a3_deployment;
                          total_completions, meta_mem[3]);
                 $fatal(1, "completion total mismatch");
             end
+            if (total_predicates !== meta_mem[5]) begin
+                $display("FAIL: predicate total %0d expected %0d",
+                         total_predicates, meta_mem[5]);
+                $fatal(1, "predicate total mismatch");
+            end
             // A comparison that compared nothing is a defect, not a pass.
             if (total_views === 0) begin
                 $display("FAIL: no operand view was resolved; the comparison is vacuous");
                 $fatal(1, "no views compared");
             end
-            $display("PASS: ABI3 RTL deployment co-simulation deployments=%0d cases=%0d completions=%0d issues=%0d views=%0d signal_flag_cases=%0d apply_overflow_cases=%0d checks=%0d",
+            $display("PASS: ABI3 RTL deployment co-simulation deployments=%0d cases=%0d completions=%0d issues=%0d views=%0d predicates=%0d signal_flag_cases=%0d apply_overflow_cases=%0d checks=%0d",
                      deployment_count, case_count, total_completions,
-                     total_issues, total_views, signal_flag_cases,
+                     total_issues, total_views, total_predicates, signal_flag_cases,
                      apply_overflow_cases, checks);
             $finish;
         end else begin
-            $display("FAIL: ABI3 RTL deployment co-simulation diverged_cases=%0d of %0d deployments=%0d issues=%0d views=%0d signal_flag_cases=%0d apply_overflow_cases=%0d checks=%0d",
+            $display("FAIL: ABI3 RTL deployment co-simulation diverged_cases=%0d of %0d deployments=%0d issues=%0d views=%0d predicates=%0d signal_flag_cases=%0d apply_overflow_cases=%0d checks=%0d",
                      diverged_cases, case_count, deployment_count, total_issues,
-                     total_views, signal_flag_cases, apply_overflow_cases,
+                     total_views, total_predicates, signal_flag_cases, apply_overflow_cases,
                      checks);
             $fatal(1, "the RTL and runtime.sim.device.Device disagree on a shipped program");
         end
