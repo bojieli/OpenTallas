@@ -340,10 +340,11 @@ the required independent capture B is accepted. The retained older local pair
 does contain 256-token exact-oracle sequences, but a fresh invocation of the
 current W10 checker rejects both records: they use the superseded nonzero-STATE
 deployment and carry stale capability, oracle, deployment, and simulator-source
-identities, while omitting newly mandatory source bindings. The checked-in old
-`qwen3_8b_natural_acceptance.json` is therefore stale diagnostic history, not a
-current Gate-1 pass. The older stress capture also diverges and has no accepted
-ROM stress partner.
+identities, while omitting newly mandatory source bindings and the raw/visible
+decoded-text evidence now required for direct human inspection. The checked-in
+old `qwen3_8b_natural_acceptance.json` is therefore stale diagnostic history,
+not a current Gate-1 pass. The older stress capture also diverges and has no
+accepted ROM stress partner.
 
 ### 7.2 DeepSeek
 
