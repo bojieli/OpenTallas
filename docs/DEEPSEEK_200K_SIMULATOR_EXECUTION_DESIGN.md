@@ -102,6 +102,26 @@ or exactly 256 tokens with the same model revision, tokenizer, workload digest,
 numeric path disclosure, greedy selection rule, and source hashes. The campaign
 must not be redefined to stop after eight tokens.
 
+The source-current Gate-B checker is now implemented in
+[`check_deepseek_v4_200k_oracle.py`](../tools/check_deepseek_v4_200k_oracle.py),
+and the oracle runner records its repository-owned producer map plus immutable
+input identities at start; it rehashes the producer source map at completion so
+a source edit during the long run invalidates the result. The retained result is
+deliberately captured as a rejected
+[`preflight artifact`](../results/abi3/deepseek_v4_200k_oracle_acceptance_preflight.json):
+the exact prompt and tokenizer round trip pass, 74/74 checkpoint file sizes and
+48/48 content-addressed shard links pass, and accelerator/oracle dependency
+separation passes, but the eight-token horizon, invalid EOS-or-256 terminal
+condition, insufficient prompt-plus-cap KV allocation, missing source-current
+producer identity, missing explicit tiled-prefill enablement, and omitted
+full-byte checkpoint hash keep `accepted = false`.
+
+Acceptance also locks the exact qualified execution stack: tile geometry and
+declared adaptations, bitwise 16-head sparse-attention splitting, the measured
+FP4-fail/FP8-pass expert fallback, exact package versions, CUDA 12.8 on
+`sm_120`, TF32 disabled, and the qualified Hadamard extension. A fluent token
+sequence from an unqualified or undisclosed path does not close Gate B.
+
 The contract's target capability, cost-lock, and full-workload deployment
 digests are also pending. The source-locked final package must populate them for
 both targets before a comparison is published.
@@ -353,8 +373,10 @@ source-map digests in the comparison contract.
 **Boundary.** The external comparator supplies expected tokens only. It supplies
 no activation, route, weight, live-buffer, or timing value to simulator execution.
 
-**Exit.** The contract is non-pending and the oracle contains the complete
-EOS-or-256 sequence for the exact workload digest.
+**Exit.** The strict checker returns accepted, every checkpoint byte is
+verified, the exact qualified execution stack is retained, the contract is
+non-pending, and the oracle contains the complete EOS-or-256 sequence for the
+exact workload digest.
 
 ### 6.2 WP-C — measurement before optimization
 

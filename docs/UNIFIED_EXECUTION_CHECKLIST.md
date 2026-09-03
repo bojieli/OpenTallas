@@ -39,6 +39,17 @@ are source-current at this checkpoint. DeepSeek token captures predate the
 `INDEX_SCORE` single-rounding repair and are prior-build evidence. Qwen long
 captures predate the live-buffer profile and hardened checker; they are also
 prior-build evidence. Neither set may be promoted without a fresh run.
+**DeepSeek Gate-B preflight:** the strict source-current EOS-or-256 oracle
+checker is implemented (`7b3f77c`, hardened at `93a7c58`) and its canonical
+preflight rejects the retained 200K
+record. The exact 200,000-token prompt, tokenizer round trip, 74-file checkpoint
+size closure, 48 shard links, and oracle/accelerator dependency separation pass;
+the eight-token horizon, invalid EOS-or-256 terminal condition, insufficient prompt-plus-cap KV
+allocation, missing producer/input provenance, missing explicit tiled-prefill
+enablement, and skipped full-byte checkpoint hash correctly keep acceptance
+false. Acceptance also locks the qualified tile/adaptation set, bitwise head
+split, measured FP8 expert fallback, exact package/CUDA/`sm_120` environment,
+TF32-off policy, and Hadamard extension.
 **Generated companion:** `docs/PROGRAM_STATUS.md` and its JSON are regenerated
 in a follow-on status commit after the source/documentation checkpoint is clean.
 **Dependency spine:** W10.1 → W11.1; W10.2 is a parallel mandatory Phase-F
@@ -70,6 +81,10 @@ are jointly admissible. W11.3 provenance work can proceed independently.
 - [x] P10.10 Remove restart exactness from the acceptance path — the frozen
   execution profile is uninterrupted and fail-stop; prior checkpoint experiments
   remain historical evidence only.
+- [x] P10.11 Bind every execution-authoritative simulator source into W10
+  acceptance provenance — `runtime/sim/weight_cache.py` is now mandatory even
+  when the decoded immutable-weight cache budget is zero, so a cache-path change
+  cannot inherit an older natural/stress acceptance identity (`b27dc80`).
 
 **Execution concurrency:** requirement audits, dry lowerings, focused tests,
 validators and documentation run in parallel. Each short source-current Qwen
@@ -139,7 +154,10 @@ evidence. None may be presented as a rerun of the current source.
 - [x] W3.9 Reduction engine — `runtime/sim/engines/reduction.py`
 - [x] W3.10 Selection engine (argmax, token append, EOS) — `runtime/sim/engines/selection.py`, on-device
 - [x] W3.11 Link engine (send/recv/remote-dma/multicast/gather/scatter/collective/barrier) for 32-node + wafer — `runtime/sim/engines/link.py`
-- [x] W3.12 Observation/recovery engines + full counter set — sequencer-executed; 124-counter registry published
+- [x] W3.12 Observation plus compatibility-only recovery engines and full
+  counter set — sequencer-executed; 124-counter registry published. Recovery
+  remains legacy ABI 3.0 compatibility coverage and is absent from the
+  zero-`STATE` production profile.
 - [x] W3.13 Host queue driver — `runtime/driver.py`, real 128-byte submission/completion records per token
 
 ## W4 — HBM/SRAM backend (shared chip; 1 node Qwen, 32 nodes DeepSeek)
@@ -1274,9 +1292,10 @@ lanes are a precondition for it, not the product. These items are the product.
   scales with the declared context and not with the workload — a short prompt
   paid the full price.
 
-- **OI-23 — the committed state image holds one layer's KV window out of
+- **OI-23 — historical: the committed state image held one layer's KV window out of
   thirty-six, so the ABI's durability record is not a durability record.**
-  *(Found by the restart-exactness work.)* `Device._apply_commit` reads
+  *(Found by the withdrawn restart-exactness work; no production action remains
+  under the frozen zero-`STATE` profile.)* `Device._apply_commit` reads
   `prepared[0 : rows × row_bytes]` and appends it to the committed image at the
   cursor. That is a coherent contract for one logical stream. But
   `_state_view` in the HBM backend merges 36 layer KV resources into a single
@@ -1285,19 +1304,14 @@ lanes are a precondition for it, not the product. These items are the product.
   else, and the committed image is never read back. A restart from the ABI's own
   durability record would lose 35 of 36 layers of KV cache.
 
-  **The ABI is right and the backend is wrong.** A resource is one durable
-  stream; the backend declared thirty-six of them as one, in a layout the commit
-  contract cannot publish. The fix belongs in the layout, not in
-  `_apply_commit`: make the resource's row the concatenation of all layers' rows
-  for one position, so `capacity_rows` counts positions and one commit of
-  `span_tokens` rows publishes every layer. Per-layer views then take a column
-  offset inside the row — the same state-plane idiom the ROM lane already uses
-  for the key and value halves.
+  The abandoned durability design would have required a different layout. The
+  accepted implementation instead removed production `STATE` descriptors and
+  writes every layer's KV directly to ordinary live buffers, so no durable row
+  concatenation, committed image, or restart repair is required.
 
-  Execution today is unaffected, because reads name the prepared image; it is
-  the durability claim that is hollow. W6.6's proof stands on its own terms —
-  it checkpoints the prepared image, and says so — but it cannot be restated as
-  "restart from the committed state" until this is fixed.
+  The old observation remains useful provenance for why restart/durability
+  claims were withdrawn. It is not an open implementation item and must not be
+  restated as a requirement to "restart from the committed state."
 
 - **OI-22 — the HBM lane's block loop ran once at any prompt length, so every
   token past the first 512 was silently dropped.** *(Found by the ROM lane; fixed.)*

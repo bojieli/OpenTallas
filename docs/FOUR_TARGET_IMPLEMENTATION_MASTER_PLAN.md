@@ -57,11 +57,14 @@ ordered implementation packages are:
 2. lower mutable KV, compressed-KV, ring, and compressor tensors explicitly as
    ordinary HBM/SRAM buffers, decomposing a complex update into existing
    operations and scratch views when one operator record is insufficient;
-3. execute those operations directly against simulator HBM/SRAM buffers and
+3. remove `TRANSACTIONAL_STATE` from every production deployment's required
+   features and require `INTEGRITY_RETRY` only for a deployment with a real
+   packet link, where its scope is packet-local;
+4. execute those operations directly against simulator HBM/SRAM buffers and
    enforce a fence after all memory and communication work for one token;
-4. correlate the same ABI 3.0 program, addresses, counters, and completion
+5. correlate the same ABI 3.0 program, addresses, counters, and completion
    boundary through the cycle model and RTL; and
-5. run focused conformance checks, then rebuild and re-execute all four target
+6. run focused conformance checks, then rebuild and re-execute all four target
    deployments.
 
 The required profile is uninterrupted and fail-stop. A failed model step ends
@@ -236,6 +239,9 @@ Every agent and lane must preserve these invariants:
 - every HBM/SRAM chip includes the digital inter-chip endpoint, remote DMA,
   packet queues/credits, collectives, integrity/retry, faults, and counters
   required for causal 32-node execution;
+- production deployments require no transactional-state feature; packet
+  integrity/replay is required only by a link-bearing topology and never grants
+  model-operation retry;
 - Qwen ROM is conventional single-chip and DeepSeek ROM is mandatory
   wafer-scale hardware;
 - Qwen acceptance uses exactly 8,000 natural prompt tokens, plus a separate
