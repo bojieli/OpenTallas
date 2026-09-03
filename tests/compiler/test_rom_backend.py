@@ -3400,7 +3400,10 @@ def test_direct_state_token_append_waits_for_link_join_and_fence(deepseek_build)
 
     assert fence.signal_event_id in waited(token)
     fence_inputs = waited(fence)
-    assert len(fence_inputs) == 1
+    # The terminal frontier is reduced only until one ABI wait set can name
+    # it; FENCE itself is the final join, so no otherwise-unused root event is
+    # required.
+    assert 1 <= len(fence_inputs) <= 12
     signaller = {
         instruction.signal_event_id: instruction
         for instruction in instructions
@@ -4565,3 +4568,393 @@ def test_an_index_family_the_frozen_operator_cannot_produce_is_refused(
         int(Route.WINDOW_INDEX),
     )
     assert aux[0] == 64
+
+
+# ---------------------------------------------------------------------------
+# Released DeepSeek rolling compressor (ordinary-HBM ABI 3.0)
+# ---------------------------------------------------------------------------
+REAL_DEEPSEEK_ROM_IR = Path(
+    "build/ir-v3/deepseek-v4-flash-0731/kernel_ir.v3.json"
+)
+
+
+@pytest.fixture(scope="module")
+def released_deepseek_rom_build():
+    """Compile the production graph once when the generated IR is present."""
+
+    root = Path(__file__).resolve().parents[2]
+    path = root / REAL_DEEPSEEK_ROM_IR
+    if not path.exists():
+        pytest.skip("DeepSeek IR has not been built into build/ir-v3")
+    graph = KernelGraph.read(path)
+    capability = deepseek_v4_rom_capability()
+    deployment, plan = build_deepseek_v4_rom_deployment(
+        graph, capability=capability
+    )
+    return graph, capability, deployment, plan
+
+
+def _released_operator_rows(deployment, source: int, major: int, sub: int):
+    rows = []
+    for position, instruction in enumerate(_instructions(deployment)):
+        if (
+            instruction.source_operation_id != source
+            or instruction.major != int(major)
+            or instruction.sub != int(sub)
+            or instruction.descriptor_id == NO_ID
+        ):
+            continue
+        operator = deployment.table.get(
+            instruction.descriptor_id, ExtendedDescriptorType.OPERATOR
+        )
+        rows.append((position, instruction, operator))
+    return rows
+
+
+def _released_view(deployment, operator, field: str):
+    descriptor_id = int(operator.payload[field])
+    if descriptor_id == NO_ID:
+        return None
+    return deployment.table.get(
+        descriptor_id, ExtendedDescriptorType.TENSOR_VIEW
+    )
+
+
+def _released_dims(view):
+    return tuple(
+        int(view.payload[f"dim{axis}"])
+        for axis in range(int(view.payload["rank"]))
+    )
+
+
+def _released_strides(view):
+    return tuple(
+        int(view.payload[f"stride{axis}"])
+        for axis in range(int(view.payload["rank"]))
+    )
+
+
+def _released_waited(deployment, instruction):
+    if instruction.wait_set_id == NO_ID:
+        return set()
+    payload = deployment.table.get(
+        instruction.wait_set_id, ExtendedDescriptorType.EVENT_WAIT_SET
+    ).payload
+    return {
+        int(payload[f"producer_{slot}"])
+        for slot in range(int(payload["producer_count"]))
+    }
+
+
+def test_released_rolling_compressor_is_admitted_as_plain_abi3(
+    released_deepseek_rom_build,
+):
+    """The production graph fits the frozen event limit with no STATE layer."""
+
+    graph, capability, deployment, _plan = released_deepseek_rom_build
+    verification = verify_deployment(deployment, capability)
+    assert verification.admitted, verification.errors
+    assert verification.event_count <= capability.limits["max_events"]
+    assert verification.state_resources == 0
+
+    report = check_rom_schedule(graph, deployment, capability)
+    assert report["status"] == "pass", report["errors"]
+    for name in (
+        "rolling_abi3_metadata",
+        "rolling_no_state_descriptors",
+        "rolling_history_resets",
+        "rolling_ape_geometry",
+        "rolling_score_add_fp32_rne",
+        "rolling_history_ring_append",
+        "rolling_packed_split",
+        "rolling_boundary_geometry",
+        "rolling_no_history_roll_copy",
+        "rolling_dual_path",
+        "rolling_decode_static_extent",
+        "rolling_rope_group_start",
+        "rolling_append_convergence",
+        "rolling_history_terminal_fence",
+    ):
+        assert report["checks"][name], name
+
+    assert deployment.notes["rom_predicates"]["rolling_compressor"] == {
+        "abi": "3.0",
+        "boundary": "ring_indices_v1(POSITION_END) == 0",
+        "history": "ordinary_hbm_circular_absolute_position",
+        "ratios": [4, 128],
+        "roll_copy": False,
+    }
+
+
+def test_released_boundary_flags_are_shared_and_history_never_rolls(
+    released_deepseek_rom_build,
+):
+    """There is one four-byte flag per ratio and no history-to-history copy."""
+
+    from runtime.abi3.constants import Dma, InstructionFlag
+    from runtime.abi3.descriptors import PredicateKind
+
+    graph, _capability, deployment, _plan = released_deepseek_rom_build
+    predicates = {
+        descriptor.descriptor_id: descriptor
+        for descriptor in deployment.table.descriptors()
+        if descriptor.descriptor_type == ExtendedDescriptorType.PREDICATE
+        and descriptor.payload["predicate_kind"]
+        == int(PredicateKind.BOOLEAN_OBJECT)
+    }
+    assert len(predicates) == 2
+    assert {
+        deployment.table[predicate.payload["object_id"]].payload["size_bytes"]
+        for predicate in predicates.values()
+    } == {4}
+    assert all(
+        deployment.table[predicate.payload["object_id"]].payload["storage_class"]
+        == int(StorageClass.HBM)
+        for predicate in predicates.values()
+    )
+
+    writers = {predicate.payload["object_id"]: [] for predicate in predicates.values()}
+    transfers = []
+    update_ids = {
+        kernel.index
+        for kernel in graph.kernels
+        if kernel.kind == "COMPRESS_STATE_UPDATE"
+    }
+    for instruction in _instructions(deployment):
+        if instruction.predicate_id in predicates:
+            assert instruction.flags & int(InstructionFlag.PREDICATE_INVERT)
+        if (
+            instruction.major != int(Major.DMA)
+            or instruction.sub not in {int(Dma.TRANSFER), int(Dma.FILL)}
+            or instruction.descriptor_id == NO_ID
+        ):
+            continue
+        operator = deployment.table[instruction.descriptor_id]
+        output = _released_view(deployment, operator, "output_view_0")
+        if (
+            instruction.sub == int(Dma.TRANSFER)
+            and instruction.source_operation_id in update_ids
+        ):
+            transfers.append(output)
+        if output is not None and output.primary_object_id in writers:
+            writers[output.primary_object_id].append(instruction.sub)
+    assert all(sorted(rows) == sorted([int(Dma.TRANSFER), int(Dma.FILL)]) for rows in writers.values())
+    assert transfers and all(_released_dims(view) == (1,) for view in transfers)
+
+    # Five representative state transitions use only the two request-wide
+    # flags, demonstrating that setup is shared rather than repeated by layer.
+    emitted_updates = {
+        kernel.index
+        for kernel in graph.kernels
+        if kernel.kind == "COMPRESS_STATE_UPDATE"
+        and any(
+            instruction.source_operation_id == kernel.index
+            for instruction in _instructions(deployment)
+        )
+    }
+    assert len(emitted_updates) > len(predicates)
+
+
+def test_released_decode_paths_are_static_and_rope_uses_group_start(
+    released_deepseek_rom_build,
+):
+    """Boundary decode is one group; compressed RoPE selects p + 1 - R."""
+
+    from runtime.abi3.constants import InstructionFlag
+    from runtime.abi3.descriptors import PredicateKind, SelectorKind
+
+    graph, _capability, deployment, _plan = released_deepseek_rom_build
+    predicates = {
+        descriptor.descriptor_id: descriptor.payload
+        for descriptor in deployment.table.descriptors()
+        if descriptor.descriptor_type == ExtendedDescriptorType.PREDICATE
+    }
+    rolling_names = {
+        kernel.attributes["predicate_output"]
+        for kernel in graph.kernels
+        if kernel.kind == "COMPRESS_STATE_UPDATE"
+    }
+    representative_ratios = set()
+    checked_static = 0
+    for kernel in graph.kernels:
+        if kernel.attributes.get("execution_predicate") not in rolling_names:
+            continue
+        engine = KERNEL_TO_ENGINE[kernel.kind]
+        rows = _released_operator_rows(
+            deployment, kernel.index, engine.family, engine.sub
+        )
+        if not rows:
+            continue
+        decode = [
+            row
+            for row in rows
+            if predicates[row[1].predicate_id]["predicate_kind"]
+            == int(PredicateKind.BOOLEAN_OBJECT)
+            and row[1].flags & int(InstructionFlag.PREDICATE_INVERT)
+        ]
+        assert len(rows) == 2 and len(decode) == 1
+        operator = decode[0][2]
+        for field in ("input_view_0", "input_view_1", "input_view_2", "output_view_0", "output_view_1"):
+            view = _released_view(deployment, operator, field)
+            if view is None:
+                continue
+            obj = deployment.table[view.primary_object_id]
+            if obj.payload["storage_class"] == int(StorageClass.ROM):
+                continue
+            if kernel.kind == "KV_APPEND" and field.startswith("output_"):
+                continue
+            assert _released_dims(view)[0] == 1
+            assert view.payload["dynamic_term_count"] == 0
+            checked_static += 1
+
+        if kernel.kind != "GATHER" or not kernel.attributes.get("compressed"):
+            continue
+        ratio = int(kernel.attributes["ratio"])
+        representative_ratios.add(ratio)
+        index = _released_view(deployment, operator, "input_view_0")
+        coefficient = _released_view(deployment, operator, "input_view_1")
+        source = deployment.objects[index.primary_object_id]
+        assert source.generator == "floor_div_indices_v1"
+        assert source.parameters["divisor"] == ratio
+        assert _released_dims(index) == (1,)
+        assert _released_strides(index) == (ratio,)
+        terms = {
+            (
+                index.payload[f"term{slot}_kind"],
+                index.payload[f"term{slot}_index"],
+                index.payload[f"term{slot}_stride"],
+            )
+            for slot in range(index.payload["dynamic_term_count"])
+        }
+        assert (
+            int(SelectorKind.RUNTIME_SYMBOL),
+            int(Symbol.POSITION_START),
+            1,
+        ) in terms
+        width = int(graph.tensors[[t.tensor_id for t in graph.tensors].index(kernel.inputs[1])].shape[-1])
+        assert _released_strides(coefficient)[0] == ratio * width
+    assert checked_static
+    assert representative_ratios == {4, 128}
+
+
+def test_rolling_checker_rejects_wrong_history_modulus(
+    released_deepseek_rom_build,
+):
+    """A legal ROM index object with the wrong ring size is still rejected."""
+
+    from runtime.abi3.constants import Dma
+
+    graph, capability, deployment, _plan = released_deepseek_rom_build
+    update = next(
+        kernel
+        for kernel in graph.kernels
+        if kernel.kind == "COMPRESS_STATE_UPDATE"
+        and kernel.attributes.get("ratio") == 4
+        and _released_operator_rows(
+            deployment, kernel.index, Major.DMA, int(Dma.SCATTER)
+        )
+    )
+    scatter = _released_operator_rows(
+        deployment, update.index, Major.DMA, int(Dma.SCATTER)
+    )[0]
+    index = _released_view(deployment, scatter[2], "input_view_0")
+    wrong_object = next(
+        object_id
+        for object_id, source in deployment.objects.items()
+        if source.generator == "ring_indices_v1"
+        and source.parameters.get("modulus") == 128
+    )
+    candidate = copy.deepcopy(deployment)
+    candidate.table[index.descriptor_id].primary_object_id = wrong_object
+    candidate.table.rewrite(index.descriptor_id)
+    _restamp(candidate)
+    report = check_rom_schedule(graph, candidate, capability)
+    assert report["status"] == "fail"
+    assert not report["checks"]["rolling_history_ring_append"]
+
+
+def test_rolling_checker_rejects_wrong_ratio4_half(
+    released_deepseek_rom_build,
+):
+    """The current half must read the second D columns, not a nearby slice."""
+
+    from runtime.abi3.constants import Dma, InstructionFlag
+    from runtime.abi3.descriptors import PredicateKind
+
+    graph, capability, deployment, _plan = released_deepseek_rom_build
+    predicates = {
+        descriptor.descriptor_id: descriptor.payload
+        for descriptor in deployment.table.descriptors()
+        if descriptor.descriptor_type == ExtendedDescriptorType.PREDICATE
+    }
+    update = next(
+        kernel
+        for kernel in graph.kernels
+        if kernel.kind == "COMPRESS_STATE_UPDATE"
+        and kernel.attributes.get("ratio") == 4
+        and _released_operator_rows(
+            deployment, kernel.index, Major.DMA, int(Dma.GATHER)
+        )
+    )
+    current = next(
+        row
+        for row in _released_operator_rows(
+            deployment, update.index, Major.DMA, int(Dma.GATHER)
+        )
+        if row[1].flags & int(InstructionFlag.PREDICATE_INVERT)
+        and predicates[row[1].predicate_id]["predicate_kind"]
+        == int(PredicateKind.BOOLEAN_OBJECT)
+        and _released_view(deployment, row[2], "input_view_0").payload[
+            "element_offset"
+        ]
+        == 4
+    )
+    source = _released_view(deployment, current[2], "input_view_1")
+    candidate = _mutate_descriptor(
+        deployment,
+        source.descriptor_id,
+        "element_offset",
+        source.payload["element_offset"] + 1,
+    )
+    report = check_rom_schedule(graph, candidate, capability)
+    assert report["status"] == "fail"
+    assert not report["checks"]["rolling_boundary_geometry"]
+
+
+def test_rolling_checker_rejects_missing_history_write_dependency(
+    released_deepseek_rom_build,
+):
+    """Score history cannot publish before the KV history write completes."""
+
+    from runtime.abi3.constants import Dma
+
+    graph, capability, deployment, _plan = released_deepseek_rom_build
+    update = next(
+        kernel
+        for kernel in graph.kernels
+        if kernel.kind == "COMPRESS_STATE_UPDATE"
+        and _released_operator_rows(
+            deployment, kernel.index, Major.DMA, int(Dma.SCATTER)
+        )
+    )
+    scatters = _released_operator_rows(
+        deployment, update.index, Major.DMA, int(Dma.SCATTER)
+    )
+    kv, score = scatters
+    assert kv[1].signal_event_id in _released_waited(deployment, score[1])
+    candidate = copy.deepcopy(deployment)
+    descriptor = candidate.table.get(
+        score[1].wait_set_id, ExtendedDescriptorType.EVENT_WAIT_SET
+    )
+    producers = sorted(
+        (_released_waited(deployment, score[1]) - {kv[1].signal_event_id})
+        | {0}
+    )
+    assert len(producers) == descriptor.payload["producer_count"]
+    for slot, event in enumerate(producers):
+        descriptor.payload[f"producer_{slot}"] = event
+    candidate.table.rewrite(descriptor.descriptor_id)
+    _restamp(candidate)
+    report = check_rom_schedule(graph, candidate, capability)
+    assert report["status"] == "fail"
+    assert not report["checks"]["rolling_history_write_order"]

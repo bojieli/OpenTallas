@@ -35,15 +35,21 @@ from runtime.abi3.constants import (
     NO_ID,
     ParticipantScope,
     Permission,
+    Reduction,
+    RoundingMode,
     State,
     StorageClass,
     Tensor as TensorOp,
     TopologyClass,
+    Vector,
 )
 from runtime.abi3.deployment import Deployment
 from runtime.abi3.descriptors import (
     CollectiveOp,
+    Comparison,
     ExtendedDescriptorType,
+    Phase,
+    PredicateKind,
     SelectorKind,
     Symbol,
 )
@@ -87,6 +93,19 @@ _MAX_LAYER_PERIOD = 8
 # backend-private opcode.
 _AUXILIARY_ENGINE_OPS: Mapping[str, frozenset[tuple[int, int]]] = {
     "EXPERT_DISPATCH": frozenset({(int(Major.DMA), 0)}),  # DMA.TRANSFER
+    # The released rolling compressor is expanded into ordinary frozen ABI
+    # 3.0 dataflow.  This allow-list admits only those existing operations;
+    # ``_check_rolling_compressor`` below independently proves their exact
+    # views, predicates, constants, generators, dependencies, and counts.
+    "COMPRESS_STATE_UPDATE": frozenset(
+        {
+            (int(Major.DMA), int(Dma.TRANSFER)),
+            (int(Major.DMA), int(Dma.FILL)),
+            (int(Major.DMA), int(Dma.GATHER)),
+            (int(Major.DMA), int(Dma.SCATTER)),
+            (int(Major.REDUCTION), int(Reduction.ORDERED_SUM)),
+        }
+    ),
 }
 
 
@@ -133,8 +152,14 @@ def check_rom_schedule(
     }
     views = {d.descriptor_id: d for d in by_type[ExtendedDescriptorType.TENSOR_VIEW]}
     schedules = {d.descriptor_id: d for d in by_type[ExtendedDescriptorType.SCHEDULE]}
-    numeric_ids = {d.descriptor_id for d in by_type[ExtendedDescriptorType.NUMERIC]}
+    numerics = {
+        d.descriptor_id: d for d in by_type[ExtendedDescriptorType.NUMERIC]
+    }
+    numeric_ids = set(numerics)
     operators = {d.descriptor_id: d for d in by_type[ExtendedDescriptorType.OPERATOR]}
+    predicates = {
+        d.descriptor_id: d for d in by_type[ExtendedDescriptorType.PREDICATE]
+    }
     waits = {d.descriptor_id: d for d in by_type[ExtendedDescriptorType.EVENT_WAIT_SET]}
     loops = {d.descriptor_id: d for d in by_type[ExtendedDescriptorType.LOOP_CONTROL]}
     states = {d.descriptor_id: d for d in by_type[ExtendedDescriptorType.STATE]}
@@ -340,6 +365,21 @@ def check_rom_schedule(
             f"engine operations {sorted(_mnemonic(pair) for pair in pairs - permitted)}",
         )
 
+    rolling_predicates = _check_rolling_compressor(
+        graph=graph,
+        deployment=deployment,
+        expected_order=expected_order,
+        instructions=instructions,
+        by_source=by_source,
+        objects=objects,
+        views=views,
+        numerics=numerics,
+        predicates=predicates,
+        waits=waits,
+        states=states,
+        require=require,
+    )
+
     # A dynamic tensor-view term can add POSITION_START but cannot divide it.
     # Independently prove that every compressed-cache scatter reads the
     # generated quotient table with the exact divisor and addressing geometry
@@ -363,60 +403,59 @@ def check_rom_schedule(
             if (item[1].major, item[1].sub)
             == (int(Major.DMA), int(Dma.SCATTER))
         ]
+        expected_scatter_count = (
+            2
+            if str(kernel.attributes.get("execution_predicate", ""))
+            in rolling_predicates
+            else 1
+        )
         if not require(
             "floor_div_scatter_present",
-            len(emitted) == 1,
+            len(emitted) == expected_scatter_count,
             f"kernel {kernel.index} has {len(emitted)} compressed-row scatters, "
-            "expected one",
+            f"expected {expected_scatter_count}",
         ):
             continue
-        operator = emitted[0][2]
-        index_view = views.get(int(operator.payload["input_view_0"]))
-        if not require(
-            "floor_div_index_view_present",
-            index_view is not None,
-            f"kernel {kernel.index} compressed-row scatter has no index view",
-        ):
-            continue
-        source = deployment.objects.get(int(index_view.primary_object_id))
-        parameters = dict(source.parameters) if source is not None else {}
-        require(
-            "floor_div_generator_exact",
-            source is not None
-            and source.kind == "generated"
-            and source.generator == "floor_div_indices_v1"
-            and int(parameters.get("divisor", 0)) == divisor,
-            f"kernel {kernel.index} compressed-row index is not generated as "
-            f"position // {divisor}",
-        )
-        require(
-            "floor_div_generator_extent",
-            int(parameters.get("count", 0))
-            > int(capability.limits["max_context_positions"]),
-            f"kernel {kernel.index} quotient table does not extend beyond the "
-            "maximum admissible position",
-        )
-        payload = index_view.payload
-        terms = [
-            (
-                int(payload[f"term{slot}_kind"]),
-                int(payload[f"term{slot}_index"]),
-                int(payload[f"term{slot}_stride"]),
+        for _index, _instruction, operator in emitted:
+            index_view = views.get(int(operator.payload["input_view_0"]))
+            if not require(
+                "floor_div_index_view_present",
+                index_view is not None,
+                f"kernel {kernel.index} compressed-row scatter has no index view",
+            ):
+                continue
+            source = deployment.objects.get(int(index_view.primary_object_id))
+            parameters = dict(source.parameters) if source is not None else {}
+            require(
+                "floor_div_generator_exact",
+                source is not None
+                and source.kind == "generated"
+                and source.generator == "floor_div_indices_v1"
+                and int(parameters.get("divisor", 0)) == divisor,
+                f"kernel {kernel.index} compressed-row index is not generated as "
+                f"position // {divisor}",
             )
-            for slot in range(int(payload["dynamic_term_count"]))
-        ]
-        require(
-            "floor_div_index_geometry",
-            int(payload["stride0"]) == divisor
-            and (
-                int(SelectorKind.RUNTIME_SYMBOL),
-                int(Symbol.POSITION_START),
-                1,
+            require(
+                "floor_div_generator_extent",
+                int(parameters.get("count", 0))
+                > int(capability.limits["max_context_positions"]),
+                f"kernel {kernel.index} quotient table does not extend beyond the "
+                "maximum admissible position",
             )
-            in terms,
-            f"kernel {kernel.index} quotient view does not use storage stride "
-            f"{divisor} with POSITION_START coefficient one",
-        )
+            payload = index_view.payload
+            terms = _view_terms(index_view)
+            require(
+                "floor_div_index_geometry",
+                int(payload["stride0"]) == divisor
+                and (
+                    int(SelectorKind.RUNTIME_SYMBOL),
+                    int(Symbol.POSITION_START),
+                    1,
+                )
+                in terms,
+                f"kernel {kernel.index} quotient view does not use storage stride "
+                f"{divisor} with POSITION_START coefficient one",
+            )
 
     # -- control-flow work and instruction multiplicity -------------------
     multipliers = [0] * len(instructions)
@@ -1206,6 +1245,865 @@ def _extent(value: Any) -> int:
     if isinstance(value, Symbolic):
         return max(int(value.maximum or value.multiplier or 1), 1)
     return max(int(value), 1)
+
+
+def _view_dims(view: Any | None) -> tuple[int, ...]:
+    if view is None:
+        return ()
+    payload = view.payload
+    return tuple(
+        int(payload[f"dim{axis}"]) for axis in range(int(payload["rank"]))
+    )
+
+
+def _view_strides(view: Any | None) -> tuple[int, ...]:
+    if view is None:
+        return ()
+    payload = view.payload
+    return tuple(
+        int(payload[f"stride{axis}"]) for axis in range(int(payload["rank"]))
+    )
+
+
+def _view_terms(view: Any | None) -> tuple[tuple[int, int, int], ...]:
+    if view is None:
+        return ()
+    payload = view.payload
+    return tuple(
+        (
+            int(payload[f"term{slot}_kind"]),
+            int(payload[f"term{slot}_index"]),
+            int(payload[f"term{slot}_stride"]),
+        )
+        for slot in range(int(payload["dynamic_term_count"]))
+    )
+
+
+def _operator_view(
+    operator: Any, views: Mapping[int, Any], field: str
+) -> Any | None:
+    descriptor_id = int(operator.payload[field])
+    if descriptor_id == NO_ID:
+        return None
+    return views.get(descriptor_id)
+
+
+def _generated_view_source(deployment: Deployment, view: Any) -> Any | None:
+    if view is None:
+        return None
+    source = deployment.objects.get(int(view.primary_object_id))
+    if source is None or source.kind != "generated":
+        return None
+    return source
+
+
+def _phase_predicate(
+    predicates: Mapping[int, Any], descriptor_id: int, phase: Phase
+) -> bool:
+    predicate = predicates.get(int(descriptor_id))
+    if predicate is None:
+        return False
+    payload = predicate.payload
+    return (
+        int(payload["predicate_kind"]) == int(PredicateKind.PHASE_IS)
+        and int(payload["comparison"]) == int(Comparison.EQ)
+        and int(payload["selector_kind"]) == int(SelectorKind.RUNTIME_SYMBOL)
+        and int(payload["selector_index"]) == int(Symbol.PHASE)
+        and int(payload["immediate"]) == int(phase)
+    )
+
+
+def _prefill_group_predicate(
+    predicates: Mapping[int, Any], descriptor_id: int, ratio: int
+) -> bool:
+    predicate = predicates.get(int(descriptor_id))
+    if predicate is None:
+        return False
+    payload = predicate.payload
+    return (
+        int(payload["predicate_kind"]) == int(PredicateKind.COMPARE_SYMBOL)
+        and int(payload["comparison"]) == int(Comparison.GE)
+        and int(payload["selector_kind"]) == int(SelectorKind.RUNTIME_SYMBOL)
+        and int(payload["selector_index"]) == int(Symbol.SPAN_TOKENS)
+        and int(payload["immediate"]) == int(ratio)
+    )
+
+
+def _check_rolling_compressor(
+    *,
+    graph: KernelGraph,
+    deployment: Deployment,
+    expected_order: Sequence[Kernel],
+    instructions: Sequence[Instruction],
+    by_source: Mapping[int, Sequence[tuple[int, Instruction, Any]]],
+    objects: Mapping[int, Any],
+    views: Mapping[int, Any],
+    numerics: Mapping[int, Any],
+    predicates: Mapping[int, Any],
+    waits: Mapping[int, Any],
+    states: Mapping[int, Any],
+    require: Callable[[str, bool, str], bool],
+) -> dict[str, int]:
+    """Independently prove the released ABI-3.0 rolling transition.
+
+    The neutral state-update kernel is deliberately expanded, but only into
+    frozen DMA, REDUCTION and VECTOR rows.  This proof reconstructs the two raw
+    HBM rings, APE addition, boundary flag, no-copy gather, dual downstream
+    paths, compressed RoPE position, and final history fence from descriptors;
+    producer-side helper names and metadata are never imported.
+    """
+
+    updates = [kernel for kernel in expected_order if kernel.kind == "COMPRESS_STATE_UPDATE"]
+    if not updates:
+        return {}
+
+    tensor_by_id = {tensor.tensor_id: tensor for tensor in graph.tensors}
+    state_by_id = {state.state_id: state for state in graph.states}
+    rolling_predicates: dict[str, int] = {}
+    update_rows: dict[int, dict[str, Any]] = {}
+    boundary_by_ratio: dict[int, int] = {}
+    raw_history_events: set[int] = set()
+
+    signal_instruction = {
+        int(instruction.signal_event_id): (index, instruction)
+        for index, instruction in enumerate(instructions)
+        if int(instruction.signal_event_id) != NO_ID
+    }
+
+    def emitted(
+        kernel: Kernel, family: Major, sub: int
+    ) -> list[tuple[int, Instruction, Any]]:
+        return [
+            item
+            for item in by_source.get(kernel.index, ())
+            if (int(item[1].major), int(item[1].sub)) == (int(family), int(sub))
+        ]
+
+    def storage(view: Any | None) -> int:
+        if view is None:
+            return -1
+        descriptor = objects.get(int(view.primary_object_id))
+        return -1 if descriptor is None else int(descriptor.payload["storage_class"])
+
+    def generated(
+        view: Any | None, name: str, parameter: str, value: int
+    ) -> bool:
+        source = _generated_view_source(deployment, view)
+        return (
+            source is not None
+            and source.generator == name
+            and int(dict(source.parameters).get(parameter, -1)) == int(value)
+        )
+
+    def generated_as(view: Any | None, name: str) -> bool:
+        source = _generated_view_source(deployment, view)
+        return source is not None and source.generator == name
+
+    def runtime_term(view: Any | None, symbol: Symbol) -> bool:
+        return view is not None and (
+            int(SelectorKind.RUNTIME_SYMBOL), int(symbol), 1
+        ) in _view_terms(view)
+
+    note = dict(deployment.notes.get("rom_predicates", {})).get(
+        "rolling_compressor"
+    )
+    expected_ratios = sorted(
+        {int(kernel.attributes.get("ratio", 0) or 0) for kernel in updates}
+    )
+    require(
+        "rolling_abi3_metadata",
+        note
+        == {
+            "abi": "3.0",
+            "boundary": "ring_indices_v1(POSITION_END) == 0",
+            "history": "ordinary_hbm_circular_absolute_position",
+            "ratios": expected_ratios,
+            "roll_copy": False,
+        },
+        "rolling compressor metadata is not the frozen direct-HBM ABI 3.0 profile",
+    )
+    require(
+        "rolling_no_state_descriptors",
+        not states
+        and not any(instruction.major == int(Major.STATE) for instruction in instructions),
+        "rolling compressor emitted ABI STATE records instead of ordinary HBM",
+    )
+
+    for kernel in updates:
+        ratio = int(kernel.attributes.get("ratio", 0) or 0)
+        predicate_name = str(kernel.attributes.get("predicate_output", ""))
+        conditions = kernel.attributes.get("predicate_condition", {})
+        conditions = dict(conditions) if isinstance(conditions, Mapping) else {}
+        require(
+            "rolling_ratio",
+            ratio in {4, 128},
+            f"compressor kernel {kernel.index} uses unpinned ratio {ratio}",
+        )
+        require(
+            "rolling_predicate_contract",
+            bool(predicate_name)
+            and conditions.get("decode") == f"context_length % {ratio} == 0"
+            and conditions.get("prefill") == f"span_groups_ratio{ratio} > 0",
+            f"compressor kernel {kernel.index} does not declare the exact two-phase boundary",
+        )
+        previous = rolling_predicates.setdefault(predicate_name, ratio)
+        require(
+            "rolling_predicate_ratio_unique",
+            previous == ratio,
+            f"rolling predicate {predicate_name!r} names conflicting ratios",
+        )
+
+        packed = tensor_by_id[kernel.inputs[0]]
+        packed_dims = tuple(_extent(value) for value in packed.shape)
+        width = packed_dims[-1] if len(packed_dims) == 3 else 0
+        slots = ratio * (2 if ratio == 4 else 1)
+        head_dim = width // (2 if ratio == 4 else 1) if width else 0
+        named_states = [state_by_id.get(name) for name in kernel.state_reads]
+        require(
+            "rolling_state_pair",
+            len(named_states) == 2
+            and None not in named_states
+            and set(kernel.state_reads) == set(kernel.state_writes),
+            f"compressor kernel {kernel.index} does not read/write one raw state pair",
+        )
+        require(
+            "rolling_state_geometry",
+            bool(width)
+            and packed_dims[1:2] == (2,)
+            and all(
+                state is not None
+                and state.state_class == "compressor_window"
+                and state.dtype == "fp32"
+                and _extent(state.capacity_rows) == slots
+                and int(state.row_elements) == width
+                for state in named_states
+            )
+            and {state.initialization for state in named_states if state is not None}
+            == {"zero", "negative_infinity"},
+            f"compressor kernel {kernel.index} raw state is not FP32 {slots}x{width}",
+        )
+
+        fills = emitted(kernel, Major.DMA, int(Dma.FILL))
+        reset_rows: dict[int, tuple[int, Instruction, Any, Any]] = {}
+        for item in fills:
+            output = _operator_view(item[2], views, "output_view_0")
+            if output is None or _view_dims(output) != (slots, width):
+                continue
+            code = int(item[2].payload["aux_id_0"])
+            reset_rows[code] = (*item, output)
+        require(
+            "rolling_history_resets",
+            set(reset_rows) == {0, 0xFF800000}
+            and len(reset_rows) == 2
+            and all(
+                int(row[1].predicate_id) != NO_ID
+                and _phase_predicate(predicates, row[1].predicate_id, Phase.PREFILL)
+                and not row[1].flags & int(InstructionFlag.PREDICATE_INVERT)
+                and int(row[3].payload["dtype"]) == int(DType.FP32)
+                and _view_strides(row[3]) == (width, 1)
+                and storage(row[3]) == int(StorageClass.HBM)
+                for row in reset_rows.values()
+            ),
+            f"compressor kernel {kernel.index} lacks exact zero/-infinity HBM resets",
+        )
+        if set(reset_rows) != {0, 0xFF800000}:
+            continue
+        kv_reset = reset_rows[0]
+        score_reset = reset_rows[0xFF800000]
+        kv_history = kv_reset[3]
+        score_history = score_reset[3]
+        history_objects = {
+            int(kv_history.primary_object_id),
+            int(score_history.primary_object_id),
+        }
+        require(
+            "rolling_history_objects_distinct",
+            len(history_objects) == 2
+            and all(
+                int(view.permissions) & int(Permission.READ | Permission.WRITE)
+                == int(Permission.READ | Permission.WRITE)
+                for view in (kv_history, score_history)
+            ),
+            f"compressor kernel {kernel.index} does not bind two writable HBM histories",
+        )
+
+        gathers = emitted(kernel, Major.DMA, int(Dma.GATHER))
+        ape_rows = [
+            item
+            for item in gathers
+            if item[1].predicate_id == NO_ID
+            and storage(_operator_view(item[2], views, "input_view_1"))
+            == int(StorageClass.ROM)
+        ]
+        require(
+            "rolling_ape_gather_count",
+            len(ape_rows) == 1,
+            f"compressor kernel {kernel.index} has {len(ape_rows)} APE gathers",
+        )
+        sums = emitted(kernel, Major.REDUCTION, int(Reduction.ORDERED_SUM))
+        scatters = emitted(kernel, Major.DMA, int(Dma.SCATTER))
+        pools = emitted(kernel, Major.VECTOR, int(Vector.COMPRESS))
+        require(
+            "rolling_primitive_counts",
+            len(sums) == 1 and len(scatters) == 2 and len(pools) == 1,
+            f"compressor kernel {kernel.index} does not emit one sum, two scatters and one pool",
+        )
+        if len(ape_rows) != 1 or len(sums) != 1 or len(scatters) != 2 or len(pools) != 1:
+            continue
+
+        ape_at, ape_instruction, ape_operator = ape_rows[0]
+        ape_index = _operator_view(ape_operator, views, "input_view_0")
+        ape_source = _operator_view(ape_operator, views, "input_view_1")
+        ape_output = _operator_view(ape_operator, views, "output_view_0")
+        require(
+            "rolling_ape_geometry",
+            generated(ape_index, "ring_indices_v1", "modulus", ratio)
+            and runtime_term(ape_index, Symbol.POSITION_START)
+            and _view_dims(ape_source) == (ratio, width)
+            and _view_strides(ape_source) == (width, 1)
+            and int(ape_source.payload["dtype"]) == int(DType.FP32)
+            and _view_dims(ape_output)[-1:] == (width,)
+            and _view_strides(ape_output)[-1:] == (1,)
+            and int(ape_output.payload["dtype"]) == int(DType.FP32),
+            f"compressor kernel {kernel.index} APE gather is not the ratio-{ratio} ring",
+        )
+
+        sum_at, sum_instruction, sum_operator = sums[0]
+        score_terms = _operator_view(sum_operator, views, "input_view_0")
+        score_scratch = _operator_view(sum_operator, views, "input_view_1")
+        sum_output = _operator_view(sum_operator, views, "output_view_0")
+        numeric = numerics.get(int(sum_operator.payload["numeric_profile_id"]))
+        numeric_payload = numeric.payload if numeric is not None else {}
+        require(
+            "rolling_score_add_fp32_rne",
+            score_scratch is not None
+            and sum_output is not None
+            and score_scratch.descriptor_id == sum_output.descriptor_id
+            and score_terms is not None
+            and int(score_terms.payload["dtype"]) == int(DType.FP32)
+            and int(score_scratch.payload["dtype"]) == int(DType.FP32)
+            and numeric is not None
+            and all(
+                int(numeric_payload.get(field, -1)) == int(DType.FP32)
+                for field in (
+                    "input_dtype",
+                    "second_input_dtype",
+                    "accumulator_dtype",
+                    "output_dtype",
+                )
+            )
+            and int(numeric_payload.get("rounding_mode", -1))
+            == int(RoundingMode.NEAREST_EVEN)
+            and ape_instruction.signal_event_id
+            in _wait_events(sum_instruction, waits, require),
+            f"compressor kernel {kernel.index} score plus APE is not binary32 RNE",
+        )
+
+        scatter_by_object = {
+            int(_operator_view(item[2], views, "output_view_0").primary_object_id): item
+            for item in scatters
+            if _operator_view(item[2], views, "output_view_0") is not None
+        }
+        require(
+            "rolling_history_scatter_targets",
+            set(scatter_by_object) == history_objects
+            and all(item[1].predicate_id == NO_ID for item in scatters),
+            f"compressor kernel {kernel.index} does not append both histories unconditionally",
+        )
+        if set(scatter_by_object) != history_objects:
+            continue
+        kv_scatter = scatter_by_object[int(kv_history.primary_object_id)]
+        score_scatter = scatter_by_object[int(score_history.primary_object_id)]
+        kv_index = _operator_view(kv_scatter[2], views, "input_view_0")
+        score_index = _operator_view(score_scatter[2], views, "input_view_0")
+        kv_values = _operator_view(kv_scatter[2], views, "input_view_1")
+        score_values = _operator_view(score_scatter[2], views, "input_view_1")
+        require(
+            "rolling_history_ring_append",
+            kv_index is not None
+            and score_index is not None
+            and kv_index.descriptor_id == score_index.descriptor_id
+            and generated(kv_index, "ring_indices_v1", "modulus", slots)
+            and runtime_term(kv_index, Symbol.POSITION_START)
+            and _view_strides(kv_index) == (1,)
+            and kv_values is not None
+            and _view_dims(kv_values)[-1:] == (width,)
+            and _view_strides(kv_values)[-2:] == (2 * width, 1)
+            and score_values is not None
+            and score_scratch is not None
+            and score_values.descriptor_id == score_scratch.descriptor_id,
+            f"compressor kernel {kernel.index} history append is not the {slots}-row absolute ring",
+        )
+        require(
+            "rolling_packed_split",
+            kv_values is not None
+            and score_terms is not None
+            and int(kv_values.primary_object_id) == int(score_terms.primary_object_id)
+            and len(_view_dims(score_terms)) == 3
+            and _view_dims(score_terms)[0] == 1
+            and _view_dims(score_terms)[-1] == width
+            and _view_strides(score_terms)[-2:] == (2 * width, 1)
+            and int(score_terms.payload["element_offset"])
+            == int(kv_values.payload["element_offset"]) + width,
+            f"compressor kernel {kernel.index} does not split packed [S,2,W] exactly",
+        )
+        score_waits = _wait_events(score_scatter[1], waits, require)
+        require(
+            "rolling_history_write_order",
+            int(kv_scatter[1].signal_event_id) in score_waits
+            and int(sum_instruction.signal_event_id) in score_waits,
+            f"compressor kernel {kernel.index} score history does not follow KV and APE writes",
+        )
+        raw_history_events.update(
+            {
+                int(kv_scatter[1].signal_event_id),
+                int(score_scatter[1].signal_event_id),
+            }
+        )
+
+        common_reset_waits = set(_wait_events(kv_scatter[1], waits, require)) & set(
+            _wait_events(score_scatter[1], waits, require)
+        )
+        reset_join = next(
+            (
+                event
+                for event in common_reset_waits
+                if event in signal_instruction
+                and signal_instruction[event][1].major == int(Major.CONTROL)
+                and signal_instruction[event][1].sub == int(Control.NOP)
+                and signal_instruction[event][1].predicate_id == NO_ID
+            ),
+            None,
+        )
+        reset_events = {
+            int(kv_reset[1].signal_event_id),
+            int(score_reset[1].signal_event_id),
+        }
+        guarded_reset_waits: set[int] = set()
+        if reset_join is not None:
+            join_at = signal_instruction[reset_join][0]
+            for candidate in instructions[:join_at]:
+                if (
+                    candidate.major == int(Major.CONTROL)
+                    and candidate.sub == int(Control.WAIT)
+                    and _phase_predicate(
+                        predicates, candidate.predicate_id, Phase.PREFILL
+                    )
+                ):
+                    guarded_reset_waits.update(
+                        _wait_events(candidate, waits, require) & reset_events
+                    )
+        require(
+            "rolling_reset_convergence",
+            reset_join is not None and guarded_reset_waits == reset_events,
+            f"compressor kernel {kernel.index} does not converge guarded resets before append",
+        )
+
+        pool_at, pool_instruction, pool_operator = pools[0]
+        require(
+            "rolling_prefill_pool",
+            _prefill_group_predicate(predicates, pool_instruction.predicate_id, ratio)
+            and not pool_instruction.flags & int(InstructionFlag.PREDICATE_INVERT)
+            and int(pool_operator.payload["aux_id_0"]) == 2
+            and int(pool_operator.payload["aux_id_1"]) == ratio
+            and int(pool_operator.payload["aux_id_2"]) == int(Symbol.POSITION_START)
+            and int(score_scatter[1].signal_event_id)
+            in _wait_events(pool_instruction, waits, require),
+            f"compressor kernel {kernel.index} prefill pool is not exact VECTOR.COMPRESS subcase 2",
+        )
+
+        boundary_rows = [
+            item
+            for item in gathers
+            if item[1].predicate_id != NO_ID
+            and item[1].flags & int(InstructionFlag.PREDICATE_INVERT)
+            and storage(_operator_view(item[2], views, "input_view_1"))
+            == int(StorageClass.HBM)
+        ]
+        expected_boundary_rows = 4 if ratio == 4 else 2
+        boundary_ids = {int(item[1].predicate_id) for item in boundary_rows}
+        require(
+            "rolling_boundary_gather_count",
+            len(boundary_rows) == expected_boundary_rows and len(boundary_ids) == 1,
+            f"compressor kernel {kernel.index} has {len(boundary_rows)} ratio-{ratio} boundary gathers",
+        )
+        if len(boundary_rows) != expected_boundary_rows or len(boundary_ids) != 1:
+            continue
+        boundary_id = next(iter(boundary_ids))
+        previous_boundary = boundary_by_ratio.setdefault(ratio, boundary_id)
+        require(
+            "rolling_boundary_predicate_shared",
+            previous_boundary == boundary_id,
+            f"ratio-{ratio} compressor kernels do not share one boundary predicate",
+        )
+        boundary_predicate = predicates.get(boundary_id)
+        require(
+            "rolling_boundary_boolean",
+            boundary_predicate is not None
+            and int(boundary_predicate.payload["predicate_kind"])
+            == int(PredicateKind.BOOLEAN_OBJECT)
+            and int(boundary_predicate.payload["comparison"]) == int(Comparison.EQ),
+            f"ratio-{ratio} boundary is not an inverted BOOLEAN_OBJECT zero test",
+        )
+
+        pool_output_objects = {
+            int(view.primary_object_id)
+            for field in ("output_view_0", "output_view_1")
+            if (view := _operator_view(pool_operator, views, field)) is not None
+        }
+        boundary_output_objects = {
+            int(view.primary_object_id)
+            for item in boundary_rows
+            if (view := _operator_view(item[2], views, "output_view_0")) is not None
+        }
+        require(
+            "rolling_boundary_pool_alias",
+            boundary_output_objects <= pool_output_objects,
+            f"compressor kernel {kernel.index} decode gather does not feed the prefill pool buffers",
+        )
+
+        by_history: dict[int, list[tuple[int, Instruction, Any]]] = {}
+        for item in boundary_rows:
+            source_view = _operator_view(item[2], views, "input_view_1")
+            if source_view is not None:
+                by_history.setdefault(int(source_view.primary_object_id), []).append(item)
+        require(
+            "rolling_boundary_history_pair",
+            set(by_history) == history_objects,
+            f"compressor kernel {kernel.index} boundary gather misses a history plane",
+        )
+        for object_id, rows in by_history.items():
+            base_view = (
+                kv_history
+                if object_id == int(kv_history.primary_object_id)
+                else score_history
+            )
+            base = int(base_view.payload["element_offset"])
+            rows.sort(key=lambda item: int(_operator_view(item[2], views, "input_view_0").payload["element_offset"]))
+            if ratio == 4:
+                geometry_ok = len(rows) == 2
+                if len(rows) == 2:
+                    left_index = _operator_view(rows[0][2], views, "input_view_0")
+                    right_index = _operator_view(rows[1][2], views, "input_view_0")
+                    left_source = _operator_view(rows[0][2], views, "input_view_1")
+                    right_source = _operator_view(rows[1][2], views, "input_view_1")
+                    left_output = _operator_view(rows[0][2], views, "output_view_0")
+                    right_output = _operator_view(rows[1][2], views, "output_view_0")
+                    geometry_ok = geometry_ok and (
+                        generated(left_index, "ring_indices_v1", "modulus", slots)
+                        and generated(right_index, "ring_indices_v1", "modulus", slots)
+                        and runtime_term(left_index, Symbol.POSITION_END)
+                        and runtime_term(right_index, Symbol.POSITION_END)
+                        and _view_dims(left_index) == (ratio,)
+                        and _view_dims(right_index) == (ratio,)
+                        and int(left_index.payload["element_offset"]) == 0
+                        and int(right_index.payload["element_offset"]) == ratio
+                        and _view_dims(left_source) == (slots, head_dim)
+                        and _view_dims(right_source) == (slots, head_dim)
+                        and _view_strides(left_source) == (width, 1)
+                        and _view_strides(right_source) == (width, 1)
+                        and int(left_source.payload["element_offset"]) == base
+                        and int(right_source.payload["element_offset"]) == base + head_dim
+                        and _view_dims(left_output) == (ratio, head_dim)
+                        and _view_dims(right_output) == (ratio, head_dim)
+                        and _view_strides(left_output) == (head_dim, 1)
+                        and _view_strides(right_output) == (head_dim, 1)
+                        and int(right_output.payload["element_offset"])
+                        - int(left_output.payload["element_offset"])
+                        == ratio * head_dim
+                    )
+            else:
+                geometry_ok = len(rows) == 1
+                if len(rows) == 1:
+                    index_view = _operator_view(rows[0][2], views, "input_view_0")
+                    source_view = _operator_view(rows[0][2], views, "input_view_1")
+                    output_view = _operator_view(rows[0][2], views, "output_view_0")
+                    geometry_ok = geometry_ok and (
+                        generated(index_view, "ring_indices_v1", "modulus", slots)
+                        and runtime_term(index_view, Symbol.POSITION_END)
+                        and _view_dims(index_view) == (slots,)
+                        and int(index_view.payload["element_offset"]) == 0
+                        and _view_dims(source_view) == (slots, width)
+                        and _view_strides(source_view) == (width, 1)
+                        and int(source_view.payload["element_offset"]) == base
+                        and _view_dims(output_view) == (slots, width)
+                        and _view_strides(output_view) == (width, 1)
+                    )
+            require(
+                "rolling_boundary_geometry",
+                geometry_ok,
+                f"compressor kernel {kernel.index} has incorrect ratio-{ratio} history ordering",
+            )
+
+        ordered_boundary = sorted(boundary_rows, key=lambda item: item[0])
+        boundary_chain_ok = bool(ordered_boundary)
+        predecessor = int(score_scatter[1].signal_event_id)
+        for item in ordered_boundary:
+            boundary_chain_ok = boundary_chain_ok and predecessor in _wait_events(
+                item[1], waits, require
+            )
+            predecessor = int(item[1].signal_event_id)
+        require(
+            "rolling_boundary_write_order",
+            boundary_chain_ok,
+            f"compressor kernel {kernel.index} boundary gather races its history append",
+        )
+
+        transfers = emitted(kernel, Major.DMA, int(Dma.TRANSFER))
+        require(
+            "rolling_no_history_roll_copy",
+            all(
+                (view := _operator_view(item[2], views, "output_view_0")) is not None
+                and _view_dims(view) == (1,)
+                and int(view.payload["dtype"]) == int(DType.U32)
+                for item in transfers
+            ),
+            f"compressor kernel {kernel.index} emits a physical history roll copy",
+        )
+        update_rows[kernel.index] = {
+            "ratio": ratio,
+            "boundary": boundary_id,
+            "history_objects": history_objects,
+        }
+
+    # One ordinary four-byte HBM flag and one pair of phase-selected writers
+    # serve every representative compressor of a ratio.
+    all_update_ops = [item for kernel in updates for item in by_source.get(kernel.index, ())]
+    boundary_objects: set[int] = set()
+    for ratio, predicate_id in sorted(boundary_by_ratio.items()):
+        predicate = predicates.get(predicate_id)
+        object_id = (
+            int(predicate.payload["object_id"])
+            if predicate is not None
+            else NO_ID
+        )
+        boundary_objects.add(object_id)
+        descriptor = objects.get(object_id)
+        transfers = []
+        fills = []
+        for item in all_update_ops:
+            output = _operator_view(item[2], views, "output_view_0")
+            if output is None or int(output.primary_object_id) != object_id:
+                continue
+            if (item[1].major, item[1].sub) == (int(Major.DMA), int(Dma.TRANSFER)):
+                transfers.append(item)
+            if (item[1].major, item[1].sub) == (int(Major.DMA), int(Dma.FILL)):
+                fills.append(item)
+        require(
+            "rolling_boundary_flag_object",
+            descriptor is not None
+            and int(descriptor.payload["storage_class"]) == int(StorageClass.HBM)
+            and int(descriptor.payload["size_bytes"]) == 4
+            and len(transfers) == 1
+            and len(fills) == 1,
+            f"ratio-{ratio} does not have one shared four-byte HBM boundary flag",
+        )
+        if len(transfers) != 1 or len(fills) != 1:
+            continue
+        transfer = transfers[0]
+        fill = fills[0]
+        ring_word = _operator_view(transfer[2], views, "input_view_0")
+        flag_view = _operator_view(transfer[2], views, "output_view_0")
+        require(
+            "rolling_boundary_flag_writers",
+            generated(ring_word, "ring_indices_v1", "modulus", ratio)
+            and runtime_term(ring_word, Symbol.POSITION_END)
+            and _view_dims(ring_word) == (1,)
+            and flag_view is not None
+            and int(flag_view.permissions)
+            & int(Permission.READ | Permission.WRITE)
+            == int(Permission.READ | Permission.WRITE)
+            and int(fill[2].payload["aux_id_0"]) == 1
+            and _phase_predicate(predicates, transfer[1].predicate_id, Phase.DECODE)
+            and _phase_predicate(predicates, fill[1].predicate_id, Phase.PREFILL),
+            f"ratio-{ratio} boundary flag is not POSITION_END modulo ratio with prefill suppression",
+        )
+        first_use = min(
+            (
+                index
+                for index, instruction in enumerate(instructions)
+                if int(instruction.predicate_id) == predicate_id
+            ),
+            default=len(instructions),
+        )
+        guarded = set()
+        for writer in (transfer, fill):
+            for index, instruction in enumerate(instructions):
+                if not writer[0] < index < first_use:
+                    continue
+                if (
+                    instruction.major == int(Major.CONTROL)
+                    and instruction.sub == int(Control.WAIT)
+                    and instruction.predicate_id == writer[1].predicate_id
+                    and writer[1].signal_event_id
+                    in _wait_events(instruction, waits, require)
+                ):
+                    guarded.add(int(writer[1].signal_event_id))
+        uses = [
+            instruction
+            for instruction in instructions
+            if int(instruction.predicate_id) == predicate_id
+        ]
+        require(
+            "rolling_boundary_flag_acquire",
+            guarded
+            == {
+                int(transfer[1].signal_event_id),
+                int(fill[1].signal_event_id),
+            }
+            and uses
+            and all(
+                instruction.flags & int(InstructionFlag.PREDICATE_INVERT)
+                for instruction in uses
+            ),
+            f"ratio-{ratio} boundary object is read before its guarded write completes",
+        )
+    require(
+        "rolling_boundary_objects_distinct",
+        len(boundary_objects) == len(boundary_by_ratio),
+        "different compression ratios alias one boundary flag",
+    )
+
+    # Every should-compress consumer has a many-row prefill path and a static
+    # one-row decode path.  The decode path is gated by the same inverted
+    # BOOLEAN_OBJECT as its state transition.
+    for kernel in expected_order:
+        predicate_name = str(kernel.attributes.get("execution_predicate", ""))
+        if predicate_name not in rolling_predicates:
+            continue
+        ratio = rolling_predicates[predicate_name]
+        pair = _expected_engine(kernel)
+        issued = [
+            item
+            for item in by_source.get(kernel.index, ())
+            if (item[1].major, item[1].sub) == pair
+        ]
+        boundary_id = boundary_by_ratio.get(ratio, NO_ID)
+        prefill = [
+            item
+            for item in issued
+            if _prefill_group_predicate(predicates, item[1].predicate_id, ratio)
+            and not item[1].flags & int(InstructionFlag.PREDICATE_INVERT)
+        ]
+        decode = [
+            item
+            for item in issued
+            if int(item[1].predicate_id) == boundary_id
+            and item[1].flags & int(InstructionFlag.PREDICATE_INVERT)
+        ]
+        require(
+            "rolling_dual_path",
+            len(issued) == 2 and len(prefill) == 1 and len(decode) == 1,
+            f"rolling consumer {kernel.index} does not have exact prefill/decode paths",
+        )
+        if len(prefill) != 1 or len(decode) != 1:
+            continue
+        decode_item = decode[0]
+        static_ok = True
+        for field in (
+            "input_view_0",
+            "input_view_1",
+            "input_view_2",
+            "input_view_3",
+            "output_view_0",
+            "output_view_1",
+        ):
+            view = _operator_view(decode_item[2], views, field)
+            if view is None or storage(view) == int(StorageClass.ROM):
+                continue
+            if kernel.kind == "KV_APPEND" and field.startswith("output_"):
+                continue
+            dims = _view_dims(view)
+            static_ok = static_ok and bool(dims) and dims[0] == 1
+            static_ok = static_ok and not _view_terms(view)
+            if kernel.kind == "COMPRESS_POOL":
+                static_ok = static_ok and len(dims) > 1 and dims[1] == 1
+        require(
+            "rolling_decode_static_extent",
+            static_ok,
+            f"rolling consumer {kernel.index} decode path is not a static one-group view",
+        )
+
+        if kernel.kind == "GATHER" and bool(kernel.attributes.get("compressed", False)):
+            prefill_index = _operator_view(prefill[0][2], views, "input_view_0")
+            decode_index = _operator_view(decode_item[2], views, "input_view_0")
+            coefficient = _operator_view(decode_item[2], views, "input_view_1")
+            tensor = tensor_by_id[kernel.inputs[1]]
+            tensor_dims = tuple(_extent(value) for value in tensor.shape)
+            coefficient_width = tensor_dims[-1]
+            require(
+                "rolling_rope_group_start",
+                generated(decode_index, "floor_div_indices_v1", "divisor", ratio)
+                and runtime_term(decode_index, Symbol.POSITION_START)
+                and _view_dims(decode_index) == (1,)
+                and _view_strides(decode_index) == (ratio,)
+                and generated_as(prefill_index, "arange_u32_v1")
+                and runtime_term(prefill_index, Symbol.POSITION_START)
+                and _view_strides(prefill_index) == (ratio,)
+                and coefficient is not None
+                and _view_dims(coefficient)
+                == ((tensor_dims[0] + ratio - 1) // ratio, coefficient_width)
+                and _view_strides(coefficient) == (ratio * coefficient_width, 1),
+                f"compressed RoPE kernel {kernel.index} does not select p+1-ratio at decode boundary",
+            )
+
+        if kernel.kind == "KV_APPEND":
+            tail = max(prefill[0][0], decode_item[0])
+            convergence = list(instructions[tail + 1 : tail + 4])
+            expected_events = {
+                int(prefill[0][1].signal_event_id),
+                int(decode_item[1].signal_event_id),
+            }
+            waited_events: set[int] = set()
+            guarded_ok = len(convergence) == 3
+            for instruction in convergence[:2]:
+                guarded_ok = guarded_ok and (
+                    instruction.major == int(Major.CONTROL)
+                    and instruction.sub == int(Control.WAIT)
+                )
+                waited_events.update(_wait_events(instruction, waits, require))
+            joined = convergence[2] if len(convergence) == 3 else None
+            guarded_ok = guarded_ok and (
+                waited_events == expected_events
+                and joined is not None
+                and joined.major == int(Major.CONTROL)
+                and joined.sub == int(Control.NOP)
+                and joined.predicate_id == NO_ID
+                and joined.signal_event_id != NO_ID
+            )
+            require(
+                "rolling_append_convergence",
+                guarded_ok,
+                f"compressed append {kernel.index} does not publish a non-boundary-safe ready event",
+            )
+
+    # The terminal FENCE must acquire both raw history writes.  Following the
+    # unconditional event DAG proves this without relying on instruction order
+    # or the producer's internal frontier algorithm.
+    fences = [
+        instruction
+        for instruction in instructions
+        if instruction.major == int(Major.CONTROL)
+        and instruction.sub == int(Control.FENCE)
+    ]
+    ancestors: set[int] = set()
+    if len(fences) == 1:
+        pending = list(_wait_events(fences[0], waits, require))
+        while pending:
+            event = int(pending.pop())
+            if event in ancestors:
+                continue
+            ancestors.add(event)
+            signaller = signal_instruction.get(event)
+            if signaller is not None:
+                pending.extend(_wait_events(signaller[1], waits, require))
+    require(
+        "rolling_history_terminal_fence",
+        len(fences) == 1 and raw_history_events <= ancestors,
+        "terminal token fence does not acquire every raw compressor history write",
+    )
+
+    return rolling_predicates
 
 
 def _layer_signature(
