@@ -258,6 +258,15 @@ module tb_a3_tensor_lane_mapper;
             mask_path, mask_mem, 0, expected_total_waves - 1
         );
 
+        // Exhaustively prove the synthesizable quotient boundary table used
+        // by the DUT against mathematical floor(256 / rows).
+        for (j = 0; j <= 256; j = j + 1)
+            expect64(
+                "column capacity lookup",
+                dut.column_capacity_for_rows(j[8:0]),
+                (j == 0) ? 64'd0 : (256 / j)
+            );
+
         repeat (4) @(posedge clk);
         rst_n = 1'b1;
         repeat (2) @(posedge clk);

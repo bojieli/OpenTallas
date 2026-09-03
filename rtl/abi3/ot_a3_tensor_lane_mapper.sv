@@ -71,6 +71,79 @@ module ot_a3_tensor_lane_mapper #(
     localparam [1:0] S_PREPARE = 2'd1;
     localparam [1:0] S_HOLD = 2'd2;
 
+    // Exact floor(256 / row_count) without a variable hardware divider.  The
+    // result changes at only these quotient boundaries, so a small comparator
+    // chain is cheaper and easier to time than general division.
+    function automatic [8:0] column_capacity_for_rows;
+        input [8:0] row_count;
+        begin
+            if (row_count == 0)
+                column_capacity_for_rows = 9'd0;
+            else if (row_count == 1)
+                column_capacity_for_rows = 9'd256;
+            else if (row_count == 2)
+                column_capacity_for_rows = 9'd128;
+            else if (row_count == 3)
+                column_capacity_for_rows = 9'd85;
+            else if (row_count == 4)
+                column_capacity_for_rows = 9'd64;
+            else if (row_count == 5)
+                column_capacity_for_rows = 9'd51;
+            else if (row_count == 6)
+                column_capacity_for_rows = 9'd42;
+            else if (row_count == 7)
+                column_capacity_for_rows = 9'd36;
+            else if (row_count == 8)
+                column_capacity_for_rows = 9'd32;
+            else if (row_count == 9)
+                column_capacity_for_rows = 9'd28;
+            else if (row_count == 10)
+                column_capacity_for_rows = 9'd25;
+            else if (row_count == 11)
+                column_capacity_for_rows = 9'd23;
+            else if (row_count == 12)
+                column_capacity_for_rows = 9'd21;
+            else if (row_count == 13)
+                column_capacity_for_rows = 9'd19;
+            else if (row_count == 14)
+                column_capacity_for_rows = 9'd18;
+            else if (row_count == 15)
+                column_capacity_for_rows = 9'd17;
+            else if (row_count == 16)
+                column_capacity_for_rows = 9'd16;
+            else if (row_count == 17)
+                column_capacity_for_rows = 9'd15;
+            else if (row_count == 18)
+                column_capacity_for_rows = 9'd14;
+            else if (row_count == 19)
+                column_capacity_for_rows = 9'd13;
+            else if (row_count <= 21)
+                column_capacity_for_rows = 9'd12;
+            else if (row_count <= 23)
+                column_capacity_for_rows = 9'd11;
+            else if (row_count <= 25)
+                column_capacity_for_rows = 9'd10;
+            else if (row_count <= 28)
+                column_capacity_for_rows = 9'd9;
+            else if (row_count <= 32)
+                column_capacity_for_rows = 9'd8;
+            else if (row_count <= 36)
+                column_capacity_for_rows = 9'd7;
+            else if (row_count <= 42)
+                column_capacity_for_rows = 9'd6;
+            else if (row_count <= 51)
+                column_capacity_for_rows = 9'd5;
+            else if (row_count <= 64)
+                column_capacity_for_rows = 9'd4;
+            else if (row_count <= 85)
+                column_capacity_for_rows = 9'd3;
+            else if (row_count <= 128)
+                column_capacity_for_rows = 9'd2;
+            else
+                column_capacity_for_rows = 9'd1;
+        end
+    endfunction
+
     reg [1:0] state;
 
     reg [31:0] rows_q;
@@ -234,7 +307,10 @@ module ot_a3_tensor_lane_mapper #(
                         (group_end < {32'd0, col_group_base_q}))
                         group_end = {32'd0, cols_q};
                     column_remaining = group_end - {32'd0, col_cursor_q};
-                    column_capacity = 64'd256 / chosen_rows;
+                    column_capacity = {
+                        55'd0,
+                        column_capacity_for_rows(chosen_rows[8:0])
+                    };
                     chosen_cols = (column_remaining > column_capacity)
                                   ? column_capacity : column_remaining;
                     chosen_active = chosen_rows * chosen_cols;
