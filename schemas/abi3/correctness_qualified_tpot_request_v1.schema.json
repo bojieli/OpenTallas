@@ -1,0 +1,80 @@
+{
+  "$id": "https://opentallas.org/schemas/abi3/correctness_qualified_tpot_request_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "points": {
+      "items": {"$ref": "#/$defs/point"},
+      "minItems": 1,
+      "type": "array"
+    },
+    "schema": {
+      "const": "opentallas.abi3.correctness_qualified_tpot_request.v1"
+    }
+  },
+  "required": ["points", "schema"],
+  "title": "ABI 3.0 correctness-qualified TPOT request v1",
+  "type": "object",
+  "$defs": {
+    "file": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {"minLength": 1, "type": "string"},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      },
+      "required": ["path", "sha256"],
+      "type": "object"
+    },
+    "point": {
+      "additionalProperties": false,
+      "properties": {
+        "batch_execution_id": {
+          "oneOf": [
+            {"$ref": "#/$defs/sha256"},
+            {"type": "null"}
+          ]
+        },
+        "comparison_contract": {"$ref": "#/$defs/file"},
+        "correctness_acceptance": {"$ref": "#/$defs/file"},
+        "execution_records": {
+          "items": {"$ref": "#/$defs/file"},
+          "minItems": 1,
+          "type": "array"
+        },
+        "point_id": {
+          "maxLength": 192,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$",
+          "type": "string"
+        },
+        "required_correctness_tier": {
+          "enum": [
+            "functional_accelerator_execution",
+            "full_rtl_generated_tokens"
+          ]
+        },
+        "target_role": {"enum": ["hbm", "rom"]},
+        "target_timing_trace": {
+          "oneOf": [
+            {"$ref": "#/$defs/file"},
+            {"type": "null"}
+          ]
+        }
+      },
+      "required": [
+        "comparison_contract",
+        "correctness_acceptance",
+        "execution_records",
+        "point_id",
+        "required_correctness_tier",
+        "target_role",
+        "target_timing_trace"
+      ],
+      "type": "object"
+    },
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    }
+  }
+}

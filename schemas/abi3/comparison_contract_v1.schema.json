@@ -44,7 +44,8 @@
             {"const": "decode"}
           ],
           "type": "array"
-        }
+        },
+        "tpot_acceptance": {"$ref": "#/$defs/tpotAcceptance"}
       },
       "required": [
         "batch",
@@ -292,6 +293,64 @@
         "template_id": {"$ref": "#/$defs/identifier"}
       },
       "required": ["mode", "path", "source_sha256", "template_id"],
+      "type": "object"
+    },
+    "tpotAcceptance": {
+      "additionalProperties": false,
+      "properties": {
+        "batch_size": {"minimum": 1, "type": "integer"},
+        "metric": {
+          "const": "per_sequence_steady_state_decode_step_latency_seconds"
+        },
+        "roles": {
+          "additionalProperties": false,
+          "properties": {
+            "hbm": {"$ref": "#/$defs/tpotRoleBudget"},
+            "rom": {"$ref": "#/$defs/tpotRoleBudget"}
+          },
+          "required": ["hbm", "rom"],
+          "type": "object"
+        },
+        "schema": {
+          "const": "opentallas.abi3.tpot_acceptance_budget.v1"
+        },
+        "steady_state_start_decode_step": {"minimum": 0, "type": "integer"}
+      },
+      "required": [
+        "batch_size",
+        "metric",
+        "roles",
+        "schema",
+        "steady_state_start_decode_step"
+      ],
+      "type": "object"
+    },
+    "tpotRoleBudget": {
+      "additionalProperties": false,
+      "properties": {
+        "assumption_dependent_evidence_allowed": {"type": "boolean"},
+        "eligible_measurement_classes": {
+          "items": {
+            "enum": [
+              "abi3_cycle_model_execution",
+              "post_layout_timing_simulation",
+              "rtl_cycle_simulation",
+              "silicon_measurement"
+            ]
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "maximum_seconds": {"exclusiveMinimum": 0, "type": "number"},
+        "statistic": {"enum": ["max", "p50", "p95", "p99"]}
+      },
+      "required": [
+        "assumption_dependent_evidence_allowed",
+        "eligible_measurement_classes",
+        "maximum_seconds",
+        "statistic"
+      ],
       "type": "object"
     },
     "version": {"pattern": "^[1-9][0-9]*\\.[0-9]+\\.[0-9]+$", "type": "string"},

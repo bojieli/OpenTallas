@@ -1,0 +1,667 @@
+{
+  "$id": "https://opentallas.org/schemas/abi3/correctness_qualified_tpot_report_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "claim_boundary": {"$ref": "#/$defs/reportClaim"},
+    "points": {
+      "items": {"$ref": "#/$defs/point"},
+      "type": "array"
+    },
+    "request_problems": {
+      "items": {"type": "string"},
+      "type": "array"
+    },
+    "schema": {
+      "const": "opentallas.abi3.correctness_qualified_tpot_report.v1"
+    },
+    "status": {"enum": ["fail", "not_evaluable", "pass", "rejected"]},
+    "summary": {"$ref": "#/$defs/summary"}
+  },
+  "required": [
+    "claim_boundary",
+    "points",
+    "request_problems",
+    "schema",
+    "status",
+    "summary"
+  ],
+  "title": "ABI 3.0 correctness-qualified TPOT report v1",
+  "type": "object",
+  "$defs": {
+    "batch": {
+      "additionalProperties": false,
+      "properties": {
+        "batch_execution_id": {
+          "oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]
+        },
+        "batch_size": {"minimum": 0, "type": "integer"},
+        "concurrency": {
+          "oneOf": [{"minimum": 1, "type": "integer"}, {"type": "null"}]
+        },
+        "generated_tokens_per_sequence": {
+          "items": {"minimum": 0, "type": "integer"},
+          "type": "array"
+        },
+        "prompt_tokens_per_sequence": {
+          "items": {"minimum": 0, "type": "integer"},
+          "type": "array"
+        },
+        "total_generated_tokens": {"minimum": 0, "type": "integer"},
+        "total_prompt_tokens": {"minimum": 0, "type": "integer"}
+      },
+      "required": [
+        "batch_execution_id",
+        "batch_size",
+        "concurrency",
+        "generated_tokens_per_sequence",
+        "prompt_tokens_per_sequence",
+        "total_generated_tokens",
+        "total_prompt_tokens"
+      ],
+      "type": "object"
+    },
+    "batchMetrics": {
+      "additionalProperties": false,
+      "properties": {
+        "aggregate_end_to_end_generated_tokens_per_second": {
+          "exclusiveMinimum": 0,
+          "type": "number"
+        },
+        "aggregate_end_to_end_window_seconds": {
+          "exclusiveMinimum": 0,
+          "type": "number"
+        },
+        "aggregate_steady_state_tokens_per_second": {
+          "exclusiveMinimum": 0,
+          "type": "number"
+        },
+        "aggregate_steady_state_window_seconds": {
+          "exclusiveMinimum": 0,
+          "type": "number"
+        },
+        "batch_size": {"minimum": 1, "type": "integer"},
+        "maximum_per_sequence_steady_state_tpot_seconds": {
+          "exclusiveMinimum": 0,
+          "type": "number"
+        },
+        "mean_per_sequence_steady_state_tpot_seconds": {
+          "exclusiveMinimum": 0,
+          "type": "number"
+        },
+        "per_sequence_steady_state_decode_step_latency_seconds": {
+          "$ref": "#/$defs/distribution"
+        },
+        "total_generated_tokens": {"minimum": 1, "type": "integer"},
+        "total_steady_state_decode_tokens": {"minimum": 1, "type": "integer"}
+      },
+      "required": [
+        "aggregate_end_to_end_generated_tokens_per_second",
+        "aggregate_end_to_end_window_seconds",
+        "aggregate_steady_state_tokens_per_second",
+        "aggregate_steady_state_window_seconds",
+        "batch_size",
+        "maximum_per_sequence_steady_state_tpot_seconds",
+        "mean_per_sequence_steady_state_tpot_seconds",
+        "per_sequence_steady_state_decode_step_latency_seconds",
+        "total_generated_tokens",
+        "total_steady_state_decode_tokens"
+      ],
+      "type": "object"
+    },
+    "budget": {
+      "additionalProperties": false,
+      "properties": {
+        "batch_size": {
+          "oneOf": [{"minimum": 1, "type": "integer"}, {"type": "null"}]
+        },
+        "eligible_measurement_classes": {
+          "items": {"$ref": "#/$defs/measurementClass"},
+          "type": "array",
+          "uniqueItems": true
+        },
+        "assumption_dependent_evidence_allowed": {
+          "oneOf": [{"type": "boolean"}, {"type": "null"}]
+        },
+        "maximum_seconds": {
+          "oneOf": [{"exclusiveMinimum": 0, "type": "number"}, {"type": "null"}]
+        },
+        "metric": {
+          "oneOf": [
+            {"const": "per_sequence_steady_state_decode_step_latency_seconds"},
+            {"type": "null"}
+          ]
+        },
+        "statistic": {
+          "oneOf": [
+            {"enum": ["max", "p50", "p95", "p99"]},
+            {"type": "null"}
+          ]
+        },
+        "status": {"enum": ["budget_missing", "invalid", "present"]},
+        "steady_state_start_decode_step": {
+          "oneOf": [{"minimum": 0, "type": "integer"}, {"type": "null"}]
+        },
+        "target_role": {
+          "oneOf": [{"enum": ["hbm", "rom"]}, {"type": "null"}]
+        }
+      },
+      "required": [
+        "assumption_dependent_evidence_allowed",
+        "batch_size",
+        "eligible_measurement_classes",
+        "maximum_seconds",
+        "metric",
+        "statistic",
+        "status",
+        "steady_state_start_decode_step",
+        "target_role"
+      ],
+      "type": "object"
+    },
+    "claim": {
+      "additionalProperties": false,
+      "properties": {
+        "assumption_dependent_target_timing": {
+          "oneOf": [{"type": "boolean"}, {"type": "null"}]
+        },
+        "correctness_uses_exact_independent_oracle_tokens": {"const": true},
+        "cycle_model_target_tpot_is_silicon_measurement": {"const": false},
+        "functional_host_wall_time_is_target_tpot": {"const": false},
+        "functional_token_acceptance_is_full_rtl_token_acceptance": {
+          "const": false
+        },
+        "no_numeric_slo_invented": {"type": "boolean"},
+        "per_sequence_tpot_is_aggregate_throughput": {"const": false},
+        "production_high_fidelity_timing": {"type": "boolean"},
+        "production_tpot_gate_closed": {"type": "boolean"},
+        "production_tpot_requires_full_rtl_tokens_and_characterized_timing": {
+          "const": true
+        },
+        "roofline_or_analytical_projection_is_target_tpot": {"const": false},
+        "rtl_simulator_wall_time_is_target_tpot": {"const": false},
+        "target_tpot_uses_bound_token_commit_ticks_only": {"const": true},
+        "unprovenanced_cycles_are_target_tpot": {"const": false}
+      },
+      "required": [
+        "assumption_dependent_target_timing",
+        "correctness_uses_exact_independent_oracle_tokens",
+        "cycle_model_target_tpot_is_silicon_measurement",
+        "functional_host_wall_time_is_target_tpot",
+        "functional_token_acceptance_is_full_rtl_token_acceptance",
+        "no_numeric_slo_invented",
+        "per_sequence_tpot_is_aggregate_throughput",
+        "production_high_fidelity_timing",
+        "production_tpot_gate_closed",
+        "production_tpot_requires_full_rtl_tokens_and_characterized_timing",
+        "roofline_or_analytical_projection_is_target_tpot",
+        "rtl_simulator_wall_time_is_target_tpot",
+        "target_tpot_uses_bound_token_commit_ticks_only",
+        "unprovenanced_cycles_are_target_tpot"
+      ],
+      "type": "object"
+    },
+    "comparison": {
+      "additionalProperties": false,
+      "properties": {
+        "comparison_id": {"oneOf": [{"type": "string"}, {"type": "null"}]},
+        "contract_path": {"oneOf": [{"type": "string"}, {"type": "null"}]},
+        "contract_sha256": {
+          "oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]
+        },
+        "process_view": {"oneOf": [{"type": "string"}, {"type": "null"}]},
+        "pvt": {"oneOf": [{"type": "object"}, {"type": "null"}]},
+        "target_id": {"oneOf": [{"type": "string"}, {"type": "null"}]},
+        "target_role": {"oneOf": [{"enum": ["hbm", "rom"]}, {"type": "null"}]}
+      },
+      "required": [
+        "comparison_id",
+        "contract_path",
+        "contract_sha256",
+        "process_view",
+        "pvt",
+        "target_id",
+        "target_role"
+      ],
+      "type": "object"
+    },
+    "correctness": {
+      "additionalProperties": false,
+      "properties": {
+        "acceptance_path": {"oneOf": [{"type": "string"}, {"type": "null"}]},
+        "acceptance_schema": {"oneOf": [{"type": "string"}, {"type": "null"}]},
+        "acceptance_sha256": {
+          "oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]
+        },
+        "evidence_tier": {"$ref": "#/$defs/evidenceTier"},
+        "gate_precedes_tpot": {"const": true},
+        "producer": {"$ref": "#/$defs/correctnessProducer"},
+        "sequences": {
+          "items": {"$ref": "#/$defs/sequenceEvidence"},
+          "type": "array"
+        },
+        "status": {"enum": ["pass", "rejected"]}
+      },
+      "required": [
+        "acceptance_path",
+        "acceptance_schema",
+        "acceptance_sha256",
+        "evidence_tier",
+        "gate_precedes_tpot",
+        "producer",
+        "sequences",
+        "status"
+      ],
+      "type": "object"
+    },
+    "correctnessProducer": {
+      "additionalProperties": false,
+      "properties": {
+        "class": {"const": "model_specific_independent_acceptance_checker"},
+        "schema": {"oneOf": [{"type": "string"}, {"type": "null"}]}
+      },
+      "required": ["class", "schema"],
+      "type": "object"
+    },
+    "distribution": {
+      "additionalProperties": false,
+      "properties": {
+        "max": {"exclusiveMinimum": 0, "type": "number"},
+        "mean": {"exclusiveMinimum": 0, "type": "number"},
+        "p50": {"exclusiveMinimum": 0, "type": "number"},
+        "p95": {"exclusiveMinimum": 0, "type": "number"},
+        "p99": {"exclusiveMinimum": 0, "type": "number"},
+        "sample_count": {"minimum": 1, "type": "integer"},
+        "statistic_policy": {
+          "const": "nearest_rank_over_raw_per_sequence_decode_intervals"
+        }
+      },
+      "required": ["max", "mean", "p50", "p95", "p99", "sample_count", "statistic_policy"],
+      "type": "object"
+    },
+    "hostTiming": {
+      "additionalProperties": false,
+      "properties": {
+        "decode_step_latencies_seconds": {
+          "items": {"exclusiveMinimum": 0, "type": "number"},
+          "type": "array"
+        },
+        "eligible_for_target_tpot": {"const": false},
+        "measurement_class": {"const": "host_functional_simulator_observation"},
+        "ttft_seconds": {
+          "oneOf": [{"exclusiveMinimum": 0, "type": "number"}, {"type": "null"}]
+        },
+        "used_for_target_tpot": {"const": false},
+        "wall_seconds": {
+          "oneOf": [{"exclusiveMinimum": 0, "type": "number"}, {"type": "null"}]
+        }
+      },
+      "required": [
+        "decode_step_latencies_seconds",
+        "eligible_for_target_tpot",
+        "measurement_class",
+        "ttft_seconds",
+        "used_for_target_tpot",
+        "wall_seconds"
+      ],
+      "type": "object"
+    },
+    "evidenceTier": {
+      "additionalProperties": false,
+      "properties": {
+        "full_rtl_generated_tokens": {"type": "boolean"},
+        "functional_accelerator_tokens": {"type": "boolean"},
+        "observed": {
+          "oneOf": [
+            {"enum": ["functional_accelerator_execution", "full_rtl_generated_tokens"]},
+            {"type": "null"}
+          ]
+        },
+        "required": {
+          "oneOf": [
+            {"enum": ["functional_accelerator_execution", "full_rtl_generated_tokens"]},
+            {"type": "null"}
+          ]
+        },
+        "satisfies_required_tier": {"type": "boolean"}
+      },
+      "required": [
+        "full_rtl_generated_tokens",
+        "functional_accelerator_tokens",
+        "observed",
+        "required",
+        "satisfies_required_tier"
+      ],
+      "type": "object"
+    },
+    "latency": {
+      "additionalProperties": false,
+      "properties": {
+        "generated_token_index": {"minimum": 1, "type": "integer"},
+        "latency_seconds": {"exclusiveMinimum": 0, "type": "number"},
+        "latency_ticks": {"minimum": 1, "type": "integer"}
+      },
+      "required": ["generated_token_index", "latency_seconds", "latency_ticks"],
+      "type": "object"
+    },
+    "measurementClass": {
+      "enum": [
+        "abi3_cycle_model_execution",
+        "post_layout_timing_simulation",
+        "rtl_cycle_simulation",
+        "silicon_measurement"
+      ]
+    },
+    "metrics": {
+      "additionalProperties": false,
+      "properties": {
+        "batch_metrics": {"$ref": "#/$defs/batchMetrics"},
+        "sequence_metrics": {
+          "items": {"$ref": "#/$defs/sequenceMetrics"},
+          "minItems": 1,
+          "type": "array"
+        },
+        "timebase": {"$ref": "#/$defs/timebase"}
+      },
+      "required": ["batch_metrics", "sequence_metrics", "timebase"],
+      "type": "object"
+    },
+    "point": {
+      "additionalProperties": false,
+      "properties": {
+        "batch": {"$ref": "#/$defs/batch"},
+        "claim_boundary": {"$ref": "#/$defs/claim"},
+        "comparison": {"$ref": "#/$defs/comparison"},
+        "correctness_gate": {"$ref": "#/$defs/correctness"},
+        "performance_verdict": {"$ref": "#/$defs/verdict"},
+        "point_id": {"type": "string"},
+        "process_node_verdict": {"$ref": "#/$defs/processNodeVerdict"},
+        "problems": {"items": {"type": "string"}, "type": "array"},
+        "status": {"enum": ["fail", "not_evaluable", "pass", "rejected"]},
+        "target_timing": {"$ref": "#/$defs/targetTiming"},
+        "tpot_budget": {"$ref": "#/$defs/budget"}
+      },
+      "required": [
+        "batch",
+        "claim_boundary",
+        "comparison",
+        "correctness_gate",
+        "performance_verdict",
+        "point_id",
+        "process_node_verdict",
+        "problems",
+        "status",
+        "target_timing",
+        "tpot_budget"
+      ],
+      "type": "object"
+    },
+    "processNodeVerdict": {
+      "additionalProperties": false,
+      "properties": {
+        "performance_status": {
+          "enum": [
+            "budget_invalid",
+            "budget_missing",
+            "fail",
+            "gate1_failed",
+            "pass",
+            "timing_evidence_missing",
+            "timing_evidence_rejected"
+          ]
+        },
+        "pvt": {"oneOf": [{"type": "object"}, {"type": "null"}]},
+        "status": {"enum": ["fail", "not_evaluable", "pass", "rejected"]},
+        "technology_view": {
+          "oneOf": [{"type": "string"}, {"type": "null"}]
+        }
+      },
+      "required": ["performance_status", "pvt", "status", "technology_view"],
+      "type": "object"
+    },
+    "reportClaim": {
+      "additionalProperties": false,
+      "properties": {
+        "abi_version": {"const": "3.0"},
+        "correct_tokens_are_gate_1": {"const": true},
+        "desired_tpot_is_gate_2": {"const": true},
+        "exact_independent_oracle_equality_required": {"const": true},
+        "functional_host_wall_time_eligible": {"const": false},
+        "projection_only_artifacts_eligible": {"const": false},
+        "rtl_simulator_wall_time_eligible": {"const": false},
+        "same_bound_execution_required_for_tpot": {"const": true},
+        "unprovenanced_target_cycles_eligible": {"const": false},
+        "thresholds_are_contract_supplied_only": {"const": true}
+      },
+      "required": [
+        "abi_version",
+        "correct_tokens_are_gate_1",
+        "desired_tpot_is_gate_2",
+        "exact_independent_oracle_equality_required",
+        "functional_host_wall_time_eligible",
+        "projection_only_artifacts_eligible",
+        "rtl_simulator_wall_time_eligible",
+        "same_bound_execution_required_for_tpot",
+        "unprovenanced_target_cycles_eligible",
+        "thresholds_are_contract_supplied_only"
+      ],
+      "type": "object"
+    },
+    "sequenceEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "association_manifest_sha256": {
+          "oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]
+        },
+        "correct_token_count": {"minimum": 0, "type": "integer"},
+        "first_divergence_index": {
+          "oneOf": [{"minimum": 0, "type": "integer"}, {"type": "null"}]
+        },
+        "first_eos_index": {
+          "oneOf": [{"minimum": 0, "type": "integer"}, {"type": "null"}]
+        },
+        "generated_token_count": {"minimum": 0, "type": "integer"},
+        "generated_token_ids": {
+          "items": {"minimum": 0, "type": "integer"},
+          "type": "array"
+        },
+        "generated_token_ids_sha256": {"$ref": "#/$defs/sha256"},
+        "host_functional_timing": {"$ref": "#/$defs/hostTiming"},
+        "implementation_identity_sha256": {
+          "oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]
+        },
+        "no_post_eos_step": {"type": "boolean"},
+        "passes": {"type": "boolean"},
+        "path": {"type": "string"},
+        "problems": {"items": {"type": "string"}, "type": "array"},
+        "prompt_count": {"minimum": 0, "type": "integer"},
+        "sequence_index": {"minimum": 0, "type": "integer"},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "source_manifest_sha256": {
+          "oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]
+        },
+        "stop_reason": {"oneOf": [{"type": "string"}, {"type": "null"}]},
+        "terminal_kind": {
+          "oneOf": [{"enum": ["cap", "eos"]}, {"type": "null"}]
+        },
+        "text_evidence": {"type": "object"}
+      },
+      "required": [
+        "association_manifest_sha256",
+        "correct_token_count",
+        "first_divergence_index",
+        "first_eos_index",
+        "generated_token_count",
+        "generated_token_ids",
+        "generated_token_ids_sha256",
+        "host_functional_timing",
+        "implementation_identity_sha256",
+        "no_post_eos_step",
+        "passes",
+        "path",
+        "problems",
+        "prompt_count",
+        "sequence_index",
+        "sha256",
+        "source_manifest_sha256",
+        "stop_reason",
+        "terminal_kind",
+        "text_evidence"
+      ],
+      "type": "object"
+    },
+    "sequenceMetrics": {
+      "additionalProperties": false,
+      "properties": {
+        "raw_decode_step_latencies": {
+          "items": {"$ref": "#/$defs/latency"},
+          "minItems": 1,
+          "type": "array"
+        },
+        "request_start_tick": {"minimum": 0, "type": "integer"},
+        "sequence_index": {"minimum": 0, "type": "integer"},
+        "steady_state_decode_step_count": {"minimum": 1, "type": "integer"},
+        "steady_state_tpot_distribution_seconds": {"$ref": "#/$defs/distribution"},
+        "steady_state_tpot_seconds": {"exclusiveMinimum": 0, "type": "number"},
+        "steady_state_window_end_tick": {"minimum": 1, "type": "integer"},
+        "steady_state_window_start_tick": {"minimum": 1, "type": "integer"},
+        "token_commit_ticks": {
+          "items": {"minimum": 1, "type": "integer"},
+          "minItems": 2,
+          "type": "array"
+        },
+        "ttft_seconds": {"exclusiveMinimum": 0, "type": "number"},
+        "ttft_ticks": {"minimum": 1, "type": "integer"},
+        "warm_decode_step_count": {"minimum": 0, "type": "integer"}
+      },
+      "required": [
+        "raw_decode_step_latencies",
+        "request_start_tick",
+        "sequence_index",
+        "steady_state_decode_step_count",
+        "steady_state_tpot_distribution_seconds",
+        "steady_state_tpot_seconds",
+        "steady_state_window_end_tick",
+        "steady_state_window_start_tick",
+        "token_commit_ticks",
+        "ttft_seconds",
+        "ttft_ticks",
+        "warm_decode_step_count"
+      ],
+      "type": "object"
+    },
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "summary": {
+      "additionalProperties": false,
+      "properties": {
+        "budget_missing_count": {"minimum": 0, "type": "integer"},
+        "gate1_pass_count": {"minimum": 0, "type": "integer"},
+        "performance_fail_count": {"minimum": 0, "type": "integer"},
+        "performance_pass_count": {"minimum": 0, "type": "integer"},
+        "point_count": {"minimum": 0, "type": "integer"},
+        "target_timing_accepted_count": {"minimum": 0, "type": "integer"}
+      },
+      "required": [
+        "budget_missing_count",
+        "gate1_pass_count",
+        "performance_fail_count",
+        "performance_pass_count",
+        "point_count",
+        "target_timing_accepted_count"
+      ],
+      "type": "object"
+    },
+    "targetTiming": {
+      "additionalProperties": false,
+      "properties": {
+        "claim_class": {"oneOf": [{"type": "string"}, {"type": "null"}]},
+        "measurement_class": {
+          "oneOf": [{"$ref": "#/$defs/measurementClass"}, {"type": "null"}]
+        },
+        "metrics": {
+          "oneOf": [{"$ref": "#/$defs/metrics"}, {"type": "null"}]
+        },
+        "path": {"type": "string"},
+        "projection_only": {"oneOf": [{"type": "boolean"}, {"type": "null"}]},
+        "production_high_fidelity": {"type": "boolean"},
+        "provenance": {
+          "oneOf": [
+            {
+              "additionalProperties": false,
+              "properties": {
+                "class": {
+                  "enum": ["assumed", "characterized", "measured", "mixed"]
+                },
+                "depends_on_assumed_values": {"type": "boolean"}
+              },
+              "required": ["class", "depends_on_assumed_values"],
+              "type": "object"
+            },
+            {"type": "null"}
+          ]
+        },
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "status": {
+          "enum": ["accepted", "missing", "not_evaluated_gate1_failed", "rejected"]
+        }
+      },
+      "required": ["metrics", "status"],
+      "type": "object"
+    },
+    "timebase": {
+      "additionalProperties": false,
+      "properties": {
+        "clock_frequency_hz": {
+          "oneOf": [{"minimum": 1, "type": "integer"}, {"type": "null"}]
+        },
+        "ticks_per_second": {"minimum": 1, "type": "integer"},
+        "unit": {"enum": ["cycles", "nanoseconds"]}
+      },
+      "required": ["clock_frequency_hz", "ticks_per_second", "unit"],
+      "type": "object"
+    },
+    "verdict": {
+      "additionalProperties": false,
+      "properties": {
+        "maximum_seconds": {
+          "oneOf": [{"exclusiveMinimum": 0, "type": "number"}, {"type": "null"}]
+        },
+        "meets_budget": {"oneOf": [{"type": "boolean"}, {"type": "null"}]},
+        "metric": {
+          "oneOf": [
+            {"const": "per_sequence_steady_state_decode_step_latency_seconds"},
+            {"type": "null"}
+          ]
+        },
+        "observed_seconds": {
+          "oneOf": [{"exclusiveMinimum": 0, "type": "number"}, {"type": "null"}]
+        },
+        "production_gate_closed": {"type": "boolean"},
+        "statistic": {
+          "oneOf": [{"enum": ["max", "p50", "p95", "p99"]}, {"type": "null"}]
+        },
+        "status": {
+          "enum": [
+            "budget_invalid",
+            "budget_missing",
+            "fail",
+            "gate1_failed",
+            "pass",
+            "timing_evidence_missing",
+            "timing_evidence_rejected"
+          ]
+        }
+      },
+      "required": [
+        "maximum_seconds",
+        "meets_budget",
+        "metric",
+        "observed_seconds",
+        "production_gate_closed",
+        "statistic",
+        "status"
+      ],
+      "type": "object"
+    }
+  }
+}

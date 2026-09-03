@@ -1,0 +1,203 @@
+{
+  "$id": "https://opentallas.org/schemas/abi3/target_timing_trace_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "batch_execution_id": {
+      "oneOf": [
+        {"$ref": "#/$defs/sha256"},
+        {"type": "null"}
+      ]
+    },
+    "batch_size": {"minimum": 1, "type": "integer"},
+    "comparison_contract_sha256": {"$ref": "#/$defs/sha256"},
+    "comparison_id": {"$ref": "#/$defs/identifier"},
+    "concurrency": {"minimum": 1, "type": "integer"},
+    "correctness_acceptance_sha256": {"$ref": "#/$defs/sha256"},
+    "cost_table": {"$ref": "#/$defs/costTable"},
+    "counterfactual_or_extrapolated": {"const": false},
+    "evidence_class": {"const": "executed_target_timing_trace"},
+    "full_workload_execution": {"const": true},
+    "graph_id": {"$ref": "#/$defs/sha256"},
+    "latency_boundary": {"$ref": "#/$defs/identifier"},
+    "measurement_class": {
+      "enum": [
+        "abi3_cycle_model_execution",
+        "post_layout_timing_simulation",
+        "rtl_cycle_simulation",
+        "silicon_measurement"
+      ]
+    },
+    "model_id": {"$ref": "#/$defs/identifier"},
+    "producer": {"$ref": "#/$defs/producer"},
+    "projection_only": {"const": false},
+    "provenance": {"$ref": "#/$defs/provenance"},
+    "pvt": {"$ref": "#/$defs/pvt"},
+    "schema": {"const": "opentallas.abi3.target_timing_trace.v1"},
+    "sequences": {
+      "items": {"$ref": "#/$defs/timeline"},
+      "minItems": 1,
+      "type": "array"
+    },
+    "steady_state_start_decode_step": {"minimum": 0, "type": "integer"},
+    "target": {"$ref": "#/$defs/target"},
+    "technology_view": {"$ref": "#/$defs/identifier"},
+    "timebase": {"$ref": "#/$defs/timebase"},
+    "token_commits_from_execution": {"const": true},
+    "execution_records": {
+      "items": {"$ref": "#/$defs/recordBinding"},
+      "minItems": 1,
+      "type": "array"
+    },
+    "workload_digest": {"$ref": "#/$defs/sha256"},
+    "workload_id": {"$ref": "#/$defs/identifier"}
+  },
+  "required": [
+    "batch_execution_id",
+    "batch_size",
+    "comparison_contract_sha256",
+    "comparison_id",
+    "concurrency",
+    "correctness_acceptance_sha256",
+    "cost_table",
+    "counterfactual_or_extrapolated",
+    "evidence_class",
+    "execution_records",
+    "full_workload_execution",
+    "graph_id",
+    "latency_boundary",
+    "measurement_class",
+    "model_id",
+    "producer",
+    "projection_only",
+    "provenance",
+    "pvt",
+    "schema",
+    "sequences",
+    "steady_state_start_decode_step",
+    "target",
+    "technology_view",
+    "timebase",
+    "token_commits_from_execution",
+    "workload_digest",
+    "workload_id"
+  ],
+  "title": "ABI 3.0 raw target token timing trace v1",
+  "type": "object",
+  "$defs": {
+    "costTable": {
+      "additionalProperties": false,
+      "properties": {
+        "cost_table_id": {"$ref": "#/$defs/identifier"},
+        "path": {"minLength": 1, "type": "string"},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      },
+      "required": ["cost_table_id", "path", "sha256"],
+      "type": "object"
+    },
+    "identifier": {
+      "maxLength": 192,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$",
+      "type": "string"
+    },
+    "producer": {
+      "additionalProperties": false,
+      "properties": {
+        "source_sha256": {"$ref": "#/$defs/sha256"},
+        "tool": {"minLength": 1, "type": "string"}
+      },
+      "required": ["source_sha256", "tool"],
+      "type": "object"
+    },
+    "provenance": {
+      "additionalProperties": false,
+      "properties": {
+        "class": {"enum": ["assumed", "characterized", "mixed", "measured"]},
+        "depends_on_assumed_values": {"type": "boolean"}
+      },
+      "required": ["class", "depends_on_assumed_values"],
+      "type": "object"
+    },
+    "pvt": {
+      "additionalProperties": false,
+      "properties": {
+        "corner_id": {"$ref": "#/$defs/identifier"},
+        "process": {"$ref": "#/$defs/identifier"},
+        "temperature_c": {"type": "number"},
+        "voltage_v": {"exclusiveMinimum": 0, "type": "number"}
+      },
+      "required": ["corner_id", "process", "temperature_c", "voltage_v"],
+      "type": "object"
+    },
+    "recordBinding": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {"minLength": 1, "type": "string"},
+        "sequence_index": {"minimum": 0, "type": "integer"},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      },
+      "required": ["path", "sequence_index", "sha256"],
+      "type": "object"
+    },
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "target": {
+      "additionalProperties": false,
+      "properties": {
+        "backend": {"$ref": "#/$defs/identifier"},
+        "capability_digest": {"$ref": "#/$defs/sha256"},
+        "deployment_digest": {"$ref": "#/$defs/sha256"},
+        "implementation_identity_sha256": {"$ref": "#/$defs/sha256"},
+        "node_count": {"minimum": 1, "type": "integer"},
+        "source_manifest_sha256": {"$ref": "#/$defs/sha256"},
+        "target_id": {"$ref": "#/$defs/identifier"},
+        "technology_view": {"$ref": "#/$defs/identifier"},
+        "topology_class": {"maximum": 2, "minimum": 0, "type": "integer"}
+      },
+      "required": [
+        "backend",
+        "capability_digest",
+        "deployment_digest",
+        "implementation_identity_sha256",
+        "node_count",
+        "source_manifest_sha256",
+        "target_id",
+        "technology_view",
+        "topology_class"
+      ],
+      "type": "object"
+    },
+    "timeline": {
+      "additionalProperties": false,
+      "properties": {
+        "request_start_tick": {"minimum": 0, "type": "integer"},
+        "sequence_index": {"minimum": 0, "type": "integer"},
+        "token_commit_ticks": {
+          "items": {"minimum": 1, "type": "integer"},
+          "minItems": 1,
+          "type": "array"
+        }
+      },
+      "required": ["request_start_tick", "sequence_index", "token_commit_ticks"],
+      "type": "object"
+    },
+    "timebase": {
+      "additionalProperties": false,
+      "properties": {
+        "clock_frequency_hz": {
+          "oneOf": [
+            {"minimum": 1, "type": "integer"},
+            {"type": "null"}
+          ]
+        },
+        "ticks_per_second": {"minimum": 1, "type": "integer"},
+        "unit": {"enum": ["cycles", "nanoseconds"]}
+      },
+      "required": ["clock_frequency_hz", "ticks_per_second", "unit"],
+      "type": "object"
+    }
+  }
+}
