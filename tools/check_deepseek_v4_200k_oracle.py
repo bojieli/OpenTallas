@@ -87,6 +87,34 @@ REQUIRED_VENDOR_SOURCES = (
     "tokenizer.json",
 )
 
+QUALIFIED_PACKAGE_VERSIONS = {
+    "apache-tvm-ffi": "0.1.8.post2",
+    "safetensors": "0.8.0",
+    "tilelang": "0.1.8",
+    "tokenizers": "0.22.2",
+    "torch": "2.10.0+cu128",
+    "transformers": "4.57.6",
+}
+QUALIFIED_TILE_GEOMETRY = {
+    "compressor_positions_per_tile": 16_384,
+    "expert_rows_per_tile": 8_192,
+    "hyper_connection_residual_on_host": True,
+    "hyper_connection_tile": 2_048,
+    "indexer_score_block_bytes": 819_200_000,
+    "indexer_sub_tile": 128,
+    "sequence_tile": 4_096,
+    "sequence_tiles": 49,
+}
+REQUIRED_ADAPTATIONS = {
+    "dspark_stages_not_built",
+    "endpoint_residency",
+    "hadamard_fallback_available_but_unused",
+    "layer_streaming",
+    "prefill_sequence_tiling",
+    "routed_experts_via_vendor_fp8_recast",
+    "sparse_attn_head_split",
+}
+
 # These are the executable accelerator/compiler regions in which importing the
 # external comparator would turn an independent check into oracle injection.
 ACCELERATOR_SOURCE_ROOTS = (
@@ -664,10 +692,72 @@ def validate_oracle_report(
         problems.append("oracle KV allocation did not cover prompt plus the full cap")
     if result.get("prefill_tiled") is not True:
         problems.append("exact-200K prefill did not use the qualified tiled path")
+    if result.get("tile_geometry") != QUALIFIED_TILE_GEOMETRY:
+        problems.append("exact-200K prefill did not use the qualified tile geometry")
     for name in ("prefill_seconds", "wall_seconds", "peak_device_bytes"):
         value = result.get(name)
         if not isinstance(value, (int, float)) or isinstance(value, bool) or value <= 0:
             problems.append(f"oracle has no positive {name} observation")
+
+    tiling = report.get("prefill_tiling")
+    if not isinstance(tiling, dict) or tiling.get("enabled") is not True:
+        problems.append("oracle report does not identify the tiled prefill as enabled")
+    elif (
+        tiling.get("sequence_tile") != QUALIFIED_TILE_GEOMETRY["sequence_tile"]
+        or tiling.get("index_tile_rows_fixed")
+        != QUALIFIED_TILE_GEOMETRY["indexer_sub_tile"]
+        or tiling.get("compressor_positions_per_tile")
+        != QUALIFIED_TILE_GEOMETRY["compressor_positions_per_tile"]
+        or tiling.get("expert_rows_per_tile")
+        != QUALIFIED_TILE_GEOMETRY["expert_rows_per_tile"]
+        or tiling.get("hyper_connection_residual_on_host") is not True
+    ):
+        problems.append("oracle report's tiled-prefill configuration is not qualified")
+
+    adaptation_rows = report.get("adaptations")
+    adaptation_ids = {
+        row.get("id")
+        for row in adaptation_rows
+        if isinstance(row, dict) and isinstance(row.get("id"), str)
+    } if isinstance(adaptation_rows, list) else set()
+    if not REQUIRED_ADAPTATIONS <= adaptation_ids:
+        problems.append("oracle report omits a required execution adaptation")
+
+    head_split = report.get("head_split_verification")
+    if (
+        not isinstance(head_split, dict)
+        or head_split.get("bitwise_identical") is not True
+        or head_split.get("max_abs_difference") != 0
+        or head_split.get("heads_per_launch") != 16
+    ):
+        problems.append("sparse-attention head split is not bitwise qualified")
+    fp4 = report.get("fp4_gemm_verification")
+    if (
+        not isinstance(fp4, dict)
+        or fp4.get("fp8_gemm_agrees") is not True
+        or fp4.get("fp4_gemm_agrees") is not False
+        or not isinstance(fp4.get("fp4_path_max_abs_error"), (int, float))
+        or not isinstance(fp4.get("tolerance"), (int, float))
+        or fp4.get("fp4_path_max_abs_error", 0) <= fp4.get("tolerance", 0)
+        or report.get("expert_numeric_path") != "fp8"
+        or result.get("expert_numeric_path") != "fp8"
+    ):
+        problems.append("routed-expert FP8 fallback is not numerically qualified")
+
+    environment = report.get("environment")
+    if not isinstance(environment, dict):
+        problems.append("oracle has no execution environment record")
+    else:
+        if environment.get("package_versions") != QUALIFIED_PACKAGE_VERSIONS:
+            problems.append("oracle package versions differ from the qualified stack")
+        if environment.get("torch_cuda") != "12.8":
+            problems.append("oracle CUDA runtime is not the qualified 12.8 stack")
+        if environment.get("compute_capability") != [12, 0]:
+            problems.append("oracle GPU compute capability is not the qualified sm_120")
+        if environment.get("tf32_allowed") is not False:
+            problems.append("oracle allowed TF32 in a float32 arithmetic path")
+        if environment.get("fast_hadamard_transform") != "fast_hadamard_transform":
+            problems.append("oracle did not use the qualified Hadamard extension")
 
     expected_vendor = {
         relative: record.get("sha256")

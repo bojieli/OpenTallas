@@ -66,6 +66,14 @@ def complete_report(inputs) -> dict:
     report.update(
         {
             "run_status": "complete",
+            "prefill_tiling": {
+                "enabled": True,
+                "sequence_tile": 4_096,
+                "index_tile_rows_fixed": 128,
+                "compressor_positions_per_tile": 16_384,
+                "expert_rows_per_tile": 8_192,
+                "hyper_connection_residual_on_host": True,
+            },
             "producer": {
                 "tool": "tools/run_deepseek_v4_reference_oracle.py",
                 "tool_source_sha256": source_map[
@@ -234,6 +242,41 @@ def test_stale_producer_source_fails_closed(complete_report, inputs) -> None:
     ] = complete_report["producer"]["source_map_sha256"]
     _evidence, problems = _validate(complete_report, inputs)
     assert "producer source runtime/reference/deepseek_v4_oracle.py is stale" in problems
+
+
+@pytest.mark.parametrize(
+    ("mutation", "expected_problem"),
+    [
+        (
+            lambda report: report["results"][tool.WORKLOAD_ID]["tile_geometry"].update(
+                {"indexer_sub_tile": 64}
+            ),
+            "exact-200K prefill did not use the qualified tile geometry",
+        ),
+        (
+            lambda report: report["adaptations"].pop(),
+            "oracle report omits a required execution adaptation",
+        ),
+        (
+            lambda report: report["fp4_gemm_verification"].update(
+                {"fp8_gemm_agrees": False}
+            ),
+            "routed-expert FP8 fallback is not numerically qualified",
+        ),
+        (
+            lambda report: report["environment"]["package_versions"].update(
+                {"torch": "different"}
+            ),
+            "oracle package versions differ from the qualified stack",
+        ),
+    ],
+)
+def test_execution_qualification_mutations_fail_closed(
+    complete_report, inputs, mutation, expected_problem
+) -> None:
+    mutation(complete_report)
+    _evidence, problems = _validate(complete_report, inputs)
+    assert expected_problem in problems
 
 
 def test_omitted_required_producer_source_fails_closed(
