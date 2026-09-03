@@ -118,8 +118,8 @@ evidence. None may be presented as a rerun of the current source.
 - [x] W2.1 Model Graph v3 schema (source semantics, phases, state effects, numeric-contract IDs) — `compiler/ir/v3/kernel_ir.py`
 - [x] W2.2 Tensor Kernel IR v3 schema (target numerics, iteration domains, tensor views, deps, counter classes) — `compiler/ir/v3/kernel_ir.py` + `lowering.py` (53 kinds mapped)
 - [x] W2.3 Neutrality checker (no ROM/HBM/SRAM/stage/queue/address terms in either IR) — `compiler/ir/v3/kernel_ir.py::check_neutral`
-- [x] W2.4 Qwen3-8B exporter → Model Graph v3 → Kernel IR v3 — `compiler/frontends/v3/qwen3.py`; 728 kernels, 1165 tensors, 36 states, all 399 weight bindings verified against 16,381,470,720 real checkpoint bytes; graph_id `88496d70b772…` <!-- figure: 728 src="results/abi3/program_status.json#neutral_ir.qwen3-8b.kernels" name="Qwen kernels" --> <!-- figure: 1165 src="results/abi3/program_status.json#neutral_ir.qwen3-8b.tensors" name="Qwen tensors" --> <!-- figure: 36 src="results/abi3/program_status.json#neutral_ir.qwen3-8b.states" name="Qwen states" --> <!-- figure: 16,381,470,720 src="results/abi3/program_status.json#neutral_ir.qwen3-8b.bound_weight_bytes" name="Qwen bound weight bytes" --> <!-- figure: "88496d70b772…" src="results/abi3/program_status.json#neutral_ir.qwen3-8b.graph_id" name="Qwen graph id" -->
-- [x] W2.5 DeepSeek-V4-Flash exporter → Model Graph v3 → Kernel IR v3 — `compiler/frontends/v3/deepseek_v4.py`; 3956 kernels, 7047 tensors, 229 states, 156,015,698,140 bound weight bytes <!-- figure: 3956 src="results/abi3/program_status.json#neutral_ir.deepseek-v4-flash-0731.kernels" name="DeepSeek kernels" --> <!-- figure: 7047 src="results/abi3/program_status.json#neutral_ir.deepseek-v4-flash-0731.tensors" name="DeepSeek tensors" --> <!-- figure: 229 src="results/abi3/program_status.json#neutral_ir.deepseek-v4-flash-0731.states" name="DeepSeek states" --> <!-- figure: 156,015,698,140 src="results/abi3/program_status.json#neutral_ir.deepseek-v4-flash-0731.bound_weight_bytes" name="DeepSeek bound weight bytes" -->
+- [x] W2.4 Qwen3-8B exporter → Model Graph v3 → Kernel IR v3 — `compiler/frontends/v3/qwen3.py`; 728 kernels, 1165 tensors, 36 legacy semantic state declarations lowered to ordinary live buffers, all 399 weight bindings verified against 16,381,470,720 real checkpoint bytes; graph_id `84bb97dd1243…` <!-- figure: 728 src="results/abi3/program_status.json#neutral_ir.qwen3-8b.kernels" name="Qwen kernels" --> <!-- figure: 1165 src="results/abi3/program_status.json#neutral_ir.qwen3-8b.tensors" name="Qwen tensors" --> <!-- figure: 36 src="results/abi3/program_status.json#neutral_ir.qwen3-8b.states" name="Qwen legacy semantic state declarations" --> <!-- figure: 16,381,470,720 src="results/abi3/program_status.json#neutral_ir.qwen3-8b.bound_weight_bytes" name="Qwen bound weight bytes" --> <!-- figure: "84bb97dd1243…" src="results/abi3/program_status.json#neutral_ir.qwen3-8b.graph_id" name="Qwen graph id" -->
+- [x] W2.5 DeepSeek-V4-Flash exporter → Model Graph v3 → Kernel IR v3 — `compiler/frontends/v3/deepseek_v4.py`; 3956 kernels, 7047 tensors, 229 legacy semantic state declarations lowered to ordinary live buffers, and 156,015,698,140 bound weight bytes <!-- figure: 3956 src="results/abi3/program_status.json#neutral_ir.deepseek-v4-flash-0731.kernels" name="DeepSeek kernels" --> <!-- figure: 7047 src="results/abi3/program_status.json#neutral_ir.deepseek-v4-flash-0731.tensors" name="DeepSeek tensors" --> <!-- figure: 229 src="results/abi3/program_status.json#neutral_ir.deepseek-v4-flash-0731.states" name="DeepSeek legacy semantic state declarations" --> <!-- figure: 156,015,698,140 src="results/abi3/program_status.json#neutral_ir.deepseek-v4-flash-0731.bound_weight_bytes" name="DeepSeek bound weight bytes" -->
 - [x] W2.6 Cross-model operator union report; both exporters pass one schema + verifier — `tests/compiler/test_neutral_ir_cross_model.py` (33 gates); union published as `spec/abi3/numeric_contract_union.json` (67 contracts) <!-- figure: 67 src="spec/abi3/numeric_contract_union.json#contract_count" name="numeric contract union size" -->
 
 ## W3 — Functional simulator (ABI 3.0 device)
@@ -792,12 +792,12 @@ lanes are a precondition for it, not the product. These items are the product.
 - [x] W11.4 Final status report and README update — `README.md`,
   `docs/README.md`, this checklist, `docs/ABI3_PROGRAM_REPORT.md`, and
   `docs/EVIDENCE_LEDGER.md` now separate source-current evidence from retained
-  historical horizons and state every cycle/performance non-claim. The final
-  clean-tree `make abi3-status` snapshot at `0a5bc1f…` republishes the current
+  historical horizons and state every cycle/performance non-claim. The
+  follow-on clean-tree `make abi3-status` snapshot republishes the current
   83/10/1 top-level milestone arithmetic in `docs/PROGRAM_STATUS.md` and
-  `results/abi3/program_status.json`, with `worktree_dirty: false`; its recorded
-  identity is the clean W6.6 closure commit summarized by the follow-on status
-  publication commit
+  `results/abi3/program_status.json`, with `worktree_dirty: false`; the
+  generated artifact records the exact clean source/documentation commit it
+  summarizes
 
 ---
 

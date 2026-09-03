@@ -149,13 +149,13 @@ def test_a_stale_digest_is_rejected(tmp_path) -> None:
 
     checklist = ROOT / "docs" / "UNIFIED_EXECUTION_CHECKLIST.md"
     broken = _copy(tmp_path, checklist,
-                   ("`88496d70b772…`", "`65eb209fdead…`"),
-                   ('figure: "88496d70b772…"', 'figure: "65eb209fdead…"'))
+                   ("`84bb97dd1243…`", "`65eb209fdead…`"),
+                   ('figure: "84bb97dd1243…"', 'figure: "65eb209fdead…"'))
     code, out = _run(broken)
 
     assert code == 2
     assert "Qwen graph id" in out
-    assert "65eb209fdead" in out and "88496d70b772" in out
+    assert "65eb209fdead" in out and "84bb97dd1243" in out
 
 
 # --------------------------------------------------------------------------

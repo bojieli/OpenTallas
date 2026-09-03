@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -38,6 +39,19 @@ def _load(path: Path) -> Any | None:
         return json.loads(path.read_text())
     except Exception:
         return None
+
+
+def _source_worktree_dirty(*generated_outputs: Path) -> bool:
+    """Report source/input drift without counting this generator's outputs."""
+
+    pathspecs = ["."]
+    for output in generated_outputs:
+        try:
+            relative = output.resolve().relative_to(REPO)
+        except ValueError:
+            continue
+        pathspecs.append(f":(exclude){relative.as_posix()}")
+    return bool(_git("status", "--porcelain", "--", *pathspecs))
 
 
 def engine_coverage() -> dict[str, Any]:
@@ -141,7 +155,6 @@ def physical_results() -> dict[str, Any]:
             "fmax_hz": timing.get("fmax_hz"),
             "setup_wns_ns": timing.get("setup_wns_ns"),
             "hold_wns_ns": timing.get("hold_wns_ns"),
-            "timing_met": timing.get("timing_met"),
             "drc_violations": route.get("drc_violations"),
         }
     return out
@@ -189,13 +202,18 @@ def checklist_progress() -> dict[str, Any]:
     path = REPO / "docs" / "UNIFIED_EXECUTION_CHECKLIST.md"
     if not path.exists():
         return {"present": False}
-    text = path.read_text()
+    rows = re.findall(
+        r"^- \[(x|~| |!)\] W\d+\.\d+\b",
+        path.read_text(encoding="utf-8"),
+        flags=re.MULTILINE,
+    )
     return {
         "present": True,
-        "done": text.count("- [x] "),
-        "in_progress": text.count("- [~] "),
-        "not_started": text.count("- [ ] "),
-        "blocked": text.count("- [!] "),
+        "scope": "top_level_Wn.m_rows_only",
+        "done": rows.count("x"),
+        "in_progress": rows.count("~"),
+        "not_started": rows.count(" "),
+        "blocked": rows.count("!"),
     }
 
 
@@ -211,7 +229,14 @@ def main() -> int:
         "schema": "opentallas.abi3.program_status.v1",
         "commit": _git("rev-parse", "HEAD"),
         "branch": _git("rev-parse", "--abbrev-ref", "HEAD"),
-        "worktree_dirty": bool(_git("status", "--porcelain")),
+        "worktree_dirty": _source_worktree_dirty(
+            args.output,
+            args.markdown,
+            REPO / "results" / "abi3" / "prose_figure_coverage.json",
+        ),
+        "worktree_dirty_scope": (
+            "repository_except_generated_status_and_prose_coverage_outputs"
+        ),
         "checklist": checklist_progress(),
         "engine_coverage": engine_coverage(),
         "neutral_ir": ir_artifacts(),
@@ -251,7 +276,17 @@ def main() -> int:
         ))
         lines.append("")
 
-    lines += ["## Neutral IR", "", "| Model | Kernels | Tensors | States | Bound weights | graph_id |", "|---|---:|---:|---:|---:|---|"]
+    lines += [
+        "## Neutral IR",
+        "",
+        "The `Legacy state declarations` column counts semantic declarations in",
+        "the retained source IR. They are not ABI state members: every current",
+        "four-target deployment lowers mutable values to ordinary live buffers and",
+        "emits zero ABI `STATE` descriptors and instructions.",
+        "",
+        "| Model | Kernels | Tensors | Legacy state declarations | Bound weights | graph_id |",
+        "|---|---:|---:|---:|---:|---|",
+    ]
     for model, body in status["neutral_ir"].items():
         if not body.get("present"):
             lines.append(f"| {model} | — | — | — | — | not built |")
