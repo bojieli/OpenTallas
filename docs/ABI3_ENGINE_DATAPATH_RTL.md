@@ -2,12 +2,14 @@
 
 **Checklist item:** W8.3
 **Status:** eleven `(family, subopcode)` pairs are implemented and correlated,
-including six bounded VECTOR additions; the rest of the engine surface is not,
-and none of these datapaths is wired to the microsequencer
+including six bounded VECTOR additions. One exact `DMA.GATHER` profile is now
+wired to the microsequencer for a bounded prefix of all four shipped decode
+images; the rest of the engine surface and full-model integration are not
 **Evidence class:** `public_open_tool_rtl_simulation` (functional), plus a
 separate open-PDK physical view that carries its own boundary
 **Primary artifacts:**
 `results/rtl/abi3_engine_campaign.json` (functional correlation),
+`results/rtl/abi3_shipped_prefix_campaign.json` (first integrated prefix),
 `testdata/compiler/abi3_engine/abi3_engine_vectors.json` (the vector set),
 `results/physical_abi3/sky130hd/{a3_selection_argmax,a3_vector_add,a3_dma_index_mover}/physical.json`
 (routed), `results/physical_abi3/sky130hd/a3_mac_lane/prelayout.json`,
@@ -30,14 +32,22 @@ so in their own limitations: *no engine arithmetic is modelled on either side.*
 So the sequence is verified — on all four shipped deployments, at
 whole-transaction depth — and the arithmetic is not.
 
-This item is the other half. It does not replace the control-plane campaign and
-it is not wired to it: the two are correlated separately, and **nothing here
-shows that a resolved operand view drives the addresses these datapaths read.**
-That integration is still open, and the deployment campaign measures how far
-apart the two halves are: the shipped programs issue 38 distinct
-`(family, subopcode)` pairs, and only a handful of those have datapath RTL here
-at all — none of it driven by the sequencer. That campaign's `engine_coverage`
-field carries the current split.
+The standalone engine campaign remains the other half: it does not replace the
+control-plane campaign, and its generated programs still correlate arithmetic
+separately. A third, narrower campaign now closes the first real connection.
+`results/rtl/abi3_shipped_prefix_campaign.json` loads the four shipped decode
+images, lets the sequencer resolve their real views, validates the referenced
+operator/view/numeric descriptors, and launches six dense FP32 `DMA.GATHER`
+operations through `ot_a3_engine_array`. Both simulators compare all 1,024
+result words before the bridge precisely refuses the next unsupported
+`TENSOR.EMBED_LOOKUP`.
+
+That witness proves the handshake, descriptor admission, resolved addressing,
+engine completion, and precise fail-stop boundary for this one prefix only. It
+does not turn either older campaign into a data-bearing whole-transaction run.
+The deployment campaign's `engine_coverage` field remains the authority for how
+far the complete 37-pair shipped operator surface exceeds the bounded engine
+array.
 
 **What the routed numbers in §7 may and may not claim.** They are the
 implementation cost of these datapath blocks in an open 130-nm PDK, and nothing
@@ -525,8 +535,10 @@ It does **not** establish any of the following:
 * **the contraction lane's routed area, timing or power, or physical
   characterisation of the six new VECTOR blocks.** Three legacy blocks are
   routed; `ot_a3_mac_lane` and all six additions are not — see 5.3;
-* **integration with the control plane.** The sequencer of W8.6 and these
-  datapaths are correlated separately and are not wired together;
+* **integration beyond the shipped gather prefix.** The source-bound prefix
+  campaign now wires the sequencer to dense FP32 `DMA.GATHER`, but every later
+  required model operator, complete transaction, and token-producing path
+  remains unwired;
 * **memory macros.** Operand and result memories are behavioural arrays in the
   verification top. No SRAM or ROM macro, no bank conflict, no ECC, no
   arbitration, no backpressure from a real memory;
@@ -537,7 +549,10 @@ It does **not** establish any of the following:
 ```sh
 python3 tools/build_abi3_engine_vectors.py           # regenerate the vectors
 python3 tools/rtl_abi3_engine_campaign.py --force    # replay on both simulators
+python3 tools/build_abi3_shipped_prefix_vectors.py   # derive shipped prefixes
+python3 tools/rtl_abi3_shipped_prefix_campaign.py --force
 python3 -m pytest tests/compiler/test_rtl_abi3_engine.py
+python3 -m pytest tests/compiler/test_rtl_abi3_shipped_prefix.py
 ```
 
 The campaign artifact records the SHA-256 of every RTL source, testbench,

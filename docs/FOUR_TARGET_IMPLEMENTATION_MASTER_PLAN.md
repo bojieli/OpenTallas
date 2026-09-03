@@ -85,10 +85,13 @@ At the 2026-09-03 integration checkpoint, all four current deployment
 certificates report zero ABI `STATE` resources. The shared simulator has
 host-only performance observations and an opt-in decoded immutable-weight cache
 whose default is disabled. The Qwen long-run checker independently authenticates
-and admits the serialized deployment and verifies token text. The remaining
-critical path is RTL datapath integration, fresh exact-length accelerator runs,
-and complete same-view SKY130/ASAP7 characterization; it is not another ABI
-revision.
+and admits the serialized deployment and verifies token text. The first bounded
+RTL integration slice now drives six real `DMA.GATHER` launches from the four
+shipped decode images through the engine array, compares 1,024 result words on
+Icarus and Verilator, and fails closed at the next unsupported operator. The
+remaining critical path is operator-complete RTL integration, fresh exact-length
+accelerator runs, and complete same-view SKY130/ASAP7 characterization; it is
+not another ABI revision.
 
 The authoritative requirement-by-requirement progress ledger is
 [the unified execution checklist](UNIFIED_EXECUTION_CHECKLIST.md). Sections 2,

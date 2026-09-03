@@ -8,8 +8,9 @@
 removed ABI 3.1/durable-restart work from the active path, re-read every current
 deployment certificate, integrated host-only DeepSeek performance observation
 and bounded decoded-weight caching, corrected DeepSeek learned-index rounding,
-strengthened the Qwen long-run checker, and regenerated both source-bound RTL
-campaigns.
+strengthened the Qwen long-run checker, regenerated the generic and shipped
+control campaigns, and added a source-bound shipped-program engine-prefix
+campaign.
 **Current execution checkpoint (2026-09-03):** all four current deployments
 contain zero ABI `STATE` resources. Qwen HBM passes 21/21 deployment checks <!-- figure: 21 src="results/abi3/hbm_qwen_deployment_certificate.json#cases[case=qwen3-hbm-single-chip].passed_check_count" name="current Qwen HBM checks, checkpoint" --> at
 74 instructions <!-- figure: 74 src="results/abi3/hbm_qwen_deployment_certificate.json#cases[case=qwen3-hbm-single-chip].actual.instructions" name="current Qwen HBM instructions, checkpoint" --> and 215 descriptors <!-- figure: 215 src="results/abi3/hbm_qwen_deployment_certificate.json#cases[case=qwen3-hbm-single-chip].actual.descriptors" name="current Qwen HBM descriptors, checkpoint" -->; Qwen ROM passes 61/61 schedule checks <!-- figure: 61 src="results/abi3/rom_schedule_checks.json#cases[case=qwen3-rom-single-chip].passed_check_count" name="current Qwen ROM checks, checkpoint" --> at
@@ -21,8 +22,10 @@ Verilator with 595,020 checks per simulator <!-- figure: 595020 src="results/rtl
 `STATE_COMPAT=0` refusal before fetch. The standalone engine campaign correlates
 11 bounded opcode pairs <!-- figure: 11 src="results/rtl/abi3_engine_campaign.json#correlation.family_count" name="current RTL engine families, checkpoint" --> over 135 cases <!-- figure: 135 src="results/rtl/abi3_engine_campaign.json#correlation.case_count" name="current RTL engine cases, checkpoint" --> with 40,878 checks per simulator <!-- figure: 40878 src="results/rtl/abi3_engine_campaign.json#checks_per_simulator.iverilog" name="current RTL engine checks, checkpoint" --> and
 catches all 7 compiled RTL mutations <!-- figure: 7 src="results/rtl/abi3_engine_campaign.json#mutation_sensitivity.mutation_count" name="current caught RTL mutations, checkpoint" -->. These are control-plane and bounded
-datapath evidence respectively; they are not yet wired into a full token-
-producing RTL system.
+datapath evidence respectively. The first bounded integration witness now runs
+four shipped decode prefixes through six real `DMA.GATHER` launches and checks
+1,024 result words on both simulators before trapping at the first unsupported
+operator. It is not a full token-producing RTL system.
 **Controlling ABI profile:** KV, compressed KV, compressor history, tokens, and
 intermediates are ordinary live HBM/SRAM buffers. Existing tensor views, events,
 and a token-step fence provide addressing and ordering. Runs are uninterrupted
@@ -34,8 +37,9 @@ or restart experiments remain provenance only and do not override this profile.
 and **0 blocked**, counting only the `Wn.m` rows below.
 **Remaining top-level rows:** partial — W8.3, W8.4, W8.5, W9.4, W9.5,
 W10.1, W10.2, W11.1, W11.3, W13.4; open — W11.2.
-**Certification freshness:** the deployment certificates and both RTL campaigns
-are source-current at this checkpoint. DeepSeek token captures predate the
+**Certification freshness:** the deployment certificates and all four current
+RTL campaign classes are source-current at this checkpoint. DeepSeek token
+captures predate the
 `INDEX_SCORE` single-rounding repair and are prior-build evidence. Qwen long
 captures predate the live-buffer profile and hardened checker; they are also
 prior-build evidence. Neither set may be promoted without a fresh run.
@@ -57,9 +61,9 @@ acceptance lane. W8.3/W8.4/W8.5/W9.4 → W9.5. W11.1 and W9.5, the DeepSeek
 200K accelerator pair, and W11.2-specific capability, cycle, physical, fabric,
 area/energy and uncertainty prerequisites all feed W11.2. W10.2, W11.3 and
 W13.4 can otherwise proceed independently.
-**Remaining-work order:** (1) connect the source-current sequencer/view/event
-boundary to the bounded engine array and close the missing model-required RTL
-operators; (2) pass short integrated-token diagnostics on all four targets;
+**Remaining-work order:** (1) extend the proven gather-prefix bridge across the
+missing model-required RTL operators and memory/link services; (2) pass short
+integrated-token diagnostics on all four targets;
 (3) run two clean W10.1 HBM natural captures and the required Qwen ROM/HBM
 workload matrix against the frozen oracle; (4) extend the DeepSeek 200K external
 oracle through EOS or 256 tokens, then run the wafer-ROM and exact-32-node HBM
@@ -320,6 +324,22 @@ evidence. None may be presented as a rerun of the current source.
 - [x] W7.5 Counter reconciliation: functional == cycle == RTL for the same program — fixture/campaign coverage first established the three-way control-plane relation. The retained current-tree real-deployment result, `results/abi3/deepseek_v4_flash_hbm_p32_prefill_cycle.json`, now runs one 32-token prefill through the shipped DeepSeek HBM cluster deployment (`294319…`) and exits `SUCCESS` / `NONE`. Its independently rerun functional device agrees on all **66** compared architectural counters <!-- figure: 66 src="results/abi3/deepseek_v4_flash_hbm_p32_prefill_cycle.json#functional_agreement.counters_compared" name="DeepSeek HBM cycle counters reconciled, W7.5" --> with `differences: {}`; the schedule audit covers **447** operators <!-- figure: 447 src="results/abi3/deepseek_v4_flash_hbm_p32_prefill_cycle.json#schedule_audit.operators_checked" name="DeepSeek HBM cycle operators audited, W7.5" -->, is complete, and reports no findings or contract gaps. The model emits **244,691,019,251** cycles <!-- figure: 244,691,019,251 src="results/abi3/deepseek_v4_flash_hbm_p32_prefill_cycle.json#timing.total_cycles" name="DeepSeek HBM modeled prefill cycles, W7.5" --> only under a cost table with **124** assumed and **5** characterized parameters <!-- figure: 124 src="results/abi3/deepseek_v4_flash_hbm_p32_prefill_cycle.json#provenance.counts.assumed" name="DeepSeek HBM assumed cycle parameters, W7.5" --> <!-- figure: 5 src="results/abi3/deepseek_v4_flash_hbm_p32_prefill_cycle.json#provenance.counts.characterized" name="DeepSeek HBM characterized cycle parameters, W7.5" -->. It therefore closes governed schedule/counter reconciliation, not performance: the artifact is class `assumed`, has no full Python source map, does not stage the governed prompt payload, and does not compare its produced token with the external oracle. W8.8 separately correlates the shipped deployment control plane with RTL at its declared 16-token request shape; engine arithmetic is still not wired under that sequencer
 
 ## W8 — RTL 3.0
+
+**Current sequencer/engine integration boundary:** the source-bound
+`results/rtl/abi3_shipped_prefix_campaign.json` campaign now connects the real
+sequencer and resolved-view stream to the existing engine array for the exact
+first supported operations in all four shipped decode images. Icarus and
+Verilator each pass 3,289 checks over four cases, six real dense FP32
+`DMA.GATHER` launches, 30 resolved views, and 1,024 authenticated
+generated-RoPE result words. The next `TENSOR.EMBED_LOOKUP` returns a precise
+`CAPABILITY` trap at Qwen PC 4 and DeepSeek PC 7; it does not retire or publish
+its signal, and the campaign records zero post-fault writes and zero
+compatibility-state activity under `STATE_COMPAT=0`. This establishes only a
+decode prefix: it performs no prefill, whole transaction, token selection,
+decoding, EOS handling, or physical measurement. References later in W8.3 to
+the datapath and control campaigns being unwired describe those two older
+campaigns individually; this narrow third campaign is the current integration
+exception.
 
 - [x] W8.1 Microsequencer RTL (fetch/decode/loop/predicate/event/trap/complete) — `rtl/abi3/ot_a3_microsequencer.sv`; operand tensor-view resolution (A4 dynamic terms, A13 partial final extent, A18 extent axis/unit, A26 fixed-address edge masks) — `rtl/abi3/ot_a3_view_resolver.sv`
 - [x] W8.2 Queue/event controller RTL and compatibility-only state controller —

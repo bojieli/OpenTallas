@@ -259,6 +259,28 @@ def rtl_engine_correlation() -> dict[str, Any]:
     }
 
 
+def rtl_shipped_prefix_correlation() -> dict[str, Any]:
+    body = _load(REPO / "results" / "rtl" / "abi3_shipped_prefix_campaign.json")
+    if not body:
+        return {"present": False}
+    return {
+        "present": True,
+        "status": body.get("status"),
+        "evidence_class": body.get("evidence_class"),
+        "cases": body.get("case_count"),
+        "real_engine_launches": body.get("real_engine_launch_count"),
+        "result_words": body.get("result_word_count"),
+        "resolved_views": body.get("resolved_view_count"),
+        "capability_faults": body.get("capability_fault_count"),
+        "simulator_checks": body.get("simulator_checks", {}),
+        "simulators_agree": body.get("simulators_agree"),
+        "state_compat": body.get("state_compat"),
+        "post_fault_writes": body.get("post_fault_write_count"),
+        "fault_sites": body.get("fault_sites", []),
+        "scope": body.get("scope", {}),
+    }
+
+
 def checklist_progress() -> dict[str, Any]:
     path = REPO / "docs" / "UNIFIED_EXECUTION_CHECKLIST.md"
     if not path.exists():
@@ -307,6 +329,7 @@ def main() -> int:
         "campaigns": campaign_results(),
         "rtl_correlation": rtl_correlation(),
         "rtl_deployment_correlation": rtl_deployment_correlation(),
+        "rtl_shipped_prefix_correlation": rtl_shipped_prefix_correlation(),
         "rtl_engine_correlation": rtl_engine_correlation(),
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
@@ -441,6 +464,42 @@ def main() -> int:
         ]
     else:
         lines += ["### Shipped-deployment control plane", "", "Artifact absent.", ""]
+
+    prefix_rtl = status["rtl_shipped_prefix_correlation"]
+    if prefix_rtl.get("present"):
+        checks = ", ".join(
+            f"{name} {count:,}"
+            for name, count in prefix_rtl["simulator_checks"].items()
+            if isinstance(count, int)
+        )
+        fault_sites = ", ".join(
+            f"{site.get('case')} PC {site.get('pc')}"
+            for site in prefix_rtl["fault_sites"]
+        )
+        lines += [
+            "### Integrated shipped-program engine prefix",
+            "",
+            f"{prefix_rtl['cases']} shipped decode cases launched "
+            f"{prefix_rtl['real_engine_launches']} real engine operations, "
+            f"compared {prefix_rtl['result_words']:,} result words and resolved "
+            f"{prefix_rtl['resolved_views']} views. The simulators agree = "
+            f"{prefix_rtl['simulators_agree']} ({checks}).",
+            "",
+            f"Precise capability boundaries: {fault_sites}. Production "
+            f"`STATE_COMPAT={prefix_rtl['state_compat']}`; post-fault writes = "
+            f"{prefix_rtl['post_fault_writes']}.",
+            "",
+            "This is a bounded data-bearing decode prefix, not prefill, a whole "
+            "transaction, token generation, EOS, or physical closure.",
+            "",
+        ]
+    else:
+        lines += [
+            "### Integrated shipped-program engine prefix",
+            "",
+            "Artifact absent.",
+            "",
+        ]
 
     engine_rtl = status["rtl_engine_correlation"]
     if engine_rtl.get("present"):

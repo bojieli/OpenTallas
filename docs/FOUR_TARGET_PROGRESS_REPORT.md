@@ -4,9 +4,9 @@
 
 **Status date:** 2026-09-03
 
-**Input baseline:** `main == origin/main` at `93a7c589d3f7` before this report
-refresh; this includes the Qwen W10 provenance repair and the strict DeepSeek
-exact-200K external-oracle gate
+**Input baseline:** `main == origin/main` at `a7441df` before this report
+refresh; this includes the Qwen W10 provenance repair, the strict DeepSeek
+exact-200K external-oracle gate, and the first shipped-program RTL engine prefix
 
 **Role:** current narrative status and handoff report. Machine-readable result
 artifacts and the [unified execution checklist](UNIFIED_EXECUTION_CHECKLIST.md)
@@ -34,7 +34,8 @@ The present boundary is therefore:
 - production acceptance validators: implemented for Qwen and for the DeepSeek
   exact-200K external oracle; both still reject the incomplete current evidence;
 - RTL control plane and bounded arithmetic blocks: independently correlated;
-- sequencer-to-arithmetic integration and complete operator RTL: open;
+- sequencer-to-arithmetic integration: the first exact shipped-program
+  `DMA.GATHER` prefix is closed; complete operator RTL remains open;
 - exact mandatory long executions: open; and
 - final process-specific performance comparison: open.
 
@@ -51,7 +52,7 @@ the remaining cost.
 | Architecture and ABI 3.0 | closed | frozen live-buffer/fence profile; zero `STATE` in all four deployments | no ABI 3.1 work is required |
 | Common IR and four backend builds | closed for current graphs | Qwen and DeepSeek lower through the shared Model Graph and Tensor Kernel IR into HBM and ROM bundles | rebuild whenever an execution-authoritative source changes |
 | Functional short execution | partial | complete functional engine exists; retained short token prefixes and historical workload evidence | current DeepSeek arithmetic repair and Qwen source profile make the retained captures non-promotable |
-| RTL 3.0 | partial | shipped control replay and 11 bounded arithmetic pairs independently correlate on Icarus and Verilator | the issue/view boundary is not wired to the engine array; the full operator set is incomplete |
+| RTL 3.0 | partial | shipped control replay and 11 bounded arithmetic pairs independently correlate; a source-bound prefix campaign now drives six real gathers from all four decode images through the engine array on Icarus and Verilator | the witness stops precisely at the first unsupported embed lookup; the full operator set and whole-token path are incomplete |
 | Mandatory workloads | open | exact prompt artifacts and tokenizer/oracle machinery exist | fresh Qwen exact-8K pairs and both DeepSeek exact-200K executions are absent; the DeepSeek oracle stops after eight tokens |
 | SKY130 and ASAP7 | partial | several bounded blocks have process-specific reports | neither view characterizes a complete target; ASAP7 readiness has 15 fail-closed blockers |
 | Governed comparison | partial | short historical ROM/HBM comparisons retain topology and counter evidence | no source-current mandatory-workload pair or complete same-view system cost exists |
@@ -95,12 +96,15 @@ memory and I/O headroom.
   locks the qualified tiling/adaptation, head-split, FP8 fallback, package,
   CUDA/`sm_120`, TF32-off, and Hadamard execution stack. No 200K accelerator job
   should start before a replacement oracle passes.
-- The RTL integration audit confirms that the shipped top currently connects the
-  sequencer to a recording-ready boundary, while the arithmetic engine array is
-  a standalone campaign. The first honest integration milestone is one admitted,
-  bounded real operator driven through the resolved six-view issue boundary,
-  with completion held until the engine finishes and every unsupported opcode or
-  oversized shipped shape rejected explicitly.
+- The first RTL integration milestone is now retained and source-bound. All four
+  shipped decode images enter the real sequencer; six dense FP32
+  `DMA.GATHER` launches run through `ot_a3_engine_array`; and 1,024 generated
+  RoPE words match under independently written Icarus and Verilator checkers,
+  each with 3,289 checks. Completion is held until the engine responds. The
+  first unsupported `TENSOR.EMBED_LOOKUP` traps with `CAPABILITY` at Qwen PC 4
+  and DeepSeek PC 7, without retirement, signal publication, compatibility-state
+  activity, or a post-fault write. This is an exact decode-prefix witness, not a
+  prefill, whole transaction, token, EOS, timing, area, or power result.
 
 ## 2. Frozen ABI 3.0 execution profile
 
@@ -193,7 +197,8 @@ arithmetic, cycle performance, or physical closure.
 
 ## 5. RTL status
 
-Two different RTL evidence classes must remain separate.
+Three complementary RTL evidence boundaries must remain separate: control
+replay, standalone datapaths, and their first bounded integration prefix.
 
 ### 5.1 Shipped-deployment control plane
 
@@ -216,13 +221,25 @@ argmax, residual add, and bounded convert, scale, Hadamard, learned-index,
 compressor-project, and hyper-connection-post forms. Exact reference probes and
 mutated-RTL runs guard arithmetic and descriptor admission.
 
-This establishes the published bounded datapaths only. The blocks are not yet
-wired to the shipped-deployment microsequencer. Correctly rounded RTL for the
+This establishes the published bounded datapaths. Correctly rounded RTL for the
 remaining operator surface—including softmax and other transcendental forms—is
-still incomplete, and no current RTL simulation executes a whole model to
-produce the accepted output tokens. The shipped programs reach 37 distinct
-opcode pairs: 11 have bounded correlated datapaths and 26 still have no
-correlated datapath RTL at this boundary.
+still incomplete. The shipped programs reach 37 distinct opcode pairs: 11 have
+bounded correlated datapaths and 26 still have no correlated datapath RTL at
+this boundary.
+
+### 5.3 First shipped-program engine prefix
+
+The separate shipped-prefix campaign closes one narrow connection between the
+two evidence classes above. It validates the real operator, tensor-view, dtype,
+permission, geometry, and `exact_index_select_v1` descriptors before allowing
+the sequencer's initial generated-RoPE gathers to launch the existing DMA
+datapath. Engine faults are precise: a failed operation neither retires nor
+publishes its completion event.
+
+The campaign intentionally refuses the next operation rather than simulating it
+as a no-op. It therefore establishes the sequencer/view/engine handshake and
+real data movement only for that prefix. No current RTL simulation executes a
+whole model or produces an accepted output token.
 
 ## 6. What “full execution” means
 
@@ -333,9 +350,9 @@ is not foundry signoff.
    model-operation retry contract.
 3. Regenerate all source-bound RTL and deployment artifacts after the numerical
    repair and performance tranche; reject any stale result.
-4. Wire the ABI issue/view/event interface to the bounded engine array, then add
-   the missing model-required datapaths without changing the ABI or numerical
-   contracts.
+4. Extend the now-proven ABI issue/view/engine bridge beyond its exact gather
+   prefix, adding the missing model-required datapaths and memory services
+   without changing the ABI or numerical contracts.
 5. Run short integrated token diagnostics on all four targets and require exact
    identity before spending resources on long campaigns.
 6. Produce the complete DeepSeek external EOS-or-256 oracle.
