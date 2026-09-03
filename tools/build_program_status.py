@@ -389,11 +389,10 @@ def main() -> int:
             )
         lines.append("")
 
+    lines += ["## RTL 3.0 correlation", ""]
     rtl = status["rtl_correlation"]
     if rtl.get("present"):
         lines += [
-            "## RTL 3.0 correlation",
-            "",
             "### Generic microsequencer fixtures",
             "",
             f"{rtl['cases']} cases, {rtl['programs_run']} programs executed, "
@@ -407,9 +406,15 @@ def main() -> int:
             lines.append("Declared limitations:")
             lines += [f"- {item}" for item in rtl["limitations"]]
             lines.append("")
+    else:
+        lines += ["### Generic microsequencer fixtures", "", "Artifact absent.", ""]
 
     deployment_rtl = status["rtl_deployment_correlation"]
     if deployment_rtl.get("present"):
+        compatibility = deployment_rtl["state_compatibility_elaborated"]
+        compatibility_text = (
+            "disabled" if compatibility is False else str(compatibility)
+        )
         checks = ", ".join(
             f"{name} {count:,}"
             for name, count in deployment_rtl["checks_per_simulator"].items()
@@ -427,7 +432,8 @@ def main() -> int:
             f"{len(deployment_rtl['simulators'])} independent simulators "
             f"({checks}).",
             "",
-            "The production profile elaborates with compatibility state disabled "
+            "The production profile elaborates with compatibility state "
+            f"{compatibility_text} "
             f"and requires {deployment_rtl['required_state_descriptors']} `STATE` "
             f"descriptors and {deployment_rtl['required_state_instructions']} "
             "`STATE` instructions.",
