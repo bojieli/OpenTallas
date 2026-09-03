@@ -1,10 +1,17 @@
 #!/usr/bin/env python3
-"""Run the focused two-simulator ABI 3.0 shipped-prefix integration witness."""
+"""Run the focused ABI 3.0 shipped-prefix integration witness.
+
+The complete source-bound Qwen PC-11 projection.MATMUL is intentionally executed once
+under Verilator.  Interpreted Icarus needs several hours for the 167,772,160
+cycles of the two single-lane launches, so this campaign does not imply that
+Icarus ran the complete integrated transaction.  Instead it fail-closed binds
+the unchanged ``ot_a3_mac_lane`` source to the retained dual-simulator engine
+qualification and records that evidence as compositional, not integrated.
+"""
 
 from __future__ import annotations
 
 import argparse
-from concurrent.futures import ThreadPoolExecutor
 import hashlib
 import json
 import os
@@ -22,9 +29,9 @@ VECTOR_DIR = ROOT / "testdata/compiler/abi3_shipped_prefix"
 VECTOR_JSON = VECTOR_DIR / "abi3_shipped_prefix_vectors.json"
 DEPLOYMENT_VECTOR_DIR = ROOT / "testdata/compiler/abi3_deployment"
 DEFAULT_OUTPUT = ROOT / "results/rtl/abi3_shipped_prefix_campaign.json"
+ENGINE_CAMPAIGN = ROOT / "results/rtl/abi3_engine_campaign.json"
 
 PINNED_VERILATOR_VERSION = "5.050"
-PINNED_IVERILOG_VERSION = "11.0"
 TOOLS_ROOT = Path(
     os.environ.get("OPENTALLAS_TOOL_ROOT", Path.home() / ".local/opentallas-tools")
 )
@@ -57,7 +64,6 @@ RTL_SOURCES = (
 )
 TEST_SOURCES = (
     "rtl/test/a3_shipped_prefix_top.sv",
-    "rtl/test/tb_a3_shipped_prefix.sv",
     "rtl/test/a3_shipped_prefix_harness.cpp",
 )
 CONTRACT_SOURCES = (
@@ -70,6 +76,7 @@ CONTRACT_SOURCES = (
     "runtime/sim/generators.py",
     "runtime/sim/engines/dma.py",
     "runtime/reference/tensor_accelerator_rmsnorm.py",
+    "runtime/tensor_accelerator/bf16.py",
 )
 TOOL_SOURCES = (
     "tools/build_abi3_deployment_rtl_vectors.py",
@@ -100,7 +107,6 @@ CASE_RE = re.compile(
 )
 CHECKS_RE = re.compile(r"checks=(\d+)")
 VERILATOR_VERSION_RE = re.compile(r"Verilator (\d+)\.(\d+)")
-IVERILOG_VERSION_RE = re.compile(r"Icarus Verilog version (\d+)\.(\d+)")
 
 
 def sha256_file(path: Path) -> str:
@@ -155,11 +161,58 @@ def require_versions(tools: dict[str, dict[str, str]]) -> None:
         raise SystemExit(
             f"Verilator {PINNED_VERILATOR_VERSION} or newer is required"
         )
-    match = IVERILOG_VERSION_RE.search(tools["iverilog"]["version"])
-    if match is None or (int(match.group(1)), int(match.group(2))) < (11, 0):
+
+
+def load_lane_qualification() -> dict[str, Any]:
+    """Bind the unchanged MAC lane to its retained dual-simulator evidence."""
+
+    if not ENGINE_CAMPAIGN.is_file():
+        raise SystemExit(f"missing compositional lane evidence: {ENGINE_CAMPAIGN}")
+    body = json.loads(ENGINE_CAMPAIGN.read_text(encoding="utf-8"))
+    source_path = "rtl/abi3/ot_a3_mac_lane.sv"
+    source_sha256 = sha256_file(ROOT / source_path)
+    blocked_limit = body.get("claim_boundary", {}).get(
+        "does_not_establish", {}
+    ).get("blocked_contraction_contract")
+    expected_simulators = ["iverilog_vvp", "verilator_cpp_executable"]
+    expected_checks = {"iverilog": 40_878, "verilator": 40_878}
+    if (
+        body.get("schema") != "opentallas.rtl.abi3_engine_campaign.v1"
+        or body.get("status") != "pass"
+        or body.get("evidence_class") != "public_open_tool_rtl_simulation"
+        or body.get("simulators_counted") != expected_simulators
+        or body.get("checks_per_simulator") != expected_checks
+        or body.get("source_sha256", {}).get(source_path) != source_sha256
+        or body.get("correlation", {}).get("mac_count") != 59_868
+        or not isinstance(blocked_limit, str)
+        or "only bf16_bf16_fp32_sequential_rne_v1 is correlated"
+        not in blocked_limit
+    ):
         raise SystemExit(
-            f"Icarus Verilog {PINNED_IVERILOG_VERSION} or newer is required"
+            "the retained dual-simulator MAC-lane qualification changed"
         )
+    return {
+        "artifact": str(ENGINE_CAMPAIGN.relative_to(ROOT)),
+        "artifact_sha256": sha256_file(ENGINE_CAMPAIGN),
+        "schema": body["schema"],
+        "status": body["status"],
+        "evidence_class": body["evidence_class"],
+        "simulators_counted": expected_simulators,
+        "checks_per_simulator": expected_checks,
+        "qualified_mac_count": 59_868,
+        "lane_source": source_path,
+        "lane_source_sha256": source_sha256,
+        "qualification_contract": "bf16_bf16_fp32_sequential_rne_v1",
+        "blocked_contract_limit": blocked_limit,
+        "composition_boundary": (
+            "the exact shipped blocked-contract operation declares the same "
+            "single-lane ascending-K arithmetic association and executes it "
+            "completely in the integrated Verilator replay; the retained "
+            "Icarus evidence qualifies that unchanged lane arithmetic on its "
+            "bounded sequential-contract vectors, not the full shipped "
+            "program, exact 4096x4096 shape, or blocked descriptor"
+        ),
+    }
 
 
 def load_vectors() -> dict[str, Any]:
@@ -185,6 +238,73 @@ def load_vectors() -> dict[str, Any]:
         if sha256_file(DEPLOYMENT_VECTOR_DIR / name) != expected:
             raise SystemExit(f"source deployment image {name} changed")
     return vectors
+
+
+def stage_matmul_weight(
+    vectors: dict[str, Any], destination: Path
+) -> dict[str, Any]:
+    """Stage the one complete Qwen matrix both shipped targets consume."""
+
+    sources = []
+    for case in vectors["cases"][:2]:
+        matches = [
+            operation["weight_source"]
+            for operation in case["supported_prefix"]
+            if operation["kind"] == "tensor_matmul"
+        ]
+        if len(matches) != 1:
+            raise SystemExit(
+                f"{case['name']}: expected one staged MATMUL weight source"
+            )
+        sources.append(matches[0])
+    identity_fields = (
+        "checkpoint",
+        "checkpoint_revision",
+        "shard",
+        "declared_segment_offset",
+        "declared_segment_bytes",
+        "declared_segment_sha256",
+        "selected_matrix_sha256",
+    )
+    if any(
+        sources[0][field] != sources[1][field] for field in identity_fields
+    ):
+        raise SystemExit("Qwen ROM/HBM PC-11 weight identities disagree")
+    source = sources[0]
+    checkpoint = Path(source["checkpoint"]).expanduser()
+    if checkpoint.name != source["checkpoint_revision"]:
+        raise SystemExit("Qwen checkpoint revision path disagrees")
+    shard = checkpoint / source["shard"]
+    offset = int(source["declared_segment_offset"])
+    byte_count = int(source["declared_segment_bytes"])
+    digest = hashlib.sha256()
+    remaining = byte_count
+    with shard.open("rb") as input_handle, destination.open("xb") as output_handle:
+        input_handle.seek(offset)
+        while remaining:
+            chunk = input_handle.read(min(1 << 20, remaining))
+            if not chunk:
+                raise SystemExit("Qwen PC-11 MATMUL weight segment is truncated")
+            output_handle.write(chunk)
+            digest.update(chunk)
+            remaining -= len(chunk)
+        output_handle.flush()
+        os.fsync(output_handle.fileno())
+    observed = digest.hexdigest()
+    if (
+        destination.stat().st_size != byte_count
+        or observed != source["declared_segment_sha256"]
+        or observed != source["selected_matrix_sha256"]
+    ):
+        raise SystemExit("Qwen PC-11 MATMUL weight segment identity differs")
+    return {
+        "path": "generated/p3_matmul_weight.bin",
+        "bytes": byte_count,
+        "sha256": observed,
+        "source_checkpoint_revision": source["checkpoint_revision"],
+        "source_shard": source["shard"],
+        "source_offset": offset,
+    }
 
 
 def run_stage(
@@ -279,10 +399,9 @@ def _expected_cases(vectors: dict[str, Any]) -> list[dict[str, int]]:
 
 def run(build_root: Path | None = None) -> dict[str, Any]:
     vectors = load_vectors()
+    lane_qualification = load_lane_qualification()
     marker = vectors["required_marker"]
     executables = {
-        "iverilog": resolve("iverilog", None),
-        "vvp": resolve("vvp", None),
         "verilator": resolve(
             "verilator",
             TOOLS_ROOT / f"verilator-{PINNED_VERILATOR_VERSION}/bin/verilator",
@@ -290,7 +409,7 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
         "cxx": resolve("g++", None),
     }
     tools = {
-        name: tool_record(path, ["-V"] if name in {"iverilog", "vvp"} else ["--version"])
+        name: tool_record(path, ["--version"])
         for name, path in executables.items()
     }
     require_versions(tools)
@@ -302,19 +421,11 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
             shutil.copy2(DEPLOYMENT_VECTOR_DIR / name, build / name)
         for name in VECTOR_FILES:
             shutil.copy2(VECTOR_DIR / name, build / name)
+        staged_matmul_weight = stage_matmul_weight(
+            vectors, build / "p3_matmul_weight.bin"
+        )
 
         rtl = [str(ROOT / path) for path in RTL_SOURCES]
-        iverilog_compile = [
-            str(executables["iverilog"]),
-            "-g2012",
-            "-s",
-            "tb_a3_shipped_prefix",
-            "-o",
-            "p3_sim.vvp",
-            *rtl,
-            str(ROOT / "rtl/test/a3_shipped_prefix_top.sv"),
-            str(ROOT / "rtl/test/tb_a3_shipped_prefix.sv"),
-        ]
         verilator_compile = [
             str(executables["verilator"]),
             "--cc",
@@ -333,33 +444,22 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
             "-CFLAGS",
             "-std=c++17",
         ]
-        with ThreadPoolExecutor(max_workers=2) as pool:
-            futures = [
-                pool.submit(
-                    simulator_case,
-                    "iverilog",
-                    iverilog_compile,
-                    [str(executables["vvp"]), "p3_sim.vvp"],
-                    build,
-                    marker,
-                ),
-                pool.submit(
-                    simulator_case,
-                    "verilator",
-                    verilator_compile,
-                    ["./obj_p3/Vot_a3_shipped_prefix_top"],
-                    build,
-                    marker,
-                ),
-            ]
-            cases = [future.result() for future in futures]
+        cases = [
+            simulator_case(
+                "verilator",
+                verilator_compile,
+                ["./obj_p3/Vot_a3_shipped_prefix_top"],
+                build,
+                marker,
+            )
+        ]
 
     expected_cases = _expected_cases(vectors)
-    observations_agree = (
-        all(case["status"] == "pass" for case in cases)
-        and cases[0]["checks"] == cases[1]["checks"]
-        and cases[0]["observed_cases"] == cases[1]["observed_cases"]
+    integrated_replay_passed = (
+        len(cases) == 1
+        and cases[0]["status"] == "pass"
         and cases[0]["observed_cases"] == expected_cases
+        and cases[0]["checks"] == 136_496
     )
     source_paths = (*RTL_SOURCES, *TEST_SOURCES, *CONTRACT_SOURCES, *TOOL_SOURCES)
     sources = {
@@ -387,6 +487,7 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
     ]
     checkpoint_rows = []
     checkpoint_gains = []
+    checkpoint_matrices = []
     for vector_case in vectors["cases"]:
         embedding = next(
             operation
@@ -428,10 +529,42 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
                     "source": rms_norm["weight_source"],
                 }
             )
+        matmul_operations = [
+            operation
+            for operation in vector_case["supported_prefix"]
+            if operation["kind"] == "tensor_matmul"
+        ]
+        for matmul in matmul_operations:
+            checkpoint_matrices.append(
+                {
+                    "case": vector_case["name"],
+                    "deployment_sha256": vector_case[
+                        "deployment_sha256"
+                    ],
+                    "operator_pc": int(matmul["pc"]),
+                    "operator_descriptor_id": int(
+                        matmul["descriptor_id"]
+                    ),
+                    "numeric_contract_sha256": matmul[
+                        "contract_sha256"
+                    ],
+                    "executed_association": matmul[
+                        "executed_association"
+                    ],
+                    "association_scope": matmul["association_scope"],
+                    "expected_row_sha256": matmul[
+                        "expected_row_sha256"
+                    ],
+                    "source": matmul["weight_source"],
+                }
+            )
     return {
         "schema": "opentallas.rtl.abi3_shipped_prefix_campaign.v1",
-        "status": "pass" if observations_agree else "fail",
-        "evidence_class": "public_open_tool_rtl_simulation",
+        "status": "pass" if integrated_replay_passed else "fail",
+        "evidence_class": "public_open_tool_rtl_simulation_composite",
+        "evidence_mode": (
+            "full_integrated_verilator_plus_dual_simulator_mac_lane_composition"
+        ),
         "abi": {"major": 3, "minor": 0},
         "state_compat": 0,
         "state_activity": {
@@ -452,6 +585,8 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
             "sha256": sha256_file(VECTOR_JSON),
             "schema": vectors["schema"],
         },
+        "staged_matmul_weight": staged_matmul_weight,
+        "compositional_mac_lane_qualification": lane_qualification,
         "scope": {
             "establishes": [
                 "the real sequencer resolves exact operand views from each of the four shipped decode programs",
@@ -459,17 +594,22 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
                 "four exact BF16 TENSOR.EMBED_LOOKUP operations execute through the existing index mover and reproduce 16,384 checkpoint codes from four bounded 8 KiB selected-row reads",
                 "two exact Qwen BF16 VECTOR.RMS_NORM operations consume the prior embedding result and authenticated layer-zero gain, reproducing all 8,192 retained output codes",
                 "two DeepSeek stride-zero DMA.TRANSFER operations consume the prior embedding result and reproduce all 32,768 output codes through a four-zero-index mover lowering",
+                "two complete Qwen layer-zero query TENSOR.MATMUL operations consume the prior RMSNorm result and every code of an authenticated 32 MiB weight matrix through ot_a3_mac_lane, reproducing all 8,192 output codes after 33,554,432 MACs",
+                "the blocked MATMUL contract is bound to the explicit ot_a3_mac_lane single-lane ascending-K association, executed 1x4096-by-4096x4096 shape, per-product and per-add binary32 RNE, and one final BF16 RNE",
                 "each selected checkpoint range is bound to its certified deployment, checkpoint revision, shard, declared segment digest, exact byte range, and selected-range SHA-256 without claiming a complete-shard rehash",
-                "Qwen next refuses TENSOR.MATMUL at PC 11; DeepSeek ROM refuses LINK.MULTICAST at PC 13 and DeepSeek HBM refuses VECTOR.MHC at PC 14, each with a precise CAPABILITY trap, no retirement, no event publication, and no later write",
+                "Qwen next refuses the second TENSOR.MATMUL at PC 14; DeepSeek ROM refuses LINK.MULTICAST at PC 13 and DeepSeek HBM refuses VECTOR.MHC at PC 14, each with a precise CAPABILITY trap, no retirement, no event publication, and no later write",
                 "the production profile elaborates STATE_COMPAT=0 and every compatibility-state counter and overflow output remains zero",
-                "Icarus and Verilator use independently written checkers and agree on every retained case observation and check count",
+                "Verilator executes the complete integrated shipped-prefix cases and its independent C++ checker reproduces every retained observation and result word",
+                "the unchanged ot_a3_mac_lane source is bound by SHA-256 to its retained Icarus-plus-Verilator engine qualification; that compositional campaign contributes 40,878 checks per simulator over 59,868 MACs",
             ],
             "does_not_establish": [
                 "prefill execution",
-                "TENSOR.MATMUL, LINK.MULTICAST, VECTOR.MHC, or any later model operator",
+                "any TENSOR.MATMUL after the first Qwen query projection, LINK.MULTICAST, VECTOR.MHC, or any later model operator",
                 "a whole transaction, token selection, decoding, EOS, or model correctness",
                 "complete checkpoint-segment reauthentication during this bounded run",
                 "memory-macro timing, SRAM/HBM arbitration, physical timing, area, or power",
+                "a complete integrated shipped-prefix execution under Icarus; Icarus coverage is compositional qualification of the unchanged MAC lane, not execution of this full 4096x4096 blocked-contract operation or its control path",
+                "dual-simulator agreement on this complete integrated transaction",
             ],
         },
         "supported_profile": vectors["supported_profile"],
@@ -480,6 +620,7 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
         "embedding_launch_count": vectors["embedding_launch_count"],
         "rms_norm_launch_count": vectors["rms_norm_launch_count"],
         "dma_transfer_launch_count": vectors["dma_transfer_launch_count"],
+        "matmul_launch_count": vectors["matmul_launch_count"],
         "rope_result_word_count": vectors["rope_result_word_count"],
         "embedding_result_word_count": vectors[
             "embedding_result_word_count"
@@ -490,11 +631,16 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
         "dma_transfer_result_word_count": vectors[
             "dma_transfer_result_word_count"
         ],
+        "matmul_result_word_count": vectors["matmul_result_word_count"],
+        "matmul_mac_count": vectors["matmul_mac_count"],
         "selected_embedding_checkpoint_byte_count": vectors[
             "selected_embedding_checkpoint_byte_count"
         ],
         "selected_rms_checkpoint_byte_count": vectors[
             "selected_rms_checkpoint_byte_count"
+        ],
+        "selected_matmul_checkpoint_byte_count": vectors[
+            "selected_matmul_checkpoint_byte_count"
         ],
         "selected_checkpoint_byte_count": vectors[
             "selected_checkpoint_byte_count"
@@ -505,12 +651,14 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
         "fault_sites": fault_sites,
         "checkpoint_rows": checkpoint_rows,
         "checkpoint_gains": checkpoint_gains,
+        "checkpoint_matrices": checkpoint_matrices,
         "post_fault_write_count": 0,
         "required_marker": marker,
-        "simulators_agree": observations_agree,
-        "simulator_checks": {
+        "integrated_simulator_checks": {
             case["name"]: case["checks"] for case in cases
         },
+        "integrated_simulators": [case["name"] for case in cases],
+        "integrated_replay_passed": integrated_replay_passed,
         "expected_cases": expected_cases,
         "tools": tools,
         "source": sources,

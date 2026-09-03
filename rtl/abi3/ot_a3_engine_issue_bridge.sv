@@ -4,11 +4,12 @@
 //
 // This is deliberately a bounded production profile, not a claim that every
 // shipped operator has an RTL datapath.  It admits the exact dense one-index
-// DMA.GATHER, BF16 TENSOR.EMBED_LOOKUP, Qwen BF16 VECTOR.RMS_NORM, and
-// DeepSeek stride-zero DMA.TRANSFER forms at the head of the shipped decode
-// programs.  EMBED_LOOKUP and TRANSFER are row movements and lower internally
-// to the existing index mover; RMS_NORM uses the exact buffered arithmetic
-// slice.  The sequencer continues to observe each original opcode and
+// DMA.GATHER, BF16 TENSOR.EMBED_LOOKUP, Qwen BF16 VECTOR.RMS_NORM and complete
+// layer-zero query TENSOR.MATMUL, and DeepSeek stride-zero DMA.TRANSFER forms
+// at the head of the shipped decode programs.  EMBED_LOOKUP and TRANSFER are
+// row movements and lower internally to the existing index mover; RMS_NORM
+// uses the exact buffered arithmetic slice and MATMUL reuses the qualified ABI
+// 3.0 MAC lane.  The sequencer continues to observe each original opcode and
 // descriptor.  Completion is returned only after the datapath finishes.
 // Every other opcode returns a precise CAPABILITY trap.  Malformed metadata
 // returns a DESCRIPTOR trap, and a datapath failure returns an ENGINE trap.
@@ -64,6 +65,8 @@ module ot_a3_engine_issue_bridge (
     input  wire [31:0]   cfg_rms_weight_base,
     input  wire [31:0]   cfg_transfer_index_base,
     input  wire [31:0]   cfg_transfer_source_base,
+    input  wire [31:0]   cfg_matmul_input_base,
+    input  wire [31:0]   cfg_matmul_weight_base,
     input  wire [31:0]   cfg_output_base,
 
     // Operand/result ports of the integrated engine array.
@@ -84,6 +87,7 @@ module ot_a3_engine_issue_bridge (
     output wire [31:0]   out_data,
     output wire          m0_reads_result,
     output wire          m1_reads_result,
+    output wire          m1_reads_matmul_weight,
 
     // Non-control observation for the focused checker.
     output wire          engine_busy,
@@ -95,6 +99,7 @@ module ot_a3_engine_issue_bridge (
     output reg  [31:0]   embedding_launch_count,
     output reg  [31:0]   rms_norm_launch_count,
     output reg  [31:0]   dma_transfer_launch_count,
+    output reg  [31:0]   matmul_launch_count,
     output reg  [31:0]   capability_fault_count,
     output reg  [31:0]   descriptor_fault_count,
     output reg  [31:0]   engine_fault_count,
@@ -121,6 +126,7 @@ module ot_a3_engine_issue_bridge (
     localparam [7:0] DMA_TRANSFER = 8'h00;
     localparam [7:0] DMA_GATHER = 8'h02;
     localparam [7:0] TENSOR_EMBED_LOOKUP = 8'h03;
+    localparam [7:0] TENSOR_MATMUL = 8'h00;
     localparam [7:0] VECTOR_RMS_NORM = 8'h00;
     localparam [7:0] FMT_U32 = 8'h04;
     localparam [7:0] FMT_I32 = 8'h05;
@@ -141,6 +147,8 @@ module ot_a3_engine_issue_bridge (
         256'hda3fc0b8b5271a03bfb1f0c1e6d2be46af1896d484db57fd6dc3d4c46bf89e99;
     localparam [255:0] CONTRACT_DEEPSEEK_TRANSFER_RAW =
         256'h94180f7a2a2d20609236e96941dde296643a19e8e71ff1ab239c3ac09ae5e14a;
+    localparam [255:0] CONTRACT_QWEN_MATMUL_RAW =
+        256'ha15a76a03cd9c4212365014f8ebb77b73f61872818463b77d5d93f776adc5075;
     localparam [31:0] QWEN_VOCABULARY = 32'd151936;
     localparam [31:0] DEEPSEEK_VOCABULARY = 32'd129280;
     localparam [31:0] EMBEDDING_WIDTH = 32'd4096;
@@ -170,6 +178,7 @@ module ot_a3_engine_issue_bridge (
     reg        embedding_q;
     reg        rms_norm_q;
     reg        dma_transfer_q;
+    reg        matmul_q;
 
     reg [5:0]  captured_valid;
     reg [31:0] captured_id [0:5];
@@ -243,7 +252,7 @@ module ot_a3_engine_issue_bridge (
         (desc_view_scale_block == 0) &&
         (desc_primary_object != NO_ID) &&
         ((desc_permissions & 32'd1) != 0);
-    wire dense_row_source_ok = !rms_norm_q && !dma_transfer_q &&
+    wire dense_row_source_ok = !rms_norm_q && !dma_transfer_q && !matmul_q &&
         (desc_view_dtype == (embedding_q ? FMT_BF16 : FMT_FP32)) &&
         (desc_view_rank == 2) && (desc_view_terms == 0) &&
         (desc_view_dim0 != 0) && (desc_view_dim1 != 0) &&
@@ -270,6 +279,20 @@ module ot_a3_engine_issue_bridge (
         (desc_view_stride3 == 0) && (desc_view_stride4 == 0) &&
         (desc_view_stride5 == 0) &&
         (captured_rank[1] == 1) && (captured_axis[1] == 0) &&
+        (captured_extent[1] == EMBEDDING_WIDTH) &&
+        (captured_offset[1] == desc_view_offset);
+    wire matmul_weight_source_ok = matmul_q &&
+        (desc_view_dtype == FMT_BF16) && (desc_view_rank == 2) &&
+        (desc_view_terms <= 4) &&
+        (desc_view_dim0 == EMBEDDING_WIDTH) &&
+        (desc_view_dim1 == EMBEDDING_WIDTH) &&
+        (desc_view_dim2 == 0) && (desc_view_dim3 == 0) &&
+        (desc_view_dim4 == 0) && (desc_view_dim5 == 0) &&
+        (desc_view_stride0 == EMBEDDING_WIDTH) &&
+        (desc_view_stride1 == 1) && (desc_view_stride2 == 0) &&
+        (desc_view_stride3 == 0) && (desc_view_stride4 == 0) &&
+        (desc_view_stride5 == 0) &&
+        (captured_rank[1] == 2) && (captured_axis[1] == 0) &&
         (captured_extent[1] == EMBEDDING_WIDTH) &&
         (captured_offset[1] == desc_view_offset);
     wire transfer_source_ok = dma_transfer_q &&
@@ -361,6 +384,12 @@ module ot_a3_engine_issue_bridge (
         (desc_data[559:552] == 0) &&
         (desc_data[607:576] == 0) &&
         (desc_data[1023:768] == CONTRACT_DEEPSEEK_TRANSFER_RAW);
+    wire matmul_numeric_ok = matmul_q &&
+        (desc_data[519:512] == FMT_BF16) &&
+        (desc_data[527:520] == FMT_BF16) &&
+        (desc_data[559:552] == 2) &&
+        (desc_data[607:576] == 0) &&
+        (desc_data[1023:768] == CONTRACT_QWEN_MATMUL_RAW);
 
     integer slot;
     always @(posedge clk or negedge rst_n) begin
@@ -378,6 +407,7 @@ module ot_a3_engine_issue_bridge (
             embedding_q <= 1'b0;
             rms_norm_q <= 1'b0;
             dma_transfer_q <= 1'b0;
+            matmul_q <= 1'b0;
             captured_valid <= 6'd0;
             op_input0 <= NO_ID;
             op_input1 <= NO_ID;
@@ -394,6 +424,7 @@ module ot_a3_engine_issue_bridge (
             embedding_launch_count <= 32'd0;
             rms_norm_launch_count <= 32'd0;
             dma_transfer_launch_count <= 32'd0;
+            matmul_launch_count <= 32'd0;
             capability_fault_count <= 32'd0;
             descriptor_fault_count <= 32'd0;
             engine_fault_count <= 32'd0;
@@ -420,12 +451,14 @@ module ot_a3_engine_issue_bridge (
                 embedding_q <= 1'b0;
                 rms_norm_q <= 1'b0;
                 dma_transfer_q <= 1'b0;
+                matmul_q <= 1'b0;
                 result_word_cursor <= 32'd0;
                 real_launch_count <= 32'd0;
                 dma_gather_launch_count <= 32'd0;
                 embedding_launch_count <= 32'd0;
                 rms_norm_launch_count <= 32'd0;
                 dma_transfer_launch_count <= 32'd0;
+                matmul_launch_count <= 32'd0;
                 capability_fault_count <= 32'd0;
                 descriptor_fault_count <= 32'd0;
                 engine_fault_count <= 32'd0;
@@ -459,6 +492,9 @@ module ot_a3_engine_issue_bridge (
                                    (issue_sub == DMA_GATHER)) ||
                                   ((issue_family == FAMILY_TENSOR) &&
                                    (issue_sub == TENSOR_EMBED_LOOKUP)) ||
+                                  ((issue_family == FAMILY_TENSOR) &&
+                                   (issue_sub == TENSOR_MATMUL) &&
+                                   (issue_index == 32'd11)) ||
                                   ((issue_family == FAMILY_VECTOR) &&
                                    (issue_sub == VECTOR_RMS_NORM)) ||
                                   ((issue_family == FAMILY_DMA) &&
@@ -477,6 +513,9 @@ module ot_a3_engine_issue_bridge (
                                 dma_transfer_q <=
                                     (issue_family == FAMILY_DMA) &&
                                     (issue_sub == DMA_TRANSFER);
+                                matmul_q <=
+                                    (issue_family == FAMILY_TENSOR) &&
+                                    (issue_sub == TENSOR_MATMUL);
                                 desc_req <= 1'b1;
                                 desc_id <= issue_descriptor_id;
                                 state <= S_OP_WAIT;
@@ -529,7 +568,8 @@ module ot_a3_engine_issue_bridge (
                                 op_output0 <= desc_data[863:832];
                                 desc_req <= 1'b1;
                                 desc_id <= desc_data[735:704];
-                                state <= rms_norm_q ? S_RMS_INPUT_WAIT
+                                state <= (rms_norm_q || matmul_q)
+                                      ? S_RMS_INPUT_WAIT
                                       : dma_transfer_q ? S_SOURCE_WAIT
                                       : S_INDEX_WAIT;
                             end
@@ -612,7 +652,8 @@ module ot_a3_engine_issue_bridge (
                                 state <= S_RESPONSE;
                             end else begin
                                 index_raw_dim0 <= desc_view_dim0;
-                                source_rows <= 32'd1;
+                                source_rows <= matmul_q
+                                    ? EMBEDDING_WIDTH : 32'd1;
                                 source_trailing <= EMBEDDING_WIDTH;
                                 source_dtype <= FMT_BF16;
                                 desc_req <= 1'b1;
@@ -627,6 +668,7 @@ module ot_a3_engine_issue_bridge (
                             if (!input_view_common_ok ||
                                 !(dense_row_source_ok ||
                                   rms_weight_source_ok ||
+                                  matmul_weight_source_ok ||
                                   transfer_source_ok)) begin
                                 response_fault <= 1'b1;
                                 response_trap <= TRAP_DESCRIPTOR;
@@ -671,6 +713,7 @@ module ot_a3_engine_issue_bridge (
                                 !(gather_numeric_ok ||
                                   embedding_numeric_ok ||
                                   rms_numeric_ok ||
+                                  matmul_numeric_ok ||
                                   transfer_numeric_ok)) begin
                                 response_fault <= 1'b1;
                                 response_trap <= TRAP_DESCRIPTOR;
@@ -716,6 +759,9 @@ module ot_a3_engine_issue_bridge (
                                 if (rms_norm_q)
                                     rms_norm_launch_count <=
                                         rms_norm_launch_count + 1;
+                                else if (matmul_q)
+                                    matmul_launch_count <=
+                                        matmul_launch_count + 1;
                                 else if (dma_transfer_q)
                                     dma_transfer_launch_count <=
                                         dma_transfer_launch_count + 1;
@@ -786,12 +832,14 @@ module ot_a3_engine_issue_bridge (
         ? rms_result_count : array_result_count;
     assign engine_work_count = rms_norm_q
         ? rms_work_count : array_work_count;
-    wire [31:0] expected_result_count = rms_norm_q
+    wire [31:0] expected_result_count = (rms_norm_q || matmul_q)
         ? EMBEDDING_WIDTH
         : dma_transfer_q ? (TRANSFER_COPIES * EMBEDDING_WIDTH)
         : source_trailing;
     wire [31:0] expected_work_count = rms_norm_q
-        ? EMBEDDING_WIDTH : dma_transfer_q ? TRANSFER_COPIES : 32'd1;
+        ? EMBEDDING_WIDTH
+        : matmul_q ? (EMBEDDING_WIDTH * EMBEDDING_WIDTH)
+        : dma_transfer_q ? TRANSFER_COPIES : 32'd1;
 
     assign m0_rd_en = rms_norm_q ? rms_input_rd_en : array_m0_rd_en;
     assign m0_rd_addr = rms_norm_q ? rms_input_rd_addr : array_m0_rd_addr;
@@ -804,8 +852,9 @@ module ot_a3_engine_issue_bridge (
     assign out_we = rms_norm_q ? rms_out_we : array_out_we;
     assign out_addr = rms_norm_q ? rms_out_addr : array_out_addr;
     assign out_data = rms_norm_q ? rms_out_data : array_out_data;
-    assign m0_reads_result = rms_norm_q;
+    assign m0_reads_result = rms_norm_q || matmul_q;
     assign m1_reads_result = dma_transfer_q;
+    assign m1_reads_matmul_weight = matmul_q;
 
     wire [31:0] launch_index_base = dma_transfer_q
         ? cfg_transfer_index_base
@@ -850,16 +899,16 @@ module ot_a3_engine_issue_bridge (
         .clk(clk),
         .rst_n(rst_n),
         .start(engine_start & !rms_norm_q),
-        .cfg_family(FAMILY_DMA),
-        .cfg_sub(DMA_GATHER),
-        .cfg_rows(16'd0),
+        .cfg_family(matmul_q ? FAMILY_TENSOR : FAMILY_DMA),
+        .cfg_sub(matmul_q ? TENSOR_MATMUL : DMA_GATHER),
+        .cfg_rows(matmul_q ? 16'd1 : 16'd0),
         .cfg_cols(source_trailing[15:0]),
-        .cfg_depth(16'd0),
+        .cfg_depth(matmul_q ? EMBEDDING_WIDTH[15:0] : 16'd0),
         .cfg_count(expected_result_count),
-        .cfg_dtype_a(FMT_U32),
+        .cfg_dtype_a(matmul_q ? FMT_BF16 : FMT_U32),
         .cfg_dtype_b(source_dtype),
-        .cfg_a_base(launch_index_base),
-        .cfg_b_base(launch_source_base),
+        .cfg_a_base(matmul_q ? cfg_matmul_input_base : launch_index_base),
+        .cfg_b_base(matmul_q ? cfg_matmul_weight_base : launch_source_base),
         .cfg_c_base(32'd0),
         .cfg_out_base(launch_output_base),
         .cfg_scale_a(1'b0),
@@ -875,57 +924,60 @@ module ot_a3_engine_issue_bridge (
         .cfg_extent(dma_transfer_q ? 32'd1 : source_rows),
         .cfg_input_valid(4'b0011),
         .cfg_output_valid(2'b01),
-        .cfg_input_dtypes({16'd0, source_dtype, FMT_U32}),
+        .cfg_input_dtypes({16'd0, source_dtype,
+            matmul_q ? FMT_BF16 : FMT_U32}),
         .cfg_output_dtypes({8'd0, source_dtype}),
-        .cfg_view_ranks(24'h02_00_21),
+        .cfg_view_ranks(matmul_q ? 24'h02_00_22 : 24'h02_00_21),
         .cfg_view_scaled(6'd0),
         .cfg_profile_valid(1'b1),
         .cfg_profile_dtypes(numeric_profile_dtypes),
         .cfg_rounding_mode(8'd0),
-        .cfg_reduction_order(8'd0),
+        .cfg_reduction_order(matmul_q ? 8'd2 : 8'd0),
         .cfg_profile_saturate(1'b0),
         .cfg_nan_policy(8'd0),
         .cfg_profile_scale_bits(32'd0),
         .cfg_epsilon_bits(32'd0),
         .cfg_profile_flags(32'd0),
-        .cfg_input0_dims({96'd0,
-            dma_transfer_q ? TRANSFER_COPIES : 32'd1}),
+        .cfg_input0_dims(matmul_q
+            ? {64'd0, EMBEDDING_WIDTH, 32'd1}
+            : {96'd0, dma_transfer_q ? TRANSFER_COPIES : 32'd1}),
         .cfg_input1_dims({64'd0, source_trailing,
             dma_transfer_q ? 32'd1 : source_rows}),
         .cfg_input2_dims(128'd0),
         .cfg_input3_dims(128'd0),
         .cfg_output0_dims({64'd0, source_trailing,
-            dma_transfer_q ? TRANSFER_COPIES : 32'd1}),
+            matmul_q ? 32'd1
+            : (dma_transfer_q ? TRANSFER_COPIES : 32'd1)}),
         .cfg_output1_dims(128'd0),
-        .cfg_contract_0(embedding_q
+        .cfg_contract_0(matmul_q ? 32'h7550dc6a : embedding_q
             ? ((source_rows == QWEN_VOCABULARY)
                 ? 32'hd1ea2f18 : 32'hca62e720)
             : 32'h12a24197),
-        .cfg_contract_1(embedding_q
+        .cfg_contract_1(matmul_q ? 32'h773fd9d5 : embedding_q
             ? ((source_rows == QWEN_VOCABULARY)
                 ? 32'he0b161e1 : 32'haa0132c2)
             : 32'hc80d3851),
-        .cfg_contract_2(embedding_q
+        .cfg_contract_2(matmul_q ? 32'h773b4618 : embedding_q
             ? ((source_rows == QWEN_VOCABULARY)
                 ? 32'h9e17f465 : 32'h1f095a7f)
             : 32'hcc5ea3e6),
-        .cfg_contract_3(embedding_q
+        .cfg_contract_3(matmul_q ? 32'h2887613f : embedding_q
             ? ((source_rows == QWEN_VOCABULARY)
                 ? 32'hced630e0 : 32'h1f8d5d94)
             : 32'h9915f7db),
-        .cfg_contract_4(embedding_q
+        .cfg_contract_4(matmul_q ? 32'hb777bb8e : embedding_q
             ? ((source_rows == QWEN_VOCABULARY)
                 ? 32'haf7d0de9 : 32'h07149b85)
             : 32'hc926aa1c),
-        .cfg_contract_5(embedding_q
+        .cfg_contract_5(matmul_q ? 32'h4f016523 : embedding_q
             ? ((source_rows == QWEN_VOCABULARY)
                 ? 32'h70dadd67 : 32'h47ddeb0a)
             : 32'h2ee795c8),
-        .cfg_contract_6(embedding_q
+        .cfg_contract_6(matmul_q ? 32'h21c4d93c : embedding_q
             ? ((source_rows == QWEN_VOCABULARY)
                 ? 32'h76c685ab : 32'hbd5d882a)
             : 32'hfe3af1a6),
-        .cfg_contract_7(embedding_q
+        .cfg_contract_7(matmul_q ? 32'ha0765aa1 : embedding_q
             ? ((source_rows == QWEN_VOCABULARY)
                 ? 32'h6539fbcc : 32'h2f0180d3)
             : 32'h7677daee),

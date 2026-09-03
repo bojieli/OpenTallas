@@ -8,15 +8,15 @@
 // ---------------------------------------------------------------------------
 module tb_a3_shipped_prefix;
     localparam integer CASES = 4;
-    localparam integer CASE_STRIDE = 48;
+    localparam integer CASE_STRIDE = 56;
     localparam integer ISSUE_STRIDE = 4;
-    localparam integer RESULT_WORDS = 65536;
+    localparam integer RESULT_WORDS = 69632;
     localparam [31:0] UNWRITTEN = 32'hdead_beef;
 
     reg [31:0] case_mem [0:CASES*CASE_STRIDE-1];
-    reg [31:0] issue_mem [0:71];
-    reg [31:0] expect_mem [0:58367];
-    reg [31:0] meta_mem [0:15];
+    reg [31:0] issue_mem [0:79];
+    reg [31:0] expect_mem [0:66559];
+    reg [31:0] meta_mem [0:19];
     initial begin
         $readmemh("p3_case.hex", case_mem);
         $readmemh("p3_issue.hex", issue_mem);
@@ -46,6 +46,8 @@ module tb_a3_shipped_prefix;
     reg [31:0] cfg_rms_weight_base = 0;
     reg [31:0] cfg_transfer_index_base = 0;
     reg [31:0] cfg_transfer_source_base = 0;
+    reg [31:0] cfg_matmul_input_base = 0;
+    reg [31:0] cfg_matmul_weight_base = 0;
     reg [31:0] cfg_output_base = 0;
 
     wire busy, done, complete, trapped;
@@ -63,6 +65,7 @@ module tb_a3_shipped_prefix;
     wire [31:0] real_launch_count, capability_fault_count;
     wire [31:0] dma_gather_launch_count, embedding_launch_count;
     wire [31:0] rms_norm_launch_count, dma_transfer_launch_count;
+    wire [31:0] matmul_launch_count;
     wire [31:0] descriptor_fault_count, engine_fault_count;
     wire [31:0] last_response_index, last_response_descriptor_id;
     wire [7:0] last_response_family, last_response_sub;
@@ -93,6 +96,8 @@ module tb_a3_shipped_prefix;
         .cfg_rms_weight_base(cfg_rms_weight_base),
         .cfg_transfer_index_base(cfg_transfer_index_base),
         .cfg_transfer_source_base(cfg_transfer_source_base),
+        .cfg_matmul_input_base(cfg_matmul_input_base),
+        .cfg_matmul_weight_base(cfg_matmul_weight_base),
         .cfg_output_base(cfg_output_base),
         .busy(busy), .done(done), .complete(complete), .trapped(trapped),
         .trap_class(trap_class),
@@ -118,6 +123,7 @@ module tb_a3_shipped_prefix;
         .embedding_launch_count(embedding_launch_count),
         .rms_norm_launch_count(rms_norm_launch_count),
         .dma_transfer_launch_count(dma_transfer_launch_count),
+        .matmul_launch_count(matmul_launch_count),
         .capability_fault_count(capability_fault_count),
         .descriptor_fault_count(descriptor_fault_count),
         .engine_fault_count(engine_fault_count),
@@ -153,6 +159,7 @@ module tb_a3_shipped_prefix;
     integer total_embeddings = 0;
     integer total_rms_norms = 0;
     integer total_transfers = 0;
+    integer total_matmuls = 0;
     integer total_words = 0;
     integer total_views = 0;
     integer field, case_index, word, guard, issue_word;
@@ -213,11 +220,15 @@ module tb_a3_shipped_prefix;
         check_equal("meta DMA gathers", meta_mem[8], 6);
         check_equal("meta embedding launches", meta_mem[9], 4);
         check_equal("meta RoPE words", meta_mem[10], 1024);
-        check_equal("meta selected checkpoint bytes", meta_mem[11], 49152);
+        check_equal("meta selected checkpoint bytes", meta_mem[11], 67158016);
         check_equal("meta RMSNorm launches", meta_mem[12], 2);
         check_equal("meta transfer launches", meta_mem[13], 2);
         check_equal("meta RMSNorm words", meta_mem[14], 8192);
         check_equal("meta transfer words", meta_mem[15], 32768);
+        check_equal("meta MATMUL launches", meta_mem[16], 2);
+        check_equal("meta MATMUL words", meta_mem[17], 8192);
+        check_equal("meta MATMUL MACs", meta_mem[18], 33554432);
+        check_equal("meta MATMUL checkpoint bytes", meta_mem[19], 67108864);
 
         for (case_index = 0; case_index < CASES;
              case_index = case_index + 1) begin
@@ -239,6 +250,8 @@ module tb_a3_shipped_prefix;
             cfg_rms_weight_base = record[41];
             cfg_transfer_index_base = record[42];
             cfg_transfer_source_base = record[43];
+            cfg_matmul_input_base = record[48];
+            cfg_matmul_weight_base = record[49];
             cfg_output_base = record[13];
             response_expected = record[21];
             response_base = record[31];
@@ -253,7 +266,7 @@ module tb_a3_shipped_prefix;
             @(negedge clk); start = 1'b1;
             @(negedge clk); start = 1'b0;
             guard = 0;
-            while (!done && guard < 100000) begin
+            while (!done && guard < 100000000) begin
                 @(negedge clk);
                 guard = guard + 1;
             end
@@ -286,6 +299,7 @@ module tb_a3_shipped_prefix;
                         record[44]);
             check_equal("DMA transfer launches", dma_transfer_launch_count,
                         record[45]);
+            check_equal("MATMUL launches", matmul_launch_count, record[50]);
             check_equal("capability responses", capability_fault_count,
                         record[29]);
             check_equal("descriptor faults", descriptor_fault_count, 0);
@@ -298,9 +312,11 @@ module tb_a3_shipped_prefix;
                         last_response_descriptor_id, record[18]);
             check_equal("engine error", engine_error_code, 0);
             check_equal("last engine result count", engine_result_count,
-                        record[44] != 0 ? record[46] : record[47]);
+                        record[50] != 0 ? record[51]
+                        : (record[44] != 0 ? record[46] : record[47]));
             check_equal("last engine work count", engine_work_count,
-                        record[44] != 0 ? 4096 : 4);
+                        record[50] != 0 ? record[52]
+                        : (record[44] != 0 ? 4096 : 4));
             check_equal("result write count", output_write_count, record[15]);
             check_equal("writes after capability fault", writes_after_fault, 0);
             check_equal("operand read in bounds", operand_read_oob, 0);
@@ -327,6 +343,7 @@ module tb_a3_shipped_prefix;
             total_embeddings = total_embeddings + embedding_launch_count;
             total_rms_norms = total_rms_norms + rms_norm_launch_count;
             total_transfers = total_transfers + dma_transfer_launch_count;
+            total_matmuls = total_matmuls + matmul_launch_count;
             total_words = total_words + output_write_count;
             total_views = total_views + count_views_resolved;
             $display("CASE %0d OK launches=%0d words=%0d responses=%0d trap=%0d fault=%0d fetched=%0d retired=%0d issued=%0d views=%0d",
@@ -344,6 +361,7 @@ module tb_a3_shipped_prefix;
         check_equal("total embedding launches", total_embeddings, meta_mem[9]);
         check_equal("total RMSNorm launches", total_rms_norms, meta_mem[12]);
         check_equal("total transfer launches", total_transfers, meta_mem[13]);
+        check_equal("total MATMUL launches", total_matmuls, meta_mem[16]);
         check_equal("total result words", total_words, meta_mem[2]);
         check_equal("total resolved views", total_views, meta_mem[3]);
         for (word = 0; word < meta_mem[2]; word = word + 1) begin
@@ -360,7 +378,7 @@ module tb_a3_shipped_prefix;
             $display("FAILURES: %0d checks=%0d", failures, checks);
             $fatal(1, "ABI3 shipped-prefix engine integration failed");
         end
-        $display("PASS: ABI3 shipped-prefix engine integration cases=4 launches=14 words=58368 capability_faults=4 checks=%0d", checks);
+        $display("PASS: ABI3 shipped-prefix engine integration cases=4 launches=16 words=66560 capability_faults=4 checks=%0d", checks);
         $finish;
     end
 endmodule

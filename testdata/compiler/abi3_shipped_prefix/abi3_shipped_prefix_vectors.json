@@ -10,6 +10,8 @@
       "bank_mapping": {
         "embedding_source_base": 4352,
         "index_base": 0,
+        "matmul_input_base": 4352,
+        "matmul_weight_base": 0,
         "output_base": 0,
         "rms_input_base": 256,
         "rms_weight_base": 8448,
@@ -32,30 +34,34 @@
         "dma_transfer_result_words": 0,
         "embedding_launches": 1,
         "embedding_result_words": 4096,
-        "fetched": 12,
-        "first_fault_instruction": 11,
-        "issued": 4,
-        "loop_iterations": 3,
-        "real_engine_launches": 3,
-        "result_words": 8448,
-        "retired": 11,
+        "fetched": 15,
+        "first_fault_instruction": 14,
+        "issued": 5,
+        "loop_iterations": 4,
+        "matmul_launches": 1,
+        "matmul_mac_count": 16777216,
+        "matmul_result_words": 4096,
+        "real_engine_launches": 4,
+        "result_words": 12544,
+        "retired": 14,
         "rms_norm_launches": 1,
         "rms_norm_result_words": 4096,
         "rope_result_words": 256,
-        "selected_checkpoint_bytes": 16384,
+        "selected_checkpoint_bytes": 33570816,
         "selected_embedding_checkpoint_bytes": 8192,
+        "selected_matmul_checkpoint_bytes": 33554432,
         "selected_rms_checkpoint_bytes": 8192,
-        "signals": 3,
+        "signals": 4,
         "state_compat": 0,
         "trap_class": 4,
-        "views": 12,
-        "wait_events": 2
+        "views": 15,
+        "wait_events": 3
       },
       "first_unsupported": {
-        "descriptor_id": 59,
+        "descriptor_id": 67,
         "family": 32,
         "opcode": "TENSOR.MATMUL",
-        "pc": 11,
+        "pc": 14,
         "sub": 0,
         "trap_class": 4
       },
@@ -296,6 +302,60 @@
             4096,
             1
           ]
+        },
+        {
+          "descriptor_id": 62,
+          "dims": [
+            1,
+            4096
+          ],
+          "dtype": 16,
+          "element_offset": 0,
+          "extent": 1,
+          "extent_axis": 0,
+          "object_id": 45,
+          "pc": 14,
+          "slot": 0,
+          "strides": [
+            4096,
+            1
+          ]
+        },
+        {
+          "descriptor_id": 63,
+          "dims": [
+            1024,
+            4096
+          ],
+          "dtype": 16,
+          "element_offset": 0,
+          "extent": 1024,
+          "extent_axis": 0,
+          "object_id": 6,
+          "pc": 14,
+          "slot": 1,
+          "strides": [
+            4096,
+            1
+          ]
+        },
+        {
+          "descriptor_id": 65,
+          "dims": [
+            1,
+            1024
+          ],
+          "dtype": 16,
+          "element_offset": 0,
+          "extent": 1,
+          "extent_axis": 0,
+          "object_id": 64,
+          "pc": 14,
+          "slot": 4,
+          "strides": [
+            1024,
+            1
+          ]
         }
       ],
       "supported_prefix": [
@@ -533,6 +593,100 @@
               1
             ]
           }
+        },
+        {
+          "association_scope": {
+            "binary32_rounding": "rne_after_each_product_and_add",
+            "columns": 4096,
+            "lane_count": 1,
+            "output_rounding": "bf16_rne_once",
+            "reduction": 4096,
+            "reduction_order": "ascending_k",
+            "rows": 1
+          },
+          "contract": "bf16_bf16_fp32_blocked_rne_v1",
+          "contract_sha256": "7550dc6a773fd9d5773b46182887613fb777bb8e4f01652321c4d93ca0765aa1",
+          "descriptor_id": 59,
+          "executed_association": "ot_a3_mac_lane_single_lane_ascending_k_v1",
+          "expected_row_sha256": "b900b79fd38ff6a9bff470ac27e9672b0c3724b84f6a1f7e964c2ec0918ea0ff",
+          "input_source": "prior_rms_norm_result_bank",
+          "input_view": {
+            "descriptor_id": 53,
+            "dims": [
+              1,
+              4096
+            ],
+            "dtype": 16,
+            "element_offset": 0,
+            "extent": 1,
+            "extent_axis": 0,
+            "object_id": 45,
+            "slot": 0,
+            "strides": [
+              4096,
+              1
+            ]
+          },
+          "kind": "tensor_matmul",
+          "mac_count": 16777216,
+          "numeric_profile_id": 57,
+          "output_saturated_element_count": 0,
+          "output_view": {
+            "descriptor_id": 56,
+            "dims": [
+              1,
+              4096
+            ],
+            "dtype": 16,
+            "element_offset": 0,
+            "extent": 1,
+            "extent_axis": 0,
+            "object_id": 55,
+            "slot": 4,
+            "strides": [
+              4096,
+              1
+            ]
+          },
+          "pc": 11,
+          "weight_source": {
+            "authentication_boundary": "the complete selected source segment was re-read and hashed; all 16,777,216 BF16 codes are consumed by the RTL operation",
+            "checkpoint": "~/.cache/huggingface/hub/models--Qwen--Qwen3-8B/snapshots/b968826d9c46dd6066d109eabc6255188de91218",
+            "checkpoint_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+            "declared_segment_bytes": 33554432,
+            "declared_segment_offset": 1588618872,
+            "declared_segment_sha256": "fd56b85bf301661c8655ed517928304d25df7d6b3ea3d9be85c021159d61bad8",
+            "object_content_sha256": "f085ed2c8f8e81d7f341e01504b1a1ec1a3cf2441dd171349b58967e2bf4be69",
+            "object_id": 5,
+            "selected_matrix_dtype": "BF16",
+            "selected_matrix_file_range": {
+              "start": 1588618872,
+              "stop_exclusive": 1622173304
+            },
+            "selected_matrix_sha256": "fd56b85bf301661c8655ed517928304d25df7d6b3ea3d9be85c021159d61bad8",
+            "selected_matrix_shape": [
+              4096,
+              4096
+            ],
+            "shard": "model-00001-of-00005.safetensors"
+          },
+          "weight_view": {
+            "descriptor_id": 54,
+            "dims": [
+              4096,
+              4096
+            ],
+            "dtype": 16,
+            "element_offset": 0,
+            "extent": 4096,
+            "extent_axis": 0,
+            "object_id": 5,
+            "slot": 1,
+            "strides": [
+              4096,
+              1
+            ]
+          }
         }
       ]
     },
@@ -540,13 +694,15 @@
       "bank_mapping": {
         "embedding_source_base": 16896,
         "index_base": 2,
-        "output_base": 8448,
-        "rms_input_base": 8704,
+        "matmul_input_base": 16896,
+        "matmul_weight_base": 0,
+        "output_base": 12544,
+        "rms_input_base": 12800,
         "rms_weight_base": 20992,
         "source_base": 12544,
         "source_launch_stride": 4352,
         "transfer_index_base": 0,
-        "transfer_source_base": 8704
+        "transfer_source_base": 12800
       },
       "deployment": "qwen3-8b-hbm-single-chip",
       "deployment_identity_evidence": {
@@ -562,30 +718,34 @@
         "dma_transfer_result_words": 0,
         "embedding_launches": 1,
         "embedding_result_words": 4096,
-        "fetched": 12,
-        "first_fault_instruction": 11,
-        "issued": 4,
-        "loop_iterations": 3,
-        "real_engine_launches": 3,
-        "result_words": 8448,
-        "retired": 11,
+        "fetched": 15,
+        "first_fault_instruction": 14,
+        "issued": 5,
+        "loop_iterations": 4,
+        "matmul_launches": 1,
+        "matmul_mac_count": 16777216,
+        "matmul_result_words": 4096,
+        "real_engine_launches": 4,
+        "result_words": 12544,
+        "retired": 14,
         "rms_norm_launches": 1,
         "rms_norm_result_words": 4096,
         "rope_result_words": 256,
-        "selected_checkpoint_bytes": 16384,
+        "selected_checkpoint_bytes": 33570816,
         "selected_embedding_checkpoint_bytes": 8192,
+        "selected_matmul_checkpoint_bytes": 33554432,
         "selected_rms_checkpoint_bytes": 8192,
-        "signals": 3,
+        "signals": 4,
         "state_compat": 0,
         "trap_class": 4,
-        "views": 12,
-        "wait_events": 2
+        "views": 15,
+        "wait_events": 3
       },
       "first_unsupported": {
-        "descriptor_id": 72,
+        "descriptor_id": 78,
         "family": 32,
         "opcode": "TENSOR.MATMUL",
-        "pc": 11,
+        "pc": 14,
         "sub": 0,
         "trap_class": 4
       },
@@ -826,6 +986,60 @@
             4096,
             1
           ]
+        },
+        {
+          "descriptor_id": 75,
+          "dims": [
+            1,
+            4096
+          ],
+          "dtype": 16,
+          "element_offset": 0,
+          "extent": 1,
+          "extent_axis": 0,
+          "object_id": 19,
+          "pc": 14,
+          "slot": 0,
+          "strides": [
+            4096,
+            1
+          ]
+        },
+        {
+          "descriptor_id": 76,
+          "dims": [
+            1024,
+            4096
+          ],
+          "dtype": 16,
+          "element_offset": 0,
+          "extent": 1024,
+          "extent_axis": 0,
+          "object_id": 3,
+          "pc": 14,
+          "slot": 1,
+          "strides": [
+            4096,
+            1
+          ]
+        },
+        {
+          "descriptor_id": 77,
+          "dims": [
+            1,
+            1024
+          ],
+          "dtype": 16,
+          "element_offset": 0,
+          "extent": 1,
+          "extent_axis": 0,
+          "object_id": 21,
+          "pc": 14,
+          "slot": 4,
+          "strides": [
+            1024,
+            1
+          ]
         }
       ],
       "supported_prefix": [
@@ -1063,6 +1277,100 @@
               1
             ]
           }
+        },
+        {
+          "association_scope": {
+            "binary32_rounding": "rne_after_each_product_and_add",
+            "columns": 4096,
+            "lane_count": 1,
+            "output_rounding": "bf16_rne_once",
+            "reduction": 4096,
+            "reduction_order": "ascending_k",
+            "rows": 1
+          },
+          "contract": "bf16_bf16_fp32_blocked_rne_v1",
+          "contract_sha256": "7550dc6a773fd9d5773b46182887613fb777bb8e4f01652321c4d93ca0765aa1",
+          "descriptor_id": 72,
+          "executed_association": "ot_a3_mac_lane_single_lane_ascending_k_v1",
+          "expected_row_sha256": "b900b79fd38ff6a9bff470ac27e9672b0c3724b84f6a1f7e964c2ec0918ea0ff",
+          "input_source": "prior_rms_norm_result_bank",
+          "input_view": {
+            "descriptor_id": 67,
+            "dims": [
+              1,
+              4096
+            ],
+            "dtype": 16,
+            "element_offset": 0,
+            "extent": 1,
+            "extent_axis": 0,
+            "object_id": 19,
+            "slot": 0,
+            "strides": [
+              4096,
+              1
+            ]
+          },
+          "kind": "tensor_matmul",
+          "mac_count": 16777216,
+          "numeric_profile_id": 70,
+          "output_saturated_element_count": 0,
+          "output_view": {
+            "descriptor_id": 69,
+            "dims": [
+              1,
+              4096
+            ],
+            "dtype": 16,
+            "element_offset": 0,
+            "extent": 1,
+            "extent_axis": 0,
+            "object_id": 20,
+            "slot": 4,
+            "strides": [
+              4096,
+              1
+            ]
+          },
+          "pc": 11,
+          "weight_source": {
+            "authentication_boundary": "the complete selected source segment was re-read and hashed; all 16,777,216 BF16 codes are consumed by the RTL operation",
+            "checkpoint": "~/.cache/huggingface/hub/models--Qwen--Qwen3-8B/snapshots/b968826d9c46dd6066d109eabc6255188de91218",
+            "checkpoint_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+            "declared_segment_bytes": 33554432,
+            "declared_segment_offset": 1588618872,
+            "declared_segment_sha256": "fd56b85bf301661c8655ed517928304d25df7d6b3ea3d9be85c021159d61bad8",
+            "object_content_sha256": "f085ed2c8f8e81d7f341e01504b1a1ec1a3cf2441dd171349b58967e2bf4be69",
+            "object_id": 2,
+            "selected_matrix_dtype": "BF16",
+            "selected_matrix_file_range": {
+              "start": 1588618872,
+              "stop_exclusive": 1622173304
+            },
+            "selected_matrix_sha256": "fd56b85bf301661c8655ed517928304d25df7d6b3ea3d9be85c021159d61bad8",
+            "selected_matrix_shape": [
+              4096,
+              4096
+            ],
+            "shard": "model-00001-of-00005.safetensors"
+          },
+          "weight_view": {
+            "descriptor_id": 68,
+            "dims": [
+              4096,
+              4096
+            ],
+            "dtype": 16,
+            "element_offset": 0,
+            "extent": 4096,
+            "extent_axis": 0,
+            "object_id": 2,
+            "slot": 1,
+            "strides": [
+              4096,
+              1
+            ]
+          }
         }
       ]
     },
@@ -1070,13 +1378,15 @@
       "bank_mapping": {
         "embedding_source_base": 29440,
         "index_base": 4,
-        "output_base": 16896,
-        "rms_input_base": 17152,
+        "matmul_input_base": 0,
+        "matmul_weight_base": 0,
+        "output_base": 25088,
+        "rms_input_base": 25344,
         "rms_weight_base": 0,
         "source_base": 25088,
         "source_launch_stride": 2176,
         "transfer_index_base": 7,
-        "transfer_source_base": 17152
+        "transfer_source_base": 25344
       },
       "deployment": "deepseek-v4-flash-rom-wafer",
       "deployment_identity_evidence": {
@@ -1096,6 +1406,9 @@
         "first_fault_instruction": 13,
         "issued": 5,
         "loop_iterations": 4,
+        "matmul_launches": 0,
+        "matmul_mac_count": 0,
+        "matmul_result_words": 0,
         "real_engine_launches": 4,
         "result_words": 20736,
         "retired": 13,
@@ -1104,6 +1417,7 @@
         "rope_result_words": 256,
         "selected_checkpoint_bytes": 8192,
         "selected_embedding_checkpoint_bytes": 8192,
+        "selected_matmul_checkpoint_bytes": 0,
         "selected_rms_checkpoint_bytes": 0,
         "signals": 4,
         "state_compat": 0,
@@ -1642,13 +1956,15 @@
       "bank_mapping": {
         "embedding_source_base": 37888,
         "index_base": 11,
-        "output_base": 37632,
-        "rms_input_base": 37888,
+        "matmul_input_base": 0,
+        "matmul_weight_base": 0,
+        "output_base": 45824,
+        "rms_input_base": 46080,
         "rms_weight_base": 0,
         "source_base": 33536,
         "source_launch_stride": 2176,
         "transfer_index_base": 14,
-        "transfer_source_base": 37888
+        "transfer_source_base": 46080
       },
       "deployment": "deepseek-v4-flash-hbm-cluster",
       "deployment_identity_evidence": {
@@ -1668,6 +1984,9 @@
         "first_fault_instruction": 14,
         "issued": 5,
         "loop_iterations": 4,
+        "matmul_launches": 0,
+        "matmul_mac_count": 0,
+        "matmul_result_words": 0,
         "real_engine_launches": 4,
         "result_words": 20736,
         "retired": 14,
@@ -1676,6 +1995,7 @@
         "rope_result_words": 256,
         "selected_checkpoint_bytes": 8192,
         "selected_embedding_checkpoint_bytes": 8192,
+        "selected_matmul_checkpoint_bytes": 0,
         "selected_rms_checkpoint_bytes": 0,
         "signals": 4,
         "state_compat": 0,
@@ -2321,30 +2641,30 @@
       ]
     }
   ],
-  "claim": "exact shipped decode-program prefixes: six real DMA.GATHER launches copy 1,024 authentic generated RoPE words and four TENSOR.EMBED_LOOKUP launches copy 16,384 BF16 codes from four bounded, authenticated checkpoint-row reads; two exact Qwen VECTOR.RMS_NORM launches produce 8,192 BF16 codes using two bounded gain reads, and two DeepSeek stride-zero DMA.TRANSFER launches produce 32,768 BF16 codes from the prior embedding result; Qwen then fails closed at TENSOR.MATMUL and DeepSeek at LINK.MULTICAST or VECTOR.MHC; this is not a whole-model, prefill, token-selection, or decoding claim",
+  "claim": "exact shipped decode-program prefixes: six real DMA.GATHER launches copy 1,024 authentic generated RoPE words and four TENSOR.EMBED_LOOKUP launches copy 16,384 BF16 codes from four bounded, authenticated checkpoint-row reads; two exact Qwen VECTOR.RMS_NORM launches produce 8,192 BF16 codes using two bounded gain reads, and two DeepSeek stride-zero DMA.TRANSFER launches produce 32,768 BF16 codes from the prior embedding result; two complete Qwen layer-zero query TENSOR.MATMUL launches consume 33,554,432 authenticated BF16 weights and MACs and produce 8,192 BF16 codes; Qwen then fails closed at the next TENSOR.MATMUL and DeepSeek at LINK.MULTICAST or VECTOR.MHC; this is not a whole-model, prefill, token-selection, or decoding claim",
   "dma_gather_launch_count": 6,
   "dma_transfer_launch_count": 2,
   "dma_transfer_result_word_count": 32768,
   "embedding_launch_count": 4,
   "embedding_result_word_count": 16384,
   "geometry": {
-    "case_stride": 48,
-    "case_words_used": 192,
-    "expected_words_used": 58368,
+    "case_stride": 56,
+    "case_words_used": 224,
+    "expected_words_used": 66560,
     "index_words": 64,
     "index_words_used": 18,
     "issue_stride": 4,
-    "issue_words_used": 72,
-    "result_words": 65536,
+    "issue_words_used": 80,
+    "result_words": 69632,
     "source_words": 65536,
     "source_words_used": 41984
   },
   "image_sha256": {
-    "p3_case.hex": "2a2795cc71bb336577e8e08cfac9c11065e5e92cc4d5585771a008fe251bf00b",
-    "p3_expect.hex": "946af78ebe77b95a7efeba16cd717b67d279722ff79b59be927f99a96a23b4cd",
+    "p3_case.hex": "57f7740bf28e4c463de06f38b260fc2574a6275d6852ac3ef0565ed7dea2424d",
+    "p3_expect.hex": "91f8e46b8c7956cf9975f5eebcf628300bef1947b8f039796eecac57ba15858e",
     "p3_index.hex": "3782c32630334de6249983b67fe2fe6198815a3435ef977a8512dacb2292b2e0",
-    "p3_issue.hex": "fdadf6b87f4305c09fcec6cb9d4d8781e5138c2131da06d6106a3ce4b4b0231c",
-    "p3_meta.hex": "16f9d9127e144215f686b754b8ab354e0ba6e5c11da24794d98452dd3c7ff554",
+    "p3_issue.hex": "d213f700d2f93e413c0cb617aff609cc4b22fdccddd7940fb30e64ab7771307a",
+    "p3_meta.hex": "5f35b37a8fc9b1c94f67bee1142d51858d24733b726c6be360a18466fd3d8e93",
     "p3_source.hex": "8a682b59efbd2f77db8b3ec1d93a2c2cfc56e07c62b5975d470831a0a82b4050"
   },
   "input_deployment_vectors": {
@@ -2356,7 +2676,10 @@
     "path": "testdata/compiler/abi3_deployment/abi3_deployment_rtl_vectors.json",
     "sha256": "036c28d07e9de30930e4640c85a757e094b8ebb974ef1877b3d961eaa765bc3f"
   },
-  "real_engine_launch_count": 14,
+  "matmul_launch_count": 2,
+  "matmul_mac_count": 33554432,
+  "matmul_result_word_count": 8192,
+  "real_engine_launch_count": 16,
   "request_scope": {
     "embedding_probe_scope": "bounded synthetic legal-vocabulary probe; not a natural-language or end-to-end model claim",
     "embedding_token_id": 0,
@@ -2364,17 +2687,18 @@
     "position_start": 16,
     "prompt_tokens": 16
   },
-  "required_marker": "PASS: ABI3 shipped-prefix engine integration cases=4 launches=14 words=58368 capability_faults=4",
-  "resolved_view_count": 52,
-  "result_word_count": 58368,
+  "required_marker": "PASS: ABI3 shipped-prefix engine integration cases=4 launches=16 words=66560 capability_faults=4",
+  "resolved_view_count": 58,
+  "result_word_count": 66560,
   "rms_norm_launch_count": 2,
   "rms_norm_result_word_count": 8192,
   "rope_result_word_count": 1024,
   "schema": "opentallas.rtl.abi3_shipped_prefix_vectors.v1",
-  "selected_checkpoint_byte_count": 49152,
+  "selected_checkpoint_byte_count": 67158016,
   "selected_embedding_checkpoint_byte_count": 32768,
+  "selected_matmul_checkpoint_byte_count": 67108864,
   "selected_rms_checkpoint_byte_count": 16384,
   "state_compat": 0,
-  "supported_profile": "dense one-index FP32 DMA.GATHER plus exact token-zero BF16 TENSOR.EMBED_LOOKUP with 4,096-code rows, exact one-row Qwen BF16 RMSNorm, and DeepSeek four-copy stride-zero BF16 transfer; resolved views, unscaled operands, and numeric contracts are bound before each launch",
+  "supported_profile": "dense one-index FP32 DMA.GATHER plus exact token-zero BF16 TENSOR.EMBED_LOOKUP with 4,096-code rows, exact one-row Qwen BF16 RMSNorm, one complete Qwen 1x4096-by-4096x4096 query MATMUL through the declared single-lane ascending-K association, and DeepSeek four-copy stride-zero BF16 transfer; resolved views, unscaled operands, and numeric contracts are bound before each launch",
   "unsupported_policy": "every other family/subopcode returns CAPABILITY before any engine launch, result write, retirement, or signal publication"
 }

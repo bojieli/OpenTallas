@@ -15,9 +15,9 @@
 namespace {
 
 constexpr std::size_t kCases = 4;
-constexpr std::size_t kCaseStride = 48;
+constexpr std::size_t kCaseStride = 56;
 constexpr std::size_t kIssueStride = 4;
-constexpr std::size_t kResultWords = 65536;
+constexpr std::size_t kResultWords = 69632;
 constexpr std::uint32_t kUnwritten = 0xdeadbeefU;
 
 std::vector<std::uint32_t> read_hex(const std::string& path) {
@@ -77,6 +77,8 @@ struct Model {
         dut.cfg_rms_weight_base = 0;
         dut.cfg_transfer_index_base = 0;
         dut.cfg_transfer_source_base = 0;
+        dut.cfg_matmul_input_base = 0;
+        dut.cfg_matmul_weight_base = 0;
         dut.cfg_output_base = 0;
         dut.result_read_addr = 0;
         dut.eval();
@@ -111,8 +113,8 @@ int main(int argc, char** argv) {
         const auto issues = read_hex("p3_issue.hex");
         const auto expected = read_hex("p3_expect.hex");
         const auto meta = read_hex("p3_meta.hex");
-        if (cases.size() != kCases * kCaseStride || issues.size() != 72 ||
-            expected.size() != 58368 || meta.size() != 16)
+        if (cases.size() != kCases * kCaseStride || issues.size() != 80 ||
+            expected.size() != 66560 || meta.size() != 20)
             throw std::runtime_error("shipped-prefix vector geometry mismatch");
 
         Checker check;
@@ -124,11 +126,15 @@ int main(int argc, char** argv) {
         check.equal("meta DMA gathers", meta[8], 6);
         check.equal("meta embedding launches", meta[9], 4);
         check.equal("meta RoPE words", meta[10], 1024);
-        check.equal("meta selected checkpoint bytes", meta[11], 49152);
+        check.equal("meta selected checkpoint bytes", meta[11], 67158016);
         check.equal("meta RMSNorm launches", meta[12], 2);
         check.equal("meta transfer launches", meta[13], 2);
         check.equal("meta RMSNorm words", meta[14], 8192);
         check.equal("meta transfer words", meta[15], 32768);
+        check.equal("meta MATMUL launches", meta[16], 2);
+        check.equal("meta MATMUL words", meta[17], 8192);
+        check.equal("meta MATMUL MACs", meta[18], 33554432);
+        check.equal("meta MATMUL checkpoint bytes", meta[19], 67108864);
 
         std::uint64_t total_responses = 0;
         std::uint64_t total_launches = 0;
@@ -136,6 +142,7 @@ int main(int argc, char** argv) {
         std::uint64_t total_embeddings = 0;
         std::uint64_t total_rms_norms = 0;
         std::uint64_t total_transfers = 0;
+        std::uint64_t total_matmuls = 0;
         std::uint64_t total_words = 0;
         std::uint64_t total_views = 0;
 
@@ -159,6 +166,8 @@ int main(int argc, char** argv) {
             model.dut.cfg_rms_weight_base = record[41];
             model.dut.cfg_transfer_index_base = record[42];
             model.dut.cfg_transfer_source_base = record[43];
+            model.dut.cfg_matmul_input_base = record[48];
+            model.dut.cfg_matmul_weight_base = record[49];
             model.dut.cfg_output_base = record[13];
 
             model.dut.result_read_addr = record[13];
@@ -203,7 +212,7 @@ int main(int argc, char** argv) {
             model.cycle(observe);
             model.dut.start = 0;
             std::uint32_t guard = 0;
-            while (!model.dut.done && guard < 100000) {
+            while (!model.dut.done && guard < 100000000) {
                 model.cycle(observe);
                 ++guard;
             }
@@ -241,6 +250,8 @@ int main(int argc, char** argv) {
                         record[44]);
             check.equal("DMA transfer launches",
                         model.dut.dma_transfer_launch_count, record[45]);
+            check.equal("MATMUL launches", model.dut.matmul_launch_count,
+                        record[50]);
             check.equal("capability responses",
                         model.dut.capability_fault_count, record[29]);
             check.equal("descriptor faults", model.dut.descriptor_fault_count,
@@ -259,9 +270,12 @@ int main(int argc, char** argv) {
             check.equal("engine error", model.dut.engine_error_code, 0);
             check.equal("last engine result count",
                         model.dut.engine_result_count,
-                        record[44] != 0 ? record[46] : record[47]);
+                        record[50] != 0 ? record[51]
+                                        : (record[44] != 0 ? record[46]
+                                                           : record[47]));
             check.equal("last engine work count", model.dut.engine_work_count,
-                        record[44] != 0 ? 4096 : 4);
+                        record[50] != 0 ? record[52]
+                                        : (record[44] != 0 ? 4096 : 4));
             check.equal("result write count", model.dut.output_write_count,
                         record[15]);
             check.equal("writes after capability fault",
@@ -298,6 +312,7 @@ int main(int argc, char** argv) {
             total_embeddings += model.dut.embedding_launch_count;
             total_rms_norms += model.dut.rms_norm_launch_count;
             total_transfers += model.dut.dma_transfer_launch_count;
+            total_matmuls += model.dut.matmul_launch_count;
             total_words += model.dut.output_write_count;
             total_views += model.dut.count_views_resolved;
             std::cout << "CASE " << case_index << " OK launches="
@@ -318,6 +333,7 @@ int main(int argc, char** argv) {
         check.equal("total embedding launches", total_embeddings, meta[9]);
         check.equal("total RMSNorm launches", total_rms_norms, meta[12]);
         check.equal("total transfer launches", total_transfers, meta[13]);
+        check.equal("total MATMUL launches", total_matmuls, meta[16]);
         check.equal("total result words", total_words, meta[2]);
         check.equal("total resolved views", total_views, meta[3]);
         for (std::uint32_t word = 0; word < meta[2]; ++word) {
@@ -341,7 +357,7 @@ int main(int argc, char** argv) {
         }
         std::cout
             << "PASS: ABI3 shipped-prefix engine integration cases=4 "
-               "launches=14 words=58368 capability_faults=4 checks="
+               "launches=16 words=66560 capability_faults=4 checks="
             << check.checks << "\n";
         return 0;
     } catch (const std::exception& exc) {

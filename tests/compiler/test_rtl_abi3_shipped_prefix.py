@@ -17,9 +17,7 @@ VECTOR_DIR = ROOT / "testdata/compiler/abi3_shipped_prefix"
 VECTOR_JSON = VECTOR_DIR / "abi3_shipped_prefix_vectors.json"
 CAMPAIGN_JSON = ROOT / "results/rtl/abi3_shipped_prefix_campaign.json"
 
-TOOLS_AVAILABLE = all(
-    shutil.which(tool) is not None for tool in ("iverilog", "vvp", "g++")
-) and (
+TOOLS_AVAILABLE = shutil.which("g++") is not None and (
     shutil.which("verilator") is not None
     or (
         campaign.TOOLS_ROOT
@@ -52,20 +50,24 @@ def test_witness_is_exactly_the_small_abi3_fail_stop_prefix() -> None:
     assert vectors["abi"] == {"major": 3, "minor": 0}
     assert vectors["state_compat"] == 0
     assert vectors["case_count"] == 4
-    assert vectors["real_engine_launch_count"] == 14
+    assert vectors["real_engine_launch_count"] == 16
     assert vectors["dma_gather_launch_count"] == 6
     assert vectors["embedding_launch_count"] == 4
     assert vectors["rms_norm_launch_count"] == 2
     assert vectors["dma_transfer_launch_count"] == 2
+    assert vectors["matmul_launch_count"] == 2
     assert vectors["rope_result_word_count"] == 1_024
     assert vectors["embedding_result_word_count"] == 16_384
     assert vectors["rms_norm_result_word_count"] == 8_192
     assert vectors["dma_transfer_result_word_count"] == 32_768
+    assert vectors["matmul_result_word_count"] == 8_192
+    assert vectors["matmul_mac_count"] == 33_554_432
     assert vectors["selected_embedding_checkpoint_byte_count"] == 32_768
     assert vectors["selected_rms_checkpoint_byte_count"] == 16_384
-    assert vectors["selected_checkpoint_byte_count"] == 49_152
-    assert vectors["result_word_count"] == 58_368
-    assert vectors["resolved_view_count"] == 52
+    assert vectors["selected_matmul_checkpoint_byte_count"] == 67_108_864
+    assert vectors["selected_checkpoint_byte_count"] == 67_158_016
+    assert vectors["result_word_count"] == 66_560
+    assert vectors["resolved_view_count"] == 58
     assert vectors["capability_fault_count"] == 4
     assert [case["name"] for case in vectors["cases"]] == [
         "qwen3-8b-rom-single-chip/decode",
@@ -74,14 +76,38 @@ def test_witness_is_exactly_the_small_abi3_fail_stop_prefix() -> None:
         "deepseek-v4-flash-hbm-cluster/decode",
     ]
     assert [case["first_unsupported"] for case in vectors["cases"]] == [
-        {"pc": 11, "family": 32, "sub": 0, "opcode": "TENSOR.MATMUL",
-         "descriptor_id": 59, "trap_class": 4},
-        {"pc": 11, "family": 32, "sub": 0, "opcode": "TENSOR.MATMUL",
-         "descriptor_id": 72, "trap_class": 4},
-        {"pc": 13, "family": 144, "sub": 3, "opcode": "LINK.MULTICAST",
-         "descriptor_id": 368, "trap_class": 4},
-        {"pc": 14, "family": 48, "sub": 9, "opcode": "VECTOR.MHC",
-         "descriptor_id": 546, "trap_class": 4},
+        {
+            "pc": 14,
+            "family": 32,
+            "sub": 0,
+            "opcode": "TENSOR.MATMUL",
+            "descriptor_id": 67,
+            "trap_class": 4,
+        },
+        {
+            "pc": 14,
+            "family": 32,
+            "sub": 0,
+            "opcode": "TENSOR.MATMUL",
+            "descriptor_id": 78,
+            "trap_class": 4,
+        },
+        {
+            "pc": 13,
+            "family": 144,
+            "sub": 3,
+            "opcode": "LINK.MULTICAST",
+            "descriptor_id": 368,
+            "trap_class": 4,
+        },
+        {
+            "pc": 14,
+            "family": 48,
+            "sub": 9,
+            "opcode": "VECTOR.MHC",
+            "descriptor_id": 546,
+            "trap_class": 4,
+        },
     ]
     for case_index, case in enumerate(vectors["cases"]):
         assert not case["expected"]["complete"]
@@ -89,9 +115,11 @@ def test_witness_is_exactly_the_small_abi3_fail_stop_prefix() -> None:
         assert case["expected"]["embedding_launches"] == 1
         assert case["expected"]["embedding_result_words"] == 4_096
         assert case["expected"]["selected_checkpoint_bytes"] == (
-            16_384 if case_index < 2 else 8_192
+            33_570_816 if case_index < 2 else 8_192
         )
-        assert case["expected"]["wait_events"] == (1 if case_index == 2 else 2)
+        assert case["expected"]["wait_events"] == (
+            3 if case_index < 2 else (1 if case_index == 2 else 2)
+        )
         assert case["expected"]["retired"] + 1 == case["expected"]["fetched"]
 
         embedding = next(
@@ -116,6 +144,7 @@ def test_witness_is_exactly_the_small_abi3_fail_stop_prefix() -> None:
             "authentication_boundary"
         ]
         if case_index < 2:
+            assert case["bank_mapping"]["matmul_weight_base"] == 0
             rms_norm = next(
                 operation
                 for operation in case["supported_prefix"]
@@ -141,6 +170,36 @@ def test_witness_is_exactly_the_small_abi3_fail_stop_prefix() -> None:
             assert gain["selected_row_sha256"] == (
                 "00695bad97c2abc77a9d1ce57e4d4a5e5c2b574387fcb4029ef5ce12239b2530"
             )
+            matmul = next(
+                operation
+                for operation in case["supported_prefix"]
+                if operation["kind"] == "tensor_matmul"
+            )
+            weight = matmul["weight_source"]
+            assert case["expected"]["matmul_launches"] == 1
+            assert case["expected"]["matmul_result_words"] == 4_096
+            assert case["expected"]["matmul_mac_count"] == 16_777_216
+            assert matmul["input_source"] == "prior_rms_norm_result_bank"
+            assert matmul["contract_sha256"] == (
+                "7550dc6a773fd9d5773b46182887613fb777bb8e4f01652321c4d93ca0765aa1"
+            )
+            assert matmul["executed_association"] == (
+                "ot_a3_mac_lane_single_lane_ascending_k_v1"
+            )
+            assert matmul["expected_row_sha256"] == (
+                "b900b79fd38ff6a9bff470ac27e9672b0c3724b84f6a1f7e964c2ec0918ea0ff"
+            )
+            assert weight["declared_segment_bytes"] == 33_554_432
+            assert weight["declared_segment_sha256"] == (
+                "fd56b85bf301661c8655ed517928304d25df7d6b3ea3d9be85c021159d61bad8"
+            )
+            assert weight["selected_matrix_shape"] == [4_096, 4_096]
+            assert weight["selected_matrix_sha256"] == weight[
+                "declared_segment_sha256"
+            ]
+            assert "complete selected source segment" in weight[
+                "authentication_boundary"
+            ]
         else:
             transfer = next(
                 operation
@@ -181,7 +240,12 @@ def test_retained_campaign_is_current_and_states_the_simple_boundary() -> None:
         json.dumps(retained, indent=2, sort_keys=True) + "\n"
     ).encode("utf-8")
     assert retained["status"] == "pass"
-    assert retained["evidence_class"] == "public_open_tool_rtl_simulation"
+    assert retained["evidence_class"] == (
+        "public_open_tool_rtl_simulation_composite"
+    )
+    assert retained["evidence_mode"] == (
+        "full_integrated_verilator_plus_dual_simulator_mac_lane_composition"
+    )
     assert retained["abi"] == {"major": 3, "minor": 0}
     assert retained["state_compat"] == 0
     assert retained["state_activity"] == {
@@ -198,14 +262,46 @@ def test_retained_campaign_is_current_and_states_the_simple_boundary() -> None:
         "apply_overflow_count": 0,
     }
     assert retained["post_fault_write_count"] == 0
-    assert retained["simulators_agree"]
-    assert retained["simulator_checks"] == {
-        "iverilog": 124_189,
-        "verilator": 124_189,
+    assert retained["integrated_replay_passed"]
+    assert retained["integrated_simulators"] == ["verilator"]
+    assert retained["integrated_simulator_checks"] == {
+        "verilator": 136_496,
     }
-    assert [site["pc"] for site in retained["fault_sites"]] == [11, 11, 13, 14]
+    assert "simulators_agree" not in retained
+    assert "simulator_checks" not in retained
+    lane = retained["compositional_mac_lane_qualification"]
+    assert lane["artifact"] == "results/rtl/abi3_engine_campaign.json"
+    assert lane["artifact_sha256"] == campaign.sha256_file(
+        campaign.ENGINE_CAMPAIGN
+    )
+    assert lane["status"] == "pass"
+    assert lane["simulators_counted"] == [
+        "iverilog_vvp",
+        "verilator_cpp_executable",
+    ]
+    assert lane["checks_per_simulator"] == {
+        "iverilog": 40_878,
+        "verilator": 40_878,
+    }
+    assert lane["qualified_mac_count"] == 59_868
+    assert lane["lane_source"] == "rtl/abi3/ot_a3_mac_lane.sv"
+    assert lane["lane_source_sha256"] == campaign.sha256_file(
+        ROOT / lane["lane_source"]
+    )
+    assert lane["qualification_contract"] == (
+        "bf16_bf16_fp32_sequential_rne_v1"
+    )
+    assert "not the full shipped program" in lane["composition_boundary"]
+    assert any(
+        "complete integrated shipped-prefix execution under Icarus" in item
+        for item in retained["scope"]["does_not_establish"]
+    )
+    assert [site["pc"] for site in retained["fault_sites"]] == [14, 14, 13, 14]
     assert [site["descriptor_id"] for site in retained["fault_sites"]] == [
-        59, 72, 368, 546
+        67,
+        78,
+        368,
+        546,
     ]
     assert [site["opcode"] for site in retained["fault_sites"]] == [
         "TENSOR.MATMUL",
@@ -217,7 +313,14 @@ def test_retained_campaign_is_current_and_states_the_simple_boundary() -> None:
     assert retained["embedding_launch_count"] == 4
     assert retained["rms_norm_launch_count"] == 2
     assert retained["dma_transfer_launch_count"] == 2
-    assert retained["selected_checkpoint_byte_count"] == 49_152
+    assert retained["matmul_launch_count"] == 2
+    assert retained["real_engine_launch_count"] == 16
+    assert retained["result_word_count"] == 66_560
+    assert retained["resolved_view_count"] == 58
+    assert retained["matmul_result_word_count"] == 8_192
+    assert retained["matmul_mac_count"] == 33_554_432
+    assert retained["selected_matmul_checkpoint_byte_count"] == 67_108_864
+    assert retained["selected_checkpoint_byte_count"] == 67_158_016
     assert len(retained["checkpoint_rows"]) == 4
     for row in retained["checkpoint_rows"]:
         assert len(row["deployment_sha256"]) == 64
@@ -232,6 +335,34 @@ def test_retained_campaign_is_current_and_states_the_simple_boundary() -> None:
         assert gain["numeric_contract_sha256"] == (
             "999ef86bc4d4c36dfd57db84d49618af46bed2e6c1f0b1bf031a27b5b8c03fda"
         )
+    assert len(retained["checkpoint_matrices"]) == 2
+    for matrix in retained["checkpoint_matrices"]:
+        assert matrix["operator_pc"] == 11
+        assert matrix["numeric_contract_sha256"] == (
+            "7550dc6a773fd9d5773b46182887613fb777bb8e4f01652321c4d93ca0765aa1"
+        )
+        assert matrix["executed_association"] == (
+            "ot_a3_mac_lane_single_lane_ascending_k_v1"
+        )
+        assert matrix["expected_row_sha256"] == (
+            "b900b79fd38ff6a9bff470ac27e9672b0c3724b84f6a1f7e964c2ec0918ea0ff"
+        )
+        assert matrix["source"]["declared_segment_bytes"] == 33_554_432
+        assert matrix["source"]["declared_segment_sha256"] == (
+            "fd56b85bf301661c8655ed517928304d25df7d6b3ea3d9be85c021159d61bad8"
+        )
+    assert retained["staged_matmul_weight"] == {
+        "path": "generated/p3_matmul_weight.bin",
+        "bytes": 33_554_432,
+        "sha256": (
+            "fd56b85bf301661c8655ed517928304d25df7d6b3ea3d9be85c021159d61bad8"
+        ),
+        "source_checkpoint_revision": (
+            "b968826d9c46dd6066d109eabc6255188de91218"
+        ),
+        "source_shard": "model-00001-of-00005.safetensors",
+        "source_offset": 1_588_618_872,
+    }
     for path, record in retained["source"].items():
         source_path = ROOT / path
         assert source_path.stat().st_size == record["bytes"]
@@ -250,22 +381,25 @@ def test_campaign_refuses_to_overwrite_an_existing_artifact(
 
 @pytest.mark.skipif(
     not TOOLS_AVAILABLE,
-    reason="Icarus, vvp, Verilator, and a C++ compiler are required",
+    reason="Verilator and a C++ compiler are required",
 )
-def test_focused_campaign_replays_both_independent_simulators(
+def test_focused_campaign_replays_verilator_and_binds_mac_lane(
     tmp_path: Path,
 ) -> None:
     summary = campaign.run(tmp_path / "build")
     assert summary["status"] == "pass", summary["cases"]
-    assert summary["simulators_agree"]
-    assert summary["simulator_checks"] == {
-        "iverilog": 124_189,
-        "verilator": 124_189,
+    assert summary["integrated_replay_passed"]
+    assert summary["integrated_simulators"] == ["verilator"]
+    assert summary["integrated_simulator_checks"] == {
+        "verilator": 136_496,
     }
+    assert "simulators_agree" not in summary
+    assert "simulator_checks" not in summary
+    assert summary["compositional_mac_lane_qualification"][
+        "simulators_counted"
+    ] == ["iverilog_vvp", "verilator_cpp_executable"]
     assert summary["post_fault_write_count"] == 0
-    assert [case["name"] for case in summary["cases"]] == [
-        "iverilog", "verilator"
-    ]
+    assert [case["name"] for case in summary["cases"]] == ["verilator"]
     for simulator in summary["cases"]:
         assert simulator["status"] == "pass"
         assert simulator["compile_returncode"] == 0, simulator["compile_log"]

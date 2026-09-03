@@ -14,7 +14,8 @@ module ot_a3_shipped_prefix_top #(
     parameter integer SYMBOL_WORDS = 2048,
     parameter integer INDEX_WORDS = 64,
     parameter integer SOURCE_WORDS = 65536,
-    parameter integer RESULT_WORDS = 65536
+    parameter integer RESULT_WORDS = 69632,
+    parameter integer MATMUL_WEIGHT_BYTES = 33554432
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -36,6 +37,8 @@ module ot_a3_shipped_prefix_top #(
     input  wire [31:0] cfg_rms_weight_base,
     input  wire [31:0] cfg_transfer_index_base,
     input  wire [31:0] cfg_transfer_source_base,
+    input  wire [31:0] cfg_matmul_input_base,
+    input  wire [31:0] cfg_matmul_weight_base,
     input  wire [31:0] cfg_output_base,
 
     output wire        busy,
@@ -69,6 +72,7 @@ module ot_a3_shipped_prefix_top #(
     output wire [31:0] embedding_launch_count,
     output wire [31:0] rms_norm_launch_count,
     output wire [31:0] dma_transfer_launch_count,
+    output wire [31:0] matmul_launch_count,
     output wire [31:0] capability_fault_count,
     output wire [31:0] descriptor_fault_count,
     output wire [31:0] engine_fault_count,
@@ -100,14 +104,25 @@ module ot_a3_shipped_prefix_top #(
     reg [31:0]   index_mem [0:INDEX_WORDS-1];
     reg [31:0]   source_mem [0:SOURCE_WORDS-1];
     reg [31:0]   result_mem [0:RESULT_WORDS-1];
+    reg [7:0]    matmul_weight_mem [0:MATMUL_WEIGHT_BYTES-1];
 
     integer clear_word;
+    integer weight_file;
+    integer weight_bytes_read;
     initial begin
         $readmemh("a3_program.hex", program_mem);
         $readmemh("a3_descriptor.hex", desc_mem);
         $readmemh("a3_symbol.hex", symbol_mem);
         $readmemh("p3_index.hex", index_mem);
         $readmemh("p3_source.hex", source_mem);
+        weight_file = $fopen("p3_matmul_weight.bin", "rb");
+        if (weight_file == 0)
+            $fatal(1, "cannot open p3_matmul_weight.bin");
+        weight_bytes_read = $fread(matmul_weight_mem, weight_file);
+        if (weight_bytes_read != MATMUL_WEIGHT_BYTES)
+            $fatal(1, "p3_matmul_weight.bin has %0d bytes, expected %0d",
+                   weight_bytes_read, MATMUL_WEIGHT_BYTES);
+        $fclose(weight_file);
         for (clear_word = 0; clear_word < RESULT_WORDS;
              clear_word = clear_word + 1)
             result_mem[clear_word] = 32'hdead_beef;
@@ -290,6 +305,7 @@ module ot_a3_shipped_prefix_top #(
     wire [31:0] out_data;
     wire m0_reads_result;
     wire m1_reads_result;
+    wire m1_reads_matmul_weight;
     reg fault_seen;
 
     always @(posedge clk or negedge rst_n) begin
@@ -322,7 +338,17 @@ module ot_a3_shipped_prefix_top #(
                 end
             end
             if (m1_rd_en) begin
-                if (m1_reads_result && (m1_rd_addr < RESULT_WORDS))
+                if (m1_reads_matmul_weight) begin
+                    if (m1_rd_addr < (MATMUL_WEIGHT_BYTES / 2))
+                        m1_rd_data <= {16'd0,
+                            matmul_weight_mem[(m1_rd_addr << 1) + 32'd1],
+                            matmul_weight_mem[m1_rd_addr << 1]};
+                    else begin
+                        m1_rd_data <= 32'd0;
+                        operand_read_oob <= 1'b1;
+                    end
+                end
+                else if (m1_reads_result && (m1_rd_addr < RESULT_WORDS))
                     m1_rd_data <= result_mem[m1_rd_addr];
                 else if (!m1_reads_result && (m1_rd_addr < SOURCE_WORDS))
                     m1_rd_data <= source_mem[m1_rd_addr];
@@ -333,11 +359,17 @@ module ot_a3_shipped_prefix_top #(
             end
             if (m2_rd_en) begin
                 m2_rd_data <= 32'd0;
-                operand_read_oob <= 1'b1;
+                // ot_a3_mac_lane drives both scale ports for every reduction
+                // step.  This exact Qwen descriptor declares both operands
+                // unscaled, so zero is the architectural don't-care responder
+                // and no scale-object access took place.
+                if (!m1_reads_matmul_weight)
+                    operand_read_oob <= 1'b1;
             end
             if (m3_rd_en) begin
                 m3_rd_data <= 32'd0;
-                operand_read_oob <= 1'b1;
+                if (!m1_reads_matmul_weight)
+                    operand_read_oob <= 1'b1;
             end
             if (out_we) begin
                 output_write_count <= output_write_count + 32'd1;
@@ -389,6 +421,8 @@ module ot_a3_shipped_prefix_top #(
         .cfg_rms_weight_base(cfg_rms_weight_base),
         .cfg_transfer_index_base(cfg_transfer_index_base),
         .cfg_transfer_source_base(cfg_transfer_source_base),
+        .cfg_matmul_input_base(cfg_matmul_input_base),
+        .cfg_matmul_weight_base(cfg_matmul_weight_base),
         .cfg_output_base(cfg_output_base),
         .m0_rd_en(m0_rd_en),
         .m0_rd_addr(m0_rd_addr),
@@ -407,6 +441,7 @@ module ot_a3_shipped_prefix_top #(
         .out_data(out_data),
         .m0_reads_result(m0_reads_result),
         .m1_reads_result(m1_reads_result),
+        .m1_reads_matmul_weight(m1_reads_matmul_weight),
         .engine_busy(engine_busy),
         .engine_error_code(engine_error_code),
         .engine_result_count(engine_result_count),
@@ -416,6 +451,7 @@ module ot_a3_shipped_prefix_top #(
         .embedding_launch_count(embedding_launch_count),
         .rms_norm_launch_count(rms_norm_launch_count),
         .dma_transfer_launch_count(dma_transfer_launch_count),
+        .matmul_launch_count(matmul_launch_count),
         .capability_fault_count(capability_fault_count),
         .descriptor_fault_count(descriptor_fault_count),
         .engine_fault_count(engine_fault_count),
