@@ -189,8 +189,8 @@ partial result is a failure, not a pass.**
   `DMA.TRANSFER` the same program issues, so a scatter that never read the
   destination back cannot pass. A repeated index resolves to the later slot.
 * **Ninety-two refusals**: 17 Device faults <!-- figure: 17 src="results/rtl/abi3_engine_campaign.json#correlation.refusal_count_by_expectation_source.device_fault" name="engine RTL Device refusals" --> whose classes are derived from the functional
-  engine's actual `EngineError`; 18 one-above-bound or unsupported-form
-  refusals <!-- figure: 18 src="results/rtl/abi3_engine_campaign.json#correlation.refusal_count_by_expectation_source.rtl_bounded_profile" name="engine RTL bounded-profile refusals" -->; and 57 independently corrupted descriptor-admission cases <!-- figure: 57 src="results/rtl/abi3_engine_campaign.json#correlation.refusal_count_by_expectation_source.rtl_descriptor_admission" name="engine RTL descriptor-admission refusals" -->.
+  engine's actual `EngineError`; 18 <!-- figure: 18 src="results/rtl/abi3_engine_campaign.json#correlation.refusal_count_by_expectation_source.rtl_bounded_profile" name="engine RTL bounded-profile refusals" --> one-above-bound or unsupported-form
+  refusals; and 57 independently corrupted descriptor-admission cases <!-- figure: 57 src="results/rtl/abi3_engine_campaign.json#correlation.refusal_count_by_expectation_source.rtl_descriptor_admission" name="engine RTL descriptor-admission refusals" -->.
   The latter two groups start from programs the general Device successfully
   executes and require the bounded RTL to return `ERR_SHAPE` before any operand
   read or destination write. All 92 cases prove the entire destination remains

@@ -50,7 +50,7 @@
       "temperature_c": 25,
       "voltage_v": 0.7
     },
-    "state_boundary": "fresh_session_prefill_then_causal_decode_v1",
+    "state_boundary": "fresh_session_live_hbm_compressed_kv_prefill_decode_fail_stop_v1",
     "technology_claim": "predictive ASAP7 research view only; not foundry signoff, manufacturability, or an N4 claim",
     "technology_view": "asap7"
   },
@@ -117,7 +117,7 @@
       "topology_class": 2
     }
   },
-  "version": "1.0.0",
+  "version": "1.1.0",
   "workload": {
     "digest": "803f0c3a3e9bf7ef68ddff00947576d2fab5703d1f4387df1eb2ec11be2c59bd",
     "index_path": "build/workloads/deepseek-v4-flash-0731/index.json",

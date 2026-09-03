@@ -2,8 +2,10 @@
 
 **Design ID:** `TA-DS-200K-SIM-1`
 
-**Status:** implementation design; final execution and comparison are blocked by
-the two admission gates in Section 2
+**Status:** ABI 3.0 live-buffer Gate A is closed; WP-C/WP-D implementation is
+complete at bounded-test scope; final execution and comparison remain blocked
+by Gate B, source-current exact-200K accelerator runs, integrated RTL, and the
+physical comparison gates
 
 **Issued:** 2026-09-03
 
@@ -14,7 +16,7 @@ identical HBM/SRAM accelerator chips
 ## 1. Purpose and authority boundary
 
 This document defines how to make the mandatory DeepSeek-V4 Flash 200,000-token
-simulator executions tractable without weakening their numerical, state,
+simulator executions tractable without weakening their numerical, mutable-buffer,
 ordering, topology, provenance, or oracle contracts. It records the exact
 routed-expert work implied by the currently emitted programs, identifies the
 host-side materialization bottleneck, and divides implementation into independently
@@ -30,12 +32,12 @@ The required execution remains:
   tokens when no official EOS occurs first;
 - external-oracle agreement over that complete generated sequence; and
 - the exact ROM-wafer and 32-node HBM topology, object-source, numerical,
-  counter, and transaction contracts.
+  counter, and execution contracts.
 
 This document does **not** define a new ABI state encoding. ABI 3.0 is
 sufficient. Mutable KV, compressed-KV, sliding-window, and compressor buffers
 are ordinary HBM/SRAM memory objects with compiler-emitted ABI 3.0 tensor views
-and operations. The implementation may decompose a complex state transition
+and operations. The implementation may decompose a complex live-buffer update
 into multiple existing operations and scratch views. A token-step fence, plus
 the existing cluster communication barriers, is the visibility boundary. A
 failed run stops; no durable publication or retry protocol is required.
@@ -51,40 +53,41 @@ than the admitted program performs.
 Both gates are mandatory. They are independent, and closing one does not relax
 the other.
 
-### 2.1 Gate A — ABI 3.0 direct mutable-state execution
+### 2.1 Gate A — ABI 3.0 direct live-buffer execution — closed
 
-The current deployments route a compressed-KV buffer through a `STATE.COMMIT`
-copy whose row count is `SPAN_TOKENS`, although the buffer is indexed in
+Earlier deployments routed a compressed-KV buffer through a `STATE.COMMIT`
+copy whose row count was `SPAN_TOKENS`, although the buffer was indexed in
 completed compression groups. That unnecessary shadow-copy capacity check
-makes both mandatory 200K paths unreachable:
+made both mandatory 200K paths unreachable:
 
 | Lane | First prompt span that traps | Resource | Capacity rows |
 |---|---:|---|---:|
 | ROM wafer | 2,049 | state 321, `COMPRESSED_KV` | 2,048 |
 | HBM cluster | 40,961 | state 340, `COMPRESSED_KV` | 40,960 |
 
-The source authority is
+This table is retained as the defect boundary, not as current behavior. The
+source authority is
 [operator conventions A21/A25](TENSOR_ACCELERATOR_ABI_3_OPERATOR_CONVENTIONS.md#21-amendment-a21--a-state-resource-declares-its-own-commit)
 and [wire format, “What is behind it”](TENSOR_ACCELERATOR_ABI_3_WIRE_FORMAT.md#what-is-behind-it).
-The current STATE payload contains `commit_policy` but no group divisor, and the
-simulator consequently falls through to `rows = span` in
-[`Device._execute_state`](../runtime/sim/device.py).
+The repaired source lowers every execution-authoritative KV, compressed-KV,
+ring, and compressor-history value as an ordinary mutable HBM/SRAM object,
+addresses completed groups through existing tensor views and loops, and orders
+writes through existing events and the token-step fence. No state member,
+descriptor minor, feature bit, or commit policy was introduced.
 
-The model operators do not read that committed shadow; uninterrupted execution
-uses the mutable working buffer. The ABI 3.0 repair is therefore to lower these
-buffers as execution-authoritative mutable HBM/SRAM objects, address completed
-groups with existing tensor views and loops, and order their writes with
-existing events and fences. No state member, descriptor minor, feature bit, or
-new commit policy is introduced. If one existing operator record lacks enough
-operands, the compiler emits multiple existing operations and scratch views.
+Gate A is closed at the compiler, admission, functional-engine, and RTL
+control-plane boundary:
 
-Gate A closes when both backends rebuild as ABI 3.0, the independent checker
-proves that no request-span state copy can reject a group-indexed buffer, the
-functional simulator matches the source-locked compression reference across
-prefill and decode boundaries, and cycle/RTL traces execute the same addresses
-and token-step fence. Simulator performance work may be developed and tested on
-bounded diagnostic inputs before that point, but it is not admissible as a
-200K result.
+- the current DeepSeek HBM certificate passes 36/36 checks with zero `STATE`
+  resources;
+- the current DeepSeek ROM schedule certificate passes 123/123 checks with zero
+  `STATE` resources; and
+- the shipped-deployment RTL profile elaborates with `STATE_COMPAT=0`, rejects
+  a nonzero state count before fetch, and correlates the same live-buffer views
+  and terminal fence on two simulators.
+
+This closure removes the obsolete request-span wall. It does not itself prove a
+complete 200K run, engine arithmetic in the shipped RTL, or final performance.
 
 ### 2.2 Gate B — complete external EOS-or-256 oracle
 
@@ -105,9 +108,11 @@ both targets before a comparison is published.
 
 ### 2.3 Absolute promotion rule
 
-**No optimization is admissible as a DeepSeek 200K result, and no final
-ROM-wafer versus 32-node-HBM comparison is admissible, before both the ABI 3.0
-direct-state gate and the complete 256-or-EOS external-oracle gate close.**
+**Gate A is now a regression invariant: every final deployment must continue to
+emit zero `STATE` resources and use direct live buffers. No optimization is
+admissible as a DeepSeek 200K result, and no final ROM-wafer versus 32-node-HBM
+comparison is admissible, before Gate B closes and both full accelerator
+executions pass.**
 
 ## 3. Audited execution identities
 
@@ -327,10 +332,11 @@ but cannot serve as the final performance baseline.
 
 ## 6. Work packages
 
-WP-A is the ABI 3.0 direct-state lowering required by Gate A: remove the
-unnecessary request-span shadow commit from group-indexed state, bind all
-mutable buffers through existing memory objects and views, and fence them at
-the token boundary. It introduces no wire or descriptor revision. The
+WP-A, the ABI 3.0 direct live-buffer lowering required by Gate A, is complete.
+It removed the unnecessary request-span shadow commit, binds mutable buffers
+through existing memory objects and views, and fences them at the token
+boundary. It introduced no wire or descriptor revision. Gate A's zero-`STATE`
+certificate and RTL-profile checks are permanent regression gates. The
 performance-oriented simulator work starts at WP-B.
 
 ### 6.1 WP-B — oracle and final provenance package
@@ -352,6 +358,9 @@ EOS-or-256 sequence for the exact workload digest.
 
 ### 6.2 WP-C — measurement before optimization
 
+**Status.** Implemented and focused-test complete. Production P32 and exact-200K
+captures with these observations remain pending.
+
 **Goal.** Separate materialization, route organization, contraction, memory, and
 association costs without changing architectural behavior.
 
@@ -368,14 +377,22 @@ association costs without changing architectural behavior.
 Performance observations belong in the execution artifact, not in the ABI
 counter registry. Architectural counters must remain byte-for-byte unchanged.
 
-**Affected paths.** `runtime/sim/engines/tensor.py`, `runtime/sim/backend.py`,
-`runtime/sim/device.py`, and `tools/run_accelerator_tokens.py`.
+**Affected paths.** `runtime/sim/performance.py`,
+`runtime/sim/engines/tensor.py`, `runtime/sim/engine.py`,
+`runtime/sim/device.py`, `runtime/driver.py`, and
+`tools/run_accelerator_tokens.py`.
 
 **Exit.** Cache-off P32 and tail-boundary runs retain an association manifest,
 reconcile all architectural counters, and attribute routed wall time without a
 material instrumentation regression.
 
 ### 6.3 WP-D — centralized immutable decoded-weight cache
+
+**Status.** Implemented and focused differential-test complete. The cache is
+opt-in and defaults to a zero-byte budget. A bounded authenticated routed-weight
+case proves cache-off/cache-on bit identity, architectural-counter identity,
+association identity, exact central byte accounting, and reuse. This is not a
+P32 or 200K performance result.
 
 **Goal.** Reuse the exact validated FP32 weight materialization while preserving
 the original contraction calls and architectural accounting.
@@ -426,8 +443,8 @@ creates or suppresses an architectural trap. A failed or poisoned
 materialization is never inserted. Cache eviction changes no architectural
 state.
 
-**Affected paths.** `runtime/sim/device.py`, `runtime/sim/memory.py`, and the
-routed operand/materialization path in `runtime/sim/engines/tensor.py`.
+**Affected paths.** `runtime/sim/weight_cache.py`, `runtime/sim/device.py`, and
+the routed operand/materialization path in `runtime/sim/engines/tensor.py`.
 
 **Exit.** Cache-off and cache-on executions are bit-identical in outputs, traps,
 destinations, architectural counters, and association manifests. Live cache
@@ -608,7 +625,7 @@ the governed target comparison.
 
 Cache allocation, eviction, bypass, worker failure, and performance-observation
 failure are host implementation conditions. None may partially publish an
-architectural destination or state transition.
+architectural destination or live-buffer update.
 
 ## 9. Focused acceptance matrix
 
@@ -626,7 +643,7 @@ architectural destination or state transition.
 | Superblock liveness | Window sizes one, two, several, final partial window; injected fault in each stage | Capacity proof, no alias, original fault priority, LINK order, and completed-step fencing |
 | Segmented primitive | Random segment partitions and every deployment-derived activation/weight/output shape | Bitwise equality per original segment and identical ordered semantic manifest |
 | Node concurrency | Worker counts one through bound; fixed and changed BLAS thread counts; faults on different nodes | Qualified identities only; sequential-equivalent output, fault priority, and counter reconciliation |
-| ABI 3.0 direct state | Compression boundaries, ordinary mutable-object addresses, token-step fence, and fail-stop fault cases | Reference, compiler checker, functional simulator, cycle trace, and RTL address/control correlation agree without a new wire value |
+| ABI 3.0 direct live buffers | Compression boundaries, ordinary mutable-object addresses, token-step fence, and fail-stop fault cases | Reference, compiler checker, functional simulator, cycle trace, and RTL address/control correlation agree without a new wire value |
 | Historical state walls | ROM 2,048/2,049 and HBM 40,960/40,961 | The obsolete request-span shadow copy is absent and cannot cause a capacity refusal |
 | Deployment trace | Regenerated P32 route traces with the current manifest-emitting runner | Baseline and WP-C/D/E results match bitwise before longer runs |
 | Final workload | Exact 200K on rebuilt ROM and HBM deployments through first EOS or 256 | ROM/HBM agree with each other and the complete external oracle |
@@ -635,7 +652,7 @@ architectural destination or state transition.
 
 ### 10.1 Baselines
 
-The production baseline is the ABI-3.0-rebuilt deployment with WP-C
+The production baseline is the current ABI 3.0 live-buffer deployment with WP-C
 instrumentation enabled, cache disabled, original route scans, original
 contractions, and sequential node issue. It must retain:
 
@@ -660,7 +677,7 @@ A package is promoted only when:
 1. all applicable rows of Section 9 pass;
 2. token/output arrays are bit-identical to its admitted baseline;
 3. failure cases have identical trap class, first-fault PC, and untouched
-   destination/state bytes;
+   destination/live-buffer bytes;
 4. architectural and node/cluster counters reconcile exactly;
 5. cache and route changes retain the exact baseline association manifest and
    backend-call count;
@@ -700,7 +717,7 @@ show that its gain is not oversubscription noise.
 
 ### 10.4 Final comparison gate
 
-The final result runs both source-locked, ABI-3.0-rebuilt targets on the exact
+The final result runs both source-locked, ABI 3.0 live-buffer targets on the exact
 200,000-token workload and continues until first official EOS or 256 generated
 tokens. It retains the exact tails, all provenance and association manifests,
 per-node/cluster counters, cache state, memory/fault observations, and the

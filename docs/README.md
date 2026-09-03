@@ -21,7 +21,7 @@ document roles rather than by moving active working documents.
 | Understand the architecture | [OpenTallas in plain English](OVERVIEW.md) | [Compute-in-ROM mechanism](COMPUTE_IN_ROM_MECHANISM.md) and [first-principles memory design](FIRST_PRINCIPLES_MEMORY_DESIGN.md) |
 | Audit the performance claim | [Root README performance guide](../README.md#performance-comparison) | [Methodology](METHODOLOGY.md), [assumptions](ASSUMPTIONS.md), and the [iso-node](../results/iso-node/) / [area-constrained](../results/roofline/) reports |
 | Evaluate ROM for video/world models | [Recent-model landscape audit](../results/world-model-landscape/REPORT.md) | [Oasis causal-state and H3 study](../results/world-model/REPORT.md), [compute-in-ROM mechanism](COMPUTE_IN_ROM_MECHANISM.md), and the [source register](SOURCES.md) |
-| See what works today | [ABI 3.0 program report](ABI3_PROGRAM_REPORT.md) | [Generated status](PROGRAM_STATUS.md) and [execution checklist](UNIFIED_EXECUTION_CHECKLIST.md) |
+| See what works today | [Four-target progress report](FOUR_TARGET_PROGRESS_REPORT.md) | [Generated status](PROGRAM_STATUS.md), [ABI 3.0 program report](ABI3_PROGRAM_REPORT.md), and [execution checklist](UNIFIED_EXECUTION_CHECKLIST.md) |
 | Implement software or hardware | [Specification index](../spec/README.md) | [ABI architecture decision](TENSOR_ACCELERATOR_ABI_3_ARCHITECTURE_DECISION.md), [wire format](TENSOR_ACCELERATOR_ABI_3_WIRE_FORMAT.md), and [operator conventions](TENSOR_ACCELERATOR_ABI_3_OPERATOR_CONVENTIONS.md) |
 | Work on the compiler/runtime | [Compiler guide](../compiler/README.md) | [Execution plan](TENSOR_ACCELERATOR_EXECUTION_PLAN.md) and [independent numeric reference](../runtime/reference/README.md) |
 | Review RTL | [RTL inventory](../rtl/README.md) | [Engine datapaths](ABI3_ENGINE_DATAPATH_RTL.md), [ROM service](ROM_SERVICE_RTL.md), and [RTL reports](../results/rtl/) |
@@ -82,6 +82,9 @@ owns the question:
 
 ## Program orientation and status
 
+- [Four-target progress report](FOUR_TARGET_PROGRESS_REPORT.md) — current
+  implementation boundary, per-target readiness, and critical path to full
+  Qwen/DeepSeek ROM-versus-HBM acceptance.
 - [Why instantaneous inference matters](VISION.md) — economic and product
   reasons for high per-user throughput, future application directions, and
   system-level qualifications.

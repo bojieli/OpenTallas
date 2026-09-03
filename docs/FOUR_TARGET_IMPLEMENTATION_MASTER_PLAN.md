@@ -41,18 +41,24 @@ through first official EOS or exactly 256 generated tokens. Neither an
 eight-token oracle prefix nor an artifact-only structural replay is a full
 execution.
 
+The current implementation and evidence snapshot is maintained in the
+[four-target progress report](FOUR_TARGET_PROGRESS_REPORT.md). That report is
+the concise handoff; this document remains the controlling delivery plan, and
+the unified checklist remains the requirement-by-requirement ledger.
+
 ### 1.1 Current execution override
 
 TA-A3-ARCH-0 is closed and the released ABI 3.0 contract is sufficient. The
 ordered implementation packages are:
 
-1. audit each remaining Qwen and DeepSeek state transition against existing
-   ABI 3.0 memory objects, tensor views, loops, predicates, and operations;
-2. lower mutable KV, compressed-KV, ring, and compressor tensors explicitly,
-   decomposing a complex transition into existing operations and scratch views
-   when one operator record is insufficient;
-3. execute those operations directly against simulator HBM/SRAM state and
-   enforce a fence after all state and communication work for one token;
+1. audit each remaining Qwen and DeepSeek mutable-buffer update against
+   existing ABI 3.0 memory objects, tensor views, loops, predicates, and
+   operations;
+2. lower mutable KV, compressed-KV, ring, and compressor tensors explicitly as
+   ordinary HBM/SRAM buffers, decomposing a complex update into existing
+   operations and scratch views when one operator record is insufficient;
+3. execute those operations directly against simulator HBM/SRAM buffers and
+   enforce a fence after all memory and communication work for one token;
 4. correlate the same ABI 3.0 program, addresses, counters, and completion
    boundary through the cycle model and RTL; and
 5. run focused conformance checks, then rebuild and re-execute all four target
@@ -67,13 +73,19 @@ token step. A lane may not invent a private ABI, IR operation, state
 convention, or evidence exception.
 Long-running immutable campaigns may execute concurrently only after their
 source digest, deployment digest, workload, oracle, topology, and output path
-are frozen. The W10 ABI 3.0 HBM stress run completed on 2026-09-03 after
-10,879.2 seconds but failed exact token identity at generated-token index 2
-(`279` versus oracle `264`). Its artifact is retained as diagnostic evidence,
-not acceptance. The paired ROM stress run must not be launched from that failed
-HBM baseline. The former W10 source lock is released; diagnosis and the simple
-ABI 3.0 direct-state lowering may now modify the governed implementation before
-both stress lanes are rebuilt and rerun.
+are frozen. Historical local W10 captures bind an obsolete state-based source
+identity and are diagnostic only; one stress capture also diverges from its
+oracle. They are not committed acceptance evidence and must not seed a paired
+run. Fresh captures start only from one committed live-buffer source identity.
+
+At the 2026-09-03 integration checkpoint, all four current deployment
+certificates report zero ABI `STATE` resources. The shared simulator has
+host-only performance observations and an opt-in decoded immutable-weight cache
+whose default is disabled. The Qwen long-run checker independently authenticates
+and admits the serialized deployment and verifies token text. The remaining
+critical path is RTL datapath integration, fresh exact-length accelerator runs,
+and complete same-view SKY130/ASAP7 characterization; it is not another ABI
+revision.
 
 The authoritative requirement-by-requirement progress ledger is
 [the unified execution checklist](UNIFIED_EXECUTION_CHECKLIST.md). Sections 2,
@@ -553,7 +565,7 @@ labeled external/assumed; no cross-view composite is admitted.
 A target is functionally complete only when:
 
 - the pinned prompt is rendered and tokenized by the frozen template/tokenizer;
-- every model operation and state transition is in the compiled deployment;
+- every model operation and live-buffer update is in the compiled deployment;
 - the simulator consumes only authenticated artifacts;
 - prefill and every decode step execute causally;
 - token selection occurs through the declared accelerator selection operation;
