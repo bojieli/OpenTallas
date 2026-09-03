@@ -95,6 +95,8 @@ FUNCTIONAL_COMMON_SOURCES = frozenset(
         "runtime/sim/formats.py",
         "runtime/sim/generators.py",
         "runtime/sim/memory.py",
+        "runtime/sim/performance.py",
+        "runtime/sim/weight_cache.py",
         "runtime/tensor_accelerator/attention.py",
         "runtime/tensor_accelerator/bf16.py",
         "runtime/tensor_accelerator/elementwise.py",
