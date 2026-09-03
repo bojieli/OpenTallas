@@ -28,6 +28,7 @@ from runtime.abi3.constants import (
     Control,
     DTYPE_BITS,
     DType,
+    Dma,
     InstructionFlag,
     Link,
     Major,
@@ -44,6 +45,7 @@ from runtime.abi3.descriptors import (
     CollectiveOp,
     ExtendedDescriptorType,
     SelectorKind,
+    Symbol,
 )
 from runtime.abi3.records import Instruction, decode_body, split_program
 from runtime.abi3.verifier import verify_deployment
@@ -74,6 +76,9 @@ _ENGINE_KEY: Mapping[int, str] = {
 _WEIGHT_ROLES = frozenset({"weight", "constant"})
 _TRANSACTION_KINDS = frozenset({"STATE_PREPARE", "STATE_COMMIT"})
 _DIRECT_STATE_KIND = "STATE_READ"
+_DIRECT_BUFFER_STATE_CLASSES = frozenset(
+    {"compressed_kv", "compressor_window", "kv_window"}
+)
 _MAX_LAYER_PERIOD = 8
 
 # The generator may materialise the dispatch rows before issuing the frozen
@@ -188,6 +193,16 @@ def check_rom_schedule(
     # -- independent layer reconstruction ---------------------------------
     bands, canonical, representatives = _reconstruct_bands(graph)
     expected_order = _representative_order(graph, bands)
+    direct_state_ids = frozenset(
+        state.state_id
+        for state in graph.states
+        if state.state_class in _DIRECT_BUFFER_STATE_CLASSES
+    )
+    transactional_state_ids = frozenset(
+        state.state_id
+        for state in graph.states
+        if state.state_id not in direct_state_ids
+    )
     order_position = {
         kernel.index: position for position, kernel in enumerate(expected_order)
     }
@@ -218,7 +233,13 @@ def check_rom_schedule(
     unmatched = list(constant_setups)
     matched_band_loops: list[tuple[_Band, Any]] = []
     for band in bands:
-        match = _match_band_loop(band, unmatched, instructions, operators)
+        match = _match_band_loop(
+            band,
+            unmatched,
+            instructions,
+            operators,
+            direct_state_ids,
+        )
         if require(
             "layer_loop_body",
             match is not None,
@@ -281,6 +302,12 @@ def check_rom_schedule(
         if kernel.kind in _TRANSACTION_KINDS:
             continue
         if kernel.kind == _DIRECT_STATE_KIND:
+            if _uses_only_direct_state(kernel, direct_state_ids):
+                # In the fail-stop ABI 3.0 profile the ordinary HBM object is
+                # already the execution image.  STATE_READ therefore carries
+                # an IR dependency/view alias and intentionally emits no
+                # STATE-family instruction.
+                continue
             expected = _expected_engine(kernel)
             found = [
                 instruction
@@ -311,6 +338,84 @@ def check_rom_schedule(
             pairs <= permitted,
             f"kernel {kernel.index} ({kernel.kind}) emits private/unexplained "
             f"engine operations {sorted(_mnemonic(pair) for pair in pairs - permitted)}",
+        )
+
+    # A dynamic tensor-view term can add POSITION_START but cannot divide it.
+    # Independently prove that every compressed-cache scatter reads the
+    # generated quotient table with the exact divisor and addressing geometry
+    # stated by the graph.  Merely reproducing a generated object's own digest
+    # would not prove that it is the right generated object for this operand.
+    for kernel in expected_order:
+        if (
+            str(kernel.attributes.get("cache_row", ""))
+            != "completed_absolute_position_floor_div_ratio"
+        ):
+            continue
+        divisor = int(kernel.attributes.get("ratio", 0) or 0)
+        require(
+            "floor_divisor_positive",
+            divisor > 0,
+            f"kernel {kernel.index} declares compressed row divisor {divisor}",
+        )
+        emitted = [
+            item
+            for item in by_source.get(kernel.index, ())
+            if (item[1].major, item[1].sub)
+            == (int(Major.DMA), int(Dma.SCATTER))
+        ]
+        if not require(
+            "floor_div_scatter_present",
+            len(emitted) == 1,
+            f"kernel {kernel.index} has {len(emitted)} compressed-row scatters, "
+            "expected one",
+        ):
+            continue
+        operator = emitted[0][2]
+        index_view = views.get(int(operator.payload["input_view_0"]))
+        if not require(
+            "floor_div_index_view_present",
+            index_view is not None,
+            f"kernel {kernel.index} compressed-row scatter has no index view",
+        ):
+            continue
+        source = deployment.objects.get(int(index_view.primary_object_id))
+        parameters = dict(source.parameters) if source is not None else {}
+        require(
+            "floor_div_generator_exact",
+            source is not None
+            and source.kind == "generated"
+            and source.generator == "floor_div_indices_v1"
+            and int(parameters.get("divisor", 0)) == divisor,
+            f"kernel {kernel.index} compressed-row index is not generated as "
+            f"position // {divisor}",
+        )
+        require(
+            "floor_div_generator_extent",
+            int(parameters.get("count", 0))
+            > int(capability.limits["max_context_positions"]),
+            f"kernel {kernel.index} quotient table does not extend beyond the "
+            "maximum admissible position",
+        )
+        payload = index_view.payload
+        terms = [
+            (
+                int(payload[f"term{slot}_kind"]),
+                int(payload[f"term{slot}_index"]),
+                int(payload[f"term{slot}_stride"]),
+            )
+            for slot in range(int(payload["dynamic_term_count"]))
+        ]
+        require(
+            "floor_div_index_geometry",
+            int(payload["stride0"]) == divisor
+            and (
+                int(SelectorKind.RUNTIME_SYMBOL),
+                int(Symbol.POSITION_START),
+                1,
+            )
+            in terms,
+            f"kernel {kernel.index} quotient view does not use storage stride "
+            f"{divisor} with POSITION_START coefficient one",
         )
 
     # -- control-flow work and instruction multiplicity -------------------
@@ -912,6 +1017,20 @@ def check_rom_schedule(
             )
 
     # -- state transaction order ------------------------------------------
+    if direct_state_ids and not transactional_state_ids:
+        require(
+            "direct_state_has_no_state_descriptors",
+            not states,
+            "a graph containing only direct HBM state emitted STATE descriptors",
+        )
+        require(
+            "direct_state_has_no_state_instructions",
+            not any(
+                instruction.major == int(Major.STATE)
+                for instruction in instructions
+            ),
+            "a graph containing only direct HBM state emitted STATE instructions",
+        )
     prepared: dict[int, int] = {}
     closed: dict[int, int] = {}
     first_non_state = next(
@@ -1237,9 +1356,16 @@ def _match_band_loop(
     candidates: Sequence[tuple[int, Any]],
     instructions: Sequence[Instruction],
     operators: Mapping[int, Any],
+    direct_state_ids: frozenset[str],
 ) -> tuple[int, Any] | None:
     expected = [
-        kernel.index for kernel in band.body if kernel.kind not in _TRANSACTION_KINDS
+        kernel.index
+        for kernel in band.body
+        if kernel.kind not in _TRANSACTION_KINDS
+        and not (
+            kernel.kind == _DIRECT_STATE_KIND
+            and _uses_only_direct_state(kernel, direct_state_ids)
+        )
     ]
     for setup, descriptor in candidates:
         start = int(descriptor.payload["body_start"])
@@ -1260,6 +1386,15 @@ def _match_band_loop(
             if positions == sorted(positions):
                 return setup, descriptor
     return None
+
+
+def _uses_only_direct_state(
+    kernel: Kernel, direct_state_ids: frozenset[str]
+) -> bool:
+    """Whether every state effect on ``kernel`` names a direct HBM resource."""
+
+    named = (*kernel.state_reads, *kernel.state_writes)
+    return bool(named) and all(state_id in direct_state_ids for state_id in named)
 
 
 def _expected_engine(kernel: Kernel) -> tuple[int, int]:

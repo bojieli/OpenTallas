@@ -3310,6 +3310,139 @@ def test_memory_capacity_is_proved(qwen_build, deepseek_build):
         assert footprint["session_bytes_in_hbm"] <= declared["hbm"]
 
 
+def test_deepseek_state_groups_are_single_direct_hbm_objects(
+    deepseek_graph, deepseek_capability
+):
+    """Wave A uses ordinary mutable HBM, with no STATE transaction surface."""
+
+    lowering = _lowering(deepseek_graph, deepseek_capability)
+    deployment = lowering.build()
+    state_descriptors = [
+        descriptor
+        for descriptor in deployment.table.descriptors()
+        if descriptor.descriptor_type == ExtendedDescriptorType.STATE
+    ]
+    assert state_descriptors == []
+    assert not [
+        instruction
+        for instruction in _instructions(deployment)
+        if instruction.major == int(Major.STATE)
+    ]
+
+    groups = deployment.notes["rom_lowering"]["direct_buffer_state"]
+    assert groups["physical_groups"] == len(lowering._state_object)
+    assert groups["physical_groups"] == deployment.notes["rom_lowering"][
+        "state_groups"
+    ]
+    assert groups["classes"] == ["compressed_kv"]
+    assert groups["storage_class"] == "HBM"
+    for object_id in lowering._state_object.values():
+        descriptor = deployment.table.get(
+            object_id, ExtendedDescriptorType.MEMORY_OBJECT
+        )
+        assert descriptor.payload["storage_class"] == int(StorageClass.HBM)
+        assert descriptor.permissions == int(Permission.READ | Permission.WRITE)
+
+
+def test_direct_state_negative_infinity_initializer_keeps_the_fp32_sentinel():
+    """A score window starts at FP32 -infinity, not at an all-zero row."""
+
+    from runtime.sim.generators import generate_bytes
+
+    state = StateResource(
+        state_id="score-window",
+        state_class="compressor_window",
+        dtype="fp32",
+        row_elements=4,
+        capacity_rows=2,
+        initialization="negative_infinity",
+    )
+    source = RomLowering._direct_state_source(state, 32)
+    assert source.generator == "constant_u32_v1"
+    assert source.parameters == {"value": 0xFF800000, "count": 8}
+    assert generate_bytes(source.generator, source.parameters) == (
+        b"\x00\x00\x80\xff" * 8
+    )
+
+
+def test_direct_state_token_append_waits_for_link_join_and_fence(deepseek_build):
+    """The irreversible token publication follows all work, including LINK."""
+
+    from runtime.abi3.constants import Control
+
+    deployment, _plan = deepseek_build
+    instructions = _instructions(deployment)
+    token_at, token = next(
+        (index, instruction)
+        for index, instruction in enumerate(instructions)
+        if instruction.major == int(Major.SELECTION)
+        and instruction.sub == 0x01
+    )
+    fence_at, fence = next(
+        (index, instruction)
+        for index, instruction in enumerate(instructions)
+        if instruction.major == int(Major.CONTROL)
+        and instruction.sub == int(Control.FENCE)
+    )
+    assert fence_at < token_at
+    assert fence.signal_event_id != NO_ID
+
+    def waited(instruction):
+        if instruction.wait_set_id == NO_ID:
+            return set()
+        payload = deployment.table.get(
+            instruction.wait_set_id, ExtendedDescriptorType.EVENT_WAIT_SET
+        ).payload
+        return {
+            payload[f"producer_{slot}"]
+            for slot in range(payload["producer_count"])
+        }
+
+    assert fence.signal_event_id in waited(token)
+    fence_inputs = waited(fence)
+    assert len(fence_inputs) == 1
+    signaller = {
+        instruction.signal_event_id: instruction
+        for instruction in instructions
+        if instruction.signal_event_id != NO_ID
+    }
+    ancestry = set(fence_inputs)
+    pending = list(fence_inputs)
+    while pending:
+        event = pending.pop()
+        for dependency in waited(signaller[event]):
+            if dependency not in ancestry:
+                ancestry.add(dependency)
+                pending.append(dependency)
+    link_events = {
+        instruction.signal_event_id
+        for instruction in instructions[:fence_at]
+        if instruction.major == int(Major.LINK)
+    }
+    assert link_events
+    assert link_events <= ancestry
+
+
+def test_qwen_retains_transactional_state_descriptors_and_instructions(qwen_build):
+    """The direct-state class boundary does not change Qwen's kv_cache ABI."""
+
+    from runtime.abi3.constants import State
+
+    deployment, _plan = qwen_build
+    assert [
+        descriptor
+        for descriptor in deployment.table.descriptors()
+        if descriptor.descriptor_type == ExtendedDescriptorType.STATE
+    ]
+    state_subs = {
+        instruction.sub
+        for instruction in _instructions(deployment)
+        if instruction.major == int(Major.STATE)
+    }
+    assert state_subs == {int(State.PREPARE), int(State.COMMIT)}
+    assert "direct_buffer_state" not in deployment.notes["rom_lowering"]
+
+
 def test_mutable_state_overflow_is_refused(qwen_graph):
     from compiler.backends.rom.qwen3 import qwen3_rom_capability as make
 
@@ -3438,6 +3571,120 @@ def test_a_state_read_representation_does_not_reserve_a_second_column(
     assert written[0] == read[0]
     assert written[1][0] == read[1][0]
     assert written[2] == read[2] == 0
+
+
+def test_direct_state_read_is_a_dependency_preserving_alias(
+    workspace, qwen_capability
+):
+    """Direct STATE_READ emits nothing while its consumer keeps the append wait."""
+
+    root = workspace / "direct-state-read"
+    root.mkdir(parents=True, exist_ok=True)
+    graph = _state_read_representation(qwen_shaped_graph(root))
+    graph = dataclasses.replace(
+        graph,
+        states=tuple(
+            dataclasses.replace(state, state_class="compressed_kv")
+            for state in graph.states
+        ),
+    )
+    deployment, _plan = build_qwen3_rom_deployment(
+        graph, capability=qwen_capability
+    )
+    instructions = _instructions(deployment)
+    state_read = next(kernel for kernel in graph.kernels if kernel.kind == "STATE_READ")
+    assert not [
+        instruction
+        for instruction in instructions
+        if instruction.source_operation_id == state_read.index
+    ]
+
+    append = next(
+        kernel
+        for kernel in graph.kernels
+        if state_read.inputs[0] in kernel.outputs
+    )
+    consumer = next(
+        kernel
+        for kernel in graph.kernels
+        if state_read.outputs[0] in kernel.inputs
+    )
+    append_event = next(
+        instruction.signal_event_id
+        for instruction in instructions
+        if instruction.source_operation_id == append.index
+        and instruction.signal_event_id != NO_ID
+    )
+    consumed = next(
+        instruction
+        for instruction in instructions
+        if instruction.source_operation_id == consumer.index
+    )
+    wait = deployment.table.get(
+        consumed.wait_set_id, ExtendedDescriptorType.EVENT_WAIT_SET
+    ).payload
+    assert append_event in {
+        wait[f"producer_{slot}"] for slot in range(wait["producer_count"])
+    }
+
+    report = check_rom_schedule(graph, deployment, qwen_capability)
+    assert report["ok"], report["errors"]
+    assert report["checks"]["direct_state_has_no_state_descriptors"]
+    assert report["checks"]["direct_state_has_no_state_instructions"]
+
+
+def test_floor_div_cache_rows_use_the_registered_generated_table(
+    workspace, qwen_capability
+):
+    """A compressed append samples ``position // ratio`` at ratio strides."""
+
+    root = workspace / "floor-div-cache-row"
+    root.mkdir(parents=True, exist_ok=True)
+    graph = qwen_shaped_graph(root)
+    kernels = []
+    for kernel in graph.kernels:
+        if kernel.kind != "KV_APPEND":
+            kernels.append(kernel)
+            continue
+        attributes = dict(kernel.attributes)
+        attributes.update(
+            cache_row="completed_absolute_position_floor_div_ratio", ratio=4
+        )
+        kernels.append(dataclasses.replace(kernel, attributes=attributes))
+    graph = dataclasses.replace(graph, kernels=tuple(kernels))
+    deployment, _plan = build_qwen3_rom_deployment(
+        graph, capability=qwen_capability
+    )
+    generated = [
+        (object_id, source)
+        for object_id, source in deployment.objects.items()
+        if source.kind == "generated"
+        and source.generator == "floor_div_indices_v1"
+    ]
+    assert len(generated) == 1
+    object_id, source = generated[0]
+    assert source.parameters["divisor"] == 4
+
+    append = next(kernel for kernel in graph.kernels if kernel.kind == "KV_APPEND")
+    operator = next(
+        descriptor
+        for descriptor in deployment.table.descriptors()
+        if descriptor.descriptor_type == ExtendedDescriptorType.OPERATOR
+        and descriptor.payload["source_kernel_id"] == append.index
+    )
+    index_view = deployment.table.get(
+        operator.payload["input_view_0"], ExtendedDescriptorType.TENSOR_VIEW
+    )
+    assert index_view.primary_object_id == object_id
+    assert index_view.payload["stride0"] == 4
+    assert index_view.payload["dynamic_term_count"] >= 1
+    assert index_view.payload["term0_kind"] == int(SelectorKind.RUNTIME_SYMBOL)
+    assert index_view.payload["term0_index"] == int(Symbol.POSITION_START)
+    assert index_view.payload["term0_stride"] == 1
+
+    report = check_rom_schedule(graph, deployment, qwen_capability)
+    assert report["checks"]["floor_div_generator_exact"]
+    assert report["checks"]["floor_div_index_geometry"]
 
 
 def test_a_read_plane_no_write_covers_is_refused(workspace, qwen_capability):
@@ -4142,7 +4389,25 @@ def test_a_conditionally_present_operand_becomes_two_complementary_paths(
         assert not first.flags & InstructionFlag.PREDICATE_INVERT
         assert second.flags & InstructionFlag.PREDICATE_INVERT
         assert first.signal_event_id != second.signal_event_id
-        join = instructions[second_at + 1]
+        convergence = instructions[second_at + 1 : second_at + 3]
+        assert len(convergence) == 2
+        assert all(
+            (item.major, item.sub) == (int(Major.CONTROL), int(Control.WAIT))
+            for item in convergence
+        )
+        assert convergence[0].predicate_id == first.predicate_id
+        assert convergence[1].predicate_id == second.predicate_id
+        assert not convergence[0].flags & InstructionFlag.PREDICATE_INVERT
+        assert convergence[1].flags & InstructionFlag.PREDICATE_INVERT
+        waited = []
+        for item in convergence:
+            descriptor = deployment.table.get(
+                item.wait_set_id, ExtendedDescriptorType.EVENT_WAIT_SET
+            )
+            assert descriptor.payload["producer_count"] == 1
+            waited.append(descriptor.payload["producer_0"])
+        assert waited == [first.signal_event_id, second.signal_event_id]
+        join = instructions[second_at + 3]
         assert (join.major, join.sub) == (int(Major.CONTROL), int(Control.NOP))
         assert not join.flags & InstructionFlag.PREDICATED
         assert join.signal_event_id != NO_ID

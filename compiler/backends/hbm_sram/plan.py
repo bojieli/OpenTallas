@@ -117,6 +117,22 @@ DTYPE_MAP: Mapping[str, DType] = {
     "bool": DType.U8,
 }
 
+#: Neutral state classes whose ABI 3.0 representation is one persistent,
+#: ordinary writable HBM buffer.  These are DeepSeek's streaming caches and
+#: compressor history: their source semantics require an in-place update on
+#: every token step and provide no rollback/retry contract.  Qwen's
+#: ``kv_cache`` deliberately remains outside this set and keeps the existing
+#: committed/prepared STATE transaction lowering.
+DIRECT_BUFFER_STATE_CLASSES = frozenset(
+    {"compressed_kv", "compressor_window", "kv_window"}
+)
+
+
+def is_direct_buffer_state(state_class: str) -> bool:
+    """Whether ``state_class`` lowers to one ordinary writable HBM object."""
+
+    return str(state_class) in DIRECT_BUFFER_STATE_CLASSES
+
 #: Kernel kinds whose ABI operation contracts over a depth axis and therefore
 #: gets the row / output-tile / depth-tile loop nest.
 _CONTRACTION_SUBOPS = frozenset(
@@ -2032,8 +2048,9 @@ def position_inputs(graph: KernelGraph) -> tuple[str, ...]:
     return tuple(sorted(out))
 
 
-#: Synthetic tensor id prefix for a ring-index table, one per modulus.
+#: Synthetic tensor id prefixes for cache-row lookup tables.
 RING_INDEX_PREFIX = "generated.ring_indices."
+FLOOR_DIV_INDEX_PREFIX = "generated.floor_div_indices."
 
 #: Destination-row maps a neutral ``cache_row`` attribute may name.  A map this
 #: backend does not implement is a compile error rather than an identity: the
@@ -2078,9 +2095,45 @@ def ring_modulus(kernel: Kernel) -> int:
     return window
 
 
+def floor_divisor(kernel: Kernel) -> int:
+    """The divisor for a compressed-cache destination row, or zero.
+
+    ABI 3.0 dynamic view terms can add a runtime position but cannot divide
+    it.  A compressed append therefore indexes an immutable table containing
+    ``position // ratio``.  The ratio is a property of the kernel and must be
+    positive whenever this row map is selected.
+    """
+
+    declared = kernel.attributes.get("cache_row")
+    if declared is None:
+        return 0
+    name = str(declared)
+    if name not in CACHE_ROW_MAPS:
+        raise PlanError(
+            f"kernel {kernel.kernel_id}: destination-row map {name!r} is not "
+            f"one of {', '.join(sorted(CACHE_ROW_MAPS))}; a map this backend "
+            "does not implement must not be taken as the identity"
+        )
+    if name != "completed_absolute_position_floor_div_ratio":
+        return 0
+    divisor = int(kernel.attributes.get("ratio", 0) or 0)
+    if divisor <= 0:
+        raise PlanError(
+            f"kernel {kernel.kernel_id}: compressed destination-row map "
+            f"declares ratio {divisor}"
+        )
+    return divisor
+
+
 def ring_moduli(graph: KernelGraph) -> set[int]:
     """Every distinct ring capacity the graph's cache writes address."""
     return {m for m in (ring_modulus(k) for k in graph.kernels) if m}
+
+
+def floor_divisors(graph: KernelGraph) -> set[int]:
+    """Every distinct compressed-cache divisor used by the graph."""
+
+    return {d for d in (floor_divisor(k) for k in graph.kernels) if d}
 
 
 def _generated_constants(
@@ -2122,6 +2175,22 @@ def _generated_constants(
                 parameters=parameters,
                 size_bytes=int(generate("ring_indices_v1", parameters).nbytes),
                 digest=digest_of("ring_indices_v1", parameters),
+            )
+        )
+    for divisor in sorted(floor_divisors(graph)):
+        # Reading element p returns floor(p / divisor).  Sampling this table
+        # with an element stride of ``divisor`` also gives the consecutive
+        # group ordinals needed by prefill, while a one-element decode view
+        # gives the destination for the newly completed group.
+        count = max(int(context_max) + max(int(headroom), 1), 1)
+        parameters = {"count": count, "divisor": int(divisor)}
+        out.append(
+            GeneratedConstant(
+                tensor_id=f"{FLOOR_DIV_INDEX_PREFIX}{int(divisor)}",
+                generator="floor_div_indices_v1",
+                parameters=parameters,
+                size_bytes=int(generate("floor_div_indices_v1", parameters).nbytes),
+                digest=digest_of("floor_div_indices_v1", parameters),
             )
         )
     for tensor in graph.tensors:
@@ -5182,8 +5251,11 @@ def _allocate_hbm(
     for constant in generated:
         place(f"generated.{constant.tensor_id}", constant.size_bytes, 12)
     for state in states:
-        place(f"state.{state.physical_id}.committed", state.size_bytes, 12)
-        place(f"state.{state.physical_id}.prepared", state.size_bytes, 12)
+        if is_direct_buffer_state(state.state_class):
+            place(f"state.{state.physical_id}.direct", state.size_bytes, 12)
+        else:
+            place(f"state.{state.physical_id}.committed", state.size_bytes, 12)
+            place(f"state.{state.physical_id}.prepared", state.size_bytes, 12)
     for slot in arenas:
         place(f"arena.{slot.slot_id}", slot.size_bytes, 12)
 
@@ -5252,7 +5324,10 @@ def _prove(
     weight_bytes_per_node = sum(group.materialized_size_bytes for group in groups)
     generated_constant_bytes = sum(constant.size_bytes for constant in generated)
     arena_bytes = sum(a.size_bytes for a in arenas)
-    state_bytes = sum(s.size_bytes * 2 for s in states)  # committed + prepared
+    state_bytes = sum(
+        s.size_bytes * (1 if is_direct_buffer_state(s.state_class) else 2)
+        for s in states
+    )
     host_bytes = sum(int(o["size_bytes"]) for o in host_objects.values())
     sram_bytes = sum(r.size_bytes for r in sram_regions)
     communication_scratch_bytes = _communication_scratch_bytes(kernels, node_count)
@@ -5280,7 +5355,8 @@ def _prove(
         reserve(constant.size_bytes)
     for state in states:
         reserve(state.size_bytes)
-        reserve(state.size_bytes)
+        if not is_direct_buffer_state(state.state_class):
+            reserve(state.size_bytes)
     for arena in arenas:
         reserve(arena.size_bytes)
     reserve(cluster_control_bytes)

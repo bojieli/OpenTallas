@@ -55,6 +55,7 @@ from compiler.ir.v3.kernel_ir import (
 from compiler.ir.v3.lowering import engine_for
 from runtime.abi3.constants import (
     Attention,
+    Control,
     Dma,
     Major,
     NO_ID,
@@ -1024,7 +1025,8 @@ def test_expert_pipeline_uses_one_shared_loop_and_fixed_address_blocks(
         assert any(set(indices) <= body for body in loop_bodies)
 
 
-def test_state_read_output_reuses_the_prepared_state_binding(single_chip):
+@pytest.mark.parametrize("state_class", ["kv_cache", "compressed_kv"])
+def test_state_read_output_reuses_the_state_binding(single_chip, state_class):
     """A read-only state view cannot fall back to a recycled arena object.
 
     DeepSeek writes post-QDQ compressed KV, then ``STATE_READ`` re-presents the
@@ -1033,6 +1035,13 @@ def test_state_read_output_reuses_the_prepared_state_binding(single_chip):
     rather than consume a new state plane or become an ordinary activation.
     """
     graph = dense_graph(layers=1)
+    graph = dataclasses.replace(
+        graph,
+        states=tuple(
+            dataclasses.replace(state, state_class=state_class)
+            for state in graph.states
+        ),
+    )
     by_id = {tensor.tensor_id: tensor for tensor in graph.tensors}
     tensors = list(graph.tensors)
     kernels: list[Kernel] = []
@@ -1183,6 +1192,131 @@ def test_state_read_output_reuses_the_prepared_state_binding(single_chip):
     assert index_view.payload["stride1"] == 128
     assert index_view.payload["extent_axis"] == 1
     assert index_view.payload["dynamic_term_count"] == 1
+
+    if state_class == "compressed_kv":
+        from runtime.abi3.records import decode_body, split_program
+
+        _, body = split_program(deployment.program)
+        instructions = decode_body(body)
+        assert all(
+            instruction.major != int(Major.STATE) for instruction in instructions
+        )
+        state_read = next(
+            kernel.index for kernel in graph.kernels if kernel.kind == "STATE_READ"
+        )
+        alias = next(
+            instruction
+            for instruction in instructions
+            if instruction.source_operation_id == state_read
+            and instruction.major == int(Major.CONTROL)
+            and instruction.sub == int(Control.NOP)
+            and instruction.signal_event_id != NO_ID
+        )
+        consumer = next(
+            instruction
+            for instruction in instructions
+            if instruction.source_operation_id == index_id
+        )
+        wait = deployment.table[consumer.wait_set_id]
+        assert alias.signal_event_id in {
+            wait.payload[f"producer_{slot}"]
+            for slot in range(wait.payload["producer_count"])
+        }
+
+
+def test_deepseek_state_classes_are_single_direct_hbm_objects(moe, single_chip):
+    """Direct caches consume one writable object and no ABI STATE machinery."""
+
+    deployment, plan = lower_with_plan(moe, single_chip)
+    assert plan.states
+    assert {state.state_class for state in plan.states} == {"compressed_kv"}
+    assert plan.proofs["state_bytes"] == sum(state.size_bytes for state in plan.states)
+
+    objects = [
+        descriptor
+        for descriptor in deployment.table.descriptors()
+        if descriptor.descriptor_type == ExtendedDescriptorType.MEMORY_OBJECT
+    ]
+    for state in plan.states:
+        direct_key = f"state.{state.physical_id}.direct"
+        assert direct_key in plan.hbm_map
+        assert f"state.{state.physical_id}.committed" not in plan.hbm_map
+        assert f"state.{state.physical_id}.prepared" not in plan.hbm_map
+        placement = plan.hbm_map[direct_key]
+        matches = [
+            descriptor
+            for descriptor in objects
+            if descriptor.payload["storage_class"] == int(StorageClass.HBM)
+            and descriptor.payload["base_address"] == placement.base_address
+            and descriptor.payload["size_bytes"] == state.size_bytes
+        ]
+        assert len(matches) == 1
+        assert matches[0].permissions & Permission.READ
+        assert matches[0].permissions & Permission.WRITE
+
+    assert not deployment.table.ids_of_type(ExtendedDescriptorType.STATE)
+    assert all(
+        descriptor.payload["storage_class"] != int(StorageClass.STATE)
+        for descriptor in objects
+    )
+    from runtime.abi3.records import decode_body, split_program
+
+    _, body = split_program(deployment.program)
+    assert all(instruction.major != int(Major.STATE) for instruction in decode_body(body))
+    require_admitted(deployment, single_chip)
+
+
+def test_qwen_kv_cache_keeps_transactional_state_objects(dense, single_chip):
+    """The direct-buffer classification does not change Qwen's kv_cache."""
+
+    deployment, plan = lower_with_plan(dense, single_chip)
+    assert {state.state_class for state in plan.states} == {"kv_cache"}
+    assert plan.proofs["state_bytes"] == 2 * sum(
+        state.size_bytes for state in plan.states
+    )
+    assert deployment.table.ids_of_type(ExtendedDescriptorType.STATE)
+    storage = [
+        descriptor.payload["storage_class"]
+        for descriptor in deployment.table.descriptors()
+        if descriptor.descriptor_type == ExtendedDescriptorType.MEMORY_OBJECT
+    ]
+    assert storage.count(int(StorageClass.STATE)) == 2 * len(plan.states)
+
+
+def test_direct_score_window_starts_at_negative_infinity(single_chip):
+    """An unused compressor score slot must never look like a zero score."""
+
+    graph = movement_graph()
+    graph = dataclasses.replace(
+        graph,
+        states=tuple(
+            dataclasses.replace(
+                state,
+                state_class="compressor_window",
+                initialization="negative_infinity",
+            )
+            for state in graph.states
+        ),
+    )
+    deployment = lower_to_abi3(graph, single_chip)
+    initialized = [
+        (descriptor, deployment.objects[descriptor.descriptor_id])
+        for descriptor in deployment.table.descriptors()
+        if descriptor.descriptor_type == ExtendedDescriptorType.MEMORY_OBJECT
+        and deployment.objects[descriptor.descriptor_id].generator
+        == "constant_u32_v1"
+        and descriptor.permissions & Permission.WRITE
+    ]
+    assert len(initialized) == 1
+    descriptor, source = initialized[0]
+    assert descriptor.payload["storage_class"] == int(StorageClass.HBM)
+    assert source.parameters["value"] == 0xFF800000
+    assert source.parameters["count"] * 4 == source.size_bytes
+    from runtime.sim.generators import generate
+
+    values = generate(source.generator, source.parameters)
+    assert set(int(value) for value in values) == {0xFF800000}
+    require_admitted(deployment, single_chip)
 
 
 # ---------------------------------------------------------------------------
@@ -1338,6 +1472,55 @@ def test_cluster_commit_barrier_waits_for_work_and_gates_every_commit(moe, clust
         waits(instruction) == {barrier.signal_event_id}
         for _, instruction in commits
     )
+
+
+def test_direct_cluster_token_append_follows_barrier_and_fence(moe, cluster):
+    """No selected token is published before mutable and LINK work retires."""
+
+    from runtime.abi3.constants import Link
+    from runtime.abi3.records import decode_body, split_program
+
+    deployment = lower_to_abi3(moe, cluster)
+    _, body = split_program(deployment.program)
+    instructions = decode_body(body)
+
+    def waits(instruction):
+        if instruction.wait_set_id == NO_ID:
+            return set()
+        descriptor = deployment.table[instruction.wait_set_id]
+        return {
+            int(descriptor.payload[f"producer_{slot}"])
+            for slot in range(int(descriptor.payload["producer_count"]))
+        }
+
+    append_source = next(
+        kernel.index for kernel in moe.kernels if kernel.kind == "TOKEN_APPEND"
+    )
+    append_index, append = next(
+        (index, instruction)
+        for index, instruction in enumerate(instructions)
+        if instruction.source_operation_id == append_source
+    )
+    fences = [
+        (index, instruction)
+        for index, instruction in enumerate(instructions)
+        if instruction.major == int(Major.CONTROL)
+        and instruction.sub == int(Control.FENCE)
+        and instruction.signal_event_id in waits(append)
+    ]
+    assert len(fences) == 1
+    fence_index, fence = fences[0]
+    barriers = [
+        (index, instruction)
+        for index, instruction in enumerate(instructions)
+        if instruction.major == int(Major.LINK)
+        and instruction.sub == int(Link.BARRIER)
+    ]
+    assert len(barriers) == 1
+    barrier_index, barrier = barriers[0]
+    assert barrier.signal_event_id in waits(fence)
+    assert barrier_index < fence_index < append_index
+    assert all(instruction.major != int(Major.STATE) for instruction in instructions)
 
 
 # ---------------------------------------------------------------------------
@@ -1631,6 +1814,135 @@ def test_generated_positions_cover_a_partial_final_token_block(single_chip):
     assert len(positions) == 1
     assert positions[0].parameters == {"count": 270848}
     require_admitted(deployment, single_chip)
+
+
+def test_compressed_append_uses_floor_div_table_for_prefill_and_decode(single_chip):
+    """POSITION_START advances by one; logical group rows stride by ratio."""
+
+    ratio = 4
+    groups = Symbolic("span_groups_ratio4", 1, 256)
+    graph = KernelGraph(
+        model_id="compressed-append-addressing",
+        source={"family": "compressed-append-test"},
+        symbols=(
+            RuntimeSymbol("span_tokens", 1, 1024),
+            RuntimeSymbol("span_groups_ratio4", 0, 256, binding="derived"),
+        ),
+        tensors=(
+            Tensor("groups", "bf16", (groups, 8), "input"),
+            Tensor("positions", "u32", (1,), "input"),
+            Tensor("cache", "bf16", (256, 8), "state"),
+        ),
+        states=(StateResource("cache", "compressed_kv", "bf16", 8, 256),),
+        kernels=(
+            Kernel(
+                0,
+                "prepare",
+                "STATE_PREPARE",
+                (),
+                (),
+                "bf16_byte_preserving_state_v1",
+                state_writes=("cache",),
+            ),
+            Kernel(
+                1,
+                "append",
+                "KV_APPEND",
+                ("groups", "positions"),
+                ("cache",),
+                "bf16_byte_preserving_state_v1",
+                attributes={
+                    "cache_row": "completed_absolute_position_floor_div_ratio",
+                    "ratio": ratio,
+                },
+                state_writes=("cache",),
+            ),
+            Kernel(
+                2,
+                "commit",
+                "STATE_COMMIT",
+                (),
+                (),
+                "bf16_byte_preserving_state_v1",
+                state_writes=("cache",),
+            ),
+        ),
+        entrypoints=(
+            Entrypoint(
+                "prefill", ("groups", "positions"), ("cache",), ("cache",)
+            ),
+            Entrypoint(
+                "decode", ("groups", "positions"), ("cache",), ("cache",)
+            ),
+        ),
+    )
+    deployment = lower_to_abi3(graph, single_chip)
+    quotient_objects = [
+        (object_id, source)
+        for object_id, source in deployment.objects.items()
+        if source.generator == "floor_div_indices_v1"
+    ]
+    assert len(quotient_objects) == 1
+    quotient_id, source = quotient_objects[0]
+    assert source.parameters["divisor"] == ratio
+
+    append_ids = {
+        kernel.index for kernel in graph.kernels if kernel.kind == "KV_APPEND"
+    }
+    operators = [
+        descriptor
+        for descriptor in deployment.table.descriptors()
+        if descriptor.descriptor_type == ExtendedDescriptorType.OPERATOR
+        and descriptor.payload["source_kernel_id"] in append_ids
+    ]
+    assert len(operators) == 1
+    for operator in operators:
+        index = deployment.table.get(
+            operator.payload["input_view_0"],
+            ExtendedDescriptorType.TENSOR_VIEW,
+        )
+        assert index.primary_object_id == quotient_id
+        # Prefill samples q[start + g*R], yielding consecutive group rows.
+        assert index.payload["stride0"] == ratio
+        position_terms = [
+            (
+                index.payload[f"term{slot}_index"],
+                index.payload[f"term{slot}_stride"],
+            )
+            for slot in range(index.payload["dynamic_term_count"])
+            if index.payload[f"term{slot}_kind"]
+            == int(SelectorKind.RUNTIME_SYMBOL)
+        ]
+        # Decode reads one q[start] entry: POSITION_START itself still advances
+        # the underlying table by exactly one element, never by the ratio.
+        assert (int(Symbol.POSITION_START), 1) in position_terms
+        maximum_read = (
+            single_chip.limits["max_context_positions"]
+            + (index.payload["dim0"] - 1) * ratio
+        )
+        assert source.parameters["count"] > maximum_read
+
+    from runtime.sim.generators import generate
+
+    table = generate(source.generator, source.parameters)
+    assert [int(table[group * ratio]) for group in range(5)] == list(range(5))
+    assert int(table[7]) == 1
+    assert int(table[8]) == 2
+    report = check_deployment(graph, deployment, single_chip)
+    assert report["ok"], report["errors"]
+
+    # Generated bytes alone are not a proof that the executed scatter uses
+    # them with the graph's divisor.  The independent checker binds the
+    # reachable operator to this exact view geometry.
+    operator = operators[0]
+    index = deployment.table.get(
+        operator.payload["input_view_0"],
+        ExtendedDescriptorType.TENSOR_VIEW,
+    )
+    index.payload["stride0"] = 1
+    tampered = check_deployment(graph, deployment, single_chip)
+    assert not tampered["checks"]["floor_div_index_geometry"]
+    assert not tampered["ok"]
 
 
 def test_scatter_state_destination_exposes_the_whole_absolute_cache(single_chip):

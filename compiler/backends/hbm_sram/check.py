@@ -42,6 +42,7 @@ from compiler.ir.v3.lowering import ABSENT_OPERANDS, abi_input_slots, engine_for
 from runtime.abi3.capability import Capability
 from runtime.abi3.constants import (
     Control,
+    DType,
     Dma,
     Major,
     NO_ID,
@@ -87,6 +88,9 @@ _MERGE_SLACK = 4096
 #: Kernel kinds the backend is allowed to fold into the hoisted state
 #: transaction rather than emitting as an engine operator.
 _TRANSACTION_KINDS = frozenset({"STATE_PREPARE", "STATE_COMMIT", "STATE_READ"})
+_DIRECT_BUFFER_STATE_CLASSES = frozenset(
+    {"compressed_kv", "compressor_window", "kv_window"}
+)
 
 
 def _wait_events(table: Any, wait_set_id: int) -> set[int]:
@@ -419,8 +423,22 @@ def check_deployment(
             f"kernel {index} ({kernel.kind}) must lower to "
             f"{Major(engine.family).name}.{int(engine.sub)}, found {sorted(families)}",
         )
+    named_states = {state.state_id: state for state in graph.states}
     for index in sorted(representative - emitted_kernels):
         kernel = graph.kernels[index]
+        effects = [
+            named_states[name]
+            for name in (*kernel.state_reads, *kernel.state_writes)
+            if name in named_states
+        ]
+        if kernel.kind in _TRANSACTION_KINDS and effects and all(
+            state.state_class in _DIRECT_BUFFER_STATE_CLASSES for state in effects
+        ):
+            # Direct buffers are ordinary HBM objects.  STATE_READ is a view
+            # alias/order join and PREPARE/COMMIT intentionally have no wire
+            # instruction, so requiring Major.STATE here would reject the
+            # representation this checker is meant to audit.
+            continue
         engine = engine_for(kernel.kind)
         require(
             "state_kernel_coverage",
@@ -445,6 +463,15 @@ def check_deployment(
     ]
     _check_generated_constants(
         graph, deployment, generated, require, errors, capability
+    )
+    _check_floor_div_index_views(
+        graph,
+        deployment,
+        table,
+        by_kernel,
+        emitted_kernels,
+        capability,
+        require,
     )
     immutable = [d for d in immutable if d not in generated]
     actual_groups: list[list[tuple[str, int, int, str | None]]] = []
@@ -741,15 +768,21 @@ def check_deployment(
 
     # -- 6. states ---------------------------------------------------------
     resources = {s.state_id for s in graph.states}
-    if resources:
+    transactional_resources = [
+        state
+        for state in graph.states
+        if state.state_class not in _DIRECT_BUFFER_STATE_CLASSES
+    ]
+    if transactional_resources:
         require(
             "states_bound",
             bool(states),
-            f"{len(resources)} declared state resources but no state descriptor",
+            f"{len(transactional_resources)} transactional state resources "
+            "but no state descriptor",
         )
         require(
             "states_merged_not_multiplied",
-            len(states) <= len(resources),
+            len(states) <= len(transactional_resources),
             "physical state resources outnumber the declared ones",
         )
         capacity = sum(
@@ -757,13 +790,20 @@ def check_deployment(
         )
         declared_capacity = sum(
             _extent(s.capacity_rows) * s.row_elements * _bits(s.dtype) // 8
-            for s in graph.states
+            for s in transactional_resources
         )
         require(
             "state_capacity",
             capacity >= declared_capacity,
             f"state descriptors hold {capacity} bytes, the graph declares "
             f"{declared_capacity}",
+        )
+    elif resources:
+        require(
+            "direct_state_has_no_state_descriptors",
+            not states,
+            "a graph containing only direct-buffer state emitted ABI STATE "
+            "descriptors",
         )
     prepared: dict[int, int] = {}
     committed: set[int] = set()
@@ -905,6 +945,22 @@ def _ring_moduli(graph: KernelGraph) -> set[int]:
     return moduli
 
 
+def _floor_divisors(graph: KernelGraph) -> set[int]:
+    """Every compressed-cache divisor independently derived from the graph."""
+
+    divisors: set[int] = set()
+    for kernel in graph.kernels:
+        if (
+            str(kernel.attributes.get("cache_row", ""))
+            != "completed_absolute_position_floor_div_ratio"
+        ):
+            continue
+        divisor = int(kernel.attributes.get("ratio", 0) or 0)
+        if divisor > 0:
+            divisors.add(divisor)
+    return divisors
+
+
 def _check_generated_constants(
     graph: KernelGraph,
     deployment: Deployment,
@@ -935,7 +991,7 @@ def _check_generated_constants(
         if getattr(tensor, "generator", "")
     ]
     declared_names = {name for name, _ in declared}
-    # Two generators are legitimately *implied* by the graph rather than
+    # Three generators are legitimately *implied* by the graph rather than
     # declared on a tensor.  Each rule is re-derived here from the graph so
     # that a backend cannot pass off any other fabricated table as one of them.
     #
@@ -944,9 +1000,12 @@ def _check_generated_constants(
     #  * a cache write whose destination-row map is
     #    ``absolute_position_mod_window`` addresses a ring of ``window_size``
     #    rows, and a view can offset an index vector by a symbol but cannot
-    #    reduce one, so the reduction has to be tabulated.
+    #    reduce one, so the reduction has to be tabulated; and
+    #  * ``completed_absolute_position_floor_div_ratio`` similarly needs a
+    #    table because a dynamic term cannot divide POSITION_START.
     positions = _position_inputs(graph)
     moduli = _ring_moduli(graph)
+    divisors = _floor_divisors(graph)
     reach = int(capability.limits["max_context_positions"])
     for descriptor in generated:
         source = deployment.objects[descriptor.descriptor_id]
@@ -973,6 +1032,20 @@ def _check_generated_constants(
                 "generated_position_extent",
                 int(parameters.get("count", 0)) > reach,
                 f"object {oid} holds {parameters.get('count')} ring rows; "
+                "a window starting at the last admissible position runs past it",
+            )
+        elif source.generator == "floor_div_indices_v1" and divisors:
+            require(
+                "generated_floor_divisor",
+                int(parameters.get("divisor", 0)) in divisors,
+                f"object {oid} tabulates division by "
+                f"{parameters.get('divisor')}; the graph's compressed caches "
+                f"divide by {sorted(divisors)}",
+            )
+            require(
+                "generated_position_extent",
+                int(parameters.get("count", 0)) > reach,
+                f"object {oid} holds {parameters.get('count')} quotient rows; "
                 "a window starting at the last admissible position runs past it",
             )
         else:
@@ -1013,6 +1086,120 @@ def _check_generated_constants(
             "generated_is_immutable",
             not descriptor.permissions & Permission.WRITE,
             f"object {oid} is a derived constant but declares a write path",
+        )
+
+
+def _check_floor_div_index_views(
+    graph: KernelGraph,
+    deployment: Deployment,
+    table: Any,
+    by_kernel: Mapping[int, Sequence[Any]],
+    emitted_kernels: set[int],
+    capability: Capability,
+    require: Any,
+) -> None:
+    """Bind every compressed scatter to its exact quotient-table geometry.
+
+    Reproducing a generated object's digest proves its bytes, but not that the
+    executed scatter reads those bytes in the way the graph declares.  This is
+    intentionally independent of the planner and lowerer: the graph supplies
+    the divisor, while the executed operator supplies the actual index view.
+    """
+
+    reach = int(capability.limits["max_context_positions"])
+    for kernel_index in sorted(emitted_kernels):
+        kernel = graph.kernels[kernel_index]
+        if (
+            str(kernel.attributes.get("cache_row", ""))
+            != "completed_absolute_position_floor_div_ratio"
+        ):
+            continue
+
+        divisor = int(kernel.attributes.get("ratio", 0) or 0)
+        if not require(
+            "floor_divisor_positive",
+            divisor > 0,
+            f"kernel {kernel_index} declares compressed row divisor {divisor}",
+        ):
+            continue
+
+        scatters = [
+            operator
+            for operator in by_kernel.get(kernel_index, ())
+            if int(operator.payload["engine_family"]) == int(Major.DMA)
+            and int(operator.payload["engine_sub"]) == int(Dma.SCATTER)
+        ]
+        if not require(
+            "floor_div_scatter_present",
+            len(scatters) == 1,
+            f"kernel {kernel_index} has {len(scatters)} executed compressed-row "
+            "scatter operators, expected one",
+        ):
+            continue
+
+        view_id = int(scatters[0].payload["input_view_0"])
+        view_ok = (
+            view_id != NO_ID
+            and 0 <= view_id < len(table)
+            and table[view_id].descriptor_type
+            == ExtendedDescriptorType.TENSOR_VIEW
+        )
+        if not require(
+            "floor_div_index_view_present",
+            view_ok,
+            f"kernel {kernel_index} compressed-row scatter has no index view",
+        ):
+            continue
+        view = table[view_id]
+
+        object_id = int(view.primary_object_id)
+        source = deployment.objects.get(object_id)
+        parameters = dict(source.parameters) if source is not None else {}
+        require(
+            "floor_div_generator_exact",
+            source is not None
+            and source.kind == "generated"
+            and source.generator == "floor_div_indices_v1"
+            and int(parameters.get("divisor", 0)) == divisor,
+            f"kernel {kernel_index} compressed-row index is not generated as "
+            f"position // {divisor}",
+        )
+
+        payload = view.payload
+        runtime_terms = [
+            (
+                int(payload[f"term{slot}_index"]),
+                int(payload[f"term{slot}_stride"]),
+            )
+            for slot in range(int(payload["dynamic_term_count"]))
+            if int(payload[f"term{slot}_kind"])
+            == int(SelectorKind.RUNTIME_SYMBOL)
+        ]
+        dim0 = int(payload["dim0"])
+        require(
+            "floor_div_index_geometry",
+            int(payload["dtype"]) == int(DType.U32)
+            and int(payload["rank"]) == 1
+            and int(payload["element_offset"]) == 0
+            and dim0 > 0
+            and int(payload["stride0"]) == divisor
+            and runtime_terms == [(int(Symbol.POSITION_START), 1)],
+            f"kernel {kernel_index} quotient view is not a rank-one U32 view "
+            f"with zero base, storage stride {divisor}, and exactly one "
+            "POSITION_START coefficient of one",
+        )
+
+        # At the largest admissible start, even the last row of this physical
+        # view must remain inside the authenticated table.  Loop terms are
+        # checked by the generic ABI bounds proof; this local check binds the
+        # graph's ratio to the row geometry itself.
+        maximum_read = reach + max(dim0 - 1, 0) * divisor
+        require(
+            "floor_div_generator_extent",
+            int(parameters.get("count", 0)) > maximum_read,
+            f"kernel {kernel_index} quotient table has "
+            f"{parameters.get('count')} entries but its view can read index "
+            f"{maximum_read}",
         )
 
 

@@ -80,6 +80,7 @@ from runtime.abi3.constants import (
     DType,
     Dma,
     Feature,
+    InstructionFlag,
     Major,
     NO_ID,
     ParticipantScope,
@@ -132,6 +133,21 @@ MAX_OPERATOR_OUTPUTS = 2
 MAX_WAIT_PRODUCERS = 12
 
 WEIGHT_ROLES = frozenset({"weight", "constant"})
+
+#: Neutral state classes whose ABI 3.0 representation is one persistent,
+#: ordinary writable HBM buffer.  DeepSeek's streaming caches and compressor
+#: windows update in place and have no rollback/retry contract.  Qwen's
+#: ``kv_cache`` deliberately stays outside this set and retains the existing
+#: committed/prepared STATE transaction lowering.
+DIRECT_BUFFER_STATE_CLASSES = frozenset(
+    {"compressed_kv", "compressor_window", "kv_window"}
+)
+
+
+def _is_direct_buffer_state(state_class: str) -> bool:
+    """Whether ``state_class`` lowers as an ordinary mutable HBM object."""
+
+    return str(state_class) in DIRECT_BUFFER_STATE_CLASSES
 
 #: Integer operand types.  These carry indices and identifiers, never values a
 #: broadcast could share between heads.
@@ -1127,8 +1143,11 @@ class RomLowering:
         self._wait_cache: dict[tuple[int, ...], int] = {}
         self._loop_of_run: dict[int, int] = {}
         self._state_descriptor: dict[str, int] = {}
+        self._state_object: dict[str, int] = {}
         self._state_slot: dict[str, tuple[str, int]] = {}
         self._state_group_shape: dict[str, tuple[int, int, int]] = {}
+        self._state_group_count = 0
+        self._direct_state_groups: dict[str, str] = {}
         self._state_column: dict[str, int] = {}
         self._substituted_inputs: dict[str, str] = {}
         self._position_input_cache: frozenset[str] | None = None
@@ -1147,6 +1166,8 @@ class RomLowering:
         self._predicate_values: dict[str, str] | None = None
         self._predicated_operators: dict[str, str] = {}
         self._operand_alternatives: dict[str, str] = {}
+        self._deferred_token_appends: list[Kernel] = []
+        self._token_step_fence_event = NO_ID
         #: Tensor -> phase -> the A18 extent that phase's path writes.  A join
         #: whose operands sum over two runtime symbols has no single extent,
         #: and every view of its result -- the producer's and the consumer's --
@@ -2147,6 +2168,38 @@ class RomLowering:
         self._state_owner = owner
         return order
 
+    @staticmethod
+    def _direct_state_source(state: StateResource, size_bytes: int) -> ObjectSource:
+        """Materialise a direct buffer's declared fresh-session sentinel."""
+
+        if state.initialization == "zero":
+            return ObjectSource.zeros(size_bytes)
+        if state.initialization != "negative_infinity":
+            raise RomLoweringError(
+                f"state {state.state_id!r}: direct-buffer initialization "
+                f"{state.initialization!r} is unsupported"
+            )
+        if state.dtype != "fp32" or size_bytes % 4:
+            raise RomLoweringError(
+                f"state {state.state_id!r}: negative_infinity initialization "
+                f"requires whole FP32 elements, got {state.dtype!r} and "
+                f"{size_bytes} bytes"
+            )
+        # Object sources materialise bytes, independently of the dtype through
+        # which an operator later views them.  Repeating the U32 bit pattern is
+        # therefore the exact spelling of FP32 -infinity, and uses an existing
+        # frozen generator rather than adding a state-specific ABI concept.
+        from runtime.sim.generators import digest_of
+
+        parameters = {"value": 0xFF800000, "count": size_bytes // 4}
+        generator = "constant_u32_v1"
+        return ObjectSource.generated(
+            generator,
+            parameters,
+            size_bytes,
+            digest_of(generator, parameters),
+        )
+
     def emit_states(self) -> None:
         """Merge congruent per-layer state resources into one physical state.
 
@@ -2182,17 +2235,6 @@ class RomLowering:
             groups.setdefault(key, []).append(state)
         for index, key in enumerate(sorted(groups, key=lambda k: str(k))):
             members = groups[key]
-            state_class = STATE_CLASS_BY_NAME.get(members[0].state_class)
-            if state_class is None:
-                raise RomLoweringError(
-                    f"state class {members[0].state_class!r} is not in the frozen "
-                    "ABI 3.0 registry and has no documented alias; extend the "
-                    "registry through a versioned change, never privately"
-                )
-            if members[0].state_class in STATE_CLASS_ALIASES:
-                self._state_class_aliases[members[0].state_class] = (
-                    STATE_CLASS_ALIASES[members[0].state_class]
-                )
             dtype = self._dtype(members[0].dtype)
             bits = DTYPE_BITS[dtype]
             declared_row = members[0].row_elements
@@ -2219,6 +2261,38 @@ class RomLowering:
                 raise RomLoweringError(f"state group {index} has no capacity")
             total = slot_bytes * len(members)
             group_key = f"state.{index}"
+            self._state_group_count += 1
+            self._state_group_shape[group_key] = (slot_bytes, capacity, row_elements)
+            for slot, state in enumerate(members):
+                self._state_slot[state.state_id] = (group_key, slot)
+
+            if _is_direct_buffer_state(members[0].state_class):
+                source = self._direct_state_source(members[0], total)
+                direct = self.builder.memory_object(
+                    storage_class=StorageClass.HBM,
+                    size_bytes=total,
+                    source=source,
+                    permissions=int(Permission.READ | Permission.WRITE),
+                    alignment_log2=12,
+                    integrity_mode=IntegrityMode.CRC_AND_ECC,
+                    content_digest=source.authenticated_content_digest(),
+                    key=f"obj.{group_key}",
+                )
+                self._state_object[group_key] = direct
+                self._direct_state_groups[group_key] = members[0].state_class
+                continue
+
+            state_class = STATE_CLASS_BY_NAME.get(members[0].state_class)
+            if state_class is None:
+                raise RomLoweringError(
+                    f"state class {members[0].state_class!r} is not in the frozen "
+                    "ABI 3.0 registry and has no documented alias; extend the "
+                    "registry through a versioned change, never privately"
+                )
+            if members[0].state_class in STATE_CLASS_ALIASES:
+                self._state_class_aliases[members[0].state_class] = (
+                    STATE_CLASS_ALIASES[members[0].state_class]
+                )
             committed = self.builder.memory_object(
                 storage_class=StorageClass.STATE,
                 size_bytes=total,
@@ -2251,10 +2325,9 @@ class RomLowering:
                 counter_class_id=self._counter_class("state", Major.STATE),
                 key=f"desc.{group_key}",
             )
-            self._state_group_shape[group_key] = (slot_bytes, capacity, row_elements)
             for slot, state in enumerate(members):
                 self._state_descriptor[state.state_id] = descriptor
-                self._state_slot[state.state_id] = (group_key, slot)
+            self._state_object[group_key] = prepared
             self.builder.name(f"obj.{group_key}", prepared)
         self._plan_state_layout()
 
@@ -2451,7 +2524,7 @@ class RomLowering:
             return None
         group_key, slot = self._state_slot[state_id]
         slot_bytes, capacity, row_elements = self._state_group_shape[group_key]
-        prepared = self.builder.lookup(f"obj.{group_key}")
+        prepared = self._state_object[group_key]
         tensor = self.tensors[tensor_id]
         dtype = self._dtype(tensor.dtype)
         bits = DTYPE_BITS[dtype]
@@ -2928,6 +3001,29 @@ class RomLowering:
             )
         return window
 
+    def _cache_row_divisor(self, kernel: Kernel) -> int | None:
+        """The divisor of a compressed-cache destination-row map, if any."""
+
+        declared = kernel.attributes.get("cache_row")
+        if declared is None:
+            return None
+        name = str(declared)
+        if name not in self.CACHE_ROW_MAPS:
+            raise RomLoweringError(
+                f"kernel {kernel.kernel_id!r} declares destination-row map "
+                f"{name!r}, which this backend does not implement; the frozen "
+                f"maps are {', '.join(sorted(self.CACHE_ROW_MAPS))}"
+            )
+        if name != "completed_absolute_position_floor_div_ratio":
+            return None
+        divisor = int(kernel.attributes.get("ratio", 0) or 0)
+        if divisor <= 0:
+            raise RomLoweringError(
+                f"kernel {kernel.kernel_id!r} addresses compressed state but "
+                f"declares ratio {divisor}"
+            )
+        return divisor
+
     def _ring_object(self, modulus: int) -> int:
         """The ``position mod modulus`` range, materialised once per modulus."""
         key = f"ring.{modulus}"
@@ -2957,6 +3053,54 @@ class RomLowering:
             integrity_mode=IntegrityMode.CRC_AND_ECC,
             content_digest=bytes.fromhex(digest),
             key=f"obj.rom.ring.{modulus}",
+        )
+        self._generated_objects[key] = object_id
+        return object_id
+
+    def _floor_div_object(self, divisor: int) -> int:
+        """The ``position // divisor`` range, or a fail-closed refusal."""
+
+        from runtime.sim.generators import (
+            GeneratorError,
+            digest_of,
+            generate,
+            registered,
+        )
+
+        generator = "floor_div_indices_v1"
+        if generator not in registered():
+            raise RomLoweringError(
+                f"compressed cache rows require registered generator "
+                f"{generator!r}; falling back to absolute positions would "
+                "silently address the wrong HBM rows"
+            )
+        key = f"floor_div.{divisor}"
+        cached = self._generated_objects.get(key)
+        if cached is not None:
+            return cached
+        span_max = int(self.capability.limits["max_context_positions"])
+        parameters = {
+            "count": max(span_max + self._padded_symbol_bound(), 1),
+            "divisor": int(divisor),
+        }
+        try:
+            payload = generate(generator, parameters)
+            digest = digest_of(generator, parameters)
+        except GeneratorError as exc:
+            raise RomLoweringError(
+                f"floor-div index range for divisor {divisor}: {exc}"
+            ) from None
+        object_id = self.builder.memory_object(
+            storage_class=self.weight_storage_class,
+            size_bytes=int(payload.nbytes),
+            source=ObjectSource.generated(
+                generator, parameters, int(payload.nbytes), digest
+            ),
+            permissions=ROM_PERMISSIONS,
+            alignment_log2=12,
+            integrity_mode=IntegrityMode.CRC_AND_ECC,
+            content_digest=bytes.fromhex(digest),
+            key=f"obj.rom.floor_div.{divisor}",
         )
         self._generated_objects[key] = object_id
         return object_id
@@ -3401,6 +3545,7 @@ class RomLowering:
         absolute: bool,
         stride: int = 1,
         modulus: int | None = None,
+        divisor: int | None = None,
     ) -> int:
         """A movement's index vector: one index per row the movement touches.
 
@@ -3424,22 +3569,39 @@ class RomLowering:
                 f"kernel {kernel.kernel_id!r}: index stride {stride} is not "
                 "positive"
             )
+        if modulus is not None and divisor is not None:
+            raise RomLoweringError(
+                f"kernel {kernel.kernel_id!r}: an index map cannot be both "
+                "modular and floor-divided"
+            )
+        floor_object = self._floor_div_object(divisor) if divisor is not None else None
+        # A compressed output contributes one row per ``divisor`` positions.
+        # Exporters may leave the default stride of one or state that ratio
+        # explicitly; both describe the same quotient-table sampling and must
+        # not be multiplied into ratio squared.
+        if floor_object is not None and stride not in {1, divisor}:
+            raise RomLoweringError(
+                f"kernel {kernel.kernel_id!r}: floor-div row map with divisor "
+                f"{divisor} declares incompatible position_stride {stride}"
+            )
+        table_stride = divisor if floor_object is not None else stride
         terms: list[DynamicTerm] = []
         if absolute:
             terms.append(DynamicTerm.symbol(Symbol.POSITION_START, 1))
             if loop is not None and shape.row_symbolic:
-                terms.append(DynamicTerm.loop(loop, shape.block * stride))
+                terms.append(DynamicTerm.loop(loop, shape.block * table_stride))
         elif count == 1:
             terms.append(DynamicTerm.symbol(Symbol.SPAN_LAST_INDEX, 1))
         elif loop is not None and shape.row_symbolic:
             terms.append(DynamicTerm.loop(loop, shape.block * stride))
         dtype = self._dtype(tensor.dtype)
         if name in self._position_inputs:
-            object_id = (
-                self._position_object(name)
-                if modulus is None
-                else self._ring_object(modulus)
-            )
+            if floor_object is not None:
+                object_id = floor_object
+            elif modulus is not None:
+                object_id = self._ring_object(modulus)
+            else:
+                object_id = self._position_object(name)
             permissions = int(Permission.READ)
             # The materialised range is ``arange_u32_v1``, so the view over it
             # is U32 whatever word the graph used for "an integer position".  A
@@ -3464,7 +3626,7 @@ class RomLowering:
             object_id=object_id,
             dtype=dtype,
             dims=[max(count, 1)],
-            strides=[stride],
+            strides=[table_stride],
             dynamic=terms,
             permissions=permissions,
             extent_unit=shape.axis.unit if walked else 0,
@@ -4488,6 +4650,7 @@ class RomLowering:
                 absolute=absolute,
                 stride=int(kernel.attributes.get("position_stride", 1)),
                 modulus=self._cache_row_modulus(kernel),
+                divisor=self._cache_row_divisor(kernel),
             )
         ]
         if source_name is not None:
@@ -5518,6 +5681,7 @@ class RomLowering:
         """One instruction per phase, each stating that phase's row space."""
         slots = self._abi_input_slots(kernel, order)
         phases = sorted({phase for table in paths.values() for phase in table})
+        events: list[tuple[int, int, bool]] = []
         for table in paths.values():
             if sorted(table) != phases:
                 raise RomLoweringError(
@@ -5552,7 +5716,8 @@ class RomLowering:
                     divisor=context_divisor,
                     writable=False,
                 )
-            self._emit_operator(
+            predicate = self._phase_predicate(phase)
+            event = self._emit_operator(
                 kernel,
                 family,
                 sub,
@@ -5561,21 +5726,50 @@ class RomLowering:
                 loop=None,
                 schedule_rows=schedule_rows,
                 suffix=f".{phase}",
-                predicate_id=self._phase_predicate(phase),
+                predicate_id=predicate,
             )
-        join = self.builder.new_event()
-        self.builder.emit(
-            Major.CONTROL,
-            Control.NOP,
-            signal_event_id=join,
-            source_operation_id=kernel.index,
-        )
+            events.append((event, predicate, False))
+        join = self._emit_guarded_join(events, source_operation_id=kernel.index)
         for name in kernel.outputs:
             self._event_of_tensor[name] = join
         if loop is not None:
             self.builder.close_loop()
         for _ in range(extra_close):
             self.builder.close_loop()
+
+    def _emit_guarded_join(
+        self,
+        paths: Sequence[tuple[int, int, bool]],
+        *,
+        source_operation_id: int = NO_ID,
+    ) -> int:
+        """Converge mutually exclusive event paths without waiting on a skip.
+
+        A predicated-off instruction never signals.  Each CONTROL.WAIT carries
+        the exact same guard as its producer, so precisely the live path is
+        acquired; the following unconditional NOP can then publish one event
+        to ordinary consumers.
+        """
+
+        if not paths:
+            raise RomLoweringError("cannot join an empty set of guarded paths")
+        for event, predicate, inverted in paths:
+            self.builder.emit(
+                Major.CONTROL,
+                Control.WAIT,
+                wait_set_id=self._wait_set([event]),
+                predicate_id=predicate,
+                invert_predicate=inverted,
+                source_operation_id=source_operation_id,
+            )
+        joined = self.builder.new_event()
+        self.builder.emit(
+            Major.CONTROL,
+            Control.NOP,
+            signal_event_id=joined,
+            source_operation_id=source_operation_id,
+        )
+        return joined
 
     def _phase_predicate(self, phase: str) -> int:
         value = Phase.PREFILL if str(phase) == "prefill" else Phase.DECODE
@@ -5881,6 +6075,34 @@ class RomLowering:
             engine = EngineOp(Major.TENSOR, TensorOp.MATMUL, 2, 1)
         family = Major(engine.family)
         if kernel.kind == "STATE_READ":
+            if self._kernel_uses_direct_state(kernel):
+                # Direct state is already the execution image.  STATE_READ is
+                # therefore a view/alias declaration, not an engine action,
+                # but its dataflow edge must survive so the first real
+                # consumer still waits for the append that produced the rows.
+                producers = {
+                    self._event_of_tensor[name]
+                    for name in kernel.inputs
+                    if name in self._event_of_tensor
+                }
+                if len(producers) > 1:
+                    raise RomLoweringError(
+                        f"kernel {kernel.kernel_id!r}: an alias-only STATE_READ "
+                        f"has {len(producers)} distinct producer events"
+                    )
+                event = next(iter(producers), None)
+                for name in kernel.outputs:
+                    if event is None:
+                        self._event_of_tensor.pop(name, None)
+                    else:
+                        self._event_of_tensor[name] = event
+                condition = self._kernel_condition(kernel)
+                if condition is not None:
+                    # The alias emits no instruction to predicate.  Recording
+                    # the resolved condition proves it was intentionally
+                    # absorbed; the consuming operator carries the condition.
+                    self._predicated_operators[kernel.kernel_id] = condition
+                return
             # A state read is one instruction and no operator descriptor, so it
             # takes the kernel's predicate directly.  This is the shape A18
             # names: the compressed-KV valid view leads with
@@ -6175,8 +6397,9 @@ class RomLowering:
             context_divisor=context_divisor,
             declared_output=outputs[0] if outputs else NO_ID,
         )
+        path_events: list[tuple[int, int, bool]] = []
         if present_paths is None:
-            self._emit_operator(
+            event = self._emit_operator(
                 kernel,
                 family,
                 sub,
@@ -6186,9 +6409,10 @@ class RomLowering:
                 schedule_rows=schedule_rows,
                 predicate_id=predicate,
             )
+            path_events.append((event, predicate, False))
         else:
             for phase, path_predicate, path_output in present_paths:
-                self._emit_operator(
+                event = self._emit_operator(
                     kernel,
                     family,
                     sub,
@@ -6199,7 +6423,8 @@ class RomLowering:
                     suffix=f".{phase}",
                     predicate_id=path_predicate,
                 )
-        self._emit_operator(
+                path_events.append((event, path_predicate, False))
+        absent_event = self._emit_operator(
             kernel,
             family,
             sub,
@@ -6214,12 +6439,9 @@ class RomLowering:
                 name for index, name in enumerate(kernel.inputs) if index != absent
             ],
         )
-        join = self.builder.new_event()
-        self.builder.emit(
-            Major.CONTROL,
-            Control.NOP,
-            signal_event_id=join,
-            source_operation_id=kernel.index,
+        path_events.append((absent_event, predicate, True))
+        join = self._emit_guarded_join(
+            path_events, source_operation_id=kernel.index
         )
         for name in kernel.outputs:
             self._event_of_tensor[name] = join
@@ -6244,7 +6466,7 @@ class RomLowering:
         invert_predicate: bool = False,
         wait_inputs: Sequence[str] | None = None,
         event: int | None = None,
-    ) -> None:
+    ) -> int:
         """Bind one operator descriptor, issue it, and close its loop.
 
         ``predicate_id`` defaults to the kernel's own declared predicate;
@@ -6285,6 +6507,12 @@ class RomLowering:
             for name in (kernel.inputs if wait_inputs is None else wait_inputs)
             if name in self._event_of_tensor
         ]
+        if (
+            kernel.kind == "TOKEN_APPEND"
+            and self._token_step_fence_event != NO_ID
+            and self._token_step_fence_event not in producers
+        ):
+            producers.append(self._token_step_fence_event)
         wait = self._wait_set(producers)
         if event is None:
             event = self.builder.new_event()
@@ -6309,6 +6537,7 @@ class RomLowering:
         # event the first iteration cannot yet have signalled.
         for name in kernel.outputs:
             self._event_of_tensor[name] = event
+        return event
 
     def _state_for(self, kernel: Kernel) -> int:
         for state_id in (*kernel.state_writes, *kernel.state_reads):
@@ -6318,6 +6547,24 @@ class RomLowering:
             f"kernel {kernel.kernel_id!r} is a state operation naming no declared "
             "state resource"
         )
+
+    def _kernel_uses_direct_state(self, kernel: Kernel) -> bool:
+        """Whether every state resource named by ``kernel`` is direct HBM."""
+
+        named = (*kernel.state_reads, *kernel.state_writes)
+        if not named:
+            return False
+        direct = {
+            _is_direct_buffer_state(self.states[state_id].state_class)
+            for state_id in named
+            if state_id in self.states
+        }
+        if len(direct) > 1:
+            raise RomLoweringError(
+                f"kernel {kernel.kernel_id!r} mixes direct-buffer and "
+                "transactional state resources"
+            )
+        return direct == {True}
 
     # -- link fabric -----------------------------------------------------
     def _admitted_topology(self) -> Mapping[str, int]:
@@ -6415,6 +6662,86 @@ class RomLowering:
             )
             self._link_instruction_count += 1
 
+    def _emit_event_join_tree(self, events: Sequence[int]) -> int:
+        """Join arbitrary many events through ABI-sized CONTROL.NOP nodes."""
+
+        level = sorted(set(int(event) for event in events if event != NO_ID))
+        if not level:
+            raise RomLoweringError("a terminal token step has no work events")
+        # Always publish a distinct root, including for a single input.  This
+        # makes the FENCE's dependency an explicit terminal join rather than a
+        # special case that happens to rely on the last operator's event.
+        while True:
+            collapsed: list[int] = []
+            for offset in range(0, len(level), MAX_WAIT_PRODUCERS):
+                chunk = level[offset : offset + MAX_WAIT_PRODUCERS]
+                joined = self.builder.new_event()
+                self.builder.emit(
+                    Major.CONTROL,
+                    Control.NOP,
+                    wait_set_id=self._wait_set(chunk),
+                    signal_event_id=joined,
+                )
+                collapsed.append(joined)
+            if len(collapsed) == 1:
+                return collapsed[0]
+            level = collapsed
+
+    def _emit_terminal_fence(self) -> int:
+        """Acquire every issued work event and publish a fenced completion."""
+
+        unconditional: list[int] = []
+        conditional: dict[tuple[int, bool], list[int]] = {}
+        # Snapshot the work program before adding convergence instructions.
+        # Waiting on all issued events (not merely a syntactic leaf heuristic)
+        # is guard-correct when an unconditional producer has only a
+        # predicated consumer.
+        for instruction in tuple(self.builder.instructions):
+            event = int(instruction.signal_event_id)
+            if event == NO_ID:
+                continue
+            if instruction.predicate_id == NO_ID:
+                unconditional.append(event)
+                continue
+            guard = (
+                int(instruction.predicate_id),
+                bool(instruction.flags & int(InstructionFlag.PREDICATE_INVERT)),
+            )
+            conditional.setdefault(guard, []).append(event)
+
+        if conditional:
+            # A predicated-off producer never signals.  Guard each wait with
+            # exactly its producer's predicate, then publish one unconditional
+            # event after all live guarded waits have retired.
+            for (predicate, inverted), events in sorted(conditional.items()):
+                for offset in range(0, len(events), MAX_WAIT_PRODUCERS):
+                    self.builder.emit(
+                        Major.CONTROL,
+                        Control.WAIT,
+                        wait_set_id=self._wait_set(
+                            events[offset : offset + MAX_WAIT_PRODUCERS]
+                        ),
+                        predicate_id=predicate,
+                        invert_predicate=inverted,
+                    )
+            guarded = self.builder.new_event()
+            self.builder.emit(
+                Major.CONTROL,
+                Control.NOP,
+                signal_event_id=guarded,
+            )
+            unconditional.append(guarded)
+
+        root = self._emit_event_join_tree(unconditional)
+        fenced = self.builder.new_event()
+        self.builder.emit(
+            Major.CONTROL,
+            Control.FENCE,
+            wait_set_id=self._wait_set([root]),
+            signal_event_id=fenced,
+        )
+        return fenced
+
     def _link_reduction_numeric(self, step: LinkStep) -> int:
         """The numeric contract of an arithmetic collective, or ``NO_ID``.
 
@@ -6510,11 +6837,18 @@ class RomLowering:
             self.builder.close_loop()
         for kernel in analysis.epilogue:
             emitted.append(kernel)
+            if self._direct_state_groups and kernel.kind == "TOKEN_APPEND":
+                self._deferred_token_appends.append(kernel)
+                continue
             self._emit_kernel(kernel, run=None)
         self._prove_predicates_lowered(emitted)
         self._require_on_device_selection()
         for descriptor in state_descriptors:
             self.builder.emit(Major.STATE, State.COMMIT, descriptor_id=descriptor)
+        if self._deferred_token_appends:
+            self._token_step_fence_event = self._emit_terminal_fence()
+            for kernel in self._deferred_token_appends:
+                self._emit_kernel(kernel, run=None)
         self.builder.emit(Major.CONTROL, Control.COMPLETE)
 
     def _require_on_device_selection(self) -> None:
@@ -6688,9 +7022,15 @@ class RomLowering:
             "substituted_inputs": dict(sorted(self._substituted_inputs.items())),
             "token_block_rows": int(self.policy.token_block_rows or 0),
             "source_kernel_count": len(self.graph.kernels),
-            "state_groups": len(set(self._state_descriptor.values())),
+            "state_groups": self._state_group_count,
             "tile_mapping_owner": "schedule_descriptor",
         }
+        if self._direct_state_groups:
+            builder.notes["rom_lowering"]["direct_buffer_state"] = {
+                "classes": sorted(set(self._direct_state_groups.values())),
+                "physical_groups": len(self._direct_state_groups),
+                "storage_class": StorageClass.HBM.name,
+            }
         return builder.finish()
 
 

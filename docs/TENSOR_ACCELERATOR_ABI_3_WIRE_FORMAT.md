@@ -1721,6 +1721,14 @@ control plane and not the arithmetic.
 
 ### 12.16 Amendment A25 — a commit whose row axis is a ring saturates onto it
 
+This amendment remains the ABI 3.0 rule for a deployment that represents a
+sliding window as a transactional `STATE` resource. It is not a mechanism for
+compact compressed-KV publication. In the required uninterrupted, fail-stop
+simulation profile, TA-ADR-003 lowers compact compressed KV and compressor
+working history as ordinary writable HBM tensors, ordered by the token-step
+event frontier and fence. They issue no `STATE.COMMIT`, so their completed-group
+row axis requires no wire-format divisor or additional commit policy.
+
 `commit_policy` gains a third value. A21 gave the byte a registry of two, and
 both of those answers are about a resource whose row axis is *one* thing: the
 token axis (`REQUEST_SPAN`), or nothing a transaction can write (`UNSTAGED`).

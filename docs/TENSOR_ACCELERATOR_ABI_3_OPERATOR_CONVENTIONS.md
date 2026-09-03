@@ -823,15 +823,22 @@ the positions the request names; A21 governs only what the transaction's commit
 publishes afterwards. A `REQUEST_SPAN` resource behaves exactly as it did,
 including both of its traps.
 
-**What is still owed.** A `compressed_kv` resource stages one row per completed
-group and its commit still claims `SPAN_TOKENS` of them. At a 104-token prefill
-at ratio 4 that is 104 claimed against 26 staged, and at ratio 128 it is 104
-against none; the resource's capacity — 65,536 groups and 2,048 groups — is far
-above either, so nothing is refused and nothing is corrupted, because the
-committed image is a durability record no operator reads. It is the same defect
-class as the one A21 closes and it is not closed. The policy registry is where
-it would be closed, by a third value naming the group divisor, and that should
-be written when a lane needs it rather than guessed at now.
+**Simulation-profile resolution.** A compact `compressed_kv` tensor has one row
+per completed group, so it must not be published by a `STATE.COMMIT` whose row
+count is `SPAN_TOKENS`. TA-ADR-003 resolves that mismatch without extending the
+policy registry: the uninterrupted, fail-stop simulation profile lowers
+compressed KV and compressor working history as ordinary writable HBM objects.
+Existing tensor views expose `floor(CONTEXT_LENGTH / ratio)` valid rows, and
+existing DMA operations address an append at
+`floor(absolute_position / ratio)`. These objects participate in the token-step
+event frontier and fence, but in no prepare/commit copy. Consequently there is
+no quotient-valued state commit to encode and no fourth policy, divisor field,
+descriptor minor, or state-member abstraction to add.
+
+`REQUEST_SPAN`, `UNSTAGED`, and `SATURATING` retain exactly their ABI 3.0
+meanings for deployments that choose transactional `STATE` resources. The
+direct-buffer lowering is a compiler choice made from the tensor's row axis;
+it does not reinterpret any existing policy value.
 
 ## 22. Amendment A25 — the third row axis is a ring, and it saturates
 
@@ -847,7 +854,7 @@ sliding-window KV cache, and it is the resource both DeepSeek lanes stopped at:
 | Resource | Row axis | Rows a transaction stages | Policy |
 |---|---|---|---|
 | KV cache (`kv_cache`) | absolute position | `SPAN_TOKENS`, appended at the cursor | `REQUEST_SPAN` |
-| compressed cache (`compressed_kv`) | completed compression group | one per `ratio` tokens | `REQUEST_SPAN` — **still wrong**, see below |
+| compressed cache (`compressed_kv`) | completed compression group | one per `ratio` tokens | direct HBM tensor; no `STATE.COMMIT` in the required simulation profile |
 | compressor raw window | a fixed slot count | none: no descriptor stages it | `UNSTAGED` (A21) |
 | sliding-window ring (`kv_window`) | slot `position mod W` | `min(span, W)`, in circular slot order | `SATURATING` (A25) |
 
@@ -869,25 +876,22 @@ same bytes, same cursor. That identity is why the defect survived every
 DeepSeek run before `TA-DS-CTX-129-1` — 104 tokens and 32 tokens are both under
 the 128-row window — and it is checked, not asserted.
 
-**What is still owed, now measured.** Section 21 recorded that a `compressed_kv`
-resource stages one row per completed group and commits `SPAN_TOKENS` of them,
-and judged it harmless because "the resource's capacity … is far above either,
-so nothing is refused". That judgement was bounded by the prompt lengths
-reachable at the time, and A25 moves the bound. With the window no longer
-refusing, the ladder reaches lengths where the compressed caches' capacities
-are *not* far above the span, and the same defect becomes a wall:
+**The measured compact-cache wall and its resolution.** Earlier deployments
+nevertheless represented `compressed_kv` as transactional `STATE`, staged one
+row per completed group, and then tried to commit `SPAN_TOKENS` rows. Once the
+window stopped refusing, that mismatch became observable:
 
 | lane | first prompt length that traps | resource | `capacity_rows` |
 |---|---:|---|---:|
 | ROM | 2,049 | state 321 | 2,048 |
 | HBM | 40,961 | state 340 | 40,960 |
 
-A25 deliberately does **not** take the registry value section 21 reserved for
-this. The two cases are different rules — a ring saturates, a group divides —
-and the divisor case needs a number the policy byte cannot carry, so it is a
-further amendment with a field rather than a fourth enumerator squeezed beside
-this one. It should be written when a lane needs it, and a lane needs it at
-2,049 tokens.
+A25 deliberately does **not** reinterpret a ring policy as a quotient policy.
+Under TA-ADR-003 the compiler removes the irrelevant committed shadow instead:
+the compact cache remains compact, the mutable HBM object is execution
+authoritative, and the token-step fence orders its final write. The historical
+2,049/40,961 refusals are regression cases proving that no request-span commit
+targets the direct compact cache; they are not justification for ABI 3.1.
 
 ## 23. Amendment A27 — a joined prefill window carries the streamed query position
 

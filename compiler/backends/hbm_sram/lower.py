@@ -89,6 +89,7 @@ from runtime.abi3.descriptors import (
 )
 
 from .plan import (
+    FLOOR_DIV_INDEX_PREFIX,
     KernelPlan,
     RING_INDEX_PREFIX,
     _extent_value as _static_extent,
@@ -99,6 +100,8 @@ from .plan import (
     build_plan,
     bytes_for,
     dtype_of,
+    floor_divisor,
+    is_direct_buffer_state,
     is_row_gather,
     matrix_shape,
     position_inputs,
@@ -420,6 +423,11 @@ class _Emitter:
         self._hoisted: set[str] = set()
         self._transaction_source: dict[tuple[str, str], int] = {}
         self._commit_frontier: tuple[int, ...] = ()
+        self._defer_token_append = any(
+            is_direct_buffer_state(state.state_class) for state in plan.states
+        )
+        self._deferred_token_plans: list[KernelPlan] = []
+        self._token_step_fence_event: int = NO_ID
         self.token_ring_tensor: str | None = None
         self.token_input_tensor: str | None = None
         self._position_inputs = frozenset(position_inputs(graph))
@@ -481,20 +489,43 @@ class _Emitter:
             else:
                 self._emit_sequence(body)
 
-        # A cluster commits its state as one coordinated transaction: the
-        # barrier is the point at which every node agrees the step happened.
+        # A cluster commits transactional state as one coordinated operation.
+        # A direct-buffer program uses the same terminal frontier for a
+        # different purpose: TOKEN_APPEND is the irreversible publication of
+        # the token step, so it must follow every mutable write and LINK.
         commit_barrier = NO_ID
-        if self.node_count > 1:
+        frontier: list[int] = []
+        if self.node_count > 1 or self._deferred_token_plans:
             frontier = self._terminal_work_events()
             if not frontier:
                 raise LoweringError(
-                    "a cluster transaction reaches coordinated commit without "
+                    "a token step reaches its terminal ordering point without "
                     "publishing any preceding work event"
                 )
+        if self.node_count > 1:
             self._commit_frontier = tuple(frontier)
             commit_barrier = self._emit_barrier(
                 "coordinated_commit", "commit", wait=frontier
             )
+
+        if self._deferred_token_plans:
+            # FENCE is the local visibility point after the cluster's
+            # acquire/release barrier (or directly after the single-node
+            # frontier).  TOKEN_APPEND additionally keeps its ordinary token
+            # producer dependency; neither program order nor the selection
+            # queue is asked to stand in for completion of state/LINK work.
+            fence_event = builder.new_event()
+            builder.emit(
+                Major.CONTROL,
+                Control.FENCE,
+                wait_set_id=self._wait_set(
+                    [commit_barrier] if commit_barrier != NO_ID else frontier
+                ),
+                signal_event_id=fence_event,
+            )
+            self._token_step_fence_event = fence_event
+            for plan in self._deferred_token_plans:
+                self._emit_kernel(plan)
         for physical_id in sorted(self._state_descriptor):
             if physical_id not in committed:
                 builder.emit(
@@ -939,6 +970,30 @@ class _Emitter:
         builder = self.builder
         for state in self.plan.states:
             size = state.size_bytes
+            if is_direct_buffer_state(state.state_class):
+                source = self._direct_state_source(state)
+                base, channel = self._address(
+                    f"state.{state.physical_id}.direct"
+                )
+                direct = builder.memory_object(
+                    storage_class=StorageClass.HBM,
+                    size_bytes=size,
+                    source=source,
+                    permissions=int(Permission.READ | Permission.WRITE),
+                    base_address=base,
+                    bank_or_tile=channel,
+                    alignment_log2=12,
+                    integrity_mode=IntegrityMode.CRC_AND_ECC,
+                    content_digest=source.authenticated_content_digest(),
+                    key=f"obj.{state.physical_id}.direct",
+                )
+                # The rest of the view-lowering code deliberately has one
+                # notion of the mutable execution image.  Binding both tuple
+                # positions to the same ordinary object preserves that code
+                # path without inventing a second allocation or a STATE
+                # descriptor.
+                self._state_objects[state.physical_id] = (direct, direct)
+                continue
             committed_base, committed_channel = self._address(
                 f"state.{state.physical_id}.committed"
             )
@@ -995,6 +1050,41 @@ class _Emitter:
                 counter_class_id=self._counter_class(int(Major.STATE)),
                 key=f"state.{state.physical_id}",
             )
+
+    @staticmethod
+    def _direct_state_source(state: Any) -> ObjectSource:
+        """Materialise a direct buffer's declared fresh-session sentinel."""
+
+        if state.initialization == "zero":
+            return ObjectSource.zeros(state.size_bytes)
+        if state.initialization != "negative_infinity":
+            raise LoweringError(
+                f"state {state.physical_id}: direct buffer initialization "
+                f"{state.initialization!r} is unsupported"
+            )
+        if state.dtype != "fp32" or state.size_bytes % 4:
+            raise LoweringError(
+                f"state {state.physical_id}: negative_infinity initialization "
+                f"requires whole FP32 elements, got {state.dtype} and "
+                f"{state.size_bytes} bytes"
+            )
+        # Object sources are byte materialisers, not typed operands.  The
+        # existing U32 constant generator is therefore the exact way to spell
+        # repeated little-endian 0xff800000 without adding a generator or
+        # relying on a host fill.
+        from runtime.sim.generators import digest_of
+
+        parameters = {
+            "value": 0xFF800000,
+            "count": state.size_bytes // 4,
+        }
+        generator = "constant_u32_v1"
+        return ObjectSource.generated(
+            generator,
+            parameters,
+            state.size_bytes,
+            digest_of(generator, parameters),
+        )
 
     def _state_transaction_sites(self) -> tuple[set[str], set[str]]:
         """Physical states whose prepare/commit the graph places explicitly.
@@ -1975,9 +2065,16 @@ class _Emitter:
         # of four tokens, at the position of the group's first token.  An
         # element stride of four reaches exactly those rows of the coefficient
         # table, so the strided range needs no second table to materialise.
-        position_stride = max(
+        declared_position_stride = max(
             int(self.kernels[plan.index].attributes.get("position_stride", 1) or 1), 1
         )
+        divisor = floor_divisor(self.kernels[plan.index])
+        if divisor and declared_position_stride not in (1, divisor):
+            raise LoweringError(
+                f"kernel {plan.kernel_id}: compressed row map requires index "
+                f"stride {divisor}, but declares {declared_position_stride}"
+            )
+        position_stride = divisor or declared_position_stride
         # Amendment A18: this vector holds one index per row the *addressed*
         # operand has, so it is clamped in that operand's own axis units -- a
         # compressor's row is a group of four tokens, and 104 tokens are 26 of
@@ -2042,6 +2139,17 @@ class _Emitter:
                     "and the plan materialised no ring-index table for it"
                 )
             object_id = ring
+        elif divisor:
+            quotient = self._generated_object.get(
+                f"{FLOOR_DIV_INDEX_PREFIX}{divisor}"
+            )
+            if quotient is None:
+                raise LoweringError(
+                    f"kernel {plan.kernel_id}: addresses compressed groups "
+                    f"with divisor {divisor}, and the plan materialised no "
+                    "floor-div index table for it"
+                )
+            object_id = quotient
         walks = any(
             term.kind == int(SelectorKind.LOOP_INDUCTION) for term in terms
         )
@@ -2838,6 +2946,15 @@ class _Emitter:
         cursor = 0
         while cursor < len(plans):
             first = plans[cursor]
+            if self._defer_token_append and first.kind == "TOKEN_APPEND":
+                if first.stream_group:
+                    raise LoweringError(
+                        f"kernel {first.kernel_id}: TOKEN_APPEND cannot be a "
+                        "member of a rolling pipeline"
+                    )
+                self._deferred_token_plans.append(first)
+                cursor += 1
+                continue
             if not first.stream_group:
                 self._emit_kernel(first)
                 cursor += 1
@@ -2913,6 +3030,12 @@ class _Emitter:
         ]
         consumer_paths = self._phase_consumer_paths(plan, kernel)
         producer_events = self._producer_events(kernel)
+        if (
+            kernel.kind == "TOKEN_APPEND"
+            and self._token_step_fence_event != NO_ID
+            and self._token_step_fence_event not in producer_events
+        ):
+            producer_events.append(self._token_step_fence_event)
         if plan.link_class == "sparse_gather" and consumer_paths is None:
             kv_operand = next(
                 (
@@ -3792,12 +3915,21 @@ class _Emitter:
             mapping = self.plan.state_of_resource.get(name)
             if mapping and mapping[0] not in physical:
                 physical.append(mapping[0])
+        direct = [
+            physical_id
+            for physical_id in physical
+            if is_direct_buffer_state(self.plan.state(physical_id).state_class)
+        ]
+        if kernel.kind == "STATE_READ" and direct:
+            self._emit_direct_state_alias(plan, kernel)
         sub = {
             "STATE_PREPARE": State.PREPARE,
             "STATE_COMMIT": State.COMMIT,
             "STATE_READ": State.READ,
         }[kernel.kind]
         for physical_id in physical:
+            if physical_id in direct:
+                continue
             if kernel.kind == "STATE_COMMIT" and self.node_count > 1:
                 # A cluster publishes every state resource only after the one
                 # coordinated barrier at the end of the transaction.  The
@@ -3819,6 +3951,86 @@ class _Emitter:
                 predicate_id=self._kernel_predicate(plan),
                 source_operation_id=plan.index,
             )
+
+    def _emit_direct_state_alias(self, plan: KernelPlan, kernel: Kernel) -> None:
+        """Publish an alias event without issuing an ABI STATE operation.
+
+        The planner has already bound the output tensor to the input's physical
+        state object.  This method carries only ordering.  A preceding append
+        may itself be predicated: wait for it under that same predicate, then
+        publish an unconditional event so a later consumer can read either the
+        newly written buffer or the unchanged persistent buffer safely.
+        """
+
+        # STATE_READ's own predicate still has to reach the wire even though
+        # the data operation has become an alias.  It cannot predicate a wait
+        # on the input event: the input append may use a different condition,
+        # and waiting under the read condition for an append skipped under its
+        # own condition would deadlock.  A predicated NOP is therefore the
+        # exact representation of the conditional, zero-work alias operation;
+        # the unconditional NOP below publishes its dependency join.
+        alias_predicate = self._kernel_predicate(plan)
+        if alias_predicate != NO_ID:
+            self.builder.emit(
+                Major.CONTROL,
+                Control.NOP,
+                predicate_id=alias_predicate,
+                source_operation_id=plan.index,
+            )
+
+        producer_events = list(dict.fromkeys(self._producer_events(kernel)))
+        unconditional: list[int] = []
+        for event in producer_events:
+            producer = next(
+                (
+                    instruction
+                    for instruction in reversed(self.builder.instructions)
+                    if instruction.signal_event_id == event
+                ),
+                None,
+            )
+            if producer is None or producer.predicate_id == NO_ID:
+                unconditional.append(event)
+                continue
+            self.builder.emit(
+                Major.CONTROL,
+                Control.WAIT,
+                wait_set_id=self._wait_set([event]),
+                predicate_id=producer.predicate_id,
+                invert_predicate=bool(
+                    producer.flags & int(InstructionFlag.PREDICATE_INVERT)
+                ),
+                source_operation_id=plan.index,
+            )
+
+        while len(unconditional) > MAX_WAIT_PRODUCERS:
+            collapsed: list[int] = []
+            for offset in range(0, len(unconditional), MAX_WAIT_PRODUCERS):
+                chunk = unconditional[offset : offset + MAX_WAIT_PRODUCERS]
+                if len(chunk) == 1:
+                    collapsed.extend(chunk)
+                    continue
+                event = self.builder.new_event()
+                self.builder.emit(
+                    Major.CONTROL,
+                    Control.NOP,
+                    wait_set_id=self._wait_set(chunk),
+                    signal_event_id=event,
+                    source_operation_id=plan.index,
+                )
+                collapsed.append(event)
+            unconditional = collapsed
+
+        joined = self.builder.new_event()
+        self.builder.emit(
+            Major.CONTROL,
+            Control.NOP,
+            wait_set_id=self._wait_set(unconditional),
+            signal_event_id=joined,
+            source_operation_id=plan.index,
+        )
+        for name in kernel.outputs:
+            self._event_of_tensor[name] = joined
 
     def _open_row_loop(self, plan: KernelPlan) -> int | None:
         """Open the plan's symbol-bounded token loop, if it has one."""
