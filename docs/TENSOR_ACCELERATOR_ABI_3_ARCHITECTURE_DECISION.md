@@ -42,12 +42,12 @@ OpenTallas will use a bounded tensor-accelerator programming model, not a GPU,
 SIMT machine, TPU clone, or general-purpose NPU instruction set. The production
 control plane has two processors with deliberately different responsibilities:
 
-1. a small, standard management processor handles boot, attestation, deployment
-   admission, host queues, memory protection, telemetry, faults, reset, and
-   recovery; and
+1. a small, standard management processor loads an admitted deployment, handles
+   the host queue, memory protection, telemetry, terminal fault reporting, and
+   fresh-run reset; and
 2. a deterministic hardware microsequencer issues bounded descriptors to
    dedicated DMA, tensor, vector, attention, routing, reduction, selection,
-   state, and link engines.
+   and link engines.
 
 The model data path has no general-purpose scalar fallback. The management
 processor may not execute tensor operations, calculate missing model results,
@@ -57,9 +57,9 @@ ABI 3.0 is split into three separately versioned but release-bound interfaces:
 
 | Interface | Purpose | Primary consumer |
 |---|---|---|
-| Host Queue ABI | deployment, session, generation, completion, and administration requests | host driver and management firmware |
-| Deployment and Descriptor ABI | authenticated objects, shapes, numerics, schedules, memory windows, programs, and state resources | compiler, firmware, simulator, and microsequencer |
-| Device Micro-ISA | loops, predicates, events, fences, engine launch, transactional state, completion, and traps | hardware microsequencer |
+| Host Queue ABI | deployment, run, generation, completion, and administration requests | host driver and management firmware |
+| Deployment and Descriptor ABI | authenticated objects, shapes, numerics, schedules, memory windows, programs, and compatibility records | compiler, firmware, simulator, and microsequencer |
+| Device Micro-ISA | loops, predicates, events, fences, engine launch, ordered live-buffer access, completion, and traps | hardware microsequencer |
 
 “RTL 3.0” names the hardware family defined by these ABI 3.0 contracts; RTL
 3.0 is not a separate ISA version.
@@ -100,6 +100,30 @@ conventional reticle-bounded chip/package. DeepSeek-ROM is a mandatory
 wafer-scale accelerator with an on-wafer fabric and distributed HBM attachment.
 The DeepSeek comparison is therefore wafer-scale ROM versus a 32-node
 HBM/SRAM-chip cluster, not wafer versus wafer and not one oversized HBM chip.
+
+### 1.1 Simplest required execution profile
+
+The four acceptance deployments use the smallest ABI 3.0 subset that executes
+the models without a host-compute fallback:
+
+- one admitted batch-one run performs prefill and ordinary greedy decode;
+- KV, compressed KV, compressor history, token, and intermediate tensors are
+  ordinary live memory objects and tensor views;
+- existing DMA and engine operations write those buffers directly;
+- existing dependency events order producers and consumers, and one fence at
+  the token boundary makes the completed token and buffer writes visible;
+- the first unrecoverable trap ends the run with a failed completion, and a
+  later run starts from freshly initialized buffers; and
+- CRC and bounded replay repair packets only. They never retry a layer, token,
+  or model transaction.
+
+The frozen ABI 3.0 wire registry still describes `STATE` records for backward
+compatibility, but the four required acceptance deployments emit zero `STATE`
+descriptors and zero `STATE` instructions. Their absence is a structural
+certificate condition. The state controller, checkpoint/restart, durable
+publication, and recovery protocol are therefore not dependencies of model
+correctness, RTL correlation, long-context acceptance, or the ROM-versus-HBM
+comparison.
 
 ## 2. Why a new boundary is required
 
@@ -151,9 +175,9 @@ Qwen-HBM and DeepSeek-HBM share:
 - one management complex and microsequencer;
 - one node-local HBM/SRAM hierarchy and address model plus one versioned
   32-node cluster address/topology extension;
-- one set of tensor, vector, attention, route, reduce, state, and selection
+- one set of tensor, vector, attention, route, reduce, memory, and selection
   engine interfaces;
-- one event, queue, trap, counter, and recovery model;
+- one event, queue, trap, counter, and fail-stop model;
 - one causal functional simulator and one cycle-model implementation; and
 - one synthesized conventional-chip RTL/netlist and one cluster-fabric protocol
   and endpoint architecture.
@@ -195,10 +219,11 @@ The 32-node HBM cluster contract requires:
 - actual link latency, serialization, switch contention, bandwidth, retry,
   congestion, and failure modeling in data-bearing cycle simulation;
 - per-node HBM capacity/locality and explicit remote-traffic accounting;
-- coordinated session, transaction, state-commit, token-selection, and EOS
-  semantics without a host per-layer execution loop; and
-- node/link isolation, retry, abort, restart, and fail-stop behavior. The first
-  release need not continue after losing a node, but it must never return a
+- one coordinated run namespace, ordered live-buffer visibility,
+  token-selection, and EOS semantics without a host per-layer execution loop;
+  and
+- bounded packet-level link replay followed by fail-stop behavior. An
+  unrecoverable node or link failure ends the run and must never return a
   successful partially sharded result.
 
 The wafer-scale contract requires:
@@ -217,8 +242,8 @@ The wafer-scale contract requires:
 - clock, reset, power, thermal, RAS, and fault-containment domains;
 - tile/link quarantine, spare activation, degraded-topology discovery, and
   yield-aware recompilation; and
-- host submission to one logical accelerator; firmware may manage health and
-  recovery but may not sequence model stages across the wafer.
+- host submission to one logical accelerator; firmware may report health and
+  reset for a fresh run but may not sequence model stages across the wafer.
 
 Public contemporary Cerebras-class wafer-scale specifications and public
 NVIDIA NVLink/NVL72-class specifications are sourced reference envelopes and
@@ -280,19 +305,21 @@ RV32IMC with Zicsr and Zifencei, machine mode, physical memory protection, no
 floating-point extension, and no vector extension. A compatible implementation
 may add hardened security features without changing the ABI.
 
-Its normative responsibilities are:
+Its responsibilities in the required simulation and RTL profile are:
 
-- immutable boot-ROM execution and measured boot;
-- firmware and deployment signature verification;
 - ABI and capability discovery;
 - submission/completion queue creation and ownership;
 - deployment admission, descriptor-window validation, and activation;
-- session allocation, generation ownership, quotas, and teardown;
+- run allocation and teardown;
 - IOMMU or device memory-window programming;
 - interrupt handling, first-fault capture, telemetry, and health monitoring;
-- quiesce, drain, reset, repair-map activation, and recovery;
-- watchdog policy and firmware update/rollback control; and
-- administrative command authorization.
+  and
+- terminal abort and fresh-run reset.
+
+Measured boot, signatures, attestation, firmware update, multi-tenant quotas,
+repair activation, and warm recovery may be added by a later secured-product
+profile. They are not required to compile, simulate, correlate, or compare the
+four accelerator targets.
 
 It must not:
 
@@ -318,9 +345,8 @@ data path. It owns:
 - dependency events and the global transaction scoreboard;
 - queue-space and completion waits;
 - acquire/release memory fences;
-- transactional state prepare, commit, and discard;
 - precise control traps and first asynchronous engine fault capture;
-- poison, cancel, drain, and terminal completion; and
+- stop-issue and terminal completion on the first failure; and
 - architectural counters.
 
 The sequencer supports no arbitrary integer load/store program, recursive call,
@@ -416,7 +442,7 @@ Descriptor families are:
 | Schedule | engine queue, tile mapping, bank/port use, NoC path, issue window, and resource bound |
 | Topology | one-chip, exact 32-node cluster, or wafer profile; node/reticle/tile coordinates, active/quarantined resources, HBM locality, link classes, route groups, and epoch |
 | Communication | source/destination objects and nodes/groups, byte extent, route/virtual channel, ordering, integrity/retry, collective/reduction contract, credit bound, timeout, and completion event |
-| State | state class, session binding, generation, committed/prepared objects, cursor, capacity, and commit policy |
+| State (compatibility registry only) | legacy state class, session binding, generation, objects, cursor, capacity, and commit policy; not emitted by the four acceptance deployments |
 | Event/wait set | producer set, completion condition, timeout class, and memory-order scope |
 | Loop/control | lower bound, upper bound, step, induction bindings, predicate, and maximum iteration product |
 | Operator | source graph/kernel IDs, counter class, legal engine family, and diagnostic boundary |
@@ -427,12 +453,12 @@ sizes and addresses are 64-bit.
 ### 6.3 Host submission and completion
 
 The host interface uses submission and completion rings with explicit producer
-and consumer ownership. Every request contains:
+and consumer ownership. The frozen record layout contains:
 
 - opcode, ABI version, flags, and request size;
 - deployment ID and deployment generation;
 - session ID and session generation where applicable;
-- transaction ID and idempotency key;
+- transaction ID and compatibility idempotency field;
 - input/output memory-window IDs and bounded offsets;
 - entrypoint and generation-policy descriptor IDs;
 - deadline/watchdog class; and
@@ -442,24 +468,26 @@ Every completion contains:
 
 - matching deployment, session, generation, and transaction identity;
 - success, trap class, engine fault, and first-fault program counter;
-- committed position and state generation;
+- completed position and compatibility state-generation field;
 - produced-token count and output-token extent;
 - final selected token and EOS reason when applicable;
 - counter-snapshot ID;
-- poison, overflow, and recovery status; and
+- fault, overflow, and compatibility recovery status; and
 - completion CRC32C.
 
-Mandatory host operations are:
+For the simplest required profile, compatibility-only identity, idempotency,
+state-generation, poison, and recovery fields are zero and have no behavioral
+effect. No host request is retried. The operations required by the four
+acceptance paths are:
 
 - capability query;
 - deployment admit, activate, deactivate, and remove;
-- session create, reset, abort, and destroy;
 - prefill;
 - decode one token;
 - generate until EOS or a declared bound;
 - counter snapshot;
-- quiesce and resume; and
-- administrator-controlled reset and diagnostics.
+- terminal abort; and
+- fresh-run reset and diagnostics.
 
 One host request targets one logical accelerator deployment. For DeepSeek-HBM,
 the admitted 32-node topology has one coordinator-visible request/completion
@@ -469,7 +497,7 @@ software does not submit one model-layer request per node or reticle.
 
 ## 7. Device Micro-ISA families
 
-The mandatory instruction families are:
+The frozen instruction registry is:
 
 | Family | Operations |
 |---|---|
@@ -482,13 +510,18 @@ The mandatory instruction families are:
 | Routing | ISSUE_ROUTE |
 | Reduction | ISSUE_REDUCE |
 | Selection | ISSUE_ARGMAX, ISSUE_TOPK, ISSUE_TOKEN_APPEND |
-| State | STATE_READ, STATE_PREPARE, STATE_COMMIT, STATE_DISCARD |
+| State (compatibility only) | STATE_READ, STATE_PREPARE, STATE_COMMIT, STATE_DISCARD |
 | Pipeline/link | ISSUE_SEND, ISSUE_RECEIVE, ISSUE_REMOTE_DMA, ISSUE_MULTICAST, ISSUE_COLLECTIVE |
 
 Engine operation details live in typed descriptors, not in an expanding set of
 model-semantic opcodes. For example, the neutral kernel operation MATMUL may
 bind either an HBM weight view or a ROM weight view. ROM_MATMUL is not a
 backend-neutral operation.
+
+The four required acceptance programs use control, WAIT/FENCE/BARRIER, DMA,
+tensor, vector, attention, routing, reduction, selection, and link operations.
+They emit no `STATE`, `CANCEL`, or `DRAIN` instruction. Those encodings remain
+decodable only so freezing the accepted ABI 3.0 does not require a new ABI.
 
 For the 32-node cluster and wafer-scale profiles, the pipeline/link family
 additionally includes bounded multicast and collective launch descriptors.
@@ -649,7 +682,8 @@ Trap classes are stable ABI values:
 - numeric and exceptional value;
 - DMA/HBM/SRAM/ROM;
 - tensor/vector/attention/route/reduce/selection engine;
-- state transaction;
+- state transaction (compatibility registry only; unreachable in the four
+  acceptance deployments);
 - timeout/watchdog;
 - link/NoC;
 - power/reset/thermal; and
@@ -657,10 +691,10 @@ Trap classes are stable ABI values:
 
 Synchronous decode/admission traps are precise and issue no engine work.
 Asynchronous engine faults record the first failing instruction and engine,
-poison the transaction, block new model work, cancel work that is explicitly
-cancellable, drain non-cancellable writes, and publish one failed completion.
-The required simulator profile is fail-stop: the
-campaign records the failure and does not retry that model step.
+block new model work, and publish one failed completion. Writes already issued
+need not be rolled back because a failed run produces no successful model
+result and its buffers are not reused. The required simulator profile is
+fail-stop: the campaign records the failure and does not retry that model step.
 
 Warm-reset recovery and reuse of a failed session are outside the required
 simulation profile. A new run begins from freshly initialized state. Late
@@ -675,8 +709,8 @@ The production contract distinguishes integrity from authenticity:
 - signed release manifests authenticate approved deployments and firmware;
 - measured boot and optional attestation report firmware, ABI, capability, and
   active deployment identities;
-- monotonic anti-rollback policy protects production firmware and deployment
-  generations;
+- deployment-generation anti-rollback may be added by a later secured-product
+  profile; it is not required for RTL, simulation, or comparison acceptance;
 - memory windows and descriptor permissions constrain DMA and engine access;
 - debug/test modes are lifecycle controlled and block inference where required;
   and
@@ -700,9 +734,9 @@ Counter groups cover:
 - tensor products/additions/conversions and vector/reduction elements;
 - attention score/value work and actual context/sparse-index extents;
 - routed experts, selected IDs, dispatched bytes, and reduction work;
-- state reads, prepares, commits, discards, and bytes;
+- compatibility state counters, all zero in the four acceptance deployments;
 - selected tokens, EOS stops, maximum-length stops, and invalid tokens;
-- poison, cancellation, drain, watchdog, reset, and recovery events; and
+- terminal fault, watchdog, and fresh-run reset events; and
 - latency histograms with fixed bucket definitions.
 
 Trace packets carry deployment, session-generation, transaction, program
@@ -797,8 +831,9 @@ Binary compatibility with ABI 2.5 is not required. Reproducible semantic and
 state equivalence is required.
 
 The descriptor draft contributes fixed-record integrity, authenticated table
-references, prepare/commit checking, and fail-closed validation ideas. Its
-ROM_MATMUL family and DeepSeek-only lowering table do not define ABI 3.0.
+references, and fail-closed validation ideas. Its prepare/commit machinery,
+ROM_MATMUL family, and DeepSeek-only lowering table do not define the required
+ABI 3.0 acceptance profile.
 
 ## 18. Verification consequences
 
@@ -863,10 +898,11 @@ TA-A3-ARCH-0 closes only when review records confirm:
   conventional accelerator-chip netlist;
 - management firmware and microsequencer responsibilities are unambiguous;
 - host, deployment/descriptor, and micro-ISA layers are separate and complete;
-- instruction families, loops, predicates, events, queues, ordering, state, EOS,
-  traps, recovery, counters, security, and versioning are requirement-traced;
+- instruction families, loops, predicates, events, queues, ordering, live
+  buffers, EOS, traps, fail-stop behavior, counters, and versioning are
+  requirement-traced;
 - the Qwen and DeepSeek capability union has no unrepresented ordinary-path
-  operation or state class;
+  operation or buffer class;
 - the cluster and wafer topology, global address/event/session model, HBM
   locality, collectives, synchronization, fault domains, repair, and degraded
   behavior are versioned and requirement-traced;

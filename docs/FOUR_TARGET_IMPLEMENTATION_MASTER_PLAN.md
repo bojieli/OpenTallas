@@ -472,7 +472,9 @@ fixture through both HBM and ROM storage classes. Execute it in an independent
 functional sequencer and reject corrupted or unsupported variants.
 
 **Exit:** TA-A3-IR-1. Two clean builds are byte-identical, inverse reconstruction
-passes, state rollback is exact, and no backend field appears in neutral IR.
+passes, live-buffer contents and token-boundary ordering are exact, all four
+deployments contain zero `STATE` records, and no backend field appears in
+neutral IR.
 
 ### Phase C — legacy equivalence and real vertical slices
 
@@ -487,16 +489,17 @@ counters, and failure semantics match for every declared slice.
 ### Phase D — complete short model execution
 
 **Work:** compile and run complete Qwen and DeepSeek ordinary paths. Execute
-prefill, repeated decode, on-device argmax, state commit, EOS, legitimate token
-decode, and checkpoint/restart from artifacts. Add chat and simple agent
-workloads using pinned templates.
+prefill, repeated decode, on-device argmax, direct live-buffer updates, the
+token-step fence, EOS, and legitimate token decode from artifacts. A fault ends
+the run; restart and model-operation retry are not part of this phase. Add chat
+and simple agent workloads using pinned templates.
 
 **Exit:** TA-E2E-SHORT-3 independently for all four targets. A short pass does
 not close long context, timing, or RTL.
 
 ### Phase E — RTL 3.0 and ROM RTL correlation
 
-**Work:** implement the microsequencer, queues/events/traps/state controller,
+**Work:** implement the microsequencer, queues/events/traps/live-buffer access,
 inter-chip endpoint, wafer endpoint, and representative engines. Drive generated
 programs through RTL/co-simulation with stalls, faults, resets, link retries,
 and backpressure. ROM lanes integrate their model-specific weight service and

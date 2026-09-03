@@ -62,6 +62,12 @@ The post-unification program structure and agent handoff policy are controlled b
 [FOUR_TARGET_IMPLEMENTATION_MASTER_PLAN.md](FOUR_TARGET_IMPLEMENTATION_MASTER_PLAN.md),
 and the production control architecture is controlled by
 [TENSOR_ACCELERATOR_ABI_3_ARCHITECTURE_DECISION.md](TENSOR_ACCELERATOR_ABI_3_ARCHITECTURE_DECISION.md).
+For all new work, ABI 3.0 is final and the required profile uses ordinary live
+HBM/SRAM buffers, direct writes, dependency events, one token-step fence, and
+fail-stop execution. ABI 3.1, durable publication, rollback, checkpoint/restart,
+and model-operation retry are not gates. Older sections below retain historical
+ABI 2.x and transactional-state evidence only as provenance; they do not define
+the four current acceptance paths.
 No dirty concurrent implementation, generated artifact, or checkpoint payload
 was admitted during the merge. New implementation evidence enters `main` only
 through the gate and handoff rules in those documents and Sections 16 and 17.

@@ -2,7 +2,7 @@
 
 **Plan ID:** TA-QW-ROM-3.0
 
-**Status:** audit-ready; implementation blocked on TA-A3-ARCH-0
+**Status:** active under frozen ABI 3.0; TA-A3-ARCH-0 is closed
 
 **Model:** Qwen/Qwen3-8B at b968826d9c46dd6066d109eabc6255188de91218
 
@@ -28,7 +28,7 @@ yield, or timing gates, the release fails and returns to architecture review
 rather than silently becoming a wafer or cluster.
 
 The Qwen ROM design must nevertheless preserve the common model semantics,
-numeric contracts, session/state behavior, workload, EOS rules, evidence
+numeric contracts, live-buffer behavior, workload, EOS rules, evidence
 schemas, and same-technology-view comparison boundary used by the Qwen HBM
 deployment.
 
@@ -39,7 +39,8 @@ Completion means:
 - all 616 semantic nodes plus terminal completion execute causally from
   generated artifacts;
 - no framework operator supplies model arithmetic;
-- mutable KV state is prepared and committed atomically;
+- mutable KV is written directly to ordinary HBM/SRAM buffers and ordered by
+  events plus the token-step fence;
 - vocabulary selection and EOS are explicit;
 - complete natural and agentic decoding produces legitimate output;
 - representative complete programs execute through ROM RTL/co-simulation;
@@ -103,7 +104,7 @@ or internal pipeline region is not a separate chip or cluster node.
 - HBM/SRAM KV state;
 - on-device deterministic argmax, token append, and EOS;
 - pinned chat and simple tool-use templates;
-- checkpoint/restart, abort, reset, counters, and trace; and
+- fail-stop error completion, fresh-run reset, counters, and trace; and
 - separate SKY130 implementation and ASAP7 predictive methodologies.
 
 ### 3.2 Separate extensions
@@ -140,20 +141,20 @@ one conventional reticle-bounded Qwen ROM chip
 | vocabulary reduction, argmax, and EOS   |
 +-------------------+---------------------+
                     |
-external HBM controller/PHY boundary for mutable state
+external HBM controller/PHY boundary for mutable buffers
 ~~~
 
 ### 4.1 Control reuse
 
 The ROM design should reuse the reviewed ABI 3.0 management, host queue,
-session, transactional-state, counter, trace, trap, and generation semantics
+run, live-buffer, counter, trace, trap, and generation semantics
 where compatible. It may use a ROM-specialized device program and static
 schedule, but those artifacts must bind the same source graph/kernel operations
-and expose equivalent architectural state.
+and expose equivalent results and buffer contents.
 
 The control path may be smaller than the shared HBM accelerator because Qwen
 has no expert route engine and weights are immutable. It still must implement
-bounded loops, events, state, errors, argmax, EOS, and complete program
+bounded loops, events, fences, errors, argmax, EOS, and complete program
 retirement. A semantic microprogram executed by Python is not the hardware
 controller.
 
@@ -174,21 +175,21 @@ diagnose, or remap resources but cannot alter logical model content.
 
 ### 4.3 Mutable memory
 
-ROM removes ordinary weight traffic from HBM; it does not remove mutable state.
+ROM removes ordinary weight traffic from HBM; it does not remove mutable data.
 HBM/SRAM holds:
 
 - all 36 layer KV resources;
 - token and output buffers;
-- prepared state extents;
+- current valid extents;
 - activation/attention spill explicitly required by the physical plan;
-- program/session metadata where configured; and
-- trace/checkpoint state.
+- run metadata where configured; and
+- trace buffers.
 
-State capacity must include the exact 8,000-token prompt plus the frozen
+Buffer capacity must include the exact 8,000-token prompt plus the frozen
 256-token generation maximum, or at least 8,256 session positions. The
 separately reported 8,192 case remains a legacy boundary fixture rather than
-the release maximum. Failure before terminal commit cannot expose partial KV
-advancement.
+the release maximum. A failure ends the run, and its partially written buffers
+are neither published as a successful result nor reused.
 
 ### 4.4 Compute specialization
 
@@ -214,7 +215,7 @@ The retained Qwen semantic graph and complete current differential remain the
 source oracle. After the common production IR freezes, the lane:
 
 1. exports the same graph into the common Model Graph contract;
-2. verifies exact operation, tensor, state, source, and numeric coverage;
+2. verifies exact operation, tensor, live-buffer, source, and numeric coverage;
 3. consumes the common Qwen Tensor Kernel IR;
 4. lowers immutable logical weights to the Qwen ROM Physical Plan IR;
 5. emits the Qwen ROM program and schedule;
@@ -233,12 +234,12 @@ The plan records:
 - scale, padding, integrity, repair, and test regions;
 - tensor-lane and reduction topology;
 - activation/SRAM allocation and lifetime;
-- HBM KV layout and state transactions;
+- HBM KV layout, direct writes, dependencies, and token-step fence;
 - on-chip NoC and local schedule;
 - program/event/queue mapping;
 - vocabulary partition and argmax reduction;
 - capacity, timing, power, repair, and yield assumptions; and
-- exact expected operation, ROM, HBM, SRAM, link, and state counters.
+- exact expected operation, ROM, HBM, SRAM, link, and live-buffer counters.
 
 Physical chip count is frozen at one. The compiler must prove that all payload,
 padding, integrity, repair reserve, datapath, SRAM, control, HBM interface, power,
@@ -254,11 +255,11 @@ An implementation-independent checker:
 - rereads all 399 checkpoint tensors;
 - reconstructs logical payloads from ROM images and repair maps;
 - proves unique placement, bounds, padding, integrity, and no write path;
-- reconstructs SRAM/HBM state legality;
+- reconstructs SRAM/HBM object and tensor-view legality;
 - verifies schedule paths, conflicts, credits, and queue occupancy;
 - derives program work and counters; and
 - rejects missing tensors, aliasing, schedule conflicts, repair exhaustion, or
-  incomplete state transactions.
+  incomplete producer/consumer and token-fence ordering.
 
 ## 6. Simulator plan
 
@@ -270,9 +271,9 @@ current Python graph builder. It implements:
 - ROM reads and fixed logical payload reconstruction;
 - Qwen tensor/vector/attention operations through qualified native kernels;
 - the generated ROM microprogram and static schedule;
-- SRAM/HBM objects, state, faults, and counters;
+- SRAM/HBM live objects, faults, and counters;
 - on-device vocabulary argmax and EOS control; and
-- deterministic checkpoint/restart.
+- direct KV writes with token-boundary fence visibility.
 
 It may reuse independently qualified arithmetic libraries. It may not invoke
 PyTorch linear, attention, or model modules in an acceptance run.
@@ -302,7 +303,7 @@ The sequence is:
 2. program fetch/control, loops, events, traps, counters, and completion;
 3. tensor-lane plus SRAM boundary for one real Qwen tile;
 4. RMSNorm, head RMSNorm, and RoPE;
-5. GQA attention plus KV prepare/commit;
+5. GQA attention plus direct KV write and token-boundary fence;
 6. residual, SiLU-gate, and final RMSNorm;
 7. vocabulary partition/reduction, argmax, token append, and EOS;
 8. one connected real checkpoint layer;
@@ -326,7 +327,7 @@ Before long execution, reproduce:
 - arithmetic, geography, science, computer-science, practical-advice, and
   reasoning EOS behavior;
 - the hello-world and fix-permissions agent tasks; and
-- exact prompt, token, state, layer, and logit evidence.
+- exact prompt, token, live-buffer, layer, and logit evidence.
 
 The current ROM results are goldens, not inputs. The new simulator must generate
 them causally.
@@ -346,7 +347,7 @@ The natural run retains:
 - every generated ID including EOS;
 - raw and visible decoded text;
 - tokenizer legality and round-trip evidence;
-- complete state generations and checkpoint identities;
+- complete KV/token buffer identities at the terminal fence;
 - operation, ROM, HBM, SRAM, link, cycle, and energy-event counters; and
 - comparison with the common Qwen reference and Qwen HBM result.
 
@@ -396,9 +397,9 @@ yield, HBM package closure, or commercial signoff. Those gaps remain explicit.
 | QROM-A0 | architecture/control reuse accepted | TA-A3-ARCH-0 plus Qwen lane review |
 | QROM-C1 | common-IR migration | exact coverage and retained-boundary equivalence |
 | QROM-P2 | physical plan and images | all 399 tensors inverse-reconstruct; one-chip capacity/repair legal |
-| QROM-F3 | artifact-only full short model | no framework fallback; exact logits/state/tokens/EOS |
+| QROM-F3 | artifact-only full short model | no framework fallback; exact logits/live buffers/tokens/EOS |
 | QROM-S4 | data-bearing cycle model | causal ROM/HBM/SRAM/link timing and counters |
-| QROM-R5 | representative ROM RTL | generated program, connected layer, state and selection correlation |
+| QROM-R5 | representative ROM RTL | generated program, connected layer, live-buffer and selection correlation |
 | QROM-N6 | natural and agent campaign | six prompts and two agent tasks reproduce accepted goldens |
 | QROM-8K7 | exact mandatory context | natural 8K plus separate stress, legitimate text and EOS |
 | QROM-PHY8-SKY | SKY130 physical convergence | one-chip characterized capability, recompile, rerun |

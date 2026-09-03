@@ -2,14 +2,14 @@
 
 **Plan ID:** TA-DS-ROM-3.0
 
-**Status:** audit-ready; implementation blocked on TA-A3-ARCH-0
+**Status:** active under frozen ABI 3.0; TA-A3-ARCH-0 is closed
 
 **Model profile:** DeepSeek-V4-Flash-0731 ordinary target-only inference
 
 **Mandatory context:** exactly 200,000 natural prompt tokens
 
 **Physical topology:** one wafer-scale logical ROM accelerator with distributed
-HBM mutable-state attachment
+HBM mutable-buffer attachment
 **Issue date:** 2026-08-29
 
 ## 1. Mission
@@ -22,7 +22,7 @@ Qwen ROM product. It does not need to run Qwen dynamically.
 Wafer scale is mandatory for this lane, not one candidate discovered after
 compilation. The complete ordinary model is distributed across a reticle/tile
 hierarchy with a very-low-latency, very-high-bandwidth on-wafer fabric and
-distributed HBM attachment for mutable state. The host sees one logical
+distributed HBM attachment for mutable buffers. The host sees one logical
 accelerator and does not sequence a pipeline of conventional chips. If this
 wafer boundary cannot meet capacity, communication, power, thermal, yield,
 repair, timing, or correctness gates, the architecture is redesigned or
@@ -38,7 +38,7 @@ The lane is complete only when:
 - all ordinary-path graph nodes and checkpoint roles lower into generated
   deployment artifacts;
 - every immutable tensor/scale has one legal ROM location and inverse proof;
-- all required mixed-format, MoE, sparse-attention, compressor, mHC, and state
+- all required mixed-format, MoE, sparse-attention, compressor, mHC, and buffer
   operations execute causally;
 - a complete checkpoint-derived transformer block and then complete model run
   match independent references;
@@ -118,11 +118,11 @@ The first mandatory profile includes:
 - all ordinary target transformer layers;
 - dense/shared and routed expert paths;
 - target attention and sparse-index behavior;
-- KV window, compressor, compressed-KV, and related state;
+- KV window, compressor history, compressed KV, and related buffers;
 - mHC pre/head/post paths;
 - final normalization and target vocabulary head;
 - deterministic greedy argmax;
-- token append, EOS, and session state; and
+- token append, EOS, and run-local control data; and
 - pinned tokenizer/chat/tool protocol.
 
 Every conditional ordinary path remains represented with explicit guards and
@@ -140,7 +140,7 @@ The following are separately versioned and do not block ordinary closure:
 - seven-token or other serving-engine candidate policies.
 
 The capability may reserve compatible fields, but no performance result may
-credit speculation before its target verification, state commit, RNG, and
+credit speculation before its target verification, token-step fence, RNG, and
 acceptance semantics are pinned and executed.
 
 ## 4. Architecture
@@ -164,25 +164,26 @@ reticle/tile hierarchy over a stitched on-wafer fabric
 | vector, normalization, mHC, compression            |
 | route, top-k, dispatch, sparse gather, reduction   |
 | SRAM activation/index/accumulator service          |
-| HBM KV/compressor/compressed-state service         |
+| HBM KV/compressor/compressed-buffer service        |
 +---------------------+------------------------------+
                     |
-distributed HBM controllers/PHY attachment for mutable state
+distributed HBM controllers/PHY attachment for mutable buffers
 ~~~
 
 ### 4.1 Control architecture
 
-The ROM lane reuses the accepted ABI 3.0 management, session, state,
-trap/recovery, counter, trace, and EOS semantics where compatible. The
+The ROM lane reuses the accepted ABI 3.0 management, run, live-buffer,
+trap, counter, trace, and EOS semantics where compatible. The
 model-specific sequencer may exploit static on-wafer and ROM schedules, but must
 still:
 
 - execute an authenticated bounded program;
-- consume bound tensor/numeric/state/schedule descriptors;
+- consume bound tensor/numeric/memory/schedule descriptors;
 - handle runtime routes, indices, phases, and guards;
 - issue asynchronous engines through explicit events;
 - prevent deadlock and queue overflow;
-- atomically prepare/commit/discard all mutable state;
+- write mutable buffers directly and order their visibility with existing
+  events plus the token-step fence;
 - perform on-device target vocabulary selection; and
 - publish precise success or failure.
 
@@ -227,26 +228,28 @@ The design must:
 A design that expands all experts as dense work may be used as a diagnostic
 oracle but does not close the intended routed architecture or comparison.
 
-### 4.4 Mutable state at 200K
+### 4.4 Mutable live buffers at 200K
 
-ROM holds no mutable KV or compressor state. HBM/SRAM state objects cover:
+ROM holds no mutable KV or compressor data. Ordinary HBM/SRAM memory objects
+cover:
 
 - windowed and ordinary attention KV;
 - compressed KV and valid-prefix metadata;
-- raw compressor state and monotonic versions;
-- per-session cursors, tombstones, generations, and retirement;
+- raw compressor history;
+- run-local cursors and valid extents;
 - mHC or other explicitly declared mutable resources;
-- token/output/checkpoint buffers; and
-- prepare/commit/discard extents.
+- token/output buffers; and
+- compiler-proved capacity and tensor-view extents.
 
 The compiler proves capacity and addresses for exactly 200,000 prompt positions
-plus the frozen decode allowance. State views never expose stale capacity rows.
-Abort, reset, timeout, invalid route/index, or numeric failure advances neither
-position nor committed state.
+plus the frozen decode allowance. Tensor views never expose stale capacity
+rows. A timeout, invalid route/index, numeric failure, or unrecoverable link
+fault terminates the run; partial buffers are discarded with that failed run
+rather than rolled back or reused.
 
 HBM is physically distributed around the wafer/package boundary. The compiler
-binds every state object to one or more attachment/locality domains and prices
-all access and replication. A single zero-latency uniform HBM abstraction is
+binds every mutable memory object to one or more attachment/locality domains
+and prices all access and replication. A single zero-latency uniform HBM abstraction is
 illegal in cycle or physical acceptance.
 
 ## 5. Common IR migration
@@ -260,7 +263,8 @@ target path into the shared production Model Graph IR. It must preserve:
 - tensors, shapes, layouts, checkpoint bindings, and source anchors;
 - prefill/decode phases;
 - runtime predicates, guards, and optional values;
-- state read, prepare, commit, discard, and retirement effects;
+- mutable-buffer reads/writes, valid extents, dependencies, and token-step
+  fence effects;
 - numeric-contract IDs and reduction/conversion boundaries;
 - entrypoints and outputs; and
 - exact coverage of ordinary target-only checkpoint roles.
@@ -290,7 +294,7 @@ The exporter emits:
 
 - included and excluded graph-node counts;
 - operation-kind and checkpoint-role coverage;
-- state-resource/action coverage;
+- live-buffer object/access coverage;
 - numeric/reference-owner coverage;
 - lowering and cost-class coverage;
 - unknown/opaque operation count;
@@ -309,9 +313,9 @@ The deterministic compiler performs:
 3. canonical format/scale/layout conversion;
 4. mandatory wafer reticle/tile partition and capacity analysis;
 5. ROM macro/region placement with repair and reserve;
-6. tensor/vector/route/reduce/state engine assignment;
+6. tensor/vector/route/reduce engine assignment;
 7. SRAM activation/index/accumulator allocation;
-8. HBM state layout for the declared context;
+8. HBM live-buffer layout for the declared context;
 9. deterministic local/on-wafer schedule, collective plan, and credit proof;
 10. compact program, descriptor, event, and queue emission;
 11. known-answer, counter, capacity, and trace contracts;
@@ -329,7 +333,7 @@ proxy, 100-TB/s proxy, or stage-link assumptions from `spec/ARCHITECTURE.md`.
 Candidate wafer partitions are evaluated with exact:
 
 - post-padding/scale/integrity/repair ROM bytes and largest indivisible region;
-- reticle/tile capacity, local SRAM, and distributed HBM state capacity;
+- reticle/tile capacity, local SRAM, and distributed HBM buffer capacity;
 - dense, routed, sparse, activation, multicast, reduction, collective, and
   vocabulary traffic derived from compiled execution;
 - on-wafer path length, bisection bandwidth, serialization, hop/switch latency,
@@ -354,7 +358,7 @@ The checker independently:
 - checks format packing, padding, integrity, spares, and repair remaps;
 - proves unique placement and legal capacity per reticle, tile, and wafer;
 - verifies excluded extension tensors cannot be addressed;
-- reconstructs HBM/SRAM object bounds and state capacity;
+- reconstructs HBM/SRAM object bounds and live-buffer capacity;
 - checks program/descriptors against graph/kernel IDs; and
 - emits exact missing, duplicate, alias, overflow, and corruption failures.
 
@@ -368,7 +372,7 @@ The schedule checker reconstructs:
 - runtime route and sparse-index bounds;
 - local and on-wafer paths, slots, collectives, credits, and retry buffers;
 - event producers, wait sets, queue occupancy, and deadlock freedom;
-- state transaction order; and
+- live-buffer producer/consumer and token-fence order; and
 - expected work, byte, flit, and stall counter bounds.
 
 It does not call the schedule generator.
@@ -401,9 +405,9 @@ The functional simulator verifies and consumes only the published deployment:
 
 - common graph/kernel identities;
 - ROM images and physical map;
-- tensor/numeric/state/schedule descriptors;
+- tensor/numeric/memory/schedule descriptors;
 - generated target microprogram;
-- HBM/SRAM initial state;
+- HBM/SRAM initial buffer images;
 - request/workload and tokenizer/generation policy; and
 - expected counter contract.
 
@@ -415,7 +419,7 @@ intermediates that are not deployment inputs.
 The simulator must not:
 
 - call the official model or PyTorch as a hidden operator;
-- accept caller-supplied base logits, routes, activations, or state that the
+- accept caller-supplied base logits, routes, activations, or buffers that the
   graph should produce;
 - use a synthetic tensor in an acceptance run;
 - skip non-selected experts without executing the route that selected them; or
@@ -427,17 +431,17 @@ collective causally. It may omit physical link cycles in this mode, but it may
 not replace communication with direct global-memory access or a precombined
 reduction.
 
-### 7.2 State and generation
+### 7.2 Live buffers and generation
 
 One request:
 
-1. validates session, position, context, program, and memory windows;
+1. validates run, position, context, program, and memory windows;
 2. executes prefill or decode graph work;
-3. prepares all affected KV/compressor state;
+3. writes all affected KV/compressor buffers through declared views;
 4. computes target vocabulary logits;
 5. performs deterministic target argmax and token validation;
 6. tests the official EOS set;
-7. atomically commits state and token position;
+7. executes the token-step fence, exposing the completed writes and token;
 8. returns the token and trace/counters; and
 9. loops for GENERATE until first EOS or the declared bound.
 
@@ -448,16 +452,15 @@ The returned sequence includes EOS. No post-EOS request executes.
 Before 200K, execute increasing natural contexts and publish:
 
 - functional and cycle transactions per host second;
-- time by tensor, vector, attention, route, state, and selection class;
-- host RAM, accelerator-state image, temporary disk, and trace growth;
-- checkpoint/restart time and identity;
+- time by tensor, vector, attention, route, buffer access, and selection class;
+- host RAM, accelerator-memory image, temporary disk, and trace growth;
 - actual sparse/routed work distributions;
 - on-wafer event/flit rates, communication critical path, and distributed-HBM
   locality;
 - projected 200K completion time and resource margin; and
 - exact differential evidence for every simulator optimization.
 
-If projection is infeasible, optimize native kernels, streaming, state storage,
+If projection is infeasible, optimize native kernels, streaming, buffer storage,
 and trace representation. Do not replace 200K with an analytical-only run.
 
 ## 8. Cycle simulator
@@ -469,10 +472,10 @@ The data-bearing cycle model includes:
 - dynamic expert route distribution and actual selected work;
 - sparse-index gather and attention work;
 - vector/compression/mHC pipelines;
-- SRAM banks/ports/ECC/arbitration and HBM state timing;
+- SRAM banks/ports/ECC/arbitration and HBM buffer timing;
 - local/on-wafer routes, serialization, credits, retries, collectives,
   congestion, and contention;
-- prepare/commit/discard and error drain;
+- live-buffer writes, token-step fence visibility, and terminal error handling;
 - vocabulary/argmax/EOS latency;
 - power/thermal throttle events; and
 - exact utilization, stall, byte, flit, cycle, and energy-event counters.
@@ -484,18 +487,19 @@ does not carry or depend on real data cannot close correctness or 200K.
 
 RTL integration proceeds vertically:
 
-1. target program admission, loop/event/queue/state control;
+1. target program admission, loop/event/queue/fence control;
 2. immutable multi-format ROM wrapper, integrity, repair, and no-write proof;
 3. FP8 dense/shared tensor slice with real payloads;
 4. MXFP4/E8M0 routed tensor slice with runtime expert IDs;
 5. vector/RMSNorm/conversion and ordered reduction;
-6. sparse-index/attention and HBM state;
+6. sparse-index/attention and HBM buffers;
 7. compressor and mHC representative transactions;
 8. target vocabulary gather/argmax/token/EOS;
 9. one complete checkpoint-derived transformer block;
 10. reticle-local and cross-reticle generated schedules with backpressure;
-11. wafer multicast/collective, distributed-HBM, and global-commit paths;
-12. abort, reset, retry, tile/link quarantine, repair degradation, and recovery;
+11. wafer multicast/collective, distributed-HBM, and token-step fence paths;
+12. fail-stop fault completion, fresh-run reset, tile/link detection, and ROM
+    repair degradation;
 13. representative complete target program correlation; and
 14. formal, coverage, CDC/RDC, DFT, power, and hierarchical physical entry.
 
@@ -538,8 +542,8 @@ The retained evidence includes:
 - raw and visible decoded output;
 - vocabulary legality and tokenizer round-trip;
 - every route/top-k/sparse-index decision required by the acceptance policy;
-- committed KV/compressor state generations and checkpoint identities;
-- functional and cycle operation/memory/link/state/token counters;
+- terminal-fence KV/compressor/token buffer identities;
+- functional and cycle operation/memory/link/buffer/token counters;
 - wall-clock and simulator-resource measurements;
 - first divergence if any; and
 - same-workload comparison with the DeepSeek HBM result.
@@ -569,7 +573,7 @@ Physical convergence includes:
 
 - format-specific ROM macro/slice characterization;
 - FP8 and MXFP4/E8M0 tensor tiles;
-- vector/route/reduce/state/control tiles;
+- vector/route/reduce/control tiles;
 - representative tile and reticle floorplans plus deterministic local/on-wafer
   NoC;
 - clock, route, congestion, EM/IR proxy, power, and thermal analysis;
@@ -584,7 +588,7 @@ reticle regions, extract cross-reticle links, then assemble wafer-level timing,
 power, clock, thermal, repair, and yield models. A tile-only P&R result or an
 ideal stitched-wire assumption cannot close the wafer gate.
 
-HBM state, HBM PHY, package, and production mask-ROM evidence remain separately
+HBM buffers, HBM PHY, package, and production mask-ROM evidence remain separately
 classified. A public PDK result is methodology evidence, not target foundry
 signoff.
 
@@ -593,14 +597,14 @@ signoff.
 | Gate | Outcome | Exit evidence |
 |---|---|---|
 | DROM-A0 | architecture/profile accepted | TA-A3-ARCH-0 and ordinary/speculative split review |
-| DROM-I1 | common-IR export | zero unknown/unpriced operations, complete ordinary tensor/state/numeric coverage |
+| DROM-I1 | common-IR export | zero unknown/unpriced operations, complete ordinary tensor/buffer/numeric coverage |
 | DROM-P2 | complete wafer physical plan | all included tensors inverse-reconstruct; reticle/tile/wafer capacity, repair, fabric, and schedule legal |
-| DROM-V3 | complete checkpoint block | artifact-only dense/routed/sparse/state block exact against independent references |
+| DROM-V3 | complete checkpoint block | artifact-only dense/routed/sparse/live-buffer block exact against independent references |
 | DROM-F4 | complete short target model | ordinary prefill/decode, target argmax/EOS, legitimate output, no fallback |
-| DROM-S5 | data-bearing cycle closure | causal mixed-format/route/state/on-wafer timing and reconciled counters |
+| DROM-S5 | data-bearing cycle closure | causal mixed-format/route/live-buffer/on-wafer timing and reconciled counters |
 | DROM-R6 | representative ROM RTL | generated program, complete block, reticle and fabric paths correlate under faults/stalls |
 | DROM-C7 | chat and agent context | natural output and causal tool protocol pass |
-| DROM-200K8 | exact mandatory context | 200,000 natural tokens plus ordinary decode, state/token/counter evidence |
+| DROM-200K8 | exact mandatory context | 200,000 natural tokens plus ordinary decode, buffer/token/counter evidence |
 | DROM-PHY9-SKY | SKY130 wafer convergence | hierarchical characterized capability, recompile, rerun |
 | DROM-PHY9-A7 | ASAP7 wafer projection | separate academic hierarchical projection, recompile, rerun, limitations |
 | DROM-REL10 | DeepSeek ROM release | reproducible release and governed DeepSeek ROM-versus-HBM comparison |
@@ -634,10 +638,10 @@ The first DeepSeek ROM implementation tranche is:
 1. define the ordinary target-only graph slice and explicit DSpark exclusions;
 2. export a small but connected source region into the common IR;
 3. bind one checkpoint-derived path that includes dense compute, a runtime
-   predicate or route, a cross-tile/on-wafer transfer, and a transactional state
+   predicate or route, a cross-tile/on-wafer transfer, and a mutable live-buffer
    effect;
 4. lower it to a ROM Physical Plan and bound descriptors;
-5. execute it through the common control/state semantics without caller-supplied
+5. execute it through the common control/live-buffer semantics without caller-supplied
    intermediates;
 6. compare every boundary with independent target references; and
 7. add breadth only after the entire vertical chain passes.
