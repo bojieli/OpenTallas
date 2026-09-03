@@ -24,9 +24,11 @@
 //   * an engine issue is emitted only once the family's own precondition has
 //     passed, so a faulting STATE or RECOVERY.ABORT produces no issue event.
 //
-// Engine datapaths are out of scope: the issue port is a ready/valid interface
-// carrying (family, subopcode, descriptor ID) and nothing else.  This block
-// therefore models the control plane exactly and the data plane not at all.
+// Engine datapaths sit behind a ready/valid response interface carrying the
+// issued (family, subopcode, descriptor ID).  ``issue_ready`` is completion,
+// not mere queue acceptance: alongside it the engine may return a precise
+// fail-stop trap.  A successful response retires and publishes the signal;
+// a faulting response does neither.  The sequencer still owns no arithmetic.
 // Data-dependent BOOLEAN_OBJECT and EOS_MEMBER predicates use a separate
 // request/response port.  The memory/selection integration owns the read (and,
 // for a cluster, the node-consensus check); the sequencer owns only the
@@ -105,6 +107,8 @@ module ot_a3_microsequencer
     // -- engine issue --------------------------------------------------
     output reg           issue_valid,
     input  wire          issue_ready,
+    input  wire          issue_fault,
+    input  wire [15:0]   issue_trap_class,
     output reg  [7:0]    issue_family,
     output reg  [7:0]    issue_sub,
     output reg  [31:0]   issue_descriptor_id,
@@ -1068,8 +1072,20 @@ module ot_a3_microsequencer
                     issue_index <= pc;
                     if (issue_valid && issue_ready) begin
                         issue_valid <= 1'b0;
-                        evt_signal_valid <= (ins_signal_event_id != A3_NO_ID);
-                        state <= S_RETIRE;
+                        if (issue_fault) begin
+                            // Completion faults are architecturally precise:
+                            // the operation was issued, but it never retires
+                            // and its event is never published.
+                            raise_trap(
+                                (issue_trap_class == A3_TRAP_NONE)
+                                    ? A3_TRAP_ENGINE : issue_trap_class,
+                                pc
+                            );
+                        end else begin
+                            evt_signal_valid <=
+                                (ins_signal_event_id != A3_NO_ID);
+                            state <= S_RETIRE;
+                        end
                     end
                 end
                 S_RETIRE: begin

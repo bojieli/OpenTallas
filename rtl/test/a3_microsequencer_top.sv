@@ -269,6 +269,11 @@ module ot_a3_microsequencer_top
         .predicate_read_trap_class(predicate_read_trap_class),
         .issue_valid(issue_valid),
         .issue_ready(issue_ready),
+        // The standalone control-plane campaigns intentionally retain their
+        // recording consumer.  The shipped-prefix integration top supplies
+        // the real engine response on these same ABI 3.0 sequencer ports.
+        .issue_fault(1'b0),
+        .issue_trap_class(16'd0),
         .issue_family(issue_family),
         .issue_sub(issue_sub),
         .issue_descriptor_id(issue_descriptor_id),

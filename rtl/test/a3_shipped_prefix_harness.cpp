@@ -1,0 +1,311 @@
+// Independent Verilator checker for the exact shipped ABI 3.0 engine prefix.
+// It parses the memory images itself, observes every completion handshake, and
+// never consumes an expectation through the RTL design.
+#include "Vot_a3_shipped_prefix_top.h"
+#include "verilated.h"
+
+#include <cstdint>
+#include <fstream>
+#include <iomanip>
+#include <iostream>
+#include <stdexcept>
+#include <string>
+#include <vector>
+
+namespace {
+
+constexpr std::size_t kCases = 4;
+constexpr std::size_t kCaseStride = 32;
+constexpr std::size_t kIssueStride = 4;
+constexpr std::size_t kResultWords = 2048;
+constexpr std::uint32_t kUnwritten = 0xdeadbeefU;
+
+std::vector<std::uint32_t> read_hex(const std::string& path) {
+    std::ifstream input(path);
+    if (!input) throw std::runtime_error("cannot open " + path);
+    std::vector<std::uint32_t> words;
+    std::string line;
+    while (std::getline(input, line)) {
+        if (line.empty()) continue;
+        std::size_t used = 0;
+        const auto value = std::stoull(line, &used, 16);
+        if (used != line.size() || value > 0xffffffffULL)
+            throw std::runtime_error("invalid 32-bit hex word in " + path);
+        words.push_back(static_cast<std::uint32_t>(value));
+    }
+    return words;
+}
+
+struct Checker {
+    std::uint64_t checks = 0;
+    std::uint64_t failures = 0;
+
+    void equal(const std::string& label, std::uint64_t got,
+               std::uint64_t want) {
+        ++checks;
+        if (got != want) {
+            ++failures;
+            std::cerr << "FAIL: " << label << " got=" << got << " (0x"
+                      << std::hex << got << ") want=" << std::dec << want
+                      << " (0x" << std::hex << want << std::dec << ")\n";
+        }
+    }
+};
+
+struct Model {
+    VerilatedContext context;
+    Vot_a3_shipped_prefix_top dut{&context};
+
+    Model() {
+        dut.clk = 0;
+        dut.rst_n = 0;
+        dut.start = 0;
+        dut.cfg_program_base = 0;
+        dut.cfg_instruction_count = 0;
+        dut.cfg_entry_pc = 0;
+        dut.cfg_desc_base = 0;
+        dut.cfg_desc_count = 0;
+        dut.cfg_symbol_base = 0;
+        dut.cfg_symbol_mask = 0;
+        dut.cfg_max_retired_work = 0;
+        dut.cfg_state_count = 0;
+        dut.cfg_index_base = 0;
+        dut.cfg_source_base = 0;
+        dut.cfg_source_launch_stride = 0;
+        dut.cfg_output_base = 0;
+        dut.result_read_addr = 0;
+        dut.eval();
+    }
+
+    template <class Observer>
+    void cycle(Observer&& before_rising) {
+        dut.clk = 0;
+        dut.eval();
+        before_rising();
+        dut.clk = 1;
+        dut.eval();
+        context.timeInc(1);
+        dut.clk = 0;
+        dut.eval();
+        context.timeInc(1);
+    }
+
+    void reset() {
+        for (int i = 0; i < 4; ++i) cycle([] {});
+        dut.rst_n = 1;
+        for (int i = 0; i < 2; ++i) cycle([] {});
+    }
+};
+
+}  // namespace
+
+int main(int argc, char** argv) {
+    Verilated::commandArgs(argc, argv);
+    try {
+        const auto cases = read_hex("p3_case.hex");
+        const auto issues = read_hex("p3_issue.hex");
+        const auto expected = read_hex("p3_expect.hex");
+        const auto meta = read_hex("p3_meta.hex");
+        if (cases.size() != kCases * kCaseStride || issues.size() != 40 ||
+            expected.size() != 1024 || meta.size() != 8)
+            throw std::runtime_error("shipped-prefix vector geometry mismatch");
+
+        Checker check;
+        Model model;
+        model.reset();
+        check.equal("meta case count", meta[0], kCases);
+        check.equal("meta case stride", meta[4], kCaseStride);
+        check.equal("meta result memory", meta[7], kResultWords);
+
+        std::uint64_t total_responses = 0;
+        std::uint64_t total_launches = 0;
+        std::uint64_t total_words = 0;
+        std::uint64_t total_views = 0;
+
+        for (std::size_t case_index = 0; case_index < kCases; ++case_index) {
+            const auto* record = &cases[case_index * kCaseStride];
+            model.dut.cfg_program_base = record[0];
+            model.dut.cfg_instruction_count = record[1];
+            model.dut.cfg_desc_base = record[2];
+            model.dut.cfg_desc_count = record[3];
+            model.dut.cfg_symbol_base = record[4];
+            model.dut.cfg_symbol_mask = record[5];
+            model.dut.cfg_entry_pc = record[6];
+            model.dut.cfg_max_retired_work =
+                (static_cast<std::uint64_t>(record[8]) << 32) | record[7];
+            model.dut.cfg_state_count = record[9];
+            model.dut.cfg_index_base = record[10];
+            model.dut.cfg_source_base = record[11];
+            model.dut.cfg_source_launch_stride = record[12];
+            model.dut.cfg_output_base = record[13];
+
+            model.dut.result_read_addr = record[13];
+            model.dut.eval();
+            check.equal("result initially unwritten",
+                        model.dut.result_read_data, kUnwritten);
+
+            std::uint32_t response_seen = 0;
+            const std::uint32_t response_expected = record[21];
+            const std::uint32_t response_base = record[31];
+            auto observe = [&]() {
+                if (!model.dut.rst_n || !model.dut.response_valid) return;
+                if (response_seen >= response_expected) {
+                    ++check.failures;
+                    std::cerr << "FAIL: response overflow in case "
+                              << case_index << "\n";
+                } else {
+                    const auto offset =
+                        (response_base + response_seen) * kIssueStride;
+                    check.equal(
+                        "response opcode",
+                        (static_cast<std::uint32_t>(model.dut.response_family)
+                         << 8) |
+                            model.dut.response_sub,
+                        issues[offset]);
+                    check.equal("response descriptor",
+                                model.dut.response_descriptor_id,
+                                issues[offset + 1]);
+                    check.equal("response PC", model.dut.response_index,
+                                issues[offset + 2]);
+                    check.equal("response trap",
+                                model.dut.response_trap_class,
+                                issues[offset + 3]);
+                    check.equal("response fault bit", model.dut.response_fault,
+                                issues[offset + 3] != 0);
+                }
+                ++response_seen;
+                ++total_responses;
+            };
+
+            model.dut.start = 1;
+            model.cycle(observe);
+            model.dut.start = 0;
+            std::uint32_t guard = 0;
+            while (!model.dut.done && guard < 20000) {
+                model.cycle(observe);
+                ++guard;
+            }
+            if (!model.dut.done) {
+                ++check.failures;
+                std::cerr << "FAIL: case " << case_index << " timed out\n";
+            }
+
+            check.equal("response count", response_seen, response_expected);
+            check.equal("busy at completion", model.dut.busy, 0);
+            check.equal("complete must remain false", model.dut.complete, 0);
+            check.equal("transaction trapped", model.dut.trapped, 1);
+            check.equal("trap class", model.dut.trap_class, 4);
+            check.equal("first fault PC", model.dut.first_fault_instruction,
+                        record[16]);
+            check.equal("fetched", model.dut.count_fetched, record[19]);
+            check.equal("retired", model.dut.count_retired, record[20]);
+            check.equal("issued", model.dut.count_issued, record[21]);
+            check.equal("loop iterations", model.dut.count_loop_iterations,
+                        record[22]);
+            check.equal("signals", model.dut.count_signals, record[23]);
+            check.equal("views resolved", model.dut.count_views_resolved,
+                        record[24]);
+            check.equal("predicated off", model.dut.count_predicated_off, 0);
+            check.equal("branches", model.dut.count_branches, 0);
+            check.equal("wait events", model.dut.count_wait_events, 0);
+            check.equal("real engine launches", model.dut.real_launch_count,
+                        record[14]);
+            check.equal("capability responses",
+                        model.dut.capability_fault_count, record[29]);
+            check.equal("descriptor faults", model.dut.descriptor_fault_count,
+                        0);
+            check.equal("engine faults", model.dut.engine_fault_count, 0);
+            check.equal("last response PC", model.dut.last_response_index,
+                        record[16]);
+            check.equal(
+                "last response opcode",
+                (static_cast<std::uint32_t>(model.dut.last_response_family)
+                 << 8) |
+                    model.dut.last_response_sub,
+                record[17]);
+            check.equal("last response descriptor",
+                        model.dut.last_response_descriptor_id, record[18]);
+            check.equal("engine error", model.dut.engine_error_code, 0);
+            check.equal("last gather result count",
+                        model.dut.engine_result_count, record[27]);
+            check.equal("last gather checked indices",
+                        model.dut.engine_work_count, 1);
+            check.equal("result write count", model.dut.output_write_count,
+                        record[15]);
+            check.equal("writes after capability fault",
+                        model.dut.writes_after_fault, 0);
+            check.equal("operand read in bounds", model.dut.operand_read_oob,
+                        0);
+            check.equal("result write in bounds", model.dut.result_write_oob,
+                        0);
+            check.equal("event scoreboard error",
+                        model.dut.event_signal_error, 0);
+            check.equal("state apply overflow", model.dut.state_apply_overflow,
+                        0);
+            check.equal("state prepares", model.dut.count_state_prepares, 0);
+            check.equal("state commits", model.dut.count_state_commits, 0);
+            check.equal("state discards", model.dut.count_state_discards, 0);
+            check.equal("state reads", model.dut.count_state_reads, 0);
+            check.equal("state generation advances",
+                        model.dut.count_state_generation_advances, 0);
+            check.equal("state commits applied",
+                        model.dut.count_state_commits_applied, 0);
+            check.equal("state rows committed",
+                        model.dut.count_state_rows_committed, 0);
+            check.equal("state bytes written",
+                        model.dut.count_state_bytes_written, 0);
+
+            for (std::uint32_t word = 0; word < record[15]; ++word) {
+                model.dut.result_read_addr = record[13] + word;
+                model.dut.eval();
+                check.equal("real result word", model.dut.result_read_data,
+                            expected[record[13] + word]);
+            }
+            total_launches += model.dut.real_launch_count;
+            total_words += model.dut.output_write_count;
+            total_views += model.dut.count_views_resolved;
+            std::cout << "CASE " << case_index << " OK launches="
+                      << model.dut.real_launch_count << " words="
+                      << model.dut.output_write_count << " responses="
+                      << response_seen << " trap=" << model.dut.trap_class
+                      << " fault=" << model.dut.first_fault_instruction
+                      << " fetched=" << model.dut.count_fetched
+                      << " retired=" << model.dut.count_retired
+                      << " issued=" << model.dut.count_issued << " views="
+                      << model.dut.count_views_resolved << "\n";
+            model.cycle(observe);
+        }
+
+        check.equal("total responses", total_responses, meta[0] + meta[1]);
+        check.equal("total launches", total_launches, meta[1]);
+        check.equal("total result words", total_words, meta[2]);
+        check.equal("total resolved views", total_views, meta[3]);
+        for (std::uint32_t word = 0; word < meta[2]; ++word) {
+            model.dut.result_read_addr = word;
+            model.dut.eval();
+            check.equal("final retained result", model.dut.result_read_data,
+                        expected[word]);
+        }
+        for (std::uint32_t word = meta[2]; word < kResultWords; ++word) {
+            model.dut.result_read_addr = word;
+            model.dut.eval();
+            check.equal("unwritten result tail", model.dut.result_read_data,
+                        kUnwritten);
+        }
+
+        model.dut.final();
+        if (check.failures != 0) {
+            std::cerr << "FAILURES: " << check.failures
+                      << " checks=" << check.checks << "\n";
+            return 1;
+        }
+        std::cout
+            << "PASS: ABI3 shipped-prefix engine integration cases=4 "
+               "launches=6 words=1024 capability_faults=4 checks="
+            << check.checks << "\n";
+        return 0;
+    } catch (const std::exception& exc) {
+        std::cerr << "FAIL: " << exc.what() << "\n";
+        return 2;
+    }
+}
