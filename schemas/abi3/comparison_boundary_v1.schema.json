@@ -1,0 +1,194 @@
+{
+  "$id": "https://opentallas.org/schemas/abi3/comparison_boundary_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "boundary_sha256": {"$ref": "#/$defs/sha256"},
+    "capability": {"$ref": "#/$defs/source"},
+    "comparison_contract": {"$ref": "#/$defs/contract_source"},
+    "comparison_id": {"$ref": "#/$defs/identifier"},
+    "comparison_sha256": {"$ref": "#/$defs/sha256"},
+    "comparison_workload_sha256": {"$ref": "#/$defs/sha256"},
+    "cost_table": {"$ref": "#/$defs/cost_table"},
+    "deployment": {"$ref": "#/$defs/deployment"},
+    "execution_scope": {"enum": ["full_workload", "measurement_slice"]},
+    "model_digest": {"$ref": "#/$defs/sha256"},
+    "model_id": {"$ref": "#/$defs/identifier"},
+    "numeric_profile": {"$ref": "#/$defs/identifier"},
+    "request_sha256": {"$ref": "#/$defs/sha256"},
+    "request_trajectory_sha256": {"$ref": "#/$defs/sha256"},
+    "schema": {"const": "opentallas.abi3.comparison_boundary.v1"},
+    "target": {"$ref": "#/$defs/target"},
+    "workload": {"$ref": "#/$defs/workload"}
+  },
+  "required": [
+    "boundary_sha256",
+    "capability",
+    "comparison_contract",
+    "comparison_id",
+    "comparison_sha256",
+    "comparison_workload_sha256",
+    "cost_table",
+    "deployment",
+    "execution_scope",
+    "model_digest",
+    "model_id",
+    "numeric_profile",
+    "schema",
+    "target",
+    "workload"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "properties": {"execution_scope": {"const": "measurement_slice"}},
+        "required": ["execution_scope"]
+      },
+      "then": {
+        "required": ["request_sha256"],
+        "not": {"required": ["request_trajectory_sha256"]}
+      }
+    },
+    {
+      "if": {
+        "properties": {"execution_scope": {"const": "full_workload"}},
+        "required": ["execution_scope"]
+      },
+      "then": {
+        "required": ["request_trajectory_sha256"],
+        "not": {"required": ["request_sha256"]}
+      }
+    }
+  ],
+  "title": "OpenTallas ABI 3.0 governed comparison boundary v1",
+  "type": "object",
+  "$defs": {
+    "contract_source": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {"$ref": "#/$defs/path"},
+        "schema": {"const": "opentallas.abi3.comparison_contract.v1"},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "source_sha256": {"$ref": "#/$defs/sha256"}
+      },
+      "required": ["path", "schema", "sha256", "source_sha256"],
+      "type": "object"
+    },
+    "cost_table": {
+      "additionalProperties": false,
+      "properties": {
+        "cost_table_id": {"$ref": "#/$defs/identifier"},
+        "path": {"$ref": "#/$defs/path"},
+        "policy_id": {"$ref": "#/$defs/identifier"},
+        "schema": {"const": "opentallas.abi3.cost_table.v1"},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "source_sha256": {"$ref": "#/$defs/sha256"},
+        "technology_view": {"$ref": "#/$defs/identifier"}
+      },
+      "required": [
+        "cost_table_id",
+        "path",
+        "policy_id",
+        "schema",
+        "sha256",
+        "source_sha256",
+        "technology_view"
+      ],
+      "type": "object"
+    },
+    "deployment": {
+      "additionalProperties": false,
+      "properties": {
+        "manifest_sha256": {"$ref": "#/$defs/sha256"},
+        "path": {"$ref": "#/$defs/path"},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      },
+      "required": ["manifest_sha256", "path", "sha256"],
+      "type": "object"
+    },
+    "identifier": {
+      "maxLength": 192,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$",
+      "type": "string"
+    },
+    "path": {"minLength": 1, "type": "string"},
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "source": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {"$ref": "#/$defs/path"},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "source_sha256": {"$ref": "#/$defs/sha256"},
+        "technology_view": {"$ref": "#/$defs/identifier"}
+      },
+      "required": ["path", "sha256", "source_sha256", "technology_view"],
+      "type": "object"
+    },
+    "target": {
+      "additionalProperties": false,
+      "properties": {
+        "backend": {"$ref": "#/$defs/identifier"},
+        "node_count": {"minimum": 1, "type": "integer"},
+        "role": {"enum": ["rom", "hbm"]},
+        "storage_class": {"enum": ["ROM", "HBM"]},
+        "target_id": {"$ref": "#/$defs/identifier"},
+        "topology_class": {"maximum": 2, "minimum": 0, "type": "integer"}
+      },
+      "required": [
+        "backend",
+        "node_count",
+        "role",
+        "storage_class",
+        "target_id",
+        "topology_class"
+      ],
+      "type": "object"
+    },
+    "template": {
+      "additionalProperties": false,
+      "properties": {
+        "mode": {"enum": ["none_plain_text", "source_file"]},
+        "path": {"anyOf": [{"$ref": "#/$defs/path"}, {"type": "null"}]},
+        "source_sha256": {
+          "anyOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]
+        },
+        "template_id": {"$ref": "#/$defs/identifier"}
+      },
+      "required": ["mode", "path", "source_sha256", "template_id"],
+      "type": "object"
+    },
+    "workload": {
+      "additionalProperties": false,
+      "properties": {
+        "index_path": {"$ref": "#/$defs/path"},
+        "index_source_sha256": {"$ref": "#/$defs/sha256"},
+        "kind": {"$ref": "#/$defs/identifier"},
+        "max_new_tokens": {"minimum": 1, "type": "integer"},
+        "path": {"$ref": "#/$defs/path"},
+        "prompt_token_count": {"minimum": 1, "type": "integer"},
+        "rendered_text_sha256": {"$ref": "#/$defs/sha256"},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "template": {"$ref": "#/$defs/template"},
+        "tokenizer_sha256": {"$ref": "#/$defs/sha256"},
+        "workload_digest": {"$ref": "#/$defs/sha256"},
+        "workload_id": {"$ref": "#/$defs/identifier"}
+      },
+      "required": [
+        "index_path",
+        "index_source_sha256",
+        "kind",
+        "max_new_tokens",
+        "path",
+        "prompt_token_count",
+        "rendered_text_sha256",
+        "sha256",
+        "template",
+        "tokenizer_sha256",
+        "workload_digest",
+        "workload_id"
+      ],
+      "type": "object"
+    }
+  }
+}

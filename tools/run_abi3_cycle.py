@@ -22,12 +22,15 @@ ABI 3.0, so two runs with the same inputs are byte-identical.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import sys
 from pathlib import Path
 from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
+CYCLE_PRODUCER_SCHEMA = "opentallas.abi3.cycle_producer.v1"
+CYCLE_PRODUCER_EVIDENCE_CLASS = "cycle_model_measurement"
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
@@ -43,6 +46,11 @@ from runtime.cycle.model import (  # noqa: E402
     CycleRequest,
     ScheduleError,
     functional_counters,
+)
+from tools.abi3_comparison_boundary import (  # noqa: E402
+    BoundaryError,
+    build_boundary,
+    validate_boundary,
 )
 
 
@@ -139,6 +147,21 @@ def build_parser() -> argparse.ArgumentParser:
             "non-timing counter matches"
         ),
     )
+    parser.add_argument(
+        "--comparison-id",
+        help=(
+            "governed comparison identifier; requires --workload and causes the "
+            "result to carry a source-revalidated comparison boundary"
+        ),
+    )
+    parser.add_argument(
+        "--workload",
+        type=Path,
+        help=(
+            "governed workload JSON; requires --comparison-id and binds both its "
+            "content SHA-256 and declared workload digest"
+        ),
+    )
     return parser
 
 
@@ -187,6 +210,17 @@ def load_inputs(args: argparse.Namespace) -> tuple[Deployment, Capability, Path 
 
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
+    governed = args.comparison_id is not None or args.workload is not None
+    if (args.comparison_id is None) != (args.workload is None):
+        raise SystemExit("--comparison-id and --workload must be supplied together")
+    if governed and args.deployment is None:
+        raise SystemExit("a governed comparison requires --deployment, not --fixture")
+    if governed and args.no_verify:
+        raise SystemExit("a governed comparison cannot use --no-verify")
+    if governed and args.permissive_schedules:
+        raise SystemExit("a governed comparison cannot use --permissive-schedules")
+    if governed and args.no_load_engines:
+        raise SystemExit("a governed comparison cannot use --no-load-engines")
     out: Path = args.out
     if out.exists() and not args.force:
         raise SystemExit(
@@ -201,6 +235,22 @@ def main(argv: list[str] | None = None) -> int:
     except MachineError as exc:
         raise SystemExit(str(exc)) from None
     request = load_request(args)
+    comparison_boundary: dict[str, Any] | None = None
+    if governed:
+        try:
+            comparison_boundary = build_boundary(
+                comparison_id=args.comparison_id,
+                deployment=deployment,
+                deployment_path=args.deployment,
+                capability=capability,
+                capability_path=args.capability,
+                cost_table=cost_table,
+                cost_table_path=args.cost_table,
+                workload_path=args.workload,
+                request=request.to_dict(),
+            )
+        except (BoundaryError, OSError, ValueError, json.JSONDecodeError) as exc:
+            raise SystemExit(f"invalid comparison boundary: {exc}") from None
 
     try:
         model = CycleModel(
@@ -215,8 +265,14 @@ def main(argv: list[str] | None = None) -> int:
     except ScheduleError as exc:
         raise SystemExit(f"tile mapping is incomplete: {exc}") from None
     body: dict[str, Any] = result.to_dict()
+    body["producer"] = {
+        "schema": CYCLE_PRODUCER_SCHEMA,
+        "tool": "tools/run_abi3_cycle.py",
+        "source_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+        "evidence_class": CYCLE_PRODUCER_EVIDENCE_CLASS,
+    }
 
-    if args.check_functional_agreement:
+    if args.check_functional_agreement or governed:
         reference = functional_counters(
             deployment,
             capability,
@@ -239,6 +295,79 @@ def main(argv: list[str] | None = None) -> int:
             "counters_compared": len(set(reference) | set(observed)),
             "differences": differences,
             "rule": body["counters"]["agreement_rule"],
+        }
+
+    if comparison_boundary is not None:
+        workload = comparison_boundary["workload"]
+        target = comparison_boundary["target"]
+        body["inputs"].update(
+            {
+                "model_digest": comparison_boundary["model_digest"],
+                "workload": workload,
+                "node_count": target["node_count"],
+                "comparison_digest": comparison_boundary["comparison_sha256"],
+                "comparison_contract_digest": comparison_boundary[
+                    "comparison_contract"
+                ]["sha256"],
+                "comparison_workload_sha256": comparison_boundary[
+                    "comparison_workload_sha256"
+                ],
+                "comparison_execution_scope": comparison_boundary[
+                    "execution_scope"
+                ],
+                "comparison_boundary_digest": comparison_boundary["boundary_sha256"],
+            }
+        )
+        body["workload_execution"] = {
+            "scope": "measurement_slice",
+            "full_workload_consumed": False,
+            "terminal_condition_proved": False,
+            "phases_completed": [],
+            "input_workload_digest": None,
+            "input_token_count": 0,
+            "batch": None,
+            "concurrency": None,
+            "generated_token_ids": [],
+            "generated_token_count": 0,
+            "stop_reason": "not_applicable_measurement_slice",
+            "post_eos_transactions": 0,
+            "functional_artifact": None,
+            "external_oracle": None,
+        }
+        body["comparison_boundary"] = comparison_boundary
+        validation = validate_boundary(
+            comparison_boundary,
+            cycle_inputs=body["inputs"],
+        )
+        acceptance_checks = {
+            "boundary_source_validation": validation["valid"],
+            "full_workload_scope": (
+                comparison_boundary["execution_scope"] == "full_workload"
+                and body["workload_execution"]["scope"] == "full_workload"
+                and body["workload_execution"]["full_workload_consumed"] is True
+                and body["workload_execution"]["terminal_condition_proved"] is True
+            ),
+            "execution_status_success": body["execution"]["status"] == "SUCCESS",
+            "execution_trap_none": body["execution"]["trap_class"] == "NONE",
+            "execution_transactions_complete": (
+                body["execution"]["transactions"]
+                == body["inputs"]["request"]["transactions"]
+                and body["execution"]["transactions"] > 0
+            ),
+            "schedule_audit_complete": (
+                body["schedule_audit"]["complete"] is True
+                and body["schedule_audit"]["findings"] == []
+            ),
+            "contract_gaps_empty": body.get("gaps") == [],
+            "functional_counter_agreement": (
+                body["functional_agreement"]["checked"] is True
+                and body["functional_agreement"]["agrees"] is True
+            ),
+        }
+        body["comparison_boundary_validation"] = {
+            **validation,
+            "acceptance_checks": acceptance_checks,
+            "admissible": validation["valid"] and all(acceptance_checks.values()),
         }
 
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -273,6 +402,11 @@ def main(argv: list[str] | None = None) -> int:
             f"  operators without a tile mapping "
             f"{len(body['schedule_audit']['findings'])}"
         )
+    if comparison_boundary is not None:
+        admitted = body["comparison_boundary_validation"]["admissible"]
+        print(f"  comparison boundary  {'admissible' if admitted else 'refused'}")
+        if not admitted:
+            return 4
     return 0
 
 

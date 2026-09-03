@@ -790,7 +790,10 @@ def synthetic_tiled_deployment(
         phase=Phase.DECODE,
         generation_policy_id=policy,
     )
-    builder.source_identity = {"fixture": "abi3-cycle-tiled-v1"}
+    builder.source_identity = {
+        "fixture": "abi3-cycle-tiled-v1",
+        "graph_id": "1" * 64,
+    }
     return builder.finish(), capability
 
 
@@ -3036,6 +3039,57 @@ def test_cli_writes_canonical_json(tmp_path: Path):
     assert body["execution"]["status"] == "SUCCESS"
     assert body["timing"]["tile_launches"] > 0
     assert body["provenance"]["class"] == "assumed"
+
+
+def test_cli_governed_result_refuses_until_authoritative_target_locks_exist(
+    tmp_path: Path,
+):
+    root = publish(tmp_path)
+    out = tmp_path / "governed.json"
+
+    proc = run_cli(
+        "--deployment",
+        str(root),
+        "--capability",
+        str(root / "capability.json"),
+        "--cost-table",
+        str(BASELINE),
+        *SYMBOLS,
+        "--comparison-id",
+        "qwen3_rom_single_chip_vs_hbm_single_chip",
+        "--workload",
+        str(REPO / "build/workloads/qwen3-8b/TA-QW-8K-1.json"),
+        "--out",
+        str(out),
+    )
+    assert proc.returncode != 0
+    assert "comparison contract target sources are not locked" in proc.stderr
+    assert not out.exists()
+
+
+def test_cli_governed_result_refuses_diagnostic_escape_hatches(tmp_path: Path):
+    root = publish(tmp_path)
+    workload = tmp_path / "workload.json"
+    workload.write_text("{}")
+    out = tmp_path / "result.json"
+    proc = run_cli(
+        "--deployment",
+        str(root),
+        "--capability",
+        str(root / "capability.json"),
+        "--cost-table",
+        str(BASELINE),
+        "--comparison-id",
+        "qwen3_rom_single_chip_vs_hbm_single_chip",
+        "--workload",
+        str(workload),
+        "--no-verify",
+        "--out",
+        str(out),
+    )
+    assert proc.returncode != 0
+    assert "cannot use --no-verify" in proc.stderr
+    assert not out.exists()
 
 
 def test_cli_refuses_to_overwrite_without_force(tmp_path: Path):

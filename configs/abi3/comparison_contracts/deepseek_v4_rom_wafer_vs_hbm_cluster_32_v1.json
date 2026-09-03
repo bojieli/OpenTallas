@@ -1,0 +1,141 @@
+{
+  "comparison_id": "deepseek_v4_rom_wafer_vs_hbm_cluster_32",
+  "execution": {
+    "batch": 1,
+    "concurrency": 1,
+    "context_tokens": 200000,
+    "evidence_scope": "full_workload",
+    "generation": {
+      "eos_token_ids": [1],
+      "include_eos_in_output": true,
+      "max_new_tokens": 256,
+      "selection_mode": "greedy_argmax_lowest_id",
+      "stop_condition": "first_official_eos_or_maximum_new_tokens",
+      "tie_rule": "lowest_token_id",
+      "vocabulary_size": 129280
+    },
+    "phases": ["prefill", "decode"]
+  },
+  "external_oracle": {
+    "evidence_class": "external_reference_comparator",
+    "path": "results/abi3/deepseek_v4_reference_oracle_context_ladder.json",
+    "producer": {
+      "source_sha256": null,
+      "tool": "tools/run_deepseek_v4_reference_oracle.py"
+    },
+    "schema": "opentallas.abi3.reference_oracle.v1",
+    "source_sha256": null,
+    "status": "pending"
+  },
+  "model": {
+    "graph_id": "9ef6c3248d23c181c774fd43c09b0de2a19c8e23f344cb9a25c43040268337d9",
+    "kernel_ir_path": "build/ir-v3/deepseek-v4-flash-0731/kernel_ir.v3.json",
+    "kernel_ir_source_sha256": "e101b3e7a63e73f7dd66b3d6c15c40d0b7b6eba7cdc387ddc5cd9623c0e0ccf1",
+    "model_id": "deepseek-v4-flash-0731",
+    "numeric_profile": "deepseek_v4_flash_target_precision_v1"
+  },
+  "policy": {
+    "clock": {
+      "comparison_frequency_hz": null,
+      "policy_id": "common_routed_minimum_fmax_v1",
+      "same_frequency_required": true
+    },
+    "evidence_class": "predictive_asap7_characterized_or_explicit_assumption_v1",
+    "external_fabric_policy": "source_locked_cluster_and_wafer_fabric_v1",
+    "external_memory_policy": "source_locked_distributed_hbm_phy_and_stack_v1",
+    "latency_boundary": "host_request_to_terminal_completion_v1",
+    "pvt": {
+      "corner_id": "asap7_tt_0p70v_25c",
+      "process": "TT",
+      "temperature_c": 25,
+      "voltage_v": 0.7
+    },
+    "state_boundary": "fresh_session_prefill_then_causal_decode_v1",
+    "technology_claim": "predictive ASAP7 research view only; not foundry signoff, manufacturability, or an N4 claim",
+    "technology_view": "asap7"
+  },
+  "schema": "opentallas.abi3.comparison_contract.v1",
+  "targets": {
+    "hbm": {
+      "backend": "hbm-sram-abi3",
+      "capability": {
+        "digest": null,
+        "path": "configs/hardware/abi3_capability/asap7/hbm_sram_cluster_32_v1.json",
+        "source_sha256": null,
+        "status": "pending"
+      },
+      "cost_policy": {
+        "cost_table_id": "abi3-cost-asap7-hbm-cluster32-v1",
+        "lock": {
+          "digest": null,
+          "path": "configs/hardware/abi3_cost_asap7_hbm_cluster32_v1.json",
+          "source_sha256": null,
+          "status": "pending"
+        },
+        "policy_id": "deepseek_hbm_cluster_full_target_asap7_v1"
+      },
+      "deployment": {
+        "digest": null,
+        "path": "build/abi3/asap7/deepseek-v4-flash-hbm-full-workload",
+        "source_sha256": null,
+        "status": "pending"
+      },
+      "node_count": 32,
+      "role": "hbm",
+      "storage_class": "HBM",
+      "target_id": "hbm-sram-abi3-cluster_32",
+      "topology_class": 1
+    },
+    "rom": {
+      "backend": "rom.wafer_logical_device",
+      "capability": {
+        "digest": null,
+        "path": "configs/hardware/abi3_capability/asap7/rom_deepseek_v4_wafer_v1.json",
+        "source_sha256": null,
+        "status": "pending"
+      },
+      "cost_policy": {
+        "cost_table_id": "abi3-cost-asap7-deepseek-rom-wafer-v1",
+        "lock": {
+          "digest": null,
+          "path": "configs/hardware/abi3_cost_asap7_deepseek_rom_wafer_v1.json",
+          "source_sha256": null,
+          "status": "pending"
+        },
+        "policy_id": "deepseek_rom_wafer_full_target_asap7_v1"
+      },
+      "deployment": {
+        "digest": null,
+        "path": "build/abi3/asap7/deepseek-v4-flash-rom-full-workload",
+        "source_sha256": null,
+        "status": "pending"
+      },
+      "node_count": 1,
+      "role": "rom",
+      "storage_class": "ROM",
+      "target_id": "deepseek-v4-flash-rom-wafer",
+      "topology_class": 2
+    }
+  },
+  "version": "1.0.0",
+  "workload": {
+    "digest": "803f0c3a3e9bf7ef68ddff00947576d2fab5703d1f4387df1eb2ec11be2c59bd",
+    "index_path": "build/workloads/deepseek-v4-flash-0731/index.json",
+    "index_schema": "opentallas.workload_index.v1",
+    "index_source_sha256": "45f478d457d0e617d1ef06e6f5a5b542bc567bd911be28072fa10ec6c625d310",
+    "kind": "long_natural",
+    "max_new_tokens": 256,
+    "path": "build/workloads/deepseek-v4-flash-0731/TA-DS-CTX-200K-1.json",
+    "prompt_token_count": 200000,
+    "rendered_text_sha256": "6ad57114c426156f7e25341d6faa55d061033e6b98244d31ab1e8a395463527a",
+    "source_sha256": "b00dd2f461329c14e0a8c0863dbef78e066950bee0aba053aa651f91890418bb",
+    "template": {
+      "mode": "none_plain_text",
+      "path": null,
+      "source_sha256": null,
+      "template_id": "none_plain_text"
+    },
+    "tokenizer_sha256": "8f9f37ca37fdc4f5fd36d5cf4d3b0e8392edb4e894fd10cc0d70b4957c8633cf",
+    "workload_id": "TA-DS-CTX-200K-1"
+  }
+}

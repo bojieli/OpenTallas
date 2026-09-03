@@ -1,0 +1,141 @@
+{
+  "comparison_id": "qwen3_rom_single_chip_vs_hbm_single_chip",
+  "execution": {
+    "batch": 1,
+    "concurrency": 1,
+    "context_tokens": 8000,
+    "evidence_scope": "full_workload",
+    "generation": {
+      "eos_token_ids": [151645, 151643],
+      "include_eos_in_output": true,
+      "max_new_tokens": 256,
+      "selection_mode": "greedy_argmax_lowest_id",
+      "stop_condition": "first_official_eos_or_maximum_new_tokens",
+      "tie_rule": "lowest_token_id",
+      "vocabulary_size": 151936
+    },
+    "phases": ["prefill", "decode"]
+  },
+  "external_oracle": {
+    "evidence_class": "external_reference_comparator",
+    "path": "results/abi3/qwen3_reference_oracle_long.json",
+    "producer": {
+      "source_sha256": "dcad60852cf89003a96853659bd1e31cf2261668d8969957bc0538e9c4f09c15",
+      "tool": "tools/run_qwen3_reference_oracle.py"
+    },
+    "schema": "opentallas.abi3.reference_oracle.v1",
+    "source_sha256": "119067e3f3b7bf83739fbca8bd10976e9b5aa24d04fcc6e9bb59b688967307e8",
+    "status": "locked"
+  },
+  "model": {
+    "graph_id": "84bb97dd1243553f170fde014c15c76c6adf0b80f0ef3bdad27a015577b6c24b",
+    "kernel_ir_path": "build/ir-v3/qwen3-8b/kernel_ir.v3.json",
+    "kernel_ir_source_sha256": "62499454381d24641f8cedda00f049aff61b4aa96410fa3fe460e0044df567e6",
+    "model_id": "qwen3-8b",
+    "numeric_profile": "qwen3_bf16_gqa_target_v1"
+  },
+  "policy": {
+    "clock": {
+      "comparison_frequency_hz": null,
+      "policy_id": "common_routed_minimum_fmax_v1",
+      "same_frequency_required": true
+    },
+    "evidence_class": "predictive_asap7_characterized_or_explicit_assumption_v1",
+    "external_fabric_policy": "single_chip_no_external_fabric_v1",
+    "external_memory_policy": "source_locked_hbm_phy_and_stack_v1",
+    "latency_boundary": "host_request_to_terminal_completion_v1",
+    "pvt": {
+      "corner_id": "asap7_tt_0p70v_25c",
+      "process": "TT",
+      "temperature_c": 25,
+      "voltage_v": 0.7
+    },
+    "state_boundary": "fresh_session_prefill_then_causal_decode_v1",
+    "technology_claim": "predictive ASAP7 research view only; not foundry signoff, manufacturability, or an N4 claim",
+    "technology_view": "asap7"
+  },
+  "schema": "opentallas.abi3.comparison_contract.v1",
+  "targets": {
+    "hbm": {
+      "backend": "hbm-sram-abi3",
+      "capability": {
+        "digest": null,
+        "path": "configs/hardware/abi3_capability/asap7/hbm_sram_single_chip_v1.json",
+        "source_sha256": null,
+        "status": "pending"
+      },
+      "cost_policy": {
+        "cost_table_id": "abi3-cost-asap7-hbm-chip-v1",
+        "lock": {
+          "digest": null,
+          "path": "configs/hardware/abi3_cost_asap7_hbm_chip_v1.json",
+          "source_sha256": null,
+          "status": "pending"
+        },
+        "policy_id": "qwen_hbm_full_target_asap7_v1"
+      },
+      "deployment": {
+        "digest": null,
+        "path": "build/abi3/asap7/qwen3-8b-hbm-full-workload",
+        "source_sha256": null,
+        "status": "pending"
+      },
+      "node_count": 1,
+      "role": "hbm",
+      "storage_class": "HBM",
+      "target_id": "hbm-sram-abi3-single_chip",
+      "topology_class": 0
+    },
+    "rom": {
+      "backend": "rom.single_chip",
+      "capability": {
+        "digest": null,
+        "path": "configs/hardware/abi3_capability/asap7/rom_qwen3_single_chip_v1.json",
+        "source_sha256": null,
+        "status": "pending"
+      },
+      "cost_policy": {
+        "cost_table_id": "abi3-cost-asap7-qwen-rom-v1",
+        "lock": {
+          "digest": null,
+          "path": "configs/hardware/abi3_cost_asap7_qwen_rom_v1.json",
+          "source_sha256": null,
+          "status": "pending"
+        },
+        "policy_id": "qwen_rom_full_target_asap7_v1"
+      },
+      "deployment": {
+        "digest": null,
+        "path": "build/abi3/asap7/qwen3-8b-rom-full-workload",
+        "source_sha256": null,
+        "status": "pending"
+      },
+      "node_count": 1,
+      "role": "rom",
+      "storage_class": "ROM",
+      "target_id": "qwen3-8b-rom-single-chip",
+      "topology_class": 0
+    }
+  },
+  "version": "1.0.0",
+  "workload": {
+    "digest": "a25704db14fb0d0d888cf5e076b43bcf94a7713e4dd06ee150bc2304e130c6a5",
+    "index_path": "build/workloads/qwen3-8b/index.json",
+    "index_schema": "opentallas.abi3.workload_index.v1",
+    "index_source_sha256": "ffd0c0f52c6d96f172ad5318f157eddd352907e35bc46bee01e098d1b98ec065",
+    "kind": "long_natural",
+    "max_new_tokens": 256,
+    "path": "build/workloads/qwen3-8b/TA-QW-8K-1.json",
+    "prompt_token_count": 8000,
+    "rendered_text_sha256": "9627a47653bb9956e3b452b45f036352a44e3cf74ebc1a686ae5382a17cab75d",
+    "source_sha256": "9284b85b721d109d0d17c2fe3bc7187ebeca4e65fa90290c5de69270d217e9fc",
+    "template": {
+      "mode": "none_plain_text",
+      "path": null,
+      "source_sha256": null,
+      "template_id": "none_plain_text"
+    },
+    "tokenizer_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+    "workload_id": "TA-QW-8K-1"
+  }
+}
