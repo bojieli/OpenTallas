@@ -4,20 +4,39 @@
 
 **Status date:** 2026-09-03
 
-**Input baseline:** `main` through `60478c0` before this report refresh; this
-includes the fail-closed DeepSeek exact-200K oracle and accelerator-pair
-checkers, operation-derived ABI feature requirements, refreshed zero-`STATE`
-deployments, the correctness-qualified TPOT gate, exact DeepSeek wafer
-multicast RTL, the shipped-program Qwen prefix through all three real
-checkpoint-backed layer-zero Q/K/V projections, the exact full-shape first
-DeepSeek HBM `HC_PRE` functional issue, and the shared tensor-datapath
-correctness/TPOT architecture decision
+**Input baseline:** `main` through `f2bc183`; this includes the fail-closed
+DeepSeek exact-200K oracle and accelerator-pair checkers, refreshed
+zero-`STATE` deployments, the correctness-qualified TPOT and RTL-bound
+co-simulation evidence gates, the exact DeepSeek wafer multicast, the
+shipped-program Qwen prefix through all three real checkpoint-backed
+layer-zero Q/K/V projections, the exact full-shape first DeepSeek HBM
+`HC_PRE` functional issue, the standalone 256-lane row-folding mapper and
+exact Sinkhorn numeric tail, the bit-exact Qwen host-simulator attention
+acceleration, the corrected HBM `HEAD_RMS_NORM` head-count lowering, and the
+recorded no-artifact outcomes of the first DeepSeek ROM-array functional and
+cycle attempts
 
 **Role:** current narrative status and handoff report. Machine-readable result
 artifacts and the [unified execution checklist](UNIFIED_EXECUTION_CHECKLIST.md)
 remain authoritative when a copied count or status differs.
 
 ## 1. Executive status
+
+There are exactly two highest-priority release outcomes, and they are ordered.
+All compiler, RTL, physical-design, and simulator milestones below are enabling
+evidence for these outcomes rather than substitutes for them.
+
+| Priority release gate | Current status | Source-current acceptance evidence | Closure condition |
+|---|---|---|---|
+| 1. Correct output tokens | **open** | zero mandatory target executions are accepted at the current source identity | each target must execute the complete governed model and prompt, match every legal token ID and decoded text against the independent oracle, include and stop at the first official EOS when present or stop at exactly 256 tokens, and prove no post-EOS model transaction |
+| 2. Desired TPOT | **blocked by Gate 1; otherwise not evaluable** | zero correctness-qualified TPOT points exist for B=1/2/4/8 on either process view | the same token-correct execution must retain raw architectural token-commit ticks and use a characterized SKY130 or ASAP7 timebase, then pass a frozen numerical SLO for that workload and batch point |
+
+The 10,000-token/s or 100-microsecond-per-token figure remains an aspirational
+north star, not a silently assumed pass threshold. None of the three governed
+comparison contracts currently contains `execution.tpot_acceptance`; therefore
+no result can honestly be labeled “desired TPOT achieved” until numerical SLO
+rows are frozen. Host simulator speed, RTL simulator wall time, isolated block
+cycles, and analytical rooflines do not close Gate 2.
 
 The common compiler and functional-simulator stack is real and shared by both
 models and both storage backends. Both complete model graphs lower through the
@@ -45,6 +64,8 @@ The present boundary is therefore:
   evidence, target-cycle traces, process identities, or numerical budgets are
   absent;
 - RTL control plane and bounded arithmetic blocks: independently correlated;
+  the row-folding mapper and Sinkhorn tail are standalone blocks and are not yet
+  wired into a token-producing full-system path;
 - sequencer-to-arithmetic integration: the exact shipped-program prefix through
   `DMA.GATHER`, `TENSOR.EMBED_LOOKUP`, Qwen `VECTOR.RMS_NORM`, and all three
   layer-zero Q/K/V `TENSOR.MATMUL` operations, or through the DeepSeek
@@ -65,18 +86,21 @@ the remaining cost.
 | Gate | Status | Evidence now | What still prevents closure |
 |---|---|---|---|
 | Architecture and ABI 3.0 | closed | frozen live-buffer/fence profile; zero `STATE` in all four deployments | no ABI 3.1 work is required |
-| Common IR and four backend builds | closed for current graphs | Qwen and DeepSeek lower through the shared Model Graph and Tensor Kernel IR into HBM and ROM bundles | rebuild whenever an execution-authoritative source changes |
+| Common IR and four backend builds | closed for current graphs | Qwen and DeepSeek lower through the shared Model Graph and Tensor Kernel IR into HBM and ROM bundles; HBM head norms now encode 32/8 Qwen rows and 64 DeepSeek rows from the neutral IR | rebuild whenever an execution-authoritative source changes |
 | Functional short execution | partial | complete functional engine exists; retained short token prefixes and historical workload evidence; the first exact T=512 DeepSeek HBM `HC_PRE` issue matches an independent service on all 12,288 FP32 output words | current DeepSeek arithmetic repair and Qwen source profile make the retained token captures non-promotable; the `HC_PRE` result is an operator qualification, not a token |
-| RTL 3.0 | partial | shipped control replay and 11 bounded arithmetic pairs independently correlate; the integrated Verilator prefix now drives 6 gathers, 4 embedding lookups, 2 Qwen RMSNorms, 6 complete Qwen Q/K/V projections, and 2 DeepSeek transfers; the unchanged MAC lane is separately Icarus/Verilator qualified; exact DeepSeek wafer multicast passes both simulators in an isolated campaign | Qwen next stops at `VECTOR.HEAD_RMS_NORM` at PC 20, DeepSeek multicast still needs shared-prefix integration, DeepSeek HBM stops at `VECTOR.MHC`, and no RTL path reaches a token |
+| RTL 3.0 | partial | shipped control replay and bounded arithmetic pairs independently correlate; the integrated Verilator prefix now drives 6 gathers, 4 embedding lookups, 2 Qwen RMSNorms, 6 complete Qwen Q/K/V projections, and 2 DeepSeek transfers; the standalone 256-lane mapper, exact Sinkhorn tail, unchanged MAC lane, and exact DeepSeek wafer multicast have dual-simulator evidence | Qwen next stops at `VECTOR.HEAD_RMS_NORM` at PC 20, DeepSeek multicast still needs shared-prefix integration, DeepSeek HBM stops at `VECTOR.MHC`, and no RTL path reaches a token |
 | Mandatory workloads | open | exact prompt artifacts and tokenizer/oracle machinery exist | fresh Qwen exact-8K pairs and both DeepSeek exact-200K executions are absent; the DeepSeek oracle stops after eight tokens |
 | SKY130 and ASAP7 | partial | several bounded blocks have process-specific reports | neither view characterizes a complete target; ASAP7 readiness has 15 fail-closed blockers |
-| Governed comparison | partial | short historical ROM/HBM comparisons retain topology and counter evidence; `081161b` adds a source/process/batch-bound correctness-qualified TPOT schema and checker; `cbaecf0` freezes the shared-datapath production plan and exact-execution promotion rule | no source-current mandatory-workload pair, production-simulation token record, target token-commit trace, frozen numerical TPOT budget, or complete same-view system cost exists |
+| Governed comparison | partial | short historical ROM/HBM comparisons retain topology and counter evidence; `081161b` adds a source/process/batch-bound correctness-qualified TPOT schema and checker; `8080d8f` adds the explicit RTL-bound accelerated co-simulation tier; `cbaecf0` freezes the shared-datapath production plan and exact-execution promotion rule | no source-current mandatory-workload pair, production-simulation token record, target token-commit trace, frozen numerical TPOT budget, or complete same-view system cost exists |
 
 ### 1.2 Source-current execution readiness
 
-At this checkpoint no long accelerator capture is active or accepted. Other
-high-memory jobs remain serialized until one source-current run establishes
-memory and I/O headroom.
+At this checkpoint one short-threshold, 32-node DeepSeek ROM-array functional
+rerun is active, but no long mandatory accelerator capture is active or
+accepted. The rerun uses `TA-DS-CTX-129-1` and requests eight generated tokens;
+it is a scalability diagnostic, not the exact-200K Gate-1 workload. Other
+high-memory jobs remain serialized until it finishes and one source-current
+mandatory run establishes memory and I/O headroom.
 
 - Qwen HBM natural capture A ran as the durable user service
   `opentallas-qwen-w10-natural-a-r1.service`. It launched from committed source
@@ -91,7 +115,7 @@ memory and I/O headroom.
   acceptance verdict, or TPOT. Capture B remains gated on a replacement capture
   A completing and passing the W10 checker.
 
-- Qwen HBM deployment `a6d98d47ff80…` passes its 21/21 certificate and the
+- Qwen HBM deployment `0d7897457e14…` passes its 21/21 certificate and the
   independent 43/43 admission checks. It spans 18.53 GB of admitted HBM and has
   exact prefill/decode entrypoints, 215 descriptors, 74 instructions, and zero
   `STATE` records. A source-map audit found that `runtime/sim/weight_cache.py`
@@ -99,6 +123,21 @@ memory and I/O headroom.
   part of the required source map. The terminated durable run bound its launch
   source and output identity; any replacement must bind a newly frozen identity
   rather than silently folding later source changes into the failed run.
+- Commit `197a714` removes a correctness-critical HBM lowering default. The
+  neutral IR declares the logical head rows, but the old HBM path encoded
+  `aux0=1` after flattening the physical operand. The source-current Qwen bundle
+  now encodes 32 query heads and 8 key heads, and all four compressed DeepSeek
+  descriptors encode 64 heads. Real-model regressions and missing/zero-head
+  fail-closed cases pass; Qwen's rebuilt bundle is deterministic, admitted, and
+  independently passes all 21 certificate checks. This repair is required
+  compiler evidence, not a generated token.
+- Commit `04cceeb` parallelizes the eight numerically independent Qwen GQA KV
+  heads in the host functional simulator without changing an individual
+  head's reduction order, outputs, counters, descriptor semantics, or fault
+  ordering. A representative exact-8K-shape attention benchmark improved from
+  5.6503 s to 1.6968 s (3.33x) with an identical output digest and counters;
+  34 focused tests pass. These seconds describe campaign turnaround only and
+  are categorically not target TPOT.
 - Qwen ROM deployment `d8a6f8edaaac…` passes 61/61 schedule checks with 236
   descriptors, 74 instructions, and zero `STATE` records. Operation-derived
   feature cleanup is integrated: every production program omits
@@ -165,9 +204,12 @@ memory and I/O headroom.
   bitwise with zero mismatches. It accounts for 201,326,592 ordered projection
   fused product-adds. This is full operator-level functional evidence only: it
   is not RTL execution, token generation, EOS completion, architectural timing,
-  or TPOT. Reusable correctly rounded nonlinear/division hardware, the exact
-  Sinkhorn controller, full-shape scheduling, and PC-14 bridge integration
-  remain open.
+  or TPOT. Commit `601a108` subsequently qualifies a correctly rounded finite
+  FP32 divider and atomic post-stable-softmax 4x4 Sinkhorn-20 tail on Icarus and
+  Verilator: 6,641 division cases, 81 matrices, and 73,040 exact checks, plus
+  clean generic Yosys elaboration. The exponential and sigmoid units, stable
+  softmax front end, full-shape scheduling, and PC-14 bridge integration remain
+  open, so this still is not complete `HC_PRE` or a model-token result.
 - Commit `081161b` adds the correctness-qualified TPOT request, raw timing-trace,
   report schemas, and checker. It requires exact independent-oracle tokens and
   EOS/cap behavior before consuming raw token-commit ticks from the same bound
@@ -183,6 +225,27 @@ memory and I/O headroom.
   forbids publishing TPOT unless that exact batch/source/checkpoint/tokenizer/
   workload/IR/deployment/implementation/process execution first passes complete
   tokens, legal decoding, EOS-or-cap, and no-post-EOS checks.
+- Commits `473d0fb` and `5256f5c` qualify the standalone synthesizable 256-lane,
+  four-group deterministic row-folding mapper and replace its general divider
+  with exact quotient-boundary comparisons. Icarus and Verilator agree over 34
+  cases, 2,065 waves, 498,429 logical coordinates, and 1,663,558 checks per
+  simulator. This closes lane-coordinate control in isolation; the mapper is
+  not yet integrated with the tensor datapath, memory ports, or token path.
+- The first 32-node DeepSeek ROM-array functional attempt on
+  `TA-DS-CTX-129-1` ran for 2 h 45 min wall time and about 5 h of CPU at 64 GB
+  RSS, but its owning session stopped while execution was still in progress.
+  It wrote no result and proves no token. A replacement began at 22:00:44 UTC;
+  its live command writes to a session-temporary
+  `scratchpad/array_ctx129_rerun.json`, not directly to the canonical
+  `results/abi3` path. Completion, artifact preservation, and validation must
+  all be confirmed before even this short diagnostic may be cited.
+- The first 32-node DeepSeek ROM-array cycle attempt was admitted, then killed
+  by the kernel OOM killer after about 155 min wall time and 29 CPU-hours at
+  84 GB RSS. It produced no cycle artifact. The deployment allocates node-local
+  arenas at the IR's 1,048,576-position horizon; replicating those live arenas
+  across all 32 nodes is not hostable on this 188 GiB machine. WP-D2-style KV
+  and activation sharding is required before this path can support the
+  mandatory exact-200K workload or a correctness-qualified TPOT capture.
 
 ## 2. Frozen ABI 3.0 execution profile
 
@@ -401,6 +464,9 @@ executions. The launcher and final pair checker are implemented and focused-test
 complete, but neither the full oracle run nor either accelerator run has
 occurred. Performance instrumentation and decoded weight caching make those
 runs more tractable but do not reduce the workload or the required arithmetic.
+The active 129-token ROM-array rerun is useful only for early scalability and
+integration diagnosis; even a successful eight-token result cannot substitute
+for the exact-200K wafer-ROM or 32-node-HBM executions.
 
 ### 7.3 Tokens, stopping, and speed actually established
 
@@ -452,21 +518,65 @@ release pass criterion; the actual SLO remains to be frozen separately for
 each model, role, process/PVT view, batch/concurrency point, statistic, and
 eligible evidence class.
 
-Commit `8a7160d` makes one important performance blocker explicit without
-changing any schedule or cycle total. Across the 253 Qwen decode matmuls, the
-current mapping reports 7,568,097,280 useful work units and 445,151,444,992
-issued units: 437,583,347,712 padded units, or 98.2999 percent. The same matmul
-set has zero padding for a 64-token prefill span. Physical lane utilization is
-reported as `not_derivable`, because neither an active-row mask nor a binding
-from ABI tile axes to physical tensor lanes exists in the implemented RTL.
-Changing only the compiler tile row count would manufacture a faster estimate.
-The architecture must first choose and implement either active-row/lane mapping
-or a physically distinct narrow decode engine, then correlate it against exact
-tokens and characterize it separately on SKY130 and ASAP7.
+Commit `8a7160d` exposed one performance blocker without changing a schedule or
+cycle total. Across the 253 Qwen decode matmuls, the old fixed-tile mapping
+reports 7,568,097,280 useful work units and 445,151,444,992 issued units:
+437,583,347,712 padded units, or 98.2999 percent. Commits `473d0fb` and
+`5256f5c` now prove the active-row and deterministic folding coordinate rule in
+standalone RTL, so the required control mapping is no longer unspecified. It
+has not yet been integrated with 256 physical MAC lanes, accumulators, SRAM/HBM
+ports, or the cycle model. The old padded cycle total therefore remains
+diagnostic, while a new integrated cycle total remains absent.
+
+Even granting perfect removal of every padded issue, perfect overlap, no
+bubbles or conflicts, and the characterized 0.3458786 useful work per
+lane-cycle, the source-current useful-work inventory gives these optimistic
+*compute-only lower bounds* for one batch decode step. They are design
+feasibility projections, not executed TPOT:
+
+| Target and physical tensor lanes | Process proxy | B=1 | B=2 | B=4 | B=8 |
+|---|---|---:|---:|---:|---:|
+| Qwen HBM, 256 | SKY130, 38.8071 MHz | 2.202 s | 4.405 s | 8.810 s | 17.620 s |
+| Qwen HBM, 256 | ASAP7, 57.959 MHz | 1.475 s | 2.949 s | 5.899 s | 11.798 s |
+| Qwen ROM, 512 | SKY130, 38.8071 MHz | 1.101 s | 2.202 s | 4.405 s | 8.810 s |
+| Qwen ROM, 512 | ASAP7, 57.959 MHz | 0.737 s | 1.475 s | 2.949 s | 5.899 s |
+| DeepSeek 32-chip HBM, 8,192 global | SKY130 proxy | 0.1085 s | 0.2169 s | 0.4339 s | 0.8677 s |
+| DeepSeek 32-chip HBM, 8,192 global | ASAP7 proxy | 0.0726 s | 0.1453 s | 0.2905 s | 0.5810 s |
+| DeepSeek wafer ROM, 8,192 | SKY130 proxy | 0.1085 s | 0.2169 s | 0.4339 s | 0.8677 s |
+| DeepSeek wafer ROM, 8,192 | ASAP7 proxy | 0.0726 s | 0.1453 s | 0.2905 s | 0.5810 s |
+
+The Qwen rows use the retained 7,568,097,280-work inventory. The DeepSeek rows
+use a static 11,926,769,664-work contraction-volume projection from the
+source-current 200K-capacity IR, not an executed model counter. At the first
+Qwen decode step, 16,381,470,720 certified weight bytes plus 1,179,795,456 KV
+bytes impose a separate optimistic 43.06 ms floor on one 407.8 GB/s HBM stack,
+assuming perfect service and reuse of one weight sweep across the batch.
+
+If 100 microseconds is promoted from north star to a mandatory B=1 target, the
+current baseline is not a near miss. At the characterized rate it would require
+about 5.64 million Qwen tensor lanes on the SKY130 proxy or 3.78 million on the
+ASAP7 proxy, versus 256 HBM lanes; ideal Qwen HBM weight service alone would
+require 163.8 TB/s. DeepSeek would require about 8.89 million or 5.95 million
+global lanes, versus 8,192. Preserving 100 microseconds per sequence at larger
+batches multiplies the compute requirement by B. Therefore folding is
+necessary, but a mandatory 100-microsecond SLO would require a fundamentally
+wider spatial design and memory/fabric system rather than another scheduling
+tweak.
+
+The ROM timing inputs also have an unresolved structural mismatch. The Qwen
+ROM capability declares 16 banks and the DeepSeek wafer capability declares
+12,288 banks, while the cycle loader asks for `memory.rom.arrays`; neither
+capability supplies that field, so both fall back to the cost table's eight
+arrays at 32 bytes/cycle each. Banks cannot be silently relabeled as independent
+arrays. The intended bank-to-port/array organization and its arbitration must
+be represented in the capability, correlated in RTL, and characterized in each
+process view before a ROM bandwidth or TPOT claim is credible.
 
 The 2026-09-03 launch preflight observed 202.4 GB host RAM with 165.1 GB
 available, 99.4 GB free filesystem space, and an RTX PRO 6000 with 97,887 MiB
-total but only 12,353 MiB free. Swap was effectively full. The DeepSeek
+total but only 12,353 MiB free. A later live check during the ROM-array rerun
+showed about 129 GiB available RAM, 83 GiB free filesystem space, and swap still
+fully occupied at 8 GiB. The DeepSeek
 checkpoint manifest closes over 74 files totaling 166,898,661,074 bytes,
 including 48 checkpoint shards. These observations make
 serial high-memory campaigns mandatory on this host and are resource-safety
@@ -489,40 +599,53 @@ is not foundry signoff.
 ## 9. Critical path from here
 
 1. Keep ABI 3.0 frozen and retain the zero-`STATE`, live-buffer admission gates.
-2. Establish why the last durable service received `SIGTERM`, freeze the final
-   source/deployment identity, and relaunch Qwen HBM exact-8K natural capture A
-   with a unique result, log, timing, and deployment path. Require legal IDs,
-   exact tokenizer and text round trips, exact external-oracle equality, correct
-   first-EOS-or-256 stopping, complete provenance, and a strict W10 checker
-   pass.
-3. Only after the fresh capture A establishes resource headroom and passes,
-   launch the
-   independent capture B. Then complete the assigned source-current Qwen ROM,
-   reasoning/chat, stress, and closed-loop agentic cells.
-4. Execute the DeepSeek `--gate-b-production` external oracle when the required
+2. Freeze explicit workload/process/PVT/B/statistic TPOT SLO rows before fixing
+   the production lane and memory organization. If 100 microseconds is a
+   mandatory rather than aspirational target, replace the present 256-lane
+   single-chip baseline with a quantitatively feasible spatial architecture;
+   do not spend the full physical-closure effort on a baseline whose optimistic
+   lower bound already fails the target by orders of magnitude.
+3. Let the active DeepSeek 129-token ROM-array diagnostic finish without a
+   competing long-model launch. Preserve and validate its temporary result if
+   it completes, but do not count it toward exact-200K correctness or TPOT.
+4. Treat commit `197a714` and rebuilt deployment `0d7897457e14…` as the first
+   corrected Qwen HBM candidate, but do not launch while another long-model job
+   owns the host. The prior service's external `SIGTERM` has no established
+   source. Require a clean pushed source, host-exclusive execution, at least
+   100 GiB available memory, reclaimed swap headroom, and unique result/log/time
+   paths before relaunching exact-8K natural capture A.
+5. Inspect capture A's complete 256-token cap result against the external
+   oracle: legal IDs, exact token and text equality, no EOS for this oracle,
+   exact-cap stop, no post-cap transaction, provenance, and a strict W10 pass.
+   Only after A passes, launch independent capture B. Then complete the
+   source-current Qwen ROM, reasoning/chat, stress, and closed-loop agentic
+   cells.
+6. Execute the DeepSeek `--gate-b-production` external oracle when the required
    GPU, checkpoint I/O, and host-memory resources are available. Require both
    the pre-run full-byte hash and the completion identity rehash; do not promote
    the retained eight-token prefix.
-5. Preserve the integrated operation-derived feature invariant:
+7. Resolve and test the exact-200K attention/KV read-view extent before a
+   DeepSeek target launch, then preserve the operation-derived feature
+   invariant:
    `TRANSACTIONAL_STATE` in no production program and `INTEGRITY_RETRY` only
    for actual DeepSeek communication descriptors.
-6. Implement the shared 256-lane active-row mask and deterministic row-folding
-   contract without changing reduction association, and extend the proven RTL
+8. Integrate the proven active-row/folding mapper with the selected production
+   tensor lanes without changing reduction association, and extend the RTL
    prefix from Qwen `VECTOR.HEAD_RMS_NORM`, DeepSeek ROM `LINK.MULTICAST`, and
    DeepSeek HBM `VECTOR.MHC` through every required operator, memory service,
    communication primitive, argmax, token append, token-commit counter, and EOS
-   path. Bind any accelerated full-system co-simulation engine bit-for-bit and
+   path. Bind every accelerated full-system co-simulation engine bit-for-bit and
    cycle-for-cycle to synthesizable RTL; do not label that tier monolithic RTL.
-7. Run short integrated token diagnostics on all four targets; then run exact
+9. Run short integrated token diagnostics on all four targets; then run exact
    200K accelerator execution on one DeepSeek ROM wafer and exactly 32 shared
    HBM/SRAM chips, publishing complete tokens, text, counters, topology, and
    source identities and passing the exact-200K accelerator-pair checker.
-8. Freeze explicit role/process/PVT/batch/statistic TPOT budgets. Only after a
-   run is token-correct, measure and report its TPOT. For every
-   later batch point, require correct-token count, first divergence, stop
-   reason, TTFT, per-step latency, steady-state TPOT, and aggregate throughput
-   from the same execution; keep analytical projections separate.
-9. Complete separate SKY130 and ASAP7 full-system characterization and feed
+10. Only after each run is token-correct, derive its TPOT from its own raw
+   token-commit ticks and characterized target timebase. For every B=1/2/4/8
+   point, retain correct-token count, first divergence, stop reason, TTFT,
+   per-step latency, steady-state per-sequence TPOT, and aggregate throughput
+   from that same execution; keep analytical projections separate.
+11. Complete separate SKY130 and ASAP7 full-system characterization and feed
    measured limits back into the cycle model before publishing the same-view
    ROM-versus-HBM comparison.
 
