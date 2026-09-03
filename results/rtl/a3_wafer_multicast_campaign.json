@@ -1,0 +1,386 @@
+{
+  "case_count": 38,
+  "checks": 12583553,
+  "geometry": {
+    "bytes_per_message": 65536,
+    "messages": 255,
+    "participants": 256,
+    "payload_bytes": 16711680,
+    "payload_flits": 4177920,
+    "remote_writes_including_root": 4194304,
+    "rounds": 8,
+    "words_per_message": 16384
+  },
+  "log_sha256": {
+    "iverilog": "8f7e2afe0411b056986a0c56d54612a57079bf8fe33c06d69d6bbf6303feee6b",
+    "verilator": "9d7236a02096965d20aa5c2f6da236ea4c198ef47528b5877f0ff2fe7d421a3a"
+  },
+  "normalized_cases": [
+    {
+      "admitted": 1,
+      "bytes": 16711680,
+      "crc_errors": 1,
+      "credit_stalls": 0,
+      "cycles": 4228354,
+      "index": 0,
+      "messages": 255,
+      "payload_flits": 4177920,
+      "reason": 0,
+      "replayed": 4,
+      "retries": 1,
+      "sequence_errors": 4,
+      "tx_flits": 4177925,
+      "writes": 4194304
+    },
+    {
+      "admitted": 0,
+      "index": 1,
+      "reads": 0,
+      "reason": 1,
+      "writes": 0
+    },
+    {
+      "admitted": 0,
+      "index": 2,
+      "reads": 0,
+      "reason": 1,
+      "writes": 0
+    },
+    {
+      "admitted": 0,
+      "index": 3,
+      "reads": 0,
+      "reason": 1,
+      "writes": 0
+    },
+    {
+      "admitted": 0,
+      "index": 4,
+      "reads": 0,
+      "reason": 1,
+      "writes": 0
+    },
+    {
+      "admitted": 0,
+      "index": 5,
+      "reads": 0,
+      "reason": 2,
+      "writes": 0
+    },
+    {
+      "admitted": 0,
+      "index": 6,
+      "reads": 0,
+      "reason": 3,
+      "writes": 0
+    },
+    {
+      "admitted": 0,
+      "index": 7,
+      "reads": 0,
+      "reason": 4,
+      "writes": 0
+    },
+    {
+      "admitted": 0,
+      "index": 8,
+      "reads": 0,
+      "reason": 5,
+      "writes": 0
+    },
+    {
+      "admitted": 0,
+      "index": 9,
+      "reads": 0,
+      "reason": 5,
+      "writes": 0
+    },
+    {
+      "admitted": 0,
+      "index": 10,
+      "reads": 0,
+      "reason": 5,
+      "writes": 0
+    },
+    {
+      "admitted": 0,
+      "index": 11,
+      "reads": 0,
+      "reason": 5,
+      "writes": 0
+    },
+    {
+      "admitted": 0,
+      "index": 12,
+      "reads": 0,
+      "reason": 5,
+      "writes": 0
+    },
+    {
+      "admitted": 0,
+      "index": 13,
+      "reads": 0,
+      "reason": 5,
+      "writes": 0
+    },
+    {
+      "admitted": 0,
+      "index": 14,
+      "reads": 0,
+      "reason": 5,
+      "writes": 0
+    },
+    {
+      "admitted": 0,
+      "index": 15,
+      "reads": 0,
+      "reason": 5,
+      "writes": 0
+    },
+    {
+      "admitted": 0,
+      "index": 16,
+      "reads": 0,
+      "reason": 6,
+      "writes": 0
+    },
+    {
+      "admitted": 0,
+      "index": 17,
+      "reads": 0,
+      "reason": 6,
+      "writes": 0
+    },
+    {
+      "admitted": 0,
+      "index": 18,
+      "reads": 0,
+      "reason": 7,
+      "writes": 0
+    },
+    {
+      "admitted": 0,
+      "index": 19,
+      "reads": 0,
+      "reason": 7,
+      "writes": 0
+    },
+    {
+      "admitted": 0,
+      "index": 20,
+      "reads": 0,
+      "reason": 7,
+      "writes": 0
+    },
+    {
+      "admitted": 0,
+      "index": 21,
+      "reads": 0,
+      "reason": 7,
+      "writes": 0
+    },
+    {
+      "admitted": 0,
+      "index": 22,
+      "reads": 0,
+      "reason": 7,
+      "writes": 0
+    },
+    {
+      "admitted": 0,
+      "index": 23,
+      "reads": 0,
+      "reason": 8,
+      "writes": 0
+    },
+    {
+      "admitted": 0,
+      "index": 24,
+      "reads": 0,
+      "reason": 8,
+      "writes": 0
+    },
+    {
+      "admitted": 0,
+      "index": 25,
+      "reads": 0,
+      "reason": 9,
+      "writes": 0
+    },
+    {
+      "admitted": 0,
+      "index": 26,
+      "reads": 0,
+      "reason": 9,
+      "writes": 0
+    },
+    {
+      "admitted": 0,
+      "index": 27,
+      "reads": 0,
+      "reason": 10,
+      "writes": 0
+    },
+    {
+      "admitted": 0,
+      "index": 28,
+      "reads": 0,
+      "reason": 10,
+      "writes": 0
+    },
+    {
+      "admitted": 0,
+      "index": 29,
+      "reads": 0,
+      "reason": 10,
+      "writes": 0
+    },
+    {
+      "admitted": 0,
+      "index": 30,
+      "reads": 0,
+      "reason": 10,
+      "writes": 0
+    },
+    {
+      "admitted": 0,
+      "index": 31,
+      "reads": 0,
+      "reason": 10,
+      "writes": 0
+    },
+    {
+      "admitted": 0,
+      "index": 32,
+      "reads": 0,
+      "reason": 10,
+      "writes": 0
+    },
+    {
+      "admitted": 0,
+      "index": 33,
+      "reads": 0,
+      "reason": 11,
+      "writes": 0
+    },
+    {
+      "admitted": 0,
+      "index": 34,
+      "reads": 0,
+      "reason": 11,
+      "writes": 0
+    },
+    {
+      "admitted": 0,
+      "index": 35,
+      "reads": 0,
+      "reason": 12,
+      "writes": 0
+    },
+    {
+      "admitted": 0,
+      "index": 36,
+      "reads": 0,
+      "reason": 12,
+      "writes": 0
+    },
+    {
+      "admitted": 0,
+      "index": 37,
+      "reads": 0,
+      "reason": 12,
+      "writes": 0
+    }
+  ],
+  "schema": "opentallas.rtl.a3_wafer_multicast_campaign.v1",
+  "scope": {
+    "architectural_tpot_claim": false,
+    "deployment": "build/abi3/deepseek-v4-flash-rom",
+    "descriptor_id": 368,
+    "exact_full_payload": true,
+    "host_wall_time_is_verification_cost_only": true,
+    "instruction": "LINK.MULTICAST",
+    "packet_crc_replay_injected": true,
+    "pc": 13,
+    "time_multiplexed_verification_adapter": true
+  },
+  "simulators_agree": true,
+  "source": {
+    "bundle": "build/abi3/deepseek-v4-flash-rom",
+    "capability_sha256": "5abf26b4ef235d6083c6f6dbe48d7021068c59ecb451238569a2f660303d26b6",
+    "communication_descriptor_id": 368,
+    "communication_prefix_hex": "5441334406000100c0000000000000006d0100006e010000ffffffffffffffff",
+    "counter_descriptor_id": 367,
+    "deployment_json_sha256": "04778ff37e57b87cd0cee48c01558bdfd63c2f8146d0b0a23ff9afee15a54b45",
+    "deployment_sha256": "f239f8fede6963d3daebfe19e8771afad69cf09992e339a0191a1983518ae8a7",
+    "descriptors_bin_sha256": "4f341b3b91e3260029066700b7dab4f8e290818db667abd769381ac476f288f0",
+    "local_object_descriptor_id": 365,
+    "pc": 13,
+    "program_bin_sha256": "1677777e96086fa7f8f0ab3007324629ac05ea7f02c2306d698d1ffd1c6cfc6f",
+    "raw_record_sha256": {
+      "communication": "fb23e1284c751135323210d1c5b44aee55da7b73411ab20209afa3e17b53866f",
+      "counter": "5c05c5725e57dbcb261bdf5c8943c05d9d66d425fc575e9f10525a477039afb3",
+      "local": "88f48030a471540b66792a53425ecd547ed17b371a7827de6e569d65e468f965",
+      "remote": "460645a925b1ca5b416df323d4a974ddb5c49ed24a0556f31640a683a37c4795",
+      "topology": "6af9839425ad9991a22b3e0d5d9c4952bc91d00099bbf075fb394a1405055b21"
+    },
+    "remote_object_descriptor_id": 366,
+    "topology_descriptor_id": 0
+  },
+  "source_sha256": {
+    "rtl/abi3/ot_a3_communication_decoder.sv": "c693a58478a06ec4efb0f7ba550c086d618327a4ca2b1a3849c5f965e63b7a2a",
+    "rtl/abi3/ot_a3_link_channel.sv": "c8856fce3b899cced1d8991f3354b0cc1249f6ee0150dbf6a90635b1f7bdc9da",
+    "rtl/abi3/ot_a3_link_endpoint.sv": "544994b3332313dc43d4ca84548d3946120a4957ec927751eaf9edc16baced0a",
+    "rtl/abi3/ot_a3_link_node.sv": "2a1d8e6fbfc22fb310bb76b89e6e92de30adf32b596c38e019b79f5129779309",
+    "rtl/abi3/ot_a3_link_pkg.sv": "d49c14b787d0af6ad803f46a19e0481155f196f893dc55a0019594dd6f3c3fcf",
+    "rtl/abi3/ot_a3_wafer_multicast_adapter.sv": "baf8bd310fdc7a25b4dfa9d464932f87a4a9c8f4c7e7074102488aeb5922b8bb",
+    "rtl/lib/ot_crc_pkg.sv": "49b31710d955827b5beabc9fd63930f1d53c566f925985f16715835ae1ff7d3b",
+    "rtl/ot_fp32_rne_pkg.sv": "39de679dd5f277d8a9cc2d5b6349eb1675e9397e64a8256bb1f53a34a054608c",
+    "rtl/test/tb_a3_wafer_multicast.sv": "6ab48a7bc652e4607d06c0a44defe58f00e8919d802792eb6111273d40fc17e9",
+    "runtime/abi3/constants.py": "a97b329b38a5bfb6438924e34b26c6f70b8e068026c685a29ec9b1ff0b8c1e4a",
+    "runtime/abi3/crc.py": "d47b2c45f250b438d3cbc04eef2dd3c1ab68b771392cbe16de78a1238439e27e",
+    "runtime/abi3/deployment.py": "e7aeac69a74590ded75ba34b603b23aa071f58ef7965e2f8f93d72a82dc35b61",
+    "runtime/abi3/descriptors.py": "fd60c52ee2117016a8faa644cdaebe1e95ad003535576bec241f7d9c6018993e",
+    "runtime/abi3/records.py": "18140e2a382dd4d515da33ccf2c5a08c203bcb36ae9e3e86747265346d4ad7ca",
+    "runtime/cycle/fabric.py": "b105396ae0ce8398baa88e2bb04f441bacc512a510c5285c36ba021aa555c693",
+    "runtime/cycle/model.py": "4b50afbaef3297e418c36f940dfdd652b12188508ff43de8b8c211edb82fdefd",
+    "runtime/sim/engines/link.py": "086af2f3f501b180821ae6130abd6aeefe78172199a86066cb01583699aa208e",
+    "spec/abi3/descriptor_payloads.json": "ed7ad8fbc510f3e4a3b7bae190651df10692b2279f0df057ca1a93197811a911",
+    "spec/abi3/records.json": "a6e6d518a2e4dec27296ec7a9ea6a293234c5126a87c9c5387479aacae3d99ae",
+    "spec/abi3/registries.json": "8ae8cbb74d9c6f6c7285e154b9ea8e8fa273d501e17d15edf55ba5ad3ededd23",
+    "tools/build_a3_wafer_multicast_vectors.py": "1efc27f6eefb2c5d25e29ac004f76e15cf1c9c4ee2d281349cc9467444d4388e",
+    "tools/rtl_a3_wafer_multicast_campaign.py": "9b817f7456c0dd02bd395a856e3817344816db75f862a41152d5314203805867"
+  },
+  "status": "pass",
+  "tools": {
+    "iverilog": {
+      "path": "/usr/bin/iverilog",
+      "sha256": "1ba67856249142771239573b5d51c7f6e4d67a1e7931a0d0fab56e0d473d2167",
+      "version": "Icarus Verilog version 11.0 (stable) ()"
+    },
+    "verilator": {
+      "path": "<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator",
+      "sha256": "fb2cc573b1055cf096c90e1efc9966fe56bdb4b265c83590cf2a49f7a0defcdf",
+      "version": "Verilator 5.050 2026-07-01 rev v5.050"
+    },
+    "vvp": {
+      "path": "/usr/bin/vvp",
+      "sha256": "075b114070eed3bc72e0e4559decf40520f3b693b1da9c94bba1defe8896966d"
+    }
+  },
+  "vector_sha256": {
+    "case_meta.hex": "cb3eb9388935ffebffb4c45c3307810590b6d824e1d9e2e353f877a1041e66f2",
+    "communication.hex": "84184ecea877608a5bc52d48bf804bb02e43f6ed97b2693fc7660f2eabc1f6c3",
+    "counter.hex": "c05408cd1520a63e8740d76c0af1cea48a103d646ef64a958d27b5e2ac56e7a7",
+    "index.json": "8f85ac98b6946aabae15dabec5362a4514784f870e69cec3376f27c70f3bd4c6",
+    "local_object.hex": "3bcb6c1fa0f48c907ce7f622a1e304ea56767ed4ed86b34f513ff0e6b15a4e58",
+    "remote_object.hex": "8c30608e8c12c2d10b965d8d68e9998c9303bb0706d203b18954e9f651987342",
+    "topology.hex": "e504da89b49a384b31d95841abb2c936078784f5e7f1b578b83255a3cefdc1dd"
+  },
+  "verification_wall_seconds": {
+    "iverilog_compile": 0.017701653065159917,
+    "iverilog_simulation": 466.25152142497245,
+    "verilator_compile": 7.4559902279870585,
+    "verilator_simulation": 63.07265590596944
+  }
+}

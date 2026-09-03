@@ -1,0 +1,330 @@
+{
+  "case_count": 38,
+  "cases": [
+    {
+      "admitted": true,
+      "index": 0,
+      "inject_crc": true,
+      "label": "exact_pc13_multicast_crc_replay",
+      "refusal_reason": 0
+    },
+    {
+      "admitted": false,
+      "index": 1,
+      "inject_crc": false,
+      "label": "wrong_pc",
+      "refusal_reason": 1
+    },
+    {
+      "admitted": false,
+      "index": 2,
+      "inject_crc": false,
+      "label": "wrong_major",
+      "refusal_reason": 1
+    },
+    {
+      "admitted": false,
+      "index": 3,
+      "inject_crc": false,
+      "label": "wrong_subopcode",
+      "refusal_reason": 1
+    },
+    {
+      "admitted": false,
+      "index": 4,
+      "inject_crc": false,
+      "label": "wrong_communication_id",
+      "refusal_reason": 1
+    },
+    {
+      "admitted": false,
+      "index": 5,
+      "inject_crc": false,
+      "label": "nonzero_view_count",
+      "refusal_reason": 2
+    },
+    {
+      "admitted": false,
+      "index": 6,
+      "inject_crc": false,
+      "label": "nonzero_state_count",
+      "refusal_reason": 3
+    },
+    {
+      "admitted": false,
+      "index": 7,
+      "inject_crc": false,
+      "label": "communication_stale_crc",
+      "refusal_reason": 4
+    },
+    {
+      "admitted": false,
+      "index": 8,
+      "inject_crc": false,
+      "label": "communication_ordering",
+      "refusal_reason": 5
+    },
+    {
+      "admitted": false,
+      "index": 9,
+      "inject_crc": false,
+      "label": "communication_scope",
+      "refusal_reason": 5
+    },
+    {
+      "admitted": false,
+      "index": 10,
+      "inject_crc": false,
+      "label": "communication_participants",
+      "refusal_reason": 5
+    },
+    {
+      "admitted": false,
+      "index": 11,
+      "inject_crc": false,
+      "label": "communication_chunk",
+      "refusal_reason": 5
+    },
+    {
+      "admitted": false,
+      "index": 12,
+      "inject_crc": false,
+      "label": "communication_extent",
+      "refusal_reason": 5
+    },
+    {
+      "admitted": false,
+      "index": 13,
+      "inject_crc": false,
+      "label": "communication_local_object",
+      "refusal_reason": 5
+    },
+    {
+      "admitted": false,
+      "index": 14,
+      "inject_crc": false,
+      "label": "communication_source_outside_group",
+      "refusal_reason": 5
+    },
+    {
+      "admitted": false,
+      "index": 15,
+      "inject_crc": false,
+      "label": "communication_destination_outside_group",
+      "refusal_reason": 5
+    },
+    {
+      "admitted": false,
+      "index": 16,
+      "inject_crc": false,
+      "label": "topology_stale_crc",
+      "refusal_reason": 6
+    },
+    {
+      "admitted": false,
+      "index": 17,
+      "inject_crc": false,
+      "label": "topology_reserved_nonzero",
+      "refusal_reason": 6
+    },
+    {
+      "admitted": false,
+      "index": 18,
+      "inject_crc": false,
+      "label": "topology_class",
+      "refusal_reason": 7
+    },
+    {
+      "admitted": false,
+      "index": 19,
+      "inject_crc": false,
+      "label": "topology_node_count",
+      "refusal_reason": 7
+    },
+    {
+      "admitted": false,
+      "index": 20,
+      "inject_crc": false,
+      "label": "topology_group_geometry",
+      "refusal_reason": 7
+    },
+    {
+      "admitted": false,
+      "index": 21,
+      "inject_crc": false,
+      "label": "topology_selected_group_inactive",
+      "refusal_reason": 7
+    },
+    {
+      "admitted": false,
+      "index": 22,
+      "inject_crc": false,
+      "label": "topology_selected_group_quarantined",
+      "refusal_reason": 7
+    },
+    {
+      "admitted": false,
+      "index": 23,
+      "inject_crc": false,
+      "label": "local_object_stale_crc",
+      "refusal_reason": 8
+    },
+    {
+      "admitted": false,
+      "index": 24,
+      "inject_crc": false,
+      "label": "local_object_reserved_nonzero",
+      "refusal_reason": 8
+    },
+    {
+      "admitted": false,
+      "index": 25,
+      "inject_crc": false,
+      "label": "remote_object_stale_crc",
+      "refusal_reason": 9
+    },
+    {
+      "admitted": false,
+      "index": 26,
+      "inject_crc": false,
+      "label": "remote_object_reserved_nonzero",
+      "refusal_reason": 9
+    },
+    {
+      "admitted": false,
+      "index": 27,
+      "inject_crc": false,
+      "label": "local_object_permissions",
+      "refusal_reason": 10
+    },
+    {
+      "admitted": false,
+      "index": 28,
+      "inject_crc": false,
+      "label": "remote_object_permissions",
+      "refusal_reason": 10
+    },
+    {
+      "admitted": false,
+      "index": 29,
+      "inject_crc": false,
+      "label": "local_object_id_sideband",
+      "refusal_reason": 10
+    },
+    {
+      "admitted": false,
+      "index": 30,
+      "inject_crc": false,
+      "label": "remote_object_id_sideband",
+      "refusal_reason": 10
+    },
+    {
+      "admitted": false,
+      "index": 31,
+      "inject_crc": false,
+      "label": "local_object_range",
+      "refusal_reason": 10
+    },
+    {
+      "admitted": false,
+      "index": 32,
+      "inject_crc": false,
+      "label": "remote_object_range",
+      "refusal_reason": 10
+    },
+    {
+      "admitted": false,
+      "index": 33,
+      "inject_crc": false,
+      "label": "counter_stale_crc",
+      "refusal_reason": 11
+    },
+    {
+      "admitted": false,
+      "index": 34,
+      "inject_crc": false,
+      "label": "counter_reserved_nonzero",
+      "refusal_reason": 11
+    },
+    {
+      "admitted": false,
+      "index": 35,
+      "inject_crc": false,
+      "label": "counter_id_sideband",
+      "refusal_reason": 12
+    },
+    {
+      "admitted": false,
+      "index": 36,
+      "inject_crc": false,
+      "label": "counter_group",
+      "refusal_reason": 12
+    },
+    {
+      "admitted": false,
+      "index": 37,
+      "inject_crc": false,
+      "label": "counter_event_count",
+      "refusal_reason": 12
+    }
+  ],
+  "files": {
+    "case_meta.hex": {
+      "bytes": 5472,
+      "sha256": "cb3eb9388935ffebffb4c45c3307810590b6d824e1d9e2e353f877a1041e66f2"
+    },
+    "communication.hex": {
+      "bytes": 16416,
+      "sha256": "84184ecea877608a5bc52d48bf804bb02e43f6ed97b2693fc7660f2eabc1f6c3"
+    },
+    "counter.hex": {
+      "bytes": 10944,
+      "sha256": "c05408cd1520a63e8740d76c0af1cea48a103d646ef64a958d27b5e2ac56e7a7"
+    },
+    "local_object.hex": {
+      "bytes": 10944,
+      "sha256": "3bcb6c1fa0f48c907ce7f622a1e304ea56767ed4ed86b34f513ff0e6b15a4e58"
+    },
+    "remote_object.hex": {
+      "bytes": 10944,
+      "sha256": "8c30608e8c12c2d10b965d8d68e9998c9303bb0706d203b18954e9f651987342"
+    },
+    "topology.hex": {
+      "bytes": 21888,
+      "sha256": "e504da89b49a384b31d95841abb2c936078784f5e7f1b578b83255a3cefdc1dd"
+    }
+  },
+  "geometry": {
+    "bytes_per_message": 65536,
+    "messages": 255,
+    "participants": 256,
+    "payload_bytes": 16711680,
+    "payload_flits": 4177920,
+    "remote_writes_including_root": 4194304,
+    "rounds": 8,
+    "words_per_message": 16384
+  },
+  "schema": "opentallas.rtl.a3_wafer_multicast_vectors.v1",
+  "source": {
+    "bundle": "build/abi3/deepseek-v4-flash-rom",
+    "capability_sha256": "5abf26b4ef235d6083c6f6dbe48d7021068c59ecb451238569a2f660303d26b6",
+    "communication_descriptor_id": 368,
+    "communication_prefix_hex": "5441334406000100c0000000000000006d0100006e010000ffffffffffffffff",
+    "counter_descriptor_id": 367,
+    "deployment_json_sha256": "04778ff37e57b87cd0cee48c01558bdfd63c2f8146d0b0a23ff9afee15a54b45",
+    "deployment_sha256": "f239f8fede6963d3daebfe19e8771afad69cf09992e339a0191a1983518ae8a7",
+    "descriptors_bin_sha256": "4f341b3b91e3260029066700b7dab4f8e290818db667abd769381ac476f288f0",
+    "local_object_descriptor_id": 365,
+    "pc": 13,
+    "program_bin_sha256": "1677777e96086fa7f8f0ab3007324629ac05ea7f02c2306d698d1ffd1c6cfc6f",
+    "raw_record_sha256": {
+      "communication": "fb23e1284c751135323210d1c5b44aee55da7b73411ab20209afa3e17b53866f",
+      "counter": "5c05c5725e57dbcb261bdf5c8943c05d9d66d425fc575e9f10525a477039afb3",
+      "local": "88f48030a471540b66792a53425ecd547ed17b371a7827de6e569d65e468f965",
+      "remote": "460645a925b1ca5b416df323d4a974ddb5c49ed24a0556f31640a683a37c4795",
+      "topology": "6af9839425ad9991a22b3e0d5d9c4952bc91d00099bbf075fb394a1405055b21"
+    },
+    "remote_object_descriptor_id": 366,
+    "topology_descriptor_id": 0
+  }
+}
