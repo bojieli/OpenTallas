@@ -4,8 +4,9 @@
 
 **Status date:** 2026-09-03
 
-**Input baseline:** `main` through `969cb52`; this includes the fail-closed
-DeepSeek exact-200K oracle and accelerator-pair checkers, refreshed
+**Input baseline:** `main` through `1c699a1`; this includes the fail-closed
+DeepSeek exact-200K oracle and accelerator-pair checkers, the DeepSeek
+phase-selected sparse-KV layout repair, and refreshed
 zero-`STATE` deployments, the correctness-qualified TPOT and RTL-bound
 co-simulation evidence gates, the exact DeepSeek wafer multicast, the
 shipped-program Qwen prefix through all three real checkpoint-backed
@@ -60,6 +61,10 @@ The present boundary is therefore:
 - full-model functional simulator: implemented, with prior short token evidence;
 - full-shape DeepSeek HBM `HC_PRE` functional qualification: the first exact
   T=512 issue is bitwise closed, but it is one operator and produces no token;
+- DeepSeek main sparse-attention phase layout: compiler and interacting-operator
+  repair closed over prefill/decode, ratios 0/4/128, circular wrap, and absolute
+  position 200,000; this is bounded synthetic/operator evidence and produces no
+  checkpoint-backed token;
 - production acceptance validators: implemented for the governed Qwen
   exact-8K official-chat workload, the DeepSeek exact-200K external oracle,
   and the final ROM/HBM accelerator pairs; all still reject the incomplete
@@ -175,6 +180,19 @@ mandatory run establishes memory and I/O headroom.
   preflight still correctly reports 41 problems and rejects the eight-token
   record; no 200K accelerator job should start before a replacement oracle
   passes.
+- Commit `a877cfe` removes the false main-attention KV union. The neutral graph
+  now selects `current || compressed-prefix` in prefill and
+  `physical-window[128] || compressed-prefix` in decode using existing ABI 3.0
+  phase predicates and forward branches. Its fresh 3,956-kernel graph is
+  `6c281c3b7f1bcf3366b9e572c553b6bddae8d13a6ac8056676a2a70166898834`.
+  Independent admission accepts the ROM image at 1,329 instructions and 3,861
+  descriptors and the HBM image at 1,292 instructions and 3,293 descriptors,
+  with zero errors. The 82 compiler/interacting-operator cases, 105 affected
+  engine cases, and 16 direct neutral-admission checks pass. The matrix covers
+  prefill spans 1/32/129/160/256, decode positions 1/127/128/129/200,000, and
+  ratios 0/4/128, including bit-exact BF16 sparse output. This closes a concrete
+  Gate-1 prerequisite only: it executes no checkpoint-backed full model,
+  produces no output token or EOS decision, and supplies no TPOT sample.
 - `check_deepseek_v4_200k_accelerator_acceptance.py` now provides the final
   fail-closed accelerator-pair gate, covered by 26 focused tests. After an
   accepted Gate-B oracle, it independently authenticates one exact ROM-wafer
@@ -652,9 +670,11 @@ is not foundry signoff.
    GPU, checkpoint I/O, and host-memory resources are available. Require both
    the pre-run full-byte hash and the completion identity rehash; do not promote
    the retained eight-token prefix.
-7. Resolve and test the exact-200K attention/KV read-view extent before a
-   DeepSeek target launch, then preserve the operation-derived feature
-   invariant:
+7. Treat the exact-200K attention/KV phase-layout blocker as repaired at
+   compiler and interacting-operator scope by `a877cfe`. Carry that repair into
+   the next checkpoint-backed integrated run and require exact generated-token
+   equality before closing Gate 1; the 30-case bounded matrix is not a token
+   substitute. Preserve the operation-derived feature invariant:
    `TRANSACTIONAL_STATE` in no production program and `INTEGRITY_RETRY` only
    for actual DeepSeek communication descriptors.
 8. Integrate the proven active-row/folding mapper with the selected production

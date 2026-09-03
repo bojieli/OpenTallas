@@ -7,7 +7,7 @@
 **Reference profile:** `opentallas.deepseek_v4_attention_kv_view.v1`
 
 **Graph contract at qualification:**
-`cab1b68f0411ed5942b40aa31f3aa6ebdee19b8913ba7a3918672f63930c76d9`
+`6c281c3b7f1bcf3366b9e572c553b6bddae8d13a6ac8056676a2a70166898834`
 
 ## Scope
 
@@ -28,10 +28,13 @@ an index tensor may select. Unused or preserved stale window capacity can remain
 in the fixed decode buffer, as it does in the released source, but it never
 enters the valid selectable-row set.
 
-This gate does not implement KV projection, normalization, RoPE, QDQ, index
-construction, sparse-attention arithmetic, an atomic inter-request transaction,
-compiler or service execution, RTL, physical memory placement, cycles,
-bandwidth, PPA, checkpoint-derived activations, or complete-model output.
+The reference itself does not implement KV projection, normalization, RoPE,
+QDQ, index construction, sparse-attention arithmetic, an atomic inter-request
+transaction, compiler or service execution, RTL, physical memory placement,
+cycles, bandwidth, PPA, checkpoint-derived activations, or complete-model
+output. The separate interacting-operator differential below executes the
+index and sparse-attention operators against bounded synthetic tensors; it
+does not widen this reference into complete-model evidence.
 
 ## Pinned authority
 
@@ -141,6 +144,17 @@ nonfinite/malformed values, mutable-input alias resistance, forged result
 records, exact logical counter fields, and a bounded randomized physical-slot
 oracle.
 
+The ABI 3.0 interacting-operator differential additionally executes the cross
+product of prefill spans `1, 32, 129, 160, 256`, decode positions
+`1, 127, 128, 129, 200000`, and ratios `0, 4, 128`. For every case it compares
+the functional device's phase-selected `GROUPED_CONCAT` layout with this
+reference, `WINDOW_INDEX` and ranked/dense `INDEX_TOPK` with the independent
+indexing/selection references, and the final BF16 `ATTENTION.SPARSE` result with
+the independent sparse-attention reference. It also exercises the
+source-defined numerical wrap in a full physical decode window and keeps the
+200,001-token absolute position bound separate from the much smaller physical
+KV operand.
+
 Reproduce the operator and interacting-state gate with:
 
 ```bash
@@ -152,8 +166,15 @@ pytest -q \
   tests/runtime/test_deepseek_v4_sparse_attention.py
 
 pytest -q tests/compiler/test_deepseek_v4_graph.py
+
+pytest -q \
+  tests/compiler/test_attention_join_phase_extent.py \
+  tests/sim/test_deepseek_sparse_phase_matrix.py
 ```
 
-This evidence qualifies one target reference kind and repairs the DSpark graph
-edge. It does not close `COMP-01`, M4, M6, M8, target-node feasibility, or any
-physical or performance milestone.
+This evidence qualifies the KV-view reference, repairs the DSpark source edge,
+and proves the phase-selected main-attention operator chain over the stated
+30-case matrix. It produces no checkpoint-backed model token, EOS decision, or
+architectural token-commit trace. It therefore closes neither output-token
+correctness nor TPOT, and it does not close `COMP-01`, M4, M6, M8, target-node
+feasibility, or any physical milestone.

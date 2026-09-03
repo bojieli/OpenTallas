@@ -258,19 +258,18 @@ released implementation transcribed from the pinned `inference/model.py`
 (`Indexer.forward`, `get_compress_topk_idxs`, `get_window_topk_idxs`, and the
 `torch.cat` in `Attention.forward`).
 
-**The two sides do not number KV rows the same way, and the audit checks the
-map rather than assuming it.** The released `Attention.forward` attends over
-`cat([kv, kv_compress])` in prefill, so compressed group `g` is row
-`seqlen + g`; in decode it attends over the circular cache, so `g` is row
-`window + g`. The accelerator's `ATTENTION.SPARSE` operand is the request's own
-rows, then the window, then the compressed rows in both phases, so `g` is row
-`span + window + g`. Both are internally consistent. The audit compares which
-window positions and which compressed groups each side selects, and requires
-the counts to match, so a defect that moved the compressed segment would break
-the check rather than slip through it. The first version of the audit compared
-raw row numbers and reported all eighteen cases disagreeing, including a case
-with no ranking at all; that was the address map, not the selection, and
-diagnosing it before believing it is the point.
+**The current accelerator and source use the same phase-specific row map.** The
+released `Attention.forward` attends over `cat([kv, kv_compress])` in prefill,
+so compressed group `g` is row `seqlen + g`; in decode it attends over the
+physical circular cache, so `g` is row `window + g`. The neutral
+`ATTENTION_KV_VIEW` now states those exact two input subsets and both ABI 3.0
+backends select them with forward phase branches. The historical audit below
+normalised an older accelerator-only `span + window + g` map before comparing
+selection membership. It remains selection evidence, but it is not evidence
+for the repaired physical layout. The phase-layout differential now compares
+raw layout bytes, raw window/joined indices, and sparse BF16 output against
+independent references at prefill spans 1/32/129/160/256 and decode positions
+1/127/128/129/200000 for ratios 0/4/128.
 
 <!-- figure: 24 src="results/abi3/deepseek_v4_index_selection_audit.json#case_count" name="index selection audit cases" -->
 Result: 24 cases.
@@ -467,8 +466,11 @@ cover.
   a differential on
   `INDEX_SCORE` itself, or a 2,052-token backend run; adding rungs below 2,052
   cannot do it.
-- **`ATTENTION.SPARSE`'s arithmetic at long context is not gated here.** The
-  audit gates which rows are selected, not the online softmax over them.
+- **Full-width `ATTENTION.SPARSE` arithmetic at long context is not gated
+  here.** The 30-case ABI differential executes the online BF16 sparse
+  attention and separates absolute position 200,000 from the physical KV-row
+  bound, but it deliberately uses bounded synthetic tensors. It does not
+  execute the full 200K live cache/index width or a checkpoint-backed model.
 - **Neither current lane has produced a token at a length that crosses a
   sparsity threshold.** A25 makes the first three rungs reachable, but they
   have not been rerun; 2,052 and the quoted long contexts remain blocked by

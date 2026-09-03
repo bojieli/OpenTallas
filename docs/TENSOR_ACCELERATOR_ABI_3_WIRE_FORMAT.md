@@ -551,8 +551,9 @@ Both divisions floor, and `u` must divide `n * d`, or one iteration is not a
 whole number of that axis's elements and the term walks nothing. The bias is
 added **after** the division and is not part of `step`: it is a count the
 operand carries whatever the request is, not one an iteration advances by,
-which is what lets a join state `span + 128` for a sliding window that is
-present for a span of one.
+which is what lets a selected decode join state
+`128 + floor(context / ratio)` while the fixed circular-window base does not
+advance with the context-derived suffix.
 
 **A13 is the `axis = 0, n = 1, u = 1, b = 0` case of this rule, exactly.**
 Substituting gives `step = d`, the test `term_stride == stride0 * d`,
@@ -610,22 +611,32 @@ group axis of ratio 4 produced an extent four times too long. The *count* was
 already expressible — a block loop's trip is `ceil(symbol / bound_divisor)` —
 and only the *extent* was not.
 
-**An extent longer than the request's rows.**
-`main.layerNN.attention_kv_view` joins the current KV rows to a 128-row sliding
-window on axis 0, so its output extent is `span + 128`. A clamp can only
-*shorten* a declared extent to a bound symbol's remainder, so this number had
-no spelling at all, and the HBM lane stopped after 299 instructions:
+**A phase selects one of two extents.**
+`main.layerNN.attention_kv_view` does not join current KV to a duplicate
+128-row window. The pinned source selects current rows in prefill and the
+physical window in decode, then appends a valid compressed prefix when the
+layer has one:
+
+```text
+prefill = S + floor(S / ratio)
+decode  = 128 + floor(C / ratio)
+```
+
+At ratio zero those are `S` and fixed 128. A clamp can only shorten one
+declared extent; it cannot choose two different input subsets or affine
+functions. Before the phase rule was expressed, one false three-way join could
+still pass an operand-sum check at its maximum and fail only at execution:
 
 ```text
 prefill failed: GROUPED_CONCAT output view 678 dims (104, 512) differ from
 the axis-0 concatenation (262272, 512)
 ```
 
-This is an **axis-0** join, so it is not what A17 fixed; A17 named the axis a
-join consumes, and this is the extent the join produces. It is the case that
-turns the amendment from a clamp with two more knobs into an affine function:
-`b` is not a refinement of `n` and `u`, it is the third independent thing an
-extent can be.
+This is an **axis-0** join, so it is not what A17 fixed; A17 names the axis a
+join consumes, A18 states the extent one selected descriptor presents, and the
+neutral `phase_inputs` rule selects which descriptor exists on the request's
+ABI 3.0 control-flow path. The decode bias of 128 remains a genuine affine
+term: `b` is not a refinement of `n` and `u`.
 
 There is a mechanically available workaround — expressing the join as one
 movement per row block with a symbol-offset destination window, exactly as the
@@ -665,9 +676,9 @@ ninth.
 | `span_groups_ratio128` | `SPAN_TOKENS / 128` |
 | `context_groups_ratio4` | `CONTEXT_LENGTH / 4` |
 | `context_groups_ratio128` | `CONTEXT_LENGTH / 128` |
-| `attention_rows_window` | `CONTEXT_LENGTH + 128` |
-| `attention_rows_ratio4` | `5 * CONTEXT_LENGTH / 4 + 128` |
-| `attention_rows_ratio128` | `129 * CONTEXT_LENGTH / 128 + 128` |
+| `attention_rows_window` | `SPAN_TOKENS` (declared prefill form) |
+| `attention_rows_ratio4` | `5 * SPAN_TOKENS / 4` (declared prefill form) |
+| `attention_rows_ratio128` | `129 * SPAN_TOKENS / 128` (declared prefill form) |
 | `selected_rows_ratio128` | `CONTEXT_LENGTH / 128 + 128` (retired by A20) |
 
 Amendment A20 has since retired the eighth. `selected_rows_ratio128` sized the
@@ -678,58 +689,36 @@ kept above because A18's argument is about the *form*, and the form is what
 carries the other seven.
 
 The two with a numerator are exact rather than approximate:
-`floor(5c/4) = c + floor(c/4)` because `5c/4 = c + c/4` and `c` is an integer,
+`floor(5s/4) = s + floor(s/4)` because `5s/4 = s + s/4` and `s` is an integer,
 and likewise for 129/128. That is what the numerator is for — it lets one
 symbol state both a count of rows and a count of groups derived from those same
-rows, which is what a compressed layer's KV join is.
+rows in prefill. Decode uses a separate context-derived descriptor with bias
+128 on the selected ABI 3.0 branch.
 
 **The boundary, stated rather than left to be discovered.** The form is exact
-for an extent affine in **one** bound symbol. A compressed layer's KV join in
-*decode* is `1 + 128 + CONTEXT_LENGTH / 128` — a constant span and a symbolic
-context — and that is `CONTEXT_LENGTH / 128 + 129`, still one symbol, so it is
-expressible; but it needs *different* coefficients from the same join in
-prefill, where `span == context` makes it `129 * CONTEXT_LENGTH / 128 + 128`.
-A program whose prefill and decode share one view descriptor for that operand
-cannot state both. Prefill and decode are separate entrypoints and a backend
-may give the operand a view per phase, which is how this is meant to be met; an
-extent that is genuinely a sum of terms over two *different* symbols in one
-phase is outside this amendment, and would need a further one rather than a
-reinterpretation of these fields.
-
-**One released operand is on the far side of that boundary, measured.**
-`main.layerNN.attention_kv_view` on a compressed layer joins three operands
-whose resolved leading extents are `SPAN_TOKENS`, a static 128, and
-`CONTEXT_LENGTH / ratio`. Its output is therefore
-`SPAN_TOKENS + 128 + CONTEXT_LENGTH / ratio`, a sum over **two** bound symbols
-in one phase, and neither the table above nor the ROM backend states it: the
-table spells the symbol `5 * CONTEXT_LENGTH / 4 + 128` and the backend emits
-`5 * SPAN_TOKENS / 4 + 128`, which are the same number only where
-`span == context`. Resolving the deployed views under three request shapes
-gives A17's sum check as
-
-```text
-prefill, span == context == 104   : 104 + 128 + 26     = 258 vs 258   pass
-prefill, span 65,536, context 100,000: 65,536 + 128 + 25,000 = 90,664 vs 82,048 fail
-decode,  span 1, context 105      : 1 + 128 + 26       = 155 vs 129   fail
-```
-
-so it holds only in a prefill that is one whole tile, and the first decode step
-after that prefill is already outside it. The two-operand window join beside it
-— `SPAN_TOKENS + 128`, one symbol — passes in both phases, which is what says
-the boundary is exactly the second symbol and not the join. This is recorded
-here rather than repaired here: the repair is a further amendment giving an
-extent a *second* affine term over a second bound symbol, and A18's fields
-cannot be reinterpreted into one.
+for an extent affine in **one** bound symbol. A compressed layer's selected KV
+join in decode is `128 + CONTEXT_LENGTH / ratio`, still one symbol and therefore
+expressible; but it needs different operands and coefficients from the same
+join in prefill. Existing `PHASE_IS` predicates and forward `CONTROL.BRANCH`
+instructions select those descriptors. No record or field changes, and no ABI
+3.1 state machinery, are involved. A program whose prefill and decode share one
+view descriptor still cannot state both layouts. The neutral graph therefore
+names an ordered input subset per phase, and each backend derives that subset's
+one-symbol extent before emitting the existing branches. If `phase_inputs` and
+its binding are removed, the candidate union again becomes
+`SPAN_TOKENS + 128 + CONTEXT_LENGTH / ratio`; both backends refuse that mixed
+two-symbol join rather than approximate it. The compiler differential checks
+the ratio-0, ratio-4 and ratio-128 descriptors in both phases, including
+absolute decode position 200,000.
 
 **An extent that floors to zero is not a clamp.** Three tokens contain no whole
 group of four, so `extent` is zero at `b = 0` and `dim[a]` keeps its block.
 That is deliberate: ABI 3.0 has no zero-extent view — the verifier refuses one
 — so "the request has none of this axis" is a *predicate* question, and the
-operator must be predicated off rather than issued against an empty operand. It
-is the same question the compressor's own should-compress predicate asks, and
-the engine's refusal quoted above is the trap for a program that did not ask
-it. With `b > 0` the extent is never zero, which is right: a join of no current
-rows and a 128-row window is 128 rows.
+operator must omit that optional compressed operand rather than issue an empty
+view. It is the same question the compressor's own should-compress predicate
+asks. The base selected layout remains nonempty: current rows in prefill or the
+fixed 128 physical rows in decode.
 
 **One axis per view, deliberately.** A view names one request-dependent extent.
 `INDEX_SCORE`'s output is `[B,S,C]` with two of them, and it is expressible
@@ -792,7 +781,7 @@ at absolute position `p` therefore sees
 
 ```
 visible = (p + 1) / r        candidates, floored
-row(g)  = span + window + g  the KV row a selected candidate names
+row(g)  = phase_base + g     phase_base is S in prefill, window in decode
 ```
 
 and the operator writes `sort(compact(window_row, rebased_selection))`.
@@ -815,10 +804,10 @@ tail-padded inside its own block, so joining a second block behind it puts
 padding in the middle of the row. That is the refusal above.
 
 *The selection was not rebased.* The operator emitted columns of the score
-view. Column 0 is compression group 0, which lives at KV row `span + 128` of
-the operand `ATTENTION.SPARSE` gathers from — the join is the request's own
-rows, then the window, then the compressed rows. Unrebased, slot 128 of the
-joined array named KV row 0, which is a real row, so nothing refused it.
+view. Column 0 is compression group 0, which lives after the selected base
+layout: at KV row `S` in prefill and row 128 in decode. Unrebased it named a
+real but unrelated base row, so a bounds check alone could not refuse the wrong
+answer.
 
 *The causal horizon was counted in the wrong unit.* `aux_id_1 = 0` is
 `MASK_CAUSAL`, and the engine's causal rule was `limit = base + row + 1`: one
@@ -873,13 +862,13 @@ the channel an operator has for a value it did not compute, and the ratio is
 pinned per layer, so it reads a one-element mask-programmed constant declared
 by the `constant_u32_v1` generator.
 
-**Why the ordering clause of A6 stands.** The weaker repair was to retract it:
-let a sparse index carry padding anywhere and be unordered, as the released
-kernel does. That closes the first defect and neither of the other two, and it
-leaves the two the device cannot see — an unrebased index and a horizon in the
-wrong unit both name real KV rows and produce a silently wrong token. A6 is
-kept and the producer is made to satisfy it, which turns all three into
-something a consumer can check.
+**Why A6 keeps tail compaction but not numerical sorting.** A19 removes padding
+holes before publishing its joined result. The consumer checks that padding is
+a suffix and still checks every selected value against the resolved KV rows.
+It does not require numerical monotonicity: a direct decode `WINDOW_INDEX`
+consumer must preserve chronological physical ring order such as `1..127, 0`,
+and selected-slot order reaches the block-64 numeric contract. A19 continues to
+choose a sorted canonical order for its own joined output.
 
 **What a backend must do.** Emit the window block into `input_view_1` and the
 ratio constant into `input_view_2`, and stop emitting the axis-1
@@ -899,15 +888,13 @@ prefill failed: sparse index view 1419: query 3 selects KV row 232, outside
 the 104 valid rows
 ```
 
-— where 232 is `span 104 + window 128 + group 0`, exactly right. The fused KV
-operand is a **row space**: the request's rows, the window, then the compressed
-rows, and no count of tokens says how many that is. Its own resolved extent
-does, which A13 and A18 already make the request's size. So for `SPARSE`,
-`aux_id_2` bounds the *positions* the causal base check uses and the operand's
-leading extent bounds the *rows*. `DENSE` and `GQA` are untouched: their KV view
-is indexed by position, so for them the two are the same number. A capacity
-buffer still states how much of itself is filled — through its view, which is
-what A13's clamp is for.
+That capture used the obsolete duplicate-window layout and is retained only as
+the discovery trace. The corrected fused KV operand is a **phase-selected row
+space**: current then compressed in prefill, physical window then compressed in
+decode. No token count is its physical row count. Its own resolved extent does
+bound rows, while `aux_id_2` bounds the absolute *positions* used by the causal
+base check. `DENSE` and `GQA` are untouched: their KV view is indexed by
+position, so for them the two are the same number.
 
 **Zero candidates is not a fault.** A context shorter than one compression
 group has completed none, and the released model runs that layer as pure
@@ -987,14 +974,16 @@ else moves.
 For the query at absolute position `p = base + row`, with ratio `r`:
 
 ```
-sort(window_row minus padding) ++ (arange(0, min((p + 1) / r, candidates)) + span + W)
+sort((window_row minus padding) ++
+     (arange(0, min((p + 1) / r, candidates)) + phase_base))
+phase_base = S in prefill, W in decode
 ```
 
 **No opcode is added.** The dense family was being lowered to
-`ROUTE.WINDOW_INDEX`, which emits `arange(first, last + 1)` over the absolute
-positions of a causal window — a position list, not an enumeration of completed
-compression groups — and the ROM backend refused to build the graph rather than
-emit it:
+`ROUTE.WINDOW_INDEX`, which emits the causal window in source order: absolute
+current-request rows in prefill and physical circular slots in decode. Neither
+representation enumerates completed compression groups, and the ROM backend
+refused to build the graph rather than emit it:
 
 ```text
 kernel 'main.layer03.compressed_dense_indices.enumerate' declares index family
@@ -2080,10 +2069,11 @@ symbol. For a causal `INDEX_TOPK` with a joined window and a zero base, the last
 non-pad entry of `input_view_1` is therefore the absolute position `p` used for
 the compressed-candidate horizon. The row must be non-empty, strictly ascending
 and inside the context or the engine traps. Its selected compressed group `g`
-also names KV row `context + window + g`, because the request's complete current
-rows precede the window and compressed segments; the physical one-row score
-slice is not that request span. For an unjoined operator, full visibility, or a
-nonzero base, the existing `p = base + row` and A19 rebase rules are unchanged.
+also names KV row `context + g`, because the phase-selected prefill KV layout is
+the request's complete current rows followed immediately by compressed rows;
+the physical one-row score slice is not that request span. Decode instead uses
+its explicit nonzero position base, physical circular-window indices, and a
+compressed base equal to the fixed window capacity.
 
 This composes the existing records rather than extending them: A19's window
 operand already carries the prefill absolute interval, A26 already carries the
@@ -2092,6 +2082,26 @@ request-base symbol IDs at payload bytes 56 and 60. Descriptor payloads,
 capabilities, decoders and pre-A27 nonzero-base deployments are byte-identical.
 Operator conventions section 23 defines the resulting causal rule and its
 fail-closed checks.
+
+#### Phase-selected sparse KV layout (existing ABI 3.0 control flow)
+
+The neutral `phase_inputs` attribute does not assign wire-format state. It
+requires both backends to emit two already-legal descriptor blocks and select
+them with the existing `PHASE_IS` predicate and forward `CONTROL.BRANCH`:
+
+```text
+prefill: current[0:S] || compressed[0:floor(S / ratio)]
+decode:  physical_window[0:128] || compressed[0:floor(C / ratio)]
+```
+
+At ratio zero the suffix is absent; below the first completed group the
+optional compressed path is predicated off. Each block consumes its live event
+with `CONTROL.WAIT` (or the existing ROM `CONTROL.FENCE` for the uncompressed
+path) before convergence, and its phase-specific extent is propagated to the
+sparse consumer. `ATTENTION.SPARSE` checks selected values against that
+physical row extent while reading `aux_id_2` only as the absolute
+position-space bound. This composition adds no field, opcode, feature,
+transaction policy, or ABI 3.1 requirement.
 
 ### 12.19 Amendment A28 — node-indexed authenticated object sources
 

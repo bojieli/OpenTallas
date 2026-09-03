@@ -83,14 +83,15 @@ This is an additive convention on an existing record, not a format change. What
 it does mean is that an engine must dispatch its operand reading on the
 subopcode and reject a `SPARSE` operator carrying a dense-shaped operand set.
 
-Sparse index arrays are ascending and tail-padded with `0xffffffff`. Padding is
-never executed and never counted: `attention.sparse_indices` counts the rows
-actually gathered. That clause stands as written; amendment A19 (section 19)
-moves the obligation onto the producer, which is `ROUTE.INDEX_TOPK` and has the
-window block, the compression ratio and the KV row space it needs to satisfy
-it. The released kernel imposes no order and accepts a `-1` at any slot, so this
-is OpenTallas's canonical form for the array rather than the model's, chosen so
-that a consumer can check what reaches it.
+Sparse index arrays retain producer-defined source order and are tail-padded
+with `0xffffffff`. Padding is never executed and never counted:
+`attention.sparse_indices` counts the rows actually gathered. The order is
+load-bearing for the block-64 numeric contract. In particular, decode
+`WINDOW_INDEX` lists physical circular slots oldest-to-newest and therefore has
+one numerical wrap after the cursor passes slot 127. `ATTENTION.SPARSE` must not
+sort that row. Amendment A19's joined `INDEX_TOPK` path separately defines a
+compacted, sorted canonical result; both forms are legal producers of this
+operand and both remain strictly bounded by the resolved fused-KV view.
 
 ## 5. Route family
 
@@ -102,16 +103,17 @@ that a consumer can check what reaches it.
 | `EXPERT_DISPATCH` | activations | selected IDs | — | dispatched `[groups * k, width]` in `(group, slot)` order | — | `aux0` expert count, **required** |
 | `INDEX_TOPK` | scores, or `NO_ID` for the dense form (A20) | window index (A19, A27) | compression ratio (A19) | joined KV rows, compacted and ascending | — | `aux0` `k`, `aux1` mask mode, `aux2` context *symbol*, `aux3` request position-base *symbol* (A27) |
 | `HASH_ROUTE` | token IDs | hash table | — | expert IDs | — | — |
-| `WINDOW_INDEX` | positions | — | — | ascending indices | — | `aux0` window, `aux1` mask mode, `aux2` context *symbol* |
+| `WINDOW_INDEX` | positions | — | — | prefill absolute rows or decode physical circular slots | — | `aux0` window, `aux1` mask mode, `aux2` context *symbol* |
 
-`WINDOW_INDEX` writes `arange(first, last + 1)` over the **absolute positions**
-of a causal window and nothing else. Amendment A20 (section 20) makes that a
-checkable claim rather than a description: a neutral kernel that names an
-`index_family` this operator does not produce is refused at admission.
-For a zero-base causal prefill, amendment A27 makes the last non-pad entry of
-that row the logical query position consumed by a joined `INDEX_TOPK`; this is
-what preserves the position when the physical score view is streamed one row
-at a time.
+`WINDOW_INDEX` writes the source-defined causal window and nothing else. During
+prefill it is `arange(first, last + 1)` in absolute current-request row space.
+During decode each absolute position is reduced modulo the physical window
+capacity, preserving oldest-to-newest chronology; the result can therefore be
+`1..127, 0` rather than numerically ascending. Amendment A20 (section 20) makes
+the index family checkable at neutral admission. For a zero-base causal
+prefill, amendment A27 makes the last non-pad absolute entry the logical query
+position consumed by a joined `INDEX_TOPK`; decode instead keeps its explicit
+absolute position symbol because its row contains physical addresses.
 
 `EXPERT_DISPATCH` requires `aux0`: an engine that cannot state the expert bound
 cannot prove a routed ID is inside it, and an unbounded expert ID is a memory
@@ -569,26 +571,28 @@ three places, and they are three different failures rather than one:
 | `VECTOR.COMPRESS`, `aux0 = 2` | `out0`, `out1` | `[B, G, P, D]` | `G` at axis 1, `1 * S / ratio` |
 | `VECTOR.INDEX_SCORE` | `in1` | `[B, C, D]` | `C` at axis 1, `1 * S / 128` |
 | `VECTOR.INDEX_SCORE` | `out0` | `[B, S, C]` | `C` at axis 2, `1 * S / 128` |
-| `REDUCTION.GROUPED_CONCAT`, axis 0 | `out0` | `[R, D]` | `R` at axis 0, `1 * S / 1 + 128` |
+| `REDUCTION.GROUPED_CONCAT`, axis 0 | `out0` | `[R, D]` | phase-selected `R`: prefill `S + floor(S / ratio)`, decode `128 + floor(C / ratio)` |
 
 `COMPRESS_STATE_UPDATE` groups along `S` and its overlap transform reaches
 across `G`, so neither axis can be the batch and neither can be moved to the
 front. `INDEX_SCORE` requires `kv_batch == batch`, so under every assignment of
-`B` at least one of `S` and `C` is a non-leading axis. And the attention KV
-join carries a 128-row sliding window that the request does not supply, so its
-output extent is *longer* than the rows the request has — which a clamp cannot
-state at all, because a clamp only shortens. None of the three is a shape a
-backend chose; all three are what the released model computes.
+`B` at least one of `S` and `C` is a non-leading axis. The main attention KV
+join has two source-defined input subsets: prefill uses current rows, while
+decode uses the fixed 128-row physical window; either may append the valid
+compressed prefix. No one clamp can state both phase extents. None of the three
+is a shape a backend chose; all three are what the released model computes.
 
 **What a backend must do.** State the axis, the numerator, the unit and the
 bias on the view. A neutral tensor whose extent is a *derived* symbol lowers to
 the base symbol as the loop's `bound_symbol` and to the affine coefficients on
-the view: `span_groups_ratio4` is `SPAN_TOKENS / 4`, `attention_rows_window` is
-`CONTEXT_LENGTH + 128`, `attention_rows_ratio4` is
-`5 * CONTEXT_LENGTH / 4 + 128`. A backend that states none of them leaves the
-operand at its declared maximum, and the verifier now refuses a view that
-declares one and cannot resolve it, so the failure is an admission refusal
-rather than a wrong answer.
+the view: `span_groups_ratio4` is `SPAN_TOKENS / 4`, while the declared
+attention-row symbols are the prefill functions `SPAN_TOKENS`,
+`5 * SPAN_TOKENS / 4`, and `129 * SPAN_TOKENS / 128`. Decode descriptors are
+selected by existing ABI 3.0 control flow and state the fixed 128 rows plus the
+context-derived prefix. A backend that states none of them leaves the operand
+at its declared maximum, and the verifier now refuses a view that declares one
+and cannot resolve it, so the failure is an admission refusal rather than a
+wrong answer.
 
 A backend must **not** re-express a join whose output extent it cannot state as
 a stream of movements with a symbol-offset destination window. That is
@@ -645,7 +649,8 @@ stood. With both present:
 
 * the visible candidate count for the query at absolute position `p` is
   `(p + 1) / r`, floored, clamped to `context / r`;
-* a selected candidate `g` names KV row `span + W + g`;
+* a selected candidate `g` names KV row `S + g` in prefill and `W + g` in
+  decode, matching the phase-selected fused-KV layout;
 * the emitted row is the window block and the rebased selection, with every
   `0xffffffff` removed, sorted ascending and tail-padded back to `W + k`.
 
@@ -661,9 +666,10 @@ there is no window block either, because then there is nothing to emit.
 
 **What `ATTENTION.SPARSE` must do with the result.** Bound the index by the
 fused KV operand's own resolved leading extent, and read `aux_id_2` as a bound
-on *positions* only. A19 makes the index name rows of a join — the request's
-rows, the window, then the compressed rows — and a context length in tokens
-counts none of those. `DENSE` and `GQA` keep `aux_id_2` as a row bound because
+on *positions* only. A19 makes the index name rows of a phase-selected join —
+current then compressed in prefill, or physical window then compressed in
+decode — and a context length in tokens is not the number of physical rows in
+either representation. `DENSE` and `GQA` keep `aux_id_2` as a row bound because
 their KV view is indexed by position; for them the two numbers are the same
 one. A fused KV buffer presented at capacity still says how much of itself the
 request filled, through its view's extent, which is amendment A13.
@@ -673,14 +679,13 @@ request filled, through its view's extent, which is amendment A13.
 ratio as an operand rather than as an attribute, so a backend that drops it
 loses an operand rather than silently defaulting to one.
 
-**What it does not change.** Amendment A6's ordering clause stands exactly as
-written: a sparse index array is ascending and tail-padded, padding is never
-executed and never counted. A19 does not relax it — it moves the obligation to
-the producer that can actually satisfy it. `ATTENTION.SPARSE` still refuses an
-index that interleaves padding or descends, and it should: after A19 such an
-array can only come from a producer that failed to compact, and a malformed
-index that names real KV rows is exactly the failure a consumer must not
-absorb.
+**What it does not change.** Amendment A6's tail-padding clause stands exactly
+as written: padding is never executed or counted, and `ATTENTION.SPARSE`
+refuses a padding hole. Valid indices remain in producer-defined source order.
+The A19 producer chooses a compacted, sorted canonical order, whereas a direct
+decode `WINDOW_INDEX` consumer preserves one chronological circular wrap. The
+consumer must not reorder either one because selected-slot order reaches the
+numeric contract.
 
 **Where the ordering comes from.** The released kernel is indifferent to it —
 `kernel.sparse_attn` reads `topk_idxs` as a set of `-1`-or-row lanes — so
@@ -716,8 +721,8 @@ takes all of them, so the dense family is the ranked one with `in0` removed.
   compressed segment can hold. A context that completes more is a refusal, not
   a truncation;
 * emit, for the query at absolute position `p`,
-  `arange(0, min((p + 1) / r, candidates))` rebased by `span + W`, in ascending
-  group order.
+  `arange(0, min((p + 1) / r, candidates))` rebased by `S` in prefill or `W`
+  in decode, in ascending group order.
 
 Everything after the selection is A19 unchanged: rebase, join to the window
 block, compact away the padding, sort ascending, tail-pad to `W + k`.
@@ -923,21 +928,53 @@ valid = window_row without trailing 0xffffffff entries
 require valid is non-empty, strictly ascending, and valid[-1] < context
 p = valid[-1]
 visible_compressed_groups = min((p + 1) // ratio, candidates)
-compressed_kv_row(g) = context + window + g
+compressed_kv_row(g) = context + g
 ```
 
 The prefill `WINDOW_INDEX` row is an absolute ascending interval ending at the
 query, so this is device-resident data already required by A19 rather than a
 host-supplied side channel. The same physical slice cannot rebase A19's
-compressed segment by its one-row `span`: the compressed rows follow the
-request's complete current context and the fixed window, so the request-level
-`context` in `aux2` supplies that base too. With no joined window, with full
-visibility, or with a nonzero `POSITION_START`, the existing
-`p = base + row` and `compressed_kv_row(g) = span + window + g` rules remain.
-In particular decode keeps its explicit nonzero time coordinate; its window
-operand is a KV-row address list, not a replacement for that coordinate.
+compressed segment by its one-row `span`: in prefill the compressed rows follow
+the request's complete current context, so request-level `context` in `aux2`
+supplies that base too. Decode instead rebases by the fixed window capacity and
+keeps its explicit nonzero time coordinate; its window operand is a physical
+KV-row address list, not a replacement for that coordinate.
 
 Nothing on the wire changes. The same input and auxiliary descriptor IDs retain
 their assigned meanings, no capability bit moves, and no pre-A27 unjoined or
 nonzero-base operator changes result. This amendment fixes how an already
 assigned request-level base composes with A26's fixed-address rolling slice.
+
+## 24. ABI 3.0 phase-selected sparse KV layout
+
+The pinned main-attention source never concatenates current KV and a second
+copy of the circular window. It selects one of two layouts:
+
+```text
+prefill: current[0:S] || compressed[0:floor(S / ratio)]
+decode:  physical_window[0:128] || compressed[0:floor(C / ratio)]
+```
+
+The compressed suffix is absent at ratio zero and is conditionally absent when
+no complete group exists. Its row offset is therefore `S` in prefill and 128 in
+decode. `phase_inputs` on a neutral axis-zero `CONCAT` names the ordered IR
+input subset for every declared kernel phase. Neutral admission rejects a
+missing phase, an out-of-range or repeated input index, an input selected by no
+phase, a use on another operator/axis, or a phase map without the matching
+`phase_symbol_binding` authority.
+
+Both backends derive each selected output extent from those operands. Prefill
+resolves to `S`, `5*S/4`, or `129*S/128`; decode resolves to fixed 128,
+`128 + floor(C/4)`, or `128 + floor(C/128)`. The same phase extent is propagated
+to every `ATTENTION.SPARSE` view of the result. An actually selected index is
+still checked against that resolved physical row count, while sparse `aux2`
+remains the absolute position-space bound and may legitimately be 200,001 when
+the physical operand is much smaller.
+
+This is an ABI **3.0** lowering convention, not ABI 3.1. It adds no record,
+field, opcode, feature bit, state-member abstraction, retry state, or durable
+transaction. The existing `PHASE_IS` predicate and forward `CONTROL.BRANCH`
+select the prefill or decode descriptor block. A live optional-prefix path is
+consumed by its matching `CONTROL.WAIT`; the uncompressed ROM path uses the
+existing `CONTROL.FENCE`. Control converges only after the selected producer is
+complete, so program order safely carries the result into its consumer.
