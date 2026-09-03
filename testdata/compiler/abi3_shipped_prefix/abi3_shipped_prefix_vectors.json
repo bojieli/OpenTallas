@@ -21,10 +21,10 @@
       "deployment": "qwen3-8b-rom-single-chip",
       "deployment_identity_evidence": {
         "artifact": "results/abi3/rom_schedule_checks.json",
-        "artifact_sha256": "1665c06d9d46d672c1c946c2044e0261562c0dce6764c66c127574fd1a1bb248",
+        "artifact_sha256": "c68d5016347b60418a012d14bc1e126237ef52ec5eefa9533448d10f7e8559b0",
         "case": "qwen3-rom-single-chip"
       },
-      "deployment_sha256": "f8505cb6f7028b2ef0ae7b72eeea844331fce556306a1b83304694c6a9bf7946",
+      "deployment_sha256": "d8a6f8edaaac8617261d5c85a9a79b0829cf9f4435ca269e50dd15cc68756a9b",
       "expected": {
         "complete": false,
         "dma_gather_launches": 1,
@@ -551,7 +551,7 @@
       "deployment": "qwen3-8b-hbm-single-chip",
       "deployment_identity_evidence": {
         "artifact": "results/abi3/hbm_qwen_deployment_certificate.json",
-        "artifact_sha256": "adf0fe228cd14e56154ef565a8f7168dea04d273fe638067f46c30f519627ed4",
+        "artifact_sha256": "becc8693717d59cec947488fe51d086eef9d6aa8d4dad1ff7251f098f3596121",
         "case": "qwen3-hbm-single-chip"
       },
       "deployment_sha256": "a6d98d47ff80acaed81b78c9bab7616ae0950302c66b04405fc6ef57414b84c6",
@@ -1081,10 +1081,10 @@
       "deployment": "deepseek-v4-flash-rom-wafer",
       "deployment_identity_evidence": {
         "artifact": "results/abi3/rom_schedule_checks.json",
-        "artifact_sha256": "1665c06d9d46d672c1c946c2044e0261562c0dce6764c66c127574fd1a1bb248",
+        "artifact_sha256": "c68d5016347b60418a012d14bc1e126237ef52ec5eefa9533448d10f7e8559b0",
         "case": "deepseek-v4-flash-rom-wafer"
       },
-      "deployment_sha256": "a733e1ca55fda27484f1584cbde19a7caf345b08ec08e33764688cdcead037e0",
+      "deployment_sha256": "f239f8fede6963d3daebfe19e8771afad69cf09992e339a0191a1983518ae8a7",
       "expected": {
         "complete": false,
         "dma_gather_launches": 2,
@@ -1653,10 +1653,10 @@
       "deployment": "deepseek-v4-flash-hbm-cluster",
       "deployment_identity_evidence": {
         "artifact": "results/abi3/hbm_deepseek_deployment_certificate.json",
-        "artifact_sha256": "0ca2aa3da4f50098753511eaffdec920bd5aed0211615b7a84a9d636f36833e1",
+        "artifact_sha256": "9b9d58bafac7bcabbcc8c644dd56da8a87d9e03d523d91b4881c5345e6b4d46a",
         "case": "deepseek-v4-flash-hbm-cluster"
       },
-      "deployment_sha256": "920bbb4c57d71c3b04303a22787b9c16a138c67d46ad178e6b2982d49d5bf44d",
+      "deployment_sha256": "2380c602842f716f1fcdc277751b6243e0e9610bfccdcc7ed9f9c27ef478aff7",
       "expected": {
         "complete": false,
         "dma_gather_launches": 2,
@@ -2354,7 +2354,7 @@
       "a3_symbol.hex": "aefea5f803c69340757eed992d1f3e691d4ca2f0b610256864a5bf1d0f757f38"
     },
     "path": "testdata/compiler/abi3_deployment/abi3_deployment_rtl_vectors.json",
-    "sha256": "12b7203fc0b4e2cad7be6e6802ce7f66a6c86b2f12ec90d596694e56d0f2e939"
+    "sha256": "036c28d07e9de30930e4640c85a757e094b8ebb974ef1877b3d961eaa765bc3f"
   },
   "real_engine_launch_count": 14,
   "request_scope": {
