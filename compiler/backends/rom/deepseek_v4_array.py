@@ -113,26 +113,18 @@ SRAM_BYTES = 256 << 20
 #: die-edge beachfront rule of ``src/opentallas/roofline.py``
 #: (``max_hbm_stacks_per_device``: 12 mm pitch, 0.60 edge utilisation) times
 #: the 36 GB stack the leading-node study prices
-#: (``configs/hardware/technology_inputs.json``).  The GPU comparator is
-#: charged by the same rule.
+#: (``configs/hardware/technology_inputs.json``).  The HBM/SRAM tensor-
+#: accelerator comparator is charged by the same rule.
 HBM_STACKS_PER_NODE = 5
 HBM3E_STACK_BYTES = 36_000_000_000
 PHYSICAL_HBM_BYTES = HBM_STACKS_PER_NODE * HBM3E_STACK_BYTES
 
-#: What this build *declares* per node, and why it is not the physical figure.
-#: The ROM program allocates every state plane and live activation at the
-#: IR's own horizon (1,048,576 positions), 1.08 TB for one session, and this
-#: build replicates that live set on every node: the wafer's declared
-#: distributed HBM absorbs it, no five-stack die does.  Clamping the IR's
-#: symbolic maxima to a smaller context was tried and breaks the additive
-#: window biases the IR bakes into them.  So the capability declares the
-#: replicated live set -- 34 stacks' worth -- and says so in every note, and
-#: the plan's WP-D2 (KV and activations sharded across the 32 nodes, the HBM
-#: cluster's own partition) is what brings the node back to five stacks.  A
-#: comparison that reads this capability's HBM as a die-edge quantity is
-#: reading the wrong field.
-REPLICATED_LIVE_STATE_BYTES = 1_200_000_000_000
-HBM_BYTES = REPLICATED_LIVE_STATE_BYTES
+#: The declared and physical per-node HBM boundary are now the same.  The
+#: shared activation-liveness allocator keeps every IR extent at its authentic
+#: maximum but aliases non-overlapping mutable buffers, reducing the released
+#: graph's ROM-array session image from 1.08 TB to below this five-stack limit.
+#: This is address reuse, not context clamping or host-side virtualization.
+HBM_BYTES = PHYSICAL_HBM_BYTES
 
 #: The wafer's declared context, kept so the emitted program is the same
 #: program at the same bounds; only the placement and the fabric differ.
@@ -202,20 +194,19 @@ def array_geometry(
         "hbm_bytes_per_node_declared": HBM_BYTES,
         "hbm_bytes_per_node_physical": PHYSICAL_HBM_BYTES,
         "hbm_stacks_per_node_physical": HBM_STACKS_PER_NODE,
-        "hbm_stacks_per_node_implied_by_declaration": -(-HBM_BYTES // HBM3E_STACK_BYTES),
+        "hbm_stacks_per_node_implied_by_declaration": -(
+            -HBM_BYTES // HBM3E_STACK_BYTES
+        ),
         "hbm_stack_bytes": HBM3E_STACK_BYTES,
         "hbm_rule": (
-            "physical: five HBM3e stacks, the die-edge beachfront an 815 mm2 die "
-            "attaches at 12 mm pitch and 0.60 edge utilisation, the same rule "
-            "the GPU comparator is charged; declared: the replicated live set of "
-            "one session at the IR's 1,048,576-position horizon, which no "
-            "five-stack die holds"
+            "five HBM3e stacks, the die-edge beachfront an 815 mm2 die attaches "
+            "at 12 mm pitch and 0.60 edge utilisation; the capability declares "
+            "this same physical limit"
         ),
         "live_state_boundary": (
-            "live KV and activations are replicated per node in this build and "
-            "declared at the IR horizon; a five-stack node needs them sharded "
-            "across the 32 nodes (plan WP-D2) before the physical HBM figure "
-            "applies"
+            "full-extent KV and activations remain node-local; exact-size, "
+            "exact-dtype liveness reuse brings the complete session image below "
+            "the five-stack physical boundary without shortening the IR horizon"
         ),
         "partition": "expert_parallel_consecutive_ownership_dense_replicated",
         "evidence": (
@@ -425,15 +416,13 @@ def deepseek_v4_array_rom_capability(
                 "bytes": HBM_BYTES,
                 "channels": 8,
                 "burst_bytes": 64,
-                # ``bytes`` is the replicated live set this build declares;
-                # the two physical fields are the five-stack die-edge figure.
-                # The array_geometry notes say which is which.
+                # All three fields name the same five-stack die-edge boundary.
                 "physical_stacks": HBM_STACKS_PER_NODE,
                 "physical_bytes": PHYSICAL_HBM_BYTES,
             },
         },
         link=dict(CLUSTER_32_LINK),
-        technology_view="rom_array_cluster_32_declared_v1",
+        technology_view="rom_array_cluster_32_physical_v1",
     )
     capability.validate()
     return capability

@@ -59,6 +59,7 @@ from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any, Container, Mapping, Sequence
 
+from compiler.backends.activation_liveness import LiveBuffer, allocate_live_buffers
 from compiler.ir.v3.kernel_ir import (
     Kernel,
     KernelGraph,
@@ -3071,44 +3072,25 @@ def _place_activations(
         key=lambda k: (first_use.get(k, 0), k),
     )
 
-    slots: list[dict[str, Any]] = []
-    arena_of_key: dict[str, str] = {}
-    for key in arena_keys:
-        size, rows, cols, dtype, symbolic, rolling_group = sizes[key]
-        chosen = None
-        # A rolling pipeline keeps one explicit buffer per value.  Reusing a
-        # second stage's object merely because the liveness intervals do not
-        # overlap would make two numerically distinct operand bindings collapse
-        # to one descriptor under the shared edge loop, and it leaves no
-        # physical separation for an asynchronous producer/consumer fence to
-        # protect. The buffers are block-sized; clarity costs megabytes here,
-        # while the eliminated full-context planes are tens of gigabytes.
-        for slot in slots if reuse_arenas and not rolling_group else ():
-            if (
-                slot["size_bytes"] != size
-                or slot["dtype"] != dtype
-                or slot["rolling_group"] != rolling_group
-            ):
-                continue
-            if slot["free_at"] <= first_use.get(key, 0):
-                chosen = slot
-                break
-        if chosen is None:
-            chosen = {
-                "slot_id": f"arena{len(slots):04d}",
-                "size_bytes": size,
-                "rows": rows,
-                "cols": cols,
-                "dtype": dtype,
-                "symbolic": symbolic,
-                "rolling_group": rolling_group,
-                "tenants": [],
-                "free_at": 0,
-            }
-            slots.append(chosen)
-        chosen["tenants"].append(key)
-        chosen["free_at"] = max(chosen["free_at"], last_use.get(key, 0) + 1)
-        arena_of_key[key] = chosen["slot_id"]
+    # The exact-fit interval allocator is shared with the ROM backend.  A
+    # rolling pipeline keeps one explicit buffer per value: collapsing two
+    # stages under the shared edge loop would erase their physical separation,
+    # so those requests are exclusive even when their linear intervals do not
+    # overlap.  Diagnostic ``reuse_arenas=False`` makes every request exclusive.
+    live_arenas, arena_of_key = allocate_live_buffers(
+        (
+            LiveBuffer(
+                key=key,
+                size_bytes=sizes[key][0],
+                dtype=sizes[key][3],
+                first_use=first_use.get(key, 0),
+                last_use=last_use.get(key, 0),
+                exclusive=bool(sizes[key][5]) or not reuse_arenas,
+            )
+            for key in arena_keys
+        ),
+        slot_prefix="arena",
+    )
 
     for key in host_keys:
         size, rows, cols, dtype, symbolic, _rolling_group = sizes[key]
@@ -3121,18 +3103,18 @@ def _place_activations(
             "direction": "in" if key.startswith("host.in.") else "out",
         }
 
-    arena_slots = tuple(
+    arena_slots: tuple[ArenaSlot, ...] = tuple(
         ArenaSlot(
-            slot_id=slot["slot_id"],
-            size_bytes=slot["size_bytes"],
-            rows=slot["rows"],
-            cols=slot["cols"],
-            dtype=slot["dtype"],
-            symbolic_rows=slot["symbolic"],
-            tenants=tuple(slot["tenants"]),
-            rolling_group=slot["rolling_group"],
+            slot_id=slot.slot_id,
+            size_bytes=slot.size_bytes,
+            rows=sizes[slot.tenants[0].key][1],
+            cols=sizes[slot.tenants[0].key][2],
+            dtype=slot.dtype,
+            symbolic_rows=sizes[slot.tenants[0].key][4],
+            tenants=tuple(tenant.key for tenant in slot.tenants),
+            rolling_group=sizes[slot.tenants[0].key][5],
         )
-        for slot in slots
+        for slot in live_arenas
     )
     return keys, arena_slots, arena_of_key, host_objects
 

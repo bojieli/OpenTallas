@@ -3392,6 +3392,25 @@ def test_memory_capacity_is_proved(qwen_build, deepseek_build):
         assert footprint["session_bytes_in_hbm"] <= declared["hbm"]
 
 
+def test_rom_activation_arena_reuses_only_disjoint_exact_buffers(qwen_build):
+    deployment, _plan = qwen_build
+    report = deployment.notes["rom_lowering"]["activation_liveness"]
+
+    assert report["allocator"] == (
+        "backend_neutral_exact_size_dtype_closed_interval_v1"
+    )
+    assert report["logical_buffer_count"] >= report["arena_slots"]
+    assert report["logical_buffer_bytes"] >= report["arena_bytes"]
+    assert report["reclaimed_bytes"] == (
+        report["logical_buffer_bytes"] - report["arena_bytes"]
+    )
+    assert report["reclaimed_bytes"] > 0
+    for slot in report["slots"]:
+        tenants = slot["tenants"]
+        for left, right in zip(tenants, tenants[1:]):
+            assert left["last_use"] < right["first_use"]
+
+
 def test_deepseek_state_groups_are_single_direct_hbm_objects(
     deepseek_graph, deepseek_capability
 ):

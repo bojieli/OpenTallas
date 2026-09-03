@@ -53,6 +53,7 @@ import math
 from dataclasses import dataclass, field as dc_field
 from typing import Any, Callable, Iterable, Mapping, Sequence
 
+from compiler.backends.activation_liveness import LiveBuffer, allocate_live_buffers
 from compiler.backends.numeric_contracts import (
     EXECUTION_CONTRACT,
     reduction_order_for,
@@ -1149,6 +1150,7 @@ class RomLowering:
         self._buffer_place: dict[str, BufferPlacement] = {}
         self._buffer_root: dict[str, str] = {}
         self._buffer_size: dict[str, int] = {}
+        self._buffer_liveness_report: dict[str, Any] = {}
         self._sram_used = 0
         self._numeric_cache: dict[tuple[Any, ...], int] = {}
         self._schedule_cache: dict[tuple[int, int], int] = {}
@@ -1833,7 +1835,13 @@ class RomLowering:
                     reticles.add(int(shard.coordinate.reticle))
                     tiles.add(int(shard.coordinate.tile))
                 continue
-            port_mask |= 1 << (int(obj.payload["bank_or_tile"]) % 32)
+            port = int(obj.payload["bank_or_tile"])
+            # REMOTE/link staging objects use the ABI's unassigned sentinel;
+            # it is not physical port 31.  The previous modulo conversion only
+            # happened to pass while hundreds of one-use activation objects
+            # populated every concrete port and masked the phantom bit.
+            if 0 <= port < 32:
+                port_mask |= 1 << port
         if len(reticles) > 1:
             route = RouteClass.INTER_RETICLE
         elif len(tiles) > 1:
@@ -2117,7 +2125,7 @@ class RomLowering:
         return f"buf.g.{tensor_id}"
 
     def _unify_buffers(self) -> None:
-        """Alias the buffers a compressed body forces to be one object.
+        """Alias required loop operands, then reuse disjoint live buffers.
 
         Layer ``L`` of a run reads the residual its predecessor wrote, and layer
         0 reads what the prologue wrote.  Those are different IR tensors, but a
@@ -2125,6 +2133,14 @@ class RomLowering:
         (run, position, slot) must resolve to the same buffer.  That aliasing is
         the residual stream; it is a placement decision, not a semantic one, and
         it is rejected outright if the aliased buffers differ in size.
+
+        The required aliases are logical roots.  A second, backend-neutral
+        interval allocation then lets roots with disjoint closed lifetimes share
+        one exact-size, exact-dtype arena.  No extent is shortened: this changes
+        only physical addresses, and therefore preserves the IR's full context
+        contract.  Both the functional device and the current RTL sequencer
+        retire an engine instruction only after ``issue_ready`` reports its
+        completion, so program-order non-overlap is also physical non-overlap.
         """
         parent: dict[str, str] = {}
 
@@ -2167,12 +2183,140 @@ class RomLowering:
             padded_sizes[root] = max(
                 padded_sizes.get(root, 0), self._padded_bytes(tensor)
             )
-        self._buffer_root = {
+        logical_root = {
             self._base_buffer_key(t.tensor_id): find(self._base_buffer_key(t.tensor_id))
             for t in self.graph.tensors
             if t.role not in WEIGHT_ROLES and t.role != "state"
         }
-        self._buffer_size = padded_sizes
+
+        # One position per emitted kernel body.  Every source kernel in a
+        # compressed run maps to its shared body position; this is the same
+        # time coordinate the program executes and the HBM planner uses.
+        position_of: dict[int, int] = {}
+        cursor = 0
+        for kernel in self.analysis.prologue:
+            position_of[kernel.index] = cursor
+            cursor += 1
+        for run in self.analysis.runs:
+            for offset, column in enumerate(run.body):
+                for kernel in column:
+                    position_of[kernel.index] = cursor + offset
+            cursor += run.positions
+        for kernel in self.analysis.epilogue:
+            position_of[kernel.index] = cursor
+            cursor += 1
+        missing = [
+            kernel.kernel_id
+            for kernel in self.graph.kernels
+            if kernel.index not in position_of
+        ]
+        if missing:
+            raise RomLoweringError(
+                "buffer liveness cannot place kernels absent from the compressed "
+                f"program order: {missing[:4]}"
+            )
+
+        first_use: dict[str, int] = {}
+        last_use: dict[str, int] = {}
+        roles: dict[str, set[str]] = {}
+        dtypes: dict[str, set[str]] = {}
+
+        def record(name: str, position: int) -> None:
+            tensor = self.tensors[name]
+            if tensor.role in WEIGHT_ROLES or tensor.role == "state":
+                return
+            root = logical_root[self._base_buffer_key(name)]
+            first_use[root] = min(first_use.get(root, position), position)
+            last_use[root] = max(last_use.get(root, position), position)
+            roles.setdefault(root, set()).add(tensor.role)
+            dtypes.setdefault(root, set()).add(tensor.dtype)
+
+        # Outputs precede inputs for the first-use convention used by the HBM
+        # planner.  Equal positions remain overlapping because the intervals
+        # are closed and the allocator requires ``prior.last < next.first``.
+        for kernel in self.graph.kernels:
+            position = position_of[kernel.index]
+            for name in kernel.outputs:
+                record(name, position)
+            for name in kernel.inputs:
+                record(name, position)
+
+        requests: list[LiveBuffer] = []
+        unpooled: set[str] = set()
+        for root, size in sorted(padded_sizes.items()):
+            root_roles = roles.get(root, set())
+            root_dtypes = dtypes.get(root, set())
+            if len(root_dtypes) > 1:
+                raise RomLoweringError(
+                    f"logical buffer {root!r} aliases element types "
+                    f"{sorted(root_dtypes)}"
+                )
+            # Host windows retain their identity and visibility.  A declared
+            # but unused input likewise has no defensible lifetime to recycle.
+            if root_roles.intersection({"input", "output"}) or root not in first_use:
+                unpooled.add(root)
+                continue
+            if not root_dtypes:
+                raise RomLoweringError(
+                    f"logical buffer {root!r} has no element type"
+                )
+            requests.append(
+                LiveBuffer(
+                    key=root,
+                    size_bytes=size,
+                    dtype=next(iter(root_dtypes)),
+                    first_use=first_use[root],
+                    last_use=last_use[root],
+                )
+            )
+
+        arenas, allocation = allocate_live_buffers(
+            requests, slot_prefix="buf.arena"
+        )
+        physical_of_root = {
+            root: allocation.get(root, root) for root in padded_sizes
+        }
+        self._buffer_root = {
+            base: physical_of_root[root] for base, root in logical_root.items()
+        }
+        self._buffer_size = {
+            arena.slot_id: arena.size_bytes for arena in arenas
+        }
+        self._buffer_size.update({root: padded_sizes[root] for root in unpooled})
+
+        logical_bytes = sum(request.size_bytes for request in requests)
+        physical_bytes = sum(arena.size_bytes for arena in arenas)
+        self._buffer_liveness_report = {
+            "allocator": "backend_neutral_exact_size_dtype_closed_interval_v1",
+            "arena_bytes": physical_bytes,
+            "arena_slots": len(arenas),
+            "logical_buffer_bytes": logical_bytes,
+            "logical_buffer_count": len(requests),
+            "reclaimed_bytes": logical_bytes - physical_bytes,
+            "unpooled_buffer_bytes": sum(padded_sizes[root] for root in unpooled),
+            "unpooled_buffer_count": len(unpooled),
+            "ordering_proof": (
+                "closed lifetimes do not overlap; the functional device and "
+                "RTL sequencer observe engine completion before retiring and "
+                "advancing to the next instruction"
+            ),
+            "slots": [
+                {
+                    "dtype": arena.dtype,
+                    "size_bytes": arena.size_bytes,
+                    "slot_id": arena.slot_id,
+                    "tenants": [
+                        {
+                            "first_use": tenant.first_use,
+                            "key": tenant.key,
+                            "last_use": tenant.last_use,
+                        }
+                        for tenant in arena.tenants
+                    ],
+                }
+                for arena in arenas
+            ],
+        }
 
     def _buffer_key(self, tensor_id: str) -> str:
         base = self._base_buffer_key(tensor_id)
@@ -8744,6 +8888,7 @@ class RomLowering:
         builder.notes["memory_footprint"] = self._prove_memory_capacity()
         builder.notes["rom_plan"] = plan.to_dict()
         builder.notes["rom_lowering"] = {
+            "activation_liveness": self._buffer_liveness_report,
             "compressed_kernel_count": self.analysis.compressed_kernel_count,
             "layer_runs": [
                 {
