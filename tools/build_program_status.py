@@ -198,6 +198,67 @@ def rtl_correlation() -> dict[str, Any]:
     }
 
 
+def rtl_deployment_correlation() -> dict[str, Any]:
+    body = _load(REPO / "results" / "rtl" / "abi3_deployment_campaign.json")
+    if not body:
+        return {"present": False}
+    simulator_rows = body.get("cases", [])
+    observed = simulator_rows[0].get("observed_cases", []) if simulator_rows else []
+    what_ran = body.get("what_ran", {})
+    profile = body.get("rtl_profile", {})
+    return {
+        "present": True,
+        "status": body.get("status"),
+        "evidence_class": body.get("evidence_class"),
+        "deployments": len(what_ran.get("deployments", [])),
+        "cases": len(body.get("correlated_cases", [])),
+        "completions": sum(row.get("verdict") == "OK" for row in observed),
+        "issue_events": sum(row.get("issues_compared", 0) for row in observed),
+        "resolved_views": sum(row.get("views_compared", 0) for row in observed),
+        "predicates": sum(row.get("predicates_compared", 0) for row in observed),
+        "checks_per_simulator": {
+            row.get("name", "unknown"): row.get("checks") for row in simulator_rows
+        },
+        "simulators": body.get("simulators_counted", []),
+        "state_compatibility_elaborated": profile.get(
+            "state_compatibility_elaborated"
+        ),
+        "required_state_descriptors": profile.get(
+            "required_state_descriptor_count"
+        ),
+        "required_state_instructions": profile.get(
+            "required_state_instruction_count"
+        ),
+        "limitations": body.get("limitations", []),
+    }
+
+
+def rtl_engine_correlation() -> dict[str, Any]:
+    body = _load(REPO / "results" / "rtl" / "abi3_engine_campaign.json")
+    if not body:
+        return {"present": False}
+    correlation = body.get("correlation", {})
+    sensitivity = body.get("mutation_sensitivity", {})
+    boundary = body.get("claim_boundary", {}).get("does_not_establish", {})
+    return {
+        "present": True,
+        "status": body.get("status"),
+        "evidence_class": body.get("evidence_class"),
+        "cases": correlation.get("case_count"),
+        "families": correlation.get("family_count"),
+        "result_words": correlation.get("result_word_count"),
+        "macs": correlation.get("mac_count"),
+        "faults": correlation.get("fault_case_count"),
+        "decode_probes": correlation.get("decode_probe_count"),
+        "arithmetic_probes": correlation.get("arith_probe_count"),
+        "checks_per_simulator": body.get("checks_per_simulator", {}),
+        "simulators": body.get("simulators_counted", []),
+        "mutations": sensitivity.get("mutation_count"),
+        "all_mutations_caught": sensitivity.get("all_caught_by_both_simulators"),
+        "integration_limit": boundary.get("integration_with_the_control_plane"),
+    }
+
+
 def checklist_progress() -> dict[str, Any]:
     path = REPO / "docs" / "UNIFIED_EXECUTION_CHECKLIST.md"
     if not path.exists():
@@ -245,6 +306,8 @@ def main() -> int:
         "physical": physical_results(),
         "campaigns": campaign_results(),
         "rtl_correlation": rtl_correlation(),
+        "rtl_deployment_correlation": rtl_deployment_correlation(),
+        "rtl_engine_correlation": rtl_engine_correlation(),
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_bytes(canonical_json(status))
@@ -261,11 +324,11 @@ def main() -> int:
         f"{status['checklist'].get('in_progress', 0)} in progress, "
         f"{status['checklist'].get('not_started', 0)} not started",
         "",
-        "## Engine coverage",
+        "## Functional simulator engine coverage",
         "",
         f"{status['engine_coverage']['implemented']} of "
         f"{status['engine_coverage']['implemented'] + status['engine_coverage']['missing']}"
-        " dispatched engine operations implemented; "
+        " dispatched functional engine operations implemented; "
         f"{status['engine_coverage']['sequencer_executed']} families are executed by "
         "the microsequencer itself.",
         "",
@@ -331,6 +394,8 @@ def main() -> int:
         lines += [
             "## RTL 3.0 correlation",
             "",
+            "### Generic microsequencer fixtures",
+            "",
             f"{rtl['cases']} cases, {rtl['programs_run']} programs executed, "
             f"{rtl['issue_events']} engine-issue events and {rtl['traps']} traps "
             f"matched against `{rtl['reference']}` on "
@@ -342,6 +407,63 @@ def main() -> int:
             lines.append("Declared limitations:")
             lines += [f"- {item}" for item in rtl["limitations"]]
             lines.append("")
+
+    deployment_rtl = status["rtl_deployment_correlation"]
+    if deployment_rtl.get("present"):
+        checks = ", ".join(
+            f"{name} {count:,}"
+            for name, count in deployment_rtl["checks_per_simulator"].items()
+            if isinstance(count, int)
+        )
+        lines += [
+            "### Shipped-deployment control plane",
+            "",
+            f"{deployment_rtl['deployments']} deployments, "
+            f"{deployment_rtl['cases']} prefill/decode cases, "
+            f"{deployment_rtl['completions']} completions, "
+            f"{deployment_rtl['issue_events']:,} engine issues, "
+            f"{deployment_rtl['resolved_views']:,} resolved views and "
+            f"{deployment_rtl['predicates']:,} predicates matched on "
+            f"{len(deployment_rtl['simulators'])} independent simulators "
+            f"({checks}).",
+            "",
+            "The production profile elaborates with compatibility state disabled "
+            f"and requires {deployment_rtl['required_state_descriptors']} `STATE` "
+            f"descriptors and {deployment_rtl['required_state_instructions']} "
+            "`STATE` instructions.",
+            "",
+        ]
+    else:
+        lines += ["### Shipped-deployment control plane", "", "Artifact absent.", ""]
+
+    engine_rtl = status["rtl_engine_correlation"]
+    if engine_rtl.get("present"):
+        checks = ", ".join(
+            f"{name} {count:,}"
+            for name, count in engine_rtl["checks_per_simulator"].items()
+            if isinstance(count, int)
+        )
+        lines += [
+            "### Standalone engine datapaths",
+            "",
+            f"{engine_rtl['cases']} cases across {engine_rtl['families']} bounded "
+            f"opcode pairs compared {engine_rtl['result_words']:,} result words, "
+            f"{engine_rtl['macs']:,} MACs, {engine_rtl['faults']} faults, "
+            f"{engine_rtl['decode_probes']:,} format-decode probes and "
+            f"{engine_rtl['arithmetic_probes']:,} arithmetic probes on "
+            f"{len(engine_rtl['simulators'])} independent simulators ({checks}).",
+            "",
+            f"Mutation sensitivity: {engine_rtl['mutations']} mutations; "
+            f"all caught by both simulators = {engine_rtl['all_mutations_caught']}.",
+            "",
+        ]
+        if engine_rtl.get("integration_limit"):
+            lines += [
+                "Integration boundary: " + engine_rtl["integration_limit"],
+                "",
+            ]
+    else:
+        lines += ["### Standalone engine datapaths", "", "Artifact absent.", ""]
 
     if status["campaigns"]:
         lines += ["## Accelerator campaigns", "",
