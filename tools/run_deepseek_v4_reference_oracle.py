@@ -74,6 +74,40 @@ from opentallas.workload import kv_traffic, rho_one  # noqa: E402
 SCHEMA = "opentallas.abi3.reference_oracle.v1"
 MODEL_ID = "deepseek-v4-flash-0731"
 EOS_TOKEN_ID = 1
+GATE_B_LAUNCH_SCHEMA = "opentallas.deepseek_v4.gate_b_launch.v1"
+GATE_B_PROFILE_ID = "deepseek_v4_flash_200k_external_oracle_v1"
+GATE_B_WORKLOAD_ID = "TA-DS-CTX-200K-1"
+GATE_B_PROMPT_TOKENS = 200_000
+GATE_B_MAX_NEW_TOKENS = 256
+GATE_B_KV_ALIGNMENT_TOKENS = 128
+GATE_B_MAX_SEQ_LEN = 200_320
+GATE_B_WORKLOAD_SOURCE_SHA256 = (
+    "b00dd2f461329c14e0a8c0863dbef78e066950bee0aba053aa651f91890418bb"
+)
+GATE_B_WORKLOAD_INDEX_SHA256 = (
+    "45f478d457d0e617d1ef06e6f5a5b542bc567bd911be28072fa10ec6c625d310"
+)
+GATE_B_CHECKPOINT_SOURCE_SHA256 = (
+    "c9cf820d5183a4de2fdd51769535b48d6a47975a6d707f5d1b2f105af64141c5"
+)
+GATE_B_WORKLOADS = REPO / "build" / "workloads" / MODEL_ID
+GATE_B_QUALIFIED_PACKAGE_VERSIONS = {
+    "apache-tvm-ffi": "0.1.8.post2",
+    "safetensors": "0.8.0",
+    "tilelang": "0.1.8",
+    "tokenizers": "0.22.2",
+    "torch": "2.10.0+cu128",
+    "transformers": "4.57.6",
+}
+GATE_B_REQUIRED_ADAPTATIONS = {
+    "dspark_stages_not_built",
+    "endpoint_residency",
+    "hadamard_fallback_available_but_unused",
+    "layer_streaming",
+    "prefill_sequence_tiling",
+    "routed_experts_via_vendor_fp8_recast",
+    "sparse_attn_head_split",
+}
 
 # This is the complete repository-owned implementation boundary that can alter
 # the oracle's token choices.  Vendor model sources and immutable inputs are
@@ -83,6 +117,7 @@ PRODUCER_SOURCE_PATHS = (
     "compiler/frontend/deepseek_v4_tokenizer.py",
     "runtime/reference/deepseek_v4_oracle.py",
     "tools/deepseek_v4_prefill_tiling.py",
+    "tools/check_deepseek_v4_200k_oracle.py",
     "tools/run_deepseek_v4_reference_oracle.py",
 )
 CHECKPOINT_SOURCE_PATH = (
@@ -134,6 +169,259 @@ def _producer_identity() -> dict[str, object]:
         ],
         "source_map": source_map,
         "source_map_sha256": _canonical_digest(source_map),
+    }
+
+
+def _gate_b_launch_contract(max_seq_len: int) -> dict[str, object]:
+    """Return the one qualified launch contract for exact-200K Gate B.
+
+    The production flag below normalises the relevant CLI values to this
+    contract.  Keeping the normalised values in the report makes the launch
+    reproducible without treating a shell command string as configuration.
+    """
+
+    return {
+        "schema": GATE_B_LAUNCH_SCHEMA,
+        "profile_id": GATE_B_PROFILE_ID,
+        "workload_id": GATE_B_WORKLOAD_ID,
+        "prompt_token_count": GATE_B_PROMPT_TOKENS,
+        "max_new_tokens": GATE_B_MAX_NEW_TOKENS,
+        "selection": "greedy_lowest_token_id_argmax",
+        "kv_allocation": {
+            "prompt_tokens": GATE_B_PROMPT_TOKENS,
+            "reserved_decode_tokens": GATE_B_MAX_NEW_TOKENS,
+            "required_tokens": GATE_B_PROMPT_TOKENS + GATE_B_MAX_NEW_TOKENS,
+            "alignment_tokens": GATE_B_KV_ALIGNMENT_TOKENS,
+            "allocated_tokens": max_seq_len,
+        },
+        "prefill_tiling": {
+            "enabled": True,
+            "sequence_tile": 4_096,
+            "index_tile_rows_fixed": 128,
+            "index_score_budget_bytes": 1_024 << 20,
+            "hyper_connection_budget_bytes": 768 << 20,
+            "compressor_positions_per_tile": 16_384,
+            "expert_rows_per_tile": 8_192,
+            "untiled_floor_tokens": 4_096,
+            "hyper_connection_residual_on_host": True,
+        },
+        "execution_stack": {
+            "package_versions": dict(GATE_B_QUALIFIED_PACKAGE_VERSIONS),
+            "torch_cuda": "12.8",
+            "compute_capability": [12, 0],
+            "tf32_allowed": False,
+            "fast_hadamard_transform": "fast_hadamard_transform",
+            "expert_numeric_path": "fp8",
+            "sparse_attention_heads_per_launch": 16,
+            "sparse_attention_bitwise_identical": True,
+            "required_adaptation_ids": sorted(GATE_B_REQUIRED_ADAPTATIONS),
+        },
+        "completion_rehash": [
+            "producer_sources",
+            "checkpoint_source",
+            "workload_index",
+            "workload_source",
+        ],
+    }
+
+
+def _configure_gate_b_production(args: argparse.Namespace) -> list[str]:
+    """Fail closed on incompatible options, then install qualified values."""
+
+    if not args.gate_b_production:
+        return []
+    problems: list[str] = []
+    if args.only not in (None, [GATE_B_WORKLOAD_ID]):
+        problems.append(
+            f"--gate-b-production only permits --only {GATE_B_WORKLOAD_ID}"
+        )
+    if args.max_new_tokens not in (None, GATE_B_MAX_NEW_TOKENS):
+        problems.append("--gate-b-production requires exactly 256 new tokens")
+    if args.append:
+        problems.append("--gate-b-production cannot append to a prior report")
+    if args.tiling_equivalence:
+        problems.append("--gate-b-production cannot run an equivalence-only job")
+    if args.time_budget_seconds is not None:
+        problems.append("--gate-b-production cannot skip work on a time budget")
+    if args.head_on_device:
+        problems.append("--gate-b-production requires the qualified host LM head")
+    if problems:
+        return problems
+
+    # One switch deliberately owns every correctness-relevant launch value.
+    # This avoids a long, typo-prone production command while the raw argv is
+    # still retained as provenance.
+    args.only = [GATE_B_WORKLOAD_ID]
+    args.max_new_tokens = GATE_B_MAX_NEW_TOKENS
+    args.engine_per_workload = False
+    args.tile_prefill = True
+    args.tiling_floor = 4_096
+    args.seq_tile = 4_096
+    args.index_tile = 128
+    args.expert_rows = 8_192
+    args.compressor_positions = 16_384
+    args.host_residual = True
+    args.index_score_budget_mib = 1_024
+    args.hc_budget_mib = 768
+    return []
+
+
+def _qualified_stack_problems(
+    environment: object,
+    head_split: object,
+    fp4_gemm: object,
+    expert_numeric_path: object,
+    adaptations: object,
+) -> list[str]:
+    """Validate the measured execution stack before workload execution."""
+
+    problems: list[str] = []
+    if not isinstance(environment, dict):
+        return ["execution environment metadata is absent"]
+    if environment.get("package_versions") != GATE_B_QUALIFIED_PACKAGE_VERSIONS:
+        problems.append("package versions differ from the qualified stack")
+    if environment.get("torch_cuda") != "12.8":
+        problems.append("CUDA runtime is not the qualified 12.8 stack")
+    if environment.get("compute_capability") != [12, 0]:
+        problems.append("GPU compute capability is not the qualified sm_120")
+    if environment.get("tf32_allowed") is not False:
+        problems.append("TF32 is enabled in a float32 arithmetic path")
+    if environment.get("fast_hadamard_transform") != "fast_hadamard_transform":
+        problems.append("the qualified Hadamard extension is not active")
+    if (
+        not isinstance(head_split, dict)
+        or head_split.get("bitwise_identical") is not True
+        or head_split.get("max_abs_difference") != 0
+        or head_split.get("heads_per_launch") != 16
+    ):
+        problems.append("the sparse-attention head split is not bitwise qualified")
+    if (
+        not isinstance(fp4_gemm, dict)
+        or fp4_gemm.get("fp8_gemm_agrees") is not True
+        or fp4_gemm.get("fp4_gemm_agrees") is not False
+        or not isinstance(fp4_gemm.get("fp4_path_max_abs_error"), (int, float))
+        or not isinstance(fp4_gemm.get("tolerance"), (int, float))
+        or fp4_gemm.get("fp4_path_max_abs_error", 0)
+        <= fp4_gemm.get("tolerance", 0)
+        or expert_numeric_path != "fp8"
+        or environment.get("expert_numeric_path") != "fp8"
+    ):
+        problems.append("the routed-expert FP8 fallback is not qualified")
+    adaptation_ids = {
+        row.get("id")
+        for row in adaptations
+        if isinstance(row, dict) and isinstance(row.get("id"), str)
+    } if isinstance(adaptations, list) else set()
+    if (
+        adaptation_ids != GATE_B_REQUIRED_ADAPTATIONS
+        or not isinstance(adaptations, list)
+        or len(adaptations) != len(GATE_B_REQUIRED_ADAPTATIONS)
+    ):
+        problems.append("the execution adaptation set is not exactly qualified")
+    return problems
+
+
+def _input_identity(
+    index_path: Path,
+    checkpoint_source_path: Path,
+    selected: list[tuple[str, dict[str, object]]],
+    workloads: Path,
+) -> dict[str, object]:
+    """Hash every immutable runner input selected for this invocation."""
+
+    return {
+        "checkpoint_source": _file_identity(checkpoint_source_path),
+        "workload_index": _file_identity(index_path),
+        "workload_sources": {
+            workload_id: _file_identity(workloads / str(entry["path"]))
+            for workload_id, entry in selected
+        },
+    }
+
+
+def _gate_b_input_problems(
+    args: argparse.Namespace,
+    input_identity: object,
+) -> list[str]:
+    """Reject immutable input drift before importing torch or building a model."""
+
+    if not args.gate_b_production:
+        return []
+    problems: list[str] = []
+    if args.snapshot.resolve() != DEFAULT_SNAPSHOT.resolve():
+        problems.append(
+            f"--snapshot must resolve to the pinned Gate-B snapshot {DEFAULT_SNAPSHOT}"
+        )
+    if not args.snapshot.is_dir():
+        problems.append("the pinned Gate-B snapshot directory is absent")
+    if args.workloads.resolve() != GATE_B_WORKLOADS.resolve():
+        problems.append(
+            f"--workloads must resolve to the pinned Gate-B inputs {GATE_B_WORKLOADS}"
+        )
+    if not isinstance(input_identity, dict):
+        return problems + ["immutable input identity is absent"]
+
+    expected = {
+        "checkpoint_source": {
+            "path": f"compiler/models/{MODEL_ID}/checkpoint_source.json",
+            "sha256": GATE_B_CHECKPOINT_SOURCE_SHA256,
+        },
+        "workload_index": {
+            "path": f"build/workloads/{MODEL_ID}/index.json",
+            "sha256": GATE_B_WORKLOAD_INDEX_SHA256,
+        },
+    }
+    for label, required in expected.items():
+        observed = input_identity.get(label)
+        if not isinstance(observed, dict) or any(
+            observed.get(key) != value for key, value in required.items()
+        ):
+            problems.append(f"{label.replace('_', ' ')} identity is not Gate-B pinned")
+    workload_sources = input_identity.get("workload_sources")
+    workload_source = (
+        workload_sources.get(GATE_B_WORKLOAD_ID)
+        if isinstance(workload_sources, dict)
+        else None
+    )
+    expected_workload = {
+        "path": f"build/workloads/{MODEL_ID}/{GATE_B_WORKLOAD_ID}.json",
+        "sha256": GATE_B_WORKLOAD_SOURCE_SHA256,
+    }
+    if not isinstance(workload_source, dict) or any(
+        workload_source.get(key) != value for key, value in expected_workload.items()
+    ):
+        problems.append("exact-200K workload source identity is not Gate-B pinned")
+    return problems
+
+
+def _verify_gate_b_checkpoint_before_execution(snapshot: Path) -> dict[str, object]:
+    """Hash the complete pinned checkpoint before a production workload starts.
+
+    This is intentionally production-only.  The exact-200K run takes hours, so
+    discovering a stale shard only in the post-run acceptance check would waste
+    the expensive execution.  The final checker still rehashes independently.
+    """
+
+    import check_deepseek_v4_200k_oracle as gate_b
+
+    checkpoint_source = gate_b._load_object(CHECKPOINT_SOURCE_PATH)
+    evidence, problems = gate_b.validate_checkpoint_snapshot(
+        checkpoint_source,
+        snapshot,
+        full_hash=True,
+    )
+    if problems or evidence.get("full_byte_hash_verified") is not True:
+        detail = "; ".join(problems) if problems else "full-byte hash was not verified"
+        raise OracleError(f"Gate-B checkpoint preflight failed: {detail}")
+    return {
+        "completed_before_workload_execution": True,
+        "source_sha256": GATE_B_CHECKPOINT_SOURCE_SHA256,
+        "expected_file_count": evidence.get("expected_file_count"),
+        "expected_total_file_bytes": evidence.get("expected_total_file_bytes"),
+        "full_byte_hash_verified": True,
+        "full_byte_hash_verified_file_count": evidence.get(
+            "full_byte_hash_verified_file_count"
+        ),
     }
 
 #: Recorded in ``adaptations`` whenever a rung actually used the tiled prefill,
@@ -707,8 +995,21 @@ def main() -> int:
             "vectors and whether the greedy choice moves"
         ),
     )
+    parser.add_argument(
+        "--gate-b-production",
+        action="store_true",
+        help=(
+            "run only the exact 200,000-token Gate-B workload through the "
+            "qualified tiled-prefill and prompt-plus-256 KV profile; the "
+            "measured execution stack must match before decoding starts"
+        ),
+    )
     parser.add_argument("--force", action="store_true")
     args = parser.parse_args()
+
+    gate_b_option_problems = _configure_gate_b_production(args)
+    if gate_b_option_problems:
+        parser.error("; ".join(gate_b_option_problems))
 
     if args.output.exists() and not (args.force or args.append):
         print(f"refusing to overwrite {args.output}; pass --force", file=sys.stderr)
@@ -757,10 +1058,6 @@ def main() -> int:
             (args.workloads / entry["path"]).read_text()
         )
 
-    producer_identity = _producer_identity()
-    workload_index_identity = _file_identity(index_path)
-    checkpoint_source_identity = _file_identity(CHECKPOINT_SOURCE_PATH)
-
     if args.engine_per_workload:
         # Climb the ladder shortest first, so every rung that *can* run has
         # already been recorded by the time a longer one exhausts the device.
@@ -789,12 +1086,40 @@ def main() -> int:
     else:
         max_seq_len = sequence_length_for([wid for wid, _ in selected])
 
+    if args.gate_b_production and max_seq_len != GATE_B_MAX_SEQ_LEN:
+        parser.error(
+            "the exact-200K Gate-B KV allocation must be 200,320 aligned tokens"
+        )
+
+    producer_identity = _producer_identity()
+    input_identity = _input_identity(
+        index_path, CHECKPOINT_SOURCE_PATH, selected, args.workloads
+    )
+    workload_index_identity = input_identity["workload_index"]
+    checkpoint_source_identity = input_identity["checkpoint_source"]
+    workload_source_identities = input_identity["workload_sources"]
+    assert isinstance(workload_index_identity, dict)
+    assert isinstance(checkpoint_source_identity, dict)
+    assert isinstance(workload_source_identities, dict)
+
+    gate_b_input_problems = _gate_b_input_problems(args, input_identity)
+    if gate_b_input_problems:
+        parser.error("; ".join(gate_b_input_problems))
+
     os.environ.setdefault("PYTORCH_CUDA_ALLOC_CONF", "expandable_segments:True")
-
-    import torch
-
     started_all = time.perf_counter()
     tokenizer = load_verified_deepseek_v4_tokenizer(args.snapshot)
+    production_checkpoint_preflight = None
+    if args.gate_b_production:
+        try:
+            production_checkpoint_preflight = (
+                _verify_gate_b_checkpoint_before_execution(args.snapshot)
+            )
+        except (OSError, ValueError, OracleError) as exc:
+            print(str(exc), file=sys.stderr)
+            return 2
+
+    import torch
 
     # The tiled bodies have to be on the vendor classes *before* the engine is
     # constructed: the engine stashes the Block and Expert forwards it finds and
@@ -824,6 +1149,10 @@ def main() -> int:
         tiling.instrument_decode(vendor_model_mod)
         tiling.COUNTERS.enabled = True
 
+    execution_adaptations = [dict(item) for item in ADAPTATIONS] + (
+        [dict(PREFILL_TILING_ADAPTATION)] if args.tile_prefill else []
+    )
+
     profile = None
     if args.measure_kv:
         profile = ModelProfile.load(args.model_profile)
@@ -840,6 +1169,19 @@ def main() -> int:
             flush=True,
         )
         built = StreamingDeepSeekV4(config)
+        if args.gate_b_production:
+            stack_problems = _qualified_stack_problems(
+                built.environment(),
+                built.head_split_evidence,
+                built.fp4_gemm_evidence,
+                built.expert_dtype,
+                execution_adaptations,
+            )
+            if stack_problems:
+                raise OracleError(
+                    "Gate-B execution stack is not qualified: "
+                    + "; ".join(stack_problems)
+                )
         placement = built.load_endpoints()
         return built, placement
 
@@ -847,6 +1189,21 @@ def main() -> int:
     setup_seconds = time.perf_counter() - started_all
     print(f"engine ready in {setup_seconds:.1f}s: {endpoints}", flush=True)
 
+    execution_environment = {
+        **engine.environment(),
+        **_host_memory(),
+        "platform": platform.platform(),
+        "python": sys.version.split()[0],
+        "cpu_count": os.cpu_count(),
+    }
+    launch_contract = (
+        _gate_b_launch_contract(max_seq_len)
+        if args.gate_b_production
+        else None
+    )
+    launch_contract_sha256 = (
+        _canonical_digest(launch_contract) if launch_contract is not None else None
+    )
     report = {
         "schema": SCHEMA,
         "run_status": "running",
@@ -869,10 +1226,29 @@ def main() -> int:
                 workload_id for workload_id, _entry in selected
             ],
         },
-        "input_identity": {
-            "checkpoint_source": checkpoint_source_identity,
-            "workload_index": workload_index_identity,
-        },
+        "input_identity": input_identity,
+        "production_checkpoint_preflight": production_checkpoint_preflight,
+        "production_launch": (
+            {
+                "explicitly_requested": True,
+                "contract": launch_contract,
+                "contract_sha256": launch_contract_sha256,
+            }
+            if args.gate_b_production
+            else {"explicitly_requested": False}
+        ),
+        "qualified_execution_stack": (
+            {
+                "profile_id": GATE_B_PROFILE_ID,
+                "requirements_sha256": _canonical_digest(
+                    launch_contract["execution_stack"]
+                ),
+                "validated_before_workload_execution": True,
+                "problems": [],
+            }
+            if launch_contract is not None
+            else None
+        ),
         "tokenizer_sha256": index["tokenizer_sha256"],
         "vendor_source_sha256": engine.vendor_digests,
         # Kept at the top level as well as inside "environment" so this report
@@ -898,8 +1274,7 @@ def main() -> int:
         "engine_per_workload": bool(args.engine_per_workload),
         "mandatory_context_tokens": index.get("mandatory_context_tokens"),
         "context_ladder": index.get("context_ladder"),
-        "adaptations": [dict(item) for item in ADAPTATIONS]
-        + ([dict(PREFILL_TILING_ADAPTATION)] if args.tile_prefill else []),
+        "adaptations": execution_adaptations,
         "head_split_verification": engine.head_split_evidence,
         "fp4_gemm_verification": engine.fp4_gemm_evidence,
         "expert_numeric_path": engine.expert_dtype,
@@ -922,13 +1297,7 @@ def main() -> int:
             else {"enabled": False}
         ),
         "kv_measurement_enabled": bool(args.measure_kv),
-        "environment": {
-            **engine.environment(),
-            **_host_memory(),
-            "platform": platform.platform(),
-            "python": sys.version.split()[0],
-            "cpu_count": os.cpu_count(),
-        },
+        "environment": execution_environment,
         "setup_seconds": round(setup_seconds, 3),
         "results": {},
         "not_executed": {},
@@ -1115,18 +1484,18 @@ def main() -> int:
             "workload_digest": entry["digest"],
             "execution_identity": {
                 "checkpoint_source_sha256": checkpoint_source_identity["sha256"],
+                "gate_b_launch_contract_sha256": launch_contract_sha256,
                 "producer_source_map_sha256": producer_identity[
                     "source_map_sha256"
                 ],
                 "vendor_source_sha256": dict(engine.vendor_digests),
                 "workload_index_sha256": workload_index_identity["sha256"],
-                "workload_source": _file_identity(
-                    args.workloads / entry["path"]
-                ),
+                "workload_source": workload_source_identities[workload_id],
             },
             "prompt_token_count": len(ids),
             "generated_token_ids": generated,
             "generated_token_count": len(generated),
+            "max_new_tokens": new_tokens,
             "stop_reason": outcome["stop_reason"],
             "raw_decoded_text": raw_text,
             "visible_decoded_text": visible,
@@ -1224,20 +1593,41 @@ def main() -> int:
         if value["kind"] == "long_natural"
     ]
     report["largest_natural_context_executed"] = max(natural) if natural else 0
-    producer_at_completion = _producer_identity()
-    report["producer"]["source_current_at_completion"] = (
-        producer_at_completion == producer_identity
-    )
+    completion_errors: list[str] = []
+    try:
+        producer_at_completion = _producer_identity()
+    except (OSError, OracleError) as exc:
+        producer_at_completion = {"error": f"{type(exc).__name__}: {exc}"}
+        completion_errors.append("producer source rehash failed")
+    try:
+        inputs_at_completion = _input_identity(
+            index_path, CHECKPOINT_SOURCE_PATH, selected, args.workloads
+        )
+    except (OSError, OracleError) as exc:
+        inputs_at_completion = {"error": f"{type(exc).__name__}: {exc}"}
+        completion_errors.append("immutable input rehash failed")
+    producer_unchanged = producer_at_completion == producer_identity
+    inputs_unchanged = inputs_at_completion == input_identity
+    if not producer_unchanged:
+        completion_errors.append("producer sources changed during execution")
+    if not inputs_unchanged:
+        completion_errors.append("immutable inputs changed during execution")
+    report["completion_identity"] = {
+        "producer": producer_at_completion,
+        "inputs": inputs_at_completion,
+        "problems": completion_errors,
+    }
+    report["producer"]["source_current_at_completion"] = producer_unchanged
+    report["input_identity_current_at_completion"] = inputs_unchanged
     report["run_status"] = (
-        "complete"
-        if report["producer"]["source_current_at_completion"]
-        else "producer_source_changed_during_run"
+        "complete" if not completion_errors else "execution_identity_changed_during_run"
     )
     flush()
     print(f"\nwrote {args.output}")
     if report["run_status"] != "complete":
         print(
-            "producer source changed during execution; result is not admissible",
+            "producer source or immutable input changed during execution; "
+            "result is not admissible",
             file=sys.stderr,
         )
         return 2

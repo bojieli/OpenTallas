@@ -37,6 +37,10 @@ MAX_NEW_TOKENS = 256
 VOCABULARY_SIZE = 129_280
 EOS_TOKEN_ID = 1
 SELECTION = "greedy_lowest_token_id_argmax"
+GATE_B_LAUNCH_SCHEMA = "opentallas.deepseek_v4.gate_b_launch.v1"
+GATE_B_PROFILE_ID = "deepseek_v4_flash_200k_external_oracle_v1"
+KV_ALIGNMENT_TOKENS = 128
+QUALIFIED_MAX_SEQ_LEN = 200_320
 
 WORKLOAD_DIGEST = "803f0c3a3e9bf7ef68ddff00947576d2fab5703d1f4387df1eb2ec11be2c59bd"
 WORKLOAD_SOURCE_SHA256 = (
@@ -54,6 +58,8 @@ TOKENIZER_SHA256 = (
 CHECKPOINT_SOURCE_SHA256 = (
     "c9cf820d5183a4de2fdd51769535b48d6a47975a6d707f5d1b2f105af64141c5"
 )
+CHECKPOINT_EXPECTED_FILE_COUNT = 74
+CHECKPOINT_EXPECTED_TOTAL_BYTES = 166_898_661_074
 
 DEFAULT_ORACLE = (
     REPO / "results" / "abi3" / "deepseek_v4_reference_oracle_context_ladder.json"
@@ -76,6 +82,7 @@ REQUIRED_PRODUCER_SOURCES = (
     "compiler/frontend/deepseek_v4_tokenizer.py",
     "runtime/reference/deepseek_v4_oracle.py",
     "tools/deepseek_v4_prefill_tiling.py",
+    "tools/check_deepseek_v4_200k_oracle.py",
     "tools/run_deepseek_v4_reference_oracle.py",
 )
 
@@ -114,6 +121,52 @@ REQUIRED_ADAPTATIONS = {
     "routed_experts_via_vendor_fp8_recast",
     "sparse_attn_head_split",
 }
+
+
+def _expected_gate_b_launch_contract() -> dict[str, Any]:
+    return {
+        "schema": GATE_B_LAUNCH_SCHEMA,
+        "profile_id": GATE_B_PROFILE_ID,
+        "workload_id": WORKLOAD_ID,
+        "prompt_token_count": PROMPT_TOKENS,
+        "max_new_tokens": MAX_NEW_TOKENS,
+        "selection": SELECTION,
+        "kv_allocation": {
+            "prompt_tokens": PROMPT_TOKENS,
+            "reserved_decode_tokens": MAX_NEW_TOKENS,
+            "required_tokens": PROMPT_TOKENS + MAX_NEW_TOKENS,
+            "alignment_tokens": KV_ALIGNMENT_TOKENS,
+            "allocated_tokens": QUALIFIED_MAX_SEQ_LEN,
+        },
+        "prefill_tiling": {
+            "enabled": True,
+            "sequence_tile": 4_096,
+            "index_tile_rows_fixed": 128,
+            "index_score_budget_bytes": 1_024 << 20,
+            "hyper_connection_budget_bytes": 768 << 20,
+            "compressor_positions_per_tile": 16_384,
+            "expert_rows_per_tile": 8_192,
+            "untiled_floor_tokens": 4_096,
+            "hyper_connection_residual_on_host": True,
+        },
+        "execution_stack": {
+            "package_versions": dict(QUALIFIED_PACKAGE_VERSIONS),
+            "torch_cuda": "12.8",
+            "compute_capability": [12, 0],
+            "tf32_allowed": False,
+            "fast_hadamard_transform": "fast_hadamard_transform",
+            "expert_numeric_path": "fp8",
+            "sparse_attention_heads_per_launch": 16,
+            "sparse_attention_bitwise_identical": True,
+            "required_adaptation_ids": sorted(REQUIRED_ADAPTATIONS),
+        },
+        "completion_rehash": [
+            "producer_sources",
+            "checkpoint_source",
+            "workload_index",
+            "workload_source",
+        ],
+    }
 
 # These are the executable accelerator/compiler regions in which importing the
 # external comparator would turn an independent check into oracle injection.
@@ -369,6 +422,30 @@ def validate_producer(
         or not all(isinstance(item, str) for item in argv)
     ):
         problems.append("runner command identity is missing or malformed")
+    elif argv.count("--gate-b-production") != 1:
+        problems.append("runner command did not explicitly select Gate-B production")
+
+    expected_launch = _expected_gate_b_launch_contract()
+    expected_launch_digest = _canonical_digest(expected_launch)
+    production_launch = report.get("production_launch")
+    if not isinstance(production_launch, dict):
+        production_launch = {}
+        problems.append("oracle report has no production launch provenance")
+    if production_launch.get("explicitly_requested") is not True:
+        problems.append("oracle launch was not explicitly marked as Gate-B production")
+    if production_launch.get("contract") != expected_launch:
+        problems.append("oracle launch does not match the qualified Gate-B contract")
+    if production_launch.get("contract_sha256") != expected_launch_digest:
+        problems.append("oracle launch contract digest is wrong")
+
+    expected_stack_validation = {
+        "profile_id": GATE_B_PROFILE_ID,
+        "requirements_sha256": _canonical_digest(expected_launch["execution_stack"]),
+        "validated_before_workload_execution": True,
+        "problems": [],
+    }
+    if report.get("qualified_execution_stack") != expected_stack_validation:
+        problems.append("runner did not validate the qualified stack before execution")
 
     inputs = report.get("input_identity")
     if not isinstance(inputs, dict):
@@ -388,6 +465,36 @@ def validate_producer(
         label="checkpoint source",
         problems=problems,
     )
+    workload_sources = inputs.get("workload_sources")
+    if not isinstance(workload_sources, dict):
+        workload_sources = {}
+        problems.append("oracle input identity has no workload-source map")
+    _check_file_identity(
+        workload_sources.get(WORKLOAD_ID),
+        expected_path=workload_path,
+        expected_sha256=WORKLOAD_SOURCE_SHA256,
+        label="start-time 200K workload source",
+        problems=problems,
+    )
+
+    completion = report.get("completion_identity")
+    if not isinstance(completion, dict):
+        completion = {}
+        problems.append("oracle report has no completion-time identity rehash")
+    start_producer_identity = {
+        "tool": producer.get("tool"),
+        "tool_source_sha256": producer.get("tool_source_sha256"),
+        "source_map": source_map,
+        "source_map_sha256": producer.get("source_map_sha256"),
+    }
+    if completion.get("producer") != start_producer_identity:
+        problems.append("completion-time producer identity differs from launch")
+    if completion.get("inputs") != inputs:
+        problems.append("completion-time immutable input identity differs from launch")
+    if completion.get("problems") != []:
+        problems.append("completion-time identity rehash records a problem")
+    if report.get("input_identity_current_at_completion") is not True:
+        problems.append("runner did not prove immutable inputs stayed fixed through completion")
 
     execution = result.get("execution_identity")
     if not isinstance(execution, dict):
@@ -399,6 +506,8 @@ def validate_producer(
         problems.append("200K result is not bound to the frozen workload index")
     if execution.get("checkpoint_source_sha256") != CHECKPOINT_SOURCE_SHA256:
         problems.append("200K result is not bound to the frozen checkpoint manifest")
+    if execution.get("gate_b_launch_contract_sha256") != expected_launch_digest:
+        problems.append("200K result is not bound to the Gate-B launch contract")
     _check_file_identity(
         execution.get("workload_source"),
         expected_path=workload_path,
@@ -406,6 +515,8 @@ def validate_producer(
         label="200K workload source",
         problems=problems,
     )
+    if execution.get("workload_source") != workload_sources.get(WORKLOAD_ID):
+        problems.append("200K result is not bound to its start-time workload identity")
 
     return {
         "tool": producer.get("tool"),
@@ -413,6 +524,9 @@ def validate_producer(
         "recorded_source_count": len(source_map),
         "current_source_count": len(checked_sources),
         "selected_workload_ids": selected,
+        "gate_b_profile_id": production_launch.get("contract", {}).get("profile_id")
+        if isinstance(production_launch.get("contract"), dict)
+        else None,
     }, problems
 
 
@@ -596,6 +710,7 @@ def validate_oracle_report(
     workload_path: Path,
     index_path: Path,
     checkpoint_source_path: Path,
+    snapshot_path: Path,
     tokenizer: object | None = None,
 ) -> tuple[dict[str, Any], list[str]]:
     del index  # Its independently checked identity is consumed through hashes.
@@ -614,6 +729,12 @@ def validate_oracle_report(
         problems.append("oracle tokenizer identity is wrong")
     if report.get("mandatory_context_tokens") != PROMPT_TOKENS:
         problems.append("oracle does not retain the mandatory 200K target")
+    reported_snapshot = report.get("snapshot")
+    if (
+        not isinstance(reported_snapshot, str)
+        or Path(reported_snapshot).resolve() != snapshot_path.resolve()
+    ):
+        problems.append("oracle did not execute the snapshot being acceptance-checked")
     source = report.get("source")
     if not isinstance(source, dict) or source != {
         "repository": OFFICIAL_REPOSITORY,
@@ -632,6 +753,19 @@ def validate_oracle_report(
         or not required_disclaimers <= set(not_a_claim)
     ):
         problems.append("oracle does not preserve the external-comparator claim boundary")
+
+    expected_checkpoint_preflight = {
+        "completed_before_workload_execution": True,
+        "source_sha256": CHECKPOINT_SOURCE_SHA256,
+        "expected_file_count": CHECKPOINT_EXPECTED_FILE_COUNT,
+        "expected_total_file_bytes": CHECKPOINT_EXPECTED_TOTAL_BYTES,
+        "full_byte_hash_verified": True,
+        "full_byte_hash_verified_file_count": CHECKPOINT_EXPECTED_FILE_COUNT,
+    }
+    if report.get("production_checkpoint_preflight") != expected_checkpoint_preflight:
+        problems.append(
+            "runner did not fully hash the pinned checkpoint before workload execution"
+        )
 
     results = report.get("results")
     result = results.get(WORKLOAD_ID) if isinstance(results, dict) else None
@@ -688,8 +822,12 @@ def validate_oracle_report(
         problems.append("oracle has no raw decoded text")
     if not isinstance(result.get("visible_decoded_text"), str):
         problems.append("oracle has no visible decoded text")
-    if not _is_int(result.get("max_seq_len"), minimum=PROMPT_TOKENS + MAX_NEW_TOKENS):
-        problems.append("oracle KV allocation did not cover prompt plus the full cap")
+    if result.get("max_new_tokens") != MAX_NEW_TOKENS:
+        problems.append("oracle result does not bind the exact 256-token cap")
+    if result.get("max_seq_len") != QUALIFIED_MAX_SEQ_LEN:
+        problems.append(
+            "oracle KV allocation is not the qualified prompt-plus-256 extent"
+        )
     if result.get("prefill_tiled") is not True:
         problems.append("exact-200K prefill did not use the qualified tiled path")
     if result.get("tile_geometry") != QUALIFIED_TILE_GEOMETRY:
@@ -720,7 +858,11 @@ def validate_oracle_report(
         for row in adaptation_rows
         if isinstance(row, dict) and isinstance(row.get("id"), str)
     } if isinstance(adaptation_rows, list) else set()
-    if not REQUIRED_ADAPTATIONS <= adaptation_ids:
+    if (
+        adaptation_ids != REQUIRED_ADAPTATIONS
+        or not isinstance(adaptation_rows, list)
+        or len(adaptation_rows) != len(REQUIRED_ADAPTATIONS)
+    ):
         problems.append("oracle report omits a required execution adaptation")
 
     head_split = report.get("head_split_verification")
@@ -871,6 +1013,7 @@ def main() -> int:
         workload_path=args.workload,
         index_path=args.workload_index,
         checkpoint_source_path=args.checkpoint_source,
+        snapshot_path=args.snapshot,
         tokenizer=tokenizer,
     )
     problems.extend(oracle_problems)

@@ -9,6 +9,7 @@ import json
 import subprocess
 import sys
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -20,6 +21,17 @@ _spec = importlib.util.spec_from_file_location(
 tool = importlib.util.module_from_spec(_spec)
 assert _spec.loader is not None
 _spec.loader.exec_module(tool)
+
+
+def _load_runner():
+    runner_spec = importlib.util.spec_from_file_location(
+        "run_deepseek_v4_reference_oracle_for_test",
+        REPO / "tools" / "run_deepseek_v4_reference_oracle.py",
+    )
+    runner = importlib.util.module_from_spec(runner_spec)
+    assert runner_spec.loader is not None
+    runner_spec.loader.exec_module(runner)
+    return runner
 
 
 def _identity(path: Path) -> dict[str, object]:
@@ -53,6 +65,7 @@ def complete_report(inputs) -> dict:
             "raw_decoded_text": "," * len(generated),
             "visible_decoded_text": "," * len(generated),
             "max_seq_len": 200_320,
+            "max_new_tokens": tool.MAX_NEW_TOKENS,
             "prefill_tiled": True,
             "vendor_sample_agreements": len(generated),
             "vendor_sample_disagreements": [],
@@ -63,6 +76,15 @@ def complete_report(inputs) -> dict:
         for relative in tool.REQUIRED_PRODUCER_SOURCES
     }
     source_map_sha256 = tool._canonical_digest(source_map)
+    launch_contract = tool._expected_gate_b_launch_contract()
+    launch_contract_sha256 = tool._canonical_digest(launch_contract)
+    input_identity = {
+        "checkpoint_source": _identity(tool.DEFAULT_CHECKPOINT_SOURCE),
+        "workload_index": _identity(tool.DEFAULT_INDEX),
+        "workload_sources": {
+            tool.WORKLOAD_ID: _identity(tool.DEFAULT_WORKLOAD),
+        },
+    }
     report.update(
         {
             "run_status": "complete",
@@ -85,13 +107,45 @@ def complete_report(inputs) -> dict:
                 "selected_workload_ids": [tool.WORKLOAD_ID],
                 "command_argv": [
                     "tools/run_deepseek_v4_reference_oracle.py",
-                    "--only",
-                    tool.WORKLOAD_ID,
+                    "--gate-b-production",
                 ],
             },
-            "input_identity": {
-                "checkpoint_source": _identity(tool.DEFAULT_CHECKPOINT_SOURCE),
-                "workload_index": _identity(tool.DEFAULT_INDEX),
+            "input_identity": input_identity,
+            "input_identity_current_at_completion": True,
+            "production_checkpoint_preflight": {
+                "completed_before_workload_execution": True,
+                "source_sha256": tool.CHECKPOINT_SOURCE_SHA256,
+                "expected_file_count": tool.CHECKPOINT_EXPECTED_FILE_COUNT,
+                "expected_total_file_bytes": tool.CHECKPOINT_EXPECTED_TOTAL_BYTES,
+                "full_byte_hash_verified": True,
+                "full_byte_hash_verified_file_count": (
+                    tool.CHECKPOINT_EXPECTED_FILE_COUNT
+                ),
+            },
+            "production_launch": {
+                "explicitly_requested": True,
+                "contract": launch_contract,
+                "contract_sha256": launch_contract_sha256,
+            },
+            "qualified_execution_stack": {
+                "profile_id": tool.GATE_B_PROFILE_ID,
+                "requirements_sha256": tool._canonical_digest(
+                    launch_contract["execution_stack"]
+                ),
+                "validated_before_workload_execution": True,
+                "problems": [],
+            },
+            "completion_identity": {
+                "producer": {
+                    "tool": "tools/run_deepseek_v4_reference_oracle.py",
+                    "tool_source_sha256": source_map[
+                        "tools/run_deepseek_v4_reference_oracle.py"
+                    ],
+                    "source_map": source_map,
+                    "source_map_sha256": source_map_sha256,
+                },
+                "inputs": copy.deepcopy(input_identity),
+                "problems": [],
             },
         }
     )
@@ -105,6 +159,7 @@ def complete_report(inputs) -> dict:
     report["vendor_source_sha256"] = vendor_sources
     result["execution_identity"] = {
         "checkpoint_source_sha256": tool.CHECKPOINT_SOURCE_SHA256,
+        "gate_b_launch_contract_sha256": launch_contract_sha256,
         "producer_source_map_sha256": source_map_sha256,
         "vendor_source_sha256": vendor_sources,
         "workload_index_sha256": tool.WORKLOAD_INDEX_SHA256,
@@ -123,6 +178,7 @@ def _validate(report: dict, inputs) -> tuple[dict, list[str]]:
         workload_path=tool.DEFAULT_WORKLOAD,
         index_path=tool.DEFAULT_INDEX,
         checkpoint_source_path=tool.DEFAULT_CHECKPOINT_SOURCE,
+        snapshot_path=tool.DEFAULT_SNAPSHOT,
         tokenizer=None,
     )
 
@@ -269,6 +325,24 @@ def test_stale_producer_source_fails_closed(complete_report, inputs) -> None:
             ),
             "oracle package versions differ from the qualified stack",
         ),
+        (
+            lambda report: report["results"][tool.WORKLOAD_ID].update(
+                {"max_seq_len": tool.PROMPT_TOKENS + tool.MAX_NEW_TOKENS}
+            ),
+            "oracle KV allocation is not the qualified prompt-plus-256 extent",
+        ),
+        (
+            lambda report: report["production_launch"]["contract"].update(
+                {"max_new_tokens": 8}
+            ),
+            "oracle launch does not match the qualified Gate-B contract",
+        ),
+        (
+            lambda report: report["production_checkpoint_preflight"].update(
+                {"full_byte_hash_verified": False}
+            ),
+            "runner did not fully hash the pinned checkpoint before workload execution",
+        ),
     ],
 )
 def test_execution_qualification_mutations_fail_closed(
@@ -323,13 +397,7 @@ def test_checkpoint_manifest_closure_and_sizes_are_exact() -> None:
 
 
 def test_runner_source_identity_covers_the_required_minimum() -> None:
-    runner_spec = importlib.util.spec_from_file_location(
-        "run_deepseek_v4_reference_oracle_for_test",
-        REPO / "tools" / "run_deepseek_v4_reference_oracle.py",
-    )
-    runner = importlib.util.module_from_spec(runner_spec)
-    assert runner_spec.loader is not None
-    runner_spec.loader.exec_module(runner)
+    runner = _load_runner()
     identity = runner._producer_identity()
     assert tuple(identity["source_map"]) == runner.PRODUCER_SOURCE_PATHS
     assert identity["source_map_sha256"] == runner._canonical_digest(
@@ -338,6 +406,7 @@ def test_runner_source_identity_covers_the_required_minimum() -> None:
     assert identity["tool_source_sha256"] == identity["source_map"][
         "tools/run_deepseek_v4_reference_oracle.py"
     ]
+    assert set(identity["source_map"]) == set(tool.REQUIRED_PRODUCER_SOURCES)
 
 
 def test_wrong_per_result_workload_binding_is_rejected(
@@ -349,3 +418,179 @@ def test_wrong_per_result_workload_binding_is_rejected(
     ] = "f" * 64
     _evidence, problems = _validate(report, inputs)
     assert "200K result is not bound to the frozen workload index" in problems
+
+
+def test_runner_gate_b_switch_normalises_the_complete_launch_contract() -> None:
+    runner = _load_runner()
+    args = SimpleNamespace(
+        gate_b_production=True,
+        only=None,
+        max_new_tokens=None,
+        append=False,
+        tiling_equivalence=False,
+        time_budget_seconds=None,
+        head_on_device=False,
+        engine_per_workload=True,
+        tile_prefill=False,
+        tiling_floor=99,
+        seq_tile=99,
+        index_tile=0,
+        expert_rows=99,
+        compressor_positions=99,
+        host_residual=False,
+        index_score_budget_mib=99,
+        hc_budget_mib=99,
+    )
+    assert runner._configure_gate_b_production(args) == []
+    assert args.only == [runner.GATE_B_WORKLOAD_ID]
+    assert args.max_new_tokens == 256
+    assert args.engine_per_workload is False
+    assert args.tile_prefill is True
+    assert args.seq_tile == 4_096
+    assert args.index_tile == 128
+    assert args.expert_rows == 8_192
+    assert args.compressor_positions == 16_384
+    assert args.host_residual is True
+    assert runner._gate_b_launch_contract(runner.GATE_B_MAX_SEQ_LEN) == (
+        tool._expected_gate_b_launch_contract()
+    )
+
+
+def test_runner_gate_b_inputs_are_pinned_before_engine_construction(inputs) -> None:
+    runner = _load_runner()
+    _workload, index, _checkpoint = inputs
+    selected = [
+        (
+            runner.GATE_B_WORKLOAD_ID,
+            index["workloads"][runner.GATE_B_WORKLOAD_ID],
+        )
+    ]
+    identity = runner._input_identity(
+        runner.GATE_B_WORKLOADS / "index.json",
+        runner.CHECKPOINT_SOURCE_PATH,
+        selected,
+        runner.GATE_B_WORKLOADS,
+    )
+    args = SimpleNamespace(
+        gate_b_production=True,
+        snapshot=runner.DEFAULT_SNAPSHOT,
+        workloads=runner.GATE_B_WORKLOADS,
+    )
+    assert runner._gate_b_input_problems(args, identity) == []
+
+    stale = copy.deepcopy(identity)
+    stale["workload_sources"][runner.GATE_B_WORKLOAD_ID]["sha256"] = "0" * 64
+    assert runner._gate_b_input_problems(args, stale) == [
+        "exact-200K workload source identity is not Gate-B pinned"
+    ]
+
+    wrong_snapshot = copy.copy(args)
+    wrong_snapshot.snapshot = REPO
+    assert any(
+        "--snapshot must resolve" in problem
+        for problem in runner._gate_b_input_problems(wrong_snapshot, identity)
+    )
+
+
+def test_runner_production_checkpoint_preflight_requires_full_hash(
+    monkeypatch,
+) -> None:
+    runner = _load_runner()
+    gate_b = importlib.import_module("check_deepseek_v4_200k_oracle")
+    calls: list[bool] = []
+
+    def verified(_source, _snapshot, *, full_hash):
+        calls.append(full_hash)
+        return {
+            "expected_file_count": 74,
+            "expected_total_file_bytes": 166_898_661_074,
+            "full_byte_hash_verified": True,
+            "full_byte_hash_verified_file_count": 74,
+        }, []
+
+    monkeypatch.setattr(gate_b, "validate_checkpoint_snapshot", verified)
+    evidence = runner._verify_gate_b_checkpoint_before_execution(
+        runner.DEFAULT_SNAPSHOT
+    )
+    assert calls == [True]
+    assert evidence["completed_before_workload_execution"] is True
+    assert evidence["full_byte_hash_verified"] is True
+
+    monkeypatch.setattr(
+        gate_b,
+        "validate_checkpoint_snapshot",
+        lambda *_args, **_kwargs: (
+            {"full_byte_hash_verified": False},
+            ["checkpoint byte differs"],
+        ),
+    )
+    with pytest.raises(runner.OracleError, match="checkpoint byte differs"):
+        runner._verify_gate_b_checkpoint_before_execution(runner.DEFAULT_SNAPSHOT)
+
+
+@pytest.mark.parametrize(
+    ("field", "value", "problem"),
+    [
+        ("max_new_tokens", 8, "requires exactly 256 new tokens"),
+        ("append", True, "cannot append"),
+        ("tiling_equivalence", True, "cannot run an equivalence-only job"),
+        ("head_on_device", True, "requires the qualified host LM head"),
+    ],
+)
+def test_runner_gate_b_switch_rejects_incompatible_options(
+    field: str, value: object, problem: str
+) -> None:
+    runner = _load_runner()
+    args = SimpleNamespace(
+        gate_b_production=True,
+        only=None,
+        max_new_tokens=None,
+        append=False,
+        tiling_equivalence=False,
+        time_budget_seconds=None,
+        head_on_device=False,
+    )
+    setattr(args, field, value)
+    assert any(
+        problem in item for item in runner._configure_gate_b_production(args)
+    )
+
+
+def test_runner_qualified_stack_validation_is_fail_closed(complete_report) -> None:
+    runner = _load_runner()
+    assert runner._qualified_stack_problems(
+        complete_report["environment"],
+        complete_report["head_split_verification"],
+        complete_report["fp4_gemm_verification"],
+        complete_report["expert_numeric_path"],
+        complete_report["adaptations"],
+    ) == []
+
+    stale = copy.deepcopy(complete_report["environment"])
+    stale["fast_hadamard_transform"] = "opentallas_binary32_butterfly"
+    problems = runner._qualified_stack_problems(
+        stale,
+        complete_report["head_split_verification"],
+        complete_report["fp4_gemm_verification"],
+        complete_report["expert_numeric_path"],
+        complete_report["adaptations"],
+    )
+    assert problems == ["the qualified Hadamard extension is not active"]
+
+
+def test_completion_time_input_drift_is_rejected(complete_report, inputs) -> None:
+    complete_report["completion_identity"]["inputs"]["workload_sources"][
+        tool.WORKLOAD_ID
+    ]["sha256"] = "0" * 64
+    _evidence, problems = _validate(complete_report, inputs)
+    assert "completion-time immutable input identity differs from launch" in problems
+
+
+def test_missing_explicit_production_flag_is_rejected(complete_report, inputs) -> None:
+    complete_report["producer"]["command_argv"] = [
+        "tools/run_deepseek_v4_reference_oracle.py",
+        "--only",
+        tool.WORKLOAD_ID,
+    ]
+    _evidence, problems = _validate(complete_report, inputs)
+    assert "runner command did not explicitly select Gate-B production" in problems
