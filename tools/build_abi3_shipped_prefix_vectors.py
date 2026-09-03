@@ -3,17 +3,18 @@
 
 The four shipped ABI 3.0 decode entrypoints all begin with a bounded sequence
 that the RTL can execute without pretending an unsupported model operator
-exists: Qwen has one real ``DMA.GATHER`` and DeepSeek has two, followed by one
-``TENSOR.EMBED_LOOKUP`` over the model's real checkpoint table.  The bridge
-lowers that exact row-copy operation to the existing index-mover datapath.
+exists: generated-row ``DMA.GATHER`` operations, one checkpoint-backed
+``TENSOR.EMBED_LOOKUP``, then Qwen ``VECTOR.RMS_NORM`` or DeepSeek
+stride-zero ``DMA.TRANSFER``.  Row movement lowers to the existing index
+mover; RMSNorm uses the independently correlated exact arithmetic slice.
 
 This generator retains those exact program and descriptor identities, resolves
 their real views for the same 16-token decode request used by the deployment
-campaign, materialises only the selected generated RoPE rows, reads only token
-zero's 8 KiB BF16 checkpoint row, and emits compact verification-bank data.
-The hardware must copy all 1,024 generated FP32 words and all 16,384 selected
-BF16 codes, then fail closed at the exact next unsupported instruction.  It
-does not claim a whole model, prefill, token selection, or decoding result.
+campaign, materialises only the selected generated RoPE rows, and performs
+bounded reads of token zero's BF16 checkpoint row and Qwen's layer-zero gain.
+The hardware must produce every retained result word, then fail closed at the
+exact next unsupported instruction.  It does not claim a whole model,
+prefill, token selection, or decoding result.
 """
 
 from __future__ import annotations
@@ -49,6 +50,9 @@ from runtime.abi3.descriptors import (  # noqa: E402
 from runtime.abi3.records import decode_body, split_program  # noqa: E402
 from runtime.sim.generators import _rope_frequencies_binary32  # noqa: E402
 from runtime.sim.memory import ViewResolver  # noqa: E402
+from runtime.reference.tensor_accelerator_rmsnorm import (  # noqa: E402
+    rms_norm_bf16,
+)
 from tools.build_abi3_deployment_rtl_vectors import (  # noqa: E402
     CASE_STRIDE as DEPLOYMENT_CASE_STRIDE,
     TARGETS,
@@ -63,11 +67,11 @@ DEPLOYMENT_VECTOR_JSON = (
 )
 
 VECTOR_SCHEMA = "opentallas.rtl.abi3_shipped_prefix_vectors.v1"
-CASE_STRIDE = 40
-META_WORDS = 12
+CASE_STRIDE = 48
+META_WORDS = 16
 INDEX_WORDS = 64
 SOURCE_WORDS = 65536
-RESULT_WORDS = 32768
+RESULT_WORDS = 65536
 PROMPT_TOKENS = 16
 INDEX_VALUE = 16
 EMBED_TOKEN = 0
@@ -77,12 +81,20 @@ QWEN_EMBED_CONTRACT = hashlib.sha256(b"bf16_payload_lookup_v1").digest()
 DEEPSEEK_EMBED_CONTRACT = hashlib.sha256(
     b"lookup_bf16_token_embedding_v1"
 ).digest()
+QWEN_RMS_CONTRACT = hashlib.sha256(
+    b"qwen3_rmsnorm_fp32_bf16_v1"
+).digest()
+DEEPSEEK_TRANSFER_CONTRACT = hashlib.sha256(
+    b"structural_hc_expand_bf16_v1"
+).digest()
 EMBED_DESCRIPTOR_IDS = (41, 54, 356, 527)
+RMS_DESCRIPTOR_IDS = (50, 64)
+TRANSFER_DESCRIPTOR_IDS = (363, 532)
 NEXT_BOUNDARIES = (
-    (8, int(Major.VECTOR), int(Vector.RMS_NORM), 50, "VECTOR.RMS_NORM"),
-    (8, int(Major.VECTOR), int(Vector.RMS_NORM), 64, "VECTOR.RMS_NORM"),
-    (10, int(Major.DMA), int(Dma.TRANSFER), 363, "DMA.TRANSFER"),
-    (10, int(Major.DMA), int(Dma.TRANSFER), 532, "DMA.TRANSFER"),
+    (11, int(Major.TENSOR), int(Tensor.MATMUL), 59, "TENSOR.MATMUL"),
+    (11, int(Major.TENSOR), int(Tensor.MATMUL), 72, "TENSOR.MATMUL"),
+    (13, int(Major.LINK), 3, 368, "LINK.MULTICAST"),
+    (14, int(Major.VECTOR), int(Vector.MHC), 546, "VECTOR.MHC"),
 )
 
 INPUT_IMAGES = (
@@ -161,7 +173,13 @@ def _resolved_views(
     operator_id: int,
     loops: dict[int, int],
     symbols: dict[int, int],
+    *,
+    major: int,
 ) -> list[dict[str, Any]]:
+    if major == int(Major.LINK):
+        # LINK descriptors are COMMUNICATION records, not OPERATOR records,
+        # and do not own tensor-view operands at the sequencer boundary.
+        return []
     operator = deployment.table.get(
         operator_id, ExtendedDescriptorType.OPERATOR
     )
@@ -407,7 +425,13 @@ def build(argv: list[str] | None = None) -> int:
     total_launches = 0
     total_gathers = 0
     total_embeddings = 0
+    total_rms_norms = 0
+    total_transfers = 0
     total_rope_words = 0
+    total_rms_words = 0
+    total_transfer_words = 0
+    total_embedding_checkpoint_bytes = 0
+    total_rms_checkpoint_bytes = 0
     total_checkpoint_bytes = 0
     total_views = 0
 
@@ -458,6 +482,8 @@ def build(argv: list[str] | None = None) -> int:
         loops: dict[int, int] = {}
         gathers: list[dict[str, Any]] = []
         embeddings: list[dict[str, Any]] = []
+        rms_norms: list[dict[str, Any]] = []
+        transfers: list[dict[str, Any]] = []
         prefix_views: list[dict[str, Any]] = []
         fetched = retired = issued = loop_iterations = wait_events = signals = 0
         unsupported: dict[str, Any] | None = None
@@ -497,7 +523,11 @@ def build(argv: list[str] | None = None) -> int:
 
             issued += 1
             resolved = _resolved_views(
-                deployment, int(instruction.descriptor_id), loops, symbols
+                deployment,
+                int(instruction.descriptor_id),
+                loops,
+                symbols,
+                major=major,
             )
             prefix_views.extend({"pc": pc, **view} for view in resolved)
             if int(instruction.wait_set_id) != NO_ID:
@@ -705,6 +735,276 @@ def build(argv: list[str] | None = None) -> int:
                 pc += 1
                 continue
 
+            if major == int(Major.VECTOR) and sub == int(Vector.RMS_NORM):
+                if target_index >= 2 or len(embeddings) != 1:
+                    raise SystemExit(
+                        f"{target.key}: RMSNorm appeared outside the Qwen "
+                        "post-embedding prefix"
+                    )
+                operator = deployment.table.get(
+                    int(instruction.descriptor_id),
+                    ExtendedDescriptorType.OPERATOR,
+                )
+                payload = operator.payload
+                if (
+                    int(instruction.descriptor_id)
+                    != RMS_DESCRIPTOR_IDS[target_index]
+                    or int(payload["engine_family"]) != major
+                    or int(payload["engine_sub"]) != sub
+                    or int(payload["numeric_profile_id"]) == NO_ID
+                    or [view["slot"] for view in resolved] != [0, 1, 4]
+                    or any(
+                        int(payload[field]) != NO_ID
+                        for field in (
+                            "input_view_2",
+                            "input_view_3",
+                            "output_view_1",
+                            "aux_id_0",
+                            "aux_id_1",
+                            "aux_id_2",
+                            "aux_id_3",
+                        )
+                    )
+                ):
+                    raise SystemExit(
+                        f"{target.key}: RMSNorm operator profile changed"
+                    )
+                by_slot = {int(view["slot"]): view for view in resolved}
+                input_view = by_slot[0]
+                weight_view = by_slot[1]
+                output_view = by_slot[4]
+                embedding = embeddings[0]
+                if (
+                    input_view["dtype"] != int(DType.BF16)
+                    or input_view["dims"] != [1, EMBED_WIDTH]
+                    or input_view["strides"] != [EMBED_WIDTH, 1]
+                    or input_view["element_offset"] != 0
+                    or input_view["object_id"]
+                    != embedding["output_view"]["object_id"]
+                    or weight_view["dtype"] != int(DType.BF16)
+                    or weight_view["dims"] != [EMBED_WIDTH]
+                    or weight_view["strides"] != [1]
+                    or weight_view["element_offset"] != 0
+                    or output_view["dtype"] != int(DType.BF16)
+                    or output_view["dims"] != [1, EMBED_WIDTH]
+                    or output_view["strides"] != [EMBED_WIDTH, 1]
+                    or output_view["element_offset"] != 0
+                    or any(view["extent_axis"] != 0 for view in resolved)
+                ):
+                    raise SystemExit(
+                        f"{target.key}: RMSNorm view profile changed"
+                    )
+                numeric_id = int(payload["numeric_profile_id"])
+                numeric = deployment.table.get(
+                    numeric_id, ExtendedDescriptorType.NUMERIC
+                )
+                numeric_payload = numeric.payload
+                if (
+                    int(numeric_payload["input_dtype"]) != int(DType.BF16)
+                    or int(numeric_payload["second_input_dtype"])
+                    != int(DType.BF16)
+                    or int(numeric_payload["accumulator_dtype"])
+                    != int(DType.FP32)
+                    or int(numeric_payload["output_dtype"])
+                    != int(DType.BF16)
+                    or int(numeric_payload["rounding_mode"]) != 0
+                    or int(numeric_payload["reduction_order"]) != 1
+                    or int(numeric_payload["saturate"]) != 0
+                    or int(numeric_payload["nan_policy"]) != 0
+                    or int(numeric_payload["epsilon_bits"]) != 0x358637BD
+                    or int(numeric_payload["scale_bits"]) != 0
+                    or int(numeric_payload["flags"]) != 0
+                    or bytes(numeric_payload["contract_digest"])
+                    != QWEN_RMS_CONTRACT
+                ):
+                    raise SystemExit(
+                        f"{target.key}: RMSNorm numeric profile changed"
+                    )
+                gain, gain_identity = _checkpoint_row(
+                    target,
+                    deployment,
+                    int(weight_view["object_id"]),
+                    0,
+                    EMBED_WIDTH,
+                )
+                gain_words = tuple(
+                    int.from_bytes(gain[offset : offset + 2], "little")
+                    for offset in range(0, len(gain), 2)
+                )
+                input_words = tuple(
+                    int(code) for code in embedding["_expected_words"]
+                )
+                result = rms_norm_bf16((input_words,), gain_words)
+                result_words = list(result.values[0])
+                result_bytes = b"".join(
+                    code.to_bytes(2, "little") for code in result_words
+                )
+                if (
+                    result.mean_square_codes != (0x3A5BF2CA,)
+                    or result.inverse_rms_codes != (0x420A0297,)
+                    or result.normalized_saturated_element_count != 0
+                    or result.output_saturated_element_count != 0
+                    or hashlib.sha256(result_bytes).hexdigest()
+                    != "976d6de1a3ed91a066c7efed4354e578edf366a3b51a7e6077d68282981ffa58"
+                ):
+                    raise SystemExit(
+                        f"{target.key}: exact RMSNorm oracle result changed"
+                    )
+                rms_norms.append(
+                    {
+                        "kind": "vector_rms_norm",
+                        "pc": pc,
+                        "descriptor_id": int(instruction.descriptor_id),
+                        "numeric_profile_id": numeric_id,
+                        "input_view": input_view,
+                        "weight_view": weight_view,
+                        "output_view": output_view,
+                        "contract": "qwen3_rmsnorm_fp32_bf16_v1",
+                        "contract_sha256": QWEN_RMS_CONTRACT.hex(),
+                        "input_source": "prior_embedding_result_bank",
+                        "weight_source": gain_identity,
+                        "mean_square_code": result.mean_square_codes[0],
+                        "inverse_rms_code": result.inverse_rms_codes[0],
+                        "normalized_saturated_element_count": (
+                            result.normalized_saturated_element_count
+                        ),
+                        "output_saturated_element_count": (
+                            result.output_saturated_element_count
+                        ),
+                        "expected_row_sha256": hashlib.sha256(
+                            result_bytes
+                        ).hexdigest(),
+                        "_weight_words": list(gain_words),
+                        "_expected_words": result_words,
+                    }
+                )
+                if int(instruction.signal_event_id) != NO_ID:
+                    signals += 1
+                retired += 1
+                pc += 1
+                continue
+
+            if major == int(Major.DMA) and sub == int(Dma.TRANSFER):
+                if target_index < 2 or len(embeddings) != 1:
+                    raise SystemExit(
+                        f"{target.key}: transfer appeared outside the "
+                        "DeepSeek post-embedding prefix"
+                    )
+                operator = deployment.table.get(
+                    int(instruction.descriptor_id),
+                    ExtendedDescriptorType.OPERATOR,
+                )
+                payload = operator.payload
+                if (
+                    int(instruction.descriptor_id)
+                    != TRANSFER_DESCRIPTOR_IDS[target_index - 2]
+                    or int(payload["engine_family"]) != major
+                    or int(payload["engine_sub"]) != sub
+                    or int(payload["numeric_profile_id"]) == NO_ID
+                    or [view["slot"] for view in resolved] != [0, 4]
+                    or int(payload["input_view_1"]) != NO_ID
+                    or any(
+                        int(payload[field]) != NO_ID
+                        for field in (
+                            "input_view_2",
+                            "input_view_3",
+                            "output_view_1",
+                            "aux_id_0",
+                            "aux_id_1",
+                            "aux_id_2",
+                            "aux_id_3",
+                        )
+                    )
+                ):
+                    raise SystemExit(
+                        f"{target.key}: transfer operator profile changed"
+                    )
+                by_slot = {int(view["slot"]): view for view in resolved}
+                input_view = by_slot[0]
+                output_view = by_slot[4]
+                embedding = embeddings[0]
+                if (
+                    input_view["dtype"] != int(DType.BF16)
+                    or input_view["dims"] != [1, 4, EMBED_WIDTH]
+                    or input_view["strides"] != [EMBED_WIDTH, 0, 1]
+                    or input_view["element_offset"] != 0
+                    or input_view["object_id"]
+                    != embedding["output_view"]["object_id"]
+                    or output_view["dtype"] != int(DType.BF16)
+                    or output_view["dims"] != [1, 4, EMBED_WIDTH]
+                    or output_view["strides"]
+                    != [4 * EMBED_WIDTH, EMBED_WIDTH, 1]
+                    or output_view["element_offset"] != 0
+                    or any(view["extent_axis"] != 0 for view in resolved)
+                ):
+                    raise SystemExit(
+                        f"{target.key}: transfer view profile changed"
+                    )
+                numeric_id = int(payload["numeric_profile_id"])
+                numeric = deployment.table.get(
+                    numeric_id, ExtendedDescriptorType.NUMERIC
+                )
+                numeric_payload = numeric.payload
+                if (
+                    int(numeric_payload["input_dtype"]) != int(DType.BF16)
+                    or int(numeric_payload["second_input_dtype"])
+                    != int(DType.BF16)
+                    or int(numeric_payload["accumulator_dtype"])
+                    != int(DType.FP32)
+                    or int(numeric_payload["output_dtype"])
+                    != int(DType.BF16)
+                    or any(
+                        int(numeric_payload[field]) != 0
+                        for field in (
+                            "rounding_mode",
+                            "reduction_order",
+                            "saturate",
+                            "nan_policy",
+                            "epsilon_bits",
+                            "scale_bits",
+                            "flags",
+                        )
+                    )
+                    or bytes(numeric_payload["contract_digest"])
+                    != DEEPSEEK_TRANSFER_CONTRACT
+                ):
+                    raise SystemExit(
+                        f"{target.key}: transfer numeric profile changed"
+                    )
+                result_words = list(embedding["_expected_words"]) * 4
+                result_bytes = b"".join(
+                    code.to_bytes(2, "little") for code in result_words
+                )
+                transfers.append(
+                    {
+                        "kind": "dma_transfer",
+                        "pc": pc,
+                        "descriptor_id": int(instruction.descriptor_id),
+                        "numeric_profile_id": numeric_id,
+                        "input_view": input_view,
+                        "output_view": output_view,
+                        "contract": "structural_hc_expand_bf16_v1",
+                        "contract_sha256": DEEPSEEK_TRANSFER_CONTRACT.hex(),
+                        "lowering": {
+                            "operation": "four_row_gather",
+                            "indices": [0, 0, 0, 0],
+                            "slots": 4,
+                            "trailing": EMBED_WIDTH,
+                            "extent": 1,
+                            "source": "prior_embedding_result_bank",
+                        },
+                        "expected_payload_sha256": hashlib.sha256(
+                            result_bytes
+                        ).hexdigest(),
+                        "_expected_words": result_words,
+                    }
+                )
+                if int(instruction.signal_event_id) != NO_ID:
+                    signals += 1
+                retired += 1
+                pc += 1
+                continue
+
             unsupported = {
                 "pc": pc,
                 "family": major,
@@ -726,6 +1026,15 @@ def build(argv: list[str] | None = None) -> int:
         if len(embeddings) != 1:
             raise SystemExit(
                 f"{target.key}: expected one embedding, found {len(embeddings)}"
+            )
+        if target_index < 2:
+            if len(rms_norms) != 1 or transfers:
+                raise SystemExit(
+                    f"{target.key}: expected one RMSNorm and no transfer"
+                )
+        elif len(transfers) != 1 or rms_norms:
+            raise SystemExit(
+                f"{target.key}: expected one transfer and no RMSNorm"
             )
         trailing_values = {int(g["source_view"]["dims"][1]) for g in gathers}
         if len(trailing_values) != 1:
@@ -752,22 +1061,68 @@ def build(argv: list[str] | None = None) -> int:
         expected_words.extend(embedding.pop("_expected_words"))
         case_rope_words = len(gathers) * trailing
         case_embedding_words = EMBED_WIDTH
-        case_launches = len(gathers) + 1
-        case_result_words = case_rope_words + case_embedding_words
+        rms_input_base = output_base + case_rope_words
+        rms_weight_base = 0
+        transfer_index_base = 0
+        transfer_source_base = output_base + case_rope_words
+        case_rms_words = 0
+        case_transfer_words = 0
+        if rms_norms:
+            rms_norm = rms_norms[0]
+            rms_weight_base = len(source_words)
+            source_words.extend(rms_norm.pop("_weight_words"))
+            rms_expected = rms_norm.pop("_expected_words")
+            expected_words.extend(rms_expected)
+            case_rms_words = len(rms_expected)
+        else:
+            transfer = transfers[0]
+            transfer_index_base = len(index_words)
+            index_words.extend([0, 0, 0, 0])
+            transfer_expected = transfer.pop("_expected_words")
+            expected_words.extend(transfer_expected)
+            case_transfer_words = len(transfer_expected)
+        case_launches = len(gathers) + 2
+        case_result_words = (
+            case_rope_words
+            + case_embedding_words
+            + case_rms_words
+            + case_transfer_words
+        )
 
         state_count = int(source_case[34])
         if state_count != 0:
             raise SystemExit(f"{target.key}: production profile contains STATE")
         expected_boundary = NEXT_BOUNDARIES[target_index]
-        expected_counts = {
-            "fetched": 9 if target_index < 2 else 11,
-            "retired": 8 if target_index < 2 else 10,
-            "issued": 3 if target_index < 2 else 4,
-            "loop_iterations": 2 if target_index < 2 else 3,
-            "wait_events": 1,
-            "signals": expected_gathers + 1,
-            "views": 9 if target_index < 2 else 11,
-        }
+        if target_index < 2:
+            expected_counts = {
+                "fetched": 12,
+                "retired": 11,
+                "issued": 4,
+                "loop_iterations": 3,
+                "wait_events": 2,
+                "signals": 3,
+                "views": 12,
+            }
+        elif target_index == 2:
+            expected_counts = {
+                "fetched": 14,
+                "retired": 13,
+                "issued": 5,
+                "loop_iterations": 4,
+                "wait_events": 1,
+                "signals": 4,
+                "views": 11,
+            }
+        else:
+            expected_counts = {
+                "fetched": 15,
+                "retired": 14,
+                "issued": 5,
+                "loop_iterations": 4,
+                "wait_events": 2,
+                "signals": 4,
+                "views": 17,
+            }
         observed_counts = {
             "fetched": fetched,
             "retired": retired,
@@ -836,6 +1191,14 @@ def build(argv: list[str] | None = None) -> int:
             case_embedding_words,
             EMBED_TOKEN,
             trailing,
+            rms_input_base,
+            rms_weight_base,
+            transfer_index_base,
+            transfer_source_base,
+            len(rms_norms),
+            len(transfers),
+            case_rms_words,
+            case_transfer_words,
         ]
         if len(words) != CASE_STRIDE:
             raise SystemExit("internal case-record length error")
@@ -857,6 +1220,26 @@ def build(argv: list[str] | None = None) -> int:
                 0,
             ]
         )
+        if rms_norms:
+            rms_norm = rms_norms[0]
+            issue_words.extend(
+                [
+                    (int(Major.VECTOR) << 8) | int(Vector.RMS_NORM),
+                    int(rms_norm["descriptor_id"]),
+                    int(rms_norm["pc"]),
+                    0,
+                ]
+            )
+        else:
+            transfer = transfers[0]
+            issue_words.extend(
+                [
+                    (int(Major.DMA) << 8) | int(Dma.TRANSFER),
+                    int(transfer["descriptor_id"]),
+                    int(transfer["pc"]),
+                    0,
+                ]
+            )
         issue_words.extend(
             [
                 (unsupported["family"] << 8) | unsupported["sub"],
@@ -868,9 +1251,23 @@ def build(argv: list[str] | None = None) -> int:
         total_launches += case_launches
         total_gathers += len(gathers)
         total_embeddings += 1
+        total_rms_norms += len(rms_norms)
+        total_transfers += len(transfers)
         total_rope_words += case_rope_words
-        total_checkpoint_bytes += int(
+        total_rms_words += case_rms_words
+        total_transfer_words += case_transfer_words
+        embedding_checkpoint_bytes = int(
             embedding["source"]["selected_row_bytes"]
+        )
+        rms_checkpoint_bytes = (
+            int(rms_norms[0]["weight_source"]["selected_row_bytes"])
+            if rms_norms
+            else 0
+        )
+        total_embedding_checkpoint_bytes += embedding_checkpoint_bytes
+        total_rms_checkpoint_bytes += rms_checkpoint_bytes
+        total_checkpoint_bytes += (
+            embedding_checkpoint_bytes + rms_checkpoint_bytes
         )
         total_views += expected_counts["views"]
         records.append(
@@ -897,6 +1294,10 @@ def build(argv: list[str] | None = None) -> int:
                     "source_base": source_base,
                     "source_launch_stride": source_stride,
                     "embedding_source_base": embedding_source_base,
+                    "rms_input_base": rms_input_base,
+                    "rms_weight_base": rms_weight_base,
+                    "transfer_index_base": transfer_index_base,
+                    "transfer_source_base": transfer_source_base,
                     "output_base": output_base,
                 },
                 "expected": {
@@ -904,10 +1305,18 @@ def build(argv: list[str] | None = None) -> int:
                     "real_engine_launches": case_launches,
                     "dma_gather_launches": len(gathers),
                     "embedding_launches": 1,
+                    "rms_norm_launches": len(rms_norms),
+                    "dma_transfer_launches": len(transfers),
                     "rope_result_words": case_rope_words,
                     "embedding_result_words": case_embedding_words,
-                    "selected_checkpoint_bytes": int(
-                        embedding["source"]["selected_row_bytes"]
+                    "rms_norm_result_words": case_rms_words,
+                    "dma_transfer_result_words": case_transfer_words,
+                    "selected_embedding_checkpoint_bytes": (
+                        embedding_checkpoint_bytes
+                    ),
+                    "selected_rms_checkpoint_bytes": rms_checkpoint_bytes,
+                    "selected_checkpoint_bytes": (
+                        embedding_checkpoint_bytes + rms_checkpoint_bytes
                     ),
                     "result_words": case_result_words,
                     "trap_class": 4,
@@ -918,26 +1327,42 @@ def build(argv: list[str] | None = None) -> int:
                 "supported_prefix": [
                     {key: value for key, value in gather.items()}
                     for gather in gathers
-                ] + [{key: value for key, value in embedding.items()}],
+                ]
+                + [{key: value for key, value in embedding.items()}]
+                + [
+                    {key: value for key, value in operation.items()}
+                    for operation in rms_norms + transfers
+                ],
                 "first_unsupported": unsupported,
                 "resolved_prefix_views": prefix_views,
             }
         )
 
     if (
-        total_launches != 10
+        total_launches != 14
         or total_gathers != 6
         or total_embeddings != 4
+        or total_rms_norms != 2
+        or total_transfers != 2
         or total_rope_words != 1_024
-        or len(expected_words) != 17_408
-        or total_checkpoint_bytes != 32_768
-        or total_views != 40
+        or total_rms_words != 8_192
+        or total_transfer_words != 32_768
+        or len(expected_words) != 58_368
+        or total_embedding_checkpoint_bytes != 32_768
+        or total_rms_checkpoint_bytes != 16_384
+        or total_checkpoint_bytes != 49_152
+        or total_views != 52
     ):
         raise SystemExit(
             "witness depth changed: "
             f"launches={total_launches}, gathers={total_gathers}, "
             f"embeddings={total_embeddings}, rope_words={total_rope_words}, "
+            f"rms_norms={total_rms_norms}, transfers={total_transfers}, "
+            f"rms_words={total_rms_words}, "
+            f"transfer_words={total_transfer_words}, "
             f"words={len(expected_words)}, "
+            f"embedding_checkpoint_bytes={total_embedding_checkpoint_bytes}, "
+            f"rms_checkpoint_bytes={total_rms_checkpoint_bytes}, "
             f"checkpoint_bytes={total_checkpoint_bytes}, views={total_views}"
         )
     files = {
@@ -960,6 +1385,10 @@ def build(argv: list[str] | None = None) -> int:
                 total_embeddings,
                 total_rope_words,
                 total_checkpoint_bytes,
+                total_rms_norms,
+                total_transfers,
+                total_rms_words,
+                total_transfer_words,
             ]
         ),
     }
@@ -989,16 +1418,20 @@ def build(argv: list[str] | None = None) -> int:
             "exact shipped decode-program prefixes: six real DMA.GATHER "
             "launches copy 1,024 authentic generated RoPE words and four "
             "TENSOR.EMBED_LOOKUP launches copy 16,384 BF16 codes from four "
-            "bounded, authenticated checkpoint-row reads; Qwen then fails "
-            "closed at VECTOR.RMS_NORM PC 8 and DeepSeek at DMA.TRANSFER PC "
-            "10; this is not a whole-model, prefill, token-selection, or "
-            "decoding claim"
+            "bounded, authenticated checkpoint-row reads; two exact Qwen "
+            "VECTOR.RMS_NORM launches produce 8,192 BF16 codes using two "
+            "bounded gain reads, and two DeepSeek stride-zero DMA.TRANSFER "
+            "launches produce 32,768 BF16 codes from the prior embedding "
+            "result; Qwen then fails closed at TENSOR.MATMUL and DeepSeek at "
+            "LINK.MULTICAST or VECTOR.MHC; this is not a whole-model, "
+            "prefill, token-selection, or decoding claim"
         ),
         "supported_profile": (
             "dense one-index FP32 DMA.GATHER plus exact token-zero BF16 "
-            "TENSOR.EMBED_LOOKUP with 4,096-code rows; U32 resolved index "
-            "views, matching dense outputs, unscaled views, no auxiliary "
-            "operands, and exact SHA-256 numeric-contract binding"
+            "TENSOR.EMBED_LOOKUP with 4,096-code rows, exact one-row Qwen "
+            "BF16 RMSNorm, and DeepSeek four-copy stride-zero BF16 transfer; "
+            "resolved views, unscaled operands, and numeric contracts are "
+            "bound before each launch"
         ),
         "unsupported_policy": (
             "every other family/subopcode returns CAPABILITY before any engine "
@@ -1008,8 +1441,16 @@ def build(argv: list[str] | None = None) -> int:
         "real_engine_launch_count": total_launches,
         "dma_gather_launch_count": total_gathers,
         "embedding_launch_count": total_embeddings,
+        "rms_norm_launch_count": total_rms_norms,
+        "dma_transfer_launch_count": total_transfers,
         "rope_result_word_count": total_rope_words,
         "embedding_result_word_count": total_embeddings * EMBED_WIDTH,
+        "rms_norm_result_word_count": total_rms_words,
+        "dma_transfer_result_word_count": total_transfer_words,
+        "selected_embedding_checkpoint_byte_count": (
+            total_embedding_checkpoint_bytes
+        ),
+        "selected_rms_checkpoint_byte_count": total_rms_checkpoint_bytes,
         "selected_checkpoint_byte_count": total_checkpoint_bytes,
         "result_word_count": len(expected_words),
         "resolved_view_count": total_views,

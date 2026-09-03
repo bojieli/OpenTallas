@@ -8,15 +8,15 @@
 // ---------------------------------------------------------------------------
 module tb_a3_shipped_prefix;
     localparam integer CASES = 4;
-    localparam integer CASE_STRIDE = 40;
+    localparam integer CASE_STRIDE = 48;
     localparam integer ISSUE_STRIDE = 4;
-    localparam integer RESULT_WORDS = 32768;
+    localparam integer RESULT_WORDS = 65536;
     localparam [31:0] UNWRITTEN = 32'hdead_beef;
 
     reg [31:0] case_mem [0:CASES*CASE_STRIDE-1];
-    reg [31:0] issue_mem [0:55];
-    reg [31:0] expect_mem [0:17407];
-    reg [31:0] meta_mem [0:11];
+    reg [31:0] issue_mem [0:71];
+    reg [31:0] expect_mem [0:58367];
+    reg [31:0] meta_mem [0:15];
     initial begin
         $readmemh("p3_case.hex", case_mem);
         $readmemh("p3_issue.hex", issue_mem);
@@ -42,6 +42,10 @@ module tb_a3_shipped_prefix;
     reg [31:0] cfg_source_base = 0;
     reg [31:0] cfg_source_launch_stride = 0;
     reg [31:0] cfg_embedding_source_base = 0;
+    reg [31:0] cfg_rms_input_base = 0;
+    reg [31:0] cfg_rms_weight_base = 0;
+    reg [31:0] cfg_transfer_index_base = 0;
+    reg [31:0] cfg_transfer_source_base = 0;
     reg [31:0] cfg_output_base = 0;
 
     wire busy, done, complete, trapped;
@@ -58,6 +62,7 @@ module tb_a3_shipped_prefix;
     wire event_signal_error, state_apply_overflow;
     wire [31:0] real_launch_count, capability_fault_count;
     wire [31:0] dma_gather_launch_count, embedding_launch_count;
+    wire [31:0] rms_norm_launch_count, dma_transfer_launch_count;
     wire [31:0] descriptor_fault_count, engine_fault_count;
     wire [31:0] last_response_index, last_response_descriptor_id;
     wire [7:0] last_response_family, last_response_sub;
@@ -84,6 +89,10 @@ module tb_a3_shipped_prefix;
         .cfg_index_base(cfg_index_base), .cfg_source_base(cfg_source_base),
         .cfg_source_launch_stride(cfg_source_launch_stride),
         .cfg_embedding_source_base(cfg_embedding_source_base),
+        .cfg_rms_input_base(cfg_rms_input_base),
+        .cfg_rms_weight_base(cfg_rms_weight_base),
+        .cfg_transfer_index_base(cfg_transfer_index_base),
+        .cfg_transfer_source_base(cfg_transfer_source_base),
         .cfg_output_base(cfg_output_base),
         .busy(busy), .done(done), .complete(complete), .trapped(trapped),
         .trap_class(trap_class),
@@ -107,6 +116,8 @@ module tb_a3_shipped_prefix;
         .real_launch_count(real_launch_count),
         .dma_gather_launch_count(dma_gather_launch_count),
         .embedding_launch_count(embedding_launch_count),
+        .rms_norm_launch_count(rms_norm_launch_count),
+        .dma_transfer_launch_count(dma_transfer_launch_count),
         .capability_fault_count(capability_fault_count),
         .descriptor_fault_count(descriptor_fault_count),
         .engine_fault_count(engine_fault_count),
@@ -140,6 +151,8 @@ module tb_a3_shipped_prefix;
     integer total_launches = 0;
     integer total_gathers = 0;
     integer total_embeddings = 0;
+    integer total_rms_norms = 0;
+    integer total_transfers = 0;
     integer total_words = 0;
     integer total_views = 0;
     integer field, case_index, word, guard, issue_word;
@@ -200,7 +213,11 @@ module tb_a3_shipped_prefix;
         check_equal("meta DMA gathers", meta_mem[8], 6);
         check_equal("meta embedding launches", meta_mem[9], 4);
         check_equal("meta RoPE words", meta_mem[10], 1024);
-        check_equal("meta selected checkpoint bytes", meta_mem[11], 32768);
+        check_equal("meta selected checkpoint bytes", meta_mem[11], 49152);
+        check_equal("meta RMSNorm launches", meta_mem[12], 2);
+        check_equal("meta transfer launches", meta_mem[13], 2);
+        check_equal("meta RMSNorm words", meta_mem[14], 8192);
+        check_equal("meta transfer words", meta_mem[15], 32768);
 
         for (case_index = 0; case_index < CASES;
              case_index = case_index + 1) begin
@@ -218,6 +235,10 @@ module tb_a3_shipped_prefix;
             cfg_source_base = record[11];
             cfg_source_launch_stride = record[12];
             cfg_embedding_source_base = record[32];
+            cfg_rms_input_base = record[40];
+            cfg_rms_weight_base = record[41];
+            cfg_transfer_index_base = record[42];
+            cfg_transfer_source_base = record[43];
             cfg_output_base = record[13];
             response_expected = record[21];
             response_base = record[31];
@@ -261,6 +282,10 @@ module tb_a3_shipped_prefix;
                         record[33]);
             check_equal("embedding launches", embedding_launch_count,
                         record[34]);
+            check_equal("RMSNorm launches", rms_norm_launch_count,
+                        record[44]);
+            check_equal("DMA transfer launches", dma_transfer_launch_count,
+                        record[45]);
             check_equal("capability responses", capability_fault_count,
                         record[29]);
             check_equal("descriptor faults", descriptor_fault_count, 0);
@@ -272,9 +297,10 @@ module tb_a3_shipped_prefix;
             check_equal("last response descriptor",
                         last_response_descriptor_id, record[18]);
             check_equal("engine error", engine_error_code, 0);
-            check_equal("last embedding result count", engine_result_count,
-                        record[27]);
-            check_equal("last embedding checked indices", engine_work_count, 1);
+            check_equal("last engine result count", engine_result_count,
+                        record[44] != 0 ? record[46] : record[47]);
+            check_equal("last engine work count", engine_work_count,
+                        record[44] != 0 ? 4096 : 4);
             check_equal("result write count", output_write_count, record[15]);
             check_equal("writes after capability fault", writes_after_fault, 0);
             check_equal("operand read in bounds", operand_read_oob, 0);
@@ -299,6 +325,8 @@ module tb_a3_shipped_prefix;
             total_launches = total_launches + real_launch_count;
             total_gathers = total_gathers + dma_gather_launch_count;
             total_embeddings = total_embeddings + embedding_launch_count;
+            total_rms_norms = total_rms_norms + rms_norm_launch_count;
+            total_transfers = total_transfers + dma_transfer_launch_count;
             total_words = total_words + output_write_count;
             total_views = total_views + count_views_resolved;
             $display("CASE %0d OK launches=%0d words=%0d responses=%0d trap=%0d fault=%0d fetched=%0d retired=%0d issued=%0d views=%0d",
@@ -314,6 +342,8 @@ module tb_a3_shipped_prefix;
         check_equal("total launches", total_launches, meta_mem[1]);
         check_equal("total DMA gathers", total_gathers, meta_mem[8]);
         check_equal("total embedding launches", total_embeddings, meta_mem[9]);
+        check_equal("total RMSNorm launches", total_rms_norms, meta_mem[12]);
+        check_equal("total transfer launches", total_transfers, meta_mem[13]);
         check_equal("total result words", total_words, meta_mem[2]);
         check_equal("total resolved views", total_views, meta_mem[3]);
         for (word = 0; word < meta_mem[2]; word = word + 1) begin
@@ -330,7 +360,7 @@ module tb_a3_shipped_prefix;
             $display("FAILURES: %0d checks=%0d", failures, checks);
             $fatal(1, "ABI3 shipped-prefix engine integration failed");
         end
-        $display("PASS: ABI3 shipped-prefix engine integration cases=4 launches=10 words=17408 capability_faults=4 checks=%0d", checks);
+        $display("PASS: ABI3 shipped-prefix engine integration cases=4 launches=14 words=58368 capability_faults=4 checks=%0d", checks);
         $finish;
     end
 endmodule

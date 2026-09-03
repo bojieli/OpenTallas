@@ -4,13 +4,14 @@
 //
 // This is deliberately a bounded production profile, not a claim that every
 // shipped operator has an RTL datapath.  It admits the exact dense one-index
-// DMA.GATHER form and the exact BF16 TENSOR.EMBED_LOOKUP form at the head of
-// all four shipped decode programs.  EMBED_LOOKUP is a row copy, so it lowers
-// internally to the existing index mover while the sequencer continues to
-// observe the original opcode and descriptor.  Completion is returned only
-// after the datapath finishes.  Every other opcode returns a precise
-// CAPABILITY trap.  Malformed operator/view/numeric metadata returns a
-// DESCRIPTOR trap, and an engine failure returns an ENGINE trap.
+// DMA.GATHER, BF16 TENSOR.EMBED_LOOKUP, Qwen BF16 VECTOR.RMS_NORM, and
+// DeepSeek stride-zero DMA.TRANSFER forms at the head of the shipped decode
+// programs.  EMBED_LOOKUP and TRANSFER are row movements and lower internally
+// to the existing index mover; RMS_NORM uses the exact buffered arithmetic
+// slice.  The sequencer continues to observe each original opcode and
+// descriptor.  Completion is returned only after the datapath finishes.
+// Every other opcode returns a precise CAPABILITY trap.  Malformed metadata
+// returns a DESCRIPTOR trap, and a datapath failure returns an ENGINE trap.
 //
 // The descriptor port is independent of the sequencer's descriptor port.  A
 // real descriptor store may arbitrate those reads; the verification top uses
@@ -59,6 +60,10 @@ module ot_a3_engine_issue_bridge (
     input  wire [31:0]   cfg_source_base,
     input  wire [31:0]   cfg_source_launch_stride,
     input  wire [31:0]   cfg_embedding_source_base,
+    input  wire [31:0]   cfg_rms_input_base,
+    input  wire [31:0]   cfg_rms_weight_base,
+    input  wire [31:0]   cfg_transfer_index_base,
+    input  wire [31:0]   cfg_transfer_source_base,
     input  wire [31:0]   cfg_output_base,
 
     // Operand/result ports of the integrated engine array.
@@ -77,6 +82,8 @@ module ot_a3_engine_issue_bridge (
     output wire          out_we,
     output wire [31:0]   out_addr,
     output wire [31:0]   out_data,
+    output wire          m0_reads_result,
+    output wire          m1_reads_result,
 
     // Non-control observation for the focused checker.
     output wire          engine_busy,
@@ -86,6 +93,8 @@ module ot_a3_engine_issue_bridge (
     output reg  [31:0]   real_launch_count,
     output reg  [31:0]   dma_gather_launch_count,
     output reg  [31:0]   embedding_launch_count,
+    output reg  [31:0]   rms_norm_launch_count,
+    output reg  [31:0]   dma_transfer_launch_count,
     output reg  [31:0]   capability_fault_count,
     output reg  [31:0]   descriptor_fault_count,
     output reg  [31:0]   engine_fault_count,
@@ -108,8 +117,11 @@ module ot_a3_engine_issue_bridge (
 
     localparam [7:0] FAMILY_DMA = 8'h10;
     localparam [7:0] FAMILY_TENSOR = 8'h20;
+    localparam [7:0] FAMILY_VECTOR = 8'h30;
+    localparam [7:0] DMA_TRANSFER = 8'h00;
     localparam [7:0] DMA_GATHER = 8'h02;
     localparam [7:0] TENSOR_EMBED_LOOKUP = 8'h03;
+    localparam [7:0] VECTOR_RMS_NORM = 8'h00;
     localparam [7:0] FMT_U32 = 8'h04;
     localparam [7:0] FMT_I32 = 8'h05;
     localparam [7:0] FMT_BF16 = 8'h10;
@@ -125,9 +137,15 @@ module ot_a3_engine_issue_bridge (
         256'hccfb3965ab85c67667ddda70e90d7dafe030d6ce65f4179ee161b1e0182fead1;
     localparam [255:0] CONTRACT_DEEPSEEK_EMBED_RAW =
         256'hd380012f2a885dbd0aebdd47859b1407945d8d1f7f5a091fc23201aa20e762ca;
+    localparam [255:0] CONTRACT_QWEN_RMS_NORM_RAW =
+        256'hda3fc0b8b5271a03bfb1f0c1e6d2be46af1896d484db57fd6dc3d4c46bf89e99;
+    localparam [255:0] CONTRACT_DEEPSEEK_TRANSFER_RAW =
+        256'h94180f7a2a2d20609236e96941dde296643a19e8e71ff1ab239c3ac09ae5e14a;
     localparam [31:0] QWEN_VOCABULARY = 32'd151936;
     localparam [31:0] DEEPSEEK_VOCABULARY = 32'd129280;
     localparam [31:0] EMBEDDING_WIDTH = 32'd4096;
+    localparam [31:0] RMS_EPSILON = 32'h3586_37bd;
+    localparam [31:0] TRANSFER_COPIES = 32'd4;
 
     localparam [3:0] S_IDLE        = 4'd0;
     localparam [3:0] S_OP_WAIT     = 4'd1;
@@ -138,6 +156,7 @@ module ot_a3_engine_issue_bridge (
     localparam [3:0] S_START       = 4'd6;
     localparam [3:0] S_ENGINE_WAIT = 4'd7;
     localparam [3:0] S_RESPONSE    = 4'd8;
+    localparam [3:0] S_RMS_INPUT_WAIT = 4'd9;
 
     reg [3:0] state;
     reg       response_fault;
@@ -149,6 +168,8 @@ module ot_a3_engine_issue_bridge (
     reg [31:0] issue_descriptor_q;
     reg [31:0] issue_index_q;
     reg        embedding_q;
+    reg        rms_norm_q;
+    reg        dma_transfer_q;
 
     reg [5:0]  captured_valid;
     reg [31:0] captured_id [0:5];
@@ -214,6 +235,133 @@ module ot_a3_engine_issue_bridge (
     wire [31:0] desc_permissions = desc_data[287:256];
     wire [31:0] desc_primary_object = desc_data[159:128];
 
+    wire input_view_common_ok = descriptor_header_ok(
+        desc_data, desc_fault, DESC_TENSOR_VIEW, 32'd192, 32'd128
+    ) &&
+        (desc_view_layout == 0) &&
+        (desc_view_scale_object == NO_ID) &&
+        (desc_view_scale_block == 0) &&
+        (desc_primary_object != NO_ID) &&
+        ((desc_permissions & 32'd1) != 0);
+    wire dense_row_source_ok = !rms_norm_q && !dma_transfer_q &&
+        (desc_view_dtype == (embedding_q ? FMT_BF16 : FMT_FP32)) &&
+        (desc_view_rank == 2) && (desc_view_terms == 0) &&
+        (desc_view_dim0 != 0) && (desc_view_dim1 != 0) &&
+        (desc_view_dim2 == 0) && (desc_view_dim3 == 0) &&
+        (desc_view_dim4 == 0) && (desc_view_dim5 == 0) &&
+        (desc_view_stride0 == desc_view_dim1) &&
+        (desc_view_stride1 == 1) && (desc_view_stride2 == 0) &&
+        (desc_view_stride3 == 0) && (desc_view_stride4 == 0) &&
+        (desc_view_stride5 == 0) &&
+        (captured_rank[1] == 2) && (captured_axis[1] == 0) &&
+        (captured_extent[1] == desc_view_dim0) &&
+        (captured_offset[1] == desc_view_offset) &&
+        (!embedding_q || ((desc_view_dim1 == EMBEDDING_WIDTH) &&
+         ((desc_view_dim0 == QWEN_VOCABULARY) ||
+          (desc_view_dim0 == DEEPSEEK_VOCABULARY))));
+    wire rms_weight_source_ok = rms_norm_q &&
+        (desc_view_dtype == FMT_BF16) && (desc_view_rank == 1) &&
+        (desc_view_terms <= 4) &&
+        (desc_view_dim0 == EMBEDDING_WIDTH) &&
+        (desc_view_dim1 == 0) && (desc_view_dim2 == 0) &&
+        (desc_view_dim3 == 0) && (desc_view_dim4 == 0) &&
+        (desc_view_dim5 == 0) && (desc_view_stride0 == 1) &&
+        (desc_view_stride1 == 0) && (desc_view_stride2 == 0) &&
+        (desc_view_stride3 == 0) && (desc_view_stride4 == 0) &&
+        (desc_view_stride5 == 0) &&
+        (captured_rank[1] == 1) && (captured_axis[1] == 0) &&
+        (captured_extent[1] == EMBEDDING_WIDTH) &&
+        (captured_offset[1] == desc_view_offset);
+    wire transfer_source_ok = dma_transfer_q &&
+        (desc_view_dtype == FMT_BF16) && (desc_view_rank == 3) &&
+        (desc_view_terms <= 4) && (desc_view_dim0 != 0) &&
+        (desc_view_dim1 == TRANSFER_COPIES) &&
+        (desc_view_dim2 == EMBEDDING_WIDTH) &&
+        (desc_view_dim3 == 0) && (desc_view_dim4 == 0) &&
+        (desc_view_dim5 == 0) &&
+        (desc_view_stride0 == EMBEDDING_WIDTH) &&
+        (desc_view_stride1 == 0) && (desc_view_stride2 == 1) &&
+        (desc_view_stride3 == 0) && (desc_view_stride4 == 0) &&
+        (desc_view_stride5 == 0) &&
+        (captured_rank[0] == 3) && (captured_axis[0] == 0) &&
+        (captured_extent[0] == 1) &&
+        (captured_offset[0] == desc_view_offset);
+
+    wire output_view_common_ok = descriptor_header_ok(
+        desc_data, desc_fault, DESC_TENSOR_VIEW, 32'd192, 32'd128
+    ) &&
+        (desc_view_dtype == source_dtype) &&
+        (desc_view_layout == 0) && (desc_view_terms <= 4) &&
+        (desc_view_scale_object == NO_ID) &&
+        (desc_view_scale_block == 0) &&
+        (desc_primary_object != NO_ID) &&
+        ((desc_permissions & 32'd2) != 0);
+    wire dense_row_output_ok = !dma_transfer_q &&
+        (desc_view_rank == 2) && (desc_view_dim0 == index_raw_dim0) &&
+        (desc_view_dim1 == source_trailing) &&
+        (desc_view_dim2 == 0) && (desc_view_dim3 == 0) &&
+        (desc_view_dim4 == 0) && (desc_view_dim5 == 0) &&
+        (desc_view_stride0 == source_trailing) &&
+        (desc_view_stride1 == 1) && (desc_view_stride2 == 0) &&
+        (desc_view_stride3 == 0) && (desc_view_stride4 == 0) &&
+        (desc_view_stride5 == 0) &&
+        (captured_rank[4] == 2) && (captured_axis[4] == 0) &&
+        (captured_extent[4] == captured_extent[0]);
+    wire transfer_output_ok = dma_transfer_q &&
+        (desc_view_rank == 3) && (desc_view_dim0 == index_raw_dim0) &&
+        (desc_view_dim1 == TRANSFER_COPIES) &&
+        (desc_view_dim2 == EMBEDDING_WIDTH) &&
+        (desc_view_dim3 == 0) && (desc_view_dim4 == 0) &&
+        (desc_view_dim5 == 0) &&
+        (desc_view_stride0 == TRANSFER_COPIES * EMBEDDING_WIDTH) &&
+        (desc_view_stride1 == EMBEDDING_WIDTH) &&
+        (desc_view_stride2 == 1) && (desc_view_stride3 == 0) &&
+        (desc_view_stride4 == 0) && (desc_view_stride5 == 0) &&
+        (captured_rank[4] == 3) && (captured_axis[4] == 0) &&
+        (captured_extent[4] == captured_extent[0]);
+
+    wire numeric_common_ok = descriptor_header_ok(
+        desc_data, desc_fault, DESC_NUMERIC, 32'd128, 32'd64
+    ) &&
+        (desc_data[535:528] == FMT_FP32) &&
+        (desc_data[543:536] == source_dtype) &&
+        (desc_data[551:544] == 0) &&
+        (desc_data[567:560] == 0) &&
+        (desc_data[575:568] == 0) &&
+        (desc_data[639:608] == 0) &&
+        (desc_data[671:640] == 0) &&
+        (desc_data[703:672] == 0) &&
+        (desc_data[767:704] == 0);
+    wire gather_numeric_ok = !embedding_q && !rms_norm_q &&
+        !dma_transfer_q &&
+        ((desc_data[519:512] == FMT_U32) ||
+         (desc_data[519:512] == FMT_I32)) &&
+        (desc_data[527:520] == source_dtype) &&
+        (desc_data[559:552] == 0) &&
+        (desc_data[607:576] == 0) &&
+        (desc_data[1023:768] == CONTRACT_EXACT_INDEX_SELECT_RAW);
+    wire embedding_numeric_ok = embedding_q &&
+        (desc_data[519:512] == FMT_U32) &&
+        (desc_data[527:520] == source_dtype) &&
+        (desc_data[559:552] == 0) &&
+        (desc_data[607:576] == 0) &&
+        (((source_rows == QWEN_VOCABULARY) &&
+          (desc_data[1023:768] == CONTRACT_QWEN_EMBED_RAW)) ||
+         ((source_rows == DEEPSEEK_VOCABULARY) &&
+          (desc_data[1023:768] == CONTRACT_DEEPSEEK_EMBED_RAW)));
+    wire rms_numeric_ok = rms_norm_q &&
+        (desc_data[519:512] == FMT_BF16) &&
+        (desc_data[527:520] == FMT_BF16) &&
+        (desc_data[559:552] == 1) &&
+        (desc_data[607:576] == RMS_EPSILON) &&
+        (desc_data[1023:768] == CONTRACT_QWEN_RMS_NORM_RAW);
+    wire transfer_numeric_ok = dma_transfer_q &&
+        (desc_data[519:512] == FMT_BF16) &&
+        (desc_data[527:520] == FMT_BF16) &&
+        (desc_data[559:552] == 0) &&
+        (desc_data[607:576] == 0) &&
+        (desc_data[1023:768] == CONTRACT_DEEPSEEK_TRANSFER_RAW);
+
     integer slot;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -228,6 +376,8 @@ module ot_a3_engine_issue_bridge (
             issue_descriptor_q <= NO_ID;
             issue_index_q <= NO_ID;
             embedding_q <= 1'b0;
+            rms_norm_q <= 1'b0;
+            dma_transfer_q <= 1'b0;
             captured_valid <= 6'd0;
             op_input0 <= NO_ID;
             op_input1 <= NO_ID;
@@ -242,6 +392,8 @@ module ot_a3_engine_issue_bridge (
             real_launch_count <= 32'd0;
             dma_gather_launch_count <= 32'd0;
             embedding_launch_count <= 32'd0;
+            rms_norm_launch_count <= 32'd0;
+            dma_transfer_launch_count <= 32'd0;
             capability_fault_count <= 32'd0;
             descriptor_fault_count <= 32'd0;
             engine_fault_count <= 32'd0;
@@ -266,10 +418,14 @@ module ot_a3_engine_issue_bridge (
                 response_trap <= TRAP_NONE;
                 captured_valid <= 6'd0;
                 embedding_q <= 1'b0;
+                rms_norm_q <= 1'b0;
+                dma_transfer_q <= 1'b0;
                 result_word_cursor <= 32'd0;
                 real_launch_count <= 32'd0;
                 dma_gather_launch_count <= 32'd0;
                 embedding_launch_count <= 32'd0;
+                rms_norm_launch_count <= 32'd0;
+                dma_transfer_launch_count <= 32'd0;
                 capability_fault_count <= 32'd0;
                 descriptor_fault_count <= 32'd0;
                 engine_fault_count <= 32'd0;
@@ -294,9 +450,6 @@ module ot_a3_engine_issue_bridge (
                             issue_sub_q <= issue_sub;
                             issue_descriptor_q <= issue_descriptor_id;
                             issue_index_q <= issue_index;
-                            embedding_q <=
-                                (issue_family == FAMILY_TENSOR) &&
-                                (issue_sub == TENSOR_EMBED_LOOKUP);
                             last_response_index <= issue_index;
                             last_response_family <= issue_family;
                             last_response_sub <= issue_sub;
@@ -305,12 +458,25 @@ module ot_a3_engine_issue_bridge (
                             if (!(((issue_family == FAMILY_DMA) &&
                                    (issue_sub == DMA_GATHER)) ||
                                   ((issue_family == FAMILY_TENSOR) &&
-                                   (issue_sub == TENSOR_EMBED_LOOKUP)))) begin
+                                   (issue_sub == TENSOR_EMBED_LOOKUP)) ||
+                                  ((issue_family == FAMILY_VECTOR) &&
+                                   (issue_sub == VECTOR_RMS_NORM)) ||
+                                  ((issue_family == FAMILY_DMA) &&
+                                   (issue_sub == DMA_TRANSFER)))) begin
                                 // No speculative launch and no shape guess.
                                 response_fault <= 1'b1;
                                 response_trap <= TRAP_CAPABILITY;
                                 state <= S_RESPONSE;
                             end else begin
+                                embedding_q <=
+                                    (issue_family == FAMILY_TENSOR) &&
+                                    (issue_sub == TENSOR_EMBED_LOOKUP);
+                                rms_norm_q <=
+                                    (issue_family == FAMILY_VECTOR) &&
+                                    (issue_sub == VECTOR_RMS_NORM);
+                                dma_transfer_q <=
+                                    (issue_family == FAMILY_DMA) &&
+                                    (issue_sub == DMA_TRANSFER);
                                 desc_req <= 1'b1;
                                 desc_id <= issue_descriptor_id;
                                 state <= S_OP_WAIT;
@@ -331,7 +497,10 @@ module ot_a3_engine_issue_bridge (
                                 (desc_data[671:640] == NO_ID) ||
                                 (desc_data[703:672] == NO_ID) ||
                                 (desc_data[735:704] == NO_ID) ||
-                                (desc_data[767:736] == NO_ID) ||
+                                (!dma_transfer_q &&
+                                 (desc_data[767:736] == NO_ID)) ||
+                                (dma_transfer_q &&
+                                 (desc_data[767:736] != NO_ID)) ||
                                 (desc_data[799:768] != NO_ID) ||
                                 (desc_data[831:800] != NO_ID) ||
                                 (desc_data[863:832] == NO_ID) ||
@@ -342,9 +511,13 @@ module ot_a3_engine_issue_bridge (
                                 (desc_data[1023:992] != NO_ID) ||
                                 (desc_data[223:192] !=
                                  desc_data[671:640]) ||
-                                (captured_valid != 6'b010011) ||
+                                (!dma_transfer_q &&
+                                 (captured_valid != 6'b010011)) ||
+                                (dma_transfer_q &&
+                                 (captured_valid != 6'b010001)) ||
                                 (captured_id[0] != desc_data[735:704]) ||
-                                (captured_id[1] != desc_data[767:736]) ||
+                                (!dma_transfer_q &&
+                                 (captured_id[1] != desc_data[767:736])) ||
                                 (captured_id[4] != desc_data[863:832])) begin
                                 response_fault <= 1'b1;
                                 response_trap <= TRAP_DESCRIPTOR;
@@ -356,7 +529,9 @@ module ot_a3_engine_issue_bridge (
                                 op_output0 <= desc_data[863:832];
                                 desc_req <= 1'b1;
                                 desc_id <= desc_data[735:704];
-                                state <= S_INDEX_WAIT;
+                                state <= rms_norm_q ? S_RMS_INPUT_WAIT
+                                      : dma_transfer_q ? S_SOURCE_WAIT
+                                      : S_INDEX_WAIT;
                             end
                         end
                     end
@@ -402,50 +577,71 @@ module ot_a3_engine_issue_bridge (
                         end
                     end
 
-                    S_SOURCE_WAIT: begin
+                    S_RMS_INPUT_WAIT: begin
                         if (desc_valid) begin
                             if (!descriptor_header_ok(
                                     desc_data, desc_fault, DESC_TENSOR_VIEW,
                                     32'd192, 32'd128
                                 ) ||
-                                (desc_view_dtype !=
-                                 (embedding_q ? FMT_BF16 : FMT_FP32)) ||
+                                (desc_view_dtype != FMT_BF16) ||
                                 (desc_view_rank != 8'd2) ||
                                 (desc_view_layout != 8'd0) ||
-                                (desc_view_terms != 0) ||
+                                (desc_view_terms > 8'd4) ||
                                 (desc_view_scale_object != NO_ID) ||
                                 (desc_view_scale_block != 0) ||
                                 (desc_primary_object == NO_ID) ||
                                 ((desc_permissions & 32'd1) == 0) ||
                                 (desc_view_dim0 == 0) ||
-                                (desc_view_dim1 == 0) ||
+                                (desc_view_dim1 != EMBEDDING_WIDTH) ||
                                 (desc_view_dim2 != 0) ||
                                 (desc_view_dim3 != 0) ||
                                 (desc_view_dim4 != 0) ||
                                 (desc_view_dim5 != 0) ||
-                                (desc_view_stride0 != desc_view_dim1) ||
+                                (desc_view_stride0 != EMBEDDING_WIDTH) ||
                                 (desc_view_stride1 != 1) ||
                                 (desc_view_stride2 != 0) ||
                                 (desc_view_stride3 != 0) ||
                                 (desc_view_stride4 != 0) ||
                                 (desc_view_stride5 != 0) ||
-                                (captured_rank[1] != 2) ||
-                                (captured_axis[1] != 0) ||
-                                (captured_extent[1] != desc_view_dim0) ||
-                                (captured_offset[1] != desc_view_offset) ||
-                                (embedding_q &&
-                                 (desc_view_dim1 != EMBEDDING_WIDTH)) ||
-                                (embedding_q &&
-                                 (desc_view_dim0 != QWEN_VOCABULARY) &&
-                                 (desc_view_dim0 !=
-                                  DEEPSEEK_VOCABULARY))) begin
+                                (captured_rank[0] != 2) ||
+                                (captured_axis[0] != 0) ||
+                                (captured_extent[0] != 1) ||
+                                (captured_offset[0] != desc_view_offset)) begin
                                 response_fault <= 1'b1;
                                 response_trap <= TRAP_DESCRIPTOR;
                                 state <= S_RESPONSE;
                             end else begin
-                                source_rows <= desc_view_dim0;
-                                source_trailing <= desc_view_dim1;
-                                source_dtype <= desc_view_dtype;
+                                index_raw_dim0 <= desc_view_dim0;
+                                source_rows <= 32'd1;
+                                source_trailing <= EMBEDDING_WIDTH;
+                                source_dtype <= FMT_BF16;
+                                desc_req <= 1'b1;
+                                desc_id <= op_input1;
+                                state <= S_SOURCE_WAIT;
+                            end
+                        end
+                    end
+
+                    S_SOURCE_WAIT: begin
+                        if (desc_valid) begin
+                            if (!input_view_common_ok ||
+                                !(dense_row_source_ok ||
+                                  rms_weight_source_ok ||
+                                  transfer_source_ok)) begin
+                                response_fault <= 1'b1;
+                                response_trap <= TRAP_DESCRIPTOR;
+                                state <= S_RESPONSE;
+                            end else begin
+                                if (dma_transfer_q) begin
+                                    index_raw_dim0 <= desc_view_dim0;
+                                    source_rows <= 32'd1;
+                                    source_trailing <= EMBEDDING_WIDTH;
+                                    source_dtype <= FMT_BF16;
+                                end else if (!rms_norm_q) begin
+                                    source_rows <= desc_view_dim0;
+                                    source_trailing <= desc_view_dim1;
+                                    source_dtype <= desc_view_dtype;
+                                end
                                 desc_req <= 1'b1;
                                 desc_id <= op_output0;
                                 state <= S_OUTPUT_WAIT;
@@ -455,33 +651,9 @@ module ot_a3_engine_issue_bridge (
 
                     S_OUTPUT_WAIT: begin
                         if (desc_valid) begin
-                            if (!descriptor_header_ok(
-                                    desc_data, desc_fault, DESC_TENSOR_VIEW,
-                                    32'd192, 32'd128
-                                ) ||
-                                (desc_view_dtype != source_dtype) ||
-                                (desc_view_rank != 8'd2) ||
-                                (desc_view_layout != 8'd0) ||
-                                (desc_view_terms > 8'd4) ||
-                                (desc_view_scale_object != NO_ID) ||
-                                (desc_view_scale_block != 0) ||
-                                (desc_primary_object == NO_ID) ||
-                                ((desc_permissions & 32'd2) == 0) ||
-                                (desc_view_dim0 != index_raw_dim0) ||
-                                (desc_view_dim1 != source_trailing) ||
-                                (desc_view_dim2 != 0) ||
-                                (desc_view_dim3 != 0) ||
-                                (desc_view_dim4 != 0) ||
-                                (desc_view_dim5 != 0) ||
-                                (desc_view_stride0 != source_trailing) ||
-                                (desc_view_stride1 != 1) ||
-                                (desc_view_stride2 != 0) ||
-                                (desc_view_stride3 != 0) ||
-                                (desc_view_stride4 != 0) ||
-                                (desc_view_stride5 != 0) ||
-                                (captured_rank[4] != 2) ||
-                                (captured_axis[4] != 0) ||
-                                (captured_extent[4] != captured_extent[0])) begin
+                            if (!output_view_common_ok ||
+                                !(dense_row_output_ok ||
+                                  transfer_output_ok)) begin
                                 response_fault <= 1'b1;
                                 response_trap <= TRAP_DESCRIPTOR;
                                 state <= S_RESPONSE;
@@ -495,37 +667,11 @@ module ot_a3_engine_issue_bridge (
 
                     S_NUM_WAIT: begin
                         if (desc_valid) begin
-                            if (!descriptor_header_ok(
-                                    desc_data, desc_fault, DESC_NUMERIC,
-                                    32'd128, 32'd64
-                                ) ||
-                                (embedding_q &&
-                                 (desc_data[519:512] != FMT_U32)) ||
-                                (!embedding_q &&
-                                 (desc_data[519:512] != FMT_U32) &&
-                                 (desc_data[519:512] != FMT_I32)) ||
-                                (desc_data[527:520] != source_dtype) ||
-                                (desc_data[535:528] != FMT_FP32) ||
-                                (desc_data[543:536] != source_dtype) ||
-                                (desc_data[551:544] != 0) ||
-                                (desc_data[559:552] != 0) ||
-                                (desc_data[567:560] != 0) ||
-                                (desc_data[575:568] != 0) ||
-                                (desc_data[607:576] != 0) ||
-                                (desc_data[639:608] != 0) ||
-                                (desc_data[671:640] != 0) ||
-                                (desc_data[703:672] != 0) ||
-                                (desc_data[767:704] != 0) ||
-                                (!embedding_q &&
-                                 (desc_data[1023:768] !=
-                                  CONTRACT_EXACT_INDEX_SELECT_RAW)) ||
-                                (embedding_q &&
-                                 !(((source_rows == QWEN_VOCABULARY) &&
-                                    (desc_data[1023:768] ==
-                                     CONTRACT_QWEN_EMBED_RAW)) ||
-                                   ((source_rows == DEEPSEEK_VOCABULARY) &&
-                                    (desc_data[1023:768] ==
-                                     CONTRACT_DEEPSEEK_EMBED_RAW))))) begin
+                            if (!numeric_common_ok ||
+                                !(gather_numeric_ok ||
+                                  embedding_numeric_ok ||
+                                  rms_numeric_ok ||
+                                  transfer_numeric_ok)) begin
                                 response_fault <= 1'b1;
                                 response_trap <= TRAP_DESCRIPTOR;
                                 state <= S_RESPONSE;
@@ -549,8 +695,8 @@ module ot_a3_engine_issue_bridge (
                     S_ENGINE_WAIT: begin
                         if (engine_done) begin
                             if ((engine_error_code != ERR_NONE) ||
-                                (engine_result_count != source_trailing) ||
-                                (engine_work_count != 1)) begin
+                                (engine_result_count != expected_result_count) ||
+                                (engine_work_count != expected_work_count)) begin
                                 response_fault <= 1'b1;
                                 response_trap <= TRAP_ENGINE;
                             end else begin
@@ -566,8 +712,14 @@ module ot_a3_engine_issue_bridge (
                             if (!response_fault) begin
                                 real_launch_count <= real_launch_count + 1;
                                 result_word_cursor <=
-                                    result_word_cursor + source_trailing;
-                                if (embedding_q)
+                                    result_word_cursor + expected_result_count;
+                                if (rms_norm_q)
+                                    rms_norm_launch_count <=
+                                        rms_norm_launch_count + 1;
+                                else if (dma_transfer_q)
+                                    dma_transfer_launch_count <=
+                                        dma_transfer_launch_count + 1;
+                                else if (embedding_q)
                                     embedding_launch_count <=
                                         embedding_launch_count + 1;
                                 else
@@ -592,30 +744,118 @@ module ot_a3_engine_issue_bridge (
         end
     end
 
-    wire engine_done;
-    wire [31:0] engine_saturation_count;
-    wire [31:0] engine_token;
-    wire [31:0] engine_tie_multiplicity;
-    wire [31:0] launch_index_base =
-        cfg_index_base + real_launch_count;
-    wire [31:0] launch_source_base = embedding_q
-        ? (cfg_embedding_source_base +
-           embedding_launch_count * EMBEDDING_WIDTH)
-        : (cfg_source_base +
-           dma_gather_launch_count * cfg_source_launch_stride);
+    wire array_m0_rd_en;
+    wire [31:0] array_m0_rd_addr;
+    wire array_m1_rd_en;
+    wire [31:0] array_m1_rd_addr;
+    wire array_m2_rd_en;
+    wire [31:0] array_m2_rd_addr;
+    wire array_m3_rd_en;
+    wire [31:0] array_m3_rd_addr;
+    wire array_out_we;
+    wire [31:0] array_out_addr;
+    wire [31:0] array_out_data;
+    wire array_busy;
+    wire array_done;
+    wire [7:0] array_error_code;
+    wire [31:0] array_result_count;
+    wire [31:0] array_saturation_count;
+    wire [31:0] array_work_count;
+    wire [31:0] array_token;
+    wire [31:0] array_tie_multiplicity;
+
+    wire rms_input_rd_en;
+    wire [31:0] rms_input_rd_addr;
+    wire rms_weight_rd_en;
+    wire [31:0] rms_weight_rd_addr;
+    wire rms_out_we;
+    wire [31:0] rms_out_addr;
+    wire [31:0] rms_out_data;
+    wire rms_busy;
+    wire rms_done;
+    wire [7:0] rms_error_code;
+    wire [31:0] rms_result_count;
+    wire [31:0] rms_saturation_count;
+    wire [31:0] rms_work_count;
+
+    wire engine_done = rms_norm_q ? rms_done : array_done;
+    assign engine_busy = rms_norm_q ? rms_busy : array_busy;
+    assign engine_error_code = rms_norm_q
+        ? rms_error_code : array_error_code;
+    assign engine_result_count = rms_norm_q
+        ? rms_result_count : array_result_count;
+    assign engine_work_count = rms_norm_q
+        ? rms_work_count : array_work_count;
+    wire [31:0] expected_result_count = rms_norm_q
+        ? EMBEDDING_WIDTH
+        : dma_transfer_q ? (TRANSFER_COPIES * EMBEDDING_WIDTH)
+        : source_trailing;
+    wire [31:0] expected_work_count = rms_norm_q
+        ? EMBEDDING_WIDTH : dma_transfer_q ? TRANSFER_COPIES : 32'd1;
+
+    assign m0_rd_en = rms_norm_q ? rms_input_rd_en : array_m0_rd_en;
+    assign m0_rd_addr = rms_norm_q ? rms_input_rd_addr : array_m0_rd_addr;
+    assign m1_rd_en = rms_norm_q ? rms_weight_rd_en : array_m1_rd_en;
+    assign m1_rd_addr = rms_norm_q ? rms_weight_rd_addr : array_m1_rd_addr;
+    assign m2_rd_en = rms_norm_q ? 1'b0 : array_m2_rd_en;
+    assign m2_rd_addr = rms_norm_q ? 32'd0 : array_m2_rd_addr;
+    assign m3_rd_en = rms_norm_q ? 1'b0 : array_m3_rd_en;
+    assign m3_rd_addr = rms_norm_q ? 32'd0 : array_m3_rd_addr;
+    assign out_we = rms_norm_q ? rms_out_we : array_out_we;
+    assign out_addr = rms_norm_q ? rms_out_addr : array_out_addr;
+    assign out_data = rms_norm_q ? rms_out_data : array_out_data;
+    assign m0_reads_result = rms_norm_q;
+    assign m1_reads_result = dma_transfer_q;
+
+    wire [31:0] launch_index_base = dma_transfer_q
+        ? cfg_transfer_index_base
+        : (cfg_index_base + real_launch_count);
+    wire [31:0] launch_source_base = dma_transfer_q
+        ? cfg_transfer_source_base
+        : embedding_q
+            ? (cfg_embedding_source_base +
+               embedding_launch_count * EMBEDDING_WIDTH)
+            : (cfg_source_base +
+               dma_gather_launch_count * cfg_source_launch_stride);
     wire [31:0] launch_output_base =
         cfg_output_base + result_word_cursor;
+
+    ot_a3_vector_rms_norm rms_norm (
+        .clk(clk),
+        .rst_n(rst_n),
+        .start(engine_start & rms_norm_q),
+        .cfg_count(EMBEDDING_WIDTH),
+        .cfg_epsilon_bits(RMS_EPSILON),
+        .cfg_input_base(cfg_rms_input_base),
+        .cfg_weight_base(cfg_rms_weight_base),
+        .cfg_output_base(launch_output_base),
+        .input_rd_en(rms_input_rd_en),
+        .input_rd_addr(rms_input_rd_addr),
+        .input_rd_data(m0_rd_data),
+        .weight_rd_en(rms_weight_rd_en),
+        .weight_rd_addr(rms_weight_rd_addr),
+        .weight_rd_data(m1_rd_data),
+        .out_we(rms_out_we),
+        .out_addr(rms_out_addr),
+        .out_data(rms_out_data),
+        .busy(rms_busy),
+        .done(rms_done),
+        .error_code(rms_error_code),
+        .result_count(rms_result_count),
+        .saturation_count(rms_saturation_count),
+        .work_count(rms_work_count)
+    );
 
     ot_a3_engine_array engines (
         .clk(clk),
         .rst_n(rst_n),
-        .start(engine_start),
+        .start(engine_start & !rms_norm_q),
         .cfg_family(FAMILY_DMA),
         .cfg_sub(DMA_GATHER),
         .cfg_rows(16'd0),
         .cfg_cols(source_trailing[15:0]),
         .cfg_depth(16'd0),
-        .cfg_count(source_trailing),
+        .cfg_count(expected_result_count),
         .cfg_dtype_a(FMT_U32),
         .cfg_dtype_b(source_dtype),
         .cfg_a_base(launch_index_base),
@@ -630,9 +870,9 @@ module ot_a3_engine_issue_bridge (
         .cfg_block_rows_b(16'd0),
         .cfg_scale_a_base(32'd0),
         .cfg_scale_b_base(32'd0),
-        .cfg_slots(32'd1),
+        .cfg_slots(dma_transfer_q ? TRANSFER_COPIES : 32'd1),
         .cfg_trailing(source_trailing),
-        .cfg_extent(source_rows),
+        .cfg_extent(dma_transfer_q ? 32'd1 : source_rows),
         .cfg_input_valid(4'b0011),
         .cfg_output_valid(2'b01),
         .cfg_input_dtypes({16'd0, source_dtype, FMT_U32}),
@@ -648,11 +888,14 @@ module ot_a3_engine_issue_bridge (
         .cfg_profile_scale_bits(32'd0),
         .cfg_epsilon_bits(32'd0),
         .cfg_profile_flags(32'd0),
-        .cfg_input0_dims({96'd0, 32'd1}),
-        .cfg_input1_dims({64'd0, source_trailing, source_rows}),
+        .cfg_input0_dims({96'd0,
+            dma_transfer_q ? TRANSFER_COPIES : 32'd1}),
+        .cfg_input1_dims({64'd0, source_trailing,
+            dma_transfer_q ? 32'd1 : source_rows}),
         .cfg_input2_dims(128'd0),
         .cfg_input3_dims(128'd0),
-        .cfg_output0_dims({64'd0, source_trailing, 32'd1}),
+        .cfg_output0_dims({64'd0, source_trailing,
+            dma_transfer_q ? TRANSFER_COPIES : 32'd1}),
         .cfg_output1_dims(128'd0),
         .cfg_contract_0(embedding_q
             ? ((source_rows == QWEN_VOCABULARY)
@@ -691,28 +934,28 @@ module ot_a3_engine_issue_bridge (
         .cfg_aux1(NO_ID),
         .cfg_aux2(NO_ID),
         .cfg_aux3(NO_ID),
-        .m0_rd_en(m0_rd_en),
-        .m0_rd_addr(m0_rd_addr),
+        .m0_rd_en(array_m0_rd_en),
+        .m0_rd_addr(array_m0_rd_addr),
         .m0_rd_data(m0_rd_data),
-        .m1_rd_en(m1_rd_en),
-        .m1_rd_addr(m1_rd_addr),
+        .m1_rd_en(array_m1_rd_en),
+        .m1_rd_addr(array_m1_rd_addr),
         .m1_rd_data(m1_rd_data),
-        .m2_rd_en(m2_rd_en),
-        .m2_rd_addr(m2_rd_addr),
+        .m2_rd_en(array_m2_rd_en),
+        .m2_rd_addr(array_m2_rd_addr),
         .m2_rd_data(m2_rd_data),
-        .m3_rd_en(m3_rd_en),
-        .m3_rd_addr(m3_rd_addr),
+        .m3_rd_en(array_m3_rd_en),
+        .m3_rd_addr(array_m3_rd_addr),
         .m3_rd_data(m3_rd_data),
-        .out_we(out_we),
-        .out_addr(out_addr),
-        .out_data(out_data),
-        .busy(engine_busy),
-        .done(engine_done),
-        .error_code(engine_error_code),
-        .result_count(engine_result_count),
-        .saturation_count(engine_saturation_count),
-        .work_count(engine_work_count),
-        .token(engine_token),
-        .tie_multiplicity(engine_tie_multiplicity)
+        .out_we(array_out_we),
+        .out_addr(array_out_addr),
+        .out_data(array_out_data),
+        .busy(array_busy),
+        .done(array_done),
+        .error_code(array_error_code),
+        .result_count(array_result_count),
+        .saturation_count(array_saturation_count),
+        .work_count(array_work_count),
+        .token(array_token),
+        .tie_multiplicity(array_tie_multiplicity)
     );
 endmodule

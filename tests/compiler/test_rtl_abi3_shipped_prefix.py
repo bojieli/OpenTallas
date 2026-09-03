@@ -52,14 +52,20 @@ def test_witness_is_exactly_the_small_abi3_fail_stop_prefix() -> None:
     assert vectors["abi"] == {"major": 3, "minor": 0}
     assert vectors["state_compat"] == 0
     assert vectors["case_count"] == 4
-    assert vectors["real_engine_launch_count"] == 10
+    assert vectors["real_engine_launch_count"] == 14
     assert vectors["dma_gather_launch_count"] == 6
     assert vectors["embedding_launch_count"] == 4
+    assert vectors["rms_norm_launch_count"] == 2
+    assert vectors["dma_transfer_launch_count"] == 2
     assert vectors["rope_result_word_count"] == 1_024
     assert vectors["embedding_result_word_count"] == 16_384
-    assert vectors["selected_checkpoint_byte_count"] == 32_768
-    assert vectors["result_word_count"] == 17_408
-    assert vectors["resolved_view_count"] == 40
+    assert vectors["rms_norm_result_word_count"] == 8_192
+    assert vectors["dma_transfer_result_word_count"] == 32_768
+    assert vectors["selected_embedding_checkpoint_byte_count"] == 32_768
+    assert vectors["selected_rms_checkpoint_byte_count"] == 16_384
+    assert vectors["selected_checkpoint_byte_count"] == 49_152
+    assert vectors["result_word_count"] == 58_368
+    assert vectors["resolved_view_count"] == 52
     assert vectors["capability_fault_count"] == 4
     assert [case["name"] for case in vectors["cases"]] == [
         "qwen3-8b-rom-single-chip/decode",
@@ -68,22 +74,24 @@ def test_witness_is_exactly_the_small_abi3_fail_stop_prefix() -> None:
         "deepseek-v4-flash-hbm-cluster/decode",
     ]
     assert [case["first_unsupported"] for case in vectors["cases"]] == [
-        {"pc": 8, "family": 48, "sub": 0, "opcode": "VECTOR.RMS_NORM",
-         "descriptor_id": 50, "trap_class": 4},
-        {"pc": 8, "family": 48, "sub": 0, "opcode": "VECTOR.RMS_NORM",
-         "descriptor_id": 64, "trap_class": 4},
-        {"pc": 10, "family": 16, "sub": 0, "opcode": "DMA.TRANSFER",
-         "descriptor_id": 363, "trap_class": 4},
-        {"pc": 10, "family": 16, "sub": 0, "opcode": "DMA.TRANSFER",
-         "descriptor_id": 532, "trap_class": 4},
+        {"pc": 11, "family": 32, "sub": 0, "opcode": "TENSOR.MATMUL",
+         "descriptor_id": 59, "trap_class": 4},
+        {"pc": 11, "family": 32, "sub": 0, "opcode": "TENSOR.MATMUL",
+         "descriptor_id": 72, "trap_class": 4},
+        {"pc": 13, "family": 144, "sub": 3, "opcode": "LINK.MULTICAST",
+         "descriptor_id": 368, "trap_class": 4},
+        {"pc": 14, "family": 48, "sub": 9, "opcode": "VECTOR.MHC",
+         "descriptor_id": 546, "trap_class": 4},
     ]
-    for case in vectors["cases"]:
+    for case_index, case in enumerate(vectors["cases"]):
         assert not case["expected"]["complete"]
         assert case["expected"]["state_compat"] == 0
         assert case["expected"]["embedding_launches"] == 1
         assert case["expected"]["embedding_result_words"] == 4_096
-        assert case["expected"]["selected_checkpoint_bytes"] == 8_192
-        assert case["expected"]["wait_events"] == 1
+        assert case["expected"]["selected_checkpoint_bytes"] == (
+            16_384 if case_index < 2 else 8_192
+        )
+        assert case["expected"]["wait_events"] == (1 if case_index == 2 else 2)
         assert case["expected"]["retired"] + 1 == case["expected"]["fetched"]
 
         embedding = next(
@@ -107,6 +115,53 @@ def test_witness_is_exactly_the_small_abi3_fail_stop_prefix() -> None:
         assert "only this selected byte range was re-read and hashed" in source[
             "authentication_boundary"
         ]
+        if case_index < 2:
+            rms_norm = next(
+                operation
+                for operation in case["supported_prefix"]
+                if operation["kind"] == "vector_rms_norm"
+            )
+            gain = rms_norm["weight_source"]
+            assert case["expected"]["rms_norm_launches"] == 1
+            assert case["expected"]["dma_transfer_launches"] == 0
+            assert rms_norm["input_source"] == "prior_embedding_result_bank"
+            assert rms_norm["contract_sha256"] == (
+                "999ef86bc4d4c36dfd57db84d49618af46bed2e6c1f0b1bf031a27b5b8c03fda"
+            )
+            assert rms_norm["expected_row_sha256"] == (
+                "976d6de1a3ed91a066c7efed4354e578edf366a3b51a7e6077d68282981ffa58"
+            )
+            assert rms_norm["mean_square_code"] == 0x3A5BF2CA
+            assert rms_norm["inverse_rms_code"] == 0x420A0297
+            assert gain["object_content_sha256"] == (
+                "579d67ccd61b48d4b026755a6187d3e9ae690baa03b9e11ab4ece0fe6c8add44"
+            )
+            assert gain["selected_row_file_offset"] == 1_244_669_048
+            assert gain["selected_row_bytes"] == 8_192
+            assert gain["selected_row_sha256"] == (
+                "00695bad97c2abc77a9d1ce57e4d4a5e5c2b574387fcb4029ef5ce12239b2530"
+            )
+        else:
+            transfer = next(
+                operation
+                for operation in case["supported_prefix"]
+                if operation["kind"] == "dma_transfer"
+            )
+            assert case["expected"]["rms_norm_launches"] == 0
+            assert case["expected"]["dma_transfer_launches"] == 1
+            assert transfer["contract_sha256"] == (
+                "4ae1e59ac03a9c23abf11fe7e8193a6496e2dd4169e9369260202d2a7a0f1894"
+            )
+            assert transfer["input_view"]["strides"] == [4_096, 0, 1]
+            assert transfer["output_view"]["strides"] == [16_384, 4_096, 1]
+            assert transfer["lowering"] == {
+                "operation": "four_row_gather",
+                "indices": [0, 0, 0, 0],
+                "slots": 4,
+                "trailing": 4_096,
+                "extent": 1,
+                "source": "prior_embedding_result_bank",
+            }
 
 
 def test_vector_and_deployment_images_are_fresh() -> None:
@@ -145,22 +200,24 @@ def test_retained_campaign_is_current_and_states_the_simple_boundary() -> None:
     assert retained["post_fault_write_count"] == 0
     assert retained["simulators_agree"]
     assert retained["simulator_checks"] == {
-        "iverilog": 50_427,
-        "verilator": 50_427,
+        "iverilog": 124_189,
+        "verilator": 124_189,
     }
-    assert [site["pc"] for site in retained["fault_sites"]] == [8, 8, 10, 10]
+    assert [site["pc"] for site in retained["fault_sites"]] == [11, 11, 13, 14]
     assert [site["descriptor_id"] for site in retained["fault_sites"]] == [
-        50, 64, 363, 532
+        59, 72, 368, 546
     ]
     assert [site["opcode"] for site in retained["fault_sites"]] == [
-        "VECTOR.RMS_NORM",
-        "VECTOR.RMS_NORM",
-        "DMA.TRANSFER",
-        "DMA.TRANSFER",
+        "TENSOR.MATMUL",
+        "TENSOR.MATMUL",
+        "LINK.MULTICAST",
+        "VECTOR.MHC",
     ]
     assert retained["dma_gather_launch_count"] == 6
     assert retained["embedding_launch_count"] == 4
-    assert retained["selected_checkpoint_byte_count"] == 32_768
+    assert retained["rms_norm_launch_count"] == 2
+    assert retained["dma_transfer_launch_count"] == 2
+    assert retained["selected_checkpoint_byte_count"] == 49_152
     assert len(retained["checkpoint_rows"]) == 4
     for row in retained["checkpoint_rows"]:
         assert len(row["deployment_sha256"]) == 64
@@ -169,6 +226,12 @@ def test_retained_campaign_is_current_and_states_the_simple_boundary() -> None:
         assert row["source"]["selected_row_file_range"]["stop_exclusive"] - row[
             "source"
         ]["selected_row_file_range"]["start"] == 8_192
+    assert len(retained["checkpoint_gains"]) == 2
+    for gain in retained["checkpoint_gains"]:
+        assert gain["source"]["selected_row_bytes"] == 8_192
+        assert gain["numeric_contract_sha256"] == (
+            "999ef86bc4d4c36dfd57db84d49618af46bed2e6c1f0b1bf031a27b5b8c03fda"
+        )
     for path, record in retained["source"].items():
         source_path = ROOT / path
         assert source_path.stat().st_size == record["bytes"]
@@ -196,8 +259,8 @@ def test_focused_campaign_replays_both_independent_simulators(
     assert summary["status"] == "pass", summary["cases"]
     assert summary["simulators_agree"]
     assert summary["simulator_checks"] == {
-        "iverilog": 50_427,
-        "verilator": 50_427,
+        "iverilog": 124_189,
+        "verilator": 124_189,
     }
     assert summary["post_fault_write_count"] == 0
     assert [case["name"] for case in summary["cases"]] == [

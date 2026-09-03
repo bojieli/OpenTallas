@@ -14,7 +14,7 @@ module ot_a3_shipped_prefix_top #(
     parameter integer SYMBOL_WORDS = 2048,
     parameter integer INDEX_WORDS = 64,
     parameter integer SOURCE_WORDS = 65536,
-    parameter integer RESULT_WORDS = 32768
+    parameter integer RESULT_WORDS = 65536
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -32,6 +32,10 @@ module ot_a3_shipped_prefix_top #(
     input  wire [31:0] cfg_source_base,
     input  wire [31:0] cfg_source_launch_stride,
     input  wire [31:0] cfg_embedding_source_base,
+    input  wire [31:0] cfg_rms_input_base,
+    input  wire [31:0] cfg_rms_weight_base,
+    input  wire [31:0] cfg_transfer_index_base,
+    input  wire [31:0] cfg_transfer_source_base,
     input  wire [31:0] cfg_output_base,
 
     output wire        busy,
@@ -63,6 +67,8 @@ module ot_a3_shipped_prefix_top #(
     output wire [31:0] real_launch_count,
     output wire [31:0] dma_gather_launch_count,
     output wire [31:0] embedding_launch_count,
+    output wire [31:0] rms_norm_launch_count,
+    output wire [31:0] dma_transfer_launch_count,
     output wire [31:0] capability_fault_count,
     output wire [31:0] descriptor_fault_count,
     output wire [31:0] engine_fault_count,
@@ -282,6 +288,8 @@ module ot_a3_shipped_prefix_top #(
     wire out_we;
     wire [31:0] out_addr;
     wire [31:0] out_data;
+    wire m0_reads_result;
+    wire m1_reads_result;
     reg fault_seen;
 
     always @(posedge clk or negedge rst_n) begin
@@ -304,7 +312,9 @@ module ot_a3_shipped_prefix_top #(
                 fault_seen <= 1'b0;
             end
             if (m0_rd_en) begin
-                if (m0_rd_addr < INDEX_WORDS)
+                if (m0_reads_result && (m0_rd_addr < RESULT_WORDS))
+                    m0_rd_data <= result_mem[m0_rd_addr];
+                else if (!m0_reads_result && (m0_rd_addr < INDEX_WORDS))
                     m0_rd_data <= index_mem[m0_rd_addr];
                 else begin
                     m0_rd_data <= 32'd0;
@@ -312,7 +322,9 @@ module ot_a3_shipped_prefix_top #(
                 end
             end
             if (m1_rd_en) begin
-                if (m1_rd_addr < SOURCE_WORDS)
+                if (m1_reads_result && (m1_rd_addr < RESULT_WORDS))
+                    m1_rd_data <= result_mem[m1_rd_addr];
+                else if (!m1_reads_result && (m1_rd_addr < SOURCE_WORDS))
                     m1_rd_data <= source_mem[m1_rd_addr];
                 else begin
                     m1_rd_data <= 32'd0;
@@ -373,6 +385,10 @@ module ot_a3_shipped_prefix_top #(
         .cfg_source_base(cfg_source_base),
         .cfg_source_launch_stride(cfg_source_launch_stride),
         .cfg_embedding_source_base(cfg_embedding_source_base),
+        .cfg_rms_input_base(cfg_rms_input_base),
+        .cfg_rms_weight_base(cfg_rms_weight_base),
+        .cfg_transfer_index_base(cfg_transfer_index_base),
+        .cfg_transfer_source_base(cfg_transfer_source_base),
         .cfg_output_base(cfg_output_base),
         .m0_rd_en(m0_rd_en),
         .m0_rd_addr(m0_rd_addr),
@@ -389,6 +405,8 @@ module ot_a3_shipped_prefix_top #(
         .out_we(out_we),
         .out_addr(out_addr),
         .out_data(out_data),
+        .m0_reads_result(m0_reads_result),
+        .m1_reads_result(m1_reads_result),
         .engine_busy(engine_busy),
         .engine_error_code(engine_error_code),
         .engine_result_count(engine_result_count),
@@ -396,6 +414,8 @@ module ot_a3_shipped_prefix_top #(
         .real_launch_count(real_launch_count),
         .dma_gather_launch_count(dma_gather_launch_count),
         .embedding_launch_count(embedding_launch_count),
+        .rms_norm_launch_count(rms_norm_launch_count),
+        .dma_transfer_launch_count(dma_transfer_launch_count),
         .capability_fault_count(capability_fault_count),
         .descriptor_fault_count(descriptor_fault_count),
         .engine_fault_count(engine_fault_count),

@@ -31,6 +31,7 @@ TOOLS_ROOT = Path(
 
 RTL_SOURCES = (
     "rtl/ot_fp32_rne_pkg.sv",
+    "rtl/ot_fp32_rsqrt_rne.sv",
     "rtl/abi3/ot_a3_format_pkg.sv",
     "rtl/abi3/ot_a3_engine_pkg.sv",
     "rtl/abi3/ot_a3_pkg.sv",
@@ -51,6 +52,7 @@ RTL_SOURCES = (
     "rtl/abi3/ot_a3_vector_compress_project.sv",
     "rtl/abi3/ot_a3_vector_mhc_post.sv",
     "rtl/abi3/ot_a3_engine_array.sv",
+    "rtl/abi3/ot_a3_vector_rms_norm.sv",
     "rtl/abi3/ot_a3_engine_issue_bridge.sv",
 )
 TEST_SOURCES = (
@@ -67,6 +69,7 @@ CONTRACT_SOURCES = (
     "runtime/sim/memory.py",
     "runtime/sim/generators.py",
     "runtime/sim/engines/dma.py",
+    "runtime/reference/tensor_accelerator_rmsnorm.py",
 )
 TOOL_SOURCES = (
     "tools/build_abi3_deployment_rtl_vectors.py",
@@ -383,6 +386,7 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
         for vector_case in vectors["cases"]
     ]
     checkpoint_rows = []
+    checkpoint_gains = []
     for vector_case in vectors["cases"]:
         embedding = next(
             operation
@@ -402,6 +406,28 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
                 "source": embedding["source"],
             }
         )
+        rms_operations = [
+            operation
+            for operation in vector_case["supported_prefix"]
+            if operation["kind"] == "vector_rms_norm"
+        ]
+        for rms_norm in rms_operations:
+            checkpoint_gains.append(
+                {
+                    "case": vector_case["name"],
+                    "deployment_sha256": vector_case[
+                        "deployment_sha256"
+                    ],
+                    "operator_pc": int(rms_norm["pc"]),
+                    "operator_descriptor_id": int(
+                        rms_norm["descriptor_id"]
+                    ),
+                    "numeric_contract_sha256": rms_norm[
+                        "contract_sha256"
+                    ],
+                    "source": rms_norm["weight_source"],
+                }
+            )
     return {
         "schema": "opentallas.rtl.abi3_shipped_prefix_campaign.v1",
         "status": "pass" if observations_agree else "fail",
@@ -431,14 +457,16 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
                 "the real sequencer resolves exact operand views from each of the four shipped decode programs",
                 "six dense one-index FP32 DMA.GATHER operations execute through ot_a3_engine_array and reproduce 1,024 authenticated generated RoPE words",
                 "four exact BF16 TENSOR.EMBED_LOOKUP operations execute through the existing index mover and reproduce 16,384 checkpoint codes from four bounded 8 KiB selected-row reads",
-                "each selected row is bound to its certified deployment, checkpoint revision, shard, declared segment digest, exact byte range, and selected-range SHA-256 without claiming a complete-shard rehash",
-                "Qwen next refuses VECTOR.RMS_NORM at PC 8 and DeepSeek next refuses DMA.TRANSFER at PC 10 with a precise CAPABILITY trap, no retirement, no event publication, and no later write",
+                "two exact Qwen BF16 VECTOR.RMS_NORM operations consume the prior embedding result and authenticated layer-zero gain, reproducing all 8,192 retained output codes",
+                "two DeepSeek stride-zero DMA.TRANSFER operations consume the prior embedding result and reproduce all 32,768 output codes through a four-zero-index mover lowering",
+                "each selected checkpoint range is bound to its certified deployment, checkpoint revision, shard, declared segment digest, exact byte range, and selected-range SHA-256 without claiming a complete-shard rehash",
+                "Qwen next refuses TENSOR.MATMUL at PC 11; DeepSeek ROM refuses LINK.MULTICAST at PC 13 and DeepSeek HBM refuses VECTOR.MHC at PC 14, each with a precise CAPABILITY trap, no retirement, no event publication, and no later write",
                 "the production profile elaborates STATE_COMPAT=0 and every compatibility-state counter and overflow output remains zero",
                 "Icarus and Verilator use independently written checkers and agree on every retained case observation and check count",
             ],
             "does_not_establish": [
                 "prefill execution",
-                "VECTOR.RMS_NORM, DMA.TRANSFER, or any later model operator",
+                "TENSOR.MATMUL, LINK.MULTICAST, VECTOR.MHC, or any later model operator",
                 "a whole transaction, token selection, decoding, EOS, or model correctness",
                 "complete checkpoint-segment reauthentication during this bounded run",
                 "memory-macro timing, SRAM/HBM arbitration, physical timing, area, or power",
@@ -450,9 +478,23 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
         "real_engine_launch_count": vectors["real_engine_launch_count"],
         "dma_gather_launch_count": vectors["dma_gather_launch_count"],
         "embedding_launch_count": vectors["embedding_launch_count"],
+        "rms_norm_launch_count": vectors["rms_norm_launch_count"],
+        "dma_transfer_launch_count": vectors["dma_transfer_launch_count"],
         "rope_result_word_count": vectors["rope_result_word_count"],
         "embedding_result_word_count": vectors[
             "embedding_result_word_count"
+        ],
+        "rms_norm_result_word_count": vectors[
+            "rms_norm_result_word_count"
+        ],
+        "dma_transfer_result_word_count": vectors[
+            "dma_transfer_result_word_count"
+        ],
+        "selected_embedding_checkpoint_byte_count": vectors[
+            "selected_embedding_checkpoint_byte_count"
+        ],
+        "selected_rms_checkpoint_byte_count": vectors[
+            "selected_rms_checkpoint_byte_count"
         ],
         "selected_checkpoint_byte_count": vectors[
             "selected_checkpoint_byte_count"
@@ -462,6 +504,7 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
         "capability_fault_count": vectors["capability_fault_count"],
         "fault_sites": fault_sites,
         "checkpoint_rows": checkpoint_rows,
+        "checkpoint_gains": checkpoint_gains,
         "post_fault_write_count": 0,
         "required_marker": marker,
         "simulators_agree": observations_agree,
