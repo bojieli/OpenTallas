@@ -1,8 +1,9 @@
 # ABI 3.0 engine datapaths in RTL
 
 **Checklist item:** W8.3
-**Status:** four datapaths implemented and correlated; the rest of the engine
-surface is not, and none of them is wired to the microsequencer
+**Status:** eleven `(family, subopcode)` pairs are implemented and correlated,
+including six bounded VECTOR additions; the rest of the engine surface is not,
+and none of these datapaths is wired to the microsequencer
 **Evidence class:** `public_open_tool_rtl_simulation` (functional), plus a
 separate open-PDK physical view that carries its own boundary
 **Primary artifacts:**
@@ -62,16 +63,33 @@ by an existing evidence class*.
 | `TENSOR.MATMUL` | Every contraction in both models. It is the arithmetic the whole program is about, and the ASAP7 physical run that exists synthesised blocks whose own boundary says they implement *signed integer datapaths only* — not this |
 | `DMA.GATHER` / `DMA.SCATTER` | Every weight byte and every KV byte that moves. The executed simulator's strongest evidence is **byte counts**; this is the block that produces them, and its two failure modes — a clamped index and a lost read-back — are both silent |
 | `SELECTION.ARGMAX` | The token itself. `[OI-33]` is a single argmax flip at generated index 137 that ended the 8,000-token run's oracle identity. The tie rule — *lowest token ID among the maxima* — is a property of one comparison, and getting it backwards still looks like a maximum |
-| `VECTOR.ADD` | The residual, at every layer boundary, and the one vector operator with a closed-form contract (`bf16_add_rne_v1`) rather than a transcendental |
+| `VECTOR.ADD` | The residual, at every layer boundary, with the closed-form `bf16_add_rne_v1` contract |
+| bounded `VECTOR.CONVERT`, `SCALE` and `HADAMARD` | Storage conversion, scalar/elementwise scaling and the released DeepSeek normalized 128-point transform, without inventing transcendental approximations |
+| bounded `VECTOR.INDEX_SCORE`, `COMPRESS` and `MHC` | The released DeepSeek learned-index, projection and hyper-connection forms, including their packing and matrix-orientation contracts |
 
-**Twelve of the thirteen VECTOR subopcodes are not correlated here** —
-`RMS_NORM`, `HEAD_RMS_NORM`, `ROPE`, `SILU_MUL`, `SOFTMAX`, `CONVERT`, `SCALE`,
-`HADAMARD`, `SQRT_SOFTPLUS`, `COMPRESS`, `INDEX_SCORE` and `MHC` — and neither
-are ATTENTION, ROUTE, REDUCTION, LINK or STATE. Within the families that are
-covered, `TENSOR.GROUPED_MATMUL`, `ROUTED_MATMUL` and `EMBED_LOOKUP`,
+Seven of the thirteen VECTOR subopcodes now dispatch in this engine array:
+`ADD` plus the following six explicitly bounded forms. The exact same scope is
+machine-readable as `correlation.vector_rtl_scope` in the retained campaign;
+an out-of-bound or unsupported sub-case is refused with `ERR_SHAPE`.
+
+| opcode | correlated form and bound | explicitly not correlated |
+|---|---|---|
+| `CONVERT` | Unscaled, one input and one output, 1–512 elements; supported identity copies or finite numeric input converted to BF16/FP32 | Block dequantization; two-output block quantization |
+| `SCALE` | BF16-to-BF16, 1–512 elements; constant (`aux0=0`) or same-shape elementwise (`aux0=1`) | Logistic sigmoid (`aux0=2`); general trailing-axis broadcasting |
+| `HADAMARD` | Normalized 128-point BF16 transform, 1–4 rows | Widths other than 128 or more than four rows |
+| `INDEX_SCORE` | BF16 learned-index score, batch one, exactly four heads, scale exactly 1.0, 1–4 sites, 1–8 candidates and 1–16 head channels | Non-unit scale; other head counts; batches greater than one |
+| `COMPRESS` | `COMPRESS_PROJECT` (`aux0=0`), 1–8 flattened rows, 1–16 outputs and 1–64 reduction channels; packed KV-then-gate FP32 output | `COMPRESS_POOL`; `COMPRESS_STATE_UPDATE` |
+| `MHC` | `HYPER_CONNECT_POST` (`aux0=1`), 1–4 flattened sites, 1–32 hidden channels and exactly four streams | `HYPER_CONNECT_PRE`; `HYPER_CONNECT_HEAD`; multipliers other than four |
+
+The boundary is still substantial. `SILU_MUL`, `SOFTMAX` and
+`SQRT_SOFTPLUS` are wholly deferred because correctly rounded
+exponential/logarithm/square-root RTL does not exist here; no approximation is
+substituted. Standalone `RMS_NORM`, `HEAD_RMS_NORM` and `ROPE` RTL exists but
+remains outside this engine array and this correlation. ATTENTION, ROUTE,
+REDUCTION, LINK and STATE have no datapath here. Within otherwise covered
+families, `TENSOR.GROUPED_MATMUL`, `ROUTED_MATMUL` and `EMBED_LOOKUP`,
 `DMA.TRANSFER` and `FILL`, and `SELECTION.TOKEN_APPEND` are also absent.
-Saying "the vector engine" would overstate what closed: one of thirteen VECTOR
-subopcodes did, and it is the one whose contract is closed-form.
+`SELECTION.SAMPLE` has no governed contract on either side.
 
 ## 3. What the correlation actually compares
 
@@ -92,32 +110,33 @@ the totals the image declares, so the marker is not an echo of the image.
 The marker both simulators print, identically:
 
 ```
-PASS: ABI3 RTL engine datapaths cases=31 families=5 results=10025 macs=59868 faults=9 decodes=2576 arith=3696
+PASS: ABI3 RTL engine datapaths cases=135 families=11 results=14468 macs=59868 faults=92 decodes=2576 arith=5200
 ```
 
 Its parts, each re-readable from the campaign artifact:
 
 | quantity | value |
 |---|---:|
-| cases replayed | 31 <!-- figure: 31 src="results/rtl/abi3_engine_campaign.json#correlation.case_count" name="engine RTL cases" --> |
-| of which refusals | 9 <!-- figure: 9 src="results/rtl/abi3_engine_campaign.json#correlation.fault_case_count" name="engine RTL fault cases" --> |
-| distinct (family, subopcode) pairs | 5 <!-- figure: 5 src="results/rtl/abi3_engine_campaign.json#correlation.family_count" name="engine RTL families" --> |
-| result words compared, per simulator | 10025 <!-- figure: 10025 src="results/rtl/abi3_engine_campaign.json#correlation.result_word_count" name="engine RTL result words" --> |
+| cases replayed | 135 <!-- figure: 135 src="results/rtl/abi3_engine_campaign.json#correlation.case_count" name="engine RTL cases" --> |
+| of which refusals | 92 <!-- figure: 92 src="results/rtl/abi3_engine_campaign.json#correlation.fault_case_count" name="engine RTL fault cases" --> |
+| distinct (family, subopcode) pairs | 11 <!-- figure: 11 src="results/rtl/abi3_engine_campaign.json#correlation.family_count" name="engine RTL families" --> |
+| result words compared, per simulator | 14468 <!-- figure: 14468 src="results/rtl/abi3_engine_campaign.json#correlation.result_word_count" name="engine RTL result words" --> |
 | multiply-accumulates the correlated contractions perform | 59868 <!-- figure: 59868 src="results/rtl/abi3_engine_campaign.json#correlation.mac_count" name="engine RTL MACs" --> |
 | storage-format decode probes | 2576 <!-- figure: 2576 src="results/rtl/abi3_engine_campaign.json#correlation.decode_probe_count" name="engine RTL decode probes" --> |
-| binary32 arithmetic probes | 3696 <!-- figure: 3696 src="results/rtl/abi3_engine_campaign.json#correlation.arith_probe_count" name="engine RTL arithmetic probes" --> |
-| checks per simulator | 26381 <!-- figure: 26381 src="results/rtl/abi3_engine_campaign.json#checks_per_simulator.iverilog" name="engine RTL checks per simulator" --> |
+| binary32 arithmetic probes | 5200 <!-- figure: 5200 src="results/rtl/abi3_engine_campaign.json#correlation.arith_probe_count" name="engine RTL arithmetic probes" --> |
+| checks per simulator | 40878 <!-- figure: 40878 src="results/rtl/abi3_engine_campaign.json#checks_per_simulator.iverilog" name="engine RTL checks per simulator" --> |
 
 The campaign fails if the two simulators print the same marker after a
 different number of comparisons, because that is not two checks of one thing.
 
 Compared, per case: every element the engine wrote **word for word**; the
-engine's own counters (`tensor.output_elements`, `tensor.saturations`,
-`vector.saturations`, `selection.vocabulary_elements`,
-`selection.tie_multiplicity`, `dma.gather_elements`, `dma.scatter_elements`);
-the selected token; and for a refusal, the fault class *and* that the whole
-destination window still holds the unwritten sentinel — so **a partial result
-is a failure, not a pass.**
+engine's own result, work and saturation counters, including the distinct
+site-by-head-by-candidate-by-depth work count for `INDEX_SCORE`; the packed
+KV-then-gate order of `COMPRESS_PROJECT`; the source/destination matrix
+orientation of `HYPER_CONNECT_POST`; selection vocabulary and tie counts; DMA
+movement counts; the selected token; and, for a refusal, the fault class *and*
+that the whole destination window still holds the unwritten sentinel — so **a
+partial result is a failure, not a pass.**
 
 ### Coverage that is worth naming
 
@@ -142,19 +161,26 @@ is a failure, not a pass.**
   and both signs — 2,576 probes against `runtime.sim.formats`, whose tables are
   enumerated at import from the exact `fractions.Fraction` decoders in
   `runtime/reference/formats.py`.
-* **The binary32 arithmetic, on the distribution that breaks it.** The 31
+* **The six newly integrated VECTOR forms.** Directed and seeded cases cover
+  conversion identities and rounding, constant and same-shape scaling,
+  Hadamard normalization, `INDEX_SCORE`'s ReLU/reduction tree,
+  `COMPRESS_PROJECT`'s KV-then-gate packing, and `HYPER_CONNECT_POST`'s
+  combination-matrix orientation. Each form also has an explicit late-poison
+  case; the complete destination must remain unwritten even when the bad value
+  is in the final operand position.
+* **The binary32 arithmetic, on the distribution that breaks it.** The 135
   engine cases exercise the adder and the multiplier on the values real
   operands produce — normals of moderate exponent, mostly of one magnitude —
   which is where a rounding or normalisation defect is least likely to show. A
-  separate sweep of 3,696 pairs walks the other distribution: the full cross
+  separate sweep of 5,200 cases walks the other distribution: the full cross
   product of a 36-code corner set (both zeros, both smallest subnormals, the
   largest subnormal, the smallest normal, 2²⁴ where a unit ulp disappears, the
   largest finite, both signs of each) plus a seeded spread over BF16-widened
   codes, general binary32 including the nonfinite band, and the subnormal
   range. The authority is `runtime.reference.formats.binary32_add`,
-  `binary32_multiply` and `binary32_bits_to_bf16_rne`, which compute with
-  `fractions.Fraction` and round once, so **no host floating-point mode
-  participates on the reference side.**
+  `binary32_multiply`, `binary32_bits_to_bf16_rne` and
+  `binary32_product_add`, which compute with `fractions.Fraction` and round
+  once, so **no host floating-point mode participates on the reference side.**
 * **The tie rule, three ways.** A unique maximum; three logits sharing the
   maximum (the token must be 17, not 201, and the multiplicity 3); and a
   maximum that appears as both `+0` and `−0`, which compare equal in binary32
@@ -162,13 +188,15 @@ is a failure, not a pass.**
 * **Scatter read-back.** The destination starts from real bytes, seeded by a
   `DMA.TRANSFER` the same program issues, so a scatter that never read the
   destination back cannot pass. A repeated index resolves to the later slot.
-* **Nine refusals**, covering nonfinite operand, reserved E4M3FN encoding,
-  product overflow, accumulation overflow, block-scale overflow, index out of
-  range on both the read and the write side, and a nonfinite logit. Each fault
-  class is derived from the message the functional engine's `EngineError`
-  actually carried, not chosen here.
+* **Ninety-two refusals**: 17 Device faults <!-- figure: 17 src="results/rtl/abi3_engine_campaign.json#correlation.refusal_count_by_expectation_source.device_fault" name="engine RTL Device refusals" --> whose classes are derived from the functional
+  engine's actual `EngineError`; 18 one-above-bound or unsupported-form
+  refusals <!-- figure: 18 src="results/rtl/abi3_engine_campaign.json#correlation.refusal_count_by_expectation_source.rtl_bounded_profile" name="engine RTL bounded-profile refusals" -->; and 57 independently corrupted descriptor-admission cases <!-- figure: 57 src="results/rtl/abi3_engine_campaign.json#correlation.refusal_count_by_expectation_source.rtl_descriptor_admission" name="engine RTL descriptor-admission refusals" -->.
+  The latter two groups start from programs the general Device successfully
+  executes and require the bounded RTL to return `ERR_SHAPE` before any operand
+  read or destination write. All 92 cases prove the entire destination remains
+  untouched.
 
-## 4. Three things this found
+## 4. Four things this found
 
 ### 4.1 One simulator silently disagreed with the other
 
@@ -234,11 +262,11 @@ sources. It is reported, with the measurement, for whoever owns that file. Any
 rewrite must re-run this campaign, which is exactly the check that would catch
 a rewrite that changed a result bit.
 
-### 4.3 A mutation the campaign missed is why two of its cases exist
+### 4.3 The mutation that shaped the vectors, and the retained mutation gate
 
-A campaign that passes proves nothing until something makes it fail. Five
-deliberate defects were injected into the RTL and replayed against the vector
-set:
+A campaign that passes proves nothing until something makes it fail. During the
+original exploratory pass, five deliberate defects were injected into the RTL
+and replayed against the vector set:
 
 | injected defect | caught |
 |---|---|
@@ -270,6 +298,53 @@ each reference code path. Both are catastrophic cancellation with a small
 leading term — products `(2ʲ, 2³⁰, −2³⁰)` — so ascending absorbs the small term
 into the large one and returns exactly zero, while any order that cancels first
 returns it whole. With them, the descending-K mutation fails at case 5.
+
+That historical exercise explains the vector design, but it is not merely a
+prose recollection now. Every forced campaign run also makes seven exact source
+mutations, compiles each changed design independently under both simulators,
+and requires checker failure with no PASS marker:
+
+| retained source mutation | first behavior it corrupts |
+|---|---|
+| flip the low bit of every narrowed `CONVERT` result | BF16 conversion rounding |
+| replace the `SCALE` product with binary32 addition | scale arithmetic |
+| replace the Hadamard normalization constant with 1.0 | normalized transform |
+| propagate negative rounded head scores past the ReLU | `INDEX_SCORE` activation |
+| swap the compressor's KV and gate output planes | `COMPRESS_PROJECT` packing |
+| split the compressor's exact product-add into separately rounded multiply and add | `COMPRESS_PROJECT` numeric contract |
+| transpose the hyper-connection combination lookup | `HYPER_CONNECT_POST` matrix orientation |
+
+All seven compile and are caught by both Icarus and Verilator in the retained
+artifact. `mutation_sensitivity.mutations[]` records the exact before/after
+text, source digest, compile result, missing marker and first mismatch for each
+simulator; `all_caught_by_both_simulators` is true. This is seven real corrupted
+RTL builds, not a Python-level perturbation of expected data.
+
+### 4.4 Regeneration caught two functional-engine contract defects
+
+Schema-v2 generation does not blindly bless the Device's output for governed
+DeepSeek VECTOR forms. It independently recomputes `INDEX_SCORE`,
+`COMPRESS_PROJECT` and `HYPER_CONNECT_POST` with the exact rational references
+in `runtime/reference/` and refuses to emit vectors on the first mismatch.
+
+The first source-current regeneration stopped at
+`vector_index_score_exact_product_add`: the Device wrote BF16 `0x02be`, while
+`runtime.reference.index_score.index_score_bf16` required `0x02bf`. The Device
+formed a binary32 product and then added it, rounding twice, although the ABI
+3.0 numeric contract requires one correctly rounded `acc + x*w` step. The
+engine now shares the compressor's exact-product product-add path. The same
+audit found that `INDEX_SCORE` discarded its four BF16 saturation counts and
+`HYPER_CONNECT_POST` discarded its output saturation count; both now publish
+the existing architectural `vector.saturations` counter. Focused Device tests
+pin the one-ulp distinguisher and every saturation boundary.
+
+This is an ABI 3.0 semantic repair, not an ABI extension. It adds no
+instruction, descriptor, persistent state, retry or recovery mechanism. It can
+change a DeepSeek learned-index score by one BF16 ulp and therefore can change
+sparse-KV selection and a downstream token. Accelerator DeepSeek token records
+made with the earlier functional source are consequently prior-build evidence
+until rerun. Qwen does not issue `INDEX_SCORE` and is not affected by this
+numeric correction.
 
 ## 5. Physical characterisation
 
@@ -402,10 +477,15 @@ and they are true wherever it is built.
 
 A passing campaign establishes:
 
-* the four datapaths in `rtl/abi3/` produce **bit-identical** results to the
-  functional simulator's engines on every case of this vector set, under two
-  independently written checkers on two simulators making the same number of
-  comparisons;
+* the eleven integrated `(family, subopcode)` pairs in `rtl/abi3/` produce
+  **bit-identical** results to the functional simulator's engines on every case
+  of this vector set, under two independently written checkers on two
+  simulators making the same number of comparisons;
+* bounded `CONVERT`, `SCALE`, `HADAMARD`, `INDEX_SCORE`, `COMPRESS_PROJECT` and
+  `HYPER_CONNECT_POST` agree in output, fault class and architectural counters
+  within the exact scope in section 2;
+* seven independent source mutations of those six new datapaths all compile and
+  are rejected by both simulators;
 * the storage-format decoders are exhaustively correct over E4M3FN, E2M1 and
   E8M0 against the exact `Fraction` reference;
 * the binary32 add, multiply and BF16 rounding the datapaths are built from
@@ -424,24 +504,27 @@ It does **not** establish any of the following:
   association is the executing implementation's *declared* one, so "bit-exact
   against it" is not a well-posed statement about a different implementation,
   and it is not made;
-* **IEEE conformance of the arithmetic package.** The corner sweep samples
-  3,696 of the 2⁶⁴ binary32 operand pairs, chosen where a rounding or
+* **IEEE conformance of the arithmetic package.** The directed sweep samples
+  5,200 arithmetic cases from the binary32 and BF16-product-add domains,
+  chosen where a rounding or
   normalisation defect is most likely to live. It is directed evidence, not a
   proof;
-* **fault position.** The functional engine validates a whole operand before it
-  writes anything; this RTL stops at the first faulting reduction index. Every
-  fault case here is built so the first offending element is the *first output
-  element*, which is where the two orders coincide. **A fault later in the walk
-  would leave this RTL's earlier output elements written and the functional
-  engine's destination untouched, and that difference is not correlated.**
-  This is a known divergence, not a covered case;
+* **late fault position in the legacy arithmetic blocks.** The six newly
+  integrated VECTOR blocks preflight their operands or buffer the complete
+  bounded result, and their final-position poison cases prove whole-destination
+  atomicity. `TENSOR.MATMUL` and `VECTOR.ADD` still stop at the first faulting
+  output; their fault vectors put the first offender in the first output.
+  **Atomicity after a later MATMUL or ADD fault is not established** and remains
+  a known divergence from the functional engine's validate-before-write order;
 * **throughput or latency.** The lane computes one multiply-accumulate every
   five cycles by construction, to keep one binary32 operation per pipeline
   stage. No cycle count here is a performance claim and none feeds any timing
   model;
-* **the rest of the engine surface** — see section 2;
-* **the contraction lane's routed area, timing or power.** Three of the four
-  datapaths are routed; `ot_a3_mac_lane` is not — see 5.3;
+* **the rest of the engine surface and the unsupported forms within otherwise
+  routed VECTOR subopcodes** — see section 2;
+* **the contraction lane's routed area, timing or power, or physical
+  characterisation of the six new VECTOR blocks.** Three legacy blocks are
+  routed; `ot_a3_mac_lane` and all six additions are not — see 5.3;
 * **integration with the control plane.** The sequencer of W8.6 and these
   datapaths are correlated separately and are not wired together;
 * **memory macros.** Operand and result memories are behavioural arrays in the

@@ -75,11 +75,10 @@ def _raw_vectors() -> dict:
 
 def _vectors() -> dict:
     vectors = _raw_vectors()
-    if vectors.get("schema") != generator.VECTOR_SCHEMA:
-        pytest.skip(
-            "retained W8.3 vectors are intentionally stale while the frozen "
-            "INDEX_SCORE Device oracle still split-rounds its ordered dot"
-        )
+    assert vectors.get("schema") == generator.VECTOR_SCHEMA, (
+        "retained W8.3 vectors are stale; regenerate them from the current "
+        "ABI 3.0 functional engine before using this evidence"
+    )
     return vectors
 
 
@@ -150,11 +149,6 @@ def test_engine_rtl_carries_no_wildcard_package_import() -> None:
 # 2. the vector set is the device's own observation
 # ---------------------------------------------------------------------------
 def test_vector_set_is_reproducible(tmp_path: Path) -> None:
-    if _raw_vectors().get("schema") != generator.VECTOR_SCHEMA:
-        with pytest.raises(SystemExit, match="pending frozen-source repair"):
-            generator.build(["--output", str(tmp_path)])
-        assert not (tmp_path / "abi3_engine_vectors.json").exists()
-        return
     assert generator.build(["--output", str(tmp_path)]) == 0
     rebuilt = json.loads((tmp_path / "abi3_engine_vectors.json").read_text())
     assert rebuilt == _vectors()
@@ -162,6 +156,7 @@ def test_vector_set_is_reproducible(tmp_path: Path) -> None:
 
 def test_no_engine_is_stubbed_in_the_golden_execution() -> None:
     vectors = _vectors()
+    assert vectors["abi"] == {"major": 3, "minor": 0}
     assert "no engine is stubbed" in vectors["engine_policy"]
     # A case that produced nothing would make the byte comparison vacuous.
     assert vectors["result_word_count"] > 0
@@ -236,11 +231,28 @@ def test_every_new_vector_case_publishes_its_explicit_rtl_field_mapping() -> Non
         if case["family"] == int(Major.VECTOR) and case["sub"] in new_subs
     ]
     assert cases
+    identity_dtypes = {
+        int(DType.U8),
+        int(DType.U32),
+        int(DType.BF16),
+        int(DType.FP32),
+        int(DType.FP8_E4M3FN),
+        int(DType.MXFP4_E2M1),
+        int(DType.E8M0_SCALE),
+    }
     for case in cases:
         config = case["rtl_config"]
         assert config["covered_form"], case["name"]
         assert config["record"]["cfg_count"] == case["count"], case["name"]
-        assert case["output_dtype"] in (int(DType.BF16), int(DType.FP32))
+        if (
+            case["sub"] == int(Vector.CONVERT)
+            and case["operand0_dtype"] == case["output_dtype"]
+        ):
+            assert case["output_dtype"] in identity_dtypes, case["name"]
+        else:
+            assert case["output_dtype"] in (
+                int(DType.BF16), int(DType.FP32)
+            ), case["name"]
         if case["operand2_dtype"]:
             assert case["operand2_sha256"]
         if case["operand3_dtype"]:
@@ -271,7 +283,15 @@ def test_every_expectation_comes_from_the_golden_counters() -> None:
     for case in _vectors()["cases"]:
         counters = case["golden_counters"]
         if case["expected_fault_code"] != 0:
-            assert case["golden_status"] != 0, case["name"]
+            if case["expectation_source"] == "device_fault":
+                assert case["golden_status"] != 0, case["name"]
+            else:
+                assert case["expectation_source"] in {
+                    "rtl_bounded_profile",
+                    "rtl_descriptor_admission",
+                }, case["name"]
+                assert case["golden_status"] == 0, case["name"]
+                assert case["expected_fault_code"] == generator.ERR_SHAPE
             assert case["expected_result_count"] == 0, case["name"]
             continue
         assert case["golden_status"] == 0, case["name"]
@@ -298,16 +318,35 @@ def test_every_expectation_comes_from_the_golden_counters() -> None:
             assert case["expected_result_count"] == moved, case["name"]
 
 
-def test_every_refusal_is_classified_from_the_message_the_device_raised() -> None:
+def test_every_device_refusal_is_classified_from_the_message_it_raised() -> None:
     faults = [case for case in _vectors()["cases"] if case["expected_fault_code"]]
     assert len(faults) == _vectors()["fault_case_count"]
     for case in faults:
+        if case["expectation_source"] != "device_fault":
+            assert case["expectation_source"] in {
+                "rtl_bounded_profile",
+                "rtl_descriptor_admission",
+            }, case["name"]
+            assert case["golden_status"] == 0, case["name"]
+            assert case["golden_message"] == "", case["name"]
+            assert case["expected_fault_code"] == generator.ERR_SHAPE
+            continue
         assert case["golden_message"], case["name"]
         assert generator.classify_fault(case["golden_message"]) == (
             case["expected_fault_code"]
         ), case["name"]
         # A refusal must publish a window to check for partial writes.
         assert case["expected_word_count"] > 0, case["name"]
+
+    sources = {}
+    for case in faults:
+        source = case["expectation_source"]
+        sources[source] = sources.get(source, 0) + 1
+    assert sources == {
+        "device_fault": 17,
+        "rtl_bounded_profile": 18,
+        "rtl_descriptor_admission": 57,
+    }
 
 
 def test_negative_cases_cover_every_fault_class_the_datapaths_raise() -> None:

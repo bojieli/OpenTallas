@@ -3,75 +3,86 @@
   "canonical_timestamp_policy": "no timestamp in canonical artifact",
   "cases": [
     {
-      "checks": 26381,
-      "compile_command": "/usr/bin/iverilog -g2012 -s tb_a3_engine -o e3_sim.vvp <ROOT>/rtl/ot_fp32_rne_pkg.sv <ROOT>/rtl/abi3/ot_a3_format_pkg.sv <ROOT>/rtl/abi3/ot_a3_engine_pkg.sv <ROOT>/rtl/abi3/ot_a3_mac_lane.sv <ROOT>/rtl/abi3/ot_a3_selection_argmax.sv <ROOT>/rtl/abi3/ot_a3_dma_index_mover.sv <ROOT>/rtl/abi3/ot_a3_vector_add.sv <ROOT>/rtl/abi3/ot_a3_engine_array.sv <ROOT>/rtl/test/a3_engine_top.sv <ROOT>/rtl/test/tb_a3_engine.sv",
+      "checks": 40878,
+      "compile_command": "/usr/bin/iverilog -g2012 -s tb_a3_engine -o e3_sim.vvp <ROOT>/rtl/ot_fp32_rne_pkg.sv <ROOT>/rtl/abi3/ot_a3_format_pkg.sv <ROOT>/rtl/abi3/ot_a3_engine_pkg.sv <ROOT>/rtl/abi3/ot_a3_mac_lane.sv <ROOT>/rtl/abi3/ot_a3_selection_argmax.sv <ROOT>/rtl/abi3/ot_a3_dma_index_mover.sv <ROOT>/rtl/abi3/ot_a3_vector_add.sv <ROOT>/rtl/abi3/ot_a3_vector_convert.sv <ROOT>/rtl/abi3/ot_a3_vector_scale.sv <ROOT>/rtl/abi3/ot_a3_vector_hadamard.sv <ROOT>/rtl/abi3/ot_a3_vector_index_score.sv <ROOT>/rtl/abi3/ot_a3_vector_compress_project.sv <ROOT>/rtl/abi3/ot_a3_vector_mhc_post.sv <ROOT>/rtl/abi3/ot_a3_engine_array.sv <ROOT>/rtl/test/a3_engine_top.sv <ROOT>/rtl/test/tb_a3_engine.sv",
       "compile_log": "",
       "compile_returncode": 0,
-      "log_sha256": "a5879fd4ca9521bbe7ec59cebb0bb9c143802fa47e42af7fafd9f58b6c7b8f42",
+      "log_sha256": "f6044df1bf02418c83ffc52211de2bf9a8c9b5b78e7543ccfed4ae4845162a23",
       "marker_present": true,
       "name": "iverilog",
-      "required_marker": "PASS: ABI3 RTL engine datapaths cases=31 families=5 results=10025 macs=59868 faults=9 decodes=2576 arith=3696",
+      "required_marker": "PASS: ABI3 RTL engine datapaths cases=135 families=11 results=14468 macs=59868 faults=92 decodes=2576 arith=5200",
       "run_command": "/usr/bin/vvp e3_sim.vvp",
-      "run_log": "PASS: ABI3 RTL engine datapaths cases=31 families=5 results=10025 macs=59868 faults=9 decodes=2576 arith=3696\nchecks=26381\n",
+      "run_log": "PASS: ABI3 RTL engine datapaths cases=135 families=11 results=14468 macs=59868 faults=92 decodes=2576 arith=5200\nchecks=40878\n",
       "run_returncode": 0,
       "status": "pass"
     },
     {
-      "checks": 26381,
-      "compile_command": "<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator --cc --exe --build -Wall -Wno-fatal -Wno-DECLFILENAME --top-module ot_a3_engine_top --Mdir obj_e3 <ROOT>/rtl/ot_fp32_rne_pkg.sv <ROOT>/rtl/abi3/ot_a3_format_pkg.sv <ROOT>/rtl/abi3/ot_a3_engine_pkg.sv <ROOT>/rtl/abi3/ot_a3_mac_lane.sv <ROOT>/rtl/abi3/ot_a3_selection_argmax.sv <ROOT>/rtl/abi3/ot_a3_dma_index_mover.sv <ROOT>/rtl/abi3/ot_a3_vector_add.sv <ROOT>/rtl/abi3/ot_a3_engine_array.sv <ROOT>/rtl/test/a3_engine_top.sv <ROOT>/rtl/test/a3_engine_harness.cpp -CFLAGS -std=c++17",
-      "compile_log": "%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_format_pkg.sv:31:22: Parameter is not used: 'FMT_U8'\n                                                                                : ... note: In instance 'ot_a3_engine_top'\n   31 |     localparam [7:0] FMT_U8         = 8'h00;\n      |                      ^~~~~~\n                      ... For warning description see https://verilator.org/warn/UNUSEDPARAM?v=5.050\n                      ... Use \"/* verilator lint_off UNUSEDPARAM */\" and lint_on around source to disable this message.\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_format_pkg.sv:32:22: Parameter is not used: 'FMT_U32'\n                                                                                : ... note: In instance 'ot_a3_engine_top'\n   32 |     localparam [7:0] FMT_U32        = 8'h04;\n      |                      ^~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:94:22: Parameter is not used: 'ERR_OPERAND_NONFINITE'\n                                                                                  : ... note: In instance 'ot_a3_engine_top.engines'\n   94 |     localparam [7:0] ERR_OPERAND_NONFINITE = ot_a3_engine_pkg::ERR_OPERAND_NONFINITE;\n      |                      ^~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:95:22: Parameter is not used: 'ERR_PRODUCT_RANGE'\n                                                                                  : ... note: In instance 'ot_a3_engine_top.engines'\n   95 |     localparam [7:0] ERR_PRODUCT_RANGE = ot_a3_engine_pkg::ERR_PRODUCT_RANGE;\n      |                      ^~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:96:22: Parameter is not used: 'ERR_ACCUMULATE_RANGE'\n                                                                                  : ... note: In instance 'ot_a3_engine_top.engines'\n   96 |     localparam [7:0] ERR_ACCUMULATE_RANGE = ot_a3_engine_pkg::ERR_ACCUMULATE_RANGE;\n      |                      ^~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:97:22: Parameter is not used: 'ERR_INDEX_RANGE'\n                                                                                  : ... note: In instance 'ot_a3_engine_top.engines'\n   97 |     localparam [7:0] ERR_INDEX_RANGE = ot_a3_engine_pkg::ERR_INDEX_RANGE;\n      |                      ^~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:98:22: Parameter is not used: 'ERR_SELECT_NONFINITE'\n                                                                                  : ... note: In instance 'ot_a3_engine_top.engines'\n   98 |     localparam [7:0] ERR_SELECT_NONFINITE = ot_a3_engine_pkg::ERR_SELECT_NONFINITE;\n      |                      ^~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:99:22: Parameter is not used: 'ERR_SCALE_RANGE'\n                                                                                  : ... note: In instance 'ot_a3_engine_top.engines'\n   99 |     localparam [7:0] ERR_SCALE_RANGE = ot_a3_engine_pkg::ERR_SCALE_RANGE;\n      |                      ^~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_mac_lane.sv:63:24: Bits of signal are not used: 's_rd_data'[31:8]\n                                                                               : ... note: In instance 'ot_a3_engine_top.engines.mac'\n   63 |     input  wire [31:0] s_rd_data,\n      |                        ^~~~~~~~~\n                       ... For warning description see https://verilator.org/warn/UNUSEDSIGNAL?v=5.050\n                       ... Use \"/* verilator lint_off UNUSEDSIGNAL */\" and lint_on around source to disable this message.\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_mac_lane.sv:66:24: Bits of signal are not used: 't_rd_data'[31:8]\n                                                                               : ... note: In instance 'ot_a3_engine_top.engines.mac'\n   66 |     input  wire [31:0] t_rd_data,\n      |                        ^~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_mac_lane.sv:92:22: Parameter is not used: 'ERR_INDEX_RANGE'\n                                                                              : ... note: In instance 'ot_a3_engine_top.engines.mac'\n   92 |     localparam [7:0] ERR_INDEX_RANGE = ot_a3_engine_pkg::ERR_INDEX_RANGE;\n      |                      ^~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_mac_lane.sv:93:22: Parameter is not used: 'ERR_SELECT_NONFINITE'\n                                                                              : ... note: In instance 'ot_a3_engine_top.engines.mac'\n   93 |     localparam [7:0] ERR_SELECT_NONFINITE = ot_a3_engine_pkg::ERR_SELECT_NONFINITE;\n      |                      ^~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_selection_argmax.sv:58:22: Parameter is not used: 'ERR_OPERAND_NONFINITE'\n                                                                                      : ... note: In instance 'ot_a3_engine_top.engines.selection'\n   58 |     localparam [7:0] ERR_OPERAND_NONFINITE = ot_a3_engine_pkg::ERR_OPERAND_NONFINITE;\n      |                      ^~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_selection_argmax.sv:59:22: Parameter is not used: 'ERR_PRODUCT_RANGE'\n                                                                                      : ... note: In instance 'ot_a3_engine_top.engines.selection'\n   59 |     localparam [7:0] ERR_PRODUCT_RANGE = ot_a3_engine_pkg::ERR_PRODUCT_RANGE;\n      |                      ^~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_selection_argmax.sv:60:22: Parameter is not used: 'ERR_ACCUMULATE_RANGE'\n                                                                                      : ... note: In instance 'ot_a3_engine_top.engines.selection'\n   60 |     localparam [7:0] ERR_ACCUMULATE_RANGE = ot_a3_engine_pkg::ERR_ACCUMULATE_RANGE;\n      |                      ^~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_selection_argmax.sv:61:22: Parameter is not used: 'ERR_INDEX_RANGE'\n                                                                                      : ... note: In instance 'ot_a3_engine_top.engines.selection'\n   61 |     localparam [7:0] ERR_INDEX_RANGE = ot_a3_engine_pkg::ERR_INDEX_RANGE;\n      |                      ^~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_selection_argmax.sv:63:22: Parameter is not used: 'ERR_SCALE_RANGE'\n                                                                                      : ... note: In instance 'ot_a3_engine_top.engines.selection'\n   63 |     localparam [7:0] ERR_SCALE_RANGE = ot_a3_engine_pkg::ERR_SCALE_RANGE;\n      |                      ^~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_dma_index_mover.sv:65:22: Parameter is not used: 'ERR_OPERAND_NONFINITE'\n                                                                                     : ... note: In instance 'ot_a3_engine_top.engines.mover'\n   65 |     localparam [7:0] ERR_OPERAND_NONFINITE = ot_a3_engine_pkg::ERR_OPERAND_NONFINITE;\n      |                      ^~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_dma_index_mover.sv:66:22: Parameter is not used: 'ERR_PRODUCT_RANGE'\n                                                                                     : ... note: In instance 'ot_a3_engine_top.engines.mover'\n   66 |     localparam [7:0] ERR_PRODUCT_RANGE = ot_a3_engine_pkg::ERR_PRODUCT_RANGE;\n      |                      ^~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_dma_index_mover.sv:67:22: Parameter is not used: 'ERR_ACCUMULATE_RANGE'\n                                                                                     : ... note: In instance 'ot_a3_engine_top.engines.mover'\n   67 |     localparam [7:0] ERR_ACCUMULATE_RANGE = ot_a3_engine_pkg::ERR_ACCUMULATE_RANGE;\n      |                      ^~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_dma_index_mover.sv:69:22: Parameter is not used: 'ERR_SELECT_NONFINITE'\n                                                                                     : ... note: In instance 'ot_a3_engine_top.engines.mover'\n   69 |     localparam [7:0] ERR_SELECT_NONFINITE = ot_a3_engine_pkg::ERR_SELECT_NONFINITE;\n      |                      ^~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_dma_index_mover.sv:70:22: Parameter is not used: 'ERR_SCALE_RANGE'\n                                                                                     : ... note: In instance 'ot_a3_engine_top.engines.mover'\n   70 |     localparam [7:0] ERR_SCALE_RANGE = ot_a3_engine_pkg::ERR_SCALE_RANGE;\n      |                      ^~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_add.sv:29:24: Bits of signal are not used: 'a_rd_data'[31:16]\n                                                                                 : ... note: In instance 'ot_a3_engine_top.engines.adder'\n   29 |     input  wire [31:0] a_rd_data,\n      |                        ^~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_add.sv:32:24: Bits of signal are not used: 'b_rd_data'[31:16]\n                                                                                 : ... note: In instance 'ot_a3_engine_top.engines.adder'\n   32 |     input  wire [31:0] b_rd_data,\n      |                        ^~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_vector_add.sv:55:22: Parameter is not used: 'ERR_PRODUCT_RANGE'\n                                                                                : ... note: In instance 'ot_a3_engine_top.engines.adder'\n   55 |     localparam [7:0] ERR_PRODUCT_RANGE = ot_a3_engine_pkg::ERR_PRODUCT_RANGE;\n      |                      ^~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_vector_add.sv:57:22: Parameter is not used: 'ERR_INDEX_RANGE'\n                                                                                : ... note: In instance 'ot_a3_engine_top.engines.adder'\n   57 |     localparam [7:0] ERR_INDEX_RANGE = ot_a3_engine_pkg::ERR_INDEX_RANGE;\n      |                      ^~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_vector_add.sv:58:22: Parameter is not used: 'ERR_SELECT_NONFINITE'\n                                                                                : ... note: In instance 'ot_a3_engine_top.engines.adder'\n   58 |     localparam [7:0] ERR_SELECT_NONFINITE = ot_a3_engine_pkg::ERR_SELECT_NONFINITE;\n      |                      ^~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_vector_add.sv:59:22: Parameter is not used: 'ERR_SCALE_RANGE'\n                                                                                : ... note: In instance 'ot_a3_engine_top.engines.adder'\n   59 |     localparam [7:0] ERR_SCALE_RANGE = ot_a3_engine_pkg::ERR_SCALE_RANGE;\n      |                      ^~~~~~~~~~~~~~~\nmake[1]: Entering directory '<BUILD>/obj_e3'\ng++  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -Os  -c -o a3_engine_harness.o <ROOT>/rtl/test/a3_engine_harness.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -c -o verilated.o <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -c -o verilated_threads.o <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -x c++-header Vot_a3_engine_top__pch.h -o Vot_a3_engine_top__pch.h.fast.gch\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_engine_top__pch.h.fast -c Vot_a3_engine_top.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_engine_top__pch.h.fast -c Vot_a3_engine_top___024root__0.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_engine_top__pch.h.fast -c Vot_a3_engine_top___024root__1.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_engine_top__pch.h.fast -c Vot_a3_engine_top___024root__2.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -x c++-header Vot_a3_engine_top__pch.h -o Vot_a3_engine_top__pch.h.slow.gch\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_engine_top__pch.h.slow -c Vot_a3_engine_top___024root__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_engine_top__pch.h.slow -c Vot_a3_engine_top___024root__0__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_engine_top__pch.h.slow -c Vot_a3_engine_top___024root__1__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_engine_top__pch.h.slow -c Vot_a3_engine_top__Syms__Slow.cpp\ng++    a3_engine_harness.o verilated.o verilated_threads.o Vot_a3_engine_top__ALL.a    -pthread -lpthread -latomic   -o Vot_a3_engine_top\nrm Vot_a3_engine_top__ALL.verilator_deplist.tmp\nmake[1]: Leaving directory '<BUILD>/obj_e3'\n- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.561 MB sources in 10 modules, into 1.851 MB in 8 C++ files needing 0.003 MB\n- Verilator: Walltime 6.563 s (elab=0.004, cvt=0.064, bld=6.471); cpu 0.092 s on 1 threads; allocated 52.184 MB\n",
+      "checks": 40878,
+      "compile_command": "<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator --cc --exe --build -Wall -Wno-fatal -Wno-DECLFILENAME --top-module ot_a3_engine_top --Mdir obj_e3 <ROOT>/rtl/ot_fp32_rne_pkg.sv <ROOT>/rtl/abi3/ot_a3_format_pkg.sv <ROOT>/rtl/abi3/ot_a3_engine_pkg.sv <ROOT>/rtl/abi3/ot_a3_mac_lane.sv <ROOT>/rtl/abi3/ot_a3_selection_argmax.sv <ROOT>/rtl/abi3/ot_a3_dma_index_mover.sv <ROOT>/rtl/abi3/ot_a3_vector_add.sv <ROOT>/rtl/abi3/ot_a3_vector_convert.sv <ROOT>/rtl/abi3/ot_a3_vector_scale.sv <ROOT>/rtl/abi3/ot_a3_vector_hadamard.sv <ROOT>/rtl/abi3/ot_a3_vector_index_score.sv <ROOT>/rtl/abi3/ot_a3_vector_compress_project.sv <ROOT>/rtl/abi3/ot_a3_vector_mhc_post.sv <ROOT>/rtl/abi3/ot_a3_engine_array.sv <ROOT>/rtl/test/a3_engine_top.sv <ROOT>/rtl/test/a3_engine_harness.cpp -CFLAGS -std=c++17",
+      "compile_log": "%Warning-MISINDENT: <ROOT>/rtl/abi3/ot_a3_vector_index_score.sv:342:59: Misleading indentation\n  342 |                                       {16'b0, candidate}] <=\n      |                                                           ^~\n                    <ROOT>/rtl/abi3/ot_a3_vector_index_score.sv:338:25: ... Expected indentation matching this earlier statement's line:\n  338 |                         if (output_narrowed[16])\n      |                         ^~\n                    ... For warning description see https://verilator.org/warn/MISINDENT?v=5.050\n                    ... Use \"/* verilator lint_off MISINDENT */\" and lint_on around source to disable this message.\n%Warning-WIDTHTRUNC: <ROOT>/rtl/ot_fp32_rne_pkg.sv:603:43: Operator ASSIGN expects 8 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.\n                                                                          : ... note: In instance 'ot_a3_engine_top'\n  603 |                             result[30:23] = floor_exponent + 127;\n      |                                           ^\n                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050\n                     ... Use \"/* verilator lint_off WIDTHTRUNC */\" and lint_on around source to disable this message.\n%Warning-WIDTHEXPAND: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:314:57: Operator EQ expects 64 bits on the RHS, but RHS's VARREF 'cfg_count' generates 32 bits.\n                                                                                   : ... note: In instance 'ot_a3_engine_top.engines'\n  314 |         (shape_elements(desc_in0_rank, cfg_input0_dims) == cfg_count) &&\n      |                                                         ^~\n                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050\n                      ... Use \"/* verilator lint_off WIDTHEXPAND */\" and lint_on around source to disable this message.\n%Warning-WIDTHEXPAND: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:347:57: Operator EQ expects 64 bits on the RHS, but RHS's VARREF 'cfg_count' generates 32 bits.\n                                                                                   : ... note: In instance 'ot_a3_engine_top.engines'\n  347 |         (shape_elements(desc_in0_rank, cfg_input0_dims) == cfg_count) &&\n      |                                                         ^~\n%Warning-WIDTHEXPAND: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:369:57: Operator EQ expects 64 bits on the RHS, but RHS's VARREF 'cfg_count' generates 32 bits.\n                                                                                   : ... note: In instance 'ot_a3_engine_top.engines'\n  369 |         (shape_elements(desc_in0_rank, cfg_input0_dims) == cfg_count) &&\n      |                                                         ^~\n%Warning-WIDTHEXPAND: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:371:19: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'cfg_rows' generates 16 bits.\n                                                                                   : ... note: In instance 'ot_a3_engine_top.engines'\n  371 |         (cfg_rows == (cfg_count >> 7)) && (cfg_cols == 128) &&\n      |                   ^~\n%Warning-WIDTHEXPAND: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:404:19: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'cfg_rows' generates 16 bits.\n                                                                                   : ... note: In instance 'ot_a3_engine_top.engines'\n  404 |         (cfg_rows == cfg_input0_dims[63:32]) &&\n      |                   ^~\n%Warning-WIDTHEXPAND: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:405:19: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'cfg_cols' generates 16 bits.\n                                                                                   : ... note: In instance 'ot_a3_engine_top.engines'\n  405 |         (cfg_cols == cfg_input1_dims[63:32]) &&\n      |                   ^~\n%Warning-WIDTHEXPAND: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:406:20: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'cfg_depth' generates 16 bits.\n                                                                                   : ... note: In instance 'ot_a3_engine_top.engines'\n  406 |         (cfg_depth == cfg_input0_dims[127:96]) &&\n      |                    ^~\n%Warning-WIDTHEXPAND: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:408:20: Operator EQ expects 64 bits on the LHS, but LHS's VARREF 'cfg_count' generates 32 bits.\n                                                                                   : ... note: In instance 'ot_a3_engine_top.engines'\n  408 |         (cfg_count == shape_elements(desc_out0_rank, cfg_output0_dims)) &&\n      |                    ^~\n%Warning-WIDTHEXPAND: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:442:19: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'cfg_rows' generates 16 bits.\n                                                                                   : ... note: In instance 'ot_a3_engine_top.engines'\n  442 |         (cfg_rows == (cfg_input0_dims[31:0] * cfg_input0_dims[63:32])) &&\n      |                   ^~\n%Warning-WIDTHEXPAND: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:443:19: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'cfg_cols' generates 16 bits.\n                                                                                   : ... note: In instance 'ot_a3_engine_top.engines'\n  443 |         (cfg_cols == cfg_input1_dims[31:0]) &&\n      |                   ^~\n%Warning-WIDTHEXPAND: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:444:20: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'cfg_depth' generates 16 bits.\n                                                                                   : ... note: In instance 'ot_a3_engine_top.engines'\n  444 |         (cfg_depth == cfg_input0_dims[95:64]) &&\n      |                    ^~\n%Warning-WIDTHEXPAND: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:445:20: Operator EQ expects 64 bits on the LHS, but LHS's VARREF 'cfg_count' generates 32 bits.\n                                                                                   : ... note: In instance 'ot_a3_engine_top.engines'\n  445 |         (cfg_count == shape_elements(desc_out0_rank, cfg_output0_dims)) &&\n      |                    ^~\n%Warning-WIDTHEXPAND: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:488:19: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'cfg_rows' generates 16 bits.\n                                                                                   : ... note: In instance 'ot_a3_engine_top.engines'\n  488 |         (cfg_rows == (cfg_input0_dims[31:0] * cfg_input0_dims[63:32])) &&\n      |                   ^~\n%Warning-WIDTHEXPAND: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:489:19: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'cfg_cols' generates 16 bits.\n                                                                                   : ... note: In instance 'ot_a3_engine_top.engines'\n  489 |         (cfg_cols == cfg_input0_dims[95:64]) && (cfg_slots == 4) &&\n      |                   ^~\n%Warning-WIDTHEXPAND: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:490:20: Operator EQ expects 64 bits on the LHS, but LHS's VARREF 'cfg_count' generates 32 bits.\n                                                                                   : ... note: In instance 'ot_a3_engine_top.engines'\n  490 |         (cfg_count == shape_elements(desc_out0_rank, cfg_output0_dims)) &&\n      |                    ^~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_format_pkg.sv:31:22: Parameter is not used: 'FMT_U8'\n                                                                                : ... note: In instance 'ot_a3_engine_top'\n   31 |     localparam [7:0] FMT_U8         = 8'h00;\n      |                      ^~~~~~\n                      ... For warning description see https://verilator.org/warn/UNUSEDPARAM?v=5.050\n                      ... Use \"/* verilator lint_off UNUSEDPARAM */\" and lint_on around source to disable this message.\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_format_pkg.sv:32:22: Parameter is not used: 'FMT_U32'\n                                                                                : ... note: In instance 'ot_a3_engine_top'\n   32 |     localparam [7:0] FMT_U32        = 8'h04;\n      |                      ^~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:84:25: Signal is not used: 'cfg_output1_dims'\n                                                                                   : ... note: In instance 'ot_a3_engine_top.engines'\n   84 |     input  wire [127:0] cfg_output1_dims,\n      |                         ^~~~~~~~~~~~~~~~\n                       ... For warning description see https://verilator.org/warn/UNUSEDSIGNAL?v=5.050\n                       ... Use \"/* verilator lint_off UNUSEDSIGNAL */\" and lint_on around source to disable this message.\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:139:22: Parameter is not used: 'ERR_OPERAND_NONFINITE'\n                                                                                   : ... note: In instance 'ot_a3_engine_top.engines'\n  139 |     localparam [7:0] ERR_OPERAND_NONFINITE = ot_a3_engine_pkg::ERR_OPERAND_NONFINITE;\n      |                      ^~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:140:22: Parameter is not used: 'ERR_PRODUCT_RANGE'\n                                                                                   : ... note: In instance 'ot_a3_engine_top.engines'\n  140 |     localparam [7:0] ERR_PRODUCT_RANGE = ot_a3_engine_pkg::ERR_PRODUCT_RANGE;\n      |                      ^~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:141:22: Parameter is not used: 'ERR_ACCUMULATE_RANGE'\n                                                                                   : ... note: In instance 'ot_a3_engine_top.engines'\n  141 |     localparam [7:0] ERR_ACCUMULATE_RANGE = ot_a3_engine_pkg::ERR_ACCUMULATE_RANGE;\n      |                      ^~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:142:22: Parameter is not used: 'ERR_INDEX_RANGE'\n                                                                                   : ... note: In instance 'ot_a3_engine_top.engines'\n  142 |     localparam [7:0] ERR_INDEX_RANGE = ot_a3_engine_pkg::ERR_INDEX_RANGE;\n      |                      ^~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:143:22: Parameter is not used: 'ERR_SELECT_NONFINITE'\n                                                                                   : ... note: In instance 'ot_a3_engine_top.engines'\n  143 |     localparam [7:0] ERR_SELECT_NONFINITE = ot_a3_engine_pkg::ERR_SELECT_NONFINITE;\n      |                      ^~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:144:22: Parameter is not used: 'ERR_SCALE_RANGE'\n                                                                                   : ... note: In instance 'ot_a3_engine_top.engines'\n  144 |     localparam [7:0] ERR_SCALE_RANGE = ot_a3_engine_pkg::ERR_SCALE_RANGE;\n      |                      ^~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:203:16: Signal is not used: 'desc_out1_dtype'\n                                                                                    : ... note: In instance 'ot_a3_engine_top.engines'\n  203 |     wire [7:0] desc_out1_dtype = cfg_output_dtypes[15:8];\n      |                ^~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:209:16: Signal is not used: 'desc_out1_rank'\n                                                                                    : ... note: In instance 'ot_a3_engine_top.engines'\n  209 |     wire [3:0] desc_out1_rank = cfg_view_ranks[23:20];\n      |                ^~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_mac_lane.sv:63:24: Bits of signal are not used: 's_rd_data'[31:8]\n                                                                               : ... note: In instance 'ot_a3_engine_top.engines.mac'\n   63 |     input  wire [31:0] s_rd_data,\n      |                        ^~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_mac_lane.sv:66:24: Bits of signal are not used: 't_rd_data'[31:8]\n                                                                               : ... note: In instance 'ot_a3_engine_top.engines.mac'\n   66 |     input  wire [31:0] t_rd_data,\n      |                        ^~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_mac_lane.sv:92:22: Parameter is not used: 'ERR_INDEX_RANGE'\n                                                                              : ... note: In instance 'ot_a3_engine_top.engines.mac'\n   92 |     localparam [7:0] ERR_INDEX_RANGE = ot_a3_engine_pkg::ERR_INDEX_RANGE;\n      |                      ^~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_mac_lane.sv:93:22: Parameter is not used: 'ERR_SELECT_NONFINITE'\n                                                                              : ... note: In instance 'ot_a3_engine_top.engines.mac'\n   93 |     localparam [7:0] ERR_SELECT_NONFINITE = ot_a3_engine_pkg::ERR_SELECT_NONFINITE;\n      |                      ^~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_selection_argmax.sv:58:22: Parameter is not used: 'ERR_OPERAND_NONFINITE'\n                                                                                      : ... note: In instance 'ot_a3_engine_top.engines.selection'\n   58 |     localparam [7:0] ERR_OPERAND_NONFINITE = ot_a3_engine_pkg::ERR_OPERAND_NONFINITE;\n      |                      ^~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_selection_argmax.sv:59:22: Parameter is not used: 'ERR_PRODUCT_RANGE'\n                                                                                      : ... note: In instance 'ot_a3_engine_top.engines.selection'\n   59 |     localparam [7:0] ERR_PRODUCT_RANGE = ot_a3_engine_pkg::ERR_PRODUCT_RANGE;\n      |                      ^~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_selection_argmax.sv:60:22: Parameter is not used: 'ERR_ACCUMULATE_RANGE'\n                                                                                      : ... note: In instance 'ot_a3_engine_top.engines.selection'\n   60 |     localparam [7:0] ERR_ACCUMULATE_RANGE = ot_a3_engine_pkg::ERR_ACCUMULATE_RANGE;\n      |                      ^~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_selection_argmax.sv:61:22: Parameter is not used: 'ERR_INDEX_RANGE'\n                                                                                      : ... note: In instance 'ot_a3_engine_top.engines.selection'\n   61 |     localparam [7:0] ERR_INDEX_RANGE = ot_a3_engine_pkg::ERR_INDEX_RANGE;\n      |                      ^~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_selection_argmax.sv:63:22: Parameter is not used: 'ERR_SCALE_RANGE'\n                                                                                      : ... note: In instance 'ot_a3_engine_top.engines.selection'\n   63 |     localparam [7:0] ERR_SCALE_RANGE = ot_a3_engine_pkg::ERR_SCALE_RANGE;\n      |                      ^~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_dma_index_mover.sv:65:22: Parameter is not used: 'ERR_OPERAND_NONFINITE'\n                                                                                     : ... note: In instance 'ot_a3_engine_top.engines.mover'\n   65 |     localparam [7:0] ERR_OPERAND_NONFINITE = ot_a3_engine_pkg::ERR_OPERAND_NONFINITE;\n      |                      ^~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_dma_index_mover.sv:66:22: Parameter is not used: 'ERR_PRODUCT_RANGE'\n                                                                                     : ... note: In instance 'ot_a3_engine_top.engines.mover'\n   66 |     localparam [7:0] ERR_PRODUCT_RANGE = ot_a3_engine_pkg::ERR_PRODUCT_RANGE;\n      |                      ^~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_dma_index_mover.sv:67:22: Parameter is not used: 'ERR_ACCUMULATE_RANGE'\n                                                                                     : ... note: In instance 'ot_a3_engine_top.engines.mover'\n   67 |     localparam [7:0] ERR_ACCUMULATE_RANGE = ot_a3_engine_pkg::ERR_ACCUMULATE_RANGE;\n      |                      ^~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_dma_index_mover.sv:69:22: Parameter is not used: 'ERR_SELECT_NONFINITE'\n                                                                                     : ... note: In instance 'ot_a3_engine_top.engines.mover'\n   69 |     localparam [7:0] ERR_SELECT_NONFINITE = ot_a3_engine_pkg::ERR_SELECT_NONFINITE;\n      |                      ^~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_dma_index_mover.sv:70:22: Parameter is not used: 'ERR_SCALE_RANGE'\n                                                                                     : ... note: In instance 'ot_a3_engine_top.engines.mover'\n   70 |     localparam [7:0] ERR_SCALE_RANGE = ot_a3_engine_pkg::ERR_SCALE_RANGE;\n      |                      ^~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_add.sv:29:24: Bits of signal are not used: 'a_rd_data'[31:16]\n                                                                                 : ... note: In instance 'ot_a3_engine_top.engines.adder'\n   29 |     input  wire [31:0] a_rd_data,\n      |                        ^~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_add.sv:32:24: Bits of signal are not used: 'b_rd_data'[31:16]\n                                                                                 : ... note: In instance 'ot_a3_engine_top.engines.adder'\n   32 |     input  wire [31:0] b_rd_data,\n      |                        ^~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_vector_add.sv:55:22: Parameter is not used: 'ERR_PRODUCT_RANGE'\n                                                                                : ... note: In instance 'ot_a3_engine_top.engines.adder'\n   55 |     localparam [7:0] ERR_PRODUCT_RANGE = ot_a3_engine_pkg::ERR_PRODUCT_RANGE;\n      |                      ^~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_vector_add.sv:57:22: Parameter is not used: 'ERR_INDEX_RANGE'\n                                                                                : ... note: In instance 'ot_a3_engine_top.engines.adder'\n   57 |     localparam [7:0] ERR_INDEX_RANGE = ot_a3_engine_pkg::ERR_INDEX_RANGE;\n      |                      ^~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_vector_add.sv:58:22: Parameter is not used: 'ERR_SELECT_NONFINITE'\n                                                                                : ... note: In instance 'ot_a3_engine_top.engines.adder'\n   58 |     localparam [7:0] ERR_SELECT_NONFINITE = ot_a3_engine_pkg::ERR_SELECT_NONFINITE;\n      |                      ^~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_vector_add.sv:59:22: Parameter is not used: 'ERR_SCALE_RANGE'\n                                                                                : ... note: In instance 'ot_a3_engine_top.engines.adder'\n   59 |     localparam [7:0] ERR_SCALE_RANGE = ot_a3_engine_pkg::ERR_SCALE_RANGE;\n      |                      ^~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_scale.sv:32:24: Bits of signal are not used: 'a_rd_data'[31:16]\n                                                                                   : ... note: In instance 'ot_a3_engine_top.engines.scaler'\n   32 |     input  wire [31:0] a_rd_data,\n      |                        ^~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_scale.sv:35:24: Bits of signal are not used: 'b_rd_data'[31:16]\n                                                                                   : ... note: In instance 'ot_a3_engine_top.engines.scaler'\n   35 |     input  wire [31:0] b_rd_data,\n      |                        ^~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_hadamard.sv:28:24: Bits of signal are not used: 'a_rd_data'[31:16]\n                                                                                      : ... note: In instance 'ot_a3_engine_top.engines.hadamard'\n   28 |     input  wire [31:0] a_rd_data,\n      |                        ^~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_hadamard.sv:70:17: Bits of signal are not used: 'upper_index'[31:9]\n                                                                                      : ... note: In instance 'ot_a3_engine_top.engines.hadamard'\n   70 |     wire [31:0] upper_index = lower_index + {24'b0, stride};\n      |                 ^~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_index_score.sv:41:24: Bits of signal are not used: 'q_rd_data'[31:16]\n                                                                                         : ... note: In instance 'ot_a3_engine_top.engines.index_scorer'\n   41 |     input  wire [31:0] q_rd_data,\n      |                        ^~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_index_score.sv:44:24: Bits of signal are not used: 'k_rd_data'[31:16]\n                                                                                         : ... note: In instance 'ot_a3_engine_top.engines.index_scorer'\n   44 |     input  wire [31:0] k_rd_data,\n      |                        ^~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_index_score.sv:47:24: Bits of signal are not used: 'w_rd_data'[31:16]\n                                                                                         : ... note: In instance 'ot_a3_engine_top.engines.index_scorer'\n   47 |     input  wire [31:0] w_rd_data,\n      |                        ^~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_index_score.sv:131:17: Bits of signal are not used: 'scan_decoded'[31:0]\n                                                                                          : ... note: In instance 'ot_a3_engine_top.engines.index_scorer'\n  131 |     wire [33:0] scan_decoded = (scan_kind == 0) ? decoded_q\n      |                 ^~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_compress_project.sv:37:24: Bits of signal are not used: 'h_rd_data'[31:16]\n                                                                                              : ... note: In instance 'ot_a3_engine_top.engines.compressor'\n   37 |     input  wire [31:0] h_rd_data,\n      |                        ^~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_compress_project.sv:40:24: Bits of signal are not used: 'kv_rd_data'[31:16]\n                                                                                              : ... note: In instance 'ot_a3_engine_top.engines.compressor'\n   40 |     input  wire [31:0] kv_rd_data,\n      |                        ^~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_compress_project.sv:43:24: Bits of signal are not used: 'gate_rd_data'[31:16]\n                                                                                              : ... note: In instance 'ot_a3_engine_top.engines.compressor'\n   43 |     input  wire [31:0] gate_rd_data,\n      |                        ^~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_vector_compress_project.sv:56:22: Parameter is not used: 'ERR_PRODUCT_RANGE'\n                                                                                             : ... note: In instance 'ot_a3_engine_top.engines.compressor'\n   56 |     localparam [7:0] ERR_PRODUCT_RANGE = ot_a3_engine_pkg::ERR_PRODUCT_RANGE;\n      |                      ^~~~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_compress_project.sv:90:17: Bits of signal are not used: 'decoded_hidden'[31:0]\n                                                                                              : ... note: In instance 'ot_a3_engine_top.engines.compressor'\n   90 |     wire [33:0] decoded_hidden =\n      |                 ^~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_compress_project.sv:96:17: Bits of signal are not used: 'decoded_weight'[31:0]\n                                                                                              : ... note: In instance 'ot_a3_engine_top.engines.compressor'\n   96 |     wire [33:0] decoded_weight = plane ? decoded_gate : decoded_kv;\n      |                 ^~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_mhc_post.sv:41:24: Bits of signal are not used: 'branch_rd_data'[31:16]\n                                                                                      : ... note: In instance 'ot_a3_engine_top.engines.mhc_post'\n   41 |     input  wire [31:0] branch_rd_data,\n      |                        ^~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_mhc_post.sv:44:24: Bits of signal are not used: 'residual_rd_data'[31:16]\n                                                                                      : ... note: In instance 'ot_a3_engine_top.engines.mhc_post'\n   44 |     input  wire [31:0] residual_rd_data,\n      |                        ^~~~~~~~~~~~~~~~\nmake: Entering directory '<BUILD>/obj_e3'\ng++  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -Os  -c -o a3_engine_harness.o <ROOT>/rtl/test/a3_engine_harness.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -c -o verilated.o <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -c -o verilated_threads.o <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -x c++-header Vot_a3_engine_top__pch.h -o Vot_a3_engine_top__pch.h.fast.gch\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_engine_top__pch.h.fast -c Vot_a3_engine_top.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_engine_top__pch.h.fast -c Vot_a3_engine_top___024root__0.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_engine_top__pch.h.fast -c Vot_a3_engine_top___024root__1.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_engine_top__pch.h.fast -c Vot_a3_engine_top___024root__2.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_engine_top__pch.h.fast -c Vot_a3_engine_top___024root__3.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_engine_top__pch.h.fast -c Vot_a3_engine_top___024root__4.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -x c++-header Vot_a3_engine_top__pch.h -o Vot_a3_engine_top__pch.h.slow.gch\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_engine_top__pch.h.slow -c Vot_a3_engine_top__ConstPool__0__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_engine_top__pch.h.slow -c Vot_a3_engine_top___024root__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_engine_top__pch.h.slow -c Vot_a3_engine_top___024root__0__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_engine_top__pch.h.slow -c Vot_a3_engine_top___024root__1__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_engine_top__pch.h.slow -c Vot_a3_engine_top___024root__2__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_engine_top__pch.h.slow -c Vot_a3_engine_top___024root__3__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_engine_top__pch.h.slow -c Vot_a3_engine_top__Syms__Slow.cpp\ng++    a3_engine_harness.o verilated.o verilated_threads.o Vot_a3_engine_top__ALL.a    -pthread -lpthread -latomic   -o Vot_a3_engine_top\nrm Vot_a3_engine_top__ALL.verilator_deplist.tmp\nmake: Leaving directory '<BUILD>/obj_e3'\n- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 1.529 MB sources in 16 modules, into 5.054 MB in 13 C++ files needing 0.019 MB\n- Verilator: Walltime 9.486 s (elab=0.013, cvt=0.248, bld=9.157); cpu 0.330 s on 1 threads; allocated 82.184 MB\n",
       "compile_returncode": 0,
-      "log_sha256": "23053a2da6613c6a9981a3831d14b2dd68d0d63f08b8a8c0e7fe86710ad8049b",
+      "log_sha256": "887ae83c704343f2008622b533d43a561b78b247735d0225e90ed6f4a6e6c9be",
       "marker_present": true,
       "name": "verilator",
-      "required_marker": "PASS: ABI3 RTL engine datapaths cases=31 families=5 results=10025 macs=59868 faults=9 decodes=2576 arith=3696",
+      "required_marker": "PASS: ABI3 RTL engine datapaths cases=135 families=11 results=14468 macs=59868 faults=92 decodes=2576 arith=5200",
       "run_command": "./obj_e3/Vot_a3_engine_top",
-      "run_log": "PASS: ABI3 RTL engine datapaths cases=31 families=5 results=10025 macs=59868 faults=9 decodes=2576 arith=3696\nchecks=26381\n",
+      "run_log": "PASS: ABI3 RTL engine datapaths cases=135 families=11 results=14468 macs=59868 faults=92 decodes=2576 arith=5200\nchecks=40878\n",
       "run_returncode": 0,
       "status": "pass"
     }
   ],
   "checks_per_simulator": {
-    "iverilog": 26381,
-    "verilator": 26381
+    "iverilog": 40878,
+    "verilator": 40878
   },
   "claim_boundary": {
     "does_not_establish": {
       "blocked_contraction_contract": "only bf16_bf16_fp32_sequential_rne_v1 is correlated. The blocked contract's association is the executing implementation's declared one, so bit-exactness against it is not a well-posed claim about a different implementation and is not made",
-      "exhaustive_arithmetic": "the arithmetic probe is a directed corner sweep and a seeded spread, not an exhaustive proof. It samples 3,696 of the 2**64 binary32 operand pairs, chosen where a rounding or normalisation defect is most likely to live; it does not establish IEEE conformance of the package",
-      "fault_position": "the functional engine validates a whole operand before it writes anything, and this RTL stops at the first faulting reduction index. Every fault case here is constructed so the first offending element is the first output element, which is where the two orders coincide. A fault later in the walk would leave this RTL's earlier output elements written and the functional engine's destination untouched, and that difference is NOT correlated here",
+      "exhaustive_arithmetic": "the arithmetic probe is a directed corner sweep and a seeded spread, not an exhaustive proof. It samples 5,200 of the 2**64 binary32 operand pairs, chosen where a rounding or normalisation defect is most likely to live; it does not establish IEEE conformance of the package",
+      "fault_position": "the new CONVERT, SCALE, HADAMARD, INDEX_SCORE, COMPRESS_PROJECT and HYPER_CONNECT_POST blocks preflight or buffer the whole bounded operation, and late-poison cases prove their destinations stay untouched. Legacy TENSOR.MATMUL and VECTOR.ADD stop at the first faulting output; their fault cases place the first offender in the first output, so atomicity after a later legacy fault is NOT established",
       "integration_with_the_control_plane": "the sequencer of W8.6 and these datapaths are correlated separately and are not wired together. Nothing here shows that a resolved view drives the operand addresses these blocks read; the operand images are the bytes the functional device's resolver produced, supplied directly",
       "memory_macros": "operand and result memories are behavioural arrays in the verification top. No SRAM or ROM macro, no bank conflict, no ECC and no arbitration is modelled",
-      "other_engine_families": "ATTENTION, ROUTE, REDUCTION, LINK and STATE have no datapath RTL. Twelve of the thirteen VECTOR subopcodes are absent -- RMS_NORM, HEAD_RMS_NORM, ROPE, SILU_MUL, SOFTMAX, CONVERT, SCALE, HADAMARD, SQRT_SOFTPLUS, COMPRESS, INDEX_SCORE and MHC -- and so are TENSOR.GROUPED_MATMUL, ROUTED_MATMUL and EMBED_LOOKUP, DMA.TRANSFER and FILL, and SELECTION.TOKEN_APPEND. SELECTION.SAMPLE has no governed contract on either side",
+      "other_engine_families": "ATTENTION, ROUTE, REDUCTION, LINK and STATE have no datapath in this engine array. SILU_MUL, SOFTMAX and SQRT_SOFTPLUS are wholly absent because their correctly rounded transcendental RTL does not exist; SCALE.SIGMOID, CONVERT block-dequantize/two-output-quantize, COMPRESS_POOL/STATE_UPDATE, MHC_PRE/HEAD, non-unit-scale or non-four-head INDEX_SCORE and trailing-axis SCALE broadcasting are not covered. Standalone RMS_NORM, HEAD_RMS_NORM and ROPE RTL remains outside this integrated campaign. Also absent are TENSOR.GROUPED_MATMUL, ROUTED_MATMUL and EMBED_LOOKUP, DMA.TRANSFER and FILL, and SELECTION.TOKEN_APPEND. SELECTION.SAMPLE has no governed contract on either side",
       "physical_realisability": "simulation says nothing about area, timing or power. The routed characterisation is a separate artifact and states its own boundary",
       "throughput_or_latency": "the lane computes one multiply-accumulate every five cycles by construction, to keep one binary32 operation per pipeline stage. No cycle count in this campaign is a performance claim, and none feeds any timing model"
     },
     "establishes": [
-      "the four engine datapaths in rtl/abi3/ produce bit-identical results to the functional simulator's engines on every case of this vector set, under two independently written checkers on two simulators",
+      "the eleven integrated engine opcode pairs in rtl/abi3/ produce bit-identical results to the functional simulator's engines on every case of this vector set, under two independently written checkers on two simulators",
+      "bounded CONVERT, SCALE, HADAMARD, INDEX_SCORE, COMPRESS_PROJECT and HYPER_CONNECT_POST RTL agrees in output, fault class and architectural counters within the exact vector_rtl_scope published beside this claim",
+      "seven independent source mutations -- conversion rounding, scaling arithmetic, Hadamard normalization, INDEX_SCORE ReLU, compressor plane order, compressor exact-product rounding and MHC matrix orientation -- all compile and are rejected by both simulators",
       "the storage-format decoders are exhaustively correct over E4M3FN, E2M1 and E8M0 against the exact Fraction reference",
       "the sequential contraction contract is reproduced for BF16 x BF16, FP8 x FP8 and block-scaled MXFP4 x FP8, including amendment A15's two-dimensional scale block",
-      "refusals agree in class, and leave no partial result",
-      "the binary32 add, multiply and BF16 rounding these datapaths are built from agree with runtime.reference.formats over a corner cross-product and a seeded spread that reaches signed zero, both smallest subnormals, the largest finite and the nonfinite band"
+      "the 17 Device refusals agree in class, while every explicit bounded-profile and descriptor-admission negative refuses with ERR_SHAPE; every refusal leaves the whole destination untouched",
+      "the binary32 add, multiply and BF16 rounding these datapaths are built from, plus their exact-product single-rounded BF16 product-add primitive, agree with runtime.reference.formats over directed corners and seeded spreads that reach signed zero, both smallest subnormals, the largest finite and the nonfinite band"
     ]
   },
   "correlation": {
-    "arith_probe_count": 3696,
-    "arith_reference": "runtime.reference.formats binary32_add, binary32_multiply and binary32_bits_to_bf16_rne, which compute with fractions.Fraction and round once, so no host floating-point mode participates",
-    "case_count": 31,
+    "arith_probe_count": 5200,
+    "arith_reference": "runtime.reference.formats binary32_add, binary32_multiply and binary32_bits_to_bf16_rne, plus binary32_product_add for exact BF16 products accumulated with one final binary32 RNE rounding; all compute with fractions.Fraction, so no host floating-point mode participates",
+    "case_count": 135,
     "compared": [
       "every element the functional engine wrote, word for word, in the view's own logical order",
-      "the fault class of every refusal, classified from the message the functional engine's EngineError carried",
+      "the fault class of every Device refusal, classified from the message the functional engine's EngineError carried",
+      "ERR_SHAPE for every RTL-only bounded-profile or descriptor-admission refusal whose unmodified ABI 3.0 program the Device successfully executed",
       "that a refused operation left its whole destination window holding the unwritten sentinel, so a partial result is a failure rather than a pass",
       "TENSOR.MATMUL output element count and BF16 output saturation count, against tensor.output_elements and tensor.saturations",
-      "VECTOR.ADD element count and saturation count",
+      "VECTOR.ADD, CONVERT, SCALE and HADAMARD element counts and the saturation counts published where their contracts do",
+      "VECTOR.INDEX_SCORE output and saturation counts separately from its full site-by-head-by-candidate-by-depth vector.elements work count",
+      "VECTOR.COMPRESS/COMPRESS_PROJECT packed KV-then-gate FP32 output and VECTOR.MHC/HYPER_CONNECT_POST source/destination matrix orientation, result and saturation counts, and vector.elements count",
       "SELECTION.ARGMAX selected token, vocabulary elements read and tie multiplicity, against selection.vocabulary_elements and selection.tie_multiplicity",
       "DMA.GATHER and DMA.SCATTER moved-element count, against dma.gather_elements and dma.scatter_elements",
       "the complete code space of E4M3FN, E2M1 and E8M0 and a signed, four-significand sweep of every BF16 exponent, against runtime.sim.formats",
-      "binary32 add, multiply and BF16 rounding over a corner cross-product plus a seeded spread of BF16-widened, general and subnormal codes, against runtime.reference.formats, whose fractions.Fraction arithmetic rounds once with no host floating point on the reference side",
+      "binary32 add, multiply and BF16 rounding plus the exact-product single-rounded BF16 product-add primitive over a corner cross-product and seeded spreads, against runtime.reference.formats, whose fractions.Fraction arithmetic rounds once with no host floating point on the reference side",
+      "operator arity, every input/output dtype, rank, dimension and scaled flag, every NUMERIC control, the full contract digest and all auxiliary bindings before a bounded VECTOR dispatch",
       "that an operation the array does not implement is refused rather than routed to another datapath"
     ],
     "decode_probe_count": 2576,
     "decode_reference": "runtime.sim.formats E4M3FN_VALUES, MXFP4_VALUES and E8M0_VALUES, enumerated at import time from the exact fractions.Fraction decoders in runtime/reference/formats.py, plus runtime.sim.formats.widen_bf16",
+    "descriptor_admission": {
+      "derivation": "each case record derives arity, every input/output dtype, rank and dimension, scaled state, numeric profile fields, complete contract digest and aux bindings independently from the admitted deployment descriptors",
+      "negative_policy": "negative cases alter one derived record field after derivation and require ERR_SHAPE with no result or speculative saturation count",
+      "schema": "operator_view_numeric_exact_v1"
+    },
     "engine_policy": "no engine is stubbed: every case is executed by runtime.sim.device.Device with the real implementations in runtime.sim.engines, and the operand and result images are read back out of device memory after the transaction",
     "families": [
       {
@@ -91,66 +102,526 @@
         "sub": 3
       },
       {
+        "family": 48,
+        "sub": 5
+      },
+      {
+        "family": 48,
+        "sub": 6
+      },
+      {
+        "family": 48,
+        "sub": 8
+      },
+      {
+        "family": 48,
+        "sub": 9
+      },
+      {
+        "family": 48,
+        "sub": 10
+      },
+      {
+        "family": 48,
+        "sub": 11
+      },
+      {
         "family": 112,
         "sub": 0
       }
     ],
-    "family_count": 5,
-    "fault_case_count": 9,
+    "family_count": 11,
+    "fault_case_count": 92,
     "mac_count": 59868,
     "numeric_reference": {
+      "HYPER_CONNECT_POST": "runtime.sim.engines.deepseek_vector._mhc_post and runtime.reference.vector.hc_post_bf16",
       "bf16_add_rne_v1": "runtime.tensor_accelerator.elementwise.bf16_add_rne",
       "bf16_bf16_fp32_sequential_rne_v1": "runtime.tensor_accelerator.bf16.dense_bf16_linear_bf16 for BF16 x BF16 -> BF16; runtime.sim.backend.sequential_matmul_binary32 for every other operand pair",
+      "bf16_mul_rne_v1_and_bf16_scale_rne_v1": "runtime.sim.engines.vector._vector_scale using the selected backend's binary32 multiply and one output conversion",
+      "deepseek_v4_compress_project_binary32_v1": "runtime.sim.engines.deepseek_vector._compress_project and runtime.reference.compression.compress_project_bf16",
+      "deepseek_v4_hadamard_128_bf16_v1": "runtime.sim.engines.vector._vector_hadamard and runtime.reference.hadamard",
+      "deepseek_v4_index_score_bf16_v1": "runtime.sim.engines.deepseek_vector.index_score and runtime.reference.index_score",
       "exact_index_select_v1": "runtime.sim.engines.dma gather and scatter",
-      "greedy_lowest_token_id_argmax": "runtime.sim.engines.selection.argmax"
+      "greedy_lowest_token_id_argmax": "runtime.sim.engines.selection.argmax",
+      "unscaled_convert_one_input_one_output": "runtime.sim.engines.vector._vector_convert using runtime.sim.formats widen/narrow; identity dtypes are copied"
     },
-    "positive_case_count": 22,
+    "positive_case_count": 43,
     "reference": "runtime.sim.device.Device with runtime.sim.engines",
-    "result_word_count": 10025
+    "refusal_count_by_expectation_source": {
+      "device_fault": 17,
+      "rtl_bounded_profile": 18,
+      "rtl_descriptor_admission": 57
+    },
+    "result_word_count": 14468,
+    "vector_rtl_scope": {
+      "newly_integrated": [
+        {
+          "bounds": "1..512 elements; supported identity formats or finite numeric input to BF16/FP32",
+          "covered": "unscaled one-input/one-output form",
+          "opcode": "CONVERT",
+          "sub": 5,
+          "uncovered_forms": [
+            "block dequantization",
+            "two-output block quantization"
+          ]
+        },
+        {
+          "bounds": "1..512 elements",
+          "covered": "aux0 0 constant and aux0 1 same-shape elementwise BF16-to-BF16",
+          "opcode": "SCALE",
+          "sub": 6,
+          "uncovered_forms": [
+            "aux0 2 logistic sigmoid",
+            "general trailing-axis factor broadcasting"
+          ]
+        },
+        {
+          "bounds": "1..4 rows, width exactly 128",
+          "covered": "normalized 128-point BF16 transform",
+          "opcode": "HADAMARD",
+          "sub": 10,
+          "uncovered_forms": []
+        },
+        {
+          "bounds": "1..4 sites, 1..8 candidates, 1..16 head channels",
+          "covered": "batch one, four-head BF16 learned-index score at scale exactly 1.0",
+          "opcode": "INDEX_SCORE",
+          "sub": 11,
+          "uncovered_forms": [
+            "non-unit learned-index scales",
+            "head counts other than four",
+            "batches greater than one"
+          ]
+        },
+        {
+          "bounds": "1..8 flattened rows, 1..16 outputs, 1..64 reduction channels",
+          "covered": "aux0 0 COMPRESS_PROJECT with KV-then-gate FP32 output",
+          "opcode": "COMPRESS",
+          "sub": 8,
+          "uncovered_forms": [
+            "aux0 1 COMPRESS_POOL",
+            "aux0 2 COMPRESS_STATE_UPDATE"
+          ]
+        },
+        {
+          "bounds": "1..4 flattened sites, 1..32 hidden channels, multiplier exactly four",
+          "covered": "aux0 1 HYPER_CONNECT_POST with four streams",
+          "opcode": "MHC",
+          "sub": 9,
+          "uncovered_forms": [
+            "aux0 0 HYPER_CONNECT_PRE",
+            "aux0 2 HYPER_CONNECT_HEAD"
+          ]
+        }
+      ],
+      "standalone_outside_engine_array": [
+        "RMS_NORM",
+        "HEAD_RMS_NORM",
+        "ROPE"
+      ],
+      "unsupported_policy": "unsupported sub-cases and out-of-bound shapes raise ERR_SHAPE; no transcendental behavior is approximated or emulated",
+      "wholly_deferred_transcendental": [
+        {
+          "opcode": "SILU_MUL",
+          "reason": "needs correctly rounded sigmoid/exponential RTL",
+          "sub": 4
+        },
+        {
+          "opcode": "SOFTMAX",
+          "reason": "needs correctly rounded exponential and reciprocal RTL",
+          "sub": 7
+        },
+        {
+          "opcode": "SQRT_SOFTPLUS",
+          "reason": "needs correctly rounded exponential/logarithm/square-root RTL",
+          "sub": 12
+        }
+      ]
+    }
   },
   "evidence_class": "public_open_tool_rtl_simulation",
-  "required_marker": "PASS: ABI3 RTL engine datapaths cases=31 families=5 results=10025 macs=59868 faults=9 decodes=2576 arith=3696",
+  "mutation_sensitivity": {
+    "all_caught_by_both_simulators": true,
+    "mutation_count": 7,
+    "mutations": [
+      {
+        "caught_by_both": true,
+        "description": "invert the low bit of every converted BF16 result",
+        "exact_replacement": {
+          "after": "out_data <= {16'b0, narrowed[15:1], ~narrowed[0]};",
+          "before": "out_data <= {16'b0, narrowed[15:0]};"
+        },
+        "id": "convert_narrowed_lsb",
+        "mutated_source_sha256": "a8dbb7dc6528932e942a4a1c60f5780a7b25761d2583239742d4da24726800a9",
+        "simulators": [
+          {
+            "caught": true,
+            "checks_before_rejection": 40878,
+            "compile_command": "/usr/bin/iverilog -g2012 -s tb_a3_engine -o e3_mutation_convert_narrowed_lsb.vvp <ROOT>/rtl/ot_fp32_rne_pkg.sv <ROOT>/rtl/abi3/ot_a3_format_pkg.sv <ROOT>/rtl/abi3/ot_a3_engine_pkg.sv <ROOT>/rtl/abi3/ot_a3_mac_lane.sv <ROOT>/rtl/abi3/ot_a3_selection_argmax.sv <ROOT>/rtl/abi3/ot_a3_dma_index_mover.sv <ROOT>/rtl/abi3/ot_a3_vector_add.sv <BUILD>/mutation_convert_narrowed_lsb_ot_a3_vector_convert.sv <ROOT>/rtl/abi3/ot_a3_vector_scale.sv <ROOT>/rtl/abi3/ot_a3_vector_hadamard.sv <ROOT>/rtl/abi3/ot_a3_vector_index_score.sv <ROOT>/rtl/abi3/ot_a3_vector_compress_project.sv <ROOT>/rtl/abi3/ot_a3_vector_mhc_post.sv <ROOT>/rtl/abi3/ot_a3_engine_array.sv <ROOT>/rtl/test/a3_engine_top.sv <ROOT>/rtl/test/tb_a3_engine.sv",
+            "compile_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "compile_returncode": 0,
+            "first_mismatch": "FAIL: case 32 word 0 got 00003f81 want 00003f80",
+            "log_sha256": "5cfde95e8881e6ab41fa9001ac43a77756b9dee3e1a028ff09181172106650dc",
+            "marker_present": false,
+            "name": "iverilog",
+            "required_marker": "PASS: ABI3 RTL engine datapaths cases=135 families=11 results=14468 macs=59868 faults=92 decodes=2576 arith=5200",
+            "run_command": "/usr/bin/vvp e3_mutation_convert_narrowed_lsb.vvp",
+            "run_log_sha256": "5cfde95e8881e6ab41fa9001ac43a77756b9dee3e1a028ff09181172106650dc",
+            "run_returncode": 1,
+            "status": "caught"
+          },
+          {
+            "caught": true,
+            "checks_before_rejection": 40878,
+            "compile_command": "<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator --cc --exe --build -Wall -Wno-fatal -Wno-DECLFILENAME --top-module ot_a3_engine_top --Mdir obj_e3_mutation_convert_narrowed_lsb <ROOT>/rtl/ot_fp32_rne_pkg.sv <ROOT>/rtl/abi3/ot_a3_format_pkg.sv <ROOT>/rtl/abi3/ot_a3_engine_pkg.sv <ROOT>/rtl/abi3/ot_a3_mac_lane.sv <ROOT>/rtl/abi3/ot_a3_selection_argmax.sv <ROOT>/rtl/abi3/ot_a3_dma_index_mover.sv <ROOT>/rtl/abi3/ot_a3_vector_add.sv <BUILD>/mutation_convert_narrowed_lsb_ot_a3_vector_convert.sv <ROOT>/rtl/abi3/ot_a3_vector_scale.sv <ROOT>/rtl/abi3/ot_a3_vector_hadamard.sv <ROOT>/rtl/abi3/ot_a3_vector_index_score.sv <ROOT>/rtl/abi3/ot_a3_vector_compress_project.sv <ROOT>/rtl/abi3/ot_a3_vector_mhc_post.sv <ROOT>/rtl/abi3/ot_a3_engine_array.sv <ROOT>/rtl/test/a3_engine_top.sv <ROOT>/rtl/test/a3_engine_harness.cpp -CFLAGS -std=c++17",
+            "compile_log_sha256": "d6e01f850bde2be4c74e70d8df18f99e203727fd4a5f0fbdc7f6295a2b3c2ea0",
+            "compile_returncode": 0,
+            "first_mismatch": "FAIL: case 32 word 0 got 00003f81 want 00003f80",
+            "log_sha256": "cd3e58027ae59625785c7ace0a9dfaf3f3de79444cecbbe1f60a6861d508157d",
+            "marker_present": false,
+            "name": "verilator",
+            "required_marker": "PASS: ABI3 RTL engine datapaths cases=135 families=11 results=14468 macs=59868 faults=92 decodes=2576 arith=5200",
+            "run_command": "./obj_e3_mutation_convert_narrowed_lsb/Vot_a3_engine_top",
+            "run_log_sha256": "6f34eb3afd08d22eebbb1f5f70b9efe1ef9b1b735ba2a1acab8611aff81d54bd",
+            "run_returncode": 1,
+            "status": "caught"
+          }
+        ],
+        "source": "rtl/abi3/ot_a3_vector_convert.sv",
+        "source_sha256": "1811d097cc27a8a99fbe462c2e88407cf36a9fcd92169cf49b6648bec0841ff6"
+      },
+      {
+        "caught_by_both": true,
+        "description": "replace the SCALE product with a binary32 addition",
+        "exact_replacement": {
+          "after": "ot_fp32_rne_pkg::fp32_add_rne(decoded_a[31:0], right_value);",
+          "before": "ot_fp32_rne_pkg::fp32_mul_rne(decoded_a[31:0], right_value);"
+        },
+        "id": "scale_multiply_to_add",
+        "mutated_source_sha256": "f2e395d878d2b2b900427cdedc451e0e65574f06e3fb513dbd0db4d1162ee581",
+        "simulators": [
+          {
+            "caught": true,
+            "checks_before_rejection": 40878,
+            "compile_command": "/usr/bin/iverilog -g2012 -s tb_a3_engine -o e3_mutation_scale_multiply_to_add.vvp <ROOT>/rtl/ot_fp32_rne_pkg.sv <ROOT>/rtl/abi3/ot_a3_format_pkg.sv <ROOT>/rtl/abi3/ot_a3_engine_pkg.sv <ROOT>/rtl/abi3/ot_a3_mac_lane.sv <ROOT>/rtl/abi3/ot_a3_selection_argmax.sv <ROOT>/rtl/abi3/ot_a3_dma_index_mover.sv <ROOT>/rtl/abi3/ot_a3_vector_add.sv <ROOT>/rtl/abi3/ot_a3_vector_convert.sv <BUILD>/mutation_scale_multiply_to_add_ot_a3_vector_scale.sv <ROOT>/rtl/abi3/ot_a3_vector_hadamard.sv <ROOT>/rtl/abi3/ot_a3_vector_index_score.sv <ROOT>/rtl/abi3/ot_a3_vector_compress_project.sv <ROOT>/rtl/abi3/ot_a3_vector_mhc_post.sv <ROOT>/rtl/abi3/ot_a3_engine_array.sv <ROOT>/rtl/test/a3_engine_top.sv <ROOT>/rtl/test/tb_a3_engine.sv",
+            "compile_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "compile_returncode": 0,
+            "first_mismatch": "FAIL: case 36 word 0 got 00004063 want 00003edb",
+            "log_sha256": "267498de365698d938975a7077762383eddc482b696eda569d83642adcdcba90",
+            "marker_present": false,
+            "name": "iverilog",
+            "required_marker": "PASS: ABI3 RTL engine datapaths cases=135 families=11 results=14468 macs=59868 faults=92 decodes=2576 arith=5200",
+            "run_command": "/usr/bin/vvp e3_mutation_scale_multiply_to_add.vvp",
+            "run_log_sha256": "267498de365698d938975a7077762383eddc482b696eda569d83642adcdcba90",
+            "run_returncode": 1,
+            "status": "caught"
+          },
+          {
+            "caught": true,
+            "checks_before_rejection": 40878,
+            "compile_command": "<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator --cc --exe --build -Wall -Wno-fatal -Wno-DECLFILENAME --top-module ot_a3_engine_top --Mdir obj_e3_mutation_scale_multiply_to_add <ROOT>/rtl/ot_fp32_rne_pkg.sv <ROOT>/rtl/abi3/ot_a3_format_pkg.sv <ROOT>/rtl/abi3/ot_a3_engine_pkg.sv <ROOT>/rtl/abi3/ot_a3_mac_lane.sv <ROOT>/rtl/abi3/ot_a3_selection_argmax.sv <ROOT>/rtl/abi3/ot_a3_dma_index_mover.sv <ROOT>/rtl/abi3/ot_a3_vector_add.sv <ROOT>/rtl/abi3/ot_a3_vector_convert.sv <BUILD>/mutation_scale_multiply_to_add_ot_a3_vector_scale.sv <ROOT>/rtl/abi3/ot_a3_vector_hadamard.sv <ROOT>/rtl/abi3/ot_a3_vector_index_score.sv <ROOT>/rtl/abi3/ot_a3_vector_compress_project.sv <ROOT>/rtl/abi3/ot_a3_vector_mhc_post.sv <ROOT>/rtl/abi3/ot_a3_engine_array.sv <ROOT>/rtl/test/a3_engine_top.sv <ROOT>/rtl/test/a3_engine_harness.cpp -CFLAGS -std=c++17",
+            "compile_log_sha256": "d579bc627976492480b98c7736f04847452aaeaec722d6e10bbac66503db0ffd",
+            "compile_returncode": 0,
+            "first_mismatch": "FAIL: case 36 word 0 got 00004063 want 00003edb",
+            "log_sha256": "ed44b757d5c9f9d8a0eb43b004b6630ee1295a4d0989230d60922e3da9156221",
+            "marker_present": false,
+            "name": "verilator",
+            "required_marker": "PASS: ABI3 RTL engine datapaths cases=135 families=11 results=14468 macs=59868 faults=92 decodes=2576 arith=5200",
+            "run_command": "./obj_e3_mutation_scale_multiply_to_add/Vot_a3_engine_top",
+            "run_log_sha256": "02b4ab83a4559b3f96ed2dc0bcc476d3154065864d5e1f264d9d89c54db8a537",
+            "run_returncode": 1,
+            "status": "caught"
+          }
+        ],
+        "source": "rtl/abi3/ot_a3_vector_scale.sv",
+        "source_sha256": "1059ca471191e42a2b1b17b29ddf4479c6a0f63cdf63d0d0c5df5d532eb977f4"
+      },
+      {
+        "caught_by_both": true,
+        "description": "replace 1/sqrt(128) with 1.0",
+        "exact_replacement": {
+          "after": "localparam [31:0] HADAMARD_SCALE = 32'h3f80_0000;",
+          "before": "localparam [31:0] HADAMARD_SCALE = 32'h3db5_04f3;"
+        },
+        "id": "hadamard_remove_normalization",
+        "mutated_source_sha256": "cd260da7184c26f2814b91019959ecf681f1bb1449ccd39df5be5b45ae5386fd",
+        "simulators": [
+          {
+            "caught": true,
+            "checks_before_rejection": 40878,
+            "compile_command": "/usr/bin/iverilog -g2012 -s tb_a3_engine -o e3_mutation_hadamard_remove_normalization.vvp <ROOT>/rtl/ot_fp32_rne_pkg.sv <ROOT>/rtl/abi3/ot_a3_format_pkg.sv <ROOT>/rtl/abi3/ot_a3_engine_pkg.sv <ROOT>/rtl/abi3/ot_a3_mac_lane.sv <ROOT>/rtl/abi3/ot_a3_selection_argmax.sv <ROOT>/rtl/abi3/ot_a3_dma_index_mover.sv <ROOT>/rtl/abi3/ot_a3_vector_add.sv <ROOT>/rtl/abi3/ot_a3_vector_convert.sv <ROOT>/rtl/abi3/ot_a3_vector_scale.sv <BUILD>/mutation_hadamard_remove_normalization_ot_a3_vector_hadamard.sv <ROOT>/rtl/abi3/ot_a3_vector_index_score.sv <ROOT>/rtl/abi3/ot_a3_vector_compress_project.sv <ROOT>/rtl/abi3/ot_a3_vector_mhc_post.sv <ROOT>/rtl/abi3/ot_a3_engine_array.sv <ROOT>/rtl/test/a3_engine_top.sv <ROOT>/rtl/test/tb_a3_engine.sv",
+            "compile_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "compile_returncode": 0,
+            "first_mismatch": "FAIL: case 42 word 0 got 0000402e want 00003e76",
+            "log_sha256": "66bce9e78231de300ad7406354645f5a5644a0a05f17d8f4a015afe47904cbd5",
+            "marker_present": false,
+            "name": "iverilog",
+            "required_marker": "PASS: ABI3 RTL engine datapaths cases=135 families=11 results=14468 macs=59868 faults=92 decodes=2576 arith=5200",
+            "run_command": "/usr/bin/vvp e3_mutation_hadamard_remove_normalization.vvp",
+            "run_log_sha256": "66bce9e78231de300ad7406354645f5a5644a0a05f17d8f4a015afe47904cbd5",
+            "run_returncode": 1,
+            "status": "caught"
+          },
+          {
+            "caught": true,
+            "checks_before_rejection": 40878,
+            "compile_command": "<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator --cc --exe --build -Wall -Wno-fatal -Wno-DECLFILENAME --top-module ot_a3_engine_top --Mdir obj_e3_mutation_hadamard_remove_normalization <ROOT>/rtl/ot_fp32_rne_pkg.sv <ROOT>/rtl/abi3/ot_a3_format_pkg.sv <ROOT>/rtl/abi3/ot_a3_engine_pkg.sv <ROOT>/rtl/abi3/ot_a3_mac_lane.sv <ROOT>/rtl/abi3/ot_a3_selection_argmax.sv <ROOT>/rtl/abi3/ot_a3_dma_index_mover.sv <ROOT>/rtl/abi3/ot_a3_vector_add.sv <ROOT>/rtl/abi3/ot_a3_vector_convert.sv <ROOT>/rtl/abi3/ot_a3_vector_scale.sv <BUILD>/mutation_hadamard_remove_normalization_ot_a3_vector_hadamard.sv <ROOT>/rtl/abi3/ot_a3_vector_index_score.sv <ROOT>/rtl/abi3/ot_a3_vector_compress_project.sv <ROOT>/rtl/abi3/ot_a3_vector_mhc_post.sv <ROOT>/rtl/abi3/ot_a3_engine_array.sv <ROOT>/rtl/test/a3_engine_top.sv <ROOT>/rtl/test/a3_engine_harness.cpp -CFLAGS -std=c++17",
+            "compile_log_sha256": "c406bc6d1d84e203331cd320b9e71775fb5e72701e6c7a716776adae75f4c9a2",
+            "compile_returncode": 0,
+            "first_mismatch": "FAIL: case 42 word 0 got 0000402e want 00003e76",
+            "log_sha256": "e6a3f2be11cba5c8daad504ba53cc786667b3b2e196e756af9b783be39873162",
+            "marker_present": false,
+            "name": "verilator",
+            "required_marker": "PASS: ABI3 RTL engine datapaths cases=135 families=11 results=14468 macs=59868 faults=92 decodes=2576 arith=5200",
+            "run_command": "./obj_e3_mutation_hadamard_remove_normalization/Vot_a3_engine_top",
+            "run_log_sha256": "18a5c2e66aba6773d24f9235b503a3ab9e77721e4992f895143c698cc6a885b6",
+            "run_returncode": 1,
+            "status": "caught"
+          }
+        ],
+        "source": "rtl/abi3/ot_a3_vector_hadamard.sv",
+        "source_sha256": "08ac916fc973f9c039eb251db20473a4e7c314b34fbe4f5b2254096b166b6162"
+      },
+      {
+        "caught_by_both": true,
+        "description": "propagate negative rounded head scores through ReLU",
+        "exact_replacement": {
+          "after": "relu_value <= {dot_narrowed[15:0], 16'b0};",
+          "before": "relu_value <= dot_narrowed[15]\n                                    ? 32'b0 : {dot_narrowed[15:0], 16'b0};"
+        },
+        "id": "index_score_remove_relu",
+        "mutated_source_sha256": "005d64ff1e1795abdb3f323921f109240842a55d563a1055c4df2d0f38ae04e2",
+        "simulators": [
+          {
+            "caught": true,
+            "checks_before_rejection": 40878,
+            "compile_command": "/usr/bin/iverilog -g2012 -s tb_a3_engine -o e3_mutation_index_score_remove_relu.vvp <ROOT>/rtl/ot_fp32_rne_pkg.sv <ROOT>/rtl/abi3/ot_a3_format_pkg.sv <ROOT>/rtl/abi3/ot_a3_engine_pkg.sv <ROOT>/rtl/abi3/ot_a3_mac_lane.sv <ROOT>/rtl/abi3/ot_a3_selection_argmax.sv <ROOT>/rtl/abi3/ot_a3_dma_index_mover.sv <ROOT>/rtl/abi3/ot_a3_vector_add.sv <ROOT>/rtl/abi3/ot_a3_vector_convert.sv <ROOT>/rtl/abi3/ot_a3_vector_scale.sv <ROOT>/rtl/abi3/ot_a3_vector_hadamard.sv <BUILD>/mutation_index_score_remove_relu_ot_a3_vector_index_score.sv <ROOT>/rtl/abi3/ot_a3_vector_compress_project.sv <ROOT>/rtl/abi3/ot_a3_vector_mhc_post.sv <ROOT>/rtl/abi3/ot_a3_engine_array.sv <ROOT>/rtl/test/a3_engine_top.sv <ROOT>/rtl/test/tb_a3_engine.sv",
+            "compile_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "compile_returncode": 0,
+            "first_mismatch": "FAIL: case 47 word 0 got 0000c117 want 0000bfec",
+            "log_sha256": "9360a6135a81f2fdddcb847c86b2e905197c487b1a1d9ae4a2a98c4c2ff95b06",
+            "marker_present": false,
+            "name": "iverilog",
+            "required_marker": "PASS: ABI3 RTL engine datapaths cases=135 families=11 results=14468 macs=59868 faults=92 decodes=2576 arith=5200",
+            "run_command": "/usr/bin/vvp e3_mutation_index_score_remove_relu.vvp",
+            "run_log_sha256": "9360a6135a81f2fdddcb847c86b2e905197c487b1a1d9ae4a2a98c4c2ff95b06",
+            "run_returncode": 1,
+            "status": "caught"
+          },
+          {
+            "caught": true,
+            "checks_before_rejection": 40878,
+            "compile_command": "<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator --cc --exe --build -Wall -Wno-fatal -Wno-DECLFILENAME --top-module ot_a3_engine_top --Mdir obj_e3_mutation_index_score_remove_relu <ROOT>/rtl/ot_fp32_rne_pkg.sv <ROOT>/rtl/abi3/ot_a3_format_pkg.sv <ROOT>/rtl/abi3/ot_a3_engine_pkg.sv <ROOT>/rtl/abi3/ot_a3_mac_lane.sv <ROOT>/rtl/abi3/ot_a3_selection_argmax.sv <ROOT>/rtl/abi3/ot_a3_dma_index_mover.sv <ROOT>/rtl/abi3/ot_a3_vector_add.sv <ROOT>/rtl/abi3/ot_a3_vector_convert.sv <ROOT>/rtl/abi3/ot_a3_vector_scale.sv <ROOT>/rtl/abi3/ot_a3_vector_hadamard.sv <BUILD>/mutation_index_score_remove_relu_ot_a3_vector_index_score.sv <ROOT>/rtl/abi3/ot_a3_vector_compress_project.sv <ROOT>/rtl/abi3/ot_a3_vector_mhc_post.sv <ROOT>/rtl/abi3/ot_a3_engine_array.sv <ROOT>/rtl/test/a3_engine_top.sv <ROOT>/rtl/test/a3_engine_harness.cpp -CFLAGS -std=c++17",
+            "compile_log_sha256": "13b76a35013d00ab534624d1cb5799208a69f29d2feda2ebc9624a7b0b9de7b6",
+            "compile_returncode": 0,
+            "first_mismatch": "FAIL: case 47 word 0 got 0000c117 want 0000bfec",
+            "log_sha256": "c14a67273f46eb3f19b3b54f0bc02f14ee2e0aeb3a8d8ea665c96abec6498b72",
+            "marker_present": false,
+            "name": "verilator",
+            "required_marker": "PASS: ABI3 RTL engine datapaths cases=135 families=11 results=14468 macs=59868 faults=92 decodes=2576 arith=5200",
+            "run_command": "./obj_e3_mutation_index_score_remove_relu/Vot_a3_engine_top",
+            "run_log_sha256": "e97bf7cf51996f92038516bf2943c06bd7c975d6a44b1baadbcd47d3edd73d39",
+            "run_returncode": 1,
+            "status": "caught"
+          }
+        ],
+        "source": "rtl/abi3/ot_a3_vector_index_score.sv",
+        "source_sha256": "8071dc6997e61f3b692affc3334c58a6a8393c97e4ebc493f68a37236d44f5eb"
+      },
+      {
+        "caught_by_both": true,
+        "description": "store gate outputs before KV outputs",
+        "exact_replacement": {
+          "after": "(plane ? 0 : {16'b0, cfg_cols}) + {16'b0, col}",
+          "before": "(plane ? {16'b0, cfg_cols} : 0) + {16'b0, col}"
+        },
+        "id": "compress_swap_output_planes",
+        "mutated_source_sha256": "1afc2e018df9e7927ac031b1fdd7f49213345f8850a1154b31eba51de1e9e75b",
+        "simulators": [
+          {
+            "caught": true,
+            "checks_before_rejection": 40878,
+            "compile_command": "/usr/bin/iverilog -g2012 -s tb_a3_engine -o e3_mutation_compress_swap_output_planes.vvp <ROOT>/rtl/ot_fp32_rne_pkg.sv <ROOT>/rtl/abi3/ot_a3_format_pkg.sv <ROOT>/rtl/abi3/ot_a3_engine_pkg.sv <ROOT>/rtl/abi3/ot_a3_mac_lane.sv <ROOT>/rtl/abi3/ot_a3_selection_argmax.sv <ROOT>/rtl/abi3/ot_a3_dma_index_mover.sv <ROOT>/rtl/abi3/ot_a3_vector_add.sv <ROOT>/rtl/abi3/ot_a3_vector_convert.sv <ROOT>/rtl/abi3/ot_a3_vector_scale.sv <ROOT>/rtl/abi3/ot_a3_vector_hadamard.sv <ROOT>/rtl/abi3/ot_a3_vector_index_score.sv <BUILD>/mutation_compress_swap_output_planes_ot_a3_vector_compress_project.sv <ROOT>/rtl/abi3/ot_a3_vector_mhc_post.sv <ROOT>/rtl/abi3/ot_a3_engine_array.sv <ROOT>/rtl/test/a3_engine_top.sv <ROOT>/rtl/test/tb_a3_engine.sv",
+            "compile_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "compile_returncode": 0,
+            "first_mismatch": "FAIL: case 54 word 0 got c0016ae0 want c0637dd0",
+            "log_sha256": "7cc686d7028deaafc1668492f63b4579f3fdff02e3fa03d7df43fbe03baf47c0",
+            "marker_present": false,
+            "name": "iverilog",
+            "required_marker": "PASS: ABI3 RTL engine datapaths cases=135 families=11 results=14468 macs=59868 faults=92 decodes=2576 arith=5200",
+            "run_command": "/usr/bin/vvp e3_mutation_compress_swap_output_planes.vvp",
+            "run_log_sha256": "7cc686d7028deaafc1668492f63b4579f3fdff02e3fa03d7df43fbe03baf47c0",
+            "run_returncode": 1,
+            "status": "caught"
+          },
+          {
+            "caught": true,
+            "checks_before_rejection": 40878,
+            "compile_command": "<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator --cc --exe --build -Wall -Wno-fatal -Wno-DECLFILENAME --top-module ot_a3_engine_top --Mdir obj_e3_mutation_compress_swap_output_planes <ROOT>/rtl/ot_fp32_rne_pkg.sv <ROOT>/rtl/abi3/ot_a3_format_pkg.sv <ROOT>/rtl/abi3/ot_a3_engine_pkg.sv <ROOT>/rtl/abi3/ot_a3_mac_lane.sv <ROOT>/rtl/abi3/ot_a3_selection_argmax.sv <ROOT>/rtl/abi3/ot_a3_dma_index_mover.sv <ROOT>/rtl/abi3/ot_a3_vector_add.sv <ROOT>/rtl/abi3/ot_a3_vector_convert.sv <ROOT>/rtl/abi3/ot_a3_vector_scale.sv <ROOT>/rtl/abi3/ot_a3_vector_hadamard.sv <ROOT>/rtl/abi3/ot_a3_vector_index_score.sv <BUILD>/mutation_compress_swap_output_planes_ot_a3_vector_compress_project.sv <ROOT>/rtl/abi3/ot_a3_vector_mhc_post.sv <ROOT>/rtl/abi3/ot_a3_engine_array.sv <ROOT>/rtl/test/a3_engine_top.sv <ROOT>/rtl/test/a3_engine_harness.cpp -CFLAGS -std=c++17",
+            "compile_log_sha256": "10586617f375c3575f10d69e6f1a1b81d7f9cd2768f381dac9ae6e4a285b57a9",
+            "compile_returncode": 0,
+            "first_mismatch": "FAIL: case 54 word 0 got c0016ae0 want c0637dd0",
+            "log_sha256": "f230da3871bb1e39b988cf8f9cc2ef6ccde3227897971ee7e100b60292741a21",
+            "marker_present": false,
+            "name": "verilator",
+            "required_marker": "PASS: ABI3 RTL engine datapaths cases=135 families=11 results=14468 macs=59868 faults=92 decodes=2576 arith=5200",
+            "run_command": "./obj_e3_mutation_compress_swap_output_planes/Vot_a3_engine_top",
+            "run_log_sha256": "a8b60fbaedd12386a27ad987d026fcdfcbca25bab977e4ad2dc60b8d1e35477d",
+            "run_returncode": 1,
+            "status": "caught"
+          }
+        ],
+        "source": "rtl/abi3/ot_a3_vector_compress_project.sv",
+        "source_sha256": "e2c10b14c289b08732d5c1782dce092589804857beb610f8129973fc9f29fdf2"
+      },
+      {
+        "caught_by_both": true,
+        "description": "replace the exact-product single-rounded dot step with a separately rounded binary32 multiply followed by add",
+        "exact_replacement": {
+          "after": "wire [33:0] split_product = ot_fp32_rne_pkg::fp32_mul_rne(\n        decoded_hidden[31:0], decoded_weight[31:0]\n    );\n    wire [33:0] accumulated = ot_fp32_rne_pkg::fp32_add_rne(\n        accumulator, split_product[31:0]\n    );",
+          "before": "wire [33:0] accumulated =\n        ot_fp32_rne_pkg::bf16_bf16_fp32_product_add_rne(\n            accumulator, h_rd_data[15:0], weight_code\n        );"
+        },
+        "id": "compress_split_product_add_rounding",
+        "mutated_source_sha256": "3087ae35de79aa59af236f3fad21d04c7da076d95f7f26822bdd5a5df29298d1",
+        "simulators": [
+          {
+            "caught": true,
+            "checks_before_rejection": 40878,
+            "compile_command": "/usr/bin/iverilog -g2012 -s tb_a3_engine -o e3_mutation_compress_split_product_add_rounding.vvp <ROOT>/rtl/ot_fp32_rne_pkg.sv <ROOT>/rtl/abi3/ot_a3_format_pkg.sv <ROOT>/rtl/abi3/ot_a3_engine_pkg.sv <ROOT>/rtl/abi3/ot_a3_mac_lane.sv <ROOT>/rtl/abi3/ot_a3_selection_argmax.sv <ROOT>/rtl/abi3/ot_a3_dma_index_mover.sv <ROOT>/rtl/abi3/ot_a3_vector_add.sv <ROOT>/rtl/abi3/ot_a3_vector_convert.sv <ROOT>/rtl/abi3/ot_a3_vector_scale.sv <ROOT>/rtl/abi3/ot_a3_vector_hadamard.sv <ROOT>/rtl/abi3/ot_a3_vector_index_score.sv <BUILD>/mutation_compress_split_product_add_rounding_ot_a3_vector_compress_project.sv <ROOT>/rtl/abi3/ot_a3_vector_mhc_post.sv <ROOT>/rtl/abi3/ot_a3_engine_array.sv <ROOT>/rtl/test/a3_engine_top.sv <ROOT>/rtl/test/tb_a3_engine.sv",
+            "compile_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "compile_returncode": 0,
+            "first_mismatch": "FAIL: case 56 word 0 got 0131b842 want 0131b843",
+            "log_sha256": "a70b170ea88448ec57f1ffd93eef31afb1e40394f405f82097506d4c3cadf793",
+            "marker_present": false,
+            "name": "iverilog",
+            "required_marker": "PASS: ABI3 RTL engine datapaths cases=135 families=11 results=14468 macs=59868 faults=92 decodes=2576 arith=5200",
+            "run_command": "/usr/bin/vvp e3_mutation_compress_split_product_add_rounding.vvp",
+            "run_log_sha256": "a70b170ea88448ec57f1ffd93eef31afb1e40394f405f82097506d4c3cadf793",
+            "run_returncode": 1,
+            "status": "caught"
+          },
+          {
+            "caught": true,
+            "checks_before_rejection": 40878,
+            "compile_command": "<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator --cc --exe --build -Wall -Wno-fatal -Wno-DECLFILENAME --top-module ot_a3_engine_top --Mdir obj_e3_mutation_compress_split_product_add_rounding <ROOT>/rtl/ot_fp32_rne_pkg.sv <ROOT>/rtl/abi3/ot_a3_format_pkg.sv <ROOT>/rtl/abi3/ot_a3_engine_pkg.sv <ROOT>/rtl/abi3/ot_a3_mac_lane.sv <ROOT>/rtl/abi3/ot_a3_selection_argmax.sv <ROOT>/rtl/abi3/ot_a3_dma_index_mover.sv <ROOT>/rtl/abi3/ot_a3_vector_add.sv <ROOT>/rtl/abi3/ot_a3_vector_convert.sv <ROOT>/rtl/abi3/ot_a3_vector_scale.sv <ROOT>/rtl/abi3/ot_a3_vector_hadamard.sv <ROOT>/rtl/abi3/ot_a3_vector_index_score.sv <BUILD>/mutation_compress_split_product_add_rounding_ot_a3_vector_compress_project.sv <ROOT>/rtl/abi3/ot_a3_vector_mhc_post.sv <ROOT>/rtl/abi3/ot_a3_engine_array.sv <ROOT>/rtl/test/a3_engine_top.sv <ROOT>/rtl/test/a3_engine_harness.cpp -CFLAGS -std=c++17",
+            "compile_log_sha256": "b4db22358aef2126e05eb45f04eee399cec320199942d3e7d77b8cd8ec247002",
+            "compile_returncode": 0,
+            "first_mismatch": "FAIL: case 56 word 0 got 0131b842 want 0131b843",
+            "log_sha256": "8b1bb8e90626ee855d59853d217e1c77985e72a8717dcefb304d613cec8a3420",
+            "marker_present": false,
+            "name": "verilator",
+            "required_marker": "PASS: ABI3 RTL engine datapaths cases=135 families=11 results=14468 macs=59868 faults=92 decodes=2576 arith=5200",
+            "run_command": "./obj_e3_mutation_compress_split_product_add_rounding/Vot_a3_engine_top",
+            "run_log_sha256": "8d41b6b5d7e3366156bb3b5acfd296df09e143a12a89add6748226631aa52e5c",
+            "run_returncode": 1,
+            "status": "caught"
+          }
+        ],
+        "source": "rtl/abi3/ot_a3_vector_compress_project.sv",
+        "source_sha256": "e2c10b14c289b08732d5c1782dce092589804857beb610f8129973fc9f29fdf2"
+      },
+      {
+        "caught_by_both": true,
+        "description": "address comb[destination][source] instead of source/dest",
+        "exact_replacement": {
+          "after": "({30'b0, destination} * MULTIPLIER) +\n                        {30'b0, source};",
+          "before": "({30'b0, source} * MULTIPLIER) +\n                        {30'b0, destination};"
+        },
+        "id": "mhc_transpose_combination",
+        "mutated_source_sha256": "fc912d741ebb72feed1a1944ad0b55832d44050bde91846916186af3e43b898d",
+        "simulators": [
+          {
+            "caught": true,
+            "checks_before_rejection": 40878,
+            "compile_command": "/usr/bin/iverilog -g2012 -s tb_a3_engine -o e3_mutation_mhc_transpose_combination.vvp <ROOT>/rtl/ot_fp32_rne_pkg.sv <ROOT>/rtl/abi3/ot_a3_format_pkg.sv <ROOT>/rtl/abi3/ot_a3_engine_pkg.sv <ROOT>/rtl/abi3/ot_a3_mac_lane.sv <ROOT>/rtl/abi3/ot_a3_selection_argmax.sv <ROOT>/rtl/abi3/ot_a3_dma_index_mover.sv <ROOT>/rtl/abi3/ot_a3_vector_add.sv <ROOT>/rtl/abi3/ot_a3_vector_convert.sv <ROOT>/rtl/abi3/ot_a3_vector_scale.sv <ROOT>/rtl/abi3/ot_a3_vector_hadamard.sv <ROOT>/rtl/abi3/ot_a3_vector_index_score.sv <ROOT>/rtl/abi3/ot_a3_vector_compress_project.sv <BUILD>/mutation_mhc_transpose_combination_ot_a3_vector_mhc_post.sv <ROOT>/rtl/abi3/ot_a3_engine_array.sv <ROOT>/rtl/test/a3_engine_top.sv <ROOT>/rtl/test/tb_a3_engine.sv",
+            "compile_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "compile_returncode": 0,
+            "first_mismatch": "FAIL: case 58 word 0 got 0000bfe8 want 00003ec1",
+            "log_sha256": "15319a8c121ba63a37a590371bfc58179c3e0ef03863c6eb1dde7fee18b9084a",
+            "marker_present": false,
+            "name": "iverilog",
+            "required_marker": "PASS: ABI3 RTL engine datapaths cases=135 families=11 results=14468 macs=59868 faults=92 decodes=2576 arith=5200",
+            "run_command": "/usr/bin/vvp e3_mutation_mhc_transpose_combination.vvp",
+            "run_log_sha256": "15319a8c121ba63a37a590371bfc58179c3e0ef03863c6eb1dde7fee18b9084a",
+            "run_returncode": 1,
+            "status": "caught"
+          },
+          {
+            "caught": true,
+            "checks_before_rejection": 40878,
+            "compile_command": "<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator --cc --exe --build -Wall -Wno-fatal -Wno-DECLFILENAME --top-module ot_a3_engine_top --Mdir obj_e3_mutation_mhc_transpose_combination <ROOT>/rtl/ot_fp32_rne_pkg.sv <ROOT>/rtl/abi3/ot_a3_format_pkg.sv <ROOT>/rtl/abi3/ot_a3_engine_pkg.sv <ROOT>/rtl/abi3/ot_a3_mac_lane.sv <ROOT>/rtl/abi3/ot_a3_selection_argmax.sv <ROOT>/rtl/abi3/ot_a3_dma_index_mover.sv <ROOT>/rtl/abi3/ot_a3_vector_add.sv <ROOT>/rtl/abi3/ot_a3_vector_convert.sv <ROOT>/rtl/abi3/ot_a3_vector_scale.sv <ROOT>/rtl/abi3/ot_a3_vector_hadamard.sv <ROOT>/rtl/abi3/ot_a3_vector_index_score.sv <ROOT>/rtl/abi3/ot_a3_vector_compress_project.sv <BUILD>/mutation_mhc_transpose_combination_ot_a3_vector_mhc_post.sv <ROOT>/rtl/abi3/ot_a3_engine_array.sv <ROOT>/rtl/test/a3_engine_top.sv <ROOT>/rtl/test/a3_engine_harness.cpp -CFLAGS -std=c++17",
+            "compile_log_sha256": "606c77a7f7ec8b52b02f0a268190ccd6d98d56ff8f098cdb7322423dd47c94e2",
+            "compile_returncode": 0,
+            "first_mismatch": "FAIL: case 58 word 0 got 0000bfe8 want 00003ec1",
+            "log_sha256": "9a92297488301530349058d30fa7ea1b67888aee5045a8f14adc2386a43d0d1c",
+            "marker_present": false,
+            "name": "verilator",
+            "required_marker": "PASS: ABI3 RTL engine datapaths cases=135 families=11 results=14468 macs=59868 faults=92 decodes=2576 arith=5200",
+            "run_command": "./obj_e3_mutation_mhc_transpose_combination/Vot_a3_engine_top",
+            "run_log_sha256": "fbcbcaa6df48a4d24ee7adf80e09ee8ba191962369b7bbd67c6fd047e027ba24",
+            "run_returncode": 1,
+            "status": "caught"
+          }
+        ],
+        "source": "rtl/abi3/ot_a3_vector_mhc_post.sv",
+        "source_sha256": "15a817e26affb1d090072d7061abbf92ab80d77bdce94e8d979a79a99a880071"
+      }
+    ],
+    "policy": "a mutation is caught only when its modified RTL compiles, the checker executes and returns failure, and the baseline PASS marker is absent"
+  },
+  "required_marker": "PASS: ABI3 RTL engine datapaths cases=135 families=11 results=14468 macs=59868 faults=92 decodes=2576 arith=5200",
   "schema": "opentallas.rtl.abi3_engine_campaign.v1",
   "simulators_counted": [
     "iverilog_vvp",
     "verilator_cpp_executable"
   ],
   "source_sha256": {
-    "docs/TENSOR_ACCELERATOR_ABI_3_WIRE_FORMAT.md": "dbde0d5efb29f9504d8ff205d585b95287136502448299c0145e74d53bcd24a7",
+    "docs/TENSOR_ACCELERATOR_ABI_3_WIRE_FORMAT.md": "be2219437c149efa6e9751aa544f86eff3e2cc6c8fb07dc7c35647c244b3aa22",
     "rtl/abi3/ot_a3_dma_index_mover.sv": "e254421fcba397e3db821c52b9acafaf3922af78653ab2d2e3029705ee166c64",
-    "rtl/abi3/ot_a3_engine_array.sv": "8e8acab89436004d03c6ad98ac229d37c783c27a6907b9043c2d35ab80b287b1",
-    "rtl/abi3/ot_a3_engine_pkg.sv": "a4e78449b610ac226127d5c676b8dfa59659c0122a1d2e62799374da1ec2d892",
+    "rtl/abi3/ot_a3_engine_array.sv": "35d10a5aa17ef82ba21fe30e98482cac6391407e8a5250494e4ef0a802672a2a",
+    "rtl/abi3/ot_a3_engine_pkg.sv": "1186eecdc80321e87e08c97fb8e1c9a1b078584d019353736d235bf5cc84d477",
     "rtl/abi3/ot_a3_format_pkg.sv": "dbea89ef9c450d1b9ffda1e578f1685b3e33d3b6f400e43c1784ec022de9e7f0",
     "rtl/abi3/ot_a3_mac_lane.sv": "abbfa2b96164190c7730407cface079c728769be65d3188c2ad78f81ed1bbe37",
     "rtl/abi3/ot_a3_selection_argmax.sv": "d6dfd8fb62d8b5715cd1a487b74a131c84eb4b73a33cfbbfe0af0919f135e543",
     "rtl/abi3/ot_a3_vector_add.sv": "a6a6516da202ad4dc26bd8a25c4fdac4f5c5b00fe0a934f93db06e04be5baac9",
-    "rtl/ot_fp32_rne_pkg.sv": "3f892e737057cdfb651c0022c913d00f5e1be02b960f9afe9f57b202f1d57fa9",
-    "rtl/test/a3_engine_harness.cpp": "60c6fe2345b882dec51d192a592a94e0f0bb7bab9ee03af57ccca36b99c2768b",
-    "rtl/test/a3_engine_top.sv": "73cd268314eb2e2352331f7e50a2a052ff1fb11dfcb7fef0c55b41ef3126f95e",
-    "rtl/test/tb_a3_engine.sv": "b62340daaa43744d80a89a8db33e46de29812788288d9aedff27c44ca7813f87",
+    "rtl/abi3/ot_a3_vector_compress_project.sv": "e2c10b14c289b08732d5c1782dce092589804857beb610f8129973fc9f29fdf2",
+    "rtl/abi3/ot_a3_vector_convert.sv": "1811d097cc27a8a99fbe462c2e88407cf36a9fcd92169cf49b6648bec0841ff6",
+    "rtl/abi3/ot_a3_vector_hadamard.sv": "08ac916fc973f9c039eb251db20473a4e7c314b34fbe4f5b2254096b166b6162",
+    "rtl/abi3/ot_a3_vector_index_score.sv": "8071dc6997e61f3b692affc3334c58a6a8393c97e4ebc493f68a37236d44f5eb",
+    "rtl/abi3/ot_a3_vector_mhc_post.sv": "15a817e26affb1d090072d7061abbf92ab80d77bdce94e8d979a79a99a880071",
+    "rtl/abi3/ot_a3_vector_scale.sv": "1059ca471191e42a2b1b17b29ddf4479c6a0f63cdf63d0d0c5df5d532eb977f4",
+    "rtl/ot_fp32_rne_pkg.sv": "39de679dd5f277d8a9cc2d5b6349eb1675e9397e64a8256bb1f53a34a054608c",
+    "rtl/test/a3_engine_harness.cpp": "6243fce5a33defdad63b4c9d34a0b6ac1cee20de23bb237894753b87c5a6f633",
+    "rtl/test/a3_engine_top.sv": "fb031f24e9c42ea4094f37de023599549b876fc7bcd419bca8edfc658d6832f2",
+    "rtl/test/tb_a3_engine.sv": "ad20a8ef0e3213de8cb33637caa22bd64d3ed1bad5519857f84bd0b7203011e3",
     "runtime/abi3/constants.py": "a97b329b38a5bfb6438924e34b26c6f70b8e068026c685a29ec9b1ff0b8c1e4a",
     "runtime/abi3/descriptors.py": "fd60c52ee2117016a8faa644cdaebe1e95ad003535576bec241f7d9c6018993e",
+    "runtime/reference/compression.py": "94e0c2003666c3aa141031372f047cf9bfaff96435d43d05d48dfe7db8414ca8",
     "runtime/reference/formats.py": "74a3254c7a1dba9ad3bf07a5c793cb2ec1766f953b48ec4c782391f757290aa2",
-    "runtime/sim/backend.py": "e91b9dc70de0bbf310e5d542a84b05d7ea6a1b828e73a9dcfe5b20b31a48b008",
+    "runtime/reference/hadamard.py": "2d432fa289214cce5db6090c23c898ba9b13c75517190ec22b709be6d1ea2a34",
+    "runtime/reference/index_score.py": "400da432afc370e1cedd1eb52a4c306ef3528d49354f63944aa2954d74e403e0",
+    "runtime/reference/vector.py": "6427894cbab7d10ee09a7d566735d7509eed27dee21e06d9e9597c74600db01a",
+    "runtime/sim/backend.py": "0841204d2d42212285707c3137b143f785d41b11c46a840508ad15181c147e26",
+    "runtime/sim/engines/deepseek_vector.py": "af8677076a1ae7864094c8827865f68a775cb47e4350c97931d4d81c4d377cbe",
     "runtime/sim/engines/dma.py": "92ed01711032c0a2e1d9e4ca4c7e1eee735475246d4c30aa8621d05d1767fc45",
     "runtime/sim/engines/selection.py": "98215d7b484067f882dc77de573ac8d7a5926c53edbb41a7a2b10ad6a94f53b9",
-    "runtime/sim/engines/tensor.py": "91d67e776fd65bcc1fceba67445a1b54e090bee09f4ec7efd7fd9c12c2238e00",
+    "runtime/sim/engines/tensor.py": "a16c7f4836b2becf5fda8fd853bf846f7be2001b50a80c634743b31db696a565",
     "runtime/sim/engines/vector.py": "b394bc9c04cee5e4f679b5ba1aebc3d2389591fd9c4cbdc93d60c3daeef26d5f",
     "runtime/sim/formats.py": "f2c9d1e2a6c13eb1961e4d156a7a28fd0ee03e1bdb47018b8cb1d79c89448385",
     "runtime/tensor_accelerator/bf16.py": "75543479efffeb7a6806dd44178c8af1844276f87e3d01366b21e1cbccf68a34",
     "runtime/tensor_accelerator/elementwise.py": "64877e0af6d47a695dd650a1d3912d2e1ed508d425b90babb89c4ce931fa4e26",
-    "testdata/compiler/abi3_engine/abi3_engine_vectors.json": "a6238e9840f40bfa0d35d4a4dc47b810386a5426675abcb97bd3630f79f98ce1",
-    "testdata/compiler/abi3_engine/e3_arith.hex": "a1e481184066d9a7769bf497db834979f6e33756d47ea404796936ab7295cd91",
-    "testdata/compiler/abi3_engine/e3_case.hex": "3bdf8169275b156d65892bb42bdc2213a50a37e218e803eba91357f723605461",
+    "testdata/compiler/abi3_engine/abi3_engine_vectors.json": "e2af788f122fab8ee62bbc66ab77669ae51fea193f45a239b037152c8ab607fa",
+    "testdata/compiler/abi3_engine/e3_arith.hex": "8b2c9667823deafbfe3fedd6b8a1fd77704989550c009755e73f01575648b57b",
+    "testdata/compiler/abi3_engine/e3_case.hex": "6e01e3977becb47cf0b29225daee8477178b45f94cccbc73b6b41ab883fbed4b",
     "testdata/compiler/abi3_engine/e3_decode.hex": "93656a9165c095f72ae962a120f21a65a9f8210b359724ae2aecf398be53c42a",
-    "testdata/compiler/abi3_engine/e3_expect.hex": "b18d91ec30c6a05a4552b090153149c5f47ea0a7115fe89908777bedeaf777aa",
-    "testdata/compiler/abi3_engine/e3_m0.hex": "1706cd85b70627b83ec7c2e03db4923cc6b0a9ee0166807c8b59921e8a43501d",
-    "testdata/compiler/abi3_engine/e3_m1.hex": "175e3d1e69c96d448635e20119154e97da88cf6986674483bb0be5a0c945958a",
-    "testdata/compiler/abi3_engine/e3_m2.hex": "b3c62c0e7999753adbbd66e036a9f7bf4886474934e2f4e9b5fc5b725646dd17",
-    "testdata/compiler/abi3_engine/e3_m3.hex": "eba654cab57eca14360bfc20c36006834ffab82b766cbd1bc4f71fe6ddcc59b5",
-    "testdata/compiler/abi3_engine/e3_meta.hex": "2ec84803ead34fe24da0fddcc448b683bee247b6e3490c47328c629229408ea3",
-    "tools/build_abi3_engine_vectors.py": "4271f298e087ec3ec49f776d79164c4ac2811e8e1b15932542d7996b9c6b5b7e",
-    "tools/rtl_abi3_engine_campaign.py": "e0c9a6ab82e3e6a2bdbd3f38adfa24996cd060d4bd452975e9410b61f0792ecf"
+    "testdata/compiler/abi3_engine/e3_expect.hex": "489d976a2ef74ff954b607e4255dfec76a3ab7a498776fd9e768b948ae03d5e0",
+    "testdata/compiler/abi3_engine/e3_m0.hex": "68be091849eab5ea90f303b7fb6d5a2098d0d0b07648f7052f687acfafe66749",
+    "testdata/compiler/abi3_engine/e3_m1.hex": "d96772ac55489d8c60d2bf4a159b1d29e81923da7fe4acce7b9d50c907c67486",
+    "testdata/compiler/abi3_engine/e3_m2.hex": "3c8efaa1a258e09e95198023c55a31616eddabcd749cb82074dd15e0484fa92e",
+    "testdata/compiler/abi3_engine/e3_m3.hex": "65672dc8a5832ae27ee59823364429fcc663784e52d55a1317009264649918b0",
+    "testdata/compiler/abi3_engine/e3_meta.hex": "2d0c7f2ae569037ec760d8d4967c4af3b42c7dbc7f891942a69d09e141b2aac3",
+    "tools/build_abi3_engine_vectors.py": "c9678ad2016cecf85e293af7c14a7dc9d63db5031d2c8248409c6751a645a765",
+    "tools/rtl_abi3_engine_campaign.py": "db06fc573e9889becd4ffb70eabd3db5429e7136487e8d18a0d0c8b4d4a68f6c"
   },
   "status": "pass",
   "tools": {

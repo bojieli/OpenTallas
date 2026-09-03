@@ -314,28 +314,32 @@ def _balanced_sum(values: np.ndarray) -> np.ndarray:
 def _ordered_product_add(rows: np.ndarray, weights: np.ndarray) -> np.ndarray:
     """``sum_k`` of fused binary32 product-adds in increasing reduction index.
 
-    ``rows`` is ``[R, K]`` and ``weights`` is ``[N, K]``, both as exact binary32
-    values; the result is ``[R, N]``.  Each step is one correctly rounded
-    ``acc + x * w`` -- see the module docstring for why binary64 delivers it.
+    ``rows`` is ``[..., K]`` and ``weights`` is ``[N, K]``, both carrying exact
+    BF16 widenings; the result is ``[..., N]``.  Each step is one correctly
+    rounded ``acc + x * w`` -- see the module docstring for why binary64
+    delivers it.  Accepting arbitrary leading dimensions lets INDEX_SCORE use
+    this same governed primitive without flattening its site/head axes.
     """
-    row_count, width = rows.shape
+    width = rows.shape[-1]
     outputs = weights.shape[0]
-    accumulator = np.zeros((row_count, outputs), dtype=np.float64)
+    accumulator = np.zeros((*rows.shape[:-1], outputs), dtype=np.float64)
     left = np.ascontiguousarray(rows, dtype=np.float64)
     right = np.ascontiguousarray(weights, dtype=np.float64)
     for index in range(width):
-        column = left[:, index]
+        column = left[..., index]
         if not np.any(column):
             # Adding an exact zero product cannot change a positive-zero
             # accumulator, which is what the reference's zero-skip relies on.
             continue
         accumulator = np.add(
-            accumulator, np.multiply.outer(column, right[:, index]), dtype=np.float64
+            accumulator,
+            np.multiply(column[..., None], right[:, index], dtype=np.float64),
+            dtype=np.float64,
         ).astype(np.float32).astype(np.float64)
     return np.ascontiguousarray(accumulator, dtype=np.float32)
 
 
-def _scaled_bf16(codes: np.ndarray, scale_bits: int) -> np.ndarray:
+def _scaled_bf16(codes: np.ndarray, scale_bits: int) -> tuple[np.ndarray, int]:
     """``encode_bf16_rne(bf16_value * binary32_scale)`` -- one rounding.
 
     The product of an eight-bit BF16 significand and a 24-bit binary32 scale
@@ -351,17 +355,25 @@ def _scaled_bf16(codes: np.ndarray, scale_bits: int) -> np.ndarray:
         )
     scale_value = decoded.value
 
-    def _scale_code(code: int) -> int:
+    def _scale_code(code: int) -> tuple[int, bool]:
         value = decode_bf16(int(code) & 0xFFFF).value
         if value is None:
             raise EngineError(
                 "learned-index head weight is not finite BF16",
                 trap_class=int(TrapClass.NUMERIC_OR_EXCEPTIONAL_VALUE),
             )
-        return int(encode_bf16_rne(value * scale_value).code)
+        converted = encode_bf16_rne(value * scale_value)
+        return int(converted.code), bool(converted.saturated)
 
-    mapped = _map_codes(np.asarray(codes, dtype=np.uint32), _scale_code)
-    return mapped.astype(np.uint16)
+    flat = np.ascontiguousarray(codes, dtype=np.uint32).reshape(-1)
+    unique, inverse, counts = np.unique(flat, return_inverse=True, return_counts=True)
+    mapped = np.empty(unique.size, dtype=np.uint16)
+    saturation_count = 0
+    for index, (code, count) in enumerate(zip(unique, counts, strict=True)):
+        mapped_code, saturated = _scale_code(int(code))
+        mapped[index] = mapped_code
+        saturation_count += int(saturated) * int(count)
+    return mapped[inverse].reshape(codes.shape), saturation_count
 
 
 # ---------------------------------------------------------------------------
@@ -687,38 +699,35 @@ def index_score(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
     query = widen_bf16(_bf16(ctx, query_view, "INDEX_SCORE query"))
     keys = widen_bf16(_bf16(ctx, kv_view, "INDEX_SCORE key"))
     weight_codes = _bf16(ctx, weight_view, "INDEX_SCORE head weights")
-    scaled = widen_bf16(_scaled_bf16(weight_codes.astype(np.uint32), profile.scale_bits))
+    scaled_codes, saturation_count = _scaled_bf16(
+        weight_codes.astype(np.uint32), profile.scale_bits
+    )
+    scaled = widen_bf16(scaled_codes)
 
     previous = np.seterr(over="ignore", invalid="ignore", under="ignore")
     try:
         out = np.empty((batch, span, candidates), dtype=np.uint16)
         for index in range(batch):
-            # Increasing reduction index over the head dimension; the BF16
-            # products are exact in binary32, so each step rounds once.
-            accumulator = np.zeros((span, heads, candidates), dtype=np.float32)
-            for column in range(head_dim):
-                accumulator = np.add(
-                    accumulator,
-                    np.multiply(
-                        query[index, :, :, column][:, :, None],
-                        keys[index, :, column][None, None, :],
-                        dtype=np.float32,
-                    ),
-                    dtype=np.float32,
-                )
+            # Increasing reduction index over the head dimension.  The BF16
+            # product is exact, and each product-add is rounded once rather
+            # than once for the product and again for the sum.
+            accumulator = _ordered_product_add(query[index], keys[index])
             _finite(accumulator, "INDEX_SCORE query-key product")
-            rounded, _ = narrow_bf16_rne(accumulator)
+            rounded, qk_saturations = narrow_bf16_rne(accumulator)
+            saturation_count += qk_saturations
             relu = np.maximum(widen_bf16(rounded), np.float32(0.0))
             weighted = np.multiply(
                 relu, scaled[index][:, :, None], dtype=np.float32
             )
             _finite(weighted, "INDEX_SCORE weighted head score")
-            weighted_codes, _ = narrow_bf16_rne(weighted)
+            weighted_codes, weighted_saturations = narrow_bf16_rne(weighted)
+            saturation_count += weighted_saturations
             contributions = np.moveaxis(widen_bf16(weighted_codes), 1, -1)
             total = _finite(
                 _balanced_sum(contributions), "INDEX_SCORE head reduction"
             )
-            scores, _ = narrow_bf16_rne(total)
+            scores, output_saturations = narrow_bf16_rne(total)
+            saturation_count += output_saturations
             out[index] = scores
     finally:
         np.seterr(**previous)
@@ -728,6 +737,7 @@ def index_score(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
         "vector.elements", int(batch * span * heads * candidates * head_dim)
     )
     ctx.counters.add("vector.conversions", int(out.size))
+    ctx.counters.add("vector.saturations", saturation_count)
 
 
 # ---------------------------------------------------------------------------
@@ -998,13 +1008,14 @@ def _mhc_post(ctx: EngineContext, descriptor: Descriptor) -> None:
             np.add(branch_product, residual_sum, dtype=np.float32),
             "HYPER_CONNECT_POST mix",
         )
-        codes, _ = narrow_bf16_rne(combined)
+        codes, saturation_count = narrow_bf16_rne(combined)
     finally:
         np.seterr(**previous)
 
     ctx.write(out_view, np.ascontiguousarray(codes, dtype=np.uint16))
     ctx.counters.add("vector.mhc_sites", batch * span)
     ctx.counters.add("vector.elements", int(residual.size))
+    ctx.counters.add("vector.saturations", saturation_count)
 
 
 def _mhc_head(ctx: EngineContext, descriptor: Descriptor, profile: NumericProfile) -> None:

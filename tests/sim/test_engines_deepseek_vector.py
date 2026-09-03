@@ -545,6 +545,100 @@ def test_index_score_matches_the_exact_reference():
     assert int(np.count_nonzero(produced)) > 0
 
 
+def test_index_score_uses_single_rounded_product_add():
+    query = np.zeros((1, 1, 4, 2), dtype=np.uint16)
+    query[0, 0, 0] = np.array([0x2A7E, 0x1B83], dtype=np.uint16)
+    keys = np.array([[[0x17C0, 0x1A83]]], dtype=np.uint16)
+    weights = np.zeros((1, 1, 4), dtype=np.uint16)
+    weights[0, 0, 0] = 0x3F80
+
+    build, out = build_index_score(
+        query, keys, weights, scale=0x3F800000
+    )
+    device = build.finish()
+    result = run(device)
+    assert result.status == CompletionStatus.SUCCESS, result.message
+
+    expected = index_score_bf16(
+        nested(query), nested(keys), nested(weights), scale_binary32=0x3F800000
+    )
+    produced = read(device, out)
+    assert np.array_equal(produced, np.asarray(expected.values, dtype=np.uint16))
+    assert int(produced[0, 0, 0]) == 0x02BF
+
+
+def test_index_score_publishes_every_saturation_boundary():
+    cases = []
+
+    scaled_query = np.zeros((1, 1, 4, 1), dtype=np.uint16)
+    scaled_query[0, 0, 0, 0] = 0x3F80
+    scaled_weights = np.zeros((1, 1, 4), dtype=np.uint16)
+    scaled_weights[0, 0, 0] = 0x7F7F
+    cases.append((
+        scaled_query,
+        np.array([[[0x3F80]]], dtype=np.uint16),
+        scaled_weights,
+        0x40000000,
+    ))
+
+    qk_query = np.zeros((1, 1, 4, 2), dtype=np.uint16)
+    qk_query[0, 0, 0] = np.array([0x7F7F, 0x7B00], dtype=np.uint16)
+    qk_weights = np.zeros((1, 1, 4), dtype=np.uint16)
+    qk_weights[0, 0, 0] = 0x3F80
+    cases.append((
+        qk_query,
+        np.array([[[0x3F80, 0x3F80]]], dtype=np.uint16),
+        qk_weights,
+        0x3F800000,
+    ))
+
+    weighted_query = np.zeros((1, 1, 4, 1), dtype=np.uint16)
+    weighted_query[0, 0, 0, 0] = 0x7F7E
+    weighted_weights = np.zeros((1, 1, 4), dtype=np.uint16)
+    weighted_weights[0, 0, 0] = 0x3F81
+    cases.append((
+        weighted_query,
+        np.array([[[0x3F80]]], dtype=np.uint16),
+        weighted_weights,
+        0x3F800000,
+    ))
+
+    output_query = np.zeros((1, 1, 4, 1), dtype=np.uint16)
+    output_query[0, 0, 0, 0] = 0x7F7F
+    output_query[0, 0, 1, 0] = 0x7B00
+    output_weights = np.zeros((1, 1, 4), dtype=np.uint16)
+    output_weights[0, 0, :2] = 0x3F80
+    cases.append((
+        output_query,
+        np.array([[[0x3F80]]], dtype=np.uint16),
+        output_weights,
+        0x3F800000,
+    ))
+
+    for query, keys, weights, scale in cases:
+        build, out = build_index_score(query, keys, weights, scale=scale)
+        device = build.finish()
+        completion = run(device)
+        assert completion.status == CompletionStatus.SUCCESS, completion.message
+        expected = index_score_bf16(
+            nested(query),
+            nested(keys),
+            nested(weights),
+            scale_binary32=scale,
+        )
+        expected_saturations = (
+            expected.qk_saturated_element_count
+            + expected.scaled_weight_saturated_element_count
+            + expected.weighted_score_saturated_element_count
+            + expected.output_saturated_element_count
+        )
+        assert expected_saturations == 1
+        assert completion.counters["vector.saturations"] == expected_saturations
+        assert np.array_equal(
+            read(device, out), np.asarray(expected.values, dtype=np.uint16)
+        )
+
+
 def test_index_score_refuses_a_key_that_disagrees_with_the_query():
     rng = np.random.default_rng(41)
     query = bf16_uniform(rng, (1, 2, 4, 8))
@@ -600,6 +694,46 @@ def test_mhc_post_matches_the_exact_reference():
     assert np.array_equal(produced, np.asarray(expected.output_codes, dtype=np.uint16))
     assert int(np.count_nonzero(produced)) > 0
     assert result.counters["vector.mhc_sites"] == batch * span
+
+
+def test_mhc_post_publishes_output_saturation():
+    branch = np.array([[[0x7F7F]]], dtype=np.uint16)
+    residual = np.zeros((1, 1, HC_MULTIPLIER, 1), dtype=np.uint16)
+    post = np.array(
+        [[[0x3F808000, 0, 0, 0]]], dtype=np.uint32
+    ).view(np.float32)
+    comb = np.zeros(
+        (1, 1, HC_MULTIPLIER, HC_MULTIPLIER), dtype=np.float32
+    )
+    build = Build()
+    out = build.output_view((1, 1, HC_MULTIPLIER, 1), DType.BF16)
+    emit(
+        build,
+        Vector.MHC,
+        inputs=[
+            build.input_view(branch, DType.BF16),
+            build.input_view(residual, DType.BF16),
+            build.input_view(post, DType.FP32),
+            build.input_view(comb, DType.FP32),
+        ],
+        outputs=[out],
+        aux=[HC_POST, NO_ID, HC_MULTIPLIER],
+    )
+    device = build.finish()
+    completion = run(device)
+    assert completion.status == CompletionStatus.SUCCESS, completion.message
+    expected = hc_post_bf16(
+        nested(branch),
+        nested(residual),
+        nested(codes32(post)),
+        nested(codes32(comb)),
+        hc_multiplier=HC_MULTIPLIER,
+    )
+    assert expected.output_saturation_count == 1
+    assert completion.counters["vector.saturations"] == 1
+    assert np.array_equal(
+        read(device, out), np.asarray(expected.output_codes, dtype=np.uint16)
+    )
 
 
 def test_mhc_post_refuses_a_residual_that_disagrees_with_the_branch():

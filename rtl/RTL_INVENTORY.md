@@ -20,6 +20,12 @@ integrity, reset, poison, and test contracts remain equivalent.
 | ABI 3.0 on-device selection | `abi3/ot_a3_selection_argmax.sv` | `greedy_lowest_token_id_argmax`: signed-zero-canonical binary32 ordering, lowest token ID among the maxima by construction, published tie multiplicity, nonfinite logit refused | A3-ENG-001 |
 | ABI 3.0 indexed movement | `abi3/ot_a3_dma_index_mover.sv` | GATHER/SCATTER of storage codes with every index validated before anything moves, destination read back so unnamed rows survive, and ascending slot order making a repeated index resolve to the later write | A3-ENG-001 |
 | ABI 3.0 residual add | `abi3/ot_a3_vector_add.sv`, `ot_fp32_rne_pkg.sv` | `bf16_add_rne_v1`: exact BF16 widening, one binary32 RNE add, one RNE BF16 conversion with counted saturation, nonfinite and overflow refused | A3-ENG-001 |
+| ABI 3.0 bounded conversion | `abi3/ot_a3_vector_convert.sv` | Unscaled one-input/one-output conversion, at most 512 elements, over supported identity formats or finite numeric input to BF16/FP32; complete operand preflight before writeback | A3-ENG-001 |
+| ABI 3.0 bounded scale | `abi3/ot_a3_vector_scale.sv`, `ot_fp32_rne_pkg.sv` | Constant or same-shape elementwise BF16 scaling, at most 512 elements, with one binary32 RNE multiply and one RNE BF16 conversion; complete operand preflight before writeback | A3-ENG-001 |
+| ABI 3.0 bounded Hadamard | `abi3/ot_a3_vector_hadamard.sv`, `ot_fp32_rne_pkg.sv` | Normalized 128-point BF16 transform over at most four rows, using the released staged butterfly order and buffered whole-operation writeback | A3-ENG-001 |
+| ABI 3.0 bounded learned-index score | `abi3/ot_a3_vector_index_score.sv`, `ot_fp32_rne_pkg.sv` | Batch-one, exactly four-head, unit-scale BF16 `INDEX_SCORE`, at most four sites, eight candidates and sixteen head channels; ReLU, head reduction and complete result buffering | A3-ENG-001 |
+| ABI 3.0 bounded compressor projection | `abi3/ot_a3_vector_compress_project.sv`, `ot_fp32_rne_pkg.sv` | `COMPRESS_PROJECT` only, at most eight flattened rows, sixteen outputs and 64 reduction channels, with packed KV-then-gate FP32 output and buffered complete result | A3-ENG-001 |
+| ABI 3.0 bounded hyper-connection post | `abi3/ot_a3_vector_mhc_post.sv`, `ot_fp32_rne_pkg.sv` | Four-stream `HYPER_CONNECT_POST` only, at most four flattened sites and 32 hidden channels, with explicit source/destination combination-matrix orientation and buffered complete result | A3-ENG-001 |
 | ABI 3.0 engine dispatch | `abi3/ot_a3_engine_array.sv`, `abi3/ot_a3_engine_pkg.sv` | Fail-closed dispatch on (family, subopcode); an operation the array does not implement is refused rather than routed to another datapath | A3-ENG-001 |
 | Tile | `ot_tile.sv`, `opentallas_tile.sv` | route-before-activation and result alignment | DV-TILE-004 |
 | Static schedule | `ot_schedule_controller.sv`, `static_timeslot_switch.sv` | fully rewritten shadow bank, typed schedule-ID/epoch atomic commit, and slot transport | DV-NOC-001 |
@@ -331,19 +337,41 @@ yield, or silicon claim follows. See
 flow lock, retained measurements, rejected predecessor, and open gates.
 
 A3-ENG-001 is the two-simulator engine-datapath correlation retained as
-`results/rtl/abi3_engine_campaign.json`. Icarus and Verilator each replay 31
+`results/rtl/abi3_engine_campaign.json`. Icarus and Verilator each replay 135
 real ABI 3.0 programs -- built by `runtime.abi3.builder`, admitted by
 `runtime.abi3.verifier`, executed by `runtime.sim.device.Device` with the real
-engines and nothing stubbed -- and compare 10,025 result words element by
-element, 9 refusals by fault class with the destination proved untouched,
-2,576 exhaustive storage-format decode probes, and 3,696 binary32
-add/multiply/round probes against the exact `fractions.Fraction` reference, for
-26,381 checks each.
-This evidence covers datapath arithmetic only: it does not wire these blocks to
-the ABI 3.0 microsequencer, does not model an SRAM or ROM macro, does not cover
-the blocked contraction contract or any VECTOR operator but `ADD`, and
-establishes no timing or performance quantity. `docs/ABI3_ENGINE_DATAPATH_RTL.md`
-states the full boundary.
+engines and nothing stubbed -- across eleven `(family, subopcode)` pairs. They
+compare 14,468 result words element by element, 92 refusals with
+the destination proved untouched, 2,576 exhaustive storage-format decode
+probes, and 5,200 binary32 add/multiply/round and exact-product-add probes
+against the exact `fractions.Fraction` reference, for 40,878 checks each. The
+92 refusals comprise 17 Device faults, 18 bounded-profile refusals and 57
+descriptor-admission corruptions; all leave the destination untouched. The
+forced campaign also compiles seven source mutations -- conversion rounding,
+scaling arithmetic, Hadamard normalization, `INDEX_SCORE` ReLU, compressor
+plane order, compressor product-add rounding and MHC matrix orientation -- and
+both simulators catch all seven.
+
+In addition to MATMUL, GATHER/SCATTER, ADD and ARGMAX, the integrated array now
+correlates bounded `CONVERT`, `SCALE`, `HADAMARD`, `INDEX_SCORE`,
+`COMPRESS_PROJECT` and `HYPER_CONNECT_POST`. The artifact's
+`correlation.vector_rtl_scope` is authoritative for their shape and sub-form
+bounds. The six new blocks preflight or buffer the whole operation, and
+late-poison cases prove destination atomicity; later-output fault atomicity is
+still unproved for legacy MATMUL and ADD.
+
+This is standalone datapath correlation only. It does not wire these blocks to
+the ABI 3.0 microsequencer, and the separately promoted shipped-deployment
+campaign uses recording no-op engines rather than this arithmetic. It does not
+model an SRAM or ROM macro, cover the blocked contraction contract, or supply
+correctly rounded transcendental RTL for `SILU_MUL`, `SOFTMAX` or
+`SQRT_SOFTPLUS`. SCALE sigmoid/general broadcast, CONVERT block forms,
+COMPRESS pool/state update, MHC pre/head, and generalized `INDEX_SCORE` remain
+unsupported; standalone RMS/HEAD_RMS/ROPE RTL remains outside this engine
+array. None of this establishes timing or performance. The six new blocks also
+have no physical artifacts; the pre-existing routed evidence covers only
+selection, residual add and indexed movement.
+`docs/ABI3_ENGINE_DATAPATH_RTL.md` states the full boundary.
 
 A3-SEQ-001 is the two-simulator control-plane correlation, and it is retained
 as two artifacts that answer two different questions.

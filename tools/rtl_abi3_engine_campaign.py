@@ -329,7 +329,7 @@ def mutation_simulator_case(
 
     A syntax or elaboration failure is not sensitivity to arithmetic, so it is
     explicitly not counted as caught.  Mutation logs are represented by stable
-    hashes and the first mismatch instead of being duplicated six times in the
+    hashes and the first mismatch instead of being duplicated seven times in the
     retained artifact.
     """
     compiled = run_stage(f"{name}.compile", compile_command, build, timeout=1800)
@@ -417,6 +417,12 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
     vectors = load_vectors()
     marker = vectors["required_marker"]
     mutations: list[dict[str, Any]] = []
+    refusal_sources: dict[str, int] = {}
+    for vector_case in vectors["cases"]:
+        if int(vector_case["expected_fault_code"]) == 0:
+            continue
+        source = str(vector_case["expectation_source"])
+        refusal_sources[source] = refusal_sources.get(source, 0) + 1
 
     executables = {
         "iverilog": resolve("iverilog", None),
@@ -644,12 +650,17 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
             "arith_probe_count": vectors["arith_probe_count"],
             "arith_reference": vectors["arith_reference"],
             "numeric_reference": vectors["numeric_reference"],
+            "descriptor_admission": vectors["descriptor_admission"],
+            "refusal_count_by_expectation_source": refusal_sources,
             "vector_rtl_scope": vectors["vector_rtl_scope"],
             "compared": [
                 "every element the functional engine wrote, word for word, in "
                 "the view's own logical order",
-                "the fault class of every refusal, classified from the message "
-                "the functional engine's EngineError carried",
+                "the fault class of every Device refusal, classified from the "
+                "message the functional engine's EngineError carried",
+                "ERR_SHAPE for every RTL-only bounded-profile or descriptor-"
+                "admission refusal whose unmodified ABI 3.0 program the Device "
+                "successfully executed",
                 "that a refused operation left its whole destination window "
                 "holding the unwritten sentinel, so a partial result is a "
                 "failure rather than a pass",
@@ -657,11 +668,13 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
                 "count, against tensor.output_elements and tensor.saturations",
                 "VECTOR.ADD, CONVERT, SCALE and HADAMARD element counts and "
                 "the saturation counts published where their contracts do",
-                "VECTOR.INDEX_SCORE output count separately from its full "
-                "site-by-head-by-candidate-by-depth vector.elements work count",
+                "VECTOR.INDEX_SCORE output and saturation counts separately "
+                "from its full site-by-head-by-candidate-by-depth "
+                "vector.elements work count",
                 "VECTOR.COMPRESS/COMPRESS_PROJECT packed KV-then-gate FP32 "
                 "output and VECTOR.MHC/HYPER_CONNECT_POST source/destination "
-                "matrix orientation, result count and vector.elements count",
+                "matrix orientation, result and saturation counts, and "
+                "vector.elements count",
                 "SELECTION.ARGMAX selected token, vocabulary elements read and "
                 "tie multiplicity, against selection.vocabulary_elements and "
                 "selection.tie_multiplicity",
@@ -670,11 +683,15 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
                 "the complete code space of E4M3FN, E2M1 and E8M0 and a "
                 "signed, four-significand sweep of every BF16 exponent, "
                 "against runtime.sim.formats",
-                "binary32 add, multiply and BF16 rounding over a corner "
-                "cross-product plus a seeded spread of BF16-widened, general "
-                "and subnormal codes, against runtime.reference.formats, whose "
-                "fractions.Fraction arithmetic rounds once with no host "
-                "floating point on the reference side",
+                "binary32 add, multiply and BF16 rounding plus the exact-"
+                "product single-rounded BF16 product-add primitive over a "
+                "corner cross-product and seeded spreads, against "
+                "runtime.reference.formats, whose fractions.Fraction "
+                "arithmetic rounds once with no host floating point on the "
+                "reference side",
+                "operator arity, every input/output dtype, rank, dimension and "
+                "scaled flag, every NUMERIC control, the full contract digest "
+                "and all auxiliary bindings before a bounded VECTOR dispatch",
                 "that an operation the array does not implement is refused "
                 "rather than routed to another datapath",
             ],
@@ -692,19 +709,24 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
                 "COMPRESS_PROJECT and HYPER_CONNECT_POST RTL agrees in output, "
                 "fault class and architectural counters within the exact "
                 "vector_rtl_scope published beside this claim",
-                "six independent source mutations -- conversion rounding, "
+                "seven independent source mutations -- conversion rounding, "
                 "scaling arithmetic, Hadamard normalization, INDEX_SCORE "
-                "ReLU, compressor plane order and MHC matrix orientation -- "
-                "all compile and are rejected by both simulators",
+                "ReLU, compressor plane order, compressor exact-product "
+                "rounding and MHC matrix orientation -- all compile and are "
+                "rejected by both simulators",
                 "the storage-format decoders are exhaustively correct over "
                 "E4M3FN, E2M1 and E8M0 against the exact Fraction reference",
                 "the sequential contraction contract is reproduced for "
                 "BF16 x BF16, FP8 x FP8 and block-scaled MXFP4 x FP8, "
                 "including amendment A15's two-dimensional scale block",
-                "refusals agree in class, and leave no partial result",
+                f"the {refusal_sources.get('device_fault', 0)} Device refusals "
+                "agree in class, while every explicit bounded-profile and "
+                "descriptor-admission negative refuses with ERR_SHAPE; every "
+                "refusal leaves the whole destination untouched",
                 "the binary32 add, multiply and BF16 rounding these datapaths "
-                "are built from agree with runtime.reference.formats over a "
-                "corner cross-product and a seeded spread that reaches signed "
+                "are built from, plus their exact-product single-rounded BF16 "
+                "product-add primitive, agree with runtime.reference.formats "
+                "over directed corners and seeded spreads that reach signed "
                 "zero, both smallest subnormals, the largest finite and the "
                 "nonfinite band",
             ],
@@ -761,7 +783,8 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
                 ),
                 "exhaustive_arithmetic": (
                     "the arithmetic probe is a directed corner sweep and a "
-                    "seeded spread, not an exhaustive proof. It samples 3,696 "
+                    "seeded spread, not an exhaustive proof. It samples "
+                    f"{vectors['arith_probe_count']:,} "
                     "of the 2**64 binary32 operand pairs, chosen where a "
                     "rounding or normalisation defect is most likely to live; "
                     "it does not establish IEEE conformance of the package"

@@ -44,8 +44,15 @@ changes a published result rather than a cycle count:
     scatter applies slots in ascending order so a repeated index resolves to
     the last write while unnamed rows keep their prior contents.
 
-``VECTOR.ADD``
-    The residual, at every layer boundary, under ``bf16_add_rne_v1``.
+``VECTOR.ADD`` and six bounded VECTOR forms
+    The residual, at every layer boundary, under ``bf16_add_rne_v1``; unscaled
+    one-input/one-output ``CONVERT``; constant and same-shape ``SCALE``;
+    normalized 128-point ``HADAMARD``; four-head, unit-scale ``INDEX_SCORE``;
+    ``COMPRESS_PROJECT``; and four-stream ``HYPER_CONNECT_POST``.  The generated
+    ``vector_rtl_scope`` is the authority for the exact shape limits and names
+    every unsupported form.  Out-of-bound and descriptor-inconsistent cases
+    are retained as RTL-only ``ERR_SHAPE`` refusals even when the more general
+    functional Device legitimately executes the same ABI 3.0 program.
 
 ``SELECTION.ARGMAX``
     The token itself, under ``greedy_lowest_token_id_argmax``: the lowest token
@@ -2042,9 +2049,9 @@ def build_cases(capability: Capability, root: Path) -> list[Case]:
         "destination word is written",
         capability,
         root,
-        source=np.arange(513, dtype=np.uint16).reshape(3, 171),
-        input_dtype=DType.U16,
-        output_dtype=DType.U16,
+        source=np.arange(513, dtype=np.uint32).reshape(3, 171),
+        input_dtype=DType.U32,
+        output_dtype=DType.U32,
         contract="identity_storage_v1",
         rtl_expected_fault_code=ERR_SHAPE,
     ))
