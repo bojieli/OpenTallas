@@ -135,6 +135,9 @@ not promote planned behavior into implemented evidence.
   model-specific ROM target.
 - [DeepSeek-V4-Flash ROM hardware plan](DEEPSEEK_V4_ROM_HARDWARE_IMPLEMENTATION_PLAN.md)
   — wafer-scale sparse-model ROM target.
+- [DeepSeek-V4 ROM array implementation and evaluation plan](DEEPSEEK_V4_ROM_ARRAY_IMPLEMENTATION_PLAN.md)
+  — N-node reticle-class ROM array on the TA-DS-HBM fabric for Flash and Pro;
+  the controlled array-versus-wafer and ROM-versus-HBM experiment.
 
 ## Functional and model evidence
 
