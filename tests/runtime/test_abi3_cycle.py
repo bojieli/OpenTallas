@@ -73,11 +73,13 @@ from runtime.cycle.model import (
     CycleModel,
     CycleRequest,
     ScheduleError,
+    TraceStep,
     architectural_counters,
     functional_counters,
     functional_reference,
     operand_extents,
     prove_acyclic_waits,
+    tile_mapping,
     timing_counters,
 )
 from runtime.sim.engines import load_engines
@@ -1616,6 +1618,96 @@ def test_partial_tiles_charge_their_padding():
     assert tensor["padding_work"] > 0
     assert tensor["issued_work"] > tensor["useful_work"]
     assert body["counters"]["timing"]["latency.tile_padding_work"] > 0
+
+
+def test_tiling_report_does_not_call_issue_efficiency_physical_lane_use():
+    """Report the useful work without inventing unimplemented lane masking.
+
+    The fixed cycle policy still charges complete partial tiles.  Reporting the
+    useful fraction is valuable, but ABI 3.0 has no schedule-to-lane binding or
+    active-row mask from which physical utilization could be measured.  That
+    gap must stay typed and visible until an RTL architecture closes it.
+    """
+    deployment, capability = synthetic_tiled_deployment(
+        tile_rows=3, tile_cols=7, tile_depth=10
+    )
+    req = request()
+    result = CycleModel(deployment, capability, load_cost_table(BASELINE)).run(req)
+    body = result.to_dict()
+    tiling = body["tiling"]
+    tensor = tiling["by_family"]["tensor"]
+    engine = body["engines"]["tensor"]
+
+    assert tensor["useful_work"] + tensor["padding_work"] == tensor["issued_work"]
+    assert tensor["useful_issue_utilisation"] == round(
+        tensor["useful_work"] / tensor["issued_work"], 6
+    )
+    assert tensor["padding_fraction"] == round(
+        tensor["padding_work"] / tensor["issued_work"], 6
+    )
+    assert engine["useful_tile_work"] == tensor["useful_work"]
+    assert engine["issued_tile_work"] == tensor["issued_work"]
+    assert engine["tile_padding_work"] == tensor["padding_work"]
+    assert tensor["memory_traffic"] == {
+        "bytes_touched": engine["bytes_touched"],
+        "bytes_transferred": engine["bytes_transferred"],
+        "tile_refetch_amplification_bytes": (
+            engine["bytes_transferred"] - engine["bytes_touched"]
+        ),
+    }
+    lane = tiling["physical_lane_utilisation"]
+    assert lane["status"] == "not_derivable"
+    assert lane["value"] is None
+    assert "active-row or active-lane mask" in lane["reason"]
+    assert result.architectural == functional_counters(deployment, capability, req)
+
+
+def test_qwen_projection_decode_retains_fixed_tile_cost_while_prefill_is_full():
+    """The Qwen row-of-one pathology is phase-specific and remains honest.
+
+    A Qwen decode transaction binds one token row while a prefill block can
+    fill the 64-row schedule.  Until RTL implements masking or a narrow decode
+    engine, the decode mapping must retain the same issued 64-row tile rather
+    than turning a smaller logical extent into a cycle-model-only speedup.
+    """
+    params = MachineModel(cycle_capability(), load_cost_table(BASELINE)).engine(
+        "tensor"
+    )
+    schedule = {
+        "tile_rows": 64,
+        "tile_cols": 128,
+        "tile_depth": 128,
+        "issue_window": 2,
+        "max_outstanding": 4,
+    }
+
+    def projection(rows: int) -> TraceStep:
+        return TraceStep(
+            index=0,
+            kind="ENGINE",
+            mnemonic="TENSOR.MATMUL",
+            family="tensor",
+            operator_id=1,
+            schedule_id=2,
+            schedule=schedule,
+            operand_dims={
+                "in0": (rows, 4096),
+                "in1": (4096, 4096),
+                "out0": (rows, 4096),
+            },
+        )
+
+    decode = tile_mapping(projection(1), params)
+    prefill = tile_mapping(projection(64), params)
+
+    assert decode.tile_rows == prefill.tile_rows == 64
+    assert decode.issued_work == prefill.issued_work
+    assert decode.useful_work * 64 == decode.issued_work
+    assert decode.padding_work > 0
+    assert decode.to_dict()["axis_issue_utilisation"]["rows"] == 0.015625
+    assert decode.to_dict()["useful_issue_utilisation"] == 0.015625
+    assert prefill.padding_work == 0
+    assert prefill.to_dict()["useful_issue_utilisation"] == 1.0
 
 
 def test_an_absent_tile_mapping_is_rejected_before_it_reaches_the_model():

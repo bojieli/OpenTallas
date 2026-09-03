@@ -725,10 +725,42 @@ class TileMapping:
     def padding_work(self) -> int:
         return max(0, self.issued_work - self.useful_work)
 
+    @property
+    def issued_rows(self) -> int:
+        """Rows occupied by the issued tiles, including the final tile's pad."""
+        return self.row_tiles * self.tile_rows
+
+    @property
+    def issued_cols(self) -> int:
+        """Columns occupied by the issued tiles, including edge padding."""
+        return self.col_tiles * self.tile_cols
+
+    @property
+    def issued_depth(self) -> int:
+        """Reduction depth occupied by the issued tiles, padding included."""
+        return self.depth_tiles * self.tile_depth
+
+    @property
+    def useful_issue_utilisation(self) -> float:
+        """Fraction of scheduled work that belongs to the logical operation.
+
+        This is deliberately an *issue* utilisation, not physical-lane
+        utilisation.  ABI 3.0 says how an operation is tiled, but it does not
+        say how a tile maps onto physical lanes or whether inactive rows can be
+        clock-gated.  Calling this a lane measurement would manufacture a
+        microarchitecture the deployment does not describe.
+        """
+        return self.useful_work / self.issued_work if self.issued_work else 0.0
+
     def to_dict(self) -> dict[str, Any]:
         return {
             "schedule_id": self.schedule_id,
             "extent": {"rows": self.rows, "cols": self.cols, "depth": self.depth},
+            "issued_extent": {
+                "rows": self.issued_rows,
+                "cols": self.issued_cols,
+                "depth": self.issued_depth,
+            },
             "tile_shape": {
                 "tile_rows": self.tile_rows,
                 "tile_cols": self.tile_cols,
@@ -741,6 +773,15 @@ class TileMapping:
             "issued_work": self.issued_work,
             "useful_work": self.useful_work,
             "padding_work": self.padding_work,
+            "padding_fraction": _round(self.padding_work / self.issued_work)
+            if self.issued_work
+            else 0.0,
+            "useful_issue_utilisation": _round(self.useful_issue_utilisation),
+            "axis_issue_utilisation": {
+                "rows": _round(self.rows / self.issued_rows),
+                "cols": _round(self.cols / self.issued_cols),
+                "depth": _round(self.depth / self.issued_depth),
+            },
             "issue_window": self.issue_window,
             "max_outstanding": self.max_outstanding,
             "bank_mask": self.bank_mask,
@@ -1158,10 +1199,24 @@ class _Queue:
 class _EngineUnit:
     """One engine family's datapath occupancy."""
 
-    __slots__ = ("name", "params", "free_at", "busy_cycles", "operations",
-                 "compute_cycles", "memory_stall_cycles", "work_units", "bytes",
-                 "tiles", "tile_issue_cycles", "pipeline_stall_cycles",
-                 "issued_work", "padding_work", "transferred_bytes")
+    __slots__ = (
+        "name",
+        "params",
+        "free_at",
+        "busy_cycles",
+        "operations",
+        "compute_cycles",
+        "memory_stall_cycles",
+        "work_units",
+        "bytes",
+        "tiles",
+        "tile_issue_cycles",
+        "pipeline_stall_cycles",
+        "issued_work",
+        "useful_work",
+        "padding_work",
+        "transferred_bytes",
+    )
 
     def __init__(self, name: str, params: EngineParams) -> None:
         self.name = name
@@ -1177,6 +1232,7 @@ class _EngineUnit:
         self.tile_issue_cycles = 0
         self.pipeline_stall_cycles = 0
         self.issued_work = 0
+        self.useful_work = 0
         self.padding_work = 0
         self.transferred_bytes = 0
 
@@ -1192,7 +1248,14 @@ class _EngineUnit:
             "tile_pipeline_stall_cycles": self.pipeline_stall_cycles,
             "work_units": self.work_units,
             "issued_tile_work": self.issued_work,
+            "useful_tile_work": self.useful_work,
             "tile_padding_work": self.padding_work,
+            "tile_padding_fraction": _round(self.padding_work / self.issued_work)
+            if self.issued_work
+            else 0.0,
+            "useful_issue_utilisation": _round(self.useful_work / self.issued_work)
+            if self.issued_work
+            else 0.0,
             "bytes_touched": self.bytes,
             "bytes_transferred": self.transferred_bytes,
             "utilisation": _round(self.busy_cycles / span) if span else 0.0,
@@ -1981,6 +2044,7 @@ class CycleModel:
                 unit.tiles += mapping.tiles
                 unit.tile_issue_cycles += tile_issue
                 unit.issued_work += mapping.issued_work
+                unit.useful_work += mapping.useful_work
                 unit.padding_work += mapping.padding_work
                 totals["tiles"] += mapping.tiles
                 totals["tile_issue"] += tile_issue
@@ -3116,18 +3180,35 @@ class CycleModel:
         totals = node["totals"]
         per_family: dict[str, Any] = {}
         for family, mappings in sorted(node["tiles_seen"].items()):
+            engine = node["engines"][family]
             shapes = sorted(
                 {
                     (m.tile_rows, m.tile_cols, m.tile_depth, m.schedule_id)
                     for m in mappings
                 }
             )
+            issued_work = sum(m.issued_work for m in mappings)
+            useful_work = sum(m.useful_work for m in mappings)
+            padding_work = sum(m.padding_work for m in mappings)
             per_family[family] = {
                 "operations": len(mappings),
                 "tiles": sum(m.tiles for m in mappings),
-                "issued_work": sum(m.issued_work for m in mappings),
-                "useful_work": sum(m.useful_work for m in mappings),
-                "padding_work": sum(m.padding_work for m in mappings),
+                "issued_work": issued_work,
+                "useful_work": useful_work,
+                "padding_work": padding_work,
+                "padding_fraction": _round(padding_work / issued_work)
+                if issued_work
+                else 0.0,
+                "useful_issue_utilisation": _round(useful_work / issued_work)
+                if issued_work
+                else 0.0,
+                "memory_traffic": {
+                    "bytes_touched": engine.bytes,
+                    "bytes_transferred": engine.transferred_bytes,
+                    "tile_refetch_amplification_bytes": max(
+                        0, engine.transferred_bytes - engine.bytes
+                    ),
+                },
                 "tile_shapes": [
                     {
                         "schedule_id": schedule_id,
@@ -3141,6 +3222,12 @@ class CycleModel:
             }
         issued = sum(f["issued_work"] for f in per_family.values())
         useful = sum(f["useful_work"] for f in per_family.values())
+        bytes_touched = sum(
+            f["memory_traffic"]["bytes_touched"] for f in per_family.values()
+        )
+        bytes_transferred = sum(
+            f["memory_traffic"]["bytes_transferred"] for f in per_family.values()
+        )
         return {
             "source": "SCHEDULE descriptor",
             "rule": (
@@ -3155,9 +3242,50 @@ class CycleModel:
             "issued_tile_work": issued,
             "useful_work": useful,
             "padding_work": totals["tile_padding"],
-            "padding_fraction": _round(
-                (issued - useful) / issued
-            ) if issued else 0.0,
+            "padding_fraction": _round((issued - useful) / issued) if issued else 0.0,
+            "useful_issue_utilisation": _round(useful / issued) if issued else 0.0,
+            "memory_traffic": {
+                "scope": "tiled engine families on the reported node",
+                "bytes_touched": bytes_touched,
+                "bytes_transferred": bytes_transferred,
+                "tile_refetch_amplification_bytes": max(
+                    0, bytes_transferred - bytes_touched
+                ),
+            },
+            "physical_lane_utilisation": {
+                "status": "not_derivable",
+                "value": None,
+                "reason": (
+                    "ABI 3.0 SCHEDULE descriptors declare tile extents but no "
+                    "active-row or active-lane mask, and the capability record "
+                    "does not bind tile axes to physical lanes.  Useful divided "
+                    "by issued work is therefore an issue-efficiency diagnostic, "
+                    "not a physical-lane measurement."
+                ),
+                "required_architecture_decision": [
+                    "define and implement active-row/lane masking",
+                    "or define and implement a separate narrow decode engine",
+                ],
+                "required_evidence": [
+                    "RTL consumes the selected schedule semantics",
+                    "functional and RTL results remain token-exact",
+                    "same-process characterization supplies the timed lane behavior",
+                ],
+            },
+            "assumptions": {
+                "partial_tile_cost": (
+                    "every issued partial tile occupies and is charged as its "
+                    "complete SCHEDULE tile shape"
+                ),
+                "operand_refetch": (
+                    "a contraction re-reads its left operand per column tile and "
+                    "its right operand per row tile; accumulated output is written "
+                    "once"
+                ),
+                "physical_lane_activity": (
+                    "not inferred from tile shape or useful-work fraction"
+                ),
+            },
             "by_family": per_family,
             "unmodelled_schedule_fields": {
                 "resource_bound": (
