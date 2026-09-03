@@ -2,12 +2,31 @@
 
 **Decision ID:** TA-ADR-003
 
-**Status:** proposed for architecture review; implementation gate closed
+**Status:** accepted foundation; ABI 3.1 state amendment controls the current
+implementation gate
 
 **Issue date:** 2026-08-29
 **Applies to:** the shared HBM/SRAM tensor-accelerator chip and cluster
 profiles, their compiler and simulator, and the Qwen3 conventional and
 DeepSeek-V4 wafer-scale ROM families
+
+**Normative minor-version amendment (2026-09-03):**
+[the ABI 3.1 state and compressed-context amendment](TENSOR_ACCELERATOR_ABI_3_1_STATE_AMENDMENT.md)
+extends this decision for grouped transactional state, quotient-addressed
+compressed caches, persistent compressor windows, transaction-private working
+images, and atomic generation-root publication. The host submission and
+completion record ABI remains 3.0. All four production deployment programs
+must be rebuilt as ABI 3.1; grouped ABI 3.0 artifacts and their execution
+evidence are historical and cannot close a production gate. Unaffected ABI 3.0
+contracts below remain in force, and an ABI 3.1 implementation must retain the
+amendment's genuine-3.0 compatibility path.
+
+The mandatory DeepSeek execution and promotion boundary is specified by
+[the exact-200K simulator execution design](DEEPSEEK_200K_SIMULATOR_EXECUTION_DESIGN.md).
+It requires one 200,000-token natural prompt followed by ordinary decoding
+through the first official EOS or exactly 256 generated tokens, on both the
+wafer-scale ROM target and the exact 32-chip HBM/SRAM cluster, with complete
+external-oracle agreement.
 
 ## 1. Decision
 
@@ -34,8 +53,9 @@ ABI 3.0 is split into three separately versioned but release-bound interfaces:
 | Deployment and Descriptor ABI | authenticated objects, shapes, numerics, schedules, memory windows, programs, and state resources | compiler, firmware, simulator, and microsequencer |
 | Device Micro-ISA | loops, predicates, events, fences, engine launch, transactional state, completion, and traps | hardware microsequencer |
 
-“RTL 3.0” means the RTL implementation of these ABI 3.0 contracts. It is not a
-separate ISA version.
+“RTL 3.0” names the hardware family initially defined by these ABI 3.0
+contracts. An ABI 3.1-capable revision also implements the normative minor
+extension identified above; RTL 3.0 is not a separate ISA version.
 
 The product topology is:
 
@@ -58,15 +78,15 @@ Qwen and DeepSeek source/checkpoint adapters
  for Qwen    for DeepSeek
 ~~~
 
-The HBM/SRAM backend has one ABI 3.0, one programmable tile/controller
-architecture, one engine-interface set, one numerical contract, one compiler
-backend, one simulator, and one conventional accelerator-chip netlist. Qwen3-8B
-uses one such HBM/SRAM chip. DeepSeek-V4 Flash uses exactly 32 nodes of that same
-chip, connected by a separately modeled high-bandwidth, low-latency,
-NVLink-class cluster fabric. No model-specific chip RTL, datapath, or micro-ISA
-fork is permitted. Each node implements the union of required Qwen and DeepSeek
-engine modes; DeepSeek capacity and work are sharded by the compiler across the
-32 identical nodes.
+The HBM/SRAM backend has one versioned ABI 3.x contract, one programmable
+tile/controller architecture, one engine-interface set, one numerical
+contract, one compiler backend, one simulator, and one conventional
+accelerator-chip netlist. Qwen3-8B uses one such HBM/SRAM chip. DeepSeek-V4
+Flash uses exactly 32 nodes of that same chip, connected by a separately
+modeled high-bandwidth, low-latency, NVLink-class cluster fabric. No
+model-specific chip RTL, datapath, or micro-ISA fork is permitted. Each node
+implements the union of required Qwen and DeepSeek engine modes; DeepSeek
+capacity and work are sharded by the compiler across the 32 identical nodes.
 
 Qwen-ROM and DeepSeek-ROM are different physical products. Qwen-ROM is a
 conventional reticle-bounded chip/package. DeepSeek-ROM is a mandatory

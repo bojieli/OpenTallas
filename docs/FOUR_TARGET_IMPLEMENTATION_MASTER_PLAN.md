@@ -2,9 +2,12 @@
 
 **Plan ID:** TA-MASTER-3.0
 
-**Status:** active planning baseline; implementation paused at TA-A3-ARCH-0
+**Status:** active execution baseline; ABI 3.1 state implementation is the
+current shared gate
 
-**Planning baseline:** main at b6c38ee74b695145898c54c65a2a0f9eec3c281c
+**Original planning baseline:** main at b6c38ee74b695145898c54c65a2a0f9eec3c281c
+
+**Current contract refresh:** 2026-09-03, ABI 3.1 grouped-state amendment
 
 **Issue date:** 2026-08-29
 **Program owner:** integration and evidence owner
@@ -26,7 +29,54 @@ acceptance evidence so that parallel work does not fork the architecture or
 overwrite another lane.
 
 It is governed by
-[the ABI 3.0 architecture decision](TENSOR_ACCELERATOR_ABI_3_ARCHITECTURE_DECISION.md).
+[the ABI 3.0 architecture decision](TENSOR_ACCELERATOR_ABI_3_ARCHITECTURE_DECISION.md)
+as normatively extended by
+[the ABI 3.1 state and compressed-context amendment](TENSOR_ACCELERATOR_ABI_3_1_STATE_AMENDMENT.md).
+The host submission/completion records remain ABI 3.0, but all four grouped
+production deployment programs must be rebuilt as ABI 3.1. Earlier grouped
+ABI 3.0 deployments and token/restart evidence are historical inputs only and
+must not be promoted as source-current evidence.
+
+The DeepSeek end-to-end implementation additionally follows
+[the exact-200K simulator execution design](DEEPSEEK_200K_SIMULATOR_EXECUTION_DESIGN.md).
+Its two independent hard gates are a mutually correlated ABI 3.1
+compiler/runtime/simulator/RTL implementation and an external oracle continued
+through first official EOS or exactly 256 generated tokens. Neither an
+eight-token oracle prefix nor an artifact-only structural replay is a full
+execution.
+
+### 1.1 Current execution override
+
+TA-A3-ARCH-0 is no longer awaiting an initial ABI definition. The released
+ABI 3.0 foundation remains the compatibility baseline, while the ABI 3.1
+amendment is the sole authority for the affected state paths. The ordered
+implementation packages are:
+
+1. versioned codecs, registries, capabilities, and admission;
+2. common HBM/ROM compiler grouping, quotient predicates/views, and stateful
+   compression lowering;
+3. transaction-private simulator images, atomic root publication,
+   checkpointing, and idempotent recovery;
+4. RTL descriptor-minor admission, grouped-member walking, quotient/full-image
+   policies, counters, and root-interface properties; and
+5. focused conformance closure followed by rebuilding and re-executing all
+   four target deployments.
+
+These packages share one amendment and one integration owner. A lane may not
+invent a private ABI, IR operation, state convention, or evidence exception.
+Long-running immutable campaigns may execute concurrently only after their
+source digest, deployment digest, workload, oracle, topology, and output path
+are frozen. Until the in-progress W10 ABI 3.0 stress milestone finishes, its
+functional compiler/runtime/simulator source boundary remains locked; the
+milestone will be retained as historical evidence and then regenerated under
+ABI 3.1.
+
+The authoritative requirement-by-requirement progress ledger is
+[the unified execution checklist](UNIFIED_EXECUTION_CHECKLIST.md). Sections 2,
+13, 14, and 15 below retain the original unification snapshot and launch
+packets for provenance; their old statuses and immediate actions do not
+override this subsection or the unified checklist.
+
 The lane-specific plans are:
 
 - [shared HBM/SRAM tensor accelerator](HBM_SRAM_TENSOR_ACCELERATOR_IMPLEMENTATION_PLAN.md);
@@ -144,7 +194,7 @@ source + checkpoint + tokenizer + generation policy
      |                               |
 HBM/SRAM chip/cluster Plan IR   ROM chip/wafer Plan IR
      |                               |
-ABI 3.0 deployment/program       ROM image/program/schedule
+ABI 3.1 deployment/program      ABI 3.1 program + ROM image/schedule
      |                               |
 functional + cycle simulator     functional + cycle simulator
      |                               |
@@ -162,7 +212,9 @@ copied into the other merely to make counters comparable.
 Every agent and lane must preserve these invariants:
 
 - “tensor accelerator” is the programmable HBM/SRAM product name;
-- “RTL 3.0” is the implementation of ABI 3.0, not a model or separate ISA;
+- “RTL 3.0” is the shared hardware family, not a model or separate ISA, and its
+  production revision admits both genuine ABI 3.0 and the required ABI 3.1
+  programs;
 - HBM Qwen uses one node and HBM DeepSeek uses exactly 32 nodes of one identical
   conventional chip capability/netlist without resynthesis;
 - every HBM/SRAM chip includes the digital inter-chip endpoint, remote DMA,
