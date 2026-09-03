@@ -9,6 +9,8 @@ either, and that is exactly what these tests are for.
 
 from __future__ import annotations
 
+import threading
+
 import numpy as np
 
 from runtime.abi3.builder import DeploymentBuilder, DynamicTerm
@@ -389,7 +391,12 @@ def test_gqa_output_does_not_depend_on_the_contraction_pass_length(monkeypatch):
         assert result.status == CompletionStatus.SUCCESS, result.message
         return read(device, out_view), dict(result.counters)
 
+    # One worker is the former serial KV-head order.  Use it as the direct
+    # baseline, then restore the production eight-worker ceiling before the
+    # barrier proves that the candidate actually overlaps independent heads.
+    monkeypatch.setattr(engine_attention, "_MAX_DENSE_GQA_WORKERS", 1)
     expected_values, expected_counters = run()
+    monkeypatch.setattr(engine_attention, "_MAX_DENSE_GQA_WORKERS", 8)
     group = q_heads // kv_heads
     pass_lengths = set()
     for max_rows in (group, 3 * group, 7 * group, 13 * group, 1 << 20):
@@ -403,6 +410,88 @@ def test_gqa_output_does_not_depend_on_the_contraction_pass_length(monkeypatch):
     # the whole span in one pass: a vacuous sweep must not report a pass.
     assert 1 in pass_lengths and span in pass_lengths
     assert len(pass_lengths) >= 4
+
+
+def test_gqa_runs_independent_kv_heads_concurrently_and_remains_bit_exact(
+    monkeypatch,
+):
+    """Parallel scheduling may cross heads, never one head's reduction.
+
+    A barrier at both ordered contractions proves that two distinct workers are
+    live; a serial implementation cannot pass it.  The separately executed
+    uninstrumented result and all architectural counters remain bit-identical.
+    """
+
+    rng = np.random.default_rng(0xC011EC7)
+    span, q_heads, kv_heads, dim, context = 3, 4, 2, 8, 6
+    q = bf16_uniform(rng, (span, q_heads, dim))
+    k = bf16_uniform(rng, (context, kv_heads, dim))
+    v = bf16_uniform(rng, (context, kv_heads, dim))
+
+    def run():
+        build, out_view = build_attention(
+            sub=int(Attention.GQA),
+            q=q,
+            k=k,
+            v=v,
+            scale_bits=fp32_bits(0.25),
+        )
+        device = build.finish()
+        result = device.run_transaction(
+            device.create_session(), entrypoint_id=0, symbols={}
+        )
+        assert result.status == CompletionStatus.SUCCESS, result.message
+        return read(device, out_view), dict(result.counters)
+
+    expected_values, expected_counters = run()
+    original = engine_attention.dense_bf16_linear_bf16
+    barrier = threading.Barrier(kv_heads, timeout=10.0)
+    identities: set[int] = set()
+    identity_lock = threading.Lock()
+
+    def synchronized(*args, **kwargs):
+        with identity_lock:
+            identities.add(threading.get_ident())
+        barrier.wait()
+        return original(*args, **kwargs)
+
+    monkeypatch.setattr(engine_attention, "dense_bf16_linear_bf16", synchronized)
+    values, counters = run()
+    assert len(identities) == kv_heads
+    assert np.array_equal(values, expected_values)
+    assert counters == expected_counters
+
+
+def test_gqa_parallel_fault_reporting_keeps_ascending_kv_head_order(monkeypatch):
+    """Completion order must not choose which malformed head is reported."""
+
+    rng = np.random.default_rng(0xFA017)
+    span, q_heads, kv_heads, dim, context = 1, 4, 2, 8, 2
+    q = bf16_uniform(rng, (span, q_heads, dim))
+    k = bf16_uniform(rng, (context, kv_heads, dim))
+    v = bf16_uniform(rng, (context, kv_heads, dim))
+    barrier = threading.Barrier(kv_heads, timeout=10.0)
+
+    def failing_head(**kwargs):
+        barrier.wait()
+        raise engine_attention.BF16KernelError(f"synthetic head {kwargs['head']}")
+
+    monkeypatch.setattr(engine_attention, "_dense_gqa_kv_head_block", failing_head)
+    build, _ = build_attention(
+        sub=int(Attention.GQA),
+        q=q,
+        k=k,
+        v=v,
+        scale_bits=fp32_bits(0.25),
+    )
+    device = build.finish()
+    result = device.run_transaction(
+        device.create_session(), entrypoint_id=0, symbols={}
+    )
+    assert result.status == CompletionStatus.FAILED
+    assert result.trap_class == TrapClass.NUMERIC_OR_EXCEPTIONAL_VALUE
+    assert "synthetic head 0" in result.message
+    assert "synthetic head 2" not in result.message
 
 
 def test_gqa_is_causal_by_absolute_position():

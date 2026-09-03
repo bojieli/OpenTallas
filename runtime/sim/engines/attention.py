@@ -128,6 +128,8 @@ Counter semantics (frozen registry, ``runtime/sim/counters.py``)
 from __future__ import annotations
 
 
+from concurrent.futures import Future, ThreadPoolExecutor
+
 import numpy as np
 
 from runtime.abi3.constants import Attention, DType, Major, NO_ID
@@ -162,6 +164,13 @@ _SCORE_BLOCK_ELEMENTS = 1 << 21
 #: rows the contraction is already bandwidth bound and a longer pass only grows
 #: the working set; measured on this machine, 256 rows is the flat top.
 _MAX_BLOCK_ROWS = 256
+#: Dense Qwen GQA has eight independent KV heads.  Each head owns disjoint
+#: query rows, key/value operands and output columns, so executing those heads
+#: concurrently cannot move one addend in another head's reduction.  Keep the
+#: worker count fixed and bounded rather than deriving it from host CPU count:
+#: the schedule is then the same on every host and the peak score working set is
+#: at most eight times the already bounded per-head pass.
+_MAX_DENSE_GQA_WORKERS = 8
 
 PAD_INDEX = NO_ID
 """Sentinel in a sparse index view: the slot is padding and is not executed."""
@@ -254,6 +263,59 @@ def _context_bound(
 # ---------------------------------------------------------------------------
 # DENSE and GQA
 # ---------------------------------------------------------------------------
+def _dense_gqa_kv_head_block(
+    *,
+    queries: np.ndarray,
+    keys: np.ndarray,
+    values: np.ndarray,
+    mask_values: np.ndarray,
+    scale: np.float32,
+    start: int,
+    stop: int,
+    head: int,
+    group: int,
+    head_dim: int,
+    context: int,
+) -> np.ndarray:
+    """Execute one KV head for one query-token block.
+
+    KV heads do not share an accumulator.  This helper deliberately contains
+    the complete score -> scale -> mask -> softmax -> value chain for one head,
+    so a worker neither publishes a partial result nor writes shared output.
+    The caller collects completed values in ascending KV-head order and alone
+    writes the destination tensor.
+    """
+
+    block_queries = np.ascontiguousarray(
+        queries[start:stop, head : head + group, :]
+    ).reshape((stop - start) * group, head_dim)
+    rows_in_pass = int(block_queries.shape[0])
+    scored = dense_bf16_linear_bf16(
+        block_queries,
+        keys,
+        input_tile_rows=rows_in_pass,
+        output_tile_rows=context,
+    )
+    scaled, _ = _round_bf16(
+        np.multiply(_widen_bf16(scored.values), scale, dtype=np.float32)
+    )
+    masked, _ = _round_bf16(
+        np.add(
+            _widen_bf16(scaled),
+            mask_values,
+            dtype=np.float32,
+        )
+    )
+    probabilities, _ = _softmax_bf16_rows(masked)
+    context_block = dense_bf16_linear_bf16(
+        probabilities,
+        values,
+        input_tile_rows=rows_in_pass,
+        output_tile_rows=head_dim,
+    )
+    return context_block.values.reshape(stop - start, group, head_dim)
+
+
 def _execute_dense_gqa(ctx: EngineContext, descriptor: Descriptor, sub: int) -> None:
     _, scale = _preamble(ctx, descriptor, sub)
 
@@ -356,6 +418,17 @@ def _execute_dense_gqa(ctx: EngineContext, descriptor: Descriptor, sub: int) -> 
     columns = np.arange(context, dtype=np.int64)
     block = _token_block(span, context, group)
 
+    # NumPy's ordered tensor kernel releases the GIL inside every ufunc.  One
+    # bounded pool can therefore overlap the eight independent Qwen KV heads
+    # without changing the ascending-K reduction inside any output element.
+    # A single-head dense operator stays on the direct path and pays no pool
+    # overhead.  The pool lives for this operator issue, not process-wide, so it
+    # cannot retain model tensors or outlive a failed transaction.
+    executor = (
+        ThreadPoolExecutor(max_workers=min(kv_heads, _MAX_DENSE_GQA_WORKERS))
+        if kv_heads > 1
+        else None
+    )
     try:
         for start in range(0, span, block):
             stop = min(start + block, span)
@@ -371,45 +444,54 @@ def _execute_dense_gqa(ctx: EngineContext, descriptor: Descriptor, sub: int) -> 
                 np.uint16(0),
             ).astype(np.uint16)
             mask_values = _widen_bf16(mask)
-            for kv_head in range(kv_heads):
-                head = kv_head * group
-                # ``head // group == kv_head`` for exactly this contiguous run
-                # of query heads, so iterating KV head then group member visits
-                # the heads in the same order the scalar loop did.
-                block_queries = np.ascontiguousarray(
-                    queries[start:stop, head : head + group, :]
-                ).reshape((stop - start) * group, head_dim)
-                rows_in_pass = int(block_queries.shape[0])
-                scored = dense_bf16_linear_bf16(
-                    block_queries,
-                    key_rows[kv_head],
-                    input_tile_rows=rows_in_pass,
-                    output_tile_rows=context,
+            if executor is None:
+                completed = (
+                    _dense_gqa_kv_head_block(
+                        queries=queries,
+                        keys=key_rows[0],
+                        values=value_rows[0],
+                        mask_values=mask_values,
+                        scale=scale,
+                        start=start,
+                        stop=stop,
+                        head=0,
+                        group=group,
+                        head_dim=head_dim,
+                        context=context,
+                    ),
                 )
-                scaled, _ = _round_bf16(
-                    np.multiply(_widen_bf16(scored.values), scale, dtype=np.float32)
-                )
-                scaled, _ = _round_bf16(
-                    np.add(
-                        _widen_bf16(scaled),
-                        mask_values,
-                        dtype=np.float32,
+            else:
+                futures: tuple[Future[np.ndarray], ...] = tuple(
+                    executor.submit(
+                        _dense_gqa_kv_head_block,
+                        queries=queries,
+                        keys=key_rows[kv_head],
+                        values=value_rows[kv_head],
+                        mask_values=mask_values,
+                        scale=scale,
+                        start=start,
+                        stop=stop,
+                        head=kv_head * group,
+                        group=group,
+                        head_dim=head_dim,
+                        context=context,
                     )
+                    for kv_head in range(kv_heads)
                 )
-                probabilities, _ = _softmax_bf16_rows(scaled)
-                context_block = dense_bf16_linear_bf16(
-                    probabilities,
-                    value_rows[kv_head],
-                    input_tile_rows=rows_in_pass,
-                    output_tile_rows=head_dim,
-                )
-                outputs[start:stop, head : head + group] = context_block.values.reshape(
-                    stop - start, group, head_dim
-                )
+                # ``future.result`` is deliberately consumed in ascending head
+                # order.  A malformed lower-numbered head therefore remains
+                # the first reported fault, matching the former serial path.
+                completed = tuple(future.result() for future in futures)
+            for kv_head, context_values in enumerate(completed):
+                head = kv_head * group
+                outputs[start:stop, head : head + group] = context_values
     except (AttentionKernelError, BF16KernelError) as exc:
         raise EngineError(
             f"attention numeric contract violated: {exc}", trap_class=6
         ) from exc
+    finally:
+        if executor is not None:
+            executor.shutdown(wait=True, cancel_futures=True)
 
     ctx.write(out_view, outputs)
     ctx.counters.add("attention.heads", span * query_heads)
