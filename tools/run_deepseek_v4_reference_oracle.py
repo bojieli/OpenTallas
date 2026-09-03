@@ -37,6 +37,7 @@ from __future__ import annotations
 
 import argparse
 import gc
+import hashlib
 import json
 import math
 import os
@@ -68,11 +69,72 @@ sys.path.insert(0, str(REPO / "tools"))
 
 import deepseek_v4_prefill_tiling as tiling  # noqa: E402
 from opentallas.schema import ModelProfile  # noqa: E402
-from opentallas.workload import kv_traffic, rho_one, weight_traffic  # noqa: E402
+from opentallas.workload import kv_traffic, rho_one  # noqa: E402
 
 SCHEMA = "opentallas.abi3.reference_oracle.v1"
 MODEL_ID = "deepseek-v4-flash-0731"
 EOS_TOKEN_ID = 1
+
+# This is the complete repository-owned implementation boundary that can alter
+# the oracle's token choices.  Vendor model sources and immutable inputs are
+# bound separately below.  Keep this list intentionally small: this program is
+# an external comparator, not part of the accelerator compiler or runtime.
+PRODUCER_SOURCE_PATHS = (
+    "compiler/frontend/deepseek_v4_tokenizer.py",
+    "runtime/reference/deepseek_v4_oracle.py",
+    "tools/deepseek_v4_prefill_tiling.py",
+    "tools/run_deepseek_v4_reference_oracle.py",
+)
+CHECKPOINT_SOURCE_PATH = (
+    REPO
+    / "compiler"
+    / "models"
+    / MODEL_ID
+    / "checkpoint_source.json"
+)
+
+
+def _sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1 << 20), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def _canonical_digest(value: object) -> str:
+    encoded = json.dumps(
+        value, sort_keys=True, separators=(",", ":"), ensure_ascii=True
+    ).encode("ascii")
+    return hashlib.sha256(encoded).hexdigest()
+
+
+def _file_identity(path: Path) -> dict[str, object]:
+    resolved = path.resolve()
+    try:
+        relative = resolved.relative_to(REPO.resolve()).as_posix()
+    except ValueError as exc:
+        raise OracleError(f"source input is outside the repository: {path}") from exc
+    return {
+        "path": relative,
+        "size_bytes": resolved.stat().st_size,
+        "sha256": _sha256_file(resolved),
+    }
+
+
+def _producer_identity() -> dict[str, object]:
+    source_map = {
+        relative: _sha256_file(REPO / relative)
+        for relative in PRODUCER_SOURCE_PATHS
+    }
+    return {
+        "tool": "tools/run_deepseek_v4_reference_oracle.py",
+        "tool_source_sha256": source_map[
+            "tools/run_deepseek_v4_reference_oracle.py"
+        ],
+        "source_map": source_map,
+        "source_map_sha256": _canonical_digest(source_map),
+    }
 
 #: Recorded in ``adaptations`` whenever a rung actually used the tiled prefill,
 #: in the same shape as the adaptations the engine itself declares.
@@ -695,6 +757,10 @@ def main() -> int:
             (args.workloads / entry["path"]).read_text()
         )
 
+    producer_identity = _producer_identity()
+    workload_index_identity = _file_identity(index_path)
+    checkpoint_source_identity = _file_identity(CHECKPOINT_SOURCE_PATH)
+
     if args.engine_per_workload:
         # Climb the ladder shortest first, so every rung that *can* run has
         # already been recorded by the time a longer one exhausts the device.
@@ -783,6 +849,7 @@ def main() -> int:
 
     report = {
         "schema": SCHEMA,
+        "run_status": "running",
         "evidence_class": "external_reference_comparator",
         "not_a_claim": [
             "accelerator_execution",
@@ -792,6 +859,20 @@ def main() -> int:
         "model_id": MODEL_ID,
         "snapshot": str(args.snapshot),
         "source": index.get("source", {}),
+        "producer": {
+            **producer_identity,
+            "command_argv": [
+                "tools/run_deepseek_v4_reference_oracle.py",
+                *sys.argv[1:],
+            ],
+            "selected_workload_ids": [
+                workload_id for workload_id, _entry in selected
+            ],
+        },
+        "input_identity": {
+            "checkpoint_source": checkpoint_source_identity,
+            "workload_index": workload_index_identity,
+        },
         "tokenizer_sha256": index["tokenizer_sha256"],
         "vendor_source_sha256": engine.vendor_digests,
         # Kept at the top level as well as inside "environment" so this report
@@ -1032,6 +1113,17 @@ def main() -> int:
         report["results"][workload_id] = {
             "kind": entry["kind"],
             "workload_digest": entry["digest"],
+            "execution_identity": {
+                "checkpoint_source_sha256": checkpoint_source_identity["sha256"],
+                "producer_source_map_sha256": producer_identity[
+                    "source_map_sha256"
+                ],
+                "vendor_source_sha256": dict(engine.vendor_digests),
+                "workload_index_sha256": workload_index_identity["sha256"],
+                "workload_source": _file_identity(
+                    args.workloads / entry["path"]
+                ),
+            },
             "prompt_token_count": len(ids),
             "generated_token_ids": generated,
             "generated_token_count": len(generated),
@@ -1132,8 +1224,23 @@ def main() -> int:
         if value["kind"] == "long_natural"
     ]
     report["largest_natural_context_executed"] = max(natural) if natural else 0
+    producer_at_completion = _producer_identity()
+    report["producer"]["source_current_at_completion"] = (
+        producer_at_completion == producer_identity
+    )
+    report["run_status"] = (
+        "complete"
+        if report["producer"]["source_current_at_completion"]
+        else "producer_source_changed_during_run"
+    )
     flush()
     print(f"\nwrote {args.output}")
+    if report["run_status"] != "complete":
+        print(
+            "producer source changed during execution; result is not admissible",
+            file=sys.stderr,
+        )
+        return 2
     return 0
 
 
