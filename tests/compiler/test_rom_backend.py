@@ -1555,6 +1555,67 @@ def test_schedule_checker_rejects_semantically_wrong_wait(
     assert report["checks"]["producer_consumer_wait"] is False
 
 
+def test_qwen_kv_resource_events_order_attention_and_fail_closed(
+    qwen_build, qwen_graph, qwen_capability
+):
+    """The checker independently requires both cache-plane append events."""
+
+    deployment, _plan = qwen_build
+    instructions = _instructions(deployment)
+    writers = [
+        kernel
+        for kernel in qwen_graph.kernels
+        if kernel.layer == 0 and kernel.kind == "KV_APPEND"
+    ]
+    reader = next(
+        kernel
+        for kernel in qwen_graph.kernels
+        if kernel.layer == 0 and kernel.kind == "ATTENTION_GQA"
+    )
+    writer_events = {
+        instruction.signal_event_id
+        for instruction in instructions
+        if instruction.source_operation_id in {kernel.index for kernel in writers}
+        and instruction.signal_event_id != NO_ID
+    }
+    reader_index, reader_instruction = next(
+        (index, instruction)
+        for index, instruction in enumerate(instructions)
+        if instruction.source_operation_id == reader.index
+    )
+    wait = deployment.table[reader_instruction.wait_set_id]
+    named = {
+        int(wait.payload[f"producer_{slot}"])
+        for slot in range(int(wait.payload["producer_count"]))
+    }
+    assert len(writer_events) == 2
+    assert writer_events <= named
+
+    signal_index = {
+        instruction.signal_event_id: index
+        for index, instruction in enumerate(instructions)
+        if instruction.signal_event_id != NO_ID
+    }
+    replacement = next(
+        event
+        for event, index in sorted(signal_index.items())
+        if index < reader_index and event not in named
+    )
+    removed = next(iter(writer_events))
+    slot = next(
+        slot
+        for slot in range(int(wait.payload["producer_count"]))
+        if int(wait.payload[f"producer_{slot}"]) == removed
+    )
+    candidate = _mutate_descriptor(
+        deployment, wait.descriptor_id, f"producer_{slot}", replacement
+    )
+    assert verify_deployment(candidate, qwen_capability).admitted
+    report = check_rom_schedule(qwen_graph, candidate, qwen_capability)
+    assert report["status"] == "fail"
+    assert report["checks"]["producer_consumer_wait"] is False
+
+
 def test_schedule_checker_rejects_zero_link_credit(
     deepseek_build, deepseek_graph, deepseek_capability
 ):
@@ -3426,24 +3487,41 @@ def test_direct_state_token_append_waits_for_link_join_and_fence(deepseek_build)
     assert link_events <= ancestry
 
 
-def test_qwen_retains_transactional_state_descriptors_and_instructions(qwen_build):
-    """The direct-state class boundary does not change Qwen's kv_cache ABI."""
-
-    from runtime.abi3.constants import State
+def test_qwen_kv_cache_is_one_live_hbm_group(qwen_build):
+    """Qwen's KV cache is ordinary writable HBM with no ABI STATE surface."""
 
     deployment, _plan = qwen_build
-    assert [
+    assert not [
         descriptor
         for descriptor in deployment.table.descriptors()
         if descriptor.descriptor_type == ExtendedDescriptorType.STATE
     ]
-    state_subs = {
-        instruction.sub
+    assert not [
+        instruction
         for instruction in _instructions(deployment)
         if instruction.major == int(Major.STATE)
-    }
-    assert state_subs == {int(State.PREPARE), int(State.COMMIT)}
-    assert "direct_buffer_state" not in deployment.notes["rom_lowering"]
+    ]
+
+    groups = deployment.notes["rom_lowering"]["direct_buffer_state"]
+    assert groups["physical_groups"] == 1
+    assert groups["physical_groups"] == deployment.notes["rom_lowering"]["state_groups"]
+    assert groups["classes"] == ["kv_cache"]
+    assert groups["storage_class"] == "HBM"
+
+    objects = [
+        descriptor
+        for descriptor in deployment.table.descriptors()
+        if descriptor.descriptor_type == ExtendedDescriptorType.MEMORY_OBJECT
+    ]
+    assert all(
+        descriptor.payload["storage_class"] != int(StorageClass.STATE)
+        for descriptor in objects
+    )
+    assert any(
+        descriptor.payload["storage_class"] == int(StorageClass.HBM)
+        and descriptor.permissions == int(Permission.READ | Permission.WRITE)
+        for descriptor in objects
+    )
 
 
 def test_mutable_state_overflow_is_refused(qwen_graph):
@@ -3890,15 +3968,15 @@ def test_prefill_issues_one_dispatch_per_kernel_per_layer(
     state = [d for d in engine if d == int(M.STATE)]
     work = len(engine) - len(state)
     # Exactly one dispatch per kernel that does engine work: not one per token,
-    # and not one per tile.  The graph's own state kernels are emitted once each
-    # at the transaction boundary rather than per layer.
+    # and not one per tile.  The graph's legacy transaction markers emit
+    # nothing because the KV cache is already the ordinary live HBM image.
     priced = [
         k
         for k in execution_graph.kernels
         if k.kind not in {"STATE_PREPARE", "STATE_COMMIT"}
     ]
     assert work == len(priced)
-    assert len(state) == 2
+    assert state == []
 
 
 def test_position_range_is_materialised_not_staged(qwen_build, qwen_graph):
@@ -3975,32 +4053,40 @@ def test_contraction_operands_are_stated_as_matrices(qwen_build, qwen_graph):
     assert checked >= 8
 
 
-def test_state_planes_share_one_fused_row(qwen_build):
+def test_state_planes_share_one_live_hbm_fused_row(qwen_build, qwen_graph):
     """Key and value are halves of one row, described rather than copied."""
-    deployment, plan = qwen_build
-    state = next(
+
+    deployment, _plan = qwen_build
+    attention = next(
         d
         for d in deployment.table.descriptors()
-        if d.descriptor_type == ExtendedDescriptorType.STATE
+        if d.descriptor_type == ExtendedDescriptorType.OPERATOR
+        and qwen_graph.kernels[d.payload["source_kernel_id"]].kind == "ATTENTION_GQA"
     )
-    row_elements = state.payload["row_bytes"] // 2  # BF16
-    prepared = state.payload["prepared_object_id"]
     planes = [
-        d.payload
-        for d in deployment.table.descriptors()
-        if d.descriptor_type == ExtendedDescriptorType.TENSOR_VIEW
-        and d.primary_object_id == prepared
-        and d.payload["rank"] == 3
+        deployment.table.get(
+            attention.payload[f"input_view_{slot}"],
+            ExtendedDescriptorType.TENSOR_VIEW,
+        )
+        for slot in (1, 2)
     ]
-    assert planes
+    assert planes[0].primary_object_id == planes[1].primary_object_id
+    state_object = deployment.table.get(
+        planes[0].primary_object_id, ExtendedDescriptorType.MEMORY_OBJECT
+    )
+    assert state_object.payload["storage_class"] == int(StorageClass.HBM)
+    assert state_object.permissions == int(Permission.READ | Permission.WRITE)
+    row_elements = int(planes[0].payload["stride0"])
     offsets = set()
-    for payload in planes:
+    for plane in planes:
+        payload = plane.payload
         assert payload["stride0"] == row_elements
-        assert payload["dim0"] == state.payload["capacity_rows"]
+        assert payload["rank"] == 3
         offsets.add(payload["element_offset"])
     # Two distinct planes, both inside one row.
-    assert len(offsets) >= 2
+    assert len(offsets) == 2
     assert max(offsets) < row_elements
+    assert not deployment.table.ids_of_type(ExtendedDescriptorType.STATE)
 
 
 def test_movement_operands_are_permuted_into_the_engine_order(qwen_build, qwen_graph):

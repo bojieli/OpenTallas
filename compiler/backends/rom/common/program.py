@@ -134,13 +134,12 @@ MAX_WAIT_PRODUCERS = 12
 
 WEIGHT_ROLES = frozenset({"weight", "constant"})
 
-#: Neutral state classes whose ABI 3.0 representation is one persistent,
-#: ordinary writable HBM buffer.  DeepSeek's streaming caches and compressor
-#: windows update in place and have no rollback/retry contract.  Qwen's
-#: ``kv_cache`` deliberately stays outside this set and retains the existing
-#: committed/prepared STATE transaction lowering.
+#: Neutral state classes whose ABI 3.0 representation is one live, ordinary
+#: writable HBM buffer.  The model caches and compressor histories update in
+#: place during one uninterrupted, fail-stop execution; they have no
+#: rollback/retry or durable-publication contract.
 DIRECT_BUFFER_STATE_CLASSES = frozenset(
-    {"compressed_kv", "compressor_window", "kv_window"}
+    {"compressed_kv", "compressor_window", "kv_cache", "kv_window"}
 )
 
 
@@ -1153,6 +1152,10 @@ class RomLowering:
         self._position_input_cache: frozenset[str] | None = None
         self._state_owner: dict[str, str] = {}
         self._event_of_tensor: dict[str, int] = {}
+        # Qwen's append results and attention-history operands have different
+        # tensor IDs even though they address the same physical KV group.  This
+        # frontier makes the DMA-to-attention dependency explicit by resource.
+        self._kv_cache_write_events: dict[str, list[int]] = {}
         self._communications: list[tuple[str, int]] = []
         self._link_endpoint_objects: dict[int, tuple[int, int]] = {}
         self._link_numeric: dict[tuple[str, str], int] = {}
@@ -7175,6 +7178,7 @@ class RomLowering:
                     for name in kernel.inputs
                     if name in self._event_of_tensor
                 }
+                producers.update(self._kv_cache_read_events(kernel))
                 if len(producers) > 1:
                     raise RomLoweringError(
                         f"kernel {kernel.kernel_id!r}: an alias-only STATE_READ "
@@ -7630,6 +7634,7 @@ class RomLowering:
             for name in (kernel.inputs if wait_inputs is None else wait_inputs)
             if name in self._event_of_tensor
         ]
+        producers.extend(self._kv_cache_read_events(kernel))
         producers.extend(int(item) for item in extra_wait_events if item != NO_ID)
         if (
             kernel.kind == "TOKEN_APPEND"
@@ -7661,7 +7666,37 @@ class RomLowering:
         # event the first iteration cannot yet have signalled.
         for name in kernel.outputs:
             self._event_of_tensor[name] = event
+        if kernel.kind == "KV_APPEND":
+            self._record_kv_cache_write(kernel, event)
         return event
+
+    def _kv_cache_groups(self, resources: Sequence[str]) -> list[str]:
+        """Physical ordinary-HBM Qwen KV groups named by state effects."""
+
+        groups: list[str] = []
+        for state_id in resources:
+            state = self.states.get(state_id)
+            placement = self._state_slot.get(state_id)
+            if state is None or placement is None or state.state_class != "kv_cache":
+                continue
+            group = str(placement[0])
+            if group not in groups:
+                groups.append(group)
+        return groups
+
+    def _kv_cache_read_events(self, kernel: Kernel) -> list[int]:
+        events: list[int] = []
+        for group in self._kv_cache_groups(kernel.state_reads):
+            events.extend(self._kv_cache_write_events.get(group, ()))
+        return list(dict.fromkeys(events))
+
+    def _record_kv_cache_write(self, kernel: Kernel, event: int) -> None:
+        if event == NO_ID:
+            return
+        for group in self._kv_cache_groups(kernel.state_writes):
+            frontier = self._kv_cache_write_events.setdefault(group, [])
+            if int(event) not in frontier:
+                frontier.append(int(event))
 
     def _state_for(self, kernel: Kernel) -> int:
         for state_id in (*kernel.state_writes, *kernel.state_reads):

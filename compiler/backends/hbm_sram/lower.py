@@ -421,6 +421,12 @@ class _Emitter:
         self._host_object: dict[str, int] = {}
         self._state_objects: dict[str, tuple[int, int]] = {}
         self._state_descriptor: dict[str, int] = {}
+        # Qwen names cache writes and cache reads with different tensor IDs.
+        # Track the completion frontier by physical KV resource so the
+        # cross-engine DMA-to-attention dependency is explicit on the wire.
+        # Other direct-state families have their own phase-aware transition
+        # lowering and are deliberately not folded into this simple frontier.
+        self._kv_cache_write_events: dict[str, list[int]] = {}
         #: Neutral state-class names this graph borrowed a frozen class for.
         self._state_class_aliases: dict[str, str] = {}
         self._event_of_tensor: dict[str, int] = {}
@@ -3362,6 +3368,7 @@ class _Emitter:
             )
             for name in kernel.outputs:
                 self._event_of_tensor[name] = event
+            self._record_kv_cache_write(kernel, [event])
             return
         if consumer_paths is not None:
             event = self._emit_phase_consumer(
@@ -3379,6 +3386,7 @@ class _Emitter:
             )
             for name in kernel.outputs:
                 self._event_of_tensor[name] = event
+            self._record_kv_cache_write(kernel, [event])
             return
         operator = builder.operator(
             engine_family=Major(plan.engine_family),
@@ -3413,6 +3421,7 @@ class _Emitter:
         )
         for name in kernel.outputs:
             self._event_of_tensor[name] = event
+        self._record_kv_cache_write(kernel, [event])
 
     def _state_member_view(
         self,
@@ -4906,6 +4915,7 @@ class _Emitter:
         predicate = self._phase_predicate(plan.phases)
         column = 0
         event = NO_ID
+        write_events: list[int] = []
         for slot, operand in enumerate(
             o for o in plan.operands if o.direction == "in"
         ):
@@ -4927,6 +4937,7 @@ class _Emitter:
                 key=f"op.k{plan.index}.part{slot}",
             )
             event = builder.new_event()
+            write_events.append(event)
             builder.emit(
                 Major(plan.engine_family),
                 plan.engine_sub,
@@ -4943,6 +4954,7 @@ class _Emitter:
         )
         for name in kernel.outputs:
             self._event_of_tensor[name] = event
+        self._record_kv_cache_write(kernel, write_events)
 
     def _state_window(
         self,
@@ -5250,11 +5262,42 @@ class _Emitter:
         return _narrow_bf16_rne(bits)
 
     def _producer_events(self, kernel: Kernel) -> list[int]:
-        return [
+        events = [
             self._event_of_tensor[name]
             for name in kernel.inputs
             if name in self._event_of_tensor
         ]
+        for physical_id in self._kv_cache_resources(kernel.state_reads):
+            events.extend(self._kv_cache_write_events.get(physical_id, ()))
+        return list(dict.fromkeys(events))
+
+    def _kv_cache_resources(self, resources: Iterable[str]) -> list[str]:
+        """Physical ordinary-HBM KV resources named by neutral state effects."""
+
+        physical: list[str] = []
+        for resource_id in resources:
+            mapping = self.plan.state_of_resource.get(resource_id)
+            if mapping is None:
+                continue
+            physical_id = str(mapping[0])
+            state = self.plan.state(physical_id)
+            if state.state_class == "kv_cache" and physical_id not in physical:
+                physical.append(physical_id)
+        return physical
+
+    def _record_kv_cache_write(
+        self, kernel: Kernel, events: Iterable[int]
+    ) -> None:
+        """Publish an unconditional KV-write frontier for later cache readers."""
+
+        emitted = [int(event) for event in events if int(event) != NO_ID]
+        if not emitted:
+            return
+        for physical_id in self._kv_cache_resources(kernel.state_writes):
+            frontier = self._kv_cache_write_events.setdefault(physical_id, [])
+            for event in emitted:
+                if event not in frontier:
+                    frontier.append(event)
 
     def _terminal_work_events(self) -> list[int]:
         """Acquire all issued work and return one ABI-sized terminal frontier.

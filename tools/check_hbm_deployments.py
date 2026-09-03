@@ -48,7 +48,6 @@ from runtime.abi3.constants import (  # noqa: E402
     Major,
     NO_ID,
     Permission,
-    State,
     StorageClass,
     TopologyClass,
 )
@@ -392,6 +391,116 @@ def _link_records(
             }
         )
     return records
+
+
+def _terminal_cluster_ordering(
+    graph: KernelGraph,
+    deployment: Deployment,
+    instructions: Sequence[Any] | None = None,
+) -> dict[str, Any]:
+    """Reconstruct the fail-stop cluster completion ordering.
+
+    Live model buffers need no STATE transaction.  The one ordering boundary
+    that remains is ordinary execution ordering: all cluster work reaches the
+    completion barrier, a local FENCE acquires that barrier, and TOKEN_APPEND
+    waits for the fence before exposing the selected token.
+    """
+
+    if instructions is None:
+        _header, body = split_program(deployment.program)
+        instructions = decode_body(body)
+    instructions = list(instructions)
+    links = _link_records(graph, deployment, instructions)
+    barriers = [
+        record
+        for record in links
+        if int(record["route_class"])
+        == _DEEPSEEK_ROUTE_CONTRACT["coordinated_commit"][0]
+    ]
+    errors: list[str] = []
+
+    if len(barriers) != 1 or int(barriers[0]["signal_event_id"]) == NO_ID:
+        errors.append("expected exactly one completion-signalled cluster barrier")
+        barrier_index = -1
+        barrier_event = NO_ID
+    else:
+        barrier_index = int(barriers[0]["instruction_index"])
+        barrier_event = int(barriers[0]["signal_event_id"])
+
+    producer_index = {
+        int(instruction.signal_event_id): index
+        for index, instruction in enumerate(instructions)
+        if int(instruction.signal_event_id) != NO_ID
+    }
+    barrier_waits = (
+        set(int(event) for event in barriers[0]["wait_events"])
+        if len(barriers) == 1
+        else set()
+    )
+    barrier_waits_for_work = bool(barrier_waits) and all(
+        producer_index.get(event, len(instructions)) < barrier_index
+        for event in barrier_waits
+    )
+    if not barrier_waits_for_work:
+        errors.append("cluster completion barrier does not wait for prior work")
+
+    fences = [
+        (index, instruction)
+        for index, instruction in enumerate(instructions)
+        if int(instruction.major) == int(Major.CONTROL)
+        and int(instruction.sub) == int(Control.FENCE)
+        and barrier_event != NO_ID
+        and barrier_event
+        in _wait_events(deployment, int(instruction.wait_set_id))
+    ]
+    fence_ordered = (
+        len(fences) == 1
+        and fences[0][0] > barrier_index
+        and int(fences[0][1].signal_event_id) != NO_ID
+    )
+    if not fence_ordered:
+        errors.append("exactly one signalled FENCE must acquire the cluster barrier")
+    fence_index = fences[0][0] if fence_ordered else -1
+    fence_event = int(fences[0][1].signal_event_id) if fence_ordered else NO_ID
+
+    append_sources = {
+        int(kernel.index) for kernel in graph.kernels if kernel.kind == "TOKEN_APPEND"
+    }
+    appends = [
+        (index, instruction)
+        for index, instruction in enumerate(instructions)
+        if int(instruction.source_operation_id) in append_sources
+    ]
+    appends_wait_for_fence = bool(append_sources) and {
+        int(instruction.source_operation_id) for _index, instruction in appends
+    } == append_sources and all(
+        index > fence_index
+        and fence_event != NO_ID
+        and fence_event in _wait_events(deployment, int(instruction.wait_set_id))
+        for index, instruction in appends
+    )
+    if not appends_wait_for_fence:
+        errors.append("TOKEN_APPEND does not wait for the post-barrier FENCE")
+
+    no_state_instructions = not any(
+        int(instruction.major) == int(Major.STATE) for instruction in instructions
+    )
+    if not no_state_instructions:
+        errors.append("live-buffer execution unexpectedly emits ABI STATE instructions")
+
+    return {
+        "ok": not errors,
+        "errors": errors,
+        "barrier_count": len(barriers),
+        "barrier_event": barrier_event,
+        "barrier_waits_for_work": barrier_waits_for_work,
+        "fence_count": len(fences),
+        "fence_event": fence_event,
+        "fence_ordered_after_barrier": fence_ordered,
+        "token_append_count": len(appends),
+        "token_appends_wait_for_fence": appends_wait_for_fence,
+        "no_state_instructions": no_state_instructions,
+    }
 
 
 def _scratch_serialization(
@@ -882,10 +991,11 @@ def _weight_locality(plan: Any) -> dict[str, Any]:
 
 def _local_hbm_footprint(
     plan: Any, locality: Mapping[str, Any], communication_scratch: int
-) -> dict[str, int]:
+) -> dict[str, Any]:
     """Pack the independently reconstructed node-local payload at 4 KiB."""
     resident = 0
     payload = 0
+    state_placement_errors: list[str] = []
 
     def reserve(size: int) -> None:
         nonlocal resident, payload
@@ -900,17 +1010,48 @@ def _local_hbm_footprint(
     for constant in plan.generated_constants:
         reserve(int(constant.size_bytes))
     for state in plan.states:
-        reserve(int(state.size_bytes))
-        reserve(int(state.size_bytes))
+        keys = (
+            f"state.{state.physical_id}.direct",
+            f"state.{state.physical_id}.committed",
+            f"state.{state.physical_id}.prepared",
+        )
+        present = tuple(key for key in keys if key in plan.hbm_map)
+        if present not in {(keys[0],), (keys[1], keys[2])}:
+            state_placement_errors.append(
+                f"{state.physical_id}: expected one direct placement or a "
+                f"committed/prepared pair, found {list(present)!r}"
+            )
+        for key in present:
+            placement = plan.hbm_map[key]
+            if int(placement.size_bytes) != int(state.size_bytes):
+                state_placement_errors.append(
+                    f"{key}: placement holds {placement.size_bytes} bytes, "
+                    f"state requires {state.size_bytes}"
+                )
+            reserve(int(placement.size_bytes))
     for arena in plan.arena_slots:
         reserve(int(arena.size_bytes))
     if int(plan.topology.node_count) > 1:
         reserve(64)
+    compressor_ratios = {
+        int(kernel.aux[1]) if len(kernel.aux) > 1 else 0
+        for kernel in plan.kernels
+        if kernel.kind == "COMPRESS_STATE_UPDATE"
+    }
+    for ratio in sorted(compressor_ratios):
+        if ratio <= 0:
+            state_placement_errors.append(
+                f"COMPRESS_STATE_UPDATE declares invalid ratio {ratio}"
+            )
+            continue
+        reserve(4)
     reserve(communication_scratch)
     return {
         "bytes_per_node": resident,
         "payload_bytes_per_node": payload,
         "alignment_bytes_per_node": resident - payload,
+        "compressor_boundary_bytes_per_node": 4 * len(compressor_ratios),
+        "state_placement_errors": state_placement_errors,
     }
 
 
@@ -959,6 +1100,7 @@ def run_case(
     link_records = _link_records(graph, shipped, instructions)
     link_count = len(link_records)
     scratch_serialization: dict[str, Any] | None = None
+    terminal_ordering: dict[str, Any] | None = None
 
     checks: dict[str, bool] = {}
     errors: list[str] = []
@@ -1050,7 +1192,8 @@ def run_case(
     )
     require(
         "node_local_hbm_accounting",
-        int(local_hbm["bytes_per_node"])
+        not local_hbm["state_placement_errors"]
+        and int(local_hbm["bytes_per_node"])
         == int(first_plan.proofs["hbm_bytes_per_node"])
         and int(hbm_inventory["address_span"])
         == int(first_plan.proofs["hbm_bytes_per_node"])
@@ -1059,7 +1202,8 @@ def run_case(
         and communication_scratch
         == int(first_plan.proofs["communication_scratch_bytes"]),
         "node-local HBM payload, emitted address span, alignment, or exchange "
-        "scratch was miscounted",
+        "scratch was miscounted: "
+        + "; ".join(local_hbm["state_placement_errors"]),
     )
     require(
         "sram_capacity",
@@ -1149,6 +1293,9 @@ def run_case(
         scratch_serialization = _scratch_serialization(
             shipped, capability, instructions
         )
+        terminal_ordering = _terminal_cluster_ordering(
+            graph, shipped, instructions
+        )
         require(
             "cluster_topology",
             int(shipped.topology_class) == int(TopologyClass.CLUSTER_32),
@@ -1221,43 +1368,31 @@ def run_case(
             + "; ".join(scratch_serialization["errors"]),
         )
 
-        barrier_records = [
-            record
-            for record in link_records
-            if record["route_class"]
-            == _DEEPSEEK_ROUTE_CONTRACT["coordinated_commit"][0]
-        ]
-        barrier_event = (
-            int(barrier_records[0]["signal_event_id"])
-            if len(barrier_records) == 1
-            else NO_ID
-        )
-        commit_records = [
-            (index, instruction)
-            for index, instruction in enumerate(instructions)
-            if instruction.major == int(Major.STATE)
-            and instruction.sub == int(State.COMMIT)
-        ]
         require(
-            "one_commit_barrier",
-            len(barrier_records) == 1 and barrier_event != NO_ID,
-            "DeepSeek cluster does not publish exactly one completion-signalled commit barrier",
+            "one_completion_barrier",
+            int(terminal_ordering["barrier_count"]) == 1
+            and int(terminal_ordering["barrier_event"]) != NO_ID,
+            "DeepSeek cluster does not publish exactly one completion-signalled barrier",
         )
         require(
-            "commit_barrier_waits_for_work",
-            len(barrier_records) == 1 and bool(barrier_records[0]["wait_events"]),
-            "coordinated-commit barrier is issued without waiting for prior work",
+            "completion_barrier_waits_for_work",
+            bool(terminal_ordering["barrier_waits_for_work"]),
+            "cluster completion barrier is issued without waiting for prior work",
         )
         require(
-            "commits_wait_for_barrier",
-            bool(commit_records)
-            and barrier_event != NO_ID
-            and all(
-                index > int(barrier_records[0]["instruction_index"])
-                and barrier_event in _wait_events(shipped, int(instruction.wait_set_id))
-                for index, instruction in commit_records
-            ),
-            "node-local STATE.COMMIT operations do not wait for the cluster barrier",
+            "terminal_fence_waits_for_barrier",
+            bool(terminal_ordering["fence_ordered_after_barrier"]),
+            "terminal FENCE does not acquire the cluster completion barrier",
+        )
+        require(
+            "token_append_waits_for_terminal_fence",
+            bool(terminal_ordering["token_appends_wait_for_fence"]),
+            "TOKEN_APPEND does not wait for the post-barrier FENCE",
+        )
+        require(
+            "no_model_state_transactions",
+            bool(terminal_ordering["no_state_instructions"]),
+            "live-buffer DeepSeek execution unexpectedly emits ABI STATE instructions",
         )
 
     return {
@@ -1391,6 +1526,7 @@ def run_case(
                     sorted(shipped.notes.get("replicated_link_sites", {}).items())
                 ),
                 "scratch_serialization": scratch_serialization,
+                "terminal_ordering": terminal_ordering,
             }
             if case.product == "deepseek"
             else None

@@ -14,6 +14,7 @@ tests below are the machine-checkable form of that claim:
 
 from __future__ import annotations
 
+import copy
 import dataclasses
 import hashlib
 import json
@@ -1266,21 +1267,45 @@ def test_deepseek_state_classes_are_single_direct_hbm_objects(moe, single_chip):
     require_admitted(deployment, single_chip)
 
 
-def test_qwen_kv_cache_keeps_transactional_state_objects(dense, single_chip):
-    """The direct-buffer classification does not change Qwen's kv_cache."""
+def test_qwen_kv_cache_is_one_live_hbm_buffer(dense, single_chip):
+    """Qwen's KV cache uses ordinary mutable HBM and no ABI STATE surface."""
 
     deployment, plan = lower_with_plan(dense, single_chip)
     assert {state.state_class for state in plan.states} == {"kv_cache"}
-    assert plan.proofs["state_bytes"] == 2 * sum(
-        state.size_bytes for state in plan.states
-    )
-    assert deployment.table.ids_of_type(ExtendedDescriptorType.STATE)
-    storage = [
-        descriptor.payload["storage_class"]
+    assert plan.proofs["state_bytes"] == sum(state.size_bytes for state in plan.states)
+    assert not deployment.table.ids_of_type(ExtendedDescriptorType.STATE)
+
+    objects = [
+        descriptor
         for descriptor in deployment.table.descriptors()
         if descriptor.descriptor_type == ExtendedDescriptorType.MEMORY_OBJECT
     ]
-    assert storage.count(int(StorageClass.STATE)) == 2 * len(plan.states)
+    for state in plan.states:
+        direct_key = f"state.{state.physical_id}.direct"
+        assert direct_key in plan.hbm_map
+        assert f"state.{state.physical_id}.committed" not in plan.hbm_map
+        assert f"state.{state.physical_id}.prepared" not in plan.hbm_map
+        placement = plan.hbm_map[direct_key]
+        matches = [
+            descriptor
+            for descriptor in objects
+            if descriptor.payload["storage_class"] == int(StorageClass.HBM)
+            and descriptor.payload["base_address"] == placement.base_address
+            and descriptor.payload["size_bytes"] == state.size_bytes
+        ]
+        assert len(matches) == 1
+        assert matches[0].permissions & Permission.READ
+        assert matches[0].permissions & Permission.WRITE
+
+    assert all(
+        descriptor.payload["storage_class"] != int(StorageClass.STATE)
+        for descriptor in objects
+    )
+    from runtime.abi3.records import decode_body, split_program
+
+    _, body = split_program(deployment.program)
+    assert all(instruction.major != int(Major.STATE) for instruction in decode_body(body))
+    require_admitted(deployment, single_chip)
 
 
 def test_direct_score_window_starts_at_negative_infinity(single_chip):
@@ -1421,8 +1446,12 @@ def test_cluster_emits_link_traffic_and_single_chip_does_not(moe, cluster, singl
     assert route_class["coordinated_commit"] in classes
 
 
-def test_cluster_commit_barrier_waits_for_work_and_gates_every_commit(moe, cluster):
-    from runtime.abi3.constants import Link, State
+def test_cluster_completion_barrier_waits_for_work_and_gates_token_append(
+    moe, cluster
+):
+    """Direct live buffers need a completion fence, not ABI STATE commits."""
+
+    from runtime.abi3.constants import Link
     from runtime.abi3.records import decode_body, split_program
 
     deployment = lower_to_abi3(moe, cluster)
@@ -1457,21 +1486,27 @@ def test_cluster_commit_barrier_waits_for_work_and_gates_every_commit(moe, clust
     }
     assert all(producer_index[event] < barrier_index for event in frontier)
 
-    commits = [
+    assert not deployment.table.ids_of_type(ExtendedDescriptorType.STATE)
+    assert all(instruction.major != int(Major.STATE) for instruction in instructions)
+
+    append_source = next(
+        kernel.index for kernel in moe.kernels if kernel.kind == "TOKEN_APPEND"
+    )
+    append_index, append = next(
         (index, instruction)
         for index, instruction in enumerate(instructions)
-        if instruction.major == int(Major.STATE)
-        and instruction.sub == int(State.COMMIT)
-    ]
-    assert len(commits) == len(
-        deployment.table.ids_of_type(ExtendedDescriptorType.STATE)
+        if instruction.source_operation_id == append_source
+    )
+    fence_index, fence = next(
+        (index, instruction)
+        for index, instruction in enumerate(instructions)
+        if instruction.major == int(Major.CONTROL)
+        and instruction.sub == int(Control.FENCE)
+        and instruction.signal_event_id in waits(append)
     )
     assert barrier.signal_event_id != NO_ID
-    assert all(index > barrier_index for index, _ in commits)
-    assert all(
-        waits(instruction) == {barrier.signal_event_id}
-        for _, instruction in commits
-    )
+    assert barrier.signal_event_id in waits(fence)
+    assert barrier_index < fence_index < append_index
 
 
 def test_direct_cluster_token_append_follows_barrier_and_fence(moe, cluster):
@@ -1735,19 +1770,27 @@ def test_band_carries_the_residual_in_one_buffer(dense, single_chip):
     assert live_in == per_layer[0]
 
 
-def test_state_views_bind_the_prepared_image(dense, single_chip):
-    """A transaction reads what it has just appended, not the last commit."""
+def test_state_views_bind_the_live_hbm_image(dense, single_chip):
+    """Cache readers and writers address the one live ordinary-HBM image."""
+
     deployment, plan = lower_with_plan(dense, single_chip)
-    prepared = {
-        deployment.table[d.descriptor_id].payload["prepared_object_id"]
-        for d in deployment.table.descriptors()
-        if d.descriptor_type == ExtendedDescriptorType.STATE
-    }
-    committed = {
-        deployment.table[d.descriptor_id].payload["committed_object_id"]
-        for d in deployment.table.descriptors()
-        if d.descriptor_type == ExtendedDescriptorType.STATE
-    }
+    objects = [
+        descriptor
+        for descriptor in deployment.table.descriptors()
+        if descriptor.descriptor_type == ExtendedDescriptorType.MEMORY_OBJECT
+    ]
+    live = set()
+    for state in plan.states:
+        placement = plan.hbm_map[f"state.{state.physical_id}.direct"]
+        live.add(
+            next(
+                descriptor.descriptor_id
+                for descriptor in objects
+                if descriptor.payload["storage_class"] == int(StorageClass.HBM)
+                and descriptor.payload["base_address"] == placement.base_address
+                and descriptor.payload["size_bytes"] == state.size_bytes
+            )
+        )
     touched = set()
     for descriptor in deployment.table.descriptors():
         if descriptor.descriptor_type != ExtendedDescriptorType.OPERATOR:
@@ -1760,11 +1803,8 @@ def test_state_views_bind_the_prepared_image(dense, single_chip):
             if vid == 0xFFFFFFFF:
                 continue
             touched.add(deployment.table[vid].primary_object_id)
-    assert touched & prepared, "no operator reads or writes the prepared image"
-    assert not (touched & committed), (
-        "an operator addresses the committed image; the commit publishes it, "
-        "execution runs against the prepared one"
-    )
+    assert live <= touched, "an ordinary KV buffer is not reached by engine views"
+    assert not deployment.table.ids_of_type(ExtendedDescriptorType.STATE)
 
 
 def _absolute_kv_graph(*, span_max: int = 1024) -> KernelGraph:
@@ -2269,7 +2309,7 @@ def test_every_kernel_reaches_an_operator(dense, single_chip):
     assert expected <= covered
 
 
-def test_state_resources_are_merged_and_closed(dense, single_chip):
+def test_live_state_resources_are_merged_without_abi_state(dense, single_chip):
     deployment, plan = lower_with_plan(dense, single_chip)
     # Eight declared resources -- a key and a value cache per layer -- become
     # two physical resources, one per role, each with one member per layer.
@@ -2278,8 +2318,9 @@ def test_state_resources_are_merged_and_closed(dense, single_chip):
     assert all(len(s.members) == 4 for s in plan.states)
     report = verify_deployment(deployment, single_chip)
     assert report.admitted
-    assert report.state_resources == 2
+    assert report.state_resources == 0
     assert report.checks["state_discipline"]
+    assert not deployment.table.ids_of_type(ExtendedDescriptorType.STATE)
 
 
 # ---------------------------------------------------------------------------
@@ -2382,6 +2423,73 @@ def test_real_qwen_ir_is_deterministic():
     assert first.program == second.program
     assert first.table.encode() == second.table.encode()
     assert first.deployment_digest == second.deployment_digest
+
+
+@pytest.mark.skipif(not REAL_QWEN_IR.exists(), reason="Qwen IR not published yet")
+def test_real_qwen_kv_resource_events_order_attention_and_fail_closed():
+    """Both disjoint cache-plane appends must retire before GQA reads HBM."""
+
+    graph = read_kernel_graph(REAL_QWEN_IR)
+    capability = single_chip_capability()
+    deployment = lower_to_abi3(graph, capability)
+    from runtime.abi3.records import decode_body, split_program
+
+    _, body = split_program(deployment.program)
+    instructions = decode_body(body)
+    writers = [
+        kernel
+        for kernel in graph.kernels
+        if kernel.layer == 0 and kernel.kind == "KV_APPEND"
+    ]
+    reader = next(
+        kernel
+        for kernel in graph.kernels
+        if kernel.layer == 0 and kernel.kind == "ATTENTION_GQA"
+    )
+    writer_events = {
+        instruction.signal_event_id
+        for instruction in instructions
+        if instruction.source_operation_id in {kernel.index for kernel in writers}
+        and instruction.signal_event_id != NO_ID
+    }
+    reader_index, reader_instruction = next(
+        (index, instruction)
+        for index, instruction in enumerate(instructions)
+        if instruction.source_operation_id == reader.index
+    )
+    wait = deployment.table[reader_instruction.wait_set_id]
+    named = {
+        int(wait.payload[f"producer_{slot}"])
+        for slot in range(int(wait.payload["producer_count"]))
+    }
+    assert len(writer_events) == 2
+    assert writer_events <= named
+
+    signal_index = {
+        instruction.signal_event_id: index
+        for index, instruction in enumerate(instructions)
+        if instruction.signal_event_id != NO_ID
+    }
+    replacement = next(
+        event
+        for event, index in sorted(signal_index.items())
+        if index < reader_index and event not in named
+    )
+    removed = next(iter(writer_events))
+    slot = next(
+        slot
+        for slot in range(int(wait.payload["producer_count"]))
+        if int(wait.payload[f"producer_{slot}"]) == removed
+    )
+    mutated = copy.deepcopy(deployment)
+    mutated_wait = mutated.table[reader_instruction.wait_set_id]
+    mutated_wait.payload[f"producer_{slot}"] = replacement
+    mutated.table.rewrite(mutated_wait.descriptor_id)
+    mutated = _restamp_descriptor_table_and_deployment(mutated)
+    assert verify_deployment(mutated, capability).admitted
+    report = check_deployment(graph, mutated, capability)
+    assert not report["ok"]
+    assert report["checks"]["kv_state_read_after_write"] is False
 
 
 # ---------------------------------------------------------------------------
@@ -3432,6 +3540,8 @@ def test_real_deepseek_rolling_plan_fits_hbm_and_is_admitted(
     # future change cannot call unbounded placement "streaming".
     assert sum(slot.size_bytes for slot in rolling) < 1_500_000_000
     assert plan.proofs["activation_arena_bytes"] < 72_000_000_000
+    assert plan.proofs["compressor_boundary_object_count"] == 2
+    assert plan.proofs["compressor_boundary_bytes"] == 8
 
 
 def _restamp_deployment_digest(deployment):

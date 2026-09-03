@@ -117,14 +117,12 @@ DTYPE_MAP: Mapping[str, DType] = {
     "bool": DType.U8,
 }
 
-#: Neutral state classes whose ABI 3.0 representation is one persistent,
-#: ordinary writable HBM buffer.  These are DeepSeek's streaming caches and
-#: compressor history: their source semantics require an in-place update on
-#: every token step and provide no rollback/retry contract.  Qwen's
-#: ``kv_cache`` deliberately remains outside this set and keeps the existing
-#: committed/prepared STATE transaction lowering.
+#: Neutral state classes whose ABI 3.0 representation is one live, ordinary
+#: writable HBM buffer.  The model caches and compressor histories update in
+#: place during one uninterrupted, fail-stop execution; they have no
+#: rollback/retry or durable-publication contract.
 DIRECT_BUFFER_STATE_CLASSES = frozenset(
-    {"compressed_kv", "compressor_window", "kv_window"}
+    {"compressed_kv", "compressor_window", "kv_cache", "kv_window"}
 )
 
 
@@ -550,7 +548,11 @@ class LayerBand:
 
 @dataclass(frozen=True, slots=True)
 class StatePlacement:
-    """One physical transactional state resource, possibly merged over layers."""
+    """One physical live model buffer, possibly merged over layers.
+
+    Its state class decides whether ABI 3.0 represents it as one ordinary HBM
+    object or as a committed/prepared STATE pair.
+    """
 
     physical_id: str
     state_class: str
@@ -5353,6 +5355,12 @@ def _prove(
     host_bytes = sum(int(o["size_bytes"]) for o in host_objects.values())
     sram_bytes = sum(r.size_bytes for r in sram_regions)
     communication_scratch_bytes = _communication_scratch_bytes(kernels, node_count)
+    compressor_boundary_ratios = {
+        int(kernel.aux[1])
+        for kernel in kernels
+        if kernel.kind == "COMPRESS_STATE_UPDATE" and len(kernel.aux) > 1
+    }
+    compressor_boundary_bytes = 4 * len(compressor_boundary_ratios)
     hbm_available = int(capability.memory["hbm"]["bytes"])
     sram_available = int(capability.memory["sram"]["bytes"])
     cluster_control_bytes = 64 if node_count > 1 else 0
@@ -5382,6 +5390,12 @@ def _prove(
     for arena in arenas:
         reserve(arena.size_bytes)
     reserve(cluster_control_bytes)
+    # The lowerer allocates one independently addressed U32 boundary word per
+    # compressor ratio.  Each call to ``_extra_hbm`` advances to the next 4-KiB
+    # boundary, so capacity must reproduce that same packing rather than count
+    # the words as one dense eight-byte payload.
+    for _ratio in sorted(compressor_boundary_ratios):
+        reserve(4)
     reserve(communication_scratch_bytes)
     hbm_alignment_bytes = resident - resident_payload
 
@@ -5427,6 +5441,8 @@ def _prove(
         "state_bytes": state_bytes,
         "communication_scratch_bytes": communication_scratch_bytes,
         "cluster_control_bytes": cluster_control_bytes,
+        "compressor_boundary_object_count": len(compressor_boundary_ratios),
+        "compressor_boundary_bytes": compressor_boundary_bytes,
         "hbm_alignment_bytes": hbm_alignment_bytes,
         "host_bytes": host_bytes,
         "sram_bytes": sram_bytes,

@@ -13,7 +13,7 @@ from compiler.backends.hbm_sram.check import check_deployment
 from compiler.backends.hbm_sram.lower import lower_with_plan
 from compiler.ir.v3.kernel_ir import KernelGraph
 from runtime.abi3.capability import Capability
-from runtime.abi3.constants import InstructionFlag, Link, Major, NO_ID
+from runtime.abi3.constants import Control, InstructionFlag, Link, Major, NO_ID
 from runtime.abi3.descriptors import (
     ExtendedDescriptorType,
     SelectorKind,
@@ -23,7 +23,9 @@ from runtime.abi3.records import decode_body, split_program
 from tools.check_hbm_deployments import (
     _DEEPSEEK_ROUTE_CONTRACT,
     _link_records,
+    _local_hbm_footprint,
     _scratch_serialization,
+    _terminal_cluster_ordering,
     _weight_locality,
 )
 
@@ -171,6 +173,39 @@ def test_deepseek_capacity_counts_replication_constants_and_rolling_queries(
         > 12_000_000_000
     )
     assert proofs["hbm_fits"]
+
+
+def test_live_state_capacity_is_counted_once_from_the_physical_map(
+    deepseek_cluster,
+) -> None:
+    _graph, _capability, _deployment, plan = deepseek_cluster
+    footprint = _local_hbm_footprint(
+        plan,
+        _weight_locality(plan),
+        int(plan.proofs["communication_scratch_bytes"]),
+    )
+    assert footprint["state_placement_errors"] == []
+    assert footprint["bytes_per_node"] == plan.proofs["hbm_bytes_per_node"]
+    assert (
+        footprint["alignment_bytes_per_node"]
+        == plan.proofs["hbm_alignment_bytes"]
+    )
+
+    state = plan.states[0]
+    direct_key = f"state.{state.physical_id}.direct"
+    prepared_key = f"state.{state.physical_id}.prepared"
+    hbm_map = dict(plan.hbm_map)
+    hbm_map[prepared_key] = dataclasses.replace(
+        hbm_map[direct_key], key=prepared_key
+    )
+    malformed = dataclasses.replace(plan, hbm_map=hbm_map)
+    rejected = _local_hbm_footprint(
+        malformed,
+        _weight_locality(malformed),
+        int(plan.proofs["communication_scratch_bytes"]),
+    )
+    assert rejected["state_placement_errors"]
+    assert state.physical_id in rejected["state_placement_errors"][0]
 
 
 def test_weight_locality_checker_rejects_a_false_replica_declaration(
@@ -397,6 +432,71 @@ def test_severed_receive_unpack_is_rejected_by_semantic_checker(
     assert record["pack_bound"]
     assert not record["received_data_consumed"]
     assert not record["causally_bound"]
+
+
+def test_terminal_ordering_rejects_broken_fence_and_append_dependencies(
+    deepseek_cluster,
+) -> None:
+    graph, _capability, deployment, _plan = deepseek_cluster
+    _header, body = split_program(deployment.program)
+    instructions = decode_body(body)
+    baseline = _terminal_cluster_ordering(graph, deployment, instructions)
+    assert baseline["ok"], baseline["errors"]
+    assert baseline["no_state_instructions"]
+
+    barrier_event = int(baseline["barrier_event"])
+    fence_index = next(
+        index
+        for index, instruction in enumerate(instructions)
+        if instruction.major == int(Major.CONTROL)
+        and instruction.sub == int(Control.FENCE)
+        and barrier_event
+        in (
+            set()
+            if instruction.wait_set_id == NO_ID
+            else {
+                int(
+                    deployment.table[instruction.wait_set_id].payload[
+                        f"producer_{slot}"
+                    ]
+                )
+                for slot in range(
+                    int(
+                        deployment.table[instruction.wait_set_id].payload[
+                            "producer_count"
+                        ]
+                    )
+                )
+            }
+        )
+    )
+    broken_fence = list(instructions)
+    broken_fence[fence_index] = dataclasses.replace(
+        broken_fence[fence_index], wait_set_id=NO_ID
+    )
+    fence_result = _terminal_cluster_ordering(
+        graph, deployment, broken_fence
+    )
+    assert not fence_result["ok"]
+    assert not fence_result["fence_ordered_after_barrier"]
+
+    append_sources = {
+        kernel.index for kernel in graph.kernels if kernel.kind == "TOKEN_APPEND"
+    }
+    append_index = next(
+        index
+        for index, instruction in enumerate(instructions)
+        if instruction.source_operation_id in append_sources
+    )
+    broken_append = list(instructions)
+    broken_append[append_index] = dataclasses.replace(
+        broken_append[append_index], wait_set_id=NO_ID
+    )
+    append_result = _terminal_cluster_ordering(
+        graph, deployment, broken_append
+    )
+    assert not append_result["ok"]
+    assert not append_result["token_appends_wait_for_fence"]
 
 
 def test_shared_exchange_scratch_uses_one_dedicated_one_credit_queue(

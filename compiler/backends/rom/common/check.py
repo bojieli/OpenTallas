@@ -83,7 +83,7 @@ _WEIGHT_ROLES = frozenset({"weight", "constant"})
 _TRANSACTION_KINDS = frozenset({"STATE_PREPARE", "STATE_COMMIT"})
 _DIRECT_STATE_KIND = "STATE_READ"
 _DIRECT_BUFFER_STATE_CLASSES = frozenset(
-    {"compressed_kv", "compressor_window", "kv_window"}
+    {"compressed_kv", "compressor_window", "kv_cache", "kv_window"}
 )
 _MAX_LAYER_PERIOD = 8
 
@@ -228,6 +228,27 @@ def check_rom_schedule(
         for state in graph.states
         if state.state_id not in direct_state_ids
     )
+    # Qwen's append result tensors and attention-history tensors have distinct
+    # names, so tensor producer edges alone cannot prove the DMA-to-attention
+    # hazard.  Reconstruct the preceding writers from the neutral state
+    # effects, independently of the producer's resource-event bookkeeping.
+    kv_cache_ids = frozenset(
+        state.state_id for state in graph.states if state.state_class == "kv_cache"
+    )
+    kv_writers: dict[str, set[int]] = {}
+    kv_dependencies: dict[int, set[int]] = {}
+    for kernel in expected_order:
+        dependencies: set[int] = set()
+        if kernel.kind not in _TRANSACTION_KINDS:
+            for state_id in kernel.state_reads:
+                if state_id in kv_cache_ids:
+                    dependencies.update(kv_writers.get(state_id, ()))
+        if dependencies:
+            kv_dependencies[kernel.index] = dependencies
+        if kernel.kind not in _TRANSACTION_KINDS:
+            for state_id in kernel.state_writes:
+                if state_id in kv_cache_ids:
+                    kv_writers.setdefault(state_id, set()).add(kernel.index)
     order_position = {
         kernel.index: position for position, kernel in enumerate(expected_order)
     }
@@ -807,6 +828,7 @@ def check_rom_schedule(
             if graph.kernels[expected].kind == _DIRECT_STATE_KIND:
                 continue
             expected_sources.add(expected)
+        expected_sources.update(kv_dependencies.get(source, ()))
         for expected in expected_sources:
             events = signals_by_source.get(expected, set())
             dependency_edges += 1

@@ -97,7 +97,7 @@ _MERGE_SLACK = 4096
 #: transaction rather than emitting as an engine operator.
 _TRANSACTION_KINDS = frozenset({"STATE_PREPARE", "STATE_COMMIT", "STATE_READ"})
 _DIRECT_BUFFER_STATE_CLASSES = frozenset(
-    {"compressed_kv", "compressor_window", "kv_window"}
+    {"compressed_kv", "compressor_window", "kv_cache", "kv_window"}
 )
 
 
@@ -456,6 +456,68 @@ def check_deployment(
             ),
             f"state kernel {index} ({kernel.kind}) has no matching instruction",
         )
+
+    # Qwen gives the append result and attention-history views different tensor
+    # IDs.  Reconstruct their ordering through the neutral KV resource effects;
+    # otherwise a well-formed but cross-queue-racy deployment could pass every
+    # tensor-name dependency check.
+    kv_cache_ids = frozenset(
+        state.state_id for state in graph.states if state.state_class == "kv_cache"
+    )
+    kv_writers: dict[str, set[int]] = {}
+    signals_by_source: dict[int, set[int]] = {}
+    instructions_by_source: dict[int, list[Any]] = {}
+    for instruction in instructions:
+        source = int(instruction.source_operation_id)
+        if source == NO_ID:
+            continue
+        instructions_by_source.setdefault(source, []).append(instruction)
+        if instruction.signal_event_id != NO_ID:
+            signals_by_source.setdefault(source, set()).add(
+                int(instruction.signal_event_id)
+            )
+    for index in sorted(representative):
+        kernel = graph.kernels[index]
+        expected_writers: set[int] = set()
+        if kernel.kind not in _TRANSACTION_KINDS:
+            for state_id in kernel.state_reads:
+                if state_id in kv_cache_ids:
+                    expected_writers.update(kv_writers.get(state_id, ()))
+        if expected_writers:
+            expected_events: set[int] = set()
+            for writer in expected_writers:
+                events = signals_by_source.get(writer, set())
+                require(
+                    "kv_state_writer_signals",
+                    bool(events),
+                    f"KV writer kernel {writer} publishes no completion event",
+                )
+                expected_events.update(events)
+            readers = [
+                instruction
+                for instruction in instructions_by_source.get(index, ())
+                if instruction.descriptor_id != NO_ID
+                and 0 <= instruction.descriptor_id < len(table)
+                and table[instruction.descriptor_id].descriptor_type
+                == ExtendedDescriptorType.OPERATOR
+            ]
+            require(
+                "kv_state_reader_emitted",
+                bool(readers),
+                f"KV reader kernel {index} emits no engine instruction",
+            )
+            for instruction in readers:
+                actual = _wait_events(table, int(instruction.wait_set_id))
+                require(
+                    "kv_state_read_after_write",
+                    expected_events <= actual,
+                    f"KV reader kernel {index} waits on {sorted(actual)}, not "
+                    f"all preceding KV writer events {sorted(expected_events)}",
+                )
+        if kernel.kind not in _TRANSACTION_KINDS:
+            for state_id in kernel.state_writes:
+                if state_id in kv_cache_ids:
+                    kv_writers.setdefault(state_id, set()).add(index)
 
     # -- 2/3. zero-copy weights and role stacks ---------------------------
     immutable = [
