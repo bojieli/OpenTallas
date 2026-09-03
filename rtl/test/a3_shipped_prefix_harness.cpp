@@ -15,9 +15,9 @@
 namespace {
 
 constexpr std::size_t kCases = 4;
-constexpr std::size_t kCaseStride = 32;
+constexpr std::size_t kCaseStride = 40;
 constexpr std::size_t kIssueStride = 4;
-constexpr std::size_t kResultWords = 2048;
+constexpr std::size_t kResultWords = 32768;
 constexpr std::uint32_t kUnwritten = 0xdeadbeefU;
 
 std::vector<std::uint32_t> read_hex(const std::string& path) {
@@ -72,6 +72,7 @@ struct Model {
         dut.cfg_index_base = 0;
         dut.cfg_source_base = 0;
         dut.cfg_source_launch_stride = 0;
+        dut.cfg_embedding_source_base = 0;
         dut.cfg_output_base = 0;
         dut.result_read_addr = 0;
         dut.eval();
@@ -106,8 +107,8 @@ int main(int argc, char** argv) {
         const auto issues = read_hex("p3_issue.hex");
         const auto expected = read_hex("p3_expect.hex");
         const auto meta = read_hex("p3_meta.hex");
-        if (cases.size() != kCases * kCaseStride || issues.size() != 40 ||
-            expected.size() != 1024 || meta.size() != 8)
+        if (cases.size() != kCases * kCaseStride || issues.size() != 56 ||
+            expected.size() != 17408 || meta.size() != 12)
             throw std::runtime_error("shipped-prefix vector geometry mismatch");
 
         Checker check;
@@ -116,9 +117,15 @@ int main(int argc, char** argv) {
         check.equal("meta case count", meta[0], kCases);
         check.equal("meta case stride", meta[4], kCaseStride);
         check.equal("meta result memory", meta[7], kResultWords);
+        check.equal("meta DMA gathers", meta[8], 6);
+        check.equal("meta embedding launches", meta[9], 4);
+        check.equal("meta RoPE words", meta[10], 1024);
+        check.equal("meta selected checkpoint bytes", meta[11], 32768);
 
         std::uint64_t total_responses = 0;
         std::uint64_t total_launches = 0;
+        std::uint64_t total_gathers = 0;
+        std::uint64_t total_embeddings = 0;
         std::uint64_t total_words = 0;
         std::uint64_t total_views = 0;
 
@@ -137,6 +144,7 @@ int main(int argc, char** argv) {
             model.dut.cfg_index_base = record[10];
             model.dut.cfg_source_base = record[11];
             model.dut.cfg_source_launch_stride = record[12];
+            model.dut.cfg_embedding_source_base = record[32];
             model.dut.cfg_output_base = record[13];
 
             model.dut.result_read_addr = record[13];
@@ -181,7 +189,7 @@ int main(int argc, char** argv) {
             model.cycle(observe);
             model.dut.start = 0;
             std::uint32_t guard = 0;
-            while (!model.dut.done && guard < 20000) {
+            while (!model.dut.done && guard < 100000) {
                 model.cycle(observe);
                 ++guard;
             }
@@ -207,9 +215,14 @@ int main(int argc, char** argv) {
                         record[24]);
             check.equal("predicated off", model.dut.count_predicated_off, 0);
             check.equal("branches", model.dut.count_branches, 0);
-            check.equal("wait events", model.dut.count_wait_events, 0);
+            check.equal("wait events", model.dut.count_wait_events,
+                        record[35]);
             check.equal("real engine launches", model.dut.real_launch_count,
                         record[14]);
+            check.equal("DMA gather launches",
+                        model.dut.dma_gather_launch_count, record[33]);
+            check.equal("embedding launches",
+                        model.dut.embedding_launch_count, record[34]);
             check.equal("capability responses",
                         model.dut.capability_fault_count, record[29]);
             check.equal("descriptor faults", model.dut.descriptor_fault_count,
@@ -226,9 +239,9 @@ int main(int argc, char** argv) {
             check.equal("last response descriptor",
                         model.dut.last_response_descriptor_id, record[18]);
             check.equal("engine error", model.dut.engine_error_code, 0);
-            check.equal("last gather result count",
+            check.equal("last embedding result count",
                         model.dut.engine_result_count, record[27]);
-            check.equal("last gather checked indices",
+            check.equal("last embedding checked indices",
                         model.dut.engine_work_count, 1);
             check.equal("result write count", model.dut.output_write_count,
                         record[15]);
@@ -262,6 +275,8 @@ int main(int argc, char** argv) {
                             expected[record[13] + word]);
             }
             total_launches += model.dut.real_launch_count;
+            total_gathers += model.dut.dma_gather_launch_count;
+            total_embeddings += model.dut.embedding_launch_count;
             total_words += model.dut.output_write_count;
             total_views += model.dut.count_views_resolved;
             std::cout << "CASE " << case_index << " OK launches="
@@ -278,6 +293,8 @@ int main(int argc, char** argv) {
 
         check.equal("total responses", total_responses, meta[0] + meta[1]);
         check.equal("total launches", total_launches, meta[1]);
+        check.equal("total DMA gathers", total_gathers, meta[8]);
+        check.equal("total embedding launches", total_embeddings, meta[9]);
         check.equal("total result words", total_words, meta[2]);
         check.equal("total resolved views", total_views, meta[3]);
         for (std::uint32_t word = 0; word < meta[2]; ++word) {
@@ -301,7 +318,7 @@ int main(int argc, char** argv) {
         }
         std::cout
             << "PASS: ABI3 shipped-prefix engine integration cases=4 "
-               "launches=6 words=1024 capability_faults=4 checks="
+               "launches=10 words=17408 capability_faults=4 checks="
             << check.checks << "\n";
         return 0;
     } catch (const std::exception& exc) {

@@ -13,8 +13,8 @@ module ot_a3_shipped_prefix_top #(
     parameter integer DESC_WORDS = 8192,
     parameter integer SYMBOL_WORDS = 2048,
     parameter integer INDEX_WORDS = 64,
-    parameter integer SOURCE_WORDS = 32768,
-    parameter integer RESULT_WORDS = 2048
+    parameter integer SOURCE_WORDS = 65536,
+    parameter integer RESULT_WORDS = 32768
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -31,6 +31,7 @@ module ot_a3_shipped_prefix_top #(
     input  wire [31:0] cfg_index_base,
     input  wire [31:0] cfg_source_base,
     input  wire [31:0] cfg_source_launch_stride,
+    input  wire [31:0] cfg_embedding_source_base,
     input  wire [31:0] cfg_output_base,
 
     output wire        busy,
@@ -60,6 +61,8 @@ module ot_a3_shipped_prefix_top #(
     output wire        state_apply_overflow,
 
     output wire [31:0] real_launch_count,
+    output wire [31:0] dma_gather_launch_count,
+    output wire [31:0] embedding_launch_count,
     output wire [31:0] capability_fault_count,
     output wire [31:0] descriptor_fault_count,
     output wire [31:0] engine_fault_count,
@@ -369,6 +372,7 @@ module ot_a3_shipped_prefix_top #(
         .cfg_index_base(cfg_index_base),
         .cfg_source_base(cfg_source_base),
         .cfg_source_launch_stride(cfg_source_launch_stride),
+        .cfg_embedding_source_base(cfg_embedding_source_base),
         .cfg_output_base(cfg_output_base),
         .m0_rd_en(m0_rd_en),
         .m0_rd_addr(m0_rd_addr),
@@ -390,6 +394,8 @@ module ot_a3_shipped_prefix_top #(
         .engine_result_count(engine_result_count),
         .engine_work_count(engine_work_count),
         .real_launch_count(real_launch_count),
+        .dma_gather_launch_count(dma_gather_launch_count),
+        .embedding_launch_count(embedding_launch_count),
         .capability_fault_count(capability_fault_count),
         .descriptor_fault_count(descriptor_fault_count),
         .engine_fault_count(engine_fault_count),

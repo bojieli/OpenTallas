@@ -4,8 +4,10 @@
 //
 // This is deliberately a bounded production profile, not a claim that every
 // shipped operator has an RTL datapath.  It admits the exact dense one-index
-// DMA.GATHER form at the head of all four shipped decode programs, launches
-// the existing real engine array, and returns completion to the sequencer only
+// DMA.GATHER form and the exact BF16 TENSOR.EMBED_LOOKUP form at the head of
+// all four shipped decode programs.  EMBED_LOOKUP is a row copy, so it lowers
+// internally to the existing index mover while the sequencer continues to
+// observe the original opcode and descriptor.  Completion is returned only
 // after the datapath finishes.  Every other opcode returns a precise
 // CAPABILITY trap.  Malformed operator/view/numeric metadata returns a
 // DESCRIPTOR trap, and an engine failure returns an ENGINE trap.
@@ -49,11 +51,14 @@ module ot_a3_engine_issue_bridge (
     input  wire [1535:0] desc_data,
 
     // Per-transaction compact verification-bank placement.  The first
-    // supported gather uses each base.  Later gathers advance by the stated
-    // source stride, one index word, and one output row respectively.
+    // supported operation uses one index word.  Gathers advance through the
+    // generated-row source region by the stated stride; embeddings use the
+    // separately packed checkpoint-row region.  Mixed-width results advance
+    // through one contiguous output cursor.
     input  wire [31:0]   cfg_index_base,
     input  wire [31:0]   cfg_source_base,
     input  wire [31:0]   cfg_source_launch_stride,
+    input  wire [31:0]   cfg_embedding_source_base,
     input  wire [31:0]   cfg_output_base,
 
     // Operand/result ports of the integrated engine array.
@@ -79,6 +84,8 @@ module ot_a3_engine_issue_bridge (
     output wire [31:0]   engine_result_count,
     output wire [31:0]   engine_work_count,
     output reg  [31:0]   real_launch_count,
+    output reg  [31:0]   dma_gather_launch_count,
+    output reg  [31:0]   embedding_launch_count,
     output reg  [31:0]   capability_fault_count,
     output reg  [31:0]   descriptor_fault_count,
     output reg  [31:0]   engine_fault_count,
@@ -100,9 +107,12 @@ module ot_a3_engine_issue_bridge (
     localparam [15:0] TRAP_ENGINE = 16'd8;
 
     localparam [7:0] FAMILY_DMA = 8'h10;
+    localparam [7:0] FAMILY_TENSOR = 8'h20;
     localparam [7:0] DMA_GATHER = 8'h02;
+    localparam [7:0] TENSOR_EMBED_LOOKUP = 8'h03;
     localparam [7:0] FMT_U32 = 8'h04;
     localparam [7:0] FMT_I32 = 8'h05;
+    localparam [7:0] FMT_BF16 = 8'h10;
     localparam [7:0] FMT_FP32 = 8'h12;
     localparam [7:0] ERR_NONE = 8'd0;
 
@@ -111,6 +121,13 @@ module ot_a3_engine_issue_bridge (
     // bytes avoids silently accepting another contract with the same dtypes.
     localparam [255:0] CONTRACT_EXACT_INDEX_SELECT_RAW =
         256'heeda7776a6f13afec895e72e1caa26c9dbf71599e6a35ecc51380dc89741a212;
+    localparam [255:0] CONTRACT_QWEN_EMBED_RAW =
+        256'hccfb3965ab85c67667ddda70e90d7dafe030d6ce65f4179ee161b1e0182fead1;
+    localparam [255:0] CONTRACT_DEEPSEEK_EMBED_RAW =
+        256'hd380012f2a885dbd0aebdd47859b1407945d8d1f7f5a091fc23201aa20e762ca;
+    localparam [31:0] QWEN_VOCABULARY = 32'd151936;
+    localparam [31:0] DEEPSEEK_VOCABULARY = 32'd129280;
+    localparam [31:0] EMBEDDING_WIDTH = 32'd4096;
 
     localparam [3:0] S_IDLE        = 4'd0;
     localparam [3:0] S_OP_WAIT     = 4'd1;
@@ -131,6 +148,7 @@ module ot_a3_engine_issue_bridge (
     reg [7:0]  issue_sub_q;
     reg [31:0] issue_descriptor_q;
     reg [31:0] issue_index_q;
+    reg        embedding_q;
 
     reg [5:0]  captured_valid;
     reg [31:0] captured_id [0:5];
@@ -148,6 +166,7 @@ module ot_a3_engine_issue_bridge (
     reg [31:0] source_trailing;
     reg [7:0]  source_dtype;
     reg [31:0] numeric_profile_dtypes;
+    reg [31:0] result_word_cursor;
 
     function automatic descriptor_header_ok;
         input [1535:0] data;
@@ -208,6 +227,7 @@ module ot_a3_engine_issue_bridge (
             issue_sub_q <= 8'd0;
             issue_descriptor_q <= NO_ID;
             issue_index_q <= NO_ID;
+            embedding_q <= 1'b0;
             captured_valid <= 6'd0;
             op_input0 <= NO_ID;
             op_input1 <= NO_ID;
@@ -218,7 +238,10 @@ module ot_a3_engine_issue_bridge (
             source_trailing <= 32'd0;
             source_dtype <= 8'd0;
             numeric_profile_dtypes <= 32'd0;
+            result_word_cursor <= 32'd0;
             real_launch_count <= 32'd0;
+            dma_gather_launch_count <= 32'd0;
+            embedding_launch_count <= 32'd0;
             capability_fault_count <= 32'd0;
             descriptor_fault_count <= 32'd0;
             engine_fault_count <= 32'd0;
@@ -242,7 +265,11 @@ module ot_a3_engine_issue_bridge (
                 response_fault <= 1'b0;
                 response_trap <= TRAP_NONE;
                 captured_valid <= 6'd0;
+                embedding_q <= 1'b0;
+                result_word_cursor <= 32'd0;
                 real_launch_count <= 32'd0;
+                dma_gather_launch_count <= 32'd0;
+                embedding_launch_count <= 32'd0;
                 capability_fault_count <= 32'd0;
                 descriptor_fault_count <= 32'd0;
                 engine_fault_count <= 32'd0;
@@ -267,13 +294,18 @@ module ot_a3_engine_issue_bridge (
                             issue_sub_q <= issue_sub;
                             issue_descriptor_q <= issue_descriptor_id;
                             issue_index_q <= issue_index;
+                            embedding_q <=
+                                (issue_family == FAMILY_TENSOR) &&
+                                (issue_sub == TENSOR_EMBED_LOOKUP);
                             last_response_index <= issue_index;
                             last_response_family <= issue_family;
                             last_response_sub <= issue_sub;
                             last_response_descriptor_id <=
                                 issue_descriptor_id;
-                            if ((issue_family != FAMILY_DMA) ||
-                                (issue_sub != DMA_GATHER)) begin
+                            if (!(((issue_family == FAMILY_DMA) &&
+                                   (issue_sub == DMA_GATHER)) ||
+                                  ((issue_family == FAMILY_TENSOR) &&
+                                   (issue_sub == TENSOR_EMBED_LOOKUP)))) begin
                                 // No speculative launch and no shape guess.
                                 response_fault <= 1'b1;
                                 response_trap <= TRAP_CAPABILITY;
@@ -292,8 +324,10 @@ module ot_a3_engine_issue_bridge (
                                     desc_data, desc_fault, DESC_OPERATOR,
                                     32'd128, 32'd64
                                 ) ||
-                                (desc_data[519:512] != FAMILY_DMA) ||
-                                (desc_data[527:520] != DMA_GATHER) ||
+                                (desc_data[519:512] != issue_family_q) ||
+                                (desc_data[527:520] != issue_sub_q) ||
+                                (desc_data[543:528] != 0) ||
+                                (desc_data[639:608] == NO_ID) ||
                                 (desc_data[671:640] == NO_ID) ||
                                 (desc_data[703:672] == NO_ID) ||
                                 (desc_data[735:704] == NO_ID) ||
@@ -374,7 +408,8 @@ module ot_a3_engine_issue_bridge (
                                     desc_data, desc_fault, DESC_TENSOR_VIEW,
                                     32'd192, 32'd128
                                 ) ||
-                                (desc_view_dtype != FMT_FP32) ||
+                                (desc_view_dtype !=
+                                 (embedding_q ? FMT_BF16 : FMT_FP32)) ||
                                 (desc_view_rank != 8'd2) ||
                                 (desc_view_layout != 8'd0) ||
                                 (desc_view_terms != 0) ||
@@ -397,7 +432,13 @@ module ot_a3_engine_issue_bridge (
                                 (captured_rank[1] != 2) ||
                                 (captured_axis[1] != 0) ||
                                 (captured_extent[1] != desc_view_dim0) ||
-                                (captured_offset[1] != desc_view_offset)) begin
+                                (captured_offset[1] != desc_view_offset) ||
+                                (embedding_q &&
+                                 (desc_view_dim1 != EMBEDDING_WIDTH)) ||
+                                (embedding_q &&
+                                 (desc_view_dim0 != QWEN_VOCABULARY) &&
+                                 (desc_view_dim0 !=
+                                  DEEPSEEK_VOCABULARY))) begin
                                 response_fault <= 1'b1;
                                 response_trap <= TRAP_DESCRIPTOR;
                                 state <= S_RESPONSE;
@@ -458,7 +499,10 @@ module ot_a3_engine_issue_bridge (
                                     desc_data, desc_fault, DESC_NUMERIC,
                                     32'd128, 32'd64
                                 ) ||
-                                ((desc_data[519:512] != FMT_U32) &&
+                                (embedding_q &&
+                                 (desc_data[519:512] != FMT_U32)) ||
+                                (!embedding_q &&
+                                 (desc_data[519:512] != FMT_U32) &&
                                  (desc_data[519:512] != FMT_I32)) ||
                                 (desc_data[527:520] != source_dtype) ||
                                 (desc_data[535:528] != FMT_FP32) ||
@@ -472,8 +516,16 @@ module ot_a3_engine_issue_bridge (
                                 (desc_data[671:640] != 0) ||
                                 (desc_data[703:672] != 0) ||
                                 (desc_data[767:704] != 0) ||
-                                (desc_data[1023:768] !=
-                                 CONTRACT_EXACT_INDEX_SELECT_RAW)) begin
+                                (!embedding_q &&
+                                 (desc_data[1023:768] !=
+                                  CONTRACT_EXACT_INDEX_SELECT_RAW)) ||
+                                (embedding_q &&
+                                 !(((source_rows == QWEN_VOCABULARY) &&
+                                    (desc_data[1023:768] ==
+                                     CONTRACT_QWEN_EMBED_RAW)) ||
+                                   ((source_rows == DEEPSEEK_VOCABULARY) &&
+                                    (desc_data[1023:768] ==
+                                     CONTRACT_DEEPSEEK_EMBED_RAW))))) begin
                                 response_fault <= 1'b1;
                                 response_trap <= TRAP_DESCRIPTOR;
                                 state <= S_RESPONSE;
@@ -511,9 +563,17 @@ module ot_a3_engine_issue_bridge (
 
                     S_RESPONSE: begin
                         if (response_fire) begin
-                            if (!response_fault)
+                            if (!response_fault) begin
                                 real_launch_count <= real_launch_count + 1;
-                            else if (response_trap == TRAP_CAPABILITY)
+                                result_word_cursor <=
+                                    result_word_cursor + source_trailing;
+                                if (embedding_q)
+                                    embedding_launch_count <=
+                                        embedding_launch_count + 1;
+                                else
+                                    dma_gather_launch_count <=
+                                        dma_gather_launch_count + 1;
+                            end else if (response_trap == TRAP_CAPABILITY)
                                 capability_fault_count <=
                                     capability_fault_count + 1;
                             else if (response_trap == TRAP_DESCRIPTOR)
@@ -538,17 +598,20 @@ module ot_a3_engine_issue_bridge (
     wire [31:0] engine_tie_multiplicity;
     wire [31:0] launch_index_base =
         cfg_index_base + real_launch_count;
-    wire [31:0] launch_source_base =
-        cfg_source_base + real_launch_count * cfg_source_launch_stride;
+    wire [31:0] launch_source_base = embedding_q
+        ? (cfg_embedding_source_base +
+           embedding_launch_count * EMBEDDING_WIDTH)
+        : (cfg_source_base +
+           dma_gather_launch_count * cfg_source_launch_stride);
     wire [31:0] launch_output_base =
-        cfg_output_base + real_launch_count * source_trailing;
+        cfg_output_base + result_word_cursor;
 
     ot_a3_engine_array engines (
         .clk(clk),
         .rst_n(rst_n),
         .start(engine_start),
-        .cfg_family(issue_family_q),
-        .cfg_sub(issue_sub_q),
+        .cfg_family(FAMILY_DMA),
+        .cfg_sub(DMA_GATHER),
         .cfg_rows(16'd0),
         .cfg_cols(source_trailing[15:0]),
         .cfg_depth(16'd0),
@@ -591,14 +654,38 @@ module ot_a3_engine_issue_bridge (
         .cfg_input3_dims(128'd0),
         .cfg_output0_dims({64'd0, source_trailing, 32'd1}),
         .cfg_output1_dims(128'd0),
-        .cfg_contract_0(32'h12a24197),
-        .cfg_contract_1(32'hc80d3851),
-        .cfg_contract_2(32'hcc5ea3e6),
-        .cfg_contract_3(32'h9915f7db),
-        .cfg_contract_4(32'hc926aa1c),
-        .cfg_contract_5(32'h2ee795c8),
-        .cfg_contract_6(32'hfe3af1a6),
-        .cfg_contract_7(32'h7677daee),
+        .cfg_contract_0(embedding_q
+            ? ((source_rows == QWEN_VOCABULARY)
+                ? 32'hd1ea2f18 : 32'hca62e720)
+            : 32'h12a24197),
+        .cfg_contract_1(embedding_q
+            ? ((source_rows == QWEN_VOCABULARY)
+                ? 32'he0b161e1 : 32'haa0132c2)
+            : 32'hc80d3851),
+        .cfg_contract_2(embedding_q
+            ? ((source_rows == QWEN_VOCABULARY)
+                ? 32'h9e17f465 : 32'h1f095a7f)
+            : 32'hcc5ea3e6),
+        .cfg_contract_3(embedding_q
+            ? ((source_rows == QWEN_VOCABULARY)
+                ? 32'hced630e0 : 32'h1f8d5d94)
+            : 32'h9915f7db),
+        .cfg_contract_4(embedding_q
+            ? ((source_rows == QWEN_VOCABULARY)
+                ? 32'haf7d0de9 : 32'h07149b85)
+            : 32'hc926aa1c),
+        .cfg_contract_5(embedding_q
+            ? ((source_rows == QWEN_VOCABULARY)
+                ? 32'h70dadd67 : 32'h47ddeb0a)
+            : 32'h2ee795c8),
+        .cfg_contract_6(embedding_q
+            ? ((source_rows == QWEN_VOCABULARY)
+                ? 32'h76c685ab : 32'hbd5d882a)
+            : 32'hfe3af1a6),
+        .cfg_contract_7(embedding_q
+            ? ((source_rows == QWEN_VOCABULARY)
+                ? 32'h6539fbcc : 32'h2f0180d3)
+            : 32'h7677daee),
         .cfg_aux_valid(4'd0),
         .cfg_aux0(NO_ID),
         .cfg_aux1(NO_ID),

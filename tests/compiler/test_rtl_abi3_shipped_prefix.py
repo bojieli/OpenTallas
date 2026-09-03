@@ -52,9 +52,14 @@ def test_witness_is_exactly_the_small_abi3_fail_stop_prefix() -> None:
     assert vectors["abi"] == {"major": 3, "minor": 0}
     assert vectors["state_compat"] == 0
     assert vectors["case_count"] == 4
-    assert vectors["real_engine_launch_count"] == 6
-    assert vectors["result_word_count"] == 1_024
-    assert vectors["resolved_view_count"] == 30
+    assert vectors["real_engine_launch_count"] == 10
+    assert vectors["dma_gather_launch_count"] == 6
+    assert vectors["embedding_launch_count"] == 4
+    assert vectors["rope_result_word_count"] == 1_024
+    assert vectors["embedding_result_word_count"] == 16_384
+    assert vectors["selected_checkpoint_byte_count"] == 32_768
+    assert vectors["result_word_count"] == 17_408
+    assert vectors["resolved_view_count"] == 40
     assert vectors["capability_fault_count"] == 4
     assert [case["name"] for case in vectors["cases"]] == [
         "qwen3-8b-rom-single-chip/decode",
@@ -63,19 +68,45 @@ def test_witness_is_exactly_the_small_abi3_fail_stop_prefix() -> None:
         "deepseek-v4-flash-hbm-cluster/decode",
     ]
     assert [case["first_unsupported"] for case in vectors["cases"]] == [
-        {"pc": 4, "family": 32, "sub": 3, "descriptor_id": 41,
-         "trap_class": 4},
-        {"pc": 4, "family": 32, "sub": 3, "descriptor_id": 54,
-         "trap_class": 4},
-        {"pc": 7, "family": 32, "sub": 3, "descriptor_id": 356,
-         "trap_class": 4},
-        {"pc": 7, "family": 32, "sub": 3, "descriptor_id": 527,
-         "trap_class": 4},
+        {"pc": 8, "family": 48, "sub": 0, "opcode": "VECTOR.RMS_NORM",
+         "descriptor_id": 50, "trap_class": 4},
+        {"pc": 8, "family": 48, "sub": 0, "opcode": "VECTOR.RMS_NORM",
+         "descriptor_id": 64, "trap_class": 4},
+        {"pc": 10, "family": 16, "sub": 0, "opcode": "DMA.TRANSFER",
+         "descriptor_id": 363, "trap_class": 4},
+        {"pc": 10, "family": 16, "sub": 0, "opcode": "DMA.TRANSFER",
+         "descriptor_id": 532, "trap_class": 4},
     ]
     for case in vectors["cases"]:
         assert not case["expected"]["complete"]
         assert case["expected"]["state_compat"] == 0
+        assert case["expected"]["embedding_launches"] == 1
+        assert case["expected"]["embedding_result_words"] == 4_096
+        assert case["expected"]["selected_checkpoint_bytes"] == 8_192
+        assert case["expected"]["wait_events"] == 1
         assert case["expected"]["retired"] + 1 == case["expected"]["fetched"]
+
+        embedding = next(
+            operation
+            for operation in case["supported_prefix"]
+            if operation["kind"] == "tensor_embed_lookup"
+        )
+        source = embedding["source"]
+        assert embedding["token_id"] == 0
+        assert embedding["source_view"]["dims"][1] == 4_096
+        assert source["selected_token_id"] == 0
+        assert source["selected_row_bytes"] == 8_192
+        assert source["selected_row_logical_offset"] == 0
+        assert source["selected_row_segment_offset"] == 0
+        assert source["selected_row_file_range"] == {
+            "start": source["selected_row_file_offset"],
+            "stop_exclusive": source["selected_row_file_offset"] + 8_192,
+        }
+        assert len(source["declared_segment_sha256"]) == 64
+        assert len(source["selected_row_sha256"]) == 64
+        assert "only this selected byte range was re-read and hashed" in source[
+            "authentication_boundary"
+        ]
 
 
 def test_vector_and_deployment_images_are_fresh() -> None:
@@ -114,13 +145,30 @@ def test_retained_campaign_is_current_and_states_the_simple_boundary() -> None:
     assert retained["post_fault_write_count"] == 0
     assert retained["simulators_agree"]
     assert retained["simulator_checks"] == {
-        "iverilog": 3_289,
-        "verilator": 3_289,
+        "iverilog": 50_427,
+        "verilator": 50_427,
     }
-    assert [site["pc"] for site in retained["fault_sites"]] == [4, 4, 7, 7]
+    assert [site["pc"] for site in retained["fault_sites"]] == [8, 8, 10, 10]
     assert [site["descriptor_id"] for site in retained["fault_sites"]] == [
-        41, 54, 356, 527
+        50, 64, 363, 532
     ]
+    assert [site["opcode"] for site in retained["fault_sites"]] == [
+        "VECTOR.RMS_NORM",
+        "VECTOR.RMS_NORM",
+        "DMA.TRANSFER",
+        "DMA.TRANSFER",
+    ]
+    assert retained["dma_gather_launch_count"] == 6
+    assert retained["embedding_launch_count"] == 4
+    assert retained["selected_checkpoint_byte_count"] == 32_768
+    assert len(retained["checkpoint_rows"]) == 4
+    for row in retained["checkpoint_rows"]:
+        assert len(row["deployment_sha256"]) == 64
+        assert row["deployment_identity_evidence"]["artifact"]
+        assert row["source"]["selected_row_bytes"] == 8_192
+        assert row["source"]["selected_row_file_range"]["stop_exclusive"] - row[
+            "source"
+        ]["selected_row_file_range"]["start"] == 8_192
     for path, record in retained["source"].items():
         source_path = ROOT / path
         assert source_path.stat().st_size == record["bytes"]
@@ -148,8 +196,8 @@ def test_focused_campaign_replays_both_independent_simulators(
     assert summary["status"] == "pass", summary["cases"]
     assert summary["simulators_agree"]
     assert summary["simulator_checks"] == {
-        "iverilog": 3_289,
-        "verilator": 3_289,
+        "iverilog": 50_427,
+        "verilator": 50_427,
     }
     assert summary["post_fault_write_count"] == 0
     assert [case["name"] for case in summary["cases"]] == [

@@ -375,12 +375,33 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
             ),
             "family": int(vector_case["first_unsupported"]["family"]),
             "sub": int(vector_case["first_unsupported"]["sub"]),
+            "opcode": str(vector_case["first_unsupported"]["opcode"]),
             "trap_class": int(
                 vector_case["first_unsupported"]["trap_class"]
             ),
         }
         for vector_case in vectors["cases"]
     ]
+    checkpoint_rows = []
+    for vector_case in vectors["cases"]:
+        embedding = next(
+            operation
+            for operation in vector_case["supported_prefix"]
+            if operation["kind"] == "tensor_embed_lookup"
+        )
+        checkpoint_rows.append(
+            {
+                "case": vector_case["name"],
+                "deployment_sha256": vector_case["deployment_sha256"],
+                "deployment_identity_evidence": vector_case[
+                    "deployment_identity_evidence"
+                ],
+                "operator_pc": int(embedding["pc"]),
+                "operator_descriptor_id": int(embedding["descriptor_id"]),
+                "numeric_contract_sha256": embedding["contract_sha256"],
+                "source": embedding["source"],
+            }
+        )
     return {
         "schema": "opentallas.rtl.abi3_shipped_prefix_campaign.v1",
         "status": "pass" if observations_agree else "fail",
@@ -409,14 +430,17 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
             "establishes": [
                 "the real sequencer resolves exact operand views from each of the four shipped decode programs",
                 "six dense one-index FP32 DMA.GATHER operations execute through ot_a3_engine_array and reproduce 1,024 authenticated generated RoPE words",
-                "the first TENSOR.EMBED_LOOKUP is refused at Qwen PC 4 and DeepSeek PC 7 with a precise CAPABILITY trap, no retirement, no event publication, and no later write",
+                "four exact BF16 TENSOR.EMBED_LOOKUP operations execute through the existing index mover and reproduce 16,384 checkpoint codes from four bounded 8 KiB selected-row reads",
+                "each selected row is bound to its certified deployment, checkpoint revision, shard, declared segment digest, exact byte range, and selected-range SHA-256 without claiming a complete-shard rehash",
+                "Qwen next refuses VECTOR.RMS_NORM at PC 8 and DeepSeek next refuses DMA.TRANSFER at PC 10 with a precise CAPABILITY trap, no retirement, no event publication, and no later write",
                 "the production profile elaborates STATE_COMPAT=0 and every compatibility-state counter and overflow output remains zero",
                 "Icarus and Verilator use independently written checkers and agree on every retained case observation and check count",
             ],
             "does_not_establish": [
                 "prefill execution",
-                "TENSOR.EMBED_LOOKUP or any later model operator",
+                "VECTOR.RMS_NORM, DMA.TRANSFER, or any later model operator",
                 "a whole transaction, token selection, decoding, EOS, or model correctness",
+                "complete checkpoint-segment reauthentication during this bounded run",
                 "memory-macro timing, SRAM/HBM arbitration, physical timing, area, or power",
             ],
         },
@@ -424,10 +448,20 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
         "unsupported_policy": vectors["unsupported_policy"],
         "case_count": vectors["case_count"],
         "real_engine_launch_count": vectors["real_engine_launch_count"],
+        "dma_gather_launch_count": vectors["dma_gather_launch_count"],
+        "embedding_launch_count": vectors["embedding_launch_count"],
+        "rope_result_word_count": vectors["rope_result_word_count"],
+        "embedding_result_word_count": vectors[
+            "embedding_result_word_count"
+        ],
+        "selected_checkpoint_byte_count": vectors[
+            "selected_checkpoint_byte_count"
+        ],
         "result_word_count": vectors["result_word_count"],
         "resolved_view_count": vectors["resolved_view_count"],
         "capability_fault_count": vectors["capability_fault_count"],
         "fault_sites": fault_sites,
+        "checkpoint_rows": checkpoint_rows,
         "post_fault_write_count": 0,
         "required_marker": marker,
         "simulators_agree": observations_agree,
