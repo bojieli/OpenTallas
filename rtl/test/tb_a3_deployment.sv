@@ -101,6 +101,7 @@ module tb_a3_deployment;
     localparam integer D_STATE_APPLIED       = 45;
     localparam integer D_STATE_ROWS          = 46;
     localparam integer D_SIGNAL_ERROR        = 47;
+    localparam integer D_STATE_APPLY_OVERFLOW = 48;
 
     reg [31:0] case_mem  [0:CASE_MEM_WORDS-1];
     reg [31:0] issue_mem [0:ISSUE_MEM_WORDS-1];
@@ -186,7 +187,8 @@ module tb_a3_deployment;
 
     ot_a3_microsequencer_top #(
         .PROGRAM_WORDS(PROGRAM_WORDS),
-        .DESC_WORDS(DESC_WORDS)
+        .DESC_WORDS(DESC_WORDS),
+        .STATE_COMPAT(0)
     ) dut (
         .clk(clk),
         .rst_n(rst_n),
@@ -483,6 +485,38 @@ module tb_a3_deployment;
         rst_n = 1'b1;
         repeat (2) @(negedge clk);
 
+        // The production profile must fail closed before fetching anything
+        // if a caller attempts to bind legacy transactional-state resources.
+        cfg_instruction_count = 32'd1;
+        cfg_max_retired_work = 64'd1;
+        cfg_state_count = 32'd1;
+        @(negedge clk);
+        start = 1'b1;
+        @(negedge clk);
+        start = 1'b0;
+        guard = 0;
+        while (!done && guard < 20) begin
+            @(negedge clk);
+            guard = guard + 1;
+        end
+        if (!done || !trapped || complete ||
+            (trap_class !== 16'd4) ||
+            (first_fault_instruction !== 32'hffff_ffff) ||
+            (count_fetched !== 32'd0) ||
+            (count_state_prepares !== 32'd0) ||
+            state_apply_overflow)
+            $fatal(1, "STATE_COMPAT=0 did not reject state resources before fetch");
+        $display("PROFILE: ABI3 live-buffer state exclusion PASS");
+
+        // Reset after the negative profile-admission probe so every shipped
+        // deployment starts from the same fresh-run boundary.
+        @(negedge clk);
+        rst_n = 1'b0;
+        repeat (4) @(negedge clk);
+        rst_n = 1'b1;
+        cfg_state_count = 32'd0;
+        repeat (2) @(negedge clk);
+
         for (case_index = 0; case_index < case_count; case_index = case_index + 1) begin
             base = case_index * CASE_STRIDE;
             case_code = D_NONE;
@@ -625,12 +659,12 @@ module tb_a3_deployment;
             // an event ID, which every loop-compressed program does: it was
             // set on all four Qwen cases, 691 signals against 26 IDs.
             //
-            // state_apply_overflow still has no golden counterpart --
-            // runtime.sim.device.Device publishes nothing to compare it
-            // against -- so it stays counted, printed, and required by
-            // tools/rtl_abi3_deployment_campaign.py to agree between the two
-            // simulators.
+            // STATE_COMPAT is zero in this production-profile top and all
+            // four certified deployments contain zero state records, so the
+            // compatibility apply-overflow output is tied to zero.
             check_equal(D_SIGNAL_ERROR, {63'd0, event_signal_error}, 64'd0);
+            check_equal(D_STATE_APPLY_OVERFLOW,
+                        {63'd0, state_apply_overflow}, 64'd0);
             if (event_signal_error) signal_flag_cases = signal_flag_cases + 1;
             if (state_apply_overflow)
                 apply_overflow_cases = apply_overflow_cases + 1;

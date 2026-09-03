@@ -48,6 +48,13 @@
 // ---------------------------------------------------------------------------
 module ot_a3_microsequencer
     import ot_a3_pkg::*;
+#(
+    // The four production-comparison deployments use ordinary live buffers
+    // and contain no STATE descriptors or instructions.  Keeping the legacy
+    // controller behind a parameter preserves ABI 3.0 compatibility tests
+    // without forcing its slot file or apply path into the shipped profile.
+    parameter integer STATE_COMPAT = 1
+)
 (
     input  wire          clk,
     input  wire          rst_n,
@@ -343,34 +350,52 @@ module ot_a3_microsequencer
     wire [15:0] st_op_trap_class;
     wire        st_apply_done;
 
-    ot_a3_state_controller states (
-        .clk(clk),
-        .rst_n(rst_n),
-        .clear(xact_clear),
-        .op_valid(st_op_valid),
-        .op_sub(ins_sub),
-        .op_descriptor_id(ins_descriptor_id),
-        .op_payload(state_payload),
-        .op_rows(sym_value),
-        .op_rows_bound(sym_bound),
-        .op_done(st_op_done),
-        .op_ok(st_op_ok),
-        .op_trap_class(st_op_trap_class),
-        .commit_all(st_commit_all),
-        .discard_all(st_discard_all),
-        .session_state_count(state_count),
-        .apply_busy(),
-        .apply_done(st_apply_done),
-        .apply_overflow(state_apply_overflow),
-        .count_prepares(count_state_prepares),
-        .count_commits(count_state_commits),
-        .count_discards(count_state_discards),
-        .count_reads(count_state_reads),
-        .count_generation_advances(count_state_generation_advances),
-        .count_commits_applied(count_state_commits_applied),
-        .count_rows_committed(count_state_rows_committed),
-        .count_bytes_written(count_state_bytes_written)
-    );
+    generate
+        if (STATE_COMPAT != 0) begin : g_state_compat
+            ot_a3_state_controller states (
+                .clk(clk),
+                .rst_n(rst_n),
+                .clear(xact_clear),
+                .op_valid(st_op_valid),
+                .op_sub(ins_sub),
+                .op_descriptor_id(ins_descriptor_id),
+                .op_payload(state_payload),
+                .op_rows(sym_value),
+                .op_rows_bound(sym_bound),
+                .op_done(st_op_done),
+                .op_ok(st_op_ok),
+                .op_trap_class(st_op_trap_class),
+                .commit_all(st_commit_all),
+                .discard_all(st_discard_all),
+                .session_state_count(state_count),
+                .apply_busy(),
+                .apply_done(st_apply_done),
+                .apply_overflow(state_apply_overflow),
+                .count_prepares(count_state_prepares),
+                .count_commits(count_state_commits),
+                .count_discards(count_state_discards),
+                .count_reads(count_state_reads),
+                .count_generation_advances(count_state_generation_advances),
+                .count_commits_applied(count_state_commits_applied),
+                .count_rows_committed(count_state_rows_committed),
+                .count_bytes_written(count_state_bytes_written)
+            );
+        end else begin : g_no_state_compat
+            assign st_op_done = 1'b1;
+            assign st_op_ok = 1'b0;
+            assign st_op_trap_class = A3_TRAP_CAPABILITY;
+            assign st_apply_done = 1'b1;
+            assign state_apply_overflow = 1'b0;
+            assign count_state_prepares = 32'd0;
+            assign count_state_commits = 32'd0;
+            assign count_state_discards = 32'd0;
+            assign count_state_reads = 32'd0;
+            assign count_state_generation_advances = 32'd0;
+            assign count_state_commits_applied = 32'd0;
+            assign count_state_rows_committed = 32'd0;
+            assign count_state_bytes_written = 64'd0;
+        end
+    endgenerate
 
     // -- tensor view resolution (A4 and A13) -------------------------------
     // OPERATOR payload (runtime/abi3/descriptors.OPERATOR_PAYLOAD):
@@ -521,9 +546,15 @@ module ot_a3_microsequencer
             trap_class <= class_value;
             first_fault_instruction <= fault_index;
             trapped <= 1'b1;
-            st_discard_all <= 1'b1;
             predicate_read_req <= 1'b0;
-            state <= S_DISCARD;
+            if (STATE_COMPAT != 0) begin
+                st_discard_all <= 1'b1;
+                state <= S_DISCARD;
+            end else begin
+                // Live-buffer execution is fail-stop.  There is no staged
+                // image to discard and partial buffers are never reused.
+                state <= S_DONE;
+            end
         end
     endtask
 
@@ -634,7 +665,15 @@ module ot_a3_microsequencer
                         predicate_read_object_id <= A3_NO_ID;
                         predicate_read_element_index <= 32'd0;
                         xact_clear <= 1'b1;
-                        state <= S_CHECK_PC;
+                        if ((STATE_COMPAT == 0) &&
+                            (cfg_state_count != 32'd0)) begin
+                            trapped <= 1'b1;
+                            trap_class <= A3_TRAP_CAPABILITY;
+                            first_fault_instruction <= A3_NO_ID;
+                            state <= S_DONE;
+                        end else begin
+                            state <= S_CHECK_PC;
+                        end
                     end
                 end
 
@@ -850,8 +889,14 @@ module ot_a3_microsequencer
                                 count_retired <= count_retired + 32'd1;
                                 publish_signal;
                                 complete <= 1'b1;
-                                st_commit_all <= 1'b1;
-                                state <= S_COMMIT;
+                                if (STATE_COMPAT != 0) begin
+                                    st_commit_all <= 1'b1;
+                                    state <= S_COMMIT;
+                                end else begin
+                                    // The program's final dependency fence
+                                    // already orders direct live-buffer writes.
+                                    state <= S_DONE;
+                                end
                             end
                             A3_CONTROL_TRAP: begin
                                 raise_trap(A3_TRAP_ILLEGAL, pc);
@@ -934,9 +979,13 @@ module ot_a3_microsequencer
                             // STATE family here; every family is checked.
                             raise_trap(A3_TRAP_DESCRIPTOR, pc);
                         end else if (ins_major == A3_MAJOR_STATE) begin
-                            state_payload <= desc_payload;
-                            sym_index_q <= A3_SYMBOL_SPAN_TOKENS;
-                            state <= S_STATE_SYM;
+                            if (STATE_COMPAT == 0) begin
+                                raise_trap(A3_TRAP_CAPABILITY, pc);
+                            end else begin
+                                state_payload <= desc_payload;
+                                sym_index_q <= A3_SYMBOL_SPAN_TOKENS;
+                                state <= S_STATE_SYM;
+                            end
                         end else if (expected_type == A3_DESC_OPERATOR) begin
                             // A4/A13: an engine is handed extents, not just a
                             // descriptor ID, so every operand view this

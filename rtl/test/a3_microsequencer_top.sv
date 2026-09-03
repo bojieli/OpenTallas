@@ -29,7 +29,8 @@ module ot_a3_microsequencer_top
     parameter integer PROGRAM_WORDS = 2048,
     parameter integer HEADER_WORDS  = 8192,
     parameter integer DESC_WORDS    = 4096,
-    parameter integer SYMBOL_WORDS  = 2048
+    parameter integer SYMBOL_WORDS  = 2048,
+    parameter integer STATE_COMPAT  = 1
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -231,7 +232,9 @@ module ot_a3_microsequencer_top
     wire [31:0] sym_value = symbol_mem[sym_addr[19:0]];
     wire        sym_bound = cfg_symbol_mask[sym_index];
 
-    ot_a3_microsequencer sequencer (
+    ot_a3_microsequencer #(
+        .STATE_COMPAT(STATE_COMPAT)
+    ) sequencer (
         .clk(clk),
         .rst_n(rst_n),
         .start(start),

@@ -1105,18 +1105,21 @@ def test_deployment_campaign_has_four_targets_and_private_memory_geometry() -> N
     )
     assert re.search(r"parameter integer PROGRAM_WORDS\s*=\s*2048", shared_top)
     assert re.search(r"parameter integer DESC_WORDS\s*=\s*4096", shared_top)
+    assert re.search(r"parameter integer STATE_COMPAT\s*=\s*1", shared_top)
 
     deployment_tb = (ROOT / "rtl/test/tb_a3_deployment.sv").read_text(
         encoding="utf-8"
     )
     assert ".PROGRAM_WORDS(PROGRAM_WORDS)" in deployment_tb
     assert ".DESC_WORDS(DESC_WORDS)" in deployment_tb
+    assert ".STATE_COMPAT(0)" in deployment_tb
 
     deployment_campaign = (
         ROOT / "tools/rtl_abi3_deployment_campaign.py"
     ).read_text(encoding="utf-8")
     assert '"-GPROGRAM_WORDS=4096"' in deployment_campaign
     assert '"-GDESC_WORDS=8192"' in deployment_campaign
+    assert '"-GSTATE_COMPAT=0"' in deployment_campaign
 
 
 def test_deployment_target_identities_come_from_retained_certificates() -> None:
@@ -1303,6 +1306,9 @@ def test_a_lowered_work_bound_bounds_both_sides(tmp_path: Path) -> None:
 def test_retained_deployment_campaign_is_bound_to_these_sources() -> None:
     retained = json.loads(DEPLOYMENT_CAMPAIGN_JSON.read_text(encoding="utf-8"))
     assert retained["required_marker"] == _deployment_vectors()["required_marker"]
+    assert retained["required_profile_marker"] == (
+        "PROFILE: ABI3 live-buffer state exclusion PASS"
+    )
     assert DEPLOYMENT_CAMPAIGN_JSON.read_bytes() == (
         json.dumps(retained, indent=2, sort_keys=True) + "\n"
     ).encode("utf-8")
@@ -1313,6 +1319,15 @@ def test_retained_deployment_campaign_is_bound_to_these_sources() -> None:
         "iverilog_vvp",
         "verilator_cpp_executable",
     ]
+    assert retained["rtl_profile"] == {
+        "buffer_model": "direct_memory_objects_with_token_fence",
+        "failure_model": "fail_stop_fresh_run",
+        "link_retry_scope": "packet_only",
+        "required_state_descriptor_count": 0,
+        "required_state_instruction_count": 0,
+        "state_compatibility_elaborated": False,
+    }
+    assert all(case["profile_marker_present"] for case in retained["cases"])
     assert retained["cross_simulator_agreement"][
         "simulators_observed_the_same_cases"
     ], "the two simulators did not observe the same thing"

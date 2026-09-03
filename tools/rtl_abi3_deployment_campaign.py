@@ -26,11 +26,11 @@ two simulators to have seen the *same* thing, divergences included.  Two
 simulators agreeing that the RTL is wrong is a stronger statement than one
 simulator failing.
 
-*Two of the sequencer's outputs are counted rather than asserted.*
-``event_signal_error`` and ``state_apply_overflow`` are RTL status bits that the
-golden model has no counterpart for.  Asserting a value for them would be a
-hand-written expectation, so they are counted per case, printed in the marker,
-and required to agree between the two simulators.  What they were is recorded.
+*The production-profile elaboration has no transactional-state controller.*
+All four certified deployments contain zero STATE descriptors and instructions,
+so this campaign sets ``STATE_COMPAT=0``.  Compatibility state counters and
+``state_apply_overflow`` are tied to zero; both checkers still observe them.
+``event_signal_error`` is asserted from the admitted ABI event bounds.
 
 Tool identity is recorded, not assumed: the resolved executable path, its
 SHA-256 and its self-reported version go into the artifact, and a Verilator
@@ -57,6 +57,7 @@ ROOT = Path(__file__).resolve().parents[1]
 VECTOR_DIR = ROOT / "testdata/compiler/abi3_deployment"
 VECTOR_JSON = VECTOR_DIR / "abi3_deployment_rtl_vectors.json"
 DEFAULT_OUTPUT = ROOT / "results/rtl/abi3_deployment_campaign.json"
+PROFILE_MARKER = "PROFILE: ABI3 live-buffer state exclusion PASS"
 
 PINNED_VERILATOR_VERSION = "5.050"
 PINNED_IVERILOG_VERSION = "11.0"
@@ -156,6 +157,7 @@ SITE_NAMES = {
     45: "state commits applied",
     46: "state rows committed",
     47: "event signal error (A23/A24: zero on any admitted program)",
+    48: "compatibility state apply overflow",
 }
 
 CASE_RE = re.compile(
@@ -342,6 +344,7 @@ def simulator_case(
         and executed is not None
         and executed["returncode"] == 0
         and marker in executed["log"]
+        and PROFILE_MARKER in executed["log"]
     )
     return {
         "name": name,
@@ -354,7 +357,11 @@ def simulator_case(
         "run_log": executed["log"] if executed else "",
         "log_sha256": hashlib.sha256(log.encode("utf-8")).hexdigest(),
         "required_marker": marker,
+        "required_profile_marker": PROFILE_MARKER,
         "marker_present": bool(executed and marker in executed["log"]),
+        "profile_marker_present": bool(
+            executed and PROFILE_MARKER in executed["log"]
+        ),
         "checks": observation["checks"],
         "signal_flag_cases": observation["signal_flag_cases"],
         "apply_overflow_cases": observation["apply_overflow_cases"],
@@ -439,11 +446,10 @@ def engine_coverage(
         "note": (
             "an opcode with datapath RTL is still not driven by this "
             "sequencer: the two campaigns correlate the control plane and the "
-            "datapaths separately and nothing wires them together. The STATE "
-            "family (128) is the exception in the other direction -- it has no "
-            "engine datapath because the sequencer's own state controller "
-            "implements it, and this campaign does correlate its prepare, "
-            "commit, discard, read and advance counts"
+            "datapaths separately and nothing wires them together. The "
+            "compatibility STATE family (128) is absent from all four "
+            "certified deployments and its controller is not elaborated in "
+            "this production-profile campaign"
         ),
     }
 
@@ -520,6 +526,7 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
             "ot_a3_microsequencer_top",
             "-GPROGRAM_WORDS=4096",
             "-GDESC_WORDS=8192",
+            "-GSTATE_COMPAT=0",
             "--Mdir",
             "obj_a3_deploy",
             *rtl,
@@ -608,11 +615,8 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
 
     status_bits = {
         "why_they_are_not_correlated": (
-            "state_apply_overflow is a sequencer status output "
-            "runtime.sim.device.Device publishes no counterpart for, so there "
-            "is nothing to correlate it against and asserting a value would be "
-            "a hand-written expectation. It is counted, printed by both "
-            "checkers, and required above to agree between the two simulators. "
+            "state_apply_overflow is tied to zero because STATE_COMPAT=0. It "
+            "is counted, printed by both checkers, and required above to agree. "
             "event_signal_error is no longer in this class: amendment A24 "
             "narrowed it to one condition -- a signal naming an event ID "
             "outside the scoreboard's space -- and amendment A23 makes that "
@@ -664,6 +668,15 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
         "canonical_timestamp_policy": "no timestamp in canonical artifact",
         "simulators_counted": ["iverilog_vvp", "verilator_cpp_executable"],
         "required_marker": marker,
+        "required_profile_marker": PROFILE_MARKER,
+        "rtl_profile": {
+            "state_compatibility_elaborated": False,
+            "required_state_descriptor_count": 0,
+            "required_state_instruction_count": 0,
+            "buffer_model": "direct_memory_objects_with_token_fence",
+            "failure_model": "fail_stop_fresh_run",
+            "link_retry_scope": "packet_only",
+        },
         "what_ran": {
             "reference": "runtime.sim.device.Device",
             "deployments": [
@@ -723,8 +736,9 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
                 "raw Boolean response before instruction-level inversion",
                 "instructions fetched, retired, predicated off and issued",
                 "loop iterations, branches taken and wait-set evaluations",
-                "state prepare, commit, discard, read and advance counts, "
-                "commits applied and rows committed",
+                "all compatibility-state counters and apply-overflow remain "
+                "zero because STATE_COMPAT=0 and the certified deployments "
+                "contain no STATE descriptors or instructions",
                 "the completion decision, the trap class and the first "
                 "faulting instruction",
             ],
@@ -758,10 +772,10 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
                 "so a loop trip or a branch that came out differently is "
                 "caught at the next issue rather than at the end",
                 "one verification-top instance represents one sequencer node; "
-                "its resolved views are compared with golden node zero and its "
-                "state rows with the exact symmetric per-node commit run. The "
-                "vector artifact separately retains each deployment's node "
-                "count and Device's cluster-total committed rows",
+                "its resolved views are compared with golden node zero. The "
+                "state compatibility block is not elaborated, every state "
+                "counter remains zero, and the vector artifact separately "
+                "retains each deployment's node count",
                 "every resolved operand view is compared against "
                 "runtime.sim.memory.ViewResolver.resolve at the loop bindings "
                 "the device recorded: element offset (A4), resolved extent "
@@ -819,10 +833,9 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
                 "record_integrity": "descriptor record CRC32C and the "
                 "header's SHA-256 digests are not checked in RTL; instruction "
                 "and header CRC32C are",
-                "rtl_status_bits": "state_apply_overflow has no counterpart "
-                "in the golden model. It is counted and required to agree "
-                "between the two simulators; it is not correlated, because "
-                "there is nothing to correlate it against. event_signal_error "
+                "rtl_status_bits": "state_apply_overflow is tied to zero in "
+                "the STATE_COMPAT=0 production profile and required to agree "
+                "between the two simulators. event_signal_error "
                 "is asserted rather than counted -- amendments A23 and A24 "
                 "make zero the ABI's answer for any admitted program, not a "
                 "hand-written one -- see "

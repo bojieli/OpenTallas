@@ -14,7 +14,7 @@ integrity, reset, poison, and test contracts remain equivalent.
 | ROM read service | `rom/ot_rom_pkg.sv`, `rom/ot_rom_read_service.sv` | Deployment-named ROM object to placement resource, row, sense granule and operand bus: object and shard lookup over the compiled region plan, bounds and shard-gap refusal, row-redundancy translation, region masking with no array access at all, fail-closed quarantine and column-repair refusal, row-activation accounting against a persistent row buffer, and the column mux that presents a partial granule from the low lane with the rest zeroed | ROM-SVC-001 |
 | ROM sense-interface array | `rom/ot_rom_bank_array.sv` | The behavioural array standing behind the sense interface: no write port, no write enable, no write data, no bidirectional pin; wordline activation counted separately from sense access; an address outside the built array is a defined miss rather than stale row data. **Not a macro and not a density or energy model** | ROM-SVC-001 |
 | Numeric/DV | `ot_format_decode.sv`, `ot_numeric_dot.sv`, `ot_reduction_tree.sv` | classification, signed exact order, deterministic reduction | DV-NUM-001/002 |
-| ABI 3.0 microsequencer and control plane | `abi3/ot_a3_pkg.sv`, `abi3/ot_a3_program_header.sv`, `abi3/ot_a3_instruction_decoder.sv`, `abi3/ot_a3_loop_stack.sv`, `abi3/ot_a3_view_resolver.sv`, `abi3/ot_a3_event_scoreboard.sv`, `abi3/ot_a3_state_controller.sv`, `abi3/ot_a3_microsequencer.sv` | Program-header admission, instruction fetch and decode, the loop nest, predication, event single-assignment, state prepare/commit/discard/read/advance, trap classification and completion, and operand tensor-view resolution (amendment A4 dynamic index terms, A13 partial final extent, A18 extent axis). The block is bounded by four parameters declared in `ot_a3_pkg.sv` -- `A3_STATE_SLOTS`, `A3_EVENT_COUNT`, `A3_LOOP_DEPTH`, `A3_WAIT_PRODUCERS`. A bound that nothing expresses in a capability or in the frozen ABI cannot be refused at admission, so a deployment that exceeds it is admitted and traps in RTL instead; the deployment campaign's `rtl_implementation_bounds.expressed_by` says, per bound, what expresses it | A3-SEQ-001 |
+| ABI 3.0 microsequencer and control plane | `abi3/ot_a3_pkg.sv`, `abi3/ot_a3_program_header.sv`, `abi3/ot_a3_instruction_decoder.sv`, `abi3/ot_a3_loop_stack.sv`, `abi3/ot_a3_view_resolver.sv`, `abi3/ot_a3_event_scoreboard.sv`, `abi3/ot_a3_state_controller.sv`, `abi3/ot_a3_microsequencer.sv` | Program-header admission, instruction fetch/decode, loop nesting, predication, event single-assignment, trap/completion, and operand tensor-view resolution (A4 dynamic index terms, A13 partial final extent, A18 extent axis). `STATE_COMPAT=1` retains the historical ABI 3.0 state controller for compatibility tests. Every shipped comparison deployment uses `STATE_COMPAT=0`: the controller is not elaborated, compatibility counters are zero, nonzero state resources are refused before fetch, completion follows the program's terminal fence, and faults are fail-stop. `A3_EVENT_COUNT`, `A3_LOOP_DEPTH`, and `A3_WAIT_PRODUCERS` remain production bounds; `A3_STATE_SLOTS` applies only to the compatibility profile | A3-SEQ-001 |
 | ABI 3.0 storage-format decode | `abi3/ot_a3_format_pkg.sv` | Exact BF16, binary32, FP8 E4M3FN, MXFP4 E2M1 and unsigned E8M0 decode to binary32, canonical positive zero, reserved encodings reported rather than valued | A3-ENG-001 |
 | ABI 3.0 tensor contraction lane | `abi3/ot_a3_mac_lane.sv`, `ot_fp32_rne_pkg.sv` | `bf16_bf16_fp32_sequential_rne_v1`: exact widening, one binary32 RNE block-scale multiply, one binary32 RNE product with canonicalized zero, strictly ascending-K binary32 accumulation, one RNE output rounding with counted saturation, and fail-closed operand/product/accumulation/scale faults | A3-ENG-001 |
 | ABI 3.0 on-device selection | `abi3/ot_a3_selection_argmax.sv` | `greedy_lowest_token_id_argmax`: signed-zero-canonical binary32 ordering, lowest token ID among the maxima by construction, published tie multiplicity, nonfinite logit refused | A3-ENG-001 |
@@ -376,21 +376,26 @@ selection, residual add and indexed movement.
 A3-SEQ-001 is the two-simulator control-plane correlation, and it is retained
 as two artifacts that answer two different questions.
 
-`results/rtl/abi3_campaign.json` correlates the sequencer against
-`runtime.sim.device.Device` over programs **built for the campaign**: 64 cases,
-52 programs run, 182 engine-issue events, 454 resolved operand views, 11 traps
-and 17 negative cases, 4,383 checks per simulator under Icarus and Verilator.
+`results/rtl/abi3_campaign.json` correlates the compatibility-profile sequencer
+against `runtime.sim.device.Device` over programs **built for the campaign**:
+65 cases, 53 programs run, 185 engine-issue events, 460 resolved operand views,
+11 traps and 17 negative cases, with 4,449 checks per simulator under Icarus
+and Verilator. This retains historical ABI 3.0 `STATE` behavior as compatibility
+coverage; it is not the shipped product profile.
 
 `results/rtl/abi3_deployment_campaign.json` asks the harder question -- whether
 the same RTL runs the programs this repository actually ships -- by loading the
 four real deployment bundles into the sequencer with no program invented for
 the campaign. **Both Qwen3-8B deployments, the DeepSeek-V4-Flash ROM wafer,
 and the DeepSeek-V4-Flash 32-node HBM cluster correlate exactly** on both
-entrypoints at whole-transaction depth. Each Qwen case retires 2,105
-instructions with 693 engine issues and 2,143 resolved operand views. DeepSeek
-ROM retires 18,491 / 11,714 instructions on prefill / decode, with 6,852 /
-3,600 issues and 20,499 / 10,428 views; DeepSeek HBM retires 18,607 / 11,229,
-with 7,376 / 4,454 issues and 21,114 / 11,718 views. Every case ends in
+entrypoints at whole-transaction depth. The production elaboration sets
+`STATE_COMPAT=0`; its independent negative probe refuses a nonzero state count
+before fetch, and every certified deployment declares zero state resources.
+Each Qwen case retires 2,104 instructions with 691 engine issues and 2,143
+resolved operand views. DeepSeek ROM retires 19,999 / 12,929 instructions on
+prefill / decode, with 7,866 / 4,490 issues and 23,395 / 13,221 views; DeepSeek
+HBM retires 20,048 / 12,379, with 8,388 / 5,342 issues and 24,010 / 14,511
+views. Every case ends in
 COMPLETE rather than at a work bound, identically on both simulation engines
 under different back-pressure. Every issue is compared by the instruction
 index that issued it as well as by family, subopcode and descriptor ID; every
@@ -401,29 +406,22 @@ the certificate sources and ignored bundle inputs, and has no digest-drift
 override.
 
 **Which deployments this evidence covers is the artifact's `correlated_cases`
-field, not a sentence here.** It moves whenever a sequencer bound is raised and
-the campaign re-run, so a prose copy of it goes stale silently. As recorded at
-commit `518260f` it named the two Qwen builds and not the DeepSeek-V4-Flash ROM
-wafer deployment, which the RTL trapped after eight retirements of the 29,333
-its prefill retires on the golden model, because `ot_a3_pkg.sv` declared
-`A3_STATE_SLOTS = 8` where that deployment prepares ten. The finding was never
-the slot count: **nothing expressed that bound anywhere a deployment could be
-refused for exceeding it**, so a shipped deployment passed every admission gate
-and was refused in hardware instead. `A3_EVENT_COUNT` was latent behind it, for
-the related reason that a scoreboard indexed by event ID is bounded by the
-largest ID plus one and the capability field beside it bounded the number of
-distinct IDs.
+field, not a sentence here.** The current artifact names all eight model,
+backend, and phase cases, records 595,020 checks per simulator, and requires the
+`PROFILE: ABI3 live-buffer state exclusion PASS` marker. Earlier slot-bound
+failures remain useful history in the unified checklist, but they do not
+describe the current zero-`STATE` production elaboration.
 
-This evidence covers the instruction stream and the operand addressing, at
-whole-transaction depth, on the deployments the artifact lists. **It does not
-establish engine arithmetic** -- every dispatchable operation is a recording
-no-op on both sides, and the datapaths A3-ENG-001 correlates are not wired to
-this sequencer, so nothing shows that a resolved view drives the operand
-addresses an engine reads. It reads no checkpoint byte, exercises one request
-shape per entrypoint (a sixteen-token prefill and a one-token decode at position
-sixteen), checks neither descriptor record CRC32C nor the header's SHA-256, and
-establishes no area, timing or power quantity of any kind: **no block of this
-control plane has been synthesised or routed** (see [OI-43] in
+This evidence covers the instruction stream and operand addressing, at complete
+program depth, on the deployments the artifact lists. **It does not establish
+engine arithmetic** -- every dispatchable operation is a recording no-op on
+both sides, and the datapaths A3-ENG-001 correlates are not wired to this
+sequencer, so nothing shows that a resolved view drives the operand addresses an
+engine reads. It reads no checkpoint byte, exercises one request shape per
+entrypoint (a sixteen-token prefill and a one-token decode at position sixteen),
+checks neither descriptor record CRC32C nor the header's SHA-256, and establishes
+no area, timing or power quantity of any kind: **no block of this control plane
+has been synthesised or routed** (see [OI-43] in
 `docs/UNIFIED_EXECUTION_CHECKLIST.md`). A physical or performance claim resting
 on this RTL may name exactly the deployments `correlated_cases` records and no
 others.

@@ -94,6 +94,7 @@ enum Site : int {
     kStateApplied = 45,
     kStateRows = 46,
     kSignalError = 47,
+    kStateApplyOverflow = 48,
 };
 
 [[noreturn]] void fail(const std::string& message) {
@@ -202,6 +203,30 @@ int main(int argc, char** argv) {
         fail("a3_deployment_case.hex is short");
 
     Model model;
+    model.reset();
+
+    // Production-profile admission: any legacy state-resource count is
+    // rejected before the first instruction fetch.  This is independent of
+    // the eight real-deployment cases, all of which correctly declare zero.
+    model.dut.cfg_instruction_count = 1;
+    model.dut.cfg_max_retired_work = 1;
+    model.dut.cfg_state_count = 1;
+    model.dut.start = 1;
+    model.step();
+    model.dut.start = 0;
+    unsigned profile_guard = 0;
+    while (!model.dut.done && profile_guard < 20) {
+        model.step();
+        ++profile_guard;
+    }
+    if (!model.dut.done || !model.dut.trapped || model.dut.complete ||
+        model.dut.trap_class != 4 ||
+        model.dut.first_fault_instruction != 0xffffffffU ||
+        model.dut.count_fetched != 0 ||
+        model.dut.count_state_prepares != 0 ||
+        model.dut.state_apply_overflow)
+        fail("STATE_COMPAT=0 did not reject state resources before fetch");
+    std::printf("PROFILE: ABI3 live-buffer state exclusion PASS\n");
     model.reset();
 
     unsigned total_issues = 0;
@@ -428,10 +453,12 @@ int main(int argc, char** argv) {
         // outside the scoreboard's space, and amendment A23 makes that a
         // refusal at admission, so zero is the ABI's expectation for any
         // admitted program rather than a hand-written constant.
-        // state_apply_overflow still has no golden counterpart and stays
-        // counted and printed, with the campaign requiring the two simulators
-        // to see the same counts.
+        // STATE_COMPAT is zero in this production-profile elaboration and all
+        // four certified deployments contain zero state records.  The
+        // compatibility apply-overflow output is therefore tied to zero.
         result.equal(kSignalError, model.dut.event_signal_error, 0U);
+        result.equal(kStateApplyOverflow,
+                     model.dut.state_apply_overflow, 0U);
         if (model.dut.event_signal_error) ++signal_flag_cases;
         if (model.dut.state_apply_overflow) ++apply_overflow_cases;
 
