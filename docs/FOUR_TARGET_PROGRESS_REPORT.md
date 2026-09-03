@@ -4,17 +4,19 @@
 
 **Status date:** 2026-09-03
 
-**Input baseline:** `main` through `f2bc183`; this includes the fail-closed
+**Input baseline:** `main` through `969cb52`; this includes the fail-closed
 DeepSeek exact-200K oracle and accelerator-pair checkers, refreshed
 zero-`STATE` deployments, the correctness-qualified TPOT and RTL-bound
 co-simulation evidence gates, the exact DeepSeek wafer multicast, the
 shipped-program Qwen prefix through all three real checkpoint-backed
-layer-zero Q/K/V projections, the exact full-shape first DeepSeek HBM
-`HC_PRE` functional issue, the standalone 256-lane row-folding mapper and
-exact Sinkhorn numeric tail, the bit-exact Qwen host-simulator attention
-acceleration, the corrected HBM `HEAD_RMS_NORM` head-count lowering, and the
-recorded no-artifact outcomes of the first DeepSeek ROM-array functional and
-cycle attempts
+layer-zero Q/K/V projections and query/key head RMSNorm, the exact full-shape
+first DeepSeek HBM `HC_PRE` functional issue, the standalone 256-lane
+row-folding mapper and exact Sinkhorn numeric tail, the bit-exact Qwen
+host-simulator attention acceleration, the corrected HBM `HEAD_RMS_NORM`
+head-count lowering, the target-tick-to-token binding in the TPOT gate, the
+governed exact-8K official-chat Qwen workload and three-capture acceptance
+gate, and the recorded no-artifact outcomes of the first DeepSeek ROM-array
+functional and cycle attempts
 
 **Role:** current narrative status and handoff report. Machine-readable result
 artifacts and the [unified execution checklist](UNIFIED_EXECUTION_CHECKLIST.md)
@@ -46,10 +48,11 @@ contains zero ABI `STATE` descriptors and zero `STATE` instructions.
 
 The project is not yet at final acceptance. The strongest current end-to-end
 model-token records are short or historical runs of the functional simulator.
-There is not yet a source-current Qwen exact-8,000 natural-context acceptance
-package, a source-current DeepSeek exact-200,000 accelerator execution, a fully
-integrated RTL datapath capable of producing those tokens, or a complete
-same-view SKY130/ASAP7 physical comparison of all four systems.
+The source-current Qwen exact-8,000 workload and fail-closed acceptance logic
+exist, but its external oracle and the required HBM-A/HBM-B/ROM captures do
+not. There is not yet a source-current DeepSeek exact-200,000 accelerator
+execution, a fully integrated RTL datapath capable of producing those tokens,
+or a complete same-view SKY130/ASAP7 physical comparison of all four systems.
 
 The present boundary is therefore:
 
@@ -57,9 +60,10 @@ The present boundary is therefore:
 - full-model functional simulator: implemented, with prior short token evidence;
 - full-shape DeepSeek HBM `HC_PRE` functional qualification: the first exact
   T=512 issue is bitwise closed, but it is one operator and produces no token;
-- production acceptance validators: implemented for Qwen, the DeepSeek
-  exact-200K external oracle, and the final DeepSeek ROM/HBM accelerator pair;
-  all still reject the incomplete current evidence;
+- production acceptance validators: implemented for the governed Qwen
+  exact-8K official-chat workload, the DeepSeek exact-200K external oracle,
+  and the final ROM/HBM accelerator pairs; all still reject the incomplete
+  current evidence;
 - correctness-qualified TPOT validator: implemented and fail-closed when token
   evidence, target-cycle traces, process identities, or numerical budgets are
   absent;
@@ -67,10 +71,11 @@ The present boundary is therefore:
   the row-folding mapper and Sinkhorn tail are standalone blocks and are not yet
   wired into a token-producing full-system path;
 - sequencer-to-arithmetic integration: the exact shipped-program prefix through
-  `DMA.GATHER`, `TENSOR.EMBED_LOOKUP`, Qwen `VECTOR.RMS_NORM`, and all three
-  layer-zero Q/K/V `TENSOR.MATMUL` operations, or through the DeepSeek
-  `DMA.TRANSFER`, is closed; exact DeepSeek wafer multicast is separately
-  dual-simulator qualified but not yet integrated into that shared prefix;
+  `DMA.GATHER`, `TENSOR.EMBED_LOOKUP`, Qwen `VECTOR.RMS_NORM`, all three
+  layer-zero Q/K/V `TENSOR.MATMUL` operations, and query/key
+  `VECTOR.HEAD_RMS_NORM`, or through the DeepSeek `DMA.TRANSFER`, is closed;
+  exact DeepSeek wafer multicast is separately dual-simulator qualified but not
+  yet integrated into that shared prefix;
 - exact mandatory long executions: open; the latest Qwen HBM capture A was
   terminated by `SIGTERM` before producing a result artifact; and
 - final process-specific performance comparison: open.
@@ -88,8 +93,8 @@ the remaining cost.
 | Architecture and ABI 3.0 | closed | frozen live-buffer/fence profile; zero `STATE` in all four deployments | no ABI 3.1 work is required |
 | Common IR and four backend builds | closed for current graphs | Qwen and DeepSeek lower through the shared Model Graph and Tensor Kernel IR into HBM and ROM bundles; HBM head norms now encode 32/8 Qwen rows and 64 DeepSeek rows from the neutral IR | rebuild whenever an execution-authoritative source changes |
 | Functional short execution | partial | complete functional engine exists; retained short token prefixes and historical workload evidence; the first exact T=512 DeepSeek HBM `HC_PRE` issue matches an independent service on all 12,288 FP32 output words | current DeepSeek arithmetic repair and Qwen source profile make the retained token captures non-promotable; the `HC_PRE` result is an operator qualification, not a token |
-| RTL 3.0 | partial | shipped control replay and bounded arithmetic pairs independently correlate; the integrated Verilator prefix now drives 6 gathers, 4 embedding lookups, 2 Qwen RMSNorms, 6 complete Qwen Q/K/V projections, and 2 DeepSeek transfers; the standalone 256-lane mapper, exact Sinkhorn tail, unchanged MAC lane, and exact DeepSeek wafer multicast have dual-simulator evidence | Qwen next stops at `VECTOR.HEAD_RMS_NORM` at PC 20, DeepSeek multicast still needs shared-prefix integration, DeepSeek HBM stops at `VECTOR.MHC`, and no RTL path reaches a token |
-| Mandatory workloads | open | exact prompt artifacts and tokenizer/oracle machinery exist | fresh Qwen exact-8K pairs and both DeepSeek exact-200K executions are absent; the DeepSeek oracle stops after eight tokens |
+| RTL 3.0 | partial | shipped control replay and bounded arithmetic pairs independently correlate; the integrated Verilator prefix now drives 6 gathers, 4 embedding lookups, 2 Qwen RMSNorms, 6 complete Qwen Q/K/V projections, 4 query/key head RMSNorms, and 2 DeepSeek transfers; the standalone 256-lane mapper, exact Sinkhorn tail, unchanged MAC lane, and exact DeepSeek wafer multicast have dual-simulator evidence | Qwen next stops at `VECTOR.ROPE` at PC 26, DeepSeek multicast still needs shared-prefix integration, DeepSeek HBM stops at `VECTOR.MHC`, and no RTL path reaches a token |
+| Mandatory workloads | open | the Qwen exact-8K rendered official-chat prompt is frozen and reproducible; exact prompt artifacts plus tokenizer/oracle machinery exist for both models | the new Qwen oracle and its HBM-A/HBM-B/ROM captures and both DeepSeek exact-200K executions are absent; the retained DeepSeek oracle stops after eight tokens |
 | SKY130 and ASAP7 | partial | several bounded blocks have process-specific reports | neither view characterizes a complete target; ASAP7 readiness has 15 fail-closed blockers |
 | Governed comparison | partial | short historical ROM/HBM comparisons retain topology and counter evidence; `081161b` adds a source/process/batch-bound correctness-qualified TPOT schema and checker; `8080d8f` adds the explicit RTL-bound accelerated co-simulation tier; `cbaecf0` freezes the shared-datapath production plan and exact-execution promotion rule | no source-current mandatory-workload pair, production-simulation token record, target token-commit trace, frozen numerical TPOT budget, or complete same-view system cost exists |
 
@@ -102,6 +107,18 @@ it is a scalability diagnostic, not the exact-200K Gate-1 workload. Other
 high-memory jobs remain serialized until it finishes and one source-current
 mandatory run establishes memory and I/O headroom.
 
+- Commit `969cb52` replaces the old plain-prose Qwen long workload with one
+  governed prompt rendered through the official Qwen chat template. It has
+  exactly 8,000 input token IDs and ends with the canonical authenticated
+  question, “What is 17 multiplied by 23? Give only the number.” The expected
+  visible answer is `391`, but no output-token sequence is embedded or treated
+  as an oracle. Gate 1 requires a separately generated external oracle, two
+  independently materialized HBM captures, and one ROM capture. All three must
+  match every token ID and decoded text, accept only legal vocabulary IDs,
+  include and stop at the first official EOS or reach exactly 256 tokens, and
+  show no model transaction after termination. The focused construction and
+  acceptance tests pass; the external oracle and accelerator captures remain
+  absent, so this is gate readiness rather than correct-token evidence.
 - Qwen HBM natural capture A ran as the durable user service
   `opentallas-qwen-w10-natural-a-r1.service`. It launched from committed source
   `2270889bd9716a918e5a0193e90af3bfa60be7f9`, the exact 8,000-token workload,
@@ -191,6 +208,13 @@ mandatory run establishes memory and I/O headroom.
   `VECTOR.HEAD_RMS_NORM`, while the DeepSeek boundaries are unchanged. This is
   authenticated intermediate-tensor RTL evidence, not a decoded token, EOS,
   end-to-end model correctness, or TPOT result.
+- Commit `4ee1f25` advances the Qwen prefix through query/key
+  `VECTOR.HEAD_RMS_NORM`. The campaign now executes 24 real launches and checks
+  80,896 output words; the isolated retained Verilator campaign passed 163,169
+  comparisons before later build-artifact drift invalidated a root-worktree
+  source-current rerun. The next unsupported Qwen instruction is
+  `VECTOR.ROPE` at PC 26. This is still prefix evidence: it produces no logit,
+  token, EOS decision, or TPOT sample.
 - Commit `0b928e5` independently qualifies the exact DeepSeek ROM PC-13 wafer
   multicast on Icarus and Verilator: 256 participants, 255 tree messages,
   4,177,920 payload flits, 4,194,304 exact destination writes, one injected CRC
@@ -216,6 +240,10 @@ mandatory run establishes memory and I/O headroom.
   execution. It categorically excludes functional and RTL simulator wall time,
   projections, and unprovenanced cycles. No real model timing trace or numerical
   ROM/HBM SLO was added, so current production TPOT remains not evaluable.
+- Commit `f3cab35` additionally binds request-start and every token-commit tick
+  to the exact token-execution record and makes the checker reconcile an
+  external timing trace with those events. This closes a measurement-integrity
+  hole but adds no correctness-qualified TPOT point.
 - Commit `cbaecf0` records the shared tensor-datapath production decision. One
   256-lane, four-group, maskable and row-foldable datapath remains the baseline
   for both models; a separate narrow decode engine is only a same-process PPA
