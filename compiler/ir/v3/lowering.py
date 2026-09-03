@@ -158,6 +158,13 @@ KERNEL_TO_ENGINE: Mapping[str, EngineOp] = {
 #: an index into a list it is not in would mean nothing.
 ABSENT_OPERANDS = "absent_operands"
 
+#: Attribute describing a phase-dependent ordered subset of a neutral
+#: kernel's IR inputs.  It is intentionally an IR-input map rather than an ABI
+#: operand row: the model owns which semantic segments exist in each phase,
+#: while each backend remains responsible for placing those inputs into the
+#: frozen ABI 3.0 slots.
+PHASE_INPUTS = "phase_inputs"
+
 
 #: ABI input slots a neutral kind may declare statically absent, by kind.
 #:
@@ -194,10 +201,11 @@ OPTIONAL_INPUT_SLOTS: Mapping[str, frozenset[int]] = {
 #: So the attribute either had to be refused where it is not implemented or
 #: cease to exist, and it is refused -- **here**, at neutral admission, so that
 #: it is one rule both backends inherit rather than two backends each
-#: remembering.  ``ROUTE.WINDOW_INDEX`` writes ``arange(first, last + 1)`` over
-#: the absolute positions of a causal window, tail-padded; that is the whole of
-#: what it produces, and ``causal_circular_window`` is the whole of what may be
-#: claimed for it.
+#: remembering.  ``ROUTE.WINDOW_INDEX`` writes the causal window in source
+#: order and tail-pads it.  In prefill its values are absolute rows in the
+#: current request; in decode they are physical circular-buffer slots.  That
+#: phase-dependent representation is the whole of what it produces, and
+#: ``causal_circular_window`` is the whole of what may be claimed for it.
 #:
 #: Two families are therefore refused and both refusals are load-bearing:
 #:
@@ -249,6 +257,102 @@ def check_operand_slots(
             f"{len(slots)} declared absent"
         )
     return errors
+
+
+def check_phase_inputs(
+    kind: str,
+    inputs: Sequence[str],
+    phases: Sequence[str],
+    attributes: Mapping[str, object],
+) -> list[str]:
+    """Validate a phase-dependent ordered input subset.
+
+    This contract currently exists for axis-zero ``CONCAT``.  It is the exact
+    distinction DeepSeek's sparse KV view needs: prefill joins current rows and
+    an optional compressed prefix, while decode joins the fixed circular-window
+    rows and that prefix.  Treating the attribute as a backend comment would
+    recreate the original defect, so neutral admission checks it once for both
+    lanes.
+    """
+
+    declared = attributes.get(PHASE_INPUTS)
+    if declared is None:
+        return []
+    if kind != "CONCAT":
+        return [f"{PHASE_INPUTS} is defined only for CONCAT, not {kind}"]
+    axis = attributes.get("axis", 0)
+    if type(axis) is not int:
+        return [f"{PHASE_INPUTS} CONCAT axis must be a non-boolean integer"]
+    if axis != 0:
+        return [f"{PHASE_INPUTS} requires an axis-0 CONCAT"]
+    if not isinstance(declared, Mapping):
+        return [f"{PHASE_INPUTS} must map each kernel phase to IR input indices"]
+    expected = {str(phase) for phase in phases}
+    observed = {str(phase) for phase in declared}
+    errors: list[str] = []
+    if observed != expected:
+        errors.append(
+            f"{PHASE_INPUTS} covers phases {sorted(observed)}, expected "
+            f"{sorted(expected)}"
+        )
+    used: set[int] = set()
+    for phase, raw in declared.items():
+        if not isinstance(raw, (list, tuple)) or not raw:
+            errors.append(
+                f"{PHASE_INPUTS}[{str(phase)!r}] must be a non-empty list of "
+                "IR input indices"
+            )
+            continue
+        if not all(isinstance(index, int) and not isinstance(index, bool) for index in raw):
+            errors.append(
+                f"{PHASE_INPUTS}[{str(phase)!r}] must contain only IR input indices"
+            )
+            continue
+        row = [int(index) for index in raw]
+        if len(set(row)) != len(row):
+            errors.append(
+                f"{PHASE_INPUTS}[{str(phase)!r}] names an input twice: {row}"
+            )
+        outside = sorted(index for index in set(row) if not 0 <= index < len(inputs))
+        if outside:
+            errors.append(
+                f"{PHASE_INPUTS}[{str(phase)!r}] names input indices {outside} "
+                f"outside the {len(inputs)} CONCAT inputs"
+            )
+        used.update(index for index in row if 0 <= index < len(inputs))
+    unused = sorted(set(range(len(inputs))) - used)
+    if unused:
+        errors.append(
+            f"{PHASE_INPUTS} never selects CONCAT input indices {unused}"
+        )
+    binding = attributes.get("phase_symbol_binding")
+    if not isinstance(binding, Mapping) or {str(phase) for phase in binding} != expected:
+        errors.append(
+            f"{PHASE_INPUTS} requires phase_symbol_binding for exactly "
+            f"{sorted(expected)}"
+        )
+    return errors
+
+
+def phase_inputs(
+    inputs: Sequence[str], attributes: Mapping[str, object]
+) -> dict[str, tuple[int, ...]] | None:
+    """Return the admitted phase input map in canonical integer form."""
+
+    declared = attributes.get(PHASE_INPUTS)
+    if declared is None:
+        return None
+    # ``check_phase_inputs`` runs during neutral admission.  Backends still use
+    # an explicit conversion here so a direct caller that skipped admission
+    # fails visibly rather than carrying arbitrary JSON values into lowering.
+    if not isinstance(declared, Mapping):
+        raise ValueError(f"{PHASE_INPUTS} is not a phase mapping")
+    result: dict[str, tuple[int, ...]] = {}
+    for phase, raw in declared.items():
+        if not isinstance(raw, (list, tuple)):
+            raise ValueError(f"{PHASE_INPUTS}[{str(phase)!r}] is not a list")
+        result[str(phase)] = tuple(int(index) for index in raw)
+    return result
 
 
 def abi_input_slots(

@@ -58,7 +58,7 @@ def narrow(values: np.ndarray) -> np.ndarray:
     return (upper + increment.astype(np.uint32)).astype(np.uint16)
 
 
-def capability() -> Capability:
+def capability(*, max_context_positions: int = 4096) -> Capability:
     cap = Capability(
         capability_id="",
         topology_class=int(TopologyClass.SINGLE_CHIP),
@@ -83,7 +83,7 @@ def capability() -> Capability:
             "max_event_id": 511,
             "max_state_resources": 16,
             "max_outstanding_per_queue": 8,
-            "max_context_positions": 4096,
+            "max_context_positions": max_context_positions,
             "max_expert_ids": 1024,
             "max_topk": 64,
             "max_vocabulary": 1 << 17,
@@ -102,8 +102,10 @@ def capability() -> Capability:
 class Build:
     """A minimal single-transaction deployment builder for engine tests."""
 
-    def __init__(self, name: str = "engine-test") -> None:
-        self.capability = capability()
+    def __init__(
+        self, name: str = "engine-test", *, max_context_positions: int = 4096
+    ) -> None:
+        self.capability = capability(max_context_positions=max_context_positions)
         self.builder = DeploymentBuilder(
             target_id=name, model_id=name, backend="test", capability=self.capability
         )
@@ -149,12 +151,12 @@ class Build:
             self.scratch(count * itemsize), dtype, dims, writable=True
         )
 
-    def finish(self) -> Device:
+    def finish(self, *, phase: Phase = Phase.PREFILL) -> Device:
         self.builder.emit(Major.CONTROL, Control.COMPLETE)
         self.builder.entrypoint(
             entrypoint_id=0,
             first_instruction=0,
-            phase=Phase.PREFILL,
+            phase=phase,
             generation_policy_id=NO_ID,
         )
         device = Device(self.builder.finish(), self.capability)
@@ -964,7 +966,7 @@ def test_index_topk_joins_rebases_and_compacts_under_a19():
         visible = min((token + 1) // ratio, candidates)
         # score 9.0 at column 1 wins whenever column 1 is visible.
         order = sorted(range(visible), key=lambda c: (-scores[token, c], c))
-        chosen = [c + span + window for c in order[:top_k]]
+        chosen = [c + span for c in order[:top_k]]
         rows = sorted(
             [int(v) for v in window_block[token] if v != NO_ID] + chosen
         )
@@ -1018,9 +1020,7 @@ def test_index_topk_streamed_prefill_uses_the_joined_absolute_query_position():
     assert result.status == CompletionStatus.SUCCESS, result.message
 
     expected = np.full((1, window + top_k), NO_ID, dtype=np.uint32)
-    rows = list(range(context)) + list(
-        range(context + window, context + window + top_k)
-    )
+    rows = list(range(context)) + list(range(context, context + top_k))
     expected[0, : len(rows)] = rows
     assert np.array_equal(read(device, out), expected)
     assert result.counters["route.topk_candidates"] == top_k
@@ -1071,7 +1071,8 @@ def test_index_topk_matches_the_qualified_selection_reference(base, span, contex
         [out],
         aux=[top_k, 0, int(Symbol.CONTEXT_LENGTH), int(Symbol.POSITION_START)],
     )
-    device = build.finish()
+    phase = Phase.PREFILL if base == 0 else Phase.DECODE
+    device = build.finish(phase=phase)
     result = run(
         device,
         symbols={
@@ -1087,7 +1088,7 @@ def test_index_topk_matches_the_qualified_selection_reference(base, span, contex
         top_k=top_k,
         compression_ratio=ratio,
         start_position=base,
-        offset=span + window,
+        offset=context if phase is Phase.PREFILL else window,
     )[0]
     got = read(device, out)
     for token in range(span):
@@ -1101,7 +1102,7 @@ def test_index_topk_matches_the_qualified_selection_reference(base, span, contex
 
 @pytest.mark.parametrize(
     "base,span,context",
-    [(0, 24, 24), (0, 512, 512), (127, 1, 128), (1023, 1, 1024), (60, 4, 64)],
+    [(0, 24, 24), (0, 512, 512), (127, 1, 128), (1023, 1, 1024)],
 )
 def test_index_topk_with_no_score_operand_is_the_released_dense_family(
     base, span, context
@@ -1134,7 +1135,8 @@ def test_index_topk_with_no_score_operand_is_the_released_dense_family(
         [out],
         aux=[capacity, 0, int(Symbol.CONTEXT_LENGTH), int(Symbol.POSITION_START)],
     )
-    device = build.finish()
+    phase = Phase.PREFILL if base == 0 else Phase.DECODE
+    device = build.finish(phase=phase)
     result = run(
         device,
         symbols={
@@ -1154,7 +1156,7 @@ def test_index_topk_with_no_score_operand_is_the_released_dense_family(
             1,
             position + 1,
             position if base or span == 1 else 0,
-            span + window,
+            context if phase is Phase.PREFILL else window,
         )
         reference = matrix[0] if len(matrix) == 1 else matrix[position]
         expected = sorted(
@@ -1275,3 +1277,34 @@ def test_window_index_emits_the_visible_window_with_tail_padding():
     )
     assert np.array_equal(read(device, out), expected)
     assert result.counters["route.topk_candidates"] == 1 + 4 + 4
+
+
+@pytest.mark.parametrize("position", [1, 127, 128, 129, 200_000])
+def test_window_index_decode_emits_physical_circular_slots(position):
+    """Decode indices address the fixed ring, including after many wraps."""
+
+    from runtime.reference.indexing import window_indices
+
+    window = 128
+    build = Build(max_context_positions=262_144)
+    src = build.input_view(np.array([position], dtype=np.uint32), DType.U32)
+    out = build.output_view((1, window), DType.U32, 4)
+    emit_op(
+        build,
+        Major.ROUTE,
+        Route.WINDOW_INDEX,
+        [src],
+        [out],
+        aux=[window, 0, int(Symbol.CONTEXT_LENGTH)],
+    )
+    device = build.finish(phase=Phase.DECODE)
+    result = run(
+        device,
+        symbols={int(Symbol.CONTEXT_LENGTH): position + 1},
+    )
+    assert result.status == CompletionStatus.SUCCESS, result.message
+
+    (batch,) = window_indices(window, 1, 1, position)
+    expected = np.asarray(batch, dtype=np.int64)
+    expected = np.where(expected < 0, NO_ID, expected).astype(np.uint32)
+    assert np.array_equal(read(device, out), expected)

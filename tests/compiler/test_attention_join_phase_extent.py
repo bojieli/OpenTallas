@@ -1,125 +1,105 @@
-"""The compressed attention join's row space, on both lanes, in both phases.
+"""DeepSeek's phase-selected sparse-attention KV row space.
 
-DeepSeek's ``ATTENTION_KV_VIEW`` joins three operands whose extents are
-functions of *two* runtime symbols -- ``span_tokens + 128 +
-context_length / ratio`` -- and amendment A18 states an extent as an affine
-image of one.  The exporter declared ``attention_rows_ratioN``, which is that
-sum with the span's group count substituted for the context's.  In prefill the
-span *is* the context and the substitution is exact; at every decode step it is
-short by every committed compression group, and the two backends were short by
-different amounts:
+The pinned model has two mutually exclusive main-attention layouts:
 
-* ROM declared ``1 + 128 + 0`` and its operands supplied ``1 + 128 + 8``;
-* HBM declared the same ``129`` and resolved its compressed operand against the
-  *span* as well, presenting a whole 128-group block, so its operands supplied
-  ``1 + 128 + 128``.
+* prefill: complete current KV, then the valid compressed prefix;
+* decode: all 128 physical circular-window slots, then that prefix.
 
-Both are the project's recurring defect: legal values, no trap, nothing
-refused, and a wrong answer -- discovered at decode step 1 of a functional run
-rather than at lowering.  These tests hold the three things that close it.
-
-1. Each backend *derives* a join's output extent from its operands and refuses
-   a declaration that disagrees, instead of taking the exporter's word.
-2. A join whose sum has no A18 image in some phase, and which declares no phase
-   binding to collapse it, is refused by both backends.
-3. The two lanes resolve the join and its consumer to the *same* number of rows
-   at prefill and at decode.  Comparability is the point of the program, and a
-   resource whose size the lanes disagree about is not one resource.
+There is no phase in which current KV and a second copy of the window are both
+present.  The neutral graph states the ordered input subset in ``phase_inputs``
+and both backends lower it with existing ABI 3.0 forward branches.  These tests
+read the emitted wire descriptors, follow those branches for one static pass,
+and independently check the selected operands, their sum, and the sparse
+consumer's view in the uncompressed, ratio-four, and ratio-128 layer families.
 """
 
 from __future__ import annotations
 
 import json
-from pathlib import Path
+from dataclasses import dataclass
 
 import pytest
 
+from compiler.frontends.v3.deepseek_v4 import export_deepseek_v4_kernel_graph
 from compiler.ir.v3.kernel_ir import KernelGraph
 from runtime.abi3.capability import Capability
+from runtime.abi3.constants import Attention, Control, InstructionFlag, Major, NO_ID
 from runtime.abi3.descriptors import (
     Comparison,
     ExtendedDescriptorType,
+    Phase,
     PredicateKind,
     SelectorKind,
     Symbol,
 )
-from runtime.abi3.constants import Attention, Control, InstructionFlag, Major, NO_ID
 from runtime.abi3.records import INSTRUCTION, Instruction, split_program
 from runtime.sim.memory import iteration_extent
 
-REPO = Path(__file__).resolve().parents[2]
-IR = REPO / "build/ir-v3/deepseek-v4-flash-0731/kernel_ir.v3.json"
 
-#: The join, and the one operator that reads its result.
-JOIN = "main.layer02.attention_kv_view"
-CONSUMER = "main.layer02.sparse_attention"
+WINDOW = 128
 
-#: 32 prompt tokens, then the first and the third decode step -- the workload
-#: ``TA-DS-CHAT-1-P32`` runs, bound exactly as ``runtime.driver`` binds it.
-BINDINGS = {
-    "prefill": {
-        Symbol.SPAN_TOKENS: 32,
-        Symbol.POSITION_START: 0,
-        Symbol.POSITION_END: 32,
-        Symbol.CONTEXT_LENGTH: 32,
-        Symbol.PHASE: 0,
-    },
-    "decode_1": {
-        Symbol.SPAN_TOKENS: 1,
-        Symbol.POSITION_START: 32,
-        Symbol.POSITION_END: 33,
-        Symbol.CONTEXT_LENGTH: 33,
-        Symbol.PHASE: 1,
-    },
-    "decode_3": {
-        Symbol.SPAN_TOKENS: 1,
-        Symbol.POSITION_START: 34,
-        Symbol.POSITION_END: 35,
-        Symbol.CONTEXT_LENGTH: 35,
-        Symbol.PHASE: 1,
-    },
-    # The step that crosses a compression-group boundary: at ``start_pos``
-    # 35 the compressor's ``(start_pos + 1) % 4 == 0`` fires, the committed
-    # prefix grows from eight groups to nine, and the join's row space grows
-    # with it.  A four-token generation from a 32-token prompt stops one step
-    # short of this, so the executed captures do not reach it and it is stated
-    # here instead of assumed.
-    "decode_4": {
-        Symbol.SPAN_TOKENS: 1,
-        Symbol.POSITION_START: 35,
-        Symbol.POSITION_END: 36,
-        Symbol.CONTEXT_LENGTH: 36,
-        Symbol.PHASE: 1,
-    },
-    # And a much longer context, where the window no longer covers it: the
-    # extent is still one affine function of the context and both lanes still
-    # have to agree on it.
-    "decode_long": {
-        Symbol.SPAN_TOKENS: 1,
-        Symbol.POSITION_START: 4095,
-        Symbol.POSITION_END: 4096,
-        Symbol.CONTEXT_LENGTH: 4096,
-        Symbol.PHASE: 1,
-    },
+
+@dataclass(frozen=True)
+class Site:
+    ratio: int
+    join: str
+    consumer: str
+    prefill_inputs: tuple[int, ...]
+    decode_inputs: tuple[int, ...]
+
+
+SITES = {
+    0: Site(
+        ratio=0,
+        join="main.layer00.attention_kv_view",
+        consumer="main.layer00.sparse_attention",
+        prefill_inputs=(0,),
+        decode_inputs=(1,),
+    ),
+    4: Site(
+        ratio=4,
+        join="main.layer02.attention_kv_view",
+        consumer="main.layer02.sparse_attention",
+        prefill_inputs=(0, 2),
+        decode_inputs=(1, 2),
+    ),
+    128: Site(
+        ratio=128,
+        join="main.layer03.attention_kv_view",
+        consumer="main.layer03.sparse_attention",
+        prefill_inputs=(0, 2),
+        decode_inputs=(1, 2),
+    ),
 }
 
-#: ``span + window + committed groups``, computed here from the bindings rather
-#: than typed in, so the expectation is the join's own definition.
-WINDOW = 128
-RATIO = 4
+
+def _binding(*, phase: Phase, span: int, position: int) -> dict[Symbol, int]:
+    return {
+        Symbol.SPAN_TOKENS: span,
+        Symbol.POSITION_START: position,
+        Symbol.POSITION_END: position + span,
+        Symbol.CONTEXT_LENGTH: position + span,
+        Symbol.PHASE: int(phase),
+    }
 
 
-def _expected(binding: dict[Symbol, int]) -> int:
-    return (
-        int(binding[Symbol.SPAN_TOKENS])
-        + WINDOW
-        + int(binding[Symbol.CONTEXT_LENGTH]) // RATIO
-    )
+# Both sides of each optional compressed-prefix boundary are included.  The
+# 200,000-position row is deliberately here as an extent/address-space check;
+# it does not allocate or execute a full model context.
+BINDINGS = {
+    "prefill_1": _binding(phase=Phase.PREFILL, span=1, position=0),
+    "prefill_160": _binding(phase=Phase.PREFILL, span=160, position=0),
+    "decode_1": _binding(phase=Phase.DECODE, span=1, position=1),
+    "decode_129": _binding(phase=Phase.DECODE, span=1, position=129),
+    "decode_200000": _binding(phase=Phase.DECODE, span=1, position=200_000),
+}
 
 
 def _lower(lane: str, graph: KernelGraph):
     import importlib
+    from pathlib import Path
 
+    root = Path(__file__).resolve().parents[2]
     module, function, capability = {
         "rom": (
             "compiler.backends.rom.deepseek_v4",
@@ -134,19 +114,17 @@ def _lower(lane: str, graph: KernelGraph):
     }[lane]
     lower = getattr(importlib.import_module(module), function)
     return lower(
-        graph, Capability.from_dict(json.loads((REPO / capability).read_text()))
+        graph,
+        Capability.from_dict(json.loads((root / capability).read_text())),
     )
 
 
 def _resolve(table, view_id: int, symbols: dict[int, int]) -> tuple[int, ...]:
-    """The dims ``runtime.sim.memory.ViewResolver`` would present.
+    """Resolve the view dimensions from the emitted ABI 3.0 descriptor."""
 
-    The same arithmetic, restated over the descriptor payload so that the test
-    reads the wire format rather than a device.
-    """
     payload = table.get(view_id, ExtendedDescriptorType.TENSOR_VIEW).payload
     rank = payload["rank"]
-    dims = [payload[f"dim{a}"] for a in range(rank)]
+    dims = [payload[f"dim{axis}"] for axis in range(rank)]
     axis = int(payload["extent_axis"])
     unit = max(int(payload["extent_unit"]), 1)
     numerator = max(int(payload["extent_numerator"]), 1)
@@ -164,9 +142,7 @@ def _resolve(table, view_id: int, symbols: dict[int, int]) -> tuple[int, ...]:
         control = loop.payload
         if control["bound_selector_kind"] != int(SelectorKind.RUNTIME_SYMBOL):
             continue
-        step = iteration_extent(
-            max(int(control["bound_divisor"]), 1), numerator, unit
-        )
+        step = iteration_extent(max(int(control["bound_divisor"]), 1), numerator, unit)
         if step is None:
             continue
         if int(payload[f"term{slot}_stride"]) != int(payload[f"stride{axis}"]) * step:
@@ -184,322 +160,229 @@ def _resolve(table, view_id: int, symbols: dict[int, int]) -> tuple[int, ...]:
 
 
 def _issues(table, instruction: Instruction, symbols: dict[int, int]) -> bool:
+    """Evaluate the predicate kinds used by the selected paths."""
+
     if instruction.predicate_id == NO_ID:
         return True
     payload = table.get(
         instruction.predicate_id, ExtendedDescriptorType.PREDICATE
     ).payload
-    if payload["predicate_kind"] == int(PredicateKind.PHASE_IS):
-        value = symbols[int(Symbol.PHASE)]
-    else:
+    kind = PredicateKind(payload["predicate_kind"])
+    if kind is PredicateKind.ALWAYS:
+        verdict = True
+    elif kind is PredicateKind.PHASE_IS:
+        verdict = symbols[int(Symbol.PHASE)] == int(payload["immediate"])
+    elif kind is PredicateKind.COMPARE_SYMBOL:
         value = symbols[int(payload["selector_index"])]
-    immediate = int(payload["immediate"])
-    verdict = {
-        Comparison.EQ: value == immediate,
-        Comparison.NE: value != immediate,
-        Comparison.LT: value < immediate,
-        Comparison.LE: value <= immediate,
-        Comparison.GT: value > immediate,
-        Comparison.GE: value >= immediate,
-    }[Comparison(payload["comparison"])]
+        immediate = int(payload["immediate"])
+        verdict = {
+            Comparison.EQ: value == immediate,
+            Comparison.NE: value != immediate,
+            Comparison.LT: value < immediate,
+            Comparison.LE: value <= immediate,
+            Comparison.GT: value > immediate,
+            Comparison.GE: value >= immediate,
+        }[Comparison(payload["comparison"])]
+    else:  # No selected join/consumer or forward phase branch uses another kind.
+        raise AssertionError(f"static path cannot evaluate predicate kind {kind.name}")
     if instruction.flags & InstructionFlag.PREDICATE_INVERT:
-        return not verdict
+        verdict = not verdict
     return verdict
 
 
-def _wait_events(table, instruction: Instruction) -> set[int]:
-    if instruction.wait_set_id == NO_ID:
-        return set()
-    wait = table.get(
-        instruction.wait_set_id, ExtendedDescriptorType.EVENT_WAIT_SET
-    ).payload
-    return {
-        int(wait[f"producer_{slot}"])
-        for slot in range(int(wait["producer_count"]))
-    }
+def _static_path(
+    table, stream: list[Instruction], symbols: dict[int, int]
+) -> tuple[int, ...]:
+    """Follow forward branches while treating loop records as fallthrough.
 
-
-def _event_reaches_wait(
-    table,
-    stream: list[Instruction],
-    source_event: int,
-    wait_index: int,
-    wait: Instruction,
-    predicate_id: int,
-    predicate_invert: bool,
-) -> bool:
-    """Whether ``source_event`` causally reaches ``wait`` on one branch.
-
-    HBM may stage one logical operator as DMA -> LINK -> DMA -> engine work.
-    The branch-closing wait names the engine event, so an earlier stage reaches
-    it through the wait sets of the intervening instructions rather than by a
-    direct edge.  Walk that event graph backwards, admitting only producers
-    earlier than their consumer and carrying the same branch predicate.
+    One pass is sufficient for descriptor inspection: loop induction changes
+    addresses, not which phase-specific operator descriptor a request selects.
     """
 
-    producers = {
-        instruction.signal_event_id: (index, instruction)
-        for index, instruction in enumerate(stream)
-        if instruction.signal_event_id != NO_ID
-    }
-    pending = [
-        (event_id, wait_index) for event_id in _wait_events(table, wait)
-    ]
-    visited: set[tuple[int, int]] = set()
-    while pending:
-        event_id, consumer_index = pending.pop()
-        if event_id == source_event:
-            return True
-        edge = (event_id, consumer_index)
-        if edge in visited:
-            continue
-        visited.add(edge)
-        producer = producers.get(event_id)
-        if producer is None:
-            continue
-        producer_index, instruction = producer
-        if producer_index >= consumer_index:
-            continue
-        if instruction.predicate_id != predicate_id:
-            continue
-        if bool(instruction.flags & InstructionFlag.PREDICATE_INVERT) != (
-            predicate_invert
+    path: list[int] = []
+    pc = 0
+    while pc < len(stream):
+        instruction = stream[pc]
+        path.append(pc)
+        if (
+            instruction.major == int(Major.CONTROL)
+            and instruction.sub == int(Control.BRANCH)
+            and _issues(table, instruction, symbols)
         ):
+            assert pc < instruction.control_id <= len(stream), (
+                f"non-forward branch {pc} -> {instruction.control_id}"
+            )
+            pc = instruction.control_id
             continue
-        pending.extend(
-            (dependency, producer_index)
-            for dependency in _wait_events(table, instruction)
-        )
-    return False
+        if (
+            instruction.major == int(Major.CONTROL)
+            and instruction.sub == int(Control.COMPLETE)
+            and _issues(table, instruction, symbols)
+        ):
+            break
+        pc += 1
+    return tuple(path)
 
 
-def _rows(lane: str, graph: KernelGraph) -> dict[str, dict[str, int]]:
-    """``phase -> {"join_in", "join_out", "attention_kv"}`` row counts."""
+def _expected_parts(site: Site, binding: dict[Symbol, int]) -> tuple[int, ...]:
+    phase = Phase(binding[Symbol.PHASE])
+    base = binding[Symbol.SPAN_TOKENS] if phase is Phase.PREFILL else WINDOW
+    groups = 0 if site.ratio == 0 else binding[Symbol.CONTEXT_LENGTH] // site.ratio
+    return (base, *([groups] if groups else []))
+
+
+def _measure(lane: str, graph: KernelGraph):
     deployment = _lower(lane, graph)
     table = deployment.table
-    kernel_of = {k.index: k.kernel_id for k in graph.kernels}
+    kernel_of = {kernel.index: kernel.kernel_id for kernel in graph.kernels}
+    site_of_name = {
+        name: (ratio, role)
+        for ratio, site in SITES.items()
+        for role, name in (("join", site.join), ("consumer", site.consumer))
+    }
     operators = {}
     for index, descriptor in enumerate(table.descriptors()):
         if descriptor.descriptor_type != ExtendedDescriptorType.OPERATOR:
             continue
         name = kernel_of.get(descriptor.payload["source_kernel_id"], "")
-        if name == JOIN:
-            operators[index] = (descriptor.payload, name)
-        elif (
-            name == CONSUMER
-            and descriptor.payload["engine_family"] == int(Major.ATTENTION)
+        matched = site_of_name.get(name)
+        if matched is None:
+            continue
+        ratio, role = matched
+        if role == "consumer" and not (
+            descriptor.payload["engine_family"] == int(Major.ATTENTION)
             and descriptor.payload["engine_sub"] == int(Attention.SPARSE)
         ):
-            operators[index] = (descriptor.payload, name)
+            continue
+        operators[index] = (ratio, role, descriptor.payload)
+
     _header, body = split_program(deployment.program)
     size = INSTRUCTION.size
     stream = [
-        Instruction.decode(body[i * size : (i + 1) * size])
-        for i in range(len(body) // size)
+        Instruction.decode(body[offset : offset + size])
+        for offset in range(0, len(body), size)
     ]
-    results: dict[str, dict[str, int]] = {}
-    for phase, binding in BINDINGS.items():
-        symbols = {int(k): int(v) for k, v in binding.items()}
-        seen: dict[str, int] = {}
-        for instruction in stream:
-            if instruction.descriptor_id not in operators:
+    results = {}
+    for case_name, raw_binding in BINDINGS.items():
+        symbols = {int(key): int(value) for key, value in raw_binding.items()}
+        measured = {ratio: {} for ratio in SITES}
+        for pc in _static_path(table, stream, symbols):
+            instruction = stream[pc]
+            matched = operators.get(instruction.descriptor_id)
+            if matched is None or not _issues(table, instruction, symbols):
                 continue
-            payload, name = operators[instruction.descriptor_id]
-            if not _issues(table, instruction, symbols):
-                continue
-            if name == JOIN:
-                assert "join_out" not in seen, (
-                    f"{lane}/{phase}: two join paths issue for one request"
+            ratio, role, payload = matched
+            if role == "join":
+                assert "join_parts" not in measured[ratio], (
+                    f"{lane}/{case_name}/ratio{ratio}: multiple join paths issue"
                 )
-                inputs = [
+                parts = tuple(
                     _resolve(table, payload[f"input_view_{slot}"], symbols)[0]
                     for slot in range(4)
                     if payload[f"input_view_{slot}"] != NO_ID
-                ]
-                seen["join_in"] = sum(inputs)
-                seen["join_out"] = _resolve(
+                )
+                measured[ratio]["join_parts"] = parts
+                measured[ratio]["join_out"] = _resolve(
                     table, payload["output_view_0"], symbols
                 )[0]
             else:
-                assert "attention_kv" not in seen, (
-                    f"{lane}/{phase}: two attention paths issue for one request"
+                assert "attention_kv" not in measured[ratio], (
+                    f"{lane}/{case_name}/ratio{ratio}: multiple sparse paths issue"
                 )
-                seen["attention_kv"] = _resolve(
+                measured[ratio]["attention_kv"] = _resolve(
                     table, payload["input_view_1"], symbols
                 )[0]
-        results[phase] = seen
+        results[case_name] = measured
     return results
 
 
 @pytest.fixture(scope="module")
 def graph() -> KernelGraph:
-    if not IR.exists():  # pragma: no cover - build artefact
-        pytest.skip(f"{IR} has not been built; run `make abi3-ir`")
-    return KernelGraph.read(IR)
+    """Always inspect a fresh source graph, never a worktree-local artefact."""
+
+    return export_deepseek_v4_kernel_graph()
 
 
 @pytest.fixture(scope="module")
-def rows(graph: KernelGraph) -> dict[str, dict[str, dict[str, int]]]:
-    return {lane: _rows(lane, graph) for lane in ("rom", "hbm")}
+def rows(graph: KernelGraph):
+    return {lane: _measure(lane, graph) for lane in ("rom", "hbm")}
+
+
+@pytest.mark.parametrize("ratio", sorted(SITES))
+def test_neutral_phase_inputs_name_the_source_order(graph: KernelGraph, ratio: int):
+    site = SITES[ratio]
+    kernel = next(kernel for kernel in graph.kernels if kernel.kernel_id == site.join)
+    selected = kernel.attributes["phase_inputs"]
+    assert tuple(selected["prefill"]) == site.prefill_inputs
+    assert tuple(selected["decode"]) == site.decode_inputs
+    assert kernel.attributes["phase_symbol_binding"] == {
+        "prefill": {"position_start": 0},
+        "decode": {"span_tokens": 1},
+    }
+    assert "kv_fp8_qdq.output" in kernel.inputs[site.prefill_inputs[0]]
+    assert "committed_window" in kernel.inputs[site.decode_inputs[0]]
+    if ratio:
+        assert "compress_kv_valid_view.output" in kernel.inputs[site.prefill_inputs[1]]
+        assert site.prefill_inputs[1] == site.decode_inputs[1]
 
 
 @pytest.mark.parametrize("lane", ["rom", "hbm"])
-@pytest.mark.parametrize("phase", sorted(BINDINGS))
-def test_join_output_is_the_sum_of_its_operands(lane, phase, rows):
-    """A17, at the extents the request actually binds.
-
-    This is the equality the engine checks one dispatch after admission, and
-    the one that failed at decode step 1: ``output view ... dims (129, 512)
-    differ from the axis-0 concatenation (137, 512)``.
-    """
-    measured = rows[lane][phase]
-    assert measured, f"{lane}/{phase}: no join path issues at all"
-    assert measured["join_out"] == measured["join_in"]
-    assert measured["join_out"] == _expected(BINDINGS[phase])
-
-
-@pytest.mark.parametrize("phase", sorted(BINDINGS))
-def test_both_lanes_size_the_same_resource_the_same(phase, rows):
-    """The comparability half of the defect.
-
-    ROM said 137 rows and HBM said 257 for the same decode step of the same
-    graph.  Two lanes that disagree about the size of one resource are not
-    comparing anything, whichever of them is right.
-    """
-    assert rows["rom"][phase] == rows["hbm"][phase]
-
-
-@pytest.mark.parametrize("kernel_id", [JOIN, CONSUMER])
-def test_hbm_conditional_paths_have_a_causal_or_join(kernel_id, graph):
-    """Every mutually exclusive producer reaches a wait on its own branch."""
-
-    deployment = _lower("hbm", graph)
-    source = next(k.index for k in graph.kernels if k.kernel_id == kernel_id)
-    _header, body = split_program(deployment.program)
-    size = INSTRUCTION.size
-    stream = [
-        Instruction.decode(body[i * size : (i + 1) * size])
-        for i in range(len(body) // size)
-    ]
-    indexed = [
-        (index, instruction)
-        for index, instruction in enumerate(stream)
-        if instruction.source_operation_id == source
-    ]
-    producers = [
-        (index, instruction)
-        for index, instruction in indexed
-        if instruction.major != int(Major.CONTROL)
-        and instruction.predicate_id != NO_ID
-        and instruction.signal_event_id != NO_ID
-    ]
-    waits = [
-        (index, instruction)
-        for index, instruction in indexed
-        if instruction.major == int(Major.CONTROL)
-        and instruction.sub == int(Control.WAIT)
-    ]
-    joins = [
-        (index, instruction)
-        for index, instruction in indexed
-        if instruction.major == int(Major.CONTROL)
-        and instruction.sub == int(Control.NOP)
-        and instruction.signal_event_id != NO_ID
-    ]
-    assert producers
-    assert len(joins) == 1
-    join_index, join = joins[0]
-    assert join.predicate_id == NO_ID
-    for producer_index, producer in producers:
-        matching = [
-            (wait_index, wait)
-            for wait_index, wait in waits
-            if wait.predicate_id == producer.predicate_id
-            and bool(wait.flags & InstructionFlag.PREDICATE_INVERT)
-            == bool(producer.flags & InstructionFlag.PREDICATE_INVERT)
-            and _event_reaches_wait(
-                deployment.table,
-                stream,
-                producer.signal_event_id,
-                wait_index,
-                wait,
-                producer.predicate_id,
-                bool(producer.flags & InstructionFlag.PREDICATE_INVERT),
-            )
-        ]
-        assert len(matching) == 1
-        assert producer_index < matching[0][0] < join_index
-
-
-@pytest.mark.parametrize("lane", ["rom", "hbm"])
-@pytest.mark.parametrize("phase", sorted(BINDINGS))
-def test_the_consumer_reads_the_rows_the_join_wrote(lane, phase, rows):
-    """The propagation the split cannot stop at the producer.
-
-    ``ATTENTION.SPARSE`` gathers rows of the join by index and bounds those
-    indices by its own operand's resolved extent.  A consumer holding the
-    prefill function at decode would present 129 of 137 rows and refuse the
-    eight rebased compressed indices its own selector had just produced.
-    """
-    measured = rows[lane][phase]
+@pytest.mark.parametrize("ratio", sorted(SITES))
+@pytest.mark.parametrize("case_name", sorted(BINDINGS))
+def test_selected_join_and_sparse_consumer_have_exact_rows(
+    lane: str, ratio: int, case_name: str, rows
+):
+    expected_parts = _expected_parts(SITES[ratio], BINDINGS[case_name])
+    measured = rows[lane][case_name][ratio]
+    assert measured["join_parts"] == expected_parts
+    assert measured["join_out"] == sum(expected_parts)
     assert measured["attention_kv"] == measured["join_out"]
 
 
-def _stripped(field: str) -> KernelGraph:
-    body = json.loads(IR.read_text())
-    removed = 0
-    for kernel in body["kernels"]:
-        if field in kernel.get("attributes", {}):
-            del kernel["attributes"][field]
-            removed += 1
-    assert removed, f"no kernel declares {field!r}"
-    body.pop("graph_id", None)
-    import tempfile
+@pytest.mark.parametrize("ratio", sorted(SITES))
+@pytest.mark.parametrize("case_name", sorted(BINDINGS))
+def test_both_lanes_size_the_same_resource_the_same(ratio, case_name, rows):
+    assert rows["rom"][case_name][ratio] == rows["hbm"][case_name][ratio]
 
-    handle = tempfile.NamedTemporaryFile("w", suffix=".json", delete=False)
-    json.dump(body, handle)
-    handle.close()
-    return KernelGraph.read(Path(handle.name))
+
+def _edited_graph(graph: KernelGraph, edit) -> KernelGraph:
+    body = graph.to_dict()
+    edit(body)
+    body.pop("graph_id", None)
+    return KernelGraph.from_dict(body)
 
 
 @pytest.mark.parametrize("lane", ["rom", "hbm"])
-def test_a_join_with_no_phase_binding_is_refused(lane, graph):
-    """The refusal that should have caught this at the first decode attempt.
+def test_a_mixed_symbol_join_without_phase_selection_is_refused(lane, graph):
+    """Removing both phase authorities must not revive the old approximation."""
 
-    Without the phase binding the sum is over two symbols in every phase, so
-    there is no A18 image of it at all -- and the exporter's declared
-    ``attention_rows_ratioN`` is a guess a backend used to accept.  Both lanes
-    now refuse the lowering rather than emit a view the engine will reject.
-    """
-    with pytest.raises(Exception) as excinfo:
-        _lower(lane, _stripped("phase_symbol_binding"))
-    assert "no single A18 extent" in str(excinfo.value)
+    def edit(body):
+        kernel = next(
+            kernel for kernel in body["kernels"] if kernel["kernel_id"] == SITES[4].join
+        )
+        kernel["attributes"].pop("phase_inputs")
+        kernel["attributes"].pop("phase_symbol_binding")
+
+    with pytest.raises(Exception, match="no single A18 extent"):
+        _lower(lane, _edited_graph(graph, edit))
 
 
 @pytest.mark.parametrize("lane", ["rom", "hbm"])
-def test_a_declared_extent_that_is_not_the_sum_is_refused(lane):
-    """A join whose output symbol disagrees with its operands.
+def test_a_wrong_prefill_extent_is_refused(lane, graph):
+    """A phase split does not license a false declaration for either phase."""
 
-    The window layers join ``span + 128`` and declare ``attention_rows_window``.
-    Relabelling that output ``attention_rows_ratio4`` -- the exact substitution
-    this defect was -- must be refused rather than lowered.
-    """
-    body = json.loads(IR.read_text())
-    patched = 0
-    for tensor in body["tensors"]:
-        if tensor.get("tensor_id", "").endswith(
-            "main.layer00.attention_kv_view.output"
-        ):
-            tensor["shape"][0]["symbol"] = "attention_rows_ratio4"
-            tensor["shape"][0]["maximum"] = 327808
-            patched += 1
-    assert patched == 1
-    body.pop("graph_id", None)
-    import tempfile
+    def edit(body):
+        source = next(
+            tensor["shape"][0]
+            for tensor in body["tensors"]
+            if tensor["tensor_id"].endswith("main.layer03.attention_kv_view.output")
+        )
+        target = next(
+            tensor
+            for tensor in body["tensors"]
+            if tensor["tensor_id"].endswith("main.layer02.attention_kv_view.output")
+        )
+        target["shape"][0] = dict(source)
 
-    handle = tempfile.NamedTemporaryFile("w", suffix=".json", delete=False)
-    json.dump(body, handle)
-    handle.close()
-    with pytest.raises(Exception) as excinfo:
-        _lower(lane, KernelGraph.read(Path(handle.name)))
-    assert "operands sum to" in str(excinfo.value)
+    with pytest.raises(Exception, match="does not match"):
+        _lower(lane, _edited_graph(graph, edit))

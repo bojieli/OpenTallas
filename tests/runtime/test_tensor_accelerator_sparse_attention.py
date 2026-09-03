@@ -106,9 +106,11 @@ CASES = [
 def _indices(rng, span, slots, rows, pattern):
     """Selected rows in the reference's ``-1``-padded signed form.
 
-    ``holes`` and ``descending`` are legal for the reference and illegal for
-    amendment A6, which the engine enforces above the kernel.  The kernel must
-    not quietly assume the narrower convention.
+    ``holes`` are legal for the reference and rejected by the engine's
+    tail-padding convention. ``descending`` remains legal end to end because
+    producer order reaches the numeric contract; a circular decode window is
+    the load-bearing wrapped-order case. The kernel must not quietly assume a
+    narrower convention than either producer can supply.
     """
     indices = np.full((span, slots), -1, dtype=np.int64)
     for position in range(span):

@@ -70,6 +70,7 @@ from compiler.ir.v3.lowering import (
     EngineOp,
     KERNEL_TO_ENGINE,
     abi_input_slots as _shared_input_slots,
+    phase_inputs as _phase_inputs,
 )
 from runtime.abi3.builder import DeploymentBuilder, DynamicTerm
 from runtime.abi3.capability import Capability
@@ -643,26 +644,16 @@ SYMBOL_BY_NAME: Mapping[str, RequestAxis] = {
     # resolved operands were (262144, 128, 65536) summing to the output's
     # 327,808 when the request had 133 rows.
     #
-    # These are the *prefill* forms, and they are now derived rather than
-    # trusted: ``_check_join_extent`` sums the operands of every axis-0 join
-    # and refuses an output whose declared function is not that sum.  The
-    # decode form is not in this table because it is not one entry -- the sum
-    # is over two symbols and A18 states one -- so it is derived per phase from
-    # the graph's ``phase_symbol_binding`` and emitted as its own path.  The
-    # paragraph below records what this table said before that existed; the
-    # last sentence of it was wrong, and a decode step is where it was wrong.
-    #
-    # ``window`` is the span joined to a 128-row sliding window, which is the
-    # bias: those rows are there for a span of one.  The compressed layers add
-    # ``context / ratio`` more, and in *prefill* the context is the span, so
-    # ratio-4 is ``5 * span / 4 + 128`` and ratio-128 is ``129 * span / 128 +
-    # 128``.  Decode binds the two symbols apart and A18 is exact for an affine
-    # function of one, so a decode of a compressed layer needs a phase split
-    # that prefill does not; it is not solved here because it is not needed
-    # here, and stating it speculatively would state it wrong.
-    "attention_rows_window": RequestAxis(Symbol.SPAN_TOKENS, 1, 1, 128),
-    "attention_rows_ratio4": RequestAxis(Symbol.SPAN_TOKENS, 4, 5, 128),
-    "attention_rows_ratio128": RequestAxis(Symbol.SPAN_TOKENS, 128, 129, 128),
+    # These are the declared *prefill* forms.  The pinned layout selects current
+    # KV plus the valid compressed prefix, so ratio 0 is ``span``, ratio 4 is
+    # ``5 * span / 4`` and ratio 128 is ``129 * span / 128``.  Decode selects a
+    # different neutral input subset -- fixed 128-row physical window plus the
+    # context-derived prefix -- and ``_phase_layout_extents`` derives that path
+    # from ``phase_inputs``.  Existing ABI 3.0 control flow selects between the
+    # two; this table neither approximates decode nor implies ABI 3.1.
+    "attention_rows_window": RequestAxis(Symbol.SPAN_TOKENS),
+    "attention_rows_ratio4": RequestAxis(Symbol.SPAN_TOKENS, 4, 5),
+    "attention_rows_ratio128": RequestAxis(Symbol.SPAN_TOKENS, 128, 129),
     "selected_rows_ratio128": RequestAxis(Symbol.SPAN_TOKENS, 128, 1, 128),
 }
 
@@ -752,8 +743,8 @@ def _rewrite_comparison(
 #: The index families ``ROUTE.WINDOW_INDEX`` actually produces.  A gate, not a
 #: label: a family outside this set is refused at compile time.
 #:
-#: The engine writes ``arange(first, last + 1)`` over *absolute positions* of a
-#: causal window, tail-padded -- that and nothing else.  A graph may name a
+#: The engine writes the causal window, tail-padded -- absolute current-request
+#: rows in prefill and physical circular slots in decode.  A graph may name a
 #: different family, and the DeepSeek export does: the ratio-128 layers declare
 #: ``causal_compressed_dense``, whose released form is
 #: ``arange(0, context // ratio) + offset`` -- an enumeration of completed
@@ -1210,7 +1201,9 @@ class RomLowering:
         #: whose operands sum over two runtime symbols has no single extent,
         #: and every view of its result -- the producer's and the consumer's --
         #: has to state the phase's own.
-        self._phase_extent: dict[str, dict[str, RequestAxis]] = {}
+        self._phase_extent: dict[
+            str, dict[str, tuple[RequestAxis | None, int]]
+        ] = {}
         self._unrepresentable_predicates: dict[str, dict[str, str]] = {}
         self._unify_buffers()
 
@@ -5625,11 +5618,15 @@ class RomLowering:
             report["phase_split_extents"] = {
                 name: {
                     phase: (
-                        f"{extent.numerator}*"
-                        f"{Symbol(int(extent.symbol)).name}/"
-                        f"{extent.unit}+{extent.bias}"
+                        str(static)
+                        if extent is None
+                        else (
+                            f"{extent.numerator}*"
+                            f"{Symbol(int(extent.symbol)).name}/"
+                            f"{extent.unit}+{extent.bias}"
+                        )
                     )
-                    for phase, extent in sorted(table.items())
+                    for phase, (extent, static) in sorted(table.items())
                 }
                 for name, table in sorted(self._phase_extent.items())
             }
@@ -5703,14 +5700,13 @@ class RomLowering:
     ) -> tuple[RequestAxis | None, int]:
         """:meth:`_join_extent`, evaluated under one phase's substitutions.
 
-        A17 makes a join's output the sum of its inputs, and A18 states an
-        extent as an affine image of *one* symbol.  The compressed attention
-        join is a sum over two -- ``span_tokens + 128 + context_length /
-        ratio`` -- so the sum has no A18 image at all and the exporter's own
-        ``attention_rows_ratioN`` was taken on trust.  It was wrong: it names
-        the *span's* group count, which equals the context's only while the
-        span is the context, so it is exact in prefill and short by every
-        committed group at every decode step.
+        A17 makes a join's output the sum of its selected inputs, and A18 states
+        an extent as an affine image of *one* symbol.  The union of the main
+        attention join's candidate inputs is ``span_tokens + 128 +
+        context_length / ratio`` and has no A18 image at all.  ``phase_inputs``
+        prevents that false three-way layout: this helper receives current or
+        window, plus the optional prefix, under the matching phase substitution
+        and the selected sum collapses exactly.
 
         Under a phase's substitutions the sum does collapse.  A symbol the
         phase pins to a constant folds into the bias; a symbol the phase makes
@@ -5961,7 +5957,10 @@ class RomLowering:
                     view,
                 )
             )
-            self._phase_extent.setdefault(kernel.outputs[0], {})[str(phase)] = extent
+            self._phase_extent.setdefault(kernel.outputs[0], {})[str(phase)] = (
+                extent,
+                0,
+            )
         for phase, triple in triples.items():
             for other, constants in pinned_by_phase.items():
                 if other == phase:
@@ -5985,25 +5984,25 @@ class RomLowering:
 
     def _phase_consumer_paths(
         self, kernel: Kernel
-    ) -> dict[int, dict[str, RequestAxis]] | None:
+    ) -> dict[int, dict[str, tuple[RequestAxis | None, int]]] | None:
         """Operands of this kernel whose extent the phase decides.
 
         A tensor produced by a phase-split join has no single A18 extent, and a
-        view of it is a statement of that extent wherever it is read.  So the
+        view of it is a statement of that extent wherever it is read. So the
         split does not stop at the producer: every consumer states the same two
-        functions, or it presents rows the producer did not write.  Left
-        unpropagated, DeepSeek's sparse attention read the prefill function at
-        decode -- 129 rows of a 137-row join -- and refused the eight rebased
-        compressed indices its own selector had just produced.
+        functions, or it presents rows the producer did not write. Left
+        unpropagated, DeepSeek's sparse attention would read the span-derived
+        prefill extent during decode and truncate the fixed physical window and
+        its context-derived compressed prefix.
 
         One hop is the whole propagation for both released graphs: the join's
         output is read by ``ATTENTION.SPARSE`` and by nothing else, and that
-        operator's own output is span-sized.  A second hop would be refused
+        operator's own output is span-sized. A second hop would be refused
         below rather than followed silently.
         """
         if not self._phase_extent or not kernel.inputs:
             return None
-        found: dict[int, dict[str, RequestAxis]] = {}
+        found: dict[int, dict[str, tuple[RequestAxis | None, int]]] = {}
         for index, name in enumerate(kernel.inputs):
             phases = self._phase_extent.get(name)
             if phases is not None:
@@ -6035,7 +6034,7 @@ class RomLowering:
         outputs: Sequence[int],
         *,
         order: Sequence[int],
-        paths: Mapping[int, Mapping[str, RequestAxis]],
+        paths: Mapping[int, Mapping[str, tuple[RequestAxis | None, int]]],
         loop: int | None,
         schedule_rows: int | None,
         extra_close: int,
@@ -6063,22 +6062,14 @@ class RomLowering:
                         f"kernel {kernel.kernel_id!r}: no ABI slot carries the "
                         f"phase-split operand {ir_slot}"
                     )
-                extent = table[phase]
-                if int(extent.symbol) == int(Symbol.SPAN_TOKENS):
-                    continue  # the declared view already states this phase
-                if context_loop is None or context_divisor <= 0:
-                    raise RomLoweringError(
-                        f"kernel {kernel.kernel_id!r}: phase {phase!r} names a "
-                        f"{Symbol(int(extent.symbol)).name}-bound row space and "
-                        "no loop resolves it"
-                    )
-                row[abi_slot] = self._phase_extent_view(
+                row[abi_slot] = self._view_for_phase_extent(
                     self.tensors[kernel.inputs[ir_slot]],
                     shape,
-                    extent=extent,
-                    loop=context_loop,
-                    divisor=context_divisor,
+                    table[phase],
                     writable=False,
+                    declared=row[abi_slot],
+                    context_loop=context_loop,
+                    context_divisor=context_divisor,
                 )
             predicate = self._phase_predicate(phase)
             event = self._emit_operator(
@@ -6190,6 +6181,43 @@ class RomLowering:
             return None
         return request
 
+    def _phase_layout_extents(
+        self, kernel: Kernel
+    ) -> dict[str, tuple[RequestAxis | None, int]] | None:
+        """Derive each selected phase layout from its neutral input subset."""
+
+        selected = _phase_inputs(kernel.inputs, kernel.attributes)
+        if selected is None:
+            return None
+        bindings = kernel.attributes.get("phase_symbol_binding")
+        if not isinstance(bindings, Mapping) or set(bindings) != set(selected):
+            raise RomLoweringError(
+                f"kernel {kernel.kernel_id!r}: phase_inputs and "
+                "phase_symbol_binding do not name the same phases"
+            )
+        extents: dict[str, tuple[RequestAxis | None, int]] = {}
+        for phase, indices in sorted(selected.items()):
+            pinned = bindings[phase]
+            if not isinstance(pinned, Mapping):
+                raise RomLoweringError(
+                    f"kernel {kernel.kernel_id!r}: phase {phase!r} binding is "
+                    "not a map"
+                )
+            constants, aliases = self._phase_substitution(
+                pinned, f"kernel {kernel.kernel_id!r} phase {phase!r}"
+            )
+            names = [kernel.inputs[index] for index in indices]
+            extent, static = self._join_extent_under(
+                names, 0, constants, aliases
+            )
+            if extent is None and static <= 0:
+                raise RomLoweringError(
+                    f"kernel {kernel.kernel_id!r}: phase {phase!r} selects an "
+                    "empty CONCAT layout"
+                )
+            extents[phase] = (extent, int(static))
+        return extents
+
     def _check_join_extent(self, kernel: Kernel, join_axis: int) -> None:
         """Refuse a join whose declared output extent is not its operands' sum.
 
@@ -6212,6 +6240,8 @@ class RomLowering:
         if join_axis != 0 or not kernel.outputs or not kernel.inputs:
             return
         declared = self._declared_join_axis(kernel.outputs[0], 0)
+        if self._phase_layout_extents(kernel) is not None:
+            return
         phases = kernel.attributes.get("phase_symbol_binding")
         names = list(kernel.inputs)
         if phases:
@@ -6272,6 +6302,241 @@ class RomLowering:
             divisor=divisor,
             writable=True,
         )
+
+    def _static_phase_extent_view(
+        self,
+        tensor: Tensor,
+        shape: KernelShape,
+        *,
+        rows: int,
+        writable: bool,
+    ) -> int:
+        """Present one phase's fixed row count without a dynamic claim."""
+
+        dims = self._blocked_dims(tensor, shape)
+        if not dims:
+            raise RomLoweringError(
+                f"tensor {tensor.tensor_id!r}: a phase row layout needs rank"
+            )
+        declared = self._dims(tensor)
+        dims[0] = min(max(int(rows), 1), int(declared[0]))
+        return self._buffer_view(
+            tensor,
+            dims=dims,
+            strides=None,
+            shape=shape,
+            loop=None,
+            writable=writable,
+            blocked=False,
+        )
+
+    def _view_for_phase_extent(
+        self,
+        tensor: Tensor,
+        shape: KernelShape,
+        phase_extent: tuple[RequestAxis | None, int],
+        *,
+        writable: bool,
+        declared: int | None,
+        context_loop: int | None,
+        context_divisor: int,
+    ) -> int:
+        """Build the exact fixed or A18 view selected by one phase."""
+
+        extent, static = phase_extent
+        declared_extent = self._declared_join_axis(tensor.tensor_id, 0)
+        if extent is not None and declared is not None and declared_extent == extent:
+            return declared
+        if extent is None:
+            return self._static_phase_extent_view(
+                tensor, shape, rows=static, writable=writable
+            )
+        if int(extent.symbol) == int(Symbol.SPAN_TOKENS):
+            raise RomLoweringError(
+                f"tensor {tensor.tensor_id!r}: phase extent "
+                f"{extent.numerator}*SPAN_TOKENS/{extent.unit}+{extent.bias} "
+                "does not match its declared output"
+            )
+        if context_loop is None or context_divisor <= 0:
+            raise RomLoweringError(
+                f"tensor {tensor.tensor_id!r}: a context-bound phase layout "
+                "has no context loop"
+            )
+        return self._phase_extent_view(
+            tensor,
+            shape,
+            extent=extent,
+            loop=context_loop,
+            divisor=context_divisor,
+            writable=writable,
+        )
+
+    def _emit_phase_layout(
+        self,
+        kernel: Kernel,
+        shape: KernelShape,
+        family: Major,
+        sub: int,
+        inputs: Sequence[int],
+        outputs: Sequence[int],
+        *,
+        order: Sequence[int],
+        present: tuple[int, str] | None,
+        schedule_rows: int | None,
+        loop: int | None,
+        extra_close: int,
+        context_loop: int | None,
+        context_divisor: int,
+    ) -> None:
+        """Lower a phase-selected CONCAT using frozen ABI 3.0 branches."""
+
+        selected = _phase_inputs(kernel.inputs, kernel.attributes)
+        extents = self._phase_layout_extents(kernel)
+        if selected is None or extents is None:
+            raise RomLoweringError(
+                f"kernel {kernel.kernel_id!r}: phase layout metadata disappeared"
+            )
+        if set(selected) != {"prefill", "decode"}:
+            raise RomLoweringError(
+                f"kernel {kernel.kernel_id!r}: ABI entrypoints require prefill "
+                "and decode phase layouts"
+            )
+        slots = self._abi_input_slots(kernel, order)
+        abi_of = {
+            int(ir): abi for abi, ir in enumerate(slots) if ir is not None
+        }
+        condition_predicate = (
+            self._predicate_descriptor(present[1], kernel.kernel_id)
+            if present is not None
+            else NO_ID
+        )
+        if present is not None:
+            if any(present[0] not in row for row in selected.values()):
+                raise RomLoweringError(
+                    f"kernel {kernel.kernel_id!r}: conditional input "
+                    f"{present[0]} is not selected in every phase"
+                )
+            self._operand_alternatives[kernel.kernel_id] = present[1]
+
+        output_tensor = self.tensors[kernel.outputs[0]]
+
+        def emit_operator(
+            phase: str,
+            *,
+            include_optional: bool,
+            predicate: int,
+            inverted: bool,
+            signal: bool = True,
+        ) -> int:
+            row = [NO_ID] * len(inputs)
+            wait_names: list[str] = []
+            for ir_index in selected[phase]:
+                if present is not None and ir_index == present[0] and not include_optional:
+                    continue
+                abi_slot = abi_of.get(ir_index)
+                if abi_slot is None or abi_slot >= len(inputs):
+                    raise RomLoweringError(
+                        f"kernel {kernel.kernel_id!r}: no ABI slot carries "
+                        f"selected input {ir_index} in phase {phase!r}"
+                    )
+                row[abi_slot] = inputs[abi_slot]
+                wait_names.append(kernel.inputs[ir_index])
+            output = self._view_for_phase_extent(
+                output_tensor,
+                shape,
+                extents[phase],
+                writable=True,
+                declared=outputs[0],
+                context_loop=context_loop,
+                context_divisor=context_divisor,
+            )
+            return self._emit_operator(
+                kernel,
+                family,
+                sub,
+                row,
+                [output, *outputs[1:]],
+                loop=None,
+                schedule_rows=schedule_rows,
+                suffix=(
+                    f".layout.{phase}."
+                    f"{'full' if include_optional else 'base'}"
+                ),
+                predicate_id=predicate,
+                invert_predicate=inverted,
+                wait_inputs=wait_names,
+                event=None if signal else NO_ID,
+            )
+
+        def emit_phase(phase: str) -> None:
+            if present is None:
+                emit_operator(
+                    phase,
+                    include_optional=True,
+                    predicate=NO_ID,
+                    inverted=False,
+                    signal=False,
+                )
+                self.builder.emit(
+                    Major.CONTROL,
+                    Control.FENCE,
+                    source_operation_id=kernel.index,
+                )
+                return
+            full = emit_operator(
+                phase,
+                include_optional=True,
+                predicate=condition_predicate,
+                inverted=False,
+            )
+            base = emit_operator(
+                phase,
+                include_optional=False,
+                predicate=condition_predicate,
+                inverted=True,
+            )
+            for event, inverted in ((full, False), (base, True)):
+                self.builder.emit(
+                    Major.CONTROL,
+                    Control.WAIT,
+                    wait_set_id=self._wait_set([event]),
+                    predicate_id=condition_predicate,
+                    invert_predicate=inverted,
+                    source_operation_id=kernel.index,
+                )
+
+        phase_predicate = self._phase_predicate("prefill")
+        to_decode = self.builder.emit(
+            Major.CONTROL,
+            Control.BRANCH,
+            control_id=0,
+            predicate_id=phase_predicate,
+            invert_predicate=True,
+            source_operation_id=kernel.index,
+        )
+        emit_phase("prefill")
+        to_end = self.builder.emit(
+            Major.CONTROL,
+            Control.BRANCH,
+            control_id=0,
+            source_operation_id=kernel.index,
+        )
+        decode_start = len(self.builder.instructions)
+        emit_phase("decode")
+        end = len(self.builder.instructions)
+        self.builder.instructions[to_decode].control_id = decode_start
+        self.builder.instructions[to_end].control_id = end
+
+        # Each phase block waits for its one live operator path before control
+        # converges.  Program order therefore carries the dependency without a
+        # synthetic event-producing NOP at every layer.
+        self._phase_extent.setdefault(kernel.outputs[0], {}).update(extents)
+        for name in kernel.outputs:
+            self._event_of_tensor.pop(name, None)
+        if loop is not None:
+            self.builder.close_loop()
+        for _ in range(extra_close):
+            self.builder.close_loop()
 
     def _phase_extent_view(
         self,
@@ -7341,9 +7606,10 @@ class RomLowering:
                 kernel, self._dims(plane)[0], plane_axis
             )
         elif consumer_paths is not None and any(
-            int(extent.symbol) != int(Symbol.SPAN_TOKENS)
+            extent is not None
+            and int(extent.symbol) != int(Symbol.SPAN_TOKENS)
             for _slot, phases in consumer_paths.items()
-            for extent in phases.values()
+            for extent, _static in phases.values()
         ):
             # A consumer of a phase-split join reads a *context*-sized row
             # space in one phase and a span-sized one in the other, and A18
@@ -7424,6 +7690,29 @@ class RomLowering:
                 schedule_rows=schedule_rows,
                 extra_close=closes,
                 spec=compressor_spec,
+            )
+            return
+        phase_layout = _phase_inputs(kernel.inputs, kernel.attributes)
+        if phase_layout is not None:
+            if consumer_paths is not None:
+                raise RomLoweringError(
+                    f"kernel {kernel.kernel_id!r}: a phase-selected CONCAT "
+                    "cannot also consume a phase split"
+                )
+            self._emit_phase_layout(
+                kernel,
+                shape,
+                family,
+                engine.sub,
+                inputs,
+                outputs,
+                order=order,
+                present=present,
+                schedule_rows=schedule_rows,
+                loop=innermost,
+                extra_close=closes,
+                context_loop=context,
+                context_divisor=context_divisor,
             )
             return
         if present is None and consumer_paths is not None:

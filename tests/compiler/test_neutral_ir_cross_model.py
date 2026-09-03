@@ -33,6 +33,7 @@ from compiler.ir.v3.lowering import (
     OPTIONAL_INPUT_SLOTS,
     check_index_family,
     check_operand_slots,
+    check_phase_inputs,
     check_table_complete,
 )
 
@@ -278,6 +279,50 @@ def test_an_index_family_the_operator_does_not_produce_is_refused() -> None:
     # A kind that produces no index family may not claim one either.
     stray = check_index_family("MATMUL", {"index_family": "causal_circular_window"})
     assert stray and "no index family is" in stray[0]
+
+
+@pytest.mark.parametrize("axis", [None, False, True, 0.0, "0", "not-an-axis"])
+def test_phase_inputs_refuses_a_non_integer_axis_without_throwing(axis: object) -> None:
+    attributes = {
+        "axis": axis,
+        "phase_inputs": {"prefill": [0], "decode": [1]},
+        "phase_symbol_binding": {"prefill": "span", "decode": "window"},
+    }
+
+    errors = check_phase_inputs(
+        "CONCAT", ("current", "window"), ("prefill", "decode"), attributes
+    )
+
+    assert errors == ["phase_inputs CONCAT axis must be a non-boolean integer"]
+
+
+@pytest.mark.parametrize(
+    ("phase_map", "problem"),
+    [
+        ([], "must map each kernel phase"),
+        ({"prefill": [0]}, "covers phases"),
+        ({"prefill": [], "decode": [1]}, "must be a non-empty list"),
+        ({"prefill": [False], "decode": [1]}, "only IR input indices"),
+        ({"prefill": [0, 0], "decode": [1]}, "names an input twice"),
+        ({"prefill": [0], "decode": [2]}, "outside the 2 CONCAT inputs"),
+    ],
+)
+def test_phase_inputs_refuses_malformed_phase_maps(
+    phase_map: object, problem: str
+) -> None:
+    errors = check_phase_inputs(
+        "CONCAT",
+        ("current", "window"),
+        ("prefill", "decode"),
+        {
+            "axis": 0,
+            "phase_inputs": phase_map,
+            "phase_symbol_binding": {"prefill": "span", "decode": "window"},
+        },
+    )
+
+    assert errors
+    assert any(problem in error for error in errors)
 
 
 def test_a_published_graph_declares_only_families_the_abi_implements(

@@ -1296,16 +1296,16 @@ def export_deepseek_v4_kernel_graph(
         128: Symbolic("context_groups_ratio128", 1, context_tokens // 128),
     }
     attention_rows = {
-        0: Symbolic("attention_rows_window", 1, context_tokens + SLIDING_WINDOW),
+        0: Symbolic("attention_rows_window", 1, context_tokens),
         4: Symbolic(
             "attention_rows_ratio4",
             1,
-            context_tokens + SLIDING_WINDOW + context_tokens // 4,
+            context_tokens + context_tokens // 4,
         ),
         128: Symbolic(
             "attention_rows_ratio128",
             1,
-            context_tokens + SLIDING_WINDOW + context_tokens // 128,
+            context_tokens + context_tokens // 128,
         ),
     }
     symbols = (
@@ -1318,19 +1318,19 @@ def export_deepseek_v4_kernel_graph(
             "context_groups_ratio128", 0, context_tokens // 128, 1, "derived"
         ),
         RuntimeSymbol(
-            "attention_rows_window", 1, context_tokens + SLIDING_WINDOW, 1, "derived"
+            "attention_rows_window", 1, context_tokens, 1, "derived"
         ),
         RuntimeSymbol(
             "attention_rows_ratio4",
             1,
-            context_tokens + SLIDING_WINDOW + context_tokens // 4,
+            context_tokens + context_tokens // 4,
             1,
             "derived",
         ),
         RuntimeSymbol(
             "attention_rows_ratio128",
             1,
-            context_tokens + SLIDING_WINDOW + context_tokens // 128,
+            context_tokens + context_tokens // 128,
             1,
             "derived",
         ),
@@ -2693,58 +2693,53 @@ def export_deepseek_v4_kernel_graph(
                 else attention_rows[ratio]
             )
             output = view(out0, "bf16", (rows, HEAD_DIM))
-            join_attributes: dict[str, Any] = {
-                **attrs,
-                "axis": 0,
-                "segment_order": (
-                    "current_then_committed_window_then_valid_compressed_prefix"
-                ),
-            }
-            # The join's own extent carries A18's bias -- ``span + 128`` for the
-            # window layers, ``+ context_groups_ratioN`` on top for a compressed
-            # one -- so it never floors to zero and the join itself is always
-            # issued: "a join of no current rows and a 128-row window is 128
-            # rows".  Its *third* operand does floor, because the compressed KV
-            # state has no committed group until the context holds one, and a
-            # zero-extent view is refused.  The join names the operand and the
-            # condition; the released model takes the same branch, joining
-            # ``kv_compress`` only when the compressor returned one.
-            if len(sources) == 3:
+            if scope == "dspark":
+                # DSpark is decode-only and the source puts the fixed main
+                # window before the five current draft rows.
+                sources = (sources[1], sources[0])
+                join_attributes: dict[str, Any] = {
+                    **attrs,
+                    "axis": 0,
+                    "segment_order": "committed_window_then_current_draft",
+                }
+            else:
+                # The main sparse-KV row space is phase-dependent in the pinned
+                # source.  Prefill consumes the complete current request and
+                # never a duplicate window; decode consumes all 128 physical
+                # circular-window slots and never a duplicate current row.
+                # Both append the same valid compressed prefix when it exists.
+                # ``phase_inputs`` is an ordered subset of this kernel's IR
+                # inputs, checked once by neutral admission and lowered by both
+                # ABI 3.0 backends.
+                compressed = [2] if len(sources) == 3 else []
+                join_attributes = {
+                    **attrs,
+                    "axis": 0,
+                    "phase_inputs": {
+                        "prefill": [0, *compressed],
+                        "decode": [1, *compressed],
+                    },
+                    "phase_segment_order": {
+                        "prefill": "current_then_valid_compressed_prefix",
+                        "decode": "committed_window_then_valid_compressed_prefix",
+                    },
+                    # ABI 3.0 section 12.2 relates context, start and span.
+                    # Pinning the source-defined phase facts collapses each
+                    # selected input sum to one exact A18 extent: prefill is
+                    # ``span + floor(span / ratio)`` (or just ``span``), while
+                    # decode is ``128 + floor(context / ratio)`` (or 128).
+                    "phase_symbol_binding": {
+                        "prefill": {"position_start": 0},
+                        "decode": {"span_tokens": 1},
+                    },
+                }
+            # A compressed state view has no row until a complete group exists,
+            # and ABI 3.0 deliberately refuses zero-extent views.  The operand
+            # therefore remains conditional; each selected phase layout has a
+            # base-only path and a base-plus-prefix path.
+            if scope != "dspark" and len(sources) == 3:
                 join_attributes["operand_present_predicate"] = {
                     "2": _nonempty(committed_groups[ratio]),
-                }
-                # The compressed join's row space is a sum over *two* runtime
-                # symbols -- ``span_tokens + 128 + context_length / ratio`` --
-                # and amendment A18 states an axis as an affine image of one.
-                # The declared ``attention_rows_ratioN`` above is that sum with
-                # the *span's* group count substituted for the context's, which
-                # is exact in prefill (the span is the context) and wrong at
-                # every decode step: at a span of one it binds to ``1 + 128 +
-                # 0`` where the committed prefix supplies ``1 + 128 +
-                # context/4``.  Nothing refused it because prefill is the only
-                # phase either lane had ever run past the first token.
-                #
-                # A backend cannot fix that by choosing a better single symbol:
-                # there is none.  What it can do is derive the extent per
-                # *phase*, and the two facts that make each phase's sum affine
-                # in one symbol are the released model's own, so they are
-                # stated here rather than assumed there.  ``position_start ==
-                # 0`` in prefill is the qualified reference's "prefill requires
-                # that cursor to equal S"; ``span_tokens == 1`` in decode is the
-                # ``decode_sequence_length`` the KV append already carries.
-                # With ``context_length == position_start + span_tokens`` --
-                # ABI 3.0's own relation between the three, not a model fact --
-                # each phase's sum collapses onto one symbol: ``5 * span / 4 +
-                # 128`` in prefill and ``context / 4 + 129`` in decode.
-                #
-                # The same two facts move the operand's own condition onto the
-                # phase's symbol, which is what keeps one path per request:
-                # ``context_length >= 4`` is ``span_tokens >= 4`` in prefill and
-                # ``position_start >= 3`` in decode, and those two are disjoint
-                # exactly because of the facts stated here.
-                join_attributes["phase_symbol_binding"] = {
-                    "prefill": {"position_start": 0},
-                    "decode": {"span_tokens": 1},
                 }
             emit(
                 node_id,

@@ -51,20 +51,20 @@ rules hold across all seven subopcodes:
     selection width; ``aux_id_1`` mask mode (``0`` causal, ``1`` full),
     ``aux_id_2`` the runtime symbol bounding the context **in the symbol's own
     units**, ``aux_id_3`` the symbol holding the absolute position of query
-    ``0``, in the same units.  Amendment A27 keeps that request-level base
-    when a prefill is physically streamed one row at a time: with a zero base,
-    the joined causal window's last non-pad entry is the absolute position of
-    the physical row.  A nonzero base remains authoritative because the window
-    operand names KV rows and is not the decode time-coordinate field.
+    ``0``, in the same units.  A prefill that is physically streamed one row at
+    a time recovers that row's logical position from the joined prefill window;
+    decode keeps ``aux_id_3`` authoritative because its window operand contains
+    physical circular-buffer rows, not time coordinates.
 
     With a compression ratio ``r`` the candidate axis holds ``context // r``
     groups, group ``g`` completes at absolute position ``r * (g + 1) - 1``, and
     a causal query at absolute position ``p`` therefore sees ``(p + 1) // r`` of
     them -- which is the released ``Indexer``'s mask in prefill and its whole
     cache in decode, from one rule rather than two branches.  A selected group
-    ``g`` names KV row ``span + window + g``: the KV operand ``ATTENTION.SPARSE``
-    gathers from is the request's own rows, then the window, then the compressed
-    rows, so the compressed segment begins after the first two.
+    ``g`` is rebased onto the phase's actual KV layout: prefill begins the
+    compressed segment after all current rows, while decode begins it after the
+    fixed circular-window capacity.  There is never a phase whose sparse KV
+    operand contains both current rows and a second copy of the window.
 
     That horizon is the *whole* of the dense form.  ``Indexer.forward`` is
     ``get_compress_topk_idxs`` with a ranking in front of it: both count groups
@@ -81,10 +81,13 @@ rules hold across all seven subopcodes:
 
 ``ROUTE.WINDOW_INDEX``
     ``input_view_0`` U32 absolute query positions ``[span]``;
-    ``output_view_0`` U32 ``[span, window]`` of the visible positions ending at
-    each query, ascending and tail-padded with ``0xffffffff``.  ``aux_id_0``
-    immediate window (``NO_ID`` uses the output extent), ``aux_id_1`` mask
-    mode, ``aux_id_2`` the runtime symbol bounding the context.
+    ``output_view_0`` U32 ``[span, window]`` of the visible KV rows ending at
+    each query, tail-padded with ``0xffffffff``.  In prefill those rows are
+    absolute indices into the current-request KV tensor.  In decode they are
+    physical slots of the circular window, in causal oldest-to-newest order.
+    ``aux_id_0`` is the immediate window (``NO_ID`` uses the output extent),
+    ``aux_id_1`` the mask mode, and ``aux_id_2`` the runtime symbol bounding the
+    context.
 """
 
 from __future__ import annotations
@@ -92,7 +95,7 @@ from __future__ import annotations
 import numpy as np
 
 from runtime.abi3.constants import DType, Major, NO_ID, Route
-from runtime.abi3.descriptors import Descriptor
+from runtime.abi3.descriptors import Descriptor, Phase, Symbol
 from runtime.sim.engine import EngineContext, EngineError, register
 from runtime.sim.engines.reduction import narrow, ordered_sum, widen
 from runtime.sim.memory import ResolvedView
@@ -362,6 +365,15 @@ def _mask_mode(descriptor: Descriptor, slot: int) -> int:
     return mode
 
 
+def _phase(ctx: EngineContext, where: str) -> Phase:
+    value = int(ctx.symbol(int(Symbol.PHASE)))
+    _require(
+        value in (int(Phase.PREFILL), int(Phase.DECODE)),
+        f"{where}: runtime phase {value} is neither prefill nor decode",
+    )
+    return Phase(value)
+
+
 @register(Major.ROUTE, Route.INDEX_TOPK)
 def index_topk(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
     """Select, rebase and join, as amendment A19 fixes the operator.
@@ -397,8 +409,8 @@ def index_topk(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
     prefill ``POSITION_START`` remains zero for the whole request; the final
     valid absolute index in the joined causal window therefore carries the
     query position into each one-row slice.  Decode has a nonzero
-    ``POSITION_START``; its joined window remains a KV-row address list rather
-    than the time-coordinate field, so it continues to use ``base + row``.
+    ``POSITION_START`` and its joined window contains circular-buffer slots, so
+    the explicit position symbol remains the time coordinate there.
     """
     _check_operator(descriptor, int(Route.INDEX_TOPK))
     score_view = ctx.optional_input(descriptor, 0)
@@ -463,6 +475,7 @@ def index_topk(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
         )
 
     mode = _mask_mode(descriptor, 1)
+    phase = _phase(ctx, "ROUTE.INDEX_TOPK")
     # ``aux_id_2`` and ``aux_id_3`` are read in the *symbol's own units*, which
     # for DeepSeek is tokens.  The candidate axis is counted in groups, so the
     # ratio is what converts between them; before A19 the two were silently the
@@ -504,11 +517,17 @@ def index_topk(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
         f"ROUTE.INDEX_TOPK: a span of {span} at absolute position {base} does "
         f"not fit in {context} positions",
     )
-    # The compressed rows sit behind the request's own rows and the window in
-    # the KV operand ATTENTION.SPARSE gathers from, so a selected group names a
-    # KV row that far along.  With no compressed axis there is no compressed
-    # segment and a candidate is already a KV row.
-    rebase = span + window if ratio_view is not None else 0
+    # The compressed segment has a phase-dependent base in the exact source
+    # layout.  Prefill attends the complete current request followed by the
+    # compressed prefix.  Decode attends the fixed physical window followed by
+    # that prefix.  ``context`` is the complete prefill length even when the
+    # score plane is streamed as one physical query row; ``window`` is the
+    # physical circular-window capacity even before all of its slots are valid.
+    rebase = (
+        (context if phase is Phase.PREFILL else window)
+        if ratio_view is not None
+        else 0
+    )
 
     scores: np.ndarray | None = None
     if score_view is not None:
@@ -531,14 +550,16 @@ def index_topk(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
             valid_window = block[block != np.uint64(PAD_INDEX)]
 
         query_position = base + row
-        row_rebase = rebase
-        if mode == MASK_CAUSAL and base == 0 and valid_window is not None:
+        if (
+            mode == MASK_CAUSAL
+            and phase is Phase.PREFILL
+            and valid_window is not None
+        ):
             # A27: a streamed prefill retains the request's zero position base
             # on every physical one-row invocation.  WINDOW_INDEX's prefill
             # row is absolute, ascending and ends at the query, so it is the
-            # carried logical coordinate.  This is deliberately restricted to
-            # a zero base: after decode begins, the window is an address list
-            # and aux_id_3 is the explicit time axis.
+            # carried logical coordinate.  Decode cannot use this rule: its
+            # window entries are physical ring slots and may wrap.
             _require(
                 bool(valid_window.size),
                 f"ROUTE.INDEX_TOPK: causal prefill query {row} has an empty "
@@ -557,14 +578,6 @@ def index_topk(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
                 f"absolute position {query_position}, outside {context} "
                 "positions",
             )
-            # The same physical one-row slice also cannot define A19's
-            # compressed-KV segment base.  That segment follows the request's
-            # complete current rows and the fixed window, not the streamed
-            # score view's one physical row.  ``aux_id_2`` already supplies the
-            # request context, so A27 carries both logical coordinates from the
-            # same request-level contract.
-            if ratio_view is not None:
-                row_rebase = context + window
         if mode == MASK_CAUSAL:
             limit = min((query_position + 1) // ratio, candidates)
         else:
@@ -584,11 +597,11 @@ def index_topk(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
             # exceed the capacity ``topk_count`` states -- so this is the whole
             # admitted prefix of the candidate axis, ascending, and the ranking
             # is the only thing that is gone.
-            chosen = np.arange(take, dtype=np.int64) + row_rebase
+            chosen = np.arange(take, dtype=np.int64) + rebase
         else:
             chosen = (
                 _rank_descending(scores[row, :limit])[:take].astype(np.int64)
-                + row_rebase
+                + rebase
             )
         if valid_window is None:
             joined = chosen
@@ -629,6 +642,7 @@ def window_index(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
         f"{position_view.element_count} positions for {span} query rows",
     )
     mode = _mask_mode(descriptor, 1)
+    phase = _phase(ctx, "ROUTE.WINDOW_INDEX")
     context_symbol = _aux(descriptor, 2)
     _require(
         mode == MASK_CAUSAL or context_symbol is not None,
@@ -649,7 +663,10 @@ def window_index(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
         last = position if mode == MASK_CAUSAL else (context or position + 1) - 1
         first = max(0, last - window + 1)
         count = last - first + 1
-        selected[row, :count] = np.arange(first, last + 1, dtype=np.uint32)
+        rows = np.arange(first, last + 1, dtype=np.uint64)
+        if phase is Phase.DECODE:
+            rows %= np.uint64(window)
+        selected[row, :count] = rows.astype(np.uint32)
         produced += count
     ctx.write(out_view, selected.reshape(out_view.dims))
     ctx.counters.add("route.topk_candidates", produced)

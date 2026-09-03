@@ -1001,20 +1001,13 @@ class RequestExtent:
 #: reproduces the declared maximum exactly, which :func:`request_extent_of`
 #: asserts on every tensor it reads.
 #:
-#: ``context_*`` names resolve against the *span* deliberately.  In prefill the
-#: two coincide; in decode a compressed layer's join is a sum over two
-#: different symbols, which wire format section 12.8 places outside the
-#: amendment and which the unresolved names below therefore decline to state
-#: rather than approximate.
-#:
-#: That paragraph described a gap, and the gap was reached: the ``attention_*``
-#: entries here are the *prefill* forms of a sum that has no single A18 image,
-#: and a decode step of DeepSeek's compressed layers binds the two symbols
-#: apart.  They are still the prefill forms, but nothing takes them on trust
-#: any more -- ``_check_join_extent`` derives every axis-0 join's output from
-#: its operands and refuses a declaration that disagrees -- and the decode form
-#: is derived per phase by :func:`join_extent_under` rather than named here,
-#: because it is not one entry.
+#: ``context_*`` names resolve against the *span* only where a tensor is a
+#: prefill declaration.  DeepSeek's main sparse KV join now selects different
+#: input subsets by phase: current plus compressed in prefill, fixed window plus
+#: compressed in decode.  The ``attention_*`` entries below are therefore only
+#: the declared prefill forms.  The decode form is derived from ``phase_inputs``
+#: by :func:`join_extent_under` and emitted as its own ABI 3.0 branch; it is not
+#: approximated by this table.
 REQUEST_EXTENT: Mapping[str, RequestExtent] = {
     "span_tokens": RequestExtent(),
     "context_tokens": RequestExtent(symbol="context_length"),
@@ -1023,14 +1016,14 @@ REQUEST_EXTENT: Mapping[str, RequestExtent] = {
     "span_groups_ratio128": RequestExtent(unit=128),
     "context_groups_ratio4": RequestExtent(unit=4, symbol="context_length"),
     "context_groups_ratio128": RequestExtent(unit=128, symbol="context_length"),
-    # The joins.  A bias is a count the operand carries whatever the request
-    # is -- a 128-row committed sliding window is present for a span of one --
-    # so it is added after the division and is not part of the step.  This is
-    # the row A13 could not state at all: a clamp only shortens, and these are
-    # longer than the rows the request supplies.
-    "attention_rows_window": RequestExtent(bias=128),
-    "attention_rows_ratio4": RequestExtent(numerator=5, unit=4, bias=128),
-    "attention_rows_ratio128": RequestExtent(numerator=129, unit=128, bias=128),
+    # The main sparse-attention join's declared shape is its prefill form.  The
+    # pinned layout has no duplicate 128-row window in prefill: it is current
+    # KV followed by the valid compressed prefix.  Decode is the other selected
+    # input sum -- fixed window capacity followed by the prefix -- and is
+    # derived from ``phase_inputs`` rather than approximated by this one table.
+    "attention_rows_window": RequestExtent(),
+    "attention_rows_ratio4": RequestExtent(numerator=5, unit=4),
+    "attention_rows_ratio128": RequestExtent(numerator=129, unit=128),
     "selected_rows_ratio128": RequestExtent(unit=128, bias=128),
 }
 
@@ -1233,12 +1226,12 @@ def join_extent_under(
 ) -> tuple[RequestExtent | None, int]:
     """:func:`join_extent`, evaluated under one phase's substitutions.
 
-    A17 makes a join's output the sum of its inputs and A18 states an extent as
-    an affine image of *one* symbol.  DeepSeek's compressed attention join is a
-    sum over two -- ``span_tokens + 128 + context_length / ratio`` -- so the sum
-    has no A18 image at all and the exporter's ``attention_rows_ratioN`` was
-    taken on trust.  It was wrong: it names the *span's* group count, which is
-    the context's only while the span is the context.
+    A17 makes a join's output the sum of its selected inputs and A18 states an
+    extent as an affine image of *one* symbol.  The union of DeepSeek's candidate
+    inputs is ``span_tokens + 128 + context_length / ratio`` and has no A18
+    image at all.  ``phase_inputs`` prevents that false three-way join: under
+    each phase substitution this helper instead receives current or window,
+    plus the optional prefix, and the selected sum collapses exactly.
 
     Under a phase's substitutions the sum does collapse.  A symbol the phase
     pins folds into the bias; a symbol the phase makes an offset image of

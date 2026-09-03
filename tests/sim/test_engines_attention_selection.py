@@ -100,7 +100,7 @@ def bf16_uniform(rng: np.random.Generator, shape, scale: float = 1.0) -> np.ndar
     return narrow(rng.uniform(-scale, scale, size=shape).astype(np.float32))
 
 
-def capability() -> Capability:
+def capability(*, max_context_positions: int = 4096) -> Capability:
     cap = Capability(
         capability_id="",
         topology_class=int(TopologyClass.SINGLE_CHIP),
@@ -125,7 +125,7 @@ def capability() -> Capability:
             "max_event_id": 511,
             "max_state_resources": 16,
             "max_outstanding_per_queue": 8,
-            "max_context_positions": 4096,
+            "max_context_positions": max_context_positions,
             "max_expert_ids": 1024,
             "max_topk": 64,
             "max_vocabulary": 1 << 17,
@@ -144,8 +144,10 @@ def capability() -> Capability:
 class Build:
     """A minimal single-transaction deployment builder for engine tests."""
 
-    def __init__(self, name: str = "engine-test") -> None:
-        self.capability = capability()
+    def __init__(
+        self, name: str = "engine-test", *, max_context_positions: int = 4096
+    ) -> None:
+        self.capability = capability(max_context_positions=max_context_positions)
         self.builder = DeploymentBuilder(
             target_id=name, model_id=name, backend="test", capability=self.capability
         )
@@ -652,6 +654,7 @@ def build_sparse(
     scale_bits: int = SPARSE_ATTENTION_SCALE_BINARY32,
     aux=(),
     kv_dims=None,
+    max_context_positions: int = 4096,
 ):
     """A conforming ATTENTION.SPARSE operator under amendment A6.
 
@@ -659,7 +662,7 @@ def build_sparse(
     object holds, which is how a capacity buffer states how many of its rows
     the request has filled -- amendment A13's clamp, not an auxiliary symbol.
     """
-    build = Build()
+    build = Build(max_context_positions=max_context_positions)
     span, heads, dim = q.shape
     q_view = build.view(build.object_of(q), DType.BF16, q.shape)
     kv_view = build.view(
@@ -890,13 +893,13 @@ def test_sparse_rejects_a_block_width_other_than_the_frozen_one():
 
 
 def test_sparse_rejects_interleaved_padding():
-    """A6's ordering clause is kept, and amendment A19 is why it can be.
+    """A6 keeps compact tail padding without constraining valid-row order.
 
     Before A19 nothing could produce a compacted joined index, so this refusal
-    fired on the released model's own array shape.  A19 makes
-    ``ROUTE.INDEX_TOPK`` emit the join compacted and ascending, which leaves
-    this case reachable only from a producer that did not, and an index that
-    interleaves padding still names real KV rows -- so it is still refused.
+    fired on the released model's own joined array shape. A19 makes
+    ``ROUTE.INDEX_TOPK`` compact the join, which leaves this case reachable only
+    from a producer that did not. Valid rows remain in producer order so a
+    chronological circular wrap is not mistaken for malformed padding.
     """
     q, kv, sinks = sparse_case(47, span=1, heads=1, dim=4, rows=4)
     indices = np.array([[0, NO_ID, 2]], dtype=np.uint32)
@@ -908,6 +911,29 @@ def test_sparse_rejects_interleaved_padding():
     assert result.status == CompletionStatus.FAILED
     assert result.trap_class == TrapClass.DESCRIPTOR_OR_ADDRESS
     assert "trailing run" in result.message
+
+
+def test_sparse_preserves_a_physical_circular_window_wrap():
+    """Valid rows are consumed in producer order, not silently sorted."""
+
+    q, kv, sinks = sparse_case(71, span=1, heads=1, dim=4, rows=4)
+    indices = np.array([[2, 3, 0, 1]], dtype=np.uint32)
+    build, out_view = build_sparse(q=q, kv=kv, indices=indices, sinks=sinks)
+    device = build.finish()
+    result = device.run_transaction(
+        device.create_session(), entrypoint_id=0, symbols={}
+    )
+    assert result.status == CompletionStatus.SUCCESS, result.message
+    expected = sparse_attention_bf16(
+        [q.tolist()],
+        [kv.tolist()],
+        [int(code) for code in sinks.view(np.uint32)],
+        [[[2, 3, 0, 1]]],
+        scale_binary32=SPARSE_ATTENTION_SCALE_BINARY32,
+    )
+    assert np.array_equal(
+        read(device, out_view), np.asarray(expected.values[0], dtype=np.uint16)
+    )
 
 
 def test_sparse_rejects_an_out_of_range_index():
@@ -927,9 +953,9 @@ def test_sparse_bounds_the_kv_index_by_the_operand_extent():
     """A fused KV view spans its capacity; only the rows it resolves are rows.
 
     Amendment A19 makes this the operand's own extent rather than ``aux_id_2``.
-    The KV operand of a sparse attention is a *joined row space* -- the
-    request's rows, the window, then the compressed rows -- and no count of
-    tokens says how many rows that is, so a context length cannot bound it.
+    The KV operand of sparse attention is a phase-selected physical row space --
+    current then compressed in prefill, or window then compressed in decode --
+    and no token count says how many rows that is, so context cannot bound it.
     The capacity-versus-filled distinction is the view's, which is what A13 and
     A18 are for: the object below holds six rows and the view presents four.
     """
@@ -989,6 +1015,66 @@ def test_sparse_accepts_a_row_beyond_the_context_symbol():
     assert np.array_equal(
         read(device, out_view), np.asarray(expected.values[0], dtype=np.uint16)
     )
+
+
+def test_sparse_keeps_absolute_200k_position_separate_from_physical_kv_rows():
+    """``aux2`` is position-space; indices are still strict KV row-space."""
+
+    q, kv, sinks = sparse_case(59, span=1, heads=1, dim=4, rows=12)
+    indices = np.array([[0, 7, 11]], dtype=np.uint32)
+    build, out_view = build_sparse(
+        q=q,
+        kv=kv,
+        indices=indices,
+        sinks=sinks,
+        max_context_positions=262_144,
+        aux=[
+            NO_ID,
+            NO_ID,
+            int(Symbol.CONTEXT_LENGTH),
+            int(Symbol.POSITION_START),
+        ],
+    )
+    device = build.finish()
+    symbols = {
+        int(Symbol.CONTEXT_LENGTH): 200_001,
+        int(Symbol.POSITION_START): 200_000,
+    }
+    result = device.run_transaction(
+        device.create_session(), entrypoint_id=0, symbols=symbols
+    )
+    assert result.status == CompletionStatus.SUCCESS, result.message
+
+    expected = sparse_attention_bf16(
+        [q.tolist()],
+        [kv.tolist()],
+        [int(code) for code in sinks.view(np.uint32)],
+        [[[0, 7, 11]]],
+        scale_binary32=SPARSE_ATTENTION_SCALE_BINARY32,
+    )
+    assert np.array_equal(
+        read(device, out_view), np.asarray(expected.values[0], dtype=np.uint16)
+    )
+
+    bad_build, _ = build_sparse(
+        q=q,
+        kv=kv,
+        indices=np.array([[0, 12]], dtype=np.uint32),
+        sinks=sinks,
+        max_context_positions=262_144,
+        aux=[
+            NO_ID,
+            NO_ID,
+            int(Symbol.CONTEXT_LENGTH),
+            int(Symbol.POSITION_START),
+        ],
+    )
+    bad_device = bad_build.finish()
+    bad = bad_device.run_transaction(
+        bad_device.create_session(), entrypoint_id=0, symbols=symbols
+    )
+    assert bad.status == CompletionStatus.FAILED
+    assert "outside the 12 valid rows" in bad.message
 
 
 def test_attention_rejects_a_non_positive_scale():

@@ -47,6 +47,7 @@ from compiler.backends.numeric_contracts import (
     reduction_order_for,
 )
 from compiler.ir.v3.kernel_ir import Kernel, KernelGraph, Symbolic, Tensor
+from compiler.ir.v3.lowering import phase_inputs as _phase_inputs
 from runtime.abi3.builder import DeploymentBuilder, DynamicTerm
 from runtime.abi3.capability import Capability
 from runtime.abi3.constants import (
@@ -393,7 +394,9 @@ class _Emitter:
         #: whose operands sum over two runtime symbols has no single extent,
         #: and every view of its result -- the producer's and the consumer's --
         #: states the phase's own.
-        self._phase_extent: dict[str, dict[str, RequestExtent]] = {}
+        self._phase_extent: dict[
+            str, dict[str, tuple[RequestExtent | None, int]]
+        ] = {}
         self._emitted_kernels: set[int] = set()
         self.span_max = plan.span_max
         self.builder = DeploymentBuilder(
@@ -667,11 +670,15 @@ class _Emitter:
             report["phase_split_extents"] = {
                 name: {
                     phase: (
-                        f"{extent.numerator}*"
-                        f"{extent.symbol}/"
-                        f"{extent.unit}+{extent.bias}"
+                        str(static)
+                        if extent is None
+                        else (
+                            f"{extent.numerator}*"
+                            f"{extent.symbol}/"
+                            f"{extent.unit}+{extent.bias}"
+                        )
                     )
-                    for phase, extent in sorted(table.items())
+                    for phase, (extent, static) in sorted(table.items())
                 }
                 for name, table in sorted(self._phase_extent.items())
             }
@@ -3357,6 +3364,27 @@ class _Emitter:
                 close_row=close_row,
             )
             return
+        if _phase_inputs(kernel.inputs, kernel.attributes) is not None:
+            if consumer_paths is not None or plan.link_class:
+                raise LoweringError(
+                    f"kernel {plan.kernel_id}: a phase-selected CONCAT cannot "
+                    "also consume a phase split or carry a link class"
+                )
+            event = self._emit_phase_layout(
+                plan, kernel, loops, inputs, outputs, present
+            )
+            self._close_loops(
+                loops, ["context", *(["row"] if close_row else [])]
+            )
+            # ``_emit_phase_layout`` has already waited for the one live
+            # branch before convergence, so NO_ID is an intentional
+            # program-order readiness marker rather than an unsignalled event.
+            # Map membership is still required by the immediate phase-aware
+            # sparse-gather consumer; every wait-set constructor drops NO_ID.
+            for name in kernel.outputs:
+                self._event_of_tensor[name] = event
+            self._record_kv_cache_write(kernel, [event])
+            return
         if present is not None:
             event = self._emit_alternative_paths(
                 plan, kernel, loops, inputs, outputs, absent=present[0],
@@ -4416,6 +4444,42 @@ class _Emitter:
         """The A18 function the graph declares for one tensor's leading axis."""
         return request_extent_of(self.tensors[name], self.span_max)
 
+    def _phase_layout_extents(
+        self, plan: KernelPlan, kernel: Kernel
+    ) -> dict[str, tuple[RequestExtent | None, int]] | None:
+        """Derive every selected phase layout from its neutral input subset."""
+
+        selected = _phase_inputs(kernel.inputs, kernel.attributes)
+        if selected is None:
+            return None
+        bindings = kernel.attributes.get("phase_symbol_binding")
+        if not isinstance(bindings, Mapping) or set(bindings) != set(selected):
+            raise LoweringError(
+                f"kernel {plan.kernel_id}: phase_inputs and "
+                "phase_symbol_binding do not name the same phases"
+            )
+        extents: dict[str, tuple[RequestExtent | None, int]] = {}
+        for phase, indices in sorted(selected.items()):
+            pinned = bindings[phase]
+            if not isinstance(pinned, Mapping):
+                raise LoweringError(
+                    f"kernel {plan.kernel_id}: phase {phase!r} binding is not a map"
+                )
+            constants, aliases = phase_substitution(
+                pinned, f"kernel {plan.kernel_id} phase {phase!r}"
+            )
+            names = [kernel.inputs[index] for index in indices]
+            extent, static = join_extent_under(
+                self.tensors, names, 0, self.span_max, constants, aliases
+            )
+            if extent is None and static <= 0:
+                raise LoweringError(
+                    f"kernel {plan.kernel_id}: phase {phase!r} selects an empty "
+                    "CONCAT layout"
+                )
+            extents[phase] = (extent, int(static))
+        return extents
+
     def _check_join_extent(self, plan: KernelPlan, kernel: Kernel) -> None:
         """Refuse a join whose declared output extent is not its operands' sum.
 
@@ -4435,8 +4499,11 @@ class _Emitter:
         if not kernel.outputs or not kernel.inputs:
             return
         declared = self._declared_join_axis(kernel.outputs[0])
+        phase_layout = self._phase_layout_extents(plan, kernel)
         phases = kernel.attributes.get("phase_symbol_binding")
         names = list(kernel.inputs)
+        if phase_layout is not None:
+            return
         if phases:
             for phase, pinned in sorted(dict(phases).items()):
                 constants, aliases = phase_substitution(
@@ -4481,6 +4548,240 @@ class _Emitter:
                 + "; A17 makes the two the same number and the engine checks it"
             )
 
+    def _static_phase_view(
+        self,
+        plan: KernelPlan,
+        operand: OperandPlan,
+        loops: Mapping[str, int],
+        rows: int,
+        *,
+        writable: bool,
+    ) -> int:
+        """Present one phase's fixed leading extent without an A18 claim."""
+
+        kept = tuple(
+            term for term in operand.terms if term not in {"row", "context"}
+        )
+        return self._operand_view(
+            plan,
+            replace(
+                operand,
+                terms=kept,
+                extent_numerator=1,
+                extent_unit=1,
+                extent_bias=0,
+                context_axis=-1,
+                context_numerator=1,
+                context_unit=1,
+                context_bias=0,
+            ),
+            loops,
+            writable=writable,
+            narrow=(0, rows),
+        )
+
+    def _view_for_phase_extent(
+        self,
+        plan: KernelPlan,
+        operand: OperandPlan,
+        loops: Mapping[str, int],
+        phase_extent: tuple[RequestExtent | None, int],
+        *,
+        writable: bool,
+        declared: int | None = None,
+    ) -> int:
+        """Build a view for one exact dynamic or fixed phase row count."""
+
+        extent, static = phase_extent
+        declared_extent = self._declared_join_axis(operand.tensor_id)
+        if extent is not None and declared is not None and declared_extent == extent:
+            return declared
+        if extent is None:
+            return self._static_phase_view(
+                plan, operand, loops, static, writable=writable
+            )
+        if extent.symbol == "span_tokens":
+            # A non-declared span function would require a second row-loop view
+            # convention.  No released phase layout has one; refuse instead of
+            # silently resolving it through the context loop.
+            raise LoweringError(
+                f"kernel {plan.kernel_id}: phase extent "
+                f"{extent.numerator}*span_tokens/{extent.unit}+{extent.bias} "
+                "does not match the declared output"
+            )
+        return self._phase_extent_view(
+            plan, operand, loops, extent, writable=writable
+        )
+
+    def _emit_phase_layout(
+        self,
+        plan: KernelPlan,
+        kernel: Kernel,
+        loops: Mapping[str, int],
+        inputs: Sequence[int],
+        outputs: Sequence[int],
+        present: tuple[int, str] | None,
+    ) -> int:
+        """Lower a phase-selected CONCAT with existing ABI 3.0 control flow.
+
+        One forward branch selects the phase.  Inside that block, an optional
+        compressed operand uses the existing complementary predicate pair.
+        Each live engine event is consumed before control leaves its block, so
+        the converged NOP can publish one ordinary producer event without a
+        composite predicate or a new opcode.
+        """
+
+        selected = _phase_inputs(kernel.inputs, kernel.attributes)
+        extents = self._phase_layout_extents(plan, kernel)
+        if selected is None or extents is None:
+            raise LoweringError(
+                f"kernel {plan.kernel_id}: phase layout metadata disappeared"
+            )
+        if set(selected) != {"prefill", "decode"}:
+            raise LoweringError(
+                f"kernel {plan.kernel_id}: ABI entrypoints require prefill and "
+                "decode phase layouts"
+            )
+        slots = _abi_input_slots(kernel, plan.slot_order)
+        abi_of = {
+            int(ir): abi for abi, ir in enumerate(slots) if ir is not None
+        }
+        out_operand = next(
+            operand
+            for operand in plan.operands
+            if operand.direction == "out" and operand.slot == 0
+        )
+        condition_predicate = (
+            self._predicate_descriptor(present[1]) if present is not None else NO_ID
+        )
+        if present is not None:
+            if any(present[0] not in row for row in selected.values()):
+                raise LoweringError(
+                    f"kernel {plan.kernel_id}: conditional input {present[0]} "
+                    "is not selected in every phase"
+                )
+            self._operand_alternatives[kernel.kernel_id] = present[1]
+
+        def emit_operator(
+            phase: str, *, include_optional: bool, predicate: int, inverted: bool
+        ) -> int:
+            row = [NO_ID] * len(inputs)
+            wait_names: list[str] = []
+            for ir_index in selected[phase]:
+                if present is not None and ir_index == present[0] and not include_optional:
+                    continue
+                abi_slot = abi_of.get(ir_index)
+                if abi_slot is None or abi_slot >= len(inputs):
+                    raise LoweringError(
+                        f"kernel {plan.kernel_id}: no ABI slot carries selected "
+                        f"input {ir_index} in phase {phase!r}"
+                    )
+                row[abi_slot] = inputs[abi_slot]
+                wait_names.append(kernel.inputs[ir_index])
+            output = self._view_for_phase_extent(
+                plan,
+                out_operand,
+                loops,
+                extents[phase],
+                writable=True,
+                declared=outputs[0],
+            )
+            operator = self.builder.operator(
+                engine_family=Major(plan.engine_family),
+                engine_sub=plan.engine_sub,
+                inputs=row,
+                outputs=[output, *outputs[1:]],
+                aux=list(plan.aux),
+                numeric_profile_id=self._kernel_numeric(plan),
+                schedule_id=self._schedule_for(plan),
+                counter_class_id=self._counter_class(plan.engine_family),
+                source_kernel_id=plan.index,
+                key=(
+                    f"op.k{plan.index}.layout.{phase}."
+                    f"{'full' if include_optional else 'base'}"
+                ),
+            )
+            event = self.builder.new_event()
+            self.builder.emit(
+                Major(plan.engine_family),
+                plan.engine_sub,
+                descriptor_id=operator,
+                wait_set_id=self._wait_set(
+                    self._event_of_tensor[name]
+                    for name in wait_names
+                    if name in self._event_of_tensor
+                ),
+                signal_event_id=event,
+                predicate_id=predicate,
+                invert_predicate=inverted,
+                source_operation_id=plan.index,
+            )
+            return event
+
+        def emit_phase(phase: str) -> None:
+            if present is None:
+                event = emit_operator(
+                    phase, include_optional=True, predicate=NO_ID, inverted=False
+                )
+                self.builder.emit(
+                    Major.CONTROL,
+                    Control.WAIT,
+                    wait_set_id=self._wait_set([event]),
+                    source_operation_id=plan.index,
+                )
+                return
+            full = emit_operator(
+                phase,
+                include_optional=True,
+                predicate=condition_predicate,
+                inverted=False,
+            )
+            base = emit_operator(
+                phase,
+                include_optional=False,
+                predicate=condition_predicate,
+                inverted=True,
+            )
+            for event, inverted in ((full, False), (base, True)):
+                self.builder.emit(
+                    Major.CONTROL,
+                    Control.WAIT,
+                    wait_set_id=self._wait_set([event]),
+                    predicate_id=condition_predicate,
+                    invert_predicate=inverted,
+                    source_operation_id=plan.index,
+                )
+
+        phase_predicate = self._phase_predicate(("prefill",))
+        to_decode = self.builder.emit(
+            Major.CONTROL,
+            Control.BRANCH,
+            control_id=0,
+            predicate_id=phase_predicate,
+            invert_predicate=True,
+            source_operation_id=plan.index,
+        )
+        emit_phase("prefill")
+        to_end = self.builder.emit(
+            Major.CONTROL,
+            Control.BRANCH,
+            control_id=0,
+            source_operation_id=plan.index,
+        )
+        decode_start = len(self.builder.instructions)
+        emit_phase("decode")
+        end = len(self.builder.instructions)
+        self.builder.instructions[to_decode].control_id = decode_start
+        self.builder.instructions[to_end].control_id = end
+
+        # Each phase block consumes its live engine event with CONTROL.WAIT
+        # before control converges here.  The output is therefore ready by
+        # program order and needs no extra event-producing NOP; recording a
+        # synthetic event for every layer would exceed the ROM target's frozen
+        # event namespace without adding ordering.
+        self._phase_extent.setdefault(kernel.outputs[0], {}).update(extents)
+        return NO_ID
+
     def _phase_extent_view(
         self,
         plan: KernelPlan,
@@ -4514,7 +4815,14 @@ class _Emitter:
             plan,
             replace(
                 operand,
-                terms=("context",),
+                terms=(
+                    *(
+                        term
+                        for term in operand.terms
+                        if term not in {"row", "context"}
+                    ),
+                    "context",
+                ),
                 context_axis=0,
                 context_numerator=int(extent.numerator),
                 context_unit=int(extent.unit),
@@ -4608,7 +4916,10 @@ class _Emitter:
                 view = self._phase_extent_view(
                     plan, out, loops, extent, writable=True
                 )
-            self._phase_extent.setdefault(kernel.outputs[0], {})[str(phase)] = extent
+            self._phase_extent.setdefault(kernel.outputs[0], {})[str(phase)] = (
+                extent,
+                0,
+            )
             paths.append((str(phase), self._predicate_from_triple(moved), view))
         for phase, triple in triples.items():
             for other, constants in pinned_by_phase.items():
@@ -4655,18 +4966,20 @@ class _Emitter:
 
     def _phase_consumer_paths(
         self, plan: KernelPlan, kernel: Kernel
-    ) -> dict[int, dict[str, RequestExtent]] | None:
+    ) -> dict[int, dict[str, tuple[RequestExtent | None, int]]] | None:
         """Operands of this kernel whose extent the phase decides.
 
         A tensor produced by a phase-split join has no single A18 extent, and a
-        view of it states that extent wherever it is read.  So the split does
-        not stop at the producer: left unpropagated, sparse attention read the
-        prefill function at decode -- 129 rows of a 137-row join -- and refused
-        the rebased compressed indices its own selector had just produced.
+        view of it states that extent wherever it is read. So the split does
+        not stop at the producer: left unpropagated, sparse attention would read
+        the span-derived prefill extent during decode and truncate the fixed
+        physical window and its context-derived compressed prefix.
         """
         if not self._phase_extent or not kernel.inputs:
             return None
-        found: dict[int, dict[str, RequestExtent]] = {}
+        found: dict[
+            int, dict[str, tuple[RequestExtent | None, int]]
+        ] = {}
         for index, name in enumerate(kernel.inputs):
             phases = self._phase_extent.get(name)
             if phases is not None:
@@ -4695,7 +5008,9 @@ class _Emitter:
         loops: Mapping[str, int],
         inputs: Sequence[int],
         outputs: Sequence[int],
-        paths: Mapping[int, Mapping[str, RequestExtent]],
+        paths: Mapping[
+            int, Mapping[str, tuple[RequestExtent | None, int]]
+        ],
         *,
         producer_events: Sequence[int],
     ) -> int:
@@ -4721,16 +5036,19 @@ class _Emitter:
                         f"kernel {plan.kernel_id}: no ABI slot carries the "
                         f"phase-split operand {ir_slot}"
                     )
-                extent = table[phase]
-                if extent.symbol == "span_tokens":
-                    continue  # the declared view already states this phase
+                phase_extent = table[phase]
                 operand = next(
                     o
                     for o in plan.operands
                     if o.direction == "in" and o.slot == abi_slot
                 )
-                row[abi_slot] = self._phase_extent_view(
-                    plan, operand, loops, extent, writable=False
+                row[abi_slot] = self._view_for_phase_extent(
+                    plan,
+                    operand,
+                    loops,
+                    phase_extent,
+                    writable=False,
+                    declared=row[abi_slot],
                 )
             predicate = self._phase_predicate((phase,))
             path_events = list(producer_events)
@@ -4759,7 +5077,7 @@ class _Emitter:
                     kv_operand,
                     loops,
                     self._event_of_tensor[kv_operand.tensor_id],
-                    extent=paths[kv_ir_slot][phase],
+                    phase_extent=paths[kv_ir_slot][phase],
                     predicate_id=predicate,
                 )
                 path_events = [
@@ -5736,7 +6054,7 @@ class _Emitter:
         loops: Mapping[str, int],
         wait: int,
         *,
-        extent: RequestExtent | None = None,
+        phase_extent: tuple[RequestExtent | None, int] | None = None,
         predicate_id: int | None = None,
     ) -> int:
         """Gather disjoint fused-KV bands and rebuild the consumer's row space.
@@ -5761,8 +6079,25 @@ class _Emitter:
                 f"kernel {plan.kernel_id}: fused-KV width {cols} is not "
                 f"divisible by {self.node_count} nodes"
             )
+        extent, static = phase_extent or (None, 0)
+        fixed_phase = phase_extent is not None and extent is None
         context_bound = extent is not None and extent.symbol != "span_tokens"
-        if context_bound:
+        walk_loop: int | None
+        walk_step = 0
+        if fixed_phase:
+            if static <= 0:
+                raise LoweringError(
+                    f"kernel {plan.kernel_id}: phase-bound sparse gather has "
+                    f"invalid fixed extent {static}"
+                )
+            rows = int(static)
+            extent_numerator = 1
+            extent_unit = 1
+            extent_bias = 0
+            walk_loop = None
+            fixed_edge = NO_ID
+        elif context_bound:
+            assert extent is not None
             context = plan.context_loop
             context_loop = loops.get("context")
             if context is None or context_loop is None:
@@ -5790,13 +6125,14 @@ class _Emitter:
                     f"kernel {plan.kernel_id}: sparse gather needs a walked "
                     "fused-KV block"
                 )
-            if extent is None:
+            if phase_extent is None:
                 rows = max(kv.tile_rows, 1)
                 extent_numerator = max(int(kv.extent_numerator), 1)
                 extent_unit = max(int(kv.extent_unit), 1)
                 extent_bias = int(kv.extent_bias)
                 walk_step = self._row_step(plan, kv)
             else:
+                assert extent is not None
                 step = extent.step(int(plan.block_rows))
                 if step is None:
                     raise LoweringError(
@@ -5819,8 +6155,16 @@ class _Emitter:
         builder = self.builder
         dtype = dtype_of(kv.dtype)
         object_id, base = self._object_for(kv)
-        source_term = DynamicTerm.loop(walk_loop, walk_step * cols)
-        scratch_term = DynamicTerm.loop(walk_loop, walk_step * shard)
+        source_term = (
+            DynamicTerm.loop(walk_loop, walk_step * cols)
+            if walk_loop is not None
+            else None
+        )
+        scratch_term = (
+            DynamicTerm.loop(walk_loop, walk_step * shard)
+            if walk_loop is not None
+            else None
+        )
         numeric = self._kernel_numeric(plan)
         schedule = self._scratch_schedule_for(plan)
         counter = self._counter_class(int(Major.DMA))
@@ -5838,7 +6182,7 @@ class _Emitter:
             element_offset=base,
             dynamic=[
                 DynamicTerm.symbol(Symbol.NODE_ID, shard),
-                source_term,
+                *([source_term] if source_term is not None else []),
             ],
             extent_axis=0,
             extent_numerator=extent_numerator,
@@ -5852,7 +6196,11 @@ class _Emitter:
             strides=[shard, 1],
             dynamic=[
                 DynamicTerm.symbol(Symbol.NODE_ID, slot_elements),
-                *([scratch_term] if context_bound else []),
+                *(
+                    [scratch_term]
+                    if context_bound and scratch_term is not None
+                    else []
+                ),
             ],
             writable=True,
             extent_axis=0,
@@ -5915,8 +6263,12 @@ class _Emitter:
             dtype=dtype,
             dims=[self.node_count, rows, shard],
             strides=[slot_elements, shard, 1],
-            dynamic=([scratch_term] if context_bound else []),
-            extent_axis=1,
+            dynamic=(
+                [scratch_term]
+                if context_bound and scratch_term is not None
+                else []
+            ),
+            extent_axis=0 if fixed_phase else 1,
             extent_numerator=extent_numerator,
             extent_unit=extent_unit,
             extent_bias=extent_bias,
@@ -5928,9 +6280,9 @@ class _Emitter:
             dims=[self.node_count, rows, shard],
             strides=[shard, cols, 1],
             element_offset=base,
-            dynamic=[source_term],
+            dynamic=([source_term] if source_term is not None else []),
             writable=True,
-            extent_axis=1,
+            extent_axis=0 if fixed_phase else 1,
             extent_numerator=extent_numerator,
             extent_unit=extent_unit,
             extent_bias=extent_bias,

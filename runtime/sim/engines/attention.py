@@ -82,8 +82,10 @@ set.
     ``input_view_1``
         Fused KV, BF16, ``[kv_rows, head_dim]`` -- rank 2, one KV head.
     ``input_view_2``
-        Selected KV rows, U32, ``[span, slots]``, ascending and tail-padded with
-        ``0xffffffff``.  Padding is never executed.
+        Selected KV rows, U32, ``[span, slots]``, in producer-defined source
+        order and tail-padded with ``0xffffffff``.  Padding is never executed.
+        In particular a decode circular window can contain one numerical wrap
+        (for example ``1..127, 0``) while remaining chronological.
     ``input_view_3``
         Per-head attention-sink logits, FP32, ``[query_heads]``.
     ``output_view_0``
@@ -95,8 +97,9 @@ set.
         Source block width.  The reference is frozen at 64, so a declared value
         must be 64.  ``NO_ID`` uses 64.
     ``aux_id_2``
-        Runtime symbol ID bounding the valid KV rows.  ``NO_ID`` uses the KV
-        view's leading extent.
+        Runtime symbol ID bounding absolute query positions. ``NO_ID`` uses the
+        KV view's leading extent as a fallback position bound. Selected row
+        addresses are independently bounded by the resolved KV leading extent.
     ``aux_id_3``
         Runtime symbol ID holding the absolute position of query ``0``.  It does
         not place a mask -- the index list already carries visibility -- but the
@@ -256,6 +259,25 @@ def _context_bound(
         0 < context <= kv_rows,
         f"attention: context length {context} is outside the {kv_rows} KV rows "
         f"addressed by view {view.descriptor_id}",
+    )
+    return context
+
+
+def _position_context(ctx: EngineContext, descriptor: Descriptor, fallback: int) -> int:
+    """Return sparse attention's absolute position-space bound.
+
+    ``ATTENTION.SPARSE`` gathers a phase-composed *row space*: current rows in
+    prefill or physical circular-window slots in decode, followed by a
+    compressed prefix.  Its ``aux2`` still names the absolute causal context,
+    so comparing that value with the number of physical rows conflates two
+    different coordinate systems.  Selected rows remain bounded separately by
+    :func:`_sparse_index_rows` against the resolved KV operand.
+    """
+
+    context = _symbol_value(ctx, _aux(descriptor, 2), fallback)
+    _require(
+        context > 0,
+        f"attention: context length {context} is not a positive position bound",
     )
     return context
 
@@ -643,18 +665,16 @@ def _execute_sparse(ctx: EngineContext, descriptor: Descriptor) -> None:
         f"contract is frozen at {SPARSE_ATTENTION_BLOCK_SIZE}",
     )
 
-    # Amendment A19: the fused KV operand is a **row space**, not a position
-    # space.  ``ROUTE.INDEX_TOPK`` emits rows of the join the operand is -- the
-    # request's own rows, then the window, then the compressed rows -- and no
-    # count of tokens names how many of those there are: a 104-token request
-    # produces 104 + 128 + 26 of them.  So the index is bounded by the operand's
-    # own resolved extent, which A13 and A18 already make the request's size,
-    # and ``aux_id_2`` bounds the *positions* the causal base check uses.  Read
-    # as a row count it truncated a joined KV to its token count and then
-    # refused every rebased index, which is the refusal A19 exists to make
-    # unnecessary.  DENSE and GQA are unchanged: their KV view is indexed by
-    # position, so there the two numbers are the same one.
-    positions = _context_bound(ctx, descriptor, kv_view, kv_rows)
+    # The fused KV operand is a **row space**, not a position space.
+    # ``ROUTE.INDEX_TOPK`` emits rows of the phase's actual join: current then
+    # compressed during prefill, or the fixed physical window then compressed
+    # during decode.  At absolute position 200,000 that decode operand can have
+    # only ``128 + floor(200001 / ratio)`` rows.  ``aux_id_2`` therefore bounds
+    # only the absolute query-position check below; the selected indices are
+    # independently and strictly bounded by ``kv_rows`` in
+    # :func:`_sparse_index_rows`.  DENSE and GQA keep :func:`_context_bound`
+    # because their KV rows are positions.
+    positions = _position_context(ctx, descriptor, kv_rows)
     base_symbol = _aux(descriptor, 3)
     if base_symbol is not None:
         base = _symbol_value(ctx, base_symbol, max(positions - span, 0))
@@ -708,24 +728,20 @@ def _sparse_index_rows(
 ) -> tuple[np.ndarray, int]:
     """Decode a ``[span, slots]`` U32 index array into signed reference rows.
 
-    Amendment A6 fixes the array as ascending and tail-padded with
-    ``0xffffffff``.  Both properties are checked: padding that is not a suffix,
-    or a descending pair, is a malformed operand rather than something to
-    reinterpret.  Returns the rows in the reference's ``-1``-padded signed form
-    and the number of rows actually gathered.
+    ABI 3.0 fixes padding as one trailing run but leaves valid rows in producer
+    order.  That distinction is load-bearing after the source-defined decode
+    address correction: ``ROUTE.WINDOW_INDEX`` emits chronological physical
+    ring slots, which are numerically wrapped once the cursor passes slot 127.
+    Rejecting the wrap made every uncompressed sparse-attention layer trap at
+    decode position 128 even though every selected row was valid.
 
-    These two checks are stricter than the reference beneath them, and
-    deliberately so.  ``runtime.reference.sparse_attention`` accepts a ``-1`` at
-    any slot in any order -- it counts ``explicit_padding_slots`` apart from
-    ``implicit_tail_padding_lanes`` precisely because the released kernel does,
-    reading each lane as ``idxs[i] != -1`` with no order imposed.  Until
-    amendment A19 there was no producer that could satisfy A6, so this gate was
-    strictness with nothing behind it; ``ROUTE.INDEX_TOPK`` now emits the joined
-    array compacted and ascending, and the gate checks a property something is
-    responsible for.  It is kept rather than relaxed because after A19 an array
-    that interleaves padding can only come from a producer that failed to
-    compact, and every index in it names a real KV row -- which is a silently
-    wrong token, not a visible fault, if this absorbs it.
+    ``runtime.reference.sparse_attention`` consumes selected slots in their
+    stated order because that order reaches the block-64 online softmax and BF16
+    AV accumulation.  The engine therefore must not silently sort here.
+    ``ROUTE.INDEX_TOPK`` may still publish its separately frozen compact/sorted
+    canonical form; a direct ``WINDOW_INDEX`` consumer retains circular order.
+    Bounds remain against the resolved physical KV operand, independently of
+    the much larger absolute position-space value carried in sparse ``aux2``.
     """
     raw = np.asarray(ctx.read(view), dtype=np.uint64).reshape(span, view.dims[1])
     rows = np.full((span, int(view.dims[1])), SPARSE_PAD, dtype=np.int64)
@@ -749,11 +765,6 @@ def _sparse_index_rows(
                     f"selects KV row {bad}, outside the {context} valid rows",
                     trap_class=3,
                 )
-            _require(
-                bool(np.all(np.diff(executed.astype(np.int64)) >= 0)),
-                f"sparse index view {view.descriptor_id}: query {token} is not "
-                "ascending; amendment A6 fixes the selected rows as ascending",
-            )
         _require(
             count > 0,
             f"ATTENTION.SPARSE: query {token} selects no KV row; an empty "
