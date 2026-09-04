@@ -98,6 +98,17 @@ BACKEND_EXECUTION_SOURCE_PATHS = {
         "compiler/backends/rom/common/image.py",
         "compiler/backends/rom/common/program.py",
     ),
+    # The 32-node array shares the ROM lowering and image builder with the
+    # wafer and adds its own placement module, so its boundary is the wafer's
+    # three files plus that one.  A record that does not bind all four is not
+    # promotable: the array's expert ownership, its node-sharded images and its
+    # data-bearing all-reduce are decided across exactly these sources.
+    "rom_deepseek_v4_array": (
+        "compiler/backends/rom/deepseek_v4_array.py",
+        "compiler/backends/rom/deepseek_v4.py",
+        "compiler/backends/rom/common/image.py",
+        "compiler/backends/rom/common/program.py",
+    ),
 }
 
 
