@@ -153,7 +153,7 @@ ABI can express without an amendment.
 | Fabric | two-level: NVLink-class domains of `link_domain_size` nodes, an InfiniBand-NDR-class or scale-out inter-domain fabric | `configs/hardware/technology.json` `links.nvlink5`, `links.infiniband_ndr`; the roofline's `hybrid` plan |
 | Topology class | `CLUSTER_N` (proposed value 3), an ABI amendment | section 5 |
 | Mandatory workload | 200,000 prompt tokens as for Flash; 1,000,000 is the roofline context and is a stretch gate, not the mandatory one | section 9 |
-| KV per session at 200K | 9,856,011,264 B | `results/roofline/n5_vs_b200/analytical.json` `model_summaries` |
+| KV per session | **1,977,611,264 B at 200K**; 9,856,011,264 B at 1M | `results/roofline/context_ladder/n5_vs_b200/pro-200k/analytical.json` and `results/roofline/n5_vs_b200/analytical.json`, both `model_summaries[model=DeepSeek-V4-Pro-0813].kv_storage_bytes_per_user`. The row previously gave the 1M figure under the 200K label: the primary study runs Pro at 1,000,000 tokens and 200K is a context-ladder rung, so both numbers live under `model_summaries` in different trees |
 
 Pro is the reason the array target matters beyond a controlled experiment. At
 4 GiB of ROM per reticle field the wafer backend's own geometry
