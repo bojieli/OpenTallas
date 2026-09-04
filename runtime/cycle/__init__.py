@@ -54,20 +54,32 @@ from runtime.cycle.model import (
     tile_mapping,
     timing_counters,
 )
+from runtime.cycle.batch import (
+    BoundTokenTiming,
+    CYCLE_BATCH_SCHEMA,
+    CycleBatchScheduler,
+    TIMING_RECORD_SCHEMA,
+    TimingBindingError,
+)
 
 __all__ = [
     "CYCLE_RESULT_SCHEMA",
+    "CYCLE_BATCH_SCHEMA",
+    "BoundTokenTiming",
     "ClusterFabric",
     "CostTable",
     "CycleModel",
     "CycleRequest",
     "CycleResult",
+    "CycleBatchScheduler",
     "FabricTiming",
     "MachineModel",
     "Provenance",
     "ResolvedParameter",
     "ScheduleError",
     "TileMapping",
+    "TIMING_RECORD_SCHEMA",
+    "TimingBindingError",
     "WaferFabric",
     "architectural_counters",
     "build_fabric",
