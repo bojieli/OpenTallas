@@ -263,6 +263,37 @@ PHYSICALLY_CHARACTERISED_CLASSES = frozenset(
 )
 
 
+#: Keys inside ``implementation_identity`` that record what a run DID rather
+#: than what ran it.  ``deepseek_ordered_product_add.executed`` counts numba
+#: calls, and a wafer partition makes 583 of them where a 32-node partition
+#: makes 18,656 -- so two topologies that partition differently could never be
+#: compared, and the only pair that ever passed was two 32-node runs whose
+#: counts happened to coincide.  Statistics are evidence; they are not identity.
+_EXECUTION_STATISTIC_KEYS = frozenset({"executed", "calls", "statistics"})
+
+
+def _implementation_only(identity: Mapping[str, Any]) -> dict[str, Any]:
+    """``identity`` with every execution statistic removed, recursively."""
+
+    def strip(node: Any) -> Any:
+        if isinstance(node, Mapping):
+            return {
+                k: strip(v)
+                for k, v in node.items()
+                if k not in _EXECUTION_STATISTIC_KEYS
+            }
+        if isinstance(node, list):
+            return [strip(v) for v in node]
+        return node
+
+    return strip(dict(identity or {}))
+
+
+def _brief(value: Any, limit: int = 60) -> str:
+    text = repr(value)
+    return text if len(text) <= limit else text[: limit - 3] + "..."
+
+
 def check_comparable(left: ExecutionRecord, right: ExecutionRecord) -> list[str]:
     """Return every reason ``left`` and ``right`` may not be compared."""
     problems: list[str] = []
@@ -308,17 +339,23 @@ def check_comparable(left: ExecutionRecord, right: ExecutionRecord) -> list[str]
                 for k in differing
             )
         )
-    if (
-        left.implementation_identity
-        and right.implementation_identity
-        and left.implementation_identity != right.implementation_identity
-    ):
+    left_impl = _implementation_only(left.implementation_identity)
+    right_impl = _implementation_only(right.implementation_identity)
+    if left_impl and right_impl and left_impl != right_impl:
+        differing = sorted(
+            k
+            for k in set(left_impl) | set(right_impl)
+            if left_impl.get(k) != right_impl.get(k)
+        )
         problems.append(
             "the two records ran on different implementations: "
-            f"{left.implementation_identity.get('backend')} vs "
-            f"{right.implementation_identity.get('backend')}; the blocked "
-            "contract's association is fixed by the implementation, so a token "
-            "or counter difference between them would not be attributable"
+            + ", ".join(
+                f"{k} ({_brief(left_impl.get(k))} vs {_brief(right_impl.get(k))})"
+                for k in differing
+            )
+            + "; the blocked contract's association is fixed by the "
+            "implementation, so a token or counter difference between them "
+            "would not be attributable"
         )
     if left.target.deployment_digest == right.target.deployment_digest:
         problems.append(
