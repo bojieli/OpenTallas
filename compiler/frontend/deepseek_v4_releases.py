@@ -418,7 +418,6 @@ PRO = DeepSeekV4Release(
     ),
     quantization_config=_QUANTIZATION_CONFIG,
     rope_scaling=_ROPE_SCALING,
-    checkpoint_source_pending=True,
     # Both values are outputs of tools/build_checkpoint_lock.py over the
     # complete snapshot: 892,727,580,904 payload bytes across 149,782
     # tensors in 66 shards, read and hashed in 953 s.  The tensor-content

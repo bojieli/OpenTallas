@@ -1,4 +1,4 @@
-"""Pinned DeepSeek-V4-Flash-0731 acceptance workloads.
+"""Pinned DeepSeek-V4 acceptance workloads.
 
 This mirrors :mod:`compiler.workloads.qwen3`: each workload is defined once, as
 content plus a digest, so the HBM deployment, the ROM deployment, the cycle
@@ -29,6 +29,22 @@ eBook 2701, *Moby Dick*) rather than synthesised, because the contract requires
 *natural* prompt tokens; a repeated-token filler would exercise neither the
 tokenizer nor the attention distribution realistically.  The repeated-special
 stress workload exists separately and is explicitly not a substitute.
+
+One definition, two releases
+----------------------------
+The content above is defined once and built against a release record from
+:mod:`compiler.frontend.deepseek_v4_releases`, the same way the rest of the
+front end is.  The record supplies the model id, the repository and the
+revision the index names, and the ``max_position_embeddings`` the ladder is
+confronted with; :data:`WORKLOAD_ID_PREFIXES` supplies the identity prefix -
+``TA-DS`` for Flash, ``TA-DSP`` for Pro.
+
+The two releases ship the same tokenizer: ``tokenizer.json`` and
+``tokenizer_config.json`` have equal SHA-256 in both snapshots and are
+byte-identical under ``cmp``.  A rung's prompt token IDs are therefore the same
+integers for both releases.  Their workload *identities* are not, because the
+digest covers the workload id, so a report cannot silently attribute one
+release's run to the other's prompt.
 """
 
 from __future__ import annotations
@@ -37,13 +53,24 @@ import hashlib
 import json
 from dataclasses import dataclass, field as dc_field
 from pathlib import Path
+from types import MappingProxyType
 from typing import Any, Callable, Mapping
+
+from compiler.frontend.deepseek_v4_releases import (
+    FLASH,
+    PRO,
+    DeepSeekV4Release,
+    DeepSeekV4ReleaseError,
+    resolve_release,
+)
 
 # The corpus identity is pinned once for the whole program.  Importing it keeps
 # a single SHA-256 for the one Project Gutenberg text both model families read,
 # rather than a second copy that could drift out of step with the first.
+# ``CORPUS_PATH`` is re-exported rather than used here, so a reader of this
+# module reaches the corpus through the same name the Qwen module uses.
 from compiler.workloads.qwen3 import (
-    CORPUS_PATH,
+    CORPUS_PATH as CORPUS_PATH,
     CORPUS_SHA256,
     CORPUS_SOURCE,
     exact_token_window,
@@ -53,9 +80,29 @@ from compiler.workloads.qwen3 import (
 
 REPO = Path(__file__).resolve().parents[2]
 
-MODEL_ID = "deepseek-v4-flash-0731"
-OFFICIAL_REPOSITORY = "deepseek-ai/DeepSeek-V4-Flash-0731"
-OFFICIAL_REVISION = "7872f01b1d1fe23eabc4c98b48bffcef5a386062"
+#: The release every builder defaults to.  Naming a second release does not
+#: move this one: the Flash workload documents are byte-identical before and
+#: after the generalisation, and their digests are pinned as literals in
+#: ``tests/compiler/test_deepseek_v4_workload_ladder.py``.
+DEFAULT_MODEL_ID = FLASH.model_id
+
+#: Flash's identity, still exported because callers import these three names.
+#: They are read from the release record rather than restated here, so this
+#: module cannot drift from the pin the front end enforces.
+MODEL_ID = FLASH.model_id
+OFFICIAL_REPOSITORY = FLASH.repository
+OFFICIAL_REVISION = FLASH.revision
+
+#: The workload-id prefix each release's identities carry.  This is a program
+#: naming convention rather than a released fact, so it lives here and not in
+#: the release record.  A release absent from this table has no workload
+#: family, and :func:`workload_id_prefix` refuses to invent one for it.
+WORKLOAD_ID_PREFIXES: Mapping[str, str] = MappingProxyType(
+    {
+        FLASH.model_id: "TA-DS",
+        PRO.model_id: "TA-DSP",
+    }
+)
 
 #: Exactly 200,000 natural prompt tokens is the mandatory DeepSeek context.
 LONG_PROMPT_TOKENS = 200_000
@@ -195,15 +242,31 @@ AGENT_SANDBOX_FILES = {
 AGENT_EXPECTED_TOTAL = 24 + 17 + 58 + 131 + 9
 
 
-def _ladder_id(tokens: int) -> str:
+def workload_id_prefix(release: str | DeepSeekV4Release = DEFAULT_MODEL_ID) -> str:
+    """The workload-id prefix of one release, refusing an unknown one."""
+
+    record = resolve_release(release)
+    try:
+        return WORKLOAD_ID_PREFIXES[record.model_id]
+    except KeyError:
+        raise DeepSeekV4ReleaseError(
+            f"{record.model_id} has no pinned workload-id prefix; add one to "
+            "WORKLOAD_ID_PREFIXES before naming its workloads, because a "
+            "workload identity that collides with another release's would "
+            "make two prompts share one digest"
+        ) from None
+
+
+def _ladder_id(tokens: int, prefix: str) -> str:
     if tokens % 1000:
-        return f"TA-DS-CTX-{tokens}-1"
-    return f"TA-DS-CTX-{tokens // 1000}K-1"
+        return f"{prefix}-CTX-{tokens}-1"
+    return f"{prefix}-CTX-{tokens // 1000}K-1"
 
 
 def build_chat_workload(
     encode_prompt: Callable[..., tuple[str, list[int]]],
     *,
+    release: str | DeepSeekV4Release = DEFAULT_MODEL_ID,
     max_new_tokens: int = CHAT_MAX_NEW_TOKENS,
 ) -> Workload:
     """The pinned reasoning question, rendered through the official encoding."""
@@ -211,7 +274,7 @@ def build_chat_workload(
         [{"role": "user", "content": CHAT_QUESTION}], "chat"
     )
     return Workload(
-        workload_id="TA-DS-CHAT-1",
+        workload_id=f"{workload_id_prefix(release)}-CHAT-1",
         kind="chat",
         description=(
             "Pinned multi-rate reasoning question rendered with the official "
@@ -227,6 +290,7 @@ def build_chat_workload(
 def build_agent_workload(
     encode_prompt: Callable[..., tuple[str, list[int]]],
     *,
+    release: str | DeepSeekV4Release = DEFAULT_MODEL_ID,
     max_new_tokens: int = DEFAULT_MAX_NEW_TOKENS,
 ) -> Workload:
     """A single-tool agent task carrying the model's own tool encoding."""
@@ -242,7 +306,7 @@ def build_agent_workload(
         "chat",
     )
     return Workload(
-        workload_id="TA-DS-AGENT-1",
+        workload_id=f"{workload_id_prefix(release)}-AGENT-1",
         kind="agent",
         description=(
             "Single-tool shell agent task executed in a frozen sandbox, with "
@@ -265,6 +329,7 @@ def build_context_workload(
     target_tokens: int,
     body: str | None = None,
     *,
+    release: str | DeepSeekV4Release = DEFAULT_MODEL_ID,
     max_new_tokens: int = DEFAULT_MAX_NEW_TOKENS,
 ) -> Workload:
     """One rung of the natural-prose context ladder, exact to the token."""
@@ -273,7 +338,7 @@ def build_context_workload(
     window, ids = exact_token_window(encode, body, target_tokens)
     mandatory = target_tokens == LONG_PROMPT_TOKENS
     return Workload(
-        workload_id=_ladder_id(target_tokens),
+        workload_id=_ladder_id(target_tokens, workload_id_prefix(release)),
         kind="long_natural",
         description=(
             f"Exactly {target_tokens:,} natural prompt tokens of public-domain "
@@ -303,6 +368,7 @@ def build_stress_workload(
     encode: Callable[[str], list[int]],
     decode: Callable[[list[int]], str],
     *,
+    release: str | DeepSeekV4Release = DEFAULT_MODEL_ID,
     max_new_tokens: int = 32,
 ) -> Workload:
     """A legal but pathological repeated-special-token stream."""
@@ -314,7 +380,7 @@ def build_stress_workload(
         )
     ids = tuple(special * STRESS_PROMPT_TOKENS)
     return Workload(
-        workload_id="TA-DS-STRESS-1",
+        workload_id=f"{workload_id_prefix(release)}-STRESS-1",
         kind="repeated_special",
         description=(
             "Repeated-special-token stress workload. Separate from the natural "
@@ -331,6 +397,7 @@ def build_stress_workload(
 def build_workloads(
     tokenizer,
     *,
+    release: str | DeepSeekV4Release = DEFAULT_MODEL_ID,
     max_new_tokens: int = DEFAULT_MAX_NEW_TOKENS,
     ladder: tuple[int, ...] = CONTEXT_LADDER,
 ) -> dict[str, Workload]:
@@ -339,8 +406,23 @@ def build_workloads(
     ``tokenizer`` must expose ``encode``/``decode`` and an ``encode_prompt``
     that renders through the official ``encoding_dsv4`` wire format -
     :class:`compiler.frontend.deepseek_v4_tokenizer.VerifiedDeepSeekV4Tokenizer`
-    satisfies this.
+    satisfies this.  It must be the tokenizer ``release`` names; nothing here
+    can tell one tokenizer from another, so the caller binds that and the
+    index records the digest it used.
+
+    Every rung is confronted with the release's own
+    ``max_position_embeddings``: a ladder that reaches past the context the
+    model was released with would be asking for prompts the model cannot hold.
     """
+
+    record = resolve_release(release)
+    context_bound = int(record.scalar("max_position_embeddings"))
+    beyond = [rung for rung in ladder if rung > context_bound]
+    if beyond:
+        raise ValueError(
+            f"{record.model_id} pins max_position_embeddings="
+            f"{context_bound:,}; ladder rungs {beyond} exceed it"
+        )
 
     def encode(text: str) -> list[int]:
         return tokenizer.encode(text, enforce_max_length=False)
@@ -352,28 +434,40 @@ def build_workloads(
         return tokenizer.encode_prompt(messages, thinking_mode)
 
     workloads: list[Workload] = [
-        build_chat_workload(encode_prompt),
-        build_agent_workload(encode_prompt, max_new_tokens=max_new_tokens),
-        build_stress_workload(encode, decode),
+        build_chat_workload(encode_prompt, release=record),
+        build_agent_workload(
+            encode_prompt, release=record, max_new_tokens=max_new_tokens
+        ),
+        build_stress_workload(encode, decode, release=record),
     ]
     body = natural_body(load_corpus())
     for target in ladder:
         workloads.append(
             build_context_workload(
-                encode, target, body, max_new_tokens=max_new_tokens
+                encode,
+                target,
+                body,
+                release=record,
+                max_new_tokens=max_new_tokens,
             )
         )
     return {workload.workload_id: workload for workload in workloads}
 
 
-def index_document(workloads: Mapping[str, Workload], **extra: Any) -> dict[str, Any]:
+def index_document(
+    workloads: Mapping[str, Workload],
+    *,
+    release: str | DeepSeekV4Release = DEFAULT_MODEL_ID,
+    **extra: Any,
+) -> dict[str, Any]:
     """The ``index.json`` shape the oracle and the deployments read."""
+    record = resolve_release(release)
     document = {
         "schema": "opentallas.workload_index.v1",
-        "model_id": MODEL_ID,
+        "model_id": record.model_id,
         "source": {
-            "repository": OFFICIAL_REPOSITORY,
-            "revision": OFFICIAL_REVISION,
+            "repository": record.repository,
+            "revision": record.revision,
         },
         "mandatory_context_tokens": LONG_PROMPT_TOKENS,
         "context_ladder": list(CONTEXT_LADDER),

@@ -1,10 +1,19 @@
-"""Hash-verified, local-only tokenizer boundary for DeepSeek V4 Flash.
+"""Hash-verified, local-only tokenizer boundary for DeepSeek V4.
 
 The official tokenizer is data, not remote Python. This module accepts only the
 two byte-exact tokenizer files named by the immutable checkpoint source, loads
 the Rust ``tokenizers`` implementation from local bytes, verifies its complete
 vocabulary shape and protocol-token IDs, and runs independent golden probes
 before exposing encode/decode operations.
+
+The pinned identities below are one tokenizer, and both released DeepSeek-V4
+snapshots carry it: ``tokenizer.json`` and ``tokenizer_config.json`` have the
+same SHA-256 in the Flash and Pro snapshots and are byte-identical under
+``cmp``. ``release`` therefore selects which checkpoint source authenticates
+the files - the repository and revision differ - and not which bytes are
+expected. A release whose record named different tokenizer digests would be a
+different tokenizer than the one verified here, so the loader refuses it rather
+than verifying the wrong pin.
 """
 
 from __future__ import annotations
@@ -24,13 +33,15 @@ from compiler.frontend.deepseek_v4_encoding import (
     DSML_TOKEN,
     EOS_TOKEN,
     LATEST_REMINDER_TOKEN,
-    OFFICIAL_REPOSITORY,
-    OFFICIAL_REVISION,
     TASK_TOKENS,
     THINKING_END_TOKEN,
     THINKING_START_TOKEN,
     USER_TOKEN,
     encode_messages,
+)
+from compiler.frontend.deepseek_v4_releases import (
+    DeepSeekV4Release,
+    resolve_release,
 )
 from compiler.ir.model import canonical_json_bytes
 
@@ -51,10 +62,11 @@ BOS_TOKEN_ID = 0
 EOS_TOKEN_ID = 1
 PAD_TOKEN_ID = 1
 
+DEFAULT_MODEL_ID = "deepseek-v4-flash-0731"
 DEFAULT_SOURCE_PATH = (
     Path(__file__).resolve().parents[1]
     / "models"
-    / "deepseek-v4-flash-0731"
+    / DEFAULT_MODEL_ID
     / "checkpoint_source.json"
 )
 
@@ -198,16 +210,32 @@ def _expected_file(source: Mapping[str, Any], name: str) -> Mapping[str, Any]:
     return records[0]
 
 
-def _validate_source(source: Mapping[str, Any]) -> None:
-    if source["repository"] != OFFICIAL_REPOSITORY:
+def _validate_release(release: DeepSeekV4Release) -> None:
+    """Refuse a release whose record names a tokenizer this module has not pinned."""
+
+    identity = (release.tokenizer_sha256, release.tokenizer_config_sha256)
+    if identity != (TOKENIZER_SHA256, TOKENIZER_CONFIG_SHA256):
+        raise DeepSeekV4TokenizerError(
+            f"{release.model_id} pins tokenizer identity {identity!r}, which "
+            f"is not the one this module verifies "
+            f"({(TOKENIZER_SHA256, TOKENIZER_CONFIG_SHA256)!r}); its vocabulary "
+            "shape, protocol-token IDs and golden probes would have to be "
+            "established before it could be loaded here"
+        )
+
+
+def _validate_source(
+    source: Mapping[str, Any], release: DeepSeekV4Release
+) -> None:
+    if source["repository"] != release.repository:
         raise DeepSeekV4TokenizerError(
             f"tokenizer source repository is {source['repository']!r}, "
-            f"expected {OFFICIAL_REPOSITORY!r}"
+            f"expected {release.repository!r}"
         )
-    if source["revision"] != OFFICIAL_REVISION:
+    if source["revision"] != release.revision:
         raise DeepSeekV4TokenizerError(
             f"tokenizer source revision is {source['revision']!r}, "
-            f"expected {OFFICIAL_REVISION!r}"
+            f"expected {release.revision!r}"
         )
     if source["remote_code_policy"] != "disabled":
         raise DeepSeekV4TokenizerError(
@@ -587,14 +615,25 @@ class VerifiedDeepSeekV4Tokenizer:
 
 
 def load_verified_deepseek_v4_tokenizer(
-    snapshot: Path, source_path: Path = DEFAULT_SOURCE_PATH
+    snapshot: Path,
+    source_path: Path | None = None,
+    *,
+    release: str | DeepSeekV4Release = DEFAULT_MODEL_ID,
 ) -> VerifiedDeepSeekV4Tokenizer:
     """Load the exact official tokenizer from a verified local snapshot.
 
     No network client, Transformers auto-loader, or checkpoint Python is invoked.
     A tokenizer-only snapshot containing the two pinned files is sufficient.
+
+    ``release`` names which DeepSeek-V4 release's checkpoint source
+    authenticates the snapshot; it defaults to Flash, and ``source_path``
+    defaults to that release's committed ``checkpoint_source.json``.
     """
 
+    record = resolve_release(release)
+    _validate_release(record)
+    if source_path is None:
+        source_path = record.checkpoint_source_path
     try:
         snapshot = Path(snapshot)
         source_path = Path(source_path)
@@ -612,7 +651,7 @@ def load_verified_deepseek_v4_tokenizer(
         raise DeepSeekV4TokenizerError(
             f"cannot validate tokenizer checkpoint source: {exc}"
         ) from exc
-    _validate_source(source)
+    _validate_source(source, record)
     tokenizer_bytes = _read_verified_file(
         snapshot, TOKENIZER_FILENAME, TOKENIZER_SIZE_BYTES, TOKENIZER_SHA256
     )
@@ -632,8 +671,8 @@ def load_verified_deepseek_v4_tokenizer(
     report: dict[str, Any] = {
         "schema": "opentallas.deepseek_v4_tokenizer_validation.v1",
         "source": {
-            "repository": OFFICIAL_REPOSITORY,
-            "revision": OFFICIAL_REVISION,
+            "repository": record.repository,
+            "revision": record.revision,
             "remote_code_policy": "disabled",
             "tokenizer_config_sha256": TOKENIZER_CONFIG_SHA256,
             "tokenizer_config_size_bytes": TOKENIZER_CONFIG_SIZE_BYTES,
@@ -670,6 +709,7 @@ def load_verified_deepseek_v4_tokenizer(
 __all__ = [
     "BASE_VOCAB_SIZE",
     "BOS_TOKEN_ID",
+    "DEFAULT_MODEL_ID",
     "DeepSeekV4TokenizerError",
     "EOS_TOKEN_ID",
     "MODEL_MAX_LENGTH",
