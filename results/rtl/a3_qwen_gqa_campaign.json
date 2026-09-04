@@ -1,0 +1,216 @@
+{
+  "abi": {
+    "major": 3,
+    "minor": 0
+  },
+  "activation_binding": {
+    "key_pc29_bf16_sha256": "b41de05c0a7f1f495ded2295c22781f4aa345136d2c572248469c422f266c406",
+    "query_pc26_bf16_sha256": "f36db31b14aa59e0b0c7bc444403a7991063c3a0e874dcee151b7428b0ee8150",
+    "value_pc17_bf16_sha256": "b07011da7a3d58dcccceb91e596ceebc2084ab3c2fc9d0b6a9a8704e91ef8dc5"
+  },
+  "aggregate": {
+    "atomic_sentinel_words_checked": 12288,
+    "case_count": 5,
+    "checks_per_simulator": 20565,
+    "computed_output_words_compared": 8192,
+    "exponential_evaluations": 1632,
+    "memory_reads": 430080,
+    "negative_case_count": 3,
+    "positive_case_count": 2,
+    "rtl_write_beats": 8192,
+    "score_multiplications": 208896,
+    "value_multiplications": 208896
+  },
+  "boundary": {
+    "hbm_operator_descriptor_id": 137,
+    "new_first_unsupported_opcode": "TENSOR.MATMUL",
+    "new_first_unsupported_pc": 41,
+    "previous_first_unsupported_pc": 38,
+    "rom_operator_descriptor_id": 134
+  },
+  "history_binding": {
+    "authentic": false,
+    "construction": "deterministic head rotation, element rotation, and reversal of the authentic current key/value row",
+    "key_bf16_sha256": "19c4553e8a5febf22ca8ba622184e26483be91350490bf991e5c5ccfb53eebb1",
+    "row_count": 16,
+    "value_bf16_sha256": "4e5b49a872e2cc78b72e7323b91d01c9f0b507674b784c834a46d6615468e226"
+  },
+  "log_sha256": {
+    "iverilog": "e2a71e7ab2e0ecfcb4d0c23e4e74dd8164a03ed219fa1c15b16f7e13f4931ecc",
+    "verilator": "0e649d0bd23ef4316173e617d185f824fc3128467462d212c38ba9a1dca9f222",
+    "verilator_compile": "a201cc6ffdbc5c66a1a6d866f6917e31acabbad2689e7cff1861bbf6dd919e59",
+    "yosys": "7ac05f266cb7bea7833d2beb1d744d74edcbf6c4ff98887a7ef2355c86b034c0"
+  },
+  "normalized_cases": [
+    {
+      "executed": 1,
+      "exp": 544,
+      "failed": 0,
+      "index": 0,
+      "reads": 143360,
+      "records": 7,
+      "refusal": 0,
+      "score": 69632,
+      "trap": 0,
+      "value": 69632,
+      "verification_cycles": 471054,
+      "writes": 4096
+    },
+    {
+      "executed": 1,
+      "exp": 544,
+      "failed": 0,
+      "index": 1,
+      "reads": 143360,
+      "records": 7,
+      "refusal": 0,
+      "score": 69632,
+      "trap": 0,
+      "value": 69632,
+      "verification_cycles": 718949,
+      "writes": 4096
+    },
+    {
+      "executed": 0,
+      "exp": 544,
+      "failed": 1,
+      "index": 2,
+      "reads": 143360,
+      "records": 7,
+      "refusal": 5,
+      "score": 69632,
+      "trap": 8,
+      "value": 69632,
+      "verification_cycles": 713202,
+      "writes": 0
+    },
+    {
+      "executed": 0,
+      "exp": 0,
+      "failed": 1,
+      "index": 3,
+      "reads": 0,
+      "records": 7,
+      "refusal": 3,
+      "score": 0,
+      "trap": 3,
+      "value": 0,
+      "verification_cycles": 333,
+      "writes": 0
+    },
+    {
+      "executed": 0,
+      "exp": 0,
+      "failed": 1,
+      "index": 4,
+      "reads": 0,
+      "records": 0,
+      "refusal": 2,
+      "score": 0,
+      "trap": 2,
+      "value": 0,
+      "verification_cycles": 14,
+      "writes": 0
+    }
+  ],
+  "oracle": {
+    "expected_bf16_sha256": "8992e9d1a0b5303b81b2503df2e23170f838f772e79eb8d7c65c1fce4fac93c2",
+    "implementation": "runtime/reference/tensor_accelerator_attention.py",
+    "independent_of_dut": true,
+    "word_count": 4096
+  },
+  "schema": "opentallas.rtl.a3_qwen_gqa_campaign.v1",
+  "scope": {
+    "architectural_token_commit_ticks": false,
+    "authentic_current_query_key_value": true,
+    "authentic_prior_context_kv": false,
+    "complete_layer": false,
+    "dual_simulator": true,
+    "eos": false,
+    "exact_computed_words": true,
+    "exact_pc38_gqa_arithmetic": true,
+    "exact_rom_and_hbm_pc38_records": true,
+    "independent_arithmetic_oracle": true,
+    "late_fault_zero_writes": true,
+    "memory_input_backpressure": true,
+    "model_token_generation": false,
+    "output_backpressure_and_stability": true,
+    "shared_certifying_exponential": true,
+    "simulator_cycles_are_verification_cost_only": true,
+    "synthesizable_elaboration": true,
+    "tpot": false
+  },
+  "simulators_agree": true,
+  "source_sha256": {
+    "results/rtl/abi3_shipped_prefix_campaign.json": "6888ae7dea7e7f2bc6275619d5811d31fd46fa77e816b05ea21c2e8dbc4422aa",
+    "rtl/abi3/ot_a3_descriptor_record_validator.sv": "92d39545cb99c762c8b96144c4c165fadeb4c355a77155db42c175ba5a36c1f3",
+    "rtl/abi3/ot_a3_dma_index_mover.sv": "e254421fcba397e3db821c52b9acafaf3922af78653ab2d2e3029705ee166c64",
+    "rtl/abi3/ot_a3_engine_pkg.sv": "1186eecdc80321e87e08c97fb8e1c9a1b078584d019353736d235bf5cc84d477",
+    "rtl/abi3/ot_a3_fp32_div_rne.sv": "f3220311dd399b0218a9aa5828ad11c9e4f9121d2924b0678ef4b3f95a7e04c1",
+    "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv": "b1c0e01c663a353a25ea7056718b21b30636bedac4a84dc0cc1216dcbb03218e",
+    "rtl/abi3/ot_a3_instruction_decoder.sv": "9f2390ce38f9bddf80d47c01931b6fba5dde6c2f15a3f5fd0ae089e0bf27c3e1",
+    "rtl/abi3/ot_a3_pkg.sv": "6fb71525b329497fe62145ab0d9b1b6eff03f1e0c95f3bc6a0c1dde5c6744054",
+    "rtl/abi3/ot_a3_qwen_gqa.sv": "743ad9b08d624f593e22d5559b263a7e50fe4ebf19436eb1e50a0904cf2d6c5a",
+    "rtl/abi3/ot_a3_qwen_gqa_adapter.sv": "7aa9f31150546c9bba2dd06b270e659833610333724a9a130ce70f9dcb061735",
+    "rtl/abi3/ot_a3_qwen_kv_scatter_adapter.sv": "d3ce0ef8fda09b66461e038cca0bb747e569d523da821e8eb34229b6f114f5d1",
+    "rtl/ot_fp32_rne_pkg.sv": "39de679dd5f277d8a9cc2d5b6349eb1675e9397e64a8256bb1f53a34a054608c",
+    "rtl/test/tb_a3_qwen_gqa.sv": "50012d431702fe58f7546efc627ec6668f25658132c117e30900579c476538ab",
+    "runtime/reference/formats.py": "74a3254c7a1dba9ad3bf07a5c793cb2ec1766f953b48ec4c782391f757290aa2",
+    "runtime/reference/tensor_accelerator_attention.py": "72153848bf51ef8a6f2a61456ffa222fbf37150de05305c1ea4bfbaf955abf68",
+    "testdata/compiler/abi3_deployment/a3_descriptor.hex": "e2af94bbccaaa4e1a4b3d7d67a384d86a80769a37d06f38d622850fb116dd616",
+    "testdata/compiler/abi3_deployment/a3_program.hex": "9a86572ef8fbfb0eb6c175cd528c8e39164d0f315cec889d9c85a4ddf227c505",
+    "testdata/compiler/abi3_deployment/abi3_deployment_rtl_vectors.json": "06977e3d3be02282c5076fa269f8fe5a25dec320f4b0ec7840b4429d09945638",
+    "testdata/compiler/abi3_shipped_prefix/abi3_shipped_prefix_vectors.json": "cd72fa9e711340095da1f8698abc7a810d2a82750d6bde43ec0144257a53b09d",
+    "testdata/compiler/abi3_shipped_prefix/p3_expect.hex": "1cadfc3371d198704fc9f245e7d8e27b72b38e906eafa0cdbc576f1eb2f98327",
+    "tools/build_a3_qwen_gqa_vectors.py": "674da53be001a14534bcc7b3ee8262b4745dac3878033536469cac7c92414b44",
+    "tools/run_a3_qwen_gqa_rtl_campaign.py": "3e69d9b546d99f3009ed7bc1bc0ea48ef6ce5e6887194f810abcfa43ccd339bf"
+  },
+  "status": "pass",
+  "synthesis_frontend": {
+    "check_problems": 0,
+    "note": "generic synthesizable elaboration only; no library mapping, PPA, token latency, output-token correctness, or TPOT claim",
+    "top": "ot_a3_qwen_gqa"
+  },
+  "tools": {
+    "iverilog": {
+      "path": "/usr/bin/iverilog",
+      "sha256": "1ba67856249142771239573b5d51c7f6e4d67a1e7931a0d0fab56e0d473d2167",
+      "version": "Icarus Verilog version 11.0 (stable) ()"
+    },
+    "verilator": {
+      "path": "<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator",
+      "sha256": "fb2cc573b1055cf096c90e1efc9966fe56bdb4b265c83590cf2a49f7a0defcdf",
+      "version": "Verilator 5.050 2026-07-01 rev v5.050"
+    },
+    "vvp": {
+      "path": "/usr/bin/vvp",
+      "sha256": "075b114070eed3bc72e0e4559decf40520f3b693b1da9c94bba1defe8896966d"
+    },
+    "yosys": {
+      "path": "<HOME>/.local/opentallas-tools/yosys-0.68/bin/yosys",
+      "sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+    }
+  },
+  "vector_sha256": {
+    "cases.hex": "a94e2b253383d91ee21f38fe05aef7674a192a5c9bf86d24a93413ebf7508df6",
+    "expected.hex": "2d3591211e4fb6fd32ef0f2f3e1c23eb3e9709797c5efdb25f03073eb6b77743",
+    "index.json": "b9db0d077add983448a3ea87910e84c545849939325c37b7d61fd86fab2a1709",
+    "instruction.hex": "bfc4ff746f30d62070c70913b8f059b353fff60bd768f7b58ec1e5105a555aa5",
+    "numeric.hex": "4c7c17d4ed5ec1dbb3ac0b34b50807c5588a2a55840ee0c8266b4e9312119344",
+    "operator.hex": "836b5d9f1cf257873e43d7a818c2c129600132389c5f36ec3a1f2d64faab2f3d",
+    "output.hex": "9fecab7decdf4d6027ec46bf17cc62e89474fad6694a32b5f43962e217107d6b",
+    "source.hex": "cf8b6f7b79ccc56d180e30ef39e2c215b7c8e2059c044488a80eb78f35404468",
+    "view0.hex": "1dff97522e63d18f8a0b2baa13571be1fef2865176da9058a0c3bc74560b66fc",
+    "view1.hex": "0a31e9a549d0beadaf2899fc0641036c6398a4e8668a4b02018cb21b78e6f88c",
+    "view2.hex": "69764a8672b02f705c24ffd9a0dafc81e5f9675b963200a6ac42a778a73018f8",
+    "view3.hex": "231dcf4efe1eb6f7677434337b4f2cee7ffb0d626f0af86b6b65539afde71258"
+  },
+  "verification_wall_seconds": {
+    "iverilog_compile": 0.019526449032127857,
+    "iverilog_simulation": 195.1172391769942,
+    "verilator_compile": 10.37341512099374,
+    "verilator_simulation": 5.878481055027805,
+    "yosys_elaboration": 71.35726695798803
+  }
+}
