@@ -791,7 +791,14 @@ def _check_association(record: Mapping[str, Any]) -> list[str]:
         problems.append("association manifest digest is invalid")
     identity = record.get("implementation_identity")
     expected_identity = dict(identity) if isinstance(identity, dict) else {}
+    # The executed-association manifest is owned by the blocked GEMM backend.
+    # The token record also carries identities for other functional helpers at
+    # the top level.  Those helpers neither participate in, nor are emitted by,
+    # the GEMM backend's association manifest.  Compare the exact backend-owned
+    # projection while retaining the auxiliary identities elsewhere in the
+    # independently authenticated record.
     expected_identity.pop("device_memory_bytes", None)
+    expected_identity.pop("deepseek_ordered_product_add", None)
     if not expected_identity or "unavailable" in expected_identity:
         problems.append("implementation identity is unavailable")
     if manifest.get("implementation_identity") != expected_identity:

@@ -726,6 +726,37 @@ def test_individually_valid_but_different_association_manifests_are_refused(tmp_
     assert "pair check failed: executed_association_manifests_identical" in result["problems"]
 
 
+def test_auxiliary_numeric_identity_is_not_mistaken_for_gemm_identity(tmp_path):
+    left = _record("stress", "hbm_sram", tmp_path / "hbm-deployment")
+    right = _record("stress", "rom_qwen3", tmp_path / "rom-deployment")
+    auxiliary = {
+        "policy": "numpy_or_numba_k_serial_row_output_parallel_v1",
+        "executed": {"numba_calls": 0, "numpy_calls": 0},
+    }
+    for record in (left, right):
+        record["implementation_identity"]["deepseek_ordered_product_add"] = (
+            copy.deepcopy(auxiliary)
+        )
+
+    result = tool.validate("stress", _write_pair(tmp_path, left, right))
+
+    assert result["status"] == "pass"
+
+
+def test_gemm_identity_mismatch_remains_fail_closed(tmp_path):
+    left = _record("stress", "hbm_sram", tmp_path / "hbm-deployment")
+    right = _record("stress", "rom_qwen3", tmp_path / "rom-deployment")
+    left["implementation_identity"]["library_version"] = "different"
+
+    result = tool.validate("stress", _write_pair(tmp_path, left, right))
+
+    assert result["status"] == "fail"
+    assert any(
+        "association implementation identity differs" in problem
+        for problem in result["problems"]
+    )
+
+
 def test_stress_token_divergence_is_refused_even_when_metadata_claims_agreement(tmp_path):
     left = _record("stress", "hbm_sram", tmp_path / "hbm-deployment")
     right = _record("stress", "rom_qwen3", tmp_path / "rom-deployment")
