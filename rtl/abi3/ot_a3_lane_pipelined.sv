@@ -430,6 +430,7 @@ module ot_a3_lane_pipelined #(
         msb_j = 0;
         any_nonzero = 1'b0;
         lz = 0;
+        gj = 0;
         if (mode == 2'd0) begin
             rounded = ot_a3_lane_pkg::round_product(
                 p_sign[0], p_zero[0], p_mag[15:0], p_pow[11:0]);
