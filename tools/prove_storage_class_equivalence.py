@@ -200,6 +200,70 @@ def assess_memory_object_transition(
     }
 
 
+def assess_schedule_bank_transition(
+    rom_descriptor: Descriptor,
+    hbm_descriptor: Descriptor,
+) -> dict[str, Any]:
+    """Assess one differing SCHEDULE against the bank half of the transition.
+
+    A schedule's ``bank_mask`` names the ROM banks the operator's weight
+    operands occupy.  Move those weights to HBM and there are no ROM banks to
+    name, so the mask is empty.  That is the placement transition itself,
+    observed on the schedule that reads the object rather than on the object,
+    and it is admitted only in that exact shape: both records are SCHEDULE
+    descriptors, no header field moves, ``bank_mask`` is the only payload field
+    that differs, the ROM side names at least one bank, and the HBM side names
+    none.  A schedule that differed in tile geometry, queue, engine, outstanding
+    bound or route class would still be a compiler difference and is still a
+    violation -- as is an HBM build that names a ROM bank, which would mean the
+    weights had not moved.
+
+    What protects attributability is unchanged: the instruction stream stays
+    byte-identical between the two builds, so no measured difference can come
+    from a different program.
+    """
+
+    rom_payload = dict(rom_descriptor.payload)
+    hbm_payload = dict(hbm_descriptor.payload)
+    changed_header_fields = [
+        name
+        for name in DESCRIPTOR_HEADER_FIELDS
+        if getattr(rom_descriptor, name) != getattr(hbm_descriptor, name)
+    ]
+    changed_payload_fields = sorted(
+        name
+        for name in set(rom_payload) | set(hbm_payload)
+        if name not in rom_payload
+        or name not in hbm_payload
+        or rom_payload[name] != hbm_payload[name]
+    )
+    reasons: list[str] = []
+    if (
+        rom_descriptor.type_name != "SCHEDULE"
+        or hbm_descriptor.type_name != "SCHEDULE"
+    ):
+        reasons.append("descriptor_type_not_schedule_on_both_sides")
+    if changed_header_fields:
+        reasons.append("descriptor_header_drift")
+    if changed_payload_fields != ["bank_mask"]:
+        reasons.append("payload_drift_outside_bank_mask")
+    if not int(rom_payload.get("bank_mask", 0)):
+        reasons.append("rom_schedule_names_no_bank")
+    if int(hbm_payload.get("bank_mask", 0)):
+        reasons.append("hbm_schedule_still_names_a_rom_bank")
+    return {
+        "permitted": not reasons,
+        "reasons": reasons,
+        "rom_type": rom_descriptor.type_name,
+        "hbm_type": hbm_descriptor.type_name,
+        "storage_transition": "rom_bank_mask->empty",
+        "changed_header_fields": changed_header_fields,
+        "changed_payload_fields": changed_payload_fields,
+        "rom_bank_mask": int(rom_payload.get("bank_mask", 0)),
+        "hbm_bank_mask": int(hbm_payload.get("bank_mask", 0)),
+    }
+
+
 def prove(graph: KernelGraph, product: str) -> dict[str, Any]:
     import importlib
 
@@ -224,14 +288,26 @@ def prove(graph: KernelGraph, product: str) -> dict[str, Any]:
     integrity_mode_exception_count = 0
     permitted_transition_count = 0
     violations: list[dict[str, Any]] = []
+    schedule_bank_transition_count = 0
+    object_transition_count = 0
     for index in differing:
         left, right = table_rom[index], table_hbm[index]
+        if left.type_name == "SCHEDULE" or right.type_name == "SCHEDULE":
+            assessment = assess_schedule_bank_transition(left, right)
+            transitions[assessment["storage_transition"]] += 1
+            if not assessment["permitted"]:
+                violations.append({"descriptor_id": index, **assessment})
+                continue
+            permitted_transition_count += 1
+            schedule_bank_transition_count += 1
+            continue
         assessment = assess_memory_object_transition(left, right)
         transitions[assessment["storage_transition"]] += 1
         if not assessment["permitted"]:
             violations.append({"descriptor_id": index, **assessment})
             continue
         permitted_transition_count += 1
+        object_transition_count += 1
         placement_transitions[
             (
                 "rom_placement_to_hbm_unplaced"
@@ -308,8 +384,12 @@ def prove(graph: KernelGraph, product: str) -> dict[str, Any]:
         "differing_by_type": dict(Counter(table_rom[i].type_name for i in differing)),
         "storage_class_transitions": dict(transitions),
         "permitted_transition_count": permitted_transition_count,
-        "hbm_unplaced_transition_count": permitted_transition_count,
+        # Objects that made the ROM-to-HBM transition and landed unplaced.
+        # ``permitted_transition_count`` is the total including the schedules
+        # whose bank mask emptied, which are not objects and are not placed.
+        "hbm_unplaced_transition_count": object_transition_count,
         "placement_transitions": dict(placement_transitions),
+        "schedule_bank_transition_count": schedule_bank_transition_count,
         "integrity_mode_exception_count": integrity_mode_exception_count,
         "differences_beyond_permitted_transition": violations,
         "admitted": admitted,

@@ -286,7 +286,7 @@ evidence. None may be presented as a rerun of the current source.
   with the routed expert banks node-sharded by consecutive ownership (eight
   experts per node, A28 `node_segments` images) and a data-bearing
   `LINK.COLLECTIVE SUM` per routed group ahead of `EXPERT_REDUCE`. The
-  source-current sparse-corrected build admits **1,340** instructions <!-- figure: 1,340 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-array-32].actual.instructions" name="array ROM instructions, W5.6" -->,
+  source-current sparse-corrected build admits **1,344** instructions <!-- figure: 1,344 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-array-32].actual.instructions" name="array ROM instructions, W5.6" -->,
   **3,423** descriptors <!-- figure: 3,423 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-array-32].actual.descriptors" name="array ROM descriptors, W5.6" -->,
   **19** cluster communication records <!-- figure: 19 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-array-32].actual.communications" name="array ROM communications, W5.6" -->,
   and **0** `STATE` resources <!-- figure: 0 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-array-32].actual.states" name="array ROM STATE resources, W5.6" -->,
@@ -297,7 +297,7 @@ evidence. None may be presented as a rerun of the current source.
   declaration. `results/abi3/deepseek_v4_activation_liveness_capacity.json`
   retains the source identities, admission result, capacity arithmetic, and
   HBM-planner equivalence. Against this deployment identity the independent
-  schedule checker passes **135/135** checks <!-- figure: 135 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-array-32].passed_check_count" name="array independent ROM schedule checks passed" -->,
+  schedule checker passes **139/139** checks <!-- figure: 139 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-array-32].passed_check_count" name="array independent ROM schedule checks passed" -->,
   including the four phase-layout convergence rules the sparse-phase lowering
   required, and the regenerated inverse proof reconstructs all
   **156,015,698,140** payload bytes <!-- figure: 156,015,698,140 src="results/abi3/deepseek_v4_rom_array_inverse.json#report.payload_bytes" name="array inverse payload bytes, W5.6" -->

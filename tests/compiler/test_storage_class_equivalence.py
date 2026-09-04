@@ -81,8 +81,20 @@ def test_both_builds_declare_the_same_descriptor_set(proof) -> None:
     assert proof["descriptor_count"]["rom"] == proof["descriptor_count"]["hbm"]
 
 
-def test_only_memory_objects_differ(proof) -> None:
-    assert set(proof["differing_by_type"]) <= {"MEMORY_OBJECT"}, proof["differing_by_type"]
+def test_only_the_objects_and_their_bank_masks_differ(proof) -> None:
+    """Two descriptor types may move, and a schedule only by its bank mask.
+
+    A schedule's ``bank_mask`` names the ROM banks its weight operands occupy,
+    so moving those weights to HBM empties it.  That is the placement
+    transition observed on the reader rather than on the object, and
+    ``assess_schedule_bank_transition`` admits it only in that exact shape.
+    Any other schedule field -- tile geometry, queue, engine, outstanding
+    bound, route class -- would be a compiler difference and lands in
+    ``differences_beyond_permitted_transition`` below.
+    """
+    assert set(proof["differing_by_type"]) <= {"MEMORY_OBJECT", "SCHEDULE"}, proof[
+        "differing_by_type"
+    ]
 
 
 def test_every_difference_is_the_governed_storage_and_placement_transition(
@@ -95,9 +107,22 @@ def test_every_difference_is_the_governed_storage_and_placement_transition(
         "base_address": 0,
     }
     assert proof["differences_beyond_permitted_transition"] == []
-    assert set(proof["storage_class_transitions"]) == {"ROM->HBM"}
+    assert set(proof["storage_class_transitions"]) <= {
+        "ROM->HBM",
+        "rom_bank_mask->empty",
+    }
     assert proof["permitted_transition_count"] == proof["differing_descriptor_count"]
-    assert proof["hbm_unplaced_transition_count"] == proof["differing_descriptor_count"]
+    # Every object difference is the unplacing transition, and every remaining
+    # difference is a schedule's emptied bank mask.  The two counts together
+    # account for every differing descriptor, so nothing is admitted silently.
+    assert (
+        proof["hbm_unplaced_transition_count"]
+        + proof["schedule_bank_transition_count"]
+        == proof["differing_descriptor_count"]
+    )
+    assert proof["schedule_bank_transition_count"] == proof["differing_by_type"].get(
+        "SCHEDULE", 0
+    )
 
 
 def test_non_wire_inputs_are_identical(proof) -> None:

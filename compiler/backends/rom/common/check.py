@@ -381,12 +381,16 @@ def check_rom_schedule(
         permitted = {expected} | set(_AUXILIARY_ENGINE_OPS.get(kernel.kind, ()))
         if kernel.kind == "ROUTED_MATMUL" and int(topology.get("node_count", 1)) > 1:
             # On a multi-node topology a routed contraction's owner-partial
-            # rows are packed, all-reduced and unpacked by a data-bearing
-            # reduction.  Those two DMA.TRANSFER operations are admitted here
-            # only because ``data_bearing_expert_reduction`` below proves the
-            # whole chain -- its shape, its waits and its buffers -- for every
-            # such kernel; an unproven move still fails there.
-            permitted = permitted | {(int(Major.DMA), int(Dma.TRANSFER))}
+            # rows are cleared, packed, all-reduced and unpacked by a
+            # data-bearing reduction.  Those three DMA operations are admitted
+            # here only because ``data_bearing_expert_reduction`` below proves
+            # the whole chain -- its shape, its waits, its buffers and that the
+            # fill covers the participant slot's declared maximum with positive
+            # zero -- for every such kernel; an unproven move still fails there.
+            permitted = permitted | {
+                (int(Major.DMA), int(Dma.TRANSFER)),
+                (int(Major.DMA), int(Dma.FILL)),
+            }
         require(
             "no_private_engine_ops",
             pairs <= permitted,
@@ -3055,9 +3059,71 @@ def _data_bearing_reductions(
                 pack_target = (
                     int(out_view.primary_object_id) if out_view is not None else NO_ID
                 )
-                pending[source] = (index, signal_of.get(index, NO_ID), pack_target)
+                # The collective reduces a descriptor constant's worth of bytes
+                # from every participant, while the pack writes only the rows
+                # this step produced.  So the slot has to be cleared first, over
+                # its declared maximum and with positive zero, or the tail of a
+                # short step is summed as data.  The staging objects are shared
+                # by byte size across the program, so that tail is another
+                # step's bytes read under this step's dtype.
+                clear_index = NO_ID
+                for i in range(index - 1, -1, -1):
+                    candidate = instructions[i]
+                    if candidate.major != int(Major.DMA):
+                        continue
+                    if candidate.sub != int(Dma.FILL):
+                        break
+                    fill_op = operators.get(candidate.descriptor_id)
+                    if fill_op is None or int(
+                        fill_op.payload["source_kernel_id"]
+                    ) != source:
+                        break
+                    fill_view = views.get(int(fill_op.payload["output_view_0"]))
+                    fill_target = (
+                        int(fill_view.primary_object_id)
+                        if fill_view is not None
+                        else NO_ID
+                    )
+                    require(
+                        "reduction_clear_covers_the_slot",
+                        fill_target == pack_target
+                        and fill_view is not None
+                        and int(fill_view.payload["edge_mask_id"]) == NO_ID
+                        and int(fill_view.payload["extent_unit"]) == 0,
+                        f"kernel {source}: the fill at {i} does not cover the "
+                        "participant slot's declared maximum unconditionally",
+                    )
+                    require(
+                        "reduction_clear_is_positive_zero",
+                        int(fill_op.payload["aux_id_0"]) == 0,
+                        f"kernel {source}: the fill at {i} writes code "
+                        f"{fill_op.payload['aux_id_0']}, not positive zero",
+                    )
+                    clear_index = i
+                    break
+                require(
+                    "reduction_clears_the_slot",
+                    clear_index != NO_ID,
+                    f"kernel {source}: the pack at {index} is not preceded by a "
+                    "fill of its participant slot, so the collective would sum "
+                    "whatever the previous step left in the tail",
+                )
+                if clear_index != NO_ID:
+                    require(
+                        "reduction_pack_waits_for_the_clear",
+                        signal_of.get(clear_index, NO_ID)
+                        in _wait_events(instruction, waits, require),
+                        f"kernel {source}: the pack at {index} does not wait for "
+                        f"the fill at {clear_index}",
+                    )
+                pending[source] = (
+                    index,
+                    signal_of.get(index, NO_ID),
+                    pack_target,
+                    clear_index,
+                )
                 continue
-            pack_index, pack_event, pack_target = pending.pop(source)
+            pack_index, pack_event, pack_target, clear_index = pending.pop(source)
             # between the pack and this unpack: exactly one LINK.COLLECTIVE SUM
             # at route class 3 over all the nodes, waiting on the pack
             links = [
@@ -3141,7 +3207,9 @@ def _data_bearing_reductions(
             events, explained = found.setdefault(source, (set(), set()))
             events.add(signal_of.get(index, NO_ID))
             explained.update((pack_index, index))
-    for source, (pack_index, _event, _target) in pending.items():
+            if clear_index != NO_ID:
+                explained.add(clear_index)
+    for source, (pack_index, _event, _target, _clear) in pending.items():
         require(
             "reduction_unpack_present",
             False,

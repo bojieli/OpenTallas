@@ -8449,6 +8449,60 @@ class RomLowering:
         numeric = self._copy_numeric(dtype)
         counter = self._counter_class("", Major.DMA)
         producers = [self._event_of_tensor[name]] if name in self._event_of_tensor else []
+        # Clear the whole slot before the pack.  The collective reduces
+        # ``byte_extent`` bytes from every participant, and ``byte_extent`` is a
+        # descriptor constant, while the pack writes only the rows this step
+        # produced: the A26 edge mask above clamps a final partial block, and a
+        # decode step's block is a single token's rows where a prefill step's is
+        # the whole span.  Whatever the pack does not write, the collective
+        # still sums.  The staging objects are shared by byte size across every
+        # reduction site in the program, so that tail holds another step's
+        # bytes -- reinterpreted under this step's dtype, which is how summing
+        # 32 of them overflowed binary32 one token into decode.  Filling with
+        # positive zero makes the untouched tail contribute nothing, which is
+        # the same rule the non-owned expert rows already follow.
+        cleared = self.builder.new_event()
+        # The fill deliberately covers the slot's declared maximum rather than
+        # the request-set extent: the tail is exactly what it exists to clear.
+        # So it declares no A18 extent at all -- a view that named one without a
+        # term to walk it would be refused, and rightly.
+        whole_slot = self._view(
+            object_id=remote,
+            dtype=dtype,
+            dims=dims,
+            strides=strides,
+            dynamic=[DynamicTerm.symbol(Symbol.NODE_ID, slot_elements)],
+            permissions=int(Permission.READ | Permission.WRITE),
+            label="view.link.slot.whole",
+            edge_mask_id=NO_ID,
+            extent_axis=0,
+            extent_unit=0,
+            extent_numerator=0,
+            extent_bias=0,
+        )
+        clear = self.builder.operator(
+            engine_family=Major.DMA,
+            engine_sub=int(Dma.FILL),
+            outputs=[whole_slot],
+            aux=[0],
+            numeric_profile_id=numeric,
+            schedule_id=self._schedule(
+                kernel,
+                Major.DMA,
+                int(Dma.FILL),
+                placement_views=([], [whole_slot]),
+            ),
+            counter_class_id=counter,
+            source_kernel_id=kernel.index,
+            key=f"op.k{kernel.index:05d}.{step.label}.clear",
+        )
+        self.builder.emit(
+            Major.DMA,
+            Dma.FILL,
+            descriptor_id=clear,
+            signal_event_id=cleared,
+            source_operation_id=kernel.index,
+        )
         packed = self.builder.new_event()
         pack = self.builder.operator(
             engine_family=Major.DMA,
@@ -8470,7 +8524,7 @@ class RomLowering:
             Major.DMA,
             Dma.TRANSFER,
             descriptor_id=pack,
-            wait_set_id=self._wait_set(producers) if producers else NO_ID,
+            wait_set_id=self._wait_set([*producers, cleared]),
             signal_event_id=packed,
             source_operation_id=kernel.index,
         )
