@@ -730,7 +730,11 @@ def lowering_plan(
             "DEQUANTIZE",
             "KV_APPEND",
         ),
-        "DSPARK_WINDOW_INDEX": ("WINDOW_INDEX",),
+        # Amendment A30: the draft window is its own operator,
+        # ``ROUTE.DSPARK_WINDOW_INDEX``, not ``WINDOW_INDEX`` wearing a
+        # family label.  It broadcasts one row across the draft block and
+        # names KV rows the sliding window cannot address.
+        "DSPARK_WINDOW_INDEX": ("DSPARK_WINDOW_INDEX",),
         "EXPERT_DISPATCH": ("EXPERT_DISPATCH",),
         "EXPERT_REDUCE": ("EXPERT_REDUCE",),
         "FP4_QDQ": ("QUANTIZE", "DEQUANTIZE"),
@@ -896,6 +900,7 @@ COUNTER_CLASS_BY_KIND: Mapping[str, str] = {
     "COMPRESS_PROJECT": "tensor",
     "COMPRESS_STATE_UPDATE": "state",
     "DEQUANTIZE": "vector_reduction",
+    "DSPARK_WINDOW_INDEX": "route_expert",
     "EMBEDDING_LOOKUP": "tensor",
     "EXPERT_DISPATCH": "route_expert",
     "EXPERT_REDUCE": "route_expert",
@@ -2969,11 +2974,18 @@ def export_deepseek_v4_kernel_graph(
             context_of[root]["window_indices"] = output
 
         elif source_kind == "DSPARK_WINDOW_INDEX":
+            # Amendment A30.  This used to emit ``WINDOW_INDEX`` with the
+            # family as an attribute, which is the substitution the family gate
+            # exists to catch: the draft window is broadcast across the block,
+            # spans a second address range beginning at the window capacity and
+            # slides not at all, none of which ``ROUTE.WINDOW_INDEX`` does.
+            # ``window_size`` and ``draft_block_size`` arrive through ``attrs``
+            # and both backends require them.
             width = SLIDING_WINDOW + DRAFT_BLOCK
             output = act(out0, "u32", (DRAFT_BLOCK, width))
             emit(
                 node_id,
-                "WINDOW_INDEX",
+                "DSPARK_WINDOW_INDEX",
                 (ten("request.start_pos"),),
                 (output,),
                 iteration_domain={"tokens": DRAFT_BLOCK, "width": width},

@@ -765,7 +765,42 @@ def _rewrite_comparison(
 #:
 #: Adding the operator, or restating the plan, is a change to the frozen
 #: lowering table and to the exporter, and neither is a backend's to make.
+#:
+#: Amendment A30 is that change made, once, for the second refused family --
+#: and it does not move this set.  ``causal_window_then_current_draft`` is now
+#: an operator, ``ROUTE.DSPARK_WINDOW_INDEX``, whose families are the mirror
+#: set below; ``ROUTE.WINDOW_INDEX`` still refuses it, for the reason stated
+#: above, and still admits ``causal_circular_window`` alone.  The two sets are
+#: selected by subopcode in ``INDEX_FAMILIES_BY_SUBOPCODE``, so a substitution
+#: in either direction changes an opcode rather than a string.
 IMPLEMENTED_INDEX_FAMILIES = frozenset({"causal_circular_window"})
+
+#: The index families ``ROUTE.DSPARK_WINDOW_INDEX`` produces (amendment A30).
+#:
+#: The released ``get_dspark_topk_idxs``: the populated slots of the main
+#: circular window, ``arange(0, min(window, p + 1))``, followed by the draft
+#: block at ``window + arange(0, block)``, and that one row broadcast unchanged
+#: to every draft query.  ``causal_circular_window`` is refused here for the
+#: symmetric reason: this operator does not slide, does not reduce modulo the
+#: window and does not write a per-query row.
+IMPLEMENTED_DRAFT_INDEX_FAMILIES = frozenset({"causal_window_then_current_draft"})
+
+#: The admissible families of each route index subopcode, and the operator's
+#: own description of what it emits, for the refusal to quote.
+INDEX_FAMILIES_BY_SUBOPCODE: dict[int, tuple[frozenset[str], str]] = {
+    int(Route.WINDOW_INDEX): (
+        IMPLEMENTED_INDEX_FAMILIES,
+        "emits arange(first, last + 1) over the absolute positions of a "
+        "causal window, tail-padded -- a sliding position list, one row per "
+        "query",
+    ),
+    int(Route.DSPARK_WINDOW_INDEX): (
+        IMPLEMENTED_DRAFT_INDEX_FAMILIES,
+        "emits the populated window slots followed by the draft block at "
+        "window + arange(block), one row broadcast to every draft query, with "
+        "no sliding and no modulo reduction",
+    ),
+}
 
 
 #: Contraction subopcodes: the operations whose operands are stated as matrices.
@@ -4774,6 +4809,29 @@ class RomLowering:
             window = self._dims(self.tensors[kernel.inputs[slot_map[1]]])[-1]
         return index_topk_capacity(kernel, slots, window)
 
+    def _require_index_family(self, kernel: Kernel, sub: int) -> None:
+        """Refuse an ``index_family`` this route subopcode does not produce.
+
+        Dispatched on the subopcode, not on the attribute, which is amendment
+        A30's whole point: ``ROUTE.WINDOW_INDEX`` and
+        ``ROUTE.DSPARK_WINDOW_INDEX`` take the same operand row and write
+        different rows from it, so the family a kernel claims and the operator
+        it lowers to have to agree at the opcode, where the engine also checks
+        it.  Each set refuses the other's family.
+        """
+        admitted, emits = INDEX_FAMILIES_BY_SUBOPCODE[sub]
+        family = str(kernel.attributes.get("index_family", ""))
+        if family and family not in admitted:
+            raise RomLoweringError(
+                f"kernel {kernel.kernel_id!r} declares index family "
+                f"{family!r}, which this backend does not implement.  It "
+                f"lowers to ROUTE.{Route(sub).name}, and that operator "
+                f"{emits} -- not the enumeration this family names.  No engine "
+                "reads index_family, so the substitution would produce legal "
+                "KV rows and nothing downstream could refuse them.  The frozen "
+                f"families are {', '.join(sorted(admitted))}"
+            )
+
     def _aux(self, kernel: Kernel, family: Major, sub: int) -> list[int]:
         """The auxiliary IDs the frozen operand convention requires.
 
@@ -4935,20 +4993,7 @@ class RomLowering:
                     int(Symbol.POSITION_START),
                 ]
             if sub == int(Route.WINDOW_INDEX):
-                family = str(attributes.get("index_family", ""))
-                if family and family not in IMPLEMENTED_INDEX_FAMILIES:
-                    raise RomLoweringError(
-                        f"kernel {kernel.kernel_id!r} declares index family "
-                        f"{family!r}, which this backend does not implement.  "
-                        "It lowers to ROUTE.WINDOW_INDEX, and that operator "
-                        "emits arange(first, last + 1) over the absolute "
-                        "positions of a causal window, tail-padded -- a "
-                        "position list, not the enumeration this family names. "
-                        " No engine reads index_family, so the substitution "
-                        "would produce legal KV rows and nothing downstream "
-                        "could refuse them.  The frozen families are "
-                        f"{', '.join(sorted(IMPLEMENTED_INDEX_FAMILIES))}"
-                    )
+                self._require_index_family(kernel, int(Route.WINDOW_INDEX))
                 # ``window_size`` is the name both exporters use; ``window``
                 # was read here and is declared by neither, so every window
                 # index fell through to the 128 default and was right only
@@ -4964,6 +5009,37 @@ class RomLowering:
                         )
                     ),
                     0 if attributes.get("mask_mode", "causal") == "causal" else 1,
+                    int(Symbol.CONTEXT_LENGTH),
+                ]
+            if sub == int(Route.DSPARK_WINDOW_INDEX):
+                # Amendment A30.  Both immediates are required.  The fallback
+                # one branch up -- derive the window from the output's own
+                # extent -- would be actively wrong here: this output is
+                # ``window + block`` wide, so a derived window is 133 for a
+                # 128-slot ring and every history index past 127 addresses a
+                # draft row.  There is no mask mode to select, so aux1 carries
+                # the block width, which is amendment A6's move on
+                # ``ATTENTION.SPARSE`` applied a second time.
+                self._require_index_family(
+                    kernel, int(Route.DSPARK_WINDOW_INDEX)
+                )
+                window = attributes.get("window_size")
+                block = attributes.get("draft_block_size")
+                if not window or not block:
+                    raise RomLoweringError(
+                        f"kernel {kernel.kernel_id!r} lowers to "
+                        "ROUTE.DSPARK_WINDOW_INDEX, which states its window "
+                        "capacity in aux0 and its draft block size in aux1, "
+                        f"and the graph declares window_size={window!r} "
+                        f"draft_block_size={block!r}.  Neither may be derived "
+                        "from the output, whose extent is their sum: a window "
+                        "read back from a [block, window + block] output is "
+                        "too large by the block, and every history index past "
+                        "the true capacity would address a draft row"
+                    )
+                return [
+                    int(window),
+                    int(block),
                     int(Symbol.CONTEXT_LENGTH),
                 ]
             return []

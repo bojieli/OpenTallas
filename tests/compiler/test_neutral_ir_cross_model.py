@@ -281,6 +281,43 @@ def test_an_index_family_the_operator_does_not_produce_is_refused() -> None:
     assert stray and "no index family is" in stray[0]
 
 
+def test_the_draft_window_family_is_implemented_on_its_own_kind() -> None:
+    """Amendment A30's pair: each family refused on the other's kind.
+
+    ``causal_window_then_current_draft`` stopped being a refusal and became an
+    operator -- ``ROUTE.DSPARK_WINDOW_INDEX`` -- and the reason it may not be
+    claimed on ``WINDOW_INDEX`` is unchanged by that.  The released
+    ``get_dspark_topk_idxs`` broadcasts one row to every draft query, spans two
+    disjoint address ranges and does not slide; ``ROUTE.WINDOW_INDEX`` slides,
+    writes a different row per query and reduces it modulo the window.  Both
+    name legal KV rows of the same fused operand, so the only thing that can
+    tell a substitution apart is the subopcode -- which is why the two entries
+    are separate and why this assertion is stated in both directions.
+    """
+    assert INDEX_FAMILIES["WINDOW_INDEX"] == frozenset({"causal_circular_window"})
+    assert INDEX_FAMILIES["DSPARK_WINDOW_INDEX"] == frozenset(
+        {"causal_window_then_current_draft"}
+    )
+    assert (
+        check_index_family(
+            "DSPARK_WINDOW_INDEX",
+            {"index_family": "causal_window_then_current_draft"},
+        )
+        == []
+    )
+    refused = check_index_family(
+        "DSPARK_WINDOW_INDEX", {"index_family": "causal_circular_window"}
+    )
+    assert refused
+    assert "causal_circular_window" in refused[0]
+    assert "DSPARK_WINDOW_INDEX" in refused[0]
+    assert "causal_window_then_current_draft" in refused[0]
+    # And the other direction is still refused, which A30 does not relax.
+    assert check_index_family(
+        "WINDOW_INDEX", {"index_family": "causal_window_then_current_draft"}
+    )
+
+
 @pytest.mark.parametrize("axis", [None, False, True, 0.0, "0", "not-an-axis"])
 def test_phase_inputs_refuses_a_non_integer_axis_without_throwing(axis: object) -> None:
     attributes = {

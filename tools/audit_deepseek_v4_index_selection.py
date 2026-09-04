@@ -104,6 +104,7 @@ from runtime.abi3.constants import (  # noqa: E402
 from runtime.abi3.deployment import ObjectSource  # noqa: E402
 from runtime.abi3.descriptors import Phase, Symbol  # noqa: E402
 from runtime.abi3.records import CompletionStatus  # noqa: E402
+from runtime.reference.indexing import dspark_window_indices  # noqa: E402
 from runtime.sim.device import Device  # noqa: E402
 
 import runtime.sim.engines.route  # noqa: E402,F401  (registers the handlers)
@@ -352,12 +353,12 @@ class _Build:
         self.builder.emit(family, sub, descriptor_id=op)
         return op
 
-    def finish(self) -> Device:
+    def finish(self, phase: Phase = Phase.PREFILL) -> Device:
         self.builder.emit(Major.CONTROL, Control.COMPLETE)
         self.builder.entrypoint(
             entrypoint_id=0,
             first_instruction=0,
-            phase=Phase.PREFILL,
+            phase=phase,
             generation_policy_id=NO_ID,
         )
         device = Device(self.builder.finish(), self.capability)
@@ -605,6 +606,73 @@ def accelerator_window(
     view = device.views.resolve(out, {}, symbols)
     got = np.array(device.views.read_array(view)).reshape(span, window)
     return [sorted(int(v) for v in row if int(v) != NO_ID) for row in got]
+
+
+def accelerator_dspark_window(
+    positions: np.ndarray, *, window: int, block: int, context: int
+) -> list[list[int]]:
+    """Run ``ROUTE.DSPARK_WINDOW_INDEX`` on the device and read it back.
+
+    Amendment A30's operator, and unlike ``ROUTE.WINDOW_INDEX`` it exists in
+    decode only, so the entrypoint declares that phase.  The rows are returned
+    in the order the operator wrote them, not sorted: this family's order is
+    slot-ascending rather than chronological, and sorting would be exactly the
+    step that hides a restored rotation.
+    """
+
+    span = int(positions.size)
+    slots = window + block
+    footprint = span * slots * 4 + span * 4 + (1 << 20)
+    build = _Build(max(1 << 22, int(footprint * 2)))
+    src = build.input_view(positions.astype(np.uint32), DType.U32)
+    out = build.output_view((span, slots), DType.U32, 4)
+    build.emit(
+        Major.ROUTE,
+        Route.DSPARK_WINDOW_INDEX,
+        [src],
+        [out],
+        aux=[window, block, int(Symbol.CONTEXT_LENGTH), NO_ID],
+    )
+    device = build.finish(Phase.DECODE)
+    symbols = {int(Symbol.CONTEXT_LENGTH): context}
+    result = device.run_transaction(
+        device.create_session(), entrypoint_id=0, symbols=symbols
+    )
+    if result.status != CompletionStatus.SUCCESS:
+        raise SystemExit(
+            f"ROUTE.DSPARK_WINDOW_INDEX did not complete: {result.status.name}"
+        )
+    view = device.views.resolve(out, {}, symbols)
+    got = np.array(device.views.read_array(view)).reshape(span, slots)
+    return [[int(v) for v in row if int(v) != NO_ID] for row in got]
+
+
+def run_dspark_window_case(
+    *, label: str, window: int, block: int, start_pos: int, context: int
+) -> dict[str, Any]:
+    positions = start_pos + np.arange(block, dtype=np.uint32)
+    got = accelerator_dspark_window(
+        positions, window=window, block=block, context=context
+    )
+    expected = [
+        list(row)
+        for row in dspark_window_indices(window, 1, block, start_pos)[0]
+    ]
+    mismatches = [q for q in range(block) if got[q] != expected[q]]
+    return {
+        "label": label,
+        "operator": "ROUTE.DSPARK_WINDOW_INDEX",
+        "context": context,
+        "window": window,
+        "draft_block": block,
+        "start_position": start_pos,
+        "phase": "decode",
+        "history_slots": min(window, start_pos + 1),
+        "rows_identical": len({tuple(row) for row in got}) == 1,
+        "row_mismatches": mismatches[:8],
+        "row_mismatch_count": len(mismatches),
+        "agrees": not mismatches,
+    }
 
 
 def run_window_case(
@@ -891,6 +959,29 @@ def main() -> int:
         window_results.append(run_window_case(window=window, **case))
         print(f"    agrees={window_results[-1]['agrees']}")
 
+    # Amendment A30.  The draft window is a separate operator, so it is audited
+    # separately: a padded row (fewer than ``window`` committed tokens, the only
+    # case that exercises tail padding) and two saturated ones.
+    dspark_results = []
+    for case in (
+        dict(label="dspark_decode_short_60", block=5, start_pos=60, context=61),
+        dict(
+            label="dspark_decode_saturated_200",
+            block=5,
+            start_pos=200,
+            context=201,
+        ),
+        dict(
+            label="dspark_decode_saturated_32000",
+            block=5,
+            start_pos=31999,
+            context=32000,
+        ),
+    ):
+        print(f"  {case['label']} ...", flush=True)
+        dspark_results.append(run_dspark_window_case(window=window, **case))
+        print(f"    agrees={dspark_results[-1]['agrees']}")
+
     results = []
     for index, case in enumerate(default_cases(config, groups)):
         print(f"  {case['label']} ...", flush=True)
@@ -902,9 +993,8 @@ def main() -> int:
             f"boundary_ties={last['rows_with_boundary_tie']}/{last['span']}"
         )
 
-    disagreements = [
-        r for r in (results + window_results) if not r["agrees"]
-    ]
+    all_results = results + window_results + dspark_results
+    disagreements = [r for r in all_results if not r["agrees"]]
     document = {
         "schema": SCHEMA,
         "evidence_class": "external_reference_comparator",
@@ -918,18 +1008,24 @@ def main() -> int:
                 "Indexer.forward",
                 "get_window_topk_idxs",
                 "get_compress_topk_idxs",
+                "get_dspark_topk_idxs",
             ],
             "supplies_no_activation_to_the_accelerator": True,
         },
         "under_test": {
-            "operator": ["ROUTE.INDEX_TOPK", "ROUTE.WINDOW_INDEX"],
+            "operator": [
+                "ROUTE.INDEX_TOPK",
+                "ROUTE.WINDOW_INDEX",
+                "ROUTE.DSPARK_WINDOW_INDEX",
+            ],
             "executed_by": "runtime/sim/engines/route.py on runtime/sim/device.py",
             "through": "a real ABI 3.0 deployment admitted by the verifier",
         },
         "seed": args.seed,
         "cases": results,
         "window_index_cases": window_results,
-        "case_count": len(results) + len(window_results),
+        "dspark_window_index_cases": dspark_results,
+        "case_count": len(all_results),
         "disagreeing_cases": [r["label"] for r in disagreements],
         "all_agree": not disagreements,
         "score_value_space": {
@@ -960,7 +1056,10 @@ def main() -> int:
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(document, indent=1, sort_keys=True) + "\n")
-    print(f"wrote {args.output}: {len(results)} cases, all_agree={not disagreements}")
+    print(
+        f"wrote {args.output}: {len(all_results)} cases, "
+        f"all_agree={not disagreements}"
+    )
     return 0 if not disagreements else 2
 
 

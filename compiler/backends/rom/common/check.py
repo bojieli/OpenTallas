@@ -1123,7 +1123,12 @@ def check_rom_schedule(
                 f"kernel {kernel.index} addresses {experts} experts, capability "
                 f"admits {capability.limits['max_expert_ids']}",
             )
-        if kernel.kind in {"INDEX_TOPK", "WINDOW_INDEX", "ATTENTION_SPARSE"}:
+        if kernel.kind in {
+            "INDEX_TOPK",
+            "WINDOW_INDEX",
+            "DSPARK_WINDOW_INDEX",
+            "ATTENTION_SPARSE",
+        }:
             candidates = _first_int(
                 kernel.attributes,
                 "k",
@@ -1131,6 +1136,15 @@ def check_rom_schedule(
                 "window_size",
                 default=_domain_int(kernel, "candidates", 1),
             )
+            if kernel.kind == "DSPARK_WINDOW_INDEX":
+                # Amendment A30.  This operator's bounded extent is the width
+                # of the row it writes, and that row is the window followed by
+                # the draft block: bounding it by ``window_size`` alone
+                # under-bounds the operator's own output by the block, which is
+                # precisely the segment the window operator cannot address.
+                candidates += _first_int(
+                    kernel.attributes, "draft_block_size", default=0
+                )
             require(
                 "sparse_index_bound",
                 1 <= candidates <= int(capability.limits["max_context_positions"]),

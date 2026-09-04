@@ -916,12 +916,19 @@ def speculative_graph():
     ``window + arange(block)``.  ``ROUTE.WINDOW_INDEX`` emits a *sliding*
     window ending at each query and pads the rest -- at window 128, block 5 and
     position 200 the released row is KV rows 0..132 and the operator's is
-    73..200 with five pads -- so this is the same substitution as the ratio-128
-    one, latent behind a profile the first release does not build.
+    73..200 with five pads -- so lowering the draft window to it would have been
+    the same substitution as the ratio-128 one, latent behind a profile the
+    first release does not build.
 
-    Skipped with the refusal as the reason, not failed: a profile the IR
-    refuses has no graph to make assertions about, so the property is
-    unproven rather than violated, and the suite says which.
+    Amendment A30 is the repair, and it is an operator rather than a permission:
+    ``ROUTE.DSPARK_WINDOW_INDEX`` (ABI subopcode 0x07) implements the family in
+    the engine, in both backends' aux rows and in the bound checks, and
+    ``INDEX_FAMILIES['WINDOW_INDEX']`` is untouched -- each family is still
+    refused on the other's kind.  The profile therefore builds, and the try /
+    skip below stays: it is the shape of this fixture, and the next refusal
+    this profile meets should skip with its own reason rather than fail as if
+    it were this one.  ``tests/sim/test_dspark_window_index_differential.py``
+    carries the proof that the operator reproduces the released helper.
     """
     try:
         return export_deepseek_v4_kernel_graph(include_speculative=True)
@@ -948,6 +955,30 @@ def test_speculative_profile_covers_every_source_kind(
     assert total == PAYLOAD_BYTES
     assert speculative_graph.generation_policy["speculative_profile"] is True
     assert speculative_graph.graph_id != graph.graph_id
+
+    # Amendment A30.  The draft windows lower to their own operator, and each
+    # states the two immediates that operator requires -- neither is derivable
+    # from an output whose extent is their sum.
+    drafts = [
+        k for k in speculative_graph.kernels if k.kind == "DSPARK_WINDOW_INDEX"
+    ]
+    assert drafts
+    for kernel in drafts:
+        assert kernel.phases == ("decode",)
+        assert (
+            kernel.attributes["index_family"] == "causal_window_then_current_draft"
+        )
+        window = int(kernel.attributes["window_size"])
+        block = int(kernel.attributes["draft_block_size"])
+        assert window > 0 and block > 0
+        shape = speculative_graph.tensor(kernel.outputs[0]).shape
+        assert (int(shape[0]), int(shape[1])) == (block, window + block)
+    # The ordinary sliding window is untouched by the speculative profile.
+    assert {
+        k.attributes["index_family"]
+        for k in speculative_graph.kernels
+        if k.kind == "WINDOW_INDEX"
+    } == {"causal_circular_window"}
 
 
 def test_speculative_profile_keeps_the_ordinary_kernels_intact(

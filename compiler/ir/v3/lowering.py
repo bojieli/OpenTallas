@@ -97,6 +97,14 @@ KERNEL_TO_ENGINE: Mapping[str, EngineOp] = {
     "ATTENTION_SPARSE": EngineOp(Major.ATTENTION, Attention.SPARSE, 4, 1),
     "INDEX_SCORE": EngineOp(Major.VECTOR, Vector.INDEX_SCORE, 3, 1),
     "WINDOW_INDEX": EngineOp(Major.ROUTE, Route.WINDOW_INDEX, 1, 1),
+    # Amendment A30.  Same operand row as ``WINDOW_INDEX`` -- one position
+    # vector in, one index block out -- and a different operator, because
+    # the row it writes is broadcast across the draft block, spans two
+    # disjoint address ranges and slides not at all.  The distinct
+    # subopcode is what welds the declaration to the behaviour.
+    "DSPARK_WINDOW_INDEX": EngineOp(
+        Major.ROUTE, Route.DSPARK_WINDOW_INDEX, 1, 1
+    ),
     # compression and hyper-connections
     "COMPRESS_PROJECT": EngineOp(Major.VECTOR, Vector.COMPRESS, 3, 1),
     "COMPRESS_POOL": EngineOp(Major.VECTOR, Vector.COMPRESS, 2, 1),
@@ -207,7 +215,11 @@ OPTIONAL_INPUT_SLOTS: Mapping[str, frozenset[int]] = {
 #: phase-dependent representation is the whole of what it produces, and
 #: ``causal_circular_window`` is the whole of what may be claimed for it.
 #:
-#: Two families are therefore refused and both refusals are load-bearing:
+#: Two families are therefore refused **on** ``WINDOW_INDEX`` and both refusals
+#: are load-bearing.  Neither is refused because it is unimplementable; each is
+#: refused because the operator next to it is the one that produces it, and a
+#: family that can be claimed on two operators is a family no check can read
+#: back out of a lowered program.
 #:
 #: * ``causal_compressed_dense`` -- ``arange(0, context // ratio) + offset``,
 #:   counted in compression groups and rebased onto the joined KV rows.  After
@@ -219,10 +231,37 @@ OPTIONAL_INPUT_SLOTS: Mapping[str, frozenset[int]] = {
 #:   draft block at ``window + arange(block)``.  Two segments in a disjoint
 #:   address range, identical for every draft query, with no sliding.
 #:   ``WINDOW_INDEX`` produces a *sliding* window ending at each query and pads
-#:   the rest, so the substitution is the same defect a second time, latent
-#:   behind a profile the first release does not build.
+#:   the rest, so the substitution would be the same defect a second time.
+#:   Amendment A30 makes it an operator rather than a refusal --
+#:   ``ROUTE.DSPARK_WINDOW_INDEX``, below -- and ``WINDOW_INDEX`` still refuses
+#:   it, for the reason just given and unchanged by A30.
+#:
+#: ``DSPARK_WINDOW_INDEX`` is therefore the mirror entry, and what it produces
+#: is worth stating in this file's own terms rather than by reference.  The
+#: request cursor ``p`` fixes one row: the populated physical slots of the main
+#: circular window, ``arange(0, min(window, p + 1))``, followed by the draft
+#: block at ``window + arange(0, block)`` -- a second segment in an address
+#: range the window operator cannot reach, because those rows are appended
+#: *after* the window's capacity rather than stored in it.  That single row is
+#: written to all ``block`` draft queries **unchanged**.  The broadcast is the
+#: semantics: attention within the draft block is bidirectional, every draft
+#: query seeing every draft key, which is the only thing that makes one
+#: parallel block pass worth running.  Nothing slides, nothing reduces modulo
+#: the window, and no row carries a per-query limit.
+#:
+#: So the two families differ in four independent ways at the same operand row
+#: -- sliding versus fixed, per-row versus broadcast, one segment versus two,
+#: modulo-reduced versus slot-enumerated -- and every index either of them
+#: names is a legal row of the same fused KV operand.  That is exactly why the
+#: distinction cannot live in an attribute alone: the operand checks, the bound
+#: checks and the numeric checks all pass either way, and ``ATTENTION.SPARSE``
+#: reads the row as a set, so a wrong-but-legal row yields a full, finite,
+#: fluent softmax over the wrong keys.  A substitution between them now has to
+#: change the **subopcode**, which the engine, both backends' aux builders and
+#: the microcode step table each check.
 INDEX_FAMILIES: Mapping[str, frozenset[str]] = {
     "WINDOW_INDEX": frozenset({"causal_circular_window"}),
+    "DSPARK_WINDOW_INDEX": frozenset({"causal_window_then_current_draft"}),
 }
 
 

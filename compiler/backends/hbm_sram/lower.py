@@ -2281,8 +2281,15 @@ class _Emitter:
         if is_gather or source is None:
             # A gather addresses the rows it writes.  So does an operation
             # whose *only* input is the position vector: ``ROUTE.WINDOW_INDEX``
-            # takes one absolute position per query row and nothing else, so
-            # the rows it addresses are the rows of its own output.  Reading
+            # and, under amendment A30, ``ROUTE.DSPARK_WINDOW_INDEX`` each take
+            # one absolute position per query row and nothing else, so the rows
+            # they address are the rows of their own output.  For the draft
+            # window that output is ``[block, window + block]``, so the vector
+            # is ``block`` long and row 0 is ``POSITION_START`` by
+            # construction, which is what the engine reads the request cursor
+            # from -- and it requires the consecutive run, so a vector built
+            # any other way traps instead of silently changing the history
+            # length.  Reading
             # the count from a second input that does not exist left the view
             # holding a single position for a whole block of queries, which the
             # engine refuses -- it has one position per row or it has nothing

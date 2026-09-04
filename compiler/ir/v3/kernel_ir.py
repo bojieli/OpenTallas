@@ -120,6 +120,12 @@ OPERATION_KINDS = frozenset(
         "ATTENTION_SPARSE",
         "INDEX_SCORE",
         "WINDOW_INDEX",
+        # Amendment A30.  A separate kind, not a family label on
+        # ``WINDOW_INDEX``: the two operators emit different rows from the same
+        # operand row, and only a distinct kind makes the difference reach the
+        # subopcode, where the engine, both aux builders and the microcode step
+        # table all check it.
+        "DSPARK_WINDOW_INDEX",
         # compression and hyper-connections
         "COMPRESS_PROJECT",
         "COMPRESS_POOL",

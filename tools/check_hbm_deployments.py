@@ -130,7 +130,18 @@ _DEEPSEEK_ROUTE_CONTRACT: Mapping[str, tuple[int, int, int, frozenset[str]]] = {
         1,
         int(Link.COLLECTIVE),
         int(CollectiveOp.ALL_GATHER),
-        frozenset({"GATHER", "WINDOW_INDEX", "INDEX_TOPK", "ATTENTION_SPARSE"}),
+        frozenset(
+            {
+                "GATHER",
+                "WINDOW_INDEX",
+                # Amendment A30.  Absent from this set the draft-window
+                # operator does not fail the deployment check -- it
+                # silently stops being covered by it.
+                "DSPARK_WINDOW_INDEX",
+                "INDEX_TOPK",
+                "ATTENTION_SPARSE",
+            }
+        ),
     ),
     "activation_transfer": (
         2,

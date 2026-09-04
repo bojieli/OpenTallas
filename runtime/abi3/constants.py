@@ -135,6 +135,16 @@ class Route(enum.IntEnum):
     INDEX_TOPK = 0x04
     HASH_ROUTE = 0x05
     WINDOW_INDEX = 0x06
+    # Amendment A30.  The DSpark draft window is its own operator, not a family
+    # label on ``WINDOW_INDEX``: it writes one row -- the populated ring slots
+    # followed by the draft block in the disjoint range beginning at the window
+    # capacity -- broadcast identically to every draft query, and it exists in
+    # decode only.  The value is this enum's next free one and deliberately
+    # differs from ``RouteSubopcode.DSPARK_WINDOW_INDEX = 0x09`` in the
+    # microcode ISA; the two are separate numbering spaces (that enum already
+    # has ``WINDOW_INDEX = 0x01`` against this one's 0x06) and aligning them
+    # would move a frozen wire value.
+    DSPARK_WINDOW_INDEX = 0x07
 
 
 class Reduction(enum.IntEnum):

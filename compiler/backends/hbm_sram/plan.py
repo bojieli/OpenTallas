@@ -3975,6 +3975,31 @@ def _aux_ids(
                 int(attributes.get("mask_mode", 0)),
                 int(Symbol.CONTEXT_LENGTH),
             ]
+        elif sub == int(Route.DSPARK_WINDOW_INDEX):
+            # Amendment A30.  Both immediates are required and neither has the
+            # fallback above.  This output is ``window + block`` wide, so the
+            # output's own column count is not the window: derived, it would be
+            # 133 for a 128-slot ring and every history index past 127 would
+            # address a draft row -- a legal KV row, and the wrong one.  There
+            # is no mask mode to choose here, so aux1 carries the block width,
+            # exactly as ``ATTENTION.SPARSE`` spends aux1 on a block width
+            # under amendment A6.
+            window = attributes.get("window_size")
+            block = attributes.get("draft_block_size")
+            if not window or not block:
+                raise PlanError(
+                    f"kernel {kernel.kernel_id} lowers to "
+                    "ROUTE.DSPARK_WINDOW_INDEX, which states its window "
+                    "capacity in aux0 and its draft block size in aux1, and "
+                    f"the graph declares window_size={window!r} "
+                    f"draft_block_size={block!r}.  Neither may be derived from "
+                    "the output, whose extent is their sum"
+                )
+            aux = [
+                int(window),
+                int(block),
+                int(Symbol.CONTEXT_LENGTH),
+            ]
     elif family == int(Major.TENSOR):
         if sub == int(TensorOp.GROUPED_MATMUL):
             aux = [
@@ -4632,6 +4657,11 @@ def _plan_kernels(
             + (f"\n  ... and {more} more" if more else "")
         )
     if undeclared_windows:
+        # ``ROUTE.WINDOW_INDEX`` only.  Amendment A30's draft-window operator
+        # never reaches this list: it refuses a missing window_size outright,
+        # because its output extent is the window *plus* the draft block and
+        # so cannot stand in for either.  A warning there would name a plan
+        # that had already chosen a wrong window.
         warnings.append(
             "ROUTE.WINDOW_INDEX operators declaring no window_size: "
             + ", ".join(sorted(undeclared_windows))

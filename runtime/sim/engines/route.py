@@ -2,7 +2,7 @@
 
 Routing is where a MoE model decides *what work exists*, so every decision here
 is made from device memory and is deterministic down to the tie break.  Two
-rules hold across all seven subopcodes:
+rules hold across all eight subopcodes:
 
 * a rank order is by descending key, and equal keys resolve to the lower index,
   so a re-run of the same scores selects the same experts in the same slots;
@@ -88,6 +88,36 @@ rules hold across all seven subopcodes:
     ``aux_id_0`` is the immediate window (``NO_ID`` uses the output extent),
     ``aux_id_1`` the mask mode, and ``aux_id_2`` the runtime symbol bounding the
     context.
+
+``ROUTE.DSPARK_WINDOW_INDEX``
+    Amendment A30.  The DSpark draft window: ``input_view_0`` U32 absolute
+    query positions ``[block]`` -- the consecutive run beginning at the request
+    cursor -- and ``output_view_0`` U32 ``[block, window + block]``.
+    ``aux_id_0`` is the immediate window capacity and ``aux_id_1`` the
+    immediate draft block size, both **mandatory**; ``aux_id_2`` is the runtime
+    symbol bounding the context; ``aux_id_3`` is ``NO_ID``.  There is no mask
+    mode to spend a slot on, so ``aux_id_1`` carries the block width instead --
+    amendment A6's move on ``ATTENTION.SPARSE``, and the same corollary: an
+    engine dispatches its operand reading on the subopcode.
+
+    One row is computed from the cursor ``p`` and written **identically** to
+    all ``block`` rows: ``arange(0, min(window, p + 1))``, the populated
+    physical slots of the main circular window, followed by
+    ``window + arange(0, block)``, the draft rows appended after it in a
+    disjoint address range.  The broadcast is the semantics, not an
+    optimisation -- attention inside the draft block is bidirectional, which is
+    what makes one parallel block pass mean anything.  The order is
+    slot-ascending and deliberately *not* chronological: the released helper
+    does not rotate, so after saturation the history is ``0..window-1`` rather
+    than the wrap ``WINDOW_INDEX`` writes.  Padding is a tail and never
+    interior, reachable only while ``p + 1 < window``.
+
+    Decode only.  ``DSparkAttention.forward`` returns after filling its cache
+    when ``start_pos == 0``, so the released helper is never called in prefill
+    and asserts ``start_pos > 0``; the graph agrees, carrying ``phases =
+    ("decode",)``.  Prefill traps rather than reusing the decode rule, because
+    silently defining a row nothing states is the substitution this operator
+    exists to prevent.
 """
 
 from __future__ import annotations
@@ -672,6 +702,130 @@ def window_index(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
     ctx.counters.add("route.topk_candidates", produced)
 
 
+@register(Major.ROUTE, Route.DSPARK_WINDOW_INDEX)
+def dspark_window_index(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
+    """Write the DSpark draft window: populated ring slots, then the block.
+
+    Amendment A30.  This is the released ``get_dspark_topk_idxs`` and nothing
+    else::
+
+        matrix = cat([arange(min(window_size, start_pos + 1)),
+                      window_size + arange(block_size)])
+        matrix.view(1, 1, -1).expand(bsz, block_size, -1)
+
+    Four properties are the operator, and each is a place a plausible repair
+    would be wrong.
+
+    *One row, broadcast.*  The row is computed once from the request cursor and
+    written to every draft query.  There is no per-row base and no per-row
+    limit: every draft query sees every draft key.  A causal variant would be
+    the same operator with the point removed.
+
+    *History is ring slots, not a modulo reduction.*  ``arange(0, min(window,
+    p + 1))`` names the populated physical slots directly -- before saturation
+    the ring has filled linearly from slot 0, after it every slot is live, and
+    the one expression covers both.  It is not a sliding interval reduced by a
+    modulus, and it always contains ``p % window``, the slot the main KV append
+    has just written.
+
+    *Slot-ascending, not chronological.*  ``get_dspark_topk_idxs`` does not
+    rotate, unlike ``get_window_topk_idxs``, so a saturated row is
+    ``0..window-1`` rather than the chronological wrap a decode
+    ``ROUTE.WINDOW_INDEX`` row carries.  Legal because amendment A6 freezes
+    producer-defined source order and ``sparse_attn`` reads the row as a set --
+    which is also why restoring the rotation would be invisible to any
+    comparison of attention outputs, and why the order is asserted against the
+    reference instead.
+
+    *Padding is a tail.*  The two segments are contiguous and ``0xffffffff``
+    runs to the end.  Interior padding, holding the draft segment at fixed
+    columns while the history is short, is refused: A6 freezes tail padding and
+    A19's consumer check requires padding to be a suffix.
+
+    The window capacity and the block size are both mandatory immediates.
+    ``ROUTE.WINDOW_INDEX`` may derive its window from the output's own extent;
+    here that fallback would be actively wrong, because this output is
+    ``window + block`` wide and a window derived from it makes every history
+    index past the true capacity address a draft row.  ``slots == aux0 + aux1``
+    and ``span == aux1`` are checkable identities, so they are checked.
+    """
+    _check_operator(descriptor, int(Route.DSPARK_WINDOW_INDEX))
+    position_view = ctx.input_view(descriptor, 0)
+    out_view = ctx.output_view(descriptor, 0)
+    _u32_out(out_view, "dspark window index")
+    _u32_out(position_view, "position")
+    span, slots = _groups(out_view, "dspark window index")
+    window = _aux(descriptor, 0)
+    block = _aux(descriptor, 1)
+    _require(
+        window is not None and block is not None,
+        "ROUTE.DSPARK_WINDOW_INDEX requires the window capacity in aux_id_0 "
+        "and the draft block size in aux_id_1; neither may be derived from the "
+        "output, whose extent is their sum",
+    )
+    _require(
+        window > 0 and block > 0,
+        f"ROUTE.DSPARK_WINDOW_INDEX declares window {window} and draft block "
+        f"{block}; both are capacities and both must be positive",
+    )
+    _require(
+        span == block and slots == window + block,
+        f"ROUTE.DSPARK_WINDOW_INDEX writes {span} rows of {slots} slots for a "
+        f"{block}-query draft block over a {window}-slot window; the output is "
+        f"[{block}, {window + block}]",
+    )
+    phase = _phase(ctx, "ROUTE.DSPARK_WINDOW_INDEX")
+    _require(
+        phase is Phase.DECODE,
+        "ROUTE.DSPARK_WINDOW_INDEX is a decode operator: the released "
+        "DSparkAttention fills its cache and returns when start_pos == 0, so "
+        "get_dspark_topk_idxs is never called in prefill and asserts "
+        "start_pos > 0.  No prefill row is defined, and inventing one here "
+        "would be the substitution this operator exists to prevent",
+    )
+    _require(
+        position_view.element_count == span,
+        f"ROUTE.DSPARK_WINDOW_INDEX position view {position_view.descriptor_id} "
+        f"holds {position_view.element_count} positions for {span} draft rows",
+    )
+    context_symbol = _aux(descriptor, 2)
+    context = None if context_symbol is None else int(ctx.symbol(context_symbol))
+    positions = np.asarray(ctx.read(position_view), dtype=np.int64).reshape(span)
+    cursor = int(positions[0])
+    expected = cursor + np.arange(span, dtype=np.int64)
+    _require(
+        bool(np.array_equal(positions, expected)),
+        f"ROUTE.DSPARK_WINDOW_INDEX position view {position_view.descriptor_id} "
+        f"is not the consecutive run {cursor}..{cursor + span - 1} both "
+        "backends build; the history length is read from row 0, so a "
+        "differently built vector would silently shorten or lengthen it",
+    )
+    _require(
+        cursor >= 1,
+        f"ROUTE.DSPARK_WINDOW_INDEX: cursor {cursor} is a prefill position; "
+        "the released helper asserts start_pos > 0",
+    )
+    # Only the cursor is bounded by the context.  The draft rows are positions
+    # the request has not committed yet -- bounding them would refuse exactly
+    # the speculation this operator indexes.
+    _require(
+        context is None or cursor < context,
+        f"ROUTE.DSPARK_WINDOW_INDEX: cursor {cursor} is outside the {context} "
+        "visible positions",
+    )
+    populated = min(window, cursor + 1)
+    row = np.concatenate(
+        (
+            np.arange(populated, dtype=np.uint32),
+            np.uint32(window) + np.arange(block, dtype=np.uint32),
+        )
+    )
+    selected = np.full((span, slots), np.uint32(PAD_INDEX), dtype=np.uint32)
+    selected[:, : row.size] = row
+    ctx.write(out_view, selected.reshape(out_view.dims))
+    ctx.counters.add("route.topk_candidates", span * int(row.size))
+
+
 # ---------------------------------------------------------------------------
 # HASH_ROUTE
 # ---------------------------------------------------------------------------
@@ -708,6 +862,7 @@ __all__ = [
     "MASK_FULL",
     "PAD_INDEX",
     "biased_topk",
+    "dspark_window_index",
     "expert_dispatch",
     "hash_route",
     "index_topk",
