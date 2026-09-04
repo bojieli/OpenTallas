@@ -10,6 +10,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <string>
+#include <string_view>
 #include <vector>
 
 namespace {
@@ -18,7 +19,21 @@ constexpr std::size_t kCases = 4;
 constexpr std::size_t kCaseStride = 72;
 constexpr std::size_t kIssueStride = 4;
 constexpr std::size_t kResultWords = 81920;
+constexpr std::size_t kMulticastParticipants = 256;
+constexpr std::uint32_t kMulticastWords = 16384;
+constexpr std::uint32_t kMulticastWrites = 4194304;
 constexpr std::uint32_t kUnwritten = 0xdeadbeefU;
+
+std::uint32_t payload_word(std::uint32_t index) {
+    return 0x9e3779b9U ^ (index * 0x045d9f3bU) ^
+           ((index << 18) | (index << 4) | (index & 0xfU));
+}
+
+std::uint32_t expected_tree_source(std::uint32_t destination) {
+    std::uint32_t power = 1;
+    while ((power << 1) <= destination) power <<= 1;
+    return destination - power;
+}
 
 std::vector<std::uint32_t> read_hex(const std::string& path) {
     std::ifstream input(path);
@@ -40,7 +55,7 @@ struct Checker {
     std::uint64_t checks = 0;
     std::uint64_t failures = 0;
 
-    void equal(const std::string& label, std::uint64_t got,
+    void equal(std::string_view label, std::uint64_t got,
                std::uint64_t want) {
         ++checks;
         if (got != want) {
@@ -126,7 +141,11 @@ int main(int argc, char** argv) {
         const auto issues = read_hex("p3_issue.hex");
         const auto expected = read_hex("p3_expect.hex");
         const auto meta = read_hex("p3_meta.hex");
-        if (cases.size() != kCases * kCaseStride || issues.size() != 112 ||
+        const bool multicast_overlay = meta.size() == 24 && meta[1] == 25;
+        const std::size_t expected_issue_words =
+            multicast_overlay ? 116 : 112;
+        if (cases.size() != kCases * kCaseStride ||
+            issues.size() != expected_issue_words ||
             expected.size() != 80896 || meta.size() != 24)
             throw std::runtime_error("shipped-prefix vector geometry mismatch");
 
@@ -161,6 +180,7 @@ int main(int argc, char** argv) {
         std::uint64_t total_head_rms_norms = 0;
         std::uint64_t total_transfers = 0;
         std::uint64_t total_matmuls = 0;
+        std::uint64_t total_multicasts = 0;
         std::uint64_t total_words = 0;
         std::uint64_t total_views = 0;
 
@@ -209,7 +229,44 @@ int main(int argc, char** argv) {
             std::uint32_t response_seen = 0;
             const std::uint32_t response_expected = record[21];
             const std::uint32_t response_base = record[31];
+            std::uint64_t observed_multicast_writes = 0;
+            std::vector<std::uint32_t> next_multicast_word(
+                kMulticastParticipants, 0);
+            std::vector<std::uint32_t> participant_writes(
+                kMulticastParticipants, 0);
             auto observe = [&]() {
+                if (model.dut.rst_n &&
+                    model.dut.multicast_remote_write_valid &&
+                    model.dut.multicast_remote_write_ready) {
+                    const std::uint32_t participant =
+                        model.dut.multicast_remote_write_participant;
+                    const std::uint64_t offset =
+                        model.dut.multicast_remote_write_offset;
+                    const std::uint32_t word =
+                        static_cast<std::uint32_t>((offset & 0xffffU) >> 2);
+                    check.equal(
+                        "multicast write address/data",
+                        model.dut.multicast_remote_write_object_id == 366 &&
+                            (offset & 3U) == 0 &&
+                            offset < 16777216ULL && participant < 256 &&
+                            participant == ((offset >> 16) & 0xffU) &&
+                            model.dut.multicast_remote_write_data ==
+                                payload_word(word),
+                        1);
+                    if (participant < kMulticastParticipants) {
+                        check.equal("multicast ascending participant word",
+                                    word,
+                                    next_multicast_word[participant]);
+                        ++next_multicast_word[participant];
+                        ++participant_writes[participant];
+                        if (participant != 0)
+                            check.equal(
+                                "multicast binomial-tree source",
+                                model.dut.multicast_tree_source,
+                                expected_tree_source(participant));
+                    }
+                    ++observed_multicast_writes;
+                }
                 if (!model.dut.rst_n || !model.dut.response_valid) return;
                 if (response_seen >= response_expected) {
                     ++check.failures;
@@ -285,6 +342,12 @@ int main(int argc, char** argv) {
                         model.dut.dma_transfer_launch_count, record[45]);
             check.equal("MATMUL launches", model.dut.matmul_launch_count,
                         record[55]);
+            if (multicast_overlay) {
+                check.equal("multicast launches",
+                            model.dut.multicast_launch_count, record[71]);
+                check.equal("multicast faults",
+                            model.dut.multicast_fault_count, 0);
+            }
             check.equal("capability responses",
                         model.dut.capability_fault_count, record[29]);
             check.equal("descriptor faults", model.dut.descriptor_fault_count,
@@ -329,6 +392,67 @@ int main(int argc, char** argv) {
                         model.dut.count_state_rows_committed, 0);
             check.equal("state bytes written",
                         model.dut.count_state_bytes_written, 0);
+            if (multicast_overlay) {
+                check.equal("multicast protocol error",
+                            model.dut.multicast_protocol_error, 0);
+                check.equal("multicast writes after completion",
+                            model.dut.multicast_writes_after_completion, 0);
+            }
+
+            if (multicast_overlay && record[71] != 0) {
+                check.equal("multicast source reads",
+                            model.dut.multicast_source_read_count,
+                            kMulticastWords);
+                check.equal("multicast source stalls exercised",
+                            model.dut.multicast_source_stall_cycles != 0, 1);
+                check.equal("multicast destination stalls exercised",
+                            model.dut.multicast_destination_stall_cycles != 0,
+                            1);
+                check.equal("multicast messages sent",
+                            model.dut.multicast_messages_sent, 255);
+                check.equal("multicast messages received",
+                            model.dut.multicast_messages_received, 255);
+                check.equal("multicast bytes sent",
+                            model.dut.multicast_bytes_sent, 16711680);
+                check.equal("multicast bytes received",
+                            model.dut.multicast_bytes_received, 16711680);
+                check.equal("multicast payload flits",
+                            model.dut.multicast_payload_flits, 4177920);
+                check.equal("multicast adapter writes",
+                            model.dut.multicast_remote_write_count,
+                            kMulticastWrites);
+                check.equal("multicast observed writes",
+                            observed_multicast_writes, kMulticastWrites);
+                check.equal("multicast CRC errors",
+                            model.dut.multicast_crc_errors, 1);
+                check.equal("multicast retry exercised",
+                            model.dut.multicast_retry_events != 0, 1);
+                check.equal("multicast replay exercised",
+                            model.dut.multicast_replayed_flits != 0, 1);
+                check.equal("multicast sequence errors",
+                            model.dut.multicast_sequence_errors, 4);
+                check.equal(
+                    "multicast wire delivery relation",
+                    model.dut.multicast_wire_flits,
+                    static_cast<std::uint64_t>(
+                        model.dut.multicast_payload_flits) +
+                        model.dut.multicast_crc_errors +
+                        model.dut.multicast_sequence_errors);
+                for (std::size_t participant = 0;
+                     participant < kMulticastParticipants; ++participant)
+                    check.equal("multicast participant writes",
+                                participant_writes[participant],
+                                kMulticastWords);
+            } else if (multicast_overlay) {
+                check.equal("no multicast source reads",
+                            model.dut.multicast_source_read_count, 0);
+                check.equal("no multicast destination writes",
+                            observed_multicast_writes, 0);
+                check.equal("no multicast adapter writes",
+                            model.dut.multicast_remote_write_count, 0);
+                check.equal("no multicast CRC activity",
+                            model.dut.multicast_crc_errors, 0);
+            }
 
             for (std::uint32_t word = 0; word < record[15]; ++word) {
                 model.dut.result_read_addr = record[13] + word;
@@ -343,6 +467,7 @@ int main(int argc, char** argv) {
             total_head_rms_norms += model.dut.head_rms_norm_launch_count;
             total_transfers += model.dut.dma_transfer_launch_count;
             total_matmuls += model.dut.matmul_launch_count;
+            total_multicasts += model.dut.multicast_launch_count;
             total_words += model.dut.output_write_count;
             total_views += model.dut.count_views_resolved;
             std::cout << "CASE " << case_index << " OK launches="
@@ -353,7 +478,11 @@ int main(int argc, char** argv) {
                       << " fetched=" << model.dut.count_fetched
                       << " retired=" << model.dut.count_retired
                       << " issued=" << model.dut.count_issued << " views="
-                      << model.dut.count_views_resolved << "\n";
+                      << model.dut.count_views_resolved;
+            if (multicast_overlay)
+                std::cout << " multicasts="
+                          << model.dut.multicast_launch_count;
+            std::cout << "\n";
             model.cycle(observe);
         }
 
@@ -366,6 +495,8 @@ int main(int argc, char** argv) {
                     meta[20]);
         check.equal("total transfer launches", total_transfers, meta[13]);
         check.equal("total MATMUL launches", total_matmuls, meta[16]);
+        if (multicast_overlay)
+            check.equal("total multicast launches", total_multicasts, 1);
         check.equal("total result words", total_words, meta[2]);
         check.equal("total resolved views", total_views, meta[3]);
         for (std::uint32_t word = 0; word < meta[2]; ++word) {
@@ -387,10 +518,17 @@ int main(int argc, char** argv) {
                       << " checks=" << check.checks << "\n";
             return 1;
         }
-        std::cout
-            << "PASS: ABI3 shipped-prefix engine integration cases=4 "
-               "launches=24 words=80896 capability_faults=4 checks="
-            << check.checks << "\n";
+        if (multicast_overlay)
+            std::cout
+                << "PASS: ABI3 shipped-prefix multicast integration cases=4 "
+                   "launches=25 words=80896 capability_faults=4 multicasts=1 "
+                   "checks="
+                << check.checks << "\n";
+        else
+            std::cout
+                << "PASS: ABI3 shipped-prefix engine integration cases=4 "
+                   "launches=24 words=80896 capability_faults=4 checks="
+                << check.checks << "\n";
         return 0;
     } catch (const std::exception& exc) {
         std::cerr << "FAIL: " << exc.what() << "\n";

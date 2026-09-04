@@ -1,0 +1,187 @@
+{
+  "abi": {
+    "major": 3,
+    "minor": 0
+  },
+  "base_vector_set": {
+    "image_sha256": {
+      "p3_case.hex": "520e3660bdcf41fd67b8aafeb277d10de8494fc798672f26b5ca24f0a2a7740e",
+      "p3_expect.hex": "a353ea447ab333973da13230f061f93cc3df6704177ca7d94318cc1bf286ac4a",
+      "p3_index.hex": "3782c32630334de6249983b67fe2fe6198815a3435ef977a8512dacb2292b2e0",
+      "p3_issue.hex": "e2e0f948d9bd0ed25c1a204d506b1709293c2f3e6722f514f1af7c659c5508ee",
+      "p3_meta.hex": "d88be8927dd1eeb95c5b6a6d9b342382503043a87d5f1fe5dc10164afb2ec37f",
+      "p3_source.hex": "20eabb96e15b766c00e965e566021ef3f8944b823e26a15c46db6398d399e0b9"
+    },
+    "input_deployment_vectors": {
+      "images": {
+        "a3_descriptor.hex": "73a3796cef4ab56d8b9be148f9a006fb78d04f365898229b9663e192722e0f44",
+        "a3_program.hex": "3342d7729996bb1d4a2d2447f77d1254c73e94b1b55f20a532e1fe4a9d523f78",
+        "a3_symbol.hex": "aefea5f803c69340757eed992d1f3e691d4ca2f0b610256864a5bf1d0f757f38"
+      },
+      "path": "testdata/compiler/abi3_deployment/abi3_deployment_rtl_vectors.json",
+      "sha256": "be5ffff67d78779b98edc8cdafa77332ada2ebbd3e70cb582cd2b5b3d972a9f4"
+    },
+    "path": "testdata/compiler/abi3_shipped_prefix/abi3_shipped_prefix_vectors.json",
+    "schema": "opentallas.rtl.abi3_shipped_prefix_vectors.v1",
+    "sha256": "014f8cd85f7547f8ef5756c8a0c57321c582f31cd2e27fb58ce62fe5da124942"
+  },
+  "capability_fault_count": 4,
+  "case_count": 4,
+  "case_stride": 72,
+  "claim": "the already-checked four-case shipped RTL prefix identity is extended only by the qualified exact DeepSeek ROM PC-13 LINK.MULTICAST; it completes one 256-participant, 64-KiB broadcast with CRC replay and then fails closed at PC-15 VECTOR.MHC",
+  "does_not_establish": [
+    "a source-current canonical compiler or deployment rebuild",
+    "prefill, a whole model transaction, token selection, EOS, or decoded-token correctness",
+    "architectural TPOT, physical timing, area, power, HBM timing, or SRAM timing",
+    "simulator wall time as model performance"
+  ],
+  "exact_multicast": {
+    "communication_descriptor_id": 368,
+    "counter_descriptor_id": 367,
+    "family": 144,
+    "local_object_descriptor_id": 365,
+    "next_unsupported": {
+      "descriptor_id": 381,
+      "family": 48,
+      "opcode": "VECTOR.MHC",
+      "pc": 15,
+      "sub": 9,
+      "trap_class": 4
+    },
+    "payload_function": "0x9e3779b9 XOR (index * 0x045d9f3b) XOR concat(index[13:0], index[13:0], index[3:0])",
+    "payload_source": "deterministic_nonzero_live_scratch_object_365",
+    "payload_words": 16384,
+    "pc": 13,
+    "remote_object_descriptor_id": 366,
+    "sub": 3,
+    "topology_descriptor_id": 0
+  },
+  "expected_cases": [
+    {
+      "fault": 26,
+      "fetched": 27,
+      "index": 0,
+      "issued": 9,
+      "launches": 8,
+      "multicast_launches": 0,
+      "name": "qwen3-8b-rom-single-chip/decode",
+      "responses": 9,
+      "retired": 26,
+      "trap": 4,
+      "views": 27,
+      "words": 19712
+    },
+    {
+      "fault": 26,
+      "fetched": 27,
+      "index": 1,
+      "issued": 9,
+      "launches": 8,
+      "multicast_launches": 0,
+      "name": "qwen3-8b-hbm-single-chip/decode",
+      "responses": 9,
+      "retired": 26,
+      "trap": 4,
+      "views": 27,
+      "words": 19712
+    },
+    {
+      "fault": 15,
+      "fetched": 16,
+      "index": 2,
+      "issued": 6,
+      "launches": 5,
+      "multicast_launches": 1,
+      "name": "deepseek-v4-flash-rom-wafer/decode",
+      "responses": 6,
+      "retired": 15,
+      "trap": 4,
+      "views": 17,
+      "words": 20736
+    },
+    {
+      "fault": 14,
+      "fetched": 15,
+      "index": 3,
+      "issued": 5,
+      "launches": 4,
+      "multicast_launches": 0,
+      "name": "deepseek-v4-flash-hbm-cluster/decode",
+      "responses": 5,
+      "retired": 14,
+      "trap": 4,
+      "views": 17,
+      "words": 20736
+    }
+  ],
+  "image_sha256": {
+    "p3_case.hex": "a3a804aa7026a95b698d94fb1f74ce78f49e5136f022340401ed37020f22c505",
+    "p3_issue.hex": "20b707abc9f4b0fd5e6d6d99c779efad84d68847b1b551b497e0e7f5c80d96d2",
+    "p3_meta.hex": "eef7e373eda2c1d74bc2bd0a67bdbeb3935c933a0a90fd022acf0d5eb5d38d40",
+    "p3_multicast_communication.hex": "e287e85c3a8a194f5d129781e66471570039916ec5699ba8014160a84c36de85",
+    "p3_multicast_counter.hex": "8c935d68a2ce282595ac021b704a61a318f4b6442cd9c35c10df72b2e1db42f3",
+    "p3_multicast_local_object.hex": "6d0294ee77a9cc47fb59c04e9f27fc896a156ad5e3dc9213c05b49cd9df4f5b9",
+    "p3_multicast_remote_object.hex": "7f7e7adfff8c2dfd4ccbde061e1406f7a872faf9cfd3741fbd886d5f29ce7e17",
+    "p3_multicast_source.hex": "ead5d17dc074a54efbc058c1e6b2ebba995678d36527bdb4e7ce0262bf8f3308",
+    "p3_multicast_topology.hex": "856babd63bb69ab43b75920b473c42ce00d8e6b31439d8d18689db63f806d577"
+  },
+  "issue_count": 29,
+  "issue_stride": 4,
+  "multicast_launch_count": 1,
+  "multicast_qualification": {
+    "adapter_source": "rtl/abi3/ot_a3_wafer_multicast_adapter.sv",
+    "adapter_source_sha256": "baf8bd310fdc7a25b4dfa9d464932f87a4a9c8f4c7e7074102488aeb5922b8bb",
+    "campaign": "results/rtl/a3_wafer_multicast_campaign.json",
+    "campaign_sha256": "9514e54e7c3a88b4243054fbe1881b708e71e8076dc990681fd571c04dd92a1e",
+    "exact_case": {
+      "admitted": true,
+      "index": 0,
+      "inject_crc": true,
+      "label": "exact_pc13_multicast_crc_replay",
+      "refusal_reason": 0
+    },
+    "geometry": {
+      "bytes_per_message": 65536,
+      "messages": 255,
+      "participants": 256,
+      "payload_bytes": 16711680,
+      "payload_flits": 4177920,
+      "remote_writes_including_root": 4194304,
+      "rounds": 8,
+      "words_per_message": 16384
+    },
+    "source": {
+      "bundle": "build/abi3/deepseek-v4-flash-rom",
+      "capability_sha256": "5abf26b4ef235d6083c6f6dbe48d7021068c59ecb451238569a2f660303d26b6",
+      "communication_descriptor_id": 368,
+      "communication_prefix_hex": "5441334406000100c0000000000000006d0100006e010000ffffffffffffffff",
+      "counter_descriptor_id": 367,
+      "deployment_json_sha256": "04778ff37e57b87cd0cee48c01558bdfd63c2f8146d0b0a23ff9afee15a54b45",
+      "deployment_sha256": "f239f8fede6963d3daebfe19e8771afad69cf09992e339a0191a1983518ae8a7",
+      "descriptors_bin_sha256": "4f341b3b91e3260029066700b7dab4f8e290818db667abd769381ac476f288f0",
+      "local_object_descriptor_id": 365,
+      "pc": 13,
+      "program_bin_sha256": "1677777e96086fa7f8f0ab3007324629ac05ea7f02c2306d698d1ffd1c6cfc6f",
+      "raw_record_sha256": {
+        "communication": "fb23e1284c751135323210d1c5b44aee55da7b73411ab20209afa3e17b53866f",
+        "counter": "5c05c5725e57dbcb261bdf5c8943c05d9d66d425fc575e9f10525a477039afb3",
+        "local": "88f48030a471540b66792a53425ecd547ed17b371a7827de6e569d65e468f965",
+        "remote": "460645a925b1ca5b416df323d4a974ddb5c49ed24a0556f31640a683a37c4795",
+        "topology": "6af9839425ad9991a22b3e0d5d9c4952bc91d00099bbf075fb394a1405055b21"
+      },
+      "remote_object_descriptor_id": 366,
+      "topology_descriptor_id": 0
+    },
+    "vector_manifest": "testdata/rtl/a3_wafer_multicast/index.json",
+    "vector_manifest_sha256": "8f85ac98b6946aabae15dabec5362a4514784f870e69cec3376f27c70f3bd4c6"
+  },
+  "promotion_blocker": "the Qwen HBM deployment certificate records a 32992-byte IR kernel while the current source is 33234 bytes; this overlay neither bypasses nor relabels that source-currentness failure",
+  "promotion_status": "blocked_on_canonical_deployment_rebuild",
+  "real_launch_count": 25,
+  "required_marker": "PASS: ABI3 shipped-prefix multicast integration cases=4 launches=25 words=80896 capability_faults=4 multicasts=1",
+  "resolved_view_count": 88,
+  "result_word_count": 80896,
+  "schema": "opentallas.rtl.abi3_shipped_prefix_multicast_vectors.v1",
+  "state_compat": 0,
+  "status": "frozen_identity_rtl_integration_only"
+}

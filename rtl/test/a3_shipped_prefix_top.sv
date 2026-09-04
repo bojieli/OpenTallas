@@ -15,7 +15,8 @@ module ot_a3_shipped_prefix_top #(
     parameter integer INDEX_WORDS = 64,
     parameter integer SOURCE_WORDS = 65536,
     parameter integer RESULT_WORDS = 81920,
-    parameter integer MATMUL_WEIGHT_BYTES = 50331648
+    parameter integer MATMUL_WEIGHT_BYTES = 50331648,
+    parameter integer ENABLE_EXACT_MULTICAST = 0
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -87,6 +88,8 @@ module ot_a3_shipped_prefix_top #(
     output wire [31:0] head_rms_norm_launch_count,
     output wire [31:0] dma_transfer_launch_count,
     output wire [31:0] matmul_launch_count,
+    output wire [31:0] multicast_launch_count,
+    output wire [31:0] multicast_fault_count,
     output wire [31:0] capability_fault_count,
     output wire [31:0] descriptor_fault_count,
     output wire [31:0] engine_fault_count,
@@ -109,6 +112,31 @@ module ot_a3_shipped_prefix_top #(
     output reg         operand_read_oob,
     output reg         result_write_oob,
 
+    output wire        multicast_remote_write_valid,
+    output wire        multicast_remote_write_ready,
+    output wire [31:0] multicast_remote_write_object_id,
+    output wire [15:0] multicast_remote_write_participant,
+    output wire [63:0] multicast_remote_write_offset,
+    output wire [31:0] multicast_remote_write_data,
+    output wire [7:0]  multicast_tree_source,
+    output wire [31:0] multicast_source_read_count,
+    output wire [31:0] multicast_source_stall_cycles,
+    output wire [31:0] multicast_destination_stall_cycles,
+    output wire [31:0] multicast_remote_write_count,
+    output wire [31:0] multicast_messages_sent,
+    output wire [31:0] multicast_messages_received,
+    output wire [63:0] multicast_bytes_sent,
+    output wire [63:0] multicast_bytes_received,
+    output wire [31:0] multicast_payload_flits,
+    output wire [31:0] multicast_wire_flits,
+    output wire [31:0] multicast_replayed_flits,
+    output wire [31:0] multicast_retry_events,
+    output wire [31:0] multicast_credit_stall_cycles,
+    output wire [31:0] multicast_crc_errors,
+    output wire [31:0] multicast_sequence_errors,
+    output wire [31:0] multicast_writes_after_completion,
+    output wire        multicast_protocol_error,
+
     input  wire [31:0] result_read_addr,
     output wire [31:0] result_read_data
 );
@@ -120,7 +148,24 @@ module ot_a3_shipped_prefix_top #(
     reg [31:0]   result_mem [0:RESULT_WORDS-1];
     reg [7:0]    matmul_weight_mem [0:MATMUL_WEIGHT_BYTES-1];
 
+    // Complete exact records cannot all be reconstructed from the 192-byte
+    // descriptor-prefix image: TOPOLOGY is 256 bytes.  These side images are
+    // the first, admitted vector of the retained multicast qualification and
+    // are hash-bound by the overlay manifest and campaign.
+    reg [31:0] multicast_communication_mem [0:47];
+    reg [31:0] multicast_topology_mem [0:63];
+    reg [31:0] multicast_local_object_mem [0:31];
+    reg [31:0] multicast_remote_object_mem [0:31];
+    reg [31:0] multicast_counter_mem [0:31];
+    reg [31:0] multicast_source_mem [0:16383];
+    reg [1535:0] multicast_communication_record;
+    reg [2047:0] multicast_topology_record;
+    reg [1023:0] multicast_local_object_record;
+    reg [1023:0] multicast_remote_object_record;
+    reg [1023:0] multicast_counter_record;
+
     integer clear_word;
+    integer multicast_record_word;
     integer weight_file;
     integer weight_bytes_read;
     initial begin
@@ -129,6 +174,43 @@ module ot_a3_shipped_prefix_top #(
         $readmemh("a3_symbol.hex", symbol_mem);
         $readmemh("p3_index.hex", index_mem);
         $readmemh("p3_source.hex", source_mem);
+        multicast_communication_record = 1536'd0;
+        multicast_topology_record = 2048'd0;
+        multicast_local_object_record = 1024'd0;
+        multicast_remote_object_record = 1024'd0;
+        multicast_counter_record = 1024'd0;
+        if (ENABLE_EXACT_MULTICAST != 0) begin
+            $readmemh("p3_multicast_communication.hex",
+                      multicast_communication_mem);
+            $readmemh("p3_multicast_topology.hex", multicast_topology_mem);
+            $readmemh("p3_multicast_local_object.hex",
+                      multicast_local_object_mem);
+            $readmemh("p3_multicast_remote_object.hex",
+                      multicast_remote_object_mem);
+            $readmemh("p3_multicast_counter.hex", multicast_counter_mem);
+            $readmemh("p3_multicast_source.hex", multicast_source_mem);
+            for (multicast_record_word = 0; multicast_record_word < 48;
+                 multicast_record_word = multicast_record_word + 1)
+                multicast_communication_record[
+                    multicast_record_word*32 +: 32] =
+                    multicast_communication_mem[multicast_record_word];
+            for (multicast_record_word = 0; multicast_record_word < 64;
+                 multicast_record_word = multicast_record_word + 1)
+                multicast_topology_record[
+                    multicast_record_word*32 +: 32] =
+                    multicast_topology_mem[multicast_record_word];
+            for (multicast_record_word = 0; multicast_record_word < 32;
+                 multicast_record_word = multicast_record_word + 1) begin
+                multicast_local_object_record[
+                    multicast_record_word*32 +: 32] =
+                    multicast_local_object_mem[multicast_record_word];
+                multicast_remote_object_record[
+                    multicast_record_word*32 +: 32] =
+                    multicast_remote_object_mem[multicast_record_word];
+                multicast_counter_record[multicast_record_word*32 +: 32] =
+                    multicast_counter_mem[multicast_record_word];
+            end
+        end
         weight_file = $fopen("p3_matmul_weight.bin", "rb");
         if (weight_file == 0)
             $fatal(1, "cannot open p3_matmul_weight.bin");
@@ -228,6 +310,32 @@ module ot_a3_shipped_prefix_top #(
     wire [63:0] view_element_offset;
     wire [7:0] view_rank;
 
+    wire bridge_issue_ready;
+    wire bridge_issue_fault;
+    wire [15:0] bridge_issue_trap_class;
+    wire exact_multicast_issue = (ENABLE_EXACT_MULTICAST != 0) && issue_valid &&
+        (issue_family == 8'h90) && (issue_sub == 8'd3);
+    reg multicast_issue_active;
+    reg multicast_start;
+    reg multicast_inject_crc;
+    reg [31:0] multicast_observed_views;
+    reg [31:0] views_at_last_response;
+    reg [31:0] multicast_launch_count_q;
+    reg [31:0] multicast_fault_count_q;
+    wire multicast_busy;
+    wire multicast_done;
+    wire multicast_failed;
+    wire [15:0] multicast_trap_class;
+    wire [7:0] multicast_refusal_reason;
+
+    assign issue_ready = exact_multicast_issue
+        ? (multicast_issue_active && (multicast_done || multicast_failed))
+        : bridge_issue_ready;
+    assign issue_fault = exact_multicast_issue
+        ? multicast_failed : bridge_issue_fault;
+    assign issue_trap_class = exact_multicast_issue
+        ? multicast_trap_class : bridge_issue_trap_class;
+
     assign response_valid = issue_valid && issue_ready;
     assign response_fault = issue_fault;
     assign response_trap_class = issue_trap_class;
@@ -235,6 +343,9 @@ module ot_a3_shipped_prefix_top #(
     assign response_sub = issue_sub;
     assign response_descriptor_id = issue_descriptor_id;
     assign response_index = issue_index;
+
+    assign multicast_launch_count = multicast_launch_count_q;
+    assign multicast_fault_count = multicast_fault_count_q;
 
     ot_a3_microsequencer #(.STATE_COMPAT(0)) sequencer (
         .clk(clk),
@@ -309,6 +420,308 @@ module ot_a3_shipped_prefix_top #(
         .dbg_wait_fault_event(),
         .dbg_loop_action()
     );
+
+    // -- exact DeepSeek ROM wafer multicast ----------------------------
+    // LINK owns no tensor views.  Record the number actually observed since
+    // the preceding completion and make the adapter admit zero rather than
+    // assuming it.  Every other LINK shape remains routed to the ordinary
+    // bridge and receives its existing fail-closed CAPABILITY response.
+    wire multicast_response_fire = exact_multicast_issue && issue_ready;
+    reg multicast_started_this_transaction;
+    reg [31:0] multicast_service_cycle;
+    reg [31:0] multicast_source_read_count_q;
+    reg [31:0] multicast_source_stall_cycles_q;
+    reg [31:0] multicast_destination_stall_cycles_q;
+    reg [31:0] multicast_writes_after_completion_q;
+    reg multicast_protocol_error_q;
+    reg multicast_completed_seen;
+    reg multicast_source_ready_phase;
+
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            multicast_issue_active <= 1'b0;
+            multicast_start <= 1'b0;
+            multicast_inject_crc <= 1'b0;
+            multicast_observed_views <= 32'd0;
+            views_at_last_response <= 32'd0;
+            multicast_launch_count_q <= 32'd0;
+            multicast_fault_count_q <= 32'd0;
+            multicast_started_this_transaction <= 1'b0;
+            multicast_service_cycle <= 32'd0;
+            multicast_completed_seen <= 1'b0;
+        end else begin
+            multicast_start <= 1'b0;
+            multicast_inject_crc <= 1'b0;
+            if (start) begin
+                multicast_issue_active <= 1'b0;
+                multicast_observed_views <= 32'd0;
+                views_at_last_response <= 32'd0;
+                multicast_launch_count_q <= 32'd0;
+                multicast_fault_count_q <= 32'd0;
+                multicast_started_this_transaction <= 1'b0;
+                multicast_service_cycle <= 32'd0;
+                multicast_completed_seen <= 1'b0;
+            end else begin
+                if (multicast_issue_active)
+                    multicast_service_cycle <= multicast_service_cycle + 32'd1;
+                if (!multicast_issue_active && exact_multicast_issue) begin
+                    multicast_issue_active <= 1'b1;
+                    multicast_started_this_transaction <= 1'b1;
+                    multicast_observed_views <=
+                        count_views_resolved - views_at_last_response;
+                    // The endpoint is idle when this pulse is sampled.  One
+                    // packet is corrupted and recovered through NAK/replay.
+                    multicast_inject_crc <= 1'b1;
+                    multicast_start <= 1'b1;
+                end
+                if (multicast_done)
+                    multicast_completed_seen <= 1'b1;
+                if (response_valid)
+                    views_at_last_response <= count_views_resolved;
+                if (multicast_response_fire) begin
+                    multicast_issue_active <= 1'b0;
+                    if (multicast_failed)
+                        multicast_fault_count_q <=
+                            multicast_fault_count_q + 32'd1;
+                    else
+                        multicast_launch_count_q <=
+                            multicast_launch_count_q + 32'd1;
+                end
+            end
+        end
+    end
+
+    function automatic [31:0] multicast_expected_word;
+        input [13:0] index;
+        reg [31:0] widened;
+        begin
+            widened = {18'd0, index};
+            multicast_expected_word = 32'h9e37_79b9 ^
+                (widened * 32'h045d_9f3b) ^ {index, index, index[3:0]};
+        end
+    endfunction
+
+    wire multicast_source_read_valid_int;
+    wire multicast_source_read_ready_int = multicast_issue_active &&
+        multicast_source_ready_phase;
+    wire [31:0] multicast_source_read_object_id_int;
+    wire [63:0] multicast_source_read_offset_int;
+    reg multicast_source_response_valid;
+    wire multicast_source_response_ready;
+    reg [31:0] multicast_source_response_data;
+
+    assign multicast_source_read_count = multicast_source_read_count_q;
+    assign multicast_source_stall_cycles = multicast_source_stall_cycles_q;
+    assign multicast_destination_stall_cycles =
+        multicast_destination_stall_cycles_q;
+    assign multicast_writes_after_completion =
+        multicast_writes_after_completion_q;
+    assign multicast_protocol_error = multicast_protocol_error_q;
+
+    // One-outstanding-response scratch-memory service.  Its nonzero contents
+    // represent live object 365; they are intentionally not aliased to the
+    // preceding DMA result, which belongs to a different object.
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            multicast_source_response_valid <= 1'b0;
+            multicast_source_response_data <= 32'd0;
+            multicast_source_read_count_q <= 32'd0;
+            multicast_source_stall_cycles_q <= 32'd0;
+            multicast_destination_stall_cycles_q <= 32'd0;
+            multicast_writes_after_completion_q <= 32'd0;
+            multicast_protocol_error_q <= 1'b0;
+            multicast_source_ready_phase <= 1'b0;
+        end else begin
+            if (start) begin
+                multicast_source_response_valid <= 1'b0;
+                multicast_source_response_data <= 32'd0;
+                multicast_source_read_count_q <= 32'd0;
+                multicast_source_stall_cycles_q <= 32'd0;
+                multicast_destination_stall_cycles_q <= 32'd0;
+                multicast_writes_after_completion_q <= 32'd0;
+                multicast_protocol_error_q <= 1'b0;
+                multicast_source_ready_phase <= 1'b0;
+            end else begin
+                if (!multicast_source_read_valid_int)
+                    multicast_source_ready_phase <= 1'b0;
+                else if (!multicast_source_ready_phase)
+                    multicast_source_ready_phase <= 1'b1;
+                else if (multicast_source_read_ready_int)
+                    multicast_source_ready_phase <= 1'b0;
+                if (multicast_source_response_valid &&
+                    multicast_source_response_ready)
+                    multicast_source_response_valid <= 1'b0;
+                if (multicast_source_read_valid_int &&
+                    !multicast_source_read_ready_int)
+                    multicast_source_stall_cycles_q <=
+                        multicast_source_stall_cycles_q + 32'd1;
+                if (multicast_source_read_valid_int &&
+                    multicast_source_read_ready_int) begin
+                    multicast_source_read_count_q <=
+                        multicast_source_read_count_q + 32'd1;
+                    if ((multicast_source_read_object_id_int != 32'd365) ||
+                        (multicast_source_read_offset_int[1:0] != 2'd0) ||
+                        (multicast_source_read_offset_int >= 64'd65536) ||
+                        (multicast_source_read_offset_int[15:2] !=
+                         multicast_source_read_count_q[13:0])) begin
+                        multicast_source_response_data <= 32'd0;
+                        multicast_protocol_error_q <= 1'b1;
+                    end else begin
+                        multicast_source_response_data <=
+                            multicast_source_mem[
+                                multicast_source_read_offset_int[15:2]];
+                    end
+                    multicast_source_response_valid <= 1'b1;
+                end
+                if (multicast_remote_write_valid &&
+                    !multicast_remote_write_ready)
+                    multicast_destination_stall_cycles_q <=
+                        multicast_destination_stall_cycles_q + 32'd1;
+                if (multicast_remote_write_valid &&
+                    multicast_remote_write_ready) begin
+                    if ((multicast_remote_write_object_id != 32'd366) ||
+                        (multicast_remote_write_offset[1:0] != 2'd0) ||
+                        (multicast_remote_write_offset >= 64'd16777216) ||
+                        (multicast_remote_write_participant !=
+                         {8'd0, multicast_remote_write_offset[23:16]}) ||
+                        (multicast_remote_write_data !=
+                         multicast_expected_word(
+                             multicast_remote_write_offset[15:2])))
+                        multicast_protocol_error_q <= 1'b1;
+                    if (multicast_completed_seen)
+                        multicast_writes_after_completion_q <=
+                            multicast_writes_after_completion_q + 32'd1;
+                end
+            end
+        end
+    end
+
+    // One-cycle deterministic ready gaps exercise integration-level source
+    // and destination backpressure while remaining far below endpoint timeout.
+    assign multicast_remote_write_ready = multicast_issue_active &&
+        (multicast_service_cycle[1:0] != 2'b00);
+
+    wire [31:0] multicast_messages_sent_int;
+    wire [31:0] multicast_messages_received_int;
+    wire [63:0] multicast_bytes_sent_int;
+    wire [63:0] multicast_bytes_received_int;
+    wire [31:0] multicast_remote_write_count_int;
+    wire [31:0] multicast_payload_flits_int;
+    wire [31:0] multicast_wire_flits_int;
+    wire [31:0] multicast_replayed_flits_int;
+    wire [31:0] multicast_retry_events_int;
+    wire [31:0] multicast_credit_stall_cycles_int;
+    wire [31:0] multicast_crc_errors_int;
+    wire [31:0] multicast_sequence_errors_int;
+
+    assign multicast_messages_sent = multicast_started_this_transaction
+        ? multicast_messages_sent_int : 32'd0;
+    assign multicast_messages_received = multicast_started_this_transaction
+        ? multicast_messages_received_int : 32'd0;
+    assign multicast_bytes_sent = multicast_started_this_transaction
+        ? multicast_bytes_sent_int : 64'd0;
+    assign multicast_bytes_received = multicast_started_this_transaction
+        ? multicast_bytes_received_int : 64'd0;
+    assign multicast_remote_write_count = multicast_started_this_transaction
+        ? multicast_remote_write_count_int : 32'd0;
+    assign multicast_payload_flits = multicast_started_this_transaction
+        ? multicast_payload_flits_int : 32'd0;
+    assign multicast_wire_flits = multicast_started_this_transaction
+        ? multicast_wire_flits_int : 32'd0;
+    assign multicast_replayed_flits = multicast_started_this_transaction
+        ? multicast_replayed_flits_int : 32'd0;
+    assign multicast_retry_events = multicast_started_this_transaction
+        ? multicast_retry_events_int : 32'd0;
+    assign multicast_credit_stall_cycles =
+        multicast_started_this_transaction
+        ? multicast_credit_stall_cycles_int : 32'd0;
+    assign multicast_crc_errors = multicast_started_this_transaction
+        ? multicast_crc_errors_int : 32'd0;
+    assign multicast_sequence_errors = multicast_started_this_transaction
+        ? multicast_sequence_errors_int : 32'd0;
+
+    generate
+        if (ENABLE_EXACT_MULTICAST != 0) begin : g_exact_multicast
+            ot_a3_shipped_prefix_multicast_adapter_wrapper u_multicast (
+                .clk(clk), .rst_n(rst_n), .start(multicast_start),
+                .issue_pc(issue_index), .issue_major(issue_family),
+                .issue_sub(issue_sub),
+                .issue_descriptor_id(issue_descriptor_id),
+                .observed_view_count(multicast_observed_views),
+                .state_descriptor_count(cfg_state_count),
+                .topology_descriptor_id(32'd0),
+                .local_object_descriptor_id(32'd365),
+                .remote_object_descriptor_id(32'd366),
+                .counter_descriptor_id(32'd367),
+                .communication_record(multicast_communication_record),
+                .topology_record(multicast_topology_record),
+                .local_object_record(multicast_local_object_record),
+                .remote_object_record(multicast_remote_object_record),
+                .counter_record(multicast_counter_record),
+                .source_read_valid(multicast_source_read_valid_int),
+                .source_read_ready(multicast_source_read_ready_int),
+                .source_read_object_id(multicast_source_read_object_id_int),
+                .source_read_offset(multicast_source_read_offset_int),
+                .source_response_valid(multicast_source_response_valid),
+                .source_response_ready(multicast_source_response_ready),
+                .source_response_data(multicast_source_response_data),
+                .source_response_error(1'b0),
+                .remote_write_valid(multicast_remote_write_valid),
+                .remote_write_ready(multicast_remote_write_ready),
+                .remote_write_object_id(multicast_remote_write_object_id),
+                .remote_write_participant(
+                    multicast_remote_write_participant),
+                .remote_write_offset(multicast_remote_write_offset),
+                .remote_write_data(multicast_remote_write_data),
+                .inject_crc_error(multicast_inject_crc),
+                .busy(multicast_busy), .done(multicast_done),
+                .failed(multicast_failed),
+                .trap_class(multicast_trap_class),
+                .refusal_reason(multicast_refusal_reason),
+                .messages_sent(multicast_messages_sent_int),
+                .messages_received(multicast_messages_received_int),
+                .bytes_sent(multicast_bytes_sent_int),
+                .bytes_received(multicast_bytes_received_int),
+                .remote_write_count(multicast_remote_write_count_int),
+                .payload_flits_delivered(multicast_payload_flits_int),
+                .wire_flits_transmitted(multicast_wire_flits_int),
+                .replayed_flits(multicast_replayed_flits_int),
+                .retry_events(multicast_retry_events_int),
+                .credit_stall_cycles(multicast_credit_stall_cycles_int),
+                .crc_errors(multicast_crc_errors_int),
+                .sequence_errors(multicast_sequence_errors_int),
+                .tree_source(multicast_tree_source)
+            );
+        end else begin : g_no_exact_multicast
+            assign multicast_source_read_valid_int = 1'b0;
+            assign multicast_source_read_object_id_int = 32'd0;
+            assign multicast_source_read_offset_int = 64'd0;
+            assign multicast_source_response_ready = 1'b0;
+            assign multicast_remote_write_valid = 1'b0;
+            assign multicast_remote_write_object_id = 32'd0;
+            assign multicast_remote_write_participant = 16'd0;
+            assign multicast_remote_write_offset = 64'd0;
+            assign multicast_remote_write_data = 32'd0;
+            assign multicast_busy = 1'b0;
+            assign multicast_done = 1'b0;
+            assign multicast_failed = 1'b0;
+            assign multicast_trap_class = 16'd0;
+            assign multicast_refusal_reason = 8'd0;
+            assign multicast_messages_sent_int = 32'd0;
+            assign multicast_messages_received_int = 32'd0;
+            assign multicast_bytes_sent_int = 64'd0;
+            assign multicast_bytes_received_int = 64'd0;
+            assign multicast_remote_write_count_int = 32'd0;
+            assign multicast_payload_flits_int = 32'd0;
+            assign multicast_wire_flits_int = 32'd0;
+            assign multicast_replayed_flits_int = 32'd0;
+            assign multicast_retry_events_int = 32'd0;
+            assign multicast_credit_stall_cycles_int = 32'd0;
+            assign multicast_crc_errors_int = 32'd0;
+            assign multicast_sequence_errors_int = 32'd0;
+            assign multicast_tree_source = 8'd0;
+        end
+    endgenerate
 
     // -- compact operand banks and result memory ------------------------
     wire m0_rd_en, m1_rd_en, m2_rd_en, m3_rd_en;
@@ -387,13 +800,18 @@ module ot_a3_shipped_prefix_top #(
             end
             if (out_we) begin
                 output_write_count <= output_write_count + 32'd1;
-                if (fault_seen)
-                    writes_after_fault <= writes_after_fault + 32'd1;
                 if (out_addr < RESULT_WORDS)
                     result_mem[out_addr] <= out_data;
                 else
                     result_write_oob <= 1'b1;
             end
+            if (fault_seen &&
+                (out_we || (multicast_remote_write_valid &&
+                            multicast_remote_write_ready)))
+                writes_after_fault <= writes_after_fault +
+                    (out_we ? 32'd1 : 32'd0) +
+                    ((multicast_remote_write_valid &&
+                      multicast_remote_write_ready) ? 32'd1 : 32'd0);
             if (issue_valid && issue_ready && issue_fault)
                 fault_seen <= 1'b1;
         end
@@ -403,14 +821,17 @@ module ot_a3_shipped_prefix_top #(
         ? result_mem[result_read_addr] : 32'd0;
 
     wire engine_busy;
+    wire [31:0] bridge_real_launch_count;
+    assign real_launch_count =
+        bridge_real_launch_count + multicast_launch_count_q;
     ot_a3_engine_issue_bridge bridge (
         .clk(clk),
         .rst_n(rst_n),
         .clear(start),
-        .issue_valid(issue_valid),
-        .issue_ready(issue_ready),
-        .issue_fault(issue_fault),
-        .issue_trap_class(issue_trap_class),
+        .issue_valid(issue_valid && !exact_multicast_issue),
+        .issue_ready(bridge_issue_ready),
+        .issue_fault(bridge_issue_fault),
+        .issue_trap_class(bridge_issue_trap_class),
         .issue_family(issue_family),
         .issue_sub(issue_sub),
         .issue_descriptor_id(issue_descriptor_id),
@@ -473,7 +894,7 @@ module ot_a3_shipped_prefix_top #(
         .engine_error_code(engine_error_code),
         .engine_result_count(engine_result_count),
         .engine_work_count(engine_work_count),
-        .real_launch_count(real_launch_count),
+        .real_launch_count(bridge_real_launch_count),
         .dma_gather_launch_count(dma_gather_launch_count),
         .embedding_launch_count(embedding_launch_count),
         .rms_norm_launch_count(rms_norm_launch_count),
