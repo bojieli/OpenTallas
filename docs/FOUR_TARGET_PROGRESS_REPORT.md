@@ -4,7 +4,7 @@
 
 **Status date:** 2026-09-04
 
-**Input baseline:** `main` through `1d54f3b`; this includes the fail-closed
+**Input baseline:** `main` through `429e4bc`; this includes the fail-closed
 DeepSeek exact-200K oracle and accelerator-pair checkers, the DeepSeek
 phase-selected sparse-KV layout repair, the shared activation-liveness
 allocator and physical 180-GB ROM-array capacity boundary, and refreshed
@@ -27,7 +27,8 @@ the first frozen-source exact-token Qwen HBM/SRAM accelerator diagnostic,
 the correctness-bound shared-resource batch cycle scheduler, and the
 certifying DeepSeek `HC_PRE` FP32 exponential/sigmoid RTL primitive, plus
 the exact Qwen ROM/HBM PC-32/35 KV appends and fixed-context-17 PC-38 GQA
-arithmetic.
+arithmetic, ABI 3.0 DSpark draft-window indexing, and the governed
+heterogeneous B=1/2/4/8 execution-evidence path.
 
 **Role:** current narrative status and handoff report. Machine-readable result
 artifacts and the [unified execution checklist](UNIFIED_EXECUTION_CHECKLIST.md)
@@ -95,6 +96,18 @@ The present boundary is therefore:
   the pinned checkpoint tokenizer, proves prompt decode and re-encode
   round-trip against the retained natural context, and retains raw/visible
   decoded output with oracle-horizon equality; a mismatch makes the run fail;
+- governed heterogeneous execution evidence: commits `bb2ddf2`, `fd5dd1f`,
+  and `daf6205` add strict request/result schemas and one ABI 3.0 batch runner.
+  It loads one deployment, executes genuinely distinct B=1/2/4/8 lanes with
+  shared immutable and private mutable storage, validates every lane's legal
+  token IDs, complete oracle equality, raw/visible decoded text, independent
+  EOS-or-cap retirement, and no post-terminal transaction, and retains raw
+  request/token-commit ticks from that same execution. The focused suite
+  covers all four batch sizes and fail-closed tampering cases. No production
+  model batch has used this path yet, so it contributes zero accepted model
+  tokens and zero TPOT points. The singular-workload comparison/TPOT contract
+  must be extended to bind a heterogeneous workload set before B>1 timing can
+  be promoted;
 - correctness-qualified TPOT validator: implemented and fail-closed when token
   evidence, target-cycle traces, process identities, or numerical budgets are
   absent;

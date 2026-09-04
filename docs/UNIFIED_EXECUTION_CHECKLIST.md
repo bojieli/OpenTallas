@@ -413,9 +413,16 @@ evidence. None may be presented as a rerun of the current source.
   focused batch suite includes heterogeneous B=2 EOS and request-cap
   retirement: the request may narrow but cannot enlarge the compiled policy
   ceiling, the last non-EOS token carries the length-stop reason, and no
-  post-terminal write or transaction is admitted. No heterogeneous full-model
-  B>1 run, governed exported timing trace, characterized target timebase, or
-  correctness-qualified TPOT point exists yet
+  post-terminal write or transaction is admitted. Commits `bb2ddf2`,
+  `fd5dd1f`, and `daf6205` add the governed export path: authenticated
+  workload/oracle/deployment inputs, exact per-lane tokens and raw/visible
+  text, independent terminal evidence, source identities, and the raw
+  request/token-commit ticks from the same physical batch. Its B=1/2/4/8
+  focused tests qualify the mechanism only. No heterogeneous full-model B>1
+  run, characterized target timebase, or correctness-qualified TPOT point
+  exists yet; the existing singular-workload comparison contract also cannot
+  promote a genuinely heterogeneous B>1 point until it gains a workload-set
+  binding
 - [x] W7.2 Capability records for SKY130 view and ASAP7 view (separately versioned) — five cost tables with per-parameter provenance
 - [x] W7.3 32-node fabric model (latency, serialization, contention, credits, retry) — `runtime/cycle/fabric.py` ClusterFabric
 - [x] W7.4 Wafer fabric model (reticle/tile routing, congestion, barriers) — `runtime/cycle/fabric.py` WaferFabric
