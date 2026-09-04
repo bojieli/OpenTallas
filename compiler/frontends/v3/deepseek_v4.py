@@ -720,7 +720,7 @@ def lowering_plan(
         "COMPRESS_STATE_UPDATE": ("COMPRESS_STATE_UPDATE",),
         "CONFIDENCE_SCORE": ("CONCAT", "MATMUL"),
         "DSPARK_MAIN_PROJECT": ("CONCAT", "QUANTIZE", "MATMUL", "RMS_NORM"),
-        "DSPARK_NOISE_EMBED": ("SCATTER", "EMBEDDING_LOOKUP", "BROADCAST"),
+        "DSPARK_NOISE_EMBED": ("CONCAT", "EMBEDDING_LOOKUP", "BROADCAST"),
         "DSPARK_PREFILL_KV": (
             "QUANTIZE",
             "MATMUL",
@@ -2828,6 +2828,17 @@ def export_deepseek_v4_kernel_graph(
                     (normalized,),
                     step="conditioning_norm",
                     iteration_domain={"rows": rows, "width": HIDDEN},
+                    # ``DSparkBlock.__init__`` builds this norm as
+                    # ``RMSNorm(args.dim, args.norm_eps)`` -- the model's one
+                    # norm epsilon, the same scalar every main-stack RMS norm
+                    # already carries.  The composite DSPARK_MAIN_PROJECT node
+                    # states no epsilon, so without this the emitted RMS_NORM
+                    # inherited attributes that name none, the NUMERIC
+                    # descriptor was written with a zero epsilon, and the
+                    # vector engine refused the operation at run time:
+                    # "numeric profile 214 declares no epsilon; the RMSNorm
+                    # contract requires a positive finite binary32 epsilon".
+                    attributes={**attrs, "epsilon": RMS_EPSILON},
                 )
                 output = normalized
             bind(out0, output)
@@ -4046,18 +4057,45 @@ def export_deepseek_v4_kernel_graph(
 
         elif source_kind == "DSPARK_NOISE_EMBED":
             weight = role_weight(roles[0], scope, layer)
+            # ``dspark_noise_token_block`` is the carried target token at column
+            # zero followed by ``block_size - 1`` copies of the fixed noise
+            # token.  This was emitted as a ``SCATTER`` binding only the carried
+            # token, with the destination positions and the fill left in
+            # attributes -- which is not a scatter.  ``DMA.SCATTER``'s frozen
+            # operand row is (index, values), so the kernel filled one of two
+            # mandatory slots and no backend could bind it; worse, the engine
+            # reads the destination and overwrites only the rows the index
+            # names, so even given an index the four noise positions would have
+            # held whatever the arena last contained.  The operation is a
+            # concatenation of the carried token with a constant tail, which is
+            # what the reference computes and what the graph now says.  The two
+            # attributes are kept because they state *why* the carried token is
+            # first and which token the tail holds.
+            noise_token_id = int(config["dspark_noise_token_id"])
+            noise_tail = builder.tensor(
+                f"{node_id}.noise_tail",
+                TOKEN_DTYPE,
+                (DRAFT_BLOCK - 1,),
+                "constant",
+                generator="constant_u32_v1",
+                generator_parameters={
+                    "value": noise_token_id,
+                    "count": DRAFT_BLOCK - 1,
+                },
+            )
             draft_ids = act(f"{node_id}.draft_token_ids", TOKEN_DTYPE, (DRAFT_BLOCK,))
             emit(
                 f"{node_id}.compose",
-                "SCATTER",
-                (operands[0],),
+                "CONCAT",
+                (operands[0], noise_tail),
                 (draft_ids,),
                 step="noise_block",
                 iteration_domain={"rows": DRAFT_BLOCK},
                 attributes={
                     **attrs,
+                    "axis": 0,
                     "carried_position": 0,
-                    "fill_token_id": int(config["dspark_noise_token_id"]),
+                    "fill_token_id": noise_token_id,
                 },
             )
             embedded = act(f"{node_id}.embedded", "bf16", (DRAFT_BLOCK, HIDDEN))
@@ -4131,6 +4169,11 @@ def export_deepseek_v4_kernel_graph(
                 (normalized,),
                 step="key_value_norm",
                 iteration_domain={"rows": rows, "width": HEAD_DIM},
+                # The KV norm of DSpark's prefill pass, which is the ordinary
+                # ``RMSNorm(..., args.norm_eps)`` of the attention it belongs
+                # to.  Stated for the same reason as the conditioning norm
+                # above: the composite node carries no epsilon of its own.
+                attributes={**attrs, "epsilon": RMS_EPSILON},
                 state=False,
             )
             rotated = act(f"{node_id}.rotated", "bf16", (rows, HEAD_DIM))

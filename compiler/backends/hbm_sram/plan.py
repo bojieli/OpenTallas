@@ -522,13 +522,30 @@ class LayerBand:
     body_kernels: tuple[int, ...]
     degraded: bool
     reason: str = ""
+    #: The layer key of this band's section, subtracted to recover the model's
+    #: own layer numbering.  Zero for a graph with one layered section, which is
+    #: every shipped graph, so ``first_layer`` and ``model_first_layer`` agree
+    #: there and nothing about those plans moves.  Deliberately absent from
+    #: :meth:`to_dict`: a band is identified downstream by its layers, and the
+    #: base is how those layers are *spelled*, not another fact about the band.
+    layer_base: int = 0
 
     @property
     def layers(self) -> tuple[int, ...]:
-        """Every layer this band covers, in order."""
+        """Every layer key this band covers, in order."""
         return tuple(
             range(self.first_layer, self.first_layer + self.layer_count * self.period)
         )
+
+    @property
+    def model_first_layer(self) -> int:
+        """The model's own number for this band's first layer."""
+        return self.first_layer - self.layer_base
+
+    @property
+    def model_layers(self) -> tuple[int, ...]:
+        """Every layer this band covers, in the model's own numbering."""
+        return tuple(key - self.layer_base for key in self.layers)
 
     def iteration_layers(self, iteration: int) -> tuple[int, ...]:
         base = self.first_layer + iteration * self.period
@@ -537,7 +554,7 @@ class LayerBand:
     def to_dict(self) -> dict[str, Any]:
         return {
             "band_id": self.band_id,
-            "first_layer": self.first_layer,
+            "first_layer": self.model_first_layer,
             "layer_count": self.layer_count,
             "period": self.period,
             "signature": self.signature,
@@ -1792,7 +1809,7 @@ def build_plan(
     warnings.extend(warn_state)
     state_of_tensor = _bind_state_tensors(graph, tensors, state_of_resource)
     stream_kernels, rolling_tensors = _streaming_schedule(
-        graph, tensors, body_position, band_of_kernel, block
+        graph, tensors, body_position, band_of_kernel, block, span_max
     )
     activation_keys, arena_slots, arena_of_key, host_objects = _place_activations(
         graph,
@@ -1949,10 +1966,7 @@ def weight_roles(
     naming convention.
     """
     by_index = {k.index: k for k in graph.kernels}
-    by_layer: dict[int, list[Kernel]] = {}
-    for kernel in graph.kernels:
-        if kernel.layer is not None:
-            by_layer.setdefault(kernel.layer, []).append(kernel)
+    by_layer = kernels_by_layer_key(graph)
     tensors = {t.tensor_id: t for t in graph.tensors}
 
     roles: list[tuple[str, tuple[str, ...]]] = []
@@ -2514,6 +2528,136 @@ def _layer_signature(
     return ";".join(parts)
 
 
+# -- layered sections and the layer key -------------------------------------
+#
+# A graph is not "prologue, one layered run, epilogue".  That was true of every
+# graph this lane had seen, so the layer index was used directly as a grouping
+# key, and the DSpark speculative export -- whose draft stack is a *second*
+# layered run whose layer numbering restarts at zero -- made two different
+# things share a key.  It did not raise: ``_build_bands`` merely warned that
+# "layer 0 kernels are not a contiguous index block" and returned bands in which
+# main layer 0 and DSpark stage 0 were one 156-kernel body.  ``_emission_order``
+# then placed the DSpark stages inside the main bands, ahead of the interlude
+# that produces their inputs.  A silently wrong program is worse than a refused
+# one, so the grouping coordinate is now explicit.
+#
+# Walk the kernel list once.  A maximal run of ``layer is not None`` kernels is a
+# LAYERED SECTION; what lies between sections is straight-line code.  Sections
+# are numbered in program order and each gets a base, so that
+#
+#     layer_key(kernel) = base[section of kernel] + kernel.layer
+#
+# is injective, monotone in program order, and still *consecutive* across the
+# whole graph -- which matters, because the band machinery and ROM's
+# consecutive-layer guard both address a layer by an induction variable.  On the
+# speculative flash graph it maps main 0..42 -> 0..42 and DSpark 0..2 -> 43..45.
+#
+# The key is an internal coordinate only.  Wherever a layer is REPORTED or
+# ADDRESSED -- ``KernelPlan.layer``, the band notes, KV-resource selection --
+# the model's own layer is what is used; the key is for BUCKETING and COMPARING.
+
+
+@dataclass(frozen=True, slots=True)
+class LayerSection:
+    """One maximal run of layered kernels, in program order."""
+
+    ordinal: int
+    base: int
+    first_index: int
+    last_index: int
+    layers: tuple[int, ...]
+
+    @property
+    def keys(self) -> tuple[int, ...]:
+        return tuple(self.base + layer for layer in self.layers)
+
+
+def layered_sections(graph: KernelGraph) -> tuple[LayerSection, ...]:
+    """The graph's layered sections, numbered and based, in program order."""
+    runs: list[list[Kernel]] = []
+    current: list[Kernel] | None = None
+    for kernel in graph.kernels:
+        if kernel.layer is None:
+            current = None
+            continue
+        if current is None:
+            current = []
+            runs.append(current)
+        current.append(kernel)
+
+    sections: list[LayerSection] = []
+    base = 0
+    for ordinal, run in enumerate(runs):
+        # MONOTONE, checked where it is claimed.  The key above is asserted to
+        # be "injective, monotone in program order", and injectivity is
+        # structural -- one base per section -- but monotonicity is a property
+        # of the labels the exporter wrote, so nothing but this loop can know
+        # it.  If a section's labels descend, ``_build_bands`` still covers
+        # every kernel exactly once and still emits no warning: the band body
+        # simply becomes whichever kernels carry the lowest label, the loop
+        # replays them, and the program reads values before they are produced.
+        # The ABI verifier admits that program and the independent checker
+        # passes it, so a refusal here is the only place it can be caught.
+        for previous, kernel in zip(run, run[1:]):
+            if int(kernel.layer) < int(previous.layer):
+                raise PlanError(
+                    f"layered section {ordinal} is not monotone in program "
+                    f"order: kernel {kernel.index} ({kernel.kernel_id}) carries "
+                    f"layer {int(kernel.layer)} after kernel {previous.index} "
+                    f"({previous.kernel_id}) carried layer "
+                    f"{int(previous.layer)}.  The layer key is the band "
+                    "machinery's induction variable, so a descending label "
+                    "would make the loop replay the wrong kernels in the wrong "
+                    "order without warning."
+                )
+        layers = sorted({int(k.layer) for k in run if k.layer is not None})
+        sections.append(
+            LayerSection(
+                ordinal=ordinal,
+                base=base,
+                first_index=run[0].index,
+                last_index=run[-1].index,
+                layers=tuple(layers),
+            )
+        )
+        base += layers[-1] + 1
+    return tuple(sections)
+
+
+def layer_key_map(graph: KernelGraph) -> dict[int, int]:
+    """``kernel.index`` -> layer key, for layered kernels only."""
+    keys: dict[int, int] = {}
+    for section in layered_sections(graph):
+        for kernel in graph.kernels:
+            if kernel.layer is None:
+                continue
+            if section.first_index <= kernel.index <= section.last_index:
+                keys[kernel.index] = section.base + int(kernel.layer)
+    return keys
+
+
+def layer_base_of_key(sections: Sequence[LayerSection], key: int) -> int:
+    """The base to subtract from ``key`` to recover the model's own layer."""
+    base = 0
+    for section in sections:
+        if section.base <= key <= section.base + section.layers[-1]:
+            return section.base
+        base = section.base
+    return base
+
+
+def kernels_by_layer_key(graph: KernelGraph) -> dict[int, list[Kernel]]:
+    """Bucket layered kernels by layer key, in program order within a key."""
+    keys = layer_key_map(graph)
+    buckets: dict[int, list[Kernel]] = {}
+    for kernel in graph.kernels:
+        key = keys.get(kernel.index)
+        if key is None:
+            continue
+        buckets.setdefault(key, []).append(kernel)
+    return buckets
+
+
 def _block_kernels(
     by_layer: Mapping[int, Sequence[Kernel]], first: int, period: int
 ) -> list[Kernel]:
@@ -2546,69 +2690,77 @@ def _build_bands(
     producer = {
         name: kernel.index for kernel in graph.kernels for name in kernel.outputs
     }
-    by_layer: dict[int, list[Kernel]] = {}
-    for kernel in graph.kernels:
-        if kernel.layer is None:
-            continue
-        by_layer.setdefault(kernel.layer, []).append(kernel)
+    by_layer = kernels_by_layer_key(graph)
     if not by_layer:
         return (), warnings
 
-    layers = sorted(by_layer)
-    for layer in layers:
-        indices = [k.index for k in by_layer[layer]]
+    sections = layered_sections(graph)
+    for key in sorted(by_layer):
+        indices = [k.index for k in by_layer[key]]
         if indices != list(range(indices[0], indices[0] + len(indices))):
+            base = layer_base_of_key(sections, key)
             warnings.append(
-                f"layer {layer} kernels are not a contiguous index block; the "
-                "emitted body follows kernel order within the layer"
+                f"layer {key - base} kernels are not a contiguous index block; "
+                "the emitted body follows kernel order within the layer"
             )
-    if layers != list(range(layers[0], layers[0] + len(layers))):
-        warnings.append("layer indices are not contiguous; bands stop at each gap")
 
     signatures = {
-        layer: _layer_signature(by_layer[layer], tensors, producer) for layer in layers
+        key: _layer_signature(by_layer[key], tensors, producer) for key in by_layer
     }
 
+    # Detection runs inside one section at a time.  A band that straddled a
+    # section boundary would fold two different layer axes into one loop body --
+    # the layer numbering restarts at each section, so the second run is its own
+    # periodic run with its own loop, not a continuation of the first.
     bands: list[LayerBand] = []
-    cursor = 0
-    while cursor < len(layers):
-        first = layers[cursor]
-        period, iterations = _longest_period(
-            layers, cursor, signatures, by_layer, tensors
-        )
-        covered = period * iterations
-        if iterations > 1:
-            bands.append(
-                LayerBand(
-                    band_id=len(bands),
-                    first_layer=first,
-                    layer_count=iterations,
-                    period=period,
-                    signature=";".join(
-                        signatures[first + offset] for offset in range(period)
-                    ),
-                    body_kernels=tuple(
-                        k.index for k in _block_kernels(by_layer, first, period)
-                    ),
-                    degraded=False,
-                )
+    for section in sections:
+        layers = list(section.keys)
+        if layers != list(range(layers[0], layers[0] + len(layers))):
+            warnings.append(
+                f"layer indices in section {section.ordinal} are not "
+                "contiguous; bands stop at each gap"
             )
-        else:
-            for offset in range(max(covered, 1)):
-                layer = first + offset
+        cursor = 0
+        while cursor < len(layers):
+            first = layers[cursor]
+            period, iterations = _longest_period(
+                layers, cursor, signatures, by_layer, tensors
+            )
+            covered = period * iterations
+            if iterations > 1:
                 bands.append(
                     LayerBand(
                         band_id=len(bands),
-                        first_layer=layer,
-                        layer_count=1,
-                        period=1,
-                        signature=signatures[layer],
-                        body_kernels=tuple(k.index for k in by_layer[layer]),
-                        degraded=True,
-                        reason="no repeating block starts at this layer",
+                        first_layer=first,
+                        layer_count=iterations,
+                        period=period,
+                        signature=";".join(
+                            signatures[first + offset] for offset in range(period)
+                        ),
+                        body_kernels=tuple(
+                            k.index for k in _block_kernels(by_layer, first, period)
+                        ),
+                        degraded=False,
+                        layer_base=section.base,
                     )
                 )
-        cursor += max(covered, 1)
+            else:
+                for offset in range(max(covered, 1)):
+                    layer = first + offset
+                    bands.append(
+                        LayerBand(
+                            band_id=len(bands),
+                            first_layer=layer,
+                            layer_count=1,
+                            period=1,
+                            signature=signatures[layer],
+                            body_kernels=tuple(k.index for k in by_layer[layer]),
+                            degraded=True,
+                            reason="no repeating block starts at this layer",
+                            layer_base=section.base,
+                        )
+                    )
+            cursor += max(covered, 1)
     return tuple(bands), warnings
 
 
@@ -2742,10 +2894,7 @@ def _emission_order(
     band_of_kernel: dict[int, int] = {}
     body_position: dict[int, int] = {}
     band_layers: dict[int, set[int]] = {}
-    by_layer: dict[int, list[Kernel]] = {}
-    for kernel in graph.kernels:
-        if kernel.layer is not None:
-            by_layer.setdefault(kernel.layer, []).append(kernel)
+    by_layer = kernels_by_layer_key(graph)
     # Every iteration's kernels get the body position of their band's body, so a
     # tensor produced at position p of one iteration and consumed at position q
     # of the next resolves to the same buffer -- which is exactly what makes the
@@ -2767,11 +2916,12 @@ def _emission_order(
 
     units: list[EmissionUnit] = []
     emitted_bands: set[int] = set()
+    layer_keys = layer_key_map(graph)
     for kernel in graph.kernels:
         if kernel.layer is None:
             units.append(EmissionUnit("kernel", kernel.index))
             continue
-        band_id = layer_to_band[kernel.layer]
+        band_id = layer_to_band[layer_keys[kernel.index]]
         band_of_kernel[kernel.index] = band_id
         if band_id in emitted_bands:
             continue
@@ -2789,6 +2939,7 @@ def _streaming_schedule(
     body_position: Mapping[int, int],
     band_of_kernel: Mapping[int, int],
     block: int,
+    span_max: int,
 ) -> tuple[dict[int, tuple[str, int]], dict[str, tuple[str, int]]]:
     """Find producer/consumer runs that may reuse one fixed-address block.
 
@@ -2817,9 +2968,10 @@ def _streaming_schedule(
     consumer stays full-span, and a group that crosses a layer/band boundary is
     refused by omission rather than guessed into a pipeline.
     """
+    layer_keys = layer_key_map(graph)
     by_layer: dict[int | None, list[Kernel]] = {}
     for kernel in graph.kernels:
-        by_layer.setdefault(kernel.layer, []).append(kernel)
+        by_layer.setdefault(layer_keys.get(kernel.index), []).append(kernel)
     consumers: dict[str, list[int]] = {}
     for kernel in graph.kernels:
         for name in kernel.inputs:
@@ -2837,7 +2989,7 @@ def _streaming_schedule(
         start_band = band_of_kernel.get(start.index)
         if start_band != band_of_kernel.get(end.index):
             return None
-        if start.layer != end.layer:
+        if layer_keys.get(start.index) != layer_keys.get(end.index):
             return None
         if start_band is None:
             return f"k{start.index}.{kind}.{end.index}"
@@ -2916,8 +3068,40 @@ def _streaming_schedule(
             uses = consumers.get(name, ())
             if not uses or tensor.role in {"input", "output", "weight", "constant", "state"}:
                 continue
-            if all(members.get(index) == spec for index in uses):
-                rolling[name] = spec
+            if not all(members.get(index) == spec for index in uses):
+                continue
+            if request_extent_of(tensor, span_max) is None:
+                # A rolling arena exists to bound a leading axis that grows with
+                # the request: it holds one block of rows and the pipeline
+                # advances it.  A tensor whose leading axis is a constant is
+                # already bounded -- DSpark's draft block is a static five rows
+                # -- so there is nothing to roll, and asking for a row step on an
+                # axis that has no request function is how this raised
+                # ``'NoneType' object has no attribute 'step'`` instead.  It
+                # keeps its ordinary static arena, which is a superset of what
+                # the pipeline would have given it.
+                continue
+            rolling[name] = spec
+
+    # A stream group is the *label* on a rolling pipeline, and the two must
+    # agree.  The loop above refuses a rolling arena to every tensor whose
+    # leading axis is a constant, which is every tensor of DSpark's static
+    # five-row draft block -- but the membership above was decided purely from
+    # kernel shape, so those kernels kept a group name for a pipeline that
+    # rolls nothing.  ``lower.py`` then reads the name, requires the members to
+    # share one symbol-bounded row loop, and finds none has a row loop at all:
+    # "stream group 'b7.query_stream.p16-18' does not share one symbol-bounded
+    # row loop".  The group was never a pipeline; a run of kernels that hold
+    # one static block needs no fixed-address window and no shared loop, and
+    # each member keeps the ordinary static arena the refusal above already
+    # gave its outputs.  Dropping the name is therefore the same rule stated
+    # once more, not a second rule: no rolling tensor, no rolling pipeline.
+    grouped_rolling = {spec[0] for spec in rolling.values()}
+    members = {
+        index: spec
+        for index, spec in members.items()
+        if spec[0] in grouped_rolling
+    }
     return members, rolling
 
 
@@ -3123,10 +3307,7 @@ def _unrolled_bands(
     bands: Sequence[LayerBand], graph: KernelGraph
 ) -> tuple[LayerBand, ...]:
     """One band per layer, for a diagnostic build that must be readable back."""
-    by_layer: dict[int, list[Kernel]] = {}
-    for kernel in graph.kernels:
-        if kernel.layer is not None:
-            by_layer.setdefault(kernel.layer, []).append(kernel)
+    by_layer = kernels_by_layer_key(graph)
     out: list[LayerBand] = []
     for band in bands:
         for layer in band.layers:
@@ -3161,10 +3342,7 @@ def _unify_loop_carried(
     that is produced outside the band, whose counterpart in the second iteration
     is produced inside it, is the same logical buffer as that counterpart.
     """
-    by_layer: dict[int, list[Kernel]] = {}
-    for kernel in graph.kernels:
-        if kernel.layer is not None:
-            by_layer.setdefault(kernel.layer, []).append(kernel)
+    by_layer = kernels_by_layer_key(graph)
     alias: dict[str, str] = {}
     for band in bands:
         if band.layer_count < 2:
@@ -3211,10 +3389,7 @@ def _place_states(
     resources = {s.state_id: s for s in graph.states}
 
     # Which states does each *iteration* of each band touch, in kernel order?
-    by_layer: dict[int, list[Kernel]] = {}
-    for kernel in graph.kernels:
-        if kernel.layer is not None:
-            by_layer.setdefault(kernel.layer, []).append(kernel)
+    by_layer = kernels_by_layer_key(graph)
     band_states: dict[int, dict[int, list[str]]] = {}
     for band in bands:
         for iteration in range(band.layer_count):
@@ -4108,9 +4283,18 @@ def _infer_expert_count(
     tensors: Mapping[str, Tensor],
     span_max: int,
 ) -> int:
-    """Derive the expert bound from the routed contraction in the same layer."""
+    """Derive the expert bound from the routed contraction in the same layer.
+
+    "The same layer" is the layer *key*, not the layer number: a graph with two
+    layered sections numbers each from zero, so a raw comparison would accept a
+    peer from the other section as this kernel's own.  The key map is built here
+    rather than threaded in because this path runs only when the graph declares
+    no ``expert_count``, which no published graph does.
+    """
+    layer_keys = layer_key_map(graph)
+    own = layer_keys.get(kernel.index)
     for peer in graph.kernels:
-        if peer.layer != kernel.layer:
+        if layer_keys.get(peer.index) != own:
             continue
         if peer.kind not in {"ROUTED_MATMUL", "GROUPED_MATMUL"}:
             continue
@@ -4245,6 +4429,10 @@ def _plan_kernels(
     # A layer is expert-sharded only when its routed bank divides exactly over
     # the admitted nodes; smaller diagnostic MoEs keep the existing column
     # sharding and must not acquire a reduction that would sum replicas.
+    # Keyed, not raw: expert sharding is a property of one section's layer, and
+    # a raw layer number would extend a main layer's sharding to the DSpark
+    # stage that happens to carry the same number.
+    layer_keys = layer_key_map(graph)
     expert_sharded_layers: set[int | None] = set()
     if node_count > 1:
         for routed in graph.kernels:
@@ -4254,7 +4442,7 @@ def _plan_kernels(
                 routed, tensors[routed.inputs[1]], span_max
             )
             if bank_extent >= node_count and bank_extent % node_count == 0:
-                expert_sharded_layers.add(routed.layer)
+                expert_sharded_layers.add(layer_keys.get(routed.index))
     plans: list[KernelPlan] = []
     # The emitted body is the *first iteration* of each band, which spans the
     # band's period rather than a single layer.
@@ -4263,7 +4451,8 @@ def _plan_kernels(
     }
 
     for kernel in graph.kernels:
-        if kernel.layer is not None and kernel.layer not in emitted_layers:
+        layer_key = layer_keys.get(kernel.index)
+        if layer_key is not None and layer_key not in emitted_layers:
             continue
         engine = engine_for(kernel.kind)
         if len(kernel.outputs) > 2:
@@ -4385,7 +4574,7 @@ def _plan_kernels(
             bank = expert_bank_extent(kernel, tensors[kernel.inputs[1]], span_max)
             if bank:
                 w_rows //= bank
-                if kernel.layer in expert_sharded_layers:
+                if layer_key in expert_sharded_layers:
                     bank_shard = bank // node_count
             # The iteration domain is the authority on contraction geometry when
             # the graph states it.  A grouped projection contracts one group's
@@ -4594,12 +4783,12 @@ def _plan_kernels(
         if node_count > 1:
             if (
                 kernel.kind == "EXPERT_DISPATCH"
-                and kernel.layer in expert_sharded_layers
+                and layer_key in expert_sharded_layers
             ):
                 link_class = LINK_CLASS_BY_KIND[kernel.kind]
             elif (
                 kernel.kind == "EXPERT_REDUCE"
-                and kernel.layer in expert_sharded_layers
+                and layer_key in expert_sharded_layers
                 and int(kernel.attributes.get("top_k", 0) or 0) > 0
             ):
                 link_class = LINK_CLASS_BY_KIND[kernel.kind]

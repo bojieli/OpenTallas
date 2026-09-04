@@ -62,7 +62,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument(
         "--profile",
         default="single-chip",
-        choices=("single-chip", "cluster-32"),
+        choices=("single-chip", "cluster-32", "cluster-32-speculative"),
         help="which shared-chip deployment profile to compile against",
     )
     parser.add_argument(

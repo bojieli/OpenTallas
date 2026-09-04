@@ -104,6 +104,7 @@ from .plan import (
     floor_divisor,
     is_direct_buffer_state,
     is_row_gather,
+    kernels_by_layer_key,
     matrix_shape,
     position_inputs,
     ring_modulus,
@@ -594,7 +595,7 @@ class _Emitter:
                 "bands": [
                     {
                         "band_id": b.band_id,
-                        "first_layer": b.first_layer,
+                        "first_layer": b.model_first_layer,
                         "layer_count": b.layer_count,
                         "degraded": b.degraded,
                     }
@@ -746,10 +747,7 @@ class _Emitter:
         known, rather than assumed from the fact that the released stack
         alternates in step with its compression ratios.
         """
-        by_layer: dict[int, list[Kernel]] = {}
-        for kernel in self.graph.kernels:
-            if kernel.layer is not None:
-                by_layer.setdefault(kernel.layer, []).append(kernel)
+        by_layer = kernels_by_layer_key(self.graph)
         for band in self.plan.bands:
             if band.layer_count <= 1:
                 continue
@@ -5865,11 +5863,25 @@ class _Emitter:
         """
 
         row_loop = loops.get("row")
-        if not out.rolling or row_loop is None:
+        static_block = plan.row_loop is None and "row" not in out.terms
+        if static_block:
+            # The rolling arena is required here for one property: the scatter
+            # names a destination address, so the dispatch block must sit at an
+            # address that does not move between iterations.  A tensor whose
+            # leading axis is a constant -- DSpark dispatches a static
+            # ``block_size * top_k`` row block -- is already at a fixed address
+            # in an ordinary static arena, and it has no iteration to move
+            # between.  It also has no partial trailing block, so there is no
+            # edge to mask: ``edge`` is NO_ID rather than a row loop that does
+            # not exist.  Every other operand of a walked dispatch is unchanged.
+            edge = NO_ID
+        elif not out.rolling or row_loop is None:
             raise LoweringError(
                 f"kernel {plan.kernel_id}: expert dispatch must use the "
                 "fixed-address token-block arena"
             )
+        else:
+            edge = int(row_loop)
         builder = self.builder
         dtype = dtype_of(out.dtype)
         object_id, base = self._object_for(out)
@@ -5879,7 +5891,6 @@ class _Emitter:
         exchange = self._participant_array(
             self.node_count * slot_elements, out.dtype
         )
-        edge = int(row_loop)
         extent_numerator = max(int(out.extent_numerator), 1)
         extent_unit = max(int(out.extent_unit), 1)
         extent_bias = int(out.extent_bias)
@@ -5898,7 +5909,7 @@ class _Emitter:
             dims=[self.node_count, rows, cols],
             strides=[0, cols, 1],
             element_offset=base,
-            extent_axis=1,
+            extent_axis=0 if static_block else 1,
             extent_numerator=extent_numerator,
             extent_unit=extent_unit,
             extent_bias=extent_bias,
@@ -5910,7 +5921,7 @@ class _Emitter:
             dims=[self.node_count, rows, cols],
             strides=[slot_elements, cols, 1],
             writable=True,
-            extent_axis=1,
+            extent_axis=0 if static_block else 1,
             extent_numerator=extent_numerator,
             extent_unit=extent_unit,
             extent_bias=extent_bias,
@@ -6007,11 +6018,20 @@ class _Emitter:
         """All-reduce expert-owner partial rows before EXPERT_REDUCE reads them."""
 
         row_loop = loops.get("row")
-        if not contribution.rolling or row_loop is None:
+        static_block = plan.row_loop is None and "row" not in contribution.terms
+        if static_block:
+            # Same distinction as the dispatch scatter above: the requirement
+            # is a contribution at an address the all-reduce can name, and a
+            # constant leading axis already gives that in an ordinary static
+            # arena, with no trailing partial block to mask.
+            edge = NO_ID
+        elif not contribution.rolling or row_loop is None:
             raise LoweringError(
                 f"kernel {plan.kernel_id}: distributed expert reduction must "
                 "consume a fixed-address token-block contribution"
             )
+        else:
+            edge = int(row_loop)
         builder = self.builder
         dtype = dtype_of(contribution.dtype)
         rows = max(contribution.tile_rows, 1)
@@ -6020,7 +6040,6 @@ class _Emitter:
         exchange = self._participant_array(
             self.node_count * slot_elements, contribution.dtype
         )
-        edge = int(row_loop)
         extent_numerator = max(int(contribution.extent_numerator), 1)
         extent_unit = max(int(contribution.extent_unit), 1)
         extent_bias = int(contribution.extent_bias)
@@ -6158,6 +6177,13 @@ class _Emitter:
         context_bound = extent is not None and extent.symbol != "span_tokens"
         walk_loop: int | None
         walk_step = 0
+        # True when this gather's row count is a constant rather than something
+        # the request sets.  Amendment A18 is then silent: a view that declares
+        # an axis is saying the request decides that extent, and the verifier
+        # refuses a declaration no dynamic term can resolve.  The phase-bound
+        # branch has always passed axis 0 (the non-declaring encoding) for this
+        # reason; the static branch below is the same fact reached another way.
+        static_rows = False
         if fixed_phase:
             if static <= 0:
                 raise LoweringError(
@@ -6191,6 +6217,31 @@ class _Emitter:
             extent_bias = int(extent.bias)
             walk_loop = int(context_loop)
             walk_step = int(step)
+            fixed_edge = NO_ID
+        elif plan.row_loop is None and "row" not in kv.terms:
+            static_rows = True
+            # A fused-KV row space that is neither phase-bound nor walked.
+            # DSpark's is the released example: its attention joins the 128
+            # committed window rows to the five current draft rows (see the
+            # exporter's ``committed_window_then_current_draft``), so the block
+            # is a constant 133 rows and the stage carries no row loop at all.
+            # That is one fixed extent, which is what the phase-bound branch
+            # above already encodes -- the same DMA, the same all-gather, and
+            # ``walk_loop = None`` because there is no loop to walk.  The error
+            # this replaces read the absent row loop as a broken walked gather;
+            # the two are distinguished here rather than conflated, and an
+            # operand that DOES carry a ``row`` term without a loop to walk it
+            # still fails below.
+            rows = int(kv.tile_rows)
+            if rows <= 0:
+                raise LoweringError(
+                    f"kernel {plan.kernel_id}: static sparse gather has "
+                    f"invalid row extent {rows}"
+                )
+            extent_numerator = 1
+            extent_unit = 1
+            extent_bias = 0
+            walk_loop = None
             fixed_edge = NO_ID
         else:
             row_loop = loops.get("row")
@@ -6342,7 +6393,7 @@ class _Emitter:
                 if context_bound and scratch_term is not None
                 else []
             ),
-            extent_axis=0 if fixed_phase else 1,
+            extent_axis=0 if (fixed_phase or static_rows) else 1,
             extent_numerator=extent_numerator,
             extent_unit=extent_unit,
             extent_bias=extent_bias,
@@ -6356,7 +6407,7 @@ class _Emitter:
             element_offset=base,
             dynamic=([source_term] if source_term is not None else []),
             writable=True,
-            extent_axis=0 if fixed_phase else 1,
+            extent_axis=0 if (fixed_phase or static_rows) else 1,
             extent_numerator=extent_numerator,
             extent_unit=extent_unit,
             extent_bias=extent_bias,

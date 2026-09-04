@@ -398,11 +398,14 @@ def check_deployment(
     expected_groups, expected_extents, expected_members = _reconstruct_weight_groups(
         graph, tensors, bands
     )
+    layer_keys = _section_keys(graph)
     first_iteration = {
         b["layers"][offset] for b in bands for offset in range(b["period"])
     }
     representative = {
-        k.index for k in graph.kernels if k.layer is None or k.layer in first_iteration
+        k.index
+        for k in graph.kernels
+        if k.layer is None or layer_keys[k.index] in first_iteration
     }
     emitted_kernels = {
         k for k in representative if graph.kernels[k].kind not in _TRANSACTION_KINDS
@@ -771,11 +774,17 @@ def check_deployment(
         and d.payload["max_iterations"] > 1
     ]
     multi_layer_bands = [b for b in bands if b["layer_count"] > 1]
+    # Both directions.  Too few loops means the program was unrolled over
+    # layers; too many means the program repeats a block this reconstruction
+    # never found, which is the same disagreement seen from the other side and
+    # is exactly how a fused band structure used to slip through -- five
+    # program loops against one reconstructed band read as "plenty".
     require(
         "layer_loop_present",
-        len(band_loops) >= len(multi_layer_bands),
-        f"{len(multi_layer_bands)} multi-layer bands but only {len(band_loops)} "
-        "layer loops; the program is unrolled over layers",
+        len(band_loops) == len(multi_layer_bands),
+        f"{len(multi_layer_bands)} multi-layer bands but {len(band_loops)} "
+        "layer loops; the program's loop structure and the reconstructed band "
+        "structure disagree",
     )
     body_kernels = sum(len(b["body"]) for b in bands)
     prologue = sum(1 for k in graph.kernels if k.layer is None)
@@ -2080,6 +2089,35 @@ def _signature(
     return ";".join(parts)
 
 
+def _section_keys(graph: KernelGraph) -> dict[int, tuple[int, int]]:
+    """``kernel.index`` -> ``(section ordinal, kernel.layer)``.
+
+    A *section* is a maximal run of layered kernels in program order.  A graph
+    that carries two model stacks -- a target and a speculative drafter -- has
+    two of them, and the second one's ``kernel.layer`` restarts at zero, so the
+    raw label is not a grouping key: it fuses target layer 0 with draft stage 0
+    and reconstructs a band structure that never existed.
+
+    Written here from the kernel list alone, and deliberately NOT imported from
+    the planner's ``layered_sections``.  This module's whole claim is that it
+    reaches the same answer by a different route; a checker that shares the
+    producer's grouping helper cannot catch the producer's grouping bug, and
+    would merely look fixed.
+    """
+    keys: dict[int, tuple[int, int]] = {}
+    ordinal = -1
+    inside = False
+    for kernel in graph.kernels:
+        if kernel.layer is None:
+            inside = False
+            continue
+        if not inside:
+            ordinal += 1
+            inside = True
+        keys[kernel.index] = (ordinal, int(kernel.layer))
+    return keys
+
+
 def _reconstruct_bands(
     graph: KernelGraph, tensors: Mapping[str, Tensor]
 ) -> list[dict[str, Any]]:
@@ -2089,15 +2127,40 @@ def _reconstruct_bands(
     written the other way round from the planner's -- it grows the period until
     the signature sequence repeats, rather than testing candidate periods -- so
     that agreement between the two is evidence rather than a shared bug.
+
+    Bands are searched inside one section at a time (see :func:`_section_keys`),
+    so a band can never straddle two model stacks.
     """
     produced = {n: k.index for k in graph.kernels for n in k.outputs}
-    by_layer: dict[int, list[Kernel]] = {}
+    keys = _section_keys(graph)
+    by_layer: dict[tuple[int, int], list[Kernel]] = {}
     for kernel in graph.kernels:
         if kernel.layer is not None:
-            by_layer.setdefault(kernel.layer, []).append(kernel)
+            by_layer.setdefault(keys[kernel.index], []).append(kernel)
     if not by_layer:
         return []
-    layers = sorted(by_layer)
+    bands: list[dict[str, Any]] = []
+    for ordinal in sorted({key[0] for key in by_layer}):
+        bands.extend(
+            _reconstruct_section_bands(
+                ordinal,
+                sorted(key for key in by_layer if key[0] == ordinal),
+                by_layer,
+                tensors,
+                produced,
+            )
+        )
+    return bands
+
+
+def _reconstruct_section_bands(
+    ordinal: int,
+    layers: Sequence[tuple[int, int]],
+    by_layer: Mapping[tuple[int, int], Sequence[Kernel]],
+    tensors: Mapping[str, Tensor],
+    produced: Mapping[str, int],
+) -> list[dict[str, Any]]:
+    """The bands of one section, keyed by ``(section ordinal, model layer)``."""
     signatures = [_signature(by_layer[layer], tensors, produced) for layer in layers]
 
     bands: list[dict[str, Any]] = []
@@ -2112,8 +2175,8 @@ def _reconstruct_bands(
                     break
                 if any(
                     signatures[start + offset] != signatures[cursor + offset]
-                    or layers[start + offset]
-                    != layers[cursor + offset] + iterations * period
+                    or layers[start + offset][1]
+                    != layers[cursor + offset][1] + iterations * period
                     for offset in range(period)
                 ):
                     break
@@ -2127,7 +2190,8 @@ def _reconstruct_bands(
         if best_iterations < 2:
             bands.append(
                 {
-                    "first_layer": layers[cursor],
+                    "section": ordinal,
+                    "first_layer": layers[cursor][1],
                     "layer_count": 1,
                     "period": 1,
                     "layers": [layers[cursor]],
@@ -2142,10 +2206,11 @@ def _reconstruct_bands(
             body.extend(by_layer[layer])
         bands.append(
             {
-                "first_layer": covered[0],
+                "section": ordinal,
+                "first_layer": covered[0][1],
                 "layer_count": best_iterations,
                 "period": best_period,
-                "layers": covered,
+                "layers": list(covered),
                 "body": body,
             }
         )
@@ -2158,8 +2223,8 @@ _MAX_PERIOD = 8
 
 
 def _uniform(
-    by_layer: Mapping[int, Sequence[Kernel]],
-    layers: Sequence[int],
+    by_layer: Mapping[tuple[int, int], Sequence[Kernel]],
+    layers: Sequence[tuple[int, int]],
     cursor: int,
     period: int,
     iterations: int,
@@ -2851,10 +2916,11 @@ def _reconstruct_weight_groups(
     made of and is not recoverable from the ranges once a segmented binding has
     been expanded.
     """
-    by_layer: dict[int, list[Kernel]] = {}
+    keys = _section_keys(graph)
+    by_layer: dict[tuple[int, int], list[Kernel]] = {}
     for kernel in graph.kernels:
         if kernel.layer is not None:
-            by_layer.setdefault(kernel.layer, []).append(kernel)
+            by_layer.setdefault(keys[kernel.index], []).append(kernel)
 
     groups: dict[str, list[_Range]] = {}
     extents: dict[str, list[int]] = {}
@@ -2894,7 +2960,10 @@ def _reconstruct_weight_groups(
                 if not members:
                     continue
                 claimed.update(members)
-                role_key = f"role:{band['first_layer']}.{position}.{slot}"
+                role_key = (
+                    f"role:{band['section']}.{band['first_layer']}"
+                    f".{position}.{slot}"
+                )
                 groups[role_key] = [
                     rng for m in members for rng in _binding_ranges(tensors[m].binding)
                 ]

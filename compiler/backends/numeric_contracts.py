@@ -17,6 +17,10 @@ from runtime.abi3.constants import ReductionOrder
 
 
 BLOCKED_CONTRACTION_CONTRACT: Final = "bf16_bf16_fp32_blocked_rne_v1"
+#: The released DeepSeek RMSNorm: binary32 through the gain multiply, one
+#: rounding at the output.  ``runtime/sim/backend.py`` binds this name to
+#: ``runtime.reference.normalization.rms_norm_bf16``.
+DEEPSEEK_RMSNORM_CONTRACT: Final = "deepseek_rmsnorm_binary32_v1"
 
 # TA-ABI3-OPCONV-1 amendment A7 admits both the strictly ascending scalar
 # qualification contract and the blocked lane-array execution contract.  A key
@@ -42,6 +46,21 @@ EXECUTION_CONTRACT: Final[Mapping[str, str]] = MappingProxyType(
         "mxfp4_swiglu_bf16_gate_contraction_v1": BLOCKED_CONTRACTION_CONTRACT,
         "mxfp4_swiglu_bf16_up_contraction_v1": BLOCKED_CONTRACTION_CONTRACT,
         "mxfp4_swiglu_bf16_down_contraction_v1": BLOCKED_CONTRACTION_CONTRACT,
+        # DSpark's two composite operations each contain one ordinary
+        # ``RMSNorm(dim, norm_eps)`` of the released model, and their
+        # qualifying references say so by *calling* the one that owns it:
+        # ``runtime.reference.dspark_main_project`` and
+        # ``runtime.reference.dspark_prefill_kv`` both compose
+        # ``runtime.reference.normalization.rms_norm_bf16``, which
+        # ``runtime/sim/backend.py`` maps to ``deepseek_rmsnorm_binary32_v1``.
+        # So this is not a guess about which rounding the operation wants --
+        # the two contracts are the same arithmetic by construction, and the
+        # composite name exists to keep the *qualification* attached to the
+        # released composite.  Without the substitution the vector engine
+        # refuses the descriptor outright, which is correct of it: A8 has it
+        # dispatch RMSNorm on the contract and never infer one.
+        "dspark_main_project_bf16_conditioning_norm_v1": DEEPSEEK_RMSNORM_CONTRACT,
+        "dspark_prefill_kv_bf16_key_value_norm_v1": DEEPSEEK_RMSNORM_CONTRACT,
     }
 )
 

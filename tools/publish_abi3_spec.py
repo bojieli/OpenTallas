@@ -143,6 +143,11 @@ def build(*, include_derived: bool = True) -> dict[str, dict]:
     }
     if include_derived:
         published["spec/abi3/numeric_contract_union.json"] = _numeric_union()
+        speculative = _speculative_numeric_union()
+        if speculative is not None:
+            published["spec/abi3/numeric_contract_union_speculative.json"] = (
+                speculative
+            )
     return published
 
 
@@ -156,6 +161,29 @@ def _numeric_union() -> dict:
     from compiler.ir.v3.numeric import capability_union, default_graph_paths
 
     paths = default_graph_paths()
+    body = capability_union(paths)
+    body["derived_from"] = [str(p.relative_to(REPO)) for p in paths]
+    return body
+
+
+def _speculative_numeric_union() -> dict | None:
+    """The contract union of the DSpark speculative graphs, published apart.
+
+    Kept out of :func:`_numeric_union` on purpose.  The speculative exports name
+    48 contracts the shipped graphs do not, and folding them into the shipped
+    union would widen both shipped HBM capabilities, move their digests and so
+    invalidate deployments already admitted against them -- silently, because
+    nothing about a wider union looks like a change to a shipped product.  A
+    separate record makes admitting them a decision rather than a side effect.
+
+    ``None`` when the speculative graphs have not been exported, so that a
+    checkout without them neither publishes an empty union nor reports drift.
+    """
+    from compiler.ir.v3.numeric import capability_union, speculative_graph_paths
+
+    paths = speculative_graph_paths()
+    if not paths:
+        return None
     body = capability_union(paths)
     body["derived_from"] = [str(p.relative_to(REPO)) for p in paths]
     return body

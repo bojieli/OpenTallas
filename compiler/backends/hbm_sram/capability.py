@@ -28,7 +28,11 @@ from __future__ import annotations
 
 from typing import Any, Mapping
 
-from compiler.ir.v3.numeric import canonical_contract_id, union_contract_ids
+from compiler.ir.v3.numeric import (
+    require_implemented,
+    speculative_union_contract_ids,
+    union_contract_ids,
+)
 from runtime.abi3.capability import Capability
 from runtime.abi3.constants import Feature, TopologyClass
 
@@ -75,13 +79,30 @@ _FALLBACK_CONTRACTS: tuple[str, ...] = (
 
 
 def shared_numeric_contracts() -> tuple[str, ...]:
-    """The contract union this chip declares, canonical and sorted."""
+    """The contract union this chip declares, canonical and sorted.
+
+    Every name is checked against an implementation before it is declared.  A
+    capability is a statement about what the chip *does*, and the cheapest way
+    to make a refused build admit is to add the refused name to this tuple --
+    which produces a program that runs and is wrong, with no later check able to
+    tell.  :func:`require_implemented` makes that edit fail instead.
+    """
     union = set(union_contract_ids()) or set(_FALLBACK_CONTRACTS)
     union |= set(EXECUTION_ONLY_CONTRACTS)
-    return tuple(sorted(canonical_contract_id(name) for name in union))
+    return require_implemented(union, what="the shared-chip capability")
 
 
 SHARED_NUMERIC_CONTRACTS: tuple[str, ...] = shared_numeric_contracts()
+
+
+def speculative_numeric_contracts() -> tuple[str, ...]:
+    """The shared union widened by the DSpark speculative contracts.
+
+    See :func:`cluster32_speculative_capability` for why this is a separate
+    tuple rather than a wider :data:`SHARED_NUMERIC_CONTRACTS`.
+    """
+    union = set(SHARED_NUMERIC_CONTRACTS) | set(speculative_union_contract_ids())
+    return require_implemented(union, what="the speculative capability")
 
 #: Feature bits the shared chip implements.  ``INTER_CHIP_ENDPOINT`` is present
 #: in *both* profiles: the endpoint is synthesized into every chip whether or
@@ -232,6 +253,44 @@ def cluster32_capability() -> Capability:
     )
 
 
+def cluster32_speculative_capability() -> Capability:
+    """Cluster-32, declaring the DSpark speculative contracts as well.
+
+    This is the one place the lane's own doctrine needs an explicit defence.
+    TA-HBM-3.0 section 3.5 and this module's docstring say the profiles may
+    differ in exactly three fields -- topology class, node count and link -- and
+    this record differs in a fourth, ``numeric_contracts``.  That is not a
+    model-specific hardware switch, and the distinction is worth stating
+    precisely rather than asserting:
+
+    *The chip does not change.*  Same netlist, same feature bits, same engines,
+    same memory, same limits, same technology view.  Nothing here asks for
+    silicon the two shipped profiles do not have.
+
+    *The declaration widens over work already released.*  Every one of the 48
+    added contracts already had its bit-exact reference in ``runtime/reference``
+    before this record existed -- the confidence head, the DSpark projections
+    and prefill KV, the Markov loop, the noise embedding, the window indices and
+    the target-hidden capture.  :func:`speculative_numeric_contracts` re-checks
+    that, so this profile cannot become a way to declare an operation nothing
+    implements.
+
+    *It is a separate record only so that admitting them is deliberate.*  Adding
+    the 48 to :data:`SHARED_NUMERIC_CONTRACTS` would move both shipped digests
+    and invalidate the deployments and cycle evidence bound to them, as a side
+    effect of an unrelated export appearing on disk.  Re-merging the speculative
+    contracts into the single union is the right end state, but it has to happen
+    alongside a deliberate rebuild of the shipped deployments.  This record
+    defers that rather than doing it by accident.
+    """
+    return _shared_capability(
+        topology_class=TopologyClass.CLUSTER_32,
+        node_count=32,
+        link=CLUSTER_32_LINK,
+        numeric_contracts=speculative_numeric_contracts(),
+    )
+
+
 #: Factories, one per named profile.  Kept private so that ``PROFILES`` can be
 #: a mapping of *capabilities* rather than of callables: a consumer that writes
 #: ``PROFILES["single-chip"]`` should get the record, not something it has to
@@ -239,7 +298,13 @@ def cluster32_capability() -> Capability:
 _FACTORIES: dict[str, Any] = {
     "single-chip": single_chip_capability,
     "cluster-32": cluster32_capability,
+    "cluster-32-speculative": cluster32_speculative_capability,
 }
+
+#: The profiles that describe a shipped product.  :func:`profile_difference`
+#: reports on exactly these, so adding a research profile above does not
+#: weaken the release claim it checks.
+SHIPPED_PROFILES: tuple[str, ...] = ("single-chip", "cluster-32")
 
 #: The shared chip's deployment profiles, by name.  These records are shared;
 #: call :func:`capability_for` for one a caller may modify.

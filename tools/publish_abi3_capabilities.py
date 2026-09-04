@@ -40,6 +40,13 @@ CONFIG_ROOT = REPO / "configs" / "hardware" / "abi3_capability"
 PUBLISHED: dict[str, tuple[str, str]] = {
     "hbm_sram_single_chip": ("compiler.backends.hbm_sram.capability", "single-chip"),
     "hbm_sram_cluster_32": ("compiler.backends.hbm_sram.capability", "cluster-32"),
+    # Not a shipped product: the cluster-32 chip with the DSpark speculative
+    # contracts declared as well, so that admitting them cannot re-digest the
+    # two profiles above.  See ``cluster32_speculative_capability``.
+    "hbm_sram_cluster_32_speculative": (
+        "compiler.backends.hbm_sram.capability",
+        "cluster-32-speculative",
+    ),
     # The two ROM profiles had the same two sources of truth this tool exists
     # to remove, and were simply not listed here: the file on disk and
     # ``qwen3_rom_capability`` / ``deepseek_v4_rom_capability`` happened to

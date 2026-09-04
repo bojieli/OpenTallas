@@ -823,6 +823,7 @@ def test_index_stream_keeps_one_row_for_the_two_dynamic_score_axes():
         body_position={0: 0, 1: 1},
         band_of_kernel={0: 0, 1: 0},
         block=512,
+        span_max=512,
     )
 
     assert members[0] == members[1]
@@ -898,7 +899,11 @@ def test_profiles_map_to_capability_records_not_factories():
     from compiler.backends.hbm_sram.capability import PROFILES
     from runtime.abi3.capability import Capability
 
-    assert set(PROFILES) == {"single-chip", "cluster-32"}
+    assert set(PROFILES) == {
+        "single-chip",
+        "cluster-32",
+        "cluster-32-speculative",
+    }
     for name, profile in PROFILES.items():
         assert isinstance(profile, Capability), name
         assert profile.digest == capability_for(name).digest
@@ -4037,3 +4042,621 @@ def test_both_lanes_agree_which_operands_carry_a_block_scale():
         "is two lanes running two different models -- which is exactly what "
         "the declared numeric contracts could not show."
     )
+
+
+# ---------------------------------------------------------------------------
+# Two layered sections: the DSpark speculative shape
+# ---------------------------------------------------------------------------
+def two_span_graph(
+    *,
+    first_layers: int = 4,
+    second_layers: int = 2,
+    hidden: int = 64,
+    span_max: int = 128,
+) -> KernelGraph:
+    """Prologue, layered run, interlude, second layered run, epilogue.
+
+    The second run's layer numbering **restarts at zero**, which is the shape
+    the DSpark speculative export produces and the one a single ``by_layer``
+    bucket silently fuses with the first run.  Everything else is kept as small
+    as it can be so the test reads as a statement about structure.
+    """
+    ck = _Checkpoint(1)
+    tensors: list[Tensor] = []
+    kernels: list[Kernel] = []
+
+    def weight(name: str, shape: tuple[int, ...]) -> str:
+        elements = 1
+        for dim in shape:
+            elements *= dim
+        tensors.append(
+            Tensor(
+                tensor_id=name,
+                dtype="bf16",
+                shape=shape,
+                role="weight",
+                binding=ck.bind(name, elements),
+            )
+        )
+        return name
+
+    def act(name: str, shape: tuple, dtype: str = "bf16", role: str = "activation"):
+        tensors.append(Tensor(tensor_id=name, dtype=dtype, shape=shape, role=role))
+        return name
+
+    def emit(kind: str, ins, outs, contract: str, **kw) -> None:
+        kernels.append(
+            Kernel(
+                index=len(kernels),
+                kernel_id=f"k{len(kernels):04d}.{kind.lower()}",
+                kind=kind,
+                inputs=tuple(ins),
+                outputs=tuple(outs),
+                numeric_contract=contract,
+                **kw,
+            )
+        )
+
+    def stack(prefix: str, count: int, source: str) -> str:
+        previous = source
+        for index in range(count):
+            p = f"{prefix}{index}"
+            weight(f"{p}.norm", (hidden,))
+            weight(f"{p}.w", (hidden, hidden))
+            act(f"{p}.n", (SPAN, hidden))
+            act(f"{p}.o", (SPAN, hidden))
+            act(f"{p}.res", (SPAN, hidden))
+            layer = {"layer": index}  # NOTE: restarts at 0 for each stack
+            emit("RMS_NORM", [previous, f"{p}.norm"], [f"{p}.n"],
+                 "qwen3_rmsnorm_fp32_bf16_v1", **layer)
+            emit("MATMUL", [f"{p}.n", f"{p}.w"], [f"{p}.o"],
+                 "bf16_bf16_fp32_sequential_rne_v1", **layer)
+            emit("ADD", [previous, f"{p}.o"], [f"{p}.res"], "bf16_add_rne_v1",
+                 **layer)
+            previous = f"{p}.res"
+        return previous
+
+    act("tokens", (SPAN, 1), "u32", role="input")
+    weight("embed", (span_max, hidden))
+    act("hidden0", (SPAN, hidden))
+    emit("EMBEDDING_LOOKUP", ["tokens", "embed"], ["hidden0"],
+         "lookup_bf16_token_embedding_v1")
+
+    main_out = stack("main", first_layers, "hidden0")
+
+    # The interlude: unlayered kernels that produce the second run's input.
+    weight("mid.norm", (hidden,))
+    act("mid.n", (SPAN, hidden))
+    emit("RMS_NORM", [main_out, "mid.norm"], ["mid.n"],
+         "qwen3_rmsnorm_fp32_bf16_v1")
+
+    draft_out = stack("draft", second_layers, "mid.n")
+
+    weight("final.norm", (hidden,))
+    act("hidden.final", (SPAN, hidden))
+    act("out", (SPAN, hidden), role="output")
+    emit("RMS_NORM", [draft_out, "final.norm"], ["hidden.final"],
+         "qwen3_rmsnorm_fp32_bf16_v1")
+    emit("ADD", ["hidden.final", draft_out], ["out"], "bf16_add_rne_v1")
+
+    return KernelGraph(
+        model_id="synthetic-two-span",
+        source={"family": "two-span"},
+        symbols=(RuntimeSymbol("span_tokens", 1, span_max, 1),),
+        tensors=tuple(tensors),
+        states=(),
+        kernels=tuple(kernels),
+        entrypoints=(Entrypoint("decode", ("tokens",), ("out",), ()),),
+        generation_policy={},
+    )
+
+
+def _bands_of(graph: KernelGraph):
+    from compiler.backends.hbm_sram.plan import _build_bands
+
+    return _build_bands(graph, {t.tensor_id: t for t in graph.tensors})
+
+
+def test_layer_key_separates_sections_whose_numbering_restarts():
+    """The grouping key is injective across sections; the raw layer is not."""
+    from compiler.backends.hbm_sram.plan import (
+        kernels_by_layer_key,
+        layer_key_map,
+        layered_sections,
+    )
+
+    graph = two_span_graph()
+    sections = layered_sections(graph)
+    assert [(s.ordinal, s.base, s.layers) for s in sections] == [
+        (0, 0, (0, 1, 2, 3)),
+        (1, 4, (0, 1)),
+    ]
+
+    # Raw layer numbers collide: layer 0 names a main layer *and* a draft one.
+    raw: dict[int, int] = {}
+    for kernel in graph.kernels:
+        if kernel.layer is not None:
+            raw[kernel.layer] = raw.get(kernel.layer, 0) + 1
+    assert raw[0] == 6, "main layer 0 and draft layer 0 fuse under the raw key"
+
+    # Keyed, they do not.  Keys stay consecutive so a loop induction variable
+    # still addresses a layer.
+    buckets = kernels_by_layer_key(graph)
+    assert sorted(buckets) == [0, 1, 2, 3, 4, 5]
+    assert all(len(v) == 3 for v in buckets.values())
+    keys = layer_key_map(graph)
+    assert len(set(keys.values())) == 6
+
+
+def test_two_layered_sections_compress_into_two_loops():
+    """Each section becomes its own loop; no band straddles the boundary."""
+    graph = two_span_graph()
+    bands, warnings = _bands_of(graph)
+
+    assert warnings == [], "a multi-section graph must not warn its way through"
+    assert len(bands) == 2, [b.to_dict() for b in bands]
+
+    first, second = bands
+    assert (first.first_layer, first.layer_count, first.period) == (0, 4, 1)
+    assert (second.first_layer, second.layer_count, second.period) == (4, 2, 1)
+    assert not first.degraded and not second.degraded
+
+    # Each band lies wholly inside one section, and reports the model's own
+    # layer numbering rather than the internal key.
+    assert first.layer_base == 0 and first.model_first_layer == 0
+    assert second.layer_base == 4 and second.model_first_layer == 0
+    assert second.model_layers == (0, 1)
+    assert first.to_dict()["first_layer"] == 0
+    assert second.to_dict()["first_layer"] == 0
+
+
+def test_two_span_emission_covers_every_kernel_exactly_once():
+    """No kernel is dropped between the sections, and none is emitted twice."""
+    from compiler.backends.hbm_sram.plan import _emission_order, kernels_by_layer_key
+
+    graph = two_span_graph()
+    bands, _ = _bands_of(graph)
+    units, _, band_of_kernel = _emission_order(graph, bands)
+    buckets = kernels_by_layer_key(graph)
+
+    covered: list[int] = []
+    for unit in units:
+        if unit.kind == "kernel":
+            covered.append(unit.index)
+        else:
+            band = bands[unit.index]
+            for key in band.layers:
+                covered.extend(k.index for k in buckets[key])
+
+    assert sorted(covered) == list(range(len(graph.kernels)))
+    assert len(covered) == len(set(covered))
+    # Every layered kernel is attributed to exactly one band.
+    assert len(band_of_kernel) == sum(len(v) for v in buckets.values())
+
+
+def test_interlude_is_emitted_before_the_second_run_that_consumes_it():
+    """The straight-line code between the sections must not be reordered.
+
+    Before the section walk the second run was folded into the first run's
+    bands, so its loops opened *ahead* of the kernels producing their inputs --
+    silently, because nothing raised.
+    """
+    from compiler.backends.hbm_sram.plan import _emission_order
+
+    graph = two_span_graph()
+    bands, _ = _bands_of(graph)
+    units, _, _ = _emission_order(graph, bands)
+
+    order = [(u.kind, u.index) for u in units]
+    interlude = order.index(("kernel", 13))  # the mid RMS_NORM
+    assert order.index(("band", 0)) < interlude < order.index(("band", 1))
+    assert order == [
+        ("kernel", 0),
+        ("band", 0),
+        ("kernel", 13),
+        ("band", 1),
+        ("kernel", 20),
+        ("kernel", 21),
+    ]
+
+
+def test_single_section_graphs_compress_exactly_as_before(dense, moe):
+    """The key is the identity on a graph with one layered section."""
+    from compiler.backends.hbm_sram.plan import (
+        kernels_by_layer_key,
+        layer_key_map,
+        layered_sections,
+    )
+
+    for graph in (dense, moe):
+        sections = layered_sections(graph)
+        assert len(sections) == 1
+        assert sections[0].base == 0
+        keys = layer_key_map(graph)
+        for kernel in graph.kernels:
+            if kernel.layer is not None:
+                assert keys[kernel.index] == kernel.layer
+        buckets = kernels_by_layer_key(graph)
+        assert sorted(buckets) == sorted(
+            {k.layer for k in graph.kernels if k.layer is not None}
+        )
+        bands, warnings = _bands_of(graph)
+        assert warnings == []
+        for band in bands:
+            assert band.layer_base == 0
+            assert band.model_first_layer == band.first_layer
+            assert band.model_layers == band.layers
+
+
+def test_dense_graph_still_folds_into_one_band(dense):
+    """The pre-change compression result, restated as a regression."""
+    bands, warnings = _bands_of(dense)
+    assert warnings == []
+    assert len(bands) == 1
+    assert (bands[0].first_layer, bands[0].layer_count, bands[0].period) == (0, 4, 1)
+    assert not bands[0].degraded
+
+
+# ---------------------------------------------------------------------------
+# A contract must be implemented, not merely declared
+# ---------------------------------------------------------------------------
+def test_a_declared_but_unimplemented_contract_is_refused():
+    from compiler.ir.v3.numeric import (
+        NumericContractError,
+        implementation_of,
+        require_implemented,
+        unimplemented_contracts,
+    )
+
+    invented = "utterly_invented_contract_v1"
+    assert implementation_of(invented) is None
+    assert unimplemented_contracts([invented]) == (invented,)
+
+    with pytest.raises(NumericContractError) as excinfo:
+        require_implemented(["exact_index_select_v1", invented], what="a test profile")
+    assert invented in str(excinfo.value)
+    # The refusal must name the fix as adding the reference, not widening.
+    assert "do not widen the declaration" in str(excinfo.value)
+
+
+def test_every_declared_contract_of_every_profile_is_implemented():
+    """The gate is live on the profiles, not only available to them."""
+    from compiler.backends.hbm_sram.capability import PROFILES
+    from compiler.ir.v3.numeric import unimplemented_contracts
+
+    for name, profile in PROFILES.items():
+        assert unimplemented_contracts(profile.numeric_contracts) == (), name
+
+
+def test_the_speculative_profile_widens_only_the_contract_declaration():
+    """A research profile must not become a model-specific hardware switch."""
+    from compiler.backends.hbm_sram.capability import (
+        cluster32_capability,
+        cluster32_speculative_capability,
+    )
+
+    shipped = cluster32_capability().to_dict()
+    speculative = cluster32_speculative_capability().to_dict()
+    differing = sorted(
+        key
+        for key in set(shipped) | set(speculative)
+        if shipped.get(key) != speculative.get(key)
+    )
+    assert differing == ["numeric_contracts"]
+    assert set(shipped["numeric_contracts"]) < set(speculative["numeric_contracts"])
+    assert cluster32_speculative_capability().digest != cluster32_capability().digest
+    # And the shipped record has not moved.
+    assert cluster32_capability().digest == (
+        "1eb2e92dac1d9fb8937b7724953d2f65993bd56e342e9058569442eb61d74bad"
+    )
+
+
+# ---------------------------------------------------------------------------
+# The independent checker's own section walk
+#
+# check.py is deliberately a second opinion: it reconstructs the band structure
+# from the kernel list by a different search than the planner's, so that
+# agreement between the two is evidence rather than a shared bug.  It used to
+# bucket by the raw ``kernel.layer``, which is the planner's old bug, so on a
+# two-stack graph it agreed with nothing and disagreed with everything:
+#
+#   * on spans of EQUAL length it FAILED OPEN -- five 3-layer spans reconstructed
+#     as one 3-layer band with a 15-kernel body, and the deployment still passed
+#     33 of 33 checks, because ``layer_loop_present`` only asked whether the
+#     program had at least as many loops as the reconstruction found;
+#   * on spans of UNEQUAL length it failed closed with misleading errors about
+#     kernels reaching no operator; and
+#   * it could not catch the mis-compilation the planner's section walk was
+#     added to prevent.
+#
+# The fix is a second, independently written section walk in check.py -- NOT an
+# import of the planner's, which would destroy the file's purpose while
+# appearing to fix it.
+# ---------------------------------------------------------------------------
+def _two_span_lowerable() -> KernelGraph:
+    """``two_span_graph`` with the prefill entrypoint the neutral IR requires."""
+    graph = two_span_graph()
+    return dataclasses.replace(
+        graph,
+        entrypoints=(
+            Entrypoint("prefill", ("tokens",), ("out",), ()),
+            Entrypoint("decode", ("tokens",), ("out",), ()),
+        ),
+    )
+
+
+def test_the_checker_buckets_by_section_not_by_the_raw_layer_label():
+    """The raw label fuses the two stacks; the checker's own key does not."""
+    from compiler.backends.hbm_sram.check import _section_keys
+
+    graph = two_span_graph()
+    keys = _section_keys(graph)
+
+    # What the raw label does: main layer 0 and draft stage 0 share a bucket.
+    raw: dict[int, list[int]] = {}
+    for kernel in graph.kernels:
+        if kernel.layer is not None:
+            raw.setdefault(int(kernel.layer), []).append(kernel.index)
+    assert len(raw[0]) == 6, "the raw label fuses main layer 0 with draft stage 0"
+
+    # What the checker's key does: two sections, numbered in program order,
+    # each carrying the model's own layer.
+    assert sorted({key[0] for key in keys.values()}) == [0, 1]
+    keyed: dict[tuple[int, int], list[int]] = {}
+    for index, key in keys.items():
+        keyed.setdefault(key, []).append(index)
+    assert sorted(keyed) == [(0, 0), (0, 1), (0, 2), (0, 3), (1, 0), (1, 1)]
+    assert all(len(members) == 3 for members in keyed.values())
+
+
+def test_the_checker_reconstructs_exactly_the_planner_s_bands_on_two_sections():
+    """Agreement is the file's whole claim, and it must hold per section."""
+    from compiler.backends.hbm_sram.check import _reconstruct_bands
+
+    graph = two_span_graph()
+    tensors = {t.tensor_id: t for t in graph.tensors}
+    planner = _bands_of(graph)
+    planner = planner[0] if isinstance(planner, tuple) else planner
+    checker = _reconstruct_bands(graph, tensors)
+
+    assert [(b["section"], b["first_layer"], b["layer_count"], b["period"])
+            for b in checker] == [(0, 0, 4, 1), (1, 0, 2, 1)]
+    assert [(b.model_first_layer, b.layer_count, b.period) for b in planner] == [
+        (b["first_layer"], b["layer_count"], b["period"]) for b in checker
+    ]
+    # No reconstructed band straddles the boundary between the two stacks.
+    boundary = max(
+        k.index for k in graph.kernels
+        if k.layer is not None and k.index < min(
+            j.index for j in graph.kernels
+            if j.layer is not None and j.index > 10
+        )
+    )
+    for band in checker:
+        indices = [k.index for k in band["body"]]
+        assert (max(indices) <= boundary) or (min(indices) > boundary)
+
+
+def test_a_two_section_deployment_passes_the_independent_checker():
+    """It used to fail closed here, on kernels that reach no operator."""
+    graph = _two_span_lowerable()
+    capability = single_chip_capability()
+    deployment = lower_to_abi3(graph, capability)
+    report = check_deployment(graph, deployment, capability)
+    failing = sorted(name for name, ok in report["checks"].items() if not ok)
+    assert failing == [], report["errors"][:4]
+    assert report["ok"] is True
+
+
+def multi_span_graph(counts, *, hidden: int = 64, span_max: int = 128) -> KernelGraph:
+    """``len(counts)`` layered sections, each numbering restarting at zero.
+
+    ``two_span_graph`` generalised: with EQUAL section lengths the old raw-layer
+    reconstruction folds every section into one band and still reports a
+    plausible band structure, which is the shape that used to pass.
+    """
+    ck = _Checkpoint(1)
+    tensors: list[Tensor] = []
+    kernels: list[Kernel] = []
+
+    def weight(name: str, shape: tuple[int, ...]) -> str:
+        elements = 1
+        for dim in shape:
+            elements *= dim
+        tensors.append(
+            Tensor(
+                tensor_id=name,
+                dtype="bf16",
+                shape=shape,
+                role="weight",
+                binding=ck.bind(name, elements),
+            )
+        )
+        return name
+
+    def act(name: str, shape: tuple, dtype: str = "bf16", role: str = "activation"):
+        tensors.append(Tensor(tensor_id=name, dtype=dtype, shape=shape, role=role))
+        return name
+
+    def emit(kind: str, ins, outs, contract: str, **kw) -> None:
+        kernels.append(
+            Kernel(
+                index=len(kernels),
+                kernel_id=f"k{len(kernels):04d}.{kind.lower()}",
+                kind=kind,
+                inputs=tuple(ins),
+                outputs=tuple(outs),
+                numeric_contract=contract,
+                **kw,
+            )
+        )
+
+    def stack(prefix: str, count: int, source: str) -> str:
+        previous = source
+        for index in range(count):
+            p = f"{prefix}{index}"
+            weight(f"{p}.norm", (hidden,))
+            weight(f"{p}.w", (hidden, hidden))
+            act(f"{p}.n", (SPAN, hidden))
+            act(f"{p}.o", (SPAN, hidden))
+            act(f"{p}.res", (SPAN, hidden))
+            layer = {"layer": index}
+            emit("RMS_NORM", [previous, f"{p}.norm"], [f"{p}.n"],
+                 "qwen3_rmsnorm_fp32_bf16_v1", **layer)
+            emit("MATMUL", [f"{p}.n", f"{p}.w"], [f"{p}.o"],
+                 "bf16_bf16_fp32_sequential_rne_v1", **layer)
+            emit("ADD", [previous, f"{p}.o"], [f"{p}.res"], "bf16_add_rne_v1", **layer)
+            previous = f"{p}.res"
+        return previous
+
+    act("tokens", (SPAN, 1), "u32", role="input")
+    weight("embed", (span_max, hidden))
+    act("hidden0", (SPAN, hidden))
+    emit("EMBEDDING_LOOKUP", ["tokens", "embed"], ["hidden0"],
+         "lookup_bf16_token_embedding_v1")
+
+    previous = "hidden0"
+    for ordinal, count in enumerate(counts):
+        previous = stack(f"s{ordinal}_", count, previous)
+        if ordinal != len(counts) - 1:
+            weight(f"mid{ordinal}.norm", (hidden,))
+            act(f"mid{ordinal}.n", (SPAN, hidden))
+            emit("RMS_NORM", [previous, f"mid{ordinal}.norm"], [f"mid{ordinal}.n"],
+                 "qwen3_rmsnorm_fp32_bf16_v1")
+            previous = f"mid{ordinal}.n"
+
+    weight("final.norm", (hidden,))
+    act("hidden.final", (SPAN, hidden))
+    act("out", (SPAN, hidden), role="output")
+    emit("RMS_NORM", [previous, "final.norm"], ["hidden.final"],
+         "qwen3_rmsnorm_fp32_bf16_v1")
+    emit("ADD", ["hidden.final", previous], ["out"], "bf16_add_rne_v1")
+
+    return KernelGraph(
+        model_id="synthetic-multi-span",
+        source={"family": "multi-span"},
+        symbols=(RuntimeSymbol("span_tokens", 1, span_max, 1),),
+        tensors=tuple(tensors),
+        states=(),
+        kernels=tuple(kernels),
+        entrypoints=(
+            Entrypoint("prefill", ("tokens",), ("out",), ()),
+            Entrypoint("decode", ("tokens",), ("out",), ()),
+        ),
+        generation_policy={},
+    )
+
+
+def test_more_loops_than_reconstructed_bands_is_a_disagreement_too(monkeypatch):
+    """The fail-open: five loops against one band once read as 'plenty'.
+
+    ``layer_loop_present`` asked ``len(band_loops) >= len(multi_layer_bands)``,
+    so a program carrying MORE constant loops than the reconstruction found was
+    never questioned -- and that is exactly the shape a fused reconstruction
+    produces on sections of equal length.  Here the reconstruction is forced
+    back to raw-layer bucketing while the program is left correct, so the only
+    thing under test is the direction of the comparison.
+    """
+    from compiler.backends.hbm_sram import check as check_module
+
+    graph = multi_span_graph([3, 3, 3])
+    capability = single_chip_capability()
+    deployment = lower_to_abi3(graph, capability)
+
+    honest = check_deployment(graph, deployment, capability)
+    assert honest["checks"]["layer_loop_present"] is True
+    assert len(check_module._reconstruct_bands(
+        graph, {t.tensor_id: t for t in graph.tensors}
+    )) == 3
+
+    def fused(graph_, tensors, _real=check_module._reconstruct_bands):
+        """The pre-fix reconstruction: one bucket per raw layer label."""
+        produced = {n: k.index for k in graph_.kernels for n in k.outputs}
+        by_layer: dict[int, list[Kernel]] = {}
+        for kernel in graph_.kernels:
+            if kernel.layer is not None:
+                by_layer.setdefault(int(kernel.layer), []).append(kernel)
+        layers = sorted(by_layer)
+        return [{
+            "section": 0,
+            "first_layer": layers[0],
+            "layer_count": len(layers),
+            "period": 1,
+            "layers": [(0, layer) for layer in layers],
+            "body": [k for layer in layers for k in by_layer[layer]],
+        }] if by_layer and produced else []
+
+    monkeypatch.setattr(check_module, "_reconstruct_bands", fused)
+    report = check_deployment(graph, deployment, capability)
+    assert report["checks"]["layer_loop_present"] is False
+    assert any("layer loops" in message for message in report["errors"])
+
+
+def test_single_section_graphs_are_reconstructed_exactly_as_before(dense, moe):
+    """The section walk must be inert wherever there is only one section."""
+    from compiler.backends.hbm_sram.check import _reconstruct_bands, _section_keys
+
+    for graph in (dense, moe):
+        keys = _section_keys(graph)
+        assert {key[0] for key in keys.values()} == {0}
+        # With one section the key is the raw label again.
+        assert all(key[1] == int(graph.kernels[index].layer)
+                   for index, key in keys.items())
+        bands = _reconstruct_bands(graph, {t.tensor_id: t for t in graph.tensors})
+        assert all(band["section"] == 0 for band in bands)
+        assert [band["first_layer"] for band in bands] == sorted(
+            band["first_layer"] for band in bands
+        )
+
+
+# ---------------------------------------------------------------------------
+# The layer key's asserted monotonicity, checked where it is asserted
+# ---------------------------------------------------------------------------
+def test_a_section_whose_labels_descend_is_refused():
+    """Coverage stayed exact while the emitted order became wrong.
+
+    Permuting only the layer LABELS of one section, leaving the kernel index
+    order and the dataflow untouched, used to produce a band whose body is
+    whichever kernels carry the lowest label.  Every kernel was still emitted
+    exactly once, no warning was raised, the ABI verifier admitted the program
+    and the independent checker passed it -- and two kernels read a value
+    produced by a kernel emitted after them.
+    """
+    from compiler.backends.hbm_sram.plan import PlanError, layered_sections
+
+    graph = two_span_graph(first_layers=3, second_layers=1)
+    permutation = {0: 1, 1: 0, 2: 2}
+    kernels = []
+    for kernel in graph.kernels:
+        if kernel.layer is not None and kernel.index <= 9:
+            kernels.append(
+                dataclasses.replace(kernel, layer=permutation[int(kernel.layer)])
+            )
+        elif kernel.layer is not None:
+            kernels.append(dataclasses.replace(kernel, layer=None))
+        else:
+            kernels.append(kernel)
+    permuted = dataclasses.replace(graph, kernels=tuple(kernels))
+
+    with pytest.raises(PlanError) as raised:
+        layered_sections(permuted)
+    message = str(raised.value)
+    assert "not monotone in program order" in message
+    assert "layer 0 after kernel 3" in message
+
+
+def test_the_monotone_guard_is_inert_on_every_graph_the_lane_carries(dense, moe):
+    """A refusal nothing in tree triggers, which is why it can be a refusal."""
+    from compiler.backends.hbm_sram.plan import layered_sections
+
+    for graph in (dense, moe, two_span_graph()):
+        sections = layered_sections(graph)
+        assert sections
+        for section in sections:
+            run = [
+                k for k in graph.kernels
+                if k.layer is not None
+                and section.first_index <= k.index <= section.last_index
+            ]
+            labels = [int(k.layer) for k in run]
+            assert labels == sorted(labels)
