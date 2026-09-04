@@ -389,18 +389,15 @@ def _record_binding_in_acceptance(
         )
 
 
-def _existing_schema_problems(trace: Mapping[str, Any]) -> list[str]:
-    """Validate the established trace fields; release fields are integrated later."""
+def _trace_schema_problems(trace: Mapping[str, Any]) -> list[str]:
+    """Validate the complete release-bound target timing trace."""
 
     schema = json.loads(TRACE_SCHEMA_PATH.read_text(encoding="utf-8"))
     Draft202012Validator.check_schema(schema)
-    established = dict(trace)
-    established.pop(RELEASE_FILE_DIGEST_FIELD, None)
-    established.pop(RELEASE_SEMANTIC_DIGEST_FIELD, None)
     return [
         f"target timing trace schema violation at {error.json_path}: {error.message}"
         for error in sorted(
-            Draft202012Validator(schema).iter_errors(established),
+            Draft202012Validator(schema).iter_errors(trace),
             key=lambda error: (
                 tuple(str(part) for part in error.absolute_path),
                 error.message,
@@ -1114,7 +1111,7 @@ def publish_governed_target_timing_trace(
         RELEASE_FILE_DIGEST_FIELD: release_file_sha,
         RELEASE_SEMANTIC_DIGEST_FIELD: release_sha,
     }
-    problems.extend(_existing_schema_problems(trace))
+    problems.extend(_trace_schema_problems(trace))
     if problems:
         raise GovernedTimingExportError(
             "governed target timing export refused:\n  "

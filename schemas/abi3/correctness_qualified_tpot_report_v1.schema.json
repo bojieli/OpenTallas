@@ -622,6 +622,12 @@
         "cosimulation_proof_sha256": {
           "oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]
         },
+        "execution_release_lock_sha256": {
+          "oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]
+        },
+        "execution_release_sha256": {
+          "oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]
+        },
         "measurement_class": {
           "oneOf": [{"$ref": "#/$defs/measurementClass"}, {"type": "null"}]
         },

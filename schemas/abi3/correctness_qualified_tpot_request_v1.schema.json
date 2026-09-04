@@ -36,6 +36,7 @@
         },
         "comparison_contract": {"$ref": "#/$defs/file"},
         "correctness_acceptance": {"$ref": "#/$defs/file"},
+        "execution_release_lock": {"$ref": "#/$defs/file"},
         "execution_records": {
           "items": {"$ref": "#/$defs/file"},
           "minItems": 1,
@@ -68,6 +69,7 @@
       "required": [
         "comparison_contract",
         "correctness_acceptance",
+        "execution_release_lock",
         "execution_records",
         "point_id",
         "required_correctness_tier",

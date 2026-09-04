@@ -54,6 +54,8 @@
     "cost_table": {"$ref": "#/$defs/costTable"},
     "counterfactual_or_extrapolated": {"const": false},
     "evidence_class": {"const": "executed_target_timing_trace"},
+    "execution_release_lock_sha256": {"$ref": "#/$defs/sha256"},
+    "execution_release_sha256": {"$ref": "#/$defs/sha256"},
     "execution_tier": {
       "enum": ["rtl_bound_accelerated_cosimulation"]
     },
@@ -105,6 +107,8 @@
     "cost_table",
     "counterfactual_or_extrapolated",
     "evidence_class",
+    "execution_release_lock_sha256",
+    "execution_release_sha256",
     "execution_records",
     "full_workload_execution",
     "graph_id",
