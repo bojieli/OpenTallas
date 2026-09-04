@@ -3636,6 +3636,21 @@ def test_real_deepseek_rolling_plan_fits_hbm_and_is_admitted(
     require_admitted(deployment, capability)
     checker = check_deployment(graph, deployment, capability)
     assert checker["ok"], checker["errors"]
+    assert checker["checks"]["branch_exclusive_wait"]
+
+    sparse_kv_views = [
+        deployment.table[int(operator.payload["input_view_1"])]
+        for operator in deployment.table.descriptors()
+        if operator.descriptor_type == ExtendedDescriptorType.OPERATOR
+        and int(operator.payload["engine_family"]) == int(Major.ATTENTION)
+        and int(operator.payload["engine_sub"]) == int(Attention.SPARSE)
+    ]
+    assert sparse_kv_views
+    assert all(
+        view.descriptor_type == ExtendedDescriptorType.TENSOR_VIEW
+        and int(view.payload["rank"]) == 2
+        for view in sparse_kv_views
+    )
 
     assert plan.proofs["hbm_fits"]
     assert plan.proofs["hbm_bytes_per_node"] <= plan.proofs[
@@ -3656,6 +3671,60 @@ def test_real_deepseek_rolling_plan_fits_hbm_and_is_admitted(
     assert plan.proofs["activation_arena_bytes"] < 72_000_000_000
     assert plan.proofs["compressor_boundary_object_count"] == 2
     assert plan.proofs["compressor_boundary_bytes"] == 8
+
+
+def test_hbm_checker_rejects_a_wait_across_mutually_exclusive_branch_paths(
+    real_deepseek_build,
+):
+    """An earlier event is not necessarily reachable on the selected path."""
+
+    from runtime.abi3.records import decode_body, split_program
+
+    graph, capability, deployment, _plan = real_deepseek_build
+    mutated = copy.deepcopy(deployment)
+    _header, body = split_program(mutated.program)
+    instructions = decode_body(body)
+
+    mutation = None
+    for branch_at, branch in enumerate(instructions):
+        if not (
+            branch.major == int(Major.CONTROL)
+            and branch.sub == int(Control.BRANCH)
+            and branch.predicate_id == NO_ID
+            and int(branch.control_id) > branch_at
+        ):
+            continue
+        before = [
+            item.signal_event_id
+            for item in instructions[:branch_at]
+            if item.signal_event_id != NO_ID
+        ]
+        skipped = [
+            item.signal_event_id
+            for item in instructions[branch_at + 1 : int(branch.control_id)]
+            if item.signal_event_id != NO_ID
+        ]
+        consumers = [
+            item
+            for item in instructions[int(branch.control_id) :]
+            if item.wait_set_id != NO_ID
+        ]
+        if before and skipped and consumers:
+            mutation = (int(before[-1]), int(skipped[0]), consumers[0])
+            break
+    assert mutation is not None
+    before_event, skipped_event, consumer = mutation
+    wait = mutated.table[int(consumer.wait_set_id)]
+    wait.payload["producer_count"] = 2
+    wait.payload["required_count"] = 2
+    wait.payload["producer_0"] = before_event
+    wait.payload["producer_1"] = skipped_event
+
+    report = check_deployment(graph, mutated, capability)
+
+    assert not report["ok"]
+    assert not report["checks"]["branch_exclusive_wait"]
+    assert any("makes mutually exclusive" in error for error in report["errors"])
 
 
 def _restamp_deployment_digest(deployment):

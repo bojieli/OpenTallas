@@ -24,7 +24,8 @@ What it proves
    traffic present if and only if there is more than one node;
 6. every state resource the graph declares is bound to a state descriptor whose
    prepare/commit pairs close; and
-7. the deployment passes the frozen ABI 3.0 verifier.
+7. no wait set requires events from mutually exclusive control-flow paths; and
+8. the deployment passes the frozen ABI 3.0 verifier.
 """
 
 from __future__ import annotations
@@ -335,6 +336,50 @@ def check_deployment(
     table = deployment.table
     header, body = split_program(deployment.program)
     instructions = decode_body(body)
+
+    # The generic ABI verifier proves that every waited event has an earlier
+    # producer, but instruction order alone does not prove reachability.  An
+    # unconditional forward branch separates the block before the branch from
+    # the skipped block between branch and target.  No execution can signal one
+    # event from each side, so a conjunctive wait naming both deadlocks.  This
+    # independent check is deliberately program-derived and does not trust the
+    # lowering's terminal-frontier bookkeeping.
+    signal_index = {
+        int(instruction.signal_event_id): index
+        for index, instruction in enumerate(instructions)
+        if int(instruction.signal_event_id) != NO_ID
+    }
+    forward_skips = [
+        (index, int(instruction.control_id))
+        for index, instruction in enumerate(instructions)
+        if int(instruction.major) == int(Major.CONTROL)
+        and int(instruction.sub) == int(Control.BRANCH)
+        and int(instruction.predicate_id) == NO_ID
+        and int(instruction.control_id) > index
+    ]
+    require("branch_exclusive_wait", True, "")
+    for index, instruction in enumerate(instructions):
+        producers = sorted(
+            signal_index[event]
+            for event in _wait_events(table, int(instruction.wait_set_id))
+            if event in signal_index
+        )
+        if len(producers) < 2:
+            continue
+        for branch, target in forward_skips:
+            before = [position for position in producers if position < branch]
+            skipped = [
+                position for position in producers if branch < position < target
+            ]
+            if before and skipped:
+                require(
+                    "branch_exclusive_wait",
+                    False,
+                    f"instruction {index} waits on events signalled at "
+                    f"{before[-1]} and {skipped[0]}, which unconditional "
+                    f"branch {branch} to {target} makes mutually exclusive",
+                )
+                break
 
     descriptors_of = {
         kind: [table[i] for i in table.ids_of_type(kind)]
