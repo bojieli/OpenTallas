@@ -1115,43 +1115,65 @@ def evaluate_verdict(record: dict[str, Any]) -> dict[str, Any]:
 # the routed block closed at the target period (``closed`` says so).
 
 _NETLIST_INSTANCE_RE = re.compile(r"^\s*(\w+)\s+(\\\S+|\w+)\s+\(", re.M)
+_NETLIST_NET_RE = re.compile(
+    r"^\s*(?:wire|reg|input|output|inout)\s+(?:\[[^\]]*\]\s*)?(\\\S+|\w+)\s*;", re.M
+)
 
 
 def count_lane_instances(netlist: Path, lane_regex: str) -> dict[str, Any]:
-    """Count the distinct lane indices among the instance names of a gate netlist.
+    """Count the distinct lane indices named in a flattened gate netlist.
 
-    ORFS flattens the hierarchy (SYNTH_HIERARCHICAL = 0) but Yosys keeps the
-    hierarchical prefix on every register it maps, so a generate-loop lane
-    survives as an instance-name prefix such as ``gen_lane[3].u_lane.``.
-    ABC renames combinational cells, which therefore carry no prefix; the
-    per-lane counts below are over the named (sequential) cells only and are
-    a lower bound on the cells each lane contributes.
+    ORFS flattens the hierarchy (SYNTH_HIERARCHICAL = 0), but Yosys keeps the
+    hierarchical prefix on every net it declares, so a generate-loop lane
+    survives as a net-name prefix such as ``gen_lane[3].u_lane.``.  Whether
+    the mapped registers keep that prefix as an instance name depends on the
+    Yosys version (0.68 renames them ``_NNN_`` like ABC renames the
+    combinational cells), so both instance names and net names are scanned
+    and a lane counts as present when either carries its index.  The per-lane
+    counts are over named objects only and are a lower bound on what each
+    lane contributes.
     """
     pattern = re.compile(lane_regex)
-    per_lane: dict[str, int] = {}
-    total = 0
+    cells_per_lane: dict[str, int] = {}
+    nets_per_lane: dict[str, int] = {}
+    instances_total = 0
+    nets_total = 0
     text = netlist.read_text(encoding="utf-8", errors="ignore")
     for match in _NETLIST_INSTANCE_RE.finditer(text):
-        total += 1
+        instances_total += 1
         found = pattern.search(match.group(2))
         if found:
             key = found.group(1)
-            per_lane[key] = per_lane.get(key, 0) + 1
+            cells_per_lane[key] = cells_per_lane.get(key, 0) + 1
+    for match in _NETLIST_NET_RE.finditer(text):
+        nets_total += 1
+        found = pattern.search(match.group(1))
+        if found:
+            key = found.group(1)
+            nets_per_lane[key] = nets_per_lane.get(key, 0) + 1
+    lanes_seen = set(cells_per_lane) | set(nets_per_lane)
+
+    def ordered(counts: dict[str, int]) -> dict[str, int]:
+        return {key: counts[key] for key in sorted(counts, key=lambda k: (len(k), k))}
+
     return {
         "netlist": netlist.name,
         "netlist_sha256": sha256_file(netlist),
         "instance_regex": lane_regex,
-        "instances_total": total,
-        "distinct_lanes": len(per_lane),
-        "named_cells_per_lane": {
-            key: per_lane[key] for key in sorted(per_lane, key=lambda k: (len(k), k))
-        },
+        "instances_total": instances_total,
+        "nets_total": nets_total,
+        "distinct_lanes": len(lanes_seen),
+        "distinct_lanes_by_instance_name": len(cells_per_lane),
+        "distinct_lanes_by_net_name": len(nets_per_lane),
+        "named_cells_per_lane": ordered(cells_per_lane),
+        "named_nets_per_lane": ordered(nets_per_lane),
         "note": (
-            "named (register) cells only; ABC renames combinational cells so "
-            "they carry no lane prefix"
+            "distinct_lanes is the union of lane indices found on instance "
+            "names and on declared net names; ABC renames combinational cells "
+            "and Yosys 0.68 renames mapped registers, so instance names may "
+            "carry no lane prefix while the nets keep it"
         ),
     }
-
 
 def evidence_entry(spec: str) -> dict[str, Any]:
     """Resolve ``PATH`` or ``PATH:DOTTED.FIELD`` into a hashed citation."""
