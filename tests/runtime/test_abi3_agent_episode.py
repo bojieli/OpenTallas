@@ -1356,9 +1356,12 @@ def test_checkpoint_source_mutation_is_refused(
     ("model_id", "backend", "expected_count"),
     [
         ("qwen3-8b", "hbm_sram", 114),
-        ("qwen3-8b", "rom_qwen3", 135),
-        ("deepseek-v4-flash-0731", "hbm_sram", 122),
-        ("deepseek-v4-flash-0731", "rom_deepseek_v4", 123),
+        # The three lanes that glob ``compiler/frontend/*.py`` each gained one
+        # file: ``deepseek_v4_releases.py``, which holds the pinned per-release
+        # records the DeepSeek front end reads instead of module constants.
+        ("qwen3-8b", "rom_qwen3", 136),
+        ("deepseek-v4-flash-0731", "hbm_sram", 123),
+        ("deepseek-v4-flash-0731", "rom_deepseek_v4", 124),
     ],
 )
 def test_functional_source_map_has_exact_lane_keys(

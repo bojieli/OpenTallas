@@ -1,13 +1,23 @@
 #!/usr/bin/env python3
-"""Build the DeepSeek-V4-Flash-0731 Tensor Kernel IR v3 document.
+"""Build a DeepSeek-V4 Tensor Kernel IR v3 document.
 
 The front end lives in ``compiler/frontends/v3/deepseek_v4.py``; this tool only
-selects a profile, writes the canonical JSON and prints the census a release
-report quotes.  Two runs with the same arguments produce byte-identical output
-and the same ``graph_id``.
+selects a model profile, writes the canonical JSON and prints the census a
+release report quotes.  Two runs with the same arguments produce byte-identical
+output and the same ``graph_id``.
 
     python3 tools/build_deepseek_v4_kernel_ir_v3.py \\
         --output build/ir-v3/deepseek-v4-flash-0731/kernel_ir.v3.json
+
+``--model deepseek-v4-pro-0813`` builds the other pinned release.  It needs
+that release's own checkpoint artifacts, which are not the Flash ones: the
+complete 66-shard snapshot including ``model.safetensors.index.json``, the
+committed ``compiler/models/deepseek-v4-pro-0813/checkpoint_source.json`` that
+``tools/build_checkpoint_source.py`` writes, and the Pro checkpoint lock at
+``~/.cache/opentallas/deepseek-v4-pro-0813/checkpoint.lock.json`` that
+``tools/build_checkpoint_lock.py`` writes by reading all 892,727,580,904
+payload bytes once.  Without them the build stops before emitting anything and
+names each artifact it does not have.
 """
 
 from __future__ import annotations
@@ -21,33 +31,70 @@ REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 if str(REPOSITORY_ROOT) not in sys.path:
     sys.path.insert(0, str(REPOSITORY_ROOT))
 
-from compiler.frontend.deepseek_v4 import (  # noqa: E402
-    DEFAULT_CONFIG,
-    DEFAULT_SOURCE,
-    MODEL_ID,
-)
+from compiler.frontend.deepseek_v4 import MODEL_ID  # noqa: E402
 from compiler.frontends.v3.deepseek_v4 import (  # noqa: E402
-    DEFAULT_CHECKPOINT_LOCK,
     DEFAULT_CONTEXT_TOKENS,
-    DEFAULT_SNAPSHOT,
+    MODEL_PROFILES,
     DeepSeekV4KernelIRError,
     export_deepseek_v4_kernel_graph,
     graph_census,
+    resolve_model_profile,
     verify_checkpoint_bindings,
 )
 
-DEFAULT_OUTPUT = REPOSITORY_ROOT / "build" / "ir-v3" / MODEL_ID / "kernel_ir.v3.json"
+
+def default_output(model_id: str) -> Path:
+    return REPOSITORY_ROOT / "build" / "ir-v3" / model_id / "kernel_ir.v3.json"
+
+
+DEFAULT_OUTPUT = default_output(MODEL_ID)
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--snapshot", type=Path, default=DEFAULT_SNAPSHOT)
-    parser.add_argument(
-        "--checkpoint-lock", type=Path, default=DEFAULT_CHECKPOINT_LOCK
+    parser = argparse.ArgumentParser(
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
-    parser.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
-    parser.add_argument("--source", type=Path, default=DEFAULT_SOURCE)
-    parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
+    parser.add_argument(
+        "--model",
+        choices=sorted(MODEL_PROFILES),
+        default=MODEL_ID,
+        help=(
+            "which pinned release to build (default %(default)s); "
+            "deepseek-v4-pro-0813 needs the Pro checkpoint lock, source "
+            "contract and complete snapshot, not the Flash ones"
+        ),
+    )
+    parser.add_argument(
+        "--snapshot",
+        type=Path,
+        default=None,
+        help="checkpoint snapshot root (default: the selected model's)",
+    )
+    parser.add_argument(
+        "--checkpoint-lock",
+        type=Path,
+        default=None,
+        help="checkpoint lock path (default: the selected model's)",
+    )
+    parser.add_argument(
+        "--config",
+        type=Path,
+        default=None,
+        help="committed official config (default: the selected model's)",
+    )
+    parser.add_argument(
+        "--source",
+        type=Path,
+        default=None,
+        help="committed checkpoint source contract (default: the selected model's)",
+    )
+    parser.add_argument(
+        "--output",
+        type=Path,
+        default=None,
+        help="document path (default: build/ir-v3/<model>/kernel_ir.v3.json)",
+    )
     parser.add_argument(
         "--context-tokens",
         type=int,
@@ -86,8 +133,12 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
+    profile = resolve_model_profile(args.model)
+    output = default_output(profile.model_id) if args.output is None else args.output
+    snapshot = profile.release.snapshot if args.snapshot is None else args.snapshot
     try:
         graph = export_deepseek_v4_kernel_graph(
+            model=profile,
             snapshot=args.snapshot,
             checkpoint_lock_path=args.checkpoint_lock,
             config_path=args.config,
@@ -103,14 +154,14 @@ def main(argv: list[str] | None = None) -> int:
     verified = []
     if args.verify_bindings:
         verified = verify_checkpoint_bindings(
-            args.snapshot, graph, sample=args.verify_bindings
+            snapshot, graph, sample=args.verify_bindings
         )
 
-    args.output.parent.mkdir(parents=True, exist_ok=True)
-    graph_id = graph.write(args.output)
+    output.parent.mkdir(parents=True, exist_ok=True)
+    graph_id = graph.write(output)
     census = graph_census(graph)
-    census["file_bytes"] = args.output.stat().st_size
-    census["output"] = str(args.output)
+    census["file_bytes"] = output.stat().st_size
+    census["output"] = str(output)
     census["verified_bindings"] = verified
     if args.census_output is not None:
         args.census_output.parent.mkdir(parents=True, exist_ok=True)

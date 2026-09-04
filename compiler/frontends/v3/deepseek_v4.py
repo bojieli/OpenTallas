@@ -1,21 +1,34 @@
-"""Export the pinned DeepSeek-V4-Flash-0731 checkpoint into Tensor Kernel IR v3.
+"""Export a pinned DeepSeek-V4 checkpoint into Tensor Kernel IR v3.
 
-This front end is the only place the DeepSeek-V4-Flash forward is expressed for
-ABI 3.0.  The shared HBM/SRAM backend and the ROM backend consume the one
-document it emits, so it carries complete model semantics and no backend
-concept: no memory target, no schedule, no engine instance, no address
-(ADR-003 section 15, enforced by ``compiler.ir.v3.kernel_ir.check_neutral``).
+This front end is the only place the DeepSeek-V4 forward is expressed for ABI
+3.0.  The shared HBM/SRAM backend and the ROM backend consume the one document
+it emits, so it carries complete model semantics and no backend concept: no
+memory target, no schedule, no engine instance, no address (ADR-003 section 15,
+enforced by ``compiler.ir.v3.kernel_ir.check_neutral``).
+
+Which release is being exported is an argument.  :class:`DeepSeekV4Profile`
+carries every parameter that differs between DeepSeek-V4-Flash-0731 and
+DeepSeek-V4-Pro-0813 -- the released widths, read from the pinned configuration
+in ``compiler.frontend.deepseek_v4_releases``, plus the numeric-profile and
+generation-policy identities, which two models must not share -- and
+``export_deepseek_v4_kernel_graph`` sizes everything from the profile it is
+given.  The two releases ship the same ``inference/model.py`` byte for byte, so
+a second model is a re-parameterisation of this export and not a second
+derivation of its semantics.  Figures quoted below are the release profile's,
+DeepSeek-V4-Flash-0731.
 
 What it reuses rather than restates
 -----------------------------------
 * ``compiler.frontend.deepseek_v4_graph.build_official_graph_contract`` supplies
-  the frozen 2,136-node, 46-operator-kind semantic graph.  This module walks
+  the frozen 2,136-node, 46-operator-kind semantic graph -- 3,011 nodes over
+  the same 46 kinds for Pro.  This module walks
   that graph node by node and lowers each node into one or more neutral
   kernels, so the neutral IR cannot drift from the source-mapped semantics and
   the census can be reported per source operator kind.
 * ``compiler.frontend.deepseek_v4`` supplies the 72,317 :class:`TensorSpec`
-  records -- exact name, storage dtype, shape, semantic role, scope, layer and
-  expert -- derived from the released configuration.
+  records for Flash and 149,782 for Pro -- exact name, storage dtype, shape,
+  semantic role, scope, layer and expert -- derived from the released
+  configuration.
 * ``compiler.frontend.checkpoint`` supplies the hash-locked checkpoint whose
   shard headers are re-read here to derive each weight's exact byte range.
 * ``runtime.reference.*`` supplies the bit-exact target-precision identity per
@@ -28,7 +41,8 @@ Every weight tensor carries a :class:`CheckpointBinding` naming the shard file,
 the absolute byte offset (safetensors 8-byte length prefix + header length +
 the header's ``data_offsets`` start), the byte length, and the SHA-256 of
 exactly those bytes.  A backend turns that into an ABI 3.0 object source and
-never materialises a private copy of the 156 GB weight image.  Paths are
+never materialises a private copy of the weight image, which is 156 GB on
+Flash and 831 GB on Pro.  Paths are
 relative to the checkpoint snapshot so the graph identity is reproducible on
 any host that holds the pinned revision.
 
@@ -45,7 +59,7 @@ shape carries the remaining geometry.
 Speculation
 -----------
 ``include_speculative`` selects the profile.  The first release graph is the
-ordinary target-model path -- the 43 main layers plus the head -- because
+ordinary target-model path -- the main layers plus the head -- because
 ADR-003 section 18 sequences ordinary DeepSeek generation before speculative
 execution, and the DSpark verification/acceptance contract is still open
 (DSV4-SEM-001).  Setting the flag adds the three ``mtp.*`` DSpark blocks, the
@@ -108,9 +122,10 @@ speculative profile.
 ``TENSOR.ROUTED_MATMUL``'s operand row is (activations, routed weights, expert
 IDs, route weights), so the ``[E, N, K]`` stack is a *mandatory operand*.
 :class:`CheckpointBinding` used to name exactly one contiguous byte range and
-the released checkpoint interleaves the 256 experts of a layer, so no single
-range covered a stack; this export therefore declared all 66,048 routed expert
-tensors individually and named the ordered family in an
+the released checkpoint interleaves a layer's experts, so no single
+range covered a stack; this export therefore declared every routed expert
+tensor individually -- 66,048 of them on Flash -- and named the ordered family
+in an
 ``expert_weight_tensors`` attribute.  An attribute is not an operand: the
 weight slot stayed empty, the expert IDs sat in it, and every routed
 contraction named two of the three operands its engine requires.
@@ -244,6 +259,7 @@ import hashlib
 import json
 import struct
 from collections import Counter, defaultdict
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Iterable, Mapping, Sequence
 
@@ -252,25 +268,23 @@ from compiler.frontend.checkpoint import (
     load_checkpoint_lock,
 )
 from compiler.frontend.deepseek_v4 import (
-    DEFAULT_CONFIG,
-    DEFAULT_SOURCE,
     MODEL_ID,
-    OFFICIAL_CHECKPOINT_LOCK_ID,
-    PAYLOAD_BYTES,
-    REPOSITORY,
-    REVISION,
-    TENSOR_COUNT,
-    TENSOR_STRUCTURE_SHA256,
+    DeepSeekV4AdapterError,
     TensorSpec,
     build_official_tensor_specs,
     load_official_config,
     validate_official_checkpoint_lock,
 )
+from compiler.frontend.deepseek_v4_releases import (
+    FLASH,
+    PRO,
+    DeepSeekV4Release,
+)
 from compiler.frontend.deepseek_v4_graph import (
     MODEL_SOURCE_SHA256,
     KERNEL_SOURCE_SHA256,
-    INFERENCE_CONFIG_SHA256,
     OPERATOR_CATALOG,
+    DeepSeekV4GraphError,
     build_official_graph_contract,
 )
 from compiler.ir.v3.kernel_ir import (
@@ -291,14 +305,11 @@ from compiler.ir.v3.numeric import CONTRACT_PATTERN
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
 
-DEFAULT_SNAPSHOT = Path(
-    "/home/ubuntu/.cache/huggingface/hub/"
-    "models--deepseek-ai--DeepSeek-V4-Flash-0731/snapshots/"
-    "7872f01b1d1fe23eabc4c98b48bffcef5a386062"
-)
-DEFAULT_CHECKPOINT_LOCK = Path(
-    "/home/ubuntu/.cache/opentallas/deepseek-v4-flash-0731/checkpoint.lock.json"
-)
+#: The DeepSeek-V4-Flash-0731 snapshot and lock, under the names the tests and
+#: the build tool import.  Both are fields of that release's record; a build of
+#: another release takes them from the record it names.
+DEFAULT_SNAPSHOT = FLASH.snapshot
+DEFAULT_CHECKPOINT_LOCK = FLASH.checkpoint_lock
 
 #: Architectural capacity published for this model.  It is not the deployment
 #: capacity: ADR-003 section 18 fixes a 200,000-token DeepSeek acceptance run,
@@ -309,44 +320,301 @@ ARCHITECTURAL_MAX_CONTEXT = 1_048_576
 #: state capacity below is derived from it.
 DEFAULT_CONTEXT_TOKENS = 262_144
 
-NUMERIC_PROFILE = "deepseek_v4_flash_target_precision_v1"
-GENERATION_POLICY_ID = "deepseek_v4_flash_greedy_argmax_v1"
+@dataclass(frozen=True)
+class DeepSeekV4Profile:
+    """Everything this exporter has to know that differs between releases.
 
-EOS_TOKEN_ID = 1
-BOS_TOKEN_ID = 0
+    The record in :mod:`compiler.frontend.deepseek_v4_releases` carries the
+    released facts -- identity, digests, the compression-ratio tables and the
+    complete pinned root configuration.  A profile adds what only the neutral
+    export names: the numeric-profile identity that owns every emitted kernel's
+    precision contract, and the generation-policy identity the two entrypoints
+    reference.  Both are per release, because a graph that shared either with
+    another model could not be told apart from it in the numeric-qualification
+    ledger.
+
+    Every width below is read from the release's pinned configuration, so the
+    exporter has one number per fact rather than a module constant beside the
+    config value it is supposed to equal.  ``architecture_pins`` is the list
+    the export confronts with the released ``config.json`` before it emits
+    anything; a config that disagrees with the profile in any of those fields
+    stops the build.
+    """
+
+    release: DeepSeekV4Release
+    numeric_profile: str
+    generation_policy_id: str
+
+    # -- identity ---------------------------------------------------------
+    @property
+    def model_id(self) -> str:
+        return self.release.model_id
+
+    # -- released widths --------------------------------------------------
+    @property
+    def hidden(self) -> int:
+        return int(self.release.scalar("hidden_size"))
+
+    @property
+    def hc_mult(self) -> int:
+        return int(self.release.scalar("hc_mult"))
+
+    @property
+    def heads(self) -> int:
+        return int(self.release.scalar("num_attention_heads"))
+
+    @property
+    def kv_heads(self) -> int:
+        """One *fused* KV head: key and value share one 512-wide row."""
+
+        return int(self.release.scalar("num_key_value_heads"))
+
+    @property
+    def head_dim(self) -> int:
+        return int(self.release.scalar("head_dim"))
+
+    @property
+    def rope_dim(self) -> int:
+        return int(self.release.scalar("qk_rope_head_dim"))
+
+    @property
+    def nope_dim(self) -> int:
+        return self.head_dim - self.rope_dim
+
+    @property
+    def q_rank(self) -> int:
+        return int(self.release.scalar("q_lora_rank"))
+
+    @property
+    def o_groups(self) -> int:
+        return int(self.release.scalar("o_groups"))
+
+    @property
+    def o_rank(self) -> int:
+        return int(self.release.scalar("o_lora_rank"))
+
+    @property
+    def index_heads(self) -> int:
+        return int(self.release.scalar("index_n_heads"))
+
+    @property
+    def index_head_dim(self) -> int:
+        return int(self.release.scalar("index_head_dim"))
+
+    @property
+    def index_topk(self) -> int:
+        return int(self.release.scalar("index_topk"))
+
+    @property
+    def vocabulary(self) -> int:
+        return int(self.release.scalar("vocab_size"))
+
+    @property
+    def routed_experts(self) -> int:
+        return int(self.release.scalar("n_routed_experts"))
+
+    @property
+    def top_k(self) -> int:
+        return int(self.release.scalar("num_experts_per_tok"))
+
+    @property
+    def moe_intermediate(self) -> int:
+        return int(self.release.scalar("moe_intermediate_size"))
+
+    @property
+    def sliding_window(self) -> int:
+        return int(self.release.scalar("sliding_window"))
+
+    @property
+    def swiglu_limit(self) -> float:
+        return float(self.release.scalar("swiglu_limit"))
+
+    @property
+    def route_scale(self) -> float:
+        return float(self.release.scalar("routed_scaling_factor"))
+
+    @property
+    def draft_block(self) -> int:
+        return int(self.release.scalar("dspark_block_size"))
+
+    @property
+    def markov_rank(self) -> int:
+        return int(self.release.scalar("dspark_markov_rank"))
+
+    @property
+    def rms_epsilon(self) -> float:
+        return float(self.release.scalar("rms_norm_eps"))
+
+    @property
+    def bos_token_id(self) -> int:
+        return int(self.release.scalar("bos_token_id"))
+
+    @property
+    def eos_token_id(self) -> int:
+        return int(self.release.scalar("eos_token_id"))
+
+    @property
+    def layers(self) -> int:
+        return self.release.num_hidden_layers
+
+    @property
+    def target_layers(self) -> tuple[int, ...]:
+        return tuple(int(layer) for layer in self.release.scalar("dspark_target_layer_ids"))
+
+    @property
+    def main_compress_ratios(self) -> tuple[int, ...]:
+        return self.release.main_compress_ratios
+
+    # -- derived ----------------------------------------------------------
+    @property
+    def hc_mix(self) -> int:
+        """``(2 + hc_mult) * hc_mult`` mixing rows.
+
+        The Sinkhorn split yields ``hc_mult`` pre, ``hc_mult`` post and
+        ``hc_mult * hc_mult`` combination coefficients.
+        """
+
+        return (2 + self.hc_mult) * self.hc_mult
+
+    @property
+    def hc_coefficients(self) -> int:
+        return self.hc_mult + self.hc_mult * self.hc_mult
+
+    @property
+    def output_join_levels(self) -> int:
+        """CONCAT kernels in ``GROUPED_OUTPUT_PROJECT``'s feature-axis join.
+
+        Amendment A17 joins the per-group products four views at a time, so
+        eight blocks are two joins of four plus one of two -- three kernels --
+        and sixteen are four joins of four plus one of four, which is five.
+        """
+
+        joins, remaining = 0, self.o_groups
+        while remaining > 1:
+            remaining = -(-remaining // 4)
+            joins += remaining
+        return joins
+
+    @property
+    def architecture_pins(self) -> tuple[tuple[str, Any], ...]:
+        """Released config key and the value this export will use for it.
+
+        Twelve of these move between the two pinned releases and the rest do
+        not; all of them are checked, because a width that is not confronted
+        with the config it claims to come from is a width that can drift
+        silently.  ``routed_scaling_factor`` is the clearest case: nothing
+        downstream would notice a route scale of 1.5 applied to a model whose
+        released value is 2.5, because the product is finite either way.
+        """
+
+        return (
+            ("hidden_size", self.hidden),
+            ("hc_mult", self.hc_mult),
+            ("num_attention_heads", self.heads),
+            ("num_key_value_heads", self.kv_heads),
+            ("head_dim", self.head_dim),
+            ("qk_rope_head_dim", self.rope_dim),
+            ("q_lora_rank", self.q_rank),
+            ("o_groups", self.o_groups),
+            ("o_lora_rank", self.o_rank),
+            ("index_head_dim", self.index_head_dim),
+            ("index_n_heads", self.index_heads),
+            ("index_topk", self.index_topk),
+            ("vocab_size", self.vocabulary),
+            ("n_routed_experts", self.routed_experts),
+            ("num_experts_per_tok", self.top_k),
+            ("moe_intermediate_size", self.moe_intermediate),
+            ("sliding_window", self.sliding_window),
+            ("swiglu_limit", self.swiglu_limit),
+            ("routed_scaling_factor", self.route_scale),
+            ("dspark_block_size", self.draft_block),
+            ("dspark_markov_rank", self.markov_rank),
+            ("dspark_target_layer_ids", list(self.target_layers)),
+            ("rms_norm_eps", self.rms_epsilon),
+            ("bos_token_id", self.bos_token_id),
+            ("eos_token_id", self.eos_token_id),
+            ("num_hidden_layers", self.layers),
+            ("compress_ratios", self.release.compress_ratios),
+        )
+
+
+FLASH_PROFILE = DeepSeekV4Profile(
+    release=FLASH,
+    numeric_profile="deepseek_v4_flash_target_precision_v1",
+    generation_policy_id="deepseek_v4_flash_greedy_argmax_v1",
+)
+
+#: DeepSeek-V4-Pro-0813.  The neutral semantics are the Flash ones -- the two
+#: releases ship the same ``inference/model.py`` byte for byte -- so this
+#: profile differs only in the released widths its record carries and in the
+#: two identities above, which must not be shared: every emitted kernel's
+#: numeric contract is recorded against ``numeric_profile``, and two models
+#: under one profile id would be indistinguishable in the qualification ledger.
+PRO_PROFILE = DeepSeekV4Profile(
+    release=PRO,
+    numeric_profile="deepseek_v4_pro_target_precision_v1",
+    generation_policy_id="deepseek_v4_pro_greedy_argmax_v1",
+)
+
+MODEL_PROFILES: Mapping[str, DeepSeekV4Profile] = {
+    profile.model_id: profile for profile in (FLASH_PROFILE, PRO_PROFILE)
+}
+
+
+def resolve_model_profile(
+    model: str | DeepSeekV4Profile | DeepSeekV4Release = MODEL_ID,
+) -> DeepSeekV4Profile:
+    """Return the profile for a model id, a release record, or a profile."""
+
+    if isinstance(model, DeepSeekV4Profile):
+        return model
+    if isinstance(model, DeepSeekV4Release):
+        model = model.model_id
+    try:
+        return MODEL_PROFILES[model]
+    except KeyError:
+        raise DeepSeekV4KernelIRError(
+            f"unknown DeepSeek-V4 model {model!r}; this front end carries "
+            + ", ".join(sorted(MODEL_PROFILES))
+        ) from None
+
+
+#: The DeepSeek-V4-Flash-0731 profile's values, under the names this module and
+#: its tests have always used.  A build reads the profile it was given; these
+#: stay because the release profile is the default one.
+NUMERIC_PROFILE = FLASH_PROFILE.numeric_profile
+GENERATION_POLICY_ID = FLASH_PROFILE.generation_policy_id
+
+EOS_TOKEN_ID = FLASH_PROFILE.eos_token_id
+BOS_TOKEN_ID = FLASH_PROFILE.bos_token_id
 
 #: Architectural widths taken from the released configuration and re-checked
 #: against it in :func:`export_deepseek_v4_kernel_graph`.
-HIDDEN = 4096
-HC_MULT = 4
-HEADS = 64
-#: One *fused* KV head: the released model keeps key and value in one 512-wide
-#: tensor per position, so every query head attends the same KV row.
-KV_HEADS = 1
-HEAD_DIM = 512
-ROPE_DIM = 64
-NOPE_DIM = HEAD_DIM - ROPE_DIM
-Q_RANK = 1024
-O_GROUPS = 8
-O_RANK = 1024
-INDEX_HEADS = 64
-INDEX_HEAD_DIM = 128
-INDEX_TOPK = 512
-VOCABULARY = 129_280
-ROUTED_EXPERTS = 256
-TOP_K = 6
-MOE_INTERMEDIATE = 2048
-SLIDING_WINDOW = 128
-SWIGLU_LIMIT = 10.0
-ROUTE_SCALE = 1.5
-DRAFT_BLOCK = 5
-MARKOV_RANK = 256
-RMS_EPSILON = 1e-6
-#: ``(2 + hc_mult) * hc_mult`` mixing rows; the Sinkhorn split yields
-#: ``hc_mult`` pre, ``hc_mult`` post and ``hc_mult * hc_mult`` combination
-#: coefficients.
-HC_MIX = (2 + HC_MULT) * HC_MULT
-HC_COEFFICIENTS = HC_MULT + HC_MULT * HC_MULT
+HIDDEN = FLASH_PROFILE.hidden
+HC_MULT = FLASH_PROFILE.hc_mult
+HEADS = FLASH_PROFILE.heads
+KV_HEADS = FLASH_PROFILE.kv_heads
+HEAD_DIM = FLASH_PROFILE.head_dim
+ROPE_DIM = FLASH_PROFILE.rope_dim
+NOPE_DIM = FLASH_PROFILE.nope_dim
+Q_RANK = FLASH_PROFILE.q_rank
+O_GROUPS = FLASH_PROFILE.o_groups
+O_RANK = FLASH_PROFILE.o_rank
+INDEX_HEADS = FLASH_PROFILE.index_heads
+INDEX_HEAD_DIM = FLASH_PROFILE.index_head_dim
+INDEX_TOPK = FLASH_PROFILE.index_topk
+VOCABULARY = FLASH_PROFILE.vocabulary
+ROUTED_EXPERTS = FLASH_PROFILE.routed_experts
+TOP_K = FLASH_PROFILE.top_k
+MOE_INTERMEDIATE = FLASH_PROFILE.moe_intermediate
+SLIDING_WINDOW = FLASH_PROFILE.sliding_window
+SWIGLU_LIMIT = FLASH_PROFILE.swiglu_limit
+ROUTE_SCALE = FLASH_PROFILE.route_scale
+DRAFT_BLOCK = FLASH_PROFILE.draft_block
+MARKOV_RANK = FLASH_PROFILE.markov_rank
+RMS_EPSILON = FLASH_PROFILE.rms_epsilon
+HC_MIX = FLASH_PROFILE.hc_mix
+HC_COEFFICIENTS = FLASH_PROFILE.hc_coefficients
 
 #: The official default sampling temperature, as the released generation
 #: configuration states it: binary32 one.  ABI 3.0's submission record carries
@@ -425,97 +693,118 @@ class DeepSeekV4KernelIRError(RuntimeError):
 #: invents an opcode.  ``QUANTIZE`` steps marked ``shared`` are emitted once per
 #: distinct activation value, so a node that reuses an already quantized
 #: activation contributes fewer kernels than this plan lists.
-LOWERING_PLAN: Mapping[str, tuple[str, ...]] = {
-    "ATTENTION_KV_VIEW": ("CONCAT",),
-    "BF16_LINEAR": ("MATMUL",),
-    "BINARY32_TO_BF16": ("CONVERT",),
-    "BIASED_TOPK_ROUTE": ("BIASED_TOPK",),
-    # Amendment A20: the dense compressed index is ``ROUTE.INDEX_TOPK`` with
-    # its score operand absent, not a window enumeration joined to a window.
-    "COMPRESSED_DENSE_INDEX": ("INDEX_TOPK",),
-    "COMPRESSED_KV_VALID_VIEW": ("STATE_READ",),
-    "COMPRESS_KV_WRITE": ("KV_APPEND",),
-    "COMPRESS_POOL": ("COMPRESS_POOL",),
-    "COMPRESS_PROJECT": ("COMPRESS_PROJECT",),
-    "COMPRESS_STATE_UPDATE": ("COMPRESS_STATE_UPDATE",),
-    "CONFIDENCE_SCORE": ("CONCAT", "MATMUL"),
-    "DSPARK_MAIN_PROJECT": ("CONCAT", "QUANTIZE", "MATMUL", "RMS_NORM"),
-    "DSPARK_NOISE_EMBED": ("SCATTER", "EMBEDDING_LOOKUP", "BROADCAST"),
-    "DSPARK_PREFILL_KV": (
-        "QUANTIZE",
-        "MATMUL",
-        "RMS_NORM",
-        "ROPE",
-        "QUANTIZE",
-        "DEQUANTIZE",
-        "KV_APPEND",
-    ),
-    "DSPARK_WINDOW_INDEX": ("WINDOW_INDEX",),
-    "EXPERT_DISPATCH": ("EXPERT_DISPATCH",),
-    "EXPERT_REDUCE": ("EXPERT_REDUCE",),
-    "FP4_QDQ": ("QUANTIZE", "DEQUANTIZE"),
-    "FP8_LINEAR": ("QUANTIZE", "MATMUL"),
-    "FP8_QDQ": ("QUANTIZE", "DEQUANTIZE"),
-    "FP8_SWIGLU": (
-        "QUANTIZE",
-        "MATMUL",
-        "MATMUL",
-        "SWIGLU",
-        "QUANTIZE",
-        "MATMUL",
-    ),
-    # Amendment A17.  The released projection is block diagonal over features,
-    # which is eight contractions over eight column blocks and a feature-axis
-    # join, not one ``GROUPED_MATMUL`` over a row partition that does not exist.
-    # Eight blocks and four input views make the join a tree of three.
-    "GROUPED_OUTPUT_PROJECT": (
-        ("COPY",) + ("SELECT", "MATMUL") * O_GROUPS + ("CONCAT",) * 3
-    ),
-    "HADAMARD_ROTATE": ("HADAMARD",),
-    "HASH_ROUTE": ("EMBEDDING_LOOKUP",),
-    "HC_EXPAND": ("BROADCAST",),
-    "HC_HEAD": ("HYPER_CONNECT_HEAD",),
-    "HC_POST": ("HYPER_CONNECT_POST",),
-    "HC_PRE": ("HYPER_CONNECT_PRE", "SELECT", "SELECT", "EXPERT_REDUCE"),
-    "HEAD_RMS_NORM": ("HEAD_RMS_NORM",),
-    "INDEX_SCORE": ("INDEX_SCORE",),
-    "INDEX_TOPK": ("INDEX_TOPK", "CONCAT"),
-    "KV_WINDOW_WRITE": ("KV_APPEND",),
-    "LM_HEAD": ("LAST_TOKEN_SELECT", "VOCAB_PROJECT"),
-    "MARKOV_AUTOREGRESSIVE_LOOP": (
-        "EMBEDDING_LOOKUP",
-        "VOCAB_PROJECT",
-        "ADD",
-        "ARGMAX",
-        "TOKEN_APPEND",
-    )
-    * DRAFT_BLOCK
-    + ("CONCAT", "CONCAT", "CONCAT", "CONCAT"),
-    "MXFP4_SWIGLU": (
-        "QUANTIZE",
-        "ROUTED_MATMUL",
-        "ROUTED_MATMUL",
-        "SWIGLU",
-        "MUL",
-        "QUANTIZE",
-        "ROUTED_MATMUL",
-    ),
-    "RMS_NORM": ("RMS_NORM",),
-    # The compressor rotates one row per pooled group and the released prefill
-    # strides the coefficient table by the compression ratio, so its rows are
-    # gathered under the rotation's own predicate; every other call site shares
-    # one span-indexed gather emitted once for the whole graph.
-    "ROPE_APPLY": ("GATHER", "ROPE"),
-    "ROPE_INVERSE": ("ROPE_INVERSE",),
-    "ROUTER_SCORE": ("ROUTER_SCORE",),
-    "ROUTER_WEIGHT_NORMALIZE": ("GATHER", "WEIGHT_NORMALIZE", "SCALE"),
-    "SAMPLE": ("SCALE", "ARGMAX", "TOKEN_APPEND"),
-    "SPARSE_ATTENTION": ("ATTENTION_SPARSE",),
-    "SQRT_SOFTPLUS": ("SQRT_SOFTPLUS",),
-    "TARGET_HIDDEN_CAPTURE": ("PARTITION_SUM", "SCALE"),
-    "TOKEN_EMBED": ("EMBEDDING_LOOKUP",),
-    "WINDOW_INDEX": ("WINDOW_INDEX",),
-}
+def lowering_plan(
+    profile: DeepSeekV4Profile = FLASH_PROFILE,
+) -> Mapping[str, tuple[str, ...]]:
+    """One profile's source-kind to neutral-kind plan.
+
+    Two entries are shaped by the released configuration: the grouped output
+    projection emits one ``SELECT``/``MATMUL`` pair per output group and joins
+    the results four views at a time, and the Markov loop repeats its five
+    kernels once per draft-block step.  Everything else is the same lowering
+    for either release, because both ship the same ``inference/model.py``.
+    """
+
+    return {
+        "ATTENTION_KV_VIEW": ("CONCAT",),
+        "BF16_LINEAR": ("MATMUL",),
+        "BINARY32_TO_BF16": ("CONVERT",),
+        "BIASED_TOPK_ROUTE": ("BIASED_TOPK",),
+        # Amendment A20: the dense compressed index is ``ROUTE.INDEX_TOPK`` with
+        # its score operand absent, not a window enumeration joined to a window.
+        "COMPRESSED_DENSE_INDEX": ("INDEX_TOPK",),
+        "COMPRESSED_KV_VALID_VIEW": ("STATE_READ",),
+        "COMPRESS_KV_WRITE": ("KV_APPEND",),
+        "COMPRESS_POOL": ("COMPRESS_POOL",),
+        "COMPRESS_PROJECT": ("COMPRESS_PROJECT",),
+        "COMPRESS_STATE_UPDATE": ("COMPRESS_STATE_UPDATE",),
+        "CONFIDENCE_SCORE": ("CONCAT", "MATMUL"),
+        "DSPARK_MAIN_PROJECT": ("CONCAT", "QUANTIZE", "MATMUL", "RMS_NORM"),
+        "DSPARK_NOISE_EMBED": ("SCATTER", "EMBEDDING_LOOKUP", "BROADCAST"),
+        "DSPARK_PREFILL_KV": (
+            "QUANTIZE",
+            "MATMUL",
+            "RMS_NORM",
+            "ROPE",
+            "QUANTIZE",
+            "DEQUANTIZE",
+            "KV_APPEND",
+        ),
+        "DSPARK_WINDOW_INDEX": ("WINDOW_INDEX",),
+        "EXPERT_DISPATCH": ("EXPERT_DISPATCH",),
+        "EXPERT_REDUCE": ("EXPERT_REDUCE",),
+        "FP4_QDQ": ("QUANTIZE", "DEQUANTIZE"),
+        "FP8_LINEAR": ("QUANTIZE", "MATMUL"),
+        "FP8_QDQ": ("QUANTIZE", "DEQUANTIZE"),
+        "FP8_SWIGLU": (
+            "QUANTIZE",
+            "MATMUL",
+            "MATMUL",
+            "SWIGLU",
+            "QUANTIZE",
+            "MATMUL",
+        ),
+        # Amendment A17.  The released projection is block diagonal over
+        # features, which is one contraction per column block and a
+        # feature-axis join, not one ``GROUPED_MATMUL`` over a row partition
+        # that does not exist.  A join takes four input views, so eight blocks
+        # are a tree of three ``CONCAT`` kernels and sixteen are a tree of
+        # five.
+        "GROUPED_OUTPUT_PROJECT": (
+            ("COPY",)
+            + ("SELECT", "MATMUL") * profile.o_groups
+            + ("CONCAT",) * profile.output_join_levels
+        ),
+        "HADAMARD_ROTATE": ("HADAMARD",),
+        "HASH_ROUTE": ("EMBEDDING_LOOKUP",),
+        "HC_EXPAND": ("BROADCAST",),
+        "HC_HEAD": ("HYPER_CONNECT_HEAD",),
+        "HC_POST": ("HYPER_CONNECT_POST",),
+        "HC_PRE": ("HYPER_CONNECT_PRE", "SELECT", "SELECT", "EXPERT_REDUCE"),
+        "HEAD_RMS_NORM": ("HEAD_RMS_NORM",),
+        "INDEX_SCORE": ("INDEX_SCORE",),
+        "INDEX_TOPK": ("INDEX_TOPK", "CONCAT"),
+        "KV_WINDOW_WRITE": ("KV_APPEND",),
+        "LM_HEAD": ("LAST_TOKEN_SELECT", "VOCAB_PROJECT"),
+        "MARKOV_AUTOREGRESSIVE_LOOP": (
+            "EMBEDDING_LOOKUP",
+            "VOCAB_PROJECT",
+            "ADD",
+            "ARGMAX",
+            "TOKEN_APPEND",
+        )
+        * profile.draft_block
+        + ("CONCAT", "CONCAT", "CONCAT", "CONCAT"),
+        "MXFP4_SWIGLU": (
+            "QUANTIZE",
+            "ROUTED_MATMUL",
+            "ROUTED_MATMUL",
+            "SWIGLU",
+            "MUL",
+            "QUANTIZE",
+            "ROUTED_MATMUL",
+        ),
+        "RMS_NORM": ("RMS_NORM",),
+        # The compressor rotates one row per pooled group and the released prefill
+        # strides the coefficient table by the compression ratio, so its rows are
+        # gathered under the rotation's own predicate; every other call site shares
+        # one span-indexed gather emitted once for the whole graph.
+        "ROPE_APPLY": ("GATHER", "ROPE"),
+        "ROPE_INVERSE": ("ROPE_INVERSE",),
+        "ROUTER_SCORE": ("ROUTER_SCORE",),
+        "ROUTER_WEIGHT_NORMALIZE": ("GATHER", "WEIGHT_NORMALIZE", "SCALE"),
+        "SAMPLE": ("SCALE", "ARGMAX", "TOKEN_APPEND"),
+        "SPARSE_ATTENTION": ("ATTENTION_SPARSE",),
+        "SQRT_SOFTPLUS": ("SQRT_SOFTPLUS",),
+        "TARGET_HIDDEN_CAPTURE": ("PARTITION_SUM", "SCALE"),
+        "TOKEN_EMBED": ("EMBEDDING_LOOKUP",),
+        "WINDOW_INDEX": ("WINDOW_INDEX",),
+    }
+
+
+#: The release profile's plan, under the name the tests and the census import.
+LOWERING_PLAN: Mapping[str, tuple[str, ...]] = lowering_plan(FLASH_PROFILE)
+
 
 #: Canonical numeric-contract base per source operator kind.  ADR-003 section 15
 #: forbids the neutral IR from naming an implementation location, so these are
@@ -675,7 +964,7 @@ def read_checkpoint_bindings(
     data_offsets[0]``: eight bytes of little-endian header length, the JSON
     header itself, then the contiguous data segment.  Every header is re-read
     here and required to match the hash-locked header and tensor records, so a
-    binding cannot drift from the locked 156 GB checkpoint.
+    binding cannot drift from the locked checkpoint.
     """
 
     bindings: dict[str, CheckpointBinding] = {}
@@ -1177,20 +1466,79 @@ def _neutral_state_ids(source_names: Iterable[str]) -> tuple[str, ...]:
     return tuple(out)
 
 
+def _missing_checkpoint_artifacts(
+    release: DeepSeekV4Release,
+    snapshot: Path,
+    checkpoint_lock_path: Path,
+) -> list[str]:
+    """Name every checkpoint artifact this build needs and does not have.
+
+    A kernel IR document binds each weight to a byte range in a shard, so it
+    cannot be produced from a configuration alone: it needs the complete
+    snapshot, the registry-listing witness that authenticates it, and the lock
+    that has read every byte.  Reporting all of them at once, each with the
+    tool that produces it, is the difference between a build that stops and a
+    build that stops somewhere.
+    """
+
+    missing: list[str] = []
+    if not snapshot.is_dir():
+        missing.append(
+            f"snapshot {snapshot} is absent; download {release.repository} at "
+            f"revision {release.revision}"
+        )
+    else:
+        index = snapshot / "model.safetensors.index.json"
+        if not index.is_file():
+            shards = len(list(snapshot.glob("model-*-of-*.safetensors")))
+            missing.append(
+                f"checkpoint index {index} is absent ({shards} of "
+                f"{release.shard_count} shards present); it arrives with the "
+                f"rest of the {release.repository} snapshot at revision "
+                f"{release.revision}"
+            )
+    if not release.checkpoint_source_path.is_file():
+        missing.append(
+            f"checkpoint source contract {release.checkpoint_source_path} is "
+            "absent; produce it with tools/build_checkpoint_source.py against "
+            "the complete snapshot and the committed registry listing"
+        )
+    if not checkpoint_lock_path.is_file():
+        missing.append(
+            f"checkpoint lock {checkpoint_lock_path} is absent; produce it with "
+            "tools/build_checkpoint_lock.py, which reads all "
+            f"{release.payload_bytes:,} payload bytes once"
+        )
+    elif not release.lock_identity_established:
+        missing.append(
+            f"no pinned lock identity for {release.model_id}; record the lock's "
+            "lock_id and tensor_content_sha256 on its release in "
+            "compiler/frontend/deepseek_v4_releases.py"
+        )
+    return missing
+
+
 def export_deepseek_v4_kernel_graph(
     *,
-    snapshot: Path = DEFAULT_SNAPSHOT,
-    checkpoint_lock_path: Path = DEFAULT_CHECKPOINT_LOCK,
-    config_path: Path = DEFAULT_CONFIG,
-    source_path: Path = DEFAULT_SOURCE,
+    model: str | DeepSeekV4Profile | DeepSeekV4Release = MODEL_ID,
+    snapshot: Path | None = None,
+    checkpoint_lock_path: Path | None = None,
+    config_path: Path | None = None,
+    source_path: Path | None = None,
     context_tokens: int = DEFAULT_CONTEXT_TOKENS,
     maximum_new_tokens: int | None = None,
     include_speculative: bool = False,
 ) -> KernelGraph:
-    """Export DeepSeek-V4-Flash-0731 as one neutral Tensor Kernel IR v3 graph.
+    """Export one pinned DeepSeek-V4 release as a neutral Tensor Kernel IR v3 graph.
 
-    ``include_speculative`` selects the profile.  ``False`` -- the first
-    release -- emits the ordinary target-model path: the 43 main layers, the
+    ``model`` names the release: ``deepseek-v4-flash-0731`` by default, or
+    ``deepseek-v4-pro-0813``.  It selects the profile -- every width, layer
+    count, expert count and identity below -- and the default snapshot,
+    checkpoint lock, committed config and checkpoint source contract; any of
+    those four paths may be given explicitly instead.
+
+    ``include_speculative`` selects the emitted profile.  ``False`` -- the
+    first release -- emits the ordinary target-model path: the main layers, the
     hyper-connection head, the final norm, the vocabulary head and greedy
     selection.  ``True`` additionally emits the three DSpark draft blocks, the
     DSpark conditioning projection, the Markov draft head and the confidence
@@ -1198,7 +1546,65 @@ def export_deepseek_v4_kernel_graph(
     whose acceptance contract is still open (DSV4-SEM-001).
     """
 
-    snapshot = Path(snapshot)
+    model_profile = resolve_model_profile(model)
+    release = model_profile.release
+
+    # The released widths for the model being built, taken from its profile and
+    # each confronted with this release's own ``config.json`` a few lines below
+    # before anything is emitted.  They deliberately shadow the module-level
+    # constants of the same name, which are the DeepSeek-V4-Flash-0731
+    # profile's: every expression in the body below reads the model being
+    # built, and no expression in the body reads the release profile by
+    # accident.  ``model_profile`` is spelled out because ``profile`` is this
+    # function's word for a *rotary* profile and for the target/speculative
+    # split.
+    HIDDEN = model_profile.hidden
+    HC_MULT = model_profile.hc_mult
+    HEADS = model_profile.heads
+    KV_HEADS = model_profile.kv_heads
+    HEAD_DIM = model_profile.head_dim
+    ROPE_DIM = model_profile.rope_dim
+    NOPE_DIM = model_profile.nope_dim
+    O_GROUPS = model_profile.o_groups
+    O_RANK = model_profile.o_rank
+    INDEX_HEADS = model_profile.index_heads
+    INDEX_HEAD_DIM = model_profile.index_head_dim
+    INDEX_TOPK = model_profile.index_topk
+    VOCABULARY = model_profile.vocabulary
+    ROUTED_EXPERTS = model_profile.routed_experts
+    TOP_K = model_profile.top_k
+    MOE_INTERMEDIATE = model_profile.moe_intermediate
+    SLIDING_WINDOW = model_profile.sliding_window
+    SWIGLU_LIMIT = model_profile.swiglu_limit
+    ROUTE_SCALE = model_profile.route_scale
+    DRAFT_BLOCK = model_profile.draft_block
+    MARKOV_RANK = model_profile.markov_rank
+    RMS_EPSILON = model_profile.rms_epsilon
+    HC_MIX = model_profile.hc_mix
+    HC_COEFFICIENTS = model_profile.hc_coefficients
+    EOS_TOKEN_ID = model_profile.eos_token_id
+    BOS_TOKEN_ID = model_profile.bos_token_id
+    NUMERIC_PROFILE = model_profile.numeric_profile
+    GENERATION_POLICY_ID = model_profile.generation_policy_id
+    MODEL_ID = release.model_id
+    REPOSITORY = release.repository
+    REVISION = release.revision
+    TENSOR_COUNT = release.tensor_count
+    PAYLOAD_BYTES = release.payload_bytes
+    TENSOR_STRUCTURE_SHA256 = release.tensor_structure_sha256
+    INFERENCE_CONFIG_SHA256 = release.inference_config_sha256
+
+    snapshot = release.snapshot if snapshot is None else Path(snapshot)
+    checkpoint_lock_path = (
+        release.checkpoint_lock
+        if checkpoint_lock_path is None
+        else Path(checkpoint_lock_path)
+    )
+    config_path = release.config_path if config_path is None else Path(config_path)
+    source_path = (
+        release.checkpoint_source_path if source_path is None else Path(source_path)
+    )
+
     if context_tokens < 1 or context_tokens > ARCHITECTURAL_MAX_CONTEXT:
         raise DeepSeekV4KernelIRError(
             f"deployment context {context_tokens} is outside the architectural "
@@ -1215,47 +1621,59 @@ def export_deepseek_v4_kernel_graph(
             "maximum_new_tokens is outside the deployment context"
         )
 
-    config = load_official_config(Path(config_path))
-    specs = build_official_tensor_specs(config)
-    for key, expected in (
-        ("hidden_size", HIDDEN),
-        ("hc_mult", HC_MULT),
-        ("num_attention_heads", HEADS),
-        ("num_key_value_heads", KV_HEADS),
-        ("head_dim", HEAD_DIM),
-        ("qk_rope_head_dim", ROPE_DIM),
-        ("q_lora_rank", Q_RANK),
-        ("o_groups", O_GROUPS),
-        ("o_lora_rank", O_RANK),
-        ("index_head_dim", INDEX_HEAD_DIM),
-        ("index_n_heads", INDEX_HEADS),
-        ("index_topk", INDEX_TOPK),
-        ("vocab_size", VOCABULARY),
-        ("n_routed_experts", ROUTED_EXPERTS),
-        ("num_experts_per_tok", TOP_K),
-        ("moe_intermediate_size", MOE_INTERMEDIATE),
-        ("sliding_window", SLIDING_WINDOW),
-        ("num_hidden_layers", 43),
-    ):
-        if int(config[key]) != expected:
+    # The adapter and the graph module raise their own errors.  A caller of
+    # this export gets one error type, so a build that stops says which model
+    # and which artifact rather than which module.
+    try:
+        config = load_official_config(config_path, source_path, release)
+        specs = build_official_tensor_specs(config, release)
+    except DeepSeekV4AdapterError as exc:
+        raise DeepSeekV4KernelIRError(
+            f"{release.model_id} tensor contract is not available: {exc}"
+        ) from exc
+    # Confront the profile with the release it claims to describe.  Every width
+    # this export sizes anything by is here, moving or not: a width that is not
+    # checked against the config it came from is a width that can drift without
+    # a symptom, and the route scale is the case with no downstream witness at
+    # all -- 1.5 applied to a model whose released value is 2.5 is a finite
+    # number either way.
+    for key, expected in model_profile.architecture_pins:
+        if key not in release.config_scalars and key != "compress_ratios":
+            raise DeepSeekV4KernelIRError(
+                f"{MODEL_ID} sizes the graph by {key}, which its release record "
+                "does not pin"
+            )
+        if config[key] != expected:
             raise DeepSeekV4KernelIRError(
                 f"released config {key}={config[key]} differs from the pinned {expected}"
             )
 
+    missing = _missing_checkpoint_artifacts(release, snapshot, checkpoint_lock_path)
+    if missing:
+        raise DeepSeekV4KernelIRError(
+            f"the {MODEL_ID} kernel IR needs "
+            f"{len(missing)} artifact{'s' if len(missing) > 1 else ''} that "
+            "this host does not have:\n  " + "\n  ".join(missing)
+        )
     try:
-        lock = load_checkpoint_lock(Path(checkpoint_lock_path))
+        lock = load_checkpoint_lock(checkpoint_lock_path)
     except CheckpointError as exc:
         raise DeepSeekV4KernelIRError(
             f"invalid DeepSeek V4 checkpoint lock: {exc}"
         ) from exc
-    validate_official_checkpoint_lock(lock, config)
+    try:
+        validate_official_checkpoint_lock(lock, config, release)
+    except DeepSeekV4AdapterError as exc:
+        raise DeepSeekV4KernelIRError(
+            f"{release.model_id} checkpoint lock is not usable: {exc}"
+        ) from exc
     if (
-        lock["lock_id"] != OFFICIAL_CHECKPOINT_LOCK_ID
+        lock["lock_id"] != release.checkpoint_lock_id
         or lock["checkpoint"]["tensor_count"] != TENSOR_COUNT
         or lock["checkpoint"]["payload_bytes"] != PAYLOAD_BYTES
     ):
         raise DeepSeekV4KernelIRError(
-            "checkpoint lock is not the pinned DeepSeek-V4-Flash-0731 release"
+            f"checkpoint lock is not the pinned {MODEL_ID} release"
         )
     bindings = read_checkpoint_bindings(snapshot, lock)
     if len(bindings) != TENSOR_COUNT:
@@ -1263,10 +1681,19 @@ def export_deepseek_v4_kernel_graph(
             f"checkpoint headers describe {len(bindings)} tensors, expected {TENSOR_COUNT}"
         )
 
-    contract = build_official_graph_contract()
+    try:
+        contract = build_official_graph_contract(release)
+    except DeepSeekV4GraphError as exc:
+        raise DeepSeekV4KernelIRError(
+            f"{release.model_id} source graph contract is not available: {exc}"
+        ) from exc
     nodes = contract["nodes"]
 
-    ratios = [int(r) for r in config["compress_ratios"][:43]]
+    #: The main layers' compression ratios, from the profile.  The released
+    #: list is longer: its tail is the DSpark stages' own ratios, which the
+    #: speculative blocks read separately.  ``validate_official_config`` has
+    #: already refused a config whose list differs from this one.
+    ratios = list(model_profile.main_compress_ratios)
 
     # ------------------------------------------------------------------
     # Tensor specification index
@@ -1308,31 +1735,80 @@ def export_deepseek_v4_kernel_graph(
             context_tokens + context_tokens // 128,
         ),
     }
+    # A derived symbol is declared where a layer of that compression ratio
+    # exists, and not otherwise.  Flash has all three kinds -- two window-only
+    # layers, 21 at ratio 4 and 20 at ratio 128 -- so it declares all nine
+    # symbols.  Pro has no window-only layer, so ``attention_rows_window``
+    # would be a symbol no tensor extent names; both backends still carry the
+    # name in their frozen A5 registries, so declaring it would be legal and
+    # inert, and leaving it out is the same choice made for the base rotary
+    # table above and for the same reason.
+    ratio_kinds = set(ratios)
     symbols = (
         RuntimeSymbol("span_tokens", 1, context_tokens, 1, "request"),
         RuntimeSymbol("context_length", 1, context_tokens, 1, "request"),
-        RuntimeSymbol("span_groups_ratio4", 0, context_tokens // 4, 1, "derived"),
-        RuntimeSymbol("span_groups_ratio128", 0, context_tokens // 128, 1, "derived"),
-        RuntimeSymbol("context_groups_ratio4", 0, context_tokens // 4, 1, "derived"),
-        RuntimeSymbol(
-            "context_groups_ratio128", 0, context_tokens // 128, 1, "derived"
+        *(
+            (RuntimeSymbol("span_groups_ratio4", 0, context_tokens // 4, 1, "derived"),)
+            if 4 in ratio_kinds
+            else ()
         ),
-        RuntimeSymbol(
-            "attention_rows_window", 1, context_tokens, 1, "derived"
+        *(
+            (
+                RuntimeSymbol(
+                    "span_groups_ratio128", 0, context_tokens // 128, 1, "derived"
+                ),
+            )
+            if 128 in ratio_kinds
+            else ()
         ),
-        RuntimeSymbol(
-            "attention_rows_ratio4",
-            1,
-            context_tokens + context_tokens // 4,
-            1,
-            "derived",
+        *(
+            (
+                RuntimeSymbol(
+                    "context_groups_ratio4", 0, context_tokens // 4, 1, "derived"
+                ),
+            )
+            if 4 in ratio_kinds
+            else ()
         ),
-        RuntimeSymbol(
-            "attention_rows_ratio128",
-            1,
-            context_tokens + context_tokens // 128,
-            1,
-            "derived",
+        *(
+            (
+                RuntimeSymbol(
+                    "context_groups_ratio128", 0, context_tokens // 128, 1, "derived"
+                ),
+            )
+            if 128 in ratio_kinds
+            else ()
+        ),
+        *(
+            (RuntimeSymbol("attention_rows_window", 1, context_tokens, 1, "derived"),)
+            if 0 in ratio_kinds
+            else ()
+        ),
+        *(
+            (
+                RuntimeSymbol(
+                    "attention_rows_ratio4",
+                    1,
+                    context_tokens + context_tokens // 4,
+                    1,
+                    "derived",
+                ),
+            )
+            if 4 in ratio_kinds
+            else ()
+        ),
+        *(
+            (
+                RuntimeSymbol(
+                    "attention_rows_ratio128",
+                    1,
+                    context_tokens + context_tokens // 128,
+                    1,
+                    "derived",
+                ),
+            )
+            if 128 in ratio_kinds
+            else ()
         ),
     )
 
@@ -1386,11 +1862,24 @@ def export_deepseek_v4_kernel_graph(
     # a named generator, the deployment binds the SHA-256 of its output, and the
     # device re-derives and re-checks it at load.
     #
-    # Two tables, because the released model uses two rotary profiles: the pure
-    # sliding-window layers rotate at theta 10,000 with no position scaling, and
-    # the compressed layers rotate at theta 160,000 with the committed YaRN
-    # interpolation.  Collapsing them onto one table would give whichever layers
-    # did not get their own the wrong frequencies.
+    # Two rotary profiles, because ``inference/model.py`` selects between them
+    # per layer: ``if self.compress_ratio`` rotates at ``compress_rope_theta``
+    # with the committed YaRN interpolation, and the ``else`` branch -- the
+    # pure sliding-window layers -- disables YaRN and rotates at the base
+    # ``rope_theta``.  Collapsing them onto one table would give whichever
+    # layers did not get their own the wrong frequencies.
+    #
+    # A profile is declared only where some node reads it.  Flash reads both:
+    # its layers 0 and 1 are the only ratio-0 layers either release has.
+    # DeepSeek-V4-Pro-0813 has no window-only main layer at all, so its
+    # target-only graph would otherwise declare a generated table, an
+    # activation row block and a GATHER whose output nothing consumes.
+    # ``check_neutral`` does not reject that -- an unread constant is legal --
+    # which is exactly why it is decided here rather than left to a backend:
+    # one lane that allocates for every declared tensor and one that prunes
+    # would disagree about a document neither had rejected.  The base profile
+    # comes back with the speculative profile, whose three DSpark stages carry
+    # ratio 0.
     #
     # The rows are ``cos[rotary_width] || sin[rotary_width]``, not
     # ``cos[head_dim] || sin[head_dim]``: the rotation is partial.  Only the
@@ -1399,10 +1888,18 @@ def export_deepseek_v4_kernel_graph(
     # and repeats each pair's value across the two channels it multiplies.
     rope_tables: dict[str, str] = {}
     rope_rows: dict[str, str] = {}
+    rope_ratios = set(ratios)
+    if include_speculative:
+        rope_ratios.update(release.dspark_compress_ratios)
     for profile, theta, scaling in (
         ("base", float(config["rope_theta"]), "none"),
         ("yarn", float(config["compress_rope_theta"]), "yarn"),
     ):
+        reads_profile = any(
+            ("yarn" if ratio else "base") == profile for ratio in rope_ratios
+        )
+        if not reads_profile:
+            continue
         parameters: dict[str, Any] = {
             "maximum_position": context_tokens,
             "position_scaling": scaling,
@@ -1632,7 +2129,7 @@ def export_deepseek_v4_kernel_graph(
         """One segmented binding over an ordered family of checkpoint ranges.
 
         A stack of expert weights is an operand, not an attribute.  The
-        released checkpoint interleaves the 256 experts of a layer, so no single
+        released checkpoint interleaves a layer's experts, so no single
         range covers the stack, and until :class:`CheckpointBinding` grew
         ``segments`` the only way to name it was a list of tensor names in an
         attribute -- which is not an operand, so the mandatory ``[E, N, K]``
@@ -2952,25 +3449,26 @@ def export_deepseek_v4_kernel_graph(
             # Emitting it anyway left ``in2`` empty -- a mandatory slot naming
             # ``NO_ID``, which every backend's arity gate correctly refuses.
             #
-            # The faithful form is the one below: eight contractions over eight
-            # column blocks, joined back into one token-major row.  That join is
-            # on the *feature* axis, which amendment A17 is what makes sayable;
-            # before it, ``REDUCTION.GROUPED_CONCAT`` joined on axis 0 only, and
-            # eight ``[tokens, 1024]`` blocks joined that way are
-            # ``[8 * tokens, 1024]`` -- group major where token major belongs.
-            # No strided output view repairs that, because group ``g`` of token
-            # ``t`` lives at ``t * 8192 + g * 1024`` and a rank-2 view has one
-            # row stride; and eight kernels writing column ranges of one tensor
-            # is eight producers of one tensor, which single assignment forbids
-            # and should.
+            # The faithful form is the one below: one contraction per column
+            # block, joined back into one token-major row.  That join is on the
+            # *feature* axis, which amendment A17 is what makes sayable; before
+            # it, ``REDUCTION.GROUPED_CONCAT`` joined on axis 0 only, and the
+            # release profile's eight ``[tokens, 1024]`` blocks joined that way
+            # are ``[8 * tokens, 1024]`` -- group major where token major
+            # belongs.  No strided output view repairs that, because group
+            # ``g`` of token ``t`` lives at ``t * o_groups * o_rank + g *
+            # o_rank`` and a rank-2 view has one row stride; and one kernel per
+            # group writing column ranges of one tensor is many producers of
+            # one tensor, which single assignment forbids and should.
             #
             # The weight is split the same way the contraction is.  Group ``g``
-            # contracts against rows ``[1024g, 1024(g+1))`` of the released
-            # ``[8192, 4096]`` fp8 matrix and the matching eight rows of its
-            # ``[64, 32]`` tile scale; both are contiguous byte ranges, so each
-            # group is one ordinary checkpoint binding whose digest is derived
-            # from the checkpoint and accepted only when the eight of them
-            # reassemble to the locked whole-tensor SHA-256.
+            # contracts against rows ``[o_rank * g, o_rank * (g + 1))`` of the
+            # released ``[o_groups * o_rank, heads * head_dim // o_groups]``
+            # fp8 matrix -- ``[8192, 4096]`` on Flash, ``[16384, 4096]`` on Pro
+            # -- and the matching rows of its tile scale; both are contiguous
+            # byte ranges, so each group is one ordinary checkpoint binding
+            # whose digest is derived from the checkpoint and accepted only
+            # when all of them reassemble to the locked whole-tensor SHA-256.
             source = operands[0]
             spec = role_specs(roles[0], scope, layer)
             if len(spec) != 1:
@@ -3978,11 +4476,17 @@ __all__ = [
     "DEFAULT_CONTEXT_TOKENS",
     "DEFAULT_SNAPSHOT",
     "DeepSeekV4KernelIRError",
+    "DeepSeekV4Profile",
     "CONTRACT_BASE_BY_SOURCE_KIND",
+    "FLASH_PROFILE",
     "LOWERING_PLAN",
+    "MODEL_PROFILES",
     "NUMERIC_PROFILE",
+    "PRO_PROFILE",
     "export_deepseek_v4_kernel_graph",
     "graph_census",
+    "lowering_plan",
     "read_checkpoint_bindings",
+    "resolve_model_profile",
     "verify_checkpoint_bindings",
 ]

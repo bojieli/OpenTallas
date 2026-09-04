@@ -490,7 +490,9 @@ def test_fixture_lock_cannot_enter_official_application_scope(
 ) -> None:
     snapshot, lock, _ = application_fixture
     output = tmp_path / "must-not-exist"
-    with pytest.raises(DeepSeekV4AdapterError, match="not the pinned V4 Flash"):
+    with pytest.raises(
+        DeepSeekV4AdapterError, match="not the pinned deepseek-v4-flash-0731"
+    ):
         apply_official_canonical_plan(
             snapshot=snapshot,
             lock=lock,

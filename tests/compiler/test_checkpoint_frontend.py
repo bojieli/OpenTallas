@@ -480,5 +480,7 @@ def test_checkpoint_cli_locks_and_replays_snapshot(
         text=True,
     )
     assert wrong_model_result.returncode == 2
-    assert "not the pinned V4 Flash release" in wrong_model_result.stderr
+    assert (
+        "not the pinned deepseek-v4-flash-0731 release" in wrong_model_result.stderr
+    )
     assert not (tmp_path / "must-not-exist.json").exists()

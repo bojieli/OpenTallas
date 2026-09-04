@@ -1,11 +1,17 @@
-"""Source-mapped DeepSeek V4 Flash semantic graph coverage.
+"""Source-mapped DeepSeek V4 semantic graph coverage.
 
-This module turns the pinned official topology into an ordered graph contract.
+This module turns one pinned official topology into an ordered graph contract.
 It deliberately stops short of calling that graph executable: every operator is
 owned, source-anchored, assigned a lowering and cost class, and connected to its
 checkpoint tensor roles.  Qualified reference slices are named individually;
 all 46 reference owners are qualified, while graph-wide service-engine and RTL
 execution stay explicitly pending.
+
+Which release is being described is an argument.  Every width, layer count,
+expert count and target-layer list is read from the release record's config
+rather than written here, so the node graph follows the release the caller
+names; the module constants below are DeepSeek-V4-Flash-0731's, kept under the
+names the rest of the tree imports.
 """
 
 from __future__ import annotations
@@ -18,21 +24,28 @@ import re
 from typing import Any
 
 from compiler.frontend.deepseek_v4 import (
-    DEFAULT_SOURCE,
-    MODEL_ID,
-    REPOSITORY,
-    REVISION,
     TensorSpec,
     build_official_tensor_specs,
     load_official_config,
+)
+from compiler.frontend.deepseek_v4_releases import (
+    FLASH,
+    DeepSeekV4Release,
+    resolve_release,
 )
 from compiler.frontend.checkpoint import load_checkpoint_source
 from compiler.ir.model import canonical_json_bytes, load_strict_json
 
 
-INFERENCE_CONFIG_SHA256 = (
-    "c90861f3d10a9e4ef5954f8f1a34c529d480da1c5799f84660028f4e38e14e71"
-)
+#: The released inference implementation, the encoding module and their four
+#: source anchors are shared byte for byte by both pinned releases: each of
+#: ``inference/model.py``, ``inference/kernel.py``, ``inference/convert.py``,
+#: ``inference/generate.py`` and ``encoding/encoding_dsv4.py`` hashes to the
+#: same value on the DeepSeek-V4-Flash-0731 and DeepSeek-V4-Pro-0813 snapshots,
+#: measured with ``sha256sum`` on both.  That is why a second release is a
+#: re-parameterisation of this graph and not a re-derivation of its semantics,
+#: and why these five digests are release-independent while the root config,
+#: the inference config and the model card are not.
 MODEL_SOURCE_SHA256 = "c0c19e6c9fa439bac7fbb1c5bc1868232dfd5aa2f439a548d0e33dcc2a9edd3f"
 KERNEL_SOURCE_SHA256 = (
     "59b325083d7103975cba025bd0d60ea343bb82d8fff53088afb7c04bd380c0c2"
@@ -43,15 +56,16 @@ CONVERT_SOURCE_SHA256 = (
 GENERATE_SOURCE_SHA256 = (
     "775fcfee2344e21a7b02c73161c517763e4348b84cf2eb266353e0857b9c8812"
 )
-MODEL_CARD_SHA256 = "252acafdc9204d0dba3fde1b0a93d71cd1664a4ceadfe222b60117ed0ccc56ff"
 ENCODING_SOURCE_SHA256 = (
     "abc0d26120250dda0ae077dc64aa28836026e61e970854aaeb792445e6a0dde6"
 )
-TOKENIZER_SHA256 = "8f9f37ca37fdc4f5fd36d5cf4d3b0e8392edb4e894fd10cc0d70b4957c8633cf"
-DEFAULT_INFERENCE_CONFIG = (
-    Path(__file__).resolve().parents[1]
-    / "models/deepseek-v4-flash-0731/inference_config.json"
-)
+
+#: DeepSeek-V4-Flash-0731's per-release digests and paths, under the names the
+#: rest of the tree imports.
+INFERENCE_CONFIG_SHA256 = FLASH.inference_config_sha256
+MODEL_CARD_SHA256 = FLASH.model_card_sha256
+TOKENIZER_SHA256 = FLASH.tokenizer_sha256
+DEFAULT_INFERENCE_CONFIG = FLASH.inference_config_path
 
 _QUALIFIED_REFERENCE_OWNERS = {
     "ATTENTION_KV_VIEW": (
@@ -775,9 +789,28 @@ def _fp8_roles(base: str) -> tuple[str, str]:
     return (f"{base}.weight", f"{base}.scale")
 
 
-def _rms_norm_attributes(width: int) -> dict[str, Any]:
-    if width not in {128, 512, 1024, 4096}:
-        raise DeepSeekV4GraphError(f"unsupported RMS_NORM width {width}")
+def _normalized_widths(config: dict[str, Any]) -> frozenset[int]:
+    """The widths a released RMS_NORM may have.
+
+    The four sites are the indexer compressor norm (``index_head_dim``), the KV
+    and main compressor norms (``head_dim``), the query norm (``q_lora_rank``)
+    and the attention/FFN/final norms (``hidden_size``).  Flash gives
+    {128, 512, 1024, 4096} and Pro {128, 512, 1536, 7168}; a width outside the
+    set its own config admits is a derivation error, not a new profile.
+    """
+
+    return frozenset(
+        int(config[key])
+        for key in ("index_head_dim", "head_dim", "q_lora_rank", "hidden_size")
+    )
+
+
+def _rms_norm_attributes(width: int, *, admissible: frozenset[int]) -> dict[str, Any]:
+    if width not in admissible:
+        raise DeepSeekV4GraphError(
+            f"unsupported RMS_NORM width {width}; this release admits "
+            f"{sorted(admissible)}"
+        )
     return {
         "checkpoint_weight_dtype": "bf16",
         "epsilon": 1e-6,
@@ -814,17 +847,17 @@ def _head_rms_norm_attributes() -> dict[str, Any]:
     }
 
 
-def _bf16_linear_attributes() -> dict[str, Any]:
+def _bf16_linear_attributes(*, in_features: int, out_features: int) -> dict[str, Any]:
     return {
         "accumulation_order": "increasing_reduction_index",
         "accumulation_rounding": "binary32_rne_each_fused_product_add",
         "accumulator_dtype": "binary32",
         "bias": "none",
         "checkpoint_weight_dtype": "bf16",
-        "in_features": 4096,
+        "in_features": in_features,
         "input_dtype": "bf16",
         "intermediate_overflow": "poison",
-        "out_features": 64,
+        "out_features": out_features,
         "output_dtype": "bf16",
         "output_rounding": "bf16_rne_once",
         "output_zero": "canonical_positive",
@@ -833,15 +866,15 @@ def _bf16_linear_attributes() -> dict[str, Any]:
     }
 
 
-def _router_score_attributes() -> dict[str, Any]:
+def _router_score_attributes(*, experts: int, in_features: int) -> dict[str, Any]:
     return {
         "accumulation_order": "increasing_reduction_index",
         "accumulation_rounding": "binary32_rne_each_fused_product_add",
         "accumulator_dtype": "binary32",
         "bias": "none",
         "checkpoint_weight_dtype": "bf16",
-        "experts": 256,
-        "in_features": 4096,
+        "experts": experts,
+        "in_features": in_features,
         "input_compute_dtype": "binary32_exact_bf16_widen",
         "input_dtype": "bf16",
         "intermediate_overflow": "poison",
@@ -872,7 +905,9 @@ def _expert_reduce_attributes() -> dict[str, Any]:
     }
 
 
-def _confidence_score_attributes() -> dict[str, Any]:
+def _confidence_score_attributes(
+    *, hidden_width: int, markov_width: int
+) -> dict[str, Any]:
     return {
         "accumulation_order": "increasing_reduction_index",
         "accumulation_rounding": "binary32_rne_each_fused_product_add",
@@ -882,12 +917,13 @@ def _confidence_score_attributes() -> dict[str, Any]:
         "checkpoint_weight_dtype": "bf16",
         "concatenation_order": "hidden_then_markov",
         "hidden_input_dtype": "bf16",
-        "hidden_width": 4096,
+        "hidden_width": hidden_width,
         "input_compute_dtype": "binary32_exact_bf16_widen",
-        "input_width": 4352,
+        # The head reads the concatenation, so its reduction width is the sum.
+        "input_width": hidden_width + markov_width,
         "intermediate_overflow": "poison",
         "markov_input_dtype": "bf16",
-        "markov_width": 256,
+        "markov_width": markov_width,
         "output_count": 1,
         "output_dtype": "binary32",
         "output_zero": "canonical_positive",
@@ -897,14 +933,16 @@ def _confidence_score_attributes() -> dict[str, Any]:
     }
 
 
-def _lm_head_attributes(*, full_logits: bool) -> dict[str, Any]:
+def _lm_head_attributes(
+    *, full_logits: bool, hidden_width: int, vocabulary_size: int
+) -> dict[str, Any]:
     attributes: dict[str, Any] = {
         "accumulator_dtype": "binary32",
         "bias": False,
         "checkpoint_weight_dtype": "bf16",
         "collective": "all_gather_then_rank_order_concat",
         "full_logits": full_logits,
-        "hidden_width": 4096,
+        "hidden_width": hidden_width,
         "input_dtype": "bf16",
         "intermediate_overflow": "poison",
         "output_dtype": "binary32",
@@ -922,19 +960,21 @@ def _lm_head_attributes(*, full_logits: bool) -> dict[str, Any]:
         "subnormal_policy": "preserve",
         "tensor_parallel_world_sizes": [1, 2, 4, 8],
         "untied": True,
-        "vocabulary_size": 129280,
+        "vocabulary_size": vocabulary_size,
     }
     if full_logits:
         attributes.update({"block_size": 5, "shared_main_head": True})
     return attributes
 
 
-def _markov_loop_attributes() -> dict[str, Any]:
+def _markov_loop_attributes(
+    *, markov_rank: int, vocabulary_size: int, block_size: int
+) -> dict[str, Any]:
     return {
         "adjusted_logits_output_dtype": "binary32",
         "base_logits_input_dtype": "binary32",
         "bias_add_rounding": "separate_binary32_rne",
-        "block_size": 5,
+        "block_size": block_size,
         "causal_order": "increasing_step_0_to_4",
         "embedding_checkpoint_dtype": "bf16",
         "embedding_output_dtype": "bf16",
@@ -951,12 +991,12 @@ def _markov_loop_attributes() -> dict[str, Any]:
         "head_runtime_weight_dtype": "binary32_exact_bf16_widen",
         "initial_token_output_column": 0,
         "intermediate_overflow": "poison_complete_transaction",
-        "markov_rank": 256,
+        "markov_rank": markov_rank,
         "official_default_temperature_binary32": "0x3f800000",
         "official_stochastic_replay": (
             "blocked_unpinned_torch_cuda_rng_exponential_softmax_backend"
         ),
-        "output_token_count": 6,
+        "output_token_count": block_size + 1,
         "partition_axis": "vocabulary",
         "partition_rule": "equal_contiguous_rank_order",
         "reference_profile": "opentallas.deepseek_v4_markov_loop_binary32.v1",
@@ -967,7 +1007,7 @@ def _markov_loop_attributes() -> dict[str, Any]:
         ),
         "temperature_input": "request.temperature_binary32",
         "tensor_parallel_world_sizes": [1, 2, 4, 8],
-        "vocabulary_size": 129280,
+        "vocabulary_size": vocabulary_size,
     }
 
 
@@ -976,7 +1016,13 @@ def _compress_project_attributes(
     ratio: int,
     output_features: int,
     projection_scope: str,
+    in_features: int,
 ) -> dict[str, Any]:
+    # The output widths are head-dimension derived -- ``head_dim`` for the main
+    # compressor, ``index_head_dim`` for the indexer's, doubled where the
+    # ratio-4 pooling overlaps -- and neither moves between the releases, which
+    # is why this table is not release-parameterised while ``in_features``,
+    # which is ``hidden_size``, is.
     expected_output_features = {
         ("indexer", 4): 256,
         ("main", 4): 1024,
@@ -996,7 +1042,7 @@ def _compress_project_attributes(
         "activation_quantization": "none",
         "bias": "none",
         "checkpoint_weight_dtype": "bf16",
-        "in_features": 4096,
+        "in_features": in_features,
         "input_compute_dtype": "binary32_exact_bf16_widen",
         "input_dtype": "bf16",
         "intermediate_overflow": "poison",
@@ -1221,6 +1267,16 @@ def _attention_kv_view_attributes(
 
 
 def _index_score_attributes() -> dict[str, Any]:
+    """The indexer's scoring contract, which is the same in both releases.
+
+    ``index_n_heads`` is 64 and ``index_head_dim`` 128 on Flash and on Pro --
+    both are pinned per release in
+    ``compiler.frontend.deepseek_v4_releases`` -- and
+    ``head_weight_scale_binary32`` 0x3c3504f3 is exactly
+    ``1 / sqrt(index_n_heads * index_head_dim)``, so it is stated once here
+    rather than recomputed per release.
+    """
+
     return {
         "candidate_axis": "may_be_empty",
         "finite_saturation": "sticky_count_at_each_bf16_boundary",
@@ -1252,7 +1308,7 @@ def _index_score_attributes() -> dict[str, Any]:
     }
 
 
-def _sparse_attention_attributes(ratio: int) -> dict[str, Any]:
+def _sparse_attention_attributes(ratio: int, *, heads: int) -> dict[str, Any]:
     if ratio not in {0, 4, 128}:
         raise DeepSeekV4GraphError(
             f"unsupported sparse-attention compression ratio {ratio}"
@@ -1269,7 +1325,7 @@ def _sparse_attention_attributes(ratio: int) -> dict[str, Any]:
         "finite_saturation": "sticky_count_at_final_bf16_boundary",
         "first_block_valid_policy": "at_least_one_valid_index_required",
         "head_dim": 512,
-        "heads": 64,
+        "heads": heads,
         "index_dtype": "int32",
         "intermediate_overflow": "poison",
         "kv_input_dtype": "bf16",
@@ -1302,6 +1358,7 @@ def _add_block_graph(
     graph: _GraphBuilder,
     hidden: str,
     *,
+    config: dict[str, Any],
     scope: str,
     layer: int,
     ratio: int,
@@ -1309,7 +1366,36 @@ def _add_block_graph(
     dspark: bool = False,
     conditioning: str | None = None,
 ) -> str:
+    """Add one released block to the graph, sized entirely by ``config``.
+
+    Every width below is a released configuration value.  ``head_dim``,
+    ``qk_rope_head_dim``, ``sliding_window``, ``hc_mult``, ``num_experts_per_tok``
+    and the two indexer widths happen to be equal in the two pinned releases,
+    but they are read rather than written for the same reason as the ones that
+    move: a literal here cannot be confronted with the config that contradicts
+    it.
+    """
+
     root = f"{scope}.layer{layer:02d}"
+    dim = int(config["hidden_size"])
+    heads = int(config["num_attention_heads"])
+    head_dim = int(config["head_dim"])
+    rope_dim = int(config["qk_rope_head_dim"])
+    q_lora_rank = int(config["q_lora_rank"])
+    o_groups = int(config["o_groups"])
+    o_rank = int(config["o_lora_rank"])
+    index_heads = int(config["index_n_heads"])
+    index_head_dim = int(config["index_head_dim"])
+    index_topk = int(config["index_topk"])
+    experts = int(config["n_routed_experts"])
+    top_k = int(config["num_experts_per_tok"])
+    intermediate = int(config["moe_intermediate_size"])
+    hc_mult = int(config["hc_mult"])
+    window = int(config["sliding_window"])
+    draft_block = int(config["dspark_block_size"])
+    route_scale = config["routed_scaling_factor"]
+    swiglu_limit = config["swiglu_limit"]
+    norm_widths = _normalized_widths(config)
     normal_phases = ("decode",) if dspark else ("prefill", "decode")
     if dspark:
         if conditioning is None:
@@ -1319,7 +1405,7 @@ def _add_block_graph(
             "DSPARK_PREFILL_KV",
             (conditioning, "request.start_pos"),
             phases=("prefill",),
-            attributes={"layer": layer, "window_size": 128},
+            attributes={"layer": layer, "window_size": window},
             state_reads=(f"state.dspark.layer{layer}.window_kv",),
             state_writes=(f"state.dspark.layer{layer}.window_kv",),
             tensor_roles=(
@@ -1333,7 +1419,7 @@ def _add_block_graph(
         (hidden,),
         ("branch", "post", "comb", "residual"),
         phases=normal_phases,
-        attributes={"branch": "attention", "hc_mult": 4, "layer": layer},
+        attributes={"branch": "attention", "hc_mult": hc_mult, "layer": layer},
         tensor_roles=(
             "hyper_connection.attn.base",
             "hyper_connection.attn.projection",
@@ -1345,7 +1431,7 @@ def _add_block_graph(
         "RMS_NORM",
         (attn_input,),
         phases=normal_phases,
-        attributes=_rms_norm_attributes(4096),
+        attributes=_rms_norm_attributes(dim, admissible=norm_widths),
         tensor_roles=("block.attention_norm.weight",),
     )
     (q_rank,) = graph.add(
@@ -1353,7 +1439,7 @@ def _add_block_graph(
         "FP8_LINEAR",
         (attn_norm,),
         phases=normal_phases,
-        attributes={"in_features": 4096, "out_features": 1024},
+        attributes={"in_features": dim, "out_features": q_lora_rank},
         tensor_roles=_fp8_roles("attention.query_a"),
     )
     (q_rank_norm,) = graph.add(
@@ -1361,7 +1447,7 @@ def _add_block_graph(
         "RMS_NORM",
         (q_rank,),
         phases=normal_phases,
-        attributes=_rms_norm_attributes(1024),
+        attributes=_rms_norm_attributes(q_lora_rank, admissible=norm_widths),
         tensor_roles=("attention.q_norm.weight",),
     )
     (query,) = graph.add(
@@ -1369,7 +1455,7 @@ def _add_block_graph(
         "FP8_LINEAR",
         (q_rank_norm,),
         phases=normal_phases,
-        attributes={"heads": 64, "head_dim": 512},
+        attributes={"heads": heads, "head_dim": head_dim},
         tensor_roles=_fp8_roles("attention.query_b"),
     )
     (query,) = graph.add(
@@ -1384,14 +1470,14 @@ def _add_block_graph(
         "ROPE_APPLY",
         (query, "request.start_pos"),
         phases=normal_phases,
-        attributes={"inverse": False, "rope_dim": 64},
+        attributes={"inverse": False, "rope_dim": rope_dim},
     )
     (kv,) = graph.add(
         f"{root}.kv_project",
         "FP8_LINEAR",
         (attn_norm,),
         phases=normal_phases,
-        attributes={"in_features": 4096, "out_features": 512},
+        attributes={"in_features": dim, "out_features": head_dim},
         tensor_roles=_fp8_roles("attention.kv_projection"),
     )
     (kv,) = graph.add(
@@ -1399,7 +1485,7 @@ def _add_block_graph(
         "RMS_NORM",
         (kv,),
         phases=normal_phases,
-        attributes=_rms_norm_attributes(512),
+        attributes=_rms_norm_attributes(head_dim, admissible=norm_widths),
         tensor_roles=("attention.kv_norm.weight",),
     )
     (kv,) = graph.add(
@@ -1407,7 +1493,7 @@ def _add_block_graph(
         "ROPE_APPLY",
         (kv, "request.start_pos"),
         phases=normal_phases,
-        attributes={"inverse": False, "rope_dim": 64},
+        attributes={"inverse": False, "rope_dim": rope_dim},
     )
     (kv,) = graph.add(
         f"{root}.kv_fp8_qdq",
@@ -1418,8 +1504,8 @@ def _add_block_graph(
             "block_size": 64,
             "dimensions": "non_rope",
             "inplace": True,
-            "quantized_width": 448,
-            "rope_width": 64,
+            "quantized_width": head_dim - rope_dim,
+            "rope_width": rope_dim,
             "scale_format": "ue8m0",
             "scale_storage": "e8m0",
         },
@@ -1431,8 +1517,8 @@ def _add_block_graph(
             (conditioning,),
             phases=normal_phases,
             attributes={
-                "in_features": 4096,
-                "out_features": 512,
+                "in_features": dim,
+                "out_features": head_dim,
                 "source": "dspark_conditioning",
             },
             tensor_roles=_fp8_roles("attention.kv_projection"),
@@ -1442,7 +1528,7 @@ def _add_block_graph(
             "RMS_NORM",
             (main_kv,),
             phases=normal_phases,
-            attributes=_rms_norm_attributes(512),
+            attributes=_rms_norm_attributes(head_dim, admissible=norm_widths),
             tensor_roles=("attention.kv_norm.weight",),
         )
         (main_kv,) = graph.add(
@@ -1450,7 +1536,7 @@ def _add_block_graph(
             "ROPE_APPLY",
             (main_kv, "request.start_pos"),
             phases=normal_phases,
-            attributes={"inverse": False, "rope_dim": 64},
+            attributes={"inverse": False, "rope_dim": rope_dim},
         )
         (main_kv,) = graph.add(
             f"{root}.main_kv_fp8_qdq",
@@ -1461,8 +1547,8 @@ def _add_block_graph(
                 "block_size": 64,
                 "dimensions": "non_rope",
                 "inplace": True,
-                "quantized_width": 448,
-                "rope_width": 64,
+                "quantized_width": head_dim - rope_dim,
+                "rope_width": rope_dim,
                 "scale_format": "ue8m0",
                 "scale_storage": "e8m0",
             },
@@ -1473,7 +1559,10 @@ def _add_block_graph(
         window_kind,
         ("request.start_pos",),
         phases=normal_phases,
-        attributes={"draft_block_size": 5 if dspark else 0, "window_size": 128},
+        attributes={
+            "draft_block_size": draft_block if dspark else 0,
+            "window_size": window,
+        },
     )
     (window_kv_state,) = graph.add(
         f"{root}.window_kv_write",
@@ -1481,7 +1570,7 @@ def _add_block_graph(
         (main_kv if dspark else kv, "request.start_pos"),
         ("committed_window",),
         phases=normal_phases,
-        attributes={"layer": layer, "scope": scope, "window_size": 128},
+        attributes={"layer": layer, "scope": scope, "window_size": window},
         state_reads=(f"state.{scope}.layer{layer}.window_kv",),
         state_writes=(f"state.{scope}.layer{layer}.window_kv",),
     )
@@ -1496,8 +1585,10 @@ def _add_block_graph(
             phases=normal_phases,
             attributes=_compress_project_attributes(
                 ratio=ratio,
-                output_features=1024 if ratio == 4 else 512,
+                # ratio-4 pooling overlaps, so it projects two head rows.
+                output_features=2 * head_dim if ratio == 4 else head_dim,
                 projection_scope="main",
+                in_features=dim,
             ),
             tensor_roles=(
                 "attention.compressor.wkv.weight",
@@ -1522,7 +1613,7 @@ def _add_block_graph(
             predicate_outputs=("should_compress",),
             attributes=_compress_state_attributes(
                 ratio=ratio,
-                head_dim=512,
+                head_dim=head_dim,
                 projection_scope="main",
             ),
             state_reads=(f"state.{scope}.layer{layer}.compressor",),
@@ -1535,7 +1626,7 @@ def _add_block_graph(
             (pool_kv, pool_scores, should_compress),
             phases=normal_phases,
             guard=should_compress,
-            attributes=_compress_pool_attributes(ratio=ratio, head_dim=512),
+            attributes=_compress_pool_attributes(ratio=ratio, head_dim=head_dim),
         )
         (compressed_kv,) = graph.add(
             f"{root}.compress_bf16",
@@ -1543,7 +1634,7 @@ def _add_block_graph(
             (compressed_kv, should_compress),
             phases=normal_phases,
             guard=should_compress,
-            attributes=_binary32_to_bf16_attributes(head_dim=512),
+            attributes=_binary32_to_bf16_attributes(head_dim=head_dim),
         )
         (compressed_kv,) = graph.add(
             f"{root}.compress_norm",
@@ -1551,7 +1642,7 @@ def _add_block_graph(
             (compressed_kv,),
             phases=normal_phases,
             guard=should_compress,
-            attributes=_rms_norm_attributes(512),
+            attributes=_rms_norm_attributes(head_dim, admissible=norm_widths),
             tensor_roles=("attention.compressor.norm.weight",),
         )
         (compressed_kv,) = graph.add(
@@ -1572,8 +1663,8 @@ def _add_block_graph(
                 "block_size": 64,
                 "dimensions": "non_rope",
                 "inplace": True,
-                "quantized_width": 448,
-                "rope_width": 64,
+                "quantized_width": head_dim - rope_dim,
+                "rope_width": rope_dim,
                 "scale_format": "ue8m0",
                 "scale_storage": "e8m0",
             },
@@ -1595,7 +1686,7 @@ def _add_block_graph(
                 ratio=ratio,
                 scope=scope,
                 projection_scope="main",
-                head_dim=512,
+                head_dim=head_dim,
             ),
             state_reads=(f"state.{scope}.layer{layer}.compressed_kv",),
             state_writes=(f"state.{scope}.layer{layer}.compressed_kv",),
@@ -1608,7 +1699,7 @@ def _add_block_graph(
             attributes=_compressed_kv_valid_view_attributes(
                 ratio=ratio,
                 projection_scope="main",
-                head_dim=512,
+                head_dim=head_dim,
             ),
         )
         if ratio == 4:
@@ -1617,7 +1708,7 @@ def _add_block_graph(
                 "FP8_LINEAR",
                 (q_rank_norm,),
                 phases=normal_phases,
-                attributes={"head_dim": 128, "heads": 64},
+                attributes={"head_dim": index_head_dim, "heads": index_heads},
                 tensor_roles=_fp8_roles("attention.indexer.query"),
             )
             (index_query,) = graph.add(
@@ -1625,13 +1716,17 @@ def _add_block_graph(
                 "ROPE_APPLY",
                 (index_query, "request.start_pos"),
                 phases=normal_phases,
-                attributes={"inverse": False, "rope_dim": 64},
+                attributes={"inverse": False, "rope_dim": rope_dim},
             )
             (index_query,) = graph.add(
                 f"{root}.index_query_rotate",
                 "HADAMARD_ROTATE",
                 (index_query,),
                 phases=normal_phases,
+                # The rotation is over one indexer head and its normalization
+                # is exactly 1 / sqrt(128); both releases pin
+                # ``index_head_dim`` 128, so the width and the constant stay
+                # together rather than one of them being derived.
                 attributes={
                     "arithmetic": "binary32_rne",
                     "butterfly_order": "ascending_stride_1_to_64",
@@ -1658,8 +1753,9 @@ def _add_block_graph(
                 phases=normal_phases,
                 attributes=_compress_project_attributes(
                     ratio=4,
-                    output_features=256,
+                    output_features=2 * index_head_dim,
                     projection_scope="indexer",
+                    in_features=dim,
                 ),
                 tensor_roles=(
                     "attention.indexer.compressor.wkv.weight",
@@ -1684,7 +1780,7 @@ def _add_block_graph(
                 predicate_outputs=("should_compress",),
                 attributes=_compress_state_attributes(
                     ratio=4,
-                    head_dim=128,
+                    head_dim=index_head_dim,
                     projection_scope="indexer",
                 ),
                 state_reads=(f"state.{scope}.layer{layer}.index_compressor",),
@@ -1697,7 +1793,9 @@ def _add_block_graph(
                 (index_pool_kv, index_pool_scores, index_should_compress),
                 phases=normal_phases,
                 guard=index_should_compress,
-                attributes=_compress_pool_attributes(ratio=4, head_dim=128),
+                attributes=_compress_pool_attributes(
+                    ratio=4, head_dim=index_head_dim
+                ),
             )
             (index_kv,) = graph.add(
                 f"{root}.index_compress_bf16",
@@ -1705,7 +1803,7 @@ def _add_block_graph(
                 (index_kv, index_should_compress),
                 phases=normal_phases,
                 guard=index_should_compress,
-                attributes=_binary32_to_bf16_attributes(head_dim=128),
+                attributes=_binary32_to_bf16_attributes(head_dim=index_head_dim),
             )
             (index_kv,) = graph.add(
                 f"{root}.index_compress_norm",
@@ -1713,7 +1811,9 @@ def _add_block_graph(
                 (index_kv,),
                 phases=normal_phases,
                 guard=index_should_compress,
-                attributes=_rms_norm_attributes(128),
+                attributes=_rms_norm_attributes(
+                    index_head_dim, admissible=norm_widths
+                ),
                 tensor_roles=("attention.indexer.compressor.norm.weight",),
             )
             (index_kv,) = graph.add(
@@ -1722,6 +1822,10 @@ def _add_block_graph(
                 (index_kv,),
                 phases=normal_phases,
                 guard=index_should_compress,
+                # The rotation is over one indexer head and its normalization
+                # is exactly 1 / sqrt(128); both releases pin
+                # ``index_head_dim`` 128, so the width and the constant stay
+                # together rather than one of them being derived.
                 attributes={
                     "arithmetic": "binary32_rne",
                     "butterfly_order": "ascending_stride_1_to_64",
@@ -1758,7 +1862,7 @@ def _add_block_graph(
                     ratio=4,
                     scope=scope,
                     projection_scope="indexer",
-                    head_dim=128,
+                    head_dim=index_head_dim,
                 ),
                 state_reads=(f"state.{scope}.layer{layer}.index_compressed_kv",),
                 state_writes=(f"state.{scope}.layer{layer}.index_compressed_kv",),
@@ -1771,7 +1875,7 @@ def _add_block_graph(
                 attributes=_compressed_kv_valid_view_attributes(
                     ratio=4,
                     projection_scope="indexer",
-                    head_dim=128,
+                    head_dim=index_head_dim,
                 ),
             )
             (head_weights,) = graph.add(
@@ -1779,7 +1883,9 @@ def _add_block_graph(
                 "BF16_LINEAR",
                 (attn_norm,),
                 phases=normal_phases,
-                attributes=_bf16_linear_attributes(),
+                attributes=_bf16_linear_attributes(
+                    in_features=dim, out_features=index_heads
+                ),
                 tensor_roles=("attention.indexer.head_weights.weight",),
             )
             (index_score,) = graph.add(
@@ -1794,7 +1900,7 @@ def _add_block_graph(
                 "INDEX_TOPK",
                 (index_score, window_indices, "request.start_pos"),
                 phases=normal_phases,
-                attributes={"top_k": 512},
+                attributes={"top_k": index_topk},
             )
         else:
             (attention_indices,) = graph.add(
@@ -1823,7 +1929,7 @@ def _add_block_graph(
         "SPARSE_ATTENTION",
         (query, attention_kv, attention_indices),
         phases=normal_phases,
-        attributes=_sparse_attention_attributes(ratio),
+        attributes=_sparse_attention_attributes(ratio, heads=heads),
         tensor_roles=("attention.sink",),
     )
     (attention_output,) = graph.add(
@@ -1831,14 +1937,14 @@ def _add_block_graph(
         "ROPE_INVERSE",
         (attention_output, "request.start_pos"),
         phases=normal_phases,
-        attributes={"rope_dim": 64},
+        attributes={"rope_dim": rope_dim},
     )
     (attention_output,) = graph.add(
         f"{root}.output_a",
         "GROUPED_OUTPUT_PROJECT",
         (attention_output,),
         phases=normal_phases,
-        attributes={"groups": 8, "rank": 1024},
+        attributes={"groups": o_groups, "rank": o_rank},
         tensor_roles=_fp8_roles("attention.output_a"),
     )
     (attention_output,) = graph.add(
@@ -1846,7 +1952,7 @@ def _add_block_graph(
         "FP8_LINEAR",
         (attention_output,),
         phases=normal_phases,
-        attributes={"in_features": 8192, "out_features": 4096},
+        attributes={"in_features": o_groups * o_rank, "out_features": dim},
         tensor_roles=_fp8_roles("attention.output_b"),
     )
     (hidden,) = graph.add(
@@ -1854,7 +1960,7 @@ def _add_block_graph(
         "HC_POST",
         (attention_output, attn_residual, attn_post, attn_comb),
         phases=normal_phases,
-        attributes={"branch": "attention", "hc_mult": 4},
+        attributes={"branch": "attention", "hc_mult": hc_mult},
     )
 
     ffn_input, ffn_post, ffn_comb, ffn_residual = graph.add(
@@ -1863,7 +1969,7 @@ def _add_block_graph(
         (hidden,),
         ("branch", "post", "comb", "residual"),
         phases=normal_phases,
-        attributes={"branch": "ffn", "hc_mult": 4, "layer": layer},
+        attributes={"branch": "ffn", "hc_mult": hc_mult, "layer": layer},
         tensor_roles=(
             "hyper_connection.ffn.base",
             "hyper_connection.ffn.projection",
@@ -1875,7 +1981,7 @@ def _add_block_graph(
         "RMS_NORM",
         (ffn_input,),
         phases=normal_phases,
-        attributes=_rms_norm_attributes(4096),
+        attributes=_rms_norm_attributes(dim, admissible=norm_widths),
         tensor_roles=("block.ffn_norm.weight",),
     )
     (router_scores,) = graph.add(
@@ -1883,7 +1989,7 @@ def _add_block_graph(
         "ROUTER_SCORE",
         (ffn_input,),
         phases=normal_phases,
-        attributes=_router_score_attributes(),
+        attributes=_router_score_attributes(experts=experts, in_features=dim),
         tensor_roles=("moe.router.weight",),
     )
     (original_scores,) = graph.add(
@@ -1902,7 +2008,7 @@ def _add_block_graph(
         route_kind,
         (original_scores, "request.input_ids"),
         phases=normal_phases,
-        attributes={"experts": 256, "top_k": 6},
+        attributes={"experts": experts, "top_k": top_k},
         tensor_roles=route_roles,
     )
     (expert_weights,) = graph.add(
@@ -1910,14 +2016,14 @@ def _add_block_graph(
         "ROUTER_WEIGHT_NORMALIZE",
         (original_scores, expert_indices),
         phases=normal_phases,
-        attributes={"route_scale": 1.5, "top_k": 6},
+        attributes={"route_scale": route_scale, "top_k": top_k},
     )
     (dispatch,) = graph.add(
         f"{root}.expert_dispatch",
         "EXPERT_DISPATCH",
         (ffn_input, expert_indices, expert_weights),
         phases=normal_phases,
-        attributes={"expert_count": 256, "top_k": 6},
+        attributes={"expert_count": experts, "top_k": top_k},
     )
     (routed_output,) = graph.add(
         f"{root}.routed_experts",
@@ -1925,10 +2031,10 @@ def _add_block_graph(
         (dispatch,),
         phases=normal_phases,
         attributes={
-            "expert_count": 256,
-            "intermediate_size": 2048,
-            "swiglu_limit": 10.0,
-            "top_k": 6,
+            "expert_count": experts,
+            "intermediate_size": intermediate,
+            "swiglu_limit": swiglu_limit,
+            "top_k": top_k,
         },
         tensor_roles=(
             "moe.routed_expert.gate.weight",
@@ -1944,7 +2050,7 @@ def _add_block_graph(
         "FP8_SWIGLU",
         (ffn_input,),
         phases=normal_phases,
-        attributes={"intermediate_size": 2048, "swiglu_limit": 10.0},
+        attributes={"intermediate_size": intermediate, "swiglu_limit": swiglu_limit},
         tensor_roles=(
             "moe.shared_expert.gate.weight",
             "moe.shared_expert.gate.scale",
@@ -1966,31 +2072,59 @@ def _add_block_graph(
         "HC_POST",
         (ffn_output, ffn_residual, ffn_post, ffn_comb),
         phases=normal_phases,
-        attributes={"branch": "ffn", "hc_mult": 4},
+        attributes={"branch": "ffn", "hc_mult": hc_mult},
     )
     return hidden
 
 
 def load_official_inference_config(
-    path: Path = DEFAULT_INFERENCE_CONFIG,
-    source_path: Path = DEFAULT_SOURCE,
+    path: Path | None = None,
+    source_path: Path | None = None,
+    release: DeepSeekV4Release = FLASH,
 ) -> dict[str, Any]:
-    source = load_checkpoint_source(source_path)
-    if source["repository"] != REPOSITORY or source["revision"] != REVISION:
-        raise DeepSeekV4GraphError("inference config source is not pinned V4 Flash")
-    expected = {item["path"]: item for item in source["expected_files"]}
-    for remote_path, digest in (
-        ("inference/config.json", INFERENCE_CONFIG_SHA256),
+    """Load one release's committed inference config and check its anchors.
+
+    The eight source digests are the semantic anchors the operator ledger
+    quotes.  Where the release's checkpoint source contract is committed they
+    are confronted with the registry-listing witness, file by file; a release
+    whose contract is still pending (``checkpoint_source_pending``) has its
+    committed inference config authenticated by the release record's own
+    digest, which is the same check the contract would perform on it.
+    """
+
+    release = resolve_release(release)
+    path = release.inference_config_path if path is None else Path(path)
+    source_path = (
+        release.checkpoint_source_path if source_path is None else Path(source_path)
+    )
+    anchors = (
+        ("inference/config.json", release.inference_config_sha256),
         ("inference/model.py", MODEL_SOURCE_SHA256),
         ("inference/kernel.py", KERNEL_SOURCE_SHA256),
         ("inference/convert.py", CONVERT_SOURCE_SHA256),
         ("inference/generate.py", GENERATE_SOURCE_SHA256),
-        ("README.md", MODEL_CARD_SHA256),
+        ("README.md", release.model_card_sha256),
         ("encoding/encoding_dsv4.py", ENCODING_SOURCE_SHA256),
-        ("tokenizer.json", TOKENIZER_SHA256),
-    ):
-        if expected.get(remote_path, {}).get("sha256") != digest:
-            raise DeepSeekV4GraphError(f"source hash differs for {remote_path}")
+        ("tokenizer.json", release.tokenizer_sha256),
+    )
+    if source_path.is_file():
+        source = load_checkpoint_source(source_path)
+        if (
+            source["repository"] != release.repository
+            or source["revision"] != release.revision
+        ):
+            raise DeepSeekV4GraphError(
+                f"inference config source is not the pinned {release.model_id} release"
+            )
+        expected = {item["path"]: item for item in source["expected_files"]}
+        for remote_path, digest in anchors:
+            if expected.get(remote_path, {}).get("sha256") != digest:
+                raise DeepSeekV4GraphError(f"source hash differs for {remote_path}")
+    elif not release.checkpoint_source_pending:
+        raise DeepSeekV4GraphError(
+            f"checkpoint source contract {source_path} is absent; build it with "
+            "tools/build_checkpoint_source.py"
+        )
     try:
         payload = path.read_bytes()
         config = load_strict_json(path)
@@ -1998,9 +2132,9 @@ def load_official_inference_config(
         raise DeepSeekV4GraphError(
             f"cannot load inference config {path}: {exc}"
         ) from exc
-    if hashlib.sha256(payload).hexdigest() != INFERENCE_CONFIG_SHA256:
+    if hashlib.sha256(payload).hexdigest() != release.inference_config_sha256:
         raise DeepSeekV4GraphError("committed inference config is not byte-exact")
-    root = load_official_config(source_path=source_path)
+    root = load_official_config(source_path=source_path, release=release)
     expected_values = {
         "compress_ratios": root["compress_ratios"],
         "dim": root["hidden_size"],
@@ -2020,7 +2154,7 @@ def load_official_inference_config(
         "n_hash_layers": root["num_hash_layers"],
         "n_heads": root["num_attention_heads"],
         "n_layers": root["num_hidden_layers"],
-        "n_mtp_layers": 3,
+        "n_mtp_layers": release.dspark_stage_count,
         "n_routed_experts": root["n_routed_experts"],
         "n_shared_experts": root["n_shared_experts"],
         "o_groups": root["o_groups"],
@@ -2099,41 +2233,53 @@ def _assert_tensor_role_coverage(
     }
 
 
-def build_official_graph_contract() -> dict[str, Any]:
+def build_official_graph_contract(
+    release: DeepSeekV4Release = FLASH,
+) -> dict[str, Any]:
     """Generate the complete source-mapped graph and open implementation ledger."""
 
-    config = load_official_config()
-    inference_config = load_official_inference_config()
-    specs = build_official_tensor_specs(config)
-    if inference_config["n_mtp_layers"] != 3:
+    release = resolve_release(release)
+    config = load_official_config(release=release)
+    inference_config = load_official_inference_config(release=release)
+    specs = build_official_tensor_specs(config, release)
+    if inference_config["n_mtp_layers"] != release.dspark_stage_count:
         raise DeepSeekV4GraphError(
-            "official inference graph does not have three DSpark stages"
+            "official inference graph does not have "
+            f"{release.dspark_stage_count} DSpark stages"
         )
+    dim = int(config["hidden_size"])
+    vocabulary = int(config["vocab_size"])
+    hc_mult = int(config["hc_mult"])
+    draft_block = int(config["dspark_block_size"])
+    markov_rank = int(config["dspark_markov_rank"])
+    target_layers = list(config["dspark_target_layer_ids"])
+    norm_widths = _normalized_widths(config)
     graph = _GraphBuilder()
     (hidden,) = graph.add(
         "main.token_embed",
         "TOKEN_EMBED",
         ("request.input_ids",),
-        attributes={"hidden_size": 4096, "vocab_size": 129280},
+        attributes={"hidden_size": dim, "vocab_size": vocabulary},
         tensor_roles=("model.token_embedding.weight",),
     )
     (hidden,) = graph.add(
         "main.hc_expand",
         "HC_EXPAND",
         (hidden,),
-        attributes={"hc_mult": 4},
+        attributes={"hc_mult": hc_mult},
     )
     target_hiddens: list[str] = []
-    for layer, ratio in enumerate(config["compress_ratios"][:43]):
+    for layer, ratio in enumerate(release.main_compress_ratios):
         hidden = _add_block_graph(
             graph,
             hidden,
+            config=config,
             scope="main",
             layer=layer,
             ratio=ratio,
-            hash_route=layer < 3,
+            hash_route=layer < int(config["num_hash_layers"]),
         )
-        if layer in config["dspark_target_layer_ids"]:
+        if layer in target_layers:
             (captured,) = graph.add(
                 f"main.layer{layer:02d}.target_hidden",
                 "TARGET_HIDDEN_CAPTURE",
@@ -2149,7 +2295,7 @@ def build_official_graph_contract() -> dict[str, Any]:
         "main.hc_head",
         "HC_HEAD",
         (hidden,),
-        attributes={"epsilon": 1e-6, "hc_mult": 4},
+        attributes={"epsilon": config["rms_norm_eps"], "hc_mult": hc_mult},
         tensor_roles=(
             "model.hyper_connection_head.base",
             "model.hyper_connection_head.projection",
@@ -2160,14 +2306,16 @@ def build_official_graph_contract() -> dict[str, Any]:
         "main.final_norm",
         "RMS_NORM",
         (main_hidden,),
-        attributes=_rms_norm_attributes(4096),
+        attributes=_rms_norm_attributes(dim, admissible=norm_widths),
         tensor_roles=("model.final_norm.weight",),
     )
     (main_logits,) = graph.add(
         "main.lm_head",
         "LM_HEAD",
         (main_hidden,),
-        attributes=_lm_head_attributes(full_logits=False),
+        attributes=_lm_head_attributes(
+            full_logits=False, hidden_width=dim, vocabulary_size=vocabulary
+        ),
         tensor_roles=("model.lm_head.weight",),
     )
     main_token, main_entropy_continuation = graph.add(
@@ -2200,7 +2348,7 @@ def build_official_graph_contract() -> dict[str, Any]:
         "dspark.main_project",
         "DSPARK_MAIN_PROJECT",
         tuple(target_hiddens),
-        attributes={"source_layers": [40, 41, 42]},
+        attributes={"source_layers": target_layers},
         tensor_roles=(
             *_fp8_roles("dspark.main_hidden_projection"),
             "dspark.main_hidden_norm.weight",
@@ -2210,16 +2358,21 @@ def build_official_graph_contract() -> dict[str, Any]:
         "dspark.noise_embed",
         "DSPARK_NOISE_EMBED",
         (main_token, "request.input_ids"),
-        attributes={"block_size": 5, "hc_mult": 4, "noise_token_id": 128799},
+        attributes={
+            "block_size": draft_block,
+            "hc_mult": hc_mult,
+            "noise_token_id": int(config["dspark_noise_token_id"]),
+        },
         tensor_roles=("model.token_embedding.weight",),
     )
-    for stage in range(3):
+    for stage, stage_ratio in enumerate(release.dspark_compress_ratios):
         draft_hidden = _add_block_graph(
             graph,
             draft_hidden,
+            config=config,
             scope="dspark",
             layer=stage,
-            ratio=0,
+            ratio=stage_ratio,
             hash_route=False,
             dspark=True,
             conditioning=dspark_condition,
@@ -2229,7 +2382,7 @@ def build_official_graph_contract() -> dict[str, Any]:
         "HC_HEAD",
         (draft_hidden,),
         phases=("decode",),
-        attributes={"epsilon": 1e-6, "hc_mult": 4},
+        attributes={"epsilon": config["rms_norm_eps"], "hc_mult": hc_mult},
         tensor_roles=(
             "dspark.hyper_connection_head.base",
             "dspark.hyper_connection_head.projection",
@@ -2241,7 +2394,7 @@ def build_official_graph_contract() -> dict[str, Any]:
         "RMS_NORM",
         (draft_hidden,),
         phases=("decode",),
-        attributes=_rms_norm_attributes(4096),
+        attributes=_rms_norm_attributes(dim, admissible=norm_widths),
         tensor_roles=("dspark.final_norm.weight",),
     )
     (draft_logits,) = graph.add(
@@ -2249,7 +2402,9 @@ def build_official_graph_contract() -> dict[str, Any]:
         "LM_HEAD",
         (draft_hidden,),
         phases=("decode",),
-        attributes=_lm_head_attributes(full_logits=True),
+        attributes=_lm_head_attributes(
+            full_logits=True, hidden_width=dim, vocabulary_size=vocabulary
+        ),
         tensor_roles=("model.lm_head.weight",),
     )
     (
@@ -2268,7 +2423,11 @@ def build_official_graph_contract() -> dict[str, Any]:
         ),
         ("tokens", "adjusted_logits", "embeddings", "entropy_continuation"),
         phases=("decode",),
-        attributes=_markov_loop_attributes(),
+        attributes=_markov_loop_attributes(
+            markov_rank=markov_rank,
+            vocabulary_size=vocabulary,
+            block_size=draft_block,
+        ),
         tensor_roles=(
             "dspark.markov_embedding.weight",
             "dspark.markov_head.weight",
@@ -2279,7 +2438,9 @@ def build_official_graph_contract() -> dict[str, Any]:
         "CONFIDENCE_SCORE",
         (draft_hidden, markov_embeddings),
         phases=("decode",),
-        attributes=_confidence_score_attributes(),
+        attributes=_confidence_score_attributes(
+            hidden_width=dim, markov_width=markov_rank
+        ),
         tensor_roles=("dspark.confidence_head.weight",),
     )
     tensor_assignment = _assert_tensor_role_coverage(graph.nodes, specs)
@@ -2301,8 +2462,10 @@ def build_official_graph_contract() -> dict[str, Any]:
         "adaptations": [
             {
                 "decision": "resolve three DSpark stages from official inference config and checkpoint namespaces",
-                "inference_config_n_mtp_layers": 3,
-                "root_config_num_nextn_predict_layers": 1,
+                "inference_config_n_mtp_layers": release.dspark_stage_count,
+                "root_config_num_nextn_predict_layers": int(
+                    config["num_nextn_predict_layers"]
+                ),
             },
             {
                 "decision": "freeze compressor pooling arithmetic rather than inherit backend-dependent reduction and exponential behavior",
@@ -2360,7 +2523,7 @@ def build_official_graph_contract() -> dict[str, Any]:
             confidence,
             markov_entropy_continuation,
         ],
-        "model_id": MODEL_ID,
+        "model_id": release.model_id,
         "nodes": [node.to_dict() for node in graph.nodes],
         "open_semantic_issues": [
             {
@@ -2387,7 +2550,7 @@ def build_official_graph_contract() -> dict[str, Any]:
             {
                 "id": "DSV4-SEM-005",
                 "issue": "All 46 graph operator kinds now have pinned, unit-qualified target-precision references, including the shared BF16 vocabulary head and the five-step Markov loop with explicit adjusted logits and entropy continuation. The graph still has no complete graph-to-microcode lowering or artifact-driven service-engine executor, so unit-reference completeness cannot be reported as executable model semantics.",
-                "required_resolution": "Lower all 2,136 nodes and their state/control dependencies into generated deployment artifacts, execute them through the functional service engine, and reconcile every qualified boundary before marking the graph executable.",
+                "required_resolution": f"Lower all {len(graph.nodes):,} nodes and their state/control dependencies into generated deployment artifacts, execute them through the functional service engine, and reconcile every qualified boundary before marking the graph executable.",
                 "severity": "blocking",
                 "source_anchor": "compiler/frontend/deepseek_v4_graph.py;runtime/reference;compiler/microcode;runtime/service_engine",
             },
@@ -2409,13 +2572,13 @@ def build_official_graph_contract() -> dict[str, Any]:
             "convert_sha256": CONVERT_SOURCE_SHA256,
             "encoding_sha256": ENCODING_SOURCE_SHA256,
             "generate_sha256": GENERATE_SOURCE_SHA256,
-            "inference_config_sha256": INFERENCE_CONFIG_SHA256,
+            "inference_config_sha256": release.inference_config_sha256,
             "kernel_sha256": KERNEL_SOURCE_SHA256,
-            "model_card_sha256": MODEL_CARD_SHA256,
+            "model_card_sha256": release.model_card_sha256,
             "model_sha256": MODEL_SOURCE_SHA256,
-            "repository": REPOSITORY,
-            "revision": REVISION,
-            "tokenizer_sha256": TOKENIZER_SHA256,
+            "repository": release.repository,
+            "revision": release.revision,
+            "tokenizer_sha256": release.tokenizer_sha256,
         },
         "system_scope": {
             "covered": [
@@ -2428,10 +2591,22 @@ def build_official_graph_contract() -> dict[str, Any]:
                 "target-only prefill/decode, EOS, and executor-commit control with synthetic transcripts",
                 "scalar target formats, activation microscaling, ordered accumulation, and official block-dot primitives",
                 "all 46 operator kinds have unit-qualified target references, including routed-MXFP4/shared-FP8 SwiGLU, stateful KV/compressor semantics, exact attention row-space composition, the shared BF16 vocabulary head, the five-step causal Markov loop with adjusted logits and entropy continuation, and fail-closed greedy/target-adapted sampling",
-                "complete official 72,317-tensor, 77,116-assignment MP=4 canonical application with independent replay identity b20ac53d48714c2328470b45f44b06aed11bed4c6dc7ef48f27185c5ba813f28",
+                *(
+                    [release.canonical_application_claim]
+                    if release.canonical_application_claim is not None
+                    else []
+                ),
             ],
             "request_boundary": "token_ids_session_ids_start_position_temperature_and_explicit_entropy",
             "unresolved": [
+                *(
+                    []
+                    if release.canonical_application_claim is not None
+                    else [
+                        "an MP=4 canonical application and its independent replay "
+                        "identity for this release"
+                    ]
+                ),
                 "end-to-end binding of the verified host boundary to checkpoint-derived logits",
                 "exact stochastic replay for the unpinned Torch/CUDA RNG stack",
                 "DSpark target verification and speculative acceptance",
