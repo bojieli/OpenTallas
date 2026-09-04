@@ -1,0 +1,123 @@
+{
+  "abi": {
+    "major": 3,
+    "minor": 0
+  },
+  "capability_id": "rom_qwen3_n5_design_target_v1",
+  "derived_from": {
+    "analytical_artifact": "results/roofline/n5_vs_b200/analytical.json",
+    "base_capability": "configs/hardware/abi3_capability/rom_qwen3.json",
+    "changed": [
+      "technology_view",
+      "capability_id",
+      "engines.*.lanes",
+      "engines.*.queues",
+      "limits.max_outstanding_per_queue",
+      "memory.sram.banks",
+      "memory.sram.ports",
+      "memory.hbm.channels",
+      "memory.rom.arrays",
+      "memory.rom.banks"
+    ],
+    "design_point": "Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4",
+    "generator": "tools/derive_cycle_machine.py",
+    "note": "technology_view n5_design_target is deliberately outside runtime/cycle/machine.py CHARACTERIZED_TECHNOLOGY_VIEWS, so every structural count this record advertises is graded `assumed` with no code change, and every run against it prints the not-a-performance-claim note."
+  },
+  "engines": {
+    "attention": {
+      "lanes": 1024,
+      "queues": 16
+    },
+    "dma": {
+      "lanes": 1024,
+      "queues": 16
+    },
+    "link": {
+      "lanes": 1024,
+      "queues": 16
+    },
+    "reduction": {
+      "lanes": 1024,
+      "queues": 16
+    },
+    "route": {
+      "lanes": 1024,
+      "queues": 16
+    },
+    "selection": {
+      "lanes": 1024,
+      "queues": 16
+    },
+    "state": {
+      "lanes": 1024,
+      "queues": 16
+    },
+    "tensor": {
+      "lanes": 1024,
+      "queues": 16
+    },
+    "vector": {
+      "lanes": 1024,
+      "queues": 16
+    }
+  },
+  "features": [
+    0,
+    1,
+    2,
+    3,
+    6,
+    7,
+    10
+  ],
+  "limits": {
+    "max_context_positions": 8256,
+    "max_descriptors": 16384,
+    "max_event_id": 1023,
+    "max_events": 256,
+    "max_expert_ids": 1,
+    "max_instructions": 4096,
+    "max_loop_depth": 4,
+    "max_loop_trip": 4096,
+    "max_nodes": 1,
+    "max_outstanding_per_queue": 16,
+    "max_retired_work": 16777216,
+    "max_sessions": 8,
+    "max_state_resources": 16,
+    "max_topk": 1,
+    "max_vocabulary": 151936
+  },
+  "link": {},
+  "memory": {
+    "hbm": {
+      "bytes": 103079215104,
+      "channels": 160
+    },
+    "rom": {
+      "arrays": 16,
+      "banks": 16,
+      "bytes": 17179869184
+    },
+    "sram": {
+      "banks": 32,
+      "bytes": 134217728,
+      "ports": 4
+    }
+  },
+  "numeric_contracts": [
+    "bf16_add_rne_v1",
+    "bf16_bf16_fp32_sequential_rne_v1",
+    "bf16_byte_preserving_state_v1",
+    "bf16_payload_lookup_v1",
+    "exact_index_select_v1",
+    "exact_token_append_eos_v1",
+    "greedy_lowest_token_id_argmax_v1",
+    "qwen3_gqa_fp32_softmax_bf16_v1",
+    "qwen3_rmsnorm_fp32_bf16_v1",
+    "qwen3_rope_fp32_bf16_v1",
+    "qwen3_silu_mul_bf16_v1"
+  ],
+  "schema": "opentallas.abi3.capability.v1",
+  "technology_view": "n5_design_target",
+  "topology_class": 0
+}

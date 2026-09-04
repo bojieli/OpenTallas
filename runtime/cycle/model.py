@@ -2372,6 +2372,39 @@ class CycleModel:
             for name in FAMILY_WORK_COUNTERS.get(family, ())
         )
 
+    def _work_scale(
+        self, step: TraceStep, family: str, mapping: "TileMapping"
+    ) -> float:
+        """Work-counter units the engine records per unit of tile work.
+
+        A tile's work is a *coordinate* count: for a contraction, one
+        multiply-accumulate per ``(row, col, depth)`` point.  An engine's
+        ``work_per_lane_cycle`` is characterized against that family's work
+        COUNTERS, and for a contraction those count the multiply and the add
+        separately -- ``matmul_multiply_count == matmul_add_count ==
+        16,777,216`` in
+        ``results/tensor_accelerator/qwen3_rtl_q_proj_campaign.json#program_correlation``.
+
+        Dividing coordinates by a rate stated in counter units charges the
+        engine half the cycles its own characterization supports, which is
+        exactly what the tile branches below did: the Qwen decode artifacts
+        record ``work_units`` of 15,134,641,792 against ``issued_tile_work`` of
+        7,568,101,376, a ratio of 1.999794, and the tensor engine was charged
+        85,692,144 cycles where its own rate implies 170,926,140.
+
+        The ratio is read from the step rather than assumed, so an operator
+        that does not accumulate is charged once and one that fuses more work
+        into a coordinate is charged for it.
+        """
+
+        issued = mapping.issued_work
+        if issued <= 0:
+            return 1.0
+        work = self._work_units(step, family)
+        if work <= 0:
+            return 1.0
+        return work / issued
+
     @staticmethod
     def _queue_key(
         family: str, mapping: "TileMapping | None", queues: Mapping[str, "_Queue"]
@@ -2422,22 +2455,29 @@ class CycleModel:
             # declared order.  Masked lanes do no work and cannot accelerate a
             # live lane, so a wave's time depends on active K depth, not on a
             # padded row rectangle or on the number of tail lanes.
+            # ``depth`` counts coordinates; the rate counts work units.  See
+            # ``_work_scale``: without this the engine is charged half the
+            # cycles its own characterization supports.
+            scale = self._work_scale(step, params.family, mapping)
             full_depth_tiles, tail_depth = divmod(mapping.depth, mapping.tile_depth)
             depth_cycles = full_depth_tiles * max(
-                math.ceil(mapping.tile_depth / params.work_per_lane_cycle),
+                math.ceil(mapping.tile_depth * scale / params.work_per_lane_cycle),
                 params.tile_issue_cycles,
             )
             if tail_depth:
                 depth_cycles += max(
-                    math.ceil(tail_depth / params.work_per_lane_cycle),
+                    math.ceil(tail_depth * scale / params.work_per_lane_cycle),
                     params.tile_issue_cycles,
                 )
             cycles = mapping.tensor_lanes.output_waves * depth_cycles
             tile_issue = mapping.tiles * params.tile_issue_cycles
             return max(cycles, params.minimum_cycles), tile_issue
         else:
+            # Same unit conversion as the tensor-lane branch above.
             per_tile = math.ceil(
-                mapping.tile_work / (params.lanes * params.work_per_lane_cycle)
+                mapping.tile_work
+                * self._work_scale(step, params.family, mapping)
+                / (params.lanes * params.work_per_lane_cycle)
             )
         per_tile = max(per_tile, 1)
         tile_issue = mapping.tiles * params.tile_issue_cycles

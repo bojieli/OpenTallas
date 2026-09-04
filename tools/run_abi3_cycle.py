@@ -24,7 +24,9 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import sys
+from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 
@@ -52,6 +54,140 @@ from tools.abi3_comparison_boundary import (  # noqa: E402
     build_boundary,
     validate_boundary,
 )
+
+
+#: Every directory whose Python source decides what a cycle costs.  The driver
+#: script's own hash says nothing about these, and they are exactly what moved
+#: under a pair of runs that were then compared as if they were comparable.
+CYCLE_MODEL_SOURCE_ROOTS = ("runtime/cycle", "runtime/sim/engines")
+
+
+def cycle_model_identity() -> dict[str, Any]:
+    """Digest the loaded cycle-model implementation and engine registry.
+
+    A cycle count is a function of the machine description *and* of the code
+    that walks it.  Recording only ``tools/run_abi3_cycle.py`` pins the caller
+    and leaves the model itself unnamed, so two artifacts produced by two
+    different cost models are indistinguishable to a later reader -- which is
+    how a 15.5% shift in one deployment's total was read as a measurement
+    rather than as a changed model.
+
+    Call this *after* ``load_engines()``: the registry decides which engine
+    modules are resident, and an engine that never loaded cannot have priced
+    anything.
+    """
+    modules: dict[str, str] = {}
+    for module in list(sys.modules.values()):
+        origin = getattr(module, "__file__", None)
+        if not origin:
+            continue
+        try:
+            relative = Path(origin).resolve().relative_to(REPO_ROOT)
+        except ValueError:
+            continue
+        text = relative.as_posix()
+        if not any(
+            text == root or text.startswith(root + "/")
+            for root in CYCLE_MODEL_SOURCE_ROOTS
+        ):
+            continue
+        try:
+            modules[text] = hashlib.sha256(
+                (REPO_ROOT / relative).read_bytes()
+            ).hexdigest()
+        except OSError:
+            continue
+    payload = json.dumps(modules, sort_keys=True, separators=(",", ":")).encode()
+    return {
+        "sha256": hashlib.sha256(payload).hexdigest(),
+        "roots": list(CYCLE_MODEL_SOURCE_ROOTS),
+        "modules": modules,
+    }
+
+
+def require_comparable(current: Mapping[str, Any], prior: Mapping[str, Any]) -> None:
+    """Refuse to relate two results the same cost model did not produce."""
+    prior_inputs = prior.get("inputs")
+    prior_identity = (
+        prior_inputs.get("cycle_model") if isinstance(prior_inputs, Mapping) else None
+    )
+    prior_digest = (
+        prior_identity.get("sha256") if isinstance(prior_identity, Mapping) else None
+    )
+    if not prior_digest:
+        raise SystemExit(
+            "the earlier result records no cycle-model identity, so it cannot "
+            "be shown comparable with this one; re-run it with a driver that "
+            "writes inputs.cycle_model before comparing the two"
+        )
+    if prior_digest != current["sha256"]:
+        moved = sorted(
+            path
+            for path, digest in current["modules"].items()
+            if isinstance(prior_identity.get("modules"), Mapping)
+            and prior_identity["modules"].get(path) != digest
+        )
+        raise SystemExit(
+            "cycle-model mismatch: the earlier result was produced by model "
+            f"{prior_digest[:16]} and this run by {current['sha256'][:16]}; "
+            "the two totals are not comparable"
+            + (f" (changed: {', '.join(moved)})" if moved else "")
+        )
+
+
+def bandwidth_floor(body: Mapping[str, Any]) -> dict[str, Any]:
+    """How far the reported total sits above the bytes it moved.
+
+    A run cannot finish sooner than its own traffic divided by its own declared
+    peak bandwidth.  That floor is the cheapest available sanity check on a
+    cycle total, and it is computed from numbers the result already carries --
+    yet nothing recomputed it, so a total sitting 11,558x above its floor at
+    0.02% bandwidth utilisation was read as a per-token latency.  A run that far
+    above its floor is measuring the memory-conflict model, not the program, and
+    a ratio built on it says nothing about the workload.
+    """
+    timing = body.get("timing", {})
+    total = int(timing.get("total_cycles", 0) or 0)
+    stores: dict[str, Any] = {}
+    binding_name, binding_floor = None, 0
+    for name, store in (body.get("memory") or {}).items():
+        if not isinstance(store, Mapping):
+            continue
+        peak = store.get("peak_bytes_per_cycle")
+        moved = store.get("bytes_total", store.get("bytes_read"))
+        if not peak or not moved:
+            continue
+        floor = math.ceil(float(moved) / float(peak))
+        ratio = (total / floor) if floor else 0.0
+        stores[name] = {
+            "bytes_moved": int(moved),
+            "peak_bytes_per_cycle": float(peak),
+            "floor_cycles": int(floor),
+            "total_over_floor": ratio,
+            "bandwidth_utilisation": store.get("bandwidth_utilisation"),
+            "conflict_cycles": store.get("conflict_cycles"),
+        }
+        # The BINDING floor is the tightest lower bound the run has to clear,
+        # which is the store that moved the most cycles' worth of traffic --
+        # not the store with the widest ratio, which is always whichever store
+        # was barely touched.
+        if floor > binding_floor:
+            binding_name, binding_floor = name, int(floor)
+    wait = int(timing.get("wait_stall_cycles", 0) or 0)
+    return {
+        "stores": stores,
+        "binding_store": binding_name,
+        "binding_floor_cycles": binding_floor,
+        "total_over_binding_floor": (
+            (total / binding_floor) if binding_floor else 0.0
+        ),
+        "wait_stall_share": (wait / total) if total else 0.0,
+        "rule": (
+            "total_cycles / (bytes_moved / peak_bytes_per_cycle); a total far "
+            "above this floor is dominated by the conflict and stall model, "
+            "not by the program's work"
+        ),
+    }
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -112,6 +248,16 @@ def build_parser() -> argparse.ArgumentParser:
         help="bind one runtime symbol, e.g. --symbol SPAN_TOKENS=1 (repeatable)",
     )
     parser.add_argument("--out", type=Path, required=True, help="output JSON path")
+    parser.add_argument(
+        "--compare-with",
+        type=Path,
+        help=(
+            "an earlier cycle result to relate this one to; the run fails "
+            "closed unless that result names the same cycle-model digest, "
+            "because a total taken under a different cost model is not a "
+            "comparable number"
+        ),
+    )
     parser.add_argument(
         "--force",
         action="store_true",
@@ -229,6 +375,15 @@ def main(argv: list[str] | None = None) -> int:
 
     if not args.no_load_engines:
         load_engines()
+    model_identity = cycle_model_identity()
+    if args.compare_with is not None:
+        try:
+            prior = json.loads(args.compare_with.read_text())
+        except (OSError, json.JSONDecodeError) as exc:
+            raise SystemExit(f"cannot read {args.compare_with}: {exc}") from None
+        if not isinstance(prior, Mapping):
+            raise SystemExit(f"{args.compare_with} is not a cycle result document")
+        require_comparable(model_identity, prior)
     deployment, capability, root = load_inputs(args)
     try:
         cost_table = load_cost_table(args.cost_table)
@@ -271,6 +426,16 @@ def main(argv: list[str] | None = None) -> int:
         "source_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         "evidence_class": CYCLE_PRODUCER_EVIDENCE_CLASS,
     }
+    # The producer block above pins the caller, and its four keys are a frozen
+    # shape -- tools/audit_abi3_asap7_comparison_readiness.py admits a result
+    # only when ``set(producer)`` is exactly those four.  What decides the cycle
+    # count is not the caller but the cost model, and that belongs beside the
+    # cost table it walks: both are inputs this run consumed.  Recording only
+    # the driver left two artifacts from two different cost models
+    # indistinguishable to every later reader, which is how a 15.5% shift in one
+    # deployment's total was read as a measurement rather than as a changed
+    # model.
+    body["inputs"]["cycle_model"] = model_identity
 
     if args.check_functional_agreement or governed:
         reference = functional_counters(
@@ -370,6 +535,8 @@ def main(argv: list[str] | None = None) -> int:
             "admissible": validation["valid"] and all(acceptance_checks.values()),
         }
 
+    body["plausibility"] = bandwidth_floor(body)
+
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_bytes(canonical_json(body))
 
@@ -395,6 +562,19 @@ def main(argv: list[str] | None = None) -> int:
         f"  tile padding          {tiling['padding_work']}"
         f" of {tiling['issued_tile_work']} work units"
     )
+    floor = body["plausibility"]
+    if floor["binding_store"] is not None:
+        store = floor["stores"][floor["binding_store"]]
+        print(
+            f"  bandwidth floor       {floor['binding_store']} moved "
+            f"{store['bytes_moved']} B, so no run can finish under "
+            f"{store['floor_cycles']} cycles"
+        )
+        print(
+            f"  total over that floor {store['total_over_floor']:.1f}x at "
+            f"{store['bandwidth_utilisation']} utilisation, "
+            f"{floor['wait_stall_share']:.4%} wait stall"
+        )
     if body.get("gaps"):
         print(f"  contract gaps         {len(body['gaps'])}")
     if not body["schedule_audit"]["complete"]:
