@@ -1,0 +1,313 @@
+{
+  "abi": {
+    "major": 3,
+    "minor": 0
+  },
+  "cases": [
+    {
+      "expected": {
+        "compare_output": true,
+        "failed": false,
+        "input_reads": 4096,
+        "macs": 16777216,
+        "memory_reads": 16781312,
+        "mutation": 0,
+        "projection_executed": true,
+        "records_checked": 5,
+        "refusal_reason": 0,
+        "saturations": 0,
+        "stall_mode": 0,
+        "trap_class": 0,
+        "weight_reads": 16777216,
+        "writes": 4096
+      },
+      "name": "rom_pc41_output_projection_exact",
+      "target": "qwen3-8b-rom-single-chip"
+    },
+    {
+      "expected": {
+        "compare_output": true,
+        "failed": false,
+        "input_reads": 4096,
+        "macs": 16777216,
+        "memory_reads": 16781312,
+        "mutation": 0,
+        "projection_executed": true,
+        "records_checked": 5,
+        "refusal_reason": 0,
+        "saturations": 0,
+        "stall_mode": 1,
+        "trap_class": 0,
+        "weight_reads": 16777216,
+        "writes": 4096
+      },
+      "name": "hbm_pc41_output_projection_backpressure",
+      "target": "qwen3-8b-hbm-single-chip"
+    },
+    {
+      "expected": {
+        "compare_output": false,
+        "failed": true,
+        "input_reads": 4096,
+        "macs": 16777216,
+        "memory_reads": 16781312,
+        "mutation": 1,
+        "projection_executed": false,
+        "records_checked": 5,
+        "refusal_reason": 5,
+        "saturations": 0,
+        "stall_mode": 0,
+        "trap_class": 8,
+        "weight_reads": 16777216,
+        "writes": 0
+      },
+      "name": "rom_pc41_late_weight_nonfinite",
+      "target": "qwen3-8b-rom-single-chip"
+    },
+    {
+      "expected": {
+        "compare_output": false,
+        "failed": true,
+        "input_reads": 0,
+        "macs": 0,
+        "memory_reads": 0,
+        "mutation": 0,
+        "projection_executed": false,
+        "records_checked": 5,
+        "refusal_reason": 3,
+        "saturations": 0,
+        "stall_mode": 1,
+        "trap_class": 3,
+        "weight_reads": 0,
+        "writes": 0
+      },
+      "name": "hbm_pc41_wrong_numeric_valid_crc",
+      "target": "qwen3-8b-hbm-single-chip"
+    },
+    {
+      "expected": {
+        "compare_output": false,
+        "failed": true,
+        "input_reads": 0,
+        "macs": 0,
+        "memory_reads": 0,
+        "mutation": 0,
+        "projection_executed": false,
+        "records_checked": 5,
+        "refusal_reason": 3,
+        "saturations": 0,
+        "stall_mode": 1,
+        "trap_class": 3,
+        "weight_reads": 0,
+        "writes": 0
+      },
+      "name": "rom_pc41_wrong_output_shape_valid_crc",
+      "target": "qwen3-8b-rom-single-chip"
+    },
+    {
+      "expected": {
+        "compare_output": false,
+        "failed": true,
+        "input_reads": 0,
+        "macs": 0,
+        "memory_reads": 0,
+        "mutation": 0,
+        "projection_executed": false,
+        "records_checked": 0,
+        "refusal_reason": 2,
+        "saturations": 0,
+        "stall_mode": 1,
+        "trap_class": 2,
+        "weight_reads": 0,
+        "writes": 0
+      },
+      "name": "rom_pc41_instruction_crc_corrupt",
+      "target": "qwen3-8b-rom-single-chip"
+    }
+  ],
+  "claim_boundary": {
+    "architectural_token_commit_ticks": false,
+    "authentic_prior_context_kv": false,
+    "complete_checkpoint_weight_tensor_authenticated": true,
+    "complete_layer": false,
+    "complete_layer_zero_output_projection": true,
+    "eos": false,
+    "exact_computed_words": true,
+    "exact_rom_and_hbm_pc41_records": true,
+    "full_output_independently_scalar_checked": false,
+    "independent_scalar_rows_checked": 32,
+    "late_fault_zero_writes": true,
+    "memory_input_backpressure": true,
+    "model_token_generation": false,
+    "output_backpressure_and_stability": true,
+    "strictly_ascending_k_association": true,
+    "tpot": false
+  },
+  "image_sha256": {
+    "cases.hex": "ec17574b24039c0209da54c4c444897ce29dff2166ef27ca6bd0aff549accc56",
+    "expected.hex": "5c03e8ec22e003fe3080bf81c838378a253c3500f834339ae398ce4d65aac0c7",
+    "input.hex": "2d3591211e4fb6fd32ef0f2f3e1c23eb3e9709797c5efdb25f03073eb6b77743",
+    "instruction.hex": "b8581b78504a8c214f05c2e9d23aaa0aecc1f984954ad308165a871568176929",
+    "numeric.hex": "3529e9e8ca0630af4ec99ce2aa6d8b9cfe5bd284e76b8da6ee6f597fd72f7892",
+    "operator.hex": "7d4799620cf675d207465b8a8a312ab305f55b601510dff8e6bb986372faf336",
+    "output.hex": "588a2e7bca27a37ab865d77185b3773d8e9572f0665e7ca0c01dcaa4adf20421",
+    "view0.hex": "b87dc8b2d93e1362caa676764b47dbf255626f6bbe088de35b007860a5aaf392",
+    "view1.hex": "57c89d355a5f16e19bbe75fd2562aee745192e0c7a61dafb4fde56580a25e618"
+  },
+  "input": {
+    "authentic_current_qkv": true,
+    "authentic_prior_context_kv": false,
+    "bf16_sha256": "8992e9d1a0b5303b81b2503df2e23170f838f772e79eb8d7c65c1fce4fac93c2",
+    "source": "retained exact PC38 bounded GQA output",
+    "upstream_campaign": "results/rtl/a3_qwen_gqa_campaign.json",
+    "upstream_campaign_sha256": "36c2bb9477e967ebb640123971ef7a2657fdc6440f2c4a335377fd755d4461dd",
+    "upstream_manifest": "testdata/rtl/a3_qwen_gqa/index.json",
+    "upstream_manifest_sha256": "b9db0d077add983448a3ea87910e84c545849939325c37b7d61fd86fab2a1709",
+    "word_count": 4096
+  },
+  "numeric": {
+    "accumulation_rounding": "binary32_rne_after_each_add",
+    "contract": "bf16_bf16_fp32_blocked_rne_v1",
+    "contract_sha256": "7550dc6a773fd9d5773b46182887613fb777bb8e4f01652321c4d93ca0765aa1",
+    "executed_association": "single_lane_strictly_ascending_k_v1",
+    "output_rounding": "bf16_rne_once",
+    "product_rounding": "binary32_rne"
+  },
+  "oracle": {
+    "expected_bf16_sha256": "018f52e0834dbe624493704eea505c7d96be52463a82a12e448b8faefd749262",
+    "full_output_independently_scalar_checked": false,
+    "implementation": "runtime/tensor_accelerator/bf16.py",
+    "independent_scalar_expected_sha256": "3c1e8edbe1aefa18062e0e461ecc52700ec65d49144f3bdccf3407f15b334d56",
+    "independent_scalar_implementation": "runtime/reference/tensor_accelerator_bf16.py",
+    "independent_scalar_row_count": 32,
+    "independent_scalar_row_indices": [
+      0,
+      1,
+      2,
+      3,
+      127,
+      128,
+      255,
+      256,
+      511,
+      512,
+      1023,
+      1024,
+      1535,
+      1536,
+      2047,
+      2048,
+      2559,
+      2560,
+      3071,
+      3072,
+      3583,
+      3584,
+      3967,
+      3968,
+      4031,
+      4032,
+      4063,
+      4064,
+      4087,
+      4088,
+      4094,
+      4095
+    ],
+    "word_count": 4096
+  },
+  "profiles": [
+    {
+      "deployment_sha256": "f475fbaf521df53a62a5f26cd89da5e0bf82ff8054ece1df0fe00b3fd127809d",
+      "descriptor_sha256": {
+        "numeric": "91ec700f4a9a73a518ba325ced0dbaf6f40dc46d4156a0471b69d951bd4eff4c",
+        "operator": "4ad4f022676386617e54586c4931b7d3addbcd7f956be70584479283ec3d5380",
+        "output": "6f1658c64e9381fd4b164ee8faebe50c96425d3e6fe9fd5bd91f8f9ed2a2fd2f",
+        "view0": "1bfa108ed408ad876533957f58977ecacc7609bd954c8ee5aacd133ce68e2cd3",
+        "view1": "09769134de7b1ffc0d43fd647e6fed7cf812df578ec10f42ba43f5341b566bf9"
+      },
+      "ids": {
+        "numeric": 57,
+        "operator": 134,
+        "output": 132,
+        "view0": 130,
+        "view1": 131,
+        "view2": 4294967295,
+        "view3": 4294967295
+      },
+      "objects": {
+        "output": 55,
+        "view0": 45,
+        "view1": 12,
+        "view2": 4294967295,
+        "view3": 4294967295
+      },
+      "target": "qwen3-8b-rom-single-chip"
+    },
+    {
+      "deployment_sha256": "0d7897457e14666fc057ea6223cc32e65c61e39bfe5b2ff675c3b5585fe2ce8e",
+      "descriptor_sha256": {
+        "numeric": "91ec700f4a9a73a518ba325ced0dbaf6f40dc46d4156a0471b69d951bd4eff4c",
+        "operator": "f35f99e2b2889bcc7094ed425d249d3eb21b4eda4ebf9f83fec883c9dbd5049f",
+        "output": "bd43a4a8bb90898bed54391e0df4867b9ddf68a35537fc98d04d9a74054fdd7b",
+        "view0": "ac9c44840ee7ee876fa3257185443b63f61e9ae31e45c654140c889eca05cece",
+        "view1": "d32b4e9ca6d3b56c7d15ae597ee23e5cee2242ba456b5f9492c7ec86c4fe331d"
+      },
+      "ids": {
+        "numeric": 70,
+        "operator": 137,
+        "output": 136,
+        "view0": 134,
+        "view1": 135,
+        "view2": 4294967295,
+        "view3": 4294967295
+      },
+      "objects": {
+        "output": 20,
+        "view0": 19,
+        "view1": 7,
+        "view2": 4294967295,
+        "view3": 4294967295
+      },
+      "target": "qwen3-8b-hbm-single-chip"
+    }
+  ],
+  "request": {
+    "context_length": 17,
+    "input_base_words": 0,
+    "input_shape": [
+      1,
+      4096
+    ],
+    "output_base_words": 0,
+    "output_shape": [
+      1,
+      4096
+    ],
+    "pc": 41,
+    "position_start": 16,
+    "weight_base_words": 4096,
+    "weight_shape": [
+      4096,
+      4096
+    ]
+  },
+  "schema": "opentallas.rtl.a3_qwen_output_projection_vectors.v1",
+  "weight": {
+    "authentication_boundary": "all 16,777,216 BF16 codes in the complete 32-MiB tensor are read and authenticated; campaign staging independently re-reads it",
+    "checkpoint": "/home/ubuntu/.cache/huggingface/hub/models--Qwen--Qwen3-8B/snapshots/b968826d9c46dd6066d109eabc6255188de91218",
+    "checkpoint_lock": "results/tensor_accelerator/qwen3_full_model_physical/source/checkpoint.lock.json",
+    "checkpoint_lock_id": "fa32932d73c1f605a69db3a803f1f25ef5b022a98cc3c6b5fe42b7f7af024e2a",
+    "checkpoint_lock_sha256": "880782c1a160c466b39e2b4502649704819a96666f1de7abaacda30f090fbaaa",
+    "checkpoint_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+    "dtype": "BF16",
+    "name": "model.layers.0.self_attn.o_proj.weight",
+    "payload_sha256": "d6fec091373ead7a102c480d4642a9b135e9e2cf0d0c289e0425967c96877ac2",
+    "shape": [
+      4096,
+      4096
+    ],
+    "shard": "model-00001-of-00005.safetensors",
+    "size_bytes": 33554432
+  }
+}
