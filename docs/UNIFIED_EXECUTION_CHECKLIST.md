@@ -486,11 +486,18 @@ operation without a connected datapath is PC 41 `TENSOR.MATMUL`, operators
 handles EOS, emits architectural token-commit ticks, or establishes TPOT.
 
 The separate exact `HC_PRE` scheduler campaign admits DeepSeek ROM PC 15 /
-descriptor 381 and its then-current HBM PC 14 / descriptor 546, covers ROM T=1 and HBM
+descriptor 381 and current HBM PC 14 / descriptor 545, proves the explicit
+one-ID-shift semantic equivalence to the prior authenticated descriptor 546, and covers ROM T=1 and HBM
 T=512/T=320/T=1 including `390 * 512 + 320 = 200,000`, and correlates 688,188
-emitted tiles plus 11,346,434 checks on Icarus and Verilator. Full
-projection/RMS, scheduler integration through a layer, token selection, and
-TPOT remain open. Standalone CR32
+emitted tiles plus 11,346,434 checks on Icarus and Verilator. A focused T=1
+continuation now runs exact BF16-by-FP32 fused accumulation, balanced
+16,384-element RMS, all 24 projection rows, and the complete coefficient tail
+behind both semantic configurations. Icarus 11.0 and pinned Verilator 5.050
+agree on 1,379,450 checks, all 74 authenticated checkpoint numeric boundaries
+per profile, and identical 24-word public results. It is not yet connected to
+the ordinary shipped-prefix control/view/memory path and does not cover
+T=512/T=320/all 200K prompt positions. Full layer integration, logits,
+selection, append/EOS-or-cap control, and TPOT remain open. Standalone CR32
 nonpositive exp and direct sigmoid pass 169,962 exact checks on both
 simulators. The composed stable-softmax front end passes 2,394,764 checks per
 simulator over 853 matrices, including every matrix in the first T=512 and
@@ -498,9 +505,11 @@ final T=320 checkpoint blocks; descriptor integration and the other 389
 full-sized blocks remain open. The atomic stable-softmax/Sinkhorn composition
 then passes 19,313,653 checks per simulator over those same 853 matrices,
 reproduces the authenticated T=512 final combination output, and binds the
-current HBM PC-14 descriptor 545 plus ROM PC-15 descriptor 381. It is not yet
-driven by either descriptor, and none of these campaigns produces a token or
-TPOT point.
+current HBM PC-14 descriptor 545 plus ROM PC-15 descriptor 381. The new T=1
+continuation consumes the derived semantic configuration for each descriptor;
+it still does not retire the raw shipped record through the ordinary prefix,
+and none of these campaigns produces a token or TPOT point. All reported
+operator/testbench cycles remain verification metadata, never TPOT.
 
 - [x] W8.1 Microsequencer RTL (fetch/decode/loop/predicate/event/trap/complete) — `rtl/abi3/ot_a3_microsequencer.sv`; operand tensor-view resolution (A4 dynamic terms, A13 partial final extent, A18 extent axis/unit, A26 fixed-address edge masks) — `rtl/abi3/ot_a3_view_resolver.sv`
 - [x] W8.2 Queue/event controller RTL and compatibility-only state controller —

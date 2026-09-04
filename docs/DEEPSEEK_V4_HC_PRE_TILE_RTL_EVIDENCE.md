@@ -3,15 +3,15 @@
 - **Evidence date:** 2026-09-04
 - **ABI:** 3.0
 - **ROM site:** wafer decode PC 15, `VECTOR.MHC`, descriptor 381
-- **HBM site:** qualified scheduler snapshot PC 14, `VECTOR.MHC`, descriptor 546; current main descriptor 545
+- **HBM site:** current PC 14, `VECTOR.MHC`, descriptor 545; authenticated prior qualification descriptor 546
 - **Campaign:** `results/rtl/a3_mhc_pre_tile_campaign.json`
 - **Arithmetic continuation:** `docs/DEEPSEEK_V4_HC_PRE_ARITHMETIC_RTL_EVIDENCE.md`
 - **Status:** passing prerequisite evidence; neither release gate is closed
 
 ## Outcome and acceptance position
 
-The standalone synthesizable scheduler admits the exact retained-snapshot ROM
-and HBM `HYPER_CONNECT_PRE` records and emits every required projection and output
+The standalone synthesizable scheduler admits the exact current ROM and HBM
+`HYPER_CONNECT_PRE` records and emits every required projection and output
 coordinate once, in deterministic token/field/increasing-K order. Icarus and
 pinned Verilator 5.050 produce identical results, and pinned Yosys 0.68 reports
 zero generic elaboration problems.
@@ -30,9 +30,11 @@ claiming Gate 1. It must not be counted as a correctness-qualified TPOT point.
 
 The vector builder derives the instruction and all consumed descriptors from
 the retained four-deployment images. For the HBM T=512 profile it additionally
-byte-compares the selected instruction and eleven records with the independent
-checkpoint-backed functional qualification. The complete 256-bit numeric
-contract digest is part of admission.
+proves that the current descriptor 545 bundle is semantically identical to the
+independently checkpoint-backed prior descriptor 546 qualification after the
+one-record-ID shift. Every ordinary payload field must match and every shifted
+reference is checked explicitly. The complete 256-bit numeric contract digest
+is part of admission.
 
 | Profile | Active extent | Projection tiles | Commit tiles | Logical projection FMAs | Output words |
 |---|---:|---:|---:|---:|---:|
@@ -97,18 +99,17 @@ pytest -q tests/compiler/test_a3_mhc_pre_tile_rtl.py
 
 ## Required continuation
 
-Gate 1 still requires correctly rounded RMS/projection and exact weight and
-combination commits to be integrated behind this scheduler. Standalone
-certifying sigmoid/nonpositive-exponential, source-major 4x4 stable-softmax,
-and Sinkhorn-tail blocks now pass focused dual-simulator campaigns. They are
-also composed under one atomic boundary over all 512 matrices in the first
-checkpoint block, all 320 in the final partial block, and a T=1 witness. That
-composition is not wired to this scheduler, and the intervening 389 full-sized
-blocks remain outside the checkpoint-derived RTL campaign. The
-complete operator must reproduce all authenticated T=512 output words from
-computation, then be connected at ROM PC 15 and HBM PC 14. The RTL path must subsequently
-continue through all remaining model operators, communication, logits, argmax,
-token append, and first-EOS control and pass the governed natural and agentic
+The T=1 continuation now wires exact balanced RMS/projection and the complete
+coefficient tail behind this scheduler's current ROM/HBM semantic
+configurations. Both profiles compute all 74 retained checkpoint numeric
+boundaries and the 24 public coefficient words exactly on Icarus and pinned
+Verilator; see `results/rtl/a3_hc_pre_t1_campaign.json`. It remains a decoded
+semantic-config adapter, not ordinary shipped-prefix control integration, and
+it supports one token only. The next step is to wire it to the shipped
+microsequencer/view/memory path and extend it to authenticated T=512, T=320,
+and all 391 prompt blocks. The RTL path must then continue through all
+remaining model operators, communication, final RMS/LM head, selection, token
+append, and first-EOS-or-cap control and pass the governed natural and agentic
 token suites plus the exact Qwen-8K and DeepSeek-200K workloads.
 
 Only after those same executions match every oracle token may their raw
@@ -117,8 +118,10 @@ timebase and compared with a pre-frozen numerical TPOT SLO for B=1/2/4/8.
 
 ## Explicit nonclaims
 
-This evidence does not establish full `HC_PRE` RTL arithmetic, a complete
-transformer layer, checkpoint-backed model execution, output-token correctness,
-token legitimacy, decoded-text quality, EOS behavior, a complete 200,000-token
-transaction, shipped-prefix integration, architectural cycles, latency, TPOT,
-throughput, technology timing, power, area, or ROM-versus-HBM superiority.
+This scheduler evidence alone does not establish full `HC_PRE` arithmetic. The
+separate integrated campaign establishes one T=1 coefficient transaction, not
+a complete transformer layer or checkpoint-backed model execution. Neither
+establishes output-token correctness, token legitimacy, decoded-text quality,
+EOS behavior, a complete 200,000-token transaction, shipped-prefix
+integration, architectural token latency, TPOT, throughput, technology timing,
+power, area, or ROM-versus-HBM superiority.

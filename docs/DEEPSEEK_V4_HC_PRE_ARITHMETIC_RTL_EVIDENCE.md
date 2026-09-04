@@ -4,15 +4,76 @@
 - **ABI:** 3.0
 - **HBM target site:** current PC 14, descriptor 545; prior qualified scheduler descriptor 546
 - **ROM target site:** PC 15, descriptor 381
+- **T=1 implementation:** `0da6107`
 - **Stable-softmax implementation:** `bc06fcb`
 - **Stable-softmax/Sinkhorn implementation:** `4bc65f5`
 - **Transcendental campaign:** `results/rtl/a3_hc_transcendental_campaign.json`
 - **Stable-softmax campaign:** `results/rtl/a3_hc_stable_softmax_campaign.json`
 - **Stable-softmax/Sinkhorn campaign:** `results/rtl/a3_hc_softmax_sinkhorn20_campaign.json`
 - **Divider/Sinkhorn campaign:** `results/rtl/a3_hc_numeric_campaign.json`
-- **Status:** passing reusable-block evidence; neither release gate is closed
+- **Full T=1 coefficient campaign:** `results/rtl/a3_hc_pre_t1_campaign.json`
+- **Status:** passing authenticated T=1 descriptor-facing coefficient evidence; neither release gate is closed
 
 ## Outcome
+
+The current ROM PC 15 / operator 381 and HBM PC 14 / operator 545 semantic
+configurations now drive one common synthesizable T=1 arithmetic path. It
+computes, rather than looks up:
+
+- all 16,384 BF16 input squares and the exact 16,383-add balanced RMS tree;
+- the `2^-14` mean scale, epsilon addition, and correctly rounded reciprocal
+  square root;
+- 24 rows of increasing-K BF16-by-FP32 exact-product, single-rounded FP32
+  accumulation, using eight physical field lanes and 393,216 fused
+  product-adds;
+- all 24 normalized projection and separately rounded affine values;
+- eight sigmoid-derived pre/post weight words; and
+- the sixteen source-major stable-softmax/Sinkhorn-20 combination words.
+
+The authenticated input is position zero, token ID 18,042, from the exact
+200,000-token `TA-DS-CTX-200K-1` workload. The retained input is extracted from
+the pinned official checkpoint and contains 16,384 BF16 hidden codes, 393,216
+FP32 projection codes, 24 bases, and three scales. Full checkpoint shard,
+tensor, selected-row, extracted-file, workload, and current descriptor-image
+identities are retained. An independent immutable exact-rational reference
+recomputes every expected value. The final 24 words also equal the first token
+of the separately authenticated T=512 functional qualification byte for byte.
+
+The exact checkpoint witness is:
+
+```text
+mean square = 0x3b98e318
+inverse RMS = 0x416a36cf
+raw projection SHA-256 = 53df982fa534d5f09851f5632840ecad1327ec56512e64eb3e442a3d63e9390a
+normalized projection SHA-256 = 74c6f22532fd9c459f042175afb28ba17224f41ba3abff2d977af920279428d1
+final 8+16 coefficient SHA-256 = 230486960b73611968868cb0999567ec2085a3e6e37cca0fe8d063c174d61a02
+```
+
+The independent FMA oracle additionally covers 4,112 cases: 3,571 finite
+successes, six nonfinite refusals, and 535 finite overflows. In 118 successful
+cases the required fused boundary differs from a separately rounded multiply
+then add, preventing that common implementation substitution from passing.
+
+Icarus 11.0 and pinned Verilator 5.050 agree on 1,379,450 checks per simulator.
+Both descriptor profiles reproduce all 74 retained numeric boundary words;
+their 24 public coefficient words are identical. The campaign continuously
+checks 685,335 in-flight cycles for all-zero public outputs and also covers
+busy input refusal/input latching, active reset, output backpressure, an
+active-token descriptor refusal, an early nonfinite-hidden refusal, and a late
+nonfinite-base refusal after projection. The late failure produces exactly one
+all-zero error transaction; it cannot leak or double-complete. Pinned Yosys
+0.68 generically elaborates and checks the integrated top with zero reported
+structural problems; the 16,384-word reduction scratch remains one 524,288-bit
+memory with two read ports and one write port rather than expanding into a
+controller-reset register array.
+
+The campaign records 236,126 conservative controller cycles for either
+descriptor profile. That number is deliberately **not TPOT**: it is the
+operation count of this standalone, serial verification implementation, is not
+a whole-token execution, and has no SKY130/ASAP7 characterized clock or full
+memory/interconnect schedule.
+
+## Reusable arithmetic foundation
 
 A standalone synthesizable engine now computes the two mathematical-function
 boundaries required by `HC_PRE`:
@@ -121,14 +182,13 @@ latency or TPOT.
 
 | Priority | Required release result | Status after this work |
 |---:|---|---|
-| 1 | The governed 200,000-context DeepSeek transaction produces every expected output token, includes the first EOS token, and emits no post-EOS transaction | **Open.** This block emits FP32 arithmetic values, not logits or tokens. |
-| 2 | Desired TPOT measured from that same Gate-1-passing execution using characterized SKY130 or ASAP7 timing | **Blocked by Gate 1.** Testbench cycles and simulator wall time are verification costs, not token latency. |
+| 1 | The governed 200,000-context DeepSeek transaction produces every expected output token, includes the first EOS token (or exact governed cap), and emits no post-EOS transaction | **Open.** One layer-zero T=1 coefficient boundary passes; it emits no logit or token. |
+| 2 | Desired TPOT measured from that same Gate-1-passing execution using characterized SKY130 or ASAP7 timing | **Blocked by Gate 1.** Operator/testbench cycles and simulator wall time are verification costs, not token latency. |
 
-This work shortens the Gate-1 path by replacing previously absent reusable
-numeric primitives and completing the bit-exact stable-softmax-to-Sinkhorn
-combination-coefficient composition. It is still standalone: neither input
-logit production nor its final result is driven by the real PC-14/PC-15
-descriptor path.
+This work shortens the Gate-1 path by closing exact T=1 layer-zero coefficient
+arithmetic behind both current semantic descriptor configurations. It remains
+outside the ordinary shipped-prefix microsequencer/decoder/view-resolver and
+does not execute the downstream layer or model-token path.
 
 ## Reproduction
 
@@ -142,6 +202,10 @@ pytest -q tests/compiler/test_a3_hc_stable_softmax_rtl.py
 python3 tools/build_a3_hc_softmax_sinkhorn20_vectors.py
 python3 tools/run_a3_hc_softmax_sinkhorn20_rtl_campaign.py
 pytest -q tests/compiler/test_a3_hc_softmax_sinkhorn20_rtl.py
+python3 tools/extract_a3_hc_pre_t1_checkpoint.py
+python3 tools/build_a3_hc_pre_t1_vectors.py
+python3 tools/run_a3_hc_pre_t1_rtl_campaign.py
+pytest -q tests/compiler/test_a3_hc_pre_t1_rtl.py
 ```
 
 The campaign regenerates and byte-compares the vectors, runs the complete
@@ -151,30 +215,32 @@ vector, and simulator log.
 
 ## Remaining Gate-1 work
 
-The next `HC_PRE` closure steps are:
+The shortest remaining Gate-1 path is:
 
-1. implement and differentially qualify exact BF16-by-FP32 fused product-add;
-2. implement the balanced 16,384-element RMS path and reuse the existing
-   correctly rounded reciprocal-square-root unit;
-3. retain projection accumulators across the scheduler's increasing-K tiles,
-   implement the affine/pre/post output paths, and atomically commit weights
-   and combination matrices;
-4. reproduce from arithmetic all 24 T=1 words, all 7,680 T=320 words, and all
-   12,288 authenticated T=512 words, then integrate at HBM PC 14 and ROM PC 15;
-5. continue through every downstream layer, logits, argmax, token append, and
-   first-EOS control until the exact 200,000-context token transaction passes.
+1. connect this semantic-config wrapper to the ordinary shipped-prefix
+   microsequencer, descriptor decoder, view resolver, and real memory ports;
+2. extend the same arithmetic beyond T=1, first to the authenticated T=512
+   block, the final T=320 block, and then all `390 * 512 + 320 = 200,000`
+   prompt positions without changing reduction order;
+3. connect the coefficient outputs through the remaining layer-zero branch,
+   attention/MLP/residual state, then repeat through every transformer layer;
+4. execute final RMS, LM head, deterministic selection, token append/KV-state
+   advance, and first-EOS-or-exact-cap stopping;
+5. compare every generated token ID, decoded natural/agentic text, stop reason,
+   and absence of post-EOS work with the independent checkpoint oracle.
 
-Only after step 5 closes Gate 1 can architectural token-commit events from that
-same execution be converted through a physical timebase and assessed against
-the frozen TPOT target.
+Only after step 5 closes Gate 1 may raw token-commit events from that identical
+execution be converted with a characterized SKY130 or ASAP7 timebase and
+assessed against the pre-frozen TPOT SLO at each governed batch size.
 
 ## Explicit nonclaims
 
-The 4,200-vector transcendental sample is not exhaustive over every binary32
-encoding. The stable-softmax evidence covers the first T=512 and final T=320
-checkpoint blocks, not every one of the 391 blocks in the 200,000-token
-transaction. This evidence does not establish full `HC_PRE`, descriptor
-retirement, a transformer layer, checkpoint-backed full-model RTL execution,
-output-token correctness, decoded-text quality, EOS behavior, a complete
-200,000-token transaction, architectural latency, TPOT, technology timing,
-power, area, or ROM-versus-HBM superiority.
+The 4,112 FMA and 4,200 transcendental samples are not exhaustive over every
+operand encoding. The integrated arithmetic evidence covers one authentic
+T=1 position, not the full T=512/T=320 shapes or every one of the 391 prompt
+blocks. It consumes a derived semantic configuration rather than the raw
+records through the full shipped-prefix control path. This evidence does not
+establish a complete transformer layer, checkpoint-backed full-model RTL
+execution, output-token correctness, decoded-text quality, EOS behavior, the
+complete 200,000-context transaction, architectural token latency, TPOT,
+technology timing, power, area, or ROM-versus-HBM superiority.
