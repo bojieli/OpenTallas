@@ -1,0 +1,2909 @@
+{
+  "adder_stages": 1,
+  "case_stride": 40,
+  "cases": [
+    {
+      "block_a": 0,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 1,
+      "depth": 1,
+      "dtype_a": 16,
+      "dtype_b": 16,
+      "expected": {
+        "pipelined": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 1,
+          "out_count": 1,
+          "products": 1,
+          "saturations": 0,
+          "written": 1
+        },
+        "sequential": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 1,
+          "out_count": 1,
+          "products": 1,
+          "saturations": 0,
+          "written": 1
+        }
+      },
+      "extras": {
+        "numpy_cross_check": "sequential_matmul_binary32 agrees on every accumulator"
+      },
+      "group": 1,
+      "id": 0,
+      "mode_name": null,
+      "name": "shape_1x1x1",
+      "note": "1 x 1 against 1 x 1: pass and chain boundaries",
+      "out_fp32": false,
+      "products": 1,
+      "rate": false,
+      "rows": 1,
+      "run_reference": true,
+      "scaled_a": false,
+      "scaled_b": false
+    },
+    {
+      "block_a": 0,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 1,
+      "depth": 2,
+      "dtype_a": 16,
+      "dtype_b": 16,
+      "expected": {
+        "pipelined": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 2,
+          "out_count": 1,
+          "products": 2,
+          "saturations": 0,
+          "written": 1
+        },
+        "sequential": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 2,
+          "out_count": 1,
+          "products": 2,
+          "saturations": 0,
+          "written": 1
+        }
+      },
+      "extras": {
+        "numpy_cross_check": "sequential_matmul_binary32 agrees on every accumulator"
+      },
+      "group": 1,
+      "id": 1,
+      "mode_name": null,
+      "name": "shape_1x1x2",
+      "note": "1 x 2 against 1 x 2: pass and chain boundaries",
+      "out_fp32": false,
+      "products": 2,
+      "rate": false,
+      "rows": 1,
+      "run_reference": true,
+      "scaled_a": false,
+      "scaled_b": false
+    },
+    {
+      "block_a": 0,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 2,
+      "depth": 1,
+      "dtype_a": 16,
+      "dtype_b": 16,
+      "expected": {
+        "pipelined": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 2,
+          "out_count": 2,
+          "products": 2,
+          "saturations": 0,
+          "written": 2
+        },
+        "sequential": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 2,
+          "out_count": 2,
+          "products": 2,
+          "saturations": 0,
+          "written": 2
+        }
+      },
+      "extras": {
+        "numpy_cross_check": "sequential_matmul_binary32 agrees on every accumulator"
+      },
+      "group": 1,
+      "id": 2,
+      "mode_name": null,
+      "name": "shape_1x2x1",
+      "note": "1 x 1 against 2 x 1: pass and chain boundaries",
+      "out_fp32": false,
+      "products": 2,
+      "rate": false,
+      "rows": 1,
+      "run_reference": true,
+      "scaled_a": false,
+      "scaled_b": false
+    },
+    {
+      "block_a": 0,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 1,
+      "depth": 1,
+      "dtype_a": 16,
+      "dtype_b": 16,
+      "expected": {
+        "pipelined": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 2,
+          "out_count": 2,
+          "products": 2,
+          "saturations": 0,
+          "written": 2
+        },
+        "sequential": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 2,
+          "out_count": 2,
+          "products": 2,
+          "saturations": 0,
+          "written": 2
+        }
+      },
+      "extras": {
+        "numpy_cross_check": "sequential_matmul_binary32 agrees on every accumulator"
+      },
+      "group": 1,
+      "id": 3,
+      "mode_name": null,
+      "name": "shape_2x1x1",
+      "note": "2 x 1 against 1 x 1: pass and chain boundaries",
+      "out_fp32": false,
+      "products": 2,
+      "rate": false,
+      "rows": 2,
+      "run_reference": true,
+      "scaled_a": false,
+      "scaled_b": false
+    },
+    {
+      "block_a": 0,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 3,
+      "depth": 5,
+      "dtype_a": 16,
+      "dtype_b": 16,
+      "expected": {
+        "pipelined": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 15,
+          "out_count": 3,
+          "products": 15,
+          "saturations": 0,
+          "written": 3
+        },
+        "sequential": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 15,
+          "out_count": 3,
+          "products": 15,
+          "saturations": 0,
+          "written": 3
+        }
+      },
+      "extras": {
+        "numpy_cross_check": "sequential_matmul_binary32 agrees on every accumulator"
+      },
+      "group": 1,
+      "id": 4,
+      "mode_name": null,
+      "name": "shape_1x3x5",
+      "note": "1 x 5 against 3 x 5: pass and chain boundaries",
+      "out_fp32": false,
+      "products": 15,
+      "rate": false,
+      "rows": 1,
+      "run_reference": true,
+      "scaled_a": false,
+      "scaled_b": false
+    },
+    {
+      "block_a": 0,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 4,
+      "depth": 3,
+      "dtype_a": 16,
+      "dtype_b": 16,
+      "expected": {
+        "pipelined": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 12,
+          "out_count": 4,
+          "products": 12,
+          "saturations": 0,
+          "written": 4
+        },
+        "sequential": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 12,
+          "out_count": 4,
+          "products": 12,
+          "saturations": 0,
+          "written": 4
+        }
+      },
+      "extras": {
+        "numpy_cross_check": "sequential_matmul_binary32 agrees on every accumulator"
+      },
+      "group": 1,
+      "id": 5,
+      "mode_name": null,
+      "name": "shape_1x4x3",
+      "note": "1 x 3 against 4 x 3: pass and chain boundaries",
+      "out_fp32": false,
+      "products": 12,
+      "rate": false,
+      "rows": 1,
+      "run_reference": true,
+      "scaled_a": false,
+      "scaled_b": false
+    },
+    {
+      "block_a": 0,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 5,
+      "depth": 7,
+      "dtype_a": 16,
+      "dtype_b": 16,
+      "expected": {
+        "pipelined": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 35,
+          "out_count": 5,
+          "products": 35,
+          "saturations": 0,
+          "written": 5
+        },
+        "sequential": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 35,
+          "out_count": 5,
+          "products": 35,
+          "saturations": 0,
+          "written": 5
+        }
+      },
+      "extras": {
+        "numpy_cross_check": "sequential_matmul_binary32 agrees on every accumulator"
+      },
+      "group": 1,
+      "id": 6,
+      "mode_name": null,
+      "name": "shape_1x5x7",
+      "note": "1 x 7 against 5 x 7: pass and chain boundaries",
+      "out_fp32": false,
+      "products": 35,
+      "rate": false,
+      "rows": 1,
+      "run_reference": true,
+      "scaled_a": false,
+      "scaled_b": false
+    },
+    {
+      "block_a": 0,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 7,
+      "depth": 2,
+      "dtype_a": 16,
+      "dtype_b": 16,
+      "expected": {
+        "pipelined": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 14,
+          "out_count": 7,
+          "products": 14,
+          "saturations": 0,
+          "written": 7
+        },
+        "sequential": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 14,
+          "out_count": 7,
+          "products": 14,
+          "saturations": 0,
+          "written": 7
+        }
+      },
+      "extras": {
+        "numpy_cross_check": "sequential_matmul_binary32 agrees on every accumulator"
+      },
+      "group": 1,
+      "id": 7,
+      "mode_name": null,
+      "name": "shape_1x7x2",
+      "note": "1 x 2 against 7 x 2: pass and chain boundaries",
+      "out_fp32": false,
+      "products": 14,
+      "rate": false,
+      "rows": 1,
+      "run_reference": true,
+      "scaled_a": false,
+      "scaled_b": false
+    },
+    {
+      "block_a": 0,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 8,
+      "depth": 9,
+      "dtype_a": 16,
+      "dtype_b": 16,
+      "expected": {
+        "pipelined": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 72,
+          "out_count": 8,
+          "products": 72,
+          "saturations": 0,
+          "written": 8
+        },
+        "sequential": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 72,
+          "out_count": 8,
+          "products": 72,
+          "saturations": 0,
+          "written": 8
+        }
+      },
+      "extras": {
+        "numpy_cross_check": "sequential_matmul_binary32 agrees on every accumulator"
+      },
+      "group": 1,
+      "id": 8,
+      "mode_name": null,
+      "name": "shape_1x8x9",
+      "note": "1 x 9 against 8 x 9: pass and chain boundaries",
+      "out_fp32": false,
+      "products": 72,
+      "rate": false,
+      "rows": 1,
+      "run_reference": true,
+      "scaled_a": false,
+      "scaled_b": false
+    },
+    {
+      "block_a": 0,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 9,
+      "depth": 4,
+      "dtype_a": 16,
+      "dtype_b": 16,
+      "expected": {
+        "pipelined": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 72,
+          "out_count": 18,
+          "products": 72,
+          "saturations": 0,
+          "written": 18
+        },
+        "sequential": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 72,
+          "out_count": 18,
+          "products": 72,
+          "saturations": 0,
+          "written": 18
+        }
+      },
+      "extras": {
+        "numpy_cross_check": "sequential_matmul_binary32 agrees on every accumulator"
+      },
+      "group": 1,
+      "id": 9,
+      "mode_name": null,
+      "name": "shape_2x9x4",
+      "note": "2 x 4 against 9 x 4: pass and chain boundaries",
+      "out_fp32": false,
+      "products": 72,
+      "rate": false,
+      "rows": 2,
+      "run_reference": true,
+      "scaled_a": false,
+      "scaled_b": false
+    },
+    {
+      "block_a": 0,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 5,
+      "depth": 7,
+      "dtype_a": 16,
+      "dtype_b": 16,
+      "expected": {
+        "pipelined": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 105,
+          "out_count": 15,
+          "products": 105,
+          "saturations": 0,
+          "written": 15
+        },
+        "sequential": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 105,
+          "out_count": 15,
+          "products": 105,
+          "saturations": 0,
+          "written": 15
+        }
+      },
+      "extras": {
+        "numpy_cross_check": "sequential_matmul_binary32 agrees on every accumulator"
+      },
+      "group": 1,
+      "id": 10,
+      "mode_name": null,
+      "name": "shape_3x5x7",
+      "note": "3 x 7 against 5 x 7: pass and chain boundaries",
+      "out_fp32": false,
+      "products": 105,
+      "rate": false,
+      "rows": 3,
+      "run_reference": true,
+      "scaled_a": false,
+      "scaled_b": false
+    },
+    {
+      "block_a": 0,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 6,
+      "depth": 1,
+      "dtype_a": 16,
+      "dtype_b": 16,
+      "expected": {
+        "pipelined": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 12,
+          "out_count": 12,
+          "products": 12,
+          "saturations": 0,
+          "written": 12
+        },
+        "sequential": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 12,
+          "out_count": 12,
+          "products": 12,
+          "saturations": 0,
+          "written": 12
+        }
+      },
+      "extras": {
+        "numpy_cross_check": "sequential_matmul_binary32 agrees on every accumulator"
+      },
+      "group": 1,
+      "id": 11,
+      "mode_name": null,
+      "name": "shape_2x6x1",
+      "note": "2 x 1 against 6 x 1: pass and chain boundaries",
+      "out_fp32": false,
+      "products": 12,
+      "rate": false,
+      "rows": 2,
+      "run_reference": true,
+      "scaled_a": false,
+      "scaled_b": false
+    },
+    {
+      "block_a": 0,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 3,
+      "depth": 13,
+      "dtype_a": 16,
+      "dtype_b": 16,
+      "expected": {
+        "pipelined": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 156,
+          "out_count": 12,
+          "products": 156,
+          "saturations": 0,
+          "written": 12
+        },
+        "sequential": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 156,
+          "out_count": 12,
+          "products": 156,
+          "saturations": 0,
+          "written": 12
+        }
+      },
+      "extras": {
+        "numpy_cross_check": "sequential_matmul_binary32 agrees on every accumulator"
+      },
+      "group": 1,
+      "id": 12,
+      "mode_name": null,
+      "name": "shape_4x3x13",
+      "note": "4 x 13 against 3 x 13: pass and chain boundaries",
+      "out_fp32": false,
+      "products": 156,
+      "rate": false,
+      "rows": 4,
+      "run_reference": true,
+      "scaled_a": false,
+      "scaled_b": false
+    },
+    {
+      "block_a": 0,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 8,
+      "depth": 16,
+      "dtype_a": 16,
+      "dtype_b": 16,
+      "expected": {
+        "pipelined": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 512,
+          "out_count": 32,
+          "products": 512,
+          "saturations": 0,
+          "written": 32
+        },
+        "sequential": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 512,
+          "out_count": 32,
+          "products": 512,
+          "saturations": 0,
+          "written": 32
+        }
+      },
+      "extras": {
+        "numpy_cross_check": "sequential_matmul_binary32 agrees on every accumulator"
+      },
+      "group": 1,
+      "id": 13,
+      "mode_name": null,
+      "name": "bf16_small",
+      "note": "4 x 16 against 8 x 16: the ordinary contraction",
+      "out_fp32": false,
+      "products": 512,
+      "rate": false,
+      "rows": 4,
+      "run_reference": true,
+      "scaled_a": false,
+      "scaled_b": false
+    },
+    {
+      "block_a": 0,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 65,
+      "depth": 33,
+      "dtype_a": 16,
+      "dtype_b": 16,
+      "expected": {
+        "pipelined": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 19305,
+          "out_count": 585,
+          "products": 19305,
+          "saturations": 0,
+          "written": 585
+        },
+        "sequential": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 19305,
+          "out_count": 585,
+          "products": 19305,
+          "saturations": 0,
+          "written": 585
+        }
+      },
+      "extras": {
+        "numpy_cross_check": "sequential_matmul_binary32 agrees on every accumulator"
+      },
+      "group": 1,
+      "id": 14,
+      "mode_name": null,
+      "name": "bf16_tile_edge",
+      "note": "9 x 33 against 65 x 33: crosses every tile edge",
+      "out_fp32": false,
+      "products": 19305,
+      "rate": false,
+      "rows": 9,
+      "run_reference": true,
+      "scaled_a": false,
+      "scaled_b": false
+    },
+    {
+      "block_a": 0,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 4,
+      "depth": 2,
+      "dtype_a": 16,
+      "dtype_b": 16,
+      "expected": {
+        "pipelined": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 24,
+          "out_count": 12,
+          "products": 24,
+          "saturations": 6,
+          "written": 12
+        },
+        "sequential": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 24,
+          "out_count": 12,
+          "products": 24,
+          "saturations": 6,
+          "written": 12
+        }
+      },
+      "extras": {
+        "numpy_cross_check": "sequential_matmul_binary32 agrees on every accumulator"
+      },
+      "group": 1,
+      "id": 15,
+      "mode_name": null,
+      "name": "bf16_saturating",
+      "note": "accumulators inside binary32 and outside BF16: six of twelve outputs saturate",
+      "out_fp32": false,
+      "products": 24,
+      "rate": false,
+      "rows": 3,
+      "run_reference": true,
+      "scaled_a": false,
+      "scaled_b": false
+    },
+    {
+      "block_a": 0,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 6,
+      "depth": 8,
+      "dtype_a": 16,
+      "dtype_b": 16,
+      "expected": {
+        "pipelined": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 192,
+          "out_count": 24,
+          "products": 192,
+          "saturations": 0,
+          "written": 24
+        },
+        "sequential": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 192,
+          "out_count": 24,
+          "products": 192,
+          "saturations": 0,
+          "written": 24
+        }
+      },
+      "extras": {
+        "numpy_cross_check": "sequential_matmul_binary32 agrees on every accumulator"
+      },
+      "group": 1,
+      "id": 16,
+      "mode_name": null,
+      "name": "bf16_signed_zero",
+      "note": "every product is a signed exact zero: the result is +0",
+      "out_fp32": false,
+      "products": 192,
+      "rate": false,
+      "rows": 4,
+      "run_reference": true,
+      "scaled_a": false,
+      "scaled_b": false
+    },
+    {
+      "block_a": 0,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 4,
+      "depth": 3,
+      "dtype_a": 16,
+      "dtype_b": 16,
+      "expected": {
+        "pipelined": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 48,
+          "out_count": 16,
+          "products": 48,
+          "saturations": 0,
+          "written": 16
+        },
+        "sequential": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 48,
+          "out_count": 16,
+          "products": 48,
+          "saturations": 0,
+          "written": 16
+        }
+      },
+      "extras": {
+        "numpy_cross_check": "sequential_matmul_binary32 agrees on every accumulator"
+      },
+      "group": 1,
+      "id": 17,
+      "mode_name": null,
+      "name": "bf16_reduction_order",
+      "note": "a small leading product then an exact cancellation: ascending-K returns zero",
+      "out_fp32": false,
+      "products": 48,
+      "rate": false,
+      "rows": 4,
+      "run_reference": true,
+      "scaled_a": false,
+      "scaled_b": false
+    },
+    {
+      "block_a": 0,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 4,
+      "depth": 256,
+      "dtype_a": 16,
+      "dtype_b": 16,
+      "expected": {
+        "pipelined": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 2048,
+          "out_count": 8,
+          "products": 2048,
+          "saturations": 0,
+          "written": 8
+        },
+        "sequential": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 2048,
+          "out_count": 8,
+          "products": 2048,
+          "saturations": 0,
+          "written": 8
+        }
+      },
+      "extras": {
+        "numpy_cross_check": "sequential_matmul_binary32 agrees on every accumulator"
+      },
+      "group": 1,
+      "id": 18,
+      "mode_name": null,
+      "name": "bf16_wide_reduction",
+      "note": "a 256-deep reduction",
+      "out_fp32": false,
+      "products": 2048,
+      "rate": false,
+      "rows": 2,
+      "run_reference": true,
+      "scaled_a": false,
+      "scaled_b": false
+    },
+    {
+      "block_a": 0,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 3,
+      "depth": 8,
+      "dtype_a": 16,
+      "dtype_b": 16,
+      "expected": {
+        "pipelined": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 48,
+          "out_count": 6,
+          "products": 48,
+          "saturations": 0,
+          "written": 6
+        },
+        "sequential": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 48,
+          "out_count": 6,
+          "products": 48,
+          "saturations": 0,
+          "written": 6
+        }
+      },
+      "extras": {
+        "numpy_cross_check": "sequential_matmul_binary32 agrees on every accumulator"
+      },
+      "group": 1,
+      "id": 19,
+      "mode_name": null,
+      "name": "bf16_subnormal_operands",
+      "note": "BF16 subnormal operands (exponent field 0) on both sides, exact products",
+      "out_fp32": false,
+      "products": 48,
+      "rate": false,
+      "rows": 2,
+      "run_reference": true,
+      "scaled_a": false,
+      "scaled_b": false
+    },
+    {
+      "block_a": 0,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 3,
+      "depth": 16,
+      "dtype_a": 16,
+      "dtype_b": 16,
+      "expected": {
+        "pipelined": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 144,
+          "out_count": 9,
+          "products": 144,
+          "saturations": 0,
+          "written": 9
+        },
+        "sequential": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 144,
+          "out_count": 9,
+          "products": 144,
+          "saturations": 0,
+          "written": 9
+        }
+      },
+      "extras": {
+        "numpy_cross_check": "sequential_matmul_binary32 agrees on every accumulator"
+      },
+      "group": 1,
+      "id": 20,
+      "mode_name": null,
+      "name": "bf16_subnormal_products",
+      "note": "products in the binary32 subnormal range: exact where the grid holds them",
+      "out_fp32": false,
+      "products": 144,
+      "rate": false,
+      "rows": 3,
+      "run_reference": true,
+      "scaled_a": false,
+      "scaled_b": false
+    },
+    {
+      "block_a": 0,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 3,
+      "depth": 16,
+      "dtype_a": 16,
+      "dtype_b": 16,
+      "expected": {
+        "pipelined": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 144,
+          "out_count": 9,
+          "products": 144,
+          "saturations": 0,
+          "written": 9
+        },
+        "sequential": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 144,
+          "out_count": 9,
+          "products": 144,
+          "saturations": 0,
+          "written": 9
+        }
+      },
+      "extras": {
+        "numpy_cross_check": "sequential_matmul_binary32 agrees on every accumulator"
+      },
+      "group": 1,
+      "id": 21,
+      "mode_name": null,
+      "name": "bf16_rounded_products",
+      "note": "products below the 2**-149 grid: rounded to it, ties to even, or to zero",
+      "out_fp32": false,
+      "products": 144,
+      "rate": false,
+      "rows": 3,
+      "run_reference": true,
+      "scaled_a": false,
+      "scaled_b": false
+    },
+    {
+      "block_a": 0,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 2,
+      "depth": 4,
+      "dtype_a": 16,
+      "dtype_b": 16,
+      "expected": {
+        "pipelined": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 16,
+          "out_count": 4,
+          "products": 16,
+          "saturations": 0,
+          "written": 4
+        },
+        "sequential": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 16,
+          "out_count": 4,
+          "products": 16,
+          "saturations": 0,
+          "written": 4
+        }
+      },
+      "extras": {
+        "numpy_cross_check": "sequential_matmul_binary32 agrees on every accumulator"
+      },
+      "group": 1,
+      "id": 22,
+      "mode_name": null,
+      "name": "bf16_subnormal_ties",
+      "note": "products of exactly half an ulp of the subnormal grid: ties to even",
+      "out_fp32": false,
+      "products": 16,
+      "rate": false,
+      "rows": 2,
+      "run_reference": true,
+      "scaled_a": false,
+      "scaled_b": false
+    },
+    {
+      "block_a": 0,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 2,
+      "depth": 64,
+      "dtype_a": 16,
+      "dtype_b": 16,
+      "expected": {
+        "pipelined": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 256,
+          "out_count": 4,
+          "products": 256,
+          "saturations": 0,
+          "written": 4
+        },
+        "sequential": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 256,
+          "out_count": 4,
+          "products": 256,
+          "saturations": 0,
+          "written": 4
+        }
+      },
+      "extras": {
+        "numpy_cross_check": "sequential_matmul_binary32 agrees on every accumulator"
+      },
+      "group": 1,
+      "id": 23,
+      "mode_name": null,
+      "name": "bf16_subnormal_accumulation",
+      "note": "sums that stay in the binary32 subnormal range and cross into the normal range",
+      "out_fp32": false,
+      "products": 256,
+      "rate": false,
+      "rows": 2,
+      "run_reference": true,
+      "scaled_a": false,
+      "scaled_b": false
+    },
+    {
+      "block_a": 0,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 2,
+      "depth": 4,
+      "dtype_a": 16,
+      "dtype_b": 16,
+      "expected": {
+        "pipelined": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 16,
+          "out_count": 4,
+          "products": 16,
+          "saturations": 0,
+          "written": 4
+        },
+        "sequential": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 16,
+          "out_count": 4,
+          "products": 16,
+          "saturations": 0,
+          "written": 4
+        }
+      },
+      "extras": {
+        "numpy_cross_check": "sequential_matmul_binary32 agrees on every accumulator"
+      },
+      "group": 1,
+      "id": 24,
+      "mode_name": null,
+      "name": "bf16_cancellation_to_zero",
+      "note": "exact cancellation inside the chain returns +0",
+      "out_fp32": false,
+      "products": 16,
+      "rate": false,
+      "rows": 2,
+      "run_reference": true,
+      "scaled_a": false,
+      "scaled_b": false
+    },
+    {
+      "block_a": 0,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 2,
+      "depth": 3,
+      "dtype_a": 16,
+      "dtype_b": 16,
+      "expected": {
+        "pipelined": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 12,
+          "out_count": 4,
+          "products": 12,
+          "saturations": 0,
+          "written": 4
+        },
+        "sequential": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 12,
+          "out_count": 4,
+          "products": 12,
+          "saturations": 0,
+          "written": 4
+        }
+      },
+      "extras": {
+        "numpy_cross_check": "sequential_matmul_binary32 agrees on every accumulator"
+      },
+      "group": 1,
+      "id": 25,
+      "mode_name": null,
+      "name": "bf16_near_overflow",
+      "note": "accumulations near 2**128 without leaving binary32",
+      "out_fp32": false,
+      "products": 12,
+      "rate": false,
+      "rows": 2,
+      "run_reference": true,
+      "scaled_a": false,
+      "scaled_b": false
+    },
+    {
+      "block_a": 0,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 3,
+      "depth": 2,
+      "dtype_a": 16,
+      "dtype_b": 16,
+      "expected": {
+        "pipelined": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 12,
+          "out_count": 6,
+          "products": 12,
+          "saturations": 0,
+          "written": 6
+        },
+        "sequential": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 12,
+          "out_count": 6,
+          "products": 12,
+          "saturations": 0,
+          "written": 6
+        }
+      },
+      "extras": {
+        "numpy_cross_check": "sequential_matmul_binary32 agrees on every accumulator"
+      },
+      "group": 1,
+      "id": 26,
+      "mode_name": null,
+      "name": "bf16_huge_exponents",
+      "note": "operands at the top of the BF16 range, few products",
+      "out_fp32": false,
+      "products": 12,
+      "rate": false,
+      "rows": 2,
+      "run_reference": true,
+      "scaled_a": false,
+      "scaled_b": false
+    },
+    {
+      "block_a": 0,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 3,
+      "depth": 12,
+      "dtype_a": 16,
+      "dtype_b": 16,
+      "expected": {
+        "pipelined": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 72,
+          "out_count": 6,
+          "products": 72,
+          "saturations": 0,
+          "written": 6
+        },
+        "sequential": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 72,
+          "out_count": 6,
+          "products": 72,
+          "saturations": 0,
+          "written": 6
+        }
+      },
+      "extras": {
+        "numpy_cross_check": "sequential_matmul_binary32 agrees on every accumulator"
+      },
+      "group": 1,
+      "id": 27,
+      "mode_name": null,
+      "name": "bf16_tiny_exponents",
+      "note": "operands at the bottom of the BF16 range",
+      "out_fp32": false,
+      "products": 72,
+      "rate": false,
+      "rows": 2,
+      "run_reference": true,
+      "scaled_a": false,
+      "scaled_b": false
+    },
+    {
+      "block_a": 0,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 6,
+      "depth": 40,
+      "dtype_a": 16,
+      "dtype_b": 16,
+      "expected": {
+        "pipelined": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 1200,
+          "out_count": 30,
+          "products": 1200,
+          "saturations": 0,
+          "written": 30
+        },
+        "sequential": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 1200,
+          "out_count": 30,
+          "products": 1200,
+          "saturations": 0,
+          "written": 30
+        }
+      },
+      "extras": {
+        "numpy_cross_check": "sequential_matmul_binary32 agrees on every accumulator"
+      },
+      "group": 1,
+      "id": 28,
+      "mode_name": null,
+      "name": "spread_narrow",
+      "note": "seeded spread, exponent window 118..137",
+      "out_fp32": false,
+      "products": 1200,
+      "rate": false,
+      "rows": 5,
+      "run_reference": true,
+      "scaled_a": false,
+      "scaled_b": false
+    },
+    {
+      "block_a": 0,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 6,
+      "depth": 47,
+      "dtype_a": 16,
+      "dtype_b": 16,
+      "expected": {
+        "pipelined": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 1410,
+          "out_count": 30,
+          "products": 1410,
+          "saturations": 0,
+          "written": 30
+        },
+        "sequential": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 1410,
+          "out_count": 30,
+          "products": 1410,
+          "saturations": 0,
+          "written": 30
+        }
+      },
+      "extras": {
+        "numpy_cross_check": "sequential_matmul_binary32 agrees on every accumulator"
+      },
+      "group": 1,
+      "id": 29,
+      "mode_name": null,
+      "name": "spread_wide",
+      "note": "seeded spread, exponent window 64..185",
+      "out_fp32": false,
+      "products": 1410,
+      "rate": false,
+      "rows": 5,
+      "run_reference": true,
+      "scaled_a": false,
+      "scaled_b": false
+    },
+    {
+      "block_a": 0,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 6,
+      "depth": 54,
+      "dtype_a": 16,
+      "dtype_b": 16,
+      "expected": {
+        "pipelined": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 1620,
+          "out_count": 30,
+          "products": 1620,
+          "saturations": 0,
+          "written": 30
+        },
+        "sequential": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 1620,
+          "out_count": 30,
+          "products": 1620,
+          "saturations": 0,
+          "written": 30
+        }
+      },
+      "extras": {
+        "numpy_cross_check": "sequential_matmul_binary32 agrees on every accumulator"
+      },
+      "group": 1,
+      "id": 30,
+      "mode_name": null,
+      "name": "spread_same",
+      "note": "seeded spread, exponent window 125..130",
+      "out_fp32": false,
+      "products": 1620,
+      "rate": false,
+      "rows": 5,
+      "run_reference": true,
+      "scaled_a": false,
+      "scaled_b": false
+    },
+    {
+      "block_a": 0,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 6,
+      "depth": 61,
+      "dtype_a": 16,
+      "dtype_b": 16,
+      "expected": {
+        "pipelined": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 1830,
+          "out_count": 30,
+          "products": 1830,
+          "saturations": 0,
+          "written": 30
+        },
+        "sequential": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 1830,
+          "out_count": 30,
+          "products": 1830,
+          "saturations": 0,
+          "written": 30
+        }
+      },
+      "extras": {
+        "numpy_cross_check": "sequential_matmul_binary32 agrees on every accumulator"
+      },
+      "group": 1,
+      "id": 31,
+      "mode_name": null,
+      "name": "spread_mixed",
+      "note": "seeded spread, exponent window 100..150",
+      "out_fp32": false,
+      "products": 1830,
+      "rate": false,
+      "rows": 5,
+      "run_reference": true,
+      "scaled_a": false,
+      "scaled_b": false
+    },
+    {
+      "block_a": 0,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 6,
+      "depth": 68,
+      "dtype_a": 16,
+      "dtype_b": 16,
+      "expected": {
+        "pipelined": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 2040,
+          "out_count": 30,
+          "products": 2040,
+          "saturations": 0,
+          "written": 30
+        },
+        "sequential": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 2040,
+          "out_count": 30,
+          "products": 2040,
+          "saturations": 0,
+          "written": 30
+        }
+      },
+      "extras": {
+        "numpy_cross_check": "sequential_matmul_binary32 agrees on every accumulator"
+      },
+      "group": 1,
+      "id": 32,
+      "mode_name": null,
+      "name": "spread_tiny",
+      "note": "seeded spread, exponent window 1..40",
+      "out_fp32": false,
+      "products": 2040,
+      "rate": false,
+      "rows": 5,
+      "run_reference": true,
+      "scaled_a": false,
+      "scaled_b": false
+    },
+    {
+      "block_a": 0,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 4,
+      "depth": 96,
+      "dtype_a": 16,
+      "dtype_b": 16,
+      "expected": {
+        "pipelined": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 1536,
+          "out_count": 16,
+          "products": 1536,
+          "saturations": 0,
+          "written": 16
+        },
+        "sequential": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 1536,
+          "out_count": 16,
+          "products": 1536,
+          "saturations": 0,
+          "written": 16
+        }
+      },
+      "extras": {
+        "numpy_cross_check": "sequential_matmul_binary32 agrees on every accumulator"
+      },
+      "group": 1,
+      "id": 33,
+      "mode_name": null,
+      "name": "spread_mixed_signs_same_magnitude",
+      "note": "same-magnitude operands of random sign: heavy cancellation in every chain",
+      "out_fp32": false,
+      "products": 1536,
+      "rate": false,
+      "rows": 4,
+      "run_reference": true,
+      "scaled_a": false,
+      "scaled_b": false
+    },
+    {
+      "block_a": 0,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 5,
+      "depth": 20,
+      "dtype_a": 16,
+      "dtype_b": 16,
+      "expected": {
+        "pipelined": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 300,
+          "out_count": 15,
+          "products": 300,
+          "saturations": 0,
+          "written": 15
+        },
+        "sequential": null
+      },
+      "extras": {
+        "numpy_cross_check": "sequential_matmul_binary32 agrees on every accumulator"
+      },
+      "group": 1,
+      "id": 34,
+      "mode_name": null,
+      "name": "spread_fp32_partials",
+      "note": "binary32 partial output (cfg_out_fp32), pipelined lane only",
+      "out_fp32": true,
+      "products": 300,
+      "rate": false,
+      "rows": 3,
+      "run_reference": false,
+      "scaled_a": false,
+      "scaled_b": false
+    },
+    {
+      "block_a": 0,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 8,
+      "depth": 32,
+      "dtype_a": 32,
+      "dtype_b": 32,
+      "expected": {
+        "pipelined": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 1024,
+          "out_count": 32,
+          "products": 1024,
+          "saturations": 0,
+          "written": 32
+        },
+        "sequential": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 1024,
+          "out_count": 32,
+          "products": 1024,
+          "saturations": 0,
+          "written": 32
+        }
+      },
+      "extras": {
+        "numpy_cross_check": "sequential_matmul_binary32 agrees on every accumulator"
+      },
+      "group": 1,
+      "id": 35,
+      "mode_name": null,
+      "name": "fp8_fp8_g1",
+      "note": "FP8 E4M3FN on both sides under g = 1: exact decode, exact products",
+      "out_fp32": false,
+      "products": 1024,
+      "rate": false,
+      "rows": 4,
+      "run_reference": true,
+      "scaled_a": false,
+      "scaled_b": false
+    },
+    {
+      "block_a": 0,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 3,
+      "depth": 3,
+      "dtype_a": 32,
+      "dtype_b": 32,
+      "expected": {
+        "pipelined": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 27,
+          "out_count": 9,
+          "products": 27,
+          "saturations": 0,
+          "written": 9
+        },
+        "sequential": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 27,
+          "out_count": 9,
+          "products": 27,
+          "saturations": 0,
+          "written": 9
+        }
+      },
+      "extras": {
+        "numpy_cross_check": "sequential_matmul_binary32 agrees on every accumulator"
+      },
+      "group": 1,
+      "id": 36,
+      "mode_name": null,
+      "name": "fp8_reduction_order_g1",
+      "note": "the order-sensitive construction on the FP8 path",
+      "out_fp32": false,
+      "products": 27,
+      "rate": false,
+      "rows": 3,
+      "run_reference": true,
+      "scaled_a": false,
+      "scaled_b": false
+    },
+    {
+      "block_a": 0,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 128,
+      "depth": 4,
+      "dtype_a": 32,
+      "dtype_b": 32,
+      "expected": {
+        "pipelined": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 32768,
+          "out_count": 8192,
+          "products": 32768,
+          "saturations": 0,
+          "written": 8192
+        },
+        "sequential": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 32768,
+          "out_count": 8192,
+          "products": 32768,
+          "saturations": 0,
+          "written": 8192
+        }
+      },
+      "extras": {
+        "numpy_cross_check": "sequential_matmul_binary32 agrees on every accumulator"
+      },
+      "group": 1,
+      "id": 37,
+      "mode_name": null,
+      "name": "fp8_k_major_g1",
+      "note": "64 x 128 over a 4-deep reduction",
+      "out_fp32": false,
+      "products": 32768,
+      "rate": false,
+      "rows": 64,
+      "run_reference": true,
+      "scaled_a": false,
+      "scaled_b": false
+    },
+    {
+      "block_a": 32,
+      "block_b": 32,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 8,
+      "depth": 64,
+      "dtype_a": 48,
+      "dtype_b": 32,
+      "expected": {
+        "pipelined": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 2048,
+          "out_count": 32,
+          "products": 2048,
+          "saturations": 0,
+          "written": 32
+        },
+        "sequential": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 2048,
+          "out_count": 32,
+          "products": 2048,
+          "saturations": 0,
+          "written": 32
+        }
+      },
+      "extras": {
+        "numpy_cross_check": "sequential_matmul_binary32 agrees on every accumulator"
+      },
+      "group": 1,
+      "id": 38,
+      "mode_name": null,
+      "name": "mxfp4_fp8_block_scaled_g1",
+      "note": "MXFP4 E2M1 activations and FP8 weights with 32-element E8M0 blocks, g = 1",
+      "out_fp32": false,
+      "products": 2048,
+      "rate": false,
+      "rows": 4,
+      "run_reference": true,
+      "scaled_a": true,
+      "scaled_b": true
+    },
+    {
+      "block_a": 0,
+      "block_b": 32,
+      "block_rows_a": 0,
+      "block_rows_b": 4,
+      "cols": 8,
+      "depth": 64,
+      "dtype_a": 16,
+      "dtype_b": 32,
+      "expected": {
+        "pipelined": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 1536,
+          "out_count": 24,
+          "products": 1536,
+          "saturations": 0,
+          "written": 24
+        },
+        "sequential": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 1536,
+          "out_count": 24,
+          "products": 1536,
+          "saturations": 0,
+          "written": 24
+        }
+      },
+      "extras": {
+        "numpy_cross_check": "sequential_matmul_binary32 agrees on every accumulator"
+      },
+      "group": 1,
+      "id": 39,
+      "mode_name": null,
+      "name": "fp8_a15_block_rows_g1",
+      "note": "amendment A15's two-dimensional scale block, one code per 4 x 32 weight tile",
+      "out_fp32": false,
+      "products": 1536,
+      "rate": false,
+      "rows": 3,
+      "run_reference": true,
+      "scaled_a": false,
+      "scaled_b": true
+    },
+    {
+      "block_a": 16,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 2,
+      "depth": 32,
+      "dtype_a": 16,
+      "dtype_b": 16,
+      "expected": {
+        "pipelined": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 128,
+          "out_count": 4,
+          "products": 128,
+          "saturations": 0,
+          "written": 4
+        },
+        "sequential": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 128,
+          "out_count": 4,
+          "products": 128,
+          "saturations": 0,
+          "written": 4
+        }
+      },
+      "extras": {
+        "numpy_cross_check": "sequential_matmul_binary32 agrees on every accumulator"
+      },
+      "group": 1,
+      "id": 40,
+      "mode_name": null,
+      "name": "bf16_scaled_subnormal_pin",
+      "note": "np.float32 pin: a scaled BF16 operand lands below the binary32 subnormal grid and is rounded to it before the product",
+      "out_fp32": false,
+      "products": 128,
+      "rate": false,
+      "rows": 2,
+      "run_reference": true,
+      "scaled_a": true,
+      "scaled_b": false
+    },
+    {
+      "block_a": 16,
+      "block_b": 16,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 3,
+      "depth": 32,
+      "dtype_a": 16,
+      "dtype_b": 16,
+      "expected": {
+        "pipelined": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 192,
+          "out_count": 6,
+          "products": 192,
+          "saturations": 0,
+          "written": 6
+        },
+        "sequential": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 192,
+          "out_count": 6,
+          "products": 192,
+          "saturations": 0,
+          "written": 6
+        }
+      },
+      "extras": {
+        "numpy_cross_check": "sequential_matmul_binary32 agrees on every accumulator"
+      },
+      "group": 1,
+      "id": 41,
+      "mode_name": null,
+      "name": "bf16_scaled_both_sides",
+      "note": "E8M0 scales on both BF16 operands, g = 1",
+      "out_fp32": false,
+      "products": 192,
+      "rate": false,
+      "rows": 2,
+      "run_reference": true,
+      "scaled_a": true,
+      "scaled_b": true
+    },
+    {
+      "block_a": 0,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 3,
+      "depth": 8,
+      "dtype_a": 16,
+      "dtype_b": 16,
+      "expected": {
+        "pipelined": {
+          "error_code": 1,
+          "error_detail": 1,
+          "lane_ops": 0,
+          "out_count": 0,
+          "products": 0,
+          "saturations": 0,
+          "written": 0
+        },
+        "sequential": {
+          "error_code": 1,
+          "error_detail": 1,
+          "lane_ops": 0,
+          "out_count": 0,
+          "products": 0,
+          "saturations": 0,
+          "written": 0
+        }
+      },
+      "extras": {},
+      "group": 1,
+      "id": 42,
+      "mode_name": "nonfinite_bf16_operand_a",
+      "name": "fault_operand_a_nonfinite",
+      "note": "a BF16 infinity in operand A",
+      "out_fp32": false,
+      "products": 48,
+      "rate": false,
+      "rows": 2,
+      "run_reference": true,
+      "scaled_a": false,
+      "scaled_b": false
+    },
+    {
+      "block_a": 0,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 3,
+      "depth": 8,
+      "dtype_a": 16,
+      "dtype_b": 16,
+      "expected": {
+        "pipelined": {
+          "error_code": 1,
+          "error_detail": 2,
+          "lane_ops": 0,
+          "out_count": 0,
+          "products": 0,
+          "saturations": 0,
+          "written": 0
+        },
+        "sequential": {
+          "error_code": 1,
+          "error_detail": 2,
+          "lane_ops": 0,
+          "out_count": 0,
+          "products": 0,
+          "saturations": 0,
+          "written": 0
+        }
+      },
+      "extras": {},
+      "group": 1,
+      "id": 43,
+      "mode_name": "nonfinite_bf16_operand_b",
+      "name": "fault_operand_b_nonfinite",
+      "note": "a BF16 NaN in operand B",
+      "out_fp32": false,
+      "products": 48,
+      "rate": false,
+      "rows": 2,
+      "run_reference": true,
+      "scaled_a": false,
+      "scaled_b": false
+    },
+    {
+      "block_a": 0,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 3,
+      "depth": 8,
+      "dtype_a": 32,
+      "dtype_b": 32,
+      "expected": {
+        "pipelined": {
+          "error_code": 1,
+          "error_detail": 3,
+          "lane_ops": 0,
+          "out_count": 0,
+          "products": 0,
+          "saturations": 0,
+          "written": 0
+        },
+        "sequential": {
+          "error_code": 1,
+          "error_detail": 3,
+          "lane_ops": 0,
+          "out_count": 0,
+          "products": 0,
+          "saturations": 0,
+          "written": 0
+        }
+      },
+      "extras": {},
+      "group": 1,
+      "id": 44,
+      "mode_name": "reserved_e4m3fn_operand_a",
+      "name": "fault_operand_a_reserved",
+      "note": "the reserved E4M3FN code 0x7f in operand A",
+      "out_fp32": false,
+      "products": 48,
+      "rate": false,
+      "rows": 2,
+      "run_reference": true,
+      "scaled_a": false,
+      "scaled_b": false
+    },
+    {
+      "block_a": 0,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 3,
+      "depth": 8,
+      "dtype_a": 32,
+      "dtype_b": 32,
+      "expected": {
+        "pipelined": {
+          "error_code": 1,
+          "error_detail": 4,
+          "lane_ops": 0,
+          "out_count": 0,
+          "products": 0,
+          "saturations": 0,
+          "written": 0
+        },
+        "sequential": {
+          "error_code": 1,
+          "error_detail": 4,
+          "lane_ops": 0,
+          "out_count": 0,
+          "products": 0,
+          "saturations": 0,
+          "written": 0
+        }
+      },
+      "extras": {},
+      "group": 1,
+      "id": 45,
+      "mode_name": "reserved_e4m3fn_operand_b",
+      "name": "fault_operand_b_reserved",
+      "note": "the reserved E4M3FN code 0xff in operand B",
+      "out_fp32": false,
+      "products": 48,
+      "rate": false,
+      "rows": 2,
+      "run_reference": true,
+      "scaled_a": false,
+      "scaled_b": false
+    },
+    {
+      "block_a": 32,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 3,
+      "depth": 32,
+      "dtype_a": 32,
+      "dtype_b": 32,
+      "expected": {
+        "pipelined": {
+          "error_code": 1,
+          "error_detail": 5,
+          "lane_ops": 0,
+          "out_count": 0,
+          "products": 0,
+          "saturations": 0,
+          "written": 0
+        },
+        "sequential": {
+          "error_code": 1,
+          "error_detail": 5,
+          "lane_ops": 0,
+          "out_count": 0,
+          "products": 0,
+          "saturations": 0,
+          "written": 0
+        }
+      },
+      "extras": {},
+      "group": 1,
+      "id": 46,
+      "mode_name": "reserved_e8m0_scale_a",
+      "name": "fault_scale_a_reserved",
+      "note": "the reserved E8M0 code 0xff in operand A's scales",
+      "out_fp32": false,
+      "products": 192,
+      "rate": false,
+      "rows": 2,
+      "run_reference": true,
+      "scaled_a": true,
+      "scaled_b": false
+    },
+    {
+      "block_a": 0,
+      "block_b": 32,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 3,
+      "depth": 32,
+      "dtype_a": 32,
+      "dtype_b": 32,
+      "expected": {
+        "pipelined": {
+          "error_code": 1,
+          "error_detail": 6,
+          "lane_ops": 0,
+          "out_count": 0,
+          "products": 0,
+          "saturations": 0,
+          "written": 0
+        },
+        "sequential": {
+          "error_code": 1,
+          "error_detail": 6,
+          "lane_ops": 0,
+          "out_count": 0,
+          "products": 0,
+          "saturations": 0,
+          "written": 0
+        }
+      },
+      "extras": {},
+      "group": 1,
+      "id": 47,
+      "mode_name": "reserved_e8m0_scale_b",
+      "name": "fault_scale_b_reserved",
+      "note": "the reserved E8M0 code 0xff in operand B's scales",
+      "out_fp32": false,
+      "products": 192,
+      "rate": false,
+      "rows": 2,
+      "run_reference": true,
+      "scaled_a": false,
+      "scaled_b": true
+    },
+    {
+      "block_a": 32,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 3,
+      "depth": 32,
+      "dtype_a": 32,
+      "dtype_b": 16,
+      "expected": {
+        "pipelined": {
+          "error_code": 6,
+          "error_detail": 7,
+          "lane_ops": 0,
+          "out_count": 0,
+          "products": 0,
+          "saturations": 0,
+          "written": 0
+        },
+        "sequential": {
+          "error_code": 6,
+          "error_detail": 7,
+          "lane_ops": 0,
+          "out_count": 0,
+          "products": 0,
+          "saturations": 0,
+          "written": 0
+        }
+      },
+      "extras": {},
+      "group": 1,
+      "id": 48,
+      "mode_name": "scale_application_range_a",
+      "name": "fault_scale_a_range",
+      "note": "a legal E8M0 2**127 against 448: the scale application overflows",
+      "out_fp32": false,
+      "products": 192,
+      "rate": false,
+      "rows": 2,
+      "run_reference": true,
+      "scaled_a": true,
+      "scaled_b": false
+    },
+    {
+      "block_a": 0,
+      "block_b": 32,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 3,
+      "depth": 32,
+      "dtype_a": 16,
+      "dtype_b": 32,
+      "expected": {
+        "pipelined": {
+          "error_code": 6,
+          "error_detail": 8,
+          "lane_ops": 0,
+          "out_count": 0,
+          "products": 0,
+          "saturations": 0,
+          "written": 0
+        },
+        "sequential": {
+          "error_code": 6,
+          "error_detail": 8,
+          "lane_ops": 0,
+          "out_count": 0,
+          "products": 0,
+          "saturations": 0,
+          "written": 0
+        }
+      },
+      "extras": {},
+      "group": 1,
+      "id": 49,
+      "mode_name": "scale_application_range_b",
+      "name": "fault_scale_b_range",
+      "note": "the same on operand B",
+      "out_fp32": false,
+      "products": 192,
+      "rate": false,
+      "rows": 2,
+      "run_reference": true,
+      "scaled_a": false,
+      "scaled_b": true
+    },
+    {
+      "block_a": 0,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 3,
+      "depth": 4,
+      "dtype_a": 16,
+      "dtype_b": 16,
+      "expected": {
+        "pipelined": {
+          "error_code": 2,
+          "error_detail": 9,
+          "lane_ops": 0,
+          "out_count": 0,
+          "products": 0,
+          "saturations": 0,
+          "written": 0
+        },
+        "sequential": {
+          "error_code": 2,
+          "error_detail": 9,
+          "lane_ops": 0,
+          "out_count": 0,
+          "products": 0,
+          "saturations": 0,
+          "written": 0
+        }
+      },
+      "extras": {},
+      "group": 1,
+      "id": 50,
+      "mode_name": "product_range",
+      "name": "fault_product_range",
+      "note": "the largest finite BF16 squared leaves binary32",
+      "out_fp32": false,
+      "products": 24,
+      "rate": false,
+      "rows": 2,
+      "run_reference": true,
+      "scaled_a": false,
+      "scaled_b": false
+    },
+    {
+      "block_a": 0,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 3,
+      "depth": 4,
+      "dtype_a": 16,
+      "dtype_b": 16,
+      "expected": {
+        "pipelined": {
+          "error_code": 3,
+          "error_detail": 10,
+          "lane_ops": 3,
+          "out_count": 0,
+          "products": 3,
+          "saturations": 0,
+          "written": 0
+        },
+        "sequential": {
+          "error_code": 3,
+          "error_detail": 10,
+          "lane_ops": 3,
+          "out_count": 0,
+          "products": 3,
+          "saturations": 0,
+          "written": 0
+        }
+      },
+      "extras": {},
+      "group": 1,
+      "id": 51,
+      "mode_name": "accumulate_range",
+      "name": "fault_accumulate_range",
+      "note": "finite products whose ascending-K sum leaves binary32",
+      "out_fp32": false,
+      "products": 24,
+      "rate": false,
+      "rows": 2,
+      "run_reference": true,
+      "scaled_a": false,
+      "scaled_b": false
+    },
+    {
+      "block_a": 0,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 3,
+      "depth": 0,
+      "dtype_a": 16,
+      "dtype_b": 16,
+      "expected": {
+        "pipelined": {
+          "error_code": 7,
+          "error_detail": 11,
+          "lane_ops": 0,
+          "out_count": 0,
+          "products": 0,
+          "saturations": 0,
+          "written": 0
+        },
+        "sequential": {
+          "error_code": 7,
+          "error_detail": 11,
+          "lane_ops": 0,
+          "out_count": 0,
+          "products": 0,
+          "saturations": 0,
+          "written": 0
+        }
+      },
+      "extras": {},
+      "group": 1,
+      "id": 52,
+      "mode_name": "shape",
+      "name": "fault_shape_zero_depth",
+      "note": "a degenerate extent is refused by both lanes",
+      "out_fp32": false,
+      "products": 0,
+      "rate": false,
+      "rows": 2,
+      "run_reference": true,
+      "scaled_a": false,
+      "scaled_b": false
+    },
+    {
+      "block_a": 0,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 7,
+      "depth": 6,
+      "dtype_a": 16,
+      "dtype_b": 16,
+      "expected": {
+        "pipelined": {
+          "error_code": 1,
+          "error_detail": 1,
+          "lane_ops": 46,
+          "out_count": 7,
+          "products": 46,
+          "saturations": 0,
+          "written": 7
+        },
+        "sequential": {
+          "error_code": 1,
+          "error_detail": 1,
+          "lane_ops": 46,
+          "out_count": 7,
+          "products": 46,
+          "saturations": 0,
+          "written": 7
+        }
+      },
+      "extras": {},
+      "group": 1,
+      "id": 53,
+      "mode_name": null,
+      "name": "fault_late_operand",
+      "note": "an infinity at row 1, k 4: earlier passes are written",
+      "out_fp32": false,
+      "products": 126,
+      "rate": false,
+      "rows": 3,
+      "run_reference": true,
+      "scaled_a": false,
+      "scaled_b": false
+    },
+    {
+      "block_a": 0,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 7,
+      "depth": 6,
+      "dtype_a": 16,
+      "dtype_b": 16,
+      "expected": {
+        "pipelined": {
+          "error_code": 1,
+          "error_detail": 2,
+          "lane_ops": 32,
+          "out_count": 5,
+          "products": 32,
+          "saturations": 0,
+          "written": 5
+        },
+        "sequential": {
+          "error_code": 1,
+          "error_detail": 2,
+          "lane_ops": 32,
+          "out_count": 5,
+          "products": 32,
+          "saturations": 0,
+          "written": 5
+        }
+      },
+      "extras": {},
+      "group": 1,
+      "id": 54,
+      "mode_name": null,
+      "name": "fault_late_column",
+      "note": "an infinity in column 5, k 2: the passes before it are written",
+      "out_fp32": false,
+      "products": 84,
+      "rate": false,
+      "rows": 2,
+      "run_reference": true,
+      "scaled_a": false,
+      "scaled_b": false
+    },
+    {
+      "block_a": 0,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 5,
+      "depth": 5,
+      "dtype_a": 16,
+      "dtype_b": 16,
+      "expected": {
+        "pipelined": {
+          "error_code": 3,
+          "error_detail": 10,
+          "lane_ops": 43,
+          "out_count": 8,
+          "products": 43,
+          "saturations": 0,
+          "written": 8
+        },
+        "sequential": {
+          "error_code": 3,
+          "error_detail": 10,
+          "lane_ops": 43,
+          "out_count": 8,
+          "products": 43,
+          "saturations": 0,
+          "written": 8
+        }
+      },
+      "extras": {},
+      "group": 1,
+      "id": 55,
+      "mode_name": null,
+      "name": "fault_late_accumulate",
+      "note": "an accumulation overflow in the last row's second pass",
+      "out_fp32": false,
+      "products": 50,
+      "rate": false,
+      "rows": 2,
+      "run_reference": true,
+      "scaled_a": false,
+      "scaled_b": false
+    },
+    {
+      "block_a": 0,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 16,
+      "depth": 1800,
+      "dtype_a": 16,
+      "dtype_b": 16,
+      "expected": {
+        "pipelined": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 460800,
+          "out_count": 256,
+          "products": 460800,
+          "saturations": 0,
+          "written": 256
+        },
+        "sequential": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 460800,
+          "out_count": 256,
+          "products": 460800,
+          "saturations": 0,
+          "written": 256
+        }
+      },
+      "extras": {
+        "numpy_cross_check": "sequential_matmul_binary32 agrees on every accumulator"
+      },
+      "group": 1,
+      "id": 56,
+      "mode_name": null,
+      "name": "sweep_0_narrow_16x16x1800",
+      "note": "normal-range BF16 sweep block 0: 16 x 16 outputs over K = 1800, exponent window 118..137",
+      "out_fp32": false,
+      "products": 460800,
+      "rate": false,
+      "rows": 16,
+      "run_reference": true,
+      "scaled_a": false,
+      "scaled_b": false
+    },
+    {
+      "block_a": 0,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 16,
+      "depth": 1800,
+      "dtype_a": 16,
+      "dtype_b": 16,
+      "expected": {
+        "pipelined": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 460800,
+          "out_count": 256,
+          "products": 460800,
+          "saturations": 0,
+          "written": 256
+        },
+        "sequential": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 460800,
+          "out_count": 256,
+          "products": 460800,
+          "saturations": 0,
+          "written": 256
+        }
+      },
+      "extras": {
+        "numpy_cross_check": "sequential_matmul_binary32 agrees on every accumulator"
+      },
+      "group": 1,
+      "id": 57,
+      "mode_name": null,
+      "name": "sweep_1_wide_16x16x1800",
+      "note": "normal-range BF16 sweep block 1: 16 x 16 outputs over K = 1800, exponent window 64..185",
+      "out_fp32": false,
+      "products": 460800,
+      "rate": false,
+      "rows": 16,
+      "run_reference": true,
+      "scaled_a": false,
+      "scaled_b": false
+    },
+    {
+      "block_a": 0,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 16,
+      "depth": 1800,
+      "dtype_a": 16,
+      "dtype_b": 16,
+      "expected": {
+        "pipelined": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 460800,
+          "out_count": 256,
+          "products": 460800,
+          "saturations": 0,
+          "written": 256
+        },
+        "sequential": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 460800,
+          "out_count": 256,
+          "products": 460800,
+          "saturations": 0,
+          "written": 256
+        }
+      },
+      "extras": {
+        "numpy_cross_check": "sequential_matmul_binary32 agrees on every accumulator"
+      },
+      "group": 1,
+      "id": 58,
+      "mode_name": null,
+      "name": "sweep_2_same_16x16x1800",
+      "note": "normal-range BF16 sweep block 2: 16 x 16 outputs over K = 1800, exponent window 125..130",
+      "out_fp32": false,
+      "products": 460800,
+      "rate": false,
+      "rows": 16,
+      "run_reference": true,
+      "scaled_a": false,
+      "scaled_b": false
+    },
+    {
+      "block_a": 0,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 7,
+      "depth": 2403,
+      "dtype_a": 16,
+      "dtype_b": 16,
+      "expected": {
+        "pipelined": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 117747,
+          "out_count": 49,
+          "products": 117747,
+          "saturations": 0,
+          "written": 49
+        },
+        "sequential": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 117747,
+          "out_count": 49,
+          "products": 117747,
+          "saturations": 0,
+          "written": 49
+        }
+      },
+      "extras": {
+        "numpy_cross_check": "sequential_matmul_binary32 agrees on every accumulator"
+      },
+      "group": 1,
+      "id": 59,
+      "mode_name": null,
+      "name": "sweep_3_mixed_7x7x2403",
+      "note": "normal-range BF16 sweep block 3: 7 x 7 outputs over K = 2403, exponent window 100..150",
+      "out_fp32": false,
+      "products": 117747,
+      "rate": false,
+      "rows": 7,
+      "run_reference": true,
+      "scaled_a": false,
+      "scaled_b": false
+    },
+    {
+      "block_a": 0,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 1,
+      "depth": 2,
+      "dtype_a": 16,
+      "dtype_b": 16,
+      "expected": {
+        "pipelined": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 2,
+          "out_count": 1,
+          "products": 2,
+          "saturations": 0,
+          "written": 1
+        },
+        "sequential": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 2,
+          "out_count": 1,
+          "products": 2,
+          "saturations": 0,
+          "written": 1
+        }
+      },
+      "extras": {
+        "numpy_cross_check": "sequential_matmul_binary32 agrees on every accumulator"
+      },
+      "group": 1,
+      "id": 60,
+      "mode_name": null,
+      "name": "sweep_4_narrow_1x1x2",
+      "note": "normal-range BF16 sweep block 4: 1 x 1 outputs over K = 2, exponent window 118..137",
+      "out_fp32": false,
+      "products": 2,
+      "rate": false,
+      "rows": 1,
+      "run_reference": true,
+      "scaled_a": false,
+      "scaled_b": false
+    },
+    {
+      "block_a": 0,
+      "block_b": 0,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 48,
+      "depth": 1024,
+      "dtype_a": 16,
+      "dtype_b": 16,
+      "expected": {
+        "pipelined": {
+          "error_code": 0,
+          "error_detail": 0,
+          "lane_ops": 1572864,
+          "out_count": 1536,
+          "products": 1572864,
+          "saturations": 0,
+          "written": 1536
+        },
+        "sequential": null
+      },
+      "extras": {
+        "numpy_cross_check": "sequential_matmul_binary32 agrees on every accumulator"
+      },
+      "group": 1,
+      "id": 61,
+      "mode_name": null,
+      "name": "rate_bf16_32x48x1024",
+      "note": "gate D2: 32 x 48 outputs over K = 1024 (1,572,864 lane-ops, 512 passes of 48 columns)",
+      "out_fp32": false,
+      "products": 1572864,
+      "rate": true,
+      "rows": 32,
+      "run_reference": false,
+      "scaled_a": false,
+      "scaled_b": false
+    }
+  ],
+  "failure_modes": {
+    "accumulate_range": {
+      "case": 51,
+      "detail_name": "accumulate_range",
+      "error_code": 3,
+      "error_detail": 10,
+      "name": "fault_accumulate_range"
+    },
+    "nonfinite_bf16_operand_a": {
+      "case": 42,
+      "detail_name": "operand_a_nonfinite_bf16",
+      "error_code": 1,
+      "error_detail": 1,
+      "name": "fault_operand_a_nonfinite"
+    },
+    "nonfinite_bf16_operand_b": {
+      "case": 43,
+      "detail_name": "operand_b_nonfinite_bf16",
+      "error_code": 1,
+      "error_detail": 2,
+      "name": "fault_operand_b_nonfinite"
+    },
+    "product_range": {
+      "case": 50,
+      "detail_name": "product_range",
+      "error_code": 2,
+      "error_detail": 9,
+      "name": "fault_product_range"
+    },
+    "reserved_e4m3fn_operand_a": {
+      "case": 44,
+      "detail_name": "operand_a_reserved_e4m3fn",
+      "error_code": 1,
+      "error_detail": 3,
+      "name": "fault_operand_a_reserved"
+    },
+    "reserved_e4m3fn_operand_b": {
+      "case": 45,
+      "detail_name": "operand_b_reserved_e4m3fn",
+      "error_code": 1,
+      "error_detail": 4,
+      "name": "fault_operand_b_reserved"
+    },
+    "reserved_e8m0_scale_a": {
+      "case": 46,
+      "detail_name": "scale_a_reserved_e8m0",
+      "error_code": 1,
+      "error_detail": 5,
+      "name": "fault_scale_a_reserved"
+    },
+    "reserved_e8m0_scale_b": {
+      "case": 47,
+      "detail_name": "scale_b_reserved_e8m0",
+      "error_code": 1,
+      "error_detail": 6,
+      "name": "fault_scale_b_reserved"
+    },
+    "scale_application_range_a": {
+      "case": 48,
+      "detail_name": "scale_a_application_range",
+      "error_code": 6,
+      "error_detail": 7,
+      "name": "fault_scale_a_range"
+    },
+    "scale_application_range_b": {
+      "case": 49,
+      "detail_name": "scale_b_application_range",
+      "error_code": 6,
+      "error_detail": 8,
+      "name": "fault_scale_b_range"
+    },
+    "shape": {
+      "case": 52,
+      "detail_name": "shape",
+      "error_code": 7,
+      "error_detail": 11,
+      "name": "fault_shape_zero_depth"
+    }
+  },
+  "geometry": {
+    "case_words": 2480,
+    "expect_words": 23528,
+    "m0_words": 140458,
+    "m1_words": 161000,
+    "m2_words": 20,
+    "m3_words": 32,
+    "result_words": 11764
+  },
+  "image_sha256": {
+    "lane_case.hex": "67406ed457ee28f21122c2052f76f8424a336cb9ccd246cf0dcbf1863005d9f9",
+    "lane_expect.hex": "a0151893e1e177a8062c29dff02df0e3dba93c9be92d46326adae4d53e050d8a",
+    "lane_m0.hex": "41d0d0a17ea755d100441e27c545623718fef1608bba26fe2a977ef2c69900ff",
+    "lane_m1.hex": "42ac8b3670f20fca58b83a3842fb4bd782d1caaa18c873e878dc9b32d38bd92b",
+    "lane_m2.hex": "004a1357d3d73e05fd254d18adccf9495fe435945a4633f9f6e288e2deb6336a",
+    "lane_m3.hex": "127c5bcfe454a6c6d231727696664349f1f01cdd2bbcc9f65d20c0bdb5b3f090",
+    "lane_meta.hex": "bc6cc336ab14930807d0fb217dfc709811fd800345296dbcc36ee65e36439e0d"
+  },
+  "profile": "full",
+  "rate_cases": [
+    {
+      "case": 61,
+      "lane_ops": 1572864,
+      "products": 1572864
+    }
+  ],
+  "reference": {
+    "g1_cross_check": "runtime/sim/backend.py::sequential_matmul_binary32",
+    "model": "tools/am_e1_lane_reference.py",
+    "numeric_authority": "runtime/reference/formats.py (fractions.Fraction, encode_binary32_rne)",
+    "scale_semantics": "runtime/sim/engines/tensor.py::_operand (np.multiply dtype=float32)"
+  },
+  "required_marker_prefix": "PASS: ABI3 pipelined lane cases=62 lane_ops=3144145 products=3144145 outputs=11673 faults=14 reference_cases=60 reference_outputs=10122",
+  "schema": "opentallas.rtl.abi3_lane_pipelined_vectors.v1",
+  "seed": 20260904,
+  "suite": "d1",
+  "sweep_plan": [
+    [
+      16,
+      16,
+      1800,
+      "narrow"
+    ],
+    [
+      16,
+      16,
+      1800,
+      "wide"
+    ],
+    [
+      16,
+      16,
+      1800,
+      "same"
+    ],
+    [
+      7,
+      7,
+      2403,
+      "mixed"
+    ],
+    [
+      1,
+      1,
+      2,
+      "narrow"
+    ]
+  ],
+  "sweep_products": 1500149,
+  "totals": {
+    "faults": 14,
+    "lane_ops": 3144145,
+    "outputs": 11673,
+    "products": 3144145,
+    "ref_outputs": 10122,
+    "reference": 60
+  },
+  "unwritten_sentinel": 3735928559
+}
