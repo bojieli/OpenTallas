@@ -1,0 +1,750 @@
+{
+  "abi": {
+    "major": 3,
+    "minor": 0
+  },
+  "cases": [
+    {
+      "expected": {
+        "compare_output": true,
+        "failed": false,
+        "gqa_boundary": false,
+        "indices_checked": 1,
+        "moved_elements": 1024,
+        "records_checked": 5,
+        "refusal_reason": 0,
+        "trap_class": 0,
+        "write_count": 18432
+      },
+      "index_value": 16,
+      "mutation": null,
+      "name": "rom_pc32_key_scatter",
+      "pc": 32,
+      "plane": 0,
+      "profile": 0,
+      "target": "qwen3-8b-rom-single-chip"
+    },
+    {
+      "expected": {
+        "compare_output": true,
+        "failed": false,
+        "gqa_boundary": false,
+        "indices_checked": 1,
+        "moved_elements": 1024,
+        "records_checked": 5,
+        "refusal_reason": 0,
+        "trap_class": 0,
+        "write_count": 18432
+      },
+      "index_value": 16,
+      "mutation": null,
+      "name": "rom_pc35_value_scatter",
+      "pc": 35,
+      "plane": 1,
+      "profile": 0,
+      "target": "qwen3-8b-rom-single-chip"
+    },
+    {
+      "expected": {
+        "compare_output": false,
+        "failed": true,
+        "gqa_boundary": true,
+        "indices_checked": 0,
+        "moved_elements": 0,
+        "records_checked": 7,
+        "refusal_reason": 4,
+        "trap_class": 4,
+        "write_count": 0
+      },
+      "index_value": 16,
+      "mutation": null,
+      "name": "rom_pc38_gqa_boundary",
+      "pc": 38,
+      "plane": 2,
+      "profile": 0,
+      "target": "qwen3-8b-rom-single-chip"
+    },
+    {
+      "expected": {
+        "compare_output": true,
+        "failed": false,
+        "gqa_boundary": false,
+        "indices_checked": 1,
+        "moved_elements": 1024,
+        "records_checked": 5,
+        "refusal_reason": 0,
+        "trap_class": 0,
+        "write_count": 18432
+      },
+      "index_value": 16,
+      "mutation": null,
+      "name": "hbm_pc32_key_scatter",
+      "pc": 32,
+      "plane": 0,
+      "profile": 1,
+      "target": "qwen3-8b-hbm-single-chip"
+    },
+    {
+      "expected": {
+        "compare_output": true,
+        "failed": false,
+        "gqa_boundary": false,
+        "indices_checked": 1,
+        "moved_elements": 1024,
+        "records_checked": 5,
+        "refusal_reason": 0,
+        "trap_class": 0,
+        "write_count": 18432
+      },
+      "index_value": 16,
+      "mutation": null,
+      "name": "hbm_pc35_value_scatter",
+      "pc": 35,
+      "plane": 1,
+      "profile": 1,
+      "target": "qwen3-8b-hbm-single-chip"
+    },
+    {
+      "expected": {
+        "compare_output": false,
+        "failed": true,
+        "gqa_boundary": true,
+        "indices_checked": 0,
+        "moved_elements": 0,
+        "records_checked": 7,
+        "refusal_reason": 4,
+        "trap_class": 4,
+        "write_count": 0
+      },
+      "index_value": 16,
+      "mutation": null,
+      "name": "hbm_pc38_gqa_boundary",
+      "pc": 38,
+      "plane": 2,
+      "profile": 1,
+      "target": "qwen3-8b-hbm-single-chip"
+    },
+    {
+      "expected": {
+        "compare_output": false,
+        "failed": true,
+        "gqa_boundary": false,
+        "indices_checked": 0,
+        "moved_elements": 0,
+        "records_checked": 0,
+        "refusal_reason": 2,
+        "trap_class": 2,
+        "write_count": 0
+      },
+      "index_value": 16,
+      "mutation": "instruction byte 31 bit 0 flipped without CRC repair",
+      "name": "rom_pc32_instruction_crc_corrupt",
+      "pc": 32,
+      "plane": 0,
+      "profile": 0,
+      "target": "qwen3-8b-rom-single-chip"
+    },
+    {
+      "expected": {
+        "compare_output": false,
+        "failed": true,
+        "gqa_boundary": false,
+        "indices_checked": 0,
+        "moved_elements": 0,
+        "records_checked": 5,
+        "refusal_reason": 3,
+        "trap_class": 3,
+        "write_count": 0
+      },
+      "index_value": 16,
+      "mutation": "source-view primary object changed and descriptor CRC repaired",
+      "name": "hbm_pc32_wrong_source_object_valid_crc",
+      "pc": 32,
+      "plane": 0,
+      "profile": 1,
+      "target": "qwen3-8b-hbm-single-chip"
+    },
+    {
+      "expected": {
+        "compare_output": false,
+        "failed": true,
+        "gqa_boundary": false,
+        "indices_checked": 0,
+        "moved_elements": 0,
+        "records_checked": 5,
+        "refusal_reason": 3,
+        "trap_class": 3,
+        "write_count": 0
+      },
+      "index_value": 16,
+      "mutation": "source-view head width changed to 127 and descriptor CRC repaired",
+      "name": "rom_pc35_wrong_source_shape_valid_crc",
+      "pc": 35,
+      "plane": 1,
+      "profile": 0,
+      "target": "qwen3-8b-rom-single-chip"
+    },
+    {
+      "expected": {
+        "compare_output": false,
+        "failed": true,
+        "gqa_boundary": false,
+        "indices_checked": 0,
+        "moved_elements": 0,
+        "records_checked": 5,
+        "refusal_reason": 3,
+        "trap_class": 3,
+        "write_count": 0
+      },
+      "index_value": 16,
+      "mutation": "numeric contract bit flipped and descriptor CRC repaired",
+      "name": "hbm_pc35_wrong_numeric_contract_valid_crc",
+      "pc": 35,
+      "plane": 1,
+      "profile": 1,
+      "target": "qwen3-8b-hbm-single-chip"
+    },
+    {
+      "expected": {
+        "compare_output": false,
+        "failed": true,
+        "gqa_boundary": false,
+        "indices_checked": 0,
+        "moved_elements": 0,
+        "records_checked": 3,
+        "refusal_reason": 2,
+        "trap_class": 2,
+        "write_count": 0
+      },
+      "index_value": 16,
+      "mutation": "last byte of fourth descriptor flipped without CRC repair",
+      "name": "rom_pc32_output_record_late_crc_corrupt",
+      "pc": 32,
+      "plane": 0,
+      "profile": 0,
+      "target": "qwen3-8b-rom-single-chip"
+    },
+    {
+      "expected": {
+        "compare_output": false,
+        "failed": true,
+        "gqa_boundary": false,
+        "indices_checked": 1,
+        "moved_elements": 0,
+        "records_checked": 5,
+        "refusal_reason": 5,
+        "trap_class": 8,
+        "write_count": 0
+      },
+      "index_value": 17,
+      "mutation": "index equals active-row extent 17",
+      "name": "rom_pc32_out_of_active_context_index",
+      "pc": 32,
+      "plane": 0,
+      "profile": 0,
+      "target": "qwen3-8b-rom-single-chip"
+    }
+  ],
+  "claim_boundary": {
+    "all_active_plane_words_compared": true,
+    "architectural_timing": false,
+    "authentic_prior_context_kv": false,
+    "complete_layer": false,
+    "descriptor_crc_before_write": true,
+    "eos": false,
+    "exact_operator_tensor_view_numeric_records": true,
+    "exact_pc38_gqa_metadata_admitted": true,
+    "exact_rom_and_hbm_pc32_pc35_instruction_records": true,
+    "exact_upstream_key_from_pc29_rope": true,
+    "exact_upstream_value_from_pc17_projection": true,
+    "gqa_arithmetic": false,
+    "model_token_generation": false,
+    "row_16_replaced": true,
+    "tpot": false,
+    "unchanged_rows_preserved": true,
+    "verification_cycles_are_tpot": false
+  },
+  "gqa_boundary_case_count": 2,
+  "image_sha256": {
+    "cases.hex": "ee538b57415b2562b2dc741e45b50c46bd254bb98e3a1c9e31aa2ab4a98ccf65",
+    "instruction.hex": "75d5f3ecdec959cee90a9049c5c5f6a95c8460763759cc7b6a5786fd2c23900d",
+    "numeric.hex": "bea66168e390b8d8dd495e7e9669709caa21c40c08910c521ab3896252aa2df4",
+    "operator.hex": "f46f5fe00219f011164f635cff370c5d32c564ce8518485608ab4cd6c2fbcb8f",
+    "output.hex": "dea18c697ec2e245504281130f1db70ec62742d4815944a231332ed88bb2b4ae",
+    "source.hex": "28c7a2a90b9089184b6262281d89c2fb26574259d24471bc612411a8ebcf6482",
+    "view0.hex": "f2eb0b36f927ac4e1de5adc3afa85e1dcb6464553cf100ca91e27b980ea062bb",
+    "view1.hex": "070e1e581b50b166ea49a741c9dcb6faf4703a24c155878caade98abae021425",
+    "view2.hex": "3f6b0faee50d7830e83c5036a08350fea8e837efcb0f34d372f69b6334d26287",
+    "view3.hex": "339dee47e73d8beff87a81190ecf93ed37f0bd696c7356170634e12c7a6e87f6"
+  },
+  "negative_case_count": 6,
+  "plane_binding": {
+    "key": {
+      "expected_word_payload_sha256": "525b88b812a4f7f648478f2d750864397084354063a530588388e96d45888509",
+      "preserved_word_count": 16384,
+      "prior_word_payload_sha256": "bf6e51bbc909741b73ee4eeabddb61552ce05c6fcc89c425c51d9fb00a46547e",
+      "replaced_word_count": 1024
+    },
+    "value": {
+      "expected_word_payload_sha256": "92818e90d803733a2f0904f323ae645d61e1f24dafe81c8705e72abeab95253b",
+      "preserved_word_count": 16384,
+      "prior_word_payload_sha256": "4923caf000d7db3c419a1324cad303403fc0c3cc282fa65b6705ffa0892b1318",
+      "replaced_word_count": 1024
+    }
+  },
+  "positive_scatter_case_count": 4,
+  "profiles": {
+    "qwen3-8b-hbm-single-chip/pc32": {
+      "deployment": {
+        "admitted": true,
+        "capability": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+        "capability_digest": "fa70dd44a1b532a99d103968b31b743bbed324d002fbe0214c9541fb1687e23d",
+        "co_simulable_within_rtl_bounds": true,
+        "declared_max_retired_work": 24088,
+        "deployment_dir": "build/abi3/qwen3-8b-hbm-tokens",
+        "deployment_identity_evidence": {
+          "artifact": "results/abi3/hbm_qwen_deployment_certificate.json",
+          "artifact_sha256": "009e8a705851a8428b9aa39cff9464cb9b207a9faa81737abfee5a91dde79b16",
+          "case": "qwen3-hbm-single-chip"
+        },
+        "deployment_sha256": "0d7897457e14666fc057ea6223cc32e65c61e39bfe5b2ff675c3b5585fe2ce8e",
+        "descriptor_count": 215,
+        "descriptor_table_sha256": "98bb1b8f2c43f071bd4e04ea965bcb151aeabc7a30b56b5848c1afb4140a0589",
+        "entrypoint_count": 2,
+        "instruction_count": 74,
+        "key": "qwen3-8b-hbm-single-chip",
+        "model_id": "qwen3-8b",
+        "program_sha256": "260062c29551952f348a747f8d9d4f69db3e142671cd4f1a84fed894490f678b",
+        "reproduce": "make abi3-hbm-qwen-build",
+        "rtl_bound_demands": {
+          "A3_EVENT_COUNT": 27,
+          "A3_LOOP_DEPTH": 2,
+          "A3_STATE_SLOTS": 0,
+          "A3_WAIT_PRODUCERS": 3
+        },
+        "rtl_bound_overruns": [],
+        "state_descriptor_count": 0,
+        "target_id": "hbm-sram-abi3-single_chip",
+        "title": "Qwen3-8B HBM single chip",
+        "verifier_errors": []
+      },
+      "descriptor_sha256": {
+        "numeric": "ff6735f854a664f72d3767a9097aafaec1d752339c2b30f3730c6a35e26fe6fc",
+        "operator": "322680e008b7269c01560b94862327aeac1f4e96d146e82029ec0a039314281f",
+        "output": "501fe67331706bf5a9c68555d33a334228dadc71f33b9ba7afc7e2b8f132aed3",
+        "view0": "f2bae829449205def1c00f7d72d16ccc4565ec981377372badd24fccdf291126",
+        "view1": "a0439cc531f3459139361d5dba9d54fe2501d9cd9e5d2542168dcea53484a3b6"
+      },
+      "ids": {
+        "numeric": 113,
+        "operator": 114,
+        "output": 112,
+        "view0": 110,
+        "view1": 111,
+        "view2": 4294967295,
+        "view3": 4294967295
+      },
+      "instruction": {
+        "flags": 12,
+        "mnemonic": "DMA.SCATTER",
+        "sha256": "7cb81afa103ab48c37e40a12c934e01bee5d144f4af75f7410cb19ce7e83820b",
+        "source_operation_id": 11
+      },
+      "objects": {
+        "output": 38,
+        "view0": 15,
+        "view1": 21,
+        "view2": 4294967295,
+        "view3": 4294967295
+      },
+      "pc": 32,
+      "target": {
+        "key": "qwen3-8b-hbm-single-chip",
+        "profile": 1
+      }
+    },
+    "qwen3-8b-hbm-single-chip/pc35": {
+      "deployment": {
+        "admitted": true,
+        "capability": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+        "capability_digest": "fa70dd44a1b532a99d103968b31b743bbed324d002fbe0214c9541fb1687e23d",
+        "co_simulable_within_rtl_bounds": true,
+        "declared_max_retired_work": 24088,
+        "deployment_dir": "build/abi3/qwen3-8b-hbm-tokens",
+        "deployment_identity_evidence": {
+          "artifact": "results/abi3/hbm_qwen_deployment_certificate.json",
+          "artifact_sha256": "009e8a705851a8428b9aa39cff9464cb9b207a9faa81737abfee5a91dde79b16",
+          "case": "qwen3-hbm-single-chip"
+        },
+        "deployment_sha256": "0d7897457e14666fc057ea6223cc32e65c61e39bfe5b2ff675c3b5585fe2ce8e",
+        "descriptor_count": 215,
+        "descriptor_table_sha256": "98bb1b8f2c43f071bd4e04ea965bcb151aeabc7a30b56b5848c1afb4140a0589",
+        "entrypoint_count": 2,
+        "instruction_count": 74,
+        "key": "qwen3-8b-hbm-single-chip",
+        "model_id": "qwen3-8b",
+        "program_sha256": "260062c29551952f348a747f8d9d4f69db3e142671cd4f1a84fed894490f678b",
+        "reproduce": "make abi3-hbm-qwen-build",
+        "rtl_bound_demands": {
+          "A3_EVENT_COUNT": 27,
+          "A3_LOOP_DEPTH": 2,
+          "A3_STATE_SLOTS": 0,
+          "A3_WAIT_PRODUCERS": 3
+        },
+        "rtl_bound_overruns": [],
+        "state_descriptor_count": 0,
+        "target_id": "hbm-sram-abi3-single_chip",
+        "title": "Qwen3-8B HBM single chip",
+        "verifier_errors": []
+      },
+      "descriptor_sha256": {
+        "numeric": "ff6735f854a664f72d3767a9097aafaec1d752339c2b30f3730c6a35e26fe6fc",
+        "operator": "f7e9d31453a990098903dabd45e79f3556d74d1139b853dff4cb4c1e76bd12ac",
+        "output": "2642744f9f2718e10a8d14921125049fab6b6caa2797d5731fd7c7694783cbf9",
+        "view0": "ea3effa7449c67c9f3e727e2be047031f989344cef07e7b7a8574b5513586e5e",
+        "view1": "844dbc737e6054b12238782bb7f449d53c6ca537011251e414897d8a03ba0999"
+      },
+      "ids": {
+        "numeric": 113,
+        "operator": 120,
+        "output": 119,
+        "view0": 117,
+        "view1": 118,
+        "view2": 4294967295,
+        "view3": 4294967295
+      },
+      "instruction": {
+        "flags": 12,
+        "mnemonic": "DMA.SCATTER",
+        "sha256": "5af1e49dff1b471b88ded49d9b1c260f4806628b2795f9fad3ccbbb85d161642",
+        "source_operation_id": 12
+      },
+      "objects": {
+        "output": 38,
+        "view0": 15,
+        "view1": 22,
+        "view2": 4294967295,
+        "view3": 4294967295
+      },
+      "pc": 35,
+      "target": {
+        "key": "qwen3-8b-hbm-single-chip",
+        "profile": 1
+      }
+    },
+    "qwen3-8b-hbm-single-chip/pc38": {
+      "deployment": {
+        "admitted": true,
+        "capability": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+        "capability_digest": "fa70dd44a1b532a99d103968b31b743bbed324d002fbe0214c9541fb1687e23d",
+        "co_simulable_within_rtl_bounds": true,
+        "declared_max_retired_work": 24088,
+        "deployment_dir": "build/abi3/qwen3-8b-hbm-tokens",
+        "deployment_identity_evidence": {
+          "artifact": "results/abi3/hbm_qwen_deployment_certificate.json",
+          "artifact_sha256": "009e8a705851a8428b9aa39cff9464cb9b207a9faa81737abfee5a91dde79b16",
+          "case": "qwen3-hbm-single-chip"
+        },
+        "deployment_sha256": "0d7897457e14666fc057ea6223cc32e65c61e39bfe5b2ff675c3b5585fe2ce8e",
+        "descriptor_count": 215,
+        "descriptor_table_sha256": "98bb1b8f2c43f071bd4e04ea965bcb151aeabc7a30b56b5848c1afb4140a0589",
+        "entrypoint_count": 2,
+        "instruction_count": 74,
+        "key": "qwen3-8b-hbm-single-chip",
+        "model_id": "qwen3-8b",
+        "program_sha256": "260062c29551952f348a747f8d9d4f69db3e142671cd4f1a84fed894490f678b",
+        "reproduce": "make abi3-hbm-qwen-build",
+        "rtl_bound_demands": {
+          "A3_EVENT_COUNT": 27,
+          "A3_LOOP_DEPTH": 2,
+          "A3_STATE_SLOTS": 0,
+          "A3_WAIT_PRODUCERS": 3
+        },
+        "rtl_bound_overruns": [],
+        "state_descriptor_count": 0,
+        "target_id": "hbm-sram-abi3-single_chip",
+        "title": "Qwen3-8B HBM single chip",
+        "verifier_errors": []
+      },
+      "descriptor_sha256": {
+        "numeric": "5b1929862aa9f5ad6b9b66d555380ebe127c4fb6cdc62a03c745563cf2f52275",
+        "operator": "0e182b1b47bf520a1fcb03164964689e99cb988fbff67080f6b8cf61c564b071",
+        "output": "90e96f6384732bbeb5867e42a4c648c48cca1fc074607853f9e99085a19314c8",
+        "view0": "217d3ee056da3e07876602d5c80d2821c7e224d22b8428cbb810331f4c709942",
+        "view1": "f4da877e9e3cf6353ed8068ea0984505e0bae6e03d5fade424e3ff29de0d8ce8",
+        "view2": "7f93d838cf08c088f98ceb2d3c5f86100e2c5ad4cf33df5b4d5e36e65fe37a6a",
+        "view3": "8a539f70bcb49a964eae9fe56dde6bf8289abfb8383d47cf4cfd5861f0c3cea4"
+      },
+      "ids": {
+        "numeric": 129,
+        "operator": 131,
+        "output": 128,
+        "view0": 124,
+        "view1": 125,
+        "view2": 126,
+        "view3": 127
+      },
+      "instruction": {
+        "flags": 12,
+        "mnemonic": "ATTENTION.GQA",
+        "sha256": "b6ce3d64c2b1089419c476b9956d6d96a54f756f2c14f7e0d78cf162fa6a17a5",
+        "source_operation_id": 13
+      },
+      "objects": {
+        "output": 19,
+        "view0": 20,
+        "view1": 38,
+        "view2": 38,
+        "view3": 15
+      },
+      "pc": 38,
+      "target": {
+        "key": "qwen3-8b-hbm-single-chip",
+        "profile": 1
+      }
+    },
+    "qwen3-8b-rom-single-chip/pc32": {
+      "deployment": {
+        "admitted": true,
+        "capability": "configs/hardware/abi3_capability/rom_qwen3.json",
+        "capability_digest": "5b5770fa766cd89d7a236a62722ef33d1db9f87be7403a8f8c55fc9ec8c8458e",
+        "co_simulable_within_rtl_bounds": true,
+        "declared_max_retired_work": 24088,
+        "deployment_dir": "build/abi3/qwen3-8b-rom",
+        "deployment_identity_evidence": {
+          "artifact": "results/abi3/rom_schedule_checks.json",
+          "artifact_sha256": "ae930fee14e53ac86668289266f8b7838f367b2ceb99c707b4a21bf939218044",
+          "case": "qwen3-rom-single-chip"
+        },
+        "deployment_sha256": "f475fbaf521df53a62a5f26cd89da5e0bf82ff8054ece1df0fe00b3fd127809d",
+        "descriptor_count": 227,
+        "descriptor_table_sha256": "4cba98828279c45c1c59823c46166b3aaf480c40306d989e03ad760453985914",
+        "entrypoint_count": 2,
+        "instruction_count": 74,
+        "key": "qwen3-8b-rom-single-chip",
+        "model_id": "qwen3-8b",
+        "program_sha256": "d65c3b147acf940e01ad70a5305753c332da1190a66ace39eb971c58d3ff46ab",
+        "reproduce": "make abi3-rom-qwen-build",
+        "rtl_bound_demands": {
+          "A3_EVENT_COUNT": 27,
+          "A3_LOOP_DEPTH": 2,
+          "A3_STATE_SLOTS": 0,
+          "A3_WAIT_PRODUCERS": 3
+        },
+        "rtl_bound_overruns": [],
+        "state_descriptor_count": 0,
+        "target_id": "qwen3-8b-rom-single-chip",
+        "title": "Qwen3-8B ROM single chip",
+        "verifier_errors": []
+      },
+      "descriptor_sha256": {
+        "numeric": "8decd00f722c6ec05c10621837d9c78c82c42c9b75e60b7b6ec6e1ddfdde7fc0",
+        "operator": "ae9096acf07c53d3404bfeecec995c34b387348a92dc7ca4313068fa9b777892",
+        "output": "dab34a72749cf4f37ecc9a512fd91d0492f23ce56aa994f93cb4e5f63ad4fe1c",
+        "view0": "94d01e0178444b67c9feb0db4beec2ac2fcb5b9c161bf83a14df1b5aaa38b3d9",
+        "view1": "5dda68ea2adc659352032dbcbedff14595c7dafdcf625acc9b99c8e9d35f6df6"
+      },
+      "ids": {
+        "numeric": 109,
+        "operator": 111,
+        "output": 108,
+        "view0": 106,
+        "view1": 107,
+        "view2": 4294967295,
+        "view3": 4294967295
+      },
+      "instruction": {
+        "flags": 12,
+        "mnemonic": "DMA.SCATTER",
+        "sha256": "052ea73038e6ddfd2fa3df00ec4233d7a69d0f84dc613871aa35b4c8e8a8df3a",
+        "source_operation_id": 11
+      },
+      "objects": {
+        "output": 17,
+        "view0": 23,
+        "view1": 64,
+        "view2": 4294967295,
+        "view3": 4294967295
+      },
+      "pc": 32,
+      "target": {
+        "key": "qwen3-8b-rom-single-chip",
+        "profile": 0
+      }
+    },
+    "qwen3-8b-rom-single-chip/pc35": {
+      "deployment": {
+        "admitted": true,
+        "capability": "configs/hardware/abi3_capability/rom_qwen3.json",
+        "capability_digest": "5b5770fa766cd89d7a236a62722ef33d1db9f87be7403a8f8c55fc9ec8c8458e",
+        "co_simulable_within_rtl_bounds": true,
+        "declared_max_retired_work": 24088,
+        "deployment_dir": "build/abi3/qwen3-8b-rom",
+        "deployment_identity_evidence": {
+          "artifact": "results/abi3/rom_schedule_checks.json",
+          "artifact_sha256": "ae930fee14e53ac86668289266f8b7838f367b2ceb99c707b4a21bf939218044",
+          "case": "qwen3-rom-single-chip"
+        },
+        "deployment_sha256": "f475fbaf521df53a62a5f26cd89da5e0bf82ff8054ece1df0fe00b3fd127809d",
+        "descriptor_count": 227,
+        "descriptor_table_sha256": "4cba98828279c45c1c59823c46166b3aaf480c40306d989e03ad760453985914",
+        "entrypoint_count": 2,
+        "instruction_count": 74,
+        "key": "qwen3-8b-rom-single-chip",
+        "model_id": "qwen3-8b",
+        "program_sha256": "d65c3b147acf940e01ad70a5305753c332da1190a66ace39eb971c58d3ff46ab",
+        "reproduce": "make abi3-rom-qwen-build",
+        "rtl_bound_demands": {
+          "A3_EVENT_COUNT": 27,
+          "A3_LOOP_DEPTH": 2,
+          "A3_STATE_SLOTS": 0,
+          "A3_WAIT_PRODUCERS": 3
+        },
+        "rtl_bound_overruns": [],
+        "state_descriptor_count": 0,
+        "target_id": "qwen3-8b-rom-single-chip",
+        "title": "Qwen3-8B ROM single chip",
+        "verifier_errors": []
+      },
+      "descriptor_sha256": {
+        "numeric": "8decd00f722c6ec05c10621837d9c78c82c42c9b75e60b7b6ec6e1ddfdde7fc0",
+        "operator": "9188698aaccb2d725180cd3978c51c203d6471da805e1a29c0e9b2a63d3c00fc",
+        "output": "0fbd48777d4a7b70250c679c62c1bcc516dfb0f6cc6f175be5eca8c641587478",
+        "view0": "d997b2df4650184d8e6e19f9f1f6a26d63cc4da3578840fefb77776a04973258",
+        "view1": "5897b99d396f797788e9f931886b670dc740ab660f30e0c843966b09ff3d6909"
+      },
+      "ids": {
+        "numeric": 109,
+        "operator": 118,
+        "output": 116,
+        "view0": 114,
+        "view1": 115,
+        "view2": 4294967295,
+        "view3": 4294967295
+      },
+      "instruction": {
+        "flags": 12,
+        "mnemonic": "DMA.SCATTER",
+        "sha256": "149eeebf71cff98fe0f3682c037f5c87fb81b1bf77858558951afa100ab1cb2a",
+        "source_operation_id": 12
+      },
+      "objects": {
+        "output": 17,
+        "view0": 23,
+        "view1": 71,
+        "view2": 4294967295,
+        "view3": 4294967295
+      },
+      "pc": 35,
+      "target": {
+        "key": "qwen3-8b-rom-single-chip",
+        "profile": 0
+      }
+    },
+    "qwen3-8b-rom-single-chip/pc38": {
+      "deployment": {
+        "admitted": true,
+        "capability": "configs/hardware/abi3_capability/rom_qwen3.json",
+        "capability_digest": "5b5770fa766cd89d7a236a62722ef33d1db9f87be7403a8f8c55fc9ec8c8458e",
+        "co_simulable_within_rtl_bounds": true,
+        "declared_max_retired_work": 24088,
+        "deployment_dir": "build/abi3/qwen3-8b-rom",
+        "deployment_identity_evidence": {
+          "artifact": "results/abi3/rom_schedule_checks.json",
+          "artifact_sha256": "ae930fee14e53ac86668289266f8b7838f367b2ceb99c707b4a21bf939218044",
+          "case": "qwen3-rom-single-chip"
+        },
+        "deployment_sha256": "f475fbaf521df53a62a5f26cd89da5e0bf82ff8054ece1df0fe00b3fd127809d",
+        "descriptor_count": 227,
+        "descriptor_table_sha256": "4cba98828279c45c1c59823c46166b3aaf480c40306d989e03ad760453985914",
+        "entrypoint_count": 2,
+        "instruction_count": 74,
+        "key": "qwen3-8b-rom-single-chip",
+        "model_id": "qwen3-8b",
+        "program_sha256": "d65c3b147acf940e01ad70a5305753c332da1190a66ace39eb971c58d3ff46ab",
+        "reproduce": "make abi3-rom-qwen-build",
+        "rtl_bound_demands": {
+          "A3_EVENT_COUNT": 27,
+          "A3_LOOP_DEPTH": 2,
+          "A3_STATE_SLOTS": 0,
+          "A3_WAIT_PRODUCERS": 3
+        },
+        "rtl_bound_overruns": [],
+        "state_descriptor_count": 0,
+        "target_id": "qwen3-8b-rom-single-chip",
+        "title": "Qwen3-8B ROM single chip",
+        "verifier_errors": []
+      },
+      "descriptor_sha256": {
+        "numeric": "5b1929862aa9f5ad6b9b66d555380ebe127c4fb6cdc62a03c745563cf2f52275",
+        "operator": "e228c2e35b125193b54f48048522387d3aedb7011b5be64ae478a33c89aae31b",
+        "output": "556b10cf608aba7a1a236865498caf09d934287b3936a24e43b598bef41c7d50",
+        "view0": "413906a9e5765c6b3831f8a6ead8342eeac0a4dd0d6c5e29c66ea0b9d04ac2c4",
+        "view1": "dab34a72749cf4f37ecc9a512fd91d0492f23ce56aa994f93cb4e5f63ad4fe1c",
+        "view2": "0fbd48777d4a7b70250c679c62c1bcc516dfb0f6cc6f175be5eca8c641587478",
+        "view3": "acf06c3b4069aaf34b6c356a1ecd575212e74c3259457a2ee62c49599cca2c28"
+      },
+      "ids": {
+        "numeric": 124,
+        "operator": 127,
+        "output": 123,
+        "view0": 121,
+        "view1": 108,
+        "view2": 116,
+        "view3": 122
+      },
+      "instruction": {
+        "flags": 12,
+        "mnemonic": "ATTENTION.GQA",
+        "sha256": "e0e49261767ac46c0586a4feadda550deb00f72332a5024bb90ff95efd5b1583",
+        "source_operation_id": 13
+      },
+      "objects": {
+        "output": 45,
+        "view0": 55,
+        "view1": 17,
+        "view2": 17,
+        "view3": 23
+      },
+      "pc": 38,
+      "target": {
+        "key": "qwen3-8b-rom-single-chip",
+        "profile": 0
+      }
+    }
+  },
+  "request": {
+    "active_rows": 17,
+    "context_length": 17,
+    "head_width": 128,
+    "kv_heads": 8,
+    "phase": "decode",
+    "plane_words": 1024,
+    "position_start": 16
+  },
+  "schema": "opentallas.rtl.a3_qwen_kv_scatter_vectors.v1",
+  "source_binding": {
+    "key": {
+      "bf16_payload_sha256": "b41de05c0a7f1f495ded2295c22781f4aa345136d2c572248469c422f266c406",
+      "producer_pc": 29,
+      "word_count": 1024,
+      "word_payload_sha256": "33c6ee79b782b709bb6ead0342e265cf1d9694a0734d7008c735227524862862"
+    },
+    "value": {
+      "bf16_payload_sha256": "b07011da7a3d58dcccceb91e596ceebc2084ab3c2fc9d0b6a9a8704e91ef8dc5",
+      "producer_pc": 17,
+      "word_count": 1024,
+      "word_payload_sha256": "bc68d29a1ea0775432087a7faff1303774092dba465483ca95178ed90d4a8ac7"
+    }
+  },
+  "upstream_dependency": {
+    "campaign": "results/rtl/abi3_shipped_prefix_campaign.json",
+    "campaign_sha256": "6888ae7dea7e7f2bc6275619d5811d31fd46fa77e816b05ea21c2e8dbc4422aa",
+    "campaign_status": "pass",
+    "expected_image": "testdata/compiler/abi3_shipped_prefix/p3_expect.hex",
+    "expected_image_sha256": "1cadfc3371d198704fc9f245e7d8e27b72b38e906eafa0cdbc576f1eb2f98327",
+    "integrated_replay_passed": true,
+    "vector_manifest": "testdata/compiler/abi3_shipped_prefix/abi3_shipped_prefix_vectors.json",
+    "vector_manifest_sha256": "cd72fa9e711340095da1f8698abc7a810d2a82750d6bde43ec0144257a53b09d"
+  }
+}
