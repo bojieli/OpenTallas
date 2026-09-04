@@ -400,47 +400,16 @@ abi3-tokens: abi3-tokens-qwen-rom abi3-tokens-qwen-hbm abi3-tokens-deepseek
 W10_ENV = env PYTHONPATH=. OPENTALLAS_ABI3_BACKEND=numpy OMP_NUM_THREADS=8 OPENBLAS_NUM_THREADS=8 MKL_NUM_THREADS=8 NUMEXPR_NUM_THREADS=8 VECLIB_MAXIMUM_THREADS=8
 
 abi3-w10-natural-oracle:
-	PYTHONPATH=. python3 tools/run_qwen3_reference_oracle.py \
-	  --gate-1-production \
-	  --checkpoint-lock results/tensor_accelerator/qwen3_full_model_physical/source/checkpoint.lock.json \
-	  --exact-8k-construction configs/abi3/workloads/qwen3_exact_8k_chat_v1.json \
-	  --output results/abi3/qwen3_reference_oracle_exact_8k_chat.json
+	PYTHONPATH=. python3 tools/run_qwen3_gate1_attempt.py oracle
 
 abi3-w10-natural-hbm-a:
-	$(W10_ENV) /usr/bin/time -v python3 tools/run_accelerator_tokens.py \
-	  --kernel-ir build/ir-v3/qwen3-8b/kernel_ir.v3.json \
-	  --backend hbm_sram \
-	  --capability configs/hardware/abi3_capability/hbm_sram_single_chip.json \
-	  --workload build/workloads/qwen3-8b/TA-QW-8K-1.json \
-	  --reference results/abi3/qwen3_reference_oracle_exact_8k_chat.json \
-	  --checkpoint $(QWEN3_SNAPSHOT) \
-	  --publish build/abi3/qwen3-8b-hbm-w10-natural-a \
-	  --max-new-tokens 256 --terminal-contract exact_eos_or_cap \
-	  --output results/abi3/w10/qwen3_8b_hbm_natural_a.json
+	PYTHONPATH=. python3 tools/run_qwen3_gate1_attempt.py hbm-a
 
 abi3-w10-natural-hbm-b:
-	$(W10_ENV) /usr/bin/time -v python3 tools/run_accelerator_tokens.py \
-	  --kernel-ir build/ir-v3/qwen3-8b/kernel_ir.v3.json \
-	  --backend hbm_sram \
-	  --capability configs/hardware/abi3_capability/hbm_sram_single_chip.json \
-	  --workload build/workloads/qwen3-8b/TA-QW-8K-1.json \
-	  --reference results/abi3/qwen3_reference_oracle_exact_8k_chat.json \
-	  --checkpoint $(QWEN3_SNAPSHOT) \
-	  --publish build/abi3/qwen3-8b-hbm-w10-natural-b \
-	  --max-new-tokens 256 --terminal-contract exact_eos_or_cap \
-	  --output results/abi3/w10/qwen3_8b_hbm_natural_b.json
+	PYTHONPATH=. python3 tools/run_qwen3_gate1_attempt.py hbm-b
 
 abi3-w10-natural-rom:
-	$(W10_ENV) /usr/bin/time -v python3 tools/run_accelerator_tokens.py \
-	  --kernel-ir build/ir-v3/qwen3-8b/kernel_ir.v3.json \
-	  --backend rom_qwen3 \
-	  --capability configs/hardware/abi3_capability/rom_qwen3.json \
-	  --workload build/workloads/qwen3-8b/TA-QW-8K-1.json \
-	  --reference results/abi3/qwen3_reference_oracle_exact_8k_chat.json \
-	  --checkpoint $(QWEN3_SNAPSHOT) \
-	  --publish build/abi3/qwen3-8b-rom-w10-natural \
-	  --max-new-tokens 256 --terminal-contract exact_eos_or_cap \
-	  --output results/abi3/w10/qwen3_8b_rom_natural.json
+	PYTHONPATH=. python3 tools/run_qwen3_gate1_attempt.py rom
 
 abi3-w10-natural-check:
 	PYTHONPATH=. python3 tools/check_qwen3_w10_acceptance.py natural \
