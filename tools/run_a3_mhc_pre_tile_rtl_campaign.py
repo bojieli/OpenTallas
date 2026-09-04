@@ -362,7 +362,8 @@ def campaign(output: Path) -> dict[str, Any]:
             "status": "pass",
             "scope": {
                 "exact_rom_pc15_descriptor_381_admission": True,
-                "exact_hbm_pc14_descriptor_546_admission": True,
+                "exact_hbm_pc14_descriptor_545_admission": True,
+                "authenticated_prior_hbm_descriptor_546_semantic_equivalence": True,
                 "exact_projection_coordinate_coverage": True,
                 "exact_output_coordinate_coverage": True,
                 "lossless_ready_valid_backpressure": True,

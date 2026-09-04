@@ -6,7 +6,7 @@
 // two released DeepSeek-V4-Flash HC_PRE sites:
 //
 //   * ROM wafer decode PC 15, OPERATOR descriptor 381; and
-//   * HBM/SRAM cluster PC 14, OPERATOR descriptor 546.
+//   * HBM/SRAM cluster PC 14, OPERATOR descriptor 545.
 //
 // The 128-word semantic configuration is supplied only after the ordinary ABI
 // record decoder, CRC checker, permission checker, wait scoreboard and view
@@ -134,8 +134,8 @@ module ot_a3_vector_mhc_pre_tile_scheduler #(
     reg instruction_hbm;
     always @* instruction_hbm =
         (cfg(config_words, 2) == 32'd14) &&
-        (cfg(config_words, 4) == 32'd546) &&
-        (cfg(config_words, 5) == 32'd547) &&
+        (cfg(config_words, 4) == 32'd545) &&
+        (cfg(config_words, 5) == 32'd546) &&
         (cfg(config_words, 7) == 32'd4);
     wire instruction_supported =
         profile_known && instruction_common &&
@@ -172,15 +172,15 @@ module ot_a3_vector_mhc_pre_tile_scheduler #(
         (cfg(config_words, 23) == 32'd377);
     reg operator_hbm;
     always @* operator_hbm =
-        (cfg(config_words, 15) == 32'd536) &&
-        (cfg(config_words, 16) == 32'd544) &&
-        (cfg(config_words, 17) == 32'd545) &&
-        (cfg(config_words, 18) == 32'd538) &&
-        (cfg(config_words, 19) == 32'd539) &&
-        (cfg(config_words, 20) == 32'd540) &&
-        (cfg(config_words, 21) == 32'd541) &&
-        (cfg(config_words, 22) == 32'd542) &&
-        (cfg(config_words, 23) == 32'd543);
+        (cfg(config_words, 15) == 32'd535) &&
+        (cfg(config_words, 16) == 32'd543) &&
+        (cfg(config_words, 17) == 32'd544) &&
+        (cfg(config_words, 18) == 32'd537) &&
+        (cfg(config_words, 19) == 32'd538) &&
+        (cfg(config_words, 20) == 32'd539) &&
+        (cfg(config_words, 21) == 32'd540) &&
+        (cfg(config_words, 22) == 32'd541) &&
+        (cfg(config_words, 23) == 32'd542);
     wire operator_supported =
         operator_common &&
         ((profile == PROFILE_ROM && operator_rom) ||

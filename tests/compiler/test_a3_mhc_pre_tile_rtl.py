@@ -38,11 +38,12 @@ def test_profiles_are_exact_shipped_instruction_and_descriptor_sites() -> None:
     rom = manifest["profiles"]["deepseek-v4-flash-rom-wafer"]
     hbm = manifest["profiles"]["deepseek-v4-flash-hbm-cluster"]
     assert (rom["program_counter"], rom["operator_descriptor_id"]) == (15, 381)
-    assert (hbm["program_counter"], hbm["operator_descriptor_id"]) == (14, 546)
+    assert (hbm["program_counter"], hbm["operator_descriptor_id"]) == (14, 545)
+    assert hbm["authenticated_prior_descriptor_id"] == 546
     assert rom["profile"] == vectors.PROFILE_ROM
     assert hbm["profile"] == vectors.PROFILE_HBM
     assert hbm["instruction_sha256"] == (
-        "5208e38a19d34c5a5f408183576e25a43f17e58ddd0fab23f2ee704e13585468"
+        "1495e79701542b0ef97e414465a67b323fa24c8d793a58b176dd3ee2d164c8ec"
     )
     assert len(rom["selected_descriptors"]) == 11
     assert len(hbm["selected_descriptors"]) == 11
@@ -157,7 +158,8 @@ def test_retained_dual_simulator_campaign_is_source_current() -> None:
     assert result["active_reset"] == {"accepted": 37, "stalls": 9}
     scope = result["scope"]
     assert scope["exact_rom_pc15_descriptor_381_admission"]
-    assert scope["exact_hbm_pc14_descriptor_546_admission"]
+    assert scope["exact_hbm_pc14_descriptor_545_admission"]
+    assert scope["authenticated_prior_hbm_descriptor_546_semantic_equivalence"]
     assert scope["functional_t512_golden_digest_bound"]
     assert scope["simulator_cycles_are_verification_cost_only"]
     assert scope["end_to_end_token_correctness"] is False
