@@ -7,6 +7,12 @@
   "shipped_capability_sha256": "1eb2e92dac1d9fb8937b7724953d2f65993bd56e342e9058569442eb61d74bad",
   "descriptor_id": 546,
   "program_counter": 14,
+  "progress_evidence": {
+    "transcendental_campaign": "results/rtl/a3_hc_transcendental_campaign.json",
+    "transcendental_status": "standalone reusable exp/sigmoid RTL passes 4200 exact-rational cases on Icarus and pinned Verilator; blocker remains open until the complete checkpoint-reachable corpus and PC14 integration pass",
+    "numeric_campaign": "results/rtl/a3_hc_numeric_campaign.json",
+    "numeric_status": "standalone divider and post-softmax Sinkhorn tail pass; full stable-softmax front end and all 8192 checkpoint combination outputs remain open"
+  },
   "first_issue_geometry": {
     "hidden_bf16": [512, 4, 4096],
     "projection_fp32": [24, 16384],

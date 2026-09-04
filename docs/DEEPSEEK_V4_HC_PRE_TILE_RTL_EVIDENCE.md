@@ -5,6 +5,7 @@
 - **ROM site:** wafer decode PC 15, `VECTOR.MHC`, descriptor 381
 - **HBM site:** 32-node cluster PC 14, `VECTOR.MHC`, descriptor 546
 - **Campaign:** `results/rtl/a3_mhc_pre_tile_campaign.json`
+- **Arithmetic continuation:** `docs/DEEPSEEK_V4_HC_PRE_ARITHMETIC_RTL_EVIDENCE.md`
 - **Status:** passing prerequisite evidence; neither release gate is closed
 
 ## Outcome and acceptance position
@@ -96,9 +97,12 @@ pytest -q tests/compiler/test_a3_mhc_pre_tile_rtl.py
 
 ## Required continuation
 
-Gate 1 still requires correctly rounded RMS/projection, sigmoid/exponential,
-stable-softmax, the already-qualified Sinkhorn tail, and exact weight and
-combination commits to be integrated behind this scheduler. That complete
+Gate 1 still requires correctly rounded RMS/projection, stable-softmax, and
+exact weight and combination commits to be integrated behind this scheduler.
+A standalone certifying sigmoid/nonpositive-exponential block now passes its
+focused dual-simulator campaign, and the Sinkhorn tail was already qualified;
+neither is yet wired to this scheduler, and the complete checkpoint-reachable
+transcendental argument corpus remains open. That complete
 operator must reproduce all authenticated T=512 output words from computation,
 then be connected at ROM PC 15 and HBM PC 14. The RTL path must subsequently
 continue through all remaining model operators, communication, logits, argmax,
