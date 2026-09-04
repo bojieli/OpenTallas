@@ -81,8 +81,11 @@ QWEN_CHECKPOINT_LOCK = (
     / "results/tensor_accelerator/qwen3_full_model_physical/source/"
     "checkpoint.lock.json"
 )
+#: Re-pinned 2026-09-04 with tools/run_qwen3_reference_oracle.py when
+#: TA-QW-EOS-1 joined the index; previously
+#: ce7ec985a65017e692013f056828adf16695d6ecb7747eb90970cd64978c2ee9.
 NATURAL_WORKLOAD_INDEX_SHA256 = (
-    "ce7ec985a65017e692013f056828adf16695d6ecb7747eb90970cd64978c2ee9"
+    "d92535c9845245221d788407afca98c1d3724184acb0d0e5e7b23a29e25138a3"
 )
 NATURAL_WORKLOAD_SHA256 = (
     "4bd1ca5cad91a6006383c4470a16fd803e18bbfad9ec19fe8ed01373da118217"

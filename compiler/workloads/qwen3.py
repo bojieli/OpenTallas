@@ -188,13 +188,29 @@ def exact_token_window(
     return window, ids
 
 
+#: The G1 governed workload of docs/OPENTALLAS_REDESIGN_PLAN.md: the smallest
+#: chat prompt whose greedy gold ends in the official EOS.  Chosen by a search
+#: over eight tiny prompts on the pinned Qwen3-8B on 2026-09-04: sixteen prompt
+#: tokens under the chat template, three generated (``OK.<|im_end|>``), nineteen
+#: passes in all.  Every pass is about 1.5e7 cycles on the 512-lane integration
+#: top, so this is the difference between a 25-minute Verilator run and a
+#: multi-day one (docs/CHIP_ARCHITECTURE_DESIGN.md section 11.5).
+EOS_QUESTION = "Reply with OK."
+EOS_MAX_NEW_TOKENS = 16
+EOS_CHECKS = (
+    "the first generated token decodes to OK",
+    "the last generated token is an official EOS id (151645 or 151643)",
+    "generation stops before EOS_MAX_NEW_TOKENS; a cap stop is a failed gold",
+)
+
+
 def build_workloads(
     tokenizer,
     *,
     exact_8k_workload: Workload,
     max_new_tokens: int = 256,
 ) -> dict[str, Workload]:
-    """Build all four pinned Qwen workloads against a loaded tokenizer.
+    """Build all five pinned Qwen workloads against a loaded tokenizer.
 
     ``tokenizer`` must expose ``apply_chat_template`` and ``encode`` compatible
     with the pinned Qwen3-8B tokenizer.
@@ -217,6 +233,25 @@ def build_workloads(
         token_ids=tuple(encode(chat_text)),
         max_new_tokens=max_new_tokens,
         metadata={"checks": CHAT_CHECKS, "enable_thinking": False},
+    )
+
+    eos_text = tokenizer.apply_chat_template(
+        [{"role": "user", "content": EOS_QUESTION}],
+        tokenize=False,
+        add_generation_prompt=True,
+        enable_thinking=False,
+    )
+    eos = Workload(
+        workload_id="TA-QW-EOS-1",
+        kind="chat",
+        description=(
+            "G1 governed workload: the smallest chat prompt whose greedy gold "
+            "ends in the official EOS. Sixteen prompt tokens, three generated."
+        ),
+        rendered_text=eos_text,
+        token_ids=tuple(encode(eos_text)),
+        max_new_tokens=EOS_MAX_NEW_TOKENS,
+        metadata={"checks": EOS_CHECKS, "enable_thinking": False, "gate": "G1"},
     )
 
     agent_text = tokenizer.apply_chat_template(
@@ -272,5 +307,5 @@ def build_workloads(
     )
 
     return {
-        w.workload_id: w for w in (chat, agent, exact_8k_workload, stress)
+        w.workload_id: w for w in (chat, eos, agent, exact_8k_workload, stress)
     }

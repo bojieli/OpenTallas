@@ -1334,7 +1334,7 @@ The critical path is D1–D5 → G1 → G2 → G3, and nothing above L0 exists u
 5. **Field tree versus mesh on the wafer** — the tree's 6-level count is `assumed`; without it the wafer stays at 3,760–4,250 tok/s.
 6. **Pro: four stitched wafers versus the 170-die array** — neither is manufacturable by anything in this repository.
 7. **Qwen x5 is compute-bound** — accept ~3,500 tok/s, move to x6-romfill, or restore weight binding by giving up KV SRAM (HBMKV x5).
-8. **The G1 governed workload** — its prompt, gold and OFFICIAL_EOS ending must be registered before L2.
+8. **The G1 governed workload** — its prompt, gold and OFFICIAL_EOS ending must be registered before L2. **Settled 2026-09-04:** `TA-QW-EOS-1` (`compiler/workloads/qwen3.py`), the user turn "Reply with OK." under the official chat template with thinking disabled: 16 prompt tokens, gold `[3925, 13, 151645]` (`OK`, `.`, `<|im_end|>`) by greedy lowest-id argmax on the pinned Qwen3-8B, 19 passes in all, stop reason `eos` (`results/abi3/qwen3_reference_oracle_eos.json`, CPU bfloat16). Chosen by a search over eight tiny prompts as the shortest EOS-terminated gold; "Name one color." ties at 19 and was not chosen because its check is less unambiguous than "the first token decodes to OK".
 9. **`hbm.channels` in the C1 allowlist** — keep with the role note or drop after regenerating the pair at equal device count.
 10. **Transcendental unit count** — after G2a-V.
 
