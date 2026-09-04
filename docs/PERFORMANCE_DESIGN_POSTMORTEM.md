@@ -172,6 +172,38 @@ Not one of those polices speed. The result is a program that can prove, to a ver
 standard, that a machine four orders of magnitude too slow computes exactly the right
 tokens.
 
+### 3.7 The simulation was in the wrong regime, so it could not have validated anything
+
+This was found after the rest of this document was written, and it is the sharpest of the
+seven.
+
+The analytical roofline publishes, for Qwen3-8B at batch 1 and context 8,192 at equal
+silicon area, a ROM design at 3,911.3 per-user tokens/s against a GPU design at 693.6, a
+ratio of 5.639x. The cycle model on the same model and the same token gives 0.262 and
+0.225, a ratio of **1.16x**.
+
+The magnitudes being wrong is the subject of this post-mortem. The ratio being wrong is
+worse, and it has a separate cause. The analytical model finds the GPU **weight-read
+bound**, spending 1,051 us of a 1,322 us budget fetching weights, and that fact is the
+entire reason a mask-ROM design wins: it is the term ROM removes. The cycle model finds
+**both** targets compute-bound, because a 0.346 work/lane/cycle fabric is so slow that
+memory never becomes the limit on either side.
+
+A simulation whose binding constraint differs from the model it is validating cannot
+validate it at any speed. The one quantity the project exists to measure — what happens
+when weights stop coming from DRAM — was structurally invisible in the simulator, and no
+amount of scheduling work or row folding would have revealed it. The two models were not
+disagreeing about a number. They were describing different machines in different regimes,
+and nothing in the program compared them until it was asked directly.
+
+**The corollary is the design rule.** A cycle-model machine must not be specified by hand
+alongside an analytical model; it must be *derived from it*, so that the two share a
+machine by construction and the simulation's job is to add what the roofline omits —
+scheduling, dependencies, contention — rather than to describe a different computer. The
+derivation is arithmetic, not judgement: the analytical ROM point's compute area of
+726.6 mm2, times the published N5 density of 6.799e11 ops/s/mm2, times the 0.55 efficiency
+derate, yields 55.70 us against its own published compute term of 55.703 us.
+
 ## 4. What the comparison inherited
 
 The project exists to compare a mask-ROM design against an HBM design. On the Qwen pair
@@ -250,6 +282,17 @@ do when they do not validate, it degenerated into producing numbers.
 **R8. When the tool says the result is not a claim, that is the beginning of the
 analysis.** A disclaimer explains what a number cannot support. It does not excuse anyone
 from reading what the number plainly says.
+
+**R9. Two models of one machine must share the machine by construction.** Where an
+analytical model and a simulator both exist, the simulator's machine is derived from the
+analytical design point mechanically, never specified alongside it. Otherwise they drift
+into different regimes and each looks internally consistent while the pair means nothing.
+
+**R10. Check the binding constraint before comparing the number.** Two models that
+disagree about which term is binding are not measuring the same thing, and reconciling
+their outputs is meaningless until they agree about what limits the machine. Publish the
+binding constraint next to every performance figure so a mismatch is visible at a glance
+instead of after four orders of magnitude.
 
 ---
 
