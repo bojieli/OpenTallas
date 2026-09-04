@@ -49,9 +49,12 @@
 // (gate D5); the other lanes complete their own columns.  The block reports
 // the class and detail of the lowest-numbered faulting lane, that lane's
 // index, and every lane's class and detail beside them.  A column count that
-// is not a multiple of LANES is refused before any lane starts, with the
-// block's own detail (DETAIL_BLOCK_COLUMNS), so it is told apart from every
-// lane-level refusal.
+// is not a multiple of LANES, or a group whose weight codes do not fit the
+// 2 B per lane the stream carries, is refused before any lane starts, with
+// the block's own detail (DETAIL_BLOCK_COLUMNS, DETAIL_BLOCK_STREAM_WIDTH),
+// so it is told apart from every lane-level refusal; a refused operation
+// reports zero counters and no lane class (the lanes, never started, still
+// hold the previous operation's values and are gated off).
 //
 // Package constants are referred to by scope, never by wildcard import (OI-43).
 // ---------------------------------------------------------------------------
@@ -162,7 +165,9 @@ module ot_a3_lq8 #(
     wire [LANES-1:0]    l_a_en, l_b_en, l_s_en, l_t_en;
     wire [32*LANES-1:0] l_a_addr, l_b_addr, l_s_addr, l_t_addr;
     wire [32*LANES-1:0] l_out_count, l_saturation_count, l_mac_count, l_product_count;
+    wire [8*LANES-1:0]  l_error_code, l_error_detail;
     reg                 lane_start;
+    reg                 lanes_started;   // the last accepted start reached the lanes
     reg  [31:0]         w_ptr;
     reg  [LANES-1:0]    finished;
     reg                 state;
@@ -193,8 +198,8 @@ module ot_a3_lq8 #(
                 .out_we(out_we[gi]), .out_addr(out_addr[32*gi +: 32]),
                 .out_data(out_data[32*gi +: 32]), .out_acc(out_acc[32*gi +: 32]),
                 .busy(lane_busy[gi]), .done(lane_done[gi]),
-                .error_code(lane_error_code[8*gi +: 8]),
-                .error_detail(lane_error_detail[8*gi +: 8]),
+                .error_code(l_error_code[8*gi +: 8]),
+                .error_detail(l_error_detail[8*gi +: 8]),
                 .out_count(l_out_count[32*gi +: 32]),
                 .saturation_count(l_saturation_count[32*gi +: 32]),
                 .mac_count(l_mac_count[32*gi +: 32]),
@@ -240,6 +245,10 @@ module ot_a3_lq8 #(
     assign ws_rd_addr = cfg_ws_base + sel_t_addr;
 
     // -- block counters: sums of the lanes' registered counters ------------------
+    // The lanes clear their counters and classes only when they are started;
+    // after a block-level refusal they still hold the previous operation's
+    // values, so everything read from them is gated by lanes_started and a
+    // refused operation reports zero counters and no lane class.
     always @* begin
         out_count = 32'b0;
         saturation_count = 32'b0;
@@ -253,7 +262,15 @@ module ot_a3_lq8 #(
             product_count = product_count + l_product_count[32*li +: 32];
             retire_count = retire_count + {{($clog2(LANES+1)-1){1'b0}}, op_retire[li]};
         end
+        if (!lanes_started) begin
+            out_count = 32'b0;
+            saturation_count = 32'b0;
+            mac_count = 32'b0;
+            product_count = 32'b0;
+        end
     end
+    assign lane_error_code   = lanes_started ? l_error_code   : {8*LANES{1'b0}};
+    assign lane_error_detail = lanes_started ? l_error_detail : {8*LANES{1'b0}};
 
     // -- control ---------------------------------------------------------------------
     wire [LANES-1:0] finished_next = finished | lane_done;
@@ -264,6 +281,7 @@ module ot_a3_lq8 #(
             busy <= 1'b0;
             done <= 1'b0;
             lane_start <= 1'b0;
+            lanes_started <= 1'b0;
             error_code <= ERR_NONE;
             error_detail <= DETAIL_NONE;
             error_lane <= 8'b0;
@@ -284,13 +302,16 @@ module ot_a3_lq8 #(
                         if (!cols_ok) begin
                             error_code <= ERR_SHAPE;
                             error_detail <= DETAIL_BLOCK_COLUMNS;
+                            lanes_started <= 1'b0;
                             done <= 1'b1;
                         end else if (!stream_ok) begin
                             error_code <= ERR_SHAPE;
                             error_detail <= DETAIL_BLOCK_STREAM_WIDTH;
+                            lanes_started <= 1'b0;
                             done <= 1'b1;
                         end else begin
                             lane_start <= 1'b1;
+                            lanes_started <= 1'b1;
                             w_ptr <= cfg_w_base;
                             busy <= 1'b1;
                             state <= S_RUN;
@@ -306,9 +327,9 @@ module ot_a3_lq8 #(
                         // The lanes hold their class and detail until the next
                         // start; report the lowest-numbered faulting lane.
                         for (fi = LANES - 1; fi >= 0; fi = fi - 1) begin
-                            if (lane_error_code[8*fi +: 8] != ERR_NONE) begin
-                                error_code <= lane_error_code[8*fi +: 8];
-                                error_detail <= lane_error_detail[8*fi +: 8];
+                            if (l_error_code[8*fi +: 8] != ERR_NONE) begin
+                                error_code <= l_error_code[8*fi +: 8];
+                                error_detail <= l_error_detail[8*fi +: 8];
                                 error_lane <= fi[7:0];
                             end
                         end
