@@ -213,3 +213,9 @@ Recorded so it is scheduled rather than rediscovered:
   was deliberately not widened
 - 7 open issues carried in the checklist, [OI-43] among them, which is why the
   microsequencer is absent from every physical result
+- token records bind `runtime/evidence.py` -- the module that *reports* and *compares*
+  records -- among the 54 sources that fix their identity. A fix to comparison logic
+  (`146ef7c`) therefore invalidated three five-hour records it was written to compare.
+  Identity should bind what produced the tokens, never what formats the report; until
+  that is separated, every reporting fix costs a full re-run, which is the treadmill the
+  previous programme ran on
