@@ -113,6 +113,14 @@ module ot_a3_microsequencer
     output reg  [7:0]    issue_sub,
     output reg  [31:0]   issue_descriptor_id,
     output reg  [31:0]   issue_index,
+    // The metadata below is the same decoded instruction held for the issue
+    // handshake.  Engine adapters must not sample the decoder's later live
+    // output or reconstruct these ABI fields from a descriptor.
+    output wire [15:0]   issue_flags,
+    output wire [31:0]   issue_wait_set_id,
+    output wire [31:0]   issue_signal_event_id,
+    output wire [31:0]   issue_control_id,
+    output wire [31:0]   issue_source_operation_id,
 
     // -- resolved tensor views (amendments A4, A13 and A18) ------------
     // One single-cycle pulse per operand view of the instruction about to
@@ -204,6 +212,7 @@ module ot_a3_microsequencer
     reg [31:0] ins_wait_set_id;
     reg [31:0] ins_signal_event_id;
     reg [31:0] ins_control_id;
+    reg [31:0] ins_source_operation_id;
 
     reg [511:0] pred_payload;
     reg [511:0] state_payload;
@@ -469,9 +478,14 @@ module ot_a3_microsequencer
     );
 
     assign dbg_decode_error = dec_out_error;
-    assign dbg_source_operation_id = dec_source_operation_id;
+    assign dbg_source_operation_id = ins_source_operation_id;
     assign dbg_wait_fault_event = evt_wait_fault_event;
     assign dbg_loop_action = loop_action;
+    assign issue_flags = ins_flags;
+    assign issue_wait_set_id = ins_wait_set_id;
+    assign issue_signal_event_id = ins_signal_event_id;
+    assign issue_control_id = ins_control_id;
+    assign issue_source_operation_id = ins_source_operation_id;
 
     // -- descriptor header view -------------------------------------------
     wire [31:0]  desc_magic         = desc_data[31:0];
@@ -625,6 +639,7 @@ module ot_a3_microsequencer
             ins_wait_set_id <= A3_NO_ID;
             ins_signal_event_id <= A3_NO_ID;
             ins_control_id <= A3_NO_ID;
+            ins_source_operation_id <= A3_NO_ID;
             count_fetched <= 32'd0;
             count_retired <= 32'd0;
             count_predicated_off <= 32'd0;
@@ -720,6 +735,7 @@ module ot_a3_microsequencer
                         ins_wait_set_id <= dec_wait_set_id;
                         ins_signal_event_id <= dec_signal_event_id;
                         ins_control_id <= dec_control_id;
+                        ins_source_operation_id <= dec_source_operation_id;
                         if (!dec_out_legal)
                             raise_trap(dec_out_trap_class, dec_index);
                         else
