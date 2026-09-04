@@ -1,0 +1,159 @@
+{
+  "$id": "https://opentallas.org/schemas/abi3/execution_release_lock_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "abi_version": {"const": "3.0"},
+    "comparison_contracts": {
+      "items": {"$ref": "#/$defs/comparisonContract"},
+      "minItems": 1,
+      "type": "array"
+    },
+    "external_locks": {
+      "items": {"$ref": "#/$defs/externalLock"},
+      "minItems": 1,
+      "type": "array"
+    },
+    "release_id": {"$ref": "#/$defs/identifier"},
+    "release_sha256": {"$ref": "#/$defs/sha256"},
+    "result_namespace": {"$ref": "#/$defs/resultNamespace"},
+    "schema": {"const": "opentallas.abi3.execution_release_lock.v1"},
+    "source": {"$ref": "#/$defs/source"}
+  },
+  "required": [
+    "abi_version",
+    "comparison_contracts",
+    "external_locks",
+    "release_id",
+    "release_sha256",
+    "result_namespace",
+    "schema",
+    "source"
+  ],
+  "title": "OpenTallas ABI 3.0 immutable execution release lock v1",
+  "type": "object",
+  "$defs": {
+    "comparisonContract": {
+      "additionalProperties": false,
+      "properties": {
+        "batch_size": {"minimum": 1, "type": "integer"},
+        "comparison_id": {"$ref": "#/$defs/identifier"},
+        "context_tokens": {"minimum": 1, "type": "integer"},
+        "model_id": {"$ref": "#/$defs/identifier"},
+        "path": {"$ref": "#/$defs/path"},
+        "process_view": {"$ref": "#/$defs/identifier"},
+        "semantic_sha256": {"$ref": "#/$defs/sha256"},
+        "source_sha256": {"$ref": "#/$defs/sha256"},
+        "targets": {
+          "items": {"$ref": "#/$defs/target"},
+          "minItems": 2,
+          "type": "array"
+        },
+        "tpot_acceptance_sha256": {"$ref": "#/$defs/sha256"},
+        "workload_id": {"$ref": "#/$defs/identifier"}
+      },
+      "required": [
+        "batch_size",
+        "comparison_id",
+        "context_tokens",
+        "model_id",
+        "path",
+        "process_view",
+        "semantic_sha256",
+        "source_sha256",
+        "targets",
+        "tpot_acceptance_sha256",
+        "workload_id"
+      ],
+      "type": "object"
+    },
+    "externalLock": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {"$ref": "#/$defs/identifier"},
+        "path": {"$ref": "#/$defs/path"},
+        "semantic_sha256": {"$ref": "#/$defs/sha256"},
+        "source_sha256": {"$ref": "#/$defs/sha256"}
+      },
+      "required": ["name", "path", "semantic_sha256", "source_sha256"],
+      "type": "object"
+    },
+    "gitObject": {
+      "pattern": "^([0-9a-f]{40}|[0-9a-f]{64})$",
+      "type": "string"
+    },
+    "identifier": {
+      "maxLength": 192,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$",
+      "type": "string"
+    },
+    "path": {
+      "minLength": 1,
+      "not": {"pattern": "(^/)|(^|/)\\.\\.?(/|$)|\\\\"},
+      "type": "string"
+    },
+    "resultNamespace": {
+      "additionalProperties": false,
+      "properties": {
+        "create_once": {"const": true},
+        "path": {"$ref": "#/$defs/path"}
+      },
+      "required": ["create_once", "path"],
+      "type": "object"
+    },
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "source": {
+      "additionalProperties": false,
+      "properties": {
+        "commit": {"$ref": "#/$defs/gitObject"},
+        "tracked_file_count": {"minimum": 1, "type": "integer"},
+        "tracked_source_map": {
+          "items": {"$ref": "#/$defs/trackedFile"},
+          "minItems": 1,
+          "type": "array"
+        },
+        "tracked_source_map_sha256": {"$ref": "#/$defs/sha256"},
+        "tracked_worktree_clean": {"const": true},
+        "tree": {"$ref": "#/$defs/gitObject"}
+      },
+      "required": [
+        "commit",
+        "tracked_file_count",
+        "tracked_source_map",
+        "tracked_source_map_sha256",
+        "tracked_worktree_clean",
+        "tree"
+      ],
+      "type": "object"
+    },
+    "target": {
+      "additionalProperties": false,
+      "properties": {
+        "backend": {"$ref": "#/$defs/identifier"},
+        "node_count": {"minimum": 1, "type": "integer"},
+        "role": {"enum": ["hbm", "rom", "rom_array"]},
+        "target_id": {"$ref": "#/$defs/identifier"},
+        "topology_class": {"maximum": 2, "minimum": 0, "type": "integer"}
+      },
+      "required": [
+        "backend",
+        "node_count",
+        "role",
+        "target_id",
+        "topology_class"
+      ],
+      "type": "object"
+    },
+    "trackedFile": {
+      "additionalProperties": false,
+      "properties": {
+        "blob": {"$ref": "#/$defs/gitObject"},
+        "mode": {"pattern": "^[0-7]{6}$", "type": "string"},
+        "path": {"$ref": "#/$defs/path"}
+      },
+      "required": ["blob", "mode", "path"],
+      "type": "object"
+    }
+  }
+}
