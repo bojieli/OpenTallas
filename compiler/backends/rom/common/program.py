@@ -3073,6 +3073,18 @@ class RomLowering:
         # extra block being exactly its 128-row window, which is a bias and not
         # a step.
         symbol_max = int(self.capability.limits["max_context_positions"])
+        # ...and by the horizon the *graph* was built for, when that is
+        # shorter.  A released model is built for the target it ships on, so
+        # the two agree and this bounds nothing: the shipped program is byte
+        # for byte what it was.  A *derived* graph is where they part.  The
+        # DSpark draft stack, sliced out at a 1,024-token horizon and lowered
+        # against a 262,144-position capability, tripped its block loops 256
+        # times and so promised every symbolic-leading view 262,144 rows of a
+        # 1,024-row object.  Seventy-four views were refused, none of them
+        # wrong about anything except how many rows the loop had claimed.
+        horizon = int(self.graph.source.get("deployment_context_tokens") or 0)
+        if horizon:
+            symbol_max = min(symbol_max, horizon)
         configured = int(self.policy.token_block_rows or 0)
         divisor = max(min(configured or symbol_max, symbol_max), 1)
         # A view's row term advances by ``step * row width`` elements and that
