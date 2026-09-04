@@ -2,9 +2,10 @@
 """Authoritative, source-revalidated ABI 3.0 comparison boundaries.
 
 The checked-in comparison contract is the pair identity.  It fixes the common
-model/workload/execution/scientific policy and the exact ROM and HBM target
-slots.  A target boundary then binds one slot's deployment, capability, cost
-table and request.  The ordinary cycle CLI can produce only a
+model/workload/execution/scientific policy and the exact target slots: either
+the ROM and HBM slots of a storage-class comparison or the two ROM slots
+(``rom`` and ``rom_array``) of a packaging comparison.  A target boundary then
+binds one slot's deployment, capability, cost table and request.  The ordinary cycle CLI can produce only a
 ``measurement_slice``; full-workload evidence requires a runner that consumes
 and proves the complete governed workload.
 """
@@ -41,6 +42,10 @@ CONTRACT_PATHS = {
         "configs/abi3/comparison_contracts/"
         "deepseek_v4_rom_wafer_vs_hbm_cluster_32_v1.json"
     ),
+    "deepseek_v4_rom_wafer_vs_rom_array_32": (
+        "configs/abi3/comparison_contracts/"
+        "deepseek_v4_rom_wafer_vs_rom_array_32_v1.json"
+    ),
 }
 ORACLE_PRODUCER_PATHS = {
     "qwen3_rom_single_chip_vs_hbm_single_chip": (
@@ -49,7 +54,16 @@ ORACLE_PRODUCER_PATHS = {
     "deepseek_v4_rom_wafer_vs_hbm_cluster_32": (
         "tools/run_deepseek_v4_reference_oracle.py"
     ),
+    "deepseek_v4_rom_wafer_vs_rom_array_32": (
+        "tools/run_deepseek_v4_reference_oracle.py"
+    ),
 }
+# The storage class each target role must declare, and the two pair shapes a
+# contract's ``targets`` object may take (comparison_contract_v1 ``targets``):
+# the ROM/HBM storage-class pair or the ROM/ROM packaging pair.  ``rom_array``
+# is a ROM role in every check below; only its slot name differs.
+TARGET_ROLE_STORAGE = {"rom": "ROM", "hbm": "HBM", "rom_array": "ROM"}
+TARGET_ROLE_PAIRS = (("rom", "hbm"), ("rom", "rom_array"))
 REQUEST_TRAJECTORY_SCHEMA = "opentallas.abi3.request_trajectory.v1"
 REQUEST_TRAJECTORY_SEMANTIC_SCHEMA = (
     "opentallas.abi3.request_trajectory_semantics.v1"
@@ -167,6 +181,21 @@ def _is_sha256(value: object) -> bool:
         and len(value) == _SHA256_LENGTH
         and all(character in "0123456789abcdef" for character in value)
     )
+
+
+def contract_target_roles(targets: object) -> tuple[str, str]:
+    """Return the ordered role pair a contract's ``targets`` object declares.
+
+    A key set that is neither registered pair falls back to the ROM/HBM pair
+    so that every per-role check still reports a named failure (and the
+    schema check reports the malformed shape) instead of raising.
+    """
+
+    keys = set(_mapping(targets))
+    for pair in TARGET_ROLE_PAIRS:
+        if keys == set(pair):
+            return pair
+    return TARGET_ROLE_PAIRS[0]
 
 
 def _schema_errors(body: object, path: Path) -> list[str]:
@@ -521,6 +550,7 @@ def validate_comparison_contract(
     execution = _mapping(body.get("execution"))
     generation = _mapping(execution.get("generation"))
     targets = _mapping(body.get("targets"))
+    roles = contract_target_roles(targets)
     schema_errors = _schema_errors(body, CONTRACT_SCHEMA_PATH)
     shared: dict[str, bool] = {
         "schema_valid": not schema_errors,
@@ -553,7 +583,7 @@ def validate_comparison_contract(
                 and 0 <= _mapping(targets.get(role)).get("topology_class", -1) <= 2
                 and type(_mapping(targets.get(role)).get("node_count")) is int
                 and _mapping(targets.get(role)).get("node_count", 0) > 0
-                for role in ("rom", "hbm")
+                for role in roles
             )
         ),
     }
@@ -863,9 +893,9 @@ def validate_comparison_contract(
 
     target_checks: dict[str, bool] = {}
     target_ready: dict[str, bool] = {}
-    for role in ("rom", "hbm"):
+    for role in roles:
         target = _mapping(targets.get(role))
-        expected_storage = "ROM" if role == "rom" else "HBM"
+        expected_storage = TARGET_ROLE_STORAGE[role]
         try:
             _source_path(repo, _mapping(target.get("deployment")).get("path"))
             _source_path(repo, _mapping(target.get("capability")).get("path"))
@@ -1013,19 +1043,18 @@ def validate_comparison_contract(
             if name.startswith(f"target_{role}_")
         )
 
-    rom_target = _mapping(targets.get("rom"))
-    hbm_target = _mapping(targets.get("hbm"))
+    first_target, second_target = (_mapping(targets.get(role)) for role in roles)
     shared.update(
         target_ids_distinct=(
-            bool(rom_target.get("target_id"))
-            and bool(hbm_target.get("target_id"))
-            and rom_target.get("target_id") != hbm_target.get("target_id")
+            bool(first_target.get("target_id"))
+            and bool(second_target.get("target_id"))
+            and first_target.get("target_id") != second_target.get("target_id")
         ),
         target_deployments_distinct=(
-            bool(_mapping(rom_target.get("deployment")).get("path"))
-            and bool(_mapping(hbm_target.get("deployment")).get("path"))
-            and _mapping(rom_target.get("deployment")).get("path")
-            != _mapping(hbm_target.get("deployment")).get("path")
+            bool(_mapping(first_target.get("deployment")).get("path"))
+            and bool(_mapping(second_target.get("deployment")).get("path"))
+            and _mapping(first_target.get("deployment")).get("path")
+            != _mapping(second_target.get("deployment")).get("path")
         ),
     )
 
@@ -1084,8 +1113,9 @@ def _target_role(
     topology, nodes = topology_identity(deployment)
     storage = _immutable_storage_classes(deployment)
     matches: list[tuple[str, Mapping[str, Any]]] = []
-    for role in ("rom", "hbm"):
-        target = _mapping(_mapping(contract.get("targets")).get(role))
+    targets = _mapping(contract.get("targets"))
+    for role in contract_target_roles(targets):
+        target = _mapping(targets.get(role))
         expected_storage = target.get("storage_class")
         if (
             target.get("role") == role
@@ -1375,7 +1405,7 @@ def validate_boundary(
             == governed_workload.get("rendered_text_sha256")
             and workload.get("template") == governed_workload.get("template")
         ),
-        target_role_exact=role in {"rom", "hbm"}
+        target_role_exact=role in TARGET_ROLE_STORAGE
         and expected_target.get("role") == role,
         target_identity_contract_exact=(
             type(target.get("topology_class")) is int

@@ -42,6 +42,7 @@ CAPABILITY_ROOT = REPO / "configs/hardware/abi3_capability"
 HARDWARE_ROOT = REPO / "configs/hardware"
 QWEN_ID = "qwen3_rom_single_chip_vs_hbm_single_chip"
 DEEPSEEK_ID = "deepseek_v4_rom_wafer_vs_hbm_cluster_32"
+WAFER_ARRAY_ID = "deepseek_v4_rom_wafer_vs_rom_array_32"
 
 
 def _json(path: Path) -> dict:
@@ -200,20 +201,32 @@ def test_current_report_uses_valid_authoritative_contracts_but_pending_targets()
     assert acceptance["comparison_contracts_source_valid"] is True
     assert acceptance["comparison_contracts_target_sources_ready"] is False
     assert acceptance["comparison_contracts_external_oracles_ready"] is False
-    assert len(acceptance["required_comparisons"]) == 2
+    assert len(acceptance["required_comparisons"]) == 3
+    expected_roles = {
+        QWEN_ID: {"rom", "hbm"},
+        DEEPSEEK_ID: {"rom", "hbm"},
+        WAFER_ARRAY_ID: {"rom", "rom_array"},
+    }
     for contract in acceptance["required_comparisons"]:
         assert contract["contract_source_valid"] is True
         assert contract["contract_ready"] is False
         assert len(contract["contract_sha256"]) == 64
-        assert contract["target_lock_status"]["rom"]["source_ready"] is False
-        assert contract["target_lock_status"]["hbm"]["source_ready"] is False
+        lock_status = contract["target_lock_status"]
+        assert set(lock_status) == expected_roles[contract["comparison_id"]]
+        for role in lock_status:
+            assert lock_status[role]["source_ready"] is False
     contracts = {
         item["comparison_id"]: item for item in acceptance["required_comparisons"]
     }
-    assert contracts[QWEN_ID]["external_oracle_lock_status"] == "locked"
-    assert contracts[QWEN_ID]["external_oracle_source_ready"] is True
+    assert set(contracts) == set(expected_roles)
+    # The Qwen contract re-targeted its external oracle at the exact-8K chat
+    # oracle with status pending (version 1.2.0); every oracle is now pending.
+    assert contracts[QWEN_ID]["external_oracle_lock_status"] == "pending"
+    assert contracts[QWEN_ID]["external_oracle_source_ready"] is False
     assert contracts[DEEPSEEK_ID]["external_oracle_lock_status"] == "pending"
     assert contracts[DEEPSEEK_ID]["external_oracle_source_ready"] is False
+    assert contracts[WAFER_ARRAY_ID]["external_oracle_lock_status"] == "pending"
+    assert contracts[WAFER_ARRAY_ID]["external_oracle_source_ready"] is False
     assert report["claim_boundary"]["cross_view_inputs_admitted"] is False
     assert report["claim_boundary"]["performance_comparison_admissible"] is False
     assert report["cycle_evidence"]["admissible_cycle_result_count"] == 0
@@ -239,8 +252,10 @@ def test_current_report_preserves_existing_fail_closed_blockers() -> None:
         "asap7_capability_records_missing",
         "asap7_cluster_cost_model_missing",
         "asap7_wafer_cost_model_missing",
+        "deepseek_wafer_array_mandatory_accelerator_pair_missing",
         "qwen_same_view_cycle_pair_missing",
         "deepseek_same_view_cycle_pair_missing",
+        "deepseek_wafer_array_same_view_cycle_pair_missing",
         "cycle_workload_identity_missing",
         "asap7_engine_coverage_incomplete",
         "asap7_control_plane_missing",
@@ -904,6 +919,58 @@ def test_one_exact_pair_is_ready_only_with_distinct_target_and_deployment_ids(
     assert pair["admissible_candidate_counts"] == {"rom": 1, "hbm": 1}
 
 
+def test_rom_versus_rom_pair_is_matched_by_the_roles_its_contract_declares(
+    tmp_path: Path,
+) -> None:
+    bundle = make_locked_repository(
+        tmp_path,
+        comparison_id=WAFER_ARRAY_ID,
+        namespace="packaging",
+        roles=("rom", "rom_array"),
+    )
+    result_root = tmp_path / "results/abi3"
+    write_json(result_root / "rom.json", _cycle(bundle, "rom"))
+    write_json(result_root / "rom_array.json", _cycle(bundle, "rom_array"))
+
+    contract = _contract(tmp_path, WAFER_ARRAY_ID)
+    assert set(contract["target_lock_status"]) == {"rom", "rom_array"}
+    inventory, _ = _cycle_inventory(tmp_path, [contract])
+    pair = inventory["comparisons"][WAFER_ARRAY_ID]
+    assert pair["admissible_candidate_counts"] == {"rom": 1, "rom_array": 1}
+    assert pair["matched_pair"] == {
+        "rom": "results/abi3/rom.json",
+        "rom_array": "results/abi3/rom_array.json",
+    }
+    assert pair["ready"] is True
+    assert pair["strict_functional_candidate_counts"] == {"rom": 1, "rom_array": 1}
+    assert pair["functional_ready"] is True
+
+    # An HBM-shaped record cannot occupy either ROM slot of this pair.
+    for row in inventory["cycle_results"]:
+        assert row["role"] in {"rom", "rom_array"}
+        assert row["checks"]["target_role_exact"] is True
+
+
+def test_rom_versus_rom_pair_refuses_two_records_on_the_same_rom_slot(
+    tmp_path: Path,
+) -> None:
+    bundle = make_locked_repository(
+        tmp_path,
+        comparison_id=WAFER_ARRAY_ID,
+        namespace="packaging",
+        roles=("rom", "rom_array"),
+    )
+    result_root = tmp_path / "results/abi3"
+    write_json(result_root / "rom.json", _cycle(bundle, "rom"))
+    write_json(result_root / "rom-again.json", _cycle(bundle, "rom"))
+
+    inventory, _ = _cycle_inventory(tmp_path, [_contract(tmp_path, WAFER_ARRAY_ID)])
+    pair = inventory["comparisons"][WAFER_ARRAY_ID]
+    assert pair["admissible_candidate_counts"] == {"rom": 2, "rom_array": 0}
+    assert pair["matched_pair"] is None
+    assert pair["ready"] is False
+
+
 def test_pair_refuses_different_generated_token_sequences(tmp_path: Path) -> None:
     bundle = make_locked_repository(tmp_path)
     result_root = tmp_path / "results/abi3"
@@ -966,6 +1033,8 @@ def test_auditor_functional_source_boundary_matches_the_producer_exactly() -> No
         (QWEN_ID, "hbm", "hbm_sram"),
         (DEEPSEEK_ID, "rom", "rom_deepseek_v4"),
         (DEEPSEEK_ID, "hbm", "hbm_sram"),
+        (WAFER_ARRAY_ID, "rom", "rom_deepseek_v4"),
+        (WAFER_ARRAY_ID, "rom_array", "rom_deepseek_v4_array"),
     )
     for comparison_id, role, backend in cases:
         assert _required_functional_sources(REPO, comparison_id, role) == set(

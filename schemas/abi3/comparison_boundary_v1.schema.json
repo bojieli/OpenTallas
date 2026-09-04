@@ -130,7 +130,10 @@
       "properties": {
         "backend": {"$ref": "#/$defs/identifier"},
         "node_count": {"minimum": 1, "type": "integer"},
-        "role": {"enum": ["rom", "hbm"]},
+        "role": {
+          "description": "The contract slot this side binds: rom or hbm for the storage-class pair, rom or rom_array for the ROM-versus-ROM packaging pair.",
+          "enum": ["rom", "hbm", "rom_array"]
+        },
         "storage_class": {"enum": ["ROM", "HBM"]},
         "target_id": {"$ref": "#/$defs/identifier"},
         "topology_class": {"maximum": 2, "minimum": 0, "type": "integer"}

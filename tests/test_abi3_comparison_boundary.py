@@ -20,12 +20,15 @@ from abi3_comparison_contract_support import (
 from compiler.ir.v3.kernel_ir import KernelGraph
 from runtime.abi3.capability import canonical_json
 from tools.abi3_comparison_boundary import (
-    BoundaryError,
+    CONTRACT_PATHS,
     CONTRACT_SCHEMA_PATH,
+    ORACLE_PRODUCER_PATHS,
+    BoundaryError,
     boundary_digest,
     build_boundary,
     comparison_payload,
     comparison_workload_digest,
+    contract_target_roles,
     legacy_workload_digest,
     load_comparison_contract,
     validate_boundary,
@@ -688,3 +691,269 @@ def test_contract_source_symlink_escape_is_rejected(tmp_path: Path) -> None:
     bundle["contract"]["workload"]["source_sha256"] = sha256_file(outside)
 
     assert _rewrite_contract(bundle)["valid"] is False
+
+
+# --- ROM-versus-ROM pairs: the wafer-versus-array packaging comparison -------
+
+CONTRACT_ROOT = ROOT / "configs/abi3/comparison_contracts"
+WAFER_ARRAY_ID = "deepseek_v4_rom_wafer_vs_rom_array_32"
+WAFER_ARRAY_FILE = "deepseek_v4_rom_wafer_vs_rom_array_32_v1.json"
+ARRAY_HBM_FILE = "deepseek_v4_rom_array_32_vs_hbm_cluster_32_v1.json"
+WAFER_HBM_FILE = "deepseek_v4_rom_wafer_vs_hbm_cluster_32_v1.json"
+QWEN_FILE = "qwen3_rom_single_chip_vs_hbm_single_chip_v1.json"
+
+
+def _checked_in_contract(name: str) -> dict:
+    return json.loads((CONTRACT_ROOT / name).read_text(encoding="utf-8"))
+
+
+def _contract_validator() -> Draft202012Validator:
+    schema = json.loads(CONTRACT_SCHEMA_PATH.read_text(encoding="utf-8"))
+    Draft202012Validator.check_schema(schema)
+    return Draft202012Validator(schema)
+
+
+def _shared_checks(validation: dict) -> dict:
+    """The contract checks that do not depend on a target slot or the path."""
+
+    return {
+        name: passed
+        for name, passed in validation["checks"].items()
+        if not name.startswith("target_") and name != "registered_path_exact"
+    }
+
+
+def test_wafer_versus_array_contract_validates_and_is_registered() -> None:
+    contract = _checked_in_contract(WAFER_ARRAY_FILE)
+    _contract_validator().validate(contract)
+
+    assert contract["comparison_id"] == WAFER_ARRAY_ID
+    assert CONTRACT_PATHS[WAFER_ARRAY_ID] == (
+        "configs/abi3/comparison_contracts/" + WAFER_ARRAY_FILE
+    )
+    assert ORACLE_PRODUCER_PATHS[WAFER_ARRAY_ID] == (
+        "tools/run_deepseek_v4_reference_oracle.py"
+    )
+    assert contract_target_roles(contract["targets"]) == ("rom", "rom_array")
+
+    # The sides are the two existing contracts' targets, copied exactly.
+    wafer_hbm = _checked_in_contract(WAFER_HBM_FILE)
+    array_hbm = _checked_in_contract(ARRAY_HBM_FILE)
+    assert contract["targets"]["rom"] == wafer_hbm["targets"]["rom"]
+    assert contract["targets"]["rom_array"] == {
+        **array_hbm["targets"]["rom"],
+        "role": "rom_array",
+    }
+    assert contract["targets"]["rom_array"]["storage_class"] == "ROM"
+    for block in ("model", "workload", "execution", "external_oracle"):
+        assert contract[block] == array_hbm[block]
+    assert contract["external_oracle"]["status"] == "pending"
+
+    source_path = ROOT / CONTRACT_PATHS[WAFER_ARRAY_ID]
+    validation = validate_comparison_contract(
+        contract, repo=ROOT, source_path=source_path
+    )
+    checks = validation["checks"]
+    assert validation["schema_errors"] == []
+    assert checks["schema_valid"] is True
+    assert checks["registered_path_exact"] is True
+    assert checks["contract_integer_fields_strict"] is True
+    assert checks["external_oracle_contract_well_formed"] is True
+    assert checks["target_rom_identity_well_formed"] is True
+    assert checks["target_rom_array_identity_well_formed"] is True
+    assert checks["target_ids_distinct"] is True
+    assert checks["target_deployments_distinct"] is True
+    assert set(validation["target_sources_ready"]) == {"rom", "rom_array"}
+    assert validation["ready"] is False
+    # The shared model, workload and oracle blocks are the ones the registered
+    # wafer-versus-HBM contract binds, so the two contracts' shared-source
+    # checks must agree exactly on this host, whatever the state of the
+    # (out-of-tree) build inputs.
+    sibling = validate_comparison_contract(
+        wafer_hbm, repo=ROOT, source_path=CONTRACT_ROOT / WAFER_HBM_FILE
+    )
+    assert _shared_checks(validation) == _shared_checks(sibling)
+
+
+@pytest.mark.parametrize("name", [QWEN_FILE, WAFER_HBM_FILE, ARRAY_HBM_FILE])
+def test_existing_contracts_still_validate_against_the_amended_schema(
+    name: str,
+) -> None:
+    contract = _checked_in_contract(name)
+    _contract_validator().validate(contract)
+    assert contract_target_roles(contract["targets"]) == ("rom", "hbm")
+
+    validation = validate_comparison_contract(
+        contract, repo=ROOT, source_path=CONTRACT_ROOT / name
+    )
+    assert validation["schema_errors"] == []
+    assert validation["checks"]["schema_valid"] is True
+    assert set(validation["target_sources_ready"]) == {"rom", "hbm"}
+
+
+def _with_hbm_and_rom_array(contract: dict) -> None:
+    hbm = _checked_in_contract(WAFER_HBM_FILE)["targets"]["hbm"]
+    contract["targets"]["hbm"] = hbm
+
+
+def _with_rom_array_in_hbm_storage(contract: dict) -> None:
+    contract["targets"]["rom_array"]["storage_class"] = "HBM"
+
+
+def _with_rom_array_mislabelled_rom(contract: dict) -> None:
+    contract["targets"]["rom_array"]["role"] = "rom"
+
+
+def _with_only_rom(contract: dict) -> None:
+    del contract["targets"]["rom_array"]
+
+
+@pytest.mark.parametrize(
+    "mutate",
+    [
+        _with_hbm_and_rom_array,
+        _with_rom_array_in_hbm_storage,
+        _with_rom_array_mislabelled_rom,
+        _with_only_rom,
+    ],
+)
+def test_targets_refuse_three_sides_and_a_rom_array_that_is_not_rom(
+    mutate,
+) -> None:
+    contract = _checked_in_contract(WAFER_ARRAY_FILE)
+    mutate(contract)
+
+    assert not _contract_validator().is_valid(contract)
+    validation = validate_comparison_contract(
+        contract, repo=ROOT, source_path=ROOT / CONTRACT_PATHS[WAFER_ARRAY_ID]
+    )
+    assert validation["valid"] is False
+    assert validation["checks"]["schema_valid"] is False
+    assert validation["schema_errors"]
+
+
+def test_hbm_pair_refuses_a_rom_array_slot_and_a_rom_array_role() -> None:
+    validator = _contract_validator()
+    contract = _checked_in_contract(WAFER_HBM_FILE)
+    contract["targets"]["rom_array"] = {
+        **_checked_in_contract(ARRAY_HBM_FILE)["targets"]["rom"],
+        "role": "rom_array",
+    }
+    assert not validator.is_valid(contract)
+
+    contract = _checked_in_contract(WAFER_HBM_FILE)
+    contract["targets"]["hbm"]["role"] = "rom_array"
+    assert not validator.is_valid(contract)  # every slot pins its role
+    validation = validate_comparison_contract(
+        contract, repo=ROOT, source_path=CONTRACT_ROOT / WAFER_HBM_FILE
+    )
+    assert validation["checks"]["schema_valid"] is False
+    assert validation["checks"]["target_hbm_identity_well_formed"] is False
+
+
+@pytest.mark.parametrize(
+    ("contract_file", "slot", "field", "value"),
+    [
+        (WAFER_HBM_FILE, "rom", "role", "rom_array"),
+        (WAFER_HBM_FILE, "rom", "role", "hbm"),
+        (WAFER_HBM_FILE, "rom", "storage_class", "HBM"),
+        (WAFER_HBM_FILE, "hbm", "role", "rom"),
+        (WAFER_HBM_FILE, "hbm", "storage_class", "ROM"),
+        (WAFER_ARRAY_FILE, "rom", "role", "rom_array"),
+        (WAFER_ARRAY_FILE, "rom", "storage_class", "HBM"),
+        (WAFER_ARRAY_FILE, "rom_array", "role", "rom"),
+        (WAFER_ARRAY_FILE, "rom_array", "storage_class", "HBM"),
+    ],
+)
+def test_every_slot_pins_its_role_and_storage_class(
+    contract_file, slot, field, value
+) -> None:
+    contract = _checked_in_contract(contract_file)
+    assert contract["targets"][slot][field] != value
+    contract["targets"][slot][field] = value
+
+    errors = sorted(_contract_validator().iter_errors(contract), key=str)
+    assert errors
+    assert any(list(error.path) == ["targets", slot, field] for error in errors)
+
+
+def test_readiness_audit_registers_the_wafer_versus_array_contract() -> None:
+    from tools.audit_abi3_asap7_comparison_readiness import (
+        SOURCE_PATHS,
+        _load_authoritative_contracts,
+        _required_functional_sources,
+    )
+
+    summaries = {
+        item["comparison_id"]: item for item in _load_authoritative_contracts(ROOT)
+    }
+    assert WAFER_ARRAY_ID in summaries
+    summary = summaries[WAFER_ARRAY_ID]
+    assert summary["contract_path"] == CONTRACT_PATHS[WAFER_ARRAY_ID]
+    assert summary["source_checks"]["schema_valid"] is True
+    assert summary["source_checks"]["registered_path_exact"] is True
+    assert set(summary["target_lock_status"]) == {"rom", "rom_array"}
+    assert set(summary["target_sources_ready"]) == {"rom", "rom_array"}
+    assert summary["contract_ready"] is False
+    assert summary["external_oracle_lock_status"] == "pending"
+    # Shared sources are the array-versus-HBM contract's; the readiness
+    # verdict on them is whatever this host gives the wafer-versus-HBM
+    # sibling, which binds the same Kernel IR and workload.
+    sibling = summaries["deepseek_v4_rom_wafer_vs_hbm_cluster_32"]
+    assert summary["contract_source_valid"] == sibling["contract_source_valid"]
+    assert CONTRACT_PATHS[WAFER_ARRAY_ID] in SOURCE_PATHS
+
+    from tools.run_accelerator_tokens import _functional_source_sha256
+
+    assert _required_functional_sources(ROOT, WAFER_ARRAY_ID, "rom") == set(
+        _functional_source_sha256("rom_deepseek_v4")
+    )
+    assert _required_functional_sources(ROOT, WAFER_ARRAY_ID, "rom_array") == set(
+        _functional_source_sha256("rom_deepseek_v4_array")
+    )
+
+
+def test_rom_versus_rom_fixture_pair_locks_and_resolves_sides_by_identity(
+    tmp_path: Path,
+) -> None:
+    bundle = make_locked_repository(
+        tmp_path,
+        comparison_id=WAFER_ARRAY_ID,
+        namespace="packaging",
+        roles=("rom", "rom_array"),
+    )
+    validation = bundle["contract_validation"]
+    assert validation["ready"] is True
+    assert validation["target_sources_ready"] == {"rom": True, "rom_array": True}
+
+    _contract_validator().validate(bundle["contract"])
+    boundary_schema = json.loads(BOUNDARY_SCHEMA.read_text(encoding="utf-8"))
+    rom = make_boundary(bundle, "rom")
+    array = make_boundary(bundle, "rom_array")
+    for boundary in (rom, array):
+        Draft202012Validator(boundary_schema).validate(boundary)
+        result = validate_boundary(boundary, repo=tmp_path)
+        assert result["valid"] is True
+        assert result["failed_checks"] == []
+    assert rom["target"]["role"] == "rom"
+    assert array["target"]["role"] == "rom_array"
+    assert rom["target"]["storage_class"] == array["target"]["storage_class"] == "ROM"
+    assert rom["comparison_sha256"] == array["comparison_sha256"]
+    assert rom["boundary_sha256"] != array["boundary_sha256"]
+    assert rom["deployment"]["sha256"] != array["deployment"]["sha256"]
+
+    # A ROM deployment presented under the other ROM slot is refused: the
+    # slot is resolved by backend and target identity, not by storage class.
+    forged = copy.deepcopy(array)
+    forged["target"]["role"] = "rom"
+    forged["boundary_sha256"] = boundary_digest(forged)
+    result = validate_boundary(forged, repo=tmp_path)
+    assert result["valid"] is False
+    assert "target_identity_contract_exact" in result["failed_checks"]
+
+    # The wafer-slot deployment handed the array slot's materials resolves to
+    # the rom slot by identity and is then refused by that slot's locks.
+    arguments = dict(bundle["roles"]["rom_array"])
+    arguments["deployment"] = bundle["roles"]["rom"]["deployment"]
+    with pytest.raises(BoundaryError, match="target source lock mismatch"):
+        build_boundary(**arguments)

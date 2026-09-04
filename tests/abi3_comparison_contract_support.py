@@ -32,6 +32,7 @@ from tools.abi3_comparison_boundary import (
 ROOT = Path(__file__).resolve().parents[1]
 COMPARISON_ID = "qwen3_rom_single_chip_vs_hbm_single_chip"
 DEEPSEEK_COMPARISON_ID = "deepseek_v4_rom_wafer_vs_hbm_cluster_32"
+WAFER_ARRAY_COMPARISON_ID = "deepseek_v4_rom_wafer_vs_rom_array_32"
 FUNCTIONAL_COMMON_SOURCES = (
     "tools/run_accelerator_tokens.py",
     "compiler/backends/numeric_contracts.py",
@@ -98,10 +99,29 @@ FUNCTIONAL_BACKEND_SOURCES = {
         "compiler/backends/hbm_sram/lower.py",
         "compiler/backends/hbm_sram/plan.py",
     ),
+    (WAFER_ARRAY_COMPARISON_ID, "rom"): (
+        "compiler/backends/rom/deepseek_v4.py",
+        "compiler/backends/rom/common/image.py",
+        "compiler/backends/rom/common/program.py",
+    ),
+    (WAFER_ARRAY_COMPARISON_ID, "rom_array"): (
+        "compiler/backends/rom/deepseek_v4_array.py",
+        "compiler/backends/rom/deepseek_v4.py",
+        "compiler/backends/rom/common/image.py",
+        "compiler/backends/rom/common/program.py",
+    ),
 }
 ORACLE_PRODUCERS = {
     COMPARISON_ID: "tools/run_qwen3_reference_oracle.py",
     DEEPSEEK_COMPARISON_ID: "tools/run_deepseek_v4_reference_oracle.py",
+    WAFER_ARRAY_COMPARISON_ID: "tools/run_deepseek_v4_reference_oracle.py",
+}
+# Fixture identity per target role: immutable weight storage, backend suffix
+# and target id.  A ROM-versus-ROM pair uses ``("rom", "rom_array")``.
+ROLE_SPECS = {
+    "rom": (StorageClass.ROM, "rom", "fixture-rom"),
+    "hbm": (StorageClass.HBM, "hbm", "fixture-hbm"),
+    "rom_array": (StorageClass.ROM, "rom_array", "fixture-rom-array"),
 }
 
 
@@ -154,11 +174,26 @@ def _locked(path: str, digest: str, source_sha256: str) -> dict[str, Any]:
     }
 
 
-def _deployment(storage: StorageClass, capability, backend: str, graph_id: str):
+def _deployment(
+    storage: StorageClass,
+    capability,
+    backend: str,
+    graph_id: str,
+    target_id: str | None = None,
+):
+    """Build the conformance fixture with the contract's graph and target ids.
+
+    ``build_fixture`` names its target after the storage class alone, which
+    cannot tell the two ROM sides of a packaging pair apart; ``target_id``
+    overrides that name before the manifest is finished.
+    """
+
     original_finish = DeploymentBuilder.finish
 
     def finish_with_graph(builder, **kwargs):
         builder.source_identity["graph_id"] = graph_id
+        if target_id is not None:
+            builder.target_id = target_id
         return original_finish(builder, **kwargs)
 
     with patch.object(DeploymentBuilder, "finish", finish_with_graph):
@@ -243,8 +278,13 @@ def make_locked_repository(
     max_new_tokens: int = 3,
     oracle_generated_token_ids: list[int] | None = None,
     oracle_stop_reason: str = "eos",
+    roles: tuple[str, str] = ("rom", "hbm"),
 ) -> dict[str, Any]:
-    """Create one tiny but fully source-revalidated registered contract."""
+    """Create one tiny but fully source-revalidated registered contract.
+
+    ``roles`` selects the pair shape: the default ROM/HBM storage-class pair
+    or ``("rom", "rom_array")`` for a ROM-versus-ROM packaging pair.
+    """
 
     repo.mkdir(parents=True, exist_ok=True)
     generation = {
@@ -397,9 +437,11 @@ def make_locked_repository(
     }
 
     role_specs = {
-        "rom": (StorageClass.ROM, f"{namespace}.rom", "fixture-rom"),
-        "hbm": (StorageClass.HBM, f"{namespace}.hbm", "fixture-hbm"),
+        role: (storage, f"{namespace}.{suffix}", target_id)
+        for role, (storage, suffix, target_id) in ROLE_SPECS.items()
+        if role in roles
     }
+    assert tuple(role_specs) == tuple(roles), roles
     for role, (storage, backend, target_id) in role_specs.items():
         contract["targets"][role] = {
             "role": role,
@@ -442,14 +484,16 @@ def make_locked_repository(
             encoding="utf-8"
         )
     )
-    for role, (storage, backend, _target_id) in role_specs.items():
+    for role, (storage, backend, target_id) in role_specs.items():
         target = contract["targets"][role]
         capability = fixture_capability()
         capability.technology_view = "asap7"
         capability_path = repo / target["capability"]["path"]
         write_json(capability_path, capability.to_dict())
 
-        deployment = _deployment(storage, capability, backend, graph.graph_id)
+        deployment = _deployment(
+            storage, capability, backend, graph.graph_id, target_id=target_id
+        )
         deployment_path = repo / target["deployment"]["path"]
         deployment.write(deployment_path)
 
@@ -493,7 +537,7 @@ def make_locked_repository(
     fixture_sources = {
         "tools/run_abi3_cycle.py",
         ORACLE_PRODUCERS[comparison_id],
-        *(path for role in ("rom", "hbm") for path in functional_source_paths(comparison_id, role)),
+        *(path for role in roles for path in functional_source_paths(comparison_id, role)),
     }
     for source in sorted(fixture_sources):
         write_json(repo / source, {"fixture_source": source})

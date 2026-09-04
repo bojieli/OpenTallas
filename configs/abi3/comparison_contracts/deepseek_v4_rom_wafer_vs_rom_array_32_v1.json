@@ -1,5 +1,5 @@
 {
-  "comparison_id": "deepseek_v4_rom_array_32_vs_hbm_cluster_32",
+  "comparison_id": "deepseek_v4_rom_wafer_vs_rom_array_32",
   "execution": {
     "batch": 1,
     "concurrency": 1,
@@ -46,7 +46,7 @@
       "same_frequency_required": true
     },
     "evidence_class": "predictive_asap7_characterized_or_explicit_assumption_v1",
-    "external_fabric_policy": "source_locked_cluster_fabric_both_sides_v1",
+    "external_fabric_policy": "source_locked_cluster_and_wafer_fabric_v1",
     "external_memory_policy": "source_locked_distributed_hbm_phy_and_stack_v1",
     "latency_boundary": "host_request_to_terminal_completion_v1",
     "pvt": {
@@ -56,42 +56,42 @@
       "voltage_v": 0.7
     },
     "state_boundary": "fresh_session_live_hbm_compressed_kv_prefill_decode_fail_stop_v1",
-    "technology_claim": "predictive ASAP7 research view only; not foundry signoff, manufacturability, or an N4 claim Iso-area rule (docs/DEEPSEEK_V4_ROM_ARRAY_IMPLEMENTATION_PLAN.md section 3.5): area is accelerator die area per node times node count, HBM stacks, package, switch silicon and board reported beside it and never in the denominator; node counts are equal on both sides by construction (32), so this pair is iso-area exactly when the two dies match in area, which DRA-PHY10 decides; the array deployment's notes state its per-node ROM bytes and the die area they imply at two graded densities. Tolerance 0.02; a ratio outside it carries a stated granularity correction or the pair is relabelled the equal-node control.",
+    "technology_claim": "predictive ASAP7 research view only; not foundry signoff, manufacturability, or an N4 claim. Iso-area rule for this pair (docs/DEEPSEEK_V4_ROM_ARRAY_IMPLEMENTATION_PLAN.md sections 3.5 and 17): area is accelerator die area per node times node count; HBM stacks, package, switch silicon and board are reported beside it and never in the denominator. The rom side is one logical device whose silicon is one wafer, 46,225 mm2 (plan section 3.5, 'Wafer versus array'; docs/WAFER_VERSUS_ARRAY_LATENCY.md; the roofline's wafer_reference_silicon_area_mm2 at batch 1 in results/roofline/n5_vs_b200/analytical.json#design_selection.models[model=DeepSeek-V4-Flash-0731].iso_area_by_batch[batch_size=1].array_at_wafer_area). The rom_array side's per-node die area is a graded value: 815 mm2 per node is assumed until DRA-PHY10 (configs/hardware/technology.json reticle.area_mm2, graded published from the Taalas HC1 anchor; plan section 3.5 rule 4), while the deployment's own notes (build/abi3/deepseek-v4-flash-rom-array-32/deployment.json#notes.array_placement) state 13,445,283,840 ROM bytes per node and the die area those bytes imply, 1,109 mm2 at the wafer backend's usable density and 1,533 mm2 at the roofline's N5 array density (plan section 17, 'What the built array is, exactly'), both above one 815 mm2 reticle. The 32-node build therefore holds node count fixed, not area: it is the equal-node CONTROL of this pair, and no ratio read from it is an iso-area ratio. The iso-area array comparator is the reticle count whose silicon is within the 0.02 tolerance of the wafer's (plan section 3.5 rule 2, tolerance from plan section 11), derived from the array's per-node bytes and not from 32 x 815 mm2: at 815 mm2 per die that is about 57 reticle-class dies (plan section 3.5). The roofline's 'array @ wafer area' rows give the analytical comparator the plan reads (plan section 17 quotes the batch-8 row; the batch-1 row is in the same artifact): at batch 1, SRAMKV-array-hybrid-x56-romfill, 56 dies, 45,640 mm2, area_ratio_to_wafer 0.987 (artifact value 0.9873445105462412, quoted here to three decimals) against the 46,225 mm2 wafer-tensor-x1-romfill (results/roofline/n5_vs_b200/analytical.json#design_selection.models[model=DeepSeek-V4-Flash-0731].iso_area_by_batch[batch_size=1].array_at_wafer_area), within tolerance; at batch 8, HBMKV-array-hybrid-x116-romfill, 116 dies, 94,540 mm2, area_ratio_to_wafer 1.023 (artifact value 1.0226068144943212, quoted here to three decimals) against the 92,450 mm2 HBMKV-wafer-hybrid-x2-romfill (same artifact, iso_area_by_batch[batch_size=8].array_at_wafer_area), which the roofline selects within 5% (plan section 17) and which is outside the 0.02 tolerance, so it carries a granularity correction under rule 2 before it is read as iso-area. This contract executes at batch 1. These rows are analytical; the executed comparison artifact must carry its own iso_area_ratio and the die-area grade of each side.",
     "technology_view": "asap7"
   },
   "schema": "opentallas.abi3.comparison_contract.v1",
   "targets": {
-    "hbm": {
-      "backend": "hbm-sram-abi3",
+    "rom": {
+      "backend": "rom.wafer_logical_device",
       "capability": {
         "digest": null,
-        "path": "configs/hardware/abi3_capability/asap7/hbm_sram_cluster_32_v1.json",
+        "path": "configs/hardware/abi3_capability/asap7/rom_deepseek_v4_wafer_v1.json",
         "source_sha256": null,
         "status": "pending"
       },
       "cost_policy": {
-        "cost_table_id": "abi3-cost-asap7-hbm-cluster32-v1",
+        "cost_table_id": "abi3-cost-asap7-deepseek-rom-wafer-v1",
         "lock": {
           "digest": null,
-          "path": "configs/hardware/abi3_cost_asap7_hbm_cluster32_v1.json",
+          "path": "configs/hardware/abi3_cost_asap7_deepseek_rom_wafer_v1.json",
           "source_sha256": null,
           "status": "pending"
         },
-        "policy_id": "deepseek_hbm_cluster_full_target_asap7_v1"
+        "policy_id": "deepseek_rom_wafer_full_target_asap7_v1"
       },
       "deployment": {
         "digest": null,
-        "path": "build/abi3/asap7/deepseek-v4-flash-hbm-full-workload",
+        "path": "build/abi3/asap7/deepseek-v4-flash-rom-full-workload",
         "source_sha256": null,
         "status": "pending"
       },
-      "node_count": 32,
-      "role": "hbm",
-      "storage_class": "HBM",
-      "target_id": "hbm-sram-abi3-cluster_32",
-      "topology_class": 1
+      "node_count": 1,
+      "role": "rom",
+      "storage_class": "ROM",
+      "target_id": "deepseek-v4-flash-rom-wafer",
+      "topology_class": 2
     },
-    "rom": {
+    "rom_array": {
       "backend": "rom.cluster_32",
       "capability": {
         "digest": null,
@@ -116,7 +116,7 @@
         "status": "pending"
       },
       "node_count": 32,
-      "role": "rom",
+      "role": "rom_array",
       "storage_class": "ROM",
       "target_id": "deepseek-v4-flash-rom-array-32",
       "topology_class": 1

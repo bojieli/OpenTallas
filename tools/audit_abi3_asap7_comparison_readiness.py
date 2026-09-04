@@ -2,9 +2,12 @@
 """Build the fail-closed readiness record for checklist gate TA-CMP-7-ASAP7.
 
 This is a preflight, not a performance-report generator.  It inventories the
-evidence needed to compare the Qwen ROM/HBM targets and the DeepSeek wafer/32
-node targets in one predictive ASAP7 view.  An input from another technology
-view is reported as excluded and is never used to satisfy the gate.
+evidence needed to compare the Qwen ROM/HBM targets, the DeepSeek wafer/32
+node HBM targets and the DeepSeek wafer/32 node ROM array targets in one
+predictive ASAP7 view.  Each registered contract names its own pair of target
+roles (ROM/HBM or ROM/ROM); the pairing below follows the contract rather
+than assuming one side is HBM.  An input from another technology view is
+reported as excluded and is never used to satisfy the gate.
 """
 
 from __future__ import annotations
@@ -36,7 +39,9 @@ from tools.abi3_comparison_boundary import (  # noqa: E402
     CONTRACT_PATHS,
     ORACLE_PRODUCER_PATHS,
     REQUEST_TRAJECTORY_SCHEMA,
+    TARGET_ROLE_STORAGE,
     comparison_workload_digest,
+    contract_target_roles,
     load_comparison_contract,
     request_trajectory_digest,
     validate_boundary,
@@ -130,6 +135,23 @@ FUNCTIONAL_BACKEND_SOURCES = {
         {
             "compiler/backends/hbm_sram/lower.py",
             "compiler/backends/hbm_sram/plan.py",
+        }
+    ),
+    ("deepseek_v4_rom_wafer_vs_rom_array_32", "rom"): frozenset(
+        {
+            "compiler/backends/rom/deepseek_v4.py",
+            "compiler/backends/rom/common/image.py",
+            "compiler/backends/rom/common/program.py",
+        }
+    ),
+    # The array backend is the producer's ``rom_deepseek_v4_array`` boundary:
+    # it lowers through the wafer backend's module as well as its own.
+    ("deepseek_v4_rom_wafer_vs_rom_array_32", "rom_array"): frozenset(
+        {
+            "compiler/backends/rom/deepseek_v4_array.py",
+            "compiler/backends/rom/deepseek_v4.py",
+            "compiler/backends/rom/common/image.py",
+            "compiler/backends/rom/common/program.py",
         }
     ),
 }
@@ -265,7 +287,7 @@ def _contract_summary(
     targets = _mapping(body.get("targets"))
     target_sources_ready = _mapping(validation.get("target_sources_ready"))
     target_lock_status: dict[str, Any] = {}
-    for role in ("rom", "hbm"):
+    for role in contract_target_roles(targets):
         target = _mapping(targets.get(role))
         cost_policy = _mapping(target.get("cost_policy"))
         target_lock_status[role] = {
@@ -361,8 +383,9 @@ def _target_role(
 ) -> str | None:
     """Resolve a role only by an exact authoritative target identity."""
 
-    for role in ("rom", "hbm"):
-        expected = _mapping(_mapping(contract.get("targets")).get(role))
+    targets = _mapping(contract.get("targets"))
+    for role in contract_target_roles(targets):
+        expected = _mapping(targets.get(role))
         if (
             _strict_int(target.get("topology_class"), minimum=0)
             and _strict_int(target.get("node_count"), minimum=1)
@@ -466,7 +489,7 @@ def assess_functional_document(
         and workload.get("max_new_tokens") == contract["max_new_tokens"],
         "tokenizer_identity_exact": bool(contract.get("tokenizer_sha256"))
         and workload.get("tokenizer_sha256") == contract.get("tokenizer_sha256"),
-        "target_role_known": target_role in {"rom", "hbm"},
+        "target_role_known": target_role in TARGET_ROLE_STORAGE,
         "target_backend_exact": target.get("backend")
         == expected_target.get("backend"),
         "target_id_exact": target.get("target_id")
@@ -562,15 +585,19 @@ def _functional_inventory(
                     inspected.add(path)
 
         candidates.sort(key=lambda item: item["path"])
+        first_role, second_role = contract_target_roles(contract.get("targets"))
         admitted = {
             role: [item for item in candidates if item["role"] == role and item["admissible"]]
-            for role in ("rom", "hbm")
+            for role in (first_role, second_role)
         }
         matching_pair = None
-        for left in admitted["rom"]:
-            for right in admitted["hbm"]:
+        for left in admitted[first_role]:
+            for right in admitted[second_role]:
                 if left["generated_token_ids"] == right["generated_token_ids"]:
-                    matching_pair = {"rom": left["path"], "hbm": right["path"]}
+                    matching_pair = {
+                        first_role: left["path"],
+                        second_role: right["path"],
+                    }
                     break
             if matching_pair:
                 break
@@ -1851,7 +1878,7 @@ def assess_cycle_document(
         "capability_view_exact": inputs.get("capability_technology_view")
         == policy.get("technology_view")
         == required_view,
-        "target_role_exact": target_role in {"rom", "hbm"}
+        "target_role_exact": target_role in TARGET_ROLE_STORAGE
         and expected_target.get("role") == target_role
         and _target_role(boundary_target, contract_document) == target_role,
         "target_backend_exact": inputs.get("backend")
@@ -2040,33 +2067,34 @@ def _cycle_inventory(
             == contract.get("contract_sha256")
         ]
         matched = None
+        first_role, second_role = contract_target_roles(contract.get("targets"))
         sides = {
             role: [item for item in exact if item["role"] == role]
-            for role in ("rom", "hbm")
+            for role in (first_role, second_role)
         }
-        if len(sides["rom"]) == 1 and len(sides["hbm"]) == 1:
-            rom = sides["rom"][0]
-            hbm = sides["hbm"][0]
+        if len(sides[first_role]) == 1 and len(sides[second_role]) == 1:
+            left = sides[first_role][0]
+            right = sides[second_role][0]
             if (
-                rom["comparison_digest"] == hbm["comparison_digest"]
+                left["comparison_digest"] == right["comparison_digest"]
                 == contract.get("contract_sha256")
-                and rom["model_digest"] == hbm["model_digest"]
-                and rom["comparison_workload_sha256"]
-                == hbm["comparison_workload_sha256"]
+                and left["model_digest"] == right["model_digest"]
+                and left["comparison_workload_sha256"]
+                == right["comparison_workload_sha256"]
                 == contract.get("comparison_workload_sha256")
-                and rom["target_id"] != hbm["target_id"]
-                and rom["deployment_digest"] != hbm["deployment_digest"]
-                and rom["comparison_boundary_digest"]
-                != hbm["comparison_boundary_digest"]
-                and rom["generated_token_sequence_sha256"]
-                == hbm["generated_token_sequence_sha256"]
-                and rom["external_oracle_sha256"]
-                == hbm["external_oracle_sha256"]
-                and bool(rom["request_trajectory_sha256"])
-                and rom["request_trajectory_sha256"]
-                == hbm["request_trajectory_sha256"]
+                and left["target_id"] != right["target_id"]
+                and left["deployment_digest"] != right["deployment_digest"]
+                and left["comparison_boundary_digest"]
+                != right["comparison_boundary_digest"]
+                and left["generated_token_sequence_sha256"]
+                == right["generated_token_sequence_sha256"]
+                and left["external_oracle_sha256"]
+                == right["external_oracle_sha256"]
+                and bool(left["request_trajectory_sha256"])
+                and left["request_trajectory_sha256"]
+                == right["request_trajectory_sha256"]
             ):
-                matched = {"rom": rom["path"], "hbm": hbm["path"]}
+                matched = {first_role: left["path"], second_role: right["path"]}
 
         functional_exact = [
             item
@@ -2091,35 +2119,35 @@ def _cycle_inventory(
         ]
         functional_sides = {
             role: [item for item in functional_exact if item["role"] == role]
-            for role in ("rom", "hbm")
+            for role in (first_role, second_role)
         }
         functional_matched = None
         if (
-            len(functional_sides["rom"]) == 1
-            and len(functional_sides["hbm"]) == 1
+            len(functional_sides[first_role]) == 1
+            and len(functional_sides[second_role]) == 1
         ):
-            rom = functional_sides["rom"][0]
-            hbm = functional_sides["hbm"][0]
+            left = functional_sides[first_role][0]
+            right = functional_sides[second_role][0]
             if (
-                rom["comparison_digest"] == hbm["comparison_digest"]
+                left["comparison_digest"] == right["comparison_digest"]
                 == contract.get("contract_sha256")
-                and rom["model_digest"] == hbm["model_digest"]
-                and rom["comparison_workload_sha256"]
-                == hbm["comparison_workload_sha256"]
+                and left["model_digest"] == right["model_digest"]
+                and left["comparison_workload_sha256"]
+                == right["comparison_workload_sha256"]
                 == contract.get("comparison_workload_sha256")
-                and rom["target_id"] != hbm["target_id"]
-                and rom["deployment_digest"] != hbm["deployment_digest"]
-                and rom["generated_token_sequence_sha256"]
-                == hbm["generated_token_sequence_sha256"]
-                and rom["external_oracle_sha256"]
-                == hbm["external_oracle_sha256"]
-                and bool(rom["request_trajectory_sha256"])
-                and rom["request_trajectory_sha256"]
-                == hbm["request_trajectory_sha256"]
+                and left["target_id"] != right["target_id"]
+                and left["deployment_digest"] != right["deployment_digest"]
+                and left["generated_token_sequence_sha256"]
+                == right["generated_token_sequence_sha256"]
+                and left["external_oracle_sha256"]
+                == right["external_oracle_sha256"]
+                and bool(left["request_trajectory_sha256"])
+                and left["request_trajectory_sha256"]
+                == right["request_trajectory_sha256"]
             ):
                 functional_matched = {
-                    "rom": rom["path"],
-                    "hbm": hbm["path"],
+                    first_role: left["path"],
+                    second_role: right["path"],
                 }
         pair_results[str(contract["comparison_id"])] = {
             "workload_id": contract["workload_id"],
@@ -2160,7 +2188,8 @@ def _cycle_inventory(
                     "contract-locked external oracle producer source SHA",
                     "artifact-derived exact batch/concurrency and per-step phases",
                     "artifact-derived terminal EOS-or-cap and no post-EOS proof",
-                    "matching ROM/HBM generated-token and oracle digests",
+                    "matching generated-token and oracle digests on both "
+                    "sides of the contract's target pair",
                     "execution.status=SUCCESS",
                     "execution.trap_class=NONE",
                     "execution.transactions=inputs.request.transactions",
@@ -2281,6 +2310,7 @@ def _blockers(
     deepseek = cycles["comparisons"][
         "deepseek_v4_rom_wafer_vs_hbm_cluster_32"
     ]
+    wafer_array = cycles["comparisons"]["deepseek_v4_rom_wafer_vs_rom_array_32"]
     if not qwen["functional_ready"]:
         blockers.append(
             {
@@ -2302,6 +2332,19 @@ def _blockers(
                     "Execute both the ROM wafer and HBM 32-node accelerator targets "
                     "for TA-DS-CTX-200K-1; the external oracle alone is not an "
                     "accelerator pair."
+                ),
+            }
+        )
+    if not wafer_array["functional_ready"]:
+        blockers.append(
+            {
+                "code": "deepseek_wafer_array_mandatory_accelerator_pair_missing",
+                "scope": "correctness/deepseek_wafer_array",
+                "required_action": (
+                    "Execute both the ROM wafer and the 32-node ROM array "
+                    "accelerator targets for TA-DS-CTX-200K-1 with identical "
+                    "output; the packaging comparison has no HBM side and the "
+                    "external oracle alone is not an accelerator pair."
                 ),
             }
         )
@@ -2364,6 +2407,18 @@ def _blockers(
                     "Run the complete DeepSeek wafer and 32-node targets with ASAP7 "
                     "capability/cost inputs, a matching shared comparison digest, and "
                     "distinct source-valid target boundaries."
+                ),
+            }
+        )
+    if not cycle_pairs["deepseek_v4_rom_wafer_vs_rom_array_32"]["ready"]:
+        blockers.append(
+            {
+                "code": "deepseek_wafer_array_same_view_cycle_pair_missing",
+                "scope": "cycle/deepseek_wafer_array",
+                "required_action": (
+                    "Run the complete DeepSeek ROM wafer and 32-node ROM array "
+                    "targets with ASAP7 capability/cost inputs, a matching shared "
+                    "comparison digest, and distinct source-valid target boundaries."
                 ),
             }
         )

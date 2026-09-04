@@ -148,6 +148,19 @@
       ],
       "type": "object"
     },
+    "hbmTarget": {
+      "allOf": [
+        {"$ref": "#/$defs/target"},
+        {
+          "properties": {
+            "role": {"const": "hbm"},
+            "storage_class": {"const": "HBM"}
+          },
+          "required": ["role", "storage_class"]
+        }
+      ],
+      "description": "The HBM side of the storage-class pair: a target whose role is hbm and whose immutable weight storage is HBM. An hbm slot carrying any other role or storage class is refused."
+    },
     "identifier": {
       "maxLength": 192,
       "minLength": 1,
@@ -255,7 +268,10 @@
         },
         "deployment": {"$ref": "#/$defs/lock"},
         "node_count": {"minimum": 1, "type": "integer"},
-        "role": {"enum": ["rom", "hbm"]},
+        "role": {
+          "description": "The slot this target fills. rom and hbm are the storage-class pair; rom_array is the second ROM role of the packaging pair. Each role is admitted only under the targets key of the same name, which also pins its storage class.",
+          "enum": ["rom", "hbm", "rom_array"]
+        },
         "storage_class": {"enum": ["ROM", "HBM"]},
         "target_id": {"$ref": "#/$defs/identifier"},
         "topology_class": {"maximum": 2, "minimum": 0, "type": "integer"}
@@ -273,13 +289,45 @@
       ],
       "type": "object"
     },
+    "romArrayTarget": {
+      "allOf": [
+        {"$ref": "#/$defs/target"},
+        {
+          "properties": {
+            "role": {"const": "rom_array"},
+            "storage_class": {"const": "ROM"}
+          },
+          "required": ["role", "storage_class"]
+        }
+      ],
+      "description": "The second ROM role of a ROM-versus-ROM pair: a target whose role is rom_array and whose immutable weight storage is ROM. A rom_array target with any other storage class is refused."
+    },
+    "romTarget": {
+      "allOf": [
+        {"$ref": "#/$defs/target"},
+        {
+          "properties": {
+            "role": {"const": "rom"},
+            "storage_class": {"const": "ROM"}
+          },
+          "required": ["role", "storage_class"]
+        }
+      ],
+      "description": "The ROM side present in both pair shapes: a target whose role is rom and whose immutable weight storage is ROM. A rom slot carrying any other role or storage class is refused."
+    },
     "targets": {
       "additionalProperties": false,
+      "description": "Exactly one of two pair shapes. {rom, hbm} is the storage-class comparison (a ROM target against an HBM target). {rom, rom_array} is the packaging comparison (two ROM targets, for example one wafer-scale logical device against an N-node ROM array). Every slot pins its target: the role must equal the slot name and the storage class must be that role's storage (rom and rom_array: ROM; hbm: HBM), so a mislabelled role or a target under the wrong slot is refused here, not only by the tool. hbm and rom_array never appear together, and rom is present in both shapes.",
+      "oneOf": [
+        {"required": ["hbm"]},
+        {"required": ["rom_array"]}
+      ],
       "properties": {
-        "hbm": {"$ref": "#/$defs/target"},
-        "rom": {"$ref": "#/$defs/target"}
+        "hbm": {"$ref": "#/$defs/hbmTarget"},
+        "rom": {"$ref": "#/$defs/romTarget"},
+        "rom_array": {"$ref": "#/$defs/romArrayTarget"}
       },
-      "required": ["hbm", "rom"],
+      "required": ["rom"],
       "type": "object"
     },
     "template": {
@@ -304,11 +352,17 @@
         },
         "roles": {
           "additionalProperties": false,
+          "description": "One budget per target role, in the same pair shape as targets: {rom, hbm} or {rom, rom_array}. A budget for only one side is refused.",
+          "oneOf": [
+            {"required": ["hbm"]},
+            {"required": ["rom_array"]}
+          ],
           "properties": {
             "hbm": {"$ref": "#/$defs/tpotRoleBudget"},
-            "rom": {"$ref": "#/$defs/tpotRoleBudget"}
+            "rom": {"$ref": "#/$defs/tpotRoleBudget"},
+            "rom_array": {"$ref": "#/$defs/tpotRoleBudget"}
           },
-          "required": ["hbm", "rom"],
+          "required": ["rom"],
           "type": "object"
         },
         "schema": {
