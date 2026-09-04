@@ -1,0 +1,291 @@
+{
+  "abi": {
+    "major": 3,
+    "minor": 0
+  },
+  "aggregate": {
+    "atomic_sentinel_words_checked": 16384,
+    "case_count": 6,
+    "checkpoint_weight_reads": 50331648,
+    "checks_per_simulator": 24702,
+    "computed_output_words_compared": 8192,
+    "input_reads": 12288,
+    "memory_reads": 50343936,
+    "multiply_adds": 50331648,
+    "negative_case_count": 4,
+    "positive_case_count": 2,
+    "rtl_write_beats": 8192
+  },
+  "boundary": {
+    "completed_opcode": "TENSOR.MATMUL",
+    "completed_pc": 41,
+    "hbm_operator_descriptor_id": 137,
+    "new_first_unsupported_opcode": "VECTOR.ADD",
+    "new_first_unsupported_pc": 44,
+    "previous_first_unsupported_pc": 41,
+    "rom_operator_descriptor_id": 134
+  },
+  "checkpoint_weight": {
+    "authentication_boundary": "all 16,777,216 BF16 codes in the complete 32-MiB tensor are read and authenticated; campaign staging independently re-reads it",
+    "checkpoint": "/home/ubuntu/.cache/huggingface/hub/models--Qwen--Qwen3-8B/snapshots/b968826d9c46dd6066d109eabc6255188de91218",
+    "checkpoint_lock": "results/tensor_accelerator/qwen3_full_model_physical/source/checkpoint.lock.json",
+    "checkpoint_lock_id": "fa32932d73c1f605a69db3a803f1f25ef5b022a98cc3c6b5fe42b7f7af024e2a",
+    "checkpoint_lock_sha256": "880782c1a160c466b39e2b4502649704819a96666f1de7abaacda30f090fbaaa",
+    "checkpoint_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+    "dtype": "BF16",
+    "name": "model.layers.0.self_attn.o_proj.weight",
+    "payload_sha256": "d6fec091373ead7a102c480d4642a9b135e9e2cf0d0c289e0425967c96877ac2",
+    "shape": [
+      4096,
+      4096
+    ],
+    "shard": "model-00001-of-00005.safetensors",
+    "size_bytes": 33554432,
+    "staged_bytes": 33554432,
+    "staged_copy_retained": false,
+    "staged_sha256": "d6fec091373ead7a102c480d4642a9b135e9e2cf0d0c289e0425967c96877ac2"
+  },
+  "input_binding": {
+    "authentic_current_qkv": true,
+    "authentic_prior_context_kv": false,
+    "bf16_sha256": "8992e9d1a0b5303b81b2503df2e23170f838f772e79eb8d7c65c1fce4fac93c2",
+    "source": "retained exact PC38 bounded GQA output",
+    "upstream_campaign": "results/rtl/a3_qwen_gqa_campaign.json",
+    "upstream_campaign_sha256": "36c2bb9477e967ebb640123971ef7a2657fdc6440f2c4a335377fd755d4461dd",
+    "upstream_manifest": "testdata/rtl/a3_qwen_gqa/index.json",
+    "upstream_manifest_sha256": "b9db0d077add983448a3ea87910e84c545849939325c37b7d61fd86fab2a1709",
+    "word_count": 4096
+  },
+  "log_sha256": {
+    "iverilog": "8bc2a213e1b9dd5a9b582ea3dba5966e0fa32c0856d0b515b4a40379418b497b",
+    "verilator": "b127db3c984522f8ecbcd5fbc69df1d8c25cdf458dec8cdde392e8990981e832",
+    "verilator_compile": "48d8e66c4b51e03b79784975e1baac619bd7ff318c3c8fd92dc70e6ef55d0f6e",
+    "yosys": "505c7838d60fcb808907dc2a182c34f50fcd88c986b6259d234fbf381e12db19"
+  },
+  "normalized_cases": [
+    {
+      "executed": 1,
+      "failed": 0,
+      "index": 0,
+      "input": 4096,
+      "macs": 16777216,
+      "reads": 16781312,
+      "records": 5,
+      "refusal": 0,
+      "trap": 0,
+      "verification_cycles": 16785643,
+      "weights": 16777216,
+      "writes": 4096
+    },
+    {
+      "executed": 1,
+      "failed": 0,
+      "index": 1,
+      "input": 4096,
+      "macs": 16777216,
+      "reads": 16781312,
+      "records": 5,
+      "refusal": 0,
+      "trap": 0,
+      "verification_cycles": 16852210,
+      "weights": 16777216,
+      "writes": 4096
+    },
+    {
+      "executed": 0,
+      "failed": 1,
+      "index": 2,
+      "input": 4096,
+      "macs": 16777216,
+      "reads": 16781312,
+      "records": 5,
+      "refusal": 5,
+      "trap": 8,
+      "verification_cycles": 16781547,
+      "weights": 16777216,
+      "writes": 0
+    },
+    {
+      "executed": 0,
+      "failed": 1,
+      "index": 3,
+      "input": 0,
+      "macs": 0,
+      "reads": 0,
+      "records": 5,
+      "refusal": 3,
+      "trap": 3,
+      "verification_cycles": 230,
+      "weights": 0,
+      "writes": 0
+    },
+    {
+      "executed": 0,
+      "failed": 1,
+      "index": 4,
+      "input": 0,
+      "macs": 0,
+      "reads": 0,
+      "records": 5,
+      "refusal": 3,
+      "trap": 3,
+      "verification_cycles": 230,
+      "weights": 0,
+      "writes": 0
+    },
+    {
+      "executed": 0,
+      "failed": 1,
+      "index": 5,
+      "input": 0,
+      "macs": 0,
+      "reads": 0,
+      "records": 0,
+      "refusal": 2,
+      "trap": 2,
+      "verification_cycles": 11,
+      "weights": 0,
+      "writes": 0
+    }
+  ],
+  "oracle": {
+    "expected_bf16_sha256": "018f52e0834dbe624493704eea505c7d96be52463a82a12e448b8faefd749262",
+    "full_output_independently_scalar_checked": false,
+    "implementation": "runtime/tensor_accelerator/bf16.py",
+    "independent_scalar_expected_sha256": "3c1e8edbe1aefa18062e0e461ecc52700ec65d49144f3bdccf3407f15b334d56",
+    "independent_scalar_implementation": "runtime/reference/tensor_accelerator_bf16.py",
+    "independent_scalar_row_count": 32,
+    "independent_scalar_row_indices": [
+      0,
+      1,
+      2,
+      3,
+      127,
+      128,
+      255,
+      256,
+      511,
+      512,
+      1023,
+      1024,
+      1535,
+      1536,
+      2047,
+      2048,
+      2559,
+      2560,
+      3071,
+      3072,
+      3583,
+      3584,
+      3967,
+      3968,
+      4031,
+      4032,
+      4063,
+      4064,
+      4087,
+      4088,
+      4094,
+      4095
+    ],
+    "word_count": 4096
+  },
+  "release_gate_order": [
+    "exact legitimate model output tokens through EOS",
+    "TPOT from architectural token-commit ticks in that same passing execution using characterized SKY130/ASAP7 timing"
+  ],
+  "schema": "opentallas.rtl.a3_qwen_output_projection_campaign.v1",
+  "scope": {
+    "architectural_token_commit_ticks": false,
+    "authentic_prior_context_kv": false,
+    "complete_checkpoint_weight_tensor_authenticated": true,
+    "complete_layer": false,
+    "complete_layer_zero_output_projection": true,
+    "dual_simulator": true,
+    "eos": false,
+    "exact_computed_words": true,
+    "exact_rom_and_hbm_pc41_records": true,
+    "full_output_independently_scalar_checked": false,
+    "independent_scalar_rows_checked": 32,
+    "late_fault_zero_writes": true,
+    "memory_input_backpressure": true,
+    "model_token_generation": false,
+    "output_backpressure_and_stability": true,
+    "release_gate_1_exact_tokens_through_eos_closed": false,
+    "release_gate_2_tpot_from_same_token_execution_closed": false,
+    "simulator_cycles_are_verification_cost_only": true,
+    "strictly_ascending_k_association": true,
+    "synthesizable_elaboration": true,
+    "tpot": false
+  },
+  "simulators_agree": true,
+  "source_sha256": {
+    "results/rtl/a3_qwen_gqa_campaign.json": "36c2bb9477e967ebb640123971ef7a2657fdc6440f2c4a335377fd755d4461dd",
+    "results/tensor_accelerator/qwen3_full_model_physical/source/checkpoint.lock.json": "880782c1a160c466b39e2b4502649704819a96666f1de7abaacda30f090fbaaa",
+    "rtl/abi3/ot_a3_descriptor_record_validator.sv": "92d39545cb99c762c8b96144c4c165fadeb4c355a77155db42c175ba5a36c1f3",
+    "rtl/abi3/ot_a3_engine_pkg.sv": "1186eecdc80321e87e08c97fb8e1c9a1b078584d019353736d235bf5cc84d477",
+    "rtl/abi3/ot_a3_instruction_decoder.sv": "9f2390ce38f9bddf80d47c01931b6fba5dde6c2f15a3f5fd0ae089e0bf27c3e1",
+    "rtl/abi3/ot_a3_pkg.sv": "6fb71525b329497fe62145ab0d9b1b6eff03f1e0c95f3bc6a0c1dde5c6744054",
+    "rtl/abi3/ot_a3_qwen_output_projection.sv": "ec0098b3ccb3bc001de9cb3152d7f3dc36640cd898570df2d55b0c7ba8b5520c",
+    "rtl/abi3/ot_a3_qwen_output_projection_adapter.sv": "5b10d569c97836797f246e2e74a3a4a50eb0b61b1eb3259cadd007edd4ffb040",
+    "rtl/ot_fp32_rne_pkg.sv": "39de679dd5f277d8a9cc2d5b6349eb1675e9397e64a8256bb1f53a34a054608c",
+    "rtl/test/tb_a3_qwen_output_projection.sv": "cc545117160a256e672209f94543ba6687c5d91ef530e3a6f0d0375e869c10a5",
+    "runtime/reference/formats.py": "74a3254c7a1dba9ad3bf07a5c793cb2ec1766f953b48ec4c782391f757290aa2",
+    "runtime/reference/tensor_accelerator_bf16.py": "e4d03cdd115f273849734048635501a56c9240fbb0f89809b8f92a563955877f",
+    "runtime/tensor_accelerator/bf16.py": "75543479efffeb7a6806dd44178c8af1844276f87e3d01366b21e1cbccf68a34",
+    "testdata/compiler/abi3_deployment/a3_descriptor.hex": "e2af94bbccaaa4e1a4b3d7d67a384d86a80769a37d06f38d622850fb116dd616",
+    "testdata/compiler/abi3_deployment/a3_program.hex": "9a86572ef8fbfb0eb6c175cd528c8e39164d0f315cec889d9c85a4ddf227c505",
+    "testdata/compiler/abi3_deployment/abi3_deployment_rtl_vectors.json": "06977e3d3be02282c5076fa269f8fe5a25dec320f4b0ec7840b4429d09945638",
+    "testdata/rtl/a3_qwen_gqa/expected.hex": "2d3591211e4fb6fd32ef0f2f3e1c23eb3e9709797c5efdb25f03073eb6b77743",
+    "testdata/rtl/a3_qwen_gqa/index.json": "b9db0d077add983448a3ea87910e84c545849939325c37b7d61fd86fab2a1709",
+    "tools/build_a3_qwen_output_projection_vectors.py": "bb69c461f8bfeb04013c99198b9c1c186de13be5f37b500674164b51e34b32ec",
+    "tools/run_a3_qwen_output_projection_rtl_campaign.py": "70fb7ea9e2d099748a10f2a01b4c18827680284f22d2e91eef24da4d46356757"
+  },
+  "status": "pass",
+  "synthesis_frontend": {
+    "check_problems": 0,
+    "note": "generic synthesizable elaboration only; no library mapping, PPA, token latency, output-token correctness, or TPOT claim",
+    "top": "ot_a3_qwen_output_projection"
+  },
+  "tools": {
+    "iverilog": {
+      "path": "/usr/bin/iverilog",
+      "sha256": "1ba67856249142771239573b5d51c7f6e4d67a1e7931a0d0fab56e0d473d2167",
+      "version": "Icarus Verilog version 11.0 (stable) ()"
+    },
+    "verilator": {
+      "path": "<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator",
+      "sha256": "fb2cc573b1055cf096c90e1efc9966fe56bdb4b265c83590cf2a49f7a0defcdf",
+      "version": "Verilator 5.050 2026-07-01 rev v5.050"
+    },
+    "vvp": {
+      "path": "/usr/bin/vvp",
+      "sha256": "075b114070eed3bc72e0e4559decf40520f3b693b1da9c94bba1defe8896966d"
+    },
+    "yosys": {
+      "path": "<HOME>/.local/opentallas-tools/yosys-0.68/bin/yosys",
+      "sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+    }
+  },
+  "vector_sha256": {
+    "cases.hex": "ec17574b24039c0209da54c4c444897ce29dff2166ef27ca6bd0aff549accc56",
+    "expected.hex": "5c03e8ec22e003fe3080bf81c838378a253c3500f834339ae398ce4d65aac0c7",
+    "index.json": "d1a90ecb05fa2f43f451ebef6b548b5f98d397255e56b6399fe77855893680bd",
+    "input.hex": "2d3591211e4fb6fd32ef0f2f3e1c23eb3e9709797c5efdb25f03073eb6b77743",
+    "instruction.hex": "b8581b78504a8c214f05c2e9d23aaa0aecc1f984954ad308165a871568176929",
+    "numeric.hex": "3529e9e8ca0630af4ec99ce2aa6d8b9cfe5bd284e76b8da6ee6f597fd72f7892",
+    "operator.hex": "7d4799620cf675d207465b8a8a312ab305f55b601510dff8e6bb986372faf336",
+    "output.hex": "588a2e7bca27a37ab865d77185b3773d8e9572f0665e7ca0c01dcaa4adf20421",
+    "view0.hex": "b87dc8b2d93e1362caa676764b47dbf255626f6bbe088de35b007860a5aaf392",
+    "view1.hex": "57c89d355a5f16e19bbe75fd2562aee745192e0c7a61dafb4fde56580a25e618"
+  },
+  "verification_wall_seconds": {
+    "iverilog_compile": 0.08020352700259537,
+    "iverilog_simulation": 6194.361375206965,
+    "verilator_compile": 9.226967711001635,
+    "verilator_simulation": 28.80752041307278,
+    "yosys_elaboration": 188.10443109099288
+  }
+}

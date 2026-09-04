@@ -31,6 +31,7 @@ integrity, reset, poison, and test contracts remain equivalent.
 | ABI 3.0 shipped-prefix issue bridge | `abi3/ot_a3_engine_issue_bridge.sv` | Descriptor- and view-checked connection from the real microsequencer to the exact shipped dense gather, BF16 embedding, Qwen RMSNorm, and DeepSeek stride-zero transfer profiles; completion only after datapath finish and precise descriptor/capability/engine traps for every refusal | A3-SHIP-PREFIX-001 |
 | ABI 3.0 Qwen KV-scatter continuation | `abi3/ot_a3_descriptor_record_validator.sv`, `abi3/ot_a3_qwen_kv_scatter_adapter.sv` | CRC- and descriptor-checked execution of the exact Qwen ROM/HBM PC-32 key and PC-35 value appends through the existing DMA mover; admits exact PC-38 GQA metadata and refuses capability before any write. This is a causal token-path dependency, not a token or TPOT result | A3-QW-KV-001 |
 | ABI 3.0 Qwen context-17 GQA continuation | `abi3/ot_a3_qwen_gqa.sv`, `abi3/ot_a3_qwen_gqa_adapter.sv`, `abi3/ot_a3_fp32_div_rne.sv`, `abi3/ot_a3_fp32_transcendental_cr_rne.sv` | Exact shipped ROM/HBM PC-38 descriptor admission and fixed `[1,32,128] x [17,8,128]` grouped-query attention: ordered binary32 products and reductions, BF16 score/probability/output boundaries, stable eight-lane softmax, complete-result buffering, ready/valid backpressure, and zero-write late-fault behavior. Only the current Q/K/V row is authentic; prior KV rows are synthetic, so this is not a layer, token, EOS, tick, or TPOT result | A3-QW-GQA-001 |
+| ABI 3.0 Qwen attention output-projection continuation | `abi3/ot_a3_qwen_output_projection.sv`, `abi3/ot_a3_qwen_output_projection_adapter.sv` | Exact shipped ROM/HBM PC-41 descriptor admission and layer-zero `[1,4096] x [4096,4096]^T` output projection: the complete official BF16 checkpoint weight tensor, single-lane ascending-K binary32-RNE association, complete-result buffering, input/output backpressure, and zero-write final-weight fault behavior. Its PC-38 input inherits synthetic prior KV history and it covers only layer zero, so this is not a layer stack, token, EOS, tick, or TPOT result | A3-QW-OPROJ-001 |
 | Tile | `ot_tile.sv`, `opentallas_tile.sv` | route-before-activation and result alignment | DV-TILE-004 |
 | Static schedule | `ot_schedule_controller.sv`, `static_timeslot_switch.sv` | fully rewritten shadow bank, typed schedule-ID/epoch atomic commit, and slot transport | DV-NOC-001 |
 | Credits | `ot_credit_manager.sv` | atomic reservation and conservation | DV-NOC-004 |
@@ -372,8 +373,9 @@ wires gather, embedding, Qwen RMSNorm, and DeepSeek transfer through
 `ot_a3_engine_issue_bridge.sv`; it does not broaden the standalone campaign. It
 does not model an SRAM or ROM macro, cover the blocked contraction contract, or
 integrate general `SILU_MUL`, `SOFTMAX`, or `SQRT_SOFTPLUS` into the engine
-array. A shared correctly rounded exponential and the fixed context-17 Qwen GQA
-continuation exist under A3-QW-GQA-001, outside that general correlation
+array. A shared correctly rounded exponential, the fixed context-17 Qwen GQA
+continuation, and the full layer-zero Qwen attention output projection exist
+under A3-QW-GQA-001 and A3-QW-OPROJ-001, outside that general correlation
 surface. SCALE sigmoid/general broadcast, CONVERT block forms,
 COMPRESS pool/state update, MHC pre/head, and generalized `INDEX_SCORE` remain
 unsupported; standalone RMS/HEAD_RMS/ROPE RTL remains outside this engine
@@ -390,13 +392,18 @@ other word in the active 17-row logical planes. A3-QW-GQA-001 is retained as
 metadata at context 17 on Icarus and pinned Verilator, comparing 8,192 computed
 BF16 words with the independent scalar attention oracle and checking 12,288
 zero-write sentinels across three fail-closed cases. Generic Yosys elaboration
-reports zero problems. The authentic current query/key/value activations are
-bound by digest, but the sixteen prior KV rows are deterministic synthetic
-transformations because no authentic history was retained. PC 41
-`TENSOR.MATMUL` (operators 134/137 for ROM/HBM) is the next shipped operation
-without a connected datapath. Neither campaign executes a complete layer,
-selects a token, handles EOS, emits architectural token-commit ticks, or
-establishes timing or TPOT.
+reports zero problems. A3-QW-OPROJ-001 is retained as
+`results/rtl/a3_qwen_output_projection_campaign.json`. It executes PC 41 on
+the exact 4,096-word PC-38 result and authenticates all 16,777,216 BF16 codes
+in the official layer-zero output-projection weight. ROM and backpressured HBM
+each compare all 4,096 results; a final-weight fault and three admission
+mutations publish zero words. The authentic current query/key/value activations
+are bound by digest, but the sixteen prior KV rows are deterministic synthetic
+transformations because no authentic history was retained. PCs 42–43 use the
+already-supported loop control, so PC 44 `VECTOR.ADD` is the next shipped
+operation without a connected datapath. These campaigns execute neither a
+complete layer stack nor a token, handle no EOS, emit no architectural
+token-commit ticks, and establish neither timing nor TPOT.
 
 A3-SEQ-001 is the two-simulator control-plane correlation, and it is retained
 as two artifacts that answer two different questions.

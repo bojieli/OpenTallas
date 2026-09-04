@@ -20,7 +20,8 @@ HBM instruction and descriptor records at:
 | 32 | `DMA.SCATTER` key append | 111 | 114 | exact 1,024-code row appended at logical row 16 |
 | 35 | `DMA.SCATTER` value append | 118 | 120 | exact 1,024-code row appended at logical row 16 |
 | 38 | `ATTENTION.GQA` | 127 | 131 | exact fixed-context-17 arithmetic; 4,096 BF16 words match the independent oracle on ROM and HBM |
-| 41 | `TENSOR.MATMUL` | 134 | 137 | next shipped operation; output-projection RTL is not connected |
+| 41 | `TENSOR.MATMUL` output projection | 134 | 137 | exact layer-zero `[1,4096] x [4096,4096]^T`; 4,096 BF16 words match the source-bound oracle on ROM and HBM |
+| 44 | `VECTOR.ADD` attention residual | 142 | 144 | next shipped operation without a connected datapath; PCs 42–43 are supported loop control |
 
 Both storage backends carry the same scatter contract digest,
 `55f39bccbda65baf6238cfcd93d7bf9959330984af837979870cc019be00e16f`.
@@ -52,9 +53,23 @@ The new synthesizable datapath implements only that exact context-17 decode
 geometry. It performs ordered QxK products, BF16 score and probability
 boundaries, stable softmax through the shared correctly rounded exponential and
 divider, the specified eight-lane denominator reduction, ordered probabilityxV
-reduction, and complete-result buffering before publication. The next shipped
-operation without a connected datapath is PC 41 output projection for both
-backends.
+reduction, and complete-result buffering before publication.
+
+The PC 41 continuation consumes that 4,096-word result, authenticates every
+BF16 code in the official layer-zero `self_attn.o_proj.weight` tensor, and
+performs 4,096 independent ascending-K reductions. Each BF16 product is rounded
+to binary32 RNE, each addition is rounded to binary32 RNE, and each finished
+accumulator is converted once to BF16 RNE. All 4,096 results are buffered before
+publication, so a fault on the final weight cannot leak a partial output. The
+next shipped operation without a connected datapath is PC 44 `VECTOR.ADD` for
+both backends; PC 42 `CONTROL.LOOP_NEXT` and PC 43 `CONTROL.LOOP_SETUP` use the
+already-supported control plane.
+
+This PC 41 engine is a correctness-oriented, synthesizable single-lane
+continuation; it does not freeze the production lane count or meet a TPOT SLO.
+A production tile may evaluate independent output rows in parallel, but it
+must preserve the same ascending-K association within every output and be
+correlated against this exact result before its token-commit ticks are usable.
 
 Only the current query, key, and value row is authentic. No authentic retained
 KV rows for positions 0 through 15 were available, so the focused arithmetic
@@ -126,17 +141,69 @@ The campaign's 471,054- to 718,949-cycle case counts and its host wall times
 measure verification cost. They are neither architectural token-commit ticks
 nor TPOT.
 
+### PC 41 attention output-projection evidence
+
+`results/rtl/a3_qwen_output_projection_campaign.json` is the machine-readable
+authority for PC 41. The source-current campaign records:
+
+- the exact retained PC 38 input, BF16 payload SHA-256
+  `8992e9d1a0b5303b81b2503df2e23170f838f772e79eb8d7c65c1fce4fac93c2`;
+- the complete official `[4096,4096]` layer-zero checkpoint weight, 33,554,432
+  bytes with SHA-256
+  `d6fec091373ead7a102c480d4642a9b135e9e2cf0d0c289e0425967c96877ac2`;
+- one exact ROM case and one backpressured HBM case, each comparing all 4,096
+  computed BF16 output words; the shared output payload SHA-256 is
+  `018f52e0834dbe624493704eea505c7d96be52463a82a12e448b8faefd749262`;
+- an optimized complete oracle cross-checked against a separately implemented
+  scalar oracle on 32 spread output rows, including both endpoints and tile
+  boundaries;
+- per successful case, 4,096 input reads, 16,777,216 checkpoint-weight reads
+  and MACs, 4,096 writes, and zero saturations;
+- a nonfinite fault injected on the final checkpoint weight after all
+  16,781,312 reads and 16,777,216 MAC attempts, with zero published words;
+- valid-CRC wrong numeric-contract and wrong-output-shape cases with zero
+  reads or writes, plus corrupt-instruction CRC rejection before descriptor
+  admission; and
+- 24,702 checks in Icarus and the same 24,702 checks in pinned Verilator 5.050,
+  with normalized observations identical, plus generic Yosys 0.68 elaboration
+  with zero reported structural problems.
+
+Reproduce only this focused lane with:
+
+```sh
+python tools/build_a3_qwen_output_projection_vectors.py
+python tools/run_a3_qwen_output_projection_rtl_campaign.py
+python -m pytest -q tests/compiler/test_a3_qwen_output_projection_rtl.py
+```
+
+The PC 41 input inherits the PC 38 limitation: current Q/K/V are authentic,
+but KV rows 0–15 are synthetic. PC 41 is also only layer zero. Therefore this
+is exact intermediate-tensor RTL evidence, not an authentic model-context
+execution, decoded token, EOS result, architectural token commit, or TPOT
+sample. Its per-case cycle counts and host wall times are verification costs.
+
 ## What remains before either release gate passes
 
 Gate 1 is not yet passed. The fixed context-17 PC 38 result must be generalized
 to every required position through the exact 8,000-token context without
-changing the numeric contract. The RTL path must continue at PC 41; complete
-the output projection, residual, RMSNorm, and MLP across all 36 layers; execute
-final norm and the complete vocabulary projection; select the same argmax as
-an independent model oracle; append that selected token; repeat ordinary
-decode until an official EOS token; and prove no model transaction or token
-commit occurs after EOS. Natural chat and agentic contexts must both pass,
-including the exact 8,000-natural-token Qwen acceptance context.
+changing the numeric contract, and its prior KV history must come from the
+authentic prefill/decode execution. From the new PC 44 boundary, the shortest
+shipped datapath sequence to one selected token is:
+
+| PCs | required datapath work |
+|---:|---|
+| 44, 47 | attention residual add and post-attention RMSNorm |
+| 50, 53, 56, 59, 62 | gate/up projections, SiLU-multiply, down projection, and final residual |
+| 64 | already-supported outer `LOOP_NEXT`; repeat the exact layer body for all 36 checkpoint layers |
+| 66, 68, 69 | final RMSNorm, final-row gather, and complete vocabulary projection |
+| 70–73 | argmax, fence, token append/architectural commit, and completion/EOS handoff |
+
+The selected token must match an independent model oracle, be appended by the
+RTL path, and drive the next ordinary decode submission until an official EOS
+token. The system must prove no model transaction or token commit occurs after
+EOS. Natural chat and agentic contexts must both pass, including the exact
+8,000-natural-token Qwen acceptance context. PC 41 itself does not shorten or
+waive any of those conditions.
 
 Only after that exact execution passes may Gate 2 use its architectural
 token-commit ticks. The TPOT report must identify the same deployment, prompt,

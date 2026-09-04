@@ -16,7 +16,8 @@ query/key RoPE and DeepSeek wafer multicast, qualified exact DeepSeek `HC_PRE`
 tile scheduling, added authenticated ABI 3.0 request-symbol transport for
 genuine batch admission, and retained the first exact-token frozen-source Qwen
 HBM/SRAM accelerator diagnostic, then qualified exact Qwen ROM/HBM PC-32/35 KV
-appends and fixed-context-17 PC-38 GQA arithmetic.
+appends, fixed-context-17 PC-38 GQA arithmetic, and layer-zero PC-41 attention
+output projection.
 **Current execution checkpoint (2026-09-04):** all four current deployments
 contain zero ABI `STATE` resources. Qwen HBM passes 21/21 deployment checks <!-- figure: 21 src="results/abi3/hbm_qwen_deployment_certificate.json#cases[case=qwen3-hbm-single-chip].passed_check_count" name="current Qwen HBM checks, checkpoint" --> at
 74 instructions <!-- figure: 74 src="results/abi3/hbm_qwen_deployment_certificate.json#cases[case=qwen3-hbm-single-chip].actual.instructions" name="current Qwen HBM instructions, checkpoint" --> and 215 descriptors <!-- figure: 215 src="results/abi3/hbm_qwen_deployment_certificate.json#cases[case=qwen3-hbm-single-chip].actual.descriptors" name="current Qwen HBM descriptors, checkpoint" -->; Qwen ROM passes 62/62 schedule checks <!-- figure: 62 src="results/abi3/rom_schedule_checks.json#cases[case=qwen3-rom-single-chip].passed_check_count" name="current Qwen ROM checks, checkpoint" --> at
@@ -37,7 +38,9 @@ adds one exact DeepSeek ROM PC-13 launch and checks all 4,194,304 writes across
 Icarus passes 12,587,599 with the same DeepSeek-ROM case record. Qwen next traps
 at PC 32 `DMA.SCATTER` in that shared prefix. Focused continuations execute the
 exact PC-32/35 KV appends and fixed-context-17 PC-38 `ATTENTION.GQA` for both
-Qwen backends on Icarus and Verilator; PC 41 `TENSOR.MATMUL` is now the next
+Qwen backends on Icarus and Verilator. The next continuation executes exact
+layer-zero PC-41 `TENSOR.MATMUL` output projection for both placements; PCs
+42–43 are already-supported loop control, making PC 44 `VECTOR.ADD` the next
 shipped Qwen operation without a connected datapath. DeepSeek ROM remains at PC
 15 `VECTOR.MHC` after multicast, and DeepSeek HBM at PC 14 `VECTOR.MHC`. The
 legal token ID 0 embedding remains a
@@ -104,7 +107,7 @@ genuine heterogeneous B=2/4/8 matrix; (3) execute DeepSeek
 `--gate-b-production` through EOS or 256 when resources permit, including both
 full-byte identity boundaries; (4) canonically rebuild the stale deployment
 certificate, generalize Qwen GQA beyond its fixed context-17 proof and extend
-RTL from Qwen PC-41 `TENSOR.MATMUL`, DeepSeek ROM PC-15 `VECTOR.MHC`, and
+RTL from Qwen PC-44 `VECTOR.ADD`, DeepSeek ROM PC-15 `VECTOR.MHC`, and
 DeepSeek HBM PC-14 `VECTOR.MHC` across every required
 operator, memory/link service, selection, append, and EOS path;
 (5) pass short integrated-token diagnostics, then run the wafer-ROM and
@@ -410,8 +413,8 @@ shipped-prefix launches and checks 91,136 compact result words through 94
 resolved views under Verilator. It includes Qwen layer-zero Q/K/V MATMUL, head
 RMSNorm, and query/key RoPE and binds the unchanged MAC and RoPE cores to
 retained dual-simulator arithmetic evidence. Qwen next returns `CAPABILITY` at
-PC 32 `DMA.SCATTER` in that shared bridge; the focused Qwen continuation below
-advances the bounded arithmetic boundary through PC 38 to PC 41.
+PC 32 `DMA.SCATTER` in that shared bridge; the focused Qwen continuations below
+advance the bounded arithmetic boundary through PC 38 and PC 41 to PC 44.
 DeepSeek HBM does so at PC 14 `VECTOR.MHC`.
 
 The frozen overlay
@@ -455,9 +458,23 @@ publish zero words. Generic Yosys 0.68 elaboration reports zero structural
 problems. The query and current key/value row are authentic causal RTL results,
 but prior-context rows 0 through 15 are deterministic synthetic transforms, so
 this is not authentic context-17 model execution. The next shipped Qwen
-operation without a connected datapath is PC 41 `TENSOR.MATMUL`, operators
-134/137 for ROM/HBM. Neither focused run executes a whole layer or token,
-handles EOS, emits architectural token-commit ticks, or establishes TPOT.
+operation at this point is PC 41 `TENSOR.MATMUL`, operators 134/137 for
+ROM/HBM.
+
+`results/rtl/a3_qwen_output_projection_campaign.json` closes that exact PC-41
+layer-zero operation. It authenticates the complete 33,554,432-byte official
+`self_attn.o_proj.weight` tensor, performs 16,777,216 ordered MACs per executing
+case, and compares every one of the 4,096 BF16 outputs for one ROM and one
+backpressured HBM case. Icarus and pinned Verilator agree on 24,702 checks per
+simulator and 8,192 computed words. A final-weight nonfinite fault after all
+reads publishes no result; valid-CRC numeric/shape mutations and an
+instruction-CRC mutation fail before operand access. Generic Yosys 0.68
+elaboration reports zero structural problems. PC 42 `CONTROL.LOOP_NEXT` and PC
+43 `CONTROL.LOOP_SETUP` are already handled, so PC 44 `VECTOR.ADD` is the next
+unsupported datapath instruction. The PC-41 input still inherits synthetic KV
+history rows 0–15 and covers only layer zero. None of these focused runs
+executes a whole layer stack or token, handles EOS, emits architectural
+token-commit ticks, or establishes TPOT.
 
 The separate exact `HC_PRE` scheduler campaign admits DeepSeek ROM PC 15 /
 descriptor 381 and HBM PC 14 / descriptor 546, covers ROM T=1 and HBM
