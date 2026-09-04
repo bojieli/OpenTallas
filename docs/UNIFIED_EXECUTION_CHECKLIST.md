@@ -436,6 +436,18 @@ handling, decoded-token validation, architectural TPOT, or physical
 measurement. Correct output tokens remain Gate 1; TPOT from the same
 correctness-qualified execution remains Gate 2.
 
+The focused Qwen continuation
+`results/rtl/a3_qwen_kv_scatter_campaign.json` closes both exact key/value KV
+appends after that shared prefix for ROM and HBM. It validates the real
+instruction, OPERATOR, TENSOR_VIEW, and NUMERIC records; consumes the retained
+PC-29 key and PC-17 value result words; and compares all 69,632 words across
+four active 17-row logical-plane results. Its six corruption/range negatives
+and two exact PC-38 capability boundaries perform no writes. Icarus and pinned
+Verilator each pass 209,076 focused checks. The first unsupported Qwen
+operation is therefore now PC 38 `ATTENTION.GQA`, operators 127/131 for
+ROM/HBM. This advances a causal RTL dependency only: the run still has no GQA,
+whole layer, token, EOS, architectural token-commit ticks, or TPOT.
+
 The separate exact `HC_PRE` scheduler campaign admits DeepSeek ROM PC 15 /
 descriptor 381 and HBM PC 14 / descriptor 546, covers ROM T=1 and HBM
 T=512/T=320/T=1 including `390 * 512 + 320 = 200,000`, and correlates 688,188
