@@ -3,6 +3,9 @@
 from __future__ import annotations
 
 import hashlib
+import json
+import shutil
+import subprocess
 from dataclasses import replace
 from pathlib import Path
 
@@ -10,6 +13,7 @@ import numpy as np
 import pytest
 
 from runtime.abi3.builder import DeploymentBuilder, DynamicTerm
+from runtime.abi3.capability import digest_of
 from runtime.abi3.constants import (
     Control,
     DType,
@@ -32,10 +36,24 @@ from runtime.abi3.fixture import fixture_capability
 from runtime.abi3.records import EosReason, Submission
 from runtime.abi3.request import RequestSymbolDescriptor
 from runtime.cycle.batch import CycleBatchScheduler, TimingBindingError
+from runtime.cycle.governed import (
+    GovernedTimingExportError,
+    RELEASE_FILE_DIGEST_FIELD,
+    RELEASE_SEMANTIC_DIGEST_FIELD,
+    publish_governed_target_timing_trace,
+)
 from runtime.cycle.machine import load_cost_table
 from runtime.cycle.model import CycleModel
 from runtime.sim.batch import BatchError, BatchLaneSubmission
 from runtime.sim.engines import load_engines
+from abi3_comparison_contract_support import (
+    make_locked_repository,
+    policy_identity,
+    sha256_file,
+    write_json,
+)
+from tools.abi3_comparison_boundary import validate_comparison_contract
+from tools.freeze_abi3_execution_release import build_release_lock
 
 
 REPO = Path(__file__).resolve().parents[2]
@@ -50,18 +68,32 @@ def _deployment(
     topology: TopologyClass = TopologyClass.SINGLE_CHIP,
     max_sessions: int = 8,
     with_link: bool = False,
+    max_context_positions: int = 64,
+    max_new_tokens: int = 8,
+    target_id: str = "abi3-cycle-batch-fixture",
+    model_id: str = "abi3-cycle-batch-fixture",
+    backend: str = "cycle-batch-test",
+    graph_id: str | None = None,
+    with_prefill: bool = False,
+    vocabulary: int = VOCABULARY,
+    technology_view: str = "fixture",
 ):
     capability = fixture_capability(topology)
-    capability.limits = {**capability.limits, "max_sessions": max_sessions}
+    capability.technology_view = technology_view
+    capability.limits = {
+        **capability.limits,
+        "max_sessions": max_sessions,
+        "max_context_positions": max_context_positions,
+    }
     if with_link:
         capability.features = tuple(
             sorted({*capability.features, int(Feature.INTEGRITY_RETRY)})
         )
     capability.validate()
     builder = DeploymentBuilder(
-        target_id="abi3-cycle-batch-fixture",
-        model_id="abi3-cycle-batch-fixture",
-        backend="cycle-batch-test",
+        target_id=target_id,
+        model_id=model_id,
+        backend=backend,
         capability=capability,
     )
     builder.topology(
@@ -102,8 +134,8 @@ def _deployment(
     )
     logits = builder.memory_object(
         storage_class=StorageClass.SRAM,
-        size_bytes=VOCABULARY * 4,
-        source=ObjectSource.zeros(VOCABULARY * 4),
+        size_bytes=vocabulary * 4,
+        source=ObjectSource.zeros(vocabulary * 4),
         permissions=int(Permission.READ | Permission.WRITE),
         key="obj.logits",
     )
@@ -140,7 +172,7 @@ def _deployment(
     logits_view = builder.tensor_view(
         object_id=logits,
         dtype=DType.FP32,
-        dims=[VOCABULARY],
+        dims=[vocabulary],
         permissions=int(Permission.READ | Permission.WRITE),
         key="view.logits",
     )
@@ -201,7 +233,7 @@ def _deployment(
     selection_schedule = builder.schedule(
         engine_family=Major.SELECTION,
         tile_rows=1,
-        tile_cols=VOCABULARY,
+        tile_cols=vocabulary,
         tile_depth=1,
         max_outstanding=1,
         issue_window=2,
@@ -249,9 +281,9 @@ def _deployment(
         key="op.append",
     )
     policy = builder.generation_policy(
-        eos_token_ids=[VOCABULARY - 1],
-        max_new_tokens=8,
-        vocabulary_size=VOCABULARY,
+        eos_token_ids=[vocabulary - 1],
+        max_new_tokens=max_new_tokens,
+        vocabulary_size=vocabulary,
         token_ring_object_id=tokens,
         selection_mode=SelectionMode.GREEDY_ARGMAX_LOWEST_ID,
         key="policy",
@@ -294,13 +326,31 @@ def _deployment(
     builder.emit(Major.SELECTION, Selection.ARGMAX, descriptor_id=argmax)
     builder.emit(Major.SELECTION, Selection.TOKEN_APPEND, descriptor_id=append)
     builder.emit(Major.CONTROL, Control.COMPLETE)
-    builder.entrypoint(
-        entrypoint_id=0,
-        first_instruction=0,
-        phase=Phase.DECODE,
-        generation_policy_id=policy,
+    if with_prefill:
+        builder.entrypoint(
+            entrypoint_id=0,
+            first_instruction=0,
+            phase=Phase.PREFILL,
+            generation_policy_id=policy,
+        )
+        builder.entrypoint(
+            entrypoint_id=1,
+            first_instruction=0,
+            phase=Phase.DECODE,
+            generation_policy_id=policy,
+        )
+    else:
+        builder.entrypoint(
+            entrypoint_id=0,
+            first_instruction=0,
+            phase=Phase.DECODE,
+            generation_policy_id=policy,
+        )
+    builder.source_identity = (
+        {"fixture": "abi3-cycle-batch-v1"}
+        if graph_id is None
+        else {"graph_id": graph_id}
     )
-    builder.source_identity = {"fixture": "abi3-cycle-batch-v1"}
     return builder.finish(), capability, logits, policy
 
 
@@ -311,6 +361,9 @@ def _lane(
     policy_id: int,
     *,
     span: int,
+    phase: Phase = Phase.DECODE,
+    entrypoint_id: int = 0,
+    max_new_tokens: int = 8,
 ) -> BatchLaneSubmission:
     session = scheduler.sessions[lane_index]
     descriptor_id = scheduler.device.next_request_descriptor_id
@@ -320,9 +373,9 @@ def _lane(
         int(Symbol.POSITION_START): position_start,
         int(Symbol.POSITION_END): position_start + span,
         int(Symbol.CONTEXT_LENGTH): position_start + span,
-        int(Symbol.PHASE): int(Phase.DECODE),
+        int(Symbol.PHASE): int(phase),
         int(Symbol.GENERATION_INDEX): len(session.generated),
-        int(Symbol.MAX_NEW_TOKENS): 8,
+        int(Symbol.MAX_NEW_TOKENS): max_new_tokens,
         int(Symbol.BATCH): scheduler.batch_size,
         int(Symbol.NODE_ID): 0,
         int(Symbol.NODE_COUNT): scheduler.device.node_count,
@@ -353,17 +406,26 @@ def _lane(
         idempotency_key=hashlib.sha256(
             f"{session.session_id}:{session.generation}:{transaction_id}".encode()
         ).digest()[:16],
-        entrypoint_id=0,
+        entrypoint_id=entrypoint_id,
         generation_policy_id=policy_id,
-        flags=int(SubmissionFlag.DECODE_PHASE),
+        flags=int(
+            SubmissionFlag.PREFILL_PHASE
+            if phase is Phase.PREFILL
+            else SubmissionFlag.DECODE_PHASE
+        ),
     )
     return BatchLaneSubmission(lane_index=lane_index, record=submission.encode())
 
 
 def _stage_token(
-    scheduler: CycleBatchScheduler, logits: int, lane: int, token: int
+    scheduler: CycleBatchScheduler,
+    logits: int,
+    lane: int,
+    token: int,
+    *,
+    vocabulary: int = VOCABULARY,
 ) -> None:
-    values = np.zeros(VOCABULARY, dtype=np.float32)
+    values = np.zeros(vocabulary, dtype=np.float32)
     values[token] = 9.0
     scheduler.stage_host_bytes(lane, logits, 0, values.tobytes())
 
@@ -509,6 +571,29 @@ def test_heterogeneous_batch_retires_eos_lane_without_stalling_live_lane() -> No
     assert all(sequence["no_post_eos_transaction"] for sequence in evidence["sequences"])
 
 
+def test_transaction_ids_are_session_scoped_in_a_physical_batch() -> None:
+    load_engines()
+    scheduler, logits, policy = _scheduler(2)
+    for lane in range(2):
+        _stage_token(scheduler, logits, lane, VOCABULARY - 1)
+    wave = scheduler.submit_wave(
+        [
+            _lane(scheduler, 0, 1, policy, span=1),
+            _lane(scheduler, 1, 1, policy, span=1),
+        ]
+    )
+
+    assert [lane.completion.transaction_id for lane in wave.lanes] == [1, 1]
+    assert len({lane.completion.session_id for lane in wave.lanes}) == 2
+    assert {
+        (record.session_id, record.transaction_id)
+        for record in scheduler.timing_records
+    } == {
+        (wave.lanes[0].session_id, 1),
+        (wave.lanes[1].session_id, 1),
+    }
+
+
 @pytest.mark.parametrize(
     "mutation",
     [
@@ -518,6 +603,7 @@ def test_heterogeneous_batch_retires_eos_lane_without_stalling_live_lane() -> No
         lambda record: replace(record, produced_token_id=0),
         lambda record: replace(record, eos_reason=EosReason.NONE),
         lambda record: replace(record, submission_digest="0" * 64),
+        lambda record: replace(record, request_symbols_digest="0" * 64),
         lambda record: replace(record, token_commit_tick=record.token_commit_tick + 1),
     ],
 )
@@ -552,3 +638,504 @@ def test_cluster_lanes_contend_on_one_physical_fabric() -> None:
     assert fabric["ports"]["total_busy_cycles"] > 0
     assert fabric["ports"]["total_contention_cycles"] > 0
     assert evidence["timing"]["shared_resources"]["node_count"] == 32
+
+
+def _run(repo: Path, *command: str) -> None:
+    subprocess.run(command, cwd=repo, check=True, capture_output=True, text=True)
+
+
+def _governed_budget() -> dict:
+    return {
+        "schema": "opentallas.abi3.tpot_acceptance_budget.v1",
+        "metric": "per_sequence_steady_state_decode_step_latency_seconds",
+        "batch_size": 1,
+        "steady_state_start_decode_step": 0,
+        "roles": {
+            role: {
+                "maximum_seconds": 1.0,
+                "statistic": "p95",
+                "eligible_measurement_classes": ["abi3_cycle_model_execution"],
+                "assumption_dependent_evidence_allowed": False,
+            }
+            for role in ("rom", "hbm")
+        },
+    }
+
+
+def _governed_export_fixture(tmp_path: Path, *, characterized: bool = True):
+    bundle = make_locked_repository(
+        tmp_path,
+        namespace="cycle-governed",
+        max_new_tokens=256,
+        oracle_generated_token_ids=[1, 7],
+        oracle_stop_reason="eos",
+    )
+    contract = bundle["contract"]
+    contract["execution"]["tpot_acceptance"] = _governed_budget()
+    target = contract["targets"]["hbm"]
+    deployment, capability, logits, generation_policy = _deployment(
+        max_sessions=2,
+        max_context_positions=512,
+        max_new_tokens=256,
+        target_id=target["target_id"],
+        model_id=contract["model"]["model_id"],
+        backend=target["backend"],
+        graph_id=contract["model"]["graph_id"],
+        with_prefill=True,
+        vocabulary=8,
+        technology_view="asap7",
+    )
+    capability_path = tmp_path / target["capability"]["path"]
+    write_json(capability_path, capability.to_dict())
+    deployment_root = tmp_path / target["deployment"]["path"]
+    deployment.write(deployment_root)
+    target["capability"].update(
+        status="locked",
+        digest=capability.digest,
+        source_sha256=sha256_file(capability_path),
+    )
+    target["deployment"].update(
+        status="locked",
+        digest=deployment.deployment_digest.hex(),
+        source_sha256=sha256_file(deployment_root / "deployment.json"),
+    )
+
+    cost_path = tmp_path / target["cost_policy"]["lock"]["path"]
+    cost = json.loads(cost_path.read_text(encoding="utf-8"))
+    characterization = tmp_path / "results/characterization/asap7-cycle.json"
+    write_json(characterization, {"status": "characterized"})
+    for entry in cost["parameters"].values():
+        entry["provenance"] = "characterized" if characterized else "assumed"
+        entry["source"] = characterization.relative_to(tmp_path).as_posix()
+    cost["comparison_policy"] = policy_identity(contract, "hbm")
+    write_json(cost_path, cost)
+    cost_table = load_cost_table(cost_path)
+    target["cost_policy"]["lock"].update(
+        status="locked",
+        digest=cost_table.digest,
+        source_sha256=sha256_file(cost_path),
+    )
+
+    oracle_path = tmp_path / contract["external_oracle"]["path"]
+    oracle = json.loads(oracle_path.read_text(encoding="utf-8"))
+    oracle_result = oracle["results"][contract["workload"]["workload_id"]]
+    oracle_result.update(
+        raw_decoded_text="one answer<eos>",
+        visible_decoded_text="one answer",
+    )
+    write_json(oracle_path, oracle)
+    contract["external_oracle"]["source_sha256"] = sha256_file(oracle_path)
+    write_json(bundle["contract_path"], contract)
+    validation = validate_comparison_contract(
+        contract,
+        repo=tmp_path,
+        source_path=bundle["contract_path"],
+    )
+    assert validation["ready"], validation
+
+    producer = tmp_path / "runtime/cycle/governed.py"
+    producer.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(REPO / "runtime/cycle/governed.py", producer)
+    checkpoint_lock = tmp_path / "results/source/checkpoint.lock.json"
+    write_json(
+        checkpoint_lock,
+        {
+            "schema": "opentallas.checkpoint_lock.v1",
+            "lock_id": "a" * 64,
+        },
+    )
+    _run(tmp_path, "git", "init", "-q")
+    _run(tmp_path, "git", "config", "user.email", "cycle@example.invalid")
+    _run(tmp_path, "git", "config", "user.name", "Cycle Export Test")
+    _run(tmp_path, "git", "add", "-A")
+    _run(tmp_path, "git", "commit", "-qm", "frozen cycle export")
+    namespace = "results/abi3/releases/cycle-governed"
+    release = build_release_lock(
+        repo=tmp_path,
+        release_id="cycle-governed-b1",
+        comparison_contracts=[bundle["contract_path"]],
+        external_locks={"checkpoint": checkpoint_lock},
+        result_namespace=namespace,
+    )
+    release_path = tmp_path / "results/abi3/releases/cycle-governed.lock.json"
+    write_json(release_path, release)
+
+    model = CycleModel(
+        deployment,
+        capability,
+        cost_table,
+        root=deployment_root,
+    )
+    scheduler = CycleBatchScheduler(model, 1)
+    _stage_token(scheduler, logits, 0, 1, vocabulary=8)
+    scheduler.submit_wave(
+        [
+            _lane(
+                scheduler,
+                0,
+                1,
+                generation_policy,
+                span=3,
+                phase=Phase.PREFILL,
+                entrypoint_id=0,
+                max_new_tokens=256,
+            )
+        ]
+    )
+    _stage_token(scheduler, logits, 0, 7, vocabulary=8)
+    scheduler.submit_wave(
+        [
+            _lane(
+                scheduler,
+                0,
+                2,
+                generation_policy,
+                span=1,
+                phase=Phase.DECODE,
+                entrypoint_id=1,
+                max_new_tokens=256,
+            )
+        ]
+    )
+    timings = list(scheduler.timing_records)
+    implementation = {
+        "backend": "numpy",
+        "device": "host",
+        "blocked_association": "fixture",
+    }
+    association = {"implementation": implementation, "numeric": "exact"}
+    association["manifest_sha256"] = digest_of(association)
+    source_path = "tools/run_accelerator_tokens.py"
+    source_sha = sha256_file(tmp_path / source_path)
+    record = {
+        "schema": "opentallas.abi3.accelerator_tokens.v1",
+        "status": "pass",
+        "evidence_class": "functional_artifact_only",
+        "tool": source_path,
+        "backend": "hbm_sram",
+        "target": {
+            "target_id": target["target_id"],
+            "backend": target["backend"],
+            "node_count": target["node_count"],
+            "topology_class": target["topology_class"],
+            "capability_digest": capability.digest,
+            "deployment_digest": deployment.deployment_digest.hex(),
+            "technology_view": "asap7",
+        },
+        "workload": {
+            "workload_id": contract["workload"]["workload_id"],
+            "workload_digest": contract["workload"]["digest"],
+            "prompt_token_ids": [1, 2, 3],
+            "prompt_token_count": 3,
+            "max_new_tokens": 256,
+            "rendered_text_sha256": contract["workload"]["rendered_text_sha256"],
+            "prompt_token_ids_sha256": digest_of([1, 2, 3]),
+            "tokenizer_sha256": contract["workload"]["tokenizer_sha256"],
+        },
+        "model": {
+            "model_id": contract["model"]["model_id"],
+            "graph_id": contract["model"]["graph_id"],
+            "numeric_profile": contract["model"]["numeric_profile"],
+        },
+        "verification": {
+            "admitted": True,
+            "errors": [],
+            "state_resources": 0,
+            "checks": {"capacity": True, "authentication": True},
+        },
+        "engine_coverage": {"missing_count": 0, "missing": []},
+        "implementation_identity": implementation,
+        "executed_association": association,
+        "source_sha256": {source_path: source_sha},
+        "generated_token_ids": [1, 7],
+        "generated_token_count": 2,
+        "stop_reason": "eos",
+        "failure": None,
+        "token_legitimacy_problems": [],
+        "oracle": {
+            "artifact": contract["external_oracle"]["path"],
+            "artifact_sha256": contract["external_oracle"]["source_sha256"],
+            "evidence_class": "external_reference_comparator",
+            "generated_token_ids": [1, 7],
+            "agreement": True,
+            "first_divergence_index": None,
+            "compared_tokens": 2,
+            "oracle_token_count": 2,
+        },
+        "terminal_acceptance": {
+            "contract": "exact_eos_or_cap",
+            "accepted": True,
+            "terminal_kind": "eos",
+            "failed_checks": [],
+            "checks": {"first_official_eos": True, "no_post_eos": True},
+        },
+        "per_step": [
+            {
+                "step": index,
+                "transaction_id": timing.transaction_id,
+                "phase": "prefill" if index == 0 else "decode",
+                "status": "SUCCESS",
+                "trap": "NONE",
+                "produced_tokens": [token],
+                "final_token_id": token,
+                "eos_reason": 1 if index == 1 else 0,
+                "instructions_retired": 8,
+                "retired_work": 8,
+                "completion_timestamp": timing.token_commit_tick,
+                "wall_seconds": 1.0,
+            }
+            for index, (token, timing) in enumerate(zip([1, 7], timings, strict=True))
+        ],
+        "execution_timing": {
+            "schema": "opentallas.abi3.execution_token_commit_timing.v1",
+            "unit": "cycles",
+            "clock_domain": "abi3_device_cycle_counter",
+            "request_start_tick": timings[0].request_start_tick,
+            "request_start_source": "driver_counter_before_fresh_prefill_submission",
+            "token_commit_ticks": [row.token_commit_tick for row in timings],
+            "token_commit_source": "decoded_abi3_completion.completion_timestamp",
+            "token_commits_from_execution": True,
+            "problems": [],
+        },
+        "wall_seconds": 2.0,
+    }
+    result_root = tmp_path / namespace
+    record_path = result_root / "hbm-sequence-0.json"
+    write_json(record_path, record)
+    workload_file = json.loads(bundle["workload_path"].read_text(encoding="utf-8"))
+    raw = oracle_result["raw_decoded_text"]
+    visible = oracle_result["visible_decoded_text"]
+    acceptance = {
+        "schema": "opentallas.abi3.qwen3_w10_acceptance.v1",
+        "status": "pass",
+        "workload_id": contract["workload"]["workload_id"],
+        "problems": [],
+        "pair_checks": {"token_sequences_identical": True},
+        "claim_boundary": {"acceptance_established": True},
+        "records": [
+            {
+                "path": record_path.relative_to(tmp_path).as_posix(),
+                "sha256": sha256_file(record_path),
+                "passes": True,
+                "problems": [],
+            }
+        ],
+        "text_evidence": {
+            "tokenizer": {"sha256": contract["workload"]["tokenizer_sha256"]},
+            "input": {
+                "token_count": 3,
+                "token_ids_sha256": digest_of([1, 2, 3]),
+                "rendered_text": workload_file["rendered_text"],
+                "rendered_text_sha256": contract["workload"]["rendered_text_sha256"],
+                "decode_matches_frozen_text": True,
+                "encode_round_trip_matches_ids": True,
+            },
+            "output": {
+                "token_count": 2,
+                "token_ids": [1, 7],
+                "token_ids_sha256": digest_of([1, 7]),
+                "raw_decoded_text": raw,
+                "raw_decoded_text_sha256": hashlib.sha256(raw.encode()).hexdigest(),
+                "visible_decoded_text": visible,
+                "visible_decoded_text_sha256": hashlib.sha256(
+                    visible.encode()
+                ).hexdigest(),
+                "raw_matches_frozen_oracle": True,
+                "visible_matches_frozen_oracle": True,
+            },
+        },
+    }
+    acceptance_path = result_root / "acceptance.json"
+    write_json(acceptance_path, acceptance)
+    return {
+        "repo": tmp_path,
+        "scheduler": scheduler,
+        "release": {
+            "path": release_path.relative_to(tmp_path).as_posix(),
+            "sha256": sha256_file(release_path),
+        },
+        "comparison_id": contract["comparison_id"],
+        "acceptance": {
+            "path": acceptance_path.relative_to(tmp_path).as_posix(),
+            "sha256": sha256_file(acceptance_path),
+        },
+        "records": [
+            {
+                "path": record_path.relative_to(tmp_path).as_posix(),
+                "sha256": sha256_file(record_path),
+            }
+        ],
+        "record_path": record_path,
+        "acceptance_path": acceptance_path,
+        "output": result_root / "target-timing.json",
+        "release_body": release,
+    }
+
+
+def test_governed_export_binds_correct_sequence_and_release(tmp_path: Path) -> None:
+    fixture = _governed_export_fixture(tmp_path)
+    trace = publish_governed_target_timing_trace(
+        fixture["scheduler"],
+        repo=fixture["repo"],
+        output_path=fixture["output"],
+        execution_release_lock=fixture["release"],
+        comparison_id=fixture["comparison_id"],
+        correctness_acceptance=fixture["acceptance"],
+        execution_records=fixture["records"],
+        target_role="hbm",
+    )
+
+    assert fixture["output"].is_file()
+    assert trace[RELEASE_FILE_DIGEST_FIELD] == fixture["release"]["sha256"]
+    assert trace[RELEASE_SEMANTIC_DIGEST_FIELD] == fixture["release_body"][
+        "release_sha256"
+    ]
+    assert trace["full_workload_execution"] is True
+    assert trace["provenance"] == {
+        "class": "characterized",
+        "depends_on_assumed_values": False,
+    }
+    assert trace["sequences"][0]["token_commit_ticks"] == [
+        row.token_commit_tick for row in fixture["scheduler"].timing_records
+    ]
+    with pytest.raises(GovernedTimingExportError, match="already exists"):
+        publish_governed_target_timing_trace(
+            fixture["scheduler"],
+            repo=fixture["repo"],
+            output_path=fixture["output"],
+            execution_release_lock=fixture["release"],
+            comparison_id=fixture["comparison_id"],
+            correctness_acceptance=fixture["acceptance"],
+            execution_records=fixture["records"],
+            target_role="hbm",
+        )
+
+
+def test_governed_export_rejects_uncharacterized_fixture_timing(
+    tmp_path: Path,
+) -> None:
+    fixture = _governed_export_fixture(tmp_path, characterized=False)
+    with pytest.raises(GovernedTimingExportError, match="not characterized"):
+        publish_governed_target_timing_trace(
+            fixture["scheduler"],
+            repo=fixture["repo"],
+            output_path=fixture["output"],
+            execution_release_lock=fixture["release"],
+            comparison_id=fixture["comparison_id"],
+            correctness_acceptance=fixture["acceptance"],
+            execution_records=fixture["records"],
+            target_role="hbm",
+        )
+    assert not fixture["output"].exists()
+
+
+@pytest.mark.parametrize(
+    "field",
+    [
+        "host_wall_time_used",
+        "retired_instruction_count_used_as_time",
+        "projection_used_as_qualified_tpot",
+    ],
+)
+def test_governed_export_rejects_non_target_timebases(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    field: str,
+) -> None:
+    fixture = _governed_export_fixture(tmp_path)
+    scheduler = fixture["scheduler"]
+    original_evidence = scheduler.evidence
+
+    def evidence_with_forbidden_timebase(*args, **kwargs):
+        evidence = original_evidence(*args, **kwargs)
+        evidence["timing"]["timebase"][field] = True
+        return evidence
+
+    monkeypatch.setattr(scheduler, "evidence", evidence_with_forbidden_timebase)
+    with pytest.raises(GovernedTimingExportError, match="target-cycle time"):
+        publish_governed_target_timing_trace(
+            scheduler,
+            repo=fixture["repo"],
+            output_path=fixture["output"],
+            execution_release_lock=fixture["release"],
+            comparison_id=fixture["comparison_id"],
+            correctness_acceptance=fixture["acceptance"],
+            execution_records=fixture["records"],
+            target_role="hbm",
+        )
+    assert not fixture["output"].exists()
+
+
+def test_governed_export_rejects_oracle_divergence_and_outside_namespace(
+    tmp_path: Path,
+) -> None:
+    fixture = _governed_export_fixture(tmp_path)
+    record = json.loads(fixture["record_path"].read_text(encoding="utf-8"))
+    record["oracle"]["generated_token_ids"][0] = 2
+    write_json(fixture["record_path"], record)
+    fixture["records"][0]["sha256"] = sha256_file(fixture["record_path"])
+    acceptance = json.loads(
+        fixture["acceptance_path"].read_text(encoding="utf-8")
+    )
+    acceptance["records"][0]["sha256"] = fixture["records"][0]["sha256"]
+    write_json(fixture["acceptance_path"], acceptance)
+    fixture["acceptance"]["sha256"] = sha256_file(fixture["acceptance_path"])
+    with pytest.raises(GovernedTimingExportError, match="locked oracle"):
+        publish_governed_target_timing_trace(
+            fixture["scheduler"],
+            repo=fixture["repo"],
+            output_path=fixture["repo"] / "outside.json",
+            execution_release_lock=fixture["release"],
+            comparison_id=fixture["comparison_id"],
+            correctness_acceptance=fixture["acceptance"],
+            execution_records=fixture["records"],
+            target_role="hbm",
+        )
+    assert not (fixture["repo"] / "outside.json").exists()
+
+
+def test_governed_export_rejects_output_outside_release_namespace(
+    tmp_path: Path,
+) -> None:
+    fixture = _governed_export_fixture(tmp_path)
+    outside = fixture["repo"] / "outside.json"
+    with pytest.raises(GovernedTimingExportError, match="outside the release namespace"):
+        publish_governed_target_timing_trace(
+            fixture["scheduler"],
+            repo=fixture["repo"],
+            output_path=outside,
+            execution_release_lock=fixture["release"],
+            comparison_id=fixture["comparison_id"],
+            correctness_acceptance=fixture["acceptance"],
+            execution_records=fixture["records"],
+            target_role="hbm",
+        )
+    assert not outside.exists()
+
+
+def test_governed_export_rejects_prefix_only_request_binding(
+    tmp_path: Path,
+) -> None:
+    fixture = _governed_export_fixture(tmp_path)
+    original = fixture["scheduler"].device.transaction_traces[0]
+    symbols = dict(original.request_symbols)
+    symbols[int(Symbol.SPAN_TOKENS)] = 1
+    symbols[int(Symbol.POSITION_END)] = 1
+    symbols[int(Symbol.CONTEXT_LENGTH)] = 1
+    symbols[int(Symbol.SPAN_LAST_INDEX)] = 0
+    fixture["scheduler"].device.transaction_traces[0] = replace(
+        original, request_symbols=tuple(sorted(symbols.items()))
+    )
+
+    with pytest.raises(GovernedTimingExportError, match="full-model trajectory"):
+        publish_governed_target_timing_trace(
+            fixture["scheduler"],
+            repo=fixture["repo"],
+            output_path=fixture["output"],
+            execution_release_lock=fixture["release"],
+            comparison_id=fixture["comparison_id"],
+            correctness_acceptance=fixture["acceptance"],
+            execution_records=fixture["records"],
+            target_role="hbm",
+        )
+    assert not fixture["output"].exists()
