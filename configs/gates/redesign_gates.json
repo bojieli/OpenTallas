@@ -1,0 +1,126 @@
+{
+  "schema": "opentallas.gates.redesign.v1",
+  "plan": "docs/OPENTALLAS_REDESIGN_PLAN.md",
+  "cause": "docs/PERFORMANCE_DESIGN_POSTMORTEM.md",
+  "principle": "Absence of evidence is FAIL, never not_evaluable. The previous programme's TPOT gate had two states, not_evaluable and pass, with no reachable fail; it stayed not_evaluable for the life of the project while the machine drifted 44,000x from target. A gate that cannot fail is a note. Every gate below reports FAIL until evidence says otherwise.",
+  "gates": [
+    {
+      "id": "G1",
+      "kind": "terminal",
+      "statement": "The integrated RTL produces the oracle's token IDs for one governed workload, on each of ROM and HBM.",
+      "fails_when": "No RTL path reaches a token.",
+      "evaluator": {
+        "type": "artifact_field",
+        "glob": "results/rtl/*token*.json",
+        "require": {"field": "record.oracle.agreement", "equals": true},
+        "note": "docs/FOUR_TARGET_PROGRESS_REPORT.md states at RTL 3.0: 'no RTL path reaches a token'. This gate is expected to fail until that sentence changes."
+      }
+    },
+    {
+      "id": "G2",
+      "kind": "terminal",
+      "statement": "A routed netlist exists containing the datapath array, the memory system AND the microsequencer, at one named PDK, with DRC 0 and antenna 0.",
+      "fails_when": "Any block of the ABI 3.0 control plane is absent from the physical results.",
+      "evaluator": {
+        "type": "routed_blocks_include",
+        "glob": "results/physical_abi3/*/*/pnr.json",
+        "require_any_named": ["microsequencer", "sequencer", "control_plane", "descriptor"],
+        "note": "docs/ABI3_PHYSICAL_VIEWS.md: 'No block of the ABI 3.0 control plane appears below at all'. [OI-43] is the reason."
+      }
+    },
+    {
+      "id": "G3",
+      "kind": "terminal",
+      "statement": "Measured TPOT against a FROZEN per-model budget, on a run that first passed G1.",
+      "fails_when": "TPOT exceeds the budget, OR no budget is frozen.",
+      "evaluator": {
+        "type": "frozen_budget",
+        "search": ["configs/**/*.json", "spec/**/*.json"],
+        "field": "tpot_acceptance",
+        "note": "This is the gate the previous programme could not fail. A missing budget is a FAIL here, not a deferral. Arm it with a provisional budget rather than leaving it unset."
+      }
+    },
+    {
+      "id": "G4",
+      "kind": "terminal",
+      "statement": "The cycle model reproduces the measured block cycles of the RTL within a stated band, and the derived machine reproduces the analytical design point.",
+      "fails_when": "Either exceeds its band.",
+      "evaluator": {
+        "type": "artifact_field",
+        "glob": "results/derived/*reconciliation*.json",
+        "require": {"field": "binding_regime.same_regime", "equals": true},
+        "note": "The regime half is met by results/derived/qwen3_n5_design_target_reconciliation.json. The RTL-calibration half has no artifact yet, so this gate is partial by construction and reports the weaker of the two."
+      }
+    },
+
+    {
+      "id": "D1",
+      "kind": "design",
+      "statement": "The new datapath equals the existing sequential lane bit for bit over the swept space.",
+      "fails_when": "One bit differs.",
+      "evaluator": {"type": "artifact_field", "glob": "results/rtl/*pipelined_lane*.json", "require": {"field": "bit_identity.equal", "equals": true}}
+    },
+    {
+      "id": "D2",
+      "kind": "design",
+      "statement": "Measured MAC per lane per cycle is at least 1.0.",
+      "fails_when": "The lane does not reach it.",
+      "evaluator": {"type": "artifact_threshold", "glob": "results/rtl/*pipelined_lane*.json", "field": "measured.mac_per_lane_cycle", "min": 1.0,
+        "note": "The present lane is 0.2 by its own header, and the matmul engine 0.34588/2 = 0.173."}
+    },
+    {
+      "id": "D3",
+      "kind": "design",
+      "statement": "The synthesised netlist contains N lanes for a declared N.",
+      "fails_when": "The netlist has one lane while the capability advertises more.",
+      "evaluator": {"type": "artifact_threshold", "glob": "results/physical_abi3/*/*array*/pnr.json", "field": "design.lanes", "min": 2,
+        "note": "There is currently no generate loop and no LANES parameter anywhere in the ABI3 engine hierarchy."}
+    },
+    {
+      "id": "D4",
+      "kind": "design",
+      "statement": "Per-MAC area and per-MAC period both improve against the recorded matmul_bf16_sram_engine baseline at the same PDK.",
+      "fails_when": "Either regresses.",
+      "evaluator": {"type": "per_mac_improvement", "baseline": "results/physical_abi3/asap7/matmul_bf16_sram_engine/pnr.json", "glob": "results/physical_abi3/*/*lane*/pnr.json",
+        "note": "Per-MAC figures are the node-portable ones. METHODOLOGY section 9 forbids scaling any absolute figure across nodes."}
+    },
+    {
+      "id": "D5",
+      "kind": "design",
+      "statement": "Every preserved failure mode still traps distinctly.",
+      "fails_when": "Any becomes silent.",
+      "evaluator": {"type": "artifact_field", "glob": "results/rtl/*pipelined_lane*.json", "require": {"field": "failure_modes.all_distinct", "equals": true}}
+    },
+
+    {
+      "id": "C1",
+      "kind": "comparison",
+      "statement": "ROM and HBM machines come from one derivation and differ only inside a cited weight-path allowlist.",
+      "fails_when": "Any parameter outside the allowlist differs.",
+      "evaluator": {"type": "command", "argv": ["python3", "tools/derive_cycle_machine.py", "--check"], "expect_exit": 0}
+    },
+    {
+      "id": "C2",
+      "kind": "comparison",
+      "statement": "The compiled deployments hand neither side an advantage in tile shape, column group, tile depth or DMA tile count.",
+      "fails_when": "Any asymmetry is unexplained.",
+      "evaluator": {"type": "artifact_field", "glob": "results/derived/*machine_pair*.json", "require": {"field": "deployment_audit.comparable", "equals": true},
+        "note": "The shipped comparison handed ROM a 2x tensor-lane advantage and a 16x column-group advantage. The audit currently tests tile_cols x issue_window and does NOT test tile_depth (2048 ROM against 128 HBM) or tile_rows."}
+    },
+    {
+      "id": "C3",
+      "kind": "comparison",
+      "statement": "The cycle model and the analytical model find the same binding constraint.",
+      "fails_when": "They disagree.",
+      "evaluator": {"type": "artifact_field", "glob": "results/derived/*reconciliation*.json", "require": {"field": "binding_regime.same_regime", "equals": true}}
+    },
+    {
+      "id": "C4",
+      "kind": "comparison",
+      "statement": "No published run sits more than 100x above its own bandwidth floor.",
+      "fails_when": "Any does.",
+      "evaluator": {"type": "plausibility_ceiling", "glob": "results/abi3/cycle/*.json", "field": "plausibility.total_over_binding_floor", "max": 100.0,
+        "note": "A 260,846,119,253-cycle run once sat 11,558x above its own floor at 0.02% bandwidth utilisation and was read as a per-token latency."}
+    }
+  ]
+}
