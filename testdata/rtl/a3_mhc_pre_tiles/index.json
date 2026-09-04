@@ -22,7 +22,7 @@
       "scope": "exact_shipped_rom_descriptor_decode_extent"
     },
     {
-      "config_sha256": "10c9617799d44c8a33b0fce62cb949f0c52b110429858d598f80c65fd6b736fd",
+      "config_sha256": "caf24d2a4b66f69212eca4b33b35421db04e66fe0d8ebd49280525fa4bcc2ab6",
       "expected": {
         "admitted": true,
         "commit_tiles": 24,
@@ -37,7 +37,7 @@
       "scope": "exact_authenticated_full_shape_functional_extent"
     },
     {
-      "config_sha256": "5b32744c8cc64d5fd70aa7adc2a523120b5e5a852f940608f02b7b464608aafd",
+      "config_sha256": "61e2c1522aa946f2f511d32e0a807b244e6ed6d8801e27c1d1ecad98d9df50d1",
       "expected": {
         "admitted": true,
         "commit_tiles": 15,
@@ -52,7 +52,7 @@
       "scope": "descriptor_parameterization_schedule_only"
     },
     {
-      "config_sha256": "aaba0ef888574bf3e42c76ea1770ce6050df8358f9244ea3fff0a1e13e13704f",
+      "config_sha256": "d42b88613c9032ab1c6b4bfd2c025205e337813ebfeabb5e06b87d83e697e702",
       "expected": {
         "admitted": true,
         "commit_tiles": 3,
@@ -97,7 +97,7 @@
       "scope": "fail_closed_descriptor_mutation"
     },
     {
-      "config_sha256": "512c435f839478fcbca4ceb7cc0e22842fc37b608e48b067ccb4e2d631da5131",
+      "config_sha256": "f5b2db60a1d27ff6d5b1b95da7bd6f72f1a9df3767bf264d6233d3c6d4465cc1",
       "expected": {
         "admitted": false,
         "commit_tiles": 0,
@@ -112,7 +112,7 @@
       "scope": "fail_closed_descriptor_mutation"
     },
     {
-      "config_sha256": "f19a56e01e38e9eb31363551646c474130f1dea4acab3e65e4a697f95b5fcfda",
+      "config_sha256": "2118624f19d43a5874a8a01d058a53db4660a1072003eaed4f3c7e57d7054a42",
       "expected": {
         "admitted": false,
         "commit_tiles": 0,
@@ -127,7 +127,7 @@
       "scope": "fail_closed_descriptor_mutation"
     },
     {
-      "config_sha256": "2fcbbfffa51646317790a26288fe69ae91574abd242132941f85cd289ea7819d",
+      "config_sha256": "6211f0523c5784f723eb31bec85a84a293781f9cb1164fe4002b8c4606e46efa",
       "expected": {
         "admitted": false,
         "commit_tiles": 0,
@@ -137,12 +137,12 @@
         "projection_tiles": 0,
         "total_tiles": 0
       },
-      "mutation": "config[4]=0x00000221",
+      "mutation": "config[4]=0x00000222",
       "name": "bad_operator_id",
       "scope": "fail_closed_descriptor_mutation"
     },
     {
-      "config_sha256": "ea05e4ba55676bce148d98813d66d08c703e3f5548df765979a175ff44ed0e37",
+      "config_sha256": "b6b69e1e274bd7f22f2a45302bafe7c35f9d611a77c2939345d28c57df0ed14c",
       "expected": {
         "admitted": false,
         "commit_tiles": 0,
@@ -157,7 +157,7 @@
       "scope": "fail_closed_descriptor_mutation"
     },
     {
-      "config_sha256": "75246ce367f7e0c29657add2ed97a2574131afc5e4755d65e1403e4ab0cd5a99",
+      "config_sha256": "f97c0dc69df840b9606d5e6055f7a04ffd00a85ed1933bfaa8ad99f3e4bd2fb0",
       "expected": {
         "admitted": false,
         "commit_tiles": 0,
@@ -172,7 +172,7 @@
       "scope": "fail_closed_descriptor_mutation"
     },
     {
-      "config_sha256": "f1b4ffe74378145b214cb9b6f675f5af3bac770ff51d66b2f1c97987cca19c67",
+      "config_sha256": "fcb080703f59a10775463af0c8b98f8a0317db3712a47016645f8dedbb4e627d",
       "expected": {
         "admitted": false,
         "commit_tiles": 0,
@@ -187,7 +187,7 @@
       "scope": "fail_closed_descriptor_mutation"
     },
     {
-      "config_sha256": "0b7055fc5dd1889d423be4ab724d5fb23e9d03f9a88158155f4515c8a06cdcef",
+      "config_sha256": "2ddedbaadedd5bac6a57403540884213923cd077da1e2f29502125e82d39cafa",
       "expected": {
         "admitted": false,
         "commit_tiles": 0,
@@ -202,7 +202,7 @@
       "scope": "fail_closed_descriptor_mutation"
     },
     {
-      "config_sha256": "ed6c811ea9150a79ebc0a06a319f1401bdcb22f0dfa71cf864d22bf0a70e70f6",
+      "config_sha256": "578a1c8c7c88269b955895349e9c09c7150a1581ee39960f8f6cb2b6dcafcad4",
       "expected": {
         "admitted": false,
         "commit_tiles": 0,
@@ -217,7 +217,7 @@
       "scope": "fail_closed_descriptor_mutation"
     },
     {
-      "config_sha256": "62a0d771d4c12a6fe61561b55c07e9164a59b68da69542c99edfdaf3b407fc98",
+      "config_sha256": "8ae02e94953b5791ff8088932e026fac3c30e8553f8bfd57716a0476d3ed5099",
       "expected": {
         "admitted": false,
         "commit_tiles": 0,
@@ -232,7 +232,7 @@
       "scope": "fail_closed_descriptor_mutation"
     },
     {
-      "config_sha256": "112c42df4e369ebd4e4dd25e7805ea7308e15142e5156a2d1f825239fb41b5a2",
+      "config_sha256": "92c12b7290669da2e245e241b8aa24edb8feac76d0ba3790d7d08bf7932a7291",
       "expected": {
         "admitted": false,
         "commit_tiles": 0,
@@ -247,7 +247,7 @@
       "scope": "fail_closed_descriptor_mutation"
     },
     {
-      "config_sha256": "aee355129d8cb8349129ab19dcef41521e4e3f30e1d63d2234c6c0971992cc8c",
+      "config_sha256": "c6336ba9e822ef858c57044b3b8ae7939367b7b1f059c993c96d35f1be3adee4",
       "expected": {
         "admitted": false,
         "commit_tiles": 0,
@@ -262,7 +262,7 @@
       "scope": "fail_closed_descriptor_mutation"
     },
     {
-      "config_sha256": "5aed2ebaffe9f46111c3ca4f0d8efd536f5999de2106fe4339986bb5e4d69f86",
+      "config_sha256": "393a78c0f84fc5faf8ca13cb816f3c4025a5238a79318c2648e8647fca13c73a",
       "expected": {
         "admitted": false,
         "commit_tiles": 0,
@@ -277,7 +277,7 @@
       "scope": "fail_closed_descriptor_mutation"
     },
     {
-      "config_sha256": "5b05a9afdefac935f74f1e8b3227bdbc7250255eee776a1cdb063c9cf232379a",
+      "config_sha256": "fb6e412495658102910507a3db1543e851d09aa102bd506bd60ec87bbd2a28ea",
       "expected": {
         "admitted": false,
         "commit_tiles": 0,
@@ -292,7 +292,7 @@
       "scope": "fail_closed_descriptor_mutation"
     },
     {
-      "config_sha256": "b9e0648d3ae40336f3301ffde79ff8da59b07385f6294d136d5dabaa14f1b018",
+      "config_sha256": "5ca2edf0ef1ca7f0c04d0495e81f5a92327c13c115d0645355b13300578c3bf3",
       "expected": {
         "admitted": false,
         "commit_tiles": 0,
@@ -307,7 +307,7 @@
       "scope": "fail_closed_descriptor_mutation"
     },
     {
-      "config_sha256": "2b12d22cbc41b082e9c9478e7b4c53facdff6b402d3b6cf4a3378bed24284455",
+      "config_sha256": "679beaea00903c96b27734b310bcbbad8b8506b69c5ebf98278bc3514accf49d",
       "expected": {
         "admitted": false,
         "commit_tiles": 0,
@@ -399,21 +399,22 @@
     }
   },
   "image_sha256": {
-    "cases.hex": "da45596cbdc249b9c6f522c1fd0303bbcca0bd539c9d24e5d436f4c0e25e9d91"
+    "cases.hex": "57ea2586f19b57b834bdf6ea98a84ee3ed4cfbe607bb384cb495178f71c34854"
   },
   "negative_case_count": 18,
   "positive_case_count": 4,
   "profiles": {
     "deepseek-v4-flash-hbm-cluster": {
-      "deployment_sha256": "e887bb184c4b682b00bd36189c924ef534ce84a90fa09125a248cb33b810eef1",
-      "descriptor_table_sha256": "c7aa83fef478c037be2e7360e52bf66ef4f14d9957e5adcb91bdde74b74e48fb",
-      "instruction_sha256": "5208e38a19d34c5a5f408183576e25a43f17e58ddd0fab23f2ee704e13585468",
-      "operator_descriptor_id": 546,
+      "authenticated_prior_descriptor_id": 546,
+      "deployment_sha256": "ec7cff231a7df4e1a652d421c81b853f0b1809b4fa5f0d197231f9e72da9f341",
+      "descriptor_table_sha256": "7e07d29a8bb5159ab61d893407fdba4cf9c1514ca2e996534cce3814fb30f383",
+      "instruction_sha256": "1495e79701542b0ef97e414465a67b323fa24c8d793a58b176dd3ee2d164c8ec",
+      "operator_descriptor_id": 545,
       "profile": 1,
       "program_counter": 14,
       "selected_descriptors": {
         "counter": {
-          "descriptor_id": 536,
+          "descriptor_id": 535,
           "descriptor_type": 12,
           "payload": {
             "counter_0": 83886081,
@@ -436,7 +437,7 @@
           "sha256": "f652f394997be673da9cf0ae2bc2c885e84e19cd34ecf8d4ee0a6701c1f257c2"
         },
         "input0": {
-          "descriptor_id": 538,
+          "descriptor_id": 537,
           "descriptor_type": 2,
           "payload": {
             "dim0": 512,
@@ -464,7 +465,7 @@
             "stride3": 0,
             "stride4": 0,
             "stride5": 0,
-            "term0_index": 537,
+            "term0_index": 536,
             "term0_kind": 0,
             "term0_stride": 8388608,
             "term1_index": 0,
@@ -479,10 +480,10 @@
           },
           "permissions": 1,
           "primary_object_id": 239,
-          "sha256": "657f24628187090438eda14d4683814690c18cb903ac4b33b3ce21e70028050b"
+          "sha256": "e932efc1d891688455202ca3858c72b740f407ae73d0f16e113738997c19e04f"
         },
         "input1": {
-          "descriptor_id": 539,
+          "descriptor_id": 538,
           "descriptor_type": 2,
           "payload": {
             "dim0": 24,
@@ -510,7 +511,7 @@
             "stride3": 0,
             "stride4": 0,
             "stride5": 0,
-            "term0_index": 535,
+            "term0_index": 534,
             "term0_kind": 0,
             "term0_stride": 393216,
             "term1_index": 0,
@@ -525,10 +526,10 @@
           },
           "permissions": 1,
           "primary_object_id": 1,
-          "sha256": "cad7850f415a66ae570d7a8ba40a9a9328328d6c455ea11822faa095b985abe5"
+          "sha256": "b68aed6ba33e26a4562d107bb05b916f3b063d665a5523f8cddb507bd8b66abb"
         },
         "input2": {
-          "descriptor_id": 540,
+          "descriptor_id": 539,
           "descriptor_type": 2,
           "payload": {
             "dim0": 24,
@@ -556,7 +557,7 @@
             "stride3": 0,
             "stride4": 0,
             "stride5": 0,
-            "term0_index": 535,
+            "term0_index": 534,
             "term0_kind": 0,
             "term0_stride": 24,
             "term1_index": 0,
@@ -571,10 +572,10 @@
           },
           "permissions": 1,
           "primary_object_id": 3,
-          "sha256": "39f2859e4a949232c868455cca47821237d0029ad1876202136f7c77681444b1"
+          "sha256": "261d0da81dd695dd1d196f2adc28088a001fb44ce1a80070e2aae5072996599c"
         },
         "input3": {
-          "descriptor_id": 541,
+          "descriptor_id": 540,
           "descriptor_type": 2,
           "payload": {
             "dim0": 3,
@@ -602,7 +603,7 @@
             "stride3": 0,
             "stride4": 0,
             "stride5": 0,
-            "term0_index": 535,
+            "term0_index": 534,
             "term0_kind": 0,
             "term0_stride": 3,
             "term1_index": 0,
@@ -617,10 +618,10 @@
           },
           "permissions": 1,
           "primary_object_id": 2,
-          "sha256": "28a9bf86e70e0237d56d9de214880c218c76d127e80181ceaee3da30a0270ac2"
+          "sha256": "6b6e82f816371d024b760912637674119eb3c5d23032b0053c3c93cf5fb3ceaf"
         },
         "numeric": {
-          "descriptor_id": 544,
+          "descriptor_id": 543,
           "descriptor_type": 3,
           "payload": {
             "accumulator_dtype": 18,
@@ -641,34 +642,34 @@
           "sha256": "74f3014cee7e6761309889e815ff4181b80fbcc5abf4bab1d327382a605c3add"
         },
         "operator": {
-          "descriptor_id": 546,
+          "descriptor_id": 545,
           "descriptor_type": 10,
           "payload": {
             "aux_id_0": 0,
             "aux_id_1": 20,
             "aux_id_2": 4,
             "aux_id_3": 4294967295,
-            "counter_class_id": 536,
+            "counter_class_id": 535,
             "engine_family": 48,
             "engine_sub": 9,
             "flags": 0,
-            "input_view_0": 538,
-            "input_view_1": 539,
-            "input_view_2": 540,
-            "input_view_3": 541,
-            "numeric_profile_id": 544,
-            "output_view_0": 542,
-            "output_view_1": 543,
-            "schedule_id": 545,
+            "input_view_0": 537,
+            "input_view_1": 538,
+            "input_view_2": 539,
+            "input_view_3": 540,
+            "numeric_profile_id": 543,
+            "output_view_0": 541,
+            "output_view_1": 542,
+            "schedule_id": 544,
             "source_graph_operation_id": 4294967295,
             "source_kernel_id": 4
           },
           "permissions": 5,
           "primary_object_id": 4294967295,
-          "sha256": "9f8faff0e88125cf8c3c0e96ef99e789fb27d2b6f69b18c623385e662af2bf4b"
+          "sha256": "179046a9bdc622251863c21d1d0cce87c656960c570b932078c7f52e6a9b43de"
         },
         "output0": {
-          "descriptor_id": 542,
+          "descriptor_id": 541,
           "descriptor_type": 2,
           "payload": {
             "dim0": 512,
@@ -696,7 +697,7 @@
             "stride3": 0,
             "stride4": 0,
             "stride5": 0,
-            "term0_index": 537,
+            "term0_index": 536,
             "term0_kind": 0,
             "term0_stride": 4096,
             "term1_index": 0,
@@ -711,10 +712,10 @@
           },
           "permissions": 3,
           "primary_object_id": 240,
-          "sha256": "e8ce417c3ea0a85ee7eae87767b1ca9cd67a133a7aded7e4d61bf84475f5037f"
+          "sha256": "b5ce115d5c13ccb04ac602cc8d360fe4c6f90e322df67fcc9e88f33a968fd577"
         },
         "output1": {
-          "descriptor_id": 543,
+          "descriptor_id": 542,
           "descriptor_type": 2,
           "payload": {
             "dim0": 512,
@@ -742,7 +743,7 @@
             "stride3": 0,
             "stride4": 0,
             "stride5": 0,
-            "term0_index": 537,
+            "term0_index": 536,
             "term0_kind": 0,
             "term0_stride": 8192,
             "term1_index": 0,
@@ -757,10 +758,10 @@
           },
           "permissions": 3,
           "primary_object_id": 241,
-          "sha256": "1d22f4131642a6fa2eefbbc959b20926b9accde039b48cdae610cd5087e7a19a"
+          "sha256": "4d931b855abc201a36ecef7c6873951774b9c2c7a7d76213f1c0ef42565c59fb"
         },
         "schedule": {
-          "descriptor_id": 545,
+          "descriptor_id": 544,
           "descriptor_type": 4,
           "payload": {
             "bank_mask": 8,
@@ -781,7 +782,7 @@
           "sha256": "faed83743c6f4d486f8b909009146d9761d8b5976a3bcf351255ad954106e795"
         },
         "wait": {
-          "descriptor_id": 547,
+          "descriptor_id": 546,
           "descriptor_type": 8,
           "payload": {
             "condition": 0,
@@ -810,8 +811,9 @@
       }
     },
     "deepseek-v4-flash-rom-wafer": {
-      "deployment_sha256": "f239f8fede6963d3daebfe19e8771afad69cf09992e339a0191a1983518ae8a7",
-      "descriptor_table_sha256": "4f341b3b91e3260029066700b7dab4f8e290818db667abd769381ac476f288f0",
+      "authenticated_prior_descriptor_id": 381,
+      "deployment_sha256": "34ca189cd4082b21260c0c27920f6e46d821f6709003b84cacd86cd867ed3e42",
+      "descriptor_table_sha256": "e324895066074c7da80422cc6a9388c392038d0ce721b6ad7124a4e1af38f40d",
       "instruction_sha256": "bc5a265299499d7851804b9730ea32ce8f4c1597e0f9ea3884984a6fd85c44ab",
       "operator_descriptor_id": 381,
       "profile": 0,
@@ -1216,7 +1218,7 @@
     }
   },
   "schema": "opentallas.rtl.a3_mhc_pre_tile_vectors.v1",
-  "selected_record_identity_rule": "the whole retained HBM deployment differs from the functional-qualification deployment; the selected instruction and all ten consumed descriptors are required byte-identical",
+  "selected_record_identity_rule": "the current HBM HC_PRE bundle is the authenticated functional bundle shifted down by one descriptor ID; all non-reference payload fields are identical and every shifted reference is checked explicitly",
   "source": {
     "results/abi3/deepseek_hbm_hc_pre_t512_functional_qualification.json": {
       "bytes": 265183,
@@ -1224,23 +1226,23 @@
     },
     "testdata/compiler/abi3_deployment/a3_descriptor.hex": {
       "bytes": 3153920,
-      "sha256": "73a3796cef4ab56d8b9be148f9a006fb78d04f365898229b9663e192722e0f44"
+      "sha256": "e2af94bbccaaa4e1a4b3d7d67a384d86a80769a37d06f38d622850fb116dd616"
     },
     "testdata/compiler/abi3_deployment/a3_program.hex": {
       "bytes": 266240,
-      "sha256": "3342d7729996bb1d4a2d2447f77d1254c73e94b1b55f20a532e1fe4a9d523f78"
+      "sha256": "9a86572ef8fbfb0eb6c175cd528c8e39164d0f315cec889d9c85a4ddf227c505"
     },
     "testdata/compiler/abi3_deployment/abi3_deployment_rtl_vectors.json": {
-      "bytes": 353447,
-      "sha256": "be5ffff67d78779b98edc8cdafa77332ada2ebbd3e70cb582cd2b5b3d972a9f4"
+      "bytes": 353271,
+      "sha256": "06977e3d3be02282c5076fa269f8fe5a25dec320f4b0ec7840b4429d09945638"
     },
     "testdata/runtime/deepseek_hbm_hc_pre_t512/qualification_vector.json": {
       "bytes": 5014,
       "sha256": "21dbb02b406cb4cdf39d5d140e5bcaa6b6014946a5af4228f0c3e646757642f1"
     },
     "tools/build_a3_mhc_pre_tile_vectors.py": {
-      "bytes": 24167,
-      "sha256": "bded0ec246b1b30e0086698b67c6f833873ef97e1615fd23449bc914e17eda64"
+      "bytes": 25744,
+      "sha256": "013e096d5486d59f072249c95be06e1840f9fa2ce1f385037b53fc8cf8e1469a"
     }
   },
   "status": "descriptor_bound_tiling_vectors",
@@ -1252,5 +1254,5 @@
     "projection": "[active_tokens,16384] x [24,16384]^T",
     "weight_output": "[active_tokens,2,4] FP32, flattened field width 8"
   },
-  "vector_set_id": "dec80fc75bf1b22f6e488ced0e7b48849178e722eff8ebaba2db8d8dcc2093be"
+  "vector_set_id": "c1851d798d132f5422ae48e5b33e387c8a74179f355d811471b1b566ae578440"
 }
