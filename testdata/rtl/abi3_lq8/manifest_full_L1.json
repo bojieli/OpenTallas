@@ -9283,230 +9283,6 @@
     {
       "block_a": 0,
       "block_b": 0,
-      "block_refused": true,
-      "block_rows_a": 0,
-      "block_rows_b": 0,
-      "cols": 12,
-      "cols_per_lane": 1,
-      "depth": 8,
-      "dtype_a": 16,
-      "dtype_b": 16,
-      "expected": {
-        "block": {
-          "error_code": 7,
-          "error_detail": 16,
-          "error_lane": 0,
-          "lane_ops": 0,
-          "out_count": 0,
-          "products": 0,
-          "saturations": 0,
-          "written": 0
-        },
-        "lanes": [
-          {
-            "error_code": 0,
-            "error_detail": 0,
-            "lane_ops": 0,
-            "out_count": 0,
-            "products": 0,
-            "saturations": 0,
-            "written": 0
-          },
-          {
-            "error_code": 0,
-            "error_detail": 0,
-            "lane_ops": 0,
-            "out_count": 0,
-            "products": 0,
-            "saturations": 0,
-            "written": 0
-          },
-          {
-            "error_code": 0,
-            "error_detail": 0,
-            "lane_ops": 0,
-            "out_count": 0,
-            "products": 0,
-            "saturations": 0,
-            "written": 0
-          },
-          {
-            "error_code": 0,
-            "error_detail": 0,
-            "lane_ops": 0,
-            "out_count": 0,
-            "products": 0,
-            "saturations": 0,
-            "written": 0
-          },
-          {
-            "error_code": 0,
-            "error_detail": 0,
-            "lane_ops": 0,
-            "out_count": 0,
-            "products": 0,
-            "saturations": 0,
-            "written": 0
-          },
-          {
-            "error_code": 0,
-            "error_detail": 0,
-            "lane_ops": 0,
-            "out_count": 0,
-            "products": 0,
-            "saturations": 0,
-            "written": 0
-          },
-          {
-            "error_code": 0,
-            "error_detail": 0,
-            "lane_ops": 0,
-            "out_count": 0,
-            "products": 0,
-            "saturations": 0,
-            "written": 0
-          },
-          {
-            "error_code": 0,
-            "error_detail": 0,
-            "lane_ops": 0,
-            "out_count": 0,
-            "products": 0,
-            "saturations": 0,
-            "written": 0
-          }
-        ]
-      },
-      "extras": {},
-      "group": 1,
-      "id": 82,
-      "mode_name": "block_columns",
-      "name": "fault_block_columns",
-      "note": "12 columns on 8 lanes: refused by the block before any lane starts",
-      "out_fp32": false,
-      "products": 192,
-      "rate": false,
-      "rows": 2,
-      "run_reference": false,
-      "scaled_a": false,
-      "scaled_b": false,
-      "stream_words": 0
-    },
-    {
-      "block_a": 0,
-      "block_b": 0,
-      "block_refused": true,
-      "block_rows_a": 0,
-      "block_rows_b": 0,
-      "cols": 16,
-      "cols_per_lane": 2,
-      "depth": 8,
-      "dtype_a": 48,
-      "dtype_b": 32,
-      "expected": {
-        "block": {
-          "error_code": 7,
-          "error_detail": 17,
-          "error_lane": 0,
-          "lane_ops": 0,
-          "out_count": 0,
-          "products": 0,
-          "saturations": 0,
-          "written": 0
-        },
-        "lanes": [
-          {
-            "error_code": 0,
-            "error_detail": 0,
-            "lane_ops": 0,
-            "out_count": 0,
-            "products": 0,
-            "saturations": 0,
-            "written": 0
-          },
-          {
-            "error_code": 0,
-            "error_detail": 0,
-            "lane_ops": 0,
-            "out_count": 0,
-            "products": 0,
-            "saturations": 0,
-            "written": 0
-          },
-          {
-            "error_code": 0,
-            "error_detail": 0,
-            "lane_ops": 0,
-            "out_count": 0,
-            "products": 0,
-            "saturations": 0,
-            "written": 0
-          },
-          {
-            "error_code": 0,
-            "error_detail": 0,
-            "lane_ops": 0,
-            "out_count": 0,
-            "products": 0,
-            "saturations": 0,
-            "written": 0
-          },
-          {
-            "error_code": 0,
-            "error_detail": 0,
-            "lane_ops": 0,
-            "out_count": 0,
-            "products": 0,
-            "saturations": 0,
-            "written": 0
-          },
-          {
-            "error_code": 0,
-            "error_detail": 0,
-            "lane_ops": 0,
-            "out_count": 0,
-            "products": 0,
-            "saturations": 0,
-            "written": 0
-          },
-          {
-            "error_code": 0,
-            "error_detail": 0,
-            "lane_ops": 0,
-            "out_count": 0,
-            "products": 0,
-            "saturations": 0,
-            "written": 0
-          },
-          {
-            "error_code": 0,
-            "error_detail": 0,
-            "lane_ops": 0,
-            "out_count": 0,
-            "products": 0,
-            "saturations": 0,
-            "written": 0
-          }
-        ]
-      },
-      "extras": {},
-      "group": 4,
-      "id": 83,
-      "mode_name": "block_stream_width",
-      "name": "fault_block_stream_width",
-      "note": "E2M1 activations against FP8 weights at g = 4: four weight codes do not fit 2 B per lane",
-      "out_fp32": false,
-      "products": 256,
-      "rate": false,
-      "rows": 2,
-      "run_reference": false,
-      "scaled_a": false,
-      "scaled_b": false,
-      "stream_words": 0
-    },
-    {
-      "block_a": 0,
-      "block_b": 0,
       "block_refused": false,
       "block_rows_a": 0,
       "block_rows_b": 0,
@@ -9603,7 +9379,7 @@
       },
       "extras": {},
       "group": 1,
-      "id": 84,
+      "id": 82,
       "mode_name": null,
       "name": "fault_late_operand",
       "note": "an infinity at row 1, k 4 of the shared activation: row 0 is written",
@@ -9715,7 +9491,7 @@
       },
       "extras": {},
       "group": 1,
-      "id": 85,
+      "id": 83,
       "mode_name": null,
       "name": "fault_late_column",
       "note": "an infinity in block column 42 (lane 2, local 5), k 2",
@@ -9827,7 +9603,7 @@
       },
       "extras": {},
       "group": 1,
-      "id": 86,
+      "id": 84,
       "mode_name": null,
       "name": "fault_late_accumulate",
       "note": "an accumulation overflow at row 1, block column 25 (lane 1, local 3)",
@@ -9939,7 +9715,7 @@
       },
       "extras": {},
       "group": 1,
-      "id": 87,
+      "id": 85,
       "mode_name": null,
       "name": "fault_two_lanes_two_modes",
       "note": "lane 6 leaves binary32 at its first product, lane 2 meets a NaN later: the block reports lane 2 (the lowest index) and every lane keeps its own class and detail",
@@ -10051,7 +9827,7 @@
       },
       "extras": {},
       "group": 2,
-      "id": 88,
+      "id": 86,
       "mode_name": null,
       "name": "g2_fault_late",
       "note": "a reserved code in block column 38 (lane 6, local 4), group 4",
@@ -10063,6 +9839,230 @@
       "scaled_a": false,
       "scaled_b": false,
       "stream_words": 84
+    },
+    {
+      "block_a": 0,
+      "block_b": 0,
+      "block_refused": true,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 12,
+      "cols_per_lane": 1,
+      "depth": 8,
+      "dtype_a": 16,
+      "dtype_b": 16,
+      "expected": {
+        "block": {
+          "error_code": 7,
+          "error_detail": 16,
+          "error_lane": 0,
+          "lane_ops": 0,
+          "out_count": 0,
+          "products": 0,
+          "saturations": 0,
+          "written": 0
+        },
+        "lanes": [
+          {
+            "error_code": 0,
+            "error_detail": 0,
+            "lane_ops": 0,
+            "out_count": 0,
+            "products": 0,
+            "saturations": 0,
+            "written": 0
+          },
+          {
+            "error_code": 0,
+            "error_detail": 0,
+            "lane_ops": 0,
+            "out_count": 0,
+            "products": 0,
+            "saturations": 0,
+            "written": 0
+          },
+          {
+            "error_code": 0,
+            "error_detail": 0,
+            "lane_ops": 0,
+            "out_count": 0,
+            "products": 0,
+            "saturations": 0,
+            "written": 0
+          },
+          {
+            "error_code": 0,
+            "error_detail": 0,
+            "lane_ops": 0,
+            "out_count": 0,
+            "products": 0,
+            "saturations": 0,
+            "written": 0
+          },
+          {
+            "error_code": 0,
+            "error_detail": 0,
+            "lane_ops": 0,
+            "out_count": 0,
+            "products": 0,
+            "saturations": 0,
+            "written": 0
+          },
+          {
+            "error_code": 0,
+            "error_detail": 0,
+            "lane_ops": 0,
+            "out_count": 0,
+            "products": 0,
+            "saturations": 0,
+            "written": 0
+          },
+          {
+            "error_code": 0,
+            "error_detail": 0,
+            "lane_ops": 0,
+            "out_count": 0,
+            "products": 0,
+            "saturations": 0,
+            "written": 0
+          },
+          {
+            "error_code": 0,
+            "error_detail": 0,
+            "lane_ops": 0,
+            "out_count": 0,
+            "products": 0,
+            "saturations": 0,
+            "written": 0
+          }
+        ]
+      },
+      "extras": {},
+      "group": 1,
+      "id": 87,
+      "mode_name": "block_columns",
+      "name": "fault_block_columns",
+      "note": "12 columns on 8 lanes: refused by the block before any lane starts",
+      "out_fp32": false,
+      "products": 192,
+      "rate": false,
+      "rows": 2,
+      "run_reference": false,
+      "scaled_a": false,
+      "scaled_b": false,
+      "stream_words": 0
+    },
+    {
+      "block_a": 0,
+      "block_b": 0,
+      "block_refused": true,
+      "block_rows_a": 0,
+      "block_rows_b": 0,
+      "cols": 16,
+      "cols_per_lane": 2,
+      "depth": 8,
+      "dtype_a": 48,
+      "dtype_b": 32,
+      "expected": {
+        "block": {
+          "error_code": 7,
+          "error_detail": 17,
+          "error_lane": 0,
+          "lane_ops": 0,
+          "out_count": 0,
+          "products": 0,
+          "saturations": 0,
+          "written": 0
+        },
+        "lanes": [
+          {
+            "error_code": 0,
+            "error_detail": 0,
+            "lane_ops": 0,
+            "out_count": 0,
+            "products": 0,
+            "saturations": 0,
+            "written": 0
+          },
+          {
+            "error_code": 0,
+            "error_detail": 0,
+            "lane_ops": 0,
+            "out_count": 0,
+            "products": 0,
+            "saturations": 0,
+            "written": 0
+          },
+          {
+            "error_code": 0,
+            "error_detail": 0,
+            "lane_ops": 0,
+            "out_count": 0,
+            "products": 0,
+            "saturations": 0,
+            "written": 0
+          },
+          {
+            "error_code": 0,
+            "error_detail": 0,
+            "lane_ops": 0,
+            "out_count": 0,
+            "products": 0,
+            "saturations": 0,
+            "written": 0
+          },
+          {
+            "error_code": 0,
+            "error_detail": 0,
+            "lane_ops": 0,
+            "out_count": 0,
+            "products": 0,
+            "saturations": 0,
+            "written": 0
+          },
+          {
+            "error_code": 0,
+            "error_detail": 0,
+            "lane_ops": 0,
+            "out_count": 0,
+            "products": 0,
+            "saturations": 0,
+            "written": 0
+          },
+          {
+            "error_code": 0,
+            "error_detail": 0,
+            "lane_ops": 0,
+            "out_count": 0,
+            "products": 0,
+            "saturations": 0,
+            "written": 0
+          },
+          {
+            "error_code": 0,
+            "error_detail": 0,
+            "lane_ops": 0,
+            "out_count": 0,
+            "products": 0,
+            "saturations": 0,
+            "written": 0
+          }
+        ]
+      },
+      "extras": {},
+      "group": 4,
+      "id": 88,
+      "mode_name": "block_stream_width",
+      "name": "fault_block_stream_width",
+      "note": "E2M1 activations against FP8 weights at g = 4: four weight codes do not fit 2 B per lane",
+      "out_fp32": false,
+      "products": 256,
+      "rate": false,
+      "rows": 2,
+      "run_reference": false,
+      "scaled_a": false,
+      "scaled_b": false,
+      "stream_words": 0
     },
     {
       "block_a": 0,
@@ -10904,7 +10904,7 @@
       "name": "fault_accumulate_range"
     },
     "block_columns": {
-      "case": 82,
+      "case": 87,
       "detail_name": "block_columns_not_multiple_of_lanes",
       "error_code": 7,
       "error_detail": 16,
@@ -10946,7 +10946,7 @@
       "name": "fault_block_columns"
     },
     "block_stream_width": {
-      "case": 83,
+      "case": 88,
       "detail_name": "block_stream_width",
       "error_code": 7,
       "error_detail": 17,
@@ -11420,14 +11420,14 @@
     "ws_words": 152
   },
   "image_sha256": {
-    "lq8_case.hex": "757829e0a809257403eb0eb2e83934f43c28d601035b0b0408cb8857eaae217c",
-    "lq8_expect.hex": "ffdd0cf65a9ddc1f9524ff07318c843e9d05fc0886f8cecc498c26699d67c94c",
-    "lq8_m0.hex": "46cdc6a9078f2efeafba5462394bd78892dd6cfffa5e32be1410bf6cd1a51b65",
-    "lq8_m1.hex": "8896408eecea5a4fd831d6b13192bbf7ea6f8d89cb86cd111e3109cd26c96f4a",
+    "lq8_case.hex": "8e2872cb81d5253cf4da2f4e62b32ea545a683e8e2ed6add70f876381891e2cd",
+    "lq8_expect.hex": "c74240b3a7d16ec9ba32359a91755bc6667fd69da8e9047b8bf642853b9a9c76",
+    "lq8_m0.hex": "37c7a679f11b0f4f66a3520bc1dda6f7afa5e855b564f62e6f0094664a3eeb79",
+    "lq8_m1.hex": "cc74581a29837abf0578c1b95ec35b458cf24ccb3dada0a16caf8ab5d2d1cc9a",
     "lq8_m2.hex": "2250da76171ada4fbbb8ece923f49f16cae0bd9eed27df21351c6d5540e94e41",
     "lq8_m3.hex": "68b7fe6dbed39e8760e149d6fe15b1dbbd1782f8787131ddf3e65057c4ea1aa2",
     "lq8_meta.hex": "30a9ff0b8d545940273ddc8e72e8b866252ccdf85d89ed5ee3c00f97d773795a",
-    "lq8_w.hex": "fd7ab79005230445215cc83357b73dfe204b5ece17027546e0b7e66a89b5fc8c",
+    "lq8_w.hex": "f474b8962a6a688ae7bd6c3bc128db7d88f589f07e5da210e923522b11363bb1",
     "lq8_ws.hex": "cfaefd0343f9882faadcb6ac4118857918817de7dcd4cc7c37e25a821c212d87"
   },
   "lanes": 8,

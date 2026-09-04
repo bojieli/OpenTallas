@@ -317,9 +317,13 @@ module tb_a3_lq8 #(
             for (lane = 0; lane < LANES; lane = lane + 1) begin
                 lane_rd_sel = lane[3:0];
                 #1;
+                // The block's per-lane class and detail are gated off after a
+                // refusal (expected zero); the counters read through the
+                // hierarchy are lane internals and are only meaningful for
+                // an operation that reached the lanes.
+                check_equal("lane error_code", {32'b0, lane_rd_error_code}, record[56 + lane]);
+                check_equal("lane error_detail", {32'b0, lane_rd_error_detail}, record[64 + lane]);
                 if (!refused) begin
-                    check_equal("lane error_code", {32'b0, lane_rd_error_code}, record[56 + lane]);
-                    check_equal("lane error_detail", {32'b0, lane_rd_error_detail}, record[64 + lane]);
                     check_equal("lane out_count", {32'b0, lane_rd_out_count}, record[88 + lane]);
                     check_equal("lane saturation_count", {32'b0, lane_rd_saturation_count}, record[96 + lane]);
                     check_equal("lane mac_count", {32'b0, lane_rd_mac_count}, record[72 + lane]);

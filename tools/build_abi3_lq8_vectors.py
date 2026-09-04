@@ -389,15 +389,6 @@ def build_cases(rng: np.random.Generator, profile: str) -> list[BlockCase]:
     add("fault_shape_zero_depth", "a degenerate extent is refused by every lane", 2, 24, 0,
         np.zeros((2, 0), dtype=np.uint16), np.zeros((24, 0), dtype=np.uint16),
         expect_detail=am.DETAIL_SHAPE, expect_lane=0, mode_name="shape", numpy_cross_check=False)
-    add("fault_block_columns", "12 columns on 8 lanes: refused by the block before any lane starts",
-        2, 12, 8, bf16_window(rng, (2, 8), *narrow), bf16_window(rng, (12, 8), *narrow),
-        expect_detail=DETAIL_BLOCK_COLUMNS, expect_lane=0, mode_name="block_columns",
-        run_reference=False, numpy_cross_check=False)
-    add("fault_block_stream_width",
-        "E2M1 activations against FP8 weights at g = 4: four weight codes do not fit 2 B per lane",
-        2, 16, 8, e2m1_random(rng, (2, 8)), fp8_random(rng, (16, 8)), dtype_a=E2M1, dtype_b=FP8,
-        group=4, expect_detail=DETAIL_BLOCK_STREAM_WIDTH, expect_lane=0, mode_name="block_stream_width",
-        run_reference=False, numpy_cross_check=False)
 
     # -- late faults: each lane's written set is its own -------------------------------------
     late_a = bf16_window(rng, (3, 6), *narrow)
@@ -429,6 +420,19 @@ def build_cases(rng: np.random.Generator, profile: str) -> list[BlockCase]:
     add("g2_fault_late", "a reserved code in block column 38 (lane 6, local 4), group 4",
         2, 56, 12, fp8_random(rng, (2, 12)), late_g2, dtype_a=FP8, dtype_b=FP8, group=2,
         expect_detail=am.DETAIL_B_RESERVED, expect_lane=6)
+
+    # -- the block's own refusals, placed after an operation that left every lane
+    # with non-zero counters and lane 6 with a class: a refused operation must
+    # report zero counters and no lane class, not the previous operation's.
+    add("fault_block_columns", "12 columns on 8 lanes: refused by the block before any lane starts",
+        2, 12, 8, bf16_window(rng, (2, 8), *narrow), bf16_window(rng, (12, 8), *narrow),
+        expect_detail=DETAIL_BLOCK_COLUMNS, expect_lane=0, mode_name="block_columns",
+        run_reference=False, numpy_cross_check=False)
+    add("fault_block_stream_width",
+        "E2M1 activations against FP8 weights at g = 4: four weight codes do not fit 2 B per lane",
+        2, 16, 8, e2m1_random(rng, (2, 8)), fp8_random(rng, (16, 8)), dtype_a=E2M1, dtype_b=FP8,
+        group=4, expect_detail=DETAIL_BLOCK_STREAM_WIDTH, expect_lane=0, mode_name="block_stream_width",
+        run_reference=False, numpy_cross_check=False)
 
     if profile == "full":
         # -- the normal-range BF16 sweep: 1,507,328 products over the block ------------------

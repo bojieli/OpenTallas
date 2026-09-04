@@ -230,9 +230,12 @@ int main(int argc, char** argv) {
             current_lane = static_cast<int>(lane);
             top.lane_rd_sel = static_cast<uint8_t>(lane);
             settle(top);
+            // Gated per-lane class and detail are checked on every case (zero
+            // after a refusal); the hierarchically read counters only when the
+            // operation reached the lanes.
+            report("lane error_code", top.lane_rd_error_code, field[56 + lane]);
+            report("lane error_detail", top.lane_rd_error_detail, field[64 + lane]);
             if (!refused) {
-                report("lane error_code", top.lane_rd_error_code, field[56 + lane]);
-                report("lane error_detail", top.lane_rd_error_detail, field[64 + lane]);
                 report("lane out_count", top.lane_rd_out_count, field[88 + lane]);
                 report("lane saturation_count", top.lane_rd_saturation_count, field[96 + lane]);
                 report("lane mac_count", top.lane_rd_mac_count, field[72 + lane]);
