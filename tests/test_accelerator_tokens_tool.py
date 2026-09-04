@@ -13,6 +13,7 @@ import hashlib
 import importlib.util
 import json
 from pathlib import Path
+import sys
 
 import pytest
 
@@ -32,6 +33,39 @@ def _reference(tmp_path: Path, body: dict) -> Path:
 
 
 WORKLOAD = {"workload_id": "W-1", "digest": "abc123", "token_ids": [1, 2, 3]}
+
+
+def test_existing_publish_root_is_refused_before_lowering(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    publish = tmp_path / "deployment"
+    publish.mkdir()
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "run_accelerator_tokens.py",
+            "--kernel-ir",
+            str(tmp_path / "unused-ir.json"),
+            "--backend",
+            "hbm_sram",
+            "--capability",
+            str(tmp_path / "unused-capability.json"),
+            "--workload",
+            str(tmp_path / "unused-workload.json"),
+            "--reference",
+            str(tmp_path / "unused-reference.json"),
+            "--checkpoint",
+            str(tmp_path / "unused-checkpoint"),
+            "--publish",
+            str(publish),
+            "--output",
+            str(tmp_path / "result.json"),
+        ],
+    )
+
+    assert tool.main() == 1
+    assert "refusing to overwrite deployment root" in capsys.readouterr().err
 
 
 def test_a_gold_produced_for_another_prompt_is_refused(tmp_path):

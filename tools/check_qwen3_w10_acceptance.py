@@ -59,7 +59,7 @@ PREFILL_ASSOCIATION_POLICY = (
     "tool_framework_attention_device_backend_and_chunk_pinned_v1"
 )
 ORACLE_TOOL = "tools/run_qwen3_reference_oracle.py"
-ORACLE_TOOL_VERSION = "qwen3_reference_oracle.py:v1"
+ORACLE_TOOL_VERSION = "qwen3_reference_oracle.py:v2"
 TOKENIZER_SHA256 = "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4"
 TOKENIZERS_VERSION = "0.22.2"
 BLOCKED_CONTRACT = "bf16_bf16_fp32_blocked_rne_v1"
@@ -71,6 +71,7 @@ NATURAL_ORACLE = (
 )
 STRESS_ORACLE = REPO / "results/abi3/qwen3_reference_oracle_long.json"
 NATURAL_WORKLOAD = REPO / "build/workloads/qwen3-8b/TA-QW-8K-1.json"
+NATURAL_WORKLOAD_INDEX = REPO / "build/workloads/qwen3-8b/index.json"
 STRESS_WORKLOAD = REPO / "build/workloads/qwen3-8b/TA-QW-STRESS-1.json"
 NATURAL_CONSTRUCTION = (
     REPO / "configs/abi3/workloads/qwen3_exact_8k_chat_v1.json"
@@ -80,6 +81,23 @@ QWEN_CHECKPOINT_LOCK = (
     / "results/tensor_accelerator/qwen3_full_model_physical/source/"
     "checkpoint.lock.json"
 )
+NATURAL_WORKLOAD_INDEX_SHA256 = (
+    "ce7ec985a65017e692013f056828adf16695d6ecb7747eb90970cd64978c2ee9"
+)
+NATURAL_WORKLOAD_SHA256 = (
+    "4bd1ca5cad91a6006383c4470a16fd803e18bbfad9ec19fe8ed01373da118217"
+)
+NATURAL_CONSTRUCTION_SHA256 = (
+    "38e4a9acc569fff5ffc23ed2187cb71a551133691acac7131f4b6a7d3c8909ca"
+)
+QWEN_CHECKPOINT_LOCK_SHA256 = (
+    "880782c1a160c466b39e2b4502649704819a96666f1de7abaacda30f090fbaaa"
+)
+QWEN_CHECKPOINT_LOCK_ID = (
+    "fa32932d73c1f605a69db3a803f1f25ef5b022a98cc3c6b5fe42b7f7af024e2a"
+)
+GATE_1_LAUNCH_SCHEMA = "opentallas.qwen3.gate1_launch.v1"
+GATE_1_PROFILE_ID = "qwen3_exact_8k_external_oracle_v1"
 QWEN_SNAPSHOT = Path(
     "/home/ubuntu/.cache/huggingface/hub/models--Qwen--Qwen3-8B/snapshots/"
     "b968826d9c46dd6066d109eabc6255188de91218"
@@ -781,6 +799,143 @@ def _check_association(record: Mapping[str, Any]) -> list[str]:
     return problems
 
 
+def _oracle_input_identity(
+    identity: object,
+    expected_path: Path,
+    expected_sha256: str,
+    label: str,
+) -> list[str]:
+    if not isinstance(identity, dict):
+        return [f"frozen natural oracle {label} identity is missing"]
+    problems: list[str] = []
+    if _resolved_record_path(identity.get("path")) != expected_path.resolve():
+        problems.append(f"frozen natural oracle {label} path is not pinned")
+    if identity.get("sha256") != expected_sha256:
+        problems.append(f"frozen natural oracle {label} SHA-256 is not pinned")
+    if not expected_path.is_file():
+        problems.append(f"frozen natural oracle {label} source is unavailable")
+    elif identity.get("size_bytes") != expected_path.stat().st_size:
+        problems.append(f"frozen natural oracle {label} size is not pinned")
+    return problems
+
+
+def _check_natural_oracle_governance(oracle: Mapping[str, Any]) -> list[str]:
+    """Require proof that Gate 1 authenticated inputs before model loading."""
+
+    problems: list[str] = []
+    if oracle.get("snapshot") != str(QWEN_SNAPSHOT):
+        problems.append("frozen natural oracle snapshot is not the pinned release")
+
+    producer = oracle.get("producer")
+    if not isinstance(producer, dict):
+        problems.append("frozen natural oracle producer record is missing")
+    else:
+        if producer.get("tool") != ORACLE_TOOL:
+            problems.append("frozen natural oracle producer tool differs")
+        if producer.get("tool_version") != ORACLE_TOOL_VERSION:
+            problems.append("frozen natural oracle producer version differs")
+        if producer.get("selected_workload_ids") != [NATURAL.workload_id]:
+            problems.append("frozen natural oracle selection is not exact Gate 1")
+        argv = producer.get("command_argv")
+        if (
+            not isinstance(argv, list)
+            or not all(isinstance(item, str) for item in argv)
+            or "--gate-1-production" not in argv
+        ):
+            problems.append("frozen natural oracle command did not request Gate 1")
+
+    inputs = oracle.get("input_identity")
+    if not isinstance(inputs, dict):
+        problems.append("frozen natural oracle input identity is missing")
+    else:
+        problems += _oracle_input_identity(
+            inputs.get("workload_index"),
+            NATURAL_WORKLOAD_INDEX,
+            NATURAL_WORKLOAD_INDEX_SHA256,
+            "workload index",
+        )
+        workload_sources = inputs.get("workload_sources")
+        workload_source = (
+            workload_sources.get(NATURAL.workload_id)
+            if isinstance(workload_sources, dict)
+            else None
+        )
+        if not isinstance(workload_sources, dict) or set(workload_sources) != {
+            NATURAL.workload_id
+        }:
+            problems.append("frozen natural oracle workload source set differs")
+        problems += _oracle_input_identity(
+            workload_source,
+            NATURAL_WORKLOAD,
+            NATURAL_WORKLOAD_SHA256,
+            "workload",
+        )
+        problems += _oracle_input_identity(
+            inputs.get("exact_8k_construction"),
+            NATURAL_CONSTRUCTION,
+            NATURAL_CONSTRUCTION_SHA256,
+            "construction",
+        )
+        problems += _oracle_input_identity(
+            inputs.get("checkpoint_lock"),
+            QWEN_CHECKPOINT_LOCK,
+            QWEN_CHECKPOINT_LOCK_SHA256,
+            "checkpoint lock",
+        )
+
+    preflight = oracle.get("production_checkpoint_preflight")
+    if not isinstance(preflight, dict):
+        problems.append("frozen natural oracle checkpoint preflight is missing")
+    else:
+        expected = {
+            "completed_before_model_framework_import": True,
+            "full_byte_hash_verified": True,
+            "lock_id": QWEN_CHECKPOINT_LOCK_ID,
+            "lock_source_sha256": QWEN_CHECKPOINT_LOCK_SHA256,
+            "payload_bytes": 16_381_470_720,
+            "shard_count": 5,
+            "tensor_count": 399,
+        }
+        if preflight != expected:
+            problems.append("frozen natural oracle checkpoint preflight differs")
+
+    production = oracle.get("production_launch")
+    contract = production.get("contract") if isinstance(production, dict) else None
+    expected_contract = {
+        "schema": GATE_1_LAUNCH_SCHEMA,
+        "profile_id": GATE_1_PROFILE_ID,
+        "workload_id": NATURAL.workload_id,
+        "prompt_token_count": NATURAL.prompt_count,
+        "max_new_tokens": NATURAL.cap,
+        "selection": "greedy_lowest_token_id_argmax",
+        "terminal": {
+            "eos_token_ids": [151645, 151643],
+            "include_eos_in_output": True,
+            "rule": "first_official_eos_or_exact_cap",
+        },
+        "prefill": {
+            "mode": "chunked_forward_kv_cache",
+            "chunk_tokens": 512,
+        },
+        "numeric": {
+            "dtype": "bfloat16",
+            "attention_implementation": "sdpa",
+        },
+        "placement": {
+            "policy": "auto",
+            "gpu_memory_gib": 8,
+            "cpu_memory_gib": 80,
+        },
+    }
+    if (
+        not isinstance(production, dict)
+        or production.get("explicitly_requested") is not True
+        or contract != expected_contract
+    ):
+        problems.append("frozen natural oracle production launch contract differs")
+    return problems
+
+
 def _frozen_inputs(spec: WorkloadSpec) -> tuple[dict[str, Any], dict[str, Any], list[int], list[int], list[str]]:
     problems: list[str] = []
     workload = _load(spec.workload_path)
@@ -830,6 +985,8 @@ def _frozen_inputs(spec: WorkloadSpec) -> tuple[dict[str, Any], dict[str, Any], 
         problems.append("frozen oracle has the wrong schema/model")
     if oracle.get("tokenizer_sha256") != TOKENIZER_SHA256:
         problems.append("frozen oracle tokenizer is not the pinned tokenizer")
+    if spec is NATURAL:
+        problems += _check_natural_oracle_governance(oracle)
     result = (oracle.get("results") or {}).get(spec.workload_id, {})
     if not isinstance(result, dict):
         result = {}

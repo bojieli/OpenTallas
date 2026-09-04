@@ -22,11 +22,34 @@ import sys
 import time
 from collections.abc import Mapping
 from pathlib import Path
+from typing import Any
 
 REPO = Path(__file__).resolve().parents[1]
 if str(REPO) not in sys.path:
     sys.path.insert(0, str(REPO))
 
+from compiler.frontend.checkpoint import (  # noqa: E402
+    load_checkpoint_lock,
+    verify_checkpoint_lock,
+)
+from compiler.tensor_accelerator.common import (  # noqa: E402
+    ArtifactError,
+    load_strict_json,
+    publish_bytes_atomic_no_replace,
+)
+from compiler.tensor_accelerator.qwen_chat import (  # noqa: E402
+    EOS_TOKEN_IDS,
+    EXPLICIT_VOCABULARY_SIZE,
+    QwenChatTokenizer,
+    SOURCE_REVISION,
+)
+from compiler.workloads.qwen3_exact_8k import (  # noqa: E402
+    AuthenticatedWorkloadTokenizer,
+    MAX_NEW_TOKENS as EXACT_8K_MAX_NEW_TOKENS,
+    WORKLOAD_ID as EXACT_8K_WORKLOAD_ID,
+    load_construction,
+    validate_materialized_workload,
+)
 from runtime.abi3.capability import canonical_json  # noqa: E402
 from runtime.agent import (  # noqa: E402
     AgentProtocolError,
@@ -46,7 +69,360 @@ PREFILL_ASSOCIATION_POLICY = (
     "tool_framework_attention_device_backend_and_chunk_pinned_v1"
 )
 ORACLE_TOOL = "tools/run_qwen3_reference_oracle.py"
-ORACLE_TOOL_VERSION = "qwen3_reference_oracle.py:v1"
+ORACLE_TOOL_VERSION = "qwen3_reference_oracle.py:v2"
+
+DEFAULT_WORKLOADS = REPO / "build" / "workloads" / "qwen3-8b"
+DEFAULT_CHECKPOINT_LOCK = (
+    REPO
+    / "results/tensor_accelerator/qwen3_full_model_physical/source/"
+    "checkpoint.lock.json"
+)
+DEFAULT_EXACT_8K_CONSTRUCTION = (
+    REPO / "configs/abi3/workloads/qwen3_exact_8k_chat_v1.json"
+)
+
+GATE_1_LAUNCH_SCHEMA = "opentallas.qwen3.gate1_launch.v1"
+GATE_1_PROFILE_ID = "qwen3_exact_8k_external_oracle_v1"
+GATE_1_WORKLOAD_INDEX_SHA256 = (
+    "ce7ec985a65017e692013f056828adf16695d6ecb7747eb90970cd64978c2ee9"
+)
+GATE_1_WORKLOAD_SHA256 = (
+    "4bd1ca5cad91a6006383c4470a16fd803e18bbfad9ec19fe8ed01373da118217"
+)
+GATE_1_CONSTRUCTION_SHA256 = (
+    "38e4a9acc569fff5ffc23ed2187cb71a551133691acac7131f4b6a7d3c8909ca"
+)
+GATE_1_CHECKPOINT_LOCK_SHA256 = (
+    "880782c1a160c466b39e2b4502649704819a96666f1de7abaacda30f090fbaaa"
+)
+GATE_1_CHECKPOINT_LOCK_ID = (
+    "fa32932d73c1f605a69db3a803f1f25ef5b022a98cc3c6b5fe42b7f7af024e2a"
+)
+
+
+class OracleInputError(ValueError):
+    """A source or launch option cannot support governed oracle evidence."""
+
+
+def _sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    try:
+        with Path(path).open("rb") as handle:
+            while block := handle.read(8 * 1024 * 1024):
+                digest.update(block)
+    except OSError as exc:
+        raise OracleInputError(f"cannot hash oracle input {path}: {exc}") from exc
+    return digest.hexdigest()
+
+
+def _record_path(path: Path) -> str:
+    resolved = Path(path).resolve()
+    try:
+        return resolved.relative_to(REPO.resolve()).as_posix()
+    except ValueError:
+        return str(resolved)
+
+
+def _file_identity(path: Path) -> dict[str, object]:
+    resolved = Path(path).resolve()
+    try:
+        size = resolved.stat().st_size
+    except OSError as exc:
+        raise OracleInputError(f"oracle input is unavailable: {resolved}: {exc}") from exc
+    if not resolved.is_file():
+        raise OracleInputError(f"oracle input is not a regular file: {resolved}")
+    return {
+        "path": _record_path(resolved),
+        "size_bytes": size,
+        "sha256": _sha256_file(resolved),
+    }
+
+
+def _workload_digest(body: Mapping[str, object]) -> str:
+    required = ("workload_id", "kind", "token_ids", "max_new_tokens")
+    try:
+        value = {name: body[name] for name in required}
+    except KeyError as exc:
+        raise OracleInputError(
+            f"workload lacks required field {exc.args[0]!r}"
+        ) from exc
+    encoded = json.dumps(
+        value,
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=True,
+        allow_nan=False,
+    ).encode("ascii")
+    return hashlib.sha256(encoded).hexdigest()
+
+
+def _load_selected_workloads(
+    workloads: Path, only: list[str] | None
+) -> tuple[
+    dict[str, Any],
+    list[tuple[str, dict[str, Any]]],
+    dict[str, dict[str, Any]],
+    dict[str, object],
+]:
+    """Strictly load and cross-check the workload index before model import."""
+
+    root = Path(workloads).resolve()
+    index_path = root / "index.json"
+    try:
+        index = load_strict_json(index_path)
+    except (ArtifactError, OSError, ValueError) as exc:
+        raise OracleInputError(f"cannot load workload index: {exc}") from exc
+    if (
+        set(index) != {"model_id", "schema", "snapshot", "tokenizer_sha256", "workloads"}
+        or index.get("schema") != "opentallas.abi3.workload_index.v1"
+        or index.get("model_id") != "qwen3-8b"
+        or not isinstance(index.get("workloads"), dict)
+    ):
+        raise OracleInputError("Qwen workload index boundary differs")
+    entries = index["workloads"]
+    assert isinstance(entries, dict)
+    if only is None:
+        selected_ids = sorted(entries)
+    else:
+        if len(only) != len(set(only)):
+            raise OracleInputError("--only contains a duplicate workload id")
+        unknown = sorted(set(only) - set(entries))
+        if unknown:
+            raise OracleInputError(f"unknown workloads: {unknown}")
+        selected_ids = sorted(only)
+    if not selected_ids:
+        raise OracleInputError("no workloads selected")
+
+    selected: list[tuple[str, dict[str, Any]]] = []
+    bodies: dict[str, dict[str, Any]] = {}
+    sources: dict[str, object] = {}
+    for workload_id in selected_ids:
+        raw_entry = entries[workload_id]
+        if not isinstance(raw_entry, dict) or set(raw_entry) != {
+            "digest",
+            "kind",
+            "max_new_tokens",
+            "path",
+            "prompt_token_count",
+        }:
+            raise OracleInputError(f"{workload_id}: workload index entry differs")
+        entry = dict(raw_entry)
+        relative = entry.get("path")
+        if (
+            not isinstance(relative, str)
+            or not relative
+            or Path(relative).is_absolute()
+            or Path(relative).as_posix() != relative
+        ):
+            raise OracleInputError(f"{workload_id}: workload path is not normalized")
+        source_path = (root / relative).resolve()
+        try:
+            source_path.relative_to(root)
+        except ValueError as exc:
+            raise OracleInputError(f"{workload_id}: workload path escapes its root") from exc
+        try:
+            body = load_strict_json(source_path)
+        except (ArtifactError, OSError, ValueError) as exc:
+            raise OracleInputError(f"{workload_id}: cannot load workload: {exc}") from exc
+        tokens = body.get("token_ids")
+        if (
+            body.get("workload_id") != workload_id
+            or not isinstance(tokens, list)
+            or not all(
+                isinstance(token, int) and not isinstance(token, bool) and token >= 0
+                for token in tokens
+            )
+            or body.get("prompt_token_count") != len(tokens)
+            or body.get("digest") != _workload_digest(body)
+            or entry
+            != {
+                "digest": body.get("digest"),
+                "kind": body.get("kind"),
+                "max_new_tokens": body.get("max_new_tokens"),
+                "path": relative,
+                "prompt_token_count": len(tokens),
+            }
+        ):
+            raise OracleInputError(
+                f"{workload_id}: workload body and index entry do not agree"
+            )
+        selected.append((workload_id, entry))
+        bodies[workload_id] = body
+        sources[workload_id] = _file_identity(source_path)
+    return index, selected, bodies, {
+        "workload_index": _file_identity(index_path),
+        "workload_sources": sources,
+    }
+
+
+def _configure_gate_1_production(args: argparse.Namespace) -> list[str]:
+    """Normalize every correctness-relevant exact-8K oracle option."""
+
+    if not args.gate_1_production:
+        return []
+    problems: list[str] = []
+    if args.only not in (None, [EXACT_8K_WORKLOAD_ID]):
+        problems.append(
+            f"--gate-1-production only permits --only {EXACT_8K_WORKLOAD_ID}"
+        )
+    if args.agent_episode:
+        problems.append("--gate-1-production cannot run an agent episode")
+    if args.force:
+        problems.append("--gate-1-production cannot overwrite prior evidence")
+    if args.cpu_only:
+        problems.append("--gate-1-production requires the qualified GPU/CPU placement")
+    if args.attention_implementation != "sdpa":
+        problems.append("--gate-1-production requires SDPA attention")
+    if args.prefill_chunk not in (0, 512):
+        problems.append("--gate-1-production requires a 512-token prefill chunk")
+    if args.cpu_gib != 80:
+        problems.append("--gate-1-production requires the qualified 80 GiB CPU limit")
+    if problems:
+        return problems
+    args.only = [EXACT_8K_WORKLOAD_ID]
+    args.prefill_chunk = 512
+    args.gpu_gib = 8
+    return []
+
+
+def _gate_1_launch_contract() -> dict[str, object]:
+    return {
+        "schema": GATE_1_LAUNCH_SCHEMA,
+        "profile_id": GATE_1_PROFILE_ID,
+        "workload_id": EXACT_8K_WORKLOAD_ID,
+        "prompt_token_count": 8_000,
+        "max_new_tokens": EXACT_8K_MAX_NEW_TOKENS,
+        "selection": "greedy_lowest_token_id_argmax",
+        "terminal": {
+            "eos_token_ids": list(EOS_TOKEN_IDS),
+            "include_eos_in_output": True,
+            "rule": "first_official_eos_or_exact_cap",
+        },
+        "prefill": {
+            "mode": "chunked_forward_kv_cache",
+            "chunk_tokens": 512,
+        },
+        "numeric": {
+            "dtype": "bfloat16",
+            "attention_implementation": "sdpa",
+        },
+        "placement": {
+            "policy": "auto",
+            "gpu_memory_gib": 8,
+            "cpu_memory_gib": 80,
+        },
+    }
+
+
+def _authenticate_gate_1_inputs(
+    args: argparse.Namespace,
+    index: Mapping[str, Any],
+    bodies: Mapping[str, Mapping[str, Any]],
+    input_identity: dict[str, object],
+) -> tuple[dict[str, object], QwenChatTokenizer]:
+    """Fully authenticate exact-8K sources before importing model frameworks."""
+
+    path_expectations = (
+        (args.snapshot, DEFAULT_SNAPSHOT, "snapshot"),
+        (args.workloads, DEFAULT_WORKLOADS, "workload root"),
+        (args.checkpoint_lock, DEFAULT_CHECKPOINT_LOCK, "checkpoint lock"),
+        (
+            args.exact_8k_construction,
+            DEFAULT_EXACT_8K_CONSTRUCTION,
+            "exact-8K construction",
+        ),
+    )
+    for observed, expected, label in path_expectations:
+        if Path(observed).resolve() != expected.resolve():
+            raise OracleInputError(f"{label} is not the pinned Gate-1 path {expected}")
+
+    index_identity = input_identity.get("workload_index")
+    workload_sources = input_identity.get("workload_sources")
+    workload_identity = (
+        workload_sources.get(EXACT_8K_WORKLOAD_ID)
+        if isinstance(workload_sources, dict)
+        else None
+    )
+    if (
+        not isinstance(index_identity, dict)
+        or index_identity.get("sha256") != GATE_1_WORKLOAD_INDEX_SHA256
+        or not isinstance(workload_identity, dict)
+        or workload_identity.get("sha256") != GATE_1_WORKLOAD_SHA256
+    ):
+        raise OracleInputError("exact-8K workload or index identity is not Gate-1 pinned")
+    if (
+        index.get("snapshot") != str(DEFAULT_SNAPSHOT)
+        or index.get("tokenizer_sha256")
+        != "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4"
+    ):
+        raise OracleInputError("workload index model snapshot or tokenizer differs")
+
+    construction_identity = _file_identity(args.exact_8k_construction)
+    checkpoint_lock_identity = _file_identity(args.checkpoint_lock)
+    input_identity["exact_8k_construction"] = construction_identity
+    input_identity["checkpoint_lock"] = checkpoint_lock_identity
+    if construction_identity["sha256"] != GATE_1_CONSTRUCTION_SHA256:
+        raise OracleInputError("exact-8K construction identity is not Gate-1 pinned")
+    if checkpoint_lock_identity["sha256"] != GATE_1_CHECKPOINT_LOCK_SHA256:
+        raise OracleInputError("checkpoint-lock source identity is not Gate-1 pinned")
+
+    lock = load_checkpoint_lock(args.checkpoint_lock)
+    source = lock.get("source")
+    if (
+        lock.get("lock_id") != GATE_1_CHECKPOINT_LOCK_ID
+        or not isinstance(source, dict)
+        or source.get("repository") != "Qwen/Qwen3-8B"
+        or source.get("revision") != SOURCE_REVISION
+        or source.get("remote_code_policy") != "disabled"
+    ):
+        raise OracleInputError("checkpoint lock does not bind the pinned Qwen release")
+    verify_checkpoint_lock(args.snapshot, lock)
+
+    chat = QwenChatTokenizer(args.snapshot, lock)
+    construction = load_construction(args.exact_8k_construction)
+    try:
+        validate_materialized_workload(
+            bodies[EXACT_8K_WORKLOAD_ID],
+            AuthenticatedWorkloadTokenizer(chat),
+            construction,
+            construction_path=args.exact_8k_construction,
+        )
+    except (ArtifactError, KeyError, ValueError) as exc:
+        raise OracleInputError(
+            f"exact-8K workload reconstruction failed: {exc}"
+        ) from exc
+
+    checkpoint = lock["checkpoint"]
+    return {
+        "completed_before_model_framework_import": True,
+        "full_byte_hash_verified": True,
+        "lock_id": lock["lock_id"],
+        "lock_source_sha256": checkpoint_lock_identity["sha256"],
+        "payload_bytes": checkpoint["payload_bytes"],
+        "shard_count": checkpoint["shard_count"],
+        "tensor_count": checkpoint["tensor_count"],
+    }, chat
+
+
+def _validate_gate_1_generation(
+    generated: list[int], *, eos_ids: set[int]
+) -> None:
+    if not generated:
+        raise OracleInputError("Gate-1 oracle generated no token")
+    if len(generated) > EXACT_8K_MAX_NEW_TOKENS:
+        raise OracleInputError("Gate-1 oracle exceeded its 256-token cap")
+    if any(
+        isinstance(token, bool)
+        or not isinstance(token, int)
+        or not 0 <= token < EXPLICIT_VOCABULARY_SIZE
+        for token in generated
+    ):
+        raise OracleInputError("Gate-1 oracle selected an invalid or padded token id")
+    eos_positions = [index for index, token in enumerate(generated) if token in eos_ids]
+    if eos_positions and eos_positions != [len(generated) - 1]:
+        raise OracleInputError("Gate-1 oracle executed or retained a token after EOS")
+    if not eos_positions and len(generated) != EXACT_8K_MAX_NEW_TOKENS:
+        raise OracleInputError("Gate-1 oracle stopped before EOS and before its exact cap")
 
 
 def _prefill_association_digest(association: Mapping[str, object]) -> str:
@@ -435,7 +811,15 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--snapshot", type=Path, default=DEFAULT_SNAPSHOT)
     parser.add_argument(
-        "--workloads", type=Path, default=REPO / "build" / "workloads" / "qwen3-8b"
+        "--workloads", type=Path, default=DEFAULT_WORKLOADS
+    )
+    parser.add_argument(
+        "--checkpoint-lock", type=Path, default=DEFAULT_CHECKPOINT_LOCK
+    )
+    parser.add_argument(
+        "--exact-8k-construction",
+        type=Path,
+        default=DEFAULT_EXACT_8K_CONSTRUCTION,
     )
     parser.add_argument(
         "--output",
@@ -492,8 +876,20 @@ def main() -> int:
             "are recorded with every result."
         ),
     )
+    parser.add_argument(
+        "--gate-1-production",
+        action="store_true",
+        help=(
+            "run only the governed exact-8K Gate-1 workload after fully "
+            "hashing the pinned checkpoint and reconstructing the prompt from "
+            "its authenticated tokenizer, template, corpus, and semantic source"
+        ),
+    )
     args = parser.parse_args()
 
+    gate_1_option_problems = _configure_gate_1_production(args)
+    if gate_1_option_problems:
+        parser.error("; ".join(gate_1_option_problems))
     if args.prefill_chunk < 0:
         parser.error("--prefill-chunk must be zero or a positive token count")
 
@@ -501,13 +897,29 @@ def main() -> int:
         print(f"refusing to overwrite {args.output}; pass --force", file=sys.stderr)
         return 1
 
+    try:
+        index, selected, bodies, input_identity = _load_selected_workloads(
+            args.workloads, args.only
+        )
+        checkpoint_preflight = None
+        authenticated_tokenizer = None
+        if args.gate_1_production:
+            checkpoint_preflight, authenticated_tokenizer = (
+                _authenticate_gate_1_inputs(args, index, bodies, input_identity)
+            )
+    except (ArtifactError, OSError, ValueError) as exc:
+        print(f"oracle input preflight failed: {exc}", file=sys.stderr)
+        return 2
+
+    # Model frameworks are deliberately imported only after the immutable
+    # sources above have been authenticated.  A stale prompt or checkpoint must
+    # fail before allocating model weights.
     import torch
     import transformers
     from transformers import AutoModelForCausalLM, AutoTokenizer
 
     from compiler.workloads.qwen3 import AGENT_SYSTEM, AGENT_TASK  # noqa: E402
 
-    index = json.loads((args.workloads / "index.json").read_text())
     tokenizer = AutoTokenizer.from_pretrained(
         str(args.snapshot), local_files_only=True, trust_remote_code=False
     )
@@ -562,13 +974,27 @@ def main() -> int:
         "selection": "greedy_lowest_token_id_argmax",
         "device_map": "cpu bfloat16" if args.cpu_only else "auto (gpu+cpu bfloat16)",
         "attention_implementation": args.attention_implementation,
+        "producer": {
+            "tool": ORACLE_TOOL,
+            "tool_version": ORACLE_TOOL_VERSION,
+            "command_argv": [ORACLE_TOOL, *sys.argv[1:]],
+            "selected_workload_ids": [workload_id for workload_id, _ in selected],
+        },
+        "input_identity": input_identity,
+        "production_checkpoint_preflight": checkpoint_preflight,
+        "production_launch": (
+            {
+                "explicitly_requested": True,
+                "contract": _gate_1_launch_contract(),
+            }
+            if args.gate_1_production
+            else {"explicitly_requested": False}
+        ),
         "results": {},
     }
 
-    for wid, entry in sorted(index["workloads"].items()):
-        if args.only and wid not in args.only:
-            continue
-        body = json.loads((args.workloads / entry["path"]).read_text())
+    for wid, entry in selected:
+        body = bodies[wid]
         ids = body["token_ids"]
         print(
             f"\n=== {wid} ({entry['kind']}, {len(ids)} prompt tokens, "
@@ -656,8 +1082,21 @@ def main() -> int:
                 )
             generated = out.sequences[0][len(ids) :].tolist()
         elapsed = time.perf_counter() - step_started
+        if args.gate_1_production:
+            _validate_gate_1_generation(generated, eos_ids=eos_set)
         text = tokenizer.decode(generated, skip_special_tokens=False)
         visible = tokenizer.decode(generated, skip_special_tokens=True)
+        if authenticated_tokenizer is not None:
+            authenticated_raw = authenticated_tokenizer.decode(
+                generated, skip_special_tokens=False
+            )
+            authenticated_visible = authenticated_tokenizer.decode(
+                generated, skip_special_tokens=True
+            )
+            if text != authenticated_raw or visible != authenticated_visible:
+                raise OracleInputError(
+                    "vendor and authenticated tokenizer decoding differ"
+                )
         eos_ids = set(
             [tokenizer.eos_token_id] if tokenizer.eos_token_id is not None else []
         )
@@ -687,11 +1126,22 @@ def main() -> int:
         print(f"generated {len(generated)} tokens in {elapsed:.1f}s, stop={stop}")
         print(f"first 24 ids: {generated[:24]}")
         print(f"text: {visible[:400]!r}", flush=True)
+        if not args.gate_1_production:
+            args.output.parent.mkdir(parents=True, exist_ok=True)
+            args.output.write_bytes(canonical_json(report))
+
+    if args.gate_1_production:
+        try:
+            publish_bytes_atomic_no_replace(args.output, canonical_json(report))
+        except FileExistsError:
+            print(
+                f"refusing to replace concurrently published {args.output}",
+                file=sys.stderr,
+            )
+            return 1
+    else:
         args.output.parent.mkdir(parents=True, exist_ok=True)
         args.output.write_bytes(canonical_json(report))
-
-    args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_bytes(canonical_json(report))
     print(f"\nwrote {args.output}")
     return 0
 

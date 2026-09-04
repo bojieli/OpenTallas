@@ -122,8 +122,80 @@ def _oracle_with_prefill_provenance(tmp_path, monkeypatch) -> None:
     # Structural acceptance tests use a small synthetic independent-oracle
     # record.  No release artifact receives these tokens; the governed natural
     # oracle remains absent until an actual vendor-model run is performed.
+    def oracle_identity(path: Path, sha256: str) -> dict:
+        return {
+            "path": tool._relative(path),
+            "size_bytes": path.stat().st_size,
+            "sha256": sha256,
+        }
+
     natural_oracle = {
         **{key: value for key, value in stress_oracle.items() if key != "results"},
+        "snapshot": str(tool.QWEN_SNAPSHOT),
+        "producer": {
+            "tool": tool.ORACLE_TOOL,
+            "tool_version": tool.ORACLE_TOOL_VERSION,
+            "command_argv": [tool.ORACLE_TOOL, "--gate-1-production"],
+            "selected_workload_ids": [tool.NATURAL.workload_id],
+        },
+        "input_identity": {
+            "workload_index": oracle_identity(
+                tool.NATURAL_WORKLOAD_INDEX,
+                tool.NATURAL_WORKLOAD_INDEX_SHA256,
+            ),
+            "workload_sources": {
+                tool.NATURAL.workload_id: oracle_identity(
+                    tool.NATURAL_WORKLOAD,
+                    tool.NATURAL_WORKLOAD_SHA256,
+                )
+            },
+            "exact_8k_construction": oracle_identity(
+                tool.NATURAL_CONSTRUCTION,
+                tool.NATURAL_CONSTRUCTION_SHA256,
+            ),
+            "checkpoint_lock": oracle_identity(
+                tool.QWEN_CHECKPOINT_LOCK,
+                tool.QWEN_CHECKPOINT_LOCK_SHA256,
+            ),
+        },
+        "production_checkpoint_preflight": {
+            "completed_before_model_framework_import": True,
+            "full_byte_hash_verified": True,
+            "lock_id": tool.QWEN_CHECKPOINT_LOCK_ID,
+            "lock_source_sha256": tool.QWEN_CHECKPOINT_LOCK_SHA256,
+            "payload_bytes": 16_381_470_720,
+            "shard_count": 5,
+            "tensor_count": 399,
+        },
+        "production_launch": {
+            "explicitly_requested": True,
+            "contract": {
+                "schema": tool.GATE_1_LAUNCH_SCHEMA,
+                "profile_id": tool.GATE_1_PROFILE_ID,
+                "workload_id": tool.NATURAL.workload_id,
+                "prompt_token_count": tool.NATURAL.prompt_count,
+                "max_new_tokens": tool.NATURAL.cap,
+                "selection": "greedy_lowest_token_id_argmax",
+                "terminal": {
+                    "eos_token_ids": [151645, 151643],
+                    "include_eos_in_output": True,
+                    "rule": "first_official_eos_or_exact_cap",
+                },
+                "prefill": {
+                    "mode": "chunked_forward_kv_cache",
+                    "chunk_tokens": 512,
+                },
+                "numeric": {
+                    "dtype": "bfloat16",
+                    "attention_implementation": "sdpa",
+                },
+                "placement": {
+                    "policy": "auto",
+                    "gpu_memory_gib": 8,
+                    "cpu_memory_gib": 80,
+                },
+            },
+        },
         "results": {
             tool.NATURAL.workload_id: {
                 "kind": "long_natural_chat",
@@ -457,6 +529,45 @@ def test_natural_refuses_inconsistent_oracle_result_metadata(
 ):
     oracle = json.loads(tool.NATURAL.oracle_path.read_text())
     oracle["results"][tool.NATURAL.workload_id][field] = value
+    tool.NATURAL.oracle_path.write_text(json.dumps(oracle))
+    hbm_a, hbm_b, rom = _natural_triplet(tmp_path)
+
+    result = tool.validate(
+        "natural", _write_records(tmp_path, hbm_a, hbm_b, rom)
+    )
+
+    assert result["status"] == "fail"
+    assert any(expected in problem for problem in result["problems"])
+
+
+@pytest.mark.parametrize(
+    ("mutation", "expected"),
+    [
+        (
+            lambda oracle: oracle["production_checkpoint_preflight"].__setitem__(
+                "full_byte_hash_verified", False
+            ),
+            "checkpoint preflight differs",
+        ),
+        (
+            lambda oracle: oracle["input_identity"]["workload_index"].__setitem__(
+                "sha256", "0" * 64
+            ),
+            "workload index SHA-256 is not pinned",
+        ),
+        (
+            lambda oracle: oracle["production_launch"].__setitem__(
+                "explicitly_requested", False
+            ),
+            "production launch contract differs",
+        ),
+    ],
+)
+def test_natural_refuses_unauthenticated_oracle_launch(
+    tmp_path, mutation, expected
+):
+    oracle = json.loads(tool.NATURAL.oracle_path.read_text())
+    mutation(oracle)
     tool.NATURAL.oracle_path.write_text(json.dumps(oracle))
     hbm_a, hbm_b, rom = _natural_triplet(tmp_path)
 

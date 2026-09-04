@@ -584,6 +584,16 @@ def main() -> int:
     if args.output.exists() and not args.force:
         print(f"refusing to overwrite {args.output}; pass --force", file=sys.stderr)
         return 1
+    if (
+        args.publish is not None
+        and (args.publish.exists() or args.publish.is_symlink())
+        and not args.force
+    ):
+        print(
+            f"refusing to overwrite deployment root {args.publish}; pass --force",
+            file=sys.stderr,
+        )
+        return 1
     if not args.checkpoint.is_dir():
         raise SystemExit(f"checkpoint root {args.checkpoint} is not a directory")
     if args.decoded_weight_cache_bytes < 0:

@@ -1,7 +1,7 @@
 .PHONY: abi3-tokens abi3-tokens-deepseek abi3-tokens-deepseek-rom abi3-tokens-deepseek-hbm abi3-tokens-qwen-rom abi3-tokens-qwen-hbm abi3-restart abi3-restart-qwen-hbm abi3-restart-qwen-rom abi3-restart-deepseek-hbm abi3-restart-deepseek-rom abi3-context-gate abi3-prefix-workloads abi3-hbm-qwen-deployment abi3-hbm-deepseek-deployment abi3-rom-schedule-check abi3-rom-qwen-degraded-build rom-service rom-service-vectors rom-service-physical abi3-rtl-engines check-evidence-grades check-prose-figures check-prose-coverage check-figures roofline abi3-failclosed abi3-equivalence abi3 abi3-engine-rate abi3-cost-tables abi3-cost-tables-check abi3-spec abi3-test abi3-workloads abi3-oracle abi3-engines abi3-rtl abi3-physical abi3-status abi3-ir profile simulate iso-node model-traffic world-model world-model-landscape legacy-sim routing noc sensitivity legacy-sensitivity spec-check formal rtl-sim fault-sim fault-campaign coverage rtl-static rtl pre-synth-verify synth-public spice spice-pdk test verify clean-results
 .PHONY: abi3-rom-qwen-build abi3-rom-deepseek-build abi3-rom-deepseek-array-build abi3-hbm-qwen-build abi3-hbm-deepseek-build abi3-comparison-deepseek abi3-evidence-source-current abi3-rtl-vectors abi3-rtl-deployment-vectors abi3-rtl-deployment
 .PHONY: abi3-comparison-asap7-readiness abi3-comparison-asap7-gate
-.PHONY: abi3-w10-natural-hbm-a abi3-w10-natural-hbm-b abi3-w10-natural-check abi3-w10-stress-hbm abi3-w10-stress-rom abi3-w10-stress-check
+.PHONY: abi3-w10-natural-oracle abi3-w10-natural-hbm-a abi3-w10-natural-hbm-b abi3-w10-natural-rom abi3-w10-natural-check abi3-w10-stress-hbm abi3-w10-stress-rom abi3-w10-stress-check
 
 profile:
 	python3 tools/profile_hf.py --all
@@ -401,7 +401,9 @@ W10_ENV = env PYTHONPATH=. OPENTALLAS_ABI3_BACKEND=numpy OMP_NUM_THREADS=8 OPENB
 
 abi3-w10-natural-oracle:
 	PYTHONPATH=. python3 tools/run_qwen3_reference_oracle.py \
-	  --only TA-QW-8K-1 --prefill-chunk 512 --gpu-gib 8 \
+	  --gate-1-production \
+	  --checkpoint-lock results/tensor_accelerator/qwen3_full_model_physical/source/checkpoint.lock.json \
+	  --exact-8k-construction configs/abi3/workloads/qwen3_exact_8k_chat_v1.json \
 	  --output results/abi3/qwen3_reference_oracle_exact_8k_chat.json
 
 abi3-w10-natural-hbm-a:
@@ -414,7 +416,7 @@ abi3-w10-natural-hbm-a:
 	  --checkpoint $(QWEN3_SNAPSHOT) \
 	  --publish build/abi3/qwen3-8b-hbm-w10-natural-a \
 	  --max-new-tokens 256 --terminal-contract exact_eos_or_cap \
-	  --output results/abi3/w10/qwen3_8b_hbm_natural_a.json --force
+	  --output results/abi3/w10/qwen3_8b_hbm_natural_a.json
 
 abi3-w10-natural-hbm-b:
 	$(W10_ENV) /usr/bin/time -v python3 tools/run_accelerator_tokens.py \
@@ -426,7 +428,7 @@ abi3-w10-natural-hbm-b:
 	  --checkpoint $(QWEN3_SNAPSHOT) \
 	  --publish build/abi3/qwen3-8b-hbm-w10-natural-b \
 	  --max-new-tokens 256 --terminal-contract exact_eos_or_cap \
-	  --output results/abi3/w10/qwen3_8b_hbm_natural_b.json --force
+	  --output results/abi3/w10/qwen3_8b_hbm_natural_b.json
 
 abi3-w10-natural-rom:
 	$(W10_ENV) /usr/bin/time -v python3 tools/run_accelerator_tokens.py \
@@ -438,7 +440,7 @@ abi3-w10-natural-rom:
 	  --checkpoint $(QWEN3_SNAPSHOT) \
 	  --publish build/abi3/qwen3-8b-rom-w10-natural \
 	  --max-new-tokens 256 --terminal-contract exact_eos_or_cap \
-	  --output results/abi3/w10/qwen3_8b_rom_natural.json --force
+	  --output results/abi3/w10/qwen3_8b_rom_natural.json
 
 abi3-w10-natural-check:
 	PYTHONPATH=. python3 tools/check_qwen3_w10_acceptance.py natural \
