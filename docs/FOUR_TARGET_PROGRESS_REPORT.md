@@ -4,7 +4,7 @@
 
 **Status date:** 2026-09-04
 
-**Input baseline:** `main` through `9ea330b`; this includes the fail-closed
+**Input baseline:** `main` through `6633a3b`; this includes the fail-closed
 DeepSeek exact-200K oracle and accelerator-pair checkers, the DeepSeek
 phase-selected sparse-KV layout repair, the shared activation-liveness
 allocator and physical 180-GB ROM-array capacity boundary, and refreshed
@@ -305,9 +305,9 @@ time nor its retired-instruction counter is architectural TPOT.
   fails closed at PC 32 `DMA.SCATTER`. The combined multicast overlay has 29
   launches and resolves 100 views. These are checkpoint-backed intermediate
   tensors at positions 0 and 7,999, not a complete layer, selected token, EOS,
-  or TPOT sample. Its retained artifacts require a source-current refresh after
-  the runtime and DeepSeek scheduler integrations before this prefix increment
-  is considered current-tree evidence.
+  or TPOT sample. Commit `6633a3b` canonically regenerates the affected
+  deployments, certificates, vectors, standalone multicast qualification, and
+  both prefix campaigns after the runtime and DeepSeek scheduler integrations.
 - Commit `0b928e5` independently qualifies the exact DeepSeek ROM PC-13 wafer
   multicast on Icarus and Verilator: 256 participants, 255 tree messages,
   4,177,920 payload flits, 4,194,304 exact destination writes, one injected CRC
@@ -318,9 +318,10 @@ time nor its retired-instruction counter is architectural TPOT.
   binds the prior vector hashes and full multicast records, then the real
   sequencer retires PC-13 `LINK.MULTICAST` and reaches PC-15 `VECTOR.MHC`.
   Independent streaming checkers validate every destination write, tree parent,
-  source/destination stall, and CRC replay. The overlay remains non-promotable
-  until the stale Qwen HBM deployment certificate is canonically rebuilt; it
-  adds no accepted token or TPOT point.
+  source/destination stall, and CRC replay. Its earlier stale-certificate
+  boundary is preserved as history; commit `6633a3b` replaces it with the
+  source-current bounded-prefix-only artifact. It adds no accepted token or
+  TPOT point.
 - Commit `256b568` independently qualifies the first exact DeepSeek HBM PC-14
   `VECTOR.MHC` / `HC_PRE` issue at T=512. It authenticates the official first
   512 prompt embeddings and complete relevant checkpoint shards, composes 128
@@ -557,11 +558,10 @@ stops at PC 32 `DMA.SCATTER`, and DeepSeek HBM still stops at PC 14
 `VECTOR.MHC`. Totals are 29 launches, 91,136 compact result words, and 100
 resolved views.
 
-This overlay deliberately binds the already-checked vector hashes instead of
-claiming a canonical deployment rebuild. It remains marked non-promotable until
-the owning deployment pipeline rebuilds the stale Qwen HBM certificate; the
-retained campaign source identities also require refresh after the dynamic-batch
-and DeepSeek scheduler integrations.
+Commit `6633a3b` canonically rebuilds the deployment chain and refreshes the
+retained source identities after the dynamic-batch, request-symbol, DeepSeek
+scheduler, and release-profile integrations. The artifact is now explicitly
+`source_current_bounded_prefix_only`, not a full-execution promotion.
 Its embedding index remains legal token ID 0, selected solely as a bounded
 deterministic probe; it is not a tokenizer-driven model output and establishes
 neither a whole token step nor architectural TPOT. No current RTL simulation

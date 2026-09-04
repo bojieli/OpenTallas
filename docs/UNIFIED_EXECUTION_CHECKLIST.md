@@ -37,7 +37,8 @@ Icarus passes 12,587,599 with the same DeepSeek-ROM case record. Qwen next traps
 at PC 32 `DMA.SCATTER`; DeepSeek ROM at PC 15 `VECTOR.MHC` after multicast; and
 DeepSeek HBM at PC 14 `VECTOR.MHC`. The legal token ID 0 embedding remains a
 bounded synthetic probe, not a decoded model token. The overlay is
-non-promotable while the Qwen HBM certificate/source size mismatch remains.
+classified `source_current_bounded_prefix_only`; it is source-current after the
+canonical refresh but remains non-promotable as full model execution.
 This is not a full token-producing RTL system and supplies no TPOT point.
 **Controlling ABI profile:** KV, compressed KV, compressor history, tokens, and
 intermediates are ordinary live HBM/SRAM buffers. Existing tensor views, events,
@@ -50,10 +51,11 @@ or restart experiments remain provenance only and do not override this profile.
 and **0 blocked**, counting only the `Wn.m` rows below.
 **Remaining top-level rows:** partial — W8.3, W8.4, W8.5, W9.4, W9.5,
 W10.1, W10.2, W11.1, W11.3, W13.4; open — W11.2.
-**Certification freshness:** the retained deployment-bound shipped-prefix
-campaigns are not yet source-current after the dynamic-batch/request-symbol and
-DeepSeek scheduler integrations; the canonical rebuild is in progress and the
-checks fail closed on the mismatched source hashes. DeepSeek token
+**Certification freshness:** commit `6633a3b` canonically rebuilds the affected
+deployments and refreshes the deployment-bound shipped-prefix campaigns after
+the dynamic-batch/request-symbol, DeepSeek scheduler, and release-profile
+integrations. The overlay is `source_current_bounded_prefix_only`: current for
+its exact prefix, never a full token or TPOT result. DeepSeek token
 captures predate the
 `INDEX_SCORE` single-rounding repair and are prior-build evidence. One Qwen
 exact-8K HBM/SRAM capture from Git tree
@@ -416,10 +418,9 @@ agrees on the normalized case. The ROM boundary is now PC 15 `VECTOR.MHC`
 descriptor 381; aggregate prefix counts are 29 launches, 91,136 compact result
 words, and 100 resolved views.
 
-This overlay is non-promotable until the owning pipeline rebuilds the stale
-Qwen HBM deployment certificate and refreshes the retained campaign from the
-current runtime source identity. It neither bypasses nor relabels those
-mismatches. Token ID
+Commit `6633a3b` rebuilds the deployment certificate and retained campaign from
+the current runtime source identity. The result is explicitly bounded-prefix
+evidence rather than a full-execution promotion. Token ID
 0 remains a bounded synthetic embedding probe, not a natural-context output.
 These campaigns perform no prefill, whole transaction, token selection, EOS
 handling, decoded-token validation, architectural TPOT, or physical
