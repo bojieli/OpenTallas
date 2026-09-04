@@ -1,0 +1,535 @@
+{
+ "all_pass": true,
+ "claim_boundary": {
+  "accelerator_index_pruning_executed": false,
+  "accelerator_window_clipping_executed": false,
+  "all_checked_records_pass": true,
+  "all_declared_sparsity_thresholds_executed": false,
+  "all_required_pins_present": true,
+  "all_required_records_present": true,
+  "cycles_or_performance": false,
+  "decode_arm_cross_check_pass": true,
+  "first_index_pruning_context_tokens": 2052,
+  "first_window_clipping_context_tokens": 129,
+  "functional_simulator_only": true,
+  "maximum_accelerator_context_tokens_checked": 35,
+  "rtl": false
+ },
+ "counter_model": "min(position + 1, window) + min(top_k or all, (position + 1) // ratio), summed over every layer and every query position; kv_bytes = gathered * 1024",
+ "decode_arm_cross_check": {
+  "all_agree": true,
+  "available": true,
+  "comparator": "released implementation, instrumented by --measure-kv",
+  "context_range": [
+   130,
+   2059
+  ],
+  "decode_steps_compared": 28,
+  "oracle": "results/abi3/deepseek_v4_reference_oracle_threshold.json",
+  "rungs": [
+   {
+    "agrees": true,
+    "context_tokens": 130,
+    "layers_compared": 43,
+    "measured_main_context_positions": 6196,
+    "model_main_context_positions": 6196,
+    "per_layer_mismatch_count": 0,
+    "per_layer_mismatches": [],
+    "workload_id": "TA-DS-CTX-129-1"
+   },
+   {
+    "agrees": true,
+    "context_tokens": 131,
+    "layers_compared": 43,
+    "measured_main_context_positions": 6196,
+    "model_main_context_positions": 6196,
+    "per_layer_mismatch_count": 0,
+    "per_layer_mismatches": [],
+    "workload_id": "TA-DS-CTX-129-1"
+   },
+   {
+    "agrees": true,
+    "context_tokens": 132,
+    "layers_compared": 43,
+    "measured_main_context_positions": 6217,
+    "model_main_context_positions": 6217,
+    "per_layer_mismatch_count": 0,
+    "per_layer_mismatches": [],
+    "workload_id": "TA-DS-CTX-129-1"
+   },
+   {
+    "agrees": true,
+    "context_tokens": 133,
+    "layers_compared": 43,
+    "measured_main_context_positions": 6217,
+    "model_main_context_positions": 6217,
+    "per_layer_mismatch_count": 0,
+    "per_layer_mismatches": [],
+    "workload_id": "TA-DS-CTX-129-1"
+   },
+   {
+    "agrees": true,
+    "context_tokens": 134,
+    "layers_compared": 43,
+    "measured_main_context_positions": 6217,
+    "model_main_context_positions": 6217,
+    "per_layer_mismatch_count": 0,
+    "per_layer_mismatches": [],
+    "workload_id": "TA-DS-CTX-129-1"
+   },
+   {
+    "agrees": true,
+    "context_tokens": 135,
+    "layers_compared": 43,
+    "measured_main_context_positions": 6217,
+    "model_main_context_positions": 6217,
+    "per_layer_mismatch_count": 0,
+    "per_layer_mismatches": [],
+    "workload_id": "TA-DS-CTX-129-1"
+   },
+   {
+    "agrees": true,
+    "context_tokens": 136,
+    "layers_compared": 43,
+    "measured_main_context_positions": 6238,
+    "model_main_context_positions": 6238,
+    "per_layer_mismatch_count": 0,
+    "per_layer_mismatches": [],
+    "workload_id": "TA-DS-CTX-129-1"
+   },
+   {
+    "agrees": true,
+    "context_tokens": 161,
+    "layers_compared": 43,
+    "measured_main_context_positions": 6364,
+    "model_main_context_positions": 6364,
+    "per_layer_mismatch_count": 0,
+    "per_layer_mismatches": [],
+    "workload_id": "TA-DS-CTX-160-1"
+   },
+   {
+    "agrees": true,
+    "context_tokens": 162,
+    "layers_compared": 43,
+    "measured_main_context_positions": 6364,
+    "model_main_context_positions": 6364,
+    "per_layer_mismatch_count": 0,
+    "per_layer_mismatches": [],
+    "workload_id": "TA-DS-CTX-160-1"
+   },
+   {
+    "agrees": true,
+    "context_tokens": 163,
+    "layers_compared": 43,
+    "measured_main_context_positions": 6364,
+    "model_main_context_positions": 6364,
+    "per_layer_mismatch_count": 0,
+    "per_layer_mismatches": [],
+    "workload_id": "TA-DS-CTX-160-1"
+   },
+   {
+    "agrees": true,
+    "context_tokens": 164,
+    "layers_compared": 43,
+    "measured_main_context_positions": 6385,
+    "model_main_context_positions": 6385,
+    "per_layer_mismatch_count": 0,
+    "per_layer_mismatches": [],
+    "workload_id": "TA-DS-CTX-160-1"
+   },
+   {
+    "agrees": true,
+    "context_tokens": 165,
+    "layers_compared": 43,
+    "measured_main_context_positions": 6385,
+    "model_main_context_positions": 6385,
+    "per_layer_mismatch_count": 0,
+    "per_layer_mismatches": [],
+    "workload_id": "TA-DS-CTX-160-1"
+   },
+   {
+    "agrees": true,
+    "context_tokens": 166,
+    "layers_compared": 43,
+    "measured_main_context_positions": 6385,
+    "model_main_context_positions": 6385,
+    "per_layer_mismatch_count": 0,
+    "per_layer_mismatches": [],
+    "workload_id": "TA-DS-CTX-160-1"
+   },
+   {
+    "agrees": true,
+    "context_tokens": 167,
+    "layers_compared": 43,
+    "measured_main_context_positions": 6385,
+    "model_main_context_positions": 6385,
+    "per_layer_mismatch_count": 0,
+    "per_layer_mismatches": [],
+    "workload_id": "TA-DS-CTX-160-1"
+   },
+   {
+    "agrees": true,
+    "context_tokens": 2053,
+    "layers_compared": 43,
+    "measured_main_context_positions": 16576,
+    "model_main_context_positions": 16576,
+    "per_layer_mismatch_count": 0,
+    "per_layer_mismatches": [],
+    "workload_id": "TA-DS-CTX-2052-1"
+   },
+   {
+    "agrees": true,
+    "context_tokens": 2054,
+    "layers_compared": 43,
+    "measured_main_context_positions": 16576,
+    "model_main_context_positions": 16576,
+    "per_layer_mismatch_count": 0,
+    "per_layer_mismatches": [],
+    "workload_id": "TA-DS-CTX-2052-1"
+   },
+   {
+    "agrees": true,
+    "context_tokens": 2055,
+    "layers_compared": 43,
+    "measured_main_context_positions": 16576,
+    "model_main_context_positions": 16576,
+    "per_layer_mismatch_count": 0,
+    "per_layer_mismatches": [],
+    "workload_id": "TA-DS-CTX-2052-1"
+   },
+   {
+    "agrees": true,
+    "context_tokens": 2056,
+    "layers_compared": 43,
+    "measured_main_context_positions": 16576,
+    "model_main_context_positions": 16576,
+    "per_layer_mismatch_count": 0,
+    "per_layer_mismatches": [],
+    "workload_id": "TA-DS-CTX-2052-1"
+   },
+   {
+    "agrees": true,
+    "context_tokens": 2057,
+    "layers_compared": 43,
+    "measured_main_context_positions": 16576,
+    "model_main_context_positions": 16576,
+    "per_layer_mismatch_count": 0,
+    "per_layer_mismatches": [],
+    "workload_id": "TA-DS-CTX-2052-1"
+   },
+   {
+    "agrees": true,
+    "context_tokens": 2058,
+    "layers_compared": 43,
+    "measured_main_context_positions": 16576,
+    "model_main_context_positions": 16576,
+    "per_layer_mismatch_count": 0,
+    "per_layer_mismatches": [],
+    "workload_id": "TA-DS-CTX-2052-1"
+   },
+   {
+    "agrees": true,
+    "context_tokens": 2059,
+    "layers_compared": 43,
+    "measured_main_context_positions": 16576,
+    "model_main_context_positions": 16576,
+    "per_layer_mismatch_count": 0,
+    "per_layer_mismatches": [],
+    "workload_id": "TA-DS-CTX-2052-1"
+   },
+   {
+    "agrees": true,
+    "context_tokens": 257,
+    "layers_compared": 43,
+    "measured_main_context_positions": 6888,
+    "model_main_context_positions": 6888,
+    "per_layer_mismatch_count": 0,
+    "per_layer_mismatches": [],
+    "workload_id": "TA-DS-CTX-256-1"
+   },
+   {
+    "agrees": true,
+    "context_tokens": 258,
+    "layers_compared": 43,
+    "measured_main_context_positions": 6888,
+    "model_main_context_positions": 6888,
+    "per_layer_mismatch_count": 0,
+    "per_layer_mismatches": [],
+    "workload_id": "TA-DS-CTX-256-1"
+   },
+   {
+    "agrees": true,
+    "context_tokens": 259,
+    "layers_compared": 43,
+    "measured_main_context_positions": 6888,
+    "model_main_context_positions": 6888,
+    "per_layer_mismatch_count": 0,
+    "per_layer_mismatches": [],
+    "workload_id": "TA-DS-CTX-256-1"
+   },
+   {
+    "agrees": true,
+    "context_tokens": 260,
+    "layers_compared": 43,
+    "measured_main_context_positions": 6909,
+    "model_main_context_positions": 6909,
+    "per_layer_mismatch_count": 0,
+    "per_layer_mismatches": [],
+    "workload_id": "TA-DS-CTX-256-1"
+   },
+   {
+    "agrees": true,
+    "context_tokens": 261,
+    "layers_compared": 43,
+    "measured_main_context_positions": 6909,
+    "model_main_context_positions": 6909,
+    "per_layer_mismatch_count": 0,
+    "per_layer_mismatches": [],
+    "workload_id": "TA-DS-CTX-256-1"
+   },
+   {
+    "agrees": true,
+    "context_tokens": 262,
+    "layers_compared": 43,
+    "measured_main_context_positions": 6909,
+    "model_main_context_positions": 6909,
+    "per_layer_mismatch_count": 0,
+    "per_layer_mismatches": [],
+    "workload_id": "TA-DS-CTX-256-1"
+   },
+   {
+    "agrees": true,
+    "context_tokens": 263,
+    "layers_compared": 43,
+    "measured_main_context_positions": 6909,
+    "model_main_context_positions": 6909,
+    "per_layer_mismatch_count": 0,
+    "per_layer_mismatches": [],
+    "workload_id": "TA-DS-CTX-256-1"
+   }
+  ],
+  "total_layer_comparisons": 1204,
+  "total_layer_mismatches": 0
+ },
+ "discrimination_ladder": {
+  "by_workload": {
+   "TA-DS-CHAT-1-P32": {
+    "correct": 25224,
+    "if_no_compressed_segment_were_attended": 22704,
+    "if_no_compressed_segment_were_attended_margin": -2520,
+    "if_the_window_did_not_clip": 25224,
+    "if_the_window_did_not_clip_margin": 0,
+    "prompt_token_count": 32
+   },
+   "TA-DS-CHAT-1-P8": {
+    "correct": 1674,
+    "if_no_compressed_segment_were_attended": 1548,
+    "if_no_compressed_segment_were_attended_margin": -126,
+    "if_the_window_did_not_clip": 1674,
+    "if_the_window_did_not_clip_margin": 0,
+    "prompt_token_count": 8
+   },
+   "TA-DS-CTX-129-1": {
+    "correct": 403560,
+    "if_no_compressed_segment_were_attended": 360512,
+    "if_no_compressed_segment_were_attended_margin": -43048,
+    "if_the_window_did_not_clip": 403603,
+    "if_the_window_did_not_clip_margin": 43,
+    "prompt_token_count": 129
+   },
+   "TA-DS-CTX-160-1": {
+    "correct": 598156,
+    "if_no_compressed_segment_were_attended": 531136,
+    "if_no_compressed_segment_were_attended_margin": -67020,
+    "if_the_window_did_not_clip": 620860,
+    "if_the_window_did_not_clip_margin": 22704,
+    "prompt_token_count": 160
+   },
+   "TA-DS-CTX-2052-1": {
+    "correct": 22295808,
+    "if_no_compressed_segment_were_attended": 10944704,
+    "if_no_compressed_segment_were_attended_margin": -11351104,
+    "if_the_window_did_not_clip": 101925358,
+    "if_the_window_did_not_clip_margin": 79629550,
+    "prompt_token_count": 2052
+   },
+   "TA-DS-CTX-256-1": {
+    "correct": 1232808,
+    "if_no_compressed_segment_were_attended": 1059520,
+    "if_no_compressed_segment_were_attended_margin": -173288,
+    "if_the_window_did_not_clip": 1587816,
+    "if_the_window_did_not_clip_margin": 355008,
+    "prompt_token_count": 256
+   }
+  },
+  "note": "What the gathered-position counter would be if the sparse path were not doing its job, at every pinned prompt length. An equality check is a gate only where the quantity moves. At 32 prompt tokens -- the length of the shortest retained DeepSeek accelerator gate -- a sliding window that never clipped produces a bit-identical counter, so no run at that length could have detected one."
+ },
+ "model": "deepseek-v4-flash-0731",
+ "pins": [
+  "results/abi3/deepseek_v4_context_threshold_workload_pins.json",
+  "results/abi3/deepseek_v4_prefix_workload_pins.json"
+ ],
+ "pins_missing": [],
+ "records_checked": 1,
+ "records_missing": [],
+ "results": [
+  {
+   "aggregate_excess_over_model": {
+    "attention.context_positions": 0,
+    "attention.heads": 0,
+    "attention.kv_bytes_read": 0,
+    "attention.sparse_indices": 0
+   },
+   "counter_comparison_scope": "measured_per_node_and_cluster_total",
+   "counters_compared": true,
+   "decode_steps": 3,
+   "discrimination": {
+    "correct": 30114,
+    "if_no_compressed_segment_were_attended": 27090,
+    "if_no_compressed_segment_were_attended_margin": -3024,
+    "if_the_window_did_not_clip": 30114,
+    "if_the_window_did_not_clip_margin": 0
+   },
+   "expected_aggregate_counters": {
+    "attention.context_positions": 963648,
+    "attention.heads": 3082240,
+    "attention.kv_bytes_read": 986775552,
+    "attention.sparse_indices": 963648
+   },
+   "expected_counters_per_node": {
+    "attention.context_positions": 30114,
+    "attention.heads": 96320,
+    "attention.kv_bytes_read": 30836736,
+    "attention.sparse_indices": 30114
+   },
+   "failure": null,
+   "generated_token_ids": [
+    13806,
+    345,
+    7472,
+    55560
+   ],
+   "gold_token_ids": [
+    13806,
+    345,
+    7472,
+    55560
+   ],
+   "node_count": 32,
+   "observed_aggregate_counters": {
+    "attention.context_positions": 963648,
+    "attention.heads": 3082240,
+    "attention.kv_bytes_read": 986775552,
+    "attention.sparse_indices": 963648
+   },
+   "passes": true,
+   "per_node_counter_summary": {
+    "attention.context_positions": {
+     "expected_each_node": 30114,
+     "first_mismatched_nodes": [],
+     "maximum_observed": 30114,
+     "minimum_observed": 30114,
+     "mismatched_node_count": 0,
+     "nodes_observed": 32,
+     "nodes_with_valid_counter": 32
+    },
+    "attention.heads": {
+     "expected_each_node": 96320,
+     "first_mismatched_nodes": [],
+     "maximum_observed": 96320,
+     "minimum_observed": 96320,
+     "mismatched_node_count": 0,
+     "nodes_observed": 32,
+     "nodes_with_valid_counter": 32
+    },
+    "attention.kv_bytes_read": {
+     "expected_each_node": 30836736,
+     "first_mismatched_nodes": [],
+     "maximum_observed": 30836736,
+     "minimum_observed": 30836736,
+     "mismatched_node_count": 0,
+     "nodes_observed": 32,
+     "nodes_with_valid_counter": 32
+    },
+    "attention.sparse_indices": {
+     "expected_each_node": 30114,
+     "first_mismatched_nodes": [],
+     "maximum_observed": 30114,
+     "minimum_observed": 30114,
+     "mismatched_node_count": 0,
+     "nodes_observed": 32,
+     "nodes_with_valid_counter": 32
+    }
+   },
+   "problems": [],
+   "prompt_token_count": 32,
+   "record": "results/abi3/accelerator_tokens/deepseek_v4_flash_rom_array_p32.json",
+   "record_sha256": "4ec08b44804f42d41b39df5017acd65c5b72d885c54487438c45bb0ac2e64417",
+   "status": "pass",
+   "workload_id": "TA-DS-CHAT-1-P32"
+  }
+ ],
+ "schema": "opentallas.deepseek_v4_context_gate.v2",
+ "source_sha256": {
+  "compiler/backends/hbm_sram/lower.py": "66b83a9dcc39864fd0e9b06212b59f6b3b519072c3187d52ccd2da81477633c1",
+  "compiler/backends/hbm_sram/plan.py": "cdf7e9212a74eb90726a7d3df1308031b8708ff230c5a1ccd2c534d60eddec96",
+  "compiler/backends/numeric_contracts.py": "cdcc4d00b795954ad189e266453241431e769c1ef293731bc8d97c70a6ccbd3f",
+  "compiler/backends/rom/common/image.py": "e74653b30b3d4145b2467b547c6e3954bba54236b182264bcd0201e83c37b43c",
+  "compiler/backends/rom/common/program.py": "2e71bcbcb3b5307ec677d3b94deacad457ede3bdf43c8ab9fc56b39d00ff58d1",
+  "compiler/backends/rom/deepseek_v4.py": "ce3e60fd877a746f9056005625b3ee121d67d7982187f1476b8214d43f4abef3",
+  "compiler/backends/rom/deepseek_v4_array.py": "295ecfa95b3a61b02d9535b253268c6fb694a2caa4a418ac3f4c6667e7994133",
+  "compiler/ir/v3/kernel_ir.py": "88bf21dfe85f0c2234c3d1ba9bf38b22b99433ce2f7fd489d2bdb6840375e130",
+  "compiler/ir/v3/lowering.py": "7003c99db4f0a91768d83df9deaa9b016621cdcdd00953bd29f34143bfcb0cfa",
+  "compiler/ir/v3/numeric.py": "c7270145386ec31b3ae4c274933b7338d180ae21d7f580a84535979df450496d",
+  "configs/models/deepseek-v4-flash-0731.json": "7d695ac330850416b6763279fc296420bd9ab0be6765c741a53eaa4a6decf79e",
+  "results/abi3/deepseek_v4_context_threshold_workload_pins.json": "6548f29e8baea90a5c5726e7fefe44c3b69f52432a10edf59e6716d1f2f826f5",
+  "results/abi3/deepseek_v4_prefix_workload_pins.json": "b426a8ca6b884c1c18d715c8224c52d7bb44f3029997472cecce40e296fce007",
+  "results/abi3/deepseek_v4_reference_oracle_threshold.json": "60c5118b6062d04e3ead091439f6f56ade9b2e26d62c43c5b7b971fb86bc15e3",
+  "runtime/abi3/builder.py": "2c67c3cbddc3b99749ff5a4c8243d9fe5a071faf4600fb48a244e51989745d66",
+  "runtime/abi3/capability.py": "3dd48c795fe92c400064fa4803ef3dd9ad29055dd3114cd5e8d1b04fabd0ebdc",
+  "runtime/abi3/constants.py": "147a26f4ecfc242485452c42ad9be9feb67cca105523134b8e2fcaeef8c9b4a0",
+  "runtime/abi3/crc.py": "d47b2c45f250b438d3cbc04eef2dd3c1ab68b771392cbe16de78a1238439e27e",
+  "runtime/abi3/deployment.py": "e7aeac69a74590ded75ba34b603b23aa071f58ef7965e2f8f93d72a82dc35b61",
+  "runtime/abi3/descriptors.py": "fd60c52ee2117016a8faa644cdaebe1e95ad003535576bec241f7d9c6018993e",
+  "runtime/abi3/layout.py": "6862c48ef1c596421a91dad9c2a1f87c88eaf289c1a49af1bc366ab5e97bdb8e",
+  "runtime/abi3/records.py": "18140e2a382dd4d515da33ccf2c5a08c203bcb36ae9e3e86747265346d4ad7ca",
+  "runtime/abi3/verifier.py": "c7a5b0ec41164acaa622caa5029df3e8563747b95fa152a1fe5b88a2f0ad409d",
+  "runtime/driver.py": "4a9ac6d50f8c7aa14355e0eda0bcea1e6a8f9dae39371798ff9cdb9c30189715",
+  "runtime/evidence.py": "b0c4f2adb589a88389818a638551c82297fe705ed6475c8f0fe778eb138267ff",
+  "runtime/reference/compression_pool.py": "11a4f10f4f845d746cf25691e7f84e56d988a6d782a5becff8add6239c1d55af",
+  "runtime/reference/formats.py": "74a3254c7a1dba9ad3bf07a5c793cb2ec1766f953b48ec4c782391f757290aa2",
+  "runtime/reference/hadamard.py": "2d432fa289214cce5db6090c23c898ba9b13c75517190ec22b709be6d1ea2a34",
+  "runtime/reference/hyper_connection.py": "08876748899568abd7ad58ba33e734e381ed9a65a79419bc7b65b070284113f1",
+  "runtime/reference/normalization.py": "de04abe88b769d9e9332d5050b15a4b278eff7dff18d1d51100b13d61012527e",
+  "runtime/reference/quantization.py": "f9241d8c9674b1f9ac72d44f570a1b7291635f2ec62883d74a8f555e1644cd67",
+  "runtime/reference/sparse_attention.py": "b4b16d9583ab8fc9ff50d96cc6e94b4469f54de37f62dea07333353d995306ef",
+  "runtime/reference/sqrt_softplus.py": "bbb91122078c983abd6ba8e233e1fc9573ad6ddb12c0f47e19a6fd9af2957562",
+  "runtime/reference/swiglu.py": "8a2b6821f42a438da1b34ab78e76d317d00fc2fd2bbb16deed315d77e09246d4",
+  "runtime/reference/transcendental.py": "bb26b68fbebc2ef48bdc44deb58163b73f38fd33bac8f4d9662e6d10c2822394",
+  "runtime/sim/backend.py": "0841204d2d42212285707c3137b143f785d41b11c46a840508ad15181c147e26",
+  "runtime/sim/counters.py": "dab7458cb196b94b710566e8478d0c2a4b5511a54903d1c0c0edaa1afd9f3c0a",
+  "runtime/sim/device.py": "b77fb24bdb08692e83d49a5fcb8cad42e809d21d792491dd6f567097a839f733",
+  "runtime/sim/engine.py": "e8e36edd1b53748d2e6facd70ad0160efe7938d3b4baeb6d05cce5d621c541a9",
+  "runtime/sim/engines/__init__.py": "251d9b7d848311209b978ff083f9c3a0de896833d6317df7bb9cb17d8ee7d12f",
+  "runtime/sim/engines/attention.py": "35d149b8ec7d858a6373445d589edd9f3b596db555089bdd39cbb00c49a0218a",
+  "runtime/sim/engines/deepseek_vector.py": "931a8a768537daa447e2efa1f76bda90989140d8036550d45e0ef4e0cd300c5e",
+  "runtime/sim/engines/dma.py": "92ed01711032c0a2e1d9e4ca4c7e1eee735475246d4c30aa8621d05d1767fc45",
+  "runtime/sim/engines/link.py": "086af2f3f501b180821ae6130abd6aeefe78172199a86066cb01583699aa208e",
+  "runtime/sim/engines/reduction.py": "16ed4dfafe72d5d77dd8c472f09e33c3708acb3dd9b7f8130f2c931746f9b639",
+  "runtime/sim/engines/route.py": "f529240dfab405c7c6a8b12cb04f3ae1d6fa2690af889ed04c35fbd14fbb9d54",
+  "runtime/sim/engines/selection.py": "98215d7b484067f882dc77de573ac8d7a5926c53edbb41a7a2b10ad6a94f53b9",
+  "runtime/sim/engines/tensor.py": "a16c7f4836b2becf5fda8fd853bf846f7be2001b50a80c634743b31db696a565",
+  "runtime/sim/engines/vector.py": "b394bc9c04cee5e4f679b5ba1aebc3d2389591fd9c4cbdc93d60c3daeef26d5f",
+  "runtime/sim/formats.py": "f2c9d1e2a6c13eb1961e4d156a7a28fd0ee03e1bdb47018b8cb1d79c89448385",
+  "runtime/sim/generators.py": "fb51190f1f3b432f6946d185bc4f8fd7864d8683d23bdf2d7da23a4d72c925fb",
+  "runtime/sim/memory.py": "4c5fe565e07933f86f608902b1fbce5d92667d7036902f40e67e563b21c4f3f7",
+  "runtime/tensor_accelerator/attention.py": "275859fcb1a1e951cbd40c207d50a4de011637bb10d6a3788d223d743565e5f5",
+  "runtime/tensor_accelerator/bf16.py": "75543479efffeb7a6806dd44178c8af1844276f87e3d01366b21e1cbccf68a34",
+  "runtime/tensor_accelerator/elementwise.py": "64877e0af6d47a695dd650a1d3912d2e1ed508d425b90babb89c4ce931fa4e26",
+  "runtime/tensor_accelerator/rmsnorm.py": "a4cd12f16bfc9419681cff8b4065a14f4af3778fae3866b79f7db93a46351e29",
+  "runtime/tensor_accelerator/rope.py": "86dabd538f77a9e7ff96a21f44bb14e1c3ef8176059c3e6d7cf05270131d265d",
+  "runtime/tensor_accelerator/sparse_attention.py": "5972c0ffe5714e774a1702f311352e22ff1a7d0d3feb0f614669ee08eb8c0562",
+  "tools/check_deepseek_v4_context_gate.py": "ae3562bf7a19400371ce7318ec1afc7d490a846e7d1c1e4eccee450e34023e33",
+  "tools/run_accelerator_tokens.py": "8d87ae2fcd7bb4c43897f01aa9db56d4df0835a5ab4fe951acc1fa1df0f53cb4"
+ }
+}
