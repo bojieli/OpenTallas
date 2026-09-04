@@ -155,6 +155,13 @@ def _confront(
             problems.append(f"{path}: absent from the registry listing")
             continue
         size = expected["size_bytes"]
+        if expected["sha256"] is None and not isinstance(size, int):
+            problems.append(
+                f"{path}: the registry listing records neither a digest nor a "
+                "size, so it witnesses nothing; fetch the listing with "
+                "?blobs=true"
+            )
+            continue
         if isinstance(size, int) and size != record["size_bytes"]:
             problems.append(
                 f"{path}: local size {record['size_bytes']} differs from the "

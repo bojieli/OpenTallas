@@ -15,10 +15,10 @@ and extended the source-bound shipped-program engine-prefix campaign through
 Qwen RMSNorm and DeepSeek transfer.
 **Current execution checkpoint (2026-09-03):** all four current deployments
 contain zero ABI `STATE` resources. Qwen HBM passes 21/21 deployment checks <!-- figure: 21 src="results/abi3/hbm_qwen_deployment_certificate.json#cases[case=qwen3-hbm-single-chip].passed_check_count" name="current Qwen HBM checks, checkpoint" --> at
-74 instructions <!-- figure: 74 src="results/abi3/hbm_qwen_deployment_certificate.json#cases[case=qwen3-hbm-single-chip].actual.instructions" name="current Qwen HBM instructions, checkpoint" --> and 215 descriptors <!-- figure: 215 src="results/abi3/hbm_qwen_deployment_certificate.json#cases[case=qwen3-hbm-single-chip].actual.descriptors" name="current Qwen HBM descriptors, checkpoint" -->; Qwen ROM passes 61/61 schedule checks <!-- figure: 61 src="results/abi3/rom_schedule_checks.json#cases[case=qwen3-rom-single-chip].passed_check_count" name="current Qwen ROM checks, checkpoint" --> at
+74 instructions <!-- figure: 74 src="results/abi3/hbm_qwen_deployment_certificate.json#cases[case=qwen3-hbm-single-chip].actual.instructions" name="current Qwen HBM instructions, checkpoint" --> and 215 descriptors <!-- figure: 215 src="results/abi3/hbm_qwen_deployment_certificate.json#cases[case=qwen3-hbm-single-chip].actual.descriptors" name="current Qwen HBM descriptors, checkpoint" -->; Qwen ROM passes 62/62 schedule checks <!-- figure: 62 src="results/abi3/rom_schedule_checks.json#cases[case=qwen3-rom-single-chip].passed_check_count" name="current Qwen ROM checks, checkpoint" --> at
 74 instructions <!-- figure: 74 src="results/abi3/rom_schedule_checks.json#cases[case=qwen3-rom-single-chip].actual.instructions" name="current Qwen ROM instructions, checkpoint" --> and 236 descriptors <!-- figure: 236 src="results/abi3/rom_schedule_checks.json#cases[case=qwen3-rom-single-chip].actual.descriptors" name="current Qwen ROM descriptors, checkpoint" -->. DeepSeek HBM passes 36/36 checks <!-- figure: 36 src="results/abi3/hbm_deepseek_deployment_certificate.json#cases[case=deepseek-v4-flash-hbm-cluster].passed_check_count" name="current DeepSeek HBM checks, checkpoint" --> at
 1,267 instructions <!-- figure: 1267 src="results/abi3/hbm_deepseek_deployment_certificate.json#cases[case=deepseek-v4-flash-hbm-cluster].actual.instructions" name="current DeepSeek HBM instructions, checkpoint" -->, 3,272 descriptors <!-- figure: 3272 src="results/abi3/hbm_deepseek_deployment_certificate.json#cases[case=deepseek-v4-flash-hbm-cluster].actual.descriptors" name="current DeepSeek HBM descriptors, checkpoint" --> and exactly 32 nodes <!-- figure: 32 src="results/abi3/hbm_deepseek_deployment_certificate.json#cases[case=deepseek-v4-flash-hbm-cluster].actual.node_count" name="current DeepSeek HBM nodes, checkpoint" -->; DeepSeek ROM passes
-127/127 checks <!-- figure: 127 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-wafer].passed_check_count" name="current DeepSeek ROM checks, checkpoint" --> at 1,329 instructions <!-- figure: 1329 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-wafer].actual.instructions" name="current DeepSeek ROM instructions, checkpoint" --> and 3,411 descriptors <!-- figure: 3411 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-wafer].actual.descriptors" name="current DeepSeek ROM descriptors, checkpoint" -->. The shipped RTL
+128/128 checks <!-- figure: 128 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-wafer].passed_check_count" name="current DeepSeek ROM checks, checkpoint" --> at 1,323 instructions <!-- figure: 1323 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-wafer].actual.instructions" name="current DeepSeek ROM instructions, checkpoint" --> and 3,405 descriptors <!-- figure: 3405 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-wafer].actual.descriptors" name="current DeepSeek ROM descriptors, checkpoint" -->. The shipped RTL
 campaign correlates prefill and decode for all four deployments on Icarus and
 Verilator with 595,020 checks per simulator <!-- figure: 595020 src="results/rtl/abi3_deployment_campaign.json#cases[name=iverilog].checks" name="current shipped-profile RTL checks, checkpoint" --> and explicitly proves
 `STATE_COMPAT=0` refusal before fetch. The standalone engine campaign correlates
@@ -251,8 +251,8 @@ evidence. None may be presented as a rerun of the current source.
   current deployment.
 - [x] W5.3 DeepSeek wafer-scale reticle/tile ROM placement, on-wafer fabric,
   distributed live HBM buffers, and deployment — the current schedule
-  certificate admits **1,329** instructions <!-- figure: 1329 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-wafer].actual.instructions" name="current DeepSeek ROM instructions, W5.3" -->,
-  **3,411** descriptors <!-- figure: 3411 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-wafer].actual.descriptors" name="current DeepSeek ROM descriptors, W5.3" -->,
+  certificate admits **1,323** instructions <!-- figure: 1323 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-wafer].actual.instructions" name="current DeepSeek ROM instructions, W5.3" -->,
+  **3,405** descriptors <!-- figure: 3405 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-wafer].actual.descriptors" name="current DeepSeek ROM descriptors, W5.3" -->,
   **378** schedules <!-- figure: 378 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-wafer].actual.schedules" name="current DeepSeek ROM schedules, W5.3" --> and **18** on-wafer communication records <!-- figure: 18 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-wafer].actual.communications" name="current DeepSeek ROM communications, W5.3" -->,
   with **0** `STATE` resources <!-- figure: 0 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-wafer].actual.states" name="DeepSeek ROM STATE resources, W5.3" -->.
 - [x] W5.4 Inverse proof: ROM image → original weights bit-exact — inverse proof passes bit-identically over 16.4 GB and 156 GB
@@ -263,8 +263,8 @@ evidence. None may be presented as a rerun of the current source.
   wafer participants, traffic classes, route tables, and byte/flit/stall
   bounds; the frozen ABI verifier is supplemental. `make
   abi3-rom-schedule-check` publishes `results/abi3/rom_schedule_checks.json`:
-  Qwen passes **61/61** checks over 74 instructions and 26 schedules <!-- figure: 61 src="results/abi3/rom_schedule_checks.json#cases[case=qwen3-rom-single-chip].passed_check_count" name="Qwen independent ROM schedule checks passed" -->,
-  while DeepSeek passes **127/127** checks <!-- figure: 127 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-wafer].passed_check_count" name="DeepSeek independent ROM schedule checks passed" --> over 1,312 instructions, 439 schedules and
+  Qwen passes **62/62** checks over 74 instructions and 26 schedules <!-- figure: 62 src="results/abi3/rom_schedule_checks.json#cases[case=qwen3-rom-single-chip].passed_check_count" name="Qwen independent ROM schedule checks passed" -->,
+  while DeepSeek passes **128/128** checks <!-- figure: 128 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-wafer].passed_check_count" name="DeepSeek independent ROM schedule checks passed" --> over 1,312 instructions, 439 schedules and
   18 on-wafer communications.
   Both declare zero `STATE` resources. Capability-valid placement, dependency,
   queue, link-credit, and live-buffer mutations are rejected. This is an
@@ -278,8 +278,8 @@ evidence. None may be presented as a rerun of the current source.
   with the routed expert banks node-sharded by consecutive ownership (eight
   experts per node, A28 `node_segments` images) and a data-bearing
   `LINK.COLLECTIVE SUM` per routed group ahead of `EXPERT_REDUCE`. The
-  source-current sparse-corrected build admits **1,346** instructions <!-- figure: 1,346 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-array-32].actual.instructions" name="array ROM instructions, W5.6" -->,
-  **3,429** descriptors <!-- figure: 3,429 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-array-32].actual.descriptors" name="array ROM descriptors, W5.6" -->,
+  source-current sparse-corrected build admits **1,340** instructions <!-- figure: 1,340 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-array-32].actual.instructions" name="array ROM instructions, W5.6" -->,
+  **3,423** descriptors <!-- figure: 3,423 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-array-32].actual.descriptors" name="array ROM descriptors, W5.6" -->,
   **19** cluster communication records <!-- figure: 19 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-array-32].actual.communications" name="array ROM communications, W5.6" -->,
   and **0** `STATE` resources <!-- figure: 0 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-array-32].actual.states" name="array ROM STATE resources, W5.6" -->,
   and is byte-identical on a second clean build. Its shared
@@ -289,7 +289,7 @@ evidence. None may be presented as a rerun of the current source.
   declaration. `results/abi3/deepseek_v4_activation_liveness_capacity.json`
   retains the source identities, admission result, capacity arithmetic, and
   HBM-planner equivalence. Against this deployment identity the independent
-  schedule checker passes **134/134** checks <!-- figure: 134 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-array-32].passed_check_count" name="array independent ROM schedule checks passed" -->,
+  schedule checker passes **135/135** checks <!-- figure: 135 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-array-32].passed_check_count" name="array independent ROM schedule checks passed" -->,
   including the four phase-layout convergence rules the sparse-phase lowering
   required, and the regenerated inverse proof reconstructs all
   **156,015,698,140** payload bytes <!-- figure: 156,015,698,140 src="results/abi3/deepseek_v4_rom_array_inverse.json#report.payload_bytes" name="array inverse payload bytes, W5.6" -->

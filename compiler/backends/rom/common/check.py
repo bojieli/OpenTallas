@@ -1041,6 +1041,49 @@ def check_rom_schedule(
             f"the graph declares {sorted(declared)}",
         )
 
+    # -- no wait may require two mutually exclusive producers ---------------
+    # An unconditional forward CONTROL.BRANCH that jumps past a later
+    # instruction proves the two sides are mutually exclusive: whichever side
+    # control enters, the other never runs and never signals.  A wait set that
+    # names an event from each side therefore blocks forever on the side not
+    # taken.  This is a property of the program alone, and it is checked over
+    # every wait set rather than only the ones a phase layout produces, because
+    # an instruction's predicate is only part of its reachability condition and
+    # any construct that branches can make two same-guard producers exclusive.
+    skips = [
+        (index, int(instruction.control_id))
+        for index, instruction in enumerate(instructions)
+        if instruction.major == int(Major.CONTROL)
+        and instruction.sub == int(Control.BRANCH)
+        and instruction.predicate_id == NO_ID
+        and int(instruction.control_id) > index
+    ]
+    require("branch_exclusive_wait", True, "")
+    for index, instruction in enumerate(instructions):
+        if instruction.wait_set_id == NO_ID:
+            continue
+        producers = sorted(
+            {
+                signal_index[event]
+                for event in _wait_events(instruction, waits, require)
+                if event in signal_index
+            }
+        )
+        if len(producers) < 2:
+            continue
+        for branch, target in skips:
+            before = [position for position in producers if position < branch]
+            after = [position for position in producers if branch < position < target]
+            if before and after:
+                require(
+                    "branch_exclusive_wait",
+                    False,
+                    f"instruction {index} waits on events signalled at "
+                    f"{before[-1]} and {after[0]}, which the unconditional "
+                    f"branch at {branch} to {target} makes mutually exclusive",
+                )
+                break
+
     for wait in waits.values():
         count = int(wait.payload["producer_count"])
         named = [int(wait.payload[f"producer_{slot}"]) for slot in range(count)]

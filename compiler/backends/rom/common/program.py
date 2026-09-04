@@ -8576,6 +8576,47 @@ class RomLowering:
                 for slot in range(int(wait["producer_count"]))
             )
 
+        # An event a CONTROL.WAIT already acquired under *exactly* its
+        # producer's guard is ordered before control leaves the block that
+        # holds both, so the terminal drain must not name it again.  The
+        # distinction is load-bearing rather than an optimisation: a
+        # phase-selected CONCAT emits the same operand-present condition in the
+        # prefill block and again in the decode block, so two of its operators
+        # share one guard while being mutually exclusive by control flow.
+        # Bucketing those two events together produced a drain that waited on
+        # both and stalled on whichever branch was not taken -- "wait on event
+        # 177 that has not been signalled", 41 minutes into a 32-token prefill.
+        # The guard is only part of a producer's reachability condition; the
+        # enclosing branch is the rest, and the in-block wait is the certificate
+        # that the live path retired.
+        acquired_under_producer_guard: set[int] = set()
+        guard_of_event: dict[int, tuple[int, bool]] = {}
+        for instruction in work:
+            event = int(instruction.signal_event_id)
+            if event == NO_ID or instruction.predicate_id == NO_ID:
+                continue
+            guard_of_event[event] = (
+                int(instruction.predicate_id),
+                bool(instruction.flags & int(InstructionFlag.PREDICATE_INVERT)),
+            )
+        for instruction in work:
+            if (
+                instruction.major != int(Major.CONTROL)
+                or instruction.sub != int(Control.WAIT)
+                or instruction.wait_set_id == NO_ID
+                or instruction.predicate_id == NO_ID
+            ):
+                continue
+            waiting = (
+                int(instruction.predicate_id),
+                bool(instruction.flags & int(InstructionFlag.PREDICATE_INVERT)),
+            )
+            payload = self.builder.table[int(instruction.wait_set_id)].payload
+            for slot in range(int(payload["producer_count"])):
+                event = int(payload[f"producer_{slot}"])
+                if guard_of_event.get(event) == waiting:
+                    acquired_under_producer_guard.add(event)
+
         for instruction in work:
             event = int(instruction.signal_event_id)
             if event == NO_ID:
@@ -8583,6 +8624,8 @@ class RomLowering:
             if instruction.predicate_id == NO_ID:
                 if event not in acquired_by_unconditional_signal:
                     unconditional.append(event)
+                continue
+            if event in acquired_under_producer_guard:
                 continue
             guard = (
                 int(instruction.predicate_id),
