@@ -4,18 +4,24 @@
 
 **Status:** findings established; corrective decisions open
 
-**Issue date:** 2026-09-04
+**Issue date:** 2026-09-04 (revised the same day after a forensic pass over the git
+history, the RTL and the Codex session trajectories overturned part of the first draft)
 
 **Occasion:** a cycle-accurate Qwen3-8B batch-1 decode at context 8,000 was found to
 deliver 0.225 tokens per second. The session producing it was stopped.
 
 **Scope:** why the modelled machine is four to five orders of magnitude below this
-program's own stated target, why roughly 457 million agent tokens and 340 agent-hours
-of work did not surface it, and what rule changes follow.
+program's own stated target, why roughly 457 million agent tokens and 340 agent-hours did
+not correct it, and what rule changes follow.
 
-This document is deliberately unsparing. Every number in it was recomputed from the
-repository during the investigation and every claim carries its source. Where something
-is an inference rather than a record, it says so.
+**A note on this document's own first draft.** The first version of this post-mortem said
+the shortfall went unnoticed, and reported the HBM chip as running at 99.17% model-FLOPs
+utilisation with no scheduling loss. Both are wrong, and the corrections are in sections 2
+and 3. The shortfall was quantified twice, five days apart, and reported into the sessions
+that owned the files. The 99.17% was the product of two errors that nearly cancelled. A
+post-mortem that gets its own arithmetic wrong in the reassuring direction is an instance
+of the thing it is investigating, so the errors are left visible rather than quietly
+edited out.
 
 ---
 
@@ -25,202 +31,226 @@ Two artifacts, one token, one process view (SKY130), one prompt position:
 
 | artifact | cycles | seconds | tokens/s |
 | --- | --- | --- | --- |
-| `results/abi3/cycle/qwen3_hbm_exact8k_b1_sky130_decode_pos8002_rowfold_v1.json` | 172,357,340 | 4.4414 | 0.2252 |
-| `results/abi3/cycle/qwen3_rom_exact8k_b1_sky130_decode_pos8002_rowfold_depthfix_v1.json` | 148,108,696 | 3.8165 | 0.2620 |
+| `qwen3_hbm_exact8k_b1_sky130_decode_pos8002_rowfold_v1.json` | 172,357,340 | 4.4414 | 0.2252 |
+| `qwen3_rom_exact8k_b1_sky130_decode_pos8002_rowfold_depthfix_v1.json` | 148,108,696 | 3.8165 | 0.2620 |
 
-Both retire the real model. The counters say so: `tensor.multiplications` is
-7,568,097,280 and `tensor.additions` is 7,566,544,512, for 15,134,641,792 work units,
-and the HBM lane moves 17.66 GB. The program is not a stub and the arithmetic is not
-faked. The machine executing it is simply very small.
+Both retire the real model: `tensor.multiplications` is 7,568,097,280 and
+`tensor.additions` is 7,566,544,512, for 15,134,641,792 work units, and the HBM lane moves
+17.66 GB. The program is not a stub. The machine executing it is very small.
 
 `docs/ABI3_TENSOR_DATAPATH_DECODE_UTILIZATION_ADR.md:66` states the target:
 
 > The aspirational north star remains **10,000 generated tokens/s, equivalent to
 > 100 microseconds per output token**.
 
-The delivered figure is 0.225 tokens/s. The gap is **44,414x**.
+The gap is **44,414x** on the HBM target and 38,165x on the ROM target.
 
-## 2. The gap, decomposed
+## 2. The gap, and a unit mismatch inside the simulator
 
-The tempting reading is that the machine is badly scheduled. It is not. Charging each
-target's own advertised tensor width against the work its own counters retired:
+The first draft of this document reported the HBM chip at 99.17% model-FLOPs utilisation
+and a scheduling loss of 1.008x, and concluded there was no scheduling problem at all.
+That was arrived at by dividing a consistent-units floor by an inconsistent-units measured
+total. Two errors, in opposite directions, of almost the same size. The artifact's own
+fields say otherwise:
 
-| | HBM single chip | ROM single chip |
+| field, HBM artifact | value |
+| --- | --- |
+| `engines.tensor.compute_bound_cycles` | 85,692,144 |
+| `engines.tensor.utilisation` | 0.511377 |
+| `engines.tensor.idle_cycles` | 84,217,712 |
+| `engines.tensor.issued_tile_work` | 7,568,101,376 |
+| `engines.tensor.work_units` | 15,134,641,792 |
+
+Two facts follow, and they are separate.
+
+**First, there is a real overlap loss of about 2x.** The model charges the tensor engine
+85,692,144 cycles of a 172,357,340-cycle token and leaves it idle for 84,217,712. Roughly
+half the token is spent with the arithmetic unit doing nothing.
+
+**Second, and more seriously, the tensor charge is computed in the wrong units.**
+`issued_tile_work` is 7,568,101,376, which is the multiplication count. But
+`engine.tensor.work_per_lane_cycle = 0.34587860192585124` was characterized against
+`tensor.multiplications + tensor.additions` — the cost table says so in its own note, and
+`work_units` in the same artifact records 15,134,641,792. The model therefore divides a
+MAC count by a rate defined on MACs-plus-adds. The discrepancy is a clean factor of two:
+
+| | HBM (256 lanes) | ROM (512 lanes) |
 | --- | --- | --- |
-| advertised tensor lanes | 256 | 512 |
-| measured rate, work/lane/cycle | 0.34588 | 0.34588 |
-| fabric peak | 3.436 Gwork/s | 6.872 Gwork/s |
-| tensor-bound floor | 170,926,140 cycles | 85,463,070 cycles |
-| actual / floor (scheduling loss) | **1.008x** | 1.733x |
-| model-FLOPs utilisation | **99.17%** | 57.70% |
-| compute shortfall against the north star | 44,045x | 22,023x |
-| total gap | 44,414x | 38,165x |
+| tensor cycles the model charged | 85,692,144 | 42,745,020 |
+| tensor cycles under consistent units | 170,926,140 | 85,463,070 |
+| ratio | 1.995x | 1.999x |
+| reported | 0.2252 tok/s, 44,414x short | 0.2620 tok/s, 38,165x short |
+| unit-consistent | 0.1507 tok/s, 66,377x short | 0.2034 tok/s, 49,173x short |
 
-The products reconcile exactly: 44,045 x 1.008 = 44,414, and 22,023 x 1.733 = 38,165.
+The error is in the optimistic direction. **This is an open defect and it must be resolved
+before any performance figure from this cycle model is quoted again**, including the ones
+in this document. Every number here is reported as the model reports it, with the
+correction shown beside it.
 
-**The HBM accelerator runs at 99.17% model-FLOPs utilisation.** There is no scheduling
-problem on that target at all. Every cycle the machine could have used, it used. It is
-a 3.4 Gwork/s machine asked to do a 151.3 Twork/s job.
+For scale either way: reaching the north star at one BF16 fused multiply-add per lane per
+cycle and a 1 GHz clock needs about **75,673 tensor lanes**. The design has 256 and 512.
 
-That is the central finding, and it inverts the intuitive diagnosis. The design is not
-inefficient. It is small, it is efficient at being small, and its efficiency is exactly
-what made the smallness invisible: every utilisation metric the program tracked was
-excellent right up to the moment someone divided by wall-clock seconds.
+## 3. It was found, twice, and left standing
 
-For scale: reaching the north star at one BF16 fused multiply-add per lane per cycle and
-a 1 GHz clock needs **75,673 tensor lanes**. At the SKY130 clock of 38,807,100 Hz it
-needs 1,949,984. The design has 256 and 512.
+This is the finding that replaced the first draft's claim that nobody noticed.
 
-## 3. Six mechanisms that hid it
+**2026-08-30 04:06:48Z.** A subagent audit reported into the very Claude Code session that
+had written the capability files that `engines.tensor.lanes x work_per_lane_cycle x clock`
+gives 1.02 TFLOP/s for the 512-lane ROM chip and 0.51 TFLOP/s for the 256-lane HBM chip,
+and that these are 267x and 609x short of the HC1 and A100 anchors the study exists to
+compare against. Ninety minutes earlier, commit `300c666` had added
+`docs/ISO_AREA_COMPARISON_AND_THE_TAALAS_ANCHOR.md` section 4, which states the method:
 
-### 3.1 The performance gate was defined so that it could never fail
+> 1. **Fix the silicon area first.** It is the binding constraint...
+> 2. **Derive capacity, bandwidth and compute roof from area and published densities.**
+>    They are outputs. A profile that states them as free inputs is not a design.
 
-`docs/ABI3_TENSOR_DATAPATH_DECODE_UTILIZATION_ADR.md:66-70` sets the north star and then,
-in the same paragraph, removes it from the gates:
+The capability files state lanes as free inputs. By the repository's own method, committed
+that morning, they were not a design. The audit said so, in the session that owned them,
+and nothing changed.
 
-> It is not a release pass criterion. The release SLO is still unfrozen for each model,
-> target role, context length, process view, PVT corner, batch size, and concurrency
-> point. Until those budgets are frozen in the comparison contracts, performance can be
-> measured but the TPOT gate can only be `not_evaluable`, not `pass`.
+**2026-09-03 21:37Z.** A Codex session computed the shortfall directly, and its wording
+leaves nothing to interpret:
 
-And later, at line 637:
+> HBM tensor lanes required at characterized rate: SKY130: `7.568e9 / (0.3458786 x
+> 38.8071e6 x 100e-6) ~ 5.64 million lanes`; ASAP7: about `3.78 million lanes`. Qwen ROM
+> required lanes are the same workload requirement; current 512 lanes are short by
+> roughly: SKY130 `~11,020x`, ASAP7 `~7,390x`. These enormous factors mean 100 us cannot
+> be reached by minor lane-mapper or scheduling changes. It requires a fundamentally much
+> wider spatial design, much faster arithmetic, massive replication, and/or a much higher
+> clock.
 
-> The 10,000-token/s north star is shown alongside the frozen budget but does not
-> silently populate it. A comparison with a missing budget remains `not_evaluable`; a
-> measured number alone is not a passed requirement.
+Earlier the same evening, at 17:38:11Z, the same session had written that the team
+"should treat this as an architecture-sizing failure to fix — not hide it behind simulator
+speed."
 
-Each sentence is individually defensible. Together they create a gate with two states,
-`not_evaluable` and `pass`, and no reachable `fail`. The budgets were never frozen. A
-gate that cannot fail is not a gate; it is a note. For the life of the program the
-performance question was formally deferred, and deferral was indistinguishable from
-progress.
+The governing ADR had been issued at 19:52 that day, between those two moments. It was
+never amended. Work continued for another day on row folding and lane mapping, which is
+precisely the class of change the 21:37 analysis had already ruled out.
 
-### 3.2 The tool disclaimed its own output, and the disclaimer was accepted as licence
+So the failure is not that the number was unknown. It is that **nothing in the process
+could convert a finding into a stop.**
 
-Every cycle run printed, and the stopped session's trajectory records it verbatim:
+## 4. Why finding it changed nothing
 
-```
-provenance class      assumed
-parameters by class   {'assumed': 106, 'characterized': 7, 'datasheet': 1}
-NOTE: this result depends on assumed machine values and is not a performance claim
-```
+### 4.1 Every instrument in the program is an upper bound
 
-106 of 114 machine parameters are graded `assumed`. The tool was right to say the number
-was not a performance claim. But "not a performance claim" was read as "not a number I
-need to reason about", and so 0.225 tokens/s was produced, logged, committed and never
-divided into 10,000.
+This is the deepest structural fact, and it is systematic rather than an oversight in one
+gate. `compiler/tensor_accelerator/production_capability.py:519` hard-codes
+`"performance_claims_permitted": False` and raises if a capability sets it true. The
+runtime verifier enforces `work <= max_retired_work`. The compiler raises on two dozen
+"exceeds capability" conditions. The roofline tests assert `hard_ceiling_tokens_s <
+17_000`. Every speed retraction in `docs/EVIDENCE_LEDGER.md` corrects a number downward.
 
-The provenance system was built to stop unfounded claims going out. It also, unintentionally,
-gave every founded alarm a reason to be ignored.
+The program could therefore prove, to a very high standard, that a machine is **not faster
+than** some figure. It had no instrument anywhere that could say a machine **must be faster
+than** some figure. The only field in the repository named for performance is a fail-closed
+prohibition on claiming performance, with no reachable true.
 
-### 3.3 Relative improvement replaced absolute target
+### 4.2 The performance gate had no reachable failing state, and was wired to nothing
 
-The reported progress was that row folding took the Qwen decode from 5.095e9 cycles to
-172.36e6, a 29.6x improvement. That is a real and substantial engineering result. It is
-also 29.6x of the wrong quantity: it moved the machine from 0.0076 tokens/s to 0.225
-tokens/s, and the target is 10,000.
+`docs/ABI3_TENSOR_DATAPATH_DECODE_UTILIZATION_ADR.md:66-70` sets the north star and removes
+it from the gates in the same paragraph: it "is not a release pass criterion", and until
+per-model budgets are frozen "the TPOT gate can only be `not_evaluable`, not `pass`". The
+budgets were never frozen. `tpot_acceptance` is an optional property of the
+comparison-contract schema, and its absence maps to `budget_missing` and thence to
+`not_evaluable`. The single Qwen comparison contract's capability, deployment and
+cost-table locks are all `status: pending` with null digests, so the phase that could have
+created a budget could not complete.
 
-A ratio against your own previous number always looks like progress. A ratio against the
-requirement is the only one that tells you whether to keep going or to stop and redesign.
-The program tracked the first and had formally excused itself from the second.
+And none of the Makefile's 89 targets invokes the TPOT checker. Both it and the release
+freezer exist only inside the test suite, exercised against fixtures the tests build
+themselves. A gate that cannot fail, cannot be reached, and is never run is not a gate.
 
-### 3.4 The fabric was never sized against anything
+### 4.3 The ADR forbade by name the change that produced the headline
 
-`git log --follow configs/hardware/abi3_capability/rom_qwen3.json` returns four commits.
-None of them contains a sizing calculation. Searching the documents for a derivation of
-tensor width from a throughput requirement returns nothing.
+`ADR:143-145`:
 
-The advertised widths are, across the four capabilities:
+> Changing a compiler tile from 64 rows to one row before implementing the hardware
+> semantics would only create a cycle-model speedup and is forbidden as performance
+> evidence.
 
-| capability | tensor | vector | attention |
-| --- | --- | --- | --- |
-| `rom_qwen3` | 512 | 256 | 128 |
-| `hbm_sram_single_chip` | 256 | 128 | 64 |
-| `rom_deepseek_v4` | 8192 | 4096 | 2048 |
-| `rom_deepseek_v4_array_32` | 256 | 128 | 64 |
-| `hbm_sram_cluster_32` | 256 | 128 | 64 |
+Row folding landed 17.4 hours later as `080d165`, and the ADR's own implementation update
+now records it approvingly at lines 22-31, reporting "physical output-lane utilization is
+99.9918%" and the new cycle totals. The document forbade the change, the change was made,
+and the document was updated to describe it rather than to refuse it.
 
-These are powers of two in a fixed 4:2:1 ratio. They read as a shape someone chose, not
-a width someone computed. Meanwhile the governing ADR describes "the 256-lane shared
-datapath" at line 643 and "the 256 lanes" at line 178, while `rom_qwen3` advertises 512.
-The document and the configuration disagree about the machine, and nothing checks them
-against each other.
+### 4.4 The objective could be satisfied by agreement rather than by achievement
 
-### 3.5 The measured engine rate was accepted as a fact of nature
+The stopped session's objective was "produce the numbers that validate the analytical
+numbers". It did. The simulation reproduced the analysis to within 0.07%. But the
+analytical table it was validating itself predicted about 1.475 s per token for Qwen HBM on
+ASAP7, so agreement with it was fully compatible with delivering 0.225 tokens/s.
 
-`engine.tensor.work_per_lane_cycle` is 0.34587860192585124, graded `characterized`,
-measured from one `ot_ta_matmul_bf16_sram_engine` retiring 33,554,432 work units in
-97,012,165 cycles. That is roughly 2.9 cycles per work unit, where a pipelined
-multiply-accumulate should retire one or two per cycle.
+Validating an analysis of a machine four orders of magnitude too small is a task that can
+be completed perfectly while the program fails completely. The session hit its objective.
 
-Because the number is `characterized` it outranks everything in the grading system, and
-the grading system's whole purpose is to stop people replacing measurements with wishes.
-So the slowest possible reading of the datapath became the machine's permanent rate, and
-the obvious question — why is a MAC taking three cycles, and what would it take to fix
-the RTL — was never forced by any gate. The provenance hierarchy is correct about
-epistemics and silent about ambition.
+### 4.5 The two models shared no variable through which they could ever be compared
 
-### 3.6 Correctness governance crowded out the performance question
+The analytical roofline expresses compute only as ops/s/mm2 times mm2, transferred as an
+area density from a published A100 dense roof. The cycle model expresses compute only as
+lanes times work-per-lane-cycle times hertz. `src/opentallas/roofline.py` contains zero
+occurrences of "lanes"; the cost tables contain zero occurrences of area.
 
-The repository's machinery is genuinely impressive and almost entirely pointed at
-correctness: token-identical oracle comparison, source-currency binding by SHA-256 for
-every artifact, an independent second-opinion schedule checker, prose-figure provenance
-with a 3,279-candidate census, a 24-item comparison fairness audit, deterministic rebuild
-proofs, inverse reconstruction proofs.
+There is a tool that calls itself "the join between the two halves of the project",
+`tools/validate_model_against_execution.py`, and it states in its own header that it does
+not compare time. So the only bridge between the analysis and the simulation was built
+with the load-bearing quantity deliberately excluded.
 
-Not one of those polices speed. The result is a program that can prove, to a very high
-standard, that a machine four orders of magnitude too slow computes exactly the right
+### 4.6 The lane count was never a decision
+
+`git log -S` shows 256 tensor lanes entering at 2026-08-29 16:03:40 in a commit about
+landing the Kernel IR, and 512 entering five minutes and twenty-eight seconds later inside
+`ffed8a7`, a commit titled `docs(abi3): freeze the operator operand conventions`, whose
+message never mentions the new file or any lane count. In that file every other constant
+carries a provenance comment; the `engines` dict carries none.
+
+The RTL lane mapper that now defines 256 lanes in hardware, `ot_a3_tensor_lane_mapper.sv`,
+landed five days later and its header says it implements the ADR. The causal arrow runs
+config to document to RTL, not the reverse.
+
+On the very target that produced 0.225 tokens/s, the declared lane count is not read by
+the compiler at all: `compiler/backends/hbm_sram/plan.py:250-253` fixes `rows: int = 64,
+cols: int = 128, depth: int = 128, block: int = 512` as policy defaults.
+
+### 4.7 The engine is one scalar MAC, and its rate was accepted as a fact of nature
+
+`rtl/ot_ta_matmul_bf16_sram_engine.sv` contains exactly one multiplier and one adder,
+behind a strictly serial request/wait FSM. Because request and wait are mutually exclusive,
+the engine cannot exceed two cycles per multiply-accumulate, a hard structural ceiling of
+1.0 work per lane per cycle regardless of what memory it is attached to. The measured
+0.34588 is 2.891x below even that, and the balance is contributed by the campaign
+testbench's deliberately stall-generating behavioural memory, which grants read acceptance
+on alternate cycles and rotates read latency through one, two and three extra cycles.
+
+Because the figure is graded `characterized` it outranks everything in the provenance
+system, which is exactly what that system is for. So the slowest reading of a
+one-multiplier engine measured against a deliberately hostile testbench became the
+machine's permanent rate, and no gate ever forced the question of what the RTL should
+become.
+
+### 4.8 Correctness governance was excellent, and pointed entirely away from this
+
+Token-identical oracle comparison, source-currency binding by SHA-256 on every artifact, an
+independent second-opinion schedule checker, prose-figure provenance over a
+3,300-candidate census, a 24-item comparison fairness audit, deterministic rebuild proofs,
+inverse reconstruction proofs. None of it polices speed. The program can prove to a very
+high standard that a machine four orders of magnitude too slow computes exactly the right
 tokens.
 
-### 3.7 The simulation was in the wrong regime, so it could not have validated anything
+## 5. What the comparison inherited
 
-This was found after the rest of this document was written, and it is the sharpest of the
-seven.
+On the Qwen pair the ROM chip is advertised with 512 tensor lanes and the HBM chip with
+256. `docs/COMPARISON_FAIRNESS_AUDIT.md` contains 24 audited items; item A10 concerns a
+"512- vs 8,192-token program block", which is program block size and a different quantity.
+**The 2x tensor-width asymmetry between the two chips under comparison is audited
+nowhere.**
 
-The analytical roofline publishes, for Qwen3-8B at batch 1 and context 8,192 at equal
-silicon area, a ROM design at 3,911.3 per-user tokens/s against a GPU design at 693.6, a
-ratio of 5.639x. The cycle model on the same model and the same token gives 0.262 and
-0.225, a ratio of **1.16x**.
+It may be defensible under an iso-area argument, since a ROM design spends no area on DRAM
+controllers. It is not argued anywhere. Note the direction: it flatters ROM, which is the
+conclusion the project would like to reach.
 
-The magnitudes being wrong is the subject of this post-mortem. The ratio being wrong is
-worse, and it has a separate cause. The analytical model finds the GPU **weight-read
-bound**, spending 1,051 us of a 1,322 us budget fetching weights, and that fact is the
-entire reason a mask-ROM design wins: it is the term ROM removes. The cycle model finds
-**both** targets compute-bound, because a 0.346 work/lane/cycle fabric is so slow that
-memory never becomes the limit on either side.
-
-A simulation whose binding constraint differs from the model it is validating cannot
-validate it at any speed. The one quantity the project exists to measure — what happens
-when weights stop coming from DRAM — was structurally invisible in the simulator, and no
-amount of scheduling work or row folding would have revealed it. The two models were not
-disagreeing about a number. They were describing different machines in different regimes,
-and nothing in the program compared them until it was asked directly.
-
-**The corollary is the design rule.** A cycle-model machine must not be specified by hand
-alongside an analytical model; it must be *derived from it*, so that the two share a
-machine by construction and the simulation's job is to add what the roofline omits —
-scheduling, dependencies, contention — rather than to describe a different computer. The
-derivation is arithmetic, not judgement: the analytical ROM point's compute area of
-726.6 mm2, times the published N5 density of 6.799e11 ops/s/mm2, times the 0.55 efficiency
-derate, yields 55.70 us against its own published compute term of 55.703 us.
-
-## 4. What the comparison inherited
-
-The project exists to compare a mask-ROM design against an HBM design. On the Qwen pair
-the ROM chip is advertised with 512 tensor lanes and the HBM chip with 256.
-
-`docs/COMPARISON_FAIRNESS_AUDIT.md` contains 24 audited items. Item A10 concerns "ABI3
-executed lanes: a 512-token program block against an 8,192-token one", which is program
-block size and a different quantity. **The 2x tensor-width asymmetry between the two
-chips under comparison is audited nowhere.**
-
-This may be defensible under an iso-area argument: a ROM design spends no area on DRAM
-controllers and may legitimately buy more compute. But it is not argued anywhere, and an
-unargued 2x in the numerator of the headline ratio is exactly what a fairness audit is
-for. Note the direction of the error: it flatters ROM, which is the conclusion the
-project would like to reach.
-
-## 5. The cost
+## 6. The cost
 
 From `/home/ubuntu/.codex/goals_1.sqlite`, across 26 Codex threads on this machine:
 
@@ -228,89 +258,85 @@ From `/home/ubuntu/.codex/goals_1.sqlite`, across 26 Codex threads on this machi
 - **340 agent-hours**
 - outcomes: 5 complete, 9 blocked, 8 paused, 2 usage-limited, 2 active
 
-The single stopped thread `01a048d7` alone reports `total_tokens` of 1,441,793,764 in its
-own trajectory accounting, against an objective set on 2026-09-04 reading "perform all the
-cycle accurate simulations and fix any correctness bugs or performance issues, and produce
-the numbers that validate the analytical numbers". It produced numbers. They did not
-validate the analytical numbers, and it did not stop and say so.
+The single stopped thread reports `total_tokens` of 1,441,793,764 in its own trajectory
+accounting. Of the 26 recorded objectives, none contains a term that could fail: no "at
+least", no "must reach", no "faster than", no "within". Five of the eight OpenTallas
+objectives say "autonomously".
 
-Sampling that trajectory for the target shows the pattern: "north star" appears 655 times
-in the final 126 MB, and essentially every occurrence is the agent re-reading the ADR
-paragraph that declares the north star non-binding, not computing a tokens-per-second
-figure and comparing it.
+## 7. What we learn
 
-## 6. What we learn
+**R1. Every performance gate must have a reachable failing state from the first day.** An
+unfrozen budget is a disabled alarm. A provisional target that is allowed to be wrong and
+fails loudly beats a correct target that cannot fail.
 
-These are stated as rules because that is the only form that survives contact with an
-autonomous loop.
+**R2. Instrument the lower bound, not only the upper bound.** A program whose every
+compiler check, runtime check and test asserts "not faster than" will never notice "far too
+slow". At least one check must fail when the machine is under-performing.
 
-**R1. Every performance gate must have a reachable failing state from the first day.**
-An unfrozen budget is not a deferred decision, it is a disabled alarm. If a real budget
-cannot be set, set a provisional one that is allowed to be wrong; a wrong target that
-fails loudly is worth more than a correct target that cannot fail.
+**R3. Report the ratio to the requirement, never only the ratio to yourself.** Any artifact
+publishing a cycle count must also publish tokens/second and that figure divided by the
+target.
 
-**R2. Report the ratio to the requirement, never only the ratio to yourself.** Any
-artifact that publishes a cycle count must also publish tokens/second and that figure
-divided by the target. 29.6x of a number 44,000x from where it needs to be is not
-progress worth a commit message; it is a signal to stop optimising and start resizing.
+**R4. A finding must be able to stop the work.** The shortfall was quantified on 2026-08-30
+and again on 2026-09-03, in writing, in the sessions that owned the files, and work
+continued on exactly the changes the analysis had ruled out. Route quantified shortfalls
+into a state that blocks, not into a paragraph.
 
-**R3. Size the fabric before building the evidence machine.** One page of arithmetic —
-work per token, target tokens per second, resulting work per second, resulting lanes at a
-plausible clock — would have shown in an afternoon that 256 lanes at 38.8 MHz is four
-orders of magnitude from 10,000 tokens/s. That page was never written. Write it first,
-put it under version control, and re-check it whenever a width changes.
+**R5. Size the fabric before building the evidence machine, and follow your own method.**
+The obligation existed in this repository, in writing: derive compute from area, and a
+profile that states it as a free input is not a design. It was committed and not applied.
 
-**R4. `characterized` means "this is what it does", never "this is what it must do".**
-A measured rate is a fact about the current implementation and a question about the next
-one. When a characterized rate sits far below what the target needs, that gap is itself a
-required work item, not a settled parameter.
+**R6. `characterized` means "this is what it does", never "this is what it must do".** A
+measured rate is a fact about the current implementation and a question about the next one.
+Check what the testbench was doing to the number before enshrining it.
 
-**R5. Utilisation metrics must always be published next to an absolute figure.** 99.17%
-MFU is the most reassuring number in this entire investigation and it is the one that
-concealed the problem longest. Efficiency without magnitude is not evidence of health.
+**R7. Utilisation without magnitude is not evidence of health.** "99.9918% physical
+output-lane utilization" was recorded as an implementation success on a machine 44,000x
+short. So, in this document's own first draft, was 99.17% MFU.
 
-**R6. A fairness audit must cover the parameters that set the headline ratio.** Tensor
-width is the first-order term in a compute comparison. Auditing program block size while
-leaving a 2x lane asymmetry unexamined audits the wrong thing carefully.
+**R8. A fairness audit must cover the parameters that set the headline ratio.** Tensor
+width is the first-order term in a compute comparison.
 
-**R7. An autonomous objective must carry a falsifiable acceptance criterion.** Of the 26
-recorded objectives, the recurring forms are "work autonomously", "continue with the
-remaining items", and "finish all". Those cannot terminate and cannot fail. "Produce the
-numbers that validate the analytical numbers" was closer, but with no rule about what to
-do when they do not validate, it degenerated into producing numbers.
+**R9. Two models of one machine must share the machine by construction.** Derive the
+simulator's machine from the analytical design point mechanically, never specify them
+alongside each other. The derivation is arithmetic: the analytical ROM point's 726.6 mm2 of
+compute area, times its published N5 density of 6.799e11 ops/s/mm2, times its 0.55 derate,
+gives 55.70 us against its own published compute term of 55.703 us.
 
-**R8. When the tool says the result is not a claim, that is the beginning of the
-analysis.** A disclaimer explains what a number cannot support. It does not excuse anyone
-from reading what the number plainly says.
+**R10. Check the binding constraint before comparing the number.** The analytical model
+finds the GPU weight-read bound, spending 1,051 us of a 1,322 us budget fetching weights,
+which is the entire reason a mask-ROM design wins. The cycle model finds both targets
+compute-bound, so the one quantity the project exists to measure was structurally
+invisible. Publish the binding constraint next to every performance figure.
 
-**R9. Two models of one machine must share the machine by construction.** Where an
-analytical model and a simulator both exist, the simulator's machine is derived from the
-analytical design point mechanically, never specified alongside it. Otherwise they drift
-into different regimes and each looks internally consistent while the pair means nothing.
+**R11. An autonomous objective must carry a falsifiable acceptance criterion, and it must
+name the right referent.** "Produce the numbers that validate the analytical numbers" was
+satisfiable by agreement with an analysis of the wrong machine, and it was satisfied.
 
-**R10. Check the binding constraint before comparing the number.** Two models that
-disagree about which term is binding are not measuring the same thing, and reconciling
-their outputs is meaningless until they agree about what limits the machine. Publish the
-binding constraint next to every performance figure so a mismatch is visible at a glance
-instead of after four orders of magnitude.
+**R12. Audit units at every boundary between a counter and a rate.** The tensor charge in
+this cycle model divides a MAC count by a rate defined on MACs-plus-adds, a clean factor of
+two in the optimistic direction, and it survived every provenance, source-currency and
+correctness check this repository runs.
 
 ---
 
 ## Appendix: how to reproduce the arithmetic in this document
 
 ```python
+import json
 rate = 0.34587860192585124          # engine.tensor.work_per_lane_cycle, sky130 v2
-clock = 38_807_100.0               # clock.frequency_hz, sky130 v2
-work = 15_134_641_792              # tensor.multiplications + tensor.additions
-north_star = 10_000                # tokens/s, ADR line 66
+north_star = 10_000                 # tokens/s, ADR line 66
 
-for lanes, cycles, seconds in ((256, 172_357_340, 4.441396),
-                               (512, 148_108_696, 3.816536)):
-    peak  = lanes * rate * clock
-    floor = work / (lanes * rate)
-    print(peak / 1e9,                       # Gwork/s
-          work / (peak * seconds),          # MFU
-          cycles / floor,                   # scheduling loss
-          (work * north_star) / peak,       # compute shortfall
-          north_star * seconds)             # total gap
+for art, lanes in (("qwen3_hbm_exact8k_b1_sky130_decode_pos8002_rowfold_v1", 256),
+                   ("qwen3_rom_exact8k_b1_sky130_decode_pos8002_rowfold_depthfix_v1", 512)):
+    d = json.load(open(f"results/abi3/cycle/{art}.json"))
+    t, T = d["engines"]["tensor"], d["timing"]
+    c = d["counters"]["architectural"]
+    work = c["tensor.multiplications"] + c["tensor.additions"]
+    consistent = work / (lanes * rate)          # what the rate's own units imply
+    charged = t["compute_bound_cycles"]         # what the model actually charged
+    fixed_s = (T["total_cycles"] + consistent - charged) / T["clock_frequency_hz"]
+    print(lanes, charged, round(consistent), round(consistent / charged, 3),
+          round(1 / T["seconds"], 4), round(north_star * T["seconds"]),
+          round(1 / fixed_s, 4), round(north_star * fixed_s))
 ```
