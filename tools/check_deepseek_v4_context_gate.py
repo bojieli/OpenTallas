@@ -79,10 +79,8 @@ KV_ROW_BYTES = 1024
 # checker.  The token runner embeds their digests in every new functional
 # artifact; this gate requires them so a record cannot be relabelled
 # "post-amendment" after the simulator source changed underneath it.
-REQUIRED_FUNCTIONAL_SOURCES = (
+COMMON_FUNCTIONAL_SOURCES = (
     "tools/run_accelerator_tokens.py",
-    "compiler/backends/hbm_sram/lower.py",
-    "compiler/backends/hbm_sram/plan.py",
     "compiler/backends/numeric_contracts.py",
     "compiler/ir/v3/kernel_ir.py",
     "compiler/ir/v3/lowering.py",
@@ -133,6 +131,43 @@ REQUIRED_FUNCTIONAL_SOURCES = (
     "runtime/tensor_accelerator/sparse_attention.py",
 )
 
+# A comparison checker must bind the backend that actually produced the
+# record.  Requiring HBM lowering sources from a ROM record (or vice versa)
+# makes a valid lane impossible to represent and, more importantly, does not
+# authenticate the selected backend.  Keep the common execution surface above
+# and add exactly the lowering lane named by the runner's governed ``backend``
+# field.  ``REQUIRED_FUNCTIONAL_SOURCES`` remains the union used to bind this
+# checker's own report and by callers auditing the complete supported surface.
+BACKEND_FUNCTIONAL_SOURCES = {
+    "hbm_sram": (
+        "compiler/backends/hbm_sram/lower.py",
+        "compiler/backends/hbm_sram/plan.py",
+    ),
+    "rom_deepseek_v4": (
+        "compiler/backends/rom/deepseek_v4.py",
+        "compiler/backends/rom/common/image.py",
+        "compiler/backends/rom/common/program.py",
+    ),
+    "rom_deepseek_v4_array": (
+        "compiler/backends/rom/deepseek_v4_array.py",
+        "compiler/backends/rom/deepseek_v4.py",
+        "compiler/backends/rom/common/image.py",
+        "compiler/backends/rom/common/program.py",
+    ),
+}
+REQUIRED_FUNCTIONAL_SOURCES = tuple(
+    dict.fromkeys(
+        (
+            *COMMON_FUNCTIONAL_SOURCES,
+            *(
+                source
+                for sources in BACKEND_FUNCTIONAL_SOURCES.values()
+                for source in sources
+            ),
+        )
+    )
+)
+
 
 def _relative(path: Path) -> str:
     try:
@@ -145,7 +180,9 @@ def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def _source_lock_problems(source_sha256: object) -> list[str]:
+def _source_lock_problems(
+    source_sha256: object, *, backend: object | None = None
+) -> list[str]:
     """Validate the complete recorded map and the non-removable minimum.
 
     Checking only a hand-picked subset lets a producer record a changed source
@@ -196,7 +233,19 @@ def _source_lock_problems(source_sha256: object) -> list[str]:
                 "implementation"
             )
 
-    for relative in REQUIRED_FUNCTIONAL_SOURCES:
+    required = REQUIRED_FUNCTIONAL_SOURCES
+    if backend is not None:
+        if not isinstance(backend, str) or backend not in BACKEND_FUNCTIONAL_SOURCES:
+            problems.append(
+                f"record backend {backend!r} has no governed source-lock policy"
+            )
+            required = COMMON_FUNCTIONAL_SOURCES
+        else:
+            required = (
+                *COMMON_FUNCTIONAL_SOURCES,
+                *BACKEND_FUNCTIONAL_SOURCES[backend],
+            )
+    for relative in required:
         if relative not in source_sha256:
             problems.append(f"record does not bind required source {relative}")
     return problems
@@ -570,7 +619,11 @@ def check_record(
     workload_id = workload["workload_id"]
     problems: list[str] = []
 
-    problems.extend(_source_lock_problems(record.get("source_sha256")))
+    problems.extend(
+        _source_lock_problems(
+            record.get("source_sha256"), backend=record.get("backend")
+        )
+    )
 
     pinned = prompts.get(workload_id)
     gold = golds.get(workload_id)

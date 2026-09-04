@@ -168,6 +168,43 @@ def test_source_gate_requires_the_non_removable_minimum_and_safe_paths():
     )
 
 
+def test_source_gate_requires_the_selected_backend_not_an_unrelated_lane():
+    module = _checker()
+    backend = "rom_deepseek_v4_array"
+    required = (
+        *module.COMMON_FUNCTIONAL_SOURCES,
+        *module.BACKEND_FUNCTIONAL_SOURCES[backend],
+    )
+    source_map = {
+        relative: hashlib.sha256((REPO / relative).read_bytes()).hexdigest()
+        for relative in required
+    }
+
+    assert module._source_lock_problems(source_map, backend=backend) == []
+    assert "compiler/backends/hbm_sram/lower.py" not in source_map
+    assert "compiler/backends/hbm_sram/plan.py" not in source_map
+
+    source_map.pop("compiler/backends/rom/deepseek_v4_array.py")
+    assert module._source_lock_problems(source_map, backend=backend) == [
+        "record does not bind required source "
+        "compiler/backends/rom/deepseek_v4_array.py"
+    ]
+
+
+def test_source_gate_refuses_an_unregistered_backend_identity():
+    module = _checker()
+    source_map = {
+        relative: hashlib.sha256((REPO / relative).read_bytes()).hexdigest()
+        for relative in module.COMMON_FUNCTIONAL_SOURCES
+    }
+
+    problems = module._source_lock_problems(source_map, backend="made_up")
+
+    assert problems == [
+        "record backend 'made_up' has no governed source-lock policy"
+    ]
+
+
 def test_missing_explicit_pin_is_reported_and_fails_closed(tmp_path):
     missing_pin = tmp_path / "missing-pin.json"
     output = tmp_path / "gate.json"
