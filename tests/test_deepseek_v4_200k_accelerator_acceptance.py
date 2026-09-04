@@ -911,7 +911,7 @@ def test_serialized_state_descriptor_and_instruction_are_rejected(
     assert any("ABI STATE instruction" in item for item in result["problems"])
 
 
-def test_current_short_stateful_p32_records_remain_ineligible() -> None:
+def test_current_short_p32_records_remain_ineligible() -> None:
     result = tool.validate(
         REPO / "results/abi3/accelerator_tokens/deepseek_v4_flash_rom_p32.json",
         REPO / "results/abi3/accelerator_tokens/deepseek_v4_flash_hbm_p32.json",
@@ -919,5 +919,7 @@ def test_current_short_stateful_p32_records_remain_ineligible() -> None:
     )
     assert result["status"] == "rejected"
     assert any("Gate B is not accepted" in item for item in result["problems"])
-    assert any("ABI STATE descriptor" in item for item in result["problems"])
+    assert not any("ABI STATE descriptor" in item for item in result["problems"])
+    assert not any("ABI STATE instruction" in item for item in result["problems"])
     assert any("200K prompt" in item for item in result["problems"])
+    assert any("256-token cap" in item for item in result["problems"])
