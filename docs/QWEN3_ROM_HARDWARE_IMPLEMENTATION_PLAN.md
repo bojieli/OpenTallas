@@ -59,6 +59,32 @@ batch sweeps remain projected and do not establish token correctness or
 executed TPOT. A numerical TPOT budget must be frozen in the comparison contract
 before this lane can claim the desired performance is achieved.
 
+### 1.1 Measured decode update, 2026-09-04
+
+Commits `080d165` and `686ec6c` apply row-folded active tensor lanes and stop
+non-reducing ROM operators from inheriting a weight reduction depth. Tensor
+executed padding is now zero; the false vector cost falls from 3,814,686,112 to
+6,550,800 cycles. B=1 ASAP7 total cycles fall from 8,896,523,172 to
+148,109,458, a 60.07-times reduction.
+
+| View | B | Makespan cycles | Makespan | Service s/token | Aggregate token/s |
+|---|---:|---:|---:|---:|---:|
+| ASAP7 | 1 | 148,109,458 | 2.555418 s | 2.555418 | 0.391325 |
+| ASAP7 | 2 | 176,158,214 | 3.039359 s | 1.519680 | 0.658033 |
+| ASAP7 | 4 | 334,095,422 | 5.764341 s | 1.441085 | 0.693922 |
+| ASAP7 | 8 | 663,335,793 | 11.444914 s | 1.430614 | 0.699000 |
+| SKY130 | 1 | 148,108,696 | 3.816536 s | 3.816536 | 0.262018 |
+| SKY130 | 2 | 176,154,731 | 4.539240 s | 2.269620 | 0.440602 |
+| SKY130 | 4 | 334,089,117 | 8.608969 s | 2.152242 | 0.464632 |
+| SKY130 | 8 | 663,323,114 | 17.092829 s | 2.136604 | 0.468033 |
+
+ROM/HBM is 1.164 times faster than HBM/SRAM at B=1 and 1.405 times faster in
+aggregate at B=8 under the current shared-resource model. This is not yet a
+correct-token performance claim: every fresh-state timing lane emits legal ID
+`565`, not the exact-8K oracle `[18, 24, 16, 151645]`. Exact prompt-state ROM
+execution, first-EOS termination, TTFT, distinct B=2/4/8 workload results, and
+complete RTL/physical correlation remain open.
+
 ## 2. Retained baseline and exact limitations
 
 ### 2.1 What is already valuable

@@ -19,6 +19,16 @@ ROM wafer comparison points
 [four-target progress report](FOUR_TARGET_PROGRESS_REPORT.md), and
 [ABI 3.0 frozen wire format](TENSOR_ACCELERATOR_ABI_3_WIRE_FORMAT.md)
 
+**Implementation update, 2026-09-04:** commit `080d165` implements this
+decision's resolved-active-extent, deterministic row-folded wave semantics in
+the shared cycle model. Qwen decode tensor issued work now equals useful work,
+437,583,605,760 units of rectangular schedule capacity are masked instead of
+executed, and physical output-lane utilization is 99.9918%. Commit `686ec6c`
+also removes false reduction depth from ROM embedding/vector schedules. The
+resulting B=1 totals are 172,359,893 cycles for HBM/SRAM and 148,109,458 cycles
+for ROM/HBM on ASAP7. Standalone lane RTL exists, but complete tensor-engine and
+end-to-end token RTL correlation remain open.
+
 ## 1. Outcome and release rule
 
 OpenTallas will implement one shared, maskable and row-foldable tensor datapath

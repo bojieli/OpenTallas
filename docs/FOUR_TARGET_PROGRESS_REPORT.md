@@ -4,10 +4,12 @@
 
 **Status date:** 2026-09-04
 
-**Retained simulation artifacts:** through `5f957c2` on `main`. This is the first
-checkpoint with retained, event-driven Qwen exact-8K B=1 decode simulations
-for both the HBM/SRAM and ROM deployments under both ASAP7 and SKY130 views.
-Longer functional and prefill simulations listed below are still running.
+**Retained simulation implementation:** `080d165` adds resolved-active-extent,
+row-folded tensor timing and `686ec6c` removes false reduction depth from ROM
+non-reducing operators. The result set now contains direct Qwen exact-8K decode
+simulations for HBM/SRAM and ROM/HBM at B=1/2/4/8 under both ASAP7 and SKY130
+views. Longer functional and prefill simulations listed below are still
+running.
 
 **Operating decision:** remain on ABI 3.0 and stop expanding the
 correctness-qualified tooling. There is no ABI 3.1, durable-state, rollback,
@@ -33,41 +35,86 @@ evidence for these outcomes rather than substitutes for them.
 | Priority release gate | Current status | Source-current acceptance evidence | Closure condition |
 |---|---|---|---|
 | 1. Correct output tokens | **open; exact-8K oracle is retained and a source-current HBM run is active** | Qwen's independent exact-8K oracle produced `[18, 24, 16, 151645]`, raw text `391<|im_end|>`, visible text `391`, and official-EOS stop; an older HBM/SRAM functional execution matched it exactly | complete the active source-current HBM run, then run the same prompt on ROM; repeat on distinct chat/reasoning/agentic lanes and B=2/4/8 |
-| 2. Desired TPOT | **open; first B=1 decode simulations retained, target not met** | HBM/SRAM: 87.910 s/token ASAP7 and 131.295 s/token SKY130; ROM: 153.497 s/token ASAP7 and 229.250 s/token SKY130; three consecutive positions agree on each cell | remove the decode tile-padding pathology, rerun the same points, add prefill TTFT and genuine B=2/4/8 results, then compare with an explicit numerical SLO |
+| 2. Desired TPOT | **open; corrected B=1/2/4/8 timing diagnostics retained, no token-correct TPOT yet** | B=1 HBM/SRAM: 2.973824 s ASAP7 and 4.441387 s SKY130; B=1 ROM/HBM: 2.555418 s ASAP7 and 3.816536 s SKY130. Shared-resource B=2/4/8 sweeps peak at 0.507005 token/s for HBM/SRAM and 0.699000 token/s for ROM/HBM on ASAP7 | finish the exact prompt-state execution, measure TTFT and decode ticks from that token-correct run, close remaining attention/vector inefficiency and architecture width, then compare with an explicit numerical SLO |
 
 The 10,000-token/s or 100-microsecond-per-token figure remains an aspirational
 north star, not a silently assumed pass threshold. The current simulations are
-many orders of magnitude slower and therefore plainly do not achieve the
-desired TPOT. A more elaborate checker would not change that conclusion. The
-immediate engineering signal is tile geometry: HBM/SRAM issues 448.206 billion
-work units per decode token, of which 438.848 billion (97.9121%) are padding;
-ROM issues 974.758 billion, of which 965.400 billion (about 99.04%) are
-padding. The next performance iteration must add active-row/lane masking or a
-narrow decode engine, then rerun the simulator.
+many orders of magnitude slower and therefore plainly do not reach that
+aspiration. A more elaborate checker would not change that conclusion.
 
-### 1.0.1 Retained simulation numbers
+The row-folded lane implementation has removed the dominant tensor pathology:
+Qwen tensor issued work now equals its 7,568,101,376 useful work units, while
+437,583,605,760 units of old rectangular schedule capacity are masked rather
+than executed. Physical tensor output-lane utilization is 99.9918%. Total
+remaining padding is 11.9039% for HBM/SRAM and 28.3938% for ROM/HBM; attention
+is now the largest padded family. The tensor portion measures 85,692,144 cycles
+(1.4785 s) on the ASAP7 HBM/SRAM target and 42,745,020 cycles (0.7375 s) on the
+ASAP7 ROM/HBM target, closely reproducing the prior compute-only lower bounds.
+The next performance iteration is therefore wider/faster real datapaths plus
+attention/vector and memory/fabric closure, not more acceptance tooling.
 
-All four rows below execute one complete ABI 3.0 decode transaction for Qwen3
-8B at B=1 after an 8,000-token prompt. Positions 8,000, 8,001, and 8,002 were
-simulated independently; the reported cycle and time values were identical at
-all three positions within each row.
+### 1.0.1 Corrected B=1 decode simulation numbers
+
+All four rows below execute one complete ABI 3.0 decode transaction at the
+position immediately following an 8,000-token context. They use the corrected
+row-folded tensor mapping and the fixed ROM non-reducing schedules.
 
 | Deployment | Process view | Cycles/token | Clock | Modelled TPOT | Aggregate rate |
 |---|---|---:|---:|---:|---:|
-| HBM + SRAM single chip | ASAP7 | 5,095,186,721 | 57.959 MHz | 87.910190 s | 0.011375 token/s |
-| HBM + SRAM single chip | SKY130 | 5,095,186,652 | 38.8071 MHz | 131.295218 s | 0.007616 token/s |
-| ROM + HBM single chip | ASAP7 | 8,896,523,172 | 57.959 MHz | 153.496837 s | 0.006515 token/s |
-| ROM + HBM single chip | SKY130 | 8,896,523,169 | 38.8071 MHz | 229.249884 s | 0.004362 token/s |
+| HBM + SRAM single chip | ASAP7 | 172,359,893 | 57.959 MHz | 2.973824 s | 0.336267 token/s |
+| HBM + SRAM single chip | SKY130 | 172,357,340 | 38.8071 MHz | 4.441387 s | 0.225155 token/s |
+| ROM + HBM single chip | ASAP7 | 148,109,458 | 57.959 MHz | 2.555418 s | 0.391325 token/s |
+| ROM + HBM single chip | SKY130 | 148,108,696 | 38.8071 MHz | 3.816536 s | 0.262018 token/s |
 
-Under the current mappings, HBM/SRAM is about 1.746 times faster than ROM for
-decode on either process view. This is the opposite of the intended ROM
-advantage and is actionable evidence that the ROM tiling is currently worse,
-not evidence that the architectural idea is invalid. These are event-driven
-simulator outputs with successful ABI transactions and one token append per
-transaction. Their overall provenance class remains `assumed`: only six or
-seven parameters are characterized and one HBM parameter is datasheet-derived,
-while more than one hundred machine parameters remain assumptions. They are
-design-simulation numbers, not measurements of fabricated silicon.
+Relative to the retained padded baseline, HBM/SRAM improves 29.56 times and
+ROM/HBM improves 60.07 times on architectural cycles. ROM/HBM is now 1.164
+times faster than HBM/SRAM at B=1 on either process view. These are
+event-driven simulator outputs with successful ABI transactions and one token
+append per transaction. Their overall provenance class remains `assumed`: only
+six or seven parameters are characterized and one HBM parameter is
+datasheet-derived, while more than one hundred machine parameters remain
+assumptions. They are design-simulation numbers, not measurements of fabricated
+silicon.
+
+### 1.0.2 Shared-resource batch timing diagnostics
+
+The B=2/4/8 rows use distinct ABI sessions concurrently scheduled over one set
+of modeled sequencers, queues, engines, memories, and ports. `service s/token`
+is batch makespan divided by B; it is useful for throughput comparison but is
+not an individual sequence's latency. Per-lane completion cycles are retained
+losslessly in
+`results/abi3/cycle/qwen3_exact8k_decode_batch_rowfold_diagnostic_v1.json`.
+
+| Deployment | View | B | Batch makespan cycles | Batch makespan | Service s/token | Aggregate token/s |
+|---|---|---:|---:|---:|---:|---:|
+| HBM + SRAM | ASAP7 | 1 | 172,359,893 | 2.973824 s | 2.973824 | 0.336267 |
+| HBM + SRAM | ASAP7 | 2 | 233,108,723 | 4.021959 s | 2.010980 | 0.497270 |
+| HBM + SRAM | ASAP7 | 4 | 457,266,087 | 7.889475 s | 1.972369 | 0.507005 |
+| HBM + SRAM | ASAP7 | 8 | 931,705,271 | 16.075248 s | 2.009406 | 0.497660 |
+| ROM + HBM | ASAP7 | 1 | 148,109,458 | 2.555418 s | 2.555418 | 0.391325 |
+| ROM + HBM | ASAP7 | 2 | 176,158,214 | 3.039359 s | 1.519680 | 0.658033 |
+| ROM + HBM | ASAP7 | 4 | 334,095,422 | 5.764341 s | 1.441085 | 0.693922 |
+| ROM + HBM | ASAP7 | 8 | 663,335,793 | 11.444914 s | 1.430614 | 0.699000 |
+| HBM + SRAM | SKY130 | 1 | 172,357,340 | 4.441387 s | 4.441387 | 0.225155 |
+| HBM + SRAM | SKY130 | 2 | 233,106,032 | 6.006788 s | 3.003394 | 0.332957 |
+| HBM + SRAM | SKY130 | 4 | 457,260,705 | 11.782914 s | 2.945728 | 0.339475 |
+| HBM + SRAM | SKY130 | 8 | 931,697,385 | 24.008426 s | 3.001053 | 0.333216 |
+| ROM + HBM | SKY130 | 1 | 148,108,696 | 3.816536 s | 3.816536 | 0.262018 |
+| ROM + HBM | SKY130 | 2 | 176,154,731 | 4.539240 s | 2.269620 | 0.440602 |
+| ROM + HBM | SKY130 | 4 | 334,089,117 | 8.608969 s | 2.152242 | 0.464632 |
+| ROM + HBM | SKY130 | 8 | 663,323,114 | 17.092829 s | 2.136604 | 0.468033 |
+
+The throughput curves saturate by B=4. On ASAP7, HBM/SRAM peaks at 0.507005
+token/s at B=4, while ROM/HBM reaches 0.699000 token/s at B=8. ROM's aggregate
+throughput advantage grows from 1.164 times at B=1 to 1.405 times at B=8.
+
+These batch rows intentionally expose, rather than hide, their correctness
+failure: every fresh-state lane selected legal vocabulary ID `565`; the exact
+prompt oracle begins with ID `18` and ends with `[18, 24, 16, 151645]`.
+Therefore these are shared-resource saturation measurements, not end-to-end
+token-correct TPOT. They also clone the same diagnostic shape rather than run
+the eight distinct natural/reasoning/agentic workloads, so the mandatory
+heterogeneous B=2/4/8 campaign remains open.
 
 The exact-8K natural-chat reference uses a Moby-Dick context followed by
 “What is 17 multiplied by 23? Give only the number.” The independent Qwen
@@ -89,8 +136,9 @@ It does not stand in for the mandatory exact-200,000-token-context run.
 
 Still running at this checkpoint are Qwen exact-8K HBM functional execution,
 Qwen HBM and ROM prefill timing under both process views, and a current-source
-DeepSeek 32-chip HBM P32 repeat. No genuine B=2, B=4, or B=8 full-model timing
-number exists yet.
+DeepSeek 32-chip HBM P32 repeat. Shared-resource B=2, B=4, and B=8 timing
+diagnostics now exist, but no prompt-initialized, distinct-workload,
+token-correct batch timing number exists yet.
 
 The common compiler and functional-simulator stack is real and shared by both
 models and both storage backends. Both complete model graphs lower through the
@@ -214,7 +262,7 @@ the remaining cost.
 | RTL 3.0 | partial | shipped control replay and bounded arithmetic pairs independently correlate; the integrated prefix drives Qwen through query/key RoPE and both exact key/value KV scatters, and DeepSeek ROM through wafer multicast; the focused Qwen continuation executes fixed-context-17 PC-38 GQA; current ROM/HBM `HC_PRE` T=1 semantic configurations now execute exact fused projection/RMS and the full coefficient tail with authenticated 74-word agreement; the standalone 256-lane mapper, MAC lane, and multicast transport also have dual-simulator evidence | Qwen must generalize GQA through the governed 8K context and continue at PC 41 output projection; DeepSeek T=1 arithmetic must enter the ordinary shipped-prefix/memory path, generalize to T=512/T=320/all 200K prompt positions, and continue through every layer, logits, selection, append and EOS-or-cap control; no RTL path reaches a token |
 | Mandatory workloads | open | the original Qwen exact-8K rendered official-chat prompt is frozen and reproducible; its authenticated external oracle and one frozen-source HBM/SRAM execution both produce `391` followed by EOS. Eight distinct exact-8K B=1/2/4/8 campaign inputs are also frozen and authenticated, but their oracles are pending | a single current-release HBM-A/HBM-B/ROM triplet, all eight Qwen singleton oracles, Qwen natural chat/reasoning/agentic and genuine B=1/2/4/8 accelerator cells, and both DeepSeek exact-200K executions are absent; the retained DeepSeek oracle stops after eight tokens |
 | SKY130 and ASAP7 | partial | several bounded blocks have process-specific reports | neither view characterizes a complete target; ASAP7 readiness has 15 fail-closed blockers |
-| Governed comparison | partial | all three DeepSeek P32 functional deployments produce the same four oracle-prefix tokens; Qwen HBM/SRAM and ROM now have directly comparable B=1 decode simulations under ASAP7 and SKY130 | DeepSeek evidence is P32 rather than exact 200K; Qwen source-current functional confirmation and prefill timing are still running; B=2/4/8 and complete same-view physical characterization are absent |
+| Governed comparison | partial | all three DeepSeek P32 functional deployments produce the same four oracle-prefix tokens; Qwen HBM/SRAM and ROM now have directly comparable B=1/2/4/8 decode timing diagnostics under ASAP7 and SKY130 | DeepSeek evidence is P32 rather than exact 200K; Qwen source-current functional confirmation and prefill timing are still running; B=2/4/8 timing uses fresh diagnostic state rather than the distinct token-correct workloads, and complete same-view physical characterization is absent |
 
 #### 1.1.1 Gate-eligible token and TPOT matrix
 
@@ -223,15 +271,16 @@ evidence from short diagnostics and scheduler fixtures.
 
 | Required production cell | Best retained output evidence | Gate 1 now | Gate 2 now |
 |---|---|---|---|
-| Qwen HBM/SRAM, exact 8K, B=1 | 4/4 oracle-identical IDs through official EOS, including exact raw/visible text; frozen-source; source-current repeat active | no | modelled decode: 87.910 s ASAP7, 131.295 s SKY130; not a target pass |
-| Qwen ROM, exact 8K, B=1 | no exact-8K current-release functional result; older shorter-workload records exist | no | modelled decode: 153.497 s ASAP7, 229.250 s SKY130; not a target pass |
-| Qwen HBM/SRAM and ROM, exact 8K, B=2/4/8 | 0 complete-model generated tokens at every batch size; only heterogeneous scheduler/driver fixtures | no | no TPOT |
+| Qwen HBM/SRAM, exact 8K, B=1 | 4/4 oracle-identical IDs through official EOS, including exact raw/visible text; frozen-source; source-current repeat active | no | diagnostic decode: 2.973824 s ASAP7, 4.441387 s SKY130; selected token `565`, so not token-correct TPOT |
+| Qwen ROM, exact 8K, B=1 | no exact-8K current-release functional result; older shorter-workload records exist | no | diagnostic decode: 2.555418 s ASAP7, 3.816536 s SKY130; selected token `565`, so not token-correct TPOT |
+| Qwen HBM/SRAM and ROM, exact 8K, B=2/4/8 | 0 correct mandatory-workload output tokens at every batch size; real shared-resource scheduling now produces fresh-state timing diagnostics only | no | diagnostic batch makespans and aggregate rates exist for both views; every lane selects `565`, so no Gate-2 TPOT |
 | DeepSeek 32-chip HBM/SRAM, exact 200K, B=1 | 0 generated tokens on the mandatory prompt; a separate P32 diagnostic has 4/4 oracle-prefix IDs | no | no TPOT |
 | DeepSeek wafer ROM, exact 200K, B=1 | 0 generated tokens on the mandatory prompt; a separate P32 diagnostic has 4/4 oracle-prefix IDs and correct device-cap retirement | no | no TPOT |
 
-Thus no batch-size row currently combines a source-current functional result
-with fully characterized architectural timing. The new B=1 cycle points are
-retained design simulations; B=2/4/8 remains absent.
+Thus no batch-size row currently combines a source-current, prompt-initialized,
+token-correct functional result with fully characterized architectural timing.
+B=1/2/4/8 cycle diagnostics now exist; correct heterogeneous B=2/4/8 execution
+remains absent.
 
 ### 1.2 Source-current execution readiness
 
@@ -935,15 +984,22 @@ release pass criterion; the actual SLO remains to be frozen separately for
 each model, role, process/PVT view, batch/concurrency point, statistic, and
 eligible evidence class.
 
-Commit `8a7160d` exposed one performance blocker without changing a schedule or
-cycle total. Across the 253 Qwen decode matmuls, the old fixed-tile mapping
-reports 7,568,097,280 useful work units and 445,151,444,992 issued units:
-437,583,347,712 padded units, or 98.2999 percent. Commits `473d0fb` and
-`5256f5c` now prove the active-row and deterministic folding coordinate rule in
-standalone RTL, so the required control mapping is no longer unspecified. It
-has not yet been integrated with 256 physical MAC lanes, accumulators, SRAM/HBM
-ports, or the cycle model. The old padded cycle total therefore remains
-diagnostic, while a new integrated cycle total remains absent.
+Commit `8a7160d` exposed the original fixed-tile performance blocker. Commits
+`473d0fb` and `5256f5c` then proved the active-row and deterministic folding
+coordinate rule in standalone RTL. Commit `080d165` now applies those resolved
+active extents and the same row-folded wave counting in the cycle model: Qwen
+tensor issued work equals 7,568,101,376 useful work units, tensor executed
+padding is zero, and only 128 of 1,556,992 physical output-lane slots are
+masked. Commit `686ec6c` separately prevents embedding and vector operations
+from inheriting a weight tensor's reduction depth; this reduces ROM vector
+compute from 3,814,686,112 to 6,550,800 cycles.
+
+The corrected B=1 total is 172,359,893 cycles for HBM/SRAM and 148,109,458
+cycles for ROM/HBM on ASAP7. The standalone lane mapper and cycle model now
+agree on the scheduling rule, but a complete 256/512-lane RTL engine with
+accumulators, SRAM/HBM ports, all operators, selection, token append, and EOS
+is still absent. The cycle results therefore remain architectural design
+simulations rather than full-system RTL token execution.
 
 Even granting perfect removal of every padded issue, perfect overlap, no
 bubbles or conflicts, and the characterized 0.3458786 useful work per
@@ -962,12 +1018,17 @@ feasibility projections, not executed TPOT:
 | DeepSeek wafer ROM, 8,192 | SKY130 proxy | 0.1085 s | 0.2169 s | 0.4339 s | 0.8677 s |
 | DeepSeek wafer ROM, 8,192 | ASAP7 proxy | 0.0726 s | 0.1453 s | 0.2905 s | 0.5810 s |
 
-The Qwen rows use the retained 7,568,097,280-work inventory. The DeepSeek rows
-use a static 11,926,769,664-work contraction-volume projection from the
-source-current 200K-capacity IR, not an executed model counter. At the first
-Qwen decode step, 16,381,470,720 certified weight bytes plus 1,179,795,456 KV
-bytes impose a separate optimistic 43.06 ms floor on one 407.8 GB/s HBM stack,
-assuming perfect service and reuse of one weight sweep across the batch.
+The Qwen rows used the then-retained 7,568,097,280-work inventory. The corrected
+execution now reports 7,568,101,376 useful tensor work units and measures
+1.4785 s of HBM/SRAM tensor compute and 0.7375 s of ROM/HBM tensor compute on
+ASAP7, within about 0.3% and 0.1% respectively of those analytical B=1 rows.
+The analytical tensor lower bound is therefore validated; the larger total
+TPOT comes from attention, vector, movement, memory stalls, and serialization.
+The DeepSeek rows use a static 11,926,769,664-work contraction-volume projection
+from the source-current 200K-capacity IR, not an executed model counter. At the
+first Qwen decode step, 16,381,470,720 certified weight bytes plus 1,179,795,456
+KV bytes impose a separate optimistic 43.06 ms floor on one 407.8 GB/s HBM
+stack, assuming perfect service and reuse of one weight sweep across the batch.
 
 If 100 microseconds is promoted from north star to a mandatory B=1 target, the
 current baseline is not a near miss. At the characterized rate it would require
@@ -1022,15 +1083,17 @@ is not foundry signoff.
 3. Run the same exact-8K Qwen functional workload on ROM. The direct acceptance
    check is exact token equality with `[18, 24, 16, 151645]`, legal decoding to
    `391<|im_end|>`, first-EOS stop, and no transaction after EOS.
-4. Fix the measured decode bottleneck: integrate active-row/lane masking or a
-   narrow decode mapping so one-token matrix operations do not issue 64 padded
-   rows. Rerun the four B=1 process/backend cells and report the new cycles,
-   TPOT, tokens/s, padding fraction, and speedup against this baseline.
+4. Carry the now-modeled row-folded lane rule into the complete tensor RTL and
+   retain the same cycles/counters. Then remove the remaining attention/vector
+   padding, characterize memory service and every engine, and widen or
+   replicate the datapath enough to address the multi-order-of-magnitude TPOT
+   gap. The corrected four B=1 cells and diagnostic B=2/4/8 sweeps are retained
+   as the new baseline.
 5. Generate the remaining seven Qwen singleton oracles serially, then run real
    natural-chat, reasoning, agentic-tool, and stress prompts. Execute genuinely
-   distinct B=2, B=4, and B=8 batches; never clone one prompt to manufacture a
-   batch result. For every lane publish output IDs, text, stop reason, TTFT,
-   per-sequence TPOT, and aggregate tokens/s.
+   distinct B=2, B=4, and B=8 batches; the completed cloned-shape saturation
+   sweep cannot substitute for them. For every lane publish output IDs, text,
+   stop reason, TTFT, per-sequence TPOT, and aggregate tokens/s.
 6. Use the completing DeepSeek P32 HBM repeat only as a short diagnostic. The
    production comparison remains one exact-200K wafer-ROM execution versus one
    exact-200K execution on exactly 32 HBM/SRAM chips with NVLink-class links.

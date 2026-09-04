@@ -60,6 +60,35 @@ remain projections. The numerical TPOT acceptance budgets must be frozen in the
 Qwen and DeepSeek comparison contracts before a run can claim it achieved the
 "desired" performance; neither current contract contains such a threshold.
 
+#### 1.1.1 Qwen timing update, 2026-09-04
+
+Commit `080d165` implements resolved-active-extent, row-folded tensor timing.
+The Qwen decode tensor now executes zero padded MAC work and reports 99.9918%
+physical output-lane utilization. Direct B=1 cycle simulation improves from
+5,095,186,721 to 172,359,893 cycles on ASAP7, a 29.56-times reduction.
+
+Shared-resource timing over distinct ABI sessions now measures:
+
+| View | B | Makespan cycles | Makespan | Service s/token | Aggregate token/s |
+|---|---:|---:|---:|---:|---:|
+| ASAP7 | 1 | 172,359,893 | 2.973824 s | 2.973824 | 0.336267 |
+| ASAP7 | 2 | 233,108,723 | 4.021959 s | 2.010980 | 0.497270 |
+| ASAP7 | 4 | 457,266,087 | 7.889475 s | 1.972369 | 0.507005 |
+| ASAP7 | 8 | 931,705,271 | 16.075248 s | 2.009406 | 0.497660 |
+| SKY130 | 1 | 172,357,340 | 4.441387 s | 4.441387 | 0.225155 |
+| SKY130 | 2 | 233,106,032 | 6.006788 s | 3.003394 | 0.332957 |
+| SKY130 | 4 | 457,260,705 | 11.782914 s | 2.945728 | 0.339475 |
+| SKY130 | 8 | 931,697,385 | 24.008426 s | 3.001053 | 0.333216 |
+
+These are performance diagnostics, not Gate-1 or Gate-2 passes. The fresh
+timing sessions all select legal token ID `565`, while the exact-8K natural
+oracle is `[18, 24, 16, 151645]` and decodes to `391<|im_end|>`. The active
+source-current prompt-initialized execution must finish and reproduce that
+stream before timing can be called token-correct TPOT. The B=2/4/8 rows also
+use one repeated diagnostic shape; the required distinct chat, reasoning, and
+agentic batch workloads remain open. DeepSeek exact-200K cluster timing remains
+absent.
+
 ### 1.2 ABI and live-buffer scope
 
 ABI 3.0 is the final interface for this plan. ABI 3.1 is not required or in
