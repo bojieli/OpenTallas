@@ -162,6 +162,14 @@ step is to run the eight singleton oracle jobs serially when the memory-heavy
 host is free, then freeze and validate the reference set. Only after that may
 the B=1/2/4/8 HBM and ROM heterogeneous requests be constructed.
 
+The historical profile's options, v2 tool-version label, launch contract, and
+generation checks are unchanged. Its existing frozen oracle nevertheless
+binds the SHA-256 of the *entire* launcher file. Adding the isolated v3 path
+therefore makes that old artifact source-stale under the existing fail-closed
+W10 checker; it does not show a token mismatch. Do not edit or relabel the old
+artifact. Re-run the historical v2 production command when the host is free
+before claiming source-current W10 qualification.
+
 The two acceptance gates are deliberately separate and ordered:
 
 1. **Correct output tokens:** every sequence in the exact physical batch must
