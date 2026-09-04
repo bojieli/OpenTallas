@@ -1047,7 +1047,13 @@ class Verifier:
             Symbol.PHASE: 1,
             Symbol.GENERATION_INDEX: self.capability.limits["max_context_positions"],
             Symbol.MAX_NEW_TOKENS: self.capability.limits["max_context_positions"],
-            Symbol.BATCH: 1,
+            # ABI 3.0 already freezes BATCH as a request symbol and the
+            # capability already freezes the resident-session ceiling.  The
+            # former batch-one bound admitted descriptors that could become
+            # out-of-range as soon as the runtime legally bound BATCH > 1.
+            # Prove every BATCH-affine view against the actual capability
+            # ceiling; deployments sized only for one lane now fail closed.
+            Symbol.BATCH: self.capability.limits["max_sessions"],
             Symbol.NODE_ID: max(self.capability.limits["max_nodes"] - 1, 0),
             Symbol.NODE_COUNT: self.capability.limits["max_nodes"],
             Symbol.ACTIVE_EXPERT_COUNT: self.capability.limits["max_topk"],
