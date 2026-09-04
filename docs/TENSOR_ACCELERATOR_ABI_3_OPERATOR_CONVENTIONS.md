@@ -166,6 +166,12 @@ validates against the bound GENERATION_POLICY, tests the EOS set, and its ring
 output normally carries a dynamic term bound to `GENERATION_INDEX` so one
 descriptor serves every decode step.
 
+The generation policy supplies the immutable maximum, while the authenticated
+request's `MAX_NEW_TOKENS` symbol supplies the active cap. `TOKEN_APPEND` uses
+the latter and returns `EosReason.MAX_NEW_TOKENS` with the final allowed
+non-EOS token. Both that reason and an official EOS retire the device session;
+host-only loop termination does not satisfy this operator contract.
+
 `SAMPLE` has no governed contract and is deliberately unimplemented; dispatch
 fails closed on it.
 

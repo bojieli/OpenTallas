@@ -506,6 +506,14 @@ arithmetic, cycle performance, or physical closure.
   It decodes and round-trips the exact prompt and output with the pinned
   tokenizer, checks official EOS/cap placement and legal token IDs, and emits
   the human-readable input and output text.
+- ABI 3.0 now enforces the authenticated request's active generation cap on the
+  device. The immutable generation policy remains the ceiling; an oversized
+  request is refused before work, while a narrower request returns
+  `MAX_NEW_TOKENS` on the completion that commits its final non-EOS token and
+  retires that session. A heterogeneous B=2 test proves independent one-token
+  and two-token cap retirement with no post-terminal host write or model
+  transaction. This closes a production batch-runner prerequisite, not a
+  full-model B>1 token result or TPOT point.
 - DeepSeek `INDEX_SCORE` now performs one correctly rounded product-add instead
   of a split multiply/add rounding. The engine also publishes previously lost
   saturation counts for `INDEX_SCORE` and `HYPER_CONNECT_POST`. Because learned

@@ -620,6 +620,16 @@ A GENERATE request stops on the first official EOS token or the declared
 maximum-new-token bound. EOS is included in the returned token sequence. No
 post-EOS model transaction may execute.
 
+The immutable `GENERATION_POLICY.max_new_tokens` field is the compiled safety
+ceiling. The authenticated request symbol `MAX_NEW_TOKENS` is the active bound
+for that generation and must be in `1..policy.max_new_tokens`. `TOKEN_APPEND`
+tests that request value after appending the selected token and returns
+`MAX_NEW_TOKENS` on the completion that commits the final allowed non-EOS
+token. Reaching either EOS or the request cap retires the session on the device;
+a host loop stopping without that terminal completion is not a compliant
+length stop. This is an ABI 3.0 semantic clarification and changes no record or
+descriptor layout.
+
 ### 8.8 Inter-chip and on-wafer communication
 
 Inter-chip communication is a first-class accelerator engine, not a simulator

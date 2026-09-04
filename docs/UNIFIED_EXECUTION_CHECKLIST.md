@@ -17,8 +17,9 @@ tile scheduling, standalone certifying nonpositive-exp/direct-sigmoid RTL, and
 the atomic source-major 4x4 stable-softmax front end over first/final checkpoint
 blocks,
 added authenticated ABI 3.0 request-symbol transport for
-genuine batch admission, and retained the first exact-token frozen-source Qwen
-HBM/SRAM accelerator diagnostic.
+genuine batch admission, made the authenticated request cap device-enforced
+with independent heterogeneous-lane retirement, and retained the first
+exact-token frozen-source Qwen HBM/SRAM accelerator diagnostic.
 **Current execution checkpoint (2026-09-04):** all four current deployments
 contain zero ABI `STATE` resources. Qwen HBM passes 21/21 deployment checks <!-- figure: 21 src="results/abi3/hbm_qwen_deployment_certificate.json#cases[case=qwen3-hbm-single-chip].passed_check_count" name="current Qwen HBM checks, checkpoint" --> at
 74 instructions <!-- figure: 74 src="results/abi3/hbm_qwen_deployment_certificate.json#cases[case=qwen3-hbm-single-chip].actual.instructions" name="current Qwen HBM instructions, checkpoint" --> and 215 descriptors <!-- figure: 215 src="results/abi3/hbm_qwen_deployment_certificate.json#cases[case=qwen3-hbm-single-chip].actual.descriptors" name="current Qwen HBM descriptors, checkpoint" -->; Qwen ROM passes 62/62 schedule checks <!-- figure: 62 src="results/abi3/rom_schedule_checks.json#cases[case=qwen3-rom-single-chip].passed_check_count" name="current Qwen ROM checks, checkpoint" --> at
@@ -398,9 +399,11 @@ evidence. None may be presented as a rerun of the current source.
   itself. `runtime/cycle/batch.py` now schedules genuine B=1/2/4/8 ABI session
   waves over the same bounded queues, engines, memory, and fabric, and binds
   every request/token-commit tick to the exact functional transaction. The
-  focused 26-case batch suite plus eight affected cycle checks pass, including
-  heterogeneous B=2 EOS retirement. No heterogeneous full-model B>1 run,
-  governed exported timing trace, characterized target timebase, or
+  focused batch suite includes heterogeneous B=2 EOS and request-cap
+  retirement: the request may narrow but cannot enlarge the compiled policy
+  ceiling, the last non-EOS token carries the length-stop reason, and no
+  post-terminal write or transaction is admitted. No heterogeneous full-model
+  B>1 run, governed exported timing trace, characterized target timebase, or
   correctness-qualified TPOT point exists yet
 - [x] W7.2 Capability records for SKY130 view and ASAP7 view (separately versioned) — five cost tables with per-parameter provenance
 - [x] W7.3 32-node fabric model (latency, serialization, contention, credits, retry) — `runtime/cycle/fabric.py` ClusterFabric

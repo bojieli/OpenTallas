@@ -478,6 +478,14 @@ for `RUNTIME_SYMBOL` it is a value from the registry in section 12.2.
 A loop bound and a predicate operand may name any of these. Unassigned values
 are reserved.
 
+`MAX_NEW_TOKENS` is the authenticated active generation cap, not a host-only
+loop hint. It must be positive and no greater than the bound in the selected
+immutable `GENERATION_POLICY`. A request above that ceiling is refused before
+engine issue. The `TOKEN_APPEND` that commits the final allowed non-EOS token
+returns completion EOS reason `MAX_NEW_TOKENS=2`, and the device refuses every
+later transaction for that session. The policy field remains the compiled
+ceiling, so a request may narrow it but may not enlarge it.
+
 ### 12.6 Amendment A15 — a block scale may tile two axes
 
 A `TENSOR_VIEW` gains `scale_block_rows` at payload offset 104, four bytes; the

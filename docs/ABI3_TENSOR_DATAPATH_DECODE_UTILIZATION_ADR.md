@@ -536,8 +536,12 @@ For each target, batch size, and sequence, Gate C requires:
    output retained in the evidence package;
 8. first official EOS included exactly once when reached, otherwise exactly
    256 generated tokens and an explicit cap termination;
-9. no model transaction, live-buffer write, or token append after EOS; and
-10. no host-supplied logits, token IDs, routes, activations, or hidden states.
+9. an on-device terminal completion from `TOKEN_APPEND`: official EOS or the
+   authenticated request's `MAX_NEW_TOKENS`, bounded by the immutable
+   generation-policy ceiling;
+10. no model transaction, live-buffer write, or token append after EOS or the
+   generation cap; and
+11. no host-supplied logits, token IDs, routes, activations, or hidden states.
 
 Two independent source-current Qwen HBM captures remain required by the master
 plan before promoting the long-run path. DeepSeek requires one complete
