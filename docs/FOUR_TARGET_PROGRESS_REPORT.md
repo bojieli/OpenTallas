@@ -4,7 +4,7 @@
 
 **Status date:** 2026-09-04
 
-**Input baseline:** `main` through `a506dca`; this includes the fail-closed
+**Input baseline:** `main` through `f942909`; this includes the fail-closed
 DeepSeek exact-200K oracle and accelerator-pair checkers, the DeepSeek
 phase-selected sparse-KV layout repair, the shared activation-liveness
 allocator and physical 180-GB ROM-array capacity boundary, and refreshed
@@ -25,7 +25,9 @@ mutable memory and fail-closed dynamic batch waves, authenticated ABI 3.0
 request-symbol descriptors, the exact DeepSeek `HC_PRE` RTL tile scheduler,
 the first frozen-source exact-token Qwen HBM/SRAM accelerator diagnostic,
 the correctness-bound shared-resource batch cycle scheduler, and the
-certifying DeepSeek `HC_PRE` FP32 exponential/sigmoid RTL primitive
+certifying DeepSeek `HC_PRE` FP32 exponential/sigmoid RTL primitive, plus
+the exact Qwen ROM/HBM PC-32/35 KV appends and fixed-context-17 PC-38 GQA
+arithmetic.
 
 **Role:** current narrative status and handoff report. Machine-readable result
 artifacts and the [unified execution checklist](UNIFIED_EXECUTION_CHECKLIST.md)
@@ -99,6 +101,11 @@ The present boundary is therefore:
   layer-zero Q/K/V `TENSOR.MATMUL` operations, and query/key
   `VECTOR.HEAD_RMS_NORM` and query/key `VECTOR.ROPE`, or through the DeepSeek
   `DMA.TRANSFER`, is closed;
+  a focused Qwen continuation executes the exact PC-32/35 KV appends and
+  fixed-context-17 PC-38 GQA for ROM and HBM, making PC 41 output projection
+  the next shipped operation without a connected datapath; its prior KV rows
+  are synthetic, so it is operator evidence rather than model-context or token
+  evidence;
   exact DeepSeek wafer multicast is dual-simulator qualified and integrated
   into that shared prefix, where the ROM path now reaches PC 15 `VECTOR.MHC`;
   exact ROM/HBM `HC_PRE` descriptor admission and tile scheduling are also
@@ -128,7 +135,7 @@ the remaining cost.
 | Architecture and ABI 3.0 | closed | frozen live-buffer/fence profile; zero `STATE` in all four deployments | no ABI 3.1 work is required |
 | Common IR and four backend builds | closed for current graphs | Qwen and DeepSeek lower through the shared Model Graph and Tensor Kernel IR into HBM and ROM bundles; HBM head norms now encode 32/8 Qwen rows and 64 DeepSeek rows from the neutral IR | rebuild whenever an execution-authoritative source changes |
 | Functional execution | partial | the complete functional engine exists; one frozen-source Qwen HBM/SRAM run executed the exact 8K prompt end to end and matched all four oracle tokens through EOS; source-current DeepSeek 32-node HBM and ROM-array P32 diagnostics each execute the compiled model and match the same four-token oracle prefix; the first exact T=512 DeepSeek HBM `HC_PRE` issue also matches an independent service on all 12,288 FP32 output words | the Qwen result predates current runtime changes and lacks its independent HBM-B/ROM peers; both DeepSeek token results use only 32 prompt tokens and a four-token prefix contract, the ROM-array target is not the required single wafer-ROM device, and the `HC_PRE` result is operator qualification rather than a token |
-| RTL 3.0 | partial | shipped control replay and bounded arithmetic pairs independently correlate; the integrated prefix now drives Qwen through query/key RoPE and both exact key/value KV scatters, and DeepSeek ROM through wafer multicast; exact ROM/HBM `HC_PRE` tile scheduling, the standalone 256-lane mapper, exact Sinkhorn tail, certifying FP32 exp/sigmoid engine, fixed 4x4 stable softmax, MAC lane, and multicast transport have dual-simulator evidence | Qwen next stops at `ATTENTION.GQA` at PC 38; DeepSeek `HC_PRE` still lacks BF16-by-FP32 fused accumulation, balanced projection/RMS, stable-softmax-to-Sinkhorn composition, full-shape word agreement, and PC-14/PC-15 integration; no RTL path reaches a token |
+| RTL 3.0 | partial | shipped control replay and bounded arithmetic pairs independently correlate; the integrated prefix drives Qwen through query/key RoPE and both exact key/value KV scatters, and DeepSeek ROM through wafer multicast; the focused Qwen continuation executes fixed-context-17 PC-38 GQA; exact ROM/HBM `HC_PRE` tile scheduling, the standalone 256-lane mapper, exact Sinkhorn tail, certifying FP32 exp/sigmoid engine, fixed 4x4 stable softmax, MAC lane, and multicast transport have dual-simulator evidence | Qwen must generalize GQA through the governed 8K context and continue at PC 41 output projection; DeepSeek `HC_PRE` still lacks BF16-by-FP32 fused accumulation, balanced projection/RMS, stable-softmax-to-Sinkhorn composition, full-shape word agreement, and PC-14/PC-15 integration; no RTL path reaches a token |
 | Mandatory workloads | open | the Qwen exact-8K rendered official-chat prompt is frozen and reproducible; its authenticated external oracle and one frozen-source HBM/SRAM execution both produce `391` followed by EOS | a single current-release HBM-A/HBM-B/ROM triplet, Qwen natural chat/reasoning/agentic and genuine B=1/2/4/8 cells, and both DeepSeek exact-200K executions are absent; the retained DeepSeek oracle stops after eight tokens |
 | SKY130 and ASAP7 | partial | several bounded blocks have process-specific reports | neither view characterizes a complete target; ASAP7 readiness has 15 fail-closed blockers |
 | Governed comparison | partial | a source-current four-token DeepSeek ROM-array-versus-32-chip-HBM diagnostic now binds both compiled executions, identical tokens, topology and counter evidence; `081161b` adds a source/process/batch-bound correctness-qualified TPOT schema and checker; `8080d8f` adds the explicit RTL-bound accelerated co-simulation tier; `cbaecf0` freezes the shared-datapath production plan and exact-execution promotion rule | the diagnostic is P32 rather than exact 200K, uses a 32-node ROM array rather than the required wafer-ROM target, and supplies no target timing; no source-current mandatory-workload pair, production-simulation token record, frozen numerical TPOT budget, or complete same-view system cost exists |
@@ -328,6 +335,18 @@ time nor its retired-instruction counter is architectural TPOT.
   or TPOT sample. Commit `6633a3b` canonically regenerates the affected
   deployments, certificates, vectors, standalone multicast qualification, and
   both prefix campaigns after the runtime and DeepSeek scheduler integrations.
+- Commits `93b6234` and `586616a` add focused Qwen continuations beyond that
+  shared bridge. The first executes the exact ROM/HBM PC-32 key and PC-35 value
+  scatters. The second executes fixed-context-17 PC-38 `ATTENTION.GQA`: one ROM
+  and one backpressured HBM case each match all 4,096 BF16 output words from an
+  independent scalar oracle. Icarus and pinned Verilator agree on 20,565 checks
+  per simulator, including 8,192 computed-word comparisons and 12,288
+  fail-closed sentinel checks; generic Yosys elaboration reports zero problems.
+  The current Q/K/V row is an authentic causal RTL result, but prior KV rows
+  0 through 15 are synthetic transformations because no authentic history was
+  retained. This closes only bounded operator arithmetic. It produces no layer,
+  token, EOS, architectural token-commit tick, physical timing, or TPOT result;
+  PC 41 output projection is next.
 - Commit `0b928e5` independently qualifies the exact DeepSeek ROM PC-13 wafer
   multicast on Icarus and Verilator: 256 participants, 255 tree messages,
   4,177,920 payload flits, 4,194,304 exact destination writes, one injected CRC
@@ -594,8 +613,9 @@ all 256 participants, validates per-participant ordering and every binomial-tree
 parent, and exercises CRC/NAK/replay plus source and destination backpressure.
 The full four-case Verilator replay passes 12,756,653 checks and the focused
 DeepSeek-ROM Icarus replay passes 12,587,599 checks with the same normalized
-case record. The new boundary is PC 15 `VECTOR.MHC` descriptor 381; Qwen now
-stops at PC 32 `DMA.SCATTER`, and DeepSeek HBM still stops at PC 14
+case record. The new DeepSeek ROM boundary is PC 15 `VECTOR.MHC` descriptor
+381; within this shared prefix Qwen stops at PC 32 `DMA.SCATTER`, and DeepSeek
+HBM still stops at PC 14
 `VECTOR.MHC`. Totals are 29 launches, 91,136 compact result words, and 100
 resolved views.
 
@@ -607,6 +627,16 @@ Its embedding index remains legal token ID 0, selected solely as a bounded
 deterministic probe; it is not a tokenizer-driven model output and establishes
 neither a whole token step nor architectural TPOT. No current RTL simulation
 executes a whole model or produces an accepted output token.
+
+Separate source-bound Qwen campaigns extend only that model's bounded decode
+slice. `results/rtl/a3_qwen_kv_scatter_campaign.json` executes the PC-32/35 KV
+appends, and `results/rtl/a3_qwen_gqa_campaign.json` executes the exact PC-38
+context-17 arithmetic for ROM and HBM. The latter compares 8,192 computed BF16
+words against an independent oracle on each of Icarus and pinned Verilator and
+proves zero publication in three fault cases. Its authentic current Q/K/V row
+does not make the synthetic prior-context rows authentic. The new bounded Qwen
+boundary is PC 41 `TENSOR.MATMUL`; context generalization, layer completion,
+token selection, EOS, architectural tick tracing, and TPOT all remain open.
 
 ## 6. What “full execution” means
 
@@ -891,9 +921,10 @@ is not foundry signoff.
    `TRANSACTIONAL_STATE` in no production program and `INTEGRITY_RETRY` only
    for actual DeepSeek communication descriptors.
 8. Integrate the proven active-row/folding mapper with the selected production
-   tensor lanes without changing reduction association, and extend the RTL
-   prefix from Qwen PC-38 `ATTENTION.GQA`, DeepSeek ROM PC-15 `VECTOR.MHC`, and
-   DeepSeek HBM PC-14 `VECTOR.MHC` through every required operator, memory service,
+   tensor lanes without changing reduction association, generalize Qwen GQA
+   beyond its fixed context-17 proof, and extend the RTL path from Qwen PC-41
+   `TENSOR.MATMUL`, DeepSeek ROM PC-15 `VECTOR.MHC`, and DeepSeek HBM PC-14
+   `VECTOR.MHC` through every required operator, memory service,
    communication primitive, argmax, token append, token-commit counter, and EOS
    path. Bind every accelerated full-system co-simulation engine bit-for-bit and
    cycle-for-cycle to synthesizable RTL; do not label that tier monolithic RTL.
