@@ -4,16 +4,16 @@
     "basis": "every case is run once on the block and then LANES times on the single qualified lane, once per block lane on that lane's own column-major weight image and lane-local scale image built from the same weight elements; both checkers compare, element by element, the output word and the binary32 accumulator of each block lane against its reference run directly, both against the exact expectation, counters, error classes and details per lane, the unwritten sentinel on every element no lane was to write, and require the top's lockstep monitor to read zero; one differing bit fails the marker",
     "checks_per_depth": {
       "L1": {
-        "iverilog": 130034,
-        "verilator": 130034
+        "iverilog": 130066,
+        "verilator": 130066
       },
       "L2": {
-        "iverilog": 130028,
-        "verilator": 130028
+        "iverilog": 130060,
+        "verilator": 130060
       },
       "L3": {
-        "iverilog": 130024,
-        "verilator": 130024
+        "iverilog": 130056,
+        "verilator": 130056
       }
     },
     "equal": true,
@@ -132,13 +132,13 @@
       "adder_stages": 3,
       "simulators": [
         {
-          "checks": 130024,
+          "checks": 130056,
           "compile_command": "/usr/bin/iverilog -g2012 -s tb_a3_lq8 -Ptb_a3_lq8.ADDER_STAGES=3 -Ptb_a3_lq8.LANES=8 -o lq8_sim.vvp <ROOT>/rtl/ot_fp32_rne_pkg.sv <ROOT>/rtl/abi3/ot_a3_format_pkg.sv <ROOT>/rtl/abi3/ot_a3_engine_pkg.sv <ROOT>/rtl/abi3/ot_a3_lane_pkg.sv <ROOT>/rtl/abi3/ot_a3_lane_pipelined.sv <ROOT>/rtl/abi3/ot_a3_lq8.sv <ROOT>/rtl/test/a3_lq8_top.sv <ROOT>/rtl/test/tb_a3_lq8.sv",
           "compile_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
           "compile_log_tail": "",
           "compile_returncode": 0,
           "first_failure": null,
-          "log_sha256": "3f1eccddd5444b842bca35576a398fe9c3f394c1c0a7064ef39a2b156bd32224",
+          "log_sha256": "ff1c3559a2abbc058760d0eb98368b622f5010d05d28b22b61c6221543ebaeb0",
           "marker": {
             "adder_stages": 3,
             "cases": 96,
@@ -187,19 +187,19 @@
           ],
           "required_marker_prefix": "PASS: ABI3 lq8 cases=96 lane_ops=2498935 products=3131522 outputs=19407 faults=18 reference_cases=94 reference_outputs=19407",
           "run_command": "/usr/bin/vvp lq8_sim.vvp",
-          "run_log_sha256": "3f1eccddd5444b842bca35576a398fe9c3f394c1c0a7064ef39a2b156bd32224",
-          "run_log_tail": "WARNING: <ROOT>/rtl/test/a3_lq8_top.sv:154: $readmemh(lq8_m0.hex): Not enough words in the file for the requested range [0:262143].\nWARNING: <ROOT>/rtl/test/a3_lq8_top.sv:155: $readmemh(lq8_m2.hex): Not enough words in the file for the requested range [0:65535].\nWARNING: <ROOT>/rtl/test/a3_lq8_top.sv:156: $readmemh(lq8_w.hex): Not enough words in the file for the requested range [0:524287].\nWARNING: <ROOT>/rtl/test/a3_lq8_top.sv:157: $readmemh(lq8_ws.hex): Not enough words in the file for the requested range [0:65535].\nWARNING: <ROOT>/rtl/test/a3_lq8_top.sv:158: $readmemh(lq8_m1.hex): Not enough words in the file for the requested range [0:524287].\nWARNING: <ROOT>/rtl/test/a3_lq8_top.sv:159: $readmemh(lq8_m3.hex): Not enough words in the file for the requested range [0:65535].\nWARNING: <ROOT>/rtl/test/a3_lq8_top.sv:160: $readmemh(lq8_case.hex): Not enough words in the file for the requested range [0:16383].\nWARNING: <ROOT>/rtl/test/a3_lq8_top.sv:161: $readmemh(lq8_expect.hex): Not enough words in the file for the requested range [0:262143].\nRATE: case=93 lane_ops=393216 products=393216 total_cycles=49164 window_cycles=49152 first_retire=10 last_retire=49161 lanes=8\nRATE: case=94 lane_ops=196608 products=393216 total_cycles=24588 window_cycles=24576 first_retire=10 last_retire=24585 lanes=8\nRATE: case=95 lane_ops=98304 products=393216 total_cycles=12300 window_cycles=12288 first_retire=10 last_retire=12297 lanes=8\nPASS: ABI3 lq8 cases=96 lane_ops=2498935 products=3131522 outputs=19407 faults=18 reference_cases=94 reference_outputs=19407 identity=19407 lanes=8 adder_stages=3\nchecks=130024",
+          "run_log_sha256": "ff1c3559a2abbc058760d0eb98368b622f5010d05d28b22b61c6221543ebaeb0",
+          "run_log_tail": "WARNING: <ROOT>/rtl/test/a3_lq8_top.sv:154: $readmemh(lq8_m0.hex): Not enough words in the file for the requested range [0:262143].\nWARNING: <ROOT>/rtl/test/a3_lq8_top.sv:155: $readmemh(lq8_m2.hex): Not enough words in the file for the requested range [0:65535].\nWARNING: <ROOT>/rtl/test/a3_lq8_top.sv:156: $readmemh(lq8_w.hex): Not enough words in the file for the requested range [0:524287].\nWARNING: <ROOT>/rtl/test/a3_lq8_top.sv:157: $readmemh(lq8_ws.hex): Not enough words in the file for the requested range [0:65535].\nWARNING: <ROOT>/rtl/test/a3_lq8_top.sv:158: $readmemh(lq8_m1.hex): Not enough words in the file for the requested range [0:524287].\nWARNING: <ROOT>/rtl/test/a3_lq8_top.sv:159: $readmemh(lq8_m3.hex): Not enough words in the file for the requested range [0:65535].\nWARNING: <ROOT>/rtl/test/a3_lq8_top.sv:160: $readmemh(lq8_case.hex): Not enough words in the file for the requested range [0:16383].\nWARNING: <ROOT>/rtl/test/a3_lq8_top.sv:161: $readmemh(lq8_expect.hex): Not enough words in the file for the requested range [0:262143].\nRATE: case=93 lane_ops=393216 products=393216 total_cycles=49164 window_cycles=49152 first_retire=10 last_retire=49161 lanes=8\nRATE: case=94 lane_ops=196608 products=393216 total_cycles=24588 window_cycles=24576 first_retire=10 last_retire=24585 lanes=8\nRATE: case=95 lane_ops=98304 products=393216 total_cycles=12300 window_cycles=12288 first_retire=10 last_retire=12297 lanes=8\nPASS: ABI3 lq8 cases=96 lane_ops=2498935 products=3131522 outputs=19407 faults=18 reference_cases=94 reference_outputs=19407 identity=19407 lanes=8 adder_stages=3\nchecks=130056",
           "run_returncode": 0,
           "status": "pass"
         },
         {
-          "checks": 130024,
+          "checks": 130056,
           "compile_command": "<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator --cc --exe --build -Wall -Wno-fatal -Wno-DECLFILENAME --top-module ot_a3_lq8_top -GADDER_STAGES=3 -GLANES=8 --Mdir obj_lq8 <ROOT>/rtl/ot_fp32_rne_pkg.sv <ROOT>/rtl/abi3/ot_a3_format_pkg.sv <ROOT>/rtl/abi3/ot_a3_engine_pkg.sv <ROOT>/rtl/abi3/ot_a3_lane_pkg.sv <ROOT>/rtl/abi3/ot_a3_lane_pipelined.sv <ROOT>/rtl/abi3/ot_a3_lq8.sv <ROOT>/rtl/test/a3_lq8_top.sv <ROOT>/rtl/test/a3_lq8_harness.cpp -CFLAGS '-std=c++17 -O2' -j 8",
-          "compile_log_sha256": "463c62e47ffe217397a50af7ddf096c472d3500fba0cc8f6a4ae434e864938af",
-          "compile_log_tail": "                                                                                      : ... note: In instance 'ot_a3_lq8_top.u_dut.gen_lane[7].u_lane'\n  499 |     wire        g_valid = token_valid(tok_g);\n      |                 ^~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_lane_pipelined.sv:553:17: Bits of signal are not used: 'narrowed'[18:17]\n                                                                                      : ... note: In instance 'ot_a3_lq8_top.u_dut.gen_lane[7].u_lane'\n  553 |     wire [18:0] narrowed = ot_fp32_rne_pkg::fp32_to_bf16_rne(wb_code);\n      |                 ^~~~~~~~\nmake: Entering directory '<BUILD>/obj_lq8'\ng++  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -Os  -c -o a3_lq8_harness.o <ROOT>/rtl/test/a3_lq8_harness.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -c -o verilated.o <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -c -o verilated_threads.o <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -x c++-header Vot_a3_lq8_top__pch.h -o Vot_a3_lq8_top__pch.h.fast.gch\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -x c++-header Vot_a3_lq8_top__pch.h -o Vot_a3_lq8_top__pch.h.slow.gch\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top___024root__0.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top_ot_a3_lane_pipelined__0.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top_ot_a3_lane_pipelined__1.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top_ot_a3_lane_pipelined__2.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top_ot_a3_lane_pipelined__3.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top_ot_a3_lane_pipelined__4.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top_ot_a3_lane_pipelined__5.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top_ot_a3_lane_pipelined__6.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top_ot_a3_lane_pipelined__7.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top_ot_a3_lane_pipelined__8.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top__ConstPool__0__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top___024root__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top___024root__0__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top_ot_a3_lane_pipelined__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top_ot_a3_lane_pipelined__0__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top_ot_a3_lane_pipelined__1__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top_ot_a3_lane_pipelined__2__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top_ot_a3_lane_pipelined__3__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top_ot_a3_lane_pipelined__4__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top__Syms__Slow.cpp\ng++    a3_lq8_harness.o verilated.o verilated_threads.o Vot_a3_lq8_top__ALL.a    -pthread -lpthread -latomic   -o Vot_a3_lq8_top\nrm Vot_a3_lq8_top__ALL.verilator_deplist.tmp\nmake: Leaving directory '<BUILD>/obj_lq8'\n- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.572 MB sources in 8 modules, into 7.583 MB in 21 C++ files needing 0.025 MB\n- Verilator: Walltime 4.762 s (elab=0.014, cvt=0.598, bld=4.055); cpu 0.794 s on 8 threads; allocated 130.215 MB",
+          "compile_log_sha256": "cf988c66a17f14fca512b9018e0d0bcdc8352e470a702420e22ac1faed902b89",
+          "compile_log_tail": "                                                                                      : ... note: In instance 'ot_a3_lq8_top.u_dut.gen_lane[7].u_lane'\n  499 |     wire        g_valid = token_valid(tok_g);\n      |                 ^~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_lane_pipelined.sv:553:17: Bits of signal are not used: 'narrowed'[18:17]\n                                                                                      : ... note: In instance 'ot_a3_lq8_top.u_dut.gen_lane[7].u_lane'\n  553 |     wire [18:0] narrowed = ot_fp32_rne_pkg::fp32_to_bf16_rne(wb_code);\n      |                 ^~~~~~~~\nmake: Entering directory '<BUILD>/obj_lq8'\ng++  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -Os  -c -o a3_lq8_harness.o <ROOT>/rtl/test/a3_lq8_harness.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -c -o verilated.o <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -c -o verilated_threads.o <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -x c++-header Vot_a3_lq8_top__pch.h -o Vot_a3_lq8_top__pch.h.fast.gch\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -x c++-header Vot_a3_lq8_top__pch.h -o Vot_a3_lq8_top__pch.h.slow.gch\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top___024root__0.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top_ot_a3_lane_pipelined__0.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top_ot_a3_lane_pipelined__1.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top_ot_a3_lane_pipelined__2.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top_ot_a3_lane_pipelined__3.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top_ot_a3_lane_pipelined__4.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top_ot_a3_lane_pipelined__5.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top_ot_a3_lane_pipelined__6.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top_ot_a3_lane_pipelined__7.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top_ot_a3_lane_pipelined__8.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top__ConstPool__0__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top___024root__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top___024root__0__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top_ot_a3_lane_pipelined__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top_ot_a3_lane_pipelined__0__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top_ot_a3_lane_pipelined__1__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top_ot_a3_lane_pipelined__2__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top_ot_a3_lane_pipelined__3__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top_ot_a3_lane_pipelined__4__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top__Syms__Slow.cpp\ng++    a3_lq8_harness.o verilated.o verilated_threads.o Vot_a3_lq8_top__ALL.a    -pthread -lpthread -latomic   -o Vot_a3_lq8_top\nrm Vot_a3_lq8_top__ALL.verilator_deplist.tmp\nmake: Leaving directory '<BUILD>/obj_lq8'\n- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.573 MB sources in 8 modules, into 7.586 MB in 21 C++ files needing 0.025 MB\n- Verilator: Walltime 4.552 s (elab=0.009, cvt=0.561, bld=3.912); cpu 0.704 s on 8 threads; allocated 130.215 MB",
           "compile_returncode": 0,
           "first_failure": null,
-          "log_sha256": "7dcf0ac687fa74befb3dbd675f410b0c4ffd933876ce9e4ac39fc83e1b8321ae",
+          "log_sha256": "5acc31b0830f9f09312e78ccfc38c4be53e04a58bbde88083aa1daef5620a03d",
           "marker": {
             "adder_stages": 3,
             "cases": 96,
@@ -248,8 +248,8 @@
           ],
           "required_marker_prefix": "PASS: ABI3 lq8 cases=96 lane_ops=2498935 products=3131522 outputs=19407 faults=18 reference_cases=94 reference_outputs=19407",
           "run_command": "./obj_lq8/Vot_a3_lq8_top",
-          "run_log_sha256": "af08c735973152325c51bfa69901b1e39e44883b64ff931c2cdb6791ffe44f4c",
-          "run_log_tail": "RATE: case=93 lane_ops=393216 products=393216 total_cycles=49164 window_cycles=49152 first_retire=10 last_retire=49161 lanes=8\nRATE: case=94 lane_ops=196608 products=393216 total_cycles=24588 window_cycles=24576 first_retire=10 last_retire=24585 lanes=8\nRATE: case=95 lane_ops=98304 products=393216 total_cycles=12300 window_cycles=12288 first_retire=10 last_retire=12297 lanes=8\nPASS: ABI3 lq8 cases=96 lane_ops=2498935 products=3131522 outputs=19407 faults=18 reference_cases=94 reference_outputs=19407 identity=19407 lanes=8 adder_stages=3\nchecks=130024",
+          "run_log_sha256": "7bf394ab55c9b936e34acbe481b223c555dc2ec05f0d09a8ad80e4f7b460647a",
+          "run_log_tail": "RATE: case=93 lane_ops=393216 products=393216 total_cycles=49164 window_cycles=49152 first_retire=10 last_retire=49161 lanes=8\nRATE: case=94 lane_ops=196608 products=393216 total_cycles=24588 window_cycles=24576 first_retire=10 last_retire=24585 lanes=8\nRATE: case=95 lane_ops=98304 products=393216 total_cycles=12300 window_cycles=12288 first_retire=10 last_retire=12297 lanes=8\nPASS: ABI3 lq8 cases=96 lane_ops=2498935 products=3131522 outputs=19407 faults=18 reference_cases=94 reference_outputs=19407 identity=19407 lanes=8 adder_stages=3\nchecks=130056",
           "run_returncode": 0,
           "status": "pass"
         }
@@ -9292,224 +9292,6 @@
             "stream_words": 0
           },
           {
-            "block_refused": true,
-            "block_rows_b": 0,
-            "cols": 12,
-            "cols_per_lane": 1,
-            "depth": 8,
-            "dtype_a": 16,
-            "dtype_b": 16,
-            "expected": {
-              "block": {
-                "error_code": 7,
-                "error_detail": 16,
-                "error_lane": 0,
-                "lane_ops": 0,
-                "out_count": 0,
-                "products": 0,
-                "saturations": 0,
-                "written": 0
-              },
-              "lanes": [
-                {
-                  "error_code": 0,
-                  "error_detail": 0,
-                  "lane_ops": 0,
-                  "out_count": 0,
-                  "products": 0,
-                  "saturations": 0,
-                  "written": 0
-                },
-                {
-                  "error_code": 0,
-                  "error_detail": 0,
-                  "lane_ops": 0,
-                  "out_count": 0,
-                  "products": 0,
-                  "saturations": 0,
-                  "written": 0
-                },
-                {
-                  "error_code": 0,
-                  "error_detail": 0,
-                  "lane_ops": 0,
-                  "out_count": 0,
-                  "products": 0,
-                  "saturations": 0,
-                  "written": 0
-                },
-                {
-                  "error_code": 0,
-                  "error_detail": 0,
-                  "lane_ops": 0,
-                  "out_count": 0,
-                  "products": 0,
-                  "saturations": 0,
-                  "written": 0
-                },
-                {
-                  "error_code": 0,
-                  "error_detail": 0,
-                  "lane_ops": 0,
-                  "out_count": 0,
-                  "products": 0,
-                  "saturations": 0,
-                  "written": 0
-                },
-                {
-                  "error_code": 0,
-                  "error_detail": 0,
-                  "lane_ops": 0,
-                  "out_count": 0,
-                  "products": 0,
-                  "saturations": 0,
-                  "written": 0
-                },
-                {
-                  "error_code": 0,
-                  "error_detail": 0,
-                  "lane_ops": 0,
-                  "out_count": 0,
-                  "products": 0,
-                  "saturations": 0,
-                  "written": 0
-                },
-                {
-                  "error_code": 0,
-                  "error_detail": 0,
-                  "lane_ops": 0,
-                  "out_count": 0,
-                  "products": 0,
-                  "saturations": 0,
-                  "written": 0
-                }
-              ]
-            },
-            "extras": {},
-            "group": 1,
-            "id": 82,
-            "mode_name": "block_columns",
-            "name": "fault_block_columns",
-            "note": "12 columns on 8 lanes: refused by the block before any lane starts",
-            "out_fp32": false,
-            "products": 192,
-            "rate": false,
-            "rows": 2,
-            "run_reference": false,
-            "scaled_a": false,
-            "scaled_b": false,
-            "stream_words": 0
-          },
-          {
-            "block_refused": true,
-            "block_rows_b": 0,
-            "cols": 16,
-            "cols_per_lane": 2,
-            "depth": 8,
-            "dtype_a": 48,
-            "dtype_b": 32,
-            "expected": {
-              "block": {
-                "error_code": 7,
-                "error_detail": 17,
-                "error_lane": 0,
-                "lane_ops": 0,
-                "out_count": 0,
-                "products": 0,
-                "saturations": 0,
-                "written": 0
-              },
-              "lanes": [
-                {
-                  "error_code": 0,
-                  "error_detail": 0,
-                  "lane_ops": 0,
-                  "out_count": 0,
-                  "products": 0,
-                  "saturations": 0,
-                  "written": 0
-                },
-                {
-                  "error_code": 0,
-                  "error_detail": 0,
-                  "lane_ops": 0,
-                  "out_count": 0,
-                  "products": 0,
-                  "saturations": 0,
-                  "written": 0
-                },
-                {
-                  "error_code": 0,
-                  "error_detail": 0,
-                  "lane_ops": 0,
-                  "out_count": 0,
-                  "products": 0,
-                  "saturations": 0,
-                  "written": 0
-                },
-                {
-                  "error_code": 0,
-                  "error_detail": 0,
-                  "lane_ops": 0,
-                  "out_count": 0,
-                  "products": 0,
-                  "saturations": 0,
-                  "written": 0
-                },
-                {
-                  "error_code": 0,
-                  "error_detail": 0,
-                  "lane_ops": 0,
-                  "out_count": 0,
-                  "products": 0,
-                  "saturations": 0,
-                  "written": 0
-                },
-                {
-                  "error_code": 0,
-                  "error_detail": 0,
-                  "lane_ops": 0,
-                  "out_count": 0,
-                  "products": 0,
-                  "saturations": 0,
-                  "written": 0
-                },
-                {
-                  "error_code": 0,
-                  "error_detail": 0,
-                  "lane_ops": 0,
-                  "out_count": 0,
-                  "products": 0,
-                  "saturations": 0,
-                  "written": 0
-                },
-                {
-                  "error_code": 0,
-                  "error_detail": 0,
-                  "lane_ops": 0,
-                  "out_count": 0,
-                  "products": 0,
-                  "saturations": 0,
-                  "written": 0
-                }
-              ]
-            },
-            "extras": {},
-            "group": 4,
-            "id": 83,
-            "mode_name": "block_stream_width",
-            "name": "fault_block_stream_width",
-            "note": "E2M1 activations against FP8 weights at g = 4: four weight codes do not fit 2 B per lane",
-            "out_fp32": false,
-            "products": 256,
-            "rate": false,
-            "rows": 2,
-            "run_reference": false,
-            "scaled_a": false,
-            "scaled_b": false,
-            "stream_words": 0
-          },
-          {
             "block_refused": false,
             "block_rows_b": 0,
             "cols": 56,
@@ -9605,7 +9387,7 @@
             },
             "extras": {},
             "group": 1,
-            "id": 84,
+            "id": 82,
             "mode_name": null,
             "name": "fault_late_operand",
             "note": "an infinity at row 1, k 4 of the shared activation: row 0 is written",
@@ -9714,7 +9496,7 @@
             },
             "extras": {},
             "group": 1,
-            "id": 85,
+            "id": 83,
             "mode_name": null,
             "name": "fault_late_column",
             "note": "an infinity in block column 42 (lane 2, local 5), k 2",
@@ -9823,7 +9605,7 @@
             },
             "extras": {},
             "group": 1,
-            "id": 86,
+            "id": 84,
             "mode_name": null,
             "name": "fault_late_accumulate",
             "note": "an accumulation overflow at row 1, block column 25 (lane 1, local 3)",
@@ -9932,7 +9714,7 @@
             },
             "extras": {},
             "group": 1,
-            "id": 87,
+            "id": 85,
             "mode_name": null,
             "name": "fault_two_lanes_two_modes",
             "note": "lane 6 leaves binary32 at its first product, lane 2 meets a NaN later: the block reports lane 2 (the lowest index) and every lane keeps its own class and detail",
@@ -10041,7 +9823,7 @@
             },
             "extras": {},
             "group": 2,
-            "id": 88,
+            "id": 86,
             "mode_name": null,
             "name": "g2_fault_late",
             "note": "a reserved code in block column 38 (lane 6, local 4), group 4",
@@ -10053,6 +9835,224 @@
             "scaled_a": false,
             "scaled_b": false,
             "stream_words": 84
+          },
+          {
+            "block_refused": true,
+            "block_rows_b": 0,
+            "cols": 12,
+            "cols_per_lane": 1,
+            "depth": 8,
+            "dtype_a": 16,
+            "dtype_b": 16,
+            "expected": {
+              "block": {
+                "error_code": 7,
+                "error_detail": 16,
+                "error_lane": 0,
+                "lane_ops": 0,
+                "out_count": 0,
+                "products": 0,
+                "saturations": 0,
+                "written": 0
+              },
+              "lanes": [
+                {
+                  "error_code": 0,
+                  "error_detail": 0,
+                  "lane_ops": 0,
+                  "out_count": 0,
+                  "products": 0,
+                  "saturations": 0,
+                  "written": 0
+                },
+                {
+                  "error_code": 0,
+                  "error_detail": 0,
+                  "lane_ops": 0,
+                  "out_count": 0,
+                  "products": 0,
+                  "saturations": 0,
+                  "written": 0
+                },
+                {
+                  "error_code": 0,
+                  "error_detail": 0,
+                  "lane_ops": 0,
+                  "out_count": 0,
+                  "products": 0,
+                  "saturations": 0,
+                  "written": 0
+                },
+                {
+                  "error_code": 0,
+                  "error_detail": 0,
+                  "lane_ops": 0,
+                  "out_count": 0,
+                  "products": 0,
+                  "saturations": 0,
+                  "written": 0
+                },
+                {
+                  "error_code": 0,
+                  "error_detail": 0,
+                  "lane_ops": 0,
+                  "out_count": 0,
+                  "products": 0,
+                  "saturations": 0,
+                  "written": 0
+                },
+                {
+                  "error_code": 0,
+                  "error_detail": 0,
+                  "lane_ops": 0,
+                  "out_count": 0,
+                  "products": 0,
+                  "saturations": 0,
+                  "written": 0
+                },
+                {
+                  "error_code": 0,
+                  "error_detail": 0,
+                  "lane_ops": 0,
+                  "out_count": 0,
+                  "products": 0,
+                  "saturations": 0,
+                  "written": 0
+                },
+                {
+                  "error_code": 0,
+                  "error_detail": 0,
+                  "lane_ops": 0,
+                  "out_count": 0,
+                  "products": 0,
+                  "saturations": 0,
+                  "written": 0
+                }
+              ]
+            },
+            "extras": {},
+            "group": 1,
+            "id": 87,
+            "mode_name": "block_columns",
+            "name": "fault_block_columns",
+            "note": "12 columns on 8 lanes: refused by the block before any lane starts",
+            "out_fp32": false,
+            "products": 192,
+            "rate": false,
+            "rows": 2,
+            "run_reference": false,
+            "scaled_a": false,
+            "scaled_b": false,
+            "stream_words": 0
+          },
+          {
+            "block_refused": true,
+            "block_rows_b": 0,
+            "cols": 16,
+            "cols_per_lane": 2,
+            "depth": 8,
+            "dtype_a": 48,
+            "dtype_b": 32,
+            "expected": {
+              "block": {
+                "error_code": 7,
+                "error_detail": 17,
+                "error_lane": 0,
+                "lane_ops": 0,
+                "out_count": 0,
+                "products": 0,
+                "saturations": 0,
+                "written": 0
+              },
+              "lanes": [
+                {
+                  "error_code": 0,
+                  "error_detail": 0,
+                  "lane_ops": 0,
+                  "out_count": 0,
+                  "products": 0,
+                  "saturations": 0,
+                  "written": 0
+                },
+                {
+                  "error_code": 0,
+                  "error_detail": 0,
+                  "lane_ops": 0,
+                  "out_count": 0,
+                  "products": 0,
+                  "saturations": 0,
+                  "written": 0
+                },
+                {
+                  "error_code": 0,
+                  "error_detail": 0,
+                  "lane_ops": 0,
+                  "out_count": 0,
+                  "products": 0,
+                  "saturations": 0,
+                  "written": 0
+                },
+                {
+                  "error_code": 0,
+                  "error_detail": 0,
+                  "lane_ops": 0,
+                  "out_count": 0,
+                  "products": 0,
+                  "saturations": 0,
+                  "written": 0
+                },
+                {
+                  "error_code": 0,
+                  "error_detail": 0,
+                  "lane_ops": 0,
+                  "out_count": 0,
+                  "products": 0,
+                  "saturations": 0,
+                  "written": 0
+                },
+                {
+                  "error_code": 0,
+                  "error_detail": 0,
+                  "lane_ops": 0,
+                  "out_count": 0,
+                  "products": 0,
+                  "saturations": 0,
+                  "written": 0
+                },
+                {
+                  "error_code": 0,
+                  "error_detail": 0,
+                  "lane_ops": 0,
+                  "out_count": 0,
+                  "products": 0,
+                  "saturations": 0,
+                  "written": 0
+                },
+                {
+                  "error_code": 0,
+                  "error_detail": 0,
+                  "lane_ops": 0,
+                  "out_count": 0,
+                  "products": 0,
+                  "saturations": 0,
+                  "written": 0
+                }
+              ]
+            },
+            "extras": {},
+            "group": 4,
+            "id": 88,
+            "mode_name": "block_stream_width",
+            "name": "fault_block_stream_width",
+            "note": "E2M1 activations against FP8 weights at g = 4: four weight codes do not fit 2 B per lane",
+            "out_fp32": false,
+            "products": 256,
+            "rate": false,
+            "rows": 2,
+            "run_reference": false,
+            "scaled_a": false,
+            "scaled_b": false,
+            "stream_words": 0
           },
           {
             "block_refused": false,
@@ -10875,7 +10875,7 @@
             "name": "fault_accumulate_range"
           },
           "block_columns": {
-            "case": 82,
+            "case": 87,
             "detail_name": "block_columns_not_multiple_of_lanes",
             "error_code": 7,
             "error_detail": 16,
@@ -10917,7 +10917,7 @@
             "name": "fault_block_columns"
           },
           "block_stream_width": {
-            "case": 83,
+            "case": 88,
             "detail_name": "block_stream_width",
             "error_code": 7,
             "error_detail": 17,
@@ -11391,17 +11391,17 @@
           "ws_words": 152
         },
         "image_sha256": {
-          "lq8_case.hex": "199a77b19ef42734679583490147863684072821e09e1661322f381d26cebba5",
-          "lq8_expect.hex": "ffdd0cf65a9ddc1f9524ff07318c843e9d05fc0886f8cecc498c26699d67c94c",
-          "lq8_m0.hex": "46cdc6a9078f2efeafba5462394bd78892dd6cfffa5e32be1410bf6cd1a51b65",
-          "lq8_m1.hex": "8896408eecea5a4fd831d6b13192bbf7ea6f8d89cb86cd111e3109cd26c96f4a",
+          "lq8_case.hex": "821dac581c53205bc0bcb388a77b5f55a0e675d17b3b3e842283823ec7690699",
+          "lq8_expect.hex": "c74240b3a7d16ec9ba32359a91755bc6667fd69da8e9047b8bf642853b9a9c76",
+          "lq8_m0.hex": "37c7a679f11b0f4f66a3520bc1dda6f7afa5e855b564f62e6f0094664a3eeb79",
+          "lq8_m1.hex": "cc74581a29837abf0578c1b95ec35b458cf24ccb3dada0a16caf8ab5d2d1cc9a",
           "lq8_m2.hex": "2250da76171ada4fbbb8ece923f49f16cae0bd9eed27df21351c6d5540e94e41",
           "lq8_m3.hex": "68b7fe6dbed39e8760e149d6fe15b1dbbd1782f8787131ddf3e65057c4ea1aa2",
           "lq8_meta.hex": "5825d53ea6b6b888f9eeb56dd72b2bb241411ad7bd82ce5213835d2890cf6535",
-          "lq8_w.hex": "186b6cd85df9b904e350fe24febf7c9611d6039f1d264abbda922ba2a7309fa1",
+          "lq8_w.hex": "c4f4344112f5ec467c42291bf0c300fa7ab35a223fbe6977e0ab6d3de5ec9311",
           "lq8_ws.hex": "cfaefd0343f9882faadcb6ac4118857918817de7dcd4cc7c37e25a821c212d87"
         },
-        "manifest_sha256": "e25a20b901361c69fa950b1f74288be252b3128bc87ae3016f0f20df497392f9",
+        "manifest_sha256": "d653e69bc5aea9ce0e4a29f80b629a2c16ff6c84527cf506c14f7f2dfd2458d6",
         "rate_cases": [
           {
             "case": 93,
@@ -11446,13 +11446,13 @@
       "adder_stages": 2,
       "simulators": [
         {
-          "checks": 130028,
+          "checks": 130060,
           "compile_command": "/usr/bin/iverilog -g2012 -s tb_a3_lq8 -Ptb_a3_lq8.ADDER_STAGES=2 -Ptb_a3_lq8.LANES=8 -o lq8_sim.vvp <ROOT>/rtl/ot_fp32_rne_pkg.sv <ROOT>/rtl/abi3/ot_a3_format_pkg.sv <ROOT>/rtl/abi3/ot_a3_engine_pkg.sv <ROOT>/rtl/abi3/ot_a3_lane_pkg.sv <ROOT>/rtl/abi3/ot_a3_lane_pipelined.sv <ROOT>/rtl/abi3/ot_a3_lq8.sv <ROOT>/rtl/test/a3_lq8_top.sv <ROOT>/rtl/test/tb_a3_lq8.sv",
           "compile_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
           "compile_log_tail": "",
           "compile_returncode": 0,
           "first_failure": null,
-          "log_sha256": "0c333219ea5703f8b0142ed47a05f33c15ba1af1927a75fafa7eea087e35dcd6",
+          "log_sha256": "8f4efd2c8e885111d9b7c50d6f154d8dee2eedba3d9669f3128169b63fcbb3fe",
           "marker": {
             "adder_stages": 2,
             "cases": 96,
@@ -11501,19 +11501,19 @@
           ],
           "required_marker_prefix": "PASS: ABI3 lq8 cases=96 lane_ops=2498882 products=3131470 outputs=19409 faults=18 reference_cases=94 reference_outputs=19409",
           "run_command": "/usr/bin/vvp lq8_sim.vvp",
-          "run_log_sha256": "0c333219ea5703f8b0142ed47a05f33c15ba1af1927a75fafa7eea087e35dcd6",
-          "run_log_tail": "WARNING: <ROOT>/rtl/test/a3_lq8_top.sv:154: $readmemh(lq8_m0.hex): Not enough words in the file for the requested range [0:262143].\nWARNING: <ROOT>/rtl/test/a3_lq8_top.sv:155: $readmemh(lq8_m2.hex): Not enough words in the file for the requested range [0:65535].\nWARNING: <ROOT>/rtl/test/a3_lq8_top.sv:156: $readmemh(lq8_w.hex): Not enough words in the file for the requested range [0:524287].\nWARNING: <ROOT>/rtl/test/a3_lq8_top.sv:157: $readmemh(lq8_ws.hex): Not enough words in the file for the requested range [0:65535].\nWARNING: <ROOT>/rtl/test/a3_lq8_top.sv:158: $readmemh(lq8_m1.hex): Not enough words in the file for the requested range [0:524287].\nWARNING: <ROOT>/rtl/test/a3_lq8_top.sv:159: $readmemh(lq8_m3.hex): Not enough words in the file for the requested range [0:65535].\nWARNING: <ROOT>/rtl/test/a3_lq8_top.sv:160: $readmemh(lq8_case.hex): Not enough words in the file for the requested range [0:16383].\nWARNING: <ROOT>/rtl/test/a3_lq8_top.sv:161: $readmemh(lq8_expect.hex): Not enough words in the file for the requested range [0:262143].\nRATE: case=93 lane_ops=393216 products=393216 total_cycles=49163 window_cycles=49152 first_retire=9 last_retire=49160 lanes=8\nRATE: case=94 lane_ops=196608 products=393216 total_cycles=24587 window_cycles=24576 first_retire=9 last_retire=24584 lanes=8\nRATE: case=95 lane_ops=98304 products=393216 total_cycles=12299 window_cycles=12288 first_retire=9 last_retire=12296 lanes=8\nPASS: ABI3 lq8 cases=96 lane_ops=2498882 products=3131470 outputs=19409 faults=18 reference_cases=94 reference_outputs=19409 identity=19409 lanes=8 adder_stages=2\nchecks=130028",
+          "run_log_sha256": "8f4efd2c8e885111d9b7c50d6f154d8dee2eedba3d9669f3128169b63fcbb3fe",
+          "run_log_tail": "WARNING: <ROOT>/rtl/test/a3_lq8_top.sv:154: $readmemh(lq8_m0.hex): Not enough words in the file for the requested range [0:262143].\nWARNING: <ROOT>/rtl/test/a3_lq8_top.sv:155: $readmemh(lq8_m2.hex): Not enough words in the file for the requested range [0:65535].\nWARNING: <ROOT>/rtl/test/a3_lq8_top.sv:156: $readmemh(lq8_w.hex): Not enough words in the file for the requested range [0:524287].\nWARNING: <ROOT>/rtl/test/a3_lq8_top.sv:157: $readmemh(lq8_ws.hex): Not enough words in the file for the requested range [0:65535].\nWARNING: <ROOT>/rtl/test/a3_lq8_top.sv:158: $readmemh(lq8_m1.hex): Not enough words in the file for the requested range [0:524287].\nWARNING: <ROOT>/rtl/test/a3_lq8_top.sv:159: $readmemh(lq8_m3.hex): Not enough words in the file for the requested range [0:65535].\nWARNING: <ROOT>/rtl/test/a3_lq8_top.sv:160: $readmemh(lq8_case.hex): Not enough words in the file for the requested range [0:16383].\nWARNING: <ROOT>/rtl/test/a3_lq8_top.sv:161: $readmemh(lq8_expect.hex): Not enough words in the file for the requested range [0:262143].\nRATE: case=93 lane_ops=393216 products=393216 total_cycles=49163 window_cycles=49152 first_retire=9 last_retire=49160 lanes=8\nRATE: case=94 lane_ops=196608 products=393216 total_cycles=24587 window_cycles=24576 first_retire=9 last_retire=24584 lanes=8\nRATE: case=95 lane_ops=98304 products=393216 total_cycles=12299 window_cycles=12288 first_retire=9 last_retire=12296 lanes=8\nPASS: ABI3 lq8 cases=96 lane_ops=2498882 products=3131470 outputs=19409 faults=18 reference_cases=94 reference_outputs=19409 identity=19409 lanes=8 adder_stages=2\nchecks=130060",
           "run_returncode": 0,
           "status": "pass"
         },
         {
-          "checks": 130028,
+          "checks": 130060,
           "compile_command": "<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator --cc --exe --build -Wall -Wno-fatal -Wno-DECLFILENAME --top-module ot_a3_lq8_top -GADDER_STAGES=2 -GLANES=8 --Mdir obj_lq8 <ROOT>/rtl/ot_fp32_rne_pkg.sv <ROOT>/rtl/abi3/ot_a3_format_pkg.sv <ROOT>/rtl/abi3/ot_a3_engine_pkg.sv <ROOT>/rtl/abi3/ot_a3_lane_pkg.sv <ROOT>/rtl/abi3/ot_a3_lane_pipelined.sv <ROOT>/rtl/abi3/ot_a3_lq8.sv <ROOT>/rtl/test/a3_lq8_top.sv <ROOT>/rtl/test/a3_lq8_harness.cpp -CFLAGS '-std=c++17 -O2' -j 8",
-          "compile_log_sha256": "69a285033f8b08bd7234aa88a03fe1a5b1177971e6e26c9027ebb70a03454bd6",
-          "compile_log_tail": "                                                                                      : ... note: In instance 'ot_a3_lq8_top.u_dut.gen_lane[7].u_lane'\n  499 |     wire        g_valid = token_valid(tok_g);\n      |                 ^~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_lane_pipelined.sv:553:17: Bits of signal are not used: 'narrowed'[18:17]\n                                                                                      : ... note: In instance 'ot_a3_lq8_top.u_dut.gen_lane[7].u_lane'\n  553 |     wire [18:0] narrowed = ot_fp32_rne_pkg::fp32_to_bf16_rne(wb_code);\n      |                 ^~~~~~~~\nmake: Entering directory '<BUILD>/obj_lq8'\ng++  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -Os  -c -o a3_lq8_harness.o <ROOT>/rtl/test/a3_lq8_harness.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -c -o verilated.o <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -c -o verilated_threads.o <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -x c++-header Vot_a3_lq8_top__pch.h -o Vot_a3_lq8_top__pch.h.fast.gch\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -x c++-header Vot_a3_lq8_top__pch.h -o Vot_a3_lq8_top__pch.h.slow.gch\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top___024root__0.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A2__0.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A2__1.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A2__2.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A2__3.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A2__4.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A2__5.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A2__6.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A2__7.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A2__8.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top__ConstPool__0__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top___024root__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top___024root__0__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A2__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A2__0__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A2__1__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A2__2__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A2__3__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A2__4__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top__Syms__Slow.cpp\ng++    a3_lq8_harness.o verilated.o verilated_threads.o Vot_a3_lq8_top__ALL.a    -pthread -lpthread -latomic   -o Vot_a3_lq8_top\nrm Vot_a3_lq8_top__ALL.verilator_deplist.tmp\nmake: Leaving directory '<BUILD>/obj_lq8'\n- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.572 MB sources in 8 modules, into 7.579 MB in 21 C++ files needing 0.024 MB\n- Verilator: Walltime 4.962 s (elab=0.012, cvt=0.651, bld=4.201); cpu 0.856 s on 8 threads; allocated 129.219 MB",
+          "compile_log_sha256": "16cfaafde25c814f0854f43fc6bc1db63c49506d740e8f156e1e2365f0198295",
+          "compile_log_tail": "                                                                                      : ... note: In instance 'ot_a3_lq8_top.u_dut.gen_lane[7].u_lane'\n  499 |     wire        g_valid = token_valid(tok_g);\n      |                 ^~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_lane_pipelined.sv:553:17: Bits of signal are not used: 'narrowed'[18:17]\n                                                                                      : ... note: In instance 'ot_a3_lq8_top.u_dut.gen_lane[7].u_lane'\n  553 |     wire [18:0] narrowed = ot_fp32_rne_pkg::fp32_to_bf16_rne(wb_code);\n      |                 ^~~~~~~~\nmake: Entering directory '<BUILD>/obj_lq8'\ng++  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -Os  -c -o a3_lq8_harness.o <ROOT>/rtl/test/a3_lq8_harness.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -c -o verilated.o <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -c -o verilated_threads.o <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -x c++-header Vot_a3_lq8_top__pch.h -o Vot_a3_lq8_top__pch.h.fast.gch\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -x c++-header Vot_a3_lq8_top__pch.h -o Vot_a3_lq8_top__pch.h.slow.gch\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top__ConstPool__0__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top___024root__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top___024root__0__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A2__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A2__0__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A2__1__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A2__2__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A2__3__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A2__4__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top__Syms__Slow.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top___024root__0.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A2__0.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A2__1.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A2__2.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A2__3.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A2__4.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A2__5.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A2__6.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A2__7.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A2__8.cpp\ng++    a3_lq8_harness.o verilated.o verilated_threads.o Vot_a3_lq8_top__ALL.a    -pthread -lpthread -latomic   -o Vot_a3_lq8_top\nrm Vot_a3_lq8_top__ALL.verilator_deplist.tmp\nmake: Leaving directory '<BUILD>/obj_lq8'\n- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.573 MB sources in 8 modules, into 7.582 MB in 21 C++ files needing 0.024 MB\n- Verilator: Walltime 4.556 s (elab=0.010, cvt=0.665, bld=3.783); cpu 0.871 s on 8 threads; allocated 130.219 MB",
           "compile_returncode": 0,
           "first_failure": null,
-          "log_sha256": "b92ab4dfef44ca38113d6a2027a736c39dd20e7745d5f52ef15bc33d7f080edd",
+          "log_sha256": "ac84ed8e9900396fda30b4f051752453698c723b4e80d4ddaff4f9809d781c4b",
           "marker": {
             "adder_stages": 2,
             "cases": 96,
@@ -11562,8 +11562,8 @@
           ],
           "required_marker_prefix": "PASS: ABI3 lq8 cases=96 lane_ops=2498882 products=3131470 outputs=19409 faults=18 reference_cases=94 reference_outputs=19409",
           "run_command": "./obj_lq8/Vot_a3_lq8_top",
-          "run_log_sha256": "ac5130c22b9dbad18df51002513c130f0906cc7d7a89ccadb63dd6ddaa4590c8",
-          "run_log_tail": "RATE: case=93 lane_ops=393216 products=393216 total_cycles=49163 window_cycles=49152 first_retire=9 last_retire=49160 lanes=8\nRATE: case=94 lane_ops=196608 products=393216 total_cycles=24587 window_cycles=24576 first_retire=9 last_retire=24584 lanes=8\nRATE: case=95 lane_ops=98304 products=393216 total_cycles=12299 window_cycles=12288 first_retire=9 last_retire=12296 lanes=8\nPASS: ABI3 lq8 cases=96 lane_ops=2498882 products=3131470 outputs=19409 faults=18 reference_cases=94 reference_outputs=19409 identity=19409 lanes=8 adder_stages=2\nchecks=130028",
+          "run_log_sha256": "1c26894ad16efbef1ef3354dd65e96414fd954b93599e045e4aa3af2410fa46e",
+          "run_log_tail": "RATE: case=93 lane_ops=393216 products=393216 total_cycles=49163 window_cycles=49152 first_retire=9 last_retire=49160 lanes=8\nRATE: case=94 lane_ops=196608 products=393216 total_cycles=24587 window_cycles=24576 first_retire=9 last_retire=24584 lanes=8\nRATE: case=95 lane_ops=98304 products=393216 total_cycles=12299 window_cycles=12288 first_retire=9 last_retire=12296 lanes=8\nPASS: ABI3 lq8 cases=96 lane_ops=2498882 products=3131470 outputs=19409 faults=18 reference_cases=94 reference_outputs=19409 identity=19409 lanes=8 adder_stages=2\nchecks=130060",
           "run_returncode": 0,
           "status": "pass"
         }
@@ -20606,224 +20606,6 @@
             "stream_words": 0
           },
           {
-            "block_refused": true,
-            "block_rows_b": 0,
-            "cols": 12,
-            "cols_per_lane": 1,
-            "depth": 8,
-            "dtype_a": 16,
-            "dtype_b": 16,
-            "expected": {
-              "block": {
-                "error_code": 7,
-                "error_detail": 16,
-                "error_lane": 0,
-                "lane_ops": 0,
-                "out_count": 0,
-                "products": 0,
-                "saturations": 0,
-                "written": 0
-              },
-              "lanes": [
-                {
-                  "error_code": 0,
-                  "error_detail": 0,
-                  "lane_ops": 0,
-                  "out_count": 0,
-                  "products": 0,
-                  "saturations": 0,
-                  "written": 0
-                },
-                {
-                  "error_code": 0,
-                  "error_detail": 0,
-                  "lane_ops": 0,
-                  "out_count": 0,
-                  "products": 0,
-                  "saturations": 0,
-                  "written": 0
-                },
-                {
-                  "error_code": 0,
-                  "error_detail": 0,
-                  "lane_ops": 0,
-                  "out_count": 0,
-                  "products": 0,
-                  "saturations": 0,
-                  "written": 0
-                },
-                {
-                  "error_code": 0,
-                  "error_detail": 0,
-                  "lane_ops": 0,
-                  "out_count": 0,
-                  "products": 0,
-                  "saturations": 0,
-                  "written": 0
-                },
-                {
-                  "error_code": 0,
-                  "error_detail": 0,
-                  "lane_ops": 0,
-                  "out_count": 0,
-                  "products": 0,
-                  "saturations": 0,
-                  "written": 0
-                },
-                {
-                  "error_code": 0,
-                  "error_detail": 0,
-                  "lane_ops": 0,
-                  "out_count": 0,
-                  "products": 0,
-                  "saturations": 0,
-                  "written": 0
-                },
-                {
-                  "error_code": 0,
-                  "error_detail": 0,
-                  "lane_ops": 0,
-                  "out_count": 0,
-                  "products": 0,
-                  "saturations": 0,
-                  "written": 0
-                },
-                {
-                  "error_code": 0,
-                  "error_detail": 0,
-                  "lane_ops": 0,
-                  "out_count": 0,
-                  "products": 0,
-                  "saturations": 0,
-                  "written": 0
-                }
-              ]
-            },
-            "extras": {},
-            "group": 1,
-            "id": 82,
-            "mode_name": "block_columns",
-            "name": "fault_block_columns",
-            "note": "12 columns on 8 lanes: refused by the block before any lane starts",
-            "out_fp32": false,
-            "products": 192,
-            "rate": false,
-            "rows": 2,
-            "run_reference": false,
-            "scaled_a": false,
-            "scaled_b": false,
-            "stream_words": 0
-          },
-          {
-            "block_refused": true,
-            "block_rows_b": 0,
-            "cols": 16,
-            "cols_per_lane": 2,
-            "depth": 8,
-            "dtype_a": 48,
-            "dtype_b": 32,
-            "expected": {
-              "block": {
-                "error_code": 7,
-                "error_detail": 17,
-                "error_lane": 0,
-                "lane_ops": 0,
-                "out_count": 0,
-                "products": 0,
-                "saturations": 0,
-                "written": 0
-              },
-              "lanes": [
-                {
-                  "error_code": 0,
-                  "error_detail": 0,
-                  "lane_ops": 0,
-                  "out_count": 0,
-                  "products": 0,
-                  "saturations": 0,
-                  "written": 0
-                },
-                {
-                  "error_code": 0,
-                  "error_detail": 0,
-                  "lane_ops": 0,
-                  "out_count": 0,
-                  "products": 0,
-                  "saturations": 0,
-                  "written": 0
-                },
-                {
-                  "error_code": 0,
-                  "error_detail": 0,
-                  "lane_ops": 0,
-                  "out_count": 0,
-                  "products": 0,
-                  "saturations": 0,
-                  "written": 0
-                },
-                {
-                  "error_code": 0,
-                  "error_detail": 0,
-                  "lane_ops": 0,
-                  "out_count": 0,
-                  "products": 0,
-                  "saturations": 0,
-                  "written": 0
-                },
-                {
-                  "error_code": 0,
-                  "error_detail": 0,
-                  "lane_ops": 0,
-                  "out_count": 0,
-                  "products": 0,
-                  "saturations": 0,
-                  "written": 0
-                },
-                {
-                  "error_code": 0,
-                  "error_detail": 0,
-                  "lane_ops": 0,
-                  "out_count": 0,
-                  "products": 0,
-                  "saturations": 0,
-                  "written": 0
-                },
-                {
-                  "error_code": 0,
-                  "error_detail": 0,
-                  "lane_ops": 0,
-                  "out_count": 0,
-                  "products": 0,
-                  "saturations": 0,
-                  "written": 0
-                },
-                {
-                  "error_code": 0,
-                  "error_detail": 0,
-                  "lane_ops": 0,
-                  "out_count": 0,
-                  "products": 0,
-                  "saturations": 0,
-                  "written": 0
-                }
-              ]
-            },
-            "extras": {},
-            "group": 4,
-            "id": 83,
-            "mode_name": "block_stream_width",
-            "name": "fault_block_stream_width",
-            "note": "E2M1 activations against FP8 weights at g = 4: four weight codes do not fit 2 B per lane",
-            "out_fp32": false,
-            "products": 256,
-            "rate": false,
-            "rows": 2,
-            "run_reference": false,
-            "scaled_a": false,
-            "scaled_b": false,
-            "stream_words": 0
-          },
-          {
             "block_refused": false,
             "block_rows_b": 0,
             "cols": 56,
@@ -20919,7 +20701,7 @@
             },
             "extras": {},
             "group": 1,
-            "id": 84,
+            "id": 82,
             "mode_name": null,
             "name": "fault_late_operand",
             "note": "an infinity at row 1, k 4 of the shared activation: row 0 is written",
@@ -21028,7 +20810,7 @@
             },
             "extras": {},
             "group": 1,
-            "id": 85,
+            "id": 83,
             "mode_name": null,
             "name": "fault_late_column",
             "note": "an infinity in block column 42 (lane 2, local 5), k 2",
@@ -21137,7 +20919,7 @@
             },
             "extras": {},
             "group": 1,
-            "id": 86,
+            "id": 84,
             "mode_name": null,
             "name": "fault_late_accumulate",
             "note": "an accumulation overflow at row 1, block column 25 (lane 1, local 3)",
@@ -21246,7 +21028,7 @@
             },
             "extras": {},
             "group": 1,
-            "id": 87,
+            "id": 85,
             "mode_name": null,
             "name": "fault_two_lanes_two_modes",
             "note": "lane 6 leaves binary32 at its first product, lane 2 meets a NaN later: the block reports lane 2 (the lowest index) and every lane keeps its own class and detail",
@@ -21355,7 +21137,7 @@
             },
             "extras": {},
             "group": 2,
-            "id": 88,
+            "id": 86,
             "mode_name": null,
             "name": "g2_fault_late",
             "note": "a reserved code in block column 38 (lane 6, local 4), group 4",
@@ -21367,6 +21149,224 @@
             "scaled_a": false,
             "scaled_b": false,
             "stream_words": 84
+          },
+          {
+            "block_refused": true,
+            "block_rows_b": 0,
+            "cols": 12,
+            "cols_per_lane": 1,
+            "depth": 8,
+            "dtype_a": 16,
+            "dtype_b": 16,
+            "expected": {
+              "block": {
+                "error_code": 7,
+                "error_detail": 16,
+                "error_lane": 0,
+                "lane_ops": 0,
+                "out_count": 0,
+                "products": 0,
+                "saturations": 0,
+                "written": 0
+              },
+              "lanes": [
+                {
+                  "error_code": 0,
+                  "error_detail": 0,
+                  "lane_ops": 0,
+                  "out_count": 0,
+                  "products": 0,
+                  "saturations": 0,
+                  "written": 0
+                },
+                {
+                  "error_code": 0,
+                  "error_detail": 0,
+                  "lane_ops": 0,
+                  "out_count": 0,
+                  "products": 0,
+                  "saturations": 0,
+                  "written": 0
+                },
+                {
+                  "error_code": 0,
+                  "error_detail": 0,
+                  "lane_ops": 0,
+                  "out_count": 0,
+                  "products": 0,
+                  "saturations": 0,
+                  "written": 0
+                },
+                {
+                  "error_code": 0,
+                  "error_detail": 0,
+                  "lane_ops": 0,
+                  "out_count": 0,
+                  "products": 0,
+                  "saturations": 0,
+                  "written": 0
+                },
+                {
+                  "error_code": 0,
+                  "error_detail": 0,
+                  "lane_ops": 0,
+                  "out_count": 0,
+                  "products": 0,
+                  "saturations": 0,
+                  "written": 0
+                },
+                {
+                  "error_code": 0,
+                  "error_detail": 0,
+                  "lane_ops": 0,
+                  "out_count": 0,
+                  "products": 0,
+                  "saturations": 0,
+                  "written": 0
+                },
+                {
+                  "error_code": 0,
+                  "error_detail": 0,
+                  "lane_ops": 0,
+                  "out_count": 0,
+                  "products": 0,
+                  "saturations": 0,
+                  "written": 0
+                },
+                {
+                  "error_code": 0,
+                  "error_detail": 0,
+                  "lane_ops": 0,
+                  "out_count": 0,
+                  "products": 0,
+                  "saturations": 0,
+                  "written": 0
+                }
+              ]
+            },
+            "extras": {},
+            "group": 1,
+            "id": 87,
+            "mode_name": "block_columns",
+            "name": "fault_block_columns",
+            "note": "12 columns on 8 lanes: refused by the block before any lane starts",
+            "out_fp32": false,
+            "products": 192,
+            "rate": false,
+            "rows": 2,
+            "run_reference": false,
+            "scaled_a": false,
+            "scaled_b": false,
+            "stream_words": 0
+          },
+          {
+            "block_refused": true,
+            "block_rows_b": 0,
+            "cols": 16,
+            "cols_per_lane": 2,
+            "depth": 8,
+            "dtype_a": 48,
+            "dtype_b": 32,
+            "expected": {
+              "block": {
+                "error_code": 7,
+                "error_detail": 17,
+                "error_lane": 0,
+                "lane_ops": 0,
+                "out_count": 0,
+                "products": 0,
+                "saturations": 0,
+                "written": 0
+              },
+              "lanes": [
+                {
+                  "error_code": 0,
+                  "error_detail": 0,
+                  "lane_ops": 0,
+                  "out_count": 0,
+                  "products": 0,
+                  "saturations": 0,
+                  "written": 0
+                },
+                {
+                  "error_code": 0,
+                  "error_detail": 0,
+                  "lane_ops": 0,
+                  "out_count": 0,
+                  "products": 0,
+                  "saturations": 0,
+                  "written": 0
+                },
+                {
+                  "error_code": 0,
+                  "error_detail": 0,
+                  "lane_ops": 0,
+                  "out_count": 0,
+                  "products": 0,
+                  "saturations": 0,
+                  "written": 0
+                },
+                {
+                  "error_code": 0,
+                  "error_detail": 0,
+                  "lane_ops": 0,
+                  "out_count": 0,
+                  "products": 0,
+                  "saturations": 0,
+                  "written": 0
+                },
+                {
+                  "error_code": 0,
+                  "error_detail": 0,
+                  "lane_ops": 0,
+                  "out_count": 0,
+                  "products": 0,
+                  "saturations": 0,
+                  "written": 0
+                },
+                {
+                  "error_code": 0,
+                  "error_detail": 0,
+                  "lane_ops": 0,
+                  "out_count": 0,
+                  "products": 0,
+                  "saturations": 0,
+                  "written": 0
+                },
+                {
+                  "error_code": 0,
+                  "error_detail": 0,
+                  "lane_ops": 0,
+                  "out_count": 0,
+                  "products": 0,
+                  "saturations": 0,
+                  "written": 0
+                },
+                {
+                  "error_code": 0,
+                  "error_detail": 0,
+                  "lane_ops": 0,
+                  "out_count": 0,
+                  "products": 0,
+                  "saturations": 0,
+                  "written": 0
+                }
+              ]
+            },
+            "extras": {},
+            "group": 4,
+            "id": 88,
+            "mode_name": "block_stream_width",
+            "name": "fault_block_stream_width",
+            "note": "E2M1 activations against FP8 weights at g = 4: four weight codes do not fit 2 B per lane",
+            "out_fp32": false,
+            "products": 256,
+            "rate": false,
+            "rows": 2,
+            "run_reference": false,
+            "scaled_a": false,
+            "scaled_b": false,
+            "stream_words": 0
           },
           {
             "block_refused": false,
@@ -22189,7 +22189,7 @@
             "name": "fault_accumulate_range"
           },
           "block_columns": {
-            "case": 82,
+            "case": 87,
             "detail_name": "block_columns_not_multiple_of_lanes",
             "error_code": 7,
             "error_detail": 16,
@@ -22231,7 +22231,7 @@
             "name": "fault_block_columns"
           },
           "block_stream_width": {
-            "case": 83,
+            "case": 88,
             "detail_name": "block_stream_width",
             "error_code": 7,
             "error_detail": 17,
@@ -22705,17 +22705,17 @@
           "ws_words": 152
         },
         "image_sha256": {
-          "lq8_case.hex": "5a09e6ab1a16f4c6b7295051b623c9ce45629ac75562d3e56ecdaa8519c3c48b",
-          "lq8_expect.hex": "ffdd0cf65a9ddc1f9524ff07318c843e9d05fc0886f8cecc498c26699d67c94c",
-          "lq8_m0.hex": "46cdc6a9078f2efeafba5462394bd78892dd6cfffa5e32be1410bf6cd1a51b65",
-          "lq8_m1.hex": "8896408eecea5a4fd831d6b13192bbf7ea6f8d89cb86cd111e3109cd26c96f4a",
+          "lq8_case.hex": "d385094faa3ea1117d41a617cf284f2f3bf97e07f551b84d22a05966a27da754",
+          "lq8_expect.hex": "c74240b3a7d16ec9ba32359a91755bc6667fd69da8e9047b8bf642853b9a9c76",
+          "lq8_m0.hex": "37c7a679f11b0f4f66a3520bc1dda6f7afa5e855b564f62e6f0094664a3eeb79",
+          "lq8_m1.hex": "cc74581a29837abf0578c1b95ec35b458cf24ccb3dada0a16caf8ab5d2d1cc9a",
           "lq8_m2.hex": "2250da76171ada4fbbb8ece923f49f16cae0bd9eed27df21351c6d5540e94e41",
           "lq8_m3.hex": "68b7fe6dbed39e8760e149d6fe15b1dbbd1782f8787131ddf3e65057c4ea1aa2",
           "lq8_meta.hex": "30dad72f54d3c6800b36f1fdeb441622a96c2431147a316ace6fa74890e51d72",
-          "lq8_w.hex": "c27cd172b2f8c86dbe5a8622d357398bcf00c38982a6f0e3b06fb78233b28144",
+          "lq8_w.hex": "ede78c6b5e50aa06d72752ccc6aab88b159ab55a6bf3d4e001c28382236c6e83",
           "lq8_ws.hex": "cfaefd0343f9882faadcb6ac4118857918817de7dcd4cc7c37e25a821c212d87"
         },
-        "manifest_sha256": "0b7ef66d404f2a2ba3bc12d2c010a7cd68afc6b07a22aa9eb9bfd57973f4127e",
+        "manifest_sha256": "b2eb74c15dcdfdef9583f00afd0da64f02a1fa1c11da53b22e7167c5dc566c26",
         "rate_cases": [
           {
             "case": 93,
@@ -22760,13 +22760,13 @@
       "adder_stages": 1,
       "simulators": [
         {
-          "checks": 130034,
+          "checks": 130066,
           "compile_command": "/usr/bin/iverilog -g2012 -s tb_a3_lq8 -Ptb_a3_lq8.ADDER_STAGES=1 -Ptb_a3_lq8.LANES=8 -o lq8_sim.vvp <ROOT>/rtl/ot_fp32_rne_pkg.sv <ROOT>/rtl/abi3/ot_a3_format_pkg.sv <ROOT>/rtl/abi3/ot_a3_engine_pkg.sv <ROOT>/rtl/abi3/ot_a3_lane_pkg.sv <ROOT>/rtl/abi3/ot_a3_lane_pipelined.sv <ROOT>/rtl/abi3/ot_a3_lq8.sv <ROOT>/rtl/test/a3_lq8_top.sv <ROOT>/rtl/test/tb_a3_lq8.sv",
           "compile_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
           "compile_log_tail": "",
           "compile_returncode": 0,
           "first_failure": null,
-          "log_sha256": "ff7b9c1a66fc63445e8237445e78f0dab17edcf3caf284969278bc290485e014",
+          "log_sha256": "e82b25b311e487709734147af377715be371fad5c689fb42227c3bb61f4d1c22",
           "marker": {
             "adder_stages": 1,
             "cases": 96,
@@ -22815,19 +22815,19 @@
           ],
           "required_marker_prefix": "PASS: ABI3 lq8 cases=96 lane_ops=2498829 products=3131413 outputs=19412 faults=18 reference_cases=94 reference_outputs=19412",
           "run_command": "/usr/bin/vvp lq8_sim.vvp",
-          "run_log_sha256": "ff7b9c1a66fc63445e8237445e78f0dab17edcf3caf284969278bc290485e014",
-          "run_log_tail": "WARNING: <ROOT>/rtl/test/a3_lq8_top.sv:154: $readmemh(lq8_m0.hex): Not enough words in the file for the requested range [0:262143].\nWARNING: <ROOT>/rtl/test/a3_lq8_top.sv:155: $readmemh(lq8_m2.hex): Not enough words in the file for the requested range [0:65535].\nWARNING: <ROOT>/rtl/test/a3_lq8_top.sv:156: $readmemh(lq8_w.hex): Not enough words in the file for the requested range [0:524287].\nWARNING: <ROOT>/rtl/test/a3_lq8_top.sv:157: $readmemh(lq8_ws.hex): Not enough words in the file for the requested range [0:65535].\nWARNING: <ROOT>/rtl/test/a3_lq8_top.sv:158: $readmemh(lq8_m1.hex): Not enough words in the file for the requested range [0:524287].\nWARNING: <ROOT>/rtl/test/a3_lq8_top.sv:159: $readmemh(lq8_m3.hex): Not enough words in the file for the requested range [0:65535].\nWARNING: <ROOT>/rtl/test/a3_lq8_top.sv:160: $readmemh(lq8_case.hex): Not enough words in the file for the requested range [0:16383].\nWARNING: <ROOT>/rtl/test/a3_lq8_top.sv:161: $readmemh(lq8_expect.hex): Not enough words in the file for the requested range [0:262143].\nRATE: case=93 lane_ops=393216 products=393216 total_cycles=49162 window_cycles=49152 first_retire=8 last_retire=49159 lanes=8\nRATE: case=94 lane_ops=196608 products=393216 total_cycles=24586 window_cycles=24576 first_retire=8 last_retire=24583 lanes=8\nRATE: case=95 lane_ops=98304 products=393216 total_cycles=12298 window_cycles=12288 first_retire=8 last_retire=12295 lanes=8\nPASS: ABI3 lq8 cases=96 lane_ops=2498829 products=3131413 outputs=19412 faults=18 reference_cases=94 reference_outputs=19412 identity=19412 lanes=8 adder_stages=1\nchecks=130034",
+          "run_log_sha256": "e82b25b311e487709734147af377715be371fad5c689fb42227c3bb61f4d1c22",
+          "run_log_tail": "WARNING: <ROOT>/rtl/test/a3_lq8_top.sv:154: $readmemh(lq8_m0.hex): Not enough words in the file for the requested range [0:262143].\nWARNING: <ROOT>/rtl/test/a3_lq8_top.sv:155: $readmemh(lq8_m2.hex): Not enough words in the file for the requested range [0:65535].\nWARNING: <ROOT>/rtl/test/a3_lq8_top.sv:156: $readmemh(lq8_w.hex): Not enough words in the file for the requested range [0:524287].\nWARNING: <ROOT>/rtl/test/a3_lq8_top.sv:157: $readmemh(lq8_ws.hex): Not enough words in the file for the requested range [0:65535].\nWARNING: <ROOT>/rtl/test/a3_lq8_top.sv:158: $readmemh(lq8_m1.hex): Not enough words in the file for the requested range [0:524287].\nWARNING: <ROOT>/rtl/test/a3_lq8_top.sv:159: $readmemh(lq8_m3.hex): Not enough words in the file for the requested range [0:65535].\nWARNING: <ROOT>/rtl/test/a3_lq8_top.sv:160: $readmemh(lq8_case.hex): Not enough words in the file for the requested range [0:16383].\nWARNING: <ROOT>/rtl/test/a3_lq8_top.sv:161: $readmemh(lq8_expect.hex): Not enough words in the file for the requested range [0:262143].\nRATE: case=93 lane_ops=393216 products=393216 total_cycles=49162 window_cycles=49152 first_retire=8 last_retire=49159 lanes=8\nRATE: case=94 lane_ops=196608 products=393216 total_cycles=24586 window_cycles=24576 first_retire=8 last_retire=24583 lanes=8\nRATE: case=95 lane_ops=98304 products=393216 total_cycles=12298 window_cycles=12288 first_retire=8 last_retire=12295 lanes=8\nPASS: ABI3 lq8 cases=96 lane_ops=2498829 products=3131413 outputs=19412 faults=18 reference_cases=94 reference_outputs=19412 identity=19412 lanes=8 adder_stages=1\nchecks=130066",
           "run_returncode": 0,
           "status": "pass"
         },
         {
-          "checks": 130034,
+          "checks": 130066,
           "compile_command": "<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator --cc --exe --build -Wall -Wno-fatal -Wno-DECLFILENAME --top-module ot_a3_lq8_top -GADDER_STAGES=1 -GLANES=8 --Mdir obj_lq8 <ROOT>/rtl/ot_fp32_rne_pkg.sv <ROOT>/rtl/abi3/ot_a3_format_pkg.sv <ROOT>/rtl/abi3/ot_a3_engine_pkg.sv <ROOT>/rtl/abi3/ot_a3_lane_pkg.sv <ROOT>/rtl/abi3/ot_a3_lane_pipelined.sv <ROOT>/rtl/abi3/ot_a3_lq8.sv <ROOT>/rtl/test/a3_lq8_top.sv <ROOT>/rtl/test/a3_lq8_harness.cpp -CFLAGS '-std=c++17 -O2' -j 8",
-          "compile_log_sha256": "7bd0907d3c84e63ff05023078938017f8d40de83f4c15c2c9056f9861c649339",
-          "compile_log_tail": "                                                                                      : ... note: In instance 'ot_a3_lq8_top.u_dut.gen_lane[7].u_lane'\n  499 |     wire        g_valid = token_valid(tok_g);\n      |                 ^~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_lane_pipelined.sv:553:17: Bits of signal are not used: 'narrowed'[18:17]\n                                                                                      : ... note: In instance 'ot_a3_lq8_top.u_dut.gen_lane[7].u_lane'\n  553 |     wire [18:0] narrowed = ot_fp32_rne_pkg::fp32_to_bf16_rne(wb_code);\n      |                 ^~~~~~~~\nmake: Entering directory '<BUILD>/obj_lq8'\ng++  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -Os  -c -o a3_lq8_harness.o <ROOT>/rtl/test/a3_lq8_harness.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -c -o verilated.o <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -c -o verilated_threads.o <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -x c++-header Vot_a3_lq8_top__pch.h -o Vot_a3_lq8_top__pch.h.fast.gch\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -x c++-header Vot_a3_lq8_top__pch.h -o Vot_a3_lq8_top__pch.h.slow.gch\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top__ConstPool__0__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top___024root__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top___024root__0__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A1__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A1__0__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A1__1__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A1__2__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A1__3__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A1__4__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top__Syms__Slow.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top___024root__0.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A1__0.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A1__1.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A1__2.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A1__3.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A1__4.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A1__5.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A1__6.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A1__7.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A1__8.cpp\ng++    a3_lq8_harness.o verilated.o verilated_threads.o Vot_a3_lq8_top__ALL.a    -pthread -lpthread -latomic   -o Vot_a3_lq8_top\nrm Vot_a3_lq8_top__ALL.verilator_deplist.tmp\nmake: Leaving directory '<BUILD>/obj_lq8'\n- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.572 MB sources in 8 modules, into 7.574 MB in 21 C++ files needing 0.024 MB\n- Verilator: Walltime 5.287 s (elab=0.014, cvt=1.133, bld=4.006); cpu 1.393 s on 8 threads; allocated 129.215 MB",
+          "compile_log_sha256": "b96f5053cb02667f94ab1842040e1518baf85a8bff530e9a2191a49a05034a00",
+          "compile_log_tail": "                                                                                      : ... note: In instance 'ot_a3_lq8_top.u_dut.gen_lane[7].u_lane'\n  499 |     wire        g_valid = token_valid(tok_g);\n      |                 ^~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_lane_pipelined.sv:553:17: Bits of signal are not used: 'narrowed'[18:17]\n                                                                                      : ... note: In instance 'ot_a3_lq8_top.u_dut.gen_lane[7].u_lane'\n  553 |     wire [18:0] narrowed = ot_fp32_rne_pkg::fp32_to_bf16_rne(wb_code);\n      |                 ^~~~~~~~\nmake: Entering directory '<BUILD>/obj_lq8'\ng++  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -Os  -c -o a3_lq8_harness.o <ROOT>/rtl/test/a3_lq8_harness.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -c -o verilated.o <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -c -o verilated_threads.o <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -x c++-header Vot_a3_lq8_top__pch.h -o Vot_a3_lq8_top__pch.h.fast.gch\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -x c++-header Vot_a3_lq8_top__pch.h -o Vot_a3_lq8_top__pch.h.slow.gch\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top__ConstPool__0__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top___024root__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top___024root__0__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A1__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A1__0__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A1__1__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A1__2__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A1__3__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A1__4__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.slow -c Vot_a3_lq8_top__Syms__Slow.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top___024root__0.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A1__0.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A1__1.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A1__2.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A1__3.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A1__4.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A1__5.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A1__6.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A1__7.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -include Vot_a3_lq8_top__pch.h.fast -c Vot_a3_lq8_top_ot_a3_lane_pipelined__A1__8.cpp\ng++    a3_lq8_harness.o verilated.o verilated_threads.o Vot_a3_lq8_top__ALL.a    -pthread -lpthread -latomic   -o Vot_a3_lq8_top\nrm Vot_a3_lq8_top__ALL.verilator_deplist.tmp\nmake: Leaving directory '<BUILD>/obj_lq8'\n- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.573 MB sources in 8 modules, into 7.577 MB in 21 C++ files needing 0.024 MB\n- Verilator: Walltime 4.763 s (elab=0.013, cvt=0.921, bld=3.710); cpu 1.157 s on 8 threads; allocated 130.215 MB",
           "compile_returncode": 0,
           "first_failure": null,
-          "log_sha256": "d51514c96e426859e7a0be9b14f8616809c8550533ef85dd8387ff8d1468bde1",
+          "log_sha256": "6c43d0a606ceec5087c2a6bba86d1d7e13fdbe7b37bb477bcfd1fe5965574b92",
           "marker": {
             "adder_stages": 1,
             "cases": 96,
@@ -22876,8 +22876,8 @@
           ],
           "required_marker_prefix": "PASS: ABI3 lq8 cases=96 lane_ops=2498829 products=3131413 outputs=19412 faults=18 reference_cases=94 reference_outputs=19412",
           "run_command": "./obj_lq8/Vot_a3_lq8_top",
-          "run_log_sha256": "cebaab64e384054bfc0a052ba9289c3692e39a9ad3abd0e50bbd597d3df1b0b2",
-          "run_log_tail": "RATE: case=93 lane_ops=393216 products=393216 total_cycles=49162 window_cycles=49152 first_retire=8 last_retire=49159 lanes=8\nRATE: case=94 lane_ops=196608 products=393216 total_cycles=24586 window_cycles=24576 first_retire=8 last_retire=24583 lanes=8\nRATE: case=95 lane_ops=98304 products=393216 total_cycles=12298 window_cycles=12288 first_retire=8 last_retire=12295 lanes=8\nPASS: ABI3 lq8 cases=96 lane_ops=2498829 products=3131413 outputs=19412 faults=18 reference_cases=94 reference_outputs=19412 identity=19412 lanes=8 adder_stages=1\nchecks=130034",
+          "run_log_sha256": "c4a20ebab5803a181a1d21989efde4c045c8bd3aafd8999f52ef4d298c9a079b",
+          "run_log_tail": "RATE: case=93 lane_ops=393216 products=393216 total_cycles=49162 window_cycles=49152 first_retire=8 last_retire=49159 lanes=8\nRATE: case=94 lane_ops=196608 products=393216 total_cycles=24586 window_cycles=24576 first_retire=8 last_retire=24583 lanes=8\nRATE: case=95 lane_ops=98304 products=393216 total_cycles=12298 window_cycles=12288 first_retire=8 last_retire=12295 lanes=8\nPASS: ABI3 lq8 cases=96 lane_ops=2498829 products=3131413 outputs=19412 faults=18 reference_cases=94 reference_outputs=19412 identity=19412 lanes=8 adder_stages=1\nchecks=130066",
           "run_returncode": 0,
           "status": "pass"
         }
@@ -31920,224 +31920,6 @@
             "stream_words": 0
           },
           {
-            "block_refused": true,
-            "block_rows_b": 0,
-            "cols": 12,
-            "cols_per_lane": 1,
-            "depth": 8,
-            "dtype_a": 16,
-            "dtype_b": 16,
-            "expected": {
-              "block": {
-                "error_code": 7,
-                "error_detail": 16,
-                "error_lane": 0,
-                "lane_ops": 0,
-                "out_count": 0,
-                "products": 0,
-                "saturations": 0,
-                "written": 0
-              },
-              "lanes": [
-                {
-                  "error_code": 0,
-                  "error_detail": 0,
-                  "lane_ops": 0,
-                  "out_count": 0,
-                  "products": 0,
-                  "saturations": 0,
-                  "written": 0
-                },
-                {
-                  "error_code": 0,
-                  "error_detail": 0,
-                  "lane_ops": 0,
-                  "out_count": 0,
-                  "products": 0,
-                  "saturations": 0,
-                  "written": 0
-                },
-                {
-                  "error_code": 0,
-                  "error_detail": 0,
-                  "lane_ops": 0,
-                  "out_count": 0,
-                  "products": 0,
-                  "saturations": 0,
-                  "written": 0
-                },
-                {
-                  "error_code": 0,
-                  "error_detail": 0,
-                  "lane_ops": 0,
-                  "out_count": 0,
-                  "products": 0,
-                  "saturations": 0,
-                  "written": 0
-                },
-                {
-                  "error_code": 0,
-                  "error_detail": 0,
-                  "lane_ops": 0,
-                  "out_count": 0,
-                  "products": 0,
-                  "saturations": 0,
-                  "written": 0
-                },
-                {
-                  "error_code": 0,
-                  "error_detail": 0,
-                  "lane_ops": 0,
-                  "out_count": 0,
-                  "products": 0,
-                  "saturations": 0,
-                  "written": 0
-                },
-                {
-                  "error_code": 0,
-                  "error_detail": 0,
-                  "lane_ops": 0,
-                  "out_count": 0,
-                  "products": 0,
-                  "saturations": 0,
-                  "written": 0
-                },
-                {
-                  "error_code": 0,
-                  "error_detail": 0,
-                  "lane_ops": 0,
-                  "out_count": 0,
-                  "products": 0,
-                  "saturations": 0,
-                  "written": 0
-                }
-              ]
-            },
-            "extras": {},
-            "group": 1,
-            "id": 82,
-            "mode_name": "block_columns",
-            "name": "fault_block_columns",
-            "note": "12 columns on 8 lanes: refused by the block before any lane starts",
-            "out_fp32": false,
-            "products": 192,
-            "rate": false,
-            "rows": 2,
-            "run_reference": false,
-            "scaled_a": false,
-            "scaled_b": false,
-            "stream_words": 0
-          },
-          {
-            "block_refused": true,
-            "block_rows_b": 0,
-            "cols": 16,
-            "cols_per_lane": 2,
-            "depth": 8,
-            "dtype_a": 48,
-            "dtype_b": 32,
-            "expected": {
-              "block": {
-                "error_code": 7,
-                "error_detail": 17,
-                "error_lane": 0,
-                "lane_ops": 0,
-                "out_count": 0,
-                "products": 0,
-                "saturations": 0,
-                "written": 0
-              },
-              "lanes": [
-                {
-                  "error_code": 0,
-                  "error_detail": 0,
-                  "lane_ops": 0,
-                  "out_count": 0,
-                  "products": 0,
-                  "saturations": 0,
-                  "written": 0
-                },
-                {
-                  "error_code": 0,
-                  "error_detail": 0,
-                  "lane_ops": 0,
-                  "out_count": 0,
-                  "products": 0,
-                  "saturations": 0,
-                  "written": 0
-                },
-                {
-                  "error_code": 0,
-                  "error_detail": 0,
-                  "lane_ops": 0,
-                  "out_count": 0,
-                  "products": 0,
-                  "saturations": 0,
-                  "written": 0
-                },
-                {
-                  "error_code": 0,
-                  "error_detail": 0,
-                  "lane_ops": 0,
-                  "out_count": 0,
-                  "products": 0,
-                  "saturations": 0,
-                  "written": 0
-                },
-                {
-                  "error_code": 0,
-                  "error_detail": 0,
-                  "lane_ops": 0,
-                  "out_count": 0,
-                  "products": 0,
-                  "saturations": 0,
-                  "written": 0
-                },
-                {
-                  "error_code": 0,
-                  "error_detail": 0,
-                  "lane_ops": 0,
-                  "out_count": 0,
-                  "products": 0,
-                  "saturations": 0,
-                  "written": 0
-                },
-                {
-                  "error_code": 0,
-                  "error_detail": 0,
-                  "lane_ops": 0,
-                  "out_count": 0,
-                  "products": 0,
-                  "saturations": 0,
-                  "written": 0
-                },
-                {
-                  "error_code": 0,
-                  "error_detail": 0,
-                  "lane_ops": 0,
-                  "out_count": 0,
-                  "products": 0,
-                  "saturations": 0,
-                  "written": 0
-                }
-              ]
-            },
-            "extras": {},
-            "group": 4,
-            "id": 83,
-            "mode_name": "block_stream_width",
-            "name": "fault_block_stream_width",
-            "note": "E2M1 activations against FP8 weights at g = 4: four weight codes do not fit 2 B per lane",
-            "out_fp32": false,
-            "products": 256,
-            "rate": false,
-            "rows": 2,
-            "run_reference": false,
-            "scaled_a": false,
-            "scaled_b": false,
-            "stream_words": 0
-          },
-          {
             "block_refused": false,
             "block_rows_b": 0,
             "cols": 56,
@@ -32233,7 +32015,7 @@
             },
             "extras": {},
             "group": 1,
-            "id": 84,
+            "id": 82,
             "mode_name": null,
             "name": "fault_late_operand",
             "note": "an infinity at row 1, k 4 of the shared activation: row 0 is written",
@@ -32342,7 +32124,7 @@
             },
             "extras": {},
             "group": 1,
-            "id": 85,
+            "id": 83,
             "mode_name": null,
             "name": "fault_late_column",
             "note": "an infinity in block column 42 (lane 2, local 5), k 2",
@@ -32451,7 +32233,7 @@
             },
             "extras": {},
             "group": 1,
-            "id": 86,
+            "id": 84,
             "mode_name": null,
             "name": "fault_late_accumulate",
             "note": "an accumulation overflow at row 1, block column 25 (lane 1, local 3)",
@@ -32560,7 +32342,7 @@
             },
             "extras": {},
             "group": 1,
-            "id": 87,
+            "id": 85,
             "mode_name": null,
             "name": "fault_two_lanes_two_modes",
             "note": "lane 6 leaves binary32 at its first product, lane 2 meets a NaN later: the block reports lane 2 (the lowest index) and every lane keeps its own class and detail",
@@ -32669,7 +32451,7 @@
             },
             "extras": {},
             "group": 2,
-            "id": 88,
+            "id": 86,
             "mode_name": null,
             "name": "g2_fault_late",
             "note": "a reserved code in block column 38 (lane 6, local 4), group 4",
@@ -32681,6 +32463,224 @@
             "scaled_a": false,
             "scaled_b": false,
             "stream_words": 84
+          },
+          {
+            "block_refused": true,
+            "block_rows_b": 0,
+            "cols": 12,
+            "cols_per_lane": 1,
+            "depth": 8,
+            "dtype_a": 16,
+            "dtype_b": 16,
+            "expected": {
+              "block": {
+                "error_code": 7,
+                "error_detail": 16,
+                "error_lane": 0,
+                "lane_ops": 0,
+                "out_count": 0,
+                "products": 0,
+                "saturations": 0,
+                "written": 0
+              },
+              "lanes": [
+                {
+                  "error_code": 0,
+                  "error_detail": 0,
+                  "lane_ops": 0,
+                  "out_count": 0,
+                  "products": 0,
+                  "saturations": 0,
+                  "written": 0
+                },
+                {
+                  "error_code": 0,
+                  "error_detail": 0,
+                  "lane_ops": 0,
+                  "out_count": 0,
+                  "products": 0,
+                  "saturations": 0,
+                  "written": 0
+                },
+                {
+                  "error_code": 0,
+                  "error_detail": 0,
+                  "lane_ops": 0,
+                  "out_count": 0,
+                  "products": 0,
+                  "saturations": 0,
+                  "written": 0
+                },
+                {
+                  "error_code": 0,
+                  "error_detail": 0,
+                  "lane_ops": 0,
+                  "out_count": 0,
+                  "products": 0,
+                  "saturations": 0,
+                  "written": 0
+                },
+                {
+                  "error_code": 0,
+                  "error_detail": 0,
+                  "lane_ops": 0,
+                  "out_count": 0,
+                  "products": 0,
+                  "saturations": 0,
+                  "written": 0
+                },
+                {
+                  "error_code": 0,
+                  "error_detail": 0,
+                  "lane_ops": 0,
+                  "out_count": 0,
+                  "products": 0,
+                  "saturations": 0,
+                  "written": 0
+                },
+                {
+                  "error_code": 0,
+                  "error_detail": 0,
+                  "lane_ops": 0,
+                  "out_count": 0,
+                  "products": 0,
+                  "saturations": 0,
+                  "written": 0
+                },
+                {
+                  "error_code": 0,
+                  "error_detail": 0,
+                  "lane_ops": 0,
+                  "out_count": 0,
+                  "products": 0,
+                  "saturations": 0,
+                  "written": 0
+                }
+              ]
+            },
+            "extras": {},
+            "group": 1,
+            "id": 87,
+            "mode_name": "block_columns",
+            "name": "fault_block_columns",
+            "note": "12 columns on 8 lanes: refused by the block before any lane starts",
+            "out_fp32": false,
+            "products": 192,
+            "rate": false,
+            "rows": 2,
+            "run_reference": false,
+            "scaled_a": false,
+            "scaled_b": false,
+            "stream_words": 0
+          },
+          {
+            "block_refused": true,
+            "block_rows_b": 0,
+            "cols": 16,
+            "cols_per_lane": 2,
+            "depth": 8,
+            "dtype_a": 48,
+            "dtype_b": 32,
+            "expected": {
+              "block": {
+                "error_code": 7,
+                "error_detail": 17,
+                "error_lane": 0,
+                "lane_ops": 0,
+                "out_count": 0,
+                "products": 0,
+                "saturations": 0,
+                "written": 0
+              },
+              "lanes": [
+                {
+                  "error_code": 0,
+                  "error_detail": 0,
+                  "lane_ops": 0,
+                  "out_count": 0,
+                  "products": 0,
+                  "saturations": 0,
+                  "written": 0
+                },
+                {
+                  "error_code": 0,
+                  "error_detail": 0,
+                  "lane_ops": 0,
+                  "out_count": 0,
+                  "products": 0,
+                  "saturations": 0,
+                  "written": 0
+                },
+                {
+                  "error_code": 0,
+                  "error_detail": 0,
+                  "lane_ops": 0,
+                  "out_count": 0,
+                  "products": 0,
+                  "saturations": 0,
+                  "written": 0
+                },
+                {
+                  "error_code": 0,
+                  "error_detail": 0,
+                  "lane_ops": 0,
+                  "out_count": 0,
+                  "products": 0,
+                  "saturations": 0,
+                  "written": 0
+                },
+                {
+                  "error_code": 0,
+                  "error_detail": 0,
+                  "lane_ops": 0,
+                  "out_count": 0,
+                  "products": 0,
+                  "saturations": 0,
+                  "written": 0
+                },
+                {
+                  "error_code": 0,
+                  "error_detail": 0,
+                  "lane_ops": 0,
+                  "out_count": 0,
+                  "products": 0,
+                  "saturations": 0,
+                  "written": 0
+                },
+                {
+                  "error_code": 0,
+                  "error_detail": 0,
+                  "lane_ops": 0,
+                  "out_count": 0,
+                  "products": 0,
+                  "saturations": 0,
+                  "written": 0
+                },
+                {
+                  "error_code": 0,
+                  "error_detail": 0,
+                  "lane_ops": 0,
+                  "out_count": 0,
+                  "products": 0,
+                  "saturations": 0,
+                  "written": 0
+                }
+              ]
+            },
+            "extras": {},
+            "group": 4,
+            "id": 88,
+            "mode_name": "block_stream_width",
+            "name": "fault_block_stream_width",
+            "note": "E2M1 activations against FP8 weights at g = 4: four weight codes do not fit 2 B per lane",
+            "out_fp32": false,
+            "products": 256,
+            "rate": false,
+            "rows": 2,
+            "run_reference": false,
+            "scaled_a": false,
+            "scaled_b": false,
+            "stream_words": 0
           },
           {
             "block_refused": false,
@@ -33503,7 +33503,7 @@
             "name": "fault_accumulate_range"
           },
           "block_columns": {
-            "case": 82,
+            "case": 87,
             "detail_name": "block_columns_not_multiple_of_lanes",
             "error_code": 7,
             "error_detail": 16,
@@ -33545,7 +33545,7 @@
             "name": "fault_block_columns"
           },
           "block_stream_width": {
-            "case": 83,
+            "case": 88,
             "detail_name": "block_stream_width",
             "error_code": 7,
             "error_detail": 17,
@@ -34019,17 +34019,17 @@
           "ws_words": 152
         },
         "image_sha256": {
-          "lq8_case.hex": "757829e0a809257403eb0eb2e83934f43c28d601035b0b0408cb8857eaae217c",
-          "lq8_expect.hex": "ffdd0cf65a9ddc1f9524ff07318c843e9d05fc0886f8cecc498c26699d67c94c",
-          "lq8_m0.hex": "46cdc6a9078f2efeafba5462394bd78892dd6cfffa5e32be1410bf6cd1a51b65",
-          "lq8_m1.hex": "8896408eecea5a4fd831d6b13192bbf7ea6f8d89cb86cd111e3109cd26c96f4a",
+          "lq8_case.hex": "8e2872cb81d5253cf4da2f4e62b32ea545a683e8e2ed6add70f876381891e2cd",
+          "lq8_expect.hex": "c74240b3a7d16ec9ba32359a91755bc6667fd69da8e9047b8bf642853b9a9c76",
+          "lq8_m0.hex": "37c7a679f11b0f4f66a3520bc1dda6f7afa5e855b564f62e6f0094664a3eeb79",
+          "lq8_m1.hex": "cc74581a29837abf0578c1b95ec35b458cf24ccb3dada0a16caf8ab5d2d1cc9a",
           "lq8_m2.hex": "2250da76171ada4fbbb8ece923f49f16cae0bd9eed27df21351c6d5540e94e41",
           "lq8_m3.hex": "68b7fe6dbed39e8760e149d6fe15b1dbbd1782f8787131ddf3e65057c4ea1aa2",
           "lq8_meta.hex": "30a9ff0b8d545940273ddc8e72e8b866252ccdf85d89ed5ee3c00f97d773795a",
-          "lq8_w.hex": "fd7ab79005230445215cc83357b73dfe204b5ece17027546e0b7e66a89b5fc8c",
+          "lq8_w.hex": "f474b8962a6a688ae7bd6c3bc128db7d88f589f07e5da210e923522b11363bb1",
           "lq8_ws.hex": "cfaefd0343f9882faadcb6ac4118857918817de7dcd4cc7c37e25a821c212d87"
         },
-        "manifest_sha256": "47aff030a1268c7546caeb15b988808935a67ade69df510da6111f81601f99a2",
+        "manifest_sha256": "6b2fa1f956943c9a48adb6cdcd88c4945e3d09a125e9c060912281e2de45056b",
         "rate_cases": [
           {
             "case": 93,
@@ -34097,9 +34097,9 @@
     "note": "hierarchy + proc under the synthesis front end; this records that the block elaborates and instantiates LANES lanes, not a cell count or a physical result",
     "returncode": 0,
     "script": "read_verilog -sv <ROOT>/rtl/ot_fp32_rne_pkg.sv\nread_verilog -sv <ROOT>/rtl/abi3/ot_a3_format_pkg.sv\nread_verilog -sv <ROOT>/rtl/abi3/ot_a3_engine_pkg.sv\nread_verilog -sv <ROOT>/rtl/abi3/ot_a3_lane_pkg.sv\nread_verilog -sv <ROOT>/rtl/abi3/ot_a3_lane_pipelined.sv\nread_verilog -sv <ROOT>/rtl/abi3/ot_a3_lq8.sv\nhierarchy -check -top ot_a3_lq8 -chparam LANES 8\nproc\ntee -o lq8_stat.txt stat -top ot_a3_lq8\n",
-    "stat_tail": "  1323278 wire bits\n     7207 public wires\n   145445 public wire bits\n      419 ports\n     8752 port bits\n        8 memories\n     1024 memory bits\n        - processes\n    58249 cells\n      690   $add\n      945   $adff\n      289   $dff\n       48   $div\n     3282   $eq\n       48   $ge\n      240   $gt\n       11   $le\n      634   $logic_and\n     1420   $logic_not\n      264   $logic_or\n     1624   $lt\n        8   $meminit\n        8   $memrd_v2\n       32   $mod\n      136   $mul\n    43523   $mux\n      104   $ne\n     1036   $not\n     1441   $or\n      553   $pmux\n        1   $reduce_and\n      224   $reduce_bool\n       96   $reduce_or\n       72   $shiftx\n       64   $shl\n      152   $shr\n     1264   $sub\n       40   $xor\n        8 submodules\n        8   $paramod$962770d728eefbd7acad29315d61c8e875aec268\\ot_a3_lane_pipelined",
+    "stat_tail": "  1323807 wire bits\n     7210 public wires\n   145574 public wire bits\n      419 ports\n     8752 port bits\n        8 memories\n     1024 memory bits\n        - processes\n    58263 cells\n      690   $add\n      946   $adff\n      289   $dff\n       48   $div\n     3282   $eq\n       48   $ge\n      240   $gt\n       11   $le\n      634   $logic_and\n     1421   $logic_not\n      264   $logic_or\n     1624   $lt\n        8   $meminit\n        8   $memrd_v2\n       32   $mod\n      136   $mul\n    43533   $mux\n      104   $ne\n     1038   $not\n     1441   $or\n      553   $pmux\n        1   $reduce_and\n      224   $reduce_bool\n       96   $reduce_or\n       72   $shiftx\n       64   $shl\n      152   $shr\n     1264   $sub\n       40   $xor\n        8 submodules\n        8   $paramod$962770d728eefbd7acad29315d61c8e875aec268\\ot_a3_lane_pipelined",
     "tool": "yosys",
-    "top_local_generic_cells_after_proc": 193
+    "top_local_generic_cells_after_proc": 207
   },
   "evidence_class": "public_open_tool_rtl_simulation",
   "failure_modes": {
@@ -34153,7 +34153,7 @@
         ]
       },
       "block_columns": {
-        "case": 82,
+        "case": 87,
         "case_name": "fault_block_columns",
         "detail_name": "block_columns_not_multiple_of_lanes",
         "error_code": 7,
@@ -34199,7 +34199,7 @@
         ]
       },
       "block_stream_width": {
-        "case": 83,
+        "case": 88,
         "case_name": "fault_block_stream_width",
         "detail_name": "block_stream_width",
         "error_code": 7,
@@ -34723,7 +34723,7 @@
     ]
   },
   "git": {
-    "commit": "f58eb1e185f5ae3743bc55227f4a5fc049d2e9dc",
+    "commit": "a1602fcaba4d0ddd8ee0d900030b7ebcfc0e4c8e",
     "dirty": false,
     "dirty_paths": []
   },
@@ -35060,19 +35060,19 @@
     "verilator_cpp_executable"
   ],
   "source_sha256": {
-    "<BUILD>/testdata/rtl/abi3_lq8/manifest_full_L1.json": "47aff030a1268c7546caeb15b988808935a67ade69df510da6111f81601f99a2",
-    "<BUILD>/testdata/rtl/abi3_lq8/manifest_full_L2.json": "0b7ef66d404f2a2ba3bc12d2c010a7cd68afc6b07a22aa9eb9bfd57973f4127e",
-    "<BUILD>/testdata/rtl/abi3_lq8/manifest_full_L3.json": "e25a20b901361c69fa950b1f74288be252b3128bc87ae3016f0f20df497392f9",
+    "<BUILD>/testdata/rtl/abi3_lq8/manifest_full_L1.json": "6b2fa1f956943c9a48adb6cdcd88c4945e3d09a125e9c060912281e2de45056b",
+    "<BUILD>/testdata/rtl/abi3_lq8/manifest_full_L2.json": "b2eb74c15dcdfdef9583f00afd0da64f02a1fa1c11da53b22e7167c5dc566c26",
+    "<BUILD>/testdata/rtl/abi3_lq8/manifest_full_L3.json": "d653e69bc5aea9ce0e4a29f80b629a2c16ff6c84527cf506c14f7f2dfd2458d6",
     "docs/CHIP_ARCHITECTURE_DESIGN.md": "09184ed5fdedce9aa72cc2f345949d14d6f143a2416ed6622e21a18114e75a9b",
     "rtl/abi3/ot_a3_engine_pkg.sv": "1186eecdc80321e87e08c97fb8e1c9a1b078584d019353736d235bf5cc84d477",
     "rtl/abi3/ot_a3_format_pkg.sv": "dbea89ef9c450d1b9ffda1e578f1685b3e33d3b6f400e43c1784ec022de9e7f0",
     "rtl/abi3/ot_a3_lane_pipelined.sv": "f4c25880f7820004968660523e1ac5178d430afdf927da3ee49cb81ff2de0a09",
     "rtl/abi3/ot_a3_lane_pkg.sv": "44694da13878488ee43610615fb92d13db9dc0c07367cef7814e90ee2da3200f",
-    "rtl/abi3/ot_a3_lq8.sv": "17100411b5c999cec25df6dd634465e77db1400fdfe678ca98f1e93959e23d14",
+    "rtl/abi3/ot_a3_lq8.sv": "0886f89443f3f708d6cc6b751dbb453105a20a8e9e5df09983ac7cbfb6f19415",
     "rtl/ot_fp32_rne_pkg.sv": "39de679dd5f277d8a9cc2d5b6349eb1675e9397e64a8256bb1f53a34a054608c",
-    "rtl/test/a3_lq8_harness.cpp": "0901d2677409fda8e9264c25d258c524897b9ac2fdebe8d4844c49a182cf4f1e",
+    "rtl/test/a3_lq8_harness.cpp": "82aaaa54a45cb6bb688f7a1ad7c92745bd1f213e41bf1bc5ee59ef99fe2c30c2",
     "rtl/test/a3_lq8_top.sv": "e473a79c737d8927272498f1b7fc97c6c1afe1c9c938372ef2f8b77fa496338f",
-    "rtl/test/tb_a3_lq8.sv": "b0f4ee8aaca02cad7809d84bbbe63deafb04527bdb8a3cd93595bcae60ec387a",
+    "rtl/test/tb_a3_lq8.sv": "3ce4a259bd5c5704b89e38a3d4a9d93f4335af646ffa9fdd8bff8525401d4cc1",
     "runtime/abi3/constants.py": "b9a43d78ac4ce343cfd94704c186e641e71c53fb3709b092733b8d7d93d58ed7",
     "runtime/reference/formats.py": "74a3254c7a1dba9ad3bf07a5c793cb2ec1766f953b48ec4c782391f757290aa2",
     "runtime/sim/backend.py": "0841204d2d42212285707c3137b143f785d41b11c46a840508ad15181c147e26",
@@ -35080,7 +35080,7 @@
     "runtime/sim/formats.py": "f2c9d1e2a6c13eb1961e4d156a7a28fd0ee03e1bdb47018b8cb1d79c89448385",
     "tools/am_e1_lane_reference.py": "15c2066e58f338d083a4febf71915c63138a245366ed5447a124dbebd0e16c2d",
     "tools/build_abi3_lane_vectors.py": "26d77228b539a38d03561216637a60e1c76f7b3b480a7d9b534071128d0fac7b",
-    "tools/build_abi3_lq8_vectors.py": "51eb642c460a1f42742a83144b2338f21d94b7a9e63ed0a85416f7ef08cf8d83",
+    "tools/build_abi3_lq8_vectors.py": "5a6421efbcb4902e69e935c977beedeb70dd0bb58ecc5230cb1ea57980cd96a0",
     "tools/rtl_abi3_lq8_campaign.py": "6144429b01e651ac4f1fb4efb590d84bcadf4d8fd777324bb378f21030ab031c"
   },
   "status": "pass",
