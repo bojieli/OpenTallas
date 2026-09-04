@@ -18,6 +18,7 @@ bounded shapes and are exercised small.
 from __future__ import annotations
 
 import numpy as np
+import pytest
 
 from runtime.abi3.builder import DeploymentBuilder
 from runtime.abi3.capability import Capability
@@ -47,6 +48,11 @@ from runtime.reference.compression_state import (
     zero_compression_state_f32,
 )
 from runtime.reference.hc_head import hc_head_bf16
+from runtime.reference.formats import (
+    binary32_product_add,
+    decode_bf16,
+    decode_binary32,
+)
 from runtime.reference.hyper_connection import (
     HC_MULTIPLIER,
     HIDDEN_SIZE,
@@ -69,6 +75,12 @@ from runtime.sim.engines.deepseek_vector import (
     HC_HEAD,
     HC_POST,
     HC_PRE,
+    _numba,
+    _ordered_product_add,
+    _ordered_product_add_numba,
+    _ordered_product_add_numpy,
+    ordered_product_add_implementation_identity,
+    reset_ordered_product_add_observations,
 )
 
 # Importing the engine module registers its (family, subopcode) handlers.
@@ -262,6 +274,124 @@ def emit(
 # ---------------------------------------------------------------------------
 # VECTOR.COMPRESS -- COMPRESS_PROJECT
 # ---------------------------------------------------------------------------
+def test_accelerated_ordered_product_is_bit_exact_and_k_serial():
+    if _ordered_product_add_numba is None:
+        pytest.skip("the optional numba DeepSeek simulator extra is not installed")
+
+    rng = np.random.default_rng(0xA3)
+    # 2 * 4 * 64 * 2048 reaches the deterministic acceleration threshold.
+    # The leading dimensions also prove that only independent row/output
+    # coordinates are flattened; K retains its original increasing order.
+    rows = widen(bf16_uniform(rng, (2, 4, 2048), scale=4.0))
+    weights = widen(bf16_uniform(rng, (64, 2048), scale=4.0))
+    # Preserve the portable implementation's whole-column signed-zero skip.
+    rows[..., 7] = np.float32(-0.0)
+    rows[..., 101] = np.float32(0.0)
+
+    reset_ordered_product_add_observations()
+    expected = _ordered_product_add_numpy(rows, weights)
+    produced = _ordered_product_add(rows, weights)
+
+    assert produced.shape == (2, 4, 64)
+    assert np.array_equal(codes32(produced), codes32(expected))
+    identity = ordered_product_add_implementation_identity()
+    assert identity["numba_available"] is True
+    assert identity["accelerated_kernel"] == "numba_fastmath_false_k_serial_v1"
+    assert identity["executed"]["numba_calls"] == 1
+    assert identity["executed"]["numpy_calls"] == 0
+
+    previous_threads = _numba.get_num_threads()
+    try:
+        for threads in sorted({1, min(4, previous_threads)}):
+            _numba.set_num_threads(threads)
+            threaded = _ordered_product_add_numba(
+                rows.reshape(-1, rows.shape[-1]), weights
+            ).reshape(produced.shape)
+            assert np.array_equal(codes32(threaded), codes32(expected))
+    finally:
+        _numba.set_num_threads(previous_threads)
+
+
+def test_accelerated_ordered_product_matches_independent_scalar_fma():
+    if _ordered_product_add_numba is None:
+        pytest.skip("the optional numba DeepSeek simulator extra is not installed")
+
+    rng = np.random.default_rng(0xB3)
+    row_codes = bf16_uniform(rng, (3, 19), scale=2.0)
+    rows = widen(row_codes)
+    weights = rng.uniform(-2.0, 2.0, size=(5, 19)).astype(np.float32)
+    produced = codes32(_ordered_product_add_numba(rows, weights))
+
+    expected = np.empty((3, 5), dtype=np.uint32)
+    weight_codes = codes32(weights)
+    for row in range(3):
+        for output in range(5):
+            accumulator = 0
+            for index in range(19):
+                left = decode_bf16(int(row_codes[row, index])).value
+                right = decode_binary32(int(weight_codes[output, index])).value
+                assert left is not None and right is not None
+                accumulator = binary32_product_add(accumulator, left, right)
+            expected[row, output] = accumulator
+
+    assert np.array_equal(produced, expected)
+
+
+def test_accelerated_ordered_product_preserves_subnormal_and_signed_zero_edges():
+    if _ordered_product_add_numba is None:
+        pytest.skip("the optional numba DeepSeek simulator extra is not installed")
+
+    row_codes = np.asarray(
+        [
+            [
+                0x0001,
+                0x8001,
+                0x007F,
+                0x807F,
+                0x0080,
+                0x8080,
+                0x3F80,
+                0xBF80,
+                0x4000,
+                0xC000,
+                0x0000,
+                0x8000,
+            ]
+        ],
+        dtype=np.uint16,
+    )
+    weight_codes = np.asarray(
+        [
+            [
+                0x3F800000,
+                0xBF800000,
+                0x40000000,
+                0xC0000000,
+                0x00800000,
+                0x80800000,
+                0x00000001,
+                0x80000001,
+                0x3F000000,
+                0xBF000000,
+                0x00000000,
+                0x80000000,
+            ]
+        ],
+        dtype=np.uint32,
+    )
+    produced = codes32(
+        _ordered_product_add_numba(widen(row_codes), weight_codes.view(np.float32))
+    )[0, 0]
+    expected = 0
+    for left_code, right_code in zip(row_codes[0], weight_codes[0], strict=True):
+        left = decode_bf16(int(left_code)).value
+        right = decode_binary32(int(right_code)).value
+        assert left is not None and right is not None
+        expected = binary32_product_add(expected, left, right)
+
+    assert int(produced) == expected
+
+
 def build_compress_project(hidden, kv_weight, gate_weight, *, outputs=None):
     build = Build()
     batch, span, _ = hidden.shape

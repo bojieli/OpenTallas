@@ -117,9 +117,19 @@ being reinterpreted.
 
 from __future__ import annotations
 
-from typing import Callable
+from typing import Any, Callable
 
 import numpy as np
+
+try:  # Optional campaign acceleration; the NumPy oracle remains available.
+    import numba as _numba
+except Exception as _numba_import_exception:  # pragma: no cover - environment-specific
+    _numba = None
+    _NUMBA_IMPORT_ERROR = (
+        f"{type(_numba_import_exception).__name__}: {_numba_import_exception}"
+    )
+else:
+    _NUMBA_IMPORT_ERROR = ""
 
 from runtime.abi3.constants import (
     NO_ID,
@@ -172,6 +182,66 @@ _MHC_NAMES = {
     HC_POST: "HYPER_CONNECT_POST",
     HC_HEAD: "HYPER_CONNECT_HEAD",
 }
+
+# A small ordered product is faster in NumPy because it avoids JIT dispatch and
+# the parallel scheduler.  The threshold is expressed in scalar product-adds,
+# so it is deterministic from the admitted tensor extents rather than from a
+# host timing observation.  Full DeepSeek compressor projections exceed it by
+# several orders of magnitude.
+_ORDERED_PRODUCT_NUMBA_MIN_WORK = 1 << 20
+_ORDERED_PRODUCT_OBSERVATIONS = {
+    "numba_calls": 0,
+    "numba_scalar_product_adds": 0,
+    "numpy_calls": 0,
+    "numpy_scalar_product_adds": 0,
+}
+
+
+if _numba is not None:
+
+    @_numba.njit(cache=True, parallel=True, fastmath=False, nogil=True)
+    def _ordered_product_add_numba(
+        rows: np.ndarray, weights: np.ndarray
+    ) -> np.ndarray:
+        """K-serial product-adds, parallel only across independent outputs.
+
+        The reduction index of one result is never parallelised or reassociated.
+        Binary64 carries each exact BF16-by-binary32 product and the binary32
+        accumulator; the explicit binary32 cast after every index is the
+        architectural fused product-add boundary used by the scalar oracle.
+        """
+
+        row_count = rows.shape[0]
+        width = rows.shape[1]
+        outputs = weights.shape[0]
+
+        # Match the portable implementation's whole-column zero skip exactly,
+        # including signed zero.  Computing this mask here avoids materialising
+        # ``rows != 0`` for a 200,000-token projection.
+        active = np.zeros(width, dtype=np.uint8)
+        for index in _numba.prange(width):
+            for row in range(row_count):
+                if rows[row, index] != np.float32(0.0):
+                    active[index] = np.uint8(1)
+                    break
+
+        result = np.empty((row_count, outputs), dtype=np.float32)
+        for task in _numba.prange(row_count * outputs):
+            row = task // outputs
+            output = task - row * outputs
+            accumulator = np.float32(0.0)
+            for index in range(width):
+                if active[index] != 0:
+                    accumulator = np.float32(
+                        np.float64(accumulator)
+                        + np.float64(rows[row, index])
+                        * np.float64(weights[output, index])
+                    )
+            result[row, output] = accumulator
+        return result
+
+else:
+    _ordered_product_add_numba = None
 
 
 # ---------------------------------------------------------------------------
@@ -311,14 +381,15 @@ def _balanced_sum(values: np.ndarray) -> np.ndarray:
     return np.ascontiguousarray(level[..., 0], dtype=np.float32)
 
 
-def _ordered_product_add(rows: np.ndarray, weights: np.ndarray) -> np.ndarray:
+def _ordered_product_add_numpy(rows: np.ndarray, weights: np.ndarray) -> np.ndarray:
     """``sum_k`` of fused binary32 product-adds in increasing reduction index.
 
-    ``rows`` is ``[..., K]`` and ``weights`` is ``[N, K]``, both carrying exact
-    BF16 widenings; the result is ``[..., N]``.  Each step is one correctly
-    rounded ``acc + x * w`` -- see the module docstring for why binary64
-    delivers it.  Accepting arbitrary leading dimensions lets INDEX_SCORE use
-    this same governed primitive without flattening its site/head axes.
+    ``rows`` is ``[..., K]`` and ``weights`` is ``[N, K]``.  Rows carry exact
+    BF16 widenings; weights carry either BF16 widenings or binary32 parameters.
+    The result is ``[..., N]``.  Each step is one correctly rounded
+    ``acc + x * w`` -- see the module docstring for why binary64 delivers it.
+    Accepting arbitrary leading dimensions lets INDEX_SCORE use this same
+    governed primitive without flattening its site/head axes.
     """
     width = rows.shape[-1]
     outputs = weights.shape[0]
@@ -337,6 +408,71 @@ def _ordered_product_add(rows: np.ndarray, weights: np.ndarray) -> np.ndarray:
             dtype=np.float64,
         ).astype(np.float32).astype(np.float64)
     return np.ascontiguousarray(accumulator, dtype=np.float32)
+
+
+def _ordered_product_add(rows: np.ndarray, weights: np.ndarray) -> np.ndarray:
+    """Dispatch one exact ordered projection to the bounded fastest substrate.
+
+    Numba is an execution accelerator, not a different numeric contract.  It
+    parallelises only independent ``(row, output)`` coordinates; every result
+    still visits K in strictly increasing order and rounds to binary32 after
+    each product-add.  Unsupported dtypes, small problems, or an installation
+    without Numba take the original NumPy path.
+    """
+
+    work = int(np.prod(rows.shape[:-1], dtype=np.int64))
+    work *= int(weights.shape[0]) * int(rows.shape[-1])
+    if (
+        _ordered_product_add_numba is not None
+        and rows.dtype == np.float32
+        and weights.dtype == np.float32
+        and rows.ndim >= 2
+        and weights.ndim == 2
+        and rows.shape[-1] == weights.shape[-1]
+        and work >= _ORDERED_PRODUCT_NUMBA_MIN_WORK
+    ):
+        _ORDERED_PRODUCT_OBSERVATIONS["numba_calls"] += 1
+        _ORDERED_PRODUCT_OBSERVATIONS["numba_scalar_product_adds"] += work
+        leading = tuple(int(value) for value in rows.shape[:-1])
+        flat_rows = np.ascontiguousarray(rows).reshape(-1, rows.shape[-1])
+        flat_weights = np.ascontiguousarray(weights)
+        result = _ordered_product_add_numba(flat_rows, flat_weights)
+        return np.ascontiguousarray(
+            result.reshape((*leading, weights.shape[0])), dtype=np.float32
+        )
+    _ORDERED_PRODUCT_OBSERVATIONS["numpy_calls"] += 1
+    _ORDERED_PRODUCT_OBSERVATIONS["numpy_scalar_product_adds"] += work
+    return _ordered_product_add_numpy(rows, weights)
+
+
+def reset_ordered_product_add_observations() -> None:
+    """Start one source-bound execution observation interval."""
+
+    for name in _ORDERED_PRODUCT_OBSERVATIONS:
+        _ORDERED_PRODUCT_OBSERVATIONS[name] = 0
+
+
+def ordered_product_add_implementation_identity() -> dict[str, Any]:
+    """Reproducible host identity for the exact compressor/index primitive."""
+
+    body: dict[str, Any] = {
+        "policy": "numpy_or_numba_k_serial_row_output_parallel_v1",
+        "numba_available": _numba is not None,
+        "numba_import_error": _NUMBA_IMPORT_ERROR,
+        "numba_min_scalar_product_adds": _ORDERED_PRODUCT_NUMBA_MIN_WORK,
+        "portable_fallback": "numpy_binary64_product_add_binary32_each_k_v1",
+        "executed": dict(_ORDERED_PRODUCT_OBSERVATIONS),
+    }
+    if _numba is None:
+        return body
+    body["numba_version"] = str(_numba.__version__)
+    body["numba_threads"] = int(_numba.get_num_threads())
+    try:
+        body["numba_threading_layer"] = str(_numba.threading_layer())
+    except ValueError:
+        body["numba_threading_layer"] = "not_initialized"
+    body["accelerated_kernel"] = "numba_fastmath_false_k_serial_v1"
+    return body
 
 
 def _scaled_bf16(codes: np.ndarray, scale_bits: int) -> tuple[np.ndarray, int]:

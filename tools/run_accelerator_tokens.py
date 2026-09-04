@@ -690,6 +690,11 @@ def main() -> int:
 
     numeric_backend = get_backend()
     numeric_backend.reset_executed_associations()
+    from runtime.sim.engines.deepseek_vector import (
+        reset_ordered_product_add_observations,
+    )
+
+    reset_ordered_product_add_observations()
     device = Device(
         deployment,
         capability,
@@ -862,10 +867,24 @@ def main() -> int:
 def _implementation_identity() -> dict[str, Any]:
     try:
         from runtime.sim.backend import get_backend
-
-        return dict(get_backend().implementation_identity())
+        identity = dict(get_backend().implementation_identity())
     except Exception as exc:  # a missing backend must be visible, not silent
         return {"unavailable": f"{type(exc).__name__}: {exc}"}
+    try:
+        from runtime.sim.engines.deepseek_vector import (
+            ordered_product_add_implementation_identity,
+        )
+
+        identity["deepseek_ordered_product_add"] = (
+            ordered_product_add_implementation_identity()
+        )
+    except Exception as exc:
+        # An auxiliary implementation-identity probe must not erase the
+        # arithmetic backend identity that was successfully collected above.
+        identity["deepseek_ordered_product_add"] = {
+            "unavailable": f"{type(exc).__name__}: {exc}"
+        }
+    return identity
 
 
 def _functional_source_sha256(backend: str | None = None) -> dict[str, str]:
