@@ -4,7 +4,7 @@
 
 **Status date:** 2026-09-04
 
-**Input baseline:** `main` through `6837df9`; this includes the fail-closed
+**Input baseline:** `main` through `a506dca`; this includes the fail-closed
 DeepSeek exact-200K oracle and accelerator-pair checkers, the DeepSeek
 phase-selected sparse-KV layout repair, the shared activation-liveness
 allocator and physical 180-GB ROM-array capacity boundary, and refreshed
@@ -650,7 +650,17 @@ generated tokens. The retained external context-ladder artifact reaches the
 prompt length but contains only an eight-token oracle prefix; no accelerator
 artifact currently executes that full prompt. Neither can close acceptance.
 
-The immediate DeepSeek blockers are execution of the new fail-closed production
+The 32-node ROM-array controlled variant now has a source-current short-rung
+diagnostic: on the 32-token natural chat prefix it generated
+`[13806, 345, 7472, 55560]`, exactly matching the independent oracle prefix and
+decoding to ` pump C alone empt`. All 55 recorded execution-source identities
+rehash, all token IDs are legal, and the backend-aware context gate independently
+matches every per-node and cluster-total sparse-attention counter. This closes
+that variant's 32-token/four-output diagnostic rung only. It is not the required
+wafer-ROM target, did not run 200,000 input tokens, and stopped at its four-token
+diagnostic cap rather than EOS or the production 256-token cap.
+
+The immediate DeepSeek production blockers are execution of the new fail-closed production
 oracle through complete EOS-or-256, including its pre-run and completion
 full-byte/input checks, followed by two genuine long-context accelerator
 executions. The launcher and final pair checker are implemented and focused-test
@@ -686,10 +696,17 @@ The current evidence supports only the following carefully scoped statements:
   configured eight-token limit was reached—not because EOS occurred. It took
   435.266 s including a 405.05 s tiled prefill. This is GPU external-oracle
   speed, not ROM-wafer or 32-chip simulator speed.
-- The retained DeepSeek accelerator HBM and ROM artifacts each produced only
-  `[13806, 345, 7472, 55560]` on a short prompt and matched the old four-token
-  oracle prefix. Those legal IDs predate the `INDEX_SCORE` single-rounding fix,
-  so they are regression clues rather than current decoding acceptance.
+- The source-current DeepSeek 32-node ROM-array diagnostic produced
+  `[13806, 345, 7472, 55560]` on the 32-token pump prompt. Those tokens exactly
+  match the independently produced prefix, have no legitimacy problem, and
+  decode to ` pump C alone empt`, coherently continuing the input. Every one of
+  its 32 per-node sparse-attention counter sets and its independent cluster
+  totals equal the closed-form context model; the retained context-gate artifact
+  is `results/abi3/deepseek_v4_rom_array_p32_context_gate.json`. The run stopped
+  at the requested four-token prefix cap after 8,745.571 host seconds. Its
+  completion ticks `[26337, 38756, 51175, 63594]` remain functional-device
+  counters rather than a characterized process clock. This is therefore a
+  valid short functional diagnostic, not exact-200K Gate 1 and not TPOT.
 - The new DeepSeek HBM PC-14 qualification produces intermediate `HC_PRE`
   tensors, not vocabulary logits or a selected token. Its 12,288 output words
   match bitwise and are useful for localizing the next RTL work, but they add
