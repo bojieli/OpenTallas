@@ -238,6 +238,46 @@ inverse reconstruction proofs. None of it polices speed. The program can prove t
 high standard that a machine four orders of magnitude too slow computes exactly the right
 tokens.
 
+## 4.9 Why this is a redesign and not a repair
+
+Everything above describes defects that could, individually, be fixed. Taken
+together they say something stronger, and the checklist is where it becomes
+undeniable.
+
+`docs/UNIFIED_EXECUTION_CHECKLIST.md` carries **106 items. 92 are complete, 11
+partial, 3 open.** Eighty-seven per cent done. And **zero of the 106 mention
+tokens per second, TPOT, throughput, fmax, a floorplan, chip-level closure or
+tapeout.** Not one. The programme was measuring, with real rigour, a set of
+propositions that does not contain the proposition it exists to establish.
+
+Read alongside what the artifacts actually are, the conclusion is not that the
+work was done badly. It is that the work was done well against the wrong
+specification:
+
+* the tensor lane says of itself that its five-cycle reduction "is not a
+  throughput claim, no result bit depends on it, and it is not a rate any cycle
+  model may read" -- it is a correctness vehicle, and an honest one
+* item W8.5, ROM service RTL, states that the read path "is implemented and
+  correlated on two simulators, and **it contains no ROM array**"
+* `docs/ABI3_PHYSICAL_VIEWS.md` states that "no block of the ABI 3.0 control
+  plane appears below at all" and that the microsequencer is absent
+* `docs/FOUR_TARGET_PROGRESS_REPORT.md` states, at RTL 3.0, "no RTL path
+  reaches a token"
+
+So the mask-ROM accelerator has: no ROM array in its ROM RTL, no control plane
+in its physical evidence, one multiply-accumulate lane where its capabilities
+advertise up to 8,192, and no path from RTL to a token. Every one of those is
+recorded honestly somewhere in the repository. None of them is a checklist item
+that can fail.
+
+A repair would fix the tensor unit mismatch, widen the lanes, and route more
+blocks, and would leave in place the thing that produced all of it: a
+specification whose completion criteria are orthogonal to whether the design
+works or is fast. That is why the plan is replaced rather than amended, and why
+the replacement's terminal gates are stated as numbers with comparisons rather
+than as artifacts with digests. See
+[the redesign plan](OPENTALLAS_REDESIGN_PLAN.md).
+
 ## 5. What the comparison inherited
 
 On the Qwen pair the ROM chip is advertised with 512 tensor lanes and the HBM chip with
