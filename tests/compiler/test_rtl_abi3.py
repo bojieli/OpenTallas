@@ -1458,3 +1458,75 @@ def test_deployment_campaign_replays_both_simulators(tmp_path: Path) -> None:
         if deployment["co_simulable_within_rtl_bounds"]:
             assert record["name"] in correlated, record["name"]
     assert (summary["status"] == "pass") == (not summary["divergences"])
+
+
+# ---------------------------------------------------------------------------
+# 5. the control plane elaborates under the synthesis front end (OI-43)
+# ---------------------------------------------------------------------------
+# Under Icarus 11 a wildcard-imported identifier that appears only inside a
+# module-instance port-connection expression is not resolved against the
+# import; and the pinned Yosys frontend rejects ``import`` outright, so a block
+# that carried one could be simulated but never synthesised.  The eight blocks
+# [OI-43] names refer to their packages by scope.  These tests keep it so.
+from tools import rtl_abi3_control_plane_synth_check as synth_check  # noqa: E402
+
+CONTROL_PLANE_ELABORATION_JSON = synth_check.DEFAULT_OUTPUT
+
+
+def test_control_plane_rtl_carries_no_wildcard_package_import() -> None:
+    assert [block["top"] for block in synth_check.BLOCKS] == [
+        "ot_a3_program_header",
+        "ot_a3_instruction_decoder",
+        "ot_a3_event_scoreboard",
+        "ot_a3_loop_stack",
+        "ot_a3_state_controller",
+        "ot_a3_view_resolver",
+        "ot_a3_microsequencer",
+        "ot_a3_collective_engine",
+    ]
+    assert synth_check.wildcard_imports(ROOT) == {}
+    for block in synth_check.BLOCKS:
+        for path in synth_check.block_sources(block):
+            body = "\n".join(
+                line
+                for line in (ROOT / path).read_text(encoding="utf-8").splitlines()
+                if not line.lstrip().startswith("//")
+            )
+            assert "import " not in body, f"{path} carries a package import"
+
+
+@pytest.mark.skipif(
+    not synth_check.physical.YOSYS.exists(), reason="pinned yosys absent"
+)
+def test_control_plane_rtl_elaborates_under_pinned_yosys() -> None:
+    for block in synth_check.BLOCKS:
+        record = synth_check.elaborate_local(block, ROOT)
+        assert record["ok"], (block["top"], record["errors"])
+        assert record["check_problems"] == 0, (block["top"], record)
+
+
+@pytest.mark.skipif(
+    not CONTROL_PLANE_ELABORATION_JSON.exists(),
+    reason="no retained control-plane elaboration artifact",
+)
+def test_retained_control_plane_elaboration_is_bound_to_these_sources() -> None:
+    retained = json.loads(CONTROL_PLANE_ELABORATION_JSON.read_text(encoding="utf-8"))
+    assert retained["schema"] == synth_check.SCHEMA
+    assert retained["status"] == "pass"
+    assert retained["wildcard_imports"] == {}
+    assert retained["git"]["worktree_dirty"] is False
+    assert "pinned_local" in retained["front_ends_run"]
+    assert "orfs_container" in retained["front_ends_run"]
+    tops = [block["top"] for block in synth_check.BLOCKS]
+    for front_end in retained["front_ends_run"]:
+        per_block = retained["results"][front_end]
+        assert sorted(per_block) == sorted(tops), front_end
+        for top, record in per_block.items():
+            assert record["ok"], (front_end, top, record["errors"])
+            assert record["check_problems"] == 0, (front_end, top)
+    assert CONTROL_PLANE_ELABORATION_JSON.read_bytes() == (
+        json.dumps(retained, indent=2, sort_keys=True, ensure_ascii=False) + "\n"
+    ).encode("utf-8")
+    for path, digest in retained["source_sha256"].items():
+        actual = campaign.sha256_file(ROOT / path)
+        assert actual == digest, f"{path} changed since the elaboration was recorded"

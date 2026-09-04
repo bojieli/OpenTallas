@@ -22,7 +22,10 @@
 // still rejected instruction by instruction, never issued as work.
 // ---------------------------------------------------------------------------
 module ot_a3_program_header
-    import ot_a3_pkg::*;
+    // The package is referenced by scope rather than wildcard-imported: a
+    // wildcard import is not accepted by every open synthesis front end this
+    // program pins, and a block that only elaborates in a simulator is not an
+    // implementable block.  [OI-43] docs/UNIFIED_EXECUTION_CHECKLIST.md
 (
     input  wire        clk,
     input  wire        rst_n,
@@ -82,13 +85,13 @@ module ot_a3_program_header
     // The CRC field is treated as zero while the record CRC is calculated.
     wire [31:0] checksum_word =
         (active_index == WORD_CRC) ? 32'h0000_0000 : in_word;
-    wire [31:0] crc_next = a3_crc32c_word(active_state, checksum_word);
+    wire [31:0] crc_next = ot_a3_pkg::a3_crc32c_word(active_state, checksum_word);
     wire [31:0] crc_final = crc_next ^ 32'hffff_ffff;
 
     wire magic_lo_bad = (active_index == WORD_MAGIC_LO) &&
-                        (in_word != A3_PROGRAM_MAGIC[31:0]);
+                        (in_word != ot_a3_pkg::A3_PROGRAM_MAGIC[31:0]);
     wire magic_hi_bad = (active_index == WORD_MAGIC_HI) &&
-                        (in_word != A3_PROGRAM_MAGIC[63:32]);
+                        (in_word != ot_a3_pkg::A3_PROGRAM_MAGIC[63:32]);
     wire reserved_now = (active_index >= WORD_RESERVED_0) &&
                         (active_index <= WORD_RESERVED_N) &&
                         (in_word != 32'h0000_0000);
@@ -96,32 +99,32 @@ module ot_a3_program_header
     reg [3:0] error_comb;
     always @* begin
         if (magic_bad)
-            error_comb = A3_ERR_MAGIC;
+            error_comb = ot_a3_pkg::A3_ERR_MAGIC;
         else if (reserved_bad)
-            error_comb = A3_ERR_RESERVED;
+            error_comb = ot_a3_pkg::A3_ERR_RESERVED;
         else if (crc_final != in_word)
-            error_comb = A3_ERR_CRC;
-        else if ((abi_major != A3_ABI_MAJOR) || (abi_minor > A3_ABI_MINOR))
-            error_comb = A3_ERR_VERSION;
+            error_comb = ot_a3_pkg::A3_ERR_CRC;
+        else if ((abi_major != ot_a3_pkg::A3_ABI_MAJOR) || (abi_minor > ot_a3_pkg::A3_ABI_MINOR))
+            error_comb = ot_a3_pkg::A3_ERR_VERSION;
         else if ((header_bytes != 16'd256) || (instruction_bytes != 16'd32))
-            error_comb = A3_ERR_SIZE;
+            error_comb = ot_a3_pkg::A3_ERR_SIZE;
         else if (header_flags != 16'h0000)
-            error_comb = A3_ERR_VERSION;
+            error_comb = ot_a3_pkg::A3_ERR_VERSION;
         else if ((instruction_count == 32'd0) || (entrypoint_count == 32'd0))
-            error_comb = A3_ERR_COUNT;
+            error_comb = ot_a3_pkg::A3_ERR_COUNT;
         else
-            error_comb = A3_ERR_NONE;
+            error_comb = ot_a3_pkg::A3_ERR_NONE;
     end
 
     function automatic [15:0] trap_of_error;
         input [3:0] error;
         begin
-            if (error == A3_ERR_NONE)
-                trap_of_error = A3_TRAP_NONE;
-            else if (error == A3_ERR_CRC)
-                trap_of_error = A3_TRAP_INTEGRITY;
+            if (error == ot_a3_pkg::A3_ERR_NONE)
+                trap_of_error = ot_a3_pkg::A3_TRAP_NONE;
+            else if (error == ot_a3_pkg::A3_ERR_CRC)
+                trap_of_error = ot_a3_pkg::A3_TRAP_INTEGRITY;
             else
-                trap_of_error = A3_TRAP_ADMISSION;
+                trap_of_error = ot_a3_pkg::A3_TRAP_ADMISSION;
         end
     endfunction
 
@@ -141,12 +144,12 @@ module ot_a3_program_header
             work_lo <= 32'd0;
             work_hi <= 32'd0;
             watchdog_class <= 32'd0;
-            entry_descriptor <= A3_NO_ID;
-            signature_descriptor <= A3_NO_ID;
+            entry_descriptor <= ot_a3_pkg::A3_NO_ID;
+            signature_descriptor <= ot_a3_pkg::A3_NO_ID;
             out_valid <= 1'b0;
             out_legal <= 1'b0;
-            out_error <= A3_ERR_NONE;
-            out_trap_class <= A3_TRAP_NONE;
+            out_error <= ot_a3_pkg::A3_ERR_NONE;
+            out_trap_class <= ot_a3_pkg::A3_TRAP_NONE;
             out_abi_major <= 8'd0;
             out_abi_minor <= 8'd0;
             out_flags <= 16'd0;
@@ -154,8 +157,8 @@ module ot_a3_program_header
             out_entrypoint_count <= 32'd0;
             out_max_retired_work <= 64'd0;
             out_watchdog_class <= 32'd0;
-            out_entrypoint_table_descriptor <= A3_NO_ID;
-            out_signature_descriptor <= A3_NO_ID;
+            out_entrypoint_table_descriptor <= ot_a3_pkg::A3_NO_ID;
+            out_signature_descriptor <= ot_a3_pkg::A3_NO_ID;
         end else begin
             out_valid <= 1'b0;
             if (in_valid) begin
@@ -189,7 +192,7 @@ module ot_a3_program_header
                     word_index <= 6'd0;
                     crc_state <= 32'hffff_ffff;
                     out_valid <= 1'b1;
-                    out_legal <= (error_comb == A3_ERR_NONE);
+                    out_legal <= (error_comb == ot_a3_pkg::A3_ERR_NONE);
                     out_error <= error_comb;
                     out_trap_class <= trap_of_error(error_comb);
                     out_abi_major <= abi_major;

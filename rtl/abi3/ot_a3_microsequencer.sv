@@ -49,7 +49,10 @@
 // marked STRICTER below.
 // ---------------------------------------------------------------------------
 module ot_a3_microsequencer
-    import ot_a3_pkg::*;
+    // The package is referenced by scope rather than wildcard-imported: a
+    // wildcard import is not accepted by every open synthesis front end this
+    // program pins, and a block that only elaborates in a simulator is not an
+    // implementable block.  [OI-43] docs/UNIFIED_EXECUTION_CHECKLIST.md
 #(
     // The four production-comparison deployments use ordinary live buffers
     // and contain no STATE descriptors or instructions.  Keeping the legacy
@@ -331,7 +334,7 @@ module ot_a3_microsequencer
         .clear(xact_clear),
         .signal_valid(evt_signal_valid),
         .signal_event_id(ins_signal_event_id),
-        .signal_release(ins_flags[A3_FLAG_SIGNAL_RELEASE]),
+        .signal_release(ins_flags[ot_a3_pkg::A3_FLAG_SIGNAL_RELEASE]),
         .signal_error(event_signal_error),
         .wait_start(evt_wait_start),
         .wait_payload(evt_wait_payload),
@@ -387,7 +390,7 @@ module ot_a3_microsequencer
         end else begin : g_no_state_compat
             assign st_op_done = 1'b1;
             assign st_op_ok = 1'b0;
-            assign st_op_trap_class = A3_TRAP_CAPABILITY;
+            assign st_op_trap_class = ot_a3_pkg::A3_TRAP_CAPABILITY;
             assign st_apply_done = 1'b1;
             assign state_apply_overflow = 1'b0;
             assign count_state_prepares = 32'd0;
@@ -418,7 +421,7 @@ module ot_a3_microsequencer
             3'd3:    view_slot_id = op_payload[319:288];   // input_view_3
             3'd4:    view_slot_id = op_payload[351:320];   // output_view_0
             3'd5:    view_slot_id = op_payload[383:352];   // output_view_1
-            default: view_slot_id = A3_NO_ID;
+            default: view_slot_id = ot_a3_pkg::A3_NO_ID;
         endcase
     end
 
@@ -483,8 +486,8 @@ module ot_a3_microsequencer
     // dynamic terms, so view resolution reads both payload blocks.
     wire [1023:0] desc_payload_wide = desc_data[1535:512];
     wire         desc_header_ok = !desc_fault &&
-                                  (desc_magic == A3_DESCRIPTOR_MAGIC) &&
-                                  (desc_type_major == A3_TYPE_MAJOR) &&
+                                  (desc_magic == ot_a3_pkg::A3_DESCRIPTOR_MAGIC) &&
+                                  (desc_type_major == ot_a3_pkg::A3_TYPE_MAJOR) &&
                                   (desc_payload_offset == 32'd64);
 
     // -- predicate payload view -------------------------------------------
@@ -499,11 +502,11 @@ module ot_a3_microsequencer
     reg  pred_compare_result;
     always @* begin
         case (pred_comparison)
-            A3_CMP_EQ: pred_compare_result = (pred_left == pred_immediate);
-            A3_CMP_NE: pred_compare_result = (pred_left != pred_immediate);
-            A3_CMP_LT: pred_compare_result = (pred_left <  pred_immediate);
-            A3_CMP_LE: pred_compare_result = (pred_left <= pred_immediate);
-            A3_CMP_GT: pred_compare_result = (pred_left >  pred_immediate);
+            ot_a3_pkg::A3_CMP_EQ: pred_compare_result = (pred_left == pred_immediate);
+            ot_a3_pkg::A3_CMP_NE: pred_compare_result = (pred_left != pred_immediate);
+            ot_a3_pkg::A3_CMP_LT: pred_compare_result = (pred_left <  pred_immediate);
+            ot_a3_pkg::A3_CMP_LE: pred_compare_result = (pred_left <= pred_immediate);
+            ot_a3_pkg::A3_CMP_GT: pred_compare_result = (pred_left >  pred_immediate);
             default:   pred_compare_result = (pred_left >= pred_immediate);
         endcase
     end
@@ -512,19 +515,19 @@ module ot_a3_microsequencer
     reg  loop_compare_result;
     always @* begin
         case (pred_comparison)
-            A3_CMP_EQ: loop_compare_result = (loop_left == pred_immediate);
-            A3_CMP_NE: loop_compare_result = (loop_left != pred_immediate);
-            A3_CMP_LT: loop_compare_result = (loop_left <  pred_immediate);
-            A3_CMP_LE: loop_compare_result = (loop_left <= pred_immediate);
-            A3_CMP_GT: loop_compare_result = (loop_left >  pred_immediate);
+            ot_a3_pkg::A3_CMP_EQ: loop_compare_result = (loop_left == pred_immediate);
+            ot_a3_pkg::A3_CMP_NE: loop_compare_result = (loop_left != pred_immediate);
+            ot_a3_pkg::A3_CMP_LT: loop_compare_result = (loop_left <  pred_immediate);
+            ot_a3_pkg::A3_CMP_LE: loop_compare_result = (loop_left <= pred_immediate);
+            ot_a3_pkg::A3_CMP_GT: loop_compare_result = (loop_left >  pred_immediate);
             default:   loop_compare_result = (loop_left >= pred_immediate);
         endcase
     end
 
-    wire predicated = ins_flags[A3_FLAG_PREDICATED];
-    wire invert     = ins_flags[A3_FLAG_PREDICATE_INVERT];
-    wire is_control = (ins_major == A3_MAJOR_CONTROL);
-    wire [15:0] expected_type = a3_family_descriptor_type(ins_major);
+    wire predicated = ins_flags[ot_a3_pkg::A3_FLAG_PREDICATED];
+    wire invert     = ins_flags[ot_a3_pkg::A3_FLAG_PREDICATE_INVERT];
+    wire is_control = (ins_major == ot_a3_pkg::A3_MAJOR_CONTROL);
+    wire [15:0] expected_type = ot_a3_pkg::a3_family_descriptor_type(ins_major);
     wire work_exceeded = ({32'd0, count_retired} > work_bound);
 
     // Wire format section 3 gives *every* instruction a signal-event ID and
@@ -539,7 +542,7 @@ module ot_a3_microsequencer
     // twice inside one layer.  Called from every CONTROL retirement.
     task publish_signal;
         begin
-            evt_signal_valid <= (ins_signal_event_id != A3_NO_ID);
+            evt_signal_valid <= (ins_signal_event_id != ot_a3_pkg::A3_NO_ID);
         end
     endtask
 
@@ -576,23 +579,23 @@ module ot_a3_microsequencer
             done <= 1'b0;
             complete <= 1'b0;
             trapped <= 1'b0;
-            trap_class <= A3_TRAP_NONE;
-            first_fault_instruction <= A3_NO_ID;
+            trap_class <= ot_a3_pkg::A3_TRAP_NONE;
+            first_fault_instruction <= ot_a3_pkg::A3_NO_ID;
             imem_req <= 1'b0;
             imem_index <= 32'd0;
             desc_req <= 1'b0;
-            desc_id <= A3_NO_ID;
+            desc_id <= ot_a3_pkg::A3_NO_ID;
             sym_index_q <= 4'd0;
             predicate_read_req <= 1'b0;
-            predicate_read_object_id <= A3_NO_ID;
+            predicate_read_object_id <= ot_a3_pkg::A3_NO_ID;
             predicate_read_element_index <= 32'd0;
             issue_valid <= 1'b0;
             issue_family <= 8'd0;
             issue_sub <= 8'd0;
-            issue_descriptor_id <= A3_NO_ID;
-            issue_index <= A3_NO_ID;
+            issue_descriptor_id <= ot_a3_pkg::A3_NO_ID;
+            issue_index <= ot_a3_pkg::A3_NO_ID;
             view_valid <= 1'b0;
-            view_descriptor_id <= A3_NO_ID;
+            view_descriptor_id <= ot_a3_pkg::A3_NO_ID;
             view_slot <= 3'd0;
             view_extent <= 32'd0;
             view_extent_axis <= 8'd0;
@@ -606,7 +609,7 @@ module ot_a3_microsequencer
             dec_in_valid <= 1'b0;
             loop_setup_valid <= 1'b0;
             loop_next_valid <= 1'b0;
-            loop_query_id_q <= A3_NO_ID;
+            loop_query_id_q <= ot_a3_pkg::A3_NO_ID;
             loop_payload <= 512'd0;
             evt_signal_valid <= 1'b0;
             evt_wait_start <= 1'b0;
@@ -620,11 +623,11 @@ module ot_a3_microsequencer
             ins_major <= 8'd0;
             ins_sub <= 8'd0;
             ins_flags <= 16'd0;
-            ins_predicate_id <= A3_NO_ID;
-            ins_descriptor_id <= A3_NO_ID;
-            ins_wait_set_id <= A3_NO_ID;
-            ins_signal_event_id <= A3_NO_ID;
-            ins_control_id <= A3_NO_ID;
+            ins_predicate_id <= ot_a3_pkg::A3_NO_ID;
+            ins_descriptor_id <= ot_a3_pkg::A3_NO_ID;
+            ins_wait_set_id <= ot_a3_pkg::A3_NO_ID;
+            ins_signal_event_id <= ot_a3_pkg::A3_NO_ID;
+            ins_control_id <= ot_a3_pkg::A3_NO_ID;
             count_fetched <= 32'd0;
             count_retired <= 32'd0;
             count_predicated_off <= 32'd0;
@@ -652,8 +655,8 @@ module ot_a3_microsequencer
                         busy <= 1'b1;
                         complete <= 1'b0;
                         trapped <= 1'b0;
-                        trap_class <= A3_TRAP_NONE;
-                        first_fault_instruction <= A3_NO_ID;
+                        trap_class <= ot_a3_pkg::A3_TRAP_NONE;
+                        first_fault_instruction <= ot_a3_pkg::A3_NO_ID;
                         pc <= cfg_entry_pc;
                         program_base <= cfg_program_base;
                         instruction_count <= cfg_instruction_count;
@@ -666,14 +669,14 @@ module ot_a3_microsequencer
                         count_branches <= 32'd0;
                         count_views_resolved <= 32'd0;
                         predicate_read_req <= 1'b0;
-                        predicate_read_object_id <= A3_NO_ID;
+                        predicate_read_object_id <= ot_a3_pkg::A3_NO_ID;
                         predicate_read_element_index <= 32'd0;
                         xact_clear <= 1'b1;
                         if ((STATE_COMPAT == 0) &&
                             (cfg_state_count != 32'd0)) begin
                             trapped <= 1'b1;
-                            trap_class <= A3_TRAP_CAPABILITY;
-                            first_fault_instruction <= A3_NO_ID;
+                            trap_class <= ot_a3_pkg::A3_TRAP_CAPABILITY;
+                            first_fault_instruction <= ot_a3_pkg::A3_NO_ID;
                             state <= S_DONE;
                         end else begin
                             state <= S_CHECK_PC;
@@ -686,11 +689,11 @@ module ot_a3_microsequencer
                     if (pc >= instruction_count) begin
                         // Running off the authenticated body, or a control
                         // transfer that leaves it, is an illegal control flow.
-                        raise_trap(A3_TRAP_ILLEGAL, pc);
+                        raise_trap(ot_a3_pkg::A3_TRAP_ILLEGAL, pc);
                     end else begin
                         count_fetched <= count_fetched + 32'd1;
                         if (work_exceeded) begin
-                            raise_trap(A3_TRAP_WATCHDOG, pc);
+                            raise_trap(ot_a3_pkg::A3_TRAP_WATCHDOG, pc);
                         end else begin
                             imem_req <= 1'b1;
                             imem_index <= program_base + pc;
@@ -739,8 +742,8 @@ module ot_a3_microsequencer
                 end
                 S_PRED_WAIT: begin
                     if (desc_valid) begin
-                        if (!desc_header_ok || (desc_type != A3_DESC_PREDICATE)) begin
-                            raise_trap(A3_TRAP_DESCRIPTOR, pc);
+                        if (!desc_header_ok || (desc_type != ot_a3_pkg::A3_DESC_PREDICATE)) begin
+                            raise_trap(ot_a3_pkg::A3_TRAP_DESCRIPTOR, pc);
                         end else begin
                             pred_payload <= desc_payload;
                             state <= S_PRED_SYM;
@@ -751,8 +754,8 @@ module ot_a3_microsequencer
                     // Present the symbol or loop selector one cycle before it
                     // is read so the register file read is not in the compare
                     // path.
-                    if (pred_kind == A3_PRED_PHASE_IS)
-                        sym_index_q <= A3_SYMBOL_PHASE;
+                    if (pred_kind == ot_a3_pkg::A3_PRED_PHASE_IS)
+                        sym_index_q <= ot_a3_pkg::A3_SYMBOL_PHASE;
                     else
                         sym_index_q <= pred_selector[3:0];
                     loop_query_id_q <= pred_selector;
@@ -760,7 +763,7 @@ module ot_a3_microsequencer
                 end
                 S_PRED_EVAL: begin
                     case (pred_kind)
-                        A3_PRED_ALWAYS: begin
+                        ot_a3_pkg::A3_PRED_ALWAYS: begin
                             if (invert) begin
                                 count_predicated_off <= count_predicated_off + 32'd1;
                                 pc <= pc + 32'd1;
@@ -769,12 +772,12 @@ module ot_a3_microsequencer
                                 state <= S_WAIT_REQ;
                             end
                         end
-                        A3_PRED_PHASE_IS, A3_PRED_COMPARE_SYMBOL: begin
+                        ot_a3_pkg::A3_PRED_PHASE_IS, ot_a3_pkg::A3_PRED_COMPARE_SYMBOL: begin
                             if (!sym_bound ||
-                                ((pred_kind == A3_PRED_COMPARE_SYMBOL) &&
-                                 (pred_selector >= A3_SYMBOL_COUNT))) begin
-                                raise_trap(A3_TRAP_DESCRIPTOR, pc);
-                            end else if ((pred_kind == A3_PRED_PHASE_IS)
+                                ((pred_kind == ot_a3_pkg::A3_PRED_COMPARE_SYMBOL) &&
+                                 (pred_selector >= ot_a3_pkg::A3_SYMBOL_COUNT))) begin
+                                raise_trap(ot_a3_pkg::A3_TRAP_DESCRIPTOR, pc);
+                            end else if ((pred_kind == ot_a3_pkg::A3_PRED_PHASE_IS)
                                          ? ((pred_left == pred_immediate) ^ invert)
                                          : (pred_compare_result ^ invert)) begin
                                 state <= S_WAIT_REQ;
@@ -784,9 +787,9 @@ module ot_a3_microsequencer
                                 state <= S_CHECK_PC;
                             end
                         end
-                        A3_PRED_COMPARE_LOOP: begin
+                        ot_a3_pkg::A3_PRED_COMPARE_LOOP: begin
                             if (!loop_query_active) begin
-                                raise_trap(A3_TRAP_ILLEGAL, pc);
+                                raise_trap(ot_a3_pkg::A3_TRAP_ILLEGAL, pc);
                             end else if (loop_compare_result ^ invert) begin
                                 state <= S_WAIT_REQ;
                             end else begin
@@ -795,9 +798,9 @@ module ot_a3_microsequencer
                                 state <= S_CHECK_PC;
                             end
                         end
-                        A3_PRED_LOOP_FIRST, A3_PRED_LOOP_LAST: begin
+                        ot_a3_pkg::A3_PRED_LOOP_FIRST, ot_a3_pkg::A3_PRED_LOOP_LAST: begin
                             if ((loop_query_active &&
-                                 ((pred_kind == A3_PRED_LOOP_FIRST)
+                                 ((pred_kind == ot_a3_pkg::A3_PRED_LOOP_FIRST)
                                   ? (loop_query_value == 32'd0)
                                   : (loop_query_value == (loop_query_trip - 32'd1))))
                                 ^ invert) begin
@@ -808,7 +811,7 @@ module ot_a3_microsequencer
                                 state <= S_CHECK_PC;
                             end
                         end
-                        A3_PRED_BOOLEAN_OBJECT, A3_PRED_EOS_MEMBER: begin
+                        ot_a3_pkg::A3_PRED_BOOLEAN_OBJECT, ot_a3_pkg::A3_PRED_EOS_MEMBER: begin
                             predicate_read_object_id <= pred_object_id;
                             predicate_read_element_index <= pred_element;
                             predicate_read_req <= 1'b1;
@@ -818,14 +821,14 @@ module ot_a3_microsequencer
                             // ENGINE_STATUS and ROUTE_VALID require an engine
                             // status interface this controller does not have.
                             // Fail closed on the capability, never guess.
-                            raise_trap(A3_TRAP_CAPABILITY, pc);
+                            raise_trap(ot_a3_pkg::A3_TRAP_CAPABILITY, pc);
                         end
                     endcase
                 end
                 S_PRED_OBJECT: begin
                     if (predicate_read_valid) begin
                         predicate_read_req <= 1'b0;
-                        if (predicate_read_trap_class != A3_TRAP_NONE) begin
+                        if (predicate_read_trap_class != ot_a3_pkg::A3_TRAP_NONE) begin
                             raise_trap(predicate_read_trap_class, pc);
                         end else if (predicate_read_value ^ invert) begin
                             state <= S_WAIT_REQ;
@@ -839,7 +842,7 @@ module ot_a3_microsequencer
 
                 // -- wait -------------------------------------------------
                 S_WAIT_REQ: begin
-                    if (ins_wait_set_id == A3_NO_ID) begin
+                    if (ins_wait_set_id == ot_a3_pkg::A3_NO_ID) begin
                         state <= S_DISPATCH;
                     end else begin
                         desc_req <= 1'b1;
@@ -850,12 +853,12 @@ module ot_a3_microsequencer
                 S_WAIT_WAIT: begin
                     if (desc_valid) begin
                         if (!desc_header_ok ||
-                            (desc_type != A3_DESC_EVENT_WAIT_SET)) begin
-                            raise_trap(A3_TRAP_DESCRIPTOR, pc);
+                            (desc_type != ot_a3_pkg::A3_DESC_EVENT_WAIT_SET)) begin
+                            raise_trap(ot_a3_pkg::A3_TRAP_DESCRIPTOR, pc);
                         end else begin
                             evt_wait_start <= 1'b1;
                             evt_wait_payload <= desc_payload;
-                            evt_wait_acquire <= ins_flags[A3_FLAG_WAIT_ACQUIRE];
+                            evt_wait_acquire <= ins_flags[ot_a3_pkg::A3_FLAG_WAIT_ACQUIRE];
                             state <= S_WAIT_EVAL;
                         end
                     end
@@ -873,23 +876,23 @@ module ot_a3_microsequencer
                 S_DISPATCH: begin
                     if (is_control) begin
                         case (ins_sub)
-                            A3_CONTROL_NOP,
-                            A3_CONTROL_WAIT,
-                            A3_CONTROL_FENCE,
-                            A3_CONTROL_ASSERT: begin
+                            ot_a3_pkg::A3_CONTROL_NOP,
+                            ot_a3_pkg::A3_CONTROL_WAIT,
+                            ot_a3_pkg::A3_CONTROL_FENCE,
+                            ot_a3_pkg::A3_CONTROL_ASSERT: begin
                                 count_retired <= count_retired + 32'd1;
                                 publish_signal;
                                 pc <= pc + 32'd1;
                                 state <= S_CHECK_PC;
                             end
-                            A3_CONTROL_BRANCH: begin
+                            ot_a3_pkg::A3_CONTROL_BRANCH: begin
                                 count_retired <= count_retired + 32'd1;
                                 count_branches <= count_branches + 32'd1;
                                 publish_signal;
                                 pc <= ins_control_id;
                                 state <= S_CHECK_PC;
                             end
-                            A3_CONTROL_COMPLETE: begin
+                            ot_a3_pkg::A3_CONTROL_COMPLETE: begin
                                 count_retired <= count_retired + 32'd1;
                                 publish_signal;
                                 complete <= 1'b1;
@@ -902,10 +905,10 @@ module ot_a3_microsequencer
                                     state <= S_DONE;
                                 end
                             end
-                            A3_CONTROL_TRAP: begin
-                                raise_trap(A3_TRAP_ILLEGAL, pc);
+                            ot_a3_pkg::A3_CONTROL_TRAP: begin
+                                raise_trap(ot_a3_pkg::A3_TRAP_ILLEGAL, pc);
                             end
-                            A3_CONTROL_LOOP_SETUP: begin
+                            ot_a3_pkg::A3_CONTROL_LOOP_SETUP: begin
                                 desc_req <= 1'b1;
                                 desc_id <= ins_control_id;
                                 state <= S_LOOP_WAIT;
@@ -917,10 +920,10 @@ module ot_a3_microsequencer
                         endcase
                     end else begin
                         count_issued <= count_issued + 32'd1;
-                        if ((ins_major == A3_MAJOR_RECOVERY) &&
-                            (ins_sub == A3_RECOVERY_ABORT)) begin
-                            raise_trap(A3_TRAP_INTERNAL, pc);
-                        end else if (expected_type == A3_DESC_NONE) begin
+                        if ((ins_major == ot_a3_pkg::A3_MAJOR_RECOVERY) &&
+                            (ins_sub == ot_a3_pkg::A3_RECOVERY_ABORT)) begin
+                            raise_trap(ot_a3_pkg::A3_TRAP_INTERNAL, pc);
+                        end else if (expected_type == ot_a3_pkg::A3_DESC_NONE) begin
                             state <= S_ISSUE;
                         end else begin
                             desc_req <= 1'b1;
@@ -934,8 +937,8 @@ module ot_a3_microsequencer
                 S_LOOP_WAIT: begin
                     if (desc_valid) begin
                         if (!desc_header_ok ||
-                            (desc_type != A3_DESC_LOOP_CONTROL)) begin
-                            raise_trap(A3_TRAP_DESCRIPTOR, pc);
+                            (desc_type != ot_a3_pkg::A3_DESC_LOOP_CONTROL)) begin
+                            raise_trap(ot_a3_pkg::A3_TRAP_DESCRIPTOR, pc);
                         end else begin
                             loop_payload <= desc_payload;
                             state <= S_LOOP_SYM;
@@ -943,12 +946,12 @@ module ot_a3_microsequencer
                     end
                 end
                 S_LOOP_SYM: begin
-                    if (loop_symbol_id >= A3_SYMBOL_COUNT) begin
+                    if (loop_symbol_id >= ot_a3_pkg::A3_SYMBOL_COUNT) begin
                         sym_index_q <= 4'd0;
-                        if (loop_bound_kind != A3_SELECTOR_CONSTANT) begin
+                        if (loop_bound_kind != ot_a3_pkg::A3_SELECTOR_CONSTANT) begin
                             // Symbol-bounded loop naming a symbol outside the
                             // frozen registry.
-                            raise_trap(A3_TRAP_DESCRIPTOR, pc);
+                            raise_trap(ot_a3_pkg::A3_TRAP_DESCRIPTOR, pc);
                         end else begin
                             loop_setup_valid <= 1'b1;
                             state <= S_LOOP_DONE;
@@ -981,16 +984,16 @@ module ot_a3_microsequencer
                         if (!desc_header_ok || (desc_type != expected_type)) begin
                             // STRICTER: the golden model type-checks only the
                             // STATE family here; every family is checked.
-                            raise_trap(A3_TRAP_DESCRIPTOR, pc);
-                        end else if (ins_major == A3_MAJOR_STATE) begin
+                            raise_trap(ot_a3_pkg::A3_TRAP_DESCRIPTOR, pc);
+                        end else if (ins_major == ot_a3_pkg::A3_MAJOR_STATE) begin
                             if (STATE_COMPAT == 0) begin
-                                raise_trap(A3_TRAP_CAPABILITY, pc);
+                                raise_trap(ot_a3_pkg::A3_TRAP_CAPABILITY, pc);
                             end else begin
                                 state_payload <= desc_payload;
-                                sym_index_q <= A3_SYMBOL_SPAN_TOKENS;
+                                sym_index_q <= ot_a3_pkg::A3_SYMBOL_SPAN_TOKENS;
                                 state <= S_STATE_SYM;
                             end
-                        end else if (expected_type == A3_DESC_OPERATOR) begin
+                        end else if (expected_type == ot_a3_pkg::A3_DESC_OPERATOR) begin
                             // A4/A13: an engine is handed extents, not just a
                             // descriptor ID, so every operand view this
                             // operator names is resolved before the issue.
@@ -1007,7 +1010,7 @@ module ot_a3_microsequencer
                 S_VIEW_SCAN: begin
                     if (view_next_slot >= 3'd6) begin
                         state <= S_ISSUE;
-                    end else if (view_slot_id == A3_NO_ID) begin
+                    end else if (view_slot_id == ot_a3_pkg::A3_NO_ID) begin
                         view_next_slot <= view_next_slot + 3'd1;
                     end else begin
                         desc_req <= 1'b1;
@@ -1018,8 +1021,8 @@ module ot_a3_microsequencer
                 S_VIEW_WAIT: begin
                     if (desc_valid) begin
                         if (!desc_header_ok ||
-                            (desc_type != A3_DESC_TENSOR_VIEW)) begin
-                            raise_trap(A3_TRAP_DESCRIPTOR, pc);
+                            (desc_type != ot_a3_pkg::A3_DESC_TENSOR_VIEW)) begin
+                            raise_trap(ot_a3_pkg::A3_TRAP_DESCRIPTOR, pc);
                         end else begin
                             view_payload <= desc_payload_wide;
                             view_descriptor_id <= desc_id;
@@ -1077,13 +1080,13 @@ module ot_a3_microsequencer
                             // the operation was issued, but it never retires
                             // and its event is never published.
                             raise_trap(
-                                (issue_trap_class == A3_TRAP_NONE)
-                                    ? A3_TRAP_ENGINE : issue_trap_class,
+                                (issue_trap_class == ot_a3_pkg::A3_TRAP_NONE)
+                                    ? ot_a3_pkg::A3_TRAP_ENGINE : issue_trap_class,
                                 pc
                             );
                         end else begin
                             evt_signal_valid <=
-                                (ins_signal_event_id != A3_NO_ID);
+                                (ins_signal_event_id != ot_a3_pkg::A3_NO_ID);
                             state <= S_RETIRE;
                         end
                     end

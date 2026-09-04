@@ -87,7 +87,10 @@
 // wide arithmetic in the caller's control path.
 // ---------------------------------------------------------------------------
 module ot_a3_view_resolver
-    import ot_a3_pkg::*;
+    // The package is referenced by scope rather than wildcard-imported: a
+    // wildcard import is not accepted by every open synthesis front end this
+    // program pins, and a block that only elaborates in a simulator is not an
+    // implementable block.  [OI-43] docs/UNIFIED_EXECUTION_CHECKLIST.md
 (
     input  wire          clk,
     input  wire          rst_n,
@@ -355,10 +358,10 @@ module ot_a3_view_resolver
             busy <= 1'b0;
             done <= 1'b0;
             fault <= 1'b0;
-            trap_class <= A3_TRAP_NONE;
+            trap_class <= ot_a3_pkg::A3_TRAP_NONE;
             out_element_offset <= 64'd0;
             out_extent <= 32'd0;
-            loop_query_id <= A3_NO_ID;
+            loop_query_id <= ot_a3_pkg::A3_NO_ID;
             sym_index <= 4'd0;
             slot <= 3'd0;
             value <= 32'd0;
@@ -392,7 +395,7 @@ module ot_a3_view_resolver
                         if (start) begin
                             busy <= 1'b1;
                             fault <= 1'b0;
-                            trap_class <= A3_TRAP_NONE;
+                            trap_class <= ot_a3_pkg::A3_TRAP_NONE;
                             out_element_offset <= view_offset;
                             slot <= 3'd0;
                             remain_valid <= 1'b0;
@@ -405,7 +408,7 @@ module ot_a3_view_resolver
                             // ``if rank and ...``.
                             if ((view_rank != 8'd0) &&
                                 (view_extent_axis >= view_rank))
-                                fail_closed(A3_TRAP_MEMORY);
+                                fail_closed(ot_a3_pkg::A3_TRAP_MEMORY);
                             else
                                 state <= S_SELECT;
                         end
@@ -414,7 +417,7 @@ module ot_a3_view_resolver
                     // reads are combinational and are consumed next cycle.
                     S_SELECT: begin
                         if ({5'd0, slot} >= view_terms) begin
-                            if (!edge_done && (view_edge_mask != A3_NO_ID)) begin
+                            if (!edge_done && (view_edge_mask != ot_a3_pkg::A3_NO_ID)) begin
                                 // The same loop-stack query used by an A4 term,
                                 // but A26 deliberately skips S_OFFSET.
                                 loop_query_id <= view_edge_mask;
@@ -433,7 +436,7 @@ module ot_a3_view_resolver
                     S_EDGE_READ: begin
                         if (!loop_query_active) begin
                             // "view N: edge-mask loop M is not active"
-                            fail_closed(A3_TRAP_MEMORY);
+                            fail_closed(ot_a3_pkg::A3_TRAP_MEMORY);
                         end else begin
                             value <= loop_query_value;
                             loop_symbolic <= loop_query_symbol_bounded;
@@ -460,10 +463,10 @@ module ot_a3_view_resolver
                         end
                     end
                     S_READ: begin
-                        if (term_kind == {8'd0, A3_SELECTOR_LOOP_INDUCTION}) begin
+                        if (term_kind == {8'd0, ot_a3_pkg::A3_SELECTOR_LOOP_INDUCTION}) begin
                             if (!loop_query_active) begin
                                 // "view N: loop M is not active"
-                                fail_closed(A3_TRAP_MEMORY);
+                                fail_closed(ot_a3_pkg::A3_TRAP_MEMORY);
                             end else begin
                                 value <= loop_query_value;
                                 value_is_loop <= 1'b1;
@@ -475,11 +478,11 @@ module ot_a3_view_resolver
                                 state <= S_OFFSET;
                             end
                         end else if (term_kind ==
-                                     {8'd0, A3_SELECTOR_RUNTIME_SYMBOL}) begin
-                            if (({16'd0, term_index} >= A3_SYMBOL_COUNT) ||
+                                     {8'd0, ot_a3_pkg::A3_SELECTOR_RUNTIME_SYMBOL}) begin
+                            if (({16'd0, term_index} >= ot_a3_pkg::A3_SYMBOL_COUNT) ||
                                 !sym_bound) begin
                                 // "view N: symbol S is unbound"
-                                fail_closed(A3_TRAP_MEMORY);
+                                fail_closed(ot_a3_pkg::A3_TRAP_MEMORY);
                             end else begin
                                 value <= sym_value;
                                 value_is_loop <= 1'b0;
@@ -490,7 +493,7 @@ module ot_a3_view_resolver
                         end else begin
                             // "view N: bad selector kind K".  CONSTANT lands
                             // here, exactly as the reference resolver does.
-                            fail_closed(A3_TRAP_MEMORY);
+                            fail_closed(ot_a3_pkg::A3_TRAP_MEMORY);
                         end
                     end
                     S_OFFSET: begin

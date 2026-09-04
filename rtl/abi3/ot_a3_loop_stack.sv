@@ -36,9 +36,12 @@
 // never rewrites it), so the cached value is exact for every iteration.
 // ---------------------------------------------------------------------------
 module ot_a3_loop_stack
-    import ot_a3_pkg::*;
+    // The package is referenced by scope rather than wildcard-imported: a
+    // wildcard import is not accepted by every open synthesis front end this
+    // program pins, and a block that only elaborates in a simulator is not an
+    // implementable block.  [OI-43] docs/UNIFIED_EXECUTION_CHECKLIST.md
 #(
-    parameter integer DEPTH = A3_LOOP_DEPTH
+    parameter integer DEPTH = ot_a3_pkg::A3_LOOP_DEPTH
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -203,7 +206,7 @@ module ot_a3_loop_stack
     wire signed [32:0] symbol_span =
         $signed({1'b0, hold_bound}) - $signed({1'b0, hold_lower});
     wire signed [32:0] span_value =
-        (hold_kind == A3_SELECTOR_CONSTANT) ? constant_span : symbol_span;
+        (hold_kind == ot_a3_pkg::A3_SELECTOR_CONSTANT) ? constant_span : symbol_span;
 
     wire [3:0] top = (stack_pointer == 4'd0) ? 4'd0 : (stack_pointer - 4'd1);
     wire [31:0] top_next_index = loop_index[top] + 32'd1;
@@ -215,7 +218,7 @@ module ot_a3_loop_stack
             busy <= 1'b0;
             done <= 1'b0;
             trap_valid <= 1'b0;
-            trap_class <= A3_TRAP_NONE;
+            trap_class <= ot_a3_pkg::A3_TRAP_NONE;
             next_pc <= 32'd0;
             action <= ACTION_PUSH;
             stack_pointer <= 4'd0;
@@ -229,16 +232,16 @@ module ot_a3_loop_stack
             hold_max <= 32'd0;
             hold_body_start <= 32'd0;
             hold_body_end <= 32'd0;
-            hold_loop_id <= A3_NO_ID;
+            hold_loop_id <= ot_a3_pkg::A3_NO_ID;
             hold_pc <= 32'd0;
-            hold_kind <= A3_SELECTOR_CONSTANT;
+            hold_kind <= ot_a3_pkg::A3_SELECTOR_CONSTANT;
             hold_bound <= 32'd0;
             hold_trip <= 32'd0;
             hold_symbolic <= 1'b0;
             hold_divisor <= 32'd1;
             hold_symbol_value <= 32'd0;
             for (i = 0; i < DEPTH; i = i + 1) begin
-                loop_id[i] <= A3_NO_ID;
+                loop_id[i] <= ot_a3_pkg::A3_NO_ID;
                 loop_trip[i] <= 32'd0;
                 loop_value[i] <= 32'd0;
                 loop_index[i] <= 32'd0;
@@ -277,12 +280,12 @@ module ot_a3_loop_stack
                             // that this request actually bound, and reads the
                             // divisor as max(bound_divisor, 1).
                             hold_symbolic <= (setup_bound_kind ==
-                                              A3_SELECTOR_RUNTIME_SYMBOL) &&
+                                              ot_a3_pkg::A3_SELECTOR_RUNTIME_SYMBOL) &&
                                              setup_symbol_bound;
                             hold_divisor <= (setup_bound_divisor == 32'd0)
                                           ? 32'd1 : setup_bound_divisor;
                             hold_symbol_value <= setup_symbol_value;
-                            if (setup_bound_kind == A3_SELECTOR_CONSTANT) begin
+                            if (setup_bound_kind == ot_a3_pkg::A3_SELECTOR_CONSTANT) begin
                                 state <= S_SPAN;
                             end else if (!setup_symbol_bound) begin
                                 // Loop bound names a symbol this request did
@@ -290,7 +293,7 @@ module ot_a3_loop_stack
                                 busy <= 1'b0;
                                 done <= 1'b1;
                                 trap_valid <= 1'b1;
-                                trap_class <= A3_TRAP_DESCRIPTOR;
+                                trap_class <= ot_a3_pkg::A3_TRAP_DESCRIPTOR;
                             end else begin
                                 div_start <= 1'b1;
                                 div_divisor <= (setup_bound_divisor == 32'd0)
@@ -307,11 +310,11 @@ module ot_a3_loop_stack
                             done <= 1'b1;
                             if (stack_pointer == 4'd0) begin
                                 trap_valid <= 1'b1;
-                                trap_class <= A3_TRAP_ILLEGAL;
+                                trap_class <= ot_a3_pkg::A3_TRAP_ILLEGAL;
                                 iteration_count <= iteration_count;
                             end else if (loop_id[top] != op_loop_id) begin
                                 trap_valid <= 1'b1;
-                                trap_class <= A3_TRAP_ILLEGAL;
+                                trap_class <= ot_a3_pkg::A3_TRAP_ILLEGAL;
                                 iteration_count <= iteration_count;
                             end else if (top_next_index < loop_trip[top]) begin
                                 loop_index[top] <= top_next_index;
@@ -341,7 +344,7 @@ module ot_a3_loop_stack
                             busy <= 1'b0;
                             done <= 1'b1;
                             trap_valid <= 1'b1;
-                            trap_class <= A3_TRAP_INTERNAL;
+                            trap_class <= ot_a3_pkg::A3_TRAP_INTERNAL;
                             state <= S_IDLE;
                         end else begin
                                             div_start <= 1'b1;
@@ -363,13 +366,13 @@ module ot_a3_loop_stack
                         state <= S_IDLE;
                         if (hold_trip > hold_max) begin
                             trap_valid <= 1'b1;
-                            trap_class <= A3_TRAP_CAPABILITY;
+                            trap_class <= ot_a3_pkg::A3_TRAP_CAPABILITY;
                         end else if (hold_trip == 32'd0) begin
                             next_pc <= hold_body_end + 32'd1;
                             action <= ACTION_SKIP;
                         end else if (stack_pointer >= DEPTH) begin
                             trap_valid <= 1'b1;
-                            trap_class <= A3_TRAP_CAPABILITY;
+                            trap_class <= ot_a3_pkg::A3_TRAP_CAPABILITY;
                         end else begin
                             loop_id[stack_pointer] <= hold_loop_id;
                             loop_trip[stack_pointer] <= hold_trip;

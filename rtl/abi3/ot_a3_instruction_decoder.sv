@@ -24,7 +24,10 @@
 //   branch target inside the authenticated body.
 // ---------------------------------------------------------------------------
 module ot_a3_instruction_decoder
-    import ot_a3_pkg::*;
+    // The package is referenced by scope rather than wildcard-imported: a
+    // wildcard import is not accepted by every open synthesis front end this
+    // program pins, and a block that only elaborates in a simulator is not an
+    // implementable block.  [OI-43] docs/UNIFIED_EXECUTION_CHECKLIST.md
 (
     input  wire         clk,
     input  wire         rst_n,
@@ -75,31 +78,31 @@ module ot_a3_instruction_decoder
     wire [31:0] crc_word = (crc_word_index == CRC_LAST_WORD)
                          ? 32'h0000_0000
                          : record[{crc_word_index, 5'b00000} +: 32];
-    wire [31:0] crc_next = a3_crc32c_word(crc_state, crc_word);
+    wire [31:0] crc_next = ot_a3_pkg::a3_crc32c_word(crc_state, crc_word);
     wire [31:0] crc_final = crc_next ^ 32'hffff_ffff;
 
-    wire predicated = flags[A3_FLAG_PREDICATED];
-    wire invert     = flags[A3_FLAG_PREDICATE_INVERT];
-    wire is_branch  = (major == A3_MAJOR_CONTROL) && (sub == A3_CONTROL_BRANCH);
+    wire predicated = flags[ot_a3_pkg::A3_FLAG_PREDICATED];
+    wire invert     = flags[ot_a3_pkg::A3_FLAG_PREDICATE_INVERT];
+    wire is_branch  = (major == ot_a3_pkg::A3_MAJOR_CONTROL) && (sub == ot_a3_pkg::A3_CONTROL_BRANCH);
 
     reg [3:0] error_comb;
     always @* begin
-        if (!a3_major_legal(major))
-            error_comb = A3_ERR_MAJOR;
-        else if (!a3_sub_legal(major, sub))
-            error_comb = A3_ERR_SUB;
-        else if ((flags & ~A3_FLAG_MASK) != 16'h0000)
-            error_comb = A3_ERR_FLAG_RESERVED;
+        if (!ot_a3_pkg::a3_major_legal(major))
+            error_comb = ot_a3_pkg::A3_ERR_MAJOR;
+        else if (!ot_a3_pkg::a3_sub_legal(major, sub))
+            error_comb = ot_a3_pkg::A3_ERR_SUB;
+        else if ((flags & ~ot_a3_pkg::A3_FLAG_MASK) != 16'h0000)
+            error_comb = ot_a3_pkg::A3_ERR_FLAG_RESERVED;
         else if (invert && !predicated)
-            error_comb = A3_ERR_PREDICATE_FLAG;
-        else if (predicated && (predicate_id == A3_NO_ID))
-            error_comb = A3_ERR_PREDICATE_ID;
-        else if (!predicated && (predicate_id != A3_NO_ID))
-            error_comb = A3_ERR_PREDICATE_ID;
+            error_comb = ot_a3_pkg::A3_ERR_PREDICATE_FLAG;
+        else if (predicated && (predicate_id == ot_a3_pkg::A3_NO_ID))
+            error_comb = ot_a3_pkg::A3_ERR_PREDICATE_ID;
+        else if (!predicated && (predicate_id != ot_a3_pkg::A3_NO_ID))
+            error_comb = ot_a3_pkg::A3_ERR_PREDICATE_ID;
         else if (is_branch && (control_id >= count_buffer))
-            error_comb = A3_ERR_BRANCH_TARGET;
+            error_comb = ot_a3_pkg::A3_ERR_BRANCH_TARGET;
         else
-            error_comb = A3_ERR_NONE;
+            error_comb = ot_a3_pkg::A3_ERR_NONE;
     end
 
     // Every structural defect other than a failed integrity check is an
@@ -114,12 +117,12 @@ module ot_a3_instruction_decoder
     function automatic [15:0] trap_of_error;
         input [3:0] error;
         begin
-            if (error == A3_ERR_NONE)
-                trap_of_error = A3_TRAP_NONE;
-            else if (error == A3_ERR_CRC)
-                trap_of_error = A3_TRAP_INTEGRITY;
+            if (error == ot_a3_pkg::A3_ERR_NONE)
+                trap_of_error = ot_a3_pkg::A3_TRAP_NONE;
+            else if (error == ot_a3_pkg::A3_ERR_CRC)
+                trap_of_error = ot_a3_pkg::A3_TRAP_INTEGRITY;
             else
-                trap_of_error = A3_TRAP_ILLEGAL;
+                trap_of_error = ot_a3_pkg::A3_TRAP_ILLEGAL;
         end
     endfunction
 
@@ -135,18 +138,18 @@ module ot_a3_instruction_decoder
             count_buffer <= 32'b0;
             out_valid <= 1'b0;
             out_legal <= 1'b0;
-            out_error <= A3_ERR_NONE;
-            out_trap_class <= A3_TRAP_NONE;
+            out_error <= ot_a3_pkg::A3_ERR_NONE;
+            out_trap_class <= ot_a3_pkg::A3_TRAP_NONE;
             out_index <= 32'b0;
             out_major <= 8'b0;
             out_sub <= 8'b0;
             out_flags <= 16'b0;
-            out_predicate_id <= A3_NO_ID;
-            out_descriptor_id <= A3_NO_ID;
-            out_wait_set_id <= A3_NO_ID;
-            out_signal_event_id <= A3_NO_ID;
-            out_control_id <= A3_NO_ID;
-            out_source_operation_id <= A3_NO_ID;
+            out_predicate_id <= ot_a3_pkg::A3_NO_ID;
+            out_descriptor_id <= ot_a3_pkg::A3_NO_ID;
+            out_wait_set_id <= ot_a3_pkg::A3_NO_ID;
+            out_signal_event_id <= ot_a3_pkg::A3_NO_ID;
+            out_control_id <= ot_a3_pkg::A3_NO_ID;
+            out_source_operation_id <= ot_a3_pkg::A3_NO_ID;
         end else begin
             if (out_valid && out_ready)
                 out_valid <= 1'b0;
@@ -174,10 +177,10 @@ module ot_a3_instruction_decoder
                     out_source_operation_id <= source_id;
                     if (crc_final != supplied_crc) begin
                         out_legal <= 1'b0;
-                        out_error <= A3_ERR_CRC;
-                        out_trap_class <= A3_TRAP_INTEGRITY;
+                        out_error <= ot_a3_pkg::A3_ERR_CRC;
+                        out_trap_class <= ot_a3_pkg::A3_TRAP_INTEGRITY;
                     end else begin
-                        out_legal <= (error_comb == A3_ERR_NONE);
+                        out_legal <= (error_comb == ot_a3_pkg::A3_ERR_NONE);
                         out_error <= error_comb;
                         out_trap_class <= trap_of_error(error_comb);
                     end

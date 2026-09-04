@@ -41,9 +41,12 @@
 // asserts that rather than merely counting it.
 // ---------------------------------------------------------------------------
 module ot_a3_event_scoreboard
-    import ot_a3_pkg::*;
+    // The package is referenced by scope rather than wildcard-imported: a
+    // wildcard import is not accepted by every open synthesis front end this
+    // program pins, and a block that only elaborates in a simulator is not an
+    // implementable block.  [OI-43] docs/UNIFIED_EXECUTION_CHECKLIST.md
 #(
-    parameter integer EVENTS = A3_EVENT_COUNT
+    parameter integer EVENTS = ot_a3_pkg::A3_EVENT_COUNT
 ) (
     input  wire         clk,
     input  wire         rst_n,
@@ -91,9 +94,9 @@ module ot_a3_event_scoreboard
     wire        slot_in_range = (slot_event < EVENTS);
     wire [EVENT_INDEX_W-1:0] slot_index = slot_event[EVENT_INDEX_W-1:0];
 
-    wire ordering_acquire = (payload_ordering == A3_ORDER_ACQUIRE) ||
-                            (payload_ordering == A3_ORDER_ACQUIRE_RELEASE) ||
-                            (payload_ordering == A3_ORDER_SEQUENTIAL);
+    wire ordering_acquire = (payload_ordering == ot_a3_pkg::A3_ORDER_ACQUIRE) ||
+                            (payload_ordering == ot_a3_pkg::A3_ORDER_ACQUIRE_RELEASE) ||
+                            (payload_ordering == ot_a3_pkg::A3_ORDER_SEQUENTIAL);
 
     wire signal_in_range = (signal_event_id < EVENTS);
     wire [EVENT_INDEX_W-1:0] signal_index = signal_event_id[EVENT_INDEX_W-1:0];
@@ -106,8 +109,8 @@ module ot_a3_event_scoreboard
             wait_busy <= 1'b0;
             wait_done <= 1'b0;
             wait_ok <= 1'b0;
-            wait_trap_class <= A3_TRAP_NONE;
-            wait_fault_event <= A3_NO_ID;
+            wait_trap_class <= ot_a3_pkg::A3_TRAP_NONE;
+            wait_fault_event <= ot_a3_pkg::A3_NO_ID;
             producer_count <= 8'd0;
             slot <= 8'd0;
             acquire_required <= 1'b0;
@@ -148,15 +151,15 @@ module ot_a3_event_scoreboard
                     acquire_required <= wait_acquire || ordering_acquire;
                     slot <= 8'd0;
                     wait_ok <= 1'b1;
-                    wait_trap_class <= A3_TRAP_NONE;
-                    wait_fault_event <= A3_NO_ID;
+                    wait_trap_class <= ot_a3_pkg::A3_TRAP_NONE;
+                    wait_fault_event <= ot_a3_pkg::A3_NO_ID;
                     if (payload_producer_count == 8'd0) begin
                         // A wait set with no producers is rejected at
                         // admission; treat it as an internal invariant here.
                         wait_busy <= 1'b0;
                         wait_done <= 1'b1;
                         wait_ok <= 1'b0;
-                        wait_trap_class <= A3_TRAP_INTERNAL;
+                        wait_trap_class <= ot_a3_pkg::A3_TRAP_INTERNAL;
                     end
                 end else if (wait_busy) begin
                     if (!slot_in_range ||
@@ -165,7 +168,7 @@ module ot_a3_event_scoreboard
                         wait_busy <= 1'b0;
                         wait_done <= 1'b1;
                         wait_ok <= 1'b0;
-                        wait_trap_class <= A3_TRAP_INTERNAL;
+                        wait_trap_class <= ot_a3_pkg::A3_TRAP_INTERNAL;
                         wait_fault_event <= slot_event;
                     end else if (slot + 8'd1 >= producer_count) begin
                         wait_busy <= 1'b0;

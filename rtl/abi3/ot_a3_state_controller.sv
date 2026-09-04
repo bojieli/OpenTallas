@@ -54,9 +54,12 @@
 // the capability this RTL is built for.
 // ---------------------------------------------------------------------------
 module ot_a3_state_controller
-    import ot_a3_pkg::*;
+    // The package is referenced by scope rather than wildcard-imported: a
+    // wildcard import is not accepted by every open synthesis front end this
+    // program pins, and a block that only elaborates in a simulator is not an
+    // implementable block.  [OI-43] docs/UNIFIED_EXECUTION_CHECKLIST.md
 #(
-    parameter integer SLOTS = A3_STATE_SLOTS
+    parameter integer SLOTS = ot_a3_pkg::A3_STATE_SLOTS
 ) (
     input  wire         clk,
     input  wire         rst_n,
@@ -145,8 +148,8 @@ module ot_a3_state_controller
     wire [31:0] target_capacity = hit_found ? slot_capacity[target] : payload_capacity;
     wire        target_open = hit_found ? slot_open[target] : 1'b0;
     wire [7:0]  target_policy = hit_found ? slot_policy[target] : payload_policy;
-    wire        target_unstaged = (target_policy == A3_COMMIT_POLICY_UNSTAGED);
-    wire        target_saturating = (target_policy == A3_COMMIT_POLICY_SATURATING);
+    wire        target_unstaged = (target_policy == ot_a3_pkg::A3_COMMIT_POLICY_UNSTAGED);
+    wire        target_saturating = (target_policy == ot_a3_pkg::A3_COMMIT_POLICY_SATURATING);
     // The positions the request presented.  A21's zero-count trap is stated on
     // this and not on the published row count, because zero rows is a
     // malformed *request* and a saturating commit's row count is the ring's.
@@ -164,7 +167,7 @@ module ot_a3_state_controller
     wire [31:0] apply_rows = pending_rows[apply_index];
     wire [31:0] apply_span = pending_span[apply_index];
     wire        apply_saturating =
-        (slot_policy[apply_slot] == A3_COMMIT_POLICY_SATURATING);
+        (slot_policy[apply_slot] == ot_a3_pkg::A3_COMMIT_POLICY_SATURATING);
     wire [32:0] apply_end = {1'b0, slot_cursor[apply_slot]} + {1'b0, apply_rows};
     // A25: the ring head, which is the slot the next absolute position writes.
     wire [32:0] apply_sum = {1'b0, slot_cursor[apply_slot]} + {1'b0, apply_span};
@@ -182,12 +185,12 @@ module ot_a3_state_controller
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             for (i = 0; i < SLOTS; i = i + 1) begin
-                slot_descriptor[i] <= A3_NO_ID;
+                slot_descriptor[i] <= ot_a3_pkg::A3_NO_ID;
                 slot_cursor[i] <= 32'd0;
                 slot_capacity[i] <= 32'd0;
                 slot_row_bytes[i] <= 32'd0;
                 slot_generation[i] <= 32'd0;
-                slot_policy[i] <= A3_COMMIT_POLICY_REQUEST_SPAN;
+                slot_policy[i] <= ot_a3_pkg::A3_COMMIT_POLICY_REQUEST_SPAN;
                 pending_slot[i] <= {SLOT_W{1'b0}};
                 pending_rows[i] <= 32'd0;
                 pending_span[i] <= 32'd0;
@@ -198,7 +201,7 @@ module ot_a3_state_controller
             apply_index <= {SLOT_W{1'b0}};
             op_done <= 1'b0;
             op_ok <= 1'b0;
-            op_trap_class <= A3_TRAP_NONE;
+            op_trap_class <= ot_a3_pkg::A3_TRAP_NONE;
             apply_busy <= 1'b0;
             apply_done <= 1'b0;
             apply_overflow <= 1'b0;
@@ -271,10 +274,10 @@ module ot_a3_state_controller
             end else if (op_valid) begin
                 op_done <= 1'b1;
                 op_ok <= 1'b1;
-                op_trap_class <= A3_TRAP_NONE;
+                op_trap_class <= ot_a3_pkg::A3_TRAP_NONE;
                 if (!hit_found && !free_found) begin
                     op_ok <= 1'b0;
-                    op_trap_class <= A3_TRAP_CAPABILITY;
+                    op_trap_class <= ot_a3_pkg::A3_TRAP_CAPABILITY;
                 end else begin
                     if (!hit_found) begin
                         slot_used[target] <= 1'b1;
@@ -286,26 +289,26 @@ module ot_a3_state_controller
                         slot_generation[target] <= 32'd0;
                     end
                     case (op_sub)
-                        A3_STATE_PREPARE: begin
+                        ot_a3_pkg::A3_STATE_PREPARE: begin
                             if (target_open) begin
                                 op_ok <= 1'b0;
-                                op_trap_class <= A3_TRAP_STATE;
+                                op_trap_class <= ot_a3_pkg::A3_TRAP_STATE;
                             end else begin
                                 slot_open[target] <= 1'b1;
                                 count_prepares <= count_prepares + 32'd1;
                             end
                         end
-                        A3_STATE_READ: count_reads <= count_reads + 32'd1;
-                        A3_STATE_COMMIT: begin
+                        ot_a3_pkg::A3_STATE_READ: count_reads <= count_reads + 32'd1;
+                        ot_a3_pkg::A3_STATE_COMMIT: begin
                             if (!target_open) begin
                                 op_ok <= 1'b0;
-                                op_trap_class <= A3_TRAP_STATE;
+                                op_trap_class <= ot_a3_pkg::A3_TRAP_STATE;
                             end else if (!target_unstaged &&
                                          (commit_span == 32'd0)) begin
                                 // A21: zero rows is a malformed request only
                                 // where the request is what supplies them.
                                 op_ok <= 1'b0;
-                                op_trap_class <= A3_TRAP_STATE;
+                                op_trap_class <= ot_a3_pkg::A3_TRAP_STATE;
                             end else if (!target_saturating &&
                                          (commit_end >
                                           {1'b0, target_capacity})) begin
@@ -313,10 +316,10 @@ module ot_a3_state_controller
                                 // ring, so this comparison can only refuse a
                                 // commit the ring already satisfies.
                                 op_ok <= 1'b0;
-                                op_trap_class <= A3_TRAP_CAPABILITY;
+                                op_trap_class <= ot_a3_pkg::A3_TRAP_CAPABILITY;
                             end else if (pending_count >= SLOTS[SLOT_W:0]) begin
                                 op_ok <= 1'b0;
-                                op_trap_class <= A3_TRAP_CAPABILITY;
+                                op_trap_class <= ot_a3_pkg::A3_TRAP_CAPABILITY;
                             end else begin
                                 pending_slot[pending_count[SLOT_W-1:0]] <= target;
                                 pending_rows[pending_count[SLOT_W-1:0]] <= commit_rows;
@@ -325,16 +328,16 @@ module ot_a3_state_controller
                                 count_commits <= count_commits + 32'd1;
                             end
                         end
-                        A3_STATE_DISCARD: begin
+                        ot_a3_pkg::A3_STATE_DISCARD: begin
                             slot_open[target] <= 1'b0;
                             count_discards <= count_discards + 32'd1;
                         end
-                        A3_STATE_GENERATION_ADVANCE:
+                        ot_a3_pkg::A3_STATE_GENERATION_ADVANCE:
                             count_generation_advances <=
                                 count_generation_advances + 32'd1;
                         default: begin
                             op_ok <= 1'b0;
-                            op_trap_class <= A3_TRAP_STATE;
+                            op_trap_class <= ot_a3_pkg::A3_TRAP_STATE;
                         end
                     endcase
                 end
