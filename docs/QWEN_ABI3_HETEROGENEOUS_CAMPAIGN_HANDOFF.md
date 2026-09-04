@@ -65,10 +65,14 @@ acceptance remains a separate requirement.
   closed.
 
 An admissible oracle file must contain exactly one result and its producer must
-record exactly one `selected_workload_ids` entry matching that lane. It must
-bind the checkpoint lock, campaign workload index, exact workload bytes and
-digest, prompt length, tokenizer, numeric/prefill association, and explicit
-production launch. Its output must contain legal non-padding IDs and either:
+record exactly one `selected_workload_ids` entry matching that lane. The v3
+production profile must have been explicitly requested with the integrated
+manifest, one `--only`, and the lane's create-once output path. It binds the
+checkpoint lock, reconstructed campaign and manifest file, workload-set ID,
+lane index/sequence/category/source, campaign workload index, exact workload
+bytes/digest, prompt-token digest and length, tokenizer, numeric/prefill
+association, and explicit production launch. Its output must contain legal
+non-padding IDs and either:
 
 1. end at the first official EOS, retaining that EOS and no earlier EOS; or
 2. contain exactly 256 tokens with no official EOS.
@@ -95,6 +99,41 @@ Validate the committed preparation set:
 python3 tools/check_qwen3_heterogeneous_campaign.py
 ```
 
+Generate one production oracle at a time with this exact form (shown for lane
+0):
+
+```bash
+python3 tools/run_qwen3_reference_oracle.py \
+  --heterogeneous-gate-1-production \
+  configs/abi3/workloads/qwen3_heterogeneous_exact_8k_v1/manifest.json \
+  --only TA-QW-8K-1 \
+  --output \
+  configs/abi3/workloads/qwen3_heterogeneous_exact_8k_v1/references/TA-QW-8K-1.json
+```
+
+Repeat that singleton command for the following seven exact `--only` / output
+basename pairs, preserving the manifest path and changing no production
+options:
+
+| `--only` | output basename |
+|---|---|
+| `TA-QW-8K-REASON-1` | `TA-QW-8K-REASON-1.json` |
+| `TA-QW-8K-AGENT-HELLO-1` | `TA-QW-8K-AGENT-HELLO-1.json` |
+| `TA-QW-8K-STRESS-256-1` | `TA-QW-8K-STRESS-256-1.json` |
+| `TA-QW-8K-GEOGRAPHY-1` | `TA-QW-8K-GEOGRAPHY-1.json` |
+| `TA-QW-8K-SCIENCE-1` | `TA-QW-8K-SCIENCE-1.json` |
+| `TA-QW-8K-AGENT-PERMISSIONS-1` | `TA-QW-8K-AGENT-PERMISSIONS-1.json` |
+| `TA-QW-8K-PRACTICAL-1` | `TA-QW-8K-PRACTICAL-1.json` |
+
+Every output lives under the same
+`configs/abi3/workloads/qwen3_heterogeneous_exact_8k_v1/references/`
+directory. The launcher refuses a missing, duplicate, multiple, or undeclared
+selection; a different manifest/workload root/output; agent-episode or force
+mode; CPU-only or eager attention; and nonqualified chunking or CPU placement.
+It authenticates all campaign inputs and hashes the full 16.38 GB checkpoint
+before importing Torch or Transformers. Run these jobs serially, and only when
+the DeepSeek or any other memory-heavy host process has completed.
+
 Require a production-ready result, which currently must refuse because the
 oracles are absent:
 
@@ -117,21 +156,24 @@ Validate a completed set with `--reference-set <path>`.
 
 ## Immediate dependency and next execution order
 
-`tools/run_qwen3_reference_oracle.py --gate-1-production` currently accepts
-only the historical `TA-QW-8K-1` identity and hard-coded old workload-index
-hash. It cannot honestly produce the other seven campaign oracles yet. The next
-small implementation change is to make that production preflight consume this
-workload-set manifest, select exactly one declared lane, and authenticate its
-new workload index and file identity while retaining the existing complete
-checkpoint hashing, BF16/prefill association, greedy selection, and
-first-EOS-or-256 checks. That change must not weaken the historical profile.
+The generalized launcher preflight is implemented without changing the
+historical `--gate-1-production` profile or ABI 3.0. The next state-changing
+step is to run the eight singleton oracle jobs serially when the memory-heavy
+host is free, then freeze and validate the reference set. Only after that may
+the B=1/2/4/8 HBM and ROM heterogeneous requests be constructed.
 
-Then run the eight oracle jobs serially when the memory-heavy host is free,
-freeze and validate the reference set, and only then construct B=1/2/4/8 HBM
-and ROM heterogeneous requests. Execute token correctness first. TPOT remains
-blocked until those exact physical-batch executions match every oracle token
-and decoded string and satisfy the terminal/no-post-terminal rule; this work
-does not modify the TPOT checker.
+The two acceptance gates are deliberately separate and ordered:
+
+1. **Correct output tokens:** every sequence in the exact physical batch must
+   match its independent oracle token-for-token and decoded-string-for-string,
+   use only legal IDs, and obey first-EOS-or-exact-256 with no post-EOS work.
+2. **Desired TPOT:** only a Gate-1-passing execution may contribute TTFT,
+   decode-step latency, steady-state TPOT, or aggregate-throughput evidence,
+   and each B=1/2/4/8 point must be compared with its pre-frozen numerical SLO.
+
+Reference-oracle wall time is neither accelerator TPOT nor performance
+evidence. Projected roofline throughput is also not a TPOT pass. This work does
+not modify the TPOT checker or comparison schemas.
 
 Focused qualification is:
 
