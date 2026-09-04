@@ -123,7 +123,7 @@ The present boundary is therefore:
   dual-simulator qualified. The certifying nonpositive-exp/direct-sigmoid
   primitive and fixed 4x4 stable-softmax front end are independently
   dual-simulator and synthesis qualified, but BF16-by-FP32 fused accumulation,
-  balanced projection/RMS, stable-softmax-to-Sinkhorn composition, full-shape
+  balanced projection/RMS, full-shape
   computed-word agreement, and PC-14/PC-15 integration still prevent a
   complete `HC_PRE` or token claim;
 - exact mandatory long executions: open; the authenticated Qwen oracle and one
@@ -146,7 +146,7 @@ the remaining cost.
 | Architecture and ABI 3.0 | closed | frozen live-buffer/fence profile; zero `STATE` in all four deployments | no ABI 3.1 work is required |
 | Common IR and four backend builds | closed for current graphs | Qwen and DeepSeek lower through the shared Model Graph and Tensor Kernel IR into HBM and ROM bundles; HBM head norms now encode 32/8 Qwen rows and 64 DeepSeek rows from the neutral IR | rebuild whenever an execution-authoritative source changes |
 | Functional execution | partial | the complete functional engine exists; one frozen-source Qwen HBM/SRAM run executed the exact 8K prompt end to end and matched all four oracle tokens through EOS; frozen-source DeepSeek 32-node HBM, 32-node ROM-array, and single-wafer ROM P32 diagnostics each execute the compiled model and match the same four-token oracle prefix; the first exact T=512 DeepSeek HBM `HC_PRE` issue also matches an independent service on all 12,288 FP32 output words | the Qwen result predates current runtime changes and lacks its independent HBM-B/ROM peers; every DeepSeek token result uses only 32 prompt tokens and a four-token prefix contract, the latest wafer run predates device-enforced cap retirement, and the `HC_PRE` result is operator qualification rather than a token |
-| RTL 3.0 | partial | shipped control replay and bounded arithmetic pairs independently correlate; the integrated prefix drives Qwen through query/key RoPE and both exact key/value KV scatters, and DeepSeek ROM through wafer multicast; the focused Qwen continuation executes fixed-context-17 PC-38 GQA; exact ROM/HBM `HC_PRE` tile scheduling, the standalone 256-lane mapper, exact Sinkhorn tail, certifying FP32 exp/sigmoid engine, fixed 4x4 stable softmax, MAC lane, and multicast transport have dual-simulator evidence | Qwen must generalize GQA through the governed 8K context and continue at PC 41 output projection; DeepSeek `HC_PRE` still lacks BF16-by-FP32 fused accumulation, balanced projection/RMS, stable-softmax-to-Sinkhorn composition, full-shape word agreement, and PC-14/PC-15 integration; no RTL path reaches a token |
+| RTL 3.0 | partial | shipped control replay and bounded arithmetic pairs independently correlate; the integrated prefix drives Qwen through query/key RoPE and both exact key/value KV scatters, and DeepSeek ROM through wafer multicast; the focused Qwen continuation executes fixed-context-17 PC-38 GQA; exact ROM/HBM `HC_PRE` tile scheduling, the standalone 256-lane mapper, certifying FP32 exp/sigmoid, atomic fixed 4x4 stable-softmax/Sinkhorn composition, MAC lane, and multicast transport have dual-simulator evidence | Qwen must generalize GQA through the governed 8K context and continue at PC 41 output projection; DeepSeek `HC_PRE` still lacks BF16-by-FP32 fused accumulation, balanced projection/RMS, full-shape word agreement, and PC-14/PC-15 execution integration; no RTL path reaches a token |
 | Mandatory workloads | open | the Qwen exact-8K rendered official-chat prompt is frozen and reproducible; its authenticated external oracle and one frozen-source HBM/SRAM execution both produce `391` followed by EOS | a single current-release HBM-A/HBM-B/ROM triplet, Qwen natural chat/reasoning/agentic and genuine B=1/2/4/8 cells, and both DeepSeek exact-200K executions are absent; the retained DeepSeek oracle stops after eight tokens |
 | SKY130 and ASAP7 | partial | several bounded blocks have process-specific reports | neither view characterizes a complete target; ASAP7 readiness has 15 fail-closed blockers |
 | Governed comparison | partial | a frozen-source four-token DeepSeek ROM-array-versus-32-chip-HBM diagnostic binds both compiled executions, identical tokens, topology and counter evidence; the release-bound correctness-qualified TPOT schema and checker reject stale semantic/file identities; `8080d8f` adds the explicit RTL-bound accelerated co-simulation tier; `cbaecf0` freezes the shared-datapath production plan and exact-execution promotion rule | the paired diagnostic is P32 rather than exact 200K, uses a 32-node ROM array rather than the required wafer-ROM target, predates current release changes, and supplies no target timing; the new single-wafer P32 record is likewise frozen-source and unpaired; no source-current mandatory-workload pair, production-simulation token record, frozen numerical TPOT budget, or complete same-view system cost exists |
@@ -400,18 +400,22 @@ it is neither current-release Gate 1 nor a source for TPOT.
   per-element epsilon into an atomic source-major 4x4 stable-softmax block.
   Icarus and Verilator agree on 2,394,764 checks per simulator across 853
   matrices, including all 512 first-block and 320 final-block checkpoint
-  matrices. BF16-by-FP32 fused accumulation, balanced projection/RMS,
-  stable-softmax-to-Sinkhorn composition, full-shape word agreement including
+  matrices. The subsequent atomic stable-softmax/Sinkhorn composition passes
+  19,313,653 checks per simulator on the same 853 cases, performs 528,528
+  exact Sinkhorn divisions, and reproduces the authenticated first T=512 final
+  combination output byte-for-byte. Its manifest binds the current ROM PC-15
+  descriptor 381 and HBM PC-14 descriptor 545, but does not execute either.
+  BF16-by-FP32 fused accumulation, balanced projection/RMS, full-shape word agreement including
   the other 389 prefill blocks, and PC-14/PC-15 integration remain open, so
   this is still not complete `HC_PRE` or a model-token result.
 - Commits `17fbb27`, `874b48e`, and `ff5fcb8` add and qualify the exact
-  DeepSeek `HC_PRE` tile scheduler. It admits ROM PC 15 descriptor 381 and HBM
+  DeepSeek `HC_PRE` tile scheduler. Its retained snapshot admits ROM PC 15 descriptor 381 and HBM
   PC 14 descriptor 546, covers ROM T=1 and HBM T=512/T=320/T=1, and explicitly
   covers the exact-200K partition `390 * 512 + 320`. Icarus and Verilator agree
   on 688,188 emitted tiles and 11,346,434 checks; 181,605 backpressure cycles
   preserve stable metadata and counters, while all 18 malformed cases fail
-  before work. Full projection MAC/RMS, stable-softmax-to-Sinkhorn composition,
-  BF16-by-FP32 accumulation, descriptor integration, and full-shape output
+  before work. Full projection MAC/RMS, BF16-by-FP32 accumulation, descriptor
+  execution integration, and full-shape output
   matching are still missing, so this is scheduler evidence only and produces
   no token, EOS decision, architectural timing, or TPOT.
 - Commit `081161b` adds the correctness-qualified TPOT request, raw timing-trace,

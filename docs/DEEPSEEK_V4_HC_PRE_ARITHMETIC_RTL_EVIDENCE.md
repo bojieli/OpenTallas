@@ -2,11 +2,13 @@
 
 - **Evidence date:** 2026-09-04
 - **ABI:** 3.0
-- **HBM target site:** PC 14, descriptor 546
+- **HBM target site:** current PC 14, descriptor 545; prior qualified scheduler descriptor 546
 - **ROM target site:** PC 15, descriptor 381
 - **Stable-softmax implementation:** `bc06fcb`
+- **Stable-softmax/Sinkhorn implementation:** `4bc65f5`
 - **Transcendental campaign:** `results/rtl/a3_hc_transcendental_campaign.json`
 - **Stable-softmax campaign:** `results/rtl/a3_hc_stable_softmax_campaign.json`
+- **Stable-softmax/Sinkhorn campaign:** `results/rtl/a3_hc_softmax_sinkhorn20_campaign.json`
 - **Divider/Sinkhorn campaign:** `results/rtl/a3_hc_numeric_campaign.json`
 - **Status:** passing reusable-block evidence; neither release gate is closed
 
@@ -80,6 +82,41 @@ maximum controller cycles and simulator wall times are verification metadata
 for this conservative time-multiplexed block, not architectural latency or
 TPOT.
 
+The stable-softmax and Sinkhorn blocks are now composed behind one atomic
+request/response boundary. A complete stable-softmax matrix remains private,
+enters the frozen initial-column plus nineteen row/column Sinkhorn sequence,
+and only the sixteen final combination coefficients can commit. Any refusal in
+either child produces one all-zero matrix with the child error. Active reset
+was exercised after Sinkhorn began; a poison request held throughout each live
+transaction was refused without changing the accepted input; and every final
+matrix remained stable under output backpressure.
+
+The composed campaign reuses the same 853 affine-logit matrices and recomputes
+all expected values with independent exact-rational arithmetic. All 847 valid
+transactions complete 528,528 divisions; five nonfinite and one finite
+subtraction-overflow case fail atomically. The first 512 final matrices are
+byte-identical to the authenticated full functional `HC_PRE` combination
+output, SHA-256
+`5d9a46a955239c39d423edcdfa0d3cce4b51b93aeebd585fb357ecd7eba186fa`.
+The first-plus-final checkpoint-block stream has SHA-256
+`51684cad947f996d08e01b7674b2be7b864874bed137eff03582012af8f3e63b`;
+the final T=320 segment alone is
+`dbdc4f90828960793c1a5f31bd0d223c402df6d77e1939f314648a9c4d4684bd`.
+
+Icarus 11.0 and pinned Verilator 5.050 agree on 19,313,653 result, protocol,
+and private-output checks per simulator. Pinned Yosys 0.68 reports zero generic
+elaboration problems. The manifest binds current main's ROM PC 15 descriptor
+381 and HBM PC 14 descriptor 545, their instruction/operator/numeric/output
+view bytes, deployment identities, and common numeric contract digest. This is
+source identity binding, not descriptor execution or integration at those PCs.
+Generation fails closed unless both current deployment-certificate artifacts,
+the authenticated functional qualification, its qualification vector, and the
+retained T=512 combination payload rehash and agree on checkpoint, exact-200K
+workload, output, and explicit token/EOS/TPOT nonclaims.
+The observed maximum 22,786 controller cycles and host wall times are only
+verification metadata for a conservative serial implementation—not token
+latency or TPOT.
+
 ## Position against the two release gates
 
 | Priority | Required release result | Status after this work |
@@ -88,10 +125,10 @@ TPOT.
 | 2 | Desired TPOT measured from that same Gate-1-passing execution using characterized SKY130 or ASAP7 timing | **Blocked by Gate 1.** Testbench cycles and simulator wall time are verification costs, not token latency. |
 
 This work shortens the Gate-1 path by replacing previously absent reusable
-numeric primitives and the stable-softmax front end with bit-exact RTL. The
-next arithmetic composition boundary is the stable-softmax output feeding the
-already-qualified Sinkhorn tail; neither standalone result is yet driven by the
-real PC-14/PC-15 descriptor path.
+numeric primitives and completing the bit-exact stable-softmax-to-Sinkhorn
+combination-coefficient composition. It is still standalone: neither input
+logit production nor its final result is driven by the real PC-14/PC-15
+descriptor path.
 
 ## Reproduction
 
@@ -102,6 +139,9 @@ pytest -q tests/compiler/test_a3_hc_transcendental_rtl.py
 python3 tools/build_a3_hc_stable_softmax_vectors.py
 python3 tools/run_a3_hc_stable_softmax_rtl_campaign.py
 pytest -q tests/compiler/test_a3_hc_stable_softmax_rtl.py
+python3 tools/build_a3_hc_softmax_sinkhorn20_vectors.py
+python3 tools/run_a3_hc_softmax_sinkhorn20_rtl_campaign.py
+pytest -q tests/compiler/test_a3_hc_softmax_sinkhorn20_rtl.py
 ```
 
 The campaign regenerates and byte-compares the vectors, runs the complete
@@ -116,17 +156,15 @@ The next `HC_PRE` closure steps are:
 1. implement and differentially qualify exact BF16-by-FP32 fused product-add;
 2. implement the balanced 16,384-element RMS path and reuse the existing
    correctly rounded reciprocal-square-root unit;
-3. compose the qualified stable-softmax controller with the qualified
-   Sinkhorn tail and prove one atomic 4x4 coefficient transaction;
-4. retain projection accumulators across the scheduler's increasing-K tiles,
+3. retain projection accumulators across the scheduler's increasing-K tiles,
    implement the affine/pre/post output paths, and atomically commit weights
    and combination matrices;
-5. reproduce from arithmetic all 24 T=1 words, all 7,680 T=320 words, and all
+4. reproduce from arithmetic all 24 T=1 words, all 7,680 T=320 words, and all
    12,288 authenticated T=512 words, then integrate at HBM PC 14 and ROM PC 15;
-6. continue through every downstream layer, logits, argmax, token append, and
+5. continue through every downstream layer, logits, argmax, token append, and
    first-EOS control until the exact 200,000-context token transaction passes.
 
-Only after step 6 closes Gate 1 can architectural token-commit events from that
+Only after step 5 closes Gate 1 can architectural token-commit events from that
 same execution be converted through a physical timebase and assessed against
 the frozen TPOT target.
 

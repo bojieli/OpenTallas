@@ -475,16 +475,21 @@ operation without a connected datapath is PC 41 `TENSOR.MATMUL`, operators
 handles EOS, emits architectural token-commit ticks, or establishes TPOT.
 
 The separate exact `HC_PRE` scheduler campaign admits DeepSeek ROM PC 15 /
-descriptor 381 and HBM PC 14 / descriptor 546, covers ROM T=1 and HBM
+descriptor 381 and its then-current HBM PC 14 / descriptor 546, covers ROM T=1 and HBM
 T=512/T=320/T=1 including `390 * 512 + 320 = 200,000`, and correlates 688,188
 emitted tiles plus 11,346,434 checks on Icarus and Verilator. Full
-projection/RMS, stable-softmax-to-Sinkhorn composition, scheduler integration
-through a layer, token selection, and TPOT remain open. Standalone CR32
+projection/RMS, scheduler integration through a layer, token selection, and
+TPOT remain open. Standalone CR32
 nonpositive exp and direct sigmoid pass 169,962 exact checks on both
 simulators. The composed stable-softmax front end passes 2,394,764 checks per
 simulator over 853 matrices, including every matrix in the first T=512 and
 final T=320 checkpoint blocks; descriptor integration and the other 389
-full-sized blocks remain open. Neither campaign produces a token or TPOT point.
+full-sized blocks remain open. The atomic stable-softmax/Sinkhorn composition
+then passes 19,313,653 checks per simulator over those same 853 matrices,
+reproduces the authenticated T=512 final combination output, and binds the
+current HBM PC-14 descriptor 545 plus ROM PC-15 descriptor 381. It is not yet
+driven by either descriptor, and none of these campaigns produces a token or
+TPOT point.
 
 - [x] W8.1 Microsequencer RTL (fetch/decode/loop/predicate/event/trap/complete) — `rtl/abi3/ot_a3_microsequencer.sv`; operand tensor-view resolution (A4 dynamic terms, A13 partial final extent, A18 extent axis/unit, A26 fixed-address edge masks) — `rtl/abi3/ot_a3_view_resolver.sv`
 - [x] W8.2 Queue/event controller RTL and compatibility-only state controller —

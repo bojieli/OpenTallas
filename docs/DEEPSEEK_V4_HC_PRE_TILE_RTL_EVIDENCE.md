@@ -3,15 +3,15 @@
 - **Evidence date:** 2026-09-04
 - **ABI:** 3.0
 - **ROM site:** wafer decode PC 15, `VECTOR.MHC`, descriptor 381
-- **HBM site:** 32-node cluster PC 14, `VECTOR.MHC`, descriptor 546
+- **HBM site:** qualified scheduler snapshot PC 14, `VECTOR.MHC`, descriptor 546; current main descriptor 545
 - **Campaign:** `results/rtl/a3_mhc_pre_tile_campaign.json`
 - **Arithmetic continuation:** `docs/DEEPSEEK_V4_HC_PRE_ARITHMETIC_RTL_EVIDENCE.md`
 - **Status:** passing prerequisite evidence; neither release gate is closed
 
 ## Outcome and acceptance position
 
-The standalone synthesizable scheduler now admits the exact released ROM and
-HBM `HYPER_CONNECT_PRE` records and emits every required projection and output
+The standalone synthesizable scheduler admits the exact retained-snapshot ROM
+and HBM `HYPER_CONNECT_PRE` records and emits every required projection and output
 coordinate once, in deterministic token/field/increasing-K order. Icarus and
 pinned Verilator 5.050 produce identical results, and pinned Yosys 0.68 reports
 zero generic elaboration problems.
@@ -100,11 +100,11 @@ pytest -q tests/compiler/test_a3_mhc_pre_tile_rtl.py
 Gate 1 still requires correctly rounded RMS/projection and exact weight and
 combination commits to be integrated behind this scheduler. Standalone
 certifying sigmoid/nonpositive-exponential, source-major 4x4 stable-softmax,
-and Sinkhorn-tail blocks now pass focused dual-simulator campaigns. The
-stable-softmax campaign covers all 512 matrices in the first checkpoint block,
-all 320 in the final partial block, and a T=1 witness, but it is not yet
-composed with Sinkhorn or wired to this scheduler; the intervening 389
-full-sized blocks are also outside that checkpoint-derived RTL campaign. The
+and Sinkhorn-tail blocks now pass focused dual-simulator campaigns. They are
+also composed under one atomic boundary over all 512 matrices in the first
+checkpoint block, all 320 in the final partial block, and a T=1 witness. That
+composition is not wired to this scheduler, and the intervening 389 full-sized
+blocks remain outside the checkpoint-derived RTL campaign. The
 complete operator must reproduce all authenticated T=512 output words from
 computation, then be connected at ROM PC 15 and HBM PC 14. The RTL path must subsequently
 continue through all remaining model operators, communication, logits, argmax,
