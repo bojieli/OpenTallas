@@ -34,10 +34,9 @@
       "statement": "Measured TPOT against a FROZEN per-model budget, on a run that first passed G1.",
       "fails_when": "TPOT exceeds the budget, OR no budget is frozen.",
       "evaluator": {
-        "type": "frozen_budget",
-        "search": ["configs/**/*.json", "spec/**/*.json"],
-        "field": "tpot_acceptance",
-        "note": "This is the gate the previous programme could not fail. A missing budget is a FAIL here, not a deferral. Arm it with a provisional budget rather than leaving it unset."
+        "type": "tpot_budget",
+        "budget": "configs/gates/tpot_budget_provisional.json",
+        "note": "This is the gate the previous programme could not fail. Its first evaluator searched configs/**/*.json for the string tpot_acceptance and passed on finding its own specification file -- a budget gate passing on its own definition, which is the not_evaluable gate in a new costume. It now reads a budget file with numeric per-row budgets and measurement records under results/tpot/, and every row must have BOTH a budget and a correctness-qualified measurement inside tolerance. A null budget is a FAIL. A missing measurement is a FAIL."
       }
     },
     {

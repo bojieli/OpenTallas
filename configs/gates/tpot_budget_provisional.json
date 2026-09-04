@@ -1,0 +1,34 @@
+{
+  "schema": "opentallas.gates.tpot_budget.v1",
+  "status": "provisional",
+  "principle": "docs/OPENTALLAS_REDESIGN_PLAN.md gate G3: a provisional budget that is wrong and fails loudly is worth more than a correct one that cannot fail. These budgets are the analytical model's own batch-1 per-user step time for the design point the chip is derived from, widened by a stated tolerance. They are allowed to be wrong. They are not allowed to be absent.",
+  "grade": "derived",
+  "source": "results/roofline/n5_vs_b200/analytical.json#comparisons[model=Qwen3-8B,batch_size=1,context_tokens=8192,rom_design=Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4]; DeepSeek rows from the same artifact at the contexts it prices",
+  "tolerance_x": 1.5,
+  "tolerance_note": "A measured TPOT within 1.5x of the analytical step passes. The band covers the residuals results/derived/qwen3_n5_design_target_reconciliation.json attributes and does not cover a regime change: a run that is compute-bound where the model is weight-read-bound fails C3 regardless of this band.",
+  "measurement_contract": {
+    "record_glob": "results/tpot/*.json",
+    "required_fields": ["model", "storage_class", "batch_size", "context_tokens", "tpot_s", "correctness_qualified", "token_record", "cycle_record"],
+    "rule": "tpot_s is architectural: token-commit ticks over the admitted target timebase on a run whose exact execution identity first passed the correct-token gate (G1). correctness_qualified must be true and token_record must name the passing record. Host wall time, functional-simulator wall time and roofline figures are refused."
+  },
+  "budgets": [
+    {"model": "Qwen3-8B", "storage_class": "rom", "batch_size": 1, "context_tokens": 8192,
+     "analytical_per_user_tokens_s": 3911.3245, "budget_tpot_s": 0.000255669,
+     "derivation": "1 / 3911.3245 = 255.669 us; design point Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4, 4 x 815 mm2, link_latency bound"},
+    {"model": "Qwen3-8B", "storage_class": "hbm", "batch_size": 1, "context_tokens": 8192,
+     "analytical_per_user_tokens_s": 693.5853, "budget_tpot_s": 0.001441784,
+     "derivation": "1 / 693.5853 = 1441.784 us; comparator Qwen3-8B/b200_sxm-x2-tensor, 2 x 1600 mm2, weight_read bound"},
+    {"model": "DeepSeek-V4-Flash-0731", "storage_class": "rom", "batch_size": 1, "context_tokens": null,
+     "analytical_per_user_tokens_s": null, "budget_tpot_s": null,
+     "derivation": "TO BE FILLED from the artifact's DeepSeek-V4-Flash-0731 batch-1 headline pair at the context it prices; null is a FAIL, not a deferral"},
+    {"model": "DeepSeek-V4-Flash-0731", "storage_class": "hbm", "batch_size": 1, "context_tokens": null,
+     "analytical_per_user_tokens_s": null, "budget_tpot_s": null,
+     "derivation": "as above; null is a FAIL"},
+    {"model": "DeepSeek-V4-Pro-0813", "storage_class": "rom", "batch_size": 1, "context_tokens": null,
+     "analytical_per_user_tokens_s": null, "budget_tpot_s": null,
+     "derivation": "no ABI topology fits Pro today; null is a FAIL"},
+    {"model": "DeepSeek-V4-Pro-0813", "storage_class": "hbm", "batch_size": 1, "context_tokens": null,
+     "analytical_per_user_tokens_s": null, "budget_tpot_s": null,
+     "derivation": "as above; null is a FAIL"}
+  ]
+}

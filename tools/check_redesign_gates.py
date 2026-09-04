@@ -94,22 +94,62 @@ def evaluate(gate: dict[str, Any]) -> dict[str, Any]:
             )
         return _pass(f"{' '.join(argv)} exited 0")
 
-    if kind == "frozen_budget":
-        field = ev["field"]
-        found: list[str] = []
-        for pattern in ev["search"]:
-            for path in _matches(pattern):
-                try:
-                    if field in path.read_text():
-                        found.append(str(path.relative_to(REPO)))
-                except OSError:
-                    continue
-        if not found:
+    if kind == "tpot_budget":
+        # The first version of this gate searched for the budget field's NAME
+        # and passed on finding its own specification file.  This one reads
+        # values, and every row needs both a budget and a qualified
+        # measurement inside tolerance.  Nothing here can pass on absence.
+        budget = _load(REPO / ev["budget"])
+        if budget is None:
+            return _fail(f"budget file {ev['budget']} is unreadable")
+        tolerance = float(budget.get("tolerance_x", 1.0))
+        contract = budget.get("measurement_contract", {})
+        records = []
+        for path in _matches(contract.get("record_glob", "results/tpot/*.json")):
+            body = _load(path)
+            if body is None:
+                continue
+            missing = [f for f in contract.get("required_fields", []) if f not in body]
+            if missing or body.get("correctness_qualified") is not True:
+                continue
+            records.append((path, body))
+        rows = budget.get("budgets", [])
+        unbudgeted = [r for r in rows if r.get("budget_tpot_s") in (None, 0)]
+        failures: list[str] = []
+        passes: list[str] = []
+        for row in rows:
+            key = f"{row.get('model')}/{row.get('storage_class')}"
+            if row in unbudgeted:
+                failures.append(f"{key}: no budget")
+                continue
+            matching = [
+                (p, b) for p, b in records
+                if b.get("model") == row.get("model")
+                and b.get("storage_class") == row.get("storage_class")
+                and int(b.get("batch_size", -1)) == int(row.get("batch_size", -2))
+            ]
+            if not matching:
+                failures.append(f"{key}: no correctness-qualified measurement")
+                continue
+            limit = float(row["budget_tpot_s"]) * tolerance
+            best = min(float(b["tpot_s"]) for _, b in matching)
+            if best > limit:
+                failures.append(
+                    f"{key}: measured {best*1e6:.1f} us over {limit*1e6:.1f} us"
+                )
+            else:
+                passes.append(f"{key}: {best*1e6:.1f} us <= {limit*1e6:.1f} us")
+        status = budget.get("status", "frozen")
+        if failures:
             return _fail(
-                f"no {field} is frozen anywhere in {', '.join(ev['search'])}; "
-                "a missing budget is a failed gate, not a deferred one"
+                f"{len(failures)} of {len(rows)} rows fail ({status} budget): "
+                + "; ".join(failures[:3])
+                + ("; ..." if len(failures) > 3 else "")
             )
-        return _pass(f"{field} present in {len(found)} file(s): {found[0]}")
+        return _pass(
+            f"all {len(rows)} rows within {tolerance:g}x of the {status} budget: "
+            + "; ".join(passes[:3])
+        )
 
     paths = _matches(ev["glob"]) if "glob" in ev else []
 
