@@ -23,10 +23,15 @@ from runtime.abi3.constants import (
 )
 from runtime.abi3.deployment import ObjectSource
 from runtime.abi3.descriptors import Phase, SelectionMode, Symbol
-from runtime.abi3.fixture import build_fixture, fixture_capability
+from runtime.abi3.fixture import FIXTURE_VOCAB, build_fixture, fixture_capability
 from runtime.abi3.records import EosReason, Submission
 from runtime.abi3.request import RequestSymbolDescriptor
 from runtime.abi3.verifier import verify_deployment
+from runtime.driver import (
+    BatchGenerationDriver,
+    BatchGenerationRequest,
+    GenerationDriver,
+)
 from runtime.sim.batch import BatchError, BatchLaneSubmission, BatchScheduler
 from runtime.sim.device import Device
 from runtime.sim.engines import load_engines
@@ -36,7 +41,10 @@ VOCABULARY = 4
 
 
 def _selection_deployment(
-    *, batch_probe_bytes: int | None = None, max_sessions: int = 4
+    *,
+    batch_probe_bytes: int | None = None,
+    max_sessions: int = 4,
+    with_prefill: bool = False,
 ):
     capability = fixture_capability(TopologyClass.SINGLE_CHIP)
     capability.limits = {**capability.limits, "max_sessions": max_sessions}
@@ -159,12 +167,26 @@ def _selection_deployment(
     builder.emit(Major.SELECTION, Selection.ARGMAX, descriptor_id=argmax)
     builder.emit(Major.SELECTION, Selection.TOKEN_APPEND, descriptor_id=append)
     builder.emit(Major.CONTROL, Control.COMPLETE)
-    builder.entrypoint(
-        entrypoint_id=0,
-        first_instruction=0,
-        phase=Phase.DECODE,
-        generation_policy_id=policy,
-    )
+    if with_prefill:
+        builder.entrypoint(
+            entrypoint_id=0,
+            first_instruction=0,
+            phase=Phase.PREFILL,
+            generation_policy_id=policy,
+        )
+        builder.entrypoint(
+            entrypoint_id=1,
+            first_instruction=0,
+            phase=Phase.DECODE,
+            generation_policy_id=policy,
+        )
+    else:
+        builder.entrypoint(
+            entrypoint_id=0,
+            first_instruction=0,
+            phase=Phase.DECODE,
+            generation_policy_id=policy,
+        )
     builder.source_identity = {"fixture": "abi3-dynamic-batch-structural-v1"}
     return builder.finish(), capability, immutable, logits, tokens, policy
 
@@ -532,3 +554,155 @@ def test_heterogeneous_request_caps_retire_each_lane_on_device() -> None:
         row["post_retirement_transaction_count"] == 0
         for row in evidence["sequences"]
     )
+
+
+@pytest.mark.parametrize("batch_size", [1, 2, 4, 8])
+def test_generation_driver_executes_independent_ragged_batch_to_device_caps(
+    batch_size: int,
+) -> None:
+    """The production driver owns one real B=N flow, not cloned B=1 loops."""
+
+    load_engines()
+    capability = fixture_capability()
+    capability.limits = {**capability.limits, "max_sessions": 8}
+    capability.validate()
+    deployment = build_fixture(
+        storage_class=StorageClass.HBM,
+        capability=capability,
+    )
+    device = Device(deployment, capability)
+    sessions = (
+        (device.create_session(),)
+        if batch_size == 1
+        else device.create_batch_sessions(batch_size)
+    )
+    scheduler = BatchScheduler(device, sessions)
+    driver = BatchGenerationDriver(scheduler)
+    requests = tuple(
+        BatchGenerationRequest(
+            sequence_id=f"sequence-{lane}",
+            prompt_token_ids=tuple(
+                (lane + offset) % FIXTURE_VOCAB for offset in range(lane + 1)
+            ),
+            max_new_tokens=lane % 4 + 1,
+        )
+        for lane in range(batch_size)
+    )
+    progress: list[tuple[int, int, int]] = []
+
+    result = driver.generate_batch(requests, progress=lambda *row: progress.append(row))
+
+    assert result.physical_batch_size == batch_size
+    assert result.batch_execution_id == scheduler.batch_execution_id
+    assert len(result.waves) == max(row.max_new_tokens for row in requests)
+    last_progress = {lane: (count, limit) for lane, count, limit in progress}
+    for lane, (request, sequence) in enumerate(zip(requests, result.sequences)):
+        expected_count = request.max_new_tokens
+        assert sequence.lane_index == lane
+        assert sequence.sequence_id == request.sequence_id
+        assert sequence.generation.prompt_token_ids == request.prompt_token_ids
+        assert sequence.generation.generated_token_ids == (0,) * expected_count
+        assert sequence.generation.stop_reason == "max_new_tokens"
+        assert sequence.generation.eos_token_id is None
+        assert sequence.generation.transactions == expected_count
+        assert sequence.generation.prefill_tokens == len(request.prompt_token_ids)
+        assert sequence.generation.decode_steps == expected_count - 1
+        assert sequence.generation.failure is None
+        assert scheduler.history[lane].transaction_ids == list(
+            range(1, expected_count + 1)
+        )
+        assert last_progress[lane] == (expected_count, expected_count)
+
+    for wave in result.waves:
+        active_before = {
+            lane for lane, active in enumerate(wave["active_mask_before"]) if active
+        }
+        assert {row["lane_index"] for row in wave["lanes"]} == active_before
+        assert all(
+            row["symbol_batch"] == batch_size for row in wave["lanes"]
+        )
+    assert result.scheduler_evidence["status"] == "structurally_executed"
+    assert result.scheduler_evidence["physical_batch_size"] == batch_size
+    assert all(
+        row["no_post_eos_transaction"]
+        for row in result.scheduler_evidence["sequences"]
+    )
+    assert device.live_request_descriptor_count == 0
+
+
+def test_generation_driver_b1_wrapper_preserves_scalar_trajectory() -> None:
+    """Extracting submission construction must not change the scalar path."""
+
+    load_engines()
+    capability = fixture_capability()
+    deployment = build_fixture(
+        storage_class=StorageClass.HBM,
+        capability=capability,
+    )
+    prompt = (1, 2, 3)
+    scalar = GenerationDriver(Device(deployment, capability)).generate(
+        prompt,
+        max_new_tokens=3,
+    )
+
+    batch_device = Device(deployment, capability)
+    scheduler = BatchScheduler(batch_device, (batch_device.create_session(),))
+    batched = BatchGenerationDriver(scheduler).generate_batch(
+        (
+            BatchGenerationRequest(
+                sequence_id="scalar-control",
+                prompt_token_ids=prompt,
+                max_new_tokens=3,
+            ),
+        )
+    ).sequences[0].generation
+
+    assert batched.generated_token_ids == scalar.generated_token_ids
+    assert batched.stop_reason == scalar.stop_reason
+    assert batched.eos_token_id == scalar.eos_token_id
+    assert batched.transactions == scalar.transactions
+    assert batched.decode_steps == scalar.decode_steps
+    assert batched.counters == scalar.counters
+    assert [step["phase"] for step in batched.per_step] == [
+        step["phase"] for step in scalar.per_step
+    ]
+    assert [step["completion_timestamp"] for step in batched.per_step] == [
+        step["completion_timestamp"] for step in scalar.per_step
+    ]
+
+
+def test_generation_driver_preserves_independent_eos_and_cap_retirement() -> None:
+    """EOS and length-cap lanes retire independently with no later transaction."""
+
+    load_engines()
+    deployment, capability, _immutable, logits, _tokens, _policy = (
+        _selection_deployment(max_sessions=8, with_prefill=True)
+    )
+    device = Device(deployment, capability)
+    scheduler = BatchScheduler(device, device.create_batch_sessions(2))
+    _stage_logits(scheduler, logits, 0, [0.0, 0.0, 0.0, 9.0])
+    _stage_logits(scheduler, logits, 1, [0.0, 9.0, 0.0, 0.0])
+
+    result = BatchGenerationDriver(scheduler).generate_batch(
+        (
+            BatchGenerationRequest("eos-lane", (1,), 8),
+            BatchGenerationRequest("cap-lane", (2, 1, 0), 2),
+        )
+    )
+
+    eos_lane, cap_lane = result.sequences
+    assert eos_lane.generation.generated_token_ids == (3,)
+    assert eos_lane.generation.stop_reason == "eos"
+    assert eos_lane.generation.eos_token_id == 3
+    assert cap_lane.generation.generated_token_ids == (1, 1)
+    assert cap_lane.generation.stop_reason == "max_new_tokens"
+    assert cap_lane.generation.eos_token_id is None
+    assert [row["lane_index"] for row in result.waves[0]["lanes"]] == [0, 1]
+    assert [row["lane_index"] for row in result.waves[1]["lanes"]] == [1]
+    assert scheduler.history[0].transaction_ids == [1]
+    assert scheduler.history[1].transaction_ids == [1, 2]
+    assert all(
+        row["no_post_eos_transaction"]
+        for row in result.scheduler_evidence["sequences"]
+    )
+    assert device.live_request_descriptor_count == 0

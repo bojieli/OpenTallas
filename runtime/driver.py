@@ -36,6 +36,7 @@ from runtime.abi3.constants import (
 from runtime.abi3.descriptors import ExtendedDescriptorType, Phase, SelectorKind, Symbol
 from runtime.abi3.records import Completion, EosReason, Submission
 from runtime.abi3.request import RequestSymbolDescriptor
+from runtime.sim.batch import BatchLaneSubmission, BatchScheduler
 from runtime.sim.device import Device, Session, TransactionResult
 
 
@@ -93,6 +94,53 @@ class GenerationResult:
             "per_step": self.per_step,
             "wall_seconds": round(self.wall_seconds, 6),
             "failure": self.failure,
+        }
+
+
+@dataclass(frozen=True, slots=True)
+class BatchGenerationRequest:
+    """One independent sequence admitted to a physical dynamic batch."""
+
+    sequence_id: str
+    prompt_token_ids: tuple[int, ...]
+    max_new_tokens: int
+
+
+@dataclass
+class BatchSequenceResult:
+    """One lane's complete result, retaining its scalar ABI trajectory."""
+
+    lane_index: int
+    sequence_id: str
+    generation: GenerationResult
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "lane_index": self.lane_index,
+            "sequence_id": self.sequence_id,
+            **self.generation.to_dict(),
+        }
+
+
+@dataclass
+class BatchGenerationResult:
+    """Independent sequence results from one shared scheduler execution."""
+
+    batch_execution_id: str | None
+    physical_batch_size: int
+    sequences: tuple[BatchSequenceResult, ...]
+    waves: tuple[dict[str, Any], ...]
+    scheduler_evidence: dict[str, Any]
+    wall_seconds: float
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "batch_execution_id": self.batch_execution_id,
+            "physical_batch_size": self.physical_batch_size,
+            "sequences": [sequence.to_dict() for sequence in self.sequences],
+            "waves": list(self.waves),
+            "scheduler_evidence": self.scheduler_evidence,
+            "wall_seconds": round(self.wall_seconds, 6),
         }
 
 
@@ -339,6 +387,32 @@ class GenerationDriver:
     ) -> tuple[Completion, TransactionResult]:
         """Register symbols, then execute only the encoded ABI submission."""
         transaction = self._next_transaction()
+        request = self._prepare_submission(
+            session,
+            transaction=transaction,
+            entrypoint=entrypoint,
+            symbols=symbols,
+            phase=phase,
+        )
+        completion, result = self.device.execute_submission(request)
+        return Completion.decode(completion), result
+
+    def _prepare_submission(
+        self,
+        session: Session,
+        *,
+        transaction: int,
+        entrypoint: int,
+        symbols: Mapping[int, int],
+        phase: Phase,
+    ) -> bytes:
+        """Register one symbol descriptor and return its encoded submission.
+
+        Scalar and batched generation share this exact construction. The
+        caller owns execution: the scalar path submits it immediately, while a
+        batch scheduler first admits every active lane as one atomic wave.
+        """
+
         descriptor_id = self.device.next_request_descriptor_id
         descriptor = RequestSymbolDescriptor.from_symbols(
             request_descriptor_id=descriptor_id,
@@ -374,8 +448,7 @@ class GenerationDriver:
         except Exception:
             self.device.discard_request_descriptors((descriptor_id,))
             raise
-        completion, result = self.device.execute_submission(request)
-        return Completion.decode(completion), result
+        return request
 
     def _policy_id(self) -> int:
         for entry in self.device.deployment.entrypoints:
@@ -678,6 +751,286 @@ class GenerationDriver:
             wall_seconds=time.perf_counter() - started,
             failure=failure,
         )
+
+
+class BatchGenerationDriver(GenerationDriver):
+    """Drive independent prompts through one physical ABI 3.0 batch.
+
+    The scheduler, not this driver, owns the active mask and session
+    retirement. Every active lane contributes one ordinary scalar ABI record
+    to each wave; prompts, positions, generation caps, mutable memories, token
+    streams, and transaction trajectories remain independent. The host never
+    retires a lane merely because its Python loop reached a length: the final
+    transaction must return an on-device EOS or MAX_NEW_TOKENS reason.
+    """
+
+    def __init__(
+        self,
+        scheduler: BatchScheduler,
+        *,
+        input_object_id: int | None = None,
+        token_ring_object_id: int | None = None,
+        prefill_entrypoint: int = 0,
+        decode_entrypoint: int = 1,
+    ) -> None:
+        super().__init__(
+            scheduler.device,
+            input_object_id=input_object_id,
+            token_ring_object_id=token_ring_object_id,
+            prefill_entrypoint=prefill_entrypoint,
+            decode_entrypoint=decode_entrypoint,
+        )
+        self.scheduler = scheduler
+        self._lane_transactions = [0] * scheduler.batch_size
+
+    def _next_lane_transaction(self, lane: int) -> int:
+        self._lane_transactions[lane] += 1
+        return self._lane_transactions[lane]
+
+    def _stage_lane_tokens(
+        self, lane: int, token_ids: Sequence[int], offset: int = 0
+    ) -> None:
+        payload = np.asarray(token_ids, dtype=np.uint32).tobytes()
+        byte_offset = int(offset) * 4
+        obj = self.device.host_object(
+            self.input_object_id, session=self.scheduler.sessions[lane]
+        )
+        if byte_offset + len(payload) > obj.size_bytes:
+            raise DriverError(
+                f"lane {lane} input window holds {obj.size_bytes // 4} tokens; "
+                f"writing {len(token_ids)} at {offset} does not fit"
+            )
+        for token in token_ids:
+            if not 0 <= int(token) < self.vocabulary_size:
+                raise DriverError(
+                    f"lane {lane} token {token} is outside the declared "
+                    f"vocabulary {self.vocabulary_size}"
+                )
+        self.scheduler.stage_host_bytes(
+            lane, self.input_object_id, byte_offset, payload
+        )
+
+    def _lane_submission(
+        self,
+        lane: int,
+        *,
+        phase: Phase,
+        span_tokens: int,
+        position_start: int,
+        generation_index: int,
+        max_new_tokens: int,
+    ) -> BatchLaneSubmission:
+        session = self.scheduler.sessions[lane]
+        transaction = self._next_lane_transaction(lane)
+        symbols = {
+            **self.deployment_symbols,
+            int(Symbol.SPAN_TOKENS): int(span_tokens),
+            int(Symbol.POSITION_START): int(position_start),
+            int(Symbol.POSITION_END): int(position_start + span_tokens),
+            int(Symbol.CONTEXT_LENGTH): int(position_start + span_tokens),
+            int(Symbol.PHASE): int(phase),
+            int(Symbol.MAX_NEW_TOKENS): int(max_new_tokens),
+            int(Symbol.BATCH): self.scheduler.batch_size,
+            int(Symbol.GENERATION_INDEX): int(generation_index),
+            int(Symbol.SPAN_LAST_INDEX): int(span_tokens - 1),
+        }
+        record = self._prepare_submission(
+            session,
+            transaction=transaction,
+            entrypoint=(
+                self.prefill_entrypoint
+                if phase is Phase.PREFILL
+                else self.decode_entrypoint
+            ),
+            symbols=symbols,
+            phase=phase,
+        )
+        return BatchLaneSubmission(lane_index=lane, record=record)
+
+    def generate_batch(
+        self,
+        requests: Sequence[BatchGenerationRequest],
+        *,
+        progress: Callable[[int, int, int], None] | None = None,
+    ) -> BatchGenerationResult:
+        """Execute one heterogeneous batch through device terminal reasons."""
+
+        started = time.perf_counter()
+        rows = tuple(requests)
+        if len(rows) != self.scheduler.batch_size:
+            raise DriverError(
+                f"request count {len(rows)} does not match physical batch "
+                f"{self.scheduler.batch_size}"
+            )
+        if len({row.sequence_id for row in rows}) != len(rows):
+            raise DriverError("batch sequence_id values must be unique")
+        policy_limit = int(self.policy["max_new_tokens"])
+        for lane, row in enumerate(rows):
+            if not row.sequence_id:
+                raise DriverError(f"lane {lane} has an empty sequence_id")
+            if not row.prompt_token_ids:
+                raise DriverError(f"lane {lane} prompt is empty")
+            if not 1 <= int(row.max_new_tokens) <= policy_limit:
+                raise DriverError(
+                    f"lane {lane} max_new_tokens={row.max_new_tokens} is outside "
+                    f"the generation-policy bound 1..{policy_limit}"
+                )
+
+        prompts = [tuple(int(token) for token in row.prompt_token_ids) for row in rows]
+        generated: list[list[int]] = [[] for _ in rows]
+        per_step: list[list[dict[str, Any]]] = [[] for _ in rows]
+        counters: list[dict[str, int]] = [{} for _ in rows]
+        lane_wall_seconds = [0.0] * len(rows)
+        failures: list[str | None] = [None] * len(rows)
+        common_request_start = int(self.device._device_cycle)
+
+        for lane, prompt in enumerate(prompts):
+            self._stage_lane_tokens(lane, prompt)
+        prefill = self.scheduler.submit_wave(
+            [
+                self._lane_submission(
+                    lane,
+                    phase=Phase.PREFILL,
+                    span_tokens=len(prompt),
+                    position_start=0,
+                    generation_index=0,
+                    max_new_tokens=rows[lane].max_new_tokens,
+                )
+                for lane, prompt in enumerate(prompts)
+            ]
+        )
+        self._record_batch_wave(
+            prefill,
+            generated=generated,
+            per_step=per_step,
+            counters=counters,
+            lane_wall_seconds=lane_wall_seconds,
+            failures=failures,
+            progress=progress,
+            limits=[row.max_new_tokens for row in rows],
+        )
+
+        while any(self.scheduler.active):
+            active = [
+                lane for lane, is_active in enumerate(self.scheduler.active) if is_active
+            ]
+            submissions: list[BatchLaneSubmission] = []
+            for lane in active:
+                if not generated[lane]:
+                    raise DriverError(
+                        f"lane {lane} prefill produced no token to decode from"
+                    )
+                if len(generated[lane]) >= rows[lane].max_new_tokens:
+                    raise DriverError(
+                        f"lane {lane} reached request cap "
+                        f"{rows[lane].max_new_tokens} without a device terminal reason"
+                    )
+                self._stage_lane_tokens(lane, [generated[lane][-1]])
+                position = len(prompts[lane]) + len(generated[lane]) - 1
+                submissions.append(
+                    self._lane_submission(
+                        lane,
+                        phase=Phase.DECODE,
+                        span_tokens=1,
+                        position_start=position,
+                        generation_index=len(generated[lane]),
+                        max_new_tokens=rows[lane].max_new_tokens,
+                    )
+                )
+            wave = self.scheduler.submit_wave(submissions)
+            self._record_batch_wave(
+                wave,
+                generated=generated,
+                per_step=per_step,
+                counters=counters,
+                lane_wall_seconds=lane_wall_seconds,
+                failures=failures,
+                progress=progress,
+                limits=[row.max_new_tokens for row in rows],
+            )
+
+        scheduler_evidence = self.scheduler.evidence()
+        request_starts = [common_request_start] * len(rows)
+        for lane, sequence in enumerate(scheduler_evidence.get("sequences", ())):
+            starts = sequence.get("request_start_ticks", ())
+            if starts:
+                request_starts[lane] = int(starts[0])
+
+        sequences: list[BatchSequenceResult] = []
+        for lane, row in enumerate(rows):
+            reason = int(self.scheduler.history[lane].eos_reason)
+            if reason == int(EosReason.OFFICIAL_EOS):
+                stop_reason = "eos"
+                eos_token = generated[lane][-1] if generated[lane] else None
+            elif reason == int(EosReason.MAX_NEW_TOKENS):
+                stop_reason = "max_new_tokens"
+                eos_token = None
+            else:
+                stop_reason = "failed"
+                eos_token = None
+                failures[lane] = failures[lane] or (
+                    "lane retired without OFFICIAL_EOS or MAX_NEW_TOKENS"
+                )
+            sequences.append(
+                BatchSequenceResult(
+                    lane_index=lane,
+                    sequence_id=row.sequence_id,
+                    generation=GenerationResult(
+                        prompt_token_ids=prompts[lane],
+                        generated_token_ids=tuple(generated[lane]),
+                        stop_reason=stop_reason,
+                        eos_token_id=eos_token,
+                        transactions=len(per_step[lane]),
+                        prefill_tokens=len(prompts[lane]),
+                        decode_steps=max(0, len(per_step[lane]) - 1),
+                        counters=dict(sorted(counters[lane].items())),
+                        request_start_tick=request_starts[lane],
+                        per_step=per_step[lane],
+                        wall_seconds=lane_wall_seconds[lane],
+                        failure=failures[lane],
+                    ),
+                )
+            )
+        return BatchGenerationResult(
+            batch_execution_id=self.scheduler.batch_execution_id,
+            physical_batch_size=self.scheduler.batch_size,
+            sequences=tuple(sequences),
+            waves=tuple(wave.to_dict() for wave in self.scheduler.waves),
+            scheduler_evidence=scheduler_evidence,
+            wall_seconds=time.perf_counter() - started,
+        )
+
+    @staticmethod
+    def _record_batch_wave(
+        wave: Any,
+        *,
+        generated: list[list[int]],
+        per_step: list[list[dict[str, Any]]],
+        counters: list[dict[str, int]],
+        lane_wall_seconds: list[float],
+        failures: list[str | None],
+        progress: Callable[[int, int, int], None] | None,
+        limits: Sequence[int],
+    ) -> None:
+        for completion in wave.lanes:
+            lane = int(completion.lane_index)
+            result = completion.result
+            step = len(per_step[lane])
+            phase = "prefill" if step == 0 else "decode"
+            per_step[lane].append(
+                _step_record(step, phase, completion.completion, result)
+            )
+            generated[lane].extend(int(token) for token in result.produced_tokens)
+            lane_wall_seconds[lane] += float(result.wall_seconds)
+            for name, value in result.counters.items():
+                counters[lane][name] = counters[lane].get(name, 0) + int(value)
+            if int(completion.completion.status) != int(CompletionStatus.SUCCESS):
+                failures[lane] = (
+                    f"{phase} transaction {completion.completion.transaction_id} "
+                    f"failed: {result.message}"
+                )
+            if progress is not None and result.produced_tokens:
+                progress(lane, len(generated[lane]), int(limits[lane]))
 
 
 def _declared_layer_count(notes: Mapping[str, Any]) -> tuple[int, ...]:

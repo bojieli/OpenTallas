@@ -44,6 +44,7 @@ from runtime.cycle.governed import (
 )
 from runtime.cycle.machine import load_cost_table
 from runtime.cycle.model import CycleModel
+from runtime.driver import BatchGenerationDriver, BatchGenerationRequest
 from runtime.sim.batch import BatchError, BatchLaneSubmission
 from runtime.sim.engines import load_engines
 from abi3_comparison_contract_support import (
@@ -440,6 +441,53 @@ def _scheduler(batch_size: int, *, cluster: bool = False):
     table = load_cost_table(CLUSTER if cluster else BASELINE)
     model = CycleModel(deployment, capability, table)
     return CycleBatchScheduler(model, batch_size), logits, policy
+
+
+def test_generation_driver_retains_modeled_ticks_from_the_same_token_execution() -> None:
+    """Driver records must carry the cycle scheduler's bound completion ticks."""
+
+    load_engines()
+    deployment, capability, logits, _policy = _deployment(
+        max_sessions=2,
+        max_new_tokens=3,
+        with_prefill=True,
+    )
+    model = CycleModel(deployment, capability, load_cost_table(BASELINE))
+    scheduler = CycleBatchScheduler(model, 2)
+    _stage_token(scheduler, logits, 0, 1)
+    _stage_token(scheduler, logits, 1, 2)
+
+    result = BatchGenerationDriver(scheduler).generate_batch(
+        (
+            BatchGenerationRequest("one-token", (1,), 1),
+            BatchGenerationRequest("two-tokens", (2, 0, 1), 2),
+        )
+    )
+
+    assert [row.generation.generated_token_ids for row in result.sequences] == [
+        (1,),
+        (2, 2),
+    ]
+    assert [row.generation.stop_reason for row in result.sequences] == [
+        "max_new_tokens",
+        "max_new_tokens",
+    ]
+    assert len(scheduler.timing_records) == 3
+    for lane, sequence in enumerate(result.sequences):
+        step_ticks = [
+            step["completion_timestamp"] for step in sequence.generation.per_step
+        ]
+        assert step_ticks == scheduler.history[lane].commit_ticks
+        assert sequence.generation.request_start_tick == result.scheduler_evidence[
+            "sequences"
+        ][lane]["request_start_ticks"][0]
+    assert result.scheduler_evidence["scheduler"] == "shared_resource_cycle_v1"
+    assert result.scheduler_evidence["acceptance_gates"]["gate1_correctness"][
+        "status"
+    ] == "not_evaluable"
+    assert result.scheduler_evidence["acceptance_gates"]["gate2_tpot"][
+        "status"
+    ] == "blocked"
 
 
 @pytest.mark.parametrize("batch_size", [1, 2, 4, 8])
