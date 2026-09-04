@@ -4,7 +4,7 @@
 
 **Status date:** 2026-09-04
 
-**Input baseline:** `main` through `6633a3b`; this includes the fail-closed
+**Input baseline:** `main` through `6837df9`; this includes the fail-closed
 DeepSeek exact-200K oracle and accelerator-pair checkers, the DeepSeek
 phase-selected sparse-KV layout repair, the shared activation-liveness
 allocator and physical 180-GB ROM-array capacity boundary, and refreshed
@@ -23,7 +23,9 @@ DeepSeek ordered-product host acceleration, the recorded no-artifact outcomes
 of the first DeepSeek ROM-array functional and cycle attempts, per-session
 mutable memory and fail-closed dynamic batch waves, authenticated ABI 3.0
 request-symbol descriptors, the exact DeepSeek `HC_PRE` RTL tile scheduler,
-and the first frozen-source exact-token Qwen HBM/SRAM accelerator diagnostic
+the first frozen-source exact-token Qwen HBM/SRAM accelerator diagnostic,
+the correctness-bound shared-resource batch cycle scheduler, and the
+certifying DeepSeek `HC_PRE` FP32 exponential/sigmoid RTL primitive
 
 **Role:** current narrative status and handoff report. Machine-readable result
 artifacts and the [unified execution checklist](UNIFIED_EXECUTION_CHECKLIST.md)
@@ -82,9 +84,16 @@ The present boundary is therefore:
 - correctness-qualified TPOT validator: implemented and fail-closed when token
   evidence, target-cycle traces, process identities, or numerical budgets are
   absent;
+- genuine shared batch timing substrate: implemented for ABI 3.0 scalar
+  sessions at B=1/2/4/8. Each transaction's request and token-commit ticks are
+  immutably bound to its functional submission, trace, result, and completion;
+  one heterogeneous B=2 fixture proves independent EOS retirement and no
+  post-EOS transaction. This is scheduler qualification, not a full-model
+  B>1 token result or a characterized TPOT point;
 - RTL control plane and bounded arithmetic blocks: independently correlated;
-  the row-folding mapper and Sinkhorn tail are standalone blocks and are not yet
-  wired into a token-producing full-system path;
+  the row-folding mapper, Sinkhorn tail, and certifying FP32 exp/sigmoid engine
+  are standalone blocks and are not yet wired into a token-producing
+  full-system path;
 - sequencer-to-arithmetic integration: the exact shipped-program Qwen prefix through
   `DMA.GATHER`, `TENSOR.EMBED_LOOKUP`, Qwen `VECTOR.RMS_NORM`, all three
   layer-zero Q/K/V `TENSOR.MATMUL` operations, and query/key
@@ -93,8 +102,11 @@ The present boundary is therefore:
   exact DeepSeek wafer multicast is dual-simulator qualified and integrated
   into that shared prefix, where the ROM path now reaches PC 15 `VECTOR.MHC`;
   exact ROM/HBM `HC_PRE` descriptor admission and tile scheduling are also
-  dual-simulator qualified, but the missing projection/RMS/transcendental
-  arithmetic prevents a complete `HC_PRE` or token claim;
+  dual-simulator qualified. The finite nonpositive exp and direct sigmoid
+  primitive is now dual-simulator and synthesis qualified, but BF16-by-FP32
+  fused accumulation, balanced RMS/projection, stable-softmax integration,
+  full-shape computed-word agreement, and PC-14/PC-15 integration still
+  prevent a complete `HC_PRE` or token claim;
 - exact mandatory long executions: open; the authenticated Qwen oracle and one
   frozen-source HBM/SRAM capture have completed with exact tokens, while an
   earlier HBM attempt remains a no-result `SIGTERM` diagnostic; final
@@ -115,7 +127,7 @@ the remaining cost.
 | Architecture and ABI 3.0 | closed | frozen live-buffer/fence profile; zero `STATE` in all four deployments | no ABI 3.1 work is required |
 | Common IR and four backend builds | closed for current graphs | Qwen and DeepSeek lower through the shared Model Graph and Tensor Kernel IR into HBM and ROM bundles; HBM head norms now encode 32/8 Qwen rows and 64 DeepSeek rows from the neutral IR | rebuild whenever an execution-authoritative source changes |
 | Functional execution | partial | the complete functional engine exists; one frozen-source Qwen HBM/SRAM run executed the exact 8K prompt end to end and matched all four oracle tokens through EOS; the first exact T=512 DeepSeek HBM `HC_PRE` issue matches an independent service on all 12,288 FP32 output words | the Qwen result predates current runtime changes and lacks its independent HBM-B/ROM peers; the `HC_PRE` result is an operator qualification, not a token |
-| RTL 3.0 | partial | shipped control replay and bounded arithmetic pairs independently correlate; the integrated prefix now drives Qwen through query/key RoPE and DeepSeek ROM through wafer multicast; exact ROM/HBM `HC_PRE` tile scheduling, the standalone 256-lane mapper, exact Sinkhorn tail, MAC lane, and multicast transport have dual-simulator evidence | Qwen next stops at `DMA.SCATTER` at PC 32; DeepSeek `HC_PRE` still lacks full projection/RMS plus CR32 sigmoid, exponential, and stable-softmax arithmetic; no RTL path reaches a token |
+| RTL 3.0 | partial | shipped control replay and bounded arithmetic pairs independently correlate; the integrated prefix now drives Qwen through query/key RoPE and DeepSeek ROM through wafer multicast; exact ROM/HBM `HC_PRE` tile scheduling, the standalone 256-lane mapper, exact Sinkhorn tail, certifying FP32 exp/sigmoid engine, MAC lane, and multicast transport have dual-simulator evidence | Qwen next stops at `DMA.SCATTER` at PC 32; DeepSeek `HC_PRE` still lacks BF16-by-FP32 fused accumulation, balanced RMS/projection, stable-softmax integration, full-shape word agreement, and PC-14/PC-15 integration; no RTL path reaches a token |
 | Mandatory workloads | open | the Qwen exact-8K rendered official-chat prompt is frozen and reproducible; its authenticated external oracle and one frozen-source HBM/SRAM execution both produce `391` followed by EOS | a single current-release HBM-A/HBM-B/ROM triplet, Qwen natural chat/reasoning/agentic and genuine B=1/2/4/8 cells, and both DeepSeek exact-200K executions are absent; the retained DeepSeek oracle stops after eight tokens |
 | SKY130 and ASAP7 | partial | several bounded blocks have process-specific reports | neither view characterizes a complete target; ASAP7 readiness has 15 fail-closed blockers |
 | Governed comparison | partial | short historical ROM/HBM comparisons retain topology and counter evidence; `081161b` adds a source/process/batch-bound correctness-qualified TPOT schema and checker; `8080d8f` adds the explicit RTL-bound accelerated co-simulation tier; `cbaecf0` freezes the shared-datapath production plan and exact-execution promotion rule | no source-current mandatory-workload pair, production-simulation token record, target token-commit trace, frozen numerical TPOT budget, or complete same-view system cost exists |
@@ -223,9 +235,16 @@ time nor its retired-instruction counter is architectural TPOT.
   named only by the existing `request_descriptor_id` field. Missing, corrupt,
   duplicate, stale, replayed, cross-session, cross-generation, and
   cross-transaction descriptors fail before engine work. This makes genuine
-  batched Gate-1 runs structurally possible; transactions within a wave remain
-  lane-serial, engine co-issue and shared-resource timing are not implemented,
-  and no B>1 full-model token or TPOT result exists.
+  batched Gate-1 runs structurally possible. Commits `2e6dcdc`, `6247ab5`, and
+  `e6d3a24` then replay those exact functional trace spans through one bounded,
+  shared-resource target-cycle scheduler and bind every transaction's request
+  and token-commit tick to its deployment, capability, cost table, session,
+  request descriptor, submission, trace, result, and completion identities.
+  Twenty-six focused batch tests and eight affected cycle-model tests pass; a
+  heterogeneous B=2 fixture retires one EOS lane after wave zero while the
+  other lane completes wave one. Full-model heterogeneous inputs, governed
+  timing-trace export, characterized SKY130/ASAP7 timing, and every B>1 model
+  result remain absent, so these commits create no correctness or TPOT claim.
 - Qwen ROM deployment `d8a6f8edaaac…` passes 61/61 schedule checks with 236
   descriptors, 74 instructions, and zero `STATE` records. Operation-derived
   feature cleanup is integrated: every production program omits
@@ -333,18 +352,26 @@ time nor its retired-instruction counter is architectural TPOT.
   or TPOT. Commit `601a108` subsequently qualifies a correctly rounded finite
   FP32 divider and atomic post-stable-softmax 4x4 Sinkhorn-20 tail on Icarus and
   Verilator: 6,641 division cases, 81 matrices, and 73,040 exact checks, plus
-  clean generic Yosys elaboration. The exponential and sigmoid units, stable
-  softmax front end, full-shape scheduling, and PC-14 bridge integration remain
-  open, so this still is not complete `HC_PRE` or a model-token result.
+  clean generic Yosys elaboration. Commit `79b6a19` then adds a synthesizable,
+  fail-closed FP32 engine for correctly rounded finite nonpositive exponential
+  and direct sigmoid. Its 4,200 exact-rational cases produce 4,155 certified
+  results and 45 intentional refusals; Icarus 11.0 and pinned Verilator 5.050
+  agree across 169,962 checks, and pinned Yosys 0.68 reports zero elaboration
+  problems. This removes the absent primitive, but BF16-by-FP32 fused
+  accumulation, balanced RMS/projection, stable-softmax composition,
+  checkpoint-reachable T=1/T=320/T=512 word agreement, and PC-14/PC-15 bridge
+  integration remain open. It is not complete `HC_PRE` or a model-token result.
 - Commits `17fbb27`, `874b48e`, and `ff5fcb8` add and qualify the exact
   DeepSeek `HC_PRE` tile scheduler. It admits ROM PC 15 descriptor 381 and HBM
   PC 14 descriptor 546, covers ROM T=1 and HBM T=512/T=320/T=1, and explicitly
   covers the exact-200K partition `390 * 512 + 320`. Icarus and Verilator agree
   on 688,188 emitted tiles and 11,346,434 checks; 181,605 backpressure cycles
   preserve stable metadata and counters, while all 18 malformed cases fail
-  before work. Full projection MAC/RMS and CR32 sigmoid, exponential, and
-  stable-softmax arithmetic are still missing, so this is scheduler evidence
-  only and produces no token, EOS decision, architectural timing, or TPOT.
+  before work. Full projection MAC/RMS, BF16-by-FP32 accumulation,
+  stable-softmax composition around the now-qualified exp/sigmoid primitive,
+  and full-shape output matching are still missing, so this is scheduler
+  evidence only and produces no token, EOS decision, architectural timing, or
+  TPOT.
 - Commit `081161b` adds the correctness-qualified TPOT request, raw timing-trace,
   report schemas, and checker. It requires exact independent-oracle tokens and
   EOS/cap behavior before consuming raw token-commit ticks from the same bound

@@ -391,7 +391,15 @@ evidence. None may be presented as a rerun of the current source.
 
 ## W7 — Cycle model and capability
 
-- [x] W7.1 One event-driven cycle simulator over the same ABI 3.0 artifacts — `runtime/cycle/model.py`, trace derived by running the frozen device itself
+- [x] W7.1 One event-driven cycle simulator over the same ABI 3.0 artifacts —
+  `runtime/cycle/model.py`, with traces derived by running the frozen device
+  itself. `runtime/cycle/batch.py` now schedules genuine B=1/2/4/8 ABI session
+  waves over the same bounded queues, engines, memory, and fabric, and binds
+  every request/token-commit tick to the exact functional transaction. The
+  focused 26-case batch suite plus eight affected cycle checks pass, including
+  heterogeneous B=2 EOS retirement. No heterogeneous full-model B>1 run,
+  governed exported timing trace, characterized target timebase, or
+  correctness-qualified TPOT point exists yet
 - [x] W7.2 Capability records for SKY130 view and ASAP7 view (separately versioned) — five cost tables with per-parameter provenance
 - [x] W7.3 32-node fabric model (latency, serialization, contention, credits, retry) — `runtime/cycle/fabric.py` ClusterFabric
 - [x] W7.4 Wafer fabric model (reticle/tile routing, congestion, barriers) — `runtime/cycle/fabric.py` WaferFabric
