@@ -100,15 +100,15 @@ QWEN_RMS_CONTRACT = hashlib.sha256(b"qwen3_rmsnorm_fp32_bf16_v1").digest()
 DEEPSEEK_TRANSFER_CONTRACT = hashlib.sha256(b"structural_hc_expand_bf16_v1").digest()
 QWEN_MATMUL_CONTRACT = hashlib.sha256(b"bf16_bf16_fp32_blocked_rne_v1").digest()
 QWEN_ROPE_CONTRACT = hashlib.sha256(b"qwen3_rope_fp32_bf16_v1").digest()
-EMBED_DESCRIPTOR_IDS = (41, 54, 356, 527)
+EMBED_DESCRIPTOR_IDS = (41, 54, 356, 526)
 RMS_DESCRIPTOR_IDS = (50, 64)
-TRANSFER_DESCRIPTOR_IDS = (363, 532)
+TRANSFER_DESCRIPTOR_IDS = (363, 531)
 MATMUL_PCS = (11, 14, 17)
 MATMUL_DESCRIPTOR_IDS = ((59, 67, 74), (72, 78, 83))
 HEAD_RMS_PCS = (20, 23)
-HEAD_RMS_DESCRIPTOR_IDS = ((81, 89), (88, 94))
+HEAD_RMS_DESCRIPTOR_IDS = ((80, 88), (88, 94))
 ROPE_PCS = (26, 29)
-ROPE_DESCRIPTOR_IDS = ((98, 106), (101, 107))
+ROPE_DESCRIPTOR_IDS = ((96, 103), (101, 107))
 ROPE_AUX0 = (HEAD_WIDTH, 2 * HEAD_WIDTH)
 MATMUL_OUTPUT_SHA256 = {
     11: "b900b79fd38ff6a9bff470ac27e9672b0c3724b84f6a1f7e964c2ec0918ea0ff",
@@ -135,10 +135,10 @@ ROPE_COEFFICIENT_BF16_SHA256 = (
     "836c0e4d9ba8556db28ac7d300914b4cb42d15418e59c6550a693558252049f1"
 )
 NEXT_BOUNDARIES = (
-    (32, int(Major.DMA), int(Dma.SCATTER), 114, "DMA.SCATTER"),
+    (32, int(Major.DMA), int(Dma.SCATTER), 111, "DMA.SCATTER"),
     (32, int(Major.DMA), int(Dma.SCATTER), 114, "DMA.SCATTER"),
     (13, int(Major.LINK), 3, 368, "LINK.MULTICAST"),
-    (14, int(Major.VECTOR), int(Vector.MHC), 546, "VECTOR.MHC"),
+    (14, int(Major.VECTOR), int(Vector.MHC), 545, "VECTOR.MHC"),
 )
 
 INPUT_IMAGES = (

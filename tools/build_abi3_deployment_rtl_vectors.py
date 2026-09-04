@@ -91,10 +91,10 @@ OUTPUT_DIR = ROOT / "testdata/compiler/abi3_deployment"
 # padded to these deployment-only bounds so the DUT reads fully initialised
 # memory.  A deployment that does not fit is refused rather than quietly
 # truncated.
-PROGRAM_WORDS = 4096      # 256-bit instruction records
-HEADER_WORDS = 8192       # 32-bit words, 64 per deployment
-DESC_WORDS = 8192         # 1536-bit descriptor prefixes
-SYMBOL_WORDS = 2048       # 32-bit words, 16 per case
+PROGRAM_WORDS = 4096  # 256-bit instruction records
+HEADER_WORDS = 8192  # 32-bit words, 64 per deployment
+DESC_WORDS = 8192  # 1536-bit descriptor prefixes
+SYMBOL_WORDS = 2048  # 32-bit words, 16 per case
 DESCRIPTOR_PREFIX_BYTES = 192
 
 CASE_STRIDE = 40
@@ -106,9 +106,9 @@ VIEW_MEM_WORDS = 1048576
 PREDICATE_MEM_WORDS = 65536
 SYMBOL_STRIDE = 16
 HEADER_STRIDE = 64
-ISSUE_STRIDE = 3          # opcode, descriptor ID, instruction index
+ISSUE_STRIDE = 3  # opcode, descriptor ID, instruction index
 VIEW_STRIDE = 7
-PREDICATE_STRIDE = 3     # object ID, element index, raw boolean value
+PREDICATE_STRIDE = 3  # object ID, element index, raw boolean value
 META_WORDS = 8
 
 # OPERATOR operand slots in the order the golden model and the RTL both walk
@@ -537,8 +537,7 @@ BOUND_PARAMETERS = (
 # deployment is admitted against.
 BOUND_CAPABILITY_FIELD = {
     "A3_LOOP_DEPTH": (
-        "limits.max_loop_depth -- expressible, and runtime.abi3.verifier "
-        "checks it"
+        "limits.max_loop_depth -- expressible, and runtime.abi3.verifier checks it"
     ),
     "A3_STATE_SLOTS": (
         "limits.max_state_resources (amendment A22) -- runtime.abi3.verifier "
@@ -564,9 +563,7 @@ BOUND_CAPABILITY_FIELD = {
         "the wait-set payload is sized by; the two agree at 12"
     ),
 }
-BOUND_RE = re.compile(
-    r"localparam\s+integer\s+(A3_[A-Z_]+)\s*=\s*(\d+)\s*;"
-)
+BOUND_RE = re.compile(r"localparam\s+integer\s+(A3_[A-Z_]+)\s*=\s*(\d+)\s*;")
 
 
 def rtl_bounds() -> dict[str, int]:
@@ -597,9 +594,7 @@ def deployment_demands(deployment: Deployment) -> dict[str, int]:
     header, body = split_program(deployment.program)
     instructions = decode_body(body)
     events = {
-        int(i.signal_event_id)
-        for i in instructions
-        if int(i.signal_event_id) != NO_ID
+        int(i.signal_event_id) for i in instructions if int(i.signal_event_id) != NO_ID
     }
     for wait_id in {
         int(i.wait_set_id) for i in instructions if int(i.wait_set_id) != NO_ID
@@ -610,9 +605,7 @@ def deployment_demands(deployment: Deployment) -> dict[str, int]:
         for slot in range(int(payload["producer_count"])):
             events.add(int(payload[f"producer_{slot}"]))
     producers = [0]
-    for wait_id in deployment.table.ids_of_type(
-        ExtendedDescriptorType.EVENT_WAIT_SET
-    ):
+    for wait_id in deployment.table.ids_of_type(ExtendedDescriptorType.EVENT_WAIT_SET):
         payload = deployment.table.get(
             wait_id, ExtendedDescriptorType.EVENT_WAIT_SET
         ).payload
@@ -797,15 +790,17 @@ def resolved_views(
         if view_id == NO_ID:
             continue
         resolved = device.views.resolve(view_id, entry["loops"], symbols)
-        views.append({
-            "index": int(entry["pc"]),
-            "slot": slot,
-            "descriptor_id": view_id,
-            "extent_axis": int(resolved.extent_axis),
-            "extent": int(resolved.dims[int(resolved.extent_axis)]),
-            "element_offset": int(resolved.element_offset),
-            "rank": len(resolved.dims),
-        })
+        views.append(
+            {
+                "index": int(entry["pc"]),
+                "slot": slot,
+                "descriptor_id": view_id,
+                "extent_axis": int(resolved.extent_axis),
+                "extent": int(resolved.dims[int(resolved.extent_axis)]),
+                "element_offset": int(resolved.element_offset),
+                "rank": len(resolved.dims),
+            }
+        )
     return views
 
 
@@ -836,8 +831,12 @@ def run_golden(
     predicate_reads: list[dict[str, int]] = []
     evaluate_predicate = device._evaluate_predicate  # noqa: SLF001
 
-    def recording_predicate(descriptor, loops, bound_symbols):  # noqa: ANN001
-        value = bool(evaluate_predicate(descriptor, loops, bound_symbols))
+    def recording_predicate(  # noqa: ANN001
+        descriptor, loops, bound_symbols, node_memories
+    ):
+        value = bool(
+            evaluate_predicate(descriptor, loops, bound_symbols, node_memories)
+        )
         kind = PredicateKind(int(descriptor.payload["predicate_kind"]))
         if kind in (PredicateKind.BOOLEAN_OBJECT, PredicateKind.EOS_MEMBER):
             predicate_reads.append(
@@ -873,12 +872,14 @@ def run_golden(
     views: list[dict[str, Any]] = []
     for entry in trace:
         instruction = device.instructions[entry["pc"]]
-        issues.append({
-            "index": int(entry["pc"]),
-            "family": int(instruction.major),
-            "sub": int(instruction.sub),
-            "descriptor_id": int(instruction.descriptor_id),
-        })
+        issues.append(
+            {
+                "index": int(entry["pc"]),
+                "family": int(instruction.major),
+                "sub": int(instruction.sub),
+                "descriptor_id": int(instruction.descriptor_id),
+            }
+        )
         views.extend(resolved_views(device, entry, symbols))
     success = result.status == 0
     return {
@@ -897,9 +898,7 @@ def run_golden(
         "state_commits": int(counters.get("state.commits", 0)),
         "state_discards": int(counters.get("state.discards", 0)),
         "state_reads": int(counters.get("state.reads", 0)),
-        "state_generation_advances": int(
-            counters.get("state.generation_advances", 0)
-        ),
+        "state_generation_advances": int(counters.get("state.generation_advances", 0)),
         "state_commits_applied": (
             int(counters.get("state.commits", 0)) if success else 0
         ),
@@ -1069,37 +1068,37 @@ def build(argv: list[str] | None = None) -> int:
         for overrun in overruns:
             overrun_summary.append({"deployment": target.key, **overrun})
 
-        deployments.append({
-            "key": target.key,
-            "title": target.title,
-            "deployment_dir": target.deployment,
-            "deployment_sha256": actual,
-            "deployment_identity_evidence": expected_identity.record(),
-            "descriptor_table_sha256": hashlib.sha256(table.encode()).hexdigest(),
-            "program_sha256": hashlib.sha256(image).hexdigest(),
-            "target_id": deployment.target_id,
-            "model_id": deployment.model_id,
-            "instruction_count": instruction_count,
-            "descriptor_count": len(table),
-            "state_descriptor_count": state_count,
-            "entrypoint_count": entrypoint_count,
-            "declared_max_retired_work": declared_work,
-            "capability": target.capability,
-            "capability_digest": capability.digest,
-            "admitted": report.admitted,
-            "verifier_errors": list(report.errors),
-            "rtl_bound_demands": demands,
-            "rtl_bound_overruns": overruns,
-            "co_simulable_within_rtl_bounds": not overruns,
-            "reproduce": target.reproduce,
-        })
+        deployments.append(
+            {
+                "key": target.key,
+                "title": target.title,
+                "deployment_dir": target.deployment,
+                "deployment_sha256": actual,
+                "deployment_identity_evidence": expected_identity.record(),
+                "descriptor_table_sha256": hashlib.sha256(table.encode()).hexdigest(),
+                "program_sha256": hashlib.sha256(image).hexdigest(),
+                "target_id": deployment.target_id,
+                "model_id": deployment.model_id,
+                "instruction_count": instruction_count,
+                "descriptor_count": len(table),
+                "state_descriptor_count": state_count,
+                "entrypoint_count": entrypoint_count,
+                "declared_max_retired_work": declared_work,
+                "capability": target.capability,
+                "capability_digest": capability.digest,
+                "admitted": report.admitted,
+                "verifier_errors": list(report.errors),
+                "rtl_bound_demands": demands,
+                "rtl_bound_overruns": overruns,
+                "co_simulable_within_rtl_bounds": not overruns,
+                "reproduce": target.reproduce,
+            }
+        )
 
         root = checkpoint_root(target, args.checkpoint_root)
 
         for request in requests(args.prompt_tokens):
-            device = Device(
-                deployment, capability, verify=False, trace=True, root=root
-            )
+            device = Device(deployment, capability, verify=False, trace=True, root=root)
             bounded = bool(args.max_retired_work) and args.max_retired_work < (
                 device.header.max_retired_work
             )
@@ -1152,7 +1151,8 @@ def build(argv: list[str] | None = None) -> int:
                 predicate_words.append(predicate["value"] & 1)
 
             entry = next(
-                e for e in deployment.entrypoints
+                e
+                for e in deployment.entrypoints
                 if e["entrypoint_id"] == request.entrypoint_id
             )
             flags = 1 | 2 | (4 if golden["complete"] else 0)
@@ -1168,7 +1168,7 @@ def build(argv: list[str] | None = None) -> int:
                 work_bound & 0xFFFFFFFF,
                 (work_bound >> 32) & 0xFFFFFFFF,
                 flags,
-                0,                       # expected header trap class: admitted
+                0,  # expected header trap class: admitted
                 instruction_count,
                 entrypoint_count,
                 int(golden["trap_class"]),
@@ -1219,65 +1219,66 @@ def build(argv: list[str] | None = None) -> int:
             )
             predicate_blob = b"".join(
                 int(word).to_bytes(4, "little")
-                for word in predicate_words[
-                    predicate_base * PREDICATE_STRIDE :
-                ]
+                for word in predicate_words[predicate_base * PREDICATE_STRIDE :]
             )
-            records.append({
-                "name": f"{target.key}/{request.name}",
-                "deployment": target.key,
-                "deployment_sha256": actual,
-                "request": request.name,
-                "entrypoint_id": request.entrypoint_id,
-                "phase": int(request.phase),
-                "prompt_tokens": args.prompt_tokens,
-                "symbols": {str(k): int(v) for k, v in sorted(symbols.items())},
-                "work_bound": work_bound,
-                "declared_max_retired_work": declared_work,
-                "work_bound_lowered_for_cosimulation": bounded,
-                "ran_to_completion": bool(golden["complete"]),
-                "depth": {
-                    "static_instructions_in_program": instruction_count,
-                    "distinct_static_instructions_reached": len(
-                        {int(i["index"]) for i in golden["issues"]}
-                    ),
-                    "instructions_fetched": int(golden["fetched"]),
-                    "instructions_retired": int(golden["retired"]),
-                    "engine_issues": len(golden["issues"]),
-                    "resolved_operand_views": len(golden["views"]),
-                    "data_dependent_predicate_reads": len(
-                        golden["predicate_reads"]
-                    ),
-                },
-                "golden": {
-                    key: value for key, value in sorted(golden.items())
-                    if key
-                    not in {
-                        "issues",
-                        "views",
-                        "predicate_reads",
-                        "counters",
-                        "symbols",
-                    }
-                },
-                "golden_counters": golden["counters"],
-                "issued_opcodes": [
-                    {"family": family, "sub": sub, "issues": count}
-                    for (family, sub), count in sorted(opcodes.items())
-                ],
-                "issue_base": issue_base,
-                "issue_count": len(golden["issues"]),
-                "issue_stream_sha256": hashlib.sha256(issue_blob).hexdigest(),
-                "view_base": view_base,
-                "view_count": len(golden["views"]),
-                "view_stream_sha256": hashlib.sha256(view_blob).hexdigest(),
-                "predicate_base": predicate_base,
-                "predicate_count": len(golden["predicate_reads"]),
-                "predicate_reads": golden["predicate_reads"],
-                "predicate_stream_sha256": hashlib.sha256(
-                    predicate_blob
-                ).hexdigest(),
-            })
+            records.append(
+                {
+                    "name": f"{target.key}/{request.name}",
+                    "deployment": target.key,
+                    "deployment_sha256": actual,
+                    "request": request.name,
+                    "entrypoint_id": request.entrypoint_id,
+                    "phase": int(request.phase),
+                    "prompt_tokens": args.prompt_tokens,
+                    "symbols": {str(k): int(v) for k, v in sorted(symbols.items())},
+                    "work_bound": work_bound,
+                    "declared_max_retired_work": declared_work,
+                    "work_bound_lowered_for_cosimulation": bounded,
+                    "ran_to_completion": bool(golden["complete"]),
+                    "depth": {
+                        "static_instructions_in_program": instruction_count,
+                        "distinct_static_instructions_reached": len(
+                            {int(i["index"]) for i in golden["issues"]}
+                        ),
+                        "instructions_fetched": int(golden["fetched"]),
+                        "instructions_retired": int(golden["retired"]),
+                        "engine_issues": len(golden["issues"]),
+                        "resolved_operand_views": len(golden["views"]),
+                        "data_dependent_predicate_reads": len(
+                            golden["predicate_reads"]
+                        ),
+                    },
+                    "golden": {
+                        key: value
+                        for key, value in sorted(golden.items())
+                        if key
+                        not in {
+                            "issues",
+                            "views",
+                            "predicate_reads",
+                            "counters",
+                            "symbols",
+                        }
+                    },
+                    "golden_counters": golden["counters"],
+                    "issued_opcodes": [
+                        {"family": family, "sub": sub, "issues": count}
+                        for (family, sub), count in sorted(opcodes.items())
+                    ],
+                    "issue_base": issue_base,
+                    "issue_count": len(golden["issues"]),
+                    "issue_stream_sha256": hashlib.sha256(issue_blob).hexdigest(),
+                    "view_base": view_base,
+                    "view_count": len(golden["views"]),
+                    "view_stream_sha256": hashlib.sha256(view_blob).hexdigest(),
+                    "predicate_base": predicate_base,
+                    "predicate_count": len(golden["predicate_reads"]),
+                    "predicate_reads": golden["predicate_reads"],
+                    "predicate_stream_sha256": hashlib.sha256(
+                        predicate_blob
+                    ).hexdigest(),
+                }
+            )
 
     opcode_union: dict[tuple[int, int], int] = {}
     for record in records:
@@ -1304,8 +1305,14 @@ def build(argv: list[str] | None = None) -> int:
         )
 
     meta = [
-        len(records), total_issues, total_views, completions, len(TARGETS),
-        total_predicates, 0, 0,
+        len(records),
+        total_issues,
+        total_views,
+        completions,
+        len(TARGETS),
+        total_predicates,
+        0,
+        0,
     ]
 
     # The two checkers hold these images in fixed-size arrays; a vector set that

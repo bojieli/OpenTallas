@@ -137,8 +137,8 @@ def load_extension(base: dict[str, Any]) -> dict[str, Any]:
     if (
         body.get("schema") != "opentallas.rtl.abi3_shipped_prefix_multicast_vectors.v1"
         or body.get("abi") != {"major": 3, "minor": 0}
-        or body.get("status") != "frozen_identity_rtl_integration_only"
-        or body.get("promotion_status") != "blocked_on_canonical_deployment_rebuild"
+        or body.get("status") != "source_current_rtl_integration_only"
+        or body.get("promotion_status") != "source_current_bounded_prefix_only"
     ):
         raise SystemExit("the frozen multicast overlay has an unknown status")
     for name, expected in body["image_sha256"].items():

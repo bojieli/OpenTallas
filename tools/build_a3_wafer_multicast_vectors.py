@@ -30,7 +30,7 @@ DEFAULT_OUTPUT = ROOT / "testdata/rtl/a3_wafer_multicast"
 BUNDLE = ROOT / "build/abi3/deepseek-v4-flash-rom"
 
 EXPECTED_DEPLOYMENT = (
-    "f239f8fede6963d3daebfe19e8771afad69cf09992e339a0191a1983518ae8a7"
+    "34ca189cd4082b21260c0c27920f6e46d821f6709003b84cacd86cd867ed3e42"
 )
 EXPECTED_CAPABILITY = (
     "5abf26b4ef235d6083c6f6dbe48d7021068c59ecb451238569a2f660303d26b6"

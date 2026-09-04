@@ -38,15 +38,14 @@ def test_overlay_builder_reproduces_every_retained_image(tmp_path: Path) -> None
         assert (tmp_path / name).read_bytes() == (VECTOR_DIR / name).read_bytes()
 
 
-def test_overlay_preserves_frozen_identity_and_advances_only_rom() -> None:
+def test_overlay_preserves_source_current_identity_and_advances_only_rom() -> None:
     body = vectors()
     assert body["schema"] == generator.SCHEMA
-    assert body["status"] == "frozen_identity_rtl_integration_only"
-    assert body["promotion_status"] == "blocked_on_canonical_deployment_rebuild"
-    assert "32992-byte IR kernel" in body["promotion_blocker"]
-    assert "33234 bytes" in body["promotion_blocker"]
+    assert body["status"] == "source_current_rtl_integration_only"
+    assert body["promotion_status"] == "source_current_bounded_prefix_only"
+    assert "architectural token commit" in body["promotion_blocker"]
     assert body["base_vector_set"]["sha256"] == (
-        "0d6dd391947fa698f8840f15d7761e2ae5b3a3102940860fae9f49de3a6bff1f"
+        "cd72fa9e711340095da1f8698abc7a810d2a82750d6bde43ec0144257a53b09d"
     )
     assert body["real_launch_count"] == 29
     assert body["multicast_launch_count"] == 1
@@ -107,7 +106,7 @@ def test_exact_records_payload_and_qualification_are_bound() -> None:
     assert retained["exact_case"]["replayed"] == 4
 
 
-def test_campaign_loads_overlay_without_regenerating_stale_deployments() -> None:
+def test_campaign_loads_source_current_overlay() -> None:
     base = base_campaign.load_vectors()
     assert campaign.load_extension(base) == vectors()
 
@@ -125,7 +124,7 @@ def test_retained_campaign_is_current_and_non_promotable() -> None:
         json.dumps(retained, indent=2, sort_keys=True) + "\n"
     ).encode("utf-8")
     assert retained["status"] == "pass"
-    assert retained["promotion_status"] == ("blocked_on_canonical_deployment_rebuild")
+    assert retained["promotion_status"] == "source_current_bounded_prefix_only"
     assert retained["integrated_replay_passed"]
     assert retained["simulator_correlation"] == {
         "verilator_cases_match": True,

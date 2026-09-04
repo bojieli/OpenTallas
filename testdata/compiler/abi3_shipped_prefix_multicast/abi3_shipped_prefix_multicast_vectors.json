@@ -5,32 +5,32 @@
   },
   "base_vector_set": {
     "image_sha256": {
-      "p3_case.hex": "a5dd175ddea5a217efa2b49f8a70c0bca7ad1126063a77c5403398f4a3ef5e00",
+      "p3_case.hex": "d818e3a37b180ae9711d41c9a72bccfd6b8c08eaae58c5d5ca0dbc9c3d3d838c",
       "p3_expect.hex": "1cadfc3371d198704fc9f245e7d8e27b72b38e906eafa0cdbc576f1eb2f98327",
       "p3_index.hex": "3782c32630334de6249983b67fe2fe6198815a3435ef977a8512dacb2292b2e0",
-      "p3_issue.hex": "3a7cde8547630d9a57612cd905ce8f67bf5eedb28e844b347d3fab70fa71b10b",
+      "p3_issue.hex": "529ba11d6bfaaae9d2bffc7ba1b56ac6d5ae9f6dc9ad174cc550884f7e66a7d1",
       "p3_meta.hex": "d19f9c6c4fab9917eb7fac4ee14bf12c511c5f43d2c1492bf43f8b617f1eb8c6",
       "p3_source.hex": "20eabb96e15b766c00e965e566021ef3f8944b823e26a15c46db6398d399e0b9"
     },
     "input_deployment_vectors": {
       "images": {
-        "a3_descriptor.hex": "73a3796cef4ab56d8b9be148f9a006fb78d04f365898229b9663e192722e0f44",
-        "a3_program.hex": "3342d7729996bb1d4a2d2447f77d1254c73e94b1b55f20a532e1fe4a9d523f78",
+        "a3_descriptor.hex": "e2af94bbccaaa4e1a4b3d7d67a384d86a80769a37d06f38d622850fb116dd616",
+        "a3_program.hex": "9a86572ef8fbfb0eb6c175cd528c8e39164d0f315cec889d9c85a4ddf227c505",
         "a3_symbol.hex": "aefea5f803c69340757eed992d1f3e691d4ca2f0b610256864a5bf1d0f757f38"
       },
       "path": "testdata/compiler/abi3_deployment/abi3_deployment_rtl_vectors.json",
-      "sha256": "be5ffff67d78779b98edc8cdafa77332ada2ebbd3e70cb582cd2b5b3d972a9f4"
+      "sha256": "06977e3d3be02282c5076fa269f8fe5a25dec320f4b0ec7840b4429d09945638"
     },
     "path": "testdata/compiler/abi3_shipped_prefix/abi3_shipped_prefix_vectors.json",
     "schema": "opentallas.rtl.abi3_shipped_prefix_vectors.v1",
-    "sha256": "0d6dd391947fa698f8840f15d7761e2ae5b3a3102940860fae9f49de3a6bff1f"
+    "sha256": "cd72fa9e711340095da1f8698abc7a810d2a82750d6bde43ec0144257a53b09d"
   },
   "capability_fault_count": 4,
   "case_count": 4,
   "case_stride": 80,
-  "claim": "the already-checked four-case shipped RTL prefix identity is extended only by the qualified exact DeepSeek ROM PC-13 LINK.MULTICAST; it completes one 256-participant, 64-KiB broadcast with CRC replay and then fails closed at PC-15 VECTOR.MHC",
+  "claim": "the source-current, already-checked four-case shipped RTL prefix identity is extended only by the qualified exact DeepSeek ROM PC-13 LINK.MULTICAST; it completes one 256-participant, 64-KiB broadcast with CRC replay and then fails closed at PC-15 VECTOR.MHC",
   "does_not_establish": [
-    "a source-current canonical compiler or deployment rebuild",
+    "execution beyond the exact bounded shipped-program prefixes",
     "prefill, a whole model transaction, token selection, EOS, or decoded-token correctness",
     "architectural TPOT, physical timing, area, power, HBM timing, or SRAM timing",
     "simulator wall time as model performance"
@@ -115,8 +115,8 @@
     }
   ],
   "image_sha256": {
-    "p3_case.hex": "024a9d3688c7d18833c51d032cc7ad932cfbc27faec976889a370b68c737af54",
-    "p3_issue.hex": "fca4c7f8b5e9d2b083a0c6c76151cb3fb7a819aa4281eaae4c9f3c89ac0309cc",
+    "p3_case.hex": "bfce6caf6ba612ad0b7739f5036df3a152ae8b4166fc67013ffdcd0ee32906cb",
+    "p3_issue.hex": "62ad8a4e1d088a1c68f6554840a51bd3186e05dcc19e0e03fc781a55aebcc4bb",
     "p3_meta.hex": "58a0131d2874613171dfadb9054d406ca4713f26bfe87aa8e8b86ac3c60748df",
     "p3_multicast_communication.hex": "e287e85c3a8a194f5d129781e66471570039916ec5699ba8014160a84c36de85",
     "p3_multicast_counter.hex": "8c935d68a2ce282595ac021b704a61a318f4b6442cd9c35c10df72b2e1db42f3",
@@ -132,7 +132,7 @@
     "adapter_source": "rtl/abi3/ot_a3_wafer_multicast_adapter.sv",
     "adapter_source_sha256": "baf8bd310fdc7a25b4dfa9d464932f87a4a9c8f4c7e7074102488aeb5922b8bb",
     "campaign": "results/rtl/a3_wafer_multicast_campaign.json",
-    "campaign_sha256": "9514e54e7c3a88b4243054fbe1881b708e71e8076dc990681fd571c04dd92a1e",
+    "campaign_sha256": "1329dc7dc18bce0a9e2bf87f56e937e041aeb6f8ef29759f81a778e7803e46cc",
     "exact_case": {
       "admitted": true,
       "index": 0,
@@ -156,12 +156,12 @@
       "communication_descriptor_id": 368,
       "communication_prefix_hex": "5441334406000100c0000000000000006d0100006e010000ffffffffffffffff",
       "counter_descriptor_id": 367,
-      "deployment_json_sha256": "04778ff37e57b87cd0cee48c01558bdfd63c2f8146d0b0a23ff9afee15a54b45",
-      "deployment_sha256": "f239f8fede6963d3daebfe19e8771afad69cf09992e339a0191a1983518ae8a7",
-      "descriptors_bin_sha256": "4f341b3b91e3260029066700b7dab4f8e290818db667abd769381ac476f288f0",
+      "deployment_json_sha256": "f28bab876a8b673c11a7efc2933f97db1b8bcb9cfae1be08a081374209ec9ed2",
+      "deployment_sha256": "34ca189cd4082b21260c0c27920f6e46d821f6709003b84cacd86cd867ed3e42",
+      "descriptors_bin_sha256": "e324895066074c7da80422cc6a9388c392038d0ce721b6ad7124a4e1af38f40d",
       "local_object_descriptor_id": 365,
       "pc": 13,
-      "program_bin_sha256": "1677777e96086fa7f8f0ab3007324629ac05ea7f02c2306d698d1ffd1c6cfc6f",
+      "program_bin_sha256": "5d94950fce838bd6aa50c7b29e9e85ac67498a3efa5d858b1c1bead22c2a2ec8",
       "raw_record_sha256": {
         "communication": "fb23e1284c751135323210d1c5b44aee55da7b73411ab20209afa3e17b53866f",
         "counter": "5c05c5725e57dbcb261bdf5c8943c05d9d66d425fc575e9f10525a477039afb3",
@@ -173,15 +173,15 @@
       "topology_descriptor_id": 0
     },
     "vector_manifest": "testdata/rtl/a3_wafer_multicast/index.json",
-    "vector_manifest_sha256": "8f85ac98b6946aabae15dabec5362a4514784f870e69cec3376f27c70f3bd4c6"
+    "vector_manifest_sha256": "4fb21637e32724659c13a09f543558452329138c52c9fc0a1153e7bfd332b7ce"
   },
-  "promotion_blocker": "the Qwen HBM deployment certificate records a 32992-byte IR kernel while the current source is 33234 bytes; this overlay neither bypasses nor relabels that source-currentness failure",
-  "promotion_status": "blocked_on_canonical_deployment_rebuild",
+  "promotion_blocker": "the integrated programs stop at declared unsupported instructions before a complete model transaction or architectural token commit; this bounded witness cannot be promoted to generated-token, EOS, or TPOT evidence",
+  "promotion_status": "source_current_bounded_prefix_only",
   "real_launch_count": 29,
   "required_marker": "PASS: ABI3 shipped-prefix multicast integration cases=4 launches=29 words=91136 capability_faults=4 multicasts=1",
   "resolved_view_count": 100,
   "result_word_count": 91136,
   "schema": "opentallas.rtl.abi3_shipped_prefix_multicast_vectors.v1",
   "state_compat": 0,
-  "status": "frozen_identity_rtl_integration_only"
+  "status": "source_current_rtl_integration_only"
 }

@@ -84,7 +84,7 @@ def test_witness_is_exactly_the_small_abi3_fail_stop_prefix() -> None:
             "family": 16,
             "sub": 3,
             "opcode": "DMA.SCATTER",
-            "descriptor_id": 114,
+            "descriptor_id": 111,
             "trap_class": 4,
         },
         {
@@ -108,7 +108,7 @@ def test_witness_is_exactly_the_small_abi3_fail_stop_prefix() -> None:
             "family": 48,
             "sub": 9,
             "opcode": "VECTOR.MHC",
-            "descriptor_id": 546,
+            "descriptor_id": 545,
             "trap_class": 4,
         },
     ]
@@ -279,7 +279,7 @@ def test_witness_is_exactly_the_small_abi3_fail_stop_prefix() -> None:
             ]
             assert [operation["pc"] for operation in ropes] == [26, 29]
             assert [operation["descriptor_id"] for operation in ropes] == (
-                [98, 106] if case_index == 0 else [101, 107]
+                [96, 103] if case_index == 0 else [101, 107]
             )
             assert [operation["operator_aux_id_0"] for operation in ropes] == (
                 [128, 128] if case_index == 0 else [256, 256]
@@ -462,10 +462,10 @@ def test_retained_campaign_is_current_and_states_the_simple_boundary() -> None:
     )
     assert [site["pc"] for site in retained["fault_sites"]] == [32, 32, 13, 14]
     assert [site["descriptor_id"] for site in retained["fault_sites"]] == [
-        114,
+        111,
         114,
         368,
-        546,
+        545,
     ]
     assert [site["opcode"] for site in retained["fault_sites"]] == [
         "DMA.SCATTER",
@@ -547,7 +547,7 @@ def test_retained_campaign_is_current_and_states_the_simple_boundary() -> None:
     ]
     assert [
         operation["operator_descriptor_id"] for operation in retained["rope_operations"]
-    ] == [98, 106, 101, 107]
+    ] == [96, 103, 101, 107]
     assert [
         (operation["row_count"], operation["row_width"])
         for operation in retained["rope_operations"]

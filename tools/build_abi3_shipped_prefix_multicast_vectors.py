@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
-"""Build the frozen shipped-prefix overlay for exact wafer multicast.
+"""Build the source-current shipped-prefix overlay for exact wafer multicast.
 
-This builder deliberately does not regenerate the canonical deployments.  It
-extends the retained, already-checked shipped-prefix vector identity with the
-first (exact) case of the independently qualified wafer-multicast vector set.
-That narrow construction is necessary while the Qwen HBM deployment
-certificate is source-stale.  The resulting evidence is therefore useful for
-RTL integration, but is not promotable to a model-correctness or TPOT gate
-until the owning deployment pipeline performs a canonical rebuild.
+The canonical deployment pipeline runs before this builder and the base vector
+manifest binds its refreshed certificates and deployment images.  This tool
+extends that source-current, already-checked identity with the first (exact)
+case of the independently qualified wafer-multicast vector set.  The result is
+still bounded RTL-prefix evidence: it does not establish a complete model
+transaction, generated-token correctness, EOS behavior, or TPOT.
 """
 
 from __future__ import annotations
@@ -262,21 +261,22 @@ def build(output: Path = OUTPUT_DIR) -> dict[str, Any]:
         "schema": SCHEMA,
         "abi": {"major": 3, "minor": 0},
         "state_compat": 0,
-        "status": "frozen_identity_rtl_integration_only",
-        "promotion_status": "blocked_on_canonical_deployment_rebuild",
+        "status": "source_current_rtl_integration_only",
+        "promotion_status": "source_current_bounded_prefix_only",
         "promotion_blocker": (
-            "the Qwen HBM deployment certificate records a 32992-byte IR kernel "
-            "while the current source is 33234 bytes; this overlay neither "
-            "bypasses nor relabels that source-currentness failure"
+            "the integrated programs stop at declared unsupported instructions "
+            "before a complete model transaction or architectural token commit; "
+            "this bounded witness cannot be promoted to generated-token, EOS, "
+            "or TPOT evidence"
         ),
         "claim": (
-            "the already-checked four-case shipped RTL prefix identity is "
-            "extended only by the qualified exact DeepSeek ROM PC-13 "
+            "the source-current, already-checked four-case shipped RTL prefix "
+            "identity is extended only by the qualified exact DeepSeek ROM PC-13 "
             "LINK.MULTICAST; it completes one 256-participant, 64-KiB broadcast "
             "with CRC replay and then fails closed at PC-15 VECTOR.MHC"
         ),
         "does_not_establish": [
-            "a source-current canonical compiler or deployment rebuild",
+            "execution beyond the exact bounded shipped-program prefixes",
             "prefill, a whole model transaction, token selection, EOS, or decoded-token correctness",
             "architectural TPOT, physical timing, area, power, HBM timing, or SRAM timing",
             "simulator wall time as model performance",
