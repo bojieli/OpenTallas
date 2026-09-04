@@ -134,11 +134,16 @@ with legal IDs and successful transactions. Their host wall times are
 simulation cost, not architectural TPOT. This is P32 diagnostic evidence only.
 It does not stand in for the mandatory exact-200,000-token-context run.
 
+The latest 32-chip HBM/SRAM P32 repeat has also completed. It again produces
+exact IDs `[13806, 345, 7472, 55560]`, has no illegal-token problems, decodes
+and re-encodes as ` pump C alone empt`, and stops on the requested four-token
+cap with no additional transaction. Its 7,768.17-second host wall time reflects
+the heavily contended simulation campaign and is not accelerator TPOT.
+
 Still running at this checkpoint are Qwen exact-8K HBM functional execution,
-Qwen HBM and ROM prefill timing under both process views, and a current-source
-DeepSeek 32-chip HBM P32 repeat. Shared-resource B=2, B=4, and B=8 timing
-diagnostics now exist, but no prompt-initialized, distinct-workload,
-token-correct batch timing number exists yet.
+and Qwen HBM and ROM prefill timing under both process views. Shared-resource
+B=2, B=4, and B=8 timing diagnostics now exist, but no prompt-initialized,
+distinct-workload, token-correct batch timing number exists yet.
 
 The common compiler and functional-simulator stack is real and shared by both
 models and both storage backends. Both complete model graphs lower through the
