@@ -26,9 +26,9 @@
   },
   "log_sha256": {
     "iverilog": "d6b9e2b5eda5031a6d6d33e5f7c6bdf7cadf37a26e10eed9d972d96cc934f90f",
-    "verilator": "546d1fe88f50843155d3b3e64980248b027a311111d558bd8b7930c9f9b9b60c",
-    "verilator_compile": "72cf83ba2115ae056115626b5be1760499e4b37ee9e30913e72880710c76df35",
-    "yosys": "04cf56bdf23c0dbecb39c576d17951ba3d878844217903ff30ebd089cd2e4e19"
+    "verilator": "219b51a95532d8531a3d0256da6e45d006042d615283a56439a1748d9efb19fa",
+    "verilator_compile": "92815ef0f28c0acb4cfa10d171eff03ff48e3b3644bde79d463380868aa10e75",
+    "yosys": "6ec5a9409bb7e0eadd8ce995785e05c9d40cbbdaad6e9ba23367d6e08ee6b0a3"
   },
   "normalized_cases": [
     {
@@ -232,11 +232,11 @@
     }
   },
   "source_sha256": {
-    "results/rtl/abi3_shipped_prefix_campaign.json": "6888ae7dea7e7f2bc6275619d5811d31fd46fa77e816b05ea21c2e8dbc4422aa",
+    "results/rtl/abi3_shipped_prefix_campaign.json": "f60b411b51876d1efaba5637412f4d7b212ce04e4fc6f9ad56e890e417529aa2",
     "rtl/abi3/ot_a3_descriptor_record_validator.sv": "92d39545cb99c762c8b96144c4c165fadeb4c355a77155db42c175ba5a36c1f3",
     "rtl/abi3/ot_a3_dma_index_mover.sv": "e254421fcba397e3db821c52b9acafaf3922af78653ab2d2e3029705ee166c64",
     "rtl/abi3/ot_a3_engine_pkg.sv": "1186eecdc80321e87e08c97fb8e1c9a1b078584d019353736d235bf5cc84d477",
-    "rtl/abi3/ot_a3_instruction_decoder.sv": "9f2390ce38f9bddf80d47c01931b6fba5dde6c2f15a3f5fd0ae089e0bf27c3e1",
+    "rtl/abi3/ot_a3_instruction_decoder.sv": "ad04fbf87aaa69e2c5397f99f445c7b99b10d80e796f54ea2895624ebb840355",
     "rtl/abi3/ot_a3_pkg.sv": "6fb71525b329497fe62145ab0d9b1b6eff03f1e0c95f3bc6a0c1dde5c6744054",
     "rtl/abi3/ot_a3_qwen_kv_scatter_adapter.sv": "d3ce0ef8fda09b66461e038cca0bb747e569d523da821e8eb34229b6f114f5d1",
     "rtl/test/tb_a3_qwen_kv_scatter.sv": "661dcc9f9b7ae4441def2d96f9ff33a3099fd1c18018a87691bfc4de555438ad",
@@ -278,7 +278,7 @@
   },
   "upstream_dependency": {
     "campaign": "results/rtl/abi3_shipped_prefix_campaign.json",
-    "campaign_sha256": "6888ae7dea7e7f2bc6275619d5811d31fd46fa77e816b05ea21c2e8dbc4422aa",
+    "campaign_sha256": "f60b411b51876d1efaba5637412f4d7b212ce04e4fc6f9ad56e890e417529aa2",
     "campaign_status": "pass",
     "expected_image": "testdata/compiler/abi3_shipped_prefix/p3_expect.hex",
     "expected_image_sha256": "1cadfc3371d198704fc9f245e7d8e27b72b38e906eafa0cdbc576f1eb2f98327",
@@ -288,7 +288,7 @@
   },
   "vector_sha256": {
     "cases.hex": "ee538b57415b2562b2dc741e45b50c46bd254bb98e3a1c9e31aa2ab4a98ccf65",
-    "index.json": "841588e58a06786873e1f9d80974d942b1eb2566308ccbf613b9f642a784d7d6",
+    "index.json": "ad8668a706e440dcf79e6b0f8fcd10debe812dc4b9a78af4366eefa50f912106",
     "instruction.hex": "75d5f3ecdec959cee90a9049c5c5f6a95c8460763759cc7b6a5786fd2c23900d",
     "numeric.hex": "bea66168e390b8d8dd495e7e9669709caa21c40c08910c521ab3896252aa2df4",
     "operator.hex": "f46f5fe00219f011164f635cff370c5d32c564ce8518485608ab4cd6c2fbcb8f",
@@ -300,10 +300,10 @@
     "view3.hex": "339dee47e73d8beff87a81190ecf93ed37f0bd696c7356170634e12c7a6e87f6"
   },
   "verification_wall_seconds": {
-    "iverilog_compile": 0.013669008039869368,
-    "iverilog_simulation": 1.4543370080646127,
-    "verilator_compile": 4.65963898296468,
-    "verilator_simulation": 0.10262042097747326,
-    "yosys_elaboration": 0.48002636001911014
+    "iverilog_compile": 0.015544189955107868,
+    "iverilog_simulation": 1.3313071839511395,
+    "verilator_compile": 4.074238413013518,
+    "verilator_simulation": 0.09388881688937545,
+    "yosys_elaboration": 0.4308074450818822
   }
 }
