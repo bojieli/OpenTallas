@@ -181,8 +181,18 @@ _DTYPE_FEATURE: Mapping[int, Feature] = {
 #: broadcast rule -- one axis fewer than the principal, agreeing on the leading
 #: axis -- describes it exactly and is wrong about it.  A convention that names
 #: an operand's rank outranks a rule that infers one.
+#:
+#: ``in1`` is the same case and was missing.  A6 requires a *fused* KV tensor,
+#: ``[kv_rows, head_dim]`` with a single KV head, and the engine refuses a
+#: rank-three view there.  The rule fires whenever the KV rows equal the query
+#: rows, which a window-only layer's prefill layout makes true -- it selects
+#: the current rows alone -- so the first layer's prefill presented
+#: ``[rows, heads, head_dim]`` at stride zero on the head axis and was refused.
+#: The compressed layers escaped only because their prefix made the extents
+#: differ.  ``compiler/backends/rom/common/program.py`` carries the same
+#: exemption for the same reason.
 _DECLARED_RANK_SLOTS: Mapping[tuple[int, int], tuple[int, ...]] = {
-    (int(Major.ATTENTION), int(Attention.SPARSE)): (2, 3),
+    (int(Major.ATTENTION), int(Attention.SPARSE)): (1, 2, 3),
     # ``VECTOR.INDEX_SCORE`` states every operand: in0 query ``[B,S,Hd,D]``,
     # in1 key ``[B,C,D]``, in2 head weights ``[B,S,Hd]``.  The head weights are
     # one axis short of the query and agree on the token axis, which is exactly
@@ -5643,11 +5653,68 @@ class _Emitter:
                 for slot in range(int(wait["producer_count"]))
             )
 
+        # A guard is only part of a producer's reachability condition; the
+        # enclosing branch is the rest.  A phase-selected join emits the same
+        # operand-present condition once in the prefill block and again in the
+        # decode block, so two operators that can never both run carry one
+        # guard.  Bucketing those together produces a drain that waits on both
+        # and blocks on whichever branch was not taken -- "wait on event 203
+        # that has not been signalled", 43 minutes into a 32-token prefill.
+        # An event a CONTROL.WAIT already acquired under exactly its producer's
+        # guard is ordered before control leaves the block holding both, so it
+        # needs no second acquisition here.
+        # ``compiler/backends/rom/common/program.py`` carries the same rule.
+        def guard_of(instruction: Any) -> tuple[int, bool]:
+            return (
+                int(instruction.predicate_id),
+                bool(instruction.flags & int(InstructionFlag.PREDICATE_INVERT)),
+            )
+
+        # An unconditional forward branch skips everything up to its target, so
+        # a producer before one and a consumer after it are on different paths.
+        skips = [
+            (index, int(instruction.control_id))
+            for index, instruction in enumerate(work)
+            if instruction.major == int(Major.CONTROL)
+            and instruction.sub == int(Control.BRANCH)
+            and instruction.predicate_id == NO_ID
+            and int(instruction.control_id) > index
+        ]
+        producer_of_event: dict[int, int] = {}
+        for index, instruction in enumerate(work):
+            event = int(instruction.signal_event_id)
+            if event != NO_ID:
+                producer_of_event[event] = index
+        acquired_under_producer_guard: set[int] = set()
+        for index, instruction in enumerate(work):
+            if (
+                instruction.major != int(Major.CONTROL)
+                or instruction.sub != int(Control.WAIT)
+                or instruction.wait_set_id == NO_ID
+            ):
+                continue
+            payload = self.builder.table[int(instruction.wait_set_id)].payload
+            for slot in range(int(payload["producer_count"])):
+                event = int(payload[f"producer_{slot}"])
+                source = producer_of_event.get(event)
+                if source is None or source >= index:
+                    continue
+                if guard_of(work[source]) != guard_of(instruction):
+                    continue
+                # The wait must be reachable from the producer: a branch that
+                # jumps over the wait puts the two on different paths, and then
+                # the wait proves nothing about this producer.
+                if any(source < branch < index for branch, _target in skips):
+                    continue
+                acquired_under_producer_guard.add(event)
+
         frontier: list[int] = []
         conditional: dict[tuple[int, bool], list[int]] = {}
         for instruction in work:
             event = int(instruction.signal_event_id)
             if event == NO_ID:
+                continue
+            if event in acquired_under_producer_guard:
                 continue
             if instruction.predicate_id == NO_ID:
                 if event not in acquired_by_unconditional_signal:
