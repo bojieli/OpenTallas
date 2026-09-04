@@ -73,7 +73,8 @@
       "statement": "The synthesised netlist contains N lanes for a declared N.",
       "fails_when": "The netlist has one lane while the capability advertises more.",
       "evaluator": {"type": "artifact_threshold", "glob": "results/physical_abi3/*/*array*/pnr.json", "field": "design.lanes", "min": 2,
-        "note": "There is currently no generate loop and no LANES parameter anywhere in the ABI3 engine hierarchy."}
+        "also_require": {"field": "design.lanes_verified_in_netlist", "equals": true},
+        "note": "design.lanes is the declared LANES parameter; design.lanes_verified_in_netlist is set by tools/run_abi3_physical.py only when the same number of distinct lane prefixes is recovered from the routed netlist's instance names (--lane-instance-regex), so a declared count the netlist does not contain cannot pass."}
     },
     {
       "id": "D4",
@@ -81,6 +82,8 @@
       "statement": "Per-MAC area and per-MAC period both improve against the recorded matmul_bf16_sram_engine baseline at the same PDK.",
       "fails_when": "Either regresses.",
       "evaluator": {"type": "per_mac_improvement", "baseline": "results/physical_abi3/asap7/matmul_bf16_sram_engine/pnr.json", "glob": "results/physical_abi3/*/*lane*/pnr.json",
+        "baseline_mac_per_cycle": 0.17294,
+        "baseline_note": "The baseline record predates the design block, so its per-MAC figures are derived from its routed record: 0.17294 MAC per cycle is the matmul engine's measured 0.34588 lane-ops per two cycles (gate D2 note; docs/PERFORMANCE_DESIGN_POSTMORTEM.md), giving 8,348.44 um2 / 0.17294 = 48,274 um2 per MAC/cycle and 18 ns / 0.17294 = 104.1 ns per MAC, the figures docs/CHIP_ARCHITECTURE_DESIGN.md section 8.4 cites. A candidate must be a closed routed result (status pass, design.closed true) at the baseline's view and must declare design.per_mac_area_um2 and design.per_mac_period_ns itself.",
         "note": "Per-MAC figures are the node-portable ones. METHODOLOGY section 9 forbids scaling any absolute figure across nodes."}
     },
     {

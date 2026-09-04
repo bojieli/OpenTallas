@@ -230,6 +230,83 @@ BLOCKS: dict[str, dict[str, Any]] = {
             "external, so the block maps to standard cells only."
         ),
     },
+    # -- docs/CHIP_ARCHITECTURE_DESIGN.md sections 4.2 / 4.4 / 11.1 ----------
+    #
+    # ``datapath`` DECLARES the lane count and the MAC rate the redesign gates
+    # read (configs/gates/redesign_gates.json D3, D4) and cites where each was
+    # measured; synthesis cannot measure a rate.  The lane count is also
+    # counted in the mapped netlist and the record carries ``design.lanes``
+    # only when the two agree (see ``datapath_summary``).
+    "a3_lane_pipelined": {
+        "top": "ot_a3_lane_pipelined",
+        "sources": [
+            "rtl/ot_fp32_rne_pkg.sv",
+            "rtl/abi3/ot_a3_lane_pkg.sv",
+            "rtl/abi3/ot_a3_lane_pipelined.sv",
+        ],
+        "parameters": {"ADDER_STAGES": 3, "ACC_SLOTS": 8},
+        "clock_port": "clk",
+        "false_path_from_ports": ["rst_n"],
+        "datapath": {
+            "lanes": 1,
+            "lane_module": "ot_a3_lane_pipelined",
+            "lane_instance": None,
+            "mac_per_cycle": 1.0,
+            "mac_per_cycle_basis": (
+                "one lane-op per cycle at BF16 g = 1: measured.mac_per_lane_cycle "
+                "= 1.0 in results/rtl/abi3_pipelined_lane.json (gate D2), a "
+                "simulation count on Icarus 11 and Verilator 5.050 with ideal "
+                "one-cycle operand memories; g = 2 and g = 4 retire 2 and 4 "
+                "products per lane-op (results/rtl/abi3_pipelined_lane_groups.json)"
+            ),
+            "products_per_cycle": {"bf16_g1": 1.0, "fp8_g2": 2.0, "mxfp4_g4": 4.0},
+        },
+        "description": (
+            "The format-scaled pipelined TENSOR contraction lane (section 4.2, "
+            "the first module of section 11.6): reconfigurable 8 x 8 significand "
+            "field with exponent add and E8M0 folding, exact group aligner for "
+            "g in {1, 2, 4}, ADDER_STAGES-stage binary32 RNE adder with "
+            "ADDER_STAGES output columns interleaved, ACC_SLOTS-slot accumulator "
+            "file, fail-closed subnormal / reserved-code / range-exit paths.  "
+            "Operand memories are external (one-cycle read ports), so the block "
+            "maps to standard cells only.  rtl/abi3/ot_a3_mac_lane.sv is its "
+            "untouched reference."
+        ),
+    },
+    "a3_lq8_array": {
+        "top": "ot_a3_lq8",
+        "sources": [
+            "rtl/ot_fp32_rne_pkg.sv",
+            "rtl/abi3/ot_a3_lane_pkg.sv",
+            "rtl/abi3/ot_a3_lane_pipelined.sv",
+            "rtl/abi3/ot_a3_lq8.sv",
+        ],
+        "parameters": {"LANES": 8, "ADDER_STAGES": 3, "ACC_SLOTS": 8},
+        "clock_port": "clk",
+        "false_path_from_ports": ["rst_n"],
+        "datapath": {
+            "lanes": 8,
+            "lane_module": "ot_a3_lane_pipelined",
+            "lane_instance": "gen_lane[<i>].u_lane",
+            "mac_per_cycle": 8.0,
+            "mac_per_cycle_basis": (
+                "eight lane-ops per block cycle at BF16 g = 1: "
+                "measured.mac_per_block_cycle = 8.0 and mac_per_lane_cycle = 1.0 "
+                "in results/rtl/abi3_lq8.json, a simulation count on Icarus 11 "
+                "and Verilator 5.050 with ideal one-cycle operand memories; "
+                "g = 2 and g = 4 retire 16 and 32 products per block cycle"
+            ),
+            "products_per_cycle": {"bf16_g1": 8.0, "fp8_g2": 16.0, "mxfp4_g4": 32.0},
+        },
+        "description": (
+            "LQ8 lane block (sections 4.4 and 11.1): LANES instances of the "
+            "unmodified ot_a3_lane_pipelined under a generate loop, one "
+            "sequential 2 B/lane weight stream port, one weight E8M0 table "
+            "port, shared activation and activation-scale ports, per-lane "
+            "partial ports, summed counters.  Memories are external, so the "
+            "block maps to standard cells only."
+        ),
+    },
 }
 
 
@@ -1005,6 +1082,187 @@ def run_pnr(
 
 
 # --------------------------------------------------------------------------
+# Datapath summary (redesign gates D3 and D4)
+# --------------------------------------------------------------------------
+#
+# The per-MAC figures are the node-portable ones (docs/CHIP_ARCHITECTURE_DESIGN.md
+# section 8.4) and are derived here only from numbers this flow produced plus
+# the block's DECLARED MAC rate, whose basis is cited in the record.  They
+# compare only within one technology view: the D4 baseline
+# (results/physical_abi3/asap7/matmul_bf16_sram_engine/pnr.json, 48,274 um2
+# and 104.1 ns per MAC) is 8,348.44 um2 of standard cells / (0.34588 / 2)
+# MAC per cycle and 18 ns / (0.34588 / 2), and a record at another view is
+# not compared to it (METHODOLOGY section 9).
+
+_NETLIST_CELL_RE = re.compile(r"^\s*(\S+)\s+(\\?\S+)\s*\(\s*$", re.M)
+_NON_CELL_KEYWORDS = {"module", "wire", "input", "output", "inout", "reg", "assign"}
+
+
+def count_lane_instances(netlist: Path, lane_instance: str) -> dict[str, Any]:
+    """Count the lanes present in a flattened netlist from its cell names.
+
+    Yosys ``flatten`` keeps the hierarchical path in every cell name, so a
+    block of ``gen_lane[i].u_lane`` instances yields cells named
+    ``\\gen_lane[i].u_lane.<cell>`` and the lanes are countable from the
+    netlist rather than from the parameter that asked for them.  Cells added
+    later by OpenROAD (buffers, hold fixes, fillers) carry no lane path, so
+    the count from the routed netlist is a lower bound on cells per lane.
+    """
+    prefix, _, instance = lane_instance.partition("[<i>].")
+    lane_re = re.compile(
+        r"^\\?" + re.escape(prefix) + r"\[(\d+)\]\." + re.escape(instance) + r"\."
+    )
+    per_lane: dict[int, int] = {}
+    total_cells = 0
+    for match in _NETLIST_CELL_RE.finditer(netlist.read_text(encoding="utf-8", errors="ignore")):
+        cell_type, name = match.group(1), match.group(2)
+        if cell_type in _NON_CELL_KEYWORDS or cell_type.startswith("(*"):
+            continue
+        total_cells += 1
+        lane = lane_re.match(name)
+        if lane:
+            index = int(lane.group(1))
+            per_lane[index] = per_lane.get(index, 0) + 1
+    return {
+        "netlist": netlist.name,
+        "netlist_sha256": sha256_file(netlist),
+        "lane_instance_pattern": lane_instance,
+        "lanes_found": len(per_lane),
+        "lane_indices": sorted(per_lane),
+        "cells_per_lane": {str(k): per_lane[k] for k in sorted(per_lane)},
+        "cells_in_lanes": sum(per_lane.values()),
+        "cells_total": total_cells,
+    }
+
+
+def datapath_summary(
+    record: dict[str, Any],
+    datapath: dict[str, Any],
+    netlists: list[Path],
+) -> dict[str, Any]:
+    """Derive lanes / MAC-per-cycle / per-MAC figures for ``record['design']``.
+
+    ``lanes`` is written only when the declared count is confirmed in every
+    netlist examined (or the top module IS the lane); otherwise the record
+    carries ``lanes_declared`` and the counts, and gate D3 cannot pass on it.
+    Per-MAC period is ``target period / mac_per_cycle`` -- the baseline's
+    convention -- and is only a claim when the block closed at that period,
+    which ``closed`` states; the figure at the routed Fmax is given beside it.
+    """
+    mac = float(datapath["mac_per_cycle"])
+    lanes_declared = int(datapath["lanes"])
+    pnr = record.get("place_and_route")
+    synth = record.get("synthesis")
+    sta = record.get("static_timing")
+    closed = record.get("status") == STATUS_PASS
+
+    summary: dict[str, Any] = {
+        "lanes_declared": lanes_declared,
+        "lane_module": datapath.get("lane_module"),
+        "mac_per_cycle": mac,
+        "mac_per_cycle_basis": datapath["mac_per_cycle_basis"],
+        "products_per_cycle": datapath.get("products_per_cycle"),
+        "closed": closed,
+    }
+
+    counts: list[dict[str, Any]] = []
+    if datapath.get("lane_instance"):
+        for netlist in netlists:
+            if netlist.is_file():
+                counts.append(count_lane_instances(netlist, datapath["lane_instance"]))
+        summary["lane_count_in_netlist"] = counts
+        confirmed = bool(counts) and all(c["lanes_found"] == lanes_declared for c in counts)
+        summary["lane_count_method"] = (
+            "distinct generate indices among the hierarchical cell names of "
+            "the flattened netlist(s) listed in lane_count_in_netlist"
+        )
+    else:
+        confirmed = lanes_declared == 1
+        summary["lane_count_method"] = "the top module is the lane itself"
+    if confirmed:
+        summary["lanes"] = lanes_declared
+    else:
+        summary["lanes_confirmed"] = False
+
+    if pnr:
+        m = pnr["metrics"]
+        cells = m.get("standard_cell_count")
+        area = m.get("standard_cell_area_um2")
+        fmax = m.get("fmax_hz")
+        period = float(pnr["clock_period_ns"])
+        drc = m.get("drc_errors")
+        antenna = None
+        if m.get("antenna_violating_nets") is not None and m.get("antenna_violating_pins") is not None:
+            antenna = int(m["antenna_violating_nets"]) + int(m["antenna_violating_pins"])
+        summary.update(
+            {
+                "figures_from": "place_and_route (routed, extracted parasitics)",
+                "cells": cells,
+                "area_um2": area,
+                "core_area_um2": m.get("core_area_um2"),
+                "utilization_fraction": m.get("utilization_fraction"),
+                "fmax_hz": fmax,
+                "clock_period_ns": period,
+                "setup_wns_ns": m.get("setup_wns_ns"),
+                "drc": drc,
+                "antenna": antenna,
+                "antenna_violating_nets": m.get("antenna_violating_nets"),
+                "antenna_violating_pins": m.get("antenna_violating_pins"),
+            }
+        )
+    elif synth:
+        cells = synth.get("cell_count")
+        area = synth.get("cell_area_um2")
+        period = float(record["target_clock_period_ns"])
+        fmax = None
+        if sta:
+            search = sta.get("fmax_search")
+            fmax = search["fmax_hz"] if search else sta.get("fmax_hz")
+        summary.update(
+            {
+                "figures_from": "synthesis + pre-layout static timing (no layout)",
+                "cells": cells,
+                "area_um2": area,
+                "fmax_hz": fmax,
+                "clock_period_ns": period,
+                "drc": None,
+                "antenna": None,
+            }
+        )
+    else:
+        return summary
+
+    if area is not None:
+        summary["per_mac_area_um2"] = round(float(area) / mac, 3)
+    summary["per_mac_period_ns"] = round(period / mac, 4)
+    if fmax:
+        summary["per_mac_period_at_fmax_ns"] = round(1e9 / float(fmax) / mac, 4)
+    if cells is not None:
+        summary["cells_per_mac"] = round(float(cells) / mac, 3)
+    summary["per_mac_definitions"] = {
+        "per_mac_area_um2": (
+            "standard-cell area (routed: finish__design__instance__area__stdcell; "
+            "pre-layout: mapped cell area) divided by mac_per_cycle.  The D4 "
+            "baseline's 48,274 um2 is 8,348.44 / (0.34588 / 2) under this "
+            "definition."
+        ),
+        "per_mac_period_ns": (
+            "target clock period divided by mac_per_cycle; a claim only when "
+            "closed is true.  The D4 baseline's 104.1 ns is 18 / (0.34588 / 2)."
+        ),
+        "per_mac_period_at_fmax_ns": "(1e9 / fmax_hz) / mac_per_cycle",
+        "cells_per_mac": "cells / mac_per_cycle (node-portable, section 8.4)",
+        "comparability": (
+            "per-MAC figures compare only within one technology view "
+            "(METHODOLOGY section 9); the D4 baseline "
+            "results/physical_abi3/asap7/matmul_bf16_sram_engine/pnr.json is at "
+            "asap7 and a record at any other view is not compared to it"
+        ),
+    }
+    return summary
+
+
+# --------------------------------------------------------------------------
 # Engineering verdict
 # --------------------------------------------------------------------------
 #
@@ -1101,6 +1359,198 @@ def evaluate_verdict(record: dict[str, Any]) -> dict[str, Any]:
 
 
 # --------------------------------------------------------------------------
+# Design summary: lanes, MAC rate and per-MAC figures (redesign gates D3, D4)
+# --------------------------------------------------------------------------
+#
+# docs/OPENTALLAS_REDESIGN_PLAN.md gates D3 and D4 read a ``design`` block from
+# each pnr.json: the declared lane count, the MAC (lane-op) rate the RTL
+# campaign measured for the block, and the per-MAC area and period derived
+# from the routed result with the same arithmetic as the recorded baseline
+# (docs/CHIP_ARCHITECTURE_DESIGN.md section 8.4: standard-cell area / MAC per
+# cycle = 48,274 um2; closed target period / MAC per cycle = 104.1 ns).  The
+# MAC rate is never measured here -- it is cited from the results/rtl artifact
+# named on the command line -- and the per-MAC period is meaningful only when
+# the routed block closed at the target period (``closed`` says so).
+
+_NETLIST_INSTANCE_RE = re.compile(r"^\s*(\w+)\s+(\\\S+|\w+)\s+\(", re.M)
+
+
+def count_lane_instances(netlist: Path, lane_regex: str) -> dict[str, Any]:
+    """Count the distinct lane indices among the instance names of a gate netlist.
+
+    ORFS flattens the hierarchy (SYNTH_HIERARCHICAL = 0) but Yosys keeps the
+    hierarchical prefix on every register it maps, so a generate-loop lane
+    survives as an instance-name prefix such as ``gen_lane[3].u_lane.``.
+    ABC renames combinational cells, which therefore carry no prefix; the
+    per-lane counts below are over the named (sequential) cells only and are
+    a lower bound on the cells each lane contributes.
+    """
+    pattern = re.compile(lane_regex)
+    per_lane: dict[str, int] = {}
+    total = 0
+    text = netlist.read_text(encoding="utf-8", errors="ignore")
+    for match in _NETLIST_INSTANCE_RE.finditer(text):
+        total += 1
+        found = pattern.search(match.group(2))
+        if found:
+            key = found.group(1)
+            per_lane[key] = per_lane.get(key, 0) + 1
+    return {
+        "netlist": netlist.name,
+        "netlist_sha256": sha256_file(netlist),
+        "instance_regex": lane_regex,
+        "instances_total": total,
+        "distinct_lanes": len(per_lane),
+        "named_cells_per_lane": {
+            key: per_lane[key] for key in sorted(per_lane, key=lambda k: (len(k), k))
+        },
+        "note": (
+            "named (register) cells only; ABC renames combinational cells so "
+            "they carry no lane prefix"
+        ),
+    }
+
+
+def evidence_entry(spec: str) -> dict[str, Any]:
+    """Resolve ``PATH`` or ``PATH:DOTTED.FIELD`` into a hashed citation."""
+    path_str, _, field = spec.partition(":")
+    path = Path(path_str)
+    if not path.is_absolute():
+        path = ROOT / path
+    entry: dict[str, Any] = {"path": path_str}
+    if not path.is_file():
+        entry["error"] = "missing"
+        return entry
+    entry["sha256"] = sha256_file(path)
+    if field:
+        entry["field"] = field
+        try:
+            node: Any = json.loads(path.read_text(encoding="utf-8"))
+            for part in field.split("."):
+                node = node[part]
+            entry["value"] = node
+        except Exception as exc:  # noqa: BLE001 - recorded, not fatal
+            entry["error"] = f"{type(exc).__name__}: {exc}"
+    return entry
+
+
+def augment_design(
+    record: dict[str, Any],
+    lanes: int | None,
+    mac_per_cycle: float | None,
+    evidence: list[str],
+    lane_regex: str | None,
+    netlists: list[Path | None],
+) -> None:
+    """Attach the gate-facing design summary to ``record['design']``.
+
+    Every number here is copied from a stage this run executed; when a stage
+    did not run (or the flow errored) the corresponding field is absent and
+    ``closed`` is false, so a partial record can never read as a result.
+    """
+    if lanes is None and mac_per_cycle is None and not lane_regex:
+        return
+    design = record["design"]
+    pnr = record.get("place_and_route")
+    synth = record.get("synthesis")
+    sta = record.get("static_timing") or {}
+    metrics = (pnr or {}).get("metrics", {})
+
+    if lanes is not None:
+        design["lanes"] = lanes
+        design["lanes_basis"] = (
+            "declared lane count of the block (its LANES parameter, or 1 for a "
+            "single lane); lanes_in_netlist is the count recovered from the "
+            "mapped netlist"
+        )
+    if lane_regex:
+        counted: dict[str, Any] | None = None
+        for candidate in netlists:
+            if candidate is not None and candidate.is_file():
+                counted = count_lane_instances(candidate, lane_regex)
+                break
+        if counted is None:
+            counted = {"error": "no netlist available", "instance_regex": lane_regex}
+        design["lanes_in_netlist"] = counted
+        design["lanes_verified_in_netlist"] = bool(
+            lanes is not None and counted.get("distinct_lanes") == lanes
+        )
+
+    if mac_per_cycle is not None:
+        design["mac_per_cycle"] = mac_per_cycle
+        design["mac_per_cycle_basis"] = (
+            "lane-ops retired per cycle by the whole block in steady state, as "
+            "measured by the RTL campaign cited in mac_rate_evidence (one "
+            "product per lane-op at g = 1); not measured by this flow"
+        )
+        design["mac_rate_evidence"] = [evidence_entry(item) for item in evidence]
+
+    if pnr:
+        design["cells"] = metrics.get("standard_cell_count")
+        design["cells_basis"] = (
+            "place_and_route.metrics.standard_cell_count: routed netlist after "
+            "timing repair and clock-tree synthesis, buffers included"
+        )
+        design["area_um2"] = metrics.get("standard_cell_area_um2")
+        design["area_basis"] = "place_and_route.metrics.standard_cell_area_um2"
+        design["core_area_um2"] = metrics.get("core_area_um2")
+        design["utilization_fraction"] = metrics.get("utilization_fraction")
+        design["fmax_hz"] = metrics.get("fmax_hz")
+        design["fmax_basis"] = "place_and_route.metrics.fmax_hz (ORFS finish__timing__fmax)"
+        design["clock_period_ns"] = pnr.get("clock_period_ns")
+        design["setup_wns_ns"] = metrics.get("setup_wns_ns")
+        design["hold_wns_ns"] = metrics.get("hold_wns_ns")
+        design["drc"] = metrics.get("drc_errors")
+        nets = metrics.get("antenna_violating_nets")
+        pins = metrics.get("antenna_violating_pins")
+        design["antenna_violating_nets"] = nets
+        design["antenna_violating_pins"] = pins
+        design["antenna"] = (
+            int(nets) + int(pins) if nets is not None and pins is not None else None
+        )
+    elif synth:
+        design["cells"] = synth.get("cell_count")
+        design["cells_basis"] = "synthesis.cell_count (pre-layout, pinned host Yosys)"
+        design["area_um2"] = synth.get("cell_area_um2")
+        design["area_basis"] = "synthesis.cell_area_um2 (pre-layout)"
+        design["fmax_hz"] = sta.get("fmax_hz")
+        design["fmax_basis"] = "static_timing.fmax_hz (pre-layout)" if sta else None
+        design["clock_period_ns"] = sta.get("clock_period_ns")
+        design["drc"] = None
+        design["antenna"] = None
+
+    closed = bool(pnr) and record.get("status") == STATUS_PASS
+    design["closed"] = closed
+    design["closed_basis"] = (
+        "true only when place-and-route ran and the engineering verdict is "
+        "pass: setup and hold met with zero violating paths, zero DRC, zero "
+        "antenna violations at the target period"
+    )
+
+    if mac_per_cycle:
+        area = design.get("area_um2")
+        period = design.get("clock_period_ns")
+        fmax = design.get("fmax_hz")
+        if area is not None:
+            design["per_mac_area_um2"] = float(area) / mac_per_cycle
+        if period is not None:
+            design["per_mac_period_ns"] = float(period) / mac_per_cycle
+        if fmax:
+            design["per_mac_period_ns_at_fmax"] = (1e9 / float(fmax)) / mac_per_cycle
+        design["per_mac_basis"] = (
+            "per_mac_area_um2 = standard-cell area / MAC per cycle; "
+            "per_mac_period_ns = target clock period / MAC per cycle -- the "
+            "arithmetic behind the baseline's 48,274 um2 and 104.1 ns "
+            "(results/physical_abi3/asap7/matmul_bf16_sram_engine/pnr.json: "
+            "8,348.44 um2 / 0.17294 and 18 ns / 0.17294; "
+            "docs/CHIP_ARCHITECTURE_DESIGN.md section 8.4).  The period figure "
+            "is a result only when closed is true; per_mac_period_ns_at_fmax "
+            "is the same quantity at the reported post-route fmax, for "
+            "information.  Nothing is scaled across nodes."
+        )
+
+
+# --------------------------------------------------------------------------
 # Driver
 # --------------------------------------------------------------------------
 
@@ -1146,6 +1596,48 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--output", required=True)
     parser.add_argument("--force", action="store_true")
     parser.add_argument("--keep-workdir", default=None, help="directory to retain intermediate files in")
+    parser.add_argument(
+        "--lanes", type=int, default=None,
+        help="ad-hoc blocks: declared lane count for the design summary (gate D3)",
+    )
+    parser.add_argument(
+        "--mac-per-cycle", type=float, default=None,
+        help="ad-hoc blocks: declared MAC per cycle for the per-MAC figures (gate D4)",
+    )
+    parser.add_argument(
+        "--mac-basis", default=None,
+        help="ad-hoc blocks: where the declared MAC rate was measured (cited in the record)",
+    )
+    parser.add_argument(
+        "--lanes",
+        type=int,
+        default=None,
+        help="declared lane count of the block; recorded as design.lanes (gate D3)",
+    )
+    parser.add_argument(
+        "--mac-per-cycle",
+        type=float,
+        default=None,
+        help=(
+            "MAC (lane-ops) per cycle for the whole block as measured by the RTL "
+            "campaign named in --mac-rate-evidence; recorded as design.mac_per_cycle "
+            "and used for the per-MAC figures (gate D4)"
+        ),
+    )
+    parser.add_argument(
+        "--mac-rate-evidence",
+        action="append",
+        default=[],
+        help="results/rtl artifact behind --mac-per-cycle, as PATH or PATH:DOTTED.FIELD (repeatable)",
+    )
+    parser.add_argument(
+        "--lane-instance-regex",
+        default=None,
+        help=(
+            "regex over instance names of the mapped netlist whose first group is "
+            "the lane index; distinct indices are counted into design.lanes_in_netlist"
+        ),
+    )
     args = parser.parse_args(argv)
 
     output = Path(args.output)
@@ -1182,6 +1674,15 @@ def main(argv: list[str] | None = None) -> int:
             "false_path_from_ports": args.false_path_from or [],
             "description": "ad-hoc block supplied on the command line",
         }
+        if args.lanes is not None and args.mac_per_cycle is not None:
+            block["datapath"] = {
+                "lanes": args.lanes,
+                "lane_module": None,
+                "lane_instance": None,
+                "mac_per_cycle": args.mac_per_cycle,
+                "mac_per_cycle_basis": args.mac_basis or "declared on the command line, no basis cited",
+                "products_per_cycle": None,
+            }
         block_name = args.top
     else:
         print("either --block or (--top with at least one --source) is required", file=sys.stderr)
@@ -1276,6 +1777,7 @@ def main(argv: list[str] | None = None) -> int:
         "status": STATUS_ERROR,
     }
 
+    netlist: Path | None = None
     try:
         tools: dict[str, Any] = {}
         if "synth" in stages:
@@ -1285,7 +1787,6 @@ def main(argv: list[str] | None = None) -> int:
             tools["opensta"] = tool_identity(STA, ["-version"])
         record["tools"] = tools
 
-        netlist = None
         if "synth" in stages:
             cells = scan_liberty([Path(p) for p in corner["liberty"]])
             dont_use = expand_dont_use(view["dont_use"], cells)
@@ -1294,6 +1795,10 @@ def main(argv: list[str] | None = None) -> int:
             )
             netlist = result["netlist"]
             record["synthesis"] = result["record"]
+            if block.get("datapath", {}).get("lane_instance"):
+                record["synthesis"]["lane_count_in_netlist"] = count_lane_instances(
+                    netlist, block["datapath"]["lane_instance"]
+                )
             record["synthesis"]["liberty_cell_count"] = len(cells)
             record["stages_completed"].append("synth")
 
@@ -1329,6 +1834,14 @@ def main(argv: list[str] | None = None) -> int:
         record["status"] = STATUS_ERROR
         record["error"] = f"{type(exc).__name__}: {exc}"
         record["completed_at"] = datetime.now(timezone.utc).isoformat()
+        augment_design(
+            record,
+            args.lanes,
+            args.mac_per_cycle,
+            args.mac_rate_evidence,
+            args.lane_instance_regex,
+            [netlist],
+        )
         canonical_dump(record, output)
         print(f"FAILED: {record['error']}", file=sys.stderr)
         print(f"partial record written to {output}", file=sys.stderr)
@@ -1338,6 +1851,14 @@ def main(argv: list[str] | None = None) -> int:
 
     verdict = evaluate_verdict(record)
     record["status"] = verdict["status"]
+    if block.get("datapath"):
+        summary_netlists: list[Path] = []
+        if "pnr" in stages:
+            pnr_dir = output.parent / f"{output.stem}_artifacts"
+            summary_netlists = [pnr_dir / "1_2_yosys.v", pnr_dir / "6_final.v"]
+        elif netlist is not None:
+            summary_netlists = [netlist]
+        record["design"].update(datapath_summary(record, block["datapath"], summary_netlists))
     record["acceptance"] = {
         "status": verdict["status"],
         "reason": verdict["reason"],
@@ -1355,6 +1876,15 @@ def main(argv: list[str] | None = None) -> int:
     record["completed_at"] = datetime.now(timezone.utc).isoformat()
     record["elapsed_seconds"] = round(
         (datetime.now(timezone.utc) - started).total_seconds(), 3
+    )
+    artifact_dir = output.parent / f"{output.stem}_artifacts"
+    augment_design(
+        record,
+        args.lanes,
+        args.mac_per_cycle,
+        args.mac_rate_evidence,
+        args.lane_instance_regex,
+        [artifact_dir / "6_final.v", artifact_dir / "1_2_yosys.v", netlist],
     )
     canonical_dump(record, output)
 
@@ -1384,6 +1914,15 @@ def main(argv: list[str] | None = None) -> int:
             f"  pnr:   wirelength={m.get('routed_wirelength_um')} um vias={m.get('vias')} "
             f"DRC={m.get('drc_errors')} antenna_nets={m.get('antenna_violating_nets')} "
             f"Fmax={float(m.get('fmax_hz', 0)) / 1e6:.2f} MHz"
+        )
+    design = record["design"]
+    if "per_mac_area_um2" in design or "lanes" in design:
+        print(
+            f"  design: lanes={design.get('lanes')} "
+            f"lanes_in_netlist={(design.get('lanes_in_netlist') or {}).get('distinct_lanes')} "
+            f"mac_per_cycle={design.get('mac_per_cycle')} cells={design.get('cells')} "
+            f"per_mac_area={design.get('per_mac_area_um2')} um2 "
+            f"per_mac_period={design.get('per_mac_period_ns')} ns closed={design.get('closed')}"
         )
     verdict_line = f"  STATUS: {record['status'].upper()} ({verdict['reason']})"
     if record["status"] != STATUS_PASS:

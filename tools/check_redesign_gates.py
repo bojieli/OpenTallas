@@ -166,14 +166,90 @@ def evaluate(gate: dict[str, Any]) -> dict[str, Any]:
         return _pass(f"routed: {', '.join(sorted(names))}")
 
     if kind == "per_mac_improvement":
+        # Per-MAC figures are compared only inside one view (METHODOLOGY
+        # section 9: nothing is scaled across nodes), only between closed
+        # routed results, and only when the candidate declares them itself
+        # (tools/run_abi3_physical.py --lanes/--mac-per-cycle writes the
+        # ``design`` block).  The baseline predates that block, so its figures
+        # are derived here from its routed record with the MAC rate the gate
+        # names -- the same arithmetic as docs/CHIP_ARCHITECTURE_DESIGN.md
+        # section 8.4 (standard-cell area / MAC per cycle; closed target
+        # period / MAC per cycle).
         base = _load(REPO / ev["baseline"])
         if base is None:
             return _fail(f"baseline {ev['baseline']} is unreadable")
         if not paths:
             return _fail(f"no candidate matches {ev['glob']}")
+        base_view = _dig(base, "view.name")
+        base_design = base.get("design") or {}
+        base_mpc = base_design.get("mac_per_cycle", ev.get("baseline_mac_per_cycle"))
+        try:
+            base_mpc = float(base_mpc)
+        except (TypeError, ValueError):
+            return _fail("baseline declares no MAC per cycle and the gate names none")
+        if base.get("status") != "pass" or "place_and_route" not in base:
+            return _fail(f"baseline {ev['baseline']} is not a closed routed result")
+        base_area = base_design.get("per_mac_area_um2")
+        base_period = base_design.get("per_mac_period_ns")
+        if base_area is None:
+            cell_area = _dig(base, "place_and_route.metrics.standard_cell_area_um2")
+            base_area = None if cell_area is None else float(cell_area) / base_mpc
+        if base_period is None:
+            period = _dig(base, "place_and_route.clock_period_ns")
+            base_period = None if period is None else float(period) / base_mpc
+        if base_area is None or base_period is None:
+            return _fail(f"baseline {ev['baseline']} carries no per-MAC figures")
+        reasons: list[str] = []
+        best: tuple[float, float, Path] | None = None
+        for path in paths:
+            rel = path.relative_to(REPO)
+            body = _load(path)
+            if body is None:
+                reasons.append(f"{rel}: unreadable")
+                continue
+            view = _dig(body, "view.name")
+            if view != base_view:
+                reasons.append(f"{rel}: view {view} is not the baseline's {base_view}")
+                continue
+            design = body.get("design") or {}
+            area = design.get("per_mac_area_um2")
+            period = design.get("per_mac_period_ns")
+            if not isinstance(area, (int, float)) or not isinstance(period, (int, float)):
+                reasons.append(f"{rel}: declares no per-MAC figures")
+                continue
+            if "place_and_route" not in body:
+                reasons.append(f"{rel}: no place-and-route stage")
+                continue
+            if body.get("status") != "pass" or design.get("closed") is not True:
+                reasons.append(
+                    f"{rel}: not closed (status {body.get('status')}); "
+                    f"{area:,.1f} um2 and {period:.3f} ns per MAC are what it "
+                    "achieved, not a result"
+                )
+                continue
+            area_ok = float(area) < base_area
+            period_ok = float(period) < base_period
+            if area_ok and period_ok:
+                if best is None or float(area) < best[0]:
+                    best = (float(area), float(period), path)
+            else:
+                reasons.append(
+                    f"{rel}: per-MAC area {area:,.1f} um2 vs {base_area:,.0f}, "
+                    f"period {period:.3f} ns vs {base_period:.1f}: "
+                    + ("area" if not area_ok else "period")
+                    + " regresses"
+                )
+        if best is not None:
+            return _pass(
+                f"{best[2].relative_to(REPO)}: per-MAC area {best[0]:,.1f} um2 < "
+                f"baseline {base_area:,.0f} um2 and per-MAC period {best[1]:.3f} ns < "
+                f"baseline {base_period:.1f} ns, both routed at {base_view}"
+            )
         return _fail(
-            f"{len(paths)} candidate(s) found but per-MAC comparison needs a declared "
-            "MAC count in each pnr.json; none declares one yet"
+            f"{len(paths)} candidate(s) and none improves on the baseline's "
+            f"{base_area:,.0f} um2 and {base_period:.1f} ns per MAC: "
+            + "; ".join(reasons[:3])
+            + ("; ..." if len(reasons) > 3 else "")
         )
 
     if not paths:
@@ -196,15 +272,29 @@ def evaluate(gate: dict[str, Any]) -> dict[str, Any]:
         )
 
     if kind == "artifact_threshold":
+        also = ev.get("also_require")
+        rejected: list[str] = []
         best: tuple[float, Path] | None = None
         for path in paths:
             body = _load(path)
             got = _dig(body, ev["field"]) if body else None
-            if isinstance(got, (int, float)) and (best is None or got > best[0]):
+            if not isinstance(got, (int, float)):
+                continue
+            if also and _dig(body, also["field"]) != also.get("equals"):
+                rejected.append(
+                    f"{path.relative_to(REPO)}: {also['field']} != {also.get('equals')}"
+                )
+                continue
+            if best is None or got > best[0]:
                 best = (float(got), path)
         if best is None:
             return _fail(
                 f"{len(paths)} artifact(s) matched and none carries {ev['field']}"
+                + (
+                    f" with {also['field']} == {also.get('equals')}: " + "; ".join(rejected[:3])
+                    if rejected
+                    else ""
+                )
             )
         if best[0] < float(ev["min"]):
             return _fail(
