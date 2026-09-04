@@ -1,0 +1,244 @@
+{
+  "schema_version": 1,
+  "purpose": "Speculative-decoding profiles read by tools/run_speculative_roofline.py. Each profile is a set of graded drafter parameters and a set of PUBLISHED acceptance lengths; nothing here is fitted, and no acceptance rate is invented. The grade vocabulary is the one defined in configs/hardware/technology.json#grade_definitions -- measured, executed, published, derived, assumed -- and nothing else is admitted.",
+  "grade_vocabulary": "configs/hardware/technology.json#grade_definitions",
+  "convention": {
+    "gamma": "speculative budget: draft tokens proposed per cycle. The verification pass carries n = gamma + 1 positions, the extra one being the target's own bonus token. GAMMA IS THE BLOCK SIZE, on both sources' own definition, and this file never writes block_size - 1 anywhere. DFlash, arXiv:2602.06036v2: 'the block size IS the speculation budget. With block size 16, the diffusion drafter generates exactly 16 new draft tokens per forward pass', and 'with block size 16 (gamma=16), the acceptance length ranges from 1 to 17'. DSpark, arXiv:2607.05147v1: 'we treat the anchor itself as the first prediction position, so gamma input tokens (anchor + gamma-1 masks) yield gamma draft logits'.",
+    "tau": "expected accepted tokens per cycle INCLUDING the bonus token, so tau is in [1, gamma+1] by construction. This is DFlash equation (1)'s tau and every acceptance length below is stated on that convention.",
+    "speedup": "L_target / L with L = (T_draft + T_verify) / tau -- DFlash equation (1). This study computes T_draft and T_verify from the published roofline artifact and takes tau only from the sources below."
+  },
+  "gamma_ladder": [1, 2, 3, 4, 5, 7, 8, 15, 16],
+  "gamma_ladder_note": "The ladder carries every block size either source configures -- DSpark's paper maximum 5, DeepSeek's served 7, Xiaomi's 8, DFlash's 16 -- and smaller rungs beneath them. Rungs above a profile's own configured block are an extension neither source configures and are published as sensitivity, never as a served figure.",
+  "profiles": {
+    "released_dspark": {
+      "label": "DeepSeek-V4's own speculative module, as shipped",
+      "drafter_family": "mtp_stack_with_sequential_markov_bias",
+      "applies_to_models": ["DeepSeek-V4-Pro-0813", "DeepSeek-V4-Flash-0731"],
+      "not_applicable_note": "Qwen3-8B and Kimi-K3 ship no MTP stack: configs/models/qwen3-8b.json and configs/models/kimi-k3.json both carry draft_dense_weight_bytes = 0 and draft_routed_weight_bytes = 0. This profile is DeepSeek's own module and is not transplanted onto a model that does not ship it; those models are reported as not applicable rather than modelled.",
+      "served_gamma_parameter": "served_speculative_tokens",
+      "block_size_parameters": ["block_size", "served_speculative_tokens"],
+      "sensitivity_gammas": [5, 7],
+      "parameters": {
+        "draft_stages": {
+          "value": 3,
+          "grade": "published",
+          "source": "DSpark: Confidence-Scheduled Speculative Decoding with Semi-Autoregressive Generation, arXiv:2607.05147 (2026); shipped inference/config.json n_mtp_layers = 3 in github.com/deepseek-ai/DeepSpec, corroborated by the checkpoint tensor inventory mtp.0/mtp.1/mtp.2",
+          "note": "The Hugging Face config.json key num_nextn_predict_layers = 1 is contradicted by the shipped inference config and by the tensor inventory, and is NOT used."
+        },
+        "block_size": {
+          "value": 5,
+          "grade": "published",
+          "source": "arXiv:2607.05147 (2026), dspark_block_size = 5: 'We configure the maximum block size to gamma=5'",
+          "note": "The masked block the drafter embeds once: [real_token, NOISE x (block-1)]. THE BLOCK SIZE IS GAMMA: the paper treats the anchor itself as the first prediction position, so gamma input tokens (anchor + gamma-1 masks) yield gamma draft logits. Block 5 is therefore gamma = 5, six verified positions and a cap of tau = 6. This is the paper's configured MAXIMUM, not an architectural limit: DeepSeek's own serving flag below configures a seven-token block."
+        },
+        "served_speculative_tokens": {
+          "value": 7,
+          "grade": "published",
+          "source": "DeepSeek's own vLLM integration flag num_speculative_tokens = 7, github.com/deepseek-ai/DeepSpec (2026), corroborated by https://vllm.ai/blog/2026-08-14-dspark-adaptive-verification (2026), which describes 'a 7-token block' and records the same flag at TP=8 on 8xB300",
+          "note": "gamma = 7: seven draft tokens from one seven-token block, eight verified positions, cap tau = 8. The served configuration differs from the paper's configured maximum of 5; both are carried and the sensitivity is reported across them."
+        },
+        "draft_block_passes": {
+          "value": 1,
+          "grade": "published",
+          "source": "arXiv:2607.05147 (2026): the masked block is embedded once, takes one pass through the 3 stages, and one lm_head pass covers all positions",
+          "note": "ONE pass through the drafter's weights per cycle at every gamma on the ladder, independent of the block length, because gamma IS the block size and the whole block is embedded once. At the paper's configured maximum block of 5 and at DeepSeek's served block of 7 this is the sources' own structure. Above 7 the ladder is charging one pass for a block neither source configures, which is a stated extension and not a measured configuration."
+        },
+        "draft_sequential_passes_per_draft_token": {
+          "value": 1,
+          "grade": "published",
+          "source": "arXiv:2607.05147 (2026): a rank-256 Markov bias is applied sequentially per position after the block pass, with no transformer re-run",
+          "note": "This is the term that makes DSpark structurally different from a block-diffusion drafter, and on a ROM machine it is the term that costs the most: under the locality rule in src/opentallas/roofline.py every pass that touches the array takes the full-array sweep time, so gamma sequential bias applications cost gamma sweeps however few bytes the two rank-256 tables hold."
+        },
+        "markov_bias_rank": {
+          "value": 256,
+          "grade": "published",
+          "source": "arXiv:2607.05147 (2026): 'The low-rank factorization (r=256 by default) keeps both storage and per-step compute small', with W1 in R^(VxR) and W2 in R^(RxV); corroborated by this repository's own committed tensor evidence, docs/SOURCES.md SRC-DSV4-FLASH-MARKOV and docs/DEEPSEEK_V4_MARKOV_LOOP_EVIDENCE.md, which record BF16 mtp.2.markov_head.markov_w1.weight and markov_w2.weight both of shape [129280,256] at 66,191,360 bytes each",
+          "note": "TWO rank-256 tables, not one rank-512 table. The byte total does not discriminate between the two readings -- 2 x 129280 x 256 x 2 = 132,382,720 and 1 x 129280 x 512 x 2 = 132,382,720 are the same number -- so the rank is taken from the paper and from the committed tensor shapes, not from the byte count. Used only to reconcile the externally published draft-traffic slope below; the modelled draft traffic comes from the repository's own model configs."
+        },
+        "draft_weight_bytes_source": {
+          "value": "configs/models/<model>.json draft_dense_weight_bytes + draft_routed_weight_bytes, read through opentallas.workload.draft_weight_traffic at draft_tokens = gamma + 1",
+          "grade": "derived",
+          "source": "checkpoint tensor inventory already committed in configs/models/deepseek-v4-pro-0813.json and configs/models/deepseek-v4-flash-0731.json",
+          "note": "The repository's own inventory is the modelled input. The externally published decomposition below disagrees with it and the disagreement is reported rather than resolved."
+        },
+        "drafter_kv_traffic": {
+          "value": null,
+          "band_low": 0.0,
+          "band_high_rule": "target KV time x draft_stages / num_layers",
+          "grade": "assumed",
+          "source": "no primary source: arXiv:2607.05147 (2026) states no KV byte count for the MTP stages",
+          "note": "PUBLISHED AS A BAND, NEVER AS A POINT. The low end assumes the stages re-use the target's cache with no additional traffic; the high end charges them their layer share of the target's KV read. Where the band straddles the break-even acceptance the design is reported undecided."
+        },
+        "draft_compute_ops_ratio_rule": {
+          "value": "engaged draft weight bytes / engaged target weight bytes at the same block, at equal datapath format",
+          "grade": "assumed",
+          "source": "explicit modelling convention; operations = 2 x active parameters (configs/hardware/technology.json counting convention) makes the byte ratio the operation ratio only when both sides share a datapath",
+          "note": "The drafter's own attention over the context is NOT in this ratio."
+        }
+      },
+      "acceptance_length": {
+        "grade": "published",
+        "includes_bonus_token": true,
+        "source": "LMSYS Org, 'DSpark in SGLang: Speculative Decoding with Confidence-Driven, Variable-Length Verification', https://www.lmsys.org/blog/2026-07-06-dspark-sglang/ (6 July 2026), which states verbatim: 'Together they reach 383.7 tok/s at accept length ~5 at batch size 1 on DeepSeek-V4-Pro, TP=8, B300.'",
+        "measured_on": {
+          "model": "DeepSeek-V4-Pro",
+          "batch_size": 1,
+          "hardware": "8x NVIDIA B300, TP = 8 -- stated by the source in the same sentence",
+          "workload_mix": "not stated by the source: the sentence names no dataset or task mix"
+        },
+        "points": [
+          {"workload": "SGLang integration measurement, workload mix not stated", "value": 5.0}
+        ],
+        "range_low": 5.0,
+        "range_high": 5.0,
+        "note": "WHOSE NUMBER THIS IS: the SGLang integration's own measurement, published by LMSYS Org, not a statement by DeepSeek. DeepSeek's own pages carry no accepted-length figure -- the vLLM integration blog (https://vllm.ai/blog/2026-08-14-dspark-adaptive-verification) and the DeepSeek-V4-Pro-DSpark model card were both checked and state the serving flag, the hardware and the per-position survival rates but no average accepted length. The source writes 'accept length ~5'; it is approximate and it is used here as an exact point, which is a property of the source and not a claim of precision. It is one figure and not a range; that too is a property of the source, not a claim that acceptance is workload-independent. At the paper's configured block of 5 the cap is gamma+1 = 6 and at the served block of 7 the cap is 8, so 5.00 is inside the interval at both and is never clamped."
+      },
+      "external_draft_traffic_decomposition": {
+        "grade": "published",
+        "constant_bytes": 3770773788,
+        "bytes_per_draft_token": 132382720,
+        "source": "DSpark draft weight-traffic decomposition for DeepSeek-V4-Pro-0813, arXiv:2607.05147 / github.com/deepseek-ai/DeepSpec (2026)",
+        "note": "CARRIED AS A CROSS-CHECK, NOT AS THE MODELLED INPUT. At the shipped block size 5 it gives 4,432,687,388 B, 11.17% of the 39,666,603,980 B target pass; at the served gamma = 7 it gives 4,697,452,828 B, 11.84%. The slope is exactly TWO rank-256 BF16 tables over a 129,280-token vocabulary, 66,191,360 B each (2 x 129280 x 256 x 2 = 132,382,720), which is the shape this repository's own committed tensor inventory records; one rank-512 table gives the identical byte total, so the slope alone cannot tell the two apart. The repository's own configs/models/deepseek-v4-pro-0813.json gives a different decomposition; the tool reports both and the divergence."
+      }
+    },
+    "sota_block_diffusion": {
+      "label": "The DFlash / MiMo-UltraSpeed class: a block-diffusion drafter decoding a whole block in one parallel pass",
+      "drafter_family": "block_diffusion_parallel",
+      "applies_to_models": ["Qwen3-8B", "DeepSeek-V4-Pro-0813", "DeepSeek-V4-Flash-0731", "Kimi-K3"],
+      "served_gamma_parameter": "block_size",
+      "cross_check_gamma_parameter": "mimo_block_size",
+      "block_size_parameters": ["block_size", "mimo_block_size"],
+      "sensitivity_gammas": [8, 16],
+      "parameters": {
+        "draft_layers": {
+          "value": 5,
+          "grade": "published",
+          "source": "Chen, Liang, Liu, DFlash: Block Diffusion for Flash Speculative Decoding, ICML 2026, arXiv:2602.06036v2 (28 May 2026): 5 draft layers (8 for Qwen3-Coder)",
+          "note": "Target hidden features from 5 uniformly selected target layers are fused and injected as Key/Value into every draft layer; embedding and LM head are shared with the frozen target."
+        },
+        "block_size": {
+          "value": 16,
+          "grade": "published",
+          "source": "arXiv:2602.06036v2 (2026), DFlash block size 16 (10 for LLaMA-3.1): 'the block size IS the speculation budget. With block size 16, the diffusion drafter generates exactly 16 new draft tokens per forward pass'",
+          "note": "gamma = block_size = 16, so the verification pass carries 17 positions and tau is capped at 17. The paper is explicit: 'with block size 16 (gamma=16), the acceptance length ranges from 1 to 17'."
+        },
+        "mimo_block_size": {
+          "value": 8,
+          "grade": "published",
+          "source": "https://mimo.xiaomi.com/blog/mimo-tilert-1000tps (2026): a DFlash block-diffusion drafter with block size limited to 8",
+          "note": "gamma = 8, nine verified positions. Carried as the sensitivity rung AND as the gamma at which the Xiaomi cross-check is evaluated, because it is the block size the only shipped deployment of this class uses and it is the block size Xiaomi's published acceptance lengths were measured at. A cycle at this profile's served block of 16 must never be quoted under those acceptance lengths."
+        },
+        "draft_block_passes": {
+          "value": 1,
+          "grade": "published",
+          "source": "arXiv:2602.06036v2 (2026), equation (3): T_draft = t_parallel, independent of the speculation budget gamma -- all masked positions in a block are decoded in ONE forward pass",
+          "note": "This is the whole structural difference from an autoregressive drafter, whose equation (2) is T_draft = gamma x t_step."
+        },
+        "draft_sequential_passes_per_draft_token": {
+          "value": 0,
+          "grade": "published",
+          "source": "arXiv:2602.06036v2 (2026), equation (3): the draft pass carries no per-position sequential term",
+          "note": "Figure 3 of the same paper measures the consequence: DFlash draft latency is flat in the draft-token count at 4, 8 and 16, while a 1-layer EAGLE-3 drafter's grows."
+        },
+        "drafter_derivation_when_absent": {
+          "value": "stored bytes = draft_layers x layer_dense_weight_bytes[0]; traffic bytes = stored bytes + resident_only_weight_bytes; routed bytes = 0",
+          "grade": "derived",
+          "source": "arXiv:2602.06036v2 (2026) states a dense N-layer drafter sharing the frozen target's embedding and LM head; per-layer byte counts from configs/models/<model>.json layer_dense_weight_bytes and resident_only_weight_bytes",
+          "note": "No released checkpoint of a DFlash drafter is in this repository, so the drafter's size is DERIVED from the target's own per-layer inventory. On Qwen3-8B this gives 1,929,464,320 B stored and 3,174,124,032 B of traffic. ON AN MoE TARGET THE PAPER REPORTS NO CONFIGURATION AT ALL: the derivation makes the drafter dense, which is the paper's own shape, and that is a stated modelling choice rather than a measurement."
+        },
+        "drafter_kv_traffic": {
+          "value": null,
+          "band_low": 0.0,
+          "band_high_rule": "target KV time x draft_layers / num_layers",
+          "grade": "assumed",
+          "source": "no primary source: arXiv:2602.06036v2 (2026) gives no KV byte count for the injected Key/Value features",
+          "note": "PUBLISHED AS A BAND, NEVER AS A POINT. DFlash injects target hidden features from 5 uniformly selected layers as K/V into every draft layer and the paper does not size that traffic. At 200K-1M context this term could dominate the draft pass, which is why the band is carried on every row."
+        },
+        "draft_compute_ops_ratio_rule": {
+          "value": "engaged draft weight bytes / engaged target weight bytes at the same block, at equal datapath format",
+          "grade": "assumed",
+          "source": "explicit modelling convention; operations = 2 x active parameters (configs/hardware/technology.json counting convention) makes the byte ratio the operation ratio only when both sides share a datapath",
+          "note": "The drafter's own attention over the context is NOT in this ratio."
+        }
+      },
+      "acceptance_length": {
+        "grade": "published",
+        "includes_bonus_token": true,
+        "source": "arXiv:2602.06036v2, ICML 2026, Table 1: Qwen3-8B, temperature 0, NVIDIA H200, DFlash block 16",
+        "measured_on": {
+          "model": "Qwen3-8B",
+          "batch_size": "not stated by the source",
+          "hardware": "NVIDIA H200 with the authors' own kernels",
+          "workload_mix": "seven named benchmarks, listed individually below"
+        },
+        "points": [
+          {"workload": "GSM8K", "value": 6.54, "reported_speedup_x": 5.15},
+          {"workload": "MATH-500", "value": 7.87, "reported_speedup_x": 6.08},
+          {"workload": "AIME25", "value": 7.08, "reported_speedup_x": 5.62},
+          {"workload": "HumanEval", "value": 6.5, "reported_speedup_x": 5.14},
+          {"workload": "MBPP", "value": 5.95, "reported_speedup_x": 4.65},
+          {"workload": "LiveCodeBench", "value": 7.27, "reported_speedup_x": 5.51},
+          {"workload": "MT-Bench", "value": 4.24, "reported_speedup_x": 2.75}
+        ],
+        "average": {"workload": "unweighted mean of the seven", "value": 6.49, "reported_speedup_x": 4.86},
+        "range_low": 4.24,
+        "range_high": 7.87,
+        "note": "ACCEPTANCE IS TASK-DEPENDENT AND THE SPREAD IS LARGER THAN MOST OF THE EFFECTS THIS STUDY MEASURES: 4.24 on MT-Bench against 7.87 on MATH-500, a 1.86x range on the same model and the same drafter. Every speculative rate in the report is therefore published across the range, never at the mean alone."
+      },
+      "external_acceptance_cross_check": {
+        "grade": "published",
+        "source": "https://mimo.xiaomi.com/blog/mimo-tilert-1000tps (2026)",
+        "block_size": 8,
+        "points": [
+          {"workload": "coding", "value": 6.3, "max_observed": 7.14},
+          {"workload": "maths and reasoning", "value": 5.56},
+          {"workload": "agent", "value": 4.29}
+        ],
+        "note": "Xiaomi MiMo-V2.5-Pro-UltraSpeed acceptance lengths per verification round at block size 8, on a 1-trillion-parameter model. Used as an external cross-check of the DFlash-class acceptance range, not as an input to any modelled rate."
+      },
+      "baseline_comparators": {
+        "grade": "published",
+        "source": "arXiv:2602.06036v2, ICML 2026, Table 1",
+        "eagle3_block_16": {"average_speedup_x": 1.76, "average_tau": 2.96},
+        "eagle3_tree_60": {"average_speedup_x": 2.02, "average_tau": 3.4},
+        "note": "Carried so the DFlash class is not quoted without the autoregressive drafter it is measured against."
+      }
+    }
+  },
+  "cross_checks": {
+    "dflash_overhead_factor": {
+      "grade": "published",
+      "source": "arXiv:2602.06036v2, ICML 2026, Table 1, tau divided by reported speedup",
+      "band_low": 1.26,
+      "band_high": 1.32,
+      "outlier": {"workload": "MT-Bench", "value": 1.54},
+      "note": "The factor by which a real system falls short of the ideal tau-fold speedup: drafter cost, sampler, scheduler. Their measurement is on an H200 with their kernels; this study models a B200-class cluster. Agreement of this factor is evidence that the arithmetic is not obviously wrong. IT IS NOT EVIDENCE THAT ANY MODELLED SPECULATIVE RATE IS ACHIEVABLE."
+    },
+    "xiaomi_mimo_ultraspeed": {
+      "grade": "published",
+      "source": "https://mimo.xiaomi.com/blog/mimo-tilert-1000tps (2026)",
+      "claimed_tokens_s": 1000,
+      "claimed_tokens_s_figure_caption": 1200,
+      "total_parameters": 1000000000000,
+      "active_parameters": {
+        "value": 42000000000,
+        "grade": "assumed",
+        "source": "NO PRIMARY SOURCE. Secondary reporting of the Xiaomi MiMo-V2.5-Pro-UltraSpeed release (2026); https://mimo.xiaomi.com/blog/mimo-tilert-1000tps was re-read and states only a '1-trillion-parameter model' and a '1T flagship model', with no breakdown of total against active parameters",
+        "note": "ASSUMED, and said to be assumed wherever it appears. The vendor states 1T total and nothing about active parameters, so this figure cannot be graded `published` -- that grade is reserved for what the vendor or a standards body states. It is carried only to say what class of model the comparison is against, and no modelled figure in this study depends on it."
+      },
+      "node": "a single standard 8-GPU commodity node",
+      "unstated_conditions": [
+        "the GPU model is not stated",
+        "the batch size or concurrency is not stated",
+        "whether the figure is per-user or aggregate is not stated",
+        "the attribution of the speedup among the three stacked techniques is explicitly declined by Xiaomi"
+      ],
+      "stacked_techniques": [
+        "MXFP4 quantisation of MoE experts only, with routers and attention at higher precision, quantisation-aware trained",
+        "a DFlash block-diffusion drafter with block size limited to 8",
+        "the TileRT runtime"
+      ],
+      "note": "AN EXTERNAL CROSS-CHECK WITH ITS AMBIGUITY STATED, NEVER AN ANCHOR FOR A MODELLED FIGURE AND NEVER A CALIBRATION TARGET."
+    }
+  }
+}

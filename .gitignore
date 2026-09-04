@@ -21,3 +21,7 @@ results/tensor_accelerator/qwen3_long_acceptance_physical_v1/program/commands.bi
 # 25-30 MB analytical.json per rung is regenerated deterministically by
 # `make roofline` (about nine minutes) and is not committed.
 results/roofline/context_ladder/*/*/analytical.json
+# The speculative layer's two analytical.json files are 68 and 74 MB and are
+# regenerated deterministically from the committed roofline artifacts by
+# `make speculative`; only their REPORT.md is committed, as above.
+results/roofline/speculative/*/analytical.json

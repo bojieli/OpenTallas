@@ -3,6 +3,7 @@
 .PHONY: abi3-comparison-asap7-readiness abi3-comparison-asap7-gate
 .PHONY: abi3-w10-natural-oracle abi3-w10-natural-hbm-a abi3-w10-natural-hbm-b abi3-w10-natural-rom abi3-w10-natural-check abi3-w10-stress-hbm abi3-w10-stress-rom abi3-w10-stress-check
 .PHONY: checkpoint-source-deepseek-pro
+.PHONY: speculative
 
 profile:
 	python3 tools/profile_hf.py --all
@@ -67,6 +68,27 @@ check-prose-coverage:
 	python3 tools/audit_prose_figure_coverage.py --check
 
 check-figures: check-evidence-grades check-prose-figures check-prose-coverage
+
+# Speculative decoding as an ADDITIVE layer over the roofline artifacts that
+# already exist.  `tools/run_speculative_roofline.py` READS
+# results/roofline/**/analytical.json and writes only under
+# results/roofline/speculative/; it never imports the study driver and never
+# calls `opentallas.roofline.evaluate`.
+#
+# `roofline` is deliberately NOT a prerequisite.  That target owns every
+# published figure and takes about nine minutes, and asking for the speculative
+# layer must never silently start a re-evaluation of every design.  The tool
+# refuses to run at all if the technology and model files it reads no longer
+# hash to the pins the artifact was produced against, so a stale artifact is a
+# refusal rather than a silent mixture.
+#
+# The grade check is run on the profile config, which is where every graded
+# parameter is defined; the emitted artifact embeds copies of those same
+# entries and is too large to be worth re-parsing here.
+speculative:
+	PYTHONPATH=. python3 tools/run_speculative_roofline.py --force
+	python3 tools/check_evidence_grades.py \
+	  --also configs/studies/speculative_profiles.json
 
 formal:
 	python3 tools/rtl_campaign.py --formal
