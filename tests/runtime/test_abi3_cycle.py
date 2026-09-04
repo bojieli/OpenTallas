@@ -79,6 +79,7 @@ from runtime.cycle.model import (
     functional_reference,
     operand_extents,
     prove_acyclic_waits,
+    tensor_lane_mapping,
     tile_mapping,
     timing_counters,
 )
@@ -1607,7 +1608,7 @@ def test_tile_shape_changes_cycles_but_never_architectural_counters():
     assert coarse_result.total_cycles != fine_result.total_cycles
 
 
-def test_partial_tiles_charge_their_padding():
+def test_partial_tensor_tiles_mask_inactive_coordinates():
     deployment, capability = synthetic_tiled_deployment(
         tile_rows=3, tile_cols=7, tile_depth=10
     )
@@ -1615,19 +1616,15 @@ def test_partial_tiles_charge_their_padding():
         request()
     ).to_dict()
     tensor = body["tiling"]["by_family"]["tensor"]
-    assert tensor["padding_work"] > 0
-    assert tensor["issued_work"] > tensor["useful_work"]
-    assert body["counters"]["timing"]["latency.tile_padding_work"] > 0
+    assert tensor["padding_work"] == 0
+    assert tensor["issued_work"] == tensor["useful_work"]
+    assert tensor["scheduled_capacity_work"] > tensor["issued_work"]
+    assert tensor["masked_schedule_capacity_work"] > 0
+    assert body["engines"]["tensor"]["tile_padding_work"] == 0
 
 
-def test_tiling_report_does_not_call_issue_efficiency_physical_lane_use():
-    """Report the useful work without inventing unimplemented lane masking.
-
-    The fixed cycle policy still charges complete partial tiles.  Reporting the
-    useful fraction is valuable, but ABI 3.0 has no schedule-to-lane binding or
-    active-row mask from which physical utilization could be measured.  That
-    gap must stay typed and visible until an RTL architecture closes it.
-    """
+def test_tiling_report_derives_physical_lane_use_from_row_folded_waves():
+    """Resolved extents drive the same active/masked split as the RTL mapper."""
     deployment, capability = synthetic_tiled_deployment(
         tile_rows=3, tile_cols=7, tile_depth=10
     )
@@ -1656,20 +1653,16 @@ def test_tiling_report_does_not_call_issue_efficiency_physical_lane_use():
         ),
     }
     lane = tiling["physical_lane_utilisation"]
-    assert lane["status"] == "not_derivable"
-    assert lane["value"] is None
-    assert "active-row or active-lane mask" in lane["reason"]
+    assert lane["status"] == "modeled_from_resolved_active_extents"
+    assert lane["active_lane_slots"] == 8 * 32
+    assert lane["lane_capacity_slots"] == 416
+    assert lane["masked_lane_slots"] == 416 - 8 * 32
+    assert lane["value"] == round((8 * 32) / 416, 6)
     assert result.architectural == functional_counters(deployment, capability, req)
 
 
-def test_qwen_projection_decode_retains_fixed_tile_cost_while_prefill_is_full():
-    """The Qwen row-of-one pathology is phase-specific and remains honest.
-
-    A Qwen decode transaction binds one token row while a prefill block can
-    fill the 64-row schedule.  Until RTL implements masking or a narrow decode
-    engine, the decode mapping must retain the same issued 64-row tile rather
-    than turning a smaller logical extent into a cycle-model-only speedup.
-    """
+def test_qwen_projection_decode_uses_row_folding_while_prefill_reuses_weights():
+    """One decode row fills columns; 64 prefill rows retain full useful work."""
     params = MachineModel(cycle_capability(), load_cost_table(BASELINE)).engine(
         "tensor"
     )
@@ -1701,13 +1694,41 @@ def test_qwen_projection_decode_retains_fixed_tile_cost_while_prefill_is_full():
     prefill = tile_mapping(projection(64), params)
 
     assert decode.tile_rows == prefill.tile_rows == 64
-    assert decode.issued_work == prefill.issued_work
-    assert decode.useful_work * 64 == decode.issued_work
-    assert decode.padding_work > 0
+    assert decode.scheduled_capacity_work == prefill.scheduled_capacity_work
+    assert decode.issued_work * 64 == prefill.issued_work
+    assert decode.issued_work == decode.useful_work
+    assert decode.padding_work == 0
     assert decode.to_dict()["axis_issue_utilisation"]["rows"] == 0.015625
-    assert decode.to_dict()["useful_issue_utilisation"] == 0.015625
+    assert decode.to_dict()["useful_issue_utilisation"] == 1.0
+    assert decode.tensor_lanes is not None
+    assert prefill.tensor_lanes is not None
+    assert decode.tensor_lanes.output_waves * 64 == prefill.tensor_lanes.output_waves
+    assert decode.tensor_lanes.masked_lane_slots == 0
     assert prefill.padding_work == 0
     assert prefill.to_dict()["useful_issue_utilisation"] == 1.0
+
+
+def test_qwen_real_shapes_match_the_256_lane_mapper_wave_counts():
+    common = {
+        "tile_rows": 64,
+        "tile_cols": 64,
+        "issue_window": 4,
+        "lanes": 256,
+    }
+    decode = tensor_lane_mapping(rows=1, cols=4096, **common)
+    prefill = tensor_lane_mapping(rows=64, cols=4096, **common)
+    batch8 = tensor_lane_mapping(rows=8, cols=4096, **common)
+    vocabulary = tensor_lane_mapping(rows=1, cols=151936, **common)
+
+    assert decode.output_waves == 16
+    assert prefill.output_waves == 1024
+    assert batch8.output_waves == 128
+    assert decode.masked_lane_slots == 0
+    assert prefill.masked_lane_slots == 0
+    assert batch8.masked_lane_slots == 0
+    assert vocabulary.output_waves == 594
+    assert vocabulary.active_lane_slots == 151936
+    assert vocabulary.masked_lane_slots == 128
 
 
 def test_an_absent_tile_mapping_is_rejected_before_it_reaches_the_model():
@@ -1905,9 +1926,14 @@ def test_issue_window_of_one_serialises_memory_behind_compute():
 def test_operand_extents_follow_the_frozen_operand_table():
     from runtime.cycle.model import TraceStep
 
-    step = TraceStep(index=0, kind="ENGINE", family="tensor")
+    step = TraceStep(
+        index=0, kind="ENGINE", family="tensor", mnemonic="TENSOR.MATMUL"
+    )
     step.operand_dims = {"in0": (8, 64), "in1": (32, 64), "out0": (8, 32)}
     assert operand_extents(step) == (8, 32, 64)
+    step.mnemonic = "TENSOR.EMBED_LOOKUP"
+    step.operand_dims = {"in0": (8,), "in1": (32000, 64), "out0": (8, 64)}
+    assert operand_extents(step) == (8, 64, 1)
     step.family = "vector"
     assert operand_extents(step) == (8, 32, 1)
     step.family = "reduction"

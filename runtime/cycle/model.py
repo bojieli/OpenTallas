@@ -790,12 +790,111 @@ TILED_FAMILIES = frozenset(
 #: Families with a reduction axis, for which ``tile_depth`` is load-bearing.
 REDUCING_FAMILIES = frozenset({"tensor", "attention", "reduction"})
 
+# Tensor-family operations whose logical depth is a contracted K axis.  Embed
+# lookup shares the tensor issue port but performs no reduction, so assigning
+# the table width to its depth would manufacture work that the engine never
+# executes.
+TENSOR_CONTRACTIONS = frozenset(
+    {"TENSOR.MATMUL", "TENSOR.GROUPED_MATMUL", "TENSOR.ROUTED_MATMUL"}
+)
+
 
 def _product(values: Sequence[int]) -> int:
     total = 1
     for value in values:
         total *= int(value)
     return total
+
+
+@dataclass(slots=True)
+class TensorLaneMapping:
+    """Physical output-coordinate waves for the maskable tensor datapath."""
+
+    lanes: int
+    output_waves: int
+    active_lane_slots: int
+    masked_lane_slots: int
+    row_folded_output_count: int
+    column_groups: int
+
+    @property
+    def utilisation(self) -> float:
+        capacity = self.output_waves * self.lanes
+        return self.active_lane_slots / capacity if capacity else 0.0
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "policy": "resolved-active-extents-row-folded-v1",
+            "lanes": self.lanes,
+            "output_waves": self.output_waves,
+            "active_lane_slots": self.active_lane_slots,
+            "masked_lane_slots": self.masked_lane_slots,
+            "row_folded_output_count": self.row_folded_output_count,
+            "column_groups": self.column_groups,
+            "physical_lane_utilisation": _round(self.utilisation),
+        }
+
+
+def tensor_lane_mapping(
+    *,
+    rows: int,
+    cols: int,
+    tile_rows: int,
+    tile_cols: int,
+    issue_window: int,
+    lanes: int,
+) -> TensorLaneMapping:
+    """Count the waves emitted by the deterministic RTL lane mapper.
+
+    The counting form avoids materialising every coordinate of a large prefill
+    while retaining the RTL's row-tile and issue-window boundaries exactly.
+    """
+
+    if min(rows, cols, tile_rows, tile_cols, issue_window, lanes) <= 0:
+        raise ScheduleError("tensor lane mapping requires positive extents")
+
+    output_waves = 0
+    active_lane_slots = 0
+    row_folded_output_count = 0
+    column_groups = 0
+    group_span = tile_cols * issue_window
+    row_tile_base = 0
+    while row_tile_base < rows:
+        row_tile_extent = min(tile_rows, rows - row_tile_base)
+        row_offset = 0
+        while row_offset < row_tile_extent:
+            wave_rows = min(row_tile_extent - row_offset, lanes)
+            column_capacity = lanes // wave_rows
+            if column_capacity <= 0:
+                raise ScheduleError("tensor row wave cannot admit one column")
+            column_group_base = 0
+            while column_group_base < cols:
+                group_cols = min(group_span, cols - column_group_base)
+                waves, remainder = divmod(group_cols, column_capacity)
+                if remainder:
+                    waves += 1
+                output_waves += waves
+                active_lane_slots += wave_rows * group_cols
+                row_folded_output_count += wave_rows * group_cols - wave_rows * waves
+                column_groups += 1
+                column_group_base += group_cols
+            row_offset += wave_rows
+        row_tile_base += row_tile_extent
+
+    expected = rows * cols
+    if active_lane_slots != expected:
+        raise ScheduleError(
+            "tensor lane mapping did not cover the resolved output surface: "
+            f"{active_lane_slots} != {expected}"
+        )
+    return TensorLaneMapping(
+        lanes=lanes,
+        output_waves=output_waves,
+        active_lane_slots=active_lane_slots,
+        masked_lane_slots=output_waves * lanes - active_lane_slots,
+        row_folded_output_count=row_folded_output_count,
+        column_groups=column_groups,
+    )
 
 
 @dataclass(slots=True)
@@ -820,9 +919,16 @@ class TileMapping:
     noc_route_class: int
     resource_bound: int
     priority: int
+    tensor_lanes: TensorLaneMapping | None = None
 
     @property
     def tiles(self) -> int:
+        if self.tensor_lanes is not None:
+            return self.tensor_lanes.output_waves * self.depth_tiles
+        return self.row_tiles * self.col_tiles * self.depth_tiles
+
+    @property
+    def schedule_tiles(self) -> int:
         return self.row_tiles * self.col_tiles * self.depth_tiles
 
     @property
@@ -831,8 +937,15 @@ class TileMapping:
 
     @property
     def issued_work(self) -> int:
-        """Work the tiled machine performs, padding included."""
+        """Work the machine performs after inactive coordinates are masked."""
+        if self.tensor_lanes is not None:
+            return self.useful_work
         return self.tiles * self.tile_work
+
+    @property
+    def scheduled_capacity_work(self) -> int:
+        """Full rectangular schedule capacity before active-lane masking."""
+        return self.schedule_tiles * self.tile_work
 
     @property
     def useful_work(self) -> int:
@@ -859,13 +972,11 @@ class TileMapping:
 
     @property
     def useful_issue_utilisation(self) -> float:
-        """Fraction of scheduled work that belongs to the logical operation.
+        """Fraction of actually issued arithmetic that is useful work.
 
-        This is deliberately an *issue* utilisation, not physical-lane
-        utilisation.  ABI 3.0 says how an operation is tiled, but it does not
-        say how a tile maps onto physical lanes or whether inactive rows can be
-        clock-gated.  Calling this a lane measurement would manufacture a
-        microarchitecture the deployment does not describe.
+        For the maskable tensor mapping this is one: inactive coordinates are
+        lane-mask capacity, not issued MACs.  Physical lane utilisation is
+        reported separately from the concrete wave counts.
         """
         return self.useful_work / self.issued_work if self.issued_work else 0.0
 
@@ -884,10 +995,12 @@ class TileMapping:
                 "tile_depth": self.tile_depth,
             },
             "tiles": self.tiles,
+            "schedule_tiles": self.schedule_tiles,
             "row_tiles": self.row_tiles,
             "col_tiles": self.col_tiles,
             "depth_tiles": self.depth_tiles,
             "issued_work": self.issued_work,
+            "scheduled_capacity_work": self.scheduled_capacity_work,
             "useful_work": self.useful_work,
             "padding_work": self.padding_work,
             "padding_fraction": _round(self.padding_work / self.issued_work)
@@ -899,12 +1012,20 @@ class TileMapping:
                 "cols": _round(self.cols / self.issued_cols),
                 "depth": _round(self.depth / self.issued_depth),
             },
+            "axis_schedule_capacity_utilisation": {
+                "rows": _round(self.rows / self.issued_rows),
+                "cols": _round(self.cols / self.issued_cols),
+                "depth": _round(self.depth / self.issued_depth),
+            },
             "issue_window": self.issue_window,
             "max_outstanding": self.max_outstanding,
             "bank_mask": self.bank_mask,
             "port_mask": self.port_mask,
             "queue_index": self.queue_index,
             "noc_route_class": self.noc_route_class,
+            "tensor_lane_mapping": (
+                self.tensor_lanes.to_dict() if self.tensor_lanes is not None else None
+            ),
         }
 
 
@@ -925,7 +1046,7 @@ def operand_extents(step: TraceStep) -> tuple[int, int, int]:
     cols = int(surface[-1])
     rows = _product(surface[:-1]) or 1
     family = step.family
-    if family == "tensor":
+    if family == "tensor" and step.mnemonic in TENSOR_CONTRACTIONS:
         depth = int(in0[-1]) if in0 else 1
     elif family == "attention":
         depth = int(step.counter_delta.get("attention.context_positions", 0))
@@ -970,6 +1091,17 @@ def tile_mapping(step: TraceStep, params: EngineParams) -> TileMapping:
             "zero.  A zeroed tile mapping is a hard error, not a default."
         )
     tile_depth = max(tile_depth, 1)
+    lane_mapping = None
+    if step.family == "tensor":
+        lane_mapping = tensor_lane_mapping(
+            rows=rows,
+            cols=cols,
+            tile_rows=tile_rows,
+            tile_cols=tile_cols,
+            issue_window=int(schedule.get("issue_window", 0))
+            or params.tile_pipeline_depth,
+            lanes=params.lanes,
+        )
     return TileMapping(
         schedule_id=step.schedule_id,
         rows=rows,
@@ -989,6 +1121,7 @@ def tile_mapping(step: TraceStep, params: EngineParams) -> TileMapping:
         noc_route_class=int(schedule.get("noc_route_class", 0)),
         resource_bound=int(schedule.get("resource_bound", 1)),
         priority=int(schedule.get("priority", 0)),
+        tensor_lanes=lane_mapping,
     )
 
 
@@ -1003,17 +1136,23 @@ def apply_tile_amplification(step: TraceStep, mapping: TileMapping) -> None:
     """
     left = step.operand_objects.get("in0")
     right = step.operand_objects.get("in1")
-    left_view = step.operand_dims.get("in0")
+    packed_col_groups = max(
+        1,
+        -(-mapping.cols // (mapping.tile_cols * mapping.issue_window)),
+    )
     for access in step.accesses:
         if access.write:
             access.amplification = 1
         elif right is not None and access.object_id == right and access.object_id != left:
             access.amplification = mapping.row_tiles
         elif left is not None and access.object_id == left:
-            access.amplification = mapping.col_tiles
+            access.amplification = (
+                packed_col_groups
+                if mapping.tensor_lanes is not None
+                else mapping.col_tiles
+            )
         else:
             access.amplification = 1
-    del left_view
 
 
 # ---------------------------------------------------------------------------
@@ -2278,6 +2417,24 @@ class CycleModel:
             per_tile = math.ceil(
                 max(step.bytes_transferred, 1) / mapping.tiles / params.bytes_per_cycle
             )
+        elif mapping.tensor_lanes is not None:
+            # One active lane owns one output accumulator and walks K in the
+            # declared order.  Masked lanes do no work and cannot accelerate a
+            # live lane, so a wave's time depends on active K depth, not on a
+            # padded row rectangle or on the number of tail lanes.
+            full_depth_tiles, tail_depth = divmod(mapping.depth, mapping.tile_depth)
+            depth_cycles = full_depth_tiles * max(
+                math.ceil(mapping.tile_depth / params.work_per_lane_cycle),
+                params.tile_issue_cycles,
+            )
+            if tail_depth:
+                depth_cycles += max(
+                    math.ceil(tail_depth / params.work_per_lane_cycle),
+                    params.tile_issue_cycles,
+                )
+            cycles = mapping.tensor_lanes.output_waves * depth_cycles
+            tile_issue = mapping.tiles * params.tile_issue_cycles
+            return max(cycles, params.minimum_cycles), tile_issue
         else:
             per_tile = math.ceil(
                 mapping.tile_work / (params.lanes * params.work_per_lane_cycle)
@@ -3317,12 +3474,19 @@ class CycleModel:
                 }
             )
             issued_work = sum(m.issued_work for m in mappings)
+            scheduled_capacity_work = sum(
+                m.scheduled_capacity_work for m in mappings
+            )
             useful_work = sum(m.useful_work for m in mappings)
             padding_work = sum(m.padding_work for m in mappings)
             per_family[family] = {
                 "operations": len(mappings),
                 "tiles": sum(m.tiles for m in mappings),
                 "issued_work": issued_work,
+                "scheduled_capacity_work": scheduled_capacity_work,
+                "masked_schedule_capacity_work": max(
+                    0, scheduled_capacity_work - issued_work
+                ),
                 "useful_work": useful_work,
                 "padding_work": padding_work,
                 "padding_fraction": _round(padding_work / issued_work)
@@ -3357,6 +3521,22 @@ class CycleModel:
         bytes_transferred = sum(
             f["memory_traffic"]["bytes_transferred"] for f in per_family.values()
         )
+        tensor_mappings = [
+            mapping
+            for mapping in node["tiles_seen"].get("tensor", [])
+            if mapping.tensor_lanes is not None
+        ]
+        active_lane_slots = sum(
+            mapping.tensor_lanes.active_lane_slots
+            for mapping in tensor_mappings
+            if mapping.tensor_lanes is not None
+        )
+        lane_capacity_slots = sum(
+            mapping.tensor_lanes.output_waves * mapping.tensor_lanes.lanes
+            for mapping in tensor_mappings
+            if mapping.tensor_lanes is not None
+        )
+        masked_lane_slots = lane_capacity_slots - active_lane_slots
         return {
             "source": "SCHEDULE descriptor",
             "rule": (
@@ -3382,29 +3562,31 @@ class CycleModel:
                 ),
             },
             "physical_lane_utilisation": {
-                "status": "not_derivable",
-                "value": None,
-                "reason": (
-                    "ABI 3.0 SCHEDULE descriptors declare tile extents but no "
-                    "active-row or active-lane mask, and the capability record "
-                    "does not bind tile axes to physical lanes.  Useful divided "
-                    "by issued work is therefore an issue-efficiency diagnostic, "
-                    "not a physical-lane measurement."
+                "status": (
+                    "modeled_from_resolved_active_extents"
+                    if tensor_mappings
+                    else "not_applicable"
                 ),
-                "required_architecture_decision": [
-                    "define and implement active-row/lane masking",
-                    "or define and implement a separate narrow decode engine",
-                ],
-                "required_evidence": [
-                    "RTL consumes the selected schedule semantics",
-                    "functional and RTL results remain token-exact",
-                    "same-process characterization supplies the timed lane behavior",
-                ],
+                "value": (
+                    _round(active_lane_slots / lane_capacity_slots)
+                    if lane_capacity_slots
+                    else None
+                ),
+                "active_lane_slots": active_lane_slots,
+                "masked_lane_slots": masked_lane_slots,
+                "lane_capacity_slots": lane_capacity_slots,
+                "reason": (
+                    "tensor output coordinates are mapped into deterministic "
+                    "row-folded waves using resolved view extents; absent "
+                    "coordinates are masked and perform no MAC"
+                    if tensor_mappings
+                    else "the trace contains no tensor lane waves"
+                ),
             },
             "assumptions": {
                 "partial_tile_cost": (
-                    "every issued partial tile occupies and is charged as its "
-                    "complete SCHEDULE tile shape"
+                    "tensor SCHEDULE dimensions are maximum blocking extents; "
+                    "resolved row, column and depth tails are masked"
                 ),
                 "operand_refetch": (
                     "a contraction re-reads its left operand per column tile and "
@@ -3412,7 +3594,7 @@ class CycleModel:
                     "once"
                 ),
                 "physical_lane_activity": (
-                    "not inferred from tile shape or useful-work fraction"
+                    "counted from deterministic tensor output-coordinate waves"
                 ),
             },
             "by_family": per_family,
