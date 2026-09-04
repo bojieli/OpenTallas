@@ -20,8 +20,8 @@ HBM/SRAM accelerator diagnostic.
 **Current execution checkpoint (2026-09-04):** all four current deployments
 contain zero ABI `STATE` resources. Qwen HBM passes 21/21 deployment checks <!-- figure: 21 src="results/abi3/hbm_qwen_deployment_certificate.json#cases[case=qwen3-hbm-single-chip].passed_check_count" name="current Qwen HBM checks, checkpoint" --> at
 74 instructions <!-- figure: 74 src="results/abi3/hbm_qwen_deployment_certificate.json#cases[case=qwen3-hbm-single-chip].actual.instructions" name="current Qwen HBM instructions, checkpoint" --> and 215 descriptors <!-- figure: 215 src="results/abi3/hbm_qwen_deployment_certificate.json#cases[case=qwen3-hbm-single-chip].actual.descriptors" name="current Qwen HBM descriptors, checkpoint" -->; Qwen ROM passes 62/62 schedule checks <!-- figure: 62 src="results/abi3/rom_schedule_checks.json#cases[case=qwen3-rom-single-chip].passed_check_count" name="current Qwen ROM checks, checkpoint" --> at
-74 instructions <!-- figure: 74 src="results/abi3/rom_schedule_checks.json#cases[case=qwen3-rom-single-chip].actual.instructions" name="current Qwen ROM instructions, checkpoint" --> and 236 descriptors <!-- figure: 236 src="results/abi3/rom_schedule_checks.json#cases[case=qwen3-rom-single-chip].actual.descriptors" name="current Qwen ROM descriptors, checkpoint" -->. DeepSeek HBM passes 36/36 checks <!-- figure: 36 src="results/abi3/hbm_deepseek_deployment_certificate.json#cases[case=deepseek-v4-flash-hbm-cluster].passed_check_count" name="current DeepSeek HBM checks, checkpoint" --> at
-1,267 instructions <!-- figure: 1267 src="results/abi3/hbm_deepseek_deployment_certificate.json#cases[case=deepseek-v4-flash-hbm-cluster].actual.instructions" name="current DeepSeek HBM instructions, checkpoint" -->, 3,272 descriptors <!-- figure: 3272 src="results/abi3/hbm_deepseek_deployment_certificate.json#cases[case=deepseek-v4-flash-hbm-cluster].actual.descriptors" name="current DeepSeek HBM descriptors, checkpoint" --> and exactly 32 nodes <!-- figure: 32 src="results/abi3/hbm_deepseek_deployment_certificate.json#cases[case=deepseek-v4-flash-hbm-cluster].actual.node_count" name="current DeepSeek HBM nodes, checkpoint" -->; DeepSeek ROM passes
+74 instructions <!-- figure: 74 src="results/abi3/rom_schedule_checks.json#cases[case=qwen3-rom-single-chip].actual.instructions" name="current Qwen ROM instructions, checkpoint" --> and 227 descriptors <!-- figure: 227 src="results/abi3/rom_schedule_checks.json#cases[case=qwen3-rom-single-chip].actual.descriptors" name="current Qwen ROM descriptors, checkpoint" -->. DeepSeek HBM passes 36/36 checks <!-- figure: 36 src="results/abi3/hbm_deepseek_deployment_certificate.json#cases[case=deepseek-v4-flash-hbm-cluster].passed_check_count" name="current DeepSeek HBM checks, checkpoint" --> at
+1,292 instructions <!-- figure: 1292 src="results/abi3/hbm_deepseek_deployment_certificate.json#cases[case=deepseek-v4-flash-hbm-cluster].actual.instructions" name="current DeepSeek HBM instructions, checkpoint" -->, 3,293 descriptors <!-- figure: 3293 src="results/abi3/hbm_deepseek_deployment_certificate.json#cases[case=deepseek-v4-flash-hbm-cluster].actual.descriptors" name="current DeepSeek HBM descriptors, checkpoint" --> and exactly 32 nodes <!-- figure: 32 src="results/abi3/hbm_deepseek_deployment_certificate.json#cases[case=deepseek-v4-flash-hbm-cluster].actual.node_count" name="current DeepSeek HBM nodes, checkpoint" -->; DeepSeek ROM passes
 128/128 checks <!-- figure: 128 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-wafer].passed_check_count" name="current DeepSeek ROM checks, checkpoint" --> at 1,323 instructions <!-- figure: 1323 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-wafer].actual.instructions" name="current DeepSeek ROM instructions, checkpoint" --> and 3,405 descriptors <!-- figure: 3405 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-wafer].actual.descriptors" name="current DeepSeek ROM descriptors, checkpoint" -->. The shipped RTL
 campaign correlates prefill and decode for all four deployments on Icarus and
 Verilator with 595,020 checks per simulator <!-- figure: 595020 src="results/rtl/abi3_deployment_campaign.json#cases[name=iverilog].checks" name="current shipped-profile RTL checks, checkpoint" --> and explicitly proves
@@ -235,10 +235,10 @@ evidence. None may be presented as a rerun of the current source.
   `make abi3-hbm-deepseek-deployment` publishes
   `results/abi3/hbm_deepseek_deployment_certificate.json`; all **36/36** checks pass <!-- figure: 36 src="results/abi3/hbm_deepseek_deployment_certificate.json#cases[case=deepseek-v4-flash-hbm-cluster].passed_check_count" name="DeepSeek HBM deployment checks passed, W4.7" -->.
   Two clean builds reproduce the shipped bundle byte-for-byte, and the verifier
-  plus independent checker admit **1,267** instructions and **3,272** descriptors <!-- figure: 1267 src="results/abi3/hbm_deepseek_deployment_certificate.json#cases[case=deepseek-v4-flash-hbm-cluster].actual.instructions" name="DeepSeek HBM instructions, W4.7" --> <!-- figure: 3272 src="results/abi3/hbm_deepseek_deployment_certificate.json#cases[case=deepseek-v4-flash-hbm-cluster].actual.descriptors" name="DeepSeek HBM descriptors, W4.7" -->,
+  plus independent checker admit **1,292** instructions and **3,293** descriptors <!-- figure: 1292 src="results/abi3/hbm_deepseek_deployment_certificate.json#cases[case=deepseek-v4-flash-hbm-cluster].actual.instructions" name="DeepSeek HBM instructions, W4.7" --> <!-- figure: 3293 src="results/abi3/hbm_deepseek_deployment_certificate.json#cases[case=deepseek-v4-flash-hbm-cluster].actual.descriptors" name="DeepSeek HBM descriptors, W4.7" -->,
   with exactly **32** nodes <!-- figure: 32 src="results/abi3/hbm_deepseek_deployment_certificate.json#cases[case=deepseek-v4-flash-hbm-cluster].actual.node_count" name="DeepSeek HBM node count, W4.7" --> and **0** `STATE` resources <!-- figure: 0 src="results/abi3/hbm_deepseek_deployment_certificate.json#cases[case=deepseek-v4-flash-hbm-cluster].actual.states" name="DeepSeek HBM STATE resources, W4.7" -->. The global
   **256**-expert bank <!-- figure: 256 src="results/abi3/hbm_deepseek_deployment_certificate.json#cases[case=deepseek-v4-flash-hbm-cluster].actual.expert_bank_size" name="DeepSeek global expert bank, W4.7" --> is split into **8** consecutive experts per node <!-- figure: 8 src="results/abi3/hbm_deepseek_deployment_certificate.json#cases[case=deepseek-v4-flash-hbm-cluster].actual.experts_per_node" name="DeepSeek experts per node, W4.7" -->.
-  Its **37** explicit communications <!-- figure: 37 src="results/abi3/hbm_deepseek_deployment_certificate.json#cases[case=deepseek-v4-flash-hbm-cluster].actual.communications" name="DeepSeek HBM communications, W4.7" -->
+  Its **38** explicit communications <!-- figure: 38 src="results/abi3/hbm_deepseek_deployment_certificate.json#cases[case=deepseek-v4-flash-hbm-cluster].actual.communications" name="DeepSeek HBM communications, W4.7" -->
   comprise expert scatters, sparse-KV and activation all-gathers, expert
   all-reduces, and one token-step synchronization barrier. The certificate
   follows each data-bearing producer/link/consumer path and mutation-tests its
@@ -246,8 +246,8 @@ evidence. None may be presented as a rerun of the current source.
   The deployment retains **224** zero-copy weight objects <!-- figure: 224 src="results/abi3/hbm_deepseek_deployment_certificate.json#cases[case=deepseek-v4-flash-hbm-cluster].actual.weight_objects" name="DeepSeek HBM weight objects, W4.7" --> over
   **68,214** authenticated ranges <!-- figure: 68214 src="results/abi3/hbm_deepseek_deployment_certificate.json#cases[case=deepseek-v4-flash-hbm-cluster].actual.weight_segments" name="DeepSeek HBM checkpoint ranges, W4.7" -->
   and holds **13,445,013,724** weight bytes per node <!-- figure: 13445013724 src="results/abi3/hbm_deepseek_deployment_certificate.json#cases[case=deepseek-v4-flash-hbm-cluster].actual.weight_bytes_per_node" name="DeepSeek weight bytes per node, W4.7" -->.
-  The maximum-context map occupies **88,350,257,152** bytes per node <!-- figure: 88350257152 src="results/abi3/hbm_deepseek_deployment_certificate.json#cases[case=deepseek-v4-flash-hbm-cluster].actual.hbm_bytes_per_node" name="DeepSeek HBM required bytes per node, W4.7" --> of
-  **103,079,215,104** available <!-- figure: 103079215104 src="results/abi3/hbm_deepseek_deployment_certificate.json#cases[case=deepseek-v4-flash-hbm-cluster].actual.hbm_available_per_node" name="DeepSeek HBM available bytes per node, W4.7" --> and leaves **14,728,957,952** bytes of checked headroom <!-- figure: 14728957952 src="results/abi3/hbm_deepseek_deployment_certificate.json#cases[case=deepseek-v4-flash-hbm-cluster].actual.hbm_headroom_per_node" name="DeepSeek HBM headroom per node, W4.7" -->.
+  The maximum-context map occupies **88,080,248,832** bytes per node <!-- figure: 88080248832 src="results/abi3/hbm_deepseek_deployment_certificate.json#cases[case=deepseek-v4-flash-hbm-cluster].actual.hbm_bytes_per_node" name="DeepSeek HBM required bytes per node, W4.7" --> of
+  **103,079,215,104** available <!-- figure: 103079215104 src="results/abi3/hbm_deepseek_deployment_certificate.json#cases[case=deepseek-v4-flash-hbm-cluster].actual.hbm_available_per_node" name="DeepSeek HBM available bytes per node, W4.7" --> and leaves **14,998,966,272** bytes of checked headroom <!-- figure: 14998966272 src="results/abi3/hbm_deepseek_deployment_certificate.json#cases[case=deepseek-v4-flash-hbm-cluster].actual.hbm_headroom_per_node" name="DeepSeek HBM headroom per node, W4.7" -->.
   This closes deterministic placement and causal cluster dataflow; full token,
   cycle, integrated RTL, and physical claims retain separate gates.
 
@@ -256,7 +256,7 @@ evidence. None may be presented as a rerun of the current source.
 - [x] W5.1 Common ROM contracts (immutable regions, repair map, inverse reconstruction) — `compiler/backends/rom/common/image.py` incl. repair map
 - [x] W5.2 Qwen conventional single-chip ROM partition, images, schedules,
   and deployment — the current independent schedule certificate admits **74** instructions <!-- figure: 74 src="results/abi3/rom_schedule_checks.json#cases[case=qwen3-rom-single-chip].actual.instructions" name="current Qwen ROM instructions, W5.2" -->,
-  **236** descriptors <!-- figure: 236 src="results/abi3/rom_schedule_checks.json#cases[case=qwen3-rom-single-chip].actual.descriptors" name="current Qwen ROM descriptors, W5.2" --> and **26** schedules <!-- figure: 26 src="results/abi3/rom_schedule_checks.json#cases[case=qwen3-rom-single-chip].actual.schedules" name="current Qwen ROM schedules, W5.2" --> with **0** `STATE` resources <!-- figure: 0 src="results/abi3/rom_schedule_checks.json#cases[case=qwen3-rom-single-chip].actual.states" name="Qwen ROM STATE resources, W5.2" -->.
+  **227** descriptors <!-- figure: 227 src="results/abi3/rom_schedule_checks.json#cases[case=qwen3-rom-single-chip].actual.descriptors" name="current Qwen ROM descriptors, W5.2" --> and **26** schedules <!-- figure: 26 src="results/abi3/rom_schedule_checks.json#cases[case=qwen3-rom-single-chip].actual.schedules" name="current Qwen ROM schedules, W5.2" --> with **0** `STATE` resources <!-- figure: 0 src="results/abi3/rom_schedule_checks.json#cases[case=qwen3-rom-single-chip].actual.states" name="Qwen ROM STATE resources, W5.2" -->.
   Historical token records bind older 75-instruction/239-descriptor builds and
   remain prior-build execution evidence rather than the identity of this
   current deployment.
@@ -585,14 +585,18 @@ that, the position is:
 - [x] W13.1 Qwen3-8B **HBM** lane — 24 tokens, oracle-identical <!-- figure: 24 src="results/abi3/qwen3_hbm_ta-qw-chat-1_execution.json#record.generated_token_count" name="Qwen HBM generated tokens, TA-QW-CHAT-1" -->
 - [x] W13.2 Qwen3-8B **ROM** lane — 24 tokens, oracle-identical, and identical to <!-- figure: 24 src="results/abi3/qwen3_rom_ta-qw-chat-1_execution.json#record.generated_token_count" name="Qwen ROM generated tokens, TA-QW-CHAT-1" -->
   the HBM lane position for position
-- [x] W13.3 DeepSeek-V4-Flash **HBM** (32 node) — **retained
-  prior-build short-token evidence.** One prefill plus three decode steps
-  produced `[13806, 345, 7472, 55560]`, matching all **4** retained oracle positions <!-- figure: 4 src="results/abi3/accelerator_tokens/deepseek_v4_flash_hbm_p32.json#oracle.compared_tokens" name="DeepSeek HBM prior-build oracle-compared tokens, W13.3" --> with no legality problem. Its topology and context-counter checks remain
-  useful, but the capture predates the `INDEX_SCORE` single-rounding repair.
-  It is not a source-current token claim and must be regenerated.
-- [~] W13.4 Remaining multi-design reasoning/agentic coverage — **the
-  four-design short-token spine exists only as prior-build evidence; the
-  every-design workload matrix is not closed.** The retained DeepSeek ROM
+- [x] W13.3 DeepSeek-V4-Flash **HBM** (32 node) — **source-current short-token
+  diagnostic.** One P32 prefill plus three decode steps through the compiled
+  ABI 3.0 deployment produced `[13806, 345, 7472, 55560]`, matching all **4** oracle positions <!-- figure: 4 src="results/abi3/accelerator_tokens/deepseek_v4_flash_hbm_p32.json#oracle.compared_tokens" name="DeepSeek HBM source-current oracle-compared tokens, W13.3" --> with no legality problem. The refreshed
+  `results/abi3/deepseek_v4_context_gate.json` revalidates the selected HBM
+  source set and reconciles every measured node plus cluster total. This closes
+  the short HBM diagnostic after the sparse-layout and ordered-product repairs;
+  it does **not** close the exact-200K, EOS-or-256, reasoning/agentic, RTL-token,
+  or characterized-TPOT requirements.
+- [~] W13.4 Remaining multi-design reasoning/agentic coverage — **source-current
+  short-token evidence now exists for DeepSeek HBM and the 32-node ROM-array
+  diagnostic, but the required wafer-ROM and every-design workload matrix are
+  not closed.** The retained single-wafer DeepSeek ROM
   capture produced **4** tokens identical to the retained HBM/oracle prefix <!-- figure: 4 src="results/abi3/accelerator_tokens/deepseek_v4_flash_rom_p32.json#oracle.compared_tokens" name="DeepSeek ROM prior-build oracle-compared tokens, W13.4" -->,
   but it also predates the `INDEX_SCORE` repair. The pairwise artifact is
   historical evidence, not a source-current cross-target result.
@@ -948,7 +952,7 @@ lanes are a precondition for it, not the product. These items are the product.
   has an exact expected match count and the audit refuses stale or ambiguous
   selectors. The initial conservative pass resolves **8** <!-- figure: 8 src="results/abi3/prose_figure_coverage.json#totals.unbound_triage.normative_or_example" name="W11.3 explicitly triaged normative/example candidates" --> ABI shape/algebraic
   examples and rejected legacy proxies as `normative_or_example`.
-  **2,825** candidates remain explicitly `untriaged`. <!-- figure: 2825 src="results/abi3/prose_figure_coverage.json#totals.unbound_triage.untriaged" name="W11.3 candidates still awaiting triage" -->
+  **2,830** candidates remain explicitly `untriaged`. <!-- figure: 2830 src="results/abi3/prose_figure_coverage.json#totals.unbound_triage.untriaged" name="W11.3 candidates still awaiting triage" -->
   `make check-figures` fails on annotation, census, policy, or classification
   drift. This remains partial: triage is not proof, produced figures still need
   resolving annotations, and the remaining population must be classified as
