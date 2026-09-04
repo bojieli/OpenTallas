@@ -1831,6 +1831,31 @@ lanes are a precondition for it, not the product. These items are the product.
   numbers for the ABI 2.5 blocks and none for the ABI 3.0 control plane, and it
   is a two-line change per file rather than a design problem.
 
+  **Closed at the front end.** The seven blocks that still carried the import
+  (`ot_a3_microsequencer.sv`, `ot_a3_view_resolver.sv`,
+  `ot_a3_state_controller.sv`, `ot_a3_event_scoreboard.sv`,
+  `ot_a3_loop_stack.sv`, `ot_a3_program_header.sv`,
+  `ot_a3_instruction_decoder.sv`) now refer to every package member as
+  `ot_a3_pkg::name`; `ot_a3_collective_engine.sv` already referred to
+  `ot_a3_link_pkg` by scope and is unchanged.
+  `tools/rtl_abi3_control_plane_synth_check.py` elaborates each of the eight
+  standalone (`hierarchy -top`, `proc`, `check`) under the pinned local Yosys
+  (the sky130hd synthesis path) and under the Yosys inside the pinned
+  OpenROAD-flow-scripts image with the tree mounted read-only at `/src` (the
+  asap7 path), and records the same run against the commit before the fix,
+  where all seven fail with `syntax error, unexpected TOK_IMPORT`;
+  `results/rtl/abi3_control_plane_yosys_elaboration.json` is the artifact and
+  `tests/compiler/test_rtl_abi3.py::test_control_plane_rtl_carries_no_wildcard_package_import`
+  pins the form shut. The control-plane campaigns
+  (`tools/rtl_abi3_campaign.py`, `tools/rtl_abi3_deployment_campaign.py`,
+  `tools/rtl_abi3_shipped_prefix_campaign.py` and its multicast variant) were
+  re-run on Icarus and Verilator before and after the change from a pinned
+  worktree of each commit: every observation is identical and only the seven
+  source digests and the compile-log line numbers differ. What this does
+  **not** close: no control-plane block has been synthesised to a netlist or
+  routed; elaboration is the front-end precondition, W9's physical gap and G2
+  stay open until a routed `microsequencer` block exists.
+
 - **OI-44 — the shared binary32 *adder* is the critical path, and it is a
   coding shape rather than a technology limit.** Measured on SKY130 HD
   `tt_025C_1v80`, each operation synthesised alone as one combinational cloud
