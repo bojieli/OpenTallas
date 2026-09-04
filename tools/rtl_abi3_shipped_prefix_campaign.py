@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 """Run the focused ABI 3.0 shipped-prefix integration witness.
 
-The complete source-bound Qwen layer-zero query/key/value MATMUL family and
-the two descriptor-sized query/key head RMSNorm operations are intentionally
-executed under Verilator.  Interpreted Icarus needs several hours for these
-single-lane launches, so this campaign does not imply that Icarus ran the
-complete integrated transaction.  Instead it fail-closed binds the unchanged
-``ot_a3_mac_lane`` source to the retained dual-simulator engine qualification
-and records that evidence as compositional, not integrated.
+The complete source-bound Qwen layer-zero query/key/value MATMUL family, the
+two descriptor-sized query/key head RMSNorm operations, and both whole-head
+RoPE operations are intentionally executed under Verilator.  Interpreted
+Icarus needs several hours for these single-lane MATMUL launches, so this
+campaign does not imply that Icarus ran the complete integrated transaction.
+Instead it fail-closed binds the unchanged ``ot_a3_mac_lane`` and qualified
+RoPE sources to their retained dual-simulator qualifications and records that
+evidence as compositional, not integrated.
 """
 
 from __future__ import annotations
@@ -31,9 +32,10 @@ VECTOR_JSON = VECTOR_DIR / "abi3_shipped_prefix_vectors.json"
 DEPLOYMENT_VECTOR_DIR = ROOT / "testdata/compiler/abi3_deployment"
 DEFAULT_OUTPUT = ROOT / "results/rtl/abi3_shipped_prefix_campaign.json"
 ENGINE_CAMPAIGN = ROOT / "results/rtl/abi3_engine_campaign.json"
+ROPE_CAMPAIGN = ROOT / "results/tensor_accelerator/qwen3_rtl_rope_campaign.json"
 
 PINNED_VERILATOR_VERSION = "5.050"
-EXPECTED_INTEGRATED_CHECKS = 163_169
+EXPECTED_INTEGRATED_CHECKS = 189_820
 TOOLS_ROOT = Path(
     os.environ.get("OPENTALLAS_TOOL_ROOT", Path.home() / ".local/opentallas-tools")
 )
@@ -41,6 +43,8 @@ TOOLS_ROOT = Path(
 RTL_SOURCES = (
     "rtl/ot_fp32_rne_pkg.sv",
     "rtl/ot_fp32_rsqrt_rne.sv",
+    "rtl/ot_ta_command_decoder.sv",
+    "rtl/ot_ta_rope_bf16_sram_engine.sv",
     "rtl/abi3/ot_a3_format_pkg.sv",
     "rtl/abi3/ot_a3_engine_pkg.sv",
     "rtl/abi3/ot_a3_pkg.sv",
@@ -62,6 +66,7 @@ RTL_SOURCES = (
     "rtl/abi3/ot_a3_vector_mhc_post.sv",
     "rtl/abi3/ot_a3_engine_array.sv",
     "rtl/abi3/ot_a3_vector_rms_norm.sv",
+    "rtl/abi3/ot_a3_vector_rope.sv",
     "rtl/abi3/ot_a3_engine_issue_bridge.sv",
 )
 TEST_SOURCES = (
@@ -77,8 +82,12 @@ CONTRACT_SOURCES = (
     "runtime/sim/memory.py",
     "runtime/sim/generators.py",
     "runtime/sim/engines/dma.py",
+    "runtime/sim/formats.py",
     "runtime/reference/tensor_accelerator_rmsnorm.py",
+    "runtime/reference/tensor_accelerator_rope.py",
     "runtime/tensor_accelerator/bf16.py",
+    "runtime/tensor_accelerator/rope.py",
+    "docs/TENSOR_ACCELERATOR_ABI_3_OPERATOR_CONVENTIONS.md",
 )
 TOOL_SOURCES = (
     "tools/build_abi3_deployment_rtl_vectors.py",
@@ -210,6 +219,60 @@ def load_lane_qualification() -> dict[str, Any]:
             "Icarus evidence qualifies that unchanged lane arithmetic on its "
             "bounded sequential-contract vectors, not the full shipped "
             "program, exact query/key/value shapes, or blocked descriptors"
+        ),
+    }
+
+
+def load_rope_qualification() -> dict[str, Any]:
+    """Bind the unchanged fused RoPE core to retained dual-simulator evidence."""
+
+    if not ROPE_CAMPAIGN.is_file():
+        raise SystemExit(f"missing compositional RoPE evidence: {ROPE_CAMPAIGN}")
+    body = json.loads(ROPE_CAMPAIGN.read_text(encoding="utf-8"))
+    source_path = "rtl/ot_ta_rope_bf16_sram_engine.sv"
+    source_sha256 = sha256_file(ROOT / source_path)
+    program = body.get("program_correlation", {})
+    arithmetic = body.get("arithmetic_evidence", {})
+    boundary = body.get("claim_boundary", {})
+    simulator_cases = body.get("cases", [])
+    if (
+        body.get("schema") != "opentallas.tensor_accelerator.qwen_rtl_rope_campaign.v1"
+        or body.get("status") != "pass"
+        or body.get("simulators") != ["iverilog", "verilator"]
+        or [case.get("status") for case in simulator_cases] != ["pass", "pass"]
+        or body.get("source_sha256", {}).get(source_path) != source_sha256
+        or not arithmetic.get("exact_scalar_all_elements")
+        or not boundary.get("dual_simulator_complete_operations")
+        or not boundary.get("complete_rope_graph_operation")
+        or program.get("verified_position_count") != 2
+        or len(program.get("position_cases", [])) != 2
+        or program["position_cases"][0].get("position") != 0
+        or program["position_cases"][1].get("position") != 7999
+        or program.get("element_count") != 5_120
+        or program.get("multiplication_count") != 10_240
+        or program.get("addition_count") != 5_120
+    ):
+        raise SystemExit("the retained dual-simulator RoPE qualification changed")
+    return {
+        "artifact": str(ROPE_CAMPAIGN.relative_to(ROOT)),
+        "artifact_sha256": sha256_file(ROPE_CAMPAIGN),
+        "schema": body["schema"],
+        "status": body["status"],
+        "simulators_counted": body["simulators"],
+        "qualified_positions": [0, 7999],
+        "qualified_element_count_per_position": 5_120,
+        "qualified_multiplication_count_per_position": 10_240,
+        "qualified_addition_count_per_position": 5_120,
+        "core_source": source_path,
+        "core_source_sha256": source_sha256,
+        "qualification_contract": "qwen3_rope_fp32_bf16_v1",
+        "composition_boundary": (
+            "the ABI 3.0 adapter narrows each declared FP32 coefficient to "
+            "BF16 RNE and presents one declared query or key tensor to the "
+            "unchanged fused core while the inactive side is internal zero; "
+            "the retained Icarus-plus-Verilator campaign qualifies that core "
+            "at positions 0 and 7999, while the integrated Verilator replay "
+            "checks every position-16 result from the real ABI descriptors"
         ),
     }
 
@@ -436,6 +499,7 @@ def _expected_cases(vectors: dict[str, Any]) -> list[dict[str, int]]:
 def run(build_root: Path | None = None) -> dict[str, Any]:
     vectors = load_vectors()
     lane_qualification = load_lane_qualification()
+    rope_qualification = load_rope_qualification()
     marker = vectors["required_marker"]
     executables = {
         "verilator": resolve(
@@ -520,6 +584,7 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
     checkpoint_gains = []
     checkpoint_head_gains = []
     checkpoint_matrices = []
+    rope_operations = []
     for vector_case in vectors["cases"]:
         embedding = next(
             operation
@@ -580,6 +645,37 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
                     "source": head_rms_norm["weight_source"],
                 }
             )
+        case_ropes = [
+            operation
+            for operation in vector_case["supported_prefix"]
+            if operation["kind"] == "vector_rope"
+        ]
+        for rope in case_ropes:
+            rope_operations.append(
+                {
+                    "case": vector_case["name"],
+                    "deployment_sha256": vector_case["deployment_sha256"],
+                    "operator_pc": int(rope["pc"]),
+                    "operator_descriptor_id": int(rope["descriptor_id"]),
+                    "numeric_contract_sha256": rope["contract_sha256"],
+                    "operator_aux_id_0": int(rope["operator_aux_id_0"]),
+                    "row_count": int(rope["row_count"]),
+                    "row_width": int(rope["row_width"]),
+                    "coefficient_fp32_payload_sha256": rope[
+                        "coefficient_fp32_payload_sha256"
+                    ],
+                    "coefficient_bf16_payload_sha256": rope[
+                        "coefficient_bf16_payload_sha256"
+                    ],
+                    "coefficient_narrow_saturated_element_count": int(
+                        rope["coefficient_narrow_saturated_element_count"]
+                    ),
+                    "multiplication_count": int(rope["multiplication_count"]),
+                    "addition_count": int(rope["addition_count"]),
+                    "expected_payload_sha256": rope["expected_payload_sha256"],
+                    "oracle_agreement": rope["oracle_agreement"],
+                }
+            )
         matmul_operations = [
             operation
             for operation in vector_case["supported_prefix"]
@@ -604,7 +700,8 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
         "status": "pass" if integrated_replay_passed else "fail",
         "evidence_class": "public_open_tool_rtl_simulation_composite",
         "evidence_mode": (
-            "full_integrated_verilator_plus_dual_simulator_mac_lane_composition"
+            "full_integrated_verilator_plus_dual_simulator_mac_lane_and_rope_"
+            "composition"
         ),
         "abi": {"major": 3, "minor": 0},
         "state_compat": 0,
@@ -628,6 +725,7 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
         },
         "staged_matmul_weight": staged_matmul_weight,
         "compositional_mac_lane_qualification": lane_qualification,
+        "compositional_rope_qualification": rope_qualification,
         "scope": {
             "establishes": [
                 "the real sequencer resolves exact operand views from each of the four shipped decode programs",
@@ -639,20 +737,23 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
                 "the blocked MATMUL contract is bound to the explicit ot_a3_mac_lane single-lane ascending-K association, executed for 1x4096 by 4096x4096 and two 1024x4096 shapes per deployment, with per-product and per-add binary32 RNE and one final BF16 RNE",
                 "four Qwen VECTOR.HEAD_RMS_NORM operations consume the exact prior query/key projection result banks and authenticated 128-code gains through one descriptor-sized buffered datapath, reproducing 10,240 output codes for two 32x128 and two 8x128 row sets",
                 "the head-normalization datapath applies the declared qwen3_rmsnorm_fp32_bf16_v1 contract independently to every descriptor-selected head row and buffers every output before its first destination write",
+                "four Qwen VECTOR.ROPE operations consume the exact prior query/key head-normalization result banks and the previously gathered FP32 position-16 coefficient row, narrow all 256 coefficients to BF16 RNE, and reproduce 10,240 output codes that agree element-for-element with the independent scalar oracle",
+                "the ABI 3.0 RoPE adapter executes each declared 32x128 or 8x128 operand through the unchanged qualified Qwen RoPE core, provides internal positive zero to its inactive fused side, and neither reads an undeclared external operand nor publishes an undeclared destination write",
                 "each selected checkpoint range is bound to its certified deployment, checkpoint revision, shard, declared segment digest, exact byte range, and selected-range SHA-256 without claiming a complete-shard rehash",
-                "Qwen next refuses VECTOR.ROPE at PC 26; DeepSeek ROM refuses LINK.MULTICAST at PC 13 and DeepSeek HBM refuses VECTOR.MHC at PC 14, each with a precise CAPABILITY trap, no retirement, no event publication, and no later write",
+                "Qwen next refuses DMA.SCATTER at PC 32; DeepSeek ROM refuses LINK.MULTICAST at PC 13 and DeepSeek HBM refuses VECTOR.MHC at PC 14, each with a precise CAPABILITY trap, no retirement, no event publication, and no later write",
                 "the production profile elaborates STATE_COMPAT=0 and every compatibility-state counter and overflow output remains zero",
                 "Verilator executes the complete integrated shipped-prefix cases and its independent C++ checker reproduces every retained observation and result word",
                 "the unchanged ot_a3_mac_lane source is bound by SHA-256 to its retained Icarus-plus-Verilator engine qualification; that compositional campaign contributes 40,878 checks per simulator over 59,868 MACs",
+                "the unchanged ot_ta_rope_bf16_sram_engine source is bound by SHA-256 to its retained Icarus-plus-Verilator operation-complete qualification at positions 0 and 7999",
             ],
             "does_not_establish": [
                 "prefill execution",
-                "Qwen VECTOR.ROPE, LINK.MULTICAST, VECTOR.MHC, or any later model operator",
+                "Qwen DMA.SCATTER, ATTENTION.GQA, LINK.MULTICAST, VECTOR.MHC, or any later model operator",
                 "a whole transaction, token selection, decoding, EOS, or model correctness",
                 "output-token correctness, legitimate decoded text, or correctness-qualified TPOT",
                 "complete checkpoint-segment reauthentication during this bounded run",
                 "memory-macro timing, SRAM/HBM arbitration, physical timing, area, or power",
-                "a complete integrated shipped-prefix execution under Icarus; Icarus coverage is compositional qualification of the unchanged MAC lane, not execution of these full query/key/value blocked-contract operations or their control paths",
+                "a complete integrated shipped-prefix execution under Icarus; Icarus coverage is compositional qualification of the unchanged MAC lane and Qwen RoPE core, not execution of these full shipped descriptor/control paths",
                 "dual-simulator agreement on this complete integrated transaction",
             ],
         },
@@ -664,8 +765,12 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
         "embedding_launch_count": vectors["embedding_launch_count"],
         "rms_norm_launch_count": vectors["rms_norm_launch_count"],
         "head_rms_norm_launch_count": vectors["head_rms_norm_launch_count"],
+        "rope_launch_count": vectors["rope_launch_count"],
         "dma_transfer_launch_count": vectors["dma_transfer_launch_count"],
         "matmul_launch_count": vectors["matmul_launch_count"],
+        "rope_coefficient_gather_result_word_count": vectors[
+            "rope_coefficient_gather_result_word_count"
+        ],
         "rope_result_word_count": vectors["rope_result_word_count"],
         "embedding_result_word_count": vectors["embedding_result_word_count"],
         "rms_norm_result_word_count": vectors["rms_norm_result_word_count"],
@@ -694,6 +799,7 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
         "checkpoint_gains": checkpoint_gains,
         "checkpoint_head_gains": checkpoint_head_gains,
         "checkpoint_matrices": checkpoint_matrices,
+        "rope_operations": rope_operations,
         "post_fault_write_count": 0,
         "required_marker": marker,
         "integrated_simulator_checks": {case["name"]: case["checks"] for case in cases},

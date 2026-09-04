@@ -5,11 +5,11 @@
   },
   "base_vector_set": {
     "image_sha256": {
-      "p3_case.hex": "520e3660bdcf41fd67b8aafeb277d10de8494fc798672f26b5ca24f0a2a7740e",
-      "p3_expect.hex": "a353ea447ab333973da13230f061f93cc3df6704177ca7d94318cc1bf286ac4a",
+      "p3_case.hex": "a5dd175ddea5a217efa2b49f8a70c0bca7ad1126063a77c5403398f4a3ef5e00",
+      "p3_expect.hex": "1cadfc3371d198704fc9f245e7d8e27b72b38e906eafa0cdbc576f1eb2f98327",
       "p3_index.hex": "3782c32630334de6249983b67fe2fe6198815a3435ef977a8512dacb2292b2e0",
-      "p3_issue.hex": "e2e0f948d9bd0ed25c1a204d506b1709293c2f3e6722f514f1af7c659c5508ee",
-      "p3_meta.hex": "d88be8927dd1eeb95c5b6a6d9b342382503043a87d5f1fe5dc10164afb2ec37f",
+      "p3_issue.hex": "3a7cde8547630d9a57612cd905ce8f67bf5eedb28e844b347d3fab70fa71b10b",
+      "p3_meta.hex": "d19f9c6c4fab9917eb7fac4ee14bf12c511c5f43d2c1492bf43f8b617f1eb8c6",
       "p3_source.hex": "20eabb96e15b766c00e965e566021ef3f8944b823e26a15c46db6398d399e0b9"
     },
     "input_deployment_vectors": {
@@ -23,11 +23,11 @@
     },
     "path": "testdata/compiler/abi3_shipped_prefix/abi3_shipped_prefix_vectors.json",
     "schema": "opentallas.rtl.abi3_shipped_prefix_vectors.v1",
-    "sha256": "014f8cd85f7547f8ef5756c8a0c57321c582f31cd2e27fb58ce62fe5da124942"
+    "sha256": "0d6dd391947fa698f8840f15d7761e2ae5b3a3102940860fae9f49de3a6bff1f"
   },
   "capability_fault_count": 4,
   "case_count": 4,
-  "case_stride": 72,
+  "case_stride": 80,
   "claim": "the already-checked four-case shipped RTL prefix identity is extended only by the qualified exact DeepSeek ROM PC-13 LINK.MULTICAST; it completes one 256-participant, 64-KiB broadcast with CRC replay and then fails closed at PC-15 VECTOR.MHC",
   "does_not_establish": [
     "a source-current canonical compiler or deployment rebuild",
@@ -58,32 +58,32 @@
   },
   "expected_cases": [
     {
-      "fault": 26,
-      "fetched": 27,
+      "fault": 32,
+      "fetched": 33,
       "index": 0,
-      "issued": 9,
-      "launches": 8,
+      "issued": 11,
+      "launches": 10,
       "multicast_launches": 0,
       "name": "qwen3-8b-rom-single-chip/decode",
-      "responses": 9,
-      "retired": 26,
+      "responses": 11,
+      "retired": 32,
       "trap": 4,
-      "views": 27,
-      "words": 19712
+      "views": 33,
+      "words": 24832
     },
     {
-      "fault": 26,
-      "fetched": 27,
+      "fault": 32,
+      "fetched": 33,
       "index": 1,
-      "issued": 9,
-      "launches": 8,
+      "issued": 11,
+      "launches": 10,
       "multicast_launches": 0,
       "name": "qwen3-8b-hbm-single-chip/decode",
-      "responses": 9,
-      "retired": 26,
+      "responses": 11,
+      "retired": 32,
       "trap": 4,
-      "views": 27,
-      "words": 19712
+      "views": 33,
+      "words": 24832
     },
     {
       "fault": 15,
@@ -115,9 +115,9 @@
     }
   ],
   "image_sha256": {
-    "p3_case.hex": "a3a804aa7026a95b698d94fb1f74ce78f49e5136f022340401ed37020f22c505",
-    "p3_issue.hex": "20b707abc9f4b0fd5e6d6d99c779efad84d68847b1b551b497e0e7f5c80d96d2",
-    "p3_meta.hex": "eef7e373eda2c1d74bc2bd0a67bdbeb3935c933a0a90fd022acf0d5eb5d38d40",
+    "p3_case.hex": "024a9d3688c7d18833c51d032cc7ad932cfbc27faec976889a370b68c737af54",
+    "p3_issue.hex": "fca4c7f8b5e9d2b083a0c6c76151cb3fb7a819aa4281eaae4c9f3c89ac0309cc",
+    "p3_meta.hex": "58a0131d2874613171dfadb9054d406ca4713f26bfe87aa8e8b86ac3c60748df",
     "p3_multicast_communication.hex": "e287e85c3a8a194f5d129781e66471570039916ec5699ba8014160a84c36de85",
     "p3_multicast_counter.hex": "8c935d68a2ce282595ac021b704a61a318f4b6442cd9c35c10df72b2e1db42f3",
     "p3_multicast_local_object.hex": "6d0294ee77a9cc47fb59c04e9f27fc896a156ad5e3dc9213c05b49cd9df4f5b9",
@@ -125,7 +125,7 @@
     "p3_multicast_source.hex": "ead5d17dc074a54efbc058c1e6b2ebba995678d36527bdb4e7ce0262bf8f3308",
     "p3_multicast_topology.hex": "856babd63bb69ab43b75920b473c42ce00d8e6b31439d8d18689db63f806d577"
   },
-  "issue_count": 29,
+  "issue_count": 33,
   "issue_stride": 4,
   "multicast_launch_count": 1,
   "multicast_qualification": {
@@ -177,10 +177,10 @@
   },
   "promotion_blocker": "the Qwen HBM deployment certificate records a 32992-byte IR kernel while the current source is 33234 bytes; this overlay neither bypasses nor relabels that source-currentness failure",
   "promotion_status": "blocked_on_canonical_deployment_rebuild",
-  "real_launch_count": 25,
-  "required_marker": "PASS: ABI3 shipped-prefix multicast integration cases=4 launches=25 words=80896 capability_faults=4 multicasts=1",
-  "resolved_view_count": 88,
-  "result_word_count": 80896,
+  "real_launch_count": 29,
+  "required_marker": "PASS: ABI3 shipped-prefix multicast integration cases=4 launches=29 words=91136 capability_faults=4 multicasts=1",
+  "resolved_view_count": 100,
+  "result_word_count": 91136,
   "schema": "opentallas.rtl.abi3_shipped_prefix_multicast_vectors.v1",
   "state_compat": 0,
   "status": "frozen_identity_rtl_integration_only"

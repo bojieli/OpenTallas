@@ -9,14 +9,14 @@
 // ---------------------------------------------------------------------------
 module tb_a3_shipped_prefix_deepseek_rom;
     localparam integer CASE_INDEX = 2;
-    localparam integer CASE_STRIDE = 72;
+    localparam integer CASE_STRIDE = 80;
     localparam integer ISSUE_STRIDE = 4;
     localparam integer PAYLOAD_WORDS = 16384;
     localparam integer PARTICIPANTS = 256;
 
     reg [31:0] case_mem [0:4*CASE_STRIDE-1];
-    reg [31:0] issue_mem [0:115];
-    reg [31:0] expect_mem [0:80895];
+    reg [31:0] issue_mem [0:131];
+    reg [31:0] expect_mem [0:91135];
     reg [31:0] record [0:CASE_STRIDE-1];
     initial begin
         $readmemh("p3_case.hex", case_mem);
@@ -124,6 +124,12 @@ module tb_a3_shipped_prefix_deepseek_rom;
         .cfg_head_weight_base_0(32'd0),
         .cfg_head_weight_object_1(32'hffff_ffff),
         .cfg_head_weight_base_1(32'd0),
+        .cfg_rope_input_object_0(32'hffff_ffff),
+        .cfg_rope_input_base_0(32'd0),
+        .cfg_rope_input_object_1(32'hffff_ffff),
+        .cfg_rope_input_base_1(32'd0),
+        .cfg_rope_coefficient_object(32'hffff_ffff),
+        .cfg_rope_coefficient_base(32'd0),
         .cfg_output_base(cfg_output_base),
         .busy(busy), .done(done), .complete(complete), .trapped(trapped),
         .trap_class(trap_class),
@@ -351,7 +357,7 @@ module tb_a3_shipped_prefix_deepseek_rom;
         check_equal("gather launches", dma_gather_launch_count, record[33]);
         check_equal("embedding launches", embedding_launch_count, record[34]);
         check_equal("transfer launches", dma_transfer_launch_count, record[45]);
-        check_equal("multicast launches", multicast_launch_count, record[71]);
+        check_equal("multicast launches", multicast_launch_count, record[79]);
         check_equal("multicast faults", multicast_fault_count, 0);
         check_equal("capability faults", capability_fault_count, record[29]);
         check_equal("descriptor faults", descriptor_fault_count, 0);

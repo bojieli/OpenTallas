@@ -6,13 +6,14 @@
 // shipped operator has an RTL datapath.  It admits the exact dense one-index
 // DMA.GATHER, BF16 TENSOR.EMBED_LOOKUP, Qwen BF16 VECTOR.RMS_NORM and the
 // descriptor-driven layer-zero query/key/value TENSOR.MATMUL family, Qwen
-// weighted VECTOR.HEAD_RMS_NORM, and DeepSeek stride-zero DMA.TRANSFER forms
-// at the head of the shipped decode programs.  EMBED_LOOKUP and TRANSFER are
-// row movements and lower internally to the existing index mover; both
-// RMSNorm forms use the same exact row-configured buffered arithmetic slice
-// and MATMUL reuses the qualified ABI 3.0 MAC lane.  The sequencer continues
-// to observe each original opcode and
-// descriptor.  Completion is returned only after the datapath finishes.
+// weighted VECTOR.HEAD_RMS_NORM, Qwen whole-head VECTOR.ROPE, and DeepSeek
+// stride-zero DMA.TRANSFER forms at the head of the shipped decode programs.
+// EMBED_LOOKUP and TRANSFER are row movements and lower internally to the
+// existing index mover; both RMSNorm forms use the same exact row-configured
+// buffered arithmetic slice, MATMUL reuses the qualified ABI 3.0 MAC lane,
+// and RoPE is adapted to the unchanged qualified Qwen RoPE datapath.  The
+// sequencer continues to observe each original opcode and descriptor.
+// Completion is returned only after the datapath finishes.
 // Every other opcode returns a precise CAPABILITY trap.  Malformed metadata
 // returns a DESCRIPTOR trap, and a datapath failure returns an ENGINE trap.
 //
@@ -82,6 +83,12 @@ module ot_a3_engine_issue_bridge (
     input  wire [31:0]   cfg_head_weight_base_0,
     input  wire [31:0]   cfg_head_weight_object_1,
     input  wire [31:0]   cfg_head_weight_base_1,
+    input  wire [31:0]   cfg_rope_input_object_0,
+    input  wire [31:0]   cfg_rope_input_base_0,
+    input  wire [31:0]   cfg_rope_input_object_1,
+    input  wire [31:0]   cfg_rope_input_base_1,
+    input  wire [31:0]   cfg_rope_coefficient_object,
+    input  wire [31:0]   cfg_rope_coefficient_base,
     input  wire [31:0]   cfg_output_base,
 
     // Operand/result ports of the integrated engine array.
@@ -114,6 +121,7 @@ module ot_a3_engine_issue_bridge (
     output reg  [31:0]   embedding_launch_count,
     output reg  [31:0]   rms_norm_launch_count,
     output reg  [31:0]   head_rms_norm_launch_count,
+    output reg  [31:0]   rope_launch_count,
     output reg  [31:0]   dma_transfer_launch_count,
     output reg  [31:0]   matmul_launch_count,
     output reg  [31:0]   capability_fault_count,
@@ -145,6 +153,7 @@ module ot_a3_engine_issue_bridge (
     localparam [7:0] TENSOR_MATMUL = 8'h00;
     localparam [7:0] VECTOR_RMS_NORM = 8'h00;
     localparam [7:0] VECTOR_HEAD_RMS_NORM = 8'h01;
+    localparam [7:0] VECTOR_ROPE = 8'h02;
     localparam [7:0] FMT_U32 = 8'h04;
     localparam [7:0] FMT_I32 = 8'h05;
     localparam [7:0] FMT_BF16 = 8'h10;
@@ -166,6 +175,8 @@ module ot_a3_engine_issue_bridge (
         256'h94180f7a2a2d20609236e96941dde296643a19e8e71ff1ab239c3ac09ae5e14a;
     localparam [255:0] CONTRACT_QWEN_MATMUL_RAW =
         256'ha15a76a03cd9c4212365014f8ebb77b73f61872818463b77d5d93f776adc5075;
+    localparam [255:0] CONTRACT_QWEN_ROPE_RAW =
+        256'hcf36189f7564a37bc093ee69e108bdae3e75853a46b8efe51eabb1765c15ad34;
     localparam [31:0] QWEN_VOCABULARY = 32'd151936;
     localparam [31:0] DEEPSEEK_VOCABULARY = 32'd129280;
     localparam [31:0] EMBEDDING_WIDTH = 32'd4096;
@@ -197,6 +208,7 @@ module ot_a3_engine_issue_bridge (
     reg        embedding_q;
     reg        rms_norm_q;
     reg        head_rms_norm_q;
+    reg        rope_q;
     reg        dma_transfer_q;
     reg        matmul_q;
 
@@ -218,6 +230,8 @@ module ot_a3_engine_issue_bridge (
     reg [7:0]  source_dtype;
     reg [31:0] rms_input_base_q;
     reg [31:0] rms_weight_base_q;
+    reg [31:0] rope_input_base_q;
+    reg [31:0] rope_coefficient_base_q;
     reg [31:0] matmul_weight_base_q;
     reg [31:0] numeric_profile_dtypes;
     reg [31:0] result_word_cursor;
@@ -276,7 +290,8 @@ module ot_a3_engine_issue_bridge (
         (desc_view_scale_block == 0) &&
         (desc_primary_object != NO_ID) &&
         ((desc_permissions & 32'd1) != 0);
-    wire dense_row_source_ok = !rms_norm_q && !dma_transfer_q && !matmul_q &&
+    wire dense_row_source_ok = !rms_norm_q && !rope_q &&
+        !dma_transfer_q && !matmul_q &&
         (desc_view_dtype == (embedding_q ? FMT_BF16 : FMT_FP32)) &&
         (desc_view_rank == 2) && (desc_view_terms == 0) &&
         (desc_view_dim0 != 0) && (desc_view_dim1 != 0) &&
@@ -327,6 +342,27 @@ module ot_a3_engine_issue_bridge (
     wire [31:0] mapped_head_input_base =
         (desc_primary_object == cfg_head_input_object_0)
         ? cfg_head_input_base_0 : cfg_head_input_base_1;
+    wire rope_input_source_ok = rope_q &&
+        (desc_view_dtype == FMT_BF16) && (desc_view_rank == 3) &&
+        (desc_view_terms <= 4) &&
+        (desc_view_dim0 != 0) &&
+        ((desc_view_dim1 == 32'd32) || (desc_view_dim1 == 32'd8)) &&
+        (desc_view_dim2 == HEAD_WIDTH) &&
+        (desc_view_dim3 == 0) && (desc_view_dim4 == 0) &&
+        (desc_view_dim5 == 0) &&
+        (desc_view_stride0 == desc_view_dim1 * HEAD_WIDTH) &&
+        (desc_view_stride1 == HEAD_WIDTH) &&
+        (desc_view_stride2 == 1) && (desc_view_stride3 == 0) &&
+        (desc_view_stride4 == 0) && (desc_view_stride5 == 0) &&
+        (captured_rank[0] == 3) && (captured_axis[0] == 0) &&
+        (captured_extent[0] == 1) &&
+        (captured_offset[0] == desc_view_offset);
+    wire rope_input_object_mapped =
+        (desc_primary_object == cfg_rope_input_object_0) ||
+        (desc_primary_object == cfg_rope_input_object_1);
+    wire [31:0] mapped_rope_input_base =
+        (desc_primary_object == cfg_rope_input_object_0)
+        ? cfg_rope_input_base_0 : cfg_rope_input_base_1;
     wire rms_weight_source_ok = rms_norm_q &&
         (desc_view_dtype == FMT_BF16) && (desc_view_rank == 1) &&
         (desc_view_terms <= 4) &&
@@ -346,6 +382,23 @@ module ot_a3_engine_issue_bridge (
     wire [31:0] mapped_head_weight_base =
         (desc_primary_object == cfg_head_weight_object_0)
         ? cfg_head_weight_base_0 : cfg_head_weight_base_1;
+    wire rope_coefficient_source_ok = rope_q &&
+        (desc_view_dtype == FMT_FP32) && (desc_view_rank == 3) &&
+        (desc_view_terms <= 4) &&
+        (desc_view_dim0 == index_raw_dim0) &&
+        (desc_view_dim1 == source_rows) &&
+        (desc_view_dim2 == 2 * HEAD_WIDTH) &&
+        (desc_view_dim3 == 0) && (desc_view_dim4 == 0) &&
+        (desc_view_dim5 == 0) &&
+        (desc_view_stride0 == 2 * HEAD_WIDTH) &&
+        (desc_view_stride1 == 0) &&
+        (desc_view_stride2 == 1) && (desc_view_stride3 == 0) &&
+        (desc_view_stride4 == 0) && (desc_view_stride5 == 0) &&
+        (captured_rank[1] == 3) && (captured_axis[1] == 0) &&
+        (captured_extent[1] == captured_extent[0]) &&
+        (captured_offset[1] == desc_view_offset);
+    wire rope_coefficient_object_mapped =
+        desc_primary_object == cfg_rope_coefficient_object;
     wire matmul_weight_source_ok = matmul_q &&
         (desc_view_dtype == FMT_BF16) && (desc_view_rank == 2) &&
         (desc_view_terms <= 4) &&
@@ -394,7 +447,7 @@ module ot_a3_engine_issue_bridge (
         (desc_view_scale_block == 0) &&
         (desc_primary_object != NO_ID) &&
         ((desc_permissions & 32'd2) != 0);
-    wire dense_row_output_ok = !dma_transfer_q && !matmul_q &&
+    wire dense_row_output_ok = !dma_transfer_q && !matmul_q && !rope_q &&
         !head_rms_norm_q &&
         (desc_view_rank == 2) && (desc_view_dim0 == index_raw_dim0) &&
         (desc_view_dim1 == source_trailing) &&
@@ -418,6 +471,19 @@ module ot_a3_engine_issue_bridge (
         (desc_view_stride4 == 0) && (desc_view_stride5 == 0) &&
         (captured_rank[4] == 3) && (captured_axis[4] == 0) &&
         (captured_extent[4] == captured_extent[0]);
+    wire rope_output_ok = rope_q &&
+        (desc_view_rank == 3) && (desc_view_dim0 == index_raw_dim0) &&
+        (desc_view_dim1 == source_rows) &&
+        (desc_view_dim2 == source_trailing) &&
+        (desc_view_dim3 == 0) && (desc_view_dim4 == 0) &&
+        (desc_view_dim5 == 0) &&
+        (desc_view_stride0 == source_rows * source_trailing) &&
+        (desc_view_stride1 == source_trailing) &&
+        (desc_view_stride2 == 1) && (desc_view_stride3 == 0) &&
+        (desc_view_stride4 == 0) && (desc_view_stride5 == 0) &&
+        (captured_rank[4] == 3) && (captured_axis[4] == 0) &&
+        (captured_extent[4] == captured_extent[0]) &&
+        (captured_offset[4] == desc_view_offset);
     wire matmul_output_ok = matmul_q &&
         (desc_view_rank == 2) && (desc_view_dim0 == index_raw_dim0) &&
         (desc_view_dim1 == source_rows) &&
@@ -489,6 +555,12 @@ module ot_a3_engine_issue_bridge (
         (desc_data[559:552] == 2) &&
         (desc_data[607:576] == 0) &&
         (desc_data[1023:768] == CONTRACT_QWEN_MATMUL_RAW);
+    wire rope_numeric_ok = rope_q &&
+        (desc_data[519:512] == FMT_BF16) &&
+        (desc_data[527:520] == FMT_FP32) &&
+        (desc_data[559:552] == 0) &&
+        (desc_data[607:576] == 0) &&
+        (desc_data[1023:768] == CONTRACT_QWEN_ROPE_RAW);
 
     integer slot;
     always @(posedge clk or negedge rst_n) begin
@@ -506,6 +578,7 @@ module ot_a3_engine_issue_bridge (
             embedding_q <= 1'b0;
             rms_norm_q <= 1'b0;
             head_rms_norm_q <= 1'b0;
+            rope_q <= 1'b0;
             dma_transfer_q <= 1'b0;
             matmul_q <= 1'b0;
             captured_valid <= 6'd0;
@@ -520,6 +593,8 @@ module ot_a3_engine_issue_bridge (
             source_dtype <= 8'd0;
             rms_input_base_q <= 32'd0;
             rms_weight_base_q <= 32'd0;
+            rope_input_base_q <= 32'd0;
+            rope_coefficient_base_q <= 32'd0;
             matmul_weight_base_q <= 32'd0;
             numeric_profile_dtypes <= 32'd0;
             result_word_cursor <= 32'd0;
@@ -528,6 +603,7 @@ module ot_a3_engine_issue_bridge (
             embedding_launch_count <= 32'd0;
             rms_norm_launch_count <= 32'd0;
             head_rms_norm_launch_count <= 32'd0;
+            rope_launch_count <= 32'd0;
             dma_transfer_launch_count <= 32'd0;
             matmul_launch_count <= 32'd0;
             capability_fault_count <= 32'd0;
@@ -556,10 +632,13 @@ module ot_a3_engine_issue_bridge (
                 embedding_q <= 1'b0;
                 rms_norm_q <= 1'b0;
                 head_rms_norm_q <= 1'b0;
+                rope_q <= 1'b0;
                 dma_transfer_q <= 1'b0;
                 matmul_q <= 1'b0;
                 rms_input_base_q <= 32'd0;
                 rms_weight_base_q <= 32'd0;
+                rope_input_base_q <= 32'd0;
+                rope_coefficient_base_q <= 32'd0;
                 matmul_weight_base_q <= 32'd0;
                 op_aux0 <= NO_ID;
                 result_word_cursor <= 32'd0;
@@ -568,6 +647,7 @@ module ot_a3_engine_issue_bridge (
                 embedding_launch_count <= 32'd0;
                 rms_norm_launch_count <= 32'd0;
                 head_rms_norm_launch_count <= 32'd0;
+                rope_launch_count <= 32'd0;
                 dma_transfer_launch_count <= 32'd0;
                 matmul_launch_count <= 32'd0;
                 capability_fault_count <= 32'd0;
@@ -607,7 +687,8 @@ module ot_a3_engine_issue_bridge (
                                    (issue_sub == TENSOR_MATMUL)) ||
                                   ((issue_family == FAMILY_VECTOR) &&
                                    ((issue_sub == VECTOR_RMS_NORM) ||
-                                    (issue_sub == VECTOR_HEAD_RMS_NORM))) ||
+                                    (issue_sub == VECTOR_HEAD_RMS_NORM) ||
+                                    (issue_sub == VECTOR_ROPE))) ||
                                   ((issue_family == FAMILY_DMA) &&
                                    (issue_sub == DMA_TRANSFER)))) begin
                                 // No speculative launch and no shape guess.
@@ -625,6 +706,9 @@ module ot_a3_engine_issue_bridge (
                                 head_rms_norm_q <=
                                     (issue_family == FAMILY_VECTOR) &&
                                     (issue_sub == VECTOR_HEAD_RMS_NORM);
+                                rope_q <=
+                                    (issue_family == FAMILY_VECTOR) &&
+                                    (issue_sub == VECTOR_ROPE);
                                 dma_transfer_q <=
                                     (issue_family == FAMILY_DMA) &&
                                     (issue_sub == DMA_TRANSFER);
@@ -659,10 +743,13 @@ module ot_a3_engine_issue_bridge (
                                 (desc_data[831:800] != NO_ID) ||
                                 (desc_data[863:832] == NO_ID) ||
                                 (desc_data[895:864] != NO_ID) ||
-                                (head_rms_norm_q &&
+                                ((head_rms_norm_q || rope_q) &&
                                  (desc_data[927:896] == NO_ID)) ||
-                                (!head_rms_norm_q &&
+                                (!(head_rms_norm_q || rope_q) &&
                                  (desc_data[927:896] != NO_ID)) ||
+                                (rope_q &&
+                                 (desc_data[927:896] != HEAD_WIDTH) &&
+                                 (desc_data[927:896] != 2 * HEAD_WIDTH)) ||
                                 (desc_data[959:928] != NO_ID) ||
                                 (desc_data[991:960] != NO_ID) ||
                                 (desc_data[1023:992] != NO_ID) ||
@@ -687,7 +774,7 @@ module ot_a3_engine_issue_bridge (
                                 op_aux0 <= desc_data[927:896];
                                 desc_req <= 1'b1;
                                 desc_id <= desc_data[735:704];
-                                state <= (rms_norm_q || matmul_q)
+                                state <= (rms_norm_q || matmul_q || rope_q)
                                       ? S_RMS_INPUT_WAIT
                                       : dma_transfer_q ? S_SOURCE_WAIT
                                       : S_INDEX_WAIT;
@@ -740,24 +827,30 @@ module ot_a3_engine_issue_bridge (
                         if (desc_valid) begin
                             if (!input_view_common_ok ||
                                 !(model_row_input_source_ok ||
-                                  head_rms_input_source_ok) ||
+                                  head_rms_input_source_ok ||
+                                  rope_input_source_ok) ||
                                 (head_rms_norm_q &&
                                  (!head_input_object_mapped ||
-                                  (op_aux0 != desc_view_dim1)))) begin
+                                  (op_aux0 != desc_view_dim1))) ||
+                                (rope_q &&
+                                 !rope_input_object_mapped)) begin
                                 response_fault <= 1'b1;
                                 response_trap <= TRAP_DESCRIPTOR;
                                 state <= S_RESPONSE;
                             end else begin
                                 index_raw_dim0 <= desc_view_dim0;
-                                source_rows <= head_rms_norm_q
+                                source_rows <= (head_rms_norm_q || rope_q)
                                     ? desc_view_dim1
                                     : (matmul_q ? 32'd0 : 32'd1);
-                                source_trailing <= head_rms_norm_q
+                                source_trailing <= (head_rms_norm_q || rope_q)
                                     ? desc_view_dim2 : EMBEDDING_WIDTH;
                                 source_dtype <= FMT_BF16;
                                 rms_input_base_q <= head_rms_norm_q
                                     ? mapped_head_input_base
                                     : cfg_rms_input_base;
+                                if (rope_q)
+                                    rope_input_base_q <=
+                                        mapped_rope_input_base;
                                 desc_req <= 1'b1;
                                 desc_id <= op_input1;
                                 state <= S_SOURCE_WAIT;
@@ -770,12 +863,15 @@ module ot_a3_engine_issue_bridge (
                             if (!input_view_common_ok ||
                                 !(dense_row_source_ok ||
                                   rms_weight_source_ok ||
+                                  rope_coefficient_source_ok ||
                                   matmul_weight_source_ok ||
                                   transfer_source_ok) ||
                                 (matmul_q &&
                                  !matmul_weight_object_mapped) ||
                                 (head_rms_norm_q &&
-                                 !head_weight_object_mapped)) begin
+                                 !head_weight_object_mapped) ||
+                                (rope_q &&
+                                 !rope_coefficient_object_mapped)) begin
                                 response_fault <= 1'b1;
                                 response_trap <= TRAP_DESCRIPTOR;
                                 state <= S_RESPONSE;
@@ -789,6 +885,9 @@ module ot_a3_engine_issue_bridge (
                                     rms_weight_base_q <= head_rms_norm_q
                                         ? mapped_head_weight_base
                                         : cfg_rms_weight_base;
+                                end else if (rope_q) begin
+                                    rope_coefficient_base_q <=
+                                        cfg_rope_coefficient_base;
                                 end else if (!rms_norm_q) begin
                                     source_rows <= desc_view_dim0;
                                     source_trailing <= desc_view_dim1;
@@ -809,6 +908,7 @@ module ot_a3_engine_issue_bridge (
                             if (!output_view_common_ok ||
                                 !(dense_row_output_ok ||
                                   head_rms_output_ok ||
+                                  rope_output_ok ||
                                   matmul_output_ok ||
                                   transfer_output_ok)) begin
                                 response_fault <= 1'b1;
@@ -828,6 +928,7 @@ module ot_a3_engine_issue_bridge (
                                 !(gather_numeric_ok ||
                                   embedding_numeric_ok ||
                                   rms_numeric_ok ||
+                                  rope_numeric_ok ||
                                   matmul_numeric_ok ||
                                   transfer_numeric_ok)) begin
                                 response_fault <= 1'b1;
@@ -874,6 +975,9 @@ module ot_a3_engine_issue_bridge (
                                 if (head_rms_norm_q)
                                     head_rms_norm_launch_count <=
                                         head_rms_norm_launch_count + 1;
+                                else if (rope_q)
+                                    rope_launch_count <=
+                                        rope_launch_count + 1;
                                 else if (rms_norm_q)
                                     rms_norm_launch_count <=
                                         rms_norm_launch_count + 1;
@@ -942,37 +1046,62 @@ module ot_a3_engine_issue_bridge (
     wire [31:0] rms_saturation_count;
     wire [31:0] rms_work_count;
 
-    wire engine_done = rms_norm_q ? rms_done : array_done;
-    assign engine_busy = rms_norm_q ? rms_busy : array_busy;
-    assign engine_error_code = rms_norm_q
-        ? rms_error_code : array_error_code;
-    assign engine_result_count = rms_norm_q
-        ? rms_result_count : array_result_count;
-    assign engine_work_count = rms_norm_q
-        ? rms_work_count : array_work_count;
+    wire rope_input_rd_en;
+    wire [31:0] rope_input_rd_addr;
+    wire rope_coefficient_rd_en;
+    wire [31:0] rope_coefficient_rd_addr;
+    wire rope_out_we;
+    wire [31:0] rope_out_addr;
+    wire [31:0] rope_out_data;
+    wire rope_busy;
+    wire rope_done;
+    wire [7:0] rope_error_code;
+    wire [31:0] rope_result_count;
+    wire [31:0] rope_saturation_count;
+    wire [31:0] rope_work_count;
+
+    wire engine_done = rope_q ? rope_done
+        : rms_norm_q ? rms_done : array_done;
+    assign engine_busy = rope_q ? rope_busy
+        : rms_norm_q ? rms_busy : array_busy;
+    assign engine_error_code = rope_q ? rope_error_code
+        : rms_norm_q ? rms_error_code : array_error_code;
+    assign engine_result_count = rope_q ? rope_result_count
+        : rms_norm_q ? rms_result_count : array_result_count;
+    assign engine_work_count = rope_q ? rope_work_count
+        : rms_norm_q ? rms_work_count : array_work_count;
     wire [31:0] expected_result_count = rms_norm_q
         ? (source_rows * source_trailing)
+        : rope_q ? (source_rows * source_trailing)
         : matmul_q ? source_rows
         : dma_transfer_q ? (TRANSFER_COPIES * EMBEDDING_WIDTH)
         : source_trailing;
     wire [31:0] expected_work_count = rms_norm_q
         ? (source_rows * source_trailing)
+        : rope_q ? (source_rows * source_trailing)
         : matmul_q ? (source_rows * source_trailing)
         : dma_transfer_q ? TRANSFER_COPIES : 32'd1;
 
-    assign m0_rd_en = rms_norm_q ? rms_input_rd_en : array_m0_rd_en;
-    assign m0_rd_addr = rms_norm_q ? rms_input_rd_addr : array_m0_rd_addr;
-    assign m1_rd_en = rms_norm_q ? rms_weight_rd_en : array_m1_rd_en;
-    assign m1_rd_addr = rms_norm_q ? rms_weight_rd_addr : array_m1_rd_addr;
-    assign m2_rd_en = rms_norm_q ? 1'b0 : array_m2_rd_en;
-    assign m2_rd_addr = rms_norm_q ? 32'd0 : array_m2_rd_addr;
-    assign m3_rd_en = rms_norm_q ? 1'b0 : array_m3_rd_en;
-    assign m3_rd_addr = rms_norm_q ? 32'd0 : array_m3_rd_addr;
-    assign out_we = rms_norm_q ? rms_out_we : array_out_we;
-    assign out_addr = rms_norm_q ? rms_out_addr : array_out_addr;
-    assign out_data = rms_norm_q ? rms_out_data : array_out_data;
-    assign m0_reads_result = rms_norm_q || matmul_q;
-    assign m1_reads_result = dma_transfer_q;
+    assign m0_rd_en = rope_q ? rope_input_rd_en
+        : rms_norm_q ? rms_input_rd_en : array_m0_rd_en;
+    assign m0_rd_addr = rope_q ? rope_input_rd_addr
+        : rms_norm_q ? rms_input_rd_addr : array_m0_rd_addr;
+    assign m1_rd_en = rope_q ? rope_coefficient_rd_en
+        : rms_norm_q ? rms_weight_rd_en : array_m1_rd_en;
+    assign m1_rd_addr = rope_q ? rope_coefficient_rd_addr
+        : rms_norm_q ? rms_weight_rd_addr : array_m1_rd_addr;
+    assign m2_rd_en = (rms_norm_q || rope_q) ? 1'b0 : array_m2_rd_en;
+    assign m2_rd_addr = (rms_norm_q || rope_q) ? 32'd0 : array_m2_rd_addr;
+    assign m3_rd_en = (rms_norm_q || rope_q) ? 1'b0 : array_m3_rd_en;
+    assign m3_rd_addr = (rms_norm_q || rope_q) ? 32'd0 : array_m3_rd_addr;
+    assign out_we = rope_q ? rope_out_we
+        : rms_norm_q ? rms_out_we : array_out_we;
+    assign out_addr = rope_q ? rope_out_addr
+        : rms_norm_q ? rms_out_addr : array_out_addr;
+    assign out_data = rope_q ? rope_out_data
+        : rms_norm_q ? rms_out_data : array_out_data;
+    assign m0_reads_result = rms_norm_q || rope_q || matmul_q;
+    assign m1_reads_result = rope_q || dma_transfer_q;
     assign m1_reads_matmul_weight = matmul_q;
 
     wire [31:0] launch_index_base = dma_transfer_q
@@ -1016,10 +1145,37 @@ module ot_a3_engine_issue_bridge (
         .work_count(rms_work_count)
     );
 
+    ot_a3_vector_rope rope (
+        .clk(clk),
+        .rst_n(rst_n),
+        .start(engine_start & rope_q),
+        .cfg_count(expected_result_count),
+        .cfg_rows(source_rows),
+        .cfg_cols(source_trailing),
+        .cfg_input_base(rope_input_base_q),
+        .cfg_coefficient_base(rope_coefficient_base_q),
+        .cfg_output_base(launch_output_base),
+        .input_rd_en(rope_input_rd_en),
+        .input_rd_addr(rope_input_rd_addr),
+        .input_rd_data(m0_rd_data),
+        .coefficient_rd_en(rope_coefficient_rd_en),
+        .coefficient_rd_addr(rope_coefficient_rd_addr),
+        .coefficient_rd_data(m1_rd_data),
+        .out_we(rope_out_we),
+        .out_addr(rope_out_addr),
+        .out_data(rope_out_data),
+        .busy(rope_busy),
+        .done(rope_done),
+        .error_code(rope_error_code),
+        .result_count(rope_result_count),
+        .saturation_count(rope_saturation_count),
+        .work_count(rope_work_count)
+    );
+
     ot_a3_engine_array engines (
         .clk(clk),
         .rst_n(rst_n),
-        .start(engine_start & !rms_norm_q),
+        .start(engine_start & !rms_norm_q & !rope_q),
         .cfg_family(matmul_q ? FAMILY_TENSOR : FAMILY_DMA),
         .cfg_sub(matmul_q ? TENSOR_MATMUL : DMA_GATHER),
         .cfg_rows(matmul_q ? 16'd1 : 16'd0),
@@ -1132,4 +1288,6 @@ module ot_a3_engine_issue_bridge (
         .token(array_token),
         .tie_multiplicity(array_tie_multiplicity)
     );
+
+    wire _unused_rope_saturation = &{1'b0, rope_saturation_count};
 endmodule

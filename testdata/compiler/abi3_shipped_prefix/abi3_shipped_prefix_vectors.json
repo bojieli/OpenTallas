@@ -48,6 +48,20 @@
         "output_base": 0,
         "rms_input_base": 256,
         "rms_weight_base": 8448,
+        "rope_coefficient_object": {
+          "base_words": 0,
+          "object_id": 27
+        },
+        "rope_input_objects": [
+          {
+            "base_words": 14592,
+            "object_id": 78
+          },
+          {
+            "base_words": 18688,
+            "object_id": 86
+          }
+        ],
         "source_base": 0,
         "source_launch_stride": 4352,
         "transfer_index_base": 0,
@@ -67,38 +81,40 @@
         "dma_transfer_result_words": 0,
         "embedding_launches": 1,
         "embedding_result_words": 4096,
-        "fetched": 27,
-        "first_fault_instruction": 26,
+        "fetched": 33,
+        "first_fault_instruction": 32,
         "head_rms_norm_launches": 2,
         "head_rms_norm_result_words": 5120,
-        "issued": 9,
-        "loop_iterations": 8,
+        "issued": 11,
+        "loop_iterations": 10,
         "matmul_launches": 3,
         "matmul_mac_count": 25165824,
         "matmul_result_words": 6144,
-        "real_engine_launches": 8,
-        "result_words": 19712,
-        "retired": 26,
+        "real_engine_launches": 10,
+        "result_words": 24832,
+        "retired": 32,
         "rms_norm_launches": 1,
         "rms_norm_result_words": 4096,
-        "rope_result_words": 256,
+        "rope_coefficient_gather_result_words": 256,
+        "rope_launches": 2,
+        "rope_result_words": 5120,
         "selected_checkpoint_bytes": 50348544,
         "selected_embedding_checkpoint_bytes": 8192,
         "selected_head_rms_checkpoint_bytes": 512,
         "selected_matmul_checkpoint_bytes": 50331648,
         "selected_rms_checkpoint_bytes": 8192,
-        "signals": 8,
+        "signals": 10,
         "state_compat": 0,
         "trap_class": 4,
-        "views": 27,
-        "wait_events": 7
+        "views": 33,
+        "wait_events": 9
       },
       "first_unsupported": {
-        "descriptor_id": 98,
-        "family": 48,
-        "opcode": "VECTOR.ROPE",
-        "pc": 26,
-        "sub": 2,
+        "descriptor_id": 114,
+        "family": 16,
+        "opcode": "DMA.SCATTER",
+        "pc": 32,
+        "sub": 3,
         "trap_class": 4
       },
       "input_deployment_vector_case": 1,
@@ -615,6 +631,122 @@
           "slot": 4,
           "strides": [
             4096,
+            128,
+            1
+          ]
+        },
+        {
+          "descriptor_id": 101,
+          "dims": [
+            1,
+            8,
+            128
+          ],
+          "dtype": 16,
+          "element_offset": 0,
+          "extent": 1,
+          "extent_axis": 0,
+          "object_id": 86,
+          "pc": 29,
+          "slot": 0,
+          "strides": [
+            1024,
+            128,
+            1
+          ]
+        },
+        {
+          "descriptor_id": 102,
+          "dims": [
+            1,
+            8,
+            256
+          ],
+          "dtype": 18,
+          "element_offset": 0,
+          "extent": 1,
+          "extent_axis": 0,
+          "object_id": 27,
+          "pc": 29,
+          "slot": 1,
+          "strides": [
+            256,
+            0,
+            1
+          ]
+        },
+        {
+          "descriptor_id": 104,
+          "dims": [
+            1,
+            8,
+            128
+          ],
+          "dtype": 16,
+          "element_offset": 0,
+          "extent": 1,
+          "extent_axis": 0,
+          "object_id": 103,
+          "pc": 29,
+          "slot": 4,
+          "strides": [
+            1024,
+            128,
+            1
+          ]
+        },
+        {
+          "descriptor_id": 109,
+          "dims": [
+            1
+          ],
+          "dtype": 4,
+          "element_offset": 16,
+          "extent": 1,
+          "extent_axis": 0,
+          "object_id": 23,
+          "pc": 32,
+          "slot": 0,
+          "strides": [
+            1
+          ]
+        },
+        {
+          "descriptor_id": 110,
+          "dims": [
+            1,
+            8,
+            128
+          ],
+          "dtype": 16,
+          "element_offset": 0,
+          "extent": 1,
+          "extent_axis": 0,
+          "object_id": 103,
+          "pc": 32,
+          "slot": 1,
+          "strides": [
+            1024,
+            128,
+            1
+          ]
+        },
+        {
+          "descriptor_id": 111,
+          "dims": [
+            8256,
+            8,
+            128
+          ],
+          "dtype": 16,
+          "element_offset": 0,
+          "extent": 8256,
+          "extent_axis": 0,
+          "object_id": 17,
+          "pc": 32,
+          "slot": 4,
+          "strides": [
+            2048,
             128,
             1
           ]
@@ -1320,6 +1452,164 @@
               1
             ]
           }
+        },
+        {
+          "addition_count": 4096,
+          "addition_saturated_element_count": 0,
+          "coefficient_bf16_payload_sha256": "836c0e4d9ba8556db28ac7d300914b4cb42d15418e59c6550a693558252049f1",
+          "coefficient_fp32_payload_sha256": "d5c65f780aa8e9d6618ffc6dc5e82df124968be09bc0e407df16070cb7cbae21",
+          "coefficient_narrow_saturated_element_count": 0,
+          "coefficient_source": "prior_fp32_generated_row_dma_gather_result_bank",
+          "coefficient_view": {
+            "descriptor_id": 93,
+            "dims": [
+              1,
+              32,
+              256
+            ],
+            "dtype": 18,
+            "element_offset": 0,
+            "extent": 1,
+            "extent_axis": 0,
+            "object_id": 27,
+            "slot": 1,
+            "strides": [
+              256,
+              0,
+              1
+            ]
+          },
+          "contract": "qwen3_rope_fp32_bf16_v1",
+          "contract_sha256": "34ad155c76b1ab1ee5efb8463a85753eaebd08e169ee93c07ba364759f1836cf",
+          "descriptor_id": 98,
+          "expected_payload_sha256": "f36db31b14aa59e0b0c7bc444403a7991063c3a0e874dcee151b7428b0ee8150",
+          "input_source": "prior_query_head_rms_norm_result_bank",
+          "input_view": {
+            "descriptor_id": 92,
+            "dims": [
+              1,
+              32,
+              128
+            ],
+            "dtype": 16,
+            "element_offset": 0,
+            "extent": 1,
+            "extent_axis": 0,
+            "object_id": 78,
+            "slot": 0,
+            "strides": [
+              4096,
+              128,
+              1
+            ]
+          },
+          "kind": "vector_rope",
+          "multiplication_count": 8192,
+          "multiplication_saturated_element_count": 0,
+          "numeric_profile_id": 96,
+          "operator_aux_id_0": 128,
+          "oracle_agreement": "optimized_numpy_equals_independent_scalar_all_elements",
+          "output_view": {
+            "descriptor_id": 95,
+            "dims": [
+              1,
+              32,
+              128
+            ],
+            "dtype": 16,
+            "element_offset": 0,
+            "extent": 1,
+            "extent_axis": 0,
+            "object_id": 94,
+            "slot": 4,
+            "strides": [
+              4096,
+              128,
+              1
+            ]
+          },
+          "pc": 26,
+          "row_count": 32,
+          "row_width": 128
+        },
+        {
+          "addition_count": 1024,
+          "addition_saturated_element_count": 0,
+          "coefficient_bf16_payload_sha256": "836c0e4d9ba8556db28ac7d300914b4cb42d15418e59c6550a693558252049f1",
+          "coefficient_fp32_payload_sha256": "d5c65f780aa8e9d6618ffc6dc5e82df124968be09bc0e407df16070cb7cbae21",
+          "coefficient_narrow_saturated_element_count": 0,
+          "coefficient_source": "prior_fp32_generated_row_dma_gather_result_bank",
+          "coefficient_view": {
+            "descriptor_id": 102,
+            "dims": [
+              1,
+              8,
+              256
+            ],
+            "dtype": 18,
+            "element_offset": 0,
+            "extent": 1,
+            "extent_axis": 0,
+            "object_id": 27,
+            "slot": 1,
+            "strides": [
+              256,
+              0,
+              1
+            ]
+          },
+          "contract": "qwen3_rope_fp32_bf16_v1",
+          "contract_sha256": "34ad155c76b1ab1ee5efb8463a85753eaebd08e169ee93c07ba364759f1836cf",
+          "descriptor_id": 106,
+          "expected_payload_sha256": "b41de05c0a7f1f495ded2295c22781f4aa345136d2c572248469c422f266c406",
+          "input_source": "prior_key_head_rms_norm_result_bank",
+          "input_view": {
+            "descriptor_id": 101,
+            "dims": [
+              1,
+              8,
+              128
+            ],
+            "dtype": 16,
+            "element_offset": 0,
+            "extent": 1,
+            "extent_axis": 0,
+            "object_id": 86,
+            "slot": 0,
+            "strides": [
+              1024,
+              128,
+              1
+            ]
+          },
+          "kind": "vector_rope",
+          "multiplication_count": 2048,
+          "multiplication_saturated_element_count": 0,
+          "numeric_profile_id": 96,
+          "operator_aux_id_0": 128,
+          "oracle_agreement": "optimized_numpy_equals_independent_scalar_all_elements",
+          "output_view": {
+            "descriptor_id": 104,
+            "dims": [
+              1,
+              8,
+              128
+            ],
+            "dtype": 16,
+            "element_offset": 0,
+            "extent": 1,
+            "extent_axis": 0,
+            "object_id": 103,
+            "slot": 4,
+            "strides": [
+              1024,
+              128,
+              1
+            ]
+          },
+          "pc": 29,
+          "row_count": 8,
+          "row_width": 128
         }
       ]
     },
@@ -1328,11 +1618,11 @@
         "embedding_source_base": 17152,
         "head_input_objects": [
           {
-            "base_words": 28160,
+            "base_words": 33280,
             "object_id": 20
           },
           {
-            "base_words": 32256,
+            "base_words": 37376,
             "object_id": 21
           }
         ],
@@ -1347,7 +1637,7 @@
           }
         ],
         "index_base": 2,
-        "matmul_input_base": 24064,
+        "matmul_input_base": 29184,
         "matmul_weight_objects": [
           {
             "base_words": 0,
@@ -1362,13 +1652,27 @@
             "object_id": 4
           }
         ],
-        "output_base": 19712,
-        "rms_input_base": 19968,
+        "output_base": 24832,
+        "rms_input_base": 25088,
         "rms_weight_base": 21248,
+        "rope_coefficient_object": {
+          "base_words": 24832,
+          "object_id": 17
+        },
+        "rope_input_objects": [
+          {
+            "base_words": 39424,
+            "object_id": 19
+          },
+          {
+            "base_words": 43520,
+            "object_id": 23
+          }
+        ],
         "source_base": 12800,
         "source_launch_stride": 4352,
         "transfer_index_base": 0,
-        "transfer_source_base": 19968
+        "transfer_source_base": 25088
       },
       "deployment": "qwen3-8b-hbm-single-chip",
       "deployment_identity_evidence": {
@@ -1384,38 +1688,40 @@
         "dma_transfer_result_words": 0,
         "embedding_launches": 1,
         "embedding_result_words": 4096,
-        "fetched": 27,
-        "first_fault_instruction": 26,
+        "fetched": 33,
+        "first_fault_instruction": 32,
         "head_rms_norm_launches": 2,
         "head_rms_norm_result_words": 5120,
-        "issued": 9,
-        "loop_iterations": 8,
+        "issued": 11,
+        "loop_iterations": 10,
         "matmul_launches": 3,
         "matmul_mac_count": 25165824,
         "matmul_result_words": 6144,
-        "real_engine_launches": 8,
-        "result_words": 19712,
-        "retired": 26,
+        "real_engine_launches": 10,
+        "result_words": 24832,
+        "retired": 32,
         "rms_norm_launches": 1,
         "rms_norm_result_words": 4096,
-        "rope_result_words": 256,
+        "rope_coefficient_gather_result_words": 256,
+        "rope_launches": 2,
+        "rope_result_words": 5120,
         "selected_checkpoint_bytes": 50348544,
         "selected_embedding_checkpoint_bytes": 8192,
         "selected_head_rms_checkpoint_bytes": 512,
         "selected_matmul_checkpoint_bytes": 50331648,
         "selected_rms_checkpoint_bytes": 8192,
-        "signals": 8,
+        "signals": 10,
         "state_compat": 0,
         "trap_class": 4,
-        "views": 27,
-        "wait_events": 7
+        "views": 33,
+        "wait_events": 9
       },
       "first_unsupported": {
-        "descriptor_id": 101,
-        "family": 48,
-        "opcode": "VECTOR.ROPE",
-        "pc": 26,
-        "sub": 2,
+        "descriptor_id": 114,
+        "family": 16,
+        "opcode": "DMA.SCATTER",
+        "pc": 32,
+        "sub": 3,
         "trap_class": 4
       },
       "input_deployment_vector_case": 3,
@@ -1932,6 +2238,122 @@
           "slot": 4,
           "strides": [
             4096,
+            128,
+            1
+          ]
+        },
+        {
+          "descriptor_id": 104,
+          "dims": [
+            1,
+            8,
+            128
+          ],
+          "dtype": 16,
+          "element_offset": 0,
+          "extent": 1,
+          "extent_axis": 0,
+          "object_id": 23,
+          "pc": 29,
+          "slot": 0,
+          "strides": [
+            1024,
+            128,
+            1
+          ]
+        },
+        {
+          "descriptor_id": 105,
+          "dims": [
+            1,
+            8,
+            256
+          ],
+          "dtype": 18,
+          "element_offset": 0,
+          "extent": 1,
+          "extent_axis": 0,
+          "object_id": 17,
+          "pc": 29,
+          "slot": 1,
+          "strides": [
+            256,
+            0,
+            1
+          ]
+        },
+        {
+          "descriptor_id": 106,
+          "dims": [
+            1,
+            8,
+            128
+          ],
+          "dtype": 16,
+          "element_offset": 0,
+          "extent": 1,
+          "extent_axis": 0,
+          "object_id": 21,
+          "pc": 29,
+          "slot": 4,
+          "strides": [
+            1024,
+            128,
+            1
+          ]
+        },
+        {
+          "descriptor_id": 110,
+          "dims": [
+            1
+          ],
+          "dtype": 4,
+          "element_offset": 16,
+          "extent": 1,
+          "extent_axis": 0,
+          "object_id": 15,
+          "pc": 32,
+          "slot": 0,
+          "strides": [
+            1
+          ]
+        },
+        {
+          "descriptor_id": 111,
+          "dims": [
+            1,
+            8,
+            128
+          ],
+          "dtype": 16,
+          "element_offset": 0,
+          "extent": 1,
+          "extent_axis": 0,
+          "object_id": 21,
+          "pc": 32,
+          "slot": 1,
+          "strides": [
+            1024,
+            128,
+            1
+          ]
+        },
+        {
+          "descriptor_id": 112,
+          "dims": [
+            8256,
+            8,
+            128
+          ],
+          "dtype": 16,
+          "element_offset": 0,
+          "extent": 8256,
+          "extent_axis": 0,
+          "object_id": 38,
+          "pc": 32,
+          "slot": 4,
+          "strides": [
+            2048,
             128,
             1
           ]
@@ -2637,6 +3059,164 @@
               1
             ]
           }
+        },
+        {
+          "addition_count": 4096,
+          "addition_saturated_element_count": 0,
+          "coefficient_bf16_payload_sha256": "836c0e4d9ba8556db28ac7d300914b4cb42d15418e59c6550a693558252049f1",
+          "coefficient_fp32_payload_sha256": "d5c65f780aa8e9d6618ffc6dc5e82df124968be09bc0e407df16070cb7cbae21",
+          "coefficient_narrow_saturated_element_count": 0,
+          "coefficient_source": "prior_fp32_generated_row_dma_gather_result_bank",
+          "coefficient_view": {
+            "descriptor_id": 98,
+            "dims": [
+              1,
+              32,
+              256
+            ],
+            "dtype": 18,
+            "element_offset": 0,
+            "extent": 1,
+            "extent_axis": 0,
+            "object_id": 17,
+            "slot": 1,
+            "strides": [
+              256,
+              0,
+              1
+            ]
+          },
+          "contract": "qwen3_rope_fp32_bf16_v1",
+          "contract_sha256": "34ad155c76b1ab1ee5efb8463a85753eaebd08e169ee93c07ba364759f1836cf",
+          "descriptor_id": 101,
+          "expected_payload_sha256": "f36db31b14aa59e0b0c7bc444403a7991063c3a0e874dcee151b7428b0ee8150",
+          "input_source": "prior_query_head_rms_norm_result_bank",
+          "input_view": {
+            "descriptor_id": 97,
+            "dims": [
+              1,
+              32,
+              128
+            ],
+            "dtype": 16,
+            "element_offset": 0,
+            "extent": 1,
+            "extent_axis": 0,
+            "object_id": 19,
+            "slot": 0,
+            "strides": [
+              4096,
+              128,
+              1
+            ]
+          },
+          "kind": "vector_rope",
+          "multiplication_count": 8192,
+          "multiplication_saturated_element_count": 0,
+          "numeric_profile_id": 100,
+          "operator_aux_id_0": 256,
+          "oracle_agreement": "optimized_numpy_equals_independent_scalar_all_elements",
+          "output_view": {
+            "descriptor_id": 99,
+            "dims": [
+              1,
+              32,
+              128
+            ],
+            "dtype": 16,
+            "element_offset": 0,
+            "extent": 1,
+            "extent_axis": 0,
+            "object_id": 20,
+            "slot": 4,
+            "strides": [
+              4096,
+              128,
+              1
+            ]
+          },
+          "pc": 26,
+          "row_count": 32,
+          "row_width": 128
+        },
+        {
+          "addition_count": 1024,
+          "addition_saturated_element_count": 0,
+          "coefficient_bf16_payload_sha256": "836c0e4d9ba8556db28ac7d300914b4cb42d15418e59c6550a693558252049f1",
+          "coefficient_fp32_payload_sha256": "d5c65f780aa8e9d6618ffc6dc5e82df124968be09bc0e407df16070cb7cbae21",
+          "coefficient_narrow_saturated_element_count": 0,
+          "coefficient_source": "prior_fp32_generated_row_dma_gather_result_bank",
+          "coefficient_view": {
+            "descriptor_id": 105,
+            "dims": [
+              1,
+              8,
+              256
+            ],
+            "dtype": 18,
+            "element_offset": 0,
+            "extent": 1,
+            "extent_axis": 0,
+            "object_id": 17,
+            "slot": 1,
+            "strides": [
+              256,
+              0,
+              1
+            ]
+          },
+          "contract": "qwen3_rope_fp32_bf16_v1",
+          "contract_sha256": "34ad155c76b1ab1ee5efb8463a85753eaebd08e169ee93c07ba364759f1836cf",
+          "descriptor_id": 107,
+          "expected_payload_sha256": "b41de05c0a7f1f495ded2295c22781f4aa345136d2c572248469c422f266c406",
+          "input_source": "prior_key_head_rms_norm_result_bank",
+          "input_view": {
+            "descriptor_id": 104,
+            "dims": [
+              1,
+              8,
+              128
+            ],
+            "dtype": 16,
+            "element_offset": 0,
+            "extent": 1,
+            "extent_axis": 0,
+            "object_id": 23,
+            "slot": 0,
+            "strides": [
+              1024,
+              128,
+              1
+            ]
+          },
+          "kind": "vector_rope",
+          "multiplication_count": 2048,
+          "multiplication_saturated_element_count": 0,
+          "numeric_profile_id": 100,
+          "operator_aux_id_0": 256,
+          "oracle_agreement": "optimized_numpy_equals_independent_scalar_all_elements",
+          "output_view": {
+            "descriptor_id": 106,
+            "dims": [
+              1,
+              8,
+              128
+            ],
+            "dtype": 16,
+            "element_offset": 0,
+            "extent": 1,
+            "extent_axis": 0,
+            "object_id": 21,
+            "slot": 4,
+            "strides": [
+              1024,
+              128,
+              1
+            ]
+          },
+          "pc": 29,
+          "row_count": 8,
+          "row_width": 128
         }
       ]
     },
@@ -2679,13 +3259,27 @@
             "object_id": 4294967295
           }
         ],
-        "output_base": 39424,
-        "rms_input_base": 39680,
+        "output_base": 49664,
+        "rms_input_base": 49920,
         "rms_weight_base": 0,
+        "rope_coefficient_object": {
+          "base_words": 0,
+          "object_id": 4294967295
+        },
+        "rope_input_objects": [
+          {
+            "base_words": 0,
+            "object_id": 4294967295
+          },
+          {
+            "base_words": 0,
+            "object_id": 4294967295
+          }
+        ],
         "source_base": 25600,
         "source_launch_stride": 2176,
         "transfer_index_base": 7,
-        "transfer_source_base": 39680
+        "transfer_source_base": 49920
       },
       "deployment": "deepseek-v4-flash-rom-wafer",
       "deployment_identity_evidence": {
@@ -2715,7 +3309,9 @@
         "retired": 13,
         "rms_norm_launches": 0,
         "rms_norm_result_words": 0,
-        "rope_result_words": 256,
+        "rope_coefficient_gather_result_words": 256,
+        "rope_launches": 0,
+        "rope_result_words": 0,
         "selected_checkpoint_bytes": 8192,
         "selected_embedding_checkpoint_bytes": 8192,
         "selected_head_rms_checkpoint_bytes": 0,
@@ -3293,13 +3889,27 @@
             "object_id": 4294967295
           }
         ],
-        "output_base": 60160,
-        "rms_input_base": 60416,
+        "output_base": 70400,
+        "rms_input_base": 70656,
         "rms_weight_base": 0,
+        "rope_coefficient_object": {
+          "base_words": 0,
+          "object_id": 4294967295
+        },
+        "rope_input_objects": [
+          {
+            "base_words": 0,
+            "object_id": 4294967295
+          },
+          {
+            "base_words": 0,
+            "object_id": 4294967295
+          }
+        ],
         "source_base": 34048,
         "source_launch_stride": 2176,
         "transfer_index_base": 14,
-        "transfer_source_base": 60416
+        "transfer_source_base": 70656
       },
       "deployment": "deepseek-v4-flash-hbm-cluster",
       "deployment_identity_evidence": {
@@ -3329,7 +3939,9 @@
         "retired": 14,
         "rms_norm_launches": 0,
         "rms_norm_result_words": 0,
-        "rope_result_words": 256,
+        "rope_coefficient_gather_result_words": 256,
+        "rope_launches": 0,
+        "rope_result_words": 0,
         "selected_checkpoint_bytes": 8192,
         "selected_embedding_checkpoint_bytes": 8192,
         "selected_head_rms_checkpoint_bytes": 0,
@@ -3979,32 +4591,32 @@
       ]
     }
   ],
-  "claim": "exact shipped decode-program prefixes: six real DMA.GATHER launches copy 1,024 authentic generated RoPE words and four TENSOR.EMBED_LOOKUP launches copy 16,384 BF16 codes from four bounded, authenticated checkpoint-row reads; two exact Qwen VECTOR.RMS_NORM launches produce 8,192 BF16 codes using two bounded gain reads, and two DeepSeek stride-zero DMA.TRANSFER launches produce 32,768 BF16 codes from the prior embedding result; six complete Qwen layer-zero query/key/value TENSOR.MATMUL launches consume 100,663,296 authenticated BF16 weight bytes, execute 50,331,648 MACs, and produce 12,288 BF16 codes; four Qwen weighted VECTOR.HEAD_RMS_NORM launches then normalize 40 independent 128-code heads and produce 10,240 BF16 codes from four bounded authenticated gain reads; Qwen then fails closed at VECTOR.ROPE and DeepSeek at LINK.MULTICAST or VECTOR.MHC; this is not a whole-model, prefill, token-selection, or decoding claim",
+  "claim": "exact shipped decode-program prefixes: six real DMA.GATHER launches copy 1,024 authentic generated RoPE words and four TENSOR.EMBED_LOOKUP launches copy 16,384 BF16 codes from four bounded, authenticated checkpoint-row reads; two exact Qwen VECTOR.RMS_NORM launches produce 8,192 BF16 codes using two bounded gain reads, and two DeepSeek stride-zero DMA.TRANSFER launches produce 32,768 BF16 codes from the prior embedding result; six complete Qwen layer-zero query/key/value TENSOR.MATMUL launches consume 100,663,296 authenticated BF16 weight bytes, execute 50,331,648 MACs, and produce 12,288 BF16 codes; four Qwen weighted VECTOR.HEAD_RMS_NORM launches then normalize 40 independent 128-code heads and produce 10,240 BF16 codes from four bounded authenticated gain reads; four Qwen VECTOR.ROPE launches consume those exact results and the previously gathered FP32 coefficient row, agree with an independent scalar oracle, and produce 10,240 BF16 codes; Qwen then fails closed at DMA.SCATTER and DeepSeek at LINK.MULTICAST or VECTOR.MHC; this is not a whole-model, prefill, token-selection, or decoding claim",
   "dma_gather_launch_count": 6,
   "dma_transfer_launch_count": 2,
   "dma_transfer_result_word_count": 32768,
   "embedding_launch_count": 4,
   "embedding_result_word_count": 16384,
   "geometry": {
-    "case_stride": 72,
-    "case_words_used": 288,
-    "expected_words_used": 80896,
+    "case_stride": 80,
+    "case_words_used": 320,
+    "expected_words_used": 91136,
     "index_words": 64,
     "index_words_used": 18,
     "issue_stride": 4,
-    "issue_words_used": 112,
-    "result_words": 81920,
+    "issue_words_used": 128,
+    "result_words": 98304,
     "source_words": 65536,
     "source_words_used": 42496
   },
   "head_rms_norm_launch_count": 4,
   "head_rms_norm_result_word_count": 10240,
   "image_sha256": {
-    "p3_case.hex": "520e3660bdcf41fd67b8aafeb277d10de8494fc798672f26b5ca24f0a2a7740e",
-    "p3_expect.hex": "a353ea447ab333973da13230f061f93cc3df6704177ca7d94318cc1bf286ac4a",
+    "p3_case.hex": "a5dd175ddea5a217efa2b49f8a70c0bca7ad1126063a77c5403398f4a3ef5e00",
+    "p3_expect.hex": "1cadfc3371d198704fc9f245e7d8e27b72b38e906eafa0cdbc576f1eb2f98327",
     "p3_index.hex": "3782c32630334de6249983b67fe2fe6198815a3435ef977a8512dacb2292b2e0",
-    "p3_issue.hex": "e2e0f948d9bd0ed25c1a204d506b1709293c2f3e6722f514f1af7c659c5508ee",
-    "p3_meta.hex": "d88be8927dd1eeb95c5b6a6d9b342382503043a87d5f1fe5dc10164afb2ec37f",
+    "p3_issue.hex": "3a7cde8547630d9a57612cd905ce8f67bf5eedb28e844b347d3fab70fa71b10b",
+    "p3_meta.hex": "d19f9c6c4fab9917eb7fac4ee14bf12c511c5f43d2c1492bf43f8b617f1eb8c6",
     "p3_source.hex": "20eabb96e15b766c00e965e566021ef3f8944b823e26a15c46db6398d399e0b9"
   },
   "input_deployment_vectors": {
@@ -4019,7 +4631,7 @@
   "matmul_launch_count": 6,
   "matmul_mac_count": 50331648,
   "matmul_result_word_count": 12288,
-  "real_engine_launch_count": 24,
+  "real_engine_launch_count": 28,
   "request_scope": {
     "embedding_probe_scope": "bounded synthetic legal-vocabulary probe; not a natural-language or end-to-end model claim",
     "embedding_token_id": 0,
@@ -4027,12 +4639,14 @@
     "position_start": 16,
     "prompt_tokens": 16
   },
-  "required_marker": "PASS: ABI3 shipped-prefix engine integration cases=4 launches=24 words=80896 capability_faults=4",
-  "resolved_view_count": 82,
-  "result_word_count": 80896,
+  "required_marker": "PASS: ABI3 shipped-prefix engine integration cases=4 launches=28 words=91136 capability_faults=4",
+  "resolved_view_count": 94,
+  "result_word_count": 91136,
   "rms_norm_launch_count": 2,
   "rms_norm_result_word_count": 8192,
-  "rope_result_word_count": 1024,
+  "rope_coefficient_gather_result_word_count": 1024,
+  "rope_launch_count": 4,
+  "rope_result_word_count": 10240,
   "schema": "opentallas.rtl.abi3_shipped_prefix_vectors.v1",
   "selected_checkpoint_byte_count": 100713472,
   "selected_embedding_checkpoint_byte_count": 32768,
@@ -4060,6 +4674,6 @@
     ]
   },
   "state_compat": 0,
-  "supported_profile": "dense one-index FP32 DMA.GATHER plus exact token-zero BF16 TENSOR.EMBED_LOOKUP with 4,096-code rows, exact one-row Qwen BF16 RMSNorm, three descriptor-driven Qwen 1x4096 query/key/value MATMUL launches with 4,096/1,024/1,024 output columns through the declared single-lane ascending-K association, plus weighted Qwen head RMSNorm over descriptor-selected 32x128 and 8x128 row sets, and DeepSeek four-copy stride-zero BF16 transfer; resolved views, unscaled operands, and numeric contracts are bound before each launch",
+  "supported_profile": "dense one-index FP32 DMA.GATHER plus exact token-zero BF16 TENSOR.EMBED_LOOKUP with 4,096-code rows, exact one-row Qwen BF16 RMSNorm, three descriptor-driven Qwen 1x4096 query/key/value MATMUL launches with 4,096/1,024/1,024 output columns through the declared single-lane ascending-K association, plus weighted Qwen head RMSNorm over descriptor-selected 32x128 and 8x128 row sets, and Qwen whole-head RoPE with FP32-to-BF16 RNE coefficient narrowing over those same row sets, and DeepSeek four-copy stride-zero BF16 transfer; resolved views, unscaled operands, and numeric contracts are bound before each launch",
   "unsupported_policy": "every other family/subopcode returns CAPABILITY before any engine launch, result write, retirement, or signal publication"
 }

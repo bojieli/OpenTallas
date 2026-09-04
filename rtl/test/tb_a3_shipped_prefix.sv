@@ -8,15 +8,15 @@
 // ---------------------------------------------------------------------------
 module tb_a3_shipped_prefix;
     localparam integer CASES = 4;
-    localparam integer CASE_STRIDE = 72;
+    localparam integer CASE_STRIDE = 80;
     localparam integer ISSUE_STRIDE = 4;
-    localparam integer RESULT_WORDS = 81920;
+    localparam integer RESULT_WORDS = 98304;
     localparam [31:0] UNWRITTEN = 32'hdead_beef;
 
     reg [31:0] case_mem [0:CASES*CASE_STRIDE-1];
-    reg [31:0] issue_mem [0:111];
-    reg [31:0] expect_mem [0:80895];
-    reg [31:0] meta_mem [0:23];
+    reg [31:0] issue_mem [0:127];
+    reg [31:0] expect_mem [0:91135];
+    reg [31:0] meta_mem [0:25];
     initial begin
         $readmemh("p3_case.hex", case_mem);
         $readmemh("p3_issue.hex", issue_mem);
@@ -61,6 +61,12 @@ module tb_a3_shipped_prefix;
     reg [31:0] cfg_head_weight_base_0 = 0;
     reg [31:0] cfg_head_weight_object_1 = 32'hffff_ffff;
     reg [31:0] cfg_head_weight_base_1 = 0;
+    reg [31:0] cfg_rope_input_object_0 = 32'hffff_ffff;
+    reg [31:0] cfg_rope_input_base_0 = 0;
+    reg [31:0] cfg_rope_input_object_1 = 32'hffff_ffff;
+    reg [31:0] cfg_rope_input_base_1 = 0;
+    reg [31:0] cfg_rope_coefficient_object = 32'hffff_ffff;
+    reg [31:0] cfg_rope_coefficient_base = 0;
     reg [31:0] cfg_output_base = 0;
 
     wire busy, done, complete, trapped;
@@ -78,6 +84,7 @@ module tb_a3_shipped_prefix;
     wire [31:0] real_launch_count, capability_fault_count;
     wire [31:0] dma_gather_launch_count, embedding_launch_count;
     wire [31:0] rms_norm_launch_count, head_rms_norm_launch_count;
+    wire [31:0] rope_launch_count;
     wire [31:0] dma_transfer_launch_count;
     wire [31:0] matmul_launch_count;
     wire [31:0] descriptor_fault_count, engine_fault_count;
@@ -125,6 +132,12 @@ module tb_a3_shipped_prefix;
         .cfg_head_weight_base_0(cfg_head_weight_base_0),
         .cfg_head_weight_object_1(cfg_head_weight_object_1),
         .cfg_head_weight_base_1(cfg_head_weight_base_1),
+        .cfg_rope_input_object_0(cfg_rope_input_object_0),
+        .cfg_rope_input_base_0(cfg_rope_input_base_0),
+        .cfg_rope_input_object_1(cfg_rope_input_object_1),
+        .cfg_rope_input_base_1(cfg_rope_input_base_1),
+        .cfg_rope_coefficient_object(cfg_rope_coefficient_object),
+        .cfg_rope_coefficient_base(cfg_rope_coefficient_base),
         .cfg_output_base(cfg_output_base),
         .busy(busy), .done(done), .complete(complete), .trapped(trapped),
         .trap_class(trap_class),
@@ -150,6 +163,7 @@ module tb_a3_shipped_prefix;
         .embedding_launch_count(embedding_launch_count),
         .rms_norm_launch_count(rms_norm_launch_count),
         .head_rms_norm_launch_count(head_rms_norm_launch_count),
+        .rope_launch_count(rope_launch_count),
         .dma_transfer_launch_count(dma_transfer_launch_count),
         .matmul_launch_count(matmul_launch_count),
         .capability_fault_count(capability_fault_count),
@@ -187,6 +201,8 @@ module tb_a3_shipped_prefix;
     integer total_embeddings = 0;
     integer total_rms_norms = 0;
     integer total_head_rms_norms = 0;
+    integer total_ropes = 0;
+    integer total_rope_words = 0;
     integer total_transfers = 0;
     integer total_matmuls = 0;
     integer total_words = 0;
@@ -248,7 +264,7 @@ module tb_a3_shipped_prefix;
         check_equal("meta result memory", meta_mem[7], RESULT_WORDS);
         check_equal("meta DMA gathers", meta_mem[8], 6);
         check_equal("meta embedding launches", meta_mem[9], 4);
-        check_equal("meta RoPE words", meta_mem[10], 1024);
+        check_equal("meta RoPE coefficient gather words", meta_mem[10], 1024);
         check_equal("meta selected checkpoint bytes", meta_mem[11], 100713472);
         check_equal("meta RMSNorm launches", meta_mem[12], 2);
         check_equal("meta transfer launches", meta_mem[13], 2);
@@ -262,6 +278,8 @@ module tb_a3_shipped_prefix;
         check_equal("meta head RMSNorm words", meta_mem[21], 10240);
         check_equal("meta head RMSNorm checkpoint bytes", meta_mem[22], 1024);
         check_equal("meta all RMSNorm launches", meta_mem[23], 6);
+        check_equal("meta RoPE launches", meta_mem[24], 4);
+        check_equal("meta RoPE output words", meta_mem[25], 10240);
 
         for (case_index = 0; case_index < CASES;
              case_index = case_index + 1) begin
@@ -298,6 +316,12 @@ module tb_a3_shipped_prefix;
             cfg_head_weight_base_0 = record[63];
             cfg_head_weight_object_1 = record[64];
             cfg_head_weight_base_1 = record[65];
+            cfg_rope_input_object_0 = record[71];
+            cfg_rope_input_base_0 = record[72];
+            cfg_rope_input_object_1 = record[73];
+            cfg_rope_input_base_1 = record[74];
+            cfg_rope_coefficient_object = record[75];
+            cfg_rope_coefficient_base = record[76];
             cfg_output_base = record[13];
             response_expected = record[21];
             response_base = record[31];
@@ -345,6 +369,7 @@ module tb_a3_shipped_prefix;
                         record[44]);
             check_equal("head RMSNorm launches", head_rms_norm_launch_count,
                         record[66]);
+            check_equal("RoPE launches", rope_launch_count, record[77]);
             check_equal("DMA transfer launches", dma_transfer_launch_count,
                         record[45]);
             check_equal("MATMUL launches", matmul_launch_count, record[55]);
@@ -390,6 +415,8 @@ module tb_a3_shipped_prefix;
             total_rms_norms = total_rms_norms + rms_norm_launch_count;
             total_head_rms_norms = total_head_rms_norms +
                 head_rms_norm_launch_count;
+            total_ropes = total_ropes + rope_launch_count;
+            total_rope_words = total_rope_words + record[78];
             total_transfers = total_transfers + dma_transfer_launch_count;
             total_matmuls = total_matmuls + matmul_launch_count;
             total_words = total_words + output_write_count;
@@ -410,6 +437,9 @@ module tb_a3_shipped_prefix;
         check_equal("total RMSNorm launches", total_rms_norms, meta_mem[12]);
         check_equal("total head RMSNorm launches", total_head_rms_norms,
                     meta_mem[20]);
+        check_equal("total RoPE launches", total_ropes, meta_mem[24]);
+        check_equal("total RoPE output words", total_rope_words,
+                    meta_mem[25]);
         check_equal("total transfer launches", total_transfers, meta_mem[13]);
         check_equal("total MATMUL launches", total_matmuls, meta_mem[16]);
         check_equal("total result words", total_words, meta_mem[2]);
@@ -428,7 +458,7 @@ module tb_a3_shipped_prefix;
             $display("FAILURES: %0d checks=%0d", failures, checks);
             $fatal(1, "ABI3 shipped-prefix engine integration failed");
         end
-        $display("PASS: ABI3 shipped-prefix engine integration cases=4 launches=24 words=80896 capability_faults=4 checks=%0d", checks);
+        $display("PASS: ABI3 shipped-prefix engine integration cases=4 launches=28 words=91136 capability_faults=4 checks=%0d", checks);
         $finish;
     end
 endmodule

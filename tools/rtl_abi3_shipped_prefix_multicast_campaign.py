@@ -42,13 +42,15 @@ TOOLS_ROOT = Path(
 )
 
 # Retained exact counts from the independent checkers below.
-EXPECTED_VERILATOR_CHECKS = 12_730_002
+EXPECTED_VERILATOR_CHECKS = 12_756_653
 EXPECTED_IVERILOG_CHECKS = 12_587_599
 
 RTL_SOURCES = (
     "rtl/lib/ot_crc_pkg.sv",
     "rtl/ot_fp32_rne_pkg.sv",
     "rtl/ot_fp32_rsqrt_rne.sv",
+    "rtl/ot_ta_command_decoder.sv",
+    "rtl/ot_ta_rope_bf16_sram_engine.sv",
     "rtl/abi3/ot_a3_link_pkg.sv",
     "rtl/abi3/ot_a3_format_pkg.sv",
     "rtl/abi3/ot_a3_engine_pkg.sv",
@@ -71,6 +73,7 @@ RTL_SOURCES = (
     "rtl/abi3/ot_a3_vector_mhc_post.sv",
     "rtl/abi3/ot_a3_engine_array.sv",
     "rtl/abi3/ot_a3_vector_rms_norm.sv",
+    "rtl/abi3/ot_a3_vector_rope.sv",
     "rtl/abi3/ot_a3_engine_issue_bridge.sv",
     "rtl/abi3/ot_a3_communication_decoder.sv",
     "rtl/abi3/ot_a3_link_channel.sv",
@@ -306,6 +309,7 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
     base = base_campaign.load_vectors()
     extension = load_extension(base)
     lane = base_campaign.load_lane_qualification()
+    rope = base_campaign.load_rope_qualification()
     multicast_qualification = load_multicast_qualification(extension)
 
     resolved = {
@@ -446,7 +450,7 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
         "evidence_class": "frozen_identity_public_open_tool_rtl_simulation",
         "evidence_mode": (
             "four_case_verilator_plus_deepseek_rom_icarus_correlation_plus_"
-            "retained_multicast_and_mac_lane_qualification"
+            "retained_multicast_mac_lane_and_rope_qualification"
         ),
         "abi": {"major": 3, "minor": 0},
         "promotion_status": extension["promotion_status"],
@@ -458,7 +462,7 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
                 "every non-root destination observes the exact binomial-tree parent relation",
                 "one injected CRC error causes bounded packet replay and exact final replication under deterministic source and destination backpressure",
                 "the normalized DeepSeek ROM case record agrees between Icarus and pinned Verilator",
-                "the full four-case replay preserves all 80,896 prior compact result words and every other precise unsupported boundary",
+                "the full four-case replay preserves all 91,136 prior compact result words, including 10,240 exact Qwen RoPE codes, and every other precise unsupported boundary",
             ],
             "does_not_establish": extension["does_not_establish"],
             "host_wall_time_is_verification_cost_only": True,
@@ -474,13 +478,14 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
         },
         "staged_matmul_weight": staged_matmul_weight,
         "compositional_mac_lane_qualification": lane,
+        "compositional_rope_qualification": rope,
         "compositional_multicast_qualification": multicast_qualification,
         "expected_cases": expected_cases,
         "case_count": 4,
-        "real_launch_count": 25,
+        "real_launch_count": 29,
         "multicast_launch_count": 1,
-        "result_word_count": 80_896,
-        "resolved_view_count": 88,
+        "result_word_count": 91_136,
+        "resolved_view_count": 100,
         "capability_fault_count": 4,
         "next_unsupported": extension["exact_multicast"]["next_unsupported"],
         "integrated_replay_passed": passed,

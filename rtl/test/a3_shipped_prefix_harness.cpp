@@ -16,9 +16,9 @@
 namespace {
 
 constexpr std::size_t kCases = 4;
-constexpr std::size_t kCaseStride = 72;
+constexpr std::size_t kCaseStride = 80;
 constexpr std::size_t kIssueStride = 4;
-constexpr std::size_t kResultWords = 81920;
+constexpr std::size_t kResultWords = 98304;
 constexpr std::size_t kMulticastParticipants = 256;
 constexpr std::uint32_t kMulticastWords = 16384;
 constexpr std::uint32_t kMulticastWrites = 4194304;
@@ -107,6 +107,12 @@ struct Model {
         dut.cfg_head_weight_base_0 = 0;
         dut.cfg_head_weight_object_1 = UINT32_MAX;
         dut.cfg_head_weight_base_1 = 0;
+        dut.cfg_rope_input_object_0 = UINT32_MAX;
+        dut.cfg_rope_input_base_0 = 0;
+        dut.cfg_rope_input_object_1 = UINT32_MAX;
+        dut.cfg_rope_input_base_1 = 0;
+        dut.cfg_rope_coefficient_object = UINT32_MAX;
+        dut.cfg_rope_coefficient_base = 0;
         dut.cfg_output_base = 0;
         dut.result_read_addr = 0;
         dut.eval();
@@ -141,12 +147,12 @@ int main(int argc, char** argv) {
         const auto issues = read_hex("p3_issue.hex");
         const auto expected = read_hex("p3_expect.hex");
         const auto meta = read_hex("p3_meta.hex");
-        const bool multicast_overlay = meta.size() == 24 && meta[1] == 25;
+        const bool multicast_overlay = meta.size() == 26 && meta[1] == 29;
         const std::size_t expected_issue_words =
-            multicast_overlay ? 116 : 112;
+            multicast_overlay ? 132 : 128;
         if (cases.size() != kCases * kCaseStride ||
             issues.size() != expected_issue_words ||
-            expected.size() != 80896 || meta.size() != 24)
+            expected.size() != 91136 || meta.size() != 26)
             throw std::runtime_error("shipped-prefix vector geometry mismatch");
 
         Checker check;
@@ -157,7 +163,7 @@ int main(int argc, char** argv) {
         check.equal("meta result memory", meta[7], kResultWords);
         check.equal("meta DMA gathers", meta[8], 6);
         check.equal("meta embedding launches", meta[9], 4);
-        check.equal("meta RoPE words", meta[10], 1024);
+        check.equal("meta RoPE coefficient gather words", meta[10], 1024);
         check.equal("meta selected checkpoint bytes", meta[11], 100713472);
         check.equal("meta RMSNorm launches", meta[12], 2);
         check.equal("meta transfer launches", meta[13], 2);
@@ -171,6 +177,8 @@ int main(int argc, char** argv) {
         check.equal("meta head RMSNorm words", meta[21], 10240);
         check.equal("meta head RMSNorm checkpoint bytes", meta[22], 1024);
         check.equal("meta all RMSNorm launches", meta[23], 6);
+        check.equal("meta RoPE launches", meta[24], 4);
+        check.equal("meta RoPE output words", meta[25], 10240);
 
         std::uint64_t total_responses = 0;
         std::uint64_t total_launches = 0;
@@ -178,6 +186,7 @@ int main(int argc, char** argv) {
         std::uint64_t total_embeddings = 0;
         std::uint64_t total_rms_norms = 0;
         std::uint64_t total_head_rms_norms = 0;
+        std::uint64_t total_ropes = 0;
         std::uint64_t total_transfers = 0;
         std::uint64_t total_matmuls = 0;
         std::uint64_t total_multicasts = 0;
@@ -219,6 +228,12 @@ int main(int argc, char** argv) {
             model.dut.cfg_head_weight_base_0 = record[63];
             model.dut.cfg_head_weight_object_1 = record[64];
             model.dut.cfg_head_weight_base_1 = record[65];
+            model.dut.cfg_rope_input_object_0 = record[71];
+            model.dut.cfg_rope_input_base_0 = record[72];
+            model.dut.cfg_rope_input_object_1 = record[73];
+            model.dut.cfg_rope_input_base_1 = record[74];
+            model.dut.cfg_rope_coefficient_object = record[75];
+            model.dut.cfg_rope_coefficient_base = record[76];
             model.dut.cfg_output_base = record[13];
 
             model.dut.result_read_addr = record[13];
@@ -338,13 +353,15 @@ int main(int argc, char** argv) {
                         record[44]);
             check.equal("head RMSNorm launches",
                         model.dut.head_rms_norm_launch_count, record[66]);
+            check.equal("RoPE launches", model.dut.rope_launch_count,
+                        record[77]);
             check.equal("DMA transfer launches",
                         model.dut.dma_transfer_launch_count, record[45]);
             check.equal("MATMUL launches", model.dut.matmul_launch_count,
                         record[55]);
             if (multicast_overlay) {
                 check.equal("multicast launches",
-                            model.dut.multicast_launch_count, record[71]);
+                            model.dut.multicast_launch_count, record[79]);
                 check.equal("multicast faults",
                             model.dut.multicast_fault_count, 0);
             }
@@ -399,7 +416,7 @@ int main(int argc, char** argv) {
                             model.dut.multicast_writes_after_completion, 0);
             }
 
-            if (multicast_overlay && record[71] != 0) {
+            if (multicast_overlay && record[79] != 0) {
                 check.equal("multicast source reads",
                             model.dut.multicast_source_read_count,
                             kMulticastWords);
@@ -465,6 +482,7 @@ int main(int argc, char** argv) {
             total_embeddings += model.dut.embedding_launch_count;
             total_rms_norms += model.dut.rms_norm_launch_count;
             total_head_rms_norms += model.dut.head_rms_norm_launch_count;
+            total_ropes += model.dut.rope_launch_count;
             total_transfers += model.dut.dma_transfer_launch_count;
             total_matmuls += model.dut.matmul_launch_count;
             total_multicasts += model.dut.multicast_launch_count;
@@ -493,6 +511,7 @@ int main(int argc, char** argv) {
         check.equal("total RMSNorm launches", total_rms_norms, meta[12]);
         check.equal("total head RMSNorm launches", total_head_rms_norms,
                     meta[20]);
+        check.equal("total RoPE launches", total_ropes, meta[24]);
         check.equal("total transfer launches", total_transfers, meta[13]);
         check.equal("total MATMUL launches", total_matmuls, meta[16]);
         if (multicast_overlay)
@@ -521,13 +540,13 @@ int main(int argc, char** argv) {
         if (multicast_overlay)
             std::cout
                 << "PASS: ABI3 shipped-prefix multicast integration cases=4 "
-                   "launches=25 words=80896 capability_faults=4 multicasts=1 "
+                   "launches=29 words=91136 capability_faults=4 multicasts=1 "
                    "checks="
                 << check.checks << "\n";
         else
             std::cout
                 << "PASS: ABI3 shipped-prefix engine integration cases=4 "
-                   "launches=24 words=80896 capability_faults=4 checks="
+                   "launches=28 words=91136 capability_faults=4 checks="
                 << check.checks << "\n";
         return 0;
     } catch (const std::exception& exc) {

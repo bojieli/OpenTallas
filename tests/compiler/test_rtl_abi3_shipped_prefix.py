@@ -48,14 +48,16 @@ def test_witness_is_exactly_the_small_abi3_fail_stop_prefix() -> None:
     assert vectors["abi"] == {"major": 3, "minor": 0}
     assert vectors["state_compat"] == 0
     assert vectors["case_count"] == 4
-    assert vectors["real_engine_launch_count"] == 24
+    assert vectors["real_engine_launch_count"] == 28
     assert vectors["dma_gather_launch_count"] == 6
     assert vectors["embedding_launch_count"] == 4
     assert vectors["rms_norm_launch_count"] == 2
     assert vectors["head_rms_norm_launch_count"] == 4
+    assert vectors["rope_launch_count"] == 4
     assert vectors["dma_transfer_launch_count"] == 2
     assert vectors["matmul_launch_count"] == 6
-    assert vectors["rope_result_word_count"] == 1_024
+    assert vectors["rope_coefficient_gather_result_word_count"] == 1_024
+    assert vectors["rope_result_word_count"] == 10_240
     assert vectors["embedding_result_word_count"] == 16_384
     assert vectors["rms_norm_result_word_count"] == 8_192
     assert vectors["head_rms_norm_result_word_count"] == 10_240
@@ -67,8 +69,8 @@ def test_witness_is_exactly_the_small_abi3_fail_stop_prefix() -> None:
     assert vectors["selected_head_rms_checkpoint_byte_count"] == 1_024
     assert vectors["selected_matmul_checkpoint_byte_count"] == 100_663_296
     assert vectors["selected_checkpoint_byte_count"] == 100_713_472
-    assert vectors["result_word_count"] == 80_896
-    assert vectors["resolved_view_count"] == 82
+    assert vectors["result_word_count"] == 91_136
+    assert vectors["resolved_view_count"] == 94
     assert vectors["capability_fault_count"] == 4
     assert [case["name"] for case in vectors["cases"]] == [
         "qwen3-8b-rom-single-chip/decode",
@@ -78,19 +80,19 @@ def test_witness_is_exactly_the_small_abi3_fail_stop_prefix() -> None:
     ]
     assert [case["first_unsupported"] for case in vectors["cases"]] == [
         {
-            "pc": 26,
-            "family": 48,
-            "sub": 2,
-            "opcode": "VECTOR.ROPE",
-            "descriptor_id": 98,
+            "pc": 32,
+            "family": 16,
+            "sub": 3,
+            "opcode": "DMA.SCATTER",
+            "descriptor_id": 114,
             "trap_class": 4,
         },
         {
-            "pc": 26,
-            "family": 48,
-            "sub": 2,
-            "opcode": "VECTOR.ROPE",
-            "descriptor_id": 101,
+            "pc": 32,
+            "family": 16,
+            "sub": 3,
+            "opcode": "DMA.SCATTER",
+            "descriptor_id": 114,
             "trap_class": 4,
         },
         {
@@ -119,7 +121,7 @@ def test_witness_is_exactly_the_small_abi3_fail_stop_prefix() -> None:
             50_348_544 if case_index < 2 else 8_192
         )
         assert case["expected"]["wait_events"] == (
-            7 if case_index < 2 else (1 if case_index == 2 else 2)
+            9 if case_index < 2 else (1 if case_index == 2 else 2)
         )
         assert case["expected"]["retired"] + 1 == case["expected"]["fetched"]
 
@@ -158,6 +160,9 @@ def test_witness_is_exactly_the_small_abi3_fail_stop_prefix() -> None:
             gain = rms_norm["weight_source"]
             assert case["expected"]["rms_norm_launches"] == 1
             assert case["expected"]["head_rms_norm_launches"] == 2
+            assert case["expected"]["rope_launches"] == 2
+            assert case["expected"]["rope_coefficient_gather_result_words"] == 256
+            assert case["expected"]["rope_result_words"] == 5_120
             assert case["expected"]["dma_transfer_launches"] == 0
             assert rms_norm["input_source"] == "prior_embedding_result_bank"
             assert rms_norm["contract_sha256"] == (
@@ -266,7 +271,77 @@ def test_witness_is_exactly_the_small_abi3_fail_stop_prefix() -> None:
             assert [
                 mapping["base_words"]
                 for mapping in case["bank_mapping"]["head_input_objects"]
-            ] == ([8_448, 12_544] if case_index == 0 else [28_160, 32_256])
+            ] == ([8_448, 12_544] if case_index == 0 else [33_280, 37_376])
+            ropes = [
+                operation
+                for operation in case["supported_prefix"]
+                if operation["kind"] == "vector_rope"
+            ]
+            assert [operation["pc"] for operation in ropes] == [26, 29]
+            assert [operation["descriptor_id"] for operation in ropes] == (
+                [98, 106] if case_index == 0 else [101, 107]
+            )
+            assert [operation["operator_aux_id_0"] for operation in ropes] == (
+                [128, 128] if case_index == 0 else [256, 256]
+            )
+            assert [
+                (operation["row_count"], operation["row_width"]) for operation in ropes
+            ] == [(32, 128), (8, 128)]
+            assert [operation["expected_payload_sha256"] for operation in ropes] == [
+                "f36db31b14aa59e0b0c7bc444403a7991063c3a0e874dcee151b7428b0ee8150",
+                "b41de05c0a7f1f495ded2295c22781f4aa345136d2c572248469c422f266c406",
+            ]
+            assert [operation["input_source"] for operation in ropes] == [
+                "prior_query_head_rms_norm_result_bank",
+                "prior_key_head_rms_norm_result_bank",
+            ]
+            assert [operation["multiplication_count"] for operation in ropes] == [
+                8_192,
+                2_048,
+            ]
+            assert [operation["addition_count"] for operation in ropes] == [
+                4_096,
+                1_024,
+            ]
+            for rope in ropes:
+                assert rope["contract_sha256"] == (
+                    "34ad155c76b1ab1ee5efb8463a85753eaebd08e169ee93c07ba364759f1836cf"
+                )
+                assert rope["coefficient_source"] == (
+                    "prior_fp32_generated_row_dma_gather_result_bank"
+                )
+                assert rope["coefficient_fp32_payload_sha256"] == (
+                    "d5c65f780aa8e9d6618ffc6dc5e82df124968be09bc0e407df16070cb7cbae21"
+                )
+                assert rope["coefficient_bf16_payload_sha256"] == (
+                    "836c0e4d9ba8556db28ac7d300914b4cb42d15418e59c6550a693558252049f1"
+                )
+                assert rope["coefficient_narrow_saturated_element_count"] == 0
+                assert rope["multiplication_saturated_element_count"] == 0
+                assert rope["addition_saturated_element_count"] == 0
+                assert rope["oracle_agreement"] == (
+                    "optimized_numpy_equals_independent_scalar_all_elements"
+                )
+                assert rope["input_view"]["dims"] == rope["output_view"]["dims"]
+                assert rope["input_view"]["strides"] == rope["output_view"]["strides"]
+                assert rope["coefficient_view"]["dims"] == [
+                    1,
+                    rope["row_count"],
+                    256,
+                ]
+                assert rope["coefficient_view"]["strides"] == [256, 0, 1]
+            assert [
+                mapping["object_id"]
+                for mapping in case["bank_mapping"]["rope_input_objects"]
+            ] == [operation["input_view"]["object_id"] for operation in ropes]
+            assert [
+                mapping["base_words"]
+                for mapping in case["bank_mapping"]["rope_input_objects"]
+            ] == ([14_592, 18_688] if case_index == 0 else [39_424, 43_520])
+            assert case["bank_mapping"]["rope_coefficient_object"] == {
+                "object_id": ropes[0]["coefficient_view"]["object_id"],
+                "base_words": 0 if case_index == 0 else 24_832,
+            }
         else:
             transfer = next(
                 operation
@@ -275,6 +350,8 @@ def test_witness_is_exactly_the_small_abi3_fail_stop_prefix() -> None:
             )
             assert case["expected"]["rms_norm_launches"] == 0
             assert case["expected"]["head_rms_norm_launches"] == 0
+            assert case["expected"]["rope_launches"] == 0
+            assert case["expected"]["rope_result_words"] == 0
             assert case["expected"]["dma_transfer_launches"] == 1
             assert transfer["contract_sha256"] == (
                 "4ae1e59ac03a9c23abf11fe7e8193a6496e2dd4169e9369260202d2a7a0f1894"
@@ -310,7 +387,7 @@ def test_retained_campaign_is_current_and_states_the_simple_boundary() -> None:
     assert retained["status"] == "pass"
     assert retained["evidence_class"] == ("public_open_tool_rtl_simulation_composite")
     assert retained["evidence_mode"] == (
-        "full_integrated_verilator_plus_dual_simulator_mac_lane_composition"
+        "full_integrated_verilator_plus_dual_simulator_mac_lane_and_rope_composition"
     )
     assert retained["abi"] == {"major": 3, "minor": 0}
     assert retained["state_compat"] == 0
@@ -354,6 +431,27 @@ def test_retained_campaign_is_current_and_states_the_simple_boundary() -> None:
     )
     assert lane["qualification_contract"] == ("bf16_bf16_fp32_sequential_rne_v1")
     assert "not the full shipped program" in lane["composition_boundary"]
+    rope_qualification = retained["compositional_rope_qualification"]
+    assert rope_qualification["artifact"] == (
+        "results/tensor_accelerator/qwen3_rtl_rope_campaign.json"
+    )
+    assert rope_qualification["artifact_sha256"] == campaign.sha256_file(
+        campaign.ROPE_CAMPAIGN
+    )
+    assert rope_qualification["status"] == "pass"
+    assert rope_qualification["simulators_counted"] == ["iverilog", "verilator"]
+    assert rope_qualification["qualified_positions"] == [0, 7_999]
+    assert rope_qualification["qualified_element_count_per_position"] == 5_120
+    assert rope_qualification["qualified_multiplication_count_per_position"] == (10_240)
+    assert rope_qualification["qualified_addition_count_per_position"] == 5_120
+    assert rope_qualification["core_source"] == ("rtl/ot_ta_rope_bf16_sram_engine.sv")
+    assert rope_qualification["core_source_sha256"] == campaign.sha256_file(
+        ROOT / rope_qualification["core_source"]
+    )
+    assert rope_qualification["qualification_contract"] == ("qwen3_rope_fp32_bf16_v1")
+    assert (
+        "inactive side is internal zero" in rope_qualification["composition_boundary"]
+    )
     assert any(
         "complete integrated shipped-prefix execution under Icarus" in item
         for item in retained["scope"]["does_not_establish"]
@@ -362,16 +460,16 @@ def test_retained_campaign_is_current_and_states_the_simple_boundary() -> None:
         "output-token correctness" in item and "correctness-qualified TPOT" in item
         for item in retained["scope"]["does_not_establish"]
     )
-    assert [site["pc"] for site in retained["fault_sites"]] == [26, 26, 13, 14]
+    assert [site["pc"] for site in retained["fault_sites"]] == [32, 32, 13, 14]
     assert [site["descriptor_id"] for site in retained["fault_sites"]] == [
-        98,
-        101,
+        114,
+        114,
         368,
         546,
     ]
     assert [site["opcode"] for site in retained["fault_sites"]] == [
-        "VECTOR.ROPE",
-        "VECTOR.ROPE",
+        "DMA.SCATTER",
+        "DMA.SCATTER",
         "LINK.MULTICAST",
         "VECTOR.MHC",
     ]
@@ -379,11 +477,14 @@ def test_retained_campaign_is_current_and_states_the_simple_boundary() -> None:
     assert retained["embedding_launch_count"] == 4
     assert retained["rms_norm_launch_count"] == 2
     assert retained["head_rms_norm_launch_count"] == 4
+    assert retained["rope_launch_count"] == 4
     assert retained["dma_transfer_launch_count"] == 2
     assert retained["matmul_launch_count"] == 6
-    assert retained["real_engine_launch_count"] == 24
-    assert retained["result_word_count"] == 80_896
-    assert retained["resolved_view_count"] == 82
+    assert retained["real_engine_launch_count"] == 28
+    assert retained["result_word_count"] == 91_136
+    assert retained["resolved_view_count"] == 94
+    assert retained["rope_coefficient_gather_result_word_count"] == 1_024
+    assert retained["rope_result_word_count"] == 10_240
     assert retained["head_rms_norm_result_word_count"] == 10_240
     assert retained["matmul_result_word_count"] == 12_288
     assert retained["matmul_mac_count"] == 50_331_648
@@ -437,6 +538,42 @@ def test_retained_campaign_is_current_and_states_the_simple_boundary() -> None:
             assert head_gain["inverse_rms_payload_sha256"] == (
                 "b088f0e2a9c0cb618be3df9e9752be637198b2eb8e1a457fa7862a12691f1d71"
             )
+    assert len(retained["rope_operations"]) == 4
+    assert [operation["operator_pc"] for operation in retained["rope_operations"]] == [
+        26,
+        29,
+        26,
+        29,
+    ]
+    assert [
+        operation["operator_descriptor_id"] for operation in retained["rope_operations"]
+    ] == [98, 106, 101, 107]
+    assert [
+        (operation["row_count"], operation["row_width"])
+        for operation in retained["rope_operations"]
+    ] == [(32, 128), (8, 128), (32, 128), (8, 128)]
+    assert [
+        operation["operator_aux_id_0"] for operation in retained["rope_operations"]
+    ] == [128, 128, 256, 256]
+    assert [
+        operation["expected_payload_sha256"]
+        for operation in retained["rope_operations"]
+    ] == [
+        "f36db31b14aa59e0b0c7bc444403a7991063c3a0e874dcee151b7428b0ee8150",
+        "b41de05c0a7f1f495ded2295c22781f4aa345136d2c572248469c422f266c406",
+        "f36db31b14aa59e0b0c7bc444403a7991063c3a0e874dcee151b7428b0ee8150",
+        "b41de05c0a7f1f495ded2295c22781f4aa345136d2c572248469c422f266c406",
+    ]
+    assert all(
+        operation["numeric_contract_sha256"]
+        == "34ad155c76b1ab1ee5efb8463a85753eaebd08e169ee93c07ba364759f1836cf"
+        and operation["coefficient_bf16_payload_sha256"]
+        == "836c0e4d9ba8556db28ac7d300914b4cb42d15418e59c6550a693558252049f1"
+        and operation["coefficient_narrow_saturated_element_count"] == 0
+        and operation["oracle_agreement"]
+        == "optimized_numpy_equals_independent_scalar_all_elements"
+        for operation in retained["rope_operations"]
+    )
     assert len(retained["checkpoint_matrices"]) == 6
     for matrix in retained["checkpoint_matrices"]:
         assert matrix["operator_pc"] in {11, 14, 17}
@@ -513,7 +650,7 @@ def test_campaign_refuses_to_overwrite_an_existing_artifact(
     not TOOLS_AVAILABLE,
     reason="Verilator and a C++ compiler are required",
 )
-def test_focused_campaign_replays_verilator_and_binds_mac_lane(
+def test_focused_campaign_replays_verilator_and_binds_mac_lane_and_rope(
     tmp_path: Path,
 ) -> None:
     summary = campaign.run(tmp_path / "build")
@@ -528,6 +665,10 @@ def test_focused_campaign_replays_verilator_and_binds_mac_lane(
     assert summary["compositional_mac_lane_qualification"]["simulators_counted"] == [
         "iverilog_vvp",
         "verilator_cpp_executable",
+    ]
+    assert summary["compositional_rope_qualification"]["simulators_counted"] == [
+        "iverilog",
+        "verilator",
     ]
     assert summary["post_fault_write_count"] == 0
     assert [case["name"] for case in summary["cases"]] == ["verilator"]

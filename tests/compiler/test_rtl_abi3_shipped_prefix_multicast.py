@@ -46,14 +46,14 @@ def test_overlay_preserves_frozen_identity_and_advances_only_rom() -> None:
     assert "32992-byte IR kernel" in body["promotion_blocker"]
     assert "33234 bytes" in body["promotion_blocker"]
     assert body["base_vector_set"]["sha256"] == (
-        "014f8cd85f7547f8ef5756c8a0c57321c582f31cd2e27fb58ce62fe5da124942"
+        "0d6dd391947fa698f8840f15d7761e2ae5b3a3102940860fae9f49de3a6bff1f"
     )
-    assert body["real_launch_count"] == 25
+    assert body["real_launch_count"] == 29
     assert body["multicast_launch_count"] == 1
-    assert body["result_word_count"] == 80_896
-    assert body["resolved_view_count"] == 88
+    assert body["result_word_count"] == 91_136
+    assert body["resolved_view_count"] == 100
     assert body["capability_fault_count"] == 4
-    assert body["issue_count"] == 29
+    assert body["issue_count"] == 33
     assert body["exact_multicast"]["next_unsupported"] == {
         "pc": 15,
         "family": 48,
@@ -63,11 +63,11 @@ def test_overlay_preserves_frozen_identity_and_advances_only_rom() -> None:
         "trap_class": 4,
     }
     expected = body["expected_cases"]
-    assert [case["launches"] for case in expected] == [8, 8, 5, 4]
+    assert [case["launches"] for case in expected] == [10, 10, 5, 4]
     assert [case["multicast_launches"] for case in expected] == [0, 0, 1, 0]
-    assert [case["fault"] for case in expected] == [26, 26, 15, 14]
-    assert [case["responses"] for case in expected] == [9, 9, 6, 5]
-    assert [case["views"] for case in expected] == [27, 27, 17, 17]
+    assert [case["fault"] for case in expected] == [32, 32, 15, 14]
+    assert [case["responses"] for case in expected] == [11, 11, 6, 5]
+    assert [case["views"] for case in expected] == [33, 33, 17, 17]
     assert all(
         "decoded-token correctness" in body["does_not_establish"][1] for _ in [0]
     )
@@ -135,16 +135,21 @@ def test_retained_campaign_is_current_and_non_promotable() -> None:
     assert (
         retained["next_unsupported"] == vectors()["exact_multicast"]["next_unsupported"]
     )
-    assert retained["real_launch_count"] == 25
+    assert retained["real_launch_count"] == 29
     assert retained["multicast_launch_count"] == 1
-    assert retained["result_word_count"] == 80_896
-    assert retained["resolved_view_count"] == 88
+    assert retained["result_word_count"] == 91_136
+    assert retained["resolved_view_count"] == 100
     assert retained["scope"]["architectural_tpot_claim"] is False
     assert retained["scope"]["decoded_token_correctness_claim"] is False
     assert (
         retained["compositional_multicast_qualification"]["checks_per_simulator"]
         == 12_583_553
     )
+    assert retained["compositional_rope_qualification"]["status"] == "pass"
+    assert retained["compositional_rope_qualification"]["qualified_positions"] == [
+        0,
+        7_999,
+    ]
     for path, record in retained["source"].items():
         source = ROOT / path
         assert source.stat().st_size == record["bytes"]

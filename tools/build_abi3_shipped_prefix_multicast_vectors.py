@@ -33,7 +33,7 @@ OUTPUT_DIR = ROOT / "testdata/compiler/abi3_shipped_prefix_multicast"
 SCHEMA = "opentallas.rtl.abi3_shipped_prefix_multicast_vectors.v1"
 BASE_SCHEMA = "opentallas.rtl.abi3_shipped_prefix_vectors.v1"
 MULTICAST_SCHEMA = "opentallas.rtl.a3_wafer_multicast_vectors.v1"
-CASE_STRIDE = 72
+CASE_STRIDE = 80
 ISSUE_STRIDE = 4
 CASE_COUNT = 4
 DEEPSEEK_ROM_CASE = 2
@@ -108,7 +108,7 @@ def normalized_case(index: int, name: str, words: list[int]) -> dict[str, int | 
         "retired": words[20],
         "issued": words[21],
         "views": words[24],
-        "multicast_launches": words[71],
+        "multicast_launches": words[79],
     }
 
 
@@ -124,8 +124,13 @@ def build(output: Path = OUTPUT_DIR) -> dict[str, Any]:
     base_meta = read_hex(BASE_DIR / "p3_meta.hex")
     if (
         len(base_case) != CASE_COUNT * CASE_STRIDE
-        or len(base_issue) != 112
-        or len(base_meta) != 24
+        or len(base_issue) != 128
+        or len(base_meta) != 26
+        or base.get("real_engine_launch_count") != 28
+        or base.get("result_word_count") != 91_136
+        or base.get("resolved_view_count") != 94
+        or base.get("rope_launch_count") != 4
+        or base.get("rope_result_word_count") != 10_240
     ):
         raise SystemExit("the frozen shipped-prefix base geometry changed")
 
@@ -209,22 +214,22 @@ def build(output: Path = OUTPUT_DIR) -> dict[str, Any]:
     rom[24] = 17  # 11 prior plus six MHC views
     rom[29] = 1  # one capability response
     rom[35] = 2  # transfer wait plus MHC wait
-    rom[71] = 1  # reserved base word: exact multicast launches
+    rom[79] = 1  # reserved base word: exact multicast launches
     for index, record in enumerate(cases):
         if index != DEEPSEEK_ROM_CASE:
-            record[71] = 0
+            record[79] = 0
 
     issue_words: list[int] = []
     for record, stream in zip(cases, streams, strict=True):
         record[31] = len(issue_words) // ISSUE_STRIDE
         issue_words.extend(stream)
-    if len(issue_words) != 116:
-        raise SystemExit("extended issue stream does not contain 29 responses")
+    if len(issue_words) != 132:
+        raise SystemExit("extended issue stream does not contain 33 responses")
 
     case_words = [word for record in cases for word in record]
     meta_words = copy.copy(base_meta)
-    meta_words[1] = 25  # real launches
-    meta_words[3] = 88  # resolved views
+    meta_words[1] = 29  # 28 base launches plus exact multicast
+    meta_words[3] = 100  # 94 base views plus six MHC views
 
     payload = [payload_word(index) for index in range(SOURCE_WORDS)]
     files = {
@@ -247,7 +252,7 @@ def build(output: Path = OUTPUT_DIR) -> dict[str, Any]:
 
     marker = (
         "PASS: ABI3 shipped-prefix multicast integration "
-        "cases=4 launches=25 words=80896 capability_faults=4 multicasts=1"
+        "cases=4 launches=29 words=91136 capability_faults=4 multicasts=1"
     )
     normalized = [
         normalized_case(index, base["cases"][index]["name"], record)
@@ -298,10 +303,10 @@ def build(output: Path = OUTPUT_DIR) -> dict[str, Any]:
         "case_stride": CASE_STRIDE,
         "issue_stride": ISSUE_STRIDE,
         "issue_count": len(issue_words) // ISSUE_STRIDE,
-        "real_launch_count": 25,
+        "real_launch_count": 29,
         "multicast_launch_count": 1,
         "result_word_count": base["result_word_count"],
-        "resolved_view_count": 88,
+        "resolved_view_count": 100,
         "capability_fault_count": 4,
         "required_marker": marker,
         "exact_multicast": {
