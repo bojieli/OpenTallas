@@ -539,15 +539,19 @@ class TracingDevice(Device):
         if view_id == NO_ID:
             return
         try:
-            view = self.views.resolve(view_id, ctx.loops, ctx.symbols)
+            view = ctx.views.resolve(view_id, ctx.loops, ctx.symbols)
         except Exception:
             return
         step.operand_dims[name] = tuple(int(d) for d in view.dims)
         step.operand_objects[name] = int(view.object_id)
 
-    def _evaluate_predicate(self, descriptor, loops, symbols):  # type: ignore[override]
+    def _evaluate_predicate(  # type: ignore[override]
+        self, descriptor, loops, symbols, node_memories
+    ):
         step = self._new_step("PREDICATE", descriptor_id=descriptor.descriptor_id)
-        taken = super()._evaluate_predicate(descriptor, loops, symbols)
+        taken = super()._evaluate_predicate(
+            descriptor, loops, symbols, node_memories
+        )
         step.predicate_taken = bool(taken)
         return taken
 
@@ -609,7 +613,12 @@ class TracingDevice(Device):
             step.counter_delta = _delta(before, ctx.counters.snapshot())
             step.accesses = self._recorder.end()
 
-    def _apply_commit(self, commit: PendingCommit, counters: CounterSet) -> None:  # type: ignore[override]
+    def _apply_commit(  # type: ignore[override]
+        self,
+        commit: PendingCommit,
+        counters: CounterSet,
+        node_memories,
+    ) -> None:
         before = counters.snapshot()
         resource = commit.resource
         row_bytes = resource.row_bytes
@@ -629,7 +638,7 @@ class TracingDevice(Device):
         )
         self._recorder.begin()
         try:
-            super()._apply_commit(commit, counters)
+            super()._apply_commit(commit, counters, node_memories)
         finally:
             for source_slot, destination_slot, count in runs:
                 nbytes = count * row_bytes

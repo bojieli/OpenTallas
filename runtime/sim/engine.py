@@ -98,6 +98,13 @@ class EngineContext:
     reads it: every other engine sees exactly one node's memory, which is what
     makes an inter-node transfer expressible only as a LINK instruction.
     """
+    node_views: tuple[ViewResolver, ...] = ()
+    """Resolvers paired one-for-one with :attr:`node_memories`.
+
+    A batched session owns private writable node arenas, so an engine issue
+    must not fall back to the activated device's legacy resolver.  Carrying the
+    pair in the context makes the session address-space binding explicit.
+    """
 
     # -- node access ------------------------------------------------------
     @property

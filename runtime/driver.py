@@ -391,9 +391,11 @@ class GenerationDriver:
         return NO_ID
 
     # -- input staging ----------------------------------------------------
-    def _write_input_tokens(self, token_ids: Sequence[int], offset: int) -> None:
+    def _write_input_tokens(
+        self, session: Session, token_ids: Sequence[int], offset: int
+    ) -> None:
         """Write prompt token IDs into the authenticated input window."""
-        obj = self.device.host_object(self.input_object_id)
+        obj = self.device.host_object(self.input_object_id, session=session)
         payload = np.asarray(token_ids, dtype=np.uint32).tobytes()
         byte_offset = offset * 4
         if byte_offset + len(payload) > obj.size_bytes:
@@ -410,7 +412,9 @@ class GenerationDriver:
         # Every node of the cluster reads the request out of its own input
         # window, so the window is staged on every node.  On a single chip this
         # is the one write it always was.
-        self.device.host_write(self.input_object_id, byte_offset, payload)
+        self.device.host_write(
+            self.input_object_id, byte_offset, payload, session=session
+        )
 
     # -- generation -------------------------------------------------------
     def generate(
@@ -450,7 +454,7 @@ class GenerationDriver:
         )
         session = session or self.device.create_session()
         prompt = tuple(int(t) for t in prompt_token_ids)
-        self._write_input_tokens(prompt, 0)
+        self._write_input_tokens(session, prompt, 0)
 
         per_step: list[dict[str, Any]] = []
         generated: list[int] = []
@@ -603,7 +607,7 @@ class GenerationDriver:
             # its absolute position instead left the device re-reading the
             # first prompt token every step, which showed up as the generation
             # repeating itself after the first decode.
-            self._write_input_tokens([generated[-1]], 0)
+            self._write_input_tokens(session, [generated[-1]], 0)
             symbols = {
                 **self.deployment_symbols,
                 int(Symbol.SPAN_TOKENS): 1,

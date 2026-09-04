@@ -110,6 +110,12 @@ class Session:
     generated: list[int] = dc_field(default_factory=list)
     finished: bool = False
     eos_reason: int = EosReason.NONE
+    node_memories: tuple[DeviceMemory, ...] = dc_field(
+        default_factory=tuple, repr=False
+    )
+    node_views: tuple[ViewResolver, ...] = dc_field(default_factory=tuple, repr=False)
+    isolated_memory: bool = False
+    batch_execution_id: str | None = dc_field(default=None, repr=False)
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -203,9 +209,7 @@ class TransactionResult:
 # ---------------------------------------------------------------------------
 # Device
 # ---------------------------------------------------------------------------
-def loop_trip_count(
-    payload: Mapping[str, Any], symbols: Mapping[int, int]
-) -> int:
+def loop_trip_count(payload: Mapping[str, Any], symbols: Mapping[int, int]) -> int:
     """How many times a loop descriptor runs, given its symbol bindings.
 
     A symbol-bounded loop's induction variable counts *blocks*: the symbol is
@@ -382,10 +386,26 @@ class Device:
             ExtendedDescriptorType.ENTRYPOINT_TABLE,
         )
         assert descriptor.raw_payload is not None
-        return {e["entrypoint_id"]: e for e in decode_entrypoint_table(descriptor.raw_payload)}
+        return {
+            e["entrypoint_id"]: e
+            for e in decode_entrypoint_table(descriptor.raw_payload)
+        }
 
-    def create_session(self) -> Session:
-        session = Session(session_id=self._next_session)
+    def _register_session(
+        self,
+        *,
+        node_memories: tuple[DeviceMemory, ...] = (),
+        node_views: tuple[ViewResolver, ...] = (),
+        isolated_memory: bool = False,
+    ) -> Session:
+        """Create session metadata against an already selected address space."""
+
+        session = Session(
+            session_id=self._next_session,
+            node_memories=node_memories,
+            node_views=node_views,
+            isolated_memory=isolated_memory,
+        )
         self._next_session += 1
         for did in self.deployment.table.ids_of_type(ExtendedDescriptorType.STATE):
             payload = self.deployment.table[did].payload
@@ -402,9 +422,86 @@ class Device:
         self.sessions[session.session_id] = session
         return session
 
+    def create_session(self) -> Session:
+        """Create the legacy single-session view of the activated device.
+
+        Existing scalar callers intentionally keep the activated device's
+        arenas so checkpoint and direct-engine tooling remain byte-compatible.
+        A caller that intends to execute more than one session together must
+        use :meth:`create_batch_sessions`, which allocates a private writable
+        address space for every lane, including lane zero.
+        """
+
+        return self._register_session()
+
+    def create_batch_sessions(self, batch_size: int) -> tuple[Session, ...]:
+        """Create ``batch_size`` independently writable session contexts.
+
+        ABI 3.0 submissions remain session-scoped.  Dynamic batching therefore
+        co-schedules several submissions; it does not turn one session into a
+        tensor of sessions.  Every lane receives fresh mutable HBM/SRAM/STATE/
+        HOST objects while immutable checkpoint objects remain shared with the
+        activated deployment and with every other lane.
+        """
+
+        maximum = int(self.capability.limits["max_sessions"])
+        if not 2 <= int(batch_size) <= maximum:
+            raise DeviceTrap(
+                f"batch size {batch_size} is outside the production dynamic "
+                f"batch range 2..{maximum}",
+                TrapClass.CAPABILITY_OR_RESOURCE,
+            )
+        if len(self.sessions) + int(batch_size) > maximum:
+            raise DeviceTrap(
+                f"creating {batch_size} batch sessions with {len(self.sessions)} "
+                f"already live exceeds capability max_sessions={maximum}",
+                TrapClass.CAPABILITY_OR_RESOURCE,
+            )
+        address_spaces: list[
+            tuple[tuple[DeviceMemory, ...], tuple[ViewResolver, ...]]
+        ] = []
+        for _lane in range(int(batch_size)):
+            memories = tuple(memory.fork_session() for memory in self.node_memories)
+            views = tuple(ViewResolver(self.deployment, memory) for memory in memories)
+            address_spaces.append((memories, views))
+        # Registration is deliberately second: if allocation of any lane
+        # fails, no partial batch becomes visible in the live-session table.
+        sessions: list[Session] = []
+        for memories, views in address_spaces:
+            sessions.append(
+                self._register_session(
+                    node_memories=memories,
+                    node_views=views,
+                    isolated_memory=True,
+                )
+            )
+        return tuple(sessions)
+
+    def _session_address_space(
+        self, session: Session
+    ) -> tuple[tuple[DeviceMemory, ...], tuple[ViewResolver, ...]]:
+        """Return the node arenas/resolvers bound to ``session``."""
+
+        if session.node_memories or session.node_views:
+            if (
+                len(session.node_memories) != self.node_count
+                or len(session.node_views) != self.node_count
+            ):
+                raise DeviceTrap(
+                    f"session {session.session_id} has an incomplete node address "
+                    "space",
+                    TrapClass.INTERNAL_INVARIANT,
+                )
+            return session.node_memories, session.node_views
+        return self.node_memories, self.node_views
+
     # -- predicate evaluation --------------------------------------------
     def _evaluate_predicate(
-        self, descriptor: Descriptor, loops: Mapping[int, int], symbols: Mapping[int, int]
+        self,
+        descriptor: Descriptor,
+        loops: Mapping[int, int],
+        symbols: Mapping[int, int],
+        node_memories: Sequence[DeviceMemory],
     ) -> bool:
         payload = descriptor.payload
         kind = PredicateKind(payload["predicate_kind"])
@@ -436,13 +533,15 @@ class Device:
             trip = self._loop_trip(loop, symbols)
             return loops.get(payload["selector_index"], -1) == trip - 1
         if kind in (PredicateKind.BOOLEAN_OBJECT, PredicateKind.EOS_MEMBER):
-            return self._object_predicate(descriptor)
+            return self._object_predicate(descriptor, node_memories)
         raise DeviceTrap(
             f"predicate kind {kind.name} is not implemented",
             TrapClass.CAPABILITY_OR_RESOURCE,
         )
 
-    def _object_predicate(self, descriptor: Descriptor) -> bool:
+    def _object_predicate(
+        self, descriptor: Descriptor, node_memories: Sequence[DeviceMemory]
+    ) -> bool:
         """A predicate whose truth is a word in device memory.
 
         Control flow is one program, not thirty-two, so a predicate has one
@@ -455,7 +554,7 @@ class Device:
         payload = descriptor.payload
         offset = int(payload["element_index"]) * 4
         answer: bool | None = None
-        for node, memory in enumerate(self.node_memories):
+        for node, memory in enumerate(node_memories):
             obj = memory[payload["object_id"]]
             taken = int.from_bytes(obj.read(offset, 4), "little") != 0
             if answer is None:
@@ -507,6 +606,7 @@ class Device:
         entrypoint_id: int,
         symbols: Mapping[int, int],
         generation_policy_id: int = NO_ID,
+        batch_execution_id: str | None = None,
     ) -> TransactionResult:
         """Execute one device transaction to COMPLETE or to a trap.
 
@@ -535,6 +635,26 @@ class Device:
                 status=CompletionStatus.FAILED,
                 trap_class=TrapClass.STATE_TRANSACTION,
                 message="session already returned EOS; no post-EOS transaction",
+                host_performance=host_performance_delta(),
+            )
+        if session.batch_execution_id != batch_execution_id:
+            return TransactionResult(
+                status=CompletionStatus.FAILED,
+                trap_class=TrapClass.STATE_TRANSACTION,
+                message=(
+                    f"session {session.session_id} is bound to batch execution "
+                    f"{session.batch_execution_id!r}; transaction supplied "
+                    f"{batch_execution_id!r}"
+                ),
+                host_performance=host_performance_delta(),
+            )
+        try:
+            session_memories, session_views = self._session_address_space(session)
+        except DeviceTrap as fault:
+            return TransactionResult(
+                status=CompletionStatus.FAILED,
+                trap_class=fault.trap_class,
+                message=str(fault),
                 host_performance=host_performance_delta(),
             )
         symbols = dict(symbols)
@@ -572,14 +692,15 @@ class Device:
         ]
         ctx = EngineContext(
             table=self.deployment.table,
-            memory=self.memory,
-            views=self.views,
+            memory=session_memories[0],
+            views=session_views[0],
             counters=counters,
             loops=loops,
             symbols=symbols,
             session=session,
             device=self,
-            node_memories=self.node_memories if self.node_count > 1 else (),
+            node_memories=session_memories if self.node_count > 1 else (),
+            node_views=session_views if self.node_count > 1 else (),
         )
         ctx.notes["produced_tokens"] = produced
         ctx.notes["selection"] = selection
@@ -611,7 +732,9 @@ class Device:
                     descriptor = self.deployment.table.get(
                         instruction.predicate_id, ExtendedDescriptorType.PREDICATE
                     )
-                    taken = self._evaluate_predicate(descriptor, loops, symbols)
+                    taken = self._evaluate_predicate(
+                        descriptor, loops, symbols, session_memories
+                    )
                     if instruction.flags & InstructionFlag.PREDICATE_INVERT:
                         taken = not taken
                     if not taken:
@@ -781,7 +904,7 @@ class Device:
 
         # -- atomic commit of the whole declared state set
         for commit in pending:
-            self._apply_commit(commit, counters)
+            self._apply_commit(commit, counters, session_memories)
         session.generation += 1
         for token in produced:
             session.tokens.append(token)
@@ -937,6 +1060,23 @@ class Device:
         if family is Major.LINK or family is Major.STATE:
             self._issue(ctx, instruction, family)
             return
+        memories = ctx.node_memories or (ctx.memory,)
+        if ctx.node_views:
+            views = ctx.node_views
+        elif tuple(memories) == self.node_memories:
+            # Backward-compatible direct-engine harnesses already carry the
+            # activated device's node arenas but predate the explicit resolver
+            # tuple.  That identity is safe to recover.  A session-forked arena
+            # has no such fallback and must carry its own resolvers.
+            views = self.node_views
+        else:
+            views = (ctx.views,)
+        if len(memories) != self.node_count or len(views) != self.node_count:
+            raise DeviceTrap(
+                "engine context does not carry one session-bound arena and "
+                "resolver per logical node",
+                TrapClass.INTERNAL_INVARIANT,
+            )
         previous_memory = ctx.memory
         previous_views = ctx.views
         previous_counters = ctx.counters
@@ -946,8 +1086,8 @@ class Device:
         previous_node_id = ctx.symbols.get(int(Symbol.NODE_ID))
         try:
             for node in range(self.node_count):
-                ctx.memory = self.node_memories[node]
-                ctx.views = self.node_views[node]
+                ctx.memory = memories[node]
+                ctx.views = views[node]
                 ctx.counters = node_counters[node]
                 ctx.symbols[int(Symbol.NODE_ID)] = node
                 ctx.notes["produced_tokens"] = node_produced[node]
@@ -998,7 +1138,9 @@ class Device:
                 )
         return None
 
-    def _issue(self, ctx: EngineContext, instruction: Instruction, family: Major) -> None:
+    def _issue(
+        self, ctx: EngineContext, instruction: Instruction, family: Major
+    ) -> None:
         counter = self._FAMILY_COUNTER.get(family)
         if counter:
             ctx.counters.add(counter)
@@ -1090,9 +1232,7 @@ class Device:
             # Capacity must be checked against the *staged* total, not the
             # committed cursor: several commits staged in one transaction can
             # each pass individually and still overflow when they are applied.
-            staged = sum(
-                p.rows for p in pending if p.resource is resource
-            )
+            staged = sum(p.rows for p in pending if p.resource is resource)
             if resource.cursor_rows + staged + rows > resource.capacity_rows:
                 raise DeviceTrap(
                     f"state {resource.descriptor_id}: committing {rows} rows at "
@@ -1114,7 +1254,12 @@ class Device:
             f"unhandled state subopcode {sub.name}", TrapClass.STATE_TRANSACTION
         )
 
-    def _apply_commit(self, commit: PendingCommit, counters: CounterSet) -> None:
+    def _apply_commit(
+        self,
+        commit: PendingCommit,
+        counters: CounterSet,
+        node_memories: Sequence[DeviceMemory],
+    ) -> None:
         """Apply one staged state commit on every node.
 
         The resource's cursor and generation are session bookkeeping and advance
@@ -1145,7 +1290,7 @@ class Device:
             nbytes = count * row_bytes
             if not nbytes:
                 continue
-            for memory in self.node_memories:
+            for memory in node_memories:
                 prepared = memory[resource.prepared_object_id]
                 committed = memory[resource.committed_object_id]
                 payload = prepared.read(source_slot * row_bytes, nbytes)
@@ -1198,8 +1343,15 @@ class Device:
         return runs
 
     # -- host boundary -----------------------------------------------------
-    def host_write(self, object_id: int, byte_offset: int, payload: bytes) -> None:
-        """Stage host bytes into ``object_id`` on every node.
+    def host_write(
+        self,
+        object_id: int,
+        byte_offset: int,
+        payload: bytes,
+        *,
+        session: Session | None = None,
+    ) -> None:
+        """Stage host bytes into ``object_id`` on every node of one session.
 
         The authenticated input window is the one thing the host may write, and
         a request is submitted to the *device*, not to a node of it.  Every node
@@ -1210,12 +1362,23 @@ class Device:
         collective the deployment does not declare, and inventing one here
         would be the host sequencing a device operation.
         """
-        for memory in self.node_memories:
+        memories = (
+            self.node_memories
+            if session is None
+            else self._session_address_space(session)[0]
+        )
+        for memory in memories:
             memory[object_id].write(byte_offset, payload)
 
-    def host_object(self, object_id: int):
-        """Node zero's instance of ``object_id``, for a host-side read."""
-        return self.memory[object_id]
+    def host_object(self, object_id: int, *, session: Session | None = None):
+        """Node zero's session-bound instance of ``object_id`` for host I/O."""
+
+        memory = (
+            self.memory
+            if session is None
+            else self._session_address_space(session)[0][0]
+        )
+        return memory[object_id]
 
     # -- host queue --------------------------------------------------------
     def submit(self, record: bytes) -> bytes:

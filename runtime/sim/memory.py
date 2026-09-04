@@ -519,7 +519,18 @@ class DeviceMemory:
             if share_from is not None:
                 existing = share_from.objects[oid]
                 if not existing.writable:
-                    if source.kind != "node_segments":
+                    # A node-segment source needs a distinct logical mapping
+                    # when a *different node* is being built, because logical
+                    # byte zero names that node's checkpoint range.  A session
+                    # fork of the *same node* can and must share the existing
+                    # immutable object.  That is the production batching
+                    # boundary: weights are resident once per node while every
+                    # writable activation/state/host object below is private
+                    # to the session.
+                    if (
+                        source.kind != "node_segments"
+                        or share_from.node_id == self.node_id
+                    ):
                         self.objects[oid] = existing
                         continue
                 elif existing._segments:
@@ -537,6 +548,23 @@ class DeviceMemory:
                 verified_segments=self._verified_segments,
                 source_node_id=self.node_id,
             )
+
+    def fork_session(self) -> "DeviceMemory":
+        """Build one session-private arena for this logical node.
+
+        Immutable objects are shared by reference (including a same-node
+        ``node_segments`` mapping); every object with any architectural write
+        permission is newly instantiated.  The descriptor table and mmap
+        authentication caches remain shared, so a batch does not remap or copy
+        checkpoint weights merely because it contains several sessions.
+        """
+
+        return DeviceMemory(
+            self.deployment,
+            root=self.root,
+            share_from=self,
+            node_id=self.node_id,
+        )
 
     def __getitem__(self, object_id: int) -> MemoryObject:
         try:
