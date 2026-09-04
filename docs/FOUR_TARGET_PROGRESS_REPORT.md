@@ -4,33 +4,21 @@
 
 **Status date:** 2026-09-04
 
-**Implementation baseline:** `0da6107` atop `main` commit `844cee7`; this
-includes the fail-closed DeepSeek exact-200K oracle and accelerator-pair
-checkers, the DeepSeek
-phase-selected sparse-KV layout repair, the shared activation-liveness
-allocator and physical 180-GB ROM-array capacity boundary, and refreshed
-zero-`STATE` deployments, the correctness-qualified TPOT and RTL-bound
-co-simulation evidence gates, the exact DeepSeek wafer multicast and its
-integration into the real shipped-program RTL prefix, the
-shipped-program Qwen prefix through all three real checkpoint-backed
-layer-zero Q/K/V projections and query/key head RMSNorm, the exact full-shape
-first DeepSeek HBM `HC_PRE` functional issue, the standalone 256-lane
-row-folding mapper and exact Sinkhorn numeric tail, the bit-exact Qwen
-host-simulator attention acceleration, the corrected HBM `HEAD_RMS_NORM`
-head-count lowering, the target-tick-to-token binding in the TPOT gate, the
-governed exact-8K official-chat Qwen workload and three-capture acceptance
-gate, the governed create-once Qwen production-attempt launcher, the exact
-DeepSeek ordered-product host acceleration, the recorded no-artifact outcomes
-of the first DeepSeek ROM-array functional and cycle attempts, per-session
-mutable memory and fail-closed dynamic batch waves, authenticated ABI 3.0
-request-symbol descriptors, the exact DeepSeek `HC_PRE` RTL tile scheduler,
-the first frozen-source exact-token Qwen HBM/SRAM accelerator diagnostic,
-the correctness-bound shared-resource batch cycle scheduler, and the
-certifying DeepSeek `HC_PRE` FP32 exponential/sigmoid RTL primitive, plus
-the exact Qwen ROM/HBM PC-32/35 KV appends and fixed-context-17 PC-38 GQA
-arithmetic, ABI 3.0 DSpark draft-window indexing, and the governed
-heterogeneous B=1/2/4/8 execution-evidence path, plus the authenticated
-eight-lane Qwen exact-8K natural/reasoning/agentic/stress campaign definition.
+**Retained simulation artifacts:** through `5f957c2` on `main`. This is the first
+checkpoint with retained, event-driven Qwen exact-8K B=1 decode simulations
+for both the HBM/SRAM and ROM deployments under both ASAP7 and SKY130 views.
+Longer functional and prefill simulations listed below are still running.
+
+**Operating decision:** remain on ABI 3.0 and stop expanding the
+correctness-qualified tooling. There is no ABI 3.1, durable-state, rollback,
+restart, or retry work on the critical path. The active work is to run the
+model and publish numbers. Correctness needs only the following direct checks:
+the workload/checkpoint/deployment identities match, output token IDs equal the
+independent oracle, IDs are in the legal vocabulary, decoded text is sensible,
+the first official EOS is included when produced, and no transaction follows
+EOS. Performance comes directly from the event-driven cycle simulator for the
+same model, deployment, context, phase, and batch point. Functional retired
+instruction ticks and host or RTL-simulator wall time are not TPOT.
 
 **Role:** current narrative status and handoff report. Machine-readable result
 artifacts and the [unified execution checklist](UNIFIED_EXECUTION_CHECKLIST.md)
@@ -44,15 +32,65 @@ evidence for these outcomes rather than substitutes for them.
 
 | Priority release gate | Current status | Source-current acceptance evidence | Closure condition |
 |---|---|---|---|
-| 1. Correct output tokens | **open; first positive frozen-source diagnostic retained** | one Qwen exact-8K HBM/SRAM execution produced `[18, 24, 16, 151645]`, visible text `391`, and exact EOS behavior against the independent oracle; it is bound to captured Git tree `008bf765e212c061f930d5a2726563f7ddeba740`, not the current release source | freeze one current release snapshot, then make each required target execute the complete governed model and prompt, match every legal token ID and decoded text against the independent oracle, include and stop at the first official EOS when present or stop at exactly 256 tokens, and prove no post-EOS model transaction |
-| 2. Desired TPOT | **blocked by Gate 1; otherwise not evaluable** | zero correctness-qualified TPOT points exist for B=1/2/4/8 on either process view | the same token-correct execution must retain raw architectural token-commit ticks and use a characterized SKY130 or ASAP7 timebase, then pass a frozen numerical SLO for that workload and batch point |
+| 1. Correct output tokens | **open; exact-8K oracle is retained and a source-current HBM run is active** | Qwen's independent exact-8K oracle produced `[18, 24, 16, 151645]`, raw text `391<|im_end|>`, visible text `391`, and official-EOS stop; an older HBM/SRAM functional execution matched it exactly | complete the active source-current HBM run, then run the same prompt on ROM; repeat on distinct chat/reasoning/agentic lanes and B=2/4/8 |
+| 2. Desired TPOT | **open; first B=1 decode simulations retained, target not met** | HBM/SRAM: 87.910 s/token ASAP7 and 131.295 s/token SKY130; ROM: 153.497 s/token ASAP7 and 229.250 s/token SKY130; three consecutive positions agree on each cell | remove the decode tile-padding pathology, rerun the same points, add prefill TTFT and genuine B=2/4/8 results, then compare with an explicit numerical SLO |
 
 The 10,000-token/s or 100-microsecond-per-token figure remains an aspirational
-north star, not a silently assumed pass threshold. None of the three governed
-comparison contracts currently contains `execution.tpot_acceptance`; therefore
-no result can honestly be labeled “desired TPOT achieved” until numerical SLO
-rows are frozen. Host simulator speed, RTL simulator wall time, isolated block
-cycles, and analytical rooflines do not close Gate 2.
+north star, not a silently assumed pass threshold. The current simulations are
+many orders of magnitude slower and therefore plainly do not achieve the
+desired TPOT. A more elaborate checker would not change that conclusion. The
+immediate engineering signal is tile geometry: HBM/SRAM issues 448.206 billion
+work units per decode token, of which 438.848 billion (97.9121%) are padding;
+ROM issues 974.758 billion, of which 965.400 billion (about 99.04%) are
+padding. The next performance iteration must add active-row/lane masking or a
+narrow decode engine, then rerun the simulator.
+
+### 1.0.1 Retained simulation numbers
+
+All four rows below execute one complete ABI 3.0 decode transaction for Qwen3
+8B at B=1 after an 8,000-token prompt. Positions 8,000, 8,001, and 8,002 were
+simulated independently; the reported cycle and time values were identical at
+all three positions within each row.
+
+| Deployment | Process view | Cycles/token | Clock | Modelled TPOT | Aggregate rate |
+|---|---|---:|---:|---:|---:|
+| HBM + SRAM single chip | ASAP7 | 5,095,186,721 | 57.959 MHz | 87.910190 s | 0.011375 token/s |
+| HBM + SRAM single chip | SKY130 | 5,095,186,652 | 38.8071 MHz | 131.295218 s | 0.007616 token/s |
+| ROM + HBM single chip | ASAP7 | 8,896,523,172 | 57.959 MHz | 153.496837 s | 0.006515 token/s |
+| ROM + HBM single chip | SKY130 | 8,896,523,169 | 38.8071 MHz | 229.249884 s | 0.004362 token/s |
+
+Under the current mappings, HBM/SRAM is about 1.746 times faster than ROM for
+decode on either process view. This is the opposite of the intended ROM
+advantage and is actionable evidence that the ROM tiling is currently worse,
+not evidence that the architectural idea is invalid. These are event-driven
+simulator outputs with successful ABI transactions and one token append per
+transaction. Their overall provenance class remains `assumed`: only six or
+seven parameters are characterized and one HBM parameter is datasheet-derived,
+while more than one hundred machine parameters remain assumptions. They are
+design-simulation numbers, not measurements of fabricated silicon.
+
+The exact-8K natural-chat reference uses a Moby-Dick context followed by
+“What is 17 multiplied by 23? Give only the number.” The independent Qwen
+checkpoint produced token IDs `[18, 24, 16, 151645]`, raw text
+`391<|im_end|>`, and visible text `391`; token `151645` is the included
+official EOS. The active source-current HBM functional simulation is checking
+that exact sequence and EOS behavior. Until it finishes, this checkpoint does
+not relabel the cycle transaction's synthetic selected ID as correctness
+evidence.
+
+For DeepSeek-V4 Flash, the available 32-token/four-output diagnostics all
+produce `[13806, 345, 7472, 55560]`, which decodes and re-encodes exactly as
+` pump C alone empt`. The 32-chip HBM/SRAM, 32-node ROM array, and single-wafer
+ROM functional simulators all match the independent four-token oracle prefix
+with legal IDs and successful transactions. Their host wall times are
+4,015.484 s, 8,470.543 s, and 3,066.736 s respectively; those host times are
+simulation cost, not architectural TPOT. This is P32 diagnostic evidence only.
+It does not stand in for the mandatory exact-200,000-token-context run.
+
+Still running at this checkpoint are Qwen exact-8K HBM functional execution,
+Qwen HBM and ROM prefill timing under both process views, and a current-source
+DeepSeek 32-chip HBM P32 repeat. No genuine B=2, B=4, or B=8 full-model timing
+number exists yet.
 
 The common compiler and functional-simulator stack is real and shared by both
 models and both storage backends. Both complete model graphs lower through the
@@ -89,12 +127,9 @@ The present boundary is therefore:
   repair closed over prefill/decode, ratios 0/4/128, circular wrap, and absolute
   position 200,000; this is bounded synthetic/operator evidence and produces no
   checkpoint-backed token;
-- production acceptance validators: implemented for the governed Qwen
-  exact-8K official-chat workload, the DeepSeek exact-200K external oracle,
-  and the final ROM/HBM accelerator pairs; all still reject the incomplete
-  current evidence. The timing consumer additionally binds both the semantic
-  and file digest of the frozen execution release, rejecting stale or unbound
-  token/timing inputs. The scalar accelerator runner now also hashes and loads
+- lightweight result checks are sufficient for the active simulation phase.
+  Existing production validators remain available but are not being extended
+  and are not on the critical path. The scalar accelerator runner hashes and loads
   the pinned checkpoint tokenizer, proves prompt decode and re-encode
   round-trip against the retained natural context, and retains raw/visible
   decoded output with oracle-horizon equality; a mismatch makes the run fail;
@@ -116,12 +151,12 @@ The present boundary is therefore:
   and stress cases. Their tokenizer/template/source identities, legal IDs,
   prompt round trips, non-cloning rule, 256-token cap, and first-official-EOS
   rule are authenticated. This is preparation evidence only: all eight
-  independent singleton oracles remain pending, no runnable physical batch was
-  emitted, no model or accelerator was executed, and it contributes zero
-  accepted output tokens and zero TPOT points;
-- correctness-qualified TPOT validator: implemented and fail-closed when token
-  evidence, target-cycle traces, process identities, or numerical budgets are
-  absent;
+  independent singleton oracles remain pending except the arithmetic B=1 lane,
+  no runnable physical batch was emitted, and no B>1 model or accelerator
+  batch was executed;
+- event-driven cycle simulation: the first Qwen exact-8K B=1 HBM/SRAM and ROM
+  decode points now exist for ASAP7 and SKY130. They expose a severe padding
+  problem and are the active performance baseline;
 - genuine shared batch execution and timing substrate: implemented for ABI 3.0
   scalar sessions at B=1/2/4/8. The production batch driver accepts distinct
   per-lane prompts and generation caps, submits every active lane once per
@@ -179,7 +214,7 @@ the remaining cost.
 | RTL 3.0 | partial | shipped control replay and bounded arithmetic pairs independently correlate; the integrated prefix drives Qwen through query/key RoPE and both exact key/value KV scatters, and DeepSeek ROM through wafer multicast; the focused Qwen continuation executes fixed-context-17 PC-38 GQA; current ROM/HBM `HC_PRE` T=1 semantic configurations now execute exact fused projection/RMS and the full coefficient tail with authenticated 74-word agreement; the standalone 256-lane mapper, MAC lane, and multicast transport also have dual-simulator evidence | Qwen must generalize GQA through the governed 8K context and continue at PC 41 output projection; DeepSeek T=1 arithmetic must enter the ordinary shipped-prefix/memory path, generalize to T=512/T=320/all 200K prompt positions, and continue through every layer, logits, selection, append and EOS-or-cap control; no RTL path reaches a token |
 | Mandatory workloads | open | the original Qwen exact-8K rendered official-chat prompt is frozen and reproducible; its authenticated external oracle and one frozen-source HBM/SRAM execution both produce `391` followed by EOS. Eight distinct exact-8K B=1/2/4/8 campaign inputs are also frozen and authenticated, but their oracles are pending | a single current-release HBM-A/HBM-B/ROM triplet, all eight Qwen singleton oracles, Qwen natural chat/reasoning/agentic and genuine B=1/2/4/8 accelerator cells, and both DeepSeek exact-200K executions are absent; the retained DeepSeek oracle stops after eight tokens |
 | SKY130 and ASAP7 | partial | several bounded blocks have process-specific reports | neither view characterizes a complete target; ASAP7 readiness has 15 fail-closed blockers |
-| Governed comparison | partial | a frozen-source four-token DeepSeek ROM-array-versus-32-chip-HBM diagnostic binds both compiled executions, identical tokens, topology and counter evidence; the release-bound correctness-qualified TPOT schema and checker reject stale semantic/file identities; `8080d8f` adds the explicit RTL-bound accelerated co-simulation tier; `cbaecf0` freezes the shared-datapath production plan and exact-execution promotion rule | the paired diagnostic is P32 rather than exact 200K, uses a 32-node ROM array rather than the required wafer-ROM target, predates current release changes, and supplies no target timing; the new single-wafer P32 record is likewise frozen-source and unpaired; no source-current mandatory-workload pair, production-simulation token record, frozen numerical TPOT budget, or complete same-view system cost exists |
+| Governed comparison | partial | all three DeepSeek P32 functional deployments produce the same four oracle-prefix tokens; Qwen HBM/SRAM and ROM now have directly comparable B=1 decode simulations under ASAP7 and SKY130 | DeepSeek evidence is P32 rather than exact 200K; Qwen source-current functional confirmation and prefill timing are still running; B=2/4/8 and complete same-view physical characterization are absent |
 
 #### 1.1.1 Gate-eligible token and TPOT matrix
 
@@ -188,15 +223,15 @@ evidence from short diagnostics and scheduler fixtures.
 
 | Required production cell | Best retained output evidence | Gate 1 now | Gate 2 now |
 |---|---|---|---|
-| Qwen HBM/SRAM, exact 8K, B=1 | 4/4 oracle-identical IDs through official EOS, including exact raw/visible text; frozen-source | no | no TPOT |
-| Qwen ROM, exact 8K, B=1 | no exact-8K current-release result; older shorter-workload records exist | no | no TPOT |
+| Qwen HBM/SRAM, exact 8K, B=1 | 4/4 oracle-identical IDs through official EOS, including exact raw/visible text; frozen-source; source-current repeat active | no | modelled decode: 87.910 s ASAP7, 131.295 s SKY130; not a target pass |
+| Qwen ROM, exact 8K, B=1 | no exact-8K current-release functional result; older shorter-workload records exist | no | modelled decode: 153.497 s ASAP7, 229.250 s SKY130; not a target pass |
 | Qwen HBM/SRAM and ROM, exact 8K, B=2/4/8 | 0 complete-model generated tokens at every batch size; only heterogeneous scheduler/driver fixtures | no | no TPOT |
 | DeepSeek 32-chip HBM/SRAM, exact 200K, B=1 | 0 generated tokens on the mandatory prompt; a separate P32 diagnostic has 4/4 oracle-prefix IDs | no | no TPOT |
 | DeepSeek wafer ROM, exact 200K, B=1 | 0 generated tokens on the mandatory prompt; a separate P32 diagnostic has 4/4 oracle-prefix IDs and correct device-cap retirement | no | no TPOT |
 
-Thus no batch-size row currently combines complete correct tokens with
-characterized architectural timing. Projected B=1/2/4/8 cycle and roofline
-tables remain design diagnostics and are not promoted into this matrix.
+Thus no batch-size row currently combines a source-current functional result
+with fully characterized architectural timing. The new B=1 cycle points are
+retained design simulations; B=2/4/8 remains absent.
 
 ### 1.2 Source-current execution readiness
 
@@ -980,76 +1015,38 @@ is not foundry signoff.
 
 ## 9. Critical path from here
 
-1. Keep ABI 3.0 frozen and retain the zero-`STATE`, live-buffer admission gates.
-2. Freeze explicit workload/process/PVT/B/statistic TPOT SLO rows before fixing
-   the production lane and memory organization. If 100 microseconds is a
-   mandatory rather than aspirational target, replace the present 256-lane
-   single-chip baseline with a quantitatively feasible spatial architecture;
-   do not spend the full physical-closure effort on a baseline whose optimistic
-   lower bound already fails the target by orders of magnitude.
-3. Do not spend the exclusive high-memory host on another obsolete DeepSeek
-   threshold rerun. The next DeepSeek functional execution must use the
-   source-current sparse-layout, liveness, and ordered-product implementation
-   and must be selected because it advances the exact-200K gate.
-4. Preserve the successful frozen-source Qwen HBM/SRAM result without promoting
-   it. Finish the request-symbol, engine-co-issue, shared-cycle replay, genuine
-   B=1/2/4/8, and RTL-session prerequisites, then freeze one committed release
-   snapshot before any final long capture.
-   `tools/freeze_abi3_execution_release.py` now implements that minimal
-   create-once boundary: it refuses a dirty tree, pending target/oracle locks,
-   a missing numerical TPOT budget, checkpoint/source-lock drift, or an already
-   used result namespace. Its focused tests pass, but no production release can
-   yet be instantiated because the comparison contracts still have pending
-   physical target locks and no TPOT SLO rows. The tool is not token or TPOT
-   evidence and does not change ABI 3.0.
-5. Generalize the Qwen production oracle launcher to authenticate the frozen
-   heterogeneous campaign and select exactly one declared lane without
-   weakening its historical profile. Run and freeze all eight independent
-   singleton oracles serially. From one subsequent frozen execution snapshot,
-   rerun HBM A, launch independent HBM B and ROM, and run the strict W10
-   checker over all three. Then execute the physical natural chat, reasoning,
-   deterministic closed-loop agentic, stress, and genuine heterogeneous
-   B=1/2/4/8 cells. Require per-lane exact tokens and independent EOS
-   retirement; do not clone one prompt merely to increase B.
-6. Execute the DeepSeek `--gate-b-production` external oracle when the required
-   GPU, checkpoint I/O, and host-memory resources are available. Require both
-   the pre-run full-byte hash and the completion identity rehash; do not promote
-   the retained eight-token prefix.
-7. Treat the exact-200K attention/KV phase-layout blocker as repaired at
-   compiler and interacting-operator scope by `a877cfe`. Carry that repair into
-   the next checkpoint-backed integrated run and require exact generated-token
-   equality before closing Gate 1; the 30-case bounded matrix is not a token
-   substitute. Carry the admitted 180-GB liveness placement with it and measure
-   host-resident behavior afresh; the prior 1.2-TB-declaration OOM is not a
-   result for the new deployment. Preserve the operation-derived feature invariant:
-   `TRANSACTIONAL_STATE` in no production program and `INTEGRITY_RETRY` only
-   for actual DeepSeek communication descriptors.
-8. Integrate the proven active-row/folding mapper with the selected production
-   tensor lanes without changing reduction association, generalize Qwen GQA
-   beyond its fixed context-17 proof, and extend the RTL path from Qwen PC-41
-   `TENSOR.MATMUL`, DeepSeek ROM PC-15 `VECTOR.MHC`, and DeepSeek HBM PC-14
-   `VECTOR.MHC` through every required operator, memory service,
+1. Keep ABI 3.0 frozen. Do not add ABI 3.1, durable-state, rollback, retry, or
+   more correctness-qualified tooling.
+2. Finish the simulations already running. Publish the Qwen exact-8K HBM token
+   IDs/text/EOS result and HBM/ROM TTFT under ASAP7 and SKY130.
+3. Run the same exact-8K Qwen functional workload on ROM. The direct acceptance
+   check is exact token equality with `[18, 24, 16, 151645]`, legal decoding to
+   `391<|im_end|>`, first-EOS stop, and no transaction after EOS.
+4. Fix the measured decode bottleneck: integrate active-row/lane masking or a
+   narrow decode mapping so one-token matrix operations do not issue 64 padded
+   rows. Rerun the four B=1 process/backend cells and report the new cycles,
+   TPOT, tokens/s, padding fraction, and speedup against this baseline.
+5. Generate the remaining seven Qwen singleton oracles serially, then run real
+   natural-chat, reasoning, agentic-tool, and stress prompts. Execute genuinely
+   distinct B=2, B=4, and B=8 batches; never clone one prompt to manufacture a
+   batch result. For every lane publish output IDs, text, stop reason, TTFT,
+   per-sequence TPOT, and aggregate tokens/s.
+6. Use the completing DeepSeek P32 HBM repeat only as a short diagnostic. The
+   production comparison remains one exact-200K wafer-ROM execution versus one
+   exact-200K execution on exactly 32 HBM/SRAM chips with NVLink-class links.
+   Both must publish full tokens/text and event-driven cycle timing.
+7. Continue RTL integration through every required operator, memory service,
    communication primitive, argmax, token append, token-commit counter, and EOS
-   path. Bind every accelerated full-system co-simulation engine bit-for-bit and
-   cycle-for-cycle to synthesizable RTL; do not label that tier monolithic RTL.
-9. Run short integrated token diagnostics on all four targets; then run exact
-   200K accelerator execution on one DeepSeek ROM wafer and exactly 32 shared
-   HBM/SRAM chips, publishing complete tokens, text, counters, topology, and
-   source identities and passing the exact-200K accelerator-pair checker.
-10. Only after each run is token-correct, derive its TPOT from its own raw
-   token-commit ticks and characterized target timebase. For every B=1/2/4/8
-   point, retain correct-token count, first divergence, stop reason, TTFT,
-   per-step latency, steady-state per-sequence TPOT, and aggregate throughput
-   from that same execution; keep analytical projections separate.
-11. Complete separate SKY130 and ASAP7 full-system characterization and feed
-   measured limits back into the cycle model before publishing the same-view
-   ROM-versus-HBM comparison.
+   path. RTL simulator wall time remains verification cost, not TPOT.
+8. Replace assumed cycle-model parameters with separate SKY130 and ASAP7
+   characterization as blocks close physically. Never scale SKY130 into ASAP7
+   or commercial-node claims.
 
-Every new long simulation must start from one frozen, committed source,
-deployment, workload, oracle, topology, and output identity. The terminated
-Qwen attempts, the successful pre-current-main HBM/SRAM run, and the stale
-historical acceptance pair are retained only as diagnostic provenance and must
-not be promoted or used to derive TPOT.
+Each long simulation records its committed source, deployment, workload,
+checkpoint, process view, batch, and output path so the number can be
+reproduced. No additional release/checker ceremony is required. Terminated or
+older-source attempts remain diagnostics and are not substituted for a
+completed source-current run.
 
 ## 10. Bottom line
 
