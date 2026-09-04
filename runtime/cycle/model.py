@@ -73,8 +73,15 @@ from runtime.abi3.descriptors import (
     SelectorKind,
     Symbol,
 )
+from runtime.abi3.records import Completion
 from runtime.sim.counters import CounterSet, COUNTERS, is_timing_counter
-from runtime.sim.device import Device, PendingCommit, TransactionResult
+from runtime.sim.device import (
+    Device,
+    PendingCommit,
+    PreparedSubmission,
+    Session,
+    TransactionResult,
+)
 from runtime.sim.memory import ResolvedView, ViewResolver
 from runtime.cycle.fabric import (
     ClusterFabric,
@@ -210,6 +217,37 @@ class TraceStep:
     @property
     def bytes_transferred(self) -> int:
         return sum(access.transferred_bytes for access in self.accesses)
+
+
+@dataclass(frozen=True, slots=True)
+class FunctionalTraceSpan:
+    """One authenticated functional transaction and its exact trace slice.
+
+    The batch cycle scheduler never reconstructs a request from symbols or
+    invokes an operator by itself.  It times this record, which is captured
+    around the canonical ``execute_prepared_submission`` call.  Keeping both
+    queue records' digests, the starting session generation and the resulting
+    scalar completion makes it possible to reject a timing record that has
+    been attached to a different request, lane or token.
+    """
+
+    deployment_id: int
+    deployment_generation: int
+    deployment_digest: bytes
+    session_id: int
+    session_generation_start: int
+    session_generation_end: int
+    transaction_id: int
+    request_descriptor_id: int
+    request_descriptor_digest: bytes
+    submission_digest: bytes
+    batch_execution_id: str | None
+    trace_start: int
+    trace_stop: int
+    steps: tuple[TraceStep, ...]
+    completion_record: bytes
+    completion: Completion
+    result: TransactionResult
 
 
 @dataclass(frozen=True, slots=True)
@@ -464,7 +502,64 @@ class TracingDevice(Device):
         )
         self.views = self.node_views[0]
         self.steps: list[TraceStep] = []
+        self.transaction_traces: list[FunctionalTraceSpan] = []
         self._pc_index = {id(ins): i for i, ins in enumerate(self.instructions)}
+
+    def create_batch_sessions(self, batch_size: int) -> tuple[Session, ...]:
+        """Create isolated lanes whose view resolvers retain memory traffic.
+
+        ``Device.create_batch_sessions`` correctly gives every lane private
+        mutable arenas, but its ordinary resolvers are intentionally unaware
+        of cycle tracing.  Replacing only those resolvers leaves the functional
+        memories and execution semantics untouched while ensuring a batched
+        engine access cannot disappear from the shared SRAM/HBM schedule.
+        """
+
+        sessions = super().create_batch_sessions(batch_size)
+        for session in sessions:
+            session.node_views = tuple(
+                _RecordingViews(self.deployment, memory, self._recorder)
+                for memory in session.node_memories
+            )
+        return sessions
+
+    def execute_prepared_submission(  # type: ignore[override]
+        self,
+        prepared: PreparedSubmission,
+        *,
+        batch_execution_id: str | None = None,
+    ) -> tuple[bytes, TransactionResult]:
+        """Execute normally and retain the authenticated transaction boundary."""
+
+        trace_start = len(self.steps)
+        generation_start = int(prepared.session.generation)
+        record, result = super().execute_prepared_submission(
+            prepared, batch_execution_id=batch_execution_id
+        )
+        trace_stop = len(self.steps)
+        completion = Completion.decode(record)
+        self.transaction_traces.append(
+            FunctionalTraceSpan(
+                deployment_id=int(self.deployment.deployment_id),
+                deployment_generation=int(self.deployment.generation),
+                deployment_digest=bytes(self.deployment.deployment_digest),
+                session_id=int(prepared.session.session_id),
+                session_generation_start=generation_start,
+                session_generation_end=int(prepared.session.generation),
+                transaction_id=int(prepared.request.transaction_id),
+                request_descriptor_id=int(prepared.request.request_descriptor_id),
+                request_descriptor_digest=sha256(prepared.descriptor.encode()),
+                submission_digest=bytes(prepared.request_digest),
+                batch_execution_id=batch_execution_id,
+                trace_start=trace_start,
+                trace_stop=trace_stop,
+                steps=tuple(self.steps[trace_start:trace_stop]),
+                completion_record=record,
+                completion=completion,
+                result=result,
+            )
+        )
+        return record, result
 
     # -- hooks -----------------------------------------------------------
     def _new_step(self, kind: str, **kwargs: Any) -> TraceStep:
@@ -1188,6 +1283,18 @@ class _Queue:
         stall = max(0, now - arrival)
         self.stall_cycles += stall
         return now, stall
+
+    def ready_at(self, arrival: int, bound: int | None = None) -> int:
+        """Earliest non-mutating admission time for scheduler arbitration."""
+
+        limit = self.bound_for(bound)
+        active = sorted(c for c in self._completions if c > arrival)
+        if len(active) < limit:
+            return arrival
+        # Drain completions in timestamp order until occupancy is strictly
+        # below the applicable credit bound.  Equal timestamps drain together,
+        # and choosing this indexed value has exactly that effect.
+        return active[len(active) - limit]
 
     def push(self, completion: int) -> None:
         self._completions.append(completion)

@@ -7,13 +7,15 @@ keeps that set together, binds ``Symbol.BATCH`` to the physical batch size,
 executes one wave for every active lane, retires EOS lanes independently, and
 retains the per-session completion timestamps that a later timing tier needs.
 
-This first executable slice is intentionally conservative.  Engine calls are
-still lane-serial inside a wave; no shared-resource cycle model or RTL co-issue
-claim follows from it.  Its evidence says so and is ineligible for Gate 1 and
-TPOT promotion.  What it closes is the prerequisite that repeated independent
-``B=1`` driver loops cannot close: one scheduler, one batch identity, private
-mutable session address spaces, a physical ``B=N`` symbol binding, an active
-mask, and fail-closed per-lane result accounting.
+This functional layer is intentionally conservative.  Engine calls are still
+lane-serial inside a wave; no shared-resource cycle model or RTL co-issue claim
+follows from it.  :mod:`runtime.cycle.batch` replays the unchanged functional
+traces through the target-cycle resources and owns those stronger claims.  This
+layer closes the prerequisite that repeated independent ``B=1`` driver loops
+cannot close: one scheduler, one batch identity, private mutable session
+address spaces, a physical ``B=N`` symbol binding, an active mask, and
+fail-closed per-lane result accounting.  It also accepts the ordinary scalar
+session for the genuine ``B=1`` control point used by that timing layer.
 """
 
 from __future__ import annotations
@@ -92,7 +94,7 @@ class BatchLaneCompletion:
 class BatchWaveResult:
     """The completions and active-mask transition for one scheduler wave."""
 
-    batch_execution_id: str
+    batch_execution_id: str | None
     wave_index: int
     physical_batch_size: int
     active_mask_before: tuple[bool, ...]
@@ -140,9 +142,9 @@ class BatchScheduler:
         self.sessions = tuple(sessions)
         self.batch_size = len(self.sessions)
         maximum = int(device.capability.limits["max_sessions"])
-        if not 2 <= self.batch_size <= maximum:
+        if not 1 <= self.batch_size <= maximum:
             raise BatchError(
-                f"physical batch size {self.batch_size} is outside 2..{maximum}"
+                f"physical batch size {self.batch_size} is outside 1..{maximum}"
             )
         if len({session.session_id for session in self.sessions}) != self.batch_size:
             raise BatchError("a batch must contain distinct sessions")
@@ -151,7 +153,7 @@ class BatchScheduler:
                 raise BatchError(
                     f"lane {lane} session {session.session_id} is not live on device"
                 )
-            if not session.isolated_memory:
+            if self.batch_size > 1 and not session.isolated_memory:
                 raise BatchError(
                     f"lane {lane} session {session.session_id} has no private "
                     "writable address space"
@@ -172,7 +174,12 @@ class BatchScheduler:
         for session in self.sessions:
             session.batch_execution_id = self.batch_execution_id
 
-    def _execution_id(self) -> str:
+    def _execution_id(self) -> str | None:
+        # ABI 3.0 scalar execution has no batch identity.  Keeping it ``None``
+        # preserves the ordinary session contract and matches the governed
+        # timing-evidence schema; B>1 receives a content-derived identity.
+        if self.batch_size == 1:
+            return None
         material = {
             "deployment_id": int(self.device.deployment.deployment_id),
             "deployment_generation": int(self.device.deployment.generation),
@@ -187,6 +194,36 @@ class BatchScheduler:
 
     def _verify_memory_contract(self) -> dict[str, Any]:
         """Prove mutable disjointness and immutable sharing for every lane."""
+
+        if self.batch_size == 1 and not self.sessions[0].isolated_memory:
+            baseline = self.device.node_memories
+            private = sorted(
+                {
+                    object_id
+                    for memory in baseline
+                    for object_id, obj in memory.objects.items()
+                    if obj.writable
+                }
+            )
+            shared = sorted(
+                {
+                    object_id
+                    for memory in baseline
+                    for object_id, obj in memory.objects.items()
+                    if not obj.writable
+                }
+            )
+            return {
+                "status": "scalar_not_applicable",
+                "mutable_objects_are_session_private": True,
+                "immutable_objects_are_shared": True,
+                "private_mutable_object_ids": private,
+                "shared_immutable_object_ids": shared,
+                "note": (
+                    "B=1 uses the ordinary activated-device arena; there is no "
+                    "sibling lane from which mutable state must be isolated"
+                ),
+            }
 
         private: list[int] = []
         shared: list[int] = []
