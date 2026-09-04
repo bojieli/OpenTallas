@@ -832,6 +832,87 @@ def check_rom_schedule(
     for source_kernel, (unpack_events, explained) in reductions.items():
         signals_by_source[source_kernel] = set(unpack_events)
         reduction_moves.update(explained)
+    # -- phase-selected joins (TA-ABI3-OPCONV-1 phase layouts) --------------
+    # A CONCAT that declares ``phase_inputs`` reads a different operand subset
+    # in prefill and in decode.  Its lowering is one operator per phase behind
+    # a PHASE_IS branch, each waiting on the producers of *its* subset only,
+    # and the block converges on a CONTROL.FENCE (or, when an optional operand
+    # splits the phase further, on a CONTROL.WAIT under the operator's own
+    # guard) before control leaves it.  The conventions state the certificate:
+    # control converges only after the selected producer is complete, so
+    # program order carries the result into the consumer.  The checker derives
+    # both halves from the graph and the program rather than trusting either:
+    # every phase's producer set must be waited by one of the join's
+    # instructions, every instruction must wait a whole phase, every operator
+    # must be followed by its fence or guarded wait before another kernel
+    # issues, and every consumer must sit after the converged block.
+    phase_layouts: dict[int, dict[str, tuple[int, ...]]] = {}
+    for kernel in graph.kernels:
+        declared = kernel.attributes.get("phase_inputs")
+        if isinstance(declared, Mapping) and declared:
+            phase_layouts[kernel.index] = {
+                str(phase): tuple(int(slot) for slot in row)
+                for phase, row in declared.items()
+                if isinstance(row, (list, tuple))
+            }
+    converged: dict[int, int] = {}
+    for source, rows in by_source.items():
+        if source not in phase_layouts:
+            continue
+        settled = True
+        last_index = -1
+        for index, instruction, _operator in rows:
+            last_index = max(last_index, index)
+            own_event = int(instruction.signal_event_id)
+            guard = (
+                int(instruction.predicate_id),
+                bool(instruction.flags & int(InstructionFlag.PREDICATE_INVERT)),
+            )
+            certified = False
+            for later in instructions[index + 1 :]:
+                if later.major in scheduled_families:
+                    later_operator = operators.get(later.descriptor_id)
+                    if later_operator is None or int(
+                        later_operator.payload["source_kernel_id"]
+                    ) != source:
+                        break
+                    continue
+                if later.major != int(Major.CONTROL):
+                    break
+                if later.sub in (int(Control.LOOP_NEXT), int(Control.BRANCH)):
+                    # Control leaves the phase block here; a fence in the
+                    # sibling block certifies the sibling, not this operator.
+                    break
+                if int(later.source_operation_id) != source:
+                    continue
+                later_guard = (
+                    int(later.predicate_id),
+                    bool(later.flags & int(InstructionFlag.PREDICATE_INVERT)),
+                )
+                if later.sub == int(Control.FENCE) and later.predicate_id == NO_ID:
+                    certified = True
+                    break
+                if (
+                    later.sub == int(Control.WAIT)
+                    and own_event != NO_ID
+                    and own_event in _wait_events(later, waits, require)
+                    and (later.predicate_id == NO_ID or later_guard == guard)
+                ):
+                    certified = True
+                    break
+            settled = require(
+                "phase_layout_convergence",
+                certified,
+                f"phase-layout kernel {source} instruction {index} is not "
+                "followed by its fence or guarded wait before control leaves "
+                "the phase block",
+            ) and settled
+        if settled and last_index >= 0:
+            converged[source] = last_index
+    phase_coverage: dict[int, set[str]] = {
+        source: set() for source in by_source if source in phase_layouts
+    }
+
     dependency_edges = 0
     for index, instruction, operator in instruction_operators:
         if index in reduction_moves:
@@ -849,39 +930,88 @@ def check_rom_schedule(
             int(slot)
             for slot in dict(kernel.attributes.get("operand_present_predicate", {}))
         }
-        expected_sources: set[int] = set()
-        for dependency_slot, tensor_id in enumerate(dependencies):
-            if dependency_slot in conditional_inputs and instruction.flags & int(
-                InstructionFlag.PREDICATE_INVERT
-            ):
-                # This is the explicitly declared operand-absent path.  It
-                # must not wait for a producer predicated off under the same
-                # condition; the sibling present path is checked separately.
-                continue
-            original = producer.get(tensor_id)
-            if original is None:
-                continue
-            expected = canonical.get(original, original)
-            # The producer is in a later iteration of a compressed run.  It
-            # has no instruction or event of its own; LOOP_NEXT completes the
-            # final iteration before control leaves the run, which is the
-            # dependency certificate for the following band or epilogue.
-            if original != expected:
-                continue
-            if expected == source:
-                continue
-            # A canonical producer later in the same compressed body is a
-            # loop-carried value.  Program order, not a first-iteration event,
-            # carries that dependency.
-            if order_position.get(expected, -1) >= order_position.get(source, 1 << 30):
-                continue
-            if graph.kernels[expected].kind == _DIRECT_STATE_KIND:
-                continue
-            expected_sources.add(expected)
+
+        def expected_for(slots: set[int] | None) -> set[int]:
+            found: set[int] = set()
+            for dependency_slot, tensor_id in enumerate(dependencies):
+                if slots is not None and dependency_slot not in slots:
+                    continue
+                if dependency_slot in conditional_inputs and instruction.flags & int(
+                    InstructionFlag.PREDICATE_INVERT
+                ):
+                    # This is the explicitly declared operand-absent path.  It
+                    # must not wait for a producer predicated off under the
+                    # same condition; the sibling present path is checked
+                    # separately.
+                    continue
+                original = producer.get(tensor_id)
+                if original is None:
+                    continue
+                expected = canonical.get(original, original)
+                # The producer is in a later iteration of a compressed run.  It
+                # has no instruction or event of its own; LOOP_NEXT completes
+                # the final iteration before control leaves the run, which is
+                # the dependency certificate for the following band or
+                # epilogue.
+                if original != expected:
+                    continue
+                if expected == source:
+                    continue
+                # A canonical producer later in the same compressed body is a
+                # loop-carried value.  Program order, not a first-iteration
+                # event, carries that dependency.
+                if order_position.get(expected, -1) >= order_position.get(
+                    source, 1 << 30
+                ):
+                    continue
+                if graph.kernels[expected].kind == _DIRECT_STATE_KIND:
+                    continue
+                found.add(expected)
+            return found
+
+        def waited(expected: int) -> bool:
+            if expected in converged:
+                return converged[expected] < index
+            return bool(signals_by_source.get(expected, set()) & actual_wait)
+
+        if source in phase_layouts:
+            # The instruction must acquire one whole phase's producers.  Which
+            # phase is not written on the instruction; it is whichever subset
+            # the waits cover, and the coverage rule below insists that every
+            # phase is taken by some instruction of the join.
+            matched = [
+                phase
+                for phase, slots in phase_layouts[source].items()
+                if all(waited(expected) for expected in expected_for(set(slots)))
+            ]
+            require(
+                "phase_layout_wait",
+                bool(matched),
+                f"phase-layout kernel {source} instruction {index} waits "
+                f"{sorted(actual_wait)}, which acquires no declared phase's "
+                "producers",
+            )
+            phase_coverage.setdefault(source, set()).update(matched)
+            expected_sources = (
+                expected_for(set(phase_layouts[source][matched[0]]))
+                if matched
+                else expected_for(None)
+            )
+        else:
+            expected_sources = expected_for(None)
         expected_sources.update(kv_dependencies.get(source, ()))
         for expected in expected_sources:
-            events = signals_by_source.get(expected, set())
             dependency_edges += 1
+            if expected in converged:
+                require(
+                    "phase_layout_program_order",
+                    converged[expected] < index,
+                    f"kernel {source} instruction {index} reads phase-layout "
+                    f"kernel {expected} before its block converges at "
+                    f"instruction {converged[expected]}",
+                )
+                continue
+            events = signals_by_source.get(expected, set())
             require(
                 "producer_signals",
                 bool(events),
@@ -902,6 +1032,14 @@ def check_rom_schedule(
                 f"instruction {index} waits on event {event} without an earlier "
                 "producer",
             )
+    for source, phases in phase_coverage.items():
+        declared = set(phase_layouts[source])
+        require(
+            "phase_layout_coverage",
+            phases == declared,
+            f"phase-layout kernel {source} acquires phases {sorted(phases)}; "
+            f"the graph declares {sorted(declared)}",
+        )
 
     for wait in waits.values():
         count = int(wait.payload["producer_count"])
@@ -2166,11 +2304,15 @@ def _check_rolling_compressor(
     # The terminal FENCE must acquire both raw history writes.  Following the
     # unconditional event DAG proves this without relying on instruction order
     # or the producer's internal frontier algorithm.
+    # A phase-layout join converges on a fence of its own (it carries the
+    # join's source_operation_id); the terminal token fence is the one that
+    # belongs to no kernel.
     fences = [
         instruction
         for instruction in instructions
         if instruction.major == int(Major.CONTROL)
         and instruction.sub == int(Control.FENCE)
+        and int(instruction.source_operation_id) == NO_ID
     ]
     ancestors: set[int] = set()
     if len(fences) == 1:

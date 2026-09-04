@@ -24,6 +24,8 @@ clean builds are byte-identical.
 
 from __future__ import annotations
 
+import copy
+import dataclasses
 import importlib.util
 from pathlib import Path
 
@@ -42,6 +44,10 @@ from compiler.backends.rom.deepseek_v4_array import (
 )
 from runtime.abi3.capability import canonical_json
 from runtime.abi3.constants import (
+    NO_ID,
+    Attention,
+    Control,
+    DType,
     Dma,
     Major,
     ParticipantScope,
@@ -49,7 +55,14 @@ from runtime.abi3.constants import (
     TopologyClass,
 )
 from runtime.abi3.constants import Tensor as TensorOp
+from runtime.abi3.crc import sha256
 from runtime.abi3.descriptors import CollectiveOp, ExtendedDescriptorType
+from runtime.abi3.records import (
+    ProgramHeader,
+    decode_body,
+    encode_body,
+    split_program,
+)
 from runtime.abi3.verifier import verify_deployment
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -369,3 +382,170 @@ def test_the_array_and_the_wafer_generate_identical_tokens(
     divergence = next((i for i, (a, b) in enumerate(zip(left, right)) if a != b), None)
     assert divergence is None, f"array and wafer diverge at token {divergence}: {left} vs {right}"
     assert left == right
+
+
+# ---------------------------------------------------------------------------
+# the released Flash graph: phase layouts and the fused sparse KV operand
+# ---------------------------------------------------------------------------
+FLASH_IR = ROOT / "build" / "ir-v3" / "deepseek-v4-flash-0731" / "kernel_ir.v3.json"
+
+
+@pytest.fixture(scope="module")
+def flash_array_build():
+    """Lower the released Flash IR on the array.  The checkpoint is not read."""
+    if not FLASH_IR.exists():
+        pytest.skip(f"{FLASH_IR} is not built (make abi3-ir)")
+    from compiler.ir.v3.kernel_ir import KernelGraph
+
+    graph = KernelGraph.read(FLASH_IR)
+    capability = deepseek_v4_array_rom_capability()
+    deployment, _plan = build_deepseek_v4_array_rom_deployment(
+        graph, capability=capability
+    )
+    return graph, deployment, capability
+
+
+def _sparse_attention_operators(deployment):
+    return [
+        descriptor
+        for descriptor in deployment.table.descriptors()
+        if descriptor.descriptor_type == ExtendedDescriptorType.OPERATOR
+        and descriptor.payload["engine_family"] == int(Major.ATTENTION)
+        and descriptor.payload["engine_sub"] == int(Attention.SPARSE)
+    ]
+
+
+def test_the_fused_sparse_kv_operand_is_rank_two_in_every_phase(flash_array_build):
+    """Amendment A6: ``ATTENTION.SPARSE`` reads ``[kv_rows, head_dim]``.
+
+    A window-only layer's prefill layout selects the current rows alone, so
+    the KV extent equals the query extent and the positional head broadcast
+    fired on it, presenting ``[rows, 64, 512]`` at stride zero on the head
+    axis; the engine refused the first layer's prefill.  Every phase of every
+    sparse attention has to present the fused rank-two view.
+    """
+    _graph, deployment, _capability = flash_array_build
+    operators = _sparse_attention_operators(deployment)
+    assert len(operators) >= 2
+    for operator in operators:
+        view = deployment.table[operator.payload["input_view_1"]]
+        assert view.payload["rank"] == 2, (
+            operator.payload["source_kernel_id"],
+            view.payload,
+        )
+        assert view.payload["dtype"] == int(DType.BF16)
+
+
+PHASE_LAYOUT_RULES = (
+    "phase_layout_wait",
+    "phase_layout_coverage",
+    "phase_layout_convergence",
+    "phase_layout_program_order",
+)
+
+
+def test_the_checker_certifies_the_phase_layout_convergence(flash_array_build):
+    """The phase-selected joins converge before their consumers issue."""
+    graph, deployment, capability = flash_array_build
+    report = check_rom_schedule(graph, deployment, capability)
+    assert report["status"] == "pass", report["errors"][:5]
+    for rule in PHASE_LAYOUT_RULES:
+        assert report["checks"][rule] is True, rule
+    assert report["checks"]["rolling_history_terminal_fence"] is True
+
+
+def _with_instructions(deployment, instructions):
+    """Rebind a rewritten body under a consistent header and manifest."""
+    old, _body = split_program(deployment.program)
+    body = encode_body(instructions)
+    fields = {
+        "instruction_count": len(instructions),
+        "entrypoint_count": old.entrypoint_count,
+        "required_features": old.required_features,
+        "deployment_digest": bytes(32),
+        "descriptor_table_digest": old.descriptor_table_digest,
+        "topology_digest": old.topology_digest,
+        "body_digest": sha256(body),
+        "max_retired_work": old.max_retired_work,
+        "watchdog_class": old.watchdog_class,
+        "entrypoint_table_descriptor": old.entrypoint_table_descriptor,
+        "signature_metadata_descriptor": old.signature_metadata_descriptor,
+    }
+    candidate = copy.deepcopy(deployment)
+    candidate.program = ProgramHeader(**fields).encode() + body
+    return _suite._restamp(candidate)
+
+
+def test_the_checker_refuses_a_phase_layout_that_does_not_converge(
+    flash_array_build,
+):
+    """A phase block's fence turned into a NOP leaves its consumer unordered.
+
+    The certificate is the fence (or the guarded wait) before control leaves
+    the block; without it the consumer's program-order position proves
+    nothing, and the checker has to say so rather than keep certifying the
+    join through its position alone.
+    """
+    graph, deployment, capability = flash_array_build
+    _header, body = split_program(deployment.program)
+    instructions = decode_body(body)
+    fence = next(
+        index
+        for index, instruction in enumerate(instructions)
+        if instruction.major == int(Major.CONTROL)
+        and instruction.sub == int(Control.FENCE)
+        and instruction.source_operation_id != NO_ID
+    )
+    instructions[fence] = dataclasses.replace(
+        instructions[fence], sub=int(Control.NOP)
+    )
+    candidate = _with_instructions(deployment, instructions)
+    report = check_rom_schedule(graph, candidate, capability)
+    assert report["status"] == "fail"
+    assert report["checks"]["phase_layout_convergence"] is False
+    assert report["checks"]["rolling_history_terminal_fence"] is True
+
+
+def test_the_checker_refuses_a_consumer_ahead_of_its_phase_layout(
+    flash_array_build,
+):
+    """Moving the join's consumer above the block breaks program order."""
+    graph, deployment, capability = flash_array_build
+    _header, body = split_program(deployment.program)
+    instructions = decode_body(body)
+    joins = [
+        index
+        for index, instruction in enumerate(instructions)
+        if instruction.major == int(Major.CONTROL)
+        and instruction.sub == int(Control.BRANCH)
+        and instruction.source_operation_id != NO_ID
+        and instruction.predicate_id != NO_ID
+    ]
+    assert joins, "no phase-layout branch in the program"
+    block = joins[0]
+    source = int(instructions[block].source_operation_id)
+    consumer = next(
+        index
+        for index, instruction in enumerate(instructions)
+        if index > block
+        and instruction.major == int(Major.ATTENTION)
+        and instruction.source_operation_id != source
+    )
+    hoisted = instructions[consumer]
+    rewritten = [*instructions[:block], hoisted, *instructions[block:]]
+    del rewritten[consumer + 1]
+    # Forward branch targets past the insertion point move down by one.
+    for index, instruction in enumerate(rewritten):
+        if (
+            instruction.major == int(Major.CONTROL)
+            and instruction.sub == int(Control.BRANCH)
+            and int(instruction.control_id) > block
+        ):
+            rewritten[index] = dataclasses.replace(
+                instruction, control_id=int(instruction.control_id) + 1
+            )
+    candidate = _with_instructions(deployment, rewritten)
+    report = check_rom_schedule(graph, candidate, capability)
+    assert report["status"] == "fail"
+    assert report["checks"]["phase_layout_program_order"] is False
+

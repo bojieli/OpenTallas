@@ -48,8 +48,6 @@ an HBM deployment of the same graph differ in nothing else.
 
 from __future__ import annotations
 
-import math
-
 from dataclasses import dataclass, field as dc_field
 from typing import Any, Callable, Iterable, Mapping, Sequence
 
@@ -122,12 +120,13 @@ from runtime.reference.compression_pool import PINNED_COMPRESSION_RATIOS
 from .image import (
     DTYPE_BY_NAME,
     DefectRecord,
+    ROM_PERMISSIONS,
     RegionRequest,
     RomCoordinate,
     RomImagePlan,
     RomLayoutPolicy,
     RomMember,
-    ROM_PERMISSIONS,
+    RomRegion,
     emit_rom_objects,
     plan_rom_image,
 )
@@ -4453,8 +4452,22 @@ class RomLowering:
             direction == "in"
             and slot > 0
             and tensor.dtype not in INDEX_DTYPES
+            and not (
+                family is Major.ATTENTION
+                and sub == int(Attention.SPARSE)
+                and slot == 1
+            )
         ):
-            # An index is not broadcast.  ``_broadcast`` inserts the principal's
+            # An index is not broadcast.  Neither is amendment A6's fused KV:
+            # ``ATTENTION.SPARSE`` reads ``[kv_rows, head_dim]`` with one KV
+            # head by construction, and the engine refuses a rank-three view
+            # there.  ``_broadcast`` is positional -- it inserts the query's
+            # head axis at stride zero whenever the KV rows equal the query
+            # rows -- and a window-only layer's prefill view is exactly that
+            # case: its phase layout selects the current rows alone, so the
+            # two leading extents agree and the rule fired on the one operand
+            # whose contract forbids it.  The compressed layers escaped only
+            # because their prefix made the extents differ.  ``_broadcast`` inserts the principal's
             # missing middle axes at stride zero so that a coefficient row held
             # per *token* reaches a tensor held per ``(token, head)``; that is a
             # statement about values every head shares.  An index array names
