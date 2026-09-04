@@ -207,6 +207,88 @@ A DeepSeek cluster or wafer request is submitted once to one logical-device
 queue. Internal node, reticle, tile, or layer launches are device-program work,
 not host submissions.
 
+### 6.1 Amendment A29 — authenticated request-symbol descriptor
+
+The frozen submission already assigns bytes 28 through 31 to
+`request_descriptor_id`, but the initial implementation passed runtime symbols
+beside that record as a Python mapping. That side channel was not integrity
+bound to the deployment, session generation or transaction named by the
+submission. A queue consumer could therefore execute bytes that authenticated
+one request with symbols supplied by another.
+
+A `GENERATE` submission now names one separately registered request-symbol
+descriptor. This is a queue-side object, not a deployment-table descriptor and
+not a microcode operand. It is aligned to 64 bytes, has a 128-byte header, and
+is followed by fixed 16-byte symbol entries and zero padding to the next
+64-byte boundary.
+
+#### 6.1.1 Request descriptor header
+
+| Offset | Size | Field | Rule |
+|---:|---:|---|---|
+| 0 | 4 | magic | ASCII `TA3R` |
+| 4 | 1 | ABI major | `3` |
+| 5 | 1 | ABI minor | `0` |
+| 6 | 1 | type major | `1` |
+| 7 | 1 | type minor | `0` initially; newer unsupported values fail |
+| 8 | 2 | header bytes | `128` |
+| 10 | 2 | entry bytes | `16` |
+| 12 | 4 | total record bytes | header, entries and zero padding |
+| 16 | 4 | request descriptor ID | equals submission byte 28 |
+| 20 | 4 | symbol count | exactly the frozen registry size |
+| 24 | 4 | deployment ID | equals submission byte 12 |
+| 28 | 4 | deployment generation | equals submission byte 16 |
+| 32 | 4 | session ID | equals submission byte 20 |
+| 36 | 4 | session generation | equals submission byte 24 and the live session |
+| 40 | 8 | transaction ID | equals submission byte 32 |
+| 48 | 4 | payload bytes | `symbol count × 16` |
+| 52 | 4 | flags | reserved, zero |
+| 56 | 32 | content digest | SHA-256 rule below |
+| 88 | 36 | reserved | zero |
+| 124 | 4 | record CRC32C | entire record with this field zero |
+
+The content digest is SHA-256 over the complete padded record with both bytes
+56 through 87 and bytes 124 through 127 treated as zero. CRC32C therefore
+covers the stored digest, while SHA-256 binds every ownership field, entry and
+padding byte. This is an integrity binding inside an already authenticated
+registration boundary; it is not a deployment signature and does not replace
+signed-deployment policy.
+
+#### 6.1.2 Request symbol entry
+
+| Offset | Size | Field | Rule |
+|---:|---:|---|---|
+| 0 | 4 | symbol ID | one value from the section 12.2 registry |
+| 4 | 4 | reserved | zero |
+| 8 | 8 | value | unsigned little-endian runtime value |
+
+Every frozen runtime symbol appears exactly once. A missing, duplicate or
+unknown symbol fails admission; the device does not supply a silent default.
+The driver serializes entries in ascending symbol-ID order for deterministic
+artifacts. Decoders do not depend on order, because uniqueness and completeness
+are checked independently.
+
+The descriptor lifecycle is bounded and fail closed:
+
+1. the driver serializes the complete map and registers it before publishing
+   the submission;
+2. the live pool contains no more than the capability's `max_sessions`, and at
+   most one descriptor is live for a session;
+3. IDs increase monotonically for one activated-device epoch and are not
+   recycled, so replay does not require an unbounded tombstone set;
+4. the device resolves the ID, removes the descriptor from the pool, checks
+   both integrity seals, verifies the complete symbol set and checks every
+   deployment/session/transaction binding before any engine issues;
+5. success or refusal consumes the descriptor exactly once; session generation
+   advance and session destruction retire any outstanding descriptor for that
+   session; and
+6. scalar execution requires `BATCH=1`. A dynamic batch remains several
+   ordinary scalar submissions under one scheduler, and every lane descriptor
+   must carry the scheduler's exact physical `BATCH=N` before any lane issues.
+
+This amendment assigns no submission or completion byte and creates no vector
+host record. Both remain exactly 128 bytes under ABI 3.0.
+
 ## 7. Host completion record
 
 Completion rings contain fixed 128-byte records aligned to 128 bytes.
@@ -2191,6 +2273,7 @@ remain normative.
 | A26 | an edge mask clamps a rolling tensor view at the final partial loop iteration without advancing its element offset | this document, section 12.17 |
 | A27 | a joined zero-base prefill row carries the logical query position across a fixed-address stream | this document, section 12.18; operator conventions, section 23 |
 | A28 | a symmetric cluster object may bind one ordered authenticated local image per node through a domain-separated manifest content root | this document, section 12.19; `runtime/abi3/deployment.py` |
+| A29 | `request_descriptor_id` resolves one integrity-bound, generation- and transaction-owned complete runtime-symbol map | this document, section 6.1; `runtime/abi3/request.py` |
 
 Two of these carry more weight than the rest. **A4** and **A13** together are
 what make a loop-compressed program possible at all: A4 lets a descriptor be a

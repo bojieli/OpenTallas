@@ -8,8 +8,9 @@ the device's SELECTION engine, driven by the compiled program, and the driver
 only reads the result out of the token ring.
 
 Every request and completion crosses the boundary as a real encoded 128-byte
-ABI 3.0 record, not as a Python object, so the queue format is exercised on
-every generated token rather than only in a unit test.
+ABI 3.0 record.  The complete runtime-symbol map crosses in the separately
+encoded record named by ``request_descriptor_id``; no Python symbol sidecar is
+accepted by the device queue.
 """
 
 from __future__ import annotations
@@ -34,6 +35,7 @@ from runtime.abi3.constants import (
 )
 from runtime.abi3.descriptors import ExtendedDescriptorType, Phase, SelectorKind, Symbol
 from runtime.abi3.records import Completion, EosReason, Submission
+from runtime.abi3.request import RequestSymbolDescriptor
 from runtime.sim.device import Device, Session, TransactionResult
 
 
@@ -335,52 +337,44 @@ class GenerationDriver:
         phase: Phase,
         max_new_tokens: int,
     ) -> tuple[Completion, TransactionResult]:
-        """Encode a real submission, run the transaction, encode a completion."""
+        """Register symbols, then execute only the encoded ABI submission."""
         transaction = self._next_transaction()
-        request = Submission(
-            host_opcode=int(HostOpcode.GENERATE),
+        descriptor_id = self.device.next_request_descriptor_id
+        descriptor = RequestSymbolDescriptor.from_symbols(
+            request_descriptor_id=descriptor_id,
             deployment_id=self.device.deployment.deployment_id,
             deployment_generation=self.device.deployment.generation,
             session_id=session.session_id,
             session_generation=session.generation,
             transaction_id=transaction,
-            idempotency_key=self._idempotency_key(session, transaction),
-            input_window_id=self.input_object_id,
-            output_window_id=self.token_ring_object_id,
-            entrypoint_id=entrypoint,
-            generation_policy_id=NO_ID,
-            watchdog_class=1,
-            flags=int(
-                SubmissionFlag.PREFILL_PHASE
-                if phase is Phase.PREFILL
-                else SubmissionFlag.DECODE_PHASE
-            ),
-        ).encode()
-        decoded = Submission.decode(request)  # the device sees only the bytes
-        result = self.device.run_transaction(
-            session,
-            entrypoint_id=decoded.entrypoint_id,
             symbols=symbols,
-            generation_policy_id=self._policy_id(),
         )
-        completion = Completion(
-            status=result.status,
-            transaction_id=decoded.transaction_id,
-            deployment_id=decoded.deployment_id,
-            deployment_generation=decoded.deployment_generation,
-            session_id=decoded.session_id,
-            session_generation=session.generation,
-            trap_class=result.trap_class,
-            committed_token_position=session.position,
-            produced_token_count=len(result.produced_tokens),
-            committed_state_generation=session.generation,
-            first_fault_instruction=result.first_fault_instruction,
-            idempotency_key=decoded.idempotency_key,
-            final_token_id=result.selected_token,
-            eos_reason=result.eos_reason,
-            retired_work=result.retired,
-            completion_timestamp=self.device._device_cycle,
-        ).encode()
+        self.device.register_request_descriptor(descriptor.encode())
+        try:
+            request = Submission(
+                host_opcode=int(HostOpcode.GENERATE),
+                deployment_id=self.device.deployment.deployment_id,
+                deployment_generation=self.device.deployment.generation,
+                session_id=session.session_id,
+                session_generation=session.generation,
+                request_descriptor_id=descriptor_id,
+                transaction_id=transaction,
+                idempotency_key=self._idempotency_key(session, transaction),
+                input_window_id=self.input_object_id,
+                output_window_id=self.token_ring_object_id,
+                entrypoint_id=entrypoint,
+                generation_policy_id=NO_ID,
+                watchdog_class=1,
+                flags=int(
+                    SubmissionFlag.PREFILL_PHASE
+                    if phase is Phase.PREFILL
+                    else SubmissionFlag.DECODE_PHASE
+                ),
+            ).encode()
+        except Exception:
+            self.device.discard_request_descriptors((descriptor_id,))
+            raise
+        completion, result = self.device.execute_submission(request)
         return Completion.decode(completion), result
 
     def _policy_id(self) -> int:

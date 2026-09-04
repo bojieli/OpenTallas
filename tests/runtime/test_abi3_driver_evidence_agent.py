@@ -189,6 +189,11 @@ def test_driver_binds_every_frozen_runtime_symbol():
     )
     assert set(request) == {int(symbol) for symbol in Symbol}
     assert len(request) == 15
+    assert device.last_request_descriptor is not None
+    assert device.last_request_descriptor.symbol_map() == request
+    assert device.last_request_descriptor.session_id == 1
+    assert device.last_request_descriptor.transaction_id == 1
+    assert device.live_request_descriptor_count == 0
 
 
 def test_driver_retains_raw_completion_ticks_with_the_token_result():

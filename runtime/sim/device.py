@@ -16,6 +16,7 @@ from __future__ import annotations
 import time
 from dataclasses import dataclass, field as dc_field
 from pathlib import Path
+from types import MappingProxyType
 from typing import Any, Mapping, Sequence
 
 
@@ -30,6 +31,7 @@ from runtime.abi3.constants import (
     NO_ID,
     Recovery,
     State,
+    SubmissionFlag,
     TrapClass,
 )
 from runtime.abi3.deployment import Deployment
@@ -37,6 +39,7 @@ from runtime.abi3.descriptors import (
     Comparison,
     Descriptor,
     ExtendedDescriptorType,
+    Phase,
     PredicateKind,
     SelectorKind,
     Symbol,
@@ -50,7 +53,14 @@ from runtime.abi3.records import (
     decode_body,
     split_program,
 )
-from runtime.abi3.verifier import require_admitted, VerificationReport
+from runtime.abi3.request import RequestSymbolDescriptor
+from runtime.abi3.crc import sha256
+from runtime.abi3.verifier import (
+    VerificationError,
+    VerificationReport,
+    require_admitted,
+    verify_request_symbol_descriptor,
+)
 from runtime.sim.counters import CounterSet
 from runtime.sim.engine import EngineContext, EngineError, dispatch
 from runtime.sim.memory import DeviceMemory, MemoryError_, ViewResolver
@@ -206,6 +216,29 @@ class TransactionResult:
         }
 
 
+@dataclass(frozen=True, slots=True)
+class _RegisteredRequestDescriptor:
+    """An immutable pool entry and its registration-time content binding."""
+
+    record: bytes
+    digest: bytes
+    session_id: int
+    session_generation: int
+    transaction_id: int
+
+
+@dataclass(frozen=True, slots=True)
+class PreparedSubmission:
+    """A decoded submission whose one-shot symbol record has been admitted."""
+
+    request: Submission
+    session: Session
+    descriptor: RequestSymbolDescriptor
+    symbols: Mapping[int, int]
+    generation_policy_id: int
+    request_digest: bytes
+
+
 # ---------------------------------------------------------------------------
 # Device
 # ---------------------------------------------------------------------------
@@ -316,6 +349,13 @@ class Device:
         self._entrypoints = self._load_entrypoints()
         self._next_session = 1
         self._device_cycle = 0
+        # Request descriptors are queue-side capabilities, not deployment
+        # descriptors.  At most one may be live per resident session, and IDs
+        # are monotonic for the activated-device epoch so a consumed record can
+        # never be registered again under an old ID.
+        self._request_descriptors: dict[int, _RegisteredRequestDescriptor] = {}
+        self._next_request_descriptor = 1
+        self.last_request_descriptor: RequestSymbolDescriptor | None = None
 
     def host_performance_snapshot(self) -> dict[str, Any]:
         """Complete host-only observations for this activated device epoch."""
@@ -906,6 +946,11 @@ class Device:
         for commit in pending:
             self._apply_commit(commit, counters, session_memories)
         session.generation += 1
+        # A request record is generation-scoped.  The canonical queue path has
+        # already consumed its own entry; this also retires any record a
+        # low-level test/tool registered and then made stale through a direct
+        # transaction.
+        self._retire_session_request_descriptors(session.session_id)
         for token in produced:
             session.tokens.append(token)
             session.generated.append(token)
@@ -1380,6 +1425,376 @@ class Device:
         )
         return memory[object_id]
 
+    # -- request descriptor pool ----------------------------------------
+    @property
+    def next_request_descriptor_id(self) -> int:
+        """The only descriptor ID the queue will admit next."""
+
+        if self._next_request_descriptor == NO_ID:
+            raise DeviceTrap(
+                "request descriptor ID space is exhausted for this device epoch",
+                TrapClass.CAPABILITY_OR_RESOURCE,
+            )
+        return self._next_request_descriptor
+
+    @property
+    def live_request_descriptor_count(self) -> int:
+        return len(self._request_descriptors)
+
+    def register_request_descriptor(self, record: bytes) -> int:
+        """Admit one immutable, session-owned request-symbol record.
+
+        The pool is bounded by ``max_sessions`` and admits at most one live
+        record per session.  IDs advance monotonically and are never recycled,
+        which makes a consumed ID unambiguously stale without retaining an
+        unbounded replay set.
+        """
+
+        if len(self._request_descriptors) >= int(
+            self.capability.limits["max_sessions"]
+        ):
+            raise DeviceTrap(
+                "request descriptor pool is full",
+                TrapClass.CAPABILITY_OR_RESOURCE,
+            )
+        try:
+            descriptor = RequestSymbolDescriptor.decode(bytes(record))
+        except Exception as exc:
+            raise DeviceTrap(
+                f"request descriptor failed integrity admission: {exc}",
+                TrapClass.AUTHENTICATION_OR_INTEGRITY,
+            ) from exc
+        if descriptor.request_descriptor_id != self.next_request_descriptor_id:
+            raise DeviceTrap(
+                f"request descriptor ID {descriptor.request_descriptor_id} is "
+                f"stale, replayed, or out of order; expected "
+                f"{self.next_request_descriptor_id}",
+                TrapClass.AUTHENTICATION_OR_INTEGRITY,
+            )
+        try:
+            verify_request_symbol_descriptor(descriptor, self.capability)
+        except VerificationError as exc:
+            raise DeviceTrap(str(exc), TrapClass.DESCRIPTOR_OR_ADDRESS) from exc
+        if (
+            descriptor.deployment_id != self.deployment.deployment_id
+            or descriptor.deployment_generation != self.deployment.generation
+        ):
+            raise DeviceTrap(
+                "request descriptor names a different deployment generation",
+                TrapClass.ADMISSION_OR_VERSION,
+            )
+        session = self.sessions.get(descriptor.session_id)
+        if session is None:
+            raise DeviceTrap(
+                f"request descriptor names unknown session {descriptor.session_id}",
+                TrapClass.STATE_TRANSACTION,
+            )
+        if descriptor.session_generation != session.generation:
+            raise DeviceTrap(
+                f"request descriptor session generation "
+                f"{descriptor.session_generation} is stale; live generation is "
+                f"{session.generation}",
+                TrapClass.STATE_TRANSACTION,
+            )
+        if descriptor.transaction_id == 0:
+            raise DeviceTrap(
+                "request descriptor transaction ID must be nonzero",
+                TrapClass.DESCRIPTOR_OR_ADDRESS,
+            )
+        if any(
+            item.session_id == descriptor.session_id
+            for item in self._request_descriptors.values()
+        ):
+            raise DeviceTrap(
+                f"session {descriptor.session_id} already owns a live request "
+                "descriptor",
+                TrapClass.CAPABILITY_OR_RESOURCE,
+            )
+        self._request_descriptors[descriptor.request_descriptor_id] = (
+            _RegisteredRequestDescriptor(
+                record=bytes(record),
+                digest=sha256(bytes(record)),
+                session_id=descriptor.session_id,
+                session_generation=descriptor.session_generation,
+                transaction_id=descriptor.transaction_id,
+            )
+        )
+        self._next_request_descriptor += 1
+        return descriptor.request_descriptor_id
+
+    def discard_request_descriptors(self, descriptor_ids: Sequence[int]) -> None:
+        """Retire named pool entries without issuing work."""
+
+        for descriptor_id in descriptor_ids:
+            self._request_descriptors.pop(int(descriptor_id), None)
+
+    def _retire_session_request_descriptors(self, session_id: int) -> None:
+        stale = [
+            descriptor_id
+            for descriptor_id, item in self._request_descriptors.items()
+            if item.session_id == int(session_id)
+        ]
+        self.discard_request_descriptors(stale)
+
+    def _consume_request_descriptor(
+        self, request: Submission
+    ) -> tuple[RequestSymbolDescriptor, dict[int, int]]:
+        descriptor_id = int(request.request_descriptor_id)
+        if descriptor_id == NO_ID:
+            raise DeviceTrap(
+                "GENERATE submission is missing request_descriptor_id",
+                TrapClass.DESCRIPTOR_OR_ADDRESS,
+            )
+        registered = self._request_descriptors.pop(descriptor_id, None)
+        if registered is None:
+            raise DeviceTrap(
+                f"request descriptor ID {descriptor_id} is unknown, stale, or "
+                "already consumed",
+                TrapClass.AUTHENTICATION_OR_INTEGRITY,
+            )
+        if sha256(registered.record) != registered.digest:
+            raise DeviceTrap(
+                f"request descriptor ID {descriptor_id} changed after admission",
+                TrapClass.AUTHENTICATION_OR_INTEGRITY,
+            )
+        try:
+            descriptor = RequestSymbolDescriptor.decode(registered.record)
+            symbols = verify_request_symbol_descriptor(descriptor, self.capability)
+        except (VerificationError, ValueError) as exc:
+            raise DeviceTrap(
+                f"request descriptor ID {descriptor_id} failed authentication: {exc}",
+                TrapClass.AUTHENTICATION_OR_INTEGRITY,
+            ) from exc
+
+        bindings = (
+            ("request_descriptor_id", descriptor.request_descriptor_id, descriptor_id),
+            ("deployment_id", descriptor.deployment_id, request.deployment_id),
+            (
+                "deployment_generation",
+                descriptor.deployment_generation,
+                request.deployment_generation,
+            ),
+            ("session_id", descriptor.session_id, request.session_id),
+            (
+                "session_generation",
+                descriptor.session_generation,
+                request.session_generation,
+            ),
+            ("transaction_id", descriptor.transaction_id, request.transaction_id),
+        )
+        for name, bound, submitted in bindings:
+            if int(bound) != int(submitted):
+                raise DeviceTrap(
+                    f"request descriptor {descriptor_id} binds {name}={bound}, "
+                    f"submission names {submitted}",
+                    TrapClass.STATE_TRANSACTION,
+                )
+        self.last_request_descriptor = descriptor
+        return descriptor, symbols
+
+    def prepare_request(
+        self, request: Submission, *, expected_batch: int = 1
+    ) -> PreparedSubmission:
+        """Consume and authenticate one GENERATE request before engine issue."""
+
+        if HostOpcode(request.host_opcode) is not HostOpcode.GENERATE:
+            raise DeviceTrap(
+                "request-symbol descriptors are valid only for GENERATE",
+                TrapClass.ADMISSION_OR_VERSION,
+            )
+        descriptor, symbols = self._consume_request_descriptor(request)
+        if (
+            request.deployment_id != self.deployment.deployment_id
+            or request.deployment_generation != self.deployment.generation
+        ):
+            raise DeviceTrap(
+                "submission names a different deployment generation",
+                TrapClass.ADMISSION_OR_VERSION,
+            )
+        session = self.sessions.get(request.session_id)
+        if session is None:
+            raise DeviceTrap(
+                f"submission names unknown session {request.session_id}",
+                TrapClass.STATE_TRANSACTION,
+            )
+        if request.session_generation != session.generation:
+            raise DeviceTrap(
+                f"submission session generation {request.session_generation} is "
+                f"stale; live generation is {session.generation}",
+                TrapClass.STATE_TRANSACTION,
+            )
+        if request.entrypoint_id not in self._entrypoints:
+            raise DeviceTrap(
+                f"unknown entrypoint {request.entrypoint_id}",
+                TrapClass.ADMISSION_OR_VERSION,
+            )
+        entry = self._entrypoints[request.entrypoint_id]
+        phase_flags = int(request.flags) & int(
+            SubmissionFlag.PREFILL_PHASE | SubmissionFlag.DECODE_PHASE
+        )
+        expected_flag = int(
+            SubmissionFlag.PREFILL_PHASE
+            if int(entry["phase"]) == int(Phase.PREFILL)
+            else SubmissionFlag.DECODE_PHASE
+        )
+        if phase_flags != expected_flag:
+            raise DeviceTrap(
+                "submission phase flag does not match its entrypoint",
+                TrapClass.DESCRIPTOR_OR_ADDRESS,
+            )
+        if symbols[int(Symbol.PHASE)] != int(entry["phase"]):
+            raise DeviceTrap(
+                f"request descriptor PHASE={symbols[int(Symbol.PHASE)]} does not "
+                f"match entrypoint phase {entry['phase']}",
+                TrapClass.DESCRIPTOR_OR_ADDRESS,
+            )
+        if symbols[int(Symbol.GENERATION_INDEX)] != len(session.generated):
+            raise DeviceTrap(
+                f"request descriptor GENERATION_INDEX="
+                f"{symbols[int(Symbol.GENERATION_INDEX)]} does not match committed "
+                f"generation length {len(session.generated)}",
+                TrapClass.STATE_TRANSACTION,
+            )
+        if symbols[int(Symbol.NODE_COUNT)] != self.node_count:
+            raise DeviceTrap(
+                f"request descriptor NODE_COUNT={symbols[int(Symbol.NODE_COUNT)]} "
+                f"does not match admitted topology {self.node_count}",
+                TrapClass.DESCRIPTOR_OR_ADDRESS,
+            )
+        if symbols[int(Symbol.NODE_ID)] != 0:
+            raise DeviceTrap(
+                "request descriptor NODE_ID must be zero at the queue boundary",
+                TrapClass.DESCRIPTOR_OR_ADDRESS,
+            )
+        actual_batch = symbols[int(Symbol.BATCH)]
+        if actual_batch != int(expected_batch):
+            raise DeviceTrap(
+                f"request descriptor does not bind Symbol.BATCH={expected_batch} "
+                f"(got {actual_batch})",
+                TrapClass.DESCRIPTOR_OR_ADDRESS,
+            )
+        policy_id = int(request.generation_policy_id)
+        entry_policy = int(entry["generation_policy_id"])
+        if policy_id == NO_ID:
+            policy_id = entry_policy
+        elif policy_id != entry_policy:
+            raise DeviceTrap(
+                f"submission generation policy {policy_id} does not match "
+                f"entrypoint policy {entry_policy}",
+                TrapClass.DESCRIPTOR_OR_ADDRESS,
+            )
+        return PreparedSubmission(
+            request=request,
+            session=session,
+            descriptor=descriptor,
+            symbols=MappingProxyType(dict(symbols)),
+            generation_policy_id=policy_id,
+            request_digest=sha256(request.encode()),
+        )
+
+    def _completion_record(
+        self,
+        request: Submission,
+        result: TransactionResult,
+        session: Session | None,
+    ) -> bytes:
+        generation = (
+            int(session.generation)
+            if session is not None
+            else int(request.session_generation)
+        )
+        return Completion(
+            status=result.status,
+            transaction_id=request.transaction_id,
+            deployment_id=request.deployment_id,
+            deployment_generation=request.deployment_generation,
+            session_id=request.session_id,
+            session_generation=generation,
+            trap_class=result.trap_class,
+            committed_token_position=0 if session is None else session.position,
+            produced_token_count=len(result.produced_tokens),
+            committed_state_generation=generation,
+            first_fault_instruction=result.first_fault_instruction,
+            idempotency_key=request.idempotency_key,
+            final_token_id=result.selected_token,
+            eos_reason=result.eos_reason,
+            retired_work=result.retired,
+            completion_timestamp=self._device_cycle,
+        ).encode()
+
+    def execute_prepared_submission(
+        self,
+        prepared: PreparedSubmission,
+        *,
+        batch_execution_id: str | None = None,
+    ) -> tuple[bytes, TransactionResult]:
+        """Issue a request that already consumed its authenticated descriptor."""
+
+        request = prepared.request
+        session = prepared.session
+        if sha256(request.encode()) != prepared.request_digest:
+            result = TransactionResult(
+                status=CompletionStatus.FAILED,
+                trap_class=TrapClass.AUTHENTICATION_OR_INTEGRITY,
+                message="prepared submission changed after authentication",
+            )
+        elif (
+            self.sessions.get(session.session_id) is not session
+            or session.generation != request.session_generation
+        ):
+            result = TransactionResult(
+                status=CompletionStatus.FAILED,
+                trap_class=TrapClass.STATE_TRANSACTION,
+                message="prepared submission became stale before engine issue",
+            )
+        else:
+            result = self.run_transaction(
+                session,
+                entrypoint_id=request.entrypoint_id,
+                symbols=prepared.symbols,
+                generation_policy_id=prepared.generation_policy_id,
+                batch_execution_id=batch_execution_id,
+            )
+        return self._completion_record(request, result, session), result
+
+    def execute_submission(
+        self,
+        record: bytes,
+        *,
+        expected_batch: int = 1,
+        batch_execution_id: str | None = None,
+    ) -> tuple[bytes, TransactionResult]:
+        """Canonical wire path for one scalar ABI 3.0 GENERATE record."""
+
+        try:
+            request = Submission.decode(record)
+        except Exception as exc:
+            result = TransactionResult(
+                status=CompletionStatus.FAILED,
+                trap_class=TrapClass.AUTHENTICATION_OR_INTEGRITY,
+                message=f"submission failed authentication: {exc}",
+            )
+            completion = Completion(
+                status=result.status,
+                transaction_id=0,
+                trap_class=result.trap_class,
+            ).encode()
+            return completion, result
+        try:
+            prepared = self.prepare_request(request, expected_batch=expected_batch)
+        except DeviceTrap as fault:
+            result = TransactionResult(
+                status=CompletionStatus.FAILED,
+                trap_class=fault.trap_class,
+                first_fault_instruction=fault.instruction,
+                message=str(fault),
+            )
+            session = self.sessions.get(request.session_id)
+            return self._completion_record(request, result, session), result
+        return self.execute_prepared_submission(
+            prepared, batch_execution_id=batch_execution_id
+        )
+
     # -- host queue --------------------------------------------------------
     def submit(self, record: bytes) -> bytes:
         """Execute one encoded host submission and return an encoded completion.
@@ -1408,7 +1823,10 @@ class Device:
                 idempotency_key=request.idempotency_key,
                 completion_timestamp=self._device_cycle,
             ).encode()
+        if opcode is HostOpcode.GENERATE:
+            return self.execute_submission(record)[0]
         if opcode is HostOpcode.DESTROY_SESSION:
+            self._retire_session_request_descriptors(request.session_id)
             self.sessions.pop(request.session_id, None)
             return Completion(
                 status=CompletionStatus.SUCCESS,

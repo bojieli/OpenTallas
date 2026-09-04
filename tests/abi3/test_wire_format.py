@@ -22,6 +22,7 @@ import pytest
 from runtime.abi3 import constants as C
 from runtime.abi3 import descriptors as D
 from runtime.abi3 import records as R
+from runtime.abi3 import request as Q
 from runtime.abi3.crc import CRC32C_POLY_REFLECTED, crc32c
 
 from . import ROOT, WIRE_FORMAT_DOC
@@ -190,6 +191,33 @@ DESCRIPTOR_HEADER_NAMES = {
     "record_crc32c": "record_crc",
 }
 
+REQUEST_DESCRIPTOR_HEADER_NAMES = {
+    "magic": "magic",
+    "abi_major": "abi_major",
+    "abi_minor": "abi_minor",
+    "type_major": "type_major",
+    "type_minor": "type_minor",
+    "header_bytes": "header_bytes",
+    "entry_bytes": "entry_bytes",
+    "total_record_bytes": "total_bytes",
+    "request_descriptor_id": "request_descriptor_id",
+    "symbol_count": "symbol_count",
+    "deployment_id": "deployment_id",
+    "deployment_generation": "deployment_generation",
+    "session_id": "session_id",
+    "session_generation": "session_generation",
+    "transaction_id": "transaction_id",
+    "payload_bytes": "payload_bytes",
+    "flags": "flags",
+    "content_digest": "content_digest",
+    "record_crc32c": "record_crc",
+}
+
+REQUEST_SYMBOL_ENTRY_NAMES = {
+    "symbol_id": "symbol_id",
+    "value": "value",
+}
+
 SUBMISSION_NAMES = {
     "magic": "magic",
     "abi_major": "abi_major",
@@ -256,8 +284,20 @@ RECORD_TABLES = {
         D.DESCRIPTOR_HEADER,
         DESCRIPTOR_HEADER_NAMES,
     ),
-    "submission": ("6.", "Offset", R.SUBMISSION, SUBMISSION_NAMES),
+    "submission": ("6. Host submission", "Offset", R.SUBMISSION, SUBMISSION_NAMES),
     "completion": ("7.", "Offset", R.COMPLETION, COMPLETION_NAMES),
+    "request_descriptor_header": (
+        "6.1.1",
+        "Offset",
+        Q.REQUEST_DESCRIPTOR_HEADER,
+        REQUEST_DESCRIPTOR_HEADER_NAMES,
+    ),
+    "request_symbol_entry": (
+        "6.1.2",
+        "Offset",
+        Q.REQUEST_SYMBOL_ENTRY,
+        REQUEST_SYMBOL_ENTRY_NAMES,
+    ),
 }
 
 
@@ -333,6 +373,12 @@ def test_declared_record_sizes_match_the_document() -> None:
         )
         assert ring is not None
         assert int(ring.group(1)) == int(ring.group(2)) == size
+    request_descriptor = section_text("6.1")
+    request_header = re.search(r"has a (\d+)-byte header", request_descriptor)
+    request_entry = re.search(r"fixed (\d+)-byte symbol entries", request_descriptor)
+    assert request_header is not None and request_entry is not None
+    assert int(request_header.group(1)) == C.REQUEST_DESCRIPTOR_HEADER_BYTES
+    assert int(request_entry.group(1)) == C.REQUEST_SYMBOL_ENTRY_BYTES
 
 
 def test_magic_values_match_the_document() -> None:
@@ -341,6 +387,7 @@ def test_magic_values_match_the_document() -> None:
     for prefix, magic, constant in (
         ("5.", "TA3D", C.DESCRIPTOR_MAGIC),
         ("6.", "TA3S", C.SUBMISSION_MAGIC),
+        ("6.1.1", "TA3R", C.REQUEST_DESCRIPTOR_MAGIC),
         ("7.", "TA3C", C.COMPLETION_MAGIC),
     ):
         assert f"ASCII `{magic}`" in section_text(prefix)

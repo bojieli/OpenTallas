@@ -18,7 +18,7 @@ REPO = Path(__file__).resolve().parents[1]
 if str(REPO) not in sys.path:
     sys.path.insert(0, str(REPO))
 
-from runtime.abi3 import constants, descriptors, records  # noqa: E402
+from runtime.abi3 import constants, descriptors, records, request  # noqa: E402
 from runtime.abi3.capability import canonical_json  # noqa: E402
 from runtime.abi3.layout import Layout  # noqa: E402
 
@@ -49,14 +49,8 @@ def enum_record(enum_type) -> dict:
     return {member.name: int(member) for member in enum_type}
 
 
-def build() -> dict[str, dict]:
-    fixed = {
-        constants.DescriptorType(t).name
-        if t in {int(m) for m in constants.DescriptorType}
-        else descriptors.ExtendedDescriptorType(t).name: layout_record(layout)
-        for t, layout in descriptors.PAYLOAD_LAYOUTS.items()
-    }
-    return {
+def build(*, include_derived: bool = True) -> dict[str, dict]:
+    published = {
         "spec/abi3/records.json": {
             "contract": "TA-ABI3-WIRE-1",
             "abi": {"major": constants.ABI_MAJOR, "minor": constants.ABI_MINOR},
@@ -65,6 +59,10 @@ def build() -> dict[str, dict]:
             "submission": layout_record(records.SUBMISSION),
             "completion": layout_record(records.COMPLETION),
             "descriptor_header": layout_record(descriptors.DESCRIPTOR_HEADER),
+            "request_descriptor_header": layout_record(
+                request.REQUEST_DESCRIPTOR_HEADER
+            ),
+            "request_symbol_entry": layout_record(request.REQUEST_SYMBOL_ENTRY),
         },
         "spec/abi3/descriptor_payloads.json": {
             "contract": "TA-ABI3-WIRE-1",
@@ -142,8 +140,10 @@ def build() -> dict[str, dict]:
             },
         },
         "spec/abi3/counters.json": _counter_registry(),
-        "spec/abi3/numeric_contract_union.json": _numeric_union(),
     }
+    if include_derived:
+        published["spec/abi3/numeric_contract_union.json"] = _numeric_union()
+    return published
 
 
 def _numeric_union() -> dict:
@@ -181,9 +181,14 @@ def _counter_registry() -> dict:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--check", action="store_true", help="fail if files differ")
+    parser.add_argument(
+        "--wire-only",
+        action="store_true",
+        help="publish/check only source-defined wire layouts and registries",
+    )
     args = parser.parse_args()
     drifted = []
-    for relative, body in build().items():
+    for relative, body in build(include_derived=not args.wire_only).items():
         path = REPO / relative
         payload = canonical_json(body)
         if args.check:

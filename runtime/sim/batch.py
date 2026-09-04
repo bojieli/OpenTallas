@@ -21,7 +21,7 @@ from __future__ import annotations
 import hashlib
 import json
 from dataclasses import dataclass, field as dc_field
-from typing import Any, Mapping, Sequence
+from typing import Any, Sequence
 
 from runtime.abi3.constants import (
     CompletionStatus,
@@ -32,7 +32,13 @@ from runtime.abi3.constants import (
 )
 from runtime.abi3.descriptors import Symbol
 from runtime.abi3.records import Completion, EosReason, Submission
-from runtime.sim.device import Device, Session, TransactionResult
+from runtime.sim.device import (
+    Device,
+    DeviceTrap,
+    PreparedSubmission,
+    Session,
+    TransactionResult,
+)
 
 
 STRUCTURAL_BATCH_SCHEMA = "opentallas.abi3.structural_batch_execution.v1"
@@ -44,11 +50,10 @@ class BatchError(Exception):
 
 @dataclass(frozen=True)
 class BatchLaneSubmission:
-    """One existing ABI 3.0 submission plus its request-symbol bindings."""
+    """One existing ABI 3.0 submission; symbols live only in its descriptor."""
 
     lane_index: int
     record: bytes
-    symbols: Mapping[int, int]
 
 
 @dataclass
@@ -240,9 +245,9 @@ class BatchScheduler:
                 f"lane {lane_index} is outside physical batch {self.batch_size}"
             )
 
-    def _decode_wave(
+    def _decode_wave_unchecked(
         self, submissions: Sequence[BatchLaneSubmission]
-    ) -> list[tuple[BatchLaneSubmission, Submission]]:
+    ) -> list[tuple[BatchLaneSubmission, PreparedSubmission]]:
         if self.failed:
             raise BatchError("the batch has failed; no later wave may execute")
         expected = {lane for lane, active in enumerate(self.active) if active}
@@ -291,10 +296,6 @@ class BatchScheduler:
             if request.transaction_id in transaction_ids:
                 raise BatchError("transaction IDs must be unique within a batch wave")
             transaction_ids.add(request.transaction_id)
-            if item.symbols.get(int(Symbol.BATCH)) != self.batch_size:
-                raise BatchError(
-                    f"lane {lane} does not bind Symbol.BATCH={self.batch_size}"
-                )
             flags = int(request.flags) & int(
                 SubmissionFlag.PREFILL_PHASE | SubmissionFlag.DECODE_PHASE
             )
@@ -312,7 +313,39 @@ class BatchScheduler:
                     "request extents remain legal through per-lane symbols"
                 )
             decoded.append((item, request))
-        return decoded
+
+        prepared: list[tuple[BatchLaneSubmission, PreparedSubmission]] = []
+        for item, request in decoded:
+            lane = int(item.lane_index)
+            try:
+                admitted = self.device.prepare_request(
+                    request, expected_batch=self.batch_size
+                )
+            except DeviceTrap as exc:
+                raise BatchError(
+                    f"lane {lane} request descriptor was rejected: {exc}"
+                ) from exc
+            prepared.append((item, admitted))
+        return prepared
+
+    def _decode_wave(
+        self, submissions: Sequence[BatchLaneSubmission]
+    ) -> list[tuple[BatchLaneSubmission, PreparedSubmission]]:
+        """Admit the whole wave and retire every descriptor on any refusal."""
+
+        try:
+            return self._decode_wave_unchecked(submissions)
+        except Exception:
+            descriptor_ids: list[int] = []
+            for item in submissions:
+                try:
+                    descriptor_ids.append(
+                        Submission.decode(item.record).request_descriptor_id
+                    )
+                except Exception:
+                    continue
+            self.device.discard_request_descriptors(descriptor_ids)
+            raise
 
     def submit_wave(
         self, submissions: Sequence[BatchLaneSubmission]
@@ -328,39 +361,14 @@ class BatchScheduler:
         # Structural slice boundary: the scheduler owns one B=N wave, but the
         # functional engine dispatcher is still invoked lane-serially.  This is
         # deliberately visible in evidence and cannot qualify timing.
-        for item, request in decoded:
+        for item, prepared in decoded:
             lane = int(item.lane_index)
-            session = self.sessions[lane]
-            policy_id = request.generation_policy_id
-            if policy_id == NO_ID:
-                entry = self.device._entrypoints.get(request.entrypoint_id)
-                policy_id = NO_ID if entry is None else entry["generation_policy_id"]
-            result = self.device.run_transaction(
-                session,
-                entrypoint_id=request.entrypoint_id,
-                symbols=dict(item.symbols),
-                generation_policy_id=policy_id,
+            request = prepared.request
+            session = prepared.session
+            record, result = self.device.execute_prepared_submission(
+                prepared,
                 batch_execution_id=self.batch_execution_id,
             )
-            completion = Completion(
-                status=result.status,
-                transaction_id=request.transaction_id,
-                deployment_id=request.deployment_id,
-                deployment_generation=request.deployment_generation,
-                session_id=request.session_id,
-                session_generation=session.generation,
-                trap_class=result.trap_class,
-                committed_token_position=session.position,
-                produced_token_count=len(result.produced_tokens),
-                committed_state_generation=session.generation,
-                first_fault_instruction=result.first_fault_instruction,
-                idempotency_key=request.idempotency_key,
-                final_token_id=result.selected_token,
-                eos_reason=result.eos_reason,
-                retired_work=result.retired,
-                completion_timestamp=self.device._device_cycle,
-            )
-            record = completion.encode()
             completion = Completion.decode(record)
             history = self.history[lane]
             history.submitted_waves.append(wave_index)
@@ -398,7 +406,7 @@ class BatchScheduler:
                     record=record,
                     completion=completion,
                     result=result,
-                    symbol_batch=self.batch_size,
+                    symbol_batch=prepared.symbols[int(Symbol.BATCH)],
                     active_after=active_after,
                 )
             )

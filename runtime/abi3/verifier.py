@@ -77,10 +77,116 @@ from .descriptors import (
     iteration_extent,
 )
 from .records import Instruction, decode_body, split_program
+from .request import RequestSymbolDescriptor
 
 
 class VerificationError(Exception):
     """Raised when a deployment fails an admission proof."""
+
+
+def runtime_symbol_maxima(capability: Capability) -> dict[Symbol, int]:
+    """One shared bound table for deployment proofs and live requests."""
+
+    return {
+        Symbol.SPAN_TOKENS: capability.limits["max_context_positions"],
+        Symbol.POSITION_START: capability.limits["max_context_positions"],
+        Symbol.POSITION_END: capability.limits["max_context_positions"],
+        Symbol.CONTEXT_LENGTH: capability.limits["max_context_positions"],
+        Symbol.PHASE: 1,
+        Symbol.GENERATION_INDEX: capability.limits["max_context_positions"],
+        Symbol.MAX_NEW_TOKENS: capability.limits["max_context_positions"],
+        # BATCH is bounded by the physical resident-session ceiling.  The same
+        # table proves BATCH-affine views and admits each live request record.
+        Symbol.BATCH: capability.limits["max_sessions"],
+        Symbol.NODE_ID: max(capability.limits["max_nodes"] - 1, 0),
+        Symbol.NODE_COUNT: capability.limits["max_nodes"],
+        Symbol.ACTIVE_EXPERT_COUNT: capability.limits["max_topk"],
+        Symbol.SPARSE_INDEX_COUNT: capability.limits["max_context_positions"],
+        Symbol.LAYER_COUNT: 1024,
+        Symbol.VOCABULARY_PARTITIONS: 1024,
+        Symbol.SPAN_LAST_INDEX: capability.limits["max_context_positions"],
+    }
+
+
+def verify_request_symbol_descriptor(
+    descriptor: RequestSymbolDescriptor, capability: Capability
+) -> dict[int, int]:
+    """Admit one complete runtime-symbol map, or fail before engine issue.
+
+    Wire decoding establishes record geometry and integrity.  This verifier
+    establishes the semantic half: every frozen symbol appears exactly once,
+    no foreign ID is accepted, values fit the same capability bounds used by
+    deployment verification, and the request's position tuple is coherent.
+    Ownership against a live deployment/session/transaction is checked by the
+    device because only the device has that live state.
+    """
+
+    known = {int(symbol): symbol for symbol in Symbol}
+    symbols: dict[int, int] = {}
+    for entry in descriptor.entries:
+        if entry.symbol_id not in known:
+            raise VerificationError(
+                f"request descriptor contains unknown symbol ID {entry.symbol_id}"
+            )
+        if entry.symbol_id in symbols:
+            raise VerificationError(
+                f"request descriptor repeats symbol {known[entry.symbol_id].name}"
+            )
+        symbols[entry.symbol_id] = int(entry.value)
+    missing = [symbol.name for symbol in Symbol if int(symbol) not in symbols]
+    if missing:
+        raise VerificationError(
+            f"request descriptor is missing required symbols {missing}"
+        )
+    if len(symbols) != len(Symbol):
+        raise VerificationError(
+            f"request descriptor carries {len(symbols)} symbols, expected "
+            f"{len(Symbol)}"
+        )
+
+    maxima = runtime_symbol_maxima(capability)
+    for symbol, maximum in maxima.items():
+        value = symbols[int(symbol)]
+        if value > int(maximum):
+            raise VerificationError(
+                f"request symbol {symbol.name}={value} exceeds capability bound "
+                f"{maximum}"
+            )
+    for symbol in (
+        Symbol.SPAN_TOKENS,
+        Symbol.MAX_NEW_TOKENS,
+        Symbol.BATCH,
+        Symbol.NODE_COUNT,
+        Symbol.VOCABULARY_PARTITIONS,
+    ):
+        if symbols[int(symbol)] < 1:
+            raise VerificationError(f"request symbol {symbol.name} must be positive")
+
+    span = symbols[int(Symbol.SPAN_TOKENS)]
+    start = symbols[int(Symbol.POSITION_START)]
+    end = symbols[int(Symbol.POSITION_END)]
+    context = symbols[int(Symbol.CONTEXT_LENGTH)]
+    last = symbols[int(Symbol.SPAN_LAST_INDEX)]
+    if end != start + span:
+        raise VerificationError(
+            f"request POSITION_END={end} does not equal POSITION_START={start} "
+            f"plus SPAN_TOKENS={span}"
+        )
+    if context != end:
+        raise VerificationError(
+            f"request CONTEXT_LENGTH={context} does not equal POSITION_END={end}"
+        )
+    if last != span - 1:
+        raise VerificationError(
+            f"request SPAN_LAST_INDEX={last} does not equal SPAN_TOKENS-1={span - 1}"
+        )
+    node_id = symbols[int(Symbol.NODE_ID)]
+    node_count = symbols[int(Symbol.NODE_COUNT)]
+    if node_id >= node_count:
+        raise VerificationError(
+            f"request NODE_ID={node_id} is outside NODE_COUNT={node_count}"
+        )
+    return symbols
 
 
 #: Amendment A17: the join axes ``REDUCTION.GROUPED_CONCAT`` defines.  Zero is
@@ -1039,29 +1145,7 @@ class Verifier:
 
     # -- 11. tensor-view bounds -------------------------------------------
     def _verify_views(self) -> None:
-        symbol_max = {
-            Symbol.SPAN_TOKENS: self.capability.limits["max_context_positions"],
-            Symbol.POSITION_START: self.capability.limits["max_context_positions"],
-            Symbol.POSITION_END: self.capability.limits["max_context_positions"],
-            Symbol.CONTEXT_LENGTH: self.capability.limits["max_context_positions"],
-            Symbol.PHASE: 1,
-            Symbol.GENERATION_INDEX: self.capability.limits["max_context_positions"],
-            Symbol.MAX_NEW_TOKENS: self.capability.limits["max_context_positions"],
-            # ABI 3.0 already freezes BATCH as a request symbol and the
-            # capability already freezes the resident-session ceiling.  The
-            # former batch-one bound admitted descriptors that could become
-            # out-of-range as soon as the runtime legally bound BATCH > 1.
-            # Prove every BATCH-affine view against the actual capability
-            # ceiling; deployments sized only for one lane now fail closed.
-            Symbol.BATCH: self.capability.limits["max_sessions"],
-            Symbol.NODE_ID: max(self.capability.limits["max_nodes"] - 1, 0),
-            Symbol.NODE_COUNT: self.capability.limits["max_nodes"],
-            Symbol.ACTIVE_EXPERT_COUNT: self.capability.limits["max_topk"],
-            Symbol.SPARSE_INDEX_COUNT: self.capability.limits["max_context_positions"],
-            Symbol.LAYER_COUNT: 1024,
-            Symbol.VOCABULARY_PARTITIONS: 1024,
-            Symbol.SPAN_LAST_INDEX: self.capability.limits["max_context_positions"],
-        }
+        symbol_max = runtime_symbol_maxima(self.capability)
         for descriptor in self.table.descriptors():
             if descriptor.descriptor_type != ExtendedDescriptorType.TENSOR_VIEW:
                 continue

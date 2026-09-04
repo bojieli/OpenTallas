@@ -25,6 +25,7 @@ from runtime.abi3.deployment import ObjectSource
 from runtime.abi3.descriptors import Phase, SelectionMode, Symbol
 from runtime.abi3.fixture import build_fixture, fixture_capability
 from runtime.abi3.records import EosReason, Submission
+from runtime.abi3.request import RequestSymbolDescriptor
 from runtime.abi3.verifier import verify_deployment
 from runtime.sim.batch import BatchError, BatchLaneSubmission, BatchScheduler
 from runtime.sim.device import Device
@@ -174,6 +175,7 @@ def _submission(
     *,
     transaction_id: int,
     policy_id: int,
+    request_descriptor_id: int,
 ) -> bytes:
     return Submission(
         host_opcode=int(HostOpcode.GENERATE),
@@ -181,6 +183,7 @@ def _submission(
         deployment_generation=device.deployment.generation,
         session_id=session.session_id,
         session_generation=session.generation,
+        request_descriptor_id=request_descriptor_id,
         transaction_id=transaction_id,
         idempotency_key=hashlib.sha256(
             f"{session.session_id}:{session.generation}:{transaction_id}".encode()
@@ -200,6 +203,34 @@ def _lane(
     *,
     batch: int = 2,
 ) -> BatchLaneSubmission:
+    symbols = {
+        int(Symbol.SPAN_TOKENS): 1,
+        int(Symbol.POSITION_START): len(session.generated),
+        int(Symbol.POSITION_END): len(session.generated) + 1,
+        int(Symbol.CONTEXT_LENGTH): len(session.generated) + 1,
+        int(Symbol.PHASE): int(Phase.DECODE),
+        int(Symbol.GENERATION_INDEX): len(session.generated),
+        int(Symbol.MAX_NEW_TOKENS): 8,
+        int(Symbol.BATCH): batch,
+        int(Symbol.NODE_ID): 0,
+        int(Symbol.NODE_COUNT): device.node_count,
+        int(Symbol.ACTIVE_EXPERT_COUNT): 0,
+        int(Symbol.SPARSE_INDEX_COUNT): 0,
+        int(Symbol.LAYER_COUNT): 0,
+        int(Symbol.VOCABULARY_PARTITIONS): 1,
+        int(Symbol.SPAN_LAST_INDEX): 0,
+    }
+    descriptor_id = device.next_request_descriptor_id
+    descriptor = RequestSymbolDescriptor.from_symbols(
+        request_descriptor_id=descriptor_id,
+        deployment_id=device.deployment.deployment_id,
+        deployment_generation=device.deployment.generation,
+        session_id=session.session_id,
+        session_generation=session.generation,
+        transaction_id=transaction_id,
+        symbols=symbols,
+    )
+    device.register_request_descriptor(descriptor.encode())
     return BatchLaneSubmission(
         lane_index=lane_index,
         record=_submission(
@@ -207,17 +238,8 @@ def _lane(
             session,
             transaction_id=transaction_id,
             policy_id=policy_id,
+            request_descriptor_id=descriptor_id,
         ),
-        symbols={
-            int(Symbol.BATCH): batch,
-            int(Symbol.GENERATION_INDEX): len(session.generated),
-            int(Symbol.SPAN_TOKENS): 1,
-            int(Symbol.POSITION_START): len(session.generated),
-            int(Symbol.POSITION_END): len(session.generated) + 1,
-            int(Symbol.CONTEXT_LENGTH): len(session.generated) + 1,
-            int(Symbol.MAX_NEW_TOKENS): 8,
-            int(Symbol.SPAN_LAST_INDEX): 0,
-        },
     )
 
 
@@ -411,3 +433,28 @@ def test_scheduler_preserves_the_physical_batch_symbol(batch_size: int) -> None:
     assert evidence["physical_batch_size"] == batch_size
     assert evidence["symbol_batch"] == batch_size
     assert len(evidence["active_mask"]) == batch_size
+
+
+@pytest.mark.parametrize("batch_size", [2, 4, 8])
+def test_each_lane_transports_the_exact_physical_batch_symbol(batch_size: int) -> None:
+    load_engines()
+    deployment, capability, _immutable, logits, _tokens, policy = (
+        _selection_deployment(max_sessions=8)
+    )
+    device = Device(deployment, capability)
+    sessions = device.create_batch_sessions(batch_size)
+    scheduler = BatchScheduler(device, sessions)
+    for lane in range(batch_size):
+        _stage_logits(scheduler, logits, lane, [0.0, 0.0, 0.0, 9.0])
+
+    wave = scheduler.submit_wave(
+        [
+            _lane(device, session, lane, 100 + lane, policy, batch=batch_size)
+            for lane, session in enumerate(sessions)
+        ]
+    )
+
+    assert wave.status == "executed"
+    assert [lane.symbol_batch for lane in wave.lanes] == [batch_size] * batch_size
+    assert all(lane.result.produced_tokens == (3,) for lane in wave.lanes)
+    assert device.live_request_descriptor_count == 0
