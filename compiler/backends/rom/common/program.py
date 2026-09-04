@@ -1740,23 +1740,33 @@ class RomLowering:
         tile_depth = 1
         bound = ResourceBound.MEMORY_PORT
 
-        if weights:
+        tensor_contraction = family is Major.TENSOR and sub in {
+            int(TensorOp.MATMUL),
+            int(TensorOp.GROUPED_MATMUL),
+            int(TensorOp.ROUTED_MATMUL),
+        }
+        if weights and tensor_contraction:
             weight_dims = self._dims(weights[0])
             row_elements = self._row_elements(self._dtype(weights[0].dtype))
             width = weight_dims[0]
             reduction = weight_dims[-1]
-            if family is Major.TENSOR and sub != int(TensorOp.EMBED_LOOKUP):
-                tile_cols = max(min(width, lanes), 1)
-                tile_depth = max(min(reduction, row_elements), 1)
-                bound = ResourceBound.ROM_READ
-            else:
-                tile_cols = max(min(reduction, lanes), 1)
-                tile_depth = max(min(reduction, row_elements), 1)
-                bound = (
-                    ResourceBound.ROM_READ
-                    if family is Major.TENSOR
-                    else ResourceBound.MEMORY_PORT
-                )
+            tile_cols = max(min(width, lanes), 1)
+            tile_depth = max(min(reduction, row_elements), 1)
+            bound = ResourceBound.ROM_READ
+        elif weights:
+            # Constants such as RMSNorm scales and embedding tables are reads,
+            # not contracted K axes.  Their last dimension may be thousands of
+            # elements, but a non-reducing operator consumes each output
+            # coordinate once; carrying that dimension into tile_depth makes
+            # the cycle model execute it again for every output element.
+            width = self._dims(outputs[0])[-1] if outputs else self._dims(weights[0])[-1]
+            tile_cols = max(min(width, lanes), 1)
+            tile_depth = 1
+            bound = (
+                ResourceBound.ROM_READ
+                if family is Major.TENSOR
+                else ResourceBound.MEMORY_PORT
+            )
         elif outputs:
             tile_cols = max(min(self._dims(outputs[0])[-1], lanes), 1)
 

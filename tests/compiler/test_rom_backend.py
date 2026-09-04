@@ -2396,6 +2396,33 @@ def test_schedule_payloads_are_real(qwen_build, deepseek_build):
             assert operator.payload["schedule_id"] in ids
 
 
+def test_nonreducing_rom_operators_do_not_inherit_weight_reduction_depth(
+    qwen_build, deepseek_build
+):
+    for deployment, _plan in (qwen_build, deepseek_build):
+        schedules = {
+            descriptor.descriptor_id: descriptor.payload
+            for descriptor in _schedules(deployment)
+        }
+        checked = {"dma": 0, "embed": 0, "vector": 0}
+        for operator in deployment.table.descriptors():
+            if operator.descriptor_type != ExtendedDescriptorType.OPERATOR:
+                continue
+            family = int(operator.payload["engine_family"])
+            sub = int(operator.payload["engine_sub"])
+            schedule = schedules[int(operator.payload["schedule_id"])]
+            if family == int(Major.DMA):
+                assert schedule["tile_depth"] == 1
+                checked["dma"] += 1
+            elif family == int(Major.VECTOR):
+                assert schedule["tile_depth"] == 1
+                checked["vector"] += 1
+            elif family == int(Major.TENSOR) and sub == int(TensorOp.EMBED_LOOKUP):
+                assert schedule["tile_depth"] == 1
+                checked["embed"] += 1
+        assert all(count > 0 for count in checked.values()), checked
+
+
 def test_rom_reading_operators_declare_bank_and_rom_bound(qwen_build):
     from compiler.backends.rom.common.program import ResourceBound
 
