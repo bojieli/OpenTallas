@@ -1,0 +1,468 @@
+{
+  "$id": "https://opentallas.org/schemas/abi3/heterogeneous_batch_execution_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "abi_version": {"const": "3.0"},
+    "acceptance_gates": {"$ref": "#/$defs/gates"},
+    "batch_execution_id": {
+      "oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]
+    },
+    "campaign_id": {"$ref": "#/$defs/identifier"},
+    "execution_scope": {"enum": ["fixture", "full_model"]},
+    "model": {"$ref": "#/$defs/model"},
+    "physical_batch_size": {"enum": [1, 2, 4, 8]},
+    "problems": {"$ref": "#/$defs/problems"},
+    "request": {"$ref": "#/$defs/governedFile"},
+    "schema": {"const": "opentallas.abi3.heterogeneous_batch_execution.v1"},
+    "sequences": {
+      "items": {"$ref": "#/$defs/sequence"},
+      "maxItems": 8,
+      "minItems": 1,
+      "type": "array"
+    },
+    "shared_execution": {"$ref": "#/$defs/sharedExecution"},
+    "source": {"$ref": "#/$defs/source"},
+    "status": {"enum": ["failed", "pass"]},
+    "target": {"$ref": "#/$defs/target"}
+  },
+  "required": [
+    "abi_version",
+    "acceptance_gates",
+    "batch_execution_id",
+    "campaign_id",
+    "execution_scope",
+    "model",
+    "physical_batch_size",
+    "problems",
+    "request",
+    "schema",
+    "sequences",
+    "shared_execution",
+    "source",
+    "status",
+    "target"
+  ],
+  "title": "ABI 3.0 governed heterogeneous batch execution v1",
+  "type": "object",
+  "$defs": {
+    "divergence": {
+      "additionalProperties": false,
+      "properties": {
+        "accelerator_token_id": {
+          "oneOf": [{"minimum": 0, "type": "integer"}, {"type": "null"}]
+        },
+        "index": {"minimum": 0, "type": "integer"},
+        "oracle_token_id": {
+          "oneOf": [{"minimum": 0, "type": "integer"}, {"type": "null"}]
+        }
+      },
+      "required": ["accelerator_token_id", "index", "oracle_token_id"],
+      "type": "object"
+    },
+    "file": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {"minLength": 1, "type": "string"},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      },
+      "required": ["path", "sha256"],
+      "type": "object"
+    },
+    "gates": {
+      "additionalProperties": false,
+      "properties": {
+        "gate1_correctness": {
+          "additionalProperties": false,
+          "properties": {
+            "all_sequences_exact": {"type": "boolean"},
+            "full_model_execution": {"type": "boolean"},
+            "production_qualified": {"type": "boolean"},
+            "shared_execution_exact": {"type": "boolean"},
+            "source_stable_during_execution": {"type": "boolean"},
+            "status": {"enum": ["fail", "pass"]}
+          },
+          "required": [
+            "all_sequences_exact",
+            "full_model_execution",
+            "production_qualified",
+            "shared_execution_exact",
+            "source_stable_during_execution",
+            "status"
+          ],
+          "type": "object"
+        },
+        "gate2_tpot": {
+          "additionalProperties": false,
+          "properties": {
+            "consumer": {
+              "const": "tools/check_abi3_correctness_qualified_tpot.py"
+            },
+            "consumer_report": {"type": "null"},
+            "exact_execution_consumer_acceptance_required": {"const": true},
+            "raw_token_commit_ticks_retained": {"const": true},
+            "status": {"const": "blocked"},
+            "target_performance_metrics_published": {"const": false}
+          },
+          "required": [
+            "consumer",
+            "consumer_report",
+            "exact_execution_consumer_acceptance_required",
+            "raw_token_commit_ticks_retained",
+            "status",
+            "target_performance_metrics_published"
+          ],
+          "type": "object"
+        },
+        "order": {
+          "prefixItems": [
+            {"const": "exact_heterogeneous_output_tokens_text_and_terminal"},
+            {"const": "release_bound_same_execution_tpot"}
+          ],
+          "items": false,
+          "type": "array"
+        }
+      },
+      "required": ["gate1_correctness", "gate2_tpot", "order"],
+      "type": "object"
+    },
+    "governedFile": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {"minLength": 1, "type": "string"},
+        "semantic_sha256": {"$ref": "#/$defs/sha256"},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      },
+      "required": ["path", "semantic_sha256", "sha256"],
+      "type": "object"
+    },
+    "identifier": {
+      "maxLength": 192,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$",
+      "type": "string"
+    },
+    "model": {
+      "additionalProperties": false,
+      "properties": {
+        "graph_id": {
+          "oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]
+        },
+        "model_id": {"$ref": "#/$defs/identifier"},
+        "numeric_profile": {
+          "oneOf": [{"$ref": "#/$defs/identifier"}, {"type": "null"}]
+        }
+      },
+      "required": ["graph_id", "model_id", "numeric_profile"],
+      "type": "object"
+    },
+    "oracle": {
+      "additionalProperties": false,
+      "properties": {
+        "agreement": {"type": "boolean"},
+        "compared_token_count": {"minimum": 0, "type": "integer"},
+        "file": {"$ref": "#/$defs/file"},
+        "first_divergence": {
+          "oneOf": [{"$ref": "#/$defs/divergence"}, {"type": "null"}]
+        },
+        "first_divergence_index": {
+          "oneOf": [{"minimum": 0, "type": "integer"}, {"type": "null"}]
+        },
+        "generated_token_ids": {"$ref": "#/$defs/tokenIds"},
+        "raw_decoded_text": {"type": "string"},
+        "result_sha256": {"$ref": "#/$defs/sha256"},
+        "stop_reason": {"enum": ["eos", "max_new_tokens"]},
+        "visible_decoded_text": {"type": "string"}
+      },
+      "required": [
+        "agreement",
+        "compared_token_count",
+        "file",
+        "first_divergence",
+        "first_divergence_index",
+        "generated_token_ids",
+        "raw_decoded_text",
+        "result_sha256",
+        "stop_reason",
+        "visible_decoded_text"
+      ],
+      "type": "object"
+    },
+    "problems": {
+      "items": {"minLength": 1, "type": "string"},
+      "type": "array"
+    },
+    "sequence": {
+      "additionalProperties": false,
+      "properties": {
+        "decoded_text": {"$ref": "#/$defs/textEvidence"},
+        "execution_timing": {"$ref": "#/$defs/timing"},
+        "generated_token_count": {"minimum": 0, "type": "integer"},
+        "generated_token_ids": {"$ref": "#/$defs/tokenIds"},
+        "oracle": {"$ref": "#/$defs/oracle"},
+        "passes": {"type": "boolean"},
+        "problems": {"$ref": "#/$defs/problems"},
+        "record": {"$ref": "#/$defs/file"},
+        "sequence_id": {"$ref": "#/$defs/identifier"},
+        "sequence_index": {"minimum": 0, "type": "integer"},
+        "stop_reason": {"enum": ["eos", "failed", "max_new_tokens"]},
+        "terminal": {"$ref": "#/$defs/terminal"},
+        "token_ids_legal": {"type": "boolean"},
+        "token_legitimacy_problems": {"$ref": "#/$defs/problems"},
+        "workload": {"$ref": "#/$defs/workload"}
+      },
+      "required": [
+        "decoded_text",
+        "execution_timing",
+        "generated_token_count",
+        "generated_token_ids",
+        "oracle",
+        "passes",
+        "problems",
+        "record",
+        "sequence_id",
+        "sequence_index",
+        "stop_reason",
+        "terminal",
+        "token_ids_legal",
+        "token_legitimacy_problems",
+        "workload"
+      ],
+      "type": "object"
+    },
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "sharedExecution": {
+      "additionalProperties": false,
+      "properties": {
+        "batch_generation_driver": {"const": "BatchGenerationDriver"},
+        "cycle_batch_scheduler": {"const": "CycleBatchScheduler"},
+        "deployment": {"$ref": "#/$defs/deploymentIdentity"},
+        "deployment_loaded_once": {"const": true},
+        "genuinely_independent_workload_reference_pairs": {"const": true},
+        "immutable_source_manifest_sha256": {"$ref": "#/$defs/sha256"},
+        "memory_contract": {"type": "object"},
+        "one_physical_batch": {"const": true},
+        "oracle_values_supplied_to_device": {"const": false},
+        "shared_immutable_object_ids": {
+          "items": {"minimum": 0, "type": "integer"},
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "shared_immutable_weights_and_constants": {"const": true},
+        "wave_count": {"minimum": 1, "type": "integer"}
+      },
+      "required": [
+        "batch_generation_driver",
+        "cycle_batch_scheduler",
+        "deployment",
+        "deployment_loaded_once",
+        "genuinely_independent_workload_reference_pairs",
+        "immutable_source_manifest_sha256",
+        "memory_contract",
+        "one_physical_batch",
+        "oracle_values_supplied_to_device",
+        "shared_immutable_object_ids",
+        "shared_immutable_weights_and_constants",
+        "wave_count"
+      ],
+      "type": "object"
+    },
+    "deploymentIdentity": {
+      "additionalProperties": false,
+      "properties": {
+        "capability_digest": {"$ref": "#/$defs/sha256"},
+        "cost_table_digest": {"$ref": "#/$defs/sha256"},
+        "deployment_digest": {"$ref": "#/$defs/sha256"}
+      },
+      "required": [
+        "capability_digest",
+        "cost_table_digest",
+        "deployment_digest"
+      ],
+      "type": "object"
+    },
+    "source": {
+      "additionalProperties": false,
+      "properties": {
+        "repository": {
+          "additionalProperties": false,
+          "properties": {
+            "commit": {
+              "oneOf": [{"$ref": "#/$defs/gitObject"}, {"type": "null"}]
+            },
+            "sources_tracked": {"type": "boolean"},
+            "tracked_worktree_clean": {"type": "boolean"},
+            "tree": {
+              "oneOf": [{"$ref": "#/$defs/gitObject"}, {"type": "null"}]
+            }
+          },
+          "required": [
+            "commit",
+            "sources_tracked",
+            "tracked_worktree_clean",
+            "tree"
+          ],
+          "type": "object"
+        },
+        "source_manifest_sha256": {"$ref": "#/$defs/sha256"},
+        "source_sha256": {
+          "additionalProperties": {"$ref": "#/$defs/sha256"},
+          "minProperties": 1,
+          "type": "object"
+        }
+      },
+      "required": ["repository", "source_manifest_sha256", "source_sha256"],
+      "type": "object"
+    },
+    "gitObject": {
+      "pattern": "^([0-9a-f]{40}|[0-9a-f]{64})$",
+      "type": "string"
+    },
+    "target": {
+      "additionalProperties": false,
+      "properties": {
+        "backend": {"$ref": "#/$defs/identifier"},
+        "capability_digest": {"$ref": "#/$defs/sha256"},
+        "deployment_digest": {"$ref": "#/$defs/sha256"},
+        "node_count": {"minimum": 1, "type": "integer"},
+        "role": {"enum": ["hbm", "rom"]},
+        "target_id": {"$ref": "#/$defs/identifier"},
+        "technology_view": {"$ref": "#/$defs/identifier"},
+        "topology_class": {"maximum": 2, "minimum": 0, "type": "integer"}
+      },
+      "required": [
+        "backend",
+        "capability_digest",
+        "deployment_digest",
+        "node_count",
+        "role",
+        "target_id",
+        "technology_view",
+        "topology_class"
+      ],
+      "type": "object"
+    },
+    "terminal": {
+      "additionalProperties": false,
+      "properties": {
+        "accepted": {"type": "boolean"},
+        "checks": {
+          "additionalProperties": false,
+          "properties": {
+            "device_terminal_reason_matches_oracle": {"type": "boolean"},
+            "eos_or_exact_cap": {"type": "boolean"},
+            "no_post_terminal_execution": {"type": "boolean"},
+            "one_successful_step_per_token": {"type": "boolean"}
+          },
+          "required": [
+            "device_terminal_reason_matches_oracle",
+            "eos_or_exact_cap",
+            "no_post_terminal_execution",
+            "one_successful_step_per_token"
+          ],
+          "type": "object"
+        },
+        "exact_cap": {"type": "boolean"},
+        "failed_checks": {"$ref": "#/$defs/problems"},
+        "first_eos_index": {
+          "oneOf": [{"minimum": 0, "type": "integer"}, {"type": "null"}]
+        },
+        "no_post_terminal_execution": {"type": "boolean"},
+        "terminal_kind": {
+          "oneOf": [{"enum": ["cap", "eos"]}, {"type": "null"}]
+        }
+      },
+      "required": [
+        "accepted",
+        "checks",
+        "exact_cap",
+        "failed_checks",
+        "first_eos_index",
+        "no_post_terminal_execution",
+        "terminal_kind"
+      ],
+      "type": "object"
+    },
+    "textEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "input_decode_matches_rendered_text": {"type": "boolean"},
+        "input_encode_round_trip_matches_ids": {"type": "boolean"},
+        "input_rendered_text": {"type": "string"},
+        "raw_decoded_text": {"type": "string"},
+        "raw_matches_oracle": {"type": "boolean"},
+        "tokenizer_sha256": {"$ref": "#/$defs/sha256"},
+        "visible_decoded_text": {"type": "string"},
+        "visible_matches_oracle": {"type": "boolean"}
+      },
+      "required": [
+        "input_decode_matches_rendered_text",
+        "input_encode_round_trip_matches_ids",
+        "input_rendered_text",
+        "raw_decoded_text",
+        "raw_matches_oracle",
+        "tokenizer_sha256",
+        "visible_decoded_text",
+        "visible_matches_oracle"
+      ],
+      "type": "object"
+    },
+    "timing": {
+      "additionalProperties": false,
+      "properties": {
+        "clock_domain": {"const": "abi3_device_cycle_counter"},
+        "request_start_tick": {"minimum": 0, "type": "integer"},
+        "same_execution_bindings_complete": {"type": "boolean"},
+        "target_performance_interpretation": {"const": false},
+        "token_commit_ticks": {
+          "items": {"minimum": 1, "type": "integer"},
+          "type": "array"
+        },
+        "transaction_ids": {
+          "items": {"minimum": 1, "type": "integer"},
+          "type": "array"
+        }
+      },
+      "required": [
+        "clock_domain",
+        "request_start_tick",
+        "same_execution_bindings_complete",
+        "target_performance_interpretation",
+        "token_commit_ticks",
+        "transaction_ids"
+      ],
+      "type": "object"
+    },
+    "tokenIds": {
+      "items": {"minimum": 0, "type": "integer"},
+      "type": "array"
+    },
+    "workload": {
+      "additionalProperties": false,
+      "properties": {
+        "digest": {"$ref": "#/$defs/sha256"},
+        "file": {"$ref": "#/$defs/file"},
+        "kind": {"$ref": "#/$defs/identifier"},
+        "max_new_tokens": {"minimum": 1, "type": "integer"},
+        "prompt_token_count": {"minimum": 1, "type": "integer"},
+        "prompt_token_ids": {"$ref": "#/$defs/tokenIds"},
+        "prompt_token_ids_sha256": {"$ref": "#/$defs/sha256"},
+        "rendered_text_sha256": {"$ref": "#/$defs/sha256"},
+        "workload_id": {"$ref": "#/$defs/identifier"}
+      },
+      "required": [
+        "digest",
+        "file",
+        "kind",
+        "max_new_tokens",
+        "prompt_token_count",
+        "prompt_token_ids",
+        "prompt_token_ids_sha256",
+        "rendered_text_sha256",
+        "workload_id"
+      ],
+      "type": "object"
+    }
+  }
+}

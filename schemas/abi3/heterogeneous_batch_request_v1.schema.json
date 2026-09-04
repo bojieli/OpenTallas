@@ -1,0 +1,145 @@
+{
+  "$id": "https://opentallas.org/schemas/abi3/heterogeneous_batch_request_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {"execution_scope": {"const": "full_model"}},
+        "required": ["execution_scope"]
+      },
+      "then": {
+        "properties": {
+          "model": {
+            "properties": {
+              "graph_id": {"$ref": "#/$defs/sha256"},
+              "numeric_profile": {"$ref": "#/$defs/identifier"}
+            }
+          }
+        }
+      }
+    }
+  ],
+  "properties": {
+    "abi_version": {"const": "3.0"},
+    "batch_size": {"enum": [1, 2, 4, 8]},
+    "campaign_id": {"$ref": "#/$defs/identifier"},
+    "capability": {"$ref": "#/$defs/file"},
+    "checkpoint_lock": {"$ref": "#/$defs/file"},
+    "checkpoint_root": {"$ref": "#/$defs/path"},
+    "cost_table": {"$ref": "#/$defs/file"},
+    "deployment": {"$ref": "#/$defs/deployment"},
+    "execution_scope": {"enum": ["fixture", "full_model"]},
+    "model": {"$ref": "#/$defs/model"},
+    "schema": {"const": "opentallas.abi3.heterogeneous_batch_request.v1"},
+    "sequences": {
+      "items": {"$ref": "#/$defs/sequence"},
+      "maxItems": 8,
+      "minItems": 1,
+      "type": "array"
+    },
+    "target": {"$ref": "#/$defs/target"},
+    "tokenizer": {"$ref": "#/$defs/file"}
+  },
+  "required": [
+    "abi_version",
+    "batch_size",
+    "campaign_id",
+    "capability",
+    "checkpoint_lock",
+    "checkpoint_root",
+    "cost_table",
+    "deployment",
+    "execution_scope",
+    "model",
+    "schema",
+    "sequences",
+    "target",
+    "tokenizer"
+  ],
+  "title": "ABI 3.0 governed heterogeneous batch request v1",
+  "type": "object",
+  "$defs": {
+    "deployment": {
+      "additionalProperties": false,
+      "properties": {
+        "descriptors": {"$ref": "#/$defs/file"},
+        "manifest": {"$ref": "#/$defs/file"},
+        "program": {"$ref": "#/$defs/file"}
+      },
+      "required": ["descriptors", "manifest", "program"],
+      "type": "object"
+    },
+    "file": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {"$ref": "#/$defs/path"},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      },
+      "required": ["path", "sha256"],
+      "type": "object"
+    },
+    "identifier": {
+      "maxLength": 192,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$",
+      "type": "string"
+    },
+    "model": {
+      "additionalProperties": false,
+      "properties": {
+        "graph_id": {
+          "oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]
+        },
+        "model_id": {"$ref": "#/$defs/identifier"},
+        "numeric_profile": {
+          "oneOf": [{"$ref": "#/$defs/identifier"}, {"type": "null"}]
+        }
+      },
+      "required": ["graph_id", "model_id", "numeric_profile"],
+      "type": "object"
+    },
+    "path": {
+      "minLength": 1,
+      "not": {"pattern": "(^/)|(^|/)\\.\\.?(/|$)|\\\\"},
+      "type": "string"
+    },
+    "sequence": {
+      "additionalProperties": false,
+      "properties": {
+        "reference": {"$ref": "#/$defs/file"},
+        "sequence_id": {"$ref": "#/$defs/identifier"},
+        "terminal_contract": {"const": "exact_eos_or_cap"},
+        "workload": {"$ref": "#/$defs/file"}
+      },
+      "required": [
+        "reference",
+        "sequence_id",
+        "terminal_contract",
+        "workload"
+      ],
+      "type": "object"
+    },
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "target": {
+      "additionalProperties": false,
+      "properties": {
+        "backend": {"$ref": "#/$defs/identifier"},
+        "node_count": {"minimum": 1, "type": "integer"},
+        "role": {"enum": ["hbm", "rom"]},
+        "target_id": {"$ref": "#/$defs/identifier"},
+        "technology_view": {"$ref": "#/$defs/identifier"},
+        "topology_class": {"maximum": 2, "minimum": 0, "type": "integer"}
+      },
+      "required": [
+        "backend",
+        "node_count",
+        "role",
+        "target_id",
+        "technology_view",
+        "topology_class"
+      ],
+      "type": "object"
+    }
+  }
+}
