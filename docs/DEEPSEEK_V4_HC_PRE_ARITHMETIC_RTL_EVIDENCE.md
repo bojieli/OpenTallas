@@ -4,7 +4,9 @@
 - **ABI:** 3.0
 - **HBM target site:** PC 14, descriptor 546
 - **ROM target site:** PC 15, descriptor 381
+- **Stable-softmax implementation:** `bc06fcb`
 - **Transcendental campaign:** `results/rtl/a3_hc_transcendental_campaign.json`
+- **Stable-softmax campaign:** `results/rtl/a3_hc_stable_softmax_campaign.json`
 - **Divider/Sinkhorn campaign:** `results/rtl/a3_hc_numeric_campaign.json`
 - **Status:** passing reusable-block evidence; neither release gate is closed
 
@@ -39,7 +41,44 @@ lane; host floating point and RTL helpers are not used by the oracle.
 The earlier numeric campaign remains complementary evidence. It qualifies the
 finite binary32 divider and the post-stable-softmax Sinkhorn tail, including
 four matrices extracted from authenticated DeepSeek T=512 functional output.
-It does not include the row-max/exponential/softmax front end.
+The source-major 4x4 stable-softmax front end is now synthesizable and
+qualified separately. For every row it executes the frozen sequence exactly:
+
+```text
+shifted[i] = RN32(logit[i] - max(logit))
+exp[i]     = CR32_EXP_NONPOS(shifted[i])
+denom      = RN32(RN32(exp[0] + exp[1]) + RN32(exp[2] + exp[3]))
+output[i]  = RN32(RN32(exp[i] / denom) + 0x358637bd)
+```
+
+All sixteen inputs are latched on one handshake, signed zero is canonicalized,
+and no output word is architecturally visible until the complete matrix has
+succeeded. A nonfinite input or arithmetic refusal publishes one nonzero error
+with an all-zero 4x4 result. The RTL contains no checkpoint- or output-indexed
+lookup table: it composes the general FP32 adder, certifying exponential, exact
+divider, and balanced add tree.
+
+The retained stable-softmax campaign covers 853 matrices. Of those, 832 are
+derived from the authenticated DeepSeek checkpoint and exact 200,000-token
+workload: all 512 matrices in the first prefill block and all 320 matrices in
+the final partial block. The remaining 21 cover maximum position and ordering,
+signed zero, near-equal normal values, subnormal subtraction, exponential
+underflow, finite extremes, subtraction overflow, and five nonfinite refusal
+kinds. Its independent oracle uses exact `Fraction` arithmetic and integer RNE
+for every algebraic operation and the separate exact-rational adaptive-interval
+exponential reference; it uses no host floating point, service arithmetic, or
+RTL helper. The first four matrices reproduce the retained service sentinels,
+and the complete 832-matrix expected stream has SHA-256
+`a3e540a4cfaf1ef499cf98199fc60d64b75e782cefdb56af4b12605b15142892`.
+
+Icarus 11.0 and pinned Verilator 5.050 agree on all 2,394,764 checks per
+simulator: 13,312 checkpoint output words, six atomic failures, 1,696 busy
+refusals, 250 output-stall cycles, active reset, and 2,375,812 checks that no
+partial matrix becomes visible while work is in flight. Pinned Yosys 0.68
+elaborates the composed block and reports zero problems. The observed 1,410
+maximum controller cycles and simulator wall times are verification metadata
+for this conservative time-multiplexed block, not architectural latency or
+TPOT.
 
 ## Position against the two release gates
 
@@ -48,11 +87,11 @@ It does not include the row-max/exponential/softmax front end.
 | 1 | The governed 200,000-context DeepSeek transaction produces every expected output token, includes the first EOS token, and emits no post-EOS transaction | **Open.** This block emits FP32 arithmetic values, not logits or tokens. |
 | 2 | Desired TPOT measured from that same Gate-1-passing execution using characterized SKY130 or ASAP7 timing | **Blocked by Gate 1.** Testbench cycles and simulator wall time are verification costs, not token latency. |
 
-This work shortens the Gate-1 path by replacing two previously absent reusable
-numeric primitives with bit-exact RTL. It also makes the remaining dependency
-chain more specific: stable softmax can now be assembled from row max, existing
-FP32 addition, this exponential engine, the qualified divider, and the
-qualified Sinkhorn tail.
+This work shortens the Gate-1 path by replacing previously absent reusable
+numeric primitives and the stable-softmax front end with bit-exact RTL. The
+next arithmetic composition boundary is the stable-softmax output feeding the
+already-qualified Sinkhorn tail; neither standalone result is yet driven by the
+real PC-14/PC-15 descriptor path.
 
 ## Reproduction
 
@@ -60,6 +99,9 @@ qualified Sinkhorn tail.
 python3 tools/build_a3_hc_transcendental_vectors.py
 python3 tools/run_a3_hc_transcendental_rtl_campaign.py
 pytest -q tests/compiler/test_a3_hc_transcendental_rtl.py
+python3 tools/build_a3_hc_stable_softmax_vectors.py
+python3 tools/run_a3_hc_stable_softmax_rtl_campaign.py
+pytest -q tests/compiler/test_a3_hc_stable_softmax_rtl.py
 ```
 
 The campaign regenerates and byte-compares the vectors, runs the complete
@@ -74,8 +116,8 @@ The next `HC_PRE` closure steps are:
 1. implement and differentially qualify exact BF16-by-FP32 fused product-add;
 2. implement the balanced 16,384-element RMS path and reuse the existing
    correctly rounded reciprocal-square-root unit;
-3. assemble the source-major 4x4 stable-softmax controller and connect its
-   output to the already-qualified Sinkhorn tail;
+3. compose the qualified stable-softmax controller with the qualified
+   Sinkhorn tail and prove one atomic 4x4 coefficient transaction;
 4. retain projection accumulators across the scheduler's increasing-K tiles,
    implement the affine/pre/post output paths, and atomically commit weights
    and combination matrices;
@@ -90,9 +132,11 @@ the frozen TPOT target.
 
 ## Explicit nonclaims
 
-The 4,200-vector sample is not exhaustive over every binary32 encoding and is
-not yet the complete checkpoint-reachable T=512 argument corpus. This evidence
-does not establish full `HC_PRE`, descriptor retirement, a transformer layer,
-checkpoint-backed RTL execution, output-token correctness, decoded-text
-quality, EOS behavior, a 200,000-token transaction, architectural latency,
-TPOT, technology timing, power, area, or ROM-versus-HBM superiority.
+The 4,200-vector transcendental sample is not exhaustive over every binary32
+encoding. The stable-softmax evidence covers the first T=512 and final T=320
+checkpoint blocks, not every one of the 391 blocks in the 200,000-token
+transaction. This evidence does not establish full `HC_PRE`, descriptor
+retirement, a transformer layer, checkpoint-backed full-model RTL execution,
+output-token correctness, decoded-text quality, EOS behavior, a complete
+200,000-token transaction, architectural latency, TPOT, technology timing,
+power, area, or ROM-versus-HBM superiority.

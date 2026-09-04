@@ -1,0 +1,174 @@
+{
+  "checkpoint_binding": {
+    "checkpoint_revision": "7872f01b1d1fe23eabc4c98b48bffcef5a386062",
+    "first_four_match_retained_service_sentinels": true,
+    "independent_expected_u32le_sha256": "a3e540a4cfaf1ef499cf98199fc60d64b75e782cefdb56af4b12605b15142892",
+    "input_binary_sha256": "6579ce0d11186dae5cfa06eb6c1bf0db2db45b1594f09d25984dc6ad05239534",
+    "prompt_token_count": 200000,
+    "segments": [
+      {
+        "logits_u32le_sha256": "a5a64176489044d2f9191ed1b7ed1b2af0028b75671ff416b89252c9ca506ae0",
+        "matrix_offset": 0,
+        "name": "first_prefill_t512",
+        "position_start": 0,
+        "token_count": 512,
+        "token_ids_u32le_sha256": "10af7f8081114dfec2da97e9cb7d70ffe739b8d9be1ed9e14255b5402983697f"
+      },
+      {
+        "logits_u32le_sha256": "c44ed0476527f4217e0cafd90cfa841c9226c882f9aa1116799c2d3146e524f6",
+        "matrix_offset": 512,
+        "name": "final_prefill_t320",
+        "position_start": 199680,
+        "token_count": 320,
+        "token_ids_u32le_sha256": "4812a304dd03fd4e1e0cad93c3f339ac6369e871cbcd2d99ca462bac7a7dd335"
+      }
+    ],
+    "t1_shape_witness": {
+      "case_index": 0,
+      "expected_u32le_sha256": "03e18884b30119f3540f0e31e27262f41d72d7ce0ef0a0285843e42079b00813",
+      "input_u32le_sha256": "0522cbb780764f1d38c641338c23fef4db27da12b27e063f3f8ad533e797a349",
+      "position": 0,
+      "token_id": 18042
+    },
+    "workload_digest": "803f0c3a3e9bf7ef68ddff00947576d2fab5703d1f4387df1eb2ec11be2c59bd",
+    "workload_id": "TA-DS-CTX-200K-1"
+  },
+  "checks_per_simulator": 2394764,
+  "counts": {
+    "cases": 853,
+    "categories": {
+      "checkpoint_final_t320": 320,
+      "checkpoint_first_t512": 512,
+      "directed_extreme": 2,
+      "directed_ordering": 7,
+      "directed_overflow": 1,
+      "directed_rounding": 4,
+      "directed_underflow": 2,
+      "nonfinite_refusal": 5
+    },
+    "checkpoint_cases": 832,
+    "directed_cases": 21,
+    "errors": {
+      "0": 847,
+      "1": 5,
+      "2": 1
+    },
+    "refused_cases": 6,
+    "successful_cases": 847
+  },
+  "coverage": {
+    "exponential_zero_results": 22,
+    "maximum_column_counts": {
+      "0": 1699,
+      "1": 833,
+      "2": 833,
+      "3": 24
+    },
+    "nonfinite_refusal_kinds": 5,
+    "shifted_subnormal_codes": 27,
+    "shifted_zero_codes": 3448,
+    "subtraction_overflow_cases": 1
+  },
+  "log_sha256": {
+    "iverilog": "cbe14981351a17eb6f540c454552977725ff52e610ff523ec9bd59744bcf03b5",
+    "verilator": "6af2ec13fe3f32777cf4ce4206d79d82a4ebb32e19ac9a1023f5d342fd667860",
+    "verilator_compile": "6400e71b778d21966e1374e1a2782eb7605cbfd66e92458c05f379cfabfa3918",
+    "yosys": "335c2584525dc1cde4b1be90ad8403213740c56a41e0983116b075262d3c1004"
+  },
+  "normalized_summary": {
+    "argument_errors": 5,
+    "atomic_busy_checks": 2375812,
+    "busy_refusals": 1696,
+    "cases": 853,
+    "checkpoint": 832,
+    "checkpoint_words": 13312,
+    "directed": 21,
+    "errors": 6,
+    "max_cycles": 1410,
+    "overflow_errors": 1,
+    "reset_cycles": 31,
+    "stalls": 250,
+    "success": 847,
+    "t1_words": 16
+  },
+  "schema": "opentallas.rtl.a3_hc_stable_softmax_campaign.v1",
+  "scope": {
+    "architectural_timing": false,
+    "atomic_fail_closed_output": true,
+    "checkpoint_final_t320_matrices": 320,
+    "checkpoint_first_t512_matrices": 512,
+    "correctly_rounded_nonpositive_exponential": true,
+    "dual_simulator": true,
+    "eos": false,
+    "exact_frozen_operation_order": true,
+    "full_200k_checkpoint_domain": false,
+    "full_hc_pre": false,
+    "host_floating_point_oracle": false,
+    "independent_exact_rational_oracle": true,
+    "input_latching_busy_refusal_and_output_backpressure": true,
+    "input_or_output_indexed_lookup_table": false,
+    "model_token_generation": false,
+    "pc14_integration": false,
+    "sinkhorn_composition": false,
+    "source_major_4x4_stable_softmax": true,
+    "synthesizable_elaboration": true,
+    "t1_shape_witness": true,
+    "technology_mapping_or_timing": false,
+    "tpot": false
+  },
+  "simulators_agree": true,
+  "source_sha256": {
+    "rtl/abi3/ot_a3_fp32_div_rne.sv": "f3220311dd399b0218a9aa5828ad11c9e4f9121d2924b0678ef4b3f95a7e04c1",
+    "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv": "b1c0e01c663a353a25ea7056718b21b30636bedac4a84dc0cc1216dcbb03218e",
+    "rtl/abi3/ot_a3_hc_stable_softmax_rne.sv": "1040b68ea7824e3d495c6cc4255983ce94ca376dff69bd56e21e81af658b85dd",
+    "rtl/ot_fp32_rne_pkg.sv": "39de679dd5f277d8a9cc2d5b6349eb1675e9397e64a8256bb1f53a34a054608c",
+    "rtl/test/tb_a3_hc_stable_softmax.sv": "533234eb37a5d3e5058252d8354ed70266faeec5ca313f764473d37612dcd8ef",
+    "runtime/reference/hyper_connection.py": "08876748899568abd7ad58ba33e734e381ed9a65a79419bc7b65b070284113f1",
+    "tools/build_a3_hc_numeric_vectors.py": "08f0f9450d00a804974a77ad3cfde9367039443354dea4b2e6659e68573cfc2f",
+    "tools/build_a3_hc_stable_softmax_vectors.py": "17000780d540bb74fd7a03ebeaae927e09e93cbf8e5ef9ed03796b6ca3e0f637",
+    "tools/extract_a3_hc_stable_softmax_checkpoint.py": "1733b105955c2856658652977f091190960ff33165b07572b3a8d767cf3207a8",
+    "tools/run_a3_hc_stable_softmax_rtl_campaign.py": "47b635a21603aeaf96c091f5d42f6dcd897493f28afb6d4613e0abf17e868e75"
+  },
+  "status": "pass",
+  "synthesis_frontend": {
+    "check_problems": 0,
+    "note": "generic RTLIL elaboration only; no library mapping, PPA, frequency, architectural latency, or TPOT claim",
+    "top": "ot_a3_hc_stable_softmax_rne"
+  },
+  "tools": {
+    "iverilog": {
+      "path": "/usr/bin/iverilog",
+      "sha256": "1ba67856249142771239573b5d51c7f6e4d67a1e7931a0d0fab56e0d473d2167",
+      "version": "Icarus Verilog version 11.0 (stable) ()"
+    },
+    "verilator": {
+      "path": "<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator",
+      "sha256": "fb2cc573b1055cf096c90e1efc9966fe56bdb4b265c83590cf2a49f7a0defcdf",
+      "version": "Verilator 5.050 2026-07-01 rev v5.050"
+    },
+    "vvp": {
+      "path": "/usr/bin/vvp",
+      "sha256": "075b114070eed3bc72e0e4559decf40520f3b693b1da9c94bba1defe8896966d"
+    },
+    "yosys": {
+      "path": "<HOME>/.local/opentallas-tools/yosys-0.68/bin/yosys",
+      "sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+    }
+  },
+  "vector_sha256": {
+    "checkpoint_logits.json": "3769a2087a1e700199050d706a0ec487ec8c11a20750982b1d635c59dea825a8",
+    "checkpoint_logits.u32le": "6579ce0d11186dae5cfa06eb6c1bf0db2db45b1594f09d25984dc6ad05239534",
+    "index.json": "a28708a98cfad7fbd6016304dca583c430f871f250d1c32278fe387e0021cc9c",
+    "matrix_expected.hex": "27886fa04e7f6e846cf0e54b621a819d32d10c8baa426ad1cf556793008da31e",
+    "matrix_input.hex": "3bba884fa1ac8b0c3dcf903b2ceb3bb10cf95237e0f425dd50c4cf49d185cf66",
+    "meta.hex": "7d3839ecea5d7673b2ca6807736ac0040a0b2caa3832cf957075841aa2c05260"
+  },
+  "verification_wall_seconds": {
+    "iverilog_compile": 0.015125948004424572,
+    "iverilog_simulation": 174.0758457450429,
+    "verilator_compile": 7.092729768017307,
+    "verilator_simulation": 2.4533460589591414,
+    "yosys_elaboration": 11.101431485032663
+  }
+}

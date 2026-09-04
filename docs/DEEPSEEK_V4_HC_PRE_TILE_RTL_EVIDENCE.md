@@ -97,14 +97,16 @@ pytest -q tests/compiler/test_a3_mhc_pre_tile_rtl.py
 
 ## Required continuation
 
-Gate 1 still requires correctly rounded RMS/projection, stable-softmax, and
-exact weight and combination commits to be integrated behind this scheduler.
-A standalone certifying sigmoid/nonpositive-exponential block now passes its
-focused dual-simulator campaign, and the Sinkhorn tail was already qualified;
-neither is yet wired to this scheduler, and the complete checkpoint-reachable
-transcendental argument corpus remains open. That complete
-operator must reproduce all authenticated T=512 output words from computation,
-then be connected at ROM PC 15 and HBM PC 14. The RTL path must subsequently
+Gate 1 still requires correctly rounded RMS/projection and exact weight and
+combination commits to be integrated behind this scheduler. Standalone
+certifying sigmoid/nonpositive-exponential, source-major 4x4 stable-softmax,
+and Sinkhorn-tail blocks now pass focused dual-simulator campaigns. The
+stable-softmax campaign covers all 512 matrices in the first checkpoint block,
+all 320 in the final partial block, and a T=1 witness, but it is not yet
+composed with Sinkhorn or wired to this scheduler; the intervening 389
+full-sized blocks are also outside that checkpoint-derived RTL campaign. The
+complete operator must reproduce all authenticated T=512 output words from
+computation, then be connected at ROM PC 15 and HBM PC 14. The RTL path must subsequently
 continue through all remaining model operators, communication, logits, argmax,
 token append, and first-EOS control and pass the governed natural and agentic
 token suites plus the exact Qwen-8K and DeepSeek-200K workloads.
