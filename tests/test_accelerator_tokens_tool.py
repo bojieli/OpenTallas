@@ -16,6 +16,9 @@ from pathlib import Path
 import sys
 
 import pytest
+from tokenizers import Tokenizer
+from tokenizers.models import WordLevel
+from tokenizers.pre_tokenizers import Whitespace
 
 REPO = Path(__file__).resolve().parents[1]
 _spec = importlib.util.spec_from_file_location(
@@ -33,6 +36,28 @@ def _reference(tmp_path: Path, body: dict) -> Path:
 
 
 WORKLOAD = {"workload_id": "W-1", "digest": "abc123", "token_ids": [1, 2, 3]}
+
+
+def _tokenizer_checkpoint(tmp_path: Path) -> tuple[Path, str]:
+    checkpoint = tmp_path / "checkpoint"
+    checkpoint.mkdir()
+    tokenizer = Tokenizer(
+        WordLevel(
+            {
+                "[UNK]": 0,
+                "hello": 1,
+                "world": 2,
+                "answer": 3,
+                "<eos>": 4,
+            },
+            unk_token="[UNK]",
+        )
+    )
+    tokenizer.pre_tokenizer = Whitespace()
+    tokenizer.add_special_tokens(["<eos>"])
+    path = checkpoint / "tokenizer.json"
+    tokenizer.save(str(path))
+    return checkpoint, hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def test_existing_publish_root_is_refused_before_lowering(
@@ -224,6 +249,84 @@ def test_eos_or_cap_contract_refuses_post_eos_or_bad_step_evidence():
     assert "terminal_reason_allowed" in body["failed_checks"]
     assert "no_post_eos_transaction" in body["failed_checks"]
     assert "transaction_ids_strictly_increasing" in body["failed_checks"]
+
+
+def test_decoded_text_evidence_proves_natural_prompt_and_complete_output(tmp_path):
+    checkpoint, tokenizer_sha256 = _tokenizer_checkpoint(tmp_path)
+
+    evidence, problems = tool._decoded_text_evidence(
+        checkpoint=checkpoint,
+        tokenizer_sha256=tokenizer_sha256,
+        prompt=[1, 2],
+        generated=[3, 4],
+        gold=[3, 4],
+        workload={"rendered_text": "hello world"},
+        gold_result={
+            "raw_decoded_text": "answer <eos>",
+            "visible_decoded_text": "answer",
+        },
+    )
+
+    assert problems == []
+    assert evidence["accepted"] is True
+    assert evidence["input"]["rendered_text"] == "hello world"
+    assert evidence["input"]["decode_matches_frozen_text"] is True
+    assert evidence["input"]["encode_round_trip_matches_ids"] is True
+    assert evidence["output"]["token_ids"] == [3, 4]
+    assert evidence["output"]["raw_decoded_text"] == "answer <eos>"
+    assert evidence["output"]["visible_decoded_text"] == "answer"
+    assert evidence["output"]["raw_matches_oracle_compared_horizon"] is True
+    assert evidence["output"]["visible_matches_oracle_compared_horizon"] is True
+    assert evidence["output"]["raw_matches_frozen_oracle"] is True
+    assert evidence["output"]["visible_matches_frozen_oracle"] is True
+
+
+def test_decoded_text_evidence_accepts_only_the_exact_oracle_prefix(tmp_path):
+    checkpoint, tokenizer_sha256 = _tokenizer_checkpoint(tmp_path)
+
+    evidence, problems = tool._decoded_text_evidence(
+        checkpoint=checkpoint,
+        tokenizer_sha256=tokenizer_sha256,
+        prompt=[1, 2],
+        generated=[3],
+        gold=[3, 2, 4],
+        workload={"rendered_text": "hello world"},
+        gold_result={
+            "raw_decoded_text": "answer world <eos>",
+            "visible_decoded_text": "answer world",
+        },
+    )
+
+    assert problems == []
+    assert evidence["accepted"] is True
+    assert evidence["output"]["raw_decoded_text"] == "answer"
+    assert evidence["oracle_compared_horizon"]["raw_decoded_text"] == "answer"
+    assert evidence["oracle_compared_horizon"]["is_complete_frozen_oracle"] is False
+    assert evidence["output"]["raw_matches_frozen_oracle"] is False
+
+
+def test_decoded_text_evidence_rejects_tokenizer_prompt_and_output_drift(tmp_path):
+    checkpoint, tokenizer_sha256 = _tokenizer_checkpoint(tmp_path)
+
+    evidence, problems = tool._decoded_text_evidence(
+        checkpoint=checkpoint,
+        tokenizer_sha256="0" * 64,
+        prompt=[1, 2],
+        generated=[2],
+        gold=[3],
+        workload={"rendered_text": "hello"},
+        gold_result={
+            "raw_decoded_text": "answer",
+            "visible_decoded_text": "answer",
+        },
+    )
+
+    assert evidence["accepted"] is False
+    assert evidence["tokenizer"]["sha256"] == tokenizer_sha256
+    assert "checkpoint tokenizer.json does not match the workload lock" in problems
+    assert "decoded prompt does not equal the frozen natural context" in problems
+    assert "frozen natural context does not round-trip to prompt IDs" in problems
+    assert "decoded output differs from the oracle compared horizon" in problems
 
 
 def test_counter_evidence_retains_measured_node_splits_without_division():

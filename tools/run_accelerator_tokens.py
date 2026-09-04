@@ -421,6 +421,148 @@ def _terminal_acceptance(
     }
 
 
+def _text_sha256(value: str) -> str:
+    return hashlib.sha256(value.encode("utf-8")).hexdigest()
+
+
+def _decoded_text_evidence(
+    *,
+    checkpoint: Path,
+    tokenizer_sha256: str,
+    prompt: list[int],
+    generated: list[int],
+    gold: list[int],
+    workload: dict[str, Any],
+    gold_result: dict[str, Any],
+) -> tuple[dict[str, Any], list[str]]:
+    """Decode both sides with the pinned tokenizer and fail closed on drift.
+
+    Token equality is necessary but the release gate also needs evidence that
+    the IDs are the intended natural context and legitimate model text.  For a
+    short diagnostic, compare text over exactly the same oracle prefix used by
+    :func:`_compare`; strict EOS/cap acceptance later requires the whole oracle
+    horizon, so the same fields become full-output equality without a second
+    decoding convention.
+    """
+
+    tokenizer_path = checkpoint / "tokenizer.json"
+    evidence: dict[str, Any] = {
+        "tokenizer": {
+            "path": _record_path(tokenizer_path),
+            "sha256": None,
+        },
+        "input": {},
+        "output": {},
+        "oracle_compared_horizon": {},
+    }
+    problems: list[str] = []
+    if not tokenizer_path.is_file():
+        return evidence, ["checkpoint tokenizer.json is unavailable"]
+
+    actual_tokenizer_sha256 = hashlib.sha256(tokenizer_path.read_bytes()).hexdigest()
+    evidence["tokenizer"]["sha256"] = actual_tokenizer_sha256
+    if actual_tokenizer_sha256 != tokenizer_sha256:
+        problems.append("checkpoint tokenizer.json does not match the workload lock")
+
+    try:
+        from tokenizers import Tokenizer
+
+        tokenizer = Tokenizer.from_file(str(tokenizer_path))
+        prompt_text = tokenizer.decode(prompt, skip_special_tokens=False)
+        prompt_round_trip = tokenizer.encode(
+            str(workload.get("rendered_text", "")), add_special_tokens=False
+        ).ids
+        raw_output = tokenizer.decode(generated, skip_special_tokens=False)
+        visible_output = tokenizer.decode(generated, skip_special_tokens=True)
+        oracle_horizon = gold[: len(generated)]
+        oracle_raw = tokenizer.decode(oracle_horizon, skip_special_tokens=False)
+        oracle_visible = tokenizer.decode(oracle_horizon, skip_special_tokens=True)
+    except (OSError, TypeError, ValueError) as exc:
+        return evidence, problems + [
+            "checkpoint tokenizer cannot decode execution tokens: "
+            f"{type(exc).__name__}: {exc}"
+        ]
+
+    rendered = workload.get("rendered_text")
+    input_matches = isinstance(rendered, str) and prompt_text == rendered
+    round_trip_matches = list(prompt_round_trip) == prompt
+    raw_matches_horizon = raw_output == oracle_raw
+    visible_matches_horizon = visible_output == oracle_visible
+    full_oracle_horizon = len(generated) == len(gold)
+    frozen_raw = gold_result.get("raw_decoded_text")
+    frozen_visible = gold_result.get("visible_decoded_text")
+    raw_matches_frozen = (
+        full_oracle_horizon
+        and isinstance(frozen_raw, str)
+        and raw_output == frozen_raw
+    )
+    visible_matches_frozen = (
+        full_oracle_horizon
+        and isinstance(frozen_visible, str)
+        and visible_output == frozen_visible
+    )
+
+    evidence.update(
+        {
+            "input": {
+                "token_count": len(prompt),
+                "token_ids_sha256": digest_of(prompt),
+                "rendered_text": prompt_text,
+                "rendered_text_sha256": _text_sha256(prompt_text),
+                "rendered_character_count": len(prompt_text),
+                "decode_matches_frozen_text": input_matches,
+                "encode_round_trip_matches_ids": round_trip_matches,
+            },
+            "output": {
+                "token_count": len(generated),
+                "token_ids": generated,
+                "token_ids_sha256": digest_of(generated),
+                "raw_decoded_text": raw_output,
+                "raw_decoded_text_sha256": _text_sha256(raw_output),
+                "visible_decoded_text": visible_output,
+                "visible_decoded_text_sha256": _text_sha256(visible_output),
+                "raw_matches_oracle_compared_horizon": raw_matches_horizon,
+                "visible_matches_oracle_compared_horizon": visible_matches_horizon,
+                "raw_matches_frozen_oracle": raw_matches_frozen,
+                "visible_matches_frozen_oracle": visible_matches_frozen,
+            },
+            "oracle_compared_horizon": {
+                "token_count": len(oracle_horizon),
+                "token_ids_sha256": digest_of(oracle_horizon),
+                "raw_decoded_text": oracle_raw,
+                "raw_decoded_text_sha256": _text_sha256(oracle_raw),
+                "visible_decoded_text": oracle_visible,
+                "visible_decoded_text_sha256": _text_sha256(oracle_visible),
+                "is_complete_frozen_oracle": full_oracle_horizon,
+            },
+        }
+    )
+
+    if not isinstance(rendered, str) or not rendered:
+        problems.append("workload has no retained natural input context")
+    elif not input_matches:
+        problems.append("decoded prompt does not equal the frozen natural context")
+    if not round_trip_matches:
+        problems.append("frozen natural context does not round-trip to prompt IDs")
+    if not generated:
+        problems.append("decoded output token stream is empty")
+    if not raw_matches_horizon or not visible_matches_horizon:
+        problems.append("decoded output differs from the oracle compared horizon")
+    if not visible_output.strip():
+        problems.append("decoded visible output is empty or whitespace-only")
+    if "\ufffd" in raw_output or "\ufffd" in visible_output:
+        problems.append("decoded output contains a Unicode replacement character")
+    if full_oracle_horizon:
+        if not isinstance(frozen_raw, str) or not isinstance(frozen_visible, str):
+            problems.append("complete frozen oracle does not retain decoded text")
+        elif not raw_matches_frozen or not visible_matches_frozen:
+            problems.append("decoded output differs from complete frozen oracle text")
+
+    evidence["accepted"] = not problems
+    evidence["problems"] = list(problems)
+    return evidence, problems
+
+
 def _counter_evidence(device: Device) -> dict[str, Any]:
     """Publish cluster totals beside the simulator's measured per-node split.
 
@@ -762,7 +904,34 @@ def main() -> int:
     )
     print(f"terminal acceptance: {json.dumps(terminal)}", flush=True)
 
-    if result.failure or legitimacy:
+    decoded_text, decoded_text_problems = _decoded_text_evidence(
+        checkpoint=args.checkpoint,
+        tokenizer_sha256=tokenizer_sha256,
+        prompt=prompt,
+        generated=got,
+        gold=gold_tokens,
+        workload=workload,
+        gold_result=gold_result,
+    )
+    print(f"output token ids: {got}", flush=True)
+    print(
+        "raw decoded output: "
+        f"{decoded_text.get('output', {}).get('raw_decoded_text', '')!r}",
+        flush=True,
+    )
+    print(
+        "visible decoded output: "
+        f"{decoded_text.get('output', {}).get('visible_decoded_text', '')!r}",
+        flush=True,
+    )
+    if decoded_text_problems:
+        print(
+            f"decoded-text refusal: {json.dumps(decoded_text_problems)}",
+            file=sys.stderr,
+            flush=True,
+        )
+
+    if result.failure or legitimacy or decoded_text_problems:
         status = "failed"
     elif not gold_tokens:
         status = "reference_empty"
@@ -854,6 +1023,7 @@ def main() -> int:
             **comparison,
         },
         "terminal_acceptance": terminal,
+        "decoded_text_evidence": decoded_text,
         "counters": dict(sorted(result.counters.items())),
         **_counter_evidence(device),
         "per_step": result.per_step,
@@ -869,6 +1039,8 @@ def main() -> int:
         for problem in legitimacy:
             print(f"  TOKEN LEGITIMACY {problem}", file=sys.stderr)
         return 3
+    if decoded_text_problems:
+        return 6
     if result.failure:
         return 4
     return 0 if status == "pass" else 5
