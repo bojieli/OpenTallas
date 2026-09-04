@@ -313,6 +313,116 @@ def load_governed_input(path: Path) -> GovernedInput:
     )
 
 
+#: Geometry a ROM deployment states about itself.  Nothing here is measured
+#: silicon: a wafer's area is its stitched-reticle geometry and an array's is a
+#: reticle assumption plus the area its own ROM bytes imply at two graded
+#: densities.  The physical grade is DRA-PHY10's to settle.
+def _declared_silicon(
+    manifest: Mapping[str, Any], node_count: int
+) -> dict[str, Any] | None:
+    """Each basis on which this deployment's silicon can be totalled.
+
+    Returns ``None`` for a deployment that declares no geometry, which is the
+    honest answer for the HBM backend: its die area is a physical grade the
+    deployment does not carry, so no ratio may be computed against it.
+    """
+
+    notes = manifest.get("notes")
+    if not isinstance(notes, Mapping):
+        return None
+    bases: dict[str, float] = {}
+    wafer = notes.get("wafer_geometry")
+    if isinstance(wafer, Mapping):
+        for key, name in (
+            ("wafer_area_mm2", "wafer_reticle_grid"),
+            ("stitched_area_mm2", "stitched_reticles"),
+        ):
+            value = wafer.get(key)
+            if isinstance(value, (int, float)):
+                bases[name] = float(value)
+    array = notes.get("array_geometry")
+    placement = notes.get("array_placement")
+    if isinstance(array, Mapping):
+        reticle = array.get("reticle_area_mm2")
+        if isinstance(reticle, (int, float)):
+            bases["reticle_assumption"] = float(reticle) * node_count
+    if isinstance(placement, Mapping):
+        implied = placement.get("implied_rom_area_mm2_per_node")
+        if isinstance(implied, Mapping):
+            for key, name in (
+                ("at_wafer_backend_usable_density", "implied_rom_wafer_density"),
+                ("at_roofline_n5_array_density", "implied_rom_n5_density"),
+            ):
+                value = implied.get(key)
+                if isinstance(value, (int, float)):
+                    bases[name] = float(value) * node_count
+    if not bases:
+        return None
+    return {
+        "node_count": node_count,
+        "total_mm2_by_basis": {k: round(v, 3) for k, v in sorted(bases.items())},
+    }
+
+
+def _silicon_block(
+    left_manifest: Mapping[str, Any] | None,
+    right_manifest: Mapping[str, Any] | None,
+    left_nodes: int,
+    right_nodes: int,
+    roles: tuple[str, str],
+) -> dict[str, Any]:
+    """State each side's silicon, and a ratio for every basis, or say why not.
+
+    No single ratio is published.  A wafer states one measured grid area while
+    an array states a reticle assumption and the area its own ROM bytes imply at
+    two graded densities, so the ratio a reader gets depends on which basis is
+    chosen.  Publishing one number would hide that choice; publishing every
+    basis makes the grade the reader's to weigh, which is what section 3.5 of
+    the array plan requires until DRA-PHY10 settles a measured die area.
+    """
+
+    left = (
+        _declared_silicon(left_manifest, left_nodes)
+        if left_manifest is not None
+        else None
+    )
+    right = (
+        _declared_silicon(right_manifest, right_nodes)
+        if right_manifest is not None
+        else None
+    )
+    block: dict[str, Any] = {
+        "evidence_class": "declared_deployment_geometry_not_measured_silicon",
+        roles[0]: left,
+        roles[1]: right,
+        "note": (
+            "Declared geometry, not measured die area. A ratio is published "
+            "for every basis each side declares rather than one headline "
+            "number, because the bases are graded differently and the physical "
+            "grade is not settled."
+        ),
+    }
+    if left is None or right is None:
+        missing = [
+            role
+            for role, side in ((roles[0], left), (roles[1], right))
+            if side is None
+        ]
+        block["ratios"] = None
+        block["ratios_absent_because"] = (
+            f"{', '.join(missing)} declares no geometry, so its die area is a "
+            "physical grade this comparison may not assume"
+        )
+        return block
+    block["ratios"] = {
+        f"{left_basis}_over_{right_basis}": round(left_total / right_total, 5)
+        for left_basis, left_total in left["total_mm2_by_basis"].items()
+        for right_basis, right_total in right["total_mm2_by_basis"].items()
+        if right_total
+    }
+    return block
+
+
 def _comparison_source_sha256() -> dict[str, str]:
     return {
         relative: hashlib.sha256((REPO / relative).read_bytes()).hexdigest()
@@ -333,6 +443,20 @@ def main() -> int:
             "(the wafer against the 32-node array) rather than the "
             "storage-class one"
         ),
+    )
+    parser.add_argument(
+        "--rom-deployment",
+        type=Path,
+        help=(
+            "the ROM side's deployment directory, whose notes declare its "
+            "geometry; supplying both sides adds a silicon block stating each "
+            "side's total by basis"
+        ),
+    )
+    parser.add_argument(
+        "--right-deployment",
+        type=Path,
+        help="the other side's deployment directory",
     )
     parser.add_argument("--comparison-id", required=True)
     parser.add_argument("--output", type=Path, required=True)
@@ -387,6 +511,24 @@ def main() -> int:
         right_role: hbm_input.identity(),
     }
     body["source_sha256"] = _comparison_source_sha256()
+    if args.rom_deployment is not None or args.right_deployment is not None:
+        try:
+            manifests = [
+                json.loads((path / "deployment.json").read_text())
+                if path is not None
+                else None
+                for path in (args.rom_deployment, args.right_deployment)
+            ]
+        except (OSError, json.JSONDecodeError) as exc:
+            print(f"comparison refused: cannot read a deployment: {exc}", file=sys.stderr)
+            return 2
+        body["silicon"] = _silicon_block(
+            manifests[0],
+            manifests[1],
+            rom.target.node_count,
+            hbm.target.node_count,
+            ("rom", right_role),
+        )
     if args.allow_token_divergence and not body["token_agreement"]["identical"]:
         body["claim_boundary"]["performance_comparison"] = False
         body["claim_boundary"]["note"] = (

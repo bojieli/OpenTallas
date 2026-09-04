@@ -1,7 +1,8 @@
 .PHONY: abi3-tokens abi3-tokens-deepseek abi3-tokens-deepseek-rom abi3-tokens-deepseek-hbm abi3-tokens-qwen-rom abi3-tokens-qwen-hbm abi3-restart abi3-restart-qwen-hbm abi3-restart-qwen-rom abi3-restart-deepseek-hbm abi3-restart-deepseek-rom abi3-context-gate abi3-prefix-workloads abi3-hbm-qwen-deployment abi3-hbm-deepseek-deployment abi3-rom-schedule-check abi3-rom-qwen-degraded-build rom-service rom-service-vectors rom-service-physical abi3-rtl-engines check-evidence-grades check-prose-figures check-prose-coverage check-figures roofline abi3-failclosed abi3-equivalence abi3 abi3-engine-rate abi3-cost-tables abi3-cost-tables-check abi3-spec abi3-test abi3-workloads abi3-oracle abi3-engines abi3-rtl abi3-physical abi3-status abi3-ir profile simulate iso-node model-traffic world-model world-model-landscape legacy-sim routing noc sensitivity legacy-sensitivity spec-check formal rtl-sim fault-sim fault-campaign coverage rtl-static rtl pre-synth-verify synth-public spice spice-pdk test verify clean-results
-.PHONY: abi3-rom-qwen-build abi3-rom-deepseek-build abi3-rom-deepseek-array-build abi3-hbm-qwen-build abi3-hbm-deepseek-build abi3-comparison-deepseek abi3-evidence-source-current abi3-rtl-vectors abi3-rtl-deployment-vectors abi3-rtl-deployment
+.PHONY: abi3-rom-qwen-build abi3-rom-deepseek-build abi3-rom-deepseek-array-build abi3-hbm-qwen-build abi3-hbm-deepseek-build abi3-comparison-deepseek abi3-comparison-deepseek-array abi3-comparison-deepseek-wafer-array abi3-evidence-source-current abi3-rtl-vectors abi3-rtl-deployment-vectors abi3-rtl-deployment
 .PHONY: abi3-comparison-asap7-readiness abi3-comparison-asap7-gate
 .PHONY: abi3-w10-natural-oracle abi3-w10-natural-hbm-a abi3-w10-natural-hbm-b abi3-w10-natural-rom abi3-w10-natural-check abi3-w10-stress-hbm abi3-w10-stress-rom abi3-w10-stress-check
+.PHONY: checkpoint-source-deepseek-pro
 
 profile:
 	python3 tools/profile_hf.py --all
@@ -458,6 +459,32 @@ abi3-comparison-deepseek:
 	  --comparison-id deepseek-v4-flash-rom-vs-hbm-p32 \
 	  --output results/abi3/comparison_deepseek_rom_vs_hbm.json --force
 
+# The array against the same HBM cluster: the storage-class comparison at a
+# fixed node count, which is what the array target was built to make possible.
+abi3-comparison-deepseek-array:
+	PYTHONPATH=. python3 tools/build_comparison_report.py \
+	  --rom results/abi3/accelerator_tokens/deepseek_v4_flash_rom_array_p32.json \
+	  --hbm results/abi3/accelerator_tokens/deepseek_v4_flash_hbm_p32.json \
+	  --comparison-id deepseek-v4-flash-rom-array-32-vs-hbm-cluster-32-p32 \
+	  --rom-deployment build/abi3/deepseek-v4-flash-rom-array-32 \
+	  --right-deployment build/abi3/deepseek-v4-flash-hbm-tokens \
+	  --output results/abi3/comparison_deepseek_rom_array_vs_hbm.json --force
+
+# The wafer against the array: the packaging comparison, both sides immutable
+# ROM.  The 32-node array holds node count fixed rather than area, so this pair
+# is the equal-node control; the iso-area comparator is the reticle count whose
+# silicon matches the wafer's, which the contract states and the roofline
+# reports.  See configs/abi3/comparison_contracts/
+# deepseek_v4_rom_wafer_vs_rom_array_32_v1.json.
+abi3-comparison-deepseek-wafer-array:
+	PYTHONPATH=. python3 tools/build_comparison_report.py \
+	  --rom results/abi3/accelerator_tokens/deepseek_v4_flash_rom_p32.json \
+	  --rom-array results/abi3/accelerator_tokens/deepseek_v4_flash_rom_array_p32.json \
+	  --comparison-id deepseek-v4-flash-rom-wafer-vs-rom-array-32-p32 \
+	  --rom-deployment build/abi3/deepseek-v4-flash-rom \
+	  --right-deployment build/abi3/deepseek-v4-flash-rom-array-32 \
+	  --output results/abi3/comparison_deepseek_wafer_vs_array.json --force
+
 # Source-current evidence regeneration has explicit barriers.  All four
 # canonical bundles are rebuilt before consumers inspect them.  Token lanes and
 # HBM certificates stay sequential: the DeepSeek checkpoint is about 156 GB and
@@ -539,3 +566,31 @@ abi3-restart-deepseek-rom:
 	  --output results/abi3/restart_exactness_deepseek_rom_p32.json --force
 
 abi3-restart: abi3-restart-qwen-hbm abi3-restart-qwen-rom abi3-restart-deepseek-hbm abi3-restart-deepseek-rom
+
+# --- checkpoint source expectations ----------------------------------------
+# `tools/build_checkpoint_source.py` writes the expectation half of a
+# checkpoint identity: the digest and size of every file the registry lists at
+# the pinned revision, each local digest confronted with the registry's own
+# per-file record so the expectation is not derived from the bytes it will later
+# be used to check.  The witness is committed beside the byte inventories under
+# data/inventory/ rather than fetched, so a rerun needs no network.
+#
+# This target reads and hashes every byte of the released Pro checkpoint:
+# 892,762,497,859 bytes (831 GiB) over the 92 files the registry lists at
+# revision 72e1d3230f6c, 66 of them safetensors shards.  Expect roughly 17
+# minutes -- a projection from the 0.90 GB/s this host measured hashing the
+# 166,878,536,440-byte Flash checkpoint in 185 s, not a measured Pro runtime.
+# It fails closed unless the whole snapshot is present locally.  Because of that
+# cost it is deliberately not a prerequisite of any aggregate target; invoke it
+# by name, once, when the checkpoint is complete.
+DEEPSEEK_PRO_REVISION ?= 72e1d3230f6c080a530b0a1d46f8eb4602340597
+DEEPSEEK_PRO_SNAPSHOT ?= $(HOME)/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4-Pro-0813/snapshots/$(DEEPSEEK_PRO_REVISION)
+DEEPSEEK_PRO_REGISTRY_LISTING ?= data/inventory/deepseek-v4-pro-0813-registry-listing.json
+
+checkpoint-source-deepseek-pro:
+	PYTHONPATH=. python3 tools/build_checkpoint_source.py \
+	  --repository deepseek-ai/DeepSeek-V4-Pro-0813 \
+	  --revision $(DEEPSEEK_PRO_REVISION) \
+	  --snapshot $(DEEPSEEK_PRO_SNAPSHOT) \
+	  --registry-listing $(DEEPSEEK_PRO_REGISTRY_LISTING) \
+	  --output compiler/models/deepseek-v4-pro-0813/checkpoint_source.json

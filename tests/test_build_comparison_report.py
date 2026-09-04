@@ -319,3 +319,80 @@ def test_naming_both_a_second_rom_and_an_hbm_side_is_refused(
     assert raised.value.code == 2
     assert "not allowed with argument" in capsys.readouterr().err
 
+
+def test_declared_silicon_totals_each_basis_a_deployment_states() -> None:
+    from tools.build_comparison_report import _declared_silicon
+
+    wafer = _declared_silicon(
+        {
+            "notes": {
+                "wafer_geometry": {
+                    "wafer_area_mm2": 46225.0,
+                    "stitched_area_mm2": 41184.0,
+                    "reticle_field_mm2": 858.0,
+                }
+            }
+        },
+        1,
+    )
+    assert wafer == {
+        "node_count": 1,
+        "total_mm2_by_basis": {
+            "stitched_reticles": 41184.0,
+            "wafer_reticle_grid": 46225.0,
+        },
+    }
+    array = _declared_silicon(
+        {
+            "notes": {
+                "array_geometry": {"reticle_area_mm2": 815.0},
+                "array_placement": {
+                    "implied_rom_area_mm2_per_node": {
+                        "at_wafer_backend_usable_density": 1108.7588269131638,
+                        "at_roofline_n5_array_density": 1533.0996396807298,
+                    }
+                },
+            }
+        },
+        32,
+    )
+    # A per-node figure is multiplied by the node count the record declares.
+    assert array["total_mm2_by_basis"]["reticle_assumption"] == 815.0 * 32
+    assert array["total_mm2_by_basis"]["implied_rom_wafer_density"] == round(
+        1108.7588269131638 * 32, 3
+    )
+
+
+def test_a_backend_that_declares_no_geometry_yields_no_silicon_ratio() -> None:
+    """The HBM side's die area is a physical grade, not a deployment fact."""
+    from tools.build_comparison_report import _declared_silicon, _silicon_block
+
+    assert _declared_silicon({"notes": {"backend": "hbm-sram-abi3"}}, 32) is None
+    block = _silicon_block(
+        {"notes": {"array_geometry": {"reticle_area_mm2": 815.0}}},
+        {"notes": {"backend": "hbm-sram-abi3"}},
+        32,
+        32,
+        ("rom", "hbm"),
+    )
+    assert block["ratios"] is None
+    assert "hbm declares no geometry" in block["ratios_absent_because"]
+
+
+def test_the_silicon_block_publishes_every_basis_and_no_headline_ratio() -> None:
+    """One number would hide which grade it rests on, so every basis is given."""
+    from tools.build_comparison_report import _silicon_block
+
+    block = _silicon_block(
+        {"notes": {"wafer_geometry": {"wafer_area_mm2": 46225.0}}},
+        {"notes": {"array_geometry": {"reticle_area_mm2": 815.0}}},
+        1,
+        32,
+        ("rom", "rom_array"),
+    )
+    assert block["ratios"] == {
+        "wafer_reticle_grid_over_reticle_assumption": round(46225.0 / 26080.0, 5)
+    }
+    assert "not measured die area" in block["note"]
+    assert block["evidence_class"].endswith("not_measured_silicon")
+
