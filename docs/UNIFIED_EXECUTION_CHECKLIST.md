@@ -24,16 +24,18 @@ Verilator with 595,020 checks per simulator <!-- figure: 595020 src="results/rtl
 `STATE_COMPAT=0` refusal before fetch. The standalone engine campaign correlates
 11 bounded opcode pairs <!-- figure: 11 src="results/rtl/abi3_engine_campaign.json#correlation.family_count" name="current RTL engine families, checkpoint" --> over 135 cases <!-- figure: 135 src="results/rtl/abi3_engine_campaign.json#correlation.case_count" name="current RTL engine cases, checkpoint" --> with 40,878 checks per simulator <!-- figure: 40878 src="results/rtl/abi3_engine_campaign.json#checks_per_simulator.iverilog" name="current RTL engine checks, checkpoint" --> and
 catches all 7 compiled RTL mutations <!-- figure: 7 src="results/rtl/abi3_engine_campaign.json#mutation_sensitivity.mutation_count" name="current caught RTL mutations, checkpoint" -->. These are control-plane and bounded
-datapath evidence respectively. The first bounded integration witness now runs
-four shipped decode prefixes. Its real `DMA.GATHER` launch count is **6**, and
-its exact BF16 `TENSOR.EMBED_LOOKUP` launch count is **4**, followed by **2**
-Qwen BF16 `VECTOR.RMS_NORM` and **2** DeepSeek stride-zero BF16
-`DMA.TRANSFER` launches. It checks 58,368 result words through 52 resolved
-views with 124,189 checks per simulator. The legal token ID 0 embedding is a
-bounded synthetic probe, not a decoded model token. Qwen next traps at
-`TENSOR.MATMUL` PC 11; DeepSeek ROM next traps at `LINK.MULTICAST` PC 13 and
-DeepSeek HBM at `VECTOR.MHC` PC 14. This is not a full token-producing RTL
-system.
+datapath evidence respectively. The bounded base integration witness runs 24
+real launches across the four shipped decode prefixes, checks 80,896 compact
+result words through 82 views under Verilator, and binds unchanged arithmetic
+blocks to retained dual-simulator qualification. The frozen multicast overlay
+adds one exact DeepSeek ROM PC-13 launch and checks all 4,194,304 writes across
+256 participants. Its full Verilator replay passes 12,730,002 checks; focused
+Icarus passes 12,587,599 with the same DeepSeek-ROM case record. Qwen next traps
+at PC 26 `VECTOR.ROPE`; DeepSeek ROM at PC 15 `VECTOR.MHC` after multicast; and
+DeepSeek HBM at PC 14 `VECTOR.MHC`. The legal token ID 0 embedding remains a
+bounded synthetic probe, not a decoded model token. The overlay is
+non-promotable while the Qwen HBM certificate/source size mismatch remains.
+This is not a full token-producing RTL system and supplies no TPOT point.
 **Controlling ABI profile:** KV, compressed KV, compressor history, tokens, and
 intermediates are ordinary live HBM/SRAM buffers. Existing tensor views, events,
 and a token-step fence provide addressing and ordering. Runs are uninterrupted
@@ -85,9 +87,10 @@ HBM natural capture A as a durable detached service with unique output/log paths
 (2) launch independent capture B only after fresh A passes and proves resource
 headroom, then complete the Qwen ROM/HBM workload matrix; (3) execute DeepSeek
 `--gate-b-production` through EOS or 256 when resources permit, including both
-full-byte identity boundaries; (4) extend RTL
-next from Qwen MATMUL, DeepSeek ROM multicast, and DeepSeek HBM MHC, then across
-every required operator, memory/link service, selection, append, and EOS path;
+full-byte identity boundaries; (4) canonically rebuild the stale deployment
+certificate, then extend RTL from Qwen PC-26 `VECTOR.ROPE`, DeepSeek ROM PC-15
+`VECTOR.MHC`, and DeepSeek HBM PC-14 `VECTOR.MHC` across every required
+operator, memory/link service, selection, append, and EOS path;
 (5) pass short integrated-token diagnostics, then run the wafer-ROM and
 exact-32-node HBM
 accelerators at exact 200K and pass the accelerator-pair checker; (6) accept
@@ -385,30 +388,33 @@ evidence. None may be presented as a rerun of the current source.
 
 ## W8 — RTL 3.0
 
-**Current sequencer/engine integration boundary:** the source-bound
-`results/rtl/abi3_shipped_prefix_campaign.json` campaign now connects the real
-sequencer and resolved-view stream to the existing engine array for the exact
-first supported operations in all four shipped decode images. Icarus and
-Verilator each pass 124,189 checks over four cases: six real dense FP32
-`DMA.GATHER`, four exact BF16 `TENSOR.EMBED_LOOKUP`, two Qwen BF16
-`VECTOR.RMS_NORM`, and two DeepSeek stride-zero BF16 `DMA.TRANSFER` launches.
-The campaign resolves 52 views and checks 58,368 words: 1,024 authenticated
-generated-RoPE FP32 words plus 16,384 embedding, 8,192 RMSNorm, and 32,768
-transfer BF16 codes. It authenticates four selected 8 KiB embedding rows and
-two selected 8 KiB RMS gain ranges, binding each range, segment declaration,
-checkpoint revision, shard, and deployment identity; it does not rehash a
-complete segment. Token ID 0 is a legal but synthetic deterministic probe, not
-a natural-context token or output. Qwen next returns a precise `CAPABILITY`
-trap at `TENSOR.MATMUL` PC 11 (descriptor 59 ROM, 72 HBM); DeepSeek ROM next
-traps at `LINK.MULTICAST` PC 13 (descriptor 368), and DeepSeek HBM next traps at
-`VECTOR.MHC` PC 14 (descriptor 546). No unsupported operation retires or
-publishes its signal, and the campaign records zero post-fault writes and zero
-compatibility-state activity under `STATE_COMPAT=0`.
-This establishes only a decode prefix: it performs no prefill, whole
-transaction, token selection, decoding, EOS handling, or physical measurement.
-References later in W8.3 to the datapath and control campaigns being unwired
-describe those two older campaigns individually; this narrow third campaign is
-the current integration exception.
+**Current sequencer/engine integration boundary:** the source-bound base
+campaign connects the real sequencer and resolved-view stream to 24 exact
+shipped-prefix launches and checks 80,896 compact result words through 82
+resolved views under Verilator. It includes Qwen layer-zero Q/K/V MATMUL and
+head RMSNorm and binds the unchanged MAC lane to retained dual-simulator
+arithmetic evidence. Qwen next returns `CAPABILITY` at PC 26 `VECTOR.ROPE`;
+DeepSeek HBM does so at PC 14 `VECTOR.MHC`.
+
+The frozen overlay
+`results/rtl/abi3_shipped_prefix_multicast_campaign.json` additionally retires
+the exact DeepSeek ROM PC-13 wafer `LINK.MULTICAST`. It checks all 4,194,304
+destination writes for a nonzero 64-KiB live payload at 256 participants,
+per-participant order, binomial-tree parents, CRC/NAK/replay, and deterministic
+source/destination backpressure. The full four-case Verilator replay performs
+12,730,002 checks; the DeepSeek-ROM-only Icarus replay performs 12,587,599 and
+agrees on the normalized case. The ROM boundary is now PC 15 `VECTOR.MHC`
+descriptor 381; aggregate prefix counts are 25 launches, 80,896 compact result
+words, and 88 resolved views. The primary shipped vectors remain unchanged.
+
+This overlay is non-promotable until the owning pipeline rebuilds the stale
+Qwen HBM deployment certificate (recorded IR kernel 32,992 bytes, current
+source 33,234 bytes). It neither bypasses nor relabels that mismatch. Token ID
+0 remains a bounded synthetic embedding probe, not a natural-context output.
+These campaigns perform no prefill, whole transaction, token selection, EOS
+handling, decoded-token validation, architectural TPOT, or physical
+measurement. Correct output tokens remain Gate 1; TPOT from the same
+correctness-qualified execution remains Gate 2.
 
 - [x] W8.1 Microsequencer RTL (fetch/decode/loop/predicate/event/trap/complete) — `rtl/abi3/ot_a3_microsequencer.sv`; operand tensor-view resolution (A4 dynamic terms, A13 partial final extent, A18 extent axis/unit, A26 fixed-address edge masks) — `rtl/abi3/ot_a3_view_resolver.sv`
 - [x] W8.2 Queue/event controller RTL and compatibility-only state controller —

@@ -5,13 +5,16 @@
 the standalone engine campaign, including six bounded VECTOR additions. A
 separate narrow shipped-prefix campaign wires exact `DMA.GATHER`,
 `TENSOR.EMBED_LOOKUP`, Qwen `VECTOR.RMS_NORM`, and DeepSeek `DMA.TRANSFER`
-profiles to the microsequencer; the rest of the engine surface and full-model
-integration are not complete.
+profiles to the microsequencer. A frozen-identity extension additionally wires
+the exact DeepSeek ROM PC-13 wafer `LINK.MULTICAST`; the rest of the engine
+surface and full-model integration are not complete.
 **Evidence class:** `public_open_tool_rtl_simulation` (functional), plus a
 separate open-PDK physical view that carries its own boundary
 **Primary artifacts:**
 `results/rtl/abi3_engine_campaign.json` (functional correlation),
 `results/rtl/abi3_shipped_prefix_campaign.json` (integrated decode prefix),
+`results/rtl/abi3_shipped_prefix_multicast_campaign.json` (frozen-identity
+multicast extension; non-promotable until the canonical deployment rebuild),
 `testdata/compiler/abi3_engine/abi3_engine_vectors.json` (the vector set),
 `results/physical_abi3/sky130hd/{a3_selection_argmax,a3_vector_add,a3_dma_index_mover}/physical.json`
 (routed), `results/physical_abi3/sky130hd/a3_mac_lane/prelayout.json`,
@@ -36,26 +39,45 @@ whole-transaction depth — and the arithmetic is not.
 
 The standalone engine campaign remains the other half: it does not replace the
 control-plane campaign, and its generated programs still correlate arithmetic
-separately. A third, narrower campaign now closes the first real connection.
+separately. A third, narrower campaign closes the first real connection.
 `results/rtl/abi3_shipped_prefix_campaign.json` loads the four shipped decode
 images, lets the sequencer resolve their real views, validates the referenced
-operator/view/numeric descriptors, and launches 6 dense FP32 `DMA.GATHER`, 4
-exact BF16 `TENSOR.EMBED_LOOKUP`, 2 Qwen BF16 `VECTOR.RMS_NORM`, and 2
-DeepSeek stride-zero BF16 `DMA.TRANSFER` operations. Both simulators compare all
-58,368 result words—1,024 generated-RoPE FP32 words and 16,384 embedding,
-8,192 RMSNorm, and 32,768 transfer BF16 codes—through 52 resolved views, with
-124,189 checks per simulator. Each embedding uses legal token ID 0 as a
-deterministic synthetic probe and reads one bounded 8 KiB checkpoint row; each
-Qwen RMSNorm reads one bounded 8 KiB gain range. The campaign binds and rehashes
-those 49,152 selected-range bytes plus their certified deployment/segment
-identities; it does not rehash a complete segment or claim natural-language
-token generation. The bridge then precisely refuses Qwen `TENSOR.MATMUL` at PC
-11, DeepSeek ROM `LINK.MULTICAST` at PC 13, or DeepSeek HBM `VECTOR.MHC` at PC
-14.
+operator/view/numeric descriptors, and launches 24 real operations: 6 dense
+FP32 `DMA.GATHER`, 4 exact BF16 `TENSOR.EMBED_LOOKUP`, 2 Qwen BF16
+`VECTOR.RMS_NORM`, 6 complete Qwen layer-zero `TENSOR.MATMUL`, 4 Qwen
+`VECTOR.HEAD_RMS_NORM`, and 2 DeepSeek stride-zero BF16 `DMA.TRANSFER`
+operations. Its full integrated Verilator replay checks all 80,896 compact
+result words through 82 resolved views and binds the unchanged MAC lane to its
+retained Icarus-plus-Verilator arithmetic qualification. The next precise
+boundaries are Qwen `VECTOR.ROPE` at PC 26, DeepSeek ROM `LINK.MULTICAST` at PC
+13, and DeepSeek HBM `VECTOR.MHC` at PC 14.
 
-That witness proves the handshake, descriptor admission, resolved addressing,
-engine completion, and precise fail-stop boundary for this one prefix only. It
-does not turn either older campaign into a data-bearing whole-transaction run.
+The separate
+`results/rtl/abi3_shipped_prefix_multicast_campaign.json` overlay preserves the
+exact hashes of that already-checked vector set and changes only the DeepSeek
+ROM continuation. It executes the qualified PC-13 `LINK.MULTICAST`, reproduces
+the deterministic nonzero 64-KiB live scratch payload at all 256 participants
+(4,194,304 streaming destination writes), checks ascending per-participant
+order and every binomial-tree parent, injects one CRC error, and observes NAK
+and bounded packet replay under source and destination backpressure. The full
+four-case Verilator replay performs 12,730,002 checks; a DeepSeek-ROM-only
+Icarus replay performs 12,587,599 checks and emits the same normalized case
+record. The ROM case now has 5 real launches, 17 resolved views, retires the
+multicast, and precisely refuses descriptor 381 `VECTOR.MHC` at PC 15. The
+four-case totals are 25 real launches, 80,896 compact result words, and 88
+resolved views.
+
+That overlay is intentionally marked non-promotable: the retained Qwen HBM
+deployment certificate records a 32,992-byte IR kernel while the current source
+is 33,234 bytes. The overlay neither bypasses that source-currentness failure
+nor calls the frozen identity current. The owning compiler/deployment pipeline
+must perform the canonical rebuild before this evidence can contribute to a
+release gate.
+
+These witnesses prove the handshake, descriptor admission, resolved
+addressing, engine/link completion, and precise fail-stop boundary for these
+prefixes only. They do not turn either older campaign into a data-bearing
+whole-transaction run.
 The deployment campaign's `engine_coverage` field remains the authority for how
 far the complete 37-pair shipped operator surface exceeds the bounded engine
 array.
@@ -113,7 +135,10 @@ covered families, `TENSOR.GROUPED_MATMUL`, `ROUTED_MATMUL`, general
 `SELECTION.TOKEN_APPEND` remain absent. The shipped-prefix campaign separately
 admits exactly one BF16 embedding form, one Qwen BF16 RMSNorm form, and one
 DeepSeek stride-zero BF16 transfer form. These do not broaden the standalone
-vector-set claim. `SELECTION.SAMPLE` has no governed contract on either side.
+vector-set claim. The frozen extension additionally admits only the exact
+DeepSeek ROM wafer multicast profile and does not broaden the standalone
+engine-vector claim. `SELECTION.SAMPLE` has no governed contract on either
+side.
 
 ## 3. What the correlation actually compares
 
@@ -549,17 +574,19 @@ It does **not** establish any of the following:
 * **the contraction lane's routed area, timing or power, or physical
   characterisation of the six new VECTOR blocks.** Three legacy blocks are
   routed; `ot_a3_mac_lane` and all six additions are not — see 5.3;
-* **integration beyond the shipped gather/embedding/RMSNorm-or-transfer
-  prefix.** The source-bound prefix campaign now wires the sequencer to dense
-  FP32 `DMA.GATHER`, exact BF16 token-zero `TENSOR.EMBED_LOOKUP`, Qwen BF16
-  `VECTOR.RMS_NORM`, and DeepSeek stride-zero BF16 `DMA.TRANSFER`. Qwen
-  `TENSOR.MATMUL`, DeepSeek ROM `LINK.MULTICAST`, DeepSeek HBM `VECTOR.MHC`,
-  every later required model operator, a complete transaction, and the
-  token-producing path remain unwired. The embedding value is a selected
-  checkpoint-row probe, not a decoded output token;
+* **integration beyond the retained shipped prefix.** The source-bound base
+  campaign also wires complete Qwen layer-zero Q/K/V `TENSOR.MATMUL` and
+  `VECTOR.HEAD_RMS_NORM`; its next Qwen boundary is `VECTOR.ROPE`. The frozen
+  extension retires the exact DeepSeek ROM wafer `LINK.MULTICAST`, then stops
+  at PC-15 `VECTOR.MHC`; DeepSeek HBM stops at its PC-14 `VECTOR.MHC`. Every
+  later required operator, a complete transaction, and the token-producing
+  path remain unwired. The embedding value is a selected checkpoint-row probe,
+  not a decoded output token. The extension is non-promotable until the stale
+  Qwen HBM deployment certificate is canonically rebuilt;
 * **memory macros.** Operand and result memories are behavioural arrays in the
   verification top. No SRAM or ROM macro, no bank conflict, no ECC, no
-  arbitration, no backpressure from a real memory;
+  arbitration, or backpressure from a real memory. The multicast extension's
+  deterministic ready gaps verify handshake behavior, not SRAM/ROM timing;
 * **target-node area, timing, power or realisability.** See section 5.
 
 ## 7. Reproducing
@@ -567,10 +594,15 @@ It does **not** establish any of the following:
 ```sh
 python3 tools/build_abi3_engine_vectors.py           # regenerate the vectors
 python3 tools/rtl_abi3_engine_campaign.py --force    # replay on both simulators
-python3 tools/build_abi3_shipped_prefix_vectors.py   # derive shipped prefixes
+# Canonical base rebuild: run after the owning deployment certificate refresh.
+python3 tools/build_abi3_shipped_prefix_vectors.py
 python3 tools/rtl_abi3_shipped_prefix_campaign.py --force
+# Narrow frozen-identity extension; it remains non-promotable by construction.
+python3 tools/build_abi3_shipped_prefix_multicast_vectors.py
+python3 tools/rtl_abi3_shipped_prefix_multicast_campaign.py --force
 python3 -m pytest tests/compiler/test_rtl_abi3_engine.py
 python3 -m pytest tests/compiler/test_rtl_abi3_shipped_prefix.py
+python3 -m pytest tests/compiler/test_rtl_abi3_shipped_prefix_multicast.py
 ```
 
 The campaign artifact records the SHA-256 of every RTL source, testbench,

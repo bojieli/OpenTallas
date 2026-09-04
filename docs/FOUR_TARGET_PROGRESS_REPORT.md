@@ -253,6 +253,14 @@ zero used swap, and no competing governed model or cycle process.
   4,177,920 payload flits, 4,194,304 exact destination writes, one injected CRC
   error recovered by one bounded replay, and 37 fail-closed mutations. It is not
   yet instantiated by the shared issue bridge and is transport evidence only.
+- Commit `2e6d352` integrates that unchanged adapter into the shared shipped
+  prefix behind an explicit verification-profile parameter. A frozen overlay
+  binds the prior vector hashes and full multicast records, then the real
+  sequencer retires PC-13 `LINK.MULTICAST` and reaches PC-15 `VECTOR.MHC`.
+  Independent streaming checkers validate every destination write, tree parent,
+  source/destination stall, and CRC replay. The overlay remains non-promotable
+  until the stale Qwen HBM deployment certificate is canonically rebuilt; it
+  adds no accepted token or TPOT point.
 - Commit `256b568` independently qualifies the first exact DeepSeek HBM PC-14
   `VECTOR.MHC` / `HC_PRE` issue at T=512. It authenticates the official first
   512 prompt embeddings and complete relevant checkpoint shards, composes 128
@@ -459,23 +467,35 @@ The separate shipped-prefix campaign closes one narrow connection between the
 two evidence classes above. It validates the real operator, tensor-view, dtype,
 permission, geometry, and numeric descriptors before allowing the sequencer's
 initial generated-RoPE gathers, embedding lookups, Qwen RMSNorms, complete
-layer-zero Q/K/V projections, and DeepSeek transfers to launch the bounded
-datapaths. The 20 launches produce 70,656 checked words through 70 resolved
-views, with 144,708 integrated Verilator comparisons. The unchanged MAC lane is
-separately bound to retained Icarus and Verilator arithmetic qualification; the
-complete integrated Q/K/V transaction itself is Verilator-only. Engine faults
-are precise: a failed operation neither retires nor publishes its completion
-event.
+layer-zero Q/K/V projections and head normalizations, and DeepSeek transfers to
+launch the bounded datapaths. The base campaign's 24 launches produce 80,896
+checked compact result words through 82 resolved views, with 163,169 integrated
+Verilator comparisons. The unchanged MAC lane is separately bound to retained
+Icarus and Verilator arithmetic qualification; the complete integrated Q/K/V
+transaction itself is Verilator-only. Engine faults are precise: a failed
+operation neither retires nor publishes its completion event.
 
-The campaign intentionally refuses the next operation rather than simulating it
-as a no-op: Qwen stops at PC 20 `VECTOR.HEAD_RMS_NORM`; DeepSeek ROM stops at
-PC 13 `LINK.MULTICAST`; and DeepSeek HBM stops at PC 14 `VECTOR.MHC`. Its
-embedding index is legal token ID 0, selected solely as a bounded deterministic
-probe; it is not a tokenizer-driven model output and does not establish even
-one whole token step. It therefore establishes the sequencer/view/engine
-handshake and exact intermediate Q/K/V arithmetic only for that prefix. No
-current RTL simulation executes a whole model or produces an accepted output
-token.
+The frozen-identity multicast overlay in
+`results/rtl/abi3_shipped_prefix_multicast_campaign.json` advances only the
+DeepSeek ROM case. It retires the exact PC-13 `LINK.MULTICAST`, checks
+4,194,304 writes of a deterministic nonzero 64-KiB live scratch payload across
+all 256 participants, validates per-participant ordering and every binomial-tree
+parent, and exercises CRC/NAK/replay plus source and destination backpressure.
+The full four-case Verilator replay passes 12,730,002 checks and the focused
+DeepSeek-ROM Icarus replay passes 12,587,599 checks with the same normalized
+case record. The new boundary is PC 15 `VECTOR.MHC` descriptor 381; Qwen still
+stops at PC 26 `VECTOR.ROPE`, and DeepSeek HBM still stops at PC 14
+`VECTOR.MHC`. Totals are 25 launches, 80,896 compact result words, and 88
+resolved views.
+
+This overlay deliberately binds the already-checked vector hashes instead of
+claiming a canonical rebuild: the Qwen HBM deployment certificate records a
+32,992-byte IR kernel while current source is 33,234 bytes. It is marked
+non-promotable until the owning deployment pipeline rebuilds that certificate.
+Its embedding index remains legal token ID 0, selected solely as a bounded
+deterministic probe; it is not a tokenizer-driven model output and establishes
+neither a whole token step nor architectural TPOT. No current RTL simulation
+executes a whole model or produces an accepted output token.
 
 ## 6. What “full execution” means
 
@@ -709,8 +729,8 @@ is not foundry signoff.
    for actual DeepSeek communication descriptors.
 8. Integrate the proven active-row/folding mapper with the selected production
    tensor lanes without changing reduction association, and extend the RTL
-   prefix from Qwen `VECTOR.HEAD_RMS_NORM`, DeepSeek ROM `LINK.MULTICAST`, and
-   DeepSeek HBM `VECTOR.MHC` through every required operator, memory service,
+   prefix from Qwen `VECTOR.ROPE`, DeepSeek ROM PC-15 `VECTOR.MHC`, and
+   DeepSeek HBM PC-14 `VECTOR.MHC` through every required operator, memory service,
    communication primitive, argmax, token append, token-commit counter, and EOS
    path. Bind every accelerated full-system co-simulation engine bit-for-bit and
    cycle-for-cycle to synthesizable RTL; do not label that tier monolithic RTL.

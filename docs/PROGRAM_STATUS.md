@@ -99,13 +99,34 @@ The production profile elaborates with compatibility state disabled and requires
 
 ### Integrated shipped-program engine prefix
 
-4 shipped decode cases launched 14 real engine operations, split into 6 FP32 `DMA.GATHER` launches and 4 exact BF16 `TENSOR.EMBED_LOOKUP`, 2 exact BF16 `VECTOR.RMS_NORM`, and 2 stride-zero BF16 `DMA.TRANSFER` launches. They compared 58,368 result words (1,024 generated-RoPE FP32 words plus 16,384 embedding, 8,192 RMSNorm, and 32,768 transfer BF16 codes) and resolved 52 views. The simulators agree = True (iverilog 124,189, verilator 124,189).
+The source-bound base prefix launches 24 real operations across the 4 shipped
+decode cases, compares 80,896 compact result words, and resolves 82 views in a
+full Verilator replay while binding unchanged arithmetic blocks to their
+retained dual-simulator qualifications. It covers 6 FP32 `DMA.GATHER`, 4 exact
+BF16 `TENSOR.EMBED_LOOKUP`, 2 Qwen `VECTOR.RMS_NORM`, 6 complete Qwen
+layer-zero `TENSOR.MATMUL`, 4 Qwen `VECTOR.HEAD_RMS_NORM`, and 2 DeepSeek
+stride-zero BF16 `DMA.TRANSFER` launches.
 
-Embedding reads cover 4 selected checkpoint rows (32,768 bytes); RMSNorm reads 2 selected gain ranges (16,384 bytes), for 49,152 authenticated bytes in total. Legal token ID 0 is a bounded synthetic address probe, not a natural-language decoded token. Each selected range is rehashed and bound to its certified deployment and declared segment; the complete segment is not rehashed in this campaign.
+The frozen multicast overlay adds one exact DeepSeek ROM PC-13
+`LINK.MULTICAST`: 4,194,304 destination writes reproduce a nonzero 64-KiB live
+scratch payload at 256 participants with exact ordering, binomial-tree parent,
+CRC/NAK/replay, and backpressure checks. The full Verilator replay passes
+12,730,002 checks; the focused DeepSeek-ROM Icarus replay passes 12,587,599 and
+agrees on the normalized case. Totals become 25 launches and 88 views while
+the compact result count remains 80,896.
 
-Precise capability boundaries: qwen3-8b-rom-single-chip/decode TENSOR.MATMUL PC 11 descriptor 59, qwen3-8b-hbm-single-chip/decode TENSOR.MATMUL PC 11 descriptor 72, deepseek-v4-flash-rom-wafer/decode LINK.MULTICAST PC 13 descriptor 368, deepseek-v4-flash-hbm-cluster/decode VECTOR.MHC PC 14 descriptor 546. Production `STATE_COMPAT=0`; post-fault writes = 0.
+Precise capability boundaries: both Qwen cases stop at PC 26 `VECTOR.ROPE`
+(descriptor 98 ROM, 101 HBM), DeepSeek ROM stops at PC 15 `VECTOR.MHC`
+descriptor 381 after successful multicast, and DeepSeek HBM stops at PC 14
+`VECTOR.MHC` descriptor 546. Production `STATE_COMPAT=0`; post-fault writes =
+0.
 
-This is a bounded data-bearing decode prefix, not prefill, a whole transaction, token generation, EOS, or physical closure.
+The overlay is explicitly non-promotable because the retained Qwen HBM
+certificate records a 32,992-byte IR kernel while current source is 33,234
+bytes; it neither bypasses nor relabels that mismatch. Legal token ID 0 remains
+a bounded synthetic address probe, not a natural-language decoded token. This
+is a bounded data-bearing decode prefix, not prefill, a whole transaction,
+token generation, EOS, architectural TPOT, or physical closure.
 
 ### Standalone engine datapaths
 
