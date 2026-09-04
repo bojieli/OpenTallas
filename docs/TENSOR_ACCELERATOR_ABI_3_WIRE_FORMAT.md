@@ -112,7 +112,7 @@ layer, or a framework callback.
 | `0x20` | tensor | `MATMUL=0x00`, `GROUPED_MATMUL=0x01`, `ROUTED_MATMUL=0x02`, `EMBED_LOOKUP=0x03` |
 | `0x30` | vector | `RMS_NORM=0x00`, `HEAD_RMS_NORM=0x01`, `ROPE=0x02`, `ADD=0x03`, `SILU_MUL=0x04`, `CONVERT=0x05`, `SCALE=0x06`, `SOFTMAX=0x07`, `COMPRESS=0x08`, `MHC=0x09`, `HADAMARD=0x0a`, `INDEX_SCORE=0x0b`, `SQRT_SOFTPLUS=0x0c` |
 | `0x40` | attention | `DENSE=0x00`, `GQA=0x01`, `SPARSE=0x02` |
-| `0x50` | route | `TOPK=0x00`, `BIASED_TOPK=0x01`, `WEIGHT_NORMALIZE=0x02`, `EXPERT_DISPATCH=0x03`, `INDEX_TOPK=0x04`, `HASH_ROUTE=0x05`, `WINDOW_INDEX=0x06` |
+| `0x50` | route | `TOPK=0x00`, `BIASED_TOPK=0x01`, `WEIGHT_NORMALIZE=0x02`, `EXPERT_DISPATCH=0x03`, `INDEX_TOPK=0x04`, `HASH_ROUTE=0x05`, `WINDOW_INDEX=0x06`, `DSPARK_WINDOW_INDEX=0x07` (A30) |
 | `0x60` | reduction | `ORDERED_SUM=0x00`, `EXPERT_SUM=0x01`, `VOCAB_GATHER=0x02`, `GROUPED_CONCAT=0x03`, `PARTITION_SUM=0x04` |
 | `0x70` | selection | `ARGMAX=0x00`, `TOKEN_APPEND=0x01`, `SAMPLE=0x02` |
 | `0x80` | state | `READ=0x00`, `PREPARE=0x01`, `COMMIT=0x02`, `DISCARD=0x03`, `GENERATION_ADVANCE=0x04` |
@@ -1082,7 +1082,12 @@ kernel 'main.layer03.compressed_dense_indices.enumerate' declares index family
 
 That refusal was right and the repair is not a seventh route subopcode, because
 the operator that *does* produce the family is already next door and already
-does every hard part of it.
+does every hard part of it. The claim is about **this** family: read it as a
+test, not as a rule against new subopcodes. Amendment A30 applies the same test
+to the other refused family and gets the other answer — nothing frozen emits a
+row that is identical for every query, spans two disjoint address ranges and
+reduces neither by a modulus nor by a per-row limit — so that family did become
+a route subopcode, `DSPARK_WINDOW_INDEX = 0x07`.
 
 **The released implementation says they are one function.** In the pinned
 snapshot `inference/model.py`, SHA-256
@@ -1192,8 +1197,15 @@ rows 0 through 132, all 133 of them; `ROUTE.WINDOW_INDEX` emits 73 through 200
 and five pads. Sixty rows in common, and **not one of the five draft rows** —
 which are the entire point of a draft block's index. It is the same
 substitution a second time, latent behind a profile the first release does not
-build, and it is now a refusal at export instead of a silently wrong token in
+build, and A20 made it a refusal at export instead of a silently wrong token in
 whatever build turns the profile on.
+
+Amendment A30 completes that: the family is now **implemented**, by its own
+operator `ROUTE.DSPARK_WINDOW_INDEX`, and `ROUTE.WINDOW_INDEX` still refuses it
+for exactly the reason stated in the paragraph above. What changed is only the
+verdict on the family, not the verdict on the substitution:
+`INDEX_FAMILIES["WINDOW_INDEX"]` is `causal_circular_window` and nothing else,
+before A30 and after it.
 
 **What a backend must do.** Read `absent_operands` and leave the named slot
 `NO_ID`, placing the remaining operands either side of it —
@@ -2227,6 +2239,89 @@ old deployment-v1 manifests remain readable and byte-identical. A reader that
 does not implement the new tagged source kind fails closed rather than treating
 it as a shared image.
 
+### 12.20 Amendment A30 — the DSpark draft window is its own route subopcode
+
+`ROUTE.DSPARK_WINDOW_INDEX = 0x07` is assigned. It is the first route
+subopcode added since the freeze, and the only value this amendment touches.
+
+**What the released code does.** In the pinned DeepSeek-V4-Pro-0813 snapshot,
+`inference/model.py`:
+
+```python
+@lru_cache(1)
+def get_dspark_topk_idxs(window_size, bsz, block_size, start_pos):
+    assert start_pos > 0
+    matrix = torch.cat([torch.arange(min(window_size, start_pos + 1)),
+                        window_size + torch.arange(block_size)])
+    return matrix.int().view(1, 1, -1).expand(bsz, block_size, -1).contiguous()
+```
+
+and, a few lines below, what those numbers address:
+
+```python
+self.kv_cache[:bsz, start_pos % win] = main_kv.squeeze(1)
+kv = torch.cat([self.kv_cache[:bsz], kv], dim=1)
+```
+
+So index `k < W` is physical ring slot `k` of the main sliding window, and index
+`W + j` is draft row `j` of the block appended after it. One row is built from
+the cursor and `expand` gives that same row to every draft query.
+
+**What the frozen operator does instead.** `ROUTE.WINDOW_INDEX` writes a
+*sliding* window ending at each query and, in decode, reduces it modulo the
+window. At `W = 128`, `B = 5`, `p = 200` the released row is ring slots 0–127
+followed by draft rows 128–132 — 133 entries, the same 133 for all five draft
+queries. `ROUTE.WINDOW_INDEX` emits, for query row `r`, `arange(73 + r, 201 + r)
+% 128`: 128 entries, a different row per query, and **not one of the five draft
+rows**, which are the entire reason a draft block has an index of its own. The
+two differ in four independent ways — sliding versus fixed, per-row versus
+broadcast, one segment versus two, modulo-reduced versus slot-enumerated.
+
+**Why the difference cannot be caught downstream.** Every index either operator
+names is a legal row of the same `[W + B, head_dim]` fused KV operand, so the
+operand checks pass, the bound checks pass and the numeric checks pass.
+`ATTENTION.SPARSE` reads the row as a *set* and treats `0xffffffff` as an absent
+lane at any position, so a wrong-but-legal row produces a full, finite, fluent
+softmax over the wrong keys. Concretely: a draft block attending sixty stale
+window rows and none of its own five draft tokens. The drafts become independent
+of each other, acceptance collapses toward the single-token case, and the tokens
+stay grammatical. That is the ratio-128 defect of A20 a second time, which is
+why `index_family` is a gate — and why a gate alone is not enough. A family that
+can be *claimed* on two operators is a family no lowered program records: the
+distinction has to reach the opcode.
+
+**What a backend must do.** Emit `ROUTE.DSPARK_WINDOW_INDEX` for the neutral
+kind `DSPARK_WINDOW_INDEX`; the operand row is `in0` U32 positions `[B]`,
+`in1`–`in3` `NO_ID`, `out0` U32 `[B, W + B]`. The aux row is `aux0` = `W`
+window capacity, `aux1` = `B` draft block size, `aux2` = the `CONTEXT_LENGTH`
+symbol, `aux3` = `NO_ID`; **both immediates are mandatory**. The fallback
+`ROUTE.WINDOW_INDEX` allows — derive the window from the output's own extent —
+is refused here, because this output is `W + B` wide and a derived window puts
+every history index above the true capacity onto a draft row. `slots == aux0 +
+aux1` and `span == aux1` are checkable identities and are checked. The operator
+exists in **decode only**: `DSparkAttention.forward` fills its cache and returns
+when `start_pos == 0`, so `get_dspark_topk_idxs` is never called in prefill and
+asserts `start_pos > 0`. Prefill traps. A bound check keyed on kind must use
+`window_size + draft_block_size` as this operator's extent, not `window_size`.
+
+**What it does not change.** No record, field, payload offset, feature bit,
+runtime symbol, state class or numeric contract moves, and every descriptor
+written before A30 keeps its meaning. `INDEX_FAMILIES["WINDOW_INDEX"]`, the
+`causal_circular_window` engine and every operator the flash deployment emits
+are untouched; the ordinary Flash graph is byte-identical across this
+amendment. A30 adds no feature bit, no numeric contract to any shipped
+capability, no state resource and no RTL coverage — `rtl/` implements no route
+index operator at all, so the new subopcode creates no RTL divergence and gains
+no RTL implementation. The operator is engine- and backend-side.
+
+**One thing does change, and it is not "nothing on the wire".** A subopcode
+value that was previously illegal is now legal. Nothing moves, but a decoder
+that enumerated ROUTE subopcodes — or rejected unknown ones, as it should — must
+be republished to accept `0x07`. `spec/abi3/registries.json` is therefore
+republished with this amendment rather than as quiet drift; it is generated from
+`runtime/abi3/constants.py::SUBOPCODES` and the republish is purely additive, no
+existing value moving.
+
 ## 13. Amendments made at the architecture freeze
 
 The draft of this document disagreed with `TA-ADR-003` in five places. All five
@@ -2282,6 +2377,7 @@ remain normative.
 | A27 | a joined zero-base prefill row carries the logical query position across a fixed-address stream | this document, section 12.18; operator conventions, section 23 |
 | A28 | a symmetric cluster object may bind one ordered authenticated local image per node through a domain-separated manifest content root | this document, section 12.19; `runtime/abi3/deployment.py` |
 | A29 | `request_descriptor_id` resolves one integrity-bound, generation- and transaction-owned complete runtime-symbol map | this document, section 6.1; `runtime/abi3/request.py` |
+| A30 | the draft window is an operator, not a family label: `ROUTE.DSPARK_WINDOW_INDEX` | this document, section 12.20; operator conventions, section 25 |
 
 Two of these carry more weight than the rest. **A4** and **A13** together are
 what make a loop-compressed program possible at all: A4 lets a descriptor be a

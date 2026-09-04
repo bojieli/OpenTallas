@@ -2,7 +2,7 @@
 
 **Contract ID:** TA-ABI3-OPCONV-1
 
-**Status:** frozen at `TA-A3-ARCH-0` plus amendments A6-A11 and A16-A19
+**Status:** frozen at `TA-A3-ARCH-0` plus amendments A6-A11, A16-A21, A25, A27 and A30
 
 **Depends on:** `TA-ABI3-WIRE-1` section 12 (OPERATOR payload)
 
@@ -104,6 +104,7 @@ operand and both remain strictly bounded by the resolved fused-KV view.
 | `INDEX_TOPK` | scores, or `NO_ID` for the dense form (A20) | window index (A19, A27) | compression ratio (A19) | joined KV rows, compacted and ascending | — | `aux0` `k`, `aux1` mask mode, `aux2` context *symbol*, `aux3` request position-base *symbol* (A27) |
 | `HASH_ROUTE` | token IDs | hash table | — | expert IDs | — | — |
 | `WINDOW_INDEX` | positions | — | — | prefill absolute rows or decode physical circular slots | — | `aux0` window, `aux1` mask mode, `aux2` context *symbol* |
+| `DSPARK_WINDOW_INDEX` (A30) | positions `[B]` | — | — | `[B, W + B]`: populated window slots, then the draft block at `W + arange(B)`, one row broadcast to every draft query | — | `aux0` window capacity **required**, `aux1` draft block size **required**, `aux2` context *symbol* |
 
 `WINDOW_INDEX` writes the source-defined causal window and nothing else. During
 prefill it is `arange(first, last + 1)` in absolute current-request row space.
@@ -114,6 +115,44 @@ the index family checkable at neutral admission. For a zero-base causal
 prefill, amendment A27 makes the last non-pad absolute entry the logical query
 position consumed by a joined `INDEX_TOPK`; decode instead keeps its explicit
 absolute position symbol because its row contains physical addresses.
+
+`DSPARK_WINDOW_INDEX` writes the DSpark draft window, in decode and in no other
+phase, in the physical address space of the fused draft KV operand. One row is
+computed from the request cursor `p` — `arange(0, min(W, p + 1))`, the populated
+physical slots of the main circular window, followed by `W + arange(0, B)`, the
+draft rows appended after that window's capacity — and that row is written
+**unchanged** to every one of the `B` draft queries. The broadcast is the
+semantics: attention inside the draft block is bidirectional, every draft query
+seeing every draft key, which is what makes a single parallel block pass
+meaningful. Nothing slides, nothing is reduced modulo the window, and no row
+carries a per-query limit.
+
+Two properties of this row are deliberate and are the opposite of
+`WINDOW_INDEX`'s. Its history segment is **slot-ascending, not chronological**:
+`get_dspark_topk_idxs` does not rotate, unlike `get_window_topk_idxs`, so a
+saturated row is `0..W-1` and not the `1..127, 0` wrap recorded above for a
+decode `WINDOW_INDEX` row. That is legal because amendment A6 freezes
+producer-defined source order and `sparse_attn` reads the row as a set — and it
+is stated here because restoring the rotation would name the same keys, produce
+numerically identical attention, and be invisible to every output comparison.
+Its padding is a **tail and never interior**: the two segments stay contiguous
+and `0xffffffff` runs to column `W + B`, which is reachable only while
+`p + 1 < W`. Holding the draft segment at fixed columns `W..W+B-1` while the
+history is short would be right for every context longer than the window and
+wrong only for short prompts — wrong there in the direction of attending draft
+rows as if they were history — and A6's tail-padding rule and A19's suffix check
+both forbid it.
+
+There is no mask mode on this operator, because there is no visibility choice to
+express: the history is every populated slot and the draft block is fully
+visible to every draft row. The slot `WINDOW_INDEX` spends on a mask mode
+carries the draft block size instead. That is amendment A6's own move —
+"block width goes in `aux1`, which `DENSE`/`GQA` do not use" — applied a second
+time, with A6's corollary intact: **an engine must dispatch its operand reading
+on the subopcode.** Both readings of `aux1` are immediates, so the slot changes
+its name and not its kind, and the row keeps the shape every index and attention
+row in this ABI has: immediates in `aux0`/`aux1`, runtime symbols in
+`aux2`/`aux3`.
 
 `EXPERT_DISPATCH` requires `aux0`: an engine that cannot state the expert bound
 cannot prove a routed ID is inside it, and an unbounded expert ID is a memory
@@ -770,6 +809,11 @@ At window 128, block 5, position 200 that is KV rows 0..132; `WINDOW_INDEX`
 emits 73..200 and five pads — 60 rows in common and none of the five draft
 rows, which are the whole reason a draft block has an index of its own.
 
+Amendment A30 (section 25) is that catch repaired at the operator rather than at
+the label: the family is implemented by `ROUTE.DSPARK_WINDOW_INDEX`, and
+`WINDOW_INDEX` still refuses it, for the reason in the paragraph above.
+`INDEX_FAMILIES["WINDOW_INDEX"]` is unchanged by A30.
+
 **What a backend must do.** Place operands with
 `compiler/ir/v3/lowering.py::abi_input_slots`, which returns the IR input for
 each ABI slot and `None` for a declared hole, and bind `NO_ID` where it returns
@@ -984,3 +1028,74 @@ select the prefill or decode descriptor block. A live optional-prefix path is
 consumed by its matching `CONTROL.WAIT`; the uncompressed ROM path uses the
 existing `CONTROL.FENCE`. Control converges only after the selected producer is
 complete, so program order safely carries the result into its consumer.
+
+
+## 25. Amendment A30 — the DSpark draft window is its own operator
+
+`ROUTE.DSPARK_WINDOW_INDEX` (ABI subopcode `0x07`) is added. Wire format section
+12.20 assigns the value; this section states the operand convention and the
+reasoning it inherits.
+
+**What the released code does.** `get_dspark_topk_idxs`, in the pinned
+DeepSeek-V4-Pro-0813 `inference/model.py`, concatenates
+`arange(min(window_size, start_pos + 1))` with `window_size + arange(block_size)`
+and `expand`s the result across every draft row. Its use fixes what the numbers
+address: `kv_cache[:bsz, start_pos % win] = main_kv` then
+`kv = cat([kv_cache[:bsz], kv], dim=1)`, so index `k < W` is physical ring slot
+`k` and index `W + j` is draft row `j`.
+
+**What the frozen operator does instead.** `ROUTE.WINDOW_INDEX` slides, writes a
+different row per query, reduces modulo the window and cannot name a row at or
+above `W` at all. At `W = 128`, `B = 5`, `p = 200` the released row is 0..132 for
+all five draft queries; `WINDOW_INDEX` emits `arange(73 + r, 201 + r) % 128` for
+query `r` — sixty rows in common and none of the five draft rows.
+
+**Why the difference cannot be caught downstream.** Both name legal rows of the
+same `[W + B, head_dim]` fused KV operand, and `ATTENTION.SPARSE` reads the row
+as a set with `0xffffffff` absent at any position. A substituted row therefore
+produces a full, finite, fluent softmax over the wrong keys: a draft block
+attending sixty stale window rows and none of its own drafts, whose tokens stay
+grammatical while acceptance collapses toward the single-token case.
+
+**Why an operator and not a second family on `WINDOW_INDEX`.** `INDEX_FAMILIES`
+is keyed by neutral kind and its contract is "the families the frozen operator
+produces". A second family there would make the registry say one operator
+produces two row shapes selected by an attribute, and would make the two
+interchangeable *at the same opcode* — the "attribute read by nobody" shape A20
+abolished. With a distinct kind, a substitution in either direction changes the
+**subopcode**, which the engine checks, both backends' aux builders check, and
+the microcode step table checks.
+
+**What a backend must do.** Operand row: `in0` U32 positions `[B]` — the same
+operand `WINDOW_INDEX` takes, built as `POSITION_START + row` over the
+operator's own output rows; `in1`–`in3` `NO_ID`; `out0` U32 `[B, W + B]`. Aux
+row: `aux0` window capacity, `aux1` draft block size, `aux2` `CONTEXT_LENGTH`,
+`aux3` `NO_ID`. **Both immediates are required.** Deriving the window from the
+output — which `WINDOW_INDEX` permits — is wrong here by exactly `B`, and every
+history index above the true capacity would land on a draft row. Check
+`slots == aux0 + aux1` and `span == aux1` as identities rather than inferring
+either. Read the cursor from `positions[0]` and require the consecutive run
+`p..p+B-1`; bound the cursor by `aux2` and **not** the draft positions, which the
+request has not committed. Refuse `PHASE == PREFILL`: `DSparkAttention.forward`
+returns after filling its cache at `start_pos == 0`, the helper asserts
+`start_pos > 0`, and the graph carries `phases = ("decode",)`. No prefill row is
+defined, and silently reusing the decode rule there would be the same invisible
+substitution this operator exists to prevent. A kind-keyed bound check must use
+`window_size + draft_block_size` as this operator's extent.
+
+**What it does not change.** `INDEX_FAMILIES["WINDOW_INDEX"]` remains
+`causal_circular_window` alone, and `causal_window_then_current_draft` remains
+refused on `WINDOW_INDEX`. `causal_compressed_dense` remains implemented as
+`ROUTE.INDEX_TOPK` with `in0` absent (A20), and A30 touches neither
+`OPTIONAL_INPUT_SLOTS` nor `abi_input_slots`. No feature bit, numeric contract,
+state resource or runtime symbol is added; no shipped capability moves; the
+ordinary Flash graph is byte-identical across this amendment. `rtl/` implements
+no route index operator, so A30 creates no RTL divergence and gains no RTL
+implementation — the operator is engine- and backend-side only.
+
+The rule is carried by tests stated in its own terms:
+`tests/sim/test_dspark_window_index_differential.py` compares the emitted index
+tensor against `get_dspark_topk_idxs` transcribed into NumPy, element for
+element and in order, at a padded short context and at a saturated one, and
+requires each family to be refused on the other's kind and each backend to
+refuse a draft window that does not state its block size.
