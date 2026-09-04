@@ -59,9 +59,9 @@
   },
   "log_sha256": {
     "iverilog": "578aa4bc0265e95bbb43dfe10e2658bbcda12ab63d8a1d20fb70ba1bcf179940",
-    "verilator": "9fa4669bdcac05e73f4dba770625b1ecd3868203aa9fb4cdac4ee31b68ac74c6",
-    "verilator_compile": "ea0d5d07d66ebd1d80a44c196bd38f04fe6a892c8f48da91958bc762607d3c60",
-    "yosys": "46ad1a1cd3c7e01a68f81f15768a532a486e98d90cbd75b471e69fc6c9675113"
+    "verilator": "3bc51231699052a1262a4e98d21494cf8eed96974ef6a3a888254ef513e9873a",
+    "verilator_compile": "c0d66153cc8712ae13a5fbd69e4328b472cf8d02db3b3247940cc1dd0d8829a7",
+    "yosys": "1b23638bedf0ba7b62a91d1844be3d1079b8e35f7d5517ac4d11a607c258722d"
   },
   "normalized_cases": [
     {
@@ -333,10 +333,11 @@
   "scope": {
     "active_reset": true,
     "architectural_timing": false,
+    "authenticated_prior_hbm_descriptor_546_semantic_equivalence": true,
     "dual_simulator": true,
     "end_to_end_token_correctness": false,
     "eos": false,
-    "exact_hbm_pc14_descriptor_546_admission": true,
+    "exact_hbm_pc14_descriptor_545_admission": true,
     "exact_output_coordinate_coverage": true,
     "exact_projection_coordinate_coverage": true,
     "exact_rom_pc15_descriptor_381_admission": true,
@@ -352,16 +353,16 @@
   "simulators_agree": true,
   "source_sha256": {
     "results/abi3/deepseek_hbm_hc_pre_t512_functional_qualification.json": "3a37a973339cf7abe6e06b595f17445a4a80307a8c87773f7f1950d66a5c9c60",
-    "rtl/abi3/ot_a3_vector_mhc_pre_tile_scheduler.sv": "c5e25b01d740f6a54dac8acaa27bc66459cfef7921ba6e85114a42f6c2d0a2a2",
+    "rtl/abi3/ot_a3_vector_mhc_pre_tile_scheduler.sv": "7354eacf3f6c171f784bf2da4109e281fd0ae5135d09d7afd5396a97e65725a6",
     "rtl/test/tb_a3_mhc_pre_tile_scheduler.sv": "5d5ba7da3faa75e4045d42ebeecf42fc94db7cca17049fe378b60036ddd7d370",
-    "testdata/compiler/abi3_deployment/a3_descriptor.hex": "73a3796cef4ab56d8b9be148f9a006fb78d04f365898229b9663e192722e0f44",
-    "testdata/compiler/abi3_deployment/a3_program.hex": "3342d7729996bb1d4a2d2447f77d1254c73e94b1b55f20a532e1fe4a9d523f78",
-    "testdata/compiler/abi3_deployment/abi3_deployment_rtl_vectors.json": "be5ffff67d78779b98edc8cdafa77332ada2ebbd3e70cb582cd2b5b3d972a9f4",
+    "testdata/compiler/abi3_deployment/a3_descriptor.hex": "e2af94bbccaaa4e1a4b3d7d67a384d86a80769a37d06f38d622850fb116dd616",
+    "testdata/compiler/abi3_deployment/a3_program.hex": "9a86572ef8fbfb0eb6c175cd528c8e39164d0f315cec889d9c85a4ddf227c505",
+    "testdata/compiler/abi3_deployment/abi3_deployment_rtl_vectors.json": "06977e3d3be02282c5076fa269f8fe5a25dec320f4b0ec7840b4429d09945638",
     "testdata/runtime/deepseek_hbm_hc_pre_t512/expected_pc14_combination.u32le": "5d9a46a955239c39d423edcdfa0d3cce4b51b93aeebd585fb357ecd7eba186fa",
     "testdata/runtime/deepseek_hbm_hc_pre_t512/expected_pc14_weights.u32le": "f4d046389962e663ae789177c9e86f2643df701270d5b385ab9840f7c6148a63",
     "testdata/runtime/deepseek_hbm_hc_pre_t512/qualification_vector.json": "21dbb02b406cb4cdf39d5d140e5bcaa6b6014946a5af4228f0c3e646757642f1",
-    "tools/build_a3_mhc_pre_tile_vectors.py": "bded0ec246b1b30e0086698b67c6f833873ef97e1615fd23449bc914e17eda64",
-    "tools/run_a3_mhc_pre_tile_rtl_campaign.py": "c4c4352c893e8ebdc5f0fba336084d7be4d8a1437e1283d2b3bda171eb1b0d32"
+    "tools/build_a3_mhc_pre_tile_vectors.py": "013e096d5486d59f072249c95be06e1840f9fa2ce1f385037b53fc8cf8e1469a",
+    "tools/run_a3_mhc_pre_tile_rtl_campaign.py": "89a18c89b6be9ac895d1c6fdddfcf514ba8e44f29b7eecaf829ada9d54288022"
   },
   "status": "pass",
   "synthesis_frontend": {
@@ -391,14 +392,14 @@
     }
   },
   "vector_sha256": {
-    "cases.hex": "da45596cbdc249b9c6f522c1fd0303bbcca0bd539c9d24e5d436f4c0e25e9d91",
-    "index.json": "2d4d93902f2d4aa82c85869fc2b5d74222b99f28182d3d43919bb89a5949c604"
+    "cases.hex": "57ea2586f19b57b834bdf6ea98a84ee3ed4cfbe607bb384cb495178f71c34854",
+    "index.json": "a87576e0d76c357e5115d85c11b3932e6e1092a03fbc67eba4de3f70cda7f917"
   },
   "verification_wall_seconds": {
-    "iverilog_compile": 0.011869856039993465,
-    "iverilog_simulation": 12.647692859987728,
-    "verilator_compile": 5.154850566061214,
-    "verilator_simulation": 0.4336327500641346,
-    "yosys_elaboration": 8.491031895042397
+    "iverilog_compile": 0.04498052899725735,
+    "iverilog_simulation": 16.506103947060183,
+    "verilator_compile": 5.61821910389699,
+    "verilator_simulation": 0.4920927711063996,
+    "yosys_elaboration": 13.303886765963398
   }
 }
