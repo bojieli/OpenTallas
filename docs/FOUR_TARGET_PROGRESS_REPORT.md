@@ -794,6 +794,13 @@ is not foundry signoff.
    it. Finish the request-symbol, engine-co-issue, shared-cycle replay, genuine
    B=1/2/4/8, and RTL-session prerequisites, then freeze one committed release
    snapshot before any final long capture.
+   `tools/freeze_abi3_execution_release.py` now implements that minimal
+   create-once boundary: it refuses a dirty tree, pending target/oracle locks,
+   a missing numerical TPOT budget, checkpoint/source-lock drift, or an already
+   used result namespace. Its focused tests pass, but no production release can
+   yet be instantiated because the comparison contracts still have pending
+   physical target locks and no TPOT SLO rows. The tool is not token or TPOT
+   evidence and does not change ABI 3.0.
 5. From that one snapshot, rerun HBM A, launch independent HBM B and ROM, and
    run the strict W10 checker over all three. Then complete natural chat,
    reasoning, deterministic closed-loop agentic, stress, and genuine

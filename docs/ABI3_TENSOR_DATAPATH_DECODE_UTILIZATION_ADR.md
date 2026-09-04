@@ -668,6 +668,16 @@ oracle identities; and freezes output roots for long campaigns. The owner also
 freezes the batch matrix and numeric TPOT SLO rows. No long result from a prior
 identity is promoted.
 
+`tools/freeze_abi3_execution_release.py` is the create-once boundary for this
+phase. It records the clean committed Git tree and complete tracked-file map,
+requires every included comparison contract to be source-ready with locked
+oracle, IR, deployment, capability, topology, cost/PVT, clock, and explicit
+TPOT budget identities, binds the checkpoint/source locks, and reserves one
+result namespace. `verify` must pass in the execution worktree before a
+production child starts. This record is evidence plumbing outside the ABI 3.0
+wire format: it creates no model state, journal, retry, checkpoint, or rollback
+mechanism.
+
 Exit evidence is an authenticated comparison/workload manifest and a complete
 SLO table. Correctness execution may begin before the numeric SLO is chosen,
 but performance cannot receive a pass/fail verdict without it.
