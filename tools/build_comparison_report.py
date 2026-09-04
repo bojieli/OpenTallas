@@ -323,7 +323,17 @@ def _comparison_source_sha256() -> dict[str, str]:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--rom", type=Path, required=True, help="ROM target report")
-    parser.add_argument("--hbm", type=Path, required=True, help="HBM target report")
+    side = parser.add_mutually_exclusive_group(required=True)
+    side.add_argument("--hbm", type=Path, help="HBM target report")
+    side.add_argument(
+        "--rom-array",
+        type=Path,
+        help=(
+            "second immutable-ROM target report, for the packaging comparison "
+            "(the wafer against the 32-node array) rather than the "
+            "storage-class one"
+        ),
+    )
     parser.add_argument("--comparison-id", required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--force", action="store_true")
@@ -341,9 +351,11 @@ def main() -> int:
         print(f"refusing to overwrite {args.output}; pass --force", file=sys.stderr)
         return 1
 
+    right_role = "hbm" if args.hbm is not None else "rom_array"
+    right_path = args.hbm if args.hbm is not None else args.rom_array
     try:
         rom_input = load_governed_input(args.rom)
-        hbm_input = load_governed_input(args.hbm)
+        hbm_input = load_governed_input(right_path)
     except (InputRefusal, KeyError, OSError, TypeError, ValueError) as exc:
         print(f"comparison refused: {exc}", file=sys.stderr)
         return 2
@@ -364,6 +376,7 @@ def main() -> int:
             hbm,
             comparison_id=args.comparison_id,
             require_identical_tokens=not args.allow_token_divergence,
+            roles=("rom", right_role),
         )
     except ComparisonError as exc:
         print(f"comparison refused: {exc}", file=sys.stderr)
@@ -371,7 +384,7 @@ def main() -> int:
 
     body["sources"] = {
         "rom": rom_input.identity(),
-        "hbm": hbm_input.identity(),
+        right_role: hbm_input.identity(),
     }
     body["source_sha256"] = _comparison_source_sha256()
     if args.allow_token_divergence and not body["token_agreement"]["identical"]:
@@ -392,7 +405,10 @@ def main() -> int:
     if deltas:
         print(f"  counters differing: {len(deltas)}")
         for name, delta in list(sorted(deltas.items()))[:12]:
-            print(f"    {name:38s} rom={delta['left']:<14} hbm={delta['right']}")
+            print(
+                f"    {name:38s} rom={delta['left']:<14} "
+                f"{right_role}={delta['right']}"
+            )
     return 0
 
 

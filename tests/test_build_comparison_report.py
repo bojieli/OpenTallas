@@ -220,3 +220,102 @@ def test_comparison_records_input_artifact_and_comparison_source_hashes(
     )
     for relative, digest in report["source_sha256"].items():
         assert digest == hashlib.sha256((REPO / relative).read_bytes()).hexdigest()
+
+
+def test_a_wafer_against_an_array_is_a_governed_rom_versus_rom_pair(
+    tmp_path, monkeypatch
+) -> None:
+    """The packaging comparison is admitted on the same terms as the other.
+
+    Nothing in the gate requires one side to be HBM: its authority is workload
+    identity, generation policy, evidence class, technology view and
+    implementation identity.  The report names which side is which so a reader
+    of the artifact alone can tell the packaging pair from the storage-class
+    pair.
+    """
+    wafer = tmp_path / "wafer.json"
+    array = tmp_path / "array.json"
+    output = tmp_path / "comparison.json"
+    wafer.write_text(json.dumps(_governed_capture("rom-wafer")))
+    array.write_text(json.dumps(_governed_capture("rom-array-32")))
+    monkeypatch.setattr(
+        "sys.argv",
+        [
+            "build_comparison_report.py",
+            "--rom",
+            str(wafer),
+            "--rom-array",
+            str(array),
+            "--comparison-id",
+            "deepseek-v4-flash-rom-wafer-vs-rom-array-32",
+            "--output",
+            str(output),
+        ],
+    )
+
+    assert comparison_tool.main() == 0
+    report = json.loads(output.read_text())
+    assert report["roles"] == {"left": "rom", "right": "rom_array"}
+    assert set(report["sources"]) == {"rom", "rom_array"}
+    assert report["sources"]["rom_array"]["sha256"] == hashlib.sha256(
+        array.read_bytes()
+    ).hexdigest()
+    # Topology cost is still reported for both sides rather than equalised.
+    assert set(report["topology_cost"]) == {"left", "right", "note"}
+
+
+def test_the_storage_class_pair_still_names_its_sides(tmp_path, monkeypatch) -> None:
+    rom = tmp_path / "rom.json"
+    hbm = tmp_path / "hbm.json"
+    output = tmp_path / "comparison.json"
+    rom.write_text(json.dumps(_governed_capture("rom")))
+    hbm.write_text(json.dumps(_governed_capture("hbm")))
+    monkeypatch.setattr(
+        "sys.argv",
+        [
+            "build_comparison_report.py",
+            "--rom",
+            str(rom),
+            "--hbm",
+            str(hbm),
+            "--comparison-id",
+            "test-comparison",
+            "--output",
+            str(output),
+        ],
+    )
+
+    assert comparison_tool.main() == 0
+    assert json.loads(output.read_text())["roles"] == {
+        "left": "rom",
+        "right": "hbm",
+    }
+
+
+def test_naming_both_a_second_rom_and_an_hbm_side_is_refused(
+    tmp_path, monkeypatch, capsys
+) -> None:
+    """One comparison is one pair; the two right-hand sides are exclusive."""
+    rom = tmp_path / "rom.json"
+    rom.write_text(json.dumps(_governed_capture("rom")))
+    monkeypatch.setattr(
+        "sys.argv",
+        [
+            "build_comparison_report.py",
+            "--rom",
+            str(rom),
+            "--hbm",
+            str(rom),
+            "--rom-array",
+            str(rom),
+            "--comparison-id",
+            "test-comparison",
+            "--output",
+            str(tmp_path / "out.json"),
+        ],
+    )
+    with pytest.raises(SystemExit) as raised:
+        comparison_tool.main()
+    assert raised.value.code == 2
+    assert "not allowed with argument" in capsys.readouterr().err
+

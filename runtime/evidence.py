@@ -358,12 +358,21 @@ def build_comparison(
     *,
     comparison_id: str,
     require_identical_tokens: bool = True,
+    roles: tuple[str, str] = ("rom", "hbm"),
 ) -> dict[str, Any]:
     """Build a governed same-model comparison, or raise.
 
     Topology cost is reported explicitly on both sides and never normalised
     away: a 32-node cluster and a wafer are different physical objects, and the
     comparison's job is to make that visible, not to hide it.
+
+    ``roles`` names what each side is in the pair being compared.  Nothing here
+    requires one side to be HBM: the gate gets its authority from workload
+    identity, generation policy, evidence class, technology view and
+    implementation identity, all of which two immutable-ROM targets satisfy as
+    readily as a ROM target and an HBM one.  A wafer against a 32-node array is
+    the packaging comparison, and it is refused for the same reasons and
+    admitted on the same terms as a storage-class comparison.
     """
     problems = check_comparable(left, right)
     if problems:
@@ -381,6 +390,7 @@ def build_comparison(
     body = {
         "schema": "opentallas.abi3.comparison.v1",
         "comparison_id": comparison_id,
+        "roles": {"left": str(roles[0]), "right": str(roles[1])},
         "evidence_class": left.evidence_class.value,
         "workload": left.workload.to_dict(),
         "targets": {
