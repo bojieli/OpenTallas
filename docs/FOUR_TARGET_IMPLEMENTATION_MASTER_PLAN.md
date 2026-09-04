@@ -130,6 +130,38 @@ The authoritative requirement-by-requirement progress ledger is
 packets for provenance; their old statuses and immediate actions do not
 override this subsection or the unified checklist.
 
+### 1.2 Ordered release gates and evidence flow
+
+The program has two highest-priority outcomes, in strict order:
+
+1. **Gate 1 — correct output tokens.** The complete compiled model must execute
+   from authenticated deployment artifacts on the target simulator. Every
+   generated vocabulary ID and the raw and visible decoded text must equal an
+   independently frozen oracle. The natural input context must decode and
+   re-encode to the exact pinned prompt IDs. The execution must include and
+   stop immediately after the first official EOS, or produce exactly 256
+   tokens when no EOS occurs, with no post-terminal model transaction. Qwen
+   additionally requires genuinely distinct, heterogeneous sequences at
+   B=1/2/4/8; cloning one B=1 request is not batch evidence.
+2. **Gate 2 — desired TPOT.** Only a Gate-1-passing execution may supply its
+   own performance result. That same record must retain the raw architectural
+   request-start and token-commit ticks. TPOT is derived from consecutive
+   commit-tick deltas using a characterized SKY130 or ASAP7 target clock and
+   is reported per sequence together with the raw deltas, statistic, batch
+   size, and aggregate throughput. The execution record and timing report must
+   bind the identical checkpoint, tokenizer, workload, source release, IR,
+   deployment, capability, topology, and process/PVT identities.
+
+Host wall time, RTL-simulator wall time, retired-instruction counters,
+functional-device bookkeeping ticks, isolated operator latency, and analytical
+roofline projections are useful diagnostics but are not TPOT. A failure or
+divergence at Gate 1 invalidates the associated performance row rather than
+leaving a partially eligible measurement. The current 100-microsecond/token
+figure is an aspirational architecture north star. It becomes a release pass
+criterion only if explicit per-model, per-topology, per-process/PVT,
+per-batch, and per-statistic numerical SLO rows are frozen in the comparison
+contracts before the qualifying runs.
+
 The lane-specific plans are:
 
 - [shared HBM/SRAM tensor accelerator](HBM_SRAM_TENSOR_ACCELERATOR_IMPLEMENTATION_PLAN.md);

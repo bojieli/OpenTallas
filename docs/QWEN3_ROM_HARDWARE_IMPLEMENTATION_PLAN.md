@@ -115,13 +115,14 @@ or internal pipeline region is not a separate chip or cluster node.
 - HBM/SRAM KV buffers;
 - on-device deterministic argmax, token append, and EOS;
 - pinned chat and simple tool-use templates;
+- genuinely heterogeneous B=1/2/4/8 execution for the governed batch cells,
+  with independent per-sequence retirement and token evidence;
 - fail-stop error completion, fresh-run reset, counters, and trace; and
 - separate SKY130 implementation and ASAP7 predictive methodologies.
 
 ### 3.2 Separate extensions
 
 - seeded or stochastic sampling;
-- batch greater than one;
 - contexts beyond the release session bound, which Phase F must qualify at no
   less than 8,256 positions; the separately retained 8,192 case is a legacy
   boundary fixture inside that release bound;

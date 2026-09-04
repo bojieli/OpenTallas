@@ -638,10 +638,11 @@ that, the position is:
   required single-wafer topology, but no exact-200K or every-design workload
   matrix is closed.** The latest single-wafer DeepSeek ROM
   capture produced **4** tokens identical to the retained HBM/oracle prefix <!-- figure: 4 src="results/abi3/accelerator_tokens/deepseek_v4_flash_rom_p32.json#oracle.compared_tokens" name="DeepSeek ROM prior-build oracle-compared tokens, W13.4" -->,
-  decoded as ` pump C alone empt`, but it predates device-enforced cap
-  retirement: its final ABI completion reports `EosReason.NONE` instead of
-  `MAX_NEW_TOKENS`. It is full functional execution only for P32/four outputs,
-  not Gate-1 acceptance, a source-current cross-target result, or TPOT evidence.
+  decoded as ` pump C alone empt`; its final ABI completion correctly reports
+  device-side `MAX_NEW_TOKENS`. It nevertheless predates current
+  execution-authoritative sources and decoded-text capture and is full
+  functional execution only for P32/four outputs, not Gate-1 acceptance, a
+  source-current cross-target result, or TPOT evidence.
   Neither DeepSeek backend has an accelerator reasoning or agentic capture: no
   DeepSeek reasoning workload is pinned, and the existing agentic result is
   external-oracle GPU evidence. In addition, W13.5 and W13.6 exercise Qwen HBM
