@@ -43,6 +43,9 @@ REPORT_SCHEMA = json.loads(
 CONTRACT_SCHEMA = json.loads(
     (REPO / "schemas/abi3/comparison_contract_v1.schema.json").read_text()
 )
+RELEASE_SCHEMA = json.loads(
+    (REPO / "schemas/abi3/execution_release_lock_v1.schema.json").read_text()
+)
 
 
 def _write(path: Path, value: object) -> None:
@@ -117,7 +120,144 @@ class Bundle:
     acceptance_path: Path
     record_paths: list[Path]
     trace_path: Path
+    release_path: Path
     cosimulation_proof_path: Path | None = None
+
+
+def _execution_release(
+    root: Path,
+    result_root: Path,
+    contract_path: Path,
+    contract: dict[str, Any],
+) -> Path:
+    """Freeze the synthetic source tree before publishing untracked results."""
+
+    checkpoint = root / "checkpoint-lock.json"
+    _write(
+        checkpoint,
+        {
+            "schema": "opentallas.synthetic_checkpoint_lock.v1",
+            "checkpoint_sha256": "a" * 64,
+        },
+    )
+    subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+    subprocess.run(
+        ["git", "config", "user.email", "tpot-release@example.invalid"],
+        cwd=root,
+        check=True,
+    )
+    subprocess.run(
+        ["git", "config", "user.name", "TPOT Release Test"],
+        cwd=root,
+        check=True,
+    )
+    subprocess.run(
+        [
+            "git",
+            "add",
+            "-A",
+            "--",
+            ".",
+            ":!results/**",
+            ":!execution-release.lock.json",
+        ],
+        cwd=root,
+        check=True,
+    )
+    subprocess.run(
+        ["git", "commit", "-qm", "frozen synthetic TPOT release"],
+        cwd=root,
+        check=True,
+    )
+    commit = subprocess.run(
+        ["git", "rev-parse", "HEAD^{commit}"],
+        cwd=root,
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.strip()
+    tree = subprocess.run(
+        ["git", "rev-parse", "HEAD^{tree}"],
+        cwd=root,
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.strip()
+    payload = subprocess.run(
+        ["git", "ls-files", "-s", "-z"],
+        cwd=root,
+        check=True,
+        capture_output=True,
+    ).stdout
+    tracked: list[dict[str, str]] = []
+    for entry in payload.split(b"\0"):
+        if not entry:
+            continue
+        metadata, raw_path = entry.split(b"\t", 1)
+        mode, blob, stage = metadata.decode("ascii").split()
+        assert stage == "0"
+        tracked.append(
+            {"blob": blob, "mode": mode, "path": raw_path.decode("utf-8")}
+        )
+    tracked.sort(key=lambda row: row["path"])
+    execution = contract["execution"]
+    targets = [
+        {
+            "backend": target["backend"],
+            "node_count": target["node_count"],
+            "role": role,
+            "target_id": target["target_id"],
+            "topology_class": target["topology_class"],
+        }
+        for role, target in sorted(contract["targets"].items())
+    ]
+    budget = execution.get("tpot_acceptance")
+    release: dict[str, Any] = {
+        "abi_version": "3.0",
+        "comparison_contracts": [
+            {
+                "batch_size": execution["batch"],
+                "comparison_id": contract["comparison_id"],
+                "context_tokens": execution["context_tokens"],
+                "model_id": contract["model"]["model_id"],
+                "path": contract_path.relative_to(root).as_posix(),
+                "process_view": contract["policy"]["technology_view"],
+                "semantic_sha256": tool.digest_of(contract),
+                "source_sha256": _hash(contract_path),
+                "targets": targets,
+                "tpot_acceptance_sha256": tool.digest_of(budget),
+                "workload_id": contract["workload"]["workload_id"],
+            }
+        ],
+        "external_locks": [
+            {
+                "name": "synthetic_checkpoint",
+                "path": checkpoint.relative_to(root).as_posix(),
+                "semantic_sha256": tool.digest_of(
+                    json.loads(checkpoint.read_text())
+                ),
+                "source_sha256": _hash(checkpoint),
+            }
+        ],
+        "release_id": "synthetic-tpot-release",
+        "result_namespace": {
+            "create_once": True,
+            "path": result_root.relative_to(root).as_posix(),
+        },
+        "schema": "opentallas.abi3.execution_release_lock.v1",
+        "source": {
+            "commit": commit,
+            "tree": tree,
+            "tracked_file_count": len(tracked),
+            "tracked_source_map": tracked,
+            "tracked_source_map_sha256": tool.digest_of(tracked),
+            "tracked_worktree_clean": True,
+        },
+    }
+    release["release_sha256"] = tool.digest_of(release)
+    release_path = root / "execution-release.lock.json"
+    _write(release_path, release)
+    return release_path
 
 
 def _rewrite_trace(bundle: Bundle, mutator: Callable[[dict[str, Any]], None]) -> None:
@@ -201,6 +341,8 @@ def _make_bundle(
     ):
         measurement_class = tool.COSIM_TIER
     root.mkdir(parents=True)
+    result_root = root / "results/execution-release"
+    result_root.mkdir(parents=True)
     prompt = [1, 2]
     generated = list(generated_tokens) if generated_tokens is not None else [3, 4, 5]
     token_commit_ticks = [
@@ -540,7 +682,7 @@ def _make_bundle(
             }
         if record_mutator is not None:
             record_mutator(record)
-        record_path = root / f"execution-{index}.json"
+        record_path = result_root / f"execution-{index}.json"
         _write(record_path, record)
         record_paths.append(record_path)
         text_rows.append(
@@ -573,7 +715,7 @@ def _make_bundle(
         acceptance["text_evidence"] = text_rows[0]["text_evidence"]
     else:
         acceptance["sequence_evidence"] = text_rows
-    acceptance_path = root / "correctness-acceptance.json"
+    acceptance_path = result_root / "correctness-acceptance.json"
     _write(acceptance_path, acceptance)
 
     cosimulation_proof_path: Path | None = None
@@ -723,8 +865,13 @@ def _make_bundle(
                 "technology_view": "asap7",
             },
         }
-        cosimulation_proof_path = root / "cosimulation-proof.json"
+        cosimulation_proof_path = result_root / "cosimulation-proof.json"
         _write(cosimulation_proof_path, cosimulation_proof)
+
+    release_path = _execution_release(
+        root, result_root, contract_path, contract
+    )
+    release = json.loads(release_path.read_text())
 
     trace: dict[str, Any] = {
         "schema": "opentallas.abi3.target_timing_trace.v1",
@@ -745,6 +892,8 @@ def _make_bundle(
         "comparison_id": "synthetic_rom_vs_hbm",
         "comparison_contract_sha256": _hash(contract_path),
         "correctness_acceptance_sha256": _hash(acceptance_path),
+        "execution_release_lock_sha256": _hash(release_path),
+        "execution_release_sha256": release["release_sha256"],
         "model_id": "synthetic-model",
         "graph_id": graph_id,
         "workload_id": "SYNTHETIC-WORKLOAD",
@@ -817,7 +966,7 @@ def _make_bundle(
                 "simulator_wall_time_used_as_target_time": False,
             }
         )
-    trace_path = root / "target-timing.json"
+    trace_path = result_root / "target-timing.json"
     _write(trace_path, trace)
     request = {
         "schema": "opentallas.abi3.correctness_qualified_tpot_request.v1",
@@ -826,6 +975,7 @@ def _make_bundle(
                 "point_id": "synthetic-hbm-point",
                 "comparison_contract": _ref(contract_path),
                 "correctness_acceptance": _ref(acceptance_path),
+                "execution_release_lock": _ref(release_path),
                 "execution_records": [_ref(path) for path in record_paths],
                 "batch_execution_id": batch_execution_id,
                 "required_correctness_tier": required_tier,
@@ -844,6 +994,7 @@ def _make_bundle(
         acceptance_path,
         record_paths,
         trace_path,
+        release_path,
         cosimulation_proof_path,
     )
 
@@ -859,6 +1010,7 @@ def test_new_schemas_are_valid_and_current_contracts_remain_valid() -> None:
         COSIM_PROOF_SCHEMA,
         REPORT_SCHEMA,
         CONTRACT_SCHEMA,
+        RELEASE_SCHEMA,
     ):
         Draft202012Validator.check_schema(schema)
     validator = Draft202012Validator(CONTRACT_SCHEMA)
@@ -887,7 +1039,9 @@ def test_contract_schema_accepts_role_specific_budget_and_rejects_partial_role()
         Draft202012Validator(CONTRACT_SCHEMA).validate(contract)
 
 
-def test_budget_missing_is_explicit_after_gate1_and_timing_pass(tmp_path: Path) -> None:
+def test_release_rejects_comparison_without_frozen_tpot_budget(
+    tmp_path: Path,
+) -> None:
     bundle = _make_bundle(tmp_path / "missing", threshold=None)
     Draft202012Validator(REQUEST_SCHEMA).validate(bundle.request)
     Draft202012Validator(TRACE_SCHEMA).validate(
@@ -896,13 +1050,262 @@ def test_budget_missing_is_explicit_after_gate1_and_timing_pass(tmp_path: Path) 
     report = tool.validate(bundle.request)
     _assert_report_schema(report)
     point = report["points"][0]
-    assert report["status"] == "not_evaluable"
-    assert point["correctness_gate"]["status"] == "pass"
-    assert point["target_timing"]["status"] == "accepted"
+    assert report["status"] == "rejected"
+    assert point["correctness_gate"]["status"] == "rejected"
+    assert point["target_timing"]["status"] == "not_evaluated_gate1_failed"
     assert point["tpot_budget"]["status"] == "budget_missing"
-    assert point["performance_verdict"]["status"] == "budget_missing"
+    assert point["performance_verdict"]["status"] == "gate1_failed"
     assert point["performance_verdict"]["observed_seconds"] is None
+    assert any(
+        "execution release comparison has no frozen TPOT budget" in problem
+        for problem in point["problems"]
+    )
     assert point["claim_boundary"]["no_numeric_slo_invented"] is True
+
+
+def test_request_requires_exact_execution_release_lock_reference(
+    tmp_path: Path,
+) -> None:
+    bundle = _make_bundle(tmp_path / "missing-release-reference")
+    del bundle.request["points"][0]["execution_release_lock"]
+
+    with pytest.raises(ValidationError):
+        Draft202012Validator(REQUEST_SCHEMA).validate(bundle.request)
+    report = tool.validate(bundle.request)
+    _assert_report_schema(report)
+    assert report["status"] == "rejected"
+    assert report["points"] == []
+    assert any(
+        "execution_release_lock" in problem
+        for problem in report["request_problems"]
+    )
+
+
+@pytest.mark.parametrize(
+    "field",
+    ["execution_release_lock_sha256", "execution_release_sha256"],
+)
+def test_target_timing_trace_requires_both_release_identities(
+    tmp_path: Path,
+    field: str,
+) -> None:
+    bundle = _make_bundle(tmp_path / field)
+    trace = json.loads(bundle.trace_path.read_text())
+    del trace[field]
+
+    with pytest.raises(ValidationError):
+        Draft202012Validator(TRACE_SCHEMA).validate(trace)
+    _write(bundle.trace_path, trace)
+    bundle.request["points"][0]["target_timing_trace"] = _ref(bundle.trace_path)
+    report = tool.validate(bundle.request)
+    _assert_report_schema(report)
+    point = report["points"][0]
+    assert point["correctness_gate"]["status"] == "pass"
+    assert point["target_timing"]["status"] == "rejected"
+    assert point["target_timing"]["metrics"] is None
+    assert any(
+        field in problem and "required property" in problem
+        for problem in point["problems"]
+    )
+
+
+def test_wrong_execution_release_file_digest_blocks_correctness_gate(
+    tmp_path: Path,
+) -> None:
+    bundle = _make_bundle(tmp_path / "wrong-release-file-digest")
+    bundle.request["points"][0]["execution_release_lock"]["sha256"] = "f" * 64
+
+    report = tool.validate(bundle.request)
+    _assert_report_schema(report)
+    point = report["points"][0]
+    assert report["status"] == "rejected"
+    assert point["correctness_gate"]["status"] == "rejected"
+    assert point["target_timing"]["status"] == "not_evaluated_gate1_failed"
+    assert any(
+        "execution_release_lock SHA-256 mismatch" in problem
+        for problem in point["problems"]
+    )
+
+
+def test_wrong_execution_release_semantic_digest_blocks_correctness_gate(
+    tmp_path: Path,
+) -> None:
+    bundle = _make_bundle(tmp_path / "wrong-release-semantic-digest")
+    release = json.loads(bundle.release_path.read_text())
+    release["release_sha256"] = "f" * 64
+    _write(bundle.release_path, release)
+    bundle.request["points"][0]["execution_release_lock"] = _ref(
+        bundle.release_path
+    )
+
+    report = tool.validate(bundle.request)
+    _assert_report_schema(report)
+    point = report["points"][0]
+    assert report["status"] == "rejected"
+    assert point["correctness_gate"]["status"] == "rejected"
+    assert point["target_timing"]["status"] == "not_evaluated_gate1_failed"
+    assert any(
+        "execution release semantic SHA-256 is inconsistent" in problem
+        for problem in point["problems"]
+    )
+
+
+@pytest.mark.parametrize("field", ["external_locks", "comparison_contracts"])
+def test_malformed_release_collections_fail_closed_without_crashing(
+    tmp_path: Path,
+    field: str,
+) -> None:
+    bundle = _make_bundle(tmp_path / f"malformed-{field}")
+    release = json.loads(bundle.release_path.read_text())
+    release[field] = None
+    release["release_sha256"] = tool.digest_of(
+        {key: value for key, value in release.items() if key != "release_sha256"}
+    )
+    _write(bundle.release_path, release)
+    bundle.request["points"][0]["execution_release_lock"] = _ref(
+        bundle.release_path
+    )
+
+    report = tool.validate(bundle.request)
+    _assert_report_schema(report)
+    assert report["status"] == "rejected"
+    assert len(report["points"]) == 1
+    assert report["points"][0]["correctness_gate"]["status"] == "rejected"
+    assert any(
+        "execution release lock schema violation" in problem
+        for problem in report["points"][0]["problems"]
+    )
+
+
+def test_tracked_source_drift_after_release_blocks_correctness_gate(
+    tmp_path: Path,
+) -> None:
+    bundle = _make_bundle(tmp_path / "stale-release-source")
+    timing_tool = bundle.release_path.parent / "timing-tool.py"
+    timing_tool.write_text("# source changed after release\n", encoding="utf-8")
+
+    report = tool.validate(bundle.request)
+    _assert_report_schema(report)
+    point = report["points"][0]
+    assert report["status"] == "rejected"
+    assert point["correctness_gate"]["status"] == "rejected"
+    assert point["target_timing"]["status"] == "not_evaluated_gate1_failed"
+    assert any(
+        "tracked worktree differs" in problem for problem in point["problems"]
+    )
+    assert any(
+        "execution release source identity is stale or wrong" in problem
+        for problem in point["problems"]
+    )
+
+
+@pytest.mark.parametrize(
+    "field",
+    ["execution_release_lock_sha256", "execution_release_sha256"],
+)
+def test_target_timing_must_bind_selected_execution_release(
+    tmp_path: Path,
+    field: str,
+) -> None:
+    bundle = _make_bundle(tmp_path / f"stale-trace-{field}")
+    _rewrite_trace(bundle, lambda trace: trace.__setitem__(field, "f" * 64))
+
+    report = tool.validate(bundle.request)
+    _assert_report_schema(report)
+    point = report["points"][0]
+    assert report["status"] == "rejected"
+    assert point["correctness_gate"]["status"] == "pass"
+    assert point["target_timing"]["status"] == "rejected"
+    assert point["target_timing"]["metrics"] is None
+    assert any(
+        f"target timing {field} differs from the selected execution release"
+        in problem
+        for problem in point["problems"]
+    )
+
+
+def test_acceptance_outside_release_namespace_blocks_correctness_gate(
+    tmp_path: Path,
+) -> None:
+    bundle = _make_bundle(tmp_path / "outside-acceptance")
+    outside = bundle.release_path.parent / "outside-acceptance.json"
+    bundle.acceptance_path.rename(outside)
+    bundle.request["points"][0]["correctness_acceptance"] = _ref(outside)
+
+    report = tool.validate(bundle.request)
+    _assert_report_schema(report)
+    point = report["points"][0]
+    assert point["correctness_gate"]["status"] == "rejected"
+    assert point["target_timing"]["status"] == "not_evaluated_gate1_failed"
+    assert any(
+        "correctness acceptance is outside the execution release result namespace"
+        in problem
+        for problem in point["problems"]
+    )
+
+
+def test_execution_record_outside_release_namespace_blocks_correctness_gate(
+    tmp_path: Path,
+) -> None:
+    bundle = _make_bundle(tmp_path / "outside-record")
+    outside = bundle.release_path.parent / "outside-execution.json"
+    bundle.record_paths[0].rename(outside)
+    bundle.request["points"][0]["execution_records"] = [_ref(outside)]
+
+    report = tool.validate(bundle.request)
+    _assert_report_schema(report)
+    point = report["points"][0]
+    assert point["correctness_gate"]["status"] == "rejected"
+    assert point["target_timing"]["status"] == "not_evaluated_gate1_failed"
+    assert any(
+        "execution record 0 is outside the execution release result namespace"
+        in problem
+        for problem in point["problems"]
+    )
+
+
+def test_timing_outside_release_namespace_rejects_only_second_gate(
+    tmp_path: Path,
+) -> None:
+    bundle = _make_bundle(tmp_path / "outside-timing")
+    outside = bundle.release_path.parent / "outside-target-timing.json"
+    bundle.trace_path.rename(outside)
+    bundle.request["points"][0]["target_timing_trace"] = _ref(outside)
+
+    report = tool.validate(bundle.request)
+    _assert_report_schema(report)
+    point = report["points"][0]
+    assert report["status"] == "rejected"
+    assert point["correctness_gate"]["status"] == "pass"
+    assert point["target_timing"]["status"] == "rejected"
+    assert point["performance_verdict"]["status"] == "timing_evidence_rejected"
+    assert any(
+        "target timing trace is outside the execution release result namespace"
+        in problem
+        for problem in point["problems"]
+    )
+
+
+def test_symlink_alias_into_release_namespace_is_rejected(
+    tmp_path: Path,
+) -> None:
+    bundle = _make_bundle(tmp_path / "symlink-timing")
+    alias = bundle.release_path.parent / "target-timing-alias.json"
+    alias.symlink_to(bundle.trace_path)
+    bundle.request["points"][0]["target_timing_trace"] = {
+        "path": str(alias.absolute()),
+        "sha256": _hash(alias),
+    }
+
+    report = tool.validate(bundle.request)
+    _assert_report_schema(report)
+    point = report["points"][0]
+    assert point["correctness_gate"]["status"] == "pass"
+    assert point["target_timing"]["status"] == "rejected"
+    assert any(
+        "target timing trace traverses a symlink" in problem
+        for problem in point["problems"]
+    )
 
 
 def test_derives_raw_ttft_tpot_distribution_and_distinct_aggregate_rate(
@@ -945,6 +1348,12 @@ def test_derives_raw_ttft_tpot_distribution_and_distinct_aggregate_rate(
     assert metrics["batch_metrics"][
         "aggregate_steady_state_tokens_per_second"
     ] == pytest.approx(4 / 5)
+    assert point["target_timing"]["execution_release_lock_sha256"] == _hash(
+        bundle.release_path
+    )
+    assert point["target_timing"]["execution_release_sha256"] == json.loads(
+        bundle.release_path.read_text()
+    )["release_sha256"]
     assert point["performance_verdict"] == {
         "status": "pass",
         "metric": "per_sequence_steady_state_decode_step_latency_seconds",
@@ -1144,12 +1553,12 @@ def test_functional_acceptance_does_not_satisfy_required_full_rtl_gate(
     }
 
 
-def test_qualified_cosimulation_passes_correctness_and_target_timing_without_slo(
+def test_qualified_cosimulation_passes_correctness_and_frozen_tpot_budget(
     tmp_path: Path,
 ) -> None:
     bundle = _make_bundle(
         tmp_path / "qualified-cosimulation",
-        threshold=None,
+        threshold=3.1,
         required_tier=tool.COSIM_TIER,
         generated_tokens=[3, 4, 9],
     )
@@ -1166,7 +1575,7 @@ def test_qualified_cosimulation_passes_correctness_and_target_timing_without_slo
     _assert_report_schema(report)
     point = report["points"][0]
     tier = point["correctness_gate"]["evidence_tier"]
-    assert report["status"] == "not_evaluable"
+    assert report["status"] == "pass"
     assert point["correctness_gate"]["status"] == "pass"
     assert tier["observed"] == tool.COSIM_TIER
     assert tier["rtl_bound_accelerated_cosimulation"] is True
@@ -1181,10 +1590,10 @@ def test_qualified_cosimulation_passes_correctness_and_target_timing_without_slo
     assert point["target_timing"]["status"] == "accepted"
     assert point["target_timing"]["measurement_class"] == tool.COSIM_TIER
     assert point["target_timing"]["production_high_fidelity"] is True
-    assert point["tpot_budget"]["status"] == "budget_missing"
-    assert point["performance_verdict"]["status"] == "budget_missing"
-    assert point["performance_verdict"]["observed_seconds"] is None
-    assert point["performance_verdict"]["production_gate_closed"] is False
+    assert point["tpot_budget"]["status"] == "present"
+    assert point["performance_verdict"]["status"] == "pass"
+    assert point["performance_verdict"]["observed_seconds"] == 3.0
+    assert point["performance_verdict"]["production_gate_closed"] is True
     assert point["claim_boundary"]["no_numeric_slo_invented"] is True
 
 
@@ -1688,7 +2097,8 @@ def test_governed_json_rejects_duplicate_keys_and_nonfinite_numbers(
 def test_report_supports_multiple_independently_bound_batch_points(
     tmp_path: Path,
 ) -> None:
-    first = _make_bundle(tmp_path / "first", threshold=None)
+    first = _make_bundle(tmp_path / "first", threshold=3.1)
+    first.request["points"][0]["target_timing_trace"] = None
     second = _make_bundle(tmp_path / "second", threshold=3.1)
     second_point = second.request["points"][0]
     second_point["point_id"] = "second-independent-point"
@@ -1702,8 +2112,8 @@ def test_report_supports_multiple_independently_bound_batch_points(
     assert report["summary"] == {
         "point_count": 2,
         "gate1_pass_count": 2,
-        "target_timing_accepted_count": 2,
-        "budget_missing_count": 1,
+        "target_timing_accepted_count": 1,
+        "budget_missing_count": 0,
         "performance_pass_count": 1,
         "performance_fail_count": 0,
     }
@@ -1712,7 +2122,8 @@ def test_report_supports_multiple_independently_bound_batch_points(
 def test_cli_writes_canonical_report_and_uses_not_evaluable_exit(
     tmp_path: Path,
 ) -> None:
-    bundle = _make_bundle(tmp_path / "cli-bundle", threshold=None)
+    bundle = _make_bundle(tmp_path / "cli-bundle", threshold=3.1)
+    bundle.request["points"][0]["target_timing_trace"] = None
     request_path = tmp_path / "request.json"
     output = tmp_path / "report.json"
     _write(request_path, bundle.request)
@@ -1735,4 +2146,6 @@ def test_cli_writes_canonical_report_and_uses_not_evaluable_exit(
     report = json.loads(raw)
     _assert_report_schema(report)
     assert raw == tool.canonical_json(report)
-    assert "budget=budget_missing" in completed.stdout
+    assert "timing=missing" in completed.stdout
+    assert "budget=present" in completed.stdout
+    assert "verdict=timing_evidence_missing" in completed.stdout
