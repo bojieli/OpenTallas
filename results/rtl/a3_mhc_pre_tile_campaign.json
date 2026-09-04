@@ -1,0 +1,404 @@
+{
+  "active_reset": {
+    "accepted": 37,
+    "stalls": 9
+  },
+  "aggregate": {
+    "accepted_tiles": 688188,
+    "commit_tiles": 44,
+    "deliberate_stall_cycles": 181605,
+    "negative_cases": 18,
+    "positive_cases": 4,
+    "projection_tiles": 688144
+  },
+  "checks": 11346434,
+  "functional_output_binding": {
+    "all_functional_words_bitwise_compared": true,
+    "combined_bytes": 49152,
+    "combined_sha256": "421774b7a8157549784615466e7868d2e44e11ed93fe3a060efd923ed3b75565",
+    "combined_words": 12288,
+    "concatenation_order": [
+      "weights",
+      "combination"
+    ],
+    "outputs": {
+      "combination": {
+        "bytes": 32768,
+        "dtype": "u32le",
+        "path": "testdata/runtime/deepseek_hbm_hc_pre_t512/expected_pc14_combination.u32le",
+        "sha256": "5d9a46a955239c39d423edcdfa0d3cce4b51b93aeebd585fb357ecd7eba186fa",
+        "shape": [
+          512,
+          4,
+          4
+        ]
+      },
+      "weights": {
+        "bytes": 16384,
+        "dtype": "u32le",
+        "path": "testdata/runtime/deepseek_hbm_hc_pre_t512/expected_pc14_weights.u32le",
+        "sha256": "f4d046389962e663ae789177c9e86f2643df701270d5b385ab9840f7c6148a63",
+        "shape": [
+          512,
+          2,
+          4
+        ]
+      }
+    },
+    "qualification": {
+      "path": "results/abi3/deepseek_hbm_hc_pre_t512_functional_qualification.json",
+      "record_sha256": "10641764a78e45b32c0228592822a070f33e4a6b89fe0aad350d6162cb7d4c5e",
+      "sha256": "3a37a973339cf7abe6e06b595f17445a4a80307a8c87773f7f1950d66a5c9c60",
+      "status": "pass"
+    },
+    "vector": {
+      "manifest_sha256": "f5612e0b7f58eff035918a2a210d9ffcf7fd2fb4990490bea51806350315959e",
+      "path": "testdata/runtime/deepseek_hbm_hc_pre_t512/qualification_vector.json",
+      "sha256": "21dbb02b406cb4cdf39d5d140e5bcaa6b6014946a5af4228f0c3e646757642f1"
+    }
+  },
+  "log_sha256": {
+    "iverilog": "578aa4bc0265e95bbb43dfe10e2658bbcda12ab63d8a1d20fb70ba1bcf179940",
+    "verilator": "9fa4669bdcac05e73f4dba770625b1ecd3868203aa9fb4cdac4ee31b68ac74c6",
+    "verilator_compile": "ea0d5d07d66ebd1d80a44c196bd38f04fe6a892c8f48da91958bc762607d3c60",
+    "yosys": "46ad1a1cd3c7e01a68f81f15768a532a486e98d90cbd75b471e69fc6c9675113"
+  },
+  "normalized_cases": [
+    {
+      "admitted": 1,
+      "commit": 2,
+      "cycles": 23,
+      "error": 0,
+      "fmas": 393216,
+      "index": 0,
+      "outputs": 24,
+      "projection": 16,
+      "stalls": 5,
+      "tiles": 18
+    },
+    {
+      "admitted": 1,
+      "commit": 24,
+      "cycles": 497012,
+      "error": 0,
+      "fmas": 201326592,
+      "index": 1,
+      "outputs": 12288,
+      "projection": 393216,
+      "stalls": 103772,
+      "tiles": 393240
+    },
+    {
+      "admitted": 1,
+      "commit": 15,
+      "cycles": 310632,
+      "error": 0,
+      "fmas": 125829120,
+      "index": 2,
+      "outputs": 7680,
+      "projection": 245760,
+      "stalls": 64857,
+      "tiles": 245775
+    },
+    {
+      "admitted": 1,
+      "commit": 3,
+      "cycles": 62126,
+      "error": 0,
+      "fmas": 393216,
+      "index": 3,
+      "outputs": 24,
+      "projection": 49152,
+      "stalls": 12971,
+      "tiles": 49155
+    },
+    {
+      "admitted": 0,
+      "commit": 0,
+      "cycles": 0,
+      "error": 16,
+      "fmas": 0,
+      "index": 4,
+      "outputs": 0,
+      "projection": 0,
+      "stalls": 0,
+      "tiles": 0
+    },
+    {
+      "admitted": 0,
+      "commit": 0,
+      "cycles": 0,
+      "error": 16,
+      "fmas": 0,
+      "index": 5,
+      "outputs": 0,
+      "projection": 0,
+      "stalls": 0,
+      "tiles": 0
+    },
+    {
+      "admitted": 0,
+      "commit": 0,
+      "cycles": 0,
+      "error": 16,
+      "fmas": 0,
+      "index": 6,
+      "outputs": 0,
+      "projection": 0,
+      "stalls": 0,
+      "tiles": 0
+    },
+    {
+      "admitted": 0,
+      "commit": 0,
+      "cycles": 0,
+      "error": 16,
+      "fmas": 0,
+      "index": 7,
+      "outputs": 0,
+      "projection": 0,
+      "stalls": 0,
+      "tiles": 0
+    },
+    {
+      "admitted": 0,
+      "commit": 0,
+      "cycles": 0,
+      "error": 16,
+      "fmas": 0,
+      "index": 8,
+      "outputs": 0,
+      "projection": 0,
+      "stalls": 0,
+      "tiles": 0
+    },
+    {
+      "admitted": 0,
+      "commit": 0,
+      "cycles": 0,
+      "error": 17,
+      "fmas": 0,
+      "index": 9,
+      "outputs": 0,
+      "projection": 0,
+      "stalls": 0,
+      "tiles": 0
+    },
+    {
+      "admitted": 0,
+      "commit": 0,
+      "cycles": 0,
+      "error": 17,
+      "fmas": 0,
+      "index": 10,
+      "outputs": 0,
+      "projection": 0,
+      "stalls": 0,
+      "tiles": 0
+    },
+    {
+      "admitted": 0,
+      "commit": 0,
+      "cycles": 0,
+      "error": 17,
+      "fmas": 0,
+      "index": 11,
+      "outputs": 0,
+      "projection": 0,
+      "stalls": 0,
+      "tiles": 0
+    },
+    {
+      "admitted": 0,
+      "commit": 0,
+      "cycles": 0,
+      "error": 18,
+      "fmas": 0,
+      "index": 12,
+      "outputs": 0,
+      "projection": 0,
+      "stalls": 0,
+      "tiles": 0
+    },
+    {
+      "admitted": 0,
+      "commit": 0,
+      "cycles": 0,
+      "error": 18,
+      "fmas": 0,
+      "index": 13,
+      "outputs": 0,
+      "projection": 0,
+      "stalls": 0,
+      "tiles": 0
+    },
+    {
+      "admitted": 0,
+      "commit": 0,
+      "cycles": 0,
+      "error": 19,
+      "fmas": 0,
+      "index": 14,
+      "outputs": 0,
+      "projection": 0,
+      "stalls": 0,
+      "tiles": 0
+    },
+    {
+      "admitted": 0,
+      "commit": 0,
+      "cycles": 0,
+      "error": 19,
+      "fmas": 0,
+      "index": 15,
+      "outputs": 0,
+      "projection": 0,
+      "stalls": 0,
+      "tiles": 0
+    },
+    {
+      "admitted": 0,
+      "commit": 0,
+      "cycles": 0,
+      "error": 19,
+      "fmas": 0,
+      "index": 16,
+      "outputs": 0,
+      "projection": 0,
+      "stalls": 0,
+      "tiles": 0
+    },
+    {
+      "admitted": 0,
+      "commit": 0,
+      "cycles": 0,
+      "error": 19,
+      "fmas": 0,
+      "index": 17,
+      "outputs": 0,
+      "projection": 0,
+      "stalls": 0,
+      "tiles": 0
+    },
+    {
+      "admitted": 0,
+      "commit": 0,
+      "cycles": 0,
+      "error": 19,
+      "fmas": 0,
+      "index": 18,
+      "outputs": 0,
+      "projection": 0,
+      "stalls": 0,
+      "tiles": 0
+    },
+    {
+      "admitted": 0,
+      "commit": 0,
+      "cycles": 0,
+      "error": 20,
+      "fmas": 0,
+      "index": 19,
+      "outputs": 0,
+      "projection": 0,
+      "stalls": 0,
+      "tiles": 0
+    },
+    {
+      "admitted": 0,
+      "commit": 0,
+      "cycles": 0,
+      "error": 20,
+      "fmas": 0,
+      "index": 20,
+      "outputs": 0,
+      "projection": 0,
+      "stalls": 0,
+      "tiles": 0
+    },
+    {
+      "admitted": 0,
+      "commit": 0,
+      "cycles": 0,
+      "error": 20,
+      "fmas": 0,
+      "index": 21,
+      "outputs": 0,
+      "projection": 0,
+      "stalls": 0,
+      "tiles": 0
+    }
+  ],
+  "schema": "opentallas.rtl.a3_mhc_pre_tile_campaign.v1",
+  "scope": {
+    "active_reset": true,
+    "architectural_timing": false,
+    "dual_simulator": true,
+    "end_to_end_token_correctness": false,
+    "eos": false,
+    "exact_hbm_pc14_descriptor_546_admission": true,
+    "exact_output_coordinate_coverage": true,
+    "exact_projection_coordinate_coverage": true,
+    "exact_rom_pc15_descriptor_381_admission": true,
+    "full_hc_pre_rtl_arithmetic": false,
+    "functional_t512_golden_digest_bound": true,
+    "lossless_ready_valid_backpressure": true,
+    "model_token_generation": false,
+    "simulator_cycles_are_verification_cost_only": true,
+    "synthesizable_elaboration": true,
+    "technology_mapping_or_timing": false,
+    "tpot": false
+  },
+  "simulators_agree": true,
+  "source_sha256": {
+    "results/abi3/deepseek_hbm_hc_pre_t512_functional_qualification.json": "3a37a973339cf7abe6e06b595f17445a4a80307a8c87773f7f1950d66a5c9c60",
+    "rtl/abi3/ot_a3_vector_mhc_pre_tile_scheduler.sv": "c5e25b01d740f6a54dac8acaa27bc66459cfef7921ba6e85114a42f6c2d0a2a2",
+    "rtl/test/tb_a3_mhc_pre_tile_scheduler.sv": "5d5ba7da3faa75e4045d42ebeecf42fc94db7cca17049fe378b60036ddd7d370",
+    "testdata/compiler/abi3_deployment/a3_descriptor.hex": "73a3796cef4ab56d8b9be148f9a006fb78d04f365898229b9663e192722e0f44",
+    "testdata/compiler/abi3_deployment/a3_program.hex": "3342d7729996bb1d4a2d2447f77d1254c73e94b1b55f20a532e1fe4a9d523f78",
+    "testdata/compiler/abi3_deployment/abi3_deployment_rtl_vectors.json": "be5ffff67d78779b98edc8cdafa77332ada2ebbd3e70cb582cd2b5b3d972a9f4",
+    "testdata/runtime/deepseek_hbm_hc_pre_t512/expected_pc14_combination.u32le": "5d9a46a955239c39d423edcdfa0d3cce4b51b93aeebd585fb357ecd7eba186fa",
+    "testdata/runtime/deepseek_hbm_hc_pre_t512/expected_pc14_weights.u32le": "f4d046389962e663ae789177c9e86f2643df701270d5b385ab9840f7c6148a63",
+    "testdata/runtime/deepseek_hbm_hc_pre_t512/qualification_vector.json": "21dbb02b406cb4cdf39d5d140e5bcaa6b6014946a5af4228f0c3e646757642f1",
+    "tools/build_a3_mhc_pre_tile_vectors.py": "bded0ec246b1b30e0086698b67c6f833873ef97e1615fd23449bc914e17eda64",
+    "tools/run_a3_mhc_pre_tile_rtl_campaign.py": "c4c4352c893e8ebdc5f0fba336084d7be4d8a1437e1283d2b3bda171eb1b0d32"
+  },
+  "status": "pass",
+  "synthesis_frontend": {
+    "check_problems": 0,
+    "note": "generic RTLIL elaboration only; no library mapping, PPA, frequency, latency, token-correctness, or TPOT claim",
+    "top": "ot_a3_vector_mhc_pre_tile_scheduler"
+  },
+  "tools": {
+    "iverilog": {
+      "path": "/usr/bin/iverilog",
+      "sha256": "1ba67856249142771239573b5d51c7f6e4d67a1e7931a0d0fab56e0d473d2167",
+      "version": "Icarus Verilog version 11.0 (stable) ()"
+    },
+    "verilator": {
+      "path": "<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator",
+      "sha256": "fb2cc573b1055cf096c90e1efc9966fe56bdb4b265c83590cf2a49f7a0defcdf",
+      "version": "Verilator 5.050 2026-07-01 rev v5.050"
+    },
+    "vvp": {
+      "path": "/usr/bin/vvp",
+      "sha256": "075b114070eed3bc72e0e4559decf40520f3b693b1da9c94bba1defe8896966d"
+    },
+    "yosys": {
+      "path": "<HOME>/.local/opentallas-tools/yosys-0.68/bin/yosys",
+      "sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+    }
+  },
+  "vector_sha256": {
+    "cases.hex": "da45596cbdc249b9c6f522c1fd0303bbcca0bd539c9d24e5d436f4c0e25e9d91",
+    "index.json": "2d4d93902f2d4aa82c85869fc2b5d74222b99f28182d3d43919bb89a5949c604"
+  },
+  "verification_wall_seconds": {
+    "iverilog_compile": 0.011869856039993465,
+    "iverilog_simulation": 12.647692859987728,
+    "verilator_compile": 5.154850566061214,
+    "verilator_simulation": 0.4336327500641346,
+    "yosys_elaboration": 8.491031895042397
+  }
+}
