@@ -19,7 +19,8 @@ HBM instruction and descriptor records at:
 |---:|---|---:|---:|---|
 | 32 | `DMA.SCATTER` key append | 111 | 114 | exact 1,024-code row appended at logical row 16 |
 | 35 | `DMA.SCATTER` value append | 118 | 120 | exact 1,024-code row appended at logical row 16 |
-| 38 | `ATTENTION.GQA` | 127 | 131 | complete required metadata admitted, then precise `CAPABILITY` refusal before any write |
+| 38 | `ATTENTION.GQA` | 127 | 131 | exact fixed-context-17 arithmetic; 4,096 BF16 words match the independent oracle on ROM and HBM |
+| 41 | `TENSOR.MATMUL` | 134 | 137 | next shipped operation; output-projection RTL is not connected |
 
 Both storage backends carry the same scatter contract digest,
 `55f39bccbda65baf6238cfcd93d7bf9959330984af837979870cc019be00e16f`.
@@ -29,6 +30,8 @@ rather than assuming one order.
 
 The source words are causally retained RTL results:
 
+- query: PC 26 `VECTOR.ROPE`, BF16 payload SHA-256
+  `f36db31b14aa59e0b0c7bc444403a7991063c3a0e874dcee151b7428b0ee8150`;
 - key: PC 29 `VECTOR.ROPE`, BF16 payload SHA-256
   `b41de05c0a7f1f495ded2295c22781f4aa345136d2c572248469c422f266c406`;
 - value: PC 17 `TENSOR.MATMUL`, BF16 payload SHA-256
@@ -45,10 +48,23 @@ The exact PC 38 GQA metadata has query shape `[1,32,128]`, key/value cache
 shape `[8256,8,128]`, active context length 17, scale bits `0x3db50000`, and
 contract digest
 `623af598461a17f0b15fb564380a7b8de0bf3f8c89a0833947ad9ed8872ce181`.
-No synthesizable GQA/softmax datapath is connected yet. Therefore PC 38 is the
-first unsupported operation for both Qwen backends.
+The new synthesizable datapath implements only that exact context-17 decode
+geometry. It performs ordered QxK products, BF16 score and probability
+boundaries, stable softmax through the shared correctly rounded exponential and
+divider, the specified eight-lane denominator reduction, ordered probabilityxV
+reduction, and complete-result buffering before publication. The next shipped
+operation without a connected datapath is PC 41 output projection for both
+backends.
+
+Only the current query, key, and value row is authentic. No authentic retained
+KV rows for positions 0 through 15 were available, so the focused arithmetic
+campaign uses deterministic rotations and reversals of the authentic current
+row for that history. This is honest operator-level arithmetic evidence, not an
+authentic context-17 model history and not token evidence.
 
 ## Focused evidence
+
+### KV-scatter evidence
 
 `results/rtl/a3_qwen_kv_scatter_campaign.json` is the machine-readable
 authority. Its focused campaign contains:
@@ -77,16 +93,50 @@ python tools/run_a3_qwen_kv_scatter_rtl_campaign.py
 python -m pytest -q tests/compiler/test_a3_qwen_kv_scatter_rtl.py
 ```
 
+### Context-17 GQA evidence
+
+`results/rtl/a3_qwen_gqa_campaign.json` is the machine-readable authority for
+PC 38. The source-current campaign records:
+
+- one exact ROM case and one backpressured HBM case, each comparing all 4,096
+  computed BF16 output words with an independent scalar reference; the shared
+  expected payload SHA-256 is
+  `8992e9d1a0b5303b81b2503df2e23170f838f772e79eb8d7c65c1fce4fac93c2`;
+- 8,192 computed-word comparisons and 12,288 atomic sentinel checks in total;
+- per successful case, 143,360 memory reads, 69,632 score multiplications, 544
+  exponential evaluations, 69,632 value multiplications, and 4,096 writes;
+- a late-final-value nonfinite fault after all preceding arithmetic with zero
+  writes, a valid-CRC wrong numeric contract with zero reads and writes, and an
+  instruction-CRC corruption with zero descriptor records, reads, or writes;
+- 20,565 checks in Icarus and the same 20,565 checks in pinned Verilator 5.050,
+  with all normalized case records identical; and
+- generic Yosys 0.68 elaboration with zero reported structural problems. This
+  is synthesizable-frontend evidence only, not library mapping, timing, area,
+  power, or a characterized process result.
+
+Reproduce only this focused lane with:
+
+```sh
+python tools/build_a3_qwen_gqa_vectors.py
+python tools/run_a3_qwen_gqa_rtl_campaign.py
+python -m pytest -q tests/compiler/test_a3_qwen_gqa_rtl.py
+```
+
+The campaign's 471,054- to 718,949-cycle case counts and its host wall times
+measure verification cost. They are neither architectural token-commit ticks
+nor TPOT.
+
 ## What remains before either release gate passes
 
-Gate 1 is not yet passed. The RTL path must still implement exact GQA dot
-products, scaling, stable softmax, and value reduction at PC 38; complete the
-output projection, residual, RMSNorm, and MLP across all 36 layers; execute
+Gate 1 is not yet passed. The fixed context-17 PC 38 result must be generalized
+to every required position through the exact 8,000-token context without
+changing the numeric contract. The RTL path must continue at PC 41; complete
+the output projection, residual, RMSNorm, and MLP across all 36 layers; execute
 final norm and the complete vocabulary projection; select the same argmax as
 an independent model oracle; append that selected token; repeat ordinary
-decode until an official EOS token; and prove no token commits after EOS.
-Natural chat and agentic contexts must both pass, including the exact 8,000
-natural-token Qwen acceptance context.
+decode until an official EOS token; and prove no model transaction or token
+commit occurs after EOS. Natural chat and agentic contexts must both pass,
+including the exact 8,000-natural-token Qwen acceptance context.
 
 Only after that exact execution passes may Gate 2 use its architectural
 token-commit ticks. The TPOT report must identify the same deployment, prompt,

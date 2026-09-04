@@ -15,7 +15,8 @@ extended the source-bound shipped-program engine-prefix campaign through Qwen
 query/key RoPE and DeepSeek wafer multicast, qualified exact DeepSeek `HC_PRE`
 tile scheduling, added authenticated ABI 3.0 request-symbol transport for
 genuine batch admission, and retained the first exact-token frozen-source Qwen
-HBM/SRAM accelerator diagnostic.
+HBM/SRAM accelerator diagnostic, then qualified exact Qwen ROM/HBM PC-32/35 KV
+appends and fixed-context-17 PC-38 GQA arithmetic.
 **Current execution checkpoint (2026-09-04):** all four current deployments
 contain zero ABI `STATE` resources. Qwen HBM passes 21/21 deployment checks <!-- figure: 21 src="results/abi3/hbm_qwen_deployment_certificate.json#cases[case=qwen3-hbm-single-chip].passed_check_count" name="current Qwen HBM checks, checkpoint" --> at
 74 instructions <!-- figure: 74 src="results/abi3/hbm_qwen_deployment_certificate.json#cases[case=qwen3-hbm-single-chip].actual.instructions" name="current Qwen HBM instructions, checkpoint" --> and 215 descriptors <!-- figure: 215 src="results/abi3/hbm_qwen_deployment_certificate.json#cases[case=qwen3-hbm-single-chip].actual.descriptors" name="current Qwen HBM descriptors, checkpoint" -->; Qwen ROM passes 62/62 schedule checks <!-- figure: 62 src="results/abi3/rom_schedule_checks.json#cases[case=qwen3-rom-single-chip].passed_check_count" name="current Qwen ROM checks, checkpoint" --> at
@@ -34,8 +35,12 @@ blocks to retained dual-simulator qualification. The frozen multicast overlay
 adds one exact DeepSeek ROM PC-13 launch and checks all 4,194,304 writes across
 256 participants. Its full Verilator replay passes 12,756,653 checks; focused
 Icarus passes 12,587,599 with the same DeepSeek-ROM case record. Qwen next traps
-at PC 32 `DMA.SCATTER`; DeepSeek ROM at PC 15 `VECTOR.MHC` after multicast; and
-DeepSeek HBM at PC 14 `VECTOR.MHC`. The legal token ID 0 embedding remains a
+at PC 32 `DMA.SCATTER` in that shared prefix. Focused continuations execute the
+exact PC-32/35 KV appends and fixed-context-17 PC-38 `ATTENTION.GQA` for both
+Qwen backends on Icarus and Verilator; PC 41 `TENSOR.MATMUL` is now the next
+shipped Qwen operation without a connected datapath. DeepSeek ROM remains at PC
+15 `VECTOR.MHC` after multicast, and DeepSeek HBM at PC 14 `VECTOR.MHC`. The
+legal token ID 0 embedding remains a
 bounded synthetic probe, not a decoded model token. The overlay is
 classified `source_current_bounded_prefix_only`; it is source-current after the
 canonical refresh but remains non-promotable as full model execution.
@@ -98,8 +103,9 @@ three-capture gate, then complete the natural chat/reasoning/agentic/stress and
 genuine heterogeneous B=2/4/8 matrix; (3) execute DeepSeek
 `--gate-b-production` through EOS or 256 when resources permit, including both
 full-byte identity boundaries; (4) canonically rebuild the stale deployment
-certificate, then extend RTL from Qwen PC-32 `DMA.SCATTER`, DeepSeek ROM PC-15
-`VECTOR.MHC`, and DeepSeek HBM PC-14 `VECTOR.MHC` across every required
+certificate, generalize Qwen GQA beyond its fixed context-17 proof and extend
+RTL from Qwen PC-41 `TENSOR.MATMUL`, DeepSeek ROM PC-15 `VECTOR.MHC`, and
+DeepSeek HBM PC-14 `VECTOR.MHC` across every required
 operator, memory/link service, selection, append, and EOS path;
 (5) pass short integrated-token diagnostics, then run the wafer-ROM and
 exact-32-node HBM
@@ -404,7 +410,8 @@ shipped-prefix launches and checks 91,136 compact result words through 94
 resolved views under Verilator. It includes Qwen layer-zero Q/K/V MATMUL, head
 RMSNorm, and query/key RoPE and binds the unchanged MAC and RoPE cores to
 retained dual-simulator arithmetic evidence. Qwen next returns `CAPABILITY` at
-PC 32 `DMA.SCATTER`;
+PC 32 `DMA.SCATTER` in that shared bridge; the focused Qwen continuation below
+advances the bounded arithmetic boundary through PC 38 to PC 41.
 DeepSeek HBM does so at PC 14 `VECTOR.MHC`.
 
 The frozen overlay
@@ -434,17 +441,32 @@ instruction, OPERATOR, TENSOR_VIEW, and NUMERIC records; consumes the retained
 PC-29 key and PC-17 value result words; and compares all 69,632 words across
 four active 17-row logical-plane results. Its six corruption/range negatives
 and two exact PC-38 capability boundaries perform no writes. Icarus and pinned
-Verilator each pass 209,076 focused checks. The first unsupported Qwen
-operation is therefore now PC 38 `ATTENTION.GQA`, operators 127/131 for
-ROM/HBM. This advances a causal RTL dependency only: the run still has no GQA,
-whole layer, token, EOS, architectural token-commit ticks, or TPOT.
+Verilator each pass 209,076 focused checks.
+
+The next focused continuation,
+`results/rtl/a3_qwen_gqa_campaign.json`, promotes only that exact PC-38
+capability boundary to fixed-context-17 arithmetic. One ROM case and one
+backpressured HBM case each match all 4,096 BF16 outputs from an independent
+scalar attention oracle. Across both simulators the retained evidence records
+8,192 computed-word comparisons, 12,288 atomic sentinel checks, and 20,565
+checks per simulator; a late input fault after all preceding arithmetic, a
+valid-CRC wrong numeric contract, and an instruction-CRC corruption all
+publish zero words. Generic Yosys 0.68 elaboration reports zero structural
+problems. The query and current key/value row are authentic causal RTL results,
+but prior-context rows 0 through 15 are deterministic synthetic transforms, so
+this is not authentic context-17 model execution. The next shipped Qwen
+operation without a connected datapath is PC 41 `TENSOR.MATMUL`, operators
+134/137 for ROM/HBM. Neither focused run executes a whole layer or token,
+handles EOS, emits architectural token-commit ticks, or establishes TPOT.
 
 The separate exact `HC_PRE` scheduler campaign admits DeepSeek ROM PC 15 /
 descriptor 381 and HBM PC 14 / descriptor 546, covers ROM T=1 and HBM
 T=512/T=320/T=1 including `390 * 512 + 320 = 200,000`, and correlates 688,188
 emitted tiles plus 11,346,434 checks on Icarus and Verilator. Full
-projection/RMS, CR32 sigmoid/exponential/stable-softmax arithmetic, integration
-through a layer, token selection, and TPOT remain open.
+projection/RMS, CR32 sigmoid, and complete stable-softmax arithmetic and
+integration through a layer remain open; the shared correctly rounded
+exponential alone does not close them. Token selection and TPOT also remain
+open.
 
 - [x] W8.1 Microsequencer RTL (fetch/decode/loop/predicate/event/trap/complete) — `rtl/abi3/ot_a3_microsequencer.sv`; operand tensor-view resolution (A4 dynamic terms, A13 partial final extent, A18 extent axis/unit, A26 fixed-address edge masks) — `rtl/abi3/ot_a3_view_resolver.sv`
 - [x] W8.2 Queue/event controller RTL and compatibility-only state controller —
@@ -456,7 +478,7 @@ through a layer, token selection, and TPOT remain open.
   fetch.
 - [~] W8.3 Representative engine datapaths (DMA, tensor MAC array, vector, selection) — **eleven `(family, subopcode)` pairs are bit-exact against the functional simulator's *real* engines within the campaign's stated bounds**: `TENSOR.MATMUL`, `DMA.GATHER`/`SCATTER`, `SELECTION.ARGMAX`, and seven VECTOR pairs (`ADD`, `CONVERT`, `SCALE`, `HADAMARD`, `INDEX_SCORE`, `COMPRESS`, `MHC`) in `rtl/abi3/`. The campaign correlates 135 generated ABI 3.0 programs <!-- figure: 135 src="results/rtl/abi3_engine_campaign.json#correlation.case_count" name="engine RTL cases, W8.3" --> executed by `runtime.sim.device.Device` with nothing stubbed — 14,468 result words compared <!-- figure: 14468 src="results/rtl/abi3_engine_campaign.json#correlation.result_word_count" name="engine RTL result words, W8.3" --> element by element on two simulators, 59,868 multiply-accumulates <!-- figure: 59868 src="results/rtl/abi3_engine_campaign.json#correlation.mac_count" name="engine RTL MACs, W8.3" -->, 92 refusals <!-- figure: 92 src="results/rtl/abi3_engine_campaign.json#correlation.fault_case_count" name="engine RTL faults, W8.3" --> with the destination proved untouched, and 2,576 exhaustive <!-- figure: 2576 src="results/rtl/abi3_engine_campaign.json#correlation.decode_probe_count" name="engine RTL decode probes, W8.3" --> storage-format decode probes and 5,200 <!-- figure: 5200 src="results/rtl/abi3_engine_campaign.json#correlation.arith_probe_count" name="engine RTL arithmetic probes, W8.3" --> binary32 add/multiply/round and exact-product-add probes against the exact `fractions.Fraction` reference; 40,878 checks per simulator <!-- figure: 40878 src="results/rtl/abi3_engine_campaign.json#checks_per_simulator.iverilog" name="engine RTL checks, W8.3" --> (`results/rtl/abi3_engine_campaign.json`). The refusals split into 17 Device faults <!-- figure: 17 src="results/rtl/abi3_engine_campaign.json#correlation.refusal_count_by_expectation_source.device_fault" name="engine RTL Device faults, W8.3" -->, 18 bounded-profile negatives <!-- figure: 18 src="results/rtl/abi3_engine_campaign.json#correlation.refusal_count_by_expectation_source.rtl_bounded_profile" name="engine RTL bound refusals, W8.3" --> and 57 descriptor-admission corruptions <!-- figure: 57 src="results/rtl/abi3_engine_campaign.json#correlation.refusal_count_by_expectation_source.rtl_descriptor_admission" name="engine RTL descriptor refusals, W8.3" -->. Contraction coverage remains BF16 x BF16, FP8 E4M3FN x FP8 E4M3FN and block-scaled MXFP4 E2M1 x FP8 E4M3FN under `bf16_bf16_fp32_sequential_rne_v1`, including amendment A15's two-dimensional scale block.
   The six VECTOR additions are deliberately bounded: unscaled one-input/one-output `CONVERT` (at most 512 elements); constant or same-shape BF16 `SCALE` (at most 512 elements); normalized 128-point BF16 `HADAMARD` (at most four rows); batch-one, four-head, unit-scale BF16 `INDEX_SCORE` (at most four sites, eight candidates and sixteen head channels); `COMPRESS_PROJECT` only (at most eight flattened rows, sixteen outputs and 64 reduction channels); and four-stream `HYPER_CONNECT_POST` only (at most four flattened sites and 32 hidden channels). `correlation.vector_rtl_scope` is the machine-readable authority. Late-poison vectors prove whole-destination atomicity in all six new blocks.
-  **Still open, and named rather than implied:** `SILU_MUL`, `SOFTMAX` and `SQRT_SOFTPLUS` are wholly absent because correctly rounded transcendental RTL does not exist; sigmoid/general-broadcast SCALE, block-dequantizing/two-output-quantizing CONVERT, `COMPRESS_POOL`/`STATE_UPDATE`, `MHC_PRE`/`HEAD`, and non-unit-scale, non-four-head or batch-greater-than-one `INDEX_SCORE` are unsupported. Standalone `RMS_NORM`, `HEAD_RMS_NORM` and `ROPE` RTL remains outside this array. ATTENTION, ROUTE, REDUCTION and LINK remain absent from this engine-correlation campaign (W8.4 separately covers standalone link/channel/router/collective RTL); W8.2's state controller is compatibility-only and absent from the shipped profile. The *blocked* contraction contract is out of scope by construction; later-output atomicity remains unproved only for legacy `TENSOR.MATMUL` and `VECTOR.ADD`; and none of these datapaths is wired to the W8.6 sequencer. W8.8's separately promoted shipped-deployment evidence is control-plane correlation with recording no-op engines, not functional integration of this arithmetic.
+  **Still open, and named rather than implied:** general `SILU_MUL`, `SOFTMAX` and `SQRT_SOFTPLUS` remain absent from this engine-correlation array. A shared correctly rounded exponential and fixed-context-17 Qwen GQA datapath now exist in the separate A3-QW-GQA-001 continuation; they do not implement those general operator surfaces. Sigmoid/general-broadcast SCALE, block-dequantizing/two-output-quantizing CONVERT, `COMPRESS_POOL`/`STATE_UPDATE`, `MHC_PRE`/`HEAD`, and non-unit-scale, non-four-head or batch-greater-than-one `INDEX_SCORE` are unsupported. Standalone `RMS_NORM`, `HEAD_RMS_NORM` and `ROPE` RTL remains outside this array. ATTENTION, ROUTE, REDUCTION and LINK remain absent from this engine-correlation campaign (W8.4 separately covers standalone link/channel/router/collective RTL); W8.2's state controller is compatibility-only and absent from the shipped profile. The *blocked* contraction contract is out of scope by construction; later-output atomicity remains unproved only for legacy `TENSOR.MATMUL` and `VECTOR.ADD`; and none of these datapaths is wired to the W8.6 sequencer. W8.8's separately promoted shipped-deployment evidence is control-plane correlation with recording no-op engines, not functional integration of this arithmetic.
   The retained campaign automatically compiles seven corrupted RTL variants — CONVERT rounding, SCALE arithmetic, Hadamard normalization, INDEX_SCORE ReLU, compressor plane order, compressor exact-product rounding and MHC matrix orientation — and both simulators reject all seven with no PASS marker. The earlier five-mutation exploratory exercise is preserved in the datapath report because **the reduction-order mutation it first missed is why two catastrophic-cancellation cases exist**. Physical evidence remains separate: **three legacy blocks are fully routed on SKY130 HD**, each meeting setup and hold with **0** DRC errors <!-- figure: 0 src="results/physical_abi3/sky130hd/a3_selection_argmax/physical.json#place_and_route.metrics.drc_errors" name="selection DRC, W8.3" --> and **0** antenna violations <!-- figure: 0 src="results/physical_abi3/sky130hd/a3_selection_argmax/physical.json#place_and_route.metrics.antenna_violating_nets" name="selection antenna, W8.3" -->: `ot_a3_selection_argmax`, the block that decides the token, closes at 12 ns with **3.348** ns of slack <!-- figure: 3.348 src="results/physical_abi3/sky130hd/a3_selection_argmax/physical.json#place_and_route.metrics.setup_wns_ns" name="selection routed setup slack, W8.3" --> in a die of **47,430.3** um2 <!-- figure: 47,430.3 src="results/physical_abi3/sky130hd/a3_selection_argmax/physical.json#place_and_route.metrics.die_area_um2" name="selection die area, W8.3" -->; `ot_a3_vector_add` at 100 ns in **122,766** um2 <!-- figure: 122,766 src="results/physical_abi3/sky130hd/a3_vector_add/physical.json#place_and_route.metrics.die_area_um2" name="vector add die area, W8.3" -->; and `ot_a3_dma_index_mover` at 25 ns in **268,200** um2 <!-- figure: 268,200 src="results/physical_abi3/sky130hd/a3_dma_index_mover/physical.json#place_and_route.metrics.die_area_um2" name="dma die area, W8.3" -->. **`ot_a3_mac_lane` and all six new VECTOR blocks are not routed:** the lane's flow reached global routing and its driver was terminated before it could record, so its routed area, timing and power are unmeasured; the six additions have no physical artifacts at all. What the lane run did show is that it does *not* close at 60 ns, on the scale-address divider rather than the accumulator. **No frequency from a 130 nm open PDK may be scaled to N6/N5/N4 and none of this retires `power.fabric_clock_hz = 1e9`, which stays `assumed`.** `docs/ABI3_ENGINE_DATAPATH_RTL.md` states the boundary
 - [~] W8.4 Inter-chip endpoint RTL (packets, credits, retry, collectives) — **the endpoint exists, and the traversal count the headline is priced on is now measured rather than derived.** `rtl/abi3/ot_a3_link_channel.sv` is one directed hop: a bounded credit window (`COMMUNICATION.credit_bound`), CRC32C per flit (`integrity_mode`), a monotone sequence, and go-back-N replay bounded by `retry_bound` and `timeout_class`. `ot_a3_mesh_router.sv` is a five-port X-then-Y dimension-ordered router; `ot_a3_collective_engine.sv` runs SUM/MAX/MIN all-reduce, BROADCAST, ALL_GATHER and a barrier; `ot_a3_link_node.sv` assembles them into a mesh node. Seven geometries x ten cases, **cycle-for-cycle identical** on Icarus 11.0 and Verilator 5.050, with every reduced binary32 code checked at every participant: 104,225 checks on the 8x8 mesh <!-- figure: 104225 src="results/rtl/a3_link_campaign.json#configurations[name=mesh8x8_vec64_hop1].simulators[name=iverilog].checks" name="A3 link checks, 8x8" --> and 8,225 on the 4x4 <!-- figure: 8225 src="results/rtl/a3_link_campaign.json#configurations[name=mesh4x4_vec16_hop1].simulators[name=verilator].checks" name="A3 link checks, 4x4" --> (`results/rtl/a3_link_campaign.json`).
   **What it measures, and why it was built.** A mesh all-reduce walks **exactly the mesh diameter** under recursive doubling — **14** traversals on the 8x8 mesh <!-- figure: 14 src="results/rtl/a3_link_campaign.json#configurations[name=mesh8x8_vec64_hop1].cases[label=synthetic_allreduce_sum_recursive_doubling].measured.traversals" name="measured all-reduce traversals, 8x8" --> against the **15.4** `src/opentallas/roofline.py` charges <!-- figure: 15.4 src="results/rtl/a3_link_campaign.json#configurations[name=mesh8x8_vec64_hop1].model_charged_traversals" name="model-charged traversals, 8x8" --> — and **exactly twice the diameter**, **12** on the 4x4 mesh <!-- figure: 12 src="results/rtl/a3_link_campaign.json#configurations[name=mesh4x4_vec16_hop1].cases[label=synthetic_allreduce_sum_halving_doubling].measured.traversals" name="measured halving/doubling traversals, 4x4" -->, under Rabenseifner halving/doubling. Those are two different algorithms and the model charges the **latency of the first and the bandwidth of the second** in the same event (`link_event_cost_s`: `depth = collective_traversals(...)` beside `payload = activation_bytes * 3 * (span-1)/span`). No single algorithm delivers both. Separately, a barrier's cycles are exactly linear in the declared hop occupancy: **6.000** cycles per hop-cycle <!-- figure: 6.000 src="results/rtl/a3_link_campaign.json#hop_latency_regression[label=synthetic_barrier].cycles_per_hop_cycle" name="measured cycles per hop cycle, barrier" --> on a diameter-6 mesh, zero residual, on top of a **43.0**-cycle per-collective fixed cost <!-- figure: 43.0 src="results/rtl/a3_link_campaign.json#hop_latency_regression[label=synthetic_barrier].fixed_cycles" name="measured per-collective fixed cycles" --> that the analytical model has no term for at all. Under a payload larger than the credit window the same all-reduce costs 18.5 cycles per hop-cycle, not 6, so `traversals x hop_latency` is the right form only while a collective fits inside its credit window.

@@ -30,6 +30,7 @@ integrity, reset, poison, and test contracts remain equivalent.
 | ABI 3.0 engine dispatch | `abi3/ot_a3_engine_array.sv`, `abi3/ot_a3_engine_pkg.sv` | Fail-closed dispatch on (family, subopcode); an operation the array does not implement is refused rather than routed to another datapath | A3-ENG-001 |
 | ABI 3.0 shipped-prefix issue bridge | `abi3/ot_a3_engine_issue_bridge.sv` | Descriptor- and view-checked connection from the real microsequencer to the exact shipped dense gather, BF16 embedding, Qwen RMSNorm, and DeepSeek stride-zero transfer profiles; completion only after datapath finish and precise descriptor/capability/engine traps for every refusal | A3-SHIP-PREFIX-001 |
 | ABI 3.0 Qwen KV-scatter continuation | `abi3/ot_a3_descriptor_record_validator.sv`, `abi3/ot_a3_qwen_kv_scatter_adapter.sv` | CRC- and descriptor-checked execution of the exact Qwen ROM/HBM PC-32 key and PC-35 value appends through the existing DMA mover; admits exact PC-38 GQA metadata and refuses capability before any write. This is a causal token-path dependency, not a token or TPOT result | A3-QW-KV-001 |
+| ABI 3.0 Qwen context-17 GQA continuation | `abi3/ot_a3_qwen_gqa.sv`, `abi3/ot_a3_qwen_gqa_adapter.sv`, `abi3/ot_a3_fp32_div_rne.sv`, `abi3/ot_a3_fp32_transcendental_cr_rne.sv` | Exact shipped ROM/HBM PC-38 descriptor admission and fixed `[1,32,128] x [17,8,128]` grouped-query attention: ordered binary32 products and reductions, BF16 score/probability/output boundaries, stable eight-lane softmax, complete-result buffering, ready/valid backpressure, and zero-write late-fault behavior. Only the current Q/K/V row is authentic; prior KV rows are synthetic, so this is not a layer, token, EOS, tick, or TPOT result | A3-QW-GQA-001 |
 | Tile | `ot_tile.sv`, `opentallas_tile.sv` | route-before-activation and result alignment | DV-TILE-004 |
 | Static schedule | `ot_schedule_controller.sv`, `static_timeslot_switch.sv` | fully rewritten shadow bank, typed schedule-ID/epoch atomic commit, and slot transport | DV-NOC-001 |
 | Credits | `ot_credit_manager.sv` | atomic reservation and conservation | DV-NOC-004 |
@@ -368,16 +369,34 @@ blocks to the ABI 3.0 microsequencer, and the separately promoted
 shipped-deployment campaign uses recording no-op engines rather than this
 arithmetic. The narrow shipped-prefix campaign is the explicit exception: it
 wires gather, embedding, Qwen RMSNorm, and DeepSeek transfer through
-`ot_a3_engine_issue_bridge.sv`; it does not broaden the standalone campaign. It does not
-model an SRAM or ROM macro, cover the blocked contraction contract, or supply
-correctly rounded transcendental RTL for `SILU_MUL`, `SOFTMAX` or
-`SQRT_SOFTPLUS`. SCALE sigmoid/general broadcast, CONVERT block forms,
+`ot_a3_engine_issue_bridge.sv`; it does not broaden the standalone campaign. It
+does not model an SRAM or ROM macro, cover the blocked contraction contract, or
+integrate general `SILU_MUL`, `SOFTMAX`, or `SQRT_SOFTPLUS` into the engine
+array. A shared correctly rounded exponential and the fixed context-17 Qwen GQA
+continuation exist under A3-QW-GQA-001, outside that general correlation
+surface. SCALE sigmoid/general broadcast, CONVERT block forms,
 COMPRESS pool/state update, MHC pre/head, and generalized `INDEX_SCORE` remain
 unsupported; standalone RMS/HEAD_RMS/ROPE RTL remains outside this engine
 array. None of this establishes timing or performance. The six new blocks also
 have no physical artifacts; the pre-existing routed evidence covers only
 selection, residual add and indexed movement.
 `docs/ABI3_ENGINE_DATAPATH_RTL.md` states the full boundary.
+
+A3-QW-KV-001 is retained as
+`results/rtl/a3_qwen_kv_scatter_campaign.json`. It executes the exact Qwen ROM
+and HBM key/value appends at PCs 32 and 35 and proves preservation of every
+other word in the active 17-row logical planes. A3-QW-GQA-001 is retained as
+`results/rtl/a3_qwen_gqa_campaign.json`. It then executes the exact PC-38
+metadata at context 17 on Icarus and pinned Verilator, comparing 8,192 computed
+BF16 words with the independent scalar attention oracle and checking 12,288
+zero-write sentinels across three fail-closed cases. Generic Yosys elaboration
+reports zero problems. The authentic current query/key/value activations are
+bound by digest, but the sixteen prior KV rows are deterministic synthetic
+transformations because no authentic history was retained. PC 41
+`TENSOR.MATMUL` (operators 134/137 for ROM/HBM) is the next shipped operation
+without a connected datapath. Neither campaign executes a complete layer,
+selects a token, handles EOS, emits architectural token-commit ticks, or
+establishes timing or TPOT.
 
 A3-SEQ-001 is the two-simulator control-plane correlation, and it is retained
 as two artifacts that answer two different questions.
