@@ -300,7 +300,6 @@ class BatchScheduler:
             )
 
         decoded: list[tuple[BatchLaneSubmission, Submission]] = []
-        transaction_ids: set[int] = set()
         phase_flags: int | None = None
         entrypoint_id: int | None = None
         for item in sorted(submissions, key=lambda value: value.lane_index):
@@ -330,9 +329,9 @@ class BatchScheduler:
                     f"lane {lane} submission generation {request.session_generation} "
                     f"does not match live generation {session.generation}"
                 )
-            if request.transaction_id in transaction_ids:
-                raise BatchError("transaction IDs must be unique within a batch wave")
-            transaction_ids.add(request.transaction_id)
+            # Transaction IDs are session-scoped in ABI 3.0.  Independent
+            # sequences therefore all use the canonical 1..N trajectory; the
+            # session ID is the disambiguator in completions and timing binds.
             flags = int(request.flags) & int(
                 SubmissionFlag.PREFILL_PHASE | SubmissionFlag.DECODE_PHASE
             )

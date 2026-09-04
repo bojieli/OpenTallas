@@ -241,6 +241,10 @@ class FunctionalTraceSpan:
     request_descriptor_id: int
     request_descriptor_digest: bytes
     submission_digest: bytes
+    request_symbols: tuple[tuple[int, int], ...]
+    entrypoint_id: int
+    generation_policy_id: int
+    submission_flags: int
     batch_execution_id: str | None
     trace_start: int
     trace_stop: int
@@ -550,6 +554,15 @@ class TracingDevice(Device):
                 request_descriptor_id=int(prepared.request.request_descriptor_id),
                 request_descriptor_digest=sha256(prepared.descriptor.encode()),
                 submission_digest=bytes(prepared.request_digest),
+                request_symbols=tuple(
+                    sorted(
+                        (int(symbol), int(value))
+                        for symbol, value in prepared.symbols.items()
+                    )
+                ),
+                entrypoint_id=int(prepared.request.entrypoint_id),
+                generation_policy_id=int(prepared.generation_policy_id),
+                submission_flags=int(prepared.request.flags),
                 batch_execution_id=batch_execution_id,
                 trace_start=trace_start,
                 trace_stop=trace_stop,

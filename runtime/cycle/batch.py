@@ -167,6 +167,10 @@ class BoundTokenTiming:
     request_descriptor_id: int
     request_descriptor_digest: str
     submission_digest: str
+    request_symbols_digest: str
+    entrypoint_id: int
+    generation_policy_id: int
+    submission_flags: int
     trace_start: int
     trace_stop: int
     trace_digest: str
@@ -751,6 +755,12 @@ class CycleBatchScheduler(BatchScheduler):
             request_descriptor_id=int(trace.request_descriptor_id),
             request_descriptor_digest=trace.request_descriptor_digest.hex(),
             submission_digest=trace.submission_digest.hex(),
+            request_symbols_digest=_digest(
+                [[symbol, value] for symbol, value in trace.request_symbols]
+            ),
+            entrypoint_id=int(trace.entrypoint_id),
+            generation_policy_id=int(trace.generation_policy_id),
+            submission_flags=int(trace.submission_flags),
             trace_start=int(trace.trace_start),
             trace_stop=int(trace.trace_stop),
             trace_digest=_trace_digest(trace),
