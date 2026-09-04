@@ -17,11 +17,11 @@ same holds for ``main_compress_ratios``: it decides which layers own compressor
 and indexer weights, and it is confronted with the released ``compress_ratios``
 list on every load.
 
-Two fields are ``None`` on DeepSeek-V4-Pro-0813 -- ``checkpoint_lock_id`` and
-``tensor_content_sha256`` -- because both are outputs of streaming all
-892,727,580,904 payload bytes through ``tools/build_checkpoint_lock.py``, and
-that checkpoint is still downloading.  Anything that needs either fails closed
-and names the tool that produces it.
+Both releases pin ``checkpoint_lock_id`` and ``tensor_content_sha256``, which
+are outputs of reading every payload byte through
+``tools/build_checkpoint_lock.py``.  A record that names a lock the host cannot
+produce fails closed and says which tool produces it, so a checkpoint cannot be
+substituted for the pinned one without the mismatch surfacing.
 """
 
 from __future__ import annotations
@@ -419,6 +419,19 @@ PRO = DeepSeekV4Release(
     quantization_config=_QUANTIZATION_CONFIG,
     rope_scaling=_ROPE_SCALING,
     checkpoint_source_pending=True,
+    # Both values are outputs of tools/build_checkpoint_lock.py over the
+    # complete snapshot: 892,727,580,904 payload bytes across 149,782
+    # tensors in 66 shards, read and hashed in 953 s.  The tensor-content
+    # digest is over the sorted per-tensor records, so it moves if any
+    # tensor's name, dtype, shape, shard or payload digest moves, and the
+    # lock id covers those plus the source expectation the lock was
+    # checked against.
+    checkpoint_lock_id=(
+        "4aff8a9e24558c5f11a8277cf0a3a63d688c3b378f02d3530137644eed35a462"
+    ),
+    tensor_content_sha256=(
+        "be1727c7c091d88d3ff6518ca3e54a9dd87518377fe7391845c09ba62963a90d"
+    ),
 )
 
 
