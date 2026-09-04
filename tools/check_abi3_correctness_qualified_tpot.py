@@ -3,11 +3,13 @@
 
 The input is a manifest of independently source-bound batch points.  Every
 point must name a comparison contract, an accepted model-specific correctness
-artifact, and the exact ``accelerator_tokens.v1`` records covered by that
-artifact.  Target timing is optional, but when present it must be a raw
-``target_timing_trace.v1`` containing request and token-commit ticks.  This
-tool derives TTFT and TPOT from those ticks; it never accepts precomputed rate
-fields.
+artifact, the exact ``accelerator_tokens.v1`` records covered by that artifact,
+and the immutable ABI 3.0 execution release that froze their source and TPOT
+budget.  All execution results must live below that release's create-once
+namespace.  Target timing is optional, but when present it must be a raw
+``target_timing_trace.v1`` containing request and token-commit ticks and both
+release identities.  This tool derives TTFT and TPOT from those ticks; it never
+accepts precomputed rate fields.
 
 Host functional-simulator and RTL-simulator wall time are retained as campaign
 diagnostics only.  Analytical/roofline artifacts, extrapolated rows, and those
@@ -15,9 +17,9 @@ wall times are categorically ineligible as target TPOT.  Production-simulation
 closure may use an explicitly labeled RTL-bound accelerated co-simulation only
 when its token path, execution identity, characterized target cycles, and every
 accelerated engine's bit/cycle equivalence are digest-bound.  It is never
-reported as monolithic full RTL.  A numeric TPOT threshold is never invented:
-if ``execution.tpot_acceptance`` is absent from the comparison contract, the
-explicit verdict is ``budget_missing`` / ``not_evaluable``.
+reported as monolithic full RTL.  A numeric TPOT threshold is never invented,
+and a comparison without a frozen ``execution.tpot_acceptance`` budget cannot
+form a production execution release.
 """
 
 from __future__ import annotations
@@ -26,6 +28,8 @@ import argparse
 import hashlib
 import json
 import math
+import os
+import subprocess
 import sys
 from collections.abc import Mapping, Sequence
 from pathlib import Path
@@ -61,6 +65,7 @@ COSIM_PROOF_SCHEMA_PATH = (
     REPO / "schemas/abi3/rtl_bound_accelerated_cosimulation_proof_v1.schema.json"
 )
 CONTRACT_SCHEMA_PATH = REPO / "schemas/abi3/comparison_contract_v1.schema.json"
+RELEASE_SCHEMA_PATH = REPO / "schemas/abi3/execution_release_lock_v1.schema.json"
 
 ACCEPTANCE_SCHEMAS = {
     "opentallas.abi3.qwen3_w10_acceptance.v1",
@@ -223,6 +228,373 @@ def _file_ref(
             f"{label} SHA-256 mismatch: expected {expected}, observed {actual}"
         )
     return path, actual
+
+
+def _git_repository(path: Path, problems: list[str]) -> Path | None:
+    """Return the repository owning ``path`` without trusting the caller's cwd."""
+
+    try:
+        completed = subprocess.run(
+            ["git", "-C", str(path.parent), "rev-parse", "--show-toplevel"],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+    except (OSError, subprocess.CalledProcessError) as exc:
+        detail = getattr(exc, "stderr", "")
+        problems.append(
+            "execution release lock is not inside a Git repository"
+            + (f": {str(detail).strip()}" if str(detail).strip() else "")
+        )
+        return None
+    return Path(completed.stdout.strip()).resolve()
+
+
+def _repository_member(
+    repo: Path,
+    raw: object,
+    label: str,
+    problems: list[str],
+    *,
+    must_exist: bool,
+) -> tuple[Path | None, str | None]:
+    """Resolve one canonical repository member and reject symlink aliases."""
+
+    if not isinstance(raw, str) or not raw or "\\" in raw:
+        problems.append(f"{label} is not a canonical repository path")
+        return None, None
+    supplied = Path(raw)
+    if ".." in supplied.parts:
+        problems.append(f"{label} contains a parent traversal")
+        return None, None
+    root = repo.resolve()
+    unresolved = supplied if supplied.is_absolute() else root / supplied
+    try:
+        lexical = Path(os.path.abspath(unresolved))
+        relative_path = lexical.relative_to(root)
+    except (OSError, ValueError):
+        problems.append(f"{label} escapes the execution-release repository")
+        return None, None
+    if not relative_path.parts:
+        problems.append(f"{label} is not a repository member")
+        return None, None
+    cursor = root
+    for component in relative_path.parts:
+        cursor = cursor / component
+        if cursor.is_symlink():
+            problems.append(f"{label} traverses a symlink")
+            return None, None
+        if not cursor.exists():
+            break
+    resolved = lexical.resolve(strict=False)
+    try:
+        relative = resolved.relative_to(root).as_posix()
+    except ValueError:
+        problems.append(f"{label} escapes the execution-release repository")
+        return None, None
+    if must_exist and not resolved.is_file():
+        problems.append(f"{label} is unavailable")
+    return resolved, relative
+
+
+def _current_tracked_source(repo: Path, problems: list[str]) -> dict[str, Any]:
+    """Reconstruct the source identity frozen by the release-lock producer."""
+
+    def git(*arguments: str, text: bool = True) -> str | bytes:
+        completed = subprocess.run(
+            ["git", *arguments],
+            cwd=repo,
+            check=True,
+            capture_output=True,
+            text=text,
+        )
+        return completed.stdout.strip() if text else completed.stdout
+
+    try:
+        status = str(git("status", "--porcelain=v1", "--untracked-files=no"))
+        commit = str(git("rev-parse", "--verify", "HEAD^{commit}"))
+        tree = str(git("rev-parse", "HEAD^{tree}"))
+        payload = git("ls-files", "-s", "-z", text=False)
+    except (OSError, subprocess.CalledProcessError) as exc:
+        detail = getattr(exc, "stderr", b"")
+        if isinstance(detail, bytes):
+            detail = detail.decode("utf-8", errors="replace")
+        problems.append(
+            "cannot reconstruct execution-release source identity"
+            + (f": {str(detail).strip()}" if str(detail).strip() else "")
+        )
+        return {}
+    if status:
+        problems.append(
+            "tracked worktree differs from the execution release's committed source"
+        )
+    assert isinstance(payload, bytes)
+    rows: list[dict[str, Any]] = []
+    try:
+        for entry in payload.split(b"\0"):
+            if not entry:
+                continue
+            metadata, raw_path = entry.split(b"\t", 1)
+            mode, blob, stage = metadata.decode("ascii").split()
+            if stage != "0":
+                raise ValueError("unmerged index entry")
+            rows.append(
+                {"blob": blob, "mode": mode, "path": raw_path.decode("utf-8")}
+            )
+    except (UnicodeError, ValueError):
+        problems.append("Git index cannot be represented by the execution release")
+        return {}
+    rows.sort(key=lambda row: str(row["path"]))
+    return {
+        "commit": commit,
+        "tree": tree,
+        "tracked_file_count": len(rows),
+        "tracked_source_map": rows,
+        "tracked_source_map_sha256": digest_of(rows),
+        "tracked_worktree_clean": not bool(status),
+    }
+
+
+def _check_execution_release(
+    raw_ref: object,
+    contract_path: Path | None,
+    contract: Mapping[str, Any],
+    contract_sha256: str | None,
+) -> tuple[dict[str, Any], list[str]]:
+    """Authenticate one immutable release and its selected comparison row."""
+
+    problems: list[str] = []
+    empty = {
+        "status": "rejected",
+        "path": None,
+        "file_sha256": None,
+        "semantic_sha256": None,
+        "repo": None,
+        "namespace": None,
+        "frozen_source_paths": frozenset(),
+    }
+    path, file_sha = _file_ref(raw_ref, "execution_release_lock", problems)
+    if path is None or not path.is_file() or file_sha is None:
+        return empty, problems
+    repo = _git_repository(path, problems)
+    if repo is None:
+        return {**empty, "path": path, "file_sha256": file_sha}, problems
+    raw_path = raw_ref.get("path") if isinstance(raw_ref, dict) else None
+    canonical_lock, lock_relative = _repository_member(
+        repo,
+        raw_path,
+        "execution release lock",
+        problems,
+        must_exist=True,
+    )
+    if canonical_lock != path:
+        problems.append("execution release lock path is not canonical")
+    try:
+        release = _load(path)
+    except (OSError, EvidenceError) as exc:
+        problems.append(f"execution release lock is not governed JSON: {exc}")
+        return {
+            **empty,
+            "path": path,
+            "file_sha256": file_sha,
+            "repo": repo,
+        }, problems
+    problems.extend(
+        _schema_problems(release, RELEASE_SCHEMA_PATH, "execution release lock")
+    )
+    semantic_payload = dict(release)
+    semantic_payload.pop("release_sha256", None)
+    semantic_sha = digest_of(semantic_payload)
+    if release.get("release_sha256") != semantic_sha:
+        problems.append("execution release semantic SHA-256 is inconsistent")
+
+    current_source = _current_tracked_source(repo, problems)
+    if current_source and release.get("source") != current_source:
+        problems.append("execution release source identity is stale or wrong")
+    source = _mapping(release.get("source"))
+    source_rows = source.get("tracked_source_map")
+    source_rows = source_rows if isinstance(source_rows, list) else []
+    frozen_source_paths = frozenset(
+        str(row.get("path"))
+        for row in source_rows
+        if isinstance(row, Mapping) and isinstance(row.get("path"), str)
+    )
+
+    raw_locks = release.get("external_locks")
+    raw_locks = raw_locks if isinstance(raw_locks, list) else []
+    for index, raw_lock in enumerate(raw_locks):
+        lock = _mapping(raw_lock)
+        external_path, external_relative = _repository_member(
+            repo,
+            lock.get("path"),
+            f"execution release external_locks[{index}]",
+            problems,
+            must_exist=True,
+        )
+        if external_relative not in frozen_source_paths:
+            problems.append(
+                f"execution release external_locks[{index}] is absent from frozen source"
+            )
+        if external_path is None or not external_path.is_file():
+            continue
+        try:
+            body = _load(external_path)
+        except (OSError, EvidenceError) as exc:
+            problems.append(
+                f"execution release external_locks[{index}] is not governed JSON: {exc}"
+            )
+            continue
+        if _sha256(external_path) != lock.get("source_sha256"):
+            problems.append(
+                f"execution release external_locks[{index}] file identity is stale"
+            )
+        if digest_of(body) != lock.get("semantic_sha256"):
+            problems.append(
+                f"execution release external_locks[{index}] semantic identity is stale"
+            )
+
+    comparison_id = contract.get("comparison_id")
+    raw_comparisons = release.get("comparison_contracts")
+    raw_comparisons = raw_comparisons if isinstance(raw_comparisons, list) else []
+    selected = [
+        row
+        for row in raw_comparisons
+        if isinstance(row, Mapping) and row.get("comparison_id") == comparison_id
+    ]
+    if len(selected) != 1:
+        problems.append(
+            "execution release does not contain exactly one selected comparison"
+        )
+    else:
+        row = selected[0]
+        released_contract, released_relative = _repository_member(
+            repo,
+            row.get("path"),
+            "execution release comparison contract",
+            problems,
+            must_exist=True,
+        )
+        if released_relative not in frozen_source_paths:
+            problems.append(
+                "execution release comparison contract is absent from frozen source"
+            )
+        if contract_path is None or released_contract != contract_path.resolve():
+            problems.append("execution release selects a different comparison contract")
+        execution = _mapping(contract.get("execution"))
+        model = _mapping(contract.get("model"))
+        workload = _mapping(contract.get("workload"))
+        policy = _mapping(contract.get("policy"))
+        budget = execution.get("tpot_acceptance")
+        if not isinstance(budget, Mapping):
+            problems.append("execution release comparison has no frozen TPOT budget")
+        targets = [
+            {
+                "backend": target.get("backend"),
+                "node_count": target.get("node_count"),
+                "role": role,
+                "target_id": target.get("target_id"),
+                "topology_class": target.get("topology_class"),
+            }
+            for role, target in sorted(_mapping(contract.get("targets")).items())
+            if isinstance(target, Mapping)
+        ]
+        expected = {
+            "batch_size": execution.get("batch"),
+            "comparison_id": comparison_id,
+            "context_tokens": execution.get("context_tokens"),
+            "model_id": model.get("model_id"),
+            "path": released_relative,
+            "process_view": policy.get("technology_view"),
+            "semantic_sha256": digest_of(dict(contract)) if contract else None,
+            "source_sha256": contract_sha256,
+            "targets": targets,
+            "tpot_acceptance_sha256": (
+                digest_of(dict(budget)) if isinstance(budget, Mapping) else None
+            ),
+            "workload_id": workload.get("workload_id"),
+        }
+        if dict(row) != expected:
+            problems.append("execution release comparison identity is stale or wrong")
+
+    namespace_row = _mapping(release.get("result_namespace"))
+    namespace, _namespace_relative = _repository_member(
+        repo,
+        namespace_row.get("path"),
+        "execution release result namespace",
+        problems,
+        must_exist=False,
+    )
+    if namespace_row.get("create_once") is not True:
+        problems.append("execution release result namespace is not create-once")
+    if namespace is None or not namespace.is_dir() or namespace.is_symlink():
+        problems.append("execution release result namespace is not a real directory")
+    if namespace is not None and canonical_lock is not None:
+        try:
+            canonical_lock.relative_to(namespace)
+        except ValueError:
+            pass
+        else:
+            problems.append("execution release lock is inside its result namespace")
+
+    return {
+        "status": "accepted" if not problems else "rejected",
+        "path": path,
+        "path_display": _display(path),
+        "path_relative": lock_relative,
+        "file_sha256": file_sha,
+        "semantic_sha256": release.get("release_sha256"),
+        "repo": repo,
+        "namespace": namespace,
+        "frozen_source_paths": frozen_source_paths,
+        "release": release,
+    }, problems
+
+
+def _check_release_result_ref(
+    raw_ref: object,
+    label: str,
+    release: Mapping[str, Any],
+    problems: list[str],
+) -> Path | None:
+    """Require one execution artifact strictly below the reserved namespace."""
+
+    repo = release.get("repo")
+    namespace = release.get("namespace")
+    raw_path = raw_ref.get("path") if isinstance(raw_ref, dict) else None
+    if not isinstance(repo, Path) or not isinstance(namespace, Path):
+        problems.append(f"{label} cannot be bound without a valid execution release")
+        return None
+    path, _relative = _repository_member(
+        repo, raw_path, label, problems, must_exist=True
+    )
+    if path is None:
+        return None
+    try:
+        below = path.relative_to(namespace)
+    except ValueError:
+        problems.append(f"{label} is outside the execution release result namespace")
+        return path
+    if not below.parts:
+        problems.append(f"{label} must be below the execution release result namespace")
+    return path
+
+
+def _check_frozen_producer(
+    raw_path: object,
+    label: str,
+    release: Mapping[str, Any],
+    problems: list[str],
+) -> None:
+    repo = release.get("repo")
+    frozen = release.get("frozen_source_paths")
+    if not isinstance(repo, Path) or not isinstance(frozen, frozenset):
+        problems.append(f"{label} cannot be bound without a valid execution release")
+        return
+    _path, relative = _repository_member(
+        repo, raw_path, label, problems, must_exist=True
+    )
+    if relative not in frozen:
+        problems.append(f"{label} is absent from the execution release source map")
 
 
 def _source_identity(
@@ -1787,6 +2159,7 @@ def _timing_metrics(
 
 def _check_timing(
     raw_ref: object,
+    release: Mapping[str, Any],
     contract: Mapping[str, Any],
     contract_sha256: str,
     acceptance_sha256: str,
@@ -1799,6 +2172,9 @@ def _check_timing(
     problems: list[str] = []
     if raw_ref is None:
         return {"status": "missing", "metrics": None}, problems
+    _check_release_result_ref(
+        raw_ref, "target timing trace", release, problems
+    )
     path, artifact_sha = _file_ref(raw_ref, "target_timing_trace", problems)
     if path is None or not path.is_file() or artifact_sha is None:
         return {"status": "rejected", "metrics": None}, problems
@@ -1903,6 +2279,9 @@ def _check_timing(
     _check_current_artifact_identity(
         producer.get("tool"), producer.get("source_sha256"), "timing producer", problems
     )
+    _check_frozen_producer(
+        producer.get("tool"), "timing producer", release, problems
+    )
     provenance = (
         trace.get("provenance") if isinstance(trace.get("provenance"), dict) else {}
     )
@@ -1956,6 +2335,8 @@ def _check_timing(
         "comparison_id": contract.get("comparison_id"),
         "comparison_contract_sha256": contract_sha256,
         "correctness_acceptance_sha256": acceptance_sha256,
+        "execution_release_lock_sha256": release.get("file_sha256"),
+        "execution_release_sha256": release.get("semantic_sha256"),
         "model_id": (contract.get("model") or {}).get("model_id"),
         "graph_id": (contract.get("model") or {}).get("graph_id"),
         "workload_id": (contract.get("workload") or {}).get("workload_id"),
@@ -1972,11 +2353,18 @@ def _check_timing(
             else None
         ),
     }
+    release_identity_names = {
+        "execution_release_lock_sha256",
+        "execution_release_sha256",
+    }
     for name, expected in expected_trace.items():
         if trace.get(name) != expected:
-            problems.append(
-                f"target timing {name} differs from the comparison contract"
+            boundary = (
+                "selected execution release"
+                if name in release_identity_names
+                else "comparison contract"
             )
+            problems.append(f"target timing {name} differs from the {boundary}")
     for name in ("target_id", "backend", "node_count", "topology_class"):
         if trace_target.get(name) != target_contract.get(name):
             problems.append(f"target timing target.{name} differs from the contract")
@@ -2099,6 +2487,10 @@ def _check_timing(
             if measurement_class == COSIM_TIER
             else None
         ),
+        "execution_release_lock_sha256": trace.get(
+            "execution_release_lock_sha256"
+        ),
+        "execution_release_sha256": trace.get("execution_release_sha256"),
         "metrics": metrics or None,
     }, problems
 
@@ -2111,6 +2503,19 @@ def _point(raw: Mapping[str, Any]) -> dict[str, Any]:
         raw.get("comparison_contract"), problems
     )
     contract_sources = _check_contract_sources(contract, problems) if contract else {}
+    release, release_problems = _check_execution_release(
+        raw.get("execution_release_lock"),
+        contract_path,
+        contract,
+        contract_sha,
+    )
+    problems.extend(release_problems)
+    _check_release_result_ref(
+        raw.get("correctness_acceptance"),
+        "correctness acceptance",
+        release,
+        problems,
+    )
     acceptance_path, acceptance_sha = _file_ref(
         raw.get("correctness_acceptance"), "correctness_acceptance", problems
     )
@@ -2151,6 +2556,12 @@ def _point(raw: Mapping[str, Any]) -> dict[str, Any]:
         )
     else:
         for index, ref in enumerate(refs):
+            _check_release_result_ref(
+                ref,
+                f"execution record {index}",
+                release,
+                problems,
+            )
             path, identity = _file_ref(ref, f"execution_records[{index}]", problems)
             if path is not None and path.is_file() and identity is not None:
                 record_paths.append((path, identity))
@@ -2201,6 +2612,13 @@ def _point(raw: Mapping[str, Any]) -> dict[str, Any]:
                 f"sequence {row['sequence_index']}: {problem}"
                 for problem in row["problems"]
             )
+            for source_path in row.get("sources", {}):
+                _check_frozen_producer(
+                    source_path,
+                    f"sequence {row['sequence_index']} execution source",
+                    release,
+                    problems,
+                )
         _acceptance_binds_records(acceptance, rows, problems)
 
     cosimulation: dict[str, Any] = {
@@ -2213,6 +2631,12 @@ def _point(raw: Mapping[str, Any]) -> dict[str, Any]:
         "proof": {},
     }
     if required_tier == COSIM_TIER:
+        _check_release_result_ref(
+            raw.get("rtl_bound_accelerated_cosimulation_proof"),
+            "RTL-bound accelerated co-simulation proof",
+            release,
+            problems,
+        )
         if (
             contract_sha is not None
             and acceptance_sha is not None
@@ -2269,6 +2693,7 @@ def _point(raw: Mapping[str, Any]) -> dict[str, Any]:
     if gate1_pass and contract_sha is not None and acceptance_sha is not None:
         timing, timing_problems = _check_timing(
             raw.get("target_timing_trace"),
+            release,
             contract,
             contract_sha,
             acceptance_sha,
@@ -2473,7 +2898,7 @@ def _point(raw: Mapping[str, Any]) -> dict[str, Any]:
             ),
             "production_tpot_gate_closed": verdict["production_gate_closed"],
             "production_tpot_requires_rtl_bound_tokens_and_characterized_timing": True,
-            "no_numeric_slo_invented": budget["status"] == "budget_missing",
+            "no_numeric_slo_invented": True,
         },
     }
 
