@@ -111,3 +111,27 @@ def test_the_derived_graph_really_declares_a_short_horizon(
         f"horizon {horizon} is not shorter than the capability's "
         f"{capability_bound}; this graph cannot exercise the bound"
     )
+
+
+@pytest.mark.xfail(
+    strict=True,
+    reason=(
+        "The draft stack does not lower cleanly yet, and the reason is not the "
+        "horizon.  Nineteen views remain refused, every one of them over a "
+        "tensor whose leading extent is the constant DSpark block of 5 -- "
+        "'dspark.layerNN.expert_reduce.output' at [5, 4096], 'hc_ffn_post."
+        "output' at [5, 4, 4096], 'routed_experts.output' at [30, 4096].  The "
+        "block loop walks those as if the block axis were the token axis.  The "
+        "same defect is in the HBM lane, where the static verifier admits the "
+        "deployment and the device traps on it instead: the cluster-32 draft "
+        "build (447 instructions) retires 35 and then reports 'EXPERT_SUM "
+        "weight view 321 holds 20 weights for 4 contributions' -- 20 being 5 "
+        "blocks times 4 contributions.  Settling it means settling what the "
+        "DSpark block axis is, which is the A30 draft-window contract, so this "
+        "records the defect rather than guessing at it.  Remove the marker when "
+        "the draft stack admits."
+    ),
+)
+def test_the_draft_stack_admits(refusals_by_tensor) -> None:
+    refused = {k: v for k, v in refusals_by_tensor.items() if k != "__graph__"}
+    assert refused == {}, f"{sum(len(v) for v in refused.values())} views refused"
