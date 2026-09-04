@@ -36,9 +36,39 @@
           ]
         }
       }
+    },
+    {
+      "oneOf": [
+        {
+          "required": ["workload_digest", "workload_id"],
+          "not": {
+            "anyOf": [
+              {"required": ["batch_profile_id"]},
+              {"required": ["reference_set_id"]},
+              {"required": ["workload_set_id"]},
+              {"required": ["workloads"]}
+            ]
+          }
+        },
+        {
+          "required": [
+            "batch_profile_id",
+            "reference_set_id",
+            "workload_set_id",
+            "workloads"
+          ],
+          "not": {
+            "anyOf": [
+              {"required": ["workload_digest"]},
+              {"required": ["workload_id"]}
+            ]
+          }
+        }
+      ]
     }
   ],
   "properties": {
+    "batch_profile_id": {"$ref": "#/$defs/identifier"},
     "batch_execution_id": {
       "oneOf": [
         {"$ref": "#/$defs/sha256"},
@@ -95,7 +125,14 @@
       "type": "array"
     },
     "workload_digest": {"$ref": "#/$defs/sha256"},
-    "workload_id": {"$ref": "#/$defs/identifier"}
+    "workload_id": {"$ref": "#/$defs/identifier"},
+    "workload_set_id": {"$ref": "#/$defs/sha256"},
+    "reference_set_id": {"$ref": "#/$defs/sha256"},
+    "workloads": {
+      "items": {"$ref": "#/$defs/workloadBinding"},
+      "minItems": 1,
+      "type": "array"
+    }
   },
   "required": [
     "batch_execution_id",
@@ -125,9 +162,7 @@
     "target",
     "technology_view",
     "timebase",
-    "token_commits_from_execution",
-    "workload_digest",
-    "workload_id"
+    "token_commits_from_execution"
   ],
   "title": "ABI 3.0 raw target token timing trace v1",
   "type": "object",
@@ -253,6 +288,22 @@
         "unit": {"enum": ["cycles", "nanoseconds"]}
       },
       "required": ["clock_frequency_hz", "ticks_per_second", "unit"],
+      "type": "object"
+    },
+    "workloadBinding": {
+      "additionalProperties": false,
+      "properties": {
+        "prompt_token_count": {"minimum": 1, "type": "integer"},
+        "sequence_index": {"minimum": 0, "type": "integer"},
+        "workload_digest": {"$ref": "#/$defs/sha256"},
+        "workload_id": {"$ref": "#/$defs/identifier"}
+      },
+      "required": [
+        "prompt_token_count",
+        "sequence_index",
+        "workload_digest",
+        "workload_id"
+      ],
       "type": "object"
     }
   }

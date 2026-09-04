@@ -2,27 +2,53 @@
   "$id": "https://opentallas.org/schemas/abi3/comparison_contract_v1.schema.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "additionalProperties": false,
+  "oneOf": [
+    {
+      "required": ["external_oracle", "workload"],
+      "properties": {
+        "execution": {"not": {"required": ["batch_profile_id"]}}
+      },
+      "not": {
+        "anyOf": [
+          {"required": ["reference_set"]},
+          {"required": ["workload_set"]}
+        ]
+      }
+    },
+    {
+      "required": ["reference_set", "workload_set"],
+      "properties": {
+        "execution": {"required": ["batch_profile_id"]}
+      },
+      "not": {
+        "anyOf": [
+          {"required": ["external_oracle"]},
+          {"required": ["workload"]}
+        ]
+      }
+    }
+  ],
   "properties": {
     "comparison_id": {"$ref": "#/$defs/identifier"},
     "execution": {"$ref": "#/$defs/execution"},
     "external_oracle": {"$ref": "#/$defs/externalOracle"},
     "model": {"$ref": "#/$defs/model"},
     "policy": {"$ref": "#/$defs/policy"},
+    "reference_set": {"$ref": "#/$defs/referenceSet"},
     "schema": {"const": "opentallas.abi3.comparison_contract.v1"},
     "targets": {"$ref": "#/$defs/targets"},
     "version": {"$ref": "#/$defs/version"},
-    "workload": {"$ref": "#/$defs/workload"}
+    "workload": {"$ref": "#/$defs/workload"},
+    "workload_set": {"$ref": "#/$defs/workloadSet"}
   },
   "required": [
     "comparison_id",
     "execution",
-    "external_oracle",
     "model",
     "policy",
     "schema",
     "targets",
-    "version",
-    "workload"
+    "version"
   ],
   "title": "OpenTallas ABI 3.0 authoritative comparison contract v1",
   "type": "object",
@@ -31,6 +57,7 @@
       "additionalProperties": false,
       "properties": {
         "batch": {"minimum": 1, "type": "integer"},
+        "batch_profile_id": {"$ref": "#/$defs/identifier"},
         "concurrency": {"minimum": 1, "type": "integer"},
         "context_tokens": {"minimum": 1, "type": "integer"},
         "evidence_scope": {"const": "full_workload"},
@@ -235,7 +262,7 @@
         },
         "state_boundary": {"$ref": "#/$defs/identifier"},
         "technology_claim": {"minLength": 1, "type": "string"},
-        "technology_view": {"const": "asap7"}
+        "technology_view": {"enum": ["asap7", "sky130"]}
       },
       "required": [
         "clock",
@@ -247,6 +274,26 @@
         "state_boundary",
         "technology_claim",
         "technology_view"
+      ],
+      "type": "object"
+    },
+    "referenceSet": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {"$ref": "#/$defs/path"},
+        "reference_set_id": {"$ref": "#/$defs/sha256"},
+        "schema": {"$ref": "#/$defs/identifier"},
+        "source_sha256": {"$ref": "#/$defs/sha256"},
+        "status": {"const": "locked"},
+        "workload_set_id": {"$ref": "#/$defs/sha256"}
+      },
+      "required": [
+        "path",
+        "reference_set_id",
+        "schema",
+        "source_sha256",
+        "status",
+        "workload_set_id"
       ],
       "type": "object"
     },
@@ -440,6 +487,24 @@
         "template",
         "tokenizer_sha256",
         "workload_id"
+      ],
+      "type": "object"
+    },
+    "workloadSet": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {"$ref": "#/$defs/path"},
+        "schema": {"$ref": "#/$defs/identifier"},
+        "source_sha256": {"$ref": "#/$defs/sha256"},
+        "status": {"const": "locked"},
+        "workload_set_id": {"$ref": "#/$defs/sha256"}
+      },
+      "required": [
+        "path",
+        "schema",
+        "source_sha256",
+        "status",
+        "workload_set_id"
       ],
       "type": "object"
     }
