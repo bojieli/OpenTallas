@@ -1044,6 +1044,43 @@ def test_stale_source_and_failed_admission_each_block_gate1(tmp_path: Path) -> N
     )
 
 
+def test_deferred_sample_gap_does_not_block_greedy_tpot_evidence(
+    tmp_path: Path,
+) -> None:
+    def sample_is_deferred(record: dict[str, Any]) -> None:
+        record["engine_coverage"] = {
+            "missing_count": 1,
+            "missing": ["SELECTION.SAMPLE"],
+        }
+
+    greedy = _make_bundle(
+        tmp_path / "greedy-without-sampling",
+        record_mutator=sample_is_deferred,
+    )
+    accepted = tool.validate(greedy.request)
+    _assert_report_schema(accepted)
+    assert accepted["status"] == "pass"
+    assert accepted["points"][0]["correctness_gate"]["status"] == "pass"
+
+    def required_engine_is_missing(record: dict[str, Any]) -> None:
+        record["engine_coverage"] = {
+            "missing_count": 2,
+            "missing": ["SELECTION.SAMPLE", "TENSOR.MATMUL"],
+        }
+
+    incomplete = _make_bundle(
+        tmp_path / "required-engine-missing",
+        record_mutator=required_engine_is_missing,
+    )
+    rejected = tool.validate(incomplete.request)
+    _assert_report_schema(rejected)
+    assert rejected["status"] == "rejected"
+    assert any(
+        "required engine coverage is incomplete: TENSOR.MATMUL" in problem
+        for problem in rejected["points"][0]["problems"]
+    )
+
+
 def test_record_must_use_exact_contract_oracle_even_if_alternate_file_is_current(
     tmp_path: Path,
 ) -> None:

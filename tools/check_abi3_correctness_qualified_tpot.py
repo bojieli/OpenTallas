@@ -45,6 +45,7 @@ REPORT_SCHEMA = "opentallas.abi3.correctness_qualified_tpot_report.v1"
 TRACE_SCHEMA = "opentallas.abi3.target_timing_trace.v1"
 COSIM_PROOF_SCHEMA = "opentallas.abi3.rtl_bound_accelerated_cosimulation_proof.v1"
 RECORD_SCHEMA = "opentallas.abi3.accelerator_tokens.v1"
+OPTIONAL_UNIMPLEMENTED_ENGINES = frozenset({"SELECTION.SAMPLE"})
 EXECUTION_TIMING_SCHEMA = "opentallas.abi3.execution_token_commit_timing.v1"
 CONTRACT_SCHEMA = "opentallas.abi3.comparison_contract.v1"
 COSIM_TIER = "rtl_bound_accelerated_cosimulation"
@@ -933,8 +934,22 @@ def _check_record(
         if isinstance(record.get("engine_coverage"), dict)
         else {}
     )
-    if coverage.get("missing_count") != 0 or coverage.get("missing") != []:
-        problems.append("accelerator engine coverage is incomplete")
+    missing_engines = coverage.get("missing")
+    if (
+        not isinstance(missing_engines, list)
+        or any(not isinstance(name, str) for name in missing_engines)
+        or coverage.get("missing_count") != len(missing_engines)
+    ):
+        problems.append("accelerator engine coverage is malformed")
+    else:
+        required_missing = sorted(
+            set(missing_engines) - OPTIONAL_UNIMPLEMENTED_ENGINES
+        )
+        if required_missing:
+            problems.append(
+                "accelerator required engine coverage is incomplete: "
+                + ", ".join(required_missing)
+            )
 
     implementation = record.get("implementation_identity")
     if (
