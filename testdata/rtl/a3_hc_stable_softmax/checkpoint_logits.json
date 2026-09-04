@@ -1,0 +1,57 @@
+{
+  "binary_file": "checkpoint_logits.u32le",
+  "binary_sha256": "6579ce0d11186dae5cfa06eb6c1bf0db2db45b1594f09d25984dc6ad05239534",
+  "checkpoint": {
+    "base_sha256": "edaa695cf5de59f919415f6e71dcb35be5ad817a06fa7222ee3021d9f388adda",
+    "projection_sha256": "f5c1ffdfb92df2c04ac17e9a31e38701f2b7a5cac0cd427a2df2aa3e239987fc",
+    "repository": "deepseek-ai/DeepSeek-V4-Flash-0731",
+    "revision": "7872f01b1d1fe23eabc4c98b48bffcef5a386062",
+    "scale_sha256": "0b0e327d2f4d1a104c53d6e0a9172cf532028383e82cdf6d70537cb83092c63f"
+  },
+  "claim_boundary": {
+    "architectural_timing": false,
+    "checkpoint_derived_softmax_inputs": true,
+    "expected_outputs_in_binary": false,
+    "full_hc_pre": false,
+    "model_token_generation": false,
+    "tpot": false
+  },
+  "first_four_service_sentinels_match": true,
+  "layout": "segment-major source-major matrices; 16 little-endian u32 logits per token",
+  "matrix_count": 832,
+  "record_sha256": "33b1294ab1fd47c64d03a330f6da2434bd3839a3b1e73560dbc194ebb0207745",
+  "schema": "opentallas.rtl.a3_hc_stable_softmax_checkpoint_inputs.v1",
+  "segments": [
+    {
+      "logits_u32le_sha256": "a5a64176489044d2f9191ed1b7ed1b2af0028b75671ff416b89252c9ca506ae0",
+      "matrix_offset": 0,
+      "name": "first_prefill_t512",
+      "position_start": 0,
+      "token_count": 512,
+      "token_ids_u32le_sha256": "10af7f8081114dfec2da97e9cb7d70ffe739b8d9be1ed9e14255b5402983697f"
+    },
+    {
+      "logits_u32le_sha256": "c44ed0476527f4217e0cafd90cfa841c9226c882f9aa1116799c2d3146e524f6",
+      "matrix_offset": 512,
+      "name": "final_prefill_t320",
+      "position_start": 199680,
+      "token_count": 320,
+      "token_ids_u32le_sha256": "4812a304dd03fd4e1e0cad93c3f339ac6369e871cbcd2d99ca462bac7a7dd335"
+    }
+  ],
+  "source_sha256": {
+    "runtime/service_engine/hc_pre_numeric.py": "dfdc4e5655d42a2401d5986fb462fb57edb86d10c0801d9e99ee1d6362f77482",
+    "runtime/sim/engines/deepseek_vector.py": "931a8a768537daa447e2efa1f76bda90989140d8036550d45e0ef4e0cd300c5e",
+    "tools/build_a3_hc_numeric_vectors.py": "08f0f9450d00a804974a77ad3cfde9367039443354dea4b2e6659e68573cfc2f",
+    "tools/extract_a3_hc_stable_softmax_checkpoint.py": "1733b105955c2856658652977f091190960ff33165b07572b3a8d767cf3207a8",
+    "tools/qualify_deepseek_hbm_hc_pre_t512.py": "10e7fc1b225ba054decee95c3dd2b03fa292b4e8cd95100f1c7ab2958496a205"
+  },
+  "status": "checkpoint_derived_input_vectors",
+  "workload": {
+    "file_sha256": "b00dd2f461329c14e0a8c0863dbef78e066950bee0aba053aa651f91890418bb",
+    "prompt_token_count": 200000,
+    "rendered_text_sha256": "6ad57114c426156f7e25341d6faa55d061033e6b98244d31ab1e8a395463527a",
+    "workload_digest": "803f0c3a3e9bf7ef68ddff00947576d2fab5703d1f4387df1eb2ec11be2c59bd",
+    "workload_id": "TA-DS-CTX-200K-1"
+  }
+}
