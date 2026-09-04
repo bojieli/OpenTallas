@@ -31,8 +31,12 @@ def _write(path: Path, body: dict[str, Any]) -> None:
 
 def _file(path: Path, root: Path) -> dict[str, Any]:
     raw = path.read_bytes()
+    try:
+        recorded_path = path.resolve().relative_to(root.resolve()).as_posix()
+    except ValueError:
+        recorded_path = str(path.resolve())
     return {
-        "path": path.relative_to(root).as_posix(),
+        "path": recorded_path,
         "sha256": hashlib.sha256(raw).hexdigest(),
         "size_bytes": len(raw),
     }
@@ -135,6 +139,7 @@ def _oracle(
     raw = f"lane-{lane_index}<|im_end|>"
     visible = f"lane-{lane_index}"
     codec.add_output(generated, raw, visible)
+    path = root / lane["oracle_binding"]["expected_path"]
     body = {
         "schema": campaign.REFERENCE_ORACLE_SCHEMA,
         "evidence_class": "external_reference_comparator",
@@ -154,15 +159,41 @@ def _oracle(
         "attention_implementation": "sdpa",
         "producer": {
             "tool": campaign.ORACLE_TOOL,
-            "tool_version": "test-structure-only",
-            "command_argv": [campaign.ORACLE_TOOL, "--only", workload["workload_id"]],
+            "tool_version": campaign.HETEROGENEOUS_ORACLE_TOOL_VERSION,
+            "command_argv": [
+                campaign.ORACLE_TOOL,
+                "--heterogeneous-gate-1-production",
+                str(accepted.manifest_path),
+                "--only",
+                workload["workload_id"],
+                "--output",
+                str(path),
+            ],
             "selected_workload_ids": [workload["workload_id"]],
         },
         "input_identity": {
-            "checkpoint_lock": dict(accepted.manifest["model"]["checkpoint_lock"]),
-            "workload_index": dict(accepted.manifest["workload_index"]),
+            "checkpoint_lock": _file(
+                REPO
+                / accepted.manifest["model"]["checkpoint_lock"]["path"],
+                REPO,
+            ),
+            "exact_8k_construction": _file(
+                REPO
+                / accepted.manifest["sources"]["exact_8k_construction"]["path"],
+                REPO,
+            ),
+            "heterogeneous_workload_set": (
+                campaign.heterogeneous_oracle_input_binding(
+                    accepted, lane_index
+                )
+            ),
+            "workload_index": _file(
+                root / accepted.manifest["workload_index"]["path"], REPO
+            ),
             "workload_sources": {
-                workload["workload_id"]: dict(lane["workload"]["file"])
+                workload["workload_id"]: _file(
+                    root / lane["workload"]["file"]["path"], REPO
+                )
             },
         },
         "production_checkpoint_preflight": {
@@ -175,19 +206,9 @@ def _oracle(
         },
         "production_launch": {
             "explicitly_requested": True,
-            "contract": {
-                "schema": "opentallas.qwen3.gate1_launch.v1",
-                "profile_id": "test-structure-only",
-                "workload_id": workload["workload_id"],
-                "prompt_token_count": 8000,
-                "max_new_tokens": 256,
-                "selection": "greedy_lowest_token_id_argmax",
-                "terminal": {
-                    "eos_token_ids": list(campaign.EOS_TOKEN_IDS),
-                    "include_eos_in_output": True,
-                    "rule": "first_official_eos_or_exact_cap",
-                },
-            },
+            "contract": campaign.heterogeneous_gate_1_launch_contract(
+                accepted, lane_index
+            ),
         },
         "results": {
             workload["workload_id"]: {
@@ -205,7 +226,6 @@ def _oracle(
             }
         },
     }
-    path = root / lane["oracle_binding"]["expected_path"]
     _write(path, body)
     return path
 
@@ -381,10 +401,34 @@ def test_eight_singleton_oracles_form_one_authenticated_reference_set(
             "independently selected",
         ),
         (
+            lambda body, wid: body["producer"].__setitem__(
+                "tool_version", "qwen3_reference_oracle.py:v2"
+            ),
+            "independently selected",
+        ),
+        (
+            lambda body, wid: body["producer"]["command_argv"].remove(
+                "--heterogeneous-gate-1-production"
+            ),
+            "command did not request one heterogeneous",
+        ),
+        (
             lambda body, wid: body["results"].__setitem__(
                 "extra-workload", copy.deepcopy(body["results"][wid])
             ),
             "exactly one selected result",
+        ),
+        (
+            lambda body, wid: body["input_identity"][
+                "heterogeneous_workload_set"
+            ]["selected_lane"].__setitem__("workload_id", "different-workload"),
+            "workload-set or selected-lane binding differs",
+        ),
+        (
+            lambda body, wid: body["production_launch"]["contract"].__setitem__(
+                "profile_id", "different-profile"
+            ),
+            "production launch contract differs",
         ),
         (
             lambda body, wid: body["results"][wid].__setitem__(
