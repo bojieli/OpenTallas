@@ -38,16 +38,16 @@
       "id": "D1",
       "kind": "design",
       "statement": "The new datapath equals the existing sequential lane bit for bit over the swept space.",
-      "status": "fail",
-      "why": "no artifact matches results/rtl/*pipelined_lane*.json"
+      "status": "pass",
+      "why": "results/rtl/abi3_pipelined_lane.json: bit_identity.equal == True"
     },
     {
       "fails_when": "The lane does not reach it.",
       "id": "D2",
       "kind": "design",
       "statement": "Measured MAC per lane per cycle is at least 1.0.",
-      "status": "fail",
-      "why": "no artifact matches results/rtl/*pipelined_lane*.json"
+      "status": "pass",
+      "why": "results/rtl/abi3_pipelined_lane.json: measured.mac_per_lane_cycle = 1"
     },
     {
       "fails_when": "The netlist has one lane while the capability advertises more.",
@@ -70,8 +70,8 @@
       "id": "D5",
       "kind": "design",
       "statement": "Every preserved failure mode still traps distinctly.",
-      "status": "fail",
-      "why": "no artifact matches results/rtl/*pipelined_lane*.json"
+      "status": "pass",
+      "why": "results/rtl/abi3_pipelined_lane.json: failure_modes.all_distinct == True"
     },
     {
       "fails_when": "Any parameter outside the allowlist differs.",
@@ -106,7 +106,7 @@
       "why": "26 cycle artifact(s) and none carries plausibility.total_over_binding_floor; a run that cannot state its own bandwidth floor cannot be believed"
     }
   ],
-  "passing": 1,
+  "passing": 4,
   "plan": "docs/OPENTALLAS_REDESIGN_PLAN.md",
   "principle": "Absence of evidence is FAIL, never not_evaluable. The previous programme's TPOT gate had two states, not_evaluable and pass, with no reachable fail; it stayed not_evaluable for the life of the project while the machine drifted 44,000x from target. A gate that cannot fail is a note. Every gate below reports FAIL until evidence says otherwise.",
   "schema": "opentallas.gates.redesign_result.v1",
