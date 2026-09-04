@@ -23,7 +23,7 @@ from pathlib import Path
 import random
 import struct
 import sys
-from typing import Any, Iterable, Sequence
+from typing import Any, Iterable
 
 
 ROOT = Path(__file__).resolve().parents[1]
