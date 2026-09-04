@@ -3,43 +3,43 @@
     "analytical_artifact": "results/roofline/n5_vs_b200/analytical.json",
     "batch_size": 1,
     "context_tokens": 8192,
-    "hbm_area_mm2": 3200.0,
+    "hbm_area_mm2": 4800.0,
     "hbm_binding_constraint": "weight_read",
     "hbm_component_times_s": {
-      "compute": 6.115883235555556e-06,
-      "kv_read": 8.389632e-05,
+      "compute": 4.077255490370369e-06,
+      "kv_read": 5.593088e-05,
       "layer_fixed_latency": 6.818801530875491e-06,
-      "link_latency": 0.00017378304,
-      "weight_read": 0.0010511674311111112
+      "link_latency": 0.00017411071999999997,
+      "weight_read": 0.0007007782874074074
     },
-    "hbm_design": "Qwen3-8B/b200_sxm-x2-tensor",
-    "hbm_devices": 2,
+    "hbm_design": "Qwen3-8B/b200_sxm-x3-tensor",
+    "hbm_devices": 3,
     "hbm_execution_format": "checkpoint-declared",
     "hbm_kv_store": "hbm",
-    "hbm_per_user_tokens_s": 693.5852718493809,
-    "hbm_step_time_s": 0.0014417837872098879,
+    "hbm_per_user_tokens_s": 978.7441385422231,
+    "hbm_step_time_s": 0.0010217174853168838,
     "hbm_token_slots": 1.0,
-    "iso_area": true,
-    "iso_area_ratio": 1.01875,
+    "iso_area": false,
+    "iso_area_ratio": 0.8489583333333334,
     "model": "Qwen3-8B",
-    "published_ratio": 5.6392842689793605,
-    "rom_area_mm2": 3260.0,
-    "rom_binding_constraint": "link_latency",
+    "published_ratio": 5.04830632979099,
+    "rom_area_mm2": 4075.0,
+    "rom_binding_constraint": "weight_read",
     "rom_component_times_s": {
-      "compute": 5.570312088214652e-05,
-      "kv_read": 6.7117056e-05,
+      "compute": 0.00015861700976394524,
+      "kv_read": 4.6373329869023086e-05,
       "layer_fixed_latency": 6.818801530875491e-06,
-      "link_latency": 0.00017427456,
-      "weight_read": 3.446538879609746e-05
+      "link_latency": 4.836408888888888e-06,
+      "weight_read": 0.00017165966462610557
     },
-    "rom_design": "Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4",
-    "rom_devices": 4,
+    "rom_design": "Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill",
+    "rom_devices": 5,
     "rom_execution_format": "bf16",
-    "rom_kv_store": "hbm",
-    "rom_parallelism": "tensor",
-    "rom_per_user_tokens_s": 3911.324512735987,
-    "rom_step_time_s": 0.00025566786819754213,
-    "rom_token_slots": 1.0,
+    "rom_kv_store": "sram",
+    "rom_parallelism": "pipeline",
+    "rom_per_user_tokens_s": 4941.000229848535,
+    "rom_step_time_s": 0.00020238817111543724,
+    "rom_token_slots": 5.0,
     "rom_topology_kind": "array",
     "study_id": "n5_vs_b200"
   },
@@ -53,7 +53,10 @@
       "rom.arrays",
       "rom.bytes_per_cycle_per_array",
       "rom.interleave_bytes",
-      "rom.transaction_bytes"
+      "rom.transaction_bytes",
+      "sram.bytes_per_cycle_per_port",
+      "sram.interleave_bytes",
+      "sram.transaction_bytes"
     ],
     "allowlist_unused": [],
     "hbm_provenance_classes": [
@@ -162,40 +165,52 @@
       "sequencer.predicate_cycles",
       "sequencer.wait_check_cycles",
       "sram.banks",
-      "sram.bytes_per_cycle_per_port",
-      "sram.interleave_bytes",
       "sram.ports_per_bank",
       "sram.read_latency_cycles",
-      "sram.transaction_bytes",
       "sram.write_latency_cycles",
       "state.backing_storage_class"
     ],
     "parameters_compared": 114,
     "permitted_differences": {
       "hbm.channels": {
-        "hbm": 128,
-        "justification": "HBM channel count.  The two design points state different HBM provisioning: the ROM point buys the stacks its area_fractions.hbm_phy pays for and serves KV alone from them (points[ROM].kv_transfer_bytes_per_step / component_times_s.kv_read), while the GPU point buys 8 stacks per package and serves weights AND KV from one pool (points[GPU].kv_transfer_bytes_per_step / component_times_s.kv_read).  A ROM point whose kv_store is `sram` buys none at all (area_fractions.hbm_phy 0.0) and carries a single inert channel.  Both sides resolve to the SAME hbm.bytes_per_cycle_per_channel; only the channel count differs, which is exactly what the design points say differs.  THIS ANCHOR: Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4 (kv_store 'hbm', token_slots 1, 4 devices) against Qwen3-8B/b200_sxm-x2-tensor (kv_store 'hbm', token_slots 1, 2 devices).",
-        "rom": 160
+        "hbm": 192,
+        "justification": "HBM channel count.  The two design points state different HBM provisioning: the ROM point buys the stacks its area_fractions.hbm_phy pays for and serves KV alone from them (points[ROM].kv_transfer_bytes_per_step / component_times_s.kv_read), while the GPU point buys 8 stacks per package and serves weights AND KV from one pool (points[GPU].kv_transfer_bytes_per_step / component_times_s.kv_read).  A ROM point whose kv_store is `sram` buys none at all (area_fractions.hbm_phy 0.0) and carries a single inert channel.  Both sides resolve to the SAME hbm.bytes_per_cycle_per_channel; only the channel count differs, which is exactly what the design points say differs.  THIS ANCHOR: Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill (kv_store 'sram', token_slots 5, 5 devices) against Qwen3-8B/b200_sxm-x3-tensor (kv_store 'hbm', token_slots 1, 3 devices).",
+        "rom": 1
       },
       "rom.arrays": {
         "hbm": 1,
-        "justification": "ROM array count.  The ROM design point stores its weights in ROM and the GPU design point has no ROM at all; the HBM machine carries a single inert array because the cost-table schema requires the full parameter set, and no MEMORY_OBJECT in the HBM deployment is stamped StorageClass.ROM, so it is never read.  THIS ANCHOR: Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4 (kv_store 'hbm', token_slots 1, 4 devices) against Qwen3-8B/b200_sxm-x2-tensor (kv_store 'hbm', token_slots 1, 2 devices).",
+        "justification": "ROM array count.  The ROM design point stores its weights in ROM and the GPU design point has no ROM at all; the HBM machine carries a single inert array because the cost-table schema requires the full parameter set, and no MEMORY_OBJECT in the HBM deployment is stamped StorageClass.ROM, so it is never read.  THIS ANCHOR: Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill (kv_store 'sram', token_slots 5, 5 devices) against Qwen3-8B/b200_sxm-x3-tensor (kv_store 'hbm', token_slots 1, 3 devices).",
         "rom": 16
       },
       "rom.bytes_per_cycle_per_array": {
         "hbm": 1.0,
-        "justification": "Per-array ROM read rate.  Derived on the ROM machine from points[ROM].peak_weight_read_bytes_s; inert on the HBM machine.  THIS ANCHOR: Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4 (kv_store 'hbm', token_slots 1, 4 devices) against Qwen3-8B/b200_sxm-x2-tensor (kv_store 'hbm', token_slots 1, 2 devices).",
-        "rom": 29706.0
+        "justification": "Per-array ROM read rate.  Derived on the ROM machine from points[ROM].peak_weight_read_bytes_s; inert on the HBM machine.  THIS ANCHOR: Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill (kv_store 'sram', token_slots 5, 5 devices) against Qwen3-8B/b200_sxm-x3-tensor (kv_store 'hbm', token_slots 1, 3 devices).",
+        "rom": 5964.0
       },
       "rom.interleave_bytes": {
         "hbm": 1,
-        "justification": "ROM address stripe, set equal to the burst quantum so consecutive bursts land on consecutive arrays; inert on the HBM machine.  THIS ANCHOR: Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4 (kv_store 'hbm', token_slots 1, 4 devices) against Qwen3-8B/b200_sxm-x2-tensor (kv_store 'hbm', token_slots 1, 2 devices).",
-        "rom": 29706
+        "justification": "ROM address stripe, set equal to the burst quantum so consecutive bursts land on consecutive arrays; inert on the HBM machine.  THIS ANCHOR: Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill (kv_store 'sram', token_slots 5, 5 devices) against Qwen3-8B/b200_sxm-x3-tensor (kv_store 'hbm', token_slots 1, 3 devices).",
+        "rom": 5964
       },
       "rom.transaction_bytes": {
         "hbm": 1,
-        "justification": "ROM burst quantum, set equal to rom.bytes_per_cycle_per_array so the model's ceil(transaction_bytes / bytes_per_cycle) is exactly 1 and no bandwidth is lost to quantisation; inert on the HBM machine.  THIS ANCHOR: Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4 (kv_store 'hbm', token_slots 1, 4 devices) against Qwen3-8B/b200_sxm-x2-tensor (kv_store 'hbm', token_slots 1, 2 devices).",
-        "rom": 29706
+        "justification": "ROM burst quantum, set equal to rom.bytes_per_cycle_per_array so the model's ceil(transaction_bytes / bytes_per_cycle) is exactly 1 and no bandwidth is lost to quantisation; inert on the HBM machine.  THIS ANCHOR: Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill (kv_store 'sram', token_slots 5, 5 devices) against Qwen3-8B/b200_sxm-x3-tensor (kv_store 'hbm', token_slots 1, 3 devices).",
+        "rom": 5964
+      },
+      "sram.bytes_per_cycle_per_port": {
+        "hbm": 1024.0,
+        "justification": "SRAM port read rate.  The ROM design point's kv_store is `sram`, so its KV traffic is an SRAM rate derived from points[ROM].kv_transfer_bytes_per_step / component_times_s.kv_read; the GPU point holds KV in HBM and allocates no SRAM area at all (area_fractions.sram 0.0), so its SRAM keeps the non-binding rate the shared derivation gives an unpriced store.  The difference is directionally AGAINST the ROM side: the ROM machine's activation store is finite where the GPU machine's cannot bind.  THIS ANCHOR: Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill (kv_store 'sram', token_slots 5, 5 devices) against Qwen3-8B/b200_sxm-x3-tensor (kv_store 'hbm', token_slots 1, 3 devices).",
+        "rom": 204.0
+      },
+      "sram.interleave_bytes": {
+        "hbm": 1024,
+        "justification": "SRAM address stripe, set equal to the SRAM burst on both machines; it differs only because that rate differs.  See sram.bytes_per_cycle_per_port.  THIS ANCHOR: Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill (kv_store 'sram', token_slots 5, 5 devices) against Qwen3-8B/b200_sxm-x3-tensor (kv_store 'hbm', token_slots 1, 3 devices).",
+        "rom": 204
+      },
+      "sram.transaction_bytes": {
+        "hbm": 1024,
+        "justification": "SRAM burst quantum, set equal to sram.bytes_per_cycle_per_port on both machines so the model's ceil() is exact; it differs only because that rate differs.  See sram.bytes_per_cycle_per_port.  THIS ANCHOR: Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill (kv_store 'sram', token_slots 5, 5 devices) against Qwen3-8B/b200_sxm-x3-tensor (kv_store 'hbm', token_slots 1, 3 devices).",
+        "rom": 204
       }
     },
     "rom_provenance_classes": [
@@ -246,32 +261,32 @@
     {
       "field": "memory.rom.bytes",
       "hbm": null,
-      "rom": 68719476736,
+      "rom": 85899345920,
       "why": "capacity, not bandwidth.  The weight STORE differs by construction -- that is the comparison -- and no capacity resolves to a machine parameter"
     },
     {
       "field": "memory.hbm.bytes",
-      "hbm": 206158430208,
-      "rom": 412316860416,
+      "hbm": 309237645312,
+      "rom": 515396075520,
       "why": "capacity, not bandwidth.  The weight STORE differs by construction -- that is the comparison -- and no capacity resolves to a machine parameter"
     },
     {
       "field": "memory.sram.bytes",
-      "hbm": 268435456,
-      "rom": 536870912,
+      "hbm": 402653184,
+      "rom": 671088640,
       "why": "capacity, not bandwidth.  The weight STORE differs by construction -- that is the comparison -- and no capacity resolves to a machine parameter"
     }
   ],
   "declared_asymmetries_note": "assert_comparable compares the parameters MachineModel resolves and nothing else.  These declared fields differ between the two emitted records, reach no cost-table parameter, and are listed so that a reader can see what the assertion does NOT cover.  limits.max_context_positions is the one exception: it bounds what the pair can be asked rather than how fast it runs, so both records are harmonised to the smaller of the two bases.",
   "derived_facts": {
     "collapse_exactness": {
-      "hbm_memory": -1.1102230246251565e-16,
-      "rom_weight": 2.220446049250313e-16
+      "hbm_memory": 0.0,
+      "rom_weight": 0.0
     },
     "compute_area_time_agreement": 0.0,
-    "compute_area_time_s": 5.570312088214652e-05,
-    "compute_roof_mac_s": 135870403383910.92,
-    "compute_roof_ops_s": 271740806767821.84,
+    "compute_area_time_s": 0.00015861700976394524,
+    "compute_roof_mac_s": 47714967740618.39,
+    "compute_roof_ops_s": 95429935481236.78,
     "declared_asymmetries": [
       {
         "field": "limits.max_expert_ids",
@@ -316,28 +331,28 @@
       {
         "field": "memory.rom.bytes",
         "hbm": null,
-        "rom": 68719476736,
+        "rom": 85899345920,
         "why": "capacity, not bandwidth.  The weight STORE differs by construction -- that is the comparison -- and no capacity resolves to a machine parameter"
       },
       {
         "field": "memory.hbm.bytes",
-        "hbm": 206158430208,
-        "rom": 412316860416,
+        "hbm": 309237645312,
+        "rom": 515396075520,
         "why": "capacity, not bandwidth.  The weight STORE differs by construction -- that is the comparison -- and no capacity resolves to a machine parameter"
       },
       {
         "field": "memory.sram.bytes",
-        "hbm": 268435456,
-        "rom": 536870912,
+        "hbm": 402653184,
+        "rom": 671088640,
         "why": "capacity, not bandwidth.  The weight STORE differs by construction -- that is the comparison -- and no capacity resolves to a machine parameter"
       }
     ],
     "execution_format": "bf16",
     "hbm_base_capability": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
     "hbm_bytes_per_cycle_per_channel": 112.5,
-    "hbm_peak_memory_bytes_s": 14400000000000.0,
-    "hbm_role_hbm_bytes_s_achieved": 14400000000000.0,
-    "hbm_role_hbm_channels": 128,
+    "hbm_peak_memory_bytes_s": 21600000000000.0,
+    "hbm_role_hbm_bytes_s_achieved": 21600000000000.0,
+    "hbm_role_hbm_channels": 192,
     "hbm_token_slots": 1.0,
     "lane_efficiency_at_wider_widths": {
       "12288": 0.4470285838159239,
@@ -354,25 +369,27 @@
     },
     "rom_arrays": 16,
     "rom_base_capability": "configs/hardware/abi3_capability/rom_qwen3.json",
-    "rom_interleave_stripe_bytes": 475296,
-    "rom_peak_weight_read_bytes_s": 475302072375138.4,
-    "rom_role_hbm_bytes_s_achieved": 18000000000000.0,
-    "rom_role_hbm_channels": 160,
-    "rom_token_slots": 1.0,
-    "rom_weight_read_bytes_s_achieved": 475296000000000.0,
-    "rom_weight_read_bytes_s_target": 475302072375138.4,
-    "tensor_mac_per_cycle_at_roof": 135870.40338391092,
+    "rom_interleave_stripe_bytes": 95424,
+    "rom_peak_weight_read_bytes_s": 477149677406184.0,
+    "rom_role_hbm_bytes_s_achieved": 112500000000.0,
+    "rom_role_hbm_channels": 1,
+    "rom_role_sram_bytes_s_achieved": 26112000000000.0,
+    "rom_role_sram_bytes_s_target": 26051763188284.723,
+    "rom_token_slots": 5.0,
+    "rom_weight_read_bytes_s_achieved": 95424000000000.0,
+    "rom_weight_read_bytes_s_target": 95429935481236.8,
+    "tensor_mac_per_cycle_at_roof": 47714.96774061839,
     "tensor_operator_count": 253,
     "work_units_per_mac": 2.0
   },
   "emitted": {
-    "hbm_capability": "configs/hardware/abi3_capability/n5_design_target/hbm_sram_single_chip_n5_v1.json",
-    "hbm_cost_table": "configs/hardware/abi3_cost_n5_design_target_hbm_v1.json",
-    "rom_capability": "configs/hardware/abi3_capability/n5_design_target/rom_qwen3_n5_v1.json",
-    "rom_cost_table": "configs/hardware/abi3_cost_n5_design_target_rom_v1.json"
+    "hbm_capability": "configs/hardware/abi3_capability/n5_design_target/hbm_sram_single_chip_n5_design_target_qwen3-8b__rom-n5-native-sramkv-array-pipeline-x5-romfill__b200-sxm-x3-tensor_v1.json",
+    "hbm_cost_table": "configs/hardware/n5_design_target/abi3_cost_n5_design_target_qwen3-8b__rom-n5-native-sramkv-array-pipeline-x5-romfill__b200-sxm-x3-tensor_hbm_v1.json",
+    "rom_capability": "configs/hardware/abi3_capability/n5_design_target/rom_qwen3_n5_design_target_qwen3-8b__rom-n5-native-sramkv-array-pipeline-x5-romfill__b200-sxm-x3-tensor_v1.json",
+    "rom_cost_table": "configs/hardware/n5_design_target/abi3_cost_n5_design_target_qwen3-8b__rom-n5-native-sramkv-array-pipeline-x5-romfill__b200-sxm-x3-tensor_rom_v1.json"
   },
   "generator": "tools/derive_cycle_machine.py",
-  "pair_id": "qwen3-8b__rom-n5-native-hbmkv-array-tensor-x4__b200-sxm-x2-tensor",
+  "pair_id": "qwen3-8b__rom-n5-native-sramkv-array-pipeline-x5-romfill__b200-sxm-x3-tensor",
   "parameters": [
     {
       "analytical_grade": "derived",
@@ -388,12 +405,12 @@
     {
       "analytical_grade": "assumed",
       "cost_table_provenance": "assumed",
-      "derivation": "The analytical model prices no engine byte-port bandwidth.  Both machines are given the larger of the pair's weight-path rates (4.752960e+14 B/s) so that no simulated time is attributed to an engine port the analytical model does not model.  At the shipped 64 B/cycle this would throttle DMA to 6.400e+10 B/s, 7426x below the ROM array it drains.",
-      "hbm_value": 475296.0,
+      "derivation": "The analytical model prices no engine byte-port bandwidth.  Both machines are given the larger of the pair's weight-path rates (9.542400e+13 B/s) so that no simulated time is attributed to an engine port the analytical model does not model.  At the shipped 64 B/cycle this would throttle DMA to 6.400e+10 B/s, 1491x below the ROM array it drains.",
+      "hbm_value": 95424.0,
       "parameter": "engine.attention.bytes_per_cycle",
-      "rom_value": 475296.0,
+      "rom_value": 95424.0,
       "shared": true,
-      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4].peak_weight_read_bytes_s",
+      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill].peak_weight_read_bytes_s",
       "unit": "B/cycle"
     },
     {
@@ -415,7 +432,7 @@
       "parameter": "engine.attention.lanes.default",
       "rom_value": 1024,
       "shared": true,
-      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4].area_fractions.compute",
+      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill].area_fractions.compute",
       "unit": "lanes"
     },
     {
@@ -472,22 +489,22 @@
       "analytical_grade": "derived",
       "cost_table_provenance": "assumed",
       "derivation": "Same as engine.tensor.work_per_lane_cycle: one analytical compute roof, one arithmetic rate on every engine.",
-      "hbm_value": 265.371881609201,
+      "hbm_value": 93.1932963683953,
       "parameter": "engine.attention.work_per_lane_cycle",
-      "rom_value": 265.371881609201,
+      "rom_value": 93.1932963683953,
       "shared": true,
-      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4].component_times_s.compute",
+      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill].component_times_s.compute",
       "unit": "work/lane/cycle"
     },
     {
       "analytical_grade": "assumed",
       "cost_table_provenance": "assumed",
-      "derivation": "The analytical model prices no engine byte-port bandwidth.  Both machines are given the larger of the pair's weight-path rates (4.752960e+14 B/s) so that no simulated time is attributed to an engine port the analytical model does not model.  At the shipped 64 B/cycle this would throttle DMA to 6.400e+10 B/s, 7426x below the ROM array it drains.",
-      "hbm_value": 475296.0,
+      "derivation": "The analytical model prices no engine byte-port bandwidth.  Both machines are given the larger of the pair's weight-path rates (9.542400e+13 B/s) so that no simulated time is attributed to an engine port the analytical model does not model.  At the shipped 64 B/cycle this would throttle DMA to 6.400e+10 B/s, 1491x below the ROM array it drains.",
+      "hbm_value": 95424.0,
       "parameter": "engine.dma.bytes_per_cycle",
-      "rom_value": 475296.0,
+      "rom_value": 95424.0,
       "shared": true,
-      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4].peak_weight_read_bytes_s",
+      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill].peak_weight_read_bytes_s",
       "unit": "B/cycle"
     },
     {
@@ -509,7 +526,7 @@
       "parameter": "engine.dma.lanes.default",
       "rom_value": 1024,
       "shared": true,
-      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4].area_fractions.compute",
+      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill].area_fractions.compute",
       "unit": "lanes"
     },
     {
@@ -566,22 +583,22 @@
       "analytical_grade": "derived",
       "cost_table_provenance": "assumed",
       "derivation": "Same as engine.tensor.work_per_lane_cycle: one analytical compute roof, one arithmetic rate on every engine.",
-      "hbm_value": 265.371881609201,
+      "hbm_value": 93.1932963683953,
       "parameter": "engine.dma.work_per_lane_cycle",
-      "rom_value": 265.371881609201,
+      "rom_value": 93.1932963683953,
       "shared": true,
-      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4].component_times_s.compute",
+      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill].component_times_s.compute",
       "unit": "work/lane/cycle"
     },
     {
       "analytical_grade": "assumed",
       "cost_table_provenance": "assumed",
-      "derivation": "The analytical model prices no engine byte-port bandwidth.  Both machines are given the larger of the pair's weight-path rates (4.752960e+14 B/s) so that no simulated time is attributed to an engine port the analytical model does not model.  At the shipped 64 B/cycle this would throttle DMA to 6.400e+10 B/s, 7426x below the ROM array it drains.",
-      "hbm_value": 475296.0,
+      "derivation": "The analytical model prices no engine byte-port bandwidth.  Both machines are given the larger of the pair's weight-path rates (9.542400e+13 B/s) so that no simulated time is attributed to an engine port the analytical model does not model.  At the shipped 64 B/cycle this would throttle DMA to 6.400e+10 B/s, 1491x below the ROM array it drains.",
+      "hbm_value": 95424.0,
       "parameter": "engine.link.bytes_per_cycle",
-      "rom_value": 475296.0,
+      "rom_value": 95424.0,
       "shared": true,
-      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4].peak_weight_read_bytes_s",
+      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill].peak_weight_read_bytes_s",
       "unit": "B/cycle"
     },
     {
@@ -603,7 +620,7 @@
       "parameter": "engine.link.lanes.default",
       "rom_value": 1024,
       "shared": true,
-      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4].area_fractions.compute",
+      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill].area_fractions.compute",
       "unit": "lanes"
     },
     {
@@ -660,22 +677,22 @@
       "analytical_grade": "derived",
       "cost_table_provenance": "assumed",
       "derivation": "Same as engine.tensor.work_per_lane_cycle: one analytical compute roof, one arithmetic rate on every engine.",
-      "hbm_value": 265.371881609201,
+      "hbm_value": 93.1932963683953,
       "parameter": "engine.link.work_per_lane_cycle",
-      "rom_value": 265.371881609201,
+      "rom_value": 93.1932963683953,
       "shared": true,
-      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4].component_times_s.compute",
+      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill].component_times_s.compute",
       "unit": "work/lane/cycle"
     },
     {
       "analytical_grade": "assumed",
       "cost_table_provenance": "assumed",
-      "derivation": "The analytical model prices no engine byte-port bandwidth.  Both machines are given the larger of the pair's weight-path rates (4.752960e+14 B/s) so that no simulated time is attributed to an engine port the analytical model does not model.  At the shipped 64 B/cycle this would throttle DMA to 6.400e+10 B/s, 7426x below the ROM array it drains.",
-      "hbm_value": 475296.0,
+      "derivation": "The analytical model prices no engine byte-port bandwidth.  Both machines are given the larger of the pair's weight-path rates (9.542400e+13 B/s) so that no simulated time is attributed to an engine port the analytical model does not model.  At the shipped 64 B/cycle this would throttle DMA to 6.400e+10 B/s, 1491x below the ROM array it drains.",
+      "hbm_value": 95424.0,
       "parameter": "engine.reduction.bytes_per_cycle",
-      "rom_value": 475296.0,
+      "rom_value": 95424.0,
       "shared": true,
-      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4].peak_weight_read_bytes_s",
+      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill].peak_weight_read_bytes_s",
       "unit": "B/cycle"
     },
     {
@@ -697,7 +714,7 @@
       "parameter": "engine.reduction.lanes.default",
       "rom_value": 1024,
       "shared": true,
-      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4].area_fractions.compute",
+      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill].area_fractions.compute",
       "unit": "lanes"
     },
     {
@@ -754,22 +771,22 @@
       "analytical_grade": "derived",
       "cost_table_provenance": "assumed",
       "derivation": "Same as engine.tensor.work_per_lane_cycle: one analytical compute roof, one arithmetic rate on every engine.",
-      "hbm_value": 265.371881609201,
+      "hbm_value": 93.1932963683953,
       "parameter": "engine.reduction.work_per_lane_cycle",
-      "rom_value": 265.371881609201,
+      "rom_value": 93.1932963683953,
       "shared": true,
-      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4].component_times_s.compute",
+      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill].component_times_s.compute",
       "unit": "work/lane/cycle"
     },
     {
       "analytical_grade": "assumed",
       "cost_table_provenance": "assumed",
-      "derivation": "The analytical model prices no engine byte-port bandwidth.  Both machines are given the larger of the pair's weight-path rates (4.752960e+14 B/s) so that no simulated time is attributed to an engine port the analytical model does not model.  At the shipped 64 B/cycle this would throttle DMA to 6.400e+10 B/s, 7426x below the ROM array it drains.",
-      "hbm_value": 475296.0,
+      "derivation": "The analytical model prices no engine byte-port bandwidth.  Both machines are given the larger of the pair's weight-path rates (9.542400e+13 B/s) so that no simulated time is attributed to an engine port the analytical model does not model.  At the shipped 64 B/cycle this would throttle DMA to 6.400e+10 B/s, 1491x below the ROM array it drains.",
+      "hbm_value": 95424.0,
       "parameter": "engine.route.bytes_per_cycle",
-      "rom_value": 475296.0,
+      "rom_value": 95424.0,
       "shared": true,
-      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4].peak_weight_read_bytes_s",
+      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill].peak_weight_read_bytes_s",
       "unit": "B/cycle"
     },
     {
@@ -791,7 +808,7 @@
       "parameter": "engine.route.lanes.default",
       "rom_value": 1024,
       "shared": true,
-      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4].area_fractions.compute",
+      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill].area_fractions.compute",
       "unit": "lanes"
     },
     {
@@ -848,22 +865,22 @@
       "analytical_grade": "derived",
       "cost_table_provenance": "assumed",
       "derivation": "Same as engine.tensor.work_per_lane_cycle: one analytical compute roof, one arithmetic rate on every engine.",
-      "hbm_value": 265.371881609201,
+      "hbm_value": 93.1932963683953,
       "parameter": "engine.route.work_per_lane_cycle",
-      "rom_value": 265.371881609201,
+      "rom_value": 93.1932963683953,
       "shared": true,
-      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4].component_times_s.compute",
+      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill].component_times_s.compute",
       "unit": "work/lane/cycle"
     },
     {
       "analytical_grade": "assumed",
       "cost_table_provenance": "assumed",
-      "derivation": "The analytical model prices no engine byte-port bandwidth.  Both machines are given the larger of the pair's weight-path rates (4.752960e+14 B/s) so that no simulated time is attributed to an engine port the analytical model does not model.  At the shipped 64 B/cycle this would throttle DMA to 6.400e+10 B/s, 7426x below the ROM array it drains.",
-      "hbm_value": 475296.0,
+      "derivation": "The analytical model prices no engine byte-port bandwidth.  Both machines are given the larger of the pair's weight-path rates (9.542400e+13 B/s) so that no simulated time is attributed to an engine port the analytical model does not model.  At the shipped 64 B/cycle this would throttle DMA to 6.400e+10 B/s, 1491x below the ROM array it drains.",
+      "hbm_value": 95424.0,
       "parameter": "engine.selection.bytes_per_cycle",
-      "rom_value": 475296.0,
+      "rom_value": 95424.0,
       "shared": true,
-      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4].peak_weight_read_bytes_s",
+      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill].peak_weight_read_bytes_s",
       "unit": "B/cycle"
     },
     {
@@ -885,7 +902,7 @@
       "parameter": "engine.selection.lanes.default",
       "rom_value": 1024,
       "shared": true,
-      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4].area_fractions.compute",
+      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill].area_fractions.compute",
       "unit": "lanes"
     },
     {
@@ -942,22 +959,22 @@
       "analytical_grade": "derived",
       "cost_table_provenance": "assumed",
       "derivation": "Same as engine.tensor.work_per_lane_cycle: one analytical compute roof, one arithmetic rate on every engine.",
-      "hbm_value": 265.371881609201,
+      "hbm_value": 93.1932963683953,
       "parameter": "engine.selection.work_per_lane_cycle",
-      "rom_value": 265.371881609201,
+      "rom_value": 93.1932963683953,
       "shared": true,
-      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4].component_times_s.compute",
+      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill].component_times_s.compute",
       "unit": "work/lane/cycle"
     },
     {
       "analytical_grade": "assumed",
       "cost_table_provenance": "assumed",
-      "derivation": "The analytical model prices no engine byte-port bandwidth.  Both machines are given the larger of the pair's weight-path rates (4.752960e+14 B/s) so that no simulated time is attributed to an engine port the analytical model does not model.  At the shipped 64 B/cycle this would throttle DMA to 6.400e+10 B/s, 7426x below the ROM array it drains.",
-      "hbm_value": 475296.0,
+      "derivation": "The analytical model prices no engine byte-port bandwidth.  Both machines are given the larger of the pair's weight-path rates (9.542400e+13 B/s) so that no simulated time is attributed to an engine port the analytical model does not model.  At the shipped 64 B/cycle this would throttle DMA to 6.400e+10 B/s, 1491x below the ROM array it drains.",
+      "hbm_value": 95424.0,
       "parameter": "engine.state.bytes_per_cycle",
-      "rom_value": 475296.0,
+      "rom_value": 95424.0,
       "shared": true,
-      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4].peak_weight_read_bytes_s",
+      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill].peak_weight_read_bytes_s",
       "unit": "B/cycle"
     },
     {
@@ -979,7 +996,7 @@
       "parameter": "engine.state.lanes.default",
       "rom_value": 1024,
       "shared": true,
-      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4].area_fractions.compute",
+      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill].area_fractions.compute",
       "unit": "lanes"
     },
     {
@@ -1036,22 +1053,22 @@
       "analytical_grade": "derived",
       "cost_table_provenance": "assumed",
       "derivation": "Same as engine.tensor.work_per_lane_cycle: one analytical compute roof, one arithmetic rate on every engine.",
-      "hbm_value": 265.371881609201,
+      "hbm_value": 93.1932963683953,
       "parameter": "engine.state.work_per_lane_cycle",
-      "rom_value": 265.371881609201,
+      "rom_value": 93.1932963683953,
       "shared": true,
-      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4].component_times_s.compute",
+      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill].component_times_s.compute",
       "unit": "work/lane/cycle"
     },
     {
       "analytical_grade": "assumed",
       "cost_table_provenance": "assumed",
-      "derivation": "The analytical model prices no engine byte-port bandwidth.  Both machines are given the larger of the pair's weight-path rates (4.752960e+14 B/s) so that no simulated time is attributed to an engine port the analytical model does not model.  At the shipped 64 B/cycle this would throttle DMA to 6.400e+10 B/s, 7426x below the ROM array it drains.",
-      "hbm_value": 475296.0,
+      "derivation": "The analytical model prices no engine byte-port bandwidth.  Both machines are given the larger of the pair's weight-path rates (9.542400e+13 B/s) so that no simulated time is attributed to an engine port the analytical model does not model.  At the shipped 64 B/cycle this would throttle DMA to 6.400e+10 B/s, 1491x below the ROM array it drains.",
+      "hbm_value": 95424.0,
       "parameter": "engine.tensor.bytes_per_cycle",
-      "rom_value": 475296.0,
+      "rom_value": 95424.0,
       "shared": true,
-      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4].peak_weight_read_bytes_s",
+      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill].peak_weight_read_bytes_s",
       "unit": "B/cycle"
     },
     {
@@ -1073,7 +1090,7 @@
       "parameter": "engine.tensor.lanes.default",
       "rom_value": 1024,
       "shared": true,
-      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4].area_fractions.compute",
+      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill].area_fractions.compute",
       "unit": "lanes"
     },
     {
@@ -1129,23 +1146,23 @@
     {
       "analytical_grade": "derived",
       "cost_table_provenance": "assumed",
-      "derivation": "compute roof / (lanes x clock), in work-counter units.  The roof is the design point's OWN arithmetic over the design point's OWN published time: bf16 15136811008 = 15136811008 operations / component_times_s.compute 5.570312088214652e-05 s = 2.7174080677e+14 ops/s.  That identity is exact by construction, which is the point: a literal 'bf16' index into operations_by_canonical_format raises on a w4a8 design point and a literal 'bf16' compute density prices one 2.7x too slow WITHOUT raising.  Cross-checked against the technology derivation the study built the term from -- sum over formats of ops_f / (area_fractions.compute 0.22290895663237373 x silicon_area_mm2 3260.0 x compute_ops_s_per_mm2[f] x efficiencies.compute 0.55), times token_slots 1 -- which gives 5.570312088214652e-05 s against the published 5.570312088214652e-05 s, agreeing to +0.000e+00 relative.  Units: the cost table declares this parameter in work/lane/cycle and the shipped characterized value was measured as (tensor.multiplications + tensor.additions) / cycles; the analytical operations count is a work count too, at 2 operations per active parameter (the multiply-and-add fallback), so no conversion is needed and none is applied.  That makes the machine's MAC rate lanes x work_per_lane_cycle / 2 x clock = 1.3587040338e+14 MAC/s.  In the cycle model this value divides the K extent (ceil(tile_depth x work_scale / work_per_lane_cycle)), so it is the reduction-tree width of one output lane -- 132.69 MACs deep -- and not a second lane count.",
-      "hbm_value": 265.371881609201,
+      "derivation": "compute roof / (lanes x clock), in work-counter units.  The roof is the design point's OWN arithmetic over the design point's OWN published time: bf16 15136811008 = 15136811008 operations / component_times_s.compute 0.00015861700976394524 s = 9.5429935481e+13 ops/s.  That identity is exact by construction, which is the point: a literal 'bf16' index into operations_by_canonical_format raises on a w4a8 design point and a literal 'bf16' compute density prices one 2.7x too slow WITHOUT raising.  Cross-checked against the technology derivation the study built the term from -- sum over formats of ops_f / (area_fractions.compute 0.3131246661498641 x silicon_area_mm2 4075.0 x compute_ops_s_per_mm2[f] x efficiencies.compute 0.55), times token_slots 5 -- which gives 1.586170097639452e-04 s against the published 1.586170097639452e-04 s, agreeing to +0.000e+00 relative.  Units: the cost table declares this parameter in work/lane/cycle and the shipped characterized value was measured as (tensor.multiplications + tensor.additions) / cycles; the analytical operations count is a work count too, at 2 operations per active parameter (the multiply-and-add fallback), so no conversion is needed and none is applied.  That makes the machine's MAC rate lanes x work_per_lane_cycle / 2 x clock = 4.7714967741e+13 MAC/s.  In the cycle model this value divides the K extent (ceil(tile_depth x work_scale / work_per_lane_cycle)), so it is the reduction-tree width of one output lane -- 46.60 MACs deep -- and not a second lane count.",
+      "hbm_value": 93.1932963683953,
       "parameter": "engine.tensor.work_per_lane_cycle",
-      "rom_value": 265.371881609201,
+      "rom_value": 93.1932963683953,
       "shared": true,
-      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4].component_times_s.compute",
+      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill].component_times_s.compute",
       "unit": "work/lane/cycle"
     },
     {
       "analytical_grade": "assumed",
       "cost_table_provenance": "assumed",
-      "derivation": "The analytical model prices no engine byte-port bandwidth.  Both machines are given the larger of the pair's weight-path rates (4.752960e+14 B/s) so that no simulated time is attributed to an engine port the analytical model does not model.  At the shipped 64 B/cycle this would throttle DMA to 6.400e+10 B/s, 7426x below the ROM array it drains.",
-      "hbm_value": 475296.0,
+      "derivation": "The analytical model prices no engine byte-port bandwidth.  Both machines are given the larger of the pair's weight-path rates (9.542400e+13 B/s) so that no simulated time is attributed to an engine port the analytical model does not model.  At the shipped 64 B/cycle this would throttle DMA to 6.400e+10 B/s, 1491x below the ROM array it drains.",
+      "hbm_value": 95424.0,
       "parameter": "engine.vector.bytes_per_cycle",
-      "rom_value": 475296.0,
+      "rom_value": 95424.0,
       "shared": true,
-      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4].peak_weight_read_bytes_s",
+      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill].peak_weight_read_bytes_s",
       "unit": "B/cycle"
     },
     {
@@ -1167,7 +1184,7 @@
       "parameter": "engine.vector.lanes.default",
       "rom_value": 1024,
       "shared": true,
-      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4].area_fractions.compute",
+      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill].area_fractions.compute",
       "unit": "lanes"
     },
     {
@@ -1224,33 +1241,33 @@
       "analytical_grade": "derived",
       "cost_table_provenance": "assumed",
       "derivation": "Same as engine.tensor.work_per_lane_cycle: one analytical compute roof, one arithmetic rate on every engine.",
-      "hbm_value": 265.371881609201,
+      "hbm_value": 93.1932963683953,
       "parameter": "engine.vector.work_per_lane_cycle",
-      "rom_value": 265.371881609201,
+      "rom_value": 93.1932963683953,
       "shared": true,
-      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4].component_times_s.compute",
+      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill].component_times_s.compute",
       "unit": "work/lane/cycle"
     },
     {
       "analytical_grade": "derived",
       "cost_table_provenance": "assumed",
-      "derivation": "One HBM3E channel, taken from the GPU point and shared: points[GPU].kv_transfer_bytes_per_step / component_times_s.kv_read x token_slots 1 = 1.440000e+13 B/s of physical pool over 2 packages x 8 stacks x 8 channels = 1.125000e+11 B/s per channel = 112.5 B/cycle at this clock.  The COUNT each collapsed logical device carries is that design's provisioning divided by the slots a token traverses: the GPU role gets 128 channels for 1.440000e+13 B/s and the ROM role 160 channels for 1.800000e+13 B/s of KV.  The two design points buy different numbers of the SAME channel, which is why hbm.channels is the only HBM parameter the two machines are permitted to differ on.",
+      "derivation": "One HBM3E channel, taken from the GPU point and shared: points[GPU].kv_transfer_bytes_per_step / component_times_s.kv_read x token_slots 1 = 2.160000e+13 B/s of physical pool over 3 packages x 8 stacks x 8 channels = 1.125000e+11 B/s per channel = 112.5 B/cycle at this clock.  The COUNT each collapsed logical device carries is that design's provisioning divided by the slots a token traverses: the GPU role gets 192 channels for 2.160000e+13 B/s and the ROM role a single INERT channel, because its kv_store is 'sram' and its area_fractions.hbm_phy is 0.0 -- it buys no HBM at all.  The two design points buy different numbers of the SAME channel, which is why hbm.channels is the only HBM parameter the two machines are permitted to differ on.",
       "hbm_value": 112.5,
       "parameter": "hbm.bytes_per_cycle_per_channel",
       "rom_value": 112.5,
       "shared": true,
-      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/b200_sxm-x2-tensor].kv_transfer_bytes_per_step",
+      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/b200_sxm-x3-tensor].kv_transfer_bytes_per_step",
       "unit": "B/cycle"
     },
     {
-      "analytical_grade": "derived",
+      "analytical_grade": "assumed",
       "cost_table_provenance": "assumed",
-      "derivation": "20 HBM3E stacks x 8 channels.  points[ROM].area_fractions.hbm_phy 0.06134969325153374 of 815 mm2 per device at 10 mm2 per stack over 4 devices, divided by token_slots 1 because a token engages one slot at a time, serving KV alone at 1.800000e+13 B/s (kv_transfer_bytes_per_step / component_times_s.kv_read).",
-      "hbm_value": 128,
+      "derivation": "ONE INERT CHANNEL.  points[ROM].kv_store is 'sram' and points[ROM].area_fractions.hbm_phy is 0.0: this design point buys no HBM at all and its KV is derived onto the SRAM path instead (see sram.bytes_per_cycle_per_port).  The channel exists because the cost-table schema requires the full parameter set.",
+      "hbm_value": 192,
       "parameter": "hbm.channels.default",
-      "rom_value": 160,
+      "rom_value": 1,
       "shared": false,
-      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4].area_fractions.hbm_phy",
+      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill].area_fractions.hbm_phy",
       "unit": "channels"
     },
     {
@@ -1261,13 +1278,13 @@
       "parameter": "hbm.interleave_bytes",
       "rom_value": 225,
       "shared": true,
-      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4].kv_transfer_bytes_per_step",
+      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill].kv_transfer_bytes_per_step",
       "unit": "B"
     },
     {
       "analytical_grade": "derived",
       "cost_table_provenance": "assumed",
-      "derivation": "The analytical layer_fixed_latency charges one KV round trip per layer: sram_access_s 2e-09 + one global traversal 4.282231e-09 = 6.282231e-09 s = 6.2822 cycles.  points[GPU] holds KV in 'hbm' and points[ROM] in 'hbm'; the primitive is a round trip to whichever store holds it, so it is charged identically on both machines and is shared.",
+      "derivation": "The analytical layer_fixed_latency charges one KV round trip per layer: sram_access_s 2e-09 + one global traversal 4.282231e-09 = 6.282231e-09 s = 6.2822 cycles.  points[GPU] holds KV in 'hbm' and points[ROM] in 'sram'; the primitive is a round trip to whichever store holds it, so it is charged identically on both machines and is shared.",
       "hbm_value": 6,
       "parameter": "hbm.read_latency_cycles",
       "rom_value": 6,
@@ -1283,13 +1300,13 @@
       "parameter": "hbm.transaction_bytes",
       "rom_value": 225,
       "shared": true,
-      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4].kv_transfer_bytes_per_step",
+      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill].kv_transfer_bytes_per_step",
       "unit": "B"
     },
     {
       "analytical_grade": "derived",
       "cost_table_provenance": "assumed",
-      "derivation": "The analytical layer_fixed_latency charges one KV round trip per layer: sram_access_s 2e-09 + one global traversal 4.282231e-09 = 6.282231e-09 s = 6.2822 cycles.  points[GPU] holds KV in 'hbm' and points[ROM] in 'hbm'; the primitive is a round trip to whichever store holds it, so it is charged identically on both machines and is shared.",
+      "derivation": "The analytical layer_fixed_latency charges one KV round trip per layer: sram_access_s 2e-09 + one global traversal 4.282231e-09 = 6.282231e-09 s = 6.2822 cycles.  points[GPU] holds KV in 'hbm' and points[ROM] in 'sram'; the primitive is a round trip to whichever store holds it, so it is charged identically on both machines and is shared.",
       "hbm_value": 6,
       "parameter": "hbm.write_latency_cycles",
       "rom_value": 6,
@@ -1355,18 +1372,18 @@
       "parameter": "rom.arrays.default",
       "rom_value": 16,
       "shared": false,
-      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4].weight_store",
+      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill].weight_store",
       "unit": "arrays"
     },
     {
       "analytical_grade": "derived",
       "cost_table_provenance": "assumed",
-      "derivation": "The ROM weight rate ONE TOKEN engages: the design point's aggregate array rate peak_weight_read_bytes_s 4.7530207238e+14 B/s (= rom area 1746.5168 mm2 x technology_derivations.rom_read_bytes_s_per_mm2 x efficiencies.rom_read_bandwidth, already derated) divided by token_slots 1, because a token traverses 1 slot(s) in series and can engage only one of them at a time = 4.7530207238e+14 B/s.  That reproduces the published per-token term: points[ROM].stored_weight_bytes 16381470720 / that rate = 3.446539e-05 s against component_times_s.weight_read 3.446538879609746e-05 s.  Divided by 16 arrays and by the clock = 29706.379523, rounded to 29706.  Achieved aggregate 4.7529600000e+14 B/s, -0.00128% against the analytical value.",
+      "derivation": "The ROM weight rate ONE TOKEN engages: the design point's aggregate array rate peak_weight_read_bytes_s 4.7714967741e+14 B/s (= rom area 1753.3059 mm2 x technology_derivations.rom_read_bytes_s_per_mm2 x efficiencies.rom_read_bandwidth, already derated) divided by token_slots 5, because a token traverses 5 slot(s) in series and can engage only one of them at a time = 9.5429935481e+13 B/s.  That reproduces the published per-token term: points[ROM].stored_weight_bytes 16381470720 / that rate = 1.716597e-04 s against component_times_s.weight_read 0.00017165966462610557 s.  Divided by 16 arrays and by the clock = 5964.370968, rounded to 5964.  Achieved aggregate 9.5424000000e+13 B/s, -0.00622% against the analytical value.",
       "hbm_value": 1.0,
       "parameter": "rom.bytes_per_cycle_per_array",
-      "rom_value": 29706.0,
+      "rom_value": 5964.0,
       "shared": false,
-      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4].stored_weight_bytes",
+      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill].stored_weight_bytes",
       "unit": "B/cycle"
     },
     {
@@ -1375,9 +1392,9 @@
       "derivation": "Set equal to the ROM burst so consecutive bursts of one weight object land on consecutive arrays and a sweep engages every array.",
       "hbm_value": 1,
       "parameter": "rom.interleave_bytes",
-      "rom_value": 29706,
+      "rom_value": 5964,
       "shared": false,
-      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4].peak_weight_read_bytes_s",
+      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill].peak_weight_read_bytes_s",
       "unit": "B"
     },
     {
@@ -1397,9 +1414,9 @@
       "derivation": "Set equal to rom.bytes_per_cycle_per_array so that the cycle model's max(1, ceil(transaction_bytes / bytes_per_cycle)) is exactly 1 and the array delivers its full derived rate.  The analytical model has no burst-size concept, so this is the only constraint on the value.",
       "hbm_value": 1,
       "parameter": "rom.transaction_bytes",
-      "rom_value": 29706,
+      "rom_value": 5964,
       "shared": false,
-      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4].peak_weight_read_bytes_s",
+      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill].peak_weight_read_bytes_s",
       "unit": "B"
     },
     {
@@ -1478,34 +1495,34 @@
     {
       "analytical_grade": "assumed",
       "cost_table_provenance": "assumed",
-      "derivation": "32 banks, the bank count the shipped single-chip capabilities on both sides already declare, kept so the compiled bank masks mean what they meant before.  points[ROM] allocates area_fractions.sram 0.0 and points[GPU] 0.0; the analytical model prices no bank count on either side, so this is a granularity choice shared by construction.",
+      "derivation": "32 banks, the bank count the shipped single-chip capabilities on both sides already declare, kept so the compiled bank masks mean what they meant before.  points[ROM] allocates area_fractions.sram 0.07661621698386031 and points[GPU] 0.0; the analytical model prices no bank count on either side, so this is a granularity choice shared by construction.",
       "hbm_value": 32,
       "parameter": "sram.banks.default",
       "rom_value": 32,
       "shared": true,
-      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4].area_fractions.sram",
+      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill].area_fractions.sram",
       "unit": "banks"
     },
     {
-      "analytical_grade": "assumed",
+      "analytical_grade": "derived",
       "cost_table_provenance": "assumed",
-      "derivation": "The GPU design point prices NO SRAM term and allocates no SRAM area (area_fractions.sram 0.0), so there is nothing to reproduce.  banks x ports x this rate x clock = 5.242880e+14 B/s, which exceeds every rate this pair derives (4.753021e+14 B/s) so that the activation store cannot bind and no simulated time is attributed to a store the analytical model does not price.  This is a deliberate neutralisation for a validation experiment: the derived machine is NOT a complete machine and its absolute tokens/s is an upper bound.",
-      "hbm_value": 4096.0,
+      "derivation": "points[ROM].kv_store is 'sram', so this store is NOT unpriced on the ROM side: it is the KV array.  points[ROM].kv_transfer_bytes_per_step 1208107008 / component_times_s.kv_read 4.6373329869023086e-05 s = 2.605176e+13 B/s (the design point's SRAM read bandwidth, area_fractions.sram 0.07661621698386031 x silicon_area_mm2 x technology_derivations.sram_read_bytes_s_per_mm2 x efficiencies.sram_read_bandwidth, divided by token_slots 5), over 32 banks x 4 ports and the clock, rounded to an integer.  Achieved aggregate 2.611200e+13 B/s.  The GPU point holds KV in HBM and allocates no SRAM area at all, so its SRAM keeps the non-binding rate -- a difference that runs AGAINST the ROM side and is cited in the KV-path allowlist.",
+      "hbm_value": 1024.0,
       "parameter": "sram.bytes_per_cycle_per_port",
-      "rom_value": 4096.0,
-      "shared": true,
-      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4].area_fractions.sram",
+      "rom_value": 204.0,
+      "shared": false,
+      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill].kv_transfer_bytes_per_step",
       "unit": "B/cycle"
     },
     {
       "analytical_grade": "assumed",
       "cost_table_provenance": "assumed",
       "derivation": "Set equal to the SRAM burst so consecutive bursts stripe across ports.  See sram.bytes_per_cycle_per_port.",
-      "hbm_value": 4096,
+      "hbm_value": 1024,
       "parameter": "sram.interleave_bytes",
-      "rom_value": 4096,
-      "shared": true,
-      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4].area_fractions.sram",
+      "rom_value": 204,
+      "shared": false,
+      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill].kv_transfer_bytes_per_step",
       "unit": "B"
     },
     {
@@ -1516,7 +1533,7 @@
       "parameter": "sram.ports_per_bank.default",
       "rom_value": 4,
       "shared": true,
-      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4].area_fractions.sram",
+      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill].area_fractions.sram",
       "unit": "ports"
     },
     {
@@ -1534,11 +1551,11 @@
       "analytical_grade": "assumed",
       "cost_table_provenance": "assumed",
       "derivation": "Set equal to sram.bytes_per_cycle_per_port so the model's ceil() is exact.  See that parameter.",
-      "hbm_value": 4096,
+      "hbm_value": 1024,
       "parameter": "sram.transaction_bytes",
-      "rom_value": 4096,
-      "shared": true,
-      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4].area_fractions.sram",
+      "rom_value": 204,
+      "shared": false,
+      "source": "results/roofline/n5_vs_b200/analytical.json#points[design=Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill].kv_transfer_bytes_per_step",
       "unit": "B"
     },
     {
@@ -1566,31 +1583,38 @@
   "residuals": [
     {
       "kind": "integer_quantisation",
-      "note": "rom.bytes_per_cycle_per_array must be an integer number of bytes per cycle; 29706.379523 rounds to 29706.",
-      "relative": -1.2775822979316231e-05,
+      "note": "rom.bytes_per_cycle_per_array must be an integer number of bytes per cycle; 5964.370968 rounds to 5964.",
+      "relative": -6.21972676274618e-05,
       "role": "rom",
       "term": "weight_read"
     },
     {
-      "hbm_seconds": 0.00017378304,
+      "kind": "integer_quantisation",
+      "note": "sram.bytes_per_cycle_per_port must be an integer number of bytes per cycle; 203.529400 rounds to 204.",
+      "relative": 0.0023121971161770283,
+      "role": "rom",
+      "term": "kv_read"
+    },
+    {
+      "hbm_seconds": 0.00017411071999999997,
       "kind": "structurally_inexpressible",
-      "note": "The cycle model builds NO fabric on TopologyClass.SINGLE_CHIP (runtime/cycle/fabric.py:923-930), so a single-chip run has structurally zero link cycles.  points[ROM] charges 72 hop events per token (two all-reduces per layer per token over 4 partitions inside one nvlink5 domain) and points[GPU] 72 (two all-reduces per layer per token over 2 partitions inside one nvlink5 domain).  The derived machines express each anchor as ONE logical device holding the resource one token can engage, which is exactly the transformation that removes the inter-device fabric; the term is therefore absent by construction and is reported, not approximated.  It is 68.2% of the analytical ROM step and 12.1% of the GPU step, so removing it is NOT neutral between the two sides and the reconciliation reports the ratio with the analytical link added back as well as without it.",
+      "note": "The cycle model builds NO fabric on TopologyClass.SINGLE_CHIP (runtime/cycle/fabric.py:923-930), so a single-chip run has structurally zero link cycles.  points[ROM] charges 4 hop events per token (4 pipeline-stage boundaries inside a nvlink5 domain) and points[GPU] 72 (two all-reduces per layer per token over 3 partitions inside one nvlink5 domain).  The derived machines express each anchor as ONE logical device holding the resource one token can engage, which is exactly the transformation that removes the inter-device fabric; the term is therefore absent by construction and is reported, not approximated.  It is 2.4% of the analytical ROM step and 17.0% of the GPU step, so removing it is NOT neutral between the two sides and the reconciliation reports the ratio with the analytical link added back as well as without it.",
       "role": "both",
-      "rom_seconds": 0.00017427456,
+      "rom_seconds": 4.836408888888888e-06,
       "term": "link_latency"
     },
     {
       "kind": "combination_rule",
-      "note": "The five analytical component times do NOT sum to the analytical step.  step = max(memory_time, compute_time) / efficiencies.stage_balance + link_latency + layer_fixed_latency, with memory_time = weight + kv when the design point shares one memory path and max(weight, kv) when it does not (points[ROM].overlap_rule 'weights and KV are physically separate arrays: their times overlap').  token_slots does NOT appear as a separate factor here because the published component times ALREADY carry it (src/opentallas/roofline.py:3288-3297): they are the per-slot cost times the slots a token traverses.  This anchor is token_slots 1 on the ROM side and 1 on the GPU side.  stage_balance 0.9 is applied where devices > 1 and the parallelism is not none, which is the case on both sides here; collapsing each point to one logical device sets devices = 1, so the derived machines do not carry it and it is reported.",
+      "note": "The five analytical component times do NOT sum to the analytical step.  step = max(memory_time, compute_time) / efficiencies.stage_balance + link_latency + layer_fixed_latency, with memory_time = weight + kv when the design point shares one memory path and max(weight, kv) when it does not (points[ROM].overlap_rule 'weights and KV are physically separate arrays: their times overlap').  token_slots does NOT appear as a separate factor here because the published component times ALREADY carry it (src/opentallas/roofline.py:3288-3297): they are the per-slot cost times the slots a token traverses.  This anchor is token_slots 5 on the ROM side and 1 on the GPU side.  stage_balance 0.9 is applied where devices > 1 and the parallelism is not none, which is the case on both sides here; collapsing each point to one logical device sets devices = 1, so the derived machines do not carry it and it is reported.",
       "role": "both",
       "term": "step_time"
     },
     {
       "hbm_token_slots": 1.0,
       "kind": "slot_serialisation",
-      "note": "A token traverses 1 slot(s) on the ROM design and 1 on the GPU design, and can engage only one at a time.  The collapsed logical device therefore carries the design's AGGREGATE resource DIVIDED BY ITS OWN SLOT COUNT -- ROM weight 4.753021e+14 / 1 = 4.753021e+14 B/s, GPU memory 1.440000e+13 / 1 = 1.440000e+13 B/s -- which is what reproduces each side's published PER-TOKEN term.  Carrying the undivided aggregate on both sides instead would remove a factor of 1 from one machine and 1 from the other, handing the more deeply pipelined side a 1x speed-up the study never granted it.  That is the class of defect this generator exists to prevent, so it is not done.  What the collapse DOES remove is the pipeline's aggregate throughput view: the derived machines model one token's latency, not the design's 3911.3 aggregate tokens/s.",
+      "note": "A token traverses 5 slot(s) on the ROM design and 1 on the GPU design, and can engage only one at a time.  The collapsed logical device therefore carries the design's AGGREGATE resource DIVIDED BY ITS OWN SLOT COUNT -- ROM weight 4.771497e+14 / 5 = 9.542994e+13 B/s, GPU memory 2.160000e+13 / 1 = 2.160000e+13 B/s -- which is what reproduces each side's published PER-TOKEN term.  Carrying the undivided aggregate on both sides instead would remove a factor of 5 from one machine and 1 from the other, handing the more deeply pipelined side a 5x speed-up the study never granted it.  That is the class of defect this generator exists to prevent, so it is not done.  What the collapse DOES remove is the pipeline's aggregate throughput view: the derived machines model one token's latency, not the design's 4941.0 aggregate tokens/s.",
       "role": "both",
-      "rom_token_slots": 1.0,
+      "rom_token_slots": 5.0,
       "term": "weight_read"
     },
     {
@@ -1602,26 +1626,26 @@
     },
     {
       "direction": "handicaps_the_gpu",
-      "gpu_memory_over_compute_x": 171.875,
-      "hbm_own_roof_ops_s": 2475000000000000.0,
+      "gpu_memory_over_compute_x": 171.87500000000006,
+      "hbm_own_roof_ops_s": 3712500000000001.0,
       "kind": "shared_roof_handicap",
-      "note": "The shared arithmetic roof is taken from the ROM point ALONE, which is what a single derivation means and what makes every compute parameter identical on the two machines.  The GPU point prices its own arithmetic at a published per-part roof, not at area x density: 1.513681e+10 operations over component_times_s.compute 6.115883235555556e-06 s = 2.475000e+15 ops/s, 9.108x the shared roof 2.717408e+14 ops/s.  The derived GPU machine therefore CANNOT reproduce its own analytical compute term, and the direction is NOT the same in every cell: here the shared roof is BELOW the GPU point's own, so the derived GPU machine is HANDICAPPED by 9.108x.  It is reported rather than corrected because correcting it would mean two compute roofs, which is the defect this generator exists to prevent.  Whether it matters is checkable: the GPU point is memory-bound by 171.9x on the analytical side, against a compute factor of 9.108x, which leaves it still memory-bound.",
-      "ratio": 9.107943813954543,
+      "note": "The shared arithmetic roof is taken from the ROM point ALONE, which is what a single derivation means and what makes every compute parameter identical on the two machines.  The GPU point prices its own arithmetic at a published per-part roof, not at area x density: 1.513681e+10 operations over component_times_s.compute 4.077255490370369e-06 s = 3.712500e+15 ops/s, 38.9x the shared roof 9.542994e+13 ops/s.  The derived GPU machine therefore CANNOT reproduce its own analytical compute term, and the direction is NOT the same in every cell: here the shared roof is BELOW the GPU point's own, so the derived GPU machine is HANDICAPPED by 38.9x.  It is reported rather than corrected because correcting it would mean two compute roofs, which is the defect this generator exists to prevent.  Whether it matters is checkable: the GPU point is memory-bound by 171.9x on the analytical side, against a compute factor of 38.9x, which leaves it still memory-bound.",
+      "ratio": 38.90288703726458,
       "role": "hbm",
-      "rom_roof_ops_s": 271740806767821.84,
+      "rom_roof_ops_s": 95429935481236.78,
       "term": "compute"
     },
     {
       "kind": "sweep_versus_touched",
-      "note": "The analytical ROM weight_read term is a full sweep of the STORED array: stored_weight_bytes 16381470720 / peak_weight_read_bytes_s x token_slots 1 = 3.446539e-05 s per slot pass.  The cycle model has no full-sweep semantics: it charges only the bytes the deployment's accesses touch, and at batch 1 the weight amplification is 1, so it will charge engaged_weight_bytes 15136811008 (92.40% of stored).  On a sparse MoE point that fraction is small and the divergence is the dominant one on this term.  The reconciliation must compare the cycle model's ROM traffic against the engaged bytes and report the sweep-versus-touched difference as a modelling divergence, not a machine parameter.",
+      "note": "The analytical ROM weight_read term is a full sweep of the STORED array: stored_weight_bytes 16381470720 / peak_weight_read_bytes_s x token_slots 5 = 3.433193e-05 s per slot pass.  The cycle model has no full-sweep semantics: it charges only the bytes the deployment's accesses touch, and at batch 1 the weight amplification is 1, so it will charge engaged_weight_bytes 15136811008 (92.40% of stored).  On a sparse MoE point that fraction is small and the divergence is the dominant one on this term.  The reconciliation must compare the cycle model's ROM traffic against the engaged bytes and report the sweep-versus-touched difference as a modelling divergence, not a machine parameter.",
       "role": "rom",
       "term": "weight_read"
     },
     {
       "kind": "interleave_granularity",
-      "note": "rom.interleave_bytes and rom.transaction_bytes are both set to rom.bytes_per_cycle_per_array, so one full stripe across the array pool is 16 x 29706 = 475296 bytes.  runtime/cycle/model.py:1302 stripes on address // interleave_bytes and :1336 charges ceil(bytes / transaction_bytes) transactions, so a ROM access SMALLER than 475296 bytes engages only some of the arrays and any access below one transaction costs exactly one cycle whatever its size.  Nothing in this tool checks the emitted stripe against a deployment's actual ROM access sizes, and the stripe scales with the model: it is a machine-side granularity assumption, not an analytical value, and a run whose ROM reads are smaller than the stripe will not see the derived aggregate rate.",
+      "note": "rom.interleave_bytes and rom.transaction_bytes are both set to rom.bytes_per_cycle_per_array, so one full stripe across the array pool is 16 x 5964 = 95424 bytes.  runtime/cycle/model.py:1302 stripes on address // interleave_bytes and :1336 charges ceil(bytes / transaction_bytes) transactions, so a ROM access SMALLER than 95424 bytes engages only some of the arrays and any access below one transaction costs exactly one cycle whatever its size.  Nothing in this tool checks the emitted stripe against a deployment's actual ROM access sizes, and the stripe scales with the model: it is a machine-side granularity assumption, not an analytical value, and a run whose ROM reads are smaller than the stripe will not see the derived aggregate rate.",
       "role": "rom",
-      "stripe_bytes": 475296,
+      "stripe_bytes": 95424,
       "term": "weight_read"
     },
     {

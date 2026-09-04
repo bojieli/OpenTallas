@@ -1,0 +1,1349 @@
+{
+  "analytical_artifact": "results/roofline/n5_vs_b200/analytical.json",
+  "batch_size": 1,
+  "blocked": [],
+  "cells_blocked": 0,
+  "cells_considered": 15,
+  "cells_emitted": 15,
+  "context_note": "The study prices each model at exactly ONE context: Qwen3-8B at 8,192, DeepSeek-V4-Flash-0731 at 200,000 and DeepSeek-V4-Pro-0813 at 1,000,000.  There is no batch-1/context-8192 cell for either DeepSeek model and none can be read from this artifact, so each cell is derived at its own model's published context and the context is recorded per cell.  The derived KV term is anchored to that context while a cycle run must use a short one, so the kv_read residual for both DeepSeek models is a REPORTED divergence and must not be closed by lengthening the run.",
+  "emitted": [
+    {
+      "base_capabilities": {
+        "hbm": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+        "rom": "configs/hardware/abi3_capability/rom_deepseek_v4_array_32.json"
+      },
+      "batch_size": 1,
+      "binding_constraints_agree": false,
+      "comparability": {
+        "allowlist": [
+          "hbm.channels",
+          "rom.arrays",
+          "rom.bytes_per_cycle_per_array",
+          "rom.interleave_bytes",
+          "rom.transaction_bytes"
+        ],
+        "allowlist_unused": [],
+        "parameters_compared": 114,
+        "permitted_differences": [
+          "hbm.channels",
+          "rom.arrays",
+          "rom.bytes_per_cycle_per_array",
+          "rom.interleave_bytes",
+          "rom.transaction_bytes"
+        ],
+        "unexpected_differences": 0
+      },
+      "compute_roof_ops_s": 497345417273841.9,
+      "context_tokens": 200000,
+      "declared_asymmetries": [
+        "limits.max_expert_ids",
+        "limits.max_instructions",
+        "limits.max_loop_trip",
+        "memory.rom.bytes",
+        "memory.hbm.bytes",
+        "memory.sram.bytes"
+      ],
+      "emitted": {
+        "artifact": "results/derived/deepseek-v4-flash-0731__rom-n5-native-hbmkv-array-hybrid-x32__b200-sxm-x16-hybrid_machine_pair.json",
+        "hbm_capability": "configs/hardware/abi3_capability/n5_design_target/hbm_sram_single_chip_n5_design_target_deepseek-v4-flash-0731__rom-n5-native-hbmkv-array-hybrid-x32__b200-sxm-x16-hybrid_v1.json",
+        "hbm_cost_table": "configs/hardware/n5_design_target/abi3_cost_n5_design_target_deepseek-v4-flash-0731__rom-n5-native-hbmkv-array-hybrid-x32__b200-sxm-x16-hybrid_hbm_v1.json",
+        "rom_capability": "configs/hardware/abi3_capability/n5_design_target/rom_deepseek_v4_array_32_n5_design_target_deepseek-v4-flash-0731__rom-n5-native-hbmkv-array-hybrid-x32__b200-sxm-x16-hybrid_v1.json",
+        "rom_cost_table": "configs/hardware/n5_design_target/abi3_cost_n5_design_target_deepseek-v4-flash-0731__rom-n5-native-hbmkv-array-hybrid-x32__b200-sxm-x16-hybrid_rom_v1.json"
+      },
+      "hbm_binding_constraint": "weight_read",
+      "hbm_design": "DSV4-Flash/b200_sxm-x16-hybrid",
+      "hbm_devices": 16,
+      "hbm_per_user_tokens_s": 1499.2648712262255,
+      "hbm_token_slots": 2.0,
+      "iso_area_ratio": 1.01875,
+      "model": "DeepSeek-V4-Flash-0731",
+      "pair_id": "deepseek-v4-flash-0731__rom-n5-native-hbmkv-array-hybrid-x32__b200-sxm-x16-hybrid",
+      "published_ratio": 1.7524392031103204,
+      "residual_kinds": [
+        "combination_rule",
+        "granularity",
+        "integer_quantisation",
+        "interleave_granularity",
+        "shared_roof_handicap",
+        "slot_serialisation",
+        "structurally_inexpressible",
+        "sweep_versus_touched",
+        "work_disagreement"
+      ],
+      "rom_arrays": 64,
+      "rom_binding_constraint": "link_latency",
+      "rom_design": "DSV4-Flash/ROM-N5-native-HBMKV-array-hybrid-x32",
+      "rom_devices": 32,
+      "rom_execution_format": "w4a8",
+      "rom_kv_store": "hbm",
+      "rom_parallelism": "hybrid",
+      "rom_per_user_tokens_s": 2627.370536182984,
+      "rom_token_slots": 4.0,
+      "rom_topology_kind": "array",
+      "shared_roof": {
+        "direction": "handicaps_the_gpu",
+        "gpu_memory_over_compute_x": 176.85303042429345,
+        "ratio": 45.08948352710763
+      },
+      "tensor_lanes": 64,
+      "why_this_cell": [
+        "the one analytical cell that matches a CLUSTER_32 capability: rom_deepseek_v4_array_32 against hbm_sram_cluster_32, and both deployments already exist on disk"
+      ]
+    },
+    {
+      "base_capabilities": {
+        "hbm": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+        "rom": "configs/hardware/abi3_capability/rom_deepseek_v4.json"
+      },
+      "batch_size": 1,
+      "binding_constraints_agree": true,
+      "comparability": {
+        "allowlist": [
+          "hbm.channels",
+          "rom.arrays",
+          "rom.bytes_per_cycle_per_array",
+          "rom.interleave_bytes",
+          "rom.transaction_bytes"
+        ],
+        "allowlist_unused": [],
+        "parameters_compared": 114,
+        "permitted_differences": [
+          "hbm.channels",
+          "rom.arrays",
+          "rom.bytes_per_cycle_per_array",
+          "rom.interleave_bytes",
+          "rom.transaction_bytes"
+        ],
+        "unexpected_differences": 0
+      },
+      "compute_roof_ops_s": 1.963925370818141e+16,
+      "context_tokens": 200000,
+      "declared_asymmetries": [
+        "limits.max_expert_ids",
+        "limits.max_instructions",
+        "limits.max_events",
+        "limits.max_loop_trip",
+        "features",
+        "memory.rom.bytes",
+        "memory.hbm.bytes",
+        "memory.sram.bytes"
+      ],
+      "emitted": {
+        "artifact": "results/derived/deepseek-v4-flash-0731__rom-n5-native-hbmkv-wafer-tensor-x1__b200-sxm-x29-tensor_machine_pair.json",
+        "hbm_capability": "configs/hardware/abi3_capability/n5_design_target/hbm_sram_single_chip_n5_design_target_deepseek-v4-flash-0731__rom-n5-native-hbmkv-wafer-tensor-x1__b200-sxm-x29-tensor_v1.json",
+        "hbm_cost_table": "configs/hardware/n5_design_target/abi3_cost_n5_design_target_deepseek-v4-flash-0731__rom-n5-native-hbmkv-wafer-tensor-x1__b200-sxm-x29-tensor_hbm_v1.json",
+        "rom_capability": "configs/hardware/abi3_capability/n5_design_target/rom_deepseek_v4_n5_design_target_deepseek-v4-flash-0731__rom-n5-native-hbmkv-wafer-tensor-x1__b200-sxm-x29-tensor_v1.json",
+        "rom_cost_table": "configs/hardware/n5_design_target/abi3_cost_n5_design_target_deepseek-v4-flash-0731__rom-n5-native-hbmkv-wafer-tensor-x1__b200-sxm-x29-tensor_rom_v1.json"
+      },
+      "hbm_binding_constraint": "link_latency",
+      "hbm_design": "DSV4-Flash/b200_sxm-x29-tensor",
+      "hbm_devices": 29,
+      "hbm_per_user_tokens_s": 1300.7208717198528,
+      "hbm_token_slots": 1.0,
+      "iso_area_ratio": 0.9962284482758621,
+      "model": "DeepSeek-V4-Flash-0731",
+      "pair_id": "deepseek-v4-flash-0731__rom-n5-native-hbmkv-wafer-tensor-x1__b200-sxm-x29-tensor",
+      "published_ratio": 3.619465527730169,
+      "residual_kinds": [
+        "combination_rule",
+        "granularity",
+        "integer_quantisation",
+        "interleave_granularity",
+        "shared_roof_handicap",
+        "slot_serialisation",
+        "structurally_inexpressible",
+        "sweep_versus_touched",
+        "work_disagreement"
+      ],
+      "rom_arrays": 12288,
+      "rom_binding_constraint": "link_latency",
+      "rom_design": "DSV4-Flash/ROM-N5-native-HBMKV-wafer-tensor-x1",
+      "rom_devices": 1,
+      "rom_execution_format": "w4a8",
+      "rom_kv_store": "hbm",
+      "rom_parallelism": "tensor",
+      "rom_per_user_tokens_s": 4707.914356389142,
+      "rom_token_slots": 1.0,
+      "rom_topology_kind": "wafer",
+      "shared_roof": {
+        "direction": "handicaps_the_gpu",
+        "gpu_memory_over_compute_x": 242.1944339663355,
+        "ratio": 4.139200002500436
+      },
+      "tensor_lanes": 64,
+      "why_this_cell": [
+        "the rom_deepseek_v4 wafer capability's own shape with KV in HBM"
+      ]
+    },
+    {
+      "base_capabilities": {
+        "hbm": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+        "rom": "configs/hardware/abi3_capability/rom_deepseek_v4_array_32.json"
+      },
+      "batch_size": 1,
+      "binding_constraints_agree": false,
+      "comparability": {
+        "allowlist": [
+          "hbm.channels",
+          "rom.arrays",
+          "rom.bytes_per_cycle_per_array",
+          "rom.interleave_bytes",
+          "rom.transaction_bytes",
+          "sram.bytes_per_cycle_per_port",
+          "sram.interleave_bytes",
+          "sram.transaction_bytes"
+        ],
+        "allowlist_unused": [],
+        "parameters_compared": 114,
+        "permitted_differences": [
+          "hbm.channels",
+          "rom.arrays",
+          "rom.bytes_per_cycle_per_array",
+          "rom.interleave_bytes",
+          "rom.transaction_bytes",
+          "sram.bytes_per_cycle_per_port",
+          "sram.interleave_bytes",
+          "sram.transaction_bytes"
+        ],
+        "unexpected_differences": 0
+      },
+      "compute_roof_ops_s": 473971493038761.3,
+      "context_tokens": 200000,
+      "declared_asymmetries": [
+        "limits.max_expert_ids",
+        "limits.max_instructions",
+        "limits.max_loop_trip",
+        "memory.rom.bytes",
+        "memory.hbm.bytes",
+        "memory.sram.bytes"
+      ],
+      "emitted": {
+        "artifact": "results/derived/deepseek-v4-flash-0731__rom-n5-native-sramkv-array-hybrid-x30__b200-sxm-x15-hybrid_machine_pair.json",
+        "hbm_capability": "configs/hardware/abi3_capability/n5_design_target/hbm_sram_single_chip_n5_design_target_deepseek-v4-flash-0731__rom-n5-native-sramkv-array-hybrid-x30__b200-sxm-x15-hybrid_v1.json",
+        "hbm_cost_table": "configs/hardware/n5_design_target/abi3_cost_n5_design_target_deepseek-v4-flash-0731__rom-n5-native-sramkv-array-hybrid-x30__b200-sxm-x15-hybrid_hbm_v1.json",
+        "rom_capability": "configs/hardware/abi3_capability/n5_design_target/rom_deepseek_v4_array_32_n5_design_target_deepseek-v4-flash-0731__rom-n5-native-sramkv-array-hybrid-x30__b200-sxm-x15-hybrid_v1.json",
+        "rom_cost_table": "configs/hardware/n5_design_target/abi3_cost_n5_design_target_deepseek-v4-flash-0731__rom-n5-native-sramkv-array-hybrid-x30__b200-sxm-x15-hybrid_rom_v1.json"
+      },
+      "hbm_binding_constraint": "weight_read",
+      "hbm_design": "DSV4-Flash/b200_sxm-x15-hybrid",
+      "hbm_devices": 15,
+      "hbm_per_user_tokens_s": 1465.0545169559307,
+      "hbm_token_slots": 2.0,
+      "iso_area_ratio": 1.01875,
+      "model": "DeepSeek-V4-Flash-0731",
+      "pair_id": "deepseek-v4-flash-0731__rom-n5-native-sramkv-array-hybrid-x30__b200-sxm-x15-hybrid",
+      "published_ratio": 1.793360250949635,
+      "residual_kinds": [
+        "combination_rule",
+        "granularity",
+        "integer_quantisation",
+        "interleave_granularity",
+        "shared_roof_handicap",
+        "slot_serialisation",
+        "structurally_inexpressible",
+        "sweep_versus_touched",
+        "work_disagreement"
+      ],
+      "rom_arrays": 64,
+      "rom_binding_constraint": "link_latency",
+      "rom_design": "DSV4-Flash/ROM-N5-native-SRAMKV-array-hybrid-x30",
+      "rom_devices": 30,
+      "rom_execution_format": "w4a8",
+      "rom_kv_store": "sram",
+      "rom_parallelism": "hybrid",
+      "rom_per_user_tokens_s": 2627.370536182984,
+      "rom_token_slots": 4.0,
+      "rom_topology_kind": "array",
+      "shared_roof": {
+        "direction": "handicaps_the_gpu",
+        "gpu_memory_over_compute_x": 171.54311299749526,
+        "ratio": 44.35600623298743
+      },
+      "tensor_lanes": 64,
+      "why_this_cell": [
+        "design_selection batch-1 recommendation for DeepSeek-V4-Flash-0731 -- the study's own headline pair",
+        "published batch-1 frontier entry for DeepSeek-V4-Flash-0731",
+        "best ARRAY topology the study names for DeepSeek-V4-Flash-0731 at batch 1"
+      ]
+    },
+    {
+      "base_capabilities": {
+        "hbm": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+        "rom": "configs/hardware/abi3_capability/rom_deepseek_v4.json"
+      },
+      "batch_size": 1,
+      "binding_constraints_agree": true,
+      "comparability": {
+        "allowlist": [
+          "hbm.channels",
+          "rom.arrays",
+          "rom.bytes_per_cycle_per_array",
+          "rom.interleave_bytes",
+          "rom.transaction_bytes",
+          "sram.bytes_per_cycle_per_port",
+          "sram.interleave_bytes",
+          "sram.transaction_bytes"
+        ],
+        "allowlist_unused": [],
+        "parameters_compared": 114,
+        "permitted_differences": [
+          "hbm.channels",
+          "rom.arrays",
+          "rom.bytes_per_cycle_per_array",
+          "rom.interleave_bytes",
+          "rom.transaction_bytes",
+          "sram.bytes_per_cycle_per_port",
+          "sram.interleave_bytes",
+          "sram.transaction_bytes"
+        ],
+        "unexpected_differences": 0
+      },
+      "compute_roof_ops_s": 1.5780645830696454e+16,
+      "context_tokens": 200000,
+      "declared_asymmetries": [
+        "limits.max_expert_ids",
+        "limits.max_instructions",
+        "limits.max_events",
+        "limits.max_loop_trip",
+        "features",
+        "memory.rom.bytes",
+        "memory.hbm.bytes",
+        "memory.sram.bytes"
+      ],
+      "emitted": {
+        "artifact": "results/derived/deepseek-v4-flash-0731__rom-n5-native-sramkv-wafer-tensor-x1-romfill__b200-sxm-x29-tensor_machine_pair.json",
+        "hbm_capability": "configs/hardware/abi3_capability/n5_design_target/hbm_sram_single_chip_n5_design_target_deepseek-v4-flash-0731__rom-n5-native-sramkv-wafer-tensor-x1-romfill__b200-sxm-x29-tensor_v1.json",
+        "hbm_cost_table": "configs/hardware/n5_design_target/abi3_cost_n5_design_target_deepseek-v4-flash-0731__rom-n5-native-sramkv-wafer-tensor-x1-romfill__b200-sxm-x29-tensor_hbm_v1.json",
+        "rom_capability": "configs/hardware/abi3_capability/n5_design_target/rom_deepseek_v4_n5_design_target_deepseek-v4-flash-0731__rom-n5-native-sramkv-wafer-tensor-x1-romfill__b200-sxm-x29-tensor_v1.json",
+        "rom_cost_table": "configs/hardware/n5_design_target/abi3_cost_n5_design_target_deepseek-v4-flash-0731__rom-n5-native-sramkv-wafer-tensor-x1-romfill__b200-sxm-x29-tensor_rom_v1.json"
+      },
+      "hbm_binding_constraint": "link_latency",
+      "hbm_design": "DSV4-Flash/b200_sxm-x29-tensor",
+      "hbm_devices": 29,
+      "hbm_per_user_tokens_s": 1300.7208717198528,
+      "hbm_token_slots": 1.0,
+      "iso_area_ratio": 0.9962284482758621,
+      "model": "DeepSeek-V4-Flash-0731",
+      "pair_id": "deepseek-v4-flash-0731__rom-n5-native-sramkv-wafer-tensor-x1-romfill__b200-sxm-x29-tensor",
+      "published_ratio": 3.729170813151439,
+      "residual_kinds": [
+        "combination_rule",
+        "granularity",
+        "integer_quantisation",
+        "interleave_granularity",
+        "shared_roof_handicap",
+        "slot_serialisation",
+        "structurally_inexpressible",
+        "sweep_versus_touched",
+        "work_disagreement"
+      ],
+      "rom_arrays": 12288,
+      "rom_binding_constraint": "link_latency",
+      "rom_design": "DSV4-Flash/ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill",
+      "rom_devices": 1,
+      "rom_execution_format": "w4a8",
+      "rom_kv_store": "sram",
+      "rom_parallelism": "tensor",
+      "rom_per_user_tokens_s": 4850.610310874572,
+      "rom_token_slots": 1.0,
+      "rom_topology_kind": "wafer",
+      "shared_roof": {
+        "direction": "handicaps_the_gpu",
+        "gpu_memory_over_compute_x": 242.1944339663355,
+        "ratio": 5.151297346771742
+      },
+      "tensor_lanes": 64,
+      "why_this_cell": [
+        "published batch-1 frontier entry for DeepSeek-V4-Flash-0731",
+        "best WAFER topology the study names for DeepSeek-V4-Flash-0731 at batch 1",
+        "best topology overall the study names for DeepSeek-V4-Flash-0731 at batch 1"
+      ]
+    },
+    {
+      "base_capabilities": {
+        "hbm": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+        "rom": "configs/hardware/abi3_capability/rom_deepseek_v4_pro_array_32.json"
+      },
+      "batch_size": 1,
+      "binding_constraints_agree": true,
+      "comparability": {
+        "allowlist": [
+          "hbm.channels",
+          "rom.arrays",
+          "rom.bytes_per_cycle_per_array",
+          "rom.interleave_bytes",
+          "rom.transaction_bytes"
+        ],
+        "allowlist_unused": [],
+        "parameters_compared": 114,
+        "permitted_differences": [
+          "hbm.channels",
+          "rom.arrays",
+          "rom.bytes_per_cycle_per_array",
+          "rom.interleave_bytes",
+          "rom.transaction_bytes"
+        ],
+        "unexpected_differences": 0
+      },
+      "compute_roof_ops_s": 1.0246249568110052e+16,
+      "context_tokens": 1000000,
+      "declared_asymmetries": [
+        "limits.max_expert_ids",
+        "limits.max_instructions",
+        "limits.max_loop_trip",
+        "memory.rom.bytes",
+        "memory.hbm.bytes",
+        "memory.sram.bytes"
+      ],
+      "emitted": {
+        "artifact": "results/derived/deepseek-v4-pro-0813__rom-n5-native-hbmkv-array-tensor-x170__b200-sxm-x87-tensor_machine_pair.json",
+        "hbm_capability": "configs/hardware/abi3_capability/n5_design_target/hbm_sram_single_chip_n5_design_target_deepseek-v4-pro-0813__rom-n5-native-hbmkv-array-tensor-x170__b200-sxm-x87-tensor_v1.json",
+        "hbm_cost_table": "configs/hardware/n5_design_target/abi3_cost_n5_design_target_deepseek-v4-pro-0813__rom-n5-native-hbmkv-array-tensor-x170__b200-sxm-x87-tensor_hbm_v1.json",
+        "rom_capability": "configs/hardware/abi3_capability/n5_design_target/rom_deepseek_v4_pro_array_32_n5_design_target_deepseek-v4-pro-0813__rom-n5-native-hbmkv-array-tensor-x170__b200-sxm-x87-tensor_v1.json",
+        "rom_cost_table": "configs/hardware/n5_design_target/abi3_cost_n5_design_target_deepseek-v4-pro-0813__rom-n5-native-hbmkv-array-tensor-x170__b200-sxm-x87-tensor_rom_v1.json"
+      },
+      "hbm_binding_constraint": "link_latency",
+      "hbm_design": "DSV4-Pro/b200_sxm-x87-tensor",
+      "hbm_devices": 87,
+      "hbm_per_user_tokens_s": 746.7912517268198,
+      "hbm_token_slots": 1.0,
+      "iso_area_ratio": 0.9953304597701149,
+      "model": "DeepSeek-V4-Pro-0813",
+      "pair_id": "deepseek-v4-pro-0813__rom-n5-native-hbmkv-array-tensor-x170__b200-sxm-x87-tensor",
+      "published_ratio": 1.4105891097492045,
+      "residual_kinds": [
+        "combination_rule",
+        "granularity",
+        "integer_quantisation",
+        "interleave_granularity",
+        "shared_roof_handicap",
+        "slot_serialisation",
+        "structurally_inexpressible",
+        "sweep_versus_touched",
+        "work_disagreement"
+      ],
+      "rom_arrays": 80,
+      "rom_binding_constraint": "link_latency",
+      "rom_design": "DSV4-Pro/ROM-N5-native-HBMKV-array-tensor-x170",
+      "rom_devices": 170,
+      "rom_execution_format": "w4a8",
+      "rom_kv_store": "hbm",
+      "rom_parallelism": "tensor",
+      "rom_per_user_tokens_s": 1053.4156069418289,
+      "rom_token_slots": 1.0,
+      "rom_topology_kind": "array",
+      "shared_roof": {
+        "direction": "handicaps_the_gpu",
+        "gpu_memory_over_compute_x": 344.21855820135056,
+        "ratio": 25.59993338234503
+      },
+      "tensor_lanes": 64,
+      "why_this_cell": [
+        "Pro's array rung nearest the wafer headline's area, priced at the same iso-area GPU comparator; the study says array and wafer disagree by 1.6x here, so which one is 'the' Pro cell has to be stated"
+      ]
+    },
+    {
+      "base_capabilities": {
+        "hbm": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+        "rom": "configs/hardware/abi3_capability/rom_deepseek_v4_pro_array_32.json"
+      },
+      "batch_size": 1,
+      "binding_constraints_agree": true,
+      "comparability": {
+        "allowlist": [
+          "hbm.channels",
+          "rom.arrays",
+          "rom.bytes_per_cycle_per_array",
+          "rom.interleave_bytes",
+          "rom.transaction_bytes"
+        ],
+        "allowlist_unused": [],
+        "parameters_compared": 114,
+        "permitted_differences": [
+          "hbm.channels",
+          "rom.arrays",
+          "rom.bytes_per_cycle_per_array",
+          "rom.interleave_bytes",
+          "rom.transaction_bytes"
+        ],
+        "unexpected_differences": 0
+      },
+      "compute_roof_ops_s": 5929911285162694.0,
+      "context_tokens": 1000000,
+      "declared_asymmetries": [
+        "limits.max_expert_ids",
+        "limits.max_instructions",
+        "limits.max_loop_trip",
+        "memory.rom.bytes",
+        "memory.hbm.bytes",
+        "memory.sram.bytes"
+      ],
+      "emitted": {
+        "artifact": "results/derived/deepseek-v4-pro-0813__rom-n5-native-hbmkv-wafer-hybrid-x3__b200-sxm-x87-tensor_machine_pair.json",
+        "hbm_capability": "configs/hardware/abi3_capability/n5_design_target/hbm_sram_single_chip_n5_design_target_deepseek-v4-pro-0813__rom-n5-native-hbmkv-wafer-hybrid-x3__b200-sxm-x87-tensor_v1.json",
+        "hbm_cost_table": "configs/hardware/n5_design_target/abi3_cost_n5_design_target_deepseek-v4-pro-0813__rom-n5-native-hbmkv-wafer-hybrid-x3__b200-sxm-x87-tensor_hbm_v1.json",
+        "rom_capability": "configs/hardware/abi3_capability/n5_design_target/rom_deepseek_v4_pro_array_32_n5_design_target_deepseek-v4-pro-0813__rom-n5-native-hbmkv-wafer-hybrid-x3__b200-sxm-x87-tensor_v1.json",
+        "rom_cost_table": "configs/hardware/n5_design_target/abi3_cost_n5_design_target_deepseek-v4-pro-0813__rom-n5-native-hbmkv-wafer-hybrid-x3__b200-sxm-x87-tensor_rom_v1.json"
+      },
+      "hbm_binding_constraint": "link_latency",
+      "hbm_design": "DSV4-Pro/b200_sxm-x87-tensor",
+      "hbm_devices": 87,
+      "hbm_per_user_tokens_s": 746.7912517268198,
+      "hbm_token_slots": 1.0,
+      "iso_area_ratio": 0.9962284482758621,
+      "model": "DeepSeek-V4-Pro-0813",
+      "pair_id": "deepseek-v4-pro-0813__rom-n5-native-hbmkv-wafer-hybrid-x3__b200-sxm-x87-tensor",
+      "published_ratio": 3.5468723121957404,
+      "residual_kinds": [
+        "combination_rule",
+        "granularity",
+        "integer_quantisation",
+        "interleave_granularity",
+        "shared_roof_handicap",
+        "slot_serialisation",
+        "structurally_inexpressible",
+        "sweep_versus_touched",
+        "work_disagreement"
+      ],
+      "rom_arrays": 80,
+      "rom_binding_constraint": "link_latency",
+      "rom_design": "DSV4-Pro/ROM-N5-native-HBMKV-wafer-hybrid-x3",
+      "rom_devices": 3,
+      "rom_execution_format": "w4a8",
+      "rom_kv_store": "hbm",
+      "rom_parallelism": "hybrid",
+      "rom_per_user_tokens_s": 2648.7732137398566,
+      "rom_token_slots": 3.0,
+      "rom_topology_kind": "wafer",
+      "shared_roof": {
+        "direction": "handicaps_the_gpu",
+        "gpu_memory_over_compute_x": 344.21855820135056,
+        "ratio": 44.23393432863174
+      },
+      "tensor_lanes": 64,
+      "why_this_cell": [
+        "design_selection batch-1 recommendation for DeepSeek-V4-Pro-0813 -- the study's own headline pair",
+        "published batch-1 frontier entry for DeepSeek-V4-Pro-0813"
+      ]
+    },
+    {
+      "base_capabilities": {
+        "hbm": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+        "rom": "configs/hardware/abi3_capability/rom_deepseek_v4_pro_array_32.json"
+      },
+      "batch_size": 1,
+      "binding_constraints_agree": true,
+      "comparability": {
+        "allowlist": [
+          "hbm.channels",
+          "rom.arrays",
+          "rom.bytes_per_cycle_per_array",
+          "rom.interleave_bytes",
+          "rom.transaction_bytes",
+          "sram.bytes_per_cycle_per_port",
+          "sram.interleave_bytes",
+          "sram.transaction_bytes"
+        ],
+        "allowlist_unused": [],
+        "parameters_compared": 114,
+        "permitted_differences": [
+          "hbm.channels",
+          "rom.arrays",
+          "rom.bytes_per_cycle_per_array",
+          "rom.interleave_bytes",
+          "rom.transaction_bytes",
+          "sram.bytes_per_cycle_per_port",
+          "sram.interleave_bytes",
+          "sram.transaction_bytes"
+        ],
+        "unexpected_differences": 0
+      },
+      "compute_roof_ops_s": 6045728211463091.0,
+      "context_tokens": 1000000,
+      "declared_asymmetries": [
+        "limits.max_expert_ids",
+        "limits.max_instructions",
+        "limits.max_loop_trip",
+        "memory.rom.bytes",
+        "memory.hbm.bytes",
+        "memory.sram.bytes"
+      ],
+      "emitted": {
+        "artifact": "results/derived/deepseek-v4-pro-0813__rom-n5-native-sramkv-array-tensor-x155__b200-sxm-x79-tensor_machine_pair.json",
+        "hbm_capability": "configs/hardware/abi3_capability/n5_design_target/hbm_sram_single_chip_n5_design_target_deepseek-v4-pro-0813__rom-n5-native-sramkv-array-tensor-x155__b200-sxm-x79-tensor_v1.json",
+        "hbm_cost_table": "configs/hardware/n5_design_target/abi3_cost_n5_design_target_deepseek-v4-pro-0813__rom-n5-native-sramkv-array-tensor-x155__b200-sxm-x79-tensor_hbm_v1.json",
+        "rom_capability": "configs/hardware/abi3_capability/n5_design_target/rom_deepseek_v4_pro_array_32_n5_design_target_deepseek-v4-pro-0813__rom-n5-native-sramkv-array-tensor-x155__b200-sxm-x79-tensor_v1.json",
+        "rom_cost_table": "configs/hardware/n5_design_target/abi3_cost_n5_design_target_deepseek-v4-pro-0813__rom-n5-native-sramkv-array-tensor-x155__b200-sxm-x79-tensor_rom_v1.json"
+      },
+      "hbm_binding_constraint": "link_latency",
+      "hbm_design": "DSV4-Pro/b200_sxm-x79-tensor",
+      "hbm_devices": 79,
+      "hbm_per_user_tokens_s": 741.8098372081337,
+      "hbm_token_slots": 1.0,
+      "iso_area_ratio": 0.9994066455696202,
+      "model": "DeepSeek-V4-Pro-0813",
+      "pair_id": "deepseek-v4-pro-0813__rom-n5-native-sramkv-array-tensor-x155__b200-sxm-x79-tensor",
+      "published_ratio": 1.3975507337316178,
+      "residual_kinds": [
+        "combination_rule",
+        "granularity",
+        "integer_quantisation",
+        "interleave_granularity",
+        "shared_roof_handicap",
+        "slot_serialisation",
+        "structurally_inexpressible",
+        "sweep_versus_touched",
+        "work_disagreement"
+      ],
+      "rom_arrays": 80,
+      "rom_binding_constraint": "link_latency",
+      "rom_design": "DSV4-Pro/ROM-N5-native-SRAMKV-array-tensor-x155",
+      "rom_devices": 155,
+      "rom_execution_format": "w4a8",
+      "rom_kv_store": "sram",
+      "rom_parallelism": "tensor",
+      "rom_per_user_tokens_s": 1036.716882279559,
+      "rom_token_slots": 1.0,
+      "rom_topology_kind": "array",
+      "shared_roof": {
+        "direction": "handicaps_the_gpu",
+        "gpu_memory_over_compute_x": 319.5253390731855,
+        "ratio": 39.39698474166756
+      },
+      "tensor_lanes": 64,
+      "why_this_cell": [
+        "best ARRAY topology the study names for DeepSeek-V4-Pro-0813 at batch 1"
+      ]
+    },
+    {
+      "base_capabilities": {
+        "hbm": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+        "rom": "configs/hardware/abi3_capability/rom_deepseek_v4_pro_array_32.json"
+      },
+      "batch_size": 1,
+      "binding_constraints_agree": true,
+      "comparability": {
+        "allowlist": [
+          "hbm.channels",
+          "rom.arrays",
+          "rom.bytes_per_cycle_per_array",
+          "rom.interleave_bytes",
+          "rom.transaction_bytes",
+          "sram.bytes_per_cycle_per_port",
+          "sram.interleave_bytes",
+          "sram.transaction_bytes"
+        ],
+        "allowlist_unused": [],
+        "parameters_compared": 114,
+        "permitted_differences": [
+          "hbm.channels",
+          "rom.arrays",
+          "rom.bytes_per_cycle_per_array",
+          "rom.interleave_bytes",
+          "rom.transaction_bytes",
+          "sram.bytes_per_cycle_per_port",
+          "sram.interleave_bytes",
+          "sram.transaction_bytes"
+        ],
+        "unexpected_differences": 0
+      },
+      "compute_roof_ops_s": 5497538594853625.0,
+      "context_tokens": 1000000,
+      "declared_asymmetries": [
+        "limits.max_expert_ids",
+        "limits.max_instructions",
+        "limits.max_loop_trip",
+        "memory.rom.bytes",
+        "memory.hbm.bytes",
+        "memory.sram.bytes"
+      ],
+      "emitted": {
+        "artifact": "results/derived/deepseek-v4-pro-0813__rom-n5-native-sramkv-wafer-hybrid-x3__b200-sxm-x87-tensor_machine_pair.json",
+        "hbm_capability": "configs/hardware/abi3_capability/n5_design_target/hbm_sram_single_chip_n5_design_target_deepseek-v4-pro-0813__rom-n5-native-sramkv-wafer-hybrid-x3__b200-sxm-x87-tensor_v1.json",
+        "hbm_cost_table": "configs/hardware/n5_design_target/abi3_cost_n5_design_target_deepseek-v4-pro-0813__rom-n5-native-sramkv-wafer-hybrid-x3__b200-sxm-x87-tensor_hbm_v1.json",
+        "rom_capability": "configs/hardware/abi3_capability/n5_design_target/rom_deepseek_v4_pro_array_32_n5_design_target_deepseek-v4-pro-0813__rom-n5-native-sramkv-wafer-hybrid-x3__b200-sxm-x87-tensor_v1.json",
+        "rom_cost_table": "configs/hardware/n5_design_target/abi3_cost_n5_design_target_deepseek-v4-pro-0813__rom-n5-native-sramkv-wafer-hybrid-x3__b200-sxm-x87-tensor_rom_v1.json"
+      },
+      "hbm_binding_constraint": "link_latency",
+      "hbm_design": "DSV4-Pro/b200_sxm-x87-tensor",
+      "hbm_devices": 87,
+      "hbm_per_user_tokens_s": 746.7912517268198,
+      "hbm_token_slots": 1.0,
+      "iso_area_ratio": 0.9962284482758621,
+      "model": "DeepSeek-V4-Pro-0813",
+      "pair_id": "deepseek-v4-pro-0813__rom-n5-native-sramkv-wafer-hybrid-x3__b200-sxm-x87-tensor",
+      "published_ratio": 3.5468723121957404,
+      "residual_kinds": [
+        "combination_rule",
+        "granularity",
+        "integer_quantisation",
+        "interleave_granularity",
+        "shared_roof_handicap",
+        "slot_serialisation",
+        "structurally_inexpressible",
+        "sweep_versus_touched",
+        "work_disagreement"
+      ],
+      "rom_arrays": 80,
+      "rom_binding_constraint": "link_latency",
+      "rom_design": "DSV4-Pro/ROM-N5-native-SRAMKV-wafer-hybrid-x3",
+      "rom_devices": 3,
+      "rom_execution_format": "w4a8",
+      "rom_kv_store": "sram",
+      "rom_parallelism": "hybrid",
+      "rom_per_user_tokens_s": 2648.7732137398566,
+      "rom_token_slots": 3.0,
+      "rom_topology_kind": "wafer",
+      "shared_roof": {
+        "direction": "handicaps_the_gpu",
+        "gpu_memory_over_compute_x": 344.21855820135056,
+        "ratio": 47.7128630998693
+      },
+      "tensor_lanes": 64,
+      "why_this_cell": [
+        "best WAFER topology the study names for DeepSeek-V4-Pro-0813 at batch 1",
+        "best topology overall the study names for DeepSeek-V4-Pro-0813 at batch 1"
+      ]
+    },
+    {
+      "base_capabilities": {
+        "hbm": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+        "rom": "configs/hardware/abi3_capability/rom_qwen3.json"
+      },
+      "batch_size": 1,
+      "binding_constraints_agree": false,
+      "comparability": {
+        "allowlist": [
+          "hbm.channels",
+          "rom.arrays",
+          "rom.bytes_per_cycle_per_array",
+          "rom.interleave_bytes",
+          "rom.transaction_bytes"
+        ],
+        "allowlist_unused": [],
+        "parameters_compared": 114,
+        "permitted_differences": [
+          "hbm.channels",
+          "rom.arrays",
+          "rom.bytes_per_cycle_per_array",
+          "rom.interleave_bytes",
+          "rom.transaction_bytes"
+        ],
+        "unexpected_differences": 0
+      },
+      "compute_roof_ops_s": 271740806767821.84,
+      "context_tokens": 8192,
+      "declared_asymmetries": [
+        "limits.max_expert_ids",
+        "limits.max_instructions",
+        "limits.max_descriptors",
+        "limits.max_events",
+        "limits.max_loop_trip",
+        "features",
+        "memory.rom.bytes",
+        "memory.hbm.bytes",
+        "memory.sram.bytes"
+      ],
+      "emitted": {
+        "artifact": "results/derived/qwen3_n5_design_target_machine_pair.json",
+        "hbm_capability": "configs/hardware/abi3_capability/n5_design_target/hbm_sram_single_chip_n5_v1.json",
+        "hbm_cost_table": "configs/hardware/abi3_cost_n5_design_target_hbm_v1.json",
+        "rom_capability": "configs/hardware/abi3_capability/n5_design_target/rom_qwen3_n5_v1.json",
+        "rom_cost_table": "configs/hardware/abi3_cost_n5_design_target_rom_v1.json"
+      },
+      "hbm_binding_constraint": "weight_read",
+      "hbm_design": "Qwen3-8B/b200_sxm-x2-tensor",
+      "hbm_devices": 2,
+      "hbm_per_user_tokens_s": 693.5852718493809,
+      "hbm_token_slots": 1.0,
+      "iso_area_ratio": 1.01875,
+      "model": "Qwen3-8B",
+      "pair_id": "qwen3-8b__rom-n5-native-hbmkv-array-tensor-x4__b200-sxm-x2-tensor",
+      "published_ratio": 5.6392842689793605,
+      "residual_kinds": [
+        "combination_rule",
+        "granularity",
+        "integer_quantisation",
+        "interleave_granularity",
+        "shared_roof_handicap",
+        "slot_serialisation",
+        "structurally_inexpressible",
+        "sweep_versus_touched",
+        "work_disagreement"
+      ],
+      "rom_arrays": 16,
+      "rom_binding_constraint": "link_latency",
+      "rom_design": "Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4",
+      "rom_devices": 4,
+      "rom_execution_format": "bf16",
+      "rom_kv_store": "hbm",
+      "rom_parallelism": "tensor",
+      "rom_per_user_tokens_s": 3911.324512735987,
+      "rom_token_slots": 1.0,
+      "rom_topology_kind": "array",
+      "shared_roof": {
+        "direction": "handicaps_the_gpu",
+        "gpu_memory_over_compute_x": 171.875,
+        "ratio": 9.107943813954543
+      },
+      "tensor_lanes": 1024,
+      "why_this_cell": [
+        "the pair this generator was published with: array x4, KV in HBM, one token slot.  rom_qwen3 (SINGLE_CHIP) against hbm_sram_single_chip"
+      ]
+    },
+    {
+      "base_capabilities": {
+        "hbm": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+        "rom": "configs/hardware/abi3_capability/rom_qwen3.json"
+      },
+      "batch_size": 1,
+      "binding_constraints_agree": false,
+      "comparability": {
+        "allowlist": [
+          "hbm.channels",
+          "rom.arrays",
+          "rom.bytes_per_cycle_per_array",
+          "rom.interleave_bytes",
+          "rom.transaction_bytes"
+        ],
+        "allowlist_unused": [],
+        "parameters_compared": 114,
+        "permitted_differences": [
+          "hbm.channels",
+          "rom.arrays",
+          "rom.bytes_per_cycle_per_array",
+          "rom.interleave_bytes",
+          "rom.transaction_bytes"
+        ],
+        "unexpected_differences": 0
+      },
+      "compute_roof_ops_s": 1.336036253073877e+16,
+      "context_tokens": 8192,
+      "declared_asymmetries": [
+        "limits.max_expert_ids",
+        "limits.max_instructions",
+        "limits.max_descriptors",
+        "limits.max_events",
+        "limits.max_loop_trip",
+        "features",
+        "memory.rom.bytes",
+        "memory.hbm.bytes",
+        "memory.sram.bytes"
+      ],
+      "emitted": {
+        "artifact": "results/derived/qwen3-8b__rom-n5-native-hbmkv-wafer-tensor-x1__b200-sxm-x29-hybrid_machine_pair.json",
+        "hbm_capability": "configs/hardware/abi3_capability/n5_design_target/hbm_sram_single_chip_n5_design_target_qwen3-8b__rom-n5-native-hbmkv-wafer-tensor-x1__b200-sxm-x29-hybrid_v1.json",
+        "hbm_cost_table": "configs/hardware/n5_design_target/abi3_cost_n5_design_target_qwen3-8b__rom-n5-native-hbmkv-wafer-tensor-x1__b200-sxm-x29-hybrid_hbm_v1.json",
+        "rom_capability": "configs/hardware/abi3_capability/n5_design_target/rom_qwen3_n5_design_target_qwen3-8b__rom-n5-native-hbmkv-wafer-tensor-x1__b200-sxm-x29-hybrid_v1.json",
+        "rom_cost_table": "configs/hardware/n5_design_target/abi3_cost_n5_design_target_qwen3-8b__rom-n5-native-hbmkv-wafer-tensor-x1__b200-sxm-x29-hybrid_rom_v1.json"
+      },
+      "hbm_binding_constraint": "weight_read",
+      "hbm_design": "Qwen3-8B/b200_sxm-x29-hybrid",
+      "hbm_devices": 29,
+      "hbm_per_user_tokens_s": 1866.2534448824474,
+      "hbm_token_slots": 4.0,
+      "iso_area_ratio": 0.9962284482758621,
+      "model": "Qwen3-8B",
+      "pair_id": "qwen3-8b__rom-n5-native-hbmkv-wafer-tensor-x1__b200-sxm-x29-hybrid",
+      "published_ratio": 2.9787648811712577,
+      "residual_kinds": [
+        "combination_rule",
+        "granularity",
+        "integer_quantisation",
+        "interleave_granularity",
+        "shared_roof_handicap",
+        "slot_serialisation",
+        "structurally_inexpressible",
+        "sweep_versus_touched",
+        "work_disagreement"
+      ],
+      "rom_arrays": 16,
+      "rom_binding_constraint": "link_latency",
+      "rom_design": "Qwen3-8B/ROM-N5-native-HBMKV-wafer-tensor-x1",
+      "rom_devices": 1,
+      "rom_execution_format": "bf16",
+      "rom_kv_store": "hbm",
+      "rom_parallelism": "tensor",
+      "rom_per_user_tokens_s": 5559.130220980714,
+      "rom_token_slots": 1.0,
+      "rom_topology_kind": "wafer",
+      "shared_roof": {
+        "direction": "credits_the_gpu",
+        "gpu_memory_over_compute_x": 171.87500000000003,
+        "ratio": 0.6715293076335328
+      },
+      "tensor_lanes": 1024,
+      "why_this_cell": [
+        "Qwen's wafer rung with KV in HBM and one token slot"
+      ]
+    },
+    {
+      "base_capabilities": {
+        "hbm": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+        "rom": "configs/hardware/abi3_capability/rom_qwen3.json"
+      },
+      "batch_size": 1,
+      "binding_constraints_agree": true,
+      "comparability": {
+        "allowlist": [
+          "hbm.channels",
+          "rom.arrays",
+          "rom.bytes_per_cycle_per_array",
+          "rom.interleave_bytes",
+          "rom.transaction_bytes",
+          "sram.bytes_per_cycle_per_port",
+          "sram.interleave_bytes",
+          "sram.transaction_bytes"
+        ],
+        "allowlist_unused": [],
+        "parameters_compared": 114,
+        "permitted_differences": [
+          "hbm.channels",
+          "rom.arrays",
+          "rom.bytes_per_cycle_per_array",
+          "rom.interleave_bytes",
+          "rom.transaction_bytes",
+          "sram.bytes_per_cycle_per_port",
+          "sram.interleave_bytes",
+          "sram.transaction_bytes"
+        ],
+        "unexpected_differences": 0
+      },
+      "compute_roof_ops_s": 95429935481236.78,
+      "context_tokens": 8192,
+      "declared_asymmetries": [
+        "limits.max_expert_ids",
+        "limits.max_instructions",
+        "limits.max_descriptors",
+        "limits.max_events",
+        "limits.max_loop_trip",
+        "features",
+        "memory.rom.bytes",
+        "memory.hbm.bytes",
+        "memory.sram.bytes"
+      ],
+      "emitted": {
+        "artifact": "results/derived/qwen3-8b__rom-n5-native-sramkv-array-pipeline-x5-romfill__b200-sxm-x3-tensor_machine_pair.json",
+        "hbm_capability": "configs/hardware/abi3_capability/n5_design_target/hbm_sram_single_chip_n5_design_target_qwen3-8b__rom-n5-native-sramkv-array-pipeline-x5-romfill__b200-sxm-x3-tensor_v1.json",
+        "hbm_cost_table": "configs/hardware/n5_design_target/abi3_cost_n5_design_target_qwen3-8b__rom-n5-native-sramkv-array-pipeline-x5-romfill__b200-sxm-x3-tensor_hbm_v1.json",
+        "rom_capability": "configs/hardware/abi3_capability/n5_design_target/rom_qwen3_n5_design_target_qwen3-8b__rom-n5-native-sramkv-array-pipeline-x5-romfill__b200-sxm-x3-tensor_v1.json",
+        "rom_cost_table": "configs/hardware/n5_design_target/abi3_cost_n5_design_target_qwen3-8b__rom-n5-native-sramkv-array-pipeline-x5-romfill__b200-sxm-x3-tensor_rom_v1.json"
+      },
+      "hbm_binding_constraint": "weight_read",
+      "hbm_design": "Qwen3-8B/b200_sxm-x3-tensor",
+      "hbm_devices": 3,
+      "hbm_per_user_tokens_s": 978.7441385422231,
+      "hbm_token_slots": 1.0,
+      "iso_area_ratio": 0.8489583333333334,
+      "model": "Qwen3-8B",
+      "pair_id": "qwen3-8b__rom-n5-native-sramkv-array-pipeline-x5-romfill__b200-sxm-x3-tensor",
+      "published_ratio": 5.04830632979099,
+      "residual_kinds": [
+        "combination_rule",
+        "granularity",
+        "integer_quantisation",
+        "interleave_granularity",
+        "shared_roof_handicap",
+        "slot_serialisation",
+        "structurally_inexpressible",
+        "sweep_versus_touched",
+        "work_disagreement"
+      ],
+      "rom_arrays": 16,
+      "rom_binding_constraint": "weight_read",
+      "rom_design": "Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill",
+      "rom_devices": 5,
+      "rom_execution_format": "bf16",
+      "rom_kv_store": "sram",
+      "rom_parallelism": "pipeline",
+      "rom_per_user_tokens_s": 4941.000229848535,
+      "rom_token_slots": 5.0,
+      "rom_topology_kind": "array",
+      "shared_roof": {
+        "direction": "handicaps_the_gpu",
+        "gpu_memory_over_compute_x": 171.87500000000006,
+        "ratio": 38.90288703726458
+      },
+      "tensor_lanes": 1024,
+      "why_this_cell": [
+        "design_selection batch-1 recommendation for Qwen3-8B -- the study's own headline pair",
+        "published batch-1 frontier entry for Qwen3-8B",
+        "best ARRAY topology the study names for Qwen3-8B at batch 1"
+      ]
+    },
+    {
+      "base_capabilities": {
+        "hbm": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+        "rom": "configs/hardware/abi3_capability/rom_qwen3.json"
+      },
+      "batch_size": 1,
+      "binding_constraints_agree": true,
+      "comparability": {
+        "allowlist": [
+          "hbm.channels",
+          "rom.arrays",
+          "rom.bytes_per_cycle_per_array",
+          "rom.interleave_bytes",
+          "rom.transaction_bytes",
+          "sram.bytes_per_cycle_per_port",
+          "sram.interleave_bytes",
+          "sram.transaction_bytes"
+        ],
+        "allowlist_unused": [],
+        "parameters_compared": 114,
+        "permitted_differences": [
+          "hbm.channels",
+          "rom.arrays",
+          "rom.bytes_per_cycle_per_array",
+          "rom.interleave_bytes",
+          "rom.transaction_bytes",
+          "sram.bytes_per_cycle_per_port",
+          "sram.interleave_bytes",
+          "sram.transaction_bytes"
+        ],
+        "unexpected_differences": 0
+      },
+      "compute_roof_ops_s": 97069169662967.53,
+      "context_tokens": 8192,
+      "declared_asymmetries": [
+        "limits.max_expert_ids",
+        "limits.max_instructions",
+        "limits.max_descriptors",
+        "limits.max_events",
+        "limits.max_loop_trip",
+        "features",
+        "memory.rom.bytes",
+        "memory.hbm.bytes",
+        "memory.sram.bytes"
+      ],
+      "emitted": {
+        "artifact": "results/derived/qwen3-8b__rom-n5-native-sramkv-array-pipeline-x6-romfill__b200-sxm-x3-tensor_machine_pair.json",
+        "hbm_capability": "configs/hardware/abi3_capability/n5_design_target/hbm_sram_single_chip_n5_design_target_qwen3-8b__rom-n5-native-sramkv-array-pipeline-x6-romfill__b200-sxm-x3-tensor_v1.json",
+        "hbm_cost_table": "configs/hardware/n5_design_target/abi3_cost_n5_design_target_qwen3-8b__rom-n5-native-sramkv-array-pipeline-x6-romfill__b200-sxm-x3-tensor_hbm_v1.json",
+        "rom_capability": "configs/hardware/abi3_capability/n5_design_target/rom_qwen3_n5_design_target_qwen3-8b__rom-n5-native-sramkv-array-pipeline-x6-romfill__b200-sxm-x3-tensor_v1.json",
+        "rom_cost_table": "configs/hardware/n5_design_target/abi3_cost_n5_design_target_qwen3-8b__rom-n5-native-sramkv-array-pipeline-x6-romfill__b200-sxm-x3-tensor_rom_v1.json"
+      },
+      "hbm_binding_constraint": "weight_read",
+      "hbm_design": "Qwen3-8B/b200_sxm-x3-tensor",
+      "hbm_devices": 3,
+      "hbm_per_user_tokens_s": 978.7441385422231,
+      "hbm_token_slots": 1.0,
+      "iso_area_ratio": 1.01875,
+      "model": "Qwen3-8B",
+      "pair_id": "qwen3-8b__rom-n5-native-sramkv-array-pipeline-x6-romfill__b200-sxm-x3-tensor",
+      "published_ratio": 5.098993350523259,
+      "residual_kinds": [
+        "combination_rule",
+        "granularity",
+        "integer_quantisation",
+        "interleave_granularity",
+        "shared_roof_handicap",
+        "slot_serialisation",
+        "structurally_inexpressible",
+        "sweep_versus_touched",
+        "work_disagreement"
+      ],
+      "rom_arrays": 16,
+      "rom_binding_constraint": "weight_read",
+      "rom_design": "Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x6-romfill",
+      "rom_devices": 6,
+      "rom_execution_format": "bf16",
+      "rom_kv_store": "sram",
+      "rom_parallelism": "pipeline",
+      "rom_per_user_tokens_s": 4990.609854290412,
+      "rom_token_slots": 6.0,
+      "rom_topology_kind": "array",
+      "shared_roof": {
+        "direction": "handicaps_the_gpu",
+        "gpu_memory_over_compute_x": 171.87500000000006,
+        "ratio": 38.245923117402974
+      },
+      "tensor_lanes": 1024,
+      "why_this_cell": [
+        "published batch-1 frontier entry for Qwen3-8B"
+      ]
+    },
+    {
+      "base_capabilities": {
+        "hbm": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+        "rom": "configs/hardware/abi3_capability/rom_qwen3.json"
+      },
+      "batch_size": 1,
+      "binding_constraints_agree": true,
+      "comparability": {
+        "allowlist": [
+          "hbm.channels",
+          "rom.arrays",
+          "rom.bytes_per_cycle_per_array",
+          "rom.interleave_bytes",
+          "rom.transaction_bytes",
+          "sram.bytes_per_cycle_per_port",
+          "sram.interleave_bytes",
+          "sram.transaction_bytes"
+        ],
+        "allowlist_unused": [],
+        "parameters_compared": 114,
+        "permitted_differences": [
+          "hbm.channels",
+          "rom.arrays",
+          "rom.bytes_per_cycle_per_array",
+          "rom.interleave_bytes",
+          "rom.transaction_bytes",
+          "sram.bytes_per_cycle_per_port",
+          "sram.interleave_bytes",
+          "sram.transaction_bytes"
+        ],
+        "unexpected_differences": 0
+      },
+      "compute_roof_ops_s": 98240051221346.62,
+      "context_tokens": 8192,
+      "declared_asymmetries": [
+        "limits.max_expert_ids",
+        "limits.max_instructions",
+        "limits.max_descriptors",
+        "limits.max_events",
+        "limits.max_loop_trip",
+        "features",
+        "memory.rom.bytes",
+        "memory.hbm.bytes",
+        "memory.sram.bytes"
+      ],
+      "emitted": {
+        "artifact": "results/derived/qwen3-8b__rom-n5-native-sramkv-array-pipeline-x7-romfill__b200-sxm-x4-tensor_machine_pair.json",
+        "hbm_capability": "configs/hardware/abi3_capability/n5_design_target/hbm_sram_single_chip_n5_design_target_qwen3-8b__rom-n5-native-sramkv-array-pipeline-x7-romfill__b200-sxm-x4-tensor_v1.json",
+        "hbm_cost_table": "configs/hardware/n5_design_target/abi3_cost_n5_design_target_qwen3-8b__rom-n5-native-sramkv-array-pipeline-x7-romfill__b200-sxm-x4-tensor_hbm_v1.json",
+        "rom_capability": "configs/hardware/abi3_capability/n5_design_target/rom_qwen3_n5_design_target_qwen3-8b__rom-n5-native-sramkv-array-pipeline-x7-romfill__b200-sxm-x4-tensor_v1.json",
+        "rom_cost_table": "configs/hardware/n5_design_target/abi3_cost_n5_design_target_qwen3-8b__rom-n5-native-sramkv-array-pipeline-x7-romfill__b200-sxm-x4-tensor_rom_v1.json"
+      },
+      "hbm_binding_constraint": "weight_read",
+      "hbm_design": "Qwen3-8B/b200_sxm-x4-tensor",
+      "hbm_devices": 4,
+      "hbm_per_user_tokens_s": 1232.0060368981908,
+      "hbm_token_slots": 1.0,
+      "iso_area_ratio": 0.89140625,
+      "model": "Qwen3-8B",
+      "pair_id": "qwen3-8b__rom-n5-native-sramkv-array-pipeline-x7-romfill__b200-sxm-x4-tensor",
+      "published_ratio": 4.071643546912829,
+      "residual_kinds": [
+        "combination_rule",
+        "granularity",
+        "integer_quantisation",
+        "interleave_granularity",
+        "shared_roof_handicap",
+        "slot_serialisation",
+        "structurally_inexpressible",
+        "sweep_versus_touched",
+        "work_disagreement"
+      ],
+      "rom_arrays": 16,
+      "rom_binding_constraint": "weight_read",
+      "rom_design": "Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x7-romfill",
+      "rom_devices": 7,
+      "rom_execution_format": "bf16",
+      "rom_kv_store": "sram",
+      "rom_parallelism": "pipeline",
+      "rom_per_user_tokens_s": 5016.2894298941665,
+      "rom_token_slots": 7.0,
+      "rom_topology_kind": "array",
+      "shared_roof": {
+        "direction": "handicaps_the_gpu",
+        "gpu_memory_over_compute_x": 171.875,
+        "ratio": 50.38678154642913
+      },
+      "tensor_lanes": 1024,
+      "why_this_cell": [
+        "published batch-1 frontier entry for Qwen3-8B"
+      ]
+    },
+    {
+      "base_capabilities": {
+        "hbm": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+        "rom": "configs/hardware/abi3_capability/rom_qwen3.json"
+      },
+      "batch_size": 1,
+      "binding_constraints_agree": true,
+      "comparability": {
+        "allowlist": [
+          "hbm.channels",
+          "rom.arrays",
+          "rom.bytes_per_cycle_per_array",
+          "rom.interleave_bytes",
+          "rom.transaction_bytes",
+          "sram.bytes_per_cycle_per_port",
+          "sram.interleave_bytes",
+          "sram.transaction_bytes"
+        ],
+        "allowlist_unused": [],
+        "parameters_compared": 114,
+        "permitted_differences": [
+          "hbm.channels",
+          "rom.arrays",
+          "rom.bytes_per_cycle_per_array",
+          "rom.interleave_bytes",
+          "rom.transaction_bytes",
+          "sram.bytes_per_cycle_per_port",
+          "sram.interleave_bytes",
+          "sram.transaction_bytes"
+        ],
+        "unexpected_differences": 0
+      },
+      "compute_roof_ops_s": 99118212390130.98,
+      "context_tokens": 8192,
+      "declared_asymmetries": [
+        "limits.max_expert_ids",
+        "limits.max_instructions",
+        "limits.max_descriptors",
+        "limits.max_events",
+        "limits.max_loop_trip",
+        "features",
+        "memory.rom.bytes",
+        "memory.hbm.bytes",
+        "memory.sram.bytes"
+      ],
+      "emitted": {
+        "artifact": "results/derived/qwen3-8b__rom-n5-native-sramkv-array-pipeline-x8-romfill__b200-sxm-x4-tensor_machine_pair.json",
+        "hbm_capability": "configs/hardware/abi3_capability/n5_design_target/hbm_sram_single_chip_n5_design_target_qwen3-8b__rom-n5-native-sramkv-array-pipeline-x8-romfill__b200-sxm-x4-tensor_v1.json",
+        "hbm_cost_table": "configs/hardware/n5_design_target/abi3_cost_n5_design_target_qwen3-8b__rom-n5-native-sramkv-array-pipeline-x8-romfill__b200-sxm-x4-tensor_hbm_v1.json",
+        "rom_capability": "configs/hardware/abi3_capability/n5_design_target/rom_qwen3_n5_design_target_qwen3-8b__rom-n5-native-sramkv-array-pipeline-x8-romfill__b200-sxm-x4-tensor_v1.json",
+        "rom_cost_table": "configs/hardware/n5_design_target/abi3_cost_n5_design_target_qwen3-8b__rom-n5-native-sramkv-array-pipeline-x8-romfill__b200-sxm-x4-tensor_rom_v1.json"
+      },
+      "hbm_binding_constraint": "weight_read",
+      "hbm_design": "Qwen3-8B/b200_sxm-x4-tensor",
+      "hbm_devices": 4,
+      "hbm_per_user_tokens_s": 1232.0060368981908,
+      "hbm_token_slots": 1.0,
+      "iso_area_ratio": 1.01875,
+      "model": "Qwen3-8B",
+      "pair_id": "qwen3-8b__rom-n5-native-sramkv-array-pipeline-x8-romfill__b200-sxm-x4-tensor",
+      "published_ratio": 4.080494401579304,
+      "residual_kinds": [
+        "combination_rule",
+        "granularity",
+        "integer_quantisation",
+        "interleave_granularity",
+        "shared_roof_handicap",
+        "slot_serialisation",
+        "structurally_inexpressible",
+        "sweep_versus_touched",
+        "work_disagreement"
+      ],
+      "rom_arrays": 16,
+      "rom_binding_constraint": "weight_read",
+      "rom_design": "Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x8-romfill",
+      "rom_devices": 8,
+      "rom_execution_format": "bf16",
+      "rom_kv_store": "sram",
+      "rom_parallelism": "pipeline",
+      "rom_per_user_tokens_s": 5027.193736274973,
+      "rom_token_slots": 8.0,
+      "rom_topology_kind": "array",
+      "shared_roof": {
+        "direction": "handicaps_the_gpu",
+        "gpu_memory_over_compute_x": 171.875,
+        "ratio": 49.94036797714546
+      },
+      "tensor_lanes": 1024,
+      "why_this_cell": [
+        "published batch-1 frontier entry for Qwen3-8B"
+      ]
+    },
+    {
+      "base_capabilities": {
+        "hbm": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+        "rom": "configs/hardware/abi3_capability/rom_qwen3.json"
+      },
+      "batch_size": 1,
+      "binding_constraints_agree": false,
+      "comparability": {
+        "allowlist": [
+          "hbm.channels",
+          "rom.arrays",
+          "rom.bytes_per_cycle_per_array",
+          "rom.interleave_bytes",
+          "rom.transaction_bytes",
+          "sram.bytes_per_cycle_per_port",
+          "sram.interleave_bytes",
+          "sram.transaction_bytes"
+        ],
+        "allowlist_unused": [],
+        "parameters_compared": 114,
+        "permitted_differences": [
+          "hbm.channels",
+          "rom.arrays",
+          "rom.bytes_per_cycle_per_array",
+          "rom.interleave_bytes",
+          "rom.transaction_bytes",
+          "sram.bytes_per_cycle_per_port",
+          "sram.interleave_bytes",
+          "sram.transaction_bytes"
+        ],
+        "unexpected_differences": 0
+      },
+      "compute_roof_ops_s": 5921240603901691.0,
+      "context_tokens": 8192,
+      "declared_asymmetries": [
+        "limits.max_expert_ids",
+        "limits.max_instructions",
+        "limits.max_descriptors",
+        "limits.max_events",
+        "limits.max_loop_trip",
+        "features",
+        "memory.rom.bytes",
+        "memory.hbm.bytes",
+        "memory.sram.bytes"
+      ],
+      "emitted": {
+        "artifact": "results/derived/qwen3-8b__rom-n5-native-sramkv-wafer-tensor-x1-romfill__b200-sxm-x29-hybrid_machine_pair.json",
+        "hbm_capability": "configs/hardware/abi3_capability/n5_design_target/hbm_sram_single_chip_n5_design_target_qwen3-8b__rom-n5-native-sramkv-wafer-tensor-x1-romfill__b200-sxm-x29-hybrid_v1.json",
+        "hbm_cost_table": "configs/hardware/n5_design_target/abi3_cost_n5_design_target_qwen3-8b__rom-n5-native-sramkv-wafer-tensor-x1-romfill__b200-sxm-x29-hybrid_hbm_v1.json",
+        "rom_capability": "configs/hardware/abi3_capability/n5_design_target/rom_qwen3_n5_design_target_qwen3-8b__rom-n5-native-sramkv-wafer-tensor-x1-romfill__b200-sxm-x29-hybrid_v1.json",
+        "rom_cost_table": "configs/hardware/n5_design_target/abi3_cost_n5_design_target_qwen3-8b__rom-n5-native-sramkv-wafer-tensor-x1-romfill__b200-sxm-x29-hybrid_rom_v1.json"
+      },
+      "hbm_binding_constraint": "weight_read",
+      "hbm_design": "Qwen3-8B/b200_sxm-x29-hybrid",
+      "hbm_devices": 29,
+      "hbm_per_user_tokens_s": 1866.2534448824474,
+      "hbm_token_slots": 4.0,
+      "iso_area_ratio": 0.9962284482758621,
+      "model": "Qwen3-8B",
+      "pair_id": "qwen3-8b__rom-n5-native-sramkv-wafer-tensor-x1-romfill__b200-sxm-x29-hybrid",
+      "published_ratio": 3.4638351957813565,
+      "residual_kinds": [
+        "combination_rule",
+        "granularity",
+        "integer_quantisation",
+        "interleave_granularity",
+        "shared_roof_handicap",
+        "slot_serialisation",
+        "structurally_inexpressible",
+        "sweep_versus_touched",
+        "work_disagreement"
+      ],
+      "rom_arrays": 16,
+      "rom_binding_constraint": "link_latency",
+      "rom_design": "Qwen3-8B/ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill",
+      "rom_devices": 1,
+      "rom_execution_format": "bf16",
+      "rom_kv_store": "sram",
+      "rom_parallelism": "tensor",
+      "rom_per_user_tokens_s": 6464.394366632023,
+      "rom_token_slots": 1.0,
+      "rom_topology_kind": "wafer",
+      "shared_roof": {
+        "direction": "handicaps_the_gpu",
+        "gpu_memory_over_compute_x": 171.87500000000003,
+        "ratio": 1.5152018977388204
+      },
+      "tensor_lanes": 1024,
+      "why_this_cell": [
+        "published batch-1 frontier entry for Qwen3-8B",
+        "best WAFER topology the study names for Qwen3-8B at batch 1",
+        "best topology overall the study names for Qwen3-8B at batch 1"
+      ]
+    }
+  ],
+  "generator": "tools/derive_cycle_machine.py --matrix",
+  "schema": "opentallas.derived_cycle_machine.matrix.v1",
+  "selection_rule": "Every cell is taken from the artifact: the batch-1 recommendation of each model, every entry of each published batch-1 frontier, the best array and best wafer topology the study names per model, and the ROM design points the repository already has a capability shape for.  The GPU side of each cell is the artifact's own iso-area comparator for that ROM design; no comparator is chosen here.",
+  "study_id": "n5_vs_b200"
+}

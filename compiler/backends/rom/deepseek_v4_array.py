@@ -91,6 +91,12 @@ from runtime.abi3.deployment import Deployment
 from runtime.abi3.descriptors import CollectiveOp
 
 TARGET_ID = "deepseek-v4-flash-rom-array-32"
+#: Pro on the same array is a different DEPLOYMENT of the same backend, so it
+#: carries its own target id.  A deployment binds the target it was admitted
+#: against; leaving Pro labelled with Flash's id would put a mislabelled
+#: artifact into evidence.  The default is unchanged, so every existing Flash
+#: build keeps its digest.
+PRO_TARGET_ID = "deepseek-v4-pro-rom-array-32"
 BACKEND = "rom.cluster_32"
 
 #: Exactly the HBM cluster's node count: the controlled comparison holds it
@@ -428,7 +434,73 @@ def deepseek_v4_array_rom_capability(
     return capability
 
 
-PROFILES = {"rom-deepseek-v4-array-32": deepseek_v4_array_rom_capability}
+#: DeepSeek-V4-Pro-0813's routed-expert geometry, read from the checkpoint the
+#: repository already has: ``compiler/models/deepseek-v4-pro-0813/config.json``
+#: declares n_routed_experts 384, num_experts_per_tok 6 and vocab_size 129280.
+#: Nothing here is a new model configuration -- it is the same array backend,
+#: the same node count and the same partition rule, given the expert count the
+#: checkpoint states.
+PRO_EXPERT_COUNT = 384
+PRO_EXPERTS_PER_TOKEN = 6
+PRO_VOCABULARY_SIZE = 129280
+
+#: Pro's bank geometry.  The 256 MiB x (24 + 40) bank plan that holds Flash
+#: cannot hold Pro: its dense store overflows node 0's dense banks and the
+#: build stops at ``rom.r2.p066.s1``.  Pro's 850,748,526,592 unique ROM bytes
+#: shard to 25.7 GB of experts plus 28.7 GB of replicated dense per node, so
+#: the banks are enlarged to 1 GiB and re-split 48/32 -- 48 GiB of expert store
+#: and 32 GiB of dense store per node.  This is a placement convention, exactly
+#: as the Flash split is; the analytical study prices no bank plan at all.
+PRO_BANK_BYTES = 1 << 30
+PRO_EXPERT_BANKS = 48
+PRO_DENSE_BANKS = 32
+
+#: What makes Pro expressible on CLUSTER_32 at all, when it is NOT expressible
+#: on the wafer: ``common/program.py`` computes a region's per-layer element
+#: stride as ``slot_element_stride // region_shards``.  Pro's routed expert
+#: regions are 384 x 3072 x 7168 = 8,455,716,864 elements, 1.97x over the
+#: 32-bit dynamic-term stride field of ABI 3.0 tensor views, so an unsharded
+#: (wafer, region_shards = 1) placement is refused outright.  32-way node
+#: ownership divides it to 264,241,152 and it fits.  Flash never met the wall
+#: because its equivalent is 256 x 4096 x 2048 = exactly 2^31.
+PRO_UNSHARDED_EXPERT_STRIDE_ELEMENTS = 384 * 3072 * 7168
+
+
+def deepseek_v4_pro_array_rom_capability(
+    *,
+    max_context_positions: int = MAX_CONTEXT_POSITIONS,
+) -> Capability:
+    """The 32-node ROM array sized for DeepSeek-V4-Pro-0813.
+
+    The same backend, the same node count, the same partition rule and the same
+    engine mix as the Flash array; only the expert count and the bank geometry
+    differ, and both are read from the Pro checkpoint's own shape rather than
+    chosen.
+
+    COMPARABILITY CAVEAT, stated here so it travels with the record: 32 nodes at
+    the backend's own ``at_roofline_n5_array_density`` figure is 198,435 mm2,
+    1.43x the 138,675 mm2 of the analytical study's own Pro ROM design
+    (``DSV4-Pro/ROM-N5-native-HBMKV-wafer-hybrid-x3``, three wafers).  The
+    difference is the dense store, which this partition replicates on every
+    node.  A deployment built against this record is therefore NOT iso-area
+    with the analytical Pro design point and must not be reported as if it
+    were.
+    """
+    return deepseek_v4_array_rom_capability(
+        max_context_positions=max_context_positions,
+        vocabulary_size=PRO_VOCABULARY_SIZE,
+        expert_count=PRO_EXPERT_COUNT,
+        experts_per_token=PRO_EXPERTS_PER_TOKEN,
+        bank_bytes=PRO_BANK_BYTES,
+        expert_banks=PRO_EXPERT_BANKS,
+        dense_banks=PRO_DENSE_BANKS,
+    )
+
+
+PROFILES = {
+    "rom-deepseek-v4-array-32": deepseek_v4_array_rom_capability,
+    "rom-deepseek-v4-pro-array-32": deepseek_v4_pro_array_rom_capability,
+}
 
 
 # ---------------------------------------------------------------------------
@@ -655,6 +727,7 @@ def deepseek_v4_array_rom_policy(
     chunk_bytes: int = 1 << 16,
     token_block_rows: int = TOKEN_BLOCK_ROWS,
     new_token_budget_cap: int | None = None,
+    target_id: str = TARGET_ID,
     notes: Mapping[str, Any] | None = None,
 ) -> tuple[RomTargetPolicy, _ArrayPlacer]:
     placer = _ArrayPlacer(
@@ -673,7 +746,7 @@ def deepseek_v4_array_rom_policy(
     )
     policy = RomTargetPolicy(
         product=PRODUCT,
-        target_id=TARGET_ID,
+        target_id=target_id,
         backend=BACKEND,
         topology_class=TopologyClass.CLUSTER_32,
         layout=deepseek_v4_array_layout_policy(
@@ -763,6 +836,7 @@ def build_deepseek_v4_array_rom_deployment(
     deployment_id: int = 1,
     generation: int = 1,
     notes: Mapping[str, Any] | None = None,
+    target_id: str = TARGET_ID,
 ) -> tuple[Deployment, RomImagePlan]:
     """Lower ``graph`` onto the 32-node DeepSeek ROM array."""
     capability = capability or deepseek_v4_array_rom_capability(
@@ -791,6 +865,7 @@ def build_deepseek_v4_array_rom_deployment(
         epoch=epoch,
         token_block_rows=token_block_rows,
         notes=notes,
+        target_id=target_id,
     )
     lowering = RomLowering(
         graph,
@@ -903,6 +978,7 @@ __all__ = [
     "EXPERT_BANKS",
     "NODE_COUNT",
     "PROFILES",
+    "deepseek_v4_pro_array_rom_capability",
     "TARGET_ID",
     "array_geometry",
     "build_deepseek_v4_array_rom_deployment",

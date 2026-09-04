@@ -3,7 +3,7 @@
     "major": 3,
     "minor": 0
   },
-  "capability_id": "hbm_sram_single_chip_n5_design_target_v1",
+  "capability_id": "hbm_sram_single_chip_n5_design_target_deepseek-v4-flash-0731__rom-n5-native-hbmkv-wafer-tensor-x1__b200-sxm-x29-tensor_v1",
   "derived_from": {
     "analytical_artifact": "results/roofline/n5_vs_b200/analytical.json",
     "base_capability": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
@@ -22,45 +22,45 @@
       "memory.sram.bytes",
       "limits.max_context_positions"
     ],
-    "design_point": "Qwen3-8B/b200_sxm-x2-tensor",
+    "design_point": "DSV4-Flash/b200_sxm-x29-tensor",
     "generator": "tools/derive_cycle_machine.py",
     "note": "technology_view n5_design_target is deliberately outside runtime/cycle/machine.py CHARACTERIZED_TECHNOLOGY_VIEWS, so every structural count this record advertises is graded `assumed` with no code change, and every run against it prints the not-a-performance-claim note.  topology_class is forced to SINGLE_CHIP because the derivation collapses the design point's devices into one logical device; this record is a MACHINE for that collapsed device and is not the deployment target of a multi-node backend."
   },
   "engines": {
     "attention": {
-      "lanes": 1024,
+      "lanes": 64,
       "queues": 16
     },
     "dma": {
-      "lanes": 1024,
+      "lanes": 64,
       "queues": 16
     },
     "link": {
-      "lanes": 1024,
+      "lanes": 64,
       "queues": 16
     },
     "reduction": {
-      "lanes": 1024,
+      "lanes": 64,
       "queues": 16
     },
     "route": {
-      "lanes": 1024,
+      "lanes": 64,
       "queues": 16
     },
     "selection": {
-      "lanes": 1024,
+      "lanes": 64,
       "queues": 16
     },
     "state": {
-      "lanes": 1024,
+      "lanes": 64,
       "queues": 16
     },
     "tensor": {
-      "lanes": 1024,
+      "lanes": 64,
       "queues": 16
     },
     "vector": {
-      "lanes": 1024,
+      "lanes": 64,
       "queues": 16
     }
   },
@@ -77,7 +77,7 @@
     10
   ],
   "limits": {
-    "max_context_positions": 8256,
+    "max_context_positions": 262144,
     "max_descriptors": 65536,
     "max_event_id": 1023,
     "max_events": 1024,
@@ -106,13 +106,13 @@
   "memory": {
     "hbm": {
       "burst_bytes": 64,
-      "bytes": 206158430208,
-      "channels": 128
+      "bytes": 2989297238016,
+      "channels": 1856
     },
     "sram": {
       "bank_bytes": 4194304,
       "banks": 32,
-      "bytes": 268435456,
+      "bytes": 3892314112,
       "ports": 4
     }
   },

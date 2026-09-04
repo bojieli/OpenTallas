@@ -46,6 +46,7 @@ from compiler.backends.hbm_sram.plan import (  # noqa: E402
     read_kernel_graph,
 )
 from compiler.ir.v3.kernel_ir import IRError, check_neutral  # noqa: E402
+from runtime.abi3.capability import Capability  # noqa: E402
 from runtime.abi3.verifier import verify_deployment  # noqa: E402
 
 
@@ -83,6 +84,19 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         default=None,
         help="where to write the build report (defaults to <out>/build_report.json)",
     )
+    parser.add_argument(
+        "--capability",
+        type=Path,
+        default=None,
+        help=(
+            "compile against this capability record instead of the profile's "
+            "own.  run_abi3_cycle.py admits a deployment only against the "
+            "capability it was compiled for, so timing a DERIVED machine "
+            "(tools/derive_cycle_machine.py) needs the deployment rebuilt "
+            "against that machine's record.  This overrides the machine, "
+            "never the lowering."
+        ),
+    )
     parser.add_argument("--tile-rows", type=int, default=64)
     parser.add_argument("--tile-cols", type=int, default=128)
     parser.add_argument("--tile-depth", type=int, default=128)
@@ -109,7 +123,11 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 def build(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     graph = read_kernel_graph(args.ir)
     neutrality = check_neutral(graph)
-    capability = capability_for(args.profile)
+    capability = (
+        Capability.from_dict(json.loads(Path(args.capability).read_text()))
+        if getattr(args, "capability", None) is not None
+        else capability_for(args.profile)
+    )
     tile = TileConfig(
         rows=args.tile_rows,
         cols=args.tile_cols,

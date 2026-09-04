@@ -11,6 +11,29 @@ One CLI, two products, one backend family:
         --ir build/ir-v3/deepseek-v4-flash-0731/kernel_ir.v3.json \\
         --output build/abi3/deepseek-v4-flash-rom
 
+DeepSeek-V4-Pro-0813 exists ONLY as a 32-node array product, and only from a
+short-context IR:
+
+    python3 tools/build_deepseek_v4_kernel_ir_v3.py \\
+        --model deepseek-v4-pro-0813 --context-tokens 8192 \\
+        --verify-bindings 0 --output <ir>/kernel_ir.v3.json
+    python3 tools/build_rom_deployment.py deepseek-v4-pro-array \\
+        --ir <ir>/kernel_ir.v3.json --output build/abi3/deepseek-v4-pro-rom-array-32
+
+Two facts travel with that, and neither is a knob:
+
+*   There is no Pro wafer or single-chip ROM product and there cannot be one.
+    An unsharded routed expert region needs a per-layer element stride of
+    384 x 3072 x 7168 = 8,455,716,864 elements, 1.97x over the 32-bit
+    dynamic-term stride field of ABI 3.0 tensor views; only the array's 32-way
+    node ownership divides it inside.
+*   At the shipped 262,144-position IR the array build is refused --
+    ``hbm_and_state objects need 259,278,995,592 bytes but the capability
+    declares 180,000,000,000`` -- and at 8,192 it admits.  Context length is
+    the lever; the token-block knob is not.  The matched ``--storage-class hbm``
+    twin is refused at ANY context (864,068,475,024 bytes per node), so a Pro
+    ROM deployment has no comparable HBM counterpart from this backend.
+
 The build is zero copy: no ROM image file is written.  Regions reference
 authenticated checkpoint byte ranges, and ``--checkpoint-root`` tells the
 inverse proof where to read them from.  ``--verify`` runs the independent ABI
@@ -38,22 +61,39 @@ from compiler.backends.rom.deepseek_v4 import (  # noqa: E402
     deepseek_v4_rom_capability,
 )
 from compiler.backends.rom.deepseek_v4_array import (  # noqa: E402
+    PRO_BANK_BYTES,
+    PRO_DENSE_BANKS,
+    PRO_EXPERT_BANKS,
+    PRO_TARGET_ID,
     build_deepseek_v4_array_rom_deployment,
     deepseek_v4_array_rom_capability,
+    deepseek_v4_pro_array_rom_capability,
 )
 from compiler.backends.rom.qwen3 import (  # noqa: E402
     build_qwen3_rom_deployment,
     qwen3_rom_capability,
 )
 from compiler.ir.v3.kernel_ir import KernelGraph, require_neutral  # noqa: E402
-from runtime.abi3.capability import canonical_json  # noqa: E402
+from runtime.abi3.capability import Capability, canonical_json  # noqa: E402
 from runtime.abi3.constants import StorageClass  # noqa: E402
 from runtime.abi3.deployment import Deployment  # noqa: E402
 from runtime.abi3.descriptors import ExtendedDescriptorType  # noqa: E402
 from runtime.abi3.records import decode_body, split_program  # noqa: E402
 from runtime.abi3.verifier import verify_deployment  # noqa: E402
 
-PRODUCTS = ("qwen3-8b", "deepseek-v4-flash", "deepseek-v4-flash-array")
+PRODUCTS = (
+    "qwen3-8b",
+    "deepseek-v4-flash",
+    "deepseek-v4-flash-array",
+    # DeepSeek-V4-Pro-0813 on the same 32-node ROM array.  Pro has NO wafer and
+    # NO single-chip ROM product and cannot have one: an unsharded routed
+    # expert region needs a per-layer element stride of 8,455,716,864, 1.97x
+    # over the 32-bit dynamic-term stride field of ABI 3.0 tensor views, and
+    # only 32-way node ownership brings it inside.  See
+    # ``deepseek_v4_pro_array_rom_capability`` for the geometry and for the
+    # iso-area caveat that travels with it.
+    "deepseek-v4-pro-array",
+)
 
 
 # ---------------------------------------------------------------------------
@@ -170,11 +210,26 @@ def summarise(deployment: Deployment, plan, capability) -> dict[str, Any]:
     }
 
 
+def override_capability(args) -> Any:
+    """Read a ``--capability`` record, or return None when none was given.
+
+    The record is read through ``Capability.from_dict`` rather than compared
+    field by field: the digest the deployment stamps is a function of the
+    parsed object, and a hand-rolled reader would be a second place for the
+    capability format to drift.
+    """
+    path = getattr(args, "capability", None)
+    if path is None:
+        return None
+    return Capability.from_dict(json.loads(Path(path).read_text()))
+
+
 def build(product: str, graph: KernelGraph, args) -> tuple[Deployment, Any, Any]:
     defects = parse_defects(args.defects)
     storage = StorageClass.HBM if args.storage_class == "hbm" else StorageClass.ROM
+    supplied = override_capability(args)
     if product == "qwen3-8b":
-        capability = qwen3_rom_capability()
+        capability = supplied or qwen3_rom_capability()
         deployment, plan = build_qwen3_rom_deployment(
             graph,
             capability=capability,
@@ -182,7 +237,7 @@ def build(product: str, graph: KernelGraph, args) -> tuple[Deployment, Any, Any]
             weight_storage_class=storage,
         )
     elif product == "deepseek-v4-flash-array":
-        capability = deepseek_v4_array_rom_capability()
+        capability = supplied or deepseek_v4_array_rom_capability()
         deployment, plan = build_deepseek_v4_array_rom_deployment(
             graph,
             capability=capability,
@@ -190,8 +245,21 @@ def build(product: str, graph: KernelGraph, args) -> tuple[Deployment, Any, Any]
             weight_storage_class=storage,
             epoch=args.epoch,
         )
+    elif product == "deepseek-v4-pro-array":
+        capability = supplied or deepseek_v4_pro_array_rom_capability()
+        deployment, plan = build_deepseek_v4_array_rom_deployment(
+            graph,
+            capability=capability,
+            defects=defects,
+            weight_storage_class=storage,
+            epoch=args.epoch,
+            bank_bytes=PRO_BANK_BYTES,
+            expert_banks=PRO_EXPERT_BANKS,
+            dense_banks=PRO_DENSE_BANKS,
+            target_id=PRO_TARGET_ID,
+        )
     else:
-        capability = deepseek_v4_rom_capability()
+        capability = supplied or deepseek_v4_rom_capability()
         deployment, plan = build_deepseek_v4_rom_deployment(
             graph,
             capability=capability,
@@ -220,6 +288,19 @@ def main(argv: Sequence[str] | None = None) -> int:
         default="rom",
         help="weight storage class; 'hbm' builds the comparison deployment from "
         "the identical program and is only for the ROM-versus-HBM protocol",
+    )
+    parser.add_argument(
+        "--capability",
+        type=Path,
+        help=(
+            "compile against this capability record instead of the product's "
+            "own.  The deployment's stamped capability_digest is what "
+            "run_abi3_cycle.py admits against, so a cycle run on a DERIVED "
+            "machine (tools/derive_cycle_machine.py) needs the deployment "
+            "rebuilt against that machine's capability.  The record must still "
+            "admit the product's program: this overrides the machine, never "
+            "the lowering."
+        ),
     )
     parser.add_argument("--verify", action="store_true")
     parser.add_argument("--inverse", action="store_true")

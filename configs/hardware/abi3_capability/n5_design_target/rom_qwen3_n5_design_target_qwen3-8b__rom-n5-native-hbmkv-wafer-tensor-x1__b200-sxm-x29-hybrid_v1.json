@@ -3,7 +3,7 @@
     "major": 3,
     "minor": 0
   },
-  "capability_id": "rom_qwen3_n5_design_target_v1",
+  "capability_id": "rom_qwen3_n5_design_target_qwen3-8b__rom-n5-native-hbmkv-wafer-tensor-x1__b200-sxm-x29-hybrid_v1",
   "derived_from": {
     "analytical_artifact": "results/roofline/n5_vs_b200/analytical.json",
     "base_capability": "configs/hardware/abi3_capability/rom_qwen3.json",
@@ -18,14 +18,11 @@
       "memory.hbm.channels",
       "topology_class",
       "limits.max_nodes",
-      "memory.rom.bytes",
-      "memory.hbm.bytes",
-      "memory.sram.bytes",
       "limits.max_context_positions",
       "memory.rom.arrays",
       "memory.rom.banks"
     ],
-    "design_point": "Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4",
+    "design_point": "Qwen3-8B/ROM-N5-native-HBMKV-wafer-tensor-x1",
     "generator": "tools/derive_cycle_machine.py",
     "note": "technology_view n5_design_target is deliberately outside runtime/cycle/machine.py CHARACTERIZED_TECHNOLOGY_VIEWS, so every structural count this record advertises is graded `assumed` with no code change, and every run against it prints the not-a-performance-claim note.  topology_class is forced to SINGLE_CHIP because the derivation collapses the design point's devices into one logical device; this record is a MACHINE for that collapsed device and is not the deployment target of a multi-node backend."
   },
@@ -96,17 +93,17 @@
   "link": {},
   "memory": {
     "hbm": {
-      "bytes": 412316860416,
-      "channels": 160
+      "bytes": 103079215104,
+      "channels": 344
     },
     "rom": {
       "arrays": 16,
       "banks": 16,
-      "bytes": 68719476736
+      "bytes": 17179869184
     },
     "sram": {
       "banks": 32,
-      "bytes": 536870912,
+      "bytes": 134217728,
       "ports": 4
     }
   },

@@ -58,6 +58,15 @@ PUBLISHED: dict[str, tuple[str, str]] = {
         "compiler.backends.rom.deepseek_v4_array",
         "rom-deepseek-v4-array-32",
     ),
+    # DeepSeek-V4-Pro-0813 on the same 32-node array.  It is a separate record
+    # rather than a parameter of the one above because a capability is a
+    # published boundary: Pro needs 384 expert ids against Flash's 256 and a
+    # 1 GiB x (48 + 32) bank plan against Flash's 256 MiB x (24 + 40), and
+    # writing either into the Flash record would move a shipped digest.
+    "rom_deepseek_v4_pro_array_32": (
+        "compiler.backends.rom.deepseek_v4_array",
+        "rom-deepseek-v4-pro-array-32",
+    ),
 }
 
 

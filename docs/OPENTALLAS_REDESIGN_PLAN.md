@@ -207,6 +207,13 @@ Recorded so it is scheduled rather than rediscovered:
   required feature bits [10]" against synthetic fixtures; reproduce at `3d93980` and
   `d0b078b`, so they predate the redesign
 - `test_every_kernel_reaches_an_operator` in the HBM backend suite, likewise pre-existing
+- `test_governed_v2_report_binds_sources_and_stays_below_the_thresholds` in
+  `tests/sim/test_deepseek_context_gate_model.py`: the governed context-gate report binds a
+  source that has since moved; reproduces at `cc9c97c` in a clean worktree, so it predates
+  the matrix and datapath work. Regenerating it is a governed run, not an edit
+- `test_exact_200k_rom_hbm_pair_passes` in
+  `tests/test_deepseek_v4_200k_accelerator_acceptance.py`: rejects its own synthetic
+  passing pair at clean `146ef7c`; pre-existing
 - the eight retained cycle artifacts predate the tensor unit fix and are 2x optimistic on
   their tensor term; they are evidence of a failure, not performance figures
 - no speculative deployment admits; the build stops at a declared physical HBM bound that
