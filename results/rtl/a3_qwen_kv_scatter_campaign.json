@@ -1,0 +1,309 @@
+{
+  "abi": {
+    "major": 3,
+    "minor": 0
+  },
+  "aggregate": {
+    "case_count": 12,
+    "checks_per_simulator": 209076,
+    "destination_words_compared": 69632,
+    "gqa_boundary_case_count": 2,
+    "indices_checked": 5,
+    "moved_elements": 4096,
+    "negative_case_count": 6,
+    "preserved_words_compared": 65536,
+    "records_checked": 57,
+    "replaced_words_compared": 4096,
+    "rtl_write_beats": 73728,
+    "scatter_case_count": 4
+  },
+  "boundary": {
+    "hbm_operator_descriptor_id": 131,
+    "new_first_unsupported_opcode": "ATTENTION.GQA",
+    "new_first_unsupported_pc": 38,
+    "previous_first_unsupported_pc": 32,
+    "rom_operator_descriptor_id": 127
+  },
+  "log_sha256": {
+    "iverilog": "d6b9e2b5eda5031a6d6d33e5f7c6bdf7cadf37a26e10eed9d972d96cc934f90f",
+    "verilator": "546d1fe88f50843155d3b3e64980248b027a311111d558bd8b7930c9f9b9b60c",
+    "verilator_compile": "72cf83ba2115ae056115626b5be1760499e4b37ee9e30913e72880710c76df35",
+    "yosys": "04cf56bdf23c0dbecb39c576d17951ba3d878844217903ff30ebd089cd2e4e19"
+  },
+  "normalized_cases": [
+    {
+      "checked": 1,
+      "failed": 0,
+      "gqa": 0,
+      "index": 0,
+      "moved": 1024,
+      "records": 5,
+      "refusal": 0,
+      "trap": 0,
+      "verification_cycles": 55537,
+      "writes": 18432
+    },
+    {
+      "checked": 1,
+      "failed": 0,
+      "gqa": 0,
+      "index": 1,
+      "moved": 1024,
+      "records": 5,
+      "refusal": 0,
+      "trap": 0,
+      "verification_cycles": 55537,
+      "writes": 18432
+    },
+    {
+      "checked": 0,
+      "failed": 1,
+      "gqa": 1,
+      "index": 2,
+      "moved": 0,
+      "records": 7,
+      "refusal": 4,
+      "trap": 4,
+      "verification_cycles": 330,
+      "writes": 0
+    },
+    {
+      "checked": 1,
+      "failed": 0,
+      "gqa": 0,
+      "index": 3,
+      "moved": 1024,
+      "records": 5,
+      "refusal": 0,
+      "trap": 0,
+      "verification_cycles": 55537,
+      "writes": 18432
+    },
+    {
+      "checked": 1,
+      "failed": 0,
+      "gqa": 0,
+      "index": 4,
+      "moved": 1024,
+      "records": 5,
+      "refusal": 0,
+      "trap": 0,
+      "verification_cycles": 55537,
+      "writes": 18432
+    },
+    {
+      "checked": 0,
+      "failed": 1,
+      "gqa": 1,
+      "index": 5,
+      "moved": 0,
+      "records": 7,
+      "refusal": 4,
+      "trap": 4,
+      "verification_cycles": 330,
+      "writes": 0
+    },
+    {
+      "checked": 0,
+      "failed": 1,
+      "gqa": 0,
+      "index": 6,
+      "moved": 0,
+      "records": 0,
+      "refusal": 2,
+      "trap": 2,
+      "verification_cycles": 11,
+      "writes": 0
+    },
+    {
+      "checked": 0,
+      "failed": 1,
+      "gqa": 0,
+      "index": 7,
+      "moved": 0,
+      "records": 5,
+      "refusal": 3,
+      "trap": 3,
+      "verification_cycles": 230,
+      "writes": 0
+    },
+    {
+      "checked": 0,
+      "failed": 1,
+      "gqa": 0,
+      "index": 8,
+      "moved": 0,
+      "records": 5,
+      "refusal": 3,
+      "trap": 3,
+      "verification_cycles": 230,
+      "writes": 0
+    },
+    {
+      "checked": 0,
+      "failed": 1,
+      "gqa": 0,
+      "index": 9,
+      "moved": 0,
+      "records": 5,
+      "refusal": 3,
+      "trap": 3,
+      "verification_cycles": 230,
+      "writes": 0
+    },
+    {
+      "checked": 0,
+      "failed": 1,
+      "gqa": 0,
+      "index": 10,
+      "moved": 0,
+      "records": 3,
+      "refusal": 2,
+      "trap": 2,
+      "verification_cycles": 195,
+      "writes": 0
+    },
+    {
+      "checked": 1,
+      "failed": 1,
+      "gqa": 0,
+      "index": 11,
+      "moved": 0,
+      "records": 5,
+      "refusal": 5,
+      "trap": 8,
+      "verification_cycles": 232,
+      "writes": 0
+    }
+  ],
+  "plane_binding": {
+    "key": {
+      "expected_word_payload_sha256": "525b88b812a4f7f648478f2d750864397084354063a530588388e96d45888509",
+      "preserved_word_count": 16384,
+      "prior_word_payload_sha256": "bf6e51bbc909741b73ee4eeabddb61552ce05c6fcc89c425c51d9fb00a46547e",
+      "replaced_word_count": 1024
+    },
+    "value": {
+      "expected_word_payload_sha256": "92818e90d803733a2f0904f323ae645d61e1f24dafe81c8705e72abeab95253b",
+      "preserved_word_count": 16384,
+      "prior_word_payload_sha256": "4923caf000d7db3c419a1324cad303403fc0c3cc282fa65b6705ffa0892b1318",
+      "replaced_word_count": 1024
+    }
+  },
+  "schema": "opentallas.rtl.a3_qwen_kv_scatter_campaign.v1",
+  "scope": {
+    "all_active_span_words_compared": true,
+    "architectural_token_commit_ticks": false,
+    "authentic_prior_context_kv": false,
+    "complete_layer": false,
+    "dual_simulator": true,
+    "eos_and_no_post_eos": false,
+    "exact_descriptor_crc_and_semantic_admission": true,
+    "exact_hbm_pc32_pc35_scatter": true,
+    "exact_instruction_crc_admission": true,
+    "exact_pc38_gqa_metadata_admitted": true,
+    "exact_rom_pc32_pc35_scatter": true,
+    "fail_closed_no_partial_write": true,
+    "gqa_arithmetic": false,
+    "independent_oracle_token_match": false,
+    "model_token_generation": false,
+    "pc38_gqa_returns_capability_before_write": true,
+    "position_16_replaced": true,
+    "prior_rows_preserved": true,
+    "simulator_cycles_are_verification_cost_only": true,
+    "synthesizable_elaboration": true,
+    "tpot": false,
+    "upstream_key_is_pc29_rope_result": true,
+    "upstream_value_is_pc17_projection_result": true
+  },
+  "simulators_agree": true,
+  "source_binding": {
+    "key": {
+      "bf16_payload_sha256": "b41de05c0a7f1f495ded2295c22781f4aa345136d2c572248469c422f266c406",
+      "producer_pc": 29,
+      "word_count": 1024,
+      "word_payload_sha256": "33c6ee79b782b709bb6ead0342e265cf1d9694a0734d7008c735227524862862"
+    },
+    "value": {
+      "bf16_payload_sha256": "b07011da7a3d58dcccceb91e596ceebc2084ab3c2fc9d0b6a9a8704e91ef8dc5",
+      "producer_pc": 17,
+      "word_count": 1024,
+      "word_payload_sha256": "bc68d29a1ea0775432087a7faff1303774092dba465483ca95178ed90d4a8ac7"
+    }
+  },
+  "source_sha256": {
+    "results/rtl/abi3_shipped_prefix_campaign.json": "6888ae7dea7e7f2bc6275619d5811d31fd46fa77e816b05ea21c2e8dbc4422aa",
+    "rtl/abi3/ot_a3_descriptor_record_validator.sv": "92d39545cb99c762c8b96144c4c165fadeb4c355a77155db42c175ba5a36c1f3",
+    "rtl/abi3/ot_a3_dma_index_mover.sv": "e254421fcba397e3db821c52b9acafaf3922af78653ab2d2e3029705ee166c64",
+    "rtl/abi3/ot_a3_engine_pkg.sv": "1186eecdc80321e87e08c97fb8e1c9a1b078584d019353736d235bf5cc84d477",
+    "rtl/abi3/ot_a3_instruction_decoder.sv": "9f2390ce38f9bddf80d47c01931b6fba5dde6c2f15a3f5fd0ae089e0bf27c3e1",
+    "rtl/abi3/ot_a3_pkg.sv": "6fb71525b329497fe62145ab0d9b1b6eff03f1e0c95f3bc6a0c1dde5c6744054",
+    "rtl/abi3/ot_a3_qwen_kv_scatter_adapter.sv": "d3ce0ef8fda09b66461e038cca0bb747e569d523da821e8eb34229b6f114f5d1",
+    "rtl/test/tb_a3_qwen_kv_scatter.sv": "661dcc9f9b7ae4441def2d96f9ff33a3099fd1c18018a87691bfc4de555438ad",
+    "testdata/compiler/abi3_deployment/a3_descriptor.hex": "e2af94bbccaaa4e1a4b3d7d67a384d86a80769a37d06f38d622850fb116dd616",
+    "testdata/compiler/abi3_deployment/a3_program.hex": "9a86572ef8fbfb0eb6c175cd528c8e39164d0f315cec889d9c85a4ddf227c505",
+    "testdata/compiler/abi3_deployment/abi3_deployment_rtl_vectors.json": "06977e3d3be02282c5076fa269f8fe5a25dec320f4b0ec7840b4429d09945638",
+    "testdata/compiler/abi3_shipped_prefix/abi3_shipped_prefix_vectors.json": "cd72fa9e711340095da1f8698abc7a810d2a82750d6bde43ec0144257a53b09d",
+    "testdata/compiler/abi3_shipped_prefix/p3_expect.hex": "1cadfc3371d198704fc9f245e7d8e27b72b38e906eafa0cdbc576f1eb2f98327",
+    "tools/build_a3_qwen_kv_scatter_vectors.py": "3bdc233c41b14533527e2fe36f9b0821ec68dee56ed6a369ed348d0ce59b0428",
+    "tools/run_a3_qwen_kv_scatter_rtl_campaign.py": "17887bc4ffa60ee2b9bccfef6cc329b447a74d5ffa9083f63a0b4425ee93962d"
+  },
+  "status": "pass",
+  "synthesis_frontend": {
+    "check_problems": 0,
+    "instruction_decoder_interface_stubbed": true,
+    "note": "generic RTLIL elaboration of the adapter, descriptor CRC, and DMA mover with the instruction-decoder interface stubbed because pinned Yosys cannot parse that qualified module's package import; both RTL simulators execute the real decoder. No library mapping, PPA, token latency, output-token correctness, or TPOT claim",
+    "top": "ot_a3_qwen_kv_scatter_adapter"
+  },
+  "tools": {
+    "iverilog": {
+      "path": "/usr/bin/iverilog",
+      "sha256": "1ba67856249142771239573b5d51c7f6e4d67a1e7931a0d0fab56e0d473d2167",
+      "version": "Icarus Verilog version 11.0 (stable) ()"
+    },
+    "verilator": {
+      "path": "<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator",
+      "sha256": "fb2cc573b1055cf096c90e1efc9966fe56bdb4b265c83590cf2a49f7a0defcdf",
+      "version": "Verilator 5.050 2026-07-01 rev v5.050"
+    },
+    "vvp": {
+      "path": "/usr/bin/vvp",
+      "sha256": "075b114070eed3bc72e0e4559decf40520f3b693b1da9c94bba1defe8896966d"
+    },
+    "yosys": {
+      "path": "<HOME>/.local/opentallas-tools/yosys-0.68/bin/yosys",
+      "sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+    }
+  },
+  "upstream_dependency": {
+    "campaign": "results/rtl/abi3_shipped_prefix_campaign.json",
+    "campaign_sha256": "6888ae7dea7e7f2bc6275619d5811d31fd46fa77e816b05ea21c2e8dbc4422aa",
+    "campaign_status": "pass",
+    "expected_image": "testdata/compiler/abi3_shipped_prefix/p3_expect.hex",
+    "expected_image_sha256": "1cadfc3371d198704fc9f245e7d8e27b72b38e906eafa0cdbc576f1eb2f98327",
+    "integrated_replay_passed": true,
+    "vector_manifest": "testdata/compiler/abi3_shipped_prefix/abi3_shipped_prefix_vectors.json",
+    "vector_manifest_sha256": "cd72fa9e711340095da1f8698abc7a810d2a82750d6bde43ec0144257a53b09d"
+  },
+  "vector_sha256": {
+    "cases.hex": "ee538b57415b2562b2dc741e45b50c46bd254bb98e3a1c9e31aa2ab4a98ccf65",
+    "index.json": "841588e58a06786873e1f9d80974d942b1eb2566308ccbf613b9f642a784d7d6",
+    "instruction.hex": "75d5f3ecdec959cee90a9049c5c5f6a95c8460763759cc7b6a5786fd2c23900d",
+    "numeric.hex": "bea66168e390b8d8dd495e7e9669709caa21c40c08910c521ab3896252aa2df4",
+    "operator.hex": "f46f5fe00219f011164f635cff370c5d32c564ce8518485608ab4cd6c2fbcb8f",
+    "output.hex": "dea18c697ec2e245504281130f1db70ec62742d4815944a231332ed88bb2b4ae",
+    "source.hex": "28c7a2a90b9089184b6262281d89c2fb26574259d24471bc612411a8ebcf6482",
+    "view0.hex": "f2eb0b36f927ac4e1de5adc3afa85e1dcb6464553cf100ca91e27b980ea062bb",
+    "view1.hex": "070e1e581b50b166ea49a741c9dcb6faf4703a24c155878caade98abae021425",
+    "view2.hex": "3f6b0faee50d7830e83c5036a08350fea8e837efcb0f34d372f69b6334d26287",
+    "view3.hex": "339dee47e73d8beff87a81190ecf93ed37f0bd696c7356170634e12c7a6e87f6"
+  },
+  "verification_wall_seconds": {
+    "iverilog_compile": 0.013669008039869368,
+    "iverilog_simulation": 1.4543370080646127,
+    "verilator_compile": 4.65963898296468,
+    "verilator_simulation": 0.10262042097747326,
+    "yosys_elaboration": 0.48002636001911014
+  }
+}
