@@ -267,7 +267,7 @@ class BatchScheduler:
         self._require_lane(lane_index)
         if not self.active[lane_index]:
             raise BatchError(
-                f"lane {lane_index} is retired; no post-EOS host write is allowed"
+                f"lane {lane_index} is retired; no post-terminal host write is allowed"
             )
         self.device.host_write(
             object_id,

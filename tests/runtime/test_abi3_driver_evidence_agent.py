@@ -6,6 +6,7 @@ import pytest
 
 from runtime.abi3.constants import StorageClass
 from runtime.abi3.fixture import FIXTURE_VOCAB, build_fixture, fixture_capability
+from runtime.abi3.records import EosReason
 from runtime.agent import (
     AgentProtocolError,
     Sandbox,
@@ -170,6 +171,9 @@ def test_driver_binds_every_frozen_runtime_symbol():
     prompt = [1, 2, 3]
     result = driver.generate(prompt, max_new_tokens=1)
     assert result.failure is None, result.failure
+    assert result.stop_reason == "max_new_tokens"
+    assert len(result.generated_token_ids) == 1
+    assert result.per_step[-1]["eos_reason"] == EosReason.MAX_NEW_TOKENS
 
     # Every symbol the registry defines is bound before the device sees the
     # request, and the device adds nothing that was missing.

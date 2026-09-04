@@ -202,6 +202,7 @@ def _lane(
     policy_id: int,
     *,
     batch: int = 2,
+    max_new_tokens: int = 8,
 ) -> BatchLaneSubmission:
     symbols = {
         int(Symbol.SPAN_TOKENS): 1,
@@ -210,7 +211,7 @@ def _lane(
         int(Symbol.CONTEXT_LENGTH): len(session.generated) + 1,
         int(Symbol.PHASE): int(Phase.DECODE),
         int(Symbol.GENERATION_INDEX): len(session.generated),
-        int(Symbol.MAX_NEW_TOKENS): 8,
+        int(Symbol.MAX_NEW_TOKENS): max_new_tokens,
         int(Symbol.BATCH): batch,
         int(Symbol.NODE_ID): 0,
         int(Symbol.NODE_COUNT): device.node_count,
@@ -286,7 +287,7 @@ def test_shared_batch_has_private_mutable_memory_and_independent_eos() -> None:
     assert first.lanes[1].completion.eos_reason == EosReason.NONE
 
     # An EOS lane is blocked at both the memory and submission boundaries.
-    with pytest.raises(BatchError, match="post-EOS host write"):
+    with pytest.raises(BatchError, match="post-terminal host write"):
         _stage_logits(scheduler, logits, 0, [9.0, 0.0, 0.0, 0.0])
     with pytest.raises(BatchError, match="every active lane exactly once"):
         scheduler.submit_wave(
@@ -458,3 +459,76 @@ def test_each_lane_transports_the_exact_physical_batch_symbol(batch_size: int) -
     assert [lane.symbol_batch for lane in wave.lanes] == [batch_size] * batch_size
     assert all(lane.result.produced_tokens == (3,) for lane in wave.lanes)
     assert device.live_request_descriptor_count == 0
+
+
+def test_heterogeneous_request_caps_retire_each_lane_on_device() -> None:
+    """Independent lanes stop at their own authenticated request cap."""
+
+    load_engines()
+    deployment, capability, _immutable, logits, _tokens, policy = (
+        _selection_deployment()
+    )
+    device = Device(deployment, capability)
+    sessions = device.create_batch_sessions(2)
+    scheduler = BatchScheduler(device, sessions)
+
+    # Neither selected token is EOS. Lane zero asks for one token; lane one
+    # asks for two. The device, not a host-side loop, supplies both retirements.
+    _stage_logits(scheduler, logits, 0, [0.0, 9.0, 0.0, 0.0])
+    _stage_logits(scheduler, logits, 1, [0.0, 0.0, 9.0, 0.0])
+    first = scheduler.submit_wave(
+        [
+            _lane(
+                device,
+                sessions[0],
+                0,
+                200,
+                policy,
+                max_new_tokens=1,
+            ),
+            _lane(
+                device,
+                sessions[1],
+                1,
+                201,
+                policy,
+                max_new_tokens=2,
+            ),
+        ]
+    )
+    assert first.active_mask_after == (False, True)
+    assert first.lanes[0].completion.eos_reason == EosReason.MAX_NEW_TOKENS
+    assert first.lanes[1].completion.eos_reason == EosReason.NONE
+    assert sessions[0].finished
+    assert not sessions[1].finished
+
+    with pytest.raises(BatchError, match="post-terminal host write"):
+        _stage_logits(scheduler, logits, 0, [9.0, 0.0, 0.0, 0.0])
+
+    _stage_logits(scheduler, logits, 1, [9.0, 0.0, 0.0, 0.0])
+    second = scheduler.submit_wave(
+        [
+            _lane(
+                device,
+                sessions[1],
+                1,
+                202,
+                policy,
+                max_new_tokens=2,
+            )
+        ]
+    )
+    assert second.active_mask_after == (False, False)
+    assert second.lanes[0].completion.eos_reason == EosReason.MAX_NEW_TOKENS
+    assert sessions[1].finished
+
+    evidence = scheduler.evidence(expected_tokens=[[1], [2, 0]])
+    assert evidence["status"] == "structurally_executed"
+    assert [row["eos_reason"] for row in evidence["sequences"]] == [
+        EosReason.MAX_NEW_TOKENS,
+        EosReason.MAX_NEW_TOKENS,
+    ]
+    assert all(
+        row["post_retirement_transaction_count"] == 0
+        for row in evidence["sequences"]
+    )

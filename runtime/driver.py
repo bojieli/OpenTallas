@@ -528,7 +528,8 @@ class GenerationDriver:
         started = time.perf_counter()
         if session.finished:
             raise DriverError(
-                "restored session already returned EOS; there is nothing to resume"
+                "restored session already reached EOS or the generation cap; "
+                "there is nothing to resume"
             )
         generated = [int(t) for t in generated_token_ids]
         if not generated:

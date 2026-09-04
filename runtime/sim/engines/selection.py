@@ -37,6 +37,7 @@ from runtime.abi3.descriptors import (
     ExtendedDescriptorType,
     MAX_EOS_TOKENS,
     SelectionMode,
+    Symbol,
 )
 from runtime.abi3.records import EosReason
 from runtime.sim import formats
@@ -136,6 +137,21 @@ def token_append(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
         f"{payload['selection_mode']}, which this device does not implement",
         trap_class=4,
     )
+    policy_limit = int(payload["max_new_tokens"])
+    # The immutable policy is the deployment ceiling.  The authenticated
+    # request descriptor carries the active bound for this generation.  Direct
+    # engine conformance harnesses do not cross the host queue and therefore
+    # fall back to the policy ceiling; every ABI GENERATE submission has the
+    # complete symbol map and takes the request-bound path.
+    request_limit = int(
+        ctx.symbols.get(int(Symbol.MAX_NEW_TOKENS), policy_limit)
+    )
+    _require(
+        1 <= request_limit <= policy_limit,
+        f"request MAX_NEW_TOKENS={request_limit} is outside generation policy "
+        f"{policy_id} bound 1..{policy_limit}",
+        trap_class=4,
+    )
 
     token_view = ctx.input_view(descriptor, 0)
     _single_u32(token_view, "token")
@@ -173,12 +189,10 @@ def token_append(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
         selection["eos_reason"] = int(EosReason.OFFICIAL_EOS)
         return
 
-    limit = int(payload["max_new_tokens"])
-    if limit:
-        already = len(getattr(ctx.session, "generated", ()) or ())
-        if already + len(produced) >= limit:
-            ctx.counters.add("selection.length_stops")
-            selection.setdefault("eos_reason", int(EosReason.MAX_NEW_TOKENS))
+    already = len(getattr(ctx.session, "generated", ()) or ())
+    if already + len(produced) >= request_limit:
+        ctx.counters.add("selection.length_stops")
+        selection.setdefault("eos_reason", int(EosReason.MAX_NEW_TOKENS))
 
 
 __all__ = ["argmax", "token_append"]

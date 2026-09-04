@@ -124,6 +124,28 @@ def test_scalar_queue_executes_the_exact_registered_symbol_map(monkeypatch) -> N
     assert completion_record[:4] == b"TA3C"
 
 
+def test_request_generation_cap_cannot_exceed_the_authenticated_policy() -> None:
+    """A request may narrow the compiled ceiling, never enlarge it."""
+
+    device = _device()
+    session = device.create_session()
+    symbols = _symbols(device)
+    symbols[int(Symbol.MAX_NEW_TOKENS)] = 9  # fixture policy ceiling is eight
+    descriptor_id = _register(device, session, transaction_id=1, symbols=symbols)
+    request = _submission(
+        device, session, descriptor_id=descriptor_id, transaction_id=1
+    )
+
+    _completion, result = device.execute_submission(request)
+
+    assert result.status == CompletionStatus.FAILED
+    assert result.trap_class == TrapClass.CAPABILITY_OR_RESOURCE
+    assert "exceeds generation policy" in result.message
+    assert result.retired == 0
+    assert session.generated == []
+    assert device.live_request_descriptor_count == 0
+
+
 @pytest.mark.parametrize(
     ("descriptor_id", "trap", "message"),
     [

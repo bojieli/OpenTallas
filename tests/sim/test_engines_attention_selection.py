@@ -1268,3 +1268,34 @@ def test_eos_stops_the_session_and_refuses_a_post_eos_transaction():
     assert second.trap_class == TrapClass.STATE_TRANSACTION
     assert "post-EOS" in second.message
     assert second.produced_tokens == ()
+
+
+def test_request_cap_stops_the_session_and_refuses_a_post_cap_transaction():
+    values = [0.0] * VOCABULARY
+    values[2] = 5.0  # legal non-EOS token
+    device, policy, _, _ = build_selection(logits_of(values))
+    session = device.create_session()
+    first = device.run_transaction(
+        session,
+        entrypoint_id=0,
+        symbols={int(Symbol.MAX_NEW_TOKENS): 1},
+        generation_policy_id=policy,
+    )
+    assert first.status == CompletionStatus.SUCCESS, first.message
+    assert first.produced_tokens == (2,)
+    assert first.eos_reason == EosReason.MAX_NEW_TOKENS
+    assert first.counters["selection.length_stops"] == 1
+    assert "selection.eos_stops" not in first.counters
+    assert session.finished
+    assert session.eos_reason == EosReason.MAX_NEW_TOKENS
+
+    second = device.run_transaction(
+        session,
+        entrypoint_id=0,
+        symbols={int(Symbol.MAX_NEW_TOKENS): 1},
+        generation_policy_id=policy,
+    )
+    assert second.status == CompletionStatus.FAILED
+    assert second.trap_class == TrapClass.STATE_TRANSACTION
+    assert "post-cap" in second.message
+    assert second.produced_tokens == ()

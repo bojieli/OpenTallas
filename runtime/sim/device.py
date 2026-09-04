@@ -674,7 +674,10 @@ class Device:
             return TransactionResult(
                 status=CompletionStatus.FAILED,
                 trap_class=TrapClass.STATE_TRANSACTION,
-                message="session already returned EOS; no post-EOS transaction",
+                message=(
+                    "session already reached EOS or the maximum-new-token "
+                    "bound; no post-EOS or post-cap transaction"
+                ),
                 host_performance=host_performance_delta(),
             )
         if session.batch_execution_id != batch_execution_id:
@@ -955,10 +958,14 @@ class Device:
             session.tokens.append(token)
             session.generated.append(token)
         eos_reason = int(selection.get("eos_reason", EosReason.NONE))
-        if eos_reason == EosReason.OFFICIAL_EOS:
+        if eos_reason in (
+            EosReason.OFFICIAL_EOS,
+            EosReason.MAX_NEW_TOKENS,
+        ):
             session.finished = True
             session.eos_reason = eos_reason
-            counters.add("selection.eos_stops")
+            if eos_reason == EosReason.OFFICIAL_EOS:
+                counters.add("selection.eos_stops")
         session.position = symbols.get(int(Symbol.POSITION_END), session.position)
         shares = tuple(share.snapshot() for share in node_counters)
         self.counters.merge(_totals())
@@ -1682,6 +1689,28 @@ class Device:
                 f"submission generation policy {policy_id} does not match "
                 f"entrypoint policy {entry_policy}",
                 TrapClass.DESCRIPTOR_OR_ADDRESS,
+            )
+        if policy_id == NO_ID:
+            raise DeviceTrap(
+                "GENERATE submission has no entrypoint generation policy",
+                TrapClass.DESCRIPTOR_OR_ADDRESS,
+            )
+        policy = self.deployment.table.get(
+            policy_id, ExtendedDescriptorType.GENERATION_POLICY
+        )
+        request_limit = int(symbols[int(Symbol.MAX_NEW_TOKENS)])
+        policy_limit = int(policy.payload["max_new_tokens"])
+        if request_limit > policy_limit:
+            raise DeviceTrap(
+                f"request MAX_NEW_TOKENS={request_limit} exceeds generation "
+                f"policy {policy_id} ceiling {policy_limit}",
+                TrapClass.CAPABILITY_OR_RESOURCE,
+            )
+        if len(session.generated) >= request_limit:
+            raise DeviceTrap(
+                f"request GENERATION_INDEX={len(session.generated)} has already "
+                f"reached MAX_NEW_TOKENS={request_limit}",
+                TrapClass.STATE_TRANSACTION,
             )
         return PreparedSubmission(
             request=request,
