@@ -50,6 +50,21 @@ from compiler.workloads.qwen3_exact_8k import (  # noqa: E402
     load_construction,
     validate_materialized_workload,
 )
+from compiler.workloads.qwen3_heterogeneous_8k import (  # noqa: E402
+    DEFAULT_CHECKPOINT_LOCK as HETEROGENEOUS_CHECKPOINT_LOCK,
+    DEFAULT_EXACT_8K_CONSTRUCTION as HETEROGENEOUS_EXACT_8K_CONSTRUCTION,
+    DEFAULT_SHARED_SEMANTICS as HETEROGENEOUS_SHARED_SEMANTICS,
+    DEFAULT_TERMINALBENCH_SUITE as HETEROGENEOUS_TERMINALBENCH_SUITE,
+    HETEROGENEOUS_GATE_1_LAUNCH_SCHEMA,
+    HETEROGENEOUS_GATE_1_PROFILE_ID,
+    HETEROGENEOUS_ORACLE_TOOL_VERSION,
+    LANE_SPECS as HETEROGENEOUS_LANE_SPECS,
+    authenticate_campaign_inputs,
+    build_campaign_documents,
+    heterogeneous_gate_1_launch_contract,
+    heterogeneous_oracle_input_binding,
+    validate_workload_set,
+)
 from runtime.abi3.capability import canonical_json  # noqa: E402
 from runtime.agent import (  # noqa: E402
     AgentProtocolError,
@@ -80,6 +95,11 @@ DEFAULT_CHECKPOINT_LOCK = (
 DEFAULT_EXACT_8K_CONSTRUCTION = (
     REPO / "configs/abi3/workloads/qwen3_exact_8k_chat_v1.json"
 )
+DEFAULT_HETEROGENEOUS_MANIFEST = (
+    REPO
+    / "configs/abi3/workloads/qwen3_heterogeneous_exact_8k_v1/manifest.json"
+)
+DEFAULT_HETEROGENEOUS_WORKLOADS = DEFAULT_HETEROGENEOUS_MANIFEST.parent / "workloads"
 
 GATE_1_LAUNCH_SCHEMA = "opentallas.qwen3.gate1_launch.v1"
 GATE_1_PROFILE_ID = "qwen3_exact_8k_external_oracle_v1"
@@ -285,6 +305,95 @@ def _configure_gate_1_production(args: argparse.Namespace) -> list[str]:
     return []
 
 
+def _configure_heterogeneous_gate_1_production(
+    args: argparse.Namespace,
+) -> list[str]:
+    """Normalize one manifest-declared exact-8K production-oracle lane."""
+
+    manifest_option = getattr(args, "heterogeneous_gate_1_production", None)
+    if manifest_option is None:
+        return []
+    problems: list[str] = []
+    if Path(manifest_option).resolve() != DEFAULT_HETEROGENEOUS_MANIFEST.resolve():
+        problems.append(
+            "--heterogeneous-gate-1-production requires the integrated manifest "
+            f"{DEFAULT_HETEROGENEOUS_MANIFEST}"
+        )
+
+    selected = getattr(args, "only", None)
+    if selected is None or len(selected) != 1:
+        if selected is not None and len(selected) != len(set(selected)):
+            problems.append(
+                "--heterogeneous-gate-1-production rejects duplicate --only selections"
+            )
+        else:
+            problems.append(
+                "--heterogeneous-gate-1-production requires exactly one explicit --only"
+            )
+        spec = None
+    else:
+        spec = next(
+            (
+                lane
+                for lane in HETEROGENEOUS_LANE_SPECS
+                if lane.workload_id == selected[0]
+            ),
+            None,
+        )
+        if spec is None:
+            problems.append(
+                "--heterogeneous-gate-1-production --only is not a declared lane"
+            )
+
+    workloads = Path(getattr(args, "workloads", DEFAULT_WORKLOADS)).resolve()
+    if workloads == DEFAULT_WORKLOADS.resolve():
+        args.workloads = DEFAULT_HETEROGENEOUS_WORKLOADS
+    elif workloads != DEFAULT_HETEROGENEOUS_WORKLOADS.resolve():
+        problems.append(
+            "--heterogeneous-gate-1-production requires the integrated workload root "
+            f"{DEFAULT_HETEROGENEOUS_WORKLOADS}"
+        )
+
+    if spec is not None:
+        expected_output = (
+            DEFAULT_HETEROGENEOUS_MANIFEST.parent
+            / "references"
+            / f"{spec.workload_id}.json"
+        )
+        if Path(args.output).resolve() != expected_output.resolve():
+            problems.append(
+                "--heterogeneous-gate-1-production --output must be the selected "
+                f"lane's manifest-declared path {expected_output}"
+            )
+    if args.agent_episode:
+        problems.append(
+            "--heterogeneous-gate-1-production cannot run an agent episode"
+        )
+    if args.force:
+        problems.append(
+            "--heterogeneous-gate-1-production cannot overwrite prior evidence"
+        )
+    if args.cpu_only:
+        problems.append(
+            "--heterogeneous-gate-1-production requires the qualified GPU/CPU placement"
+        )
+    if args.attention_implementation != "sdpa":
+        problems.append("--heterogeneous-gate-1-production requires SDPA attention")
+    if args.prefill_chunk not in (0, 512):
+        problems.append(
+            "--heterogeneous-gate-1-production requires a 512-token prefill chunk"
+        )
+    if args.cpu_gib != 80:
+        problems.append(
+            "--heterogeneous-gate-1-production requires the qualified 80 GiB CPU limit"
+        )
+    if problems:
+        return problems
+    args.prefill_chunk = 512
+    args.gpu_gib = 8
+    return []
+
+
 def _gate_1_launch_contract() -> dict[str, object]:
     return {
         "schema": GATE_1_LAUNCH_SCHEMA,
@@ -404,6 +513,195 @@ def _authenticate_gate_1_inputs(
     }, chat
 
 
+def _authenticate_heterogeneous_gate_1_inputs(
+    args: argparse.Namespace,
+    index: Mapping[str, Any],
+    bodies: Mapping[str, Mapping[str, Any]],
+    input_identity: dict[str, object],
+) -> tuple[dict[str, object], QwenChatTokenizer, dict[str, object]]:
+    """Authenticate one deterministic heterogeneous lane before model import."""
+
+    manifest_path = Path(args.heterogeneous_gate_1_production).resolve()
+    path_expectations = (
+        (args.snapshot, DEFAULT_SNAPSHOT, "snapshot"),
+        (
+            manifest_path,
+            DEFAULT_HETEROGENEOUS_MANIFEST,
+            "heterogeneous workload-set manifest",
+        ),
+        (
+            args.workloads,
+            DEFAULT_HETEROGENEOUS_WORKLOADS,
+            "heterogeneous workload root",
+        ),
+        (args.checkpoint_lock, HETEROGENEOUS_CHECKPOINT_LOCK, "checkpoint lock"),
+        (
+            args.exact_8k_construction,
+            HETEROGENEOUS_EXACT_8K_CONSTRUCTION,
+            "exact-8K construction",
+        ),
+    )
+    for observed, expected, label in path_expectations:
+        if Path(observed).resolve() != Path(expected).resolve():
+            raise OracleInputError(
+                f"{label} is not the pinned heterogeneous Gate-1 path {expected}"
+            )
+
+    if not isinstance(args.only, list) or len(args.only) != 1:
+        raise OracleInputError(
+            "heterogeneous Gate-1 authentication requires exactly one workload"
+        )
+    selected_id = args.only[0]
+    spec = next(
+        (
+            lane
+            for lane in HETEROGENEOUS_LANE_SPECS
+            if lane.workload_id == selected_id
+        ),
+        None,
+    )
+    if spec is None:
+        raise OracleInputError(
+            "heterogeneous Gate-1 workload is not a manifest-declared lane"
+        )
+
+    try:
+        authenticated = authenticate_campaign_inputs(
+            snapshot=args.snapshot,
+            checkpoint_lock_path=args.checkpoint_lock,
+            shared_semantics_path=HETEROGENEOUS_SHARED_SEMANTICS,
+            terminalbench_suite_path=HETEROGENEOUS_TERMINALBENCH_SUITE,
+            construction_path=args.exact_8k_construction,
+        )
+        documents, expected_manifest = build_campaign_documents(
+            authenticated, repo=REPO
+        )
+        expected_workloads = {
+            lane.workload_id: json.loads(
+                documents[f"workloads/{lane.workload_id}.json"]
+            )
+            for lane in HETEROGENEOUS_LANE_SPECS
+        }
+        campaign = validate_workload_set(
+            manifest_path,
+            codec=authenticated.chat,
+            repo=REPO,
+            expected_workloads=expected_workloads,
+            expected_sources=expected_manifest["sources"],
+        )
+    except (ArtifactError, KeyError, OSError, TypeError, ValueError) as exc:
+        raise OracleInputError(
+            f"heterogeneous Gate-1 campaign reconstruction failed: {exc}"
+        ) from exc
+
+    if (
+        campaign.manifest != expected_manifest
+        or manifest_path.read_bytes() != documents["manifest.json"]
+    ):
+        raise OracleInputError(
+            "heterogeneous workload-set manifest differs from deterministic reconstruction"
+        )
+    expected_index = json.loads(documents["workloads/index.json"])
+    if index != expected_index:
+        raise OracleInputError(
+            "loaded workload index differs from the authenticated campaign"
+        )
+    if (
+        set(bodies) != {selected_id}
+        or bodies[selected_id] != expected_workloads[selected_id]
+    ):
+        raise OracleInputError(
+            "selected workload differs from its authenticated campaign lane"
+        )
+
+    lane = campaign.manifest["lanes"][spec.lane_index]
+    expected_output = campaign.root / lane["oracle_binding"]["expected_path"]
+    if Path(args.output).resolve() != expected_output.resolve():
+        raise OracleInputError(
+            "heterogeneous Gate-1 output is not the selected lane's "
+            "manifest-declared oracle path"
+        )
+
+    index_identity = input_identity.get("workload_index")
+    workload_sources = input_identity.get("workload_sources")
+    workload_identity = (
+        workload_sources.get(selected_id)
+        if isinstance(workload_sources, dict)
+        else None
+    )
+    if (
+        not isinstance(index_identity, dict)
+        or index_identity.get("sha256")
+        != campaign.manifest["workload_index"]["sha256"]
+        or index_identity.get("size_bytes")
+        != campaign.manifest["workload_index"]["size_bytes"]
+        or not isinstance(workload_sources, dict)
+        or set(workload_sources) != {selected_id}
+        or not isinstance(workload_identity, dict)
+        or workload_identity.get("sha256") != lane["workload"]["file"]["sha256"]
+        or workload_identity.get("size_bytes")
+        != lane["workload"]["file"]["size_bytes"]
+    ):
+        raise OracleInputError(
+            "selected workload or index identity is not campaign-pinned"
+        )
+
+    construction_identity = _file_identity(args.exact_8k_construction)
+    checkpoint_lock_identity = _file_identity(args.checkpoint_lock)
+    manifest_identity = _file_identity(manifest_path)
+    if construction_identity != campaign.manifest["sources"]["exact_8k_construction"]:
+        raise OracleInputError(
+            "exact-8K construction identity is not campaign-pinned"
+        )
+    expected_checkpoint = campaign.manifest["model"]["checkpoint_lock"]
+    if any(
+        checkpoint_lock_identity.get(field) != expected_checkpoint.get(field)
+        for field in ("path", "sha256", "size_bytes")
+    ):
+        raise OracleInputError("checkpoint-lock source identity is not campaign-pinned")
+
+    lock = authenticated.checkpoint_lock
+    source = lock.get("source")
+    if (
+        lock.get("lock_id") != expected_checkpoint["lock_id"]
+        or not isinstance(source, dict)
+        or source.get("repository") != "Qwen/Qwen3-8B"
+        or source.get("revision") != SOURCE_REVISION
+        or source.get("remote_code_policy") != "disabled"
+    ):
+        raise OracleInputError("checkpoint lock does not bind the pinned Qwen release")
+    verify_checkpoint_lock(args.snapshot, lock)
+
+    input_identity["checkpoint_lock"] = checkpoint_lock_identity
+    input_identity["exact_8k_construction"] = construction_identity
+    workload_set_binding = heterogeneous_oracle_input_binding(
+        campaign, spec.lane_index
+    )
+    if workload_set_binding["manifest_file"] != manifest_identity:
+        raise OracleInputError("workload-set manifest file identity differs")
+    input_identity["heterogeneous_workload_set"] = workload_set_binding
+
+    launch_contract = heterogeneous_gate_1_launch_contract(
+        campaign, spec.lane_index
+    )
+    if (
+        launch_contract.get("schema") != HETEROGENEOUS_GATE_1_LAUNCH_SCHEMA
+        or launch_contract.get("profile_id") != HETEROGENEOUS_GATE_1_PROFILE_ID
+    ):
+        raise OracleInputError("heterogeneous Gate-1 launch profile differs")
+
+    checkpoint = lock["checkpoint"]
+    return {
+        "completed_before_model_framework_import": True,
+        "full_byte_hash_verified": True,
+        "lock_id": lock["lock_id"],
+        "lock_source_sha256": checkpoint_lock_identity["sha256"],
+        "payload_bytes": checkpoint["payload_bytes"],
+        "shard_count": checkpoint["shard_count"],
+        "tensor_count": checkpoint["tensor_count"],
+    }, authenticated.chat, launch_contract
+
+
 def _validate_gate_1_generation(
     generated: list[int], *, eos_ids: set[int]
 ) -> None:
@@ -464,6 +762,7 @@ def _oracle_execution_identity(
     *,
     cpu_only: bool,
     attention_implementation: str,
+    tool_version: str = ORACLE_TOOL_VERSION,
 ) -> dict[str, object]:
     """Identity of choices which may change a BF16 reduction association.
 
@@ -526,7 +825,7 @@ def _oracle_execution_identity(
     return {
         "producer": {
             "tool": ORACLE_TOOL,
-            "tool_version": ORACLE_TOOL_VERSION,
+            "tool_version": tool_version,
             "source_sha256": hashlib.sha256(
                 (REPO / ORACLE_TOOL).read_bytes()
             ).hexdigest(),
@@ -876,7 +1175,8 @@ def main() -> int:
             "are recorded with every result."
         ),
     )
-    parser.add_argument(
+    production = parser.add_mutually_exclusive_group()
+    production.add_argument(
         "--gate-1-production",
         action="store_true",
         help=(
@@ -885,11 +1185,33 @@ def main() -> int:
             "its authenticated tokenizer, template, corpus, and semantic source"
         ),
     )
+    production.add_argument(
+        "--heterogeneous-gate-1-production",
+        type=Path,
+        metavar="MANIFEST",
+        help=(
+            "run exactly one explicitly selected lane from the integrated "
+            "exact-8K heterogeneous campaign after authenticating the manifest, "
+            "all prompt sources, and the complete checkpoint"
+        ),
+    )
     args = parser.parse_args()
 
-    gate_1_option_problems = _configure_gate_1_production(args)
+    gate_1_option_problems = [
+        *_configure_gate_1_production(args),
+        *_configure_heterogeneous_gate_1_production(args),
+    ]
     if gate_1_option_problems:
         parser.error("; ".join(gate_1_option_problems))
+    production_requested = bool(
+        args.gate_1_production
+        or args.heterogeneous_gate_1_production is not None
+    )
+    production_tool_version = (
+        HETEROGENEOUS_ORACLE_TOOL_VERSION
+        if args.heterogeneous_gate_1_production is not None
+        else ORACLE_TOOL_VERSION
+    )
     if args.prefill_chunk < 0:
         parser.error("--prefill-chunk must be zero or a positive token count")
 
@@ -903,9 +1225,19 @@ def main() -> int:
         )
         checkpoint_preflight = None
         authenticated_tokenizer = None
+        production_launch_contract = None
         if args.gate_1_production:
             checkpoint_preflight, authenticated_tokenizer = (
                 _authenticate_gate_1_inputs(args, index, bodies, input_identity)
+            )
+            production_launch_contract = _gate_1_launch_contract()
+        elif args.heterogeneous_gate_1_production is not None:
+            (
+                checkpoint_preflight,
+                authenticated_tokenizer,
+                production_launch_contract,
+            ) = _authenticate_heterogeneous_gate_1_inputs(
+                args, index, bodies, input_identity
             )
     except (ArtifactError, OSError, ValueError) as exc:
         print(f"oracle input preflight failed: {exc}", file=sys.stderr)
@@ -955,6 +1287,7 @@ def main() -> int:
         transformers,
         cpu_only=args.cpu_only,
         attention_implementation=args.attention_implementation,
+        tool_version=production_tool_version,
     )
 
     report = {
@@ -976,7 +1309,7 @@ def main() -> int:
         "attention_implementation": args.attention_implementation,
         "producer": {
             "tool": ORACLE_TOOL,
-            "tool_version": ORACLE_TOOL_VERSION,
+            "tool_version": production_tool_version,
             "command_argv": [ORACLE_TOOL, *sys.argv[1:]],
             "selected_workload_ids": [workload_id for workload_id, _ in selected],
         },
@@ -985,9 +1318,9 @@ def main() -> int:
         "production_launch": (
             {
                 "explicitly_requested": True,
-                "contract": _gate_1_launch_contract(),
+                "contract": production_launch_contract,
             }
-            if args.gate_1_production
+            if production_requested
             else {"explicitly_requested": False}
         ),
         "results": {},
@@ -1082,7 +1415,7 @@ def main() -> int:
                 )
             generated = out.sequences[0][len(ids) :].tolist()
         elapsed = time.perf_counter() - step_started
-        if args.gate_1_production:
+        if production_requested:
             _validate_gate_1_generation(generated, eos_ids=eos_set)
         text = tokenizer.decode(generated, skip_special_tokens=False)
         visible = tokenizer.decode(generated, skip_special_tokens=True)
@@ -1126,11 +1459,11 @@ def main() -> int:
         print(f"generated {len(generated)} tokens in {elapsed:.1f}s, stop={stop}")
         print(f"first 24 ids: {generated[:24]}")
         print(f"text: {visible[:400]!r}", flush=True)
-        if not args.gate_1_production:
+        if not production_requested:
             args.output.parent.mkdir(parents=True, exist_ok=True)
             args.output.write_bytes(canonical_json(report))
 
-    if args.gate_1_production:
+    if production_requested:
         try:
             publish_bytes_atomic_no_replace(args.output, canonical_json(report))
         except FileExistsError:

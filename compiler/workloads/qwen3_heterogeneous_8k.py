@@ -76,6 +76,13 @@ WORKLOAD_INDEX_SCHEMA = "opentallas.abi3.workload_index.v1"
 VERSION = "1.0.0"
 CAMPAIGN_NAME = "qwen3-heterogeneous-exact-8k-v1"
 ORACLE_TOOL = "tools/run_qwen3_reference_oracle.py"
+HETEROGENEOUS_ORACLE_TOOL_VERSION = "qwen3_reference_oracle.py:v3"
+HETEROGENEOUS_GATE_1_LAUNCH_SCHEMA = (
+    "opentallas.qwen3.heterogeneous_gate1_launch.v1"
+)
+HETEROGENEOUS_GATE_1_PROFILE_ID = (
+    "qwen3_heterogeneous_exact_8k_external_oracle_v1"
+)
 WORKLOAD_SET_SCHEMA_PATH = (
     REPO / "schemas/abi3/qwen3_heterogeneous_workload_set_v1.schema.json"
 )
@@ -297,6 +304,28 @@ def _file_record(path: Path, *, relative_to: Path) -> dict[str, Any]:
         raise QwenHeterogeneousCampaignError(f"cannot hash {path}: {exc}") from exc
     return {
         "path": _repo_relative(path, relative_to, "file identity"),
+        "sha256": digest,
+        "size_bytes": size,
+    }
+
+
+def _recorded_path(path: Path) -> str:
+    """Record repository members portably and test fixtures unambiguously."""
+
+    resolved = Path(path).resolve()
+    try:
+        return resolved.relative_to(REPO.resolve()).as_posix()
+    except ValueError:
+        return str(resolved)
+
+
+def _oracle_file_record(path: Path) -> dict[str, Any]:
+    try:
+        digest, size = sha256_file(Path(path))
+    except OSError as exc:
+        raise QwenHeterogeneousCampaignError(f"cannot hash {path}: {exc}") from exc
+    return {
+        "path": _recorded_path(path),
         "sha256": digest,
         "size_bytes": size,
     }
@@ -1093,6 +1122,108 @@ def validate_workload_set(
     return CampaignValidation(root, path, manifest, tuple(workloads))
 
 
+def heterogeneous_gate_1_launch_contract(
+    campaign: CampaignValidation, lane_index: int
+) -> dict[str, Any]:
+    """Return the exact production launch contract for one singleton oracle."""
+
+    if not 0 <= lane_index < len(LANE_SPECS):
+        raise QwenHeterogeneousCampaignError("oracle lane index is out of range")
+    spec = LANE_SPECS[lane_index]
+    lane = campaign.manifest["lanes"][lane_index]
+    workload = campaign.workloads[lane_index]
+    manifest_file = _oracle_file_record(campaign.manifest_path)
+    return {
+        "schema": HETEROGENEOUS_GATE_1_LAUNCH_SCHEMA,
+        "profile_id": HETEROGENEOUS_GATE_1_PROFILE_ID,
+        "workload_set": {
+            "manifest_sha256": manifest_file["sha256"],
+            "workload_set_id": campaign.manifest["workload_set_id"],
+        },
+        "lane": {
+            "category": spec.category,
+            "lane_index": spec.lane_index,
+            "sequence_id": spec.sequence_id,
+            "source_id": spec.source_id,
+        },
+        "workload": {
+            "max_new_tokens": MAX_NEW_TOKENS,
+            "prompt_token_count": LONG_PROMPT_TOKENS,
+            "prompt_token_sha256": lane["workload"]["prompt_token_sha256"],
+            "workload_digest": workload["digest"],
+            "workload_file_sha256": lane["workload"]["file"]["sha256"],
+            "workload_id": spec.workload_id,
+        },
+        "selection": "greedy_lowest_token_id_argmax",
+        "terminal": {
+            "eos_token_ids": list(EOS_TOKEN_IDS),
+            "include_eos_in_output": True,
+            "rule": "first_official_eos_or_exact_cap",
+        },
+        "prefill": {
+            "chunk_tokens": 512,
+            "mode": "chunked_forward_kv_cache",
+        },
+        "numeric": {
+            "attention_implementation": "sdpa",
+            "dtype": "bfloat16",
+        },
+        "placement": {
+            "cpu_memory_gib": 80,
+            "gpu_memory_gib": 8,
+            "policy": "auto",
+        },
+    }
+
+
+def heterogeneous_oracle_input_binding(
+    campaign: CampaignValidation, lane_index: int
+) -> dict[str, Any]:
+    """Bind an oracle input record to one exact campaign lane."""
+
+    contract = heterogeneous_gate_1_launch_contract(campaign, lane_index)
+    lane = contract["lane"]
+    workload = contract["workload"]
+    return {
+        "manifest_file": _oracle_file_record(campaign.manifest_path),
+        "workload_set_id": contract["workload_set"]["workload_set_id"],
+        "selected_lane": {
+            **lane,
+            **workload,
+        },
+    }
+
+
+def _command_option_values(argv: Sequence[str], option: str) -> list[str] | None:
+    """Return option values, or ``None`` for a missing/malformed value."""
+
+    values: list[str] = []
+    position = 0
+    while position < len(argv):
+        argument = argv[position]
+        if argument == option:
+            if position + 1 >= len(argv) or argv[position + 1].startswith("--"):
+                return None
+            values.append(argv[position + 1])
+            position += 2
+            continue
+        prefix = f"{option}="
+        if argument.startswith(prefix):
+            value = argument[len(prefix) :]
+            if not value:
+                return None
+            values.append(value)
+        position += 1
+    return values
+
+
+def _command_path_matches(value: str, expected: Path) -> bool:
+    candidate = Path(value)
+    if candidate.is_absolute():
+        return candidate.resolve() == Path(expected).resolve()
+    return candidate.as_posix() == _recorded_path(expected)
+
+
 def validate_production_oracle(
     oracle_path: Path,
     *,
@@ -1107,6 +1238,15 @@ def validate_production_oracle(
     spec = LANE_SPECS[lane_index]
     lane = campaign.manifest["lanes"][lane_index]
     workload = campaign.workloads[lane_index]
+    expected_oracle_path = _safe_member(
+        campaign.root,
+        lane["oracle_binding"]["expected_path"],
+        f"lane {lane_index} expected oracle",
+    )
+    if Path(oracle_path).resolve() != expected_oracle_path:
+        raise QwenHeterogeneousCampaignError(
+            f"lane {lane_index} oracle is not at its manifest-declared path"
+        )
     body = _load_canonical(Path(oracle_path), f"lane {lane_index} oracle")
     if body.get("schema") != REFERENCE_ORACLE_SCHEMA:
         raise QwenHeterogeneousCampaignError(
@@ -1127,10 +1267,50 @@ def validate_production_oracle(
     if (
         not isinstance(producer, Mapping)
         or producer.get("tool") != ORACLE_TOOL
+        or producer.get("tool_version") != HETEROGENEOUS_ORACLE_TOOL_VERSION
         or producer.get("selected_workload_ids") != [spec.workload_id]
     ):
         raise QwenHeterogeneousCampaignError(
             f"lane {lane_index} oracle was not independently selected as one workload"
+        )
+    command = producer.get("command_argv")
+    heterogeneous_options = (
+        _command_option_values(command, "--heterogeneous-gate-1-production")
+        if isinstance(command, list)
+        and all(isinstance(argument, str) for argument in command)
+        else None
+    )
+    only_options = (
+        _command_option_values(command, "--only")
+        if isinstance(command, list)
+        and all(isinstance(argument, str) for argument in command)
+        else None
+    )
+    output_options = (
+        _command_option_values(command, "--output")
+        if isinstance(command, list)
+        and all(isinstance(argument, str) for argument in command)
+        else None
+    )
+    if (
+        not isinstance(command, list)
+        or not command
+        or command[0] != ORACLE_TOOL
+        or heterogeneous_options is None
+        or len(heterogeneous_options) != 1
+        or not _command_path_matches(
+            heterogeneous_options[0], campaign.manifest_path
+        )
+        or only_options != [spec.workload_id]
+        or output_options is None
+        or len(output_options) != 1
+        or not _command_path_matches(output_options[0], expected_oracle_path)
+        or "--gate-1-production" in command
+        or "--agent-episode" in command
+        or "--force" in command
+    ):
+        raise QwenHeterogeneousCampaignError(
+            f"lane {lane_index} oracle command did not request one heterogeneous production lane"
         )
     results = body.get("results")
     if not isinstance(results, Mapping) or set(results) != {spec.workload_id}:
@@ -1142,23 +1322,40 @@ def validate_production_oracle(
         raise QwenHeterogeneousCampaignError(
             f"lane {lane_index} oracle has no authenticated input identity"
         )
+    if set(input_identity) != {
+        "checkpoint_lock",
+        "exact_8k_construction",
+        "heterogeneous_workload_set",
+        "workload_index",
+        "workload_sources",
+    }:
+        raise QwenHeterogeneousCampaignError(
+            f"lane {lane_index} oracle authenticated input fields differ"
+        )
     checkpoint = input_identity.get("checkpoint_lock")
     expected_checkpoint = campaign.manifest["model"]["checkpoint_lock"]
+    expected_checkpoint_identity = _oracle_file_record(
+        REPO / expected_checkpoint["path"]
+    )
     if (
-        not isinstance(checkpoint, Mapping)
-        or checkpoint.get("sha256") != expected_checkpoint["sha256"]
-        or checkpoint.get("size_bytes") != expected_checkpoint["size_bytes"]
+        checkpoint != expected_checkpoint_identity
+        or expected_checkpoint_identity["sha256"] != expected_checkpoint["sha256"]
+        or expected_checkpoint_identity["size_bytes"]
+        != expected_checkpoint["size_bytes"]
     ):
         raise QwenHeterogeneousCampaignError(
             f"lane {lane_index} oracle checkpoint-lock binding differs"
         )
     index_identity = input_identity.get("workload_index")
     source_identities = input_identity.get("workload_sources")
+    expected_index_identity = _oracle_file_record(
+        campaign.root / campaign.manifest["workload_index"]["path"]
+    )
     if (
-        not isinstance(index_identity, Mapping)
-        or index_identity.get("sha256")
+        index_identity != expected_index_identity
+        or expected_index_identity["sha256"]
         != campaign.manifest["workload_index"]["sha256"]
-        or index_identity.get("size_bytes")
+        or expected_index_identity["size_bytes"]
         != campaign.manifest["workload_index"]["size_bytes"]
         or not isinstance(source_identities, Mapping)
         or set(source_identities) != {spec.workload_id}
@@ -1168,13 +1365,38 @@ def validate_production_oracle(
         )
     source_identity = source_identities[spec.workload_id]
     expected_source = lane["workload"]["file"]
+    expected_source_identity = _oracle_file_record(
+        campaign.root / expected_source["path"]
+    )
     if (
-        not isinstance(source_identity, Mapping)
-        or source_identity.get("sha256") != expected_source["sha256"]
-        or source_identity.get("size_bytes") != expected_source["size_bytes"]
+        source_identity != expected_source_identity
+        or expected_source_identity["sha256"] != expected_source["sha256"]
+        or expected_source_identity["size_bytes"] != expected_source["size_bytes"]
     ):
         raise QwenHeterogeneousCampaignError(
             f"lane {lane_index} oracle workload-file binding differs"
+        )
+    construction_identity = input_identity.get("exact_8k_construction")
+    expected_construction = campaign.manifest["sources"]["exact_8k_construction"]
+    expected_construction_identity = _oracle_file_record(
+        REPO / expected_construction["path"]
+    )
+    if (
+        construction_identity != expected_construction_identity
+        or expected_construction_identity["sha256"]
+        != expected_construction["sha256"]
+        or expected_construction_identity["size_bytes"]
+        != expected_construction["size_bytes"]
+    ):
+        raise QwenHeterogeneousCampaignError(
+            f"lane {lane_index} oracle exact-8K construction binding differs"
+        )
+    workload_set_identity = input_identity.get("heterogeneous_workload_set")
+    if workload_set_identity != heterogeneous_oracle_input_binding(
+        campaign, lane_index
+    ):
+        raise QwenHeterogeneousCampaignError(
+            f"lane {lane_index} oracle workload-set or selected-lane binding differs"
         )
     preflight = body.get("production_checkpoint_preflight")
     if (
@@ -1192,17 +1414,7 @@ def validate_production_oracle(
     if (
         not isinstance(launch, Mapping)
         or launch.get("explicitly_requested") is not True
-        or not isinstance(contract, Mapping)
-        or contract.get("workload_id") != spec.workload_id
-        or contract.get("prompt_token_count") != LONG_PROMPT_TOKENS
-        or contract.get("max_new_tokens") != MAX_NEW_TOKENS
-        or contract.get("selection") != "greedy_lowest_token_id_argmax"
-        or contract.get("terminal")
-        != {
-            "eos_token_ids": list(EOS_TOKEN_IDS),
-            "include_eos_in_output": True,
-            "rule": "first_official_eos_or_exact_cap",
-        }
+        or contract != heterogeneous_gate_1_launch_contract(campaign, lane_index)
     ):
         raise QwenHeterogeneousCampaignError(
             f"lane {lane_index} oracle production launch contract differs"
@@ -1366,6 +1578,9 @@ __all__ = [
     "DEFAULT_SHARED_SEMANTICS",
     "DEFAULT_SNAPSHOT",
     "DEFAULT_TERMINALBENCH_SUITE",
+    "HETEROGENEOUS_GATE_1_LAUNCH_SCHEMA",
+    "HETEROGENEOUS_GATE_1_PROFILE_ID",
+    "HETEROGENEOUS_ORACLE_TOOL_VERSION",
     "LANE_SPECS",
     "MAX_NEW_TOKENS",
     "PROFILE_SIZES",
@@ -1376,6 +1591,8 @@ __all__ = [
     "build_campaign_documents",
     "build_reference_set",
     "build_workloads",
+    "heterogeneous_gate_1_launch_contract",
+    "heterogeneous_oracle_input_binding",
     "prompt_token_sha256",
     "validate_production_oracle",
     "validate_reference_set",
