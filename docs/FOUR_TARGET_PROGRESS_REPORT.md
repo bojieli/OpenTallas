@@ -4,7 +4,7 @@
 
 **Status date:** 2026-09-04
 
-**Input baseline:** `main` through `f942909`; this includes the fail-closed
+**Input baseline:** `main` through `8d15a2b`; this includes the fail-closed
 DeepSeek exact-200K oracle and accelerator-pair checkers, the DeepSeek
 phase-selected sparse-KV layout repair, the shared activation-liveness
 allocator and physical 180-GB ROM-array capacity boundary, and refreshed
@@ -68,6 +68,11 @@ HBM-A/HBM-B/ROM acceptance triplet. There is not yet a source-current DeepSeek
 exact-200,000 accelerator
 execution, a fully integrated RTL datapath capable of producing those tokens,
 or a complete same-view SKY130/ASAP7 physical comparison of all four systems.
+A newly completed frozen-source DeepSeek wafer-ROM diagnostic did execute the
+real compiled model for the natural P32 prompt and match four oracle tokens,
+but it began before device-enforced request-cap retirement landed. Its last ABI
+completion therefore reports no terminal reason, so it is positive arithmetic
+and token-path diagnosis rather than a Gate-1 pass.
 
 The present boundary is therefore:
 
@@ -82,16 +87,22 @@ The present boundary is therefore:
 - production acceptance validators: implemented for the governed Qwen
   exact-8K official-chat workload, the DeepSeek exact-200K external oracle,
   and the final ROM/HBM accelerator pairs; all still reject the incomplete
-  current evidence;
+  current evidence. The timing consumer additionally binds both the semantic
+  and file digest of the frozen execution release, rejecting stale or unbound
+  token/timing inputs;
 - correctness-qualified TPOT validator: implemented and fail-closed when token
   evidence, target-cycle traces, process identities, or numerical budgets are
   absent;
-- genuine shared batch timing substrate: implemented for ABI 3.0 scalar
-  sessions at B=1/2/4/8. Each transaction's request and token-commit ticks are
-  immutably bound to its functional submission, trace, result, and completion;
-  one heterogeneous B=2 fixture proves independent EOS retirement and no
-  post-EOS transaction. This is scheduler qualification, not a full-model
-  B>1 token result or a characterized TPOT point;
+- genuine shared batch execution and timing substrate: implemented for ABI 3.0
+  scalar sessions at B=1/2/4/8. The production batch driver accepts distinct
+  per-lane prompts and generation caps, submits every active lane once per
+  wave, preserves canonical session-scoped transactions, and retires each lane
+  only on device-reported EOS or cap. Each transaction's request and
+  token-commit ticks are immutably bound to its functional submission, trace,
+  result, and completion. Focused fixtures prove ragged prompts, independent
+  EOS/cap retirement, no post-terminal transaction, B=1 compatibility, and
+  cycle-scheduler tick propagation. This is scheduler qualification, not a
+  full-model B>1 token result or a characterized TPOT point;
 - RTL control plane and bounded arithmetic blocks: independently correlated;
   the row-folding mapper, Sinkhorn tail, and certifying FP32 exp/sigmoid engine
   are standalone blocks and are not yet wired into a token-producing
@@ -134,11 +145,11 @@ the remaining cost.
 |---|---|---|---|
 | Architecture and ABI 3.0 | closed | frozen live-buffer/fence profile; zero `STATE` in all four deployments | no ABI 3.1 work is required |
 | Common IR and four backend builds | closed for current graphs | Qwen and DeepSeek lower through the shared Model Graph and Tensor Kernel IR into HBM and ROM bundles; HBM head norms now encode 32/8 Qwen rows and 64 DeepSeek rows from the neutral IR | rebuild whenever an execution-authoritative source changes |
-| Functional execution | partial | the complete functional engine exists; one frozen-source Qwen HBM/SRAM run executed the exact 8K prompt end to end and matched all four oracle tokens through EOS; source-current DeepSeek 32-node HBM and ROM-array P32 diagnostics each execute the compiled model and match the same four-token oracle prefix; the first exact T=512 DeepSeek HBM `HC_PRE` issue also matches an independent service on all 12,288 FP32 output words | the Qwen result predates current runtime changes and lacks its independent HBM-B/ROM peers; both DeepSeek token results use only 32 prompt tokens and a four-token prefix contract, the ROM-array target is not the required single wafer-ROM device, and the `HC_PRE` result is operator qualification rather than a token |
+| Functional execution | partial | the complete functional engine exists; one frozen-source Qwen HBM/SRAM run executed the exact 8K prompt end to end and matched all four oracle tokens through EOS; frozen-source DeepSeek 32-node HBM, 32-node ROM-array, and single-wafer ROM P32 diagnostics each execute the compiled model and match the same four-token oracle prefix; the first exact T=512 DeepSeek HBM `HC_PRE` issue also matches an independent service on all 12,288 FP32 output words | the Qwen result predates current runtime changes and lacks its independent HBM-B/ROM peers; every DeepSeek token result uses only 32 prompt tokens and a four-token prefix contract, the latest wafer run predates device-enforced cap retirement, and the `HC_PRE` result is operator qualification rather than a token |
 | RTL 3.0 | partial | shipped control replay and bounded arithmetic pairs independently correlate; the integrated prefix drives Qwen through query/key RoPE and both exact key/value KV scatters, and DeepSeek ROM through wafer multicast; the focused Qwen continuation executes fixed-context-17 PC-38 GQA; exact ROM/HBM `HC_PRE` tile scheduling, the standalone 256-lane mapper, exact Sinkhorn tail, certifying FP32 exp/sigmoid engine, fixed 4x4 stable softmax, MAC lane, and multicast transport have dual-simulator evidence | Qwen must generalize GQA through the governed 8K context and continue at PC 41 output projection; DeepSeek `HC_PRE` still lacks BF16-by-FP32 fused accumulation, balanced projection/RMS, stable-softmax-to-Sinkhorn composition, full-shape word agreement, and PC-14/PC-15 integration; no RTL path reaches a token |
 | Mandatory workloads | open | the Qwen exact-8K rendered official-chat prompt is frozen and reproducible; its authenticated external oracle and one frozen-source HBM/SRAM execution both produce `391` followed by EOS | a single current-release HBM-A/HBM-B/ROM triplet, Qwen natural chat/reasoning/agentic and genuine B=1/2/4/8 cells, and both DeepSeek exact-200K executions are absent; the retained DeepSeek oracle stops after eight tokens |
 | SKY130 and ASAP7 | partial | several bounded blocks have process-specific reports | neither view characterizes a complete target; ASAP7 readiness has 15 fail-closed blockers |
-| Governed comparison | partial | a source-current four-token DeepSeek ROM-array-versus-32-chip-HBM diagnostic now binds both compiled executions, identical tokens, topology and counter evidence; `081161b` adds a source/process/batch-bound correctness-qualified TPOT schema and checker; `8080d8f` adds the explicit RTL-bound accelerated co-simulation tier; `cbaecf0` freezes the shared-datapath production plan and exact-execution promotion rule | the diagnostic is P32 rather than exact 200K, uses a 32-node ROM array rather than the required wafer-ROM target, and supplies no target timing; no source-current mandatory-workload pair, production-simulation token record, frozen numerical TPOT budget, or complete same-view system cost exists |
+| Governed comparison | partial | a frozen-source four-token DeepSeek ROM-array-versus-32-chip-HBM diagnostic binds both compiled executions, identical tokens, topology and counter evidence; the release-bound correctness-qualified TPOT schema and checker reject stale semantic/file identities; `8080d8f` adds the explicit RTL-bound accelerated co-simulation tier; `cbaecf0` freezes the shared-datapath production plan and exact-execution promotion rule | the paired diagnostic is P32 rather than exact 200K, uses a 32-node ROM array rather than the required wafer-ROM target, predates current release changes, and supplies no target timing; the new single-wafer P32 record is likewise frozen-source and unpaired; no source-current mandatory-workload pair, production-simulation token record, frozen numerical TPOT budget, or complete same-view system cost exists |
 
 ### 1.2 Source-current execution readiness
 
@@ -159,6 +170,13 @@ threshold job in the same root worktree. That post-launch contention is an
 operational-governance incident, but the completed result reports zero swaps
 and retains its resource observations. Neither its 5,659.73-second host wall
 time nor its retired-instruction counter is architectural TPOT.
+
+A later serialized DeepSeek single-wafer ROM P32 run completed in 2,746.957
+host seconds and matched the first four external-oracle token IDs exactly. It
+was launched from the frozen source immediately before the device-cap change,
+so its final completion carries `EosReason.NONE` even though the host stopped
+at four tokens. It is retained specifically as a frozen-source P32 diagnostic;
+it is neither current-release Gate 1 nor a source for TPOT.
 
 - Commit `969cb52` replaces the old plain-prose Qwen long workload with one
   governed prompt rendered through the official Qwen chat template. It has
@@ -694,11 +712,11 @@ generated tokens. The retained external context-ladder artifact reaches the
 prompt length but contains only an eight-token oracle prefix; no accelerator
 artifact currently executes that full prompt. Neither can close acceptance.
 
-The 32-node ROM-array controlled variant now has a source-current short-rung
+The 32-node ROM-array controlled variant has a frozen-source short-rung
 diagnostic: on the 32-token natural chat prefix it generated
 `[13806, 345, 7472, 55560]`, exactly matching the independent oracle prefix and
 decoding to ` pump C alone empt`. All 55 recorded execution-source identities
-rehash, all token IDs are legal, and the backend-aware context gate independently
+rehash against its captured source set, all token IDs are legal, and the backend-aware context gate independently
 matches every per-node and cluster-total sparse-attention counter. This closes
 that variant's 32-token/four-output diagnostic rung only. It is not the required
 wafer-ROM target, did not run 200,000 input tokens, and stopped at its four-token
@@ -714,6 +732,17 @@ runs more tractable but do not reduce the workload or the required arithmetic.
 The stale 129-token ROM-array rerun was stopped without a result after it had
 served its resource-diagnosis purpose. Even a successful eight-token rerun
 would not substitute for the exact-200K wafer-ROM or 32-node-HBM executions.
+
+The desired single-wafer ROM topology has also completed the same P32
+diagnostic. It generated `[13806, 345, 7472, 55560]`, which the pinned tokenizer
+decodes as ` pump C alone empt`, and an independent audit confirms exact
+four-position equality with the external oracle and exact prompt-text
+round-trip. This is a full compiled-model functional execution for the stated
+32-token/four-output request, which is what `functional_artifact_only` means;
+it is not full production acceptance. It does not execute the exact-200K
+prompt, contains no RTL-bound or characterized target timing, and predates the
+device-enforced cap rule: the last completion's EOS reason is `NONE` rather
+than `MAX_NEW_TOKENS`. Gate 1 therefore remains open and Gate 2 remains blocked.
 
 ### 7.3 Tokens, stopping, and speed actually established
 
@@ -740,7 +769,7 @@ The current evidence supports only the following carefully scoped statements:
   configured eight-token limit was reached—not because EOS occurred. It took
   435.266 s including a 405.05 s tiled prefill. This is GPU external-oracle
   speed, not ROM-wafer or 32-chip simulator speed.
-- The source-current DeepSeek 32-node ROM-array diagnostic produced
+- The frozen-source DeepSeek 32-node ROM-array diagnostic produced
   `[13806, 345, 7472, 55560]` on the 32-token pump prompt. Those tokens exactly
   match the independently produced prefix, have no legitimacy problem, and
   decode to ` pump C alone empt`, coherently continuing the input. Every one of
@@ -751,7 +780,7 @@ The current evidence supports only the following carefully scoped statements:
   completion ticks `[26337, 38756, 51175, 63594]` remain functional-device
   counters rather than a characterized process clock. This is therefore a
   valid short functional diagnostic, not exact-200K Gate 1 and not TPOT.
-- The source-current DeepSeek 32-chip HBM/SRAM diagnostic independently ran the
+- The frozen-source DeepSeek 32-chip HBM/SRAM diagnostic independently ran the
   same natural P32 prompt through its own compiled ABI 3.0 deployment and
   produced the same legal IDs `[13806, 345, 7472, 55560]`, with no oracle
   divergence and decoded text ` pump C alone empt`. The refreshed
@@ -764,6 +793,15 @@ The current evidence supports only the following carefully scoped statements:
   `results/abi3/comparison_deepseek_rom_array_vs_hbm.json` therefore establishes
   identical functional output over this short horizon, but explicitly makes
   no exact-200K, wafer-ROM, RTL, timing, TPOT, or silicon claim.
+- The frozen-source DeepSeek single-wafer ROM diagnostic ran the same P32
+  natural prompt and produced the same legal IDs
+  `[13806, 345, 7472, 55560]`, decoded as ` pump C alone empt`, with exact oracle
+  prefix equality. Its host wall time was 2,746.957 s and its completion ticks
+  were `[26102, 38286, 50470, 62654]`. Host time is simulator campaign speed;
+  those ticks are retired-work bookkeeping rather than SKY130/ASAP7 target
+  cycles. More importantly, the run predates device-enforced cap retirement,
+  and its final completion reports no terminal reason. It therefore closes no
+  release gate and supplies no TPOT point.
 - The new DeepSeek HBM PC-14 qualification produces intermediate `HC_PRE`
   tensors, not vocabulary logits or a selected token. Its 12,288 output words
   match bitwise and are useful for localizing the next RTL work, but they add

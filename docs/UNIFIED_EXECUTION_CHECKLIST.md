@@ -614,21 +614,25 @@ that, the position is:
 - [x] W13.1 Qwen3-8B **HBM** lane — 24 tokens, oracle-identical <!-- figure: 24 src="results/abi3/qwen3_hbm_ta-qw-chat-1_execution.json#record.generated_token_count" name="Qwen HBM generated tokens, TA-QW-CHAT-1" -->
 - [x] W13.2 Qwen3-8B **ROM** lane — 24 tokens, oracle-identical, and identical to <!-- figure: 24 src="results/abi3/qwen3_rom_ta-qw-chat-1_execution.json#record.generated_token_count" name="Qwen ROM generated tokens, TA-QW-CHAT-1" -->
   the HBM lane position for position
-- [x] W13.3 DeepSeek-V4-Flash **HBM** (32 node) — **source-current short-token
+- [~] W13.3 DeepSeek-V4-Flash **HBM** (32 node) — **frozen-source short-token
   diagnostic.** One P32 prefill plus three decode steps through the compiled
   ABI 3.0 deployment produced `[13806, 345, 7472, 55560]`, matching all **4** oracle positions <!-- figure: 4 src="results/abi3/accelerator_tokens/deepseek_v4_flash_hbm_p32.json#oracle.compared_tokens" name="DeepSeek HBM source-current oracle-compared tokens, W13.3" --> with no legality problem. The refreshed
   `results/abi3/deepseek_v4_context_gate.json` revalidates the selected HBM
   source set and reconciles every measured node plus cluster total. This closes
-  the short HBM diagnostic after the sparse-layout and ordered-product repairs;
+  that source snapshot's short HBM diagnostic after the sparse-layout and
+  ordered-product repairs; later device-cap and release-lock changes mean it is
+  no longer source-current acceptance;
   it does **not** close the exact-200K, EOS-or-256, reasoning/agentic, RTL-token,
   or characterized-TPOT requirements.
-- [~] W13.4 Remaining multi-design reasoning/agentic coverage — **source-current
-  short-token evidence now exists for DeepSeek HBM and the 32-node ROM-array
-  diagnostic, but the required wafer-ROM and every-design workload matrix are
-  not closed.** The retained single-wafer DeepSeek ROM
+- [~] W13.4 Remaining multi-design reasoning/agentic coverage — **frozen-source
+  short-token evidence exists for DeepSeek HBM, the 32-node ROM-array, and the
+  required single-wafer topology, but no exact-200K or every-design workload
+  matrix is closed.** The latest single-wafer DeepSeek ROM
   capture produced **4** tokens identical to the retained HBM/oracle prefix <!-- figure: 4 src="results/abi3/accelerator_tokens/deepseek_v4_flash_rom_p32.json#oracle.compared_tokens" name="DeepSeek ROM prior-build oracle-compared tokens, W13.4" -->,
-  but it also predates the `INDEX_SCORE` repair. The pairwise artifact is
-  historical evidence, not a source-current cross-target result.
+  decoded as ` pump C alone empt`, but it predates device-enforced cap
+  retirement: its final ABI completion reports `EosReason.NONE` instead of
+  `MAX_NEW_TOKENS`. It is full functional execution only for P32/four outputs,
+  not Gate-1 acceptance, a source-current cross-target result, or TPOT evidence.
   Neither DeepSeek backend has an accelerator reasoning or agentic capture: no
   DeepSeek reasoning workload is pinned, and the existing agentic result is
   external-oracle GPU evidence. In addition, W13.5 and W13.6 exercise Qwen HBM
