@@ -21,7 +21,11 @@ genuine batch admission, made the authenticated request cap device-enforced
 with independent heterogeneous-lane retirement, and retained the first
 exact-token frozen-source Qwen HBM/SRAM accelerator diagnostic, then qualified
 exact Qwen ROM/HBM PC-32/35 KV
-appends and fixed-context-17 PC-38 GQA arithmetic.
+appends and fixed-context-17 PC-38 GQA arithmetic. The production scalar token
+runner now makes decoded-text legitimacy part of the run verdict: it binds the
+checkpoint tokenizer, round-trips the frozen input context, and retains
+raw/visible oracle-horizon output text rather than accepting integer equality
+alone.
 **Current execution checkpoint (2026-09-04):** all four current deployments
 contain zero ABI `STATE` resources. Qwen HBM passes 21/21 deployment checks <!-- figure: 21 src="results/abi3/hbm_qwen_deployment_certificate.json#cases[case=qwen3-hbm-single-chip].passed_check_count" name="current Qwen HBM checks, checkpoint" --> at
 74 instructions <!-- figure: 74 src="results/abi3/hbm_qwen_deployment_certificate.json#cases[case=qwen3-hbm-single-chip].actual.instructions" name="current Qwen HBM instructions, checkpoint" --> and 215 descriptors <!-- figure: 215 src="results/abi3/hbm_qwen_deployment_certificate.json#cases[case=qwen3-hbm-single-chip].actual.descriptors" name="current Qwen HBM descriptors, checkpoint" -->; Qwen ROM passes 62/62 schedule checks <!-- figure: 62 src="results/abi3/rom_schedule_checks.json#cases[case=qwen3-rom-single-chip].passed_check_count" name="current Qwen ROM checks, checkpoint" --> at

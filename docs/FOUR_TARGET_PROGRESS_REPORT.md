@@ -89,7 +89,10 @@ The present boundary is therefore:
   and the final ROM/HBM accelerator pairs; all still reject the incomplete
   current evidence. The timing consumer additionally binds both the semantic
   and file digest of the frozen execution release, rejecting stale or unbound
-  token/timing inputs;
+  token/timing inputs. The scalar accelerator runner now also hashes and loads
+  the pinned checkpoint tokenizer, proves prompt decode and re-encode
+  round-trip against the retained natural context, and retains raw/visible
+  decoded output with oracle-horizon equality; a mismatch makes the run fail;
 - correctness-qualified TPOT validator: implemented and fail-closed when token
   evidence, target-cycle traces, process identities, or numerical budgets are
   absent;
