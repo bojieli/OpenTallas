@@ -22,6 +22,19 @@ Reproduce, from the repository root::
     python3 tools/run_abi3_physical.py --view sky130hd --block reduction_s8_g2 \\
         --clock-period-ns 20 --stages synth,sta \\
         --output results/physical_abi3/sky130hd/reduction_s8_g2/physical.json
+
+Signal integrity.  ``--max-transition-ns`` and ``--max-fanout`` put explicit
+``set_max_transition`` / ``set_max_fanout`` constraints in the SDC so ORFS's
+repair_design buffers and sizes to them; ``--slew-margin-percent`` hands ORFS
+its SLEW_MARGIN so the repair overfixes.  Bare ``--max-transition-ns`` takes
+the corner's own liberty limit (asap7 RVT 0.32 ns, sky130hd 1.5 ns).  The
+values used are recorded under ``place_and_route.signal_integrity_constraints``
+and nothing is emitted or recorded when the options are absent.
+
+Pinned sources.  ``--source-root DIR`` reads the RTL from another checkout
+(a worktree pinned at the commit being characterised); the record's ``git``
+block then describes that tree and ``runner.driver`` names the commit this
+driver came from.
 """
 
 from __future__ import annotations
@@ -41,7 +54,12 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-ROOT = Path(__file__).resolve().parent.parent
+# DRIVER_ROOT is the tree this file lives in.  ROOT is the tree the RTL
+# sources, their git identity, the container's /src mount and every relative
+# path are taken from: the driver's own tree unless --source-root rebinds it
+# to a worktree pinned at the commit being characterised.
+DRIVER_ROOT = Path(__file__).resolve().parent.parent
+ROOT = DRIVER_ROOT
 CAMPAIGN_ID = "opentallas-abi3-physical-v1"
 SCHEMA_VERSION = 1
 
@@ -311,6 +329,38 @@ def git_identity() -> dict[str, Any]:
     }
 
 
+def driver_identity() -> dict[str, Any]:
+    """Which driver file ran, and the commit of the tree it came from.
+
+    ``git`` in the record describes the tree the sources came from (``ROOT``).
+    With ``--source-root`` that is a worktree pinned at the RTL's commit, whose
+    own copy of this driver may be older; the driver that actually ran is
+    identified here so the record names both commits.
+    """
+    path = Path(__file__).resolve()
+    head = run(["git", "rev-parse", "HEAD"], cwd=DRIVER_ROOT)
+    status = run(["git", "status", "--porcelain", "--", str(path)], cwd=DRIVER_ROOT)
+    same_tree = DRIVER_ROOT.resolve() == ROOT.resolve()
+    return {
+        "path": str(path),
+        "sha256": sha256_file(path),
+        "tree": str(DRIVER_ROOT),
+        "commit": (head.stdout or "").strip() or None,
+        "file_modified_since_commit": bool((status.stdout or "").strip()),
+        "same_tree_as_sources": same_tree,
+        "note": (
+            "the driver and the sources come from the same tree; git.commit describes both"
+            if same_tree
+            else (
+                "the sources, their git identity (the record's git block) and the "
+                "container's /src mount come from --source-root; the driver ran from "
+                "a different checkout, so git.commit is the sources' commit and "
+                "runner.driver.commit is the driver's"
+            )
+        ),
+    }
+
+
 def canonical_dump(payload: dict[str, Any], path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     text = json.dumps(payload, indent=2, sort_keys=True, ensure_ascii=False)
@@ -533,6 +583,199 @@ def run_synthesis(
 
 
 # --------------------------------------------------------------------------
+# SDC and signal-integrity constraints
+# --------------------------------------------------------------------------
+#
+# Every SDC the driver writes carries ``set_max_fanout 32``; nothing else
+# bounded slew, so the only max-transition limits ORFS saw were the liberty
+# files' own (``default_max_transition`` and per-pin ``max_transition``:
+# 320 ps in ASAP7 RVT, 1.5 ns in sky130hd).  repair_design buffers and sizes
+# every net to the tightest limit on each of its pins -- SDC or liberty --
+# under placement- and global-route-estimated parasitics; the finish report
+# re-checks the same limits with extracted parasitics, and an LQ8 route came
+# out with 292 pins over 320 ps.  ``--max-transition-ns`` puts an explicit
+# design-wide limit in the SDC, ``--max-fanout`` replaces the fixed 32, and
+# ``--slew-margin-percent`` hands ORFS its SLEW_MARGIN so repair_design
+# overfixes by that fraction of the limit.  None of the three is emitted or
+# recorded unless given: a record without
+# ``place_and_route.signal_integrity_constraints`` was routed with exactly
+# the SDC every earlier record had.
+
+DEFAULT_MAX_FANOUT = 32
+LIBRARY_LIMIT = "library"
+DRIVER_DEFAULT = "default"
+
+_DEFAULT_MAX_TRANSITION_RE = re.compile(
+    r"^\s*default_max_transition\s*:\s*([0-9.eE+-]+)\s*;", re.M
+)
+_DEFAULT_MAX_FANOUT_RE = re.compile(r"^\s*default_max_fanout\s*:\s*([0-9.eE+-]+)\s*;", re.M)
+_PIN_MAX_TRANSITION_RE = re.compile(r"^\s*max_transition\s*:", re.M)
+_PIN_MAX_FANOUT_RE = re.compile(r"^\s*max_fanout\s*:", re.M)
+
+
+def library_slew_limits(corner: dict[str, Any]) -> list[dict[str, Any]]:
+    """What each liberty file of the corner declares as its slew limit.
+
+    ``default_max_transition`` is in the library's own time unit (ps for
+    ASAP7, ns for sky130); ``pin_max_transition_count`` is how many per-pin
+    ``max_transition`` attributes the file carries, which override it.
+    """
+    found: list[dict[str, Any]] = []
+    for path in corner["liberty"]:
+        path = Path(path)
+        text = path.read_text(errors="ignore")
+        match = _DEFAULT_MAX_TRANSITION_RE.search(text)
+        found.append(
+            {
+                "liberty": path.name,
+                "default_max_transition": float(match.group(1)) if match else None,
+                "pin_max_transition_count": len(_PIN_MAX_TRANSITION_RE.findall(text)),
+            }
+        )
+    return found
+
+
+def library_fanout_limits(corner: dict[str, Any]) -> list[dict[str, Any]]:
+    """What each liberty file of the corner declares as its fanout limit, if anything."""
+    found: list[dict[str, Any]] = []
+    for path in corner["liberty"]:
+        path = Path(path)
+        text = path.read_text(errors="ignore")
+        match = _DEFAULT_MAX_FANOUT_RE.search(text)
+        found.append(
+            {
+                "liberty": path.name,
+                "default_max_fanout": float(match.group(1)) if match else None,
+                "pin_max_fanout_count": len(_PIN_MAX_FANOUT_RE.findall(text)),
+            }
+        )
+    return found
+
+
+def signal_integrity_sdc_lines(constraints: dict[str, Any] | None) -> list[str]:
+    """The ``set_max_*`` lines of the SDC for these constraints (legacy 32 fanout when none)."""
+    constraints = constraints or {}
+    lines = [f"set_max_fanout {constraints.get('max_fanout', DEFAULT_MAX_FANOUT)} [current_design]"]
+    if constraints.get("max_transition_library_units") is not None:
+        lines.append(
+            f"set_max_transition {constraints['max_transition_library_units']:g} [current_design]"
+        )
+    return lines
+
+
+def resolve_signal_integrity_constraints(
+    view: dict[str, Any],
+    corner: dict[str, Any],
+    max_transition_ns: float | str | None,
+    max_fanout: int | str | None,
+    slew_margin_percent: float | None,
+) -> dict[str, Any] | None:
+    """Turn the command-line options into the recorded constraint block.
+
+    Returns ``None`` when no option was given, so the SDC and the record are
+    exactly what they were before the options existed.
+    """
+    if max_transition_ns is None and max_fanout is None and slew_margin_percent is None:
+        return None
+    time_unit_ns = view["time_unit_ns"]
+    out: dict[str, Any] = {}
+
+    if max_transition_ns is not None:
+        slew_limits = library_slew_limits(corner)
+        declared = [e["default_max_transition"] for e in slew_limits if e["default_max_transition"] is not None]
+        if max_transition_ns == LIBRARY_LIMIT:
+            if not declared:
+                raise FlowError(
+                    "no liberty file of this corner declares default_max_transition; "
+                    "give --max-transition-ns a value"
+                )
+            limit_lib = min(declared)
+            ns = float(f"{limit_lib * time_unit_ns:.6g}")
+            source = (
+                "library: the smallest default_max_transition declared by the corner's "
+                "liberty files, in the library time unit"
+            )
+        else:
+            ns = float(max_transition_ns)
+            if ns <= 0:
+                raise FlowError(f"--max-transition-ns must be positive, got {ns}")
+            limit_lib = float(f"{ns / time_unit_ns:.6g}")
+            source = "command line"
+        out["max_transition_ns"] = ns
+        out["max_transition_library_units"] = limit_lib
+        out["max_transition_source"] = source
+        out["library_default_max_transition"] = slew_limits
+
+    if max_fanout is not None:
+        fanout_limits = library_fanout_limits(corner)
+        declares_any = any(
+            e["default_max_fanout"] is not None or e["pin_max_fanout_count"] for e in fanout_limits
+        )
+        if max_fanout == DRIVER_DEFAULT:
+            n = DEFAULT_MAX_FANOUT
+            source = "driver default: the set_max_fanout every earlier record's SDC carried"
+        else:
+            n = int(max_fanout)
+            if n <= 0:
+                raise FlowError(f"--max-fanout must be positive, got {n}")
+            source = "command line"
+        out["max_fanout"] = n
+        out["max_fanout_source"] = source
+        out["library_default_max_fanout"] = fanout_limits
+        out["library_declares_fanout_limit"] = declares_any
+
+    if slew_margin_percent is not None:
+        margin = float(slew_margin_percent)
+        if not 0.0 <= margin < 100.0:
+            raise FlowError(f"--slew-margin-percent must be in [0, 100), got {margin}")
+        out["slew_margin_percent"] = margin
+        out["slew_margin_basis"] = (
+            "ORFS SLEW_MARGIN, passed to repair_design -slew_margin at placement and "
+            "after global routing: the repair targets (100 - margin)% of each pin's "
+            "slew limit under estimated parasitics; the finish check keeps the full limit"
+        )
+
+    out["sdc_lines"] = signal_integrity_sdc_lines(out)
+    out["basis"] = (
+        "explicit SDC signal-integrity constraints this route was repaired against; "
+        "absent from a record means the SDC carried only set_max_fanout 32 and the "
+        "liberty files' own max_transition limits"
+    )
+    return out
+
+
+def sdc_lines(
+    view: dict[str, Any],
+    block: dict[str, Any],
+    clock_period_ns: float,
+    constraints: dict[str, Any] | None = None,
+) -> list[str]:
+    """The SDC both the host OpenSTA stage and the ORFS flow are constrained by."""
+    period_lib = clock_period_ns / view["time_unit_ns"]
+    load_lib = view["output_load_ff"] / view["cap_unit_ff"]
+    lines = [
+        f"set clk_period {period_lib:g}",
+        f"create_clock -name core_clk -period $clk_period [get_ports {block['clock_port']}]",
+        "set non_clock_inputs [all_inputs -no_clocks]",
+        "set_input_delay [expr $clk_period * 0.2] -clock core_clk $non_clock_inputs",
+        "set_output_delay [expr $clk_period * 0.2] -clock core_clk [all_outputs]",
+        f"set_load {load_lib:g} [all_outputs]",
+        *signal_integrity_sdc_lines(constraints),
+        *(f"set_false_path -from [get_ports {port}]" for port in block["false_path_from_ports"]),
+    ]
+    return lines
+
+
+def sdc_text(
+    view: dict[str, Any],
+    block: dict[str, Any],
+    clock_period_ns: float,
+    constraints: dict[str, Any] | None = None,
+) -> str:
+    return "\n".join(sdc_lines(view, block, clock_period_ns, constraints)) + "\n"
+
+
+# --------------------------------------------------------------------------
 # Stage: static timing
 # --------------------------------------------------------------------------
 
@@ -544,32 +787,13 @@ def run_sta(
     work: Path,
     netlist: Path,
     clock_period_ns: float,
+    constraints: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     time_unit_ns = view["time_unit_ns"]
     period_lib = clock_period_ns / time_unit_ns
-    load_lib = view["output_load_ff"] / view["cap_unit_ff"]
 
-    false_paths = "\n".join(
-        f"set_false_path -from [get_ports {port}]"
-        for port in block["false_path_from_ports"]
-    )
     sdc = work / "constraint.sdc"
-    sdc.write_text(
-        "\n".join(
-            [
-                f"set clk_period {period_lib:g}",
-                f"create_clock -name core_clk -period $clk_period [get_ports {block['clock_port']}]",
-                "set non_clock_inputs [all_inputs -no_clocks]",
-                "set_input_delay [expr $clk_period * 0.2] -clock core_clk $non_clock_inputs",
-                "set_output_delay [expr $clk_period * 0.2] -clock core_clk [all_outputs]",
-                f"set_load {load_lib:g} [all_outputs]",
-                "set_max_fanout 32 [current_design]",
-                false_paths,
-                "",
-            ]
-        ),
-        encoding="utf-8",
-    )
+    sdc.write_text(sdc_text(view, block, clock_period_ns, constraints), encoding="utf-8")
 
     script = work / "sta.tcl"
     script.write_text(
@@ -650,6 +874,7 @@ def search_fmax(
     start_period_ns: float,
     tolerance: float = 0.001,
     max_iterations: int = 40,
+    constraints: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Bisect the clock period for the shortest period that still meets setup.
 
@@ -662,7 +887,7 @@ def search_fmax(
     def wns_at(period_ns: float) -> float:
         stage = work / f"fmax_{period_ns:.6f}"
         stage.mkdir(parents=True, exist_ok=True)
-        result = run_sta(view, corner, block, stage, netlist, period_ns)
+        result = run_sta(view, corner, block, stage, netlist, period_ns, constraints)
         evaluations.append(
             {"clock_period_ns": period_ns, "setup_wns_ns": result["setup_wns_ns"]}
         )
@@ -832,48 +1057,16 @@ def platform_file_hashes(platform_name: str) -> dict[str, str]:
     return hashes
 
 
-def run_pnr(
-    view_name: str,
-    view: dict[str, Any],
-    block_name: str,
+def orfs_config_lines(
+    nickname: str,
     block: dict[str, Any],
-    work: Path,
-    clock_period_ns: float,
+    platform_name: str,
+    pnr: dict[str, Any],
     core_utilization: int,
     place_density: float,
-    keep_heavy: bool,
-    artifact_dir: Path,
-) -> dict[str, Any]:
-    pnr = view["pnr"]
-    platform_name = pnr["platform"]
-    case = work / "orfs"
-    case.mkdir(parents=True, exist_ok=True)
-
-    time_unit_ns = view["time_unit_ns"]
-    period_lib = clock_period_ns / time_unit_ns
-    load_lib = view["output_load_ff"] / view["cap_unit_ff"]
-
-    (case / "constraint.sdc").write_text(
-        "\n".join(
-            [
-                f"set clk_period {period_lib:g}",
-                f"create_clock -name core_clk -period $clk_period [get_ports {block['clock_port']}]",
-                "set non_clock_inputs [all_inputs -no_clocks]",
-                "set_input_delay [expr $clk_period * 0.2] -clock core_clk $non_clock_inputs",
-                "set_output_delay [expr $clk_period * 0.2] -clock core_clk [all_outputs]",
-                f"set_load {load_lib:g} [all_outputs]",
-                "set_max_fanout 32 [current_design]",
-                *(
-                    f"set_false_path -from [get_ports {port}]"
-                    for port in block["false_path_from_ports"]
-                ),
-                "",
-            ]
-        ),
-        encoding="utf-8",
-    )
-
-    nickname = f"opentallas_{block_name}_{view_name}"
+    constraints: dict[str, Any] | None = None,
+) -> list[str]:
+    """The ORFS config.mk for one route; SLEW_MARGIN only when a margin was given."""
     params = " ".join(f"{k} {v}" for k, v in sorted(block["parameters"].items()))
     config = [
         f"export DESIGN_NICKNAME = {nickname}",
@@ -902,6 +1095,40 @@ def run_pnr(
         config.append(f"export CORNER = {pnr['corner_env']}")
     for key, value in sorted(pnr["extra_config"].items()):
         config.append(f"export {key} = {value}")
+    if constraints and constraints.get("slew_margin_percent") is not None:
+        config.append(f"export SLEW_MARGIN = {constraints['slew_margin_percent']:g}")
+    return config
+
+
+def run_pnr(
+    view_name: str,
+    view: dict[str, Any],
+    block_name: str,
+    block: dict[str, Any],
+    work: Path,
+    clock_period_ns: float,
+    core_utilization: int,
+    place_density: float,
+    keep_heavy: bool,
+    artifact_dir: Path,
+    constraints: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    pnr = view["pnr"]
+    platform_name = pnr["platform"]
+    case = work / "orfs"
+    case.mkdir(parents=True, exist_ok=True)
+
+    time_unit_ns = view["time_unit_ns"]
+    period_lib = clock_period_ns / time_unit_ns
+
+    (case / "constraint.sdc").write_text(
+        sdc_text(view, block, clock_period_ns, constraints), encoding="utf-8"
+    )
+
+    nickname = f"opentallas_{block_name}_{view_name}"
+    config = orfs_config_lines(
+        nickname, block, platform_name, pnr, core_utilization, place_density, constraints
+    )
     (case / "config.mk").write_text("\n".join(config) + "\n", encoding="utf-8")
 
     def orfs_make(goal: str, log_name: str, timeout: int) -> subprocess.CompletedProcess:
@@ -1024,6 +1251,7 @@ def run_pnr(
         "place_density": place_density,
         "clock_period_ns": clock_period_ns,
         "sdc_clock_period_library_units": period_lib,
+        **({"signal_integrity_constraints": constraints} if constraints else {}),
         "metrics": metrics,
         "artifacts": artifacts,
         "artifact_dir": str(out_dir.relative_to(ROOT)) if out_dir.is_relative_to(ROOT) else str(out_dir),
@@ -1359,7 +1587,31 @@ def augment_design(
 # --------------------------------------------------------------------------
 
 
-def main(argv: list[str] | None = None) -> int:
+def _max_transition_arg(text: str) -> float | str:
+    if text == LIBRARY_LIMIT:
+        return text
+    try:
+        value = float(text)
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError(f"expected a time in ns or '{LIBRARY_LIMIT}', got {text!r}") from exc
+    if value <= 0:
+        raise argparse.ArgumentTypeError(f"max transition must be positive, got {text}")
+    return value
+
+
+def _max_fanout_arg(text: str) -> int | str:
+    if text == DRIVER_DEFAULT:
+        return text
+    try:
+        value = int(text)
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError(f"expected an integer or '{DRIVER_DEFAULT}', got {text!r}") from exc
+    if value <= 0:
+        raise argparse.ArgumentTypeError(f"max fanout must be positive, got {text}")
+    return value
+
+
+def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--view", required=True, choices=sorted(VIEWS))
     parser.add_argument("--block", choices=sorted(BLOCKS), help="named block from the built-in registry")
@@ -1379,6 +1631,56 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--core-utilization", type=int, default=35)
     parser.add_argument("--place-density", type=float, default=0.60)
     parser.add_argument("--keep-heavy-artifacts", action="store_true")
+    parser.add_argument(
+        "--max-transition-ns",
+        nargs="?",
+        const=LIBRARY_LIMIT,
+        default=None,
+        type=_max_transition_arg,
+        metavar="NS",
+        help=(
+            "emit set_max_transition NS [current_design] in the SDC so repair_design "
+            "buffers and sizes every net to that slew; given bare (or as 'library') "
+            "it is the smallest default_max_transition of the corner's liberty files "
+            "(asap7 RVT 0.32 ns, sky130hd 1.5 ns).  Absent: no set_max_transition, "
+            "the liberty limits alone, as every earlier record"
+        ),
+    )
+    parser.add_argument(
+        "--max-fanout",
+        nargs="?",
+        const=DRIVER_DEFAULT,
+        default=None,
+        type=_max_fanout_arg,
+        metavar="N",
+        help=(
+            "emit set_max_fanout N [current_design] and record it; given bare (or as "
+            "'default') it is the 32 every SDC carries anyway.  Absent: set_max_fanout "
+            "32, unrecorded, as every earlier record"
+        ),
+    )
+    parser.add_argument(
+        "--slew-margin-percent",
+        type=float,
+        default=None,
+        metavar="PCT",
+        help=(
+            "ORFS SLEW_MARGIN: repair_design overfixes max-slew to (100 - PCT)%% of "
+            "each pin's limit under estimated parasitics.  Absent: ORFS default, no margin"
+        ),
+    )
+    parser.add_argument(
+        "--source-root",
+        default=None,
+        metavar="DIR",
+        help=(
+            "tree to read the RTL sources from (default: this driver's own checkout).  "
+            "Its git identity becomes the record's git block, it is mounted as /src in "
+            "the ORFS container, and relative --output, --keep-workdir and "
+            "--mac-rate-evidence paths resolve under it; the commit this driver came "
+            "from is recorded in runner.driver"
+        ),
+    )
     parser.add_argument(
         "--purpose",
         default="characterization",
@@ -1430,7 +1732,21 @@ def main(argv: list[str] | None = None) -> int:
             "the lane index; distinct indices are counted into design.lanes_in_netlist"
         ),
     )
-    args = parser.parse_args(argv)
+    return parser
+
+
+def main(argv: list[str] | None = None) -> int:
+    global ROOT
+    args = build_parser().parse_args(argv)
+
+    if args.source_root:
+        source_root = Path(args.source_root).resolve()
+        if not (source_root / "rtl").is_dir():
+            print(f"--source-root {source_root} has no rtl/ directory", file=sys.stderr)
+            return 2
+        ROOT = source_root
+    else:
+        ROOT = DRIVER_ROOT
 
     output = Path(args.output)
     if not output.is_absolute():
@@ -1484,6 +1800,14 @@ def main(argv: list[str] | None = None) -> int:
         print(f"view {args.view} does not support place-and-route", file=sys.stderr)
         return 2
 
+    try:
+        constraints = resolve_signal_integrity_constraints(
+            view, corner, args.max_transition_ns, args.max_fanout, args.slew_margin_percent
+        )
+    except FlowError as exc:
+        print(str(exc), file=sys.stderr)
+        return 2
+
     workdir_ctx = None
     if args.keep_workdir:
         work = Path(args.keep_workdir)
@@ -1504,6 +1828,8 @@ def main(argv: list[str] | None = None) -> int:
             "python": sys.version.split()[0],
             "platform": platform.platform(),
             "argv": ["tools/run_abi3_physical.py", *(argv if argv is not None else sys.argv[1:])],
+            "source_root": str(ROOT),
+            "driver": driver_identity(),
         },
         "view": {
             "name": args.view,
@@ -1584,11 +1910,12 @@ def main(argv: list[str] | None = None) -> int:
         if "sta" in stages:
             assert netlist is not None
             record["static_timing"] = run_sta(
-                view, corner, block, work, netlist, args.clock_period_ns
+                view, corner, block, work, netlist, args.clock_period_ns, constraints
             )
             if args.fmax_search:
                 record["static_timing"]["fmax_search"] = search_fmax(
-                    view, corner, block, work, netlist, args.clock_period_ns
+                    view, corner, block, work, netlist, args.clock_period_ns,
+                    constraints=constraints,
                 )
             record["stages_completed"].append("sta")
 
@@ -1604,6 +1931,7 @@ def main(argv: list[str] | None = None) -> int:
                 args.place_density,
                 args.keep_heavy_artifacts,
                 output.parent / f"{output.stem}_artifacts",
+                constraints,
             )
             record["stages_completed"].append("pnr")
 
@@ -1685,6 +2013,19 @@ def main(argv: list[str] | None = None) -> int:
             f"  pnr:   wirelength={m.get('routed_wirelength_um')} um vias={m.get('vias')} "
             f"DRC={m.get('drc_errors')} antenna_nets={m.get('antenna_violating_nets')} "
             f"Fmax={float(m.get('fmax_hz', 0)) / 1e6:.2f} MHz"
+        )
+        print(
+            f"  drv:   max_slew={m.get('max_slew_violations')} max_cap={m.get('max_cap_violations')} "
+            f"max_fanout={m.get('max_fanout_violations')}"
+        )
+    if constraints:
+        print(
+            "  sdc:   " + "; ".join(constraints["sdc_lines"])
+            + (
+                f"; SLEW_MARGIN={constraints['slew_margin_percent']:g}"
+                if constraints.get("slew_margin_percent") is not None
+                else ""
+            )
         )
     design = record["design"]
     if "per_mac_area_um2" in design or "lanes" in design:
