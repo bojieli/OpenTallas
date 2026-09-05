@@ -120,18 +120,55 @@ def test_the_injection_audit_refuses_an_extra_edge() -> None:
 
 
 def test_the_golden_builder_reads_no_rtl() -> None:
-    """A golden derived from the run it is compared against proves nothing."""
-    text = BUILDER.read_text(encoding="utf-8")
-    body = "\n".join(
-        line for line in text.splitlines() if not line.strip().startswith("#")
-    )
-    # The docstring names the RTL it is NOT reading; strip it before looking.
-    body = body.split('"""', 2)[-1]
-    for forbidden in ("rtl/", "verilator", "iverilog", "Vot_a3", "obj_g1e"):
-        assert forbidden not in body, (
-            f"the golden builder mentions {forbidden!r}; the golden must be "
-            "produced by the reference model alone"
-        )
+    """A golden derived from the run it is compared against proves nothing.
+
+    Checked over the builder's EXECUTABLE code, not its prose: docstrings cite
+    the RTL they are talking about, and a citation is not a read.  What must
+    not be there is a string the code could open, a simulator it could run, or
+    a subprocess it could run one with.
+    """
+    import ast
+
+    tree = ast.parse(BUILDER.read_text(encoding="utf-8"))
+    docstrings = set()
+    for node in ast.walk(tree):
+        if isinstance(
+            node, (ast.Module, ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)
+        ):
+            body = getattr(node, "body", [])
+            if (
+                body
+                and isinstance(body[0], ast.Expr)
+                and isinstance(body[0].value, ast.Constant)
+                and isinstance(body[0].value.value, str)
+            ):
+                docstrings.add(id(body[0].value))
+    literals = [
+        node.value
+        for node in ast.walk(tree)
+        if isinstance(node, ast.Constant)
+        and isinstance(node.value, str)
+        and id(node) not in docstrings
+    ]
+    for text in literals:
+        lowered = text.lower()
+        for forbidden in ("rtl/", ".sv", "verilator", "iverilog", "vot_a3", "obj_"):
+            assert forbidden not in lowered, (
+                f"the golden builder's code carries the literal {text!r}; the "
+                "golden must be produced by the reference model alone"
+            )
+    imported = {
+        alias.name.split(".")[0]
+        for node in ast.walk(tree)
+        if isinstance(node, ast.Import)
+        for alias in node.names
+    } | {
+        node.module.split(".")[0]
+        for node in ast.walk(tree)
+        if isinstance(node, ast.ImportFrom) and node.module
+    }
+    assert "subprocess" not in imported
+    assert "rtl" not in imported
 
 
 def test_the_golden_reproduces_the_oracle(artifact: dict) -> None:

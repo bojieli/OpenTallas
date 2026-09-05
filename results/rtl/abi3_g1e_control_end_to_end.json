@@ -1,0 +1,2055 @@
+{
+  "campaign": "abi3_g1e_control_end_to_end",
+  "canonical_timestamp_policy": "no timestamp in canonical artifact",
+  "claim_boundary": {
+    "does_not_establish": [
+      "any engine result: every one was supplied",
+      "an RTL-emitted token, or an RTL-raised OFFICIAL_EOS",
+      "dual-simulator agreement: Icarus 11 cannot parse this vehicle's 64-bit weight window declarations",
+      "any rate or cycle-accurate timing claim"
+    ],
+    "establishes": [
+      "the ABI 3.0 control plane RTL issues the same sequence the reference model does, over every pass of the governed workload, on each of ROM and HBM, compared element for element with the first divergence recorded",
+      "the injected values reach only the engine completion handshake and the result memory write port, re-derived from the RTL source by an audit that is required to refuse a spliced counter-example",
+      "no engine ran: zero launches, zero engine work and zero weight reads, measured per pass"
+    ]
+  },
+  "cost_measurement": {
+    "measured_all_stores_seconds": 118.73,
+    "measured_per_store": {
+      "hbm": {
+        "elaborate_and_compile_seconds": 20.4,
+        "end_to_end_seconds": 58.19,
+        "golden_model_seconds": 32.69,
+        "hypothetical_note": "a lower bound: one result-memory write cycle per word, 1,879,799,430 words, at this run's own measured rate. It is reported because it is the arithmetic that most plausibly produced the ~3 h estimate, not because this rung needs it -- the RTL control plane can observe a result word only through a PREDICATE, and this program declares none",
+        "hypothetical_seconds_if_every_output_word_were_injected": 6457,
+        "run_seconds": 5.1,
+        "simulate_seconds": 2.333,
+        "simulated_cycles": 679236,
+        "simulated_cycles_per_second": 291143
+      },
+      "rom": {
+        "elaborate_and_compile_seconds": 20.51,
+        "end_to_end_seconds": 60.54,
+        "golden_model_seconds": 34.94,
+        "hypothetical_note": "a lower bound: one result-memory write cycle per word, 1,879,799,430 words, at this run's own measured rate. It is reported because it is the arithmetic that most plausibly produced the ~3 h estimate, not because this rung needs it -- the RTL control plane can observe a result word only through a PREDICATE, and this program declares none",
+        "hypothetical_seconds_if_every_output_word_were_injected": 6435,
+        "run_seconds": 5.09,
+        "simulate_seconds": 2.325,
+        "simulated_cycles": 679220,
+        "simulated_cycles_per_second": 292138
+      }
+    },
+    "replaces": {
+      "also_reported_as": "3.10 h per store by the lane that built the injection vehicle, which reported that conservative figure over an optimistic 0.35 h form under R13",
+      "figure": "~3 h per store",
+      "measured_instead": 118.73,
+      "not_edited_here": "no document or gate figure is changed by this tool; the measurement is published beside the estimate",
+      "recorded_in": [
+        "docs/OPENTALLAS_REDESIGN_PLAN.md, the ladder table's G1e row",
+        "docs/CHIP_ARCHITECTURE_DESIGN.md section 11.5",
+        "configs/gates/redesign_gates.json, G1e's evaluator note"
+      ]
+    }
+  },
+  "gate": "G1e (configs/gates/redesign_gates.json)",
+  "git": {
+    "commit": "794078a463e7791de33b1f900932566e34bc72ff",
+    "worktree_dirty": false
+  },
+  "records": [
+    {
+      "checker_returncode": 0,
+      "checks": 10441,
+      "cost": {
+        "elaborate_and_compile_seconds": 20.51,
+        "golden_model_seconds": 34.94,
+        "host_writes": 425984,
+        "passes": 3,
+        "run_seconds": 5.09,
+        "simulate_seconds": 2.325,
+        "simulated_cycles": 679220
+      },
+      "deployment": {
+        "admitted": true,
+        "capability": "configs/hardware/abi3_capability/rom_qwen3.json",
+        "capability_sha256": "5b5770fa766cd89d7a236a62722ef33d1db9f87be7403a8f8c55fc9ec8c8458e",
+        "certificate": {
+          "artifact": "results/abi3/rom_schedule_checks.json",
+          "artifact_sha256": "87da356bd8ecd47881888d8ec79e023ce9dd12da091a3f5821ce1a5688cdb0bb",
+          "case": "qwen3-rom-single-chip"
+        },
+        "declared_max_retired_work": 24088,
+        "deployment_sha256": "133afc13e1fcd2aade2e40530883c9986b0e920d99853990d9032fd777f26243",
+        "descriptor_count": 215,
+        "directory": "build/abi3/qwen3-8b-rom",
+        "entrypoint_count": 2,
+        "instruction_count": 74,
+        "model_id": "qwen3-8b",
+        "state_descriptor_count": 0,
+        "target_key": "qwen3-8b-rom-single-chip"
+      },
+      "eos": {
+        "model_generated_token_ids": [
+          3925,
+          13,
+          151645
+        ],
+        "model_stop_reason": "eos",
+        "official_eos_raised": false,
+        "post_eos_attempt": {
+          "attempted": true,
+          "message": "session already reached EOS or the maximum-new-token bound; no post-EOS or post-cap transaction",
+          "refused": true,
+          "refused_by": "runtime.sim.device.Device.run_transaction (Session.finished)",
+          "refused_in_rtl": false,
+          "rtl_probe": {
+            "emitted": true,
+            "in_the_compared_trace": false,
+            "issues": 691,
+            "shape": "one further pass, configured exactly as the last decode pass, with its own copy of that pass's engine results",
+            "why_not_in_the_trace": "the model refused this transaction, so it produced no golden for it; the probe asks only whether the RTL control plane refuses it too"
+          },
+          "status": 1,
+          "trap_class": 9,
+          "why": "the refusal is a host session-state refusal, taken before any instruction is fetched; it is not an act of the RTL control plane and this vehicle cannot measure it as one"
+        },
+        "post_eos_probe_measured_in_rtl": {
+          "issues": 691,
+          "meaning": "one further pass was driven into the RTL after the pass that produced the official EOS, configured exactly as the last decode pass. The reference model refuses such a transaction before fetching an instruction; what the RTL control plane does with it is measured here rather than argued. Its issues are not part of the compared trace",
+          "ran": true,
+          "rtl_admitted_the_pass": true,
+          "rtl_trapped": false,
+          "simulated_cycles": 169805,
+          "trap_class": 0
+        },
+        "post_eos_refused": false,
+        "rtl_eos_observation": {
+          "engine_launches": 0,
+          "eos_reason_encoding": {
+            "0": "EOS_NONE",
+            "1": "OFFICIAL_EOS",
+            "2": "MAX_NEW_TOKENS"
+          },
+          "meaning": "measured at the end of the run: the integrated top's selection outputs, which rtl/abi3/ot_a3_selection_token_append.sv drives. Under result injection the bridge's issue_valid is tied low, so that engine is never issued to and the outputs hold their reset values. An OFFICIAL_EOS reported by this rung would have been the model's, passed through",
+          "selected_eos_reason": 0,
+          "selected_tie_multiplicity": 0,
+          "selected_token": 0
+        },
+        "what_would_measure_them": [
+          "OFFICIAL_EOS: issue SELECTION.TOKEN_APPEND to the real engine with the injected ARGMAX token, which needs the top to select injection per issue rather than by parameter",
+          "post-EOS refusal: a program that predicates its continuation on EOS_MEMBER, or a device-side session the RTL owns"
+        ],
+        "why_not_measured_in_rtl": "in the promoted lowering the EOS decision is an ENGINE result -- rtl/abi3/ot_a3_selection_token_append.sv raises OFFICIAL_EOS from the policy's EOS set -- and under result injection no engine is issued to, so an EOS raised here would be the model's value passed through. The post-EOS refusal is a host session-state refusal in runtime/sim/device.py:run_transaction, taken before an instruction is fetched; this deployment's program carries no STATE instruction and no EOS_MEMBER predicate, so its RTL control plane has nothing to refuse. Both fields are reported false because this vehicle did not measure them"
+      },
+      "execution": {
+        "control_plane": "rtl/abi3/ot_a3_device_top.sv",
+        "dual_simulator": false,
+        "evidence_class": "public_open_tool_rtl_simulation",
+        "parameters": {
+          "ENABLE_RESULT_INJECTION": 1,
+          "INDEX_WORDS": 64,
+          "MATMUL_WEIGHT_BYTES": 0,
+          "RESULT_WORDS": 4096,
+          "SOURCE_WORDS": 256
+        },
+        "simulated_cycles": 679220,
+        "simulator": "verilator_cpp_executable",
+        "simulator_version": "5.050",
+        "vehicle": "rtl/test/a3_shipped_prefix_top.sv",
+        "why_single_simulator": "the vehicle declares `parameter longint unsigned MATMUL_WEIGHT_BYTES` and imports a DPI function returning `longint unsigned`; Icarus 11 cannot parse either, measured at this commit and before it. G1's own scope already records this vehicle as Verilator-only"
+      },
+      "git": {
+        "commit": "794078a463e7791de33b1f900932566e34bc72ff",
+        "worktree_dirty": false
+      },
+      "golden_vectors": {
+        "counts": {
+          "compared_trace_elements": 46866,
+          "injected_result_words": 0,
+          "injected_results": 2073,
+          "issues": 2073,
+          "passes": 3,
+          "views": 6429
+        },
+        "files": {
+          "a3_descriptor.hex": {
+            "bytes": 3153920,
+            "sha256": "1a5a51d554c7194e1d405ef08e948b4d83d6773b72f53ae83761a02963d0c060"
+          },
+          "a3_program.hex": {
+            "bytes": 266240,
+            "sha256": "745ccd815fb985216c22e68b237e7f082ed01de84bbc5a98dd8fd0220ea0ac95"
+          },
+          "a3_symbol.hex": {
+            "bytes": 18432,
+            "sha256": "d1e6e126fd3f63ebbfd0fdaa1dd2f7cb9036cfc0cfc5c57c7c10d85cfed6a9cf"
+          },
+          "g1e_case.hex": {
+            "bytes": 1152,
+            "sha256": "389cc606b23d09e5270140638b2bcf4c75c40116cb876d10f29e7ff177230728"
+          },
+          "g1e_golden_trace.txt": {
+            "bytes": 173472,
+            "sha256": "f70cfb78a438106addd8d000e1967f1f3608cc805169900083dd7c4e05e5aa52"
+          },
+          "g1e_golden_trace_queue.txt": {
+            "bytes": 177852,
+            "sha256": "2ed4856ef6735442f3abed86e05d5ff42837e5d386b0f51cd8deb215afd0b87e"
+          },
+          "g1e_inject.txt": {
+            "bytes": 51078,
+            "sha256": "c3031c2c332c8adcfc90519ff56c0d3b29cb5569597398fc5478629c056cd20d"
+          },
+          "g1e_inject_probe.txt": {
+            "bytes": 17054,
+            "sha256": "200e3f6b3dc73a8f92ebba256263e2cf5d547b52b4e6343a12a95be88813b4a2"
+          },
+          "g1e_meta.hex": {
+            "bytes": 162,
+            "sha256": "17e8c79d1428ca830b6a30518dd30df4561d3cfc6213ce0938fcd3c703a6a4c0"
+          }
+        },
+        "manifest_schema": "opentallas.rtl.abi3_g1e_control_vectors.v1"
+      },
+      "injection": {
+        "boundary": "engine_result",
+        "control_path_is_rtl": true,
+        "derivation": {
+          "boundary": "engine_result",
+          "golden_output_words_if_every_word_were_supplied": 1879799430,
+          "predicate_readable_words": [],
+          "predicated_instructions_in_program": 0,
+          "result_words_supplied": 0,
+          "supplies": [
+            "the engine completion (fault and trap class) for each issue",
+            "the result words a PREDICATE can read back, and no others"
+          ],
+          "why": "the sequencer reads device memory in exactly one place -- a PREDICATE whose truth is a word in an object -- so a word no PREDICATE names cannot change a control decision. This program declares 0 such predicate word(s) and 0 predicated instruction(s); supplying the other 1,879,799,430 output words would change nothing the control path can observe, and is counted here rather than carried"
+        },
+        "measured_at_run_time": {
+          "engine_launches": 0,
+          "engine_work": 0,
+          "result_words_written": 0,
+          "results_consumed": 2073,
+          "weight_halfword_reads": 0
+        },
+        "sites": {
+          "allowed_instance_ports": [
+            "eng_issue_fault",
+            "eng_issue_ready",
+            "eng_issue_trap_class"
+          ],
+          "allowed_sinks": [
+            "engine_fault",
+            "engine_ready",
+            "engine_trap_class",
+            "fault_seen",
+            "inj_completion_count",
+            "inj_last_response_index",
+            "injected_ready",
+            "issue_fault",
+            "issue_ready",
+            "issue_trap_class",
+            "last_response_index",
+            "output_write_count",
+            "res_addr",
+            "res_data",
+            "res_we",
+            "response_fault",
+            "response_trap_class",
+            "response_valid",
+            "result_mem",
+            "writes_after_fault"
+          ],
+          "clean": true,
+          "edges": [
+            {
+              "drives": "injected_ready",
+              "from": [
+                "inj_result_valid"
+              ],
+              "line": 587,
+              "statement": "wire injected_ready = (ENABLE_RESULT_INJECTION != 0) && inj_result_valid"
+            },
+            {
+              "drives": "engine_ready",
+              "from": [
+                "injected_ready"
+              ],
+              "line": 592,
+              "statement": "wire engine_ready = (ENABLE_RESULT_INJECTION != 0) ? injected_ready : bridge_issue_ready"
+            },
+            {
+              "drives": "engine_fault",
+              "from": [
+                "inj_result_fault",
+                "inj_result_valid"
+              ],
+              "line": 594,
+              "statement": "wire engine_fault = (ENABLE_RESULT_INJECTION != 0) ? (inj_result_valid && inj_result_fault) : bridge_issue_fault"
+            },
+            {
+              "drives": "engine_trap_class",
+              "from": [
+                "inj_result_trap_class"
+              ],
+              "line": 596,
+              "statement": "wire [15:0] engine_trap_class = (ENABLE_RESULT_INJECTION != 0) ? inj_result_trap_class : bridge_issue_trap_class"
+            },
+            {
+              "drives": "issue_ready",
+              "from": [
+                "engine_ready"
+              ],
+              "line": 598,
+              "statement": "assign issue_ready = exact_multicast_issue ? (multicast_issue_active && (multicast_done || multicast_failed)) : engine_ready"
+            },
+            {
+              "drives": "issue_fault",
+              "from": [
+                "engine_fault"
+              ],
+              "line": 601,
+              "statement": "assign issue_fault = exact_multicast_issue ? multicast_failed : engine_fault"
+            },
+            {
+              "drives": "issue_trap_class",
+              "from": [
+                "engine_trap_class"
+              ],
+              "line": 603,
+              "statement": "assign issue_trap_class = exact_multicast_issue ? multicast_trap_class : engine_trap_class"
+            },
+            {
+              "drives": "response_valid",
+              "from": [
+                "issue_ready"
+              ],
+              "line": 605,
+              "statement": "assign response_valid = issue_valid && issue_ready"
+            },
+            {
+              "drives": "response_fault",
+              "from": [
+                "issue_fault"
+              ],
+              "line": 607,
+              "statement": "assign response_fault = issue_fault"
+            },
+            {
+              "drives": "response_trap_class",
+              "from": [
+                "issue_trap_class"
+              ],
+              "line": 608,
+              "statement": "assign response_trap_class = issue_trap_class"
+            },
+            {
+              "drives": "inj_last_response_index",
+              "from": [
+                "issue_ready"
+              ],
+              "line": 856,
+              "statement": "end else if (inj_issue_valid && issue_ready) begin inj_last_response_index <= issue_index"
+            },
+            {
+              "drives": "multicast_response_fire",
+              "from": [
+                "issue_ready"
+              ],
+              "line": 879,
+              "statement": "wire multicast_response_fire = exact_multicast_issue && issue_ready"
+            },
+            {
+              "drives": "multicast_issue_active",
+              "from": [
+                "multicast_response_fire"
+              ],
+              "line": 932,
+              "statement": "if (multicast_response_fire) begin multicast_issue_active <= 1'b0"
+            },
+            {
+              "drives": "multicast_source_read_ready_int",
+              "from": [
+                "multicast_issue_active"
+              ],
+              "line": 956,
+              "statement": "wire multicast_source_read_ready_int = multicast_issue_active && multicast_source_ready_phase"
+            },
+            {
+              "drives": "multicast_source_ready_phase",
+              "from": [
+                "multicast_source_read_ready_int"
+              ],
+              "line": 1000,
+              "statement": "else if (multicast_source_read_ready_int) multicast_source_ready_phase <= 1'b0"
+            },
+            {
+              "drives": "multicast_source_stall_cycles_q",
+              "from": [
+                "multicast_source_read_ready_int"
+              ],
+              "line": 1005,
+              "statement": "if (multicast_source_read_valid_int && !multicast_source_read_ready_int) multicast_source_stall_cycles_q <= multicast_source_stall_cycles_q + 32'd1"
+            },
+            {
+              "drives": "multicast_source_read_count_q",
+              "from": [
+                "multicast_source_read_ready_int"
+              ],
+              "line": 1009,
+              "statement": "if (multicast_source_read_valid_int && multicast_source_read_ready_int) begin multicast_source_read_count_q <= multicast_source_read_count_q + 32'd1"
+            },
+            {
+              "drives": "multicast_source_response_data",
+              "from": [
+                "multicast_source_read_count_q"
+              ],
+              "line": 1013,
+              "statement": "|| (multicast_source_read_offset_int >= 64'd65536) || (multicast_source_read_offset_int[15:2] != multicast_source_read_count_q[13:0])) begin multicast_source_response_data <= 32'd0"
+            },
+            {
+              "drives": "multicast_remote_write_ready",
+              "from": [
+                "multicast_issue_active"
+              ],
+              "line": 1045,
+              "statement": "end end end end assign multicast_remote_write_ready = multicast_issue_active && (multicast_service_cycle[1:0] != 2'b00)"
+            },
+            {
+              "drives": "res_we",
+              "from": [
+                "inj_write_en"
+              ],
+              "line": 1184,
+              "statement": "wire res_we = (ENABLE_RESULT_INJECTION != 0) ? inj_write_en : out_we"
+            },
+            {
+              "drives": "res_addr",
+              "from": [
+                "inj_write_addr"
+              ],
+              "line": 1187,
+              "statement": "wire [31:0] res_addr = (ENABLE_RESULT_INJECTION != 0) ? inj_write_addr : out_addr"
+            },
+            {
+              "drives": "res_data",
+              "from": [
+                "inj_write_data"
+              ],
+              "line": 1189,
+              "statement": "wire [31:0] res_data = (ENABLE_RESULT_INJECTION != 0) ? inj_write_data : out_data"
+            },
+            {
+              "drives": "inj_completion_count",
+              "from": [
+                "issue_ready"
+              ],
+              "line": 1213,
+              "statement": "end else begin if (inj_issue_valid && issue_ready) inj_completion_count <= inj_completion_count + 32'd1"
+            },
+            {
+              "drives": "output_write_count",
+              "from": [
+                "res_we"
+              ],
+              "line": 1273,
+              "statement": "end if (res_we) begin output_write_count <= output_write_count + 32'd1"
+            },
+            {
+              "drives": "result_mem",
+              "from": [
+                "res_addr",
+                "res_data"
+              ],
+              "line": 1276,
+              "statement": "if (res_addr < RESULT_WORDS) result_mem[res_addr] <= res_data"
+            },
+            {
+              "drives": "writes_after_fault",
+              "from": [
+                "multicast_remote_write_ready",
+                "res_we"
+              ],
+              "line": 1280,
+              "statement": "lticast_remote_write_ready))) writes_after_fault <= writes_after_fault + (res_we ? 32'd1 : 32'd0) + ((multicast_remote_write_valid && multicast_remote_write_ready) ? 32'd1 : 32'd0)"
+            },
+            {
+              "drives": "fault_seen",
+              "from": [
+                "issue_fault",
+                "issue_ready"
+              ],
+              "line": 1288,
+              "statement": "if (issue_valid && issue_ready && issue_fault) fault_seen <= 1'b1"
+            },
+            {
+              "drives": "last_response_index",
+              "from": [
+                "inj_last_response_index"
+              ],
+              "line": 837,
+              "statement": "assign last_response_index = (ENABLE_RESULT_INJECTION != 0) ? inj_last_response_index : bridge_last_response_index"
+            },
+            {
+              "drives": "multicast_service_cycle",
+              "from": [
+                "multicast_issue_active"
+              ],
+              "line": 918,
+              "statement": "end else begin if (multicast_issue_active) multicast_service_cycle <= multicast_service_cycle + 32'd1"
+            },
+            {
+              "drives": "multicast_source_read_count",
+              "from": [
+                "multicast_source_read_count_q"
+              ],
+              "line": 963,
+              "statement": "assign multicast_source_read_count = multicast_source_read_count_q"
+            },
+            {
+              "drives": "multicast_source_stall_cycles",
+              "from": [
+                "multicast_source_stall_cycles_q"
+              ],
+              "line": 965,
+              "statement": "assign multicast_source_stall_cycles = multicast_source_stall_cycles_q"
+            },
+            {
+              "drives": "multicast_destination_stall_cycles_q",
+              "from": [
+                "multicast_remote_write_ready"
+              ],
+              "line": 1026,
+              "statement": "end if (multicast_remote_write_valid && !multicast_remote_write_ready) multicast_destination_stall_cycles_q <= multicast_destination_stall_cycles_q + 32'd1"
+            },
+            {
+              "drives": "multicast_protocol_error_q",
+              "from": [
+                "multicast_remote_write_ready"
+              ],
+              "line": 1031,
+              "statement": " {8'd0, multicast_remote_write_offset[23:16]}) || (multicast_remote_write_data != multicast_expected_word( multicast_remote_write_offset[15:2]))) multicast_protocol_error_q <= 1'b1"
+            },
+            {
+              "drives": "multicast_destination_stall_cycles",
+              "from": [
+                "multicast_destination_stall_cycles_q"
+              ],
+              "line": 966,
+              "statement": "assign multicast_destination_stall_cycles = multicast_destination_stall_cycles_q"
+            },
+            {
+              "drives": "multicast_protocol_error",
+              "from": [
+                "multicast_protocol_error_q"
+              ],
+              "line": 970,
+              "statement": "assign multicast_protocol_error = multicast_protocol_error_q"
+            }
+          ],
+          "exact_multicast_elaborated": 0,
+          "injected_inputs": [
+            "inj_result_valid",
+            "inj_result_fault",
+            "inj_result_trap_class",
+            "inj_write_en",
+            "inj_write_addr",
+            "inj_write_data"
+          ],
+          "instance_port_classes": [
+            "engine_completion_boundary",
+            "inert_exact_multicast_adapter"
+          ],
+          "instance_ports_outside_allowed": [],
+          "instance_ports_reached": [
+            {
+              "class": "engine_completion_boundary",
+              "expression": "issue_ready",
+              "from": [
+                "issue_ready"
+              ],
+              "line": 555,
+              "port": "eng_issue_ready"
+            },
+            {
+              "class": "engine_completion_boundary",
+              "expression": "issue_fault",
+              "from": [
+                "issue_fault"
+              ],
+              "line": 556,
+              "port": "eng_issue_fault"
+            },
+            {
+              "class": "engine_completion_boundary",
+              "expression": "issue_trap_class",
+              "from": [
+                "issue_trap_class"
+              ],
+              "line": 557,
+              "port": "eng_issue_trap_class"
+            },
+            {
+              "class": "inert_exact_multicast_adapter",
+              "expression": "multicast_source_read_ready_int",
+              "from": [
+                "multicast_source_read_ready_int"
+              ],
+              "line": 1114,
+              "port": "source_read_ready"
+            },
+            {
+              "class": "inert_exact_multicast_adapter",
+              "expression": "multicast_source_response_data",
+              "from": [
+                "multicast_source_response_data"
+              ],
+              "line": 1119,
+              "port": "source_response_data"
+            },
+            {
+              "class": "inert_exact_multicast_adapter",
+              "expression": "multicast_remote_write_ready",
+              "from": [
+                "multicast_remote_write_ready"
+              ],
+              "line": 1122,
+              "port": "remote_write_ready"
+            }
+          ],
+          "method": "every statement of the top that mentions a tainted signal is found, the signal it drives is added, and the closure is taken; a tainted signal outside the declared sink set refuses the audit",
+          "outside_allowed_sinks": [],
+          "reached": [
+            "engine_fault",
+            "engine_ready",
+            "engine_trap_class",
+            "fault_seen",
+            "inj_completion_count",
+            "inj_last_response_index",
+            "injected_ready",
+            "issue_fault",
+            "issue_ready",
+            "issue_trap_class",
+            "last_response_index",
+            "multicast_destination_stall_cycles",
+            "multicast_destination_stall_cycles_q",
+            "multicast_issue_active",
+            "multicast_protocol_error",
+            "multicast_protocol_error_q",
+            "multicast_remote_write_ready",
+            "multicast_response_fire",
+            "multicast_service_cycle",
+            "multicast_source_read_count",
+            "multicast_source_read_count_q",
+            "multicast_source_read_ready_int",
+            "multicast_source_ready_phase",
+            "multicast_source_response_data",
+            "multicast_source_stall_cycles",
+            "multicast_source_stall_cycles_q",
+            "output_write_count",
+            "res_addr",
+            "res_data",
+            "res_we",
+            "response_fault",
+            "response_trap_class",
+            "response_valid",
+            "result_mem",
+            "writes_after_fault"
+          ],
+          "self_test": {
+            "outside_allowed_sinks_when_spliced": [
+              "audit_probe_pc"
+            ],
+            "ran": true,
+            "refused_the_spliced_edge": true,
+            "spliced_edge": "wire audit_probe_pc = inj_result_valid;"
+          },
+          "through_memory": {
+            "control_path_window": "predicate_read_value",
+            "edges": [
+              {
+                "drives": "clear_word",
+                "from": [
+                  "result_mem"
+                ],
+                "line": 399,
+                "statement": "clear_word = clear_word + 1) result_mem[clear_word] = 32'hdead_beef"
+              },
+              {
+                "drives": "predicate_read_value",
+                "from": [
+                  "result_mem"
+                ],
+                "line": 811,
+                "statement": "if (predicate_mapped) begin predicate_read_value <= (result_mem[predicate_word_addr[31:0]] != 32'd0)"
+              },
+              {
+                "drives": "m0_rd_data",
+                "from": [
+                  "result_mem"
+                ],
+                "line": 1223,
+                "statement": "end if (m0_rd_en) begin if (m0_reads_result && (m0_rd_addr < RESULT_WORDS)) m0_rd_data <= result_mem[m0_rd_addr]"
+              },
+              {
+                "drives": "m1_rd_data",
+                "from": [
+                  "result_mem"
+                ],
+                "line": 1249,
+                "statement": "end end else if (m1_reads_result && (m1_rd_addr < RESULT_WORDS)) m1_rd_data <= result_mem[m1_rd_addr]"
+              },
+              {
+                "drives": "result_read_data",
+                "from": [
+                  "result_mem"
+                ],
+                "line": 1290,
+                "statement": "end end assign result_read_data = (result_read_addr < RESULT_WORDS) ? result_mem[result_read_addr] : 32'd0"
+              }
+            ],
+            "memory": "result_mem",
+            "note": "the only reader of the result memory that any control decision depends on is the sequencer's predicate-read port; the engine operand ports are read by engines, and under result injection no engine is issued to",
+            "readers": [
+              "clear_word",
+              "m0_rd_data",
+              "m1_rd_data",
+              "predicate_read_value",
+              "result_read_data"
+            ]
+          }
+        },
+        "what_the_control_plane_did_itself": [
+          "instruction fetch and decode from the loaded program store",
+          "symbol-file binding of the request's sixteen symbols",
+          "loop setup, iteration and teardown on the loop stack",
+          "operand view resolution, including every element offset",
+          "wait-set evaluation against the event scoreboard",
+          "dependence-table hazard checking",
+          "queue acceptance and issue in program order",
+          "retirement and the completion of every issue"
+        ]
+      },
+      "issue_census": {
+        "classes": 26,
+        "for": "G1's composition certificate, which its own acceptance requires to be derived mechanically from this rung's issue trace rather than asserted: these are the (family, subopcode, descriptor id) instances the governed workload issued, counted from the RTL's trace and not from the golden's",
+        "instances": 2073,
+        "rows": [
+          {
+            "descriptor_id": 32,
+            "family": 16,
+            "instances": 3,
+            "sub": 2
+          },
+          {
+            "descriptor_id": 190,
+            "family": 16,
+            "instances": 3,
+            "sub": 2
+          },
+          {
+            "descriptor_id": 108,
+            "family": 16,
+            "instances": 108,
+            "sub": 3
+          },
+          {
+            "descriptor_id": 115,
+            "family": 16,
+            "instances": 108,
+            "sub": 3
+          },
+          {
+            "descriptor_id": 59,
+            "family": 32,
+            "instances": 108,
+            "sub": 0
+          },
+          {
+            "descriptor_id": 67,
+            "family": 32,
+            "instances": 108,
+            "sub": 0
+          },
+          {
+            "descriptor_id": 73,
+            "family": 32,
+            "instances": 108,
+            "sub": 0
+          },
+          {
+            "descriptor_id": 130,
+            "family": 32,
+            "instances": 108,
+            "sub": 0
+          },
+          {
+            "descriptor_id": 151,
+            "family": 32,
+            "instances": 108,
+            "sub": 0
+          },
+          {
+            "descriptor_id": 158,
+            "family": 32,
+            "instances": 108,
+            "sub": 0
+          },
+          {
+            "descriptor_id": 171,
+            "family": 32,
+            "instances": 108,
+            "sub": 0
+          },
+          {
+            "descriptor_id": 197,
+            "family": 32,
+            "instances": 3,
+            "sub": 0
+          },
+          {
+            "descriptor_id": 41,
+            "family": 32,
+            "instances": 3,
+            "sub": 3
+          },
+          {
+            "descriptor_id": 50,
+            "family": 48,
+            "instances": 108,
+            "sub": 0
+          },
+          {
+            "descriptor_id": 144,
+            "family": 48,
+            "instances": 108,
+            "sub": 0
+          },
+          {
+            "descriptor_id": 183,
+            "family": 48,
+            "instances": 3,
+            "sub": 0
+          },
+          {
+            "descriptor_id": 79,
+            "family": 48,
+            "instances": 108,
+            "sub": 1
+          },
+          {
+            "descriptor_id": 87,
+            "family": 48,
+            "instances": 108,
+            "sub": 1
+          },
+          {
+            "descriptor_id": 94,
+            "family": 48,
+            "instances": 108,
+            "sub": 2
+          },
+          {
+            "descriptor_id": 100,
+            "family": 48,
+            "instances": 108,
+            "sub": 2
+          },
+          {
+            "descriptor_id": 138,
+            "family": 48,
+            "instances": 108,
+            "sub": 3
+          },
+          {
+            "descriptor_id": 177,
+            "family": 48,
+            "instances": 108,
+            "sub": 3
+          },
+          {
+            "descriptor_id": 165,
+            "family": 48,
+            "instances": 108,
+            "sub": 4
+          },
+          {
+            "descriptor_id": 124,
+            "family": 64,
+            "instances": 108,
+            "sub": 1
+          },
+          {
+            "descriptor_id": 205,
+            "family": 112,
+            "instances": 3,
+            "sub": 0
+          },
+          {
+            "descriptor_id": 212,
+            "family": 112,
+            "instances": 3,
+            "sub": 1
+          }
+        ],
+        "source": "the RTL's own issue trace over every pass"
+      },
+      "marker": "PASS: ABI3 G1e control end to end passes=3 issues=2073 views=6429 elements=46866 injected=2073 checks=10441",
+      "oracle": {
+        "agreement": true,
+        "artifact_sha256": "d9c7dd222cff342f84ff34be3600f8b41c6c8c6c0280a523737fc53d1f20c6ec",
+        "generated_token_ids": [
+          3925,
+          13,
+          151645
+        ],
+        "path": "results/abi3/qwen3_reference_oracle_eos.json",
+        "stop_reason": "eos"
+      },
+      "passes": {
+        "device_transactions": 3,
+        "executed": 3,
+        "gate_requires": 19,
+        "model_forward_passes": 18,
+        "per_pass": [
+          {
+            "context_length": 16,
+            "entrypoint_id": 0,
+            "generation_index": 0,
+            "index": 0,
+            "instructions_fetched": 2104,
+            "instructions_retired": 2104,
+            "issues": 691,
+            "loop_iterations": 723,
+            "simulated_cycles": 169805,
+            "views": 2143,
+            "wait_events": 689
+          },
+          {
+            "context_length": 17,
+            "entrypoint_id": 1,
+            "generation_index": 1,
+            "index": 1,
+            "instructions_fetched": 2104,
+            "instructions_retired": 2104,
+            "issues": 691,
+            "loop_iterations": 723,
+            "simulated_cycles": 169805,
+            "views": 2143,
+            "wait_events": 689
+          },
+          {
+            "context_length": 18,
+            "entrypoint_id": 1,
+            "generation_index": 2,
+            "index": 2,
+            "instructions_fetched": 2104,
+            "instructions_retired": 2104,
+            "issues": 691,
+            "loop_iterations": 723,
+            "simulated_cycles": 169805,
+            "views": 2143,
+            "wait_events": 689
+          }
+        ],
+        "unit": "device transaction through the RTL control plane",
+        "why_not_19": "measured: the shipped Qwen deployment executes TA-QW-EOS-1 in 3 device transactions -- one prefill whose SPAN_TOKENS is 16 and covers every prompt position at once, then one decode per further token. The workload's 19 token positions are 16 prompt plus 3 generated; only 18 of them are ever forward-passed, because the first generated token comes out of the prefill pass and the last generated token (the official EOS) is never fed back. No correct execution of this workload on this deployment performs 19 passes, so the gate's field cannot be satisfied by running it correctly; the number is not adjusted here and the rung fails on it",
+        "workload_token_positions": 19
+      },
+      "rung": "G1e",
+      "storage_class": "rom",
+      "trace": {
+        "compared_elements": 46866,
+        "compared_issue_count": 2073,
+        "compared_issue_fields": [
+          "family",
+          "sub",
+          "descriptor_id",
+          "pc"
+        ],
+        "compared_view_count": 6429,
+        "compared_view_fields": [
+          "slot",
+          "descriptor_id",
+          "extent",
+          "extent_axis",
+          "element_offset",
+          "rank"
+        ],
+        "divergence_index": null,
+        "equals_golden": true,
+        "extended_comparison": {
+          "adds": [
+            "queue"
+          ],
+          "compared_elements": 48939,
+          "divergence_index": null,
+          "equal": true,
+          "meaning": "the schedule the SCHEDULE record selects is a pure function of the operator's descriptor, so the model computes it and the RTL's choice can be compared; reported beside the gate-compared set, not folded into it"
+        },
+        "golden_source": {
+          "driver": "runtime.driver.GenerationDriver",
+          "how": "this tool compiles, runs and reads no RTL; the issue stream is Device.trace and every view is resolved by the device's own resolver against the loop bindings the device recorded at that instruction",
+          "independent_of_rtl": true,
+          "module": "runtime.sim.device.Device",
+          "view_resolution": "runtime.sim.memory.ViewResolver (the device's own)",
+          "wall_seconds": 34.94
+        },
+        "uncompared_issue_fields": [
+          "serial",
+          "irs_slot"
+        ],
+        "why_uncompared": "the issue serial and the issue-record-store slot are RTL allocations the reference model does not compute; a golden that carried them would be comparing the RTL against the vector builder rather than against the model. The serial is still required to advance within each pass and the slot to be a real queue index"
+      },
+      "workload": {
+        "digest": "ea35fc800cccd2839aa663cdf0e7806600948a26f0057d1ec7ec7bd31d007eaa",
+        "max_new_tokens": 16,
+        "path": "build/workloads/qwen3-8b/TA-QW-EOS-1.json",
+        "prompt_token_count": 16,
+        "sha256": "027db49013370fc73ca884d5398c06aab790956ae970c2415d63e58df23f78b8"
+      },
+      "workload_id": "TA-QW-EOS-1"
+    },
+    {
+      "checker_returncode": 0,
+      "checks": 10441,
+      "cost": {
+        "elaborate_and_compile_seconds": 20.4,
+        "golden_model_seconds": 32.69,
+        "host_writes": 425984,
+        "passes": 3,
+        "run_seconds": 5.1,
+        "simulate_seconds": 2.333,
+        "simulated_cycles": 679236
+      },
+      "deployment": {
+        "admitted": true,
+        "capability": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+        "capability_sha256": "fa70dd44a1b532a99d103968b31b743bbed324d002fbe0214c9541fb1687e23d",
+        "certificate": {
+          "artifact": "results/abi3/hbm_qwen_deployment_certificate.json",
+          "artifact_sha256": "a12e84decb9d77ed31eca1af8a4313f8aa57485de4a4bea84fc0dafd8bbcb2a0",
+          "case": "qwen3-hbm-single-chip"
+        },
+        "declared_max_retired_work": 24088,
+        "deployment_sha256": "cb9067f5fbf67f7df4212399aee6ba75ced4ca5c8f2dc8c1631372a4068cea2c",
+        "descriptor_count": 221,
+        "directory": "build/abi3/qwen3-8b-hbm-tokens",
+        "entrypoint_count": 2,
+        "instruction_count": 74,
+        "model_id": "qwen3-8b",
+        "state_descriptor_count": 0,
+        "target_key": "qwen3-8b-hbm-single-chip"
+      },
+      "eos": {
+        "model_generated_token_ids": [
+          3925,
+          13,
+          151645
+        ],
+        "model_stop_reason": "eos",
+        "official_eos_raised": false,
+        "post_eos_attempt": {
+          "attempted": true,
+          "message": "session already reached EOS or the maximum-new-token bound; no post-EOS or post-cap transaction",
+          "refused": true,
+          "refused_by": "runtime.sim.device.Device.run_transaction (Session.finished)",
+          "refused_in_rtl": false,
+          "rtl_probe": {
+            "emitted": true,
+            "in_the_compared_trace": false,
+            "issues": 691,
+            "shape": "one further pass, configured exactly as the last decode pass, with its own copy of that pass's engine results",
+            "why_not_in_the_trace": "the model refused this transaction, so it produced no golden for it; the probe asks only whether the RTL control plane refuses it too"
+          },
+          "status": 1,
+          "trap_class": 9,
+          "why": "the refusal is a host session-state refusal, taken before any instruction is fetched; it is not an act of the RTL control plane and this vehicle cannot measure it as one"
+        },
+        "post_eos_probe_measured_in_rtl": {
+          "issues": 691,
+          "meaning": "one further pass was driven into the RTL after the pass that produced the official EOS, configured exactly as the last decode pass. The reference model refuses such a transaction before fetching an instruction; what the RTL control plane does with it is measured here rather than argued. Its issues are not part of the compared trace",
+          "ran": true,
+          "rtl_admitted_the_pass": true,
+          "rtl_trapped": false,
+          "simulated_cycles": 169809,
+          "trap_class": 0
+        },
+        "post_eos_refused": false,
+        "rtl_eos_observation": {
+          "engine_launches": 0,
+          "eos_reason_encoding": {
+            "0": "EOS_NONE",
+            "1": "OFFICIAL_EOS",
+            "2": "MAX_NEW_TOKENS"
+          },
+          "meaning": "measured at the end of the run: the integrated top's selection outputs, which rtl/abi3/ot_a3_selection_token_append.sv drives. Under result injection the bridge's issue_valid is tied low, so that engine is never issued to and the outputs hold their reset values. An OFFICIAL_EOS reported by this rung would have been the model's, passed through",
+          "selected_eos_reason": 0,
+          "selected_tie_multiplicity": 0,
+          "selected_token": 0
+        },
+        "what_would_measure_them": [
+          "OFFICIAL_EOS: issue SELECTION.TOKEN_APPEND to the real engine with the injected ARGMAX token, which needs the top to select injection per issue rather than by parameter",
+          "post-EOS refusal: a program that predicates its continuation on EOS_MEMBER, or a device-side session the RTL owns"
+        ],
+        "why_not_measured_in_rtl": "in the promoted lowering the EOS decision is an ENGINE result -- rtl/abi3/ot_a3_selection_token_append.sv raises OFFICIAL_EOS from the policy's EOS set -- and under result injection no engine is issued to, so an EOS raised here would be the model's value passed through. The post-EOS refusal is a host session-state refusal in runtime/sim/device.py:run_transaction, taken before an instruction is fetched; this deployment's program carries no STATE instruction and no EOS_MEMBER predicate, so its RTL control plane has nothing to refuse. Both fields are reported false because this vehicle did not measure them"
+      },
+      "execution": {
+        "control_plane": "rtl/abi3/ot_a3_device_top.sv",
+        "dual_simulator": false,
+        "evidence_class": "public_open_tool_rtl_simulation",
+        "parameters": {
+          "ENABLE_RESULT_INJECTION": 1,
+          "INDEX_WORDS": 64,
+          "MATMUL_WEIGHT_BYTES": 0,
+          "RESULT_WORDS": 4096,
+          "SOURCE_WORDS": 256
+        },
+        "simulated_cycles": 679236,
+        "simulator": "verilator_cpp_executable",
+        "simulator_version": "5.050",
+        "vehicle": "rtl/test/a3_shipped_prefix_top.sv",
+        "why_single_simulator": "the vehicle declares `parameter longint unsigned MATMUL_WEIGHT_BYTES` and imports a DPI function returning `longint unsigned`; Icarus 11 cannot parse either, measured at this commit and before it. G1's own scope already records this vehicle as Verilator-only"
+      },
+      "git": {
+        "commit": "794078a463e7791de33b1f900932566e34bc72ff",
+        "worktree_dirty": false
+      },
+      "golden_vectors": {
+        "counts": {
+          "compared_trace_elements": 46866,
+          "injected_result_words": 0,
+          "injected_results": 2073,
+          "issues": 2073,
+          "passes": 3,
+          "views": 6429
+        },
+        "files": {
+          "a3_descriptor.hex": {
+            "bytes": 3153920,
+            "sha256": "4ebe0d08fc4c8b683b73b5ecc61ffa2f20c94af81d7860555a2d919403910bb8"
+          },
+          "a3_program.hex": {
+            "bytes": 266240,
+            "sha256": "10108246ea2042d04af4d7ccbe1ee1625f28e8f1cbaaa708db206957de61092a"
+          },
+          "a3_symbol.hex": {
+            "bytes": 18432,
+            "sha256": "fe9e0473c688121d1940026390b4251b1b7ec35f89ccc2952ebf917337f39e4f"
+          },
+          "g1e_case.hex": {
+            "bytes": 1152,
+            "sha256": "748a6bcd462df1f8b21e00210b0e219c17dbe7aba1eb5810821eae036ab11939"
+          },
+          "g1e_golden_trace.txt": {
+            "bytes": 174231,
+            "sha256": "12e332e9126a20f05b68c31fcf0cbc172f035e1bb1fc93e21636e9303796ffac"
+          },
+          "g1e_golden_trace_queue.txt": {
+            "bytes": 178611,
+            "sha256": "34ef06a0121ce1eb12c4c9399f53853702d158e81ae06d01e7a0468e4c9880d9"
+          },
+          "g1e_inject.txt": {
+            "bytes": 51186,
+            "sha256": "9d0cea9e332e2067121429117bc07d4b2821b9c91568eab09e2aae8d6513fad2"
+          },
+          "g1e_inject_probe.txt": {
+            "bytes": 17090,
+            "sha256": "6726d7d8238185e88955d8d3c6ec03f089b80888e05c32fcd4f4cdbd90b89eec"
+          },
+          "g1e_meta.hex": {
+            "bytes": 162,
+            "sha256": "027d2d94a10e1a623693e2d6664e4fdaa8bd8f00bcec19dc7804d0da875b5b9b"
+          }
+        },
+        "manifest_schema": "opentallas.rtl.abi3_g1e_control_vectors.v1"
+      },
+      "injection": {
+        "boundary": "engine_result",
+        "control_path_is_rtl": true,
+        "derivation": {
+          "boundary": "engine_result",
+          "golden_output_words_if_every_word_were_supplied": 1879799430,
+          "predicate_readable_words": [],
+          "predicated_instructions_in_program": 0,
+          "result_words_supplied": 0,
+          "supplies": [
+            "the engine completion (fault and trap class) for each issue",
+            "the result words a PREDICATE can read back, and no others"
+          ],
+          "why": "the sequencer reads device memory in exactly one place -- a PREDICATE whose truth is a word in an object -- so a word no PREDICATE names cannot change a control decision. This program declares 0 such predicate word(s) and 0 predicated instruction(s); supplying the other 1,879,799,430 output words would change nothing the control path can observe, and is counted here rather than carried"
+        },
+        "measured_at_run_time": {
+          "engine_launches": 0,
+          "engine_work": 0,
+          "result_words_written": 0,
+          "results_consumed": 2073,
+          "weight_halfword_reads": 0
+        },
+        "sites": {
+          "allowed_instance_ports": [
+            "eng_issue_fault",
+            "eng_issue_ready",
+            "eng_issue_trap_class"
+          ],
+          "allowed_sinks": [
+            "engine_fault",
+            "engine_ready",
+            "engine_trap_class",
+            "fault_seen",
+            "inj_completion_count",
+            "inj_last_response_index",
+            "injected_ready",
+            "issue_fault",
+            "issue_ready",
+            "issue_trap_class",
+            "last_response_index",
+            "output_write_count",
+            "res_addr",
+            "res_data",
+            "res_we",
+            "response_fault",
+            "response_trap_class",
+            "response_valid",
+            "result_mem",
+            "writes_after_fault"
+          ],
+          "clean": true,
+          "edges": [
+            {
+              "drives": "injected_ready",
+              "from": [
+                "inj_result_valid"
+              ],
+              "line": 587,
+              "statement": "wire injected_ready = (ENABLE_RESULT_INJECTION != 0) && inj_result_valid"
+            },
+            {
+              "drives": "engine_ready",
+              "from": [
+                "injected_ready"
+              ],
+              "line": 592,
+              "statement": "wire engine_ready = (ENABLE_RESULT_INJECTION != 0) ? injected_ready : bridge_issue_ready"
+            },
+            {
+              "drives": "engine_fault",
+              "from": [
+                "inj_result_fault",
+                "inj_result_valid"
+              ],
+              "line": 594,
+              "statement": "wire engine_fault = (ENABLE_RESULT_INJECTION != 0) ? (inj_result_valid && inj_result_fault) : bridge_issue_fault"
+            },
+            {
+              "drives": "engine_trap_class",
+              "from": [
+                "inj_result_trap_class"
+              ],
+              "line": 596,
+              "statement": "wire [15:0] engine_trap_class = (ENABLE_RESULT_INJECTION != 0) ? inj_result_trap_class : bridge_issue_trap_class"
+            },
+            {
+              "drives": "issue_ready",
+              "from": [
+                "engine_ready"
+              ],
+              "line": 598,
+              "statement": "assign issue_ready = exact_multicast_issue ? (multicast_issue_active && (multicast_done || multicast_failed)) : engine_ready"
+            },
+            {
+              "drives": "issue_fault",
+              "from": [
+                "engine_fault"
+              ],
+              "line": 601,
+              "statement": "assign issue_fault = exact_multicast_issue ? multicast_failed : engine_fault"
+            },
+            {
+              "drives": "issue_trap_class",
+              "from": [
+                "engine_trap_class"
+              ],
+              "line": 603,
+              "statement": "assign issue_trap_class = exact_multicast_issue ? multicast_trap_class : engine_trap_class"
+            },
+            {
+              "drives": "response_valid",
+              "from": [
+                "issue_ready"
+              ],
+              "line": 605,
+              "statement": "assign response_valid = issue_valid && issue_ready"
+            },
+            {
+              "drives": "response_fault",
+              "from": [
+                "issue_fault"
+              ],
+              "line": 607,
+              "statement": "assign response_fault = issue_fault"
+            },
+            {
+              "drives": "response_trap_class",
+              "from": [
+                "issue_trap_class"
+              ],
+              "line": 608,
+              "statement": "assign response_trap_class = issue_trap_class"
+            },
+            {
+              "drives": "inj_last_response_index",
+              "from": [
+                "issue_ready"
+              ],
+              "line": 856,
+              "statement": "end else if (inj_issue_valid && issue_ready) begin inj_last_response_index <= issue_index"
+            },
+            {
+              "drives": "multicast_response_fire",
+              "from": [
+                "issue_ready"
+              ],
+              "line": 879,
+              "statement": "wire multicast_response_fire = exact_multicast_issue && issue_ready"
+            },
+            {
+              "drives": "multicast_issue_active",
+              "from": [
+                "multicast_response_fire"
+              ],
+              "line": 932,
+              "statement": "if (multicast_response_fire) begin multicast_issue_active <= 1'b0"
+            },
+            {
+              "drives": "multicast_source_read_ready_int",
+              "from": [
+                "multicast_issue_active"
+              ],
+              "line": 956,
+              "statement": "wire multicast_source_read_ready_int = multicast_issue_active && multicast_source_ready_phase"
+            },
+            {
+              "drives": "multicast_source_ready_phase",
+              "from": [
+                "multicast_source_read_ready_int"
+              ],
+              "line": 1000,
+              "statement": "else if (multicast_source_read_ready_int) multicast_source_ready_phase <= 1'b0"
+            },
+            {
+              "drives": "multicast_source_stall_cycles_q",
+              "from": [
+                "multicast_source_read_ready_int"
+              ],
+              "line": 1005,
+              "statement": "if (multicast_source_read_valid_int && !multicast_source_read_ready_int) multicast_source_stall_cycles_q <= multicast_source_stall_cycles_q + 32'd1"
+            },
+            {
+              "drives": "multicast_source_read_count_q",
+              "from": [
+                "multicast_source_read_ready_int"
+              ],
+              "line": 1009,
+              "statement": "if (multicast_source_read_valid_int && multicast_source_read_ready_int) begin multicast_source_read_count_q <= multicast_source_read_count_q + 32'd1"
+            },
+            {
+              "drives": "multicast_source_response_data",
+              "from": [
+                "multicast_source_read_count_q"
+              ],
+              "line": 1013,
+              "statement": "|| (multicast_source_read_offset_int >= 64'd65536) || (multicast_source_read_offset_int[15:2] != multicast_source_read_count_q[13:0])) begin multicast_source_response_data <= 32'd0"
+            },
+            {
+              "drives": "multicast_remote_write_ready",
+              "from": [
+                "multicast_issue_active"
+              ],
+              "line": 1045,
+              "statement": "end end end end assign multicast_remote_write_ready = multicast_issue_active && (multicast_service_cycle[1:0] != 2'b00)"
+            },
+            {
+              "drives": "res_we",
+              "from": [
+                "inj_write_en"
+              ],
+              "line": 1184,
+              "statement": "wire res_we = (ENABLE_RESULT_INJECTION != 0) ? inj_write_en : out_we"
+            },
+            {
+              "drives": "res_addr",
+              "from": [
+                "inj_write_addr"
+              ],
+              "line": 1187,
+              "statement": "wire [31:0] res_addr = (ENABLE_RESULT_INJECTION != 0) ? inj_write_addr : out_addr"
+            },
+            {
+              "drives": "res_data",
+              "from": [
+                "inj_write_data"
+              ],
+              "line": 1189,
+              "statement": "wire [31:0] res_data = (ENABLE_RESULT_INJECTION != 0) ? inj_write_data : out_data"
+            },
+            {
+              "drives": "inj_completion_count",
+              "from": [
+                "issue_ready"
+              ],
+              "line": 1213,
+              "statement": "end else begin if (inj_issue_valid && issue_ready) inj_completion_count <= inj_completion_count + 32'd1"
+            },
+            {
+              "drives": "output_write_count",
+              "from": [
+                "res_we"
+              ],
+              "line": 1273,
+              "statement": "end if (res_we) begin output_write_count <= output_write_count + 32'd1"
+            },
+            {
+              "drives": "result_mem",
+              "from": [
+                "res_addr",
+                "res_data"
+              ],
+              "line": 1276,
+              "statement": "if (res_addr < RESULT_WORDS) result_mem[res_addr] <= res_data"
+            },
+            {
+              "drives": "writes_after_fault",
+              "from": [
+                "multicast_remote_write_ready",
+                "res_we"
+              ],
+              "line": 1280,
+              "statement": "lticast_remote_write_ready))) writes_after_fault <= writes_after_fault + (res_we ? 32'd1 : 32'd0) + ((multicast_remote_write_valid && multicast_remote_write_ready) ? 32'd1 : 32'd0)"
+            },
+            {
+              "drives": "fault_seen",
+              "from": [
+                "issue_fault",
+                "issue_ready"
+              ],
+              "line": 1288,
+              "statement": "if (issue_valid && issue_ready && issue_fault) fault_seen <= 1'b1"
+            },
+            {
+              "drives": "last_response_index",
+              "from": [
+                "inj_last_response_index"
+              ],
+              "line": 837,
+              "statement": "assign last_response_index = (ENABLE_RESULT_INJECTION != 0) ? inj_last_response_index : bridge_last_response_index"
+            },
+            {
+              "drives": "multicast_service_cycle",
+              "from": [
+                "multicast_issue_active"
+              ],
+              "line": 918,
+              "statement": "end else begin if (multicast_issue_active) multicast_service_cycle <= multicast_service_cycle + 32'd1"
+            },
+            {
+              "drives": "multicast_source_read_count",
+              "from": [
+                "multicast_source_read_count_q"
+              ],
+              "line": 963,
+              "statement": "assign multicast_source_read_count = multicast_source_read_count_q"
+            },
+            {
+              "drives": "multicast_source_stall_cycles",
+              "from": [
+                "multicast_source_stall_cycles_q"
+              ],
+              "line": 965,
+              "statement": "assign multicast_source_stall_cycles = multicast_source_stall_cycles_q"
+            },
+            {
+              "drives": "multicast_destination_stall_cycles_q",
+              "from": [
+                "multicast_remote_write_ready"
+              ],
+              "line": 1026,
+              "statement": "end if (multicast_remote_write_valid && !multicast_remote_write_ready) multicast_destination_stall_cycles_q <= multicast_destination_stall_cycles_q + 32'd1"
+            },
+            {
+              "drives": "multicast_protocol_error_q",
+              "from": [
+                "multicast_remote_write_ready"
+              ],
+              "line": 1031,
+              "statement": " {8'd0, multicast_remote_write_offset[23:16]}) || (multicast_remote_write_data != multicast_expected_word( multicast_remote_write_offset[15:2]))) multicast_protocol_error_q <= 1'b1"
+            },
+            {
+              "drives": "multicast_destination_stall_cycles",
+              "from": [
+                "multicast_destination_stall_cycles_q"
+              ],
+              "line": 966,
+              "statement": "assign multicast_destination_stall_cycles = multicast_destination_stall_cycles_q"
+            },
+            {
+              "drives": "multicast_protocol_error",
+              "from": [
+                "multicast_protocol_error_q"
+              ],
+              "line": 970,
+              "statement": "assign multicast_protocol_error = multicast_protocol_error_q"
+            }
+          ],
+          "exact_multicast_elaborated": 0,
+          "injected_inputs": [
+            "inj_result_valid",
+            "inj_result_fault",
+            "inj_result_trap_class",
+            "inj_write_en",
+            "inj_write_addr",
+            "inj_write_data"
+          ],
+          "instance_port_classes": [
+            "engine_completion_boundary",
+            "inert_exact_multicast_adapter"
+          ],
+          "instance_ports_outside_allowed": [],
+          "instance_ports_reached": [
+            {
+              "class": "engine_completion_boundary",
+              "expression": "issue_ready",
+              "from": [
+                "issue_ready"
+              ],
+              "line": 555,
+              "port": "eng_issue_ready"
+            },
+            {
+              "class": "engine_completion_boundary",
+              "expression": "issue_fault",
+              "from": [
+                "issue_fault"
+              ],
+              "line": 556,
+              "port": "eng_issue_fault"
+            },
+            {
+              "class": "engine_completion_boundary",
+              "expression": "issue_trap_class",
+              "from": [
+                "issue_trap_class"
+              ],
+              "line": 557,
+              "port": "eng_issue_trap_class"
+            },
+            {
+              "class": "inert_exact_multicast_adapter",
+              "expression": "multicast_source_read_ready_int",
+              "from": [
+                "multicast_source_read_ready_int"
+              ],
+              "line": 1114,
+              "port": "source_read_ready"
+            },
+            {
+              "class": "inert_exact_multicast_adapter",
+              "expression": "multicast_source_response_data",
+              "from": [
+                "multicast_source_response_data"
+              ],
+              "line": 1119,
+              "port": "source_response_data"
+            },
+            {
+              "class": "inert_exact_multicast_adapter",
+              "expression": "multicast_remote_write_ready",
+              "from": [
+                "multicast_remote_write_ready"
+              ],
+              "line": 1122,
+              "port": "remote_write_ready"
+            }
+          ],
+          "method": "every statement of the top that mentions a tainted signal is found, the signal it drives is added, and the closure is taken; a tainted signal outside the declared sink set refuses the audit",
+          "outside_allowed_sinks": [],
+          "reached": [
+            "engine_fault",
+            "engine_ready",
+            "engine_trap_class",
+            "fault_seen",
+            "inj_completion_count",
+            "inj_last_response_index",
+            "injected_ready",
+            "issue_fault",
+            "issue_ready",
+            "issue_trap_class",
+            "last_response_index",
+            "multicast_destination_stall_cycles",
+            "multicast_destination_stall_cycles_q",
+            "multicast_issue_active",
+            "multicast_protocol_error",
+            "multicast_protocol_error_q",
+            "multicast_remote_write_ready",
+            "multicast_response_fire",
+            "multicast_service_cycle",
+            "multicast_source_read_count",
+            "multicast_source_read_count_q",
+            "multicast_source_read_ready_int",
+            "multicast_source_ready_phase",
+            "multicast_source_response_data",
+            "multicast_source_stall_cycles",
+            "multicast_source_stall_cycles_q",
+            "output_write_count",
+            "res_addr",
+            "res_data",
+            "res_we",
+            "response_fault",
+            "response_trap_class",
+            "response_valid",
+            "result_mem",
+            "writes_after_fault"
+          ],
+          "self_test": {
+            "outside_allowed_sinks_when_spliced": [
+              "audit_probe_pc"
+            ],
+            "ran": true,
+            "refused_the_spliced_edge": true,
+            "spliced_edge": "wire audit_probe_pc = inj_result_valid;"
+          },
+          "through_memory": {
+            "control_path_window": "predicate_read_value",
+            "edges": [
+              {
+                "drives": "clear_word",
+                "from": [
+                  "result_mem"
+                ],
+                "line": 399,
+                "statement": "clear_word = clear_word + 1) result_mem[clear_word] = 32'hdead_beef"
+              },
+              {
+                "drives": "predicate_read_value",
+                "from": [
+                  "result_mem"
+                ],
+                "line": 811,
+                "statement": "if (predicate_mapped) begin predicate_read_value <= (result_mem[predicate_word_addr[31:0]] != 32'd0)"
+              },
+              {
+                "drives": "m0_rd_data",
+                "from": [
+                  "result_mem"
+                ],
+                "line": 1223,
+                "statement": "end if (m0_rd_en) begin if (m0_reads_result && (m0_rd_addr < RESULT_WORDS)) m0_rd_data <= result_mem[m0_rd_addr]"
+              },
+              {
+                "drives": "m1_rd_data",
+                "from": [
+                  "result_mem"
+                ],
+                "line": 1249,
+                "statement": "end end else if (m1_reads_result && (m1_rd_addr < RESULT_WORDS)) m1_rd_data <= result_mem[m1_rd_addr]"
+              },
+              {
+                "drives": "result_read_data",
+                "from": [
+                  "result_mem"
+                ],
+                "line": 1290,
+                "statement": "end end assign result_read_data = (result_read_addr < RESULT_WORDS) ? result_mem[result_read_addr] : 32'd0"
+              }
+            ],
+            "memory": "result_mem",
+            "note": "the only reader of the result memory that any control decision depends on is the sequencer's predicate-read port; the engine operand ports are read by engines, and under result injection no engine is issued to",
+            "readers": [
+              "clear_word",
+              "m0_rd_data",
+              "m1_rd_data",
+              "predicate_read_value",
+              "result_read_data"
+            ]
+          }
+        },
+        "what_the_control_plane_did_itself": [
+          "instruction fetch and decode from the loaded program store",
+          "symbol-file binding of the request's sixteen symbols",
+          "loop setup, iteration and teardown on the loop stack",
+          "operand view resolution, including every element offset",
+          "wait-set evaluation against the event scoreboard",
+          "dependence-table hazard checking",
+          "queue acceptance and issue in program order",
+          "retirement and the completion of every issue"
+        ]
+      },
+      "issue_census": {
+        "classes": 26,
+        "for": "G1's composition certificate, which its own acceptance requires to be derived mechanically from this rung's issue trace rather than asserted: these are the (family, subopcode, descriptor id) instances the governed workload issued, counted from the RTL's trace and not from the golden's",
+        "instances": 2073,
+        "rows": [
+          {
+            "descriptor_id": 46,
+            "family": 16,
+            "instances": 3,
+            "sub": 2
+          },
+          {
+            "descriptor_id": 198,
+            "family": 16,
+            "instances": 3,
+            "sub": 2
+          },
+          {
+            "descriptor_id": 118,
+            "family": 16,
+            "instances": 108,
+            "sub": 3
+          },
+          {
+            "descriptor_id": 125,
+            "family": 16,
+            "instances": 108,
+            "sub": 3
+          },
+          {
+            "descriptor_id": 72,
+            "family": 32,
+            "instances": 108,
+            "sub": 0
+          },
+          {
+            "descriptor_id": 79,
+            "family": 32,
+            "instances": 108,
+            "sub": 0
+          },
+          {
+            "descriptor_id": 84,
+            "family": 32,
+            "instances": 108,
+            "sub": 0
+          },
+          {
+            "descriptor_id": 142,
+            "family": 32,
+            "instances": 108,
+            "sub": 0
+          },
+          {
+            "descriptor_id": 162,
+            "family": 32,
+            "instances": 108,
+            "sub": 0
+          },
+          {
+            "descriptor_id": 168,
+            "family": 32,
+            "instances": 108,
+            "sub": 0
+          },
+          {
+            "descriptor_id": 180,
+            "family": 32,
+            "instances": 108,
+            "sub": 0
+          },
+          {
+            "descriptor_id": 204,
+            "family": 32,
+            "instances": 3,
+            "sub": 0
+          },
+          {
+            "descriptor_id": 54,
+            "family": 32,
+            "instances": 3,
+            "sub": 3
+          },
+          {
+            "descriptor_id": 64,
+            "family": 48,
+            "instances": 108,
+            "sub": 0
+          },
+          {
+            "descriptor_id": 156,
+            "family": 48,
+            "instances": 108,
+            "sub": 0
+          },
+          {
+            "descriptor_id": 192,
+            "family": 48,
+            "instances": 3,
+            "sub": 0
+          },
+          {
+            "descriptor_id": 90,
+            "family": 48,
+            "instances": 108,
+            "sub": 1
+          },
+          {
+            "descriptor_id": 97,
+            "family": 48,
+            "instances": 108,
+            "sub": 1
+          },
+          {
+            "descriptor_id": 104,
+            "family": 48,
+            "instances": 108,
+            "sub": 2
+          },
+          {
+            "descriptor_id": 110,
+            "family": 48,
+            "instances": 108,
+            "sub": 2
+          },
+          {
+            "descriptor_id": 150,
+            "family": 48,
+            "instances": 108,
+            "sub": 3
+          },
+          {
+            "descriptor_id": 186,
+            "family": 48,
+            "instances": 108,
+            "sub": 3
+          },
+          {
+            "descriptor_id": 174,
+            "family": 48,
+            "instances": 108,
+            "sub": 4
+          },
+          {
+            "descriptor_id": 136,
+            "family": 64,
+            "instances": 108,
+            "sub": 1
+          },
+          {
+            "descriptor_id": 211,
+            "family": 112,
+            "instances": 3,
+            "sub": 0
+          },
+          {
+            "descriptor_id": 217,
+            "family": 112,
+            "instances": 3,
+            "sub": 1
+          }
+        ],
+        "source": "the RTL's own issue trace over every pass"
+      },
+      "marker": "PASS: ABI3 G1e control end to end passes=3 issues=2073 views=6429 elements=46866 injected=2073 checks=10441",
+      "oracle": {
+        "agreement": true,
+        "artifact_sha256": "d9c7dd222cff342f84ff34be3600f8b41c6c8c6c0280a523737fc53d1f20c6ec",
+        "generated_token_ids": [
+          3925,
+          13,
+          151645
+        ],
+        "path": "results/abi3/qwen3_reference_oracle_eos.json",
+        "stop_reason": "eos"
+      },
+      "passes": {
+        "device_transactions": 3,
+        "executed": 3,
+        "gate_requires": 19,
+        "model_forward_passes": 18,
+        "per_pass": [
+          {
+            "context_length": 16,
+            "entrypoint_id": 0,
+            "generation_index": 0,
+            "index": 0,
+            "instructions_fetched": 2104,
+            "instructions_retired": 2104,
+            "issues": 691,
+            "loop_iterations": 723,
+            "simulated_cycles": 169809,
+            "views": 2143,
+            "wait_events": 689
+          },
+          {
+            "context_length": 17,
+            "entrypoint_id": 1,
+            "generation_index": 1,
+            "index": 1,
+            "instructions_fetched": 2104,
+            "instructions_retired": 2104,
+            "issues": 691,
+            "loop_iterations": 723,
+            "simulated_cycles": 169809,
+            "views": 2143,
+            "wait_events": 689
+          },
+          {
+            "context_length": 18,
+            "entrypoint_id": 1,
+            "generation_index": 2,
+            "index": 2,
+            "instructions_fetched": 2104,
+            "instructions_retired": 2104,
+            "issues": 691,
+            "loop_iterations": 723,
+            "simulated_cycles": 169809,
+            "views": 2143,
+            "wait_events": 689
+          }
+        ],
+        "unit": "device transaction through the RTL control plane",
+        "why_not_19": "measured: the shipped Qwen deployment executes TA-QW-EOS-1 in 3 device transactions -- one prefill whose SPAN_TOKENS is 16 and covers every prompt position at once, then one decode per further token. The workload's 19 token positions are 16 prompt plus 3 generated; only 18 of them are ever forward-passed, because the first generated token comes out of the prefill pass and the last generated token (the official EOS) is never fed back. No correct execution of this workload on this deployment performs 19 passes, so the gate's field cannot be satisfied by running it correctly; the number is not adjusted here and the rung fails on it",
+        "workload_token_positions": 19
+      },
+      "rung": "G1e",
+      "storage_class": "hbm",
+      "trace": {
+        "compared_elements": 46866,
+        "compared_issue_count": 2073,
+        "compared_issue_fields": [
+          "family",
+          "sub",
+          "descriptor_id",
+          "pc"
+        ],
+        "compared_view_count": 6429,
+        "compared_view_fields": [
+          "slot",
+          "descriptor_id",
+          "extent",
+          "extent_axis",
+          "element_offset",
+          "rank"
+        ],
+        "divergence_index": null,
+        "equals_golden": true,
+        "extended_comparison": {
+          "adds": [
+            "queue"
+          ],
+          "compared_elements": 48939,
+          "divergence_index": null,
+          "equal": true,
+          "meaning": "the schedule the SCHEDULE record selects is a pure function of the operator's descriptor, so the model computes it and the RTL's choice can be compared; reported beside the gate-compared set, not folded into it"
+        },
+        "golden_source": {
+          "driver": "runtime.driver.GenerationDriver",
+          "how": "this tool compiles, runs and reads no RTL; the issue stream is Device.trace and every view is resolved by the device's own resolver against the loop bindings the device recorded at that instruction",
+          "independent_of_rtl": true,
+          "module": "runtime.sim.device.Device",
+          "view_resolution": "runtime.sim.memory.ViewResolver (the device's own)",
+          "wall_seconds": 32.69
+        },
+        "uncompared_issue_fields": [
+          "serial",
+          "irs_slot"
+        ],
+        "why_uncompared": "the issue serial and the issue-record-store slot are RTL allocations the reference model does not compute; a golden that carried them would be comparing the RTL against the vector builder rather than against the model. The serial is still required to advance within each pass and the slot to be a real queue index"
+      },
+      "workload": {
+        "digest": "ea35fc800cccd2839aa663cdf0e7806600948a26f0057d1ec7ec7bd31d007eaa",
+        "max_new_tokens": 16,
+        "path": "build/workloads/qwen3-8b/TA-QW-EOS-1.json",
+        "prompt_token_count": 16,
+        "sha256": "027db49013370fc73ca884d5398c06aab790956ae970c2415d63e58df23f78b8"
+      },
+      "workload_id": "TA-QW-EOS-1"
+    }
+  ],
+  "rung": "G1e",
+  "schema": "opentallas.rtl.abi3_g1e_control_end_to_end.v1",
+  "source_sha256": {
+    "docs/TENSOR_ACCELERATOR_ABI_3_WIRE_FORMAT.md": "049134df9f17befcd6855f8277420bba44afd83677526d40288c2f6d0f435bd9",
+    "rtl/abi3/ot_a3_dependence_table.sv": "3ac3172c508d277a3b28d0438161c012365bc26a3a7c97eee3d3f12bb2d12c05",
+    "rtl/abi3/ot_a3_device_top.sv": "b3e0fc07cd836ed53a0a29efc737dedcd3ef328871816552955af495656a4561",
+    "rtl/abi3/ot_a3_dma_index_mover.sv": "e254421fcba397e3db821c52b9acafaf3922af78653ab2d2e3029705ee166c64",
+    "rtl/abi3/ot_a3_engine_array.sv": "35d10a5aa17ef82ba21fe30e98482cac6391407e8a5250494e4ef0a802672a2a",
+    "rtl/abi3/ot_a3_engine_issue_bridge.sv": "473e3b852f4db9491386d1e62fc61d7b0fab1706e6c9531300d45928a417e61f",
+    "rtl/abi3/ot_a3_engine_pkg.sv": "1186eecdc80321e87e08c97fb8e1c9a1b078584d019353736d235bf5cc84d477",
+    "rtl/abi3/ot_a3_event_scoreboard.sv": "e5546f39afe3fdb6da17c189da94fc652aedcee583b3263b662a83c7b5e86b65",
+    "rtl/abi3/ot_a3_format_pkg.sv": "dbea89ef9c450d1b9ffda1e578f1685b3e33d3b6f400e43c1784ec022de9e7f0",
+    "rtl/abi3/ot_a3_fp32_div_rne.sv": "f3220311dd399b0218a9aa5828ad11c9e4f9121d2924b0678ef4b3f95a7e04c1",
+    "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv": "b1c0e01c663a353a25ea7056718b21b30636bedac4a84dc0cc1216dcbb03218e",
+    "rtl/abi3/ot_a3_instruction_decoder.sv": "ad04fbf87aaa69e2c5397f99f445c7b99b10d80e796f54ea2895624ebb840355",
+    "rtl/abi3/ot_a3_issue_record_store.sv": "20677401892ecede055f553a516d5e0c3b0d6abac77ca5ff100bbf22b85b7d04",
+    "rtl/abi3/ot_a3_loop_stack.sv": "6167c65cf533bbbc8635d53b100b7ed9c3deea7dba437ae680f2c0b19db70ef0",
+    "rtl/abi3/ot_a3_mac_lane.sv": "abbfa2b96164190c7730407cface079c728769be65d3188c2ad78f81ed1bbe37",
+    "rtl/abi3/ot_a3_microsequencer.sv": "3a96fabaadb1bab0d9b971c52e822de3ece61a1fe77ef4cc846b880219ade278",
+    "rtl/abi3/ot_a3_pkg.sv": "99cb99b3b5044ad669a5927455f50ca5fe2672c197c97770e1709e794e402e4e",
+    "rtl/abi3/ot_a3_program_header.sv": "7a5c55cbcaa7f877923595b631334c04eb0c403aea3bf052de983eeccdd1a619",
+    "rtl/abi3/ot_a3_qwen_gqa.sv": "9fad7a0839e5e4efba94b4e40ebf5f2ce1244424504a62ba8ee7698fc9c24422",
+    "rtl/abi3/ot_a3_resolver_bank.sv": "b953bde14c2d3005de0b780dcfb5a7675e6e17a90ab095d242557b67f0e749a3",
+    "rtl/abi3/ot_a3_selection_argmax.sv": "d6dfd8fb62d8b5715cd1a487b74a131c84eb4b73a33cfbbfe0af0919f135e543",
+    "rtl/abi3/ot_a3_selection_token_append.sv": "3fdd18591e159c3d8301dcd249628324e4ea1e32427baa445bfa7ab03996f227",
+    "rtl/abi3/ot_a3_shared_divider.sv": "b16700dda17092c0128eefa4ef091cefe199abeeec2fb5ae1b2c09b08a6f407f",
+    "rtl/abi3/ot_a3_state_controller.sv": "0fe8d122267f9afbd05837399a4b4545e8b953f9481c7529cb6206d34d279006",
+    "rtl/abi3/ot_a3_symbol_file.sv": "e447946a9c88059c0dbfdfcd806e0fefe96ed1946ce8bd1c45b78dc81618301d",
+    "rtl/abi3/ot_a3_vector_add.sv": "a6a6516da202ad4dc26bd8a25c4fdac4f5c5b00fe0a934f93db06e04be5baac9",
+    "rtl/abi3/ot_a3_vector_compress_project.sv": "e2c10b14c289b08732d5c1782dce092589804857beb610f8129973fc9f29fdf2",
+    "rtl/abi3/ot_a3_vector_convert.sv": "1811d097cc27a8a99fbe462c2e88407cf36a9fcd92169cf49b6648bec0841ff6",
+    "rtl/abi3/ot_a3_vector_hadamard.sv": "08ac916fc973f9c039eb251db20473a4e7c314b34fbe4f5b2254096b166b6162",
+    "rtl/abi3/ot_a3_vector_index_score.sv": "8071dc6997e61f3b692affc3334c58a6a8393c97e4ebc493f68a37236d44f5eb",
+    "rtl/abi3/ot_a3_vector_mhc_post.sv": "15a817e26affb1d090072d7061abbf92ab80d77bdce94e8d979a79a99a880071",
+    "rtl/abi3/ot_a3_vector_rms_norm.sv": "7c1d174a678d2cd3bc6301b049fffb11d56862224fbf140105ed2aee0bed6769",
+    "rtl/abi3/ot_a3_vector_rope.sv": "59cf5fa16c0079ef90e7a21fa051b44c1c5e9f7ce9df0db6df2e3bdd3019c5be",
+    "rtl/abi3/ot_a3_vector_scale.sv": "1059ca471191e42a2b1b17b29ddf4479c6a0f63cdf63d0d0c5df5d532eb977f4",
+    "rtl/abi3/ot_a3_vector_silu_mul.sv": "802be87ea7c75bf70a4a42397c549912c293602bb77c4b1a70a9ade8f0b593a4",
+    "rtl/abi3/ot_a3_view_resolver.sv": "ca70c306e3e96ec3d3e0535159bf56678c4efd16141fb9049c4b520797dcac80",
+    "rtl/ot_fp32_rne_pkg.sv": "39de679dd5f277d8a9cc2d5b6349eb1675e9397e64a8256bb1f53a34a054608c",
+    "rtl/ot_fp32_rsqrt_rne.sv": "74ef534d4e0f8f18a74b6df39c885c10e1a12c1ee9c07b9e7bb4d8be9ec90f9b",
+    "rtl/ot_ta_command_decoder.sv": "181fa72b55c77c41a4cbf368a395afdb3f40d3beea94b245f019eaff4f460908",
+    "rtl/ot_ta_rope_bf16_sram_engine.sv": "efa253668f42a3fc5cbac2f12bbe39ccaa8a3e6f1ac17a1e202c76fefe971369",
+    "rtl/test/a3_engine_completion_adapter.sv": "350b8a591cfa4e242880bffa5b7306f4b9ce58e12c4a7a3013ec99db85216c98",
+    "rtl/test/a3_g1e_control_harness.cpp": "3dfab395eb3b4f7ca770318dbf02086bf29a68908bdced032c57d4b02a33c32b",
+    "rtl/test/a3_shipped_prefix_top.sv": "0c17ea7fa2e3d3876f5befa7a452194b1a30779daa17f0206f1f12c1a03ad466",
+    "runtime/abi3/deployment.py": "e7aeac69a74590ded75ba34b603b23aa071f58ef7965e2f8f93d72a82dc35b61",
+    "runtime/abi3/descriptors.py": "fd60c52ee2117016a8faa644cdaebe1e95ad003535576bec241f7d9c6018993e",
+    "runtime/abi3/records.py": "18140e2a382dd4d515da33ccf2c5a08c203bcb36ae9e3e86747265346d4ad7ca",
+    "runtime/abi3/verifier.py": "c7a5b0ec41164acaa622caa5029df3e8563747b95fa152a1fe5b88a2f0ad409d",
+    "runtime/driver.py": "fd39cf300d675321445c0e14b17c5de19f6ea7800f32589fff5743a4cda8e32e",
+    "runtime/sim/device.py": "5fe195429c88602e59eb58316d8c76f3423c573b0d9fe800a05bc4c91e70ab30",
+    "runtime/sim/memory.py": "4c5fe565e07933f86f608902b1fbce5d92667d7036902f40e67e563b21c4f3f7",
+    "tools/build_abi3_deployment_rtl_vectors.py": "c58b2b2d11d53414bdcba6c4dd78ec492015f6b877e806762f56cb1f9abce582",
+    "tools/build_abi3_g1e_control_vectors.py": "f2a9ebd73d4012c05b4de6cfdea7a827cd4aec0c175afb343df1ab3bb8d3312c",
+    "tools/rtl_abi3_g1e_control_campaign.py": "b331ca32c81b25637fa0d55a7370e78112a53c6a6ad54edd0071a10c2df1efab"
+  },
+  "status": "fail",
+  "tools": {
+    "cxx": {
+      "executable": "/usr/bin/x86_64-linux-gnu-g++-11",
+      "executable_sha256": "2360901d864cf10bfd6296e261cb2c14053552a80377761ab07146ec9ec9a2c0",
+      "version": "g++ (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0"
+    },
+    "verilator": {
+      "executable": "<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator",
+      "executable_sha256": "fb2cc573b1055cf096c90e1efc9966fe56bdb4b265c83590cf2a49f7a0defcdf",
+      "version": "Verilator 5.050 2026-07-01 rev v5.050"
+    }
+  },
+  "what_ran": {
+    "compared": [
+      "every engine issue in program order: family, subopcode, descriptor id and program counter",
+      "every operand view the RTL resolver produced for it: slot, descriptor id, extent, extent axis, 64-bit element offset and rank",
+      "per pass: instructions fetched, retired, predicated off and issued, loop iterations, wait events and views resolved",
+      "per issue: that the injected result answers the issue the RTL actually made, by opcode, descriptor id and program counter"
+    ],
+    "not_compared": [
+      "any engine arithmetic: no engine is issued to and none can be",
+      "the token ids: this rung emits none -- the selected token is an injected engine result, and an RTL-emitted token is G1d's claim, not this one"
+    ],
+    "reference": "runtime.sim.device.Device, run by the workload's own GenerationDriver; no RTL is read by the golden builder",
+    "vehicle": "rtl/test/a3_shipped_prefix_top.sv with ENABLE_RESULT_INJECTION=1"
+  },
+  "workload_id": "TA-QW-EOS-1"
+}
