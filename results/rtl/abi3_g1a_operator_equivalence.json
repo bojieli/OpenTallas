@@ -1,0 +1,1909 @@
+{
+  "class_definition": "(family, sub, mnemonic, numeric contract digest, resolved shape), where the resolved shape is the per-slot (slot, extent, extent_axis, rank) of the issue's own resolved views",
+  "cross_lowering_transfer": {
+    "differing_program_counter_count": 8,
+    "identical_program_counter_count": 0,
+    "note": "The two Qwen lowerings do not emit identical descriptors for the same equivalence class, so bit-exactness measured on one is not measured on the other and this artifact does not transfer it. The fields listed here are the difference, computed from the retained descriptor image; object ids and view/numeric descriptor REFERENCES are excluded, since a differing reference to an identical descriptor would not change what the datapath sees.",
+    "per_program_counter": [
+      {
+        "differing_fields": [
+          "operator.counter_class_id",
+          "numeric.input_dtype",
+          "numeric.second_input_dtype",
+          "view[0].term1_index",
+          "view[1].term0_index",
+          "view[4].term0_index"
+        ],
+        "hbm_operator_descriptor_id": 118,
+        "identical": false,
+        "mnemonic": "DMA.SCATTER",
+        "program_counter": 32,
+        "rom_operator_descriptor_id": 108
+      },
+      {
+        "differing_fields": [
+          "operator.counter_class_id",
+          "numeric.input_dtype",
+          "numeric.second_input_dtype",
+          "view[0].term1_index",
+          "view[1].term0_index",
+          "view[4].term0_index"
+        ],
+        "hbm_operator_descriptor_id": 125,
+        "identical": false,
+        "mnemonic": "DMA.SCATTER",
+        "program_counter": 35,
+        "rom_operator_descriptor_id": 115
+      },
+      {
+        "differing_fields": [
+          "operator.counter_class_id",
+          "view[0].term0_index",
+          "view[1].term0_index",
+          "view[2].term0_index",
+          "view[3].term1_index",
+          "view[4].term0_index"
+        ],
+        "hbm_operator_descriptor_id": 136,
+        "identical": false,
+        "mnemonic": "ATTENTION.GQA",
+        "program_counter": 38,
+        "rom_operator_descriptor_id": 124
+      },
+      {
+        "differing_fields": [
+          "operator.counter_class_id",
+          "view[0].term0_index",
+          "view[1].term0_index",
+          "view[4].term0_index"
+        ],
+        "hbm_operator_descriptor_id": 150,
+        "identical": false,
+        "mnemonic": "VECTOR.ADD",
+        "program_counter": 44,
+        "rom_operator_descriptor_id": 138
+      },
+      {
+        "differing_fields": [
+          "operator.counter_class_id",
+          "view[0].term0_index",
+          "view[1].term0_index",
+          "view[4].term0_index"
+        ],
+        "hbm_operator_descriptor_id": 174,
+        "identical": false,
+        "mnemonic": "VECTOR.SILU_MUL",
+        "program_counter": 56,
+        "rom_operator_descriptor_id": 165
+      },
+      {
+        "differing_fields": [
+          "operator.counter_class_id",
+          "view[0].term0_index",
+          "view[1].term0_index",
+          "view[4].term0_index"
+        ],
+        "hbm_operator_descriptor_id": 186,
+        "identical": false,
+        "mnemonic": "VECTOR.ADD",
+        "program_counter": 62,
+        "rom_operator_descriptor_id": 177
+      },
+      {
+        "differing_fields": [
+          "operator.counter_class_id"
+        ],
+        "hbm_operator_descriptor_id": 211,
+        "identical": false,
+        "mnemonic": "SELECTION.ARGMAX",
+        "program_counter": 70,
+        "rom_operator_descriptor_id": 205
+      },
+      {
+        "differing_fields": [
+          "operator.counter_class_id",
+          "view[4].dynamic_term_count",
+          "view[4].term0_index",
+          "view[4].term0_kind",
+          "view[4].term0_stride"
+        ],
+        "hbm_operator_descriptor_id": 217,
+        "identical": false,
+        "mnemonic": "SELECTION.TOKEN_APPEND",
+        "program_counter": 72,
+        "rom_operator_descriptor_id": 212
+      }
+    ],
+    "program_counters": [
+      32,
+      35,
+      38,
+      44,
+      56,
+      62,
+      70,
+      72
+    ]
+  },
+  "derived_mechanically": true,
+  "evidence_campaigns": [
+    {
+      "artifact": "results/rtl/a3_operator_admission_campaign.json",
+      "artifact_sha256": "962ff60c8a4d26ff849ee30617aee093f8b2cb2c6e6f2972c9fc6d56e8c75f83",
+      "bound_source_count": 54,
+      "compared_words": 33093,
+      "drifted_source_count": 0,
+      "drifted_sources": [],
+      "positive_case_count": 12,
+      "positive_family_subs": [
+        [
+          16,
+          3
+        ],
+        [
+          48,
+          3
+        ],
+        [
+          48,
+          4
+        ],
+        [
+          64,
+          1
+        ],
+        [
+          112,
+          0
+        ],
+        [
+          112,
+          1
+        ]
+      ],
+      "positive_operator_descriptor_ids": [
+        108,
+        115,
+        124,
+        138,
+        165,
+        177,
+        205,
+        212
+      ],
+      "positive_program_counters": [
+        32,
+        35,
+        38,
+        44,
+        56,
+        62,
+        70,
+        72
+      ],
+      "simulated_cycles": 2896360,
+      "simulator_versions": {
+        "iverilog": "Icarus Verilog version 11.0 (stable) ()",
+        "verilator": "Verilator 5.050 2026-07-01 rev v5.050"
+      },
+      "simulators": [
+        "icarus",
+        "verilator"
+      ],
+      "simulators_agree": true,
+      "status": "pass",
+      "target": "qwen3-8b-rom-single-chip",
+      "target_deployment_sha256": "133afc13e1fcd2aade2e40530883c9986b0e920d99853990d9032fd777f26243",
+      "usable": true,
+      "vector_index": "testdata/rtl/a3_operator_admission/index.json"
+    },
+    {
+      "artifact": "results/rtl/a3_qwen_gqa_campaign.json",
+      "artifact_sha256": "075011ce47e332fd38b2624d1f40e9316b4c4f89f8f8443f33008dfa5d5281aa",
+      "bound_source_count": 22,
+      "drifted_source_count": 0,
+      "drifted_sources": [],
+      "status": "pass",
+      "usable": false,
+      "why_unusable": "no retained vector index names the operator descriptors it drove, so it cannot be said to cover any particular class"
+    },
+    {
+      "artifact": "results/rtl/abi3_shipped_prefix_campaign.json",
+      "artifact_sha256": "9261ecafbcf8b4a722a10952bd932f03a53640aa6b67e2fba5ec50248cd035cc",
+      "bound_source_count": 49,
+      "drifted_source_count": 11,
+      "drifted_sources": [
+        "rtl/abi3/ot_a3_device_top.sv",
+        "rtl/abi3/ot_a3_engine_issue_bridge.sv",
+        "rtl/abi3/ot_a3_event_scoreboard.sv",
+        "rtl/abi3/ot_a3_loop_stack.sv",
+        "rtl/abi3/ot_a3_microsequencer.sv",
+        "rtl/abi3/ot_a3_pkg.sv",
+        "rtl/abi3/ot_a3_view_resolver.sv",
+        "rtl/test/a3_shipped_prefix_harness.cpp",
+        "rtl/test/a3_shipped_prefix_top.sv",
+        "tools/build_abi3_shipped_prefix_vectors.py",
+        "tools/rtl_abi3_shipped_prefix_campaign.py"
+      ],
+      "named_program_counters_by_case": {
+        "deepseek-v4-flash-hbm-cluster/decode": {
+          "deployment_sha256": "ec7cff231a7df4e1a652d421c81b853f0b1809b4fa5f0d197231f9e72da9f341",
+          "program_counters": [
+            7
+          ]
+        },
+        "deepseek-v4-flash-rom-wafer/decode": {
+          "deployment_sha256": "34ca189cd4082b21260c0c27920f6e46d821f6709003b84cacd86cd867ed3e42",
+          "program_counters": [
+            7
+          ]
+        },
+        "qwen3-8b-hbm-single-chip/decode": {
+          "deployment_sha256": "0d7897457e14666fc057ea6223cc32e65c61e39bfe5b2ff675c3b5585fe2ce8e",
+          "program_counters": [
+            4,
+            8,
+            11,
+            14,
+            17,
+            20,
+            23,
+            26,
+            29
+          ]
+        },
+        "qwen3-8b-rom-single-chip/decode": {
+          "deployment_sha256": "f475fbaf521df53a62a5f26cd89da5e0bf82ff8054ece1df0fe00b3fd127809d",
+          "program_counters": [
+            4,
+            8,
+            11,
+            14,
+            17,
+            20,
+            23,
+            26,
+            29
+          ]
+        }
+      },
+      "status": "pass",
+      "usable": false,
+      "why_unusable": "11 bound source(s) have drifted since it was recorded; no retained vector index names the operator descriptors it drove, so it cannot be said to cover any particular class"
+    }
+  ],
+  "gate": "G1a",
+  "generated_by": "tools/build_abi3_g1a_operator_equivalence.py",
+  "generated_by_sha256": "a8d3966195d99c9cd1f40d849c813f993ff768a5fcee1fb3253d42d12e98391e",
+  "inventory_source": {
+    "files": {
+      "a3_deployment_issue.hex": "50a423ad27d8e9d9107e4db7bcfa30af5ff2b4f42ae25134f9380850245e70b5",
+      "a3_deployment_view.hex": "88d8f23cd86ee1316d30fa2d91587632cd134f0ceac6f0e1a0de7f9e104d6db5",
+      "a3_descriptor.hex": "85263a2b33597ba63e82e783eef7436b1b5ea0786bf7c20e4817bbdbaee13dbd",
+      "a3_program.hex": "910a714f1eca1799df203b1330dd95f3cb6da2027569acce935729e13bcf463c",
+      "abi3_deployment_rtl_vectors.json": "e24f73e4510cf141b8b4b3fd2888ea0341efe07653578bb3b370845ab7733636"
+    },
+    "issue_stream": "runtime.sim.device.Device's own trace: for every engine issue the family, subopcode, descriptor ID and the instruction index that issued it, in program order",
+    "path": "testdata/compiler/abi3_deployment",
+    "view_stream": "runtime.sim.memory.ViewResolver.resolve, evaluated against the loop bindings runtime.sim.device.Device recorded at each issue; amendments A4 (dynamic index terms), A13 (partial final iteration of a block loop) and A18 (the axis that iteration is partial in)"
+  },
+  "records": [
+    {
+      "capability": {
+        "integrated_vehicle": "rtl/test/a3_shipped_prefix_top.sv",
+        "integrated_vehicle_trapped_families": [
+          "DMA.SCATTER",
+          "ATTENTION.GQA",
+          "VECTOR.ADD",
+          "VECTOR.SILU_MUL",
+          "SELECTION.ARGMAX",
+          "SELECTION.TOKEN_APPEND"
+        ],
+        "integrated_vehicle_wires_placement_inputs": false,
+        "operator_admission_vehicle_admitted_family_count": 6,
+        "operator_admission_vehicle_trapped_family_count": 0,
+        "reported_form": "pessimistic",
+        "why_pessimistic": "post-mortem R13: a metric reported under two models is not evidence in its optimistic form. The two models here are the operator-admission vehicle and the integrated shipped-prefix vehicle, and they disagree."
+      },
+      "capability_trapped_family_count": 6,
+      "coverage": {
+        "classes": [
+          {
+            "covered": false,
+            "family": 16,
+            "issues": 2,
+            "mnemonic": "DMA.GATHER",
+            "numeric_contract_sha256": "12a24197c80d3851cc5ea3e69915f7dbc926aa1c2ee795c8fe3af1a67677daee",
+            "operator_descriptor_ids": [
+              32,
+              190
+            ],
+            "program_counters": [
+              1,
+              68
+            ],
+            "resolved_shape": [
+              [
+                0,
+                1,
+                0,
+                1
+              ],
+              [
+                1,
+                8256,
+                0,
+                2
+              ],
+              [
+                4,
+                1,
+                0,
+                2
+              ]
+            ],
+            "shape_fields": [
+              "slot",
+              "extent",
+              "extent_axis",
+              "rank"
+            ],
+            "sub": 2,
+            "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [32, 190] of this deployment (133afc13e1fc) in a positive case"
+          },
+          {
+            "covered": true,
+            "covered_by": "results/rtl/a3_operator_admission_campaign.json",
+            "covered_by_sha256": "962ff60c8a4d26ff849ee30617aee093f8b2cb2c6e6f2972c9fc6d56e8c75f83",
+            "family": 16,
+            "issues": 72,
+            "mnemonic": "DMA.SCATTER",
+            "numeric_contract_sha256": "55f39bccbda65baf6238cfcd93d7bf9959330984af837979870cc019be00e16f",
+            "operator_descriptor_ids": [
+              108,
+              115
+            ],
+            "program_counters": [
+              32,
+              35
+            ],
+            "resolved_shape": [
+              [
+                0,
+                1,
+                0,
+                1
+              ],
+              [
+                1,
+                1,
+                0,
+                3
+              ],
+              [
+                4,
+                8256,
+                0,
+                3
+              ]
+            ],
+            "shape_fields": [
+              "slot",
+              "extent",
+              "extent_axis",
+              "rank"
+            ],
+            "sub": 3
+          },
+          {
+            "covered": false,
+            "family": 32,
+            "issues": 72,
+            "measured_once_under_a_superseded_lowering": [
+              {
+                "against_deployment_sha256": "f475fbaf521df53a62a5f26cd89da5e0bf82ff8054ece1df0fe00b3fd127809d",
+                "artifact": "results/rtl/abi3_shipped_prefix_campaign.json",
+                "case": "qwen3-8b-rom-single-chip/decode",
+                "is_the_deployment_this_record_names": false,
+                "program_counters": [
+                  14,
+                  17
+                ]
+              }
+            ],
+            "mnemonic": "TENSOR.MATMUL",
+            "numeric_contract_sha256": "7550dc6a773fd9d5773b46182887613fb777bb8e4f01652321c4d93ca0765aa1",
+            "operator_descriptor_ids": [
+              67,
+              73
+            ],
+            "program_counters": [
+              14,
+              17
+            ],
+            "resolved_shape": [
+              [
+                0,
+                1,
+                0,
+                2
+              ],
+              [
+                1,
+                1024,
+                0,
+                2
+              ],
+              [
+                4,
+                1,
+                0,
+                2
+              ]
+            ],
+            "shape_fields": [
+              "slot",
+              "extent",
+              "extent_axis",
+              "rank"
+            ],
+            "sub": 0,
+            "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [67, 73] of this deployment (133afc13e1fc) in a positive case; it was measured under a superseded lowering, whose campaign artifact no longer binds the tree"
+          },
+          {
+            "covered": false,
+            "family": 32,
+            "issues": 72,
+            "mnemonic": "TENSOR.MATMUL",
+            "numeric_contract_sha256": "7550dc6a773fd9d5773b46182887613fb777bb8e4f01652321c4d93ca0765aa1",
+            "operator_descriptor_ids": [
+              151,
+              158
+            ],
+            "program_counters": [
+              50,
+              53
+            ],
+            "resolved_shape": [
+              [
+                0,
+                1,
+                0,
+                2
+              ],
+              [
+                1,
+                12288,
+                0,
+                2
+              ],
+              [
+                4,
+                1,
+                0,
+                2
+              ]
+            ],
+            "shape_fields": [
+              "slot",
+              "extent",
+              "extent_axis",
+              "rank"
+            ],
+            "sub": 0,
+            "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [151, 158] of this deployment (133afc13e1fc) in a positive case"
+          },
+          {
+            "covered": false,
+            "family": 32,
+            "issues": 1,
+            "mnemonic": "TENSOR.MATMUL",
+            "numeric_contract_sha256": "7550dc6a773fd9d5773b46182887613fb777bb8e4f01652321c4d93ca0765aa1",
+            "operator_descriptor_ids": [
+              197
+            ],
+            "program_counters": [
+              69
+            ],
+            "resolved_shape": [
+              [
+                0,
+                1,
+                0,
+                2
+              ],
+              [
+                1,
+                151936,
+                0,
+                2
+              ],
+              [
+                4,
+                1,
+                0,
+                2
+              ]
+            ],
+            "shape_fields": [
+              "slot",
+              "extent",
+              "extent_axis",
+              "rank"
+            ],
+            "sub": 0,
+            "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [197] of this deployment (133afc13e1fc) in a positive case"
+          },
+          {
+            "covered": false,
+            "family": 32,
+            "issues": 108,
+            "measured_once_under_a_superseded_lowering": [
+              {
+                "against_deployment_sha256": "f475fbaf521df53a62a5f26cd89da5e0bf82ff8054ece1df0fe00b3fd127809d",
+                "artifact": "results/rtl/abi3_shipped_prefix_campaign.json",
+                "case": "qwen3-8b-rom-single-chip/decode",
+                "is_the_deployment_this_record_names": false,
+                "program_counters": [
+                  11
+                ]
+              }
+            ],
+            "mnemonic": "TENSOR.MATMUL",
+            "numeric_contract_sha256": "7550dc6a773fd9d5773b46182887613fb777bb8e4f01652321c4d93ca0765aa1",
+            "operator_descriptor_ids": [
+              59,
+              130,
+              171
+            ],
+            "program_counters": [
+              11,
+              41,
+              59
+            ],
+            "resolved_shape": [
+              [
+                0,
+                1,
+                0,
+                2
+              ],
+              [
+                1,
+                4096,
+                0,
+                2
+              ],
+              [
+                4,
+                1,
+                0,
+                2
+              ]
+            ],
+            "shape_fields": [
+              "slot",
+              "extent",
+              "extent_axis",
+              "rank"
+            ],
+            "sub": 0,
+            "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [59, 130, 171] of this deployment (133afc13e1fc) in a positive case; it was measured under a superseded lowering, whose campaign artifact no longer binds the tree"
+          },
+          {
+            "covered": false,
+            "family": 32,
+            "issues": 1,
+            "measured_once_under_a_superseded_lowering": [
+              {
+                "against_deployment_sha256": "f475fbaf521df53a62a5f26cd89da5e0bf82ff8054ece1df0fe00b3fd127809d",
+                "artifact": "results/rtl/abi3_shipped_prefix_campaign.json",
+                "case": "qwen3-8b-rom-single-chip/decode",
+                "is_the_deployment_this_record_names": false,
+                "program_counters": [
+                  4
+                ]
+              }
+            ],
+            "mnemonic": "TENSOR.EMBED_LOOKUP",
+            "numeric_contract_sha256": "d1ea2f18e0b161e19e17f465ced630e0af7d0de970dadd6776c685ab6539fbcc",
+            "operator_descriptor_ids": [
+              41
+            ],
+            "program_counters": [
+              4
+            ],
+            "resolved_shape": [
+              [
+                0,
+                1,
+                0,
+                1
+              ],
+              [
+                1,
+                151936,
+                0,
+                2
+              ],
+              [
+                4,
+                1,
+                0,
+                2
+              ]
+            ],
+            "shape_fields": [
+              "slot",
+              "extent",
+              "extent_axis",
+              "rank"
+            ],
+            "sub": 3,
+            "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [41] of this deployment (133afc13e1fc) in a positive case; it was measured under a superseded lowering, whose campaign artifact no longer binds the tree"
+          },
+          {
+            "covered": false,
+            "family": 48,
+            "issues": 73,
+            "measured_once_under_a_superseded_lowering": [
+              {
+                "against_deployment_sha256": "f475fbaf521df53a62a5f26cd89da5e0bf82ff8054ece1df0fe00b3fd127809d",
+                "artifact": "results/rtl/abi3_shipped_prefix_campaign.json",
+                "case": "qwen3-8b-rom-single-chip/decode",
+                "is_the_deployment_this_record_names": false,
+                "program_counters": [
+                  8
+                ]
+              }
+            ],
+            "mnemonic": "VECTOR.RMS_NORM",
+            "numeric_contract_sha256": "999ef86bc4d4c36dfd57db84d49618af46bed2e6c1f0b1bf031a27b5b8c03fda",
+            "operator_descriptor_ids": [
+              50,
+              144,
+              183
+            ],
+            "program_counters": [
+              8,
+              47,
+              66
+            ],
+            "resolved_shape": [
+              [
+                0,
+                1,
+                0,
+                2
+              ],
+              [
+                1,
+                4096,
+                0,
+                1
+              ],
+              [
+                4,
+                1,
+                0,
+                2
+              ]
+            ],
+            "shape_fields": [
+              "slot",
+              "extent",
+              "extent_axis",
+              "rank"
+            ],
+            "sub": 0,
+            "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [50, 144, 183] of this deployment (133afc13e1fc) in a positive case; it was measured under a superseded lowering, whose campaign artifact no longer binds the tree"
+          },
+          {
+            "covered": false,
+            "family": 48,
+            "issues": 72,
+            "measured_once_under_a_superseded_lowering": [
+              {
+                "against_deployment_sha256": "f475fbaf521df53a62a5f26cd89da5e0bf82ff8054ece1df0fe00b3fd127809d",
+                "artifact": "results/rtl/abi3_shipped_prefix_campaign.json",
+                "case": "qwen3-8b-rom-single-chip/decode",
+                "is_the_deployment_this_record_names": false,
+                "program_counters": [
+                  20,
+                  23
+                ]
+              }
+            ],
+            "mnemonic": "VECTOR.HEAD_RMS_NORM",
+            "numeric_contract_sha256": "999ef86bc4d4c36dfd57db84d49618af46bed2e6c1f0b1bf031a27b5b8c03fda",
+            "operator_descriptor_ids": [
+              79,
+              87
+            ],
+            "program_counters": [
+              20,
+              23
+            ],
+            "resolved_shape": [
+              [
+                0,
+                1,
+                0,
+                3
+              ],
+              [
+                1,
+                128,
+                0,
+                1
+              ],
+              [
+                4,
+                1,
+                0,
+                3
+              ]
+            ],
+            "shape_fields": [
+              "slot",
+              "extent",
+              "extent_axis",
+              "rank"
+            ],
+            "sub": 1,
+            "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [79, 87] of this deployment (133afc13e1fc) in a positive case; it was measured under a superseded lowering, whose campaign artifact no longer binds the tree"
+          },
+          {
+            "covered": false,
+            "family": 48,
+            "issues": 72,
+            "measured_once_under_a_superseded_lowering": [
+              {
+                "against_deployment_sha256": "f475fbaf521df53a62a5f26cd89da5e0bf82ff8054ece1df0fe00b3fd127809d",
+                "artifact": "results/rtl/abi3_shipped_prefix_campaign.json",
+                "case": "qwen3-8b-rom-single-chip/decode",
+                "is_the_deployment_this_record_names": false,
+                "program_counters": [
+                  26,
+                  29
+                ]
+              }
+            ],
+            "mnemonic": "VECTOR.ROPE",
+            "numeric_contract_sha256": "34ad155c76b1ab1ee5efb8463a85753eaebd08e169ee93c07ba364759f1836cf",
+            "operator_descriptor_ids": [
+              94,
+              100
+            ],
+            "program_counters": [
+              26,
+              29
+            ],
+            "resolved_shape": [
+              [
+                0,
+                1,
+                0,
+                3
+              ],
+              [
+                1,
+                1,
+                0,
+                3
+              ],
+              [
+                4,
+                1,
+                0,
+                3
+              ]
+            ],
+            "shape_fields": [
+              "slot",
+              "extent",
+              "extent_axis",
+              "rank"
+            ],
+            "sub": 2,
+            "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [94, 100] of this deployment (133afc13e1fc) in a positive case; it was measured under a superseded lowering, whose campaign artifact no longer binds the tree"
+          },
+          {
+            "covered": true,
+            "covered_by": "results/rtl/a3_operator_admission_campaign.json",
+            "covered_by_sha256": "962ff60c8a4d26ff849ee30617aee093f8b2cb2c6e6f2972c9fc6d56e8c75f83",
+            "family": 48,
+            "issues": 72,
+            "mnemonic": "VECTOR.ADD",
+            "numeric_contract_sha256": "3c972568ff6c0a44baf54121a08d9b4ad9c3c35883a87c5f258a998e3dde0b09",
+            "operator_descriptor_ids": [
+              138,
+              177
+            ],
+            "program_counters": [
+              44,
+              62
+            ],
+            "resolved_shape": [
+              [
+                0,
+                1,
+                0,
+                2
+              ],
+              [
+                1,
+                1,
+                0,
+                2
+              ],
+              [
+                4,
+                1,
+                0,
+                2
+              ]
+            ],
+            "shape_fields": [
+              "slot",
+              "extent",
+              "extent_axis",
+              "rank"
+            ],
+            "sub": 3
+          },
+          {
+            "covered": true,
+            "covered_by": "results/rtl/a3_operator_admission_campaign.json",
+            "covered_by_sha256": "962ff60c8a4d26ff849ee30617aee093f8b2cb2c6e6f2972c9fc6d56e8c75f83",
+            "family": 48,
+            "issues": 36,
+            "mnemonic": "VECTOR.SILU_MUL",
+            "numeric_contract_sha256": "1ef5b3760135b2482b4f0e1cfeb3aef86955757b320b151defe69d2d64c45aca",
+            "operator_descriptor_ids": [
+              165
+            ],
+            "program_counters": [
+              56
+            ],
+            "resolved_shape": [
+              [
+                0,
+                1,
+                0,
+                2
+              ],
+              [
+                1,
+                1,
+                0,
+                2
+              ],
+              [
+                4,
+                1,
+                0,
+                2
+              ]
+            ],
+            "shape_fields": [
+              "slot",
+              "extent",
+              "extent_axis",
+              "rank"
+            ],
+            "sub": 4
+          },
+          {
+            "covered": true,
+            "covered_by": "results/rtl/a3_operator_admission_campaign.json",
+            "covered_by_sha256": "962ff60c8a4d26ff849ee30617aee093f8b2cb2c6e6f2972c9fc6d56e8c75f83",
+            "family": 64,
+            "issues": 36,
+            "mnemonic": "ATTENTION.GQA",
+            "numeric_contract_sha256": "623af598461a17f0b15fb564380a7b8de0bf3f8c89a0833947ad9ed8872ce181",
+            "operator_descriptor_ids": [
+              124
+            ],
+            "program_counters": [
+              38
+            ],
+            "resolved_shape": [
+              [
+                0,
+                1,
+                0,
+                3
+              ],
+              [
+                1,
+                8256,
+                0,
+                3
+              ],
+              [
+                2,
+                8256,
+                0,
+                3
+              ],
+              [
+                3,
+                1,
+                0,
+                1
+              ],
+              [
+                4,
+                1,
+                0,
+                3
+              ]
+            ],
+            "shape_fields": [
+              "slot",
+              "extent",
+              "extent_axis",
+              "rank"
+            ],
+            "sub": 1
+          },
+          {
+            "covered": true,
+            "covered_by": "results/rtl/a3_operator_admission_campaign.json",
+            "covered_by_sha256": "962ff60c8a4d26ff849ee30617aee093f8b2cb2c6e6f2972c9fc6d56e8c75f83",
+            "family": 112,
+            "issues": 1,
+            "mnemonic": "SELECTION.ARGMAX",
+            "numeric_contract_sha256": "27df2365e5f573211f5b7c19a3f92792ad0cf16ec44cc08db7cc87a9ec5e7c3a",
+            "operator_descriptor_ids": [
+              205
+            ],
+            "program_counters": [
+              70
+            ],
+            "resolved_shape": [
+              [
+                0,
+                151936,
+                0,
+                1
+              ],
+              [
+                4,
+                1,
+                0,
+                1
+              ]
+            ],
+            "shape_fields": [
+              "slot",
+              "extent",
+              "extent_axis",
+              "rank"
+            ],
+            "sub": 0
+          },
+          {
+            "covered": true,
+            "covered_by": "results/rtl/a3_operator_admission_campaign.json",
+            "covered_by_sha256": "962ff60c8a4d26ff849ee30617aee093f8b2cb2c6e6f2972c9fc6d56e8c75f83",
+            "family": 112,
+            "issues": 1,
+            "mnemonic": "SELECTION.TOKEN_APPEND",
+            "numeric_contract_sha256": "8d70087c8b6f58d95f91b7e498a253c2b5805c5e175dd681b951f3ef9e3f3dfc",
+            "operator_descriptor_ids": [
+              212
+            ],
+            "program_counters": [
+              72
+            ],
+            "resolved_shape": [
+              [
+                0,
+                1,
+                0,
+                1
+              ],
+              [
+                4,
+                1,
+                0,
+                1
+              ]
+            ],
+            "shape_fields": [
+              "slot",
+              "extent",
+              "extent_axis",
+              "rank"
+            ],
+            "sub": 1
+          }
+        ],
+        "covered_class_count": 6,
+        "covered_instance_count": 218,
+        "every_issued_class_covered": false,
+        "inventory_problems": [],
+        "inventory_streams_correspond": true,
+        "issued_class_count": 15,
+        "issued_instance_count": 691,
+        "resolved_view_count": 2143,
+        "resolved_views_consumed": 2143,
+        "uncovered_class_count": 9,
+        "uncovered_instance_count": 473
+      },
+      "deployment": {
+        "deployment_sha256": "133afc13e1fcd2aade2e40530883c9986b0e920d99853990d9032fd777f26243",
+        "descriptor_table_sha256": "fb3b453895b729e5a11fa1a2dc63bae53714099f1df844bdf76a47a159d5c836",
+        "entrypoint": "decode",
+        "instruction_count": 74,
+        "key": "qwen3-8b-rom-single-chip",
+        "program_sha256": "7443ff939ceeecfbab01514b41794821aa100ac9d6a426fa19469605d3c66c2f"
+      },
+      "equivalence": {
+        "checkpoint_weighted_class_count": 8,
+        "checkpoint_weighted_covered_class_count": 0,
+        "compared_words": 33093,
+        "mismatched_words": 0,
+        "mismatched_words_note": null,
+        "weights_are_real_checkpoint": false,
+        "weights_note": "Every class that consumes a real checkpoint tensor -- TENSOR.MATMUL, TENSOR.EMBED_LOOKUP, VECTOR.RMS_NORM, VECTOR.HEAD_RMS_NORM, VECTOR.ROPE -- must be covered before this is true. The covered set is otherwise the weightless operators, whose operands in the retained campaign are a seeded deterministic BF16 spread and authentic retained RTL activations, not checkpoint weights."
+      },
+      "execution": {
+        "campaigns": [
+          "results/rtl/a3_operator_admission_campaign.json"
+        ],
+        "campaigns_considered_and_refused": [
+          {
+            "artifact": "results/rtl/a3_qwen_gqa_campaign.json",
+            "why": "no retained vector index names the operator descriptors it drove, so it cannot be said to cover any particular class"
+          },
+          {
+            "artifact": "results/rtl/abi3_shipped_prefix_campaign.json",
+            "why": "11 bound source(s) have drifted since it was recorded; no retained vector index names the operator descriptors it drove, so it cannot be said to cover any particular class"
+          }
+        ],
+        "evidence_class": "public_open_tool_rtl_simulation_dual_simulator",
+        "simulated_cycles": 2896360,
+        "simulator": "icarus, verilator",
+        "simulators": [
+          "icarus",
+          "verilator"
+        ]
+      },
+      "git": {
+        "commit": "dcf908f2aa92425c5217c6cd01ccc0ea83244eec",
+        "worktree_dirty": false
+      },
+      "storage_class": "rom",
+      "workload_id": "TA-QW-EOS-1"
+    },
+    {
+      "capability": {
+        "integrated_vehicle": "rtl/test/a3_shipped_prefix_top.sv",
+        "integrated_vehicle_trapped_families": [
+          "DMA.SCATTER",
+          "ATTENTION.GQA",
+          "VECTOR.ADD",
+          "VECTOR.SILU_MUL",
+          "SELECTION.ARGMAX",
+          "SELECTION.TOKEN_APPEND"
+        ],
+        "integrated_vehicle_wires_placement_inputs": false,
+        "operator_admission_vehicle_admitted_family_count": 6,
+        "operator_admission_vehicle_trapped_family_count": 0,
+        "reported_form": "pessimistic",
+        "why_pessimistic": "post-mortem R13: a metric reported under two models is not evidence in its optimistic form. The two models here are the operator-admission vehicle and the integrated shipped-prefix vehicle, and they disagree."
+      },
+      "capability_trapped_family_count": 6,
+      "coverage": {
+        "classes": [
+          {
+            "covered": false,
+            "family": 16,
+            "issues": 1,
+            "mnemonic": "DMA.GATHER",
+            "numeric_contract_sha256": "12a24197c80d3851cc5ea3e69915f7dbc926aa1c2ee795c8fe3af1a67677daee",
+            "operator_descriptor_ids": [
+              46
+            ],
+            "program_counters": [
+              1
+            ],
+            "resolved_shape": [
+              [
+                0,
+                1,
+                0,
+                1
+              ],
+              [
+                1,
+                8256,
+                0,
+                2
+              ],
+              [
+                4,
+                1,
+                0,
+                2
+              ]
+            ],
+            "shape_fields": [
+              "slot",
+              "extent",
+              "extent_axis",
+              "rank"
+            ],
+            "sub": 2,
+            "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [46] of this deployment (cb9067f5fbf6) in a positive case"
+          },
+          {
+            "covered": false,
+            "family": 16,
+            "issues": 1,
+            "mnemonic": "DMA.GATHER",
+            "numeric_contract_sha256": "12a24197c80d3851cc5ea3e69915f7dbc926aa1c2ee795c8fe3af1a67677daee",
+            "operator_descriptor_ids": [
+              198
+            ],
+            "program_counters": [
+              68
+            ],
+            "resolved_shape": [
+              [
+                0,
+                1,
+                0,
+                1
+              ],
+              [
+                1,
+                8704,
+                0,
+                2
+              ],
+              [
+                4,
+                1,
+                0,
+                2
+              ]
+            ],
+            "shape_fields": [
+              "slot",
+              "extent",
+              "extent_axis",
+              "rank"
+            ],
+            "sub": 2,
+            "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [198] of this deployment (cb9067f5fbf6) in a positive case"
+          },
+          {
+            "covered": false,
+            "family": 16,
+            "issues": 72,
+            "mnemonic": "DMA.SCATTER",
+            "numeric_contract_sha256": "55f39bccbda65baf6238cfcd93d7bf9959330984af837979870cc019be00e16f",
+            "operator_descriptor_ids": [
+              118,
+              125
+            ],
+            "program_counters": [
+              32,
+              35
+            ],
+            "resolved_shape": [
+              [
+                0,
+                1,
+                0,
+                1
+              ],
+              [
+                1,
+                1,
+                0,
+                3
+              ],
+              [
+                4,
+                8256,
+                0,
+                3
+              ]
+            ],
+            "shape_fields": [
+              "slot",
+              "extent",
+              "extent_axis",
+              "rank"
+            ],
+            "sub": 3,
+            "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [118, 125] of this deployment (cb9067f5fbf6) in a positive case"
+          },
+          {
+            "covered": false,
+            "family": 32,
+            "issues": 72,
+            "measured_once_under_a_superseded_lowering": [
+              {
+                "against_deployment_sha256": "0d7897457e14666fc057ea6223cc32e65c61e39bfe5b2ff675c3b5585fe2ce8e",
+                "artifact": "results/rtl/abi3_shipped_prefix_campaign.json",
+                "case": "qwen3-8b-hbm-single-chip/decode",
+                "is_the_deployment_this_record_names": false,
+                "program_counters": [
+                  14,
+                  17
+                ]
+              }
+            ],
+            "mnemonic": "TENSOR.MATMUL",
+            "numeric_contract_sha256": "7550dc6a773fd9d5773b46182887613fb777bb8e4f01652321c4d93ca0765aa1",
+            "operator_descriptor_ids": [
+              79,
+              84
+            ],
+            "program_counters": [
+              14,
+              17
+            ],
+            "resolved_shape": [
+              [
+                0,
+                1,
+                0,
+                2
+              ],
+              [
+                1,
+                1024,
+                0,
+                2
+              ],
+              [
+                4,
+                1,
+                0,
+                2
+              ]
+            ],
+            "shape_fields": [
+              "slot",
+              "extent",
+              "extent_axis",
+              "rank"
+            ],
+            "sub": 0,
+            "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [79, 84] of this deployment (cb9067f5fbf6) in a positive case; it was measured under a superseded lowering, whose campaign artifact no longer binds the tree"
+          },
+          {
+            "covered": false,
+            "family": 32,
+            "issues": 72,
+            "mnemonic": "TENSOR.MATMUL",
+            "numeric_contract_sha256": "7550dc6a773fd9d5773b46182887613fb777bb8e4f01652321c4d93ca0765aa1",
+            "operator_descriptor_ids": [
+              162,
+              168
+            ],
+            "program_counters": [
+              50,
+              53
+            ],
+            "resolved_shape": [
+              [
+                0,
+                1,
+                0,
+                2
+              ],
+              [
+                1,
+                12288,
+                0,
+                2
+              ],
+              [
+                4,
+                1,
+                0,
+                2
+              ]
+            ],
+            "shape_fields": [
+              "slot",
+              "extent",
+              "extent_axis",
+              "rank"
+            ],
+            "sub": 0,
+            "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [162, 168] of this deployment (cb9067f5fbf6) in a positive case"
+          },
+          {
+            "covered": false,
+            "family": 32,
+            "issues": 1,
+            "mnemonic": "TENSOR.MATMUL",
+            "numeric_contract_sha256": "7550dc6a773fd9d5773b46182887613fb777bb8e4f01652321c4d93ca0765aa1",
+            "operator_descriptor_ids": [
+              204
+            ],
+            "program_counters": [
+              69
+            ],
+            "resolved_shape": [
+              [
+                0,
+                1,
+                0,
+                2
+              ],
+              [
+                1,
+                151936,
+                0,
+                2
+              ],
+              [
+                4,
+                1,
+                0,
+                2
+              ]
+            ],
+            "shape_fields": [
+              "slot",
+              "extent",
+              "extent_axis",
+              "rank"
+            ],
+            "sub": 0,
+            "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [204] of this deployment (cb9067f5fbf6) in a positive case"
+          },
+          {
+            "covered": false,
+            "family": 32,
+            "issues": 108,
+            "measured_once_under_a_superseded_lowering": [
+              {
+                "against_deployment_sha256": "0d7897457e14666fc057ea6223cc32e65c61e39bfe5b2ff675c3b5585fe2ce8e",
+                "artifact": "results/rtl/abi3_shipped_prefix_campaign.json",
+                "case": "qwen3-8b-hbm-single-chip/decode",
+                "is_the_deployment_this_record_names": false,
+                "program_counters": [
+                  11
+                ]
+              }
+            ],
+            "mnemonic": "TENSOR.MATMUL",
+            "numeric_contract_sha256": "7550dc6a773fd9d5773b46182887613fb777bb8e4f01652321c4d93ca0765aa1",
+            "operator_descriptor_ids": [
+              72,
+              142,
+              180
+            ],
+            "program_counters": [
+              11,
+              41,
+              59
+            ],
+            "resolved_shape": [
+              [
+                0,
+                1,
+                0,
+                2
+              ],
+              [
+                1,
+                4096,
+                0,
+                2
+              ],
+              [
+                4,
+                1,
+                0,
+                2
+              ]
+            ],
+            "shape_fields": [
+              "slot",
+              "extent",
+              "extent_axis",
+              "rank"
+            ],
+            "sub": 0,
+            "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [72, 142, 180] of this deployment (cb9067f5fbf6) in a positive case; it was measured under a superseded lowering, whose campaign artifact no longer binds the tree"
+          },
+          {
+            "covered": false,
+            "family": 32,
+            "issues": 1,
+            "measured_once_under_a_superseded_lowering": [
+              {
+                "against_deployment_sha256": "0d7897457e14666fc057ea6223cc32e65c61e39bfe5b2ff675c3b5585fe2ce8e",
+                "artifact": "results/rtl/abi3_shipped_prefix_campaign.json",
+                "case": "qwen3-8b-hbm-single-chip/decode",
+                "is_the_deployment_this_record_names": false,
+                "program_counters": [
+                  4
+                ]
+              }
+            ],
+            "mnemonic": "TENSOR.EMBED_LOOKUP",
+            "numeric_contract_sha256": "d1ea2f18e0b161e19e17f465ced630e0af7d0de970dadd6776c685ab6539fbcc",
+            "operator_descriptor_ids": [
+              54
+            ],
+            "program_counters": [
+              4
+            ],
+            "resolved_shape": [
+              [
+                0,
+                1,
+                0,
+                1
+              ],
+              [
+                1,
+                151936,
+                0,
+                2
+              ],
+              [
+                4,
+                1,
+                0,
+                2
+              ]
+            ],
+            "shape_fields": [
+              "slot",
+              "extent",
+              "extent_axis",
+              "rank"
+            ],
+            "sub": 3,
+            "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [54] of this deployment (cb9067f5fbf6) in a positive case; it was measured under a superseded lowering, whose campaign artifact no longer binds the tree"
+          },
+          {
+            "covered": false,
+            "family": 48,
+            "issues": 73,
+            "measured_once_under_a_superseded_lowering": [
+              {
+                "against_deployment_sha256": "0d7897457e14666fc057ea6223cc32e65c61e39bfe5b2ff675c3b5585fe2ce8e",
+                "artifact": "results/rtl/abi3_shipped_prefix_campaign.json",
+                "case": "qwen3-8b-hbm-single-chip/decode",
+                "is_the_deployment_this_record_names": false,
+                "program_counters": [
+                  8
+                ]
+              }
+            ],
+            "mnemonic": "VECTOR.RMS_NORM",
+            "numeric_contract_sha256": "999ef86bc4d4c36dfd57db84d49618af46bed2e6c1f0b1bf031a27b5b8c03fda",
+            "operator_descriptor_ids": [
+              64,
+              156,
+              192
+            ],
+            "program_counters": [
+              8,
+              47,
+              66
+            ],
+            "resolved_shape": [
+              [
+                0,
+                1,
+                0,
+                2
+              ],
+              [
+                1,
+                4096,
+                0,
+                1
+              ],
+              [
+                4,
+                1,
+                0,
+                2
+              ]
+            ],
+            "shape_fields": [
+              "slot",
+              "extent",
+              "extent_axis",
+              "rank"
+            ],
+            "sub": 0,
+            "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [64, 156, 192] of this deployment (cb9067f5fbf6) in a positive case; it was measured under a superseded lowering, whose campaign artifact no longer binds the tree"
+          },
+          {
+            "covered": false,
+            "family": 48,
+            "issues": 72,
+            "measured_once_under_a_superseded_lowering": [
+              {
+                "against_deployment_sha256": "0d7897457e14666fc057ea6223cc32e65c61e39bfe5b2ff675c3b5585fe2ce8e",
+                "artifact": "results/rtl/abi3_shipped_prefix_campaign.json",
+                "case": "qwen3-8b-hbm-single-chip/decode",
+                "is_the_deployment_this_record_names": false,
+                "program_counters": [
+                  20,
+                  23
+                ]
+              }
+            ],
+            "mnemonic": "VECTOR.HEAD_RMS_NORM",
+            "numeric_contract_sha256": "999ef86bc4d4c36dfd57db84d49618af46bed2e6c1f0b1bf031a27b5b8c03fda",
+            "operator_descriptor_ids": [
+              90,
+              97
+            ],
+            "program_counters": [
+              20,
+              23
+            ],
+            "resolved_shape": [
+              [
+                0,
+                1,
+                0,
+                3
+              ],
+              [
+                1,
+                128,
+                0,
+                1
+              ],
+              [
+                4,
+                1,
+                0,
+                3
+              ]
+            ],
+            "shape_fields": [
+              "slot",
+              "extent",
+              "extent_axis",
+              "rank"
+            ],
+            "sub": 1,
+            "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [90, 97] of this deployment (cb9067f5fbf6) in a positive case; it was measured under a superseded lowering, whose campaign artifact no longer binds the tree"
+          },
+          {
+            "covered": false,
+            "family": 48,
+            "issues": 72,
+            "measured_once_under_a_superseded_lowering": [
+              {
+                "against_deployment_sha256": "0d7897457e14666fc057ea6223cc32e65c61e39bfe5b2ff675c3b5585fe2ce8e",
+                "artifact": "results/rtl/abi3_shipped_prefix_campaign.json",
+                "case": "qwen3-8b-hbm-single-chip/decode",
+                "is_the_deployment_this_record_names": false,
+                "program_counters": [
+                  26,
+                  29
+                ]
+              }
+            ],
+            "mnemonic": "VECTOR.ROPE",
+            "numeric_contract_sha256": "34ad155c76b1ab1ee5efb8463a85753eaebd08e169ee93c07ba364759f1836cf",
+            "operator_descriptor_ids": [
+              104,
+              110
+            ],
+            "program_counters": [
+              26,
+              29
+            ],
+            "resolved_shape": [
+              [
+                0,
+                1,
+                0,
+                3
+              ],
+              [
+                1,
+                1,
+                0,
+                3
+              ],
+              [
+                4,
+                1,
+                0,
+                3
+              ]
+            ],
+            "shape_fields": [
+              "slot",
+              "extent",
+              "extent_axis",
+              "rank"
+            ],
+            "sub": 2,
+            "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [104, 110] of this deployment (cb9067f5fbf6) in a positive case; it was measured under a superseded lowering, whose campaign artifact no longer binds the tree"
+          },
+          {
+            "covered": false,
+            "family": 48,
+            "issues": 72,
+            "mnemonic": "VECTOR.ADD",
+            "numeric_contract_sha256": "3c972568ff6c0a44baf54121a08d9b4ad9c3c35883a87c5f258a998e3dde0b09",
+            "operator_descriptor_ids": [
+              150,
+              186
+            ],
+            "program_counters": [
+              44,
+              62
+            ],
+            "resolved_shape": [
+              [
+                0,
+                1,
+                0,
+                2
+              ],
+              [
+                1,
+                1,
+                0,
+                2
+              ],
+              [
+                4,
+                1,
+                0,
+                2
+              ]
+            ],
+            "shape_fields": [
+              "slot",
+              "extent",
+              "extent_axis",
+              "rank"
+            ],
+            "sub": 3,
+            "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [150, 186] of this deployment (cb9067f5fbf6) in a positive case"
+          },
+          {
+            "covered": false,
+            "family": 48,
+            "issues": 36,
+            "mnemonic": "VECTOR.SILU_MUL",
+            "numeric_contract_sha256": "1ef5b3760135b2482b4f0e1cfeb3aef86955757b320b151defe69d2d64c45aca",
+            "operator_descriptor_ids": [
+              174
+            ],
+            "program_counters": [
+              56
+            ],
+            "resolved_shape": [
+              [
+                0,
+                1,
+                0,
+                2
+              ],
+              [
+                1,
+                1,
+                0,
+                2
+              ],
+              [
+                4,
+                1,
+                0,
+                2
+              ]
+            ],
+            "shape_fields": [
+              "slot",
+              "extent",
+              "extent_axis",
+              "rank"
+            ],
+            "sub": 4,
+            "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [174] of this deployment (cb9067f5fbf6) in a positive case"
+          },
+          {
+            "covered": false,
+            "family": 64,
+            "issues": 36,
+            "mnemonic": "ATTENTION.GQA",
+            "numeric_contract_sha256": "623af598461a17f0b15fb564380a7b8de0bf3f8c89a0833947ad9ed8872ce181",
+            "operator_descriptor_ids": [
+              136
+            ],
+            "program_counters": [
+              38
+            ],
+            "resolved_shape": [
+              [
+                0,
+                1,
+                0,
+                3
+              ],
+              [
+                1,
+                8256,
+                0,
+                3
+              ],
+              [
+                2,
+                8256,
+                0,
+                3
+              ],
+              [
+                3,
+                1,
+                0,
+                1
+              ],
+              [
+                4,
+                1,
+                0,
+                3
+              ]
+            ],
+            "shape_fields": [
+              "slot",
+              "extent",
+              "extent_axis",
+              "rank"
+            ],
+            "sub": 1,
+            "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [136] of this deployment (cb9067f5fbf6) in a positive case"
+          },
+          {
+            "covered": false,
+            "family": 112,
+            "issues": 1,
+            "mnemonic": "SELECTION.ARGMAX",
+            "numeric_contract_sha256": "27df2365e5f573211f5b7c19a3f92792ad0cf16ec44cc08db7cc87a9ec5e7c3a",
+            "operator_descriptor_ids": [
+              211
+            ],
+            "program_counters": [
+              70
+            ],
+            "resolved_shape": [
+              [
+                0,
+                151936,
+                0,
+                1
+              ],
+              [
+                4,
+                1,
+                0,
+                1
+              ]
+            ],
+            "shape_fields": [
+              "slot",
+              "extent",
+              "extent_axis",
+              "rank"
+            ],
+            "sub": 0,
+            "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [211] of this deployment (cb9067f5fbf6) in a positive case"
+          },
+          {
+            "covered": false,
+            "family": 112,
+            "issues": 1,
+            "mnemonic": "SELECTION.TOKEN_APPEND",
+            "numeric_contract_sha256": "8d70087c8b6f58d95f91b7e498a253c2b5805c5e175dd681b951f3ef9e3f3dfc",
+            "operator_descriptor_ids": [
+              217
+            ],
+            "program_counters": [
+              72
+            ],
+            "resolved_shape": [
+              [
+                0,
+                1,
+                0,
+                1
+              ],
+              [
+                4,
+                1,
+                0,
+                1
+              ]
+            ],
+            "shape_fields": [
+              "slot",
+              "extent",
+              "extent_axis",
+              "rank"
+            ],
+            "sub": 1,
+            "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [217] of this deployment (cb9067f5fbf6) in a positive case"
+          }
+        ],
+        "covered_class_count": 0,
+        "covered_instance_count": 0,
+        "every_issued_class_covered": false,
+        "inventory_problems": [],
+        "inventory_streams_correspond": true,
+        "issued_class_count": 16,
+        "issued_instance_count": 691,
+        "resolved_view_count": 2143,
+        "resolved_views_consumed": 2143,
+        "uncovered_class_count": 16,
+        "uncovered_instance_count": 691
+      },
+      "deployment": {
+        "deployment_sha256": "cb9067f5fbf67f7df4212399aee6ba75ced4ca5c8f2dc8c1631372a4068cea2c",
+        "descriptor_table_sha256": "e20927409e93980c837ad9c1070b2efdf1731f751c87fc5775a2c66695ca7175",
+        "entrypoint": "decode",
+        "instruction_count": 74,
+        "key": "qwen3-8b-hbm-single-chip",
+        "program_sha256": "a1f467f5ff27808bd472e4d556077195289f2c16b5286ad949f973f7eaefed1a"
+      },
+      "equivalence": {
+        "checkpoint_weighted_class_count": 8,
+        "checkpoint_weighted_covered_class_count": 0,
+        "compared_words": 0,
+        "mismatched_words": null,
+        "mismatched_words_note": "no words were compared under this lowering; a mismatch count over zero comparisons is not a zero mismatch count, and is reported as absent rather than as zero",
+        "weights_are_real_checkpoint": false,
+        "weights_note": "Every class that consumes a real checkpoint tensor -- TENSOR.MATMUL, TENSOR.EMBED_LOOKUP, VECTOR.RMS_NORM, VECTOR.HEAD_RMS_NORM, VECTOR.ROPE -- must be covered before this is true. The covered set is otherwise the weightless operators, whose operands in the retained campaign are a seeded deterministic BF16 spread and authentic retained RTL activations, not checkpoint weights."
+      },
+      "execution": {
+        "campaigns": [],
+        "campaigns_considered_and_refused": [
+          {
+            "artifact": "results/rtl/a3_qwen_gqa_campaign.json",
+            "why": "no retained vector index names the operator descriptors it drove, so it cannot be said to cover any particular class"
+          },
+          {
+            "artifact": "results/rtl/abi3_shipped_prefix_campaign.json",
+            "why": "11 bound source(s) have drifted since it was recorded; no retained vector index names the operator descriptors it drove, so it cannot be said to cover any particular class"
+          }
+        ],
+        "evidence_class": "absent: no simulation of this lowering exists",
+        "simulated_cycles": 0,
+        "simulator": null,
+        "simulators": []
+      },
+      "git": {
+        "commit": "dcf908f2aa92425c5217c6cd01ccc0ea83244eec",
+        "worktree_dirty": false
+      },
+      "storage_class": "hbm",
+      "workload_id": "TA-QW-EOS-1"
+    }
+  ],
+  "schema": "opentallas.rtl.g1a_operator_equivalence.v1",
+  "status": "fail",
+  "summary": [
+    "rom: 6 of 15 issued equivalence classes covered bit-exactly (218 of 691 issued instances); 9 uncovered; 33093 words compared, 0 mismatched; real checkpoint weights: False; capability-trapped families (pessimistic form): 6",
+    "hbm: 0 of 16 issued equivalence classes covered bit-exactly (0 of 691 issued instances); 16 uncovered; 0 words compared, None mismatched; real checkpoint weights: False; capability-trapped families (pessimistic form): 6"
+  ],
+  "workload_id": "TA-QW-EOS-1"
+}
