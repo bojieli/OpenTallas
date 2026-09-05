@@ -146,6 +146,13 @@ BASE_SILU_OUT = BASE_SILU_UP + SILU_WIDTH
 BASE_LOGITS = BASE_SILU_OUT + SILU_WIDTH
 BASE_TOKEN = BASE_LOGITS + VOCABULARY
 BASE_RING = BASE_TOKEN + 1
+# The generated-token ring is the ONE object whose extent is not the same on
+# both lowerings.  The ROM lowering's PC-72 output view resolves at element
+# offset 0, so one word held it; the HBM lowering's resolves at the generated
+# position -- offset 17 at the governed context -- and a one-word ring made
+# the bridge write past the end of the bank.  The ring is therefore sized from
+# the resolved view itself, per lowering, and BANK_WORDS below is only the
+# default for a lowering that resolves at offset 0.
 BANK_WORDS = BASE_RING + 1
 INDEX_WORDS = 64
 
@@ -402,7 +409,20 @@ class Builder:
         self.generation_policy_id = policies[0]
         self.resolver = ViewResolver(SimpleNamespace(table=self.table), None)
         self.symbols = self._symbols()
-        self.bank = [0] * BANK_WORDS
+        # Where PC 72 actually appends, and therefore how much bank the ring
+        # object needs.  Read from the resolved view, not assumed.
+        ring_view = next(
+            view
+            for view in self._operation(
+                PC_TOKEN_APPEND, "SELECTION.TOKEN_APPEND", self.symbols_at(16)
+            )["views"]
+            if int(view["slot"]) == 4
+        )
+        self.ring_offset = int(ring_view["element_offset"])
+        self.ring_words = self.ring_offset + int(ring_view["extent"])
+        self.ring_slot = BASE_RING + self.ring_offset
+        self.bank_words = BASE_RING + self.ring_words
+        self.bank = [0] * self.bank_words
         self.initial_bank: list[int] = []
         self.index_bank = list(range(INDEX_WORDS))
         self.cases: list[dict[str, Any]] = []
@@ -1011,11 +1031,11 @@ class Builder:
             expected_tie_multiplicity=0,
             expected_eos_reason=1,
             expected_launch=LAUNCH_TOKEN_APPEND,
-            compare_base=BASE_RING,
+            compare_base=self.ring_slot,
             compare_words=[token],
             note="the selected id is in the policy's EOS set: OFFICIAL_EOS",
         )
-        self.bank[BASE_RING] = token
+        self.bank[self.ring_slot] = token
 
         ordinary = 12345
         self.emit(
@@ -1039,13 +1059,13 @@ class Builder:
             expected_tie_multiplicity=0,
             expected_eos_reason=0,
             expected_launch=LAUNCH_TOKEN_APPEND,
-            compare_base=BASE_RING,
+            compare_base=self.ring_slot,
             compare_words=[ordinary],
             preload=(BASE_TOKEN, [ordinary]),
             note="not EOS and below the request bound: the session continues",
         )
         self.bank[BASE_TOKEN] = ordinary
-        self.bank[BASE_RING] = ordinary
+        self.bank[self.ring_slot] = ordinary
 
         # ------------------------------------------------------ fail-closed
         # Admission that only ever admits is not admission.  Each of these is
@@ -1234,7 +1254,7 @@ class Builder:
             expected_tie_multiplicity=0,
             expected_eos_reason=0,
             expected_launch=LAUNCH_NONE,
-            compare_base=BASE_RING,
+            compare_base=self.ring_slot,
             compare_words=[ordinary],
             preload=(BASE_TOKEN, [VOCABULARY]),
             note="a token outside the policy's vocabulary is not appended",
@@ -1263,7 +1283,7 @@ class Builder:
             expected_tie_multiplicity=0,
             expected_eos_reason=0,
             expected_launch=LAUNCH_NONE,
-            compare_base=BASE_RING,
+            compare_base=self.ring_slot,
             compare_words=[ordinary],
             preload=(BASE_TOKEN, [ordinary]),
             generation_policy_id=sampling_policy_id,
@@ -1430,7 +1450,7 @@ def build(
             "view_slots": VIEW_SLOTS,
             "view_words": VIEW_WORDS,
             "map_entries": MAP_ENTRIES,
-            "bank_words": BANK_WORDS,
+            "bank_words": builder.bank_words,
             "index_words": INDEX_WORDS,
             "descriptor_records": builder.next_synthetic_id,
             "expected_words": len(builder.expected_words),
