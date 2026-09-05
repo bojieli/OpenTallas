@@ -15,7 +15,7 @@
       "kind": "terminal",
       "statement": "A routed netlist exists containing the datapath array, the memory system AND the microsequencer, at one named PDK, with DRC 0 and antenna 0.",
       "status": "fail",
-      "why": "3 routed block(s) (add_bf16_sram_engine, matmul_bf16_sram_engine, reduction_s8_g2) and none is one of microsequencer, sequencer, control_plane, descriptor"
+      "why": "4 routed block(s) (a3_lane_pipelined, add_bf16_sram_engine, matmul_bf16_sram_engine, reduction_s8_g2) and none is one of microsequencer, sequencer, control_plane, descriptor"
     },
     {
       "fails_when": "TPOT exceeds the budget, OR no budget is frozen.",
@@ -30,8 +30,8 @@
       "id": "G4",
       "kind": "terminal",
       "statement": "The cycle model reproduces the measured block cycles of the RTL within a stated band, and the derived machine reproduces the analytical design point.",
-      "status": "fail",
-      "why": "1 artifact(s) matched results/derived/*reconciliation*.json and none has binding_regime.same_regime == True"
+      "status": "pass",
+      "why": "results/derived/qwen3_n5_design_target_reconciliation.json: targets.rom.binding_regime.same_regime == True and targets.hbm.binding_regime.same_regime == True"
     },
     {
       "fails_when": "One bit differs.",
@@ -63,7 +63,7 @@
       "kind": "design",
       "statement": "Per-MAC area and per-MAC period both improve against the recorded matmul_bf16_sram_engine baseline at the same PDK.",
       "status": "fail",
-      "why": "no candidate matches results/physical_abi3/*/*lane*/pnr.json"
+      "why": "1 candidate(s) and none improves on the baseline's 48,274 um2 and 104.1 ns per MAC: results/physical_abi3/asap7/a3_lane_pipelined/pnr.json: not closed (status not_met); 6,849.1 um2 and 8.500 ns per MAC are what it achieved, not a result"
     },
     {
       "fails_when": "Any becomes silent.",
@@ -94,8 +94,8 @@
       "id": "C3",
       "kind": "comparison",
       "statement": "The cycle model and the analytical model find the same binding constraint.",
-      "status": "fail",
-      "why": "1 artifact(s) matched results/derived/*reconciliation*.json and none has binding_regime.same_regime == True"
+      "status": "pass",
+      "why": "results/derived/qwen3_n5_design_target_reconciliation.json: targets.rom.binding_regime.same_regime == True and targets.hbm.binding_regime.same_regime == True"
     },
     {
       "fails_when": "Any does.",
@@ -106,9 +106,9 @@
       "why": "26 cycle artifact(s) and none carries plausibility.total_over_binding_floor; a run that cannot state its own bandwidth floor cannot be believed"
     }
   ],
-  "passing": 4,
+  "passing": 6,
   "plan": "docs/OPENTALLAS_REDESIGN_PLAN.md",
   "principle": "Absence of evidence is FAIL, never not_evaluable. The previous programme's TPOT gate had two states, not_evaluable and pass, with no reachable fail; it stayed not_evaluable for the life of the project while the machine drifted 44,000x from target. A gate that cannot fail is a note. Every gate below reports FAIL until evidence says otherwise.",
   "schema": "opentallas.gates.redesign_result.v1",
-  "terminal_passing": 0
+  "terminal_passing": 1
 }

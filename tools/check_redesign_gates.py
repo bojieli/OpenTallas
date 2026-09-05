@@ -257,18 +257,27 @@ def evaluate(gate: dict[str, Any]) -> dict[str, Any]:
 
     if kind == "artifact_field":
         want = ev["require"]
+        also = ev.get("also_require")
         for path in paths:
             body = _load(path)
             if body is None:
                 continue
             got = _dig(body, want["field"])
-            if got == want.get("equals"):
-                return _pass(
-                    f"{path.relative_to(REPO)}: {want['field']} == {want['equals']}"
-                )
+            if got != want.get("equals"):
+                continue
+            # A second field that must hold in the SAME artifact.  Both halves
+            # of a reconciliation must agree; passing on one target's regime
+            # while the other's is absent would be the missing-key defect again.
+            if also and _dig(body, also["field"]) != also.get("equals"):
+                continue
+            return _pass(
+                f"{path.relative_to(REPO)}: {want['field']} == {want['equals']}"
+                + (f" and {also['field']} == {also['equals']}" if also else "")
+            )
         return _fail(
             f"{len(paths)} artifact(s) matched {ev['glob']} and none has "
             f"{want['field']} == {want.get('equals')}"
+            + (f" with {also['field']} == {also.get('equals')}" if also else "")
         )
 
     if kind == "artifact_threshold":

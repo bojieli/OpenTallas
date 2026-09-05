@@ -47,8 +47,9 @@
       "evaluator": {
         "type": "artifact_field",
         "glob": "results/derived/*reconciliation*.json",
-        "require": {"field": "binding_regime.same_regime", "equals": true},
-        "note": "The regime half is met by results/derived/qwen3_n5_design_target_reconciliation.json. The RTL-calibration half has no artifact yet, so this gate is partial by construction and reports the weaker of the two."
+        "require": {"field": "targets.rom.binding_regime.same_regime", "equals": true},
+        "also_require": {"field": "targets.hbm.binding_regime.same_regime", "equals": true},
+        "note": "The regime half is met by results/derived/qwen3_n5_design_target_reconciliation.json, which writes same_regime under targets.rom and targets.hbm; the first spec read a top-level path that no artifact carries, and the checker correctly failed on the absent key. The ROM half is the informative one; the HBM half is an identity of the byte-split attribution (weight_read is the argmax by construction of a 0.8677 weight share) and is required here for completeness, not as independent evidence. The RTL-calibration half has no artifact yet, so this gate is partial by construction and reports the weaker of the two."
       }
     },
 
@@ -114,7 +115,10 @@
       "kind": "comparison",
       "statement": "The cycle model and the analytical model find the same binding constraint.",
       "fails_when": "They disagree.",
-      "evaluator": {"type": "artifact_field", "glob": "results/derived/*reconciliation*.json", "require": {"field": "binding_regime.same_regime", "equals": true}}
+      "evaluator": {"type": "artifact_field", "glob": "results/derived/*reconciliation*.json",
+        "require": {"field": "targets.rom.binding_regime.same_regime", "equals": true},
+        "also_require": {"field": "targets.hbm.binding_regime.same_regime", "equals": true},
+        "note": "Same path correction as G4. The ROM regime match is the informative half; the HBM match is attribution-defined. A reconciliation where either target disagrees with the analytical binding constraint fails this gate."}
     },
     {
       "id": "C4",
