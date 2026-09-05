@@ -542,6 +542,31 @@ def run_stage(
     }
 
 
+MEASURE_RE = re.compile(r"^MEASURE .*?\bcycles=(?P<cycles>\d+)\b", re.MULTILINE)
+
+
+def parse_measure(log: str) -> dict[str, Any]:
+    """The run's own simulated-cycle count, read off its MEASURE line.
+
+    A rung of the verification ladder must state a positive
+    ``execution.simulated_cycles``, and it has to be the number the simulator
+    reported, not one composed here.  A run that emitted no MEASURE line
+    measured no cycles, and says so rather than borrowing a plausible figure.
+    """
+
+    match = MEASURE_RE.search(log)
+    if match is None:
+        return {
+            "measured": False,
+            "simulated_cycles": 0,
+            "why_not_measured": (
+                "the run emitted no MEASURE line, so this campaign states no "
+                "cycle count of its own"
+            ),
+        }
+    return {"measured": True, "simulated_cycles": int(match.group("cycles"))}
+
+
 def parse_observation(log: str) -> dict[str, Any]:
     cases = [
         {key: int(value) for key, value in match.groupdict().items()}
@@ -552,6 +577,7 @@ def parse_observation(log: str) -> dict[str, Any]:
         "cases": cases,
         "checks": int(checks[-1]) if checks else None,
         "admission": parse_admission(log),
+        "measure": parse_measure(log),
     }
 
 
@@ -590,6 +616,8 @@ def simulator_case(
         "checks": observation["checks"],
         "observed_cases": observation["cases"],
         "operator_admission": observation["admission"],
+        "measure": observation["measure"],
+        "simulated_cycles": observation["measure"]["simulated_cycles"],
         "log_sha256": hashlib.sha256(
             (compiled["log"] + run_log).encode("utf-8")
         ).hexdigest(),
@@ -932,6 +960,15 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
         "operator_admission": (
             cases[0]["operator_admission"] if cases else parse_admission("")
         ),
+        # The integrated run's own simulated-cycle count, summed over the
+        # simulators that ran it.  Rung G1a's provenance spine requires a
+        # positive one and will not accept a composed figure.
+        "simulated_cycles": sum(
+            int(case.get("simulated_cycles") or 0) for case in cases
+        ),
+        "simulated_cycles_by_simulator": {
+            case["name"]: int(case.get("simulated_cycles") or 0) for case in cases
+        },
         "expected_cases": expected_cases,
         "tools": tools,
         "git": git_identity(),
