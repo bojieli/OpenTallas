@@ -1,0 +1,5423 @@
+{
+  "derived_mechanically": true,
+  "does_not_establish": [
+    "the handoff: see handoff.rtl_to_rtl and its measurement. Nothing in this artifact says a value produced by one layer was consumed by the next in RTL unless that field is true",
+    "any engine arithmetic: the run the loop property is measured from supplies every engine result at the engine boundary, which is rung G1e's scope, not this one's",
+    "that a structurally identical invocation computes the right words -- that is G1a per operator and G1b per layer"
+  ],
+  "establishes": [
+    "the design's own loop control issues exactly [36] invocations of the layer body per device transaction -- the model's layer count from the certified Kernel IR and the checkpoint's config.json -- measured as [108] invocations in the RTL's own certified issue trace, on each declared storage class",
+    "every one of those invocations is structurally identical: the same sequence of (family, subopcode, descriptor id, program counter), the same resolved (slot, descriptor id, extent, extent axis, rank) for every operand, and an element offset that advances by a constant per-invocation stride",
+    "at all [105] layer boundaries the RTL resolver produced, for invocation N+1's consumer, the same object, element offset and extent it produced for invocation N's producer -- address identity, not a data handoff"
+  ],
+  "gate": "G1c",
+  "generated_by": "tools/build_abi3_g1c_composition.py",
+  "generated_by_sha256": "9e73a2a14350d3ffbb6ed51601ed0833de0e5ee61fbe75b09fed6a78f6f43632",
+  "git": {
+    "commit": "05a230bd06b64521cf8a68ebf9d74794ea2de3b6",
+    "dirty_paths": [],
+    "scope": "the tree THIS artifact was derived in. It is not a claim about the tree either run happened in; see execution.control_plane_run and handoff.integrated_campaign for those.",
+    "worktree_dirty": false
+  },
+  "records": [
+    {
+      "deployment": {
+        "deployment_sha256": "133afc13e1fcd2aade2e40530883c9986b0e920d99853990d9032fd777f26243",
+        "directory": "build/abi3/qwen3-8b-rom",
+        "instruction_count": 74,
+        "key": "qwen3-8b-rom-single-chip"
+      },
+      "execution": {
+        "control_plane": "rtl/abi3/ot_a3_device_top.sv",
+        "control_plane_run": {
+          "artifact": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/reach_cd/g1e_rerun.json",
+          "artifact_sha256": "95c3d5a1bde58b346a221400c9759305d2374c6b201adc192d74f8b54396d7e5",
+          "bound_source_count": 53,
+          "census_agrees_with_the_run": true,
+          "census_rows_from_the_trace_file": 26,
+          "control_plane": "rtl/abi3/ot_a3_device_top.sv",
+          "declared_git": {
+            "commit": "4b136d675640a42ee2cb9b1869e8d717ca48bc4f",
+            "worktree_dirty": false
+          },
+          "deployment_sha256": "133afc13e1fcd2aade2e40530883c9986b0e920d99853990d9032fd777f26243",
+          "drifted_source_count": 0,
+          "drifted_sources": [],
+          "evidence_class": "public_open_tool_rtl_simulation",
+          "injection": {
+            "boundary": "engine_result",
+            "control_path_is_rtl": true,
+            "engine_launches": 0
+          },
+          "issue_census": [
+            {
+              "descriptor_id": 32,
+              "family": 16,
+              "instances": 3,
+              "sub": 2
+            },
+            {
+              "descriptor_id": 190,
+              "family": 16,
+              "instances": 3,
+              "sub": 2
+            },
+            {
+              "descriptor_id": 108,
+              "family": 16,
+              "instances": 108,
+              "sub": 3
+            },
+            {
+              "descriptor_id": 115,
+              "family": 16,
+              "instances": 108,
+              "sub": 3
+            },
+            {
+              "descriptor_id": 59,
+              "family": 32,
+              "instances": 108,
+              "sub": 0
+            },
+            {
+              "descriptor_id": 67,
+              "family": 32,
+              "instances": 108,
+              "sub": 0
+            },
+            {
+              "descriptor_id": 73,
+              "family": 32,
+              "instances": 108,
+              "sub": 0
+            },
+            {
+              "descriptor_id": 130,
+              "family": 32,
+              "instances": 108,
+              "sub": 0
+            },
+            {
+              "descriptor_id": 151,
+              "family": 32,
+              "instances": 108,
+              "sub": 0
+            },
+            {
+              "descriptor_id": 158,
+              "family": 32,
+              "instances": 108,
+              "sub": 0
+            },
+            {
+              "descriptor_id": 171,
+              "family": 32,
+              "instances": 108,
+              "sub": 0
+            },
+            {
+              "descriptor_id": 197,
+              "family": 32,
+              "instances": 3,
+              "sub": 0
+            },
+            {
+              "descriptor_id": 41,
+              "family": 32,
+              "instances": 3,
+              "sub": 3
+            },
+            {
+              "descriptor_id": 50,
+              "family": 48,
+              "instances": 108,
+              "sub": 0
+            },
+            {
+              "descriptor_id": 144,
+              "family": 48,
+              "instances": 108,
+              "sub": 0
+            },
+            {
+              "descriptor_id": 183,
+              "family": 48,
+              "instances": 3,
+              "sub": 0
+            },
+            {
+              "descriptor_id": 79,
+              "family": 48,
+              "instances": 108,
+              "sub": 1
+            },
+            {
+              "descriptor_id": 87,
+              "family": 48,
+              "instances": 108,
+              "sub": 1
+            },
+            {
+              "descriptor_id": 94,
+              "family": 48,
+              "instances": 108,
+              "sub": 2
+            },
+            {
+              "descriptor_id": 100,
+              "family": 48,
+              "instances": 108,
+              "sub": 2
+            },
+            {
+              "descriptor_id": 138,
+              "family": 48,
+              "instances": 108,
+              "sub": 3
+            },
+            {
+              "descriptor_id": 177,
+              "family": 48,
+              "instances": 108,
+              "sub": 3
+            },
+            {
+              "descriptor_id": 165,
+              "family": 48,
+              "instances": 108,
+              "sub": 4
+            },
+            {
+              "descriptor_id": 124,
+              "family": 64,
+              "instances": 108,
+              "sub": 1
+            },
+            {
+              "descriptor_id": 205,
+              "family": 112,
+              "instances": 3,
+              "sub": 0
+            },
+            {
+              "descriptor_id": 212,
+              "family": 112,
+              "instances": 3,
+              "sub": 1
+            }
+          ],
+          "parameters": {
+            "ENABLE_RESULT_INJECTION": 1,
+            "INDEX_WORDS": 64,
+            "MATMUL_WEIGHT_BYTES": 0,
+            "RESULT_WORDS": 4096,
+            "SOURCE_WORDS": 256
+          },
+          "passes": {
+            "executed": 3,
+            "per_pass": [
+              {
+                "context_length": 16,
+                "entrypoint_id": 0,
+                "generation_index": 0,
+                "index": 0,
+                "instructions_fetched": 2104,
+                "instructions_retired": 2104,
+                "issues": 691,
+                "loop_iterations": 723,
+                "simulated_cycles": 169805,
+                "views": 2143,
+                "wait_events": 689
+              },
+              {
+                "context_length": 17,
+                "entrypoint_id": 1,
+                "generation_index": 1,
+                "index": 1,
+                "instructions_fetched": 2104,
+                "instructions_retired": 2104,
+                "issues": 691,
+                "loop_iterations": 723,
+                "simulated_cycles": 169805,
+                "views": 2143,
+                "wait_events": 689
+              },
+              {
+                "context_length": 18,
+                "entrypoint_id": 1,
+                "generation_index": 2,
+                "index": 2,
+                "instructions_fetched": 2104,
+                "instructions_retired": 2104,
+                "issues": 691,
+                "loop_iterations": 723,
+                "simulated_cycles": 169805,
+                "views": 2143,
+                "wait_events": 689
+              }
+            ],
+            "unit": "device transaction through the RTL control plane",
+            "workload_token_positions": 19
+          },
+          "rung": "G1e",
+          "schema": "opentallas.rtl.abi3_g1e_control_end_to_end.v1",
+          "simulated_cycles": 679220,
+          "simulator": "verilator_cpp_executable",
+          "simulator_version": "5.050",
+          "trace": {
+            "compared_elements": 46866,
+            "compared_issue_count": 2073,
+            "compared_issue_fields": [
+              "family",
+              "sub",
+              "descriptor_id",
+              "pc"
+            ],
+            "compared_view_fields": [
+              "slot",
+              "descriptor_id",
+              "extent",
+              "extent_axis",
+              "element_offset",
+              "rank"
+            ],
+            "divergence_index": null,
+            "equals_golden": true,
+            "golden_source": "runtime.sim.device.Device"
+          },
+          "trace_file": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/reach_cd/g1e_build/build-rom/rtl_issue_trace.txt",
+          "trace_file_issue_count": 2073,
+          "trace_file_sha256": "1ff54121c906ed18b21f42b7487ba230e05e9f0ac4f5a9c9bd26a7ed5afb9778",
+          "usable": true,
+          "vehicle": "rtl/test/a3_shipped_prefix_top.sv",
+          "why_unusable": null,
+          "workload_id": "TA-QW-EOS-1"
+        },
+        "evidence_class": "public_open_tool_rtl_simulation",
+        "simulated_cycles": 679220,
+        "simulated_cycles_scope": "the control-plane run in which this rung's loop property was measured -- every device transaction of the governed workload through the design's own control plane. The integrated run that establishes (or here, fails to establish) the handoff reports its own cycles under handoff.integrated_campaign",
+        "simulator": "verilator_cpp_executable",
+        "simulator_version": "5.050",
+        "vehicle": "rtl/test/a3_shipped_prefix_top.sv"
+      },
+      "git": {
+        "commit": "05a230bd06b64521cf8a68ebf9d74794ea2de3b6",
+        "dirty_paths": [],
+        "scope": "the tree THIS artifact was derived in. It is not a claim about the tree either run happened in; see execution.control_plane_run and handoff.integrated_campaign for those.",
+        "worktree_dirty": false
+      },
+      "handoff": {
+        "address_identity_across_the_layer_boundary": {
+          "boundaries_checked": 105,
+          "boundaries_where_the_address_matched": 105,
+          "consumer_pc": 8,
+          "disagreements": [],
+          "holds": true,
+          "producer_pc": 62,
+          "shared_objects": [
+            36
+          ],
+          "what_it_is": "the RTL resolver's own (object, element offset, extent, extent axis, rank) for the consumer of each layer boundary, compared with the same for the producer of the invocation before it",
+          "what_it_is_not": "an RTL-to-RTL data handoff. The run this is measured in supplies every engine result at the engine boundary, so no value produced by one layer was consumed by the next. G1c's handoff fields are not derived from this and cannot be"
+        },
+        "blocked_at": {
+          "invocation_it_stopped_in": 1,
+          "is_inside_the_layer_body": true,
+          "mnemonic": "DMA.SCATTER",
+          "operator_descriptor_id": 108,
+          "pc": 32,
+          "trap_class": 4
+        },
+        "boundary_object_the_program_declares": {
+          "consumer_input_objects": [
+            4,
+            36
+          ],
+          "consumer_mnemonic": "VECTOR.RMS_NORM",
+          "consumer_pc": 8,
+          "derived_not_measured": true,
+          "note": "read from the two operators' own TENSOR_VIEW descriptors: invocation N's last operator writes these objects and invocation N+1's first operator reads them, so the handoff the loop would make is through device memory. Nothing here says the RTL performed it -- it did not",
+          "objects_in_common": [
+            36
+          ],
+          "producer_mnemonic": "VECTOR.ADD",
+          "producer_output_objects": [
+            36
+          ],
+          "producer_pc": 62
+        },
+        "case": {
+          "declared_boundary_pc": 32,
+          "index": 0,
+          "name": "qwen3-8b-rom-single-chip/decode",
+          "observed": {
+            "fault": 32,
+            "fetched": 33,
+            "index": 0,
+            "issued": 11,
+            "launches": 10,
+            "responses": 11,
+            "retired": 32,
+            "trap": 4,
+            "views": 33,
+            "words": 24832
+          }
+        },
+        "compared_words_across_the_layer_boundary": 0,
+        "completed_layer_invocations": 0,
+        "completed_layer_invocations_source": "derived: the run's fetch never reached the back edge, so no invocation of the body completed",
+        "consecutive_layers_executed": 0,
+        "consecutive_layers_required": 2,
+        "evidence_currency": {
+          "an_independent_run_at_this_commit_agrees": true,
+          "fields_the_handoff_reads": [
+            "expected_cases/observed_cases: fetched, fault and trap class for this lowering's case",
+            "operator_admission: which families the bridge trapped"
+          ],
+          "retained_campaign_is_usable": true,
+          "what_that_means": "the retained integrated campaign is source-current and every field the handoff reads comes from it",
+          "why_not": null
+        },
+        "golden_injected_between_layers": null,
+        "integrated_campaign": {
+          "artifact": "results/rtl/abi3_shipped_prefix_campaign.json",
+          "artifact_sha256": "079ff281bcc7e63e8edbee3c1e2cf93cfb02406acf53d0d1445ca9419f50ac8b",
+          "bound_source_count": 60,
+          "declared_git": {
+            "commit": "8555908f42464629f4321e770401589f0f24ebcc",
+            "worktree_dirty": false
+          },
+          "drifted_source_count": 0,
+          "drifted_sources": [],
+          "evidence_class": "public_open_tool_rtl_simulation_composite",
+          "integrated_simulator_checks": {
+            "verilator": 189862
+          },
+          "operator_admission": {
+            "capability_trapped_family_count": 6,
+            "cases_with_mapped_placement": 0,
+            "launches": {
+              "ATTENTION.GQA": 0,
+              "DMA.SCATTER": 0,
+              "SELECTION.ARGMAX": 0,
+              "SELECTION.TOKEN_APPEND": 0,
+              "VECTOR.ADD": 0,
+              "VECTOR.SILU_MUL": 0
+            },
+            "measured": true,
+            "reached_families": [],
+            "reached_family_count": 0,
+            "result_injection": false,
+            "trapped_families": [
+              "VECTOR.ADD",
+              "VECTOR.SILU_MUL",
+              "DMA.SCATTER",
+              "ATTENTION.GQA",
+              "SELECTION.ARGMAX",
+              "SELECTION.TOKEN_APPEND"
+            ],
+            "vector_generation": "mapped",
+            "vehicle": "rtl/test/a3_shipped_prefix_top.sv"
+          },
+          "pass_marker": "engine",
+          "simulated_cycles": 252057600,
+          "staged_matmul_weight": {
+            "bytes": 50331648,
+            "matrix_sha256": [
+              "fd56b85bf301661c8655ed517928304d25df7d6b3ea3d9be85c021159d61bad8",
+              "3ce9fdf6ee30ef2f24ad3629b506415ca91fe40f790e568a9ea3fea2978feee0",
+              "767a6c48457974bb02dd90aeec270f4d68289527a353c3c28964ab2069a966ee"
+            ],
+            "note": "not a file of this repository; it is staged into the run's build directory from the checkpoint shards and its digests are the identity of the weights the run consumed",
+            "path": "generated/p3_matmul_weight.bin",
+            "sha256": "2c8696111937aa85197cd2042dfed6cb3c5ef7f03fb80eba1fe3b93d40c1b87e"
+          },
+          "status": "pass",
+          "usable": true,
+          "vector_set_is_current": true,
+          "vector_set_path": "testdata/compiler/abi3_shipped_prefix/abi3_shipped_prefix_vectors.json",
+          "vector_set_sha256_declared": "28abd940ae1669e7de2858d7397031f84877974d53e2dcf6b5aee217dd065dec",
+          "vector_set_sha256_on_disk": "28abd940ae1669e7de2858d7397031f84877974d53e2dcf6b5aee217dd065dec",
+          "why_unusable": null
+        },
+        "layer_boundary_crossings_observed": 0,
+        "measured": {
+          "fault_pc": 32,
+          "instructions_fetched": 33,
+          "loop_back_edge_pc": 64,
+          "source": "the campaign's observed case counters",
+          "trap_class": 4,
+          "why": "the integrated run fetched 33 instruction(s) of one pass and faulted at PC 32; the layer loop's back edge is PC 64. derived: the run's fetch never reached the back edge, so no invocation of the body completed"
+        },
+        "mismatched_words": null,
+        "rtl_to_rtl": false,
+        "what_the_missing_half_would_cost": {
+          "consecutive_layers_required": 2,
+          "hours": 3.21,
+          "mac_count_for_two_consecutive_invocations": 385875968,
+          "mac_count_per_invocation": 192937984,
+          "measured_integrated_rate": {
+            "caveat": "this is the rate THAT run measured, on a machine other work was sharing. Another run of the same vehicle on a quieter box measures a higher one; the figure is reported with the run it came from rather than as a property of the design",
+            "mac_count": 50331648,
+            "macs_per_second": 33355.1,
+            "measured": true,
+            "simulation_wall_seconds": 1508.965,
+            "source": "results/rtl/abi3_shipped_prefix_campaign.json: its own matmul_mac_count and the sim_wall_s of its MEASURE line"
+          },
+          "note": "derived: the layer body's own multiply-accumulates, twice, at the rate the integrated vehicle itself measured. It is what the handoff half costs once the eleven operators the bridge traps can be issued; it is not what this rung cost, which is the control run above",
+          "per_matmul": [
+            {
+              "mac_count": 16777216,
+              "pc": 11,
+              "weight_shape": [
+                4096,
+                4096
+              ]
+            },
+            {
+              "mac_count": 4194304,
+              "pc": 14,
+              "weight_shape": [
+                1024,
+                4096
+              ]
+            },
+            {
+              "mac_count": 4194304,
+              "pc": 17,
+              "weight_shape": [
+                1024,
+                4096
+              ]
+            },
+            {
+              "mac_count": 16777216,
+              "pc": 41,
+              "weight_shape": [
+                4096,
+                4096
+              ]
+            },
+            {
+              "mac_count": 50331648,
+              "pc": 50,
+              "weight_shape": [
+                12288,
+                4096
+              ]
+            },
+            {
+              "mac_count": 50331648,
+              "pc": 53,
+              "weight_shape": [
+                12288,
+                4096
+              ]
+            },
+            {
+              "mac_count": 50331648,
+              "pc": 59,
+              "weight_shape": [
+                4096,
+                12288
+              ]
+            }
+          ],
+          "seconds": 11568.7
+        },
+        "what_would_turn_this_green": [
+          "a run whose back edge retires at least twice, so a second invocation of the body consumes what the first produced",
+          "a boundary_compared_words counter above zero and a boundary_mismatched_words of zero among them",
+          "a boundary_injected_operands of zero, so nothing crossing the boundary came from the golden model"
+        ],
+        "why_null": "mismatched_words and golden_injected_between_layers are reported null, not 0 and not false, because zero words were compared across zero layer boundaries. A count of zero mismatches over zero comparisons, or 'no golden value crossed' over no crossing, is a vacuous truth over an empty set; this ladder's first rule is that absence of evidence is a failure and never a pass"
+      },
+      "layer_loop": {
+        "back_edge_pc": 64,
+        "body_end": 64,
+        "body_start": 7,
+        "bound_selector_kind": 2,
+        "identified_by": "the loop whose declared body [body_start, body_end] contains exactly the issue sites whose certified Kernel IR kernel_id begins 'layer.0.', taken from each OPERATOR descriptor's own source_kernel_id",
+        "issue_pcs": [
+          8,
+          11,
+          14,
+          17,
+          20,
+          23,
+          26,
+          29,
+          32,
+          35,
+          38,
+          41,
+          44,
+          47,
+          50,
+          53,
+          56,
+          59,
+          62
+        ],
+        "kernel_ids": [
+          "layer.0.attention_norm",
+          "layer.0.attention.query_projection",
+          "layer.0.attention.key_projection",
+          "layer.0.attention.value_projection",
+          "layer.0.attention.query_head_norm",
+          "layer.0.attention.key_head_norm",
+          "layer.0.attention.query_rotation",
+          "layer.0.attention.key_rotation",
+          "layer.0.attention.key_append",
+          "layer.0.attention.value_append",
+          "layer.0.attention.grouped_query",
+          "layer.0.attention.output_projection",
+          "layer.0.attention.residual_add",
+          "layer.0.feed_forward_norm",
+          "layer.0.feed_forward.gate_projection",
+          "layer.0.feed_forward.up_projection",
+          "layer.0.feed_forward.activation",
+          "layer.0.feed_forward.down_projection",
+          "layer.0.feed_forward.residual_add"
+        ],
+        "layer_prefix": "layer.0.",
+        "loop_control_descriptor_id": 19,
+        "max_iterations": 36,
+        "setup_pc": 6
+      },
+      "loop": {
+        "distinct_issue_structures_over_all_invocations": 1,
+        "distinct_view_shape_structures_over_all_invocations": 2,
+        "element_offset_strides_per_layer": {
+          "pc11.slot0": 0,
+          "pc11.slot1": 16777216,
+          "pc11.slot4": 0,
+          "pc14.slot0": 0,
+          "pc14.slot1": 4194304,
+          "pc14.slot4": 0,
+          "pc17.slot0": 0,
+          "pc17.slot1": 4194304,
+          "pc17.slot4": 0,
+          "pc20.slot0": 0,
+          "pc20.slot1": 128,
+          "pc20.slot4": 0,
+          "pc23.slot0": 0,
+          "pc23.slot1": 128,
+          "pc23.slot4": 0,
+          "pc26.slot0": 0,
+          "pc26.slot1": 0,
+          "pc26.slot4": 0,
+          "pc29.slot0": 0,
+          "pc29.slot1": 0,
+          "pc29.slot4": 0,
+          "pc32.slot0": 0,
+          "pc32.slot1": 0,
+          "pc32.slot4": 16908288,
+          "pc35.slot0": 0,
+          "pc35.slot1": 0,
+          "pc35.slot4": 16908288,
+          "pc38.slot0": 0,
+          "pc38.slot1": 16908288,
+          "pc38.slot2": 16908288,
+          "pc38.slot3": 0,
+          "pc38.slot4": 0,
+          "pc41.slot0": 0,
+          "pc41.slot1": 16777216,
+          "pc41.slot4": 0,
+          "pc44.slot0": 0,
+          "pc44.slot1": 0,
+          "pc44.slot4": 0,
+          "pc47.slot0": 0,
+          "pc47.slot1": 4096,
+          "pc47.slot4": 0,
+          "pc50.slot0": 0,
+          "pc50.slot1": 50331648,
+          "pc50.slot4": 0,
+          "pc53.slot0": 0,
+          "pc53.slot1": 50331648,
+          "pc53.slot4": 0,
+          "pc56.slot0": 0,
+          "pc56.slot1": 0,
+          "pc56.slot4": 0,
+          "pc59.slot0": 0,
+          "pc59.slot1": 50331648,
+          "pc59.slot4": 0,
+          "pc62.slot0": 0,
+          "pc62.slot1": 0,
+          "pc62.slot4": 0,
+          "pc8.slot0": 0,
+          "pc8.slot1": 4096,
+          "pc8.slot4": 0
+        },
+        "invocation_count_matches_model_layers": true,
+        "invocations_measured": 108,
+        "invocations_per_transaction": [
+          36
+        ],
+        "loop_declared_max_iterations": 36,
+        "loop_iteration_cross_check": {
+          "agrees": true,
+          "assumption": "every loop other than the layer loop runs exactly one trip in these transactions. The agreement of the two counters is the evidence for it; a disagreement would be reported here rather than absorbed",
+          "checked": true,
+          "invocations_measured_per_transaction": 36,
+          "loop_setups_inside_the_body": 19,
+          "loop_setups_outside_the_body": 3,
+          "measured_loop_iterations_per_transaction": [
+            723
+          ],
+          "predicted_loop_iterations_per_transaction": 723,
+          "why_it_matters": "the invocation count above is read from the issue trace. This reads the same loop from the sequencer's own loop-iteration counter, which the trace does not produce, so the two are independent measurements of one thing"
+        },
+        "measured_from": "the RTL's own issue trace, dumped by rtl/test/a3_g1e_control_harness.cpp under OT_A3_TRACE_OUT during the G1e control run, and bound to that run by its own census",
+        "model_layers": 36,
+        "model_layers_source": {
+          "checkpoint_config": "/home/ubuntu/.cache/huggingface/hub/models--Qwen--Qwen3-8B/snapshots/b968826d9c46dd6066d109eabc6255188de91218/config.json",
+          "checkpoint_config_sha256": "f7c4eadfbbf522470667b797a3c89be2524832d2d599797248dc304fff447c30",
+          "from_checkpoint_config": 36,
+          "from_kernel_ir": 36,
+          "kernel_ir": "build/ir-v3/qwen3-8b/kernel_ir.v3.json",
+          "kernel_ir_sha256": "62499454381d24641f8cedda00f049aff61b4aa96410fa3fe460e0044df567e6",
+          "layers": 36,
+          "sources_agree": true
+        },
+        "operators_per_invocation": [
+          19
+        ],
+        "per_transaction": [
+          {
+            "distinct_issue_structures": 1,
+            "distinct_view_shape_structures": 1,
+            "element_offsets_are_arithmetic_progressions": true,
+            "invocations": 36,
+            "transaction_index": 0
+          },
+          {
+            "distinct_issue_structures": 1,
+            "distinct_view_shape_structures": 1,
+            "element_offsets_are_arithmetic_progressions": true,
+            "invocations": 36,
+            "transaction_index": 1
+          },
+          {
+            "distinct_issue_structures": 1,
+            "distinct_view_shape_structures": 1,
+            "element_offsets_are_arithmetic_progressions": true,
+            "invocations": 36,
+            "transaction_index": 2
+          }
+        ],
+        "structurally_identical": true,
+        "transactions_measured": 3,
+        "view_shape_differences_between_transactions": {
+          "entrypoint_id_per_transaction": [
+            0,
+            1,
+            1
+          ],
+          "the_difference_tracks_the_entrypoint_not_the_loop": true,
+          "view_fields_that_differ": [
+            "extent"
+          ],
+          "why": "transactions that entered at the same entrypoint resolve the same extents and transactions that entered at different ones do not, so what differs is the token span of the request -- a 16-position prefill against a one-position decode -- and not the loop's invocations, which are identical within each"
+        },
+        "view_shape_fields_that_differ_between_transactions": [
+          {
+            "field_values_seen": [
+              [
+                0,
+                43,
+                1,
+                0,
+                2
+              ],
+              [
+                0,
+                43,
+                16,
+                0,
+                2
+              ]
+            ],
+            "pc": 8,
+            "slot": 0,
+            "value_by_transaction": [
+              [
+                0,
+                43,
+                16,
+                0,
+                2
+              ],
+              [
+                0,
+                43,
+                1,
+                0,
+                2
+              ],
+              [
+                0,
+                43,
+                1,
+                0,
+                2
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                4,
+                46,
+                1,
+                0,
+                2
+              ],
+              [
+                4,
+                46,
+                16,
+                0,
+                2
+              ]
+            ],
+            "pc": 8,
+            "slot": 4,
+            "value_by_transaction": [
+              [
+                4,
+                46,
+                16,
+                0,
+                2
+              ],
+              [
+                4,
+                46,
+                1,
+                0,
+                2
+              ],
+              [
+                4,
+                46,
+                1,
+                0,
+                2
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                0,
+                53,
+                1,
+                0,
+                2
+              ],
+              [
+                0,
+                53,
+                16,
+                0,
+                2
+              ]
+            ],
+            "pc": 11,
+            "slot": 0,
+            "value_by_transaction": [
+              [
+                0,
+                53,
+                16,
+                0,
+                2
+              ],
+              [
+                0,
+                53,
+                1,
+                0,
+                2
+              ],
+              [
+                0,
+                53,
+                1,
+                0,
+                2
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                4,
+                56,
+                1,
+                0,
+                2
+              ],
+              [
+                4,
+                56,
+                16,
+                0,
+                2
+              ]
+            ],
+            "pc": 11,
+            "slot": 4,
+            "value_by_transaction": [
+              [
+                4,
+                56,
+                16,
+                0,
+                2
+              ],
+              [
+                4,
+                56,
+                1,
+                0,
+                2
+              ],
+              [
+                4,
+                56,
+                1,
+                0,
+                2
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                0,
+                62,
+                1,
+                0,
+                2
+              ],
+              [
+                0,
+                62,
+                16,
+                0,
+                2
+              ]
+            ],
+            "pc": 14,
+            "slot": 0,
+            "value_by_transaction": [
+              [
+                0,
+                62,
+                16,
+                0,
+                2
+              ],
+              [
+                0,
+                62,
+                1,
+                0,
+                2
+              ],
+              [
+                0,
+                62,
+                1,
+                0,
+                2
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                4,
+                65,
+                1,
+                0,
+                2
+              ],
+              [
+                4,
+                65,
+                16,
+                0,
+                2
+              ]
+            ],
+            "pc": 14,
+            "slot": 4,
+            "value_by_transaction": [
+              [
+                4,
+                65,
+                16,
+                0,
+                2
+              ],
+              [
+                4,
+                65,
+                1,
+                0,
+                2
+              ],
+              [
+                4,
+                65,
+                1,
+                0,
+                2
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                0,
+                69,
+                1,
+                0,
+                2
+              ],
+              [
+                0,
+                69,
+                16,
+                0,
+                2
+              ]
+            ],
+            "pc": 17,
+            "slot": 0,
+            "value_by_transaction": [
+              [
+                0,
+                69,
+                16,
+                0,
+                2
+              ],
+              [
+                0,
+                69,
+                1,
+                0,
+                2
+              ],
+              [
+                0,
+                69,
+                1,
+                0,
+                2
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                4,
+                72,
+                1,
+                0,
+                2
+              ],
+              [
+                4,
+                72,
+                16,
+                0,
+                2
+              ]
+            ],
+            "pc": 17,
+            "slot": 4,
+            "value_by_transaction": [
+              [
+                4,
+                72,
+                16,
+                0,
+                2
+              ],
+              [
+                4,
+                72,
+                1,
+                0,
+                2
+              ],
+              [
+                4,
+                72,
+                1,
+                0,
+                2
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                0,
+                75,
+                1,
+                0,
+                3
+              ],
+              [
+                0,
+                75,
+                16,
+                0,
+                3
+              ]
+            ],
+            "pc": 20,
+            "slot": 0,
+            "value_by_transaction": [
+              [
+                0,
+                75,
+                16,
+                0,
+                3
+              ],
+              [
+                0,
+                75,
+                1,
+                0,
+                3
+              ],
+              [
+                0,
+                75,
+                1,
+                0,
+                3
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                4,
+                77,
+                1,
+                0,
+                3
+              ],
+              [
+                4,
+                77,
+                16,
+                0,
+                3
+              ]
+            ],
+            "pc": 20,
+            "slot": 4,
+            "value_by_transaction": [
+              [
+                4,
+                77,
+                16,
+                0,
+                3
+              ],
+              [
+                4,
+                77,
+                1,
+                0,
+                3
+              ],
+              [
+                4,
+                77,
+                1,
+                0,
+                3
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                0,
+                82,
+                1,
+                0,
+                3
+              ],
+              [
+                0,
+                82,
+                16,
+                0,
+                3
+              ]
+            ],
+            "pc": 23,
+            "slot": 0,
+            "value_by_transaction": [
+              [
+                0,
+                82,
+                16,
+                0,
+                3
+              ],
+              [
+                0,
+                82,
+                1,
+                0,
+                3
+              ],
+              [
+                0,
+                82,
+                1,
+                0,
+                3
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                4,
+                85,
+                1,
+                0,
+                3
+              ],
+              [
+                4,
+                85,
+                16,
+                0,
+                3
+              ]
+            ],
+            "pc": 23,
+            "slot": 4,
+            "value_by_transaction": [
+              [
+                4,
+                85,
+                16,
+                0,
+                3
+              ],
+              [
+                4,
+                85,
+                1,
+                0,
+                3
+              ],
+              [
+                4,
+                85,
+                1,
+                0,
+                3
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                0,
+                90,
+                1,
+                0,
+                3
+              ],
+              [
+                0,
+                90,
+                16,
+                0,
+                3
+              ]
+            ],
+            "pc": 26,
+            "slot": 0,
+            "value_by_transaction": [
+              [
+                0,
+                90,
+                16,
+                0,
+                3
+              ],
+              [
+                0,
+                90,
+                1,
+                0,
+                3
+              ],
+              [
+                0,
+                90,
+                1,
+                0,
+                3
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                1,
+                91,
+                1,
+                0,
+                3
+              ],
+              [
+                1,
+                91,
+                16,
+                0,
+                3
+              ]
+            ],
+            "pc": 26,
+            "slot": 1,
+            "value_by_transaction": [
+              [
+                1,
+                91,
+                16,
+                0,
+                3
+              ],
+              [
+                1,
+                91,
+                1,
+                0,
+                3
+              ],
+              [
+                1,
+                91,
+                1,
+                0,
+                3
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                4,
+                92,
+                1,
+                0,
+                3
+              ],
+              [
+                4,
+                92,
+                16,
+                0,
+                3
+              ]
+            ],
+            "pc": 26,
+            "slot": 4,
+            "value_by_transaction": [
+              [
+                4,
+                92,
+                16,
+                0,
+                3
+              ],
+              [
+                4,
+                92,
+                1,
+                0,
+                3
+              ],
+              [
+                4,
+                92,
+                1,
+                0,
+                3
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                0,
+                97,
+                1,
+                0,
+                3
+              ],
+              [
+                0,
+                97,
+                16,
+                0,
+                3
+              ]
+            ],
+            "pc": 29,
+            "slot": 0,
+            "value_by_transaction": [
+              [
+                0,
+                97,
+                16,
+                0,
+                3
+              ],
+              [
+                0,
+                97,
+                1,
+                0,
+                3
+              ],
+              [
+                0,
+                97,
+                1,
+                0,
+                3
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                1,
+                98,
+                1,
+                0,
+                3
+              ],
+              [
+                1,
+                98,
+                16,
+                0,
+                3
+              ]
+            ],
+            "pc": 29,
+            "slot": 1,
+            "value_by_transaction": [
+              [
+                1,
+                98,
+                16,
+                0,
+                3
+              ],
+              [
+                1,
+                98,
+                1,
+                0,
+                3
+              ],
+              [
+                1,
+                98,
+                1,
+                0,
+                3
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                4,
+                99,
+                1,
+                0,
+                3
+              ],
+              [
+                4,
+                99,
+                16,
+                0,
+                3
+              ]
+            ],
+            "pc": 29,
+            "slot": 4,
+            "value_by_transaction": [
+              [
+                4,
+                99,
+                16,
+                0,
+                3
+              ],
+              [
+                4,
+                99,
+                1,
+                0,
+                3
+              ],
+              [
+                4,
+                99,
+                1,
+                0,
+                3
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                0,
+                103,
+                1,
+                0,
+                1
+              ],
+              [
+                0,
+                103,
+                16,
+                0,
+                1
+              ]
+            ],
+            "pc": 32,
+            "slot": 0,
+            "value_by_transaction": [
+              [
+                0,
+                103,
+                16,
+                0,
+                1
+              ],
+              [
+                0,
+                103,
+                1,
+                0,
+                1
+              ],
+              [
+                0,
+                103,
+                1,
+                0,
+                1
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                1,
+                104,
+                1,
+                0,
+                3
+              ],
+              [
+                1,
+                104,
+                16,
+                0,
+                3
+              ]
+            ],
+            "pc": 32,
+            "slot": 1,
+            "value_by_transaction": [
+              [
+                1,
+                104,
+                16,
+                0,
+                3
+              ],
+              [
+                1,
+                104,
+                1,
+                0,
+                3
+              ],
+              [
+                1,
+                104,
+                1,
+                0,
+                3
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                0,
+                111,
+                1,
+                0,
+                1
+              ],
+              [
+                0,
+                111,
+                16,
+                0,
+                1
+              ]
+            ],
+            "pc": 35,
+            "slot": 0,
+            "value_by_transaction": [
+              [
+                0,
+                111,
+                16,
+                0,
+                1
+              ],
+              [
+                0,
+                111,
+                1,
+                0,
+                1
+              ],
+              [
+                0,
+                111,
+                1,
+                0,
+                1
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                1,
+                112,
+                1,
+                0,
+                3
+              ],
+              [
+                1,
+                112,
+                16,
+                0,
+                3
+              ]
+            ],
+            "pc": 35,
+            "slot": 1,
+            "value_by_transaction": [
+              [
+                1,
+                112,
+                16,
+                0,
+                3
+              ],
+              [
+                1,
+                112,
+                1,
+                0,
+                3
+              ],
+              [
+                1,
+                112,
+                1,
+                0,
+                3
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                0,
+                118,
+                1,
+                0,
+                3
+              ],
+              [
+                0,
+                118,
+                16,
+                0,
+                3
+              ]
+            ],
+            "pc": 38,
+            "slot": 0,
+            "value_by_transaction": [
+              [
+                0,
+                118,
+                16,
+                0,
+                3
+              ],
+              [
+                0,
+                118,
+                1,
+                0,
+                3
+              ],
+              [
+                0,
+                118,
+                1,
+                0,
+                3
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                3,
+                119,
+                1,
+                0,
+                1
+              ],
+              [
+                3,
+                119,
+                16,
+                0,
+                1
+              ]
+            ],
+            "pc": 38,
+            "slot": 3,
+            "value_by_transaction": [
+              [
+                3,
+                119,
+                16,
+                0,
+                1
+              ],
+              [
+                3,
+                119,
+                1,
+                0,
+                1
+              ],
+              [
+                3,
+                119,
+                1,
+                0,
+                1
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                4,
+                120,
+                1,
+                0,
+                3
+              ],
+              [
+                4,
+                120,
+                16,
+                0,
+                3
+              ]
+            ],
+            "pc": 38,
+            "slot": 4,
+            "value_by_transaction": [
+              [
+                4,
+                120,
+                16,
+                0,
+                3
+              ],
+              [
+                4,
+                120,
+                1,
+                0,
+                3
+              ],
+              [
+                4,
+                120,
+                1,
+                0,
+                3
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                0,
+                127,
+                1,
+                0,
+                2
+              ],
+              [
+                0,
+                127,
+                16,
+                0,
+                2
+              ]
+            ],
+            "pc": 41,
+            "slot": 0,
+            "value_by_transaction": [
+              [
+                0,
+                127,
+                16,
+                0,
+                2
+              ],
+              [
+                0,
+                127,
+                1,
+                0,
+                2
+              ],
+              [
+                0,
+                127,
+                1,
+                0,
+                2
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                4,
+                129,
+                1,
+                0,
+                2
+              ],
+              [
+                4,
+                129,
+                16,
+                0,
+                2
+              ]
+            ],
+            "pc": 41,
+            "slot": 4,
+            "value_by_transaction": [
+              [
+                4,
+                129,
+                16,
+                0,
+                2
+              ],
+              [
+                4,
+                129,
+                1,
+                0,
+                2
+              ],
+              [
+                4,
+                129,
+                1,
+                0,
+                2
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                0,
+                133,
+                1,
+                0,
+                2
+              ],
+              [
+                0,
+                133,
+                16,
+                0,
+                2
+              ]
+            ],
+            "pc": 44,
+            "slot": 0,
+            "value_by_transaction": [
+              [
+                0,
+                133,
+                16,
+                0,
+                2
+              ],
+              [
+                0,
+                133,
+                1,
+                0,
+                2
+              ],
+              [
+                0,
+                133,
+                1,
+                0,
+                2
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                1,
+                134,
+                1,
+                0,
+                2
+              ],
+              [
+                1,
+                134,
+                16,
+                0,
+                2
+              ]
+            ],
+            "pc": 44,
+            "slot": 1,
+            "value_by_transaction": [
+              [
+                1,
+                134,
+                16,
+                0,
+                2
+              ],
+              [
+                1,
+                134,
+                1,
+                0,
+                2
+              ],
+              [
+                1,
+                134,
+                1,
+                0,
+                2
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                4,
+                135,
+                1,
+                0,
+                2
+              ],
+              [
+                4,
+                135,
+                16,
+                0,
+                2
+              ]
+            ],
+            "pc": 44,
+            "slot": 4,
+            "value_by_transaction": [
+              [
+                4,
+                135,
+                16,
+                0,
+                2
+              ],
+              [
+                4,
+                135,
+                1,
+                0,
+                2
+              ],
+              [
+                4,
+                135,
+                1,
+                0,
+                2
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                0,
+                141,
+                1,
+                0,
+                2
+              ],
+              [
+                0,
+                141,
+                16,
+                0,
+                2
+              ]
+            ],
+            "pc": 47,
+            "slot": 0,
+            "value_by_transaction": [
+              [
+                0,
+                141,
+                16,
+                0,
+                2
+              ],
+              [
+                0,
+                141,
+                1,
+                0,
+                2
+              ],
+              [
+                0,
+                141,
+                1,
+                0,
+                2
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                4,
+                143,
+                1,
+                0,
+                2
+              ],
+              [
+                4,
+                143,
+                16,
+                0,
+                2
+              ]
+            ],
+            "pc": 47,
+            "slot": 4,
+            "value_by_transaction": [
+              [
+                4,
+                143,
+                16,
+                0,
+                2
+              ],
+              [
+                4,
+                143,
+                1,
+                0,
+                2
+              ],
+              [
+                4,
+                143,
+                1,
+                0,
+                2
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                0,
+                147,
+                1,
+                0,
+                2
+              ],
+              [
+                0,
+                147,
+                16,
+                0,
+                2
+              ]
+            ],
+            "pc": 50,
+            "slot": 0,
+            "value_by_transaction": [
+              [
+                0,
+                147,
+                16,
+                0,
+                2
+              ],
+              [
+                0,
+                147,
+                1,
+                0,
+                2
+              ],
+              [
+                0,
+                147,
+                1,
+                0,
+                2
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                4,
+                150,
+                1,
+                0,
+                2
+              ],
+              [
+                4,
+                150,
+                16,
+                0,
+                2
+              ]
+            ],
+            "pc": 50,
+            "slot": 4,
+            "value_by_transaction": [
+              [
+                4,
+                150,
+                16,
+                0,
+                2
+              ],
+              [
+                4,
+                150,
+                1,
+                0,
+                2
+              ],
+              [
+                4,
+                150,
+                1,
+                0,
+                2
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                0,
+                154,
+                1,
+                0,
+                2
+              ],
+              [
+                0,
+                154,
+                16,
+                0,
+                2
+              ]
+            ],
+            "pc": 53,
+            "slot": 0,
+            "value_by_transaction": [
+              [
+                0,
+                154,
+                16,
+                0,
+                2
+              ],
+              [
+                0,
+                154,
+                1,
+                0,
+                2
+              ],
+              [
+                0,
+                154,
+                1,
+                0,
+                2
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                4,
+                157,
+                1,
+                0,
+                2
+              ],
+              [
+                4,
+                157,
+                16,
+                0,
+                2
+              ]
+            ],
+            "pc": 53,
+            "slot": 4,
+            "value_by_transaction": [
+              [
+                4,
+                157,
+                16,
+                0,
+                2
+              ],
+              [
+                4,
+                157,
+                1,
+                0,
+                2
+              ],
+              [
+                4,
+                157,
+                1,
+                0,
+                2
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                0,
+                160,
+                1,
+                0,
+                2
+              ],
+              [
+                0,
+                160,
+                16,
+                0,
+                2
+              ]
+            ],
+            "pc": 56,
+            "slot": 0,
+            "value_by_transaction": [
+              [
+                0,
+                160,
+                16,
+                0,
+                2
+              ],
+              [
+                0,
+                160,
+                1,
+                0,
+                2
+              ],
+              [
+                0,
+                160,
+                1,
+                0,
+                2
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                1,
+                161,
+                1,
+                0,
+                2
+              ],
+              [
+                1,
+                161,
+                16,
+                0,
+                2
+              ]
+            ],
+            "pc": 56,
+            "slot": 1,
+            "value_by_transaction": [
+              [
+                1,
+                161,
+                16,
+                0,
+                2
+              ],
+              [
+                1,
+                161,
+                1,
+                0,
+                2
+              ],
+              [
+                1,
+                161,
+                1,
+                0,
+                2
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                4,
+                163,
+                1,
+                0,
+                2
+              ],
+              [
+                4,
+                163,
+                16,
+                0,
+                2
+              ]
+            ],
+            "pc": 56,
+            "slot": 4,
+            "value_by_transaction": [
+              [
+                4,
+                163,
+                16,
+                0,
+                2
+              ],
+              [
+                4,
+                163,
+                1,
+                0,
+                2
+              ],
+              [
+                4,
+                163,
+                1,
+                0,
+                2
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                0,
+                168,
+                1,
+                0,
+                2
+              ],
+              [
+                0,
+                168,
+                16,
+                0,
+                2
+              ]
+            ],
+            "pc": 59,
+            "slot": 0,
+            "value_by_transaction": [
+              [
+                0,
+                168,
+                16,
+                0,
+                2
+              ],
+              [
+                0,
+                168,
+                1,
+                0,
+                2
+              ],
+              [
+                0,
+                168,
+                1,
+                0,
+                2
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                4,
+                170,
+                1,
+                0,
+                2
+              ],
+              [
+                4,
+                170,
+                16,
+                0,
+                2
+              ]
+            ],
+            "pc": 59,
+            "slot": 4,
+            "value_by_transaction": [
+              [
+                4,
+                170,
+                16,
+                0,
+                2
+              ],
+              [
+                4,
+                170,
+                1,
+                0,
+                2
+              ],
+              [
+                4,
+                170,
+                1,
+                0,
+                2
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                0,
+                174,
+                1,
+                0,
+                2
+              ],
+              [
+                0,
+                174,
+                16,
+                0,
+                2
+              ]
+            ],
+            "pc": 62,
+            "slot": 0,
+            "value_by_transaction": [
+              [
+                0,
+                174,
+                16,
+                0,
+                2
+              ],
+              [
+                0,
+                174,
+                1,
+                0,
+                2
+              ],
+              [
+                0,
+                174,
+                1,
+                0,
+                2
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                1,
+                175,
+                1,
+                0,
+                2
+              ],
+              [
+                1,
+                175,
+                16,
+                0,
+                2
+              ]
+            ],
+            "pc": 62,
+            "slot": 1,
+            "value_by_transaction": [
+              [
+                1,
+                175,
+                16,
+                0,
+                2
+              ],
+              [
+                1,
+                175,
+                1,
+                0,
+                2
+              ],
+              [
+                1,
+                175,
+                1,
+                0,
+                2
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                4,
+                176,
+                1,
+                0,
+                2
+              ],
+              [
+                4,
+                176,
+                16,
+                0,
+                2
+              ]
+            ],
+            "pc": 62,
+            "slot": 4,
+            "value_by_transaction": [
+              [
+                4,
+                176,
+                16,
+                0,
+                2
+              ],
+              [
+                4,
+                176,
+                1,
+                0,
+                2
+              ],
+              [
+                4,
+                176,
+                1,
+                0,
+                2
+              ]
+            ]
+          }
+        ],
+        "what_structural_identity_means_here": "every invocation issues the same sequence of (family, subopcode, descriptor id, program counter), and the RTL resolver produces the same (slot, descriptor id, extent, extent axis, rank) for every operand of every one of them, within each device transaction. element_offset is the field a loop is for: it is required to advance by a constant per-invocation stride and the strides are recorded above rather than described"
+      },
+      "storage_class": "rom",
+      "workload_id": "TA-QW-EOS-1"
+    },
+    {
+      "deployment": {
+        "deployment_sha256": "cb9067f5fbf67f7df4212399aee6ba75ced4ca5c8f2dc8c1631372a4068cea2c",
+        "directory": "build/abi3/qwen3-8b-hbm-tokens",
+        "instruction_count": 74,
+        "key": "qwen3-8b-hbm-single-chip"
+      },
+      "execution": {
+        "control_plane": "rtl/abi3/ot_a3_device_top.sv",
+        "control_plane_run": {
+          "artifact": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/reach_cd/g1e_rerun.json",
+          "artifact_sha256": "95c3d5a1bde58b346a221400c9759305d2374c6b201adc192d74f8b54396d7e5",
+          "bound_source_count": 53,
+          "census_agrees_with_the_run": true,
+          "census_rows_from_the_trace_file": 26,
+          "control_plane": "rtl/abi3/ot_a3_device_top.sv",
+          "declared_git": {
+            "commit": "4b136d675640a42ee2cb9b1869e8d717ca48bc4f",
+            "worktree_dirty": false
+          },
+          "deployment_sha256": "cb9067f5fbf67f7df4212399aee6ba75ced4ca5c8f2dc8c1631372a4068cea2c",
+          "drifted_source_count": 0,
+          "drifted_sources": [],
+          "evidence_class": "public_open_tool_rtl_simulation",
+          "injection": {
+            "boundary": "engine_result",
+            "control_path_is_rtl": true,
+            "engine_launches": 0
+          },
+          "issue_census": [
+            {
+              "descriptor_id": 46,
+              "family": 16,
+              "instances": 3,
+              "sub": 2
+            },
+            {
+              "descriptor_id": 198,
+              "family": 16,
+              "instances": 3,
+              "sub": 2
+            },
+            {
+              "descriptor_id": 118,
+              "family": 16,
+              "instances": 108,
+              "sub": 3
+            },
+            {
+              "descriptor_id": 125,
+              "family": 16,
+              "instances": 108,
+              "sub": 3
+            },
+            {
+              "descriptor_id": 72,
+              "family": 32,
+              "instances": 108,
+              "sub": 0
+            },
+            {
+              "descriptor_id": 79,
+              "family": 32,
+              "instances": 108,
+              "sub": 0
+            },
+            {
+              "descriptor_id": 84,
+              "family": 32,
+              "instances": 108,
+              "sub": 0
+            },
+            {
+              "descriptor_id": 142,
+              "family": 32,
+              "instances": 108,
+              "sub": 0
+            },
+            {
+              "descriptor_id": 162,
+              "family": 32,
+              "instances": 108,
+              "sub": 0
+            },
+            {
+              "descriptor_id": 168,
+              "family": 32,
+              "instances": 108,
+              "sub": 0
+            },
+            {
+              "descriptor_id": 180,
+              "family": 32,
+              "instances": 108,
+              "sub": 0
+            },
+            {
+              "descriptor_id": 204,
+              "family": 32,
+              "instances": 3,
+              "sub": 0
+            },
+            {
+              "descriptor_id": 54,
+              "family": 32,
+              "instances": 3,
+              "sub": 3
+            },
+            {
+              "descriptor_id": 64,
+              "family": 48,
+              "instances": 108,
+              "sub": 0
+            },
+            {
+              "descriptor_id": 156,
+              "family": 48,
+              "instances": 108,
+              "sub": 0
+            },
+            {
+              "descriptor_id": 192,
+              "family": 48,
+              "instances": 3,
+              "sub": 0
+            },
+            {
+              "descriptor_id": 90,
+              "family": 48,
+              "instances": 108,
+              "sub": 1
+            },
+            {
+              "descriptor_id": 97,
+              "family": 48,
+              "instances": 108,
+              "sub": 1
+            },
+            {
+              "descriptor_id": 104,
+              "family": 48,
+              "instances": 108,
+              "sub": 2
+            },
+            {
+              "descriptor_id": 110,
+              "family": 48,
+              "instances": 108,
+              "sub": 2
+            },
+            {
+              "descriptor_id": 150,
+              "family": 48,
+              "instances": 108,
+              "sub": 3
+            },
+            {
+              "descriptor_id": 186,
+              "family": 48,
+              "instances": 108,
+              "sub": 3
+            },
+            {
+              "descriptor_id": 174,
+              "family": 48,
+              "instances": 108,
+              "sub": 4
+            },
+            {
+              "descriptor_id": 136,
+              "family": 64,
+              "instances": 108,
+              "sub": 1
+            },
+            {
+              "descriptor_id": 211,
+              "family": 112,
+              "instances": 3,
+              "sub": 0
+            },
+            {
+              "descriptor_id": 217,
+              "family": 112,
+              "instances": 3,
+              "sub": 1
+            }
+          ],
+          "parameters": {
+            "ENABLE_RESULT_INJECTION": 1,
+            "INDEX_WORDS": 64,
+            "MATMUL_WEIGHT_BYTES": 0,
+            "RESULT_WORDS": 4096,
+            "SOURCE_WORDS": 256
+          },
+          "passes": {
+            "executed": 3,
+            "per_pass": [
+              {
+                "context_length": 16,
+                "entrypoint_id": 0,
+                "generation_index": 0,
+                "index": 0,
+                "instructions_fetched": 2104,
+                "instructions_retired": 2104,
+                "issues": 691,
+                "loop_iterations": 723,
+                "simulated_cycles": 169809,
+                "views": 2143,
+                "wait_events": 689
+              },
+              {
+                "context_length": 17,
+                "entrypoint_id": 1,
+                "generation_index": 1,
+                "index": 1,
+                "instructions_fetched": 2104,
+                "instructions_retired": 2104,
+                "issues": 691,
+                "loop_iterations": 723,
+                "simulated_cycles": 169809,
+                "views": 2143,
+                "wait_events": 689
+              },
+              {
+                "context_length": 18,
+                "entrypoint_id": 1,
+                "generation_index": 2,
+                "index": 2,
+                "instructions_fetched": 2104,
+                "instructions_retired": 2104,
+                "issues": 691,
+                "loop_iterations": 723,
+                "simulated_cycles": 169809,
+                "views": 2143,
+                "wait_events": 689
+              }
+            ],
+            "unit": "device transaction through the RTL control plane",
+            "workload_token_positions": 19
+          },
+          "rung": "G1e",
+          "schema": "opentallas.rtl.abi3_g1e_control_end_to_end.v1",
+          "simulated_cycles": 679236,
+          "simulator": "verilator_cpp_executable",
+          "simulator_version": "5.050",
+          "trace": {
+            "compared_elements": 46866,
+            "compared_issue_count": 2073,
+            "compared_issue_fields": [
+              "family",
+              "sub",
+              "descriptor_id",
+              "pc"
+            ],
+            "compared_view_fields": [
+              "slot",
+              "descriptor_id",
+              "extent",
+              "extent_axis",
+              "element_offset",
+              "rank"
+            ],
+            "divergence_index": null,
+            "equals_golden": true,
+            "golden_source": "runtime.sim.device.Device"
+          },
+          "trace_file": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/reach_cd/g1e_build/build-hbm/rtl_issue_trace.txt",
+          "trace_file_issue_count": 2073,
+          "trace_file_sha256": "72dab99c856d88e72a94bd501ad420236a99739841339aae33f27d1497ee4e16",
+          "usable": true,
+          "vehicle": "rtl/test/a3_shipped_prefix_top.sv",
+          "why_unusable": null,
+          "workload_id": "TA-QW-EOS-1"
+        },
+        "evidence_class": "public_open_tool_rtl_simulation",
+        "simulated_cycles": 679236,
+        "simulated_cycles_scope": "the control-plane run in which this rung's loop property was measured -- every device transaction of the governed workload through the design's own control plane. The integrated run that establishes (or here, fails to establish) the handoff reports its own cycles under handoff.integrated_campaign",
+        "simulator": "verilator_cpp_executable",
+        "simulator_version": "5.050",
+        "vehicle": "rtl/test/a3_shipped_prefix_top.sv"
+      },
+      "git": {
+        "commit": "05a230bd06b64521cf8a68ebf9d74794ea2de3b6",
+        "dirty_paths": [],
+        "scope": "the tree THIS artifact was derived in. It is not a claim about the tree either run happened in; see execution.control_plane_run and handoff.integrated_campaign for those.",
+        "worktree_dirty": false
+      },
+      "handoff": {
+        "address_identity_across_the_layer_boundary": {
+          "boundaries_checked": 105,
+          "boundaries_where_the_address_matched": 105,
+          "consumer_pc": 8,
+          "disagreements": [],
+          "holds": true,
+          "producer_pc": 62,
+          "shared_objects": [
+            18
+          ],
+          "what_it_is": "the RTL resolver's own (object, element offset, extent, extent axis, rank) for the consumer of each layer boundary, compared with the same for the producer of the invocation before it",
+          "what_it_is_not": "an RTL-to-RTL data handoff. The run this is measured in supplies every engine result at the engine boundary, so no value produced by one layer was consumed by the next. G1c's handoff fields are not derived from this and cannot be"
+        },
+        "blocked_at": {
+          "invocation_it_stopped_in": 1,
+          "is_inside_the_layer_body": true,
+          "mnemonic": "DMA.SCATTER",
+          "operator_descriptor_id": 118,
+          "pc": 32,
+          "trap_class": 4
+        },
+        "boundary_object_the_program_declares": {
+          "consumer_input_objects": [
+            1,
+            18
+          ],
+          "consumer_mnemonic": "VECTOR.RMS_NORM",
+          "consumer_pc": 8,
+          "derived_not_measured": true,
+          "note": "read from the two operators' own TENSOR_VIEW descriptors: invocation N's last operator writes these objects and invocation N+1's first operator reads them, so the handoff the loop would make is through device memory. Nothing here says the RTL performed it -- it did not",
+          "objects_in_common": [
+            18
+          ],
+          "producer_mnemonic": "VECTOR.ADD",
+          "producer_output_objects": [
+            18
+          ],
+          "producer_pc": 62
+        },
+        "case": {
+          "declared_boundary_pc": 32,
+          "index": 1,
+          "name": "qwen3-8b-hbm-single-chip/decode",
+          "observed": {
+            "fault": 32,
+            "fetched": 33,
+            "index": 1,
+            "issued": 11,
+            "launches": 10,
+            "responses": 11,
+            "retired": 32,
+            "trap": 4,
+            "views": 33,
+            "words": 24832
+          }
+        },
+        "compared_words_across_the_layer_boundary": 0,
+        "completed_layer_invocations": 0,
+        "completed_layer_invocations_source": "derived: the run's fetch never reached the back edge, so no invocation of the body completed",
+        "consecutive_layers_executed": 0,
+        "consecutive_layers_required": 2,
+        "evidence_currency": {
+          "an_independent_run_at_this_commit_agrees": true,
+          "fields_the_handoff_reads": [
+            "expected_cases/observed_cases: fetched, fault and trap class for this lowering's case",
+            "operator_admission: which families the bridge trapped"
+          ],
+          "retained_campaign_is_usable": true,
+          "what_that_means": "the retained integrated campaign is source-current and every field the handoff reads comes from it",
+          "why_not": null
+        },
+        "golden_injected_between_layers": null,
+        "integrated_campaign": {
+          "artifact": "results/rtl/abi3_shipped_prefix_campaign.json",
+          "artifact_sha256": "079ff281bcc7e63e8edbee3c1e2cf93cfb02406acf53d0d1445ca9419f50ac8b",
+          "bound_source_count": 60,
+          "declared_git": {
+            "commit": "8555908f42464629f4321e770401589f0f24ebcc",
+            "worktree_dirty": false
+          },
+          "drifted_source_count": 0,
+          "drifted_sources": [],
+          "evidence_class": "public_open_tool_rtl_simulation_composite",
+          "integrated_simulator_checks": {
+            "verilator": 189862
+          },
+          "operator_admission": {
+            "capability_trapped_family_count": 6,
+            "cases_with_mapped_placement": 0,
+            "launches": {
+              "ATTENTION.GQA": 0,
+              "DMA.SCATTER": 0,
+              "SELECTION.ARGMAX": 0,
+              "SELECTION.TOKEN_APPEND": 0,
+              "VECTOR.ADD": 0,
+              "VECTOR.SILU_MUL": 0
+            },
+            "measured": true,
+            "reached_families": [],
+            "reached_family_count": 0,
+            "result_injection": false,
+            "trapped_families": [
+              "VECTOR.ADD",
+              "VECTOR.SILU_MUL",
+              "DMA.SCATTER",
+              "ATTENTION.GQA",
+              "SELECTION.ARGMAX",
+              "SELECTION.TOKEN_APPEND"
+            ],
+            "vector_generation": "mapped",
+            "vehicle": "rtl/test/a3_shipped_prefix_top.sv"
+          },
+          "pass_marker": "engine",
+          "simulated_cycles": 252057600,
+          "staged_matmul_weight": {
+            "bytes": 50331648,
+            "matrix_sha256": [
+              "fd56b85bf301661c8655ed517928304d25df7d6b3ea3d9be85c021159d61bad8",
+              "3ce9fdf6ee30ef2f24ad3629b506415ca91fe40f790e568a9ea3fea2978feee0",
+              "767a6c48457974bb02dd90aeec270f4d68289527a353c3c28964ab2069a966ee"
+            ],
+            "note": "not a file of this repository; it is staged into the run's build directory from the checkpoint shards and its digests are the identity of the weights the run consumed",
+            "path": "generated/p3_matmul_weight.bin",
+            "sha256": "2c8696111937aa85197cd2042dfed6cb3c5ef7f03fb80eba1fe3b93d40c1b87e"
+          },
+          "status": "pass",
+          "usable": true,
+          "vector_set_is_current": true,
+          "vector_set_path": "testdata/compiler/abi3_shipped_prefix/abi3_shipped_prefix_vectors.json",
+          "vector_set_sha256_declared": "28abd940ae1669e7de2858d7397031f84877974d53e2dcf6b5aee217dd065dec",
+          "vector_set_sha256_on_disk": "28abd940ae1669e7de2858d7397031f84877974d53e2dcf6b5aee217dd065dec",
+          "why_unusable": null
+        },
+        "layer_boundary_crossings_observed": 0,
+        "measured": {
+          "fault_pc": 32,
+          "instructions_fetched": 33,
+          "loop_back_edge_pc": 64,
+          "source": "the campaign's observed case counters",
+          "trap_class": 4,
+          "why": "the integrated run fetched 33 instruction(s) of one pass and faulted at PC 32; the layer loop's back edge is PC 64. derived: the run's fetch never reached the back edge, so no invocation of the body completed"
+        },
+        "mismatched_words": null,
+        "rtl_to_rtl": false,
+        "what_the_missing_half_would_cost": {
+          "consecutive_layers_required": 2,
+          "hours": 3.21,
+          "mac_count_for_two_consecutive_invocations": 385875968,
+          "mac_count_per_invocation": 192937984,
+          "measured_integrated_rate": {
+            "caveat": "this is the rate THAT run measured, on a machine other work was sharing. Another run of the same vehicle on a quieter box measures a higher one; the figure is reported with the run it came from rather than as a property of the design",
+            "mac_count": 50331648,
+            "macs_per_second": 33355.1,
+            "measured": true,
+            "simulation_wall_seconds": 1508.965,
+            "source": "results/rtl/abi3_shipped_prefix_campaign.json: its own matmul_mac_count and the sim_wall_s of its MEASURE line"
+          },
+          "note": "derived: the layer body's own multiply-accumulates, twice, at the rate the integrated vehicle itself measured. It is what the handoff half costs once the eleven operators the bridge traps can be issued; it is not what this rung cost, which is the control run above",
+          "per_matmul": [
+            {
+              "mac_count": 16777216,
+              "pc": 11,
+              "weight_shape": [
+                4096,
+                4096
+              ]
+            },
+            {
+              "mac_count": 4194304,
+              "pc": 14,
+              "weight_shape": [
+                1024,
+                4096
+              ]
+            },
+            {
+              "mac_count": 4194304,
+              "pc": 17,
+              "weight_shape": [
+                1024,
+                4096
+              ]
+            },
+            {
+              "mac_count": 16777216,
+              "pc": 41,
+              "weight_shape": [
+                4096,
+                4096
+              ]
+            },
+            {
+              "mac_count": 50331648,
+              "pc": 50,
+              "weight_shape": [
+                12288,
+                4096
+              ]
+            },
+            {
+              "mac_count": 50331648,
+              "pc": 53,
+              "weight_shape": [
+                12288,
+                4096
+              ]
+            },
+            {
+              "mac_count": 50331648,
+              "pc": 59,
+              "weight_shape": [
+                4096,
+                12288
+              ]
+            }
+          ],
+          "seconds": 11568.7
+        },
+        "what_would_turn_this_green": [
+          "a run whose back edge retires at least twice, so a second invocation of the body consumes what the first produced",
+          "a boundary_compared_words counter above zero and a boundary_mismatched_words of zero among them",
+          "a boundary_injected_operands of zero, so nothing crossing the boundary came from the golden model"
+        ],
+        "why_null": "mismatched_words and golden_injected_between_layers are reported null, not 0 and not false, because zero words were compared across zero layer boundaries. A count of zero mismatches over zero comparisons, or 'no golden value crossed' over no crossing, is a vacuous truth over an empty set; this ladder's first rule is that absence of evidence is a failure and never a pass"
+      },
+      "layer_loop": {
+        "back_edge_pc": 64,
+        "body_end": 64,
+        "body_start": 7,
+        "bound_selector_kind": 2,
+        "identified_by": "the loop whose declared body [body_start, body_end] contains exactly the issue sites whose certified Kernel IR kernel_id begins 'layer.0.', taken from each OPERATOR descriptor's own source_kernel_id",
+        "issue_pcs": [
+          8,
+          11,
+          14,
+          17,
+          20,
+          23,
+          26,
+          29,
+          32,
+          35,
+          38,
+          41,
+          44,
+          47,
+          50,
+          53,
+          56,
+          59,
+          62
+        ],
+        "kernel_ids": [
+          "layer.0.attention_norm",
+          "layer.0.attention.query_projection",
+          "layer.0.attention.key_projection",
+          "layer.0.attention.value_projection",
+          "layer.0.attention.query_head_norm",
+          "layer.0.attention.key_head_norm",
+          "layer.0.attention.query_rotation",
+          "layer.0.attention.key_rotation",
+          "layer.0.attention.key_append",
+          "layer.0.attention.value_append",
+          "layer.0.attention.grouped_query",
+          "layer.0.attention.output_projection",
+          "layer.0.attention.residual_add",
+          "layer.0.feed_forward_norm",
+          "layer.0.feed_forward.gate_projection",
+          "layer.0.feed_forward.up_projection",
+          "layer.0.feed_forward.activation",
+          "layer.0.feed_forward.down_projection",
+          "layer.0.feed_forward.residual_add"
+        ],
+        "layer_prefix": "layer.0.",
+        "loop_control_descriptor_id": 56,
+        "max_iterations": 36,
+        "setup_pc": 6
+      },
+      "loop": {
+        "distinct_issue_structures_over_all_invocations": 1,
+        "distinct_view_shape_structures_over_all_invocations": 2,
+        "element_offset_strides_per_layer": {
+          "pc11.slot0": 0,
+          "pc11.slot1": 16777216,
+          "pc11.slot4": 0,
+          "pc14.slot0": 0,
+          "pc14.slot1": 4194304,
+          "pc14.slot4": 0,
+          "pc17.slot0": 0,
+          "pc17.slot1": 4194304,
+          "pc17.slot4": 0,
+          "pc20.slot0": 0,
+          "pc20.slot1": 128,
+          "pc20.slot4": 0,
+          "pc23.slot0": 0,
+          "pc23.slot1": 128,
+          "pc23.slot4": 0,
+          "pc26.slot0": 0,
+          "pc26.slot1": 0,
+          "pc26.slot4": 0,
+          "pc29.slot0": 0,
+          "pc29.slot1": 0,
+          "pc29.slot4": 0,
+          "pc32.slot0": 0,
+          "pc32.slot1": 0,
+          "pc32.slot4": 16908288,
+          "pc35.slot0": 0,
+          "pc35.slot1": 0,
+          "pc35.slot4": 16908288,
+          "pc38.slot0": 0,
+          "pc38.slot1": 16908288,
+          "pc38.slot2": 16908288,
+          "pc38.slot3": 0,
+          "pc38.slot4": 0,
+          "pc41.slot0": 0,
+          "pc41.slot1": 16777216,
+          "pc41.slot4": 0,
+          "pc44.slot0": 0,
+          "pc44.slot1": 0,
+          "pc44.slot4": 0,
+          "pc47.slot0": 0,
+          "pc47.slot1": 4096,
+          "pc47.slot4": 0,
+          "pc50.slot0": 0,
+          "pc50.slot1": 50331648,
+          "pc50.slot4": 0,
+          "pc53.slot0": 0,
+          "pc53.slot1": 50331648,
+          "pc53.slot4": 0,
+          "pc56.slot0": 0,
+          "pc56.slot1": 0,
+          "pc56.slot4": 0,
+          "pc59.slot0": 0,
+          "pc59.slot1": 50331648,
+          "pc59.slot4": 0,
+          "pc62.slot0": 0,
+          "pc62.slot1": 0,
+          "pc62.slot4": 0,
+          "pc8.slot0": 0,
+          "pc8.slot1": 4096,
+          "pc8.slot4": 0
+        },
+        "invocation_count_matches_model_layers": true,
+        "invocations_measured": 108,
+        "invocations_per_transaction": [
+          36
+        ],
+        "loop_declared_max_iterations": 36,
+        "loop_iteration_cross_check": {
+          "agrees": true,
+          "assumption": "every loop other than the layer loop runs exactly one trip in these transactions. The agreement of the two counters is the evidence for it; a disagreement would be reported here rather than absorbed",
+          "checked": true,
+          "invocations_measured_per_transaction": 36,
+          "loop_setups_inside_the_body": 19,
+          "loop_setups_outside_the_body": 3,
+          "measured_loop_iterations_per_transaction": [
+            723
+          ],
+          "predicted_loop_iterations_per_transaction": 723,
+          "why_it_matters": "the invocation count above is read from the issue trace. This reads the same loop from the sequencer's own loop-iteration counter, which the trace does not produce, so the two are independent measurements of one thing"
+        },
+        "measured_from": "the RTL's own issue trace, dumped by rtl/test/a3_g1e_control_harness.cpp under OT_A3_TRACE_OUT during the G1e control run, and bound to that run by its own census",
+        "model_layers": 36,
+        "model_layers_source": {
+          "checkpoint_config": "/home/ubuntu/.cache/huggingface/hub/models--Qwen--Qwen3-8B/snapshots/b968826d9c46dd6066d109eabc6255188de91218/config.json",
+          "checkpoint_config_sha256": "f7c4eadfbbf522470667b797a3c89be2524832d2d599797248dc304fff447c30",
+          "from_checkpoint_config": 36,
+          "from_kernel_ir": 36,
+          "kernel_ir": "build/ir-v3/qwen3-8b/kernel_ir.v3.json",
+          "kernel_ir_sha256": "62499454381d24641f8cedda00f049aff61b4aa96410fa3fe460e0044df567e6",
+          "layers": 36,
+          "sources_agree": true
+        },
+        "operators_per_invocation": [
+          19
+        ],
+        "per_transaction": [
+          {
+            "distinct_issue_structures": 1,
+            "distinct_view_shape_structures": 1,
+            "element_offsets_are_arithmetic_progressions": true,
+            "invocations": 36,
+            "transaction_index": 0
+          },
+          {
+            "distinct_issue_structures": 1,
+            "distinct_view_shape_structures": 1,
+            "element_offsets_are_arithmetic_progressions": true,
+            "invocations": 36,
+            "transaction_index": 1
+          },
+          {
+            "distinct_issue_structures": 1,
+            "distinct_view_shape_structures": 1,
+            "element_offsets_are_arithmetic_progressions": true,
+            "invocations": 36,
+            "transaction_index": 2
+          }
+        ],
+        "structurally_identical": true,
+        "transactions_measured": 3,
+        "view_shape_differences_between_transactions": {
+          "entrypoint_id_per_transaction": [
+            0,
+            1,
+            1
+          ],
+          "the_difference_tracks_the_entrypoint_not_the_loop": true,
+          "view_fields_that_differ": [
+            "extent"
+          ],
+          "why": "transactions that entered at the same entrypoint resolve the same extents and transactions that entered at different ones do not, so what differs is the token span of the request -- a 16-position prefill against a one-position decode -- and not the loop's invocations, which are identical within each"
+        },
+        "view_shape_fields_that_differ_between_transactions": [
+          {
+            "field_values_seen": [
+              [
+                0,
+                59,
+                1,
+                0,
+                2
+              ],
+              [
+                0,
+                59,
+                16,
+                0,
+                2
+              ]
+            ],
+            "pc": 8,
+            "slot": 0,
+            "value_by_transaction": [
+              [
+                0,
+                59,
+                16,
+                0,
+                2
+              ],
+              [
+                0,
+                59,
+                1,
+                0,
+                2
+              ],
+              [
+                0,
+                59,
+                1,
+                0,
+                2
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                4,
+                61,
+                1,
+                0,
+                2
+              ],
+              [
+                4,
+                61,
+                16,
+                0,
+                2
+              ]
+            ],
+            "pc": 8,
+            "slot": 4,
+            "value_by_transaction": [
+              [
+                4,
+                61,
+                16,
+                0,
+                2
+              ],
+              [
+                4,
+                61,
+                1,
+                0,
+                2
+              ],
+              [
+                4,
+                61,
+                1,
+                0,
+                2
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                0,
+                67,
+                1,
+                0,
+                2
+              ],
+              [
+                0,
+                67,
+                16,
+                0,
+                2
+              ]
+            ],
+            "pc": 11,
+            "slot": 0,
+            "value_by_transaction": [
+              [
+                0,
+                67,
+                16,
+                0,
+                2
+              ],
+              [
+                0,
+                67,
+                1,
+                0,
+                2
+              ],
+              [
+                0,
+                67,
+                1,
+                0,
+                2
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                4,
+                69,
+                1,
+                0,
+                2
+              ],
+              [
+                4,
+                69,
+                16,
+                0,
+                2
+              ]
+            ],
+            "pc": 11,
+            "slot": 4,
+            "value_by_transaction": [
+              [
+                4,
+                69,
+                16,
+                0,
+                2
+              ],
+              [
+                4,
+                69,
+                1,
+                0,
+                2
+              ],
+              [
+                4,
+                69,
+                1,
+                0,
+                2
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                0,
+                75,
+                1,
+                0,
+                2
+              ],
+              [
+                0,
+                75,
+                16,
+                0,
+                2
+              ]
+            ],
+            "pc": 14,
+            "slot": 0,
+            "value_by_transaction": [
+              [
+                0,
+                75,
+                16,
+                0,
+                2
+              ],
+              [
+                0,
+                75,
+                1,
+                0,
+                2
+              ],
+              [
+                0,
+                75,
+                1,
+                0,
+                2
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                4,
+                77,
+                1,
+                0,
+                2
+              ],
+              [
+                4,
+                77,
+                16,
+                0,
+                2
+              ]
+            ],
+            "pc": 14,
+            "slot": 4,
+            "value_by_transaction": [
+              [
+                4,
+                77,
+                16,
+                0,
+                2
+              ],
+              [
+                4,
+                77,
+                1,
+                0,
+                2
+              ],
+              [
+                4,
+                77,
+                1,
+                0,
+                2
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                0,
+                81,
+                1,
+                0,
+                2
+              ],
+              [
+                0,
+                81,
+                16,
+                0,
+                2
+              ]
+            ],
+            "pc": 17,
+            "slot": 0,
+            "value_by_transaction": [
+              [
+                0,
+                81,
+                16,
+                0,
+                2
+              ],
+              [
+                0,
+                81,
+                1,
+                0,
+                2
+              ],
+              [
+                0,
+                81,
+                1,
+                0,
+                2
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                4,
+                83,
+                1,
+                0,
+                2
+              ],
+              [
+                4,
+                83,
+                16,
+                0,
+                2
+              ]
+            ],
+            "pc": 17,
+            "slot": 4,
+            "value_by_transaction": [
+              [
+                4,
+                83,
+                16,
+                0,
+                2
+              ],
+              [
+                4,
+                83,
+                1,
+                0,
+                2
+              ],
+              [
+                4,
+                83,
+                1,
+                0,
+                2
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                0,
+                86,
+                1,
+                0,
+                3
+              ],
+              [
+                0,
+                86,
+                16,
+                0,
+                3
+              ]
+            ],
+            "pc": 20,
+            "slot": 0,
+            "value_by_transaction": [
+              [
+                0,
+                86,
+                16,
+                0,
+                3
+              ],
+              [
+                0,
+                86,
+                1,
+                0,
+                3
+              ],
+              [
+                0,
+                86,
+                1,
+                0,
+                3
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                4,
+                88,
+                1,
+                0,
+                3
+              ],
+              [
+                4,
+                88,
+                16,
+                0,
+                3
+              ]
+            ],
+            "pc": 20,
+            "slot": 4,
+            "value_by_transaction": [
+              [
+                4,
+                88,
+                16,
+                0,
+                3
+              ],
+              [
+                4,
+                88,
+                1,
+                0,
+                3
+              ],
+              [
+                4,
+                88,
+                1,
+                0,
+                3
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                0,
+                93,
+                1,
+                0,
+                3
+              ],
+              [
+                0,
+                93,
+                16,
+                0,
+                3
+              ]
+            ],
+            "pc": 23,
+            "slot": 0,
+            "value_by_transaction": [
+              [
+                0,
+                93,
+                16,
+                0,
+                3
+              ],
+              [
+                0,
+                93,
+                1,
+                0,
+                3
+              ],
+              [
+                0,
+                93,
+                1,
+                0,
+                3
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                4,
+                95,
+                1,
+                0,
+                3
+              ],
+              [
+                4,
+                95,
+                16,
+                0,
+                3
+              ]
+            ],
+            "pc": 23,
+            "slot": 4,
+            "value_by_transaction": [
+              [
+                4,
+                95,
+                16,
+                0,
+                3
+              ],
+              [
+                4,
+                95,
+                1,
+                0,
+                3
+              ],
+              [
+                4,
+                95,
+                1,
+                0,
+                3
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                0,
+                100,
+                1,
+                0,
+                3
+              ],
+              [
+                0,
+                100,
+                16,
+                0,
+                3
+              ]
+            ],
+            "pc": 26,
+            "slot": 0,
+            "value_by_transaction": [
+              [
+                0,
+                100,
+                16,
+                0,
+                3
+              ],
+              [
+                0,
+                100,
+                1,
+                0,
+                3
+              ],
+              [
+                0,
+                100,
+                1,
+                0,
+                3
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                1,
+                101,
+                1,
+                0,
+                3
+              ],
+              [
+                1,
+                101,
+                16,
+                0,
+                3
+              ]
+            ],
+            "pc": 26,
+            "slot": 1,
+            "value_by_transaction": [
+              [
+                1,
+                101,
+                16,
+                0,
+                3
+              ],
+              [
+                1,
+                101,
+                1,
+                0,
+                3
+              ],
+              [
+                1,
+                101,
+                1,
+                0,
+                3
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                4,
+                102,
+                1,
+                0,
+                3
+              ],
+              [
+                4,
+                102,
+                16,
+                0,
+                3
+              ]
+            ],
+            "pc": 26,
+            "slot": 4,
+            "value_by_transaction": [
+              [
+                4,
+                102,
+                16,
+                0,
+                3
+              ],
+              [
+                4,
+                102,
+                1,
+                0,
+                3
+              ],
+              [
+                4,
+                102,
+                1,
+                0,
+                3
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                0,
+                107,
+                1,
+                0,
+                3
+              ],
+              [
+                0,
+                107,
+                16,
+                0,
+                3
+              ]
+            ],
+            "pc": 29,
+            "slot": 0,
+            "value_by_transaction": [
+              [
+                0,
+                107,
+                16,
+                0,
+                3
+              ],
+              [
+                0,
+                107,
+                1,
+                0,
+                3
+              ],
+              [
+                0,
+                107,
+                1,
+                0,
+                3
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                1,
+                108,
+                1,
+                0,
+                3
+              ],
+              [
+                1,
+                108,
+                16,
+                0,
+                3
+              ]
+            ],
+            "pc": 29,
+            "slot": 1,
+            "value_by_transaction": [
+              [
+                1,
+                108,
+                16,
+                0,
+                3
+              ],
+              [
+                1,
+                108,
+                1,
+                0,
+                3
+              ],
+              [
+                1,
+                108,
+                1,
+                0,
+                3
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                4,
+                109,
+                1,
+                0,
+                3
+              ],
+              [
+                4,
+                109,
+                16,
+                0,
+                3
+              ]
+            ],
+            "pc": 29,
+            "slot": 4,
+            "value_by_transaction": [
+              [
+                4,
+                109,
+                16,
+                0,
+                3
+              ],
+              [
+                4,
+                109,
+                1,
+                0,
+                3
+              ],
+              [
+                4,
+                109,
+                1,
+                0,
+                3
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                0,
+                113,
+                1,
+                0,
+                1
+              ],
+              [
+                0,
+                113,
+                16,
+                0,
+                1
+              ]
+            ],
+            "pc": 32,
+            "slot": 0,
+            "value_by_transaction": [
+              [
+                0,
+                113,
+                16,
+                0,
+                1
+              ],
+              [
+                0,
+                113,
+                1,
+                0,
+                1
+              ],
+              [
+                0,
+                113,
+                1,
+                0,
+                1
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                1,
+                114,
+                1,
+                0,
+                3
+              ],
+              [
+                1,
+                114,
+                16,
+                0,
+                3
+              ]
+            ],
+            "pc": 32,
+            "slot": 1,
+            "value_by_transaction": [
+              [
+                1,
+                114,
+                16,
+                0,
+                3
+              ],
+              [
+                1,
+                114,
+                1,
+                0,
+                3
+              ],
+              [
+                1,
+                114,
+                1,
+                0,
+                3
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                0,
+                121,
+                1,
+                0,
+                1
+              ],
+              [
+                0,
+                121,
+                16,
+                0,
+                1
+              ]
+            ],
+            "pc": 35,
+            "slot": 0,
+            "value_by_transaction": [
+              [
+                0,
+                121,
+                16,
+                0,
+                1
+              ],
+              [
+                0,
+                121,
+                1,
+                0,
+                1
+              ],
+              [
+                0,
+                121,
+                1,
+                0,
+                1
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                1,
+                122,
+                1,
+                0,
+                3
+              ],
+              [
+                1,
+                122,
+                16,
+                0,
+                3
+              ]
+            ],
+            "pc": 35,
+            "slot": 1,
+            "value_by_transaction": [
+              [
+                1,
+                122,
+                16,
+                0,
+                3
+              ],
+              [
+                1,
+                122,
+                1,
+                0,
+                3
+              ],
+              [
+                1,
+                122,
+                1,
+                0,
+                3
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                0,
+                129,
+                1,
+                0,
+                3
+              ],
+              [
+                0,
+                129,
+                16,
+                0,
+                3
+              ]
+            ],
+            "pc": 38,
+            "slot": 0,
+            "value_by_transaction": [
+              [
+                0,
+                129,
+                16,
+                0,
+                3
+              ],
+              [
+                0,
+                129,
+                1,
+                0,
+                3
+              ],
+              [
+                0,
+                129,
+                1,
+                0,
+                3
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                3,
+                132,
+                1,
+                0,
+                1
+              ],
+              [
+                3,
+                132,
+                16,
+                0,
+                1
+              ]
+            ],
+            "pc": 38,
+            "slot": 3,
+            "value_by_transaction": [
+              [
+                3,
+                132,
+                16,
+                0,
+                1
+              ],
+              [
+                3,
+                132,
+                1,
+                0,
+                1
+              ],
+              [
+                3,
+                132,
+                1,
+                0,
+                1
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                4,
+                133,
+                1,
+                0,
+                3
+              ],
+              [
+                4,
+                133,
+                16,
+                0,
+                3
+              ]
+            ],
+            "pc": 38,
+            "slot": 4,
+            "value_by_transaction": [
+              [
+                4,
+                133,
+                16,
+                0,
+                3
+              ],
+              [
+                4,
+                133,
+                1,
+                0,
+                3
+              ],
+              [
+                4,
+                133,
+                1,
+                0,
+                3
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                0,
+                139,
+                1,
+                0,
+                2
+              ],
+              [
+                0,
+                139,
+                16,
+                0,
+                2
+              ]
+            ],
+            "pc": 41,
+            "slot": 0,
+            "value_by_transaction": [
+              [
+                0,
+                139,
+                16,
+                0,
+                2
+              ],
+              [
+                0,
+                139,
+                1,
+                0,
+                2
+              ],
+              [
+                0,
+                139,
+                1,
+                0,
+                2
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                4,
+                141,
+                1,
+                0,
+                2
+              ],
+              [
+                4,
+                141,
+                16,
+                0,
+                2
+              ]
+            ],
+            "pc": 41,
+            "slot": 4,
+            "value_by_transaction": [
+              [
+                4,
+                141,
+                16,
+                0,
+                2
+              ],
+              [
+                4,
+                141,
+                1,
+                0,
+                2
+              ],
+              [
+                4,
+                141,
+                1,
+                0,
+                2
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                0,
+                145,
+                1,
+                0,
+                2
+              ],
+              [
+                0,
+                145,
+                16,
+                0,
+                2
+              ]
+            ],
+            "pc": 44,
+            "slot": 0,
+            "value_by_transaction": [
+              [
+                0,
+                145,
+                16,
+                0,
+                2
+              ],
+              [
+                0,
+                145,
+                1,
+                0,
+                2
+              ],
+              [
+                0,
+                145,
+                1,
+                0,
+                2
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                1,
+                146,
+                1,
+                0,
+                2
+              ],
+              [
+                1,
+                146,
+                16,
+                0,
+                2
+              ]
+            ],
+            "pc": 44,
+            "slot": 1,
+            "value_by_transaction": [
+              [
+                1,
+                146,
+                16,
+                0,
+                2
+              ],
+              [
+                1,
+                146,
+                1,
+                0,
+                2
+              ],
+              [
+                1,
+                146,
+                1,
+                0,
+                2
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                4,
+                147,
+                1,
+                0,
+                2
+              ],
+              [
+                4,
+                147,
+                16,
+                0,
+                2
+              ]
+            ],
+            "pc": 44,
+            "slot": 4,
+            "value_by_transaction": [
+              [
+                4,
+                147,
+                16,
+                0,
+                2
+              ],
+              [
+                4,
+                147,
+                1,
+                0,
+                2
+              ],
+              [
+                4,
+                147,
+                1,
+                0,
+                2
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                0,
+                153,
+                1,
+                0,
+                2
+              ],
+              [
+                0,
+                153,
+                16,
+                0,
+                2
+              ]
+            ],
+            "pc": 47,
+            "slot": 0,
+            "value_by_transaction": [
+              [
+                0,
+                153,
+                16,
+                0,
+                2
+              ],
+              [
+                0,
+                153,
+                1,
+                0,
+                2
+              ],
+              [
+                0,
+                153,
+                1,
+                0,
+                2
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                4,
+                155,
+                1,
+                0,
+                2
+              ],
+              [
+                4,
+                155,
+                16,
+                0,
+                2
+              ]
+            ],
+            "pc": 47,
+            "slot": 4,
+            "value_by_transaction": [
+              [
+                4,
+                155,
+                16,
+                0,
+                2
+              ],
+              [
+                4,
+                155,
+                1,
+                0,
+                2
+              ],
+              [
+                4,
+                155,
+                1,
+                0,
+                2
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                0,
+                159,
+                1,
+                0,
+                2
+              ],
+              [
+                0,
+                159,
+                16,
+                0,
+                2
+              ]
+            ],
+            "pc": 50,
+            "slot": 0,
+            "value_by_transaction": [
+              [
+                0,
+                159,
+                16,
+                0,
+                2
+              ],
+              [
+                0,
+                159,
+                1,
+                0,
+                2
+              ],
+              [
+                0,
+                159,
+                1,
+                0,
+                2
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                4,
+                161,
+                1,
+                0,
+                2
+              ],
+              [
+                4,
+                161,
+                16,
+                0,
+                2
+              ]
+            ],
+            "pc": 50,
+            "slot": 4,
+            "value_by_transaction": [
+              [
+                4,
+                161,
+                16,
+                0,
+                2
+              ],
+              [
+                4,
+                161,
+                1,
+                0,
+                2
+              ],
+              [
+                4,
+                161,
+                1,
+                0,
+                2
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                0,
+                165,
+                1,
+                0,
+                2
+              ],
+              [
+                0,
+                165,
+                16,
+                0,
+                2
+              ]
+            ],
+            "pc": 53,
+            "slot": 0,
+            "value_by_transaction": [
+              [
+                0,
+                165,
+                16,
+                0,
+                2
+              ],
+              [
+                0,
+                165,
+                1,
+                0,
+                2
+              ],
+              [
+                0,
+                165,
+                1,
+                0,
+                2
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                4,
+                167,
+                1,
+                0,
+                2
+              ],
+              [
+                4,
+                167,
+                16,
+                0,
+                2
+              ]
+            ],
+            "pc": 53,
+            "slot": 4,
+            "value_by_transaction": [
+              [
+                4,
+                167,
+                16,
+                0,
+                2
+              ],
+              [
+                4,
+                167,
+                1,
+                0,
+                2
+              ],
+              [
+                4,
+                167,
+                1,
+                0,
+                2
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                0,
+                170,
+                1,
+                0,
+                2
+              ],
+              [
+                0,
+                170,
+                16,
+                0,
+                2
+              ]
+            ],
+            "pc": 56,
+            "slot": 0,
+            "value_by_transaction": [
+              [
+                0,
+                170,
+                16,
+                0,
+                2
+              ],
+              [
+                0,
+                170,
+                1,
+                0,
+                2
+              ],
+              [
+                0,
+                170,
+                1,
+                0,
+                2
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                1,
+                171,
+                1,
+                0,
+                2
+              ],
+              [
+                1,
+                171,
+                16,
+                0,
+                2
+              ]
+            ],
+            "pc": 56,
+            "slot": 1,
+            "value_by_transaction": [
+              [
+                1,
+                171,
+                16,
+                0,
+                2
+              ],
+              [
+                1,
+                171,
+                1,
+                0,
+                2
+              ],
+              [
+                1,
+                171,
+                1,
+                0,
+                2
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                4,
+                172,
+                1,
+                0,
+                2
+              ],
+              [
+                4,
+                172,
+                16,
+                0,
+                2
+              ]
+            ],
+            "pc": 56,
+            "slot": 4,
+            "value_by_transaction": [
+              [
+                4,
+                172,
+                16,
+                0,
+                2
+              ],
+              [
+                4,
+                172,
+                1,
+                0,
+                2
+              ],
+              [
+                4,
+                172,
+                1,
+                0,
+                2
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                0,
+                177,
+                1,
+                0,
+                2
+              ],
+              [
+                0,
+                177,
+                16,
+                0,
+                2
+              ]
+            ],
+            "pc": 59,
+            "slot": 0,
+            "value_by_transaction": [
+              [
+                0,
+                177,
+                16,
+                0,
+                2
+              ],
+              [
+                0,
+                177,
+                1,
+                0,
+                2
+              ],
+              [
+                0,
+                177,
+                1,
+                0,
+                2
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                4,
+                179,
+                1,
+                0,
+                2
+              ],
+              [
+                4,
+                179,
+                16,
+                0,
+                2
+              ]
+            ],
+            "pc": 59,
+            "slot": 4,
+            "value_by_transaction": [
+              [
+                4,
+                179,
+                16,
+                0,
+                2
+              ],
+              [
+                4,
+                179,
+                1,
+                0,
+                2
+              ],
+              [
+                4,
+                179,
+                1,
+                0,
+                2
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                0,
+                183,
+                1,
+                0,
+                2
+              ],
+              [
+                0,
+                183,
+                16,
+                0,
+                2
+              ]
+            ],
+            "pc": 62,
+            "slot": 0,
+            "value_by_transaction": [
+              [
+                0,
+                183,
+                16,
+                0,
+                2
+              ],
+              [
+                0,
+                183,
+                1,
+                0,
+                2
+              ],
+              [
+                0,
+                183,
+                1,
+                0,
+                2
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                1,
+                184,
+                1,
+                0,
+                2
+              ],
+              [
+                1,
+                184,
+                16,
+                0,
+                2
+              ]
+            ],
+            "pc": 62,
+            "slot": 1,
+            "value_by_transaction": [
+              [
+                1,
+                184,
+                16,
+                0,
+                2
+              ],
+              [
+                1,
+                184,
+                1,
+                0,
+                2
+              ],
+              [
+                1,
+                184,
+                1,
+                0,
+                2
+              ]
+            ]
+          },
+          {
+            "field_values_seen": [
+              [
+                4,
+                185,
+                1,
+                0,
+                2
+              ],
+              [
+                4,
+                185,
+                16,
+                0,
+                2
+              ]
+            ],
+            "pc": 62,
+            "slot": 4,
+            "value_by_transaction": [
+              [
+                4,
+                185,
+                16,
+                0,
+                2
+              ],
+              [
+                4,
+                185,
+                1,
+                0,
+                2
+              ],
+              [
+                4,
+                185,
+                1,
+                0,
+                2
+              ]
+            ]
+          }
+        ],
+        "what_structural_identity_means_here": "every invocation issues the same sequence of (family, subopcode, descriptor id, program counter), and the RTL resolver produces the same (slot, descriptor id, extent, extent axis, rank) for every operand of every one of them, within each device transaction. element_offset is the field a loop is for: it is required to advance by a constant per-invocation stride and the strides are recorded above rather than described"
+      },
+      "storage_class": "hbm",
+      "workload_id": "TA-QW-EOS-1"
+    }
+  ],
+  "rerun_not_retained": {
+    "agreement": {
+      "capability_fault_count": {
+        "agree": true,
+        "rerun": 4,
+        "retained": 4
+      },
+      "expected_cases": {
+        "agree": true,
+        "rerun": [
+          {
+            "fault": 32,
+            "fetched": 33,
+            "index": 0,
+            "issued": 11,
+            "launches": 10,
+            "responses": 11,
+            "retired": 32,
+            "trap": 4,
+            "views": 33,
+            "words": 24832
+          },
+          {
+            "fault": 32,
+            "fetched": 33,
+            "index": 1,
+            "issued": 11,
+            "launches": 10,
+            "responses": 11,
+            "retired": 32,
+            "trap": 4,
+            "views": 33,
+            "words": 24832
+          },
+          {
+            "fault": 13,
+            "fetched": 14,
+            "index": 2,
+            "issued": 5,
+            "launches": 4,
+            "responses": 5,
+            "retired": 13,
+            "trap": 4,
+            "views": 11,
+            "words": 20736
+          },
+          {
+            "fault": 14,
+            "fetched": 15,
+            "index": 3,
+            "issued": 5,
+            "launches": 4,
+            "responses": 5,
+            "retired": 14,
+            "trap": 4,
+            "views": 17,
+            "words": 20736
+          }
+        ],
+        "retained": [
+          {
+            "fault": 32,
+            "fetched": 33,
+            "index": 0,
+            "issued": 11,
+            "launches": 10,
+            "responses": 11,
+            "retired": 32,
+            "trap": 4,
+            "views": 33,
+            "words": 24832
+          },
+          {
+            "fault": 32,
+            "fetched": 33,
+            "index": 1,
+            "issued": 11,
+            "launches": 10,
+            "responses": 11,
+            "retired": 32,
+            "trap": 4,
+            "views": 33,
+            "words": 24832
+          },
+          {
+            "fault": 13,
+            "fetched": 14,
+            "index": 2,
+            "issued": 5,
+            "launches": 4,
+            "responses": 5,
+            "retired": 13,
+            "trap": 4,
+            "views": 11,
+            "words": 20736
+          },
+          {
+            "fault": 14,
+            "fetched": 15,
+            "index": 3,
+            "issued": 5,
+            "launches": 4,
+            "responses": 5,
+            "retired": 14,
+            "trap": 4,
+            "views": 17,
+            "words": 20736
+          }
+        ]
+      },
+      "operator_admission": {
+        "agree": true,
+        "rerun": {
+          "capability_trapped_family_count": 6,
+          "cases_with_mapped_placement": 0,
+          "launches": {
+            "ATTENTION.GQA": 0,
+            "DMA.SCATTER": 0,
+            "SELECTION.ARGMAX": 0,
+            "SELECTION.TOKEN_APPEND": 0,
+            "VECTOR.ADD": 0,
+            "VECTOR.SILU_MUL": 0
+          },
+          "measured": true,
+          "reached_families": [],
+          "reached_family_count": 0,
+          "result_injection": false,
+          "trapped_families": [
+            "VECTOR.ADD",
+            "VECTOR.SILU_MUL",
+            "DMA.SCATTER",
+            "ATTENTION.GQA",
+            "SELECTION.ARGMAX",
+            "SELECTION.TOKEN_APPEND"
+          ],
+          "vector_generation": "mapped",
+          "vehicle": "rtl/test/a3_shipped_prefix_top.sv"
+        },
+        "retained": {
+          "capability_trapped_family_count": 6,
+          "cases_with_mapped_placement": 0,
+          "launches": {
+            "ATTENTION.GQA": 0,
+            "DMA.SCATTER": 0,
+            "SELECTION.ARGMAX": 0,
+            "SELECTION.TOKEN_APPEND": 0,
+            "VECTOR.ADD": 0,
+            "VECTOR.SILU_MUL": 0
+          },
+          "measured": true,
+          "reached_families": [],
+          "reached_family_count": 0,
+          "result_injection": false,
+          "trapped_families": [
+            "VECTOR.ADD",
+            "VECTOR.SILU_MUL",
+            "DMA.SCATTER",
+            "ATTENTION.GQA",
+            "SELECTION.ARGMAX",
+            "SELECTION.TOKEN_APPEND"
+          ],
+          "vector_generation": "mapped",
+          "vehicle": "rtl/test/a3_shipped_prefix_top.sv"
+        }
+      },
+      "real_engine_launch_count": {
+        "agree": true,
+        "rerun": 28,
+        "retained": 28
+      },
+      "result_word_count": {
+        "agree": true,
+        "rerun": 91136,
+        "retained": 91136
+      },
+      "simulated_cycles": {
+        "agree": true,
+        "rerun": 252057600,
+        "retained": 252057600
+      },
+      "status": {
+        "agree": true,
+        "rerun": "pass",
+        "retained": "pass"
+      }
+    },
+    "agrees_on_every_compared_field": true,
+    "artifact_sha256": "69e6990dc1d0a9b952d54cedacbf310807300ba9ffb910b39455cedc2daa4915",
+    "git": {
+      "commit": "a922ef3879325e2921a4da951d6ed3eb03333198",
+      "worktree_dirty": false
+    },
+    "vector_set_sha256": "28abd940ae1669e7de2858d7397031f84877974d53e2dcf6b5aee217dd065dec",
+    "what_it_is": "an independent execution of the same integrated campaign, run for this rung at this commit in a separately pinned worktree",
+    "why_not_retained": "it is not a file of this repository, so nothing in this rung is computed from it; it is recorded as agreement with the campaign the tree does hold"
+  },
+  "schema": "opentallas.rtl.g1c_composition.v1",
+  "what_this_rung_is": "the inductive step of the ladder. G1b is the base case -- one layer. This rung is layer N to layer N+1 with an RTL-to-RTL handoff, plus the loop property that closes the induction over every layer of the model",
+  "workload_id": "TA-QW-EOS-1"
+}

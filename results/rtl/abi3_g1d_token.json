@@ -1,0 +1,1839 @@
+{
+  "derived_mechanically": true,
+  "does_not_establish": [
+    "any RTL execution of the head: no head instruction was fetched",
+    "any token id: the RTL emitted none",
+    "the logits: none were computed in RTL and none were compared",
+    "that the shard composition is exact IN RTL -- the shard check is a reference-model measurement of the plan, on the reference backend, and says so"
+  ],
+  "establishes": [
+    "the head's [4] row shards of [37984] rows partition the OUTPUT axis and leave the reduction axis whole, so composition is concatenation and no accumulator is ever split -- derived from the LM head's own weight view",
+    "executed at full dimension on the checkpoint's own lm_head bytes: the row shards reproduce the whole projection at the precision the operator writes, every output code, while the reduction-axis control does not -- a reference-model measurement of the plan, with no RTL involved"
+  ],
+  "gate": "G1d",
+  "generated_by": "tools/build_abi3_g1d_token.py",
+  "generated_by_sha256": "43cdfc2af0972cd9cc9817e5b2a620c883706adbbada2bfdd3554460cb6cab9f",
+  "git": {
+    "commit": "05a230bd06b64521cf8a68ebf9d74794ea2de3b6",
+    "dirty_paths": [],
+    "scope": "the tree THIS artifact was derived in. It is not a claim about the tree either run happened in; see execution.control_plane_run and handoff.integrated_campaign for those.",
+    "worktree_dirty": false
+  },
+  "records": [
+    {
+      "deployment": {
+        "deployment_sha256": "133afc13e1fcd2aade2e40530883c9986b0e920d99853990d9032fd777f26243",
+        "directory": "build/abi3/qwen3-8b-rom",
+        "key": "qwen3-8b-rom-single-chip"
+      },
+      "execution": {
+        "campaign": {
+          "artifact": "results/rtl/abi3_shipped_prefix_campaign.json",
+          "artifact_sha256": "079ff281bcc7e63e8edbee3c1e2cf93cfb02406acf53d0d1445ca9419f50ac8b",
+          "bound_source_count": 60,
+          "case_status": [
+            {
+              "checks": 189862,
+              "name": "verilator",
+              "status": "pass"
+            }
+          ],
+          "declared_git": {
+            "commit": "8555908f42464629f4321e770401589f0f24ebcc",
+            "worktree_dirty": false
+          },
+          "drifted_source_count": 0,
+          "drifted_sources": [],
+          "evidence_class": "public_open_tool_rtl_simulation_composite",
+          "expected_cases": [
+            {
+              "fault": 32,
+              "fetched": 33,
+              "index": 0,
+              "issued": 11,
+              "launches": 10,
+              "responses": 11,
+              "retired": 32,
+              "trap": 4,
+              "views": 33,
+              "words": 24832
+            },
+            {
+              "fault": 32,
+              "fetched": 33,
+              "index": 1,
+              "issued": 11,
+              "launches": 10,
+              "responses": 11,
+              "retired": 32,
+              "trap": 4,
+              "views": 33,
+              "words": 24832
+            },
+            {
+              "fault": 13,
+              "fetched": 14,
+              "index": 2,
+              "issued": 5,
+              "launches": 4,
+              "responses": 5,
+              "retired": 13,
+              "trap": 4,
+              "views": 11,
+              "words": 20736
+            },
+            {
+              "fault": 14,
+              "fetched": 15,
+              "index": 3,
+              "issued": 5,
+              "launches": 4,
+              "responses": 5,
+              "retired": 14,
+              "trap": 4,
+              "views": 17,
+              "words": 20736
+            }
+          ],
+          "integrated_replay_passed": true,
+          "integrated_simulator_checks": {
+            "verilator": 189862
+          },
+          "integrated_simulators": [
+            "verilator"
+          ],
+          "measure": {
+            "cycle_guard": 64000000000,
+            "cycles": 252057600,
+            "distinct_bytes": 50331648,
+            "halfword_reads": 50331648,
+            "injected_results": 0,
+            "page_faults": 96,
+            "page_hits": 50331552,
+            "pages_evicted": 88,
+            "refilled_bytes": 100663296,
+            "result_words": 98304,
+            "sim_wall_s": 1508.965,
+            "source_words": 65536,
+            "trace_compared_elements": 0,
+            "trace_divergence_index": -1,
+            "trace_issues": 0,
+            "trace_last_case_issues": 5,
+            "trace_uncompared_fields": "none",
+            "wall_s": 1510.97,
+            "weight_image_bytes": 50331648,
+            "window_cap_bytes": 8388608,
+            "window_page_bytes": 1048576,
+            "window_peak_resident_bytes": 8388608,
+            "window_segments": 1
+          },
+          "observed_cases": [
+            {
+              "fault": 32,
+              "fetched": 33,
+              "index": 0,
+              "issued": 11,
+              "launches": 10,
+              "responses": 11,
+              "retired": 32,
+              "trap": 4,
+              "views": 33,
+              "words": 24832
+            },
+            {
+              "fault": 32,
+              "fetched": 33,
+              "index": 1,
+              "issued": 11,
+              "launches": 10,
+              "responses": 11,
+              "retired": 32,
+              "trap": 4,
+              "views": 33,
+              "words": 24832
+            },
+            {
+              "fault": 13,
+              "fetched": 14,
+              "index": 2,
+              "issued": 5,
+              "launches": 4,
+              "responses": 5,
+              "retired": 13,
+              "trap": 4,
+              "views": 11,
+              "words": 20736
+            },
+            {
+              "fault": 14,
+              "fetched": 15,
+              "index": 3,
+              "issued": 5,
+              "launches": 4,
+              "responses": 5,
+              "retired": 14,
+              "trap": 4,
+              "views": 17,
+              "words": 20736
+            }
+          ],
+          "operator_admission": {
+            "capability_trapped_family_count": 6,
+            "cases_with_mapped_placement": 0,
+            "launches": {
+              "ATTENTION.GQA": 0,
+              "DMA.SCATTER": 0,
+              "SELECTION.ARGMAX": 0,
+              "SELECTION.TOKEN_APPEND": 0,
+              "VECTOR.ADD": 0,
+              "VECTOR.SILU_MUL": 0
+            },
+            "measured": true,
+            "reached_families": [],
+            "reached_family_count": 0,
+            "result_injection": false,
+            "trapped_families": [
+              "VECTOR.ADD",
+              "VECTOR.SILU_MUL",
+              "DMA.SCATTER",
+              "ATTENTION.GQA",
+              "SELECTION.ARGMAX",
+              "SELECTION.TOKEN_APPEND"
+            ],
+            "vector_generation": "mapped",
+            "vehicle": "rtl/test/a3_shipped_prefix_top.sv"
+          },
+          "pass_marker": "engine",
+          "post_fault_write_count": 0,
+          "schema": "opentallas.rtl.abi3_shipped_prefix_campaign.v1",
+          "simulated_cycles": 252057600,
+          "simulated_cycles_agree": true,
+          "simulated_cycles_declared": 252057600,
+          "simulated_cycles_from_log": 252057600,
+          "staged_matmul_weight": {
+            "bytes": 50331648,
+            "matrix_sha256": [
+              "fd56b85bf301661c8655ed517928304d25df7d6b3ea3d9be85c021159d61bad8",
+              "3ce9fdf6ee30ef2f24ad3629b506415ca91fe40f790e568a9ea3fea2978feee0",
+              "767a6c48457974bb02dd90aeec270f4d68289527a353c3c28964ab2069a966ee"
+            ],
+            "note": "not a file of this repository; it is staged into the run's build directory from the checkpoint shards and its digests are the identity of the weights the run consumed",
+            "path": "generated/p3_matmul_weight.bin",
+            "sha256": "2c8696111937aa85197cd2042dfed6cb3c5ef7f03fb80eba1fe3b93d40c1b87e"
+          },
+          "status": "pass",
+          "usable": true,
+          "vector_set_is_current": true,
+          "vector_set_path": "testdata/compiler/abi3_shipped_prefix/abi3_shipped_prefix_vectors.json",
+          "vector_set_sha256_declared": "28abd940ae1669e7de2858d7397031f84877974d53e2dcf6b5aee217dd065dec",
+          "vector_set_sha256_on_disk": "28abd940ae1669e7de2858d7397031f84877974d53e2dcf6b5aee217dd065dec",
+          "why_unusable": null
+        },
+        "evidence_class": "public_open_tool_rtl_simulation_composite",
+        "simulated_cycles": 252057600,
+        "simulated_cycles_scope": "the integrated run's own total over all four cases of the one binary; this rung does not split it per lowering because the harness reports one count",
+        "simulator": "verilator",
+        "vehicle": "rtl/test/a3_shipped_prefix_top.sv"
+      },
+      "git": {
+        "commit": "05a230bd06b64521cf8a68ebf9d74794ea2de3b6",
+        "dirty_paths": [],
+        "scope": "the tree THIS artifact was derived in. It is not a claim about the tree either run happened in; see execution.control_plane_run and handoff.integrated_campaign for those.",
+        "worktree_dirty": false
+      },
+      "head": {
+        "argmax_in_rtl": false,
+        "arithmetic": {
+          "activation_dims": [
+            1,
+            4096
+          ],
+          "derived_from": "the weight TENSOR_VIEW descriptor's own declared extents; not a table and not the gate's own note",
+          "kernel_id": "vocabulary_projection",
+          "mac_count": 622329856,
+          "numeric_contract": "bf16_bf16_fp32_blocked_rne_v1",
+          "operator_descriptor_id": 197,
+          "output_dims": [
+            1,
+            151936
+          ],
+          "output_rows": 151936,
+          "pc": 69,
+          "reduction": 4096,
+          "weight_object_id": 3,
+          "weight_view_descriptor_id": 193
+        },
+        "compared_logits": 0,
+        "entry_probe_observation": {
+          "artifact": "results/rtl/abi3_vehicle_entry_probe.json",
+          "artifact_sha256": "5203660e99415d306d7e5f622d384010915582f19df5eb87522b8514ec3dd390",
+          "caveat": "this probe artifact declares a dirty worktree, so it is not source-bound evidence; it is cited as an observation only",
+          "declared_git": {
+            "commit": "2e327dd239f0e43c0dcc2badc9ff82a0868268ea",
+            "worktree_dirty": true
+          },
+          "head_sites_that_dispatched": [
+            66
+          ],
+          "present": true,
+          "rows": [
+            {
+              "agrees": true,
+              "entry_pc": 65,
+              "family": null,
+              "instruction_count": 67,
+              "kind": "positive_control",
+              "measured": {
+                "capability_faults": 0,
+                "dispatches_the_site": true,
+                "engine_launches": 1,
+                "issued": 1,
+                "simulated_cycles": 33047,
+                "trap_class": 5,
+                "trap_pc": 67
+              },
+              "predicted": {
+                "dispatches_the_site": true,
+                "trap_class": 5,
+                "trap_pc": 67
+              },
+              "site_pc": 66,
+              "target": "qwen3-8b-rom-single-chip"
+            },
+            {
+              "agrees": true,
+              "entry_pc": 70,
+              "family": "SELECTION.ARGMAX",
+              "instruction_count": 71,
+              "kind": "own_pc_entry",
+              "measured": {
+                "capability_faults": 0,
+                "dispatches_the_site": false,
+                "engine_launches": 0,
+                "issued": 0,
+                "simulated_cycles": 25,
+                "trap_class": 13,
+                "trap_pc": 70
+              },
+              "predicted": {
+                "dispatches_the_site": false,
+                "trap_class": 13,
+                "trap_pc": 70
+              },
+              "site_pc": 70,
+              "target": "qwen3-8b-rom-single-chip"
+            }
+          ],
+          "source_bound": false,
+          "status": "pass",
+          "vector_set_committed": false,
+          "why_it_does_not_make_a_field_true": "a dispatch under a mid-program entry is not this rung's claim. G1d asks for the head to execute ON THE COMPOSED TRUNK OUTPUT and for its result to be compared: under a mid-program entry the vehicle's result memory holds its initialisation pattern, no trunk has run, and no word was compared against golden. The observation is recorded because it is a measurement and it bounds what is missing; it is not allowed to move a gate field"
+        },
+        "execution_measured": {
+          "fault_pc": 32,
+          "head_site_count": 5,
+          "head_sites": [
+            {
+              "family_is_trapped_capability_by_the_bridge": false,
+              "family_launch_count_in_the_run": null,
+              "fetched_by_the_integrated_run": false,
+              "issued": false,
+              "kernel_id": "final_norm",
+              "mnemonic": "VECTOR.RMS_NORM",
+              "numeric_contract": "qwen3_rmsnorm_fp32_bf16_v1",
+              "operator_descriptor_id": 183,
+              "pc": 66
+            },
+            {
+              "family_is_trapped_capability_by_the_bridge": false,
+              "family_launch_count_in_the_run": null,
+              "fetched_by_the_integrated_run": false,
+              "issued": false,
+              "kernel_id": "last_token_select",
+              "mnemonic": "DMA.GATHER",
+              "numeric_contract": "exact_index_select_v1",
+              "operator_descriptor_id": 190,
+              "pc": 68
+            },
+            {
+              "family_is_trapped_capability_by_the_bridge": false,
+              "family_launch_count_in_the_run": null,
+              "fetched_by_the_integrated_run": false,
+              "issued": false,
+              "kernel_id": "vocabulary_projection",
+              "mnemonic": "TENSOR.MATMUL",
+              "numeric_contract": "bf16_bf16_fp32_blocked_rne_v1",
+              "operator_descriptor_id": 197,
+              "pc": 69
+            },
+            {
+              "family_is_trapped_capability_by_the_bridge": true,
+              "family_launch_count_in_the_run": 0,
+              "fetched_by_the_integrated_run": false,
+              "issued": false,
+              "kernel_id": "token_selection",
+              "mnemonic": "SELECTION.ARGMAX",
+              "numeric_contract": "greedy_lowest_token_id_argmax_v1",
+              "operator_descriptor_id": 205,
+              "pc": 70
+            },
+            {
+              "family_is_trapped_capability_by_the_bridge": true,
+              "family_launch_count_in_the_run": 0,
+              "fetched_by_the_integrated_run": false,
+              "issued": false,
+              "kernel_id": "token_append",
+              "mnemonic": "SELECTION.TOKEN_APPEND",
+              "numeric_contract": "exact_token_append_eos_v1",
+              "operator_descriptor_id": 212,
+              "pc": 72
+            }
+          ],
+          "head_sites_fetched": 0,
+          "instructions_fetched": 33,
+          "roles": {
+            "argmax": {
+              "fetched_by_the_integrated_run": false,
+              "in_rtl_on_the_composed_trunk_output": false,
+              "kernel_id": "token_selection",
+              "pc": 70
+            },
+            "final_norm": {
+              "fetched_by_the_integrated_run": false,
+              "in_rtl_on_the_composed_trunk_output": false,
+              "kernel_id": "final_norm",
+              "pc": 66
+            },
+            "lm_head": {
+              "fetched_by_the_integrated_run": false,
+              "in_rtl_on_the_composed_trunk_output": false,
+              "kernel_id": "vocabulary_projection",
+              "pc": 69
+            }
+          },
+          "trap_class": 4,
+          "why": "the integrated run fetched 33 instruction(s) of one pass and failed closed at PC 32 with trap class 4. Every head instruction lies at PC 66 or later, so none was fetched, none was issued, and none launched"
+        },
+        "final_norm_in_rtl": false,
+        "head_named_by": "every issue site after the layer loop's back edge (PC 64), named by the certified Kernel IR kernel each OPERATOR descriptor's source_kernel_id points at",
+        "kernel_ir": {
+          "graph_id": "84bb97dd1243553f170fde014c15c76c6adf0b80f0ef3bdad27a015577b6c24b",
+          "path": "build/ir-v3/qwen3-8b/kernel_ir.v3.json",
+          "sha256": "62499454381d24641f8cedda00f049aff61b4aa96410fa3fe460e0044df567e6"
+        },
+        "lm_head_in_rtl": false,
+        "mismatched_logits": null,
+        "operators": [
+          {
+            "kernel_id": "final_norm",
+            "kernel_kind": "RMS_NORM",
+            "mnemonic": "VECTOR.RMS_NORM",
+            "numeric_contract": "qwen3_rmsnorm_fp32_bf16_v1",
+            "operator_descriptor_id": 183,
+            "pc": 66,
+            "slots": [
+              {
+                "declared_dims": [
+                  512,
+                  4096
+                ],
+                "dtype": 16,
+                "object_id": 36,
+                "rank": 2,
+                "slot": "input_view_0",
+                "view_descriptor_id": 180
+              },
+              {
+                "declared_dims": [
+                  4096
+                ],
+                "dtype": 16,
+                "object_id": 2,
+                "rank": 1,
+                "slot": "input_view_1",
+                "view_descriptor_id": 181
+              },
+              {
+                "declared_dims": [
+                  512,
+                  4096
+                ],
+                "dtype": 16,
+                "object_id": 45,
+                "rank": 2,
+                "slot": "output_view_0",
+                "view_descriptor_id": 182
+              }
+            ]
+          },
+          {
+            "kernel_id": "last_token_select",
+            "kernel_kind": "LAST_TOKEN_SELECT",
+            "mnemonic": "DMA.GATHER",
+            "numeric_contract": "exact_index_select_v1",
+            "operator_descriptor_id": 190,
+            "pc": 68,
+            "slots": [
+              {
+                "declared_dims": [
+                  1
+                ],
+                "dtype": 4,
+                "object_id": 23,
+                "rank": 1,
+                "slot": "input_view_0",
+                "view_descriptor_id": 184
+              },
+              {
+                "declared_dims": [
+                  8256,
+                  4096
+                ],
+                "dtype": 16,
+                "object_id": 45,
+                "rank": 2,
+                "slot": "input_view_1",
+                "view_descriptor_id": 185
+              },
+              {
+                "declared_dims": [
+                  1,
+                  4096
+                ],
+                "dtype": 16,
+                "object_id": 186,
+                "rank": 2,
+                "slot": "output_view_0",
+                "view_descriptor_id": 187
+              }
+            ]
+          },
+          {
+            "kernel_id": "vocabulary_projection",
+            "kernel_kind": "VOCAB_PROJECT",
+            "mnemonic": "TENSOR.MATMUL",
+            "numeric_contract": "bf16_bf16_fp32_blocked_rne_v1",
+            "operator_descriptor_id": 197,
+            "pc": 69,
+            "slots": [
+              {
+                "declared_dims": [
+                  1,
+                  4096
+                ],
+                "dtype": 16,
+                "object_id": 186,
+                "rank": 2,
+                "slot": "input_view_0",
+                "view_descriptor_id": 192
+              },
+              {
+                "declared_dims": [
+                  151936,
+                  4096
+                ],
+                "dtype": 16,
+                "object_id": 3,
+                "rank": 2,
+                "slot": "input_view_1",
+                "view_descriptor_id": 193
+              },
+              {
+                "declared_dims": [
+                  1,
+                  151936
+                ],
+                "dtype": 16,
+                "object_id": 194,
+                "rank": 2,
+                "slot": "output_view_0",
+                "view_descriptor_id": 195
+              }
+            ]
+          },
+          {
+            "kernel_id": "token_selection",
+            "kernel_kind": "ARGMAX",
+            "mnemonic": "SELECTION.ARGMAX",
+            "numeric_contract": "greedy_lowest_token_id_argmax_v1",
+            "operator_descriptor_id": 205,
+            "pc": 70,
+            "slots": [
+              {
+                "declared_dims": [
+                  151936
+                ],
+                "dtype": 16,
+                "object_id": 194,
+                "rank": 1,
+                "slot": "input_view_0",
+                "view_descriptor_id": 199
+              },
+              {
+                "declared_dims": [
+                  1
+                ],
+                "dtype": 4,
+                "object_id": 200,
+                "rank": 1,
+                "slot": "output_view_0",
+                "view_descriptor_id": 201
+              }
+            ]
+          },
+          {
+            "kernel_id": "token_append",
+            "kernel_kind": "TOKEN_APPEND",
+            "mnemonic": "SELECTION.TOKEN_APPEND",
+            "numeric_contract": "exact_token_append_eos_v1",
+            "operator_descriptor_id": 212,
+            "pc": 72,
+            "slots": [
+              {
+                "declared_dims": [
+                  1
+                ],
+                "dtype": 4,
+                "object_id": 200,
+                "rank": 1,
+                "slot": "input_view_0",
+                "view_descriptor_id": 208
+              },
+              {
+                "declared_dims": [
+                  1
+                ],
+                "dtype": 4,
+                "object_id": 209,
+                "rank": 1,
+                "slot": "output_view_0",
+                "view_descriptor_id": 210
+              }
+            ]
+          }
+        ],
+        "shard_composition_check": {
+          "activation_provenance": "real BF16 embedding rows of width 4096, read through the deployment's own declared checkpoint segments. These are NOT the composed trunk output: the trunk cannot run in this vehicle, so no composed trunk output exists. What this measures is the exactness of the SHARD COMPOSITION at the head's real shape and on the real weights; it establishes nothing about the logits of the governed workload",
+          "activations": [
+            {
+              "row_sha256": "83e977e1d4d8a904fefb1d89ffd00c7c53d9556ce10fafeedad20f7782d75827",
+              "shard": "model-00001-of-00005.safetensors",
+              "token_id": 151644
+            },
+            {
+              "row_sha256": "34e7ceea3e1fa26e83aa6619cdeda258630b58e5f52eca8e941125e2c6247d31",
+              "shard": "model-00001-of-00005.safetensors",
+              "token_id": 872
+            },
+            {
+              "row_sha256": "1b45bce97685ba7ad10fda1c9ea013342a298c6e0e56cba918379fd695cca4b9",
+              "shard": "model-00001-of-00005.safetensors",
+              "token_id": 198
+            }
+          ],
+          "backend_identity": {
+            "backend": "numpy",
+            "blas": {
+              "name": "scipy-openblas",
+              "version": "0.3.29"
+            },
+            "blocked_association": "numpy.matmul over binary32, blocked by the linked BLAS; fixed by (library, version, device, shape, thread count)",
+            "device": "host",
+            "device_name": "x86_64 x86_64",
+            "flags": {
+              "MKL_NUM_THREADS": "",
+              "NUMEXPR_NUM_THREADS": "",
+              "OMP_NUM_THREADS": "",
+              "OPENBLAS_NUM_THREADS": "",
+              "VECLIB_MAXIMUM_THREADS": "",
+              "allow_tf32": false,
+              "float32_matmul_precision": "highest"
+            },
+            "library": "numpy",
+            "library_version": "2.2.6"
+          },
+          "by_contract": {
+            "bf16_bf16_fp32_blocked_rne_v1": {
+              "association": "the executing implementation's, fixed by (library, version, device, shape, thread count)",
+              "is_the_operator_declared_contract": true,
+              "per_activation": [
+                {
+                  "compared_logits": 151936,
+                  "reduction_split_bf16_differing_elements": 28,
+                  "reduction_split_binary32_differing_elements": 123028,
+                  "row_sha256": "83e977e1d4d8a904fefb1d89ffd00c7c53d9556ce10fafeedad20f7782d75827",
+                  "row_shard_bf16_differing_elements": 0,
+                  "row_shard_binary32_differing_elements": 233,
+                  "token_id": 151644
+                },
+                {
+                  "compared_logits": 151936,
+                  "reduction_split_bf16_differing_elements": 26,
+                  "reduction_split_binary32_differing_elements": 119300,
+                  "row_sha256": "34e7ceea3e1fa26e83aa6619cdeda258630b58e5f52eca8e941125e2c6247d31",
+                  "row_shard_bf16_differing_elements": 0,
+                  "row_shard_binary32_differing_elements": 216,
+                  "token_id": 872
+                },
+                {
+                  "compared_logits": 151936,
+                  "reduction_split_bf16_differing_elements": 34,
+                  "reduction_split_binary32_differing_elements": 129827,
+                  "row_sha256": "1b45bce97685ba7ad10fda1c9ea013342a298c6e0e56cba918379fd695cca4b9",
+                  "row_shard_bf16_differing_elements": 0,
+                  "row_shard_binary32_differing_elements": 236,
+                  "token_id": 198
+                }
+              ],
+              "reduction_split_differs_at_the_output_precision": true,
+              "reduction_split_differs_in_binary32": true,
+              "row_shard_exact_at_the_declared_output_precision": true,
+              "row_shard_exact_in_binary32": false
+            },
+            "bf16_bf16_fp32_sequential_rne_v1": {
+              "association": "fixed by the contract in ascending reduction index, independently of operand shape",
+              "is_the_operator_declared_contract": false,
+              "per_activation": [
+                {
+                  "compared_logits": 151936,
+                  "reduction_split_bf16_differing_elements": 45,
+                  "reduction_split_binary32_differing_elements": 140434,
+                  "row_sha256": "83e977e1d4d8a904fefb1d89ffd00c7c53d9556ce10fafeedad20f7782d75827",
+                  "row_shard_bf16_differing_elements": 0,
+                  "row_shard_binary32_differing_elements": 0,
+                  "token_id": 151644
+                },
+                {
+                  "compared_logits": 151936,
+                  "reduction_split_bf16_differing_elements": 48,
+                  "reduction_split_binary32_differing_elements": 140842,
+                  "row_sha256": "34e7ceea3e1fa26e83aa6619cdeda258630b58e5f52eca8e941125e2c6247d31",
+                  "row_shard_bf16_differing_elements": 0,
+                  "row_shard_binary32_differing_elements": 0,
+                  "token_id": 872
+                },
+                {
+                  "compared_logits": 151936,
+                  "reduction_split_bf16_differing_elements": 67,
+                  "reduction_split_binary32_differing_elements": 143108,
+                  "row_sha256": "1b45bce97685ba7ad10fda1c9ea013342a298c6e0e56cba918379fd695cca4b9",
+                  "row_shard_bf16_differing_elements": 0,
+                  "row_shard_binary32_differing_elements": 0,
+                  "token_id": 198
+                }
+              ],
+              "reduction_split_differs_at_the_output_precision": true,
+              "reduction_split_differs_in_binary32": true,
+              "row_shard_exact_at_the_declared_output_precision": true,
+              "row_shard_exact_in_binary32": true
+            }
+          },
+          "does_not_establish": [
+            "any RTL execution of the head: this is the reference model on the reference backend, and no RTL ran",
+            "the logits of the governed workload: the activation is not the composed trunk output, which does not exist",
+            "exactness for an activation not measured here: the binary32 agreement under the declared contract is a property of this backend at these shapes and is reported per activation"
+          ],
+          "falsification_control_has_teeth": true,
+          "operator_declared_contract": "bf16_bf16_fp32_blocked_rne_v1",
+          "ran": true,
+          "row_shard_composition_is_exact": true,
+          "row_shard_composition_is_exact_in_binary32_under_the_declared_contract": false,
+          "weight": {
+            "bytes": 1244659712,
+            "columns": 4096,
+            "declared_segment_sha256": "6e46ee56769d64b9a338f350100bdfca5f26a91c3fb5bf479ffcb36c733f7939",
+            "object_id": 3,
+            "rows": 151936,
+            "selected_matrix_sha256": "6e46ee56769d64b9a338f350100bdfca5f26a91c3fb5bf479ffcb36c733f7939",
+            "shard": "model-00005-of-00005.safetensors"
+          },
+          "what_the_measurement_says": "measured, not argued. Under the operator's own declared blocked contract the four row shards reproduce the whole projection exactly at the precision the operator writes -- every one of the 151,936 BF16 output codes -- while a small number of the binary32 accumulators before that single rounding differ, because the blocked contract delegates the association to the implementation and this BLAS associates a 37,984-row operand differently from a 151,936-row one. Under the sequential contract, which fixes the association independently of shape, the row shards agree in binary32 as well. Splitting the REDUCTION axis instead differs under both, which is the control that shows this comparison can fail",
+          "what_was_computed": "the head's projection at full dimension -- [1,4096] x [151936,4096]^T over the checkpoint's own lm_head bytes -- whole, as the 4 row shards of the plan above, and with the reduction axis split in two as a falsification control; under the operator's declared contract and under the contract that fixes the association"
+        },
+        "shard_plan": {
+          "composition_is": "concatenation along the output axis",
+          "ranges": [
+            {
+              "rows": 37984,
+              "shard": 0,
+              "start_row": 0,
+              "stop_row_exclusive": 37984
+            },
+            {
+              "rows": 37984,
+              "shard": 1,
+              "start_row": 37984,
+              "stop_row_exclusive": 75968
+            },
+            {
+              "rows": 37984,
+              "shard": 2,
+              "start_row": 75968,
+              "stop_row_exclusive": 113952
+            },
+            {
+              "rows": 37984,
+              "shard": 3,
+              "start_row": 113952,
+              "stop_row_exclusive": 151936
+            }
+          ],
+          "ranges_are_disjoint_and_contiguous": true,
+          "ranges_cover_the_axis_exactly": true,
+          "reduction_axis_extent": 4096,
+          "reduction_axis_is_partitioned": false,
+          "remainder_rows": 0,
+          "rows_per_shard": 37984,
+          "shard_count": 4,
+          "sharded_axis": "output",
+          "sharded_axis_extent": 151936,
+          "structurally_exact": true,
+          "why_that_is_exact": "each output element's complete reduction over 4096 terms happens inside one shard, so no accumulator is split and no partial sum is ever re-associated. Sharding the REDUCTION axis instead would split accumulators and is what the falsification control below exercises"
+        },
+        "what_running_the_head_would_cost": {
+          "hours_in_concurrent_row_shards": 1.3,
+          "hours_whole": 5.18,
+          "mac_count": 622329856,
+          "measured_integrated_rate": {
+            "caveat": "this is the rate THAT run measured, on a machine other work was sharing. Another run of the same vehicle on a quieter box measures a higher one; the figure is reported with the run it came from rather than as a property of the design",
+            "mac_count": 50331648,
+            "macs_per_second": 33355.1,
+            "measured": true,
+            "simulation_wall_seconds": 1508.965,
+            "source": "results/rtl/abi3_shipped_prefix_campaign.json: its own matmul_mac_count and the sim_wall_s of its MEASURE line"
+          },
+          "note": "derived: the head's own multiply-accumulates at the rate the integrated vehicle itself measured. The shard figure is wall time with the shards run concurrently, which is exact because the shards share no accumulator -- see shard_plan. It is what the head would cost, not what this rung cost, which ran no head at all",
+          "seconds_whole": 18657.7
+        },
+        "why_null": "mismatched_logits is null, not 0: zero logits were compared because the head never ran. Zero mismatches over zero comparisons is not evidence"
+      },
+      "oracle": {
+        "agreement": false,
+        "all_generated_token_ids": [
+          3925,
+          13,
+          151645
+        ],
+        "artifact_sha256": "d9c7dd222cff342f84ff34be3600f8b41c6c8c6c0280a523737fc53d1f20c6ec",
+        "generated_token_ids": [
+          3925
+        ],
+        "path": "results/abi3/qwen3_reference_oracle_eos.json",
+        "stop_reason": "eos",
+        "token_field": "results.TA-QW-EOS-1.generated_token_ids",
+        "why_not_agreed": "the RTL emitted no token: the head never executed, so record_token_ids is empty. This field is never set from the oracle's own ids"
+      },
+      "record_token_ids": [],
+      "record_token_ids_note": "the RTL emitted no token id. This list is what the RTL emitted and is never filled from the oracle; a rung that copied the oracle's ids across would agree with itself",
+      "storage_class": "rom",
+      "workload_id": "TA-QW-EOS-1"
+    },
+    {
+      "deployment": {
+        "deployment_sha256": "cb9067f5fbf67f7df4212399aee6ba75ced4ca5c8f2dc8c1631372a4068cea2c",
+        "directory": "build/abi3/qwen3-8b-hbm-tokens",
+        "key": "qwen3-8b-hbm-single-chip"
+      },
+      "execution": {
+        "campaign": {
+          "artifact": "results/rtl/abi3_shipped_prefix_campaign.json",
+          "artifact_sha256": "079ff281bcc7e63e8edbee3c1e2cf93cfb02406acf53d0d1445ca9419f50ac8b",
+          "bound_source_count": 60,
+          "case_status": [
+            {
+              "checks": 189862,
+              "name": "verilator",
+              "status": "pass"
+            }
+          ],
+          "declared_git": {
+            "commit": "8555908f42464629f4321e770401589f0f24ebcc",
+            "worktree_dirty": false
+          },
+          "drifted_source_count": 0,
+          "drifted_sources": [],
+          "evidence_class": "public_open_tool_rtl_simulation_composite",
+          "expected_cases": [
+            {
+              "fault": 32,
+              "fetched": 33,
+              "index": 0,
+              "issued": 11,
+              "launches": 10,
+              "responses": 11,
+              "retired": 32,
+              "trap": 4,
+              "views": 33,
+              "words": 24832
+            },
+            {
+              "fault": 32,
+              "fetched": 33,
+              "index": 1,
+              "issued": 11,
+              "launches": 10,
+              "responses": 11,
+              "retired": 32,
+              "trap": 4,
+              "views": 33,
+              "words": 24832
+            },
+            {
+              "fault": 13,
+              "fetched": 14,
+              "index": 2,
+              "issued": 5,
+              "launches": 4,
+              "responses": 5,
+              "retired": 13,
+              "trap": 4,
+              "views": 11,
+              "words": 20736
+            },
+            {
+              "fault": 14,
+              "fetched": 15,
+              "index": 3,
+              "issued": 5,
+              "launches": 4,
+              "responses": 5,
+              "retired": 14,
+              "trap": 4,
+              "views": 17,
+              "words": 20736
+            }
+          ],
+          "integrated_replay_passed": true,
+          "integrated_simulator_checks": {
+            "verilator": 189862
+          },
+          "integrated_simulators": [
+            "verilator"
+          ],
+          "measure": {
+            "cycle_guard": 64000000000,
+            "cycles": 252057600,
+            "distinct_bytes": 50331648,
+            "halfword_reads": 50331648,
+            "injected_results": 0,
+            "page_faults": 96,
+            "page_hits": 50331552,
+            "pages_evicted": 88,
+            "refilled_bytes": 100663296,
+            "result_words": 98304,
+            "sim_wall_s": 1508.965,
+            "source_words": 65536,
+            "trace_compared_elements": 0,
+            "trace_divergence_index": -1,
+            "trace_issues": 0,
+            "trace_last_case_issues": 5,
+            "trace_uncompared_fields": "none",
+            "wall_s": 1510.97,
+            "weight_image_bytes": 50331648,
+            "window_cap_bytes": 8388608,
+            "window_page_bytes": 1048576,
+            "window_peak_resident_bytes": 8388608,
+            "window_segments": 1
+          },
+          "observed_cases": [
+            {
+              "fault": 32,
+              "fetched": 33,
+              "index": 0,
+              "issued": 11,
+              "launches": 10,
+              "responses": 11,
+              "retired": 32,
+              "trap": 4,
+              "views": 33,
+              "words": 24832
+            },
+            {
+              "fault": 32,
+              "fetched": 33,
+              "index": 1,
+              "issued": 11,
+              "launches": 10,
+              "responses": 11,
+              "retired": 32,
+              "trap": 4,
+              "views": 33,
+              "words": 24832
+            },
+            {
+              "fault": 13,
+              "fetched": 14,
+              "index": 2,
+              "issued": 5,
+              "launches": 4,
+              "responses": 5,
+              "retired": 13,
+              "trap": 4,
+              "views": 11,
+              "words": 20736
+            },
+            {
+              "fault": 14,
+              "fetched": 15,
+              "index": 3,
+              "issued": 5,
+              "launches": 4,
+              "responses": 5,
+              "retired": 14,
+              "trap": 4,
+              "views": 17,
+              "words": 20736
+            }
+          ],
+          "operator_admission": {
+            "capability_trapped_family_count": 6,
+            "cases_with_mapped_placement": 0,
+            "launches": {
+              "ATTENTION.GQA": 0,
+              "DMA.SCATTER": 0,
+              "SELECTION.ARGMAX": 0,
+              "SELECTION.TOKEN_APPEND": 0,
+              "VECTOR.ADD": 0,
+              "VECTOR.SILU_MUL": 0
+            },
+            "measured": true,
+            "reached_families": [],
+            "reached_family_count": 0,
+            "result_injection": false,
+            "trapped_families": [
+              "VECTOR.ADD",
+              "VECTOR.SILU_MUL",
+              "DMA.SCATTER",
+              "ATTENTION.GQA",
+              "SELECTION.ARGMAX",
+              "SELECTION.TOKEN_APPEND"
+            ],
+            "vector_generation": "mapped",
+            "vehicle": "rtl/test/a3_shipped_prefix_top.sv"
+          },
+          "pass_marker": "engine",
+          "post_fault_write_count": 0,
+          "schema": "opentallas.rtl.abi3_shipped_prefix_campaign.v1",
+          "simulated_cycles": 252057600,
+          "simulated_cycles_agree": true,
+          "simulated_cycles_declared": 252057600,
+          "simulated_cycles_from_log": 252057600,
+          "staged_matmul_weight": {
+            "bytes": 50331648,
+            "matrix_sha256": [
+              "fd56b85bf301661c8655ed517928304d25df7d6b3ea3d9be85c021159d61bad8",
+              "3ce9fdf6ee30ef2f24ad3629b506415ca91fe40f790e568a9ea3fea2978feee0",
+              "767a6c48457974bb02dd90aeec270f4d68289527a353c3c28964ab2069a966ee"
+            ],
+            "note": "not a file of this repository; it is staged into the run's build directory from the checkpoint shards and its digests are the identity of the weights the run consumed",
+            "path": "generated/p3_matmul_weight.bin",
+            "sha256": "2c8696111937aa85197cd2042dfed6cb3c5ef7f03fb80eba1fe3b93d40c1b87e"
+          },
+          "status": "pass",
+          "usable": true,
+          "vector_set_is_current": true,
+          "vector_set_path": "testdata/compiler/abi3_shipped_prefix/abi3_shipped_prefix_vectors.json",
+          "vector_set_sha256_declared": "28abd940ae1669e7de2858d7397031f84877974d53e2dcf6b5aee217dd065dec",
+          "vector_set_sha256_on_disk": "28abd940ae1669e7de2858d7397031f84877974d53e2dcf6b5aee217dd065dec",
+          "why_unusable": null
+        },
+        "evidence_class": "public_open_tool_rtl_simulation_composite",
+        "simulated_cycles": 252057600,
+        "simulated_cycles_scope": "the integrated run's own total over all four cases of the one binary; this rung does not split it per lowering because the harness reports one count",
+        "simulator": "verilator",
+        "vehicle": "rtl/test/a3_shipped_prefix_top.sv"
+      },
+      "git": {
+        "commit": "05a230bd06b64521cf8a68ebf9d74794ea2de3b6",
+        "dirty_paths": [],
+        "scope": "the tree THIS artifact was derived in. It is not a claim about the tree either run happened in; see execution.control_plane_run and handoff.integrated_campaign for those.",
+        "worktree_dirty": false
+      },
+      "head": {
+        "argmax_in_rtl": false,
+        "arithmetic": {
+          "activation_dims": [
+            1,
+            4096
+          ],
+          "derived_from": "the weight TENSOR_VIEW descriptor's own declared extents; not a table and not the gate's own note",
+          "kernel_id": "vocabulary_projection",
+          "mac_count": 622329856,
+          "numeric_contract": "bf16_bf16_fp32_blocked_rne_v1",
+          "operator_descriptor_id": 204,
+          "output_dims": [
+            1,
+            151936
+          ],
+          "output_rows": 151936,
+          "pc": 69,
+          "reduction": 4096,
+          "weight_object_id": 14,
+          "weight_view_descriptor_id": 201
+        },
+        "compared_logits": 0,
+        "entry_probe_observation": {
+          "artifact": "results/rtl/abi3_vehicle_entry_probe.json",
+          "artifact_sha256": "5203660e99415d306d7e5f622d384010915582f19df5eb87522b8514ec3dd390",
+          "caveat": "this probe artifact declares a dirty worktree, so it is not source-bound evidence; it is cited as an observation only",
+          "declared_git": {
+            "commit": "2e327dd239f0e43c0dcc2badc9ff82a0868268ea",
+            "worktree_dirty": true
+          },
+          "head_sites_that_dispatched": [
+            66
+          ],
+          "present": true,
+          "rows": [
+            {
+              "agrees": true,
+              "entry_pc": 65,
+              "family": null,
+              "instruction_count": 67,
+              "kind": "positive_control",
+              "measured": {
+                "capability_faults": 0,
+                "dispatches_the_site": true,
+                "engine_launches": 1,
+                "issued": 1,
+                "simulated_cycles": 33047,
+                "trap_class": 5,
+                "trap_pc": 67
+              },
+              "predicted": {
+                "dispatches_the_site": true,
+                "trap_class": 5,
+                "trap_pc": 67
+              },
+              "site_pc": 66,
+              "target": "qwen3-8b-hbm-single-chip"
+            },
+            {
+              "agrees": true,
+              "entry_pc": 70,
+              "family": "SELECTION.ARGMAX",
+              "instruction_count": 71,
+              "kind": "own_pc_entry",
+              "measured": {
+                "capability_faults": 0,
+                "dispatches_the_site": false,
+                "engine_launches": 0,
+                "issued": 0,
+                "simulated_cycles": 25,
+                "trap_class": 13,
+                "trap_pc": 70
+              },
+              "predicted": {
+                "dispatches_the_site": false,
+                "trap_class": 13,
+                "trap_pc": 70
+              },
+              "site_pc": 70,
+              "target": "qwen3-8b-hbm-single-chip"
+            }
+          ],
+          "source_bound": false,
+          "status": "pass",
+          "vector_set_committed": false,
+          "why_it_does_not_make_a_field_true": "a dispatch under a mid-program entry is not this rung's claim. G1d asks for the head to execute ON THE COMPOSED TRUNK OUTPUT and for its result to be compared: under a mid-program entry the vehicle's result memory holds its initialisation pattern, no trunk has run, and no word was compared against golden. The observation is recorded because it is a measurement and it bounds what is missing; it is not allowed to move a gate field"
+        },
+        "execution_measured": {
+          "fault_pc": 32,
+          "head_site_count": 5,
+          "head_sites": [
+            {
+              "family_is_trapped_capability_by_the_bridge": false,
+              "family_launch_count_in_the_run": null,
+              "fetched_by_the_integrated_run": false,
+              "issued": false,
+              "kernel_id": "final_norm",
+              "mnemonic": "VECTOR.RMS_NORM",
+              "numeric_contract": "qwen3_rmsnorm_fp32_bf16_v1",
+              "operator_descriptor_id": 192,
+              "pc": 66
+            },
+            {
+              "family_is_trapped_capability_by_the_bridge": false,
+              "family_launch_count_in_the_run": null,
+              "fetched_by_the_integrated_run": false,
+              "issued": false,
+              "kernel_id": "last_token_select",
+              "mnemonic": "DMA.GATHER",
+              "numeric_contract": "exact_index_select_v1",
+              "operator_descriptor_id": 198,
+              "pc": 68
+            },
+            {
+              "family_is_trapped_capability_by_the_bridge": false,
+              "family_launch_count_in_the_run": null,
+              "fetched_by_the_integrated_run": false,
+              "issued": false,
+              "kernel_id": "vocabulary_projection",
+              "mnemonic": "TENSOR.MATMUL",
+              "numeric_contract": "bf16_bf16_fp32_blocked_rne_v1",
+              "operator_descriptor_id": 204,
+              "pc": 69
+            },
+            {
+              "family_is_trapped_capability_by_the_bridge": true,
+              "family_launch_count_in_the_run": 0,
+              "fetched_by_the_integrated_run": false,
+              "issued": false,
+              "kernel_id": "token_selection",
+              "mnemonic": "SELECTION.ARGMAX",
+              "numeric_contract": "greedy_lowest_token_id_argmax_v1",
+              "operator_descriptor_id": 211,
+              "pc": 70
+            },
+            {
+              "family_is_trapped_capability_by_the_bridge": true,
+              "family_launch_count_in_the_run": 0,
+              "fetched_by_the_integrated_run": false,
+              "issued": false,
+              "kernel_id": "token_append",
+              "mnemonic": "SELECTION.TOKEN_APPEND",
+              "numeric_contract": "exact_token_append_eos_v1",
+              "operator_descriptor_id": 217,
+              "pc": 72
+            }
+          ],
+          "head_sites_fetched": 0,
+          "instructions_fetched": 33,
+          "roles": {
+            "argmax": {
+              "fetched_by_the_integrated_run": false,
+              "in_rtl_on_the_composed_trunk_output": false,
+              "kernel_id": "token_selection",
+              "pc": 70
+            },
+            "final_norm": {
+              "fetched_by_the_integrated_run": false,
+              "in_rtl_on_the_composed_trunk_output": false,
+              "kernel_id": "final_norm",
+              "pc": 66
+            },
+            "lm_head": {
+              "fetched_by_the_integrated_run": false,
+              "in_rtl_on_the_composed_trunk_output": false,
+              "kernel_id": "vocabulary_projection",
+              "pc": 69
+            }
+          },
+          "trap_class": 4,
+          "why": "the integrated run fetched 33 instruction(s) of one pass and failed closed at PC 32 with trap class 4. Every head instruction lies at PC 66 or later, so none was fetched, none was issued, and none launched"
+        },
+        "final_norm_in_rtl": false,
+        "head_named_by": "every issue site after the layer loop's back edge (PC 64), named by the certified Kernel IR kernel each OPERATOR descriptor's source_kernel_id points at",
+        "kernel_ir": {
+          "graph_id": "84bb97dd1243553f170fde014c15c76c6adf0b80f0ef3bdad27a015577b6c24b",
+          "path": "build/ir-v3/qwen3-8b/kernel_ir.v3.json",
+          "sha256": "62499454381d24641f8cedda00f049aff61b4aa96410fa3fe460e0044df567e6"
+        },
+        "lm_head_in_rtl": false,
+        "mismatched_logits": null,
+        "operators": [
+          {
+            "kernel_id": "final_norm",
+            "kernel_kind": "RMS_NORM",
+            "mnemonic": "VECTOR.RMS_NORM",
+            "numeric_contract": "qwen3_rmsnorm_fp32_bf16_v1",
+            "operator_descriptor_id": 192,
+            "pc": 66,
+            "slots": [
+              {
+                "declared_dims": [
+                  512,
+                  4096
+                ],
+                "dtype": 16,
+                "object_id": 18,
+                "rank": 2,
+                "slot": "input_view_0",
+                "view_descriptor_id": 189
+              },
+              {
+                "declared_dims": [
+                  4096
+                ],
+                "dtype": 16,
+                "object_id": 13,
+                "rank": 1,
+                "slot": "input_view_1",
+                "view_descriptor_id": 190
+              },
+              {
+                "declared_dims": [
+                  512,
+                  4096
+                ],
+                "dtype": 16,
+                "object_id": 19,
+                "rank": 2,
+                "slot": "output_view_0",
+                "view_descriptor_id": 191
+              }
+            ]
+          },
+          {
+            "kernel_id": "last_token_select",
+            "kernel_kind": "LAST_TOKEN_SELECT",
+            "mnemonic": "DMA.GATHER",
+            "numeric_contract": "exact_index_select_v1",
+            "operator_descriptor_id": 198,
+            "pc": 68,
+            "slots": [
+              {
+                "declared_dims": [
+                  1
+                ],
+                "dtype": 4,
+                "object_id": 15,
+                "rank": 1,
+                "slot": "input_view_0",
+                "view_descriptor_id": 193
+              },
+              {
+                "declared_dims": [
+                  8704,
+                  4096
+                ],
+                "dtype": 16,
+                "object_id": 19,
+                "rank": 2,
+                "slot": "input_view_1",
+                "view_descriptor_id": 194
+              },
+              {
+                "declared_dims": [
+                  1,
+                  4096
+                ],
+                "dtype": 16,
+                "object_id": 27,
+                "rank": 2,
+                "slot": "output_view_0",
+                "view_descriptor_id": 195
+              }
+            ]
+          },
+          {
+            "kernel_id": "vocabulary_projection",
+            "kernel_kind": "VOCAB_PROJECT",
+            "mnemonic": "TENSOR.MATMUL",
+            "numeric_contract": "bf16_bf16_fp32_blocked_rne_v1",
+            "operator_descriptor_id": 204,
+            "pc": 69,
+            "slots": [
+              {
+                "declared_dims": [
+                  1,
+                  4096
+                ],
+                "dtype": 16,
+                "object_id": 27,
+                "rank": 2,
+                "slot": "input_view_0",
+                "view_descriptor_id": 200
+              },
+              {
+                "declared_dims": [
+                  151936,
+                  4096
+                ],
+                "dtype": 16,
+                "object_id": 14,
+                "rank": 2,
+                "slot": "input_view_1",
+                "view_descriptor_id": 201
+              },
+              {
+                "declared_dims": [
+                  1,
+                  151936
+                ],
+                "dtype": 16,
+                "object_id": 37,
+                "rank": 2,
+                "slot": "output_view_0",
+                "view_descriptor_id": 202
+              }
+            ]
+          },
+          {
+            "kernel_id": "token_selection",
+            "kernel_kind": "ARGMAX",
+            "mnemonic": "SELECTION.ARGMAX",
+            "numeric_contract": "greedy_lowest_token_id_argmax_v1",
+            "operator_descriptor_id": 211,
+            "pc": 70,
+            "slots": [
+              {
+                "declared_dims": [
+                  151936
+                ],
+                "dtype": 16,
+                "object_id": 37,
+                "rank": 1,
+                "slot": "input_view_0",
+                "view_descriptor_id": 206
+              },
+              {
+                "declared_dims": [
+                  1
+                ],
+                "dtype": 4,
+                "object_id": 28,
+                "rank": 1,
+                "slot": "output_view_0",
+                "view_descriptor_id": 207
+              }
+            ]
+          },
+          {
+            "kernel_id": "token_append",
+            "kernel_kind": "TOKEN_APPEND",
+            "mnemonic": "SELECTION.TOKEN_APPEND",
+            "numeric_contract": "exact_token_append_eos_v1",
+            "operator_descriptor_id": 217,
+            "pc": 72,
+            "slots": [
+              {
+                "declared_dims": [
+                  1
+                ],
+                "dtype": 4,
+                "object_id": 28,
+                "rank": 1,
+                "slot": "input_view_0",
+                "view_descriptor_id": 214
+              },
+              {
+                "declared_dims": [
+                  1
+                ],
+                "dtype": 4,
+                "object_id": 36,
+                "rank": 1,
+                "slot": "output_view_0",
+                "view_descriptor_id": 215
+              }
+            ]
+          }
+        ],
+        "shard_composition_check": {
+          "activation_provenance": "real BF16 embedding rows of width 4096, read through the deployment's own declared checkpoint segments. These are NOT the composed trunk output: the trunk cannot run in this vehicle, so no composed trunk output exists. What this measures is the exactness of the SHARD COMPOSITION at the head's real shape and on the real weights; it establishes nothing about the logits of the governed workload",
+          "activations": [
+            {
+              "row_sha256": "83e977e1d4d8a904fefb1d89ffd00c7c53d9556ce10fafeedad20f7782d75827",
+              "shard": "model-00001-of-00005.safetensors",
+              "token_id": 151644
+            },
+            {
+              "row_sha256": "34e7ceea3e1fa26e83aa6619cdeda258630b58e5f52eca8e941125e2c6247d31",
+              "shard": "model-00001-of-00005.safetensors",
+              "token_id": 872
+            },
+            {
+              "row_sha256": "1b45bce97685ba7ad10fda1c9ea013342a298c6e0e56cba918379fd695cca4b9",
+              "shard": "model-00001-of-00005.safetensors",
+              "token_id": 198
+            }
+          ],
+          "backend_identity": {
+            "backend": "numpy",
+            "blas": {
+              "name": "scipy-openblas",
+              "version": "0.3.29"
+            },
+            "blocked_association": "numpy.matmul over binary32, blocked by the linked BLAS; fixed by (library, version, device, shape, thread count)",
+            "device": "host",
+            "device_name": "x86_64 x86_64",
+            "flags": {
+              "MKL_NUM_THREADS": "",
+              "NUMEXPR_NUM_THREADS": "",
+              "OMP_NUM_THREADS": "",
+              "OPENBLAS_NUM_THREADS": "",
+              "VECLIB_MAXIMUM_THREADS": "",
+              "allow_tf32": false,
+              "float32_matmul_precision": "highest"
+            },
+            "library": "numpy",
+            "library_version": "2.2.6"
+          },
+          "by_contract": {
+            "bf16_bf16_fp32_blocked_rne_v1": {
+              "association": "the executing implementation's, fixed by (library, version, device, shape, thread count)",
+              "is_the_operator_declared_contract": true,
+              "per_activation": [
+                {
+                  "compared_logits": 151936,
+                  "reduction_split_bf16_differing_elements": 28,
+                  "reduction_split_binary32_differing_elements": 123028,
+                  "row_sha256": "83e977e1d4d8a904fefb1d89ffd00c7c53d9556ce10fafeedad20f7782d75827",
+                  "row_shard_bf16_differing_elements": 0,
+                  "row_shard_binary32_differing_elements": 233,
+                  "token_id": 151644
+                },
+                {
+                  "compared_logits": 151936,
+                  "reduction_split_bf16_differing_elements": 26,
+                  "reduction_split_binary32_differing_elements": 119300,
+                  "row_sha256": "34e7ceea3e1fa26e83aa6619cdeda258630b58e5f52eca8e941125e2c6247d31",
+                  "row_shard_bf16_differing_elements": 0,
+                  "row_shard_binary32_differing_elements": 216,
+                  "token_id": 872
+                },
+                {
+                  "compared_logits": 151936,
+                  "reduction_split_bf16_differing_elements": 34,
+                  "reduction_split_binary32_differing_elements": 129827,
+                  "row_sha256": "1b45bce97685ba7ad10fda1c9ea013342a298c6e0e56cba918379fd695cca4b9",
+                  "row_shard_bf16_differing_elements": 0,
+                  "row_shard_binary32_differing_elements": 236,
+                  "token_id": 198
+                }
+              ],
+              "reduction_split_differs_at_the_output_precision": true,
+              "reduction_split_differs_in_binary32": true,
+              "row_shard_exact_at_the_declared_output_precision": true,
+              "row_shard_exact_in_binary32": false
+            },
+            "bf16_bf16_fp32_sequential_rne_v1": {
+              "association": "fixed by the contract in ascending reduction index, independently of operand shape",
+              "is_the_operator_declared_contract": false,
+              "per_activation": [
+                {
+                  "compared_logits": 151936,
+                  "reduction_split_bf16_differing_elements": 45,
+                  "reduction_split_binary32_differing_elements": 140434,
+                  "row_sha256": "83e977e1d4d8a904fefb1d89ffd00c7c53d9556ce10fafeedad20f7782d75827",
+                  "row_shard_bf16_differing_elements": 0,
+                  "row_shard_binary32_differing_elements": 0,
+                  "token_id": 151644
+                },
+                {
+                  "compared_logits": 151936,
+                  "reduction_split_bf16_differing_elements": 48,
+                  "reduction_split_binary32_differing_elements": 140842,
+                  "row_sha256": "34e7ceea3e1fa26e83aa6619cdeda258630b58e5f52eca8e941125e2c6247d31",
+                  "row_shard_bf16_differing_elements": 0,
+                  "row_shard_binary32_differing_elements": 0,
+                  "token_id": 872
+                },
+                {
+                  "compared_logits": 151936,
+                  "reduction_split_bf16_differing_elements": 67,
+                  "reduction_split_binary32_differing_elements": 143108,
+                  "row_sha256": "1b45bce97685ba7ad10fda1c9ea013342a298c6e0e56cba918379fd695cca4b9",
+                  "row_shard_bf16_differing_elements": 0,
+                  "row_shard_binary32_differing_elements": 0,
+                  "token_id": 198
+                }
+              ],
+              "reduction_split_differs_at_the_output_precision": true,
+              "reduction_split_differs_in_binary32": true,
+              "row_shard_exact_at_the_declared_output_precision": true,
+              "row_shard_exact_in_binary32": true
+            }
+          },
+          "does_not_establish": [
+            "any RTL execution of the head: this is the reference model on the reference backend, and no RTL ran",
+            "the logits of the governed workload: the activation is not the composed trunk output, which does not exist",
+            "exactness for an activation not measured here: the binary32 agreement under the declared contract is a property of this backend at these shapes and is reported per activation"
+          ],
+          "falsification_control_has_teeth": true,
+          "operator_declared_contract": "bf16_bf16_fp32_blocked_rne_v1",
+          "ran": true,
+          "row_shard_composition_is_exact": true,
+          "row_shard_composition_is_exact_in_binary32_under_the_declared_contract": false,
+          "weight": {
+            "bytes": 1244659712,
+            "columns": 4096,
+            "declared_segment_sha256": "6e46ee56769d64b9a338f350100bdfca5f26a91c3fb5bf479ffcb36c733f7939",
+            "object_id": 14,
+            "rows": 151936,
+            "selected_matrix_sha256": "6e46ee56769d64b9a338f350100bdfca5f26a91c3fb5bf479ffcb36c733f7939",
+            "shard": "model-00005-of-00005.safetensors"
+          },
+          "what_the_measurement_says": "measured, not argued. Under the operator's own declared blocked contract the four row shards reproduce the whole projection exactly at the precision the operator writes -- every one of the 151,936 BF16 output codes -- while a small number of the binary32 accumulators before that single rounding differ, because the blocked contract delegates the association to the implementation and this BLAS associates a 37,984-row operand differently from a 151,936-row one. Under the sequential contract, which fixes the association independently of shape, the row shards agree in binary32 as well. Splitting the REDUCTION axis instead differs under both, which is the control that shows this comparison can fail",
+          "what_was_computed": "the head's projection at full dimension -- [1,4096] x [151936,4096]^T over the checkpoint's own lm_head bytes -- whole, as the 4 row shards of the plan above, and with the reduction axis split in two as a falsification control; under the operator's declared contract and under the contract that fixes the association"
+        },
+        "shard_plan": {
+          "composition_is": "concatenation along the output axis",
+          "ranges": [
+            {
+              "rows": 37984,
+              "shard": 0,
+              "start_row": 0,
+              "stop_row_exclusive": 37984
+            },
+            {
+              "rows": 37984,
+              "shard": 1,
+              "start_row": 37984,
+              "stop_row_exclusive": 75968
+            },
+            {
+              "rows": 37984,
+              "shard": 2,
+              "start_row": 75968,
+              "stop_row_exclusive": 113952
+            },
+            {
+              "rows": 37984,
+              "shard": 3,
+              "start_row": 113952,
+              "stop_row_exclusive": 151936
+            }
+          ],
+          "ranges_are_disjoint_and_contiguous": true,
+          "ranges_cover_the_axis_exactly": true,
+          "reduction_axis_extent": 4096,
+          "reduction_axis_is_partitioned": false,
+          "remainder_rows": 0,
+          "rows_per_shard": 37984,
+          "shard_count": 4,
+          "sharded_axis": "output",
+          "sharded_axis_extent": 151936,
+          "structurally_exact": true,
+          "why_that_is_exact": "each output element's complete reduction over 4096 terms happens inside one shard, so no accumulator is split and no partial sum is ever re-associated. Sharding the REDUCTION axis instead would split accumulators and is what the falsification control below exercises"
+        },
+        "what_running_the_head_would_cost": {
+          "hours_in_concurrent_row_shards": 1.3,
+          "hours_whole": 5.18,
+          "mac_count": 622329856,
+          "measured_integrated_rate": {
+            "caveat": "this is the rate THAT run measured, on a machine other work was sharing. Another run of the same vehicle on a quieter box measures a higher one; the figure is reported with the run it came from rather than as a property of the design",
+            "mac_count": 50331648,
+            "macs_per_second": 33355.1,
+            "measured": true,
+            "simulation_wall_seconds": 1508.965,
+            "source": "results/rtl/abi3_shipped_prefix_campaign.json: its own matmul_mac_count and the sim_wall_s of its MEASURE line"
+          },
+          "note": "derived: the head's own multiply-accumulates at the rate the integrated vehicle itself measured. The shard figure is wall time with the shards run concurrently, which is exact because the shards share no accumulator -- see shard_plan. It is what the head would cost, not what this rung cost, which ran no head at all",
+          "seconds_whole": 18657.7
+        },
+        "why_null": "mismatched_logits is null, not 0: zero logits were compared because the head never ran. Zero mismatches over zero comparisons is not evidence"
+      },
+      "oracle": {
+        "agreement": false,
+        "all_generated_token_ids": [
+          3925,
+          13,
+          151645
+        ],
+        "artifact_sha256": "d9c7dd222cff342f84ff34be3600f8b41c6c8c6c0280a523737fc53d1f20c6ec",
+        "generated_token_ids": [
+          3925
+        ],
+        "path": "results/abi3/qwen3_reference_oracle_eos.json",
+        "stop_reason": "eos",
+        "token_field": "results.TA-QW-EOS-1.generated_token_ids",
+        "why_not_agreed": "the RTL emitted no token: the head never executed, so record_token_ids is empty. This field is never set from the oracle's own ids"
+      },
+      "record_token_ids": [],
+      "record_token_ids_note": "the RTL emitted no token id. This list is what the RTL emitted and is never filled from the oracle; a rung that copied the oracle's ids across would agree with itself",
+      "storage_class": "hbm",
+      "workload_id": "TA-QW-EOS-1"
+    }
+  ],
+  "rerun_not_retained": {
+    "agreement": {
+      "capability_fault_count": {
+        "agree": true,
+        "rerun": 4,
+        "retained": 4
+      },
+      "expected_cases": {
+        "agree": true,
+        "rerun": [
+          {
+            "fault": 32,
+            "fetched": 33,
+            "index": 0,
+            "issued": 11,
+            "launches": 10,
+            "responses": 11,
+            "retired": 32,
+            "trap": 4,
+            "views": 33,
+            "words": 24832
+          },
+          {
+            "fault": 32,
+            "fetched": 33,
+            "index": 1,
+            "issued": 11,
+            "launches": 10,
+            "responses": 11,
+            "retired": 32,
+            "trap": 4,
+            "views": 33,
+            "words": 24832
+          },
+          {
+            "fault": 13,
+            "fetched": 14,
+            "index": 2,
+            "issued": 5,
+            "launches": 4,
+            "responses": 5,
+            "retired": 13,
+            "trap": 4,
+            "views": 11,
+            "words": 20736
+          },
+          {
+            "fault": 14,
+            "fetched": 15,
+            "index": 3,
+            "issued": 5,
+            "launches": 4,
+            "responses": 5,
+            "retired": 14,
+            "trap": 4,
+            "views": 17,
+            "words": 20736
+          }
+        ],
+        "retained": [
+          {
+            "fault": 32,
+            "fetched": 33,
+            "index": 0,
+            "issued": 11,
+            "launches": 10,
+            "responses": 11,
+            "retired": 32,
+            "trap": 4,
+            "views": 33,
+            "words": 24832
+          },
+          {
+            "fault": 32,
+            "fetched": 33,
+            "index": 1,
+            "issued": 11,
+            "launches": 10,
+            "responses": 11,
+            "retired": 32,
+            "trap": 4,
+            "views": 33,
+            "words": 24832
+          },
+          {
+            "fault": 13,
+            "fetched": 14,
+            "index": 2,
+            "issued": 5,
+            "launches": 4,
+            "responses": 5,
+            "retired": 13,
+            "trap": 4,
+            "views": 11,
+            "words": 20736
+          },
+          {
+            "fault": 14,
+            "fetched": 15,
+            "index": 3,
+            "issued": 5,
+            "launches": 4,
+            "responses": 5,
+            "retired": 14,
+            "trap": 4,
+            "views": 17,
+            "words": 20736
+          }
+        ]
+      },
+      "operator_admission": {
+        "agree": true,
+        "rerun": {
+          "capability_trapped_family_count": 6,
+          "cases_with_mapped_placement": 0,
+          "launches": {
+            "ATTENTION.GQA": 0,
+            "DMA.SCATTER": 0,
+            "SELECTION.ARGMAX": 0,
+            "SELECTION.TOKEN_APPEND": 0,
+            "VECTOR.ADD": 0,
+            "VECTOR.SILU_MUL": 0
+          },
+          "measured": true,
+          "reached_families": [],
+          "reached_family_count": 0,
+          "result_injection": false,
+          "trapped_families": [
+            "VECTOR.ADD",
+            "VECTOR.SILU_MUL",
+            "DMA.SCATTER",
+            "ATTENTION.GQA",
+            "SELECTION.ARGMAX",
+            "SELECTION.TOKEN_APPEND"
+          ],
+          "vector_generation": "mapped",
+          "vehicle": "rtl/test/a3_shipped_prefix_top.sv"
+        },
+        "retained": {
+          "capability_trapped_family_count": 6,
+          "cases_with_mapped_placement": 0,
+          "launches": {
+            "ATTENTION.GQA": 0,
+            "DMA.SCATTER": 0,
+            "SELECTION.ARGMAX": 0,
+            "SELECTION.TOKEN_APPEND": 0,
+            "VECTOR.ADD": 0,
+            "VECTOR.SILU_MUL": 0
+          },
+          "measured": true,
+          "reached_families": [],
+          "reached_family_count": 0,
+          "result_injection": false,
+          "trapped_families": [
+            "VECTOR.ADD",
+            "VECTOR.SILU_MUL",
+            "DMA.SCATTER",
+            "ATTENTION.GQA",
+            "SELECTION.ARGMAX",
+            "SELECTION.TOKEN_APPEND"
+          ],
+          "vector_generation": "mapped",
+          "vehicle": "rtl/test/a3_shipped_prefix_top.sv"
+        }
+      },
+      "real_engine_launch_count": {
+        "agree": true,
+        "rerun": 28,
+        "retained": 28
+      },
+      "result_word_count": {
+        "agree": true,
+        "rerun": 91136,
+        "retained": 91136
+      },
+      "simulated_cycles": {
+        "agree": true,
+        "rerun": 252057600,
+        "retained": 252057600
+      },
+      "status": {
+        "agree": true,
+        "rerun": "pass",
+        "retained": "pass"
+      }
+    },
+    "agrees_on_every_compared_field": true,
+    "artifact_sha256": "69e6990dc1d0a9b952d54cedacbf310807300ba9ffb910b39455cedc2daa4915",
+    "git": {
+      "commit": "a922ef3879325e2921a4da951d6ed3eb03333198",
+      "worktree_dirty": false
+    },
+    "vector_set_sha256": "28abd940ae1669e7de2858d7397031f84877974d53e2dcf6b5aee217dd065dec",
+    "what_it_is": "an independent execution of the same integrated campaign, run for this rung at this commit in a separately pinned worktree",
+    "why_not_retained": "it is not a file of this repository, so nothing in this rung is computed from it; it is recorded as agreement with the campaign the tree does hold"
+  },
+  "schema": "opentallas.rtl.g1d_token.v1",
+  "what_this_rung_is": "the rung where an RTL-emitted token id first exists: the final normalisation, the LM head and the argmax executing in the integrated RTL on the composed trunk output",
+  "workload_id": "TA-QW-EOS-1"
+}
