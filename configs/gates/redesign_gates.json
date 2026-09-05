@@ -46,10 +46,10 @@
       "fails_when": "Either exceeds its band.",
       "evaluator": {
         "type": "artifact_field",
-        "glob": "results/derived/*reconciliation*.json",
-        "require": {"field": "targets.rom.binding_regime.same_regime", "equals": true},
-        "also_require": {"field": "targets.hbm.binding_regime.same_regime", "equals": true},
-        "note": "The regime half is met by results/derived/qwen3_n5_design_target_reconciliation.json, which writes same_regime under targets.rom and targets.hbm; the first spec read a top-level path that no artifact carries, and the checker correctly failed on the absent key. The ROM half is the informative one; the HBM half is an identity of the byte-split attribution (weight_read is the argmax by construction of a 0.8677 weight share) and is required here for completeness, not as independent evidence. The RTL-calibration half has no artifact yet, so this gate is partial by construction and reports the weaker of the two."
+        "glob": "results/derived/*calibration*.json",
+        "require": {"field": "calibration.block_cycles_within_band", "equals": true},
+        "also_require": {"field": "calibration.derived_machine_reproduces_anchor", "equals": true},
+        "note": "G4 has two halves: the cycle model reproduces the RTL's measured block cycles within the stated band (docs/CHIP_ARCHITECTURE_DESIGN.md section 11.5, L3: +/-10 percent, boundary 120 cycles), AND the derived machine reproduces the analytical design point. The regime half already has its own gate, C3, and passed there once its field path was corrected. For one commit this gate passed on C3's artifact alone -- half its statement -- which is the not_evaluable defect in miniature; it now reads the L3 calibration artifact, which does not exist yet, and fails until it does. The artifact is produced when tools/derive_cycle_machine.py is re-parameterised from the L1 block-cycle records (results/rtl/abi3_pipelined_lane.json and successors)."
       }
     },
 

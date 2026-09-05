@@ -30,8 +30,8 @@
       "id": "G4",
       "kind": "terminal",
       "statement": "The cycle model reproduces the measured block cycles of the RTL within a stated band, and the derived machine reproduces the analytical design point.",
-      "status": "pass",
-      "why": "results/derived/qwen3_n5_design_target_reconciliation.json: targets.rom.binding_regime.same_regime == True and targets.hbm.binding_regime.same_regime == True"
+      "status": "fail",
+      "why": "no artifact matches results/derived/*calibration*.json"
     },
     {
       "fails_when": "One bit differs.",
@@ -106,9 +106,9 @@
       "why": "26 cycle artifact(s) and none carries plausibility.total_over_binding_floor; a run that cannot state its own bandwidth floor cannot be believed"
     }
   ],
-  "passing": 6,
+  "passing": 5,
   "plan": "docs/OPENTALLAS_REDESIGN_PLAN.md",
   "principle": "Absence of evidence is FAIL, never not_evaluable. The previous programme's TPOT gate had two states, not_evaluable and pass, with no reachable fail; it stayed not_evaluable for the life of the project while the machine drifted 44,000x from target. A gate that cannot fail is a note. Every gate below reports FAIL until evidence says otherwise.",
   "schema": "opentallas.gates.redesign_result.v1",
-  "terminal_passing": 1
+  "terminal_passing": 0
 }
