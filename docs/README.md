@@ -102,6 +102,11 @@ owns the question:
 
 ## ABI and architecture decisions
 
+- [Chip architecture design](CHIP_ARCHITECTURE_DESIGN.md) — revised implementation proposal.
+- [Checked chip resource budgets](CHIP_RESOURCE_BUDGETS.md) — exact Qwen placement,
+  memory reserves, networks, engine service limits and source-bound physical snapshot.
+- [Architecture review handoff](CHIP_ARCHITECTURE_REVIEW_HANDOFF.md) — fixes,
+  verification and acceptance tasks for ongoing RTL/compiler work.
 - [ABI 3.0 architecture decision](TENSOR_ACCELERATOR_ABI_3_ARCHITECTURE_DECISION.md)
   — unified program, runtime, verifier, and RTL direction.
 - [ABI 3.0 tensor-datapath decode-utilization decision](ABI3_TENSOR_DATAPATH_DECODE_UTILIZATION_ADR.md)

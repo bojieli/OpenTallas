@@ -19,6 +19,12 @@ connects model accounting, architecture simulation, a shared compiler/runtime
 ABI, public-reference RTL, and open-PDK circuit experiments in one evidence
 chain. It is independent of Taalas and does not claim to reproduce HC1.
 
+For implementation work, use the [revised chip architecture](docs/CHIP_ARCHITECTURE_DESIGN.md),
+[checked resource budgets](docs/CHIP_RESOURCE_BUDGETS.md), and
+[review handoff](docs/CHIP_ARCHITECTURE_REVIEW_HANDOFF.md). These correct physical
+placement and service assumptions; the historical analytical studies below
+remain separate from a correctness-qualified chip throughput result.
+
 ![Conceptual OpenTallas model-specific decode architecture](docs/assets/architecture-overview.svg)
 
 ## The headline—and the evidence behind it
