@@ -9,7 +9,7 @@
   "emitted": [
     {
       "base_capabilities": {
-        "hbm": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+        "hbm": "configs/hardware/abi3_capability/hbm_sram_cluster_32.json",
         "rom": "configs/hardware/abi3_capability/rom_deepseek_v4_array_32.json"
       },
       "batch_size": 1,
@@ -46,7 +46,7 @@
       "emitted": {
         "artifact": "results/derived/deepseek-v4-flash-0731__rom-n5-native-hbmkv-array-hybrid-x32__b200-sxm-x16-hybrid_machine_pair.json",
         "deployment_audit": "results/derived/deepseek-v4-flash-0731__rom-n5-native-hbmkv-array-hybrid-x32__b200-sxm-x16-hybrid_deployment_audit.json",
-        "hbm_capability": "configs/hardware/abi3_capability/n5_design_target/hbm_sram_single_chip_n5_design_target_deepseek-v4-flash-0731__rom-n5-native-hbmkv-array-hybrid-x32__b200-sxm-x16-hybrid_v1.json",
+        "hbm_capability": "configs/hardware/abi3_capability/n5_design_target/hbm_sram_cluster_32_n5_design_target_deepseek-v4-flash-0731__rom-n5-native-hbmkv-array-hybrid-x32__b200-sxm-x16-hybrid_v1.json",
         "hbm_cost_table": "configs/hardware/n5_design_target/abi3_cost_n5_design_target_deepseek-v4-flash-0731__rom-n5-native-hbmkv-array-hybrid-x32__b200-sxm-x16-hybrid_hbm_v1.json",
         "rom_capability": "configs/hardware/abi3_capability/n5_design_target/rom_deepseek_v4_array_32_n5_design_target_deepseek-v4-flash-0731__rom-n5-native-hbmkv-array-hybrid-x32__b200-sxm-x16-hybrid_v1.json",
         "rom_cost_table": "configs/hardware/n5_design_target/abi3_cost_n5_design_target_deepseek-v4-flash-0731__rom-n5-native-hbmkv-array-hybrid-x32__b200-sxm-x16-hybrid_rom_v1.json"
@@ -179,7 +179,7 @@
     },
     {
       "base_capabilities": {
-        "hbm": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+        "hbm": "configs/hardware/abi3_capability/hbm_sram_cluster_32.json",
         "rom": "configs/hardware/abi3_capability/rom_deepseek_v4_array_32.json"
       },
       "batch_size": 1,
@@ -222,7 +222,7 @@
       "emitted": {
         "artifact": "results/derived/deepseek-v4-flash-0731__rom-n5-native-sramkv-array-hybrid-x30__b200-sxm-x15-hybrid_machine_pair.json",
         "deployment_audit": "results/derived/deepseek-v4-flash-0731__rom-n5-native-sramkv-array-hybrid-x30__b200-sxm-x15-hybrid_deployment_audit.json",
-        "hbm_capability": "configs/hardware/abi3_capability/n5_design_target/hbm_sram_single_chip_n5_design_target_deepseek-v4-flash-0731__rom-n5-native-sramkv-array-hybrid-x30__b200-sxm-x15-hybrid_v1.json",
+        "hbm_capability": "configs/hardware/abi3_capability/n5_design_target/hbm_sram_cluster_32_n5_design_target_deepseek-v4-flash-0731__rom-n5-native-sramkv-array-hybrid-x30__b200-sxm-x15-hybrid_v1.json",
         "hbm_cost_table": "configs/hardware/n5_design_target/abi3_cost_n5_design_target_deepseek-v4-flash-0731__rom-n5-native-sramkv-array-hybrid-x30__b200-sxm-x15-hybrid_hbm_v1.json",
         "rom_capability": "configs/hardware/abi3_capability/n5_design_target/rom_deepseek_v4_array_32_n5_design_target_deepseek-v4-flash-0731__rom-n5-native-sramkv-array-hybrid-x30__b200-sxm-x15-hybrid_v1.json",
         "rom_cost_table": "configs/hardware/n5_design_target/abi3_cost_n5_design_target_deepseek-v4-flash-0731__rom-n5-native-sramkv-array-hybrid-x30__b200-sxm-x15-hybrid_rom_v1.json"

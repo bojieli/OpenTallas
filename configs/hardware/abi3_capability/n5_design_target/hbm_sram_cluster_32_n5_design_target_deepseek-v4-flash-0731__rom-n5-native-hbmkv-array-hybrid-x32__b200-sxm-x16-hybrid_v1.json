@@ -3,10 +3,10 @@
     "major": 3,
     "minor": 0
   },
-  "capability_id": "hbm_sram_single_chip_n5_design_target_deepseek-v4-flash-0731__rom-n5-native-sramkv-array-hybrid-x30__b200-sxm-x15-hybrid_v1",
+  "capability_id": "hbm_sram_cluster_32_n5_design_target_deepseek-v4-flash-0731__rom-n5-native-hbmkv-array-hybrid-x32__b200-sxm-x16-hybrid_v1",
   "derived_from": {
     "analytical_artifact": "results/roofline/n5_vs_b200/analytical.json",
-    "base_capability": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+    "base_capability": "configs/hardware/abi3_capability/hbm_sram_cluster_32.json",
     "changed": [
       "technology_view",
       "capability_id",
@@ -22,7 +22,7 @@
       "memory.sram.bytes",
       "limits.max_context_positions"
     ],
-    "design_point": "DSV4-Flash/b200_sxm-x15-hybrid",
+    "design_point": "DSV4-Flash/b200_sxm-x16-hybrid",
     "generator": "tools/derive_cycle_machine.py",
     "note": "technology_view n5_design_target is deliberately outside runtime/cycle/machine.py CHARACTERIZED_TECHNOLOGY_VIEWS, so every structural count this record advertises is graded `assumed` with no code change, and every run against it prints the not-a-performance-claim note.  topology_class is forced to SINGLE_CHIP because the derivation collapses the design point's devices into one logical device; this record is a MACHINE for that collapsed device and is not the deployment target of a multi-node backend."
   },
@@ -94,25 +94,25 @@
     "max_vocabulary": 262144
   },
   "link": {
-    "bisection_links": 0,
+    "bisection_links": 64,
     "chunk_bytes": 65536,
     "credit_bound": 32,
     "endpoints_per_node": 8,
-    "peers_per_node": 0,
+    "peers_per_node": 31,
     "retry_bound": 3,
-    "route_groups": 0,
+    "route_groups": 4,
     "virtual_channels": 4
   },
   "memory": {
     "hbm": {
       "burst_bytes": 64,
-      "bytes": 1546188226560,
-      "channels": 480
+      "bytes": 1649267441664,
+      "channels": 512
     },
     "sram": {
       "bank_bytes": 4194304,
       "banks": 32,
-      "bytes": 2013265920,
+      "bytes": 2147483648,
       "ports": 4
     }
   },

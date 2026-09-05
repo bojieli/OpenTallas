@@ -13,7 +13,8 @@
       "model_id": "deepseek-v4-flash-0731",
       "role": "rom",
       "status": "no deployment built",
-      "why": "no compiled deepseek-v4-flash-0731 deployment is bound to configs/hardware/abi3_capability/rom_deepseek_v4.json"
+      "unbuildable": true,
+      "why": "no compiled deepseek-v4-flash-0731 deployment is bound to configs/hardware/abi3_capability/rom_deepseek_v4.json -- and none can be: the Flash wafer rung's ROM side is built but its single-node GPU comparator cannot be: --profile single-chip needs 229,845,618,692 bytes per node against the 103,079,215,104 the capability declares"
     }
   },
   "gate": "C2",
@@ -34,5 +35,5 @@
     "SPAN_TOKENS": 1
   },
   "schema": "opentallas.deployment_audit.v2",
-  "verdict": "NOT COMPARABLE: no deployment built -- rom: no compiled deepseek-v4-flash-0731 deployment is bound to configs/hardware/abi3_capability/rom_deepseek_v4.json; hbm: no compiled deepseek-v4-flash-0731 deployment is bound to configs/hardware/abi3_capability/hbm_sram_single_chip.json.  A cell with no compiled deployment pair has no deployment-side evidence, and absence is a failure, not a skip."
+  "verdict": "NOT COMPARABLE: no deployment built -- rom: no compiled deepseek-v4-flash-0731 deployment is bound to configs/hardware/abi3_capability/rom_deepseek_v4.json -- and none can be: the Flash wafer rung's ROM side is built but its single-node GPU comparator cannot be: --profile single-chip needs 229,845,618,692 bytes per node against the 103,079,215,104 the capability declares; hbm: no compiled deepseek-v4-flash-0731 deployment is bound to configs/hardware/abi3_capability/hbm_sram_single_chip.json.  A cell with no compiled deployment pair has no deployment-side evidence, and absence is a failure, not a skip."
 }

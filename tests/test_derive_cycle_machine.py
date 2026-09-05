@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import pathlib
 import math
 import subprocess
 import sys
@@ -425,22 +426,46 @@ def _asymmetry(report, family, field):
     return hits[0]
 
 
-@needs_shipped_pair
-def test_the_shipped_deployments_are_the_registered_ones():
-    """The audit's subject is pinned by digest, not by directory name."""
-    for base, root in (
-        ("configs/hardware/abi3_capability/rom_qwen3.json", SHIPPED_ROM_DEPLOYMENT),
-        ("configs/hardware/abi3_capability/hbm_sram_single_chip.json", SHIPPED_HBM_DEPLOYMENT),
-    ):
-        entry = SHIPPED_DEPLOYMENTS[base]
-        manifest = json.loads((root / "deployment.json").read_text())
-        assert REPO / entry["root"] == root
-        assert manifest["deployment_sha256"] == entry["deployment_sha256"], (
-            f"{root.name} is not the deployment the cited evidence names; "
-            "rebuild products go stale under evidence"
-        )
-        for path in entry["evidence"]:
-            cited = REPO / path.split(" ")[0]
+REGISTRATIONS = [
+    (base, entry)
+    for base, entries in sorted(SHIPPED_DEPLOYMENTS.items())
+    for entry in entries
+]
+
+
+@pytest.mark.parametrize(
+    "base,entry", REGISTRATIONS,
+    ids=[f"{pathlib.Path(b).stem}:{e['model_id']}" for b, e in REGISTRATIONS],
+)
+def test_every_registered_deployment_is_pinned_by_digest(base, entry):
+    """The audit's subject is pinned by digest, not by directory name.
+
+    One capability record can serve more than one model, so the table's value
+    is a list and the model id selects within it.  Every registration must name
+    a deployment that really carries the capability's own digest -- a
+    registration pointing at a bundle lowered for a different target would make
+    the gate pass on the wrong artifact -- and every cited evidence file must
+    exist.
+    """
+    from runtime.abi3.capability import Capability
+
+    root = REPO / entry["root"]
+    if not (root / "deployment.json").exists():
+        pytest.skip(f"{entry['root']} is not built in this tree")
+    manifest = json.loads((root / "deployment.json").read_text())
+    assert manifest["deployment_sha256"] == entry["deployment_sha256"], (
+        f"{root.name} is not the deployment the cited evidence names; "
+        "rebuild products go stale under evidence"
+    )
+    assert manifest["model_id"] == entry["model_id"]
+    expected = Capability.from_dict(json.loads((REPO / base).read_text())).digest
+    assert manifest["capability_digest"] == expected, (
+        f"{root.name} is registered under {base} but was lowered against a "
+        "different capability"
+    )
+    for path in entry["evidence"]:
+        cited = REPO / path.split(" ")[0]
+        if cited.suffix == ".json" or "/" in path.split(" ")[0]:
             assert cited.exists(), f"{path} is cited but absent"
 
 
@@ -715,29 +740,47 @@ def test_every_pair_artifact_carries_a_deployment_audit_verdict(path):
             )
     assert audit["pair_id"] == body["pair_id"]
     model = body["pair_id"].split("__", 1)[0]
+    rom_e9 = REPO / "build/abi3/qwen3-8b-rom-e9"
+    hbm_e9 = REPO / "build/abi3/qwen3-8b-hbm-e9"
     if model != "qwen3-8b":
-        # No DeepSeek deployment is bound to the collapsed single-chip HBM
-        # capability the derived pair prices against, and no Pro deployment
-        # exists at all.  That is a recorded failure, not a skipped cell.
+        # DeepSeek is red on both rungs, and the artifact must say which kind
+        # of red it is rather than go quiet.  The Flash ARRAY cells bind a real
+        # pair (rom_deepseek_v4_array_32 against hbm_sram_cluster_32) and fail
+        # on what the audit finds -- or, while the static walk still refuses
+        # the DeepSeek control stream, on the audit being uncarriable.  The
+        # Flash WAFER and every Pro cell fail on absence: no Pro deployment
+        # exists in any storage class, and the wafer rung's single-node GPU
+        # comparator cannot be built.  Absence and unreadability are both
+        # recorded failures, never skipped cells.
+        assert audit["comparable"] is False
+        assert audit["verdict"].startswith("NOT COMPARABLE")
+        assert audit["reason"] in (
+            "no deployment built",
+            "not comparable",
+            "audit could not be carried out",
+        ), audit["reason"]
+        return
+    if not (rom_e9.exists() and hbm_e9.exists()):
         assert audit["comparable"] is False
         assert audit["reason"] == "no deployment built"
-        assert audit["verdict"].startswith("NOT COMPARABLE: no deployment built")
         return
-    if not (SHIPPED_ROM_DEPLOYMENT.exists() and SHIPPED_HBM_DEPLOYMENT.exists()):
-        assert audit["comparable"] is False
-        assert audit["reason"] == "no deployment built"
-        return
-    assert audit["comparable"] is False
-    assert audit["reason"] == "not comparable"
-    assert "tile_depth 2048 vs 128" in audit["verdict"]
-    assert "tile_rows 128 vs 64" in audit["verdict"]
+    # AM-E9 v2 (commit b7441e8) unified the activation-buffer placement, so the
+    # Qwen pair the cells bind is comparable.  What is asserted here is that
+    # the cells bind THAT pair -- the tile-shape divergence the shipped
+    # pre-AM-E9 bundles carried is still pinned, on the shipped roots, by
+    # test_the_audit_catches_the_shipped_pairs_tile_shape_divergence.
+    assert audit["comparable"] is True, audit["verdict"]
+    assert audit["reason"] == "comparable"
     assert audit["deployments"]["rom"]["status"] == "bound"
     assert audit["deployments"]["hbm"]["status"] == "bound"
-    assert audit["deployments"]["rom"]["deployment_sha256"] == SHIPPED_DEPLOYMENTS[
-        "configs/hardware/abi3_capability/rom_qwen3.json"]["deployment_sha256"]
-    assert set(SCHEDULE_TILE_FIELDS) <= {
-        a["field"] for a in audit["asymmetries"] if a["family"] == "tensor"
-    }
+    registered = {
+        e["model_id"]: e
+        for e in SHIPPED_DEPLOYMENTS[
+            "configs/hardware/abi3_capability/rom_qwen3.json"]
+    }["qwen3-8b"]
+    assert audit["deployments"]["rom"]["deployment_sha256"] == registered[
+        "deployment_sha256"]
+    assert not [a for a in audit["asymmetries"] if a["cost_bearing"]]
 
 
 def test_the_c2_gate_fails_on_the_audits_evidence_not_on_absence():
@@ -756,10 +799,27 @@ def test_the_c2_gate_fails_on_the_audits_evidence_not_on_absence():
     # artifacts that fail and names them with their own verdicts.
     assert "fail deployment_audit.comparable == True" in result["why"]
     assert "NOT COMPARABLE" in result["why"]
-    if SHIPPED_ROM_DEPLOYMENT.exists() and SHIPPED_HBM_DEPLOYMENT.exists():
-        assert "tile_depth 2048 vs 128" in result["why"]
-    else:
-        assert "no deployment built" in result["why"]
+    # Every Qwen cell is comparable since the registration moved to the AM-E9
+    # v2 bundles, so what keeps C2 red is DeepSeek, and the reason quoted has
+    # to be DeepSeek's own -- absence on the Pro and Flash-wafer rungs, and the
+    # Flash-array pair's audit on the array rungs.  The board must never go red
+    # on a missing key.
+    assert "deepseek" in result["why"]
+    assert "qwen3-8b__" not in result["why"], (
+        "a Qwen cell is failing C2 again: " + result["why"]
+    )
+    # The why line is truncated, so the per-cell verdicts are read from the
+    # artifacts themselves: every failing cell is DeepSeek, and every one of
+    # them states a recorded reason rather than a missing key.
+    failing = [
+        json.loads(path.read_text())
+        for path in PAIR_ARTIFACTS
+        if json.loads(path.read_text())["deployment_audit"]["comparable"] is False
+    ]
+    assert failing, "C2 is green; this test pins that it fails on evidence"
+    for body in failing:
+        assert not body["pair_id"].startswith("qwen3-8b")
+        assert body["deployment_audit"]["verdict"].startswith("NOT COMPARABLE")
 
 
 # ---------------------------------------------------------------------------

@@ -44,7 +44,7 @@
     "study_id": "n5_vs_b200"
   },
   "base_capabilities": {
-    "hbm": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+    "hbm": "configs/hardware/abi3_capability/hbm_sram_cluster_32.json",
     "rom": "configs/hardware/abi3_capability/rom_deepseek_v4_array_32.json"
   },
   "comparability_assertion": {
@@ -257,28 +257,1305 @@
   ],
   "declared_asymmetries_note": "assert_comparable compares the parameters MachineModel resolves and nothing else.  These declared fields differ between the two emitted records, reach no cost-table parameter, and are listed so that a reader can see what the assertion does NOT cover.  limits.max_context_positions is the one exception: it bounds what the pair can be asked rather than how fast it runs, so both records are harmonised to the smaller of the two bases.",
   "deployment_audit": {
+    "allowlist": {},
+    "allowlist_unused": [],
+    "asymmetries": [
+      {
+        "allowlisted": false,
+        "cost_bearing": true,
+        "effect_x": 2.0,
+        "enters": "tile_mapping / tensor_lane_mapping / apply_tile_amplification / _compute_cycles",
+        "family": "attention",
+        "favours": "hbm",
+        "field": "tile_rows",
+        "hbm": {
+          "512": 43
+        },
+        "hbm_value": 512,
+        "justification": null,
+        "magnitude_x": 2.0,
+        "rom": {
+          "1024": 43
+        },
+        "rom_value": 1024,
+        "why": "tiles 537,672 either way; issued_work on the HBM side 2,255,159,820,288 as compiled, 4,510,319,640,576 with the ROM value 1024 (padded work is charged only when a tile's work exceeds the one-cycle issue floor)"
+      },
+      {
+        "allowlisted": false,
+        "cost_bearing": false,
+        "effect_x": 1.0,
+        "enters": "nothing",
+        "family": "attention",
+        "favours": "neither",
+        "field": "resource_bound",
+        "hbm": {
+          "64": 43
+        },
+        "hbm_value": 64,
+        "justification": null,
+        "magnitude_x": 21.333333333333332,
+        "rom": {
+          "3": 43
+        },
+        "rom_value": 3,
+        "why": "resource_bound is copied into the tile mapping and read by nothing that costs a cycle"
+      },
+      {
+        "allowlisted": false,
+        "cost_bearing": true,
+        "effect_x": 1.0,
+        "enters": "tile_mapping / tensor_lane_mapping / apply_tile_amplification / _compute_cycles",
+        "family": "dma",
+        "favours": "neither",
+        "field": "tile_rows",
+        "hbm": {
+          "1": 46,
+          "512": 1809
+        },
+        "hbm_value": 512,
+        "justification": null,
+        "magnitude_x": 2.0,
+        "rom": {
+          "1": 168,
+          "1024": 920,
+          "128": 40,
+          "4": 168,
+          "6144": 43
+        },
+        "rom_value": 1024,
+        "why": "cycles_per_issue 30,228 either way"
+      },
+      {
+        "allowlisted": false,
+        "cost_bearing": true,
+        "effect_x": 1.0,
+        "enters": "tile_mapping / tensor_lane_mapping / apply_tile_amplification / _compute_cycles",
+        "family": "dma",
+        "favours": "neither",
+        "field": "tile_cols",
+        "hbm": {
+          "4": 172,
+          "6": 43,
+          "64": 1640
+        },
+        "hbm_value": 64,
+        "justification": null,
+        "magnitude_x": 1.0,
+        "rom": {
+          "4": 172,
+          "6": 43,
+          "64": 1124
+        },
+        "rom_value": 64,
+        "why": "cycles_per_issue 58,583 either way"
+      },
+      {
+        "allowlisted": false,
+        "cost_bearing": true,
+        "effect_x": 1.0,
+        "enters": "tile_mapping / tensor_lane_mapping / apply_tile_amplification / _compute_cycles",
+        "family": "dma",
+        "favours": "neither",
+        "field": "tile_depth",
+        "hbm": {
+          "1": 1339,
+          "128": 516
+        },
+        "hbm_value": 1,
+        "justification": null,
+        "magnitude_x": 1.0,
+        "rom": {
+          "1": 1339
+        },
+        "rom_value": 1,
+        "why": "cycles_per_issue 58,798 either way"
+      },
+      {
+        "allowlisted": false,
+        "cost_bearing": true,
+        "effect_x": 1.0,
+        "enters": "tile_mapping / tensor_lane_mapping / apply_tile_amplification / _compute_cycles",
+        "family": "dma",
+        "favours": "neither",
+        "field": "issue_window",
+        "hbm": {
+          "1": 903,
+          "16": 389,
+          "2": 211,
+          "8": 352
+        },
+        "hbm_value": 1,
+        "justification": null,
+        "magnitude_x": 16.0,
+        "rom": {
+          "1": 215,
+          "16": 561,
+          "2": 211,
+          "8": 352
+        },
+        "rom_value": 16,
+        "why": "cycles_per_issue 3,136 either way"
+      },
+      {
+        "allowlisted": false,
+        "cost_bearing": true,
+        "effect_x": 8.0,
+        "enters": "queue admission",
+        "family": "dma",
+        "favours": "rom",
+        "field": "max_outstanding",
+        "hbm": {
+          "1": 903,
+          "16": 389,
+          "2": 211,
+          "8": 352
+        },
+        "hbm_value": 1,
+        "justification": null,
+        "magnitude_x": 16.0,
+        "rom": {
+          "1": 215,
+          "16": 561,
+          "2": 211,
+          "8": 352
+        },
+        "rom_value": 16,
+        "why": "admission bound min(queue_depth=8, max_outstanding) 8 vs 1"
+      },
+      {
+        "allowlisted": false,
+        "cost_bearing": true,
+        "effect_x": 1.5,
+        "enters": "queue admission",
+        "family": "dma",
+        "favours": "hbm",
+        "field": "queue_index",
+        "hbm": {
+          "0": 380,
+          "1": 787,
+          "3": 688
+        },
+        "hbm_value": 3,
+        "justification": null,
+        "magnitude_x": null,
+        "rom": {
+          "0": 465,
+          "1": 874
+        },
+        "rom_value": 2,
+        "why": "operators spread over 2 vs 3 dma queue(s) of the 16 the machine has"
+      },
+      {
+        "allowlisted": false,
+        "cost_bearing": true,
+        "effect_x": null,
+        "enters": "MemorySystem.schedule",
+        "family": "dma",
+        "favours": "unknown",
+        "field": "bank_mask",
+        "hbm": {
+          "3": 1855
+        },
+        "hbm_value": 3,
+        "justification": null,
+        "magnitude_x": null,
+        "rom": {
+          "3": 1339
+        },
+        "rom_value": 3,
+        "why": "bank_mask selects banks/ports in MemorySystem.schedule; the direction is a property of the placement and is not derived by this audit"
+      },
+      {
+        "allowlisted": false,
+        "cost_bearing": true,
+        "effect_x": null,
+        "enters": "MemorySystem.schedule",
+        "family": "dma",
+        "favours": "unknown",
+        "field": "port_mask",
+        "hbm": {
+          "3": 1855
+        },
+        "hbm_value": 3,
+        "justification": null,
+        "magnitude_x": null,
+        "rom": {
+          "3": 1339
+        },
+        "rom_value": 3,
+        "why": "port_mask selects banks/ports in MemorySystem.schedule; the direction is a property of the placement and is not derived by this audit"
+      },
+      {
+        "allowlisted": false,
+        "cost_bearing": true,
+        "effect_x": null,
+        "enters": "fabric route",
+        "family": "dma",
+        "favours": "unknown",
+        "field": "noc_route_class",
+        "hbm": {
+          "0": 1855
+        },
+        "hbm_value": 0,
+        "justification": null,
+        "magnitude_x": null,
+        "rom": {
+          "0": 1339
+        },
+        "rom_value": 0,
+        "why": "selects the fabric route; not derived by this audit"
+      },
+      {
+        "allowlisted": false,
+        "cost_bearing": false,
+        "effect_x": 1.0,
+        "enters": "nothing",
+        "family": "dma",
+        "favours": "neither",
+        "field": "resource_bound",
+        "hbm": {
+          "8": 1855
+        },
+        "hbm_value": 8,
+        "justification": null,
+        "magnitude_x": 2.6666666666666665,
+        "rom": {
+          "3": 1339
+        },
+        "rom_value": 3,
+        "why": "resource_bound is copied into the tile mapping and read by nothing that costs a cycle"
+      },
+      {
+        "allowlisted": false,
+        "cost_bearing": false,
+        "effect_x": 1.0,
+        "enters": "nothing",
+        "family": "dma",
+        "favours": "neither",
+        "field": "priority",
+        "hbm": {
+          "0": 1855
+        },
+        "hbm_value": 0,
+        "justification": null,
+        "magnitude_x": 1.0,
+        "rom": {
+          "0": 1339
+        },
+        "rom_value": 0,
+        "why": "priority is copied into the tile mapping and read by nothing that costs a cycle"
+      },
+      {
+        "allowlisted": false,
+        "cost_bearing": true,
+        "effect_x": 2.0,
+        "enters": "tile_mapping / tensor_lane_mapping / apply_tile_amplification / _compute_cycles",
+        "family": "reduction",
+        "favours": "hbm",
+        "field": "tile_rows",
+        "hbm": {
+          "1": 86,
+          "512": 277
+        },
+        "hbm_value": 512,
+        "justification": null,
+        "magnitude_x": 2.0,
+        "rom": {
+          "1": 129,
+          "1024": 193,
+          "1032": 20,
+          "1280": 21
+        },
+        "rom_value": 1024,
+        "why": "tiles 11,604 either way; issued_work on the HBM side 380,239,872 as compiled, 760,479,744 with the ROM value 1024 (padded work is charged only when a tile's work exceeds the one-cycle issue floor)"
+      },
+      {
+        "allowlisted": false,
+        "cost_bearing": false,
+        "effect_x": 1.0,
+        "enters": "nothing",
+        "family": "reduction",
+        "favours": "neither",
+        "field": "resource_bound",
+        "hbm": {
+          "128": 363
+        },
+        "hbm_value": 128,
+        "justification": null,
+        "magnitude_x": 42.666666666666664,
+        "rom": {
+          "3": 363
+        },
+        "rom_value": 3,
+        "why": "resource_bound is copied into the tile mapping and read by nothing that costs a cycle"
+      },
+      {
+        "allowlisted": false,
+        "cost_bearing": true,
+        "effect_x": 2.0,
+        "enters": "tile_mapping / tensor_lane_mapping / apply_tile_amplification / _compute_cycles",
+        "family": "route",
+        "favours": "hbm",
+        "field": "tile_rows",
+        "hbm": {
+          "1": 21,
+          "512": 189
+        },
+        "hbm_value": 512,
+        "justification": null,
+        "magnitude_x": 2.0,
+        "rom": {
+          "1024": 167,
+          "6144": 43
+        },
+        "rom_value": 1024,
+        "why": "tiles 849 either way; issued_work on the HBM side 25,355,264 as compiled, 50,710,528 with the ROM value 1024 (padded work is charged only when a tile's work exceeds the one-cycle issue floor)"
+      },
+      {
+        "allowlisted": false,
+        "cost_bearing": false,
+        "effect_x": 1.0,
+        "enters": "nothing",
+        "family": "route",
+        "favours": "neither",
+        "field": "resource_bound",
+        "hbm": {
+          "32": 210
+        },
+        "hbm_value": 32,
+        "justification": null,
+        "magnitude_x": 16.0,
+        "rom": {
+          "2": 210
+        },
+        "rom_value": 2,
+        "why": "resource_bound is copied into the tile mapping and read by nothing that costs a cycle"
+      },
+      {
+        "allowlisted": false,
+        "cost_bearing": false,
+        "effect_x": 1.0,
+        "enters": "nothing",
+        "family": "selection",
+        "favours": "neither",
+        "field": "resource_bound",
+        "hbm": {
+          "8": 2
+        },
+        "hbm_value": 8,
+        "justification": null,
+        "magnitude_x": 1.3333333333333333,
+        "rom": {
+          "6": 2
+        },
+        "rom_value": 6,
+        "why": "resource_bound is copied into the tile mapping and read by nothing that costs a cycle"
+      },
+      {
+        "allowlisted": false,
+        "cost_bearing": true,
+        "effect_x": 1.0,
+        "enters": "tile_mapping / tensor_lane_mapping / apply_tile_amplification / _compute_cycles",
+        "family": "tensor",
+        "favours": "neither",
+        "field": "tile_rows",
+        "hbm": {
+          "1": 1,
+          "512": 863
+        },
+        "hbm_value": 512,
+        "justification": null,
+        "magnitude_x": 2.0,
+        "rom": {
+          "1": 1,
+          "1024": 734,
+          "6144": 129
+        },
+        "rom_value": 1024,
+        "why": "cycles_per_issue 297,216 either way; every tensor operator has rows 6 <= 512 at this request"
+      },
+      {
+        "allowlisted": false,
+        "cost_bearing": false,
+        "effect_x": 1.0,
+        "enters": "nothing",
+        "family": "tensor",
+        "favours": "neither",
+        "field": "resource_bound",
+        "hbm": {
+          "256": 864
+        },
+        "hbm_value": 256,
+        "justification": null,
+        "magnitude_x": 256.0,
+        "rom": {
+          "1": 864
+        },
+        "rom_value": 1,
+        "why": "resource_bound is copied into the tile mapping and read by nothing that costs a cycle"
+      },
+      {
+        "allowlisted": false,
+        "cost_bearing": true,
+        "effect_x": 2.0,
+        "enters": "tile_mapping / tensor_lane_mapping / apply_tile_amplification / _compute_cycles",
+        "family": "vector",
+        "favours": "hbm",
+        "field": "tile_rows",
+        "hbm": {
+          "1": 22,
+          "512": 1638
+        },
+        "hbm_value": 512,
+        "justification": null,
+        "magnitude_x": 2.0,
+        "rom": {
+          "1": 394,
+          "1024": 1094,
+          "6144": 172
+        },
+        "rom_value": 1024,
+        "why": "tiles 29,686 either way; issued_work on the HBM side 968,832,000 as compiled, 1,937,664,000 with the ROM value 1024 (padded work is charged only when a tile's work exceeds the one-cycle issue floor)"
+      },
+      {
+        "allowlisted": false,
+        "cost_bearing": false,
+        "effect_x": 1.0,
+        "enters": "nothing",
+        "family": "vector",
+        "favours": "neither",
+        "field": "resource_bound",
+        "hbm": {
+          "128": 1660
+        },
+        "hbm_value": 128,
+        "justification": null,
+        "magnitude_x": 42.666666666666664,
+        "rom": {
+          "3": 1660
+        },
+        "rom_value": 3,
+        "why": "resource_bound is copied into the tile mapping and read by nothing that costs a cycle"
+      }
+    ],
+    "basis": "SCHEDULE fields at lanes=64, charged with the cycle model's own _compute_cycles",
+    "column_group_spans_match": true,
     "comparable": false,
     "deployments": {
       "hbm": {
-        "base_capability": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+        "base_capability": "configs/hardware/abi3_capability/hbm_sram_cluster_32.json",
+        "capability_digest": "1eb2e92dac1d9fb8937b7724953d2f65993bd56e342e9058569442eb61d74bad",
+        "deployment_sha256": "d83286151b5c9f7e4d653b124c93a8d4350e405e5af37239ed07d81c578ea08b",
+        "evidence": [
+          "results/abi3/hbm_deepseek_e9_deployment_certificate.json",
+          "commit 6b41a53 (the DeepSeek Flash pair re-lowered under AM-E9 v2)"
+        ],
         "model_id": "deepseek-v4-flash-0731",
+        "registered_deployment_sha256": "d83286151b5c9f7e4d653b124c93a8d4350e405e5af37239ed07d81c578ea08b",
         "role": "hbm",
-        "status": "no deployment built",
-        "why": "no compiled deepseek-v4-flash-0731 deployment is bound to configs/hardware/abi3_capability/hbm_sram_single_chip.json"
+        "root": "build/abi3/deepseek-v4-flash-hbm-e9",
+        "status": "bound"
       },
       "rom": {
         "base_capability": "configs/hardware/abi3_capability/rom_deepseek_v4_array_32.json",
+        "capability_digest": "414793fdd02d60d5cf60d11dfde3a0b656f3bb76af4a5ab4f63b7b1d4148bb84",
+        "deployment_sha256": "7839775d53466243e2f6274d85c898599611a07b60e1e567d76db70cafa656b9",
+        "evidence": [
+          "results/abi3/rom_schedule_checks_deepseek_e9.json",
+          "commit 6b41a53 (the DeepSeek Flash pair re-lowered under AM-E9 v2)"
+        ],
         "model_id": "deepseek-v4-flash-0731",
+        "registered_deployment_sha256": "7839775d53466243e2f6274d85c898599611a07b60e1e567d76db70cafa656b9",
         "role": "rom",
-        "status": "no deployment built",
-        "why": "no compiled deepseek-v4-flash-0731 deployment is bound to configs/hardware/abi3_capability/rom_deepseek_v4_array_32.json"
+        "root": "build/abi3/deepseek-v4-flash-rom-array-32-e9",
+        "status": "bound"
       }
     },
+    "families": {
+      "attention": {
+        "issued_work": {
+          "favours": "hbm",
+          "hbm": 2255159820288,
+          "magnitude_x": 2.0,
+          "rom": 4510319640576
+        },
+        "operations": {
+          "hbm": 43,
+          "rom": 43
+        },
+        "padding_fraction": {
+          "favours": "hbm",
+          "hbm": 0.87504,
+          "magnitude_x": 1.0714024501737063,
+          "rom": 0.93752
+        },
+        "tiles": {
+          "favours": "neither",
+          "hbm": 537672,
+          "magnitude_x": 1.0,
+          "rom": 537672
+        },
+        "useful_work": {
+          "hbm": 281804800000,
+          "rom": 281804800000
+        }
+      },
+      "dma": {
+        "cycles": {
+          "favours": "hbm",
+          "hbm": 305907,
+          "magnitude_x": 46.22568623797429,
+          "rom": 14140761
+        },
+        "issued_work": {
+          "favours": "rom",
+          "hbm": 434641694978,
+          "magnitude_x": 105.25782554093078,
+          "rom": 4129305282
+        },
+        "machine": {
+          "bytes_per_cycle": 1210496.0,
+          "rule": "a DMA operator costs tiles x max(ceil(bytes_transferred / tiles / bytes_per_cycle), tile_issue_cycles)",
+          "tile_issue_cycles": 1
+        },
+        "operations": {
+          "hbm": 1855,
+          "rom": 1339
+        },
+        "padding_fraction": {
+          "favours": "rom",
+          "hbm": 0.994135,
+          "magnitude_x": 1.92573745341278,
+          "rom": 0.516236
+        },
+        "payload_bytes": {
+          "hbm": 3295536188,
+          "rom": 2186074660
+        },
+        "payload_bytes_per_tile": {
+          "hbm": 10870.796,
+          "rom": 154.594
+        },
+        "tile_issue_cycles": {
+          "favours": "hbm",
+          "hbm": 303155,
+          "magnitude_x": 46.64531675215649,
+          "rom": 14140761
+        },
+        "tiles": {
+          "favours": "hbm",
+          "hbm": 303155,
+          "magnitude_x": 46.64531675215649,
+          "rom": 14140761
+        },
+        "useful_work": {
+          "hbm": 2548994191,
+          "rom": 1997607753
+        }
+      },
+      "reduction": {
+        "issued_work": {
+          "favours": "rom",
+          "hbm": 1483177984,
+          "magnitude_x": 1.1113416363335031,
+          "rom": 1334583296
+        },
+        "operations": {
+          "hbm": 363,
+          "rom": 363
+        },
+        "padding_fraction": {
+          "favours": "rom",
+          "hbm": 0.622688,
+          "magnitude_x": 1.0723464639610938,
+          "rom": 0.580678
+        },
+        "tiles": {
+          "favours": "rom",
+          "hbm": 67236,
+          "magnitude_x": 1.1760302245854615,
+          "rom": 57172
+        },
+        "useful_work": {
+          "hbm": 559620352,
+          "rom": 559620352
+        }
+      },
+      "route": {
+        "issued_work": {
+          "favours": "hbm",
+          "hbm": 115546240,
+          "magnitude_x": 9.923330434638116,
+          "rom": 1146603520
+        },
+        "operations": {
+          "hbm": 210,
+          "rom": 210
+        },
+        "padding_fraction": {
+          "favours": "hbm",
+          "hbm": 0.990309,
+          "magnitude_x": 1.0087992737620277,
+          "rom": 0.999023
+        },
+        "tiles": {
+          "favours": "neither",
+          "hbm": 3811,
+          "magnitude_x": 1.0,
+          "rom": 3811
+        },
+        "useful_work": {
+          "hbm": 1119730,
+          "rom": 1119730
+        }
+      },
+      "selection": {
+        "issued_work": {
+          "favours": "neither",
+          "hbm": 2,
+          "magnitude_x": 1.0,
+          "rom": 2
+        },
+        "operations": {
+          "hbm": 2,
+          "rom": 2
+        },
+        "padding_fraction": {
+          "favours": "neither",
+          "hbm": 0.0,
+          "magnitude_x": 1.0,
+          "rom": 0.0
+        },
+        "tiles": {
+          "favours": "neither",
+          "hbm": 2,
+          "magnitude_x": 1.0,
+          "rom": 2
+        },
+        "useful_work": {
+          "hbm": 2,
+          "rom": 2
+        }
+      },
+      "tensor": {
+        "column_groups": {
+          "favours": "hbm",
+          "hbm": 1171,
+          "magnitude_x": 2.5892399658411613,
+          "rom": 3032
+        },
+        "cycles": {
+          "favours": "hbm",
+          "hbm": 1164736,
+          "magnitude_x": 1.4047749876366833,
+          "rom": 1636192
+        },
+        "effective_tensor_width_caps": {
+          "hbm": [
+            6,
+            64
+          ],
+          "rom": [
+            6,
+            64
+          ]
+        },
+        "issued_work": {
+          "favours": "hbm",
+          "hbm": 9052663826,
+          "magnitude_x": 1.4283372455368586,
+          "rom": 12930256914
+        },
+        "operations": {
+          "hbm": 864,
+          "rom": 864
+        },
+        "output_waves": {
+          "favours": "hbm",
+          "hbm": 45859,
+          "magnitude_x": 1.6835953684118712,
+          "rom": 77208
+        },
+        "padding_fraction": {
+          "favours": "neither",
+          "hbm": 0.0,
+          "magnitude_x": 1.0,
+          "rom": 0.0
+        },
+        "tile_issue_cycles": {
+          "favours": "hbm",
+          "hbm": 1164736,
+          "magnitude_x": 1.4047749876366833,
+          "rom": 1636192
+        },
+        "tiles": {
+          "favours": "hbm",
+          "hbm": 1164803,
+          "magnitude_x": 1.4047517047947164,
+          "rom": 1636259
+        },
+        "useful_work": {
+          "hbm": 9052663826,
+          "rom": 12930256914
+        }
+      },
+      "vector": {
+        "issued_work": {
+          "favours": "hbm",
+          "hbm": 1266857600,
+          "magnitude_x": 3.666007784931787,
+          "rom": 4644309824
+        },
+        "operations": {
+          "hbm": 1660,
+          "rom": 1660
+        },
+        "padding_fraction": {
+          "favours": "hbm",
+          "hbm": 0.990697,
+          "magnitude_x": 1.0068285257752874,
+          "rom": 0.997462
+        },
+        "tiles": {
+          "favours": "neither",
+          "hbm": 57187,
+          "magnitude_x": 1.0,
+          "rom": 57187
+        },
+        "useful_work": {
+          "hbm": 11785538,
+          "rom": 11785538
+        }
+      }
+    },
+    "fields_compared": 77,
     "full_report": "results/derived/deepseek-v4-flash-0731__rom-n5-native-sramkv-array-hybrid-x30__b200-sxm-x15-hybrid_deployment_audit.json",
     "gate": "C2",
     "generator": "tools/derive_cycle_machine.py",
+    "hbm": {
+      "backend": "hbm-sram-abi3",
+      "capability_digest": "1eb2e92dac1d9fb8937b7724953d2f65993bd56e342e9058569442eb61d74bad",
+      "column_group_spans": [
+        6,
+        1024
+      ],
+      "deployment_sha256": "d83286151b5c9f7e4d653b124c93a8d4350e405e5af37239ed07d81c578ea08b",
+      "effective_tensor_width_caps": [
+        6,
+        64
+      ],
+      "families": {
+        "attention": {
+          "issued_work": 2255159820288,
+          "operations": 43,
+          "operators": 4,
+          "padding_fraction": 0.87504,
+          "padding_work": 1973355020288,
+          "tile_errors": 0,
+          "tiles": 537672,
+          "useful_work": 281804800000
+        },
+        "dma": {
+          "cycles": 305907,
+          "issued_work": 434641694978,
+          "operations": 1855,
+          "operators": 173,
+          "padding_fraction": 0.994135,
+          "padding_work": 432092700787,
+          "payload_bytes": 3295536188,
+          "tile_errors": 0,
+          "tile_issue_cycles": 303155,
+          "tiles": 303155,
+          "useful_work": 2548994191
+        },
+        "reduction": {
+          "issued_work": 1483177984,
+          "operations": 363,
+          "operators": 33,
+          "padding_fraction": 0.622688,
+          "padding_work": 923557632,
+          "tile_errors": 0,
+          "tiles": 67236,
+          "useful_work": 559620352
+        },
+        "route": {
+          "issued_work": 115546240,
+          "operations": 210,
+          "operators": 17,
+          "padding_fraction": 0.990309,
+          "padding_work": 114426510,
+          "tile_errors": 0,
+          "tiles": 3811,
+          "useful_work": 1119730
+        },
+        "selection": {
+          "issued_work": 2,
+          "operations": 2,
+          "operators": 2,
+          "padding_fraction": 0.0,
+          "padding_work": 0,
+          "tile_errors": 0,
+          "tiles": 2,
+          "useful_work": 2
+        },
+        "tensor": {
+          "column_groups": 1171,
+          "cycles": 1164736,
+          "issued_work": 9052663826,
+          "operations": 864,
+          "operators": 84,
+          "output_waves": 45859,
+          "padding_fraction": 0.0,
+          "padding_work": 0,
+          "tile_errors": 0,
+          "tile_issue_cycles": 1164736,
+          "tiles": 1164803,
+          "useful_work": 9052663826
+        },
+        "vector": {
+          "issued_work": 1266857600,
+          "operations": 1660,
+          "operators": 152,
+          "padding_fraction": 0.990697,
+          "padding_work": 1255072062,
+          "tile_errors": 0,
+          "tiles": 57187,
+          "useful_work": 11785538
+        }
+      },
+      "max_column_group_span": 1024,
+      "model_id": "deepseek-v4-flash-0731",
+      "request_symbols": {
+        "BATCH": 1,
+        "CONTEXT_LENGTH": 200000,
+        "GENERATION_INDEX": 1,
+        "MAX_NEW_TOKENS": 1,
+        "NODE_COUNT": 1,
+        "NODE_ID": 0,
+        "PHASE": 1,
+        "POSITION_END": 200000,
+        "POSITION_START": 199999,
+        "SPAN_LAST_INDEX": 0,
+        "SPAN_TOKENS": 1
+      },
+      "root": "build/abi3/deepseek-v4-flash-hbm-e9",
+      "schedule_shapes": {
+        "engine_family=112,tile_rows=1,tile_cols=1,tile_depth=1,issue_window=1": 1,
+        "engine_family=16,tile_rows=1,tile_cols=6,tile_depth=1,issue_window=1": 2,
+        "engine_family=16,tile_rows=1,tile_cols=64,tile_depth=1,issue_window=16": 1,
+        "engine_family=16,tile_rows=1,tile_cols=64,tile_depth=128,issue_window=1": 1,
+        "engine_family=16,tile_rows=512,tile_cols=4,tile_depth=1,issue_window=1": 2,
+        "engine_family=16,tile_rows=512,tile_cols=64,tile_depth=1,issue_window=1": 1,
+        "engine_family=16,tile_rows=512,tile_cols=64,tile_depth=1,issue_window=16": 2,
+        "engine_family=16,tile_rows=512,tile_cols=64,tile_depth=1,issue_window=2": 2,
+        "engine_family=16,tile_rows=512,tile_cols=64,tile_depth=1,issue_window=8": 2,
+        "engine_family=16,tile_rows=512,tile_cols=64,tile_depth=128,issue_window=1": 1,
+        "engine_family=32,tile_rows=1,tile_cols=64,tile_depth=128,issue_window=16": 1,
+        "engine_family=32,tile_rows=512,tile_cols=6,tile_depth=1,issue_window=1": 1,
+        "engine_family=32,tile_rows=512,tile_cols=64,tile_depth=1,issue_window=16": 1,
+        "engine_family=32,tile_rows=512,tile_cols=64,tile_depth=128,issue_window=16": 2,
+        "engine_family=48,tile_rows=1,tile_cols=64,tile_depth=1,issue_window=16": 2,
+        "engine_family=48,tile_rows=512,tile_cols=4,tile_depth=1,issue_window=1": 2,
+        "engine_family=48,tile_rows=512,tile_cols=6,tile_depth=1,issue_window=1": 2,
+        "engine_family=48,tile_rows=512,tile_cols=64,tile_depth=1,issue_window=16": 2,
+        "engine_family=48,tile_rows=512,tile_cols=64,tile_depth=1,issue_window=2": 2,
+        "engine_family=48,tile_rows=512,tile_cols=64,tile_depth=1,issue_window=4": 2,
+        "engine_family=48,tile_rows=512,tile_cols=64,tile_depth=1,issue_window=7": 2,
+        "engine_family=48,tile_rows=512,tile_cols=64,tile_depth=1,issue_window=8": 2,
+        "engine_family=64,tile_rows=512,tile_cols=64,tile_depth=128,issue_window=16": 1,
+        "engine_family=80,tile_rows=1,tile_cols=64,tile_depth=1,issue_window=10": 1,
+        "engine_family=80,tile_rows=512,tile_cols=6,tile_depth=1,issue_window=1": 1,
+        "engine_family=80,tile_rows=512,tile_cols=64,tile_depth=1,issue_window=16": 1,
+        "engine_family=80,tile_rows=512,tile_cols=64,tile_depth=1,issue_window=2": 1,
+        "engine_family=96,tile_rows=1,tile_cols=64,tile_depth=1,issue_window=16": 1,
+        "engine_family=96,tile_rows=512,tile_cols=64,tile_depth=1,issue_window=16": 1,
+        "engine_family=96,tile_rows=512,tile_cols=64,tile_depth=1,issue_window=2": 1,
+        "engine_family=96,tile_rows=512,tile_cols=64,tile_depth=1,issue_window=8": 1
+      },
+      "static_walk": "complete over the UNION of both arms of 2 data-dependent predicate(s) (BOOLEAN_OBJECT); 683 of 4997 issues are conditional, so the issue list is an upper bound",
+      "static_walk_detail": {
+        "bound": "UPPER: every conditional issue is counted as if its predicate admitted it; the program at run time issues this many or fewer",
+        "conditional_issues": 683,
+        "conditional_operators": [
+          "DMA.GATHER (1x128x1)",
+          "DMA.GATHER (1x128x1)",
+          "DMA.GATHER (1x128x1)",
+          "DMA.GATHER (1x512x1)",
+          "DMA.GATHER (1x512x1)",
+          "DMA.GATHER (4x128x1)",
+          "DMA.GATHER (4x128x1)",
+          "DMA.GATHER (4x128x1)",
+          "DMA.GATHER (4x128x1)",
+          "DMA.GATHER (4x128x1)",
+          "DMA.GATHER (4x128x1)",
+          "DMA.GATHER (4x128x1)",
+          "DMA.GATHER (4x128x1)",
+          "DMA.GATHER (4x512x1)",
+          "DMA.GATHER (4x512x1)",
+          "DMA.GATHER (4x512x1)",
+          "DMA.GATHER (4x512x1)",
+          "DMA.GATHER (4x512x1)",
+          "DMA.GATHER (4x512x1)",
+          "DMA.GATHER (4x512x1)",
+          "DMA.GATHER (4x512x1)",
+          "DMA.SCATTER (2048x512x1)",
+          "DMA.SCATTER (65536x128x1)",
+          "DMA.SCATTER (65536x128x1)",
+          "DMA.SCATTER (65536x512x1)",
+          "DMA.SCATTER (65536x512x1)",
+          "VECTOR.COMPRESS (1x128x1)",
+          "VECTOR.COMPRESS (1x128x1)",
+          "VECTOR.COMPRESS (1x512x1)",
+          "VECTOR.COMPRESS (1x512x1)",
+          "VECTOR.COMPRESS (1x512x1)",
+          "VECTOR.CONVERT (1x128x1)",
+          "VECTOR.CONVERT (1x128x1)",
+          "VECTOR.CONVERT (1x128x1)",
+          "VECTOR.CONVERT (1x128x1)",
+          "VECTOR.CONVERT (1x128x1)",
+          "VECTOR.CONVERT (1x128x1)",
+          "VECTOR.CONVERT (1x448x1)",
+          "VECTOR.CONVERT (1x448x1)",
+          "VECTOR.CONVERT (1x448x1)",
+          "VECTOR.CONVERT (1x512x1)",
+          "VECTOR.CONVERT (1x512x1)",
+          "VECTOR.CONVERT (1x512x1)",
+          "VECTOR.CONVERT (1x512x1)",
+          "VECTOR.CONVERT (1x512x1)",
+          "VECTOR.CONVERT (1x512x1)",
+          "VECTOR.HADAMARD (1x128x1)",
+          "VECTOR.HADAMARD (1x128x1)",
+          "VECTOR.RMS_NORM (1x128x1)",
+          "VECTOR.RMS_NORM (1x128x1)",
+          "VECTOR.RMS_NORM (1x512x1)",
+          "VECTOR.RMS_NORM (1x512x1)",
+          "VECTOR.RMS_NORM (1x512x1)",
+          "VECTOR.ROPE (1x512x1)",
+          "VECTOR.ROPE (1x512x1)",
+          "VECTOR.ROPE (1x512x1)"
+        ],
+        "rule": "a predicate whose truth is device state does not fork this walk unless it gates a control transfer: both arms of a predicated engine issue or WAIT rejoin at pc+1 with the same loop map, so the walk takes their union and marks the issue conditional",
+        "total_issues": 4997,
+        "unevaluable_predicates": [
+          {
+            "gated_instructions": 529,
+            "kind": "BOOLEAN_OBJECT",
+            "predicate_id": 1216,
+            "reads": "object 493 element 0"
+          },
+          {
+            "gated_instructions": 221,
+            "kind": "BOOLEAN_OBJECT",
+            "predicate_id": 2028,
+            "reads": "object 494 element 0"
+          }
+        ]
+      },
+      "storage_class_counts": {
+        "0": 1,
+        "1": 497,
+        "2": 8
+      },
+      "topology_class": 1
+    },
+    "lanes": 64,
+    "machine": {
+      "capability": "configs/hardware/abi3_capability/n5_design_target/rom_deepseek_v4_array_32_n5_design_target_deepseek-v4-flash-0731__rom-n5-native-sramkv-array-hybrid-x30__b200-sxm-x15-hybrid_v1.json",
+      "cost_table": "configs/hardware/n5_design_target/abi3_cost_n5_design_target_deepseek-v4-flash-0731__rom-n5-native-sramkv-array-hybrid-x30__b200-sxm-x15-hybrid_rom_v1.json",
+      "dma_bytes_per_cycle": 1210496.0,
+      "queue_depth": 8,
+      "tensor_lanes": 64,
+      "tensor_work_per_lane_cycle": 7405.8045787306455
+    },
+    "operator_asymmetries": [
+      {
+        "family": "dma",
+        "favours": "hbm",
+        "hbm": 1024,
+        "magnitude_x": 512.0,
+        "metric": "tiles_per_issue",
+        "operator": "DMA.SCATTER (65536x512x1)",
+        "rom": 524288
+      },
+      {
+        "family": "dma",
+        "favours": "hbm",
+        "hbm": 1.0,
+        "magnitude_x": 500.0,
+        "metric": "payload_bytes_per_tile",
+        "note": "more bytes per tile is fewer tiles for the same payload",
+        "operator": "DMA.SCATTER (65536x512x1)",
+        "rom": 0.002
+      },
+      {
+        "family": "dma",
+        "favours": "hbm",
+        "hbm": 1024,
+        "magnitude_x": 512.0,
+        "metric": "cycles_per_issue",
+        "operator": "DMA.SCATTER (65536x512x1)",
+        "rom": 524288
+      },
+      {
+        "family": "dma",
+        "favours": "hbm",
+        "hbm": 256,
+        "magnitude_x": 512.0,
+        "metric": "tiles_per_issue",
+        "operator": "DMA.SCATTER (65536x128x1)",
+        "rom": 131072
+      },
+      {
+        "family": "dma",
+        "favours": "hbm",
+        "hbm": 1.0,
+        "magnitude_x": 500.0,
+        "metric": "payload_bytes_per_tile",
+        "note": "more bytes per tile is fewer tiles for the same payload",
+        "operator": "DMA.SCATTER (65536x128x1)",
+        "rom": 0.002
+      },
+      {
+        "family": "dma",
+        "favours": "hbm",
+        "hbm": 256,
+        "magnitude_x": 512.0,
+        "metric": "cycles_per_issue",
+        "operator": "DMA.SCATTER (65536x128x1)",
+        "rom": 131072
+      },
+      {
+        "family": "reduction",
+        "favours": "rom",
+        "hbm": 784,
+        "magnitude_x": 2.45,
+        "metric": "tiles_per_issue",
+        "operator": "REDUCTION.GROUPED_CONCAT (50128x512x1)",
+        "rom": 320
+      },
+      {
+        "family": "dma",
+        "favours": "hbm",
+        "hbm": 32,
+        "magnitude_x": 512.0,
+        "metric": "tiles_per_issue",
+        "operator": "DMA.SCATTER (2048x512x1)",
+        "rom": 16384
+      },
+      {
+        "family": "dma",
+        "favours": "hbm",
+        "hbm": 32.0,
+        "magnitude_x": 516.1290322580645,
+        "metric": "payload_bytes_per_tile",
+        "note": "more bytes per tile is fewer tiles for the same payload",
+        "operator": "DMA.SCATTER (2048x512x1)",
+        "rom": 0.062
+      },
+      {
+        "family": "dma",
+        "favours": "hbm",
+        "hbm": 32,
+        "magnitude_x": 512.0,
+        "metric": "cycles_per_issue",
+        "operator": "DMA.SCATTER (2048x512x1)",
+        "rom": 16384
+      },
+      {
+        "family": "reduction",
+        "favours": "rom",
+        "hbm": 32,
+        "magnitude_x": 2.0,
+        "metric": "tiles_per_issue",
+        "operator": "REDUCTION.GROUPED_CONCAT (1690x512x1)",
+        "rom": 16
+      },
+      {
+        "family": "dma",
+        "favours": "hbm",
+        "hbm": 1024,
+        "magnitude_x": 512.0,
+        "metric": "tiles_per_issue",
+        "operator": "DMA.SCATTER (65536x512x1)",
+        "rom": 524288
+      },
+      {
+        "family": "dma",
+        "favours": "hbm",
+        "hbm": 1.0,
+        "magnitude_x": 500.0,
+        "metric": "payload_bytes_per_tile",
+        "note": "more bytes per tile is fewer tiles for the same payload",
+        "operator": "DMA.SCATTER (65536x512x1)",
+        "rom": 0.002
+      },
+      {
+        "family": "dma",
+        "favours": "hbm",
+        "hbm": 1024,
+        "magnitude_x": 512.0,
+        "metric": "cycles_per_issue",
+        "operator": "DMA.SCATTER (65536x512x1)",
+        "rom": 524288
+      },
+      {
+        "family": "dma",
+        "favours": "hbm",
+        "hbm": 256,
+        "magnitude_x": 512.0,
+        "metric": "tiles_per_issue",
+        "operator": "DMA.SCATTER (65536x128x1)",
+        "rom": 131072
+      },
+      {
+        "family": "dma",
+        "favours": "hbm",
+        "hbm": 1.0,
+        "magnitude_x": 500.0,
+        "metric": "payload_bytes_per_tile",
+        "note": "more bytes per tile is fewer tiles for the same payload",
+        "operator": "DMA.SCATTER (65536x128x1)",
+        "rom": 0.002
+      },
+      {
+        "family": "dma",
+        "favours": "hbm",
+        "hbm": 256,
+        "magnitude_x": 512.0,
+        "metric": "cycles_per_issue",
+        "operator": "DMA.SCATTER (65536x128x1)",
+        "rom": 131072
+      },
+      {
+        "family": "reduction",
+        "favours": "rom",
+        "hbm": 784,
+        "magnitude_x": 2.45,
+        "metric": "tiles_per_issue",
+        "operator": "REDUCTION.GROUPED_CONCAT (50128x512x1)",
+        "rom": 320
+      }
+    ],
+    "operators_unmatched": {
+      "hbm": [
+        "TENSOR.MATMUL (1x1024x1024)",
+        "DMA.TRANSFER (1024x512x1)",
+        "DMA.TRANSFER (32768x512x1)",
+        "DMA.TRANSFER (128x16x1)",
+        "DMA.TRANSFER (4096x16x1)",
+        "TENSOR.MATMUL (1x128x8192)",
+        "DMA.TRANSFER (128x512x1)",
+        "DMA.TRANSFER (4096x512x1)",
+        "TENSOR.MATMUL (1x8x4096)",
+        "DMA.TRANSFER (8x512x1)",
+        "DMA.TRANSFER (256x512x1)",
+        "DMA.TRANSFER (192x4096x1)",
+        "TENSOR.MATMUL (1x128x2048)",
+        "DMA.TRANSFER (128x512x1)",
+        "DMA.TRANSFER (4096x512x1)",
+        "TENSOR.MATMUL (1x1024x1024)",
+        "DMA.TRANSFER (1024x512x1)",
+        "DMA.TRANSFER (32768x512x1)",
+        "TENSOR.MATMUL (1x256x1024)",
+        "DMA.TRANSFER (256x512x1)",
+        "DMA.TRANSFER (8192x512x1)",
+        "TENSOR.MATMUL (1x2x4096)",
+        "DMA.TRANSFER (2x512x1)",
+        "DMA.TRANSFER (64x512x1)",
+        "DMA.TRANSFER (50128x16x1)",
+        "DMA.TRANSFER (1604096x16x1)",
+        "TENSOR.MATMUL (1x128x8192)",
+        "DMA.TRANSFER (128x512x1)",
+        "DMA.TRANSFER (4096x512x1)",
+        "TENSOR.MATMUL (1x8x4096)",
+        "DMA.TRANSFER (8x512x1)",
+        "DMA.TRANSFER (256x512x1)",
+        "DMA.TRANSFER (192x4096x1)",
+        "TENSOR.MATMUL (1x128x2048)",
+        "DMA.TRANSFER (128x512x1)",
+        "DMA.TRANSFER (4096x512x1)",
+        "TENSOR.MATMUL (1x1024x1024)",
+        "DMA.TRANSFER (1024x512x1)",
+        "DMA.TRANSFER (32768x512x1)",
+        "DMA.GATHER (1x512x1)",
+        "DMA.GATHER (1x512x1)",
+        "DMA.TRANSFER (1690x16x1)",
+        "DMA.TRANSFER (54080x16x1)",
+        "TENSOR.MATMUL (1x128x8192)",
+        "DMA.TRANSFER (128x512x1)",
+        "DMA.TRANSFER (4096x512x1)",
+        "TENSOR.MATMUL (1x8x4096)",
+        "DMA.TRANSFER (8x512x1)",
+        "DMA.TRANSFER (256x512x1)",
+        "DMA.TRANSFER (192x4096x1)",
+        "TENSOR.MATMUL (1x128x2048)",
+        "DMA.TRANSFER (128x512x1)",
+        "DMA.TRANSFER (4096x512x1)",
+        "DMA.TRANSFER (6x4096x1)",
+        "TENSOR.MATMUL (1x1024x1024)",
+        "DMA.TRANSFER (1024x512x1)",
+        "DMA.TRANSFER (32768x512x1)",
+        "TENSOR.MATMUL (1x256x1024)",
+        "DMA.TRANSFER (256x512x1)",
+        "DMA.TRANSFER (8192x512x1)",
+        "TENSOR.MATMUL (1x2x4096)",
+        "DMA.TRANSFER (2x512x1)",
+        "DMA.TRANSFER (64x512x1)",
+        "DMA.TRANSFER (50128x16x1)",
+        "DMA.TRANSFER (1604096x16x1)",
+        "TENSOR.MATMUL (1x128x8192)",
+        "DMA.TRANSFER (128x512x1)",
+        "DMA.TRANSFER (4096x512x1)",
+        "TENSOR.MATMUL (1x8x4096)",
+        "DMA.TRANSFER (8x512x1)",
+        "DMA.TRANSFER (256x512x1)",
+        "DMA.TRANSFER (192x4096x1)",
+        "DMA.TRANSFER (6x4096x1)",
+        "TENSOR.MATMUL (1x128x2048)",
+        "DMA.TRANSFER (128x512x1)",
+        "DMA.TRANSFER (4096x512x1)",
+        "DMA.TRANSFER (6x4096x1)",
+        "DMA.TRANSFER (6x4096x1)",
+        "TENSOR.MATMUL (1x4040x4096)",
+        "DMA.TRANSFER (4040x1x1)",
+        "DMA.TRANSFER (129280x1x1)"
+      ],
+      "rom": [
+        "TENSOR.MATMUL (1x32768x1024)",
+        "TENSOR.MATMUL (1x4096x8192)",
+        "TENSOR.MATMUL (1x256x4096)",
+        "DMA.TRANSFER (1x6x1)",
+        "TENSOR.MATMUL (1x4096x2048)",
+        "DMA.FILL (6144x4096x1)",
+        "TENSOR.MATMUL (1x32768x1024)",
+        "TENSOR.MATMUL (1x8192x1024)",
+        "TENSOR.MATMUL (1x64x4096)",
+        "TENSOR.MATMUL (1x4096x8192)",
+        "TENSOR.MATMUL (1x256x4096)",
+        "DMA.TRANSFER (1x6x1)",
+        "TENSOR.MATMUL (1x4096x2048)",
+        "DMA.FILL (6144x4096x1)",
+        "TENSOR.MATMUL (1x32768x1024)",
+        "DMA.GATHER (128x512x1)",
+        "DMA.GATHER (128x512x1)",
+        "TENSOR.MATMUL (1x4096x8192)",
+        "TENSOR.MATMUL (1x256x4096)",
+        "DMA.TRANSFER (1x6x1)",
+        "TENSOR.MATMUL (1x4096x2048)",
+        "DMA.FILL (6144x4096x1)",
+        "TENSOR.MATMUL (1x32768x1024)",
+        "TENSOR.MATMUL (1x8192x1024)",
+        "TENSOR.MATMUL (1x64x4096)",
+        "TENSOR.MATMUL (1x4096x8192)",
+        "TENSOR.MATMUL (1x256x4096)",
+        "DMA.TRANSFER (1x6x1)",
+        "TENSOR.MATMUL (1x4096x2048)",
+        "DMA.FILL (6144x4096x1)",
+        "TENSOR.MATMUL (1x129280x4096)"
+      ]
+    },
     "pair_id": "deepseek-v4-flash-0731__rom-n5-native-sramkv-array-hybrid-x30__b200-sxm-x15-hybrid",
-    "reason": "no deployment built",
+    "reason": "not comparable",
     "request_symbols": {
       "BATCH": 1,
       "CONTEXT_LENGTH": 200000,
@@ -292,8 +1569,296 @@
       "SPAN_LAST_INDEX": 0,
       "SPAN_TOKENS": 1
     },
+    "rom": {
+      "backend": "rom.cluster_32",
+      "capability_digest": "414793fdd02d60d5cf60d11dfde3a0b656f3bb76af4a5ab4f63b7b1d4148bb84",
+      "column_group_spans": [
+        6,
+        1024
+      ],
+      "deployment_sha256": "7839775d53466243e2f6274d85c898599611a07b60e1e567d76db70cafa656b9",
+      "effective_tensor_width_caps": [
+        6,
+        64
+      ],
+      "families": {
+        "attention": {
+          "issued_work": 4510319640576,
+          "operations": 43,
+          "operators": 4,
+          "padding_fraction": 0.93752,
+          "padding_work": 4228514840576,
+          "tile_errors": 0,
+          "tiles": 537672,
+          "useful_work": 281804800000
+        },
+        "dma": {
+          "cycles": 14140761,
+          "issued_work": 4129305282,
+          "operations": 1339,
+          "operators": 123,
+          "padding_fraction": 0.516236,
+          "padding_work": 2131697529,
+          "payload_bytes": 2186074660,
+          "tile_errors": 0,
+          "tile_issue_cycles": 14140761,
+          "tiles": 14140761,
+          "useful_work": 1997607753
+        },
+        "reduction": {
+          "issued_work": 1334583296,
+          "operations": 363,
+          "operators": 33,
+          "padding_fraction": 0.580678,
+          "padding_work": 774962944,
+          "tile_errors": 0,
+          "tiles": 57172,
+          "useful_work": 559620352
+        },
+        "route": {
+          "issued_work": 1146603520,
+          "operations": 210,
+          "operators": 17,
+          "padding_fraction": 0.999023,
+          "padding_work": 1145483790,
+          "tile_errors": 0,
+          "tiles": 3811,
+          "useful_work": 1119730
+        },
+        "selection": {
+          "issued_work": 2,
+          "operations": 2,
+          "operators": 2,
+          "padding_fraction": 0.0,
+          "padding_work": 0,
+          "tile_errors": 0,
+          "tiles": 2,
+          "useful_work": 2
+        },
+        "tensor": {
+          "column_groups": 3032,
+          "cycles": 1636192,
+          "issued_work": 12930256914,
+          "operations": 864,
+          "operators": 84,
+          "output_waves": 77208,
+          "padding_fraction": 0.0,
+          "padding_work": 0,
+          "tile_errors": 0,
+          "tile_issue_cycles": 1636192,
+          "tiles": 1636259,
+          "useful_work": 12930256914
+        },
+        "vector": {
+          "issued_work": 4644309824,
+          "operations": 1660,
+          "operators": 152,
+          "padding_fraction": 0.997462,
+          "padding_work": 4632524286,
+          "tile_errors": 0,
+          "tiles": 57187,
+          "useful_work": 11785538
+        }
+      },
+      "max_column_group_span": 1024,
+      "model_id": "deepseek-v4-flash-0731",
+      "request_symbols": {
+        "BATCH": 1,
+        "CONTEXT_LENGTH": 200000,
+        "GENERATION_INDEX": 1,
+        "MAX_NEW_TOKENS": 1,
+        "NODE_COUNT": 1,
+        "NODE_ID": 0,
+        "PHASE": 1,
+        "POSITION_END": 200000,
+        "POSITION_START": 199999,
+        "SPAN_LAST_INDEX": 0,
+        "SPAN_TOKENS": 1
+      },
+      "root": "build/abi3/deepseek-v4-flash-rom-array-32-e9",
+      "schedule_shapes": {
+        "engine_family=112,tile_rows=1,tile_cols=1,tile_depth=1,issue_window=1": 1,
+        "engine_family=16,tile_rows=1,tile_cols=6,tile_depth=1,issue_window=1": 2,
+        "engine_family=16,tile_rows=1,tile_cols=64,tile_depth=1,issue_window=16": 1,
+        "engine_family=16,tile_rows=1,tile_cols=64,tile_depth=1,issue_window=2": 2,
+        "engine_family=16,tile_rows=1,tile_cols=64,tile_depth=1,issue_window=8": 2,
+        "engine_family=16,tile_rows=1024,tile_cols=4,tile_depth=1,issue_window=1": 2,
+        "engine_family=16,tile_rows=1024,tile_cols=64,tile_depth=1,issue_window=16": 2,
+        "engine_family=16,tile_rows=1024,tile_cols=64,tile_depth=1,issue_window=2": 2,
+        "engine_family=16,tile_rows=1024,tile_cols=64,tile_depth=1,issue_window=8": 2,
+        "engine_family=16,tile_rows=128,tile_cols=64,tile_depth=1,issue_window=8": 1,
+        "engine_family=16,tile_rows=256,tile_cols=64,tile_depth=1,issue_window=2": 2,
+        "engine_family=16,tile_rows=256,tile_cols=64,tile_depth=1,issue_window=8": 2,
+        "engine_family=16,tile_rows=4,tile_cols=64,tile_depth=1,issue_window=2": 2,
+        "engine_family=16,tile_rows=4,tile_cols=64,tile_depth=1,issue_window=8": 2,
+        "engine_family=16,tile_rows=6144,tile_cols=64,tile_depth=1,issue_window=16": 2,
+        "engine_family=16,tile_rows=8,tile_cols=64,tile_depth=1,issue_window=2": 2,
+        "engine_family=16,tile_rows=8,tile_cols=64,tile_depth=1,issue_window=8": 2,
+        "engine_family=32,tile_rows=1,tile_cols=64,tile_depth=128,issue_window=16": 1,
+        "engine_family=32,tile_rows=1024,tile_cols=6,tile_depth=1,issue_window=1": 1,
+        "engine_family=32,tile_rows=1024,tile_cols=64,tile_depth=1,issue_window=16": 1,
+        "engine_family=32,tile_rows=1024,tile_cols=64,tile_depth=128,issue_window=16": 2,
+        "engine_family=32,tile_rows=6144,tile_cols=64,tile_depth=128,issue_window=16": 2,
+        "engine_family=48,tile_rows=1,tile_cols=64,tile_depth=1,issue_window=16": 2,
+        "engine_family=48,tile_rows=1,tile_cols=64,tile_depth=1,issue_window=2": 2,
+        "engine_family=48,tile_rows=1,tile_cols=64,tile_depth=1,issue_window=7": 2,
+        "engine_family=48,tile_rows=1,tile_cols=64,tile_depth=1,issue_window=8": 2,
+        "engine_family=48,tile_rows=1024,tile_cols=4,tile_depth=1,issue_window=1": 2,
+        "engine_family=48,tile_rows=1024,tile_cols=6,tile_depth=1,issue_window=1": 2,
+        "engine_family=48,tile_rows=1024,tile_cols=64,tile_depth=1,issue_window=16": 2,
+        "engine_family=48,tile_rows=1024,tile_cols=64,tile_depth=1,issue_window=2": 2,
+        "engine_family=48,tile_rows=1024,tile_cols=64,tile_depth=1,issue_window=4": 2,
+        "engine_family=48,tile_rows=1024,tile_cols=64,tile_depth=1,issue_window=7": 2,
+        "engine_family=48,tile_rows=1024,tile_cols=64,tile_depth=1,issue_window=8": 2,
+        "engine_family=48,tile_rows=256,tile_cols=64,tile_depth=1,issue_window=2": 2,
+        "engine_family=48,tile_rows=256,tile_cols=64,tile_depth=1,issue_window=7": 2,
+        "engine_family=48,tile_rows=256,tile_cols=64,tile_depth=1,issue_window=8": 2,
+        "engine_family=48,tile_rows=6144,tile_cols=64,tile_depth=1,issue_window=16": 2,
+        "engine_family=48,tile_rows=8,tile_cols=64,tile_depth=1,issue_window=7": 1,
+        "engine_family=48,tile_rows=8,tile_cols=64,tile_depth=1,issue_window=8": 2,
+        "engine_family=64,tile_rows=1024,tile_cols=64,tile_depth=128,issue_window=16": 1,
+        "engine_family=80,tile_rows=1024,tile_cols=6,tile_depth=1,issue_window=1": 1,
+        "engine_family=80,tile_rows=1024,tile_cols=64,tile_depth=1,issue_window=10": 1,
+        "engine_family=80,tile_rows=1024,tile_cols=64,tile_depth=1,issue_window=16": 1,
+        "engine_family=80,tile_rows=1024,tile_cols=64,tile_depth=1,issue_window=2": 1,
+        "engine_family=80,tile_rows=6144,tile_cols=64,tile_depth=1,issue_window=16": 1,
+        "engine_family=96,tile_rows=1,tile_cols=64,tile_depth=1,issue_window=16": 1,
+        "engine_family=96,tile_rows=1024,tile_cols=64,tile_depth=1,issue_window=16": 1,
+        "engine_family=96,tile_rows=1024,tile_cols=64,tile_depth=1,issue_window=2": 1,
+        "engine_family=96,tile_rows=1024,tile_cols=64,tile_depth=1,issue_window=8": 1,
+        "engine_family=96,tile_rows=1032,tile_cols=64,tile_depth=1,issue_window=8": 1,
+        "engine_family=96,tile_rows=1280,tile_cols=64,tile_depth=1,issue_window=8": 1
+      },
+      "static_walk": "complete over the UNION of both arms of 2 data-dependent predicate(s) (BOOLEAN_OBJECT); 683 of 4481 issues are conditional, so the issue list is an upper bound",
+      "static_walk_detail": {
+        "bound": "UPPER: every conditional issue is counted as if its predicate admitted it; the program at run time issues this many or fewer",
+        "conditional_issues": 683,
+        "conditional_operators": [
+          "DMA.GATHER (128x512x1)",
+          "DMA.GATHER (128x512x1)",
+          "DMA.GATHER (1x128x1)",
+          "DMA.GATHER (1x128x1)",
+          "DMA.GATHER (1x128x1)",
+          "DMA.GATHER (4x128x1)",
+          "DMA.GATHER (4x128x1)",
+          "DMA.GATHER (4x128x1)",
+          "DMA.GATHER (4x128x1)",
+          "DMA.GATHER (4x128x1)",
+          "DMA.GATHER (4x128x1)",
+          "DMA.GATHER (4x128x1)",
+          "DMA.GATHER (4x128x1)",
+          "DMA.GATHER (4x512x1)",
+          "DMA.GATHER (4x512x1)",
+          "DMA.GATHER (4x512x1)",
+          "DMA.GATHER (4x512x1)",
+          "DMA.GATHER (4x512x1)",
+          "DMA.GATHER (4x512x1)",
+          "DMA.GATHER (4x512x1)",
+          "DMA.GATHER (4x512x1)",
+          "DMA.SCATTER (2048x512x1)",
+          "DMA.SCATTER (65536x128x1)",
+          "DMA.SCATTER (65536x128x1)",
+          "DMA.SCATTER (65536x512x1)",
+          "DMA.SCATTER (65536x512x1)",
+          "VECTOR.COMPRESS (1x128x1)",
+          "VECTOR.COMPRESS (1x128x1)",
+          "VECTOR.COMPRESS (1x512x1)",
+          "VECTOR.COMPRESS (1x512x1)",
+          "VECTOR.COMPRESS (1x512x1)",
+          "VECTOR.CONVERT (1x128x1)",
+          "VECTOR.CONVERT (1x128x1)",
+          "VECTOR.CONVERT (1x128x1)",
+          "VECTOR.CONVERT (1x128x1)",
+          "VECTOR.CONVERT (1x128x1)",
+          "VECTOR.CONVERT (1x128x1)",
+          "VECTOR.CONVERT (1x448x1)",
+          "VECTOR.CONVERT (1x448x1)",
+          "VECTOR.CONVERT (1x448x1)",
+          "VECTOR.CONVERT (1x512x1)",
+          "VECTOR.CONVERT (1x512x1)",
+          "VECTOR.CONVERT (1x512x1)",
+          "VECTOR.CONVERT (1x512x1)",
+          "VECTOR.CONVERT (1x512x1)",
+          "VECTOR.CONVERT (1x512x1)",
+          "VECTOR.HADAMARD (1x128x1)",
+          "VECTOR.HADAMARD (1x128x1)",
+          "VECTOR.RMS_NORM (1x128x1)",
+          "VECTOR.RMS_NORM (1x128x1)",
+          "VECTOR.RMS_NORM (1x512x1)",
+          "VECTOR.RMS_NORM (1x512x1)",
+          "VECTOR.RMS_NORM (1x512x1)",
+          "VECTOR.ROPE (1x512x1)",
+          "VECTOR.ROPE (1x512x1)",
+          "VECTOR.ROPE (1x512x1)"
+        ],
+        "rule": "a predicate whose truth is device state does not fork this walk unless it gates a control transfer: both arms of a predicated engine issue or WAIT rejoin at pc+1 with the same loop map, so the walk takes their union and marks the issue conditional",
+        "total_issues": 4481,
+        "unevaluable_predicates": [
+          {
+            "gated_instructions": 529,
+            "kind": "BOOLEAN_OBJECT",
+            "predicate_id": 1067,
+            "reads": "object 1056 element 0"
+          },
+          {
+            "gated_instructions": 221,
+            "kind": "BOOLEAN_OBJECT",
+            "predicate_id": 1889,
+            "reads": "object 1881 element 0"
+          }
+        ]
+      },
+      "storage_class_counts": {
+        "0": 1,
+        "1": 105,
+        "2": 2,
+        "3": 322
+      },
+      "topology_class": 1
+    },
+    "rule": "compare, per engine family and per operator, every SCHEDULE field runtime.cycle.model.tile_mapping reads, the tile counts and padding those fields produce for the same useful work at the same request, and for DMA the tile count and bytes per tile; comparable only when no cost-bearing field differs outside the cited allowlist",
     "schema": "opentallas.deployment_audit.v2",
-    "verdict": "NOT COMPARABLE: no deployment built -- rom: no compiled deepseek-v4-flash-0731 deployment is bound to configs/hardware/abi3_capability/rom_deepseek_v4_array_32.json; hbm: no compiled deepseek-v4-flash-0731 deployment is bound to configs/hardware/abi3_capability/hbm_sram_single_chip.json.  A cell with no compiled deployment pair has no deployment-side evidence, and absence is a failure, not a skip."
+    "storage_classes_differ_as_expected": true,
+    "tensor_parity_band": {
+      "band": [
+        256.0,
+        Infinity
+      ],
+      "cycles_per_full_depth_tile": {
+        "hbm": 1,
+        "rom": 1
+      },
+      "cycles_per_unit_depth": {
+        "hbm": 0.0078125,
+        "rom": 0.0078125
+      },
+      "favours": "neither",
+      "hbm_tile_depth": 128,
+      "magnitude_x": 1.0,
+      "note": "rates on which the two depths are charged alike per unit of depth; the machine rate sits inside it",
+      "parity": true,
+      "rom_tile_depth": 128,
+      "tile_issue_cycles": 1,
+      "work_per_lane_cycle": 7405.8045787306455,
+      "work_units_per_mac": 2.0
+    },
+    "unexplained_asymmetries": [
+      "attention.tile_rows",
+      "dma.tile_rows",
+      "dma.tile_cols",
+      "dma.tile_depth",
+      "dma.issue_window",
+      "dma.max_outstanding",
+      "dma.queue_index",
+      "dma.bank_mask",
+      "dma.port_mask",
+      "dma.noc_route_class",
+      "reduction.tile_rows",
+      "route.tile_rows",
+      "tensor.tile_rows",
+      "vector.tile_rows"
+    ],
+    "verdict": "NOT COMPARABLE: tensor tile_rows 1024 vs 512 (neutral at batch-1 decode), contraction cycles per step 1,636,192 vs 1,164,736 (favours hbm 1.405x); attention tile 1024x64x128 vs 512x64x128 (tiles per step 537,672 vs 537,672; issued work incl. padding 4,510,319,640,576 vs 2,255,159,820,288, favours hbm 2x); dma tile 1024x64x1 vs 512x64x1 (tiles per step 14,140,761 vs 303,155, favours hbm 46.65x; DMA.SCATTER (65536x512x1) 524288 vs 1024 tiles per issue, favours hbm 512x; DMA.SCATTER (65536x128x1) 131072 vs 256 tiles per issue, favours hbm 512x); vector tile 1024x64x1 vs 512x64x1 (tiles per step 57,187 vs 57,187; issued work incl. padding 4,644,309,824 vs 1,266,857,600, favours hbm 3.666x); reduction tile 1024x64x1 vs 512x64x1 (tiles per step 57,172 vs 67,236, favours rom 1.176x); route tile 1024x64x1 vs 512x64x1 (tiles per step 3,811 vs 3,811; issued work incl. padding 1,146,603,520 vs 115,546,240, favours hbm 9.923x); 5 further cost-bearing field(s) differ (max_outstanding, queue_index, bank_mask, port_mask, noc_route_class; see asymmetries); 31 rom / 81 hbm operators have no counterpart with the same useful work; allowlist empty.  These are SCHEDULE fields, so no machine file can correct them; the deployments must be re-emitted under one SCHEDULE rule."
   },
   "derived_facts": {
     "collapse_exactness": {
@@ -343,7 +1908,7 @@
       }
     ],
     "execution_format": "w4a8",
-    "hbm_base_capability": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+    "hbm_base_capability": "configs/hardware/abi3_capability/hbm_sram_cluster_32.json",
     "hbm_bytes_per_cycle_per_channel": 112.5,
     "hbm_peak_memory_bytes_s": 108000000000000.0,
     "hbm_role_hbm_bytes_s_achieved": 54000000000000.0,
@@ -378,7 +1943,7 @@
     "work_units_per_mac": 3.843464585846154
   },
   "emitted": {
-    "hbm_capability": "configs/hardware/abi3_capability/n5_design_target/hbm_sram_single_chip_n5_design_target_deepseek-v4-flash-0731__rom-n5-native-sramkv-array-hybrid-x30__b200-sxm-x15-hybrid_v1.json",
+    "hbm_capability": "configs/hardware/abi3_capability/n5_design_target/hbm_sram_cluster_32_n5_design_target_deepseek-v4-flash-0731__rom-n5-native-sramkv-array-hybrid-x30__b200-sxm-x15-hybrid_v1.json",
     "hbm_cost_table": "configs/hardware/n5_design_target/abi3_cost_n5_design_target_deepseek-v4-flash-0731__rom-n5-native-sramkv-array-hybrid-x30__b200-sxm-x15-hybrid_hbm_v1.json",
     "rom_capability": "configs/hardware/abi3_capability/n5_design_target/rom_deepseek_v4_array_32_n5_design_target_deepseek-v4-flash-0731__rom-n5-native-sramkv-array-hybrid-x30__b200-sxm-x15-hybrid_v1.json",
     "rom_cost_table": "configs/hardware/n5_design_target/abi3_cost_n5_design_target_deepseek-v4-flash-0731__rom-n5-native-sramkv-array-hybrid-x30__b200-sxm-x15-hybrid_rom_v1.json"

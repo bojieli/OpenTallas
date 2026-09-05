@@ -271,7 +271,8 @@
         "model_id": "deepseek-v4-pro-0813",
         "role": "rom",
         "status": "no deployment built",
-        "why": "no compiled deepseek-v4-pro-0813 deployment is bound to configs/hardware/abi3_capability/rom_deepseek_v4_pro_array_32.json"
+        "unbuildable": true,
+        "why": "no compiled deepseek-v4-pro-0813 deployment is bound to configs/hardware/abi3_capability/rom_deepseek_v4_pro_array_32.json -- and none can be: no DeepSeek-V4-Pro deployment exists in any storage class: the ROM product has no wafer or single-chip form (32-bit dynamic-term stride overflow) and its HBM twin is refused at any context at 864,068,475,024 bytes per node"
       }
     },
     "full_report": "results/derived/deepseek-v4-pro-0813__rom-n5-native-sramkv-array-tensor-x155__b200-sxm-x79-tensor_deployment_audit.json",
@@ -293,7 +294,7 @@
       "SPAN_TOKENS": 1
     },
     "schema": "opentallas.deployment_audit.v2",
-    "verdict": "NOT COMPARABLE: no deployment built -- rom: no compiled deepseek-v4-pro-0813 deployment is bound to configs/hardware/abi3_capability/rom_deepseek_v4_pro_array_32.json; hbm: no compiled deepseek-v4-pro-0813 deployment is bound to configs/hardware/abi3_capability/hbm_sram_single_chip.json.  A cell with no compiled deployment pair has no deployment-side evidence, and absence is a failure, not a skip."
+    "verdict": "NOT COMPARABLE: no deployment built -- rom: no compiled deepseek-v4-pro-0813 deployment is bound to configs/hardware/abi3_capability/rom_deepseek_v4_pro_array_32.json -- and none can be: no DeepSeek-V4-Pro deployment exists in any storage class: the ROM product has no wafer or single-chip form (32-bit dynamic-term stride overflow) and its HBM twin is refused at any context at 864,068,475,024 bytes per node; hbm: no compiled deepseek-v4-pro-0813 deployment is bound to configs/hardware/abi3_capability/hbm_sram_single_chip.json.  A cell with no compiled deployment pair has no deployment-side evidence, and absence is a failure, not a skip."
   },
   "derived_facts": {
     "collapse_exactness": {

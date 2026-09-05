@@ -281,13 +281,67 @@ ROM_BASE_CAPABILITY: dict[tuple[str, str], str] = {
     ("DeepSeek-V4-Pro-0813", "wafer"): "rom_deepseek_v4_pro_array_32.json",
 }
 
-#: The GPU-side base is ALWAYS the single-chip record.  The derivation
-#: collapses every design point to one logical device, and
-#: ``hbm_sram_cluster_32.json`` differs from ``hbm_sram_single_chip.json`` in
-#: exactly three places -- topology_class, limits.max_nodes and the link block
-#: -- all of which the collapse removes.  Its limits, memory capacities and
-#: engine declarations are byte-identical, so nothing is lost by using the
-#: single-chip record and the emitted pair keeps one fabric-free shape.
+#: The GPU-side base record, per model, and the single-chip default.
+#:
+#: The two GPU records differ in exactly five fields -- topology_class,
+#: limits.max_nodes and the three populated link fields (bisection_links,
+#: peers_per_node, route_groups).  Their limits, memory capacities and engine
+#: declarations are byte-identical.  ``capability()`` collapses topology_class
+#: and max_nodes on both sides, so those two are genuinely removed; the link
+#: block is NOT, and the previous "all of which the collapse removes" reading
+#: was wrong.  Measured at da06a48 on the DSV4-Flash array-x32 cell: with the
+#: single-chip base the emitted pair declares ROM peers_per_node 31 /
+#: bisection_links 64 / route_groups 4 against an HBM comparator declaring
+#: 0 / 0 / 0, and nothing in the pair notices -- an undeclared machine
+#: difference of exactly the kind C2 exists to catch.
+#:
+#: The override is keyed by the cell's ROM base record, not by its model,
+#: because it is the ROM side's own topology that settles which GPU record is
+#: its peer.  ``rom_deepseek_v4_array_32.json`` -- the 32-node Flash array --
+#: is based on the cluster-32 record.  Three independent reasons agree, and
+#: none of them is convenience:
+#:
+#: 1.  It is the only record the model FITS.  Lowering the Flash graph with
+#:     ``--profile single-chip`` is refused -- "physical HBM plan requires
+#:     229,845,618,692 bytes per node, capability provides 103,079,215,104"
+#:     (measured at da06a48).  There is no single-chip DeepSeek comparator and
+#:     there cannot be one.
+#: 2.  It is the record the built comparator carries.  Commit 6b41a53 states
+#:     the pairing -- "cluster-32 is the HBM profile because the ROM side is
+#:     the 32-node array and the shipped comparison pairs those two" -- and
+#:     ``build/abi3/deepseek-v4-flash-hbm-e9`` stamps capability digest
+#:     1eb2e92dac1d, which is ``hbm_sram_cluster_32.json``.
+#: 3.  It removes the link asymmetry above instead of leaving it: the ROM base
+#:     ``rom_deepseek_v4_array_32.json`` declares 31 / 64 / 4 and so does the
+#:     cluster-32 record, so both emitted sides then declare the same fabric.
+#:
+#: Cost: none, and it is not a ROM-favouring choice under post-mortem R14.
+#: Measured on the same cell, single-chip against cluster-32: both emitted
+#: cost tables byte-identical, both emitted capabilities identical but for
+#: capability_id, base_capability and the link block, and ``assert_comparable``
+#: compares the same 114 parameters with the same 5 permitted differences
+#: either way.  No link field resolves to a machine parameter today; the
+#: correction is to what the pair DECLARES, and it declares the stronger
+#: comparator, not the weaker one.
+#:
+#: Two DeepSeek ROM bases deliberately keep the default, and neither is an
+#: oversight:
+#:
+#: * ``rom_deepseek_v4_pro_array_32.json`` -- also a 32-node array, so the same
+#:   rule would apply, but no Pro deployment exists in either shape (see
+#:   ``UNBUILDABLE_DEPLOYMENT_PAIRS``).  No compiled comparator settles the
+#:   choice, the cell is red on absence either way, and renaming four emitted
+#:   records to say something no evidence supports is churn, not correction.
+#: * ``rom_deepseek_v4.json`` -- the Flash wafer rung.  Its link block is a
+#:   different vocabulary entirely (reticle_rows / reticle_columns /
+#:   tiles_per_reticle, not peers_per_node), so NEITHER GPU record matches it
+#:   and reason 3 above does not apply.  Pointing it at cluster-32 would make
+#:   its GPU side bind a 32-node cluster deployment against a single wafer on
+#:   no evidence that the two correspond; that is the "worse than no
+#:   registration" case.  It keeps the default and reports both sides absent.
+GPU_BASE_CAPABILITY: dict[str, str] = {
+    "rom_deepseek_v4_array_32.json": "hbm_sram_cluster_32.json",
+}
 HBM_BASE_CAPABILITY = "hbm_sram_single_chip.json"
 
 
@@ -334,7 +388,10 @@ def base_capabilities(anchor: "Anchor", rom_base: str | None = None,
             )
         rom_base = f"configs/hardware/abi3_capability/{name}"
     if hbm_base is None:
-        hbm_base = f"configs/hardware/abi3_capability/{HBM_BASE_CAPABILITY}"
+        name = GPU_BASE_CAPABILITY.get(
+            Path(rom_base).name, HBM_BASE_CAPABILITY
+        )
+        hbm_base = f"configs/hardware/abi3_capability/{name}"
     return rom_base, hbm_base
 
 
@@ -2276,37 +2333,117 @@ DEPLOYMENT_AUDIT_ALLOWLIST: dict[str, str] = {}
 
 #: The compiled deployments the repository's own comparison evidence was
 #: produced from, keyed by the base capability record each was lowered
-#: against.  A cell binds a side to one of these only when the cell's base
-#: capability is the key AND the deployment's model is the cell's model; the
-#: audit then verifies, from the deployment manifest, that it really carries
-#: that capability's digest and is the exact deployment the cited evidence
-#: names.  ``build/abi3`` is a build product and is not tracked, so the digests
-#: are what make an audit result reproducible.
-SHIPPED_DEPLOYMENTS: dict[str, dict[str, Any]] = {
-    "configs/hardware/abi3_capability/rom_qwen3.json": {
-        "model_id": "qwen3-8b",
-        "root": "build/abi3/qwen3-8b-rom-rowfold-v1",
-        "deployment_sha256": (
-            "5940e5b6b5c507493fc8cf08675c43189aff8a6ecc2e4c7deeb128134893f8f9"
-        ),
-        "evidence": [
-            "results/abi3/cycle/qwen3_rom_exact8k_b1_asap7_decode_pos8000_rowfold_depthfix_v1.json",
-            "docs/PERFORMANCE_DESIGN_POSTMORTEM.md (headline table: "
-            "qwen3_rom_exact8k_b1_sky130_decode_pos8002_rowfold_depthfix_v1)",
-        ],
-    },
-    "configs/hardware/abi3_capability/hbm_sram_single_chip.json": {
-        "model_id": "qwen3-8b",
-        "root": "build/abi3/qwen3-8b-hbm-exact8k-b1-lane0",
-        "deployment_sha256": (
-            "0d7897457e14666fc057ea6223cc32e65c61e39bfe5b2ff675c3b5585fe2ce8e"
-        ),
-        "evidence": [
-            "results/abi3/cycle/qwen3_hbm_exact8k_b1_asap7_decode_pos8000_rowfold_v1.json",
-            "docs/PERFORMANCE_DESIGN_POSTMORTEM.md (headline table: "
-            "qwen3_hbm_exact8k_b1_sky130_decode_pos8002_rowfold_v1)",
-        ],
-    },
+#: against.  One capability record can serve more than one model -- every
+#: DeepSeek cell and every Qwen cell reaches the GPU side through an
+#: ``hbm_sram_*`` record -- so the value is the LIST of registrations for that
+#: record and the model id selects within it.  A cell binds a side only when
+#: the cell's base capability is the key AND the deployment's model is the
+#: cell's model; the audit then verifies, from the deployment manifest, that it
+#: really carries that capability's digest and is the exact deployment the
+#: cited evidence names.  ``build/abi3`` is a build product and is not tracked,
+#: so the digests are what make an audit result reproducible.
+#:
+#: Only a deployment that is the CURRENT lowering of its capability is
+#: registered.  A pre-AM-E9-v2 bundle still carries the split bank_mask the
+#: unified activation placement removed (commit b7441e8), so registering one
+#: would bind the audit to a build product the source no longer produces --
+#: the stale-artifact defect the R-series post-mortems name.  Every digest
+#: below was reproduced from a clean worktree pinned at the registering commit.
+SHIPPED_DEPLOYMENTS: dict[str, list[dict[str, Any]]] = {
+    "configs/hardware/abi3_capability/rom_qwen3.json": [
+        {
+            "model_id": "qwen3-8b",
+            "root": "build/abi3/qwen3-8b-rom-e9",
+            "deployment_sha256": (
+                "133afc13e1fcd2aade2e40530883c9986b0e920d99853990d9032fd777f26243"
+            ),
+            "evidence": [
+                "results/derived/qwen3_e9_deployment_audit.json",
+                "results/abi3/rom_schedule_checks_e9.json",
+                "results/abi3/accelerator_tokens/qwen3_eos_rom_e9.json",
+                "commit b7441e8 (AM-E9 v2: one activation-buffer placement, "
+                "one bank_mask)",
+            ],
+        },
+    ],
+    "configs/hardware/abi3_capability/hbm_sram_single_chip.json": [
+        {
+            "model_id": "qwen3-8b",
+            "root": "build/abi3/qwen3-8b-hbm-e9",
+            "deployment_sha256": (
+                "cb9067f5fbf67f7df4212399aee6ba75ced4ca5c8f2dc8c1631372a4068cea2c"
+            ),
+            "evidence": [
+                "results/derived/qwen3_e9_deployment_audit.json",
+                "results/abi3/hbm_qwen_e9_deployment_certificate.json",
+                "results/abi3/accelerator_tokens/qwen3_eos_hbm_e9.json",
+                "commit b7441e8 (AM-E9 v2: one activation-buffer placement, "
+                "one bank_mask)",
+            ],
+        },
+    ],
+    "configs/hardware/abi3_capability/rom_deepseek_v4_array_32.json": [
+        {
+            "model_id": "deepseek-v4-flash-0731",
+            "root": "build/abi3/deepseek-v4-flash-rom-array-32-e9",
+            "deployment_sha256": (
+                "7839775d53466243e2f6274d85c898599611a07b60e1e567d76db70cafa656b9"
+            ),
+            "evidence": [
+                "results/abi3/rom_schedule_checks_deepseek_e9.json",
+                "commit 6b41a53 (the DeepSeek Flash pair re-lowered under "
+                "AM-E9 v2)",
+            ],
+        },
+    ],
+    "configs/hardware/abi3_capability/hbm_sram_cluster_32.json": [
+        {
+            "model_id": "deepseek-v4-flash-0731",
+            "root": "build/abi3/deepseek-v4-flash-hbm-e9",
+            "deployment_sha256": (
+                "d83286151b5c9f7e4d653b124c93a8d4350e405e5af37239ed07d81c578ea08b"
+            ),
+            "evidence": [
+                "results/abi3/hbm_deepseek_e9_deployment_certificate.json",
+                "commit 6b41a53 (the DeepSeek Flash pair re-lowered under "
+                "AM-E9 v2)",
+            ],
+        },
+    ],
+}
+
+#: Design points whose C2 cell can never bind a deployment pair, with the
+#: reason each is impossible rather than merely unbuilt.  Nothing reads this
+#: table -- ``_bind_shipped_deployment`` reports absence from the tables above
+#: on its own -- but a reader who finds a permanently red C2 cell is owed the
+#: physical reason, and the reason is not in any artifact the cell emits.
+#:
+#: * ``rom_deepseek_v4_pro_array_32.json`` -- no Pro deployment exists in any
+#:   storage class.  tools/build_rom_deployment.py records both halves: there
+#:   is no Pro wafer or single-chip ROM product (an unsharded routed expert
+#:   region needs a per-layer element stride 1.97x over the 32-bit dynamic-term
+#:   stride field of ABI 3.0), and the matched ``--storage-class hbm`` twin is
+#:   refused at ANY context at 864,068,475,024 bytes per node.  The Pro array
+#:   ROM build admits only at 8,192 positions, and no Pro bundle is on disk.
+#: * ``rom_deepseek_v4.json`` (the Flash wafer rung) -- the ROM side exists
+#:   (``build/abi3/deepseek-v4-flash-rom``) but its single-node GPU comparator
+#:   does not and cannot: lowering the Flash graph with ``--profile
+#:   single-chip`` is refused with "physical HBM plan requires 229,845,618,692
+#:   bytes per node, capability provides 103,079,215,104" (measured at
+#:   da06a48).  Registering the ROM side alone would bind a pre-AM-E9-v2 bundle
+#:   to a pair that can never be completed, so it is left unregistered.
+UNBUILDABLE_DEPLOYMENT_PAIRS: dict[str, str] = {
+    "configs/hardware/abi3_capability/rom_deepseek_v4_pro_array_32.json": (
+        "no DeepSeek-V4-Pro deployment exists in any storage class: the ROM "
+        "product has no wafer or single-chip form (32-bit dynamic-term stride "
+        "overflow) and its HBM twin is refused at any context at "
+        "864,068,475,024 bytes per node"
+    ),
+    "configs/hardware/abi3_capability/rom_deepseek_v4.json": (
+        "the Flash wafer rung's ROM side is built but its single-node GPU "
+        "comparator cannot be: --profile single-chip needs 229,845,618,692 "
+        "bytes per node against the 103,079,215,104 the capability declares"
+    ),
 }
 
 #: Work-counter units per multiply-accumulate coordinate of a contraction.
@@ -3704,15 +3841,26 @@ def _bind_shipped_deployment(base_capability: str, model_id: str,
     """The deployment the cell's ``role`` side is bound to, or why there is none."""
     from runtime.abi3.capability import Capability
 
-    entry = SHIPPED_DEPLOYMENTS.get(base_capability)
+    entry = next(
+        (e for e in SHIPPED_DEPLOYMENTS.get(base_capability, [])
+         if e["model_id"] == model_id),
+        None,
+    )
     record: dict[str, Any] = {
         "role": role, "base_capability": base_capability, "model_id": model_id,
     }
-    if entry is None or entry["model_id"] != model_id:
+    if entry is None:
         record["status"] = "no deployment built"
-        record["why"] = (
+        why = (
             f"no compiled {model_id} deployment is bound to {base_capability}"
         )
+        impossible = UNBUILDABLE_DEPLOYMENT_PAIRS.get(base_capability)
+        if impossible is not None:
+            # Not "not built yet": not buildable.  A reader of a permanently
+            # red cell is owed the physical reason, not just the absence.
+            record["unbuildable"] = True
+            why = f"{why} -- and none can be: {impossible}"
+        record["why"] = why
         return None, record
     root = REPO / entry["root"]
     record.update({
@@ -3794,10 +3942,31 @@ def deployment_audit_for_pair(anchor: "Anchor", d: "Derivation",
         Capability.from_dict(bodies["rom_capability"]),
         load_cost_table(tables["rom_cost_table"]),
     )
-    report = audit_deployments(
-        rom_root, hbm_root, symbols=symbols, machine=machine,
-        allowlist=DEPLOYMENT_AUDIT_ALLOWLIST,
-    )
+    try:
+        report = audit_deployments(
+            rom_root, hbm_root, symbols=symbols, machine=machine,
+            allowlist=DEPLOYMENT_AUDIT_ALLOWLIST,
+        )
+    except Exception as exc:  # noqa: BLE001 -- the verdict records why
+        # A pair that is BOUND but cannot be surveyed is the same verdict as a
+        # pair that was never built: no deployment-side evidence.  It must not
+        # propagate, because --matrix would then record the cell as blocked and
+        # leave the previous artifact on disk -- a stale file the gate would go
+        # on reading as if it were this run's answer.  Absence of evidence is
+        # FAIL, and the failure has to be written down where the gate looks.
+        base.update({
+            "comparable": False,
+            "reason": "audit could not be carried out",
+            "audit_error": f"{type(exc).__name__}: {exc}",
+            "verdict": (
+                "NOT COMPARABLE: both sides are bound to a compiled "
+                f"deployment, but the audit could not be carried out -- "
+                f"{type(exc).__name__}: {exc}.  An audit that cannot read the "
+                "two deployments produces no comparison, and no comparison is "
+                "a failure, not a skip."
+            ),
+        })
+        return base
     tensor = machine.engine("tensor")
     base.update(report)
     base["machine"] = {
