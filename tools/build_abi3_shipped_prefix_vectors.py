@@ -25,6 +25,7 @@ decoding result.
 from __future__ import annotations
 
 import argparse
+from dataclasses import dataclass
 import hashlib
 import json
 from pathlib import Path
@@ -41,6 +42,7 @@ from runtime.abi3.constants import (  # noqa: E402
     Control,
     Dma,
     DType,
+    Link,
     Major,
     NO_ID,
     Tensor,
@@ -48,6 +50,7 @@ from runtime.abi3.constants import (  # noqa: E402
 )
 from runtime.abi3.deployment import Deployment, resolve_path  # noqa: E402
 from runtime.abi3.descriptors import (  # noqa: E402
+    CollectiveOp,
     ExtendedDescriptorType,
     SelectorKind,
     Symbol,
@@ -100,16 +103,6 @@ QWEN_RMS_CONTRACT = hashlib.sha256(b"qwen3_rmsnorm_fp32_bf16_v1").digest()
 DEEPSEEK_TRANSFER_CONTRACT = hashlib.sha256(b"structural_hc_expand_bf16_v1").digest()
 QWEN_MATMUL_CONTRACT = hashlib.sha256(b"bf16_bf16_fp32_blocked_rne_v1").digest()
 QWEN_ROPE_CONTRACT = hashlib.sha256(b"qwen3_rope_fp32_bf16_v1").digest()
-EMBED_DESCRIPTOR_IDS = (41, 54, 356, 526)
-RMS_DESCRIPTOR_IDS = (50, 64)
-TRANSFER_DESCRIPTOR_IDS = (363, 531)
-MATMUL_PCS = (11, 14, 17)
-MATMUL_DESCRIPTOR_IDS = ((59, 67, 74), (72, 78, 83))
-HEAD_RMS_PCS = (20, 23)
-HEAD_RMS_DESCRIPTOR_IDS = ((80, 88), (88, 94))
-ROPE_PCS = (26, 29)
-ROPE_DESCRIPTOR_IDS = ((96, 103), (101, 107))
-ROPE_AUX0 = (HEAD_WIDTH, 2 * HEAD_WIDTH)
 MATMUL_OUTPUT_SHA256 = {
     11: "b900b79fd38ff6a9bff470ac27e9672b0c3724b84f6a1f7e964c2ec0918ea0ff",
     14: "dd690fbd9886a0af94cc6b2477ef5bfcc84fe66cac66f345f2ec654a83b28403",
@@ -134,12 +127,711 @@ ROPE_OUTPUT_SHA256 = {
 ROPE_COEFFICIENT_BF16_SHA256 = (
     "836c0e4d9ba8556db28ac7d300914b4cb42d15418e59c6550a693558252049f1"
 )
-NEXT_BOUNDARIES = (
-    (32, int(Major.DMA), int(Dma.SCATTER), 111, "DMA.SCATTER"),
-    (32, int(Major.DMA), int(Dma.SCATTER), 114, "DMA.SCATTER"),
-    (13, int(Major.LINK), 3, 368, "LINK.MULTICAST"),
-    (14, int(Major.VECTOR), int(Vector.MHC), 545, "VECTOR.MHC"),
+
+# ---------------------------------------------------------------------------
+# Descriptor resolution by identity, never by number
+# ---------------------------------------------------------------------------
+#
+# A descriptor ID is a table index.  It records the order the backend happened
+# to emit descriptors in and nothing whatever about the operation described.
+# The governed prefix's IDs have moved three times inside this repository --
+# ``build/abi3/qwen3-8b-rom-rowfold-v1``, the ``*-pre-am-e9`` pair, and the
+# promoted AM-E9 v2 pair -- and every move silently invalidated a hand-written
+# table of numbers without changing one bit of arithmetic.  Nothing below
+# names a descriptor by number.
+#
+# Each governed operation is named by what it IS:
+#
+#   * the kernel of the CERTIFIED Kernel IR that it lowers, by that kernel's
+#     ``kernel_id`` string.  The descriptor's ``source_kernel_id`` is that
+#     kernel's ``index``, and both Qwen lowerings share one Kernel IR (as do
+#     both DeepSeek lowerings), so the anchor is lowering-independent by
+#     construction rather than by coincidence;
+#   * the engine family and sub-opcode the operation issues to;
+#   * the numeric contract its NUMERIC descriptor carries, cross-checked
+#     against the same kernel's own declared ``numeric_contract`` name -- the
+#     digest is SHA-256 of that name, so the two must agree or the derivation
+#     is refused;
+#   * ``aux_id_0`` where the family binds one, and the payload slots the
+#     family must leave unbound.
+#
+# The ID is then SEARCHED FOR in the deployment's own descriptor table.  The
+# search must return exactly one descriptor.  Zero matches and two matches are
+# both refusals that name the ambiguity, because a governed operation that
+# cannot be told apart from another one is not evidence about either.
+#
+# The two lowerings are NOT assumed to agree.  Every derivation runs against
+# the bundle of the target being built, so the ROM and HBM vector sets carry
+# different descriptor IDs wherever the lowerings differ -- which is at all
+# eight governed Qwen PCs.  Where they differ in numeric CONTRACT under one
+# contract digest, ``_audit_contract_agreement`` says so out loud instead of
+# picking one and pretending it fits both.
+
+QWEN_KV_APPEND_CONTRACT = hashlib.sha256(b"bf16_byte_preserving_state_v1").digest()
+DEEPSEEK_HC_PRE_CONTRACT = hashlib.sha256(
+    b"hyper_connection_hc_pre_bf16_v1"
+).digest()
+
+DEPLOYMENT_SCOPE = "deployment_descriptor_table"
+
+# The payload slots each governed family must leave unbound.  These are the
+# same lists the per-operation profile checks below assert; stating them in
+# the identity as well is what lets the derivation tell two operations of one
+# family apart without consulting the instruction that names either.
+UNBOUND_BINARY = (
+    "input_view_2",
+    "input_view_3",
+    "output_view_1",
+    "aux_id_0",
+    "aux_id_1",
+    "aux_id_2",
+    "aux_id_3",
 )
+UNBOUND_BINARY_WITH_AUX0 = (
+    "input_view_2",
+    "input_view_3",
+    "output_view_1",
+    "aux_id_1",
+    "aux_id_2",
+    "aux_id_3",
+)
+UNBOUND_UNARY = ("input_view_1",) + UNBOUND_BINARY
+
+# The NUMERIC payload fields that make up a numeric contract.  Two descriptors
+# that carry one contract digest and differ in any of these do not implement
+# one contract, whatever the digest claims.
+NUMERIC_SIGNATURE_FIELDS = (
+    "input_dtype",
+    "second_input_dtype",
+    "accumulator_dtype",
+    "output_dtype",
+    "rounding_mode",
+    "reduction_order",
+    "saturate",
+    "nan_policy",
+    "epsilon_bits",
+    "scale_bits",
+    "flags",
+)
+
+
+# The Kernel IR spells dtypes; the descriptor encodes them.  Mapping one to
+# the other is what lets the builder say which lowering's numeric payload
+# agrees with the graph it was lowered from, instead of only that the two
+# lowerings disagree with each other.
+KERNEL_IR_DTYPES = {
+    "u8": int(DType.U8),
+    "i8": int(DType.I8),
+    "u16": int(DType.U16),
+    "i16": int(DType.I16),
+    "u32": int(DType.U32),
+    "i32": int(DType.I32),
+    "u64": int(DType.U64),
+    "i64": int(DType.I64),
+    "bf16": int(DType.BF16),
+    "fp16": int(DType.FP16),
+    "fp32": int(DType.FP32),
+    "fp64": int(DType.FP64),
+}
+
+
+@dataclass(frozen=True)
+class OperatorIdentity:
+    """One governed operation, stated without a descriptor number."""
+
+    role: str
+    kernel: str
+    major: int
+    sub: int
+    contract: bytes
+    unbound: tuple[str, ...]
+    aux_0: int | None = None
+
+
+@dataclass(frozen=True)
+class BoundaryIdentity:
+    """The first instruction the shipped prefix refuses, named the same way."""
+
+    pc: int
+    major: int
+    sub: int
+    opcode: str
+    kernel: str | None = None
+    contract: bytes | None = None
+    collective_op: int | None = None
+
+
+@dataclass(frozen=True)
+class Resolution:
+    """A descriptor ID DERIVED from identity, carrying its own derivation."""
+
+    role: str
+    kernel: str | None
+    kernel_index: int | None
+    descriptor_id: int
+    numeric_profile_id: int | None
+    numeric_signature: tuple[tuple[str, int], ...]
+    contract_sha256: str | None
+    resolution: str
+    class_members: tuple[int, ...]
+    considered: int
+    declared_input_dtypes: tuple[int | None, ...] = ()
+
+    def record(self) -> dict[str, Any]:
+        entry: dict[str, Any] = {
+            "role": self.role,
+            "kernel_id": self.kernel,
+            "kernel_index": self.kernel_index,
+            "derived_descriptor_id": self.descriptor_id,
+            "numeric_profile_id": self.numeric_profile_id,
+            "contract_sha256": self.contract_sha256,
+            "search_scope": DEPLOYMENT_SCOPE,
+            "descriptors_considered": self.considered,
+            "resolution": self.resolution,
+        }
+        if self.resolution != "unique":
+            entry["equivalence_class"] = list(self.class_members)
+        if self.numeric_signature:
+            entry["numeric_signature"] = {
+                name: value for name, value in self.numeric_signature
+            }
+        if self.declared_input_dtypes:
+            entry["kernel_declared_input_dtypes"] = list(self.declared_input_dtypes)
+        return entry
+
+
+# The six tables this file used to carry -- EMBED_DESCRIPTOR_IDS,
+# RMS_DESCRIPTOR_IDS, TRANSFER_DESCRIPTOR_IDS, MATMUL_DESCRIPTOR_IDS,
+# HEAD_RMS_DESCRIPTOR_IDS and ROPE_DESCRIPTOR_IDS -- and the descriptor IDs
+# embedded in NEXT_BOUNDARIES are replaced by these identities.  Program
+# counters stay: a PC is a position in the program, not a descriptor number,
+# and the same PCs hold across every lowering observed.
+EMBED_IDENTITIES = (
+    OperatorIdentity(
+        role="token_embedding",
+        kernel="token_embedding",
+        major=int(Major.TENSOR),
+        sub=int(Tensor.EMBED_LOOKUP),
+        contract=QWEN_EMBED_CONTRACT,
+        unbound=UNBOUND_BINARY,
+    ),
+    OperatorIdentity(
+        role="token_embedding",
+        kernel="main.token_embed",
+        major=int(Major.TENSOR),
+        sub=int(Tensor.EMBED_LOOKUP),
+        contract=DEEPSEEK_EMBED_CONTRACT,
+        unbound=UNBOUND_BINARY,
+    ),
+)
+RMS_IDENTITY = OperatorIdentity(
+    role="attention_norm",
+    kernel="layer.0.attention_norm",
+    major=int(Major.VECTOR),
+    sub=int(Vector.RMS_NORM),
+    contract=QWEN_RMS_CONTRACT,
+    unbound=UNBOUND_BINARY,
+)
+TRANSFER_IDENTITY = OperatorIdentity(
+    role="hyper_connection_expand",
+    kernel="main.hc_expand",
+    major=int(Major.DMA),
+    sub=int(Dma.TRANSFER),
+    contract=DEEPSEEK_TRANSFER_CONTRACT,
+    unbound=UNBOUND_UNARY,
+)
+MATMUL_PCS = (11, 14, 17)
+MATMUL_IDENTITIES = tuple(
+    OperatorIdentity(
+        role=role,
+        kernel=kernel,
+        major=int(Major.TENSOR),
+        sub=int(Tensor.MATMUL),
+        contract=QWEN_MATMUL_CONTRACT,
+        unbound=UNBOUND_BINARY,
+    )
+    for role, kernel in (
+        ("query_projection", "layer.0.attention.query_projection"),
+        ("key_projection", "layer.0.attention.key_projection"),
+        ("value_projection", "layer.0.attention.value_projection"),
+    )
+)
+HEAD_RMS_PCS = (20, 23)
+HEAD_RMS_IDENTITIES = tuple(
+    OperatorIdentity(
+        role=role,
+        kernel=kernel,
+        major=int(Major.VECTOR),
+        sub=int(Vector.HEAD_RMS_NORM),
+        contract=QWEN_RMS_CONTRACT,
+        unbound=UNBOUND_BINARY_WITH_AUX0,
+        aux_0=heads,
+    )
+    for role, kernel, heads in (
+        ("query_head_norm", "layer.0.attention.query_head_norm", Q_HEADS),
+        ("key_head_norm", "layer.0.attention.key_head_norm", KV_HEADS),
+    )
+)
+ROPE_PCS = (26, 29)
+ROPE_IDENTITIES = tuple(
+    OperatorIdentity(
+        role=role,
+        kernel=kernel,
+        major=int(Major.VECTOR),
+        sub=int(Vector.ROPE),
+        contract=QWEN_ROPE_CONTRACT,
+        unbound=UNBOUND_BINARY_WITH_AUX0,
+    )
+    for role, kernel in (
+        ("query_rotation", "layer.0.attention.query_rotation"),
+        ("key_rotation", "layer.0.attention.key_rotation"),
+    )
+)
+# ``aux_id_0`` on ROPE is the coefficient-row stride, and the two Qwen
+# lowerings choose different ones under one contract digest: the ROM bundle
+# passes one head width, the HBM bundle two.  It is supplied per target rather
+# than baked into the identity, so the derivation cannot silently accept the
+# wrong lowering's operator.
+ROPE_AUX0 = (HEAD_WIDTH, 2 * HEAD_WIDTH)
+BOUNDARY_IDENTITIES = (
+    BoundaryIdentity(
+        pc=32,
+        major=int(Major.DMA),
+        sub=int(Dma.SCATTER),
+        opcode="DMA.SCATTER",
+        kernel="layer.0.attention.key_append",
+        contract=QWEN_KV_APPEND_CONTRACT,
+    ),
+    BoundaryIdentity(
+        pc=32,
+        major=int(Major.DMA),
+        sub=int(Dma.SCATTER),
+        opcode="DMA.SCATTER",
+        kernel="layer.0.attention.key_append",
+        contract=QWEN_KV_APPEND_CONTRACT,
+    ),
+    BoundaryIdentity(
+        pc=13,
+        major=int(Major.LINK),
+        sub=int(Link.MULTICAST),
+        opcode="LINK.MULTICAST",
+        collective_op=int(CollectiveOp.BROADCAST),
+    ),
+    BoundaryIdentity(
+        pc=14,
+        major=int(Major.VECTOR),
+        sub=int(Vector.MHC),
+        opcode="VECTOR.MHC",
+        kernel="main.layer00.hc_attn_pre",
+        contract=DEEPSEEK_HC_PRE_CONTRACT,
+    ),
+)
+
+
+def _kernel_ir_index(target: Any, identity: Any) -> dict[str, Any]:
+    """Load the target's Kernel IR and index it by ``kernel_id``.
+
+    ``certified_deployment_identity`` has already bound this file's SHA-256
+    through the deployment certificate and checked its graph and model IDs;
+    both are re-checked here so a derivation can never read a Kernel IR that
+    does not belong to the bundle it is resolving against.
+    """
+    path = ROOT / target.kernel_ir
+    payload = path.read_bytes()
+    document = json.loads(payload)
+    if document.get("schema") != "opentallas.tensor_kernel_ir.v3":
+        raise SystemExit(f"{target.key}: {target.kernel_ir} is not Kernel IR v3")
+    if document.get("graph_id") != identity.graph_id:
+        raise SystemExit(
+            f"{target.key}: {target.kernel_ir} graph {document.get('graph_id')!r} "
+            f"is not the certified graph {identity.graph_id!r}"
+        )
+    if document.get("model_id") != identity.model_id:
+        raise SystemExit(
+            f"{target.key}: {target.kernel_ir} model {document.get('model_id')!r} "
+            f"is not the certified model {identity.model_id!r}"
+        )
+    kernels = document.get("kernels")
+    if not isinstance(kernels, list):
+        raise SystemExit(f"{target.key}: {target.kernel_ir} has no kernel list")
+    by_id: dict[str, list[dict[str, Any]]] = {}
+    for kernel in kernels:
+        if isinstance(kernel, dict) and isinstance(kernel.get("kernel_id"), str):
+            by_id.setdefault(kernel["kernel_id"], []).append(kernel)
+    tensors = document.get("tensors")
+    tensor_dtype: dict[str, str] = {}
+    if isinstance(tensors, list):
+        for tensor in tensors:
+            if isinstance(tensor, dict) and isinstance(tensor.get("tensor_id"), str):
+                tensor_dtype[tensor["tensor_id"]] = str(tensor.get("dtype"))
+    return {
+        "path": target.kernel_ir,
+        "sha256": hashlib.sha256(payload).hexdigest(),
+        "graph_id": document.get("graph_id"),
+        "model_id": document.get("model_id"),
+        "by_id": by_id,
+        "tensor_dtype": tensor_dtype,
+        "kernel_count": len(kernels),
+    }
+
+
+def _kernel_input_dtypes(
+    kernel_ir: dict[str, Any], kernel: dict[str, Any]
+) -> list[int | None]:
+    """The dtypes the Kernel IR declares for one kernel's inputs, in order.
+
+    The ordered input list is the graph's own statement of which operand is
+    which.  A NUMERIC descriptor whose ``input_dtype`` and
+    ``second_input_dtype`` do not follow it has inverted its operands, and
+    that is a fact about the lowering rather than a matter of taste.
+    """
+    inputs = kernel.get("inputs")
+    if not isinstance(inputs, list):
+        return []
+    return [
+        KERNEL_IR_DTYPES.get(kernel_ir["tensor_dtype"].get(str(name), ""))
+        for name in inputs
+    ]
+
+
+def _governed_kernel(
+    kernel_ir: dict[str, Any], kernel_id: str, label: str
+) -> dict[str, Any]:
+    matches = kernel_ir["by_id"].get(kernel_id, [])
+    if len(matches) != 1:
+        raise SystemExit(
+            f"{label}: {kernel_ir['path']} names {len(matches)} kernels "
+            f"{kernel_id!r}; an identity must select exactly one kernel"
+        )
+    return matches[0]
+
+
+def _numeric_signature(payload: Any) -> tuple[tuple[str, int], ...]:
+    return tuple((name, int(payload[name])) for name in NUMERIC_SIGNATURE_FIELDS)
+
+
+def _operator_candidates(
+    deployment: Any,
+    *,
+    kernel_index: int,
+    major: int,
+    sub: int,
+    contract: bytes,
+    aux_0: int | None,
+    unbound: tuple[str, ...],
+) -> tuple[list[tuple[int, int, Any]], int]:
+    candidates: list[tuple[int, int, Any]] = []
+    considered = 0
+    for descriptor_id, descriptor in enumerate(deployment.table.descriptors()):
+        if int(descriptor.descriptor_type) != int(ExtendedDescriptorType.OPERATOR):
+            continue
+        considered += 1
+        payload = descriptor.payload
+        if int(payload["source_kernel_id"]) != kernel_index:
+            continue
+        if int(payload["engine_family"]) != major or int(payload["engine_sub"]) != sub:
+            continue
+        numeric_id = int(payload["numeric_profile_id"])
+        if numeric_id == NO_ID:
+            continue
+        numeric = deployment.table.get(numeric_id, ExtendedDescriptorType.NUMERIC)
+        if bytes(numeric.payload["contract_digest"]) != contract:
+            continue
+        if aux_0 is not None and int(payload["aux_id_0"]) != aux_0:
+            continue
+        if any(int(payload[slot]) != NO_ID for slot in unbound):
+            continue
+        candidates.append((descriptor_id, numeric_id, numeric))
+    return candidates, considered
+
+
+def resolve_operator(
+    deployment: Any,
+    kernel_ir: dict[str, Any],
+    identity: OperatorIdentity,
+    *,
+    target_key: str,
+    aux_0: int | None = None,
+) -> Resolution:
+    """Derive one governed operation's descriptor ID from its identity.
+
+    Refuses loudly, naming the ambiguity, when the identity selects anything
+    other than exactly one descriptor.  That refusal is the point: the whole
+    reason this function exists is that a number cannot tell you whether it
+    still means the operation it meant three lowerings ago.
+    """
+    label = f"{target_key}: {identity.role}"
+    kernel = _governed_kernel(kernel_ir, identity.kernel, label)
+    kernel_index = int(kernel["index"])
+    declared = kernel.get("numeric_contract")
+    if hashlib.sha256(str(declared).encode()).digest() != identity.contract:
+        raise SystemExit(
+            f"{label}: Kernel IR kernel {identity.kernel!r} declares numeric "
+            f"contract {declared!r}, whose digest is not the "
+            f"{identity.contract.hex()[:16]}... this derivation names"
+        )
+    expected_aux = identity.aux_0 if aux_0 is None else aux_0
+    candidates, considered = _operator_candidates(
+        deployment,
+        kernel_index=kernel_index,
+        major=identity.major,
+        sub=identity.sub,
+        contract=identity.contract,
+        aux_0=expected_aux,
+        unbound=identity.unbound,
+    )
+    if len(candidates) != 1:
+        why = (
+            "no descriptor in this bundle is that operation, and absence of a "
+            "derivation is a refusal, not a pass"
+            if not candidates
+            else "an operation that cannot be told apart from another one is "
+            "not evidence about either"
+        )
+        raise SystemExit(
+            f"{label}: identity (kernel {identity.kernel!r} index "
+            f"{kernel_index}, opcode {identity.major:#04x}.{identity.sub:#04x}, "
+            f"contract {identity.contract.hex()[:16]}, aux_id_0 "
+            f"{expected_aux!r}) selects {len(candidates)} of {considered} "
+            f"OPERATOR descriptors "
+            f"{[entry[0] for entry in candidates]}; {why}"
+        )
+    descriptor_id, numeric_id, numeric = candidates[0]
+    return Resolution(
+        role=identity.role,
+        kernel=identity.kernel,
+        kernel_index=kernel_index,
+        descriptor_id=descriptor_id,
+        numeric_profile_id=numeric_id,
+        numeric_signature=_numeric_signature(numeric.payload),
+        contract_sha256=identity.contract.hex(),
+        resolution="unique",
+        class_members=(descriptor_id,),
+        considered=considered,
+    )
+
+
+def resolve_boundary(
+    deployment: Any,
+    kernel_ir: dict[str, Any],
+    identity: BoundaryIdentity,
+    *,
+    target_key: str,
+    observed_descriptor_id: int,
+) -> Resolution:
+    """Derive the fail-stop boundary instruction's descriptor by identity.
+
+    Boundary descriptors are not always separable.  ``LINK.MULTICAST`` on the
+    DeepSeek ROM wafer lowers to three COMMUNICATION descriptors that are
+    byte-identical in every payload field, so no identity can single one out
+    and the honest derivation is the whole equivalence class: the observed
+    descriptor must be a member, the class must be non-empty, and the record
+    says the class has more than one member rather than implying a unique
+    derivation it does not have.
+    """
+    label = f"{target_key}: fail-stop boundary {identity.opcode}"
+    if identity.kernel is not None:
+        kernel = _governed_kernel(kernel_ir, identity.kernel, label)
+        kernel_index = int(kernel["index"])
+        declared = kernel.get("numeric_contract")
+        if hashlib.sha256(str(declared).encode()).digest() != identity.contract:
+            raise SystemExit(
+                f"{label}: Kernel IR kernel {identity.kernel!r} declares "
+                f"numeric contract {declared!r}, which is not the contract "
+                "this derivation names"
+            )
+        candidates, considered = _operator_candidates(
+            deployment,
+            kernel_index=kernel_index,
+            major=identity.major,
+            sub=identity.sub,
+            contract=identity.contract,
+            aux_0=None,
+            unbound=(),
+        )
+        declared_inputs = _kernel_input_dtypes(kernel_ir, kernel)
+        members = tuple(entry[0] for entry in candidates)
+        numeric_id: int | None = None
+        signature: tuple[tuple[str, int], ...] = ()
+        for entry in candidates:
+            if entry[0] == observed_descriptor_id:
+                numeric_id = entry[1]
+                signature = _numeric_signature(entry[2].payload)
+    else:
+        kernel_index = None
+        members_list: list[int] = []
+        considered = 0
+        for descriptor_id, descriptor in enumerate(deployment.table.descriptors()):
+            if int(descriptor.descriptor_type) != int(
+                ExtendedDescriptorType.COMMUNICATION
+            ):
+                continue
+            considered += 1
+            if int(descriptor.payload["collective_op"]) != identity.collective_op:
+                continue
+            members_list.append(descriptor_id)
+        members = tuple(members_list)
+        numeric_id = None
+        signature = ()
+        declared_inputs = []
+    if not members:
+        raise SystemExit(
+            f"{label}: identity selects no descriptor at all in "
+            f"{deployment.table.digest.hex()[:16]}...; absence of a derivation "
+            "is a refusal, not a pass"
+        )
+    if observed_descriptor_id not in members:
+        raise SystemExit(
+            f"{label}: PC {identity.pc} names descriptor "
+            f"{observed_descriptor_id}, which is not in the derived identity "
+            f"class {list(members)}"
+        )
+    if len(members) > 1:
+        print(
+            f"AMBIGUOUS {label}: identity class has {len(members)} members "
+            f"{list(members)}, byte-identical under every field the identity "
+            "can read; the boundary descriptor ID is recorded as a class "
+            "member, not as a unique derivation",
+            file=sys.stderr,
+        )
+    return Resolution(
+        declared_input_dtypes=tuple(declared_inputs),
+        role=f"boundary.{identity.opcode}",
+        kernel=identity.kernel,
+        kernel_index=kernel_index,
+        # A singleton class IS the derivation; a larger one is only checked
+        # for membership, and the record says which of the two happened.
+        descriptor_id=members[0] if len(members) == 1 else observed_descriptor_id,
+        numeric_profile_id=numeric_id,
+        numeric_signature=signature,
+        contract_sha256=identity.contract.hex() if identity.contract else None,
+        resolution="unique" if len(members) == 1 else "equivalence_class",
+        class_members=members,
+        considered=considered,
+    )
+
+
+def resolve_governed_descriptors(
+    deployment: Any,
+    kernel_ir: dict[str, Any],
+    *,
+    target_key: str,
+    target_index: int,
+) -> dict[str, Resolution]:
+    """Derive every governed descriptor ID for one lowering, up front.
+
+    The derivation runs against this target's own bundle before the program
+    is walked, so it cannot be contaminated by the instruction stream it is
+    later used to check.  The walk then asserts that each governed
+    instruction names the descriptor the identity derived.
+    """
+    model_index = 0 if target_index < 2 else 1
+    resolved: dict[str, Resolution] = {
+        "embed": resolve_operator(
+            deployment,
+            kernel_ir,
+            EMBED_IDENTITIES[model_index],
+            target_key=target_key,
+        )
+    }
+    if model_index == 0:
+        resolved["rms"] = resolve_operator(
+            deployment, kernel_ir, RMS_IDENTITY, target_key=target_key
+        )
+        for index, identity in enumerate(MATMUL_IDENTITIES):
+            resolved[f"matmul.{index}"] = resolve_operator(
+                deployment, kernel_ir, identity, target_key=target_key
+            )
+        for index, identity in enumerate(HEAD_RMS_IDENTITIES):
+            resolved[f"head_rms.{index}"] = resolve_operator(
+                deployment, kernel_ir, identity, target_key=target_key
+            )
+        for index, identity in enumerate(ROPE_IDENTITIES):
+            resolved[f"rope.{index}"] = resolve_operator(
+                deployment,
+                kernel_ir,
+                identity,
+                target_key=target_key,
+                aux_0=ROPE_AUX0[target_index],
+            )
+    else:
+        resolved["transfer"] = resolve_operator(
+            deployment, kernel_ir, TRANSFER_IDENTITY, target_key=target_key
+        )
+    return resolved
+
+
+def _audit_contract_agreement(
+    observations: list[dict[str, Any]]
+) -> list[dict[str, Any]]:
+    """Name every contract digest that does not bind one numeric contract.
+
+    Two descriptors may carry one ``contract_digest`` and still declare
+    different numeric payloads.  When that happens the digest is not binding
+    what it claims to bind, and the two lowerings do not implement one
+    contract however identical their digests look.  Executed operations are
+    refused outright; the fail-stop boundary is recorded, loudly, because the
+    prefix never executes it -- and the record says so rather than leaving a
+    reader to assume agreement.
+    """
+    by_key: dict[tuple[str, str], list[dict[str, Any]]] = {}
+    for entry in observations:
+        if entry["contract_sha256"] is None or not entry["numeric_signature"]:
+            continue
+        by_key.setdefault((entry["role"], entry["contract_sha256"]), []).append(entry)
+    disagreements: list[dict[str, Any]] = []
+    for (role, contract), entries in sorted(by_key.items()):
+        signatures = {entry["numeric_signature"] for entry in entries}
+        if len(signatures) < 2:
+            continue
+        differing = sorted(
+            {
+                name
+                for signature in signatures
+                for name, value in signature
+                if any(dict(other).get(name) != value for other in signatures)
+            }
+        )
+        disagreements.append(
+            {
+                "role": role,
+                "contract_sha256": contract,
+                "executed": entries[0]["executed"],
+                "differing_fields": differing,
+                "per_target": [
+                    {
+                        "target": entry["target"],
+                        "descriptor_id": entry["descriptor_id"],
+                        "numeric_profile_id": entry["numeric_profile_id"],
+                        "numeric_signature": dict(entry["numeric_signature"]),
+                        "kernel_declared_input_dtypes": entry[
+                            "kernel_declared_input_dtypes"
+                        ],
+                    }
+                    for entry in entries
+                ],
+                "finding": (
+                    "one contract digest, two numeric contracts: the digest "
+                    "does not bind the fields listed in differing_fields"
+                ),
+            }
+        )
+    executed = [entry for entry in disagreements if entry["executed"]]
+    if executed:
+        raise SystemExit(
+            "governed operations disagree on their numeric contract across "
+            "lowerings under one contract digest: "
+            + json.dumps(executed, sort_keys=True)
+        )
+    for entry in disagreements:
+        print(
+            f"CONTRACT DISAGREEMENT {entry['role']} digest "
+            f"{entry['contract_sha256'][:16]}... differs at "
+            f"{', '.join(entry['differing_fields'])} across "
+            + ", ".join(item["target"] for item in entry["per_target"]),
+            file=sys.stderr,
+        )
+    return disagreements
 
 INPUT_IMAGES = (
     "a3_program.hex",
@@ -692,9 +1384,74 @@ def emit_golden(vectors: dict[str, Any], vector_dir: Path, out_dir: Path
 
 
 
+def _derive_only(bundle: Path, target_key: str | None) -> int:
+    """Print the governed descriptor IDs one bundle's identities resolve to.
+
+    The identities are the same ones the build uses.  Pointing them at a
+    bundle the build does not ship is the check that they derive rather than
+    remember: a correct derivation reproduces each bundle's own numbering,
+    including the numbering of bundles written before the ID tables this file
+    used to carry were last edited.
+    """
+    if target_key is None:
+        raise SystemExit("--derive-from requires --as-target")
+    matches = [
+        (index, target) for index, target in enumerate(TARGETS)
+        if target.key == target_key
+    ]
+    if len(matches) != 1:
+        raise SystemExit(f"{target_key!r} is not one of the four RTL targets")
+    target_index, target = matches[0]
+    identity = certified_deployment_identity(target)
+    deployment = Deployment.read(bundle if bundle.is_absolute() else ROOT / bundle)
+    kernel_ir = _kernel_ir_index(target, identity)
+    derived = resolve_governed_descriptors(
+        deployment,
+        kernel_ir,
+        target_key=f"{target_key}@{bundle}",
+        target_index=target_index,
+    )
+    report = {
+        "bundle": str(bundle),
+        "as_target": target_key,
+        "deployment_sha256": deployment.deployment_digest.hex(),
+        "descriptor_table_sha256": deployment.table.digest.hex(),
+        "descriptor_count": len(deployment.table),
+        "kernel_ir": kernel_ir["path"],
+        "kernel_ir_sha256": kernel_ir["sha256"],
+        "derived": {
+            slot: resolution.record()
+            for slot, resolution in sorted(derived.items())
+        },
+    }
+    print(json.dumps(report, indent=2, sort_keys=True))
+    return 0
+
+
 def build(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, default=OUTPUT_DIR)
+    parser.add_argument(
+        "--derive-from",
+        type=Path,
+        default=None,
+        help=(
+            "resolve the governed descriptor identities against an arbitrary "
+            "deployment bundle and print the derived IDs, without building "
+            "vectors.  This is how the derivation is checked against the "
+            "preserved pre-promotion bundles under build/abi3/*-pre-am-e9: "
+            "the identities are lowering-independent, so a correct derivation "
+            "reproduces whatever IDs each bundle actually assigned."
+        ),
+    )
+    parser.add_argument(
+        "--as-target",
+        default=None,
+        help=(
+            "the TARGETS key whose certified Kernel IR the --derive-from "
+            "bundle is lowered from"
+        ),
+    )
     parser.add_argument(
         "--emit-g1e-from",
         type=Path,
@@ -706,6 +1463,8 @@ def build(argv: list[str] | None = None) -> int:
         ),
     )
     args = parser.parse_args(argv)
+    if args.derive_from is not None:
+        return _derive_only(args.derive_from, args.as_target)
     args.output.mkdir(parents=True, exist_ok=True)
     if args.emit_g1e_from is not None:
         vectors = json.loads(
@@ -736,6 +1495,7 @@ def build(argv: list[str] | None = None) -> int:
     source_words: list[int] = []
     expected_words: list[int] = []
     records: list[dict[str, Any]] = []
+    contract_observations: list[dict[str, Any]] = []
     row_cache: dict[tuple[str, int, int], bytes] = {}
     matrix_cache: dict[str, bytes] = {}
     matrix_staging: dict[str, dict[str, int | str]] = {}
@@ -800,6 +1560,20 @@ def build(argv: list[str] | None = None) -> int:
         }
         if symbols[int(Symbol.POSITION_START)] != INDEX_VALUE:
             raise SystemExit(f"{target.key}: decode position is not {INDEX_VALUE}")
+
+        # Every governed descriptor ID is DERIVED here, from this target's own
+        # bundle and its own certified Kernel IR, before a single instruction
+        # is walked.  Nothing below reads a descriptor number this file wrote
+        # down, and the two lowerings are resolved independently -- their IDs
+        # differ at all eight governed Qwen PCs and the derivation reports the
+        # difference instead of assuming it away.
+        kernel_ir = _kernel_ir_index(target, expected_identity)
+        derived = resolve_governed_descriptors(
+            deployment,
+            kernel_ir,
+            target_key=target.key,
+            target_index=target_index,
+        )
 
         loops: dict[int, int] = {}
         gathers: list[dict[str, Any]] = []
@@ -935,7 +1709,7 @@ def build(argv: list[str] | None = None) -> int:
                 )
                 payload = operator.payload
                 if (
-                    int(instruction.descriptor_id) != EMBED_DESCRIPTOR_IDS[target_index]
+                    int(instruction.descriptor_id) != derived["embed"].descriptor_id
                     or int(payload["engine_family"]) != major
                     or int(payload["engine_sub"]) != sub
                     or int(payload["numeric_profile_id"]) == NO_ID
@@ -1059,7 +1833,7 @@ def build(argv: list[str] | None = None) -> int:
                 )
                 payload = operator.payload
                 if (
-                    int(instruction.descriptor_id) != RMS_DESCRIPTOR_IDS[target_index]
+                    int(instruction.descriptor_id) != derived["rms"].descriptor_id
                     or int(payload["engine_family"]) != major
                     or int(payload["engine_sub"]) != sub
                     or int(payload["numeric_profile_id"]) == NO_ID
@@ -1198,7 +1972,7 @@ def build(argv: list[str] | None = None) -> int:
                 payload = operator.payload
                 if (
                     int(instruction.descriptor_id)
-                    != MATMUL_DESCRIPTOR_IDS[target_index][matmul_index]
+                    != derived[f"matmul.{matmul_index}"].descriptor_id
                     or int(payload["engine_family"]) != major
                     or int(payload["engine_sub"]) != sub
                     or int(payload["numeric_profile_id"]) == NO_ID
@@ -1367,7 +2141,7 @@ def build(argv: list[str] | None = None) -> int:
                 payload = operator.payload
                 if (
                     int(instruction.descriptor_id)
-                    != HEAD_RMS_DESCRIPTOR_IDS[target_index][head_index]
+                    != derived[f"head_rms.{head_index}"].descriptor_id
                     or int(payload["engine_family"]) != major
                     or int(payload["engine_sub"]) != sub
                     or int(payload["numeric_profile_id"]) == NO_ID
@@ -1537,7 +2311,7 @@ def build(argv: list[str] | None = None) -> int:
                 payload = operator.payload
                 if (
                     int(instruction.descriptor_id)
-                    != ROPE_DESCRIPTOR_IDS[target_index][rope_index]
+                    != derived[f"rope.{rope_index}"].descriptor_id
                     or int(payload["engine_family"]) != major
                     or int(payload["engine_sub"]) != sub
                     or int(payload["numeric_profile_id"]) == NO_ID
@@ -1721,7 +2495,7 @@ def build(argv: list[str] | None = None) -> int:
                 payload = operator.payload
                 if (
                     int(instruction.descriptor_id)
-                    != TRANSFER_DESCRIPTOR_IDS[target_index - 2]
+                    != derived["transfer"].descriptor_id
                     or int(payload["engine_family"]) != major
                     or int(payload["engine_sub"]) != sub
                     or int(payload["numeric_profile_id"]) == NO_ID
@@ -1994,7 +2768,21 @@ def build(argv: list[str] | None = None) -> int:
         state_count = int(source_case[34])
         if state_count != 0:
             raise SystemExit(f"{target.key}: production profile contains STATE")
-        expected_boundary = NEXT_BOUNDARIES[target_index]
+        boundary_identity = BOUNDARY_IDENTITIES[target_index]
+        derived["boundary"] = resolve_boundary(
+            deployment,
+            kernel_ir,
+            boundary_identity,
+            target_key=target.key,
+            observed_descriptor_id=int(unsupported["descriptor_id"]),
+        )
+        expected_boundary = (
+            boundary_identity.pc,
+            boundary_identity.major,
+            boundary_identity.sub,
+            derived["boundary"].descriptor_id,
+            boundary_identity.opcode,
+        )
         if target_index < 2:
             expected_counts = {
                 "fetched": 33,
@@ -2034,6 +2822,21 @@ def build(argv: list[str] | None = None) -> int:
             "signals": signals,
             "views": len(prefix_views),
         }
+        for role, resolution in sorted(derived.items()):
+            contract_observations.append(
+                {
+                    "target": target.key,
+                    "role": resolution.role,
+                    "executed": role != "boundary",
+                    "descriptor_id": resolution.descriptor_id,
+                    "numeric_profile_id": resolution.numeric_profile_id,
+                    "numeric_signature": resolution.numeric_signature,
+                    "contract_sha256": resolution.contract_sha256,
+                    "kernel_declared_input_dtypes": list(
+                        resolution.declared_input_dtypes
+                    ),
+                }
+            )
         observed_boundary = (
             unsupported["pc"],
             unsupported["family"],
@@ -2248,6 +3051,24 @@ def build(argv: list[str] | None = None) -> int:
                 "deployment": target.key,
                 "deployment_sha256": deployment_sha,
                 "deployment_identity_evidence": expected_identity.record(),
+                "descriptor_derivation": {
+                    "method": (
+                        "every governed descriptor ID is derived from the "
+                        "certified Kernel IR kernel it lowers, its engine "
+                        "family and sub-opcode, its numeric contract digest "
+                        "and its bound payload slots, then searched for in "
+                        "this bundle's own descriptor table and required to "
+                        "resolve uniquely; no descriptor ID is written down"
+                    ),
+                    "kernel_ir": kernel_ir["path"],
+                    "kernel_ir_sha256": kernel_ir["sha256"],
+                    "kernel_ir_graph_id": kernel_ir["graph_id"],
+                    "descriptor_table_sha256": deployment.table.digest.hex(),
+                    "operations": [
+                        {"slot": slot, **resolution.record()}
+                        for slot, resolution in sorted(derived.items())
+                    ],
+                },
                 "input_deployment_vector_case": deployment_case_index,
                 "request": {
                     "entrypoint_id": 1,
@@ -2443,6 +3264,8 @@ def build(argv: list[str] | None = None) -> int:
     for name, payload in files.items():
         (args.output / name).write_text(payload, encoding="ascii")
 
+    contract_disagreements = _audit_contract_agreement(contract_observations)
+
     marker = (
         "PASS: ABI3 shipped-prefix engine integration "
         f"cases={len(records)} launches={total_launches} "
@@ -2555,6 +3378,32 @@ def build(argv: list[str] | None = None) -> int:
         "image_sha256": {
             name: hashlib.sha256(payload.encode("ascii")).hexdigest()
             for name, payload in sorted(files.items())
+        },
+        "descriptor_derivation": {
+            "claim": (
+                "no descriptor ID in this builder is written down.  Every "
+                "governed operation is resolved against its own bundle by "
+                "identity -- the certified Kernel IR kernel it lowers, its "
+                "engine family and sub-opcode, its numeric contract digest "
+                "cross-checked against that kernel's declared contract name, "
+                "its aux_id_0 and its unbound payload slots -- and the "
+                "resolution is required to be unique.  Zero matches and two "
+                "matches are both refusals."
+            ),
+            "does_not_establish": [
+                "that a descriptor ID is stable across lowerings; it is not, "
+                "and the per-case derivations record different IDs for the "
+                "two Qwen lowerings at all eight governed PCs",
+                "that a fail-stop boundary descriptor resolves uniquely.  "
+                "Where the record says resolution equivalence_class the "
+                "deployment holds byte-identical descriptors that no identity "
+                "can separate, and the observed ID is checked for membership "
+                "of that class only",
+                "any property of an operation the prefix does not execute, "
+                "including the numeric contract of the boundary descriptor "
+                "named in numeric_contract_disagreements",
+            ],
+            "numeric_contract_disagreements": contract_disagreements,
         },
         "cases": records,
     }

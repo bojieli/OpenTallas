@@ -8,6 +8,7 @@ import shutil
 
 import pytest
 
+from runtime.abi3.deployment import Deployment
 from tools import build_abi3_shipped_prefix_vectors as generator
 from tools import rtl_abi3_shipped_prefix_campaign as campaign
 
@@ -78,40 +79,36 @@ def test_witness_is_exactly_the_small_abi3_fail_stop_prefix() -> None:
         "deepseek-v4-flash-rom-wafer/decode",
         "deepseek-v4-flash-hbm-cluster/decode",
     ]
-    assert [case["first_unsupported"] for case in vectors["cases"]] == [
-        {
-            "pc": 32,
-            "family": 16,
-            "sub": 3,
-            "opcode": "DMA.SCATTER",
-            "descriptor_id": 111,
-            "trap_class": 4,
-        },
-        {
-            "pc": 32,
-            "family": 16,
-            "sub": 3,
-            "opcode": "DMA.SCATTER",
-            "descriptor_id": 114,
-            "trap_class": 4,
-        },
-        {
-            "pc": 13,
-            "family": 144,
-            "sub": 3,
-            "opcode": "LINK.MULTICAST",
-            "descriptor_id": 368,
-            "trap_class": 4,
-        },
-        {
-            "pc": 14,
-            "family": 48,
-            "sub": 9,
-            "opcode": "VECTOR.MHC",
-            "descriptor_id": 545,
-            "trap_class": 4,
-        },
+    # The fail-stop boundary is pinned by WHICH INSTRUCTION it is -- program
+    # counter, opcode and trap class -- and never by the descriptor number it
+    # names.  A descriptor ID is a table index that moves with the lowering,
+    # and this assertion used to carry four of them, which is why it went
+    # stale the moment the AM-E9 v2 pair was promoted.  The ID is checked
+    # against the identity the builder derives from the bundle instead.
+    assert [
+        {key: value for key, value in case["first_unsupported"].items()
+         if key != "descriptor_id"}
+        for case in vectors["cases"]
+    ] == [
+        {"pc": 32, "family": 16, "sub": 3, "opcode": "DMA.SCATTER", "trap_class": 4},
+        {"pc": 32, "family": 16, "sub": 3, "opcode": "DMA.SCATTER", "trap_class": 4},
+        {"pc": 13, "family": 144, "sub": 3, "opcode": "LINK.MULTICAST",
+         "trap_class": 4},
+        {"pc": 14, "family": 48, "sub": 9, "opcode": "VECTOR.MHC", "trap_class": 4},
     ]
+    for index, case in enumerate(vectors["cases"]):
+        target = generator.TARGETS[index]
+        assert case["deployment"] == target.key
+        deployment = Deployment.read(ROOT / target.deployment)
+        identity = generator.certified_deployment_identity(target)
+        derived = generator.resolve_boundary(
+            deployment,
+            generator._kernel_ir_index(target, identity),
+            generator.BOUNDARY_IDENTITIES[index],
+            target_key=target.key,
+            observed_descriptor_id=int(case["first_unsupported"]["descriptor_id"]),
+        )
+        assert derived.descriptor_id == case["first_unsupported"]["descriptor_id"]
     for case_index, case in enumerate(vectors["cases"]):
         assert not case["expected"]["complete"]
         assert case["expected"]["state_compat"] == 0
@@ -278,9 +275,23 @@ def test_witness_is_exactly_the_small_abi3_fail_stop_prefix() -> None:
                 if operation["kind"] == "vector_rope"
             ]
             assert [operation["pc"] for operation in ropes] == [26, 29]
-            assert [operation["descriptor_id"] for operation in ropes] == (
-                [96, 103] if case_index == 0 else [101, 107]
-            )
+            # Derived from the case's own bundle, never written down: the two
+            # Qwen lowerings number these differently and both numberings have
+            # already moved twice.
+            target = generator.TARGETS[case_index]
+            rope_identity = generator.certified_deployment_identity(target)
+            rope_kernel_ir = generator._kernel_ir_index(target, rope_identity)
+            rope_deployment = Deployment.read(ROOT / target.deployment)
+            assert [operation["descriptor_id"] for operation in ropes] == [
+                generator.resolve_operator(
+                    rope_deployment,
+                    rope_kernel_ir,
+                    identity,
+                    target_key=target.key,
+                    aux_0=generator.ROPE_AUX0[case_index],
+                ).descriptor_id
+                for identity in generator.ROPE_IDENTITIES
+            ]
             assert [operation["operator_aux_id_0"] for operation in ropes] == (
                 [128, 128] if case_index == 0 else [256, 256]
             )
