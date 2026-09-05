@@ -3,32 +3,77 @@
   "status": "provisional",
   "principle": "docs/OPENTALLAS_REDESIGN_PLAN.md gate G3: a provisional budget that is wrong and fails loudly is worth more than a correct one that cannot fail. These budgets are the analytical model's own batch-1 per-user step time for the design point the chip is derived from, widened by a stated tolerance. They are allowed to be wrong. They are not allowed to be absent.",
   "grade": "derived",
-  "source": "results/roofline/n5_vs_b200/analytical.json#comparisons[model=Qwen3-8B,batch_size=1,context_tokens=8192,rom_design=Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4]; DeepSeek rows from the same artifact at the contexts it prices",
+  "source": "results/roofline/n5_vs_b200/analytical.json#comparisons[model=Qwen3-8B,batch_size=1,context_tokens=8192,rom_design=Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4]; DeepSeek rows from the same artifact at the contexts it prices; DeepSeek rows from the same artifact at context 200,000 (Flash) and 1,000,000 (Pro), the contexts it prices",
   "tolerance_x": 1.5,
   "tolerance_note": "A measured TPOT within 1.5x of the analytical step passes. The band covers the residuals results/derived/qwen3_n5_design_target_reconciliation.json attributes and does not cover a regime change: a run that is compute-bound where the model is weight-read-bound fails C3 regardless of this band.",
   "measurement_contract": {
     "record_glob": "results/tpot/*.json",
-    "required_fields": ["model", "storage_class", "batch_size", "context_tokens", "tpot_s", "correctness_qualified", "token_record", "cycle_record"],
+    "required_fields": [
+      "model",
+      "storage_class",
+      "batch_size",
+      "context_tokens",
+      "tpot_s",
+      "correctness_qualified",
+      "token_record",
+      "cycle_record"
+    ],
     "rule": "tpot_s is architectural: token-commit ticks over the admitted target timebase on a run whose exact execution identity first passed the correct-token gate (G1). correctness_qualified must be true and token_record must name the passing record. Host wall time, functional-simulator wall time and roofline figures are refused."
   },
   "budgets": [
-    {"model": "Qwen3-8B", "storage_class": "rom", "batch_size": 1, "context_tokens": 8192,
-     "analytical_per_user_tokens_s": 3911.3245, "budget_tpot_s": 0.000255669,
-     "derivation": "1 / 3911.3245 = 255.669 us; design point Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4, 4 x 815 mm2, link_latency bound"},
-    {"model": "Qwen3-8B", "storage_class": "hbm", "batch_size": 1, "context_tokens": 8192,
-     "analytical_per_user_tokens_s": 693.5853, "budget_tpot_s": 0.001441784,
-     "derivation": "1 / 693.5853 = 1441.784 us; comparator Qwen3-8B/b200_sxm-x2-tensor, 2 x 1600 mm2, weight_read bound"},
-    {"model": "DeepSeek-V4-Flash-0731", "storage_class": "rom", "batch_size": 1, "context_tokens": null,
-     "analytical_per_user_tokens_s": null, "budget_tpot_s": null,
-     "derivation": "TO BE FILLED from the artifact's DeepSeek-V4-Flash-0731 batch-1 headline pair at the context it prices; null is a FAIL, not a deferral"},
-    {"model": "DeepSeek-V4-Flash-0731", "storage_class": "hbm", "batch_size": 1, "context_tokens": null,
-     "analytical_per_user_tokens_s": null, "budget_tpot_s": null,
-     "derivation": "as above; null is a FAIL"},
-    {"model": "DeepSeek-V4-Pro-0813", "storage_class": "rom", "batch_size": 1, "context_tokens": null,
-     "analytical_per_user_tokens_s": null, "budget_tpot_s": null,
-     "derivation": "no ABI topology fits Pro today; null is a FAIL"},
-    {"model": "DeepSeek-V4-Pro-0813", "storage_class": "hbm", "batch_size": 1, "context_tokens": null,
-     "analytical_per_user_tokens_s": null, "budget_tpot_s": null,
-     "derivation": "as above; null is a FAIL"}
+    {
+      "model": "Qwen3-8B",
+      "storage_class": "rom",
+      "batch_size": 1,
+      "context_tokens": 8192,
+      "analytical_per_user_tokens_s": 3911.3245,
+      "budget_tpot_s": 0.000255669,
+      "derivation": "1 / 3911.3245 = 255.669 us; design point Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4, 4 x 815 mm2, link_latency bound"
+    },
+    {
+      "model": "Qwen3-8B",
+      "storage_class": "hbm",
+      "batch_size": 1,
+      "context_tokens": 8192,
+      "analytical_per_user_tokens_s": 693.5853,
+      "budget_tpot_s": 0.001441784,
+      "derivation": "1 / 693.5853 = 1441.784 us; comparator Qwen3-8B/b200_sxm-x2-tensor, 2 x 1600 mm2, weight_read bound"
+    },
+    {
+      "model": "DeepSeek-V4-Flash-0731",
+      "storage_class": "rom",
+      "batch_size": 1,
+      "context_tokens": 200000,
+      "analytical_per_user_tokens_s": 2627.370536182984,
+      "budget_tpot_s": 0.00038060866795468803,
+      "derivation": "1 / 2627.3705 = 380.609 us at the context the study prices (200,000); DSV4-Flash/ROM-N5-native-HBMKV-array-hybrid-x32, 32 x 815 mm2, link_latency bound; the repository has a deployment for this topology"
+    },
+    {
+      "model": "DeepSeek-V4-Flash-0731",
+      "storage_class": "hbm",
+      "batch_size": 1,
+      "context_tokens": 200000,
+      "analytical_per_user_tokens_s": 1499.2648712262255,
+      "budget_tpot_s": 0.0006669935507673941,
+      "derivation": "1 / 1499.2649 = 666.994 us at the context the study prices (200,000); comparator DSV4-Flash/b200_sxm-x16-hybrid, 16 x 1600 mm2, weight_read bound"
+    },
+    {
+      "model": "DeepSeek-V4-Pro-0813",
+      "storage_class": "rom",
+      "batch_size": 1,
+      "context_tokens": 1000000,
+      "analytical_per_user_tokens_s": 2648.7732137398566,
+      "budget_tpot_s": 0.0003775332651405364,
+      "derivation": "1 / 2648.7732 = 377.533 us at the context the study prices (1,000,000); DSV4-Pro/ROM-N5-native-HBMKV-wafer-hybrid-x3, 3 wafers; the design places Pro on four wafers (section 5.5) and no ABI topology fits it today -- the budget is the analytical point, the design band is wider, and no run can exist until AM-R1"
+    },
+    {
+      "model": "DeepSeek-V4-Pro-0813",
+      "storage_class": "hbm",
+      "batch_size": 1,
+      "context_tokens": 1000000,
+      "analytical_per_user_tokens_s": 746.7912517268198,
+      "budget_tpot_s": 0.001339062285059822,
+      "derivation": "1 / 746.7913 = 1339.062 us at the context the study prices (1,000,000); comparator DSV4-Pro/b200_sxm-x87-tensor"
+    }
   ]
 }
