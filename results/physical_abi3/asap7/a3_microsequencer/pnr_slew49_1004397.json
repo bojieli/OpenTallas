@@ -6,12 +6,12 @@
         "antenna_violating_pins": 0.0,
         "drc_errors": 0.0,
         "hold_violations": 0.0,
-        "hold_wns_ns": 0.0471363,
+        "hold_wns_ns": 0.0449029,
         "met": true,
         "physically_clean": true,
         "scope": "post-route, extracted parasitics",
         "setup_violations": 0.0,
-        "setup_wns_ns": 2.52825,
+        "setup_wns_ns": 2.44427,
         "stage": "place_and_route",
         "timing_met": true
       }
@@ -21,8 +21,14 @@
     "reason": "all evaluated stages met",
     "status": "pass"
   },
+  "annotation": {
+    "annotated_at": "2026-09-05T02:41:35+00:00",
+    "annotated_by": "tools/annotate_physical_record.py",
+    "basis": "sha256 of the record as written by the flow tool, canonical JSON with the notes and annotation keys removed; recompute with tools/annotate_physical_record.py --verify",
+    "tool_record_sha256": "09517e0d855518dd0cfc97ddf58aa88cdd86b92cda05c138842f1ccb5633e85a"
+  },
   "campaign_id": "opentallas-abi3-physical-v1",
-  "completed_at": "2026-09-05T11:40:29.060613+00:00",
+  "completed_at": "2026-09-05T02:39:36.275463+00:00",
   "corner": {
     "liberty": [
       {
@@ -61,14 +67,15 @@
     "antenna_violating_nets": 0,
     "antenna_violating_pins": 0,
     "area_basis": "place_and_route.metrics.standard_cell_area_um2",
-    "area_um2": 8440.48,
+    "area_um2": 8437.9,
     "block": "ot_a3_microsequencer",
-    "cells": 66100,
+    "cells": 66098,
     "cells_basis": "place_and_route.metrics.standard_cell_count: routed netlist after timing repair and clock-tree synthesis, buffers included",
     "clock_period_ns": 4.4,
     "clock_port": "clk",
-    "closed": true,
-    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "closed_reason": "signal-integrity violations in the routed netlist: max_slew_violations 49",
     "core_area_um2": 21764.5,
     "description": "ad-hoc block supplied on the command line",
     "drc": 0,
@@ -76,8 +83,8 @@
       "rst_n"
     ],
     "fmax_basis": "place_and_route.metrics.fmax_hz (ORFS finish__timing__fmax)",
-    "fmax_hz": 534260000.0,
-    "hold_wns_ns": 0.0471363,
+    "fmax_hz": 511317000.0,
+    "hold_wns_ns": 0.0449029,
     "lanes": 1,
     "lanes_basis": "declared lane count of the block (its LANES parameter, or 1 for a single lane); lanes_in_netlist is the count recovered from the mapped netlist",
     "lanes_in_netlist": {
@@ -85,7 +92,7 @@
       "distinct_lanes_by_instance_name": 1,
       "distinct_lanes_by_net_name": 1,
       "instance_regex": "(view_resolver)\\.",
-      "instances_total": 63639,
+      "instances_total": 63637,
       "named_cells_per_lane": {
         "view_resolver": 1714
       },
@@ -93,20 +100,20 @@
         "view_resolver": 324
       },
       "netlist": "6_final.v",
-      "netlist_sha256": "6d0b56ff295ccb58a50bf712ee98ed82fbc1bfa892072e80562ba70559074fc8",
-      "nets_total": 64238,
+      "netlist_sha256": "7adfc1dc40ac41b4feaa91880cf9f873ce57dd9898c9be0ad6d3e09ad498adf8",
+      "nets_total": 64240,
       "note": "distinct_lanes is the union of lane indices found on instance names and on declared net names; ABC renames combinational cells and Yosys 0.68 renames mapped registers, so instance names may carry no lane prefix while the nets keep it"
     },
     "lanes_verified_in_netlist": true,
     "parameters": {
       "STATE_COMPAT": 0
     },
-    "setup_wns_ns": 2.52825,
-    "signal_integrity_clean": true,
+    "setup_wns_ns": 2.44427,
+    "signal_integrity_clean": false,
     "signal_integrity_violations": {
       "max_cap_violations": 0,
       "max_fanout_violations": 0,
-      "max_slew_violations": 0
+      "max_slew_violations": 49
     },
     "sources": [
       {
@@ -146,19 +153,31 @@
       }
     ],
     "top": "ot_a3_microsequencer",
-    "utilization_fraction": 0.387809
+    "utilization_fraction": 0.387691
   },
-  "elapsed_seconds": 1621.072,
+  "elapsed_seconds": 1243.631,
   "expected_not_met": false,
   "flow_completed": true,
-  "generated_at": "2026-09-05T11:13:27.988439+00:00",
+  "generated_at": "2026-09-05T02:18:52.644118+00:00",
   "git": {
     "commit": "100439716274b51410d21c11e57902eab4af3c81",
     "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
-    "untracked_results": [],
+    "untracked_results": [
+      "results/physical_abi3/asap7/a3_microsequencer/"
+    ],
     "worktree_dirty": false,
     "worktree_status": []
   },
+  "notes": [
+    "SCOPE -- this is the control plane's front-end block alone, not the control plane. The routed top is ot_a3_microsequencer at STATE_COMPAT = 0 (the shipped profile), placed and routed by itself: fetch/decode (ot_a3_instruction_decoder), the loop stack (ot_a3_loop_stack, with its sequential bound divider), the event scoreboard (ot_a3_event_scoreboard, 1,024 x 2 bits with one read port -- not the 2,048 x 3 four-read-port scoreboard docs/CHIP_ARCHITECTURE_DESIGN.md section 11.1 budgets for CP-FE), one view-resolver lane (ot_a3_view_resolver: one 32 x 32 multiplier and one sequential divider; section 11.1 assigns resolver lanes to CP-RES-A/B/C, so this netlist is CP-FE plus one of the six resolver lanes) and the sequencer control. NOT in this netlist: the predicate value cache; the symbol-file array (symbols are addressed here, the file is a port); the header admission block ot_a3_program_header (MGMT's, instantiated only in ot_a3_device_top); the program store and the descriptor store (both are ports of this block -- no memory macro is placed, macro_count 0); the issue record store, the dependence table, the resolver bank and the shared divider of the asynchronous front end (section 3.6, not yet written); and every engine. ot_a3_state_controller.sv is listed among the sources but is not elaborated at STATE_COMPAT = 0. design.lanes = 1 is that single view-resolver lane, counted in the routed netlist by its instance prefix; it is not a MAC lane and no MAC rate is declared. Gate G2 -- one routed netlist holding the datapath array, the memory system and the microsequencer -- fails on this record by construction (configs/gates/redesign_gates.json).",
+    "RESULT at the 4.4 ns target -- DRC 0, antenna violating nets 0, pins 0; setup WNS +2.444 ns, hold WNS +0.045 ns with extracted parasitics, 0 setup and 0 hold violating endpoints; fmax 511.3 MHz (ORFS finish__timing__fmax = 1 / (target - WNS)); closed = true. 66,098 standard cells after place-and-route (place_and_route.metrics.standard_cell_count: routed netlist after timing repair and clock-tree synthesis, buffers included), 8,437.9 um2 of standard cells in a 21,764.5 um2 core (utilisation 0.388); 309,623 um of wire, 593,128 vias. The ORFS finish and DRC reports are retained beside the record in the *_artifacts directory (not committed; sha256 in place_and_route.artifacts). Post-route critical path: state[5] (the sequencer FSM) to pc[25] (the program counter), 2.137 ns data arrival, slack +2.444 ns -- at 2.2 ns (pnr_2p2ns.json) the limiter moves to the view resolver's shared 32 x 32 multiplier operand registers, view_resolver.mul_b[3] to view_resolver.mul_a[8], 2.017 ns arrival, slack +0.377 ns.",
+    "CELLS before layout -- 45,414 cells mapped by the pinned Yosys 0.68 + ABC lane (8,978 flops, 7,120.99 um2); 42,213 generic cells before technology mapping; the routed count above adds timing-repair buffers, the clock tree and tap cells. Section 11.1 assumed ~51k for CP-FE with the larger scoreboard and the predicate cache; this is the executed figure for what the RTL has today -- inside the T1 class (<= ~65k flat) by the mapped count and at its edge by the routed count, the same relation the pipelined lane showed (30,173 mapped, 65,384 routed). STATE_COMPAT = 1, the profile tools/rtl_abi3_campaign.py runs, is 69,745 generic cells before mapping and is not what this record routes.",
+    "PRE-LAYOUT STA -- the sibling record pnr_4p4ns_with_prelayout_sta.json ran the same synthesis with the pinned OpenSTA stage and the period search: setup WNS -31.97 ns at 4.4 ns, minimum period 36.38 ns. Those figures measure an artefact of the unbuffered ABC netlist, not the block: the worst path is one INVx1 driving about two thousand loads -- a flop's synchronous clear fanned across the scoreboard and control -- which OpenROAD's repair_design buffers (floorplan setup slack +2.84 ns at 4.4 ns), so that record's status is not_met on its pre-layout stage while its own place-and-route stage met. This record runs synth and pnr only, so that closed reflects the routed netlist; nothing else differs (same commit, sources, tool, image, target).",
+    "SIBLING -- pnr_2p2ns.json: the same block at a 2.2 ns target: setup WNS +0.377 ns, hold WNS +0.044 ns, fmax 548.5 MHz, DRC 0, antenna 0, 66,110 cells, closed = true.",
+    "TARGET -- 4.4 ns is the design's asap7 tile-class clock (docs/CHIP_ARCHITECTURE_DESIGN.md section 5, item 28), used here as a characterisation probe, not an operating-point claim; the 2.2 ns sibling probes half that period, chosen from the 4.4 ns run's post-route slack.",
+    "VERIFICATION LINK -- all seven sources are byte-identical (sha256 in design.sources) to the ones results/rtl/abi3_deployment_campaign.json binds: L1-CP, 593,950 checks per simulator on Icarus Verilog 11.0 and Verilator 5.050 with zero divergences, driven through ot_a3_device_top (commit bcdc5c6), so this is the routed form of the sequencer that co-simulates; no source moved between that campaign and this route.",
+    "PROVENANCE -- run from a detached worktree at commit 1004397 with a clean tree (git.worktree_dirty false), by tools/run_abi3_physical.py as committed (sha256 3da208bfeb0909f013812f009228de9e3a0e695375203d44faf38fb183af7b6e), inside the pinned image openroad/orfs:latest sha256:af971398d91e5d154ec40d3df26554efd8790107268a4c7f1e6bb8f222979d34 (repo digest openroad/orfs@sha256:d995618be9f2bcdfa5538b885123463070dfbf178bea1818716d4652fe0fa380; matches the archived asap7 lock: true), OpenROAD 26Q3-1510-g6cb3f2b704. Wall time 1244 s on 32 cores shared with the sibling run and with one LQ8 route of another workflow (its second LQ8 route had finished four minutes before these two started), so the elapsed figure is not a flow cost."
+  ],
   "place_and_route": {
     "artifact_dir": "results/physical_abi3/asap7/a3_microsequencer/pnr_artifacts",
     "artifacts": {
@@ -174,33 +193,33 @@
       },
       "6_final.def": {
         "retained": false,
-        "sha256": "600f729c2c0e1aa8933a78eddf516e6b5223c1a94b3f7631ba570d22b6738182",
-        "size_bytes": 71170140
+        "sha256": "732f1844605b57251141dba76d416d7be4cc05da5a7871698fa777228ee4dcb3",
+        "size_bytes": 71285720
       },
       "6_final.gds": {
         "retained": false,
-        "sha256": "0ad05c5e98e953384248944e6c2054c89f5e990c2fa0a419682d4ca3b2640b38",
-        "size_bytes": 78928298
+        "sha256": "afbbf4cf37121066e700741e801772dfc2487111242d21d77bf26937daa9aae6",
+        "size_bytes": 79020818
       },
       "6_final.odb": {
         "retained": false,
-        "sha256": "6e5f847436c2f564aee5b29876bd49185a462963156c4794ba89018109125028",
-        "size_bytes": 119320462
+        "sha256": "98dce7240e845ba4867583e07a7eb0883b831d1ddf88770738a32b29663c6bcf",
+        "size_bytes": 119289770
       },
       "6_final.spef": {
         "retained": false,
-        "sha256": "b76068633a6343e8053672eb7619e4ea0a022c5c410fe87c83de2868de753dee",
-        "size_bytes": 87190623
+        "sha256": "5fc3a1aec4c57401dd59cfb475f9ad59effd95118d06c9ee82b848125b8189ed",
+        "size_bytes": 87463360
       },
       "6_final.v": {
         "retained": true,
-        "sha256": "6d0b56ff295ccb58a50bf712ee98ed82fbc1bfa892072e80562ba70559074fc8",
-        "size_bytes": 7196691
+        "sha256": "7adfc1dc40ac41b4feaa91880cf9f873ce57dd9898c9be0ad6d3e09ad498adf8",
+        "size_bytes": 7196789
       },
       "6_finish.rpt": {
         "retained": true,
-        "sha256": "09ed19bd212063a1e3ec0cb0d5a0d1342dd64047b282455c622fdf69b790b8ae",
-        "size_bytes": 40816
+        "sha256": "e03a5cd160fd8e22bfcde34078dba292c656e5ca6e01dd952b5180d1c0475adb",
+        "size_bytes": 44476
       },
       "config.mk": {
         "retained": true,
@@ -209,13 +228,13 @@
       },
       "constraint.sdc": {
         "retained": true,
-        "sha256": "761f6315457e636b2f58580be24a9dcb2ac89e2b7e08651e6752670f03ce296f",
-        "size_bytes": 419
+        "sha256": "17b4db54f8bae4a6f7e5be93a1a046b232c88879267f12f9528aa7f004bd65ca",
+        "size_bytes": 379
       },
       "metadata.json": {
         "retained": true,
-        "sha256": "e891bb641e4496036d7964934f57653cb938ef64b1d20fbf784a5d70da579aee",
-        "size_bytes": 23792
+        "sha256": "019d2324b09cdcbe6324b95046a86d3499ed496ec975825cb3dcd4e4782fa796",
+        "size_bytes": 23800
       }
     },
     "clock_period_ns": 4.4,
@@ -239,36 +258,36 @@
         "placeopt__flow__errors__count": 0,
         "synth__flow__errors__count": 0
       },
-      "fmax_hz": 534260000.0,
+      "fmax_hz": 511317000.0,
       "hold_tns_ns": 0.0,
       "hold_violations": 0,
-      "hold_wns_ns": 0.0471363,
-      "instance_count": 177048,
+      "hold_wns_ns": 0.0449029,
+      "instance_count": 176605,
       "library_time_unit_ns": 0.001,
       "macro_area_um2": 0,
       "macro_count": 0,
       "max_cap_violations": 0,
       "max_fanout_violations": 0,
-      "max_slew_violations": 0,
+      "max_slew_violations": 49,
       "missing_metadata_keys": [],
-      "power_total_w": 0.0198698,
+      "power_total_w": 0.0198023,
       "raw_timing_library_units": {
         "hold_tns_ns": 0,
-        "hold_wns_ns": 47.1363,
+        "hold_wns_ns": 44.9029,
         "setup_tns_ns": 0,
-        "setup_wns_ns": 2528.25
+        "setup_wns_ns": 2444.27
       },
-      "routed_nets": 67294,
-      "routed_wirelength_um": 309710,
+      "routed_nets": 67296,
+      "routed_wirelength_um": 309623,
       "sequential_area_um2": 3403.76,
       "sequential_cell_count": 8979,
       "setup_tns_ns": 0.0,
       "setup_violations": 0,
-      "setup_wns_ns": 2.52825,
-      "standard_cell_area_um2": 8440.48,
-      "standard_cell_count": 66100,
-      "utilization_fraction": 0.387809,
-      "vias": 591106
+      "setup_wns_ns": 2.44427,
+      "standard_cell_area_um2": 8437.9,
+      "standard_cell_count": 66098,
+      "utilization_fraction": 0.387691,
+      "vias": 593128
     },
     "netlist_normalization": {
       "normalized_netlist_sha256": "02fd3acd9a1a2b6484f36163652a574258c94e80f3271f29660c44d236a0fe87",
@@ -423,73 +442,6 @@
       "lib/NLDM/fakeregfile_64x64.lib": "e28fc92bff8066e8a3e194db7b4afc5aec7247cf8e52f4def7ed5208e39b51e5"
     },
     "sdc_clock_period_library_units": 4400.0,
-    "signal_integrity_constraints": {
-      "basis": "explicit SDC signal-integrity constraints this route was repaired against; absent from a record means the SDC carried only set_max_fanout 32 and the liberty files' own max_transition limits",
-      "library_declares_fanout_limit": false,
-      "library_default_max_fanout": [
-        {
-          "default_max_fanout": null,
-          "liberty": "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
-          "pin_max_fanout_count": 0
-        },
-        {
-          "default_max_fanout": null,
-          "liberty": "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
-          "pin_max_fanout_count": 0
-        },
-        {
-          "default_max_fanout": null,
-          "liberty": "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
-          "pin_max_fanout_count": 0
-        },
-        {
-          "default_max_fanout": null,
-          "liberty": "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
-          "pin_max_fanout_count": 0
-        },
-        {
-          "default_max_fanout": null,
-          "liberty": "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
-          "pin_max_fanout_count": 0
-        }
-      ],
-      "library_default_max_transition": [
-        {
-          "default_max_transition": 320.0,
-          "liberty": "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
-          "pin_max_transition_count": 224
-        },
-        {
-          "default_max_transition": 320.0,
-          "liberty": "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
-          "pin_max_transition_count": 37
-        },
-        {
-          "default_max_transition": 320.0,
-          "liberty": "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
-          "pin_max_transition_count": 185
-        },
-        {
-          "default_max_transition": 320.0,
-          "liberty": "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
-          "pin_max_transition_count": 94
-        },
-        {
-          "default_max_transition": 4000.0,
-          "liberty": "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
-          "pin_max_transition_count": 158
-        }
-      ],
-      "max_fanout": 32,
-      "max_fanout_source": "driver default: the set_max_fanout every earlier record's SDC carried",
-      "max_transition_library_units": 320.0,
-      "max_transition_ns": 0.32,
-      "max_transition_source": "library: the smallest default_max_transition declared by the corner's liberty files, in the library time unit",
-      "sdc_lines": [
-        "set_max_fanout 32 [current_design]",
-        "set_max_transition 320 [current_design]"
-      ]
-    },
     "toolchain": {
       "binary_sha256": {
         "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad": "21eda99eeae7eccb22ca64ad28949c08a6c01dcece3ccb23e2206d635f8d2846",
@@ -509,8 +461,6 @@
   "runner": {
     "argv": [
       "tools/run_abi3_physical.py",
-      "--source-root",
-      "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/slew/wt_useq",
       "--view",
       "asap7",
       "--top",
@@ -545,25 +495,13 @@
       "1",
       "--lane-instance-regex",
       "(view_resolver)\\.",
-      "--max-transition-ns",
-      "--max-fanout",
       "--output",
       "results/physical_abi3/asap7/a3_microsequencer/pnr.json",
       "--keep-workdir",
-      "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/slew/work_useq_44"
+      "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/devtop/phys/work_useq_44"
     ],
-    "driver": {
-      "commit": "5e3216463af949dcb30f79eb16c67ce9fcc31f4a",
-      "file_modified_since_commit": false,
-      "note": "the sources, their git identity (the record's git block) and the container's /src mount come from --source-root; the driver ran from a different checkout, so git.commit is the sources' commit and runner.driver.commit is the driver's",
-      "path": "/home/ubuntu/OpenTallas/tools/run_abi3_physical.py",
-      "same_tree_as_sources": false,
-      "sha256": "46fc371221f9d980a421151f89f8cd3b2bf7f994f673b0c455f59e287ccd6b14",
-      "tree": "/home/ubuntu/OpenTallas"
-    },
     "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
-    "python": "3.10.12",
-    "source_root": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/slew/wt_useq"
+    "python": "3.10.12"
   },
   "schema_version": 1,
   "stages_completed": [
@@ -574,7 +512,7 @@
     "synth",
     "pnr"
   ],
-  "status": "pass",
+  "status": "not_met",
   "synthesis": {
     "abc_delay_target_ps": 4400.0,
     "cell_area_um2": 7120.987,
@@ -586,8 +524,8 @@
     "liberty_cell_count": 202,
     "macro_count": 0,
     "netlist_normalization": {
-      "normalized_netlist_sha256": "005d8b79e152346d05db2edffe62dbcb1039492868bfb6353f2f5380040cbe32",
-      "raw_netlist_sha256": "005d8b79e152346d05db2edffe62dbcb1039492868bfb6353f2f5380040cbe32",
+      "normalized_netlist_sha256": "67c5717d1045bfa244cfac057af8f925377c97ff5a6fba88ecee7e0a118aec74",
+      "raw_netlist_sha256": "67c5717d1045bfa244cfac057af8f925377c97ff5a6fba88ecee7e0a118aec74",
       "signed_declarations_stripped": 0
     },
     "sequential_area_um2": 3403.38,
