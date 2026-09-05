@@ -752,7 +752,10 @@ def test_the_c2_gate_fails_on_the_audits_evidence_not_on_absence():
     assert "none has deployment_audit.comparable" not in result["why"], (
         "C2 is failing on absence again: " + result["why"]
     )
-    assert "deployment_audit.comparable == False" in result["why"]
+    # a5463e8 made C2 require every audited pair; the failure now counts the
+    # artifacts that fail and names them with their own verdicts.
+    assert "fail deployment_audit.comparable == True" in result["why"]
+    assert "NOT COMPARABLE" in result["why"]
     if SHIPPED_ROM_DEPLOYMENT.exists() and SHIPPED_HBM_DEPLOYMENT.exists():
         assert "tile_depth 2048 vs 128" in result["why"]
     else:

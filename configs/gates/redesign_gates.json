@@ -67,7 +67,8 @@
           "field": "calibration.derived_machine_reproduces_anchor",
           "equals": true
         },
-        "note": "G4 has two halves: the cycle model reproduces the RTL's measured block cycles within the stated band (docs/CHIP_ARCHITECTURE_DESIGN.md section 11.5, L3: +/-10 percent, boundary 120 cycles), AND the derived machine reproduces the analytical design point. The regime half already has its own gate, C3, and passed there once its field path was corrected. For one commit this gate passed on C3's artifact alone -- half its statement -- which is the not_evaluable defect in miniature; it now reads the L3 calibration artifact, which does not exist yet, and fails until it does. The artifact is produced when tools/derive_cycle_machine.py is re-parameterised from the L1 block-cycle records (results/rtl/abi3_pipelined_lane.json and successors)."
+        "note": "G4 has two halves: the cycle model reproduces the RTL's measured block cycles within the stated band (docs/CHIP_ARCHITECTURE_DESIGN.md section 11.5, L3: +/-10 percent, boundary 120 cycles), AND the derived machine reproduces the analytical design point. The regime half already has its own gate, C3, and passed there once its field path was corrected. For one commit this gate passed on C3's artifact alone -- half its statement -- which is the not_evaluable defect in miniature; it now reads the L3 calibration artifact, which does not exist yet, and fails until it does. The artifact is produced when tools/derive_cycle_machine.py is re-parameterised from the L1 block-cycle records (results/rtl/abi3_pipelined_lane.json and successors). reason_field: when the artifact exists and its verdict is false, the board shows the artifact's own reason (the boundary ratio, the unmeasured control plane) rather than the absence text.",
+        "reason_field": "calibration.reason"
       }
     },
     {
