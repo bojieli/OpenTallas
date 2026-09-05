@@ -8,16 +8,27 @@
       "id": "G1",
       "kind": "terminal",
       "statement": "The integrated RTL produces the oracle's token IDs for one governed workload, on each of ROM and HBM.",
-      "fails_when": "No RTL path reaches a token.",
+      "fails_when": "No RTL path reaches a token, or a token record covers only one storage class, or names no simulator, or its ids differ from the oracle's.",
       "evaluator": {
-        "type": "artifact_field",
+        "type": "token_record",
         "glob": "results/rtl/*token*.json",
-        "require": {
-          "field": "record.oracle.agreement",
-          "equals": true
-        },
-        "note": "docs/FOUR_TARGET_PROGRESS_REPORT.md states at RTL 3.0: 'no RTL path reaches a token'. This gate is expected to fail until that sentence changes."
-      }
+        "require_storage_classes": [
+          "rom",
+          "hbm"
+        ],
+        "workload": "TA-QW-EOS-1",
+        "oracle": "results/abi3/qwen3_reference_oracle_eos.json",
+        "oracle_token_field": "generated_token_ids",
+        "note": "TIGHTENED 2026-09-05, before any token artifact exists. The first evaluator was artifact_field over this same glob requiring only record.oracle.agreement == true -- it checked neither storage class, nor the workload, nor that any RTL ran, so any file matching results/rtl/*token*.json would have turned this terminal gate green. That is structurally the not_evaluable defect docs/PERFORMANCE_DESIGN_POSTMORTEM.md was written to remove, and it is the third instance in this same board (G2 passed on a directory NAME, G4 on half its statement). It is fixed here deliberately in a commit that lands BEFORE the artifact, so no record is ever written against a weaker rule than the one that judges it. The evaluator now requires a conforming record for EACH of rom and hbm, each naming the workload, re-reading the oracle file and comparing its sha256, comparing the RTL-emitted record_token_ids element-wise against the oracle's gold, naming a simulator that ran with a positive simulated_cycles, declaring an evidence_class that names RTL simulation, and binding a clean worktree."
+      },
+      "acceptance": "TA-QW-EOS-1 on qwen3-8b-rom-single-chip and qwen3-8b-hbm-single-chip. The three generated tokens [3925, 13, 151645] are produced by the deployment's own decode entrypoint executing in the integrated RTL against the real Qwen3-8B checkpoint weights, with OFFICIAL_EOS raised. The 16-token prefill KV cache and the position-16 state are SUPPLIED as preloaded memory-object images produced by the qualified golden model and bound by SHA-256 in the record.",
+      "does_not_establish": [
+        "prefill execution in RTL: the 16-token prompt is 111,794,716,672 MACs, which is 43 days per storage class at the measured integrated rate of 30,149 MACs/s and about 9 days even at the 5x the pipelined lane would buy; a single prefill pass cannot be split across cores, and lane width does not help (measured: 8 lanes deliver 1.14x lane-ops per CPU-second, because Verilator's cost tracks evaluated logic x cycles)",
+        "dual-simulator agreement: the integrated path is Verilator-only by its own scope, and Icarus cannot run 2.3e10 cycles",
+        "TPOT or any rate -- that is gate G3",
+        "the blocked-vs-sequential MATMUL contract question: the compiler emits bf16_bf16_fp32_blocked_rne_v1 and the lane executes single-lane ascending-K; results/abi3/numeric_contract_qualification.json measures 17 of 32,768 BF16 elements differing at 1 ulp with vocabulary_argmax_changes = 0, so the greedy token survives, but the record must state executed_association",
+        "DeepSeek on either storage class"
+      ]
     },
     {
       "id": "G2",

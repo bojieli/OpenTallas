@@ -321,6 +321,112 @@ def evaluate(gate: dict[str, Any]) -> dict[str, Any]:
     if not paths:
         return _fail(f"no artifact matches {ev['glob']}")
 
+    if kind == "token_record":
+        # G1's whole statement, not a third of it.  The first evaluator was
+        # artifact_field over results/rtl/*token*.json requiring only
+        # record.oracle.agreement == true: it checked neither storage class,
+        # nor the workload, nor that any RTL ran, so ANY file matching the glob
+        # would have turned this terminal gate green.  That is the
+        # not_evaluable defect in a new costume -- the same shape as G2 passing
+        # on a directory NAME and G4 passing on half its statement -- and it is
+        # tightened here, deliberately in a commit that lands BEFORE any token
+        # artifact exists, so that no record is ever written against a weaker
+        # rule than the one that will judge it.
+        #
+        # A conforming record carries, per storage class:
+        #   storage_class          "rom" | "hbm"
+        #   workload_id            the governed workload's id
+        #   oracle.artifact        path of the reference oracle
+        #   oracle.artifact_sha256 its digest, re-read and compared here
+        #   oracle.generated_token_ids   the gold ids
+        #   record_token_ids       what the RTL emitted, compared element-wise
+        #   oracle.agreement       true
+        #   execution.simulator    a named simulator that ran
+        #   execution.simulated_cycles   > 0
+        #   execution.evidence_class     must name RTL simulation
+        #   git.worktree_dirty     false
+        # Records may live one per file or several in a "records" list.
+        want_classes = [str(c) for c in ev.get("require_storage_classes", [])]
+        workload = ev.get("workload")
+        oracle_path = ev.get("oracle")
+        found: dict[str, list[str]] = {}
+        problems: list[str] = []
+        oracle_ids = None
+        oracle_digest = None
+        if oracle_path:
+            opath = REPO / oracle_path
+            if not opath.exists():
+                return _fail(f"oracle artifact {oracle_path} does not exist")
+            import hashlib
+
+            oracle_digest = hashlib.sha256(opath.read_bytes()).hexdigest()
+            obody = _load(opath) or {}
+            oracle_ids = _dig(obody, ev.get("oracle_token_field", "generated_token_ids"))
+            if not isinstance(oracle_ids, list) or not oracle_ids:
+                return _fail(
+                    f"oracle artifact {oracle_path} carries no token id list at "
+                    f"{ev.get('oracle_token_field', 'generated_token_ids')}"
+                )
+        for path in paths:
+            body = _load(path)
+            if body is None:
+                problems.append(f"{path.relative_to(REPO)}: unreadable")
+                continue
+            records = body.get("records")
+            if not isinstance(records, list):
+                records = [body.get("record", body)]
+            for rec in records:
+                if not isinstance(rec, dict):
+                    continue
+                rel = str(path.relative_to(REPO))
+                klass = rec.get("storage_class")
+                if klass not in want_classes:
+                    problems.append(f"{rel}: storage_class {klass!r} is not one of {want_classes}")
+                    continue
+                why: list[str] = []
+                if workload and rec.get("workload_id") != workload:
+                    why.append(f"workload_id {rec.get('workload_id')!r} != {workload!r}")
+                oracle = rec.get("oracle") or {}
+                if oracle.get("agreement") is not True:
+                    why.append(f"oracle.agreement is {oracle.get('agreement')!r}")
+                if oracle_digest and oracle.get("artifact_sha256") != oracle_digest:
+                    why.append("oracle.artifact_sha256 does not match the oracle on disk")
+                if oracle_ids is not None:
+                    emitted = rec.get("record_token_ids")
+                    if emitted is None:
+                        emitted = oracle.get("generated_token_ids")
+                        why.append("record_token_ids absent -- no RTL-emitted ids to compare")
+                    if list(emitted or []) != list(oracle_ids):
+                        why.append(f"token ids {emitted!r} != oracle {oracle_ids!r}")
+                execution = rec.get("execution") or {}
+                if not execution.get("simulator"):
+                    why.append("execution.simulator absent -- nothing states that RTL ran")
+                cycles = execution.get("simulated_cycles")
+                if not isinstance(cycles, int) or cycles <= 0:
+                    why.append(f"execution.simulated_cycles is {cycles!r}, must be a positive int")
+                klass_evidence = str(execution.get("evidence_class", ""))
+                if "rtl" not in klass_evidence.lower():
+                    why.append(f"execution.evidence_class {klass_evidence!r} does not name RTL simulation")
+                if _dig(rec, "git.worktree_dirty") is not False:
+                    why.append("git.worktree_dirty is not false -- the record is not source-bound")
+                if why:
+                    problems.append(f"{rel} [{klass}]: " + "; ".join(why))
+                else:
+                    found.setdefault(klass, []).append(rel)
+        missing = [c for c in want_classes if c not in found]
+        if missing or not found:
+            detail = "; ".join(problems[:3]) if problems else "no conforming record"
+            return _fail(
+                f"no conforming token record for storage class(es) {missing or want_classes}: "
+                + detail
+                + ("; ..." if len(problems) > 3 else "")
+            )
+        return _pass(
+            "conforming token records on "
+            + ", ".join(f"{c} ({found[c][0]})" for c in want_classes)
+            + f"; ids match {oracle_path}"
+        )
+
     if kind == "artifact_field":
         want = ev["require"]
         also = ev.get("also_require")
