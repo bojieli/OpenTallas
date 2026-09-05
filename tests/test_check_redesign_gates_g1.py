@@ -325,3 +325,48 @@ def test_rollup_naming_a_gate_that_does_not_exist_fails(repo):
     got = gates.evaluate(board[0], board)
     assert got["status"] == "fail"
     assert "G1z" in got["why"]
+
+
+# ---------------------------------------------------------------------------
+# The configured oracle paths must resolve against the REAL artifacts in this
+# repository.  A gate that fails because its field path is wrong looks exactly
+# like a gate that fails because the work is not done, and the second is the
+# only failure anyone should ever have to read.
+# ---------------------------------------------------------------------------
+
+
+def _spec_gate(gid: str) -> dict:
+    body = json.loads((ROOT / "configs/gates/redesign_gates.json").read_text())
+    return next(g for g in body["gates"] if g["id"] == gid)
+
+
+def test_the_g1d_oracle_path_resolves_in_this_repository():
+    ev = _spec_gate("G1d")["evaluator"]
+    oracle = ROOT / ev["oracle"]
+    assert oracle.exists(), f"{ev['oracle']} is missing"
+    body = json.loads(oracle.read_text())
+    node = body
+    for part in ev["oracle_token_field"].split("."):
+        assert isinstance(node, dict) and part in node, (
+            f"G1d oracle_token_field {ev['oracle_token_field']!r} does not resolve at {part!r}"
+        )
+        node = node[part]
+    assert isinstance(node, list) and node, "the oracle's token ids are empty"
+
+
+def test_every_ladder_rung_declares_both_storage_classes_and_the_workload():
+    for gid in ("G1a", "G1b", "G1c", "G1d", "G1e", "G1f"):
+        ev = _spec_gate(gid)["evaluator"]
+        assert ev["type"] == "rtl_records", gid
+        assert sorted(ev["require_storage_classes"]) == ["hbm", "rom"], gid
+        assert ev["workload"], gid
+        assert ev.get("require_fields"), f"{gid} asserts nothing of its own"
+
+
+def test_the_rollup_requires_every_rung_the_spec_defines():
+    ev = _spec_gate("G1")["evaluator"]
+    assert ev["type"] == "gate_rollup"
+    body = json.loads((ROOT / "configs/gates/redesign_gates.json").read_text())
+    rungs = sorted(g["id"] for g in body["gates"] if g["id"].startswith("G1") and g["id"] != "G1")
+    assert sorted(ev["requires"]) == rungs, "a rung exists that the roll-up does not require"
+    assert ev.get("certificate"), "the roll-up composes nothing"

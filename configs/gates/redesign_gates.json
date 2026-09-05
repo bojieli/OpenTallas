@@ -198,9 +198,9 @@
           }
         ],
         "oracle": "results/abi3/qwen3_reference_oracle_eos.json",
-        "oracle_token_field": "generated_token_ids",
+        "oracle_token_field": "results.TA-QW-EOS-1.generated_token_ids",
         "oracle_token_count": 1,
-        "note": "Rung of the RTL verification ladder (docs/CHIP_ARCHITECTURE_DESIGN.md section 11.5). Every rung carries the same provenance spine: a named simulator, a positive simulated_cycles, an evidence_class naming RTL simulation, and a clean worktree, for EACH of rom and hbm. 622,329,856 MACs; 4.33 h whole, or 1.08 h wall in four concurrent row shards, which is how the chip itself computes it. This rung is where an RTL-emitted token id first exists."
+        "note": "Rung of the RTL verification ladder (docs/CHIP_ARCHITECTURE_DESIGN.md section 11.5). Every rung carries the same provenance spine: a named simulator, a positive simulated_cycles, an evidence_class naming RTL simulation, and a clean worktree, for EACH of rom and hbm. 622,329,856 MACs; 4.33 h whole, or 1.08 h wall in four concurrent row shards, which is how the chip itself computes it. This rung is where an RTL-emitted token id first exists. The oracle's token ids are nested at results.<workload>.generated_token_ids, not at the top level; the field path is spelled out here because a gate that fails for the wrong reason is a gate nobody trusts."
       }
     },
     {
@@ -282,7 +282,9 @@
             "equals": 0
           }
         ],
-        "note": "Rung of the RTL verification ladder (docs/CHIP_ARCHITECTURE_DESIGN.md section 11.5). Every rung carries the same provenance spine: a named simulator, a positive simulated_cycles, an evidence_class naming RTL simulation, and a clean worktree, for EACH of rom and hbm. Minutes. The industry's small-config regression: the tapeout configuration is verified by the pyramid, the regression configuration is run whole, nightly. It establishes control flow, composition and token emission with nothing supplied; it does NOT establish numerics at full dimension, which is what G1a-G1d are for. Its oracle is the same reference implementation at the reduced configuration."
+        "note": "Rung of the RTL verification ladder (docs/CHIP_ARCHITECTURE_DESIGN.md section 11.5). Every rung carries the same provenance spine: a named simulator, a positive simulated_cycles, an evidence_class naming RTL simulation, and a clean worktree, for EACH of rom and hbm. Minutes. The industry's small-config regression: the tapeout configuration is verified by the pyramid, the regression configuration is run whole, nightly. It establishes control flow, composition and token emission with nothing supplied; it does NOT establish numerics at full dimension, which is what G1a-G1d are for. Its oracle is the same reference implementation at the reduced configuration. The reduced oracle does not exist yet, so this rung currently fails by naming its missing prerequisite -- which is the correct behaviour and the reason the oracle is declared here rather than left implicit. It is produced by the same reference implementation as the full oracle, at the reduced configuration, and the rung's record must reproduce its ids exactly.",
+        "oracle": "results/abi3/qwen3_reduced_reference_oracle.json",
+        "oracle_token_field": "results.TA-QW-REDUCED-EOS-1.generated_token_ids"
       }
     },
     {
