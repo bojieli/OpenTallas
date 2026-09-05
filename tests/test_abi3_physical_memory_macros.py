@@ -172,6 +172,13 @@ def test_every_routed_record_config_mk_is_still_reproduced_byte_for_byte():
             pnr["core_utilization_percent"],
             pnr["place_density"],
             pnr.get("signal_integrity_constraints"),
+            # A record that named memory macros carries their lines in its own
+            # config.mk, so the rebuild must be handed them back.  Passing None
+            # here would have silently exempted every macro-bearing record from
+            # the only test that binds a config.mk to its hash -- and the first
+            # such record (asap7/a3_g2_cluster) would have failed instead of
+            # being checked.
+            pnr.get("memory_macros"),
         )
         text = "\n".join(lines) + "\n"
         assert hashlib.sha256(text.encode("utf-8")).hexdigest() == artifact["sha256"], path
