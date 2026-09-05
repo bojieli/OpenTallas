@@ -75,9 +75,130 @@ def _pass(why: str) -> dict[str, Any]:
     return {"status": "pass", "why": why}
 
 
-def evaluate(gate: dict[str, Any]) -> dict[str, Any]:
+def _oracle_of(ev: dict[str, Any]) -> tuple[Any, str | None, str | None]:
+    """Read the reference oracle a rung compares against, or (None, None, None).
+
+    Returned as (token ids, sha256 of the file on disk, the configured path).
+    The digest is recomputed here rather than trusted from the record, so a
+    record cannot claim agreement with an oracle that has since moved.
+    """
+    oracle_path = ev.get("oracle")
+    if not oracle_path:
+        return None, None, None
+    import hashlib
+
+    opath = REPO / oracle_path
+    if not opath.exists():
+        return "MISSING", None, oracle_path
+    digest = hashlib.sha256(opath.read_bytes()).hexdigest()
+    body = _load(opath) or {}
+    ids = _dig(body, ev.get("oracle_token_field", "generated_token_ids"))
+    if not isinstance(ids, list) or not ids:
+        return "EMPTY", digest, oracle_path
+    return ids, digest, oracle_path
+
+
+def _rtl_record_problems(
+    rec: dict[str, Any], ev: dict[str, Any], oracle_ids: Any, oracle_digest: str | None
+) -> list[str]:
+    """Every check a rung of the RTL verification ladder must survive.
+
+    Provenance first, because a record that does not say a simulator ran, or
+    that was written from a dirty tree, is not evidence whatever it claims.
+    Then the rung's own required fields.  Absence of a field is a problem, not
+    a pass -- that inversion is the whole point of this tool.
+    """
+    why: list[str] = []
+    workload = ev.get("workload")
+    if workload and rec.get("workload_id") != workload:
+        why.append(f"workload_id {rec.get('workload_id')!r} != {workload!r}")
+
+    execution = rec.get("execution") or {}
+    if not execution.get("simulator"):
+        why.append("execution.simulator absent -- nothing states that RTL ran")
+    cycles = execution.get("simulated_cycles")
+    if not isinstance(cycles, int) or cycles <= 0:
+        why.append(f"execution.simulated_cycles is {cycles!r}, must be a positive int")
+    evidence = str(execution.get("evidence_class", ""))
+    if "rtl" not in evidence.lower():
+        why.append(f"execution.evidence_class {evidence!r} does not name RTL simulation")
+    if _dig(rec, "git.worktree_dirty") is not False:
+        why.append("git.worktree_dirty is not false -- the record is not source-bound")
+
+    if oracle_ids is not None:
+        # A rung may certify only a prefix of the gold sequence -- the head and
+        # token rung emits the first generated id, the reduced end-to-end rung
+        # emits all of them.  The count is declared per rung so a rung can
+        # never quietly certify fewer tokens than it claims.
+        count = ev.get("oracle_token_count")
+        if isinstance(count, int) and count > 0:
+            oracle_ids = list(oracle_ids)[:count]
+        oracle = rec.get("oracle") or {}
+        if oracle.get("agreement") is not True:
+            why.append(f"oracle.agreement is {oracle.get('agreement')!r}")
+        if oracle_digest and oracle.get("artifact_sha256") != oracle_digest:
+            why.append("oracle.artifact_sha256 does not match the oracle on disk")
+        emitted = rec.get("record_token_ids")
+        if emitted is None:
+            why.append("record_token_ids absent -- no RTL-emitted ids to compare")
+            emitted = oracle.get("generated_token_ids")
+        if list(emitted or []) != list(oracle_ids):
+            why.append(f"token ids {emitted!r} != oracle {oracle_ids!r}")
+
+    for req in ev.get("require_fields", []):
+        got = _dig(rec, req["field"])
+        if got != req.get("equals"):
+            why.append(f"{req['field']} is {got!r}, want {req.get('equals')!r}")
+    for req in ev.get("require_min", []):
+        got = _dig(rec, req["field"])
+        if not isinstance(got, (int, float)) or got < req["at_least"]:
+            why.append(f"{req['field']} is {got!r}, want >= {req['at_least']}")
+    return why
+
+
+def evaluate(gate: dict[str, Any], board: list[dict[str, Any]] | None = None) -> dict[str, Any]:
     ev = gate.get("evaluator") or {}
     kind = ev.get("type")
+
+    if kind == "gate_rollup":
+        # G1 is a roll-up, not a run.  The industry does not sign off an
+        # accelerator by simulating a whole network; it closes a verification
+        # pyramid and composes.  So this gate passes only when every named rung
+        # passes AND a composition certificate binds them together.  Each rung
+        # is re-evaluated here rather than read from a stored board, so the
+        # roll-up can never be greener than the evidence under it right now.
+        required = list(ev.get("requires", []))
+        by_id = {g["id"]: g for g in (board or [])}
+        missing_spec = [rid for rid in required if rid not in by_id]
+        if missing_spec:
+            return _fail(f"roll-up names gate(s) that do not exist: {missing_spec}")
+        failing = []
+        for rid in required:
+            outcome = evaluate(by_id[rid], board)
+            if outcome["status"] != "pass":
+                failing.append(f"{rid}: {outcome['why'][:110]}")
+        cert = ev.get("certificate")
+        if cert:
+            cbody = _load(REPO / cert)
+            if cbody is None:
+                failing.append(f"composition certificate {cert} is absent or unreadable")
+            else:
+                for req in ev.get("certificate_requires", []):
+                    got = _dig(cbody, req["field"])
+                    if got != req.get("equals"):
+                        failing.append(
+                            f"{cert}: {req['field']} is {got!r}, want {req.get('equals')!r}"
+                        )
+        if failing:
+            return _fail(
+                f"{len(failing)} of {len(required) + (1 if cert else 0)} requirement(s) unmet: "
+                + "; ".join(failing[:3])
+                + ("; ..." if len(failing) > 3 else "")
+            )
+        return _pass(
+            f"all {len(required)} rung(s) pass and {cert} binds them"
+            if cert else f"all {len(required)} rung(s) pass"
+        )
 
     if kind == "command":
         argv = list(ev["argv"])
@@ -152,7 +273,15 @@ def evaluate(gate: dict[str, Any]) -> dict[str, Any]:
             + "; ".join(passes[:3])
         )
 
-    paths = _matches(ev["glob"]) if "glob" in ev else []
+    if "glob" in ev:
+        paths = _matches(ev["glob"])
+    elif "artifact" in ev:
+        # A rung that names ONE artifact by path.  Named rather than globbed so
+        # a rung cannot be satisfied by some other file that happens to match.
+        one = REPO / ev["artifact"]
+        paths = [one] if one.exists() else []
+    else:
+        paths = []
 
     if kind == "routed_netlist_contains":
         # G2 names three things that must sit in ONE routed netlist: the
@@ -319,54 +448,38 @@ def evaluate(gate: dict[str, Any]) -> dict[str, Any]:
         )
 
     if not paths:
-        return _fail(f"no artifact matches {ev['glob']}")
+        return _fail(
+            f"no artifact matches {ev['glob']}"
+            if "glob" in ev
+            else f"artifact {ev.get('artifact')} does not exist"
+        )
 
-    if kind == "token_record":
-        # G1's whole statement, not a third of it.  The first evaluator was
+    if kind in ("token_record", "rtl_records"):
+        # A rung of the RTL verification ladder.  G1's first evaluator was
         # artifact_field over results/rtl/*token*.json requiring only
         # record.oracle.agreement == true: it checked neither storage class,
-        # nor the workload, nor that any RTL ran, so ANY file matching the glob
-        # would have turned this terminal gate green.  That is the
-        # not_evaluable defect in a new costume -- the same shape as G2 passing
-        # on a directory NAME and G4 passing on half its statement -- and it is
-        # tightened here, deliberately in a commit that lands BEFORE any token
-        # artifact exists, so that no record is ever written against a weaker
-        # rule than the one that will judge it.
+        # nor the workload, nor that any RTL ran, so any file matching that
+        # glob would have turned a terminal gate green.  That is the
+        # not_evaluable defect the redesign plan exists to remove, and the
+        # third instance on this board -- G2 passed on a directory NAME, G4 on
+        # half its statement.
         #
-        # A conforming record carries, per storage class:
-        #   storage_class          "rom" | "hbm"
-        #   workload_id            the governed workload's id
-        #   oracle.artifact        path of the reference oracle
-        #   oracle.artifact_sha256 its digest, re-read and compared here
-        #   oracle.generated_token_ids   the gold ids
-        #   record_token_ids       what the RTL emitted, compared element-wise
-        #   oracle.agreement       true
-        #   execution.simulator    a named simulator that ran
-        #   execution.simulated_cycles   > 0
-        #   execution.evidence_class     must name RTL simulation
-        #   git.worktree_dirty     false
-        # Records may live one per file or several in a "records" list.
+        # Every rung carries the same provenance spine (a named simulator, a
+        # positive simulated_cycles, an evidence_class naming RTL simulation, a
+        # clean worktree) plus whatever that rung asserts, and must do so for
+        # EACH declared storage class.  Records live one per file or several in
+        # a "records" list.
         want_classes = [str(c) for c in ev.get("require_storage_classes", [])]
-        workload = ev.get("workload")
-        oracle_path = ev.get("oracle")
+        oracle_ids, oracle_digest, oracle_path = _oracle_of(ev)
+        if oracle_ids == "MISSING":
+            return _fail(f"oracle artifact {oracle_path} does not exist")
+        if oracle_ids == "EMPTY":
+            return _fail(
+                f"oracle artifact {oracle_path} carries no token id list at "
+                f"{ev.get('oracle_token_field', 'generated_token_ids')}"
+            )
         found: dict[str, list[str]] = {}
         problems: list[str] = []
-        oracle_ids = None
-        oracle_digest = None
-        if oracle_path:
-            opath = REPO / oracle_path
-            if not opath.exists():
-                return _fail(f"oracle artifact {oracle_path} does not exist")
-            import hashlib
-
-            oracle_digest = hashlib.sha256(opath.read_bytes()).hexdigest()
-            obody = _load(opath) or {}
-            oracle_ids = _dig(obody, ev.get("oracle_token_field", "generated_token_ids"))
-            if not isinstance(oracle_ids, list) or not oracle_ids:
-                return _fail(
-                    f"oracle artifact {oracle_path} carries no token id list at "
-                    f"{ev.get('oracle_token_field', 'generated_token_ids')}"
-                )
         for path in paths:
             body = _load(path)
             if body is None:
@@ -381,34 +494,11 @@ def evaluate(gate: dict[str, Any]) -> dict[str, Any]:
                 rel = str(path.relative_to(REPO))
                 klass = rec.get("storage_class")
                 if klass not in want_classes:
-                    problems.append(f"{rel}: storage_class {klass!r} is not one of {want_classes}")
+                    problems.append(
+                        f"{rel}: storage_class {klass!r} is not one of {want_classes}"
+                    )
                     continue
-                why: list[str] = []
-                if workload and rec.get("workload_id") != workload:
-                    why.append(f"workload_id {rec.get('workload_id')!r} != {workload!r}")
-                oracle = rec.get("oracle") or {}
-                if oracle.get("agreement") is not True:
-                    why.append(f"oracle.agreement is {oracle.get('agreement')!r}")
-                if oracle_digest and oracle.get("artifact_sha256") != oracle_digest:
-                    why.append("oracle.artifact_sha256 does not match the oracle on disk")
-                if oracle_ids is not None:
-                    emitted = rec.get("record_token_ids")
-                    if emitted is None:
-                        emitted = oracle.get("generated_token_ids")
-                        why.append("record_token_ids absent -- no RTL-emitted ids to compare")
-                    if list(emitted or []) != list(oracle_ids):
-                        why.append(f"token ids {emitted!r} != oracle {oracle_ids!r}")
-                execution = rec.get("execution") or {}
-                if not execution.get("simulator"):
-                    why.append("execution.simulator absent -- nothing states that RTL ran")
-                cycles = execution.get("simulated_cycles")
-                if not isinstance(cycles, int) or cycles <= 0:
-                    why.append(f"execution.simulated_cycles is {cycles!r}, must be a positive int")
-                klass_evidence = str(execution.get("evidence_class", ""))
-                if "rtl" not in klass_evidence.lower():
-                    why.append(f"execution.evidence_class {klass_evidence!r} does not name RTL simulation")
-                if _dig(rec, "git.worktree_dirty") is not False:
-                    why.append("git.worktree_dirty is not false -- the record is not source-bound")
+                why = _rtl_record_problems(rec, ev, oracle_ids, oracle_digest)
                 if why:
                     problems.append(f"{rel} [{klass}]: " + "; ".join(why))
                 else:
@@ -417,14 +507,14 @@ def evaluate(gate: dict[str, Any]) -> dict[str, Any]:
         if missing or not found:
             detail = "; ".join(problems[:3]) if problems else "no conforming record"
             return _fail(
-                f"no conforming token record for storage class(es) {missing or want_classes}: "
+                f"no conforming record for storage class(es) {missing or want_classes}: "
                 + detail
                 + ("; ..." if len(problems) > 3 else "")
             )
         return _pass(
-            "conforming token records on "
+            "conforming records on "
             + ", ".join(f"{c} ({found[c][0]})" for c in want_classes)
-            + f"; ids match {oracle_path}"
+            + (f"; ids match {oracle_path}" if oracle_path else "")
         )
 
     if kind == "artifact_field":
@@ -589,7 +679,7 @@ def main(argv: list[str] | None = None) -> int:
     spec = json.loads(args.gates.read_text())
     results = []
     for gate in spec["gates"]:
-        outcome = evaluate(gate)
+        outcome = evaluate(gate, spec["gates"])
         results.append({
             "id": gate["id"], "kind": gate["kind"],
             "statement": gate["statement"], "fails_when": gate["fails_when"],

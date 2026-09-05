@@ -15,10 +15,11 @@
       "context_tokens",
       "tpot_s",
       "correctness_qualified",
-      "token_record",
+      "composition_certificate",
+      "issue_trace_record",
       "cycle_record"
     ],
-    "rule": "tpot_s is architectural: token-commit ticks over the admitted target timebase on a run whose exact execution identity first passed the correct-token gate (G1). correctness_qualified must be true and token_record must name the passing record. Host wall time, functional-simulator wall time and roofline figures are refused."
+    "rule": "tpot_s is architectural and COMPOSED, not wall-clocked: the per-operator and per-boundary cycle counts are MEASURED in RTL (the same measurements gate G4 calibrates the cycle model against), and they are summed over the issue trace gate G1e certified equal to the golden model's, element for element, on the admitted target timebase. correctness_qualified must be true and composition_certificate must name a passing results/rtl/abi3_g1_composition_certificate.json, so a rate can only be published for a token sequence the whole G1 ladder proved. Host wall time, functional-simulator wall time and roofline figures are refused. Restated 2026-09-05: the previous rule required 'a run whose exact execution identity first passed G1', which the feasibility measurement showed costs 41.7 days per storage class and therefore could never happen -- a budget gate whose measurement cannot exist is the not_evaluable defect wearing a stopwatch. Composition is stronger, not weaker: it requires every operator's cycles to be measured in RTL AND the trace to be certified, where a single run would have required neither to be separable or checkable."
   },
   "budgets": [
     {

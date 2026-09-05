@@ -216,3 +216,112 @@ def test_a_missing_oracle_file_fails_rather_than_passing_vacuously(repo):
     got = _evaluate()
     assert got["status"] == "fail"
     assert "oracle artifact" in got["why"]
+
+
+# ---------------------------------------------------------------------------
+# The roll-up.  G1 is a verification pyramid, not a run: it passes only when
+# every rung passes AND a mechanically derived certificate binds them.  These
+# pin that a roll-up can never be greener than the evidence under it.
+# ---------------------------------------------------------------------------
+
+CERT_REL = "results/rtl/abi3_g1_composition_certificate.json"
+
+ROLLUP = {
+    "type": "gate_rollup",
+    "requires": ["G1a", "G1b"],
+    "certificate": CERT_REL,
+    "certificate_requires": [
+        {"field": "certificate.every_issued_instance_covered", "equals": True},
+        {"field": "certificate.uncovered_instance_count", "equals": 0},
+    ],
+}
+
+
+def _rung(gid: str, artifact: str, field: str) -> dict:
+    return {
+        "id": gid,
+        "kind": "verification",
+        "statement": gid,
+        "fails_when": "-",
+        "evaluator": {
+            "type": "rtl_records",
+            "artifact": artifact,
+            "require_storage_classes": ["rom", "hbm"],
+            "workload": "TA-QW-EOS-1",
+            "require_fields": [{"field": field, "equals": True}],
+        },
+    }
+
+
+def _rung_record(repo: Path, storage_class: str, field: str, value=True) -> dict:
+    body = _record(repo, storage_class)
+    body.pop("record_token_ids", None)
+    body.pop("oracle", None)
+    head, _, leaf = field.partition(".")
+    body[head] = {leaf: value}
+    return body
+
+
+def _board(repo: Path) -> list[dict]:
+    return [
+        {"id": "G1", "kind": "terminal", "statement": "G1", "fails_when": "-", "evaluator": ROLLUP},
+        _rung("G1a", "results/rtl/a.json", "coverage.ok"),
+        _rung("G1b", "results/rtl/b.json", "layer.complete"),
+    ]
+
+
+def _write_cert(repo: Path, **over) -> None:
+    body = {"certificate": {"every_issued_instance_covered": True, "uncovered_instance_count": 0}}
+    body["certificate"].update(over)
+    _write(repo, CERT_REL, body)
+
+
+def _all_rungs(repo: Path) -> None:
+    for rel, field in (("results/rtl/a.json", "coverage.ok"), ("results/rtl/b.json", "layer.complete")):
+        _write(repo, rel, {"records": [_rung_record(repo, "rom", field), _rung_record(repo, "hbm", field)]})
+
+
+def _rollup(repo: Path) -> dict:
+    board = _board(repo)
+    return gates.evaluate(board[0], board)
+
+
+def test_rollup_fails_when_a_rung_fails(repo):
+    _write_cert(repo)
+    _write(repo, "results/rtl/a.json", {"records": [_rung_record(repo, "rom", "coverage.ok"),
+                                                    _rung_record(repo, "hbm", "coverage.ok")]})
+    got = _rollup(repo)
+    assert got["status"] == "fail"
+    assert "G1b" in got["why"]
+
+
+def test_rollup_fails_when_the_certificate_is_absent(repo):
+    _all_rungs(repo)
+    got = _rollup(repo)
+    assert got["status"] == "fail"
+    assert "certificate" in got["why"]
+
+
+def test_rollup_fails_when_the_certificate_leaves_instances_uncovered(repo):
+    _all_rungs(repo)
+    _write_cert(repo, every_issued_instance_covered=False, uncovered_instance_count=7)
+    got = _rollup(repo)
+    assert got["status"] == "fail"
+    assert "every_issued_instance_covered" in got["why"]
+
+
+def test_rollup_passes_only_with_every_rung_and_the_certificate(repo):
+    _all_rungs(repo)
+    _write_cert(repo)
+    got = _rollup(repo)
+    assert got["status"] == "pass", got["why"]
+
+
+def test_rollup_naming_a_gate_that_does_not_exist_fails(repo):
+    _all_rungs(repo)
+    _write_cert(repo)
+    board = _board(repo)
+    board[0]["evaluator"] = dict(ROLLUP, requires=["G1a", "G1z"])
+    got = gates.evaluate(board[0], board)
+    assert got["status"] == "fail"
+    assert "G1z" in got["why"]
