@@ -358,6 +358,15 @@ this cycle model divides a MAC count by a rate defined on MACs-plus-adds, a clea
 two in the optimistic direction, and it survived every provenance, source-currency and
 correctness check this repository runs.
 
+**R13. When a flow reports one metric under two parasitic models, the optimistic one is
+not evidence.** ORFS `repair_design` fixes slew against global-route estimates; the finish
+check re-measures it against RCX extraction. LQ8 showed +0.5% slew headroom at global route
+and -49% at finish, so a stage-by-stage read of its own metadata said "clean" four times before
+saying "292 violations" once. Repair against the pessimistic model, or against a margin wide
+enough to cover the gap (`SLEW_MARGIN 40` closed LQ8 for +0.47% cells), and treat any metric
+that changes with the extraction model as unreported until the pessimistic value is in hand.
+Recorded 2026-09-05 from section 13 item 14 of the architecture design.
+
 ---
 
 ## Appendix: how to reproduce the arithmetic in this document
