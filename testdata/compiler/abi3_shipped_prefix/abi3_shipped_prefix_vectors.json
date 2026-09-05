@@ -5356,8 +5356,8 @@
   "embedding_launch_count": 4,
   "embedding_result_word_count": 16384,
   "geometry": {
-    "case_stride": 80,
-    "case_words_used": 320,
+    "case_stride": 112,
+    "case_words_used": 448,
     "expected_words_used": 91136,
     "index_words": 64,
     "index_words_used": 18,
@@ -5370,11 +5370,11 @@
   "head_rms_norm_launch_count": 4,
   "head_rms_norm_result_word_count": 10240,
   "image_sha256": {
-    "p3_case.hex": "f35f9de5e0d0c8cdf828886f922c3d88c4665d176552ad5fb8146f406daf4811",
+    "p3_case.hex": "518ffee1d6ff161dc482b869ce2539e87ff5e070fd051e3798aa257da25cb72d",
     "p3_expect.hex": "1cadfc3371d198704fc9f245e7d8e27b72b38e906eafa0cdbc576f1eb2f98327",
     "p3_index.hex": "3782c32630334de6249983b67fe2fe6198815a3435ef977a8512dacb2292b2e0",
     "p3_issue.hex": "843e44c4529d5f0a3ab67df20c184062ee0ad86a4c2a3dc83a76f3b64e9b8319",
-    "p3_meta.hex": "d19f9c6c4fab9917eb7fac4ee14bf12c511c5f43d2c1492bf43f8b617f1eb8c6",
+    "p3_meta.hex": "9fbae86e80bfef2ae3500c7ce4c1ce36bd5f2b981945fffda553d0d3f2896952",
     "p3_source.hex": "20eabb96e15b766c00e965e566021ef3f8944b823e26a15c46db6398d399e0b9"
   },
   "input_deployment_vectors": {
