@@ -1207,7 +1207,7 @@ Every hardened unit is a block under ORFS BLOCKS / generate_abstract inside clas
 
 | block | contents | cells | class | memory (modelled) |
 | --- | --- | ---: | --- | --- |
-| LQ8 | 8 format-scaled lanes (§4.2) + stream control | ~~~41k~~ **174,717 executed pre-layout** (asap7, `results/physical_abi3/asap7/a3_lq8_array/prelayout_L3.json`; min period 12.41 ns; 8 lanes counted by net name) | **T2 (gated)**, not T1 | — |
+| LQ8 | 8 format-scaled lanes (§4.2) + stream control | ~~~41k~~ **174,717 executed pre-layout; 346,589 routed** (asap7, `results/physical_abi3/asap7/a3_lq8_array/pnr.json`: 37,402 µm², DRC 0, antenna 0, 8 lanes verified in the netlist by instance and net name; 16 ns target missed by 0.47 ns, 60.7 MHz post-route, 4,675 µm² per MAC/cycle; 2.7 h in the flow) | **above T2 as routed**; the flow closed the route, not the timing | — |
 | LQ16 | 16 lanes | ~~~75k~~ **≈ 350k projected from LQ8** | **not flat-routable; BLOCKS assembly of two LQ8s** | — |
 | T64 | 8 x LQ8 (or 4 x LQ16) + tile stream sequencer, unpacker, staging control (~10k) | ~~~340k~~ **≈ 1.4M projected** | BLOCKS assembly of hardened LQ8s **only**; a flat T64 exceeds the flow's ceiling by 1.4x | staging 2 x 16 KB (vehicle 2 x 2 KB) |
 | *note* | every count in this table was `assumed` at 4,100 cells/lane; the executed lane is 30,173 pre-layout (§4.2). Rows below LQ8 are re-budgeted here by the same 7x until each is synthesised under G2a; the lane's own count will fall when the §13 item 11 divider leaves it | | | |
