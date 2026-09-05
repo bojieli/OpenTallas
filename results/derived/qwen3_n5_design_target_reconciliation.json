@@ -10,17 +10,17 @@
   "headline": {
     "analytical_ratio": 5.6392842689793605,
     "analytical_ratio_with_link_removed_from_both": 15.578685463090416,
-    "cycle_ratio": 4.086160900375156,
-    "cycle_ratio_with_analytical_link_added_to_both": 3.078285784124961,
-    "note": "Four numbers because the link term is expressible in one model and not the other, and it is 68% of the analytical ROM step.  Compare cycle_ratio against analytical_ratio_with_link_removed_from_both -- those two are the like-for-like pair -- and read the other two as the effect of the term the cycle model cannot express."
+    "cycle_ratio": 4.086138668889815,
+    "cycle_ratio_with_analytical_link_added_to_both": 3.078270806345247,
+    "note": "Four numbers because the link term is expressible in one model and not the other, and it is 68% of the analytical ROM step and 12% of the analytical GPU step.  Compare cycle_ratio against analytical_ratio_with_link_removed_from_both -- those two are the like-for-like pair -- and read the other two as the effect of the term the cycle model cannot express."
   },
   "runs": {
     "hbm": {
-      "capability_digest": "0df60fa3204c280a959a70eb15a6eac8115cf962e97e79b70fb4b7145eda4df0",
+      "capability_digest": "a65760fd5f344e1d80b5fa36bc7e04c2ba13406281477262bb1b500683881690",
       "capability_technology_view": "n5_design_target",
       "cost_table": "configs/hardware/abi3_cost_n5_design_target_hbm_v1.json",
-      "cost_table_sha256": "b567bb2f7170cafdfb3dfc975b66e85e546d49bf3ec6b198ba8cf262b9aa7b71",
-      "deployment_digest": "850474847f016b50adc73a67955dab54cda322efd71a5e7a49fdcd2146641dd6",
+      "cost_table_sha256": "ae8892bd9776459d4d746fb0b06ca0eab65229a77eb14b8980614f53c398ccd1",
+      "deployment_digest": "fdeb6458cc2eedb48bfc06dfb6ba2567ea6328bcc0d49944ce2e9721bfe155e1",
       "provenance_class": "assumed",
       "request_symbols": {
         "BATCH": 1,
@@ -35,11 +35,11 @@
       }
     },
     "rom": {
-      "capability_digest": "2e829f99f1ffc63a824bf2fc423b0e8db5ce0ddb43b47a2e9eb88c9588e20329",
+      "capability_digest": "33926014ebe4f2ef8f7e1dbc5d37889fefe9527bbcc99cb5fbaf8505dbc8522d",
       "capability_technology_view": "n5_design_target",
       "cost_table": "configs/hardware/abi3_cost_n5_design_target_rom_v1.json",
-      "cost_table_sha256": "427047de18ee060ed5179f30c9b6d26c569cf1af318bca6ca48d1a22b959fcfb",
-      "deployment_digest": "f91ceb4cc32aaaea99acb3729d3a274da8b6224a73fc823302121f0cbf14dd40",
+      "cost_table_sha256": "e33d45a2d798cf3c63cf120addeb2760961e31a8bc827aee6edac133d8ba1a03",
+      "deployment_digest": "8cc70fea7dd2d5c9537ba0e8e2ad0d6d3f6b12988ef26aab4b033c656223aef1",
       "provenance_class": "assumed",
       "request_symbols": {
         "BATCH": 1,
@@ -80,11 +80,11 @@
         "binding_constraint": "weight_read",
         "binding_constraint_rule": "argmax over the measured terms; the cycle model reports no binding constraint of its own",
         "clock_frequency_hz": 1000000000.0,
-        "per_user_tokens_s": 680.0847385584244,
-        "step_time_s": 0.001470405,
-        "total_cycles": 1470405
+        "per_user_tokens_s": 680.0884387005686,
+        "step_time_s": 0.001470397,
+        "total_cycles": 1470397
       },
-      "step_ratio_cycle_over_analytical": 1.0198512516536888,
+      "step_ratio_cycle_over_analytical": 1.0198457029715142,
       "terms": {
         "compute": {
           "analytical_s": 6.115883235555556e-06,

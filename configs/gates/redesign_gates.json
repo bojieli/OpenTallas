@@ -200,10 +200,10 @@
       "fails_when": "Any does.",
       "evaluator": {
         "type": "plausibility_ceiling",
-        "glob": "results/abi3/cycle/*.json",
+        "glob": "results/derived/**/*_run.json",
         "field": "plausibility.total_over_binding_floor",
         "max": 100.0,
-        "note": "A 260,846,119,253-cycle run once sat 11,558x above its own floor at 0.02% bandwidth utilisation and was read as a per-token latency."
+        "note": "A 260,846,119,253-cycle run once sat 11,558x above its own floor at 0.02% bandwidth utilisation and was read as a per-token latency. This gate reads the derived-machine run records under results/derived/ (every one written by tools/run_abi3_cycle.py after 1b71dff carries plausibility.* and inputs.cycle_model). The 26 records under results/abi3/cycle/ predate the floor and are retained by the post-mortem as evidence of a failure, not as performance figures; they are out of this gate's scope by design, and any new performance claim must come from a run that states its own floor. Absence of a derived run record is a FAIL."
       }
     }
   ]
