@@ -430,6 +430,7 @@ def control_run_evidence(
         "executed": _g1b._dig(rec, "passes.executed"),
         "unit": _g1b._dig(rec, "passes.unit"),
         "workload_token_positions": _g1b._dig(rec, "passes.workload_token_positions"),
+        "per_pass": _g1b._dig(rec, "passes.per_pass"),
     }
     record["injection"] = {
         "boundary": _g1b._dig(rec, "injection.boundary"),
@@ -571,6 +572,8 @@ def loop_property(
     loop: dict[str, Any],
     layers: dict[str, Any],
     transactions: int,
+    per_pass: list[dict[str, Any]] | None = None,
+    facts: "ProgramFacts | None" = None,
 ) -> dict[str, Any]:
     invocations = segment_invocations(issues, loop)
     lengths = sorted({len(inv) for inv in invocations})
@@ -649,6 +652,108 @@ def loop_property(
                         }
                     )
 
+    # Where a view field differs between transactions, say which field and
+    # whether the difference tracks the entrypoint the transaction entered at
+    # rather than the loop.  A prefill transaction spans every prompt position
+    # at once and a decode transaction spans one; that is a property of the
+    # request, not of the loop's invocations.
+    across_summary: dict[str, Any] = {}
+    if across and transactions and len(invocations) % transactions == 0:
+        stride = len(invocations) // transactions
+        entrypoints = [
+            int(row.get("entrypoint_id", -1))
+            for row in (per_pass or [])
+        ]
+        fields_differing: set[str] = set()
+        tracks = bool(entrypoints) and len(entrypoints) == transactions
+        for row in across:
+            key = (row["pc"], row["slot"])
+            by_transaction = []
+            for index in range(transactions):
+                block = invocations[index * stride:(index + 1) * stride]
+                values = {
+                    _view_shape_map(inv).get(key) for inv in block
+                }
+                by_transaction.append(
+                    next(iter(values)) if len(values) == 1 else None
+                )
+            row["value_by_transaction"] = by_transaction
+            for left, right in zip(by_transaction, by_transaction[1:]):
+                if left is None or right is None:
+                    tracks = False
+                    continue
+                for name, a, b in zip(CERTIFIED_VIEW_SHAPE_FIELDS, left, right):
+                    if a != b:
+                        fields_differing.add(name)
+            if tracks:
+                for i in range(transactions):
+                    for j in range(i + 1, transactions):
+                        same_entry = entrypoints[i] == entrypoints[j]
+                        same_value = by_transaction[i] == by_transaction[j]
+                        if same_entry != same_value:
+                            tracks = False
+        across_summary = {
+            "view_fields_that_differ": sorted(fields_differing),
+            "entrypoint_id_per_transaction": entrypoints,
+            "the_difference_tracks_the_entrypoint_not_the_loop": tracks,
+            "why": (
+                "transactions that entered at the same entrypoint resolve the "
+                "same extents and transactions that entered at different ones "
+                "do not, so what differs is the token span of the request -- a "
+                "16-position prefill against a one-position decode -- and not "
+                "the loop's invocations, which are identical within each"
+                if tracks else
+                "the difference does not line up with the entrypoint each "
+                "transaction entered at, so it is not explained here and is "
+                "left as a measured difference"
+            ),
+        }
+
+    # An independent count of the same loop, from a counter the issue trace
+    # does not produce: the RTL's own per-pass loop-iteration total.  The
+    # program's loop setups inside and outside the body predict it exactly
+    # when every inner loop runs one trip, so agreement between the two is
+    # evidence for that and a disagreement would be a finding.
+    iteration_check: dict[str, Any] = {"checked": False}
+    if facts is not None and per_pass and per_transaction_counts_ok(per_transaction):
+        inner = [
+            row for row in facts.loops
+            if loop["body_start"] <= row["setup_pc"] <= loop["body_end"]
+            and row["setup_pc"] != loop["setup_pc"]
+        ]
+        outside = [
+            row for row in facts.loops
+            if not (loop["body_start"] <= row["setup_pc"] <= loop["body_end"])
+            and row["setup_pc"] != loop["setup_pc"]
+        ]
+        measured_counts = sorted(
+            {int(row["loop_iterations"]) for row in per_pass
+             if isinstance(row.get("loop_iterations"), int)}
+        )
+        invocations_each = per_transaction[0]["invocations"]
+        predicted = invocations_each + invocations_each * len(inner) + len(outside)
+        iteration_check = {
+            "checked": True,
+            "loop_setups_inside_the_body": len(inner),
+            "loop_setups_outside_the_body": len(outside),
+            "invocations_measured_per_transaction": invocations_each,
+            "predicted_loop_iterations_per_transaction": predicted,
+            "measured_loop_iterations_per_transaction": measured_counts,
+            "agrees": measured_counts == [predicted],
+            "assumption": (
+                "every loop other than the layer loop runs exactly one trip in "
+                "these transactions. The agreement of the two counters is the "
+                "evidence for it; a disagreement would be reported here rather "
+                "than absorbed"
+            ),
+            "why_it_matters": (
+                "the invocation count above is read from the issue trace. This "
+                "reads the same loop from the sequencer's own loop-iteration "
+                "counter, which the trace does not produce, so the two are "
+                "independent measurements of one thing"
+            ),
+        }
+
     per_transaction_counts = sorted({row["invocations"] for row in per_transaction})
     matches = (
         len(per_transaction_counts) == 1
@@ -674,7 +779,9 @@ def loop_property(
         "distinct_view_shape_structures_over_all_invocations": len(view_shapes),
         "per_transaction": per_transaction,
         "element_offset_strides_per_layer": dict(sorted(strides.items())),
+        "loop_iteration_cross_check": iteration_check,
         "view_shape_fields_that_differ_between_transactions": across,
+        "view_shape_differences_between_transactions": across_summary,
         "what_structural_identity_means_here": (
             "every invocation issues the same sequence of "
             "(family, subopcode, descriptor id, program counter), and the RTL "
@@ -691,6 +798,12 @@ def loop_property(
             "control run, and bound to that run by its own census"
         ),
     }
+
+
+def per_transaction_counts_ok(per_transaction: list[dict[str, Any]]) -> bool:
+    """True when every transaction ran the same number of invocations."""
+    counts = {row["invocations"] for row in per_transaction}
+    return len(counts) == 1
 
 
 def _view_shape_map(inv: list[dict[str, Any]]) -> dict[tuple[int, int], tuple[int, ...]]:
@@ -1255,7 +1368,12 @@ def build(
         if control.get("usable"):
             transactions = int(control["passes"]["executed"])
             loop_record = loop_property(
-                control["issues"], loop, layers, transactions
+                control["issues"],
+                loop,
+                layers,
+                transactions,
+                control["passes"].get("per_pass"),
+                facts,
             )
             address_identity = boundary_address_identity(
                 control["issues"], loop, facts, transactions

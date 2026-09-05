@@ -655,3 +655,45 @@ def test_a_campaign_with_no_wall_time_measures_no_rate(tool):
     rate = tool.integrated_rate({"matmul_mac_count": 1, "cases": []})
     assert rate["measured"] is False
     assert rate["why_not"]
+
+
+def test_the_loop_is_counted_a_second_time_from_the_sequencers_own_counter(
+    tool, context
+):
+    """The issue trace and the loop-iteration counter must agree."""
+    issues = _synthetic_trace(context)
+    facts, loop, layers = context["facts"], context["loop"], context["layers"]
+    inner = [
+        row for row in facts.loops
+        if loop["body_start"] <= row["setup_pc"] <= loop["body_end"]
+        and row["setup_pc"] != loop["setup_pc"]
+    ]
+    outside = [
+        row for row in facts.loops
+        if not (loop["body_start"] <= row["setup_pc"] <= loop["body_end"])
+        and row["setup_pc"] != loop["setup_pc"]
+    ]
+    predicted = (
+        layers["layers"] + layers["layers"] * len(inner) + len(outside)
+    )
+    per_pass = [
+        {"index": index, "entrypoint_id": int(index > 0),
+         "loop_iterations": predicted}
+        for index in range(TRANSACTIONS)
+    ]
+    record = tool.loop_property(
+        issues, loop, layers, TRANSACTIONS, per_pass, facts
+    )
+    check = record["loop_iteration_cross_check"]
+    assert check["checked"] is True
+    assert check["agrees"] is True
+    assert check["predicted_loop_iterations_per_transaction"] == predicted
+
+    per_pass[1]["loop_iterations"] = predicted + 1
+    disagreeing = tool.loop_property(
+        issues, loop, layers, TRANSACTIONS, per_pass, facts
+    )
+    assert disagreeing["loop_iteration_cross_check"]["agrees"] is False, (
+        "a sequencer counter that disagrees with the program's own loop "
+        "structure must be reported, not absorbed"
+    )
