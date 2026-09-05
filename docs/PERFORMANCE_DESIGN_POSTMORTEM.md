@@ -367,6 +367,18 @@ enough to cover the gap (`SLEW_MARGIN 40` closed LQ8 for +0.47% cells), and trea
 that changes with the extraction model as unreported until the pessimistic value is in hand.
 Recorded 2026-09-05 from section 13 item 14 of the architecture design.
 
+**R14. When two unifications are both defensible, adopt the one that costs your own side.**
+Unifying the SCHEDULE `bank_mask` across both backends had two equally legitimate answers -- the
+comparator's narrow per-family table, or an unrestricted mask on both -- and they are not
+cost-symmetric: the field is charged only against the SRAM class, and the HBM deployment issues
+zero SRAM transactions in a batch-1 decode, so whichever value is chosen is paid by the ROM chip
+alone. Measured over one functional trace re-timed under four variants, the unrestricted mask
+would have moved the vehicle's pair ratio 1.68% toward our own thesis on no physical grounds. We
+took the narrow one: +0.89% against the ROM chip at the vehicle, and exactly 0.00% at the N5
+design point the comparison is charged on. A study that chooses its own free parameters is only
+believable if it can show it chose them against itself.
+Recorded 2026-09-05 from section 7.3 of the architecture design.
+
 ---
 
 ## Appendix: how to reproduce the arithmetic in this document
