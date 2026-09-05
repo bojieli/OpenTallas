@@ -318,6 +318,13 @@ def _control_artifact(tool, issues, storage_class="rom", **overrides):
         "schema": tool.G1E_SCHEMA,
         "rung": "G1e",
         "git": {"commit": "0" * 40, "worktree_dirty": False},
+        "source_sha256": {
+            relative: tool.sha256_file(ROOT / relative)
+            for relative in (
+                "rtl/abi3/ot_a3_device_top.sv",
+                "rtl/test/a3_g1e_control_harness.cpp",
+            )
+        },
         "records": [record],
     }
 
@@ -573,3 +580,23 @@ def test_address_identity_cannot_stand_in_for_the_handoff(tool, context, tmp_pat
             "RTL-to-RTL data handoff and must not turn the field green"
         )
         assert handoff["mismatched_words"] is None
+
+
+def test_a_control_run_whose_sources_moved_is_refused(tool, context, tmp_path):
+    issues = _synthetic_trace(context)
+    body = _control_artifact(tool, issues)
+    body["source_sha256"] = {"rtl/abi3/ot_a3_device_top.sv": "f" * 64}
+    artifact, root = _stage(tool, tmp_path, issues, body)
+    evidence = tool.control_run_evidence(artifact, root, "rom")
+    assert evidence["usable"] is False
+    assert "have drifted since it ran" in evidence["why_unusable"]
+
+
+def test_a_control_run_binding_nothing_is_refused(tool, context, tmp_path):
+    issues = _synthetic_trace(context)
+    body = _control_artifact(tool, issues)
+    body.pop("source_sha256")
+    artifact, root = _stage(tool, tmp_path, issues, body)
+    evidence = tool.control_run_evidence(artifact, root, "rom")
+    assert evidence["usable"] is False
+    assert "binds no source digests" in evidence["why_unusable"]

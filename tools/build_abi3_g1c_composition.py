@@ -463,6 +463,29 @@ def control_run_evidence(
                 "this rung's loop property is derived from"
             )
 
+    # Every source the control run bound, re-hashed against the tree as it is
+    # now.  The run may have happened at an earlier commit; what matters is
+    # that nothing it depended on has moved since, and that is checked rather
+    # than argued from the commit id.
+    bound = body.get("source_sha256") or {}
+    drifted = []
+    for relative, digest in sorted(bound.items()):
+        resolved = ROOT / relative
+        if not resolved.is_file():
+            drifted.append(f"{relative} [missing]")
+        elif sha256_file(resolved) != digest:
+            drifted.append(relative)
+    record["bound_source_count"] = len(bound)
+    record["drifted_source_count"] = len(drifted)
+    record["drifted_sources"] = drifted
+    if not bound:
+        reasons.append("it binds no source digests, so it cannot be re-checked")
+    elif drifted:
+        reasons.append(
+            f"{len(drifted)} source(s) it bound have drifted since it ran: "
+            + ", ".join(drifted[:4])
+        )
+
     trace_path = Path(trace_root) / f"build-{storage_class}" / "rtl_issue_trace.txt"
     record["trace_file"] = str(trace_path)
     if not trace_path.is_file():
