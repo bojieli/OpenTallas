@@ -126,7 +126,9 @@ def macro_placement_tcl(work: Path, halo: str, lef: Path) -> str:
         col, row = index % 4, index // 4
         x = round(gap + col * (width + gap), 3)
         y = round(gap + row * (height + gap), 3)
-        name = f"gen_lq8[{index}].gen_abstract.u_lq8"
+        # OpenROAD stores the escaped Verilog identifier with its brackets escaped:
+        # gen_lq8\[0\].gen_abstract.u_lq8 (verified by reading the floorplan ODB).
+        name = f"gen_lq8\\[{index}\\].gen_abstract.u_lq8"
         lines.append(f"place_macro -macro_name {{{name}}} -location {{{x} {y}}} -orientation R0")
     return "\n".join(lines) + "\n"
 
