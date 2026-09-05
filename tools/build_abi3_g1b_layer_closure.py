@@ -1036,13 +1036,15 @@ def git_state() -> dict[str, Any]:
 
 
 def rerun_note(path: Path | None) -> dict[str, Any] | None:
-    """A campaign run produced in this session but NOT retained in the tree.
+    """An independent run of the same campaign, recorded but not relied on.
 
-    It establishes nothing.  A rung may only be built from evidence the
-    repository holds, because a number derived from a file that is not
-    committed cannot be reproduced from the sources this artifact binds.  This
-    block exists so a measurement is not lost between one lane and the next,
-    and every gate field above is computed without reading it.
+    It establishes nothing: every field of the rung above is computed from
+    the campaign the repository holds, because a number taken from a file the
+    tree does not carry cannot be reproduced from the sources this artifact
+    binds.  What it is good for is agreement -- an independent execution of
+    the same vehicle that lands on the same counts is a check on the retained
+    one, and a disagreement would be a finding.  Both are reported; neither is
+    averaged.
     """
     if path is None:
         return None
@@ -1050,31 +1052,59 @@ def rerun_note(path: Path | None) -> dict[str, Any] | None:
     if not path.is_file():
         raise SystemExit(f"--rerun {path} does not exist")
     body = json.loads(path.read_text())
-    logs = [c.get("run_log", "") for c in (body.get("cases") or [])]
     measure = None
-    for log in logs:
-        found = measure_line(log)
+    for case in (body.get("cases") or []):
+        found = measure_line(case.get("run_log", ""))
         if found is not None:
             measure = found
+    retained_path = ROOT / INTEGRATED_CAMPAIGN
+    retained = (
+        json.loads(retained_path.read_text()) if retained_path.is_file() else {}
+    )
+
+    def compare(field: str) -> dict[str, Any]:
+        mine, theirs = body.get(field), retained.get(field)
+        return {"rerun": mine, "retained": theirs, "agree": mine == theirs}
+
+    agreement = {
+        field: compare(field)
+        for field in (
+            "status",
+            "integrated_replay_passed",
+            "integrated_simulator_checks",
+            "simulated_cycles",
+            "operator_admission",
+        )
+    }
+    agreement["observed_cases"] = {
+        "rerun": (body.get("cases") or [{}])[0].get("observed_cases"),
+        "retained": (retained.get("cases") or [{}])[0].get("observed_cases"),
+        "agree": (body.get("cases") or [{}])[0].get("observed_cases")
+        == (retained.get("cases") or [{}])[0].get("observed_cases"),
+    }
     return {
         "establishes": [],
+        "what_it_is": (
+            "an independent execution of the same integrated campaign, run "
+            "for this rung in a separately pinned worktree. No field of this "
+            "rung is computed from it."
+        ),
         "why_not_retained": (
-            "the vector set this run consumed is uncommitted work of the "
-            "descriptor-identity lane, so retaining the run would bind this "
-            "repository's evidence to bytes it does not hold. It is recorded "
-            "here as a measurement, not as evidence, and no field of this "
-            "rung was computed from it."
+            "it declares worktree_dirty "
+            f"{_dig(body, 'git.worktree_dirty')!r} at commit "
+            f"{str(_dig(body, 'git.commit'))[:12]}, and the repository "
+            f"already holds {INTEGRATED_CAMPAIGN} from a clean tree; "
+            "replacing a clean run with a dirtier one would weaken the "
+            "evidence, not strengthen it"
         ),
         "artifact_sha256": sha256_file(path),
-        "status": body.get("status"),
-        "integrated_replay_passed": body.get("integrated_replay_passed"),
-        "integrated_simulators": body.get("integrated_simulators"),
-        "integrated_simulator_checks": body.get("integrated_simulator_checks"),
         "vector_set_sha256": _dig(body, "vector_set.sha256"),
         "git": body.get("git"),
-        "observed_cases": (body.get("cases") or [{}])[0].get("observed_cases"),
-        "operator_admission": body.get("operator_admission"),
         "measure": measure,
+        "agreement_with_the_retained_campaign": agreement,
+        "agrees_on_every_compared_field": all(
+            entry["agree"] for entry in agreement.values()
+        ),
     }
 
 
