@@ -36,6 +36,29 @@ A class is covered only by an RTL campaign that
      ``deployment_sha256``, and
   4. drove the class's own operator descriptor ids in a POSITIVE case.
 
+Two kinds of campaign can satisfy that.  The operator-admission vehicle drives
+the issue bridge directly with one deployment's records and publishes a vector
+INDEX naming exactly what it drove; it is built and run once per lowering,
+because the two Qwen lowerings share no governed descriptor id.  The
+integrated shipped-prefix vehicle executes the real compiled program of four
+deployments in ONE pass through the whole RTL control path, against the real
+checkpoint weights served by the paged DPI window, so it has no single target
+and publishes no index: what it drove is derived from the vector set it binds
+by digest -- each case's ``supported_prefix``, which names per executed
+operation the program counter, the operator descriptor id, the numeric
+contract and the SHA-256 of the result it must produce -- and cross-checked
+operation by operation against the per-operation records the campaign emitted
+for itself.  If the two disagree, the campaign covers nothing.  That check is
+not decorative: the artifact this tool first read recorded the superseded
+lowering's descriptors while binding the promoted vector set.
+
+``equivalence.weights_are_real_checkpoint`` needs more than coverage.  Every
+class that consumes a checkpoint tensor must be covered by an operation whose
+own source record names a checkpoint revision, shard and byte range; the
+operator-admission vehicle's residual, SwiGLU and logits operands are a seeded
+deterministic BF16 spread and say so in their own manifest, so a weighted
+class covered only there does not make it true.
+
 Rule 3 is not pedantry.  The Qwen ROM and HBM lowerings do not emit identical
 operator descriptors for the same class: at PCs 32 and 35 the DMA.SCATTER
 NUMERIC descriptor's ``input_dtype``/``second_input_dtype`` pair is swapped
@@ -104,6 +127,7 @@ STORAGE_CLASSES = {
 # Each is re-validated here before it is allowed to cover anything.
 EVIDENCE_CAMPAIGNS = (
     "results/rtl/a3_operator_admission_campaign.json",
+    "results/rtl/a3_operator_admission_hbm_campaign.json",
     "results/rtl/a3_qwen_gqa_campaign.json",
     "results/rtl/abi3_shipped_prefix_campaign.json",
 )
@@ -114,7 +138,32 @@ EVIDENCE_CAMPAIGNS = (
 CAMPAIGN_VECTOR_INDEX = {
     "results/rtl/a3_operator_admission_campaign.json":
         "testdata/rtl/a3_operator_admission/index.json",
+    "results/rtl/a3_operator_admission_hbm_campaign.json":
+        "testdata/rtl/a3_operator_admission_hbm/index.json",
 }
+
+# The integrated vehicle: the real compiled program, executed instruction by
+# instruction through the whole RTL control path, against the real checkpoint
+# weights served by the paged DPI window.  It carries no separate vector
+# INDEX; what it drove is written in the vector set it binds, one case per
+# lowering, and cross-checked below against the per-operation records the
+# campaign itself emitted.  This is the only campaign here whose operands are
+# checkpoint tensors rather than a seeded spread, so it is the only one that
+# can make equivalence.weights_are_real_checkpoint true.
+INTEGRATED_CAMPAIGN = "results/rtl/abi3_shipped_prefix_campaign.json"
+INTEGRATED_VEHICLE = "rtl/test/a3_shipped_prefix_top.sv"
+
+# The sections of the integrated campaign that name one executed operation
+# each, with its case, its program counter and its operator descriptor id.
+# They are the campaign's own record of what ran and are used here to check
+# the vector set's supported prefix rather than to replace it.
+INTEGRATED_OPERATION_SECTIONS = (
+    "checkpoint_rows",
+    "checkpoint_gains",
+    "checkpoint_head_gains",
+    "checkpoint_matrices",
+    "rope_operations",
+)
 
 
 def _dig(body: Any, dotted: str) -> Any:
@@ -281,7 +330,226 @@ def _resolve(relative: str) -> Path | None:
     return None
 
 
-def evidence() -> list[dict[str, Any]]:
+def operator_work(manifest: dict[str, Any], images: dict[str, list[int]],
+                  deployment_key: str, descriptor_id: int) -> dict[str, Any] | None:
+    """The multiply-accumulate count one MATMUL operator's own views imply.
+
+    The governed decode issues every MATMUL at batch one, so the work is the
+    element count of the bound weight view -- rows times reduction -- read out
+    of the deployment's own TENSOR_VIEW record.  It is checked, not asserted:
+    the classes the integrated run DID execute must sum to the MAC count that
+    run measured, and the artifact records both numbers side by side.
+
+    Returns None when the descriptor or its views do not decode.  A missing
+    number is reported as missing, never filled in.
+    """
+
+    deployment = next(d for d in manifest["deployments"] if d["key"] == deployment_key)
+    descriptor_base, _ = _scatter.deployment_bases(manifest)[deployment_key]
+    table, _ = _admission.build_table(
+        images["descriptor"], descriptor_base, int(deployment["descriptor_count"])
+    )
+    try:
+        operator = table.get(int(descriptor_id), ExtendedDescriptorType.OPERATOR)
+    except Exception:
+        return None
+    widest: list[int] | None = None
+    for field in SLOT_FIELDS[:-1]:
+        view_id = int(operator.payload[field])
+        if view_id == NO_ID:
+            continue
+        try:
+            view = table.get(view_id, ExtendedDescriptorType.TENSOR_VIEW)
+        except Exception:
+            return None
+        rank = int(view.payload.get("rank", 0))
+        dims = [int(view.payload[f"dim{axis}"]) for axis in range(rank)]
+        if not dims:
+            continue
+        if widest is None or _product(dims) > _product(widest):
+            widest = dims
+    if widest is None:
+        return None
+    return {
+        "weight_view_dims": widest,
+        "multiply_accumulates": _product(widest),
+        "note": (
+            "batch one, so the operation's MAC count is the bound weight "
+            "view's element count (rows x reduction)"
+        ),
+    }
+
+
+def _product(values: list[int]) -> int:
+    total = 1
+    for value in values:
+        total *= value
+    return total
+
+
+def _family_sub_at(manifest: dict[str, Any], images: dict[str, list[int]],
+                   deployment_key: str, pc: int) -> tuple[int, int]:
+    """The (family, sub) the deployment's own program issues at this PC."""
+
+    _, program_base = _scatter.deployment_bases(manifest)[deployment_key]
+    instruction = Instruction.decode(
+        images["program"][program_base + int(pc)].to_bytes(32, "little")
+    )
+    return int(instruction.major), int(instruction.sub)
+
+
+def integrated_coverage(
+    body: dict[str, Any], manifest: dict[str, Any], images: dict[str, list[int]]
+) -> dict[str, Any]:
+    """What the integrated shipped-prefix run drove, per lowering.
+
+    The run executes the real compiled program of FOUR deployments in one
+    campaign, so a single ``target`` field cannot describe it.  What it drove
+    is derived from the vector set the campaign binds by digest -- each case's
+    ``supported_prefix`` names, per executed operation, the program counter,
+    the operator descriptor id, the numeric contract and the SHA-256 of the
+    result the operation must produce -- and then cross-checked, operation by
+    operation, against the per-operation records the campaign itself emitted.
+    A disagreement between the two is a refusal: neither is allowed to stand
+    alone.
+
+    Nothing here transfers between lowerings.  Each case's coverage is filed
+    under that case's own ``deployment_sha256``.
+    """
+
+    vector_relative = _dig(body, "vector_set.path")
+    problems: list[str] = []
+    if not isinstance(vector_relative, str) or not (ROOT / vector_relative).is_file():
+        return {
+            "coverage_by_deployment": {},
+            "integrated_coverage_problems": [
+                f"the campaign binds no readable vector set ({vector_relative!r}), "
+                "so nothing states which operations it drove"
+            ],
+        }
+    vectors = json.loads((ROOT / vector_relative).read_text())
+
+    # The campaign's own record of every operation it executed and compared.
+    recorded: dict[tuple[str, int], dict[str, Any]] = {}
+    for section in INTEGRATED_OPERATION_SECTIONS:
+        for item in body.get(section) or []:
+            case = str(item.get("case", ""))
+            if not case or item.get("operator_pc") is None:
+                continue
+            recorded[(case, int(item["operator_pc"]))] = {
+                "section": section,
+                "operator_descriptor_id": item.get("operator_descriptor_id"),
+                "deployment_sha256": item.get("deployment_sha256"),
+            }
+
+    replay_passed = body.get("integrated_replay_passed") is True
+    if not replay_passed:
+        problems.append(
+            "integrated_replay_passed is not true, so the integrated run did "
+            "not reproduce its own expected case records"
+        )
+
+    per_deployment: dict[str, dict[str, Any]] = {}
+    checked = 0
+    for index, case in enumerate(vectors.get("cases") or []):
+        name = str(case.get("name", ""))
+        deployment_key = str(case.get("deployment", ""))
+        deployment_sha = str(case.get("deployment_sha256", ""))
+        prefix = case.get("supported_prefix") or []
+        operations: list[dict[str, Any]] = []
+        for operation in prefix:
+            pc = int(operation["pc"])
+            descriptor_id = int(operation["descriptor_id"])
+            family, sub = _family_sub_at(manifest, images, deployment_key, pc)
+            operations.append({
+                "program_counter": pc,
+                "operator_descriptor_id": descriptor_id,
+                "family": family,
+                "sub": sub,
+                "kind": operation.get("kind"),
+                "numeric_contract_sha256": operation.get("contract_sha256"),
+                "expected_row_sha256": operation.get("expected_row_sha256"),
+                "checkpoint_bound": bool(
+                    (operation.get("source") or {}).get("checkpoint_revision")
+                ),
+            })
+            found = recorded.get((name, pc))
+            if found is None:
+                continue
+            checked += 1
+            if found["operator_descriptor_id"] is not None and int(
+                found["operator_descriptor_id"]
+            ) != descriptor_id:
+                problems.append(
+                    f"{name} PC {pc}: the campaign recorded operator descriptor "
+                    f"{found['operator_descriptor_id']} where the vector set it "
+                    f"binds says {descriptor_id}"
+                )
+            if str(found["deployment_sha256"]) != deployment_sha:
+                problems.append(
+                    f"{name} PC {pc}: the campaign recorded deployment "
+                    f"{str(found['deployment_sha256'])[:12]} where the vector "
+                    f"set it binds says {deployment_sha[:12]}"
+                )
+        for (case_name, pc), found in recorded.items():
+            if case_name == name and not any(
+                op["program_counter"] == pc for op in operations
+            ):
+                problems.append(
+                    f"{name} PC {pc}: the campaign recorded an executed "
+                    f"operation ({found['section']}) that the vector set's "
+                    "supported prefix does not contain"
+                )
+        if not deployment_sha or not operations:
+            continue
+        if deployment_sha in per_deployment:
+            problems.append(
+                f"deployment {deployment_sha[:12]} appears in more than one "
+                "case of the vector set; coverage would be ambiguous"
+            )
+            continue
+        expected = case.get("expected") or {}
+        per_deployment[deployment_sha] = {
+            "case": name,
+            "case_index": index,
+            "deployment": deployment_key,
+            "vehicle": INTEGRATED_VEHICLE,
+            "vector_set": vector_relative,
+            "vector_set_sha256": _dig(body, "vector_set.sha256"),
+            "positive_operator_descriptor_ids": sorted(
+                {op["operator_descriptor_id"] for op in operations}
+            ),
+            "positive_program_counters": sorted(
+                {op["program_counter"] for op in operations}
+            ),
+            "positive_family_subs": sorted(
+                {(op["family"], op["sub"]) for op in operations}
+            ),
+            "operations": operations,
+            "checkpoint_bound_operation_count": sum(
+                1 for op in operations if op["checkpoint_bound"]
+            ),
+            "compared_words": int(expected.get("result_words", 0)),
+            "first_fault_program_counter": (case.get("first_unsupported") or {}).get(
+                "pc"
+            ),
+            "coverage_stops_here_because": (
+                "the integrated run executes this deployment's real program "
+                "from its entrypoint and fails closed at the first operator "
+                "the bridge does not admit under this vehicle's placement, so "
+                "it covers a PREFIX of the program and nothing after it"
+            ),
+        }
+
+    return {
+        "coverage_by_deployment": ({} if problems else per_deployment),
+        "integrated_coverage_problems": problems,
+        "integrated_operations_cross_checked": checked,
+        "integrated_replay_passed": replay_passed,
+    }
+
+
+def evidence(manifest: dict[str, Any], images: dict[str, list[int]]) -> list[dict[str, Any]]:
     out: list[dict[str, Any]] = []
     for relative in EVIDENCE_CAMPAIGNS:
         path = ROOT / relative
@@ -360,6 +628,40 @@ def evidence() -> list[dict[str, Any]]:
                 if name in (body.get("tools") or {})
             }
             record["simulators_agree"] = body.get("simulators_agree")
+            record["coverage_by_deployment"] = {
+                str(index.get("deployment_sha256")): {
+                    "case": index.get("target"),
+                    "deployment": index.get("target"),
+                    "vehicle": "rtl/test/tb_a3_operator_admission.sv",
+                    "vector_set": index_rel,
+                    "positive_operator_descriptor_ids": list(
+                        record["positive_operator_descriptor_ids"]
+                    ),
+                    "positive_program_counters": list(
+                        record["positive_program_counters"]
+                    ),
+                    "positive_family_subs": [
+                        tuple(pair) for pair in record["positive_family_subs"]
+                    ],
+                    "compared_words": record["compared_words"],
+                }
+            }
+        elif relative == INTEGRATED_CAMPAIGN:
+            record.update(integrated_coverage(body, manifest, images))
+            record["vehicle"] = INTEGRATED_VEHICLE
+            record["simulators"] = list(body.get("integrated_simulators") or [])
+            record["simulator_versions"] = {
+                name: (body.get("tools") or {}).get(name, {}).get("version")
+                for name in ("iverilog", "verilator")
+                if name in (body.get("tools") or {})
+            }
+            record["simulated_cycles"] = int(body.get("simulated_cycles") or 0)
+            record["simulated_cycles_scope"] = (
+                "the whole integrated run, over every case it executed -- the "
+                "harness reports one total and no per-case split, so this is "
+                "not this lowering's share alone"
+            )
+            record["compared_words"] = int(body.get("result_word_count") or 0)
         # Which program counters this campaign names, per case, and which
         # deployment digest it ran them against.  For an artifact whose bound
         # sources have drifted this is not coverage; it is the record that the
@@ -394,7 +696,9 @@ def evidence() -> list[dict[str, Any]]:
         record["declared_worktree_dirty"] = _dig(body, "git.worktree_dirty")
 
         record["usable"] = (
-            body.get("status") == "pass" and not drifted and "target" in record
+            body.get("status") == "pass"
+            and not drifted
+            and bool(record.get("coverage_by_deployment"))
         )
         if not record["usable"]:
             reasons = []
@@ -404,11 +708,18 @@ def evidence() -> list[dict[str, Any]]:
                 reasons.append(
                     f"{len(drifted)} bound source(s) have drifted since it was recorded"
                 )
-            if "target" not in record:
-                reasons.append(
-                    "no retained vector index names the operator descriptors it drove, "
-                    "so it cannot be said to cover any particular class"
-                )
+            if not record.get("coverage_by_deployment"):
+                if record.get("integrated_coverage_problems"):
+                    reasons.append(
+                        "its own record of what it executed disagrees with the "
+                        "vector set it binds: "
+                        + "; ".join(record["integrated_coverage_problems"][:3])
+                    )
+                else:
+                    reasons.append(
+                        "nothing names the operator descriptors it drove, so it "
+                        "cannot be said to cover any particular class"
+                    )
             record["why_unusable"] = "; ".join(reasons)
         out.append(record)
     return out
@@ -525,7 +836,7 @@ def build(output: Path) -> dict[str, Any]:
         "issue": read_hex(DEPLOYMENT_DIR / "a3_deployment_issue.hex"),
         "view": read_hex(DEPLOYMENT_DIR / "a3_deployment_view.hex"),
     }
-    campaigns = evidence()
+    campaigns = evidence(manifest, images)
     usable = [c for c in campaigns if c.get("usable")]
 
     commit = subprocess.run(
@@ -539,25 +850,46 @@ def build(output: Path) -> dict[str, Any]:
     records = []
     for storage_class, deployment_key in STORAGE_CLASSES.items():
         inv = inventory(manifest, images, deployment_key)
-        covering = [
-            c for c in usable
-            if c.get("target_deployment_sha256") == inv["deployment_sha256"]
+        # A campaign covers this storage class only through the entry it filed
+        # under this deployment's OWN digest.  A campaign that ran four
+        # deployments in one pass covers each of them separately and none of
+        # them by association.
+        covering_pairs = [
+            (c, (c.get("coverage_by_deployment") or {})[inv["deployment_sha256"]])
+            for c in usable
+            if inv["deployment_sha256"] in (c.get("coverage_by_deployment") or {})
         ]
+        covering = [c for c, _ in covering_pairs]
         classes = []
         for entry in inv["classes"]:
             hit = None
-            for campaign in covering:
+            hit_scope = None
+            for campaign, scope in covering_pairs:
                 wanted = set(entry["operator_descriptor_ids"])
                 if (entry["family"], entry["sub"]) in {
-                    tuple(p) for p in campaign["positive_family_subs"]
-                } and wanted <= set(campaign["positive_operator_descriptor_ids"]):
+                    tuple(p) for p in scope["positive_family_subs"]
+                } and wanted <= set(scope["positive_operator_descriptor_ids"]):
                     hit = campaign
+                    hit_scope = scope
                     break
             item = dict(entry)
             item["covered"] = hit is not None
             if hit is not None:
                 item["covered_by"] = hit["artifact"]
                 item["covered_by_sha256"] = hit["artifact_sha256"]
+                item["covered_by_vehicle"] = hit_scope.get("vehicle")
+                item["covered_by_case"] = hit_scope.get("case")
+                item["covered_operations"] = [
+                    op for op in (hit_scope.get("operations") or [])
+                    if op["operator_descriptor_id"]
+                    in set(entry["operator_descriptor_ids"])
+                ]
+                item["operands_are_real_checkpoint"] = bool(
+                    item["covered_operations"]
+                ) and all(
+                    op.get("checkpoint_bound")
+                    for op in item["covered_operations"]
+                )
             else:
                 item["why_not_covered"] = (
                     "no source-current retained RTL campaign drove operator "
@@ -598,9 +930,63 @@ def build(output: Path) -> dict[str, Any]:
 
         covered = [c for c in classes if c["covered"]]
         uncovered = [c for c in classes if not c["covered"]]
-        cycles = sum(c.get("simulated_cycles", 0) for c in covering)
-        compared = sum(c.get("compared_words", 0) for c in covering)
+
+        # What covering the rest would cost, in the only unit that is
+        # measurable here: multiply-accumulates read out of each uncovered
+        # MATMUL's own weight view, against the MACs the integrated run
+        # actually executed.  No rate is asserted; the ratio the integrated
+        # campaign measured is recorded beside them so the arithmetic is the
+        # reader's to do and is checkable.
+        for item in classes:
+            if item["mnemonic"] != "TENSOR.MATMUL":
+                continue
+            work = [
+                operator_work(manifest, images, deployment_key, descriptor_id)
+                for descriptor_id in item["operator_descriptor_ids"]
+            ]
+            if any(entry is None for entry in work):
+                item["multiply_accumulates_per_issue"] = None
+                continue
+            item["multiply_accumulates_per_issue"] = [
+                entry["multiply_accumulates"] for entry in work
+            ]
+            item["weight_view_dims_per_operator"] = [
+                entry["weight_view_dims"] for entry in work
+            ]
+        cycles = sum(int(c.get("simulated_cycles") or 0) for c in covering)
+        # Words compared UNDER THIS LOWERING.  A campaign that ran several
+        # deployments in one pass states its own per-deployment count, and the
+        # campaign-wide total is not this record's to claim.
+        compared = sum(
+            int(
+                scope.get("compared_words")
+                if scope.get("compared_words") is not None
+                else campaign.get("compared_words") or 0
+            )
+            for campaign, scope in covering_pairs
+        )
         simulators = sorted({s for c in covering for s in c.get("simulators", [])})
+        integrated_scope = next(
+            (
+                scope for campaign, scope in covering_pairs
+                if campaign["artifact"] == INTEGRATED_CAMPAIGN
+            ),
+            None,
+        )
+        integrated_body = next(
+            (
+                json.loads((ROOT / INTEGRATED_CAMPAIGN).read_text())
+                for campaign, _ in covering_pairs
+                if campaign["artifact"] == INTEGRATED_CAMPAIGN
+            ),
+            {},
+        )
+        integrated_measured_macs = integrated_body.get("matmul_mac_count")
+        integrated_measured_cycles = integrated_body.get("simulated_cycles")
+        integrated_first_fault = (
+            integrated_scope.get("first_fault_program_counter")
+            if integrated_scope else None
+        )
 
         # Every class that consumes a real checkpoint tensor.  If any of them is
         # uncovered, the rung has not run against the real checkpoint weights,
@@ -611,6 +997,15 @@ def build(output: Path) -> dict[str, Any]:
         }
         weighted_classes = [c for c in classes if c["mnemonic"] in weighted]
         weighted_covered = [c for c in weighted_classes if c["covered"]]
+        # Covered is not enough for these: the covering run's operands must be
+        # the checkpoint's own tensors.  The operator-admission vehicle's
+        # residual, SwiGLU and logits operands are a seeded deterministic BF16
+        # spread and say so in their own manifest, so a weighted class covered
+        # only there would not make this true.
+        weighted_on_checkpoint = [
+            c for c in weighted_covered
+            if c.get("operands_are_real_checkpoint") is True
+        ]
 
         record: dict[str, Any] = {
             "storage_class": storage_class,
@@ -628,10 +1023,25 @@ def build(output: Path) -> dict[str, Any]:
                 "simulators": simulators,
                 "simulated_cycles": cycles,
                 "evidence_class": (
-                    "public_open_tool_rtl_simulation_dual_simulator"
+                    (
+                        "public_open_tool_rtl_simulation_dual_simulator"
+                        if len(simulators) > 1
+                        else f"public_open_tool_rtl_simulation_{simulators[0]}_only"
+                    )
                     if simulators
                     else "absent: no simulation of this lowering exists"
                 ),
+                "simulated_cycles_by_campaign": {
+                    c["artifact"]: int(c.get("simulated_cycles") or 0)
+                    for c in covering
+                },
+                "simulated_cycles_scope": [
+                    {
+                        "artifact": c["artifact"],
+                        "scope": c.get("simulated_cycles_scope"),
+                    }
+                    for c in covering if c.get("simulated_cycles_scope")
+                ],
                 "campaigns": [c["artifact"] for c in covering],
                 "underlying_campaign_provenance": [
                     {
@@ -665,6 +1075,55 @@ def build(output: Path) -> dict[str, Any]:
                     "execution.underlying_campaign_provenance."
                 ),
             },
+            "cost_of_the_uncovered": {
+                "definition": (
+                    "multiply-accumulates read out of each uncovered MATMUL's "
+                    "own bound weight view, summed once per distinct operator "
+                    "descriptor.  It is the size of the run that would cover "
+                    "them, not a time: the rate is whatever the vehicle "
+                    "measures, and the integrated run's own measured MACs and "
+                    "cycles are recorded beside it."
+                ),
+                "uncovered_matmul_multiply_accumulates": sum(
+                    sum(item["multiply_accumulates_per_issue"] or [])
+                    for item in uncovered
+                    if item["mnemonic"] == "TENSOR.MATMUL"
+                ),
+                "covered_matmul_multiply_accumulates": sum(
+                    sum(item["multiply_accumulates_per_issue"] or [])
+                    for item in covered
+                    if item["mnemonic"] == "TENSOR.MATMUL"
+                ),
+                "integrated_run_measured_matmul_macs": integrated_measured_macs,
+                "integrated_run_measured_cycles": integrated_measured_cycles,
+                "per_uncovered_class": [
+                    {
+                        "mnemonic": item["mnemonic"],
+                        "program_counters": item["program_counters"],
+                        "operator_descriptor_ids": item["operator_descriptor_ids"],
+                        "multiply_accumulates_per_issue": item.get(
+                            "multiply_accumulates_per_issue"
+                        ),
+                        "reachable_in_the_integrated_prefix": (
+                            integrated_first_fault is not None
+                            and max(item["program_counters"]) < integrated_first_fault
+                        ),
+                    }
+                    for item in uncovered
+                ],
+                "integrated_prefix_first_fault_program_counter": (
+                    integrated_first_fault
+                ),
+                "why_the_rest_is_out_of_reach_today": (
+                    "the integrated vehicle executes the real program from its "
+                    "entrypoint and fails closed at the first operator its "
+                    "placement does not admit, so every class whose program "
+                    "counters lie beyond that point is unreachable in it; the "
+                    "operator-admission vehicle can be pointed at any program "
+                    "counter but preloads its operands from a hex image, which "
+                    "the MLP and LM-head weight matrices do not fit"
+                ),
+            },
             "coverage": {
                 "issued_class_count": len(classes),
                 "covered_class_count": len(covered),
@@ -689,9 +1148,21 @@ def build(output: Path) -> dict[str, Any]:
                     "and is reported as absent rather than as zero"
                 ),
                 "weights_are_real_checkpoint": bool(weighted_classes)
-                and len(weighted_covered) == len(weighted_classes),
+                and len(weighted_on_checkpoint) == len(weighted_classes),
                 "checkpoint_weighted_class_count": len(weighted_classes),
                 "checkpoint_weighted_covered_class_count": len(weighted_covered),
+                "checkpoint_weighted_covered_on_checkpoint_operands_count": len(
+                    weighted_on_checkpoint
+                ),
+                "checkpoint_weighted_uncovered_classes": [
+                    {
+                        "mnemonic": c["mnemonic"],
+                        "program_counters": c["program_counters"],
+                        "operator_descriptor_ids": c["operator_descriptor_ids"],
+                        "issues": c["issues"],
+                    }
+                    for c in weighted_classes if not c["covered"]
+                ],
                 "weights_note": (
                     "Every class that consumes a real checkpoint tensor -- "
                     "TENSOR.MATMUL, TENSOR.EMBED_LOOKUP, VECTOR.RMS_NORM, "
@@ -781,6 +1252,43 @@ def build(output: Path) -> dict[str, Any]:
                 str(integrated_admission.get("why_not_measured")
                     or "its run emitted no ADMISSION line")
             )
+    # The operator-admission vehicle's own answer, PER STORAGE CLASS.  It was
+    # read from the ROM campaign for both records, which is exactly the
+    # cross-lowering transfer this tool refuses everywhere else.
+    admission_by_class = {}
+    for storage_class in STORAGE_CLASSES:
+        relative = (
+            "results/rtl/a3_operator_admission_campaign.json"
+            if storage_class == "rom"
+            else f"results/rtl/a3_operator_admission_{storage_class}_campaign.json"
+        )
+        record_for_class = next(
+            (c for c in campaigns if c["artifact"] == relative), None
+        )
+        usable_for_class = bool(record_for_class and record_for_class.get("usable"))
+        body_for_class = (
+            json.loads((ROOT / relative).read_text())
+            if (ROOT / relative).is_file() else {}
+        )
+        admission_by_class[storage_class] = {
+            "artifact": relative,
+            "artifact_is_source_current": usable_for_class,
+            "trapped_family_count": (
+                (body_for_class.get("admission") or {}).get(
+                    "capability_trapped_family_count"
+                ) if usable_for_class else None
+            ),
+            "admitted_family_count": (
+                (body_for_class.get("admission") or {}).get("admitted_family_count")
+                if usable_for_class else None
+            ),
+            "why_not_read": (
+                None if usable_for_class
+                else (record_for_class or {}).get("why_unusable")
+                or f"{relative} is absent"
+            ),
+        }
+
     for record in records:
         record["capability_trapped_family_count"] = trapped
         record["capability"] = {
@@ -805,12 +1313,20 @@ def build(output: Path) -> dict[str, Any]:
             "integrated_vehicle_reached_families": integrated_reached,
             "integrated_vehicle_trapped_families": integrated_trapped,
             "why_not_measured": why_not_measured,
-            "operator_admission_vehicle_trapped_family_count": (
-                admission_body.get("admission") or {}
-            ).get("capability_trapped_family_count"),
-            "operator_admission_vehicle_admitted_family_count": (
-                admission_body.get("admission") or {}
-            ).get("admitted_family_count"),
+            "operator_admission_vehicle": admission_by_class[
+                record["storage_class"]
+            ],
+            "operator_admission_vehicle_trapped_family_count": admission_by_class[
+                record["storage_class"]
+            ]["trapped_family_count"],
+            "operator_admission_vehicle_admitted_family_count": admission_by_class[
+                record["storage_class"]
+            ]["admitted_family_count"],
+            "operator_admission_vehicle_note": (
+                "this is THIS storage class's own admission campaign, not the "
+                "ROM campaign read twice; the two lowerings share no governed "
+                "descriptor id, so one cannot answer for the other"
+            ),
         }
 
     artifact = {
@@ -847,7 +1363,8 @@ def build(output: Path) -> dict[str, Any]:
             sorted({
                 pc
                 for campaign in usable
-                for pc in campaign.get("positive_program_counters", [])
+                for scope in (campaign.get("coverage_by_deployment") or {}).values()
+                for pc in scope.get("positive_program_counters", [])
             }),
         ),
         "summary": [
