@@ -15,7 +15,7 @@
       "kind": "terminal",
       "statement": "A routed netlist exists containing the datapath array, the memory system AND the microsequencer, at one named PDK, with DRC 0 and antenna 0.",
       "status": "fail",
-      "why": "8 routed block(s) and none holds microsequencer, datapath array and the memory system in one clean netlist: results/physical_abi3/asap7/a3_lane_pipelined/pnr.json: no microsequencer, no datapath array among its sources; no memory system (macro_count 0.0, need >= 1); results/physical_abi3/asap7/a3_microsequencer/pnr.json: no datapath array among its sources; no memory system (macro_count 0.0, need >= 1); results/physical_abi3/asap7/add_bf16_sram_engine/pnr.json: no microsequencer, no datapath array among its sources; no memory system (macro_count 0.0, need >= 1); results/physical_abi3/asap7/matmul_bf16_sram_engine/pnr.json: no microsequencer, no datapath array among its sources; no memory system (macro_count 0.0, need >= 1); ..."
+      "why": "9 routed block(s) and none holds microsequencer, datapath array and the memory system in one clean netlist: results/physical_abi3/asap7/a3_lane_pipelined/pnr.json: no microsequencer, no datapath array among its sources; no memory system (macro_count 0.0, need >= 1); results/physical_abi3/asap7/a3_lq8_array/pnr.json: no microsequencer among its sources; no memory system (macro_count 0.0, need >= 1); results/physical_abi3/asap7/a3_microsequencer/pnr.json: no datapath array among its sources; no memory system (macro_count 0.0, need >= 1); results/physical_abi3/asap7/add_bf16_sram_engine/pnr.json: no microsequencer, no datapath array among its sources; no memory system (macro_count 0.0, need >= 1); ..."
     },
     {
       "fails_when": "TPOT exceeds the budget, OR no budget is frozen.",
@@ -54,8 +54,8 @@
       "id": "D3",
       "kind": "design",
       "statement": "The synthesised netlist contains N lanes for a declared N.",
-      "status": "fail",
-      "why": "no artifact matches results/physical_abi3/*/*array*/pnr.json"
+      "status": "pass",
+      "why": "results/physical_abi3/asap7/a3_lq8_array/pnr.json: design.lanes = 8"
     },
     {
       "fails_when": "Either regresses.",
@@ -106,7 +106,7 @@
       "why": "26 cycle artifact(s) and none carries plausibility.total_over_binding_floor; a run that cannot state its own bandwidth floor cannot be believed"
     }
   ],
-  "passing": 5,
+  "passing": 6,
   "plan": "docs/OPENTALLAS_REDESIGN_PLAN.md",
   "principle": "Absence of evidence is FAIL, never not_evaluable. The previous programme's TPOT gate had two states, not_evaluable and pass, with no reachable fail; it stayed not_evaluable for the life of the project while the machine drifted 44,000x from target. A gate that cannot fail is a note. Every gate below reports FAIL until evidence says otherwise.",
   "schema": "opentallas.gates.redesign_result.v1",
