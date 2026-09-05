@@ -387,6 +387,46 @@ def _product(values: list[int]) -> int:
     return total
 
 
+_SOURCE_FIELDS = ("source", "weight_source", "input_source", "coefficient_source")
+
+
+def _binds_checkpoint(operation: dict[str, Any]) -> bool:
+    """Does this operation read a byte range of the real checkpoint?
+
+    True only when a source block names the checkpoint revision, the shard and
+    the exact byte range it re-read and hashed.  Anything less is not a
+    checkpoint binding.
+    """
+
+    for field in _SOURCE_FIELDS:
+        block = operation.get(field)
+        if isinstance(block, dict) and block.get("checkpoint_revision"):
+            return True
+    return False
+
+
+def _operand_sources(operation: dict[str, Any]) -> dict[str, str]:
+    """Each declared operand source, classified by what it actually is."""
+
+    out: dict[str, str] = {}
+    for field in _SOURCE_FIELDS:
+        block = operation.get(field)
+        if isinstance(block, dict):
+            if block.get("checkpoint_revision"):
+                out[field] = "checkpoint"
+            elif block.get("kind") == "generated" and block.get("generator"):
+                out[field] = "generated"
+            else:
+                out[field] = "unclassified"
+        elif isinstance(block, str):
+            out[field] = (
+                "prior_result"
+                if block.startswith("prior_") and block.endswith("_bank")
+                else "unclassified"
+            )
+    return out
+
+
 def _family_sub_at(manifest: dict[str, Any], images: dict[str, list[int]],
                    deployment_key: str, pc: int) -> tuple[int, int]:
     """The (family, sub) the deployment's own program issues at this PC."""
@@ -469,9 +509,8 @@ def integrated_coverage(
                 "kind": operation.get("kind"),
                 "numeric_contract_sha256": operation.get("contract_sha256"),
                 "expected_row_sha256": operation.get("expected_row_sha256"),
-                "checkpoint_bound": bool(
-                    (operation.get("source") or {}).get("checkpoint_revision")
-                ),
+                "binds_checkpoint_tensor": _binds_checkpoint(operation),
+                "operand_sources": _operand_sources(operation),
             })
             found = recorded.get((name, pc))
             if found is None:
@@ -491,6 +530,28 @@ def integrated_coverage(
                     f"{str(found['deployment_sha256'])[:12]} where the vector "
                     f"set it binds says {deployment_sha[:12]}"
                 )
+        # Whether each operation ran on the checkpoint's own numbers.  An
+        # operation qualifies when it binds a checkpoint tensor itself, or
+        # when every operand it declares is either a named reproducible
+        # generator or the result of an EARLIER operation of this same case
+        # that already qualifies.  It is a forward pass over the prefix in
+        # program order, not an assertion about the run as a whole: an
+        # operation fed by a seeded spread never qualifies, which is exactly
+        # how the operator-admission vehicle's cases are described.
+        derived_so_far = False
+        for operation in sorted(operations, key=lambda op: op["program_counter"]):
+            sources = operation["operand_sources"]
+            qualifies = operation["binds_checkpoint_tensor"] or (
+                bool(sources)
+                and all(
+                    kind == "generated" or (kind == "prior_result" and derived_so_far)
+                    or kind == "checkpoint"
+                    for kind in sources.values()
+                )
+            )
+            operation["ran_on_checkpoint_numbers"] = bool(qualifies)
+            derived_so_far = derived_so_far or bool(qualifies)
+
         for (case_name, pc), found in recorded.items():
             if case_name == name and not any(
                 op["program_counter"] == pc for op in operations
@@ -527,8 +588,12 @@ def integrated_coverage(
             ),
             "operations": operations,
             "checkpoint_bound_operation_count": sum(
-                1 for op in operations if op["checkpoint_bound"]
+                1 for op in operations if op["binds_checkpoint_tensor"]
             ),
+            "checkpoint_derived_operation_count": sum(
+                1 for op in operations if op["ran_on_checkpoint_numbers"]
+            ),
+            "operation_count": len(operations),
             "compared_words": int(expected.get("result_words", 0)),
             "first_fault_program_counter": (case.get("first_unsupported") or {}).get(
                 "pc"
@@ -838,6 +903,11 @@ def build(output: Path) -> dict[str, Any]:
     }
     campaigns = evidence(manifest, images)
     usable = [c for c in campaigns if c.get("usable")]
+    qwen_deployment_digests = {
+        entry["deployment_sha256"]
+        for entry in manifest["deployments"]
+        if entry["key"] in STORAGE_CLASSES.values()
+    }
 
     commit = subprocess.run(
         ["git", "rev-parse", "HEAD"], cwd=ROOT, capture_output=True, text=True
@@ -887,7 +957,13 @@ def build(output: Path) -> dict[str, Any]:
                 item["operands_are_real_checkpoint"] = bool(
                     item["covered_operations"]
                 ) and all(
-                    op.get("checkpoint_bound")
+                    op.get("ran_on_checkpoint_numbers")
+                    for op in item["covered_operations"]
+                )
+                item["binds_checkpoint_tensor"] = bool(
+                    item["covered_operations"]
+                ) and all(
+                    op.get("binds_checkpoint_tensor")
                     for op in item["covered_operations"]
                 )
             else:
@@ -1360,10 +1436,18 @@ def build(output: Path) -> dict[str, Any]:
         "cross_lowering_transfer": cross_lowering_transfer(
             manifest,
             images,
+            # Only the program counters covered on a QWEN lowering.  The
+            # integrated campaign also runs the two DeepSeek deployments, and
+            # their program counters are positions in a different program;
+            # decoding them against the Qwen programs would compare unrelated
+            # instructions.
             sorted({
                 pc
                 for campaign in usable
-                for scope in (campaign.get("coverage_by_deployment") or {}).values()
+                for digest, scope in (
+                    campaign.get("coverage_by_deployment") or {}
+                ).items()
+                if digest in qwen_deployment_digests
                 for pc in scope.get("positive_program_counters", [])
             }),
         ),
