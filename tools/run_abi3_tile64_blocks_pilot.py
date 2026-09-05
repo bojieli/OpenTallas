@@ -72,12 +72,21 @@ def sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
+def _as_text(value: Any) -> str:
+    """TimeoutExpired carries the captured output UNDECODED even under text=True."""
+    if value is None:
+        return ""
+    if isinstance(value, (bytes, bytearray)):
+        return bytes(value).decode("utf-8", "replace")
+    return value
+
+
 def run(cmd: list[str], timeout: int) -> tuple[subprocess.CompletedProcess | None, bool]:
     try:
         return subprocess.run(cmd, cwd=str(ROOT), capture_output=True, text=True, timeout=timeout,
                               check=False), False
     except subprocess.TimeoutExpired as expired:
-        stub = subprocess.CompletedProcess(cmd, -1, expired.stdout or "", expired.stderr or "")
+        stub = subprocess.CompletedProcess(cmd, -1, _as_text(expired.stdout), _as_text(expired.stderr))
         return stub, True
 
 
@@ -237,6 +246,48 @@ def make_in_container(work: Path, goal: str, log_path: Path, timeout: int) -> di
             "log_sha256": sha256_file(log_path), "log_tail": "\n".join(text.strip().splitlines()[-40:])}
 
 
+def container_state(container: str) -> dict[str, Any]:
+    """The container's own state, as docker reports it."""
+    proc, _ = run(["docker", "inspect", container, "--format",
+                   "{{.State.Running}}\t{{.State.StartedAt}}\t{{.State.FinishedAt}}\t{{.State.ExitCode}}"], 120)
+    if proc is None or proc.returncode != 0:
+        return {"inspected": False, "docker_stderr": (proc.stderr or "").strip()[:400] if proc else None}
+    running, started_at, finished_at, exit_code = ((proc.stdout or "").strip().split("\t") + [""] * 4)[:4]
+    state = {"inspected": True, "running": running == "true", "started_at": started_at,
+             "finished_at": None if finished_at.startswith("0001-01-01") else finished_at,
+             "exit_code": int(exit_code) if exit_code.strip().lstrip("-").isdigit() else None}
+    return state
+
+
+def reconstruct_make(goal: str, container: str, bound_seconds: int, observed_at: str) -> dict[str, Any]:
+    """Rebuild a make block for a leg whose client process died after the flow had started.
+
+    Nothing here is measured by this invocation except the container's own state: every field the
+    dead client held -- its captured stdout, its return code, its wall clock -- is null, and
+    ``reconstructed`` says so.  The leg's evidence is the flow's own logs in the kept work
+    directory, which ``leg_record`` reads.
+    """
+    state = container_state(container)
+    return {
+        "goal": goal, "container": container, "command": None, "returncode": None,
+        "timed_out": True, "wall_seconds": None, "log": None, "log_sha256": None, "log_tail": None,
+        "reconstructed": {
+            "why": "the client process that ran this leg did not write its make block: it raised "
+                   "TypeError in the timeout path (subprocess.TimeoutExpired carries bytes even "
+                   "under text=True) after the client bound expired, before it wrote the container "
+                   "log and before it stopped the container",
+            "client_bound_seconds": bound_seconds,
+            "lost_fields": ["command", "returncode", "wall_seconds", "log", "log_sha256", "log_tail"],
+            "container_state": state,
+            "container_left_running": bool(state.get("running")),
+            "observed_at": observed_at,
+            "basis": "the stage wall times, the produced files and the last log below are read from "
+                     "the kept work directory the flow itself wrote; nothing is carried over from a "
+                     "different run",
+        },
+    }
+
+
 # ORFS prints "Elapsed time: 1:03:07[h:]min:sec" for stages over an hour and
 # "Elapsed time: 23:44.10[h:]min:sec" (min:sec.cs) for shorter ones.
 ELAPSED_RE = re.compile(r"Elapsed time: (?:(\d+):)?(\d+):(\d+(?:\.\d+)?)\[h:\]min:sec")
@@ -354,6 +405,10 @@ def main(argv: list[str] | None = None) -> int:
                              "macro placer: GRID places them on a regular grid inside the core with the "
                              "halo as the spacing (ORFS MACRO_PLACEMENT_TCL)")
     parser.add_argument("--timeout-seconds", type=int, default=3 * 3600)
+    parser.add_argument("--reconstruct-make", metavar="CONTAINER", default=None,
+                        help="with --record-only: rebuild a leg whose client died after the flow "
+                             "started, from the kept work directory and the named container's own "
+                             "state; every field the dead client held is recorded null")
     parser.add_argument("--record-only", action="store_true",
                         help="rebuild this leg's record from the kept work directory without running the "
                              "flow again; the make block (command, return code, wall time) of the recorded "
@@ -396,18 +451,27 @@ def main(argv: list[str] | None = None) -> int:
     record.setdefault("sources", {s: {"sha256": sha256_file(ROOT / s)} for s in sorted(set(BLOCK_SOURCES + PARENT_SOURCES))})
     record.setdefault("target_clock_period_ns", args.clock_period_ns)
     record.setdefault("bound_seconds_per_leg", args.timeout_seconds)
-    configs = write_configs(work, args.clock_period_ns, args.core_utilization, args.place_density,
-                            args.macro_halo, args.macro_placement, args.parent_export, args.block_export)
+    if args.record_only and record.get("configs"):
+        # A record-only pass must not write into the work directory: the flow may still be in it.
+        configs = record["configs"]
+    else:
+        configs = write_configs(work, args.clock_period_ns, args.core_utilization, args.place_density,
+                                args.macro_halo, args.macro_placement, args.parent_export, args.block_export)
     record["configs"] = configs
     record.setdefault("legs", {})
 
     started = datetime.now(timezone.utc)
     previous = record.get("legs", {}).get(args.leg, {})
-    if args.record_only and not previous.get("make"):
+    if args.reconstruct_make and not args.record_only:
+        raise SystemExit("--reconstruct-make is only meaningful with --record-only")
+    if args.record_only and not previous.get("make") and not args.reconstruct_make:
         raise SystemExit(f"--record-only: no recorded {args.leg} leg to rebuild in {output}")
+    rebuilt = (reconstruct_make(("build_macros" if args.leg == "block" else "finish metadata-generate"),
+                                args.reconstruct_make, args.timeout_seconds, started.isoformat())
+               if args.reconstruct_make else None)
     if args.leg == "block":
         goal = "build_macros"
-        make = (previous["make"] if args.record_only
+        make = (rebuilt or previous["make"] if args.record_only
                 else make_in_container(work, goal, work / "orfs_block.log", args.timeout_seconds))
         leg = {"started_at": started.isoformat(), "make": make, "block": leg_record(work, BLOCK_NICKNAME),
                "abstract": abstract_summary(work),
@@ -421,7 +485,7 @@ def main(argv: list[str] | None = None) -> int:
         record["legs"]["block"] = leg
     else:
         goal = "finish metadata-generate"
-        make = (previous["make"] if args.record_only
+        make = (rebuilt or previous["make"] if args.record_only
                 else make_in_container(work, goal, work / "orfs_parent.log", args.timeout_seconds))
         leg = {"started_at": started.isoformat(), "make": make, "parent": leg_record(work, PARENT_NICKNAME),
                "block_abstract_used": abstract_summary(work)}
@@ -454,10 +518,20 @@ def main(argv: list[str] | None = None) -> int:
             attempts.append(record["legs"]["parent"])
         record["legs"]["parent"] = leg
     if args.record_only:
-        record["legs"][args.leg]["started_at"] = previous.get("started_at", leg["started_at"])
-        record["legs"][args.leg]["completed_at"] = previous.get("completed_at")
+        state = ((rebuilt or {}).get("reconstructed", {}) or {}).get("container_state", {})
+        record["legs"][args.leg]["started_at"] = (previous.get("started_at")
+                                                  or state.get("started_at") or leg["started_at"])
+        record["legs"][args.leg]["completed_at"] = previous.get("completed_at") or state.get("finished_at")
         record["legs"][args.leg]["wall_seconds"] = previous.get("wall_seconds")
+        if rebuilt is not None:
+            record["legs"][args.leg]["started_at_basis"] = (
+                "the container's own StartedAt from docker inspect; the client that launched it died "
+                "without recording its start")
         record["legs"][args.leg]["record_rebuilt_at"] = datetime.now(timezone.utc).isoformat()
+        record["legs"][args.leg]["record_rebuilt_by"] = {
+            "tool_sha256": sha256_file(Path(__file__).resolve()),
+            "commit": git_identity()["commit"],
+        }
     else:
         record["legs"][args.leg]["completed_at"] = datetime.now(timezone.utc).isoformat()
         record["legs"][args.leg]["wall_seconds"] = round((datetime.now(timezone.utc) - started).total_seconds(), 3)
