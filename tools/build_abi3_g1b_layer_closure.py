@@ -1375,6 +1375,14 @@ def build(
                         if usable else None
                     ),
                     "simulated_cycles": cycles,
+                    "simulated_cycles_scope": (
+                        "the integrated run's own total, over all four cases "
+                        "of the one binary; the harness reports one cycle "
+                        "count for the run and this rung does not split it "
+                        "per lowering, so the same number appears in both "
+                        "records and must not be added across them"
+                        if cycles else None
+                    ),
                     "evidence_class": (
                         campaign.get("evidence_class") if usable else
                         "absent: no usable integrated RTL simulation of this "
