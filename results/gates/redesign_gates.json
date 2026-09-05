@@ -62,8 +62,8 @@
       "id": "D4",
       "kind": "design",
       "statement": "Per-MAC area and per-MAC period both improve against the recorded matmul_bf16_sram_engine baseline at the same PDK.",
-      "status": "fail",
-      "why": "2 candidate(s) and none improves on the baseline's 48,274 um2 and 104.1 ns per MAC: results/physical_abi3/asap7/a3_lane_pipelined/pnr.json: not closed (status not_met); 6,849.1 um2 and 8.500 ns per MAC are what it achieved, not a result; results/physical_abi3/sky130hd/a3_lane_pipelined/pnr.json: view sky130hd is not the baseline's asap7"
+      "status": "pass",
+      "why": "results/physical_abi3/asap7/a3_lane_pipelined/pnr.json: per-MAC area 3,790.2 um2 < baseline 48,274 um2 and per-MAC period 6.000 ns < baseline 104.1 ns, both routed at asap7"
     },
     {
       "fails_when": "Any becomes silent.",
@@ -87,7 +87,7 @@
       "kind": "comparison",
       "statement": "The compiled deployments hand neither side an advantage in tile shape, column group, tile depth or DMA tile count.",
       "status": "fail",
-      "why": "results/derived/qwen3-8b__rom-n5-native-hbmkv-wafer-tensor-x1__b200-sxm-x29-hybrid_machine_pair.json: deployment_audit.comparable == False -- NOT COMPARABLE: tensor tile_depth 2048 vs 128 (favours rom 16x), tile_rows 128 vs 64 (neutral at batch-1 decode), tile_cols x issue_window 512x16 vs 128x4 (effective tensor width 1024 vs 512 at lanes=1024, favours rom 1.999x), contraction cycles per step 3,610 vs 115,488 (favours rom 31.99x); attention tile 128x128x64 vs 64x128x128 (tiles per step 4,608 vs 2,304, favours hbm 2x); dma tile 128x64x1 vs 64x128x1 (tiles per step 74,372 vs 74,338, favours hbm 1.0005x; DMA.GATHER (1x256x1) 4 vs 2 tiles per issue, favours hbm 2x; DMA.GATHER (1x4096x1) 64 vs 32 tiles per issue, favours hbm 2x); vector tile 128x256x1 vs 64x128x1 (tiles per step 4,192 vs 8,240, favours rom 1.966x; issued work incl. padding 135,004,160 vs 67,502,080, favours hbm 2x); 18 further cost-bearing field(s) differ (max_outstanding, queue_index, bank_mask, port_mask; see asymmetries); allowlist empty.  These are SCHEDULE fields, so no machine file can correct them; the deployments must be re-emitted under one SCHEDULE rule.; 14 more artifact(s) carry a failing verdict"
+      "why": "15 of 15 artifact(s) fail deployment_audit.comparable == True: results/derived/deepseek-v4-flash-0731__rom-n5-native-hbmkv-array-hybrid-x32__b200-sxm-x16-hybrid_machine_pair.json: NOT COMPARABLE: no deployment built -- rom: no compiled deepseek-v4-flash-0731 deployment is bound to configs/hardware/a; results/derived/deepseek-v4-flash-0731__rom-n5-native-hbmkv-wafer-tensor-x1__b200-sxm-x29-tensor_machine_pair.json: NOT COMPARABLE: no deployment built -- rom: no compiled deepseek-v4-flash-0731 deployment is bound to configs/hardware/a; ..."
     },
     {
       "fails_when": "They disagree.",
@@ -102,11 +102,11 @@
       "id": "C4",
       "kind": "comparison",
       "statement": "No published run sits more than 100x above its own bandwidth floor.",
-      "status": "fail",
-      "why": "26 cycle artifact(s) and none carries plausibility.total_over_binding_floor; a run that cannot state its own bandwidth floor cannot be believed"
+      "status": "pass",
+      "why": "2 of 2 artifact(s) state a floor; worst is 1.74x"
     }
   ],
-  "passing": 6,
+  "passing": 8,
   "plan": "docs/OPENTALLAS_REDESIGN_PLAN.md",
   "principle": "Absence of evidence is FAIL, never not_evaluable. The previous programme's TPOT gate had two states, not_evaluable and pass, with no reachable fail; it stayed not_evaluable for the life of the project while the machine drifted 44,000x from target. A gate that cannot fail is a note. Every gate below reports FAIL until evidence says otherwise.",
   "schema": "opentallas.gates.redesign_result.v1",
