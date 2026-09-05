@@ -600,3 +600,19 @@ def test_a_control_run_binding_nothing_is_refused(tool, context, tmp_path):
     evidence = tool.control_run_evidence(artifact, root, "rom")
     assert evidence["usable"] is False
     assert "binds no source digests" in evidence["why_unusable"]
+
+
+def test_the_handoff_records_whether_its_evidence_is_source_current(
+    tool, context, tmp_path
+):
+    issues = _synthetic_trace(context)
+    artifact, root = _stage(tool, tmp_path, issues, _control_artifact(tool, issues))
+    summary = tool.build(tmp_path / "g1c.json", artifact, root, None, None, None)
+    for record in summary["records"]:
+        currency = record["handoff"]["evidence_currency"]
+        assert currency["retained_campaign_is_usable"] in (True, False)
+        if currency["retained_campaign_is_usable"] is False:
+            assert currency["why_not"], (
+                "an unusable campaign must say why, or the red has no reason"
+            )
+        assert currency["fields_the_handoff_reads"]

@@ -815,6 +815,7 @@ def handoff_evidence(
     loop: dict[str, Any],
     vector_case: dict[str, Any],
     case_index: int,
+    rerun: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """How many layer boundaries the integrated RTL actually crossed."""
     observed = next(
@@ -980,6 +981,33 @@ def handoff_evidence(
             "is a vacuous truth over an empty set; this ladder's first rule "
             "is that absence of evidence is a failure and never a pass"
         ),
+        "evidence_currency": {
+            "retained_campaign_is_usable": bool(campaign.get("usable")),
+            "why_not": campaign.get("why_unusable"),
+            "fields_the_handoff_reads": [
+                "expected_cases/observed_cases: fetched, fault and trap class "
+                "for this lowering's case",
+                "operator_admission: which families the bridge trapped",
+            ],
+            "an_independent_run_at_this_commit_agrees": (
+                None if rerun is None
+                else bool(rerun.get("agrees_on_every_compared_field"))
+            ),
+            "what_that_means": (
+                "the retained integrated campaign is what this repository "
+                "holds, and it is no longer source-current: sources it bound "
+                "have moved since it ran. That is a second reason this half "
+                "of the rung is red, independent of the boundary at which the "
+                "vehicle fails closed. An independent execution at this "
+                "commit, in a pinned clean worktree, is recorded under "
+                "rerun_not_retained; where it agrees on every compared field "
+                "the drift did not move the measurement, and where it did not "
+                "that disagreement would itself be the finding"
+                if not campaign.get("usable") else
+                "the retained integrated campaign is source-current and every "
+                "field the handoff reads comes from it"
+            ),
+        },
         "integrated_campaign": {
             key: campaign.get(key)
             for key in (
@@ -1173,7 +1201,9 @@ def build(
             }
         control.pop("issues", None)
 
-        handoff = handoff_evidence(campaign, facts, loop, vector_case, case_index)
+        handoff = handoff_evidence(
+            campaign, facts, loop, vector_case, case_index, rerun
+        )
         handoff["address_identity_across_the_layer_boundary"] = (
             address_identity
             if address_identity is not None
