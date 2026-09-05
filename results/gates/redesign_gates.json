@@ -15,7 +15,7 @@
       "kind": "terminal",
       "statement": "A routed netlist exists containing the datapath array, the memory system AND the microsequencer, at one named PDK, with DRC 0 and antenna 0.",
       "status": "fail",
-      "why": "4 routed block(s) (a3_lane_pipelined, add_bf16_sram_engine, matmul_bf16_sram_engine, reduction_s8_g2) and none is one of microsequencer, sequencer, control_plane, descriptor"
+      "why": "7 routed block(s) and none holds microsequencer, datapath array and the memory system in one clean netlist: results/physical_abi3/asap7/a3_lane_pipelined/pnr.json: no microsequencer, no datapath array among its sources; no memory system (macro_count 0.0, need >= 1); results/physical_abi3/asap7/add_bf16_sram_engine/pnr.json: no microsequencer, no datapath array among its sources; no memory system (macro_count 0.0, need >= 1); results/physical_abi3/asap7/matmul_bf16_sram_engine/pnr.json: no microsequencer, no datapath array among its sources; no memory system (macro_count 0.0, need >= 1); results/physical_abi3/asap7/reduction_s8_g2/pnr.json: no microsequencer, no datapath array among its sources; no memory system (macro_count 0.0, need >= 1); ..."
     },
     {
       "fails_when": "TPOT exceeds the budget, OR no budget is frozen.",
@@ -63,7 +63,7 @@
       "kind": "design",
       "statement": "Per-MAC area and per-MAC period both improve against the recorded matmul_bf16_sram_engine baseline at the same PDK.",
       "status": "fail",
-      "why": "1 candidate(s) and none improves on the baseline's 48,274 um2 and 104.1 ns per MAC: results/physical_abi3/asap7/a3_lane_pipelined/pnr.json: not closed (status not_met); 6,849.1 um2 and 8.500 ns per MAC are what it achieved, not a result"
+      "why": "2 candidate(s) and none improves on the baseline's 48,274 um2 and 104.1 ns per MAC: results/physical_abi3/asap7/a3_lane_pipelined/pnr.json: not closed (status not_met); 6,849.1 um2 and 8.500 ns per MAC are what it achieved, not a result; results/physical_abi3/sky130hd/a3_lane_pipelined/pnr.json: view sky130hd is not the baseline's asap7"
     },
     {
       "fails_when": "Any becomes silent.",

@@ -31,6 +31,7 @@ without gating ordinary work.  ``--strict`` extends that to every gate.
 from __future__ import annotations
 
 import argparse
+import fnmatch
 import glob
 import json
 import subprocess
@@ -153,17 +154,82 @@ def evaluate(gate: dict[str, Any]) -> dict[str, Any]:
 
     paths = _matches(ev["glob"]) if "glob" in ev else []
 
-    if kind == "routed_blocks_include":
+    if kind == "routed_netlist_contains":
+        # G2 names three things that must sit in ONE routed netlist: the
+        # datapath array, the memory system and the microsequencer, with DRC 0
+        # and antenna 0.  The first evaluator passed on a directory NAME
+        # containing "microsequencer", so the day the front-end block alone
+        # was routed (results/physical_abi3/asap7/a3_microsequencer) it would
+        # have gone green on a third of its statement -- the not_evaluable
+        # defect again.  This one reads each record: the sources it was
+        # synthesised from must cover every named component, the memory
+        # system must be present as placed macros (the vehicle memories are
+        # macro abstracts, docs/CHIP_ARCHITECTURE_DESIGN.md section 11.2), and
+        # the route must be clean.  A block that is only part of the control
+        # plane fails, and says which parts it lacks.
         if not paths:
             return _fail(f"no routed block matches {ev['glob']}")
-        names = {p.parent.name for p in paths}
-        wanted = [w for w in ev["require_any_named"] if any(w in n for n in names)]
-        if not wanted:
-            return _fail(
-                f"{len(names)} routed block(s) ({', '.join(sorted(names))}) and none "
-                f"is one of {', '.join(ev['require_any_named'])}"
+        groups: dict[str, list[str]] = ev["require_sources_matching"]
+        macros_min = int(ev.get("require_macro_count_min", 1))
+        reasons: list[str] = []
+        for path in paths:
+            rel = path.relative_to(REPO)
+            body = _load(path)
+            if body is None:
+                reasons.append(f"{rel}: unreadable")
+                continue
+            pnr = body.get("place_and_route")
+            if not isinstance(pnr, dict) or body.get("flow_completed") is not True:
+                reasons.append(f"{rel}: no completed place-and-route stage")
+                continue
+            sources = [
+                entry.get("path", "")
+                for entry in ((body.get("design") or {}).get("sources") or [])
+                if isinstance(entry, dict)
+            ]
+            missing = [
+                name
+                for name, patterns in groups.items()
+                if not any(
+                    fnmatch.fnmatch(src, pattern)
+                    for src in sources
+                    for pattern in patterns
+                )
+            ]
+            metrics = pnr.get("metrics") or {}
+
+            def number(key: str) -> float | None:
+                value = metrics.get(key)
+                return float(value) if isinstance(value, (int, float)) else None
+
+            macro_count = number("macro_count")
+            lacks: list[str] = []
+            if missing:
+                lacks.append("no " + ", no ".join(missing) + " among its sources")
+            if macro_count is None or macro_count < macros_min:
+                lacks.append(
+                    f"no memory system (macro_count {macro_count}, need >= {macros_min})"
+                )
+            drc = number("drc_errors")
+            ant_nets = number("antenna_violating_nets")
+            ant_pins = number("antenna_violating_pins")
+            if drc != 0 or ant_nets != 0 or ant_pins != 0:
+                lacks.append(
+                    f"not clean (drc {drc}, antenna nets {ant_nets}, pins {ant_pins})"
+                )
+            if lacks:
+                reasons.append(f"{rel}: " + "; ".join(lacks))
+                continue
+            return _pass(
+                f"{rel}: one routed netlist with {', '.join(groups)} among its "
+                f"sources, {macro_count:g} placed macro(s), DRC 0, antenna 0"
             )
-        return _pass(f"routed: {', '.join(sorted(names))}")
+        return _fail(
+            f"{len(paths)} routed block(s) and none holds {', '.join(groups)} and "
+            "the memory system in one clean netlist: "
+            + "; ".join(reasons[:4])
+            + ("; ..." if len(reasons) > 4 else "")
+        )
 
     if kind == "per_mac_improvement":
         # Per-MAC figures are compared only inside one view (METHODOLOGY

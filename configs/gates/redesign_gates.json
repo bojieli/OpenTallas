@@ -22,10 +22,14 @@
       "statement": "A routed netlist exists containing the datapath array, the memory system AND the microsequencer, at one named PDK, with DRC 0 and antenna 0.",
       "fails_when": "Any block of the ABI 3.0 control plane is absent from the physical results.",
       "evaluator": {
-        "type": "routed_blocks_include",
+        "type": "routed_netlist_contains",
         "glob": "results/physical_abi3/*/*/pnr.json",
-        "require_any_named": ["microsequencer", "sequencer", "control_plane", "descriptor"],
-        "note": "docs/ABI3_PHYSICAL_VIEWS.md: 'No block of the ABI 3.0 control plane appears below at all'. [OI-43] is the reason."
+        "require_sources_matching": {
+          "microsequencer": ["*microsequencer*"],
+          "datapath array": ["*tile64*", "*lq8*"]
+        },
+        "require_macro_count_min": 1,
+        "note": "The first evaluator passed when any routed block's directory was NAMED microsequencer / sequencer / control_plane / descriptor, so the day the microsequencer's front end was routed on its own (results/physical_abi3/asap7/a3_microsequencer/pnr.json, 2026-09-05: ot_a3_microsequencer at STATE_COMPAT = 0, no descriptor store, no dependence table, no engine, no memory macro) this terminal gate would have gone green on a third of its statement -- the G4 defect of 7df5d51 again. It now reads each pnr.json and passes only when ONE record's sources cover the microsequencer and the datapath array (the vehicle's array is T64 = 8 x LQ8, docs/CHIP_ARCHITECTURE_DESIGN.md section 11.1, so an LQ8 or a tile64 source counts), the memory system is present as placed macros (the vehicle memories are macro abstracts, section 11.2; every record to date has macro_count 0), and the route is clean (DRC 0, antenna 0). The front-end record alone therefore fails, and the failure names what it lacks."
       }
     },
     {
