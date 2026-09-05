@@ -1,0 +1,290 @@
+{
+  "acceptance": {
+    "checks": [
+      {
+        "hold_met": true,
+        "hold_violating_paths": 0,
+        "hold_wns_ns": 0.3758187478704534,
+        "met": false,
+        "scope": "pre-layout, ideal clock",
+        "setup_met": false,
+        "setup_violating_paths": 39,
+        "setup_wns_ns": -1.564664886386989,
+        "stage": "static_timing"
+      }
+    ],
+    "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires zero DRC and zero antenna violations",
+    "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+    "reason": "did not meet in: static_timing",
+    "status": "not_met"
+  },
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-09-05T06:36:57.692703+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-full/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib",
+        "sha256": "8e78e14442062dba34d414fca6490b2f6b96038d4510d1438ca44fee31487135",
+        "size_bytes": 12841637
+      }
+    ],
+    "name": "tt",
+    "process": "typical",
+    "temperature_c": 25.0,
+    "voltage_v": 1.8
+  },
+  "design": {
+    "antenna": null,
+    "area_basis": "synthesis.cell_area_um2 (pre-layout)",
+    "area_um2": 159926.932,
+    "block": "ot_a3_lane_pipelined",
+    "cells": 19185,
+    "cells_basis": "synthesis.cell_count (pre-layout, pinned host Yosys)",
+    "clock_period_ns": 40.0,
+    "clock_port": "clk",
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "drc": null,
+    "false_path_from_ports": [
+      "rst_n"
+    ],
+    "fmax_basis": "static_timing.fmax_hz (pre-layout)",
+    "fmax_hz": 24058897.208323557,
+    "lanes": 1,
+    "lanes_basis": "declared lane count of the block (its LANES parameter, or 1 for a single lane); lanes_in_netlist is the count recovered from the mapped netlist",
+    "mac_per_cycle": 1.0,
+    "mac_per_cycle_basis": "lane-ops retired per cycle by the whole block in steady state, as measured by the RTL campaign cited in mac_rate_evidence (one product per lane-op at g = 1); not measured by this flow",
+    "mac_rate_evidence": [
+      {
+        "field": "measured.mac_per_lane_cycle",
+        "path": "results/rtl/abi3_pipelined_lane.json",
+        "sha256": "25b3f398dc038a5e2f4472edc20c1433f1a642dd6609fe568d97a075eb14c162",
+        "value": 1.0
+      },
+      {
+        "field": "measured.mac_per_lane_cycle",
+        "path": "results/rtl/abi3_pipelined_lane_groups.json",
+        "sha256": "356e09286979269f551af0374edc2316e059e4a6649f09c557d5b12e8c1e6be1",
+        "value": 1.0
+      }
+    ],
+    "parameters": {
+      "ACC_SLOTS": 8,
+      "ADDER_STAGES": 3
+    },
+    "per_mac_area_um2": 159926.932,
+    "per_mac_basis": "per_mac_area_um2 = standard-cell area / MAC per cycle; per_mac_period_ns = target clock period / MAC per cycle -- the arithmetic behind the baseline's 48,274 um2 and 104.1 ns (results/physical_abi3/asap7/matmul_bf16_sram_engine/pnr.json: 8,348.44 um2 / 0.17294 and 18 ns / 0.17294; docs/CHIP_ARCHITECTURE_DESIGN.md section 8.4).  The period figure is a result only when closed is true; per_mac_period_ns_at_fmax is the same quantity at the reported post-route fmax, for information.  Nothing is scaled across nodes.",
+    "per_mac_period_ns": 40.0,
+    "per_mac_period_ns_at_fmax": 41.564664886386986,
+    "sources": [
+      {
+        "path": "rtl/ot_fp32_rne_pkg.sv",
+        "sha256": "39de679dd5f277d8a9cc2d5b6349eb1675e9397e64a8256bb1f53a34a054608c",
+        "size_bytes": 29509
+      },
+      {
+        "path": "rtl/abi3/ot_a3_lane_pkg.sv",
+        "sha256": "44694da13878488ee43610615fb92d13db9dc0c07367cef7814e90ee2da3200f",
+        "size_bytes": 30643
+      },
+      {
+        "path": "rtl/abi3/ot_a3_lane_pipelined.sv",
+        "sha256": "35261aff19662d5de0fc18c073f5df2a8f399bae33d65897fb1e12563442f8ef",
+        "size_bytes": 47623
+      }
+    ],
+    "top": "ot_a3_lane_pipelined"
+  },
+  "elapsed_seconds": 34.051,
+  "expected_not_met": false,
+  "flow_completed": true,
+  "generated_at": "2026-09-05T06:36:23.641799+00:00",
+  "git": {
+    "commit": "2f6b0a4e44eab9fa57ca6ec486e6ffb45bb38bb7",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "sky130hd",
+      "--false-path-from",
+      "rst_n",
+      "--stages",
+      "synth,sta",
+      "--fmax-search",
+      "--purpose",
+      "characterization",
+      "--top",
+      "ot_a3_lane_pipelined",
+      "--source",
+      "rtl/ot_fp32_rne_pkg.sv",
+      "--source",
+      "rtl/abi3/ot_a3_lane_pkg.sv",
+      "--source",
+      "rtl/abi3/ot_a3_lane_pipelined.sv",
+      "--param",
+      "ADDER_STAGES=3",
+      "--param",
+      "ACC_SLOTS=8",
+      "--clock-period-ns",
+      "40.0",
+      "--lanes",
+      "1",
+      "--mac-per-cycle",
+      "1.0",
+      "--mac-rate-evidence",
+      "results/rtl/abi3_pipelined_lane.json:measured.mac_per_lane_cycle",
+      "--mac-rate-evidence",
+      "results/rtl/abi3_pipelined_lane_groups.json:measured.mac_per_lane_cycle",
+      "--output",
+      "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/lane11/routes_sky130hd/out_prelayout40/sky130hd/a3_lane_pipelined/pnr.json",
+      "--keep-workdir",
+      "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/lane11/routes_sky130hd/work_prelayout40"
+    ],
+    "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+    "python": "3.10.12"
+  },
+  "schema_version": 1,
+  "stages_completed": [
+    "synth",
+    "sta"
+  ],
+  "stages_requested": [
+    "synth",
+    "sta"
+  ],
+  "static_timing": {
+    "clock_period_ns": 40.0,
+    "critical_path_ns": 41.564664886386986,
+    "fmax_definition": "1 / (target clock period - setup WNS) at this target period.  Note the SDC derives input/output delay as 20% of the clock period, so for an I/O-bounded path this quantity varies with the target period; use fmax_search for a period-independent figure.",
+    "fmax_hz": 24058897.208323557,
+    "fmax_search": {
+      "evaluations": 12,
+      "fmax_hz": 24037558.68544601,
+      "method": "bisection on the SDC clock period with the mapped netlist held fixed; reported period is the smallest evaluated period with setup WNS >= 0",
+      "min_clock_period_ns": 41.6015625,
+      "relative_tolerance": 0.001,
+      "search_trace": [
+        {
+          "clock_period_ns": 40.0,
+          "setup_wns_ns": -1.564664886386989
+        },
+        {
+          "clock_period_ns": 40.0,
+          "setup_wns_ns": -1.564664886386989
+        },
+        {
+          "clock_period_ns": 41.25,
+          "setup_wns_ns": -0.3146674121444413
+        },
+        {
+          "clock_period_ns": 41.5625,
+          "setup_wns_ns": -0.002167155405359646
+        },
+        {
+          "clock_period_ns": 41.6015625,
+          "setup_wns_ns": 0.03693401244937522
+        },
+        {
+          "clock_period_ns": 41.640625,
+          "setup_wns_ns": 0.07593570431829029
+        },
+        {
+          "clock_period_ns": 41.71875,
+          "setup_wns_ns": 0.15413448731398074
+        },
+        {
+          "clock_period_ns": 41.875,
+          "setup_wns_ns": 0.31033310133372205
+        },
+        {
+          "clock_period_ns": 42.5,
+          "setup_wns_ns": 0.9353336148118855
+        },
+        {
+          "clock_period_ns": 45.0,
+          "setup_wns_ns": 3.435335668724539
+        },
+        {
+          "clock_period_ns": 50.0,
+          "setup_wns_ns": 8.435332671122287
+        },
+        {
+          "clock_period_ns": 60.0,
+          "setup_wns_ns": 18.435333781345342
+        }
+      ]
+    },
+    "hold_violating_paths": 0,
+    "hold_wns_ns": 0.3758187478704534,
+    "library_time_unit_ns": 1.0,
+    "raw_library_units": {
+      "hold_wns": 0.3758187478704534,
+      "setup_tns": -34.888676046793236,
+      "setup_wns": -1.564664886386989
+    },
+    "sdc_clock_period_library_units": 40.0,
+    "setup_tns_ns": -34.888676046793236,
+    "setup_violating_paths": 39,
+    "setup_wns_ns": -1.564664886386989,
+    "timing_met": false
+  },
+  "status": "not_met",
+  "synthesis": {
+    "abc_delay_target_ps": 40000.0,
+    "cell_area_um2": 159926.932,
+    "cell_count": 19185,
+    "cell_types_used": 78,
+    "chip_area_um2": 159922.128,
+    "combinational_cell_count": 16693,
+    "dont_use_cell_count": 36,
+    "liberty_cell_count": 428,
+    "macro_count": 0,
+    "netlist_normalization": {
+      "normalized_netlist_sha256": "22c84c5fbf63690ccf6250d3a82cb1de36f348d28fa5a6372d6d69ed288e8f4f",
+      "raw_netlist_sha256": "22c84c5fbf63690ccf6250d3a82cb1de36f348d28fa5a6372d6d69ed288e8f4f",
+      "signed_declarations_stripped": 0
+    },
+    "sequential_area_um2": 61303.926,
+    "sequential_cell_count": 2492,
+    "unmapped_cell_types": []
+  },
+  "target_clock_period_ns": 40.0,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {
+    "abc": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys-abc",
+      "sha256": "da898a762b6c3d0f4e76d3a4c142fea05dd14d98916e315e942ea9227e4e87ce"
+    },
+    "opensta": {
+      "path": "/home/ubuntu/.local/opentallas-tools/opensta-be771a0/bin/sta",
+      "sha256": "ecf87c20ca592279f330aeb5681610616b16df810e4f308b855af04605a09a88",
+      "version": "3.1.0"
+    },
+    "yosys": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+      "sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+    }
+  },
+  "view": {
+    "cell_library": "sky130_fd_sc_hd",
+    "description": "SkyWater SKY130 high-density standard cells; open manufacturable 130 nm foundry PDK.  Mature implementation view.",
+    "evidence_class": "mature open foundry PDK (manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "sky130hd",
+    "node_nm": 130,
+    "pdk_lock": "configs/pdk/sky130_full_physical_lock.json",
+    "predictive": false
+  }
+}

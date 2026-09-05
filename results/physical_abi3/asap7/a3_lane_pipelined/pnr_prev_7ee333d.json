@@ -9,7 +9,7 @@
         "scope": "pre-layout, ideal clock",
         "setup_met": true,
         "setup_violating_paths": 0,
-        "setup_wns_ns": 8.703267474845426,
+        "setup_wns_ns": 1.6822121540798745,
         "stage": "static_timing"
       },
       {
@@ -17,12 +17,12 @@
         "antenna_violating_pins": 0.0,
         "drc_errors": 0.0,
         "hold_violations": 0.0,
-        "hold_wns_ns": 0.0393152,
+        "hold_wns_ns": 0.0406484,
         "met": true,
         "physically_clean": true,
         "scope": "post-route, extracted parasitics",
         "setup_violations": 0.0,
-        "setup_wns_ns": 8.73675,
+        "setup_wns_ns": 0.991298,
         "stage": "place_and_route",
         "timing_met": true
       }
@@ -33,13 +33,13 @@
     "status": "pass"
   },
   "annotation": {
-    "annotated_at": "2026-09-05T10:19:59+00:00",
+    "annotated_at": "2026-09-05T03:39:31+00:00",
     "annotated_by": "tools/annotate_physical_record.py",
     "basis": "sha256 of the record as written by the flow tool, canonical JSON with the notes and annotation keys removed; recompute with tools/annotate_physical_record.py --verify",
-    "tool_record_sha256": "4bbfe735c7077b55ba19c9a10621de56c262aa6af7a33effab32dc148c9b7a11"
+    "tool_record_sha256": "b113351d2700952d69b90ad82ee388818af6b05abefe0208e5bc6d250d142365"
   },
   "campaign_id": "opentallas-abi3-physical-v1",
-  "completed_at": "2026-09-05T07:33:56.675176+00:00",
+  "completed_at": "2026-09-05T03:37:33.592364+00:00",
   "corner": {
     "liberty": [
       {
@@ -78,83 +78,50 @@
     "antenna_violating_nets": 0,
     "antenna_violating_pins": 0,
     "area_basis": "place_and_route.metrics.standard_cell_area_um2",
-    "area_um2": 27842.5,
-    "block": "ot_a3_lq8",
-    "cells": 238757,
+    "area_um2": 3790.2,
+    "block": "ot_a3_lane_pipelined",
+    "cells": 32909,
     "cells_basis": "place_and_route.metrics.standard_cell_count: routed netlist after timing repair and clock-tree synthesis, buffers included",
-    "clock_period_ns": 16.0,
+    "clock_period_ns": 6.0,
     "clock_port": "clk",
     "closed": true,
     "closed_basis": "true only when place-and-route ran and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
-    "core_area_um2": 76187.6,
+    "core_area_um2": 10213.3,
     "description": "ad-hoc block supplied on the command line",
     "drc": 0,
     "false_path_from_ports": [
       "rst_n"
     ],
     "fmax_basis": "place_and_route.metrics.fmax_hz (ORFS finish__timing__fmax)",
-    "fmax_hz": 137679000.0,
-    "hold_wns_ns": 0.0393152,
-    "lanes": 8,
+    "fmax_hz": 199653000.0,
+    "hold_wns_ns": 0.0406484,
+    "lanes": 1,
     "lanes_basis": "declared lane count of the block (its LANES parameter, or 1 for a single lane); lanes_in_netlist is the count recovered from the mapped netlist",
-    "lanes_in_netlist": {
-      "distinct_lanes": 8,
-      "distinct_lanes_by_instance_name": 8,
-      "distinct_lanes_by_net_name": 8,
-      "instance_regex": "gen_lane\\[(\\d+)\\]\\.u_lane\\.",
-      "instances_total": 231082,
-      "named_cells_per_lane": {
-        "0": 4282,
-        "1": 4282,
-        "2": 4282,
-        "3": 4282,
-        "4": 4282,
-        "5": 4282,
-        "6": 4282,
-        "7": 4282
-      },
-      "named_nets_per_lane": {
-        "0": 1150,
-        "1": 1152,
-        "2": 1151,
-        "3": 1151,
-        "4": 1150,
-        "5": 1149,
-        "6": 1153,
-        "7": 1154
-      },
-      "netlist": "6_final.v",
-      "netlist_sha256": "0cd997620df0138973e363a385e519821ea77475377d2e3f8a630c29bf0dfb52",
-      "nets_total": 240583,
-      "note": "distinct_lanes is the union of lane indices found on instance names and on declared net names; ABC renames combinational cells and Yosys 0.68 renames mapped registers, so instance names may carry no lane prefix while the nets keep it"
-    },
-    "lanes_verified_in_netlist": true,
-    "mac_per_cycle": 8.0,
+    "mac_per_cycle": 1.0,
     "mac_per_cycle_basis": "lane-ops retired per cycle by the whole block in steady state, as measured by the RTL campaign cited in mac_rate_evidence (one product per lane-op at g = 1); not measured by this flow",
     "mac_rate_evidence": [
       {
-        "field": "measured.mac_per_block_cycle",
-        "path": "results/rtl/abi3_lq8.json",
-        "sha256": "68a8c5b1980a45c4ed33bbc986a2e3d129cd8806ba09ed81b01b88eafbdc24c0",
-        "value": 8.0
+        "field": "measured.mac_per_lane_cycle",
+        "path": "results/rtl/abi3_pipelined_lane.json",
+        "sha256": "faf3f8d44f6d1b0a70ce6d66858af0e9eec4f84c22ee08e1f44d7ffb62c39d5a",
+        "value": 1.0
       },
       {
         "field": "measured.mac_per_lane_cycle",
-        "path": "results/rtl/abi3_lq8.json",
-        "sha256": "68a8c5b1980a45c4ed33bbc986a2e3d129cd8806ba09ed81b01b88eafbdc24c0",
+        "path": "results/rtl/abi3_pipelined_lane_groups.json",
+        "sha256": "d2fad80744973c235bea2a88d38df1c5e5c3a75f552e322cccfec46ab92e94f2",
         "value": 1.0
       }
     ],
     "parameters": {
       "ACC_SLOTS": 8,
-      "ADDER_STAGES": 3,
-      "LANES": 8
+      "ADDER_STAGES": 3
     },
-    "per_mac_area_um2": 3480.3125,
+    "per_mac_area_um2": 3790.2,
     "per_mac_basis": "per_mac_area_um2 = standard-cell area / MAC per cycle; per_mac_period_ns = target clock period / MAC per cycle -- the arithmetic behind the baseline's 48,274 um2 and 104.1 ns (results/physical_abi3/asap7/matmul_bf16_sram_engine/pnr.json: 8,348.44 um2 / 0.17294 and 18 ns / 0.17294; docs/CHIP_ARCHITECTURE_DESIGN.md section 8.4).  The period figure is a result only when closed is true; per_mac_period_ns_at_fmax is the same quantity at the reported post-route fmax, for information.  Nothing is scaled across nodes.",
-    "per_mac_period_ns": 2.0,
-    "per_mac_period_ns_at_fmax": 0.9079089766776343,
-    "setup_wns_ns": 8.73675,
+    "per_mac_period_ns": 6.0,
+    "per_mac_period_ns_at_fmax": 5.008690077284088,
+    "setup_wns_ns": 0.991298,
     "sources": [
       {
         "path": "rtl/ot_fp32_rne_pkg.sv",
@@ -170,39 +137,35 @@
         "path": "rtl/abi3/ot_a3_lane_pipelined.sv",
         "sha256": "35261aff19662d5de0fc18c073f5df2a8f399bae33d65897fb1e12563442f8ef",
         "size_bytes": 47623
-      },
-      {
-        "path": "rtl/abi3/ot_a3_lq8.sv",
-        "sha256": "0886f89443f3f708d6cc6b751dbb453105a20a8e9e5df09983ac7cbfb6f19415",
-        "size_bytes": 16564
       }
     ],
-    "top": "ot_a3_lq8",
-    "utilization_fraction": 0.365447
+    "top": "ot_a3_lane_pipelined",
+    "utilization_fraction": 0.371104
   },
-  "elapsed_seconds": 3515.064,
+  "elapsed_seconds": 1326.489,
   "expected_not_met": false,
   "flow_completed": true,
-  "generated_at": "2026-09-05T06:35:21.611684+00:00",
+  "generated_at": "2026-09-05T03:15:27.103450+00:00",
   "git": {
-    "commit": "2f6b0a4e44eab9fa57ca6ec486e6ffb45bb38bb7",
+    "commit": "7a01ce570db6862152673b9334484adf9ee83b9d",
     "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
     "untracked_results": [],
     "worktree_dirty": false,
     "worktree_status": []
   },
   "notes": [
-    "Post-route worst setup path (6_finish.rpt, report_checks -path_delay max): cfg_ws_base[0] (input port) -> ws_rd_addr[30] (output port), a combinational input-to-output path through the workspace read-address adder, 34 cell output pins on the data path (28 OA21, one HA, one FA, one XOR2, one INV, two BUF); data arrival 4.063 ns of which 3.200 ns is the SDC's external input delay (20% of the 16 ns period), against 12.800 ns required (16 ns less the 20% output delay): slack +8.737 ns. The path is I/O-bounded, so the post-route 137.7 MHz (1 / (16 ns - 8.737 ns)) moves with the target period; the period-independent figure is the pre-layout search minimum of 4.664 ns (214.4 MHz, 13 evaluations, bisection to 0.1%), of which 16 ns is 3.43x.",
-    "Against the record committed at da66772 (kept beside this one as pnr_prev_da66772.json: the lane with the scale_index() divider, routed from 0e4222e): 346,589 -> 238,757 routed cells, 37,402 -> 27,842.5 um2, 4,675 -> 3,480 um2 per MAC/cycle, 16 ns missed by 0.474 ns -> met by 8.737 ns, pre-layout search minimum 12.41 ns -> 4.664 ns, post-route 60.7 -> 137.7 MHz, 9,844 s -> 3,515 s in the flow. The eight lanes are again recovered from the routed netlist by instance name and by net name (8 of 8 each way; 4,282 named cells and 1,149 to 1,154 named nets per lane). The prelayout_L3.json beside this record is still the 0e4222e pre-layout of the previous lane (minimum 12.41 ns, not met at 4.4 ns); the divider-free block's pre-layout search is this record's static_timing.fmax_search.",
-    "Provenance: routed from the clean worktree pinned at 2f6b0a4 (tag phys-item11-2f6b0a4), the commit whose results/rtl/abi3_lq8.json (sha256 68a8c5b1980a...) is the full-profile LQ8 campaign run on 7a01ce5, the RTL this record routes: both simulators, status pass, bit_identity.equal true, vector_manifests_match_committed true, measured.mac_per_block_cycle 8.0 and mac_per_lane_cycle 1.0, failure_modes.all_distinct true. Driver argv is the record at da66772's with only the output paths changed; tools/run_abi3_physical.py is identical at 2f6b0a4 and on main."
+    "Post-route worst setup path (6_finish.rpt, report_checks -path_delay max): p_mag[0] flop -> g_pow[11] flop, data arrival 5.119 ns against 6.110 ns required; register to register through the AM-E1 group alignment (product magnitude, leading-one detect and shift, group exponent), 154 data-path cells, mostly AO21/OA21 and half adders. The previous record's limiter, cfg_block_rows_b (input port) -> flop through the scale_index() divider, no longer exists: the divider left the lane in 7a01ce5.",
+    "Companion run: the same flow from the same pinned worktree (7a01ce5) at a 7.5 ns target also closed -- setup WNS +2.455 ns, hold WNS +0.037 ns, fmax 198.2 MHz, 32,928 cells, 3,790.93 um2, DRC 0, antenna 0, 1,323 s. The tighter 6.0 ns run is the record kept; the 7.5 ns record stays in the run's scratch directory and is not committed.",
+    "Target choice: 6.0 ns is 1.39x the pre-layout search minimum of 4.318 ns at L=3 (prelayout_L3.json beside this record; L=2 4.447 ns, L=1 5.135 ns). Post-route fmax 199.7 MHz (5.009 ns) is 1.16x the pre-layout minimum; the previous record degraded 6.845 ns -> 14.9 ns on the divider path.",
+    "mac_rate_evidence sha256s are those of results/rtl/abi3_pipelined_lane.json and abi3_pipelined_lane_groups.json as committed at 7a01ce5, i.e. the records made at c2190cb on the lane before the divider was removed (both measured.mac_per_lane_cycle = 1.0). The groups campaign re-run at full profile on 7a01ce5 from the same worktree (tools/rtl_abi3_lane_campaign.py --suite groups --profile full, both simulators) reports status pass, bit_identity.equal true, vector_manifests_match_committed true, measured.mac_per_lane_cycle 1.0 and failure_modes.all_distinct true; the d1 suite's full re-run was still in progress when this record was committed and its outcome is recorded by the results/rtl regeneration, not here."
   ],
   "place_and_route": {
-    "artifact_dir": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/lane11/routes_asap7/lq8_16p0/asap7/a3_lq8_array/pnr_artifacts",
+    "artifact_dir": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/lane11/pnr/lane_6p0/asap7/a3_lane_pipelined/pnr_artifacts",
     "artifacts": {
       "1_2_yosys.v": {
         "retained": true,
-        "sha256": "ee6561e73ad4aed01b569fac98b084ba040342751878283c11381043ae2b6311",
-        "size_bytes": 34398163
+        "sha256": "dadf5e658e5e9abffcb8d306492212e974f16881ba9142a1bfb1a5b8ee1d02b8",
+        "size_bytes": 4144773
       },
       "5_route_drc.rpt": {
         "retained": true,
@@ -211,59 +174,59 @@
       },
       "6_final.def": {
         "retained": false,
-        "sha256": "2225893c15b23c2f7bd7d790f565f1e8967f29630686baa45cae0678a82cabd0",
-        "size_bytes": 269478856
+        "sha256": "909ef8ac3340b4af9b9c700ce720f0521e1f703421e8a46fc08190ed5a45d839",
+        "size_bytes": 33812654
       },
       "6_final.gds": {
         "retained": false,
-        "sha256": "0f2021095c57411f45830f27f3151a9e972305667f44401c57956e12a263281c",
-        "size_bytes": 296605750
+        "sha256": "1cb9d2f9c01295a16fa953c673a27c0092febdbb888a7a03628c0854d66197de",
+        "size_bytes": 38991930
       },
       "6_final.odb": {
         "retained": false,
-        "sha256": "db458b06bdbcbdafa615e5240fc3f3204afcf2c6a9e63fc729d01e9e05c58471",
-        "size_bytes": 434420481
+        "sha256": "eac7652120a1b255d64fddea91f30aafdcebe302f21a233201ebe51a2f6caba7",
+        "size_bytes": 59242015
       },
       "6_final.spef": {
         "retained": false,
-        "sha256": "792589cf7165b95e40a4150aa58db97608d2ca1674f370af3f2acbed5a227f4a",
-        "size_bytes": 356769584
+        "sha256": "f10656c74b6740f340d7aa090800b33a205cfa259ebf39f71813ecf4205452e8",
+        "size_bytes": 41859555
       },
       "6_final.v": {
         "retained": true,
-        "sha256": "0cd997620df0138973e363a385e519821ea77475377d2e3f8a630c29bf0dfb52",
-        "size_bytes": 27898053
+        "sha256": "516279a2de2bde23e4c1a0cd54561a8d9bd00289378cf1ffe4e00068ed65a77e",
+        "size_bytes": 3434732
       },
       "6_finish.rpt": {
         "retained": true,
-        "sha256": "d35c5cc5b69505c252afbccac99705f6ded90b76273f657e2b992cabd2e781db",
-        "size_bytes": 64071
+        "sha256": "d5df81443f4fbd8d694b013717c51400a83364e428611c9e9e24190dbf402b96",
+        "size_bytes": 84289
       },
       "config.mk": {
         "retained": true,
-        "sha256": "a5dd42a118208ba03d15636c394d700961dfbb22d53f76642bff99e6ef38d12d",
-        "size_bytes": 817
+        "sha256": "c8240b938fb27344ae5cacdf2f5092e2eb8a4943d7f6636a37e381c2507a706e",
+        "size_bytes": 804
       },
       "constraint.sdc": {
         "retained": true,
-        "sha256": "d44368981c6b003c78913708c4b5d46b7a67a0ae14da76922f9b8ee71e932afc",
-        "size_bytes": 380
+        "sha256": "abeed9cdf537c9c1ed98b9591fe8d3336673c2a1fdd24e3400a590c659cd24fb",
+        "size_bytes": 379
       },
       "metadata.json": {
         "retained": true,
-        "sha256": "b17fc6b86e2bff63d89cc3551759c6f3e2fbec81d667f75029b85dcc801b77ee",
-        "size_bytes": 24183
+        "sha256": "49232ffe7795b059b05d25f5e6b479f51aa6b93f4b40b6de044be5793a50169d",
+        "size_bytes": 23849
       }
     },
-    "clock_period_ns": 16.0,
+    "clock_period_ns": 6.0,
     "core_utilization_percent": 35,
-    "design_nickname": "opentallas_ot_a3_lq8_asap7",
+    "design_nickname": "opentallas_ot_a3_lane_pipelined_asap7",
     "metrics": {
       "antenna_violating_nets": 0,
       "antenna_violating_pins": 0,
       "clock_count": 1,
-      "core_area_um2": 76187.6,
-      "die_area_um2": 78508.7,
+      "core_area_um2": 10213.3,
+      "die_area_um2": 11068.9,
       "drc_errors": 0,
       "flow_error_counts": {
         "cts__flow__errors__count": 0,
@@ -276,38 +239,38 @@
         "placeopt__flow__errors__count": 0,
         "synth__flow__errors__count": 0
       },
-      "fmax_hz": 137679000.0,
+      "fmax_hz": 199653000.0,
       "hold_tns_ns": 0.0,
       "hold_violations": 0,
-      "hold_wns_ns": 0.0393152,
-      "instance_count": 620353,
+      "hold_wns_ns": 0.0406484,
+      "instance_count": 85733,
       "library_time_unit_ns": 0.001,
       "macro_area_um2": 0,
       "macro_count": 0,
       "missing_metadata_keys": [],
-      "power_total_w": 0.00464789,
+      "power_total_w": 0.00367216,
       "raw_timing_library_units": {
         "hold_tns_ns": 0,
-        "hold_wns_ns": 39.3152,
+        "hold_wns_ns": 40.6484,
         "setup_tns_ns": 0,
-        "setup_wns_ns": 8736.75
+        "setup_wns_ns": 991.298
       },
-      "routed_nets": 242324,
-      "routed_wirelength_um": 1140983,
-      "sequential_area_um2": 6692.1,
-      "sequential_cell_count": 18056,
+      "routed_nets": 33161,
+      "routed_wirelength_um": 124581,
+      "sequential_area_um2": 937.727,
+      "sequential_cell_count": 2524,
       "setup_tns_ns": 0.0,
       "setup_violations": 0,
-      "setup_wns_ns": 8.73675,
-      "standard_cell_area_um2": 27842.5,
-      "standard_cell_count": 238757,
-      "utilization_fraction": 0.365447,
-      "vias": 2305790
+      "setup_wns_ns": 0.991298,
+      "standard_cell_area_um2": 3790.2,
+      "standard_cell_count": 32909,
+      "utilization_fraction": 0.371104,
+      "vias": 296074
     },
     "netlist_normalization": {
-      "normalized_netlist_sha256": "ee6561e73ad4aed01b569fac98b084ba040342751878283c11381043ae2b6311",
+      "normalized_netlist_sha256": "dadf5e658e5e9abffcb8d306492212e974f16881ba9142a1bfb1a5b8ee1d02b8",
       "note": "declaration-attribute-only edit on the ORFS-synthesised gate netlist; no cell, net, port or connectivity change",
-      "raw_netlist_sha256": "ee6561e73ad4aed01b569fac98b084ba040342751878283c11381043ae2b6311",
+      "raw_netlist_sha256": "dadf5e658e5e9abffcb8d306492212e974f16881ba9142a1bfb1a5b8ee1d02b8",
       "signed_declarations_stripped": 0
     },
     "place_density": 0.6,
@@ -456,7 +419,7 @@
       "lib/NLDM/fakeregfile_32x46.lib": "532e8f4e2494e950db6dd3c3358d346c4403ff51b56a8c4bc18690158f24637a",
       "lib/NLDM/fakeregfile_64x64.lib": "e28fc92bff8066e8a3e194db7b4afc5aec7247cf8e52f4def7ed5208e39b51e5"
     },
-    "sdc_clock_period_library_units": 16000.0,
+    "sdc_clock_period_library_units": 6000.0,
     "toolchain": {
       "binary_sha256": {
         "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad": "21eda99eeae7eccb22ca64ad28949c08a6c01dcece3ccb23e2206d635f8d2846",
@@ -486,37 +449,31 @@
       "--purpose",
       "characterization",
       "--top",
-      "ot_a3_lq8",
+      "ot_a3_lane_pipelined",
       "--source",
       "rtl/ot_fp32_rne_pkg.sv",
       "--source",
       "rtl/abi3/ot_a3_lane_pkg.sv",
       "--source",
       "rtl/abi3/ot_a3_lane_pipelined.sv",
-      "--source",
-      "rtl/abi3/ot_a3_lq8.sv",
-      "--param",
-      "LANES=8",
       "--param",
       "ADDER_STAGES=3",
       "--param",
       "ACC_SLOTS=8",
       "--clock-period-ns",
-      "16.0",
+      "6.0",
       "--lanes",
-      "8",
-      "--lane-instance-regex",
-      "gen_lane\\[(\\d+)\\]\\.u_lane\\.",
+      "1",
       "--mac-per-cycle",
-      "8.0",
+      "1.0",
       "--mac-rate-evidence",
-      "results/rtl/abi3_lq8.json:measured.mac_per_block_cycle",
+      "results/rtl/abi3_pipelined_lane.json:measured.mac_per_lane_cycle",
       "--mac-rate-evidence",
-      "results/rtl/abi3_lq8.json:measured.mac_per_lane_cycle",
+      "results/rtl/abi3_pipelined_lane_groups.json:measured.mac_per_lane_cycle",
       "--output",
-      "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/lane11/routes_asap7/lq8_16p0/asap7/a3_lq8_array/pnr.json",
+      "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/lane11/pnr/lane_6p0/asap7/a3_lane_pipelined/pnr.json",
       "--keep-workdir",
-      "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/lane11/routes_asap7/work_lq8_16p0"
+      "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/lane11/pnr/work_lane_6p0"
     ],
     "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
     "python": "3.10.12"
@@ -533,68 +490,64 @@
     "pnr"
   ],
   "static_timing": {
-    "clock_period_ns": 16.0,
-    "critical_path_ns": 7.2967325251545745,
+    "clock_period_ns": 6.0,
+    "critical_path_ns": 4.317787845920126,
     "fmax_definition": "1 / (target clock period - setup WNS) at this target period.  Note the SDC derives input/output delay as 20% of the clock period, so for an I/O-bounded path this quantity varies with the target period; use fmax_search for a period-independent figure.",
-    "fmax_hz": 137047643.79845703,
+    "fmax_hz": 231600077.55936855,
     "fmax_search": {
-      "evaluations": 13,
-      "fmax_hz": 214405360.13400334,
+      "evaluations": 12,
+      "fmax_hz": 231569425.59927633,
       "method": "bisection on the SDC clock period with the mapped netlist held fixed; reported period is the smallest evaluated period with setup WNS >= 0",
-      "min_clock_period_ns": 4.6640625,
+      "min_clock_period_ns": 4.318359375,
       "relative_tolerance": 0.001,
       "search_trace": [
         {
-          "clock_period_ns": 4.0,
-          "setup_wns_ns": -0.6624625319243331
+          "clock_period_ns": 3.0,
+          "setup_wns_ns": -1.317788106128648
+        },
+        {
+          "clock_period_ns": 3.75,
+          "setup_wns_ns": -0.5677880410765174
+        },
+        {
+          "clock_period_ns": 4.125,
+          "setup_wns_ns": -0.19278800855045206
+        },
+        {
+          "clock_period_ns": 4.3125,
+          "setup_wns_ns": -0.005287770242813582
+        },
+        {
+          "clock_period_ns": 4.3154296875,
+          "setup_wns_ns": -0.00235811371372639
+        },
+        {
+          "clock_period_ns": 4.318359375,
+          "setup_wns_ns": 0.0005719869045724275
+        },
+        {
+          "clock_period_ns": 4.32421875,
+          "setup_wns_ns": 0.006432188141170063
+        },
+        {
+          "clock_period_ns": 4.3359375,
+          "setup_wns_ns": 0.018152146525153706
+        },
+        {
+          "clock_period_ns": 4.359375,
+          "setup_wns_ns": 0.041592063293121
+        },
+        {
+          "clock_period_ns": 4.40625,
+          "setup_wns_ns": 0.08846212686639984
         },
         {
           "clock_period_ns": 4.5,
-          "setup_wns_ns": -0.16246248855624604
-        },
-        {
-          "clock_period_ns": 4.625,
-          "setup_wns_ns": -0.03746247771422426
-        },
-        {
-          "clock_period_ns": 4.65625,
-          "setup_wns_ns": -0.006212363981415908
-        },
-        {
-          "clock_period_ns": 4.66015625,
-          "setup_wns_ns": -0.0023026025622733207
-        },
-        {
-          "clock_period_ns": 4.6640625,
-          "setup_wns_ns": 0.001597388894213526
-        },
-        {
-          "clock_period_ns": 4.671875,
-          "setup_wns_ns": 0.009417355821710325
-        },
-        {
-          "clock_period_ns": 4.6875,
-          "setup_wns_ns": 0.02503774975139244
-        },
-        {
-          "clock_period_ns": 4.75,
-          "setup_wns_ns": 0.08753753312779752
-        },
-        {
-          "clock_period_ns": 5.0,
-          "setup_wns_ns": 0.33753755481184106
+          "setup_wns_ns": 0.18221202397561326
         },
         {
           "clock_period_ns": 6.0,
-          "setup_wns_ns": 1.3375376415480154
-        },
-        {
-          "clock_period_ns": 8.0,
-          "setup_wns_ns": 3.3375369268419406
-        },
-        {
-          "clock_period_ns": 16.0,
-          "setup_wns_ns": 8.703267474845426
+          "setup_wns_ns": 1.6822121540798745
         }
       ]
     },
@@ -604,35 +557,35 @@
     "raw_library_units": {
       "hold_wns": 47.785341846777946,
       "setup_tns": 0.0,
-      "setup_wns": 8703.267474845425
+      "setup_wns": 1682.2121540798744
     },
-    "sdc_clock_period_library_units": 16000.0,
+    "sdc_clock_period_library_units": 6000.0,
     "setup_tns_ns": 0.0,
     "setup_violating_paths": 0,
-    "setup_wns_ns": 8.703267474845426,
+    "setup_wns_ns": 1.6822121540798745,
     "timing_met": true
   },
   "status": "pass",
   "synthesis": {
-    "abc_delay_target_ps": 16000.0,
-    "cell_area_um2": 19393.679,
-    "cell_count": 143350,
+    "abc_delay_target_ps": 6000.0,
+    "cell_area_um2": 2691.878,
+    "cell_count": 20010,
     "cell_types_used": 39,
-    "chip_area_um2": 19395.16164,
-    "combinational_cell_count": 125678,
+    "chip_area_um2": 2691.87624,
+    "combinational_cell_count": 17518,
     "dont_use_cell_count": 81,
     "liberty_cell_count": 202,
     "macro_count": 0,
     "netlist_normalization": {
-      "normalized_netlist_sha256": "cb98a901b455cda5ba60aba40873cfe68fc281396056be3bc2c5b0b9ce63d519",
-      "raw_netlist_sha256": "cb98a901b455cda5ba60aba40873cfe68fc281396056be3bc2c5b0b9ce63d519",
+      "normalized_netlist_sha256": "9fc58afc8646f777e5c88aa886e95528b2f375ce65eb422f37811b52aaa738eb",
+      "raw_netlist_sha256": "9fc58afc8646f777e5c88aa886e95528b2f375ce65eb422f37811b52aaa738eb",
       "signed_declarations_stripped": 0
     },
-    "sequential_area_um2": 6552.221,
-    "sequential_cell_count": 17672,
+    "sequential_area_um2": 926.209,
+    "sequential_cell_count": 2492,
     "unmapped_cell_types": []
   },
-  "target_clock_period_ns": 16.0,
+  "target_clock_period_ns": 6.0,
   "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
   "tools": {
     "abc": {
