@@ -144,3 +144,46 @@ def test_unproved_execution_features_cannot_enter_the_plan(inputs, section, key,
     inputs[0][section][key] = value
     with pytest.raises(ArchitectureError):
         qwen_resource_plan(*inputs)
+
+
+def test_physical_snapshot_tracks_source_edits_and_full_verdict(tmp_path):
+    import hashlib
+    from tools.check_chip_architecture import physical_summary
+    source = tmp_path / 'lane.sv'
+    source.write_text('module lane; endmodule\n')
+    record = {'status': 'not_met', 'design': {
+        'sources': [{'path': 'lane.sv', 'sha256': hashlib.sha256(source.read_bytes()).hexdigest()}],
+        'closed': False, 'closed_reason': 'max_slew_violations 292', 'clock_period_ns': 16,
+        'signal_integrity_violations': {'max_slew_violations': 292}},
+        'place_and_route': {'metrics': {'standard_cell_area_um2': 100, 'core_area_um2': 300,
+                                      'setup_wns_ns': 8.74, 'drc_errors': 0}}}
+    (tmp_path / 'pnr.json').write_text(json.dumps(record))
+    snapshot = physical_summary(tmp_path, 'pnr.json')
+    assert snapshot['source_current'] and not snapshot['closed']
+    assert snapshot['standard_cell_area_um2'] == 100
+    assert snapshot['core_area_um2'] == 300
+    assert snapshot['signal_integrity_violations']['max_slew_violations'] == 292
+    source.write_text('module changed; endmodule\n')
+    snapshot = physical_summary(tmp_path, 'pnr.json')
+    assert not snapshot['source_current'] and snapshot['mismatched_sources'] == ['lane.sv']
+    source.unlink()
+    assert not physical_summary(tmp_path, 'pnr.json')['source_current']
+    assert physical_summary(tmp_path, 'missing.json')['status'] == 'missing'
+
+
+def test_report_check_detects_tampered_json_and_markdown(tmp_path):
+    import subprocess
+    import sys
+    command = [sys.executable, str(ROOT / 'tools/check_chip_architecture.py')]
+    retained = tmp_path / 'report.json'
+    prose = tmp_path / 'report.md'
+    assert subprocess.run([*command, '--output', str(retained), '--markdown', str(prose)],
+                          capture_output=True).returncode == 0
+    check = [*command, '--check', str(retained), '--check-markdown', str(prose)]
+    assert subprocess.run(check, capture_output=True).returncode == 0
+    original = retained.read_text()
+    retained.write_text('{}\n')
+    assert subprocess.run(check, capture_output=True).returncode == 1
+    retained.write_text(original)
+    prose.write_text(prose.read_text().replace('262.144', '46.4'))
+    assert subprocess.run(check, capture_output=True).returncode == 1

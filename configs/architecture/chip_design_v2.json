@@ -60,6 +60,11 @@
   "kv_sram_achievable_fraction": 0.75,
   "link_flit_bits": 512,
   "link_phy_bytes_per_cycle_per_endpoint": 900,
+  "physical_records": [
+    "results/physical_abi3/asap7/a3_lane_pipelined/pnr.json",
+    "results/physical_abi3/asap7/a3_lq8_array/pnr.json",
+    "results/physical_abi3/asap7/a3_microsequencer/pnr.json"
+  ],
   "qwen": {
     "model": "configs/models/qwen3-8b.json",
     "capacity_positions": 8256,

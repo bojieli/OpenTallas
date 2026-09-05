@@ -27,6 +27,144 @@
     "bytes_per_cycle_per_endpoint": 64.0,
     "expert_48k_payload_serialization_cycles": 768
   },
+  "physical": [
+    {
+      "antenna_violating_nets": 0,
+      "clock_period_ns": 6.0,
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 10213.3,
+      "drc_errors": 0,
+      "hold_wns_ns": 0.0406484,
+      "macro_count": 0,
+      "max_slew_violations": null,
+      "mismatched_sources": [],
+      "path": "results/physical_abi3/asap7/a3_lane_pipelined/pnr.json",
+      "record_sha256": "c8ae3d7e380ef11257a2f43f492b8bc4dbd8ce1d0dfd79158d9e4e4bd64b0d12",
+      "setup_wns_ns": 0.991298,
+      "signal_integrity_violations": {},
+      "source_current": true,
+      "source_digests": [
+        {
+          "path": "rtl/ot_fp32_rne_pkg.sv",
+          "sha256": "39de679dd5f277d8a9cc2d5b6349eb1675e9397e64a8256bb1f53a34a054608c",
+          "size_bytes": 29509
+        },
+        {
+          "path": "rtl/abi3/ot_a3_lane_pkg.sv",
+          "sha256": "44694da13878488ee43610615fb92d13db9dc0c07367cef7814e90ee2da3200f",
+          "size_bytes": 30643
+        },
+        {
+          "path": "rtl/abi3/ot_a3_lane_pipelined.sv",
+          "sha256": "35261aff19662d5de0fc18c073f5df2a8f399bae33d65897fb1e12563442f8ef",
+          "size_bytes": 47623
+        }
+      ],
+      "standard_cell_area_um2": 3790.2,
+      "standard_cell_count": 32909,
+      "status": "pass"
+    },
+    {
+      "antenna_violating_nets": 0,
+      "clock_period_ns": 16.0,
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 76187.6,
+      "drc_errors": 0,
+      "hold_wns_ns": 0.0393152,
+      "macro_count": 0,
+      "max_slew_violations": null,
+      "mismatched_sources": [],
+      "path": "results/physical_abi3/asap7/a3_lq8_array/pnr.json",
+      "record_sha256": "ecd63c3e78f80752f440f7d62404212ce64b7ffb529ee944957ee59beb170994",
+      "setup_wns_ns": 8.73675,
+      "signal_integrity_violations": {},
+      "source_current": true,
+      "source_digests": [
+        {
+          "path": "rtl/ot_fp32_rne_pkg.sv",
+          "sha256": "39de679dd5f277d8a9cc2d5b6349eb1675e9397e64a8256bb1f53a34a054608c",
+          "size_bytes": 29509
+        },
+        {
+          "path": "rtl/abi3/ot_a3_lane_pkg.sv",
+          "sha256": "44694da13878488ee43610615fb92d13db9dc0c07367cef7814e90ee2da3200f",
+          "size_bytes": 30643
+        },
+        {
+          "path": "rtl/abi3/ot_a3_lane_pipelined.sv",
+          "sha256": "35261aff19662d5de0fc18c073f5df2a8f399bae33d65897fb1e12563442f8ef",
+          "size_bytes": 47623
+        },
+        {
+          "path": "rtl/abi3/ot_a3_lq8.sv",
+          "sha256": "0886f89443f3f708d6cc6b751dbb453105a20a8e9e5df09983ac7cbfb6f19415",
+          "size_bytes": 16564
+        }
+      ],
+      "standard_cell_area_um2": 27842.5,
+      "standard_cell_count": 238757,
+      "status": "pass"
+    },
+    {
+      "antenna_violating_nets": 0,
+      "clock_period_ns": 4.4,
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 21764.5,
+      "drc_errors": 0,
+      "hold_wns_ns": 0.0449029,
+      "macro_count": 0,
+      "max_slew_violations": null,
+      "mismatched_sources": [],
+      "path": "results/physical_abi3/asap7/a3_microsequencer/pnr.json",
+      "record_sha256": "2b63909ec6bc0cc3c82e4d547afa24e9c6da46c9a51692aa23162deed104dd60",
+      "setup_wns_ns": 2.44427,
+      "signal_integrity_violations": {},
+      "source_current": true,
+      "source_digests": [
+        {
+          "path": "rtl/abi3/ot_a3_pkg.sv",
+          "sha256": "6fb71525b329497fe62145ab0d9b1b6eff03f1e0c95f3bc6a0c1dde5c6744054",
+          "size_bytes": 14629
+        },
+        {
+          "path": "rtl/abi3/ot_a3_instruction_decoder.sv",
+          "sha256": "ad04fbf87aaa69e2c5397f99f445c7b99b10d80e796f54ea2895624ebb840355",
+          "size_bytes": 8736
+        },
+        {
+          "path": "rtl/abi3/ot_a3_loop_stack.sv",
+          "sha256": "55d3e7113a6196c20fa13133987f7c0f4b6fb721aec7ba455026a6ff4c9e61a8",
+          "size_bytes": 17522
+        },
+        {
+          "path": "rtl/abi3/ot_a3_view_resolver.sv",
+          "sha256": "9182acc5e439a9190a6d9f18c9855e9b9800c0b7a436e90305468f630857635e",
+          "size_bytes": 31772
+        },
+        {
+          "path": "rtl/abi3/ot_a3_event_scoreboard.sv",
+          "sha256": "576ee5a2301c1473c200e6f1c93f14b17c14acc895391d690856db9f054a9428",
+          "size_bytes": 8827
+        },
+        {
+          "path": "rtl/abi3/ot_a3_state_controller.sv",
+          "sha256": "0fe8d122267f9afbd05837399a4b4545e8b953f9481c7529cb6206d34d279006",
+          "size_bytes": 17595
+        },
+        {
+          "path": "rtl/abi3/ot_a3_microsequencer.sv",
+          "sha256": "27a2c971ce63aa6a86a2f73b01e5459ddb93e847d0ace78e7446bff76d10b06c",
+          "size_bytes": 49815
+        }
+      ],
+      "standard_cell_area_um2": 8437.9,
+      "standard_cell_count": 66098,
+      "status": "pass"
+    }
+  ],
   "production_ready": false,
   "profiles": [
     {
@@ -365,7 +503,7 @@
   "sources": [
     {
       "path": "configs/architecture/chip_design_v2.json",
-      "sha256": "6ddc68bff03b894f65bdf6773ac9bf1ba059f5bb180f5ee9e1af57478ecd3ead"
+      "sha256": "83e7d2c753969dea6e79349a177aab580bebab37892261fb5fa603032c9b773d"
     },
     {
       "path": "configs/models/qwen3-8b.json",
@@ -377,7 +515,7 @@
     },
     {
       "path": "tools/check_chip_architecture.py",
-      "sha256": "76130d89d78fbf4d634bbc3f048008e399fa7ae385819b1ac3dbe33b60c263ca"
+      "sha256": "1a308aee1e7eb2d6c0ff63e86bbafa18909a9742ab9882e88febf8ba3355fc76"
     }
   ]
 }

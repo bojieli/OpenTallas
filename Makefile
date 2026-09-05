@@ -4,6 +4,16 @@
 .PHONY: abi3-w10-natural-oracle abi3-w10-natural-hbm-a abi3-w10-natural-hbm-b abi3-w10-natural-rom abi3-w10-natural-check abi3-w10-stress-hbm abi3-w10-stress-rom abi3-w10-stress-check
 .PHONY: checkpoint-source-deepseek-pro
 .PHONY: speculative
+.PHONY: chip-architecture-report check-chip-architecture test-chip-architecture
+
+chip-architecture-report:
+	python3 tools/check_chip_architecture.py --output results/architecture/chip_design_v2.json --markdown docs/CHIP_RESOURCE_BUDGETS.md
+
+check-chip-architecture:
+	python3 tools/check_chip_architecture.py --check results/architecture/chip_design_v2.json --check-markdown docs/CHIP_RESOURCE_BUDGETS.md
+
+test-chip-architecture:
+	PYTHONPATH=src python3 -m pytest tests/test_chip_architecture.py tests/runtime/test_dependence_contract.py
 
 profile:
 	python3 tools/profile_hf.py --all
