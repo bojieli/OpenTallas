@@ -105,5 +105,7 @@ def operator_whole_object_accesses(deployment, operator) -> tuple[AccessRange, .
         scale_id = int(view.payload["scale_object_id"])
         if scale_id != NO_ID:
             scale = deployment.table.get(scale_id, kind.MEMORY_OBJECT)
-            accesses.append(AccessRange(scale.descriptor_id, 0, int(scale.payload["size_bytes"]), False))
+            # An output's scale plane may itself be produced. Conservatively
+            # reserve it as writable without relying on engine-specific rules.
+            accesses.append(AccessRange(scale.descriptor_id, 0, int(scale.payload["size_bytes"]), role.startswith("output")))
     return tuple(accesses)

@@ -63,14 +63,19 @@ def test_scale_objects_and_all_six_views_are_collected():
     for i, role in enumerate([*(f"input_view_{i}" for i in range(4)), "output_view_0", "output_view_1"]):
         table[i] = SimpleNamespace(descriptor_type=T.MEMORY_OBJECT, descriptor_id=i, payload={"size_bytes": 256})
         table[20+i] = SimpleNamespace(descriptor_type=T.TENSOR_VIEW, primary_object_id=i,
-                                      payload={"scale_object_id": 90 if i == 0 else NO_ID})
+                                      payload={"scale_object_id": 90 if i in (0, 4) else NO_ID})
         payload[role] = 20+i
     table[90] = SimpleNamespace(descriptor_type=T.MEMORY_OBJECT, descriptor_id=90, payload={"size_bytes": 8})
     op = SimpleNamespace(descriptor_type=T.OPERATOR, payload=payload)
     accesses = operator_whole_object_accesses(SimpleNamespace(table=table), op)
     assert {r.object_id for r in accesses} == {0, 1, 2, 3, 4, 5, 90}
-    assert {r.object_id for r in accesses if r.write} == {4, 5}
+    assert {r.object_id for r in accesses if r.write} == {4, 5, 90}
     assert compress_ranges(accesses).wildcard
+
+
+def test_memory_only_collector_refuses_other_descriptor_families():
+    with pytest.raises(ValueError, match="only OPERATOR"):
+        operator_whole_object_accesses(None, SimpleNamespace(descriptor_type=T.COMMUNICATION))
 
 
 @pytest.mark.parametrize("args", [(-1, 0, 1, False), (65536, 0, 1, False), (0, 9, 8, True), (0, 0, 1 << 40, True)])
