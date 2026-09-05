@@ -278,6 +278,1576 @@
     }
   ],
   "declared_asymmetries_note": "assert_comparable compares the parameters MachineModel resolves and nothing else.  These declared fields differ between the two emitted records, reach no cost-table parameter, and are listed so that a reader can see what the assertion does NOT cover.  limits.max_context_positions is the one exception: it bounds what the pair can be asked rather than how fast it runs, so both records are harmonised to the smaller of the two bases.",
+  "deployment_audit": {
+    "allowlist": {},
+    "allowlist_unused": [],
+    "asymmetries": [
+      {
+        "allowlisted": false,
+        "cost_bearing": true,
+        "effect_x": 2.0,
+        "enters": "tile_mapping / tensor_lane_mapping / apply_tile_amplification / _compute_cycles",
+        "family": "attention",
+        "favours": "hbm",
+        "field": "tile_rows",
+        "hbm": {
+          "64": 36
+        },
+        "hbm_value": 64,
+        "justification": null,
+        "magnitude_x": 2.0,
+        "rom": {
+          "128": 36
+        },
+        "rom_value": 128,
+        "why": "tiles 2,304 either way; issued_work on the HBM side 2,415,919,104 as compiled, 4,831,838,208 with the ROM value 128 (padded work is charged only when a tile's work exceeds the one-cycle issue floor)"
+      },
+      {
+        "allowlisted": false,
+        "cost_bearing": true,
+        "effect_x": 2.0,
+        "enters": "tile_mapping / tensor_lane_mapping / apply_tile_amplification / _compute_cycles",
+        "family": "attention",
+        "favours": "hbm",
+        "field": "tile_depth",
+        "hbm": {
+          "128": 36
+        },
+        "hbm_value": 128,
+        "justification": null,
+        "magnitude_x": 2.0,
+        "rom": {
+          "64": 36
+        },
+        "rom_value": 64,
+        "why": "tiles on the HBM side 2,304 as compiled, 4,608 with the ROM value 64; issued_work 2,415,919,104 either way"
+      },
+      {
+        "allowlisted": false,
+        "cost_bearing": true,
+        "effect_x": 1.0,
+        "enters": "tile_mapping / tensor_lane_mapping / apply_tile_amplification / _compute_cycles",
+        "family": "attention",
+        "favours": "neither",
+        "field": "issue_window",
+        "hbm": {
+          "2": 36
+        },
+        "hbm_value": 2,
+        "justification": null,
+        "magnitude_x": 8.0,
+        "rom": {
+          "16": 36
+        },
+        "rom_value": 16,
+        "why": "tiles 2,304 either way; issued_work 2,415,919,104 either way"
+      },
+      {
+        "allowlisted": false,
+        "cost_bearing": true,
+        "effect_x": 1.0,
+        "enters": "queue admission",
+        "family": "attention",
+        "favours": "neither",
+        "field": "max_outstanding",
+        "hbm": {
+          "64": 36
+        },
+        "hbm_value": 64,
+        "justification": null,
+        "magnitude_x": 4.0,
+        "rom": {
+          "16": 36
+        },
+        "rom_value": 16,
+        "why": "admission is bounded by min(queue_depth=8, max_outstanding), 8 on both sides at this machine"
+      },
+      {
+        "allowlisted": false,
+        "cost_bearing": true,
+        "effect_x": null,
+        "enters": "MemorySystem.schedule",
+        "family": "attention",
+        "favours": "unknown",
+        "field": "bank_mask",
+        "hbm": {
+          "16": 36
+        },
+        "hbm_value": 16,
+        "justification": null,
+        "magnitude_x": null,
+        "rom": {
+          "0": 36
+        },
+        "rom_value": 0,
+        "why": "bank_mask selects banks/ports in MemorySystem.schedule; the direction is a property of the placement and is not derived by this audit"
+      },
+      {
+        "allowlisted": false,
+        "cost_bearing": true,
+        "effect_x": null,
+        "enters": "MemorySystem.schedule",
+        "family": "attention",
+        "favours": "unknown",
+        "field": "port_mask",
+        "hbm": {
+          "3": 36
+        },
+        "hbm_value": 3,
+        "justification": null,
+        "magnitude_x": null,
+        "rom": {
+          "12": 36
+        },
+        "rom_value": 12,
+        "why": "port_mask selects banks/ports in MemorySystem.schedule; the direction is a property of the placement and is not derived by this audit"
+      },
+      {
+        "allowlisted": false,
+        "cost_bearing": false,
+        "effect_x": 1.0,
+        "enters": "nothing",
+        "family": "attention",
+        "favours": "neither",
+        "field": "resource_bound",
+        "hbm": {
+          "64": 36
+        },
+        "hbm_value": 64,
+        "justification": null,
+        "magnitude_x": 21.333333333333332,
+        "rom": {
+          "3": 36
+        },
+        "rom_value": 3,
+        "why": "resource_bound is copied into the tile mapping and read by nothing that costs a cycle"
+      },
+      {
+        "allowlisted": false,
+        "cost_bearing": true,
+        "effect_x": 1.9999461699951553,
+        "enters": "tile_mapping / tensor_lane_mapping / apply_tile_amplification / _compute_cycles",
+        "family": "dma",
+        "favours": "rom",
+        "field": "tile_rows",
+        "hbm": {
+          "1": 1,
+          "64": 73
+        },
+        "hbm_value": 64,
+        "justification": null,
+        "magnitude_x": 2.0,
+        "rom": {
+          "128": 74
+        },
+        "rom_value": 128,
+        "why": "cycles_per_issue on the HBM side 74,306 as compiled, 37,154 with the ROM value 128"
+      },
+      {
+        "allowlisted": false,
+        "cost_bearing": true,
+        "effect_x": 2.0,
+        "enters": "tile_mapping / tensor_lane_mapping / apply_tile_amplification / _compute_cycles",
+        "family": "dma",
+        "favours": "hbm",
+        "field": "tile_cols",
+        "hbm": {
+          "128": 74
+        },
+        "hbm_value": 128,
+        "justification": null,
+        "magnitude_x": 2.0,
+        "rom": {
+          "64": 74
+        },
+        "rom_value": 64,
+        "why": "cycles_per_issue on the HBM side 74,338 as compiled, 148,676 with the ROM value 64"
+      },
+      {
+        "allowlisted": false,
+        "cost_bearing": true,
+        "effect_x": 1.0,
+        "enters": "tile_mapping / tensor_lane_mapping / apply_tile_amplification / _compute_cycles",
+        "family": "dma",
+        "favours": "neither",
+        "field": "issue_window",
+        "hbm": {
+          "4": 74
+        },
+        "hbm_value": 4,
+        "justification": null,
+        "magnitude_x": 4.0,
+        "rom": {
+          "16": 74
+        },
+        "rom_value": 16,
+        "why": "cycles_per_issue 74,338 either way"
+      },
+      {
+        "allowlisted": false,
+        "cost_bearing": true,
+        "effect_x": 1.0,
+        "enters": "queue admission",
+        "family": "dma",
+        "favours": "neither",
+        "field": "max_outstanding",
+        "hbm": {
+          "64": 74
+        },
+        "hbm_value": 64,
+        "justification": null,
+        "magnitude_x": 4.0,
+        "rom": {
+          "16": 74
+        },
+        "rom_value": 16,
+        "why": "admission is bounded by min(queue_depth=8, max_outstanding), 8 on both sides at this machine"
+      },
+      {
+        "allowlisted": false,
+        "cost_bearing": true,
+        "effect_x": 2.0,
+        "enters": "queue admission",
+        "family": "dma",
+        "favours": "rom",
+        "field": "queue_index",
+        "hbm": {
+          "0": 74
+        },
+        "hbm_value": 1,
+        "justification": null,
+        "magnitude_x": null,
+        "rom": {
+          "0": 37,
+          "1": 37
+        },
+        "rom_value": 2,
+        "why": "operators spread over 2 vs 1 dma queue(s) of the 16 the machine has"
+      },
+      {
+        "allowlisted": false,
+        "cost_bearing": true,
+        "effect_x": null,
+        "enters": "MemorySystem.schedule",
+        "family": "dma",
+        "favours": "unknown",
+        "field": "bank_mask",
+        "hbm": {
+          "3": 74
+        },
+        "hbm_value": 3,
+        "justification": null,
+        "magnitude_x": null,
+        "rom": {
+          "0": 74
+        },
+        "rom_value": 0,
+        "why": "bank_mask selects banks/ports in MemorySystem.schedule; the direction is a property of the placement and is not derived by this audit"
+      },
+      {
+        "allowlisted": false,
+        "cost_bearing": true,
+        "effect_x": null,
+        "enters": "MemorySystem.schedule",
+        "family": "dma",
+        "favours": "unknown",
+        "field": "port_mask",
+        "hbm": {
+          "3": 74
+        },
+        "hbm_value": 3,
+        "justification": null,
+        "magnitude_x": null,
+        "rom": {
+          "1": 1,
+          "1028": 1,
+          "48": 36,
+          "80": 36
+        },
+        "rom_value": 48,
+        "why": "port_mask selects banks/ports in MemorySystem.schedule; the direction is a property of the placement and is not derived by this audit"
+      },
+      {
+        "allowlisted": false,
+        "cost_bearing": false,
+        "effect_x": 1.0,
+        "enters": "nothing",
+        "family": "dma",
+        "favours": "neither",
+        "field": "resource_bound",
+        "hbm": {
+          "8": 74
+        },
+        "hbm_value": 8,
+        "justification": null,
+        "magnitude_x": 2.6666666666666665,
+        "rom": {
+          "3": 74
+        },
+        "rom_value": 3,
+        "why": "resource_bound is copied into the tile mapping and read by nothing that costs a cycle"
+      },
+      {
+        "allowlisted": false,
+        "cost_bearing": true,
+        "effect_x": 8.0,
+        "enters": "queue admission",
+        "family": "selection",
+        "favours": "hbm",
+        "field": "max_outstanding",
+        "hbm": {
+          "64": 2
+        },
+        "hbm_value": 64,
+        "justification": null,
+        "magnitude_x": 64.0,
+        "rom": {
+          "1": 2
+        },
+        "rom_value": 1,
+        "why": "admission bound min(queue_depth=8, max_outstanding) 1 vs 8"
+      },
+      {
+        "allowlisted": false,
+        "cost_bearing": true,
+        "effect_x": null,
+        "enters": "MemorySystem.schedule",
+        "family": "selection",
+        "favours": "unknown",
+        "field": "bank_mask",
+        "hbm": {
+          "8": 2
+        },
+        "hbm_value": 8,
+        "justification": null,
+        "magnitude_x": null,
+        "rom": {
+          "0": 2
+        },
+        "rom_value": 0,
+        "why": "bank_mask selects banks/ports in MemorySystem.schedule; the direction is a property of the placement and is not derived by this audit"
+      },
+      {
+        "allowlisted": false,
+        "cost_bearing": true,
+        "effect_x": null,
+        "enters": "MemorySystem.schedule",
+        "family": "selection",
+        "favours": "unknown",
+        "field": "port_mask",
+        "hbm": {
+          "3": 2
+        },
+        "hbm_value": 3,
+        "justification": null,
+        "magnitude_x": null,
+        "rom": {
+          "12288": 1,
+          "6144": 1
+        },
+        "rom_value": 6144,
+        "why": "port_mask selects banks/ports in MemorySystem.schedule; the direction is a property of the placement and is not derived by this audit"
+      },
+      {
+        "allowlisted": false,
+        "cost_bearing": false,
+        "effect_x": 1.0,
+        "enters": "nothing",
+        "family": "selection",
+        "favours": "neither",
+        "field": "resource_bound",
+        "hbm": {
+          "8": 2
+        },
+        "hbm_value": 8,
+        "justification": null,
+        "magnitude_x": 1.3333333333333333,
+        "rom": {
+          "6": 2
+        },
+        "rom_value": 6,
+        "why": "resource_bound is copied into the tile mapping and read by nothing that costs a cycle"
+      },
+      {
+        "allowlisted": false,
+        "cost_bearing": true,
+        "effect_x": 1.0,
+        "enters": "tile_mapping / tensor_lane_mapping / apply_tile_amplification / _compute_cycles",
+        "family": "tensor",
+        "favours": "neither",
+        "field": "tile_rows",
+        "hbm": {
+          "1": 1,
+          "64": 253
+        },
+        "hbm_value": 64,
+        "justification": null,
+        "magnitude_x": 2.0,
+        "rom": {
+          "1": 1,
+          "128": 253
+        },
+        "rom_value": 128,
+        "why": "cycles_per_issue 105,984 either way; every tensor operator has rows 1 <= 64 at this request"
+      },
+      {
+        "allowlisted": false,
+        "cost_bearing": true,
+        "effect_x": 1.9994459833795013,
+        "enters": "tile_mapping / tensor_lane_mapping / apply_tile_amplification / _compute_cycles",
+        "family": "tensor",
+        "favours": "rom",
+        "field": "tile_cols",
+        "hbm": {
+          "128": 254
+        },
+        "hbm_value": 128,
+        "justification": null,
+        "magnitude_x": 4.0,
+        "rom": {
+          "512": 254
+        },
+        "rom_value": 512,
+        "why": "cycles_per_issue on the HBM side 115,488 as compiled, 57,760 with the ROM value 512; effective tensor width min(lanes=1024, tile_cols x issue_window) 1024 vs 512"
+      },
+      {
+        "allowlisted": false,
+        "cost_bearing": true,
+        "effect_x": 16.0,
+        "enters": "tile_mapping / tensor_lane_mapping / apply_tile_amplification / _compute_cycles",
+        "family": "tensor",
+        "favours": "rom",
+        "field": "tile_depth",
+        "hbm": {
+          "1": 1,
+          "128": 253
+        },
+        "hbm_value": 128,
+        "justification": null,
+        "magnitude_x": 16.0,
+        "rom": {
+          "1": 1,
+          "2048": 253
+        },
+        "rom_value": 2048,
+        "why": "cycles_per_issue on the HBM side 115,488 as compiled, 7,218 with the ROM value 2048; per unit of depth 1/2048 against 1/128 cycles at work_per_lane_cycle 5782.46, parity band [4096, inf)"
+      },
+      {
+        "allowlisted": false,
+        "cost_bearing": true,
+        "effect_x": 1.9994459833795013,
+        "enters": "tile_mapping / tensor_lane_mapping / apply_tile_amplification / _compute_cycles",
+        "family": "tensor",
+        "favours": "rom",
+        "field": "issue_window",
+        "hbm": {
+          "4": 254
+        },
+        "hbm_value": 4,
+        "justification": null,
+        "magnitude_x": 4.0,
+        "rom": {
+          "16": 254
+        },
+        "rom_value": 16,
+        "why": "cycles_per_issue on the HBM side 115,488 as compiled, 57,760 with the ROM value 16; effective tensor width min(lanes=1024, tile_cols x issue_window) 1024 vs 512"
+      },
+      {
+        "allowlisted": false,
+        "cost_bearing": true,
+        "effect_x": 1.0,
+        "enters": "queue admission",
+        "family": "tensor",
+        "favours": "neither",
+        "field": "max_outstanding",
+        "hbm": {
+          "64": 254
+        },
+        "hbm_value": 64,
+        "justification": null,
+        "magnitude_x": 4.0,
+        "rom": {
+          "16": 254
+        },
+        "rom_value": 16,
+        "why": "admission is bounded by min(queue_depth=8, max_outstanding), 8 on both sides at this machine"
+      },
+      {
+        "allowlisted": false,
+        "cost_bearing": true,
+        "effect_x": 2.0,
+        "enters": "queue admission",
+        "family": "tensor",
+        "favours": "rom",
+        "field": "queue_index",
+        "hbm": {
+          "0": 254
+        },
+        "hbm_value": 1,
+        "justification": null,
+        "magnitude_x": null,
+        "rom": {
+          "0": 110,
+          "1": 144
+        },
+        "rom_value": 2,
+        "why": "operators spread over 2 vs 1 tensor queue(s) of the 16 the machine has"
+      },
+      {
+        "allowlisted": false,
+        "cost_bearing": true,
+        "effect_x": null,
+        "enters": "MemorySystem.schedule",
+        "family": "tensor",
+        "favours": "unknown",
+        "field": "bank_mask",
+        "hbm": {
+          "7": 254
+        },
+        "hbm_value": 7,
+        "justification": null,
+        "magnitude_x": null,
+        "rom": {
+          "1": 1,
+          "16": 36,
+          "2048": 36,
+          "32": 36,
+          "4": 1,
+          "4096": 36,
+          "512": 36,
+          "64": 36,
+          "8192": 36
+        },
+        "rom_value": 16,
+        "why": "bank_mask selects banks/ports in MemorySystem.schedule; the direction is a property of the placement and is not derived by this audit"
+      },
+      {
+        "allowlisted": false,
+        "cost_bearing": true,
+        "effect_x": null,
+        "enters": "MemorySystem.schedule",
+        "family": "tensor",
+        "favours": "unknown",
+        "field": "port_mask",
+        "hbm": {
+          "3": 254
+        },
+        "hbm_value": 3,
+        "justification": null,
+        "magnitude_x": null,
+        "rom": {
+          "12": 72,
+          "136": 36,
+          "20": 36,
+          "264": 36,
+          "3": 1,
+          "3072": 1,
+          "36": 36,
+          "520": 36
+        },
+        "rom_value": 12,
+        "why": "port_mask selects banks/ports in MemorySystem.schedule; the direction is a property of the placement and is not derived by this audit"
+      },
+      {
+        "allowlisted": false,
+        "cost_bearing": false,
+        "effect_x": 1.0,
+        "enters": "nothing",
+        "family": "tensor",
+        "favours": "neither",
+        "field": "resource_bound",
+        "hbm": {
+          "256": 254
+        },
+        "hbm_value": 256,
+        "justification": null,
+        "magnitude_x": 256.0,
+        "rom": {
+          "1": 254
+        },
+        "rom_value": 1,
+        "why": "resource_bound is copied into the tile mapping and read by nothing that costs a cycle"
+      },
+      {
+        "allowlisted": false,
+        "cost_bearing": true,
+        "effect_x": 2.0,
+        "enters": "tile_mapping / tensor_lane_mapping / apply_tile_amplification / _compute_cycles",
+        "family": "vector",
+        "favours": "hbm",
+        "field": "tile_rows",
+        "hbm": {
+          "64": 325
+        },
+        "hbm_value": 64,
+        "justification": null,
+        "magnitude_x": 2.0,
+        "rom": {
+          "128": 325
+        },
+        "rom_value": 128,
+        "why": "tiles 8,240 either way; issued_work on the HBM side 67,502,080 as compiled, 135,004,160 with the ROM value 128 (padded work is charged only when a tile's work exceeds the one-cycle issue floor)"
+      },
+      {
+        "allowlisted": false,
+        "cost_bearing": true,
+        "effect_x": 2.0,
+        "enters": "tile_mapping / tensor_lane_mapping / apply_tile_amplification / _compute_cycles",
+        "family": "vector",
+        "favours": "rom",
+        "field": "tile_cols",
+        "hbm": {
+          "128": 325
+        },
+        "hbm_value": 128,
+        "justification": null,
+        "magnitude_x": 2.0,
+        "rom": {
+          "128": 144,
+          "256": 181
+        },
+        "rom_value": 256,
+        "why": "tiles on the HBM side 8,096 as compiled, 4,048 with the ROM value 256; issued_work 66,322,432 either way"
+      },
+      {
+        "allowlisted": false,
+        "cost_bearing": true,
+        "effect_x": 1.0,
+        "enters": "tile_mapping / tensor_lane_mapping / apply_tile_amplification / _compute_cycles",
+        "family": "vector",
+        "favours": "neither",
+        "field": "issue_window",
+        "hbm": {
+          "2": 325
+        },
+        "hbm_value": 2,
+        "justification": null,
+        "magnitude_x": 8.0,
+        "rom": {
+          "16": 325
+        },
+        "rom_value": 16,
+        "why": "tiles 8,240 either way; issued_work 67,502,080 either way"
+      },
+      {
+        "allowlisted": false,
+        "cost_bearing": true,
+        "effect_x": 1.0,
+        "enters": "queue admission",
+        "family": "vector",
+        "favours": "neither",
+        "field": "max_outstanding",
+        "hbm": {
+          "64": 325
+        },
+        "hbm_value": 64,
+        "justification": null,
+        "magnitude_x": 4.0,
+        "rom": {
+          "16": 325
+        },
+        "rom_value": 16,
+        "why": "admission is bounded by min(queue_depth=8, max_outstanding), 8 on both sides at this machine"
+      },
+      {
+        "allowlisted": false,
+        "cost_bearing": true,
+        "effect_x": 2.0,
+        "enters": "queue admission",
+        "family": "vector",
+        "favours": "rom",
+        "field": "queue_index",
+        "hbm": {
+          "0": 325
+        },
+        "hbm_value": 1,
+        "justification": null,
+        "magnitude_x": null,
+        "rom": {
+          "0": 180,
+          "1": 145
+        },
+        "rom_value": 2,
+        "why": "operators spread over 2 vs 1 vector queue(s) of the 16 the machine has"
+      },
+      {
+        "allowlisted": false,
+        "cost_bearing": true,
+        "effect_x": null,
+        "enters": "MemorySystem.schedule",
+        "family": "vector",
+        "favours": "unknown",
+        "field": "bank_mask",
+        "hbm": {
+          "8": 325
+        },
+        "hbm_value": 8,
+        "justification": null,
+        "magnitude_x": null,
+        "rom": {
+          "0": 180,
+          "1024": 36,
+          "128": 36,
+          "2": 1,
+          "256": 36,
+          "8": 36
+        },
+        "rom_value": 0,
+        "why": "bank_mask selects banks/ports in MemorySystem.schedule; the direction is a property of the placement and is not derived by this audit"
+      },
+      {
+        "allowlisted": false,
+        "cost_bearing": true,
+        "effect_x": null,
+        "enters": "MemorySystem.schedule",
+        "family": "vector",
+        "favours": "unknown",
+        "field": "port_mask",
+        "hbm": {
+          "3": 325
+        },
+        "hbm_value": 3,
+        "justification": null,
+        "magnitude_x": null,
+        "rom": {
+          "12": 72,
+          "13": 36,
+          "14": 72,
+          "6": 37,
+          "80": 36,
+          "81": 36,
+          "896": 36
+        },
+        "rom_value": 12,
+        "why": "port_mask selects banks/ports in MemorySystem.schedule; the direction is a property of the placement and is not derived by this audit"
+      },
+      {
+        "allowlisted": false,
+        "cost_bearing": false,
+        "effect_x": 1.0,
+        "enters": "nothing",
+        "family": "vector",
+        "favours": "neither",
+        "field": "resource_bound",
+        "hbm": {
+          "128": 325
+        },
+        "hbm_value": 128,
+        "justification": null,
+        "magnitude_x": 42.666666666666664,
+        "rom": {
+          "3": 325
+        },
+        "rom_value": 3,
+        "why": "resource_bound is copied into the tile mapping and read by nothing that costs a cycle"
+      }
+    ],
+    "basis": "SCHEDULE fields at lanes=1024, charged with the cycle model's own _compute_cycles",
+    "column_group_spans_match": false,
+    "comparable": false,
+    "deployments": {
+      "hbm": {
+        "base_capability": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+        "capability_digest": "fa70dd44a1b532a99d103968b31b743bbed324d002fbe0214c9541fb1687e23d",
+        "deployment_sha256": "0d7897457e14666fc057ea6223cc32e65c61e39bfe5b2ff675c3b5585fe2ce8e",
+        "evidence": [
+          "results/abi3/cycle/qwen3_hbm_exact8k_b1_asap7_decode_pos8000_rowfold_v1.json",
+          "docs/PERFORMANCE_DESIGN_POSTMORTEM.md (headline table: qwen3_hbm_exact8k_b1_sky130_decode_pos8002_rowfold_v1)"
+        ],
+        "model_id": "qwen3-8b",
+        "registered_deployment_sha256": "0d7897457e14666fc057ea6223cc32e65c61e39bfe5b2ff675c3b5585fe2ce8e",
+        "role": "hbm",
+        "root": "build/abi3/qwen3-8b-hbm-exact8k-b1-lane0",
+        "status": "bound"
+      },
+      "rom": {
+        "base_capability": "configs/hardware/abi3_capability/rom_qwen3.json",
+        "capability_digest": "5b5770fa766cd89d7a236a62722ef33d1db9f87be7403a8f8c55fc9ec8c8458e",
+        "deployment_sha256": "5940e5b6b5c507493fc8cf08675c43189aff8a6ecc2e4c7deeb128134893f8f9",
+        "evidence": [
+          "results/abi3/cycle/qwen3_rom_exact8k_b1_asap7_decode_pos8000_rowfold_depthfix_v1.json",
+          "docs/PERFORMANCE_DESIGN_POSTMORTEM.md (headline table: qwen3_rom_exact8k_b1_sky130_decode_pos8002_rowfold_depthfix_v1)"
+        ],
+        "model_id": "qwen3-8b",
+        "registered_deployment_sha256": "5940e5b6b5c507493fc8cf08675c43189aff8a6ecc2e4c7deeb128134893f8f9",
+        "role": "rom",
+        "root": "build/abi3/qwen3-8b-rom-rowfold-v1",
+        "status": "bound"
+      }
+    },
+    "families": {
+      "attention": {
+        "issued_work": {
+          "favours": "hbm",
+          "hbm": 2415919104,
+          "magnitude_x": 2.0,
+          "rom": 4831838208
+        },
+        "operations": {
+          "hbm": 36,
+          "rom": 36
+        },
+        "padding_fraction": {
+          "favours": "hbm",
+          "hbm": 0.5,
+          "magnitude_x": 1.5,
+          "rom": 0.75
+        },
+        "tiles": {
+          "favours": "hbm",
+          "hbm": 2304,
+          "magnitude_x": 2.0,
+          "rom": 4608
+        },
+        "useful_work": {
+          "hbm": 1207959552,
+          "rom": 1207959552
+        }
+      },
+      "dma": {
+        "cycles": {
+          "favours": "hbm",
+          "hbm": 74338,
+          "magnitude_x": 1.000457370389303,
+          "rom": 74372
+        },
+        "issued_work": {
+          "favours": "hbm",
+          "hbm": 608718848,
+          "magnitude_x": 1.0008814841231926,
+          "rom": 609255424
+        },
+        "machine": {
+          "bytes_per_cycle": 5921248.0,
+          "rule": "a DMA operator costs tiles x max(ceil(bytes_transferred / tiles / bytes_per_cycle), tile_issue_cycles); at this rate every tile of these deployments is at the issue floor, so the DMA charge is the tile count",
+          "tile_issue_cycles": 1
+        },
+        "operations": {
+          "hbm": 74,
+          "rom": 74
+        },
+        "padding_fraction": {
+          "favours": "hbm",
+          "hbm": 2.6e-05,
+          "magnitude_x": 34.88461538461539,
+          "rom": 0.000907
+        },
+        "payload_bytes": {
+          "hbm": 156672,
+          "rom": 156672
+        },
+        "payload_bytes_per_tile": {
+          "hbm": 2.108,
+          "rom": 2.107
+        },
+        "tile_issue_cycles": {
+          "favours": "hbm",
+          "hbm": 74338,
+          "magnitude_x": 1.000457370389303,
+          "rom": 74372
+        },
+        "tiles": {
+          "favours": "hbm",
+          "hbm": 74338,
+          "magnitude_x": 1.000457370389303,
+          "rom": 74372
+        },
+        "useful_work": {
+          "hbm": 608702720,
+          "rom": 608702720
+        }
+      },
+      "selection": {
+        "issued_work": {
+          "favours": "neither",
+          "hbm": 2,
+          "magnitude_x": 1.0,
+          "rom": 2
+        },
+        "operations": {
+          "hbm": 2,
+          "rom": 2
+        },
+        "padding_fraction": {
+          "favours": "neither",
+          "hbm": 0.0,
+          "magnitude_x": 1.0,
+          "rom": 0.0
+        },
+        "tiles": {
+          "favours": "neither",
+          "hbm": 2,
+          "magnitude_x": 1.0,
+          "rom": 2
+        },
+        "useful_work": {
+          "hbm": 2,
+          "rom": 2
+        }
+      },
+      "tensor": {
+        "column_groups": {
+          "favours": "rom",
+          "hbm": 3041,
+          "magnitude_x": 8.840116279069768,
+          "rom": 344
+        },
+        "cycles": {
+          "favours": "rom",
+          "hbm": 115488,
+          "magnitude_x": 31.99113573407202,
+          "rom": 3610
+        },
+        "effective_tensor_width_caps": {
+          "hbm": [
+            512
+          ],
+          "rom": [
+            1024
+          ]
+        },
+        "issued_work": {
+          "favours": "neither",
+          "hbm": 7568101376,
+          "magnitude_x": 1.0,
+          "rom": 7568101376
+        },
+        "operations": {
+          "hbm": 254,
+          "rom": 254
+        },
+        "output_waves": {
+          "favours": "rom",
+          "hbm": 3041,
+          "magnitude_x": 1.9993425378040763,
+          "rom": 1521
+        },
+        "padding_fraction": {
+          "favours": "neither",
+          "hbm": 0.0,
+          "magnitude_x": 1.0,
+          "rom": 0.0
+        },
+        "tile_issue_cycles": {
+          "favours": "rom",
+          "hbm": 115488,
+          "magnitude_x": 31.99113573407202,
+          "rom": 3610
+        },
+        "tiles": {
+          "favours": "rom",
+          "hbm": 115496,
+          "magnitude_x": 31.957941339236303,
+          "rom": 3614
+        },
+        "useful_work": {
+          "hbm": 7568101376,
+          "rom": 7568101376
+        }
+      },
+      "vector": {
+        "issued_work": {
+          "favours": "hbm",
+          "hbm": 67502080,
+          "magnitude_x": 2.0,
+          "rom": 135004160
+        },
+        "operations": {
+          "hbm": 325,
+          "rom": 325
+        },
+        "padding_fraction": {
+          "favours": "hbm",
+          "hbm": 0.979187,
+          "magnitude_x": 1.0106271835716771,
+          "rom": 0.989593
+        },
+        "tiles": {
+          "favours": "rom",
+          "hbm": 8240,
+          "magnitude_x": 1.965648854961832,
+          "rom": 4192
+        },
+        "useful_work": {
+          "hbm": 1404928,
+          "rom": 1404928
+        }
+      }
+    },
+    "fields_compared": 55,
+    "full_report": "results/derived/qwen3-8b__rom-n5-native-sramkv-wafer-tensor-x1-romfill__b200-sxm-x29-hybrid_deployment_audit.json",
+    "gate": "C2",
+    "generator": "tools/derive_cycle_machine.py",
+    "hbm": {
+      "backend": "hbm-sram-abi3",
+      "capability_digest": "fa70dd44a1b532a99d103968b31b743bbed324d002fbe0214c9541fb1687e23d",
+      "column_group_spans": [
+        512
+      ],
+      "deployment_sha256": "0d7897457e14666fc057ea6223cc32e65c61e39bfe5b2ff675c3b5585fe2ce8e",
+      "effective_tensor_width_caps": [
+        512
+      ],
+      "families": {
+        "attention": {
+          "issued_work": 2415919104,
+          "operations": 36,
+          "operators": 1,
+          "padding_fraction": 0.5,
+          "padding_work": 1207959552,
+          "tile_errors": 0,
+          "tiles": 2304,
+          "useful_work": 1207959552
+        },
+        "dma": {
+          "cycles": 74338,
+          "issued_work": 608718848,
+          "operations": 74,
+          "operators": 4,
+          "padding_fraction": 2.6e-05,
+          "padding_work": 16128,
+          "payload_bytes": 156672,
+          "tile_errors": 0,
+          "tile_issue_cycles": 74338,
+          "tiles": 74338,
+          "useful_work": 608702720
+        },
+        "selection": {
+          "issued_work": 2,
+          "operations": 2,
+          "operators": 2,
+          "padding_fraction": 0.0,
+          "padding_work": 0,
+          "tile_errors": 0,
+          "tiles": 2,
+          "useful_work": 2
+        },
+        "tensor": {
+          "column_groups": 3041,
+          "cycles": 115488,
+          "issued_work": 7568101376,
+          "operations": 254,
+          "operators": 9,
+          "output_waves": 3041,
+          "padding_fraction": 0.0,
+          "padding_work": 0,
+          "tile_errors": 0,
+          "tile_issue_cycles": 115488,
+          "tiles": 115496,
+          "useful_work": 7568101376
+        },
+        "vector": {
+          "issued_work": 67502080,
+          "operations": 325,
+          "operators": 10,
+          "padding_fraction": 0.979187,
+          "padding_work": 66097152,
+          "tile_errors": 0,
+          "tiles": 8240,
+          "useful_work": 1404928
+        }
+      },
+      "max_column_group_span": 512,
+      "model_id": "qwen3-8b",
+      "request_symbols": {
+        "BATCH": 1,
+        "CONTEXT_LENGTH": 8192,
+        "GENERATION_INDEX": 1,
+        "MAX_NEW_TOKENS": 1,
+        "NODE_COUNT": 1,
+        "NODE_ID": 0,
+        "PHASE": 1,
+        "POSITION_END": 8192,
+        "POSITION_START": 8191,
+        "SPAN_LAST_INDEX": 0,
+        "SPAN_TOKENS": 1
+      },
+      "root": "build/abi3/qwen3-8b-hbm-exact8k-b1-lane0",
+      "schedule_shapes": {
+        "engine_family=112,tile_rows=1,tile_cols=1,tile_depth=1,issue_window=1": 1,
+        "engine_family=16,tile_rows=1,tile_cols=128,tile_depth=1,issue_window=4": 1,
+        "engine_family=16,tile_rows=64,tile_cols=128,tile_depth=1,issue_window=4": 1,
+        "engine_family=32,tile_rows=1,tile_cols=128,tile_depth=128,issue_window=4": 1,
+        "engine_family=32,tile_rows=64,tile_cols=128,tile_depth=1,issue_window=4": 1,
+        "engine_family=32,tile_rows=64,tile_cols=128,tile_depth=128,issue_window=4": 1,
+        "engine_family=48,tile_rows=64,tile_cols=128,tile_depth=1,issue_window=2": 1,
+        "engine_family=64,tile_rows=64,tile_cols=128,tile_depth=128,issue_window=2": 1
+      },
+      "static_walk": "complete",
+      "storage_class_counts": {
+        "0": 2,
+        "1": 29,
+        "2": 7
+      },
+      "topology_class": 0
+    },
+    "lanes": 1024,
+    "machine": {
+      "capability": "configs/hardware/abi3_capability/n5_design_target/rom_qwen3_n5_design_target_qwen3-8b__rom-n5-native-sramkv-wafer-tensor-x1-romfill__b200-sxm-x29-hybrid_v1.json",
+      "cost_table": "configs/hardware/n5_design_target/abi3_cost_n5_design_target_qwen3-8b__rom-n5-native-sramkv-wafer-tensor-x1-romfill__b200-sxm-x29-hybrid_rom_v1.json",
+      "dma_bytes_per_cycle": 5921248.0,
+      "queue_depth": 8,
+      "tensor_lanes": 1024,
+      "tensor_work_per_lane_cycle": 5782.461527247745
+    },
+    "operator_asymmetries": [
+      {
+        "family": "dma",
+        "favours": "hbm",
+        "hbm": 2,
+        "magnitude_x": 2.0,
+        "metric": "tiles_per_issue",
+        "operator": "DMA.GATHER (1x256x1)",
+        "rom": 4
+      },
+      {
+        "family": "dma",
+        "favours": "hbm",
+        "hbm": 512.0,
+        "magnitude_x": 2.0,
+        "metric": "payload_bytes_per_tile",
+        "note": "more bytes per tile is fewer tiles for the same payload",
+        "operator": "DMA.GATHER (1x256x1)",
+        "rom": 256.0
+      },
+      {
+        "family": "dma",
+        "favours": "hbm",
+        "hbm": 2,
+        "magnitude_x": 2.0,
+        "metric": "cycles_per_issue",
+        "operator": "DMA.GATHER (1x256x1)",
+        "rom": 4
+      },
+      {
+        "family": "tensor",
+        "favours": "rom",
+        "hbm": 8,
+        "magnitude_x": 2.0,
+        "metric": "tiles_per_issue",
+        "operator": "TENSOR.EMBED_LOOKUP (1x4096x1)",
+        "rom": 4
+      },
+      {
+        "family": "vector",
+        "favours": "rom",
+        "hbm": 32,
+        "magnitude_x": 2.0,
+        "metric": "tiles_per_issue",
+        "operator": "VECTOR.RMS_NORM (1x4096x1)",
+        "rom": 16
+      },
+      {
+        "family": "tensor",
+        "favours": "rom",
+        "hbm": 256,
+        "magnitude_x": 32.0,
+        "metric": "tiles_per_issue",
+        "operator": "TENSOR.MATMUL (1x4096x4096)",
+        "rom": 8
+      },
+      {
+        "family": "tensor",
+        "favours": "rom",
+        "hbm": 256,
+        "magnitude_x": 32.0,
+        "metric": "cycles_per_issue",
+        "operator": "TENSOR.MATMUL (1x4096x4096)",
+        "rom": 8
+      },
+      {
+        "family": "tensor",
+        "favours": "rom",
+        "hbm": 64,
+        "magnitude_x": 32.0,
+        "metric": "tiles_per_issue",
+        "operator": "TENSOR.MATMUL (1x1024x4096)",
+        "rom": 2
+      },
+      {
+        "family": "tensor",
+        "favours": "rom",
+        "hbm": 64,
+        "magnitude_x": 32.0,
+        "metric": "cycles_per_issue",
+        "operator": "TENSOR.MATMUL (1x1024x4096)",
+        "rom": 2
+      },
+      {
+        "family": "tensor",
+        "favours": "rom",
+        "hbm": 64,
+        "magnitude_x": 32.0,
+        "metric": "tiles_per_issue",
+        "operator": "TENSOR.MATMUL (1x1024x4096)",
+        "rom": 2
+      },
+      {
+        "family": "tensor",
+        "favours": "rom",
+        "hbm": 64,
+        "magnitude_x": 32.0,
+        "metric": "cycles_per_issue",
+        "operator": "TENSOR.MATMUL (1x1024x4096)",
+        "rom": 2
+      },
+      {
+        "family": "attention",
+        "favours": "hbm",
+        "hbm": 64,
+        "magnitude_x": 2.0,
+        "metric": "tiles_per_issue",
+        "operator": "ATTENTION.GQA (32x128x8192)",
+        "rom": 128
+      },
+      {
+        "family": "tensor",
+        "favours": "rom",
+        "hbm": 256,
+        "magnitude_x": 32.0,
+        "metric": "tiles_per_issue",
+        "operator": "TENSOR.MATMUL (1x4096x4096)",
+        "rom": 8
+      },
+      {
+        "family": "tensor",
+        "favours": "rom",
+        "hbm": 256,
+        "magnitude_x": 32.0,
+        "metric": "cycles_per_issue",
+        "operator": "TENSOR.MATMUL (1x4096x4096)",
+        "rom": 8
+      },
+      {
+        "family": "vector",
+        "favours": "rom",
+        "hbm": 32,
+        "magnitude_x": 2.0,
+        "metric": "tiles_per_issue",
+        "operator": "VECTOR.ADD (1x4096x1)",
+        "rom": 16
+      },
+      {
+        "family": "vector",
+        "favours": "rom",
+        "hbm": 32,
+        "magnitude_x": 2.0,
+        "metric": "tiles_per_issue",
+        "operator": "VECTOR.RMS_NORM (1x4096x1)",
+        "rom": 16
+      },
+      {
+        "family": "tensor",
+        "favours": "rom",
+        "hbm": 768,
+        "magnitude_x": 32.0,
+        "metric": "tiles_per_issue",
+        "operator": "TENSOR.MATMUL (1x12288x4096)",
+        "rom": 24
+      },
+      {
+        "family": "tensor",
+        "favours": "rom",
+        "hbm": 768,
+        "magnitude_x": 32.0,
+        "metric": "cycles_per_issue",
+        "operator": "TENSOR.MATMUL (1x12288x4096)",
+        "rom": 24
+      },
+      {
+        "family": "tensor",
+        "favours": "rom",
+        "hbm": 768,
+        "magnitude_x": 32.0,
+        "metric": "tiles_per_issue",
+        "operator": "TENSOR.MATMUL (1x12288x4096)",
+        "rom": 24
+      },
+      {
+        "family": "tensor",
+        "favours": "rom",
+        "hbm": 768,
+        "magnitude_x": 32.0,
+        "metric": "cycles_per_issue",
+        "operator": "TENSOR.MATMUL (1x12288x4096)",
+        "rom": 24
+      },
+      {
+        "family": "vector",
+        "favours": "rom",
+        "hbm": 96,
+        "magnitude_x": 2.0,
+        "metric": "tiles_per_issue",
+        "operator": "VECTOR.SILU_MUL (1x12288x1)",
+        "rom": 48
+      },
+      {
+        "family": "tensor",
+        "favours": "rom",
+        "hbm": 768,
+        "magnitude_x": 32.0,
+        "metric": "tiles_per_issue",
+        "operator": "TENSOR.MATMUL (1x4096x12288)",
+        "rom": 24
+      },
+      {
+        "family": "tensor",
+        "favours": "rom",
+        "hbm": 768,
+        "magnitude_x": 32.0,
+        "metric": "cycles_per_issue",
+        "operator": "TENSOR.MATMUL (1x4096x12288)",
+        "rom": 24
+      },
+      {
+        "family": "vector",
+        "favours": "rom",
+        "hbm": 32,
+        "magnitude_x": 2.0,
+        "metric": "tiles_per_issue",
+        "operator": "VECTOR.ADD (1x4096x1)",
+        "rom": 16
+      },
+      {
+        "family": "vector",
+        "favours": "rom",
+        "hbm": 32,
+        "magnitude_x": 2.0,
+        "metric": "tiles_per_issue",
+        "operator": "VECTOR.RMS_NORM (1x4096x1)",
+        "rom": 16
+      },
+      {
+        "family": "dma",
+        "favours": "hbm",
+        "hbm": 32,
+        "magnitude_x": 2.0,
+        "metric": "tiles_per_issue",
+        "operator": "DMA.GATHER (1x4096x1)",
+        "rom": 64
+      },
+      {
+        "family": "dma",
+        "favours": "hbm",
+        "hbm": 256.0,
+        "magnitude_x": 2.0,
+        "metric": "payload_bytes_per_tile",
+        "note": "more bytes per tile is fewer tiles for the same payload",
+        "operator": "DMA.GATHER (1x4096x1)",
+        "rom": 128.0
+      },
+      {
+        "family": "dma",
+        "favours": "hbm",
+        "hbm": 32,
+        "magnitude_x": 2.0,
+        "metric": "cycles_per_issue",
+        "operator": "DMA.GATHER (1x4096x1)",
+        "rom": 64
+      },
+      {
+        "family": "tensor",
+        "favours": "rom",
+        "hbm": 9504,
+        "magnitude_x": 31.892617449664428,
+        "metric": "tiles_per_issue",
+        "operator": "TENSOR.MATMUL (1x151936x4096)",
+        "rom": 298
+      },
+      {
+        "family": "tensor",
+        "favours": "rom",
+        "hbm": 9504,
+        "magnitude_x": 31.892617449664428,
+        "metric": "cycles_per_issue",
+        "operator": "TENSOR.MATMUL (1x151936x4096)",
+        "rom": 298
+      }
+    ],
+    "operators_unmatched": {
+      "hbm": [],
+      "rom": []
+    },
+    "pair_id": "qwen3-8b__rom-n5-native-sramkv-wafer-tensor-x1-romfill__b200-sxm-x29-hybrid",
+    "reason": "not comparable",
+    "request_symbols": {
+      "BATCH": 1,
+      "CONTEXT_LENGTH": 8192,
+      "GENERATION_INDEX": 1,
+      "MAX_NEW_TOKENS": 1,
+      "NODE_COUNT": 1,
+      "NODE_ID": 0,
+      "PHASE": 1,
+      "POSITION_END": 8192,
+      "POSITION_START": 8191,
+      "SPAN_LAST_INDEX": 0,
+      "SPAN_TOKENS": 1
+    },
+    "rom": {
+      "backend": "rom.single_chip",
+      "capability_digest": "5b5770fa766cd89d7a236a62722ef33d1db9f87be7403a8f8c55fc9ec8c8458e",
+      "column_group_spans": [
+        8192
+      ],
+      "deployment_sha256": "5940e5b6b5c507493fc8cf08675c43189aff8a6ecc2e4c7deeb128134893f8f9",
+      "effective_tensor_width_caps": [
+        1024
+      ],
+      "families": {
+        "attention": {
+          "issued_work": 4831838208,
+          "operations": 36,
+          "operators": 1,
+          "padding_fraction": 0.75,
+          "padding_work": 3623878656,
+          "tile_errors": 0,
+          "tiles": 4608,
+          "useful_work": 1207959552
+        },
+        "dma": {
+          "cycles": 74372,
+          "issued_work": 609255424,
+          "operations": 74,
+          "operators": 4,
+          "padding_fraction": 0.000907,
+          "padding_work": 552704,
+          "payload_bytes": 156672,
+          "tile_errors": 0,
+          "tile_issue_cycles": 74372,
+          "tiles": 74372,
+          "useful_work": 608702720
+        },
+        "selection": {
+          "issued_work": 2,
+          "operations": 2,
+          "operators": 2,
+          "padding_fraction": 0.0,
+          "padding_work": 0,
+          "tile_errors": 0,
+          "tiles": 2,
+          "useful_work": 2
+        },
+        "tensor": {
+          "column_groups": 344,
+          "cycles": 3610,
+          "issued_work": 7568101376,
+          "operations": 254,
+          "operators": 9,
+          "output_waves": 1521,
+          "padding_fraction": 0.0,
+          "padding_work": 0,
+          "tile_errors": 0,
+          "tile_issue_cycles": 3610,
+          "tiles": 3614,
+          "useful_work": 7568101376
+        },
+        "vector": {
+          "issued_work": 135004160,
+          "operations": 325,
+          "operators": 10,
+          "padding_fraction": 0.989593,
+          "padding_work": 133599232,
+          "tile_errors": 0,
+          "tiles": 4192,
+          "useful_work": 1404928
+        }
+      },
+      "max_column_group_span": 8192,
+      "model_id": "qwen3-8b",
+      "request_symbols": {
+        "BATCH": 1,
+        "CONTEXT_LENGTH": 8192,
+        "GENERATION_INDEX": 1,
+        "MAX_NEW_TOKENS": 1,
+        "NODE_COUNT": 1,
+        "NODE_ID": 0,
+        "PHASE": 1,
+        "POSITION_END": 8192,
+        "POSITION_START": 8191,
+        "SPAN_LAST_INDEX": 0,
+        "SPAN_TOKENS": 1
+      },
+      "root": "build/abi3/qwen3-8b-rom-rowfold-v1",
+      "schedule_shapes": {
+        "engine_family=112,tile_rows=1,tile_cols=1,tile_depth=1,issue_window=1": 2,
+        "engine_family=16,tile_rows=128,tile_cols=64,tile_depth=1,issue_window=16": 4,
+        "engine_family=32,tile_rows=1,tile_cols=512,tile_depth=2048,issue_window=16": 1,
+        "engine_family=32,tile_rows=128,tile_cols=512,tile_depth=1,issue_window=16": 1,
+        "engine_family=32,tile_rows=128,tile_cols=512,tile_depth=2048,issue_window=16": 7,
+        "engine_family=48,tile_rows=128,tile_cols=128,tile_depth=1,issue_window=16": 4,
+        "engine_family=48,tile_rows=128,tile_cols=256,tile_depth=1,issue_window=16": 6,
+        "engine_family=64,tile_rows=128,tile_cols=128,tile_depth=64,issue_window=16": 1
+      },
+      "static_walk": "complete",
+      "storage_class_counts": {
+        "0": 3,
+        "1": 6,
+        "2": 7,
+        "3": 18
+      },
+      "topology_class": 0
+    },
+    "rule": "compare, per engine family and per operator, every SCHEDULE field runtime.cycle.model.tile_mapping reads, the tile counts and padding those fields produce for the same useful work at the same request, and for DMA the tile count and bytes per tile; comparable only when no cost-bearing field differs outside the cited allowlist",
+    "schema": "opentallas.deployment_audit.v2",
+    "storage_classes_differ_as_expected": true,
+    "tensor_parity_band": {
+      "band": [
+        4096.0,
+        Infinity
+      ],
+      "cycles_per_full_depth_tile": {
+        "hbm": 1,
+        "rom": 1
+      },
+      "cycles_per_unit_depth": {
+        "hbm": 0.0078125,
+        "rom": 0.00048828125
+      },
+      "favours": "rom",
+      "hbm_tile_depth": 128,
+      "magnitude_x": 16.0,
+      "note": "rates on which the two depths keep this same unequal charge",
+      "parity": false,
+      "rom_tile_depth": 2048,
+      "tile_issue_cycles": 1,
+      "work_per_lane_cycle": 5782.461527247745,
+      "work_units_per_mac": 2.0
+    },
+    "unexplained_asymmetries": [
+      "attention.tile_rows",
+      "attention.tile_depth",
+      "attention.issue_window",
+      "attention.max_outstanding",
+      "attention.bank_mask",
+      "attention.port_mask",
+      "dma.tile_rows",
+      "dma.tile_cols",
+      "dma.issue_window",
+      "dma.max_outstanding",
+      "dma.queue_index",
+      "dma.bank_mask",
+      "dma.port_mask",
+      "selection.max_outstanding",
+      "selection.bank_mask",
+      "selection.port_mask",
+      "tensor.tile_rows",
+      "tensor.tile_cols",
+      "tensor.tile_depth",
+      "tensor.issue_window",
+      "tensor.max_outstanding",
+      "tensor.queue_index",
+      "tensor.bank_mask",
+      "tensor.port_mask",
+      "vector.tile_rows",
+      "vector.tile_cols",
+      "vector.issue_window",
+      "vector.max_outstanding",
+      "vector.queue_index",
+      "vector.bank_mask",
+      "vector.port_mask"
+    ],
+    "verdict": "NOT COMPARABLE: tensor tile_depth 2048 vs 128 (favours rom 16x), tile_rows 128 vs 64 (neutral at batch-1 decode), tile_cols x issue_window 512x16 vs 128x4 (effective tensor width 1024 vs 512 at lanes=1024, favours rom 1.999x), contraction cycles per step 3,610 vs 115,488 (favours rom 31.99x); attention tile 128x128x64 vs 64x128x128 (tiles per step 4,608 vs 2,304, favours hbm 2x); dma tile 128x64x1 vs 64x128x1 (tiles per step 74,372 vs 74,338, favours hbm 1.0005x; DMA.GATHER (1x256x1) 4 vs 2 tiles per issue, favours hbm 2x; DMA.GATHER (1x4096x1) 64 vs 32 tiles per issue, favours hbm 2x); vector tile 128x256x1 vs 64x128x1 (tiles per step 4,192 vs 8,240, favours rom 1.966x; issued work incl. padding 135,004,160 vs 67,502,080, favours hbm 2x); 18 further cost-bearing field(s) differ (max_outstanding, queue_index, bank_mask, port_mask; see asymmetries); allowlist empty.  These are SCHEDULE fields, so no machine file can correct them; the deployments must be re-emitted under one SCHEDULE rule."
+  },
   "derived_facts": {
     "collapse_exactness": {
       "hbm_memory": 0.0,

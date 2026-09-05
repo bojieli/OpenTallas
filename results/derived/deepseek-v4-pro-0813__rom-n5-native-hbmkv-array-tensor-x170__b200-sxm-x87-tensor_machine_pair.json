@@ -241,6 +241,45 @@
     }
   ],
   "declared_asymmetries_note": "assert_comparable compares the parameters MachineModel resolves and nothing else.  These declared fields differ between the two emitted records, reach no cost-table parameter, and are listed so that a reader can see what the assertion does NOT cover.  limits.max_context_positions is the one exception: it bounds what the pair can be asked rather than how fast it runs, so both records are harmonised to the smaller of the two bases.",
+  "deployment_audit": {
+    "comparable": false,
+    "deployments": {
+      "hbm": {
+        "base_capability": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+        "model_id": "deepseek-v4-pro-0813",
+        "role": "hbm",
+        "status": "no deployment built",
+        "why": "no compiled deepseek-v4-pro-0813 deployment is bound to configs/hardware/abi3_capability/hbm_sram_single_chip.json"
+      },
+      "rom": {
+        "base_capability": "configs/hardware/abi3_capability/rom_deepseek_v4_pro_array_32.json",
+        "model_id": "deepseek-v4-pro-0813",
+        "role": "rom",
+        "status": "no deployment built",
+        "why": "no compiled deepseek-v4-pro-0813 deployment is bound to configs/hardware/abi3_capability/rom_deepseek_v4_pro_array_32.json"
+      }
+    },
+    "full_report": "results/derived/deepseek-v4-pro-0813__rom-n5-native-hbmkv-array-tensor-x170__b200-sxm-x87-tensor_deployment_audit.json",
+    "gate": "C2",
+    "generator": "tools/derive_cycle_machine.py",
+    "pair_id": "deepseek-v4-pro-0813__rom-n5-native-hbmkv-array-tensor-x170__b200-sxm-x87-tensor",
+    "reason": "no deployment built",
+    "request_symbols": {
+      "BATCH": 1,
+      "CONTEXT_LENGTH": 1000000,
+      "GENERATION_INDEX": 1,
+      "MAX_NEW_TOKENS": 1,
+      "NODE_COUNT": 1,
+      "NODE_ID": 0,
+      "PHASE": 1,
+      "POSITION_END": 1000000,
+      "POSITION_START": 999999,
+      "SPAN_LAST_INDEX": 0,
+      "SPAN_TOKENS": 1
+    },
+    "schema": "opentallas.deployment_audit.v2",
+    "verdict": "NOT COMPARABLE: no deployment built -- rom: no compiled deepseek-v4-pro-0813 deployment is bound to configs/hardware/abi3_capability/rom_deepseek_v4_pro_array_32.json; hbm: no compiled deepseek-v4-pro-0813 deployment is bound to configs/hardware/abi3_capability/hbm_sram_single_chip.json.  A cell with no compiled deployment pair has no deployment-side evidence, and absence is a failure, not a skip."
+  },
   "derived_facts": {
     "collapse_exactness": {
       "hbm_memory": 0.0,

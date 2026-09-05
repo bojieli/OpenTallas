@@ -87,7 +87,7 @@
       "kind": "comparison",
       "statement": "The compiled deployments hand neither side an advantage in tile shape, column group, tile depth or DMA tile count.",
       "status": "fail",
-      "why": "15 artifact(s) matched results/derived/*machine_pair*.json and none has deployment_audit.comparable == True"
+      "why": "results/derived/qwen3-8b__rom-n5-native-hbmkv-wafer-tensor-x1__b200-sxm-x29-hybrid_machine_pair.json: deployment_audit.comparable == False -- NOT COMPARABLE: tensor tile_depth 2048 vs 128 (favours rom 16x), tile_rows 128 vs 64 (neutral at batch-1 decode), tile_cols x issue_window 512x16 vs 128x4 (effective tensor width 1024 vs 512 at lanes=1024, favours rom 1.999x), contraction cycles per step 3,610 vs 115,488 (favours rom 31.99x); attention tile 128x128x64 vs 64x128x128 (tiles per step 4,608 vs 2,304, favours hbm 2x); dma tile 128x64x1 vs 64x128x1 (tiles per step 74,372 vs 74,338, favours hbm 1.0005x; DMA.GATHER (1x256x1) 4 vs 2 tiles per issue, favours hbm 2x; DMA.GATHER (1x4096x1) 64 vs 32 tiles per issue, favours hbm 2x); vector tile 128x256x1 vs 64x128x1 (tiles per step 4,192 vs 8,240, favours rom 1.966x; issued work incl. padding 135,004,160 vs 67,502,080, favours hbm 2x); 18 further cost-bearing field(s) differ (max_outstanding, queue_index, bank_mask, port_mask; see asymmetries); allowlist empty.  These are SCHEDULE fields, so no machine file can correct them; the deployments must be re-emitted under one SCHEDULE rule.; 14 more artifact(s) carry a failing verdict"
     },
     {
       "fails_when": "They disagree.",

@@ -1,0 +1,38 @@
+{
+  "comparable": false,
+  "deployments": {
+    "hbm": {
+      "base_capability": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+      "model_id": "deepseek-v4-flash-0731",
+      "role": "hbm",
+      "status": "no deployment built",
+      "why": "no compiled deepseek-v4-flash-0731 deployment is bound to configs/hardware/abi3_capability/hbm_sram_single_chip.json"
+    },
+    "rom": {
+      "base_capability": "configs/hardware/abi3_capability/rom_deepseek_v4.json",
+      "model_id": "deepseek-v4-flash-0731",
+      "role": "rom",
+      "status": "no deployment built",
+      "why": "no compiled deepseek-v4-flash-0731 deployment is bound to configs/hardware/abi3_capability/rom_deepseek_v4.json"
+    }
+  },
+  "gate": "C2",
+  "generator": "tools/derive_cycle_machine.py",
+  "pair_id": "deepseek-v4-flash-0731__rom-n5-native-hbmkv-wafer-tensor-x1__b200-sxm-x29-tensor",
+  "reason": "no deployment built",
+  "request_symbols": {
+    "BATCH": 1,
+    "CONTEXT_LENGTH": 200000,
+    "GENERATION_INDEX": 1,
+    "MAX_NEW_TOKENS": 1,
+    "NODE_COUNT": 1,
+    "NODE_ID": 0,
+    "PHASE": 1,
+    "POSITION_END": 200000,
+    "POSITION_START": 199999,
+    "SPAN_LAST_INDEX": 0,
+    "SPAN_TOKENS": 1
+  },
+  "schema": "opentallas.deployment_audit.v2",
+  "verdict": "NOT COMPARABLE: no deployment built -- rom: no compiled deepseek-v4-flash-0731 deployment is bound to configs/hardware/abi3_capability/rom_deepseek_v4.json; hbm: no compiled deepseek-v4-flash-0731 deployment is bound to configs/hardware/abi3_capability/hbm_sram_single_chip.json.  A cell with no compiled deployment pair has no deployment-side evidence, and absence is a failure, not a skip."
+}
