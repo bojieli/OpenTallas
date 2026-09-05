@@ -33,13 +33,13 @@
     "status": "pass"
   },
   "annotation": {
-    "annotated_at": "2026-09-05T10:19:59+00:00",
+    "annotated_at": "2026-09-05T03:39:31+00:00",
     "annotated_by": "tools/annotate_physical_record.py",
     "basis": "sha256 of the record as written by the flow tool, canonical JSON with the notes and annotation keys removed; recompute with tools/annotate_physical_record.py --verify",
-    "tool_record_sha256": "87809846748c7f61c883466e6ab567ab808002678915feab321089a16d712644"
+    "tool_record_sha256": "b113351d2700952d69b90ad82ee388818af6b05abefe0208e5bc6d250d142365"
   },
   "campaign_id": "opentallas-abi3-physical-v1",
-  "completed_at": "2026-09-05T06:47:45.158579+00:00",
+  "completed_at": "2026-09-05T03:37:33.592364+00:00",
   "corner": {
     "liberty": [
       {
@@ -103,13 +103,13 @@
       {
         "field": "measured.mac_per_lane_cycle",
         "path": "results/rtl/abi3_pipelined_lane.json",
-        "sha256": "25b3f398dc038a5e2f4472edc20c1433f1a642dd6609fe568d97a075eb14c162",
+        "sha256": "faf3f8d44f6d1b0a70ce6d66858af0e9eec4f84c22ee08e1f44d7ffb62c39d5a",
         "value": 1.0
       },
       {
         "field": "measured.mac_per_lane_cycle",
         "path": "results/rtl/abi3_pipelined_lane_groups.json",
-        "sha256": "356e09286979269f551af0374edc2316e059e4a6649f09c557d5b12e8c1e6be1",
+        "sha256": "d2fad80744973c235bea2a88d38df1c5e5c3a75f552e322cccfec46ab92e94f2",
         "value": 1.0
       }
     ],
@@ -142,24 +142,25 @@
     "top": "ot_a3_lane_pipelined",
     "utilization_fraction": 0.371104
   },
-  "elapsed_seconds": 743.545,
+  "elapsed_seconds": 1326.489,
   "expected_not_met": false,
   "flow_completed": true,
-  "generated_at": "2026-09-05T06:35:21.613713+00:00",
+  "generated_at": "2026-09-05T03:15:27.103450+00:00",
   "git": {
-    "commit": "2f6b0a4e44eab9fa57ca6ec486e6ffb45bb38bb7",
+    "commit": "7a01ce570db6862152673b9334484adf9ee83b9d",
     "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
     "untracked_results": [],
     "worktree_dirty": false,
     "worktree_status": []
   },
   "notes": [
-    "Post-route worst setup path (6_finish.rpt, report_checks -path_delay max): p_mag[0] flop -> g_pow[11] flop, data arrival 5.119 ns against 6.110 ns required, slack +0.991 ns; register to register through the AM-E1 group alignment (product magnitude, leading-one detect and shift, group exponent), 146 cell output pins on the data path, mostly AO21/OA21 and half adders. The routed netlist and the finish report are byte-identical to those of the record committed at 7ee333d (6_final.v sha256 516279a2de2b..., 6_finish.rpt sha256 d5df81443f4f...): same RTL, same pinned container, same flow, same result.",
-    "Provenance: rtl/abi3/ot_a3_lane_pipelined.sv is unchanged since 7a01ce5 (sha256 35261aff1966...); this route ran from the clean worktree pinned at 2f6b0a4 (tag phys-item11-2f6b0a4), the commit whose results/rtl records are the full-profile d1 and groups campaigns run on 7a01ce5 itself. mac_rate_evidence therefore cites results/rtl/abi3_pipelined_lane.json (sha256 25b3f398dc03...) and abi3_pipelined_lane_groups.json (sha256 356e09286979...) as committed at 2f6b0a4: both simulators, status pass, bit_identity.equal true, vector_manifests_match_committed true, measured.mac_per_lane_cycle 1.0, failure_modes.all_distinct true. The record committed at 7ee333d cited the c2190cb-era records made on the lane before the divider was removed; it is kept beside this one as pnr_prev_7ee333d.json, and every physical figure in it is reproduced here unchanged.",
-    "Target choice: 6.0 ns is 1.39x the pre-layout search minimum of 4.318 ns at L=3 (12 evaluations, bisection to 0.1%; prelayout_L3.json and prelayout_item11_L3.json beside this record, both at 7a01ce5, report the same minimum; L=2 4.447 ns, L=1 5.135 ns). Post-route fmax 199.7 MHz (5.009 ns) is 1.16x the pre-layout minimum. 743.5 s in the flow (1,326 s for the record at 7ee333d: the same flow under more machine load). Driver argv is that record's with only the output paths changed; tools/run_abi3_physical.py is identical at 2f6b0a4 and on main."
+    "Post-route worst setup path (6_finish.rpt, report_checks -path_delay max): p_mag[0] flop -> g_pow[11] flop, data arrival 5.119 ns against 6.110 ns required; register to register through the AM-E1 group alignment (product magnitude, leading-one detect and shift, group exponent), 154 data-path cells, mostly AO21/OA21 and half adders. The previous record's limiter, cfg_block_rows_b (input port) -> flop through the scale_index() divider, no longer exists: the divider left the lane in 7a01ce5.",
+    "Companion run: the same flow from the same pinned worktree (7a01ce5) at a 7.5 ns target also closed -- setup WNS +2.455 ns, hold WNS +0.037 ns, fmax 198.2 MHz, 32,928 cells, 3,790.93 um2, DRC 0, antenna 0, 1,323 s. The tighter 6.0 ns run is the record kept; the 7.5 ns record stays in the run's scratch directory and is not committed.",
+    "Target choice: 6.0 ns is 1.39x the pre-layout search minimum of 4.318 ns at L=3 (prelayout_L3.json beside this record; L=2 4.447 ns, L=1 5.135 ns). Post-route fmax 199.7 MHz (5.009 ns) is 1.16x the pre-layout minimum; the previous record degraded 6.845 ns -> 14.9 ns on the divider path.",
+    "mac_rate_evidence sha256s are those of results/rtl/abi3_pipelined_lane.json and abi3_pipelined_lane_groups.json as committed at 7a01ce5, i.e. the records made at c2190cb on the lane before the divider was removed (both measured.mac_per_lane_cycle = 1.0). The groups campaign re-run at full profile on 7a01ce5 from the same worktree (tools/rtl_abi3_lane_campaign.py --suite groups --profile full, both simulators) reports status pass, bit_identity.equal true, vector_manifests_match_committed true, measured.mac_per_lane_cycle 1.0 and failure_modes.all_distinct true; the d1 suite's full re-run was still in progress when this record was committed and its outcome is recorded by the results/rtl regeneration, not here."
   ],
   "place_and_route": {
-    "artifact_dir": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/lane11/routes_asap7/lane_6p0/asap7/a3_lane_pipelined/pnr_artifacts",
+    "artifact_dir": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/lane11/pnr/lane_6p0/asap7/a3_lane_pipelined/pnr_artifacts",
     "artifacts": {
       "1_2_yosys.v": {
         "retained": true,
@@ -178,7 +179,7 @@
       },
       "6_final.gds": {
         "retained": false,
-        "sha256": "ebb16dfc1b213d0d4f6caf655928a1e2c7ffa9aa4d153267045786a04a0389c3",
+        "sha256": "1cb9d2f9c01295a16fa953c673a27c0092febdbb888a7a03628c0854d66197de",
         "size_bytes": 38991930
       },
       "6_final.odb": {
@@ -188,7 +189,7 @@
       },
       "6_final.spef": {
         "retained": false,
-        "sha256": "9d6f1d1b45f8f202dcbe4294b7c888a03e0ac75b7953c6f1082e8d7c9b7a5294",
+        "sha256": "f10656c74b6740f340d7aa090800b33a205cfa259ebf39f71813ecf4205452e8",
         "size_bytes": 41859555
       },
       "6_final.v": {
@@ -213,8 +214,8 @@
       },
       "metadata.json": {
         "retained": true,
-        "sha256": "454af79b69f6db496d9b6cdc236b3d18b17a6a2145cfabdedf81d0556d9f80ba",
-        "size_bytes": 23847
+        "sha256": "49232ffe7795b059b05d25f5e6b479f51aa6b93f4b40b6de044be5793a50169d",
+        "size_bytes": 23849
       }
     },
     "clock_period_ns": 6.0,
@@ -470,9 +471,9 @@
       "--mac-rate-evidence",
       "results/rtl/abi3_pipelined_lane_groups.json:measured.mac_per_lane_cycle",
       "--output",
-      "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/lane11/routes_asap7/lane_6p0/asap7/a3_lane_pipelined/pnr.json",
+      "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/lane11/pnr/lane_6p0/asap7/a3_lane_pipelined/pnr.json",
       "--keep-workdir",
-      "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/lane11/routes_asap7/work_lane_6p0"
+      "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/lane11/pnr/work_lane_6p0"
     ],
     "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
     "python": "3.10.12"
@@ -576,8 +577,8 @@
     "liberty_cell_count": 202,
     "macro_count": 0,
     "netlist_normalization": {
-      "normalized_netlist_sha256": "4a44bb08944de34770e98f673c5ef8f0044351200473b95964441b872cde074b",
-      "raw_netlist_sha256": "4a44bb08944de34770e98f673c5ef8f0044351200473b95964441b872cde074b",
+      "normalized_netlist_sha256": "9fc58afc8646f777e5c88aa886e95528b2f375ce65eb422f37811b52aaa738eb",
+      "raw_netlist_sha256": "9fc58afc8646f777e5c88aa886e95528b2f375ce65eb422f37811b52aaa738eb",
       "signed_declarations_stripped": 0
     },
     "sequential_area_um2": 926.209,
