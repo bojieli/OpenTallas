@@ -3899,7 +3899,9 @@ def _bind_shipped_deployment(base_capability: str, model_id: str,
 
 def deployment_audit_for_pair(anchor: "Anchor", d: "Derivation",
                               bodies: Mapping[str, Mapping[str, Any]],
-                              tables: Mapping[str, Path]) -> dict[str, Any]:
+                              tables: Mapping[str, Path],
+                              report_tables: Mapping[str, Path] | None = None,
+                              ) -> dict[str, Any]:
     """The C2 audit of one cell: its bound deployments, or why it has none.
 
     Absence is a failure, never a skip: a cell whose deployments were never
@@ -3969,10 +3971,14 @@ def deployment_audit_for_pair(anchor: "Anchor", d: "Derivation",
         return base
     tensor = machine.engine("tensor")
     base.update(report)
+    # The audit LOADS the cost table from ``tables`` -- which, on a --check
+    # run, is a scratch copy -- but it must NAME the file the artifact is
+    # published against, or every re-check would report drift on a path.
+    named = report_tables if report_tables is not None else tables
     base["machine"] = {
-        "capability": _relative(tables["rom_capability"]) if isinstance(
-            tables.get("rom_capability"), Path) else str(tables.get("rom_capability")),
-        "cost_table": _relative(tables["rom_cost_table"]),
+        "capability": _relative(named["rom_capability"]) if isinstance(
+            named.get("rom_capability"), Path) else str(named.get("rom_capability")),
+        "cost_table": _relative(named["rom_cost_table"]),
         "tensor_lanes": tensor.lanes,
         "tensor_work_per_lane_cycle": tensor.work_per_lane_cycle,
         "queue_depth": tensor.queue_depth,
@@ -4595,7 +4601,8 @@ def emit_cell(anchor: Anchor, config_dir: Path, artifact_dir: Path, *,
         # C2 runs on every emit too: the deployment-side half of D1, against
         # the compiled deployments the cell's base capabilities bind to, or a
         # recorded failure when there are none.
-        deployment_audit = deployment_audit_for_pair(anchor, d, bodies, tables)
+        deployment_audit = deployment_audit_for_pair(
+            anchor, d, bodies, tables, report_tables=paths)
     art = artifact(anchor, d, comparability, {
         k: _relative(v) for k, v in paths.items()
         if k not in ("artifact", "deployment_audit")
@@ -4604,6 +4611,25 @@ def emit_cell(anchor: Anchor, config_dir: Path, artifact_dir: Path, *,
         paths["artifact"].parent.mkdir(parents=True, exist_ok=True)
         paths["artifact"].write_text(canonical(art))
         paths["deployment_audit"].write_text(canonical(deployment_audit))
+    else:
+        # The pair artifact and its audit are the files gate C2 READS.  Until
+        # this comparison existed, --check verified the four emitted config
+        # files and stopped, so it could report "0 drifted" over a stale
+        # deployment_audit.comparable -- the check that vouches for the gate's
+        # evidence never opened the gate's evidence.  A verdict on disk that a
+        # fresh derivation no longer produces is exactly the stale-artifact
+        # failure the R-series post-mortems name.
+        for key, rendered_text in (
+            ("artifact", canonical(art)),
+            ("deployment_audit", canonical(deployment_audit)),
+        ):
+            path = paths[key]
+            if not path.exists():
+                drift.append(f"{_relative(path)} is missing")
+            elif path.read_text() != rendered_text:
+                drift.append(
+                    f"{_relative(path)} does not match a fresh derivation"
+                )
     return {
         "derivation": d, "bodies": bodies, "paths": paths, "drift": drift,
         "rendered": rendered, "comparability": comparability, "artifact": art,

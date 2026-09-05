@@ -109,6 +109,39 @@ def test_check_mode_agrees():
     assert proc.returncode == 0, proc.stderr
 
 
+def test_matrix_check_reads_the_files_the_c2_gate_reads(tmp_path):
+    """--check must open the pair artifact, not only the emitted config files.
+
+    Until this was pinned, ``--matrix --check`` compared the four emitted
+    capability and cost-table files per cell and stopped.  A pair artifact
+    whose ``deployment_audit.comparable`` no longer matched a fresh derivation
+    passed the check untouched -- the check that vouches for gate C2's evidence
+    never opened that evidence.  This test edits the verdict on disk, requires
+    the check to fail, and restores the file.
+    """
+    path = next(
+        p for p in PAIR_ARTIFACTS
+        if json.loads(p.read_text())["deployment_audit"]["comparable"] is False
+    )
+    original = path.read_text()
+    body = json.loads(original)
+    body["deployment_audit"]["comparable"] = True
+    try:
+        path.write_text(json.dumps(body, indent=2))
+        proc = subprocess.run(
+            [sys.executable, "tools/derive_cycle_machine.py",
+             "--matrix", "--check"],
+            cwd=REPO, capture_output=True, text=True,
+        )
+        assert proc.returncode != 0, (
+            "--matrix --check passed over a pair artifact whose verdict a "
+            "fresh derivation does not produce"
+        )
+        assert path.name in proc.stderr, proc.stderr
+    finally:
+        path.write_text(original)
+
+
 # ---------------------------------------------------------------------------
 # 2.  D1: the two machines are one machine outside the weight path
 # ---------------------------------------------------------------------------
