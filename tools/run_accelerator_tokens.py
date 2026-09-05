@@ -152,26 +152,34 @@ FUNCTIONAL_SOURCE_PATHS = (
     "runtime/tensor_accelerator/sparse_attention.py",
 )
 
+# ``compiler/backends/schedule_rule.py`` is AM-E9's one SCHEDULE emission
+# rule, shared by every backend: it fixes the tile shape, issue window,
+# outstanding bound, queue and port mask of every operator, so it is a
+# functional source of every deployment.
 BACKEND_FUNCTIONAL_SOURCE_PATHS = {
     "hbm_sram": (
         "compiler/backends/hbm_sram/lower.py",
         "compiler/backends/hbm_sram/plan.py",
+        "compiler/backends/schedule_rule.py",
     ),
     "rom_qwen3": (
         "compiler/backends/rom/qwen3.py",
         "compiler/backends/rom/common/image.py",
         "compiler/backends/rom/common/program.py",
+        "compiler/backends/schedule_rule.py",
     ),
     "rom_deepseek_v4": (
         "compiler/backends/rom/deepseek_v4.py",
         "compiler/backends/rom/common/image.py",
         "compiler/backends/rom/common/program.py",
+        "compiler/backends/schedule_rule.py",
     ),
     "rom_deepseek_v4_array": (
         "compiler/backends/rom/deepseek_v4_array.py",
         "compiler/backends/rom/deepseek_v4.py",
         "compiler/backends/rom/common/image.py",
         "compiler/backends/rom/common/program.py",
+        "compiler/backends/schedule_rule.py",
     ),
 }
 

@@ -42,6 +42,12 @@ from __future__ import annotations
 from dataclasses import replace
 from typing import Any, Iterable, Mapping, Sequence
 
+from compiler.backends.schedule_rule import (
+    OperatorShape,
+    e9_schedule,
+    family_ordinals,
+    queue_ordinal,
+)
 from compiler.backends.numeric_contracts import (
     EXECUTION_CONTRACT,
     reduction_order_for,
@@ -374,6 +380,9 @@ class _Emitter:
         self.node_count = plan.topology.node_count
         self.tensors = {t.tensor_id: t for t in graph.tensors}
         self.kernels = {k.index: k for k in graph.kernels}
+        # AM-E9: queue_index is the operator's rank among same-family kernels
+        # in graph order, the same function the ROM backend evaluates.
+        self._queue_ordinals = family_ordinals(graph)
         self._value_reads = value_reads(graph)
         # Amendment A3.  The neutral graph states three conditional shapes and
         # ABI 3.0 states one thing about an instruction -- ``predicate_id``
@@ -1334,37 +1343,74 @@ class _Emitter:
     def _schedule_for(self, plan: KernelPlan, family: int | None = None) -> int:
         """The tile mapping, bank/port use, issue window and resource bound.
 
-        These numbers are the cycle model's direct input, so they are derived
-        from the real extents and the real bank plan.  A zeroed tile mapping
-        would produce a meaningless timing result, which is why the planner
-        chooses divisor tiles rather than leaving the field at zero.
+        These numbers are the cycle model's direct input.  AM-E9
+        (``compiler/backends/schedule_rule.py``): every tiled field -- tile
+        shape, issue window, outstanding bound, queue index and port mask --
+        is the one rule both backends share, evaluated on the shape the plan
+        read off the neutral kernel, so the ROM lowering of the same kernel
+        carries the same fields.  What this backend still decides is the
+        storage-class consequence the rule leaves to it: the bank mask names
+        the scratchpad staging groups the family streams through (AM-C4;
+        ``_ENGINE_REGIONS``), and the inert resource bound is the lane count.
         """
         # A kernel whose neutral kind lowers to more than one engine -- a
         # sharded contraction, whose all-gather is a pack, a collective and an
         # unpack -- names the family its instructions actually carry, because a
         # SCHEDULE descriptor is typed by engine family and the verifier checks
-        # the two agree.
+        # the two agree.  An auxiliary operator in another family has no K
+        # axis of its own and takes the kernel's graph index as its ordinal.
         family = plan.engine_family if family is None else int(family)
-        mask, ports = self._bank_and_port_mask(family)
-        key = (family, plan.tile_rows, plan.tile_cols, plan.tile_depth, mask, ports)
+        own = family == int(plan.engine_family)
+        shape = OperatorShape(
+            rows=max(int(plan.schedule_rows), 1),
+            cols=max(int(plan.schedule_cols), 1),
+            reduction=max(int(plan.schedule_reduction), 1) if own else 1,
+            contracts=bool(plan.schedule_contracts) if own else False,
+        )
+        rule = e9_schedule(
+            shape,
+            family,
+            self.capability,
+            ordinal=(
+                int(plan.queue_ordinal)
+                if own
+                else queue_ordinal(self._queue_ordinals, plan.index, family)
+            ),
+            # The cluster keeps the last DMA queue for the exchange buffer
+            # (``_scratch_schedule_for``); no ordinary operator may share it.
+            reserved_queues=(
+                1 if family == int(Major.DMA) and self.node_count > 1 else 0
+            ),
+        )
+        mask, _rule_ports = self._bank_and_port_mask(family)
+        key = (
+            family,
+            rule.tile_rows,
+            rule.tile_cols,
+            rule.tile_depth,
+            rule.issue_window,
+            rule.max_outstanding,
+            rule.queue_index,
+            mask,
+            rule.port_mask,
+        )
         if key in self._schedule:
             return self._schedule[key]
         name = Major(family).name.lower()
         engine = dict(self.capability.engines.get(name, {}))
-        queues = int(engine.get("queues", 1))
         lanes = int(engine.get("lanes", 1))
         sid = self.builder.schedule(
             engine_family=Major(family),
-            queue_index=0,
-            issue_window=queues,
-            tile_rows=plan.tile_rows,
-            tile_cols=plan.tile_cols,
-            tile_depth=plan.tile_depth,
+            queue_index=rule.queue_index,
+            issue_window=rule.issue_window,
+            tile_rows=rule.tile_rows,
+            tile_cols=rule.tile_cols,
+            tile_depth=rule.tile_depth,
             bank_mask=mask,
-            port_mask=ports,
+            port_mask=rule.port_mask,
             noc_route_class=0,
             resource_bound=lanes,
-            max_outstanding=int(self.capability.limits["max_outstanding_per_queue"]),
+            max_outstanding=rule.max_outstanding,
             priority=0,
             key=f"sched.{len(self._schedule)}",
         )

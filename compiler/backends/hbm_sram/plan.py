@@ -60,6 +60,13 @@ from pathlib import Path
 from typing import Any, Container, Mapping, Sequence
 
 from compiler.backends.activation_liveness import LiveBuffer, allocate_live_buffers
+from compiler.backends.schedule_rule import (
+    choose_tile,
+    e9_schedule,
+    family_ordinals,
+    operator_shape as _e9_operator_shape,
+    queue_ordinal,
+)
 from compiler.ir.v3.kernel_ir import (
     Kernel,
     KernelGraph,
@@ -192,21 +199,9 @@ def bytes_for(elements: int, dtype: str) -> int:
     return (bits + 7) // 8
 
 
-def choose_tile(extent: int, target: int) -> int:
-    """Largest divisor of ``extent`` not exceeding ``target``.
-
-    Divisor tiling removes edge tiles entirely: every tile of every loop is
-    full, so one tensor view with one dynamic term covers the whole axis and
-    the verifier's view-bound proof is exact rather than conservative.
-    """
-    if extent <= 0:
-        raise PlanError(f"cannot tile a non-positive extent {extent}")
-    limit = min(target, extent)
-    for candidate in range(limit, 0, -1):
-        if extent % candidate == 0:
-            return candidate
-    return 1
-
+# ``choose_tile`` -- the largest-divisor tile rule -- now lives in
+# ``compiler.backends.schedule_rule`` (AM-E9) and is imported above, so both
+# backends tile by one definition.
 
 def round_up(value: int, multiple: int) -> int:
     if multiple <= 0:
@@ -231,12 +226,14 @@ def _as_json(value: Any) -> Any:
 class TileConfig:
     """Tile and block shapes.
 
-    ``rows``/``cols``/``depth`` are the *hardware* tile the SCHEDULE descriptor
-    carries: how one engine operation is decomposed across lanes, banks and
-    passes.  ``block`` is the *program* token block, the only one of the four
-    that becomes a loop, because the number of tokens is the thing that
-    genuinely varies at runtime.  Actual tiles are the largest divisors of the
-    real extents not exceeding these targets, so no tile is ever partial.
+    ``block`` is the *program* token block, the only one of the four that
+    becomes a loop, because the number of tokens is the thing that genuinely
+    varies at runtime.  ``rows``/``cols``/``depth`` were this backend's private
+    targets for the *hardware* tile the SCHEDULE descriptor carries; under
+    AM-E9 (``compiler/backends/schedule_rule.py``) that tile is one rule shared
+    with the ROM backend and these three fields no longer reach any
+    descriptor -- they remain only as the scratchpad allocator's fallback
+    sizing when a plan has no kernels.
 
     ``block`` is the number of tokens one iteration of the token loop covers.
     A tensor view's extents are static while the token count is a runtime
@@ -788,6 +785,16 @@ class KernelPlan:
     #: Consecutive kernels with the same non-empty ID execute inside one shared
     #: token-block loop. Empty on ordinary producer-then-consumer schedules.
     stream_group: str = ""
+    #: AM-E9 inputs (``compiler/backends/schedule_rule.py``): the rows one
+    #: dispatch covers, the output width, the contracted extent and whether a
+    #: K axis exists, plus the operator's graph-derived queue ordinal.  The
+    #: lowering derives every tiled SCHEDULE field from these through the one
+    #: rule both backends share; ``tile_*`` above are that rule's tile.
+    schedule_rows: int = 1
+    schedule_cols: int = 1
+    schedule_reduction: int = 1
+    schedule_contracts: bool = False
+    queue_ordinal: int = 0
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -805,6 +812,11 @@ class KernelPlan:
             "tile_rows": self.tile_rows,
             "tile_cols": self.tile_cols,
             "tile_depth": self.tile_depth,
+            "schedule_rows": self.schedule_rows,
+            "schedule_cols": self.schedule_cols,
+            "schedule_reduction": self.schedule_reduction,
+            "schedule_contracts": self.schedule_contracts,
+            "queue_ordinal": self.queue_ordinal,
             "row_loop": self.row_loop.to_dict() if self.row_loop else None,
             **(
                 {"context_loop": self.context_loop.to_dict()}
@@ -4309,28 +4321,6 @@ def _infer_expert_count(
     return 0
 
 
-def _pass_depth(
-    kernel: Kernel, tensors: Mapping[str, Tensor], span_max: int, tile: TileConfig
-) -> int:
-    """The depth a non-contraction operation reduces or passes over.
-
-    Attention reduces over the head dimension, so that is its depth.  A lookup,
-    a movement or an elementwise pass reduces over nothing and makes one pass,
-    which is a depth of one.  Zero would mean "unstated", and a cycle model
-    cannot decompose an operation whose tile shape says nothing.
-    """
-    engine = engine_for(kernel.kind)
-    if int(engine.family) == int(Major.ATTENTION) and kernel.inputs:
-        shape = tensors[kernel.inputs[0]].shape
-        if shape:
-            head_dim, _ = _extent_value(shape[-1], span_max)
-            return choose_tile(max(int(head_dim), 1), tile.depth)
-    domain = _domain_extent(kernel, ("reduction_width", "reduction", "depth"), span_max)
-    if domain:
-        return choose_tile(domain, tile.depth)
-    return 1
-
-
 def _scale_row_block(tensors: Mapping[str, Tensor], tensor_id: str) -> int:
     """How many leading rows one of a weight's scale codes covers.
 
@@ -4433,6 +4423,10 @@ def _plan_kernels(
     # a raw layer number would extend a main layer's sharding to the DSpark
     # stage that happens to carry the same number.
     layer_keys = layer_key_map(graph)
+    # AM-E9: queue_index is the operator's rank among same-family kernels in
+    # graph order -- a property of the graph, computed once here and once in
+    # the ROM backend from the same function.
+    ordinals = family_ordinals(graph)
     expert_sharded_layers: set[int | None] = set()
     if node_count > 1:
         for routed in graph.kernels:
@@ -4653,15 +4647,25 @@ def _plan_kernels(
         # Tile shape for the SCHEDULE descriptor.  These are hardware tiles, not
         # program loops: the engine decomposes one operator this way and the
         # cycle model costs it from exactly these numbers, so every field has to
-        # state something.  An operation with no contraction axis still has a
-        # depth: a lookup or an elementwise pass makes one pass over its row,
-        # and attention's depth is the head dimension it reduces over.
-        tile_rows = choose_tile(max(rows, 1), tile.rows) if not symbolic else tile.rows
-        tile_cols = choose_tile(max(shard_columns, 1), tile.cols)
-        if depth:
-            tile_depth = choose_tile(depth, tile.depth)
-        else:
-            tile_depth = _pass_depth(kernel, tensors, span_max, tile)
+        # state something.  AM-E9: the shape is read off the neutral kernel and
+        # the tile is the one rule both backends share
+        # (``compiler/backends/schedule_rule.py``), so the ROM lowering of this
+        # same kernel carries the same fields.  ``rows`` is what one dispatch
+        # covers: the token block for a symbolic-leading operand, the static
+        # extent otherwise.
+        e9_shape = _e9_operator_shape(
+            kernel,
+            tensors,
+            int(engine.family),
+            int(engine.sub),
+            rows=kernel_block if symbolic else max(rows, 1),
+            capability=capability,
+        )
+        e9_ordinal = queue_ordinal(ordinals, kernel.index, int(engine.family))
+        e9 = e9_schedule(e9_shape, int(engine.family), capability, ordinal=e9_ordinal)
+        tile_rows = e9.tile_rows
+        tile_cols = e9.tile_cols
+        tile_depth = e9.tile_depth
 
         row_loop = None
         if symbolic:
@@ -4813,6 +4817,11 @@ def _plan_kernels(
                 tile_rows=tile_rows,
                 tile_cols=tile_cols,
                 tile_depth=tile_depth,
+                schedule_rows=e9_shape.rows,
+                schedule_cols=e9_shape.cols,
+                schedule_reduction=e9_shape.reduction,
+                schedule_contracts=e9_shape.contracts,
+                queue_ordinal=e9_ordinal,
                 row_loop=row_loop,
                 context_loop=context_loop,
                 operands=tuple(operands),

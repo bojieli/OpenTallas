@@ -23,6 +23,12 @@ from typing import Any, Callable, Mapping, Sequence
 
 from compiler.ir.v3.kernel_ir import Kernel, KernelGraph, Symbolic, Tensor
 from compiler.ir.v3.lowering import engine_for
+from compiler.backends.schedule_rule import (
+    COLUMN_LANE_FAMILIES,
+    E9_TILE_COLS,
+    operator_shape as _e9_operator_shape,
+    sram_ports as _e9_sram_ports,
+)
 from runtime.abi3.capability import Capability, canonical_json
 from runtime.abi3.constants import (
     Control,
@@ -615,6 +621,10 @@ def check_rom_schedule(
     queue_dispatch_bound: dict[str, int] = {}
     graph_tensors = {tensor.tensor_id: tensor for tensor in graph.tensors}
     resource_issues: list[tuple[int, int, int, int, int, set[int], int]] = []
+    # AM-C4 / [T2.1-20]: scratchpad ports per bank -- ``memory.sram.ports``
+    # when the capability publishes it, two otherwise (the same reading the
+    # emission rule takes, so the checker and the compiler cannot disagree).
+    ports = _e9_sram_ports(capability)
     queue_pressure_slots = 0
     memory_read_bound = {name: 0 for name in ("rom", "sram", "hbm", "state", "host")}
     memory_write_bound = {name: 0 for name in ("rom", "sram", "hbm", "state", "host")}
@@ -665,7 +675,16 @@ def check_rom_schedule(
         rows = int(payload["tile_rows"])
         cols = int(payload["tile_cols"])
         depth = int(payload["tile_depth"])
-        lanes = max(int(engine_spec.get("lanes", 0)) or 64, 1)
+        # AM-E9: a tile is at most 64 columns wide ([T2.1-3]).  A column-lane
+        # engine (tensor, vector, attention, reduction) that advertises fewer
+        # lanes bounds the tile at its lane count; the ``lanes`` the DMA,
+        # selection, state and link engines publish are movers and units and
+        # the route engine's are key lanes ([T2.1-12], design section 3.8),
+        # not a column bound.
+        if family in COLUMN_LANE_FAMILIES:
+            lanes = max(int(engine_spec.get("lanes", 0)) or E9_TILE_COLS, 1)
+        else:
+            lanes = E9_TILE_COLS
         require(
             "tile_geometry",
             rows > 0 and cols > 0 and depth > 0 and cols <= lanes,
@@ -676,8 +695,8 @@ def check_rom_schedule(
         input_views = _operator_views(operator, "input_view_", 4, views, require)
         output_views = _operator_views(operator, "output_view_", 2, views, require)
         expected_bank = _bank_mask(input_views, objects, plan_objects)
-        expected_port = _port_mask((*input_views, *output_views), objects)
-        allocated_ports = _allocated_port_mask(objects)
+        expected_port = _port_mask((*input_views, *output_views), objects, ports)
+        allocated_ports = _allocated_port_mask(ports)
         expected_route = _route_class(input_views, objects, plan_objects)
         expected_bound = _resource_bound(family, input_views, objects)
         require(
@@ -687,17 +706,21 @@ def check_rom_schedule(
             f"ROM operands reconstruct to {expected_bank:#x}",
         )
         actual_port = int(payload["port_mask"])
+        # AM-C4: port_mask bit p is scratchpad port p, and AM-E9 grants every
+        # operator every port.  An operator with a mutable (non-ROM) operand
+        # must therefore name all of them; a bit above the port count names a
+        # port the capability does not have.
         require(
             "memory_port_coverage",
             actual_port & expected_port == expected_port,
-            f"schedule {schedule_id} port mask {actual_port:#x} omits visible "
-            f"operand ports {expected_port:#x}",
+            f"schedule {schedule_id} port mask {actual_port:#x} omits scratchpad "
+            f"ports {expected_port:#x} its mutable operands are served on",
         )
         require(
             "memory_ports_allocated",
             actual_port & ~allocated_ports == 0,
-            f"schedule {schedule_id} names a port with no emitted mutable "
-            f"object: mask {actual_port:#x}, allocated {allocated_ports:#x}",
+            f"schedule {schedule_id} names a scratchpad port the capability "
+            f"does not publish: mask {actual_port:#x}, ports {allocated_ports:#x}",
         )
         require(
             "operator_route_class",
@@ -713,7 +736,6 @@ def check_rom_schedule(
         )
 
         rom_banks = max(int(capability.memory.get("rom", {}).get("banks", 0)), 1)
-        sram_banks = max(int(capability.memory.get("sram", {}).get("banks", 0)), 1)
         require(
             "bank_mask_capacity",
             int(payload["bank_mask"]) & ~((1 << min(rom_banks, 32)) - 1) == 0,
@@ -721,9 +743,9 @@ def check_rom_schedule(
         )
         require(
             "port_mask_capacity",
-            int(payload["port_mask"]) & ~((1 << min(sram_banks, 32)) - 1) == 0,
-            f"schedule {schedule_id} names a mutable-memory port outside the "
-            "capability",
+            int(payload["port_mask"]) & ~((1 << min(ports, 32)) - 1) == 0,
+            f"schedule {schedule_id} names a scratchpad port outside the "
+            f"capability's {ports}",
         )
         link_classes = int(topology.get("link_class_count", 0))
         require(
@@ -738,7 +760,10 @@ def check_rom_schedule(
         source_kernel = graph.kernels[int(operator.payload["source_kernel_id"])]
         tiles = max(
             _tile_count_bound(rows, cols, depth, input_views, output_views),
-            _graph_tile_count_bound(source_kernel, graph_tensors, rows, cols, depth),
+            _graph_tile_count_bound(
+                source_kernel, graph_tensors, family, int(instruction.sub),
+                capability, rows, cols, depth,
+            ),
         )
         require(
             "outstanding_has_work",
@@ -2742,36 +2767,29 @@ def _bank_mask(
     return mask
 
 
-def _port_mask(views: Sequence[Any], objects: Mapping[int, Any]) -> int:
-    mask = 0
+def _port_mask(views: Sequence[Any], objects: Mapping[int, Any], ports: int) -> int:
+    """The scratchpad ports an operator's mutable operands are served on.
+
+    AM-C4 (design section 3.8, 10.1): ``port_mask`` bit p is scratchpad port
+    p -- the reading ``runtime.cycle.model.MemorySystem._allowed`` takes, bits
+    over ``ports_per_unit`` -- and AM-E9 grants every operator every port, so
+    an operator with any non-ROM operand must name all ``ports`` of them.  The
+    previous reading (bit b = the SRAM *bank* of each activation object) was a
+    bank set in a port field, and the shipped ROM program carried it while the
+    HBM program carried ports; the two could never agree.
+    """
     for view in views:
         obj = objects.get(int(view.primary_object_id))
         if obj is None or int(obj.payload["storage_class"]) == int(StorageClass.ROM):
             continue
-        port = int(obj.payload["bank_or_tile"])
-        if 0 <= port < 32:
-            mask |= 1 << port
-    return mask
+        return (1 << min(max(int(ports), 1), 32)) - 1
+    return 0
 
 
-def _allocated_port_mask(objects: Mapping[int, Any]) -> int:
-    """Mutable logical ports that have a concrete object behind them.
+def _allocated_port_mask(ports: int) -> int:
+    """Every scratchpad port the capability publishes (AM-C4)."""
 
-    A substituted host input and a few ABI auxiliary operands reserve a port in
-    the source schedule while their OPERATOR row names no ordinary tensor view.
-    Those hidden uses cannot be reconstructed as an exact per-operator mask
-    from the wire records.  They can still be proved to name a real allocated
-    port, while every visible operand must appear explicitly.
-    """
-
-    mask = 0
-    for obj in objects.values():
-        if int(obj.payload["storage_class"]) == int(StorageClass.ROM):
-            continue
-        port = int(obj.payload["bank_or_tile"])
-        if 0 <= port < 32:
-            mask |= 1 << port
-    return mask
+    return (1 << min(max(int(ports), 1), 32)) - 1
 
 
 def _route_class(
@@ -2868,6 +2886,9 @@ def _tile_count_bound(
 def _graph_tile_count_bound(
     kernel: Kernel,
     tensors: Mapping[str, Tensor],
+    family: int,
+    sub: int,
+    capability: Capability,
     tile_rows: int,
     tile_cols: int,
     tile_depth: int,
@@ -2878,13 +2899,14 @@ def _graph_tile_count_bound(
     view even though its schedule prices the complete neutral operation.  The
     source graph is therefore the authority for the upper work envelope; using
     only that narrowed view would incorrectly call legitimate queue depth idle.
+
+    The envelope is the graph's own extents read the way AM-E9 reads them
+    (``compiler.backends.schedule_rule.operator_shape``): the output width, the
+    contracted extent -- a weight's K, or the context positions an attention
+    operator walks (AM-E2 v2: 128 per block) -- and the rows the iteration
+    domain names, which bound every dispatch the compiler can state.
     """
 
-    weights = [
-        tensors[name]
-        for name in kernel.inputs
-        if name in tensors and tensors[name].role in _WEIGHT_ROLES
-    ]
     outputs = [tensors[name] for name in kernel.outputs if name in tensors]
     rows = _domain_int(kernel, "tokens", 0)
     if rows <= 0:
@@ -2892,18 +2914,13 @@ def _graph_tile_count_bound(
     if rows <= 0 and outputs:
         rows = _extent(outputs[0].shape[0])
     rows = max(rows, 1)
-    if weights:
-        dims = tuple(_extent(dim) for dim in weights[0].shape)
-        width = max(dims[0], 1)
-        reduction = max(dims[-1], 1)
-    elif outputs:
-        dims = tuple(_extent(dim) for dim in outputs[0].shape)
-        width = max(dims[-1], 1)
-        reduction = 1
-    else:
-        width = reduction = 1
+    shape = _e9_operator_shape(
+        kernel, tensors, family, sub, rows=rows, capability=capability
+    )
     return (
-        ceil(rows / tile_rows) * ceil(width / tile_cols) * ceil(reduction / tile_depth)
+        ceil(shape.rows / tile_rows)
+        * ceil(shape.cols / tile_cols)
+        * ceil(shape.reduction / tile_depth)
     )
 
 

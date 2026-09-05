@@ -110,18 +110,23 @@ FUNCTIONAL_COMMON_SOURCES = frozenset(
         "runtime/tensor_accelerator/sparse_attention.py",
     }
 )
+# ``compiler/backends/schedule_rule.py`` is AM-E9's one SCHEDULE emission rule,
+# a functional source of every backend (tools/run_accelerator_tokens.py
+# BACKEND_FUNCTIONAL_SOURCE_PATHS), so every boundary below carries it.
 FUNCTIONAL_BACKEND_SOURCES = {
     ("qwen3_rom_single_chip_vs_hbm_single_chip", "rom"): frozenset(
         {
             "compiler/backends/rom/qwen3.py",
             "compiler/backends/rom/common/image.py",
             "compiler/backends/rom/common/program.py",
+            "compiler/backends/schedule_rule.py",
         }
     ),
     ("qwen3_rom_single_chip_vs_hbm_single_chip", "hbm"): frozenset(
         {
             "compiler/backends/hbm_sram/lower.py",
             "compiler/backends/hbm_sram/plan.py",
+            "compiler/backends/schedule_rule.py",
         }
     ),
     ("deepseek_v4_rom_wafer_vs_hbm_cluster_32", "rom"): frozenset(
@@ -129,12 +134,14 @@ FUNCTIONAL_BACKEND_SOURCES = {
             "compiler/backends/rom/deepseek_v4.py",
             "compiler/backends/rom/common/image.py",
             "compiler/backends/rom/common/program.py",
+            "compiler/backends/schedule_rule.py",
         }
     ),
     ("deepseek_v4_rom_wafer_vs_hbm_cluster_32", "hbm"): frozenset(
         {
             "compiler/backends/hbm_sram/lower.py",
             "compiler/backends/hbm_sram/plan.py",
+            "compiler/backends/schedule_rule.py",
         }
     ),
     ("deepseek_v4_rom_wafer_vs_rom_array_32", "rom"): frozenset(
@@ -142,6 +149,7 @@ FUNCTIONAL_BACKEND_SOURCES = {
             "compiler/backends/rom/deepseek_v4.py",
             "compiler/backends/rom/common/image.py",
             "compiler/backends/rom/common/program.py",
+            "compiler/backends/schedule_rule.py",
         }
     ),
     # The array backend is the producer's ``rom_deepseek_v4_array`` boundary:
@@ -152,6 +160,7 @@ FUNCTIONAL_BACKEND_SOURCES = {
             "compiler/backends/rom/deepseek_v4.py",
             "compiler/backends/rom/common/image.py",
             "compiler/backends/rom/common/program.py",
+            "compiler/backends/schedule_rule.py",
         }
     ),
 }

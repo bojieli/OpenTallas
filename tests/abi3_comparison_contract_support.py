@@ -80,35 +80,43 @@ FUNCTIONAL_ENGINE_SOURCES = tuple(
     path.relative_to(ROOT).as_posix()
     for path in sorted((ROOT / "runtime/sim/engines").glob("*.py"))
 )
+# compiler/backends/schedule_rule.py: AM-E9's one SCHEDULE emission rule, a
+# functional source of every backend (tools/run_accelerator_tokens.py).
 FUNCTIONAL_BACKEND_SOURCES = {
     (COMPARISON_ID, "rom"): (
         "compiler/backends/rom/qwen3.py",
         "compiler/backends/rom/common/image.py",
         "compiler/backends/rom/common/program.py",
+        "compiler/backends/schedule_rule.py",
     ),
     (DEEPSEEK_COMPARISON_ID, "rom"): (
         "compiler/backends/rom/deepseek_v4.py",
         "compiler/backends/rom/common/image.py",
         "compiler/backends/rom/common/program.py",
+        "compiler/backends/schedule_rule.py",
     ),
     (COMPARISON_ID, "hbm"): (
         "compiler/backends/hbm_sram/lower.py",
         "compiler/backends/hbm_sram/plan.py",
+        "compiler/backends/schedule_rule.py",
     ),
     (DEEPSEEK_COMPARISON_ID, "hbm"): (
         "compiler/backends/hbm_sram/lower.py",
         "compiler/backends/hbm_sram/plan.py",
+        "compiler/backends/schedule_rule.py",
     ),
     (WAFER_ARRAY_COMPARISON_ID, "rom"): (
         "compiler/backends/rom/deepseek_v4.py",
         "compiler/backends/rom/common/image.py",
         "compiler/backends/rom/common/program.py",
+        "compiler/backends/schedule_rule.py",
     ),
     (WAFER_ARRAY_COMPARISON_ID, "rom_array"): (
         "compiler/backends/rom/deepseek_v4_array.py",
         "compiler/backends/rom/deepseek_v4.py",
         "compiler/backends/rom/common/image.py",
         "compiler/backends/rom/common/program.py",
+        "compiler/backends/schedule_rule.py",
     ),
 }
 ORACLE_PRODUCERS = {

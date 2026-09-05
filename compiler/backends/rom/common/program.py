@@ -71,6 +71,13 @@ from compiler.ir.v3.lowering import (
     abi_input_slots as _shared_input_slots,
     phase_inputs as _phase_inputs,
 )
+from compiler.backends.schedule_rule import (
+    dispatch_rows as _e9_dispatch_rows,
+    e9_schedule,
+    family_ordinals,
+    operator_shape as _e9_operator_shape,
+    queue_ordinal,
+)
 from runtime.abi3.builder import DeploymentBuilder, DynamicTerm
 from runtime.abi3.capability import Capability
 from runtime.abi3.constants import (
@@ -1211,7 +1218,10 @@ class RomLowering:
         self._link_endpoint_objects: dict[int, tuple[int, int]] = {}
         self._link_numeric: dict[tuple[str, str], int] = {}
         self._link_instruction_count = 0
-        self._queue_cursor: dict[int, int] = {}
+        # AM-E9: queue_index is a fact about the graph (the operator's rank
+        # among same-family kernels), never about this builder's emission
+        # order, so both backends assign the same queue to the same kernel.
+        self._queue_ordinals = family_ordinals(graph)
         self._contract_substitutions: dict[str, str] = {}
         self._state_class_aliases: dict[str, str] = {}
         self._state_row_widenings: dict[str, dict[str, int]] = {}
@@ -1681,20 +1691,20 @@ class RomLowering:
         return members
 
     # -- descriptor helpers ----------------------------------------------
-    def _engine_spec(self, family: Major) -> Mapping[str, int]:
-        key = ENGINE_KEY_BY_FAMILY[int(family)]
-        return self.capability.engines.get(key, {})
+    def _dispatch_rows(self, kernel: Kernel) -> int:
+        """Rows one dispatch of ``kernel`` covers when no path states them.
 
-    def _lanes(self, family: Major) -> int:
-        return max(int(self._engine_spec(family).get("lanes", 0)) or 64, 1)
-
-    def _queues(self, family: Major) -> int:
-        return max(int(self._engine_spec(family).get("queues", 1)), 1)
-
-    def _row_elements(self, dtype: DType) -> int:
-        """Weight elements one ROM macro row read returns."""
-        bits = DTYPE_BITS[dtype]
-        return max(self.policy.layout.row_bytes * 8 // bits, 1)
+        The main emission path passes ``KernelShape.rows``; the auxiliary
+        DMA primitives (link pack / unpack, slot fills) reach ``_schedule``
+        without a shape and take the same block-bounded answer here.
+        """
+        outputs = [self.tensors[n] for n in kernel.outputs if n in self.tensors]
+        bound = int(self.capability.limits["max_context_positions"])
+        configured = int(self.policy.token_block_rows or 0)
+        block = max(min(configured or bound, bound), 1)
+        return _e9_dispatch_rows(
+            outputs[0] if outputs else None, block=block, capability=self.capability
+        )
 
     def _schedule(
         self,
@@ -1716,72 +1726,69 @@ class RomLowering:
         dispatches per Qwen forward step, which is the failure mode ABI 3.0
         exists to prevent.
 
-        The cycle model reads these fields directly, so every one of them is
-        derived from the operator's iteration domain, the engine's lane count
-        and the ROM macro read granularity.  None is a placeholder.
+        The cycle model reads these fields directly.  Every tiled field --
+        tile shape, issue window, outstanding bound, queue and port mask -- is
+        AM-E9's one rule (``compiler/backends/schedule_rule.py``), shared with
+        the HBM backend so that the two lowerings of one graph carry identical
+        SCHEDULE fields wherever the operator is the same; what this backend
+        still decides is the storage-class consequence the rule leaves to it
+        (the mask-ROM bank mask, AM-C4) and the inert route class and
+        resource bound.  None is a placeholder.
         """
-        domain = {k: self._extent(v) for k, v in kernel.iteration_domain.items()}
         inputs = [self.tensors[n] for n in kernel.inputs]
-        outputs = [self.tensors[n] for n in kernel.outputs]
         weights = [t for t in inputs if t.role in WEIGHT_ROLES]
-        lanes = self._lanes(family)
-        # The rows *one dispatch* covers.  Normally that is the operator's
-        # token extent, but an operator issued once per token covers one row
-        # however many the iteration domain names, and a schedule that claimed
-        # otherwise would price a per-token dispatch as a whole block.
+        # The rows *one dispatch* covers (AM-E9 ``rows``): the emission path
+        # states them from its loop structure -- one row for a per-token
+        # dispatch however many rows the iteration domain names -- and the
+        # auxiliary primitives take the block-bounded derivation.  Never the
+        # span maximum: a schedule that priced a dispatch as the whole span
+        # would be wrong on both sides of the comparison.
         rows = (
             rows_override
             if rows_override is not None
-            else domain.get("tokens") or (self._dims(outputs[0])[0] if outputs else 1)
+            else self._dispatch_rows(kernel)
         )
-        rows = max(int(rows), 1)
-        tile_rows = max(min(rows, self.policy.tile_rows), 1)
-        tile_cols = max(self.policy.tile_cols, 1)
-        tile_depth = 1
-        bound = ResourceBound.MEMORY_PORT
+        shape = _e9_operator_shape(
+            kernel,
+            self.tensors,
+            int(family),
+            int(sub),
+            rows=max(int(rows), 1),
+            capability=self.capability,
+        )
+        # AM-E9: every tiled field comes from the one rule both backends
+        # share (compiler/backends/schedule_rule.py).  This backend keeps only
+        # what the rule leaves to the storage class: the ROM bank mask, the
+        # route class and the inert resource bound.
+        rule = e9_schedule(
+            shape,
+            int(family),
+            self.capability,
+            ordinal=queue_ordinal(self._queue_ordinals, kernel.index, int(family)),
+        )
+        tile_rows = rule.tile_rows
+        tile_cols = rule.tile_cols
+        tile_depth = rule.tile_depth
+        max_outstanding = rule.max_outstanding
+        issue_window = rule.issue_window
+        queue_index = rule.queue_index
+        port_mask = rule.port_mask
 
         tensor_contraction = family is Major.TENSOR and sub in {
             int(TensorOp.MATMUL),
             int(TensorOp.GROUPED_MATMUL),
             int(TensorOp.ROUTED_MATMUL),
         }
+        bound = ResourceBound.MEMORY_PORT
         if weights and tensor_contraction:
-            weight_dims = self._dims(weights[0])
-            row_elements = self._row_elements(self._dtype(weights[0].dtype))
-            width = weight_dims[0]
-            reduction = weight_dims[-1]
-            tile_cols = max(min(width, lanes), 1)
-            tile_depth = max(min(reduction, row_elements), 1)
             bound = ResourceBound.ROM_READ
         elif weights:
-            # Constants such as RMSNorm scales and embedding tables are reads,
-            # not contracted K axes.  Their last dimension may be thousands of
-            # elements, but a non-reducing operator consumes each output
-            # coordinate once; carrying that dimension into tile_depth makes
-            # the cycle model execute it again for every output element.
-            width = self._dims(outputs[0])[-1] if outputs else self._dims(weights[0])[-1]
-            tile_cols = max(min(width, lanes), 1)
-            tile_depth = 1
             bound = (
                 ResourceBound.ROM_READ
                 if family is Major.TENSOR
                 else ResourceBound.MEMORY_PORT
             )
-        elif outputs:
-            tile_cols = max(min(self._dims(outputs[0])[-1], lanes), 1)
-
         if family is Major.ATTENTION:
-            head_dim = int(
-                domain.get("head_dim", self._dims(outputs[0])[-1] if outputs else lanes)
-            )
-            tile_cols = max(min(head_dim, lanes), 1)
-            tile_depth = max(
-                min(
-                    int(kernel.attributes.get("block_width", 64)),
-                    self.capability.limits["max_context_positions"],
-                ),
-                1,
-            )
             bound = ResourceBound.MEMORY_PORT
         elif family is Major.SELECTION:
             bound = ResourceBound.SELECTION
@@ -1790,22 +1797,13 @@ class RomLowering:
         elif family is Major.STATE:
             bound = ResourceBound.STATE_TRANSACTION
 
-        tiles = self._tile_count(kernel, tile_rows, tile_cols, tile_depth, rows)
-        max_outstanding = max(
-            min(tiles, self.capability.limits["max_outstanding_per_queue"]), 1
-        )
-        issue_window = min(max_outstanding, 0xFFFF)
         if placement_views is None:
             bank_mask = self._bank_mask(kernel)
-            port_mask = self._port_mask(kernel)
             route_class = self._route_class(kernel)
         else:
-            bank_mask, port_mask, route_class = self._view_placement(
+            bank_mask, _view_ports, route_class = self._view_placement(
                 *placement_views
             )
-        queues = self._queues(family)
-        queue_index = self._queue_cursor.get(int(family), 0) % queues
-        self._queue_cursor[int(family)] = queue_index + 1
 
         payload = (
             int(family),
@@ -1894,24 +1892,6 @@ class RomLowering:
             route = RouteClass.LOCAL
         return bank_mask, port_mask, route
 
-    def _tile_count(
-        self, kernel: Kernel, tile_rows: int, tile_cols: int, tile_depth: int, rows: int
-    ) -> int:
-        inputs = [self.tensors[n] for n in kernel.inputs]
-        weights = [t for t in inputs if t.role in WEIGHT_ROLES]
-        if weights:
-            dims = self._dims(weights[0])
-            width, reduction = dims[0], dims[-1]
-        else:
-            outputs = [self.tensors[n] for n in kernel.outputs]
-            width = self._dims(outputs[0])[-1] if outputs else 1
-            reduction = 1
-        return (
-            -(-rows // tile_rows)
-            * -(-max(width, 1) // tile_cols)
-            * -(-max(reduction, 1) // tile_depth)
-        )
-
     def _bank_mask(self, kernel: Kernel) -> int:
         """Which immutable ROM banks or tiles this operator reads."""
         mask = 0
@@ -1926,18 +1906,6 @@ class RomLowering:
             for shard in self.plan.region(placement[0]).shards:
                 index = shard.coordinate.tile or shard.coordinate.bank
                 mask |= 1 << (index % 32)
-        return mask
-
-    def _port_mask(self, kernel: Kernel) -> int:
-        """Which mutable memory ports this operator's activations occupy."""
-        mask = 0
-        for name in (*kernel.inputs, *kernel.outputs):
-            if self.tensors[name].role in WEIGHT_ROLES:
-                continue
-            placement = self._buffer_place.get(self._buffer_key(name))
-            if placement is None:
-                continue
-            mask |= 1 << (placement.port % 32)
         return mask
 
     def _route_class(self, kernel: Kernel) -> int:
@@ -7790,7 +7758,10 @@ class RomLowering:
                 f"ABI 3.0 operator admits {MAX_OPERATOR_OUTPUTS}"
             )
         shape = self._shape_of(kernel, engine)
-        schedule_rows: int | None = None
+        # AM-E9 ``rows``: the token rows one dispatch covers -- the loop's
+        # block for a symbolic-leading operand, the declared extent otherwise.
+        # Paths that dispatch one token at a time override this with 1 below.
+        schedule_rows: int | None = max(int(shape.rows), 1)
         groups = self._feature_group_count(kernel, family, engine.sub, shape)
         if groups > 1:
             self._emit_feature_grouped_contraction(kernel, shape, run, groups)
