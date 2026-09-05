@@ -174,11 +174,11 @@ flowchart TB
 
 Five networks, all byte-identical across the two chips.
 
-1. **Accumulator latency L per view** — use the current routed block parameters. N5 L=1 remains assumed; recost chains and pass scheduling if L changes.
-2. **AM-E7 disabled** — use BF16 keys and queries at g=1. The 84+13 µs Flash old-point sensitivity isolates the correction; a future packed-key mode needs RTL and independent qualification.
+1. **Store-delivery network (SDN)** [T2.1-22]. Eight pipelined spines of 576 B/cycle (4,608 bits wide each, repeatered every ~1 mm, 36,864 wires per die in two upper metal layers) run the die width, one per two tile-row bands, with a tap at each tile cluster; each HBM controller and each KV SRAM group injects into any spine through an edge crossbar. It carries store-to-staging traffic only: weights on the HBM chip, KV blocks for attention on both chips at the HBMKV points, KV from the KV SRAM at the SRAMKV points. Because striping is static (pass p of an object lands on tile p mod T), the controller computes the destination from the address; no arbitration on the spine, credits per tap. Cost: repeaters + taps ≈ 5 mm² at N5 (A).
+2. **Operand broadcast H-tree** [T2.1-23]. Forward plane only; root 1,024 B/cycle from one scratchpad bank port; K-block-addressed slices delivered to every tile assigned to the block; the slice is pre-staged in the tile's activation FIFO (2 x 256 B) before the pass, so a 24 KB x (K = 12,288) costs 24 root cycles per operator, overlapped with the previous pass. No reverse arithmetic plane: under AM-E1 K is split within a column group and N across tiles, so no cross-column reduction exists inside a device.
 3. **Control tree and completion tree** [T2.1-24].
 4. **Data mesh** [T2.1-25]. Allocate an endpoint for each tile cluster, scratchpad bank, KV group, HBM controller, DMA mover, link endpoint, HOST/control/management interface. Use the maximum endpoint count of the ROM and HBM twins. The checked Qwen meshes fit 113/144, 150/169 and 220/256 endpoints respectively. Activations, results, KV writes and host traffic share this network; weights and KV reads use the SDN. Endpoint fit alone does not prove routing bandwidth or congestion.
-5. **Field tree versus mesh** — derive resources, exact association, endpoint injection and finite-buffer schedule before choosing or publishing a rate.
+5. **Link endpoints** [T2.1-13] and the collective engine (§5.6): `ot_a3_link_endpoint` pipelined to the tile clock and widened to 512-bit flits (≥ 15k cells each with 8,192 buffer flops and a 64-B/cycle CRC32C), `ot_a3_collective_engine` (recursive doubling / halving-doubling, PAIRWISE_TREE over ascending rank; cycle-identical on both simulators, `results/rtl/a3_link_campaign.json`).
 
 ### 2.6 Clock plan
 
@@ -234,13 +234,13 @@ The control plane consumes the frozen ABI 3.0 wire format (`spec/abi3/records.js
 
 ### 3.2 The cycle-level contract
 
-1. **Accumulator latency L per view** — use the current routed block parameters. N5 L=1 remains assumed; recost chains and pass scheduling if L changes.
-2. **AM-E7 disabled** — use BF16 keys and queries at g=1. The 84+13 µs Flash old-point sensitivity isolates the correction; a future packed-key mode needs RTL and independent qualification.
+1. **Program order.** Fetch, predicate, wait, resolve and issue strictly in program order; at most one engine issue per cycle. CONTROL executes and retires in the front end.
+2. **Asynchronous completion.** An engine instruction leaves the front end at issue with serial S and completes asynchronously; at most 16 outstanding per queue and 32 per die [T2.1-15]; issue stalls at either bound, so bounded queue occupancy is a hardware property (ADR-003 §9).
 3. **Retirement.** At completion without fault; its signal event goes pending → signalled → published then. `instructions.issued` counts at issue, `instructions.retired` at completion; `retired_work` = retirements at COMPLETE, the golden model's definition. A node-band-predicated instruction (AM-R4) retires as a no-op on the nodes outside its band and is counted in `retired`, not `predicated_off`, so `retired_work` is identical on every node of a pipeline.
 4. **Determinism (feature bit 2).** Every issued operation, resolved view, predicate outcome, written byte, counter outside group 0x0c, `final_token_id`, `eos_reason` and `retired_work` are functions of (program, descriptors, symbols, memory). Only run-ahead depth and the 0x0c latency counters are timing-dependent; hazards between overlapped operations are excluded by the dependence table (§3.6).
-5. **Field tree versus mesh** — derive resources, exact association, endpoint injection and finite-buffer schedule before choosing or publishing a rate.
+5. **Faults.** A precise front-end trap (classes 1–5, 10, 13) stops fetch at the faulting pc; an asynchronous engine fault (3, 6, 7, 8, 11) stops issue in the cycle it is reported. Outstanding operations complete or fault; `first_fault_instruction` = the lowest issue serial among faulting instructions (or the pc of a precise trap); `retired_work` counts retirements with lower serial; **`instructions.fetched/issued/predicated_off` are frozen at the faulting serial** so a FAILED transaction's counters equal the golden model's, which stops at the faulting pc; prepared STATE resources are discarded; `fault.traps` and `fault.poisoned_transactions` increment; completion FAILED with class and `fault_descriptor_id`.
 6. **Watchdog.** Issue serial vs `max_retired_work` every cycle (trap 10); transaction cycle counter vs `deadline_cycles` when nonzero (trap 10, drain, FAILED).
-7. **Qwen x5 service and placement** — corrected KV ownership and SDN limit are specified in §5.2. No compute-bound or tok/s conclusion is retained without an end-to-end schedule.
+7. **Predicated-off** instructions are dropped at the predicate stage: never waited, issued or retired; counted in `predicated_off`.
 8. **CONTROL.** NOP retires and publishes. BRANCH forward only (admission-proved), 2-cycle redirect. LOOP_SETUP/LOOP_NEXT §3.3. WAIT retires after its wait set passes. FENCE drains (AM-C2). ASSERT retires. COMPLETE: implicit SYSTEM drain, staged STATE apply, agreement all-gather (AM-C6), completion record. TRAP: class 5.
 
 ### 3.3 The microsequencer pipeline and its cost per token
@@ -384,14 +384,7 @@ One engine set, byte-identical on both chips; the only per-chip difference insid
 
 ### 4.1 The organisation, and the alternatives priced
 
-| organisation | batch-1 decode (weight-read bound) | prefill / batch ≥ 64 | contract | verdict |
-| --- | --- | --- | --- | --- |
-| A. weight-stationary systolic (TPU MXU) | a loaded N x N tile serves one activation row: sustained rate = the weight-load port; on a ROM device delivering 59,412 BF16 weights/cycle the array shape is irrelevant (128 x 128 → 0.78 % utilisation) | reaches its roof once M ≳ N | K-ordered within a tile; cross-tile partials need a declared combine | rejected for decode; its reuse is kept as the prefill mode of C |
-| B. K-serial streaming lanes, no K split (the shipped `ot_a3_mac_lane` walked this way) | each output element's whole K chain on one lane: a pass over K = 4,096 needs ≥ 4,096 x L cycles and only N columns are busy (W_q: 1,024 of 33,984 lanes); ≥ 885 µs per Qwen token → ≤ 1,130 tok/s | same bound | satisfies `bf16_bf16_fp32_sequential_rne_v1` exactly | rejected as the production mode; retained as the qualification schedule (§4.7) |
-| **C. output-stationary streaming lanes with a 128-element K-block association and per-format fused groups (chosen)** | each lane owns one output column for one K-block; every weight byte consumed once at 2 B/lane/cycle from a tile-local bank or staging; all lanes busy on any pass with ≥ 64 x (tiles) (columns x K-blocks) — every shipped contraction qualifies | the same lane switches to an activation-block-stationary schedule (64 resident rows, reuse 64 ≥ the 15 the HBM chip needs) and runs at the lane roof from either store | the blocked contracts with the association published as the implementation identity (AM-E1) | chosen |
-| D. analog / select-MAC compute-in-ROM | cannot meet a bit-exact binary32 RNE contract; the E2M1 pre-compute/select trick saves nothing on a lane that must carry an 8 x 8 multiplier for BF16 | — | — | rejected (`docs/COMPUTE_IN_ROM_MECHANISM.md` §5) |
-
-Why C fits the ROM store: the bank's word order is chosen at mask time (the read service already maps object bytes onto placement resources and sense granules), so a bank delivers every cycle one lane-cycle of weight for each of 32 lanes at the same k with no transposition and no arbitration — a Groq-style static stream. Why it fits the HBM store: the tile staging SRAM is written n-major by 64-byte bursts over the SDN and read one lane-cycle per lane per cycle; HBM's variable latency is absorbed by the double-buffered staging, never by the lanes.
+The proposed production datapath uses 64-lane tiles with format-scaled groups and 128-element K blocks, with scalar RE8 resources explicitly budgeted. Preserve the sequential whole-K lane as a qualification schedule. An amended blocked association is accepted only after independent vendor-oracle qualification; a wide systolic or vector alternative would require its own area and service derivation. Historical estimates for these alternatives do not establish the revised chip’s rate.
 
 ### 4.2 The lane
 
@@ -419,8 +412,8 @@ flowchart LR
 
 For every blocked contraction contract the hardware fixes one association and publishes it in the capability (`numeric_contracts[*].association`) so that the proposed blocked backend and RTL can be compared under a declared implementation identity:
 
-1. **Accumulator latency L per view** — use the current routed block parameters. N5 L=1 remains assumed; recost chains and pass scheduling if L changes.
-2. **AM-E7 disabled** — use BF16 keys and queries at g=1. The 84+13 µs Flash old-point sensitivity isolates the correction; a future packed-key mode needs RTL and independent qualification.
+1. **K-block** = 128 elements. Inside a block, accumulation is ascending-k binary32 RNE from +0.0 in **groups of g** (BF16 g = 1, FP8 g = 2, MXFP4 g = 4; each group summed exactly, one rounding per group). For g = 1 this is exactly `bf16_bf16_fp32_sequential_rne_v1` restricted to the block. A final short block (unscaled formats only) is accumulated the same way.
+2. **Block partials** combined by `ReductionOrder.PAIRWISE_TREE` over ascending block index ("fold adjacent pairs, odd tail carried", `runtime/sim/engines/reduction.py`), each add binary32 RNE.
 3. **Routed slots** weighted by RNE32(w_slot x acc_slot), summed in ascending slot order from +0.0; one RNE to the output dtype.
 4. **One rounding** at the output; BF16 saturation counted in `tensor.saturations`.
 
@@ -704,11 +697,11 @@ A token is correct only when it equals the external reference oracle's token for
 
 ### 9.1 Before any request: the ROM image is bound to the checkpoint
 
-1. **Accumulator latency L per view** — use the current routed block parameters. N5 L=1 remains assumed; recost chains and pass scheduling if L changes.
-2. **AM-E7 disabled** — use BF16 keys and queries at g=1. The 84+13 µs Flash old-point sensitivity isolates the correction; a future packed-key mode needs RTL and independent qualification.
+1. **Checkpoint lock** (executed): every tensor of the pinned snapshot is hashed (Qwen 399 tensors, 16,381,470,720 B; Flash 68,214 placed tensors, 156,015,698,140 B).
+2. **Kernel IR v3 bindings**: each weight tensor carries a `CheckpointBinding`; a ROM `MEMORY_OBJECT` (`READ | IMMUTABLE`) names an ordered list of authenticated byte ranges; no bytes are copied.
 3. **Region plan** (`plan_rom_image`): regions of identical slots (one operand of every layer of a run), so the layer index is a LOOP_INDUCTION term with a slot stride; 4,096-B rows; 16 MiB placement/repair regions; spare rows 1 % with a floor; 8 spare columns per bank; quarantine; zero-filled pads. **Extended by this design** with the pass-granule-major stripe of §5.1 (16 KiB granules over all tiles of the device, lane-major inside) and, for Qwen, stage-striped banks (bank = die).
 4. **Mask image**: a pure function of the plan: per bank, data rows hold the region bytes in *stripe order* (the permutation is a declared part of the plan, `opentallas.rom.stripe.v1`), then spare rows (zero) and pads (zero); the repair map is programmed after wafer test into the read service's translation tables (`ot_rom_read_service.sv`), emitted as `opentallas.rom.repair_map.v1` with an empty activation set at mask time. No mask-set generator exists; its contract is exactly this image.
-5. **Field tree versus mesh** — derive resources, exact association, endpoint injection and finite-buffer schedule before choosing or publishing a rate.
+5. **Inverse proof** (`check_rom_inverse`, executed for the array: 156,015,698,140 B reconstructed bit-identically, 68,214 tensors, 228 regions, 609 banks, `all_padding_zero: true`, 211.5 s, deployment `06534dab…`): eight properties, extended to reconstruct through the stripe permutation (AM-T2). The Qwen ROM and wafer proofs have no committed artifact (ladder rung I0).
 6. **Hardware image-identity check** (design): a ROM BIST sweeps every bank through the ordinary sense path and computes SHA-256 per member against a member digest table derivable from `rom_plan` + the checkpoint lock, both bound by the deployment SHA-256 (AM-T2); mismatch → trap 2 at LOAD. Cost with one SHA-256 core per bank at one 64-B block per 64 cycles (assumed): the largest x4 bank (7.713 MB) 7.7 ms, a Flash bank (24.9 MB) 25 ms, all banks in parallel; mandatory at manufacturing test, a policy option at LOAD.
 
 **The HBM twin** consumes the same manifest: each HBM object is DMA'd from the host into its `base_address` and SHA-256-verified per segment; at PCIe Gen5 x16 (~64 GB/s, the one host class this document uses — the draft's 8 GB/s figure is withdrawn) that is 0.24 s for Qwen and 1.4 s per DeepSeek node (32 links in parallel), with 8 SHA-256 cores per node.
@@ -791,13 +784,13 @@ Withdrawn: token-flow A31 (chunked prefill) — the unified 512-token-block lowe
 
 ### 10.3 Compiler-side changes (no ABI change), and what each shipped bundle loses
 
-1. **Accumulator latency L per view** — use the current routed block parameters. N5 L=1 remains assumed; recost chains and pass scheduling if L changes.
-2. **AM-E7 disabled** — use BF16 keys and queries at g=1. The 84+13 µs Flash old-point sensitivity isolates the correction; a future packed-key mode needs RTL and independent qualification.
+1. **One lowering for both stores**: 512-token block loops, per-token loops with `max_iterations` 262,144, NODE/RETICLE-scope collectives by topology, symbol-affine extents, block-bounded arenas (the ROM array's 178.3 GB of 262,144-row arenas per node becomes the HBM program's shape), hybrid 4 x 8 partition with node bands (AM-R4), 2 collectives per layer + LM-head and embedding gathers + stage SENDs, no per-token BARRIER, no exchange-queue pack/unpack, FENCEs only where a wait set cannot order (≤ 3 per token); dense column-sharded (WP-D2), row-sharded with REDUCE_SCATTER where N/8 is not a multiple of 128.
+2. **Re-emit every bundle** against the unified record: SCHEDULE per AM-E9 (queue_index within the published counts — wafer VECTOR queue_index up to 3 is legal at 4 queues; TENSOR/DMA 3 legal; ROUTE 1 → 0; max_outstanding 32/64 → 16; tile_* to 64 x 128), event space ≤ 2,048, HBM objects aligned 256 B.
 3. **Placement**: pass-granule-major striping over every tile of a device (the wafer's one-expert-per-tile and Qwen's role-striped 8 GiB banks replaced); Qwen stage-striped banks; scratchpad allocator with explicit `base_address` within 120 MiB (HOST region excluded; RomTargetPolicy `sram_budget_bytes` 128 MiB on wafer and array, so the wafer's 8.585 GB of SRAM-class arenas and the array's 256 MiB objects move to HBM or block-bounded scratchpad; the Qwen ROM program's 133.7 MB of activation objects re-placed: prefill activation blocks beyond 120 MiB go to HBM at x4 or shrink to 512-row blocks); four-byte flag objects in scratchpad; index keys BF16-resident, group one; AM-E7 disabled.
 4. **Queue assignment**: independent operators (q/k/v, gate/up, the eight output_a groups, shared expert ‖ routed experts) to distinct `queue_index` values (the HBM backend emits queue 0 for everything).
-5. **Field tree versus mesh** — derive resources, exact association, endpoint injection and finite-buffer schedule before choosing or publishing a rate.
+5. **Row-batch** the per-token single-row loops (EXPERT_SUM, route gathers: 4,534 LOOP pairs per HBM token).
 6. **Qwen CLUSTER_N re-lowering** of both bundles identically (§5.2).
-7. **Qwen x5 service and placement** — corrected KV ownership and SDN limit are specified in §5.2. No compute-bound or tok/s conclusion is retained without an end-to-end schedule.
+7. **Verifier additions**: HOST-region capacity (`memory_key` has no HOST entry today); node-band partition proof; AM-E1 association check; AM-C7 refusals.
 
 None of these changes a bit of any token except through AM-E1–E3/E5/E7, which re-establish the gold.
 
@@ -876,13 +869,13 @@ Every macro instance is placed with MACRO_PLACE_HALO under SYNTH_HIERARCHICAL = 
 
 Run `python tools/check_redesign_gates.py --out /tmp/chip-review-gates.json` for the current source-bound gate status. Historical counts in earlier revisions are not a live dashboard. The validation order is:
 
-1. **Accumulator latency L per view** — use the current routed block parameters. N5 L=1 remains assumed; recost chains and pass scheduling if L changes.
-2. **AM-E7 disabled** — use BF16 keys and queries at g=1. The 84+13 µs Flash old-point sensitivity isolates the correction; a future packed-key mode needs RTL and independent qualification.
+1. **Resource contract:** checked exact per-node capacity, reserves, endpoints, service bounds and emitted placement/image inverse proof.
+2. **L0/D1–D5:** independent numeric/token oracle; lane bit identity, sustained issue, multi-lane scaling, full routed verdict and distinct refusals. Existing block artifacts are evidence only for their pinned sources and parameters.
 3. **L1/L1-CP:** every issued engine pair and asynchronous control with actual memory footprints, random backpressure, cross-trip hazards, receiver skew and faults. Record cycles as well as bytes/counters/retirements on both simulators.
 4. **L2/G1:** integrated RTL reaches governed oracle tokens, including OFFICIAL_EOS and post-EOS refusal, on both stores and simulators. Stubbed-engine control campaigns do not satisfy this gate.
-5. **Field tree versus mesh** — derive resources, exact association, endpoint injection and finite-buffer schedule before choosing or publishing a rate.
+5. **L3/G4:** calibrated block and full dependent-boundary cycles. The existing L3 calibration exposes an unmeasured boundary and missing control cycles (§13 item 13); neither 39 nor 120 cycles may be treated as measured. C2 parity includes schedule geometry; re-emit both programs and rerun it after changes.
 6. **G2:** source-current integrated compute, memory macros and microsequencer with routed timing, electrical, DRC and antenna acceptance. Standalone routes are progress, not this gate. G2a-M macro and G2a-P hierarchy pilots remain prerequisites.
-7. **Qwen x5 service and placement** — corrected KV ownership and SDN limit are specified in §5.2. No compute-bound or tok/s conclusion is retained without an end-to-end schedule.
+7. **G3/C1–C4:** correctness-qualified TPOT on the governed timing trace and provisional budgets; resource/program parity and calibrated comparison. Do not relax budgets or substitute an analytical rate to make the gates pass.
 
 The review handoff records verification results and remaining implementation tasks. Numeric, deployment and physical source locks must be rebuilt after relevant source changes.
 

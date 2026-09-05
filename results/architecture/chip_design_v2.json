@@ -37,12 +37,16 @@
       "drc_errors": 0,
       "hold_wns_ns": 0.0406484,
       "macro_count": 0,
-      "max_slew_violations": null,
+      "max_slew_violations": 0,
       "mismatched_sources": [],
       "path": "results/physical_abi3/asap7/a3_lane_pipelined/pnr.json",
-      "record_sha256": "c8ae3d7e380ef11257a2f43f492b8bc4dbd8ce1d0dfd79158d9e4e4bd64b0d12",
+      "record_sha256": "eee87c1aeab04a47838ab4e58dc584ac91c90ecb7846b91c05b398cda2f270a7",
       "setup_wns_ns": 0.991298,
-      "signal_integrity_violations": {},
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
       "source_current": true,
       "source_digests": [
         {
@@ -68,18 +72,22 @@
     {
       "antenna_violating_nets": 0,
       "clock_period_ns": 16.0,
-      "closed": true,
-      "closed_reason": null,
+      "closed": false,
+      "closed_reason": "signal-integrity violations in the routed netlist: max_slew_violations 292",
       "core_area_um2": 76187.6,
       "drc_errors": 0,
       "hold_wns_ns": 0.0393152,
       "macro_count": 0,
-      "max_slew_violations": null,
+      "max_slew_violations": 292,
       "mismatched_sources": [],
       "path": "results/physical_abi3/asap7/a3_lq8_array/pnr.json",
-      "record_sha256": "ecd63c3e78f80752f440f7d62404212ce64b7ffb529ee944957ee59beb170994",
+      "record_sha256": "569460cf558ae3e4b1232dba7ac9ce197fe291775643a86481812604ea429f29",
       "setup_wns_ns": 8.73675,
-      "signal_integrity_violations": {},
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 292
+      },
       "source_current": true,
       "source_digests": [
         {
@@ -105,23 +113,27 @@
       ],
       "standard_cell_area_um2": 27842.5,
       "standard_cell_count": 238757,
-      "status": "pass"
+      "status": "not_met"
     },
     {
       "antenna_violating_nets": 0,
       "clock_period_ns": 4.4,
-      "closed": true,
-      "closed_reason": null,
+      "closed": false,
+      "closed_reason": "signal-integrity violations in the routed netlist: max_slew_violations 49",
       "core_area_um2": 21764.5,
       "drc_errors": 0,
       "hold_wns_ns": 0.0449029,
       "macro_count": 0,
-      "max_slew_violations": null,
+      "max_slew_violations": 49,
       "mismatched_sources": [],
       "path": "results/physical_abi3/asap7/a3_microsequencer/pnr.json",
-      "record_sha256": "2b63909ec6bc0cc3c82e4d547afa24e9c6da46c9a51692aa23162deed104dd60",
+      "record_sha256": "6235d37cae9eb87486ff53749d966ef56baa6dda458cd9d986f74efdc1a2b6c4",
       "setup_wns_ns": 2.44427,
-      "signal_integrity_violations": {},
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 49
+      },
       "source_current": true,
       "source_digests": [
         {
@@ -162,7 +174,7 @@
       ],
       "standard_cell_area_um2": 8437.9,
       "standard_cell_count": 66098,
-      "status": "pass"
+      "status": "not_met"
     }
   ],
   "production_ready": false,
