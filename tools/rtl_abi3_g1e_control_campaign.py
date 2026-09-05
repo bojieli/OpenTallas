@@ -451,11 +451,15 @@ INJECT_LINE = re.compile(
 COST_LINE = re.compile(
     r"COST passes=(\d+) cycles=(\d+) seconds=([0-9.]+) host_writes=(\d+)"
 )
+CENSUS_LINE = re.compile(r"CENSUS classes=(\d+) instances=(\d+)")
+CENSUS_ROW = re.compile(r"CENSUS-ROW (\d+) (\d+) (\d+) (\d+)")
 EOS_LINE = re.compile(
     r"EOS selected_token=(\d+) selected_tie_multiplicity=(\d+) "
     r"selected_eos_reason=(\d+) engine_launches=(\d+)"
 )
-POSTEOS_LINE = re.compile(
+POSTCENSUS_LINE = re.compile(r"CENSUS classes=(\d+) instances=(\d+)")
+CENSUS_ROW = re.compile(r"CENSUS-ROW (\d+) (\d+) (\d+) (\d+)")
+EOS_LINE = re.compile(
     r"POSTEOS ran=(\d+) admitted=(\d+) trapped=(\d+) trap_class=(\d+) "
     r"issues=(\d+) cycles=(\d+)"
 )
@@ -564,6 +568,16 @@ def run_store(
     cost = COST_LINE.search(stdout)
     posteos = POSTEOS_LINE.search(stdout)
     eos = EOS_LINE.search(stdout)
+    census = CENSUS_LINE.search(stdout)
+    census_rows = [
+        {
+            "family": int(m.group(1)),
+            "sub": int(m.group(2)),
+            "descriptor_id": int(m.group(3)),
+            "instances": int(m.group(4)),
+        }
+        for m in CENSUS_ROW.finditer(stdout)
+    ]
     passes = [
         {
             "index": int(m.group(1)),
@@ -609,6 +623,12 @@ def run_store(
             "elaborate_and_compile_seconds": round(compile_seconds, 2),
             "run_seconds": round(run_seconds, 2),
             "golden_model_seconds": manifest["golden_model"]["wall_seconds"],
+        },
+        "issue_census": {
+            "classes": int(census.group(1)) if census else 0,
+            "instances": int(census.group(2)) if census else 0,
+            "rows": census_rows,
+            "source": "the RTL's own issue trace over every pass",
         },
         "eos_observation": {
             "selected_token": int(eos.group(1)) if eos else None,
@@ -811,6 +831,16 @@ def compose_record(
                 "queue acceptance and issue in program order",
                 "retirement and the completion of every issue",
             ],
+        },
+        "issue_census": {
+            **run.get("issue_census", {}),
+            "for": (
+                "G1's composition certificate, which its own acceptance "
+                "requires to be derived mechanically from this rung's issue "
+                "trace rather than asserted: these are the (family, subopcode, "
+                "descriptor id) instances the governed workload issued, "
+                "counted from the RTL's trace and not from the golden's"
+            ),
         },
         "oracle": manifest["oracle"],
         "deployment": manifest["deployment"],

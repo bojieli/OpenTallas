@@ -40,6 +40,7 @@
 //   OT_A3_CYCLE_GUARD    per-pass cycle watchdog (default 4e9)
 // ---------------------------------------------------------------------------
 #include <algorithm>
+#include <map>
 #include <chrono>
 #include <cstdint>
 #include <cstdlib>
@@ -47,6 +48,7 @@
 #include <iomanip>
 #include <iostream>
 #include <sstream>
+#include <tuple>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -914,6 +916,28 @@ int main(int argc, char** argv) {
                         model.dut.done ? 1 : 0, 1);
             check.equal("post-EOS probe issue count", probe_at, probe_issues);
         }
+        // The issue census, taken from the RTL's own trace.  G1's composition
+        // certificate is required to be derived mechanically from this rung's
+        // issue trace rather than asserted, so the rung publishes the census
+        // the certificate needs: every (family, subopcode, descriptor id) the
+        // governed workload issued, and how many instances of each.
+        std::map<std::tuple<std::uint64_t, std::uint64_t, std::uint64_t>,
+                 std::uint64_t>
+            census;
+        for (const auto& issue : rtl_trace.issues)
+            ++census[{issue.family, issue.sub, issue.descriptor_id}];
+        std::uint64_t census_instances = 0;
+        for (const auto& entry : census) census_instances += entry.second;
+        check.equal("census covers every traced issue", census_instances,
+                    rtl_trace.issues.size());
+        std::cout << "CENSUS classes=" << census.size()
+                  << " instances=" << census_instances << "\n";
+        for (const auto& entry : census)
+            std::cout << "CENSUS-ROW " << std::get<0>(entry.first) << ' '
+                      << std::get<1>(entry.first) << ' '
+                      << std::get<2>(entry.first) << ' ' << entry.second
+                      << "\n";
+
         // The EOS observation, measured rather than inferred.  OFFICIAL_EOS
         // is raised by rtl/abi3/ot_a3_selection_token_append.sv, an ENGINE.
         // Under result injection the bridge's issue_valid is tied low, so
