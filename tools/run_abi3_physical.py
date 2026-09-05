@@ -31,6 +31,16 @@ the corner's own liberty limit (asap7 RVT 0.32 ns, sky130hd 1.5 ns).  The
 values used are recorded under ``place_and_route.signal_integrity_constraints``
 and nothing is emitted or recorded when the options are absent.
 
+Memory macros.  ``--memory-macro NAME`` (repeatable) names a memory macro the
+place-and-route platform itself ships; its LEF and liberty are resolved inside
+the pinned container from the platform's own ``lef/`` and ``lib/``
+directories, never copied, and reach the flow as ``ADDITIONAL_LEFS``,
+``ADDITIONAL_LIBS`` and ``SYNTH_BLACKBOXES``, which is how ORFS's own
+macro-bearing designs get theirs.  ``--macro-place-halo X Y`` overrides the
+platform's ``MACRO_PLACE_HALO``; without it the platform default stands.  What
+was used is recorded under ``place_and_route.memory_macros`` and nothing is
+emitted or recorded when the option is absent.
+
 Pinned sources.  ``--source-root DIR`` reads the RTL from another checkout
 (a worktree pinned at the commit being characterised); the record's ``git``
 block then describes that tree and ``runner.driver`` names the commit this
@@ -1057,6 +1067,389 @@ def platform_file_hashes(platform_name: str) -> dict[str, str]:
     return hashes
 
 
+# --------------------------------------------------------------------------
+# Platform memory macros
+# --------------------------------------------------------------------------
+#
+# Every routed record to date has macro_count 0: the driver could COUNT
+# macros but had no way to SUPPLY one, so the memory system of gate G2
+# (docs/OPENTALLAS_REDESIGN_PLAN.md) could not be in any netlist.  The pinned
+# ORFS image ships compiled SRAM macros on ASAP7 with both an abstract LEF
+# and an NLDM liberty view (docs/CHIP_ARCHITECTURE_DESIGN.md section 11.2);
+# ``--memory-macro NAME`` names one of them.  The views are resolved inside
+# the container, from the platform's own lef/ and lib/ directories -- nothing
+# is copied into the design, so the macro identity is the platform's -- and
+# reach the flow exactly the way ORFS's own macro-bearing designs get theirs
+# (flow/designs/asap7/swerv_wrapper/config.mk):
+#
+#   ADDITIONAL_LEFS   the abstract the floorplanner, PDN and router place
+#   ADDITIONAL_LIBS   the timing view; the platform config appends it to
+#                     LIB_FILES, and scripts/synth_stdcells.tcl reads
+#                     LIB_FILES with ``read_liberty -lib``, which is what
+#                     makes the module a black box in Yosys and keeps the
+#                     instance in 1_2_yosys.v instead of inferring flops
+#   SYNTH_BLACKBOXES  scripts/synth_preamble.tcl blackboxes these module
+#                     names after ``hierarchy -check``, so a behavioural
+#                     body in the sources loses to the liberty view -- the
+#                     mechanism the slang frontend applies automatically to
+#                     every ADDITIONAL_LIBS cell
+#
+# Macro placement is the flow's own: scripts/macro_place_util.tcl runs
+# rtl_macro_placer whenever the netlist holds macros, with the platform's
+# MACRO_PLACE_HALO.  ``--macro-place-halo X Y`` overrides it; without the
+# option nothing is emitted and the platform default stands, and either way
+# the value and where it came from are recorded.
+#
+# Nothing here is emitted or recorded unless --memory-macro is given: a
+# record without ``place_and_route.memory_macros`` was routed with exactly
+# the config.mk every earlier record had.
+
+ORFS_PLATFORMS_DIR = "/OpenROAD-flow-scripts/flow/platforms"
+
+_MACRO_NAME_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.+-]*$")
+
+# Runs INSIDE the pinned image: resolves each named macro to the platform's
+# own LEF and liberty, hashes them, and reads back what the views declare.
+_MACRO_PROBE = r'''
+import glob, gzip, hashlib, json, os, re, sys
+
+PLATFORMS = "/OpenROAD-flow-scripts/flow/platforms"
+
+
+def sha256(path):
+    digest = hashlib.sha256()
+    with open(path, "rb") as handle:
+        for chunk in iter(lambda: handle.read(1 << 20), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def read_text(path):
+    if path.endswith(".gz"):
+        with gzip.open(path, "rt", errors="ignore") as handle:
+            return handle.read()
+    with open(path, errors="ignore") as handle:
+        return handle.read()
+
+
+def find(root, pattern):
+    return sorted(
+        p for p in glob.glob(os.path.join(root, "**", pattern), recursive=True)
+        if os.path.isfile(p)
+    )
+
+
+def view_entry(path):
+    return {"path": path, "sha256": sha256(path), "size_bytes": os.path.getsize(path)}
+
+
+def number(text):
+    try:
+        return float(text)
+    except (TypeError, ValueError):
+        return None
+
+
+platform = sys.argv[1]
+names = sys.argv[2:]
+root = os.path.join(PLATFORMS, platform)
+out = {"platform": platform, "platform_dir": root, "macros": [], "error": None}
+if not os.path.isdir(root):
+    out["error"] = "no such platform directory: " + root
+    print(json.dumps(out, sort_keys=True))
+    raise SystemExit(0)
+
+config_mk = os.path.join(root, "config.mk")
+config_text = read_text(config_mk) if os.path.isfile(config_mk) else ""
+halo = re.search(r"^\s*export\s+MACRO_PLACE_HALO\s*\??=\s*(\S+)\s+(\S+)\s*$", config_text, re.M)
+out["platform_macro_place_halo"] = [halo.group(1), halo.group(2)] if halo else None
+out["platform_macro_place_halo_line"] = halo.group(0).strip() if halo else None
+
+# What this platform offers: every LEF whose stem also has a liberty view.
+offered = []
+for lef in find(root, "*.lef"):
+    stem = os.path.basename(lef)[: -len(".lef")]
+    if find(root, stem + ".lib") or find(root, stem + ".lib.gz"):
+        offered.append(stem)
+out["macros_with_lef_and_lib"] = sorted(set(offered))
+
+for name in names:
+    entry = {"name": name}
+    lefs = find(root, name + ".lef")
+    libs = find(root, name + ".lib") + find(root, name + ".lib.gz")
+    if not lefs:
+        entry["error"] = "no %s.lef under %s" % (name, root)
+        out["macros"].append(entry)
+        continue
+    if not libs:
+        entry["error"] = "no %s.lib (or .lib.gz) under %s" % (name, root)
+        out["macros"].append(entry)
+        continue
+    entry["lef"] = view_entry(lefs[0])
+    entry["lib"] = view_entry(libs[0])
+    if len(lefs) > 1:
+        entry["lef"]["other_candidates"] = lefs[1:]
+    if len(libs) > 1:
+        entry["lib"]["other_candidates"] = libs[1:]
+
+    lef_text = read_text(lefs[0])
+    block = re.search(
+        r"^MACRO\s+" + re.escape(name) + r"\s*$(.*?)^END\s+" + re.escape(name) + r"\s*$",
+        lef_text,
+        re.M | re.S,
+    )
+    body = block.group(1) if block else ""
+    entry["lef_macro_found"] = bool(block)
+    size = re.search(r"^\s*SIZE\s+([0-9.]+)\s+BY\s+([0-9.]+)\s*;", body, re.M)
+    entry["width_um"] = number(size.group(1)) if size else None
+    entry["height_um"] = number(size.group(2)) if size else None
+    klass = re.search(r"^\s*CLASS\s+(\S+)\s*;", body, re.M)
+    entry["lef_class"] = klass.group(1) if klass else None
+    for prop in ("width", "depth", "banks"):
+        found = re.search(r"^\s*PROPERTY\s+" + prop + r"\s+([0-9]+)\s*;", body, re.M)
+        entry["lef_property_" + prop] = int(found.group(1)) if found else None
+    pins = re.findall(r"^\s*PIN\s+(\S+)\s*$", body, re.M)
+    power = re.findall(r"^\s*USE\s+(POWER|GROUND)\s*;", body, re.M)
+    entry["pin_count"] = len(pins)
+    entry["power_pin_count"] = len(power)
+    entry["signal_pin_count"] = len(pins) - len(power)
+
+    lib_text = read_text(libs[0])
+    cell = re.search(r"^\s*cell\s*\(\s*\"?([A-Za-z0-9_./\[\]-]+)\"?\s*\)\s*\{", lib_text, re.M)
+    entry["liberty_cell"] = cell.group(1) if cell else None
+    for key, pattern in (
+        ("liberty_area", r"^\s*area\s*:\s*([0-9.eE+-]+)\s*;"),
+        ("liberty_min_period", r"^\s*min_period\s*:\s*([0-9.eE+-]+)\s*;"),
+    ):
+        found = re.search(pattern, lib_text, re.M)
+        entry[key] = number(found.group(1)) if found else None
+    for key, pattern in (
+        ("liberty_address_width", r"^\s*address_width\s*:\s*([0-9]+)\s*;"),
+        ("liberty_word_width", r"^\s*word_width\s*:\s*([0-9]+)\s*;"),
+    ):
+        found = re.search(pattern, lib_text, re.M)
+        entry[key] = int(found.group(1)) if found else None
+    unit = re.search(r"^\s*time_unit\s*:\s*\"([^\"]+)\"\s*;", lib_text, re.M)
+    entry["liberty_time_unit"] = unit.group(1) if unit else None
+    unit = re.search(r"^\s*capacitive_load_unit\s*\(([^)]*)\)", lib_text, re.M)
+    entry["liberty_capacitive_load_unit"] = unit.group(1).strip() if unit else None
+    out["macros"].append(entry)
+
+print(json.dumps(out, sort_keys=True))
+'''
+
+_LIBERTY_TIME_UNIT_NS = {"1ns": 1.0, "1ps": 0.001, "1us": 1000.0, "1fs": 1e-6}
+
+
+def probe_platform_macros(platform_name: str, names: list[str]) -> dict[str, Any]:
+    """Ask the pinned image what the platform's own views of these macros are."""
+    proc = run(
+        ["docker", "run", "--rm", ORFS_IMAGE, "python3", "-c", _MACRO_PROBE,
+         platform_name, *names],
+        timeout=1800,
+    )
+    require_success(proc, "ORFS platform macro probe")
+    try:
+        return json.loads((proc.stdout or "").strip())
+    except json.JSONDecodeError as exc:
+        raise FlowError(f"unreadable macro probe output: {exc}: {(proc.stdout or '')[:500]}") from exc
+
+
+def macro_capacity(entry: dict[str, Any]) -> tuple[int | None, str]:
+    """Bits the macro holds, and where that number came from."""
+    depth = entry.get("lef_property_depth")
+    width = entry.get("lef_property_width")
+    if depth and width:
+        return depth * width, "LEF PROPERTY depth x width"
+    address_width = entry.get("liberty_address_width")
+    word_width = entry.get("liberty_word_width")
+    if address_width and word_width:
+        return (1 << address_width) * word_width, (
+            "liberty memory(): 2^address_width x word_width (the LEF declares no "
+            "depth/width property)"
+        )
+    return None, "neither the LEF properties nor the liberty memory() group declares a size"
+
+
+def resolve_memory_macros(
+    view_name: str,
+    view: dict[str, Any],
+    names: list[str],
+    halo: list[float] | None,
+) -> dict[str, Any] | None:
+    """Resolve --memory-macro / --macro-place-halo into the recorded macro block.
+
+    Returns ``None`` when no macro was named, so the config.mk and the record
+    are exactly what they were before the option existed.
+    """
+    if not names:
+        if halo is not None:
+            raise FlowError("--macro-place-halo needs --memory-macro; it places nothing on its own")
+        return None
+    pnr = view.get("pnr")
+    if not pnr:
+        raise FlowError(f"view {view_name} has no place-and-route platform, so it has no macros")
+    for name in names:
+        if not _MACRO_NAME_RE.match(name):
+            raise FlowError(f"not a platform macro name: {name!r}")
+    ordered: list[str] = []
+    for name in names:
+        if name not in ordered:
+            ordered.append(name)
+
+    platform_name = pnr["platform"]
+    probe = probe_platform_macros(platform_name, ordered)
+    if probe.get("error"):
+        raise FlowError(f"macro probe on platform {platform_name}: {probe['error']}")
+    found = {entry["name"]: entry for entry in probe["macros"]}
+    unresolved = [entry for entry in probe["macros"] if entry.get("error")]
+    if unresolved:
+        offered = probe.get("macros_with_lef_and_lib") or []
+        raise FlowError(
+            "; ".join(f"{entry['name']}: {entry['error']}" for entry in unresolved)
+            + f".  Platform {platform_name} offers, with both LEF and liberty: "
+            + (", ".join(offered) if offered else "no macro at all")
+        )
+
+    view_time_unit_ns = view["time_unit_ns"]
+    macros: list[dict[str, Any]] = []
+    for name in ordered:
+        entry = found[name]
+        bits, bits_source = macro_capacity(entry)
+        width = entry.get("width_um")
+        height = entry.get("height_um")
+        liberty_unit = entry.get("liberty_time_unit")
+        unit_ns = _LIBERTY_TIME_UNIT_NS.get(str(liberty_unit))
+        macros.append(
+            {
+                "name": name,
+                "lef": entry["lef"],
+                "lib": entry["lib"],
+                "views_resolved_from": (
+                    f"the platform's own directories inside {ORFS_IMAGE} "
+                    f"({probe['platform_dir']}); no view is copied into the design"
+                ),
+                "capacity_bits": bits,
+                "capacity_bytes": None if bits is None else bits / 8.0,
+                "capacity_source": bits_source,
+                "words": entry.get("lef_property_depth"),
+                "bits_per_word": entry.get("lef_property_width"),
+                "banks": entry.get("lef_property_banks"),
+                "footprint": {
+                    "width_um": width,
+                    "height_um": height,
+                    "area_um2": None if width is None or height is None else round(width * height, 6),
+                    "source": "LEF SIZE of the macro's own abstract",
+                },
+                "lef_class": entry.get("lef_class"),
+                "pin_count": entry.get("pin_count"),
+                "signal_pin_count": entry.get("signal_pin_count"),
+                "power_pin_count": entry.get("power_pin_count"),
+                "liberty": {
+                    "cell": entry.get("liberty_cell"),
+                    "area": entry.get("liberty_area"),
+                    "min_period_library_units": entry.get("liberty_min_period"),
+                    "address_width": entry.get("liberty_address_width"),
+                    "word_width": entry.get("liberty_word_width"),
+                    "time_unit": liberty_unit,
+                    "time_unit_ns": unit_ns,
+                    "capacitive_load_unit": entry.get("liberty_capacitive_load_unit"),
+                    "time_unit_matches_standard_cells": (
+                        None if unit_ns is None else unit_ns == view_time_unit_ns
+                    ),
+                    "unit_note": (
+                        "the macro liberty declares its own units; the SDC and every "
+                        "reported time stay in the standard cells' unit "
+                        f"({view_time_unit_ns} ns), which is read first"
+                    ),
+                },
+            }
+        )
+
+    if halo is not None:
+        halo_x, halo_y = float(halo[0]), float(halo[1])
+        if halo_x < 0 or halo_y < 0:
+            raise FlowError(f"--macro-place-halo must not be negative, got {halo_x} {halo_y}")
+        halo_source = "command line"
+        emitted = True
+    else:
+        declared = probe.get("platform_macro_place_halo")
+        if not declared:
+            raise FlowError(
+                f"platform {platform_name} declares no MACRO_PLACE_HALO and none was "
+                "given; pass --macro-place-halo X Y"
+            )
+        halo_x, halo_y = float(declared[0]), float(declared[1])
+        halo_source = (
+            f"platform default: platforms/{platform_name}/config.mk "
+            f"{probe.get('platform_macro_place_halo_line')}"
+        )
+        emitted = False
+
+    block: dict[str, Any] = {
+        "platform": platform_name,
+        "requested": list(names),
+        "macros": macros,
+        "additional_lefs": [entry["lef"]["path"] for entry in macros],
+        "additional_libs": [entry["lib"]["path"] for entry in macros],
+        "synth_blackboxes": [entry["name"] for entry in macros],
+        "synth_blackbox_basis": (
+            "ORFS scripts/synth_preamble.tcl blackboxes SYNTH_BLACKBOXES module names "
+            "after hierarchy -check, so the liberty view read from ADDITIONAL_LIBS by "
+            "scripts/synth_stdcells.tcl (read_liberty -lib) is what survives into "
+            "1_2_yosys.v -- the mechanism ORFS's own macro-bearing designs use"
+        ),
+        "capacity_bits_total": (
+            None
+            if any(entry["capacity_bits"] is None for entry in macros)
+            else sum(entry["capacity_bits"] for entry in macros)
+        ),
+        "footprint_area_um2_total": (
+            None
+            if any(entry["footprint"]["area_um2"] is None for entry in macros)
+            else round(sum(entry["footprint"]["area_um2"] for entry in macros), 6)
+        ),
+        "macro_place_halo": {
+            "x_um": halo_x,
+            "y_um": halo_y,
+            "source": halo_source,
+            "emitted_in_config": emitted,
+            "used_by": (
+                "ORFS scripts/macro_place_util.tcl: rtl_macro_placer -halo_width "
+                "-halo_height, run automatically whenever the netlist holds macros"
+            ),
+        },
+        "counts_are_per_macro_type": (
+            "one entry per named macro TYPE; how many instances the netlist holds is "
+            "place_and_route.metrics.macro_count, which the flow reports"
+        ),
+        "basis": (
+            "the platform memory macros this route was given, resolved inside the "
+            "pinned image from the platform's own lef/ and lib/ directories; absent "
+            "from a record means no ADDITIONAL_LEFS, ADDITIONAL_LIBS or "
+            "SYNTH_BLACKBOXES were emitted and the config.mk is the one every "
+            "earlier record had"
+        ),
+    }
+    block["config_lines"] = memory_macro_config_lines(block)
+    return block
+
+
+def memory_macro_config_lines(macros: dict[str, Any] | None) -> list[str]:
+    """The ADDITIONAL_LEFS / ADDITIONAL_LIBS / SYNTH_BLACKBOXES lines, or none."""
+    if not macros:
+        return []
+    lines = [
+        "export ADDITIONAL_LEFS = " + " ".join(macros["additional_lefs"]),
+        "export ADDITIONAL_LIBS = " + " ".join(macros["additional_libs"]),
+        "export SYNTH_BLACKBOXES = " + " ".join(macros["synth_blackboxes"]),
+    ]
+    halo = macros.get("macro_place_halo") or {}
+    if halo.get("emitted_in_config"):
+        lines.append(f"export MACRO_PLACE_HALO = {halo['x_um']:g} {halo['y_um']:g}")
+    return lines
+
+
 def orfs_config_lines(
     nickname: str,
     block: dict[str, Any],
@@ -1065,8 +1458,14 @@ def orfs_config_lines(
     core_utilization: int,
     place_density: float,
     constraints: dict[str, Any] | None = None,
+    memory_macros: dict[str, Any] | None = None,
 ) -> list[str]:
-    """The ORFS config.mk for one route; SLEW_MARGIN only when a margin was given."""
+    """The ORFS config.mk for one route.
+
+    SLEW_MARGIN appears only when a margin was given, and the macro lines only
+    when a memory macro was named; without either the file is byte-for-byte
+    the config.mk of every earlier record.
+    """
     params = " ".join(f"{k} {v}" for k, v in sorted(block["parameters"].items()))
     config = [
         f"export DESIGN_NICKNAME = {nickname}",
@@ -1097,6 +1496,7 @@ def orfs_config_lines(
         config.append(f"export {key} = {value}")
     if constraints and constraints.get("slew_margin_percent") is not None:
         config.append(f"export SLEW_MARGIN = {constraints['slew_margin_percent']:g}")
+    config.extend(memory_macro_config_lines(memory_macros))
     return config
 
 
@@ -1112,6 +1512,7 @@ def run_pnr(
     keep_heavy: bool,
     artifact_dir: Path,
     constraints: dict[str, Any] | None = None,
+    memory_macros: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     pnr = view["pnr"]
     platform_name = pnr["platform"]
@@ -1127,7 +1528,8 @@ def run_pnr(
 
     nickname = f"opentallas_{block_name}_{view_name}"
     config = orfs_config_lines(
-        nickname, block, platform_name, pnr, core_utilization, place_density, constraints
+        nickname, block, platform_name, pnr, core_utilization, place_density,
+        constraints, memory_macros,
     )
     (case / "config.mk").write_text("\n".join(config) + "\n", encoding="utf-8")
 
@@ -1252,6 +1654,7 @@ def run_pnr(
         "clock_period_ns": clock_period_ns,
         "sdc_clock_period_library_units": period_lib,
         **({"signal_integrity_constraints": constraints} if constraints else {}),
+        **({"memory_macros": memory_macros} if memory_macros else {}),
         "metrics": metrics,
         "artifacts": artifacts,
         "artifact_dir": str(out_dir.relative_to(ROOT)) if out_dir.is_relative_to(ROOT) else str(out_dir),
@@ -1670,6 +2073,32 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     parser.add_argument(
+        "--memory-macro",
+        action="append",
+        default=[],
+        metavar="NAME",
+        help=(
+            "place-and-route with this memory macro of the platform available: its LEF "
+            "and liberty are resolved inside the pinned image from the platform's own "
+            "lef/ and lib/ directories and emitted as ADDITIONAL_LEFS, ADDITIONAL_LIBS "
+            "and SYNTH_BLACKBOXES, so an instance in the RTL survives synthesis as a "
+            "black box and is placed as a macro.  Repeatable.  Absent: no macro lines "
+            "in config.mk, as every earlier record"
+        ),
+    )
+    parser.add_argument(
+        "--macro-place-halo",
+        nargs=2,
+        type=float,
+        default=None,
+        metavar=("X_UM", "Y_UM"),
+        help=(
+            "override MACRO_PLACE_HALO, the keep-out rtl_macro_placer leaves around "
+            "each macro.  Absent: the platform's own default, which is recorded either "
+            "way; needs --memory-macro"
+        ),
+    )
+    parser.add_argument(
         "--source-root",
         default=None,
         metavar="DIR",
@@ -1808,6 +2237,23 @@ def main(argv: list[str] | None = None) -> int:
         print(str(exc), file=sys.stderr)
         return 2
 
+    if args.memory_macro and stages != ["pnr"]:
+        print(
+            "--memory-macro is a place-and-route option: the macro views live inside "
+            "the ORFS image, not on the host, so the host synth and sta stages cannot "
+            "see them; run --stages pnr",
+            file=sys.stderr,
+        )
+        return 2
+
+    try:
+        memory_macros = resolve_memory_macros(
+            args.view, view, args.memory_macro, args.macro_place_halo
+        )
+    except FlowError as exc:
+        print(str(exc), file=sys.stderr)
+        return 2
+
     workdir_ctx = None
     if args.keep_workdir:
         work = Path(args.keep_workdir)
@@ -1932,6 +2378,7 @@ def main(argv: list[str] | None = None) -> int:
                 args.keep_heavy_artifacts,
                 output.parent / f"{output.stem}_artifacts",
                 constraints,
+                memory_macros,
             )
             record["stages_completed"].append("pnr")
 
@@ -2026,6 +2473,19 @@ def main(argv: list[str] | None = None) -> int:
                 if constraints.get("slew_margin_percent") is not None
                 else ""
             )
+        )
+    if memory_macros:
+        halo = memory_macros["macro_place_halo"]
+        for macro in memory_macros["macros"]:
+            footprint = macro["footprint"]
+            print(
+                f"  macro: {macro['name']} {macro['capacity_bits']} bits "
+                f"({footprint['width_um']} x {footprint['height_um']} um) "
+                f"lef={Path(macro['lef']['path']).name} lib={Path(macro['lib']['path']).name}"
+            )
+        print(
+            f"  halo:  {halo['x_um']:g} {halo['y_um']:g} um ({halo['source']}); "
+            f"placed macros={pnr.get('metrics', {}).get('macro_count') if pnr else None}"
         )
     design = record["design"]
     if "per_mac_area_um2" in design or "lanes" in design:
