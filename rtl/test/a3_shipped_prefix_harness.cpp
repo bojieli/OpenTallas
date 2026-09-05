@@ -1531,8 +1531,16 @@ int main(int argc, char** argv) {
                 ++probes;
                 model.cycle([] {});
             }
+            // The image load's own checks still bind: a probe run that
+            // loaded the stores badly measures the wrong machine, and must
+            // not print a marker that says otherwise.
+            if (check.failures != 0) {
+                std::cerr << "FAILURES: " << check.failures
+                          << " checks=" << check.checks << "\n";
+                return 1;
+            }
             std::cout << "PASS: ABI3 vehicle entry probe probes=" << probes
-                      << "\n";
+                      << " checks=" << check.checks << "\n";
             return 0;
         }
 

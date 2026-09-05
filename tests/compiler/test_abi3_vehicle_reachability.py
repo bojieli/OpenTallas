@@ -19,6 +19,7 @@ from tools.build_abi3_shipped_prefix_vectors import TARGETS, _deployment_vectors
 
 ROOT = Path(__file__).resolve().parents[2]
 ARTIFACT = ROOT / "results/rtl/abi3_vehicle_reachability.json"
+G1A_ARTIFACT = ROOT / "results/rtl/abi3_g1a_operator_equivalence.json"
 PROBE_ARTIFACT = ROOT / "results/rtl/abi3_vehicle_entry_probe.json"
 TRAP_INTERNAL = 13
 
@@ -191,3 +192,23 @@ def test_the_probe_measured_the_refusal_rather_than_asserting_it():
         assert entry["measured"]["trap_class"] == TRAP_INTERNAL
         assert entry["measured"]["issued"] == 0
         assert entry["measured"]["engine_launches"] == 0
+
+
+@pytest.mark.skipif(not G1A_ARTIFACT.is_file(), reason="G1a artifact absent")
+def test_the_abstract_machine_issues_what_g1a_counts(qwen_rom):
+    """Two independent derivations of the same program must agree.
+
+    G1a counts the operator instances the governed decode issues by walking
+    the deployment with the reference model; this machine counts them by
+    executing the program's control flow.  Neither reads the other, so a
+    disagreement means one of them is wrong about the workload.
+    """
+
+    record = json.loads(G1A_ARTIFACT.read_text(encoding="utf-8"))
+    issued = {
+        int(entry["coverage"]["issued_instance_count"])
+        for entry in record["records"]
+    }
+    whole = reach.simulate(qwen_rom, qwen_rom.entry_pc, len(qwen_rom.instructions))
+    assert whole["outcome"] == "complete"
+    assert len(whole["issued"]) in issued
