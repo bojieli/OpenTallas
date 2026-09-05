@@ -309,12 +309,61 @@ def stage_times(logs_dir: Path) -> dict[str, Any]:
     return times
 
 
-def metrics_of(reports_dir: Path) -> dict[str, Any] | None:
+def metrics_of(reports_dir: Path, logs_dir: Path | None = None) -> dict[str, Any] | None:
+    """Read the leg's ORFS metrics, from whichever file this make goal wrote.
+
+    Two defects lived here and both are the same defect twice.  First, this
+    read only ``reports/.../metadata.json``, which the ``metadata-generate``
+    goal writes -- but the block leg's goal is ``build_macros``, which never
+    runs it, so ``metrics`` was silently ``None`` for every hardened block and
+    the parent's ``completed`` flag could never become true.  Second, the key
+    map below carried no ``max_slew``/``max_cap``/``max_fanout`` entry, so even
+    when the file was present the DRV block ORFS writes beside setup and hold
+    was not read.
+
+    That second one is exactly the defect section 13 item 14 opened against
+    ``tools/run_abi3_physical.py`` ("Two closures were not closures"),
+    recurring in a newer tool.  It was not theoretical here: the two LQ8
+    abstracts this pilot hardened carry **462** and **423** max-slew
+    violations in their own ``6_report.json``, and the ``.lib`` timing model
+    the parent's timing flows through was characterised from a netlist this
+    repository's own closure criterion refuses.  The flow produced the number
+    and nothing consumed it -- twice, in two tools, for the same reason.
+
+    So: fall back to the flow's own per-stage ``6_report.json`` when
+    ``metadata.json`` is absent, and read the DRVs either way.
+    """
     path = reports_dir / "metadata.json"
-    if not path.is_file():
+    data: dict[str, Any] | None = None
+    source = None
+    if path.is_file():
+        data = json.loads(path.read_text(encoding="utf-8"))
+        source = str(path)
+    elif logs_dir is not None and logs_dir.is_dir():
+        # ORFS writes one <stage>_report.json per stage under logs/; the finish
+        # stage's is the one that carries the closure metrics.
+        merged: dict[str, Any] = {}
+        for stage in sorted(logs_dir.glob("*_report.json")):
+            try:
+                merged.update(json.loads(stage.read_text(encoding="utf-8")))
+            except (OSError, ValueError):
+                continue
+        for stage in sorted(logs_dir.glob("*.json")):
+            if stage.name.endswith("_report.json"):
+                continue
+            try:
+                merged.update(json.loads(stage.read_text(encoding="utf-8")))
+            except (OSError, ValueError):
+                continue
+        if merged:
+            data = merged
+            source = f"{logs_dir}/*.json (metadata.json absent: this leg's make goal does not run metadata-generate)"
+    if data is None:
         return None
-    data = json.loads(path.read_text(encoding="utf-8"))
     keys = {
+        "max_slew_violations": "finish__timing__drv__max_slew",
+        "max_cap_violations": "finish__timing__drv__max_cap",
+        "max_fanout_violations": "finish__timing__drv__max_fanout",
         "synth_cells": "synth__design__instance__count__stdcell",
         "synth_area_um2": "synth__design__instance__area__stdcell",
         "macros": "synth__design__instance__count__macros",
@@ -335,9 +384,29 @@ def metrics_of(reports_dir: Path) -> dict[str, Any] | None:
         "wirelength_um": "detailedroute__route__wirelength",
     }
     out: dict[str, Any] = {k: data.get(v) for k, v in keys.items()}
+    out["metrics_source"] = source
     for name in ("setup_ws_lib", "hold_ws_lib"):
         if out.get(name) is not None:
             out[name.replace("_lib", "_ns")] = float(out[name]) * TIME_UNIT_NS
+    # The DRV verdict, stated rather than implied.  An unread count is not a
+    # zero count: absent stays absent and is not clean.
+    drv = {k: out.get(k) for k in
+           ("max_slew_violations", "max_cap_violations", "max_fanout_violations")}
+    if any(v is None for v in drv.values()):
+        out["signal_integrity_clean"] = None
+        out["signal_integrity_reason"] = (
+            "the flow reported no DRV block for this leg: "
+            + ", ".join(f"{k} absent" for k, v in drv.items() if v is None)
+        )
+    elif any(int(v) for v in drv.values()):
+        out["signal_integrity_clean"] = False
+        out["signal_integrity_reason"] = "; ".join(
+            f"{int(v)} {k.replace('_violations', '').replace('max_', 'max-')} violation(s)"
+            for k, v in drv.items() if int(v)
+        )
+    else:
+        out["signal_integrity_clean"] = True
+        out["signal_integrity_reason"] = "max-slew, max-cap and max-fanout all zero in the routed netlist"
     out["flow_errors"] = {k: v for k, v in data.items() if k.endswith("__flow__errors__count")}
     out["available_keys"] = len(data)
     return out
@@ -363,7 +432,7 @@ def leg_record(work: Path, nickname: str) -> dict[str, Any]:
             last_log = {"name": last.name, "tail": "\n".join(
                 last.read_text(encoding="utf-8", errors="ignore").strip().splitlines()[-30:])}
     return {"results_dir": str(results_dir), "produced": produced, "logs": logs,
-            "stage_wall_seconds": stage_times(logs_dir), "metrics": metrics_of(reports_dir), "last_log": last_log}
+            "stage_wall_seconds": stage_times(logs_dir), "metrics": metrics_of(reports_dir, logs_dir), "last_log": last_log}
 
 
 def abstract_summary(work: Path) -> dict[str, Any]:
@@ -479,6 +548,24 @@ def main(argv: list[str] | None = None) -> int:
                          "place_density": args.place_density, "block_exports": list(args.block_export)}}
         leg["completed"] = bool(leg["abstract"]["lef_present"] and leg["abstract"]["lib_present"]
                                 and make["returncode"] == 0)
+        # `completed` says the flow ran and wrote an abstract.  It does NOT say
+        # the abstract is a usable timing model, and conflating the two is how
+        # a .lib characterised from a netlist with 462 max-slew violations was
+        # handed to a parent as if it were closed.  Section 13 item 14, in a
+        # newer tool.  So the block carries a second, separate verdict, and it
+        # is false when the DRV block is nonzero and null when it is unread.
+        block_metrics = (leg["block"] or {}).get("metrics") or {}
+        clean = block_metrics.get("signal_integrity_clean")
+        leg["hardened"] = bool(leg["completed"] and clean is True)
+        leg["hardened_basis"] = (
+            "true only when the make goal returned 0, both abstract views exist, and the routed "
+            "netlist the abstract was characterised from carries zero max-slew, max-cap and "
+            "max-fanout violations")
+        if not leg["hardened"]:
+            leg["hardened_reason"] = (
+                "the make goal did not complete" if not leg["completed"]
+                else block_metrics.get("signal_integrity_reason")
+                or "the flow reported no DRV block for this leg")
         if not leg["completed"]:
             leg["stopped_at"] = {"make_target": goal, "timed_out": make["timed_out"],
                                  "last_log": leg["block"]["last_log"]}
