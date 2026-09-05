@@ -213,6 +213,25 @@ def tile_cols(pattern: np.ndarray, cols: int) -> np.ndarray:
     return np.tile(pattern, (cols // pattern.shape[0], 1))
 
 
+# Per-profile geometry.  ``full`` is the design's own contract set (decode K = 4,096 and
+# 12,288, the prefill roof at rows = 16); ``contract`` is the set the two-simulator campaign
+# records -- every contract shape, at a size the slower simulator can run: the tile evaluates
+# 64 lanes every cycle and Icarus Verilog 11 simulates it about 150x slower than the pinned
+# Verilator (measured, this session: the full set is 93 s of Verilator and hours of Icarus),
+# so the two-simulator record keeps the shapes and shortens K, the row count and the tail
+# rather than dropping a format or a fault.  ``quick`` is the development set and the one the
+# secondary builds (STAGING_IN_TILE = 0, WEIGHT_SOURCE = 1) use to exercise their generate
+# branches.  The fault cases are the same in every profile.
+PROFILE_GEOMETRY: dict[str, dict[str, Any]] = {
+    "quick": {"worked_depth": 1024, "decode": [(192, 256), (64, 256)], "prefill": (2, 192, 256),
+              "batch": (2, 64, 256), "extras": None, "tail": None, "k12288": False},
+    "contract": {"worked_depth": 4096, "decode": [(192, 1024), (64, 1024)], "prefill": (4, 192, 512),
+                 "batch": (2, 64, 512), "extras": (64, 512), "tail": (64, 1088), "k12288": False},
+    "full": {"worked_depth": 4096, "decode": [(192, 4096), (64, 1024)], "prefill": (16, 192, 1024),
+             "batch": (4, 64, 1024), "extras": (64, 1024), "tail": (192, 4160), "k12288": True},
+}
+
+
 def build_cases(rng: np.random.Generator, profile: str, weight_source: int) -> list[TileCase]:
     cases: list[TileCase] = []
     narrow = WINDOWS["narrow"]
@@ -245,21 +264,23 @@ def build_cases(rng: np.random.Generator, profile: str, weight_source: int) -> l
         return dict(a=a, b=b, dtype_a=dtype_a, dtype_b=dtype_b, group=group, scales_a=sa, scales_b=sb,
                     block_a=block_a, block_b=block_b, block_rows_b=block_rows_b)
 
+    geom = PROFILE_GEOMETRY[profile]
+
     # -- the worked example of section 4.3 as a tile column ------------------------------------
-    depth = 4096
+    depth = geom["worked_depth"]
+    blocks = depth // KBLOCK
     a = np.full((1, depth), 0x3F80, dtype=np.uint16)                       # 1.0 everywhere
     b = bf16_window(rng, (64, depth), *narrow)
     b[0, :] = 0
     b[0, 0] = 0x4B80                                                       # 2**24 at k = 0
-    b[0, 128::128] = 0x3F80                                                # 1.0 at the head of blocks 1..31
-    add("worked_example_column", "column 0: P_0 = 2**24, P_1..P_31 = 1.0 -> the tree's 0x4B80000F; "
-        "a sequential chain over K would give 0x4B800000; the other 63 columns random", 1, 64, depth, a, b,
-        distinguishes=True, shape="decode K=4096")
+    b[0, 128::128] = 0x3F80                                                # 1.0 at the head of blocks 1..B-1
+    add("worked_example_column", f"column 0: P_0 = 2**24, P_1..P_{blocks - 1} = 1.0 -> the tree's root; "
+        "a sequential chain over K would absorb every 1.0 at 2**24; the other 63 columns random", 1, 64,
+        depth, a, b, distinguishes=True, shape=f"decode K={depth}")
 
     # -- decode shapes (rows = 1) -----------------------------------------------------------------------
-    decode_shapes = [(192, 4096), (64, 1024)] if profile == "full" else [(64, 1024)]
-    for cols, depth in decode_shapes:
-        rate = (cols, depth) == (192, 4096)
+    for cols, depth in geom["decode"]:
+        rate = cols == 192
         add(f"decode_bf16_1x{cols}x{depth}", f"BF16 g = 1, {cols} columns, K = {depth}: {depth // KBLOCK} K-blocks",
             1, cols, depth, bf16_window(rng, (1, depth), *narrow), bf16_window(rng, (cols, depth), *narrow),
             rate=rate, shape=f"decode K={depth}")
@@ -271,32 +292,37 @@ def build_cases(rng: np.random.Generator, profile: str, weight_source: int) -> l
         add(f"decode_mxfp4_g4_1x{cols}x{depth}", f"FP8 activations x E2M1 weights g = 4, blocks 128 / 32, K = {depth}",
             1, cols, depth, p["a"], p["b"], dtype_a=FP8, dtype_b=E2M1, group=4, scales_a=p["scales_a"],
             scales_b=p["scales_b"], block_a=128, block_b=32, rate=rate, shape=f"decode K={depth}")
-    if profile == "full":
+    if geom["k12288"]:
         add("decode_bf16_1x192x12288", "BF16 g = 1, 192 columns, K = 12,288: 96 K-blocks, the 12 -> 6 -> 3 -> 2 -> 1 tree",
             1, 192, 12288, bf16_window(rng, (1, 12288), *narrow), bf16_window(rng, (192, 12288), *narrow),
             rate=True, shape="decode K=12288")
-        add("decode_bf16_short_tail_1x192x4160", "K = 4,160: 32 full K-blocks and a final block of 64 (unscaled)",
-            1, 192, 4160, bf16_window(rng, (1, 4160), *narrow), bf16_window(rng, (192, 4160), *narrow),
-            shape="decode K=4160")
-        p = scaled_fp8(1, 64, 1024, 2, block_rows_b=4)
-        add("decode_fp8_g2_a15_rows4", "A15 weight scales shared by 4 consecutive global columns", 1, 64, 1024,
+    if geom["tail"]:
+        cols, depth = geom["tail"]
+        add(f"decode_bf16_short_tail_1x{cols}x{depth}",
+            f"K = {depth}: {depth // KBLOCK} full K-blocks and a final block of {depth % KBLOCK} (unscaled)",
+            1, cols, depth, bf16_window(rng, (1, depth), *narrow), bf16_window(rng, (cols, depth), *narrow),
+            shape=f"decode K={depth}")
+    if geom["extras"]:
+        cols, depth = geom["extras"]
+        p = scaled_fp8(1, cols, depth, 2, block_rows_b=4)
+        add("decode_fp8_g2_a15_rows4", "A15 weight scales shared by 4 consecutive global columns", 1, cols, depth,
             p["a"], p["b"], dtype_a=FP8, dtype_b=FP8, group=2, scales_a=p["scales_a"], scales_b=p["scales_b"],
-            block_a=128, block_b=32, block_rows_b=4, shape="decode K=1024")
-        add("decode_bf16_out_bf16_1x64x1024", "the output stage's BF16 rounding recorded for every root", 1, 64,
-            1024, bf16_window(rng, (1, 1024), *narrow), bf16_window(rng, (64, 1024), *narrow), out_fp32=False,
-            shape="decode K=1024")
+            block_a=128, block_b=32, block_rows_b=4, shape=f"decode K={depth}")
+        add(f"decode_bf16_out_bf16_1x{cols}x{depth}", "the output stage's BF16 rounding recorded for every root",
+            1, cols, depth, bf16_window(rng, (1, depth), *narrow), bf16_window(rng, (cols, depth), *narrow),
+            out_fp32=False, shape=f"decode K={depth}")
     # -- batch decode and the prefill contract shape -------------------------------------------------------
-    if profile == "full":
-        add("batch_bf16_4x64x1024", "rows = 4: the lane's row-serial schedule, weights re-streamed per row", 4, 64,
-            1024, bf16_window(rng, (4, 1024), *narrow), bf16_window(rng, (64, 1024), *narrow), shape="batch K=1024")
-        p = scaled_fp8(16, 192, 1024, 2)
-        add("prefill_fp8_g2_16x192x1024", "the prefill contract shape (rows = 16, 192 columns, K = 1,024) at the "
-            "lane roof, row-serial: section 4.5's activation-block-stationary schedule is not in the lane",
-            16, 192, 1024, p["a"], p["b"], dtype_a=FP8, dtype_b=FP8, group=2, scales_a=p["scales_a"],
-            scales_b=p["scales_b"], block_a=128, block_b=32, rate=True, shape="prefill K=1024")
-    else:
-        add("batch_bf16_2x64x256", "rows = 2 (quick)", 2, 64, 256, bf16_window(rng, (2, 256), *narrow),
-            bf16_window(rng, (64, 256), *narrow), shape="batch K=256")
+    rows, cols, depth = (*geom["batch"],) if len(geom["batch"]) == 3 else (geom["batch"][0], geom["batch"][1], 0)
+    add(f"batch_bf16_{rows}x{cols}x{depth}", f"rows = {rows}: the lane's row-serial schedule, weights "
+        "re-streamed per row", rows, cols, depth, bf16_window(rng, (rows, depth), *narrow),
+        bf16_window(rng, (cols, depth), *narrow), shape=f"batch K={depth}")
+    rows, cols, depth = geom["prefill"]
+    p = scaled_fp8(rows, cols, depth, 2)
+    add(f"prefill_fp8_g2_{rows}x{cols}x{depth}", f"the prefill contract shape (rows = {rows}, {cols} columns, "
+        f"K = {depth}) at the lane roof, row-serial: section 4.5's activation-block-stationary schedule is "
+        "not in the lane", rows, cols, depth, p["a"], p["b"], dtype_a=FP8, dtype_b=FP8, group=2,
+        scales_a=p["scales_a"], scales_b=p["scales_b"], block_a=128, block_b=32, rate=True,
+        shape=f"prefill K={depth}")
     # -- the qualification schedule: one K-block of K ------------------------------------------------------------
     add("qualification_kblock_k_2x64x256", "op_kblock = K: one K-block of 256, one leaf per column", 2, 64, 256,
         bf16_window(rng, (2, 256), *narrow), bf16_window(rng, (64, 256), *narrow), kblock=256,
@@ -572,7 +598,11 @@ def evaluate_case(case: TileCase, adder_stages: int) -> None:
         case.extras["column0_block_partials"] = [f"{p:#010x}" for p in leaves[:4]] + ["..."]
         case.extras["column0_tree_root"] = f"{root:#010x}"
         case.extras["column0_sequential_over_k"] = f"{sequential:#010x}"
-        if root != 0x4B80000F or sequential != 0x4B800000:
+        # The section 4.3 worked example is stated for K = 4,096 (32 leaves): the tree gives
+        # 0x4B80000F and the sequential chain over K absorbs every 1.0 at 2**24.  At a shorter K
+        # the same column still distinguishes the two associations (checked above), but the
+        # constants are the shorter tree's, so only the stated case is pinned to them.
+        if case.depth == 4096 and (root != 0x4B80000F or sequential != 0x4B800000):
             raise RuntimeError(f"{case.name}: worked example mismatch {root:#010x} / {sequential:#010x}")
 
 
@@ -857,7 +887,7 @@ def build(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--out-dir", type=Path, required=True)
     parser.add_argument("--adder-stages", type=int, default=3)
-    parser.add_argument("--profile", choices=("quick", "full"), default="full")
+    parser.add_argument("--profile", choices=tuple(PROFILE_GEOMETRY), default="contract")
     parser.add_argument("--weight-source", type=int, choices=(0, 1), default=0)
     parser.add_argument("--seed", type=int, default=20260905)
     parser.add_argument("--write-manifest", action="store_true")

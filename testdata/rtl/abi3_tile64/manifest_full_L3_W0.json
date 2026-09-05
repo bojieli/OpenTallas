@@ -45,7 +45,7 @@
       "kblock": 128,
       "mode_name": null,
       "name": "worked_example_column",
-      "note": "column 0: P_0 = 2**24, P_1..P_31 = 1.0 -> the tree's 0x4B80000F; a sequential chain over K would give 0x4B800000; the other 63 columns random",
+      "note": "column 0: P_0 = 2**24, P_1..P_31 = 1.0 -> the tree's root; a sequential chain over K would absorb every 1.0 at 2**24; the other 63 columns random",
       "out_fp32": false,
       "output_stage": [
         {
@@ -589,7 +589,7 @@
       "kblock": 128,
       "mode_name": null,
       "name": "decode_bf16_short_tail_1x192x4160",
-      "note": "K = 4,160: 32 full K-blocks and a final block of 64 (unscaled)",
+      "note": "K = 4160: 32 full K-blocks and a final block of 64 (unscaled)",
       "out_fp32": false,
       "output_stage": [
         {
@@ -861,7 +861,7 @@
       "kblock": 128,
       "mode_name": null,
       "name": "prefill_fp8_g2_16x192x1024",
-      "note": "the prefill contract shape (rows = 16, 192 columns, K = 1,024) at the lane roof, row-serial: section 4.5's activation-block-stationary schedule is not in the lane",
+      "note": "the prefill contract shape (rows = 16, 192 columns, K = 1024) at the lane roof, row-serial: section 4.5's activation-block-stationary schedule is not in the lane",
       "out_fp32": false,
       "output_stage": [
         {

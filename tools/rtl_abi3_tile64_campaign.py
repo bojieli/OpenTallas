@@ -4,18 +4,28 @@
 The artifact is ``results/rtl/abi3_tile64.json``: the tile
 ``rtl/abi3/ot_a3_tile64.sv`` (eight unmodified LQ8s, the tile stream sequencer,
 the staging ring, the activation FIFO, the partial port) run over the contract
-shapes -- decode (rows = 1) at (cols, K) = (192, 4,096) in BF16 g = 1, FP8 g = 2
-and MXFP4 g = 4, (64, 1,024) in each, (192, 12,288) in BF16, a short final
-block, batch rows, the prefill shape (16, 192, 1,024) in FP8 g = 2, the
-qualification schedule (op_kblock = K), the tile's own refusals and run-time
-faults, and LQ8 / lane faults propagated through the tile -- with every
-partial checked against the exact AM-E1 reference per lane per K-block and
-every tree root checked by feeding the captured partials through the RE8
-endpoint beside the tile in the chained shapes of the K-block tree, on Icarus
-Verilog 11 and the pinned Verilator 5.050 through two independently written
-checkers that must print the same marker, the same check count and the same
-rate lines.  The rate lines measure lane-ops per tile cycle and the cycles
-per K-block.
+shapes -- decode (rows = 1) in BF16 g = 1, FP8 g = 2 and MXFP4 g = 4 at two
+column counts (192 columns, three local columns per lane, the steady state;
+and 64 columns, one), the section 4.3 worked-example column, a short final
+block, batch rows, a prefill shape in FP8 g = 2, the qualification schedule
+(op_kblock = K), the tile's own refusals and run-time faults, and LQ8 / lane
+faults propagated through the tile -- with every partial checked against the
+exact AM-E1 reference per lane per K-block and every tree root checked by
+feeding the captured partials through the RE8 endpoint beside the tile in the
+chained shapes of the K-block tree, on Icarus Verilog 11 and the pinned
+Verilator 5.050 through two independently written checkers that must print the
+same marker, the same check count and the same rate lines.  The rate lines
+measure lane-ops per tile cycle and the cycles per K-block.
+
+Profiles (``tools/build_abi3_tile64_vectors.py``: PROFILE_GEOMETRY).  The tile
+evaluates 64 lanes every cycle, and Icarus Verilog 11 simulates it about 150x
+slower than the pinned Verilator, so the profile the two-simulator record runs
+is ``contract``: every contract shape at K = 1,024 / 512 (the worked-example
+column at K = 4,096, the tree's 32 leaves) and the prefill shape at rows = 4.
+``full`` keeps the design's own sizes -- decode (192, 4,096) in all three
+formats, (192, 12,288) in BF16, prefill (16, 192, 1,024) -- and is the profile
+for a single fast simulator or a long Icarus leg; ``quick`` is the development
+set and the one the secondary builds use.
 
 Builds: the vehicle (WEIGHT_SOURCE = 0, STAGING_IN_TILE = 1) is the primary
 evidence; the physical build's view (STAGING_IN_TILE = 0: ring and FIFO in the
@@ -521,7 +531,7 @@ def run(profile: str, adder_stages: int, build_root: Path | None, with_yosys: bo
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--profile", choices=("quick", "full"), default="full")
+    parser.add_argument("--profile", choices=("quick", "contract", "full"), default="contract")
     parser.add_argument("--adder-stages", type=int, default=3)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument("--build-dir", type=Path, default=None)
