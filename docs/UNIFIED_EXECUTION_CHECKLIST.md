@@ -33,7 +33,7 @@ contain zero ABI `STATE` resources. Qwen HBM passes 21/21 deployment checks <!--
 1,292 instructions <!-- figure: 1292 src="results/abi3/hbm_deepseek_deployment_certificate.json#cases[case=deepseek-v4-flash-hbm-cluster].actual.instructions" name="current DeepSeek HBM instructions, checkpoint" -->, 3,293 descriptors <!-- figure: 3293 src="results/abi3/hbm_deepseek_deployment_certificate.json#cases[case=deepseek-v4-flash-hbm-cluster].actual.descriptors" name="current DeepSeek HBM descriptors, checkpoint" --> and exactly 32 nodes <!-- figure: 32 src="results/abi3/hbm_deepseek_deployment_certificate.json#cases[case=deepseek-v4-flash-hbm-cluster].actual.node_count" name="current DeepSeek HBM nodes, checkpoint" -->; DeepSeek ROM passes
 128/128 checks <!-- figure: 128 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-wafer].passed_check_count" name="current DeepSeek ROM checks, checkpoint" --> at 1,323 instructions <!-- figure: 1323 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-wafer].actual.instructions" name="current DeepSeek ROM instructions, checkpoint" --> and 3,405 descriptors <!-- figure: 3405 src="results/abi3/rom_schedule_checks.json#cases[case=deepseek-v4-flash-rom-wafer].actual.descriptors" name="current DeepSeek ROM descriptors, checkpoint" -->. The shipped RTL
 campaign correlates prefill and decode for all four deployments on Icarus and
-Verilator with 595,020 checks per simulator <!-- figure: 595020 src="results/rtl/abi3_deployment_campaign.json#cases[name=iverilog].checks" name="current shipped-profile RTL checks, checkpoint" --> and explicitly proves
+Verilator with 593,950 checks per simulator <!-- figure: 593950 src="results/rtl/abi3_deployment_campaign.json#cases[name=iverilog].checks" name="current shipped-profile RTL checks, checkpoint" --> and explicitly proves
 `STATE_COMPAT=0` refusal before fetch. The standalone engine campaign correlates
 11 bounded opcode pairs <!-- figure: 11 src="results/rtl/abi3_engine_campaign.json#correlation.family_count" name="current RTL engine families, checkpoint" --> over 135 cases <!-- figure: 135 src="results/rtl/abi3_engine_campaign.json#correlation.case_count" name="current RTL engine cases, checkpoint" --> with 40,878 checks per simulator <!-- figure: 40878 src="results/rtl/abi3_engine_campaign.json#checks_per_simulator.iverilog" name="current RTL engine checks, checkpoint" --> and
 catches all 7 compiled RTL mutations <!-- figure: 7 src="results/rtl/abi3_engine_campaign.json#mutation_sensitivity.mutation_count" name="current caught RTL mutations, checkpoint" -->. These are control-plane and bounded
@@ -545,20 +545,25 @@ operator/testbench cycles remain verification metadata, never TPOT.
   HBM-deployment certificate, re-hashes the governed sources, Kernel IR,
   capability and bundle, and compares both prefill and decode with
   `runtime.sim.device.Device`. The refreshed artifact is `pass`, has no
-  divergence, and records **595,020** checks per simulator <!-- figure: 595020 src="results/rtl/abi3_deployment_campaign.json#cases[name=iverilog].checks" name="shipped-profile RTL checks per simulator, W8.8" -->,
-  **28,850** engine issues, **83,709** resolved views and **3,000**
+  divergence, and records **593,950** checks per simulator <!-- figure: 593950 src="results/rtl/abi3_deployment_campaign.json#cases[name=iverilog].checks" name="shipped-profile RTL checks per simulator, W8.8" -->,
+  **28,846** engine issues, **83,533** resolved views and **2,998**
   data-dependent predicate reads, as recorded in the artifact's required PASS
-  marker.
-  The current images are Qwen ROM (`f8505cb…`, 74 instructions/236
-  descriptors), Qwen HBM (`a6d98d4…`, 74/215), DeepSeek ROM wafer
-  (`a733e1c…`, 1,312/3,841), and DeepSeek HBM cluster (`920bbb4…`,
-  1,267/3,272). Every image contains zero `STATE` descriptors/instructions and
+  marker. Six of the eight cases run to completion; the two DeepSeek HBM
+  cluster cases end, on the golden model and the RTL alike, in trap class 13
+  (`A3_TRAP_INTERNAL`) at instruction 1,279 and are recorded as not running to
+  completion. The campaign is driven through the design top
+  `rtl/abi3/ot_a3_device_top.sv`, which both verification tops now wrap.
+  The current images are Qwen ROM (`f475fba…`, 74 instructions/227
+  descriptors), Qwen HBM (`0d78974…`, 74/215), DeepSeek ROM wafer
+  (`34ca189…`, 1,323/3,405), and DeepSeek HBM cluster (`ec7cff2…`,
+  1,292/3,293). Every image contains zero `STATE` descriptors/instructions and
   the required `PROFILE: ABI3 live-buffer state exclusion PASS` marker is
   present.
-  - DeepSeek ROM reaches **19,999** retired instructions in prefill <!-- figure: 19999 src="results/rtl/abi3_deployment_campaign.json#what_ran.depth_reached[case=deepseek-v4-flash-rom-wafer/prefill].golden_instructions_retired" name="DeepSeek wafer prefill instructions correlated, W8.8" --> and
-    **12,929** in decode <!-- figure: 12929 src="results/rtl/abi3_deployment_campaign.json#what_ran.depth_reached[case=deepseek-v4-flash-rom-wafer/decode].golden_instructions_retired" name="DeepSeek wafer decode instructions correlated, W8.8" -->.
-    DeepSeek HBM reaches **20,048** in prefill <!-- figure: 20048 src="results/rtl/abi3_deployment_campaign.json#what_ran.depth_reached[case=deepseek-v4-flash-hbm-cluster/prefill].golden_instructions_retired" name="DeepSeek HBM prefill instructions correlated, W8.8" --> and
-    **12,379** in decode <!-- figure: 12379 src="results/rtl/abi3_deployment_campaign.json#what_ran.depth_reached[case=deepseek-v4-flash-hbm-cluster/decode].golden_instructions_retired" name="DeepSeek HBM decode instructions correlated, W8.8" -->.
+  - DeepSeek ROM reaches **20,004** retired instructions in prefill <!-- figure: 20004 src="results/rtl/abi3_deployment_campaign.json#what_ran.depth_reached[case=deepseek-v4-flash-rom-wafer/prefill].golden_instructions_retired" name="DeepSeek wafer prefill instructions correlated, W8.8" --> and
+    **12,934** in decode <!-- figure: 12934 src="results/rtl/abi3_deployment_campaign.json#what_ran.depth_reached[case=deepseek-v4-flash-rom-wafer/decode].golden_instructions_retired" name="DeepSeek wafer decode instructions correlated, W8.8" -->.
+    DeepSeek HBM reaches **20,055** in prefill <!-- figure: 20055 src="results/rtl/abi3_deployment_campaign.json#what_ran.depth_reached[case=deepseek-v4-flash-hbm-cluster/prefill].golden_instructions_retired" name="DeepSeek HBM prefill instructions correlated, W8.8" --> and
+    **12,384** in decode <!-- figure: 12384 src="results/rtl/abi3_deployment_campaign.json#what_ran.depth_reached[case=deepseek-v4-flash-hbm-cluster/decode].golden_instructions_retired" name="DeepSeek HBM decode instructions correlated, W8.8" --> before
+    both sides trap.
     No case lowers its work bound. One verification-top instance represents one
     sequencer node; cluster topology remains independently certified at exactly
     32 nodes.

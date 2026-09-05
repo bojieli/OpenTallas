@@ -1,0 +1,169 @@
+{
+  "campaign": "rtl3_device_top_host_load",
+  "canonical_timestamp_policy": "no timestamp in canonical artifact",
+  "cases": [
+    {
+      "cases": [
+        {
+          "complete": 0,
+          "fetched": 1,
+          "index": 0,
+          "issued": 0,
+          "loaded": 0,
+          "retired": 0,
+          "trap": 2,
+          "views": 0
+        },
+        {
+          "complete": 1,
+          "fetched": 2104,
+          "index": 0,
+          "issued": 691,
+          "loaded": 1,
+          "retired": 2104,
+          "trap": 0,
+          "views": 2143
+        },
+        {
+          "complete": 1,
+          "fetched": 2104,
+          "index": 1,
+          "issued": 691,
+          "loaded": 1,
+          "retired": 2104,
+          "trap": 0,
+          "views": 2143
+        }
+      ],
+      "checks": 358,
+      "compile_command": "/usr/bin/iverilog -g2012 -s tb_a3_device_top_host_load -o hostload.vvp <ROOT>/rtl/abi3/ot_a3_pkg.sv <ROOT>/rtl/abi3/ot_a3_instruction_decoder.sv <ROOT>/rtl/abi3/ot_a3_program_header.sv <ROOT>/rtl/abi3/ot_a3_loop_stack.sv <ROOT>/rtl/abi3/ot_a3_view_resolver.sv <ROOT>/rtl/abi3/ot_a3_event_scoreboard.sv <ROOT>/rtl/abi3/ot_a3_state_controller.sv <ROOT>/rtl/abi3/ot_a3_microsequencer.sv <ROOT>/rtl/abi3/ot_a3_device_top.sv <ROOT>/rtl/test/tb_a3_device_top_host_load.sv",
+      "compile_returncode": 0,
+      "failures": [],
+      "host_writes": 11492,
+      "log_sha256": "d4af1c459c0ee7f94cca8f47e25d90651316b0f8b67f9a868c15bd46a6ff2361",
+      "marker": "PASS: ABI3 device top host load vehicle_program_words=128 vehicle_desc_words=256 host_writes=11492 cases=2 checks=358",
+      "name": "iverilog",
+      "run_command": "/usr/bin/vvp hostload.vvp",
+      "run_log": "CASE 0 loaded=0 complete=0 trap=2 fetched=1 retired=0 issued=0 views=0\nCASE 0 loaded=1 complete=1 trap=0 fetched=2104 retired=2104 issued=691 views=2143\nCASE 1 loaded=1 complete=1 trap=0 fetched=2104 retired=2104 issued=691 views=2143\nPASS: ABI3 device top host load vehicle_program_words=128 vehicle_desc_words=256 host_writes=11492 cases=2 checks=358",
+      "run_returncode": 0,
+      "status": "pass"
+    },
+    {
+      "cases": [
+        {
+          "complete": 0,
+          "fetched": 1,
+          "index": 0,
+          "issued": 0,
+          "loaded": 0,
+          "retired": 0,
+          "trap": 2,
+          "views": 0
+        },
+        {
+          "complete": 1,
+          "fetched": 2104,
+          "index": 0,
+          "issued": 691,
+          "loaded": 1,
+          "retired": 2104,
+          "trap": 0,
+          "views": 2143
+        },
+        {
+          "complete": 1,
+          "fetched": 2104,
+          "index": 1,
+          "issued": 691,
+          "loaded": 1,
+          "retired": 2104,
+          "trap": 0,
+          "views": 2143
+        }
+      ],
+      "checks": 358,
+      "compile_command": "<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -Wall -Wno-fatal -Wno-DECLFILENAME --top-module tb_a3_device_top_host_load --Mdir obj_hostload <ROOT>/rtl/abi3/ot_a3_pkg.sv <ROOT>/rtl/abi3/ot_a3_instruction_decoder.sv <ROOT>/rtl/abi3/ot_a3_program_header.sv <ROOT>/rtl/abi3/ot_a3_loop_stack.sv <ROOT>/rtl/abi3/ot_a3_view_resolver.sv <ROOT>/rtl/abi3/ot_a3_event_scoreboard.sv <ROOT>/rtl/abi3/ot_a3_state_controller.sv <ROOT>/rtl/abi3/ot_a3_microsequencer.sv <ROOT>/rtl/abi3/ot_a3_device_top.sv <ROOT>/rtl/test/tb_a3_device_top_host_load.sv",
+      "compile_returncode": 0,
+      "failures": [],
+      "host_writes": 11492,
+      "log_sha256": "47677823d33ef3d9be7a4f3d1e73e5282eca0d15938c5fd8594e41d673a66bf2",
+      "marker": "PASS: ABI3 device top host load vehicle_program_words=128 vehicle_desc_words=256 host_writes=11492 cases=2 checks=358",
+      "name": "verilator",
+      "run_command": "./obj_hostload/Vtb_a3_device_top_host_load",
+      "run_log": "CASE 0 loaded=0 complete=0 trap=2 fetched=1 retired=0 issued=0 views=0\nCASE 0 loaded=1 complete=1 trap=0 fetched=2104 retired=2104 issued=691 views=2143\nCASE 1 loaded=1 complete=1 trap=0 fetched=2104 retired=2104 issued=691 views=2143\nPASS: ABI3 device top host load vehicle_program_words=128 vehicle_desc_words=256 host_writes=11492 cases=2 checks=358\n- <ROOT>/rtl/test/tb_a3_device_top_host_load.sv:555: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 4ms; walltime 0.334 s; speed 12.416 ms/s\n- Verilator: cpu 0.331 s on 1 threads; allocated 8 MB",
+      "run_returncode": 0,
+      "status": "pass"
+    }
+  ],
+  "claim_boundary": {
+    "does_not_establish": {
+      "campaign_observation": "the L1-CP campaigns preload the stores by $readmemh in the wrapper; their observation streams are compared by tools/rtl_abi3_deployment_campaign.py, not here",
+      "checker_independence": "one checker under two simulators, not two independently written checkers",
+      "symbol_file_load": "the runtime symbol file is a combinational boundary of the device top and is not behind host_*"
+    },
+    "establishes": "the design's host load path writes the control stores the sequencer then executes from, at the vehicle geometry, under two simulators"
+  },
+  "deployment_loaded": "qwen3-8b-rom-single-chip (both entrypoints)",
+  "design_top": "rtl/abi3/ot_a3_device_top.sv",
+  "evidence_class": "public_open_tool_rtl_simulation",
+  "git": {
+    "commit": "08cc069a6c1ff221bd425aac0ae3235ea4408b7a",
+    "worktree_dirty": false
+  },
+  "marker": "PASS: ABI3 device top host load vehicle_program_words=128 vehicle_desc_words=256 host_writes=11492 cases=2 checks=358",
+  "schema": "opentallas.rtl.abi3_device_top_host_load.v1",
+  "simulators_agree": true,
+  "source_sha256": {
+    "rtl/abi3/ot_a3_device_top.sv": "56f2425e25cd9f294ceb1569e053fed497737d6ce202150a91202b43d66aa84f",
+    "rtl/abi3/ot_a3_event_scoreboard.sv": "576ee5a2301c1473c200e6f1c93f14b17c14acc895391d690856db9f054a9428",
+    "rtl/abi3/ot_a3_instruction_decoder.sv": "ad04fbf87aaa69e2c5397f99f445c7b99b10d80e796f54ea2895624ebb840355",
+    "rtl/abi3/ot_a3_loop_stack.sv": "55d3e7113a6196c20fa13133987f7c0f4b6fb721aec7ba455026a6ff4c9e61a8",
+    "rtl/abi3/ot_a3_microsequencer.sv": "27a2c971ce63aa6a86a2f73b01e5459ddb93e847d0ace78e7446bff76d10b06c",
+    "rtl/abi3/ot_a3_pkg.sv": "6fb71525b329497fe62145ab0d9b1b6eff03f1e0c95f3bc6a0c1dde5c6744054",
+    "rtl/abi3/ot_a3_program_header.sv": "7a5c55cbcaa7f877923595b631334c04eb0c403aea3bf052de983eeccdd1a619",
+    "rtl/abi3/ot_a3_state_controller.sv": "0fe8d122267f9afbd05837399a4b4545e8b953f9481c7529cb6206d34d279006",
+    "rtl/abi3/ot_a3_view_resolver.sv": "9182acc5e439a9190a6d9f18c9855e9b9800c0b7a436e90305468f630857635e",
+    "rtl/test/tb_a3_device_top_host_load.sv": "c9803a4896cbb4521ac5febb836ad420729dcd830972ef6032b9f7a208e4bd92",
+    "testdata/compiler/abi3_deployment/a3_deployment_case.hex": "2a4a1d2800f44c291e22c884fc15b439f7fad790f420e02eac2f7115ea12c0ed",
+    "testdata/compiler/abi3_deployment/a3_descriptor.hex": "e2af94bbccaaa4e1a4b3d7d67a384d86a80769a37d06f38d622850fb116dd616",
+    "testdata/compiler/abi3_deployment/a3_header.hex": "bcdc6a2f86cee45e1b354bf1d014b03fd17d3b7ddde2d48e01f3058771d07155",
+    "testdata/compiler/abi3_deployment/a3_program.hex": "9a86572ef8fbfb0eb6c175cd528c8e39164d0f315cec889d9c85a4ddf227c505",
+    "testdata/compiler/abi3_deployment/a3_symbol.hex": "aefea5f803c69340757eed992d1f3e691d4ca2f0b610256864a5bf1d0f757f38",
+    "tools/rtl_abi3_deployment_campaign.py": "281a7ebea36a54de5ac5d5dcdeff6429b63c05be5f77999fd07c9aee88f0d329",
+    "tools/rtl_abi3_device_top_host_load.py": "c6feaa4c5e20141b6590e63fc8d6ff9b1da48b4f5027d10b7e8c515524c1e54f"
+  },
+  "status": "pass",
+  "tools": {
+    "cxx": {
+      "executable": "/usr/bin/g++",
+      "executable_sha256": "2360901d864cf10bfd6296e261cb2c14053552a80377761ab07146ec9ec9a2c0",
+      "version": "g++ (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0"
+    },
+    "iverilog": {
+      "executable": "/usr/bin/iverilog",
+      "executable_sha256": "1ba67856249142771239573b5d51c7f6e4d67a1e7931a0d0fab56e0d473d2167",
+      "version": "Icarus Verilog version 11.0 (stable) ()"
+    },
+    "verilator": {
+      "executable": "<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator",
+      "executable_sha256": "fb2cc573b1055cf096c90e1efc9966fe56bdb4b265c83590cf2a49f7a0defcdf",
+      "version": "Verilator 5.050 2026-07-01 rev v5.050"
+    },
+    "vvp": {
+      "executable": "/usr/bin/vvp",
+      "executable_sha256": "075b114070eed3bc72e0e4559decf40520f3b693b1da9c94bba1defe8896966d",
+      "version": "Icarus Verilog runtime version 11.0 (stable) ()"
+    }
+  },
+  "vehicle_geometry": {
+    "DESC_WORDS": 256,
+    "PROGRAM_WORDS": 128
+  },
+  "what_ran": [
+    "empty stores: the first Qwen3-8B ROM case traps and retires nothing",
+    "program body and descriptor records written one 32-bit lane per cycle through host_* at the vehicle store geometry, relocated to row 0; no write refused; every row read back from the store model",
+    "program header streamed through the admission beat port; legality, trap class, instruction count, entrypoint count and declared maximum retired work against the golden record",
+    "both entrypoints run against the loaded stores: trap class, completion, fetched, retired, predicated off, issued, loop iterations, branches, wait-set evaluations, issue pulses, view pulses, views-resolved counter and event_signal_error against the golden record",
+    "a write offered while busy, past the last row of each store, and past the last lane: refused, reported, store intact; the refusal flag clears on reset"
+  ]
+}

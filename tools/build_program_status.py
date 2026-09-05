@@ -212,7 +212,13 @@ def rtl_deployment_correlation() -> dict[str, Any]:
         "evidence_class": body.get("evidence_class"),
         "deployments": len(what_ran.get("deployments", [])),
         "cases": len(body.get("correlated_cases", [])),
-        "completions": sum(row.get("verdict") == "OK" for row in observed),
+        "correlated": sum(row.get("verdict") == "OK" for row in observed),
+        # A correlated case is one the RTL reproduced, trap included; a
+        # completion is one the golden model ran to its terminal fence.
+        "completions": sum(
+            bool(row.get("ran_to_completion_on_the_golden_model"))
+            for row in what_ran.get("depth_reached", [])
+        ),
         "issue_events": sum(row.get("issues_compared", 0) for row in observed),
         "resolved_views": sum(row.get("views_compared", 0) for row in observed),
         "predicates": sum(row.get("predicates_compared", 0) for row in observed),
@@ -465,6 +471,7 @@ def main() -> int:
             "",
             f"{deployment_rtl['deployments']} deployments, "
             f"{deployment_rtl['cases']} prefill/decode cases, "
+            f"{deployment_rtl['correlated']} correlated, "
             f"{deployment_rtl['completions']} completions, "
             f"{deployment_rtl['issue_events']:,} engine issues, "
             f"{deployment_rtl['resolved_views']:,} resolved views and "
