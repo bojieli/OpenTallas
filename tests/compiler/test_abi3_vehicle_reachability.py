@@ -15,6 +15,7 @@ import pytest
 
 from runtime.abi3.constants import InstructionFlag
 from tools import build_abi3_vehicle_reachability as reach
+from tools import rtl_abi3_shipped_prefix_campaign as campaign
 from tools.build_abi3_shipped_prefix_vectors import TARGETS, _deployment_vectors
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -212,3 +213,37 @@ def test_the_abstract_machine_issues_what_g1a_counts(qwen_rom):
     whole = reach.simulate(qwen_rom, qwen_rom.entry_pc, len(qwen_rom.instructions))
     assert whole["outcome"] == "complete"
     assert len(whole["issued"]) in issued
+
+
+def test_the_campaign_elaborates_to_the_vector_set_own_geometry():
+    """The top's RTL defaults are not a statement about the vector set."""
+
+    vectors = {
+        "geometry": {
+            "index_words": 64,
+            "source_words": 1_400_832,
+            "result_words": 151_936,
+        }
+    }
+    assert campaign.elaboration_geometry(vectors) == [
+        "-GINDEX_WORDS=64",
+        "-GSOURCE_WORDS=1400832",
+        "-GRESULT_WORDS=151936",
+    ]
+
+
+@pytest.mark.parametrize(
+    "vectors",
+    [
+        {},
+        {"geometry": {}},
+        {"geometry": {"index_words": 64, "source_words": 0, "result_words": 1}},
+        {"geometry": {"index_words": 64, "source_words": "1400832",
+                      "result_words": 151_936}},
+    ],
+)
+def test_a_vector_set_that_declares_no_geometry_is_refused(vectors):
+    """Falsification: the campaign must not fall back to the RTL defaults."""
+
+    with pytest.raises(SystemExit):
+        campaign.elaboration_geometry(vectors)
