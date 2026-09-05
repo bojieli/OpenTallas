@@ -2,7 +2,7 @@
   "gate_count": 13,
   "gates": [
     {
-      "fails_when": "No RTL path reaches a token.",
+      "fails_when": "No RTL path reaches a token, or a token record covers only one storage class, or names no simulator, or its ids differ from the oracle's.",
       "id": "G1",
       "kind": "terminal",
       "statement": "The integrated RTL produces the oracle's token IDs for one governed workload, on each of ROM and HBM.",
@@ -15,7 +15,7 @@
       "kind": "terminal",
       "statement": "A routed netlist exists containing the datapath array, the memory system AND the microsequencer, at one named PDK, with DRC 0 and antenna 0.",
       "status": "fail",
-      "why": "9 routed block(s) and none holds microsequencer, datapath array and the memory system in one clean netlist: results/physical_abi3/asap7/a3_lane_pipelined/pnr.json: no microsequencer, no datapath array among its sources; no memory system (macro_count 0.0, need >= 1); results/physical_abi3/asap7/a3_lq8_array/pnr.json: no microsequencer among its sources; no memory system (macro_count 0.0, need >= 1); results/physical_abi3/asap7/a3_microsequencer/pnr.json: no datapath array among its sources; no memory system (macro_count 0.0, need >= 1); results/physical_abi3/asap7/add_bf16_sram_engine/pnr.json: no microsequencer, no datapath array among its sources; no memory system (macro_count 0.0, need >= 1); ..."
+      "why": "10 routed block(s) and none holds microsequencer, datapath array and the memory system in one clean netlist: results/physical_abi3/asap7/a3_lane_pipelined/pnr.json: no microsequencer, no datapath array among its sources; no memory system (macro_count 0.0, need >= 1); results/physical_abi3/asap7/a3_lq8_array/pnr.json: no microsequencer among its sources; no memory system (macro_count 0.0, need >= 1); results/physical_abi3/asap7/a3_microsequencer/pnr.json: no datapath array among its sources; no memory system (macro_count 0.0, need >= 1); results/physical_abi3/asap7/a3_re8/pnr.json: no microsequencer, no datapath array among its sources; no memory system (macro_count 0.0, need >= 1); ..."
     },
     {
       "fails_when": "TPOT exceeds the budget, OR no budget is frozen.",
@@ -87,7 +87,7 @@
       "kind": "comparison",
       "statement": "The compiled deployments hand neither side an advantage in tile shape, column group, tile depth or DMA tile count.",
       "status": "fail",
-      "why": "15 of 15 artifact(s) fail deployment_audit.comparable == True: results/derived/qwen3-8b__rom-n5-native-hbmkv-wafer-tensor-x1__b200-sxm-x29-hybrid_machine_pair.json: NOT COMPARABLE: tensor tile_depth 2048 vs 128 (favours rom 16x), tile_rows 128 vs 64 (neutral at batch-1 decode), tile_c; results/derived/qwen3-8b__rom-n5-native-sramkv-array-pipeline-x5-romfill__b200-sxm-x3-tensor_machine_pair.json: NOT COMPARABLE: tensor tile_depth 2048 vs 128 (favours rom 1.091x), tile_rows 128 vs 64 (neutral at batch-1 decode), til; ..."
+      "why": "8 of 15 artifact(s) fail deployment_audit.comparable == True: results/derived/deepseek-v4-flash-0731__rom-n5-native-hbmkv-array-hybrid-x32__b200-sxm-x16-hybrid_machine_pair.json: NOT COMPARABLE: tensor tile_rows 1024 vs 512 (neutral at batch-1 decode), contraction cycles per step 1,636,192 vs 1,164; results/derived/deepseek-v4-flash-0731__rom-n5-native-sramkv-array-hybrid-x30__b200-sxm-x15-hybrid_machine_pair.json: NOT COMPARABLE: tensor tile_rows 1024 vs 512 (neutral at batch-1 decode), contraction cycles per step 1,636,192 vs 1,164; ..."
     },
     {
       "fails_when": "They disagree.",
