@@ -26,7 +26,7 @@ Other corrections remove unsupported 100% port duty and throughput claims, charg
 | x5 pipeline, SRAM KV | 649 | 41,536 | 3,372,847,021 B | 320 MiB | 13×13 | 150/169 | 814.777 mm² |
 | x8 tensor, SRAM KV | 1,211 | 77,504 | 2,107,734,727 B | 160 MiB | 16×16 | 220/256 | 814.738 mm² |
 
-These counts maximize tiles within the stated assumed 815 mm² budget; they leave almost no unassigned area. Any block-area, density or routing change must rerun the derivation. They are not physically closed floorplans. The model checks aggregate per-unit alignment/reserves; per-tensor and per-bank padding, ROM bit-column repair, metadata and constants must fit the reserved payload in the actual allocator. KV bank geometry is still an assumed implementation. Every row keeps `qualified_tpot_us: null` and `production_ready: false`.
+Tensor-parallel profiles retain 616,448 B of normalization gains on every die and shard only matrix storage. That replication fits the existing aligned allocations, so the tile counts stay the same. These counts maximize tiles within the stated assumed 815 mm² budget; they leave almost no unassigned area. Any block-area, density or routing change must rerun the derivation. They are not physically closed floorplans. The model checks aggregate per-unit alignment/reserves; per-tensor and per-bank padding, ROM bit-column repair, metadata and constants must fit the reserved payload in the actual allocator. KV bank geometry is still an assumed implementation. Every row keeps `qualified_tpot_us: null` and `production_ready: false`.
 
 The HBM twin preserves tensor/reduction, mesh and baseline KV allocation. At SRAM-KV points its additional 50 mm² HBM PHY comes from the replaced ROM slot; it does not reduce the baseline KV SRAM or silently change tensor count.
 
@@ -52,7 +52,7 @@ Acceptance cases:
 
 ### 2. Implement exact placement and unified SCHEDULE emission
 
-Use x5 cuts after `layer.5.attention`, `layer.13.gate_up`, `layer.22.attention`, `layer.30.gate_up`, `head`. Keep each attention layer’s KV on its owner. Generate both weight-store variants from the same operator partition and SCHEDULE rule. The concurrent worker’s `compiler/backends/schedule_rule.py` work is complementary; these fixes do not duplicate it.
+Use x5 cuts after `layer.5.attention`, `layer.13.gate_up`, `layer.22.attention`, `layer.30.gate_up`, `head`. Keep each attention layer’s KV on its owner; on tensor profiles replicate the input/post-attention/head normalization and Q/K head-normalization gains on every die. Generate both weight-store variants from the same operator partition and SCHEDULE rule. The concurrent worker’s `compiler/backends/schedule_rule.py` work is complementary; these fixes do not duplicate it.
 
 Acceptance must enumerate every tensor, scale, gain, constant and runtime arena per node/bank; prove no overlaps and all capacities including repair/padding; invert the ROM image exactly; check the 8,256-position maximum KV owner. Emit explicit collectives and stage SENDs. Re-run C2 against newly emitted programs, not only machine-file parity.
 
@@ -93,7 +93,21 @@ python tools/check_redesign_gates.py --out /tmp/chip-review-gates.json
 
 The report check intentionally fails if source hashes or retained numbers change. Regeneration records new evidence; it does not turn failed physical or release gates into passes. The dependency audit requires existing deployments and reads descriptors/manifests, not model payloads. Broad derivation tests also need the generated neutral IR and existing deployment directories.
 
-Verification during the review: **33 focused tests passed**, including 2,000 seeded footprint cases against an independent byte-set oracle; the checked resource report passes; both real deployment audits complete. The release-gate snapshot reports **8/13 passing, with G1–G4 and C2 failing**. D1–D5, C1, C3 and C4 pass for their retained evidence, which does not qualify this new chip proposal. Final integrated regression results are recorded below before handoff.
+Verification during the review: **34 focused tests passed**, including 2,000 seeded footprint cases against an independent byte-set oracle; the checked resource report passes; both real deployment audits complete. The release-gate snapshot reports **8/13 passing, with G1–G4 and C2 failing**. D1–D5, C1, C3 and C4 pass for their retained evidence, which does not qualify this new chip proposal. The integrated run passed **251 tests in 31.53 seconds** across architecture/dependency, network, machine derivation, G2 gate, comparison boundary and physical-driver suites. The final gain-replication regression then passed with the complete 34-test focused suite; the 218 related regression tests were unaffected by that local arithmetic change.
+
+The first integrated run exposed the worker’s in-progress `schedule_rule.py` source-map mismatch. The worker updated `tools/audit_abi3_asap7_comparison_readiness.py` before the successful rerun; this review did not stage or overwrite those edits. Isolated-worktree failures from missing generated IR or outside-root deployment symlinks were resolved by testing in the main workspace with its real build inputs.
+
+Final broad command:
+
+```sh
+PYTHONPATH=src python -m pytest \
+  tests/test_chip_architecture.py tests/runtime/test_dependence_contract.py \
+  tests/test_noc.py tests/test_derive_cycle_machine.py \
+  tests/test_check_redesign_gates_g2.py tests/test_abi3_comparison_boundary.py \
+  tests/test_asap7_physical.py -q -o addopts=''
+```
+
+`make check-chip-architecture` and `git diff --check` passed after the final changes. The physical snapshot was regenerated against the main workspace: lane and LQ8 source hashes match; the historical microsequencer route no longer matches five actively edited RTL sources and is explicitly marked stale. Future worker changes can intentionally make a checked report stale again. No RTL integration, full model-token run or chip route was executed by this review.
 
 ## Organized commits
 
@@ -104,5 +118,7 @@ Verification during the review: **33 focused tests passed**, including 2,000 see
 | `8ea4251` | Conservatively reserve writes to output scale planes. |
 | `e3e234f` | Generate deterministic checked JSON/Markdown and source-bound physical summaries; add Make targets. |
 | `13e6a5a` | Reconcile the architecture specification and remove unsupported chip performance tables. |
+| `75867e2` | Publish worker handoff, preserve concurrent closure findings and reconcile remaining documentation. |
+| `fd06a98` | Replicate normalization gains correctly on tensor shards; refresh the main-workspace physical snapshot. |
 
-Merge commits preserve concurrent physical-record work, including `7ae6bd3` and `44552eb`; later documentation commits finish this handoff and refresh the physical snapshot. Main-workspace implementation changes remain owned by the concurrent worker. No full-chip route, model-token campaign or deployment regeneration was fabricated for this review.
+Merge commits preserve concurrent physical-record work, including `7ae6bd3` and `44552eb`; later documentation commits finish this handoff and refresh the physical snapshot. Main-workspace implementation changes remain owned by the concurrent worker. Full-chip routing, model-token campaigns and deployment regeneration remain implementation tasks with the acceptance criteria above.
