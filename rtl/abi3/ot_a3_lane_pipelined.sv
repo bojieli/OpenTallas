@@ -46,6 +46,47 @@
 // after it write nothing, and the lane stops with a distinct error detail
 // (gate D5) whose class equals the sequential lane's error code.
 //
+// Address generation (section 13 item 11): no divider and no multiplier on
+// the per-cycle path.  Every operand and scale address the lane issues is an
+// adder over registered walk state:
+//
+//   a_rd_addr = a_row_base + kg            a_row_base += depth_words per row
+//   b_rd_addr = b_col_base[col] + kg       the column's base word, sampled
+//                                          from a cursor that advances by
+//                                          depth_words each time a column is
+//                                          opened (its first k-group) and
+//                                          returns to cfg_b_base at the end
+//                                          of a row
+//   s_rd_addr = cfg_scale_a_base + row_scale_a + k_scale_a
+//   t_rd_addr = cfg_scale_b_base + col_scale_b[col] + k_scale_b
+//   out_addr  = out_row_base + column      out_row_base += cols per row
+//
+// For amendment A15's E8M0 code index
+//     (row / rows_per_block) * (depth / block) + (k / block)
+// none of the three quotients is divided per element.  depth / block is
+// computed once per operation by the admission unit and held as a registered
+// stride (cpr_x, codes per row of blocks); row / rows_per_block and
+// column / rows_per_block are counters that wrap at rows_per_block and add
+// the stride on the wrap (row_scale_a; and the column cursor col_cur_scale_b,
+// sampled into col_scale_b[col] when the column is opened); k / block is a
+// counter that wraps every block / g k-groups (bw_x, a shift of the block
+// size, since g divides it) and increments on the wrap.  For every admitted
+// configuration the address sequence equals the sequential lane's
+// scale_index() element by element; for a side whose scale is disabled the
+// scale address is the base (the code read there is not used).
+//
+// Admission (state S_ADMIT, once per operation): a restoring divider computes
+// depth / block for both sides one quotient bit per cycle -- a 17-bit
+// subtract per cycle, never on the issue path -- and the operation is
+// admitted only if both remainders are zero, each enabled block is a
+// multiple of g (its low log2 g bits are zero) and every format and shape
+// rule of shape_ok holds; otherwise the lane stops with ERR_SHAPE /
+// DETAIL_SHAPE and writes nothing, the same class and detail as before.
+// The first lane-op issues 18 cycles after start (it was 1); the steady-state
+// rate is unchanged.  Configuration inputs are sampled at start and held in
+// registers for the operation, so they must be stable from start to done --
+// the benches and the LQ8 block hold them so.
+//
 // Package constants are re-declared as local parameters and package functions
 // called through their scope -- never a wildcard import (OI-43).
 // ---------------------------------------------------------------------------
@@ -128,9 +169,15 @@ module ot_a3_lane_pipelined #(
     localparam [7:0] FMT_FP8_E4M3FN = ot_a3_lane_pkg::FMT_FP8_E4M3FN;
     localparam [7:0] FMT_MXFP4_E2M1 = ot_a3_lane_pkg::FMT_MXFP4_E2M1;
 
-    localparam [1:0] S_IDLE = 2'd0;
-    localparam [1:0] S_RUN  = 2'd1;
-    localparam [1:0] S_DONE = 2'd2;
+    localparam [1:0] S_IDLE  = 2'd0;
+    localparam [1:0] S_RUN   = 2'd1;
+    localparam [1:0] S_DONE  = 2'd2;
+    localparam [1:0] S_ADMIT = 2'd3;
+
+    // Column-indexed walk state is sized to the next power of two above L so
+    // that col_i (< n_active <= L) never leaves the array.
+    localparam integer COL_BITS = (ADDER_STAGES > 4) ? 3 : ((ADDER_STAGES > 2) ? 2 : 1);
+    localparam integer COL_SLOTS = 1 << COL_BITS;
 
     // -- latched configuration ---------------------------------------------------
     reg [1:0]  state;
@@ -142,6 +189,21 @@ module ot_a3_lane_pipelined #(
     reg [15:0] kg_count;        // k-groups per column
     reg [2:0]  tail_valid;      // elements valid in the last k-group
     reg        faulted;
+    reg [7:0]  dtype_a_r, dtype_b_r;
+    reg        scale_a_r, scale_b_r, out_fp32_r;
+    reg [15:0] rows_r, cols_r;
+    reg [31:0] b_base_r, scale_a_base_r, scale_b_base_r;
+
+    // -- scale geometry, from the admission unit ---------------------------------
+    reg [15:0] rpb_a, rpb_b;    // rows (columns) per scale block, >= 1
+    reg [15:0] cpr_a, cpr_b;    // codes per row of blocks: depth / block (0 when unscaled)
+    reg [15:0] bw_a, bw_b;      // k-groups per scale block: block / g (0 when unscaled)
+
+    // -- admission divider: depth / block, restoring, one bit per cycle ----------
+    reg [4:0]  div_step;
+    reg [15:0] div_n;           // the numerator, shifted out MSB first
+    reg [15:0] div_r_a, div_r_b;
+    reg [15:0] div_q_a, div_q_b;
 
     // -- issue counters ----------------------------------------------------------
     reg [15:0] row;
@@ -151,6 +213,19 @@ module ot_a3_lane_pipelined #(
     reg        issue_active;
     reg [3:0]  slot_wait [0:ACC_SLOTS-1];
     reg [31:0] inflight;
+
+    // -- address walk (adders only) ----------------------------------------------
+    reg [31:0] a_row_base;                  // cfg_a_base + row * depth_words
+    reg [31:0] out_row_base;                // cfg_out_base + row * cols
+    reg [31:0] b_col_cursor;                // cfg_b_base + (next column to open) * depth_words
+    reg [31:0] b_col_base   [0:COL_SLOTS-1];
+    reg [15:0] row_in_block_a;              // row mod rpb_a
+    reg [31:0] row_scale_a;                 // (row / rpb_a) * cpr_a
+    reg [15:0] kg_in_block_a, kg_in_block_b; // kg mod bw_x
+    reg [15:0] k_scale_a, k_scale_b;        // kg / bw_x
+    reg [15:0] col_cur_in_block_b;          // (next column to open) mod rpb_b
+    reg [31:0] col_cur_scale_b;             // ((next column to open) / rpb_b) * cpr_b
+    reg [31:0] col_scale_b  [0:COL_SLOTS-1];
 
     // -- accumulator file --------------------------------------------------------
     reg [31:0] acc_file [0:ACC_SLOTS-1];
@@ -208,26 +283,6 @@ module ot_a3_lane_pipelined #(
         end
     endfunction
 
-    // Amendment A15: the E8M0 code for element (row, column) of a view over
-    // ``depth`` columns is (row / block_rows) * (depth / block) + column / block.
-    // Identical to the sequential lane's function.
-    function automatic [31:0] scale_index;
-        input [15:0] element_row;
-        input [15:0] element_column;
-        input [15:0] depth;
-        input [15:0] block;
-        input [15:0] block_rows;
-        reg [15:0] rows_per_block;
-        reg [15:0] elements_per_block;
-        begin
-            rows_per_block = (block_rows == 16'd0) ? 16'd1 : block_rows;
-            elements_per_block = (block == 16'd0) ? 16'd1 : block;
-            scale_index = ({16'b0, element_row} / {16'b0, rows_per_block}) *
-                          ({16'b0, depth} / {16'b0, elements_per_block}) +
-                          ({16'b0, element_column} / {16'b0, elements_per_block});
-        end
-    endfunction
-
     // One 16-bit storage code out of a packed 64-bit operand word.
     function automatic [15:0] element_code;
         input [63:0] word;
@@ -270,13 +325,21 @@ module ot_a3_lane_pipelined #(
     // ---------------------------------------------------------------------------
     // Issue
     // ---------------------------------------------------------------------------
-    wire [15:0] cols_left = cfg_cols - pass_col0;
+    wire [15:0] cols_left = cols_r - pass_col0;
     wire [2:0]  n_active  = (cols_left >= L16) ? L3 : cols_left[2:0];
     wire        last_kg   = (kg + 16'd1 == kg_count);
     wire [15:0] column    = pass_col0 + {13'b0, col_i};
-    wire [15:0] k_first   = kg << group_shift;
+    wire        open_col  = (kg == 16'd0);   // first k-group: the column is opened from the cursor
     wire        can_issue = (state == S_RUN) && issue_active && !faulted &&
                             (slot_wait[col_i] == 4'd0);
+    wire [COL_BITS-1:0] col_idx = col_i[COL_BITS-1:0];
+    wire [31:0] b_col_now     = open_col ? b_col_cursor    : b_col_base[col_idx];
+    wire [31:0] col_scale_now = open_col ? col_cur_scale_b : col_scale_b[col_idx];
+    // Counter wraps, compared one bit wider so that a zero bound never wraps.
+    wire        row_wrap_a = ({1'b0, row_in_block_a} + 17'd1) == {1'b0, rpb_a};
+    wire        col_wrap_b = ({1'b0, col_cur_in_block_b} + 17'd1) == {1'b0, rpb_b};
+    wire        kg_wrap_a  = ({1'b0, kg_in_block_a} + 17'd1) == {1'b0, bw_a};
+    wire        kg_wrap_b  = ({1'b0, kg_in_block_b} + 17'd1) == {1'b0, bw_b};
 
     reg [TOKEN_BITS-1:0] tok_i, tok_r, tok_u, tok_m, tok_g;
     reg [TOKEN_BITS-1:0] tok_a [0:L-1];
@@ -301,12 +364,12 @@ module ot_a3_lane_pipelined #(
         scale_range_detail = DETAIL_NONE;
         for (uj = 0; uj < 4; uj = uj + 1) begin
             raw_a = ot_a3_lane_pkg::unpack_element(
-                cfg_dtype_a, element_code(a_rd_data, cfg_dtype_a, uj), 1'b0);
+                dtype_a_r, element_code(a_rd_data, dtype_a_r, uj), 1'b0);
             raw_b = ot_a3_lane_pkg::unpack_element(
-                cfg_dtype_b, element_code(b_rd_data, cfg_dtype_b, uj), 1'b1);
+                dtype_b_r, element_code(b_rd_data, dtype_b_r, uj), 1'b1);
             if (uj < token_nvalid(tok_r)) begin
-                u_a[uj] = ot_a3_lane_pkg::fold_scale(raw_a, s_rd_data[7:0], cfg_scale_a, 1'b0);
-                u_b[uj] = ot_a3_lane_pkg::fold_scale(raw_b, t_rd_data[7:0], cfg_scale_b, 1'b1);
+                u_a[uj] = ot_a3_lane_pkg::fold_scale(raw_a, s_rd_data[7:0], scale_a_r, 1'b0);
+                u_b[uj] = ot_a3_lane_pkg::fold_scale(raw_b, t_rd_data[7:0], scale_b_r, 1'b1);
             end else begin
                 u_a[uj] = ot_a3_lane_pkg::pack_element(DETAIL_NONE, 1'b0, 1'b1, 8'b0, 12'b0);
                 u_b[uj] = ot_a3_lane_pkg::pack_element(DETAIL_NONE, 1'b0, 1'b1, 8'b0, 12'b0);
@@ -555,8 +618,10 @@ module ot_a3_lane_pipelined #(
     // ---------------------------------------------------------------------------
     // Sequential logic
     // ---------------------------------------------------------------------------
-    // Start-time admission: fail closed on any shape or format this lane does
-    // not implement.
+    // Admission: fail closed on any shape or format this lane does not
+    // implement.  shape_ok is the combinational part; the divisibility rules
+    // (block a multiple of g, block dividing K) come from the admission
+    // divider below and are decided in S_ADMIT, never on the issue path.
     reg shape_ok;
     always @* begin
         shape_ok = (cfg_rows != 16'd0) && (cfg_cols != 16'd0) && (cfg_depth != 16'd0);
@@ -579,22 +644,33 @@ module ot_a3_lane_pipelined #(
         if ((cfg_group == 8'd4) &&
             (cfg_dtype_a != FMT_MXFP4_E2M1) && (cfg_dtype_b != FMT_MXFP4_E2M1))
             shape_ok = 1'b0;
-        // A block-scaled operand: a block, a multiple of g, dividing K.
-        if (cfg_scale_a) begin
-            if (cfg_block_a == 16'd0)
-                shape_ok = 1'b0;
-            else if (((cfg_block_a % {8'b0, cfg_group}) != 16'd0) ||
-                     ((cfg_depth % cfg_block_a) != 16'd0))
-                shape_ok = 1'b0;
-        end
-        if (cfg_scale_b) begin
-            if (cfg_block_b == 16'd0)
-                shape_ok = 1'b0;
-            else if (((cfg_block_b % {8'b0, cfg_group}) != 16'd0) ||
-                     ((cfg_depth % cfg_block_b) != 16'd0))
-                shape_ok = 1'b0;
-        end
+        // A block-scaled operand needs a block; that it is a multiple of g and
+        // divides K is checked from the divider's remainder in S_ADMIT.
+        if (cfg_scale_a && (cfg_block_a == 16'd0))
+            shape_ok = 1'b0;
+        if (cfg_scale_b && (cfg_block_b == 16'd0))
+            shape_ok = 1'b0;
     end
+
+    // One restoring step of depth / block on each side: shift the next
+    // numerator bit into the partial remainder and subtract the block if it
+    // fits.  Only S_ADMIT advances it.
+    // (The partial remainder is below the block, so a fitting difference is
+    // below 2^16 and the 16-bit subtraction is exact.)
+    wire [16:0] div_sh_a   = {div_r_a, div_n[15]};
+    wire [16:0] div_sh_b   = {div_r_b, div_n[15]};
+    wire        div_fit_a  = (div_sh_a >= {1'b0, cfg_block_a});
+    wire        div_fit_b  = (div_sh_b >= {1'b0, cfg_block_b});
+    wire [15:0] div_diff_a = div_sh_a[15:0] - cfg_block_a;
+    wire [15:0] div_diff_b = div_sh_b[15:0] - cfg_block_b;
+    // block mod g: the low log2(g) bits of the block, g latched as group_shift.
+    wire        block_mod_g_a = (group_shift == 2'd1) ? cfg_block_a[0] :
+                                (group_shift == 2'd2) ? (|cfg_block_a[1:0]) : 1'b0;
+    wire        block_mod_g_b = (group_shift == 2'd1) ? cfg_block_b[0] :
+                                (group_shift == 2'd2) ? (|cfg_block_b[1:0]) : 1'b0;
+    wire        admit_ok = shape_ok &&
+                           !(cfg_scale_a && (block_mod_g_a || (div_r_a != 16'd0))) &&
+                           !(cfg_scale_b && (block_mod_g_b || (div_r_b != 16'd0)));
 
     integer si;
     always @(posedge clk or negedge rst_n) begin
@@ -629,12 +705,49 @@ module ot_a3_lane_pipelined #(
             kg_count <= 16'b0;
             tail_valid <= 3'd1;
             faulted <= 1'b0;
+            dtype_a_r <= 8'b0;
+            dtype_b_r <= 8'b0;
+            scale_a_r <= 1'b0;
+            scale_b_r <= 1'b0;
+            out_fp32_r <= 1'b0;
+            rows_r <= 16'b0;
+            cols_r <= 16'b0;
+            b_base_r <= 32'b0;
+            scale_a_base_r <= 32'b0;
+            scale_b_base_r <= 32'b0;
+            rpb_a <= 16'd1;
+            rpb_b <= 16'd1;
+            cpr_a <= 16'b0;
+            cpr_b <= 16'b0;
+            bw_a <= 16'b0;
+            bw_b <= 16'b0;
+            div_step <= 5'b0;
+            div_n <= 16'b0;
+            div_r_a <= 16'b0;
+            div_r_b <= 16'b0;
+            div_q_a <= 16'b0;
+            div_q_b <= 16'b0;
             row <= 16'b0;
             pass_col0 <= 16'b0;
             kg <= 16'b0;
             col_i <= 3'b0;
             issue_active <= 1'b0;
             inflight <= 32'b0;
+            a_row_base <= 32'b0;
+            out_row_base <= 32'b0;
+            b_col_cursor <= 32'b0;
+            row_in_block_a <= 16'b0;
+            row_scale_a <= 32'b0;
+            kg_in_block_a <= 16'b0;
+            kg_in_block_b <= 16'b0;
+            k_scale_a <= 16'b0;
+            k_scale_b <= 16'b0;
+            col_cur_in_block_b <= 16'b0;
+            col_cur_scale_b <= 32'b0;
+            for (si = 0; si < COL_SLOTS; si = si + 1) begin
+                b_col_base[si] <= 32'b0;
+                col_scale_b[si] <= 32'b0;
+            end
             tok_i <= {TOKEN_BITS{1'b0}};
             tok_r <= {TOKEN_BITS{1'b0}};
             tok_u <= {TOKEN_BITS{1'b0}};
@@ -695,36 +808,77 @@ module ot_a3_lane_pipelined #(
             tok_i <= {TOKEN_BITS{1'b0}};
             if (can_issue) begin
                 a_rd_en <= 1'b1;
-                a_rd_addr <= cfg_a_base + ({16'b0, row} * {16'b0, depth_words}) + {16'b0, kg};
+                a_rd_addr <= a_row_base + {16'b0, kg};
                 b_rd_en <= 1'b1;
-                b_rd_addr <= cfg_b_base + ({16'b0, column} * {16'b0, depth_words}) + {16'b0, kg};
+                b_rd_addr <= b_col_now + {16'b0, kg};
                 s_rd_en <= 1'b1;
-                s_rd_addr <= cfg_scale_a_base +
-                             scale_index(row, k_first, cfg_depth, cfg_block_a, cfg_block_rows_a);
+                s_rd_addr <= scale_a_base_r + row_scale_a + {16'b0, k_scale_a};
                 t_rd_en <= 1'b1;
-                t_rd_addr <= cfg_scale_b_base +
-                             scale_index(column, k_first, cfg_depth, cfg_block_b, cfg_block_rows_b);
-                tok_i <= make_token(1'b1, col_i, (kg == 16'd0), last_kg,
+                t_rd_addr <= scale_b_base_r + col_scale_now + {16'b0, k_scale_b};
+                tok_i <= make_token(1'b1, col_i, open_col, last_kg,
                                     last_kg ? tail_valid : group,
-                                    cfg_out_base + ({16'b0, row} * {16'b0, cfg_cols}) + {16'b0, column},
+                                    out_row_base + {16'b0, column},
                                     DETAIL_NONE);
                 slot_wait[col_i] <= L_WAIT;
                 inflight <= inflight + 32'd1;
+                if (open_col) begin
+                    // The column is opened: keep its bases for the later
+                    // k-groups and step the cursor to the next column.
+                    b_col_base[col_idx] <= b_col_cursor;
+                    col_scale_b[col_idx] <= col_cur_scale_b;
+                    b_col_cursor <= b_col_cursor + {16'b0, depth_words};
+                    if (col_wrap_b) begin
+                        col_cur_in_block_b <= 16'd0;
+                        col_cur_scale_b <= col_cur_scale_b + {16'b0, cpr_b};
+                    end else begin
+                        col_cur_in_block_b <= col_cur_in_block_b + 16'd1;
+                    end
+                end
                 if (col_i + 3'd1 == n_active) begin
                     col_i <= 3'd0;
                     if (last_kg) begin
                         kg <= 16'd0;
-                        if (pass_col0 + {13'b0, n_active} >= cfg_cols) begin
+                        kg_in_block_a <= 16'd0;
+                        kg_in_block_b <= 16'd0;
+                        k_scale_a <= 16'd0;
+                        k_scale_b <= 16'd0;
+                        if (pass_col0 + {13'b0, n_active} >= cols_r) begin
+                            // End of the row: the column cursor returns to
+                            // column 0 (this overrides the step above).
                             pass_col0 <= 16'd0;
-                            if (row + 16'd1 == cfg_rows)
+                            b_col_cursor <= b_base_r;
+                            col_cur_in_block_b <= 16'd0;
+                            col_cur_scale_b <= 32'b0;
+                            if (row + 16'd1 == rows_r) begin
                                 issue_active <= 1'b0;
-                            else
+                            end else begin
                                 row <= row + 16'd1;
+                                a_row_base <= a_row_base + {16'b0, depth_words};
+                                out_row_base <= out_row_base + {16'b0, cols_r};
+                                if (row_wrap_a) begin
+                                    row_in_block_a <= 16'd0;
+                                    row_scale_a <= row_scale_a + {16'b0, cpr_a};
+                                end else begin
+                                    row_in_block_a <= row_in_block_a + 16'd1;
+                                end
+                            end
                         end else begin
                             pass_col0 <= pass_col0 + {13'b0, n_active};
                         end
                     end else begin
                         kg <= kg + 16'd1;
+                        if (kg_wrap_a) begin
+                            kg_in_block_a <= 16'd0;
+                            k_scale_a <= k_scale_a + 16'd1;
+                        end else begin
+                            kg_in_block_a <= kg_in_block_a + 16'd1;
+                        end
+                        if (kg_wrap_b) begin
+                            kg_in_block_b <= 16'd0;
+                            k_scale_b <= k_scale_b + 16'd1;
+                        end else begin
+                            kg_in_block_b <= kg_in_block_b + 16'd1;
+                        end
                     end
                 end else begin
                     col_i <= col_i + 3'd1;
@@ -761,9 +915,9 @@ module ot_a3_lane_pipelined #(
                         out_we <= 1'b1;
                         out_addr <= token_address(wb_token);
                         out_acc <= wb_code;
-                        out_data <= cfg_out_fp32 ? wb_code : {16'b0, narrowed[15:0]};
+                        out_data <= out_fp32_r ? wb_code : {16'b0, narrowed[15:0]};
                         out_count <= out_count + 32'd1;
-                        if (!cfg_out_fp32 && narrowed[16])
+                        if (!out_fp32_r && narrowed[16])
                             saturation_count <= saturation_count + 32'd1;
                     end
                 end
@@ -788,37 +942,87 @@ module ot_a3_lane_pipelined #(
                         inflight <= 32'b0;
                         for (si = 0; si < ACC_SLOTS; si = si + 1)
                             slot_wait[si] <= 4'd0;
-                        if (!shape_ok) begin
-                            error_code <= ERR_SHAPE;
-                            error_detail <= DETAIL_SHAPE;
-                            issue_active <= 1'b0;
-                            state <= S_DONE;
-                        end else begin
-                            case (cfg_group)
-                                8'd2: begin
-                                    mode <= 2'd1; group <= 3'd2; group_shift <= 2'd1;
-                                    depth_words <= (cfg_depth + 16'd1) >> 1;
-                                    kg_count <= (cfg_depth + 16'd1) >> 1;
-                                    tail_valid <= (cfg_depth[0] == 1'b0) ? 3'd2 : 3'd1;
-                                end
-                                8'd4: begin
-                                    mode <= 2'd2; group <= 3'd4; group_shift <= 2'd2;
-                                    depth_words <= (cfg_depth + 16'd3) >> 2;
-                                    kg_count <= (cfg_depth + 16'd3) >> 2;
-                                    tail_valid <= (cfg_depth[1:0] == 2'b00) ? 3'd4 : {1'b0, cfg_depth[1:0]};
-                                end
-                                default: begin
-                                    mode <= 2'd0; group <= 3'd1; group_shift <= 2'd0;
-                                    depth_words <= cfg_depth;
-                                    kg_count <= cfg_depth;
-                                    tail_valid <= 3'd1;
-                                end
-                            endcase
-                            swap_ab <= (cfg_dtype_b == FMT_MXFP4_E2M1) &&
-                                       (cfg_dtype_a != FMT_MXFP4_E2M1);
-                            issue_active <= 1'b1;
-                            state <= S_RUN;
-                        end
+                        // Sample the configuration; the divisibility rules
+                        // are decided in S_ADMIT once the divider has run.
+                        dtype_a_r <= cfg_dtype_a;
+                        dtype_b_r <= cfg_dtype_b;
+                        scale_a_r <= cfg_scale_a;
+                        scale_b_r <= cfg_scale_b;
+                        out_fp32_r <= cfg_out_fp32;
+                        rows_r <= cfg_rows;
+                        cols_r <= cfg_cols;
+                        b_base_r <= cfg_b_base;
+                        scale_a_base_r <= cfg_scale_a_base;
+                        scale_b_base_r <= cfg_scale_b_base;
+                        case (cfg_group)
+                            8'd2: begin
+                                mode <= 2'd1; group <= 3'd2; group_shift <= 2'd1;
+                                depth_words <= (cfg_depth + 16'd1) >> 1;
+                                kg_count <= (cfg_depth + 16'd1) >> 1;
+                                tail_valid <= (cfg_depth[0] == 1'b0) ? 3'd2 : 3'd1;
+                            end
+                            8'd4: begin
+                                mode <= 2'd2; group <= 3'd4; group_shift <= 2'd2;
+                                depth_words <= (cfg_depth + 16'd3) >> 2;
+                                kg_count <= (cfg_depth + 16'd3) >> 2;
+                                tail_valid <= (cfg_depth[1:0] == 2'b00) ? 3'd4 : {1'b0, cfg_depth[1:0]};
+                            end
+                            default: begin
+                                mode <= 2'd0; group <= 3'd1; group_shift <= 2'd0;
+                                depth_words <= cfg_depth;
+                                kg_count <= cfg_depth;
+                                tail_valid <= 3'd1;
+                            end
+                        endcase
+                        swap_ab <= (cfg_dtype_b == FMT_MXFP4_E2M1) &&
+                                   (cfg_dtype_a != FMT_MXFP4_E2M1);
+                        div_step <= 5'd0;
+                        div_n <= cfg_depth;
+                        div_r_a <= 16'b0;
+                        div_r_b <= 16'b0;
+                        div_q_a <= 16'b0;
+                        div_q_b <= 16'b0;
+                        issue_active <= 1'b0;
+                        state <= S_ADMIT;
+                    end
+                end
+
+                S_ADMIT: begin
+                    if (div_step != 5'd16) begin
+                        // One quotient bit per cycle, both sides together.
+                        div_r_a <= div_fit_a ? div_diff_a : div_sh_a[15:0];
+                        div_r_b <= div_fit_b ? div_diff_b : div_sh_b[15:0];
+                        div_q_a <= {div_q_a[14:0], div_fit_a};
+                        div_q_b <= {div_q_b[14:0], div_fit_b};
+                        div_n <= {div_n[14:0], 1'b0};
+                        div_step <= div_step + 5'd1;
+                    end else if (!admit_ok) begin
+                        error_code <= ERR_SHAPE;
+                        error_detail <= DETAIL_SHAPE;
+                        issue_active <= 1'b0;
+                        state <= S_DONE;
+                    end else begin
+                        // Registered geometry for the walk; an unscaled side
+                        // holds its scale address at the base.
+                        rpb_a <= (cfg_block_rows_a == 16'd0) ? 16'd1 : cfg_block_rows_a;
+                        rpb_b <= (cfg_block_rows_b == 16'd0) ? 16'd1 : cfg_block_rows_b;
+                        cpr_a <= cfg_scale_a ? div_q_a : 16'd0;
+                        cpr_b <= cfg_scale_b ? div_q_b : 16'd0;
+                        bw_a <= cfg_scale_a ? (cfg_block_a >> group_shift) : 16'd0;
+                        bw_b <= cfg_scale_b ? (cfg_block_b >> group_shift) : 16'd0;
+                        a_row_base <= cfg_a_base;
+                        out_row_base <= cfg_out_base;
+                        b_col_cursor <= cfg_b_base;
+                        row_in_block_a <= 16'd0;
+                        row_scale_a <= 32'b0;
+                        kg_in_block_a <= 16'd0;
+                        kg_in_block_b <= 16'd0;
+                        k_scale_a <= 16'd0;
+                        k_scale_b <= 16'd0;
+                        col_cur_in_block_b <= 16'd0;
+                        col_cur_scale_b <= 32'b0;
+                        issue_active <= 1'b1;
+                        state <= S_RUN;
                     end
                 end
 
