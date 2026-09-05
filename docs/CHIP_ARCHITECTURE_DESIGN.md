@@ -843,6 +843,27 @@ Vehicle scratchpad: 4 banks x 32 KiB (sky130hd OpenRAM 1rw1r 32 x 256 macros gan
 
 Every macro instance is placed with MACRO_PLACE_HALO under SYNTH_HIERARCHICAL = 1; macro placement and PDN have never been exercised in this flow (macro_count 0 in every pnr.json), so the macro-bearing pilot (G2a-M) precedes any claim that a store or staging SRAM is routable.
 
+**The asap7 vehicle memories do not have to be abstracts (established 2026-09-05).** The pinned `openroad/orfs:latest` image ships seventeen compiled SRAM macros on the ASAP7 platform, each with both an abstract LEF and an NLDM liberty view, so a macro-bearing route is a configuration away rather than a modelling exercise. Measured from the image's own `platforms/asap7/lef`:
+
+| macro | bits | capacity | footprint | pins |
+| --- | ---: | ---: | ---: | ---: |
+| `fakeram_512x8` | 4,096 | 512 B | 4.18 x 42.00 µm | 30 |
+| `fakeram7_64x21` / `_64x22` / `_64x25` / `_64x28` | 1,344-1,792 | 168-224 B | 5.5 x 11.2 to 14.6 x 6.0 µm | 51-67 |
+| `fakeram_32x46` | 1,472 | 184 B | 6.08 x 11.2 µm | 102 |
+| `fakeram7_64x256` | 16,384 | 2 KiB | 33.25 x 46.80 µm | 523 |
+| `fakeram7_256x32` / `_256x34` | 8,192 / 8,704 | 1 KiB | 8.36-8.93 x 42.0 µm | 77-81 |
+| `fakeram_256x64` / `fakeram7_128x64` | 16,384 / 8,192 | 2 KiB / 1 KiB | 16.72 x 42.0 / 16.72 x 21.6 µm | 141 / 140 |
+| `fakeram_256x128` | 32,768 | 4 KiB | 16.72 x 84.0 µm | 269 |
+| `fakeram7_256x256` | 65,536 | 8 KiB | 33.25 x 84.0 µm | 525 |
+| `fakeram_512x128` | 65,536 | 8 KiB | 66.5 x 42.0 µm | 270 |
+| `fakeram7_2048x39` | 79,872 | 9.75 KiB | 20.33 x 166.6 µm | 94 |
+| `fakeram_2048x128` | 262,144 | 32 KiB | 66.5 x 166.6 µm | 272 |
+
+Three consequences the plan takes as decisions. **(a)** The asap7 vehicle stores map onto real parts: the 8-slot IRS is eight `fakeram_512x8` at exactly 512 B each; the 4 KiB program store is one `fakeram_256x128`; the 64 KiB descriptor store is two `fakeram_2048x128`; 16 KiB of tile staging is two `fakeram_512x128`. **(b)** Gate G2 — one routed netlist holding the microsequencer, the datapath array and the memory system — is therefore reachable at asap7 without inventing a memory model, and its remaining content is the assembly, not the parts. **(c)** It is reachable *only* at asap7 in this image: `platforms/sky130hd/lef` and `.../lib` ship no RAM view at all (sky130 SRAMs live in the OpenLane `sky130_sram_macros` set, outside the pinned container), so the sky130hd column above stays an abstract and no sky130hd route can satisfy G2's macro requirement. The vehicle's second view remains a standard-cell-only comparison point.
+
+These are `fakeram` parts: black-box timing models with plausible geometry, not characterised silicon. They establish that macro placement, PDN over a macro, halo and pin access work in this flow and that the assembled netlist is routable — they do not establish memory access energy, real array timing, or yield, and no figure derived from them may be reported as a memory characterisation. The N5 design point's memories remain what section 5 prices.
+
+
 ### 11.3 The vehicle tops and their staging
 
 * **Pilot P0 (G2a-P)**: 2 x LQ8 + 1 RE8 + CP-FE + 1 NOC-R + 1 OpenRAM macro under BLOCKS at both views; records parent wall time, glue cells, DRC/antenna, and the abstract round-trip. Nothing about tile counts is quoted before P0's parent cost is measured (the largest ORFS reference places 2 blocks; no BLOCKS run has ever been executed here).
