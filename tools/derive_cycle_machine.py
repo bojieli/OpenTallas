@@ -4280,6 +4280,917 @@ def emit_cell(anchor: Anchor, config_dir: Path, artifact_dir: Path, *,
     }
 
 
+# ---------------------------------------------------------------------------
+# L3 calibration: the cycle model against the L1 block-cycle records (gate G4)
+# ---------------------------------------------------------------------------
+#
+# Gate G4 (configs/gates/redesign_gates.json) reads ONE artifact,
+# results/derived/*calibration*.json, for two fields:
+#
+#     calibration.block_cycles_within_band          -- the RTL half
+#     calibration.derived_machine_reproduces_anchor -- the analytical half
+#
+# ``--calibrate`` produces that artifact.  It does NOT re-fit anything: it
+# takes the cycle model's own per-block cost formula (runtime/cycle/model.py,
+# ``CycleModel._compute_cycles`` and ``_time_steps``), parameterises it with
+# exactly the operation each L1 record ran -- same output surface, same
+# reduction depth, same lane count, and the record's own measured rate as
+# ``work_per_lane_cycle`` -- and divides what the model charges by what the
+# RTL took.  Every ratio is written out; the verdict is a conjunction over
+# them and over the boundary rule of docs/CHIP_ARCHITECTURE_DESIGN.md
+# section 11.5, which is quoted into the artifact together with the decision
+# taken on it.  Nothing here widens the band, and a number that no
+# computation produced is written as ``null`` with the reason beside it.
+
+CALIBRATION_SCHEMA = "opentallas.derived_cycle_machine.calibration.v1"
+
+#: docs/CHIP_ARCHITECTURE_DESIGN.md section 11.5, row "L3 / G4, C3, C4":
+#: "block cycles within +/-10 % of L1".
+CALIBRATION_BAND = (0.9, 1.1)
+
+DEFAULT_LANE_RECORD = "results/rtl/abi3_pipelined_lane.json"
+DEFAULT_LANE_GROUPS_RECORD = "results/rtl/abi3_pipelined_lane_groups.json"
+DEFAULT_LQ8_RECORD = "results/rtl/abi3_lq8.json"
+DEFAULT_CONTROL_PLANE_RECORD = "results/rtl/abi3_deployment_campaign.json"
+DEFAULT_RECONCILIATION = "results/derived/qwen3_n5_design_target_reconciliation.json"
+DEFAULT_CALIBRATION_OUT = "results/derived/qwen3_n5_design_target_calibration.json"
+DESIGN_DOC = "docs/CHIP_ARCHITECTURE_DESIGN.md"
+GATES_CONFIG = "configs/gates/redesign_gates.json"
+CYCLE_MODEL_SOURCES = ("runtime/cycle/model.py", "runtime/cycle/machine.py")
+
+#: Work-counter units the tensor engine records per product coordinate: one
+#: multiply and one add (``FAMILY_WORK_COUNTERS["tensor"]``).  The cycle
+#: model's rate is stated in these units and ``CycleModel._work_scale`` reads
+#: the same factor off a real step's counters, so the calibration step carries
+#: exactly the counters a contraction of that size would.
+TENSOR_WORK_UNITS_PER_PRODUCT = 2
+
+#: The blocks whose measured cycles G4 is about.  Each must contribute at
+#: least one ratio; a block that carries no cycle count is reported as such
+#: and fails the verdict on absence rather than dropping out of it.
+CALIBRATED_BLOCKS = ("lane", "lane_groups", "lq8", "control_plane")
+
+
+def _sha256_of(path: Path) -> str:
+    import hashlib
+
+    h = hashlib.sha256()
+    with open(path, "rb") as fh:
+        for chunk in iter(lambda: fh.read(1 << 20), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def _git_state(inputs: Sequence[str]) -> dict[str, Any]:
+    import subprocess
+
+    def run(*argv: str) -> str:
+        return subprocess.run(
+            ["git", *argv], cwd=REPO, text=True, stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT, check=False,
+        ).stdout.strip()
+
+    status = run("status", "--porcelain")
+    dirty_paths = sorted(line[3:] for line in status.splitlines()) if status else []
+    return {
+        "commit": run("rev-parse", "HEAD"),
+        "dirty": bool(status),
+        "dirty_paths": dirty_paths,
+        "dirty_inputs": sorted(p for p in inputs if p in set(dirty_paths)),
+    }
+
+
+def _doc_row(text: str, first_cell: str) -> list[str]:
+    """The cells of the one markdown table row whose first cell is ``first_cell``."""
+    prefix = f"| {first_cell} |"
+    rows = [line for line in text.splitlines() if line.startswith(prefix)]
+    if len(rows) != 1:
+        raise DerivationError(
+            f"{DESIGN_DOC}: expected exactly one table row starting {prefix!r}, "
+            f"found {len(rows)}"
+        )
+    return [c.strip() for c in rows[0].strip().strip("|").split("|")]
+
+
+def design_boundary_rule(doc_text: str) -> dict[str, Any]:
+    """Read the design's boundary figure and the L3/G4 rung rule off the doc.
+
+    Both numbers are the design document's, not this tool's: section 2.1 row
+    33 states the per-boundary exposed latency and its band, and section 11.5
+    states what the L3 / G4 rung must reach.  They are parsed rather than
+    typed here so the artifact cannot drift from the document it cites.
+    """
+    import re
+
+    row33 = _doc_row(doc_text, "33")
+    m = re.search(r"\*\*(\d+) cycles\*\* \(band (\d+)[–-](\d+)\)", row33[2])
+    if not m:
+        raise DerivationError(
+            f"{DESIGN_DOC} section 2.1 row 33 no longer states '**N cycles** "
+            f"(band lo-hi)': {row33[2][:120]!r}"
+        )
+    cycles, lo, hi = (int(m.group(i)) for i in (1, 2, 3))
+    decomposition = row33[2].split(":", 1)[1].split(";")[0].strip() if ":" in row33[2] else ""
+    l3 = _doc_row(doc_text, "L3 / G4, C3, C4")
+    return {
+        "design_cycles_per_boundary": cycles,
+        "design_band": [lo, hi],
+        "design_decomposition": decomposition,
+        "design_source": f"{DESIGN_DOC} section 2.1 row 33: {row33[1]}",
+        "rung_rule": l3[3],
+        "rung_rule_source": f"{DESIGN_DOC} section 11.5 row '{l3[0]}' column 'number it must reach'",
+    }
+
+
+def _calibration_step(rows: int, cols: int, depth: int) -> Any:
+    """One tensor contraction step of the RTL case's shape, with its counters."""
+    from runtime.cycle.model import TraceStep
+
+    products = rows * cols * depth
+    return TraceStep(
+        index=0,
+        kind="ENGINE",
+        node=0,
+        family="tensor",
+        mnemonic="TENSOR.MATMUL",
+        schedule_id=1,
+        schedule={
+            "tile_rows": rows, "tile_cols": cols, "tile_depth": depth,
+            "issue_window": 1,
+        },
+        operand_dims={
+            "out0": (rows, cols), "in0": (rows, depth), "in1": (depth, cols),
+        },
+        counter_delta={
+            "tensor.multiplications": products,
+            "tensor.additions": products,
+        },
+    )
+
+
+def model_block_charge(
+    *, rows: int, cols: int, depth: int, lanes: int,
+    products_per_lane_cycle: float, engine: Any, sequencer: Any, memory: Any,
+) -> dict[str, Any]:
+    """What the cycle model charges for one contraction of this exact shape.
+
+    ``engine`` is the derived machine's tensor ``EngineParams``; its lane
+    count and rate are replaced by the RTL block's, everything else (tile
+    issue floor, minimum cycles, fixed latency) is the machine's own.  The
+    compute charge comes from ``CycleModel._compute_cycles`` and the
+    whole-instruction span from ``CycleModel._time_steps``, i.e. from the
+    model's code and not from a mirror of it.
+    """
+    import dataclasses
+    from collections import defaultdict
+
+    from runtime.cycle.model import (
+        CycleModel, MemorySystem, _EngineUnit, _Queue, tile_mapping,
+    )
+
+    rate_units = products_per_lane_cycle * TENSOR_WORK_UNITS_PER_PRODUCT
+    params = dataclasses.replace(engine, lanes=lanes, work_per_lane_cycle=rate_units)
+    model = CycleModel.__new__(CycleModel)
+    model.sequencer = sequencer
+
+    step = _calibration_step(rows, cols, depth)
+    mapping = tile_mapping(step, params)
+    scale = model._work_scale(step, "tensor", mapping)
+    compute, tile_issue = model._compute_cycles(step, params, mapping)
+    assert mapping.tensor_lanes is not None
+    waves = mapping.tensor_lanes.output_waves
+    depth_cycles = compute // waves if waves and compute % waves == 0 else None
+
+    def span(steps: Sequence[Any]) -> tuple[int, dict[str, int]]:
+        unit = _EngineUnit("tensor", params)
+        queue = _Queue("tensor", params.queue_depth, params.max_outstanding)
+        totals: dict[str, int] = defaultdict(int)
+        _seq_free, end = model._time_steps(
+            list(steps), 0,
+            queues={"tensor": queue, "tensor.0": queue},
+            engines={"tensor": unit},
+            memory=MemorySystem(memory),
+            events={}, totals=totals, counters=None, fabric=None,
+            fabric_timings=[], tiles_seen={}, node_id=0, node_count=1,
+        )
+        return int(end), dict(totals)
+
+    whole, totals = span([step])
+    front_end = sequencer.fetch_cycles + sequencer.decode_cycles + sequencer.queue_transit_cycles
+    if whole != front_end + compute + params.fixed_latency_cycles:
+        raise DerivationError(
+            "CycleModel._time_steps no longer charges one engine instruction as "
+            "fetch + decode + queue transit + compute + fixed latency "
+            f"({whole} != {front_end} + {compute} + {params.fixed_latency_cycles}); "
+            "the calibration's whole-run decomposition must be re-derived"
+        )
+    return {
+        "lanes": lanes,
+        "work_per_lane_cycle_units": rate_units,
+        "work_units_per_product": scale,
+        "output_waves": waves,
+        "tiles": mapping.tiles,
+        "depth_cycles_per_wave": depth_cycles,
+        "compute_cycles": int(compute),
+        "tile_issue_cycles": int(tile_issue),
+        "front_end_cycles": int(front_end),
+        "fixed_latency_cycles": int(params.fixed_latency_cycles),
+        "whole_run_cycles": whole,
+        "totals": {k: int(v) for k, v in sorted(totals.items())},
+    }
+
+
+def _ratio_row(**kw: Any) -> dict[str, Any]:
+    rtl = kw["rtl_cycles"]
+    model = kw["model_cycles"]
+    ratio = (model / rtl) if (rtl and model is not None) else None
+    lo, hi = CALIBRATION_BAND
+    kw["ratio_model_over_rtl"] = ratio
+    kw["within_band"] = None if ratio is None else (lo <= ratio <= hi)
+    return kw
+
+
+def calibrate_rate_record(
+    record: Mapping[str, Any], *, block: str, engine: Any, sequencer: Any,
+    memory: Any,
+) -> list[dict[str, Any]]:
+    """Every ratio one lane/LQ8 campaign record supports.
+
+    The record's ``measured.mac_per_lane_cycle`` -- the block's headline D2
+    figure, the minimum over its rate cases -- is the rate handed to the
+    model, times ``g`` products per lane-op for a group-mode case, times the
+    work units per product.  Each rate case's own cycle counts are then
+    compared with the model's charge for that case, so a block rate that did
+    not generalise across its cases would show here as a ratio off 1.
+    """
+    measured = record["measured"]
+    rate_lane_ops = float(measured["mac_per_lane_cycle"])
+    cases_by_depth: dict[str, dict[int, Mapping[str, Any]]] = {}
+    for depth_entry in record["depths"]:
+        key = f"L{int(depth_entry['adder_stages'])}"
+        cases_by_depth[key] = {
+            int(c["id"]): c for c in depth_entry["vectors"]["cases"] if c.get("rate")
+        }
+    rows_out: list[dict[str, Any]] = []
+    for depth_key in sorted(measured["rates_by_depth"]):
+        for entry in measured["rates_by_depth"][depth_key]:
+            case = cases_by_depth[depth_key][int(entry["case"])]
+            g = int(case["group"])
+            lanes = int(entry.get("lanes") or measured.get("lanes") or 1)
+            rows, cols, depth = int(case["rows"]), int(case["cols"]), int(case["depth"])
+            if int(entry["products"]) != rows * cols * depth:
+                raise DerivationError(
+                    f"{block} {depth_key} case {entry['case']}: products "
+                    f"{entry['products']} != rows x cols x depth {rows * cols * depth}"
+                )
+            charge = model_block_charge(
+                rows=rows, cols=cols, depth=depth, lanes=lanes,
+                products_per_lane_cycle=rate_lane_ops * g,
+                engine=engine, sequencer=sequencer, memory=memory,
+            )
+            window = int(entry["window_cycles"])
+            total = int(entry["total_cycles"])
+            waves = charge["output_waves"]
+            common = {
+                "block": block,
+                "depth": depth_key,
+                "adder_stages": int(depth_key[1:]),
+                "case": int(entry["case"]),
+                "name": entry["name"],
+                "simulator": entry["simulator"],
+                "shape": {"rows": rows, "cols": cols, "depth": depth, "group": g,
+                          "lanes": lanes},
+                "rtl_lane_ops": int(entry["lane_ops"]),
+                "rtl_products": int(entry["products"]),
+                "rtl_first_retire_cycle": int(entry["first_retire_cycle"]),
+                "rtl_last_retire_cycle": int(entry["last_retire_cycle"]),
+                "rate_handed_to_model": {
+                    "lane_ops_per_lane_cycle": rate_lane_ops,
+                    "products_per_lane_cycle": rate_lane_ops * g,
+                    "work_units_per_lane_cycle": charge["work_per_lane_cycle_units"],
+                },
+                "rtl_products_per_lane_window_cycle": (
+                    int(entry["products"]) / (window * lanes) if window else None
+                ),
+                "model": {k: v for k, v in charge.items() if k != "totals"},
+            }
+            rows_out.append(_ratio_row(
+                quantity="steady_state",
+                definition=(
+                    "model compute cycles (output_waves x depth cycles per wave, "
+                    "CycleModel._compute_cycles) over the RTL's cycles from the "
+                    "first to the last retirement inclusive (window_cycles)"
+                ),
+                rtl_cycles=window, model_cycles=charge["compute_cycles"], **common,
+            ))
+            rows_out.append(_ratio_row(
+                quantity="per_pass",
+                definition=(
+                    "model depth cycles per output wave over the RTL's window "
+                    "cycles per pass, one pass being one output accumulator's "
+                    "walk over the reduction depth on one lane; passes per lane "
+                    "= output waves"
+                ),
+                rtl_cycles=window / waves if waves else None,
+                model_cycles=charge["depth_cycles_per_wave"],
+                passes_per_lane=waves, **common,
+            ))
+            rows_out.append(_ratio_row(
+                quantity="whole_run",
+                definition=(
+                    "model span of one engine instruction from fetch to "
+                    "completion (fetch + decode + queue transit + compute + "
+                    "fixed latency, CycleModel._time_steps) over the RTL's "
+                    "total_cycles from start to done, fill and drain included"
+                ),
+                rtl_cycles=total, model_cycles=charge["whole_run_cycles"], **common,
+            ))
+    return rows_out
+
+
+def calibrate_control_plane(record: Mapping[str, Any], sequencer: Any) -> dict[str, Any]:
+    """The L1-CP record against the model's sequencer cost -- if it can be.
+
+    The whole-transaction co-simulation records what the microsequencer
+    fetched, retired and issued per case and compares every issue and view
+    with the golden device, but neither the campaign tool nor its harness
+    counts clock cycles, so there is no per-transaction cycle count to divide
+    the model's sequencer charge by.  The model's front-end charge for the
+    recorded fetch count is written as the lower bound it is; the ratio is
+    ``null`` and the block is reported as unmeasured.
+    """
+    per_instruction = (
+        sequencer.fetch_cycles + sequencer.decode_cycles + sequencer.issue_cycles
+    )
+    cases: list[dict[str, Any]] = []
+    cycle_fields = sorted(
+        k for sim in record.get("cases", []) for c in sim.get("observed_cases", [])
+        for k in c if "cycle" in k.lower()
+    )
+    for sim in record.get("cases", []):
+        for c in sim.get("observed_cases", []):
+            fetched = int(c["rtl_fetched"])
+            cases.append(_ratio_row(
+                block="control_plane",
+                quantity="transaction",
+                simulator=sim["name"],
+                case=int(c["index"]),
+                tag=c["tag"],
+                deployment_index=int(c["deployment_index"]),
+                phase=int(c["phase"]),
+                rtl_fetched=fetched,
+                rtl_retired=int(c["rtl_retired"]),
+                rtl_engine_issues=int(c["issues_compared"]),
+                rtl_predicates=int(c["predicates_compared"]),
+                verdict=c["verdict"],
+                rtl_cycles=None,
+                model_cycles=None,
+                model_front_end_cycles_lower_bound=fetched * per_instruction,
+                model_front_end_rule=(
+                    f"rtl_fetched x (sequencer.fetch_cycles {sequencer.fetch_cycles} "
+                    f"+ decode_cycles {sequencer.decode_cycles} + issue_cycles "
+                    f"{sequencer.issue_cycles}); waits, branch and loop cycles, "
+                    "queue and credit stalls are NOT included because the record "
+                    "carries no per-instruction trace to charge them from"
+                ),
+            ))
+    return {
+        "record_schema": record.get("schema"),
+        "campaign": record.get("campaign"),
+        "measured": False,
+        "status": "unmeasured",
+        "why": (
+            "results/rtl/abi3_deployment_campaign.json records rtl_fetched, "
+            "rtl_retired, issues_compared, views_compared and predicates_compared "
+            "per case and no clock-cycle count of any kind (cycle-named fields "
+            f"present: {cycle_fields or 'none'}); rtl/test/tb_a3_deployment.sv and "
+            "rtl/test/a3_deployment_harness.cpp count checks, not cycles.  The "
+            "model's sequencer cost per transaction (issue_cycles x issued "
+            "instructions + waits) therefore has nothing measured to be divided "
+            "by, and the control plane contributes no ratio.  Measuring it needs "
+            "the campaign to print the cycle count from the transaction's first "
+            "fetch to its completion, per case, on both simulators."
+        ),
+        "sequencer_parameters": sequencer.to_dict(),
+        "cases": cases,
+    }
+
+
+def calibrate_boundary(
+    anchor: Anchor, *, engine: Any, sequencer: Any, memory: Any,
+    clock_hz: float, doc_text: str, fill_observations: Sequence[Mapping[str, Any]],
+) -> dict[str, Any]:
+    """The model's per-boundary charge against the design's 120 cycles.
+
+    Unmeasured: no routed or simulated boundary structure -- tile sequencer,
+    K-block tree, mesh return / broadcast, completion tree -- exists in
+    results/rtl or results/physical_abi3, and the lane records' own
+    ``claim_boundary`` excludes integration and the K-block tree.  What CAN be
+    computed is what the model charges between two serially dependent engine
+    instructions, from ``_time_steps`` on a two-step dependent chain.
+    """
+    from collections import defaultdict
+
+    from runtime.cycle.model import (
+        CycleModel, MemorySystem, _EngineUnit, _Queue,
+    )
+
+    rule = design_boundary_rule(doc_text)
+    design = rule["design_cycles_per_boundary"]
+    lo, hi = rule["design_band"]
+
+    # Two dependent engine instructions: B waits on the event A signals.
+    a = _calibration_step(1, 1, 1)
+    a.signal_event_id = 7
+    b = _calibration_step(1, 1, 1)
+    b.index = 1
+    b.wait_set_id = 1
+    b.wait_producers = (7,)
+    model = CycleModel.__new__(CycleModel)
+    model.sequencer = sequencer
+
+    def end_of(steps: Sequence[Any]) -> int:
+        unit = _EngineUnit("tensor", engine)
+        queue = _Queue("tensor", engine.queue_depth, engine.max_outstanding)
+        _seq_free, end = model._time_steps(
+            list(steps), 0,
+            queues={"tensor": queue, "tensor.0": queue}, engines={"tensor": unit},
+            memory=MemorySystem(memory), events={}, totals=defaultdict(int),
+            counters=None, fabric=None, fabric_timings=[], tiles_seen={},
+            node_id=0, node_count=1,
+        )
+        return int(end)
+
+    one = end_of([a])
+    two = end_of([a, b])
+    compute_b = max(1, engine.minimum_cycles)  # a 1x1x1 contraction: the floor
+    chain = two - one - compute_b
+    decomposition = {
+        "engine.tensor.fixed_latency_cycles": int(engine.fixed_latency_cycles),
+        "sequencer.wait_check_cycles": int(sequencer.wait_check_cycles),
+        "queue.transit_cycles": int(sequencer.queue_transit_cycles),
+    }
+    if chain != sum(decomposition.values()):
+        raise DerivationError(
+            f"the model's dependent chain {chain} cycles is not fixed latency + "
+            f"wait check + queue transit {decomposition}; re-derive the boundary "
+            "decomposition"
+        )
+    analytical_cycles = anchor.array_pass_boundary_s * clock_hz
+    pfd = anchor.technology["latency"]["pipeline_fill_drain_s"]
+    rederived = str(pfd.get("grade")) in {"derived", "executed", "measured"}
+    model_ratio = chain / design
+    fixed_ratio = engine.fixed_latency_cycles / design
+    within = lo <= chain <= hi
+    return {
+        **rule,
+        "measured": False,
+        "rtl_measured_boundary_cycles": None,
+        "why_unmeasured": (
+            "no routed or simulated boundary structure exists: results/rtl and "
+            "results/physical_abi3 hold the lane, the LQ8 block, the "
+            "microsequencer front end and the engines, and no tile sequencer, "
+            "K-block pairwise tree, mesh return / operand broadcast or completion "
+            "tree.  The lane records' claim_boundary.does_not_establish names "
+            "'integration' and 'k_block_tree' explicitly.  The 120-cycle figure "
+            "is a design statement (grade A in section 2.1), not a measurement."
+        ),
+        "model_exposed_chain_cycles": chain,
+        "model_exposed_chain_rule": (
+            "CycleModel._time_steps on two serially dependent engine instructions: "
+            "the consumer starts at the producer's unit finish + "
+            "engine.tensor.fixed_latency_cycles + sequencer.wait_check_cycles + "
+            "queue.transit_cycles (model.py: finish = unit_finish + fixed_latency; "
+            "ready = max(arrival, event) + wait_check; start = admitted + transit)"
+        ),
+        "model_exposed_chain_decomposition": decomposition,
+        "model_fixed_latency_cycles": int(engine.fixed_latency_cycles),
+        "analytical_per_boundary_s": anchor.array_pass_boundary_s,
+        "analytical_per_boundary_cycles_at_clock": analytical_cycles,
+        "analytical_per_boundary_rule": (
+            "technology.json#latency.pipeline_fill_drain_s + sqrt(reticle.area_mm2) "
+            "x latency.global_wire_delay_s_per_mm, times clock.frequency_hz; this "
+            "is what engine.<family>.fixed_latency_cycles is derived from"
+        ),
+        "ratio_model_chain_over_design": model_ratio,
+        "ratio_model_fixed_latency_over_design": fixed_ratio,
+        "model_chain_within_design_band": within,
+        "technology_latency_rederived": rederived,
+        "technology_latency_grade": {
+            "pipeline_fill_drain_s": {
+                "grade": pfd.get("grade"), "source": pfd.get("source"),
+                "value": pfd.get("value"),
+            },
+        },
+        "lane_fill_observations": list(fill_observations),
+        "lane_fill_note": (
+            "first_retire_cycle is the isolated lane's (or LQ8 block's) cycles "
+            "from the start pulse to its first retirement, driven directly by "
+            "the checker with no tile sequencer, staging SRAM or H-tree; it is "
+            "one component of the design's decomposition ('fill 36'), not a "
+            "boundary measurement, and it is not a block-cycle ratio.  The "
+            "model has no per-output retire time to compare it with; its "
+            "counterpart is the per-instruction fixed latency above."
+        ),
+        "rung_item_met": False,
+        "rung_item_decision": (
+            "Section 11.5's rule for the L3 / G4 rung is quoted in rung_rule.  It "
+            "lists the boundary beside the block cycles, under the same +/-10 %, "
+            "as a number the rung must reach, and section 3.6 states 'Gate G4 "
+            "compares the RTL-measured boundary against this 120-cycle figure; "
+            "technology.json#latency must be re-derived from these structures or "
+            "the design's boundary shortened before G4 can pass at +/-10 %'.  The "
+            "rule therefore makes the boundary part of G4's band and it is FOLDED "
+            "into calibration.block_cycles_within_band.  It is unmet on every "
+            "reading: no RTL-measured boundary exists (absence is FAIL); the "
+            f"model's exposed chain is {chain} cycles against the design's {design} "
+            f"(ratio {model_ratio:.4f}, outside [{CALIBRATION_BAND[0]}, "
+            f"{CALIBRATION_BAND[1]}] and outside the design band [{lo}, {hi}]); "
+            "and technology.json#latency.pipeline_fill_drain_s is still graded "
+            f"'{pfd.get('grade')}', not re-derived from any RTL structure."
+        ),
+    }
+
+
+def calibrate_derived_machine(
+    anchor: Anchor, *, rom_table: Mapping[str, Any], hbm_table: Mapping[str, Any],
+    reconciliation: Mapping[str, Any],
+) -> dict[str, Any]:
+    """The emitted machine's compute roof against the analytical artifact.
+
+    The roof is recomputed from the emitted cost tables on disk -- lanes x
+    work_per_lane_cycle x clock -- and compared with the anchor read from
+    ``results/roofline/n5_vs_b200/analytical.json`` itself (operations over
+    the published compute time), not with the copy the pair artifact carries.
+    """
+    def roof(table: Mapping[str, Any]) -> tuple[float, dict[str, float]]:
+        p = table["parameters"]
+        lanes = float(p["engine.tensor.lanes.default"]["value"])
+        wplc = float(p["engine.tensor.work_per_lane_cycle"]["value"])
+        clock = float(p["clock.frequency_hz"]["value"])
+        return lanes * wplc * clock, {"lanes": lanes, "work_per_lane_cycle": wplc,
+                                      "clock_hz": clock}
+
+    target = anchor.compute_roof_ops_s
+    rom_roof, rom_p = roof(rom_table)
+    hbm_roof, hbm_p = roof(hbm_table)
+    rom_err = abs(rom_roof - target) / target
+    hbm_err = abs(hbm_roof - target) / target
+    published = float(anchor.rom["component_times_s"]["compute"])
+    compute_time = anchor.operations / rom_roof
+    time_err = abs(compute_time - published) / published
+    tolerance = 1e-9
+    regimes = {
+        role: reconciliation["targets"][role]["binding_regime"]
+        for role in ("rom", "hbm")
+    }
+    same = all(bool(r.get("same_regime")) for r in regimes.values())
+    ok = rom_err < tolerance and hbm_err < tolerance and time_err < tolerance
+    return {
+        "reproduces_anchor": ok,
+        "tolerance_relative": tolerance,
+        "anchor": {
+            "analytical_artifact": anchor.analytical_path,
+            "rom_design": anchor.rom_design,
+            "operations": anchor.operations,
+            "component_times_s_compute": published,
+            "compute_roof_ops_s": target,
+            "rule": "operations_by_canonical_format summed over formats / component_times_s.compute",
+        },
+        "rom_machine": {**rom_p, "compute_roof_ops_s": rom_roof, "relative_error": rom_err},
+        "hbm_machine": {**hbm_p, "compute_roof_ops_s": hbm_roof, "relative_error": hbm_err},
+        "compute_time_s_from_machine": compute_time,
+        "compute_time_relative_error": time_err,
+        "binding_regime": {
+            **regimes,
+            "same_regime_both_targets": same,
+            "source": DEFAULT_RECONCILIATION,
+            "note": "recorded from the reconciliation artifact (gate C3); not part of this field's verdict",
+        },
+    }
+
+
+def calibrate(
+    anchor: Anchor,
+    *,
+    lane: Mapping[str, Any],
+    lane_groups: Mapping[str, Any],
+    lq8: Mapping[str, Any],
+    control_plane: Mapping[str, Any],
+    reconciliation: Mapping[str, Any],
+    rom_table: Mapping[str, Any],
+    hbm_table: Mapping[str, Any],
+    rom_capability: Mapping[str, Any],
+    doc_text: str,
+    routed_records: Mapping[str, Mapping[str, Any]] | None = None,
+) -> dict[str, Any]:
+    """The ``calibration`` body: every ratio, both verdict fields, the rules."""
+    from runtime.abi3.capability import Capability
+    from runtime.cycle.machine import CostTable, MachineModel
+
+    machine = MachineModel(
+        Capability.from_dict(rom_capability), CostTable.from_dict(rom_table)
+    )
+    sequencer = machine.sequencer()
+    engine = machine.engine("tensor")
+    memory = machine.memory()
+    clock_hz = machine.clock_hz
+
+    ratios: list[dict[str, Any]] = []
+    for block, record in (("lane", lane), ("lane_groups", lane_groups), ("lq8", lq8)):
+        ratios.extend(calibrate_rate_record(
+            record, block=block, engine=engine, sequencer=sequencer, memory=memory,
+        ))
+    cp = calibrate_control_plane(control_plane, sequencer)
+
+    lo, hi = CALIBRATION_BAND
+    per_depth: dict[str, Any] = {}
+    per_block: dict[str, Any] = {}
+    for r in ratios:
+        for key, table in ((r["depth"], per_depth), (r["block"], per_block)):
+            slot = table.setdefault(key, {"ratios": 0, "min": None, "max": None,
+                                          "all_within_band": True})
+            slot["ratios"] += 1
+            v = r["ratio_model_over_rtl"]
+            slot["min"] = v if slot["min"] is None else min(slot["min"], v)
+            slot["max"] = v if slot["max"] is None else max(slot["max"], v)
+            slot["all_within_band"] = slot["all_within_band"] and r["within_band"]
+    per_block["control_plane"] = {
+        "ratios": 0, "min": None, "max": None, "all_within_band": False,
+        "status": cp["status"],
+    }
+    block_ratios_within = bool(ratios) and all(r["within_band"] for r in ratios)
+    missing = [b for b in CALIBRATED_BLOCKS if per_block.get(b, {}).get("ratios", 0) == 0]
+
+    fills = [
+        {
+            "block": r["block"], "depth": r["depth"], "case": r["case"],
+            "simulator": r["simulator"], "lanes": r["shape"]["lanes"],
+            "first_retire_cycle": r["rtl_first_retire_cycle"],
+        }
+        for r in ratios if r["quantity"] == "steady_state"
+    ]
+    boundary = calibrate_boundary(
+        anchor, engine=engine, sequencer=sequencer, memory=memory,
+        clock_hz=clock_hz, doc_text=doc_text, fill_observations=fills,
+    )
+    derived = calibrate_derived_machine(
+        anchor, rom_table=rom_table, hbm_table=hbm_table,
+        reconciliation=reconciliation,
+    )
+
+    block_cycles_within_band = (
+        block_ratios_within and not missing and boundary["rung_item_met"]
+    )
+    reasons: list[str] = []
+    outside = [r for r in ratios if not r["within_band"]]
+    if outside:
+        reasons.append(
+            f"{len(outside)} of {len(ratios)} block-cycle ratios outside [{lo}, {hi}]: "
+            + "; ".join(
+                f"{r['block']} {r['depth']} case {r['case']} {r['quantity']} "
+                f"{r['ratio_model_over_rtl']:.4f}" for r in outside[:4]
+            )
+        )
+    if missing:
+        reasons.append(
+            "no measured cycles for: " + ", ".join(missing)
+            + " (see control_plane.why)"
+        )
+    if not boundary["rung_item_met"]:
+        reasons.append(
+            "section 11.5 boundary item unmet: unmeasured, model chain "
+            f"{boundary['model_exposed_chain_cycles']} vs design "
+            f"{boundary['design_cycles_per_boundary']} (ratio "
+            f"{boundary['ratio_model_chain_over_design']:.4f}), "
+            "technology.json#latency not re-derived"
+        )
+    reason = (
+        "; ".join(reasons) if reasons
+        else f"every ratio inside [{lo}, {hi}], every block measured, boundary item met"
+    )
+
+    routed = {}
+    for name, rec in (routed_records or {}).items():
+        design_block = rec.get("design", {}) if isinstance(rec.get("design"), Mapping) else {}
+        pnr = rec.get("place_and_route", {}) if isinstance(rec.get("place_and_route"), Mapping) else {}
+        routed[name] = {
+            "clock_period_ns": design_block.get("clock_period_ns") or pnr.get("clock_period_ns"),
+            "fmax_hz": design_block.get("fmax_hz") or (pnr.get("metrics") or {}).get("fmax_hz"),
+        }
+
+    return {
+        "block_cycles_within_band": block_cycles_within_band,
+        "derived_machine_reproduces_anchor": derived["reproduces_anchor"],
+        "verdict_rule": (
+            "block_cycles_within_band = (every block-cycle ratio inside the band) "
+            "AND (every block in calibrated_blocks contributed a measured ratio) "
+            "AND (the boundary item of section 11.5's L3 / G4 rule is met).  "
+            "derived_machine_reproduces_anchor = the emitted machines' compute "
+            "roof and compute time reproduce the analytical artifact within "
+            "1e-9 relative.  Absence of a measurement is FAIL, never "
+            "not_evaluable (configs/gates/redesign_gates.json#principle)."
+        ),
+        "reason": reason,
+        "band": {"low": lo, "high": hi,
+                 "source": f"{DESIGN_DOC} section 11.5 row 'L3 / G4, C3, C4'"},
+        "block_ratios_within_band": block_ratios_within,
+        "calibrated_blocks": list(CALIBRATED_BLOCKS),
+        "blocks_without_measured_cycles": missing,
+        "ratio_count": len(ratios),
+        "per_depth": per_depth,
+        "per_block": per_block,
+        "machine": {
+            "clock_frequency_hz": clock_hz,
+            "sequencer": sequencer.to_dict(),
+            "tensor_engine_as_derived": engine.to_dict(),
+            "note": (
+                "lanes and work_per_lane_cycle are replaced per block by the "
+                "RTL's; every other parameter is the derived machine's own"
+            ),
+        },
+        "mapping": {
+            "operation": (
+                "each rate case is one TENSOR.MATMUL of the case's rows x cols "
+                "output surface and reduction depth, tiled as one tile "
+                "(tile_rows = rows, tile_cols = cols, tile_depth = depth, "
+                "issue_window 1) and lane-mapped by tensor_lane_mapping with "
+                "lanes = the block's lane count; the cost is "
+                "CycleModel._compute_cycles's tensor branch, "
+                "output_waves x ceil(tile_depth x scale / work_per_lane_cycle)"
+            ),
+            "units": (
+                "the RTL measures lane-ops per lane-cycle, one lane-op being one "
+                "multiply-accumulate of g products; the model's coordinate is one "
+                "product (K element) and its rate is in work-counter units, "
+                f"{TENSOR_WORK_UNITS_PER_PRODUCT} per product (tensor.multiplications "
+                "+ tensor.additions, read off the step by CycleModel._work_scale).  "
+                "work_per_lane_cycle handed to the model = measured.mac_per_lane_cycle "
+                f"x g x {TENSOR_WORK_UNITS_PER_PRODUCT}.  The ratio is invariant to "
+                "this unit choice because scale and rate carry the same factor."
+            ),
+            "lane_assignment": (
+                "the model's mapper folds rows onto lanes (wave_rows = min(rows, "
+                "lanes)) while ot_a3_lq8.sv gives lane i the block columns c x "
+                "LANES + i; the two assignments yield the same wave count for "
+                "every rate case here (rows x cols / lanes waves), which is the "
+                "only thing the charge depends on"
+            ),
+            "steady_state_is_a_structure_check": (
+                "with the model's rate set to the block's measured rate, the "
+                "steady-state ratio can leave the band only through the wave "
+                "count, the depth quantisation (ceil) or the tile-issue floor -- "
+                "it checks the formula's structure, not the rate.  whole_run "
+                "additionally compares the model's fixed per-instruction "
+                "overheads (front end + fixed latency) with the RTL's fill and "
+                "drain."
+            ),
+            "per_case_rate_vs_block_rate": (
+                "rtl_products_per_lane_window_cycle is each case's own rate; the "
+                "rate handed to the model is the record's headline "
+                "measured.mac_per_lane_cycle, so a case whose own rate differed "
+                "from the block's would show as a ratio off 1"
+            ),
+        },
+        "ratios": ratios,
+        "control_plane": cp,
+        "boundary": boundary,
+        "derived_machine": derived,
+        "binding_regime": derived["binding_regime"],
+        "clock": {
+            "calibrated": False,
+            "note": (
+                "every ratio above is in cycles; the derived machine's clock "
+                f"({clock_hz:g} Hz, from technology.json#latency."
+                "sequencer_issue_decode_s) is a design-target assumption and no "
+                "routed record at N5 exists.  The routed periods below are the "
+                "open-PDK records and are context, not calibration."
+            ),
+            "routed": routed,
+        },
+    }
+
+
+def calibration_artifact(
+    anchor: Anchor, *, paths: Mapping[str, Path], **kw: Any,
+) -> dict[str, Any]:
+    """The full artifact: inputs by path and digest, git state, calibration."""
+    inputs = {
+        _relative(p): {"sha256": _sha256_of(p)} for p in sorted(set(paths.values()))
+    }
+    body = calibrate(anchor, **kw)
+    return {
+        "schema": CALIBRATION_SCHEMA,
+        "generator": "tools/derive_cycle_machine.py --calibrate",
+        "gate": "G4",
+        "rung": "L3",
+        "anchor": {
+            "analytical_artifact": anchor.analytical_path,
+            "rom_design": anchor.rom_design,
+            "hbm_design": anchor.hbm_design,
+            "batch_size": anchor.batch_size,
+            "context_tokens": anchor.context_tokens,
+        },
+        "inputs": inputs,
+        "git": _git_state(list(inputs)),
+        "calibration": body,
+    }
+
+
+def calibration_input_paths(
+    analytical: Path, technology: Path, *,
+    lane_record: str = DEFAULT_LANE_RECORD,
+    lane_groups_record: str = DEFAULT_LANE_GROUPS_RECORD,
+    lq8_record: str = DEFAULT_LQ8_RECORD,
+    control_plane_record: str = DEFAULT_CONTROL_PLANE_RECORD,
+    reconciliation: str = DEFAULT_RECONCILIATION,
+) -> dict[str, Path]:
+    """Every file the calibration reads, by role; all are digested into the artifact."""
+    tables = {
+        "rom_cost_table": REPO / f"configs/hardware/abi3_cost_{TECHNOLOGY_VIEW}_rom_v1.json",
+        "hbm_cost_table": REPO / f"configs/hardware/abi3_cost_{TECHNOLOGY_VIEW}_hbm_v1.json",
+        "rom_capability": REPO / f"configs/hardware/abi3_capability/{TECHNOLOGY_VIEW}/rom_qwen3_n5_v1.json",
+        "hbm_capability": REPO / f"configs/hardware/abi3_capability/{TECHNOLOGY_VIEW}/hbm_sram_single_chip_n5_v1.json",
+    }
+    return {
+        "lane": REPO / lane_record,
+        "lane_groups": REPO / lane_groups_record,
+        "lq8": REPO / lq8_record,
+        "control_plane": REPO / control_plane_record,
+        "reconciliation": REPO / reconciliation,
+        "pair_artifact": REPO / "results/derived/qwen3_n5_design_target_machine_pair.json",
+        "analytical": analytical,
+        "technology": technology,
+        "design_doc": REPO / DESIGN_DOC,
+        "gates": REPO / GATES_CONFIG,
+        **tables,
+        **{f"source:{s}": REPO / s for s in CYCLE_MODEL_SOURCES},
+    }
+
+
+ROUTED_CONTEXT_RECORDS = (
+    "results/physical_abi3/asap7/a3_lane_pipelined/pnr.json",
+    "results/physical_abi3/asap7/a3_lq8_array/pnr.json",
+    "results/physical_abi3/asap7/a3_microsequencer/pnr.json",
+)
+
+
+def run_calibration(anchor: Anchor, analytical: Path, technology: Path,
+                    **records: str) -> dict[str, Any]:
+    """Load every input from disk and build the calibration artifact body."""
+    paths = calibration_input_paths(analytical, technology, **records)
+    missing = [str(p) for p in paths.values() if not p.exists()]
+    if missing:
+        raise DerivationError("calibration input(s) missing: " + ", ".join(missing))
+
+    def load(key: str) -> Any:
+        return json.loads(paths[key].read_text())
+
+    routed: dict[str, Any] = {}
+    for rel in ROUTED_CONTEXT_RECORDS:
+        p = REPO / rel
+        if p.exists():
+            routed[rel] = json.loads(p.read_text())
+            paths[f"routed:{rel}"] = p
+    return calibration_artifact(
+        anchor, paths=paths,
+        lane=load("lane"), lane_groups=load("lane_groups"), lq8=load("lq8"),
+        control_plane=load("control_plane"), reconciliation=load("reconciliation"),
+        rom_table=load("rom_cost_table"), hbm_table=load("hbm_cost_table"),
+        rom_capability=load("rom_capability"),
+        doc_text=paths["design_doc"].read_text(),
+        routed_records=routed,
+    )
+
+
+def _print_calibration(body: Mapping[str, Any]) -> None:
+    cal = body["calibration"]
+    print(f"{'block':<12} {'depth':<4} {'case':>4} {'sim':<9} {'quantity':<13} "
+          f"{'rtl':>12} {'model':>12} {'ratio':>10} band")
+    for r in cal["ratios"]:
+        rtl = r["rtl_cycles"]
+        rtl_s = f"{rtl:>12.1f}" if isinstance(rtl, float) else f"{rtl:>12}"
+        print(f"{r['block']:<12} {r['depth']:<4} {r['case']:>4} {r['simulator']:<9} "
+              f"{r['quantity']:<13} {rtl_s} {r['model_cycles']:>12} "
+              f"{r['ratio_model_over_rtl']:>10.6f} "
+              f"{'in' if r['within_band'] else 'OUT'}")
+    cp = cal["control_plane"]
+    print(f"control_plane: {cp['status']} -- {len(cp['cases'])} cases, no cycle count recorded")
+    b = cal["boundary"]
+    print(f"boundary: model chain {b['model_exposed_chain_cycles']} vs design "
+          f"{b['design_cycles_per_boundary']} (band {b['design_band']}), ratio "
+          f"{b['ratio_model_chain_over_design']:.4f}, measured={b['measured']}, "
+          f"rung item met={b['rung_item_met']}")
+    d = cal["derived_machine"]
+    print(f"derived machine: roof {d['rom_machine']['compute_roof_ops_s']:.10e} vs "
+          f"anchor {d['anchor']['compute_roof_ops_s']:.10e}, relative error "
+          f"{d['rom_machine']['relative_error']:.3e}; regime same={d['binding_regime']['same_regime_both_targets']}")
+    print(f"calibration.block_cycles_within_band = {cal['block_cycles_within_band']}")
+    print(f"calibration.derived_machine_reproduces_anchor = {cal['derived_machine_reproduces_anchor']}")
+    print(f"reason: {cal['reason']}")
+
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--analytical", default=DEFAULT_ANALYTICAL)
@@ -4312,6 +5223,18 @@ def main(argv: Sequence[str] | None = None) -> int:
                     help="D6 report: two run_abi3_cycle results against the anchor")
     ap.add_argument("--reconcile-out", default=None,
                     help="write the D6 report here instead of stdout")
+    ap.add_argument("--calibrate", action="store_true",
+                    help=("L3 / G4: charge the cycle model with exactly the "
+                          "operations the L1 block records ran and write the "
+                          "calibration artifact; with --check, verify the "
+                          "artifact on disk against a fresh calibration"))
+    ap.add_argument("--calibration-out", default=DEFAULT_CALIBRATION_OUT,
+                    help="where --calibrate writes its artifact")
+    ap.add_argument("--lane-record", default=DEFAULT_LANE_RECORD)
+    ap.add_argument("--lane-groups-record", default=DEFAULT_LANE_GROUPS_RECORD)
+    ap.add_argument("--lq8-record", default=DEFAULT_LQ8_RECORD)
+    ap.add_argument("--control-plane-record", default=DEFAULT_CONTROL_PLANE_RECORD)
+    ap.add_argument("--reconciliation", default=DEFAULT_RECONCILIATION)
     args = ap.parse_args(argv)
 
     config_dir = REPO / args.config_dir
@@ -4327,6 +5250,45 @@ def main(argv: Sequence[str] | None = None) -> int:
         rom_design=args.rom_design, hbm_design=args.hbm_design,
         batch_size=args.batch_size, context_tokens=args.context_tokens,
     )
+    if args.calibrate:
+        body = run_calibration(
+            anchor, analytical, technology,
+            lane_record=args.lane_record,
+            lane_groups_record=args.lane_groups_record,
+            lq8_record=args.lq8_record,
+            control_plane_record=args.control_plane_record,
+            reconciliation=args.reconciliation,
+        )
+        out = REPO / args.calibration_out
+        if args.check:
+            if not out.exists():
+                print(f"DRIFT: {out} is missing", file=sys.stderr)
+                return 1
+            on_disk = json.loads(out.read_text())
+            fresh = {k: v for k, v in body.items() if k != "git"}
+            stale = {k: v for k, v in on_disk.items() if k != "git"}
+            if canonical(fresh) != canonical(stale):
+                print(
+                    f"DRIFT: {out} does not match a fresh calibration of its "
+                    "inputs; re-run --calibrate",
+                    file=sys.stderr,
+                )
+                return 1
+            cal = on_disk["calibration"]
+            print(
+                f"derive_cycle_machine --calibrate --check: {_relative(out)} "
+                f"reproduces from its inputs; block_cycles_within_band="
+                f"{cal['block_cycles_within_band']}, "
+                f"derived_machine_reproduces_anchor="
+                f"{cal['derived_machine_reproduces_anchor']}"
+            )
+            return 0
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(canonical(body))
+        _print_calibration(body)
+        print(f"wrote {_relative(out)}")
+        return 0
+
     rom_base, hbm_base = base_capabilities(anchor, args.rom_base, args.hbm_base)
     d, bodies = build(anchor, rom_base, hbm_base)
     paths = emitted_paths(anchor, config_dir, artifact_dir, rom_base, hbm_base)
