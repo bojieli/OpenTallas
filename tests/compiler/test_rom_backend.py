@@ -1477,9 +1477,19 @@ def test_schedule_checker_rejects_unadvertised_queue(
     assert report["checks"]["queue_index"] is False
 
 
-def test_schedule_checker_rejects_wrong_rom_bank_mask(
+def test_schedule_checker_rejects_a_bank_mask_off_the_shared_placement(
     qwen_build, qwen_graph, qwen_capability
 ):
+    """AM-E9 v2: ``bank_mask`` is the shared activation placement.
+
+    It was the operator's mask-ROM shard set, which the cycle model then spent
+    as a scratchpad-bank set (``MemorySystem.schedule`` applies the field to
+    the SRAM class alone).  The checker now reconstructs the staging banks of
+    the engine family; naming a bank outside them is a refusal, and the ROM
+    shard reconstruction is checked against the plan instead.
+    """
+    from compiler.backends.schedule_rule import staging_bank_mask
+
     deployment, _plan = qwen_build
     schedule = next(
         descriptor
@@ -1487,8 +1497,12 @@ def test_schedule_checker_rejects_wrong_rom_bank_mask(
         if descriptor.descriptor_type == ExtendedDescriptorType.SCHEDULE
         and descriptor.payload["bank_mask"]
     )
-    # The fixture occupies banks 0..13; bank 14 is capability-legal but is not
-    # a shard of this operator's ROM operands.
+    family = int(schedule.payload["engine_family"])
+    assert int(schedule.payload["bank_mask"]) == staging_bank_mask(
+        family, qwen_capability
+    )
+    # Bank 14 is inside the 32-bank scratchpad, so the capacity bound still
+    # passes; it is simply not a staging bank of this family.
     candidate = _mutate_descriptor(
         deployment,
         schedule.descriptor_id,
@@ -1498,7 +1512,9 @@ def test_schedule_checker_rejects_wrong_rom_bank_mask(
     assert verify_deployment(candidate, qwen_capability).admitted
     report = check_rom_schedule(qwen_graph, candidate, qwen_capability)
     assert report["status"] == "fail"
-    assert report["checks"]["rom_bank_mask"] is False
+    assert report["checks"]["staging_bank_mask"] is False
+    assert report["checks"]["bank_mask_capacity"] is True
+    assert report["checks"]["rom_shard_banks"] is True
 
 
 def test_schedule_checker_rejects_tile_wider_than_engine(
@@ -2423,8 +2439,17 @@ def test_nonreducing_rom_operators_do_not_inherit_weight_reduction_depth(
         assert all(count > 0 for count in checked.values()), checked
 
 
-def test_rom_reading_operators_declare_bank_and_rom_bound(qwen_build):
+def test_rom_reading_operators_declare_staging_banks_and_rom_bound(
+    qwen_build, qwen_capability
+):
+    """The bank half is the shared placement now; the bound is still ROM_READ.
+
+    A contraction that reads a mask-ROM bank streams its activation, weight
+    and accumulator tiles through the declared staging regions like any other
+    tensor operator (AM-E9 v2), and says so in ``resource_bound``.
+    """
     from compiler.backends.rom.common.program import ResourceBound
+    from compiler.backends.schedule_rule import staging_bank_mask
 
     deployment, plan = qwen_build
     rom_ids = {r.object_id for r in plan.regions}
@@ -2447,7 +2472,9 @@ def test_rom_reading_operators_declare_bank_and_rom_bound(qwen_build):
         if not reads_rom:
             continue
         payload = schedules[descriptor.payload["schedule_id"]]
-        assert payload["bank_mask"] != 0
+        assert payload["bank_mask"] == staging_bank_mask(
+            int(Major.TENSOR), qwen_capability
+        )
         assert payload["resource_bound"] == ResourceBound.ROM_READ
         checked += 1
     assert checked >= 8
@@ -3596,7 +3623,11 @@ def test_mutable_state_overflow_is_refused(qwen_graph):
 
     capability = make(max_context_positions=16, vocabulary_size=32)
     capability.memory["hbm"] = {"bytes": 4096}
-    capability.memory["sram"] = {"bytes": 4096, "banks": 4}
+    # Capacity is what this test shrinks.  The bank *count* stays the vehicle's
+    # 32 ([T2.1-20]): AM-E9 v2's activation placement is declared over it, and
+    # a scratchpad with fewer banks than staging regions is a different
+    # refusal (schedule_rule.staging_bank_mask) than the one under test.
+    capability.memory["sram"] = {"bytes": 4096, "banks": 32}
     with pytest.raises(RomLoweringError, match="does not fit the target"):
         build_qwen3_rom_deployment(qwen_graph, capability=capability)
 

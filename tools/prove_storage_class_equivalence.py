@@ -16,6 +16,14 @@ with the ABI's unplaced sentinel (``bank_or_tile = NO_NODE`` and
 HBM allocation.  That coupled transition, plus the pre-existing integrity-mode
 exception, is the complete normalization boundary.  Every other wire field,
 object source, entrypoint and instruction must remain identical.
+
+Since AM-E9 v2 that boundary no longer touches SCHEDULE descriptors at all.
+``bank_mask`` used to name the operator's mask-ROM shards, so a schedule that
+read a moved weight emptied its mask and the proof admitted that one shape;
+the field is now the shared activation placement over the scratchpad both
+vehicles declare, which does not know where the weights live.  A SCHEDULE that
+differs between the two builds is therefore a compiler difference, and this
+tool refuses it (:func:`assess_schedule_difference`).
 """
 
 from __future__ import annotations
@@ -200,23 +208,26 @@ def assess_memory_object_transition(
     }
 
 
-def assess_schedule_bank_transition(
+def assess_schedule_difference(
     rom_descriptor: Descriptor,
     hbm_descriptor: Descriptor,
 ) -> dict[str, Any]:
-    """Assess one differing SCHEDULE against the bank half of the transition.
+    """A SCHEDULE that differs between the two builds is a violation.
 
-    A schedule's ``bank_mask`` names the ROM banks the operator's weight
-    operands occupy.  Move those weights to HBM and there are no ROM banks to
-    name, so the mask is empty.  That is the placement transition itself,
-    observed on the schedule that reads the object rather than on the object,
-    and it is admitted only in that exact shape: both records are SCHEDULE
-    descriptors, no header field moves, ``bank_mask`` is the only payload field
-    that differs, the ROM side names at least one bank, and the HBM side names
-    none.  A schedule that differed in tile geometry, queue, engine, outstanding
-    bound or route class would still be a compiler difference and is still a
-    violation -- as is an HBM build that names a ROM bank, which would mean the
-    weights had not moved.
+    It was not always.  While ``bank_mask`` named the mask-ROM banks the
+    operator's weight operands occupy, moving those weights to HBM emptied it,
+    and this proof admitted exactly that shape -- the placement transition
+    observed on the reader rather than on the object.
+
+    AM-E9 v2 removed the store identity from the field: ``bank_mask`` is now
+    the shared activation placement (``compiler/backends/schedule_rule.py``
+    ``ENGINE_STAGING_REGIONS`` / ``STAGING_BANK``), a function of the engine
+    family alone, because ``runtime.cycle.model.MemorySystem.schedule`` applies
+    it to the SRAM class on both vehicles.  Nothing in a SCHEDULE descriptor
+    depends on where the weights live any more, so the two builds must carry
+    byte-identical schedules and any difference -- bank mask, tile geometry,
+    queue, engine, outstanding bound or route class -- is a compiler difference
+    that would make a measurement unattributable.
 
     What protects attributability is unchanged: the instruction stream stays
     byte-identical between the two builds, so no measured difference can come
@@ -237,26 +248,12 @@ def assess_schedule_bank_transition(
         or name not in hbm_payload
         or rom_payload[name] != hbm_payload[name]
     )
-    reasons: list[str] = []
-    if (
-        rom_descriptor.type_name != "SCHEDULE"
-        or hbm_descriptor.type_name != "SCHEDULE"
-    ):
-        reasons.append("descriptor_type_not_schedule_on_both_sides")
-    if changed_header_fields:
-        reasons.append("descriptor_header_drift")
-    if changed_payload_fields != ["bank_mask"]:
-        reasons.append("payload_drift_outside_bank_mask")
-    if not int(rom_payload.get("bank_mask", 0)):
-        reasons.append("rom_schedule_names_no_bank")
-    if int(hbm_payload.get("bank_mask", 0)):
-        reasons.append("hbm_schedule_still_names_a_rom_bank")
     return {
-        "permitted": not reasons,
-        "reasons": reasons,
+        "permitted": False,
+        "reasons": ["schedule_differs_under_the_shared_activation_placement"],
         "rom_type": rom_descriptor.type_name,
         "hbm_type": hbm_descriptor.type_name,
-        "storage_transition": "rom_bank_mask->empty",
+        "storage_transition": "schedule_must_not_differ",
         "changed_header_fields": changed_header_fields,
         "changed_payload_fields": changed_payload_fields,
         "rom_bank_mask": int(rom_payload.get("bank_mask", 0)),
@@ -293,7 +290,7 @@ def prove(graph: KernelGraph, product: str) -> dict[str, Any]:
     for index in differing:
         left, right = table_rom[index], table_hbm[index]
         if left.type_name == "SCHEDULE" or right.type_name == "SCHEDULE":
-            assessment = assess_schedule_bank_transition(left, right)
+            assessment = assess_schedule_difference(left, right)
             transitions[assessment["storage_transition"]] += 1
             if not assessment["permitted"]:
                 violations.append({"descriptor_id": index, **assessment})
@@ -355,6 +352,11 @@ def prove(graph: KernelGraph, product: str) -> dict[str, Any]:
                 "integrity_mode may differ; no descriptor-header field or "
                 "other payload field may differ"
             ),
+            "schedule_rule": (
+                "no SCHEDULE descriptor may differ: AM-E9 v2 makes bank_mask "
+                "the shared activation placement, so nothing in a schedule "
+                "depends on where the weights live"
+            ),
             "derived_program_header_fields": sorted(
                 DERIVED_PROGRAM_HEADER_FIELDS
             ),
@@ -389,6 +391,8 @@ def prove(graph: KernelGraph, product: str) -> dict[str, Any]:
         # whose bank mask emptied, which are not objects and are not placed.
         "hbm_unplaced_transition_count": object_transition_count,
         "placement_transitions": dict(placement_transitions),
+        # AM-E9 v2: no schedule may differ, so this is 0 on a build that
+        # holds.  The key is kept so a record of either era is comparable.
         "schedule_bank_transition_count": schedule_bank_transition_count,
         "integrity_mode_exception_count": integrity_mode_exception_count,
         "differences_beyond_permitted_transition": violations,

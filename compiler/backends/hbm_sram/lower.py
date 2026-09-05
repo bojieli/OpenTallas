@@ -47,6 +47,8 @@ from compiler.backends.schedule_rule import (
     e9_schedule,
     family_ordinals,
     queue_ordinal,
+    sram_ports,
+    staging_bank_mask,
 )
 from compiler.backends.numeric_contracts import (
     EXECUTION_CONTRACT,
@@ -228,24 +230,6 @@ _LINK_OP: Mapping[str, tuple[Link, CollectiveOp, int]] = {
     "activation_transfer": (Link.COLLECTIVE, CollectiveOp.ALL_GATHER, 2),
     "reduction": (Link.COLLECTIVE, CollectiveOp.SUM, 3),
     "coordinated_commit": (Link.BARRIER, CollectiveOp.SUM, 4),
-}
-
-#: SRAM regions each engine family streams through; the union becomes the
-#: schedule's bank mask, which is the cycle model's bank-conflict input.
-_ENGINE_REGIONS: Mapping[int, tuple[str, ...]] = {
-    int(Major.TENSOR): (
-        "sram.activation_stage",
-        "sram.weight_stage",
-        "sram.accumulator",
-    ),
-    int(Major.DMA): ("sram.activation_stage", "sram.weight_stage"),
-    int(Major.VECTOR): ("sram.vector_stream",),
-    int(Major.REDUCTION): ("sram.vector_stream", "sram.accumulator"),
-    int(Major.ATTENTION): ("sram.attention_working",),
-    int(Major.ROUTE): ("sram.route_index",),
-    int(Major.SELECTION): ("sram.vector_stream",),
-    int(Major.STATE): ("sram.state_stage",),
-    int(Major.LINK): ("sram.link_stage",),
 }
 
 #: Neutral state-class name -> the frozen ABI 3.0 :class:`StateClass`.
@@ -1348,10 +1332,13 @@ class _Emitter:
         shape, issue window, outstanding bound, queue index and port mask --
         is the one rule both backends share, evaluated on the shape the plan
         read off the neutral kernel, so the ROM lowering of the same kernel
-        carries the same fields.  What this backend still decides is the
-        storage-class consequence the rule leaves to it: the bank mask names
-        the scratchpad staging groups the family streams through (AM-C4;
-        ``_ENGINE_REGIONS``), and the inert resource bound is the lane count.
+        carries the same fields.  AM-E9 v2 adds ``bank_mask`` to that rule: the
+        scratchpad banks of the staging regions the family streams through,
+        over the one declared placement
+        (``schedule_rule.ENGINE_STAGING_REGIONS`` / ``STAGING_BANK``, which
+        ``plan._allocate_sram`` allocates against) that the ROM backend now
+        emits too.  What this backend still decides is the inert resource
+        bound, which is the lane count.
         """
         # A kernel whose neutral kind lowers to more than one engine -- a
         # sharded contraction, whose all-gather is a pack, a collective and an
@@ -1382,7 +1369,7 @@ class _Emitter:
                 1 if family == int(Major.DMA) and self.node_count > 1 else 0
             ),
         )
-        mask, _rule_ports = self._bank_and_port_mask(family)
+        mask = rule.bank_mask
         key = (
             family,
             rule.tile_rows,
@@ -1475,14 +1462,21 @@ class _Emitter:
         return sid
 
     def _bank_and_port_mask(self, family: int) -> tuple[int, int]:
-        wanted = _ENGINE_REGIONS.get(family, ())
-        mask = 0
-        ports = 0
-        for region in self.plan.sram_regions:
-            if region.region_id in wanted:
-                mask |= region.bank_mask
-                ports |= region.port_mask
-        return mask, ports
+        """The shared activation placement's masks for ``family`` (AM-E9 v2).
+
+        Both are read off the declared table
+        (``schedule_rule.ENGINE_STAGING_REGIONS`` / ``STAGING_BANK``) rather
+        than off this plan's allocated regions, so the value does not depend on
+        which regions a node count happens to materialise and the ROM backend
+        emits the same number for the same family.  ``_allocate_sram`` places
+        the regions it does allocate at exactly those banks, so the mask names
+        the banks the objects actually occupy.
+        """
+
+        return (
+            staging_bank_mask(int(family), self.capability),
+            (1 << sram_ports(self.capability)) - 1,
+        )
 
     def _wait_set(self, events: Iterable[int]) -> int:
         unique = tuple(sorted({e for e in events if e != NO_ID}))

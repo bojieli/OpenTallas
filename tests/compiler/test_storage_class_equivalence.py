@@ -5,7 +5,10 @@ only in where the immutable weights live.  Comparison-HBM objects must use the
 ABI's explicit unplaced sentinel; ROM bank-local addresses cannot be silently
 reinterpreted as flat HBM addresses.  If anything else differed - one operand
 view, one permission bit, one numeric profile, one schedule - a measured
-difference between the targets would be unattributable.
+difference between the targets would be unattributable.  Since AM-E9 v2 a
+schedule is in that list without exception: ``bank_mask`` is the shared
+activation placement, not the operator's mask-ROM shards, so no SCHEDULE
+descriptor knows where the weights live.
 
 These tests are skipped, not failed, when a neutral IR has not been built, so a
 fresh checkout does not report a false failure.
@@ -81,18 +84,17 @@ def test_both_builds_declare_the_same_descriptor_set(proof) -> None:
     assert proof["descriptor_count"]["rom"] == proof["descriptor_count"]["hbm"]
 
 
-def test_only_the_objects_and_their_bank_masks_differ(proof) -> None:
-    """Two descriptor types may move, and a schedule only by its bank mask.
+def test_only_the_objects_differ(proof) -> None:
+    """One descriptor type may move, and only by its storage and placement.
 
-    A schedule's ``bank_mask`` names the ROM banks its weight operands occupy,
-    so moving those weights to HBM empties it.  That is the placement
-    transition observed on the reader rather than on the object, and
-    ``assess_schedule_bank_transition`` admits it only in that exact shape.
-    Any other schedule field -- tile geometry, queue, engine, outstanding
-    bound, route class -- would be a compiler difference and lands in
-    ``differences_beyond_permitted_transition`` below.
+    ``bank_mask`` used to name the ROM banks the operator's weight operands
+    occupy, so moving those weights emptied it and a differing SCHEDULE was
+    admitted in that one shape.  AM-E9 v2 makes the field the shared
+    activation placement -- a function of the engine family over a scratchpad
+    both vehicles declare -- so a schedule that differs is a compiler
+    difference and lands in ``differences_beyond_permitted_transition`` below.
     """
-    assert set(proof["differing_by_type"]) <= {"MEMORY_OBJECT", "SCHEDULE"}, proof[
+    assert set(proof["differing_by_type"]) <= {"MEMORY_OBJECT"}, proof[
         "differing_by_type"
     ]
 
@@ -107,22 +109,16 @@ def test_every_difference_is_the_governed_storage_and_placement_transition(
         "base_address": 0,
     }
     assert proof["differences_beyond_permitted_transition"] == []
-    assert set(proof["storage_class_transitions"]) <= {
-        "ROM->HBM",
-        "rom_bank_mask->empty",
-    }
+    assert set(proof["storage_class_transitions"]) <= {"ROM->HBM"}
     assert proof["permitted_transition_count"] == proof["differing_descriptor_count"]
-    # Every object difference is the unplacing transition, and every remaining
-    # difference is a schedule's emptied bank mask.  The two counts together
-    # account for every differing descriptor, so nothing is admitted silently.
+    # Every difference is the object unplacing transition; nothing is admitted
+    # silently, and no schedule differs at all under the shared placement.
     assert (
         proof["hbm_unplaced_transition_count"]
-        + proof["schedule_bank_transition_count"]
         == proof["differing_descriptor_count"]
     )
-    assert proof["schedule_bank_transition_count"] == proof["differing_by_type"].get(
-        "SCHEDULE", 0
-    )
+    assert proof["schedule_bank_transition_count"] == 0
+    assert proof["differing_by_type"].get("SCHEDULE", 0) == 0
 
 
 def test_non_wire_inputs_are_identical(proof) -> None:

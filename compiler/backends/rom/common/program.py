@@ -1727,13 +1727,20 @@ class RomLowering:
         exists to prevent.
 
         The cycle model reads these fields directly.  Every tiled field --
-        tile shape, issue window, outstanding bound, queue and port mask -- is
-        AM-E9's one rule (``compiler/backends/schedule_rule.py``), shared with
-        the HBM backend so that the two lowerings of one graph carry identical
-        SCHEDULE fields wherever the operator is the same; what this backend
-        still decides is the storage-class consequence the rule leaves to it
-        (the mask-ROM bank mask, AM-C4) and the inert route class and
-        resource bound.  None is a placeholder.
+        tile shape, issue window, outstanding bound, queue, port mask and, as
+        of AM-E9 v2, the scratchpad ``bank_mask`` -- is AM-E9's one rule
+        (``compiler/backends/schedule_rule.py``), shared with the HBM backend
+        so that the two lowerings of one graph carry identical SCHEDULE fields
+        wherever the operator is the same.  ``bank_mask`` is the shared
+        activation placement (``ENGINE_STAGING_REGIONS`` / ``STAGING_BANK``),
+        NOT this chip's mask-ROM shards: the cycle model applies the field to
+        the SRAM class alone (``MemorySystem.schedule``), so a ROM-bank set
+        here was charged as a scratchpad-bank set and every weight-free
+        operator was emitted unrestricted.  The ROM shard identity stays where
+        AM-C4 also puts it -- in the plan, and in ``noc_route_class``, which
+        this backend still reconstructs from the same shards.  What remains
+        this backend's is the route class and the inert resource bound.
+        None is a placeholder.
         """
         inputs = [self.tensors[n] for n in kernel.inputs]
         weights = [t for t in inputs if t.role in WEIGHT_ROLES]
@@ -1773,6 +1780,7 @@ class RomLowering:
         issue_window = rule.issue_window
         queue_index = rule.queue_index
         port_mask = rule.port_mask
+        bank_mask = rule.bank_mask
 
         tensor_contraction = family is Major.TENSOR and sub in {
             int(TensorOp.MATMUL),
@@ -1798,12 +1806,9 @@ class RomLowering:
             bound = ResourceBound.STATE_TRANSACTION
 
         if placement_views is None:
-            bank_mask = self._bank_mask(kernel)
             route_class = self._route_class(kernel)
         else:
-            bank_mask, _view_ports, route_class = self._view_placement(
-                *placement_views
-            )
+            route_class = self._view_route_class(*placement_views)
 
         payload = (
             int(family),
@@ -1837,76 +1842,52 @@ class RomLowering:
         self._schedule_cache[payload] = descriptor
         return descriptor
 
-    def _view_placement(
+    def _view_route_class(
         self, inputs: Sequence[int], outputs: Sequence[int]
-    ) -> tuple[int, int, int]:
-        """Reconstruct schedule placement from an auxiliary operator's views.
+    ) -> int:
+        """Reconstruct an auxiliary operator's route class from its views.
 
         Most operators bind exactly the graph operands, so their placement is
         cheaply derived from tensor IDs.  The rolling compressor also emits
         ABI-3.0 DMA/reduction primitives whose views are compiler-created
         slices of the packed projection and direct HBM history.  Those slices
         have no neutral tensor ID of their own; their descriptors are therefore
-        the only honest source for bank, port, and route placement.
+        the only honest source for the reticle and tile span the route class
+        states.
+
+        Since AM-E9 v2 this reconstructs the route class only.  ``bank_mask``
+        is the shared activation placement (a function of the engine family,
+        not of these views), and ``port_mask`` is every published scratchpad
+        port; neither is read off an operand any more.
         """
 
         planned: dict[int, Any] = {}
         if self.plan is not None:
             planned = {int(region.object_id): region for region in self.plan.regions}
-        bank_mask = 0
-        port_mask = 0
         reticles: set[int] = set()
         tiles: set[int] = set()
-        for view_id in (*inputs, *outputs):
+        for view_id in inputs:
             if int(view_id) == NO_ID:
                 continue
             view = self.builder.table[int(view_id)]
             object_id = int(view.primary_object_id)
             obj = self.builder.table[object_id]
-            storage = StorageClass(int(obj.payload["storage_class"]))
-            if storage is StorageClass.ROM:
-                # Generated constants are mask-programmed too, but unlike a
-                # checkpoint region they occupy no published plan shard and
-                # therefore assert no planned-bank bit.
-                region = planned.get(object_id)
-                if region is None or view_id not in inputs:
-                    continue
-                for shard in region.shards:
-                    index = shard.coordinate.tile or shard.coordinate.bank
-                    bank_mask |= 1 << (index % 32)
-                    reticles.add(int(shard.coordinate.reticle))
-                    tiles.add(int(shard.coordinate.tile))
+            if StorageClass(int(obj.payload["storage_class"])) is not StorageClass.ROM:
                 continue
-            port = int(obj.payload["bank_or_tile"])
-            # REMOTE/link staging objects use the ABI's unassigned sentinel;
-            # it is not physical port 31.  The previous modulo conversion only
-            # happened to pass while hundreds of one-use activation objects
-            # populated every concrete port and masked the phantom bit.
-            if 0 <= port < 32:
-                port_mask |= 1 << port
+            # Generated constants are mask-programmed too, but unlike a
+            # checkpoint region they occupy no published plan shard and
+            # therefore span no reticle of their own.
+            region = planned.get(object_id)
+            if region is None:
+                continue
+            for shard in region.shards:
+                reticles.add(int(shard.coordinate.reticle))
+                tiles.add(int(shard.coordinate.tile))
         if len(reticles) > 1:
-            route = RouteClass.INTER_RETICLE
-        elif len(tiles) > 1:
-            route = RouteClass.INTRA_RETICLE
-        else:
-            route = RouteClass.LOCAL
-        return bank_mask, port_mask, route
-
-    def _bank_mask(self, kernel: Kernel) -> int:
-        """Which immutable ROM banks or tiles this operator reads."""
-        mask = 0
-        if self.plan is None:
-            return 0
-        for name in kernel.inputs:
-            if self.tensors[name].role not in WEIGHT_ROLES:
-                continue
-            placement = self._region_of_tensor.get(name)
-            if placement is None:
-                continue
-            for shard in self.plan.region(placement[0]).shards:
-                index = shard.coordinate.tile or shard.coordinate.bank
-                mask |= 1 << (index % 32)
-        return mask
+            return RouteClass.INTER_RETICLE
+        if len(tiles) > 1:
+            return RouteClass.INTRA_RETICLE
+        return RouteClass.LOCAL
 
     def _route_class(self, kernel: Kernel) -> int:
         """Local, intra-reticle or inter-reticle, from the operand placement."""

@@ -27,7 +27,9 @@ from compiler.backends.schedule_rule import (
     COLUMN_LANE_FAMILIES,
     E9_TILE_COLS,
     operator_shape as _e9_operator_shape,
+    sram_banks as _e9_sram_banks,
     sram_ports as _e9_sram_ports,
+    staging_bank_mask as _e9_staging_bank_mask,
 )
 from runtime.abi3.capability import Capability, canonical_json
 from runtime.abi3.constants import (
@@ -694,16 +696,25 @@ def check_rom_schedule(
 
         input_views = _operator_views(operator, "input_view_", 4, views, require)
         output_views = _operator_views(operator, "output_view_", 2, views, require)
-        expected_bank = _bank_mask(input_views, objects, plan_objects)
+        rom_shards = _bank_mask(input_views, objects, plan_objects)
         expected_port = _port_mask((*input_views, *output_views), objects, ports)
         allocated_ports = _allocated_port_mask(ports)
         expected_route = _route_class(input_views, objects, plan_objects)
         expected_bound = _resource_bound(family, input_views, objects)
+        # AM-E9 v2: bank_mask is the shared activation placement -- the
+        # scratchpad banks of the staging regions this engine family streams
+        # through -- and no longer the operator's mask-ROM shard set.  The
+        # cycle model applies the field to the SRAM class alone
+        # (``runtime/cycle/model.py`` ``MemorySystem.schedule``), so a ROM-bank
+        # set here was spent as a scratchpad-bank set and a weight-free
+        # operator's zero was read as UNRESTRICTED.  The shard reconstruction
+        # is still checked, against the plan objects, below.
+        expected_bank = _e9_staging_bank_mask(family, capability)
         require(
-            "rom_bank_mask",
+            "staging_bank_mask",
             int(payload["bank_mask"]) == expected_bank,
-            f"schedule {schedule_id} bank mask {payload['bank_mask']:#x}; "
-            f"ROM operands reconstruct to {expected_bank:#x}",
+            f"schedule {schedule_id} bank mask {payload['bank_mask']:#x}; the "
+            f"shared activation placement for this family is {expected_bank:#x}",
         )
         actual_port = int(payload["port_mask"])
         # AM-C4: port_mask bit p is scratchpad port p, and AM-E9 grants every
@@ -736,10 +747,22 @@ def check_rom_schedule(
         )
 
         rom_banks = max(int(capability.memory.get("rom", {}).get("banks", 0)), 1)
+        sram_bank_count = _e9_sram_banks(capability)
         require(
             "bank_mask_capacity",
-            int(payload["bank_mask"]) & ~((1 << min(rom_banks, 32)) - 1) == 0,
-            f"schedule {schedule_id} names a ROM bank outside the capability",
+            int(payload["bank_mask"]) & ~((1 << min(sram_bank_count, 32)) - 1) == 0,
+            f"schedule {schedule_id} names a scratchpad bank outside the "
+            f"capability's {sram_bank_count}",
+        )
+        # The ROM-shard reconstruction the SCHEDULE field used to carry, moved
+        # to the store it is true of: the operator's ROM operands must occupy
+        # mask-ROM banks the capability publishes.  ``memory.rom.banks`` bounds
+        # the plan, not the scratchpad descriptor.
+        require(
+            "rom_shard_banks",
+            rom_shards & ~((1 << min(rom_banks, 32)) - 1) == 0,
+            f"schedule {schedule_id} reads ROM shards in banks "
+            f"{rom_shards:#x}, outside the capability's {rom_banks}",
         )
         require(
             "port_mask_capacity",
@@ -2748,6 +2771,15 @@ def _bank_mask(
     objects: Mapping[int, Any],
     plan_objects: Mapping[int, Mapping[str, Any]],
 ) -> int:
+    """The mask-ROM shards this operator's ROM operands occupy.
+
+    This was the expected value of the SCHEDULE ``bank_mask``.  Since AM-E9 v2
+    that field is the shared activation placement over the scratchpad -- the
+    store the cycle model actually charges it to -- and this reconstruction is
+    checked against the ROM plan instead (``rom_shard_banks``), which is where
+    AM-C4's own last clause already puts per-tile ROM placement.
+    """
+
     mask = 0
     for view in input_views:
         object_id = int(view.primary_object_id)

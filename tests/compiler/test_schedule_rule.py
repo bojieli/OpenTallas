@@ -2,11 +2,13 @@
 
 ``docs/CHIP_ARCHITECTURE_DESIGN.md`` section 3.8 / 7.2 / 10.1 (AM-E9): the two
 lowerings of one graph must carry identical SCHEDULE fields wherever the
-operator is the same, and every remaining difference must be a storage-class
-consequence the rule states (AM-C4's ``bank_mask``).  These tests pin the rule
-itself, the values it produces for the Qwen shapes, and -- the property the
-comparison protocol rests on -- that the ROM and HBM backends emit the same
-tiled fields for the same neutral kernel.
+operator is the same.  AM-E9 v2 closes the last exception: ``bank_mask`` is one
+activation-buffer placement over the scratchpad both vehicles declare, not a
+per-store value, because ``runtime.cycle.model.MemorySystem.schedule`` charges
+the field to the SRAM class on both sides.  These tests pin the rule itself,
+the values it produces for the Qwen shapes, and -- the property the comparison
+protocol rests on -- that the ROM and HBM backends emit the same tiled fields,
+and now the same banks, for the same neutral kernel.
 """
 
 from __future__ import annotations
@@ -32,6 +34,9 @@ from compiler.backends.schedule_rule import (
     E9_QUEUES,
     E9_TILE_COLS,
     E9_TILE_DEPTH,
+    ENGINE_STAGING_REGIONS,
+    STAGING_BANK,
+    STAGING_REGIONS,
     OperatorShape,
     choose_tile,
     column_lane_bound,
@@ -40,7 +45,9 @@ from compiler.backends.schedule_rule import (
     operator_shape,
     queue_count,
     queue_ordinal,
+    sram_banks,
     sram_ports,
+    staging_bank_mask,
 )
 from compiler.ir.v3.kernel_ir import KernelGraph
 from runtime.abi3.capability import Capability
@@ -57,7 +64,8 @@ HBM_CAPABILITY = REPO / "configs/hardware/abi3_capability/hbm_sram_single_chip.j
 QWEN_IR = REPO / "build/ir-v3/qwen3-8b/kernel_ir.v3.json"
 
 #: The SCHEDULE fields the rule fixes: every field the cycle model tiles by
-#: (``runtime.cycle.model.tile_mapping``) except the storage-class ``bank_mask``.
+#: (``runtime.cycle.model.tile_mapping``), ``bank_mask`` included since
+#: AM-E9 v2.
 UNIFIED_FIELDS = (
     "tile_rows",
     "tile_cols",
@@ -66,6 +74,7 @@ UNIFIED_FIELDS = (
     "max_outstanding",
     "queue_index",
     "port_mask",
+    "bank_mask",
     "noc_route_class",
 )
 
@@ -297,13 +306,10 @@ def _assert_pair_is_unified(rom_deployment, hbm_deployment) -> None:
                 f"kernel {kernel_index} family {family:#x} sub {sub}: "
                 f"{field} rom {rom_sched[field]} vs hbm {hbm_sched[field]}"
             )
-        # AM-C4: the bank mask names the streamed operand's store.  The HBM
-        # side always streams through a scratchpad staging group; the ROM
-        # side names mask-ROM shards only when a weight is read.
-        assert hbm_sched["bank_mask"] != 0
-        assert rom_sched["bank_mask"] == 0 or family in (
-            int(Major.TENSOR), int(Major.VECTOR), int(Major.DMA), int(Major.ROUTE),
-        )
+        # AM-E9 v2: one activation placement.  Both sides name the staging
+        # banks of the family's regions, and no operator is emitted
+        # unrestricted (0, which the cycle model reads as every bank).
+        assert rom_sched["bank_mask"] == hbm_sched["bank_mask"] != 0
     # The design values are what the pair carries.
     tensor = [r for r in rom_rows if r[0] == int(Major.TENSOR)]
     assert tensor
@@ -352,10 +358,72 @@ def _assert_every_schedule_is_the_rule(graph, deployment, capability) -> None:
         assert payload["max_outstanding"] == rule.max_outstanding, (kernel.kernel_id, family)
         assert payload["queue_index"] == rule.queue_index, (kernel.kernel_id, family)
         assert payload["port_mask"] == rule.port_mask, (kernel.kernel_id, family)
+        assert payload["bank_mask"] == rule.bank_mask, (kernel.kernel_id, family)
+        assert payload["bank_mask"] == staging_bank_mask(family, capability)
         assert payload["issue_window"] == payload["max_outstanding"]
         assert payload["tile_cols"] <= E9_TILE_COLS
         assert payload["tile_depth"] <= E9_TILE_DEPTH
         assert payload["max_outstanding"] <= E9_OUTSTANDING
+
+
+# ---------------------------------------------------------------------------
+# AM-E9 v2: one activation-buffer placement
+# ---------------------------------------------------------------------------
+def test_the_staging_placement_is_one_bank_per_region_and_fits_both_vehicles():
+    """One declared table, one bank each, inside both published scratchpads.
+
+    ``runtime.cycle.model.MemorySystem.schedule`` applies ``bank_mask`` to the
+    SRAM class alone, so the field is only meaningful over a scratchpad both
+    vehicles have.  Both publish 32 banks ([T2.1-20]), so the declared
+    placement is expressible on either.
+    """
+    assert list(STAGING_BANK.values()) == list(range(len(STAGING_REGIONS)))
+    assert len(set(STAGING_REGIONS)) == len(STAGING_REGIONS)
+    for capability in (_capability(ROM_CAPABILITY), _capability(HBM_CAPABILITY)):
+        assert sram_banks(capability) == 32
+        assert max(STAGING_BANK.values()) < sram_banks(capability)
+    for family, regions in ENGINE_STAGING_REGIONS.items():
+        assert regions, family
+        assert set(regions) <= set(STAGING_REGIONS), family
+
+
+def test_both_vehicles_derive_the_same_bank_mask_for_every_family():
+    """The mask is a fact about the engine family, not about the chip."""
+    rom = _capability(ROM_CAPABILITY)
+    hbm = _capability(HBM_CAPABILITY)
+    for family in ENGINE_STAGING_REGIONS:
+        mask = staging_bank_mask(family, rom)
+        assert mask == staging_bank_mask(family, hbm)
+        assert mask != 0
+        # No family is emitted unrestricted: zero is what the cycle model
+        # reads as "every bank", and it was the ROM side's value for every
+        # weight-free family before AM-E9 v2.
+        assert bin(mask).count("1") == len(ENGINE_STAGING_REGIONS[family])
+
+
+def test_a_scratchpad_too_narrow_for_the_placement_is_refused():
+    hbm = _capability(HBM_CAPABILITY)
+    narrow = Capability.from_dict({
+        **hbm.to_dict(),
+        "memory": {**hbm.memory, "sram": {**hbm.memory["sram"], "banks": 4}},
+    })
+    with pytest.raises(ValueError):
+        staging_bank_mask(int(Major.STATE), narrow)
+
+
+def test_the_hbm_planner_allocates_the_regions_at_their_declared_banks():
+    """The mask names the bank the object actually occupies.
+
+    ``MemorySystem._unit_of`` picks the unit from the address, so a mask over
+    a placement the planner did not honour would confine nothing.
+    """
+    deployment = hbm_lower(dense_graph(), single_chip_capability())
+    regions = deployment.notes["sram_regions"]
+    assert regions
+    for region in regions:
+        bank = STAGING_BANK[region["region_id"]]
+        assert region["bank_mask"] == 1 << bank, region
+        assert region["offset"] == bank * region["size_bytes"], region
 
 
 def test_the_rom_backend_emits_exactly_the_rule(tmp_path):
@@ -394,8 +462,10 @@ def test_the_qwen_graph_lowers_to_identical_tiled_fields_on_both_backends():
     """The shipped pair's 31 asymmetries, removed by construction.
 
     Every one of the asymmetries the C2 audit found in
-    ``results/derived/qwen3_n5_design_target_deployment_audit.json`` was in a
-    field this rule fixes, except ``bank_mask``, which AM-C4 keeps per store.
+    ``results/derived/qwen3_n5_design_target_deployment_audit.json`` is in a
+    field this rule fixes.  ``bank_mask`` -- the five AM-E9 v1 left, which
+    ``results/derived/qwen3_e9_deployment_audit.json`` reports as the whole
+    remaining verdict -- is fixed too, by the shared activation placement.
     """
     graph = KernelGraph.read(QWEN_IR)
     rom_capability = _capability(ROM_CAPABILITY)

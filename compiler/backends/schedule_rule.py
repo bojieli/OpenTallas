@@ -12,11 +12,11 @@ through two private tile policies and handed the ROM side a 2x tensor-lane and
 5; the C2 audit of ``results/derived/qwen3_n5_design_target_deployment_audit
 .json`` lists 31 cost-bearing SCHEDULE asymmetries).  Every SCHEDULE field the
 cycle model tiles by -- ``tile_rows``, ``tile_cols``, ``tile_depth``,
-``issue_window``, ``max_outstanding``, ``queue_index`` and ``port_mask`` -- is
-therefore ONE function of (operator shape, engine family, capability), defined
-here and called by ``compiler/backends/rom/common/program.py`` and
+``issue_window``, ``max_outstanding``, ``queue_index``, ``port_mask`` and ``bank_mask``
+-- is therefore ONE function of (operator shape, engine family, capability),
+defined here and called by ``compiler/backends/rom/common/program.py`` and
 ``compiler/backends/hbm_sram/plan.py`` + ``lower.py``.  Neither backend may
-carry a tile policy of its own.
+carry a tile policy, or a scratchpad placement, of its own.
 
 The rule, field by field
 ------------------------
@@ -106,17 +106,69 @@ The rule, field by field
     cycle model reads the field as ports (``MemorySystem._allowed``: bits over
     ``ports_per_unit``).
 
-``bank_mask``
-    NOT unified, and deliberately: AM-C4 makes bit b = bank group b of the
-    STREAMED operand's store, and the two chips stream from different stores
-    (section 7.1 rows 1-2).  The ROM chip names the mask-ROM shards of the
-    weight input (``RomProgramBuilder._bank_mask``; 0 without one), the HBM
-    chip names the scratchpad staging groups the family streams through
-    (``lower._ENGINE_REGIONS``).  The audit's allowlist cites the difference
-    per family; a unified value would violate AM-C4 and the ROM checker's
-    ``rom_bank_mask`` reconstruction.  Likewise ``noc_route_class`` (0 on a
-    single chip on both sides) and the inert ``resource_bound`` / ``priority``
-    are left to each side.
+``bank_mask = OR of 1 << STAGING_BANK[r] over ENGINE_STAGING_REGIONS[family]``
+    AM-E9 v2 -- one activation-buffer placement, and the reason this field is
+    now unified.  Bit b = scratchpad bank b of the staging regions the
+    operator's engine family streams through, over ONE declared placement
+    (:data:`STAGING_REGIONS`, :data:`ENGINE_STAGING_REGIONS`) that both
+    backends call and that the HBM planner allocates against
+    (``hbm_sram/plan.py _allocate_sram``).  ``rom_qwen3.json`` and
+    ``hbm_sram_single_chip.json`` declare the SAME scratchpad -- 32 banks,
+    134,217,728 B, 4 MiB per bank, two ports -- so one placement is
+    expressible on both ([T2.1-20]; design section 7.2: staging, scratchpad
+    ports, queues and mesh are the same for both twins).
+
+    Bit b is bank b, not bank *group* b.  [T2.1-20] describes the scratchpad
+    both ways -- "32 banks x 4 MiB" and "bank groups 0-15 ... (2 banks
+    each)" -- and AM-C4's text says group.  The value is charged as a bank:
+    ``MemorySystem._allowed`` iterates ``range(klass.units)``, and
+    ``klass.units`` is ``memory.sram.banks`` (32).  The rule takes the reading
+    that is charged, exactly as AM-E9 v1 did for ``port_mask``.  The declared
+    regions occupy banks 0-7, inside the program-visible scratchpad either way
+    ([T2.1-20] reserves banks 30-31 for the HOST region).
+
+    The previous reading (AM-C4: bit b = bank group b of the STREAMED
+    operand's store, ROM shards on one side and staging groups on the other)
+    is withdrawn because nothing implements the typing it assumes.
+    ``runtime.cycle.model.MemorySystem.schedule`` applies the field to the
+    ``sram`` class and to nothing else -- ROM-, HBM- and HOST-class accesses
+    are scheduled with mask 0 -- so the ROM backend's mask-ROM shard set was
+    charged as a scratchpad-bank set, and the three families that read no
+    weight at all (attention, dma, selection) were emitted ``0``, which
+    ``MemorySystem._allowed`` reads as UNRESTRICTED: 64 of 64 scratchpad units
+    against the HBM side's 2 to 4.  Design section 7.1 row 4 says of the ROM
+    chip's freer staging pool "no overlap credited"; the previous emission
+    credited exactly that overlap.  This is the same defect AM-E9 already
+    fixed one field over (see ``port_mask`` above): a bank set in a field the
+    model reads as something else.
+
+    Measured on the Qwen decode (batch 1, context 8,192, one transaction) with
+    only this field varied and no other change to program, machine or request
+    -- a scratch harness that wraps the cycle model's own ``tile_mapping`` and
+    replaces one field of the mapping it returns, re-timing one cached
+    functional trace under each variant; the numbers are quoted in the commit
+    that introduced this rule -- the direction and the magnitude are: at the N5 design-target machine the audit charges with, the
+    swap is worth exactly 0 cycles on both sides (ROM 438,749 total cycles
+    under every variant; HBM 22,752,774 under every variant, and provably
+    insensitive because that decode issues 0 SRAM-class transactions); at
+    asap7_v2, where the ROM decode makes 3,897,922 SRAM transactions, the ROM
+    side spans 148,804,260 (every mask zero) .. 149,990,884 (as previously
+    emitted) .. 151,322,992 (on the HBM staging placement) cycles, so the
+    pair's headline ratio moved 1.68% on the choice of emission rule alone.
+    The three weight-free families move 0 cycles in both directions on both
+    machines: the argument against their old emission is structural (same
+    class, same declared geometry, "no overlap credited"), not a cycle count.
+
+    The ROM bank identity is not lost, and does not belong in this field:
+    AM-C4's own last clause already keeps per-tile placement in the ROM plan
+    (``route_table_digest``), ``noc_route_class`` still reconstructs from the
+    same shards, and ``compiler/backends/rom/common/check.py`` now checks the
+    shard reconstruction against the plan objects (``rom_shard_banks``, bounded
+    by ``memory.rom.banks``) instead of against this descriptor, while
+    ``bank_mask_capacity`` bounds the descriptor by ``memory.sram.banks`` --
+    the store the field is actually charged to.  Likewise ``noc_route_class``
+    (0 on a single chip on both sides) and the inert ``resource_bound`` /
+    ``priority`` are left to each side.
 
 No ABI change (section 10.3): every value stays inside the frozen SCHEDULE
 fields and inside both capabilities' published limits.
@@ -141,6 +193,53 @@ E9_OUTSTANDING = 16
 #: [T2.1-20]: two scratchpad ports per bank, used when a capability publishes
 #: no ``memory.sram.ports``.
 E9_SRAM_PORTS_DEFAULT = 2
+#: [T2.1-20]: 32 scratchpad banks, used when a capability publishes no
+#: ``memory.sram.banks``.  Both vehicles publish 32.
+E9_SRAM_BANKS_DEFAULT = 32
+
+#: AM-E9 v2: THE activation-buffer placement, in bank order.  One staging
+#: region per scratchpad bank, bank index = position in this tuple, over the
+#: 32-bank / 4 MiB-per-bank scratchpad both vehicles declare ([T2.1-20],
+#: design section 7.2).  ``compiler/backends/hbm_sram/plan.py _allocate_sram``
+#: allocates exactly these regions at exactly these banks (offset = bank x
+#: bank_bytes), and both backends derive ``bank_mask`` from the same table, so
+#: the same operator on the same graph names the same banks on both sides.
+#: The single-node profiles allocate no ``sram.link_stage``; its bank is
+#: reserved so that a cluster profile does not renumber the others.
+STAGING_REGIONS: tuple[str, ...] = (
+    "sram.activation_stage",
+    "sram.weight_stage",
+    "sram.accumulator",
+    "sram.vector_stream",
+    "sram.attention_working",
+    "sram.route_index",
+    "sram.state_stage",
+    "sram.link_stage",
+)
+
+#: Staging region -> its scratchpad bank index.
+STAGING_BANK: Mapping[str, int] = {
+    region: index for index, region in enumerate(STAGING_REGIONS)
+}
+
+#: Staging regions each engine family streams through; the union is the
+#: family's ``bank_mask``.  This was ``hbm_sram/lower.py _ENGINE_REGIONS``,
+#: which only the HBM backend called; it is the shared table now.
+ENGINE_STAGING_REGIONS: Mapping[int, tuple[str, ...]] = {
+    int(Major.TENSOR): (
+        "sram.activation_stage",
+        "sram.weight_stage",
+        "sram.accumulator",
+    ),
+    int(Major.DMA): ("sram.activation_stage", "sram.weight_stage"),
+    int(Major.VECTOR): ("sram.vector_stream",),
+    int(Major.REDUCTION): ("sram.vector_stream", "sram.accumulator"),
+    int(Major.ATTENTION): ("sram.attention_working",),
+    int(Major.ROUTE): ("sram.route_index",),
+    int(Major.SELECTION): ("sram.vector_stream",),
+    int(Major.STATE): ("sram.state_stage",),
+    int(Major.LINK): ("sram.link_stage",),
+}
 
 #: Queues the rule spreads a family's operators over: the element-wise minimum
 #: of the pair's vehicle capabilities (see the module docstring).  A family
@@ -225,6 +324,7 @@ class E9Schedule:
     max_outstanding: int
     queue_index: int
     port_mask: int
+    bank_mask: int
 
 
 def choose_tile(extent: int, target: int) -> int:
@@ -352,6 +452,35 @@ def sram_ports(capability: Any) -> int:
     return ports if ports > 0 else E9_SRAM_PORTS_DEFAULT
 
 
+def sram_banks(capability: Any) -> int:
+    """``memory.sram.banks`` when published, else [T2.1-20]'s thirty-two."""
+    sram = dict(capability.memory.get("sram", {}) or {})
+    banks = int(sram.get("banks", 0) or 0)
+    return banks if banks > 0 else E9_SRAM_BANKS_DEFAULT
+
+
+def staging_bank_mask(family: int, capability: Any) -> int:
+    """The scratchpad banks ``family`` streams through (AM-E9 v2).
+
+    One value for both backends: the union of :data:`STAGING_BANK` over the
+    family's :data:`ENGINE_STAGING_REGIONS`.  A capability whose scratchpad is
+    too narrow to hold the declared placement is refused rather than folded
+    modulo its bank count -- a placement that does not fit is a design point
+    the shared rule does not describe, not a mask to invent.
+    """
+    banks = sram_banks(capability)
+    mask = 0
+    for region in ENGINE_STAGING_REGIONS.get(int(family), ()):
+        bank = STAGING_BANK[region]
+        if bank >= banks:
+            raise ValueError(
+                f"staging region {region} is bank {bank}, but the capability "
+                f"publishes only {banks} scratchpad banks"
+            )
+        mask |= 1 << bank
+    return mask
+
+
 def column_lane_bound(family: int, capability: Any) -> int:
     """The widest tile the family's column lanes serve; 64 for mover engines."""
     family = int(family)
@@ -427,6 +556,7 @@ def e9_schedule(
     queues = queue_count(family, capability, reserved=reserved_queues)
     queue_index = int(ordinal) % queues
     port_mask = (1 << sram_ports(capability)) - 1
+    bank_mask = staging_bank_mask(family, capability)
     return E9Schedule(
         tile_rows=tile_rows,
         tile_cols=tile_cols,
@@ -436,4 +566,5 @@ def e9_schedule(
         max_outstanding=max_outstanding,
         queue_index=queue_index,
         port_mask=port_mask,
+        bank_mask=bank_mask,
     )

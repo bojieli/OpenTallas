@@ -61,11 +61,13 @@ from typing import Any, Container, Mapping, Sequence
 
 from compiler.backends.activation_liveness import LiveBuffer, allocate_live_buffers
 from compiler.backends.schedule_rule import (
+    STAGING_BANK,
     choose_tile,
     e9_schedule,
     family_ordinals,
     operator_shape as _e9_operator_shape,
     queue_ordinal,
+    sram_ports as _e9_sram_ports,
 )
 from compiler.ir.v3.kernel_ir import (
     Kernel,
@@ -5319,12 +5321,21 @@ def _allocate_sram(
     node_count: int,
     tile: TileConfig,
 ) -> tuple[SramRegion, ...]:
-    """Allocate and bank-assign the explicitly managed scratchpad."""
+    """Allocate the explicitly managed scratchpad at its declared banks.
+
+    AM-E9 v2: the placement is not this backend's to choose.  Region order and
+    bank index come from ``compiler/backends/schedule_rule.py``
+    (:data:`STAGING_BANK`), which both backends also derive ``bank_mask`` from,
+    so the mask a schedule names is the bank the object actually occupies on
+    either vehicle.  Sizes stay derived from the tiles, and a region that no
+    longer fits its one declared bank is refused rather than quietly spilling
+    into the next region's bank and renumbering the placement.
+    """
     sram = capability.memory["sram"]
     total = int(sram["bytes"])
     banks = int(sram["banks"])
     bank_bytes = int(sram.get("bank_bytes", total // max(banks, 1)))
-    ports = int(sram.get("ports", 1))
+    ports = _e9_sram_ports(capability)
 
     max_rows = max((k.tile_rows for k in kernels), default=tile.rows)
     max_cols = max((k.tile_cols for k in kernels if k.contraction), default=tile.cols)
@@ -5408,36 +5419,48 @@ def _allocate_sram(
         )
 
     regions: list[SramRegion] = []
-    cursor = 0
-    bank_cursor = 0
     for region_id, purpose, elements, element_bytes, dtype, lifetime in requests:
+        if region_id not in STAGING_BANK:
+            raise PlanError(
+                f"SRAM region {region_id} is not in the shared activation "
+                "placement (compiler/backends/schedule_rule.py "
+                "STAGING_REGIONS); a region no bank_mask can name would be "
+                "invisible to the cycle model on one side of the comparison"
+            )
+        bank_first = STAGING_BANK[region_id]
         size = max(elements * element_bytes, bank_bytes)
         size = round_up(size, bank_bytes)
         bank_count = size // bank_bytes
-        if bank_cursor + bank_count > banks or cursor + size > total:
+        if bank_count != 1:
             raise PlanError(
                 f"SRAM region {region_id} needs {size} bytes in {bank_count} "
-                f"banks; only {banks - bank_cursor} banks and "
-                f"{total - cursor} bytes remain"
+                "banks; the shared activation placement "
+                "(compiler/backends/schedule_rule.py STAGING_REGIONS) declares "
+                "one bank per region, so widening it is a change to that "
+                "table, made on both backends at once"
             )
-        mask = ((1 << bank_count) - 1) << bank_cursor
+        offset = bank_first * bank_bytes
+        if bank_first + bank_count > banks or offset + size > total:
+            raise PlanError(
+                f"SRAM region {region_id} is declared at bank {bank_first} "
+                f"and needs {size} bytes; the capability publishes {banks} "
+                f"banks and {total} bytes"
+            )
         regions.append(
             SramRegion(
                 region_id=region_id,
                 purpose=purpose,
-                offset=cursor,
+                offset=offset,
                 size_bytes=size,
                 elements=size // element_bytes,
                 dtype=dtype,
-                bank_first=bank_cursor,
+                bank_first=bank_first,
                 bank_count=bank_count,
-                bank_mask=mask,
+                bank_mask=((1 << bank_count) - 1) << bank_first,
                 port_mask=(1 << ports) - 1,
                 lifetime=lifetime,
             )
         )
-        cursor += size
-        bank_cursor += bank_count
     return tuple(regions)
 
 
