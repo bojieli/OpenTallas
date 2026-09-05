@@ -708,21 +708,42 @@ def build(output: Path) -> dict[str, Any]:
     # capability_trapped_family_count, in its PESSIMISTIC form.  Two vehicles
     # give two answers and post-mortem R13 forbids publishing the optimistic
     # one: the operator-admission vehicle admits all six families (measured,
-    # capability_trapped_family_count 0), but the only vehicle that runs the
-    # real compiled program end to end, rtl/test/a3_shipped_prefix_top.sv,
-    # leaves every one of the bridge's placement inputs unconnected, and the
-    # bridge's measured answer to that configuration is TRAP_CAPABILITY
-    # (admission case capability_refusal_placement_not_configured: trap 4,
-    # zero writes, zero launches, on both simulators).  Until the integrated
-    # top wires them, the families are admitted at the bridge and unreachable
-    # in the integrated vehicle.
-    integrated_top = ROOT / "rtl/test/a3_shipped_prefix_top.sv"
-    top_text = integrated_top.read_text() if integrated_top.is_file() else ""
-    wired = "cfg_extended_placement_valid" in top_text and \
-        ".cfg_extended_placement_valid(" in top_text
-    admission = next(
-        (c for c in campaigns
-         if c["artifact"].endswith("a3_operator_admission_campaign.json")), None
+    # capability_trapped_family_count 0), and the vehicle that runs the real
+    # compiled program end to end, rtl/test/a3_shipped_prefix_top.sv, answers
+    # separately.  The integrated vehicle's answer is the one published here,
+    # and it is read from that vehicle's own campaign artifact: which of the
+    # six the bridge LAUNCHED, per family, in a case whose result words were
+    # compared against golden.  A family the integrated campaign did not
+    # launch is trapped here, and so is every family when that campaign is
+    # absent, failed, drifted, or predates the measurement -- absence of
+    # evidence is a FAIL, never "not evaluable".
+    integrated_relative = "results/rtl/abi3_shipped_prefix_campaign.json"
+    integrated_path = ROOT / integrated_relative
+    integrated_record = next(
+        (c for c in campaigns if c["artifact"] == integrated_relative), None
+    )
+    integrated_body = (
+        json.loads(integrated_path.read_text()) if integrated_path.is_file() else {}
+    )
+    # The integrated vehicle's answer is taken from what it MEASURED, never
+    # from whether its source text mentions the bridge's placement pins.  A
+    # port connection is not a launch: the previous form of this block grepped
+    # rtl/test/a3_shipped_prefix_top.sv for ".cfg_extended_placement_valid("
+    # and would have reported zero trapped families the moment the pin was
+    # connected, before a single family had run.  The measurement is the
+    # harness's ADMISSION line, per family, and it counts a family only when
+    # the bridge launched it in a case whose result words were compared
+    # against golden.
+    integrated_admission = integrated_body.get("operator_admission") or {}
+    integrated_fresh = bool(
+        integrated_record
+        and integrated_record.get("status") == "pass"
+        and integrated_record.get("drifted_source_count") == 0
+    )
+    integrated_reached = (
+        list(integrated_admission.get("reached_families") or [])
+        if (integrated_fresh and integrated_admission.get("measured"))
+        else []
     )
     admission_body = json.loads(
         (ROOT / "results/rtl/a3_operator_admission_campaign.json").read_text()
@@ -730,7 +751,36 @@ def build(output: Path) -> dict[str, Any]:
     admitted = (admission_body.get("admission") or {}).get(
         "previously_capability_trapped_families", []
     )
-    trapped = 0 if wired else len(admitted)
+    integrated_trapped = [f for f in admitted if f not in integrated_reached]
+    trapped = len(integrated_trapped)
+    why_not_measured = []
+    if not integrated_path.is_file():
+        why_not_measured.append(f"{integrated_relative} is absent")
+    elif integrated_record is None:
+        why_not_measured.append(
+            f"{integrated_relative} is not in this tool's evidence list"
+        )
+    else:
+        if integrated_record.get("status") != "pass":
+            why_not_measured.append(
+                f"{integrated_relative} status is "
+                f"{integrated_record.get('status')!r}"
+            )
+        if integrated_record.get("drifted_source_count"):
+            why_not_measured.append(
+                f"{integrated_record['drifted_source_count']} of its bound "
+                "sources have drifted since it was recorded"
+            )
+        if not integrated_admission:
+            why_not_measured.append(
+                "it records no operator_admission block, so it predates the "
+                "measurement and cannot be read as one"
+            )
+        elif not integrated_admission.get("measured"):
+            why_not_measured.append(
+                str(integrated_admission.get("why_not_measured")
+                    or "its run emitted no ADMISSION line")
+            )
     for record in records:
         record["capability_trapped_family_count"] = trapped
         record["capability"] = {
@@ -739,11 +789,22 @@ def build(output: Path) -> dict[str, Any]:
                 "post-mortem R13: a metric reported under two models is not "
                 "evidence in its optimistic form. The two models here are the "
                 "operator-admission vehicle and the integrated shipped-prefix "
-                "vehicle, and they disagree."
+                "vehicle, and this is the integrated vehicle's answer."
+            ),
+            "source_of_this_count": (
+                "measured launches in the integrated vehicle's own campaign "
+                "artifact, not the presence of a port connection in its source"
             ),
             "integrated_vehicle": "rtl/test/a3_shipped_prefix_top.sv",
-            "integrated_vehicle_wires_placement_inputs": wired,
-            "integrated_vehicle_trapped_families": [] if wired else list(admitted),
+            "integrated_vehicle_campaign": integrated_relative,
+            "integrated_vehicle_campaign_usable": integrated_fresh,
+            "integrated_vehicle_measured": bool(
+                integrated_fresh and integrated_admission.get("measured")
+            ),
+            "integrated_vehicle_launches": integrated_admission.get("launches"),
+            "integrated_vehicle_reached_families": integrated_reached,
+            "integrated_vehicle_trapped_families": integrated_trapped,
+            "why_not_measured": why_not_measured,
             "operator_admission_vehicle_trapped_family_count": (
                 admission_body.get("admission") or {}
             ).get("capability_trapped_family_count"),

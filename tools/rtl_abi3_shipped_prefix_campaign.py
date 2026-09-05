@@ -35,7 +35,16 @@ ENGINE_CAMPAIGN = ROOT / "results/rtl/abi3_engine_campaign.json"
 ROPE_CAMPAIGN = ROOT / "results/tensor_accelerator/qwen3_rtl_rope_campaign.json"
 
 PINNED_VERILATOR_VERSION = "5.050"
-EXPECTED_INTEGRATED_CHECKS = 189_826
+# The integrated replay's check count.  It is a function of the harness AND of
+# the vector set, so it moves whenever either does, and it is arithmetic here
+# rather than a re-typed measurement: 189,826 was the count before the six
+# mapped operator families were observed, and the harness now adds nine checks
+# per case -- the six per-family launch counts plus the selected token, its tie
+# multiplicity and its EOS reason -- over four cases.  A vector set that
+# carries mapped placement adds one more check per mapped case (its reserved
+# word), so this constant has to be re-measured, not adjusted by hand, when
+# the case-record generation changes.
+EXPECTED_INTEGRATED_CHECKS = 189_826 + 4 * 9
 TOOLS_ROOT = Path(
     os.environ.get("OPENTALLAS_TOOL_ROOT", Path.home() / ".local/opentallas-tools")
 )
@@ -136,6 +145,75 @@ CASE_RE = re.compile(
 )
 CHECKS_RE = re.compile(r"checks=(\d+)")
 VERILATOR_VERSION_RE = re.compile(r"Verilator (\d+)\.(\d+)")
+
+# The six operator families rtl/abi3/ot_a3_engine_issue_bridge.sv admits in
+# addition to the original seven, in the order the harness prints them.  Which
+# of them THIS vehicle reached is a measurement, taken from the run log: the
+# harness counts a family only when the bridge launched it and the case it
+# launched in compared its result words against golden.  A family with no
+# launch is trapped here, whatever another vehicle measured, and the absence of
+# the line altogether is six trapped families rather than an unknown.
+MAPPED_FAMILIES = (
+    "VECTOR.ADD",
+    "VECTOR.SILU_MUL",
+    "DMA.SCATTER",
+    "ATTENTION.GQA",
+    "SELECTION.ARGMAX",
+    "SELECTION.TOKEN_APPEND",
+)
+ADMISSION_RE = re.compile(
+    r"^ADMISSION vectors=(?P<vectors>\w+) "
+    r"cases_with_placement=(?P<cases_with_placement>\d+) "
+    r"injecting=(?P<injecting>\d+) "
+    r"(?P<counts>.*?) reached=(?P<reached>\d+) trapped=(?P<trapped>\d+)$",
+    re.MULTILINE,
+)
+
+
+def parse_admission(log: str) -> dict[str, Any]:
+    """The integrated vehicle's own answer for the six mapped families.
+
+    Absence of the marker is not "not evaluable": it is six families this
+    vehicle did not reach, which is what the rung must then report.
+    """
+    match = ADMISSION_RE.search(log)
+    if match is None:
+        return {
+            "measured": False,
+            "vehicle": "rtl/test/a3_shipped_prefix_top.sv",
+            "why_not_measured": (
+                "the integrated run emitted no ADMISSION line, so no family "
+                "was observed to launch in this vehicle"
+            ),
+            "launches": {family: 0 for family in MAPPED_FAMILIES},
+            "reached_families": [],
+            "trapped_families": list(MAPPED_FAMILIES),
+            "reached_family_count": 0,
+            "capability_trapped_family_count": len(MAPPED_FAMILIES),
+        }
+    counts = dict(
+        pair.split("=", 1) for pair in match.group("counts").split() if "=" in pair
+    )
+    launches = {family: int(counts.get(family, 0)) for family in MAPPED_FAMILIES}
+    reached = [family for family, count in launches.items() if count != 0]
+    trapped = [family for family in MAPPED_FAMILIES if family not in reached]
+    record = {
+        "measured": True,
+        "vehicle": "rtl/test/a3_shipped_prefix_top.sv",
+        "vector_generation": match.group("vectors"),
+        "cases_with_mapped_placement": int(match.group("cases_with_placement")),
+        "result_injection": int(match.group("injecting")) != 0,
+        "launches": launches,
+        "reached_families": reached,
+        "trapped_families": trapped,
+        "reached_family_count": len(reached),
+        "capability_trapped_family_count": len(trapped),
+    }
+    if len(reached) != int(match.group("reached")) or len(trapped) != int(
+        match.group("trapped")
+    ):
+        raise SystemExit("the ADMISSION line disagrees with its own counts")
+    return record
 
 
 def sha256_file(path: Path) -> str:
@@ -470,7 +548,11 @@ def parse_observation(log: str) -> dict[str, Any]:
         for match in CASE_RE.finditer(log)
     ]
     checks = CHECKS_RE.findall(log)
-    return {"cases": cases, "checks": int(checks[-1]) if checks else None}
+    return {
+        "cases": cases,
+        "checks": int(checks[-1]) if checks else None,
+        "admission": parse_admission(log),
+    }
 
 
 def simulator_case(
@@ -507,6 +589,7 @@ def simulator_case(
         "marker_present": marker in run_log,
         "checks": observation["checks"],
         "observed_cases": observation["cases"],
+        "operator_admission": observation["admission"],
         "log_sha256": hashlib.sha256(
             (compiled["log"] + run_log).encode("utf-8")
         ).hexdigest(),
@@ -844,6 +927,11 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
         "integrated_simulator_checks": {case["name"]: case["checks"] for case in cases},
         "integrated_simulators": [case["name"] for case in cases],
         "integrated_replay_passed": integrated_replay_passed,
+        # Rung G1a's integrated half, measured rather than inferred from the
+        # presence of a port connection in the top's source text.
+        "operator_admission": (
+            cases[0]["operator_admission"] if cases else parse_admission("")
+        ),
         "expected_cases": expected_cases,
         "tools": tools,
         "git": git_identity(),

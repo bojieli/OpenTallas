@@ -94,6 +94,48 @@ module ot_a3_shipped_prefix_top #(
     input  wire [31:0] cfg_rope_coefficient_object,
     input  wire [31:0] cfg_rope_coefficient_base,
     input  wire [31:0] cfg_output_base,
+    // -- mapped placement for the six admitted operator families ---------
+    // The bridge places DMA.SCATTER, ATTENTION.GQA, VECTOR.ADD,
+    // VECTOR.SILU_MUL, SELECTION.ARGMAX and SELECTION.TOKEN_APPEND by
+    // *object*, not by the appending result cursor, because a scatter is a
+    // read-modify-write into a KV plane that already exists and the second
+    // residual add writes back over the trunk object it read.  This top
+    // therefore has to hand the bridge the same object->bank table its own
+    // banks were built from; there is no default base and an unnamed object
+    // is refused.  ``cfg_extended_placement_valid`` is the statement that
+    // *this run* supplied that table.  Driving it low is not a way of
+    // switching a check off: with no bank bound to an object the six
+    // families have no operand address at all, so the bridge answers the
+    // TRAP_CAPABILITY it gave before they were implemented, and the campaign
+    // records that refusal as the measurement it is.
+    input  wire        cfg_extended_placement_valid,
+    input  wire [31:0] cfg_map_object_0,
+    input  wire [31:0] cfg_map_base_0,
+    input  wire [31:0] cfg_map_object_1,
+    input  wire [31:0] cfg_map_base_1,
+    input  wire [31:0] cfg_map_object_2,
+    input  wire [31:0] cfg_map_base_2,
+    input  wire [31:0] cfg_map_object_3,
+    input  wire [31:0] cfg_map_base_3,
+    input  wire [31:0] cfg_map_object_4,
+    input  wire [31:0] cfg_map_base_4,
+    input  wire [31:0] cfg_map_object_5,
+    input  wire [31:0] cfg_map_base_5,
+    input  wire [31:0] cfg_map_object_6,
+    input  wire [31:0] cfg_map_base_6,
+    input  wire [31:0] cfg_map_object_7,
+    input  wire [31:0] cfg_map_base_7,
+    // The request's active context length, checked inside the bridge against
+    // the position the scatter and attention index views actually resolve to
+    // (cfg_context_length == index + 1); the compact KV bank's fixed K-to-V
+    // plane stride in rows, which does not move as the context grows; and the
+    // bound GENERATION_POLICY with the authenticated request bound and the
+    // tokens already produced.
+    input  wire [31:0] cfg_context_length,
+    input  wire [31:0] cfg_kv_plane_rows,
+    input  wire [31:0] cfg_generation_policy_id,
+    input  wire [31:0] cfg_request_max_new_tokens,
+    input  wire [31:0] cfg_generated_before,
     // Byte offset of this operator's weight window inside the model image.
     // The engine port carries a 32-bit halfword offset, which reaches only
     // 8 GiB; the window base is what lets a bounded 32-bit operator offset
@@ -138,6 +180,18 @@ module ot_a3_shipped_prefix_top #(
     output wire [31:0] rope_launch_count,
     output wire [31:0] dma_transfer_launch_count,
     output wire [31:0] matmul_launch_count,
+    // The six families this top now reaches.  Each is observed separately so
+    // "the bridge admitted it" is a measurement per family rather than one
+    // aggregate that a single admission could satisfy.
+    output wire [31:0] vector_add_launch_count,
+    output wire [31:0] vector_silu_mul_launch_count,
+    output wire [31:0] dma_scatter_launch_count,
+    output wire [31:0] attention_gqa_launch_count,
+    output wire [31:0] selection_argmax_launch_count,
+    output wire [31:0] selection_token_append_launch_count,
+    output wire [31:0] selected_token,
+    output wire [31:0] selected_tie_multiplicity,
+    output wire [7:0]  selected_eos_reason,
     output wire [31:0] multicast_launch_count,
     output wire [31:0] multicast_fault_count,
     output wire [31:0] capability_fault_count,
@@ -1299,6 +1353,28 @@ module ot_a3_shipped_prefix_top #(
         .cfg_rope_coefficient_object(cfg_rope_coefficient_object),
         .cfg_rope_coefficient_base(cfg_rope_coefficient_base),
         .cfg_output_base(cfg_output_base),
+        .cfg_extended_placement_valid(cfg_extended_placement_valid),
+        .cfg_map_object_0(cfg_map_object_0),
+        .cfg_map_base_0(cfg_map_base_0),
+        .cfg_map_object_1(cfg_map_object_1),
+        .cfg_map_base_1(cfg_map_base_1),
+        .cfg_map_object_2(cfg_map_object_2),
+        .cfg_map_base_2(cfg_map_base_2),
+        .cfg_map_object_3(cfg_map_object_3),
+        .cfg_map_base_3(cfg_map_base_3),
+        .cfg_map_object_4(cfg_map_object_4),
+        .cfg_map_base_4(cfg_map_base_4),
+        .cfg_map_object_5(cfg_map_object_5),
+        .cfg_map_base_5(cfg_map_base_5),
+        .cfg_map_object_6(cfg_map_object_6),
+        .cfg_map_base_6(cfg_map_base_6),
+        .cfg_map_object_7(cfg_map_object_7),
+        .cfg_map_base_7(cfg_map_base_7),
+        .cfg_context_length(cfg_context_length),
+        .cfg_kv_plane_rows(cfg_kv_plane_rows),
+        .cfg_generation_policy_id(cfg_generation_policy_id),
+        .cfg_request_max_new_tokens(cfg_request_max_new_tokens),
+        .cfg_generated_before(cfg_generated_before),
         .m0_rd_en(m0_rd_en),
         .m0_rd_addr(m0_rd_addr),
         .m0_rd_data(m0_rd_data),
@@ -1329,6 +1405,16 @@ module ot_a3_shipped_prefix_top #(
         .rope_launch_count(rope_launch_count),
         .dma_transfer_launch_count(dma_transfer_launch_count),
         .matmul_launch_count(matmul_launch_count),
+        .vector_add_launch_count(vector_add_launch_count),
+        .vector_silu_mul_launch_count(vector_silu_mul_launch_count),
+        .dma_scatter_launch_count(dma_scatter_launch_count),
+        .attention_gqa_launch_count(attention_gqa_launch_count),
+        .selection_argmax_launch_count(selection_argmax_launch_count),
+        .selection_token_append_launch_count(
+            selection_token_append_launch_count),
+        .selected_token(selected_token),
+        .selected_tie_multiplicity(selected_tie_multiplicity),
+        .selected_eos_reason(selected_eos_reason),
         .capability_fault_count(capability_fault_count),
         .descriptor_fault_count(descriptor_fault_count),
         .engine_fault_count(engine_fault_count),

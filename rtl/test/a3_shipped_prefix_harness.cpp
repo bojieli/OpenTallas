@@ -726,7 +726,52 @@ std::uint64_t env_u64(const char* name, std::uint64_t fallback) {
 }
 
 constexpr std::size_t kCases = 4;
-constexpr std::size_t kCaseStride = 80;
+// Two case-record generations, and the harness is told which by the vector
+// set's own meta word rather than assuming one.  The legacy 80-word record
+// carries no mapped placement, so the six families the issue bridge admits --
+// DMA.SCATTER, ATTENTION.GQA, VECTOR.ADD, VECTOR.SILU_MUL, SELECTION.ARGMAX
+// and SELECTION.TOKEN_APPEND -- have no bank bound to any object and the
+// bridge refuses them with TRAP_CAPABILITY.  That refusal is measured here,
+// not assumed: it is the pessimistic half of the two answers the programme's
+// R13 rule says to publish.  The 112-word record carries the object->bank
+// table, the request's context and generation policy, and the golden launch
+// counts and selection outputs to compare against.
+constexpr std::size_t kCaseStrideLegacy = 80;
+constexpr std::size_t kCaseStrideMapped = 112;
+// Extended case-record word offsets, valid only at kCaseStrideMapped.
+constexpr std::size_t kMapValidWord = 80;      // extended placement supplied
+constexpr std::size_t kMapTableWord = 81;      // 8 x (object id, base words)
+constexpr std::size_t kMapContextWord = 97;    // request context length
+constexpr std::size_t kMapPlaneRowsWord = 98;  // KV K->V plane stride, rows
+constexpr std::size_t kMapPolicyWord = 99;     // GENERATION_POLICY descriptor
+constexpr std::size_t kMapMaxNewWord = 100;    // request max_new_tokens
+constexpr std::size_t kMapGeneratedWord = 101; // tokens produced before this
+constexpr std::size_t kMapLaunchWord = 102;    // 6 expected launch counts
+constexpr std::size_t kMapTokenWord = 108;     // expected selected token
+constexpr std::size_t kMapTieWord = 109;       // expected tie multiplicity
+constexpr std::size_t kMapEosWord = 110;       // expected EOS reason
+constexpr std::size_t kMapReservedWord = 111;  // reserved, must be zero
+// What the vector set has to satisfy for the mapped words to be usable, all
+// of it enforced inside rtl/abi3/ot_a3_engine_issue_bridge.sv rather than
+// here, and none of it defaulted:
+//   * every object a mapped operator's views name must appear in the table;
+//     an object the table does not name is a DESCRIPTOR trap, not a guess.
+//   * the scatter and attention INDEX view's object must be based in the
+//     index bank (the bridge reads it with m0_reads_result low, so its base
+//     plus resolved offset must be below INDEX_WORDS); every other mapped
+//     object is a plane of the result bank the earlier operators produced.
+//   * the KV cache object is one compact bank of 2 * kv_plane_rows * 1024
+//     words: the K plane at the mapped base, the V plane a fixed
+//     kv_plane_rows * 1024 words above it, so it does not move as the
+//     context grows.  The declared view keeps the ABI's row stride 2048 and
+//     plane offset 0 or 1024.
+//   * context_length must equal the value the index view's own element holds
+//     plus one, and must not exceed kv_plane_rows or the GQA datapath's
+//     MAX_CONTEXT.
+constexpr std::size_t kMappedFamilyCount = 6;
+const char* const kMappedFamilyName[kMappedFamilyCount] = {
+    "VECTOR.ADD", "VECTOR.SILU_MUL", "DMA.SCATTER",
+    "ATTENTION.GQA", "SELECTION.ARGMAX", "SELECTION.TOKEN_APPEND"};
 constexpr std::size_t kProgramWords = 4096;
 constexpr std::size_t kDescWords = 8192;
 constexpr std::size_t kSymbolsPerCase = 16;
@@ -858,6 +903,31 @@ struct Model {
         dut.cfg_rope_coefficient_object = UINT32_MAX;
         dut.cfg_rope_coefficient_base = 0;
         dut.cfg_output_base = 0;
+        // No object is mapped until a case binds one.  UINT32_MAX is the
+        // ABI's "no id", which the bridge's map lookup never matches, so an
+        // unbound instance forms no operand address at all.
+        dut.cfg_extended_placement_valid = 0;
+        dut.cfg_map_object_0 = UINT32_MAX;
+        dut.cfg_map_base_0 = 0;
+        dut.cfg_map_object_1 = UINT32_MAX;
+        dut.cfg_map_base_1 = 0;
+        dut.cfg_map_object_2 = UINT32_MAX;
+        dut.cfg_map_base_2 = 0;
+        dut.cfg_map_object_3 = UINT32_MAX;
+        dut.cfg_map_base_3 = 0;
+        dut.cfg_map_object_4 = UINT32_MAX;
+        dut.cfg_map_base_4 = 0;
+        dut.cfg_map_object_5 = UINT32_MAX;
+        dut.cfg_map_base_5 = 0;
+        dut.cfg_map_object_6 = UINT32_MAX;
+        dut.cfg_map_base_6 = 0;
+        dut.cfg_map_object_7 = UINT32_MAX;
+        dut.cfg_map_base_7 = 0;
+        dut.cfg_context_length = 0;
+        dut.cfg_kv_plane_rows = 0;
+        dut.cfg_generation_policy_id = UINT32_MAX;
+        dut.cfg_request_max_new_tokens = 0;
+        dut.cfg_generated_before = 0;
         dut.cfg_matmul_weight_window_base = 0;
         dut.cfg_predicate_object = UINT32_MAX;
         dut.cfg_predicate_base = 0;
@@ -1258,7 +1328,16 @@ int main(int argc, char** argv) {
         const bool multicast_overlay = meta.size() == 26 && meta[1] == 29;
         const std::size_t expected_issue_words =
             multicast_overlay ? 132 : 128;
-        if (cases.size() != kCases * kCaseStride ||
+        // The vector set states its own case stride.  Only the two published
+        // generations are accepted; anything else is a vector set this
+        // checker has not been qualified against and is refused rather than
+        // interpreted.
+        const std::size_t case_stride = meta.size() > 4 ? meta[4] : 0;
+        const bool mapped_placement_vectors =
+            case_stride == kCaseStrideMapped;
+        if ((case_stride != kCaseStrideLegacy &&
+             case_stride != kCaseStrideMapped) ||
+            cases.size() != kCases * case_stride ||
             issues.size() != expected_issue_words ||
             expected.size() != 91136 || meta.size() != 26)
             throw std::runtime_error("shipped-prefix vector geometry mismatch");
@@ -1358,7 +1437,7 @@ int main(int argc, char** argv) {
         check.equal("no write refused during load",
                     model.dut.host_write_refused, 0);
         check.equal("meta case count", meta[0], kCases);
-        check.equal("meta case stride", meta[4], kCaseStride);
+        check.equal("meta case stride", meta[4], case_stride);
         check.equal("meta result memory", meta[7], g_geometry.result_words);
         check.equal("meta DMA gathers", meta[8], 6);
         check.equal("meta embedding launches", meta[9], 4);
@@ -1391,9 +1470,16 @@ int main(int argc, char** argv) {
         std::uint64_t total_multicasts = 0;
         std::uint64_t total_words = 0;
         std::uint64_t total_views = 0;
+        // Reached, per family, in THIS vehicle: the bridge launched it at
+        // least once and the case it launched in compared its result words
+        // against golden without a failure.  Nothing is inferred from the
+        // bridge's own qualification campaign; a family this top never
+        // launched is trapped here whatever another vehicle measured.
+        std::uint64_t mapped_launches[kMappedFamilyCount] = {0, 0, 0, 0, 0, 0};
+        std::uint64_t mapped_cases_with_placement = 0;
 
         for (std::size_t case_index = 0; case_index < kCases; ++case_index) {
-            const auto* record = &cases[case_index * kCaseStride];
+            const auto* record = &cases[case_index * case_stride];
             model.dut.cfg_program_base = record[0];
             model.dut.cfg_instruction_count = record[1];
             model.dut.cfg_desc_base = record[2];
@@ -1442,6 +1528,56 @@ int main(int argc, char** argv) {
             model.dut.cfg_rope_coefficient_object = record[75];
             model.dut.cfg_rope_coefficient_base = record[76];
             model.dut.cfg_output_base = record[13];
+            // -- mapped placement for the six admitted families -----------
+            // A legacy vector set binds nothing, so every object stays "no
+            // id" and the bridge answers TRAP_CAPABILITY.  That is the state
+            // this vehicle had before these pins existed, reproduced here
+            // deliberately rather than by an unconnected pin, so the refusal
+            // is a measurement instead of an elaboration accident.
+            {
+                const bool mapped = mapped_placement_vectors &&
+                                    record[kMapValidWord] != 0;
+                std::uint32_t object[8];
+                std::uint32_t base[8];
+                for (unsigned entry = 0; entry < 8; ++entry) {
+                    object[entry] = mapped
+                        ? record[kMapTableWord + entry * 2] : UINT32_MAX;
+                    base[entry] = mapped
+                        ? record[kMapTableWord + entry * 2 + 1] : 0U;
+                }
+                model.dut.cfg_extended_placement_valid = mapped ? 1 : 0;
+                model.dut.cfg_map_object_0 = object[0];
+                model.dut.cfg_map_base_0 = base[0];
+                model.dut.cfg_map_object_1 = object[1];
+                model.dut.cfg_map_base_1 = base[1];
+                model.dut.cfg_map_object_2 = object[2];
+                model.dut.cfg_map_base_2 = base[2];
+                model.dut.cfg_map_object_3 = object[3];
+                model.dut.cfg_map_base_3 = base[3];
+                model.dut.cfg_map_object_4 = object[4];
+                model.dut.cfg_map_base_4 = base[4];
+                model.dut.cfg_map_object_5 = object[5];
+                model.dut.cfg_map_base_5 = base[5];
+                model.dut.cfg_map_object_6 = object[6];
+                model.dut.cfg_map_base_6 = base[6];
+                model.dut.cfg_map_object_7 = object[7];
+                model.dut.cfg_map_base_7 = base[7];
+                model.dut.cfg_context_length =
+                    mapped ? record[kMapContextWord] : 0U;
+                model.dut.cfg_kv_plane_rows =
+                    mapped ? record[kMapPlaneRowsWord] : 0U;
+                model.dut.cfg_generation_policy_id =
+                    mapped ? record[kMapPolicyWord] : UINT32_MAX;
+                model.dut.cfg_request_max_new_tokens =
+                    mapped ? record[kMapMaxNewWord] : 0U;
+                model.dut.cfg_generated_before =
+                    mapped ? record[kMapGeneratedWord] : 0U;
+                if (mapped) {
+                    ++mapped_cases_with_placement;
+                    check.equal("mapped record reserved word",
+                                record[kMapReservedWord], 0);
+                }
+            }
 
             last_issue_serial = 0;
             model.dut.result_read_addr = record[13];
@@ -1844,6 +1980,62 @@ int main(int argc, char** argv) {
             total_multicasts += model.dut.multicast_launch_count;
             total_words += model.dut.output_write_count;
             total_views += model.dut.count_views_resolved;
+
+            // -- the six mapped families, observed one at a time ----------
+            // The result words above were already compared against golden
+            // for this case, so a launch counted here is a launch whose
+            // output matched.  Each family is compared against the count the
+            // vector set declares, so a family that ran when it should not
+            // have is as much a failure as one that did not run.
+            {
+                const std::uint32_t observed[kMappedFamilyCount] = {
+                    model.dut.vector_add_launch_count,
+                    model.dut.vector_silu_mul_launch_count,
+                    model.dut.dma_scatter_launch_count,
+                    model.dut.attention_gqa_launch_count,
+                    model.dut.selection_argmax_launch_count,
+                    model.dut.selection_token_append_launch_count};
+                for (unsigned family = 0; family < kMappedFamilyCount;
+                     ++family) {
+                    const std::uint64_t want =
+                        (mapped_placement_vectors && !injecting)
+                            ? record[kMapLaunchWord + family] : 0U;
+                    check.equal(kMappedFamilyName[family], observed[family],
+                                want);
+                    mapped_launches[family] += observed[family];
+                }
+                const std::uint64_t want_token =
+                    (mapped_placement_vectors && !injecting)
+                        ? record[kMapTokenWord] : 0U;
+                const std::uint64_t want_tie =
+                    (mapped_placement_vectors && !injecting)
+                        ? record[kMapTieWord] : 0U;
+                const std::uint64_t want_eos =
+                    (mapped_placement_vectors && !injecting)
+                        ? record[kMapEosWord] : 0U;
+                check.equal("selected token", model.dut.selected_token,
+                            want_token);
+                check.equal("selected tie multiplicity",
+                            model.dut.selected_tie_multiplicity, want_tie);
+                check.equal("selected EOS reason",
+                            model.dut.selected_eos_reason, want_eos);
+                std::cout << "MAPPED " << case_index << " placement="
+                          << static_cast<unsigned>(
+                                 model.dut.cfg_extended_placement_valid)
+                          << " add=" << observed[0]
+                          << " silu=" << observed[1]
+                          << " scatter=" << observed[2]
+                          << " gqa=" << observed[3]
+                          << " argmax=" << observed[4]
+                          << " append=" << observed[5]
+                          << " token=" << model.dut.selected_token
+                          << " tie=" << model.dut.selected_tie_multiplicity
+                          << " eos="
+                          << static_cast<unsigned>(
+                                 model.dut.selected_eos_reason)
+                          << " capability_faults="
+                          << model.dut.capability_fault_count << "\n";
+            }
             std::cout << "CASE " << case_index << " OK launches="
                       << model.dut.real_launch_count << " words="
                       << model.dut.output_write_count << " responses="
@@ -1937,6 +2129,26 @@ int main(int argc, char** argv) {
         const auto& window_stats = weightwindow::window().stats();
         const std::uint64_t distinct_bytes =
             window_stats.distinct_pages * weightwindow::window().page_bytes();
+        // -- rung G1a, the integrated half: which of the six the vehicle
+        // -- that runs the real compiled program actually reached.
+        // A family is reached only if this top launched it; the source of
+        // the number is this run, never another vehicle's campaign and never
+        // the presence of a port connection.  Absence of a launch is a trap,
+        // which is a FAIL, not a "not evaluable".
+        {
+            unsigned reached = 0;
+            std::cout << "ADMISSION vectors="
+                      << (mapped_placement_vectors ? "mapped" : "legacy")
+                      << " cases_with_placement=" << mapped_cases_with_placement
+                      << " injecting=" << (injecting ? 1 : 0);
+            for (unsigned family = 0; family < kMappedFamilyCount; ++family) {
+                if (mapped_launches[family] != 0) ++reached;
+                std::cout << " " << kMappedFamilyName[family] << "="
+                          << mapped_launches[family];
+            }
+            std::cout << " reached=" << reached << " trapped="
+                      << (kMappedFamilyCount - reached) << "\n";
+        }
         std::cout << "MEASURE"
                   << " cycles=" << total_cycles
                   << " wall_s=" << std::fixed << std::setprecision(3)
