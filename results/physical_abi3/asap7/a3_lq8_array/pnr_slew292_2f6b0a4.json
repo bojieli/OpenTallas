@@ -17,12 +17,12 @@
         "antenna_violating_pins": 0.0,
         "drc_errors": 0.0,
         "hold_violations": 0.0,
-        "hold_wns_ns": 0.037746,
+        "hold_wns_ns": 0.0393152,
         "met": true,
         "physically_clean": true,
         "scope": "post-route, extracted parasitics",
         "setup_violations": 0.0,
-        "setup_wns_ns": 8.74398,
+        "setup_wns_ns": 8.73675,
         "stage": "place_and_route",
         "timing_met": true
       }
@@ -32,8 +32,14 @@
     "reason": "all evaluated stages met",
     "status": "pass"
   },
+  "annotation": {
+    "annotated_at": "2026-09-05T10:19:59+00:00",
+    "annotated_by": "tools/annotate_physical_record.py",
+    "basis": "sha256 of the record as written by the flow tool, canonical JSON with the notes and annotation keys removed; recompute with tools/annotate_physical_record.py --verify",
+    "tool_record_sha256": "4bbfe735c7077b55ba19c9a10621de56c262aa6af7a33effab32dc148c9b7a11"
+  },
   "campaign_id": "opentallas-abi3-physical-v1",
-  "completed_at": "2026-09-05T13:31:05.698337+00:00",
+  "completed_at": "2026-09-05T07:33:56.675176+00:00",
   "corner": {
     "liberty": [
       {
@@ -72,14 +78,15 @@
     "antenna_violating_nets": 0,
     "antenna_violating_pins": 0,
     "area_basis": "place_and_route.metrics.standard_cell_area_um2",
-    "area_um2": 28037,
+    "area_um2": 27842.5,
     "block": "ot_a3_lq8",
-    "cells": 239868,
+    "cells": 238757,
     "cells_basis": "place_and_route.metrics.standard_cell_count: routed netlist after timing repair and clock-tree synthesis, buffers included",
     "clock_period_ns": 16.0,
     "clock_port": "clk",
-    "closed": true,
-    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "closed_reason": "signal-integrity violations in the routed netlist: max_slew_violations 292",
     "core_area_um2": 76187.6,
     "description": "ad-hoc block supplied on the command line",
     "drc": 0,
@@ -87,8 +94,8 @@
       "rst_n"
     ],
     "fmax_basis": "place_and_route.metrics.fmax_hz (ORFS finish__timing__fmax)",
-    "fmax_hz": 137817000.0,
-    "hold_wns_ns": 0.037746,
+    "fmax_hz": 137679000.0,
+    "hold_wns_ns": 0.0393152,
     "lanes": 8,
     "lanes_basis": "declared lane count of the block (its LANES parameter, or 1 for a single lane); lanes_in_netlist is the count recovered from the mapped netlist",
     "lanes_in_netlist": {
@@ -96,7 +103,7 @@
       "distinct_lanes_by_instance_name": 8,
       "distinct_lanes_by_net_name": 8,
       "instance_regex": "gen_lane\\[(\\d+)\\]\\.u_lane\\.",
-      "instances_total": 232193,
+      "instances_total": 231082,
       "named_cells_per_lane": {
         "0": 4282,
         "1": 4282,
@@ -118,8 +125,8 @@
         "7": 1154
       },
       "netlist": "6_final.v",
-      "netlist_sha256": "bb533601ab76d8541a9e8a6a4cdc93fcc9b5d607757e577a0f094f068a8590c7",
-      "nets_total": 241685,
+      "netlist_sha256": "0cd997620df0138973e363a385e519821ea77475377d2e3f8a630c29bf0dfb52",
+      "nets_total": 240583,
       "note": "distinct_lanes is the union of lane indices found on instance names and on declared net names; ABC renames combinational cells and Yosys 0.68 renames mapped registers, so instance names may carry no lane prefix while the nets keep it"
     },
     "lanes_verified_in_netlist": true,
@@ -144,16 +151,16 @@
       "ADDER_STAGES": 3,
       "LANES": 8
     },
-    "per_mac_area_um2": 3504.625,
+    "per_mac_area_um2": 3480.3125,
     "per_mac_basis": "per_mac_area_um2 = standard-cell area / MAC per cycle; per_mac_period_ns = target clock period / MAC per cycle -- the arithmetic behind the baseline's 48,274 um2 and 104.1 ns (results/physical_abi3/asap7/matmul_bf16_sram_engine/pnr.json: 8,348.44 um2 / 0.17294 and 18 ns / 0.17294; docs/CHIP_ARCHITECTURE_DESIGN.md section 8.4).  The period figure is a result only when closed is true; per_mac_period_ns_at_fmax is the same quantity at the reported post-route fmax, for information.  Nothing is scaled across nodes.",
     "per_mac_period_ns": 2.0,
-    "per_mac_period_ns_at_fmax": 0.9069998621360209,
-    "setup_wns_ns": 8.74398,
-    "signal_integrity_clean": true,
+    "per_mac_period_ns_at_fmax": 0.9079089766776343,
+    "setup_wns_ns": 8.73675,
+    "signal_integrity_clean": false,
     "signal_integrity_violations": {
       "max_cap_violations": 0,
       "max_fanout_violations": 0,
-      "max_slew_violations": 0
+      "max_slew_violations": 292
     },
     "sources": [
       {
@@ -178,12 +185,12 @@
       }
     ],
     "top": "ot_a3_lq8",
-    "utilization_fraction": 0.367999
+    "utilization_fraction": 0.365447
   },
-  "elapsed_seconds": 8227.904,
+  "elapsed_seconds": 3515.064,
   "expected_not_met": false,
   "flow_completed": true,
-  "generated_at": "2026-09-05T11:13:57.793954+00:00",
+  "generated_at": "2026-09-05T06:35:21.611684+00:00",
   "git": {
     "commit": "2f6b0a4e44eab9fa57ca6ec486e6ffb45bb38bb7",
     "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
@@ -191,8 +198,13 @@
     "worktree_dirty": false,
     "worktree_status": []
   },
+  "notes": [
+    "Post-route worst setup path (6_finish.rpt, report_checks -path_delay max): cfg_ws_base[0] (input port) -> ws_rd_addr[30] (output port), a combinational input-to-output path through the workspace read-address adder, 34 cell output pins on the data path (28 OA21, one HA, one FA, one XOR2, one INV, two BUF); data arrival 4.063 ns of which 3.200 ns is the SDC's external input delay (20% of the 16 ns period), against 12.800 ns required (16 ns less the 20% output delay): slack +8.737 ns. The path is I/O-bounded, so the post-route 137.7 MHz (1 / (16 ns - 8.737 ns)) moves with the target period; the period-independent figure is the pre-layout search minimum of 4.664 ns (214.4 MHz, 13 evaluations, bisection to 0.1%), of which 16 ns is 3.43x.",
+    "Against the record committed at da66772 (kept beside this one as pnr_prev_da66772.json: the lane with the scale_index() divider, routed from 0e4222e): 346,589 -> 238,757 routed cells, 37,402 -> 27,842.5 um2, 4,675 -> 3,480 um2 per MAC/cycle, 16 ns missed by 0.474 ns -> met by 8.737 ns, pre-layout search minimum 12.41 ns -> 4.664 ns, post-route 60.7 -> 137.7 MHz, 9,844 s -> 3,515 s in the flow. The eight lanes are again recovered from the routed netlist by instance name and by net name (8 of 8 each way; 4,282 named cells and 1,149 to 1,154 named nets per lane). The prelayout_L3.json beside this record is still the 0e4222e pre-layout of the previous lane (minimum 12.41 ns, not met at 4.4 ns); the divider-free block's pre-layout search is this record's static_timing.fmax_search.",
+    "Provenance: routed from the clean worktree pinned at 2f6b0a4 (tag phys-item11-2f6b0a4), the commit whose results/rtl/abi3_lq8.json (sha256 68a8c5b1980a...) is the full-profile LQ8 campaign run on 7a01ce5, the RTL this record routes: both simulators, status pass, bit_identity.equal true, vector_manifests_match_committed true, measured.mac_per_block_cycle 8.0 and mac_per_lane_cycle 1.0, failure_modes.all_distinct true. Driver argv is the record at da66772's with only the output paths changed; tools/run_abi3_physical.py is identical at 2f6b0a4 and on main."
+  ],
   "place_and_route": {
-    "artifact_dir": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/slew/lq8_16p0_margin40/asap7/a3_lq8_array/pnr_artifacts",
+    "artifact_dir": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/lane11/routes_asap7/lq8_16p0/asap7/a3_lq8_array/pnr_artifacts",
     "artifacts": {
       "1_2_yosys.v": {
         "retained": true,
@@ -206,48 +218,48 @@
       },
       "6_final.def": {
         "retained": false,
-        "sha256": "a71f88146befd4807204871ab3f920d93ce7afd226c6a9618d6104c36ca76947",
-        "size_bytes": 270153653
+        "sha256": "2225893c15b23c2f7bd7d790f565f1e8967f29630686baa45cae0678a82cabd0",
+        "size_bytes": 269478856
       },
       "6_final.gds": {
         "retained": false,
-        "sha256": "b035c4d1f3ca78a56b997657e6a2704d3bcf5fb1ebf9856eeb7e82c97a882537",
-        "size_bytes": 297447354
+        "sha256": "0f2021095c57411f45830f27f3151a9e972305667f44401c57956e12a263281c",
+        "size_bytes": 296605750
       },
       "6_final.odb": {
         "retained": false,
-        "sha256": "88d39a4573ae61ec3076ebb298ef0ed9478f01cf73613ad8a033ad08ba56bced",
-        "size_bytes": 436035330
+        "sha256": "db458b06bdbcbdafa615e5240fc3f3204afcf2c6a9e63fc729d01e9e05c58471",
+        "size_bytes": 434420481
       },
       "6_final.spef": {
         "retained": false,
-        "sha256": "1fe046260a8327a495bd29e172a880535c2b9fe50a96049e2c1d314a9f61e5f8",
-        "size_bytes": 355498018
+        "sha256": "792589cf7165b95e40a4150aa58db97608d2ca1674f370af3f2acbed5a227f4a",
+        "size_bytes": 356769584
       },
       "6_final.v": {
         "retained": true,
-        "sha256": "bb533601ab76d8541a9e8a6a4cdc93fcc9b5d607757e577a0f094f068a8590c7",
-        "size_bytes": 27991348
+        "sha256": "0cd997620df0138973e363a385e519821ea77475377d2e3f8a630c29bf0dfb52",
+        "size_bytes": 27898053
       },
       "6_finish.rpt": {
         "retained": true,
-        "sha256": "9c7e2dcf1080e0b854ed2eb319c787c3b517c3d04d6eb9b3e030d846cf4723ae",
-        "size_bytes": 43255
+        "sha256": "d35c5cc5b69505c252afbccac99705f6ded90b76273f657e2b992cabd2e781db",
+        "size_bytes": 64071
       },
       "config.mk": {
         "retained": true,
-        "sha256": "5a1c1102f802f6c780944db46755b1585ffc5bbb94988ab67a7c004581cc4e46",
-        "size_bytes": 841
+        "sha256": "a5dd42a118208ba03d15636c394d700961dfbb22d53f76642bff99e6ef38d12d",
+        "size_bytes": 817
       },
       "constraint.sdc": {
         "retained": true,
-        "sha256": "30573abb28aefe9952cebc380060a1919e7d627598df19d330a63a82b4c58360",
-        "size_bytes": 420
+        "sha256": "d44368981c6b003c78913708c4b5d46b7a67a0ae14da76922f9b8ee71e932afc",
+        "size_bytes": 380
       },
       "metadata.json": {
         "retained": true,
-        "sha256": "2ad54a6eae131a47c3789e1f9442d61b1b40ac692962f9a6dd027bc5d6eb2c1b",
-        "size_bytes": 24160
+        "sha256": "b17fc6b86e2bff63d89cc3551759c6f3e2fbec81d667f75029b85dcc801b77ee",
+        "size_bytes": 24183
       }
     },
     "clock_period_ns": 16.0,
@@ -271,36 +283,36 @@
         "placeopt__flow__errors__count": 0,
         "synth__flow__errors__count": 0
       },
-      "fmax_hz": 137817000.0,
+      "fmax_hz": 137679000.0,
       "hold_tns_ns": 0.0,
       "hold_violations": 0,
-      "hold_wns_ns": 0.037746,
-      "instance_count": 621113,
+      "hold_wns_ns": 0.0393152,
+      "instance_count": 620353,
       "library_time_unit_ns": 0.001,
       "macro_area_um2": 0,
       "macro_count": 0,
       "max_cap_violations": 0,
       "max_fanout_violations": 0,
-      "max_slew_violations": 0,
+      "max_slew_violations": 292,
       "missing_metadata_keys": [],
-      "power_total_w": 0.00466201,
+      "power_total_w": 0.00464789,
       "raw_timing_library_units": {
         "hold_tns_ns": 0,
-        "hold_wns_ns": 37.746,
+        "hold_wns_ns": 39.3152,
         "setup_tns_ns": 0,
-        "setup_wns_ns": 8743.98
+        "setup_wns_ns": 8736.75
       },
-      "routed_nets": 243426,
-      "routed_wirelength_um": 1141516,
-      "sequential_area_um2": 6692.25,
+      "routed_nets": 242324,
+      "routed_wirelength_um": 1140983,
+      "sequential_area_um2": 6692.1,
       "sequential_cell_count": 18056,
       "setup_tns_ns": 0.0,
       "setup_violations": 0,
-      "setup_wns_ns": 8.74398,
-      "standard_cell_area_um2": 28037,
-      "standard_cell_count": 239868,
-      "utilization_fraction": 0.367999,
-      "vias": 2310881
+      "setup_wns_ns": 8.73675,
+      "standard_cell_area_um2": 27842.5,
+      "standard_cell_count": 238757,
+      "utilization_fraction": 0.365447,
+      "vias": 2305790
     },
     "netlist_normalization": {
       "normalized_netlist_sha256": "ee6561e73ad4aed01b569fac98b084ba040342751878283c11381043ae2b6311",
@@ -455,75 +467,6 @@
       "lib/NLDM/fakeregfile_64x64.lib": "e28fc92bff8066e8a3e194db7b4afc5aec7247cf8e52f4def7ed5208e39b51e5"
     },
     "sdc_clock_period_library_units": 16000.0,
-    "signal_integrity_constraints": {
-      "basis": "explicit SDC signal-integrity constraints this route was repaired against; absent from a record means the SDC carried only set_max_fanout 32 and the liberty files' own max_transition limits",
-      "library_declares_fanout_limit": false,
-      "library_default_max_fanout": [
-        {
-          "default_max_fanout": null,
-          "liberty": "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
-          "pin_max_fanout_count": 0
-        },
-        {
-          "default_max_fanout": null,
-          "liberty": "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
-          "pin_max_fanout_count": 0
-        },
-        {
-          "default_max_fanout": null,
-          "liberty": "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
-          "pin_max_fanout_count": 0
-        },
-        {
-          "default_max_fanout": null,
-          "liberty": "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
-          "pin_max_fanout_count": 0
-        },
-        {
-          "default_max_fanout": null,
-          "liberty": "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
-          "pin_max_fanout_count": 0
-        }
-      ],
-      "library_default_max_transition": [
-        {
-          "default_max_transition": 320.0,
-          "liberty": "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
-          "pin_max_transition_count": 224
-        },
-        {
-          "default_max_transition": 320.0,
-          "liberty": "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
-          "pin_max_transition_count": 37
-        },
-        {
-          "default_max_transition": 320.0,
-          "liberty": "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
-          "pin_max_transition_count": 185
-        },
-        {
-          "default_max_transition": 320.0,
-          "liberty": "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
-          "pin_max_transition_count": 94
-        },
-        {
-          "default_max_transition": 4000.0,
-          "liberty": "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
-          "pin_max_transition_count": 158
-        }
-      ],
-      "max_fanout": 32,
-      "max_fanout_source": "driver default: the set_max_fanout every earlier record's SDC carried",
-      "max_transition_library_units": 320.0,
-      "max_transition_ns": 0.32,
-      "max_transition_source": "library: the smallest default_max_transition declared by the corner's liberty files, in the library time unit",
-      "sdc_lines": [
-        "set_max_fanout 32 [current_design]",
-        "set_max_transition 320 [current_design]"
-      ],
-      "slew_margin_basis": "ORFS SLEW_MARGIN, passed to repair_design -slew_margin at placement and after global routing: the repair targets (100 - margin)% of each pin's slew limit under estimated parasitics; the finish check keeps the full limit",
-      "slew_margin_percent": 40.0
-    },
     "toolchain": {
       "binary_sha256": {
         "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad": "21eda99eeae7eccb22ca64ad28949c08a6c01dcece3ccb23e2206d635f8d2846",
@@ -543,8 +486,6 @@
   "runner": {
     "argv": [
       "tools/run_abi3_physical.py",
-      "--source-root",
-      "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/lane11/wt_routes",
       "--view",
       "asap7",
       "--false-path-from",
@@ -582,27 +523,13 @@
       "results/rtl/abi3_lq8.json:measured.mac_per_block_cycle",
       "--mac-rate-evidence",
       "results/rtl/abi3_lq8.json:measured.mac_per_lane_cycle",
-      "--max-transition-ns",
-      "--max-fanout",
-      "--slew-margin-percent",
-      "40",
       "--output",
-      "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/slew/lq8_16p0_margin40/asap7/a3_lq8_array/pnr.json",
+      "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/lane11/routes_asap7/lq8_16p0/asap7/a3_lq8_array/pnr.json",
       "--keep-workdir",
-      "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/slew/work_lq8_16p0_margin40"
+      "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/lane11/routes_asap7/work_lq8_16p0"
     ],
-    "driver": {
-      "commit": "5e3216463af949dcb30f79eb16c67ce9fcc31f4a",
-      "file_modified_since_commit": false,
-      "note": "the sources, their git identity (the record's git block) and the container's /src mount come from --source-root; the driver ran from a different checkout, so git.commit is the sources' commit and runner.driver.commit is the driver's",
-      "path": "/home/ubuntu/OpenTallas/tools/run_abi3_physical.py",
-      "same_tree_as_sources": false,
-      "sha256": "46fc371221f9d980a421151f89f8cd3b2bf7f994f673b0c455f59e287ccd6b14",
-      "tree": "/home/ubuntu/OpenTallas"
-    },
     "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
-    "python": "3.10.12",
-    "source_root": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/lane11/wt_routes"
+    "python": "3.10.12"
   },
   "schema_version": 1,
   "stages_completed": [
@@ -695,7 +622,7 @@
     "setup_wns_ns": 8.703267474845426,
     "timing_met": true
   },
-  "status": "pass",
+  "status": "not_met",
   "synthesis": {
     "abc_delay_target_ps": 16000.0,
     "cell_area_um2": 19393.679,
