@@ -6,7 +6,7 @@ Authority: `configs/architecture/chip_design_v2.json`. N5 clock, densities, tile
 
 ## Qwen capacity and floorplan
 
-Each design has 815 mm² per die. The HBM twin retains the compute, mesh and KV allocation; when the ROM variant omits HBM, the twin funds its 50 mm² PHY from the replaced ROM slot. Each row includes alignment, 16 MiB miscellaneous image reserve per die, 1% spare rows and 1% quarantine reserve. The allocator must prove emitted constants and tables fit that reserve.
+Each design has 815 mm² per die. The HBM twin retains the compute, mesh and KV allocation; when the ROM variant omits HBM, the twin funds its 50 mm² PHY from the replaced ROM slot. Tensor shards each retain all 616,448 B of normalization gains; matrix storage is sharded. Each row includes alignment, 16 MiB miscellaneous image reserve per die, 1% spare rows and 1% quarantine reserve. The allocator must prove emitted constants and tables fit that reserve.
 
 | Profile | Dies | Tiles/die | Lanes/die | Raw ROM/die (GB) | KV SRAM/die (MiB) | Mesh | Endpoints ROM/twin | Total mm²/die |
 |---|---:|---:|---:|---:|---:|---|---|---:|
@@ -69,6 +69,6 @@ Source-current below means the record's RTL source hashes match this checkout wh
 |---|---|---|---|---:|---:|---:|---:|
 | `results/physical_abi3/asap7/a3_lane_pipelined/pnr.json` | pass | True | True | 6.0 | 3790.2 | 10213.3 | 0 |
 | `results/physical_abi3/asap7/a3_lq8_array/pnr.json` | not_met | False | True | 16.0 | 27842.5 | 76187.6 | 0 |
-| `results/physical_abi3/asap7/a3_microsequencer/pnr.json` | not_met | False | True | 4.4 | 8437.9 | 21764.5 | 0 |
+| `results/physical_abi3/asap7/a3_microsequencer/pnr.json` | not_met | False | False | 4.4 | 8437.9 | 21764.5 | 0 |
 
 Closure is the record's full engineering verdict, including electrical violations; positive setup slack and zero DRC alone do not establish closure. Inspect `closed_reason` in the JSON for failures. Use the lane and LQ8 records independently; an older route cannot supply a revised block's area or timing. None of these records contains an integrated memory macro, compute array and sequencer. DeepSeek array and wafer proposals require their own exact per-node placement and network schedules before a corrected full-chip rate can be published.

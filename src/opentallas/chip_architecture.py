@@ -86,19 +86,20 @@ def qwen_units(model: Mapping[str, Any]) -> list[dict[str, Any]]:
     kv = int(meta["num_key_value_heads"]) * dim
     embedding = int(model["resident_only_weight_bytes"])
     _require(not meta["tie_word_embeddings"], "placement requires untied head")
-    units = [{"id": "embedding", "bytes": embedding, "kv_layers": 0}]
+    units = [{"id": "embedding", "bytes": embedding, "replicated_bytes": 0, "kv_layers": 0}]
     for layer, layer_bytes in enumerate(model["layer_dense_weight_bytes"]):
         # q/k/v/o plus input RMSNorm and q/k head RMSNorm gains.
-        attention = 2 * hidden * (2 * q + 2 * kv) + 2 * hidden + 4 * dim
+        attention_gains = 2 * hidden + 4 * dim
+        attention = 2 * hidden * (2 * q + 2 * kv) + attention_gains
         post_norm = 2 * hidden
         mlp = int(layer_bytes) - attention - post_norm
         _require(mlp > 0 and mlp % 3 == 0, "MLP matrices must have equal sizes")
         units.extend([
-            {"id": f"layer.{layer}.attention", "bytes": attention, "kv_layers": 1},
-            {"id": f"layer.{layer}.gate_up", "bytes": 2 * mlp // 3 + post_norm, "kv_layers": 0},
-            {"id": f"layer.{layer}.down", "bytes": mlp // 3, "kv_layers": 0},
+            {"id": f"layer.{layer}.attention", "bytes": attention, "replicated_bytes": attention_gains, "kv_layers": 1},
+            {"id": f"layer.{layer}.gate_up", "bytes": 2 * mlp // 3 + post_norm, "replicated_bytes": post_norm, "kv_layers": 0},
+            {"id": f"layer.{layer}.down", "bytes": mlp // 3, "replicated_bytes": 0, "kv_layers": 0},
         ])
-    units.append({"id": "head", "bytes": embedding + 2 * hidden, "kv_layers": 0})
+    units.append({"id": "head", "bytes": embedding + 2 * hidden, "replicated_bytes": 2 * hidden, "kv_layers": 0})
     _require(len(model["layer_dense_weight_bytes"]) == model["num_layers"], "layer count mismatch")
     _require(sum(u["bytes"] for u in units) == model["checkpoint_bytes"], "placement does not cover the exact checkpoint")
     return units
@@ -142,7 +143,10 @@ def qwen_resource_plan(config: Mapping[str, Any], model: Mapping[str, Any]) -> d
             _require(len(stages) == dies, "one pipeline stage required per die")
         else:
             _require(model["metadata"]["num_key_value_heads"] % dies == 0, "tensor sharding must preserve whole KV heads")
-            shards = [{**u, "bytes": ceil(u["bytes"] / dies), "kv_layers": u["kv_layers"] / dies} for u in units]
+            # Norm gains act on replicated residuals or each local head; every
+            # tensor shard needs its own copy. Only matrix storage is divided.
+            shards = [{**u, "bytes": ceil((u["bytes"] - u["replicated_bytes"]) / dies) + u["replicated_bytes"],
+                       "kv_layers": u["kv_layers"] / dies} for u in units]
             stages = [{"units": shards, "weight_bytes": sum(x["bytes"] for x in shards),
                        "kv_layers": model["num_layers"] / dies} for _ in range(dies)]
         for stage in stages:

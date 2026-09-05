@@ -35,6 +35,18 @@ def test_old_average_kv_allocation_is_rejected(inputs):
         qwen_resource_plan(config, model)
 
 
+def test_tensor_shards_replicate_normalization_gains(inputs):
+    config, model = inputs
+    # Two hidden-width norms and Q/K head-dimension gains per layer,
+    # followed by the final hidden-width norm. Each gain is BF16.
+    gains = 36 * (2 * 4096 + 2 * 128) * 2 + 4096 * 2
+    assert gains == 616_448
+    for p in qwen_resource_plan(config, model)["profiles"]:
+        if p["partition"] == "tensor":
+            stored = sum(s["weight_bytes"] for s in p["stages"])
+            assert stored == model["checkpoint_bytes"] + (p["dies"] - 1) * gains
+
+
 def test_repaired_memory_and_phy_fit_on_both_twins(inputs):
     report = qwen_resource_plan(*inputs)
     for p in report["profiles"]:

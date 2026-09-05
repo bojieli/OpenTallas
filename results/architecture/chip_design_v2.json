@@ -125,7 +125,13 @@
       "hold_wns_ns": 0.0449029,
       "macro_count": 0,
       "max_slew_violations": 49,
-      "mismatched_sources": [],
+      "mismatched_sources": [
+        "rtl/abi3/ot_a3_pkg.sv",
+        "rtl/abi3/ot_a3_loop_stack.sv",
+        "rtl/abi3/ot_a3_view_resolver.sv",
+        "rtl/abi3/ot_a3_event_scoreboard.sv",
+        "rtl/abi3/ot_a3_microsequencer.sv"
+      ],
       "path": "results/physical_abi3/asap7/a3_microsequencer/pnr.json",
       "record_sha256": "6235d37cae9eb87486ff53749d966ef56baa6dda458cd9d986f74efdc1a2b6c4",
       "setup_wns_ns": 2.44427,
@@ -134,7 +140,7 @@
         "max_fanout_violations": 0,
         "max_slew_violations": 49
       },
-      "source_current": true,
+      "source_current": false,
       "source_digests": [
         {
           "path": "rtl/abi3/ot_a3_pkg.sv",
@@ -222,7 +228,7 @@
           "last_unit": "head",
           "priced_kv_bytes": 301989888,
           "unit_count": 110,
-          "weight_bytes": 4095367680
+          "weight_bytes": 4095830016
         },
         {
           "aligned_weight_bytes": 4096409600,
@@ -232,7 +238,7 @@
           "last_unit": "head",
           "priced_kv_bytes": 301989888,
           "unit_count": 110,
-          "weight_bytes": 4095367680
+          "weight_bytes": 4095830016
         },
         {
           "aligned_weight_bytes": 4096409600,
@@ -242,7 +248,7 @@
           "last_unit": "head",
           "priced_kv_bytes": 301989888,
           "unit_count": 110,
-          "weight_bytes": 4095367680
+          "weight_bytes": 4095830016
         },
         {
           "aligned_weight_bytes": 4096409600,
@@ -252,7 +258,7 @@
           "last_unit": "head",
           "priced_kv_bytes": 301989888,
           "unit_count": 110,
-          "weight_bytes": 4095367680
+          "weight_bytes": 4095830016
         }
       ],
       "tile_area_mm2": 142.1544,
@@ -399,7 +405,7 @@
           "last_unit": "head",
           "priced_kv_bytes": 150994944,
           "unit_count": 110,
-          "weight_bytes": 2047683840
+          "weight_bytes": 2048223232
         },
         {
           "aligned_weight_bytes": 2048802816,
@@ -409,7 +415,7 @@
           "last_unit": "head",
           "priced_kv_bytes": 150994944,
           "unit_count": 110,
-          "weight_bytes": 2047683840
+          "weight_bytes": 2048223232
         },
         {
           "aligned_weight_bytes": 2048802816,
@@ -419,7 +425,7 @@
           "last_unit": "head",
           "priced_kv_bytes": 150994944,
           "unit_count": 110,
-          "weight_bytes": 2047683840
+          "weight_bytes": 2048223232
         },
         {
           "aligned_weight_bytes": 2048802816,
@@ -429,7 +435,7 @@
           "last_unit": "head",
           "priced_kv_bytes": 150994944,
           "unit_count": 110,
-          "weight_bytes": 2047683840
+          "weight_bytes": 2048223232
         },
         {
           "aligned_weight_bytes": 2048802816,
@@ -439,7 +445,7 @@
           "last_unit": "head",
           "priced_kv_bytes": 150994944,
           "unit_count": 110,
-          "weight_bytes": 2047683840
+          "weight_bytes": 2048223232
         },
         {
           "aligned_weight_bytes": 2048802816,
@@ -449,7 +455,7 @@
           "last_unit": "head",
           "priced_kv_bytes": 150994944,
           "unit_count": 110,
-          "weight_bytes": 2047683840
+          "weight_bytes": 2048223232
         },
         {
           "aligned_weight_bytes": 2048802816,
@@ -459,7 +465,7 @@
           "last_unit": "head",
           "priced_kv_bytes": 150994944,
           "unit_count": 110,
-          "weight_bytes": 2047683840
+          "weight_bytes": 2048223232
         },
         {
           "aligned_weight_bytes": 2048802816,
@@ -469,7 +475,7 @@
           "last_unit": "head",
           "priced_kv_bytes": 150994944,
           "unit_count": 110,
-          "weight_bytes": 2047683840
+          "weight_bytes": 2048223232
         }
       ],
       "tile_area_mm2": 352.7643,
@@ -523,11 +529,11 @@
     },
     {
       "path": "src/opentallas/chip_architecture.py",
-      "sha256": "a36bef556600edd5a77235e8d1447c662c60823e5a2e4194af0b8fb6eba03a6a"
+      "sha256": "19f0b04ad910dc038423db5841be5ddb9c5f321a18d419560babc763e94b04d9"
     },
     {
       "path": "tools/check_chip_architecture.py",
-      "sha256": "1a308aee1e7eb2d6c0ff63e86bbafa18909a9742ab9882e88febf8ba3355fc76"
+      "sha256": "bbf4a070106ab8fc8050a1f84500d2fa91bac5c75c02bd262d2b4393897520c5"
     }
   ]
 }
