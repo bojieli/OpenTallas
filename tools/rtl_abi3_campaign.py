@@ -51,6 +51,7 @@ RTL_SOURCES = (
     "rtl/abi3/ot_a3_event_scoreboard.sv",
     "rtl/abi3/ot_a3_state_controller.sv",
     "rtl/abi3/ot_a3_microsequencer.sv",
+    "rtl/abi3/ot_a3_device_top.sv",
 )
 TESTBENCH_SOURCES = (
     "rtl/test/a3_microsequencer_top.sv",
@@ -95,6 +96,26 @@ def sha256_file(path: Path) -> str:
         for chunk in iter(lambda: handle.read(1 << 20), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def git_identity() -> dict[str, Any]:
+    """The commit the artifact was produced at, and whether the tree was clean.
+
+    Recorded beside the source digests, not instead of them: the digests bind
+    the artifact to its inputs, the commit says where those inputs came from.
+    """
+    def run(args: list[str]) -> str:
+        try:
+            result = subprocess.run(
+                args, cwd=ROOT, capture_output=True, text=True, check=False
+            )
+        except OSError:
+            return ""
+        return result.stdout if result.returncode == 0 else ""
+
+    head = run(["git", "rev-parse", "HEAD"]).strip()
+    status = run(["git", "status", "--porcelain"]).strip()
+    return {"commit": head or None, "worktree_dirty": bool(status)}
 
 
 def canonical(text: str, build: Path) -> str:
@@ -360,6 +381,7 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
             ],
         },
         "tools": tools,
+        "git": git_identity(),
         "source_sha256": sources,
         "cases": cases,
         "limitations": [

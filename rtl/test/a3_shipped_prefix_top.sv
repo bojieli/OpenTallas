@@ -7,6 +7,14 @@
 // operand banks are new.  The sequencer resolves the deployed views, the
 // issue bridge validates the deployed OPERATOR/TENSOR_VIEW/NUMERIC records,
 // and the existing engine array performs the real DMA copies before replying.
+//
+// The control plane is the design's own top, rtl/abi3/ot_a3_device_top.sv
+// (admission block, sequencer, descriptor base/bound/fault logic, symbol
+// addressing, host load path); this module wraps it with the preloaded
+// control stores it presents as abstract boundaries, the engine bridge and
+// array on its engine port, the bridge's own descriptor read port, and the
+// exact multicast witness.  Its module name, parameters and ports are
+// unchanged, so every campaign and vector set that drove it still does.
 // ---------------------------------------------------------------------------
 module ot_a3_shipped_prefix_top #(
     parameter integer PROGRAM_WORDS = 4096,
@@ -231,43 +239,44 @@ module ot_a3_shipped_prefix_top #(
             result_mem[clear_word] = 32'hdead_beef;
     end
 
-    // -- sequencer instruction and descriptor ports --------------------
-    wire imem_req;
-    wire [31:0] imem_index;
-    reg imem_valid;
-    reg [255:0] imem_data;
+    // -- control stores behind the device top's store boundaries ---------
+    // One synchronous port each, ganged from 32-bit lanes: a read presents
+    // the row one cycle later and holds it, a write lands one lane.  The
+    // base/bound/fault logic that used to sit here is the design's and lives
+    // in ot_a3_device_top.
+    wire         pstore_en;
+    wire         pstore_we;
+    wire [31:0]  pstore_addr;
+    wire [2:0]   pstore_wlane;
+    wire [31:0]  pstore_wdata;
+    reg  [255:0] pstore_rdata;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            imem_valid <= 1'b0;
-            imem_data <= 256'd0;
-        end else begin
-            imem_valid <= imem_req;
-            if (imem_req)
-                imem_data <= program_mem[imem_index[19:0]];
+            pstore_rdata <= 256'd0;
+        end else if (pstore_en) begin
+            if (pstore_we)
+                program_mem[pstore_addr[19:0]][pstore_wlane*32 +: 32]
+                    <= pstore_wdata;
+            else
+                pstore_rdata <= program_mem[pstore_addr[19:0]];
         end
     end
 
-    wire seq_desc_req;
-    wire [31:0] seq_desc_id;
-    reg seq_desc_valid;
-    reg seq_desc_fault;
-    reg [1535:0] seq_desc_data;
-    wire [32:0] seq_desc_absolute =
-        {1'b0, cfg_desc_base} + {1'b0, seq_desc_id};
-    wire seq_desc_oob = (seq_desc_id >= cfg_desc_count) ||
-                         (seq_desc_absolute >= DESC_WORDS);
+    wire          dstore_en;
+    wire          dstore_we;
+    wire [31:0]   dstore_addr;
+    wire [5:0]    dstore_wlane;
+    wire [31:0]   dstore_wdata;
+    reg  [1535:0] dstore_rdata;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            seq_desc_valid <= 1'b0;
-            seq_desc_fault <= 1'b0;
-            seq_desc_data <= 1536'd0;
-        end else begin
-            seq_desc_valid <= seq_desc_req;
-            if (seq_desc_req) begin
-                seq_desc_fault <= seq_desc_oob;
-                seq_desc_data <= seq_desc_oob
-                    ? 1536'd0 : desc_mem[seq_desc_absolute[19:0]];
-            end
+            dstore_rdata <= 1536'd0;
+        end else if (dstore_en) begin
+            if (dstore_we)
+                desc_mem[dstore_addr[19:0]][dstore_wlane*32 +: 32]
+                    <= dstore_wdata;
+            else
+                dstore_rdata <= desc_mem[dstore_addr[19:0]];
         end
     end
 
@@ -296,10 +305,8 @@ module ot_a3_shipped_prefix_top #(
         end
     end
 
-    wire [3:0] sym_index;
-    wire [31:0] sym_addr = cfg_symbol_base + {28'd0, sym_index};
+    wire [31:0] sym_addr;
     wire [31:0] sym_value = symbol_mem[sym_addr[19:0]];
-    wire sym_bound = cfg_symbol_mask[sym_index];
 
     wire issue_valid;
     wire issue_ready;
@@ -354,13 +361,40 @@ module ot_a3_shipped_prefix_top #(
     assign multicast_launch_count = multicast_launch_count_q;
     assign multicast_fault_count = multicast_fault_count_q;
 
-    ot_a3_microsequencer #(.STATE_COMPAT(0)) sequencer (
+    ot_a3_device_top #(
+        .PROGRAM_WORDS(PROGRAM_WORDS),
+        .DESC_WORDS(DESC_WORDS),
+        .STATE_COMPAT(0)
+    ) device (
         .clk(clk),
         .rst_n(rst_n),
+        // This witness admits no program header and preloads its stores.
+        .hdr_in_valid(1'b0),
+        .hdr_in_start(1'b0),
+        .hdr_in_word(32'd0),
+        .header_done(),
+        .header_legal(),
+        .header_error(),
+        .header_trap_class(),
+        .header_instruction_count(),
+        .header_entrypoint_count(),
+        .header_max_retired_work(),
+        .header_entrypoint_descriptor(),
+        .host_we(1'b0),
+        .host_sel(1'b0),
+        .host_row(32'd0),
+        .host_lane(6'd0),
+        .host_wdata(32'd0),
+        .host_ready(),
+        .host_write_refused(),
         .start(start),
         .cfg_program_base(cfg_program_base),
         .cfg_instruction_count(cfg_instruction_count),
         .cfg_entry_pc(cfg_entry_pc),
+        .cfg_desc_base(cfg_desc_base),
+        .cfg_desc_count(cfg_desc_count),
+        .cfg_symbol_base(cfg_symbol_base),
+        .cfg_symbol_mask(cfg_symbol_mask),
         .cfg_max_retired_work(cfg_max_retired_work),
         .cfg_state_count(cfg_state_count),
         .busy(busy),
@@ -369,18 +403,20 @@ module ot_a3_shipped_prefix_top #(
         .trapped(trapped),
         .trap_class(trap_class),
         .first_fault_instruction(first_fault_instruction),
-        .imem_req(imem_req),
-        .imem_index(imem_index),
-        .imem_valid(imem_valid),
-        .imem_data(imem_data),
-        .desc_req(seq_desc_req),
-        .desc_id(seq_desc_id),
-        .desc_valid(seq_desc_valid),
-        .desc_fault(seq_desc_fault),
-        .desc_data(seq_desc_data),
-        .sym_index(sym_index),
+        .pstore_en(pstore_en),
+        .pstore_we(pstore_we),
+        .pstore_addr(pstore_addr),
+        .pstore_wlane(pstore_wlane),
+        .pstore_wdata(pstore_wdata),
+        .pstore_rdata(pstore_rdata),
+        .dstore_en(dstore_en),
+        .dstore_we(dstore_we),
+        .dstore_addr(dstore_addr),
+        .dstore_wlane(dstore_wlane),
+        .dstore_wdata(dstore_wdata),
+        .dstore_rdata(dstore_rdata),
+        .sym_addr(sym_addr),
         .sym_value(sym_value),
-        .sym_bound(sym_bound),
         .predicate_read_req(),
         .predicate_read_object_id(),
         .predicate_read_element_index(),

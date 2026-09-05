@@ -1,11 +1,18 @@
 `timescale 1ns/1ps
 // ---------------------------------------------------------------------------
-// Verification top for the ABI 3.0 RTL: memories plus the two admission and
-// execution blocks under test.  Both the Icarus testbench
-// (rtl/test/tb_a3_microsequencer.sv) and the Verilator C++ harness
-// (rtl/test/a3_microsequencer_harness.cpp) instantiate this module and read the
+// Verification top for the ABI 3.0 RTL: a thin wrapper around the design's
+// own control-plane top, rtl/abi3/ot_a3_device_top.sv, plus the memories it
+// presents as abstract store boundaries.  Both the Icarus testbench
+// (rtl/test/tb_a3_microsequencer.sv, rtl/test/tb_a3_deployment.sv) and the
+// C++ harnesses under Verilator (rtl/test/a3_microsequencer_harness.cpp,
+// rtl/test/a3_deployment_harness.cpp) instantiate this module and read the
 // same generated vector files, so the two simulators exercise identical RTL
-// through independently written checkers.
+// through independently written checkers.  Its port list and parameters are
+// the ones the checkers have always driven; what changed is that the
+// admission block, the sequencer, the descriptor base/bound/fault logic and
+// the symbol addressing now live in the design top, and this wrapper keeps
+// only what a testbench legitimately owns: the arrays, their preload, the
+// host-side header streaming, and the engine stub tie-offs.
 //
 // Memory images are produced by tools/build_abi3_rtl_vectors.py directly from
 // real ABI 3.0 deployments built with runtime.abi3.builder.DeploymentBuilder:
@@ -22,6 +29,12 @@
 // resolution needs the second block.  Descriptor record CRC is still not
 // re-checked here; it belongs to a descriptor-admission block that owns whole
 // records.
+//
+// The store models below are the synchronous single-port macros of the
+// vehicle memory plan: a read presents the row one cycle later and holds it,
+// a write lands one 32-bit lane.  They are preloaded by $readmemh because the
+// checkers own reset and start timing; the design's host load path is
+// exercised by rtl/test/tb_a3_device_top_host_load.sv instead.
 // ---------------------------------------------------------------------------
 module ot_a3_microsequencer_top
     import ot_a3_pkg::*;
@@ -125,7 +138,9 @@ module ot_a3_microsequencer_top
         $readmemh("a3_symbol.hex", symbol_mem);
     end
 
-    // -- header streaming -----------------------------------------------
+    // -- host-side header streaming --------------------------------------
+    // The management processor's job: 64 beats from the header image into
+    // the design's admission port, in_start with the first.
     reg        header_active;
     reg [6:0]  header_word;
     reg [31:0] header_base;
@@ -162,85 +177,84 @@ module ot_a3_microsequencer_top
         end
     end
 
-    ot_a3_program_header header (
-        .clk(clk),
-        .rst_n(rst_n),
-        .in_valid(header_valid),
-        .in_start(header_first),
-        .in_word(header_data),
-        .out_valid(header_done),
-        .out_legal(header_legal),
-        .out_error(header_error),
-        .out_trap_class(header_trap_class),
-        .out_abi_major(),
-        .out_abi_minor(),
-        .out_flags(),
-        .out_instruction_count(header_instruction_count),
-        .out_entrypoint_count(header_entrypoint_count),
-        .out_max_retired_work(header_max_retired_work),
-        .out_watchdog_class(),
-        .out_entrypoint_table_descriptor(header_entrypoint_descriptor),
-        .out_signature_descriptor()
-    );
-
-    // -- instruction memory port -----------------------------------------
-    wire         imem_req;
-    wire [31:0]  imem_index;
-    reg          imem_valid;
-    reg  [255:0] imem_data;
+    // -- program store: one synchronous port, 8 x 32-bit lanes ------------
+    wire         pstore_en;
+    wire         pstore_we;
+    wire [31:0]  pstore_addr;
+    wire [2:0]   pstore_wlane;
+    wire [31:0]  pstore_wdata;
+    reg  [255:0] pstore_rdata;
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            imem_valid <= 1'b0;
-            imem_data <= 256'd0;
-        end else begin
-            imem_valid <= imem_req;
-            if (imem_req)
-                imem_data <= program_mem[imem_index[19:0]];
+            pstore_rdata <= 256'd0;
+        end else if (pstore_en) begin
+            if (pstore_we)
+                program_mem[pstore_addr[19:0]][pstore_wlane*32 +: 32]
+                    <= pstore_wdata;
+            else
+                pstore_rdata <= program_mem[pstore_addr[19:0]];
         end
     end
 
-    // -- descriptor store port --------------------------------------------
-    wire         desc_req;
-    wire [31:0]  desc_id;
-    reg          desc_valid;
-    reg          desc_fault;
-    reg  [1535:0] desc_data;
-    wire [32:0]  desc_absolute = {1'b0, cfg_desc_base} + {1'b0, desc_id};
-    wire         desc_out_of_range = (desc_id >= cfg_desc_count) ||
-                                     (desc_absolute >= DESC_WORDS);
+    // -- descriptor store: one synchronous port, 48 x 32-bit lanes ---------
+    wire          dstore_en;
+    wire          dstore_we;
+    wire [31:0]   dstore_addr;
+    wire [5:0]    dstore_wlane;
+    wire [31:0]   dstore_wdata;
+    reg  [1535:0] dstore_rdata;
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            desc_valid <= 1'b0;
-            desc_fault <= 1'b0;
-            desc_data <= 1536'd0;
-        end else begin
-            desc_valid <= desc_req;
-            if (desc_req) begin
-                desc_fault <= desc_out_of_range;
-                desc_data <= desc_out_of_range
-                           ? 1536'd0
-                           : desc_mem[desc_absolute[19:0]];
-            end
+            dstore_rdata <= 1536'd0;
+        end else if (dstore_en) begin
+            if (dstore_we)
+                desc_mem[dstore_addr[19:0]][dstore_wlane*32 +: 32]
+                    <= dstore_wdata;
+            else
+                dstore_rdata <= desc_mem[dstore_addr[19:0]];
         end
     end
 
-    // -- runtime symbol file -----------------------------------------------
-    wire [3:0]  sym_index;
-    wire [31:0] sym_addr = cfg_symbol_base + {28'd0, sym_index};
+    // -- runtime symbol file (combinational read) ---------------------------
+    wire [31:0] sym_addr;
     wire [31:0] sym_value = symbol_mem[sym_addr[19:0]];
-    wire        sym_bound = cfg_symbol_mask[sym_index];
 
-    ot_a3_microsequencer #(
+    ot_a3_device_top #(
+        .PROGRAM_WORDS(PROGRAM_WORDS),
+        .DESC_WORDS(DESC_WORDS),
         .STATE_COMPAT(STATE_COMPAT)
-    ) sequencer (
+    ) device (
         .clk(clk),
         .rst_n(rst_n),
+        .hdr_in_valid(header_valid),
+        .hdr_in_start(header_first),
+        .hdr_in_word(header_data),
+        .header_done(header_done),
+        .header_legal(header_legal),
+        .header_error(header_error),
+        .header_trap_class(header_trap_class),
+        .header_instruction_count(header_instruction_count),
+        .header_entrypoint_count(header_entrypoint_count),
+        .header_max_retired_work(header_max_retired_work),
+        .header_entrypoint_descriptor(header_entrypoint_descriptor),
+        // The stores are preloaded above; the host load path is idle here.
+        .host_we(1'b0),
+        .host_sel(1'b0),
+        .host_row(32'd0),
+        .host_lane(6'd0),
+        .host_wdata(32'd0),
+        .host_ready(),
+        .host_write_refused(),
         .start(start),
         .cfg_program_base(cfg_program_base),
         .cfg_instruction_count(cfg_instruction_count),
         .cfg_entry_pc(cfg_entry_pc),
+        .cfg_desc_base(cfg_desc_base),
+        .cfg_desc_count(cfg_desc_count),
+        .cfg_symbol_base(cfg_symbol_base),
+        .cfg_symbol_mask(cfg_symbol_mask),
         .cfg_max_retired_work(cfg_max_retired_work),
         .cfg_state_count(cfg_state_count),
         .busy(busy),
@@ -249,18 +263,20 @@ module ot_a3_microsequencer_top
         .trapped(trapped),
         .trap_class(trap_class),
         .first_fault_instruction(first_fault_instruction),
-        .imem_req(imem_req),
-        .imem_index(imem_index),
-        .imem_valid(imem_valid),
-        .imem_data(imem_data),
-        .desc_req(desc_req),
-        .desc_id(desc_id),
-        .desc_valid(desc_valid),
-        .desc_fault(desc_fault),
-        .desc_data(desc_data),
-        .sym_index(sym_index),
+        .pstore_en(pstore_en),
+        .pstore_we(pstore_we),
+        .pstore_addr(pstore_addr),
+        .pstore_wlane(pstore_wlane),
+        .pstore_wdata(pstore_wdata),
+        .pstore_rdata(pstore_rdata),
+        .dstore_en(dstore_en),
+        .dstore_we(dstore_we),
+        .dstore_addr(dstore_addr),
+        .dstore_wlane(dstore_wlane),
+        .dstore_wdata(dstore_wdata),
+        .dstore_rdata(dstore_rdata),
+        .sym_addr(sym_addr),
         .sym_value(sym_value),
-        .sym_bound(sym_bound),
         .predicate_read_req(predicate_read_req),
         .predicate_read_object_id(predicate_read_object_id),
         .predicate_read_element_index(predicate_read_element_index),
@@ -270,8 +286,10 @@ module ot_a3_microsequencer_top
         .issue_valid(issue_valid),
         .issue_ready(issue_ready),
         // The standalone control-plane campaigns intentionally retain their
-        // recording consumer.  The shipped-prefix integration top supplies
-        // the real engine response on these same ABI 3.0 sequencer ports.
+        // recording consumer: the checker drives issue_ready and every
+        // dispatchable engine operation is a recording no-op.  The
+        // shipped-prefix integration top supplies the real engine response
+        // on these same ABI 3.0 sequencer ports.
         .issue_fault(1'b0),
         .issue_trap_class(16'd0),
         .issue_family(issue_family),

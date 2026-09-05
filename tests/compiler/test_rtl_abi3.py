@@ -1530,3 +1530,84 @@ def test_retained_control_plane_elaboration_is_bound_to_these_sources() -> None:
     for path, digest in retained["source_sha256"].items():
         actual = campaign.sha256_file(ROOT / path)
         assert actual == digest, f"{path} changed since the elaboration was recorded"
+
+
+# ---------------------------------------------------------------------------
+# 6. the device top: the control plane as design, the tops as wrappers
+# ---------------------------------------------------------------------------
+DEVICE_TOP = ROOT / "rtl/abi3/ot_a3_device_top.sv"
+HOST_LOAD_JSON = ROOT / "results/rtl/abi3_device_top_host_load.json"
+
+
+def test_device_top_is_design_and_both_verification_tops_wrap_it() -> None:
+    """docs/CHIP_ARCHITECTURE_DESIGN.md section 11.4 item 4 and section 11.6.
+
+    The control plane crosses from testbench to design: every campaign top
+    instantiates ``ot_a3_device_top`` and no longer instantiates the
+    sequencer or the admission block itself, and the design top carries no
+    testbench construct and no wildcard package import [OI-43].
+    """
+    body = "\n".join(
+        line
+        for line in DEVICE_TOP.read_text(encoding="utf-8").splitlines()
+        if not line.lstrip().startswith("//")
+    )
+    assert "import " not in body
+    for construct in ("initial", "$readmemh", "$fopen", "$fread", "$display"):
+        assert construct not in body, f"design top carries {construct!r}"
+    assert not re.search(r"#\s*\d", body), "design top carries a delay"
+    assert re.search(r"parameter integer PROGRAM_WORDS\s*=\s*128", body)
+    assert re.search(r"parameter integer DESC_WORDS\s*=\s*256", body)
+    assert re.search(r"parameter integer STATE_COMPAT\s*=\s*1", body)
+    for port in ("host_we", "host_ready", "host_write_refused", "pstore_rdata",
+                 "dstore_rdata", "sym_addr", "hdr_in_valid", "issue_ready",
+                 "predicate_read_valid"):
+        assert re.search(rf"\b{port}\b", body), port
+
+    for top in ("rtl/test/a3_microsequencer_top.sv", "rtl/test/a3_shipped_prefix_top.sv"):
+        text = "\n".join(
+            line
+            for line in (ROOT / top).read_text(encoding="utf-8").splitlines()
+            if not line.lstrip().startswith("//")
+        )
+        assert re.search(r"\bot_a3_device_top\s*#\(", text), top
+        assert not re.search(r"\bot_a3_microsequencer\s*#\(", text), top
+        assert not re.search(r"\bot_a3_program_header\s+\w+\s*\(", text), top
+    for tool in (
+        "tools/rtl_abi3_deployment_campaign.py",
+        "tools/rtl_abi3_campaign.py",
+        "tools/rtl_abi3_shipped_prefix_campaign.py",
+        "tools/rtl_abi3_shipped_prefix_multicast_campaign.py",
+    ):
+        assert '"rtl/abi3/ot_a3_device_top.sv"' in (ROOT / tool).read_text(
+            encoding="utf-8"
+        ), tool
+
+
+@pytest.mark.skipif(
+    not HOST_LOAD_JSON.exists(), reason="no retained host-load artifact"
+)
+def test_retained_device_top_host_load_is_bound_to_these_sources() -> None:
+    from tools import rtl_abi3_device_top_host_load as host_load
+
+    retained = json.loads(HOST_LOAD_JSON.read_text(encoding="utf-8"))
+    assert retained["schema"] == host_load.SCHEMA
+    assert retained["status"] == "pass"
+    assert retained["simulators_agree"] is True
+    assert retained["vehicle_geometry"] == host_load.VEHICLE_GEOMETRY
+    assert retained["git"]["worktree_dirty"] is False
+    assert [case["name"] for case in retained["cases"]] == ["iverilog", "verilator"]
+    for case in retained["cases"]:
+        assert case["status"] == "pass"
+        assert case["marker"] == retained["marker"]
+        assert case["checks"] and case["checks"] > 0
+        assert case["failures"] == []
+        # Empty stores trap; both loaded entrypoints complete.
+        assert case["cases"][0]["loaded"] == 0 and case["cases"][0]["complete"] == 0
+        assert all(entry["complete"] == 1 for entry in case["cases"][1:])
+    assert HOST_LOAD_JSON.read_bytes() == (
+        json.dumps(retained, indent=2, sort_keys=True) + "\n"
+    ).encode("utf-8")
+    for path, digest in retained["source_sha256"].items():
+        actual = campaign.sha256_file(ROOT / path)
+        assert actual == digest, f"{path} changed since the run was recorded"

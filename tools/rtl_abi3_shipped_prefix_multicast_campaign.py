@@ -56,11 +56,13 @@ RTL_SOURCES = (
     "rtl/abi3/ot_a3_engine_pkg.sv",
     "rtl/abi3/ot_a3_pkg.sv",
     "rtl/abi3/ot_a3_instruction_decoder.sv",
+    "rtl/abi3/ot_a3_program_header.sv",
     "rtl/abi3/ot_a3_loop_stack.sv",
     "rtl/abi3/ot_a3_view_resolver.sv",
     "rtl/abi3/ot_a3_event_scoreboard.sv",
     "rtl/abi3/ot_a3_state_controller.sv",
     "rtl/abi3/ot_a3_microsequencer.sv",
+    "rtl/abi3/ot_a3_device_top.sv",
     "rtl/abi3/ot_a3_mac_lane.sv",
     "rtl/abi3/ot_a3_selection_argmax.sv",
     "rtl/abi3/ot_a3_dma_index_mover.sv",
@@ -122,6 +124,26 @@ def sha256_file(path: Path) -> str:
         for chunk in iter(lambda: handle.read(1 << 20), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def git_identity() -> dict[str, Any]:
+    """The commit the artifact was produced at, and whether the tree was clean.
+
+    Recorded beside the source digests, not instead of them: the digests bind
+    the artifact to its inputs, the commit says where those inputs came from.
+    """
+    def run(args: list[str]) -> str:
+        try:
+            result = subprocess.run(
+                args, cwd=ROOT, capture_output=True, text=True, check=False
+            )
+        except OSError:
+            return ""
+        return result.stdout if result.returncode == 0 else ""
+
+    head = run(["git", "rev-parse", "HEAD"]).strip()
+    status = run(["git", "status", "--porcelain"]).strip()
+    return {"commit": head or None, "worktree_dirty": bool(status)}
 
 
 def canonical(text: str, build: Path | None = None) -> str:
@@ -499,6 +521,7 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
             "iverilog_deepseek_rom_only": iverilog["checks"],
         },
         "tools": tools,
+        "git": git_identity(),
         "source": source,
         "cases": [verilator, iverilog],
     }
