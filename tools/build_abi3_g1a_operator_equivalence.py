@@ -1098,15 +1098,27 @@ def build(output: Path) -> dict[str, Any]:
                 "simulator": (", ".join(simulators) if simulators else None),
                 "simulators": simulators,
                 "simulated_cycles": cycles,
+                # Named from what EVERY covering campaign ran on, not from the
+                # union.  The union here is {icarus, verilator} while the
+                # integrated vehicle is Verilator-only, and post-mortem R13
+                # forbids publishing the optimistic reading of a metric that
+                # two models answer differently.
                 "evidence_class": (
                     (
                         "public_open_tool_rtl_simulation_dual_simulator"
-                        if len(simulators) > 1
-                        else f"public_open_tool_rtl_simulation_{simulators[0]}_only"
+                        if all(
+                            len(c.get("simulators") or []) > 1 for c in covering
+                        )
+                        else "public_open_tool_rtl_simulation_composite_"
+                        "not_every_covering_campaign_ran_on_two_simulators"
                     )
                     if simulators
                     else "absent: no simulation of this lowering exists"
                 ),
+                "simulators_by_campaign": {
+                    c["artifact"]: sorted(c.get("simulators") or [])
+                    for c in covering
+                },
                 "simulated_cycles_by_campaign": {
                     c["artifact"]: int(c.get("simulated_cycles") or 0)
                     for c in covering
