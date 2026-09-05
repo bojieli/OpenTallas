@@ -132,10 +132,35 @@ def test_each_lowering_is_filed_under_its_own_deployment_digest(
     rom_ids = set(coverage[rom]["positive_operator_descriptor_ids"])
     hbm_ids = set(coverage[hbm]["positive_operator_descriptor_ids"])
     assert rom_ids and hbm_ids
-    # The two lowerings share no governed operator descriptor id, so a
-    # coverage map that let one stand for the other would be visible here.
-    assert not rom_ids & hbm_ids
     assert coverage[rom]["case"] != coverage[hbm]["case"]
+    assert coverage[rom]["deployment"] != coverage[hbm]["deployment"]
+
+    # A descriptor id means nothing outside its own deployment, and these two
+    # prove it by colliding: the SAME number names different operations on the
+    # two lowerings, and the two lowerings never agree on the number for the
+    # same program counter.  That is why coverage is filed under a deployment
+    # digest and never transferred.
+    def by_pc(entry):
+        return {
+            op["program_counter"]: op["operator_descriptor_id"]
+            for op in entry["operations"]
+        }
+
+    rom_by_pc, hbm_by_pc = by_pc(coverage[rom]), by_pc(coverage[hbm])
+    shared_pcs = set(rom_by_pc) & set(hbm_by_pc)
+    assert shared_pcs
+    assert all(rom_by_pc[pc] != hbm_by_pc[pc] for pc in shared_pcs)
+
+    collisions = {
+        descriptor_id
+        for descriptor_id in rom_ids & hbm_ids
+        if [pc for pc, d in rom_by_pc.items() if d == descriptor_id]
+        != [pc for pc, d in hbm_by_pc.items() if d == descriptor_id]
+    }
+    assert collisions, (
+        "no descriptor id collides across the two lowerings in this prefix; "
+        "the test's premise, that a bare id is meaningless, needs rechecking"
+    )
 
 
 def test_the_two_admission_vector_sets_describe_different_lowerings():
@@ -168,7 +193,18 @@ def test_the_two_admission_vector_sets_describe_different_lowerings():
     assert rom_index["governed_program_counters"] == (
         hbm_index["governed_program_counters"]
     )
-    for name in ("bank.hex", "expected.hex"):
-        assert (rom / name).read_bytes() == (hbm / name).read_bytes()
-    for name in ("cases.hex", "views.hex", "descriptors.hex"):
+    # Same operands and the same golden results; different records to drive
+    # the bridge with.  The banks differ only because the HBM lowering's PC-72
+    # output view resolves at the generated position, so its token ring needs
+    # 17 more words than the ROM lowering's.
+    assert (rom / "expected.hex").read_bytes() == (hbm / "expected.hex").read_bytes()
+    for name in ("cases.hex", "views.hex", "descriptors.hex", "bank.hex"):
         assert (rom / name).read_bytes() != (hbm / name).read_bytes()
+    rom_bank = rom_index["geometry"]["bank_words"]
+    hbm_bank = hbm_index["geometry"]["bank_words"]
+    assert hbm_bank > rom_bank
+    assert (
+        len((hbm / "bank.hex").read_text().split())
+        - len((rom / "bank.hex").read_text().split())
+        == hbm_bank - rom_bank
+    )
