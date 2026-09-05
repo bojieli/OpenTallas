@@ -132,6 +132,8 @@
       "artifact_sha256": "962ff60c8a4d26ff849ee30617aee093f8b2cb2c6e6f2972c9fc6d56e8c75f83",
       "bound_source_count": 54,
       "compared_words": 33093,
+      "declared_worktree_dirty": null,
+      "declares_own_git_state": false,
       "drifted_source_count": 0,
       "drifted_sources": [],
       "positive_case_count": 12,
@@ -201,6 +203,8 @@
       "artifact": "results/rtl/a3_qwen_gqa_campaign.json",
       "artifact_sha256": "075011ce47e332fd38b2624d1f40e9316b4c4f89f8f8443f33008dfa5d5281aa",
       "bound_source_count": 22,
+      "declared_worktree_dirty": null,
+      "declares_own_git_state": false,
       "drifted_source_count": 0,
       "drifted_sources": [],
       "status": "pass",
@@ -211,6 +215,8 @@
       "artifact": "results/rtl/abi3_shipped_prefix_campaign.json",
       "artifact_sha256": "9261ecafbcf8b4a722a10952bd932f03a53640aa6b67e2fba5ec50248cd035cc",
       "bound_source_count": 49,
+      "declared_worktree_dirty": false,
+      "declares_own_git_state": true,
       "drifted_source_count": 11,
       "drifted_sources": [
         "rtl/abi3/ot_a3_device_top.sv",
@@ -274,7 +280,7 @@
   ],
   "gate": "G1a",
   "generated_by": "tools/build_abi3_g1a_operator_equivalence.py",
-  "generated_by_sha256": "a8d3966195d99c9cd1f40d849c813f993ff768a5fcee1fb3253d42d12e98391e",
+  "generated_by_sha256": "abcc0758d64f9b01336b76b7bbefb1f851a26ecce6d48349991d26ec8392b08f",
   "inventory_source": {
     "files": {
       "a3_deployment_issue.hex": "50a423ad27d8e9d9107e4db7bcfa30af5ff2b4f42ae25134f9380850245e70b5",
@@ -1070,10 +1076,21 @@
         "simulators": [
           "icarus",
           "verilator"
+        ],
+        "underlying_campaign_provenance": [
+          {
+            "artifact": "results/rtl/a3_operator_admission_campaign.json",
+            "binds_every_source_digest_and_they_all_match": true,
+            "bound_source_count": 54,
+            "declared_worktree_dirty": null,
+            "declares_own_git_state": false,
+            "note": "this campaign does not declare the worktree it ran in; what binds it to committed bytes is that every source and vector digest it recorded still matches the tree, recomputed here"
+          }
         ]
       },
       "git": {
-        "commit": "dcf908f2aa92425c5217c6cd01ccc0ea83244eec",
+        "commit": "274b7523d737dfb9001583ac6f092788ae375eec",
+        "scope": "the tree THIS artifact was derived in. It is not a claim about the tree each underlying RTL campaign ran in; see execution.underlying_campaign_provenance.",
         "worktree_dirty": false
       },
       "storage_class": "rom",
@@ -1889,10 +1906,12 @@
         "evidence_class": "absent: no simulation of this lowering exists",
         "simulated_cycles": 0,
         "simulator": null,
-        "simulators": []
+        "simulators": [],
+        "underlying_campaign_provenance": []
       },
       "git": {
-        "commit": "dcf908f2aa92425c5217c6cd01ccc0ea83244eec",
+        "commit": "274b7523d737dfb9001583ac6f092788ae375eec",
+        "scope": "the tree THIS artifact was derived in. It is not a claim about the tree each underlying RTL campaign ran in; see execution.underlying_campaign_provenance.",
         "worktree_dirty": false
       },
       "storage_class": "hbm",
