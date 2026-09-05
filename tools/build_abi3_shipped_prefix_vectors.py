@@ -83,7 +83,28 @@ DEPLOYMENT_VECTOR_DIR = ROOT / "testdata/compiler/abi3_deployment"
 DEPLOYMENT_VECTOR_JSON = DEPLOYMENT_VECTOR_DIR / "abi3_deployment_rtl_vectors.json"
 
 VECTOR_SCHEMA = "opentallas.rtl.abi3_shipped_prefix_vectors.v1"
-CASE_STRIDE = 80
+# The case record carries the mapped-placement block the issue bridge needs
+# for the six families it admits by object rather than by the appending
+# result cursor (DMA.SCATTER, ATTENTION.GQA, VECTOR.ADD, VECTOR.SILU_MUL,
+# SELECTION.ARGMAX, SELECTION.TOKEN_APPEND).  Word 79 is NOT free -- the exact
+# multicast overlay writes its launch count there -- so the block starts at
+# word 80, and rtl/test/a3_shipped_prefix_harness.cpp reads it at exactly
+# these offsets.
+CASE_STRIDE = 112
+MAP_VALID_WORD = 80        # this vector set supplied the object -> bank table
+MAP_TABLE_WORD = 81        # 8 x (object id, base words), interleaved
+MAP_TABLE_ENTRIES = 8
+MAP_CONTEXT_WORD = 97      # the request's active context length
+MAP_PLANE_ROWS_WORD = 98   # the compact KV bank's K-to-V plane stride, rows
+MAP_POLICY_WORD = 99       # bound GENERATION_POLICY descriptor id
+MAP_MAX_NEW_WORD = 100     # the request's authenticated max_new_tokens
+MAP_GENERATED_WORD = 101   # tokens produced before this pass
+MAP_LAUNCH_WORD = 102      # six expected per-family launch counts
+MAP_TOKEN_WORD = 108       # expected selected token
+MAP_TIE_WORD = 109         # expected tie multiplicity
+MAP_EOS_WORD = 110         # expected EOS reason
+MAP_RESERVED_WORD = 111    # reserved, must be zero
+NO_OBJECT = 0xFFFF_FFFF
 META_WORDS = 26
 INDEX_WORDS = 64
 SOURCE_WORDS = 65536
@@ -2937,8 +2958,40 @@ def build(argv: list[str] | None = None) -> int:
             case_rope_output_words,
             0,
         ]
+        # -- the mapped-placement block ---------------------------------
+        # Not supplied by this vector set, and the record says so in one
+        # place rather than in fifteen: with word 80 low the bridge has no
+        # bank bound to any object, so the six mapped families have no
+        # operand address at all and it answers the same TRAP_CAPABILITY it
+        # gave before they were implemented.  Every other word of the block
+        # is therefore zero or the unbound object id -- none of them is a
+        # number this file invented, and the builder proves the block is
+        # consistent with the flag rather than leaving the two to drift.
+        words.append(0)  # MAP_VALID_WORD
+        for _ in range(MAP_TABLE_ENTRIES):
+            words.extend([NO_OBJECT, 0])
+        words.extend([0] * (CASE_STRIDE - len(words)))
         if len(words) != CASE_STRIDE:
             raise SystemExit("internal case-record length error")
+        if words[MAP_VALID_WORD] == 0 and any(
+            words[MAP_TABLE_WORD + entry * 2] != NO_OBJECT
+            or words[MAP_TABLE_WORD + entry * 2 + 1] != 0
+            for entry in range(MAP_TABLE_ENTRIES)
+        ):
+            raise SystemExit(
+                "the mapped-placement table binds an object while the record "
+                "says no placement was supplied"
+            )
+        if words[MAP_VALID_WORD] == 0 and any(
+            words[index] != 0
+            for index in range(MAP_CONTEXT_WORD, CASE_STRIDE)
+        ):
+            raise SystemExit(
+                "the mapped-placement block carries a value while the record "
+                "says no placement was supplied"
+            )
+        if words[MAP_RESERVED_WORD] != 0:
+            raise SystemExit("the mapped-placement reserved word is not zero")
         case_words.extend(words)
         for gather in gathers:
             issue_words.extend(

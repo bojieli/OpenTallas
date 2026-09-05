@@ -1436,6 +1436,106 @@ int main(int argc, char** argv) {
         model.cycle([] {});
         check.equal("no write refused during load",
                     model.dut.host_write_refused, 0);
+
+        // -- entry probe: what the control plane does at a given entry PC --
+        // ABI 3.0 events are transaction-scoped, so an entry PC that skips a
+        // family's wait-set producers cannot execute that family at all: the
+        // event scoreboard refuses before dispatch.  This mode replays a plan
+        // of (case, entry_pc, instruction_count) triples and reports the
+        // sequencer's own verdict for each -- the trap class, the PC it
+        // trapped at, and whether anything issued.  Nothing here is compared
+        // against a vector set: it is a measurement of the control plane, and
+        // the campaign that drives it compares it against a derivation made
+        // independently from the deployed program.
+        if (const char* probe_path = env_or_null("OT_A3_ENTRY_PROBE")) {
+            std::ifstream plan(probe_path);
+            if (!plan) throw std::runtime_error("cannot open the entry probe plan");
+            std::size_t probes = 0;
+            std::string line;
+            while (std::getline(plan, line)) {
+                if (line.empty() || line[0] == '#') continue;
+                std::istringstream fields(line);
+                std::size_t case_index = 0;
+                std::uint32_t entry_pc = 0;
+                std::uint32_t bound = 0;
+                if (!(fields >> case_index >> entry_pc >> bound))
+                    throw std::runtime_error("malformed entry probe line");
+                if (case_index >= kCases)
+                    throw std::runtime_error("entry probe names no such case");
+                const auto* record = &cases[case_index * case_stride];
+                model.dut.cfg_program_base = record[0];
+                model.dut.cfg_instruction_count = bound;
+                model.dut.cfg_desc_base = record[2];
+                model.dut.cfg_desc_count = record[3];
+                for (unsigned symbol = 0; symbol < kSymbolsPerCase; ++symbol) {
+                    const std::size_t at = record[4] + symbol;
+                    model.host_write(2, symbol, 0,
+                                     at < image_symbol.size() ? image_symbol[at] : 0);
+                    model.host_write(2, symbol, 1, 0);
+                    model.host_write(2, symbol, 2, (record[5] >> symbol) & 1U);
+                }
+                model.dut.cfg_entry_pc = entry_pc;
+                model.dut.cfg_max_retired_work =
+                    (static_cast<std::uint64_t>(record[8]) << 32) | record[7];
+                model.dut.cfg_state_count = record[9];
+                model.dut.cfg_index_base = record[10];
+                model.dut.cfg_source_base = record[11];
+                model.dut.cfg_source_launch_stride = record[12];
+                model.dut.cfg_embedding_source_base = record[32];
+                model.dut.cfg_rms_input_base = record[40];
+                model.dut.cfg_rms_weight_base = record[41];
+                model.dut.cfg_transfer_index_base = record[42];
+                model.dut.cfg_transfer_source_base = record[43];
+                model.dut.cfg_matmul_input_base = record[48];
+                model.dut.cfg_matmul_weight_object_0 = record[49];
+                model.dut.cfg_matmul_weight_base_0 = record[50];
+                model.dut.cfg_matmul_weight_object_1 = record[51];
+                model.dut.cfg_matmul_weight_base_1 = record[52];
+                model.dut.cfg_matmul_weight_object_2 = record[53];
+                model.dut.cfg_matmul_weight_base_2 = record[54];
+                model.dut.cfg_head_input_object_0 = record[58];
+                model.dut.cfg_head_input_base_0 = record[59];
+                model.dut.cfg_head_input_object_1 = record[60];
+                model.dut.cfg_head_input_base_1 = record[61];
+                model.dut.cfg_head_weight_object_0 = record[62];
+                model.dut.cfg_head_weight_base_0 = record[63];
+                model.dut.cfg_head_weight_object_1 = record[64];
+                model.dut.cfg_head_weight_base_1 = record[65];
+                model.dut.cfg_rope_input_object_0 = record[71];
+                model.dut.cfg_rope_input_base_0 = record[72];
+                model.dut.cfg_rope_input_object_1 = record[73];
+                model.dut.cfg_rope_input_base_1 = record[74];
+                model.dut.cfg_rope_coefficient_object = record[75];
+                model.dut.cfg_rope_coefficient_base = record[76];
+                model.dut.cfg_output_base = record[13];
+                model.dut.start = 1;
+                model.cycle([] {});
+                model.dut.start = 0;
+                std::uint64_t guard = 0;
+                while (!model.dut.done && guard < cycle_guard_limit) {
+                    model.cycle([] {});
+                    ++guard;
+                }
+                if (!model.dut.done)
+                    throw std::runtime_error("entry probe did not terminate");
+                std::cout << "PROBE case=" << case_index
+                          << " entry=" << entry_pc << " ic=" << bound
+                          << " trap=" << model.dut.trap_class
+                          << " fault=" << model.dut.first_fault_instruction
+                          << " launches=" << model.dut.real_launch_count
+                          << " issued=" << model.dut.count_issued
+                          << " fetched=" << model.dut.count_fetched
+                          << " retired=" << model.dut.count_retired
+                          << " capability=" << model.dut.capability_fault_count
+                          << " cycles=" << guard << "\n";
+                ++probes;
+                model.cycle([] {});
+            }
+            std::cout << "PASS: ABI3 vehicle entry probe probes=" << probes
+                      << "\n";
+            return 0;
+        }
+
         check.equal("meta case count", meta[0], kCases);
         check.equal("meta case stride", meta[4], case_stride);
         check.equal("meta result memory", meta[7], g_geometry.result_words);

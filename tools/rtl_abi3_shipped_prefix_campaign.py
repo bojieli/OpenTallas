@@ -21,9 +21,11 @@ from pathlib import Path
 import re
 import shlex
 import shutil
+import resource
 import subprocess
 import sys
 import tempfile
+import time
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -393,6 +395,33 @@ def load_rope_qualification() -> dict[str, Any]:
     }
 
 
+def elaboration_geometry(vectors: dict[str, Any]) -> list[str]:
+    """The -G flags the vector set itself demands of the top.
+
+    The campaign used to elaborate ``ot_a3_shipped_prefix_top`` at its RTL
+    defaults and pass no ``-G`` at all, which made the run correct only while
+    the defaults happened to equal the geometry the vector set was built for.
+    They are not the same statement, and the harness proves it: it compares
+    ``meta[7]`` -- the vector set's declared result memory -- against the size
+    the top reports through ``ot_a3_geometry_declare``.  The vector set is the
+    source of truth for its own geometry, so the campaign reads it from there
+    and elaborates to it.  A ladder rung whose case needs a 151,936-word
+    result bank for the LM head's logits, or a source bank sized for a KV
+    cache, states that in its vector set and gets it.
+    """
+
+    geometry = vectors.get("geometry")
+    if not isinstance(geometry, dict):
+        raise SystemExit("the shipped-prefix vectors declare no geometry")
+    flags = []
+    for name in ("INDEX_WORDS", "SOURCE_WORDS", "RESULT_WORDS"):
+        value = geometry.get(name.lower())
+        if not isinstance(value, int) or value <= 0:
+            raise SystemExit(f"the shipped-prefix vectors declare no {name}")
+        flags.append(f"-G{name}={value}")
+    return flags
+
+
 def load_vectors() -> dict[str, Any]:
     if not VECTOR_JSON.is_file():
         raise SystemExit(
@@ -525,6 +554,19 @@ def stage_matmul_weight(vectors: dict[str, Any], destination: Path) -> dict[str,
 def run_stage(
     name: str, command: list[str], build: Path, timeout: int
 ) -> dict[str, Any]:
+    """Run one stage and measure what it cost, not only what it printed.
+
+    The geometry the top is elaborated with is a cost as well as a
+    capability -- a result bank sized for 151,936 logits and a source bank
+    sized for a KV cache are simulator heap -- so every stage records its own
+    wall time and the peak resident set of the child that ran it.  ``ru_maxrss``
+    is a high-water mark over all reaped children, so the value before the
+    stage is subtracted out and the stage's own peak is the increase, or the
+    whole mark when it is the first.
+    """
+
+    before = resource.getrusage(resource.RUSAGE_CHILDREN)
+    started = time.monotonic()
     result = subprocess.run(
         command,
         cwd=build,
@@ -534,11 +576,19 @@ def run_stage(
         check=False,
         timeout=timeout,
     )
+    wall = time.monotonic() - started
+    after = resource.getrusage(resource.RUSAGE_CHILDREN)
     return {
         "name": name,
         "command": canonical(shlex.join(command), build),
         "returncode": result.returncode,
         "log": canonical(result.stdout, build),
+        "wall_seconds": round(wall, 3),
+        "cpu_seconds": round(
+            (after.ru_utime - before.ru_utime) + (after.ru_stime - before.ru_stime), 3
+        ),
+        # kilobytes on Linux; reported as bytes so no reader has to guess
+        "peak_child_resident_bytes": int(after.ru_maxrss) * 1024,
     }
 
 
@@ -608,9 +658,15 @@ def simulator_case(
         "compile_command": compiled["command"],
         "compile_returncode": compiled["returncode"],
         "compile_log": compiled["log"],
+        "compile_wall_seconds": compiled["wall_seconds"],
         "run_command": executed["command"] if executed else None,
         "run_returncode": executed["returncode"] if executed else None,
         "run_log": run_log,
+        "run_wall_seconds": executed["wall_seconds"] if executed else None,
+        "run_cpu_seconds": executed["cpu_seconds"] if executed else None,
+        "peak_child_resident_bytes": (
+            executed["peak_child_resident_bytes"] if executed else None
+        ),
         "required_marker": marker,
         "marker_present": marker in run_log,
         "checks": observation["checks"],
@@ -674,6 +730,7 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
         )
 
         rtl = [str(ROOT / path) for path in RTL_SOURCES]
+        geometry_flags = elaboration_geometry(vectors)
         verilator_compile = [
             str(executables["verilator"]),
             "--cc",
@@ -686,6 +743,7 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
             "ot_a3_shipped_prefix_top",
             "--Mdir",
             "obj_p3",
+            *geometry_flags,
             *rtl,
             str(ROOT / "rtl/test/a3_engine_completion_adapter.sv"),
             str(ROOT / "rtl/test/a3_shipped_prefix_top.sv"),
@@ -970,6 +1028,34 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
             case["name"]: int(case.get("simulated_cycles") or 0) for case in cases
         },
         "expected_cases": expected_cases,
+        # What the top was elaborated with, and what that geometry cost.  Both
+        # halves are here deliberately: a geometry that admits an operator and
+        # a geometry that thrashes are the same statement until the second
+        # number is present.
+        "elaboration": {
+            "geometry_flags": geometry_flags,
+            "declared_by": "the vector set's own geometry block",
+            "index_words": vectors["geometry"]["index_words"],
+            "source_words": vectors["geometry"]["source_words"],
+            "result_words": vectors["geometry"]["result_words"],
+            "operand_bank_bytes": 4
+            * (
+                int(vectors["geometry"]["index_words"])
+                + int(vectors["geometry"]["source_words"])
+                + int(vectors["geometry"]["result_words"])
+            ),
+        },
+        "cost": {
+            "compile_wall_seconds": [
+                case.get("compile_wall_seconds") for case in cases
+            ],
+            "run_wall_seconds": [case.get("run_wall_seconds") for case in cases],
+            "run_cpu_seconds": [case.get("run_cpu_seconds") for case in cases],
+            "peak_child_resident_bytes": max(
+                [int(case.get("peak_child_resident_bytes") or 0) for case in cases]
+                or [0]
+            ),
+        },
         "tools": tools,
         "git": git_identity(),
         "source": sources,

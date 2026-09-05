@@ -1,0 +1,3418 @@
+{
+  "all_deployments_match_vector_set": true,
+  "claim": "which operator families the integrated shipped-prefix vehicle can reach from a single-transaction entry PC, derived from each deployment's own program, descriptors and bound symbols",
+  "does_not_establish": [
+    "that a reachable family produces the right words: reachability is a control-plane property and bit-exactness is gate G1a's",
+    "any wall-clock cost: MAC counts are derived from the resolved weight views, and the seconds they imply depend on the measured integrated rate recorded elsewhere"
+  ],
+  "event_scope_rule": "ABI 3.0 events are transaction-scoped and single-assignment in the program text; rtl/abi3/ot_a3_event_scoreboard.sv traps A3_TRAP_INTERNAL (13) on a wait-set producer that is neither pending nor signalled, so an entry PC that skips a family's producers cannot execute that family",
+  "schema": "opentallas.rtl.abi3_vehicle_reachability.v1",
+  "source_sha256": {
+    "rtl/abi3/ot_a3_event_scoreboard.sv": "e5546f39afe3fdb6da17c189da94fc652aedcee583b3263b662a83c7b5e86b65",
+    "rtl/abi3/ot_a3_loop_stack.sv": "6167c65cf533bbbc8635d53b100b7ed9c3deea7dba437ae680f2c0b19db70ef0",
+    "rtl/abi3/ot_a3_microsequencer.sv": "3a96fabaadb1bab0d9b971c52e822de3ece61a1fe77ef4cc846b880219ade278",
+    "rtl/test/a3_shipped_prefix_top.sv": "0c17ea7fa2e3d3876f5befa7a452194b1a30779daa17f0206f1f12c1a03ad466",
+    "tools/build_abi3_shipped_prefix_vectors.py": "951acd043bac1e699dee7c1303ba9ced70237452e3f006751b68555e84b1d611",
+    "tools/build_abi3_vehicle_reachability.py": "1cdad27e2324497377d3bb18dda1c57c55f15fb5ff5bf0e8398b41207df7da9d"
+  },
+  "targets": [
+    {
+      "bank_demand": {
+        "index_bank_words_for_mapped_objects": 1,
+        "kv_plane_rows": 19,
+        "objects": [
+          {
+            "bank": "result_kv_bank",
+            "declared_words": 8454144,
+            "is_index_view": false,
+            "is_kv_cache": true,
+            "named_by": [
+              {
+                "family": "DMA.SCATTER",
+                "pc": 32
+              },
+              {
+                "family": "DMA.SCATTER",
+                "pc": 35
+              },
+              {
+                "family": "ATTENTION.GQA",
+                "pc": 38
+              },
+              {
+                "family": "ATTENTION.GQA",
+                "pc": 38
+              }
+            ],
+            "object_id": 17,
+            "vehicle_words": 38912
+          },
+          {
+            "bank": "index",
+            "declared_words": 1,
+            "is_index_view": true,
+            "is_kv_cache": false,
+            "named_by": [
+              {
+                "family": "DMA.SCATTER",
+                "pc": 32
+              },
+              {
+                "family": "DMA.SCATTER",
+                "pc": 35
+              },
+              {
+                "family": "ATTENTION.GQA",
+                "pc": 38
+              }
+            ],
+            "object_id": 23,
+            "vehicle_words": 1
+          },
+          {
+            "bank": "result",
+            "declared_words": 4096,
+            "is_index_view": false,
+            "is_kv_cache": false,
+            "named_by": [
+              {
+                "family": "VECTOR.ADD",
+                "pc": 44
+              },
+              {
+                "family": "VECTOR.ADD",
+                "pc": 62
+              }
+            ],
+            "object_id": 36,
+            "vehicle_words": 4096
+          },
+          {
+            "bank": "result",
+            "declared_words": 4096,
+            "is_index_view": false,
+            "is_kv_cache": false,
+            "named_by": [
+              {
+                "family": "VECTOR.ADD",
+                "pc": 44
+              },
+              {
+                "family": "VECTOR.ADD",
+                "pc": 62
+              },
+              {
+                "family": "ATTENTION.GQA",
+                "pc": 38
+              }
+            ],
+            "object_id": 45,
+            "vehicle_words": 4096
+          },
+          {
+            "bank": "result",
+            "declared_words": 4096,
+            "is_index_view": false,
+            "is_kv_cache": false,
+            "named_by": [
+              {
+                "family": "VECTOR.ADD",
+                "pc": 44
+              },
+              {
+                "family": "VECTOR.ADD",
+                "pc": 62
+              },
+              {
+                "family": "ATTENTION.GQA",
+                "pc": 38
+              }
+            ],
+            "object_id": 55,
+            "vehicle_words": 4096
+          },
+          {
+            "bank": "result",
+            "declared_words": 1024,
+            "is_index_view": false,
+            "is_kv_cache": false,
+            "named_by": [
+              {
+                "family": "DMA.SCATTER",
+                "pc": 32
+              }
+            ],
+            "object_id": 64,
+            "vehicle_words": 1024
+          },
+          {
+            "bank": "result",
+            "declared_words": 1024,
+            "is_index_view": false,
+            "is_kv_cache": false,
+            "named_by": [
+              {
+                "family": "DMA.SCATTER",
+                "pc": 35
+              }
+            ],
+            "object_id": 71,
+            "vehicle_words": 1024
+          },
+          {
+            "bank": "result",
+            "declared_words": 12288,
+            "is_index_view": false,
+            "is_kv_cache": false,
+            "named_by": [
+              {
+                "family": "VECTOR.SILU_MUL",
+                "pc": 56
+              }
+            ],
+            "object_id": 149,
+            "vehicle_words": 12288
+          },
+          {
+            "bank": "result",
+            "declared_words": 12288,
+            "is_index_view": false,
+            "is_kv_cache": false,
+            "named_by": [
+              {
+                "family": "VECTOR.SILU_MUL",
+                "pc": 56
+              }
+            ],
+            "object_id": 156,
+            "vehicle_words": 12288
+          },
+          {
+            "bank": "result",
+            "declared_words": 12288,
+            "is_index_view": false,
+            "is_kv_cache": false,
+            "named_by": [
+              {
+                "family": "VECTOR.SILU_MUL",
+                "pc": 56
+              }
+            ],
+            "object_id": 162,
+            "vehicle_words": 12288
+          },
+          {
+            "bank": "result",
+            "declared_words": 151936,
+            "is_index_view": false,
+            "is_kv_cache": false,
+            "named_by": [
+              {
+                "family": "SELECTION.ARGMAX",
+                "pc": 70
+              }
+            ],
+            "object_id": 194,
+            "vehicle_words": 151936
+          },
+          {
+            "bank": "result",
+            "declared_words": 1,
+            "is_index_view": false,
+            "is_kv_cache": false,
+            "named_by": [
+              {
+                "family": "SELECTION.ARGMAX",
+                "pc": 70
+              },
+              {
+                "family": "SELECTION.TOKEN_APPEND",
+                "pc": 72
+              }
+            ],
+            "object_id": 200,
+            "vehicle_words": 1
+          },
+          {
+            "bank": "result",
+            "declared_words": 1,
+            "is_index_view": false,
+            "is_kv_cache": false,
+            "named_by": [
+              {
+                "family": "SELECTION.TOKEN_APPEND",
+                "pc": 72
+              }
+            ],
+            "object_id": 209,
+            "vehicle_words": 1
+          }
+        ],
+        "result_bank_words_for_mapped_objects": 242050,
+        "unresolved_views": []
+      },
+      "case_plan": [
+        {
+          "cost_curve": [
+            {
+              "cumulative_macs": 25165824,
+              "family": "DMA.SCATTER",
+              "instruction_count": 33,
+              "marginal_macs": 25165824,
+              "site_pc": 32
+            },
+            {
+              "cumulative_macs": 25165824,
+              "family": "DMA.SCATTER",
+              "instruction_count": 36,
+              "marginal_macs": 0,
+              "site_pc": 35
+            },
+            {
+              "cumulative_macs": 25165824,
+              "family": "ATTENTION.GQA",
+              "instruction_count": 39,
+              "marginal_macs": 0,
+              "site_pc": 38
+            },
+            {
+              "cumulative_macs": 41943040,
+              "family": "VECTOR.ADD",
+              "instruction_count": 45,
+              "marginal_macs": 16777216,
+              "site_pc": 44
+            },
+            {
+              "cumulative_macs": 142606336,
+              "family": "VECTOR.SILU_MUL",
+              "instruction_count": 57,
+              "marginal_macs": 100663296,
+              "site_pc": 56
+            },
+            {
+              "cumulative_macs": 192937984,
+              "family": "VECTOR.ADD",
+              "instruction_count": 63,
+              "marginal_macs": 50331648,
+              "site_pc": 62
+            },
+            {
+              "cumulative_macs": 7568097280,
+              "family": "SELECTION.TOKEN_APPEND",
+              "instruction_count": 73,
+              "marginal_macs": 7375159296,
+              "site_pc": 72
+            }
+          ],
+          "covers": [
+            "DMA.SCATTER",
+            "DMA.SCATTER",
+            "ATTENTION.GQA",
+            "VECTOR.ADD",
+            "VECTOR.SILU_MUL",
+            "VECTOR.ADD",
+            "SELECTION.TOKEN_APPEND"
+          ],
+          "entry_pc": 0,
+          "full_coverage_instruction_count": 73,
+          "full_coverage_macs": 7568097280
+        },
+        {
+          "cost_curve": [
+            {
+              "cumulative_macs": 622329856,
+              "family": "SELECTION.ARGMAX",
+              "instruction_count": 71,
+              "marginal_macs": 622329856,
+              "site_pc": 70
+            }
+          ],
+          "covers": [
+            "SELECTION.ARGMAX"
+          ],
+          "entry_pc": 65,
+          "full_coverage_instruction_count": 71,
+          "full_coverage_macs": 622329856
+        }
+      ],
+      "deployment": "build/abi3/qwen3-8b-rom",
+      "deployment_matches_vector_set": true,
+      "deployment_sha256": "6a06a4ea97f290326b448f4fcc8c654a9c32b61e707ca62ef070060daf9cc21b",
+      "deployment_sha256_certified_by_vector_set": "6a06a4ea97f290326b448f4fcc8c654a9c32b61e707ca62ef070060daf9cc21b",
+      "entry_pc": 0,
+      "families": [
+        {
+          "family": "VECTOR.ADD",
+          "issue_sites": [
+            {
+              "cheapest_entry": {
+                "entry_pc": 0,
+                "instruction_count": 45,
+                "issued_operations": 15,
+                "macs": 41943040,
+                "terminal_pc": 45,
+                "terminal_trap_class": 5
+              },
+              "derivable": true,
+              "descriptor_id": 138,
+              "nearest_refusal": {
+                "entry_pc": 44,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [1, 13] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 44
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 44,
+                "instruction_count": 45,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [1, 13] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 44
+              },
+              "pc": 44,
+              "reachable": true,
+              "underivable_reason": null
+            },
+            {
+              "cheapest_entry": {
+                "entry_pc": 0,
+                "instruction_count": 63,
+                "issued_operations": 21,
+                "macs": 192937984,
+                "terminal_pc": 63,
+                "terminal_trap_class": 5
+              },
+              "derivable": true,
+              "descriptor_id": 177,
+              "nearest_refusal": {
+                "entry_pc": 62,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [14, 19] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 62
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 62,
+                "instruction_count": 63,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [14, 19] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 62
+              },
+              "pc": 62,
+              "reachable": true,
+              "underivable_reason": null
+            }
+          ],
+          "min_macs": 41943040,
+          "opcode": {
+            "major": 48,
+            "sub": 3
+          },
+          "reachable": true
+        },
+        {
+          "family": "VECTOR.SILU_MUL",
+          "issue_sites": [
+            {
+              "cheapest_entry": {
+                "entry_pc": 0,
+                "instruction_count": 57,
+                "issued_operations": 19,
+                "macs": 142606336,
+                "terminal_pc": 57,
+                "terminal_trap_class": 5
+              },
+              "derivable": true,
+              "descriptor_id": 165,
+              "nearest_refusal": {
+                "entry_pc": 56,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [16, 17] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 56
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 56,
+                "instruction_count": 57,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [16, 17] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 56
+              },
+              "pc": 56,
+              "reachable": true,
+              "underivable_reason": null
+            }
+          ],
+          "min_macs": 142606336,
+          "opcode": {
+            "major": 48,
+            "sub": 4
+          },
+          "reachable": true
+        },
+        {
+          "family": "DMA.SCATTER",
+          "issue_sites": [
+            {
+              "cheapest_entry": {
+                "entry_pc": 0,
+                "instruction_count": 33,
+                "issued_operations": 11,
+                "macs": 25165824,
+                "terminal_pc": 33,
+                "terminal_trap_class": 5
+              },
+              "derivable": true,
+              "descriptor_id": 108,
+              "nearest_refusal": {
+                "entry_pc": 32,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [9] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 32
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 32,
+                "instruction_count": 33,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [9] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 32
+              },
+              "pc": 32,
+              "reachable": true,
+              "underivable_reason": null
+            },
+            {
+              "cheapest_entry": {
+                "entry_pc": 0,
+                "instruction_count": 36,
+                "issued_operations": 12,
+                "macs": 25165824,
+                "terminal_pc": 36,
+                "terminal_trap_class": 5
+              },
+              "derivable": true,
+              "descriptor_id": 115,
+              "nearest_refusal": {
+                "entry_pc": 35,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [5] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 35
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 35,
+                "instruction_count": 36,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [5] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 35
+              },
+              "pc": 35,
+              "reachable": true,
+              "underivable_reason": null
+            }
+          ],
+          "min_macs": 25165824,
+          "opcode": {
+            "major": 16,
+            "sub": 3
+          },
+          "reachable": true
+        },
+        {
+          "family": "ATTENTION.GQA",
+          "issue_sites": [
+            {
+              "cheapest_entry": {
+                "entry_pc": 0,
+                "instruction_count": 39,
+                "issued_operations": 13,
+                "macs": 25165824,
+                "terminal_pc": 39,
+                "terminal_trap_class": 5
+              },
+              "derivable": true,
+              "descriptor_id": 124,
+              "nearest_refusal": {
+                "entry_pc": 38,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [8, 10, 11] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 38
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 38,
+                "instruction_count": 39,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [8, 10, 11] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 38
+              },
+              "pc": 38,
+              "reachable": true,
+              "underivable_reason": null
+            }
+          ],
+          "min_macs": 25165824,
+          "opcode": {
+            "major": 64,
+            "sub": 1
+          },
+          "reachable": true
+        },
+        {
+          "family": "SELECTION.ARGMAX",
+          "issue_sites": [
+            {
+              "cheapest_entry": {
+                "entry_pc": 65,
+                "instruction_count": 71,
+                "issued_operations": 4,
+                "macs": 622329856,
+                "terminal_pc": 71,
+                "terminal_trap_class": 5
+              },
+              "derivable": true,
+              "descriptor_id": 205,
+              "nearest_refusal": {
+                "entry_pc": 70,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [23] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 70
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 70,
+                "instruction_count": 71,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [23] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 70
+              },
+              "pc": 70,
+              "reachable": true,
+              "underivable_reason": null
+            }
+          ],
+          "min_macs": 622329856,
+          "opcode": {
+            "major": 112,
+            "sub": 0
+          },
+          "reachable": true
+        },
+        {
+          "family": "SELECTION.TOKEN_APPEND",
+          "issue_sites": [
+            {
+              "cheapest_entry": {
+                "entry_pc": 0,
+                "instruction_count": 73,
+                "issued_operations": 691,
+                "macs": 7568097280,
+                "terminal_pc": 73,
+                "terminal_trap_class": 5
+              },
+              "derivable": true,
+              "descriptor_id": 212,
+              "nearest_refusal": {
+                "entry_pc": 72,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [24, 25] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 72
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 72,
+                "instruction_count": 73,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [24, 25] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 72
+              },
+              "pc": 72,
+              "reachable": true,
+              "underivable_reason": null
+            }
+          ],
+          "min_macs": 7568097280,
+          "opcode": {
+            "major": 112,
+            "sub": 1
+          },
+          "reachable": true
+        }
+      ],
+      "instruction_count": 74,
+      "positive_control": {
+        "entry_pc": 65,
+        "instruction_count": 67,
+        "predicted_dispatches_the_site": true,
+        "predicted_macs": 0,
+        "predicted_trap_class": 5,
+        "predicted_trap_pc": 67,
+        "site_pc": 66
+      },
+      "target": "qwen3-8b-rom-single-chip",
+      "whole_program": {
+        "issued_operations": 691,
+        "macs": 7568097280,
+        "outcome": "complete"
+      },
+      "workload_context": {
+        "generated_token_count": 3,
+        "kv_plane_rows": 19,
+        "prompt_token_count": 16,
+        "source": "results/abi3/qwen3_reference_oracle_eos.json"
+      }
+    },
+    {
+      "bank_demand": {
+        "index_bank_words_for_mapped_objects": 1,
+        "kv_plane_rows": 19,
+        "objects": [
+          {
+            "bank": "index",
+            "declared_words": 1,
+            "is_index_view": true,
+            "is_kv_cache": false,
+            "named_by": [
+              {
+                "family": "DMA.SCATTER",
+                "pc": 32
+              },
+              {
+                "family": "DMA.SCATTER",
+                "pc": 35
+              },
+              {
+                "family": "ATTENTION.GQA",
+                "pc": 38
+              }
+            ],
+            "object_id": 15,
+            "vehicle_words": 1
+          },
+          {
+            "bank": "result",
+            "declared_words": 4096,
+            "is_index_view": false,
+            "is_kv_cache": false,
+            "named_by": [
+              {
+                "family": "VECTOR.ADD",
+                "pc": 44
+              },
+              {
+                "family": "VECTOR.ADD",
+                "pc": 62
+              }
+            ],
+            "object_id": 18,
+            "vehicle_words": 4096
+          },
+          {
+            "bank": "result",
+            "declared_words": 4096,
+            "is_index_view": false,
+            "is_kv_cache": false,
+            "named_by": [
+              {
+                "family": "VECTOR.ADD",
+                "pc": 44
+              },
+              {
+                "family": "VECTOR.ADD",
+                "pc": 62
+              },
+              {
+                "family": "ATTENTION.GQA",
+                "pc": 38
+              }
+            ],
+            "object_id": 19,
+            "vehicle_words": 4096
+          },
+          {
+            "bank": "result",
+            "declared_words": 4096,
+            "is_index_view": false,
+            "is_kv_cache": false,
+            "named_by": [
+              {
+                "family": "VECTOR.ADD",
+                "pc": 44
+              },
+              {
+                "family": "VECTOR.ADD",
+                "pc": 62
+              },
+              {
+                "family": "ATTENTION.GQA",
+                "pc": 38
+              }
+            ],
+            "object_id": 20,
+            "vehicle_words": 4096
+          },
+          {
+            "bank": "result",
+            "declared_words": 1024,
+            "is_index_view": false,
+            "is_kv_cache": false,
+            "named_by": [
+              {
+                "family": "DMA.SCATTER",
+                "pc": 32
+              }
+            ],
+            "object_id": 21,
+            "vehicle_words": 1024
+          },
+          {
+            "bank": "result",
+            "declared_words": 1024,
+            "is_index_view": false,
+            "is_kv_cache": false,
+            "named_by": [
+              {
+                "family": "DMA.SCATTER",
+                "pc": 35
+              }
+            ],
+            "object_id": 22,
+            "vehicle_words": 1024
+          },
+          {
+            "bank": "result",
+            "declared_words": 12288,
+            "is_index_view": false,
+            "is_kv_cache": false,
+            "named_by": [
+              {
+                "family": "VECTOR.SILU_MUL",
+                "pc": 56
+              }
+            ],
+            "object_id": 24,
+            "vehicle_words": 12288
+          },
+          {
+            "bank": "result",
+            "declared_words": 12288,
+            "is_index_view": false,
+            "is_kv_cache": false,
+            "named_by": [
+              {
+                "family": "VECTOR.SILU_MUL",
+                "pc": 56
+              }
+            ],
+            "object_id": 25,
+            "vehicle_words": 12288
+          },
+          {
+            "bank": "result",
+            "declared_words": 12288,
+            "is_index_view": false,
+            "is_kv_cache": false,
+            "named_by": [
+              {
+                "family": "VECTOR.SILU_MUL",
+                "pc": 56
+              }
+            ],
+            "object_id": 26,
+            "vehicle_words": 12288
+          },
+          {
+            "bank": "result",
+            "declared_words": 1,
+            "is_index_view": false,
+            "is_kv_cache": false,
+            "named_by": [
+              {
+                "family": "SELECTION.ARGMAX",
+                "pc": 70
+              },
+              {
+                "family": "SELECTION.TOKEN_APPEND",
+                "pc": 72
+              }
+            ],
+            "object_id": 28,
+            "vehicle_words": 1
+          },
+          {
+            "bank": "result",
+            "declared_words": 1,
+            "is_index_view": false,
+            "is_kv_cache": false,
+            "named_by": [
+              {
+                "family": "SELECTION.TOKEN_APPEND",
+                "pc": 72
+              }
+            ],
+            "object_id": 36,
+            "vehicle_words": 1
+          },
+          {
+            "bank": "result",
+            "declared_words": 151936,
+            "is_index_view": false,
+            "is_kv_cache": false,
+            "named_by": [
+              {
+                "family": "SELECTION.ARGMAX",
+                "pc": 70
+              }
+            ],
+            "object_id": 37,
+            "vehicle_words": 151936
+          },
+          {
+            "bank": "result_kv_bank",
+            "declared_words": 8454144,
+            "is_index_view": false,
+            "is_kv_cache": true,
+            "named_by": [
+              {
+                "family": "DMA.SCATTER",
+                "pc": 32
+              },
+              {
+                "family": "DMA.SCATTER",
+                "pc": 35
+              },
+              {
+                "family": "ATTENTION.GQA",
+                "pc": 38
+              },
+              {
+                "family": "ATTENTION.GQA",
+                "pc": 38
+              }
+            ],
+            "object_id": 38,
+            "vehicle_words": 38912
+          }
+        ],
+        "result_bank_words_for_mapped_objects": 242050,
+        "unresolved_views": []
+      },
+      "case_plan": [
+        {
+          "cost_curve": [
+            {
+              "cumulative_macs": 25165824,
+              "family": "DMA.SCATTER",
+              "instruction_count": 33,
+              "marginal_macs": 25165824,
+              "site_pc": 32
+            },
+            {
+              "cumulative_macs": 25165824,
+              "family": "DMA.SCATTER",
+              "instruction_count": 36,
+              "marginal_macs": 0,
+              "site_pc": 35
+            },
+            {
+              "cumulative_macs": 25165824,
+              "family": "ATTENTION.GQA",
+              "instruction_count": 39,
+              "marginal_macs": 0,
+              "site_pc": 38
+            },
+            {
+              "cumulative_macs": 41943040,
+              "family": "VECTOR.ADD",
+              "instruction_count": 45,
+              "marginal_macs": 16777216,
+              "site_pc": 44
+            },
+            {
+              "cumulative_macs": 142606336,
+              "family": "VECTOR.SILU_MUL",
+              "instruction_count": 57,
+              "marginal_macs": 100663296,
+              "site_pc": 56
+            },
+            {
+              "cumulative_macs": 192937984,
+              "family": "VECTOR.ADD",
+              "instruction_count": 63,
+              "marginal_macs": 50331648,
+              "site_pc": 62
+            },
+            {
+              "cumulative_macs": 7568097280,
+              "family": "SELECTION.TOKEN_APPEND",
+              "instruction_count": 73,
+              "marginal_macs": 7375159296,
+              "site_pc": 72
+            }
+          ],
+          "covers": [
+            "DMA.SCATTER",
+            "DMA.SCATTER",
+            "ATTENTION.GQA",
+            "VECTOR.ADD",
+            "VECTOR.SILU_MUL",
+            "VECTOR.ADD",
+            "SELECTION.TOKEN_APPEND"
+          ],
+          "entry_pc": 0,
+          "full_coverage_instruction_count": 73,
+          "full_coverage_macs": 7568097280
+        },
+        {
+          "cost_curve": [
+            {
+              "cumulative_macs": 622329856,
+              "family": "SELECTION.ARGMAX",
+              "instruction_count": 71,
+              "marginal_macs": 622329856,
+              "site_pc": 70
+            }
+          ],
+          "covers": [
+            "SELECTION.ARGMAX"
+          ],
+          "entry_pc": 65,
+          "full_coverage_instruction_count": 71,
+          "full_coverage_macs": 622329856
+        }
+      ],
+      "deployment": "build/abi3/qwen3-8b-hbm-tokens",
+      "deployment_matches_vector_set": true,
+      "deployment_sha256": "cb9067f5fbf67f7df4212399aee6ba75ced4ca5c8f2dc8c1631372a4068cea2c",
+      "deployment_sha256_certified_by_vector_set": "cb9067f5fbf67f7df4212399aee6ba75ced4ca5c8f2dc8c1631372a4068cea2c",
+      "entry_pc": 0,
+      "families": [
+        {
+          "family": "VECTOR.ADD",
+          "issue_sites": [
+            {
+              "cheapest_entry": {
+                "entry_pc": 0,
+                "instruction_count": 45,
+                "issued_operations": 15,
+                "macs": 41943040,
+                "terminal_pc": 45,
+                "terminal_trap_class": 5
+              },
+              "derivable": true,
+              "descriptor_id": 150,
+              "nearest_refusal": {
+                "entry_pc": 44,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [1, 13] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 44
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 44,
+                "instruction_count": 45,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [1, 13] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 44
+              },
+              "pc": 44,
+              "reachable": true,
+              "underivable_reason": null
+            },
+            {
+              "cheapest_entry": {
+                "entry_pc": 0,
+                "instruction_count": 63,
+                "issued_operations": 21,
+                "macs": 192937984,
+                "terminal_pc": 63,
+                "terminal_trap_class": 5
+              },
+              "derivable": true,
+              "descriptor_id": 186,
+              "nearest_refusal": {
+                "entry_pc": 62,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [14, 19] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 62
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 62,
+                "instruction_count": 63,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [14, 19] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 62
+              },
+              "pc": 62,
+              "reachable": true,
+              "underivable_reason": null
+            }
+          ],
+          "min_macs": 41943040,
+          "opcode": {
+            "major": 48,
+            "sub": 3
+          },
+          "reachable": true
+        },
+        {
+          "family": "VECTOR.SILU_MUL",
+          "issue_sites": [
+            {
+              "cheapest_entry": {
+                "entry_pc": 0,
+                "instruction_count": 57,
+                "issued_operations": 19,
+                "macs": 142606336,
+                "terminal_pc": 57,
+                "terminal_trap_class": 5
+              },
+              "derivable": true,
+              "descriptor_id": 174,
+              "nearest_refusal": {
+                "entry_pc": 56,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [16, 17] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 56
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 56,
+                "instruction_count": 57,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [16, 17] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 56
+              },
+              "pc": 56,
+              "reachable": true,
+              "underivable_reason": null
+            }
+          ],
+          "min_macs": 142606336,
+          "opcode": {
+            "major": 48,
+            "sub": 4
+          },
+          "reachable": true
+        },
+        {
+          "family": "DMA.SCATTER",
+          "issue_sites": [
+            {
+              "cheapest_entry": {
+                "entry_pc": 0,
+                "instruction_count": 33,
+                "issued_operations": 11,
+                "macs": 25165824,
+                "terminal_pc": 33,
+                "terminal_trap_class": 5
+              },
+              "derivable": true,
+              "descriptor_id": 118,
+              "nearest_refusal": {
+                "entry_pc": 32,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [9] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 32
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 32,
+                "instruction_count": 33,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [9] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 32
+              },
+              "pc": 32,
+              "reachable": true,
+              "underivable_reason": null
+            },
+            {
+              "cheapest_entry": {
+                "entry_pc": 0,
+                "instruction_count": 36,
+                "issued_operations": 12,
+                "macs": 25165824,
+                "terminal_pc": 36,
+                "terminal_trap_class": 5
+              },
+              "derivable": true,
+              "descriptor_id": 125,
+              "nearest_refusal": {
+                "entry_pc": 35,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [5] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 35
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 35,
+                "instruction_count": 36,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [5] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 35
+              },
+              "pc": 35,
+              "reachable": true,
+              "underivable_reason": null
+            }
+          ],
+          "min_macs": 25165824,
+          "opcode": {
+            "major": 16,
+            "sub": 3
+          },
+          "reachable": true
+        },
+        {
+          "family": "ATTENTION.GQA",
+          "issue_sites": [
+            {
+              "cheapest_entry": {
+                "entry_pc": 0,
+                "instruction_count": 39,
+                "issued_operations": 13,
+                "macs": 25165824,
+                "terminal_pc": 39,
+                "terminal_trap_class": 5
+              },
+              "derivable": true,
+              "descriptor_id": 136,
+              "nearest_refusal": {
+                "entry_pc": 38,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [8, 10, 11] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 38
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 38,
+                "instruction_count": 39,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [8, 10, 11] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 38
+              },
+              "pc": 38,
+              "reachable": true,
+              "underivable_reason": null
+            }
+          ],
+          "min_macs": 25165824,
+          "opcode": {
+            "major": 64,
+            "sub": 1
+          },
+          "reachable": true
+        },
+        {
+          "family": "SELECTION.ARGMAX",
+          "issue_sites": [
+            {
+              "cheapest_entry": {
+                "entry_pc": 65,
+                "instruction_count": 71,
+                "issued_operations": 4,
+                "macs": 622329856,
+                "terminal_pc": 71,
+                "terminal_trap_class": 5
+              },
+              "derivable": true,
+              "descriptor_id": 211,
+              "nearest_refusal": {
+                "entry_pc": 70,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [23] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 70
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 70,
+                "instruction_count": 71,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [23] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 70
+              },
+              "pc": 70,
+              "reachable": true,
+              "underivable_reason": null
+            }
+          ],
+          "min_macs": 622329856,
+          "opcode": {
+            "major": 112,
+            "sub": 0
+          },
+          "reachable": true
+        },
+        {
+          "family": "SELECTION.TOKEN_APPEND",
+          "issue_sites": [
+            {
+              "cheapest_entry": {
+                "entry_pc": 0,
+                "instruction_count": 73,
+                "issued_operations": 691,
+                "macs": 7568097280,
+                "terminal_pc": 73,
+                "terminal_trap_class": 5
+              },
+              "derivable": true,
+              "descriptor_id": 217,
+              "nearest_refusal": {
+                "entry_pc": 72,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [24, 25] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 72
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 72,
+                "instruction_count": 73,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [24, 25] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 72
+              },
+              "pc": 72,
+              "reachable": true,
+              "underivable_reason": null
+            }
+          ],
+          "min_macs": 7568097280,
+          "opcode": {
+            "major": 112,
+            "sub": 1
+          },
+          "reachable": true
+        }
+      ],
+      "instruction_count": 74,
+      "positive_control": {
+        "entry_pc": 65,
+        "instruction_count": 67,
+        "predicted_dispatches_the_site": true,
+        "predicted_macs": 0,
+        "predicted_trap_class": 5,
+        "predicted_trap_pc": 67,
+        "site_pc": 66
+      },
+      "target": "qwen3-8b-hbm-single-chip",
+      "whole_program": {
+        "issued_operations": 691,
+        "macs": 7568097280,
+        "outcome": "complete"
+      },
+      "workload_context": {
+        "generated_token_count": 3,
+        "kv_plane_rows": 19,
+        "prompt_token_count": 16,
+        "source": "results/abi3/qwen3_reference_oracle_eos.json"
+      }
+    },
+    {
+      "bank_demand": {
+        "index_bank_words_for_mapped_objects": 1,
+        "kv_plane_rows": 19,
+        "objects": [
+          {
+            "bank": "result",
+            "declared_words": 65536,
+            "is_index_view": false,
+            "is_kv_cache": false,
+            "named_by": [
+              {
+                "family": "DMA.SCATTER",
+                "pc": 69
+              }
+            ],
+            "object_id": 322,
+            "vehicle_words": 65536
+          },
+          {
+            "bank": "result",
+            "declared_words": 512,
+            "is_index_view": false,
+            "is_kv_cache": false,
+            "named_by": [
+              {
+                "family": "DMA.SCATTER",
+                "pc": 69
+              }
+            ],
+            "object_id": 483,
+            "vehicle_words": 512
+          },
+          {
+            "bank": "index",
+            "declared_words": 1,
+            "is_index_view": true,
+            "is_kv_cache": false,
+            "named_by": [
+              {
+                "family": "DMA.SCATTER",
+                "pc": 69
+              }
+            ],
+            "object_id": 521,
+            "vehicle_words": 1
+          }
+        ],
+        "result_bank_words_for_mapped_objects": 66048,
+        "unresolved_views": []
+      },
+      "case_plan": [
+        {
+          "cost_curve": [
+            {
+              "cumulative_macs": 39845888,
+              "family": "DMA.SCATTER",
+              "instruction_count": 70,
+              "marginal_macs": 39845888,
+              "site_pc": 69
+            }
+          ],
+          "covers": [
+            "DMA.SCATTER"
+          ],
+          "entry_pc": 0,
+          "full_coverage_instruction_count": 70,
+          "full_coverage_macs": 39845888
+        }
+      ],
+      "deployment": "build/abi3/deepseek-v4-flash-rom",
+      "deployment_matches_vector_set": true,
+      "deployment_sha256": "a187b4d7cae7a21b97068db583311c1b9fdcbdcb9f4fae5e88b05d4e05c7b723",
+      "deployment_sha256_certified_by_vector_set": "a187b4d7cae7a21b97068db583311c1b9fdcbdcb9f4fae5e88b05d4e05c7b723",
+      "entry_pc": 0,
+      "families": [
+        {
+          "family": "VECTOR.ADD",
+          "issue_sites": [],
+          "min_macs": null,
+          "opcode": {
+            "major": 48,
+            "sub": 3
+          },
+          "reachable": false
+        },
+        {
+          "family": "VECTOR.SILU_MUL",
+          "issue_sites": [
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 841,
+              "nearest_refusal": {
+                "entry_pc": 207,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [67, 68] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 207
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 207,
+                "instruction_count": 208,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [67, 68] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 207
+              },
+              "pc": 207,
+              "reachable": false,
+              "underivable_reason": "PC 72 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 891,
+              "nearest_refusal": {
+                "entry_pc": 228,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [74, 75] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 228
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 228,
+                "instruction_count": 229,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [74, 75] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 228
+              },
+              "pc": 228,
+              "reachable": false,
+              "underivable_reason": "PC 72 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 1674,
+              "nearest_refusal": {
+                "entry_pc": 587,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [221, 222] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 587
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 587,
+                "instruction_count": 588,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [221, 222] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 587
+              },
+              "pc": 587,
+              "reachable": false,
+              "underivable_reason": "PC 72 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 1715,
+              "nearest_refusal": {
+                "entry_pc": 608,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [228, 229] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 608
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 608,
+                "instruction_count": 609,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [228, 229] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 608
+              },
+              "pc": 608,
+              "reachable": false,
+              "underivable_reason": "PC 72 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 2283,
+              "nearest_refusal": {
+                "entry_pc": 888,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [336, 337] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 888
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 888,
+                "instruction_count": 889,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [336, 337] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 888
+              },
+              "pc": 888,
+              "reachable": false,
+              "underivable_reason": "PC 72 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 2324,
+              "nearest_refusal": {
+                "entry_pc": 909,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [343, 344] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 909
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 909,
+                "instruction_count": 910,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [343, 344] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 909
+              },
+              "pc": 909,
+              "reachable": false,
+              "underivable_reason": "PC 72 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 2996,
+              "nearest_refusal": {
+                "entry_pc": 1256,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [482, 483] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 1256
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 1256,
+                "instruction_count": 1257,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [482, 483] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 1256
+              },
+              "pc": 1256,
+              "reachable": false,
+              "underivable_reason": "PC 72 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 3037,
+              "nearest_refusal": {
+                "entry_pc": 1277,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [489, 490] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 1277
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 1277,
+                "instruction_count": 1278,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [489, 490] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 1277
+              },
+              "pc": 1277,
+              "reachable": false,
+              "underivable_reason": "PC 72 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            }
+          ],
+          "min_macs": null,
+          "opcode": {
+            "major": 48,
+            "sub": 4
+          },
+          "reachable": false
+        },
+        {
+          "family": "DMA.SCATTER",
+          "issue_sites": [
+            {
+              "cheapest_entry": {
+                "entry_pc": 0,
+                "instruction_count": 70,
+                "issued_operations": 24,
+                "macs": 39845888,
+                "terminal_pc": 70,
+                "terminal_trap_class": 5
+              },
+              "derivable": true,
+              "descriptor_id": 528,
+              "nearest_refusal": {
+                "entry_pc": 69,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [21] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 69
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 69,
+                "instruction_count": 70,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [21] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 69
+              },
+              "pc": 69,
+              "reachable": true,
+              "underivable_reason": null
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 1039,
+              "nearest_refusal": {
+                "entry_pc": 303,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [101] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 303
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 303,
+                "instruction_count": 304,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [101] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 303
+              },
+              "pc": 303,
+              "reachable": false,
+              "underivable_reason": "PC 72 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 1086,
+              "nearest_refusal": {
+                "entry_pc": 320,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [104, 109] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 320
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 320,
+                "instruction_count": 321,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [104, 109] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 320
+              },
+              "pc": 320,
+              "reachable": false,
+              "underivable_reason": "PC 72 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 1088,
+              "nearest_refusal": {
+                "entry_pc": 321,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [104, 109, 111, 112] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 321
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 321,
+                "instruction_count": 322,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [104, 109, 111, 112] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 321
+              },
+              "pc": 321,
+              "reachable": false,
+              "underivable_reason": "PC 72 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 1201,
+              "nearest_refusal": {
+                "entry_pc": 321,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [104, 109, 111, 112] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 321
+              },
+              "own_pc_entry": {
+                "derivable": false,
+                "dispatches_the_site": false,
+                "entry_pc": 357,
+                "instruction_count": 358,
+                "macs": 0,
+                "reason": "PC 357 is PREDICATED; its predicate is a device-memory read this derivation does not model",
+                "trap_class": null,
+                "trap_pc": 357
+              },
+              "pc": 357,
+              "reachable": false,
+              "underivable_reason": "PC 357 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 1204,
+              "nearest_refusal": {
+                "entry_pc": 321,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [104, 109, 111, 112] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 321
+              },
+              "own_pc_entry": {
+                "derivable": false,
+                "dispatches_the_site": false,
+                "entry_pc": 358,
+                "instruction_count": 359,
+                "macs": 0,
+                "reason": "PC 358 is PREDICATED; its predicate is a device-memory read this derivation does not model",
+                "trap_class": null,
+                "trap_pc": 358
+              },
+              "pc": 358,
+              "reachable": false,
+              "underivable_reason": "PC 358 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 1274,
+              "nearest_refusal": {
+                "entry_pc": 389,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [141, 144] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 389
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 389,
+                "instruction_count": 390,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [141, 144] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 389
+              },
+              "pc": 389,
+              "reachable": false,
+              "underivable_reason": "PC 72 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 1276,
+              "nearest_refusal": {
+                "entry_pc": 390,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [141, 144, 146, 147] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 390
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 390,
+                "instruction_count": 391,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [141, 144, 146, 147] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 390
+              },
+              "pc": 390,
+              "reachable": false,
+              "underivable_reason": "PC 72 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 1365,
+              "nearest_refusal": {
+                "entry_pc": 390,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [141, 144, 146, 147] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 390
+              },
+              "own_pc_entry": {
+                "derivable": false,
+                "dispatches_the_site": false,
+                "entry_pc": 422,
+                "instruction_count": 423,
+                "macs": 0,
+                "reason": "PC 422 is PREDICATED; its predicate is a device-memory read this derivation does not model",
+                "trap_class": null,
+                "trap_pc": 422
+              },
+              "pc": 422,
+              "reachable": false,
+              "underivable_reason": "PC 422 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 1367,
+              "nearest_refusal": {
+                "entry_pc": 390,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [141, 144, 146, 147] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 390
+              },
+              "own_pc_entry": {
+                "derivable": false,
+                "dispatches_the_site": false,
+                "entry_pc": 423,
+                "instruction_count": 424,
+                "macs": 0,
+                "reason": "PC 423 is PREDICATED; its predicate is a device-memory read this derivation does not model",
+                "trap_class": null,
+                "trap_pc": 423
+              },
+              "pc": 423,
+              "reachable": false,
+              "underivable_reason": "PC 423 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 1859,
+              "nearest_refusal": {
+                "entry_pc": 683,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [255] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 683
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 683,
+                "instruction_count": 684,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [255] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 683
+              },
+              "pc": 683,
+              "reachable": false,
+              "underivable_reason": "PC 72 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 1899,
+              "nearest_refusal": {
+                "entry_pc": 700,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [258, 263] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 700
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 700,
+                "instruction_count": 701,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [258, 263] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 700
+              },
+              "pc": 700,
+              "reachable": false,
+              "underivable_reason": "PC 72 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 1901,
+              "nearest_refusal": {
+                "entry_pc": 701,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [258, 263, 265, 266] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 701
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 701,
+                "instruction_count": 702,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [258, 263, 265, 266] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 701
+              },
+              "pc": 701,
+              "reachable": false,
+              "underivable_reason": "PC 72 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 1999,
+              "nearest_refusal": {
+                "entry_pc": 701,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [258, 263, 265, 266] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 701
+              },
+              "own_pc_entry": {
+                "derivable": false,
+                "dispatches_the_site": false,
+                "entry_pc": 735,
+                "instruction_count": 736,
+                "macs": 0,
+                "reason": "PC 735 is PREDICATED; its predicate is a device-memory read this derivation does not model",
+                "trap_class": null,
+                "trap_pc": 735
+              },
+              "pc": 735,
+              "reachable": false,
+              "underivable_reason": "PC 735 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 2001,
+              "nearest_refusal": {
+                "entry_pc": 701,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [258, 263, 265, 266] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 701
+              },
+              "own_pc_entry": {
+                "derivable": false,
+                "dispatches_the_site": false,
+                "entry_pc": 736,
+                "instruction_count": 737,
+                "macs": 0,
+                "reason": "PC 736 is PREDICATED; its predicate is a device-memory read this derivation does not model",
+                "trap_class": null,
+                "trap_pc": 736
+              },
+              "pc": 736,
+              "reachable": false,
+              "underivable_reason": "PC 736 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 2463,
+              "nearest_refusal": {
+                "entry_pc": 978,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [366] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 978
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 978,
+                "instruction_count": 979,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [366] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 978
+              },
+              "pc": 978,
+              "reachable": false,
+              "underivable_reason": "PC 72 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 2493,
+              "nearest_refusal": {
+                "entry_pc": 991,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [369, 372] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 991
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 991,
+                "instruction_count": 992,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [369, 372] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 991
+              },
+              "pc": 991,
+              "reachable": false,
+              "underivable_reason": "PC 72 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 2495,
+              "nearest_refusal": {
+                "entry_pc": 992,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [369, 372, 374, 375] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 992
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 992,
+                "instruction_count": 993,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [369, 372, 374, 375] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 992
+              },
+              "pc": 992,
+              "reachable": false,
+              "underivable_reason": "PC 72 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 2572,
+              "nearest_refusal": {
+                "entry_pc": 992,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [369, 372, 374, 375] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 992
+              },
+              "own_pc_entry": {
+                "derivable": false,
+                "dispatches_the_site": false,
+                "entry_pc": 1028,
+                "instruction_count": 1029,
+                "macs": 0,
+                "reason": "PC 1028 is PREDICATED; its predicate is a device-memory read this derivation does not model",
+                "trap_class": null,
+                "trap_pc": 1028
+              },
+              "pc": 1028,
+              "reachable": false,
+              "underivable_reason": "PC 1028 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 2574,
+              "nearest_refusal": {
+                "entry_pc": 992,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [369, 372, 374, 375] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 992
+              },
+              "own_pc_entry": {
+                "derivable": false,
+                "dispatches_the_site": false,
+                "entry_pc": 1029,
+                "instruction_count": 1030,
+                "macs": 0,
+                "reason": "PC 1029 is PREDICATED; its predicate is a device-memory read this derivation does not model",
+                "trap_class": null,
+                "trap_pc": 1029
+              },
+              "pc": 1029,
+              "reachable": false,
+              "underivable_reason": "PC 1029 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 2634,
+              "nearest_refusal": {
+                "entry_pc": 1060,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [404, 407] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 1060
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 1060,
+                "instruction_count": 1061,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [404, 407] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 1060
+              },
+              "pc": 1060,
+              "reachable": false,
+              "underivable_reason": "PC 72 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 2636,
+              "nearest_refusal": {
+                "entry_pc": 1061,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [404, 407, 409, 410] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 1061
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 1061,
+                "instruction_count": 1062,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [404, 407, 409, 410] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 1061
+              },
+              "pc": 1061,
+              "reachable": false,
+              "underivable_reason": "PC 72 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 2702,
+              "nearest_refusal": {
+                "entry_pc": 1061,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [404, 407, 409, 410] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 1061
+              },
+              "own_pc_entry": {
+                "derivable": false,
+                "dispatches_the_site": false,
+                "entry_pc": 1093,
+                "instruction_count": 1094,
+                "macs": 0,
+                "reason": "PC 1093 is PREDICATED; its predicate is a device-memory read this derivation does not model",
+                "trap_class": null,
+                "trap_pc": 1093
+              },
+              "pc": 1093,
+              "reachable": false,
+              "underivable_reason": "PC 1093 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 2704,
+              "nearest_refusal": {
+                "entry_pc": 1061,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [404, 407, 409, 410] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 1061
+              },
+              "own_pc_entry": {
+                "derivable": false,
+                "dispatches_the_site": false,
+                "entry_pc": 1094,
+                "instruction_count": 1095,
+                "macs": 0,
+                "reason": "PC 1094 is PREDICATED; its predicate is a device-memory read this derivation does not model",
+                "trap_class": null,
+                "trap_pc": 1094
+              },
+              "pc": 1094,
+              "reachable": false,
+              "underivable_reason": "PC 1094 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            }
+          ],
+          "min_macs": 39845888,
+          "opcode": {
+            "major": 16,
+            "sub": 3
+          },
+          "reachable": true
+        },
+        {
+          "family": "ATTENTION.GQA",
+          "issue_sites": [],
+          "min_macs": null,
+          "opcode": {
+            "major": 64,
+            "sub": 1
+          },
+          "reachable": false
+        },
+        {
+          "family": "SELECTION.ARGMAX",
+          "issue_sites": [
+            {
+              "cheapest_entry": {
+                "entry_pc": 1295,
+                "instruction_count": 1305,
+                "issued_operations": 6,
+                "macs": 529530880,
+                "terminal_pc": 1305,
+                "terminal_trap_class": 5
+              },
+              "derivable": false,
+              "descriptor_id": 3109,
+              "nearest_refusal": {
+                "entry_pc": 1304,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [503] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 1304
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 1304,
+                "instruction_count": 1305,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [503] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 1304
+              },
+              "pc": 1304,
+              "reachable": true,
+              "underivable_reason": "PC 72 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            }
+          ],
+          "min_macs": 529530880,
+          "opcode": {
+            "major": 112,
+            "sub": 0
+          },
+          "reachable": true
+        },
+        {
+          "family": "SELECTION.TOKEN_APPEND",
+          "issue_sites": [
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 3131,
+              "nearest_refusal": {
+                "entry_pc": 1321,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [504, 510] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 1321
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 1321,
+                "instruction_count": 1322,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [504, 510] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 1321
+              },
+              "pc": 1321,
+              "reachable": false,
+              "underivable_reason": "PC 72 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            }
+          ],
+          "min_macs": null,
+          "opcode": {
+            "major": 112,
+            "sub": 1
+          },
+          "reachable": false
+        }
+      ],
+      "instruction_count": 1323,
+      "positive_control": {
+        "entry_pc": 1295,
+        "instruction_count": 1297,
+        "predicted_dispatches_the_site": true,
+        "predicted_macs": 0,
+        "predicted_trap_class": 5,
+        "predicted_trap_pc": 1297,
+        "site_pc": 1296
+      },
+      "target": "deepseek-v4-flash-rom-wafer",
+      "whole_program": {
+        "issued_operations": 24,
+        "macs": 39845888,
+        "outcome": "underivable"
+      },
+      "workload_context": {
+        "generated_token_count": 3,
+        "kv_plane_rows": 19,
+        "prompt_token_count": 16,
+        "source": "results/abi3/qwen3_reference_oracle_eos.json"
+      }
+    },
+    {
+      "bank_demand": {
+        "index_bank_words_for_mapped_objects": 1,
+        "kv_plane_rows": 19,
+        "objects": [
+          {
+            "bank": "index",
+            "declared_words": 1,
+            "is_index_view": true,
+            "is_kv_cache": false,
+            "named_by": [
+              {
+                "family": "DMA.SCATTER",
+                "pc": 71
+              }
+            ],
+            "object_id": 227,
+            "vehicle_words": 1
+          },
+          {
+            "bank": "result",
+            "declared_words": 512,
+            "is_index_view": false,
+            "is_kv_cache": false,
+            "named_by": [
+              {
+                "family": "DMA.SCATTER",
+                "pc": 71
+              }
+            ],
+            "object_id": 255,
+            "vehicle_words": 512
+          },
+          {
+            "bank": "result",
+            "declared_words": 65536,
+            "is_index_view": false,
+            "is_kv_cache": false,
+            "named_by": [
+              {
+                "family": "DMA.SCATTER",
+                "pc": 71
+              }
+            ],
+            "object_id": 505,
+            "vehicle_words": 65536
+          }
+        ],
+        "result_bank_words_for_mapped_objects": 66048,
+        "unresolved_views": []
+      },
+      "case_plan": [
+        {
+          "cost_curve": [
+            {
+              "cumulative_macs": 7340032,
+              "family": "DMA.SCATTER",
+              "instruction_count": 72,
+              "marginal_macs": 7340032,
+              "site_pc": 71
+            }
+          ],
+          "covers": [
+            "DMA.SCATTER"
+          ],
+          "entry_pc": 0,
+          "full_coverage_instruction_count": 72,
+          "full_coverage_macs": 7340032
+        }
+      ],
+      "deployment": "build/abi3/deepseek-v4-flash-hbm-tokens",
+      "deployment_matches_vector_set": true,
+      "deployment_sha256": "d83286151b5c9f7e4d653b124c93a8d4350e405e5af37239ed07d81c578ea08b",
+      "deployment_sha256_certified_by_vector_set": "d83286151b5c9f7e4d653b124c93a8d4350e405e5af37239ed07d81c578ea08b",
+      "entry_pc": 0,
+      "families": [
+        {
+          "family": "VECTOR.ADD",
+          "issue_sites": [],
+          "min_macs": null,
+          "opcode": {
+            "major": 48,
+            "sub": 3
+          },
+          "reachable": false
+        },
+        {
+          "family": "VECTOR.SILU_MUL",
+          "issue_sites": [
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 985,
+              "nearest_refusal": {
+                "entry_pc": 200,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [83, 84] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 200
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 200,
+                "instruction_count": 201,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [83, 84] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 200
+              },
+              "pc": 200,
+              "reachable": false,
+              "underivable_reason": "PC 75 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 1019,
+              "nearest_refusal": {
+                "entry_pc": 214,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [90, 91] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 214
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 214,
+                "instruction_count": 215,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [90, 91] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 214
+              },
+              "pc": 214,
+              "reachable": false,
+              "underivable_reason": "PC 75 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 1802,
+              "nearest_refusal": {
+                "entry_pc": 571,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [260, 261] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 571
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 571,
+                "instruction_count": 572,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [260, 261] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 571
+              },
+              "pc": 571,
+              "reachable": false,
+              "underivable_reason": "PC 75 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 1833,
+              "nearest_refusal": {
+                "entry_pc": 585,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [267, 268] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 585
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 585,
+                "instruction_count": 586,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [267, 268] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 585
+              },
+              "pc": 585,
+              "reachable": false,
+              "underivable_reason": "PC 75 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 2406,
+              "nearest_refusal": {
+                "entry_pc": 855,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [392, 393] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 855
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 855,
+                "instruction_count": 856,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [392, 393] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 855
+              },
+              "pc": 855,
+              "reachable": false,
+              "underivable_reason": "PC 75 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 2437,
+              "nearest_refusal": {
+                "entry_pc": 869,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [399, 400] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 869
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 869,
+                "instruction_count": 870,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [399, 400] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 869
+              },
+              "pc": 869,
+              "reachable": false,
+              "underivable_reason": "PC 75 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 3157,
+              "nearest_refusal": {
+                "entry_pc": 1221,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [567, 568] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 1221
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 1221,
+                "instruction_count": 1222,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [567, 568] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 1221
+              },
+              "pc": 1221,
+              "reachable": false,
+              "underivable_reason": "PC 75 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 3188,
+              "nearest_refusal": {
+                "entry_pc": 1235,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [574, 575] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 1235
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 1235,
+                "instruction_count": 1236,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [574, 575] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 1235
+              },
+              "pc": 1235,
+              "reachable": false,
+              "underivable_reason": "PC 75 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            }
+          ],
+          "min_macs": null,
+          "opcode": {
+            "major": 48,
+            "sub": 4
+          },
+          "reachable": false
+        },
+        {
+          "family": "DMA.SCATTER",
+          "issue_sites": [
+            {
+              "cheapest_entry": {
+                "entry_pc": 0,
+                "instruction_count": 72,
+                "issued_operations": 26,
+                "macs": 7340032,
+                "terminal_pc": 72,
+                "terminal_trap_class": 5
+              },
+              "derivable": true,
+              "descriptor_id": 685,
+              "nearest_refusal": {
+                "entry_pc": 71,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [23] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 71
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 71,
+                "instruction_count": 72,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [23] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 71
+              },
+              "pc": 71,
+              "reachable": true,
+              "underivable_reason": null
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 1176,
+              "nearest_refusal": {
+                "entry_pc": 291,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [122] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 291
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 291,
+                "instruction_count": 292,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [122] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 291
+              },
+              "pc": 291,
+              "reachable": false,
+              "underivable_reason": "PC 75 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 1207,
+              "nearest_refusal": {
+                "entry_pc": 303,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [125] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 303
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 303,
+                "instruction_count": 304,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [125] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 303
+              },
+              "pc": 303,
+              "reachable": false,
+              "underivable_reason": "PC 75 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 1208,
+              "nearest_refusal": {
+                "entry_pc": 304,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [127, 130] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 304
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 304,
+                "instruction_count": 305,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [127, 130] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 304
+              },
+              "pc": 304,
+              "reachable": false,
+              "underivable_reason": "PC 75 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 1319,
+              "nearest_refusal": {
+                "entry_pc": 304,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [127, 130] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 304
+              },
+              "own_pc_entry": {
+                "derivable": false,
+                "dispatches_the_site": false,
+                "entry_pc": 344,
+                "instruction_count": 345,
+                "macs": 0,
+                "reason": "PC 344 is PREDICATED; its predicate is a device-memory read this derivation does not model",
+                "trap_class": null,
+                "trap_pc": 344
+              },
+              "pc": 344,
+              "reachable": false,
+              "underivable_reason": "PC 344 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 1322,
+              "nearest_refusal": {
+                "entry_pc": 304,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [127, 130] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 304
+              },
+              "own_pc_entry": {
+                "derivable": false,
+                "dispatches_the_site": false,
+                "entry_pc": 345,
+                "instruction_count": 346,
+                "macs": 0,
+                "reason": "PC 345 is PREDICATED; its predicate is a device-memory read this derivation does not model",
+                "trap_class": null,
+                "trap_pc": 345
+              },
+              "pc": 345,
+              "reachable": false,
+              "underivable_reason": "PC 345 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 1399,
+              "nearest_refusal": {
+                "entry_pc": 380,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [165] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 380
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 380,
+                "instruction_count": 381,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [165] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 380
+              },
+              "pc": 380,
+              "reachable": false,
+              "underivable_reason": "PC 75 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 1400,
+              "nearest_refusal": {
+                "entry_pc": 381,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [167, 170] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 381
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 381,
+                "instruction_count": 382,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [167, 170] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 381
+              },
+              "pc": 381,
+              "reachable": false,
+              "underivable_reason": "PC 75 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 1484,
+              "nearest_refusal": {
+                "entry_pc": 381,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [167, 170] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 381
+              },
+              "own_pc_entry": {
+                "derivable": false,
+                "dispatches_the_site": false,
+                "entry_pc": 413,
+                "instruction_count": 414,
+                "macs": 0,
+                "reason": "PC 413 is PREDICATED; its predicate is a device-memory read this derivation does not model",
+                "trap_class": null,
+                "trap_pc": 413
+              },
+              "pc": 413,
+              "reachable": false,
+              "underivable_reason": "PC 413 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 1486,
+              "nearest_refusal": {
+                "entry_pc": 381,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [167, 170] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 381
+              },
+              "own_pc_entry": {
+                "derivable": false,
+                "dispatches_the_site": false,
+                "entry_pc": 414,
+                "instruction_count": 415,
+                "macs": 0,
+                "reason": "PC 414 is PREDICATED; its predicate is a device-memory read this derivation does not model",
+                "trap_class": null,
+                "trap_pc": 414
+              },
+              "pc": 414,
+              "reachable": false,
+              "underivable_reason": "PC 414 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 1992,
+              "nearest_refusal": {
+                "entry_pc": 662,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [299] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 662
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 662,
+                "instruction_count": 663,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [299] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 662
+              },
+              "pc": 662,
+              "reachable": false,
+              "underivable_reason": "PC 75 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 2019,
+              "nearest_refusal": {
+                "entry_pc": 674,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [302] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 674
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 674,
+                "instruction_count": 675,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [302] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 674
+              },
+              "pc": 674,
+              "reachable": false,
+              "underivable_reason": "PC 75 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 2020,
+              "nearest_refusal": {
+                "entry_pc": 675,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [304, 307] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 675
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 675,
+                "instruction_count": 676,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [304, 307] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 675
+              },
+              "pc": 675,
+              "reachable": false,
+              "underivable_reason": "PC 75 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 2116,
+              "nearest_refusal": {
+                "entry_pc": 675,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [304, 307] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 675
+              },
+              "own_pc_entry": {
+                "derivable": false,
+                "dispatches_the_site": false,
+                "entry_pc": 713,
+                "instruction_count": 714,
+                "macs": 0,
+                "reason": "PC 713 is PREDICATED; its predicate is a device-memory read this derivation does not model",
+                "trap_class": null,
+                "trap_pc": 713
+              },
+              "pc": 713,
+              "reachable": false,
+              "underivable_reason": "PC 713 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 2119,
+              "nearest_refusal": {
+                "entry_pc": 675,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [304, 307] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 675
+              },
+              "own_pc_entry": {
+                "derivable": false,
+                "dispatches_the_site": false,
+                "entry_pc": 714,
+                "instruction_count": 715,
+                "macs": 0,
+                "reason": "PC 714 is PREDICATED; its predicate is a device-memory read this derivation does not model",
+                "trap_class": null,
+                "trap_pc": 714
+              },
+              "pc": 714,
+              "reachable": false,
+              "underivable_reason": "PC 714 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 2594,
+              "nearest_refusal": {
+                "entry_pc": 945,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [431] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 945
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 945,
+                "instruction_count": 946,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [431] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 945
+              },
+              "pc": 945,
+              "reachable": false,
+              "underivable_reason": "PC 75 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 2622,
+              "nearest_refusal": {
+                "entry_pc": 957,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [434] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 957
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 957,
+                "instruction_count": 958,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [434] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 957
+              },
+              "pc": 957,
+              "reachable": false,
+              "underivable_reason": "PC 75 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 2623,
+              "nearest_refusal": {
+                "entry_pc": 958,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [436, 439] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 958
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 958,
+                "instruction_count": 959,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [436, 439] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 958
+              },
+              "pc": 958,
+              "reachable": false,
+              "underivable_reason": "PC 75 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 2703,
+              "nearest_refusal": {
+                "entry_pc": 958,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [436, 439] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 958
+              },
+              "own_pc_entry": {
+                "derivable": false,
+                "dispatches_the_site": false,
+                "entry_pc": 994,
+                "instruction_count": 995,
+                "macs": 0,
+                "reason": "PC 994 is PREDICATED; its predicate is a device-memory read this derivation does not model",
+                "trap_class": null,
+                "trap_pc": 994
+              },
+              "pc": 994,
+              "reachable": false,
+              "underivable_reason": "PC 994 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 2705,
+              "nearest_refusal": {
+                "entry_pc": 958,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [436, 439] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 958
+              },
+              "own_pc_entry": {
+                "derivable": false,
+                "dispatches_the_site": false,
+                "entry_pc": 995,
+                "instruction_count": 996,
+                "macs": 0,
+                "reason": "PC 995 is PREDICATED; its predicate is a device-memory read this derivation does not model",
+                "trap_class": null,
+                "trap_pc": 995
+              },
+              "pc": 995,
+              "reachable": false,
+              "underivable_reason": "PC 995 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 2772,
+              "nearest_refusal": {
+                "entry_pc": 1030,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [472] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 1030
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 1030,
+                "instruction_count": 1031,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [472] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 1030
+              },
+              "pc": 1030,
+              "reachable": false,
+              "underivable_reason": "PC 75 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 2773,
+              "nearest_refusal": {
+                "entry_pc": 1031,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [474, 477] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 1031
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 1031,
+                "instruction_count": 1032,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [474, 477] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 1031
+              },
+              "pc": 1031,
+              "reachable": false,
+              "underivable_reason": "PC 75 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 2846,
+              "nearest_refusal": {
+                "entry_pc": 1031,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [474, 477] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 1031
+              },
+              "own_pc_entry": {
+                "derivable": false,
+                "dispatches_the_site": false,
+                "entry_pc": 1063,
+                "instruction_count": 1064,
+                "macs": 0,
+                "reason": "PC 1063 is PREDICATED; its predicate is a device-memory read this derivation does not model",
+                "trap_class": null,
+                "trap_pc": 1063
+              },
+              "pc": 1063,
+              "reachable": false,
+              "underivable_reason": "PC 1063 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            },
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 2848,
+              "nearest_refusal": {
+                "entry_pc": 1031,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [474, 477] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 1031
+              },
+              "own_pc_entry": {
+                "derivable": false,
+                "dispatches_the_site": false,
+                "entry_pc": 1064,
+                "instruction_count": 1065,
+                "macs": 0,
+                "reason": "PC 1064 is PREDICATED; its predicate is a device-memory read this derivation does not model",
+                "trap_class": null,
+                "trap_pc": 1064
+              },
+              "pc": 1064,
+              "reachable": false,
+              "underivable_reason": "PC 1064 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            }
+          ],
+          "min_macs": 7340032,
+          "opcode": {
+            "major": 16,
+            "sub": 3
+          },
+          "reachable": true
+        },
+        {
+          "family": "ATTENTION.GQA",
+          "issue_sites": [],
+          "min_macs": null,
+          "opcode": {
+            "major": 64,
+            "sub": 1
+          },
+          "reachable": false
+        },
+        {
+          "family": "SELECTION.ARGMAX",
+          "issue_sites": [
+            {
+              "cheapest_entry": {
+                "entry_pc": 1254,
+                "instruction_count": 1267,
+                "issued_operations": 9,
+                "macs": 16547840,
+                "terminal_pc": 1267,
+                "terminal_trap_class": 5
+              },
+              "derivable": false,
+              "descriptor_id": 3278,
+              "nearest_refusal": {
+                "entry_pc": 1266,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [594] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 1266
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 1266,
+                "instruction_count": 1267,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [594] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 1266
+              },
+              "pc": 1266,
+              "reachable": true,
+              "underivable_reason": "PC 75 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            }
+          ],
+          "min_macs": 16547840,
+          "opcode": {
+            "major": 112,
+            "sub": 0
+          },
+          "reachable": true
+        },
+        {
+          "family": "SELECTION.TOKEN_APPEND",
+          "issue_sites": [
+            {
+              "cheapest_entry": null,
+              "derivable": false,
+              "descriptor_id": 3301,
+              "nearest_refusal": {
+                "entry_pc": 1284,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [595, 600] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 1284
+              },
+              "own_pc_entry": {
+                "derivable": true,
+                "dispatches_the_site": false,
+                "entry_pc": 1284,
+                "instruction_count": 1285,
+                "macs": 0,
+                "reason": "wait set names producer event(s) [595, 600] that this transaction never issued",
+                "trap_class": 13,
+                "trap_pc": 1284
+              },
+              "pc": 1284,
+              "reachable": false,
+              "underivable_reason": "PC 75 is PREDICATED; its predicate is a device-memory read this derivation does not model"
+            }
+          ],
+          "min_macs": null,
+          "opcode": {
+            "major": 112,
+            "sub": 1
+          },
+          "reachable": false
+        }
+      ],
+      "instruction_count": 1286,
+      "positive_control": {
+        "entry_pc": 1254,
+        "instruction_count": 1256,
+        "predicted_dispatches_the_site": true,
+        "predicted_macs": 0,
+        "predicted_trap_class": 5,
+        "predicted_trap_pc": 1256,
+        "site_pc": 1255
+      },
+      "target": "deepseek-v4-flash-hbm-cluster",
+      "whole_program": {
+        "issued_operations": 26,
+        "macs": 7340032,
+        "outcome": "underivable"
+      },
+      "workload_context": {
+        "generated_token_count": 3,
+        "kv_plane_rows": 19,
+        "prompt_token_count": 16,
+        "source": "results/abi3/qwen3_reference_oracle_eos.json"
+      }
+    }
+  ]
+}

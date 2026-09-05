@@ -32,7 +32,13 @@ OUTPUT_DIR = ROOT / "testdata/compiler/abi3_shipped_prefix_multicast"
 SCHEMA = "opentallas.rtl.abi3_shipped_prefix_multicast_vectors.v1"
 BASE_SCHEMA = "opentallas.rtl.abi3_shipped_prefix_vectors.v1"
 MULTICAST_SCHEMA = "opentallas.rtl.a3_wafer_multicast_vectors.v1"
-CASE_STRIDE = 80
+# The case stride is the BASE vector set's, read from its own geometry block
+# rather than duplicated here: the base record grew from 80 words to 112 when
+# it gained the mapped-placement block for the six object-placed families, and
+# a second copy of the number is a second thing to forget.  Word 79 -- this
+# overlay's exact-multicast launch count -- keeps its offset in both
+# generations, which is why the mapped block starts at word 80.
+MULTICAST_LAUNCH_WORD = 79
 ISSUE_STRIDE = 4
 CASE_COUNT = 4
 DEEPSEEK_ROM_CASE = 2
@@ -107,7 +113,7 @@ def normalized_case(index: int, name: str, words: list[int]) -> dict[str, int | 
         "retired": words[20],
         "issued": words[21],
         "views": words[24],
-        "multicast_launches": words[79],
+        "multicast_launches": words[MULTICAST_LAUNCH_WORD],
     }
 
 
@@ -118,11 +124,16 @@ def build(output: Path = OUTPUT_DIR) -> dict[str, Any]:
     require_hashed_files(BASE_DIR, base["image_sha256"])
 
     base_manifest_sha256 = sha256_file(BASE_JSON)
+    case_stride = int(base["geometry"]["case_stride"])
+    if case_stride <= MULTICAST_LAUNCH_WORD:
+        raise SystemExit(
+            "the base case record is too short to carry the multicast word"
+        )
     base_case = read_hex(BASE_DIR / "p3_case.hex")
     base_issue = read_hex(BASE_DIR / "p3_issue.hex")
     base_meta = read_hex(BASE_DIR / "p3_meta.hex")
     if (
-        len(base_case) != CASE_COUNT * CASE_STRIDE
+        len(base_case) != CASE_COUNT * case_stride
         or len(base_issue) != 128
         or len(base_meta) != 26
         or base.get("real_engine_launch_count") != 28
@@ -182,7 +193,7 @@ def build(output: Path = OUTPUT_DIR) -> dict[str, Any]:
     # former LINK capability response becomes a successful completion and the
     # precise PC-15 VECTOR.MHC capability response is appended.
     cases = [
-        base_case[index * CASE_STRIDE : (index + 1) * CASE_STRIDE]
+        base_case[index * case_stride : (index + 1) * case_stride]
         for index in range(CASE_COUNT)
     ]
     streams: list[list[int]] = []
@@ -213,10 +224,10 @@ def build(output: Path = OUTPUT_DIR) -> dict[str, Any]:
     rom[24] = 17  # 11 prior plus six MHC views
     rom[29] = 1  # one capability response
     rom[35] = 2  # transfer wait plus MHC wait
-    rom[79] = 1  # reserved base word: exact multicast launches
+    rom[MULTICAST_LAUNCH_WORD] = 1  # exact multicast launches
     for index, record in enumerate(cases):
         if index != DEEPSEEK_ROM_CASE:
-            record[79] = 0
+            record[MULTICAST_LAUNCH_WORD] = 0
 
     issue_words: list[int] = []
     for record, stream in zip(cases, streams, strict=True):
@@ -300,7 +311,7 @@ def build(output: Path = OUTPUT_DIR) -> dict[str, Any]:
             "exact_case": multicast["cases"][0],
         },
         "case_count": CASE_COUNT,
-        "case_stride": CASE_STRIDE,
+        "case_stride": case_stride,
         "issue_stride": ISSUE_STRIDE,
         "issue_count": len(issue_words) // ISSUE_STRIDE,
         "real_launch_count": 29,
