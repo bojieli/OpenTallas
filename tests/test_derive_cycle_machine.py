@@ -32,14 +32,20 @@ if str(REPO) not in sys.path:
 from tools.derive_cycle_machine import (  # noqa: E402
     DEFAULT_ANALYTICAL,
     DEFAULT_TECHNOLOGY,
+    DEPLOYMENT_AUDIT_ALLOWLIST,
     FAMILIES,
+    SCHEDULE_TILE_FIELDS,
+    SHIPPED_DEPLOYMENTS,
     TECHNOLOGY_VIEW,
     WEIGHT_PATH_ALLOWLIST,
     assert_comparable,
     audit_deployments,
     build,
     canonical,
+    decode_request_symbols,
     load_anchor,
+    survey_deployment,
+    tensor_parity_band,
 )
 
 ROM_DESIGN = "Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4"
@@ -375,36 +381,382 @@ def test_the_emitted_tables_do_not_collide_with_a_shipped_one():
 
 
 # ---------------------------------------------------------------------------
-# 6.  The deployment-side half of the comparison
+# 6.  C2: the deployment-side half of the comparison
 # ---------------------------------------------------------------------------
 SHIPPED_ROM_DEPLOYMENT = REPO / "build/abi3/qwen3-8b-rom-rowfold-v1"
 SHIPPED_HBM_DEPLOYMENT = REPO / "build/abi3/qwen3-8b-hbm-exact8k-b1-lane0"
+SHIPPED_ROM_CYCLE_ARTIFACT = (
+    REPO / "results/abi3/cycle/qwen3_rom_exact8k_b1_asap7_decode_pos8000_rowfold_depthfix_v1.json"
+)
+SHIPPED_HBM_CYCLE_ARTIFACT = (
+    REPO / "results/abi3/cycle/qwen3_hbm_exact8k_b1_asap7_decode_pos8000_rowfold_v1.json"
+)
 
-
-@pytest.mark.skipif(
+needs_shipped_pair = pytest.mark.skipif(
     not (SHIPPED_ROM_DEPLOYMENT.exists() and SHIPPED_HBM_DEPLOYMENT.exists()),
     reason="the shipped Qwen deployments are not built in this tree",
 )
-def test_the_audit_catches_the_shipped_pairs_tile_shape_divergence(emitted):
+
+
+def _shipped_machine(emitted):
+    """The derived N5 machine, which both sides of the pair share (D1)."""
+    from runtime.abi3.capability import Capability
+    from runtime.cycle.machine import MachineModel, load_cost_table
+
+    return MachineModel(
+        Capability.from_dict(emitted["rom_capability"]), load_cost_table(ROM_TABLE)
+    )
+
+
+@pytest.fixture(scope="module")
+def shipped_audit(emitted):
+    if not (SHIPPED_ROM_DEPLOYMENT.exists() and SHIPPED_HBM_DEPLOYMENT.exists()):
+        pytest.skip("the shipped Qwen deployments are not built in this tree")
+    return audit_deployments(
+        SHIPPED_ROM_DEPLOYMENT, SHIPPED_HBM_DEPLOYMENT,
+        symbols=decode_request_symbols(1, 8192), machine=_shipped_machine(emitted),
+    )
+
+
+def _asymmetry(report, family, field):
+    hits = [a for a in report["asymmetries"]
+            if a["family"] == family and a["field"] == field]
+    assert len(hits) == 1, f"{family}.{field}: {hits}"
+    return hits[0]
+
+
+@needs_shipped_pair
+def test_the_shipped_deployments_are_the_registered_ones():
+    """The audit's subject is pinned by digest, not by directory name."""
+    for base, root in (
+        ("configs/hardware/abi3_capability/rom_qwen3.json", SHIPPED_ROM_DEPLOYMENT),
+        ("configs/hardware/abi3_capability/hbm_sram_single_chip.json", SHIPPED_HBM_DEPLOYMENT),
+    ):
+        entry = SHIPPED_DEPLOYMENTS[base]
+        manifest = json.loads((root / "deployment.json").read_text())
+        assert REPO / entry["root"] == root
+        assert manifest["deployment_sha256"] == entry["deployment_sha256"], (
+            f"{root.name} is not the deployment the cited evidence names; "
+            "rebuild products go stale under evidence"
+        )
+        for path in entry["evidence"]:
+            cited = REPO / path.split(" ")[0]
+            assert cited.exists(), f"{path} is cited but absent"
+
+
+def test_the_audit_catches_the_shipped_pairs_tile_shape_divergence(shipped_audit):
     """A machine file cannot fix a deployment-side compute advantage.
 
-    tile_cols and issue_window are SCHEDULE fields.  The shipped pair caps the
-    tensor engine at 8192 columns on the ROM side and 512 on the HBM side, so
-    a comparison run on those two deployments is not a comparison of machines
-    however carefully the machines are matched.  The audit must say so.
+    Every field the cycle model's tile mapping reads is a SCHEDULE field.  The
+    shipped pair differs in all four tile fields of the tensor family -- depth
+    2048 against 128, rows 128 against 64, and a column group of 512 x 16
+    against 128 x 4 -- and in the DMA tile shape, so a comparison run on those
+    two deployments is not a comparison of machines however carefully the
+    machines are matched.  The audit must say so, field by field, with the
+    direction each difference favours.
     """
-    lanes = emitted["rom_capability"]["engines"]["tensor"]["lanes"]
-    report = audit_deployments(SHIPPED_ROM_DEPLOYMENT, SHIPPED_HBM_DEPLOYMENT,
-                               lanes=lanes)
+    report = shipped_audit
+    assert report["comparable"] is False
+    assert report["verdict"].startswith("NOT COMPARABLE")
+    assert "tile_depth 2048 vs 128" in report["verdict"]
+    assert "tile_rows 128 vs 64" in report["verdict"]
+    assert report["allowlist"] == {} and DEPLOYMENT_AUDIT_ALLOWLIST == {}
+
+    depth = _asymmetry(report, "tensor", "tile_depth")
+    assert (depth["rom_value"], depth["hbm_value"]) == (2048, 128)
+    assert depth["cost_bearing"] and not depth["allowlisted"]
+    rows = _asymmetry(report, "tensor", "tile_rows")
+    assert (rows["rom_value"], rows["hbm_value"]) == (128, 64)
+    assert rows["favours"] == "neither", (
+        "at batch-1 decode every tensor operator has one row; if tile_rows "
+        "now moves the tensor charge the request or the lowering has changed"
+    )
+    cols = _asymmetry(report, "tensor", "tile_cols")
+    assert (cols["rom_value"], cols["hbm_value"]) == (512, 128)
+    window = _asymmetry(report, "tensor", "issue_window")
+    assert (window["rom_value"], window["hbm_value"]) == (16, 4)
+    # The column group is what caps the tensor engine at batch 1, and either
+    # field alone would lift the HBM side's cap: both favour ROM by the same
+    # 2x the effective width says.
+    for a in (cols, window):
+        assert a["favours"] == "rom"
+        assert a["effect_x"] == pytest.approx(2.0, rel=1e-2)
+    assert report["rom"]["effective_tensor_width_caps"] == [1024]
+    assert report["hbm"]["effective_tensor_width_caps"] == [512]
     assert not report["column_group_spans_match"]
-    assert (report["rom"]["max_column_group_span"]
-            > report["hbm"]["max_column_group_span"])
-    assert "NOT COMPARABLE" in report["verdict"]
+    tensor = report["families"]["tensor"]
+    assert tensor["useful_work"]["rom"] == tensor["useful_work"]["hbm"]
+    assert tensor["cycles"]["favours"] == "rom"
+    assert tensor["cycles"]["magnitude_x"] == pytest.approx(2.0, rel=1e-2)
+    for key in ("tensor.tile_depth", "tensor.tile_rows", "tensor.tile_cols",
+                "tensor.issue_window"):
+        assert key in report["unexplained_asymmetries"]
     # The ROM/HBM role is a deployment property, not a machine one:
     # StorageClass.ROM is 3.
     assert 3 in report["rom"]["storage_class_counts"]
     assert 3 not in report["hbm"]["storage_class_counts"]
     assert report["storage_classes_differ_as_expected"]
+    assert report["operators_unmatched"] == {"rom": [], "hbm": []}
+    assert report["rom"]["static_walk"] == "complete"
+    assert report["hbm"]["static_walk"] == "complete"
+
+
+def test_the_audit_names_the_shipped_pairs_dma_tile_count_asymmetry(shipped_audit):
+    """A DMA operator is charged once per tile, so the tile count IS the charge.
+
+    The two DMA tile shapes, 128 x 64 against 64 x 128, cover the same area
+    and so tile the KV scatters alike; on the two gathers the ROM shape pays
+    twice the tiles of the HBM shape for the same bytes.  Both facts have to
+    be in the report: the per-step total and the per-operator asymmetry, with
+    its direction.
+    """
+    report = shipped_audit
+    rows = _asymmetry(report, "dma", "tile_rows")
+    cols = _asymmetry(report, "dma", "tile_cols")
+    assert (rows["rom_value"], rows["hbm_value"]) == (128, 64)
+    assert (cols["rom_value"], cols["hbm_value"]) == (64, 128)
+    # Counterfactually each field alone moves the DMA charge 2x -- in
+    # opposite directions.  That is why the per-step totals nearly cancel.
+    assert rows["favours"] == "rom" and rows["effect_x"] == pytest.approx(2.0, rel=1e-3)
+    assert cols["favours"] == "hbm" and cols["effect_x"] == pytest.approx(2.0, rel=1e-3)
+    dma = report["families"]["dma"]
+    assert dma["useful_work"]["rom"] == dma["useful_work"]["hbm"]
+    assert dma["tiles"]["rom"] > dma["tiles"]["hbm"]
+    assert dma["tiles"]["favours"] == "hbm"
+    assert dma["cycles"]["rom"] == dma["tiles"]["rom"], (
+        "at the derived DMA rate every tile is at the one-cycle issue floor"
+    )
+    gathers = [
+        o for o in report["operator_asymmetries"]
+        if o["family"] == "dma" and o["metric"] == "tiles_per_issue"
+    ]
+    assert gathers, "no per-operator DMA tile-count asymmetry was reported"
+    big = next(o for o in gathers if o["operator"].startswith("DMA.GATHER (1x4096x1)"))
+    assert (big["rom"], big["hbm"]) == (64, 32)
+    assert big["favours"] == "hbm" and big["magnitude_x"] == 2.0
+    per_tile = next(
+        o for o in report["operator_asymmetries"]
+        if o["metric"] == "payload_bytes_per_tile"
+        and o["operator"].startswith("DMA.GATHER (1x4096x1)")
+    )
+    assert (per_tile["rom"], per_tile["hbm"]) == (128.0, 256.0)
+    assert f"DMA.GATHER (1x4096x1) 64 vs 32 tiles per issue" in report["verdict"]
+    assert f"{dma['tiles']['rom']:,} vs {dma['tiles']['hbm']:,}" in report["verdict"]
+
+
+def test_the_parity_band_is_reported_for_the_pairs_actual_depths(shipped_audit, emitted):
+    """The tensor parity is a coincidence of the rate, and the audit says where."""
+    band = shipped_audit["tensor_parity_band"]
+    assert (band["rom_tile_depth"], band["hbm_tile_depth"]) == (2048, 128)
+    rate = emitted["rom_cost_table"]["parameters"][
+        "engine.tensor.work_per_lane_cycle"
+    ]["value"]
+    assert band["work_per_lane_cycle"] == rate
+    assert band["band"] == pytest.approx(list(TENSOR_PARITY_BAND), rel=1e-12)
+    assert band["parity"] is True and band["favours"] == "neither"
+    assert band["cycles_per_full_depth_tile"] == {"rom": 16, "hbm": 1}
+    # ...and the same function says which side wins outside the band.
+    below = tensor_parity_band(2048, 128, 240.0)
+    assert below["parity"] is False and below["favours"] == "rom"
+    assert below["magnitude_x"] == pytest.approx(32 / 18)
+    assert 240.0 >= below["band"][0] and 240.0 < below["band"][1]
+    same = tensor_parity_band(128, 128, rate)
+    assert same["parity"] is True and same["band"] == [pytest.approx(256.0), math.inf]
+
+
+def _params_from_cycle_artifact(body):
+    from runtime.cycle.machine import EngineParams
+
+    engines = body["machine"]["engines"]
+
+    def params_for(family):
+        e = engines[family]
+        return EngineParams(
+            family=family, lanes=int(e["lanes"]), queues=int(e["queues"]),
+            queue_depth=int(e["queue_depth"]),
+            max_outstanding=int(e["max_outstanding"]),
+            work_per_lane_cycle=float(e["work_per_lane_cycle"]),
+            fixed_latency_cycles=int(e["fixed_latency_cycles"]),
+            bytes_per_cycle=float(e["bytes_per_cycle"]),
+            minimum_cycles=int(e["minimum_cycles"]),
+            tile_issue_cycles=int(e["tile_issue_cycles"]),
+            tile_pipeline_depth=int(e["tile_pipeline_depth_default"]),
+        )
+    return params_for
+
+
+@needs_shipped_pair
+@pytest.mark.parametrize("root,artifact", [
+    (SHIPPED_ROM_DEPLOYMENT, SHIPPED_ROM_CYCLE_ARTIFACT),
+    (SHIPPED_HBM_DEPLOYMENT, SHIPPED_HBM_CYCLE_ARTIFACT),
+], ids=["rom", "hbm"])
+def test_the_static_survey_reproduces_the_cycle_models_own_tiling(root, artifact):
+    """The audit's tile counts are the cycle model's, not a restatement.
+
+    ``survey_deployment`` decomposes each operator with ``tile_mapping`` and
+    counts its issues by walking the control stream.  Against the shipped
+    cycle artifacts -- which timed these exact deployments through the
+    functional device -- every family's operation count, tile count, useful
+    and issued work must come out identical at the artifact's own request and
+    lane counts.
+    """
+    from runtime.abi3.descriptors import Symbol
+
+    body = json.loads(artifact.read_text())
+    manifest = json.loads((root / "deployment.json").read_text())
+    assert body["inputs"]["deployment_digest"] == manifest["deployment_sha256"], (
+        f"{artifact.name} timed a different deployment than {root.name} holds"
+    )
+    symbols = {
+        int(Symbol[name]): int(value)
+        for name, value in body["inputs"]["request"]["symbols"].items()
+    }
+    survey = survey_deployment(
+        root, symbols=symbols, params_for=_params_from_cycle_artifact(body)
+    )
+    assert survey["static_walk"] == "complete"
+    traced = body["tiling"]["by_family"]
+    assert set(survey["families"]) == set(traced)
+    for family, got in survey["families"].items():
+        want = traced[family]
+        for metric in ("operations", "tiles", "useful_work", "issued_work"):
+            assert got[metric] == want[metric], (family, metric, got[metric], want[metric])
+        assert got["padding_fraction"] == pytest.approx(want["padding_fraction"], abs=2e-6)
+        shapes = {(s["tile_rows"], s["tile_cols"], s["tile_depth"]) for s in want["tile_shapes"]}
+        surveyed = {
+            (o["schedule"]["tile_rows"], o["schedule"]["tile_cols"], o["schedule"]["tile_depth"])
+            for o in survey["operators"] if o["family"] == family
+        }
+        assert surveyed == shapes, (family, surveyed, shapes)
+
+
+def test_a_synthetic_pair_with_identical_schedules_is_comparable(tmp_path):
+    """The conformance fixture lowered through ROM and through HBM.
+
+    The two builds differ only in the weight object's storage class; every
+    SCHEDULE is byte-identical.  That is the property the comparison protocol
+    depends on, and the audit must return ``comparable`` for it -- with no
+    asymmetry, every operator matched and the storage classes differing as
+    the roles require.
+    """
+    from runtime.abi3.constants import StorageClass
+    from runtime.abi3.fixture import build_fixture
+
+    rom = build_fixture(storage_class=StorageClass.ROM).write(tmp_path / "rom")
+    hbm = build_fixture(storage_class=StorageClass.HBM).write(tmp_path / "hbm")
+    report = audit_deployments(rom, hbm, lanes=8, symbols=decode_request_symbols(1, 4))
+    assert report["comparable"] is True
+    assert report["verdict"].startswith("COMPARABLE")
+    assert report["asymmetries"] == []
+    assert report["unexplained_asymmetries"] == []
+    assert report["operator_asymmetries"] == []
+    assert report["operators_unmatched"] == {"rom": [], "hbm": []}
+    assert len(report["operators"]) == 4
+    assert report["column_group_spans_match"]
+    assert report["storage_classes_differ_as_expected"]
+    for family, row in report["families"].items():
+        assert row["tiles"]["rom"] == row["tiles"]["hbm"], family
+        assert row["tiles"]["favours"] == "neither"
+
+
+def test_a_synthetic_pair_with_one_field_changed_is_not_comparable(tmp_path, monkeypatch):
+    """One SCHEDULE field is enough, and the audit names it with its direction."""
+    from runtime.abi3.builder import DeploymentBuilder
+    from runtime.abi3.constants import Major, StorageClass
+    from runtime.abi3.fixture import build_fixture
+
+    rom = build_fixture(storage_class=StorageClass.ROM).write(tmp_path / "rom")
+    original = DeploymentBuilder.schedule
+
+    def halve_tensor_depth(self, **kwargs):
+        if kwargs.get("engine_family") == Major.TENSOR:
+            kwargs["tile_depth"] //= 2
+        return original(self, **kwargs)
+
+    monkeypatch.setattr(DeploymentBuilder, "schedule", halve_tensor_depth)
+    hbm = build_fixture(storage_class=StorageClass.HBM).write(tmp_path / "hbm")
+    report = audit_deployments(rom, hbm, lanes=8, symbols=decode_request_symbols(1, 4))
+    assert report["comparable"] is False
+    assert report["unexplained_asymmetries"] == ["tensor.tile_depth"]
+    a = _asymmetry(report, "tensor", "tile_depth")
+    assert (a["rom_value"], a["hbm_value"]) == (8, 4)
+    assert a["favours"] == "rom", "half the depth is twice the depth tiles"
+    assert a["effect_x"] == pytest.approx(2.0)
+    assert "tile_depth 8 vs 4" in report["verdict"]
+    tensor = report["families"]["tensor"]
+    assert tensor["tiles"]["rom"] * 2 == tensor["tiles"]["hbm"]
+
+
+# ---------------------------------------------------------------------------
+# 6b.  Every pair artifact carries a C2 verdict; absence is a failure
+# ---------------------------------------------------------------------------
+PAIR_ARTIFACTS = sorted((REPO / "results/derived").glob("*_machine_pair.json"))
+
+
+@pytest.mark.parametrize("path", PAIR_ARTIFACTS, ids=[p.stem for p in PAIR_ARTIFACTS])
+def test_every_pair_artifact_carries_a_deployment_audit_verdict(path):
+    body = json.loads(path.read_text())
+    audit = body["deployment_audit"]
+    assert isinstance(audit["comparable"], bool)
+    assert isinstance(audit["verdict"], str) and audit["verdict"]
+    standalone = path.with_name(path.name.replace("_machine_pair.json", "_deployment_audit.json"))
+    assert standalone.exists(), f"{standalone.name} was not emitted beside {path.name}"
+    assert audit["full_report"] == str(standalone.relative_to(REPO))
+    full = json.loads(standalone.read_text())
+    # The embedded audit is the standalone one minus the per-operator survey.
+    for key, value in audit.items():
+        if key == "full_report":
+            continue
+        if key in ("rom", "hbm"):
+            assert {k: v for k, v in full[key].items() if k != "operators"} == value
+        else:
+            assert full[key] == value, (
+                f"{standalone.name} disagrees with the audit embedded in {path.name} at {key}"
+            )
+    assert audit["pair_id"] == body["pair_id"]
+    model = body["pair_id"].split("__", 1)[0]
+    if model != "qwen3-8b":
+        # No DeepSeek deployment is bound to the collapsed single-chip HBM
+        # capability the derived pair prices against, and no Pro deployment
+        # exists at all.  That is a recorded failure, not a skipped cell.
+        assert audit["comparable"] is False
+        assert audit["reason"] == "no deployment built"
+        assert audit["verdict"].startswith("NOT COMPARABLE: no deployment built")
+        return
+    if not (SHIPPED_ROM_DEPLOYMENT.exists() and SHIPPED_HBM_DEPLOYMENT.exists()):
+        assert audit["comparable"] is False
+        assert audit["reason"] == "no deployment built"
+        return
+    assert audit["comparable"] is False
+    assert audit["reason"] == "not comparable"
+    assert "tile_depth 2048 vs 128" in audit["verdict"]
+    assert "tile_rows 128 vs 64" in audit["verdict"]
+    assert audit["deployments"]["rom"]["status"] == "bound"
+    assert audit["deployments"]["hbm"]["status"] == "bound"
+    assert audit["deployments"]["rom"]["deployment_sha256"] == SHIPPED_DEPLOYMENTS[
+        "configs/hardware/abi3_capability/rom_qwen3.json"]["deployment_sha256"]
+    assert set(SCHEDULE_TILE_FIELDS) <= {
+        a["field"] for a in audit["asymmetries"] if a["family"] == "tensor"
+    }
+
+
+def test_the_c2_gate_fails_on_the_audits_evidence_not_on_absence():
+    """The board must quote the verdict, not report a missing key."""
+    from tools.check_redesign_gates import evaluate
+
+    gates = json.loads((REPO / "configs/gates/redesign_gates.json").read_text())
+    c2 = next(g for g in gates["gates"] if g["id"] == "C2")
+    assert c2["evaluator"]["reason_field"] == "deployment_audit.verdict"
+    result = evaluate(c2)
+    assert result["status"] == "fail"
+    assert "none has deployment_audit.comparable" not in result["why"], (
+        "C2 is failing on absence again: " + result["why"]
+    )
+    assert "deployment_audit.comparable == False" in result["why"]
+    if SHIPPED_ROM_DEPLOYMENT.exists() and SHIPPED_HBM_DEPLOYMENT.exists():
+        assert "tile_depth 2048 vs 128" in result["why"]
+    else:
+        assert "no deployment built" in result["why"]
 
 
 # ---------------------------------------------------------------------------

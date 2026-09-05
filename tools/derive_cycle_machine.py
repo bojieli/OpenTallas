@@ -2246,99 +2246,1430 @@ def assert_comparable(rom_cap: Mapping[str, Any], rom_table: Path,
 
 
 # ---------------------------------------------------------------------------
-# The deployment-side half of D1
+# The deployment-side half of D1: the C2 audit
 # ---------------------------------------------------------------------------
-def audit_deployments(rom_root: Path, hbm_root: Path,
-                      lanes: int | None = None) -> dict[str, Any]:
-    """Compare the two deployments' tensor tile shapes and storage classes.
+#: SCHEDULE fields, grouped by where they enter the cycle cost.  The first
+#: group is read by ``tile_mapping``, ``tensor_lane_mapping``,
+#: ``apply_tile_amplification`` and ``_compute_cycles`` and decides the tile
+#: decomposition itself.  The second enters queue admission
+#: (``max_outstanding``, ``queue_index``), the memory scheduler (``bank_mask``,
+#: ``port_mask``) or the fabric route (``noc_route_class``).  The third is
+#: copied into the mapping and read by nothing that costs a cycle.
+SCHEDULE_TILE_FIELDS: tuple[str, ...] = (
+    "tile_rows", "tile_cols", "tile_depth", "issue_window",
+)
+SCHEDULE_ADMISSION_FIELDS: tuple[str, ...] = (
+    "max_outstanding", "queue_index", "bank_mask", "port_mask", "noc_route_class",
+)
+SCHEDULE_INERT_FIELDS: tuple[str, ...] = ("resource_bound", "priority")
+SCHEDULE_FIELDS: tuple[str, ...] = (
+    SCHEDULE_TILE_FIELDS + SCHEDULE_ADMISSION_FIELDS + SCHEDULE_INERT_FIELDS
+)
 
-    The machine files cannot make a comparison fair on their own.  The tensor
-    engine's batch-1 rate is ``min(lanes, tile_cols * issue_window, cols) *
-    work_per_lane_cycle * clock`` and two of those five factors -- tile_cols
-    and issue_window -- live in the deployment's SCHEDULE descriptors.  The
-    ROM/HBM role itself is a deployment property too: ``MemorySystem.schedule``
-    picks the storage class from the MEMORY_OBJECT descriptor, not from any
-    machine file.
-    """
-    from runtime.abi3.deployment import Deployment
-    from runtime.abi3.constants import Major
-    from runtime.abi3.descriptors import ExtendedDescriptorType
+#: ``"<family>.<field>"`` -> citation.  A SCHEDULE difference is explained only
+#: when the design point itself states it -- a per-side tile shape, column
+#: group or reduction depth published in the analytical artifact.  No design
+#: point in ``results/roofline/n5_vs_b200/analytical.json`` publishes one, so
+#: the allowlist is empty and every difference the audit finds is unexplained.
+#: An entry added here must cite the artifact field that justifies it.
+DEPLOYMENT_AUDIT_ALLOWLIST: dict[str, str] = {}
 
-    def survey(root: Path) -> dict[str, Any]:
-        dep = Deployment.read(str(root))
-        tensor_shapes: Counter = Counter()
-        classes: Counter = Counter()
-        for desc in dep.table.descriptors():
-            if desc.descriptor_type == ExtendedDescriptorType.SCHEDULE:
-                p = desc.payload
-                if int(p.get("engine_family", -1)) != int(Major.TENSOR):
-                    continue
-                tensor_shapes[(
-                    int(p.get("tile_rows", 0)), int(p.get("tile_cols", 0)),
-                    int(p.get("tile_depth", 0)), int(p.get("issue_window", 0)),
-                )] += 1
-            elif desc.descriptor_type == ExtendedDescriptorType.MEMORY_OBJECT:
-                classes[int(desc.payload.get("storage_class", -1))] += 1
-        spans = sorted({tc * iw for _, tc, _, iw in tensor_shapes})
-        # What actually caps the tensor engine at batch 1 is
-        # min(lanes, tile_cols * issue_window, cols).  A deployment whose every
-        # column-group span reaches the lane count leaves the MACHINE in charge
-        # of the compute rate, which is what makes a comparison a comparison.
-        caps = sorted({min(lanes, s) for s in spans}) if lanes else None
-        return {
-            "root": str(root),
-            "capability_digest": dep.capability_digest,
-            "schedule_shapes": {
-                f"tile_rows={a},tile_cols={b},tile_depth={c},issue_window={d}": n
-                for (a, b, c, d), n in sorted(tensor_shapes.items())
-            },
-            "column_group_spans": spans,
-            "max_column_group_span": max(spans) if spans else 0,
-            "effective_tensor_width_caps": caps,
-            "storage_class_counts": dict(sorted(classes.items())),
-        }
-
-    rom, hbm = survey(rom_root), survey(hbm_root)
-    if lanes:
-        comparable = (
-            rom["effective_tensor_width_caps"]
-            == hbm["effective_tensor_width_caps"]
-        )
-        basis = f"effective tensor width caps at lanes={lanes}"
-        rom_side, hbm_side = (rom["effective_tensor_width_caps"],
-                              hbm["effective_tensor_width_caps"])
-    else:
-        comparable = rom["column_group_spans"] == hbm["column_group_spans"]
-        basis = "column-group spans"
-        rom_side, hbm_side = rom["column_group_spans"], hbm["column_group_spans"]
-    advantage = max(rom["max_column_group_span"], 1) / max(
-        hbm["max_column_group_span"], 1
-    )
-    rom_weight_classes = set(rom["storage_class_counts"])
-    hbm_weight_classes = set(hbm["storage_class_counts"])
-    return {
-        "rom": rom,
-        "hbm": hbm,
-        "lanes": lanes,
-        "basis": basis,
-        "column_group_spans_match": comparable,
-        "storage_classes_differ_as_expected": (
-            3 in rom_weight_classes and 3 not in hbm_weight_classes
+#: The compiled deployments the repository's own comparison evidence was
+#: produced from, keyed by the base capability record each was lowered
+#: against.  A cell binds a side to one of these only when the cell's base
+#: capability is the key AND the deployment's model is the cell's model; the
+#: audit then verifies, from the deployment manifest, that it really carries
+#: that capability's digest and is the exact deployment the cited evidence
+#: names.  ``build/abi3`` is a build product and is not tracked, so the digests
+#: are what make an audit result reproducible.
+SHIPPED_DEPLOYMENTS: dict[str, dict[str, Any]] = {
+    "configs/hardware/abi3_capability/rom_qwen3.json": {
+        "model_id": "qwen3-8b",
+        "root": "build/abi3/qwen3-8b-rom-rowfold-v1",
+        "deployment_sha256": (
+            "5940e5b6b5c507493fc8cf08675c43189aff8a6ecc2e4c7deeb128134893f8f9"
         ),
-        "verdict": (
-            f"COMPARABLE: both deployments present the same {basis} "
-            f"({rom_side}), so the machine files alone decide the tensor rate."
-            if comparable else
-            f"NOT COMPARABLE: the two deployments present different {basis} "
-            f"(rom {rom_side} against hbm {hbm_side}; max column-group span "
-            f"{rom['max_column_group_span']} against "
-            f"{hbm['max_column_group_span']}, a "
-            f"{advantage:.1f}x "
-            "advantage to the ROM side).  tile_cols and issue_window are "
-            "SCHEDULE fields, so NO machine file can correct this; the "
-            "deployments must be rebuilt from matched capabilities."
+        "evidence": [
+            "results/abi3/cycle/qwen3_rom_exact8k_b1_asap7_decode_pos8000_rowfold_depthfix_v1.json",
+            "docs/PERFORMANCE_DESIGN_POSTMORTEM.md (headline table: "
+            "qwen3_rom_exact8k_b1_sky130_decode_pos8002_rowfold_depthfix_v1)",
+        ],
+    },
+    "configs/hardware/abi3_capability/hbm_sram_single_chip.json": {
+        "model_id": "qwen3-8b",
+        "root": "build/abi3/qwen3-8b-hbm-exact8k-b1-lane0",
+        "deployment_sha256": (
+            "0d7897457e14666fc057ea6223cc32e65c61e39bfe5b2ff675c3b5585fe2ce8e"
+        ),
+        "evidence": [
+            "results/abi3/cycle/qwen3_hbm_exact8k_b1_asap7_decode_pos8000_rowfold_v1.json",
+            "docs/PERFORMANCE_DESIGN_POSTMORTEM.md (headline table: "
+            "qwen3_hbm_exact8k_b1_sky130_decode_pos8002_rowfold_v1)",
+        ],
+    },
+}
+
+#: Work-counter units per multiply-accumulate coordinate of a contraction.
+#: ``FAMILY_WORK_COUNTERS['tensor']`` counts the multiply and the add
+#: separately, and the RTL campaign records the two counts equal
+#: (``runtime.cycle.model.CycleModel._work_scale``), so one coordinate is two
+#: work units.  The audit sets both counters to the coordinate count, which is
+#: how ``_work_scale`` arrives at exactly 2.0 on a compiled contraction.
+TENSOR_WORK_UNITS_PER_MAC = 2.0
+
+#: A static walk of the control stream is bounded so that a malformed program
+#: cannot spin the audit forever.
+_STATIC_WALK_STEP_LIMIT = 50_000_000
+
+
+def decode_request_symbols(batch_size: int, context_tokens: int) -> dict[int, int]:
+    """One decode step at the anchor's own context: the request the pair prices.
+
+    ``analytical.json`` prices a design point at exactly one context, and the
+    decode step it prices is the one that attends to all of it.  Both
+    deployments are surveyed at these bindings, so every matched operator has
+    the same useful work on both sides by construction.
+    """
+    from runtime.abi3.descriptors import Phase, Symbol
+
+    return {
+        int(Symbol.SPAN_TOKENS): 1,
+        int(Symbol.SPAN_LAST_INDEX): 0,
+        int(Symbol.POSITION_START): int(context_tokens) - 1,
+        int(Symbol.POSITION_END): int(context_tokens),
+        int(Symbol.CONTEXT_LENGTH): int(context_tokens),
+        int(Symbol.PHASE): int(Phase.DECODE),
+        int(Symbol.GENERATION_INDEX): 1,
+        int(Symbol.MAX_NEW_TOKENS): 1,
+        int(Symbol.BATCH): int(batch_size),
+        int(Symbol.NODE_ID): 0,
+        int(Symbol.NODE_COUNT): 1,
+    }
+
+
+def _symbol_names(symbols: Mapping[int, int]) -> dict[str, int]:
+    from runtime.abi3.descriptors import Symbol
+
+    out = {}
+    for key, value in sorted(symbols.items()):
+        try:
+            out[Symbol(int(key)).name] = int(value)
+        except ValueError:
+            out[str(key)] = int(value)
+    return out
+
+
+class _StaticWalkError(RuntimeError):
+    """The control stream cannot be walked without executing the program."""
+
+
+def _static_issues(dep: Any, symbols: Mapping[int, int],
+                   entrypoint_id: int = 0) -> list[tuple[int, dict[int, int]]]:
+    """``(operator id, loop bindings)`` for every engine issue of one request.
+
+    This interprets the CONTROL stream and nothing else: LOOP_SETUP and
+    LOOP_NEXT with the device's own ``loop_trip_count``, BRANCH, COMPLETE, and
+    every predicate whose truth is a function of the request symbols and loop
+    state.  A predicate whose truth is a word in device memory (BOOLEAN_OBJECT,
+    EOS_MEMBER) cannot be evaluated without running the program, and the walk
+    refuses rather than guess.  The loop bindings are kept per issue because a
+    symbol-bounded loop's final iteration clamps the views it walks.
+    """
+    from runtime.abi3.constants import Control, InstructionFlag, Major
+    from runtime.abi3.descriptors import (
+        Comparison, ExtendedDescriptorType, PredicateKind, Symbol,
+    )
+    from runtime.abi3.records import decode_body, split_program
+    from runtime.cycle.machine import ENGINE_FAMILY_NAMES
+    from runtime.cycle.model import NO_ID, TILED_FAMILIES
+    from runtime.sim.device import _compare, loop_trip_count
+
+    _, body = split_program(dep.program)
+    instructions = decode_body(body)
+    entry = next(
+        (e for e in dep.entrypoints if int(e.get("entrypoint_id", -1)) == entrypoint_id),
+        dep.entrypoints[0] if dep.entrypoints else {"first_instruction": 0},
+    )
+    pc = int(entry["first_instruction"])
+    loops: dict[int, int] = {}
+    stack: list[tuple[int, int, int]] = []
+    issues: list[tuple[int, dict[int, int]]] = []
+    steps = 0
+
+    def predicate(descriptor_id: int) -> bool:
+        desc = dep.table.get(descriptor_id, ExtendedDescriptorType.PREDICATE)
+        p = desc.payload
+        kind = PredicateKind(p["predicate_kind"])
+        if kind is PredicateKind.ALWAYS:
+            return True
+        if kind is PredicateKind.PHASE_IS:
+            return symbols[int(Symbol.PHASE)] == p["immediate"]
+        if kind is PredicateKind.COMPARE_SYMBOL:
+            return _compare(Comparison(p["comparison"]),
+                            symbols[int(p["selector_index"])], p["immediate"])
+        if kind is PredicateKind.COMPARE_LOOP:
+            return _compare(Comparison(p["comparison"]),
+                            loops[int(p["selector_index"])], p["immediate"])
+        if kind is PredicateKind.LOOP_FIRST:
+            return loops.get(int(p["selector_index"]), -1) == 0
+        if kind is PredicateKind.LOOP_LAST:
+            loop = dep.table[int(p["selector_index"])]
+            trip = loop_trip_count(loop.payload, symbols)
+            return loops.get(int(p["selector_index"]), -1) == trip - 1
+        raise _StaticWalkError(
+            f"predicate {descriptor_id} is {kind.name}: its truth is a word in "
+            "device memory, which a static walk cannot read"
+        )
+
+    while 0 <= pc < len(instructions):
+        steps += 1
+        if steps > _STATIC_WALK_STEP_LIMIT:
+            raise _StaticWalkError(
+                f"the control stream did not reach COMPLETE within "
+                f"{_STATIC_WALK_STEP_LIMIT} steps"
+            )
+        ins = instructions[pc]
+        if ins.flags & InstructionFlag.PREDICATED:
+            taken = predicate(ins.predicate_id)
+            if ins.flags & InstructionFlag.PREDICATE_INVERT:
+                taken = not taken
+            if not taken:
+                pc += 1
+                continue
+        if ins.major == int(Major.CONTROL):
+            sub = Control(ins.sub)
+            if sub is Control.LOOP_SETUP:
+                loop = dep.table.get(ins.control_id, ExtendedDescriptorType.LOOP_CONTROL)
+                trip = loop_trip_count(loop.payload, symbols)
+                if trip == 0:
+                    pc = int(loop.payload["body_end"]) + 1
+                    continue
+                loops[ins.control_id] = int(loop.payload["lower_bound"])
+                stack.append((ins.control_id, trip, int(loop.payload["body_start"])))
+                pc += 1
+                continue
+            if sub is Control.LOOP_NEXT:
+                if not stack:
+                    raise _StaticWalkError(f"LOOP_NEXT at pc {pc} with no open loop")
+                loop_id, trip, body_start = stack[-1]
+                loop = dep.table[loop_id]
+                step = int(loop.payload["step"])
+                current = loops[loop_id] + step
+                if (current - int(loop.payload["lower_bound"])) // step < trip:
+                    loops[loop_id] = current
+                    pc = body_start
+                    continue
+                stack.pop()
+                loops.pop(loop_id, None)
+                pc += 1
+                continue
+            if sub is Control.BRANCH:
+                pc = int(ins.control_id)
+                continue
+            if sub is Control.COMPLETE:
+                break
+            if sub is Control.TRAP:
+                raise _StaticWalkError(f"program executes TRAP at pc {pc}")
+            pc += 1
+            continue
+        family = ENGINE_FAMILY_NAMES.get(int(ins.major))
+        if family in TILED_FAMILIES and ins.descriptor_id != NO_ID:
+            try:
+                operator = dep.table.get(ins.descriptor_id, ExtendedDescriptorType.OPERATOR)
+            except Exception:  # noqa: BLE001 -- not OPERATOR-driven
+                operator = None
+            if operator is not None:
+                issues.append((operator.descriptor_id, dict(loops)))
+        pc += 1
+    return issues
+
+
+def _view_bytes(view: Any) -> int:
+    count = int(view.element_count)
+    if view.is_sub_byte:
+        return (count + 1) // 2
+    return count * int(view.numpy_dtype.itemsize)
+
+
+class _CostArithmetic:
+    """The cycle model's own per-instruction cost arithmetic, borrowed whole.
+
+    ``CycleModel._compute_cycles`` reads only the step, the engine parameters
+    and the tile mapping, through ``_work_units`` and ``_work_scale``.  Lifting
+    the three methods onto this class charges an operator exactly as
+    ``CycleModel._time_steps`` would, with no restatement of the formula --
+    a restated formula is how the block-loop defect survived its own tests.
+    """
+
+    def __init__(self) -> None:
+        from runtime.cycle.model import CycleModel
+
+        self._work_units = CycleModel._work_units
+        self._work_scale = CycleModel._work_scale.__get__(self, _CostArithmetic)
+        self._compute_cycles = CycleModel._compute_cycles.__get__(
+            self, _CostArithmetic
+        )
+
+
+def _describe_operator(dep: Any, views: Any, operator_id: int,
+                       loops: Mapping[int, int], symbols: Mapping[int, int],
+                       params_for: Any, charger: _CostArithmetic | None,
+                       ) -> dict[str, Any]:
+    """One OPERATOR descriptor decomposed by its SCHEDULE, per issue."""
+    from runtime.abi3.constants import Dma, mnemonic
+    from runtime.abi3.descriptors import ExtendedDescriptorType, Symbol
+    from runtime.cycle.machine import ENGINE_FAMILY_NAMES
+    from runtime.cycle.model import (
+        NO_ID, TENSOR_CONTRACTIONS, MemoryAccess, ScheduleError, TraceStep,
+        operand_extents, tile_mapping,
+    )
+
+    operator = dep.table.get(operator_id, ExtendedDescriptorType.OPERATOR)
+    p = operator.payload
+    family = ENGINE_FAMILY_NAMES.get(int(p["engine_family"]), "?")
+    try:
+        name = mnemonic(int(p["engine_family"]), int(p["engine_sub"]))
+    except (KeyError, ValueError):
+        name = f"{family}.{int(p['engine_sub'])}"
+    schedule_id = int(p.get("schedule_id", NO_ID))
+    if schedule_id == NO_ID:
+        schedule_id = int(operator.schedule_id)
+    schedule: dict[str, int] | None = None
+    if schedule_id != NO_ID:
+        schedule = {
+            k: int(v)
+            for k, v in dep.table.get(
+                schedule_id, ExtendedDescriptorType.SCHEDULE
+            ).payload.items()
+            if isinstance(v, int)
+        }
+    operands: dict[str, dict[str, Any]] = {}
+    dims: dict[str, tuple[int, ...]] = {}
+    objects: dict[str, int] = {}
+    slots = [(f"in{i}", int(p[f"input_view_{i}"])) for i in range(4)]
+    slots += [(f"out{i}", int(p[f"output_view_{i}"])) for i in range(2)]
+    for slot, view_id in slots:
+        if view_id == NO_ID:
+            continue
+        view = views.resolve(view_id, loops, symbols)
+        dims[slot] = tuple(int(d) for d in view.dims)
+        objects[slot] = int(view.object_id)
+        operands[slot] = {
+            "view_id": view_id, "dims": list(dims[slot]),
+            "dtype": int(view.dtype), "bytes": _view_bytes(view),
+            "object_id": int(view.object_id),
+        }
+    step = TraceStep(
+        index=0, kind="ENGINE", major=int(p["engine_family"]),
+        sub=int(p["engine_sub"]), mnemonic=name, family=family,
+        operator_id=operator_id, schedule_id=schedule_id, schedule=schedule,
+        operand_dims=dims, operand_objects=objects,
+    )
+    rows, cols, depth = operand_extents(step)
+    if family == "attention":
+        # The functional device records the positions one attention operator
+        # attended as a counter; the cycle model reads its reduction depth from
+        # that counter first and from the KV join's row axis only as a
+        # fallback.  A decode step attends to the whole context.
+        depth = int(symbols[int(Symbol.CONTEXT_LENGTH)])
+        step.counter_delta["attention.context_positions"] = depth
+    if family == "tensor" and name in TENSOR_CONTRACTIONS:
+        macs = rows * cols * depth
+        step.counter_delta["tensor.multiplications"] = macs
+        step.counter_delta["tensor.additions"] = macs
+    rec: dict[str, Any] = {
+        "operator_id": operator_id, "family": family, "mnemonic": name,
+        "schedule_id": schedule_id,
+        "schedule": {f: schedule.get(f, 0) for f in SCHEDULE_FIELDS} if schedule else None,
+        "operands": operands,
+        "extent": {"rows": rows, "cols": cols, "depth": depth},
+        "useful_work": rows * cols * depth,
+    }
+    params = params_for(family)
+    try:
+        mapping = tile_mapping(step, params)
+    except ScheduleError as exc:
+        rec["tile_error"] = str(exc)
+        return rec
+    rec.update({
+        "tiles": mapping.tiles,
+        "schedule_tiles": mapping.schedule_tiles,
+        "row_tiles": mapping.row_tiles, "col_tiles": mapping.col_tiles,
+        "depth_tiles": mapping.depth_tiles,
+        "issued_work": mapping.issued_work,
+        "padding_work": mapping.padding_work,
+        "padding_fraction": (
+            round(mapping.padding_work / mapping.issued_work, 6)
+            if mapping.issued_work else 0.0
+        ),
+        "issue_window": mapping.issue_window,
+        "max_outstanding": mapping.max_outstanding,
+        "column_group_span": mapping.tile_cols * mapping.issue_window,
+    })
+    if mapping.tensor_lanes is not None:
+        rec["output_waves"] = mapping.tensor_lanes.output_waves
+        rec["column_groups"] = mapping.tensor_lanes.column_groups
+        rec["masked_lane_slots"] = mapping.tensor_lanes.masked_lane_slots
+        rec["effective_tensor_width"] = min(params.lanes, rec["column_group_span"])
+    if family == "dma":
+        # Static payload model: the moved operand once each way, plus the
+        # index an indexed transfer reads.  The functional device's exact
+        # access list is what the cycle model times; this is the payload the
+        # operator names, which is what "bytes per tile" means here.
+        data = {k: v for k, v in operands.items() if k != "in0"} or dict(operands)
+        payload = min((v["bytes"] for v in data.values()), default=0)
+        index_bytes = 0
+        sub = int(p["engine_sub"])
+        if sub in (int(Dma.GATHER), int(Dma.SCATTER)) and "in0" in operands:
+            index_bytes = int(operands["in0"]["bytes"])
+        surface = operands.get("out0") or next(iter(data.values()), None)
+        itemsize = (
+            surface["bytes"] / max(_product_dims(surface["dims"]), 1) if surface else 0.0
+        )
+        rec["payload_bytes"] = payload
+        rec["index_bytes"] = index_bytes
+        # The extent the cycle model tiles is the whole destination surface,
+        # whatever the payload: a one-row KV scatter is tiled over the cache.
+        rec["surface_bytes"] = int(round(mapping.useful_work * itemsize))
+        rec["payload_bytes_per_tile"] = (
+            round(payload / mapping.tiles, 3) if mapping.tiles else 0.0
+        )
+        left = objects.get("in0")
+        right = objects.get("in1")
+        accesses = []
+        if index_bytes and left is not None:
+            accesses.append(MemoryAccess(
+                object_id=left, storage_class=0, address=0,
+                nbytes=index_bytes, write=False,
+            ))
+        src = right if right is not None else left
+        if src is not None:
+            accesses.append(MemoryAccess(
+                object_id=src, storage_class=0, address=0,
+                nbytes=payload, write=False,
+            ))
+        out = objects.get("out0")
+        if out is not None:
+            accesses.append(MemoryAccess(
+                object_id=out, storage_class=0, address=0,
+                nbytes=payload, write=True,
+            ))
+        step.accesses = accesses
+    rec.update(_metrics_of(step, mapping, params, charger))
+    # Kept for the counterfactual re-tiling in audit_deployments; stripped
+    # before the record is written.
+    rec["_step"] = step
+    return rec
+
+
+def _metrics_of(step: Any, mapping: Any, params: Any,
+                charger: _CostArithmetic | None) -> dict[str, Any]:
+    """The cost-bearing consequences of one tile mapping, per issue."""
+    import dataclasses
+
+    from runtime.cycle.model import TENSOR_CONTRACTIONS, apply_tile_amplification
+
+    out: dict[str, Any] = {}
+    if step.family == "dma" and step.accesses:
+        # apply_tile_amplification writes each access's re-fetch factor in
+        # place, so a re-tiled counterfactual must not share the objects.
+        step.accesses = [dataclasses.replace(a) for a in step.accesses]
+        apply_tile_amplification(step, mapping)
+        out["transferred_bytes_static"] = step.bytes_transferred
+    if charger is not None and (
+        step.family == "dma"
+        or (step.family == "tensor" and step.mnemonic in TENSOR_CONTRACTIONS)
+    ):
+        cycles, tile_issue = charger._compute_cycles(step, params, mapping)
+        out["cycles_per_issue"] = int(cycles)
+        out["tile_issue_cycles_per_issue"] = int(tile_issue)
+    return out
+
+
+def _retile(rec: Mapping[str, Any], overrides: Mapping[str, int], params: Any,
+            charger: _CostArithmetic | None) -> dict[str, Any] | None:
+    """Re-decompose one operator with some SCHEDULE fields replaced.
+
+    Everything else -- extents, counters, operands -- is the operator's own,
+    so the difference between this and the record is the effect of exactly
+    the fields overridden.
+    """
+    import dataclasses
+
+    from runtime.cycle.model import ScheduleError, tile_mapping
+
+    step = rec.get("_step")
+    if step is None or step.schedule is None:
+        return None
+    probe = dataclasses.replace(
+        step, schedule={**step.schedule, **{k: int(v) for k, v in overrides.items()}},
+        accesses=[dataclasses.replace(a) for a in step.accesses],
+    )
+    try:
+        mapping = tile_mapping(probe, params)
+    except ScheduleError:
+        return None
+    out = {
+        "tiles": mapping.tiles, "issued_work": mapping.issued_work,
+        "padding_fraction": (
+            round(mapping.padding_work / mapping.issued_work, 6)
+            if mapping.issued_work else 0.0
         ),
     }
+    if mapping.tensor_lanes is not None:
+        out["output_waves"] = mapping.tensor_lanes.output_waves
+    out.update(_metrics_of(probe, mapping, params, charger))
+    return out
+
+
+def _product_dims(dims: Sequence[int]) -> int:
+    total = 1
+    for d in dims:
+        total *= int(d)
+    return total
+
+
+def survey_deployment(root: Path, *, symbols: Mapping[int, int],
+                      params_for: Any, charger: _CostArithmetic | None = None,
+                      ) -> dict[str, Any]:
+    """Every tiled operator of one deployment at one request, per issue.
+
+    The program contains no tile loops -- one engine instruction names a whole
+    contraction and its SCHEDULE descriptor carries the tile shape -- so the
+    decomposition can be read off the deployment with the cycle model's own
+    ``tile_mapping`` once the operand extents are resolved.  ``_static_issues``
+    supplies the issue count per operator so that family totals are the totals
+    ``CycleModel`` accumulates for the same request.
+    """
+    from runtime.abi3.deployment import Deployment
+    from runtime.abi3.descriptors import ExtendedDescriptorType
+    from runtime.sim.memory import ViewResolver
+
+    dep = Deployment.read(str(root))
+    views = ViewResolver(dep, None)
+    operators: dict[int, dict[str, Any]] = {}
+    walk_error: str | None = None
+    try:
+        issues = _static_issues(dep, symbols)
+    except _StaticWalkError as exc:
+        walk_error = str(exc)
+        issues = []
+        for desc in dep.table.descriptors():
+            if desc.descriptor_type == ExtendedDescriptorType.OPERATOR:
+                issues.append((desc.descriptor_id, {}))
+    for operator_id, loops in issues:
+        rec = operators.get(operator_id)
+        if rec is None:
+            rec = _describe_operator(
+                dep, views, operator_id, loops, symbols, params_for, charger
+            )
+            rec["issues"] = 0
+            operators[operator_id] = rec
+        else:
+            probe = _describe_operator(
+                dep, views, operator_id, loops, symbols, params_for, None
+            )
+            if probe["extent"] != rec["extent"]:
+                rec.setdefault("extent_varies", []).append(probe["extent"])
+        rec["issues"] += 1
+    classes: Counter = Counter()
+    for desc in dep.table.descriptors():
+        if desc.descriptor_type == ExtendedDescriptorType.MEMORY_OBJECT:
+            classes[int(desc.payload.get("storage_class", -1))] += 1
+    schedule_shapes: Counter = Counter()
+    for desc in dep.table.descriptors():
+        if desc.descriptor_type == ExtendedDescriptorType.SCHEDULE:
+            q = desc.payload
+            schedule_shapes[(
+                int(q.get("engine_family", -1)), int(q.get("tile_rows", 0)),
+                int(q.get("tile_cols", 0)), int(q.get("tile_depth", 0)),
+                int(q.get("issue_window", 0)),
+            )] += 1
+    families: dict[str, dict[str, Any]] = {}
+    for rec in operators.values():
+        fam = families.setdefault(rec["family"], {
+            "operators": 0, "operations": 0, "tiles": 0, "useful_work": 0,
+            "issued_work": 0, "padding_work": 0, "tile_errors": 0,
+        })
+        fam["operators"] += 1
+        fam["operations"] += rec["issues"]
+        if "tiles" not in rec:
+            fam["tile_errors"] += 1
+            continue
+        n = rec["issues"]
+        fam["tiles"] += rec["tiles"] * n
+        fam["useful_work"] += rec["useful_work"] * n
+        fam["issued_work"] += rec["issued_work"] * n
+        fam["padding_work"] += rec["padding_work"] * n
+        if "output_waves" in rec:
+            fam["output_waves"] = fam.get("output_waves", 0) + rec["output_waves"] * n
+            fam["column_groups"] = fam.get("column_groups", 0) + rec["column_groups"] * n
+        if "cycles_per_issue" in rec:
+            fam["cycles"] = fam.get("cycles", 0) + rec["cycles_per_issue"] * n
+            fam["tile_issue_cycles"] = (
+                fam.get("tile_issue_cycles", 0) + rec["tile_issue_cycles_per_issue"] * n
+            )
+        if rec["family"] == "dma":
+            fam["payload_bytes"] = fam.get("payload_bytes", 0) + rec["payload_bytes"] * n
+    for fam in families.values():
+        fam["padding_fraction"] = (
+            round(fam["padding_work"] / fam["issued_work"], 6)
+            if fam["issued_work"] else 0.0
+        )
+    tensor_spans = sorted({
+        r["column_group_span"] for r in operators.values()
+        if r["family"] == "tensor" and "column_group_span" in r
+    })
+    lanes = params_for("tensor").lanes
+    return {
+        "root": _relative(Path(root)),
+        "model_id": dep.model_id,
+        "backend": dep.backend,
+        "topology_class": int(dep.topology_class),
+        "deployment_sha256": dep.deployment_digest.hex(),
+        "capability_digest": dep.capability_digest,
+        "request_symbols": _symbol_names(symbols),
+        "static_walk": (
+            "complete" if walk_error is None
+            else f"REFUSED ({walk_error}); every OPERATOR counted once"
+        ),
+        "operators": [operators[k] for k in operators],
+        "families": {k: families[k] for k in sorted(families)},
+        "schedule_shapes": {
+            f"engine_family={a},tile_rows={b},tile_cols={c},tile_depth={d},issue_window={e}": n
+            for (a, b, c, d, e), n in sorted(schedule_shapes.items())
+        },
+        "column_group_spans": tensor_spans,
+        "max_column_group_span": max(tensor_spans) if tensor_spans else 0,
+        "effective_tensor_width_caps": sorted({min(lanes, s) for s in tensor_spans}),
+        "storage_class_counts": dict(sorted(classes.items())),
+    }
+
+
+def tensor_parity_band(rom_depth: int, hbm_depth: int, rate: float, *,
+                       scale: float = TENSOR_WORK_UNITS_PER_MAC,
+                       tile_issue_cycles: int = 1) -> dict[str, Any]:
+    """Where two reduction depths cost the same cycles per unit of depth.
+
+    ``_compute_cycles`` charges a full depth tile
+    ``max(ceil(tile_depth * scale / rate), tile_issue_cycles)`` cycles, so per
+    unit of depth the two shapes cost ``k_rom / d_rom`` and ``k_hbm / d_hbm``.
+    ``ceil(a / r) = k`` exactly on ``a / k <= r < a / (k - 1)``, so the band of
+    rates on which both k are what they are at ``rate`` is the intersection of
+    the two intervals, and parity is a fact about that whole band.
+    """
+    a_rom = rom_depth * scale
+    a_hbm = hbm_depth * scale
+    k_rom = max(math.ceil(a_rom / rate), tile_issue_cycles)
+    k_hbm = max(math.ceil(a_hbm / rate), tile_issue_cycles)
+    per_depth_rom = k_rom / rom_depth
+    per_depth_hbm = k_hbm / hbm_depth
+    lo = max(a_rom / k_rom, a_hbm / k_hbm)
+    hi = min(
+        a_rom / (k_rom - 1) if k_rom > 1 else math.inf,
+        a_hbm / (k_hbm - 1) if k_hbm > 1 else math.inf,
+    )
+    if per_depth_rom == per_depth_hbm:
+        favours = "neither"
+    else:
+        favours = "rom" if per_depth_rom < per_depth_hbm else "hbm"
+    ratio = (
+        max(per_depth_rom, per_depth_hbm) / min(per_depth_rom, per_depth_hbm)
+        if min(per_depth_rom, per_depth_hbm) else math.inf
+    )
+    return {
+        "rom_tile_depth": rom_depth, "hbm_tile_depth": hbm_depth,
+        "work_per_lane_cycle": rate, "work_units_per_mac": scale,
+        "tile_issue_cycles": tile_issue_cycles,
+        "cycles_per_full_depth_tile": {"rom": k_rom, "hbm": k_hbm},
+        "cycles_per_unit_depth": {"rom": per_depth_rom, "hbm": per_depth_hbm},
+        "parity": per_depth_rom == per_depth_hbm,
+        "favours": favours,
+        "magnitude_x": ratio,
+        "band": [lo, hi],
+        "note": (
+            "rates on which the two depths are charged alike per unit of "
+            "depth; the machine rate sits inside it" if per_depth_rom == per_depth_hbm
+            else "rates on which the two depths keep this same unequal charge"
+        ),
+    }
+
+
+def _fallback_params_for(lanes: int | None) -> Any:
+    from runtime.cycle.machine import EngineParams
+
+    def params_for(family: str) -> EngineParams:
+        return EngineParams(
+            family=family, lanes=int(lanes or 1), queues=1, queue_depth=1,
+            max_outstanding=1, work_per_lane_cycle=1.0, fixed_latency_cycles=0,
+            bytes_per_cycle=1.0, minimum_cycles=1, tile_issue_cycles=1,
+            tile_pipeline_depth=1,
+        )
+    return params_for
+
+
+def _values_by_side(records: Sequence[Mapping[str, Any]], field: str,
+                    source: str = "schedule") -> dict[str, int]:
+    """Distinct values of one field, weighted by how often they issue."""
+    counts: Counter = Counter()
+    for rec in records:
+        if source == "schedule":
+            if not rec.get("schedule"):
+                continue
+            value = rec["schedule"].get(field)
+        else:
+            value = rec.get(field)
+        if value is None:
+            continue
+        counts[int(value)] += int(rec.get("issues", 1))
+    return {str(v): n for v, n in sorted(counts.items())}
+
+
+def _modal(values: Mapping[str, int]) -> int | None:
+    if not values:
+        return None
+    return int(max(values.items(), key=lambda kv: (kv[1], -int(kv[0])))[0])
+
+
+def _favours(rom: float, hbm: float, *, lower_is_better: bool = True) -> str:
+    if rom == hbm:
+        return "neither"
+    better_rom = rom < hbm if lower_is_better else rom > hbm
+    return "rom" if better_rom else "hbm"
+
+
+def _ratio(rom: float, hbm: float) -> float:
+    lo, hi = min(rom, hbm), max(rom, hbm)
+    if lo == 0:
+        return math.inf if hi else 1.0
+    return hi / lo
+
+
+def _match_operators(rom_ops: Sequence[Mapping[str, Any]],
+                     hbm_ops: Sequence[Mapping[str, Any]]) -> tuple[
+                         list[tuple[Mapping[str, Any], Mapping[str, Any]]],
+                         list[Mapping[str, Any]], list[Mapping[str, Any]]]:
+    """Pair operators that perform the same useful work on both sides.
+
+    Program order first: the two backends lower the same neutral IR, so when
+    the streams agree operator-for-operator the pairing is exact.  Otherwise
+    each operator is paired with the first unpaired operator of the same
+    family, mnemonic and extent; what remains is reported, not guessed.
+    """
+    def key(rec: Mapping[str, Any]) -> tuple[Any, ...]:
+        return (rec["family"], rec["mnemonic"],
+                rec["extent"]["rows"], rec["extent"]["cols"], rec["extent"]["depth"])
+
+    if len(rom_ops) == len(hbm_ops) and all(
+        key(a) == key(b) for a, b in zip(rom_ops, hbm_ops)
+    ):
+        return list(zip(rom_ops, hbm_ops)), [], []
+    pairs: list[tuple[Mapping[str, Any], Mapping[str, Any]]] = []
+    unmatched_hbm = list(hbm_ops)
+    unmatched_rom: list[Mapping[str, Any]] = []
+    for rec in rom_ops:
+        k = key(rec)
+        hit = next((i for i, other in enumerate(unmatched_hbm) if key(other) == k), None)
+        if hit is None:
+            unmatched_rom.append(rec)
+        else:
+            pairs.append((rec, unmatched_hbm.pop(hit)))
+    return pairs, unmatched_rom, unmatched_hbm
+
+
+def _operator_label(rec: Mapping[str, Any]) -> str:
+    e = rec["extent"]
+    return f"{rec['mnemonic']} ({e['rows']}x{e['cols']}x{e['depth']})"
+
+
+def _field_effect(family: str, field: str, rom_v: int, hbm_v: int,
+                  pairs: Sequence[tuple[Mapping[str, Any], Mapping[str, Any]]],
+                  params_for: Any, charger: _CostArithmetic | None,
+                  parity: Mapping[str, Any] | None,
+                  topology_class: int) -> dict[str, Any]:
+    """Which side one differing field favours, all other fields as they are.
+
+    For the four tile fields the answer is computed, not argued: every
+    matched HBM operator carrying the HBM value is re-tiled with the ROM value
+    of this one field, and the family's cost-bearing totals before and after
+    say whether the ROM value costs less.  The admission and memory-scheduling
+    fields do not enter ``tile_mapping``; their direction follows the rule
+    that reads them, and where no rule gives one the audit says so.
+    """
+    fam_pairs = [(a, b) for a, b in pairs if a["family"] == family]
+    params = params_for(family)
+
+    def verdict(favours: str, effect: float | None, why: str) -> dict[str, Any]:
+        return {"favours": favours, "effect_x": effect, "why": why}
+
+    if field in SCHEDULE_TILE_FIELDS:
+        subjects = [
+            (a, b) for a, b in fam_pairs
+            if b.get("schedule") and b["schedule"].get(field) == hbm_v
+            and a.get("schedule") and a["schedule"].get(field) == rom_v
+            and "tiles" in b
+        ]
+        if not subjects:
+            return verdict("unknown", None, "no matched operator carries both values")
+        metrics = {"tiles": [0, 0], "issued_work": [0, 0], "output_waves": [0, 0],
+                   "cycles_per_issue": [0, 0]}
+        seen = set()
+        for _, b in subjects:
+            after = _retile(b, {field: rom_v}, params, charger)
+            if after is None:
+                return verdict("unknown", None,
+                               f"the ROM value {rom_v} cannot tile the HBM operator")
+            n = int(b.get("issues", 1))
+            for m in metrics:
+                if m in b and m in after:
+                    metrics[m][0] += b[m] * n
+                    metrics[m][1] += after[m] * n
+                    seen.add(m)
+
+        def side(m: str) -> tuple[str, float, str]:
+            before, after = metrics[m]
+            if before == after:
+                return "neither", 1.0, f"{m} {before:,} either way"
+            # A lower HBM cost with the ROM value means the ROM value is the
+            # better one for this field.
+            return (
+                ("rom" if after < before else "hbm"), _ratio(before, after),
+                f"{m} on the HBM side {before:,} as compiled, {after:,} with "
+                f"the ROM value {rom_v}",
+            )
+
+        if family == "tensor":
+            # The charge itself when a machine is given; otherwise the tile
+            # count, which is waves x depth tiles and so sees every field.
+            order = ["cycles_per_issue", "tiles", "output_waves"]
+        elif family == "dma":
+            order = ["cycles_per_issue", "tiles", "issued_work"]
+        else:
+            order = ["tiles", "issued_work"]
+        order = [m for m in order if m in seen]
+        if not order:
+            return verdict("unknown", None, "no cost-bearing metric could be recomputed")
+        first = side(order[0])
+        favours, effect, why = first
+        if family not in ("tensor", "dma") and len(order) > 1:
+            second = side(order[1])
+            if favours == "neither" and second[0] != "neither":
+                favours, effect = second[0], second[1]
+                why = (
+                    f"{first[2]}; {second[2]} (padded work is charged only when "
+                    "a tile's work exceeds the one-cycle issue floor)"
+                )
+            elif second[0] not in ("neither", favours):
+                favours = "mixed"
+                why = f"{first[2]} but {second[2]}"
+            else:
+                why = f"{first[2]}; {second[2]}"
+        if family == "tensor" and field == "tile_depth" and parity is not None:
+            lo, hi = parity["band"]
+            why += (
+                f"; per unit of depth {parity['cycles_per_full_depth_tile']['rom']}/"
+                f"{rom_v} against {parity['cycles_per_full_depth_tile']['hbm']}/{hbm_v} "
+                f"cycles at work_per_lane_cycle {parity['work_per_lane_cycle']:.6g}, "
+                f"parity band [{lo:.6g}, {hi:.6g})"
+                + (": the machine rate sits inside it, and outside it the larger "
+                   "depth is the cheaper" if parity["parity"] else "")
+            )
+        if family == "tensor" and field in ("tile_cols", "issue_window"):
+            rom_cap = max((min(params.lanes, a["column_group_span"]) for a, _ in fam_pairs), default=0)
+            hbm_cap = max((min(params.lanes, b["column_group_span"]) for _, b in fam_pairs), default=0)
+            why += (
+                f"; effective tensor width min(lanes={params.lanes}, tile_cols x "
+                f"issue_window) {rom_cap} vs {hbm_cap}"
+            )
+        if family == "tensor" and field == "tile_rows" and favours == "neither":
+            rows = max((a["extent"]["rows"] for a, _ in fam_pairs), default=0)
+            why += f"; every tensor operator has rows {rows} <= {min(rom_v, hbm_v)} at this request"
+        return verdict(favours, effect, why)
+    if field == "max_outstanding":
+        rom_b = min(params.queue_depth, rom_v)
+        hbm_b = min(params.queue_depth, hbm_v)
+        if rom_b == hbm_b:
+            return verdict("neither", 1.0, (
+                f"admission is bounded by min(queue_depth={params.queue_depth}, "
+                f"max_outstanding), {rom_b} on both sides at this machine"
+            ))
+        return verdict(_favours(rom_b, hbm_b, lower_is_better=False), _ratio(rom_b, hbm_b), (
+            f"admission bound min(queue_depth={params.queue_depth}, max_outstanding) "
+            f"{rom_b} vs {hbm_b}"
+        ))
+    if field == "queue_index":
+        rom_q = len({a["schedule"]["queue_index"] for a, _ in fam_pairs if a.get("schedule")})
+        hbm_q = len({b["schedule"]["queue_index"] for _, b in fam_pairs if b.get("schedule")})
+        return verdict(_favours(rom_q, hbm_q, lower_is_better=False), _ratio(rom_q, hbm_q), (
+            f"operators spread over {rom_q} vs {hbm_q} {family} queue(s) of the "
+            f"{params.queues} the machine has"
+        ))
+    if field in ("bank_mask", "port_mask"):
+        return verdict("unknown", None, (
+            f"{field} selects banks/ports in MemorySystem.schedule; the direction "
+            "is a property of the placement and is not derived by this audit"
+        ))
+    if field == "noc_route_class":
+        if topology_class == 0:
+            return verdict("neither", 1.0, "SINGLE_CHIP builds no fabric, so no route is selected")
+        return verdict("unknown", None, "selects the fabric route; not derived by this audit")
+    return verdict("neither", 1.0, "not read by the cycle model")
+
+
+def _shape(records: Sequence[Mapping[str, Any]]) -> str:
+    """The modal tile shape of a family on one side, ``rows x cols x depth``."""
+    parts = []
+    for f in ("tile_rows", "tile_cols", "tile_depth"):
+        m = _modal(_values_by_side(records, f))
+        parts.append("?" if m is None else str(m))
+    return "x".join(parts)
+
+
+def _fx(x: float | None) -> str:
+    if x is None or x == math.inf:
+        return ""
+    if abs(x - 1.0) < 0.005:
+        return f"{x:.4f}x"
+    return f"{x:.4g}x"
+
+
+def _render_verdict(comparable: bool, pairs: Sequence[Any], fields_compared: int,
+                    allow: Mapping[str, str], unexplained: Sequence[Mapping[str, Any]],
+                    program_mismatch: bool, only_rom: Sequence[Any],
+                    only_hbm: Sequence[Any], tile_errors: Sequence[Any],
+                    family_rows: Mapping[str, Any],
+                    operator_asymmetries: Sequence[Mapping[str, Any]],
+                    rom: Mapping[str, Any], hbm: Mapping[str, Any],
+                    parity: Mapping[str, Any] | None, lanes: int) -> str:
+    """One sentence a gate can print: the tile-shape asymmetries first."""
+    if comparable:
+        return (
+            f"COMPARABLE: {len(pairs)} operators matched operator-for-operator with "
+            f"identical SCHEDULE fields in every family ({fields_compared} fields "
+            f"compared); tiles per step equal in every family"
+            + (f"; {len(allow)} allowlisted difference(s), all cited" if allow else "")
+            + ".  The machine files alone decide the rate."
+        )
+    by_key = {(a["family"], a["field"]): a for a in unexplained}
+    clauses: list[str] = []
+    families = ["tensor", "attention", "dma", "vector"] + sorted(
+        {a["family"] for a in unexplained} - {"tensor", "attention", "dma", "vector"}
+    )
+    for family in families:
+        tile_diffs = [by_key[(family, f)] for f in SCHEDULE_TILE_FIELDS if (family, f) in by_key]
+        if not tile_diffs:
+            continue
+        rom_ops = [r for r in rom["operators"] if r["family"] == family]
+        hbm_ops = [r for r in hbm["operators"] if r["family"] == family]
+        row = family_rows.get(family, {})
+        if family == "tensor":
+            bits = []
+            for f in ("tile_depth", "tile_rows"):
+                a = by_key.get((family, f))
+                if a is None:
+                    continue
+                if a["favours"] == "neither":
+                    if f == "tile_depth" and parity is not None:
+                        lo, hi = parity["band"]
+                        bits.append(
+                            f"tile_depth {a['rom_value']} vs {a['hbm_value']} (neutral at "
+                            f"work_per_lane_cycle {parity['work_per_lane_cycle']:.6g}, parity "
+                            f"band [{lo:.6g}, {hi:.6g}); outside it the larger depth is cheaper)"
+                        )
+                    else:
+                        bits.append(f"{f} {a['rom_value']} vs {a['hbm_value']} (neutral at batch-1 decode)")
+                else:
+                    bits.append(
+                        f"{f} {a['rom_value']} vs {a['hbm_value']} (favours {a['favours']} "
+                        f"{_fx(a['effect_x'])})"
+                    )
+            cols = by_key.get((family, "tile_cols"))
+            win = by_key.get((family, "issue_window"))
+            if cols or win:
+                caps = row.get("effective_tensor_width_caps", {})
+                span_rom = f"{_modal(_values_by_side(rom_ops, 'tile_cols'))}x{_modal(_values_by_side(rom_ops, 'issue_window'))}"
+                span_hbm = f"{_modal(_values_by_side(hbm_ops, 'tile_cols'))}x{_modal(_values_by_side(hbm_ops, 'issue_window'))}"
+                lead = cols or win
+                bits.append(
+                    f"tile_cols x issue_window {span_rom} vs {span_hbm} (effective tensor "
+                    f"width {max(caps.get('rom', [0]))} vs {max(caps.get('hbm', [0]))} at "
+                    f"lanes={lanes}, favours {lead['favours']} {_fx(lead['effect_x'])})"
+                )
+            cyc = row.get("cycles")
+            if cyc:
+                bits.append(
+                    f"contraction cycles per step {cyc['rom']:,} vs {cyc['hbm']:,}"
+                    + ("" if cyc["favours"] == "neither" else f" (favours {cyc['favours']} {_fx(cyc['magnitude_x'])})")
+                )
+            clauses.append("tensor " + ", ".join(bits))
+            continue
+        tiles = row.get("tiles")
+        issued = row.get("issued_work")
+        text = f"{family} tile {_shape(rom_ops)} vs {_shape(hbm_ops)}"
+        inner = []
+        if tiles:
+            inner.append(
+                f"tiles per step {tiles['rom']:,} vs {tiles['hbm']:,}"
+                + ("" if tiles["favours"] == "neither" else f", favours {tiles['favours']} {_fx(tiles['magnitude_x'])}")
+            )
+        if issued and family != "dma" and issued["favours"] != (tiles or {}).get("favours"):
+            inner.append(
+                f"issued work incl. padding {issued['rom']:,} vs {issued['hbm']:,}"
+                + ("" if issued["favours"] == "neither" else f", favours {issued['favours']} {_fx(issued['magnitude_x'])}")
+            )
+        if family == "dma":
+            for o in [o for o in operator_asymmetries if o["family"] == "dma" and o["metric"] == "tiles_per_issue"][:2]:
+                inner.append(
+                    f"{o['operator']} {o['rom']} vs {o['hbm']} tiles per issue, favours "
+                    f"{o['favours']} {_fx(o['magnitude_x'])}"
+                )
+        clauses.append(text + (" (" + "; ".join(inner) + ")" if inner else ""))
+    other = [a for a in unexplained if a["field"] not in SCHEDULE_TILE_FIELDS]
+    if other:
+        names = sorted({a["field"] for a in other}, key=SCHEDULE_FIELDS.index)
+        clauses.append(
+            f"{len(other)} further cost-bearing field(s) differ ({', '.join(names)}; "
+            "see asymmetries)"
+        )
+    if program_mismatch:
+        clauses.append(
+            f"{len(only_rom)} rom / {len(only_hbm)} hbm operators have no counterpart "
+            "with the same useful work"
+        )
+    if tile_errors:
+        clauses.append(f"{len(tile_errors)} operator(s) cannot be tiled")
+    return (
+        "NOT COMPARABLE: " + "; ".join(clauses)
+        + f"; allowlist {'empty' if not allow else 'cites ' + str(len(allow))}"
+        + ".  These are SCHEDULE fields, so no machine file can correct them; the "
+        "deployments must be re-emitted under one SCHEDULE rule."
+    )
+
+
+def audit_deployments(rom_root: Path, hbm_root: Path,
+                      lanes: int | None = None, *,
+                      symbols: Mapping[int, int] | None = None,
+                      machine: Any = None,
+                      allowlist: Mapping[str, str] | None = None,
+                      ) -> dict[str, Any]:
+    """Do the two deployments hand either side a tile-shape advantage?
+
+    The machine files cannot make a comparison fair on their own: the tensor
+    engine's batch-1 rate is ``min(lanes, tile_cols * issue_window, cols) *
+    work_per_lane_cycle * clock`` and two of those factors live in the
+    deployment's SCHEDULE descriptors, the reduction depth is charged in
+    ``ceil(tile_depth * scale / rate)`` quanta, and a DMA operator is charged
+    once per tile.  This compares, per engine family and per operator, every
+    SCHEDULE field ``tile_mapping`` reads, the tile counts and padding those
+    fields produce for the same useful work, and for DMA the tile count and
+    bytes per tile -- with the direction and magnitude of each difference.
+
+    ``comparable`` is true only when no cost-bearing field differs outside the
+    cited allowlist and every operator of one side has its counterpart on the
+    other.  With ``machine`` (a ``MachineModel``) the tile counts are the ones
+    that machine's lane count produces and the tensor and DMA charges are
+    computed with the cycle model's own arithmetic; with only ``lanes`` the
+    survey still decomposes every operator but charges nothing.
+    """
+    from runtime.abi3.constants import StorageClass
+
+    allow = dict(DEPLOYMENT_AUDIT_ALLOWLIST if allowlist is None else allowlist)
+    if symbols is None:
+        symbols = decode_request_symbols(1, 8192)
+    if machine is not None:
+        params_cache: dict[str, Any] = {}
+
+        def params_for(family: str) -> Any:
+            if family not in params_cache:
+                params_cache[family] = machine.engine(family)
+            return params_cache[family]
+        charger: _CostArithmetic | None = _CostArithmetic()
+    else:
+        params_for = _fallback_params_for(lanes)
+        charger = None
+    tensor_params = params_for("tensor")
+    lanes = int(tensor_params.lanes)
+
+    rom = survey_deployment(rom_root, symbols=symbols, params_for=params_for, charger=charger)
+    hbm = survey_deployment(hbm_root, symbols=symbols, params_for=params_for, charger=charger)
+    pairs, only_rom, only_hbm = _match_operators(rom["operators"], hbm["operators"])
+
+    # -- the parity band for the pair's actual tensor depths -------------
+    parity: dict[str, Any] | None = None
+    rom_depths = _values_by_side(
+        [r for r in rom["operators"] if r["family"] == "tensor"], "tile_depth"
+    )
+    hbm_depths = _values_by_side(
+        [r for r in hbm["operators"] if r["family"] == "tensor"], "tile_depth"
+    )
+    rom_depth, hbm_depth = _modal(rom_depths), _modal(hbm_depths)
+    if rom_depth and hbm_depth and machine is not None:
+        parity = tensor_parity_band(
+            rom_depth, hbm_depth, float(tensor_params.work_per_lane_cycle),
+            tile_issue_cycles=int(tensor_params.tile_issue_cycles),
+        )
+
+    # -- field by field, family by family --------------------------------
+    families = sorted(set(rom["families"]) | set(hbm["families"]))
+    asymmetries: list[dict[str, Any]] = []
+    fields_compared = 0
+    topology = int(rom["topology_class"])
+    for family in families:
+        rom_ops = [r for r in rom["operators"] if r["family"] == family]
+        hbm_ops = [r for r in hbm["operators"] if r["family"] == family]
+        for field in SCHEDULE_FIELDS:
+            rom_vals = _values_by_side(rom_ops, field)
+            hbm_vals = _values_by_side(hbm_ops, field)
+            fields_compared += 1
+            if rom_vals == hbm_vals:
+                continue
+            rom_m, hbm_m = _modal(rom_vals), _modal(hbm_vals)
+            if field == "queue_index":
+                # The value that matters is how many queues the family's
+                # operators are spread over, not which index is commonest.
+                rom_m, hbm_m = len(rom_vals), len(hbm_vals)
+            cost_bearing = field not in SCHEDULE_INERT_FIELDS
+            if rom_m is not None and hbm_m is not None and cost_bearing:
+                effect = _field_effect(
+                    family, field, rom_m, hbm_m, pairs, params_for, charger,
+                    parity, topology,
+                )
+            elif not cost_bearing:
+                effect = {"favours": "neither", "effect_x": 1.0, "why": (
+                    f"{field} is copied into the tile mapping and read by nothing "
+                    "that costs a cycle"
+                )}
+            else:
+                effect = {"favours": "unknown", "effect_x": None,
+                          "why": "the field is present on one side only"}
+            key = f"{family}.{field}"
+            ratio_fields = SCHEDULE_TILE_FIELDS + ("max_outstanding",) + SCHEDULE_INERT_FIELDS
+            asymmetries.append({
+                "family": family, "field": field,
+                "rom": rom_vals, "hbm": hbm_vals,
+                "rom_value": rom_m, "hbm_value": hbm_m,
+                "magnitude_x": (
+                    _ratio(rom_m, hbm_m)
+                    if field in ratio_fields and rom_m is not None and hbm_m is not None
+                    else None
+                ),
+                "cost_bearing": cost_bearing,
+                "enters": (
+                    "tile_mapping / tensor_lane_mapping / apply_tile_amplification / _compute_cycles"
+                    if field in SCHEDULE_TILE_FIELDS else
+                    "queue admission" if field in ("max_outstanding", "queue_index") else
+                    "MemorySystem.schedule" if field in ("bank_mask", "port_mask") else
+                    "fabric route" if field == "noc_route_class" else "nothing"
+                ),
+                "favours": effect["favours"],
+                "effect_x": effect["effect_x"],
+                "why": effect["why"],
+                "allowlisted": key in allow,
+                "justification": allow.get(key),
+            })
+
+    # -- per operator, for equal useful work ------------------------------
+    operator_rows: list[dict[str, Any]] = []
+    operator_asymmetries: list[dict[str, Any]] = []
+    for a, b in pairs:
+        row: dict[str, Any] = {
+            "family": a["family"], "mnemonic": a["mnemonic"],
+            "extent": dict(a["extent"]), "useful_work": a["useful_work"],
+            "issues": {"rom": a.get("issues", 1), "hbm": b.get("issues", 1)},
+            "rom_operator_id": a["operator_id"], "hbm_operator_id": b["operator_id"],
+            "schedule": {
+                f: {"rom": (a.get("schedule") or {}).get(f), "hbm": (b.get("schedule") or {}).get(f)}
+                for f in SCHEDULE_TILE_FIELDS + ("max_outstanding", "queue_index")
+            },
+        }
+        if "tiles" in a and "tiles" in b:
+            for metric in ("tiles", "issued_work", "padding_fraction", "output_waves",
+                           "column_groups", "column_group_span", "effective_tensor_width",
+                           "payload_bytes_per_tile", "cycles_per_issue",
+                           "tile_issue_cycles_per_issue"):
+                if metric in a or metric in b:
+                    row[metric] = {"rom": a.get(metric), "hbm": b.get(metric)}
+            if a["tiles"] != b["tiles"]:
+                side = _favours(a["tiles"], b["tiles"])
+                operator_asymmetries.append({
+                    "family": a["family"], "operator": _operator_label(a),
+                    "metric": "tiles_per_issue",
+                    "rom": a["tiles"], "hbm": b["tiles"],
+                    "magnitude_x": _ratio(a["tiles"], b["tiles"]),
+                    "favours": side,
+                })
+            if a["family"] == "dma" and a.get("payload_bytes_per_tile") != b.get("payload_bytes_per_tile"):
+                operator_asymmetries.append({
+                    "family": "dma", "operator": _operator_label(a),
+                    "metric": "payload_bytes_per_tile",
+                    "rom": a.get("payload_bytes_per_tile"), "hbm": b.get("payload_bytes_per_tile"),
+                    "magnitude_x": _ratio(a.get("payload_bytes_per_tile", 0), b.get("payload_bytes_per_tile", 0)),
+                    "favours": _favours(a.get("payload_bytes_per_tile", 0), b.get("payload_bytes_per_tile", 0), lower_is_better=False),
+                    "note": "more bytes per tile is fewer tiles for the same payload",
+                })
+            if "cycles_per_issue" in a and "cycles_per_issue" in b and a["cycles_per_issue"] != b["cycles_per_issue"]:
+                operator_asymmetries.append({
+                    "family": a["family"], "operator": _operator_label(a),
+                    "metric": "cycles_per_issue",
+                    "rom": a["cycles_per_issue"], "hbm": b["cycles_per_issue"],
+                    "magnitude_x": _ratio(a["cycles_per_issue"], b["cycles_per_issue"]),
+                    "favours": _favours(a["cycles_per_issue"], b["cycles_per_issue"]),
+                })
+        else:
+            row["tile_error"] = {"rom": a.get("tile_error"), "hbm": b.get("tile_error")}
+        operator_rows.append(row)
+
+    # -- per family, per step ---------------------------------------------
+    family_rows: dict[str, Any] = {}
+    for family in families:
+        r = rom["families"].get(family, {})
+        h = hbm["families"].get(family, {})
+        row = {}
+        for metric in ("operations", "tiles", "useful_work", "issued_work",
+                       "padding_fraction", "output_waves", "column_groups",
+                       "cycles", "tile_issue_cycles", "payload_bytes"):
+            if metric in r or metric in h:
+                rv, hv = r.get(metric, 0), h.get(metric, 0)
+                entry: dict[str, Any] = {"rom": rv, "hbm": hv}
+                if metric not in ("useful_work", "operations", "payload_bytes"):
+                    entry["favours"] = _favours(rv, hv)
+                    entry["magnitude_x"] = _ratio(rv, hv)
+                row[metric] = entry
+        if family == "tensor":
+            row["effective_tensor_width_caps"] = {
+                "rom": rom["effective_tensor_width_caps"],
+                "hbm": hbm["effective_tensor_width_caps"],
+            }
+        if family == "dma":
+            row["payload_bytes_per_tile"] = {
+                "rom": round(r.get("payload_bytes", 0) / r["tiles"], 3) if r.get("tiles") else None,
+                "hbm": round(h.get("payload_bytes", 0) / h["tiles"], 3) if h.get("tiles") else None,
+            }
+            if machine is not None:
+                dma = params_for("dma")
+                row["machine"] = {
+                    "bytes_per_cycle": dma.bytes_per_cycle,
+                    "tile_issue_cycles": dma.tile_issue_cycles,
+                    "rule": (
+                        "a DMA operator costs tiles x max(ceil(bytes_transferred / tiles / "
+                        "bytes_per_cycle), tile_issue_cycles); at this rate every tile of "
+                        "these deployments is at the issue floor, so the DMA charge is the tile count"
+                        if all(
+                            (rec.get("transferred_bytes_static", 0) / max(rec.get("tiles", 1), 1))
+                            <= dma.bytes_per_cycle
+                            for rec in rom["operators"] + hbm["operators"]
+                            if rec["family"] == "dma" and "tiles" in rec
+                        ) else
+                        "a DMA operator costs tiles x max(ceil(bytes_transferred / tiles / "
+                        "bytes_per_cycle), tile_issue_cycles)"
+                    ),
+                }
+        family_rows[family] = row
+
+    # -- verdict ----------------------------------------------------------
+    unexplained = [
+        a for a in asymmetries if a["cost_bearing"] and not a["allowlisted"]
+    ]
+    allowlist_unused = sorted(
+        set(allow) - {f"{a['family']}.{a['field']}" for a in asymmetries}
+    )
+    program_mismatch = bool(only_rom or only_hbm)
+    tile_errors = [
+        (side, rec["operator_id"], rec["tile_error"])
+        for side, survey in (("rom", rom), ("hbm", hbm))
+        for rec in survey["operators"] if "tile_error" in rec
+    ]
+    comparable = not unexplained and not program_mismatch and not tile_errors
+    rom_weight_classes = set(rom["storage_class_counts"])
+    hbm_weight_classes = set(hbm["storage_class_counts"])
+    spans_match = rom["effective_tensor_width_caps"] == hbm["effective_tensor_width_caps"]
+
+    verdict = _render_verdict(
+        comparable, pairs, fields_compared, allow, unexplained, program_mismatch,
+        only_rom, only_hbm, tile_errors, family_rows, operator_asymmetries,
+        rom, hbm, parity, lanes,
+    )
+    for survey in (rom, hbm):
+        for rec in survey["operators"]:
+            for k in [k for k in rec if k.startswith("_")]:
+                del rec[k]
+    return {
+        "schema": "opentallas.deployment_audit.v2",
+        "rule": (
+            "compare, per engine family and per operator, every SCHEDULE field "
+            "runtime.cycle.model.tile_mapping reads, the tile counts and padding "
+            "those fields produce for the same useful work at the same request, "
+            "and for DMA the tile count and bytes per tile; comparable only when "
+            "no cost-bearing field differs outside the cited allowlist"
+        ),
+        "comparable": comparable,
+        "verdict": verdict,
+        "basis": (
+            f"SCHEDULE fields at lanes={lanes}"
+            + (", charged with the cycle model's own _compute_cycles" if machine is not None else "")
+        ),
+        "lanes": lanes,
+        "request_symbols": _symbol_names(symbols),
+        "rom": rom,
+        "hbm": hbm,
+        "fields_compared": fields_compared,
+        "asymmetries": asymmetries,
+        "unexplained_asymmetries": [f"{a['family']}.{a['field']}" for a in unexplained],
+        "operator_asymmetries": operator_asymmetries,
+        "operators": operator_rows,
+        "operators_unmatched": {
+            "rom": [_operator_label(r) for r in only_rom],
+            "hbm": [_operator_label(r) for r in only_hbm],
+        },
+        "families": family_rows,
+        "tensor_parity_band": parity,
+        "allowlist": dict(allow),
+        "allowlist_unused": allowlist_unused,
+        "column_group_spans_match": spans_match,
+        "storage_classes_differ_as_expected": (
+            int(StorageClass.ROM) in rom_weight_classes
+            and int(StorageClass.ROM) not in hbm_weight_classes
+        ),
+    }
+
+
+def _model_slug_of_pair(anchor: "Anchor") -> str:
+    return pair_id(anchor).split("__", 1)[0]
+
+
+def _bind_shipped_deployment(base_capability: str, model_id: str,
+                             role: str) -> tuple[Path | None, dict[str, Any]]:
+    """The deployment the cell's ``role`` side is bound to, or why there is none."""
+    from runtime.abi3.capability import Capability
+
+    entry = SHIPPED_DEPLOYMENTS.get(base_capability)
+    record: dict[str, Any] = {
+        "role": role, "base_capability": base_capability, "model_id": model_id,
+    }
+    if entry is None or entry["model_id"] != model_id:
+        record["status"] = "no deployment built"
+        record["why"] = (
+            f"no compiled {model_id} deployment is bound to {base_capability}"
+        )
+        return None, record
+    root = REPO / entry["root"]
+    record.update({
+        "root": entry["root"], "evidence": list(entry["evidence"]),
+        "registered_deployment_sha256": entry["deployment_sha256"],
+    })
+    manifest_path = root / "deployment.json"
+    if not manifest_path.exists():
+        record["status"] = "no deployment built"
+        record["why"] = f"{entry['root']} is absent from this tree"
+        return None, record
+    manifest = json.loads(manifest_path.read_text())
+    expected_cap = Capability.from_dict(
+        json.loads((REPO / base_capability).read_text())
+    ).digest
+    record["capability_digest"] = manifest.get("capability_digest")
+    record["deployment_sha256"] = manifest.get("deployment_sha256")
+    if manifest.get("capability_digest") != expected_cap:
+        record["status"] = "bound to a different capability"
+        record["why"] = (
+            f"{entry['root']} carries capability digest "
+            f"{str(manifest.get('capability_digest'))[:12]}, not "
+            f"{expected_cap[:12]} of {base_capability}"
+        )
+        return None, record
+    if manifest.get("deployment_sha256") != entry["deployment_sha256"]:
+        record["status"] = "not the registered deployment"
+        record["why"] = (
+            f"{entry['root']} is deployment {str(manifest.get('deployment_sha256'))[:12]}, "
+            f"not the {entry['deployment_sha256'][:12]} the cited evidence names"
+        )
+        return None, record
+    record["status"] = "bound"
+    return root, record
+
+
+def deployment_audit_for_pair(anchor: "Anchor", d: "Derivation",
+                              bodies: Mapping[str, Mapping[str, Any]],
+                              tables: Mapping[str, Path]) -> dict[str, Any]:
+    """The C2 audit of one cell: its bound deployments, or why it has none.
+
+    Absence is a failure, never a skip: a cell whose deployments were never
+    built reports ``comparable = false`` with the reason, so that the gate
+    reads a verdict rather than a missing key.
+    """
+    from runtime.abi3.capability import Capability
+    from runtime.cycle.machine import MachineModel, load_cost_table
+
+    model_id = _model_slug_of_pair(anchor)
+    rom_base = str(d.facts.get("rom_base_capability"))
+    hbm_base = str(d.facts.get("hbm_base_capability"))
+    rom_root, rom_bind = _bind_shipped_deployment(rom_base, model_id, "rom")
+    hbm_root, hbm_bind = _bind_shipped_deployment(hbm_base, model_id, "hbm")
+    symbols = decode_request_symbols(anchor.batch_size, anchor.context_tokens)
+    base: dict[str, Any] = {
+        "schema": "opentallas.deployment_audit.v2",
+        "generator": "tools/derive_cycle_machine.py",
+        "pair_id": pair_id(anchor),
+        "gate": "C2",
+        "deployments": {"rom": rom_bind, "hbm": hbm_bind},
+        "request_symbols": _symbol_names(symbols),
+    }
+    if rom_root is None or hbm_root is None:
+        missing = [b for b in (rom_bind, hbm_bind) if b["status"] != "bound"]
+        base.update({
+            "comparable": False,
+            "reason": "no deployment built",
+            "verdict": (
+                "NOT COMPARABLE: no deployment built -- "
+                + "; ".join(f"{b['role']}: {b['why']}" for b in missing)
+                + ".  A cell with no compiled deployment pair has no "
+                "deployment-side evidence, and absence is a failure, not a skip."
+            ),
+        })
+        return base
+    # Both sides of the derived pair share every engine parameter (D1), so
+    # the ROM machine is the machine the audit charges with.
+    machine = MachineModel(
+        Capability.from_dict(bodies["rom_capability"]),
+        load_cost_table(tables["rom_cost_table"]),
+    )
+    report = audit_deployments(
+        rom_root, hbm_root, symbols=symbols, machine=machine,
+        allowlist=DEPLOYMENT_AUDIT_ALLOWLIST,
+    )
+    tensor = machine.engine("tensor")
+    base.update(report)
+    base["machine"] = {
+        "capability": _relative(tables["rom_capability"]) if isinstance(
+            tables.get("rom_capability"), Path) else str(tables.get("rom_capability")),
+        "cost_table": _relative(tables["rom_cost_table"]),
+        "tensor_lanes": tensor.lanes,
+        "tensor_work_per_lane_cycle": tensor.work_per_lane_cycle,
+        "queue_depth": tensor.queue_depth,
+        "dma_bytes_per_cycle": machine.engine("dma").bytes_per_cycle,
+    }
+    base["reason"] = "comparable" if report["comparable"] else "not comparable"
+    return base
+
+
+#: The per-operator survey is the bulk of an audit -- every operator's
+#: operands, extents and tile decomposition on both sides.  The pair artifact
+#: embeds the audit without it and names the standalone file that has it.
+_AUDIT_BULK_KEYS = ("operators",)
+
+
+def deployment_audit_summary(audit: Mapping[str, Any],
+                             full_report: str) -> dict[str, Any]:
+    """The audit as embedded in the pair artifact: verdicts, not surveys."""
+    out: dict[str, Any] = {}
+    for key, value in audit.items():
+        if key in _AUDIT_BULK_KEYS:
+            continue
+        if key in ("rom", "hbm") and isinstance(value, Mapping):
+            out[key] = {k: v for k, v in value.items() if k not in _AUDIT_BULK_KEYS}
+        else:
+            out[key] = value
+    out["full_report"] = full_report
+    return out
 
 
 # ---------------------------------------------------------------------------
@@ -2692,6 +4023,8 @@ def emitted_paths(anchor: Anchor, config_dir: Path, artifact_dir: Path,
             "hbm_capability": cap_dir / "hbm_sram_single_chip_n5_v1.json",
             "artifact":
                 artifact_dir / "qwen3_n5_design_target_machine_pair.json",
+            "deployment_audit":
+                artifact_dir / "qwen3_n5_design_target_deployment_audit.json",
         }
     cost_dir = config_dir / TECHNOLOGY_VIEW
     return {
@@ -2704,11 +4037,13 @@ def emitted_paths(anchor: Anchor, config_dir: Path, artifact_dir: Path,
         "hbm_capability":
             cap_dir / f"{Path(hbm_base).stem}_{TECHNOLOGY_VIEW}_{pid}_v1.json",
         "artifact": artifact_dir / f"{pid}_machine_pair.json",
+        "deployment_audit": artifact_dir / f"{pid}_deployment_audit.json",
     }
 
 
 def artifact(anchor: Anchor, d: Derivation, comparability: Mapping[str, Any],
-             paths: Mapping[str, str]) -> dict[str, Any]:
+             paths: Mapping[str, str],
+             deployment_audit: Mapping[str, Any] | None = None) -> dict[str, Any]:
     A = anchor
     rows = []
     rom_p, hbm_p = d.parameters("rom"), d.parameters("hbm")
@@ -2782,6 +4117,13 @@ def artifact(anchor: Anchor, d: Derivation, comparability: Mapping[str, Any],
         "derived_facts": d.facts,
         "parameters": rows,
         "comparability_assertion": comparability,
+        "deployment_audit": (
+            dict(deployment_audit) if deployment_audit is not None else {
+                "comparable": False,
+                "reason": "audit not run",
+                "verdict": "NOT COMPARABLE: the deployment audit was not run for this cell",
+            }
+        ),
         "residuals": d.residuals,
         "emitted": dict(paths),
     }
@@ -2886,7 +4228,7 @@ def emit_cell(anchor: Anchor, config_dir: Path, artifact_dir: Path, *,
     drift: list[str] = []
     if write:
         for key, path in paths.items():
-            if key == "artifact":
+            if key in ("artifact", "deployment_audit"):
                 continue
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text(rendered[key])
@@ -2919,15 +4261,22 @@ def emit_cell(anchor: Anchor, config_dir: Path, artifact_dir: Path, *,
             bodies["hbm_capability"], tables["hbm_cost_table"],
             allowlist=allowlist_for(anchor),
         )
+        # C2 runs on every emit too: the deployment-side half of D1, against
+        # the compiled deployments the cell's base capabilities bind to, or a
+        # recorded failure when there are none.
+        deployment_audit = deployment_audit_for_pair(anchor, d, bodies, tables)
     art = artifact(anchor, d, comparability, {
-        k: _relative(v) for k, v in paths.items() if k != "artifact"
-    })
+        k: _relative(v) for k, v in paths.items()
+        if k not in ("artifact", "deployment_audit")
+    }, deployment_audit_summary(deployment_audit, _relative(paths["deployment_audit"])))
     if write:
         paths["artifact"].parent.mkdir(parents=True, exist_ok=True)
         paths["artifact"].write_text(canonical(art))
+        paths["deployment_audit"].write_text(canonical(deployment_audit))
     return {
         "derivation": d, "bodies": bodies, "paths": paths, "drift": drift,
         "rendered": rendered, "comparability": comparability, "artifact": art,
+        "deployment_audit": deployment_audit,
     }
 
 
@@ -3030,12 +4379,25 @@ def main(argv: Sequence[str] | None = None) -> int:
         return 0
 
     if args.audit_deployments:
-        report = audit_deployments(
-            Path(args.audit_deployments[0]), Path(args.audit_deployments[1]),
-            lanes=int(d.shared["engine.tensor.lanes.default"].value),
-        )
+        from runtime.abi3.capability import Capability
+        from runtime.cycle.machine import MachineModel, load_cost_table
+
+        # Charge with the derived machine of this anchor, rendered to scratch
+        # so the audit does not depend on the emitted files being on disk.
+        with tempfile.TemporaryDirectory() as tmp:
+            table = Path(tmp) / paths["rom_cost_table"].name
+            table.write_text(rendered["rom_cost_table"])
+            machine = MachineModel(
+                Capability.from_dict(bodies["rom_capability"]),
+                load_cost_table(table),
+            )
+            report = audit_deployments(
+                Path(args.audit_deployments[0]), Path(args.audit_deployments[1]),
+                symbols=decode_request_symbols(args.batch_size, args.context_tokens),
+                machine=machine,
+            )
         print(json.dumps(report, indent=2))
-        return 0 if report["column_group_spans_match"] else 3
+        return 0 if report["comparable"] else 3
 
     out = emit_cell(anchor, config_dir, artifact_dir,
                     rom_base=rom_base, hbm_base=hbm_base, write=True)

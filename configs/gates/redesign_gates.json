@@ -111,8 +111,8 @@
       "kind": "comparison",
       "statement": "The compiled deployments hand neither side an advantage in tile shape, column group, tile depth or DMA tile count.",
       "fails_when": "Any asymmetry is unexplained.",
-      "evaluator": {"type": "artifact_field", "glob": "results/derived/*machine_pair*.json", "require": {"field": "deployment_audit.comparable", "equals": true},
-        "note": "The shipped comparison handed ROM a 2x tensor-lane advantage and a 16x column-group advantage. The audit currently tests tile_cols x issue_window and does NOT test tile_depth (2048 ROM against 128 HBM) or tile_rows."}
+      "evaluator": {"type": "artifact_field", "glob": "results/derived/*machine_pair*.json", "require": {"field": "deployment_audit.comparable", "equals": true}, "reason_field": "deployment_audit.verdict",
+        "note": "The shipped comparison handed ROM a 2x tensor-lane advantage and a 16x column-group advantage. The audit (tools/derive_cycle_machine.py audit_deployments) compares, per engine family and per operator, every SCHEDULE field runtime.cycle.model.tile_mapping reads -- tile_rows, tile_cols, tile_depth, issue_window, max_outstanding, queue_index, bank_mask, port_mask, noc_route_class -- with the tile counts, padding and DMA bytes per tile they produce for the same useful work, the direction each difference favours, and the tensor parity band for the pair's actual tile depths. A cell with no compiled deployment pair reports comparable = false with reason 'no deployment built'. The gate reads deployment_audit.verdict as the failure reason."}
     },
     {
       "id": "C3",

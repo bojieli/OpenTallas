@@ -324,12 +324,21 @@ def evaluate(gate: dict[str, Any]) -> dict[str, Any]:
     if kind == "artifact_field":
         want = ev["require"]
         also = ev.get("also_require")
+        # An optional second field carrying the artifact's own reason.  When
+        # it is configured, an artifact that CARRIES the required field with
+        # the wrong value fails the gate on that evidence -- the reason it
+        # states -- rather than on the absence message below, which is for
+        # artifacts that never wrote the field at all.
+        reason_field = ev.get("reason_field")
+        verdicts: list[tuple[Path, Any, Any]] = []
         for path in paths:
             body = _load(path)
             if body is None:
                 continue
             got = _dig(body, want["field"])
             if got != want.get("equals"):
+                if reason_field and got is not None:
+                    verdicts.append((path, got, _dig(body, reason_field)))
                 continue
             # A second field that must hold in the SAME artifact.  Both halves
             # of a reconciliation must agree; passing on one target's regime
@@ -340,6 +349,26 @@ def evaluate(gate: dict[str, Any]) -> dict[str, Any]:
                 f"{path.relative_to(REPO)}: {want['field']} == {want['equals']}"
                 + (f" and {also['field']} == {also['equals']}" if also else "")
             )
+        if verdicts:
+            # Lead with a verdict that examined evidence; an artifact whose
+            # reason is that nothing was built is a weaker witness than one
+            # that compared two deployments and found them unequal.
+            verdicts.sort(
+                key=lambda v: (
+                    "no deployment built" in str(v[2] or ""),
+                    str(v[0]),
+                )
+            )
+            path, got, reason = verdicts[0]
+            text = f"{path.relative_to(REPO)}: {want['field']} == {got!r}"
+            if reason:
+                text += f" -- {str(reason)[:1200]}"
+            if len(verdicts) > 1:
+                text += f"; {len(verdicts) - 1} more artifact(s) carry a failing verdict"
+            absent = len(paths) - len(verdicts)
+            if absent:
+                text += f"; {absent} artifact(s) lack {want['field']}"
+            return _fail(text)
         return _fail(
             f"{len(paths)} artifact(s) matched {ev['glob']} and none has "
             f"{want['field']} == {want.get('equals')}"
