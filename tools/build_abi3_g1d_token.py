@@ -605,6 +605,35 @@ def oracle_evidence() -> dict[str, Any]:
     }
 
 
+def _establishes(records: list[dict[str, Any]]) -> list[str]:
+    """What the rung established, computed from the records, never declared."""
+    out: list[str] = []
+    checks = [
+        record["head"]["shard_composition_check"] for record in records
+    ]
+    plans = [record["head"]["shard_plan"] for record in records]
+    if plans and all(plan.get("structurally_exact") for plan in plans):
+        counts = sorted({int(p["shard_count"]) for p in plans})
+        widths = sorted({int(p["rows_per_shard"]) for p in plans})
+        out.append(
+            f"the head's {counts} row shards of {widths} rows partition the "
+            "OUTPUT axis and leave the reduction axis whole, so composition "
+            "is concatenation and no accumulator is ever split -- derived "
+            "from the LM head's own weight view"
+        )
+    ran = [check for check in checks if check.get("ran")]
+    if ran and all(check.get("falsification_control_has_teeth") for check in ran):
+        if all(check.get("row_shard_composition_is_exact") for check in ran):
+            out.append(
+                "executed at full dimension on the checkpoint's own lm_head "
+                "bytes: the row shards reproduce the whole projection at the "
+                "precision the operator writes, every output code, while the "
+                "reduction-axis control does not -- a reference-model "
+                "measurement of the plan, with no RTL involved"
+            )
+    return out
+
+
 # --------------------------------------------------------------------------
 def build(
     output: Path,
@@ -755,7 +784,7 @@ def build(
             "normalisation, the LM head and the argmax executing in the "
             "integrated RTL on the composed trunk output"
         ),
-        "establishes": [],
+        "establishes": _establishes(records),
         "does_not_establish": [
             "any RTL execution of the head: no head instruction was fetched",
             "any token id: the RTL emitted none",

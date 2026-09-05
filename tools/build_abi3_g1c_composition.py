@@ -992,6 +992,44 @@ def handoff_evidence(
     }
 
 
+def _establishes(records: list[dict[str, Any]]) -> list[str]:
+    """What the rung established, computed from the records, never declared."""
+    out: list[str] = []
+    loops = [record["loop"] for record in records]
+    if loops and all(row.get("invocation_count_matches_model_layers") for row in loops):
+        layers = sorted({int(row["model_layers"]) for row in loops})
+        counts = sorted({int(row["invocations_measured"]) for row in loops})
+        out.append(
+            f"the design's own loop control issues exactly {layers} "
+            "invocations of the layer body per device transaction -- the "
+            "model's layer count from the certified Kernel IR and the "
+            f"checkpoint's config.json -- measured as {counts} invocations in "
+            "the RTL's own certified issue trace, on each declared storage "
+            "class"
+        )
+    if loops and all(row.get("structurally_identical") for row in loops):
+        out.append(
+            "every one of those invocations is structurally identical: the "
+            "same sequence of (family, subopcode, descriptor id, program "
+            "counter), the same resolved (slot, descriptor id, extent, extent "
+            "axis, rank) for every operand, and an element offset that "
+            "advances by a constant per-invocation stride"
+        )
+    identities = [
+        record["handoff"]["address_identity_across_the_layer_boundary"]
+        for record in records
+    ]
+    if identities and all(row.get("holds") for row in identities):
+        checked = sorted({int(row["boundaries_checked"]) for row in identities})
+        out.append(
+            f"at all {checked} layer boundaries the RTL resolver produced, for "
+            "invocation N+1's consumer, the same object, element offset and "
+            "extent it produced for invocation N's producer -- address "
+            "identity, not a data handoff"
+        )
+    return out
+
+
 def rerun_agreement(path: Path | None, campaign: dict[str, Any]) -> dict[str, Any] | None:
     """An independent run of the same integrated campaign, recorded not relied on.
 
@@ -1184,11 +1222,11 @@ def build(
             "handoff, plus the loop property that closes the induction over "
             "every layer of the model"
         ),
-        "establishes": [],
+        "establishes": _establishes(records),
         "does_not_establish": [
-            "the handoff: no layer boundary was crossed in the integrated "
-            "vehicle, so nothing here says a value produced by one layer was "
-            "consumed by the next in RTL",
+            "the handoff: see handoff.rtl_to_rtl and its measurement. Nothing "
+            "in this artifact says a value produced by one layer was consumed "
+            "by the next in RTL unless that field is true",
             "any engine arithmetic: the run the loop property is measured "
             "from supplies every engine result at the engine boundary, which "
             "is rung G1e's scope, not this one's",
