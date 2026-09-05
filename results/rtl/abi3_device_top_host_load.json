@@ -35,16 +35,16 @@
           "views": 2143
         }
       ],
-      "checks": 358,
-      "compile_command": "/usr/bin/iverilog -g2012 -s tb_a3_device_top_host_load -o hostload.vvp <ROOT>/rtl/abi3/ot_a3_pkg.sv <ROOT>/rtl/abi3/ot_a3_instruction_decoder.sv <ROOT>/rtl/abi3/ot_a3_program_header.sv <ROOT>/rtl/abi3/ot_a3_loop_stack.sv <ROOT>/rtl/abi3/ot_a3_view_resolver.sv <ROOT>/rtl/abi3/ot_a3_event_scoreboard.sv <ROOT>/rtl/abi3/ot_a3_state_controller.sv <ROOT>/rtl/abi3/ot_a3_microsequencer.sv <ROOT>/rtl/abi3/ot_a3_device_top.sv <ROOT>/rtl/test/tb_a3_device_top_host_load.sv",
+      "checks": 353,
+      "compile_command": "/usr/bin/iverilog -g2012 -s tb_a3_device_top_host_load -o hostload.vvp <ROOT>/rtl/abi3/ot_a3_pkg.sv <ROOT>/rtl/abi3/ot_a3_instruction_decoder.sv <ROOT>/rtl/abi3/ot_a3_program_header.sv <ROOT>/rtl/abi3/ot_a3_shared_divider.sv <ROOT>/rtl/abi3/ot_a3_symbol_file.sv <ROOT>/rtl/abi3/ot_a3_loop_stack.sv <ROOT>/rtl/abi3/ot_a3_view_resolver.sv <ROOT>/rtl/abi3/ot_a3_resolver_bank.sv <ROOT>/rtl/abi3/ot_a3_event_scoreboard.sv <ROOT>/rtl/abi3/ot_a3_issue_record_store.sv <ROOT>/rtl/abi3/ot_a3_dependence_table.sv <ROOT>/rtl/abi3/ot_a3_state_controller.sv <ROOT>/rtl/abi3/ot_a3_microsequencer.sv <ROOT>/rtl/abi3/ot_a3_device_top.sv <ROOT>/rtl/test/tb_a3_device_top_host_load.sv",
       "compile_returncode": 0,
       "failures": [],
-      "host_writes": 11492,
-      "log_sha256": "d4af1c459c0ee7f94cca8f47e25d90651316b0f8b67f9a868c15bd46a6ff2361",
-      "marker": "PASS: ABI3 device top host load vehicle_program_words=128 vehicle_desc_words=256 host_writes=11492 cases=2 checks=358",
+      "host_writes": 11111,
+      "log_sha256": "b96ff4487e4c6cfd672778524040d3f79dafdcb26d87678669272b0c4994afe9",
+      "marker": "PASS: ABI3 device top host load vehicle_program_words=128 vehicle_desc_words=256 host_writes=11111 cases=2 checks=353",
       "name": "iverilog",
       "run_command": "/usr/bin/vvp hostload.vvp",
-      "run_log": "CASE 0 loaded=0 complete=0 trap=2 fetched=1 retired=0 issued=0 views=0\nCASE 0 loaded=1 complete=1 trap=0 fetched=2104 retired=2104 issued=691 views=2143\nCASE 1 loaded=1 complete=1 trap=0 fetched=2104 retired=2104 issued=691 views=2143\nPASS: ABI3 device top host load vehicle_program_words=128 vehicle_desc_words=256 host_writes=11492 cases=2 checks=358",
+      "run_log": "CASE 0 loaded=0 complete=0 trap=2 fetched=1 retired=0 issued=0 views=0\nCASE 0 loaded=1 complete=1 trap=0 fetched=2104 retired=2104 issued=691 views=2143\nCASE 1 loaded=1 complete=1 trap=0 fetched=2104 retired=2104 issued=691 views=2143\nPASS: ABI3 device top host load vehicle_program_words=128 vehicle_desc_words=256 host_writes=11111 cases=2 checks=353",
       "run_returncode": 0,
       "status": "pass"
     },
@@ -81,25 +81,25 @@
           "views": 2143
         }
       ],
-      "checks": 358,
-      "compile_command": "<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -Wall -Wno-fatal -Wno-DECLFILENAME --top-module tb_a3_device_top_host_load --Mdir obj_hostload <ROOT>/rtl/abi3/ot_a3_pkg.sv <ROOT>/rtl/abi3/ot_a3_instruction_decoder.sv <ROOT>/rtl/abi3/ot_a3_program_header.sv <ROOT>/rtl/abi3/ot_a3_loop_stack.sv <ROOT>/rtl/abi3/ot_a3_view_resolver.sv <ROOT>/rtl/abi3/ot_a3_event_scoreboard.sv <ROOT>/rtl/abi3/ot_a3_state_controller.sv <ROOT>/rtl/abi3/ot_a3_microsequencer.sv <ROOT>/rtl/abi3/ot_a3_device_top.sv <ROOT>/rtl/test/tb_a3_device_top_host_load.sv",
+      "checks": 353,
+      "compile_command": "<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -Wall -Wno-fatal -Wno-DECLFILENAME --top-module tb_a3_device_top_host_load --Mdir obj_hostload <ROOT>/rtl/abi3/ot_a3_pkg.sv <ROOT>/rtl/abi3/ot_a3_instruction_decoder.sv <ROOT>/rtl/abi3/ot_a3_program_header.sv <ROOT>/rtl/abi3/ot_a3_shared_divider.sv <ROOT>/rtl/abi3/ot_a3_symbol_file.sv <ROOT>/rtl/abi3/ot_a3_loop_stack.sv <ROOT>/rtl/abi3/ot_a3_view_resolver.sv <ROOT>/rtl/abi3/ot_a3_resolver_bank.sv <ROOT>/rtl/abi3/ot_a3_event_scoreboard.sv <ROOT>/rtl/abi3/ot_a3_issue_record_store.sv <ROOT>/rtl/abi3/ot_a3_dependence_table.sv <ROOT>/rtl/abi3/ot_a3_state_controller.sv <ROOT>/rtl/abi3/ot_a3_microsequencer.sv <ROOT>/rtl/abi3/ot_a3_device_top.sv <ROOT>/rtl/test/tb_a3_device_top_host_load.sv",
       "compile_returncode": 0,
       "failures": [],
-      "host_writes": 11492,
-      "log_sha256": "47677823d33ef3d9be7a4f3d1e73e5282eca0d15938c5fd8594e41d673a66bf2",
-      "marker": "PASS: ABI3 device top host load vehicle_program_words=128 vehicle_desc_words=256 host_writes=11492 cases=2 checks=358",
+      "host_writes": 11111,
+      "log_sha256": "8d50d441807dbe573f96042e26d32d46af5b5986d594f2bf74a635718247a6e1",
+      "marker": "PASS: ABI3 device top host load vehicle_program_words=128 vehicle_desc_words=256 host_writes=11111 cases=2 checks=353",
       "name": "verilator",
       "run_command": "./obj_hostload/Vtb_a3_device_top_host_load",
-      "run_log": "CASE 0 loaded=0 complete=0 trap=2 fetched=1 retired=0 issued=0 views=0\nCASE 0 loaded=1 complete=1 trap=0 fetched=2104 retired=2104 issued=691 views=2143\nCASE 1 loaded=1 complete=1 trap=0 fetched=2104 retired=2104 issued=691 views=2143\nPASS: ABI3 device top host load vehicle_program_words=128 vehicle_desc_words=256 host_writes=11492 cases=2 checks=358\n- <ROOT>/rtl/test/tb_a3_device_top_host_load.sv:555: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 4ms; walltime 0.334 s; speed 12.416 ms/s\n- Verilator: cpu 0.331 s on 1 threads; allocated 8 MB",
+      "run_log": "CASE 0 loaded=0 complete=0 trap=2 fetched=1 retired=0 issued=0 views=0\nCASE 0 loaded=1 complete=1 trap=0 fetched=2104 retired=2104 issued=691 views=2143\nCASE 1 loaded=1 complete=1 trap=0 fetched=2104 retired=2104 issued=691 views=2143\nPASS: ABI3 device top host load vehicle_program_words=128 vehicle_desc_words=256 host_writes=11111 cases=2 checks=353\n- <ROOT>/rtl/test/tb_a3_device_top_host_load.sv:662: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 5ms; walltime 2.653 s; speed 1.963 ms/s\n- Verilator: cpu 0.942 s on 1 threads; allocated 8 MB",
       "run_returncode": 0,
       "status": "pass"
     }
   ],
   "claim_boundary": {
     "does_not_establish": {
-      "campaign_observation": "the L1-CP campaigns preload the stores by $readmemh in the wrapper; their observation streams are compared by tools/rtl_abi3_deployment_campaign.py, not here",
+      "campaign_observation": "the L1-CP campaigns load the same host path at their own geometry and compare the observation streams of all four deployments under two checkers (tools/rtl_abi3_deployment_campaign.py); this bench compares two Qwen3-8B ROM entrypoints under one checker",
       "checker_independence": "one checker under two simulators, not two independently written checkers",
-      "symbol_file_load": "the runtime symbol file is a combinational boundary of the device top and is not behind host_*"
+      "run_ahead": "the bench completes every issue in the next cycle; the asynchronous completion path under delayed and reordered completions is the deployment campaign's run_ahead block"
     },
     "establishes": "the design's host load path writes the control stores the sequencer then executes from, at the vehicle geometry, under two simulators"
   },
@@ -107,30 +107,35 @@
   "design_top": "rtl/abi3/ot_a3_device_top.sv",
   "evidence_class": "public_open_tool_rtl_simulation",
   "git": {
-    "commit": "08cc069a6c1ff221bd425aac0ae3235ea4408b7a",
+    "commit": "e6da961e9d3dfa0020dd5ec644ac6e992184aac6",
     "worktree_dirty": false
   },
-  "marker": "PASS: ABI3 device top host load vehicle_program_words=128 vehicle_desc_words=256 host_writes=11492 cases=2 checks=358",
+  "marker": "PASS: ABI3 device top host load vehicle_program_words=128 vehicle_desc_words=256 host_writes=11111 cases=2 checks=353",
   "schema": "opentallas.rtl.abi3_device_top_host_load.v1",
   "simulators_agree": true,
   "source_sha256": {
-    "rtl/abi3/ot_a3_device_top.sv": "56f2425e25cd9f294ceb1569e053fed497737d6ce202150a91202b43d66aa84f",
-    "rtl/abi3/ot_a3_event_scoreboard.sv": "576ee5a2301c1473c200e6f1c93f14b17c14acc895391d690856db9f054a9428",
+    "rtl/abi3/ot_a3_dependence_table.sv": "3ac3172c508d277a3b28d0438161c012365bc26a3a7c97eee3d3f12bb2d12c05",
+    "rtl/abi3/ot_a3_device_top.sv": "b3e0fc07cd836ed53a0a29efc737dedcd3ef328871816552955af495656a4561",
+    "rtl/abi3/ot_a3_event_scoreboard.sv": "e5546f39afe3fdb6da17c189da94fc652aedcee583b3263b662a83c7b5e86b65",
     "rtl/abi3/ot_a3_instruction_decoder.sv": "ad04fbf87aaa69e2c5397f99f445c7b99b10d80e796f54ea2895624ebb840355",
-    "rtl/abi3/ot_a3_loop_stack.sv": "55d3e7113a6196c20fa13133987f7c0f4b6fb721aec7ba455026a6ff4c9e61a8",
-    "rtl/abi3/ot_a3_microsequencer.sv": "27a2c971ce63aa6a86a2f73b01e5459ddb93e847d0ace78e7446bff76d10b06c",
-    "rtl/abi3/ot_a3_pkg.sv": "6fb71525b329497fe62145ab0d9b1b6eff03f1e0c95f3bc6a0c1dde5c6744054",
+    "rtl/abi3/ot_a3_issue_record_store.sv": "20677401892ecede055f553a516d5e0c3b0d6abac77ca5ff100bbf22b85b7d04",
+    "rtl/abi3/ot_a3_loop_stack.sv": "6167c65cf533bbbc8635d53b100b7ed9c3deea7dba437ae680f2c0b19db70ef0",
+    "rtl/abi3/ot_a3_microsequencer.sv": "3a96fabaadb1bab0d9b971c52e822de3ece61a1fe77ef4cc846b880219ade278",
+    "rtl/abi3/ot_a3_pkg.sv": "99cb99b3b5044ad669a5927455f50ca5fe2672c197c97770e1709e794e402e4e",
     "rtl/abi3/ot_a3_program_header.sv": "7a5c55cbcaa7f877923595b631334c04eb0c403aea3bf052de983eeccdd1a619",
+    "rtl/abi3/ot_a3_resolver_bank.sv": "b953bde14c2d3005de0b780dcfb5a7675e6e17a90ab095d242557b67f0e749a3",
+    "rtl/abi3/ot_a3_shared_divider.sv": "b16700dda17092c0128eefa4ef091cefe199abeeec2fb5ae1b2c09b08a6f407f",
     "rtl/abi3/ot_a3_state_controller.sv": "0fe8d122267f9afbd05837399a4b4545e8b953f9481c7529cb6206d34d279006",
-    "rtl/abi3/ot_a3_view_resolver.sv": "9182acc5e439a9190a6d9f18c9855e9b9800c0b7a436e90305468f630857635e",
-    "rtl/test/tb_a3_device_top_host_load.sv": "c9803a4896cbb4521ac5febb836ad420729dcd830972ef6032b9f7a208e4bd92",
-    "testdata/compiler/abi3_deployment/a3_deployment_case.hex": "2a4a1d2800f44c291e22c884fc15b439f7fad790f420e02eac2f7115ea12c0ed",
-    "testdata/compiler/abi3_deployment/a3_descriptor.hex": "e2af94bbccaaa4e1a4b3d7d67a384d86a80769a37d06f38d622850fb116dd616",
-    "testdata/compiler/abi3_deployment/a3_header.hex": "bcdc6a2f86cee45e1b354bf1d014b03fd17d3b7ddde2d48e01f3058771d07155",
-    "testdata/compiler/abi3_deployment/a3_program.hex": "9a86572ef8fbfb0eb6c175cd528c8e39164d0f315cec889d9c85a4ddf227c505",
+    "rtl/abi3/ot_a3_symbol_file.sv": "e447946a9c88059c0dbfdfcd806e0fefe96ed1946ce8bd1c45b78dc81618301d",
+    "rtl/abi3/ot_a3_view_resolver.sv": "ca70c306e3e96ec3d3e0535159bf56678c4efd16141fb9049c4b520797dcac80",
+    "rtl/test/tb_a3_device_top_host_load.sv": "0af2c19da2991284592f7ceb811da88132912811993f78ba21fd4c2714afffcd",
+    "testdata/compiler/abi3_deployment/a3_deployment_case.hex": "26f912b09c21746aeef39156d19077f82ad14fb212d5f88f7855b8a3db35cf00",
+    "testdata/compiler/abi3_deployment/a3_descriptor.hex": "85263a2b33597ba63e82e783eef7436b1b5ea0786bf7c20e4817bbdbaee13dbd",
+    "testdata/compiler/abi3_deployment/a3_header.hex": "131f25a15b25a4104fe8814fe1f50afd9f2f4ceff71dce672ad46539ad8eb23e",
+    "testdata/compiler/abi3_deployment/a3_program.hex": "910a714f1eca1799df203b1330dd95f3cb6da2027569acce935729e13bcf463c",
     "testdata/compiler/abi3_deployment/a3_symbol.hex": "aefea5f803c69340757eed992d1f3e691d4ca2f0b610256864a5bf1d0f757f38",
-    "tools/rtl_abi3_deployment_campaign.py": "281a7ebea36a54de5ac5d5dcdeff6429b63c05be5f77999fd07c9aee88f0d329",
-    "tools/rtl_abi3_device_top_host_load.py": "c6feaa4c5e20141b6590e63fc8d6ff9b1da48b4f5027d10b7e8c515524c1e54f"
+    "tools/rtl_abi3_deployment_campaign.py": "5eb72f567030576a050fc1e62a31294b66e7329dfae7384c318e10e08335d25a",
+    "tools/rtl_abi3_device_top_host_load.py": "8d596eb6e68b107fa198b58f6e949a6c4ad645d5c22e0b12ff95093f9ebc2289"
   },
   "status": "pass",
   "tools": {
@@ -162,8 +167,10 @@
   "what_ran": [
     "empty stores: the first Qwen3-8B ROM case traps and retires nothing",
     "program body and descriptor records written one 32-bit lane per cycle through host_* at the vehicle store geometry, relocated to row 0; no write refused; every row read back from the store model",
+    "request symbols bound through host_* (host_sel 2: value low word, high word, bound bit), one lane per cycle",
     "program header streamed through the admission beat port; legality, trap class, instruction count, entrypoint count and declared maximum retired work against the golden record",
     "both entrypoints run against the loaded stores: trap class, completion, fetched, retired, predicated off, issued, loop iterations, branches, wait-set evaluations, issue pulses, view pulses, views-resolved counter and event_signal_error against the golden record",
-    "a write offered while busy, past the last row of each store, and past the last lane: refused, reported, store intact; the refusal flag clears on reset"
+    "a write offered while busy, past the last row of each store, past the last lane, past the symbol file's sixteen entries or three lanes, or to an unknown select: refused, reported, target intact; the refusal flag clears on reset",
+    "every accepted engine issue is completed by the bench in the next cycle through the completion port (zero run-ahead); the issue record store reports no protocol error and nothing outstanding at done"
   ]
 }

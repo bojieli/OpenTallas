@@ -1,221 +1,5 @@
 {
-  "baseline": {
-    "blocks_failing": {
-      "orfs_container": [
-        "ot_a3_event_scoreboard",
-        "ot_a3_instruction_decoder",
-        "ot_a3_loop_stack",
-        "ot_a3_microsequencer",
-        "ot_a3_program_header",
-        "ot_a3_state_controller",
-        "ot_a3_view_resolver"
-      ],
-      "pinned_local": [
-        "ot_a3_event_scoreboard",
-        "ot_a3_instruction_decoder",
-        "ot_a3_loop_stack",
-        "ot_a3_microsequencer",
-        "ot_a3_program_header",
-        "ot_a3_state_controller",
-        "ot_a3_view_resolver"
-      ]
-    },
-    "commit": "2569ddf53d0d32439c6e8db7b7f37a8367c17913",
-    "requested": "2569ddf",
-    "results": {
-      "orfs_container": {
-        "ot_a3_collective_engine": {
-          "check_problems": 0,
-          "errors": [],
-          "ok": true,
-          "returncode": 0,
-          "warning_count": 3,
-          "warnings": [
-            "Warning: Replacing memory \\acc with list of registers.",
-            "Warning: Replacing memory \\peer with list of registers.",
-            "Warning: Replacing memory \\recv_fill with list of registers."
-          ]
-        },
-        "ot_a3_event_scoreboard": {
-          "check_problems": null,
-          "errors": [
-            "rtl/abi3/ot_a3_event_scoreboard.sv:44: ERROR: syntax error, unexpected TOK_IMPORT, expecting '#' or '(' or ';'"
-          ],
-          "ok": false,
-          "returncode": 1,
-          "warning_count": 0,
-          "warnings": []
-        },
-        "ot_a3_instruction_decoder": {
-          "check_problems": null,
-          "errors": [
-            "rtl/abi3/ot_a3_instruction_decoder.sv:27: ERROR: syntax error, unexpected TOK_IMPORT, expecting '#' or '(' or ';'"
-          ],
-          "ok": false,
-          "returncode": 1,
-          "warning_count": 0,
-          "warnings": []
-        },
-        "ot_a3_loop_stack": {
-          "check_problems": null,
-          "errors": [
-            "rtl/abi3/ot_a3_loop_stack.sv:39: ERROR: syntax error, unexpected TOK_IMPORT, expecting '#' or '(' or ';'"
-          ],
-          "ok": false,
-          "returncode": 1,
-          "warning_count": 0,
-          "warnings": []
-        },
-        "ot_a3_microsequencer": {
-          "check_problems": null,
-          "errors": [
-            "rtl/abi3/ot_a3_event_scoreboard.sv:44: ERROR: syntax error, unexpected TOK_IMPORT, expecting '#' or '(' or ';'"
-          ],
-          "ok": false,
-          "returncode": 1,
-          "warning_count": 0,
-          "warnings": []
-        },
-        "ot_a3_program_header": {
-          "check_problems": null,
-          "errors": [
-            "rtl/abi3/ot_a3_program_header.sv:25: ERROR: syntax error, unexpected TOK_IMPORT, expecting '#' or '(' or ';'"
-          ],
-          "ok": false,
-          "returncode": 1,
-          "warning_count": 0,
-          "warnings": []
-        },
-        "ot_a3_state_controller": {
-          "check_problems": null,
-          "errors": [
-            "rtl/abi3/ot_a3_state_controller.sv:57: ERROR: syntax error, unexpected TOK_IMPORT, expecting '#' or '(' or ';'"
-          ],
-          "ok": false,
-          "returncode": 1,
-          "warning_count": 0,
-          "warnings": []
-        },
-        "ot_a3_view_resolver": {
-          "check_problems": null,
-          "errors": [
-            "rtl/abi3/ot_a3_view_resolver.sv:90: ERROR: syntax error, unexpected TOK_IMPORT, expecting '#' or '(' or ';'"
-          ],
-          "ok": false,
-          "returncode": 1,
-          "warning_count": 0,
-          "warnings": []
-        }
-      },
-      "pinned_local": {
-        "ot_a3_collective_engine": {
-          "check_problems": 0,
-          "errors": [],
-          "ok": true,
-          "returncode": 0,
-          "warning_count": 3,
-          "warnings": [
-            "Warning: Replacing memory \\acc with list of registers.",
-            "Warning: Replacing memory \\peer with list of registers.",
-            "Warning: Replacing memory \\recv_fill with list of registers."
-          ]
-        },
-        "ot_a3_event_scoreboard": {
-          "check_problems": null,
-          "errors": [
-            "rtl/abi3/ot_a3_event_scoreboard.sv:44: ERROR: syntax error, unexpected TOK_IMPORT, expecting '#' or '(' or ';'"
-          ],
-          "ok": false,
-          "returncode": 1,
-          "warning_count": 0,
-          "warnings": []
-        },
-        "ot_a3_instruction_decoder": {
-          "check_problems": null,
-          "errors": [
-            "rtl/abi3/ot_a3_instruction_decoder.sv:27: ERROR: syntax error, unexpected TOK_IMPORT, expecting '#' or '(' or ';'"
-          ],
-          "ok": false,
-          "returncode": 1,
-          "warning_count": 0,
-          "warnings": []
-        },
-        "ot_a3_loop_stack": {
-          "check_problems": null,
-          "errors": [
-            "rtl/abi3/ot_a3_loop_stack.sv:39: ERROR: syntax error, unexpected TOK_IMPORT, expecting '#' or '(' or ';'"
-          ],
-          "ok": false,
-          "returncode": 1,
-          "warning_count": 0,
-          "warnings": []
-        },
-        "ot_a3_microsequencer": {
-          "check_problems": null,
-          "errors": [
-            "rtl/abi3/ot_a3_event_scoreboard.sv:44: ERROR: syntax error, unexpected TOK_IMPORT, expecting '#' or '(' or ';'"
-          ],
-          "ok": false,
-          "returncode": 1,
-          "warning_count": 0,
-          "warnings": []
-        },
-        "ot_a3_program_header": {
-          "check_problems": null,
-          "errors": [
-            "rtl/abi3/ot_a3_program_header.sv:25: ERROR: syntax error, unexpected TOK_IMPORT, expecting '#' or '(' or ';'"
-          ],
-          "ok": false,
-          "returncode": 1,
-          "warning_count": 0,
-          "warnings": []
-        },
-        "ot_a3_state_controller": {
-          "check_problems": null,
-          "errors": [
-            "rtl/abi3/ot_a3_state_controller.sv:57: ERROR: syntax error, unexpected TOK_IMPORT, expecting '#' or '(' or ';'"
-          ],
-          "ok": false,
-          "returncode": 1,
-          "warning_count": 0,
-          "warnings": []
-        },
-        "ot_a3_view_resolver": {
-          "check_problems": null,
-          "errors": [
-            "rtl/abi3/ot_a3_view_resolver.sv:90: ERROR: syntax error, unexpected TOK_IMPORT, expecting '#' or '(' or ';'"
-          ],
-          "ok": false,
-          "returncode": 1,
-          "warning_count": 0,
-          "warnings": []
-        }
-      }
-    },
-    "wildcard_imports": {
-      "rtl/abi3/ot_a3_event_scoreboard.sv": [
-        44
-      ],
-      "rtl/abi3/ot_a3_instruction_decoder.sv": [
-        27
-      ],
-      "rtl/abi3/ot_a3_loop_stack.sv": [
-        39
-      ],
-      "rtl/abi3/ot_a3_microsequencer.sv": [
-        52
-      ],
-      "rtl/abi3/ot_a3_program_header.sv": [
-        25
-      ],
-      "rtl/abi3/ot_a3_state_controller.sv": [
-        57
-      ],
-      "rtl/abi3/ot_a3_view_resolver.sv": [
-        90
-      ]
-    }
-  },
+  "baseline": null,
   "blocks": [
     {
       "sources": [
@@ -268,15 +52,81 @@
     {
       "sources": [
         "rtl/abi3/ot_a3_pkg.sv",
+        "rtl/abi3/ot_a3_shared_divider.sv"
+      ],
+      "top": "ot_a3_shared_divider",
+      "yosys_script": "read_verilog -sv rtl/abi3/ot_a3_pkg.sv rtl/abi3/ot_a3_shared_divider.sv; hierarchy -top ot_a3_shared_divider; proc; check"
+    },
+    {
+      "sources": [
+        "rtl/abi3/ot_a3_pkg.sv",
+        "rtl/abi3/ot_a3_symbol_file.sv"
+      ],
+      "top": "ot_a3_symbol_file",
+      "yosys_script": "read_verilog -sv rtl/abi3/ot_a3_pkg.sv rtl/abi3/ot_a3_symbol_file.sv; hierarchy -top ot_a3_symbol_file; proc; check"
+    },
+    {
+      "sources": [
+        "rtl/abi3/ot_a3_pkg.sv",
+        "rtl/abi3/ot_a3_issue_record_store.sv"
+      ],
+      "top": "ot_a3_issue_record_store",
+      "yosys_script": "read_verilog -sv rtl/abi3/ot_a3_pkg.sv rtl/abi3/ot_a3_issue_record_store.sv; hierarchy -top ot_a3_issue_record_store; proc; check"
+    },
+    {
+      "sources": [
+        "rtl/abi3/ot_a3_pkg.sv",
+        "rtl/abi3/ot_a3_dependence_table.sv"
+      ],
+      "top": "ot_a3_dependence_table",
+      "yosys_script": "read_verilog -sv rtl/abi3/ot_a3_pkg.sv rtl/abi3/ot_a3_dependence_table.sv; hierarchy -top ot_a3_dependence_table; proc; check"
+    },
+    {
+      "sources": [
+        "rtl/abi3/ot_a3_pkg.sv",
+        "rtl/abi3/ot_a3_view_resolver.sv",
+        "rtl/abi3/ot_a3_resolver_bank.sv"
+      ],
+      "top": "ot_a3_resolver_bank",
+      "yosys_script": "read_verilog -sv rtl/abi3/ot_a3_pkg.sv rtl/abi3/ot_a3_view_resolver.sv rtl/abi3/ot_a3_resolver_bank.sv; hierarchy -top ot_a3_resolver_bank; proc; check"
+    },
+    {
+      "sources": [
+        "rtl/abi3/ot_a3_pkg.sv",
         "rtl/abi3/ot_a3_event_scoreboard.sv",
         "rtl/abi3/ot_a3_instruction_decoder.sv",
+        "rtl/abi3/ot_a3_shared_divider.sv",
+        "rtl/abi3/ot_a3_symbol_file.sv",
         "rtl/abi3/ot_a3_loop_stack.sv",
         "rtl/abi3/ot_a3_state_controller.sv",
         "rtl/abi3/ot_a3_view_resolver.sv",
+        "rtl/abi3/ot_a3_resolver_bank.sv",
+        "rtl/abi3/ot_a3_issue_record_store.sv",
+        "rtl/abi3/ot_a3_dependence_table.sv",
         "rtl/abi3/ot_a3_microsequencer.sv"
       ],
       "top": "ot_a3_microsequencer",
-      "yosys_script": "read_verilog -sv rtl/abi3/ot_a3_pkg.sv rtl/abi3/ot_a3_event_scoreboard.sv rtl/abi3/ot_a3_instruction_decoder.sv rtl/abi3/ot_a3_loop_stack.sv rtl/abi3/ot_a3_state_controller.sv rtl/abi3/ot_a3_view_resolver.sv rtl/abi3/ot_a3_microsequencer.sv; hierarchy -top ot_a3_microsequencer; proc; check"
+      "yosys_script": "read_verilog -sv rtl/abi3/ot_a3_pkg.sv rtl/abi3/ot_a3_event_scoreboard.sv rtl/abi3/ot_a3_instruction_decoder.sv rtl/abi3/ot_a3_shared_divider.sv rtl/abi3/ot_a3_symbol_file.sv rtl/abi3/ot_a3_loop_stack.sv rtl/abi3/ot_a3_state_controller.sv rtl/abi3/ot_a3_view_resolver.sv rtl/abi3/ot_a3_resolver_bank.sv rtl/abi3/ot_a3_issue_record_store.sv rtl/abi3/ot_a3_dependence_table.sv rtl/abi3/ot_a3_microsequencer.sv; hierarchy -top ot_a3_microsequencer; proc; check"
+    },
+    {
+      "sources": [
+        "rtl/abi3/ot_a3_pkg.sv",
+        "rtl/abi3/ot_a3_program_header.sv",
+        "rtl/abi3/ot_a3_event_scoreboard.sv",
+        "rtl/abi3/ot_a3_instruction_decoder.sv",
+        "rtl/abi3/ot_a3_shared_divider.sv",
+        "rtl/abi3/ot_a3_symbol_file.sv",
+        "rtl/abi3/ot_a3_loop_stack.sv",
+        "rtl/abi3/ot_a3_state_controller.sv",
+        "rtl/abi3/ot_a3_view_resolver.sv",
+        "rtl/abi3/ot_a3_resolver_bank.sv",
+        "rtl/abi3/ot_a3_issue_record_store.sv",
+        "rtl/abi3/ot_a3_dependence_table.sv",
+        "rtl/abi3/ot_a3_microsequencer.sv",
+        "rtl/abi3/ot_a3_device_top.sv"
+      ],
+      "top": "ot_a3_device_top",
+      "yosys_script": "read_verilog -sv rtl/abi3/ot_a3_pkg.sv rtl/abi3/ot_a3_program_header.sv rtl/abi3/ot_a3_event_scoreboard.sv rtl/abi3/ot_a3_instruction_decoder.sv rtl/abi3/ot_a3_shared_divider.sv rtl/abi3/ot_a3_symbol_file.sv rtl/abi3/ot_a3_loop_stack.sv rtl/abi3/ot_a3_state_controller.sv rtl/abi3/ot_a3_view_resolver.sv rtl/abi3/ot_a3_resolver_bank.sv rtl/abi3/ot_a3_issue_record_store.sv rtl/abi3/ot_a3_dependence_table.sv rtl/abi3/ot_a3_microsequencer.sv rtl/abi3/ot_a3_device_top.sv; hierarchy -top ot_a3_device_top; proc; check"
     },
     {
       "sources": [
@@ -322,8 +172,11 @@
     "orfs_container"
   ],
   "git": {
-    "commit": "8e159a2073b4bdf052bc1a6b96f088a0b064705b",
-    "worktree_dirty": false
+    "commit": "e6da961e9d3dfa0020dd5ec644ac6e992184aac6",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
   },
   "issue": "OI-43 (docs/UNIFIED_EXECUTION_CHECKLIST.md)",
   "limitations": [
@@ -346,6 +199,65 @@
           "Warning: Replacing memory \\recv_fill with list of registers."
         ]
       },
+      "ot_a3_dependence_table": {
+        "check_problems": 0,
+        "errors": [],
+        "ok": true,
+        "returncode": 0,
+        "warning_count": 3,
+        "warnings": [
+          "Warning: Replacing memory \\range_hi with list of registers.",
+          "Warning: Replacing memory \\range_lo with list of registers.",
+          "Warning: Replacing memory \\range_object with list of registers."
+        ]
+      },
+      "ot_a3_device_top": {
+        "check_problems": 0,
+        "errors": [],
+        "ok": true,
+        "returncode": 0,
+        "warning_count": 53,
+        "warnings": [
+          "Warning: Replacing memory \\aux_hi with list of registers.",
+          "Warning: Replacing memory \\aux_lo with list of registers.",
+          "Warning: Replacing memory \\aux_object with list of registers.",
+          "Warning: Replacing memory \\event_id with list of registers.",
+          "Warning: Replacing memory \\lane_object with list of registers.",
+          "Warning: Replacing memory \\lane_payload with list of registers.",
+          "Warning: Replacing memory \\lane_perm with list of registers.",
+          "Warning: Replacing memory \\lane_trap with list of registers.",
+          "Warning: Replacing memory \\loop_bound with list of registers.",
+          "Warning: Replacing memory \\loop_divisor with list of registers.",
+          "Warning: Replacing memory \\loop_id with list of registers.",
+          "Warning: Replacing memory \\loop_index with list of registers.",
+          "Warning: Replacing memory \\loop_start with list of registers.",
+          "Warning: Replacing memory \\loop_step with list of registers.",
+          "Warning: Replacing memory \\loop_symbolic with list of registers.",
+          "Warning: Replacing memory \\loop_trip with list of registers.",
+          "Warning: Replacing memory \\loop_value with list of registers.",
+          "Warning: Replacing memory \\pc with list of registers.",
+          "Warning: Replacing memory \\pending_rows with list of registers.",
+          "Warning: Replacing memory \\pending_slot with list of registers.",
+          "Warning: Replacing memory \\pending_span with list of registers.",
+          "Warning: Replacing memory \\queue with list of registers.",
+          "Warning: Replacing memory \\queue_count with list of registers.",
+          "Warning: Replacing memory \\range_hi with list of registers.",
+          "Warning: Replacing memory \\range_lo with list of registers.",
+          "Warning: Replacing memory \\range_object with list of registers.",
+          "Warning: Replacing memory \\release_bit with list of registers.",
+          "Warning: Replacing memory \\rng_hi with list of registers.",
+          "Warning: Replacing memory \\rng_lo with list of registers.",
+          "Warning: Replacing memory \\rng_object with list of registers.",
+          "Warning: Replacing memory \\serial with list of registers.",
+          "Warning: Replacing memory \\slot_capacity with list of registers.",
+          "Warning: Replacing memory \\slot_cursor with list of registers.",
+          "Warning: Replacing memory \\slot_descriptor with list of registers.",
+          "Warning: Replacing memory \\slot_generation with list of registers.",
+          "Warning: Replacing memory \\slot_policy with list of registers.",
+          "Warning: Replacing memory \\slot_row_bytes with list of registers.",
+          "Warning: Replacing memory \\value with list of registers."
+        ]
+      },
       "ot_a3_event_scoreboard": {
         "check_problems": 0,
         "errors": [],
@@ -361,6 +273,21 @@
         "returncode": 0,
         "warning_count": 0,
         "warnings": []
+      },
+      "ot_a3_issue_record_store": {
+        "check_problems": 0,
+        "errors": [],
+        "ok": true,
+        "returncode": 0,
+        "warning_count": 6,
+        "warnings": [
+          "Warning: Replacing memory \\event_id with list of registers.",
+          "Warning: Replacing memory \\pc with list of registers.",
+          "Warning: Replacing memory \\queue with list of registers.",
+          "Warning: Replacing memory \\queue_count with list of registers.",
+          "Warning: Replacing memory \\release_bit with list of registers.",
+          "Warning: Replacing memory \\serial with list of registers."
+        ]
       },
       "ot_a3_loop_stack": {
         "check_problems": 0,
@@ -385,8 +312,16 @@
         "errors": [],
         "ok": true,
         "returncode": 0,
-        "warning_count": 18,
+        "warning_count": 47,
         "warnings": [
+          "Warning: Replacing memory \\aux_hi with list of registers.",
+          "Warning: Replacing memory \\aux_lo with list of registers.",
+          "Warning: Replacing memory \\aux_object with list of registers.",
+          "Warning: Replacing memory \\event_id with list of registers.",
+          "Warning: Replacing memory \\lane_object with list of registers.",
+          "Warning: Replacing memory \\lane_payload with list of registers.",
+          "Warning: Replacing memory \\lane_perm with list of registers.",
+          "Warning: Replacing memory \\lane_trap with list of registers.",
           "Warning: Replacing memory \\loop_bound with list of registers.",
           "Warning: Replacing memory \\loop_divisor with list of registers.",
           "Warning: Replacing memory \\loop_id with list of registers.",
@@ -396,18 +331,51 @@
           "Warning: Replacing memory \\loop_symbolic with list of registers.",
           "Warning: Replacing memory \\loop_trip with list of registers.",
           "Warning: Replacing memory \\loop_value with list of registers.",
+          "Warning: Replacing memory \\pc with list of registers.",
           "Warning: Replacing memory \\pending_rows with list of registers.",
           "Warning: Replacing memory \\pending_slot with list of registers.",
           "Warning: Replacing memory \\pending_span with list of registers.",
+          "Warning: Replacing memory \\queue with list of registers.",
+          "Warning: Replacing memory \\queue_count with list of registers.",
+          "Warning: Replacing memory \\range_hi with list of registers.",
+          "Warning: Replacing memory \\range_lo with list of registers.",
+          "Warning: Replacing memory \\range_object with list of registers.",
+          "Warning: Replacing memory \\release_bit with list of registers.",
+          "Warning: Replacing memory \\rng_hi with list of registers.",
+          "Warning: Replacing memory \\rng_lo with list of registers.",
+          "Warning: Replacing memory \\rng_object with list of registers.",
+          "Warning: Replacing memory \\serial with list of registers.",
           "Warning: Replacing memory \\slot_capacity with list of registers.",
           "Warning: Replacing memory \\slot_cursor with list of registers.",
           "Warning: Replacing memory \\slot_descriptor with list of registers.",
           "Warning: Replacing memory \\slot_generation with list of registers.",
           "Warning: Replacing memory \\slot_policy with list of registers.",
-          "Warning: Replacing memory \\slot_row_bytes with list of registers."
+          "Warning: Replacing memory \\slot_row_bytes with list of registers.",
+          "Warning: Replacing memory \\value with list of registers."
         ]
       },
       "ot_a3_program_header": {
+        "check_problems": 0,
+        "errors": [],
+        "ok": true,
+        "returncode": 0,
+        "warning_count": 0,
+        "warnings": []
+      },
+      "ot_a3_resolver_bank": {
+        "check_problems": 0,
+        "errors": [],
+        "ok": true,
+        "returncode": 0,
+        "warning_count": 4,
+        "warnings": [
+          "Warning: Replacing memory \\lane_object with list of registers.",
+          "Warning: Replacing memory \\lane_payload with list of registers.",
+          "Warning: Replacing memory \\lane_perm with list of registers.",
+          "Warning: Replacing memory \\lane_trap with list of registers."
+        ]
+      },
+      "ot_a3_shared_divider": {
         "check_problems": 0,
         "errors": [],
         "ok": true,
@@ -431,6 +399,16 @@
           "Warning: Replacing memory \\slot_generation with list of registers.",
           "Warning: Replacing memory \\slot_policy with list of registers.",
           "Warning: Replacing memory \\slot_row_bytes with list of registers."
+        ]
+      },
+      "ot_a3_symbol_file": {
+        "check_problems": 0,
+        "errors": [],
+        "ok": true,
+        "returncode": 0,
+        "warning_count": 1,
+        "warnings": [
+          "Warning: Replacing memory \\value with list of registers."
         ]
       },
       "ot_a3_view_resolver": {
@@ -455,6 +433,65 @@
           "Warning: Replacing memory \\recv_fill with list of registers."
         ]
       },
+      "ot_a3_dependence_table": {
+        "check_problems": 0,
+        "errors": [],
+        "ok": true,
+        "returncode": 0,
+        "warning_count": 3,
+        "warnings": [
+          "Warning: Replacing memory \\range_hi with list of registers.",
+          "Warning: Replacing memory \\range_lo with list of registers.",
+          "Warning: Replacing memory \\range_object with list of registers."
+        ]
+      },
+      "ot_a3_device_top": {
+        "check_problems": 0,
+        "errors": [],
+        "ok": true,
+        "returncode": 0,
+        "warning_count": 53,
+        "warnings": [
+          "Warning: Replacing memory \\aux_hi with list of registers.",
+          "Warning: Replacing memory \\aux_lo with list of registers.",
+          "Warning: Replacing memory \\aux_object with list of registers.",
+          "Warning: Replacing memory \\event_id with list of registers.",
+          "Warning: Replacing memory \\lane_object with list of registers.",
+          "Warning: Replacing memory \\lane_payload with list of registers.",
+          "Warning: Replacing memory \\lane_perm with list of registers.",
+          "Warning: Replacing memory \\lane_trap with list of registers.",
+          "Warning: Replacing memory \\loop_bound with list of registers.",
+          "Warning: Replacing memory \\loop_divisor with list of registers.",
+          "Warning: Replacing memory \\loop_id with list of registers.",
+          "Warning: Replacing memory \\loop_index with list of registers.",
+          "Warning: Replacing memory \\loop_start with list of registers.",
+          "Warning: Replacing memory \\loop_step with list of registers.",
+          "Warning: Replacing memory \\loop_symbolic with list of registers.",
+          "Warning: Replacing memory \\loop_trip with list of registers.",
+          "Warning: Replacing memory \\loop_value with list of registers.",
+          "Warning: Replacing memory \\pc with list of registers.",
+          "Warning: Replacing memory \\pending_rows with list of registers.",
+          "Warning: Replacing memory \\pending_slot with list of registers.",
+          "Warning: Replacing memory \\pending_span with list of registers.",
+          "Warning: Replacing memory \\queue with list of registers.",
+          "Warning: Replacing memory \\queue_count with list of registers.",
+          "Warning: Replacing memory \\range_hi with list of registers.",
+          "Warning: Replacing memory \\range_lo with list of registers.",
+          "Warning: Replacing memory \\range_object with list of registers.",
+          "Warning: Replacing memory \\release_bit with list of registers.",
+          "Warning: Replacing memory \\rng_hi with list of registers.",
+          "Warning: Replacing memory \\rng_lo with list of registers.",
+          "Warning: Replacing memory \\rng_object with list of registers.",
+          "Warning: Replacing memory \\serial with list of registers.",
+          "Warning: Replacing memory \\slot_capacity with list of registers.",
+          "Warning: Replacing memory \\slot_cursor with list of registers.",
+          "Warning: Replacing memory \\slot_descriptor with list of registers.",
+          "Warning: Replacing memory \\slot_generation with list of registers.",
+          "Warning: Replacing memory \\slot_policy with list of registers.",
+          "Warning: Replacing memory \\slot_row_bytes with list of registers.",
+          "Warning: Replacing memory \\value with list of registers."
+        ]
+      },
       "ot_a3_event_scoreboard": {
         "check_problems": 0,
         "errors": [],
@@ -470,6 +507,21 @@
         "returncode": 0,
         "warning_count": 0,
         "warnings": []
+      },
+      "ot_a3_issue_record_store": {
+        "check_problems": 0,
+        "errors": [],
+        "ok": true,
+        "returncode": 0,
+        "warning_count": 6,
+        "warnings": [
+          "Warning: Replacing memory \\event_id with list of registers.",
+          "Warning: Replacing memory \\pc with list of registers.",
+          "Warning: Replacing memory \\queue with list of registers.",
+          "Warning: Replacing memory \\queue_count with list of registers.",
+          "Warning: Replacing memory \\release_bit with list of registers.",
+          "Warning: Replacing memory \\serial with list of registers."
+        ]
       },
       "ot_a3_loop_stack": {
         "check_problems": 0,
@@ -494,8 +546,16 @@
         "errors": [],
         "ok": true,
         "returncode": 0,
-        "warning_count": 18,
+        "warning_count": 47,
         "warnings": [
+          "Warning: Replacing memory \\aux_hi with list of registers.",
+          "Warning: Replacing memory \\aux_lo with list of registers.",
+          "Warning: Replacing memory \\aux_object with list of registers.",
+          "Warning: Replacing memory \\event_id with list of registers.",
+          "Warning: Replacing memory \\lane_object with list of registers.",
+          "Warning: Replacing memory \\lane_payload with list of registers.",
+          "Warning: Replacing memory \\lane_perm with list of registers.",
+          "Warning: Replacing memory \\lane_trap with list of registers.",
           "Warning: Replacing memory \\loop_bound with list of registers.",
           "Warning: Replacing memory \\loop_divisor with list of registers.",
           "Warning: Replacing memory \\loop_id with list of registers.",
@@ -505,18 +565,51 @@
           "Warning: Replacing memory \\loop_symbolic with list of registers.",
           "Warning: Replacing memory \\loop_trip with list of registers.",
           "Warning: Replacing memory \\loop_value with list of registers.",
+          "Warning: Replacing memory \\pc with list of registers.",
           "Warning: Replacing memory \\pending_rows with list of registers.",
           "Warning: Replacing memory \\pending_slot with list of registers.",
           "Warning: Replacing memory \\pending_span with list of registers.",
+          "Warning: Replacing memory \\queue with list of registers.",
+          "Warning: Replacing memory \\queue_count with list of registers.",
+          "Warning: Replacing memory \\range_hi with list of registers.",
+          "Warning: Replacing memory \\range_lo with list of registers.",
+          "Warning: Replacing memory \\range_object with list of registers.",
+          "Warning: Replacing memory \\release_bit with list of registers.",
+          "Warning: Replacing memory \\rng_hi with list of registers.",
+          "Warning: Replacing memory \\rng_lo with list of registers.",
+          "Warning: Replacing memory \\rng_object with list of registers.",
+          "Warning: Replacing memory \\serial with list of registers.",
           "Warning: Replacing memory \\slot_capacity with list of registers.",
           "Warning: Replacing memory \\slot_cursor with list of registers.",
           "Warning: Replacing memory \\slot_descriptor with list of registers.",
           "Warning: Replacing memory \\slot_generation with list of registers.",
           "Warning: Replacing memory \\slot_policy with list of registers.",
-          "Warning: Replacing memory \\slot_row_bytes with list of registers."
+          "Warning: Replacing memory \\slot_row_bytes with list of registers.",
+          "Warning: Replacing memory \\value with list of registers."
         ]
       },
       "ot_a3_program_header": {
+        "check_problems": 0,
+        "errors": [],
+        "ok": true,
+        "returncode": 0,
+        "warning_count": 0,
+        "warnings": []
+      },
+      "ot_a3_resolver_bank": {
+        "check_problems": 0,
+        "errors": [],
+        "ok": true,
+        "returncode": 0,
+        "warning_count": 4,
+        "warnings": [
+          "Warning: Replacing memory \\lane_object with list of registers.",
+          "Warning: Replacing memory \\lane_payload with list of registers.",
+          "Warning: Replacing memory \\lane_perm with list of registers.",
+          "Warning: Replacing memory \\lane_trap with list of registers."
+        ]
+      },
+      "ot_a3_shared_divider": {
         "check_problems": 0,
         "errors": [],
         "ok": true,
@@ -542,6 +635,16 @@
           "Warning: Replacing memory \\slot_row_bytes with list of registers."
         ]
       },
+      "ot_a3_symbol_file": {
+        "check_problems": 0,
+        "errors": [],
+        "ok": true,
+        "returncode": 0,
+        "warning_count": 1,
+        "warnings": [
+          "Warning: Replacing memory \\value with list of registers."
+        ]
+      },
       "ot_a3_view_resolver": {
         "check_problems": 0,
         "errors": [],
@@ -555,15 +658,21 @@
   "schema": "opentallas.rtl.abi3_control_plane_yosys_elaboration.v1",
   "source_sha256": {
     "rtl/abi3/ot_a3_collective_engine.sv": "b4e28febf1ba99e87eff5d722a666375c76c938a6887f5ebfa79277d8a079f8d",
-    "rtl/abi3/ot_a3_event_scoreboard.sv": "576ee5a2301c1473c200e6f1c93f14b17c14acc895391d690856db9f054a9428",
+    "rtl/abi3/ot_a3_dependence_table.sv": "3ac3172c508d277a3b28d0438161c012365bc26a3a7c97eee3d3f12bb2d12c05",
+    "rtl/abi3/ot_a3_device_top.sv": "b3e0fc07cd836ed53a0a29efc737dedcd3ef328871816552955af495656a4561",
+    "rtl/abi3/ot_a3_event_scoreboard.sv": "e5546f39afe3fdb6da17c189da94fc652aedcee583b3263b662a83c7b5e86b65",
     "rtl/abi3/ot_a3_instruction_decoder.sv": "ad04fbf87aaa69e2c5397f99f445c7b99b10d80e796f54ea2895624ebb840355",
+    "rtl/abi3/ot_a3_issue_record_store.sv": "20677401892ecede055f553a516d5e0c3b0d6abac77ca5ff100bbf22b85b7d04",
     "rtl/abi3/ot_a3_link_pkg.sv": "d49c14b787d0af6ad803f46a19e0481155f196f893dc55a0019594dd6f3c3fcf",
-    "rtl/abi3/ot_a3_loop_stack.sv": "55d3e7113a6196c20fa13133987f7c0f4b6fb721aec7ba455026a6ff4c9e61a8",
-    "rtl/abi3/ot_a3_microsequencer.sv": "27a2c971ce63aa6a86a2f73b01e5459ddb93e847d0ace78e7446bff76d10b06c",
-    "rtl/abi3/ot_a3_pkg.sv": "6fb71525b329497fe62145ab0d9b1b6eff03f1e0c95f3bc6a0c1dde5c6744054",
+    "rtl/abi3/ot_a3_loop_stack.sv": "6167c65cf533bbbc8635d53b100b7ed9c3deea7dba437ae680f2c0b19db70ef0",
+    "rtl/abi3/ot_a3_microsequencer.sv": "3a96fabaadb1bab0d9b971c52e822de3ece61a1fe77ef4cc846b880219ade278",
+    "rtl/abi3/ot_a3_pkg.sv": "99cb99b3b5044ad669a5927455f50ca5fe2672c197c97770e1709e794e402e4e",
     "rtl/abi3/ot_a3_program_header.sv": "7a5c55cbcaa7f877923595b631334c04eb0c403aea3bf052de983eeccdd1a619",
+    "rtl/abi3/ot_a3_resolver_bank.sv": "b953bde14c2d3005de0b780dcfb5a7675e6e17a90ab095d242557b67f0e749a3",
+    "rtl/abi3/ot_a3_shared_divider.sv": "b16700dda17092c0128eefa4ef091cefe199abeeec2fb5ae1b2c09b08a6f407f",
     "rtl/abi3/ot_a3_state_controller.sv": "0fe8d122267f9afbd05837399a4b4545e8b953f9481c7529cb6206d34d279006",
-    "rtl/abi3/ot_a3_view_resolver.sv": "9182acc5e439a9190a6d9f18c9855e9b9800c0b7a436e90305468f630857635e",
+    "rtl/abi3/ot_a3_symbol_file.sv": "e447946a9c88059c0dbfdfcd806e0fefe96ed1946ce8bd1c45b78dc81618301d",
+    "rtl/abi3/ot_a3_view_resolver.sv": "ca70c306e3e96ec3d3e0535159bf56678c4efd16141fb9049c4b520797dcac80",
     "rtl/ot_fp32_rne_pkg.sv": "39de679dd5f277d8a9cc2d5b6349eb1675e9397e64a8256bb1f53a34a054608c"
   },
   "status": "pass",
