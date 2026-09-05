@@ -451,6 +451,14 @@ INJECT_LINE = re.compile(
 COST_LINE = re.compile(
     r"COST passes=(\d+) cycles=(\d+) seconds=([0-9.]+) host_writes=(\d+)"
 )
+EOS_LINE = re.compile(
+    r"EOS selected_token=(\d+) selected_tie_multiplicity=(\d+) "
+    r"selected_eos_reason=(\d+) engine_launches=(\d+)"
+)
+POSTEOS_LINE = re.compile(
+    r"POSTEOS ran=(\d+) admitted=(\d+) trapped=(\d+) trap_class=(\d+) "
+    r"issues=(\d+) cycles=(\d+)"
+)
 PASS_RECORD = re.compile(
     r"PASS-RECORD index=(\d+) entrypoint=(\d+) generation=(\d+) context=(\d+) "
     r"issues=(\d+) views=(\d+) fetched=(\d+) retired=(\d+) loops=(\d+) "
@@ -554,6 +562,8 @@ def run_store(
     trace = TRACE_LINE.search(stdout)
     injection = INJECT_LINE.search(stdout)
     cost = COST_LINE.search(stdout)
+    posteos = POSTEOS_LINE.search(stdout)
+    eos = EOS_LINE.search(stdout)
     passes = [
         {
             "index": int(m.group(1)),
@@ -599,6 +609,20 @@ def run_store(
             "elaborate_and_compile_seconds": round(compile_seconds, 2),
             "run_seconds": round(run_seconds, 2),
             "golden_model_seconds": manifest["golden_model"]["wall_seconds"],
+        },
+        "eos_observation": {
+            "selected_token": int(eos.group(1)) if eos else None,
+            "selected_tie_multiplicity": int(eos.group(2)) if eos else None,
+            "selected_eos_reason": int(eos.group(3)) if eos else None,
+            "engine_launches": int(eos.group(4)) if eos else None,
+        },
+        "post_eos_probe": {
+            "ran": bool(posteos and posteos.group(1) == "1"),
+            "rtl_admitted_the_pass": bool(posteos and posteos.group(2) == "1"),
+            "rtl_trapped": bool(posteos and posteos.group(3) == "1"),
+            "trap_class": int(posteos.group(4)) if posteos else None,
+            "issues": int(posteos.group(5)) if posteos else 0,
+            "simulated_cycles": int(posteos.group(6)) if posteos else 0,
         },
         "passes": passes,
         "compile_command": canonical(" ".join(compile_command), build),
@@ -720,6 +744,31 @@ def compose_record(
             "model_stop_reason": manifest["model_run"]["stop_reason"],
             "model_generated_token_ids": manifest["model_run"]["generated_token_ids"],
             "post_eos_attempt": manifest["post_eos"],
+            "rtl_eos_observation": {
+                **run.get("eos_observation", {}),
+                "eos_reason_encoding": {"0": "EOS_NONE", "1": "OFFICIAL_EOS",
+                                        "2": "MAX_NEW_TOKENS"},
+                "meaning": (
+                    "measured at the end of the run: the integrated top's "
+                    "selection outputs, which rtl/abi3/"
+                    "ot_a3_selection_token_append.sv drives. Under result "
+                    "injection the bridge's issue_valid is tied low, so that "
+                    "engine is never issued to and the outputs hold their "
+                    "reset values. An OFFICIAL_EOS reported by this rung "
+                    "would have been the model's, passed through"
+                ),
+            },
+            "post_eos_probe_measured_in_rtl": {
+                **run.get("post_eos_probe", {}),
+                "meaning": (
+                    "one further pass was driven into the RTL after the pass "
+                    "that produced the official EOS, configured exactly as the "
+                    "last decode pass. The reference model refuses such a "
+                    "transaction before fetching an instruction; what the RTL "
+                    "control plane does with it is measured here rather than "
+                    "argued. Its issues are not part of the compared trace"
+                ),
+            },
             "why_not_measured_in_rtl": (
                 "in the promoted lowering the EOS decision is an ENGINE result "
                 "-- rtl/abi3/ot_a3_selection_token_append.sv raises "

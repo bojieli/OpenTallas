@@ -104,7 +104,7 @@ WORKLOAD_PATH = "build/workloads/qwen3-8b/TA-QW-EOS-1.json"
 ORACLE_PATH = "results/abi3/qwen3_reference_oracle_eos.json"
 
 CASE_STRIDE = 32
-META_WORDS = 16
+META_WORDS = 18
 
 # The storage classes G1e requires, and the shipped target each is.
 STORES = {
@@ -567,6 +567,29 @@ def emit(golden: dict[str, Any], out: Path) -> dict[str, Any]:
             }
         )
 
+    # -- the post-EOS probe -------------------------------------------------
+    # The reference model refuses a transaction on a session that has reached
+    # EOS, before any instruction is fetched.  Whether the RTL control plane
+    # refuses one is a question about the RTL, and it is answered by asking
+    # it: one further pass is emitted, configured exactly as the last decode
+    # pass was, with its own copy of that pass's engine results.  Its issues
+    # are NOT part of the compared trace -- the model produced no golden for a
+    # pass it refused to run -- and the checker reports only whether the RTL
+    # admitted it or refused it.
+    last = passes[-1]
+    probe_lines = [
+        "# the post-EOS probe's engine results: the last decode pass's, again"
+    ]
+    for issue in last["issues"]:
+        probe_lines.append(
+            f"RESULT {issue['family']} {issue['sub']} "
+            f"{issue['descriptor_id']} {issue['pc']} 0 0 0"
+        )
+    probe_case = list(case_words[-CASE_STRIDE:])
+    probe_case[25] = len(passes)          # pass index
+    probe_case[30] = 1                    # this is the post-EOS probe
+    case_words.extend(probe_case)
+
     meta = [
         len(passes),
         total_issues,
@@ -584,6 +607,8 @@ def emit(golden: dict[str, Any], out: Path) -> dict[str, Any]:
         work_bound & 0xFFFFFFFF,
         (work_bound >> 32) & 0xFFFFFFFF,
         len(observable),
+        1,                                 # a post-EOS probe pass is present
+        len(last["issues"]),
     ]
     if len(meta) != META_WORDS:
         raise SystemExit(f"meta is {len(meta)} words, the checker reads {META_WORDS}")
@@ -599,6 +624,7 @@ def emit(golden: dict[str, Any], out: Path) -> dict[str, Any]:
         "g1e_golden_trace.txt": "\n".join(trace_lines) + "\n",
         "g1e_golden_trace_queue.txt": "\n".join(queue_lines) + "\n",
         "g1e_inject.txt": "\n".join(result_lines) + "\n",
+        "g1e_inject_probe.txt": "\n".join(probe_lines) + "\n",
     }
     for name, payload in files.items():
         (out / name).write_text(payload, encoding="ascii")
@@ -695,7 +721,23 @@ def emit(golden: dict[str, Any], out: Path) -> dict[str, Any]:
                 "carried"
             ),
         },
-        "post_eos": golden["post_eos"],
+        "post_eos": {
+            **golden["post_eos"],
+            "rtl_probe": {
+                "emitted": True,
+                "shape": (
+                    "one further pass, configured exactly as the last decode "
+                    "pass, with its own copy of that pass's engine results"
+                ),
+                "issues": len(last["issues"]),
+                "in_the_compared_trace": False,
+                "why_not_in_the_trace": (
+                    "the model refused this transaction, so it produced no "
+                    "golden for it; the probe asks only whether the RTL "
+                    "control plane refuses it too"
+                ),
+            },
+        },
         "source_sha256": {
             path: sha256_file(ROOT / path) for path in SOURCE_FILES
         },

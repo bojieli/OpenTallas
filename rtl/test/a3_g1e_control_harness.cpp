@@ -488,7 +488,7 @@ constexpr std::size_t kProgramWords = 4096;
 constexpr std::size_t kDescWords = 8192;
 constexpr unsigned kSymbolsPerCase = 16;
 constexpr std::size_t kCaseStride = 32;
-constexpr std::size_t kMetaWords = 16;
+constexpr std::size_t kMetaWords = 18;
 
 }  // namespace
 
@@ -563,7 +563,10 @@ int main(int argc, char** argv) {
         if (meta[4] != kCaseStride)
             throw std::runtime_error("vector set declares a case stride this "
                                      "checker has not been qualified against");
-        if (passes == 0 || cases.size() != passes * kCaseStride)
+        const bool probe_present = meta[16] != 0;
+        const std::size_t probe_issues = meta[17];
+        const std::size_t case_records = passes + (probe_present ? 1u : 0u);
+        if (passes == 0 || cases.size() != case_records * kCaseStride)
             throw std::runtime_error("g1e_case.hex geometry mismatch");
 
         const auto image_program = read_rows("a3_program.hex", 8, kProgramWords);
@@ -573,6 +576,9 @@ int main(int argc, char** argv) {
         const auto golden = read_trace(vector_path("g1e_golden_trace.txt"));
         const auto golden_queue =
             read_trace(vector_path("g1e_golden_trace_queue.txt"));
+        const auto probe_results =
+            probe_present ? read_results(vector_path("g1e_inject_probe.txt"))
+                          : std::vector<Result>{};
         const std::uint64_t cycle_guard_limit =
             env_u64("OT_A3_CYCLE_GUARD", 4000000000ULL);
 
@@ -839,6 +845,95 @@ int main(int argc, char** argv) {
                       << " waits=" << model.dut.count_wait_events
                       << " cycles=" << guard << "\n";
         }
+
+        // -- the post-EOS probe ------------------------------------------
+        // The reference model refuses a transaction on a session that has
+        // reached EOS.  Whether the RTL control plane refuses one is a
+        // question about the RTL, so it is asked rather than reasoned about:
+        // the same configuration is driven once more with its own result
+        // stream, and what the design does is reported.  Its issues are not
+        // added to the compared trace.
+        bool probe_ran = false;
+        bool probe_admitted = false;
+        std::uint32_t probe_trap_class = 0;
+        std::uint64_t probe_issue_count = 0;
+        std::uint64_t probe_cycles = 0;
+        if (probe_present) {
+            const std::uint32_t* record = &cases[passes * kCaseStride];
+            model.dut.cfg_program_base = record[0];
+            model.dut.cfg_instruction_count = record[1];
+            model.dut.cfg_desc_base = record[2];
+            model.dut.cfg_desc_count = record[3];
+            for (unsigned symbol = 0; symbol < kSymbolsPerCase; ++symbol) {
+                const std::size_t at = record[4] + symbol;
+                model.host_write(2, symbol, 0,
+                                 at < image_symbol.size() ? image_symbol[at] : 0);
+                model.host_write(2, symbol, 1, 0);
+                model.host_write(2, symbol, 2, (record[5] >> symbol) & 1U);
+            }
+            model.dut.cfg_entry_pc = record[6];
+            model.dut.cfg_max_retired_work =
+                (static_cast<std::uint64_t>(record[8]) << 32) | record[7];
+            model.dut.cfg_state_count = record[9];
+            std::size_t probe_at = 0;
+            bool probe_serving = false;
+            auto probe_observe = [&]() {
+                model.dut.inj_write_en = 0;
+                model.dut.inj_result_valid = 0;
+                model.dut.inj_result_fault = 0;
+                model.dut.inj_result_trap_class = 0;
+                if (!model.dut.rst_n || !model.dut.inj_issue_valid) {
+                    model.dut.eval();
+                    return;
+                }
+                if (probe_at >= probe_results.size()) {
+                    model.dut.eval();
+                    return;   // the probe refuses to feed past its stream
+                }
+                if (!probe_serving) probe_serving = true;
+                model.dut.inj_result_valid = 1;
+                probe_serving = false;
+                ++probe_at;
+                model.dut.eval();
+            };
+            model.dut.start = 1;
+            model.cycle(probe_observe);
+            model.dut.start = 0;
+            std::uint64_t guard = 0;
+            while (!model.dut.done && guard < cycle_guard_limit) {
+                model.cycle(probe_observe);
+                ++guard;
+            }
+            probe_ran = true;
+            probe_cycles = guard;
+            probe_issue_count = probe_at;
+            probe_admitted = model.dut.done && model.dut.complete;
+            probe_trap_class = model.dut.trap_class;
+            total_cycles += guard;
+            check.equal("post-EOS probe reached a definite outcome",
+                        model.dut.done ? 1 : 0, 1);
+            check.equal("post-EOS probe issue count", probe_at, probe_issues);
+        }
+        // The EOS observation, measured rather than inferred.  OFFICIAL_EOS
+        // is raised by rtl/abi3/ot_a3_selection_token_append.sv, an ENGINE.
+        // Under result injection the bridge's issue_valid is tied low, so
+        // that engine is never issued to and these outputs must still read
+        // their reset values: that is what says the EOS in this run is the
+        // model's, not the RTL's, and it is checked instead of asserted.
+        std::cout << "EOS selected_token=" << model.dut.selected_token
+                  << " selected_tie_multiplicity="
+                  << model.dut.selected_tie_multiplicity
+                  << " selected_eos_reason="
+                  << static_cast<unsigned>(model.dut.selected_eos_reason)
+                  << " engine_launches=" << model.dut.real_launch_count << "\n";
+        check.equal("no EOS reason published by any engine",
+                    model.dut.selected_eos_reason, 0);
+        std::cout << "POSTEOS ran=" << (probe_ran ? 1 : 0)
+                  << " admitted=" << (probe_admitted ? 1 : 0)
+                  << " trapped=" << (model.dut.trapped ? 1 : 0)
+                  << " trap_class=" << probe_trap_class
+                  << " issues=" << probe_issue_count
+                  << " cycles=" << probe_cycles << "\n";
 
         check.equal("every golden result consumed", injected_at, injected.size());
         check.equal("injected words written", injected_words_written,
