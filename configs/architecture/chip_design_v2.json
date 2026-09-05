@@ -13,6 +13,35 @@
   "fixed_area_excluding_mesh_mm2": 125.58,
   "other_engines_mm2": 27,
   "tensor_tile_mm2": 0.2913,
+  "reduction": {
+    "leaves": 8,
+    "columns": 64,
+    "scalar_adders": 7,
+    "columns_per_cycle": 1,
+    "adder_initiation_interval": 1,
+    "endpoint_cells": 17000,
+    "buffer_bytes_per_endpoint": 4096,
+    "endpoints_per_cluster": 2,
+    "old_endpoints_per_cluster_in_tile_area": 1,
+    "tensor_k_block": 128,
+    "weight_port_bytes_per_cycle": 128
+  },
+  "dependence": {
+    "entries": 32,
+    "ranges_per_entry": 4,
+    "object_bits": 16,
+    "overflow_policy": "sticky_global_wildcard_until_completion",
+    "reservation": "check_all_ranges_then_atomic_insert_before_younger_issue",
+    "frontier_streaming": false
+  },
+  "numeric": {
+    "grouped_bf16_supported": false,
+    "index_score": {"key_storage": "bf16", "query_storage": "bf16", "group": 1},
+    "deepseek_flash_index_dot_us": 84,
+    "deepseek_flash_index_combine_us": 13,
+    "am_e7_enabled": false,
+    "external_oracle_required": true
+  },
   "mesh_router_cells": 55000,
   "assumed_cells_per_mm2": 750000,
   "mesh_planes": 2,

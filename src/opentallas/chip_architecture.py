@@ -36,6 +36,43 @@ def path_rate(*rates: float) -> float:
     return min(rates)
 
 
+def reduction_service(config: Mapping[str, Any], *, bits_per_weight: int, group: int) -> dict[str, int]:
+    """A tile pass cannot outrun its weight port or its reduction consumer."""
+    r = config["reduction"]
+    for key in ("leaves", "columns", "scalar_adders", "columns_per_cycle", "adder_initiation_interval",
+                "tensor_k_block", "weight_port_bytes_per_cycle"):
+        _positive(r[key], f"reduction.{key}")
+    _require(r["leaves"] == 8, "RE8 must have eight leaves")
+    _require(r["scalar_adders"] >= (r["leaves"] - 1) * r["columns_per_cycle"], "tree width exceeds instantiated adders")
+    _require((bits_per_weight, group) in ((16, 1), (8, 2), (4, 4)), "unknown tensor pass format")
+    weights = ceil(r["columns"] * r["tensor_k_block"] * bits_per_weight / 8)
+    # MXFP4: one E8M0 byte per 32 weights, not 1024 bytes per 8192 weights.
+    scales = (r["columns"] * ceil(r["tensor_k_block"] / 32) if bits_per_weight == 4 else
+              ceil(r["columns"] / 128) * ceil(r["tensor_k_block"] / 128) if bits_per_weight == 8 else 0)
+    compute = ceil(r["tensor_k_block"] / group)
+    transfer = ceil((weights + scales) / r["weight_port_bytes_per_cycle"])
+    tree = ceil(r["columns"] / r["columns_per_cycle"]) * r["adder_initiation_interval"]
+    return {"weight_bytes": weights, "scale_bytes": scales,
+            "lane_compute_cycles": compute, "weight_port_cycles": transfer,
+            "reduction_vector_service_cycles": tree, "minimum_pass_initiation_interval": max(compute, transfer, tree),
+            "first_result_tree_levels": 3, "last_result_offset_from_first_cycles": tree - 1}
+
+
+def validate_execution_contract(config: Mapping[str, Any]) -> None:
+    d = config["dependence"]
+    _require(d["entries"] == 32 and d["ranges_per_entry"] == 4 and d["object_bits"] == 16,
+             "dependence geometry differs from the reference interface")
+    _require(d["overflow_policy"] == "sticky_global_wildcard_until_completion", "range overflow must never drop dependencies")
+    _require(d["reservation"] == "check_all_ranges_then_atomic_insert_before_younger_issue", "partial insertion cannot admit younger work")
+    _require(d["frontier_streaming"] is False, "frontier streaming requires a separately proven contract")
+    n = config["numeric"]
+    _require(n["grouped_bf16_supported"] is False and n["am_e7_enabled"] is False,
+             "current lane refuses grouped BF16; AM-E7 is not an implemented capability")
+    _require(n["index_score"] == {"key_storage": "bf16", "query_storage": "bf16", "group": 1},
+             "INDEX_SCORE must use the supported BF16 sequential fallback")
+    _require(n["external_oracle_required"] is True, "new associations still require independent token qualification")
+
+
 def qwen_units(model: Mapping[str, Any]) -> list[dict[str, Any]]:
     """Exact checkpoint accounting in execution order, including norm gains.
 
@@ -83,6 +120,7 @@ def pipeline_stages(units: list[dict[str, Any]], last_units: list[str]) -> list[
 
 def qwen_resource_plan(config: Mapping[str, Any], model: Mapping[str, Any]) -> dict[str, Any]:
     """Plan per-die capacity, mesh endpoints and the minimum KV service time."""
+    validate_execution_contract(config)
     for key in ("clock_hz", "die_area_mm2", "rom_bytes_per_mm2", "sram_bytes_per_mm2",
                 "tensor_tile_mm2", "tiles_per_cluster", "assumed_cells_per_mm2"):
         _positive(config[key], key)
@@ -128,6 +166,16 @@ def qwen_resource_plan(config: Mapping[str, Any], model: Mapping[str, Any]) -> d
         fixed = config["fixed_area_excluding_mesh_mm2"] + mesh_area + config["other_engines_mm2"]
         tile_budget = config["die_area_mm2"] - fixed - rom_area - kv_area - phy_area
         tiles = floor(tile_budget / config["tensor_tile_mm2"])
+        reduction = config["reduction"]
+        _require(reduction["endpoints_per_cluster"] == 2, "reserve two RE8 endpoints per eight tiles including upper tree levels")
+        _require(reduction["old_endpoints_per_cluster_in_tile_area"] == 1, "old tile budget includes one endpoint per cluster")
+        def tree_extra(count: int) -> float:
+            clusters = ceil(count / config["tiles_per_cluster"])
+            extra_logic = clusters * reduction["endpoint_cells"] / config["assumed_cells_per_mm2"]
+            all_buffers = clusters * 2 * reduction["buffer_bytes_per_endpoint"] / config["sram_bytes_per_mm2"]
+            return extra_logic + all_buffers
+        while tiles > 0 and tiles * config["tensor_tile_mm2"] + tree_extra(tiles) > tile_budget:
+            tiles -= 1
         _require(tiles > 0, f"{profile['id']}: memory and fixed logic consume the die")
         clusters = ceil(tiles / config["tiles_per_cluster"])
         common_endpoints = (config["scratchpad_endpoints"] + config["dma_endpoints"] +
@@ -156,8 +204,9 @@ def qwen_resource_plan(config: Mapping[str, Any], model: Mapping[str, Any]) -> d
             "rom_area_mm2": rom_area, "kv_area_mm2": kv_area, "mesh_area_mm2": mesh_area,
             "fixed_and_other_area_mm2": fixed, "phy_area_mm2": phy_area,
             "tiles": tiles, "lanes": tiles * 64, "tile_area_mm2": tiles * config["tensor_tile_mm2"],
-            "total_area_mm2": fixed + rom_area + kv_area + phy_area + tiles * config["tensor_tile_mm2"],
-            "unused_area_mm2": tile_budget - tiles * config["tensor_tile_mm2"],
+            "reduction_endpoints": clusters * 2, "reduction_extra_area_mm2": tree_extra(tiles),
+            "total_area_mm2": fixed + rom_area + kv_area + phy_area + tiles * config["tensor_tile_mm2"] + tree_extra(tiles),
+            "unused_area_mm2": tile_budget - tiles * config["tensor_tile_mm2"] - tree_extra(tiles),
             "mesh_shape": [profile["mesh_x"], profile["mesh_y"]], "router_count": router_count,
             "rom_endpoints": rom_endpoints, "hbm_twin_endpoints": twin_endpoints,
             "hbm_twin_replacement_sram_area_mm2": twin_slot,

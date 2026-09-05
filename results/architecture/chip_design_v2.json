@@ -1,4 +1,26 @@
 {
+  "execution_contract": {
+    "dependence": {
+      "entries": 32,
+      "frontier_streaming": false,
+      "object_bits": 16,
+      "overflow_policy": "sticky_global_wildcard_until_completion",
+      "ranges_per_entry": 4,
+      "reservation": "check_all_ranges_then_atomic_insert_before_younger_issue"
+    },
+    "numeric": {
+      "am_e7_enabled": false,
+      "deepseek_flash_index_combine_us": 13,
+      "deepseek_flash_index_dot_us": 84,
+      "external_oracle_required": true,
+      "grouped_bf16_supported": false,
+      "index_score": {
+        "group": 1,
+        "key_storage": "bf16",
+        "query_storage": "bf16"
+      }
+    }
+  },
   "grade": "derived_from_assumptions",
   "link": {
     "bytes_per_cycle_aggregate": 512.0,
@@ -10,7 +32,7 @@
     {
       "dies": 4,
       "fixed_and_other_area_mm2": 173.7,
-      "hbm_twin_endpoints": 114,
+      "hbm_twin_endpoints": 113,
       "hbm_twin_replacement_sram_area_mm2": 447.47901327362865,
       "id": "qwen_x4",
       "kv_area_mm2": 0.0,
@@ -18,7 +40,7 @@
       "kv_delivered_bytes_per_cycle": 4500,
       "kv_service_lower_bound_us": 67.108864,
       "kv_source_bytes_per_cycle": 4500,
-      "lanes": 31552,
+      "lanes": 31232,
       "mesh_area_mm2": 21.12,
       "mesh_shape": [
         12,
@@ -28,8 +50,10 @@
       "phy_area_mm2": 50,
       "prefetch_overlap_credited": false,
       "qualified_tpot_us": null,
+      "reduction_endpoints": 122,
+      "reduction_extra_area_mm2": 1.5118245886103214,
       "rom_area_mm2": 447.47901327362865,
-      "rom_endpoints": 114,
+      "rom_endpoints": 113,
       "rom_payload_budget_bytes": 4113186816,
       "rom_raw_capacity_bytes_per_die": 4197129405,
       "router_count": 288,
@@ -81,10 +105,10 @@
           "weight_bytes": 4095367680
         }
       ],
-      "tile_area_mm2": 143.61090000000002,
-      "tiles": 493,
-      "total_area_mm2": 814.7899132736287,
-      "unused_area_mm2": 0.2100867263712871
+      "tile_area_mm2": 142.1544,
+      "tiles": 488,
+      "total_area_mm2": 814.8452378622391,
+      "unused_area_mm2": 0.15476213776097114
     },
     {
       "dies": 5,
@@ -97,7 +121,7 @@
       "kv_delivered_bytes_per_cycle": 4608,
       "kv_service_lower_bound_us": 262.144,
       "kv_source_bytes_per_cycle": 26112.0,
-      "lanes": 41984,
+      "lanes": 41536,
       "mesh_area_mm2": 24.786666666666665,
       "mesh_shape": [
         13,
@@ -107,6 +131,8 @@
       "phy_area_mm2": 0,
       "prefetch_overlap_credited": false,
       "qualified_tpot_us": null,
+      "reduction_endpoints": 164,
+      "reduction_extra_area_mm2": 2.0322887912466614,
       "rom_area_mm2": 359.5977419905112,
       "rom_endpoints": 145,
       "rom_payload_budget_bytes": 3305390080,
@@ -171,15 +197,15 @@
           "weight_bytes": 3274795520
         }
       ],
-      "tile_area_mm2": 191.0928,
-      "tiles": 656,
-      "total_area_mm2": 814.783577227868,
-      "unused_area_mm2": 0.21642277213197758
+      "tile_area_mm2": 189.0537,
+      "tiles": 649,
+      "total_area_mm2": 814.7767660191146,
+      "unused_area_mm2": 0.2232339808853352
     },
     {
       "dies": 8,
       "fixed_and_other_area_mm2": 190.12666666666667,
-      "hbm_twin_endpoints": 221,
+      "hbm_twin_endpoints": 220,
       "hbm_twin_replacement_sram_area_mm2": 174.717173303481,
       "id": "qwen_x8",
       "kv_area_mm2": 43.36318428534505,
@@ -187,7 +213,7 @@
       "kv_delivered_bytes_per_cycle": 4608,
       "kv_service_lower_bound_us": 32.768,
       "kv_source_bytes_per_cycle": 13056.0,
-      "lanes": 78336,
+      "lanes": 77504,
       "mesh_area_mm2": 37.54666666666667,
       "mesh_shape": [
         16,
@@ -197,8 +223,10 @@
       "phy_area_mm2": 0,
       "prefetch_overlap_credited": false,
       "qualified_tpot_us": null,
+      "reduction_endpoints": 304,
+      "reduction_extra_area_mm2": 3.7671694667011284,
       "rom_area_mm2": 224.717173303481,
-      "rom_endpoints": 216,
+      "rom_endpoints": 215,
       "rom_payload_budget_bytes": 2065580032,
       "rom_raw_capacity_bytes_per_die": 2107734727,
       "router_count": 512,
@@ -294,18 +322,50 @@
           "weight_bytes": 2047683840
         }
       ],
-      "tile_area_mm2": 356.5512,
-      "tiles": 1224,
-      "total_area_mm2": 814.7582242554927,
-      "unused_area_mm2": 0.2417757445073221
+      "tile_area_mm2": 352.7643,
+      "tiles": 1211,
+      "total_area_mm2": 814.7384937221938,
+      "unused_area_mm2": 0.2615062778061965
     }
   ],
+  "reduction_service": {
+    "bf16": {
+      "first_result_tree_levels": 3,
+      "lane_compute_cycles": 128,
+      "last_result_offset_from_first_cycles": 63,
+      "minimum_pass_initiation_interval": 128,
+      "reduction_vector_service_cycles": 64,
+      "scale_bytes": 0,
+      "weight_bytes": 16384,
+      "weight_port_cycles": 128
+    },
+    "fp8": {
+      "first_result_tree_levels": 3,
+      "lane_compute_cycles": 64,
+      "last_result_offset_from_first_cycles": 63,
+      "minimum_pass_initiation_interval": 65,
+      "reduction_vector_service_cycles": 64,
+      "scale_bytes": 1,
+      "weight_bytes": 8192,
+      "weight_port_cycles": 65
+    },
+    "mxfp4": {
+      "first_result_tree_levels": 3,
+      "lane_compute_cycles": 32,
+      "last_result_offset_from_first_cycles": 63,
+      "minimum_pass_initiation_interval": 64,
+      "reduction_vector_service_cycles": 64,
+      "scale_bytes": 256,
+      "weight_bytes": 4096,
+      "weight_port_cycles": 34
+    }
+  },
   "resource_checks_pass": true,
   "schema": "opentallas.chip-resource-check.v1",
   "sources": [
     {
       "path": "configs/architecture/chip_design_v2.json",
-      "sha256": "b771384333cbd25ca59f634ba5f96ff163e4d22d73f06c059394c715525a26b1"
+      "sha256": "6ddc68bff03b894f65bdf6773ac9bf1ba059f5bb180f5ee9e1af57478ecd3ead"
     },
     {
       "path": "configs/models/qwen3-8b.json",
@@ -313,11 +373,11 @@
     },
     {
       "path": "src/opentallas/chip_architecture.py",
-      "sha256": "4cdfd6f73a026a636f782a5f318c9976df76e1df6c3d40fee4cf806e68f356e3"
+      "sha256": "a36bef556600edd5a77235e8d1447c662c60823e5a2e4194af0b8fb6eba03a6a"
     },
     {
       "path": "tools/check_chip_architecture.py",
-      "sha256": "8f564779020def6e9f97b67fcde0f27d42f79c2acfe78399ac36bb7a790b0104"
+      "sha256": "76130d89d78fbf4d634bbc3f048008e399fa7ae385819b1ac3dbe33b60c263ca"
     }
   ]
 }

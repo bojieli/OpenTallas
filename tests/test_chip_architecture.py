@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 
 from opentallas.chip_architecture import (
-    ArchitectureError, path_rate, pipeline_stages, qwen_resource_plan, qwen_units,
+    ArchitectureError, path_rate, pipeline_stages, qwen_resource_plan, qwen_units, reduction_service,
 )
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -39,7 +39,8 @@ def test_repaired_memory_and_phy_fit_on_both_twins(inputs):
     report = qwen_resource_plan(*inputs)
     for p in report["profiles"]:
         assert p["total_area_mm2"] <= 815
-        assert 0 <= p["unused_area_mm2"] < inputs[0]["tensor_tile_mm2"]
+        # Opening a new cluster also reserves reduction endpoints and their buffers.
+        assert 0 <= p["unused_area_mm2"] < inputs[0]["tensor_tile_mm2"] + .05
         assert p["rom_raw_capacity_bytes_per_die"] * .98 >= p["rom_payload_budget_bytes"]
         assert p["hbm_twin_replacement_sram_area_mm2"] >= 0
         if p["id"] != "qwen_x4":
@@ -106,3 +107,40 @@ def test_changed_checkpoint_cannot_reuse_old_placement(inputs):
     model["checkpoint_bytes"] += 1
     with pytest.raises(ArchitectureError, match="exact checkpoint"):
         qwen_resource_plan(config, model)
+
+
+def test_mxfp4_cannot_overrun_scalar_reduction_or_ignore_scales(inputs):
+    service = reduction_service(inputs[0], bits_per_weight=4, group=4)
+    assert service["weight_bytes"] == 4096
+    assert service["scale_bytes"] == 256
+    assert service["weight_port_cycles"] == 34
+    assert service["lane_compute_cycles"] == 32
+    assert service["reduction_vector_service_cycles"] == 64
+    assert service["minimum_pass_initiation_interval"] == 64
+    assert service["last_result_offset_from_first_cycles"] == 63
+
+
+def test_tree_cannot_claim_uninstantiated_simd_width(inputs):
+    inputs[0]["reduction"]["columns_per_cycle"] = 2
+    with pytest.raises(ArchitectureError, match="instantiated adders"):
+        reduction_service(inputs[0], bits_per_weight=4, group=4)
+
+
+def test_fp8_scales_are_not_a_free_side_port(inputs):
+    service = reduction_service(inputs[0], bits_per_weight=8, group=2)
+    assert service["weight_bytes"] == 8192
+    assert service["scale_bytes"] == 1
+    assert service["minimum_pass_initiation_interval"] == 65
+
+
+@pytest.mark.parametrize("section,key,value", [
+    ("dependence", "overflow_policy", "drop_fifth_object"),
+    ("dependence", "frontier_streaming", True),
+    ("numeric", "am_e7_enabled", True),
+    ("numeric", "grouped_bf16_supported", True),
+    ("numeric", "external_oracle_required", False),
+])
+def test_unproved_execution_features_cannot_enter_the_plan(inputs, section, key, value):
+    inputs[0][section][key] = value
+    with pytest.raises(ArchitectureError):
+        qwen_resource_plan(*inputs)

@@ -10,7 +10,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
-from opentallas.chip_architecture import ArchitectureError, qwen_resource_plan  # noqa: E402
+from opentallas.chip_architecture import ArchitectureError, qwen_resource_plan, reduction_service  # noqa: E402
 
 
 def build_report(root: Path, config_path: Path) -> dict:
@@ -19,6 +19,9 @@ def build_report(root: Path, config_path: Path) -> dict:
         raise ArchitectureError("unsupported chip-design schema")
     model_path = root / config["qwen"]["model"]
     report = qwen_resource_plan(config, json.loads(model_path.read_text()))
+    report["reduction_service"] = {name: reduction_service(config, bits_per_weight=bits, group=group)
+                                   for name, bits, group in (("bf16", 16, 1), ("fp8", 8, 2), ("mxfp4", 4, 4))}
+    report["execution_contract"] = {key: config[key] for key in ("dependence", "numeric")}
     report["sources"] = [{"path": str(p.relative_to(root)), "sha256": hashlib.sha256(p.read_bytes()).hexdigest()}
                          for p in (config_path, model_path, root / "src/opentallas/chip_architecture.py",
                                    root / "tools/check_chip_architecture.py")]
