@@ -1,0 +1,2702 @@
+{
+  "derived_mechanically": true,
+  "does_not_establish": [
+    "any layer other than the one named above, and any position other than the governed decode position",
+    "the KV history the layer's attention would read: those rows are produced by the prefill passes, are an INPUT to this layer, and are not established by this rung",
+    "dual-simulator agreement: the integrated vehicle is Verilator only, because Icarus 11 cannot parse the paged weight window's 64-bit declarations",
+    "any rate; that is gate G3"
+  ],
+  "gate": "G1b",
+  "generated_by": "tools/build_abi3_g1b_layer_closure.py",
+  "generated_by_sha256": "8c76e8f91161cef7294b38e44f98b2ddca0c5de8c7deb1eb53eb54c8f5ee9b76",
+  "layer_definition": "one complete transformer layer, named by the certified Kernel IR: every engine issue the governed decode program makes whose OPERATOR descriptor's source_kernel_id points at a kernel whose kernel_id begins 'layer.0.'. The two lowerings are resolved independently; their descriptor IDs differ at every governed program counter and nothing measured on one is transferred to the other.",
+  "records": [
+    {
+      "deployment": {
+        "deployment_sha256": "133afc13e1fcd2aade2e40530883c9986b0e920d99853990d9032fd777f26243",
+        "key": "qwen3-8b-rom-single-chip"
+      },
+      "execution": {
+        "campaign": {
+          "artifact": "results/rtl/abi3_shipped_prefix_campaign.json",
+          "artifact_sha256": "489834223e6e45d4cdbfbc3a5206e9e64f8d0f9e47086bbe3c49f95b24171ee4",
+          "bound_source_count": 60,
+          "case_status": [
+            {
+              "checks": 189862,
+              "name": "verilator",
+              "status": "pass"
+            }
+          ],
+          "declared_git": {
+            "commit": "9aecaac27f00c435fe953e8c41f9565a811a29e0",
+            "worktree_dirty": false
+          },
+          "drifted_source_count": 0,
+          "drifted_sources": [],
+          "evidence_class": "public_open_tool_rtl_simulation_composite",
+          "expected_cases": [
+            {
+              "fault": 32,
+              "fetched": 33,
+              "index": 0,
+              "issued": 11,
+              "launches": 10,
+              "responses": 11,
+              "retired": 32,
+              "trap": 4,
+              "views": 33,
+              "words": 24832
+            },
+            {
+              "fault": 32,
+              "fetched": 33,
+              "index": 1,
+              "issued": 11,
+              "launches": 10,
+              "responses": 11,
+              "retired": 32,
+              "trap": 4,
+              "views": 33,
+              "words": 24832
+            },
+            {
+              "fault": 13,
+              "fetched": 14,
+              "index": 2,
+              "issued": 5,
+              "launches": 4,
+              "responses": 5,
+              "retired": 13,
+              "trap": 4,
+              "views": 11,
+              "words": 20736
+            },
+            {
+              "fault": 14,
+              "fetched": 15,
+              "index": 3,
+              "issued": 5,
+              "launches": 4,
+              "responses": 5,
+              "retired": 14,
+              "trap": 4,
+              "views": 17,
+              "words": 20736
+            }
+          ],
+          "integrated_replay_passed": true,
+          "integrated_simulator_checks": {
+            "verilator": 189862
+          },
+          "integrated_simulators": [
+            "verilator"
+          ],
+          "measure": {
+            "cycle_guard": 64000000000,
+            "cycles": 252057600,
+            "distinct_bytes": 50331648,
+            "halfword_reads": 50331648,
+            "injected_results": 0,
+            "page_faults": 96,
+            "page_hits": 50331552,
+            "pages_evicted": 88,
+            "refilled_bytes": 100663296,
+            "result_words": 98304,
+            "sim_wall_s": 1851.86,
+            "source_words": 65536,
+            "trace_compared_elements": 0,
+            "trace_divergence_index": -1,
+            "trace_issues": 0,
+            "trace_last_case_issues": 5,
+            "trace_uncompared_fields": "none",
+            "wall_s": 1853.954,
+            "weight_image_bytes": 50331648,
+            "window_cap_bytes": 8388608,
+            "window_page_bytes": 1048576,
+            "window_peak_resident_bytes": 8388608,
+            "window_segments": 1
+          },
+          "observed_cases": [
+            {
+              "fault": 32,
+              "fetched": 33,
+              "index": 0,
+              "issued": 11,
+              "launches": 10,
+              "responses": 11,
+              "retired": 32,
+              "trap": 4,
+              "views": 33,
+              "words": 24832
+            },
+            {
+              "fault": 32,
+              "fetched": 33,
+              "index": 1,
+              "issued": 11,
+              "launches": 10,
+              "responses": 11,
+              "retired": 32,
+              "trap": 4,
+              "views": 33,
+              "words": 24832
+            },
+            {
+              "fault": 13,
+              "fetched": 14,
+              "index": 2,
+              "issued": 5,
+              "launches": 4,
+              "responses": 5,
+              "retired": 13,
+              "trap": 4,
+              "views": 11,
+              "words": 20736
+            },
+            {
+              "fault": 14,
+              "fetched": 15,
+              "index": 3,
+              "issued": 5,
+              "launches": 4,
+              "responses": 5,
+              "retired": 14,
+              "trap": 4,
+              "views": 17,
+              "words": 20736
+            }
+          ],
+          "operator_admission": {
+            "capability_trapped_family_count": 6,
+            "cases_with_mapped_placement": 0,
+            "launches": {
+              "ATTENTION.GQA": 0,
+              "DMA.SCATTER": 0,
+              "SELECTION.ARGMAX": 0,
+              "SELECTION.TOKEN_APPEND": 0,
+              "VECTOR.ADD": 0,
+              "VECTOR.SILU_MUL": 0
+            },
+            "measured": true,
+            "reached_families": [],
+            "reached_family_count": 0,
+            "result_injection": false,
+            "trapped_families": [
+              "VECTOR.ADD",
+              "VECTOR.SILU_MUL",
+              "DMA.SCATTER",
+              "ATTENTION.GQA",
+              "SELECTION.ARGMAX",
+              "SELECTION.TOKEN_APPEND"
+            ],
+            "vector_generation": "legacy",
+            "vehicle": "rtl/test/a3_shipped_prefix_top.sv"
+          },
+          "pass_marker": "engine",
+          "post_fault_write_count": 0,
+          "schema": "opentallas.rtl.abi3_shipped_prefix_campaign.v1",
+          "simulated_cycles": 252057600,
+          "simulated_cycles_agree": true,
+          "simulated_cycles_declared": 252057600,
+          "simulated_cycles_from_log": 252057600,
+          "staged_matmul_weight": {
+            "bytes": 50331648,
+            "matrix_sha256": [
+              "fd56b85bf301661c8655ed517928304d25df7d6b3ea3d9be85c021159d61bad8",
+              "3ce9fdf6ee30ef2f24ad3629b506415ca91fe40f790e568a9ea3fea2978feee0",
+              "767a6c48457974bb02dd90aeec270f4d68289527a353c3c28964ab2069a966ee"
+            ],
+            "note": "not a file of this repository; it is staged into the run's build directory from the checkpoint shards and its digests are the identity of the weights the run consumed",
+            "path": "generated/p3_matmul_weight.bin",
+            "sha256": "2c8696111937aa85197cd2042dfed6cb3c5ef7f03fb80eba1fe3b93d40c1b87e"
+          },
+          "status": "pass",
+          "usable": true,
+          "vector_set_is_current": true,
+          "vector_set_path": "testdata/compiler/abi3_shipped_prefix/abi3_shipped_prefix_vectors.json",
+          "vector_set_sha256_declared": "eaa4629cc7d4ad96fe5a5a49f6f9153b411e5504dffdd037306f6c44bd644361",
+          "vector_set_sha256_on_disk": "eaa4629cc7d4ad96fe5a5a49f6f9153b411e5504dffdd037306f6c44bd644361",
+          "why_unusable": null
+        },
+        "case_evidence": {
+          "case_index": 0,
+          "case_name": "qwen3-8b-rom-single-chip/decode",
+          "declared_boundary_pc": 32,
+          "declared_result_words": 24832,
+          "observed": {
+            "fault": 32,
+            "fetched": 33,
+            "index": 0,
+            "issued": 11,
+            "launches": 10,
+            "responses": 11,
+            "retired": 32,
+            "trap": 4,
+            "views": 33,
+            "words": 24832
+          },
+          "observed_agrees_with_the_vector_set": true
+        },
+        "evidence_class": "public_open_tool_rtl_simulation_composite",
+        "simulated_cycles": 252057600,
+        "simulated_cycles_scope": "the integrated run's own total, over all four cases of the one binary; the harness reports one cycle count for the run and this rung does not split it per lowering, so the same number appears in both records and must not be added across them",
+        "simulator": "verilator",
+        "vehicle": {
+          "bridge": "rtl/abi3/ot_a3_engine_issue_bridge.sv",
+          "bridge_sha256": "473e3b852f4db9491386d1e62fc61d7b0fab1706e6c9531300d45928a417e61f",
+          "placement_capacity": {
+            "roles": {
+              "appending_output": {
+                "note": "the seven appending families write at cfg_output_base + result_word_cursor; an object written twice therefore occupies two addresses, which the program's own storage semantics do not",
+                "object_keyed": false,
+                "slots": 1
+              },
+              "head_rms_input": {
+                "object_keyed": true,
+                "slots": 2
+              },
+              "head_rms_weight": {
+                "object_keyed": true,
+                "slots": 2
+              },
+              "mapped_family_operand": {
+                "object_keyed": true,
+                "slots": 8
+              },
+              "matmul_input": {
+                "note": "cfg_matmul_input_base is a single base, not keyed by object",
+                "object_keyed": false,
+                "slots": 1
+              },
+              "matmul_weight": {
+                "object_keyed": true,
+                "slots": 3
+              },
+              "rms_input": {
+                "note": "cfg_rms_input_base is a single base, not keyed by object",
+                "object_keyed": false,
+                "slots": 1
+              },
+              "rms_weight": {
+                "note": "cfg_rms_weight_base is a single base, not keyed by object",
+                "object_keyed": false,
+                "slots": 1
+              },
+              "rope_coefficient": {
+                "object_keyed": true,
+                "slots": 1
+              },
+              "rope_input": {
+                "object_keyed": true,
+                "slots": 2
+              }
+            },
+            "source": "rtl/abi3/ot_a3_engine_issue_bridge.sv",
+            "source_sha256": "473e3b852f4db9491386d1e62fc61d7b0fab1706e6c9531300d45928a417e61f"
+          },
+          "top": "rtl/test/a3_shipped_prefix_top.sv",
+          "top_sha256": "0c17ea7fa2e3d3876f5befa7a452194b1a30779daa17f0206f1f12c1a03ad466"
+        }
+      },
+      "git": {
+        "commit": "e0a8ce45337d02362051b0aee84e6008ea6f2faa",
+        "dirty_paths": [],
+        "scope": "the tree THIS artifact was derived in. It is not a claim about the tree the integrated campaign ran in; see execution.campaign.declared_git.",
+        "worktree_dirty": false
+      },
+      "layer": {
+        "arithmetic": {
+          "mac_count": 192937984,
+          "note": "multiply-accumulates of the layer's projections, from each MATMUL's own declared weight view. Attention's own arithmetic is not in this figure, matching the cost the gate states.",
+          "per_matmul": [
+            {
+              "kernel_id": "layer.0.attention.query_projection",
+              "mac_count": 16777216,
+              "pc": 11,
+              "weight_shape": [
+                4096,
+                4096
+              ]
+            },
+            {
+              "kernel_id": "layer.0.attention.key_projection",
+              "mac_count": 4194304,
+              "pc": 14,
+              "weight_shape": [
+                1024,
+                4096
+              ]
+            },
+            {
+              "kernel_id": "layer.0.attention.value_projection",
+              "mac_count": 4194304,
+              "pc": 17,
+              "weight_shape": [
+                1024,
+                4096
+              ]
+            },
+            {
+              "kernel_id": "layer.0.attention.output_projection",
+              "mac_count": 16777216,
+              "pc": 41,
+              "weight_shape": [
+                4096,
+                4096
+              ]
+            },
+            {
+              "kernel_id": "layer.0.feed_forward.gate_projection",
+              "mac_count": 50331648,
+              "pc": 50,
+              "weight_shape": [
+                12288,
+                4096
+              ]
+            },
+            {
+              "kernel_id": "layer.0.feed_forward.up_projection",
+              "mac_count": 50331648,
+              "pc": 53,
+              "weight_shape": [
+                12288,
+                4096
+              ]
+            },
+            {
+              "kernel_id": "layer.0.feed_forward.down_projection",
+              "mac_count": 50331648,
+              "pc": 59,
+              "weight_shape": [
+                4096,
+                12288
+              ]
+            }
+          ]
+        },
+        "compared_words": 20480,
+        "complete": false,
+        "every_intermediate_compared": true,
+        "fail_closed_boundary": {
+          "descriptor_id": 108,
+          "family": 16,
+          "is_the_first_uncovered_operator_of_the_layer": true,
+          "opcode": "DMA.SCATTER",
+          "pc": 32,
+          "sub": 3,
+          "trap_class": 4
+        },
+        "golden_injected_breakdown": {
+          "activation_operands_staged_instead_of_produced": 0,
+          "engine_results_injected_at_the_engine_boundary": 0,
+          "note": "the first is the harness's own injected_results counter; the second is every operand of an executed operator that names an object this layer writes and was not read from the address the producing operator wrote"
+        },
+        "golden_injected_intermediate_count": 0,
+        "golden_injected_note": "measured from the harness's own injected_results counter and the PASS marker the run printed; the run that establishes this rung is the one in which the engine array computed",
+        "handoff": {
+          "every_activation_operand_came_from_the_rtl": true,
+          "golden_injected_operand_count": 0,
+          "note": "an operand is an RTL-to-RTL handoff when the address the bridge reads it from is the address an earlier operator of this run wrote; the replay of the vehicle's own append cursor is what decides that, not a declaration. A staged operand that names an object this layer writes would be a golden intermediate and is counted as one; a staged operand that names a checkpoint tensor or a generated coefficient is an input to the layer.",
+          "operand_count": 16,
+          "rtl_to_rtl_operand_count": 8,
+          "staged_input_operand_count": 8,
+          "staged_operands": [
+            [
+              "head_rms_weight",
+              8
+            ],
+            [
+              "head_rms_weight",
+              10
+            ],
+            [
+              "matmul_weight",
+              5
+            ],
+            [
+              "matmul_weight",
+              6
+            ],
+            [
+              "matmul_weight",
+              7
+            ],
+            [
+              "rms_weight",
+              4
+            ],
+            [
+              "rope_coefficient",
+              27
+            ]
+          ],
+          "unresolved_operand_count": 0
+        },
+        "intermediate_coverage": {
+          "case_compared_region_words": 24832,
+          "comparison_actually_happened": true,
+          "each_operator_writes_a_non_empty_output": true,
+          "holds": true,
+          "operator_count": 8,
+          "operator_outputs_are_disjoint": true,
+          "operator_outputs_lie_in_the_compared_region": true,
+          "words": 20480
+        },
+        "intermediates": [
+          {
+            "kernel_id": "layer.0.attention_norm",
+            "mnemonic": "VECTOR.RMS_NORM",
+            "numeric_contract": "qwen3_rmsnorm_fp32_bf16_v1",
+            "operands": [
+              {
+                "base_words": 256,
+                "golden_injected": false,
+                "handoff": "rtl_to_rtl",
+                "names_a_layer_intermediate": true,
+                "object_id": 36,
+                "produced_by_pc": 4,
+                "reads_result_bank": true,
+                "role": "rms_input",
+                "slot": "input_view_0"
+              },
+              {
+                "base_words": null,
+                "golden_injected": false,
+                "handoff": "staged_input",
+                "names_a_layer_intermediate": false,
+                "object_id": 4,
+                "produced_by_pc": null,
+                "reads_result_bank": false,
+                "role": "rms_weight",
+                "slot": "input_view_1"
+              }
+            ],
+            "operator_descriptor_id": 50,
+            "output_object_id": 45,
+            "pc": 8,
+            "result_base_words": 4352,
+            "result_words_written": 4096
+          },
+          {
+            "kernel_id": "layer.0.attention.query_projection",
+            "mnemonic": "TENSOR.MATMUL",
+            "numeric_contract": "bf16_bf16_fp32_blocked_rne_v1",
+            "operands": [
+              {
+                "base_words": 4352,
+                "golden_injected": false,
+                "handoff": "rtl_to_rtl",
+                "names_a_layer_intermediate": true,
+                "object_id": 45,
+                "produced_by_pc": 8,
+                "reads_result_bank": true,
+                "role": "matmul_input",
+                "slot": "input_view_0"
+              },
+              {
+                "base_words": null,
+                "golden_injected": false,
+                "handoff": "staged_input",
+                "names_a_layer_intermediate": false,
+                "object_id": 5,
+                "produced_by_pc": null,
+                "reads_result_bank": false,
+                "role": "matmul_weight",
+                "slot": "input_view_1"
+              }
+            ],
+            "operator_descriptor_id": 59,
+            "output_object_id": 55,
+            "pc": 11,
+            "result_base_words": 8448,
+            "result_words_written": 4096
+          },
+          {
+            "kernel_id": "layer.0.attention.key_projection",
+            "mnemonic": "TENSOR.MATMUL",
+            "numeric_contract": "bf16_bf16_fp32_blocked_rne_v1",
+            "operands": [
+              {
+                "base_words": 4352,
+                "golden_injected": false,
+                "handoff": "rtl_to_rtl",
+                "names_a_layer_intermediate": true,
+                "object_id": 45,
+                "produced_by_pc": 8,
+                "reads_result_bank": true,
+                "role": "matmul_input",
+                "slot": "input_view_0"
+              },
+              {
+                "base_words": null,
+                "golden_injected": false,
+                "handoff": "staged_input",
+                "names_a_layer_intermediate": false,
+                "object_id": 6,
+                "produced_by_pc": null,
+                "reads_result_bank": false,
+                "role": "matmul_weight",
+                "slot": "input_view_1"
+              }
+            ],
+            "operator_descriptor_id": 67,
+            "output_object_id": 64,
+            "pc": 14,
+            "result_base_words": 12544,
+            "result_words_written": 1024
+          },
+          {
+            "kernel_id": "layer.0.attention.value_projection",
+            "mnemonic": "TENSOR.MATMUL",
+            "numeric_contract": "bf16_bf16_fp32_blocked_rne_v1",
+            "operands": [
+              {
+                "base_words": 4352,
+                "golden_injected": false,
+                "handoff": "rtl_to_rtl",
+                "names_a_layer_intermediate": true,
+                "object_id": 45,
+                "produced_by_pc": 8,
+                "reads_result_bank": true,
+                "role": "matmul_input",
+                "slot": "input_view_0"
+              },
+              {
+                "base_words": null,
+                "golden_injected": false,
+                "handoff": "staged_input",
+                "names_a_layer_intermediate": false,
+                "object_id": 7,
+                "produced_by_pc": null,
+                "reads_result_bank": false,
+                "role": "matmul_weight",
+                "slot": "input_view_1"
+              }
+            ],
+            "operator_descriptor_id": 73,
+            "output_object_id": 71,
+            "pc": 17,
+            "result_base_words": 13568,
+            "result_words_written": 1024
+          },
+          {
+            "kernel_id": "layer.0.attention.query_head_norm",
+            "mnemonic": "VECTOR.HEAD_RMS_NORM",
+            "numeric_contract": "qwen3_rmsnorm_fp32_bf16_v1",
+            "operands": [
+              {
+                "base_words": 8448,
+                "golden_injected": false,
+                "handoff": "rtl_to_rtl",
+                "names_a_layer_intermediate": true,
+                "object_id": 55,
+                "produced_by_pc": 11,
+                "reads_result_bank": true,
+                "role": "head_rms_input",
+                "slot": "input_view_0"
+              },
+              {
+                "base_words": null,
+                "golden_injected": false,
+                "handoff": "staged_input",
+                "names_a_layer_intermediate": false,
+                "object_id": 8,
+                "produced_by_pc": null,
+                "reads_result_bank": false,
+                "role": "head_rms_weight",
+                "slot": "input_view_1"
+              }
+            ],
+            "operator_descriptor_id": 79,
+            "output_object_id": 45,
+            "pc": 20,
+            "result_base_words": 14592,
+            "result_words_written": 4096
+          },
+          {
+            "kernel_id": "layer.0.attention.key_head_norm",
+            "mnemonic": "VECTOR.HEAD_RMS_NORM",
+            "numeric_contract": "qwen3_rmsnorm_fp32_bf16_v1",
+            "operands": [
+              {
+                "base_words": 12544,
+                "golden_injected": false,
+                "handoff": "rtl_to_rtl",
+                "names_a_layer_intermediate": true,
+                "object_id": 64,
+                "produced_by_pc": 14,
+                "reads_result_bank": true,
+                "role": "head_rms_input",
+                "slot": "input_view_0"
+              },
+              {
+                "base_words": null,
+                "golden_injected": false,
+                "handoff": "staged_input",
+                "names_a_layer_intermediate": false,
+                "object_id": 10,
+                "produced_by_pc": null,
+                "reads_result_bank": false,
+                "role": "head_rms_weight",
+                "slot": "input_view_1"
+              }
+            ],
+            "operator_descriptor_id": 87,
+            "output_object_id": 84,
+            "pc": 23,
+            "result_base_words": 18688,
+            "result_words_written": 1024
+          },
+          {
+            "kernel_id": "layer.0.attention.query_rotation",
+            "mnemonic": "VECTOR.ROPE",
+            "numeric_contract": "qwen3_rope_fp32_bf16_v1",
+            "operands": [
+              {
+                "base_words": 14592,
+                "golden_injected": false,
+                "handoff": "rtl_to_rtl",
+                "names_a_layer_intermediate": true,
+                "object_id": 45,
+                "produced_by_pc": 20,
+                "reads_result_bank": true,
+                "role": "rope_input",
+                "slot": "input_view_0"
+              },
+              {
+                "base_words": null,
+                "golden_injected": false,
+                "handoff": "staged_input",
+                "names_a_layer_intermediate": false,
+                "object_id": 27,
+                "produced_by_pc": null,
+                "reads_result_bank": false,
+                "role": "rope_coefficient",
+                "slot": "input_view_1"
+              }
+            ],
+            "operator_descriptor_id": 94,
+            "output_object_id": 55,
+            "pc": 26,
+            "result_base_words": 19712,
+            "result_words_written": 4096
+          },
+          {
+            "kernel_id": "layer.0.attention.key_rotation",
+            "mnemonic": "VECTOR.ROPE",
+            "numeric_contract": "qwen3_rope_fp32_bf16_v1",
+            "operands": [
+              {
+                "base_words": 18688,
+                "golden_injected": false,
+                "handoff": "rtl_to_rtl",
+                "names_a_layer_intermediate": true,
+                "object_id": 84,
+                "produced_by_pc": 23,
+                "reads_result_bank": true,
+                "role": "rope_input",
+                "slot": "input_view_0"
+              },
+              {
+                "base_words": null,
+                "golden_injected": false,
+                "handoff": "staged_input",
+                "names_a_layer_intermediate": false,
+                "object_id": 27,
+                "produced_by_pc": null,
+                "reads_result_bank": false,
+                "role": "rope_coefficient",
+                "slot": "input_view_1"
+              }
+            ],
+            "operator_descriptor_id": 100,
+            "output_object_id": 64,
+            "pc": 29,
+            "result_base_words": 23808,
+            "result_words_written": 1024
+          }
+        ],
+        "kernel_ir": {
+          "graph_id": "84bb97dd1243553f170fde014c15c76c6adf0b80f0ef3bdad27a015577b6c24b",
+          "path": "build/ir-v3/qwen3-8b/kernel_ir.v3.json",
+          "sha256": "62499454381d24641f8cedda00f049aff61b4aa96410fa3fe460e0044df567e6"
+        },
+        "layer_id": "layer.0",
+        "layer_named_by": "the certified Kernel IR kernel each OPERATOR descriptor's source_kernel_id points at; every issue whose kernel_id begins 'layer.0.'",
+        "loop": {
+          "invocations_in_the_program": 36,
+          "issued_instances_in_the_program": 684,
+          "note": "the program issues this layer body once per model layer through one loop; this rung establishes ONE invocation. That the loop issues the model's layer count of structurally identical invocations is rung G1c and is not claimed here.",
+          "operators_per_invocation": 19
+        },
+        "mismatched_words": 0,
+        "mismatched_words_note": null,
+        "operator_count": 8,
+        "operator_count_meaning": "operators of this layer that executed in the integrated RTL and had every result word they wrote compared against the golden image",
+        "operators_in_layer": 19,
+        "placement_demand": {
+          "every_role_satisfiable": false,
+          "output_objects": {
+            "distinct_output_objects": 10,
+            "note": "the layer writes its intermediates into fewer buffers than it has operators: an appending output cursor gives each write a fresh address, which is sound only while nothing reads the earlier contents of a reused object",
+            "objects_written_more_than_once": {
+              "17": [
+                32,
+                35
+              ],
+              "45": [
+                8,
+                20,
+                38,
+                44
+              ],
+              "55": [
+                11,
+                26,
+                41,
+                47,
+                59
+              ],
+              "64": [
+                14,
+                29
+              ]
+            },
+            "writes": 19
+          },
+          "per_role": [
+            {
+              "distinct_objects_the_layer_needs": 7,
+              "object_keyed": false,
+              "objects": [
+                45,
+                55,
+                64,
+                71,
+                84,
+                149,
+                156
+              ],
+              "role": "appending_output",
+              "satisfiable": false,
+              "short_by": 6,
+              "slots_the_bridge_declares": 1
+            },
+            {
+              "distinct_objects_the_layer_needs": 2,
+              "object_keyed": true,
+              "objects": [
+                55,
+                64
+              ],
+              "role": "head_rms_input",
+              "satisfiable": true,
+              "short_by": 0,
+              "slots_the_bridge_declares": 2
+            },
+            {
+              "distinct_objects_the_layer_needs": 2,
+              "object_keyed": true,
+              "objects": [
+                8,
+                10
+              ],
+              "role": "head_rms_weight",
+              "satisfiable": true,
+              "short_by": 0,
+              "slots_the_bridge_declares": 2
+            },
+            {
+              "distinct_objects_the_layer_needs": 10,
+              "object_keyed": true,
+              "objects": [
+                17,
+                23,
+                36,
+                45,
+                55,
+                64,
+                71,
+                149,
+                156,
+                162
+              ],
+              "role": "mapped_family_operand",
+              "satisfiable": false,
+              "short_by": 2,
+              "slots_the_bridge_declares": 8
+            },
+            {
+              "distinct_objects_the_layer_needs": 3,
+              "object_keyed": false,
+              "objects": [
+                45,
+                55,
+                162
+              ],
+              "role": "matmul_input",
+              "satisfiable": false,
+              "short_by": 2,
+              "slots_the_bridge_declares": 1
+            },
+            {
+              "distinct_objects_the_layer_needs": 7,
+              "object_keyed": true,
+              "objects": [
+                5,
+                6,
+                7,
+                12,
+                14,
+                15,
+                16
+              ],
+              "role": "matmul_weight",
+              "satisfiable": false,
+              "short_by": 4,
+              "slots_the_bridge_declares": 3
+            },
+            {
+              "distinct_objects_the_layer_needs": 2,
+              "object_keyed": false,
+              "objects": [
+                36,
+                45
+              ],
+              "role": "rms_input",
+              "satisfiable": false,
+              "short_by": 1,
+              "slots_the_bridge_declares": 1
+            },
+            {
+              "distinct_objects_the_layer_needs": 2,
+              "object_keyed": false,
+              "objects": [
+                4,
+                13
+              ],
+              "role": "rms_weight",
+              "satisfiable": false,
+              "short_by": 1,
+              "slots_the_bridge_declares": 1
+            },
+            {
+              "distinct_objects_the_layer_needs": 1,
+              "object_keyed": true,
+              "objects": [
+                27
+              ],
+              "role": "rope_coefficient",
+              "satisfiable": true,
+              "short_by": 0,
+              "slots_the_bridge_declares": 1
+            },
+            {
+              "distinct_objects_the_layer_needs": 2,
+              "object_keyed": true,
+              "objects": [
+                45,
+                84
+              ],
+              "role": "rope_input",
+              "satisfiable": true,
+              "short_by": 0,
+              "slots_the_bridge_declares": 2
+            }
+          ],
+          "route_note": "derived from the same demand-versus-capacity counts as the shortfall above; it is what this vehicle lacks, not a design",
+          "route_to_completion": [
+            "make appending_output object-addressed: it is one unkeyed base and the layer needs 7 distinct objects ([45, 55, 64, 71, 84, 149, 156])",
+            "widen mapped_family_operand from 8 to at least 10 object slots",
+            "make matmul_input object-addressed: it is one unkeyed base and the layer needs 3 distinct objects ([45, 55, 162])",
+            "widen matmul_weight from 3 to at least 7 object slots",
+            "make rms_input object-addressed: it is one unkeyed base and the layer needs 2 distinct objects ([36, 45])",
+            "make rms_weight object-addressed: it is one unkeyed base and the layer needs 2 distinct objects ([4, 13])",
+            "place results by object rather than by the append cursor: 4 of the layer's buffers are written more than once, so an append cursor gives one object several addresses and no object-keyed reader can name the right one"
+          ],
+          "unattributed_operands": []
+        },
+        "uncovered_operators": [
+          {
+            "blocked_only_by_the_boundary": false,
+            "blocking_operands": [
+              {
+                "object_id": 23,
+                "role": "mapped_family_operand",
+                "slot": "input_view_0",
+                "why": "role mapped_family_operand needs 10 distinct objects across the layer, the bridge declares 8"
+              },
+              {
+                "object_id": 64,
+                "role": "mapped_family_operand",
+                "slot": "input_view_1",
+                "why": "role mapped_family_operand needs 10 distinct objects across the layer, the bridge declares 8"
+              },
+              {
+                "object_id": 17,
+                "role": "mapped_family_operand",
+                "slot": "output_view_0",
+                "why": "role mapped_family_operand needs 10 distinct objects across the layer, the bridge declares 8"
+              }
+            ],
+            "kernel_id": "layer.0.attention.key_append",
+            "mnemonic": "DMA.SCATTER",
+            "operator_descriptor_id": 108,
+            "pc": 32
+          },
+          {
+            "blocked_only_by_the_boundary": false,
+            "blocking_operands": [
+              {
+                "object_id": 23,
+                "role": "mapped_family_operand",
+                "slot": "input_view_0",
+                "why": "role mapped_family_operand needs 10 distinct objects across the layer, the bridge declares 8"
+              },
+              {
+                "object_id": 71,
+                "role": "mapped_family_operand",
+                "slot": "input_view_1",
+                "why": "role mapped_family_operand needs 10 distinct objects across the layer, the bridge declares 8"
+              },
+              {
+                "object_id": 17,
+                "role": "mapped_family_operand",
+                "slot": "output_view_0",
+                "why": "role mapped_family_operand needs 10 distinct objects across the layer, the bridge declares 8"
+              }
+            ],
+            "kernel_id": "layer.0.attention.value_append",
+            "mnemonic": "DMA.SCATTER",
+            "operator_descriptor_id": 115,
+            "pc": 35
+          },
+          {
+            "blocked_only_by_the_boundary": false,
+            "blocking_operands": [
+              {
+                "object_id": 55,
+                "role": "mapped_family_operand",
+                "slot": "input_view_0",
+                "why": "role mapped_family_operand needs 10 distinct objects across the layer, the bridge declares 8"
+              },
+              {
+                "object_id": 17,
+                "role": "mapped_family_operand",
+                "slot": "input_view_1",
+                "why": "role mapped_family_operand needs 10 distinct objects across the layer, the bridge declares 8"
+              },
+              {
+                "object_id": 17,
+                "role": "mapped_family_operand",
+                "slot": "input_view_2",
+                "why": "role mapped_family_operand needs 10 distinct objects across the layer, the bridge declares 8"
+              },
+              {
+                "object_id": 23,
+                "role": "mapped_family_operand",
+                "slot": "input_view_3",
+                "why": "role mapped_family_operand needs 10 distinct objects across the layer, the bridge declares 8"
+              },
+              {
+                "object_id": 45,
+                "role": "mapped_family_operand",
+                "slot": "output_view_0",
+                "why": "role mapped_family_operand needs 10 distinct objects across the layer, the bridge declares 8"
+              }
+            ],
+            "kernel_id": "layer.0.attention.grouped_query",
+            "mnemonic": "ATTENTION.GQA",
+            "operator_descriptor_id": 124,
+            "pc": 38
+          },
+          {
+            "blocked_only_by_the_boundary": false,
+            "blocking_operands": [
+              {
+                "object_id": 45,
+                "role": "matmul_input",
+                "slot": "input_view_0",
+                "why": "role matmul_input needs 3 distinct objects across the layer, the bridge declares 1"
+              },
+              {
+                "object_id": 12,
+                "role": "matmul_weight",
+                "slot": "input_view_1",
+                "why": "role matmul_weight needs 7 distinct objects across the layer, the bridge declares 3"
+              },
+              {
+                "object_id": 55,
+                "role": "appending_output",
+                "slot": "output_view_0",
+                "why": "role appending_output needs 7 distinct objects across the layer, the bridge declares 1"
+              }
+            ],
+            "kernel_id": "layer.0.attention.output_projection",
+            "mnemonic": "TENSOR.MATMUL",
+            "operator_descriptor_id": 130,
+            "pc": 41
+          },
+          {
+            "blocked_only_by_the_boundary": false,
+            "blocking_operands": [
+              {
+                "object_id": 36,
+                "role": "mapped_family_operand",
+                "slot": "input_view_0",
+                "why": "role mapped_family_operand needs 10 distinct objects across the layer, the bridge declares 8"
+              },
+              {
+                "object_id": 55,
+                "role": "mapped_family_operand",
+                "slot": "input_view_1",
+                "why": "role mapped_family_operand needs 10 distinct objects across the layer, the bridge declares 8"
+              },
+              {
+                "object_id": 45,
+                "role": "mapped_family_operand",
+                "slot": "output_view_0",
+                "why": "role mapped_family_operand needs 10 distinct objects across the layer, the bridge declares 8"
+              }
+            ],
+            "kernel_id": "layer.0.attention.residual_add",
+            "mnemonic": "VECTOR.ADD",
+            "operator_descriptor_id": 138,
+            "pc": 44
+          },
+          {
+            "blocked_only_by_the_boundary": false,
+            "blocking_operands": [
+              {
+                "object_id": 45,
+                "role": "rms_input",
+                "slot": "input_view_0",
+                "why": "role rms_input needs 2 distinct objects across the layer, the bridge declares 1"
+              },
+              {
+                "object_id": 13,
+                "role": "rms_weight",
+                "slot": "input_view_1",
+                "why": "role rms_weight needs 2 distinct objects across the layer, the bridge declares 1"
+              },
+              {
+                "object_id": 55,
+                "role": "appending_output",
+                "slot": "output_view_0",
+                "why": "role appending_output needs 7 distinct objects across the layer, the bridge declares 1"
+              }
+            ],
+            "kernel_id": "layer.0.feed_forward_norm",
+            "mnemonic": "VECTOR.RMS_NORM",
+            "operator_descriptor_id": 144,
+            "pc": 47
+          },
+          {
+            "blocked_only_by_the_boundary": false,
+            "blocking_operands": [
+              {
+                "object_id": 55,
+                "role": "matmul_input",
+                "slot": "input_view_0",
+                "why": "role matmul_input needs 3 distinct objects across the layer, the bridge declares 1"
+              },
+              {
+                "object_id": 14,
+                "role": "matmul_weight",
+                "slot": "input_view_1",
+                "why": "role matmul_weight needs 7 distinct objects across the layer, the bridge declares 3"
+              },
+              {
+                "object_id": 149,
+                "role": "appending_output",
+                "slot": "output_view_0",
+                "why": "role appending_output needs 7 distinct objects across the layer, the bridge declares 1"
+              }
+            ],
+            "kernel_id": "layer.0.feed_forward.gate_projection",
+            "mnemonic": "TENSOR.MATMUL",
+            "operator_descriptor_id": 151,
+            "pc": 50
+          },
+          {
+            "blocked_only_by_the_boundary": false,
+            "blocking_operands": [
+              {
+                "object_id": 55,
+                "role": "matmul_input",
+                "slot": "input_view_0",
+                "why": "role matmul_input needs 3 distinct objects across the layer, the bridge declares 1"
+              },
+              {
+                "object_id": 15,
+                "role": "matmul_weight",
+                "slot": "input_view_1",
+                "why": "role matmul_weight needs 7 distinct objects across the layer, the bridge declares 3"
+              },
+              {
+                "object_id": 156,
+                "role": "appending_output",
+                "slot": "output_view_0",
+                "why": "role appending_output needs 7 distinct objects across the layer, the bridge declares 1"
+              }
+            ],
+            "kernel_id": "layer.0.feed_forward.up_projection",
+            "mnemonic": "TENSOR.MATMUL",
+            "operator_descriptor_id": 158,
+            "pc": 53
+          },
+          {
+            "blocked_only_by_the_boundary": false,
+            "blocking_operands": [
+              {
+                "object_id": 149,
+                "role": "mapped_family_operand",
+                "slot": "input_view_0",
+                "why": "role mapped_family_operand needs 10 distinct objects across the layer, the bridge declares 8"
+              },
+              {
+                "object_id": 156,
+                "role": "mapped_family_operand",
+                "slot": "input_view_1",
+                "why": "role mapped_family_operand needs 10 distinct objects across the layer, the bridge declares 8"
+              },
+              {
+                "object_id": 162,
+                "role": "mapped_family_operand",
+                "slot": "output_view_0",
+                "why": "role mapped_family_operand needs 10 distinct objects across the layer, the bridge declares 8"
+              }
+            ],
+            "kernel_id": "layer.0.feed_forward.activation",
+            "mnemonic": "VECTOR.SILU_MUL",
+            "operator_descriptor_id": 165,
+            "pc": 56
+          },
+          {
+            "blocked_only_by_the_boundary": false,
+            "blocking_operands": [
+              {
+                "object_id": 162,
+                "role": "matmul_input",
+                "slot": "input_view_0",
+                "why": "role matmul_input needs 3 distinct objects across the layer, the bridge declares 1"
+              },
+              {
+                "object_id": 16,
+                "role": "matmul_weight",
+                "slot": "input_view_1",
+                "why": "role matmul_weight needs 7 distinct objects across the layer, the bridge declares 3"
+              },
+              {
+                "object_id": 55,
+                "role": "appending_output",
+                "slot": "output_view_0",
+                "why": "role appending_output needs 7 distinct objects across the layer, the bridge declares 1"
+              }
+            ],
+            "kernel_id": "layer.0.feed_forward.down_projection",
+            "mnemonic": "TENSOR.MATMUL",
+            "operator_descriptor_id": 171,
+            "pc": 59
+          },
+          {
+            "blocked_only_by_the_boundary": false,
+            "blocking_operands": [
+              {
+                "object_id": 45,
+                "role": "mapped_family_operand",
+                "slot": "input_view_0",
+                "why": "role mapped_family_operand needs 10 distinct objects across the layer, the bridge declares 8"
+              },
+              {
+                "object_id": 55,
+                "role": "mapped_family_operand",
+                "slot": "input_view_1",
+                "why": "role mapped_family_operand needs 10 distinct objects across the layer, the bridge declares 8"
+              },
+              {
+                "object_id": 36,
+                "role": "mapped_family_operand",
+                "slot": "output_view_0",
+                "why": "role mapped_family_operand needs 10 distinct objects across the layer, the bridge declares 8"
+              }
+            ],
+            "kernel_id": "layer.0.feed_forward.residual_add",
+            "mnemonic": "VECTOR.ADD",
+            "operator_descriptor_id": 177,
+            "pc": 62
+          }
+        ],
+        "why_not_complete": [
+          "11 of the layer's 19 operators did not execute in the integrated RTL: PC 32 DMA.SCATTER (layer.0.attention.key_append), PC 35 DMA.SCATTER (layer.0.attention.value_append), PC 38 ATTENTION.GQA (layer.0.attention.grouped_query), PC 41 TENSOR.MATMUL (layer.0.attention.output_projection), PC 44 VECTOR.ADD (layer.0.attention.residual_add), PC 47 VECTOR.RMS_NORM (layer.0.feed_forward_norm), PC 50 TENSOR.MATMUL (layer.0.feed_forward.gate_projection), PC 53 TENSOR.MATMUL (layer.0.feed_forward.up_projection), PC 56 VECTOR.SILU_MUL (layer.0.feed_forward.activation), PC 59 TENSOR.MATMUL (layer.0.feed_forward.down_projection), PC 62 VECTOR.ADD (layer.0.feed_forward.residual_add)",
+          "the vehicle fails closed at PC 32 DMA.SCATTER descriptor 108 with trap class 4; that is the first operator of the layer it does not run",
+          "placement role appending_output must name 7 distinct objects for this layer and the bridge declares 1, and that base is not keyed by object at all",
+          "placement role mapped_family_operand must name 10 distinct objects for this layer and the bridge declares 8",
+          "placement role matmul_input must name 3 distinct objects for this layer and the bridge declares 1, and that base is not keyed by object at all",
+          "placement role matmul_weight must name 7 distinct objects for this layer and the bridge declares 3",
+          "placement role rms_input must name 2 distinct objects for this layer and the bridge declares 1, and that base is not keyed by object at all",
+          "placement role rms_weight must name 2 distinct objects for this layer and the bridge declares 1, and that base is not keyed by object at all",
+          "the layer writes 19 intermediates into 10 buffers, so an appending output cursor gives a reused object two addresses; objects written more than once: ['17', '45', '55', '64']"
+        ]
+      },
+      "storage_class": "rom",
+      "workload_id": "TA-QW-EOS-1"
+    },
+    {
+      "deployment": {
+        "deployment_sha256": "cb9067f5fbf67f7df4212399aee6ba75ced4ca5c8f2dc8c1631372a4068cea2c",
+        "key": "qwen3-8b-hbm-single-chip"
+      },
+      "execution": {
+        "campaign": {
+          "artifact": "results/rtl/abi3_shipped_prefix_campaign.json",
+          "artifact_sha256": "489834223e6e45d4cdbfbc3a5206e9e64f8d0f9e47086bbe3c49f95b24171ee4",
+          "bound_source_count": 60,
+          "case_status": [
+            {
+              "checks": 189862,
+              "name": "verilator",
+              "status": "pass"
+            }
+          ],
+          "declared_git": {
+            "commit": "9aecaac27f00c435fe953e8c41f9565a811a29e0",
+            "worktree_dirty": false
+          },
+          "drifted_source_count": 0,
+          "drifted_sources": [],
+          "evidence_class": "public_open_tool_rtl_simulation_composite",
+          "expected_cases": [
+            {
+              "fault": 32,
+              "fetched": 33,
+              "index": 0,
+              "issued": 11,
+              "launches": 10,
+              "responses": 11,
+              "retired": 32,
+              "trap": 4,
+              "views": 33,
+              "words": 24832
+            },
+            {
+              "fault": 32,
+              "fetched": 33,
+              "index": 1,
+              "issued": 11,
+              "launches": 10,
+              "responses": 11,
+              "retired": 32,
+              "trap": 4,
+              "views": 33,
+              "words": 24832
+            },
+            {
+              "fault": 13,
+              "fetched": 14,
+              "index": 2,
+              "issued": 5,
+              "launches": 4,
+              "responses": 5,
+              "retired": 13,
+              "trap": 4,
+              "views": 11,
+              "words": 20736
+            },
+            {
+              "fault": 14,
+              "fetched": 15,
+              "index": 3,
+              "issued": 5,
+              "launches": 4,
+              "responses": 5,
+              "retired": 14,
+              "trap": 4,
+              "views": 17,
+              "words": 20736
+            }
+          ],
+          "integrated_replay_passed": true,
+          "integrated_simulator_checks": {
+            "verilator": 189862
+          },
+          "integrated_simulators": [
+            "verilator"
+          ],
+          "measure": {
+            "cycle_guard": 64000000000,
+            "cycles": 252057600,
+            "distinct_bytes": 50331648,
+            "halfword_reads": 50331648,
+            "injected_results": 0,
+            "page_faults": 96,
+            "page_hits": 50331552,
+            "pages_evicted": 88,
+            "refilled_bytes": 100663296,
+            "result_words": 98304,
+            "sim_wall_s": 1851.86,
+            "source_words": 65536,
+            "trace_compared_elements": 0,
+            "trace_divergence_index": -1,
+            "trace_issues": 0,
+            "trace_last_case_issues": 5,
+            "trace_uncompared_fields": "none",
+            "wall_s": 1853.954,
+            "weight_image_bytes": 50331648,
+            "window_cap_bytes": 8388608,
+            "window_page_bytes": 1048576,
+            "window_peak_resident_bytes": 8388608,
+            "window_segments": 1
+          },
+          "observed_cases": [
+            {
+              "fault": 32,
+              "fetched": 33,
+              "index": 0,
+              "issued": 11,
+              "launches": 10,
+              "responses": 11,
+              "retired": 32,
+              "trap": 4,
+              "views": 33,
+              "words": 24832
+            },
+            {
+              "fault": 32,
+              "fetched": 33,
+              "index": 1,
+              "issued": 11,
+              "launches": 10,
+              "responses": 11,
+              "retired": 32,
+              "trap": 4,
+              "views": 33,
+              "words": 24832
+            },
+            {
+              "fault": 13,
+              "fetched": 14,
+              "index": 2,
+              "issued": 5,
+              "launches": 4,
+              "responses": 5,
+              "retired": 13,
+              "trap": 4,
+              "views": 11,
+              "words": 20736
+            },
+            {
+              "fault": 14,
+              "fetched": 15,
+              "index": 3,
+              "issued": 5,
+              "launches": 4,
+              "responses": 5,
+              "retired": 14,
+              "trap": 4,
+              "views": 17,
+              "words": 20736
+            }
+          ],
+          "operator_admission": {
+            "capability_trapped_family_count": 6,
+            "cases_with_mapped_placement": 0,
+            "launches": {
+              "ATTENTION.GQA": 0,
+              "DMA.SCATTER": 0,
+              "SELECTION.ARGMAX": 0,
+              "SELECTION.TOKEN_APPEND": 0,
+              "VECTOR.ADD": 0,
+              "VECTOR.SILU_MUL": 0
+            },
+            "measured": true,
+            "reached_families": [],
+            "reached_family_count": 0,
+            "result_injection": false,
+            "trapped_families": [
+              "VECTOR.ADD",
+              "VECTOR.SILU_MUL",
+              "DMA.SCATTER",
+              "ATTENTION.GQA",
+              "SELECTION.ARGMAX",
+              "SELECTION.TOKEN_APPEND"
+            ],
+            "vector_generation": "legacy",
+            "vehicle": "rtl/test/a3_shipped_prefix_top.sv"
+          },
+          "pass_marker": "engine",
+          "post_fault_write_count": 0,
+          "schema": "opentallas.rtl.abi3_shipped_prefix_campaign.v1",
+          "simulated_cycles": 252057600,
+          "simulated_cycles_agree": true,
+          "simulated_cycles_declared": 252057600,
+          "simulated_cycles_from_log": 252057600,
+          "staged_matmul_weight": {
+            "bytes": 50331648,
+            "matrix_sha256": [
+              "fd56b85bf301661c8655ed517928304d25df7d6b3ea3d9be85c021159d61bad8",
+              "3ce9fdf6ee30ef2f24ad3629b506415ca91fe40f790e568a9ea3fea2978feee0",
+              "767a6c48457974bb02dd90aeec270f4d68289527a353c3c28964ab2069a966ee"
+            ],
+            "note": "not a file of this repository; it is staged into the run's build directory from the checkpoint shards and its digests are the identity of the weights the run consumed",
+            "path": "generated/p3_matmul_weight.bin",
+            "sha256": "2c8696111937aa85197cd2042dfed6cb3c5ef7f03fb80eba1fe3b93d40c1b87e"
+          },
+          "status": "pass",
+          "usable": true,
+          "vector_set_is_current": true,
+          "vector_set_path": "testdata/compiler/abi3_shipped_prefix/abi3_shipped_prefix_vectors.json",
+          "vector_set_sha256_declared": "eaa4629cc7d4ad96fe5a5a49f6f9153b411e5504dffdd037306f6c44bd644361",
+          "vector_set_sha256_on_disk": "eaa4629cc7d4ad96fe5a5a49f6f9153b411e5504dffdd037306f6c44bd644361",
+          "why_unusable": null
+        },
+        "case_evidence": {
+          "case_index": 1,
+          "case_name": "qwen3-8b-hbm-single-chip/decode",
+          "declared_boundary_pc": 32,
+          "declared_result_words": 24832,
+          "observed": {
+            "fault": 32,
+            "fetched": 33,
+            "index": 1,
+            "issued": 11,
+            "launches": 10,
+            "responses": 11,
+            "retired": 32,
+            "trap": 4,
+            "views": 33,
+            "words": 24832
+          },
+          "observed_agrees_with_the_vector_set": true
+        },
+        "evidence_class": "public_open_tool_rtl_simulation_composite",
+        "simulated_cycles": 252057600,
+        "simulated_cycles_scope": "the integrated run's own total, over all four cases of the one binary; the harness reports one cycle count for the run and this rung does not split it per lowering, so the same number appears in both records and must not be added across them",
+        "simulator": "verilator",
+        "vehicle": {
+          "bridge": "rtl/abi3/ot_a3_engine_issue_bridge.sv",
+          "bridge_sha256": "473e3b852f4db9491386d1e62fc61d7b0fab1706e6c9531300d45928a417e61f",
+          "placement_capacity": {
+            "roles": {
+              "appending_output": {
+                "note": "the seven appending families write at cfg_output_base + result_word_cursor; an object written twice therefore occupies two addresses, which the program's own storage semantics do not",
+                "object_keyed": false,
+                "slots": 1
+              },
+              "head_rms_input": {
+                "object_keyed": true,
+                "slots": 2
+              },
+              "head_rms_weight": {
+                "object_keyed": true,
+                "slots": 2
+              },
+              "mapped_family_operand": {
+                "object_keyed": true,
+                "slots": 8
+              },
+              "matmul_input": {
+                "note": "cfg_matmul_input_base is a single base, not keyed by object",
+                "object_keyed": false,
+                "slots": 1
+              },
+              "matmul_weight": {
+                "object_keyed": true,
+                "slots": 3
+              },
+              "rms_input": {
+                "note": "cfg_rms_input_base is a single base, not keyed by object",
+                "object_keyed": false,
+                "slots": 1
+              },
+              "rms_weight": {
+                "note": "cfg_rms_weight_base is a single base, not keyed by object",
+                "object_keyed": false,
+                "slots": 1
+              },
+              "rope_coefficient": {
+                "object_keyed": true,
+                "slots": 1
+              },
+              "rope_input": {
+                "object_keyed": true,
+                "slots": 2
+              }
+            },
+            "source": "rtl/abi3/ot_a3_engine_issue_bridge.sv",
+            "source_sha256": "473e3b852f4db9491386d1e62fc61d7b0fab1706e6c9531300d45928a417e61f"
+          },
+          "top": "rtl/test/a3_shipped_prefix_top.sv",
+          "top_sha256": "0c17ea7fa2e3d3876f5befa7a452194b1a30779daa17f0206f1f12c1a03ad466"
+        }
+      },
+      "git": {
+        "commit": "e0a8ce45337d02362051b0aee84e6008ea6f2faa",
+        "dirty_paths": [],
+        "scope": "the tree THIS artifact was derived in. It is not a claim about the tree the integrated campaign ran in; see execution.campaign.declared_git.",
+        "worktree_dirty": false
+      },
+      "layer": {
+        "arithmetic": {
+          "mac_count": 192937984,
+          "note": "multiply-accumulates of the layer's projections, from each MATMUL's own declared weight view. Attention's own arithmetic is not in this figure, matching the cost the gate states.",
+          "per_matmul": [
+            {
+              "kernel_id": "layer.0.attention.query_projection",
+              "mac_count": 16777216,
+              "pc": 11,
+              "weight_shape": [
+                4096,
+                4096
+              ]
+            },
+            {
+              "kernel_id": "layer.0.attention.key_projection",
+              "mac_count": 4194304,
+              "pc": 14,
+              "weight_shape": [
+                1024,
+                4096
+              ]
+            },
+            {
+              "kernel_id": "layer.0.attention.value_projection",
+              "mac_count": 4194304,
+              "pc": 17,
+              "weight_shape": [
+                1024,
+                4096
+              ]
+            },
+            {
+              "kernel_id": "layer.0.attention.output_projection",
+              "mac_count": 16777216,
+              "pc": 41,
+              "weight_shape": [
+                4096,
+                4096
+              ]
+            },
+            {
+              "kernel_id": "layer.0.feed_forward.gate_projection",
+              "mac_count": 50331648,
+              "pc": 50,
+              "weight_shape": [
+                12288,
+                4096
+              ]
+            },
+            {
+              "kernel_id": "layer.0.feed_forward.up_projection",
+              "mac_count": 50331648,
+              "pc": 53,
+              "weight_shape": [
+                12288,
+                4096
+              ]
+            },
+            {
+              "kernel_id": "layer.0.feed_forward.down_projection",
+              "mac_count": 50331648,
+              "pc": 59,
+              "weight_shape": [
+                4096,
+                12288
+              ]
+            }
+          ]
+        },
+        "compared_words": 20480,
+        "complete": false,
+        "every_intermediate_compared": true,
+        "fail_closed_boundary": {
+          "descriptor_id": 118,
+          "family": 16,
+          "is_the_first_uncovered_operator_of_the_layer": true,
+          "opcode": "DMA.SCATTER",
+          "pc": 32,
+          "sub": 3,
+          "trap_class": 4
+        },
+        "golden_injected_breakdown": {
+          "activation_operands_staged_instead_of_produced": 0,
+          "engine_results_injected_at_the_engine_boundary": 0,
+          "note": "the first is the harness's own injected_results counter; the second is every operand of an executed operator that names an object this layer writes and was not read from the address the producing operator wrote"
+        },
+        "golden_injected_intermediate_count": 0,
+        "golden_injected_note": "measured from the harness's own injected_results counter and the PASS marker the run printed; the run that establishes this rung is the one in which the engine array computed",
+        "handoff": {
+          "every_activation_operand_came_from_the_rtl": true,
+          "golden_injected_operand_count": 0,
+          "note": "an operand is an RTL-to-RTL handoff when the address the bridge reads it from is the address an earlier operator of this run wrote; the replay of the vehicle's own append cursor is what decides that, not a declaration. A staged operand that names an object this layer writes would be a golden intermediate and is counted as one; a staged operand that names a checkpoint tensor or a generated coefficient is an input to the layer.",
+          "operand_count": 16,
+          "rtl_to_rtl_operand_count": 8,
+          "staged_input_operand_count": 8,
+          "staged_operands": [
+            [
+              "head_rms_weight",
+              5
+            ],
+            [
+              "head_rms_weight",
+              6
+            ],
+            [
+              "matmul_weight",
+              2
+            ],
+            [
+              "matmul_weight",
+              3
+            ],
+            [
+              "matmul_weight",
+              4
+            ],
+            [
+              "rms_weight",
+              1
+            ],
+            [
+              "rope_coefficient",
+              17
+            ]
+          ],
+          "unresolved_operand_count": 0
+        },
+        "intermediate_coverage": {
+          "case_compared_region_words": 24832,
+          "comparison_actually_happened": true,
+          "each_operator_writes_a_non_empty_output": true,
+          "holds": true,
+          "operator_count": 8,
+          "operator_outputs_are_disjoint": true,
+          "operator_outputs_lie_in_the_compared_region": true,
+          "words": 20480
+        },
+        "intermediates": [
+          {
+            "kernel_id": "layer.0.attention_norm",
+            "mnemonic": "VECTOR.RMS_NORM",
+            "numeric_contract": "qwen3_rmsnorm_fp32_bf16_v1",
+            "operands": [
+              {
+                "base_words": 25088,
+                "golden_injected": false,
+                "handoff": "rtl_to_rtl",
+                "names_a_layer_intermediate": true,
+                "object_id": 18,
+                "produced_by_pc": 4,
+                "reads_result_bank": true,
+                "role": "rms_input",
+                "slot": "input_view_0"
+              },
+              {
+                "base_words": null,
+                "golden_injected": false,
+                "handoff": "staged_input",
+                "names_a_layer_intermediate": false,
+                "object_id": 1,
+                "produced_by_pc": null,
+                "reads_result_bank": false,
+                "role": "rms_weight",
+                "slot": "input_view_1"
+              }
+            ],
+            "operator_descriptor_id": 64,
+            "output_object_id": 19,
+            "pc": 8,
+            "result_base_words": 29184,
+            "result_words_written": 4096
+          },
+          {
+            "kernel_id": "layer.0.attention.query_projection",
+            "mnemonic": "TENSOR.MATMUL",
+            "numeric_contract": "bf16_bf16_fp32_blocked_rne_v1",
+            "operands": [
+              {
+                "base_words": 29184,
+                "golden_injected": false,
+                "handoff": "rtl_to_rtl",
+                "names_a_layer_intermediate": true,
+                "object_id": 19,
+                "produced_by_pc": 8,
+                "reads_result_bank": true,
+                "role": "matmul_input",
+                "slot": "input_view_0"
+              },
+              {
+                "base_words": null,
+                "golden_injected": false,
+                "handoff": "staged_input",
+                "names_a_layer_intermediate": false,
+                "object_id": 2,
+                "produced_by_pc": null,
+                "reads_result_bank": false,
+                "role": "matmul_weight",
+                "slot": "input_view_1"
+              }
+            ],
+            "operator_descriptor_id": 72,
+            "output_object_id": 20,
+            "pc": 11,
+            "result_base_words": 33280,
+            "result_words_written": 4096
+          },
+          {
+            "kernel_id": "layer.0.attention.key_projection",
+            "mnemonic": "TENSOR.MATMUL",
+            "numeric_contract": "bf16_bf16_fp32_blocked_rne_v1",
+            "operands": [
+              {
+                "base_words": 29184,
+                "golden_injected": false,
+                "handoff": "rtl_to_rtl",
+                "names_a_layer_intermediate": true,
+                "object_id": 19,
+                "produced_by_pc": 8,
+                "reads_result_bank": true,
+                "role": "matmul_input",
+                "slot": "input_view_0"
+              },
+              {
+                "base_words": null,
+                "golden_injected": false,
+                "handoff": "staged_input",
+                "names_a_layer_intermediate": false,
+                "object_id": 3,
+                "produced_by_pc": null,
+                "reads_result_bank": false,
+                "role": "matmul_weight",
+                "slot": "input_view_1"
+              }
+            ],
+            "operator_descriptor_id": 79,
+            "output_object_id": 21,
+            "pc": 14,
+            "result_base_words": 37376,
+            "result_words_written": 1024
+          },
+          {
+            "kernel_id": "layer.0.attention.value_projection",
+            "mnemonic": "TENSOR.MATMUL",
+            "numeric_contract": "bf16_bf16_fp32_blocked_rne_v1",
+            "operands": [
+              {
+                "base_words": 29184,
+                "golden_injected": false,
+                "handoff": "rtl_to_rtl",
+                "names_a_layer_intermediate": true,
+                "object_id": 19,
+                "produced_by_pc": 8,
+                "reads_result_bank": true,
+                "role": "matmul_input",
+                "slot": "input_view_0"
+              },
+              {
+                "base_words": null,
+                "golden_injected": false,
+                "handoff": "staged_input",
+                "names_a_layer_intermediate": false,
+                "object_id": 4,
+                "produced_by_pc": null,
+                "reads_result_bank": false,
+                "role": "matmul_weight",
+                "slot": "input_view_1"
+              }
+            ],
+            "operator_descriptor_id": 84,
+            "output_object_id": 22,
+            "pc": 17,
+            "result_base_words": 38400,
+            "result_words_written": 1024
+          },
+          {
+            "kernel_id": "layer.0.attention.query_head_norm",
+            "mnemonic": "VECTOR.HEAD_RMS_NORM",
+            "numeric_contract": "qwen3_rmsnorm_fp32_bf16_v1",
+            "operands": [
+              {
+                "base_words": 33280,
+                "golden_injected": false,
+                "handoff": "rtl_to_rtl",
+                "names_a_layer_intermediate": true,
+                "object_id": 20,
+                "produced_by_pc": 11,
+                "reads_result_bank": true,
+                "role": "head_rms_input",
+                "slot": "input_view_0"
+              },
+              {
+                "base_words": null,
+                "golden_injected": false,
+                "handoff": "staged_input",
+                "names_a_layer_intermediate": false,
+                "object_id": 5,
+                "produced_by_pc": null,
+                "reads_result_bank": false,
+                "role": "head_rms_weight",
+                "slot": "input_view_1"
+              }
+            ],
+            "operator_descriptor_id": 90,
+            "output_object_id": 19,
+            "pc": 20,
+            "result_base_words": 39424,
+            "result_words_written": 4096
+          },
+          {
+            "kernel_id": "layer.0.attention.key_head_norm",
+            "mnemonic": "VECTOR.HEAD_RMS_NORM",
+            "numeric_contract": "qwen3_rmsnorm_fp32_bf16_v1",
+            "operands": [
+              {
+                "base_words": 37376,
+                "golden_injected": false,
+                "handoff": "rtl_to_rtl",
+                "names_a_layer_intermediate": true,
+                "object_id": 21,
+                "produced_by_pc": 14,
+                "reads_result_bank": true,
+                "role": "head_rms_input",
+                "slot": "input_view_0"
+              },
+              {
+                "base_words": null,
+                "golden_injected": false,
+                "handoff": "staged_input",
+                "names_a_layer_intermediate": false,
+                "object_id": 6,
+                "produced_by_pc": null,
+                "reads_result_bank": false,
+                "role": "head_rms_weight",
+                "slot": "input_view_1"
+              }
+            ],
+            "operator_descriptor_id": 97,
+            "output_object_id": 23,
+            "pc": 23,
+            "result_base_words": 43520,
+            "result_words_written": 1024
+          },
+          {
+            "kernel_id": "layer.0.attention.query_rotation",
+            "mnemonic": "VECTOR.ROPE",
+            "numeric_contract": "qwen3_rope_fp32_bf16_v1",
+            "operands": [
+              {
+                "base_words": 39424,
+                "golden_injected": false,
+                "handoff": "rtl_to_rtl",
+                "names_a_layer_intermediate": true,
+                "object_id": 19,
+                "produced_by_pc": 20,
+                "reads_result_bank": true,
+                "role": "rope_input",
+                "slot": "input_view_0"
+              },
+              {
+                "base_words": null,
+                "golden_injected": false,
+                "handoff": "staged_input",
+                "names_a_layer_intermediate": false,
+                "object_id": 17,
+                "produced_by_pc": null,
+                "reads_result_bank": false,
+                "role": "rope_coefficient",
+                "slot": "input_view_1"
+              }
+            ],
+            "operator_descriptor_id": 104,
+            "output_object_id": 20,
+            "pc": 26,
+            "result_base_words": 44544,
+            "result_words_written": 4096
+          },
+          {
+            "kernel_id": "layer.0.attention.key_rotation",
+            "mnemonic": "VECTOR.ROPE",
+            "numeric_contract": "qwen3_rope_fp32_bf16_v1",
+            "operands": [
+              {
+                "base_words": 43520,
+                "golden_injected": false,
+                "handoff": "rtl_to_rtl",
+                "names_a_layer_intermediate": true,
+                "object_id": 23,
+                "produced_by_pc": 23,
+                "reads_result_bank": true,
+                "role": "rope_input",
+                "slot": "input_view_0"
+              },
+              {
+                "base_words": null,
+                "golden_injected": false,
+                "handoff": "staged_input",
+                "names_a_layer_intermediate": false,
+                "object_id": 17,
+                "produced_by_pc": null,
+                "reads_result_bank": false,
+                "role": "rope_coefficient",
+                "slot": "input_view_1"
+              }
+            ],
+            "operator_descriptor_id": 110,
+            "output_object_id": 21,
+            "pc": 29,
+            "result_base_words": 48640,
+            "result_words_written": 1024
+          }
+        ],
+        "kernel_ir": {
+          "graph_id": "84bb97dd1243553f170fde014c15c76c6adf0b80f0ef3bdad27a015577b6c24b",
+          "path": "build/ir-v3/qwen3-8b/kernel_ir.v3.json",
+          "sha256": "62499454381d24641f8cedda00f049aff61b4aa96410fa3fe460e0044df567e6"
+        },
+        "layer_id": "layer.0",
+        "layer_named_by": "the certified Kernel IR kernel each OPERATOR descriptor's source_kernel_id points at; every issue whose kernel_id begins 'layer.0.'",
+        "loop": {
+          "invocations_in_the_program": 36,
+          "issued_instances_in_the_program": 684,
+          "note": "the program issues this layer body once per model layer through one loop; this rung establishes ONE invocation. That the loop issues the model's layer count of structurally identical invocations is rung G1c and is not claimed here.",
+          "operators_per_invocation": 19
+        },
+        "mismatched_words": 0,
+        "mismatched_words_note": null,
+        "operator_count": 8,
+        "operator_count_meaning": "operators of this layer that executed in the integrated RTL and had every result word they wrote compared against the golden image",
+        "operators_in_layer": 19,
+        "placement_demand": {
+          "every_role_satisfiable": false,
+          "output_objects": {
+            "distinct_output_objects": 10,
+            "note": "the layer writes its intermediates into fewer buffers than it has operators: an appending output cursor gives each write a fresh address, which is sound only while nothing reads the earlier contents of a reused object",
+            "objects_written_more_than_once": {
+              "19": [
+                8,
+                20,
+                38,
+                44
+              ],
+              "20": [
+                11,
+                26,
+                41,
+                47,
+                59
+              ],
+              "21": [
+                14,
+                29
+              ],
+              "38": [
+                32,
+                35
+              ]
+            },
+            "writes": 19
+          },
+          "per_role": [
+            {
+              "distinct_objects_the_layer_needs": 7,
+              "object_keyed": false,
+              "objects": [
+                19,
+                20,
+                21,
+                22,
+                23,
+                24,
+                25
+              ],
+              "role": "appending_output",
+              "satisfiable": false,
+              "short_by": 6,
+              "slots_the_bridge_declares": 1
+            },
+            {
+              "distinct_objects_the_layer_needs": 2,
+              "object_keyed": true,
+              "objects": [
+                20,
+                21
+              ],
+              "role": "head_rms_input",
+              "satisfiable": true,
+              "short_by": 0,
+              "slots_the_bridge_declares": 2
+            },
+            {
+              "distinct_objects_the_layer_needs": 2,
+              "object_keyed": true,
+              "objects": [
+                5,
+                6
+              ],
+              "role": "head_rms_weight",
+              "satisfiable": true,
+              "short_by": 0,
+              "slots_the_bridge_declares": 2
+            },
+            {
+              "distinct_objects_the_layer_needs": 10,
+              "object_keyed": true,
+              "objects": [
+                15,
+                18,
+                19,
+                20,
+                21,
+                22,
+                24,
+                25,
+                26,
+                38
+              ],
+              "role": "mapped_family_operand",
+              "satisfiable": false,
+              "short_by": 2,
+              "slots_the_bridge_declares": 8
+            },
+            {
+              "distinct_objects_the_layer_needs": 3,
+              "object_keyed": false,
+              "objects": [
+                19,
+                20,
+                26
+              ],
+              "role": "matmul_input",
+              "satisfiable": false,
+              "short_by": 2,
+              "slots_the_bridge_declares": 1
+            },
+            {
+              "distinct_objects_the_layer_needs": 7,
+              "object_keyed": true,
+              "objects": [
+                2,
+                3,
+                4,
+                7,
+                9,
+                10,
+                11
+              ],
+              "role": "matmul_weight",
+              "satisfiable": false,
+              "short_by": 4,
+              "slots_the_bridge_declares": 3
+            },
+            {
+              "distinct_objects_the_layer_needs": 2,
+              "object_keyed": false,
+              "objects": [
+                18,
+                19
+              ],
+              "role": "rms_input",
+              "satisfiable": false,
+              "short_by": 1,
+              "slots_the_bridge_declares": 1
+            },
+            {
+              "distinct_objects_the_layer_needs": 2,
+              "object_keyed": false,
+              "objects": [
+                1,
+                8
+              ],
+              "role": "rms_weight",
+              "satisfiable": false,
+              "short_by": 1,
+              "slots_the_bridge_declares": 1
+            },
+            {
+              "distinct_objects_the_layer_needs": 1,
+              "object_keyed": true,
+              "objects": [
+                17
+              ],
+              "role": "rope_coefficient",
+              "satisfiable": true,
+              "short_by": 0,
+              "slots_the_bridge_declares": 1
+            },
+            {
+              "distinct_objects_the_layer_needs": 2,
+              "object_keyed": true,
+              "objects": [
+                19,
+                23
+              ],
+              "role": "rope_input",
+              "satisfiable": true,
+              "short_by": 0,
+              "slots_the_bridge_declares": 2
+            }
+          ],
+          "route_note": "derived from the same demand-versus-capacity counts as the shortfall above; it is what this vehicle lacks, not a design",
+          "route_to_completion": [
+            "make appending_output object-addressed: it is one unkeyed base and the layer needs 7 distinct objects ([19, 20, 21, 22, 23, 24, 25])",
+            "widen mapped_family_operand from 8 to at least 10 object slots",
+            "make matmul_input object-addressed: it is one unkeyed base and the layer needs 3 distinct objects ([19, 20, 26])",
+            "widen matmul_weight from 3 to at least 7 object slots",
+            "make rms_input object-addressed: it is one unkeyed base and the layer needs 2 distinct objects ([18, 19])",
+            "make rms_weight object-addressed: it is one unkeyed base and the layer needs 2 distinct objects ([1, 8])",
+            "place results by object rather than by the append cursor: 4 of the layer's buffers are written more than once, so an append cursor gives one object several addresses and no object-keyed reader can name the right one"
+          ],
+          "unattributed_operands": []
+        },
+        "uncovered_operators": [
+          {
+            "blocked_only_by_the_boundary": false,
+            "blocking_operands": [
+              {
+                "object_id": 15,
+                "role": "mapped_family_operand",
+                "slot": "input_view_0",
+                "why": "role mapped_family_operand needs 10 distinct objects across the layer, the bridge declares 8"
+              },
+              {
+                "object_id": 21,
+                "role": "mapped_family_operand",
+                "slot": "input_view_1",
+                "why": "role mapped_family_operand needs 10 distinct objects across the layer, the bridge declares 8"
+              },
+              {
+                "object_id": 38,
+                "role": "mapped_family_operand",
+                "slot": "output_view_0",
+                "why": "role mapped_family_operand needs 10 distinct objects across the layer, the bridge declares 8"
+              }
+            ],
+            "kernel_id": "layer.0.attention.key_append",
+            "mnemonic": "DMA.SCATTER",
+            "operator_descriptor_id": 118,
+            "pc": 32
+          },
+          {
+            "blocked_only_by_the_boundary": false,
+            "blocking_operands": [
+              {
+                "object_id": 15,
+                "role": "mapped_family_operand",
+                "slot": "input_view_0",
+                "why": "role mapped_family_operand needs 10 distinct objects across the layer, the bridge declares 8"
+              },
+              {
+                "object_id": 22,
+                "role": "mapped_family_operand",
+                "slot": "input_view_1",
+                "why": "role mapped_family_operand needs 10 distinct objects across the layer, the bridge declares 8"
+              },
+              {
+                "object_id": 38,
+                "role": "mapped_family_operand",
+                "slot": "output_view_0",
+                "why": "role mapped_family_operand needs 10 distinct objects across the layer, the bridge declares 8"
+              }
+            ],
+            "kernel_id": "layer.0.attention.value_append",
+            "mnemonic": "DMA.SCATTER",
+            "operator_descriptor_id": 125,
+            "pc": 35
+          },
+          {
+            "blocked_only_by_the_boundary": false,
+            "blocking_operands": [
+              {
+                "object_id": 20,
+                "role": "mapped_family_operand",
+                "slot": "input_view_0",
+                "why": "role mapped_family_operand needs 10 distinct objects across the layer, the bridge declares 8"
+              },
+              {
+                "object_id": 38,
+                "role": "mapped_family_operand",
+                "slot": "input_view_1",
+                "why": "role mapped_family_operand needs 10 distinct objects across the layer, the bridge declares 8"
+              },
+              {
+                "object_id": 38,
+                "role": "mapped_family_operand",
+                "slot": "input_view_2",
+                "why": "role mapped_family_operand needs 10 distinct objects across the layer, the bridge declares 8"
+              },
+              {
+                "object_id": 15,
+                "role": "mapped_family_operand",
+                "slot": "input_view_3",
+                "why": "role mapped_family_operand needs 10 distinct objects across the layer, the bridge declares 8"
+              },
+              {
+                "object_id": 19,
+                "role": "mapped_family_operand",
+                "slot": "output_view_0",
+                "why": "role mapped_family_operand needs 10 distinct objects across the layer, the bridge declares 8"
+              }
+            ],
+            "kernel_id": "layer.0.attention.grouped_query",
+            "mnemonic": "ATTENTION.GQA",
+            "operator_descriptor_id": 136,
+            "pc": 38
+          },
+          {
+            "blocked_only_by_the_boundary": false,
+            "blocking_operands": [
+              {
+                "object_id": 19,
+                "role": "matmul_input",
+                "slot": "input_view_0",
+                "why": "role matmul_input needs 3 distinct objects across the layer, the bridge declares 1"
+              },
+              {
+                "object_id": 7,
+                "role": "matmul_weight",
+                "slot": "input_view_1",
+                "why": "role matmul_weight needs 7 distinct objects across the layer, the bridge declares 3"
+              },
+              {
+                "object_id": 20,
+                "role": "appending_output",
+                "slot": "output_view_0",
+                "why": "role appending_output needs 7 distinct objects across the layer, the bridge declares 1"
+              }
+            ],
+            "kernel_id": "layer.0.attention.output_projection",
+            "mnemonic": "TENSOR.MATMUL",
+            "operator_descriptor_id": 142,
+            "pc": 41
+          },
+          {
+            "blocked_only_by_the_boundary": false,
+            "blocking_operands": [
+              {
+                "object_id": 18,
+                "role": "mapped_family_operand",
+                "slot": "input_view_0",
+                "why": "role mapped_family_operand needs 10 distinct objects across the layer, the bridge declares 8"
+              },
+              {
+                "object_id": 20,
+                "role": "mapped_family_operand",
+                "slot": "input_view_1",
+                "why": "role mapped_family_operand needs 10 distinct objects across the layer, the bridge declares 8"
+              },
+              {
+                "object_id": 19,
+                "role": "mapped_family_operand",
+                "slot": "output_view_0",
+                "why": "role mapped_family_operand needs 10 distinct objects across the layer, the bridge declares 8"
+              }
+            ],
+            "kernel_id": "layer.0.attention.residual_add",
+            "mnemonic": "VECTOR.ADD",
+            "operator_descriptor_id": 150,
+            "pc": 44
+          },
+          {
+            "blocked_only_by_the_boundary": false,
+            "blocking_operands": [
+              {
+                "object_id": 19,
+                "role": "rms_input",
+                "slot": "input_view_0",
+                "why": "role rms_input needs 2 distinct objects across the layer, the bridge declares 1"
+              },
+              {
+                "object_id": 8,
+                "role": "rms_weight",
+                "slot": "input_view_1",
+                "why": "role rms_weight needs 2 distinct objects across the layer, the bridge declares 1"
+              },
+              {
+                "object_id": 20,
+                "role": "appending_output",
+                "slot": "output_view_0",
+                "why": "role appending_output needs 7 distinct objects across the layer, the bridge declares 1"
+              }
+            ],
+            "kernel_id": "layer.0.feed_forward_norm",
+            "mnemonic": "VECTOR.RMS_NORM",
+            "operator_descriptor_id": 156,
+            "pc": 47
+          },
+          {
+            "blocked_only_by_the_boundary": false,
+            "blocking_operands": [
+              {
+                "object_id": 20,
+                "role": "matmul_input",
+                "slot": "input_view_0",
+                "why": "role matmul_input needs 3 distinct objects across the layer, the bridge declares 1"
+              },
+              {
+                "object_id": 9,
+                "role": "matmul_weight",
+                "slot": "input_view_1",
+                "why": "role matmul_weight needs 7 distinct objects across the layer, the bridge declares 3"
+              },
+              {
+                "object_id": 24,
+                "role": "appending_output",
+                "slot": "output_view_0",
+                "why": "role appending_output needs 7 distinct objects across the layer, the bridge declares 1"
+              }
+            ],
+            "kernel_id": "layer.0.feed_forward.gate_projection",
+            "mnemonic": "TENSOR.MATMUL",
+            "operator_descriptor_id": 162,
+            "pc": 50
+          },
+          {
+            "blocked_only_by_the_boundary": false,
+            "blocking_operands": [
+              {
+                "object_id": 20,
+                "role": "matmul_input",
+                "slot": "input_view_0",
+                "why": "role matmul_input needs 3 distinct objects across the layer, the bridge declares 1"
+              },
+              {
+                "object_id": 10,
+                "role": "matmul_weight",
+                "slot": "input_view_1",
+                "why": "role matmul_weight needs 7 distinct objects across the layer, the bridge declares 3"
+              },
+              {
+                "object_id": 25,
+                "role": "appending_output",
+                "slot": "output_view_0",
+                "why": "role appending_output needs 7 distinct objects across the layer, the bridge declares 1"
+              }
+            ],
+            "kernel_id": "layer.0.feed_forward.up_projection",
+            "mnemonic": "TENSOR.MATMUL",
+            "operator_descriptor_id": 168,
+            "pc": 53
+          },
+          {
+            "blocked_only_by_the_boundary": false,
+            "blocking_operands": [
+              {
+                "object_id": 24,
+                "role": "mapped_family_operand",
+                "slot": "input_view_0",
+                "why": "role mapped_family_operand needs 10 distinct objects across the layer, the bridge declares 8"
+              },
+              {
+                "object_id": 25,
+                "role": "mapped_family_operand",
+                "slot": "input_view_1",
+                "why": "role mapped_family_operand needs 10 distinct objects across the layer, the bridge declares 8"
+              },
+              {
+                "object_id": 26,
+                "role": "mapped_family_operand",
+                "slot": "output_view_0",
+                "why": "role mapped_family_operand needs 10 distinct objects across the layer, the bridge declares 8"
+              }
+            ],
+            "kernel_id": "layer.0.feed_forward.activation",
+            "mnemonic": "VECTOR.SILU_MUL",
+            "operator_descriptor_id": 174,
+            "pc": 56
+          },
+          {
+            "blocked_only_by_the_boundary": false,
+            "blocking_operands": [
+              {
+                "object_id": 26,
+                "role": "matmul_input",
+                "slot": "input_view_0",
+                "why": "role matmul_input needs 3 distinct objects across the layer, the bridge declares 1"
+              },
+              {
+                "object_id": 11,
+                "role": "matmul_weight",
+                "slot": "input_view_1",
+                "why": "role matmul_weight needs 7 distinct objects across the layer, the bridge declares 3"
+              },
+              {
+                "object_id": 20,
+                "role": "appending_output",
+                "slot": "output_view_0",
+                "why": "role appending_output needs 7 distinct objects across the layer, the bridge declares 1"
+              }
+            ],
+            "kernel_id": "layer.0.feed_forward.down_projection",
+            "mnemonic": "TENSOR.MATMUL",
+            "operator_descriptor_id": 180,
+            "pc": 59
+          },
+          {
+            "blocked_only_by_the_boundary": false,
+            "blocking_operands": [
+              {
+                "object_id": 19,
+                "role": "mapped_family_operand",
+                "slot": "input_view_0",
+                "why": "role mapped_family_operand needs 10 distinct objects across the layer, the bridge declares 8"
+              },
+              {
+                "object_id": 20,
+                "role": "mapped_family_operand",
+                "slot": "input_view_1",
+                "why": "role mapped_family_operand needs 10 distinct objects across the layer, the bridge declares 8"
+              },
+              {
+                "object_id": 18,
+                "role": "mapped_family_operand",
+                "slot": "output_view_0",
+                "why": "role mapped_family_operand needs 10 distinct objects across the layer, the bridge declares 8"
+              }
+            ],
+            "kernel_id": "layer.0.feed_forward.residual_add",
+            "mnemonic": "VECTOR.ADD",
+            "operator_descriptor_id": 186,
+            "pc": 62
+          }
+        ],
+        "why_not_complete": [
+          "11 of the layer's 19 operators did not execute in the integrated RTL: PC 32 DMA.SCATTER (layer.0.attention.key_append), PC 35 DMA.SCATTER (layer.0.attention.value_append), PC 38 ATTENTION.GQA (layer.0.attention.grouped_query), PC 41 TENSOR.MATMUL (layer.0.attention.output_projection), PC 44 VECTOR.ADD (layer.0.attention.residual_add), PC 47 VECTOR.RMS_NORM (layer.0.feed_forward_norm), PC 50 TENSOR.MATMUL (layer.0.feed_forward.gate_projection), PC 53 TENSOR.MATMUL (layer.0.feed_forward.up_projection), PC 56 VECTOR.SILU_MUL (layer.0.feed_forward.activation), PC 59 TENSOR.MATMUL (layer.0.feed_forward.down_projection), PC 62 VECTOR.ADD (layer.0.feed_forward.residual_add)",
+          "the vehicle fails closed at PC 32 DMA.SCATTER descriptor 118 with trap class 4; that is the first operator of the layer it does not run",
+          "placement role appending_output must name 7 distinct objects for this layer and the bridge declares 1, and that base is not keyed by object at all",
+          "placement role mapped_family_operand must name 10 distinct objects for this layer and the bridge declares 8",
+          "placement role matmul_input must name 3 distinct objects for this layer and the bridge declares 1, and that base is not keyed by object at all",
+          "placement role matmul_weight must name 7 distinct objects for this layer and the bridge declares 3",
+          "placement role rms_input must name 2 distinct objects for this layer and the bridge declares 1, and that base is not keyed by object at all",
+          "placement role rms_weight must name 2 distinct objects for this layer and the bridge declares 1, and that base is not keyed by object at all",
+          "the layer writes 19 intermediates into 10 buffers, so an appending output cursor gives a reused object two addresses; objects written more than once: ['19', '20', '21', '38']"
+        ]
+      },
+      "storage_class": "hbm",
+      "workload_id": "TA-QW-EOS-1"
+    }
+  ],
+  "rerun_not_retained": {
+    "agreement_with_the_retained_campaign": {
+      "integrated_replay_passed": {
+        "agree": true,
+        "rerun": true,
+        "retained": true
+      },
+      "integrated_simulator_checks": {
+        "agree": true,
+        "rerun": {
+          "verilator": 189862
+        },
+        "retained": {
+          "verilator": 189862
+        }
+      },
+      "observed_cases": {
+        "agree": true,
+        "rerun": [
+          {
+            "fault": 32,
+            "fetched": 33,
+            "index": 0,
+            "issued": 11,
+            "launches": 10,
+            "responses": 11,
+            "retired": 32,
+            "trap": 4,
+            "views": 33,
+            "words": 24832
+          },
+          {
+            "fault": 32,
+            "fetched": 33,
+            "index": 1,
+            "issued": 11,
+            "launches": 10,
+            "responses": 11,
+            "retired": 32,
+            "trap": 4,
+            "views": 33,
+            "words": 24832
+          },
+          {
+            "fault": 13,
+            "fetched": 14,
+            "index": 2,
+            "issued": 5,
+            "launches": 4,
+            "responses": 5,
+            "retired": 13,
+            "trap": 4,
+            "views": 11,
+            "words": 20736
+          },
+          {
+            "fault": 14,
+            "fetched": 15,
+            "index": 3,
+            "issued": 5,
+            "launches": 4,
+            "responses": 5,
+            "retired": 14,
+            "trap": 4,
+            "views": 17,
+            "words": 20736
+          }
+        ],
+        "retained": [
+          {
+            "fault": 32,
+            "fetched": 33,
+            "index": 0,
+            "issued": 11,
+            "launches": 10,
+            "responses": 11,
+            "retired": 32,
+            "trap": 4,
+            "views": 33,
+            "words": 24832
+          },
+          {
+            "fault": 32,
+            "fetched": 33,
+            "index": 1,
+            "issued": 11,
+            "launches": 10,
+            "responses": 11,
+            "retired": 32,
+            "trap": 4,
+            "views": 33,
+            "words": 24832
+          },
+          {
+            "fault": 13,
+            "fetched": 14,
+            "index": 2,
+            "issued": 5,
+            "launches": 4,
+            "responses": 5,
+            "retired": 13,
+            "trap": 4,
+            "views": 11,
+            "words": 20736
+          },
+          {
+            "fault": 14,
+            "fetched": 15,
+            "index": 3,
+            "issued": 5,
+            "launches": 4,
+            "responses": 5,
+            "retired": 14,
+            "trap": 4,
+            "views": 17,
+            "words": 20736
+          }
+        ]
+      },
+      "operator_admission": {
+        "agree": true,
+        "rerun": {
+          "capability_trapped_family_count": 6,
+          "cases_with_mapped_placement": 0,
+          "launches": {
+            "ATTENTION.GQA": 0,
+            "DMA.SCATTER": 0,
+            "SELECTION.ARGMAX": 0,
+            "SELECTION.TOKEN_APPEND": 0,
+            "VECTOR.ADD": 0,
+            "VECTOR.SILU_MUL": 0
+          },
+          "measured": true,
+          "reached_families": [],
+          "reached_family_count": 0,
+          "result_injection": false,
+          "trapped_families": [
+            "VECTOR.ADD",
+            "VECTOR.SILU_MUL",
+            "DMA.SCATTER",
+            "ATTENTION.GQA",
+            "SELECTION.ARGMAX",
+            "SELECTION.TOKEN_APPEND"
+          ],
+          "vector_generation": "legacy",
+          "vehicle": "rtl/test/a3_shipped_prefix_top.sv"
+        },
+        "retained": {
+          "capability_trapped_family_count": 6,
+          "cases_with_mapped_placement": 0,
+          "launches": {
+            "ATTENTION.GQA": 0,
+            "DMA.SCATTER": 0,
+            "SELECTION.ARGMAX": 0,
+            "SELECTION.TOKEN_APPEND": 0,
+            "VECTOR.ADD": 0,
+            "VECTOR.SILU_MUL": 0
+          },
+          "measured": true,
+          "reached_families": [],
+          "reached_family_count": 0,
+          "result_injection": false,
+          "trapped_families": [
+            "VECTOR.ADD",
+            "VECTOR.SILU_MUL",
+            "DMA.SCATTER",
+            "ATTENTION.GQA",
+            "SELECTION.ARGMAX",
+            "SELECTION.TOKEN_APPEND"
+          ],
+          "vector_generation": "legacy",
+          "vehicle": "rtl/test/a3_shipped_prefix_top.sv"
+        }
+      },
+      "simulated_cycles": {
+        "agree": true,
+        "rerun": 252057600,
+        "retained": 252057600
+      },
+      "status": {
+        "agree": true,
+        "rerun": "pass",
+        "retained": "pass"
+      }
+    },
+    "agrees_on_every_compared_field": true,
+    "artifact_sha256": "09decc85e01429cc57e1252d6a8b6deef103fa1807b2e19ea868cad180a739bd",
+    "establishes": [],
+    "git": {
+      "commit": "66bee9b7bd20d47a915fa37011c24527d23ae537",
+      "worktree_dirty": true
+    },
+    "measure": {
+      "cycle_guard": 64000000000,
+      "cycles": 252057600,
+      "distinct_bytes": 50331648,
+      "halfword_reads": 50331648,
+      "injected_results": 0,
+      "page_faults": 96,
+      "page_hits": 50331552,
+      "pages_evicted": 88,
+      "refilled_bytes": 100663296,
+      "result_words": 98304,
+      "sim_wall_s": 1577.265,
+      "source_words": 65536,
+      "trace_compared_elements": 0,
+      "trace_divergence_index": -1,
+      "trace_issues": 0,
+      "trace_last_case_issues": 5,
+      "trace_uncompared_fields": "none",
+      "wall_s": 1581.147,
+      "weight_image_bytes": 50331648,
+      "window_cap_bytes": 8388608,
+      "window_page_bytes": 1048576,
+      "window_peak_resident_bytes": 8388608,
+      "window_segments": 1
+    },
+    "vector_set_sha256": "eaa4629cc7d4ad96fe5a5a49f6f9153b411e5504dffdd037306f6c44bd644361",
+    "what_it_is": "an independent execution of the same integrated campaign, run for this rung in a separately pinned worktree. No field of this rung is computed from it.",
+    "why_not_retained": "it declares worktree_dirty True at commit 66bee9b7bd20, and the repository already holds results/rtl/abi3_shipped_prefix_campaign.json from a clean tree; replacing a clean run with a dirtier one would weaken the evidence, not strengthen it"
+  },
+  "schema": "opentallas.rtl.g1b_layer_closure.v1",
+  "workload_id": "TA-QW-EOS-1"
+}
