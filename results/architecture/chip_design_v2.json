@@ -1,0 +1,323 @@
+{
+  "grade": "derived_from_assumptions",
+  "link": {
+    "bytes_per_cycle_aggregate": 512.0,
+    "bytes_per_cycle_per_endpoint": 64.0,
+    "expert_48k_payload_serialization_cycles": 768
+  },
+  "production_ready": false,
+  "profiles": [
+    {
+      "dies": 4,
+      "fixed_and_other_area_mm2": 173.7,
+      "hbm_twin_endpoints": 114,
+      "hbm_twin_replacement_sram_area_mm2": 447.47901327362865,
+      "id": "qwen_x4",
+      "kv_area_mm2": 0.0,
+      "kv_capacity_bytes_per_die": 0,
+      "kv_delivered_bytes_per_cycle": 4500,
+      "kv_service_lower_bound_us": 67.108864,
+      "kv_source_bytes_per_cycle": 4500,
+      "lanes": 31552,
+      "mesh_area_mm2": 21.12,
+      "mesh_shape": [
+        12,
+        12
+      ],
+      "partition": "tensor",
+      "phy_area_mm2": 50,
+      "prefetch_overlap_credited": false,
+      "qualified_tpot_us": null,
+      "rom_area_mm2": 447.47901327362865,
+      "rom_endpoints": 114,
+      "rom_payload_budget_bytes": 4113186816,
+      "rom_raw_capacity_bytes_per_die": 4197129405,
+      "router_count": 288,
+      "stage_kv_service_cycles": [
+        67108.864,
+        67108.864,
+        67108.864,
+        67108.864
+      ],
+      "stages": [
+        {
+          "aligned_weight_bytes": 4096409600,
+          "first_unit": "embedding",
+          "kv_bytes": 304349184,
+          "kv_layers": 9.0,
+          "last_unit": "head",
+          "priced_kv_bytes": 301989888,
+          "unit_count": 110,
+          "weight_bytes": 4095367680
+        },
+        {
+          "aligned_weight_bytes": 4096409600,
+          "first_unit": "embedding",
+          "kv_bytes": 304349184,
+          "kv_layers": 9.0,
+          "last_unit": "head",
+          "priced_kv_bytes": 301989888,
+          "unit_count": 110,
+          "weight_bytes": 4095367680
+        },
+        {
+          "aligned_weight_bytes": 4096409600,
+          "first_unit": "embedding",
+          "kv_bytes": 304349184,
+          "kv_layers": 9.0,
+          "last_unit": "head",
+          "priced_kv_bytes": 301989888,
+          "unit_count": 110,
+          "weight_bytes": 4095367680
+        },
+        {
+          "aligned_weight_bytes": 4096409600,
+          "first_unit": "embedding",
+          "kv_bytes": 304349184,
+          "kv_layers": 9.0,
+          "last_unit": "head",
+          "priced_kv_bytes": 301989888,
+          "unit_count": 110,
+          "weight_bytes": 4095367680
+        }
+      ],
+      "tile_area_mm2": 143.61090000000002,
+      "tiles": 493,
+      "total_area_mm2": 814.7899132736287,
+      "unused_area_mm2": 0.2100867263712871
+    },
+    {
+      "dies": 5,
+      "fixed_and_other_area_mm2": 177.36666666666667,
+      "hbm_twin_endpoints": 150,
+      "hbm_twin_replacement_sram_area_mm2": 309.5977419905112,
+      "id": "qwen_x5",
+      "kv_area_mm2": 86.7263685706901,
+      "kv_capacity_bytes_per_die": 335544320,
+      "kv_delivered_bytes_per_cycle": 4608,
+      "kv_service_lower_bound_us": 262.144,
+      "kv_source_bytes_per_cycle": 26112.0,
+      "lanes": 41984,
+      "mesh_area_mm2": 24.786666666666665,
+      "mesh_shape": [
+        13,
+        13
+      ],
+      "partition": "pipeline",
+      "phy_area_mm2": 0,
+      "prefetch_overlap_credited": false,
+      "qualified_tpot_us": null,
+      "rom_area_mm2": 359.5977419905112,
+      "rom_endpoints": 145,
+      "rom_payload_budget_bytes": 3305390080,
+      "rom_raw_capacity_bytes_per_die": 3372847021,
+      "router_count": 338,
+      "stage_kv_service_cycles": [
+        43690.666666666664,
+        58254.22222222222,
+        65536.0,
+        58254.22222222222,
+        36408.88888888889
+      ],
+      "stages": [
+        {
+          "aligned_weight_bytes": 3258105856,
+          "first_unit": "embedding",
+          "kv_bytes": 202899456,
+          "kv_layers": 6,
+          "last_unit": "layer.5.attention",
+          "priced_kv_bytes": 201326592,
+          "unit_count": 17,
+          "weight_bytes": 3258018816
+        },
+        {
+          "aligned_weight_bytes": 3288612864,
+          "first_unit": "layer.5.gate_up",
+          "kv_bytes": 270532608,
+          "kv_layers": 8,
+          "last_unit": "layer.13.gate_up",
+          "priced_kv_bytes": 268435456,
+          "unit_count": 25,
+          "weight_bytes": 3288477696
+        },
+        {
+          "aligned_weight_bytes": 3271835648,
+          "first_unit": "layer.13.down",
+          "kv_bytes": 304349184,
+          "kv_layers": 9,
+          "last_unit": "layer.22.attention",
+          "priced_kv_bytes": 301989888,
+          "unit_count": 26,
+          "weight_bytes": 3271700992
+        },
+        {
+          "aligned_weight_bytes": 3288612864,
+          "first_unit": "layer.22.gate_up",
+          "kv_bytes": 270532608,
+          "kv_layers": 8,
+          "last_unit": "layer.30.gate_up",
+          "priced_kv_bytes": 268435456,
+          "unit_count": 25,
+          "weight_bytes": 3288477696
+        },
+        {
+          "aligned_weight_bytes": 3274883072,
+          "first_unit": "layer.30.down",
+          "kv_bytes": 169082880,
+          "kv_layers": 5,
+          "last_unit": "head",
+          "priced_kv_bytes": 167772160,
+          "unit_count": 17,
+          "weight_bytes": 3274795520
+        }
+      ],
+      "tile_area_mm2": 191.0928,
+      "tiles": 656,
+      "total_area_mm2": 814.783577227868,
+      "unused_area_mm2": 0.21642277213197758
+    },
+    {
+      "dies": 8,
+      "fixed_and_other_area_mm2": 190.12666666666667,
+      "hbm_twin_endpoints": 221,
+      "hbm_twin_replacement_sram_area_mm2": 174.717173303481,
+      "id": "qwen_x8",
+      "kv_area_mm2": 43.36318428534505,
+      "kv_capacity_bytes_per_die": 167772160,
+      "kv_delivered_bytes_per_cycle": 4608,
+      "kv_service_lower_bound_us": 32.768,
+      "kv_source_bytes_per_cycle": 13056.0,
+      "lanes": 78336,
+      "mesh_area_mm2": 37.54666666666667,
+      "mesh_shape": [
+        16,
+        16
+      ],
+      "partition": "tensor",
+      "phy_area_mm2": 0,
+      "prefetch_overlap_credited": false,
+      "qualified_tpot_us": null,
+      "rom_area_mm2": 224.717173303481,
+      "rom_endpoints": 216,
+      "rom_payload_budget_bytes": 2065580032,
+      "rom_raw_capacity_bytes_per_die": 2107734727,
+      "router_count": 512,
+      "stage_kv_service_cycles": [
+        32768.0,
+        32768.0,
+        32768.0,
+        32768.0,
+        32768.0,
+        32768.0,
+        32768.0,
+        32768.0
+      ],
+      "stages": [
+        {
+          "aligned_weight_bytes": 2048802816,
+          "first_unit": "embedding",
+          "kv_bytes": 152174592,
+          "kv_layers": 4.5,
+          "last_unit": "head",
+          "priced_kv_bytes": 150994944,
+          "unit_count": 110,
+          "weight_bytes": 2047683840
+        },
+        {
+          "aligned_weight_bytes": 2048802816,
+          "first_unit": "embedding",
+          "kv_bytes": 152174592,
+          "kv_layers": 4.5,
+          "last_unit": "head",
+          "priced_kv_bytes": 150994944,
+          "unit_count": 110,
+          "weight_bytes": 2047683840
+        },
+        {
+          "aligned_weight_bytes": 2048802816,
+          "first_unit": "embedding",
+          "kv_bytes": 152174592,
+          "kv_layers": 4.5,
+          "last_unit": "head",
+          "priced_kv_bytes": 150994944,
+          "unit_count": 110,
+          "weight_bytes": 2047683840
+        },
+        {
+          "aligned_weight_bytes": 2048802816,
+          "first_unit": "embedding",
+          "kv_bytes": 152174592,
+          "kv_layers": 4.5,
+          "last_unit": "head",
+          "priced_kv_bytes": 150994944,
+          "unit_count": 110,
+          "weight_bytes": 2047683840
+        },
+        {
+          "aligned_weight_bytes": 2048802816,
+          "first_unit": "embedding",
+          "kv_bytes": 152174592,
+          "kv_layers": 4.5,
+          "last_unit": "head",
+          "priced_kv_bytes": 150994944,
+          "unit_count": 110,
+          "weight_bytes": 2047683840
+        },
+        {
+          "aligned_weight_bytes": 2048802816,
+          "first_unit": "embedding",
+          "kv_bytes": 152174592,
+          "kv_layers": 4.5,
+          "last_unit": "head",
+          "priced_kv_bytes": 150994944,
+          "unit_count": 110,
+          "weight_bytes": 2047683840
+        },
+        {
+          "aligned_weight_bytes": 2048802816,
+          "first_unit": "embedding",
+          "kv_bytes": 152174592,
+          "kv_layers": 4.5,
+          "last_unit": "head",
+          "priced_kv_bytes": 150994944,
+          "unit_count": 110,
+          "weight_bytes": 2047683840
+        },
+        {
+          "aligned_weight_bytes": 2048802816,
+          "first_unit": "embedding",
+          "kv_bytes": 152174592,
+          "kv_layers": 4.5,
+          "last_unit": "head",
+          "priced_kv_bytes": 150994944,
+          "unit_count": 110,
+          "weight_bytes": 2047683840
+        }
+      ],
+      "tile_area_mm2": 356.5512,
+      "tiles": 1224,
+      "total_area_mm2": 814.7582242554927,
+      "unused_area_mm2": 0.2417757445073221
+    }
+  ],
+  "resource_checks_pass": true,
+  "schema": "opentallas.chip-resource-check.v1",
+  "sources": [
+    {
+      "path": "configs/architecture/chip_design_v2.json",
+      "sha256": "b771384333cbd25ca59f634ba5f96ff163e4d22d73f06c059394c715525a26b1"
+    },
+    {
+      "path": "configs/models/qwen3-8b.json",
+      "sha256": "dd84212ecd7d0dac9193a19d340108473f06b85bb8f056b66f3e44e3c7f11f7b"
+    },
+    {
+      "path": "src/opentallas/chip_architecture.py",
+      "sha256": "4cdfd6f73a026a636f782a5f318c9976df76e1df6c3d40fee4cf806e68f356e3"
+    },
+    {
+      "path": "tools/check_chip_architecture.py",
+      "sha256": "8f564779020def6e9f97b67fcde0f27d42f79c2acfe78399ac36bb7a790b0104"
+    }
+  ]
+}

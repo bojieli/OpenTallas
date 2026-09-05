@@ -1,0 +1,53 @@
+{
+  "schema": "opentallas.chip-design.v2",
+  "status": "implementation_contract_not_physical_closure",
+  "grade": "assumed",
+  "clock_hz": 1000000000,
+  "die_area_mm2": 815,
+  "rom_bytes_per_mm2": 9379500,
+  "sram_bytes_per_mm2": 3869000,
+  "rom_spare_fraction": 0.01,
+  "rom_quarantine_fraction": 0.01,
+  "rom_alignment_bytes": 16384,
+  "rom_misc_reserve_bytes_per_die": 16777216,
+  "fixed_area_excluding_mesh_mm2": 125.58,
+  "other_engines_mm2": 27,
+  "tensor_tile_mm2": 0.2913,
+  "mesh_router_cells": 55000,
+  "assumed_cells_per_mm2": 750000,
+  "mesh_planes": 2,
+  "coordinate_bits": 4,
+  "tiles_per_cluster": 8,
+  "scratchpad_endpoints": 32,
+  "kv_group_endpoints": 16,
+  "dma_endpoints": 4,
+  "link_endpoints": 8,
+  "management_endpoints": 3,
+  "hbm_controllers": 5,
+  "hbm_phy_area_mm2": 50,
+  "hbm_bytes_per_cycle": 4500,
+  "sdn_bytes_per_cycle": 4608,
+  "kv_sram_bank_bytes_per_cycle": 128,
+  "kv_sram_achievable_fraction": 0.75,
+  "link_flit_bits": 512,
+  "link_phy_bytes_per_cycle_per_endpoint": 900,
+  "qwen": {
+    "model": "configs/models/qwen3-8b.json",
+    "capacity_positions": 8256,
+    "priced_context_positions": 8192,
+    "pipeline_stage_last_unit": ["layer.5.attention", "layer.13.gate_up", "layer.22.attention", "layer.30.gate_up", "head"],
+    "profiles": [
+      {"id": "qwen_x4", "dies": 4, "partition": "tensor", "kv_store": "hbm", "kv_capacity_bytes_per_die": 0, "kv_banks": 0, "mesh_x": 12, "mesh_y": 12},
+      {"id": "qwen_x5", "dies": 5, "partition": "pipeline", "kv_store": "sram", "kv_capacity_bytes_per_die": 335544320, "kv_banks": 272, "mesh_x": 13, "mesh_y": 13},
+      {"id": "qwen_x8", "dies": 8, "partition": "tensor", "kv_store": "sram", "kv_capacity_bytes_per_die": 167772160, "kv_banks": 136, "mesh_x": 16, "mesh_y": 16}
+    ]
+  },
+  "notes": [
+    "N5 density, clock, tile area and routing budgets are assumptions; no open-PDK area is transferred to N5.",
+    "Tile count is the largest integer fitting the explicit memory, PHY, mesh and fixed budgets. It is never an independent input.",
+    "ROM includes per-unit alignment, a miscellaneous-image reserve, spare rows and quarantine reserve. The miscellaneous reserve must cover emitted constants and tables before deployment admission.",
+    "The HBM twin uses the identical compute and mesh. Where ROM omits HBM PHY, its twin funds PHY from the replaced ROM slot. KV allocation is preserved.",
+    "All SRAM KV reads traverse the SDN. No prefetch overlap is credited without a finite-buffer execution trace.",
+    "These resource checks do not establish PPA, source-current deployment parity, token correctness or TPOT."
+  ]
+}
