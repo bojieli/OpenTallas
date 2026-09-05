@@ -737,6 +737,13 @@ PNR_METRIC_KEYS = {
     "hold_wns_ns": "finish__timing__hold__ws",
     "hold_tns_ns": "finish__timing__hold__tns",
     "hold_violations": "finish__timing__drv__hold_violation_count",
+    # Signal-integrity design-rule violations.  ORFS reports them beside the
+    # timing ones and nothing read them, so an LQ8 route with 292 max-slew
+    # violations was recorded closed=true (results/physical_abi3/asap7/
+    # a3_lq8_array/pnr.json at 2f6b0a4).  A closed netlist has none.
+    "max_slew_violations": "finish__timing__drv__max_slew",
+    "max_cap_violations": "finish__timing__drv__max_cap",
+    "max_fanout_violations": "finish__timing__drv__max_fanout",
     "fmax_hz": "finish__timing__fmax",
     "core_area_um2": "finish__design__core__area",
     "die_area_um2": "finish__design__die__area",
@@ -1293,6 +1300,9 @@ def augment_design(
         design["antenna"] = (
             int(nets) + int(pins) if nets is not None and pins is not None else None
         )
+        drv = {k: metrics.get(k) for k in ("max_slew_violations", "max_cap_violations", "max_fanout_violations")}
+        design["signal_integrity_violations"] = drv
+        design["signal_integrity_clean"] = all(v is not None and int(v) == 0 for v in drv.values())
     elif synth:
         design["cells"] = synth.get("cell_count")
         design["cells_basis"] = "synthesis.cell_count (pre-layout, pinned host Yosys)"
@@ -1305,9 +1315,16 @@ def augment_design(
         design["antenna"] = None
 
     closed = bool(pnr) and record.get("status") == STATUS_PASS
+    if closed and design.get("signal_integrity_clean") is False:
+        closed = False
+        design["closed_reason"] = (
+            "signal-integrity violations in the routed netlist: "
+            + ", ".join(f"{k} {v}" for k, v in design["signal_integrity_violations"].items() if v)
+        )
     design["closed"] = closed
     design["closed_basis"] = (
-        "true only when place-and-route ran and the engineering verdict is "
+        "true only when place-and-route ran, the routed netlist carries zero "
+        "max-slew, max-cap and max-fanout violations, and the engineering verdict is "
         "pass: setup and hold met with zero violating paths, zero DRC, zero "
         "antenna violations at the target period"
     )
