@@ -12,7 +12,10 @@
       "evaluator": {
         "type": "artifact_field",
         "glob": "results/rtl/*token*.json",
-        "require": {"field": "record.oracle.agreement", "equals": true},
+        "require": {
+          "field": "record.oracle.agreement",
+          "equals": true
+        },
         "note": "docs/FOUR_TARGET_PROGRESS_REPORT.md states at RTL 3.0: 'no RTL path reaches a token'. This gate is expected to fail until that sentence changes."
       }
     },
@@ -25,8 +28,13 @@
         "type": "routed_netlist_contains",
         "glob": "results/physical_abi3/*/*/pnr.json",
         "require_sources_matching": {
-          "microsequencer": ["*microsequencer*"],
-          "datapath array": ["*tile64*", "*lq8*"]
+          "microsequencer": [
+            "*microsequencer*"
+          ],
+          "datapath array": [
+            "*tile64*",
+            "*lq8*"
+          ]
         },
         "require_macro_count_min": 1,
         "note": "The first evaluator passed when any routed block's directory was NAMED microsequencer / sequencer / control_plane / descriptor, so the day the microsequencer's front end was routed on its own (results/physical_abi3/asap7/a3_microsequencer/pnr.json, 2026-09-05: ot_a3_microsequencer at STATE_COMPAT = 0, no descriptor store, no dependence table, no engine, no memory macro) this terminal gate would have gone green on a third of its statement -- the G4 defect of 7df5d51 again. It now reads each pnr.json and passes only when ONE record's sources cover the microsequencer and the datapath array (the vehicle's array is T64 = 8 x LQ8, docs/CHIP_ARCHITECTURE_DESIGN.md section 11.1, so an LQ8 or a tile64 source counts), the memory system is present as placed macros (the vehicle memories are macro abstracts, section 11.2; every record to date has macro_count 0), and the route is clean (DRC 0, antenna 0). The front-end record alone therefore fails, and the failure names what it lacks."
@@ -51,86 +59,152 @@
       "evaluator": {
         "type": "artifact_field",
         "glob": "results/derived/*calibration*.json",
-        "require": {"field": "calibration.block_cycles_within_band", "equals": true},
-        "also_require": {"field": "calibration.derived_machine_reproduces_anchor", "equals": true},
+        "require": {
+          "field": "calibration.block_cycles_within_band",
+          "equals": true
+        },
+        "also_require": {
+          "field": "calibration.derived_machine_reproduces_anchor",
+          "equals": true
+        },
         "note": "G4 has two halves: the cycle model reproduces the RTL's measured block cycles within the stated band (docs/CHIP_ARCHITECTURE_DESIGN.md section 11.5, L3: +/-10 percent, boundary 120 cycles), AND the derived machine reproduces the analytical design point. The regime half already has its own gate, C3, and passed there once its field path was corrected. For one commit this gate passed on C3's artifact alone -- half its statement -- which is the not_evaluable defect in miniature; it now reads the L3 calibration artifact, which does not exist yet, and fails until it does. The artifact is produced when tools/derive_cycle_machine.py is re-parameterised from the L1 block-cycle records (results/rtl/abi3_pipelined_lane.json and successors)."
       }
     },
-
     {
       "id": "D1",
       "kind": "design",
       "statement": "The new datapath equals the existing sequential lane bit for bit over the swept space.",
       "fails_when": "One bit differs.",
-      "evaluator": {"type": "artifact_field", "glob": "results/rtl/*pipelined_lane*.json", "require": {"field": "bit_identity.equal", "equals": true}}
+      "evaluator": {
+        "type": "artifact_field",
+        "glob": "results/rtl/*pipelined_lane*.json",
+        "require": {
+          "field": "bit_identity.equal",
+          "equals": true
+        }
+      }
     },
     {
       "id": "D2",
       "kind": "design",
       "statement": "Measured MAC per lane per cycle is at least 1.0.",
       "fails_when": "The lane does not reach it.",
-      "evaluator": {"type": "artifact_threshold", "glob": "results/rtl/*pipelined_lane*.json", "field": "measured.mac_per_lane_cycle", "min": 1.0,
-        "note": "The present lane is 0.2 by its own header, and the matmul engine 0.34588/2 = 0.173."}
+      "evaluator": {
+        "type": "artifact_threshold",
+        "glob": "results/rtl/*pipelined_lane*.json",
+        "field": "measured.mac_per_lane_cycle",
+        "min": 1.0,
+        "note": "The present lane is 0.2 by its own header, and the matmul engine 0.34588/2 = 0.173."
+      }
     },
     {
       "id": "D3",
       "kind": "design",
       "statement": "The synthesised netlist contains N lanes for a declared N.",
       "fails_when": "The netlist has one lane while the capability advertises more.",
-      "evaluator": {"type": "artifact_threshold", "glob": "results/physical_abi3/*/*array*/pnr.json", "field": "design.lanes", "min": 2,
-        "also_require": {"field": "design.lanes_verified_in_netlist", "equals": true},
-        "note": "design.lanes is the declared LANES parameter; design.lanes_verified_in_netlist is set by tools/run_abi3_physical.py only when the same number of distinct lane prefixes is recovered from the routed netlist's instance names (--lane-instance-regex), so a declared count the netlist does not contain cannot pass."}
+      "evaluator": {
+        "type": "artifact_threshold",
+        "glob": "results/physical_abi3/*/*array*/pnr.json",
+        "field": "design.lanes",
+        "min": 2,
+        "also_require": {
+          "field": "design.lanes_verified_in_netlist",
+          "equals": true
+        },
+        "note": "design.lanes is the declared LANES parameter; design.lanes_verified_in_netlist is set by tools/run_abi3_physical.py only when the same number of distinct lane prefixes is recovered from the routed netlist's instance names (--lane-instance-regex), so a declared count the netlist does not contain cannot pass."
+      }
     },
     {
       "id": "D4",
       "kind": "design",
       "statement": "Per-MAC area and per-MAC period both improve against the recorded matmul_bf16_sram_engine baseline at the same PDK.",
       "fails_when": "Either regresses.",
-      "evaluator": {"type": "per_mac_improvement", "baseline": "results/physical_abi3/asap7/matmul_bf16_sram_engine/pnr.json", "glob": "results/physical_abi3/*/*lane*/pnr.json",
+      "evaluator": {
+        "type": "per_mac_improvement",
+        "baseline": "results/physical_abi3/asap7/matmul_bf16_sram_engine/pnr.json",
+        "glob": "results/physical_abi3/*/*lane*/pnr.json",
         "baseline_mac_per_cycle": 0.17294,
         "baseline_note": "The baseline record predates the design block, so its per-MAC figures are derived from its routed record: 0.17294 MAC per cycle is the matmul engine's measured 0.34588 lane-ops per two cycles (gate D2 note; docs/PERFORMANCE_DESIGN_POSTMORTEM.md), giving 8,348.44 um2 / 0.17294 = 48,274 um2 per MAC/cycle and 18 ns / 0.17294 = 104.1 ns per MAC, the figures docs/CHIP_ARCHITECTURE_DESIGN.md section 8.4 cites. A candidate must be a closed routed result (status pass, design.closed true) at the baseline's view and must declare design.per_mac_area_um2 and design.per_mac_period_ns itself.",
-        "note": "Per-MAC figures are the node-portable ones. METHODOLOGY section 9 forbids scaling any absolute figure across nodes."}
+        "note": "Per-MAC figures are the node-portable ones. METHODOLOGY section 9 forbids scaling any absolute figure across nodes."
+      }
     },
     {
       "id": "D5",
       "kind": "design",
       "statement": "Every preserved failure mode still traps distinctly.",
       "fails_when": "Any becomes silent.",
-      "evaluator": {"type": "artifact_field", "glob": "results/rtl/*pipelined_lane*.json", "require": {"field": "failure_modes.all_distinct", "equals": true}}
+      "evaluator": {
+        "type": "artifact_field",
+        "glob": "results/rtl/*pipelined_lane*.json",
+        "require": {
+          "field": "failure_modes.all_distinct",
+          "equals": true
+        }
+      }
     },
-
     {
       "id": "C1",
       "kind": "comparison",
       "statement": "ROM and HBM machines come from one derivation and differ only inside a cited weight-path allowlist.",
       "fails_when": "Any parameter outside the allowlist differs.",
-      "evaluator": {"type": "command", "argv": ["python3", "tools/derive_cycle_machine.py", "--check"], "expect_exit": 0}
+      "evaluator": {
+        "type": "command",
+        "argv": [
+          "python3",
+          "tools/derive_cycle_machine.py",
+          "--check"
+        ],
+        "expect_exit": 0
+      }
     },
     {
       "id": "C2",
       "kind": "comparison",
       "statement": "The compiled deployments hand neither side an advantage in tile shape, column group, tile depth or DMA tile count.",
       "fails_when": "Any asymmetry is unexplained.",
-      "evaluator": {"type": "artifact_field", "glob": "results/derived/*machine_pair*.json", "require": {"field": "deployment_audit.comparable", "equals": true}, "reason_field": "deployment_audit.verdict",
-        "note": "The shipped comparison handed ROM a 2x tensor-lane advantage and a 16x column-group advantage. The audit (tools/derive_cycle_machine.py audit_deployments) compares, per engine family and per operator, every SCHEDULE field runtime.cycle.model.tile_mapping reads -- tile_rows, tile_cols, tile_depth, issue_window, max_outstanding, queue_index, bank_mask, port_mask, noc_route_class -- with the tile counts, padding and DMA bytes per tile they produce for the same useful work, the direction each difference favours, and the tensor parity band for the pair's actual tile depths. A cell with no compiled deployment pair reports comparable = false with reason 'no deployment built'. The gate reads deployment_audit.verdict as the failure reason."}
+      "evaluator": {
+        "type": "artifact_field",
+        "glob": "results/derived/*machine_pair*.json",
+        "require": {
+          "field": "deployment_audit.comparable",
+          "equals": true
+        },
+        "reason_field": "deployment_audit.verdict",
+        "note": "The shipped comparison handed ROM a 2x tensor-lane advantage and a 16x column-group advantage. The audit (tools/derive_cycle_machine.py audit_deployments) compares, per engine family and per operator, every SCHEDULE field runtime.cycle.model.tile_mapping reads -- tile_rows, tile_cols, tile_depth, issue_window, max_outstanding, queue_index, bank_mask, port_mask, noc_route_class -- with the tile counts, padding and DMA bytes per tile they produce for the same useful work, the direction each difference favours, and the tensor parity band for the pair's actual tile depths. A cell with no compiled deployment pair reports comparable = false with reason 'no deployment built'. The gate reads deployment_audit.verdict as the failure reason. require_all: every derived pair's audit must say comparable, not the first that does; the C2 audit's verifier established that a first-match pass would go green the day one re-emitted pair is comparable while fourteen are not.",
+        "require_all": true
+      }
     },
     {
       "id": "C3",
       "kind": "comparison",
       "statement": "The cycle model and the analytical model find the same binding constraint.",
       "fails_when": "They disagree.",
-      "evaluator": {"type": "artifact_field", "glob": "results/derived/*reconciliation*.json",
-        "require": {"field": "targets.rom.binding_regime.same_regime", "equals": true},
-        "also_require": {"field": "targets.hbm.binding_regime.same_regime", "equals": true},
-        "note": "Same path correction as G4. The ROM regime match is the informative half; the HBM match is attribution-defined. A reconciliation where either target disagrees with the analytical binding constraint fails this gate."}
+      "evaluator": {
+        "type": "artifact_field",
+        "glob": "results/derived/*reconciliation*.json",
+        "require": {
+          "field": "targets.rom.binding_regime.same_regime",
+          "equals": true
+        },
+        "also_require": {
+          "field": "targets.hbm.binding_regime.same_regime",
+          "equals": true
+        },
+        "note": "Same path correction as G4. The ROM regime match is the informative half; the HBM match is attribution-defined. A reconciliation where either target disagrees with the analytical binding constraint fails this gate."
+      }
     },
     {
       "id": "C4",
       "kind": "comparison",
       "statement": "No published run sits more than 100x above its own bandwidth floor.",
       "fails_when": "Any does.",
-      "evaluator": {"type": "plausibility_ceiling", "glob": "results/abi3/cycle/*.json", "field": "plausibility.total_over_binding_floor", "max": 100.0,
-        "note": "A 260,846,119,253-cycle run once sat 11,558x above its own floor at 0.02% bandwidth utilisation and was read as a per-token latency."}
+      "evaluator": {
+        "type": "plausibility_ceiling",
+        "glob": "results/abi3/cycle/*.json",
+        "field": "plausibility.total_over_binding_floor",
+        "max": 100.0,
+        "note": "A 260,846,119,253-cycle run once sat 11,558x above its own floor at 0.02% bandwidth utilisation and was read as a per-token latency."
+      }
     }
   ]
 }

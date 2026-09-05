@@ -941,6 +941,8 @@ No shared parameter is below either side's requirement; the previous defect (the
 
 Both programs share every defect; the narrative of the drafts, which itemised the HBM side more fully, is replaced by this table.
 
+**Audited 2026-09-05 (gate C2, `results/derived/*_deployment_audit.json`, `b8e5a95`/`adf7a33`).** The shipped Qwen pair (`qwen3-8b-rom-rowfold-v1` against `qwen3-8b-hbm-exact8k-b1-lane0`), matched operator for operator, carries **31 cost-bearing SCHEDULE asymmetries** and is **not comparable**: tensor `tile_depth` 2,048 vs 128 (neutral only inside the parity band [256, 273.07) work/lane-cycle; 16x in ROM's favour at the wafer cells' rates), `tile_cols x issue_window` 512x16 vs 128x4 (effective tensor width 1,024 vs 512, 2x to ROM; contraction cycles per step 57,760 vs 115,488), attention tiles 128x128x64 vs 64x128x128 (2x to HBM), vector 128x256 vs 64x128 (2x each way on different terms), DMA shapes that cancel to 1.0005x, selection `max_outstanding` 1 vs 64 (8x to HBM), tensor/dma/vector on 2 queues vs 1 (2x to ROM), and `bank_mask`/`port_mask` differing in every family. The postmortem's "2x lane / 16x column group" was the visible part of this list. The audit's own conclusion is this section's: these are SCHEDULE fields, no machine file can correct them, and the deployments must be re-emitted under AM-E9 — one rule, both backends — which is the one comparability item still open and is scheduled for the moment the RTL needs a re-lowered deployment, so the re-run of every source-bound record is paid once.
+
 ---
 
 ## 8. Area, engine and bandwidth budgets per target; N5 derived versus the vehicles

@@ -330,6 +330,36 @@ def evaluate(gate: dict[str, Any]) -> dict[str, Any]:
         # states -- rather than on the absence message below, which is for
         # artifacts that never wrote the field at all.
         reason_field = ev.get("reason_field")
+        if ev.get("require_all"):
+            # Every matched artifact must satisfy the field, not the first
+            # that does.  Without this, C2 would go green the day ONE derived
+            # pair is re-emitted comparable while fourteen others are not --
+            # the verifier of the C2 audit named that exactly.
+            failing: list[str] = []
+            for path in paths:
+                body = _load(path)
+                got = _dig(body, want["field"]) if body else None
+                ok = got == want.get("equals") and (
+                    not also or _dig(body, also["field"]) == also.get("equals")
+                )
+                if not ok:
+                    reason = (
+                        _dig(body, reason_field) if body and reason_field else None
+                    )
+                    failing.append(
+                        f"{path.relative_to(REPO)}"
+                        + (f": {str(reason)[:120]}" if reason else "")
+                    )
+            if failing:
+                return _fail(
+                    f"{len(failing)} of {len(paths)} artifact(s) fail "
+                    f"{want['field']} == {want.get('equals')}: "
+                    + "; ".join(failing[:2])
+                    + ("; ..." if len(failing) > 2 else "")
+                )
+            return _pass(
+                f"all {len(paths)} artifact(s) have {want['field']} == {want.get('equals')}"
+            )
         verdicts: list[tuple[Path, Any, Any]] = []
         for path in paths:
             body = _load(path)
