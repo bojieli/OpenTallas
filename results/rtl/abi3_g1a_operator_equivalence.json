@@ -538,7 +538,7 @@
     },
     {
       "artifact": "results/rtl/abi3_shipped_prefix_campaign.json",
-      "artifact_sha256": "489834223e6e45d4cdbfbc3a5206e9e64f8d0f9e47086bbe3c49f95b24171ee4",
+      "artifact_sha256": "9ccd7a5c762eea46a50b6426bda5b88f08c2953b341cd631656b1ae050c098f8",
       "bound_source_count": 60,
       "compared_words": 91136,
       "coverage_by_deployment": {
@@ -1466,7 +1466,7 @@
             "covered": true,
             "covered_by": "results/rtl/abi3_shipped_prefix_campaign.json",
             "covered_by_case": "qwen3-8b-rom-single-chip/decode",
-            "covered_by_sha256": "489834223e6e45d4cdbfbc3a5206e9e64f8d0f9e47086bbe3c49f95b24171ee4",
+            "covered_by_sha256": "9ccd7a5c762eea46a50b6426bda5b88f08c2953b341cd631656b1ae050c098f8",
             "covered_by_vehicle": "rtl/test/a3_shipped_prefix_top.sv",
             "covered_operations": [
               {
@@ -1731,7 +1731,7 @@
             "covered": true,
             "covered_by": "results/rtl/abi3_shipped_prefix_campaign.json",
             "covered_by_case": "qwen3-8b-rom-single-chip/decode",
-            "covered_by_sha256": "489834223e6e45d4cdbfbc3a5206e9e64f8d0f9e47086bbe3c49f95b24171ee4",
+            "covered_by_sha256": "9ccd7a5c762eea46a50b6426bda5b88f08c2953b341cd631656b1ae050c098f8",
             "covered_by_vehicle": "rtl/test/a3_shipped_prefix_top.sv",
             "covered_operations": [
               {
@@ -1838,7 +1838,7 @@
             "covered": true,
             "covered_by": "results/rtl/abi3_shipped_prefix_campaign.json",
             "covered_by_case": "qwen3-8b-rom-single-chip/decode",
-            "covered_by_sha256": "489834223e6e45d4cdbfbc3a5206e9e64f8d0f9e47086bbe3c49f95b24171ee4",
+            "covered_by_sha256": "9ccd7a5c762eea46a50b6426bda5b88f08c2953b341cd631656b1ae050c098f8",
             "covered_by_vehicle": "rtl/test/a3_shipped_prefix_top.sv",
             "covered_operations": [
               {
@@ -1918,7 +1918,7 @@
             "covered": true,
             "covered_by": "results/rtl/abi3_shipped_prefix_campaign.json",
             "covered_by_case": "qwen3-8b-rom-single-chip/decode",
-            "covered_by_sha256": "489834223e6e45d4cdbfbc3a5206e9e64f8d0f9e47086bbe3c49f95b24171ee4",
+            "covered_by_sha256": "9ccd7a5c762eea46a50b6426bda5b88f08c2953b341cd631656b1ae050c098f8",
             "covered_by_vehicle": "rtl/test/a3_shipped_prefix_top.sv",
             "covered_operations": [
               {
@@ -2370,7 +2370,7 @@
         ]
       },
       "git": {
-        "commit": "0176d49e18a4a824b113766b8be8c303878c3859",
+        "commit": "e095126f1629858a7152eff007d02bc4721a2448",
         "scope": "the tree THIS artifact was derived in. It is not a claim about the tree each underlying RTL campaign ran in; see execution.underlying_campaign_provenance.",
         "worktree_dirty": false
       },
@@ -2508,7 +2508,7 @@
             "covered": true,
             "covered_by": "results/rtl/abi3_shipped_prefix_campaign.json",
             "covered_by_case": "qwen3-8b-hbm-single-chip/decode",
-            "covered_by_sha256": "489834223e6e45d4cdbfbc3a5206e9e64f8d0f9e47086bbe3c49f95b24171ee4",
+            "covered_by_sha256": "9ccd7a5c762eea46a50b6426bda5b88f08c2953b341cd631656b1ae050c098f8",
             "covered_by_vehicle": "rtl/test/a3_shipped_prefix_top.sv",
             "covered_operations": [
               {
@@ -2660,7 +2660,7 @@
             "covered": true,
             "covered_by": "results/rtl/abi3_shipped_prefix_campaign.json",
             "covered_by_case": "qwen3-8b-hbm-single-chip/decode",
-            "covered_by_sha256": "489834223e6e45d4cdbfbc3a5206e9e64f8d0f9e47086bbe3c49f95b24171ee4",
+            "covered_by_sha256": "9ccd7a5c762eea46a50b6426bda5b88f08c2953b341cd631656b1ae050c098f8",
             "covered_by_vehicle": "rtl/test/a3_shipped_prefix_top.sv",
             "covered_operations": [
               {
@@ -2925,7 +2925,7 @@
             "covered": true,
             "covered_by": "results/rtl/abi3_shipped_prefix_campaign.json",
             "covered_by_case": "qwen3-8b-hbm-single-chip/decode",
-            "covered_by_sha256": "489834223e6e45d4cdbfbc3a5206e9e64f8d0f9e47086bbe3c49f95b24171ee4",
+            "covered_by_sha256": "9ccd7a5c762eea46a50b6426bda5b88f08c2953b341cd631656b1ae050c098f8",
             "covered_by_vehicle": "rtl/test/a3_shipped_prefix_top.sv",
             "covered_operations": [
               {
@@ -3032,7 +3032,7 @@
             "covered": true,
             "covered_by": "results/rtl/abi3_shipped_prefix_campaign.json",
             "covered_by_case": "qwen3-8b-hbm-single-chip/decode",
-            "covered_by_sha256": "489834223e6e45d4cdbfbc3a5206e9e64f8d0f9e47086bbe3c49f95b24171ee4",
+            "covered_by_sha256": "9ccd7a5c762eea46a50b6426bda5b88f08c2953b341cd631656b1ae050c098f8",
             "covered_by_vehicle": "rtl/test/a3_shipped_prefix_top.sv",
             "covered_operations": [
               {
@@ -3112,7 +3112,7 @@
             "covered": true,
             "covered_by": "results/rtl/abi3_shipped_prefix_campaign.json",
             "covered_by_case": "qwen3-8b-hbm-single-chip/decode",
-            "covered_by_sha256": "489834223e6e45d4cdbfbc3a5206e9e64f8d0f9e47086bbe3c49f95b24171ee4",
+            "covered_by_sha256": "9ccd7a5c762eea46a50b6426bda5b88f08c2953b341cd631656b1ae050c098f8",
             "covered_by_vehicle": "rtl/test/a3_shipped_prefix_top.sv",
             "covered_operations": [
               {
@@ -3564,7 +3564,7 @@
         ]
       },
       "git": {
-        "commit": "0176d49e18a4a824b113766b8be8c303878c3859",
+        "commit": "e095126f1629858a7152eff007d02bc4721a2448",
         "scope": "the tree THIS artifact was derived in. It is not a claim about the tree each underlying RTL campaign ran in; see execution.underlying_campaign_provenance.",
         "worktree_dirty": false
       },

@@ -19,7 +19,7 @@
       "execution": {
         "campaign": {
           "artifact": "results/rtl/abi3_shipped_prefix_campaign.json",
-          "artifact_sha256": "489834223e6e45d4cdbfbc3a5206e9e64f8d0f9e47086bbe3c49f95b24171ee4",
+          "artifact_sha256": "9ccd7a5c762eea46a50b6426bda5b88f08c2953b341cd631656b1ae050c098f8",
           "bound_source_count": 60,
           "case_status": [
             {
@@ -29,7 +29,7 @@
             }
           ],
           "declared_git": {
-            "commit": "9aecaac27f00c435fe953e8c41f9565a811a29e0",
+            "commit": "4b136d675640a42ee2cb9b1869e8d717ca48bc4f",
             "worktree_dirty": false
           },
           "drifted_source_count": 0,
@@ -103,14 +103,14 @@
             "pages_evicted": 88,
             "refilled_bytes": 100663296,
             "result_words": 98304,
-            "sim_wall_s": 1851.86,
+            "sim_wall_s": 1511.417,
             "source_words": 65536,
             "trace_compared_elements": 0,
             "trace_divergence_index": -1,
             "trace_issues": 0,
             "trace_last_case_issues": 5,
             "trace_uncompared_fields": "none",
-            "wall_s": 1853.954,
+            "wall_s": 1513.4,
             "weight_image_bytes": 50331648,
             "window_cap_bytes": 8388608,
             "window_page_bytes": 1048576,
@@ -300,7 +300,7 @@
         }
       },
       "git": {
-        "commit": "e0a8ce45337d02362051b0aee84e6008ea6f2faa",
+        "commit": "e095126f1629858a7152eff007d02bc4721a2448",
         "dirty_paths": [],
         "scope": "the tree THIS artifact was derived in. It is not a claim about the tree the integrated campaign ran in; see execution.campaign.declared_git.",
         "worktree_dirty": false
@@ -1251,7 +1251,7 @@
       "execution": {
         "campaign": {
           "artifact": "results/rtl/abi3_shipped_prefix_campaign.json",
-          "artifact_sha256": "489834223e6e45d4cdbfbc3a5206e9e64f8d0f9e47086bbe3c49f95b24171ee4",
+          "artifact_sha256": "9ccd7a5c762eea46a50b6426bda5b88f08c2953b341cd631656b1ae050c098f8",
           "bound_source_count": 60,
           "case_status": [
             {
@@ -1261,7 +1261,7 @@
             }
           ],
           "declared_git": {
-            "commit": "9aecaac27f00c435fe953e8c41f9565a811a29e0",
+            "commit": "4b136d675640a42ee2cb9b1869e8d717ca48bc4f",
             "worktree_dirty": false
           },
           "drifted_source_count": 0,
@@ -1335,14 +1335,14 @@
             "pages_evicted": 88,
             "refilled_bytes": 100663296,
             "result_words": 98304,
-            "sim_wall_s": 1851.86,
+            "sim_wall_s": 1511.417,
             "source_words": 65536,
             "trace_compared_elements": 0,
             "trace_divergence_index": -1,
             "trace_issues": 0,
             "trace_last_case_issues": 5,
             "trace_uncompared_fields": "none",
-            "wall_s": 1853.954,
+            "wall_s": 1513.4,
             "weight_image_bytes": 50331648,
             "window_cap_bytes": 8388608,
             "window_page_bytes": 1048576,
@@ -1532,7 +1532,7 @@
         }
       },
       "git": {
-        "commit": "e0a8ce45337d02362051b0aee84e6008ea6f2faa",
+        "commit": "e095126f1629858a7152eff007d02bc4721a2448",
         "dirty_paths": [],
         "scope": "the tree THIS artifact was derived in. It is not a claim about the tree the integrated campaign ran in; see execution.campaign.declared_git.",
         "worktree_dirty": false
@@ -2476,227 +2476,7 @@
       "workload_id": "TA-QW-EOS-1"
     }
   ],
-  "rerun_not_retained": {
-    "agreement_with_the_retained_campaign": {
-      "integrated_replay_passed": {
-        "agree": true,
-        "rerun": true,
-        "retained": true
-      },
-      "integrated_simulator_checks": {
-        "agree": true,
-        "rerun": {
-          "verilator": 189862
-        },
-        "retained": {
-          "verilator": 189862
-        }
-      },
-      "observed_cases": {
-        "agree": true,
-        "rerun": [
-          {
-            "fault": 32,
-            "fetched": 33,
-            "index": 0,
-            "issued": 11,
-            "launches": 10,
-            "responses": 11,
-            "retired": 32,
-            "trap": 4,
-            "views": 33,
-            "words": 24832
-          },
-          {
-            "fault": 32,
-            "fetched": 33,
-            "index": 1,
-            "issued": 11,
-            "launches": 10,
-            "responses": 11,
-            "retired": 32,
-            "trap": 4,
-            "views": 33,
-            "words": 24832
-          },
-          {
-            "fault": 13,
-            "fetched": 14,
-            "index": 2,
-            "issued": 5,
-            "launches": 4,
-            "responses": 5,
-            "retired": 13,
-            "trap": 4,
-            "views": 11,
-            "words": 20736
-          },
-          {
-            "fault": 14,
-            "fetched": 15,
-            "index": 3,
-            "issued": 5,
-            "launches": 4,
-            "responses": 5,
-            "retired": 14,
-            "trap": 4,
-            "views": 17,
-            "words": 20736
-          }
-        ],
-        "retained": [
-          {
-            "fault": 32,
-            "fetched": 33,
-            "index": 0,
-            "issued": 11,
-            "launches": 10,
-            "responses": 11,
-            "retired": 32,
-            "trap": 4,
-            "views": 33,
-            "words": 24832
-          },
-          {
-            "fault": 32,
-            "fetched": 33,
-            "index": 1,
-            "issued": 11,
-            "launches": 10,
-            "responses": 11,
-            "retired": 32,
-            "trap": 4,
-            "views": 33,
-            "words": 24832
-          },
-          {
-            "fault": 13,
-            "fetched": 14,
-            "index": 2,
-            "issued": 5,
-            "launches": 4,
-            "responses": 5,
-            "retired": 13,
-            "trap": 4,
-            "views": 11,
-            "words": 20736
-          },
-          {
-            "fault": 14,
-            "fetched": 15,
-            "index": 3,
-            "issued": 5,
-            "launches": 4,
-            "responses": 5,
-            "retired": 14,
-            "trap": 4,
-            "views": 17,
-            "words": 20736
-          }
-        ]
-      },
-      "operator_admission": {
-        "agree": true,
-        "rerun": {
-          "capability_trapped_family_count": 6,
-          "cases_with_mapped_placement": 0,
-          "launches": {
-            "ATTENTION.GQA": 0,
-            "DMA.SCATTER": 0,
-            "SELECTION.ARGMAX": 0,
-            "SELECTION.TOKEN_APPEND": 0,
-            "VECTOR.ADD": 0,
-            "VECTOR.SILU_MUL": 0
-          },
-          "measured": true,
-          "reached_families": [],
-          "reached_family_count": 0,
-          "result_injection": false,
-          "trapped_families": [
-            "VECTOR.ADD",
-            "VECTOR.SILU_MUL",
-            "DMA.SCATTER",
-            "ATTENTION.GQA",
-            "SELECTION.ARGMAX",
-            "SELECTION.TOKEN_APPEND"
-          ],
-          "vector_generation": "legacy",
-          "vehicle": "rtl/test/a3_shipped_prefix_top.sv"
-        },
-        "retained": {
-          "capability_trapped_family_count": 6,
-          "cases_with_mapped_placement": 0,
-          "launches": {
-            "ATTENTION.GQA": 0,
-            "DMA.SCATTER": 0,
-            "SELECTION.ARGMAX": 0,
-            "SELECTION.TOKEN_APPEND": 0,
-            "VECTOR.ADD": 0,
-            "VECTOR.SILU_MUL": 0
-          },
-          "measured": true,
-          "reached_families": [],
-          "reached_family_count": 0,
-          "result_injection": false,
-          "trapped_families": [
-            "VECTOR.ADD",
-            "VECTOR.SILU_MUL",
-            "DMA.SCATTER",
-            "ATTENTION.GQA",
-            "SELECTION.ARGMAX",
-            "SELECTION.TOKEN_APPEND"
-          ],
-          "vector_generation": "legacy",
-          "vehicle": "rtl/test/a3_shipped_prefix_top.sv"
-        }
-      },
-      "simulated_cycles": {
-        "agree": true,
-        "rerun": 252057600,
-        "retained": 252057600
-      },
-      "status": {
-        "agree": true,
-        "rerun": "pass",
-        "retained": "pass"
-      }
-    },
-    "agrees_on_every_compared_field": true,
-    "artifact_sha256": "09decc85e01429cc57e1252d6a8b6deef103fa1807b2e19ea868cad180a739bd",
-    "establishes": [],
-    "git": {
-      "commit": "66bee9b7bd20d47a915fa37011c24527d23ae537",
-      "worktree_dirty": true
-    },
-    "measure": {
-      "cycle_guard": 64000000000,
-      "cycles": 252057600,
-      "distinct_bytes": 50331648,
-      "halfword_reads": 50331648,
-      "injected_results": 0,
-      "page_faults": 96,
-      "page_hits": 50331552,
-      "pages_evicted": 88,
-      "refilled_bytes": 100663296,
-      "result_words": 98304,
-      "sim_wall_s": 1577.265,
-      "source_words": 65536,
-      "trace_compared_elements": 0,
-      "trace_divergence_index": -1,
-      "trace_issues": 0,
-      "trace_last_case_issues": 5,
-      "trace_uncompared_fields": "none",
-      "wall_s": 1581.147,
-      "weight_image_bytes": 50331648,
-      "window_cap_bytes": 8388608,
-      "window_page_bytes": 1048576,
-      "window_peak_resident_bytes": 8388608,
-      "window_segments": 1
-    },
-    "vector_set_sha256": "eaa4629cc7d4ad96fe5a5a49f6f9153b411e5504dffdd037306f6c44bd644361",
-    "what_it_is": "an independent execution of the same integrated campaign, run for this rung in a separately pinned worktree. No field of this rung is computed from it.",
-    "why_not_retained": "it declares worktree_dirty True at commit 66bee9b7bd20, and the repository already holds results/rtl/abi3_shipped_prefix_campaign.json from a clean tree; replacing a clean run with a dirtier one would weaken the evidence, not strengthen it"
-  },
+  "rerun_not_retained": null,
   "schema": "opentallas.rtl.g1b_layer_closure.v1",
   "workload_id": "TA-QW-EOS-1"
 }
