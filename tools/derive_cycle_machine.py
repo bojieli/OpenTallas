@@ -2363,17 +2363,49 @@ class _StaticWalkError(RuntimeError):
     """The control stream cannot be walked without executing the program."""
 
 
+#: Control subs that decide where the walk goes next.  Every other
+#: instruction -- every engine issue, WAIT, FENCE, ASSERT, NOP -- leaves the
+#: walk at ``pc + 1`` with the loop stack it already had.
+_PC_REDIRECTING_CONTROL = frozenset({
+    "LOOP_SETUP", "LOOP_NEXT", "BRANCH", "COMPLETE", "TRAP",
+})
+
+
 def _static_issues(dep: Any, symbols: Mapping[int, int],
-                   entrypoint_id: int = 0) -> list[tuple[int, dict[int, int]]]:
-    """``(operator id, loop bindings)`` for every engine issue of one request.
+                   entrypoint_id: int = 0,
+                   ) -> tuple[list[tuple[int, dict[int, int], bool]], dict[str, Any]]:
+    """``(operator id, loop bindings, conditional)`` per engine issue, and a walk report.
 
     This interprets the CONTROL stream and nothing else: LOOP_SETUP and
     LOOP_NEXT with the device's own ``loop_trip_count``, BRANCH, COMPLETE, and
     every predicate whose truth is a function of the request symbols and loop
-    state.  A predicate whose truth is a word in device memory (BOOLEAN_OBJECT,
-    EOS_MEMBER) cannot be evaluated without running the program, and the walk
-    refuses rather than guess.  The loop bindings are kept per issue because a
-    symbol-bounded loop's final iteration clamps the views it walks.
+    state.  The loop bindings are kept per issue because a symbol-bounded
+    loop's final iteration clamps the views it walks.
+
+    A predicate whose truth is a word in device memory (BOOLEAN_OBJECT,
+    EOS_MEMBER) or a fact about the running engines (ENGINE_STATUS,
+    ROUTE_VALID) cannot be evaluated without running the program.  That is not
+    by itself a reason to refuse, and refusing was too blunt: it is only a
+    reason to refuse when the two arms *go different places*.
+
+    Predication in ABI-3 is not a branch.  A predicated instruction that is not
+    a control transfer has exactly one successor, ``pc + 1``, on both arms, and
+    the only state this walk carries -- the pc, the loop induction map and the
+    loop stack -- is untouched by an engine issue or a WAIT.  So the two arms
+    rejoin immediately with identical walk state, and the union of what they
+    issue is computed with no path enumeration at all: take the arm that
+    issues, mark the issue *conditional*, and carry on.  The union is what a
+    static survey of a program with runtime control flow should report, and
+    here it is exact rather than an approximation of a fork.  (``PREDICATE_INVERT``
+    does not enter: the union of the two arms is the same set either way.)
+
+    When an unevaluable predicate gates a control transfer -- BRANCH,
+    LOOP_SETUP, LOOP_NEXT, COMPLETE, TRAP -- the arms genuinely diverge, the
+    union would need a real fork of the walk, and the walk still refuses rather
+    than guess.
+
+    The returned report names every predicate whose truth the walk could not
+    read, so the survey can say out loud that its issue list is an upper bound.
     """
     from runtime.abi3.constants import Control, InstructionFlag, Major
     from runtime.abi3.descriptors import (
@@ -2393,10 +2425,12 @@ def _static_issues(dep: Any, symbols: Mapping[int, int],
     pc = int(entry["first_instruction"])
     loops: dict[int, int] = {}
     stack: list[tuple[int, int, int]] = []
-    issues: list[tuple[int, dict[int, int]]] = []
+    issues: list[tuple[int, dict[int, int], bool]] = []
+    unevaluable: dict[int, dict[str, Any]] = {}
     steps = 0
 
-    def predicate(descriptor_id: int) -> bool:
+    def predicate(descriptor_id: int) -> bool | None:
+        """The predicate's truth, or ``None`` when the walk cannot read it."""
         desc = dep.table.get(descriptor_id, ExtendedDescriptorType.PREDICATE)
         p = desc.payload
         kind = PredicateKind(p["predicate_kind"])
@@ -2416,10 +2450,27 @@ def _static_issues(dep: Any, symbols: Mapping[int, int],
             loop = dep.table[int(p["selector_index"])]
             trip = loop_trip_count(loop.payload, symbols)
             return loops.get(int(p["selector_index"]), -1) == trip - 1
-        raise _StaticWalkError(
-            f"predicate {descriptor_id} is {kind.name}: its truth is a word in "
-            "device memory, which a static walk cannot read"
-        )
+        record = unevaluable.setdefault(int(descriptor_id), {
+            "predicate_id": int(descriptor_id),
+            "kind": kind.name,
+            "reads": (
+                f"object {int(p['object_id'])} element {int(p['element_index'])}"
+                if kind in (PredicateKind.BOOLEAN_OBJECT, PredicateKind.EOS_MEMBER)
+                else "engine or fabric state"
+            ),
+            "gated_instructions": 0,
+        })
+        record["gated_instructions"] += 1
+        return None
+
+    def redirects_pc(ins: Any) -> bool:
+        """Does this instruction decide where the walk goes next?"""
+        if int(ins.major) != int(Major.CONTROL):
+            return False
+        try:
+            return Control(ins.sub).name in _PC_REDIRECTING_CONTROL
+        except ValueError:
+            return False
 
     while 0 <= pc < len(instructions):
         steps += 1
@@ -2429,13 +2480,30 @@ def _static_issues(dep: Any, symbols: Mapping[int, int],
                 f"{_STATIC_WALK_STEP_LIMIT} steps"
             )
         ins = instructions[pc]
+        conditional = False
         if ins.flags & InstructionFlag.PREDICATED:
             taken = predicate(ins.predicate_id)
-            if ins.flags & InstructionFlag.PREDICATE_INVERT:
-                taken = not taken
-            if not taken:
-                pc += 1
-                continue
+            if taken is None:
+                # Unreadable truth.  Both arms of a non-transfer rejoin at
+                # pc + 1 with this same loop map, so take their union; a
+                # control transfer's arms do not, so refuse.
+                if redirects_pc(ins):
+                    kind = unevaluable[int(ins.predicate_id)]["kind"]
+                    raise _StaticWalkError(
+                        f"predicate {ins.predicate_id} is {kind} and gates the "
+                        f"{Control(ins.sub).name} at pc {pc}: its truth is a "
+                        "word in device memory, which a static walk cannot "
+                        "read, and the two arms of a control transfer do not "
+                        "rejoin, so their union cannot be taken without "
+                        "enumerating both paths"
+                    )
+                conditional = True
+            else:
+                if ins.flags & InstructionFlag.PREDICATE_INVERT:
+                    taken = not taken
+                if not taken:
+                    pc += 1
+                    continue
         if ins.major == int(Major.CONTROL):
             sub = Control(ins.sub)
             if sub is Control.LOOP_SETUP:
@@ -2479,9 +2547,16 @@ def _static_issues(dep: Any, symbols: Mapping[int, int],
             except Exception:  # noqa: BLE001 -- not OPERATOR-driven
                 operator = None
             if operator is not None:
-                issues.append((operator.descriptor_id, dict(loops)))
+                issues.append((operator.descriptor_id, dict(loops), conditional))
         pc += 1
-    return issues
+    report = {
+        "unevaluable_predicates": [
+            unevaluable[k] for k in sorted(unevaluable)
+        ],
+        "conditional_issues": sum(1 for _, _, c in issues if c),
+        "issues": len(issues),
+    }
+    return issues, report
 
 
 def _view_bytes(view: Any) -> int:
@@ -2514,8 +2589,18 @@ class _CostArithmetic:
 def _describe_operator(dep: Any, views: Any, operator_id: int,
                        loops: Mapping[int, int], symbols: Mapping[int, int],
                        params_for: Any, charger: _CostArithmetic | None,
+                       loops_known: bool = True,
                        ) -> dict[str, Any]:
-    """One OPERATOR descriptor decomposed by its SCHEDULE, per issue."""
+    """One OPERATOR descriptor decomposed by its SCHEDULE, per issue.
+
+    ``loops_known`` is false only on ``survey_deployment``'s refusal fallback,
+    where the loop bindings are not the program's but an empty stand-in.  A
+    view that walks a loop cannot resolve against that, and the honest answer
+    is a ``tile_error`` on the operator -- which the audit already counts as
+    not comparable -- rather than the ``MemoryError_`` that used to escape the
+    tool as a crash.  On the normal path the failure is still raised: silently
+    absorbing it there would let a broken survey look like a clean one.
+    """
     from runtime.abi3.constants import Dma, mnemonic
     from runtime.abi3.descriptors import ExtendedDescriptorType, Symbol
     from runtime.cycle.machine import ENGINE_FAMILY_NAMES
@@ -2551,7 +2636,27 @@ def _describe_operator(dep: Any, views: Any, operator_id: int,
     for slot, view_id in slots:
         if view_id == NO_ID:
             continue
-        view = views.resolve(view_id, loops, symbols)
+        try:
+            view = views.resolve(view_id, loops, symbols)
+        except Exception as exc:  # noqa: BLE001 -- re-raised unless guessing
+            if loops_known:
+                raise
+            return {
+                "operator_id": operator_id, "family": family, "mnemonic": name,
+                "schedule_id": schedule_id,
+                "schedule": (
+                    {f: schedule.get(f, 0) for f in SCHEDULE_FIELDS}
+                    if schedule else None
+                ),
+                "operands": operands,
+                "extent": {"rows": 0, "cols": 0, "depth": 0},
+                "useful_work": 0,
+                "tile_error": (
+                    f"operand {slot} (view {view_id}) could not be resolved "
+                    f"because the static walk refused and the loop bindings "
+                    f"are unknown: {type(exc).__name__}: {exc}"
+                ),
+            }
         dims[slot] = tuple(int(d) for d in view.dims)
         objects[slot] = int(view.object_id)
         operands[slot] = {
@@ -2729,6 +2834,30 @@ def _product_dims(dims: Sequence[int]) -> int:
     return total
 
 
+def _static_walk_summary(walk_error: str | None,
+                         report: Mapping[str, Any]) -> str:
+    """What the walk did, in one line a gate can print.
+
+    ``"complete"`` is reserved for a walk that read every predicate it met, so
+    a survey that took a union is never mistaken for an exact one.  The exact
+    string is unchanged for an exact walk and for a refusal, because shipped
+    artifacts quote it.
+    """
+    if walk_error is not None:
+        return f"REFUSED ({walk_error}); every OPERATOR counted once"
+    preds = report.get("unevaluable_predicates") or []
+    if not preds:
+        return "complete"
+    conditional = int(report.get("conditional_issues", 0))
+    total = int(report.get("issues", 0))
+    kinds = ", ".join(sorted({str(p["kind"]) for p in preds}))
+    return (
+        f"complete over the UNION of both arms of {len(preds)} data-dependent "
+        f"predicate(s) ({kinds}); {conditional} of {total} issues are "
+        "conditional, so the issue list is an upper bound"
+    )
+
+
 def survey_deployment(root: Path, *, symbols: Mapping[int, int],
                       params_for: Any, charger: _CostArithmetic | None = None,
                       ) -> dict[str, Any]:
@@ -2749,29 +2878,40 @@ def survey_deployment(root: Path, *, symbols: Mapping[int, int],
     views = ViewResolver(dep, None)
     operators: dict[int, dict[str, Any]] = {}
     walk_error: str | None = None
+    walk_report: dict[str, Any] = {
+        "unevaluable_predicates": [], "conditional_issues": 0, "issues": 0,
+    }
     try:
-        issues = _static_issues(dep, symbols)
+        issues, walk_report = _static_issues(dep, symbols)
     except _StaticWalkError as exc:
         walk_error = str(exc)
         issues = []
         for desc in dep.table.descriptors():
             if desc.descriptor_type == ExtendedDescriptorType.OPERATOR:
-                issues.append((desc.descriptor_id, {}))
-    for operator_id, loops in issues:
+                issues.append((desc.descriptor_id, {}, False))
+    loops_known = walk_error is None
+    for operator_id, loops, conditional in issues:
         rec = operators.get(operator_id)
         if rec is None:
             rec = _describe_operator(
-                dep, views, operator_id, loops, symbols, params_for, charger
+                dep, views, operator_id, loops, symbols, params_for, charger,
+                loops_known,
             )
             rec["issues"] = 0
             operators[operator_id] = rec
         else:
             probe = _describe_operator(
-                dep, views, operator_id, loops, symbols, params_for, None
+                dep, views, operator_id, loops, symbols, params_for, None,
+                loops_known,
             )
             if probe["extent"] != rec["extent"]:
                 rec.setdefault("extent_varies", []).append(probe["extent"])
         rec["issues"] += 1
+        if conditional:
+            # An upper bound: this issue is counted as if the predicate
+            # admitted it.  Recorded per operator so the audit can name
+            # exactly which operators the bound is loose on.
+            rec["conditional_issues"] = rec.get("conditional_issues", 0) + 1
     classes: Counter = Counter()
     for desc in dep.table.descriptors():
         if desc.descriptor_type == ExtendedDescriptorType.MEMORY_OBJECT:
@@ -2821,7 +2961,7 @@ def survey_deployment(root: Path, *, symbols: Mapping[int, int],
         if r["family"] == "tensor" and "column_group_span" in r
     })
     lanes = params_for("tensor").lanes
-    return {
+    survey: dict[str, Any] = {
         "root": _relative(Path(root)),
         "model_id": dep.model_id,
         "backend": dep.backend,
@@ -2829,10 +2969,7 @@ def survey_deployment(root: Path, *, symbols: Mapping[int, int],
         "deployment_sha256": dep.deployment_digest.hex(),
         "capability_digest": dep.capability_digest,
         "request_symbols": _symbol_names(symbols),
-        "static_walk": (
-            "complete" if walk_error is None
-            else f"REFUSED ({walk_error}); every OPERATOR counted once"
-        ),
+        "static_walk": _static_walk_summary(walk_error, walk_report),
         "operators": [operators[k] for k in operators],
         "families": {k: families[k] for k in sorted(families)},
         "schedule_shapes": {
@@ -2844,6 +2981,31 @@ def survey_deployment(root: Path, *, symbols: Mapping[int, int],
         "effective_tensor_width_caps": sorted({min(lanes, s) for s in tensor_spans}),
         "storage_class_counts": dict(sorted(classes.items())),
     }
+    if walk_error is None and walk_report.get("unevaluable_predicates"):
+        # Only present when the walk was not exact, so an exact survey keeps
+        # exactly the keys it has always had and its shipped artifacts do not
+        # move.  Absence of this key means "every predicate was read".
+        survey["static_walk_detail"] = {
+            "rule": (
+                "a predicate whose truth is device state does not fork this "
+                "walk unless it gates a control transfer: both arms of a "
+                "predicated engine issue or WAIT rejoin at pc+1 with the same "
+                "loop map, so the walk takes their union and marks the issue "
+                "conditional"
+            ),
+            "conditional_issues": int(walk_report["conditional_issues"]),
+            "total_issues": int(walk_report["issues"]),
+            "unevaluable_predicates": walk_report["unevaluable_predicates"],
+            "bound": (
+                "UPPER: every conditional issue is counted as if its predicate "
+                "admitted it; the program at run time issues this many or fewer"
+            ),
+            "conditional_operators": sorted(
+                _operator_label(r) for r in operators.values()
+                if r.get("conditional_issues")
+            ),
+        }
+    return survey
 
 
 def tensor_parity_band(rom_depth: int, hbm_depth: int, rate: float, *,
