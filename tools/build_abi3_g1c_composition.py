@@ -680,6 +680,109 @@ def _view_shape_map(inv: list[dict[str, Any]]) -> dict[tuple[int, int], tuple[in
     return out
 
 
+def boundary_address_identity(
+    issues: list[dict[str, Any]],
+    loop: dict[str, Any],
+    facts: "ProgramFacts",
+    transactions: int,
+) -> dict[str, Any]:
+    """Does the RTL resolve invocation N+1's operand to what N wrote?
+
+    Measured from the same certified trace: for every layer boundary, the
+    address the RTL's own resolver produced for the consumer's operand is
+    compared with the address it produced for the producer's output, over the
+    object the two share.  This is *address* identity and nothing more.  In
+    that run every engine result was injected at the engine boundary, so no
+    value flowed; what this establishes is that the loop's view resolution
+    composes across the back edge, which is a different and weaker claim than
+    the RTL-to-RTL data handoff G1c asks for -- and it is recorded under its
+    own name so it can never stand in for it.
+    """
+    invocations = segment_invocations(issues, loop)
+    producer_pc = loop["issue_pcs"][-1]
+    consumer_pc = loop["issue_pcs"][0]
+    object_of = {
+        slot["view_descriptor_id"]: slot["object_id"]
+        for site in facts.issue_sites.values()
+        for slot in site["slots"]
+    }
+    produced = {
+        slot["object_id"]
+        for slot in facts.issue_sites[producer_pc]["slots"]
+        if slot["slot"].startswith("output")
+    }
+    consumed = {
+        slot["object_id"]
+        for slot in facts.issue_sites[consumer_pc]["slots"]
+        if slot["slot"].startswith("input")
+    }
+    shared = produced & consumed
+
+    def addresses(issue: dict[str, Any]) -> list[tuple[int, ...]]:
+        return sorted(
+            (
+                int(object_of.get(int(view["descriptor_id"]), -1)),
+                int(view["element_offset"]),
+                int(view["extent"]),
+                int(view["extent_axis"]),
+                int(view["rank"]),
+            )
+            for view in issue["views"]
+            if object_of.get(int(view["descriptor_id"])) in shared
+        )
+
+    checked = 0
+    matched = 0
+    examples: list[dict[str, Any]] = []
+    if transactions and invocations and len(invocations) % transactions == 0:
+        stride = len(invocations) // transactions
+        for index in range(transactions):
+            block = invocations[index * stride:(index + 1) * stride]
+            for position in range(len(block) - 1):
+                producer = next(
+                    (i for i in block[position] if int(i["pc"]) == producer_pc), None
+                )
+                consumer = next(
+                    (i for i in block[position + 1] if int(i["pc"]) == consumer_pc),
+                    None,
+                )
+                if producer is None or consumer is None:
+                    continue
+                checked += 1
+                left, right = addresses(producer), addresses(consumer)
+                if left and left == right:
+                    matched += 1
+                elif len(examples) < 3:
+                    examples.append(
+                        {
+                            "transaction_index": index,
+                            "from_invocation": position,
+                            "producer_addresses": left,
+                            "consumer_addresses": right,
+                        }
+                    )
+    return {
+        "shared_objects": sorted(shared),
+        "producer_pc": producer_pc,
+        "consumer_pc": consumer_pc,
+        "boundaries_checked": checked,
+        "boundaries_where_the_address_matched": matched,
+        "holds": bool(checked > 0 and matched == checked and shared),
+        "disagreements": examples,
+        "what_it_is": (
+            "the RTL resolver's own (object, element offset, extent, extent "
+            "axis, rank) for the consumer of each layer boundary, compared "
+            "with the same for the producer of the invocation before it"
+        ),
+        "what_it_is_not": (
+            "an RTL-to-RTL data handoff. The run this is measured in supplies "
+            "every engine result at the engine boundary, so no value produced "
+            "by one layer was consumed by the next. G1c's handoff fields are "
+            "not derived from this and cannot be"
+        ),
+    }
+
+
 # --------------------------------------------------------------------------
 # The handoff, measured from the integrated campaign.
 # --------------------------------------------------------------------------
@@ -986,10 +1089,14 @@ def build(
                 f"deployment on disk is {facts.deployment_sha256}"
             ).lstrip("; ")
 
+        address_identity: dict[str, Any] | None = None
         if control.get("usable"):
             transactions = int(control["passes"]["executed"])
             loop_record = loop_property(
                 control["issues"], loop, layers, transactions
+            )
+            address_identity = boundary_address_identity(
+                control["issues"], loop, facts, transactions
             )
         else:
             loop_record = {
@@ -1006,6 +1113,14 @@ def build(
         control.pop("issues", None)
 
         handoff = handoff_evidence(campaign, facts, loop, vector_case, case_index)
+        handoff["address_identity_across_the_layer_boundary"] = (
+            address_identity
+            if address_identity is not None
+            else {
+                "holds": False,
+                "why_not_measured": control.get("why_unusable"),
+            }
+        )
 
         records.append(
             {

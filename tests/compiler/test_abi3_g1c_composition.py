@@ -74,6 +74,19 @@ def _synthetic_trace(context) -> list[dict[str, object]]:
     back as a trace.
     """
     facts, loop, layers = context["facts"], context["loop"], context["layers"]
+    # Objects the body writes are its activation buffers: their address does
+    # not move with the layer index, which is what makes the boundary an
+    # address identity.  Everything else is a per-layer weight and advances.
+    written = {
+        slot["object_id"]
+        for pc in loop["issue_pcs"]
+        for slot in facts.issue_sites[pc]["slots"]
+        if slot["slot"].startswith("output")
+    }
+
+    def stride(object_id: int) -> int:
+        return 0 if object_id in written else 4096 * (object_id % 7 + 1)
+
     issues: list[dict[str, object]] = []
     for _ in range(TRANSACTIONS):
         for invocation in range(layers["layers"]):
@@ -91,7 +104,9 @@ def _synthetic_trace(context) -> list[dict[str, object]]:
                                 "descriptor_id": slot["view_descriptor_id"],
                                 "extent": slot["declared_dims"][0],
                                 "extent_axis": 0,
-                                "element_offset": invocation * 4096 * (index + 1),
+                                "element_offset": invocation * stride(
+                                    slot["object_id"]
+                                ),
                                 "rank": slot["rank"],
                             }
                             for index, slot in enumerate(site["slots"])
@@ -218,7 +233,7 @@ def test_an_offset_that_stops_advancing_is_caught(tool, context):
     issues = _synthetic_trace(context)
     body = len(context["loop"]["issue_pcs"])
     stalled = json.loads(json.dumps(issues))
-    stalled[9 * body]["views"][0]["element_offset"] = 0
+    stalled[9 * body]["views"][0]["element_offset"] = 12345
     record = _property(tool, context, stalled)
     assert record["structurally_identical"] is False
     assert record["per_transaction"][0][
@@ -508,3 +523,53 @@ def test_the_boundary_object_is_read_from_the_descriptors(tool, context, tmp_pat
             "operator reads, or the loop is not a residual trunk at all"
         )
         assert boundary["derived_not_measured"] is True
+
+
+# --------------------------------------------------------------------------
+# Address identity across the boundary is measured, and is not the handoff.
+# --------------------------------------------------------------------------
+def test_address_identity_holds_on_a_correct_trace(tool, context):
+    issues = _synthetic_trace(context)
+    record = tool.boundary_address_identity(
+        issues, context["loop"], context["facts"], TRANSACTIONS
+    )
+    assert record["shared_objects"], (
+        "the layer's last operator must write an object its first reads"
+    )
+    assert record["boundaries_checked"] == TRANSACTIONS * (
+        context["layers"]["layers"] - 1
+    )
+    assert record["holds"] is True
+
+
+def test_a_consumer_that_reads_the_wrong_address_is_caught(tool, context):
+    issues = json.loads(json.dumps(_synthetic_trace(context)))
+    body = len(context["loop"]["issue_pcs"])
+    # invocation 1's first operator reads somewhere else entirely
+    issues[body]["views"][0]["element_offset"] += 64
+    record = tool.boundary_address_identity(
+        issues, context["loop"], context["facts"], TRANSACTIONS
+    )
+    assert record["holds"] is False
+    assert record["disagreements"]
+
+
+def test_address_identity_cannot_stand_in_for_the_handoff(tool, context, tmp_path):
+    issues = _synthetic_trace(context)
+    artifact, root = _stage(tool, tmp_path, issues, _control_artifact(tool, issues))
+    summary = tool.build(tmp_path / "g1c.json", artifact, root, None, None, None)
+    # Only the ROM store has a trace staged here, so it is the only record the
+    # address identity can be measured in; the other says why it could not be.
+    for record in summary["records"]:
+        handoff = record["handoff"]
+        identity = handoff["address_identity_across_the_layer_boundary"]
+        if record["storage_class"] != "rom":
+            assert identity["holds"] is False
+            assert identity["why_not_measured"]
+            continue
+        assert identity["holds"] is True
+        assert handoff["rtl_to_rtl"] is False, (
+            "address identity under injected engine results is not an "
+            "RTL-to-RTL data handoff and must not turn the field green"
+        )
+        assert handoff["mismatched_words"] is None
