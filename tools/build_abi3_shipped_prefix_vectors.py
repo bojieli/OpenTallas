@@ -515,11 +515,214 @@ def _checkpoint_matrix(
     }
 
 
+
+# ---------------------------------------------------------------------------
+# Rung G1e's golden artifacts, and the paged weight window's segment map.
+#
+# Everything below is derived from records the reference model produced when
+# these vectors were built -- the issue stream, the resolved views, the
+# expected result image and each operation's declared output view.  No RTL
+# run is read.  The three files are what the verification top's checker
+# consumes to run the whole workload's CONTROL path with the engine results
+# injected at the engine result boundary, and to compare the RTL's issue
+# trace against the model's element for element.
+# ---------------------------------------------------------------------------
+ISSUE_STRIDE = 4
+
+# The elements the golden trace carries.  Gate G1e requires the opcode, the
+# descriptor ids, the resolved view ids and addresses, the schedule id and the
+# issue serial.  The first four are recorded by the reference model and are
+# here.  ``queue`` (the schedule id the SCHEDULE record selects) and
+# ``serial`` (the sequencer's program-order retirement serial) are emitted by
+# the RTL but the reference model does not compute either, so they are not in
+# this header and the checker reports them as NOT compared.
+GOLDEN_ISSUE_FIELDS = ("family", "sub", "descriptor_id", "pc")
+GOLDEN_VIEW_FIELDS = (
+    "slot",
+    "descriptor_id",
+    "extent",
+    "extent_axis",
+    "element_offset",
+    "rank",
+)
+
+
+def _read_hex_words(path: Path) -> list[int]:
+    return [int(token, 16) for token in path.read_text().split()]
+
+
+def _g1e_output_words(operation: dict[str, Any]) -> int:
+    dims = operation["output_view"]["dims"]
+    count = 1
+    for dim in dims:
+        count *= int(dim)
+    return count
+
+
+def emit_weight_window(vectors: dict[str, Any], destination: Path) -> int:
+    """Map the addressed weight image onto the real checkpoint shards."""
+
+    lines = [
+        "# <image_base> <bytes> <file_offset> <shard path>",
+        "# segments of the checkpoint itself; the window pages them in and "
+        "holds a bounded working set, never the image",
+    ]
+    total = 0
+    matmuls = [
+        operation
+        for operation in vectors["cases"][0]["supported_prefix"]
+        if operation["kind"] == "tensor_matmul"
+    ]
+    for operation in matmuls:
+        source = operation["weight_source"]
+        base = int(operation["staged_weight_base_words"]) * 2
+        if base != total:
+            raise SystemExit(
+                f"weight image is not contiguous at byte {total}: the "
+                f"operation at PC {operation['pc']} declares base {base}"
+            )
+        shard = Path(source["checkpoint"]).expanduser() / source["shard"]
+        lines.append(
+            f"{base} {int(source['declared_segment_bytes'])} "
+            f"{int(source['declared_segment_offset'])} {shard}"
+        )
+        total += int(source["declared_segment_bytes"])
+    declared = int(vectors["staged_matmul_weight_layout"]["bytes"])
+    if total != declared:
+        raise SystemExit(
+            f"weight window maps {total} bytes, the vector set declares "
+            f"{declared}"
+        )
+    destination.write_text("\n".join(lines) + "\n", encoding="ascii")
+    return total
+
+
+def emit_golden(vectors: dict[str, Any], vector_dir: Path, out_dir: Path
+                ) -> dict[str, int]:
+    cases = _read_hex_words(vector_dir / "p3_case.hex")
+    issues = _read_hex_words(vector_dir / "p3_issue.hex")
+    expected = _read_hex_words(vector_dir / "p3_expect.hex")
+
+    trace_lines = [
+        "FIELDS ISSUE " + " ".join(GOLDEN_ISSUE_FIELDS),
+        "FIELDS VIEW " + " ".join(GOLDEN_VIEW_FIELDS),
+    ]
+    result_lines = [
+        "# RESULT <family> <sub> <descriptor_id> <pc> <fault> <trap_class> "
+        "<word count>, then that many WORD <address> <data> lines",
+    ]
+    issue_count = 0
+    view_count = 0
+    word_count = 0
+
+    for index, case in enumerate(vectors["cases"]):
+        record = cases[index * CASE_STRIDE : (index + 1) * CASE_STRIDE]
+        response_base = record[31]
+        response_count = record[21]
+        output_base = record[13]
+
+        views_by_pc: dict[int, list[dict[str, Any]]] = {}
+        for view in case["resolved_prefix_views"]:
+            views_by_pc.setdefault(int(view["pc"]), []).append(view)
+
+        operations = list(case["supported_prefix"])
+        operation_pcs = [int(operation["pc"]) for operation in operations]
+        if len(set(operation_pcs)) != len(operation_pcs):
+            raise SystemExit(
+                "this generator groups resolved views by PC, and a PC repeats "
+                "in the issue stream: the reference model must emit views per "
+                "ISSUE before a looping program can be given a golden trace"
+            )
+
+        at = output_base
+        for position in range(response_count):
+            offset = (response_base + position) * ISSUE_STRIDE
+            opcode = issues[offset]
+            family = (opcode >> 8) & 0xFF
+            sub = opcode & 0xFF
+            descriptor_id = issues[offset + 1]
+            pc = issues[offset + 2]
+            trap_class = issues[offset + 3]
+
+            trace_lines.append(f"ISSUE {family} {sub} {descriptor_id} {pc}")
+            issue_count += 1
+            for view in sorted(views_by_pc.get(pc, []),
+                               key=lambda entry: int(entry["slot"])):
+                trace_lines.append(
+                    "VIEW "
+                    f"{int(view['slot'])} {int(view['descriptor_id'])} "
+                    f"{int(view['extent'])} {int(view['extent_axis'])} "
+                    f"{int(view['element_offset'])} {len(view['dims'])}"
+                )
+                view_count += 1
+
+            operation = None
+            for candidate in operations:
+                if int(candidate["pc"]) == pc:
+                    operation = candidate
+                    break
+            words = _g1e_output_words(operation) if operation is not None else 0
+            fault = 1 if trap_class != 0 else 0
+            result_lines.append(
+                f"RESULT {family} {sub} {descriptor_id} {pc} {fault} "
+                f"{trap_class} {words}"
+            )
+            for step in range(words):
+                result_lines.append(f"WORD {at + step} {expected[at + step]}")
+            word_count += words
+            at += words
+
+        if at - output_base != record[15]:
+            raise SystemExit(
+                f"case {index} golden results cover {at - output_base} words, "
+                f"the vector set declares {record[15]}"
+            )
+
+    (out_dir / "p3_golden_trace.txt").write_text(
+        "\n".join(trace_lines) + "\n", encoding="ascii"
+    )
+    (out_dir / "p3_golden_results.txt").write_text(
+        "\n".join(result_lines) + "\n", encoding="ascii"
+    )
+    return {
+        "issues": issue_count,
+        "views": view_count,
+        "result_words": word_count,
+    }
+
+
+
 def build(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, default=OUTPUT_DIR)
+    parser.add_argument(
+        "--emit-g1e-from",
+        type=Path,
+        default=None,
+        help=(
+            "regenerate only the G1e golden artifacts and the weight-window "
+            "segment map from an existing, committed vector set, without "
+            "rebuilding the vectors themselves"
+        ),
+    )
     args = parser.parse_args(argv)
     args.output.mkdir(parents=True, exist_ok=True)
+    if args.emit_g1e_from is not None:
+        vectors = json.loads(
+            (args.emit_g1e_from / "abi3_shipped_prefix_vectors.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        window_bytes = emit_weight_window(
+            vectors, args.output / "p3_weight_window.txt"
+        )
+        golden = emit_golden(vectors, args.emit_g1e_from, args.output)
+        print(
+            f"abi3 shipped-prefix G1e golden: window_bytes={window_bytes} "
+            f"issues={golden['issues']} views={golden['views']} "
+            f"result_words={golden['result_words']}"
+        )
+        return 0
 
     deployment_vectors, deployment_case_words = _deployment_vectors()
     deployment_cases = deployment_vectors["cases"]
@@ -2357,6 +2560,15 @@ def build(argv: list[str] | None = None) -> int:
     }
     (args.output / "abi3_shipped_prefix_vectors.json").write_text(
         json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+    window_bytes = emit_weight_window(
+        summary, args.output / "p3_weight_window.txt"
+    )
+    golden = emit_golden(summary, args.output, args.output)
+    print(
+        f"abi3 shipped-prefix G1e golden: window_bytes={window_bytes} "
+        f"issues={golden['issues']} views={golden['views']} "
+        f"result_words={golden['result_words']}"
     )
     print(
         "abi3 shipped-prefix vectors: "

@@ -29,8 +29,20 @@ module ot_a3_shipped_prefix_top #(
     parameter integer INDEX_WORDS = 64,
     parameter integer SOURCE_WORDS = 65536,
     parameter integer RESULT_WORDS = 98304,
-    parameter integer MATMUL_WEIGHT_BYTES = 50331648,
-    parameter integer ENABLE_EXACT_MULTICAST = 0
+    // The weight image is addressed, not held.  This is a 64-bit byte count
+    // of the *image* the paged window is opened over: one operator's segment
+    // (386 MB for a Qwen3-8B layer, 1.24 GB for the LM head) or the whole
+    // 16.4 GB checkpoint.  It is a `longint unsigned` because a
+    // `parameter integer` is 32-bit and caps at 2 GiB, and nothing of this
+    // size is ever resident: see the DPI window below.
+    parameter longint unsigned MATMUL_WEIGHT_BYTES = 64'd50331648,
+    parameter integer ENABLE_EXACT_MULTICAST = 0,
+    // G1e hybrid co-simulation.  0: the engine array computes (the shipped
+    // witness).  1: the ENTIRE control path is still this RTL -- fetch,
+    // decode, view resolution, predicates, the loop stack, the wait set and
+    // issue -- and only the engine RESULT is supplied, at the engine result
+    // boundary, by the golden model.  No engine is instantiated in that mode.
+    parameter integer ENABLE_RESULT_INJECTION = 0
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -82,6 +94,15 @@ module ot_a3_shipped_prefix_top #(
     input  wire [31:0] cfg_rope_coefficient_object,
     input  wire [31:0] cfg_rope_coefficient_base,
     input  wire [31:0] cfg_output_base,
+    // Byte offset of this operator's weight window inside the model image.
+    // The engine port carries a 32-bit halfword offset, which reaches only
+    // 8 GiB; the window base is what lets a bounded 32-bit operator offset
+    // address any row of a 16.4 GB checkpoint.  64-bit throughout.
+    input  wire [63:0] cfg_matmul_weight_window_base,
+    // The device's own predicate-read port, served from device memory (never
+    // from the golden model): object id and the word base inside result_mem.
+    input  wire [31:0] cfg_predicate_object,
+    input  wire [31:0] cfg_predicate_base,
 
     output wire        busy,
     output wire        done,
@@ -167,7 +188,58 @@ module ot_a3_shipped_prefix_top #(
     output wire        multicast_protocol_error,
 
     input  wire [31:0] result_read_addr,
-    output wire [31:0] result_read_data
+    output wire [31:0] result_read_data,
+
+    // -- G1e issue trace, emitted by the RTL control plane ---------------
+    // One record per accepted engine issue, taken at the sequencer's own
+    // issue handshake: opcode, descriptor id, program counter, the schedule
+    // (queue) the SCHEDULE record selected, the issue serial and the IRS
+    // slot.  The resolved-view substream below carries every view the RTL
+    // resolver produced for it, with its descriptor id and its resolved
+    // address (object id is in the descriptor; extent, extent axis and
+    // element offset are the resolved address).
+    output wire        trace_issue_valid,
+    output wire [7:0]  trace_issue_family,
+    output wire [7:0]  trace_issue_sub,
+    output wire [31:0] trace_issue_descriptor_id,
+    output wire [31:0] trace_issue_index,
+    output wire [31:0] trace_issue_serial,
+    output wire [4:0]  trace_issue_queue,
+    output wire [4:0]  trace_issue_slot,
+    output wire        trace_view_valid,
+    output wire [31:0] trace_view_descriptor_id,
+    output wire [2:0]  trace_view_slot,
+    output wire [31:0] trace_view_extent,
+    output wire [7:0]  trace_view_extent_axis,
+    output wire [63:0] trace_view_element_offset,
+    output wire [7:0]  trace_view_rank,
+    output wire [4:0]  trace_view_irs_slot,
+    output wire [31:0] trace_issue_count,
+    output wire [31:0] trace_view_count,
+
+    // -- G1e engine-result injection boundary ----------------------------
+    // Visible only when ENABLE_RESULT_INJECTION != 0.  These reach exactly
+    // two places: the engine port's completion handshake, and result memory.
+    // No injection signal is an input to fetch, decode, view resolution,
+    // predicate evaluation, the loop stack, the wait set or issue.
+    output wire        inj_issue_valid,
+    output wire [7:0]  inj_issue_family,
+    output wire [7:0]  inj_issue_sub,
+    output wire [31:0] inj_issue_descriptor_id,
+    output wire [31:0] inj_issue_index,
+    output wire [31:0] inj_issue_view_count,
+    input  wire        inj_result_valid,
+    input  wire        inj_result_fault,
+    input  wire [15:0] inj_result_trap_class,
+    input  wire        inj_write_en,
+    input  wire [31:0] inj_write_addr,
+    input  wire [31:0] inj_write_data,
+    output reg  [31:0] inj_completion_count,
+    output wire        injection_enabled,
+
+    // -- predicate read service, from device memory ----------------------
+    output reg  [31:0] predicate_read_count,
+    output reg  [31:0] predicate_read_refused_count
 );
     reg [255:0]  program_mem [0:PROGRAM_WORDS-1];
     reg [1535:0] desc_mem [0:DESC_WORDS-1];
@@ -175,7 +247,30 @@ module ot_a3_shipped_prefix_top #(
     reg [31:0]   index_mem [0:INDEX_WORDS-1];
     reg [31:0]   source_mem [0:SOURCE_WORDS-1];
     reg [31:0]   result_mem [0:RESULT_WORDS-1];
-    reg [7:0]    matmul_weight_mem [0:MATMUL_WEIGHT_BYTES-1];
+
+    // -- the weight image: addressed through a paged window, never held ---
+    // The previous form declared `reg [7:0] matmul_weight_mem
+    // [0:MATMUL_WEIGHT_BYTES-1]` and $fread the whole blob at time 0.  That
+    // is one resident byte of simulator heap per checkpoint byte: 386 MB for
+    // one Qwen3-8B layer, 1.24 GB for the LM head, 16.4 GB for the model --
+    // and the declaration could not even be written, because a
+    // `parameter integer` is 32 bits.  The window below serves the same
+    // little-endian BF16 halfword from the real safetensors shards through a
+    // bounded, hard-capped page cache in the checker, so the memory the
+    // harness holds is the working set of one operator, not the model.
+    import "DPI-C" function longint unsigned ot_a3_weight_window_open(
+        input longint unsigned declared_bytes);
+    import "DPI-C" function int unsigned ot_a3_weight_window_halfword(
+        input longint unsigned halfword_index);
+    import "DPI-C" function void ot_a3_geometry_declare(
+        input int unsigned program_words,
+        input int unsigned desc_words,
+        input int unsigned index_words,
+        input int unsigned source_words,
+        input int unsigned result_words,
+        input longint unsigned matmul_weight_bytes,
+        input int unsigned result_injection,
+        input int unsigned exact_multicast);
 
     // Complete exact records cannot all be reconstructed from the 192-byte
     // descriptor-prefix image: TOPOLOGY is 256 bytes.  These side images are
@@ -195,9 +290,12 @@ module ot_a3_shipped_prefix_top #(
 
     integer clear_word;
     integer multicast_record_word;
-    integer weight_file;
-    integer weight_bytes_read;
+    longint unsigned weight_window_bytes;
     initial begin
+        ot_a3_geometry_declare(PROGRAM_WORDS, DESC_WORDS, INDEX_WORDS,
+                               SOURCE_WORDS, RESULT_WORDS,
+                               MATMUL_WEIGHT_BYTES, ENABLE_RESULT_INJECTION,
+                               ENABLE_EXACT_MULTICAST);
         $readmemh("p3_index.hex", index_mem);
         $readmemh("p3_source.hex", source_mem);
         multicast_communication_record = 1536'd0;
@@ -237,14 +335,13 @@ module ot_a3_shipped_prefix_top #(
                     multicast_counter_mem[multicast_record_word];
             end
         end
-        weight_file = $fopen("p3_matmul_weight.bin", "rb");
-        if (weight_file == 0)
-            $fatal(1, "cannot open p3_matmul_weight.bin");
-        weight_bytes_read = $fread(matmul_weight_mem, weight_file);
-        if (weight_bytes_read != MATMUL_WEIGHT_BYTES)
-            $fatal(1, "p3_matmul_weight.bin has %0d bytes, expected %0d",
-                   weight_bytes_read, MATMUL_WEIGHT_BYTES);
-        $fclose(weight_file);
+        // Open, do not load.  The window reports the byte count it can
+        // serve; a disagreement with the declared image is fatal, exactly as
+        // the short-$fread check was.
+        weight_window_bytes = ot_a3_weight_window_open(MATMUL_WEIGHT_BYTES);
+        if (weight_window_bytes != MATMUL_WEIGHT_BYTES)
+            $fatal(1, "weight window serves %0d bytes, expected %0d",
+                   weight_window_bytes, MATMUL_WEIGHT_BYTES);
         for (clear_word = 0; clear_word < RESULT_WORDS;
              clear_word = clear_word + 1)
             result_mem[clear_word] = 32'hdead_beef;
@@ -344,6 +441,8 @@ module ot_a3_shipped_prefix_top #(
     wire [31:0] seq_issue_descriptor_id;
     wire [31:0] seq_issue_index;
     wire [4:0] seq_issue_slot;
+    wire [31:0] seq_issue_serial;
+    wire [4:0] seq_issue_queue;
     wire seq_view_valid;
     wire [31:0] seq_view_descriptor_id;
     wire [2:0] seq_view_slot;
@@ -433,13 +532,23 @@ module ot_a3_shipped_prefix_top #(
     wire [15:0] multicast_trap_class;
     wire [7:0] multicast_refusal_reason;
 
+    // The completion the engine port returns: the multicast adapter's, the
+    // engine bridge's, or -- in G1e hybrid co-simulation -- the golden
+    // model's, at the engine RESULT boundary and nowhere else.
+    wire injected_ready = (ENABLE_RESULT_INJECTION != 0) && inj_result_valid;
+    wire engine_ready = (ENABLE_RESULT_INJECTION != 0)
+        ? injected_ready : bridge_issue_ready;
+    wire engine_fault = (ENABLE_RESULT_INJECTION != 0)
+        ? (inj_result_valid && inj_result_fault) : bridge_issue_fault;
+    wire [15:0] engine_trap_class = (ENABLE_RESULT_INJECTION != 0)
+        ? inj_result_trap_class : bridge_issue_trap_class;
     assign issue_ready = exact_multicast_issue
         ? (multicast_issue_active && (multicast_done || multicast_failed))
-        : bridge_issue_ready;
+        : engine_ready;
     assign issue_fault = exact_multicast_issue
-        ? multicast_failed : bridge_issue_fault;
+        ? multicast_failed : engine_fault;
     assign issue_trap_class = exact_multicast_issue
-        ? multicast_trap_class : bridge_issue_trap_class;
+        ? multicast_trap_class : engine_trap_class;
 
     assign response_valid = issue_valid && issue_ready;
     assign response_fault = issue_fault;
@@ -451,6 +560,13 @@ module ot_a3_shipped_prefix_top #(
 
     assign multicast_launch_count = multicast_launch_count_q;
     assign multicast_fault_count = multicast_fault_count_q;
+
+    reg        predicate_read_valid;
+    reg        predicate_read_value;
+    reg [15:0] predicate_read_trap_class;
+    wire        predicate_read_req;
+    wire [31:0] predicate_read_object_id;
+    wire [31:0] predicate_read_element_index;
 
     ot_a3_device_top #(
         .PROGRAM_WORDS(PROGRAM_WORDS),
@@ -512,21 +628,21 @@ module ot_a3_shipped_prefix_top #(
         .irs_rslot(irs_rslot),
         .irs_rlane(irs_rlane),
         .irs_rdata(irs_rdata),
-        .predicate_read_req(),
-        .predicate_read_object_id(),
-        .predicate_read_element_index(),
-        .predicate_read_valid(1'b0),
-        .predicate_read_value(1'b0),
-        .predicate_read_trap_class(16'd0),
+        .predicate_read_req(predicate_read_req),
+        .predicate_read_object_id(predicate_read_object_id),
+        .predicate_read_element_index(predicate_read_element_index),
+        .predicate_read_valid(predicate_read_valid),
+        .predicate_read_value(predicate_read_value),
+        .predicate_read_trap_class(predicate_read_trap_class),
         .issue_valid(seq_issue_valid),
         .issue_ready(seq_issue_ready),
         .issue_family(seq_issue_family),
         .issue_sub(seq_issue_sub),
         .issue_descriptor_id(seq_issue_descriptor_id),
         .issue_index(seq_issue_index),
-        .issue_serial(),
+        .issue_serial(seq_issue_serial),
         .issue_slot(seq_issue_slot),
-        .issue_queue(),
+        .issue_queue(seq_issue_queue),
         .complete_valid(complete_valid),
         .complete_slot(complete_slot),
         .complete_fault(complete_fault),
@@ -569,6 +685,144 @@ module ot_a3_shipped_prefix_top #(
         .dbg_wait_stalls(),
         .irs_protocol_error()
     );
+
+    // -- G1e issue trace -------------------------------------------------
+    // Taken at the sequencer's OWN issue handshake, not at the engine port:
+    // this is the control plane's issue event, with the schedule the
+    // SCHEDULE record selected and the serial the sequencer allocated.  The
+    // view substream is the RTL resolver's output for that issue -- resolved
+    // descriptor id, slot, extent, extent axis and element offset.
+    reg [31:0] trace_issue_count_q;
+    reg [31:0] trace_view_count_q;
+    assign trace_issue_valid = seq_issue_valid && seq_issue_ready;
+    assign trace_issue_family = seq_issue_family;
+    assign trace_issue_sub = seq_issue_sub;
+    assign trace_issue_descriptor_id = seq_issue_descriptor_id;
+    assign trace_issue_index = seq_issue_index;
+    assign trace_issue_serial = seq_issue_serial;
+    assign trace_issue_queue = seq_issue_queue;
+    assign trace_issue_slot = seq_issue_slot;
+    assign trace_view_valid = seq_view_valid;
+    assign trace_view_descriptor_id = seq_view_descriptor_id;
+    assign trace_view_slot = seq_view_slot;
+    assign trace_view_extent = seq_view_extent;
+    assign trace_view_extent_axis = seq_view_extent_axis;
+    assign trace_view_element_offset = seq_view_element_offset;
+    assign trace_view_rank = seq_view_rank;
+    assign trace_view_irs_slot = seq_view_irs_slot;
+    assign trace_issue_count = trace_issue_count_q;
+    assign trace_view_count = trace_view_count_q;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            trace_issue_count_q <= 32'd0;
+            trace_view_count_q <= 32'd0;
+        end else if (start) begin
+            trace_issue_count_q <= 32'd0;
+            trace_view_count_q <= 32'd0;
+        end else begin
+            if (trace_issue_valid)
+                trace_issue_count_q <= trace_issue_count_q + 32'd1;
+            if (trace_view_valid)
+                trace_view_count_q <= trace_view_count_q + 32'd1;
+        end
+    end
+
+    // -- predicate reads, served from the device's own memory -------------
+    // A predicate outcome may never come from the golden model (G1e property
+    // 2).  The sequencer's predicate logic evaluates it; this port only
+    // supplies the element the machine itself wrote into result memory.  An
+    // unmapped object is refused with A3_TRAP_DESCRIPTOR, never guessed.
+    wire [32:0] predicate_word_addr =
+        {1'b0, cfg_predicate_base} + {1'b0, predicate_read_element_index};
+    wire predicate_mapped =
+        (predicate_read_object_id == cfg_predicate_object) &&
+        (predicate_word_addr < RESULT_WORDS);
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            predicate_read_valid <= 1'b0;
+            predicate_read_value <= 1'b0;
+            predicate_read_trap_class <= 16'd0;
+            predicate_read_count <= 32'd0;
+            predicate_read_refused_count <= 32'd0;
+        end else begin
+            predicate_read_valid <= 1'b0;
+            predicate_read_trap_class <= 16'd0;
+            predicate_read_value <= 1'b0;
+            if (start) begin
+                predicate_read_count <= 32'd0;
+                predicate_read_refused_count <= 32'd0;
+            end
+            if (predicate_read_req && !predicate_read_valid) begin
+                predicate_read_valid <= 1'b1;
+                predicate_read_count <= predicate_read_count + 32'd1;
+                if (predicate_mapped) begin
+                    predicate_read_value <=
+                        (result_mem[predicate_word_addr[31:0]] != 32'd0);
+                end else begin
+                    predicate_read_trap_class <=
+                        ot_a3_pkg::A3_TRAP_DESCRIPTOR;
+                    predicate_read_refused_count <=
+                        predicate_read_refused_count + 32'd1;
+                end
+            end
+        end
+    end
+
+    // The last response the engine port returned.  Under injection the
+    // bridge is idle, so these are latched from the completion the RTL
+    // itself issued -- the opcode, descriptor and PC the sequencer produced,
+    // not anything the golden model supplied -- and they are therefore
+    // checked against the very same expectations as the real-engine run.
+    wire [31:0] bridge_last_response_index;
+    wire [7:0]  bridge_last_response_family;
+    wire [7:0]  bridge_last_response_sub;
+    wire [31:0] bridge_last_response_descriptor_id;
+    reg  [31:0] inj_last_response_index;
+    reg  [7:0]  inj_last_response_family;
+    reg  [7:0]  inj_last_response_sub;
+    reg  [31:0] inj_last_response_descriptor_id;
+    assign last_response_index = (ENABLE_RESULT_INJECTION != 0)
+        ? inj_last_response_index : bridge_last_response_index;
+    assign last_response_family = (ENABLE_RESULT_INJECTION != 0)
+        ? inj_last_response_family : bridge_last_response_family;
+    assign last_response_sub = (ENABLE_RESULT_INJECTION != 0)
+        ? inj_last_response_sub : bridge_last_response_sub;
+    assign last_response_descriptor_id = (ENABLE_RESULT_INJECTION != 0)
+        ? inj_last_response_descriptor_id : bridge_last_response_descriptor_id;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            inj_last_response_index <= 32'hffff_ffff;
+            inj_last_response_family <= 8'hff;
+            inj_last_response_sub <= 8'hff;
+            inj_last_response_descriptor_id <= 32'hffff_ffff;
+        end else if (start) begin
+            inj_last_response_index <= 32'hffff_ffff;
+            inj_last_response_family <= 8'hff;
+            inj_last_response_sub <= 8'hff;
+            inj_last_response_descriptor_id <= 32'hffff_ffff;
+        end else if (inj_issue_valid && issue_ready) begin
+            inj_last_response_index <= issue_index;
+            inj_last_response_family <= issue_family;
+            inj_last_response_sub <= issue_sub;
+            inj_last_response_descriptor_id <= issue_descriptor_id;
+        end
+    end
+
+    // -- G1e engine-result injection --------------------------------------
+    // The issue reaches the engine port exactly as it does in the shipped
+    // witness -- through the sequencer, the completion adapter and the
+    // resolved-view replay.  Only the RESULT is supplied here.  When
+    // injection is enabled the engine array is never issued to, so
+    // real_launch_count and engine_work_count read zero: the evidence that
+    // nothing was computed.
+    assign injection_enabled = (ENABLE_RESULT_INJECTION != 0);
+    assign inj_issue_valid = injection_enabled && issue_valid &&
+                             !exact_multicast_issue;
+    assign inj_issue_family = issue_family;
+    assign inj_issue_sub = issue_sub;
+    assign inj_issue_descriptor_id = issue_descriptor_id;
+    assign inj_issue_index = issue_index;
+    assign inj_issue_view_count = issue_view_count;
 
     // -- exact DeepSeek ROM wafer multicast ----------------------------
     // LINK owns no tensor views.  Record the number the adapter replayed for
@@ -874,10 +1128,22 @@ module ot_a3_shipped_prefix_top #(
     wire out_we;
     wire [31:0] out_addr;
     wire [31:0] out_data;
+    // The engine result boundary.  In injection mode the words come from the
+    // golden model; every other signal in this module still comes from RTL.
+    wire        res_we = (ENABLE_RESULT_INJECTION != 0) ? inj_write_en : out_we;
+    wire [31:0] res_addr =
+        (ENABLE_RESULT_INJECTION != 0) ? inj_write_addr : out_addr;
+    wire [31:0] res_data =
+        (ENABLE_RESULT_INJECTION != 0) ? inj_write_data : out_data;
     wire m0_reads_result;
     wire m1_reads_result;
     wire m1_reads_matmul_weight;
     reg fault_seen;
+
+    // Halfword index into the model image: the operator's 64-bit window base
+    // plus the engine port's 32-bit halfword offset, computed at 64 bits.
+    wire [63:0] m1_weight_halfword =
+        (cfg_matmul_weight_window_base >> 1) + {32'd0, m1_rd_addr};
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -890,8 +1156,12 @@ module ot_a3_shipped_prefix_top #(
             operand_read_oob <= 1'b0;
             result_write_oob <= 1'b0;
             fault_seen <= 1'b0;
+            inj_completion_count <= 32'd0;
         end else begin
+            if (inj_issue_valid && issue_ready)
+                inj_completion_count <= inj_completion_count + 32'd1;
             if (start) begin
+                inj_completion_count <= 32'd0;
                 output_write_count <= 32'd0;
                 writes_after_fault <= 32'd0;
                 operand_read_oob <= 1'b0;
@@ -910,10 +1180,16 @@ module ot_a3_shipped_prefix_top #(
             end
             if (m1_rd_en) begin
                 if (m1_reads_matmul_weight) begin
-                    if (m1_rd_addr < (MATMUL_WEIGHT_BYTES / 2))
-                        m1_rd_data <= {16'd0,
-                            matmul_weight_mem[(m1_rd_addr << 1) + 32'd1],
-                            matmul_weight_mem[m1_rd_addr << 1]};
+                    // 64-bit throughout.  The old form was
+                    // `matmul_weight_mem[m1_rd_addr << 1]`, whose shift is
+                    // evaluated at the 32-bit width of m1_rd_addr, so every
+                    // byte index above 2^32 aliased back into the low 4 GiB
+                    // -- silently, with no fault.  The window base is added
+                    // in 64 bits so a bounded 32-bit operator offset can
+                    // address any row of the checkpoint.
+                    if (m1_weight_halfword < (MATMUL_WEIGHT_BYTES >> 1))
+                        m1_rd_data <=
+                            ot_a3_weight_window_halfword(m1_weight_halfword);
                     else begin
                         m1_rd_data <= 32'd0;
                         operand_read_oob <= 1'b1;
@@ -942,18 +1218,18 @@ module ot_a3_shipped_prefix_top #(
                 if (!m1_reads_matmul_weight)
                     operand_read_oob <= 1'b1;
             end
-            if (out_we) begin
+            if (res_we) begin
                 output_write_count <= output_write_count + 32'd1;
-                if (out_addr < RESULT_WORDS)
-                    result_mem[out_addr] <= out_data;
+                if (res_addr < RESULT_WORDS)
+                    result_mem[res_addr] <= res_data;
                 else
                     result_write_oob <= 1'b1;
             end
             if (fault_seen &&
-                (out_we || (multicast_remote_write_valid &&
+                (res_we || (multicast_remote_write_valid &&
                             multicast_remote_write_ready)))
                 writes_after_fault <= writes_after_fault +
-                    (out_we ? 32'd1 : 32'd0) +
+                    (res_we ? 32'd1 : 32'd0) +
                     ((multicast_remote_write_valid &&
                       multicast_remote_write_ready) ? 32'd1 : 32'd0);
             if (issue_valid && issue_ready && issue_fault)
@@ -972,7 +1248,8 @@ module ot_a3_shipped_prefix_top #(
         .clk(clk),
         .rst_n(rst_n),
         .clear(start),
-        .issue_valid(issue_valid && !exact_multicast_issue),
+        .issue_valid(issue_valid && !exact_multicast_issue &&
+                     (ENABLE_RESULT_INJECTION == 0)),
         .issue_ready(bridge_issue_ready),
         .issue_fault(bridge_issue_fault),
         .issue_trap_class(bridge_issue_trap_class),
@@ -1055,9 +1332,9 @@ module ot_a3_shipped_prefix_top #(
         .capability_fault_count(capability_fault_count),
         .descriptor_fault_count(descriptor_fault_count),
         .engine_fault_count(engine_fault_count),
-        .last_response_index(last_response_index),
-        .last_response_family(last_response_family),
-        .last_response_sub(last_response_sub),
-        .last_response_descriptor_id(last_response_descriptor_id)
+        .last_response_index(bridge_last_response_index),
+        .last_response_family(bridge_last_response_family),
+        .last_response_sub(bridge_last_response_sub),
+        .last_response_descriptor_id(bridge_last_response_descriptor_id)
     );
 endmodule

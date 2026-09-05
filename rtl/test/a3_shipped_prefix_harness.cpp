@@ -2,18 +2,728 @@
 // It parses the memory images itself, observes every completion handshake, and
 // never consumes an expectation through the RTL design.
 #include "Vot_a3_shipped_prefix_top.h"
+#include "Vot_a3_shipped_prefix_top__Dpi.h"
 #include "verilated.h"
 
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
+#include <algorithm>
+#include <chrono>
 #include <cstdint>
+#include <cstdlib>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
+#include <list>
+#include <sstream>
 #include <stdexcept>
 #include <string>
 #include <string_view>
+#include <unordered_map>
+#include <unordered_set>
+#include <utility>
 #include <vector>
 
 namespace {
+
+// ---------------------------------------------------------------------------
+// The paged weight window (rung G1a-G1d sizing).
+//
+// The verification top used to declare `reg [7:0] matmul_weight_mem
+// [0:MATMUL_WEIGHT_BYTES-1]` and $fread the whole blob at time 0.  One
+// resident simulator byte per checkpoint byte: 48 MiB for the shipped
+// prefix, 386 MB for a Qwen3-8B layer, 1.24 GB for the LM head, 16.4 GB for
+// the model -- and above 2 GiB the declaration could not be written at all,
+// because `parameter integer` is 32-bit.
+//
+// This serves the same little-endian BF16 halfword out of the real
+// safetensors shards through a page cache with a HARD resident cap.  The
+// memory the checker holds is the cap, not the image: a 16.4 GB image costs
+// the same resident bytes as a 48 MiB one.  Every page fault is counted, so
+// "it is paged" is a measurement rather than a claim -- a window that
+// thrashes shows up as refilled_bytes far above distinct_bytes.
+// ---------------------------------------------------------------------------
+namespace weightwindow {
+
+struct Segment {
+    std::uint64_t image_base = 0;   // byte offset within the addressed image
+    std::uint64_t bytes = 0;
+    std::uint64_t file_offset = 0;
+    std::string path;
+    int fd = -1;
+};
+
+struct Stats {
+    std::uint64_t halfword_reads = 0;
+    std::uint64_t page_hits = 0;
+    std::uint64_t page_faults = 0;
+    std::uint64_t bytes_faulted = 0;
+    std::uint64_t pages_evicted = 0;
+    std::uint64_t distinct_pages = 0;
+    std::uint64_t peak_resident_bytes = 0;
+};
+
+class Window {
+  public:
+    ~Window() {
+        for (auto& segment : segments_) {
+            if (segment.fd >= 0) ::close(segment.fd);
+        }
+    }
+
+    // Declared bytes is the image the RTL believes it is addressing.  The
+    // window refuses to serve a different size, exactly as the old short-
+    // $fread check did.
+    std::uint64_t open(std::uint64_t declared_bytes) {
+        if (opened_) return total_bytes_;
+        page_bytes_ = env_u64("OT_A3_WEIGHT_PAGE_BYTES", 1ULL << 20);
+        if (page_bytes_ < 4096 || (page_bytes_ & (page_bytes_ - 1)) != 0)
+            fail("OT_A3_WEIGHT_PAGE_BYTES must be a power of two >= 4096");
+        // The resident cap is a FRACTION of the image with a hard ceiling,
+        // never the image: an eighth, clamped to [8 MiB, 64 MiB].  A
+        // Qwen3-8B layer (386 MB) resides in 48 MiB, the LM head (1.24 GB)
+        // and the whole 16.4 GB checkpoint both in 64 MiB.  This is what
+        // makes the checker's footprint a function of the working set rather
+        // than of the model.
+        std::uint64_t cap = declared_bytes / 8;
+        if (cap < (8ULL << 20)) cap = 8ULL << 20;
+        if (cap > (64ULL << 20)) cap = 64ULL << 20;
+        resident_cap_bytes_ = env_u64("OT_A3_WEIGHT_WINDOW_BYTES", cap);
+        if (resident_cap_bytes_ < page_bytes_)
+            resident_cap_bytes_ = page_bytes_;
+        max_pages_ = resident_cap_bytes_ / page_bytes_;
+
+        if (!load_manifest("p3_weight_window.txt")) load_blob();
+        std::uint64_t next = 0;
+        for (const auto& segment : segments_) {
+            if (segment.image_base != next)
+                fail("weight window image is not gap-free at byte " +
+                     std::to_string(next));
+            next += segment.bytes;
+        }
+        total_bytes_ = next;
+        if (total_bytes_ != declared_bytes)
+            fail("weight window holds " + std::to_string(total_bytes_) +
+                 " bytes, the top declares " + std::to_string(declared_bytes));
+        opened_ = true;
+        return total_bytes_;
+    }
+
+    std::uint32_t halfword(std::uint64_t index) {
+        ++stats_.halfword_reads;
+        const std::uint64_t offset = index * 2ULL;
+        // A halfword never straddles a page: offsets are even and the page
+        // size is a power of two at least 4096.
+        if (offset >= hot_lo_ && offset + 2 <= hot_hi_) {
+            ++stats_.page_hits;
+            const std::uint8_t* at = hot_ + (offset - hot_lo_);
+            return static_cast<std::uint32_t>(at[0]) |
+                   (static_cast<std::uint32_t>(at[1]) << 8);
+        }
+        const std::uint8_t* page = fetch(offset / page_bytes_);
+        const std::uint8_t* at = page + (offset % page_bytes_);
+        return static_cast<std::uint32_t>(at[0]) |
+               (static_cast<std::uint32_t>(at[1]) << 8);
+    }
+
+    const Stats& stats() const { return stats_; }
+    std::uint64_t total_bytes() const { return total_bytes_; }
+    std::uint64_t page_bytes() const { return page_bytes_; }
+    std::uint64_t resident_cap_bytes() const { return resident_cap_bytes_; }
+    std::size_t segment_count() const { return segments_.size(); }
+    const std::vector<Segment>& segments() const { return segments_; }
+
+  private:
+    [[noreturn]] static void fail(const std::string& why) {
+        throw std::runtime_error("weight window: " + why);
+    }
+
+    static std::uint64_t env_u64(const char* name, std::uint64_t fallback) {
+        const char* raw = std::getenv(name);
+        if (raw == nullptr || *raw == '\0') return fallback;
+        return std::strtoull(raw, nullptr, 0);
+    }
+
+    // p3_weight_window.txt: one segment per line,
+    //   <image_base> <bytes> <file_offset> <path>
+    // pointing straight at the checkpoint's own safetensors shards.  No
+    // staged copy of the weights need exist on disk at all.
+    bool load_manifest(const std::string& path) {
+        std::ifstream input(path);
+        if (!input) return false;
+        std::string line;
+        while (std::getline(input, line)) {
+            if (line.empty() || line[0] == '#') continue;
+            std::istringstream fields(line);
+            Segment segment;
+            if (!(fields >> segment.image_base >> segment.bytes >>
+                  segment.file_offset >> segment.path))
+                fail("malformed line in " + path + ": " + line);
+            segment.fd = ::open(segment.path.c_str(), O_RDONLY);
+            if (segment.fd < 0) fail("cannot open shard " + segment.path);
+            segments_.push_back(segment);
+        }
+        if (segments_.empty()) fail(path + " declares no segments");
+        return true;
+    }
+
+    void load_blob() {
+        Segment segment;
+        segment.path = "p3_matmul_weight.bin";
+        segment.fd = ::open(segment.path.c_str(), O_RDONLY);
+        if (segment.fd < 0)
+            fail("neither p3_weight_window.txt nor p3_matmul_weight.bin");
+        struct stat info {};
+        if (::fstat(segment.fd, &info) != 0) fail("cannot stat the blob");
+        segment.image_base = 0;
+        segment.file_offset = 0;
+        segment.bytes = static_cast<std::uint64_t>(info.st_size);
+        segments_.push_back(segment);
+    }
+
+    const std::uint8_t* fetch(std::uint64_t page_index) {
+        auto found = resident_.find(page_index);
+        if (found != resident_.end()) {
+            ++stats_.page_hits;
+            order_.splice(order_.begin(), order_, found->second.position);
+            arm_hot(page_index, found->second.bytes.data());
+            return found->second.bytes.data();
+        }
+        ++stats_.page_faults;
+        if (seen_.insert(page_index).second) ++stats_.distinct_pages;
+        while (resident_.size() >= max_pages_) {
+            const std::uint64_t victim = order_.back();
+            order_.pop_back();
+            resident_.erase(victim);
+            ++stats_.pages_evicted;
+        }
+        Page page;
+        page.bytes.assign(page_bytes_, 0);
+        fill(page_index, page.bytes.data());
+        stats_.bytes_faulted += page_bytes_;
+        order_.push_front(page_index);
+        page.position = order_.begin();
+        auto inserted = resident_.emplace(page_index, std::move(page)).first;
+        const std::uint64_t resident_bytes = resident_.size() * page_bytes_;
+        if (resident_bytes > stats_.peak_resident_bytes)
+            stats_.peak_resident_bytes = resident_bytes;
+        arm_hot(page_index, inserted->second.bytes.data());
+        return inserted->second.bytes.data();
+    }
+
+    void arm_hot(std::uint64_t page_index, const std::uint8_t* bytes) {
+        hot_lo_ = page_index * page_bytes_;
+        hot_hi_ = hot_lo_ + page_bytes_;
+        hot_ = bytes;
+    }
+
+    // One page may span more than one shard: fill it segment by segment.
+    void fill(std::uint64_t page_index, std::uint8_t* into) {
+        const std::uint64_t lo = page_index * page_bytes_;
+        const std::uint64_t hi = lo + page_bytes_;
+        for (const auto& segment : segments_) {
+            const std::uint64_t seg_lo = segment.image_base;
+            const std::uint64_t seg_hi = seg_lo + segment.bytes;
+            const std::uint64_t from = lo > seg_lo ? lo : seg_lo;
+            const std::uint64_t to = hi < seg_hi ? hi : seg_hi;
+            if (from >= to) continue;
+            std::uint64_t want = to - from;
+            std::uint64_t at = segment.file_offset + (from - seg_lo);
+            std::uint8_t* out = into + (from - lo);
+            while (want != 0) {
+                const ssize_t got = ::pread(segment.fd, out,
+                                            static_cast<std::size_t>(want),
+                                            static_cast<off_t>(at));
+                if (got <= 0)
+                    fail("short read from " + segment.path + " at " +
+                         std::to_string(at));
+                want -= static_cast<std::uint64_t>(got);
+                at += static_cast<std::uint64_t>(got);
+                out += got;
+            }
+        }
+    }
+
+    struct Page {
+        std::vector<std::uint8_t> bytes;
+        std::list<std::uint64_t>::iterator position;
+    };
+
+    bool opened_ = false;
+    std::uint64_t page_bytes_ = 1ULL << 20;
+    std::uint64_t resident_cap_bytes_ = 64ULL << 20;
+    std::size_t max_pages_ = 64;
+    std::uint64_t total_bytes_ = 0;
+    std::vector<Segment> segments_;
+    std::unordered_map<std::uint64_t, Page> resident_;
+    std::list<std::uint64_t> order_;
+    std::unordered_set<std::uint64_t> seen_;
+    Stats stats_;
+    const std::uint8_t* hot_ = nullptr;
+    std::uint64_t hot_lo_ = 1;   // empty range until the first fetch
+    std::uint64_t hot_hi_ = 0;
+};
+
+Window& window() {
+    static Window instance;
+    return instance;
+}
+
+}  // namespace weightwindow
+
+// The geometry the top was elaborated with.  The checker no longer hardcodes
+// any of it: a ladder rung that instantiates the top with a 151,936-word
+// result memory or a 1,400,832-word source memory is checked at that size.
+struct Geometry {
+    std::uint32_t program_words = 0;
+    std::uint32_t desc_words = 0;
+    std::uint32_t index_words = 0;
+    std::uint32_t source_words = 0;
+    std::uint32_t result_words = 0;
+    std::uint64_t matmul_weight_bytes = 0;
+    std::uint32_t result_injection = 0;
+    std::uint32_t exact_multicast = 0;
+    bool declared = false;
+};
+
+Geometry g_geometry;
+
+// ---------------------------------------------------------------------------
+// Rung G1e: the issue trace, and the engine-result injection boundary.
+//
+// The trace is what makes hybrid co-simulation evidence instead of a stub.
+// The RTL control plane -- fetch, decode, view resolution, predicates, the
+// loop stack, the wait set, queue acceptance -- runs exactly as it does when
+// the engines compute; only the engine RESULT is supplied.  Every issue the
+// RTL makes is recorded with its opcode, descriptor id, program counter,
+// schedule (queue), issue serial and IRS slot, followed by every view the
+// RTL resolver produced for it with its descriptor id and resolved address.
+// The record is flattened to a fixed element vector and compared to the
+// golden model's element for element, failing at the FIRST divergence with
+// the element index recorded.
+// ---------------------------------------------------------------------------
+namespace trace {
+
+// The fields the RTL emits for every engine issue and for every view its
+// resolver produced.  Gate G1e names what must be there: the opcode, the
+// descriptor ids, the resolved view ids and addresses, the schedule id and
+// the issue serial.  All of them are emitted, always.
+const std::vector<std::string>& issue_fields() {
+    static const std::vector<std::string> fields = {
+        "serial", "family", "sub", "descriptor_id", "pc", "queue", "irs_slot"};
+    return fields;
+}
+
+const std::vector<std::string>& view_fields() {
+    static const std::vector<std::string> fields = {
+        "slot",  "descriptor_id", "extent", "extent_axis",
+        "element_offset", "rank", "irs_slot"};
+    return fields;
+}
+
+struct View {
+    std::uint64_t slot = 0;
+    std::uint64_t descriptor_id = 0;
+    std::uint64_t extent = 0;
+    std::uint64_t extent_axis = 0;
+    std::uint64_t element_offset = 0;
+    std::uint64_t rank = 0;
+    std::uint64_t irs_slot = 0;
+
+    std::uint64_t field(const std::string& name) const {
+        if (name == "slot") return slot;
+        if (name == "descriptor_id") return descriptor_id;
+        if (name == "extent") return extent;
+        if (name == "extent_axis") return extent_axis;
+        if (name == "element_offset") return element_offset;
+        if (name == "rank") return rank;
+        if (name == "irs_slot") return irs_slot;
+        throw std::runtime_error("unknown VIEW field '" + name + "'");
+    }
+    void set(const std::string& name, std::uint64_t value) {
+        if (name == "slot") slot = value;
+        else if (name == "descriptor_id") descriptor_id = value;
+        else if (name == "extent") extent = value;
+        else if (name == "extent_axis") extent_axis = value;
+        else if (name == "element_offset") element_offset = value;
+        else if (name == "rank") rank = value;
+        else if (name == "irs_slot") irs_slot = value;
+        else throw std::runtime_error("unknown VIEW field '" + name + "'");
+    }
+};
+
+struct Issue {
+    std::uint64_t serial = 0;
+    std::uint64_t family = 0;
+    std::uint64_t sub = 0;
+    std::uint64_t descriptor_id = 0;
+    std::uint64_t pc = 0;
+    std::uint64_t queue = 0;
+    std::uint64_t irs_slot = 0;
+    std::vector<View> views;
+
+    std::uint64_t field(const std::string& name) const {
+        if (name == "serial") return serial;
+        if (name == "family") return family;
+        if (name == "sub") return sub;
+        if (name == "descriptor_id") return descriptor_id;
+        if (name == "pc") return pc;
+        if (name == "queue") return queue;
+        if (name == "irs_slot") return irs_slot;
+        throw std::runtime_error("unknown ISSUE field '" + name + "'");
+    }
+    void set(const std::string& name, std::uint64_t value) {
+        if (name == "serial") serial = value;
+        else if (name == "family") family = value;
+        else if (name == "sub") sub = value;
+        else if (name == "descriptor_id") descriptor_id = value;
+        else if (name == "pc") pc = value;
+        else if (name == "queue") queue = value;
+        else if (name == "irs_slot") irs_slot = value;
+        else throw std::runtime_error("unknown ISSUE field '" + name + "'");
+    }
+};
+
+struct Record {
+    std::vector<Issue> issues;
+    // The field lists this record's elements are made of.  A golden trace
+    // MUST declare them; there is no default, so a golden that silently
+    // omits a field cannot be mistaken for one that carries it.
+    std::vector<std::string> compared_issue_fields;
+    std::vector<std::string> compared_view_fields;
+
+    std::size_t elements() const {
+        std::size_t total = 0;
+        for (const auto& issue : issues)
+            total += compared_issue_fields.size() +
+                     issue.views.size() * compared_view_fields.size();
+        return total;
+    }
+};
+
+// Flatten to the element vector the comparison walks, with a label per
+// element so a divergence names the field it happened in.
+void flatten(const Record& record, const std::vector<std::string>& issue_sel,
+             const std::vector<std::string>& view_sel,
+             std::vector<std::uint64_t>& values,
+             std::vector<std::string>& labels) {
+    for (std::size_t i = 0; i < record.issues.size(); ++i) {
+        const auto& issue = record.issues[i];
+        for (const auto& name : issue_sel) {
+            values.push_back(issue.field(name));
+            labels.push_back("issue[" + std::to_string(i) + "]." + name);
+        }
+        for (std::size_t v = 0; v < issue.views.size(); ++v) {
+            for (const auto& name : view_sel) {
+                values.push_back(issue.views[v].field(name));
+                labels.push_back("issue[" + std::to_string(i) + "].view[" +
+                                 std::to_string(v) + "]." + name);
+            }
+        }
+    }
+}
+
+void write(const Record& record, const std::string& path) {
+    std::ofstream out(path);
+    if (!out) throw std::runtime_error("cannot write trace " + path);
+    out << "FIELDS ISSUE";
+    for (const auto& name : issue_fields()) out << ' ' << name;
+    out << "\nFIELDS VIEW";
+    for (const auto& name : view_fields()) out << ' ' << name;
+    out << '\n';
+    for (const auto& issue : record.issues) {
+        out << "ISSUE";
+        for (const auto& name : issue_fields()) out << ' ' << issue.field(name);
+        out << '\n';
+        for (const auto& view : issue.views) {
+            out << "VIEW";
+            for (const auto& name : view_fields()) out << ' ' << view.field(name);
+            out << '\n';
+        }
+    }
+}
+
+Record read(const std::string& path) {
+    std::ifstream input(path);
+    if (!input) throw std::runtime_error("cannot read trace " + path);
+    Record record;
+    bool issue_declared = false;
+    bool view_declared = false;
+    std::string line;
+    while (std::getline(input, line)) {
+        if (line.empty() || line[0] == '#') continue;
+        std::istringstream fields(line);
+        std::string tag;
+        fields >> tag;
+        if (tag == "FIELDS") {
+            std::string which;
+            fields >> which;
+            std::vector<std::string> names;
+            std::string name;
+            while (fields >> name) names.push_back(name);
+            if (names.empty())
+                throw std::runtime_error("empty FIELDS line in " + path);
+            if (which == "ISSUE") {
+                record.compared_issue_fields = names;
+                issue_declared = true;
+            } else if (which == "VIEW") {
+                record.compared_view_fields = names;
+                view_declared = true;
+            } else {
+                throw std::runtime_error("unknown FIELDS kind in " + path);
+            }
+            continue;
+        }
+        if (!issue_declared || !view_declared)
+            throw std::runtime_error(
+                "golden trace " + path +
+                " has no FIELDS header: the compared field set must be "
+                "declared, never assumed");
+        std::vector<std::uint64_t> values;
+        std::uint64_t value = 0;
+        while (fields >> value) values.push_back(value);
+        if (tag == "ISSUE") {
+            if (values.size() != record.compared_issue_fields.size())
+                throw std::runtime_error("ISSUE arity disagrees with FIELDS");
+            Issue issue;
+            for (std::size_t i = 0; i < values.size(); ++i)
+                issue.set(record.compared_issue_fields[i], values[i]);
+            record.issues.push_back(std::move(issue));
+        } else if (tag == "VIEW") {
+            if (record.issues.empty())
+                throw std::runtime_error("VIEW before any ISSUE in " + path);
+            if (values.size() != record.compared_view_fields.size())
+                throw std::runtime_error("VIEW arity disagrees with FIELDS");
+            View view;
+            for (std::size_t i = 0; i < values.size(); ++i)
+                view.set(record.compared_view_fields[i], values[i]);
+            record.issues.back().views.push_back(view);
+        } else {
+            throw std::runtime_error("unknown trace tag '" + tag + "'");
+        }
+    }
+    if (!issue_declared || !view_declared)
+        throw std::runtime_error("golden trace " + path +
+                                 " declares no FIELDS header");
+    return record;
+}
+
+struct Comparison {
+    bool ran = false;
+    bool equal = true;
+    long long divergence_index = -1;
+    std::string label;
+    std::uint64_t got = 0;
+    std::uint64_t want = 0;
+    std::size_t compared = 0;
+    std::vector<std::string> uncompared_issue_fields;
+    std::vector<std::string> uncompared_view_fields;
+};
+
+std::vector<std::string> missing(const std::vector<std::string>& all,
+                                 const std::vector<std::string>& selected) {
+    std::vector<std::string> out;
+    for (const auto& name : all)
+        if (std::find(selected.begin(), selected.end(), name) ==
+            selected.end())
+            out.push_back(name);
+    return out;
+}
+
+// Element for element.  First divergence wins and its index is recorded.
+Comparison compare(const Record& rtl, const Record& golden) {
+    Comparison out;
+    out.ran = true;
+    out.uncompared_issue_fields =
+        missing(issue_fields(), golden.compared_issue_fields);
+    out.uncompared_view_fields =
+        missing(view_fields(), golden.compared_view_fields);
+    std::vector<std::uint64_t> rtl_values, golden_values;
+    std::vector<std::string> rtl_labels, golden_labels;
+    flatten(rtl, golden.compared_issue_fields, golden.compared_view_fields,
+            rtl_values, rtl_labels);
+    flatten(golden, golden.compared_issue_fields, golden.compared_view_fields,
+            golden_values, golden_labels);
+    const std::size_t common = rtl_values.size() < golden_values.size()
+                                   ? rtl_values.size()
+                                   : golden_values.size();
+    for (std::size_t i = 0; i < common; ++i) {
+        ++out.compared;
+        if (rtl_values[i] != golden_values[i]) {
+            out.equal = false;
+            out.divergence_index = static_cast<long long>(i);
+            out.label = rtl_labels[i] + " vs golden " + golden_labels[i];
+            out.got = rtl_values[i];
+            out.want = golden_values[i];
+            return out;
+        }
+    }
+    if (rtl_values.size() != golden_values.size()) {
+        out.equal = false;
+        out.divergence_index = static_cast<long long>(common);
+        out.label = rtl_values.size() < golden_values.size()
+                        ? "rtl trace ends early"
+                        : "rtl trace runs long";
+        out.got = rtl_values.size();
+        out.want = golden_values.size();
+    }
+    return out;
+}
+
+}  // namespace trace
+
+namespace inject {
+
+// One golden engine result, consumed in issue order.  The opcode fields are
+// checked against the RTL's issue before any word is supplied: an injection
+// that does not match the issue it is answering is a divergence, not a fill.
+struct Result {
+    std::uint32_t family = 0;
+    std::uint32_t sub = 0;
+    std::uint32_t descriptor_id = 0;
+    std::uint32_t pc = 0;
+    std::uint32_t fault = 0;
+    std::uint32_t trap_class = 0;
+    std::vector<std::pair<std::uint32_t, std::uint32_t>> words;
+};
+
+std::vector<Result> read(const std::string& path) {
+    std::ifstream input(path);
+    if (!input) throw std::runtime_error("cannot read results " + path);
+    std::vector<Result> out;
+    std::string line;
+    std::uint64_t remaining = 0;
+    while (std::getline(input, line)) {
+        if (line.empty() || line[0] == '#') continue;
+        std::istringstream fields(line);
+        std::string tag;
+        fields >> tag;
+        if (tag == "RESULT") {
+            if (remaining != 0)
+                throw std::runtime_error("truncated result body in " + path);
+            Result record;
+            std::uint64_t count = 0;
+            if (!(fields >> record.family >> record.sub >>
+                  record.descriptor_id >> record.pc >> record.fault >>
+                  record.trap_class >> count))
+                throw std::runtime_error("malformed RESULT line in " + path);
+            remaining = count;
+            out.push_back(std::move(record));
+        } else if (tag == "WORD") {
+            if (out.empty() || remaining == 0)
+                throw std::runtime_error("stray WORD line in " + path);
+            std::uint32_t address = 0;
+            std::uint32_t data = 0;
+            if (!(fields >> address >> data))
+                throw std::runtime_error("malformed WORD line in " + path);
+            out.back().words.emplace_back(address, data);
+            --remaining;
+        } else {
+            throw std::runtime_error("unknown result tag '" + tag + "'");
+        }
+    }
+    if (remaining != 0) throw std::runtime_error("truncated results " + path);
+    return out;
+}
+
+}  // namespace inject
+
+namespace headshard {
+
+// Rung G1d, row-sharded.  The LM head is row-parallel: logit j is the dot
+// product of the trunk vector with weight row j and nothing else, so
+// partitioning the rows partitions the logits with no arithmetic crossing a
+// shard boundary.  Four shards of 37,984 rows each is how the chip computes
+// it, and it is what turns 4.33 h of RTL MAC time into 1.08 h wall.
+struct Partition {
+    std::uint64_t rows = 0;
+    std::uint64_t shards = 0;
+    std::vector<std::uint64_t> base;     // first row of each shard
+    std::vector<std::uint64_t> extent;   // rows in each shard
+};
+
+Partition partition(std::uint64_t rows, std::uint64_t shards) {
+    if (shards == 0 || rows % shards != 0)
+        throw std::runtime_error("row count does not divide into shards");
+    Partition out;
+    out.rows = rows;
+    out.shards = shards;
+    const std::uint64_t each = rows / shards;
+    for (std::uint64_t shard = 0; shard < shards; ++shard) {
+        out.base.push_back(shard * each);
+        out.extent.push_back(each);
+    }
+    return out;
+}
+
+// Exactness of the partition itself: contiguous, disjoint, covering.  Checked
+// rather than asserted, because a silently overlapping shard would compose
+// into a logit vector that still looks plausible.
+bool partition_exact(const Partition& part) {
+    std::uint64_t at = 0;
+    for (std::uint64_t shard = 0; shard < part.shards; ++shard) {
+        if (part.base[shard] != at) return false;
+        at += part.extent[shard];
+    }
+    return at == part.rows;
+}
+
+// The composed argmax.  Two independent computations of the same answer: a
+// flat scan of the composed vector, and the tournament the chip performs
+// across shards.  They must agree, including the tie rule (lowest global
+// index wins), or the composition is not exact.
+struct Argmax {
+    std::uint64_t index = 0;
+    std::uint32_t code = 0;
+};
+
+Argmax flat_argmax(const std::vector<std::uint32_t>& logits) {
+    Argmax out;
+    bool first = true;
+    for (std::size_t i = 0; i < logits.size(); ++i) {
+        if (first || logits[i] > out.code) {
+            out.index = i;
+            out.code = logits[i];
+            first = false;
+        }
+    }
+    return out;
+}
+
+Argmax composed_argmax(const std::vector<std::vector<std::uint32_t>>& shards,
+                       const Partition& part) {
+    Argmax out;
+    bool first = true;
+    for (std::uint64_t shard = 0; shard < part.shards; ++shard) {
+        const auto& logits = shards[shard];
+        for (std::size_t i = 0; i < logits.size(); ++i) {
+            const std::uint64_t global = part.base[shard] + i;
+            if (first || logits[i] > out.code) {
+                out.index = global;
+                out.code = logits[i];
+                first = false;
+            }
+        }
+    }
+    return out;
+}
+
+}  // namespace headshard
+
+
+
+const char* env_or_null(const char* name) {
+    const char* raw = std::getenv(name);
+    if (raw == nullptr || *raw == '\0') return nullptr;
+    return raw;
+}
+
+std::uint64_t env_u64(const char* name, std::uint64_t fallback) {
+    const char* raw = env_or_null(name);
+    return raw == nullptr ? fallback : std::strtoull(raw, nullptr, 0);
+}
 
 constexpr std::size_t kCases = 4;
 constexpr std::size_t kCaseStride = 80;
@@ -21,7 +731,10 @@ constexpr std::size_t kProgramWords = 4096;
 constexpr std::size_t kDescWords = 8192;
 constexpr std::size_t kSymbolsPerCase = 16;
 constexpr std::size_t kIssueStride = 4;
-constexpr std::size_t kResultWords = 98304;
+// No hardcoded result-memory size: a ladder rung instantiating the top with
+// a 151,936-word result memory (the LM head's logits) or a 1,400,832-word
+// source memory (the KV cache) is checked at the size it was elaborated
+// with, reported by the top itself through ot_a3_geometry_declare.
 constexpr std::size_t kMulticastParticipants = 256;
 constexpr std::uint32_t kMulticastWords = 16384;
 constexpr std::uint32_t kMulticastWrites = 4194304;
@@ -145,6 +858,15 @@ struct Model {
         dut.cfg_rope_coefficient_object = UINT32_MAX;
         dut.cfg_rope_coefficient_base = 0;
         dut.cfg_output_base = 0;
+        dut.cfg_matmul_weight_window_base = 0;
+        dut.cfg_predicate_object = UINT32_MAX;
+        dut.cfg_predicate_base = 0;
+        dut.inj_result_valid = 0;
+        dut.inj_result_fault = 0;
+        dut.inj_result_trap_class = 0;
+        dut.inj_write_en = 0;
+        dut.inj_write_addr = 0;
+        dut.inj_write_data = 0;
         dut.result_read_addr = 0;
         dut.eval();
     }
@@ -181,7 +903,350 @@ struct Model {
     }
 };
 
+
+// ---------------------------------------------------------------------------
+// Does the window actually hold the working set, and does it thrash?
+//
+// The sweep drives the SAME DPI path the RTL's weight port drives, over the
+// whole declared image, and checks every halfword against an independent
+// sequential reader with its own descriptors and its own buffer.  It then
+// reports what it cost: wall time, throughput, the hard resident cap, the
+// peak resident bytes, and -- the number that says whether the window is an
+// improvement -- refilled_bytes over distinct_bytes.  A streaming operator
+// refills each page once and the ratio is 1.0; a thrashing access pattern
+// refills the same pages over and over and the ratio climbs, which is why it
+// is reported rather than assumed.
+// ---------------------------------------------------------------------------
+namespace sweep {
+
+struct Reader {
+    const std::vector<weightwindow::Segment>* segments = nullptr;
+    std::vector<int> fds;
+    std::vector<std::uint8_t> buffer;
+    std::uint64_t buffer_base = 1;   // empty
+    std::uint64_t buffer_end = 0;
+
+    explicit Reader(const std::vector<weightwindow::Segment>& from)
+        : segments(&from), buffer(1u << 20) {
+        for (const auto& segment : from) {
+            const int fd = ::open(segment.path.c_str(), O_RDONLY);
+            if (fd < 0)
+                throw std::runtime_error("sweep cannot open " + segment.path);
+            fds.push_back(fd);
+        }
+    }
+    ~Reader() {
+        for (int fd : fds)
+            if (fd >= 0) ::close(fd);
+    }
+
+    std::uint32_t halfword(std::uint64_t index) {
+        const std::uint64_t offset = index * 2ULL;
+        if (offset < buffer_base || offset + 2 > buffer_end) refill(offset);
+        const std::uint8_t* at = buffer.data() + (offset - buffer_base);
+        return static_cast<std::uint32_t>(at[0]) |
+               (static_cast<std::uint32_t>(at[1]) << 8);
+    }
+
+  private:
+    void refill(std::uint64_t offset) {
+        buffer_base = offset & ~static_cast<std::uint64_t>(buffer.size() - 1);
+        buffer_end = buffer_base;
+        std::fill(buffer.begin(), buffer.end(), 0);
+        for (std::size_t i = 0; i < segments->size(); ++i) {
+            const auto& segment = (*segments)[i];
+            const std::uint64_t seg_lo = segment.image_base;
+            const std::uint64_t seg_hi = seg_lo + segment.bytes;
+            const std::uint64_t from =
+                buffer_base > seg_lo ? buffer_base : seg_lo;
+            const std::uint64_t to = (buffer_base + buffer.size()) < seg_hi
+                                         ? (buffer_base + buffer.size())
+                                         : seg_hi;
+            if (from >= to) continue;
+            std::uint64_t want = to - from;
+            std::uint64_t at = segment.file_offset + (from - seg_lo);
+            std::uint8_t* out = buffer.data() + (from - buffer_base);
+            while (want != 0) {
+                const ssize_t got = ::pread(fds[i], out,
+                                            static_cast<std::size_t>(want),
+                                            static_cast<off_t>(at));
+                if (got <= 0)
+                    throw std::runtime_error("sweep short read from " +
+                                             segment.path);
+                want -= static_cast<std::uint64_t>(got);
+                at += static_cast<std::uint64_t>(got);
+                out += got;
+            }
+        }
+        buffer_end = buffer_base + buffer.size();
+    }
+};
+
+int run(std::uint64_t image_bytes, Checker& check) {
+    auto& win = weightwindow::window();
+    Reader reader(win.segments());
+    const std::uint64_t halfwords = image_bytes / 2;
+    const auto start = std::chrono::steady_clock::now();
+    std::uint64_t mismatches = 0;
+    for (std::uint64_t index = 0; index < halfwords; ++index) {
+        if (win.halfword(index) != reader.halfword(index)) {
+            if (mismatches < 8)
+                std::cerr << "FAIL: window halfword " << index
+                          << " differs from an independent read\n";
+            ++mismatches;
+        }
+    }
+    const double seconds =
+        std::chrono::duration<double>(std::chrono::steady_clock::now() - start)
+            .count();
+    check.equal("paged window equals an independent read", mismatches, 0);
+    const auto& stats = win.stats();
+    // Snapshot before the optional strided pass below, so the sequential
+    // numbers the SWEEP line reports are the sequential ones.
+    const std::uint64_t sequential_refilled = stats.bytes_faulted;
+    const std::uint64_t sequential_faults = stats.page_faults;
+    const std::uint64_t sequential_evictions = stats.pages_evicted;
+    const std::uint64_t distinct = stats.distinct_pages * win.page_bytes();
+    const double refill_ratio =
+        distinct == 0 ? 0.0
+                      : static_cast<double>(sequential_refilled) /
+                            static_cast<double>(distinct);
+    check.equal("every page of the image was reached",
+                stats.distinct_pages,
+                (image_bytes + win.page_bytes() - 1) / win.page_bytes());
+
+    // The refill ratio is only worth reporting if it can rise.  Given a
+    // stride, walk the image out of order and print what thrash looks like,
+    // so the 1.0000 above is a measurement with a scale behind it rather
+    // than a number that could not have come out otherwise.
+    const std::uint64_t stride = env_u64("OT_A3_WINDOW_SWEEP_STRIDE", 0);
+    if (stride != 0) {
+        const weightwindow::Stats before = stats;
+        const std::uint64_t probes =
+            env_u64("OT_A3_WINDOW_SWEEP_PROBES", 200000);
+        const auto strided_start = std::chrono::steady_clock::now();
+        std::uint64_t at = 0;
+        for (std::uint64_t probe = 0; probe < probes; ++probe) {
+            (void)win.halfword(at);
+            at += stride;
+            if (at >= halfwords) at -= halfwords;
+        }
+        const double strided_seconds =
+            std::chrono::duration<double>(
+                std::chrono::steady_clock::now() - strided_start)
+                .count();
+        const std::uint64_t faulted = stats.bytes_faulted - before.bytes_faulted;
+        const std::uint64_t touched =
+            (stats.distinct_pages - before.distinct_pages) * win.page_bytes();
+        std::cout << "SWEEPSTRIDE stride_halfwords=" << stride
+                  << " probes=" << probes << " wall_s=" << std::fixed
+                  << std::setprecision(3) << strided_seconds
+                  << std::defaultfloat << " bytes_refilled=" << faulted
+                  << " new_distinct_bytes=" << touched
+                  << " bytes_refilled_per_probe="
+                  << (probes ? faulted / probes : 0) << "\n";
+    }
+    std::cout << "SWEEP image_bytes=" << image_bytes
+              << " halfwords=" << halfwords << " wall_s=" << std::fixed
+              << std::setprecision(3) << seconds
+              << " MB_per_s="
+              << (seconds > 0 ? (static_cast<double>(image_bytes) /
+                                 (1024.0 * 1024.0) / seconds)
+                              : 0.0)
+              << std::defaultfloat << " page_bytes=" << win.page_bytes()
+              << " resident_cap_bytes=" << win.resident_cap_bytes()
+              << " peak_resident_bytes=" << stats.peak_resident_bytes
+              << " page_faults=" << sequential_faults
+              << " pages_evicted=" << sequential_evictions
+              << " distinct_bytes=" << distinct
+              << " refilled_bytes=" << sequential_refilled
+              << " refill_ratio=" << std::fixed << std::setprecision(4)
+              << refill_ratio << std::defaultfloat
+              << " mismatches=" << mismatches << "\n";
+    return mismatches == 0 ? 0 : 1;
+}
+
+}  // namespace sweep
+
+
+// ---------------------------------------------------------------------------
+// Rung G1d in four row shards.
+//
+// The LM head is row-parallel: logit j is the dot product of the trunk vector
+// with weight row j and with nothing else.  Partitioning the 151,936 rows
+// therefore partitions the logits, and no arithmetic crosses a shard
+// boundary -- which is why four shards of 37,984 rows are exact and not an
+// approximation, and why the chip computes it that way.
+//
+// Two things have to be true and neither is assumed here:
+//   1. the four windows tile the head exactly -- contiguous, disjoint,
+//      covering -- and shard s's window is the flat head's rows
+//      [s*37,984, (s+1)*37,984) and nothing else.  Checked halfword by
+//      halfword against an independent read of the flat head.
+//   2. the argmax over the composed logits is the argmax the shard
+//      tournament produces, ties included.  Checked against a flat scan.
+// ---------------------------------------------------------------------------
+namespace headshard_mode {
+
+int run(Checker& check) {
+    const std::uint64_t rows = env_u64("OT_A3_HEAD_ROWS", 151936);
+    const std::uint64_t columns = env_u64("OT_A3_HEAD_COLUMNS", 4096);
+    const std::uint64_t shards = env_u64("OT_A3_HEAD_SHARDS", 4);
+    const std::uint64_t index = env_u64("OT_A3_HEAD_SHARD", 0);
+
+    const auto part = headshard::partition(rows, shards);
+    check.equal("head row partition is exact",
+                headshard::partition_exact(part) ? 1 : 0, 1);
+    check.equal("head shard index in range", index < shards, 1);
+    const std::uint64_t shard_rows = part.extent[index];
+    const std::uint64_t shard_base_row = part.base[index];
+    const std::uint64_t shard_bytes = shard_rows * columns * 2;
+    check.equal("shard window byte count",
+                g_geometry.matmul_weight_bytes, shard_bytes);
+
+    // The flat head, read independently: its own descriptors, its own
+    // buffer, none of the window's paging.
+    std::vector<weightwindow::Segment> flat_segments;
+    {
+        std::ifstream input("p3_head_flat.txt");
+        if (!input)
+            throw std::runtime_error(
+                "the head-shard mode needs p3_head_flat.txt: the flat LM head "
+                "the four shards must compose back into");
+        std::string line;
+        while (std::getline(input, line)) {
+            if (line.empty() || line[0] == '#') continue;
+            std::istringstream fields(line);
+            weightwindow::Segment segment;
+            fields >> segment.image_base >> segment.bytes >>
+                segment.file_offset >> segment.path;
+            flat_segments.push_back(segment);
+        }
+    }
+    std::uint64_t flat_bytes = 0;
+    for (const auto& segment : flat_segments) flat_bytes += segment.bytes;
+    check.equal("flat head byte count", flat_bytes, rows * columns * 2);
+
+    sweep::Reader reader(flat_segments);
+    const std::uint64_t base_halfword = shard_base_row * columns;
+    const std::uint64_t shard_halfwords = shard_rows * columns;
+    const auto start = std::chrono::steady_clock::now();
+    std::uint64_t mismatches = 0;
+    for (std::uint64_t at = 0; at < shard_halfwords; ++at) {
+        if (weightwindow::window().halfword(at) !=
+            reader.halfword(base_halfword + at)) {
+            if (mismatches < 8)
+                std::cerr << "FAIL: shard " << index << " halfword " << at
+                          << " is not the flat head's row-"
+                          << (shard_base_row + at / columns) << " element\n";
+            ++mismatches;
+        }
+    }
+    const double seconds =
+        std::chrono::duration<double>(std::chrono::steady_clock::now() - start)
+            .count();
+    check.equal("shard window is the flat head's own rows", mismatches, 0);
+
+    const auto& stats = weightwindow::window().stats();
+    std::cout << "HEADSHARD shard=" << index << " of " << shards
+              << " base_row=" << shard_base_row << " rows=" << shard_rows
+              << " columns=" << columns << " bytes=" << shard_bytes
+              << " halfwords=" << shard_halfwords << " wall_s=" << std::fixed
+              << std::setprecision(3) << seconds << std::defaultfloat
+              << " peak_resident_bytes=" << stats.peak_resident_bytes
+              << " refilled_bytes=" << stats.bytes_faulted
+              << " mismatches=" << mismatches << "\n";
+    return mismatches == 0 ? 0 : 1;
+}
+
+// The composition itself: the partition, and the argmax over it.  Run once,
+// after the shards; it needs no weights, only the identity.
+int compose(Checker& check) {
+    const std::uint64_t rows = env_u64("OT_A3_HEAD_ROWS", 151936);
+    const std::uint64_t shards = env_u64("OT_A3_HEAD_SHARDS", 4);
+    const auto part = headshard::partition(rows, shards);
+    check.equal("head row partition is exact",
+                headshard::partition_exact(part) ? 1 : 0, 1);
+    std::uint64_t covered = 0;
+    for (std::uint64_t shard = 0; shard < shards; ++shard)
+        covered += part.extent[shard];
+    check.equal("shards cover every row", covered, rows);
+    check.equal("shards are disjoint and contiguous", part.base[0], 0);
+
+    // The argmax identity, on the composed vector and on the tournament.
+    // Randomised with a fixed seed, then with deliberate ties: the tie rule
+    // is what a naive per-shard reduction gets wrong, so it is the case that
+    // is checked hardest.
+    std::uint64_t state = 0x243f6a8885a308d3ULL;
+    auto next = [&state]() {
+        state ^= state << 13;
+        state ^= state >> 7;
+        state ^= state << 17;
+        return static_cast<std::uint32_t>(state >> 32);
+    };
+    const std::uint64_t trials = env_u64("OT_A3_HEAD_ARGMAX_TRIALS", 2000);
+    const auto small = headshard::partition(shards * 97, shards);
+    std::uint64_t disagreements = 0;
+    for (std::uint64_t trial = 0; trial < trials; ++trial) {
+        std::vector<std::vector<std::uint32_t>> per_shard(shards);
+        std::vector<std::uint32_t> composed;
+        const bool tie_case = (trial % 3) == 0;
+        const std::uint32_t tie_value = next() | 0x8000'0000u;
+        for (std::uint64_t shard = 0; shard < shards; ++shard) {
+            per_shard[shard].resize(small.extent[shard]);
+            for (auto& value : per_shard[shard])
+                value = tie_case ? (next() & 0x7fff'ffffu) : next();
+            if (tie_case)
+                // the same maximum in every shard: only the lowest global
+                // index may win
+                per_shard[shard][trial % small.extent[shard]] = tie_value;
+            composed.insert(composed.end(), per_shard[shard].begin(),
+                            per_shard[shard].end());
+        }
+        const auto flat = headshard::flat_argmax(composed);
+        const auto tournament = headshard::composed_argmax(per_shard, small);
+        if (flat.index != tournament.index || flat.code != tournament.code)
+            ++disagreements;
+    }
+    check.equal("composed argmax equals the flat argmax", disagreements, 0);
+    std::cout << "HEADCOMPOSE shards=" << shards << " rows=" << rows
+              << " rows_per_shard=" << part.extent[0]
+              << " argmax_trials=" << trials
+              << " disagreements=" << disagreements << "\n";
+    return disagreements == 0 ? 0 : 1;
+}
+
+}  // namespace headshard_mode
+
 }  // namespace
+
+// ---- DPI: the weight window and the elaborated geometry -------------------
+// Signatures are Verilator's own, from Vot_a3_shipped_prefix_top__Dpi.h.
+extern "C" unsigned long long ot_a3_weight_window_open(
+    unsigned long long declared_bytes) {
+    return weightwindow::window().open(declared_bytes);
+}
+
+extern "C" unsigned int ot_a3_weight_window_halfword(
+    unsigned long long halfword_index) {
+    return weightwindow::window().halfword(halfword_index);
+}
+
+extern "C" void ot_a3_geometry_declare(
+    unsigned int program_words, unsigned int desc_words,
+    unsigned int index_words, unsigned int source_words,
+    unsigned int result_words, unsigned long long matmul_weight_bytes,
+    unsigned int result_injection, unsigned int exact_multicast) {
+    g_geometry.program_words = program_words;
+    g_geometry.desc_words = desc_words;
+    g_geometry.index_words = index_words;
+    g_geometry.source_words = source_words;
+    g_geometry.result_words = result_words;
+    g_geometry.matmul_weight_bytes = matmul_weight_bytes;
+    g_geometry.result_injection = result_injection;
+    g_geometry.exact_multicast = exact_multicast;
+    g_geometry.declared = true;
+}
 
 int main(int argc, char** argv) {
     Verilated::commandArgs(argc, argv);
@@ -205,8 +1270,79 @@ int main(int argc, char** argv) {
         const auto image_desc = read_rows("a3_descriptor.hex", 384, kDescWords);
         const auto image_symbol = read_hex("a3_symbol.hex");
 
+        // -- optional G1e modes.  Absent every one of these the checker
+        // -- runs exactly as it did before, with the same checks.
+        const char* trace_out_path = env_or_null("OT_A3_TRACE_OUT");
+        const char* golden_trace_path = env_or_null("OT_A3_GOLDEN_TRACE");
+        const char* inject_path = env_or_null("OT_A3_INJECT_RESULTS");
+        const std::uint64_t cycle_guard_limit =
+            env_u64("OT_A3_CYCLE_GUARD", 64000000000ULL);
+
+        std::vector<inject::Result> injected;
+        if (inject_path != nullptr) injected = inject::read(inject_path);
+
         Checker check;
         Model model;
+        if (!g_geometry.declared)
+            throw std::runtime_error("the top declared no geometry");
+
+        // Sizing measurement: sweep the whole declared weight image through
+        // the very DPI path the RTL's weight port uses, check it against an
+        // independent reader, and report what it cost.  Nothing else runs.
+        if (env_or_null("OT_A3_HEAD_COMPOSE") != nullptr) {
+            const int status = headshard_mode::compose(check);
+            if (check.failures != 0) {
+                std::cerr << "FAILURES: " << check.failures
+                          << " checks=" << check.checks << "\n";
+                return 1;
+            }
+            std::cout << "PASS: ABI3 LM-head shard composition checks="
+                      << check.checks << "\n";
+            return status;
+        }
+        if (env_or_null("OT_A3_HEAD_SHARD") != nullptr) {
+            const int status = headshard_mode::run(check);
+            if (check.failures != 0) {
+                std::cerr << "FAILURES: " << check.failures
+                          << " checks=" << check.checks << "\n";
+                return 1;
+            }
+            std::cout << "PASS: ABI3 LM-head row shard checks="
+                      << check.checks << "\n";
+            return status;
+        }
+        if (env_or_null("OT_A3_WINDOW_SWEEP") != nullptr) {
+            const int status =
+                sweep::run(g_geometry.matmul_weight_bytes, check);
+            if (check.failures != 0) {
+                std::cerr << "FAILURES: " << check.failures
+                          << " checks=" << check.checks << "\n";
+                return 1;
+            }
+            std::cout << "PASS: ABI3 weight-window sweep image_bytes="
+                      << g_geometry.matmul_weight_bytes
+                      << " checks=" << check.checks << "\n";
+            return status;
+        }
+        if (inject_path != nullptr && g_geometry.result_injection == 0)
+            throw std::runtime_error(
+                "OT_A3_INJECT_RESULTS needs ENABLE_RESULT_INJECTION=1");
+        if (inject_path == nullptr && g_geometry.result_injection != 0)
+            throw std::runtime_error(
+                "ENABLE_RESULT_INJECTION=1 needs OT_A3_INJECT_RESULTS");
+        const bool injecting = inject_path != nullptr;
+        const bool tracing =
+            trace_out_path != nullptr || golden_trace_path != nullptr;
+        trace::Record rtl_trace;
+        std::vector<trace::View> pending_views;
+        std::size_t injected_at = 0;
+        std::size_t injected_word_at = 0;
+        bool injected_serving = false;
+        std::uint64_t last_issue_serial = 0;
+        const auto wall_start = std::chrono::steady_clock::now();
+        std::uint64_t total_cycles = 0;
+        double sim_seconds = 0.0;
+
         model.reset();
         model.dut.eval();
         check.equal("host ready before load", model.dut.host_ready, 1);
@@ -223,7 +1359,7 @@ int main(int argc, char** argv) {
                     model.dut.host_write_refused, 0);
         check.equal("meta case count", meta[0], kCases);
         check.equal("meta case stride", meta[4], kCaseStride);
-        check.equal("meta result memory", meta[7], kResultWords);
+        check.equal("meta result memory", meta[7], g_geometry.result_words);
         check.equal("meta DMA gathers", meta[8], 6);
         check.equal("meta embedding launches", meta[9], 4);
         check.equal("meta RoPE coefficient gather words", meta[10], 1024);
@@ -307,6 +1443,7 @@ int main(int argc, char** argv) {
             model.dut.cfg_rope_coefficient_base = record[76];
             model.dut.cfg_output_base = record[13];
 
+            last_issue_serial = 0;
             model.dut.result_read_addr = record[13];
             model.dut.eval();
             check.equal("result initially unwritten",
@@ -320,7 +1457,111 @@ int main(int argc, char** argv) {
                 kMulticastParticipants, 0);
             std::vector<std::uint32_t> participant_writes(
                 kMulticastParticipants, 0);
+            // The G1e engine-result boundary and the issue trace.  Ordered
+            // deliberately: drive the injected completion, settle, and only
+            // then observe -- so the handshake is seen in the cycle it
+            // happens, exactly as the real engine's is.  Nothing here is an
+            // input to fetch, decode, view resolution, predicates, the loop
+            // stack, the wait set or queue acceptance.
+            auto drive_injection = [&]() {
+                if (!injecting) return;
+                model.dut.inj_write_en = 0;
+                model.dut.inj_result_valid = 0;
+                model.dut.inj_result_fault = 0;
+                model.dut.inj_result_trap_class = 0;
+                if (!model.dut.rst_n || !model.dut.inj_issue_valid) {
+                    model.dut.eval();
+                    return;
+                }
+                if (injected_at >= injected.size()) {
+                    ++check.failures;
+                    std::cerr << "FAIL: RTL issued past the golden result "
+                                 "stream at issue "
+                              << injected_at << "\n";
+                    model.dut.eval();
+                    return;
+                }
+                const auto& record = injected[injected_at];
+                if (!injected_serving) {
+                    injected_serving = true;
+                    injected_word_at = 0;
+                    // The injected result must answer the issue the RTL
+                    // actually made.  A mismatch is a divergence, not a fill.
+                    check.equal("injected result opcode",
+                                (static_cast<std::uint32_t>(
+                                     model.dut.inj_issue_family)
+                                 << 8) |
+                                    model.dut.inj_issue_sub,
+                                (record.family << 8) | record.sub);
+                    check.equal("injected result descriptor",
+                                model.dut.inj_issue_descriptor_id,
+                                record.descriptor_id);
+                    check.equal("injected result pc",
+                                model.dut.inj_issue_index, record.pc);
+                }
+                if (injected_word_at < record.words.size()) {
+                    model.dut.inj_write_en = 1;
+                    model.dut.inj_write_addr =
+                        record.words[injected_word_at].first;
+                    model.dut.inj_write_data =
+                        record.words[injected_word_at].second;
+                    ++injected_word_at;
+                } else {
+                    model.dut.inj_result_valid = 1;
+                    model.dut.inj_result_fault = record.fault;
+                    model.dut.inj_result_trap_class = record.trap_class;
+                    injected_serving = false;
+                    ++injected_at;
+                }
+                model.dut.eval();
+            };
+
+            auto capture_trace = [&]() {
+                if (!tracing || !model.dut.rst_n) return;
+                if (model.dut.trace_view_valid) {
+                    trace::View view;
+                    view.slot = model.dut.trace_view_slot;
+                    view.descriptor_id = model.dut.trace_view_descriptor_id;
+                    view.extent = model.dut.trace_view_extent;
+                    view.extent_axis = model.dut.trace_view_extent_axis;
+                    view.element_offset = model.dut.trace_view_element_offset;
+                    view.rank = model.dut.trace_view_rank;
+                    view.irs_slot = model.dut.trace_view_irs_slot;
+                    pending_views.push_back(view);
+                }
+                if (!model.dut.trace_issue_valid) return;
+                trace::Issue issue;
+                issue.serial = model.dut.trace_issue_serial;
+                issue.family = model.dut.trace_issue_family;
+                issue.sub = model.dut.trace_issue_sub;
+                issue.descriptor_id = model.dut.trace_issue_descriptor_id;
+                issue.pc = model.dut.trace_issue_index;
+                issue.queue = model.dut.trace_issue_queue;
+                issue.irs_slot = model.dut.trace_issue_slot;
+                // Views are attached to the issue they were resolved for and
+                // ordered by slot, so the record is a function of the data
+                // and not of RTL timing.
+                std::sort(pending_views.begin(), pending_views.end(),
+                          [](const trace::View& a, const trace::View& b) {
+                              return a.slot < b.slot;
+                          });
+                issue.views = pending_views;
+                pending_views.clear();
+                // The serial must advance, and the schedule must be a real
+                // queue: fields a golden trace may not carry are still not
+                // left unexamined.
+                // The sequencer restarts its program-order serial at every
+                // transaction, so monotonicity is a within-case property.
+                check.equal("issue serial advances",
+                            issue.serial > last_issue_serial, 1);
+                last_issue_serial = issue.serial;
+                check.equal("issue queue in range", issue.queue < 32, 1);
+                rtl_trace.issues.push_back(std::move(issue));
+            };
+
             auto observe = [&]() {
+                drive_injection();
+                capture_trace();
                 if (model.dut.rst_n &&
                     model.dut.multicast_remote_write_valid &&
                     model.dut.multicast_remote_write_ready) {
@@ -385,16 +1626,54 @@ int main(int argc, char** argv) {
             model.dut.start = 1;
             model.cycle(observe);
             model.dut.start = 0;
-            std::uint32_t guard = 0;
-            while (!model.dut.done && guard < 150000000) {
+            // 64-bit.  The old guard was a std::uint32_t bounded at
+            // 150,000,000; one full-dimension layer is about 1e9 cycles and
+            // the LM head about 3e9, so the guard tripped before the work
+            // did.  It still trips -- it is a watchdog, not a formality --
+            // and the bound it tripped at is reported.
+            std::uint64_t guard = 0;
+            const auto sim_start = std::chrono::steady_clock::now();
+            while (!model.dut.done && guard < cycle_guard_limit) {
                 model.cycle(observe);
                 ++guard;
             }
+            sim_seconds += std::chrono::duration<double>(
+                               std::chrono::steady_clock::now() - sim_start)
+                               .count();
+            total_cycles += guard;
             if (!model.dut.done) {
                 ++check.failures;
-                std::cerr << "FAIL: case " << case_index << " timed out\n";
+                std::cerr << "FAIL: case " << case_index
+                          << " timed out after " << guard << " cycles\n";
+            }
+            if (!pending_views.empty()) {
+                ++check.failures;
+                std::cerr << "FAIL: case " << case_index << " left "
+                          << pending_views.size()
+                          << " resolved views attached to no issue\n";
+                pending_views.clear();
+            }
+            if (injecting) {
+                // No engine was issued to.  This is the evidence that the
+                // control plane, not the datapath, is what ran.
+                check.equal("no engine launch under injection",
+                            model.dut.real_launch_count, 0);
+                check.equal("no engine work under injection",
+                            model.dut.engine_work_count, 0);
+                check.equal("injected completions",
+                            model.dut.inj_completion_count, response_seen);
+                check.equal("predicate reads refused",
+                            model.dut.predicate_read_refused_count, 0);
             }
 
+            // Engine-side observables. Under G1e injection no engine is
+            // issued to at all, so every one of them must read zero; the
+            // CONTROL counters below are compared against the very same
+            // expectations as the real-engine run, which is what makes
+            // "the control path was not stubbed" a measurement.
+            auto engine_expect = [&](std::uint64_t value) -> std::uint64_t {
+                return injecting ? 0 : value;
+            };
             check.equal("response count", response_seen, response_expected);
             check.equal("busy at completion", model.dut.busy, 0);
             check.equal("complete must remain false", model.dut.complete, 0);
@@ -415,21 +1694,25 @@ int main(int argc, char** argv) {
             check.equal("wait events", model.dut.count_wait_events,
                         record[35]);
             check.equal("real engine launches", model.dut.real_launch_count,
-                        record[14]);
+                        engine_expect(record[14]));
             check.equal("DMA gather launches",
-                        model.dut.dma_gather_launch_count, record[33]);
+                        model.dut.dma_gather_launch_count,
+                        engine_expect(record[33]));
             check.equal("embedding launches",
-                        model.dut.embedding_launch_count, record[34]);
+                        model.dut.embedding_launch_count,
+                        engine_expect(record[34]));
             check.equal("RMSNorm launches", model.dut.rms_norm_launch_count,
-                        record[44]);
+                        engine_expect(record[44]));
             check.equal("head RMSNorm launches",
-                        model.dut.head_rms_norm_launch_count, record[66]);
+                        model.dut.head_rms_norm_launch_count,
+                        engine_expect(record[66]));
             check.equal("RoPE launches", model.dut.rope_launch_count,
-                        record[77]);
+                        engine_expect(record[77]));
             check.equal("DMA transfer launches",
-                        model.dut.dma_transfer_launch_count, record[45]);
+                        model.dut.dma_transfer_launch_count,
+                        engine_expect(record[45]));
             check.equal("MATMUL launches", model.dut.matmul_launch_count,
-                        record[55]);
+                        engine_expect(record[55]));
             if (multicast_overlay) {
                 check.equal("multicast launches",
                             model.dut.multicast_launch_count, record[79]);
@@ -437,7 +1720,8 @@ int main(int argc, char** argv) {
                             model.dut.multicast_fault_count, 0);
             }
             check.equal("capability responses",
-                        model.dut.capability_fault_count, record[29]);
+                        model.dut.capability_fault_count,
+                        engine_expect(record[29]));
             check.equal("descriptor faults", model.dut.descriptor_fault_count,
                         0);
             check.equal("engine faults", model.dut.engine_fault_count, 0);
@@ -453,9 +1737,10 @@ int main(int argc, char** argv) {
                         model.dut.last_response_descriptor_id, record[18]);
             check.equal("engine error", model.dut.engine_error_code, 0);
             check.equal("last engine result count",
-                        model.dut.engine_result_count, record[67]);
+                        model.dut.engine_result_count,
+                        engine_expect(record[67]));
             check.equal("last engine work count", model.dut.engine_work_count,
-                        record[68]);
+                        engine_expect(record[68]));
             check.equal("result write count", model.dut.output_write_count,
                         record[15]);
             check.equal("writes after capability fault",
@@ -576,15 +1861,22 @@ int main(int argc, char** argv) {
         }
 
         check.equal("total responses", total_responses, meta[0] + meta[1]);
-        check.equal("total launches", total_launches, meta[1]);
-        check.equal("total DMA gathers", total_gathers, meta[8]);
-        check.equal("total embedding launches", total_embeddings, meta[9]);
-        check.equal("total RMSNorm launches", total_rms_norms, meta[12]);
+        check.equal("total launches", total_launches,
+                    injecting ? 0 : meta[1]);
+        check.equal("total DMA gathers", total_gathers,
+                    injecting ? 0 : meta[8]);
+        check.equal("total embedding launches", total_embeddings,
+                    injecting ? 0 : meta[9]);
+        check.equal("total RMSNorm launches", total_rms_norms,
+                    injecting ? 0 : meta[12]);
         check.equal("total head RMSNorm launches", total_head_rms_norms,
-                    meta[20]);
-        check.equal("total RoPE launches", total_ropes, meta[24]);
-        check.equal("total transfer launches", total_transfers, meta[13]);
-        check.equal("total MATMUL launches", total_matmuls, meta[16]);
+                    injecting ? 0 : meta[20]);
+        check.equal("total RoPE launches", total_ropes,
+                    injecting ? 0 : meta[24]);
+        check.equal("total transfer launches", total_transfers,
+                    injecting ? 0 : meta[13]);
+        check.equal("total MATMUL launches", total_matmuls,
+                    injecting ? 0 : meta[16]);
         if (multicast_overlay)
             check.equal("total multicast launches", total_multicasts, 1);
         check.equal("total result words", total_words, meta[2]);
@@ -595,12 +1887,87 @@ int main(int argc, char** argv) {
             check.equal("final retained result", model.dut.result_read_data,
                         expected[word]);
         }
-        for (std::uint32_t word = meta[2]; word < kResultWords; ++word) {
+        for (std::uint32_t word = meta[2]; word < g_geometry.result_words;
+             ++word) {
             model.dut.result_read_addr = word;
             model.dut.eval();
             check.equal("unwritten result tail", model.dut.result_read_data,
                         kUnwritten);
         }
+
+        // -- rung G1e: the issue trace, element for element ---------------
+        if (trace_out_path != nullptr) trace::write(rtl_trace, trace_out_path);
+        trace::Comparison comparison;
+        std::string uncompared;
+        if (golden_trace_path != nullptr) {
+            const auto golden = trace::read(golden_trace_path);
+            comparison = trace::compare(rtl_trace, golden);
+            check.equal("issue trace equals golden", comparison.equal ? 1 : 0,
+                        1);
+            if (!comparison.equal) {
+                std::cerr << "FAIL: issue trace diverges at element "
+                          << comparison.divergence_index << " ("
+                          << comparison.label << ") got=" << comparison.got
+                          << " want=" << comparison.want << "\n";
+            }
+            check.equal("issue trace compared elements", comparison.compared,
+                        golden.elements());
+            check.equal("issue trace issue count", rtl_trace.issues.size(),
+                        golden.issues.size());
+            // A field the golden does not carry was NOT compared.  Say so in
+            // the run's own output rather than letting a partial trace read
+            // as a complete one.
+            for (const auto& name : comparison.uncompared_issue_fields)
+                uncompared += (uncompared.empty() ? "" : ",") + ("issue." + name);
+            for (const auto& name : comparison.uncompared_view_fields)
+                uncompared += (uncompared.empty() ? "" : ",") + ("view." + name);
+            if (!uncompared.empty())
+                std::cerr << "NOTE: golden trace carries no "
+                          << uncompared
+                          << "; those elements were NOT compared\n";
+        }
+        if (injecting)
+            check.equal("golden result stream fully consumed", injected_at,
+                        injected.size());
+
+        // -- what the run cost, measured, not estimated -------------------
+        const auto wall_end = std::chrono::steady_clock::now();
+        const double wall_seconds =
+            std::chrono::duration<double>(wall_end - wall_start).count();
+        const auto& window_stats = weightwindow::window().stats();
+        const std::uint64_t distinct_bytes =
+            window_stats.distinct_pages * weightwindow::window().page_bytes();
+        std::cout << "MEASURE"
+                  << " cycles=" << total_cycles
+                  << " wall_s=" << std::fixed << std::setprecision(3)
+                  << wall_seconds << std::defaultfloat
+                  << " sim_wall_s=" << std::fixed
+                  << std::setprecision(3) << sim_seconds << std::defaultfloat
+                  << " cycle_guard=" << cycle_guard_limit
+                  << " result_words=" << g_geometry.result_words
+                  << " source_words=" << g_geometry.source_words
+                  << " weight_image_bytes=" << g_geometry.matmul_weight_bytes
+                  << " window_page_bytes="
+                  << weightwindow::window().page_bytes()
+                  << " window_cap_bytes="
+                  << weightwindow::window().resident_cap_bytes()
+                  << " window_peak_resident_bytes="
+                  << window_stats.peak_resident_bytes
+                  << " window_segments="
+                  << weightwindow::window().segment_count()
+                  << " halfword_reads=" << window_stats.halfword_reads
+                  << " page_hits=" << window_stats.page_hits
+                  << " page_faults=" << window_stats.page_faults
+                  << " pages_evicted=" << window_stats.pages_evicted
+                  << " distinct_bytes=" << distinct_bytes
+                  << " refilled_bytes=" << window_stats.bytes_faulted
+                  << " trace_last_case_issues=" << model.dut.trace_issue_count
+                  << " trace_issues=" << rtl_trace.issues.size()
+                  << " injected_results=" << injected_at
+                  << " trace_compared_elements=" << comparison.compared
+                  << " trace_divergence_index=" << comparison.divergence_index
+                  << " trace_uncompared_fields="
+                  << (uncompared.empty() ? "none" : uncompared) << "\n";
 
         model.dut.final();
         if (check.failures != 0) {
@@ -608,7 +1975,15 @@ int main(int argc, char** argv) {
                       << " checks=" << check.checks << "\n";
             return 1;
         }
-        if (multicast_overlay)
+        if (injecting)
+            // A different claim, and it says so: the control plane ran, the
+            // engines did not, and the issue trace equalled golden's.
+            std::cout
+                << "PASS: ABI3 shipped-prefix G1e control-plane injection "
+                   "cases=4 engine_launches=0 words=91136 injected_results="
+                << injected_at << " trace_issues=" << rtl_trace.issues.size()
+                << " checks=" << check.checks << "\n";
+        else if (multicast_overlay)
             std::cout
                 << "PASS: ABI3 shipped-prefix multicast integration cases=4 "
                    "launches=29 words=91136 capability_faults=4 multicasts=1 "
