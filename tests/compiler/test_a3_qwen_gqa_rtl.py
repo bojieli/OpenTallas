@@ -25,15 +25,27 @@ def test_vectors_are_byte_exact_and_source_current() -> None:
             ).read_bytes()
 
     assert manifest["schema"] == vectors.SCHEMA
-    assert len(manifest["cases"]) == 5
+    assert len(manifest["cases"]) == 7
     assert manifest["oracle"] == {
-        "expected_bf16_sha256": (
-            "8992e9d1a0b5303b81b2503df2e23170f838f772e79eb8d7c65c1fce4fac93c2"
-        ),
+        # Context 17 is byte-identical to the digest this campaign was
+        # qualified on before the datapath's context became a runtime length:
+        # the parameterisation is not allowed to move the qualified result.
+        "expected_bf16_sha256": {
+            "17": (
+                "8992e9d1a0b5303b81b2503df2e23170f838f772e79eb8d7c65c1fce4fac93c2"
+            ),
+            "18": (
+                "2f2c8e3246e893bdd10ccdc27416fd519ecbaba6ef1f5b571afb39ea0b619f63"
+            ),
+            "19": (
+                "0233775ee7474be9d86aeb7449190242ccdcdffcd23904eccda94029c74b644f"
+            ),
+        },
         "implementation": "runtime/reference/tensor_accelerator_attention.py",
         "independent_of_dut": True,
-        "word_count": 4096,
+        "word_count": 28_672,
     }
+    assert manifest["request"]["contexts"] == [17, 18, 19]
 
 
 def test_activation_provenance_and_honest_history_boundary() -> None:
@@ -49,9 +61,11 @@ def test_activation_provenance_and_honest_history_boundary() -> None:
             "b07011da7a3d58dcccceb91e596ceebc2084ab3c2fc9d0b6a9a8704e91ef8dc5"
         ),
     }
-    assert manifest["history"]["row_count"] == 16
+    assert manifest["history"]["row_counts"] == {"17": 16, "18": 17, "19": 18}
     assert manifest["history"]["authentic"] is False
     boundary = manifest["claim_boundary"]
+    assert boundary["runtime_context_length"] is True
+    assert boundary["contexts_covered"] == [17, 18, 19]
     assert boundary["exact_pc38_gqa_arithmetic"]
     assert boundary["authentic_current_query_key_value"]
     assert boundary["authentic_prior_context_kv"] is False
@@ -71,6 +85,16 @@ def test_fail_closed_and_backpressure_matrix() -> None:
     assert cases["rom_pc38_gqa_exact"]["writes"] == 4096
     assert cases["hbm_pc38_gqa_backpressure"]["writes"] == 4096
     assert cases["hbm_pc38_gqa_backpressure"]["stall_mode"] == 1
+    # The second and third generated tokens, which a constant context 17 made
+    # inexpressible.  Each is one more committed KV row, and every counter
+    # scales with it.
+    for context in (18, 19):
+        later = cases[f"rom_pc38_gqa_exact_context{context}"]
+        assert later["context"] == context
+        assert later["writes"] == 4096
+        assert later["score_multiplies"] == context * 4096
+        assert later["exponentials"] == context * 32
+        assert later["memory_reads"] == 4096 + 2 * context * 4096
     late = cases["rom_pc38_late_value_nonfinite"]
     assert late["memory_reads"] == 143_360
     assert late["value_multiplies"] == 69_632
@@ -85,6 +109,7 @@ def test_retained_dual_simulator_campaign_is_source_current() -> None:
     assert result["status"] == "pass"
     assert result["simulators_agree"]
     assert result["boundary"] == {
+        "contexts_covered": [17, 18, 19],
         "hbm_operator_descriptor_id": 137,
         "new_first_unsupported_opcode": "TENSOR.MATMUL",
         "new_first_unsupported_pc": 41,
@@ -93,16 +118,17 @@ def test_retained_dual_simulator_campaign_is_source_current() -> None:
     }
     assert result["aggregate"] == {
         "atomic_sentinel_words_checked": 12_288,
-        "case_count": 5,
-        "checks_per_simulator": 20_565,
-        "computed_output_words_compared": 8_192,
-        "exponential_evaluations": 1_632,
-        "memory_reads": 430_080,
+        "case_count": 7,
+        "checks_per_simulator": 28_791,
+        "computed_output_words_compared": 16_384,
+        "contexts_covered": [17, 18, 19],
+        "exponential_evaluations": 2_816,
+        "memory_reads": 741_376,
         "negative_case_count": 3,
-        "positive_case_count": 2,
-        "rtl_write_beats": 8_192,
-        "score_multiplications": 208_896,
-        "value_multiplications": 208_896,
+        "positive_case_count": 4,
+        "rtl_write_beats": 16_384,
+        "score_multiplications": 360_448,
+        "value_multiplications": 360_448,
     }
     scope = result["scope"]
     assert scope["shared_certifying_exponential"]

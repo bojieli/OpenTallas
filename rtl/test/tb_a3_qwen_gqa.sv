@@ -1,14 +1,17 @@
 `timescale 1ns/1ps
 
 module tb_a3_qwen_gqa;
-    localparam integer CASE_COUNT = 5;
+    // Three governed decode contexts (17, 18, 19) with an independent KV
+    // plane each, plus the three retained refusal cases.
+    localparam integer CASE_COUNT = 7;
     localparam integer CASE_WORDS = 32;
-    localparam integer SOURCE_WORDS = 38912;
+    localparam integer MAX_CONTEXT = 19;
+    localparam integer KV_ROW_WORDS = 1024;
+    localparam integer QUERY_WORDS = 4096;
+    localparam integer SOURCE_WORDS =
+        QUERY_WORDS + 2 * KV_ROW_WORDS * (17 + 18 + 19);
     localparam integer OUTPUT_WORDS = 4096;
     localparam integer QUERY_BASE = 0;
-    localparam integer KEY_BASE = 4096;
-    localparam integer VALUE_BASE = 21504;
-    localparam integer LATE_VALUE_ADDR = SOURCE_WORDS - 1;
     localparam [31:0] SENTINEL = 32'hdead_beef;
 
     reg clk = 1'b0;
@@ -26,7 +29,7 @@ module tb_a3_qwen_gqa;
     reg [1535:0] output_record_mem [0:CASE_COUNT-1];
     reg [1535:0] numeric_mem [0:CASE_COUNT-1];
     reg [31:0] source_mem [0:SOURCE_WORDS-1];
-    reg [31:0] expected_mem [0:OUTPUT_WORDS-1];
+    reg [31:0] expected_mem [0:CASE_COUNT*OUTPUT_WORDS-1];
     reg [31:0] observed_mem [0:OUTPUT_WORDS-1];
 
     reg [1023:0] cases_path;
@@ -63,6 +66,14 @@ module tb_a3_qwen_gqa;
     reg [1535:0] view3_record;
     reg [1535:0] output_record;
     reg [1535:0] numeric_record;
+    reg [31:0] case_position_start;
+    reg [31:0] case_context_length;
+    reg [31:0] case_key_base;
+    reg [31:0] case_value_base;
+    reg [31:0] case_late_value_addr;
+    reg [31:0] case_late_value_trigger;
+    integer positive_cases;
+    integer compared_words;
 
     wire mem_req_valid;
     wire mem_req_ready;
@@ -129,7 +140,10 @@ module tb_a3_qwen_gqa;
         end
     endtask
 
-    ot_a3_qwen_gqa_adapter dut (
+    ot_a3_qwen_gqa_adapter #(
+        .MIN_CONTEXT(8),
+        .MAX_CONTEXT(MAX_CONTEXT)
+    ) dut (
         .clk(clk), .rst_n(rst_n), .start(start),
         .instruction_record(instruction_record),
         .instruction_index(instruction_index),
@@ -149,9 +163,11 @@ module tb_a3_qwen_gqa;
         .operator_record(operator_record), .view0_record(view0_record),
         .view1_record(view1_record), .view2_record(view2_record),
         .view3_record(view3_record), .output_record(output_record),
-        .numeric_record(numeric_record), .cfg_position_start(32'd16),
-        .cfg_context_length(32'd17), .cfg_query_base(QUERY_BASE),
-        .cfg_key_base(KEY_BASE), .cfg_value_base(VALUE_BASE),
+        .numeric_record(numeric_record),
+        .cfg_position_start(case_position_start),
+        .cfg_context_length(case_context_length),
+        .cfg_query_base(QUERY_BASE),
+        .cfg_key_base(case_key_base), .cfg_value_base(case_value_base),
         .cfg_output_base(32'd0), .mem_req_valid(mem_req_valid),
         .mem_req_ready(mem_req_ready), .mem_req_addr(mem_req_addr),
         .mem_rsp_valid(mem_rsp_valid), .mem_rsp_data(mem_rsp_data),
@@ -211,8 +227,8 @@ module tb_a3_qwen_gqa;
                 if (response_delay == 0) begin
                     mem_rsp_valid <= 1'b1;
                     if (mutation == 1 &&
-                        pending_address == LATE_VALUE_ADDR &&
-                        value_multiply_count == 32'd69631)
+                        pending_address == case_late_value_addr &&
+                        value_multiply_count == case_late_value_trigger)
                         mem_rsp_data <= 32'h0000_7f80;
                     else
                         mem_rsp_data <= source_mem[pending_address];
@@ -251,6 +267,14 @@ module tb_a3_qwen_gqa;
 
     initial begin
         checks = 0;
+        positive_cases = 0;
+        compared_words = 0;
+        case_position_start = 0;
+        case_context_length = 0;
+        case_key_base = 0;
+        case_value_base = 0;
+        case_late_value_addr = 0;
+        case_late_value_trigger = 0;
         stall_mode = 0;
         mutation = 0;
         instruction_record = 0;
@@ -323,8 +347,15 @@ module tb_a3_qwen_gqa;
             expected_object2 = case_mem[base + 11];
             expected_object3 = case_mem[base + 12];
             expected_output_object = case_mem[base + 13];
+            case_position_start = case_mem[base + 14];
+            case_context_length = case_mem[base + 15];
             mutation = case_mem[base + 16];
             stall_mode = case_mem[base + 17];
+            case_key_base = case_mem[base + 28];
+            case_value_base = case_mem[base + 29];
+            case_late_value_trigger = case_mem[base + 30];
+            case_late_value_addr = case_mem[base + 29] +
+                case_mem[base + 15] * KV_ROW_WORDS - 1;
             operator_record = operator_mem[case_index];
             view0_record = view0_mem[case_index];
             view1_record = view1_mem[case_index];
@@ -371,12 +402,17 @@ module tb_a3_qwen_gqa;
                 if (case_mem[base + 23] != 0)
                     check_equal(
                         "computed_output",
-                        observed_mem[word_index], expected_mem[word_index]
+                        observed_mem[word_index],
+                        expected_mem[case_index * OUTPUT_WORDS + word_index]
                     );
                 else
                     check_equal(
                         "atomic_zero_write", observed_mem[word_index], SENTINEL
                     );
+            end
+            if (case_mem[base + 23] != 0) begin
+                positive_cases = positive_cases + 1;
+                compared_words = compared_words + OUTPUT_WORDS;
             end
             $display(
                 "CASE_SUMMARY index=%0d failed=%0d trap=%0d refusal=%0d records=%0d reads=%0d writes=%0d score=%0d exp=%0d value=%0d executed=%0d verification_cycles=%0d",
@@ -388,8 +424,8 @@ module tb_a3_qwen_gqa;
             repeat (3) @(posedge clk);
         end
         $display(
-            "PASS a3_qwen_gqa cases=%0d positive=2 words=8192 checks=%0d",
-            CASE_COUNT, checks
+            "PASS a3_qwen_gqa cases=%0d positive=%0d words=%0d checks=%0d",
+            CASE_COUNT, positive_cases, compared_words, checks
         );
         $finish;
     end

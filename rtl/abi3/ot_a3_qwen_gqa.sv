@@ -3,8 +3,22 @@
 // Exact one-token Qwen3-8B grouped-query attention datapath.
 //
 // This engine implements qwen3_gqa_fp32_softmax_bf16_v1 for the ABI 3.0
-// decode geometry [1,32,128] x [17,8,128].  Query heads 4*h..4*h+3 select KV
-// head h.  Dot products and value reductions run in increasing logical index;
+// decode geometry [1,32,128] x [C,8,128].  Query heads 4*h..4*h+3 select KV
+// head h.
+//
+// C is a *runtime* length inside a compile-time bound, not a constant.  It
+// was a constant 17, which expressed exactly one generated token: the
+// governed workload's three decode positions run at contexts 17, 18 and 19,
+// and the second and third were inexpressible.  ``MAX_CONTEXT`` now sizes the
+// score, exponential and probability buffers, and ``cfg_context_length`` is
+// checked against the closed interval [MIN_CONTEXT, MAX_CONTEXT] at start.
+//
+// The lower bound is not decoration.  The softmax denominator is the frozen
+// eight-lane reduction, and ``binary32_lanes8_sum`` reduces a row shorter
+// than eight *sequentially* -- a different association, and therefore
+// potentially a different last bit.  This datapath implements the eight-lane
+// branch only, so a context below eight is refused with ERR_CONFIG rather
+// than reduced in an order the contract does not name.  Dot products and value reductions run in increasing logical index;
 // every product/add rounds to binary32, the dot and scale round to BF16, and
 // softmax uses the specified eight-lane reduction.  Exponential is delegated
 // to the shared certifying transcendental engine and reciprocal to the shared
@@ -15,7 +29,13 @@
 // result is buffered, so a late memory or numeric fault produces zero writes.
 // Output valid/address/data remain stable under backpressure.
 // ---------------------------------------------------------------------------
-module ot_a3_qwen_gqa (
+module ot_a3_qwen_gqa #(
+    // The largest context this instance's buffers hold.  The reference caps a
+    // Qwen KV cache at runtime.reference.tensor_accelerator_attention.
+    // MAX_CONTEXT_TOKENS = 8192; a verification instance sizes itself to the
+    // contexts its campaign actually issues.
+    parameter integer MAX_CONTEXT = 32
+) (
     input  wire        clk,
     input  wire        rst_n,
     input  wire        start,
@@ -52,7 +72,9 @@ module ot_a3_qwen_gqa (
     localparam [7:0] ERR_INPUT = 8'd2;
     localparam [7:0] ERR_NUMERIC = 8'd3;
 
-    localparam integer CONTEXT = 17;
+    // The eight-lane softmax reduction the contract names is defined for
+    // rows of eight or more; below that the reference reduces sequentially.
+    localparam integer MIN_CONTEXT = 8;
     localparam integer QUERY_HEADS = 32;
     localparam integer KV_HEADS = 8;
     localparam integer HEAD_WIDTH = 128;
@@ -87,13 +109,15 @@ module ot_a3_qwen_gqa (
     reg [5:0] query_head_q;
     reg [2:0] kv_head_q;
     reg [7:0] dimension_q;
-    reg [4:0] context_index_q;
+    reg [15:0] context_index_q;
+    reg [15:0] context_length_q;
+    wire [15:0] context_last = context_length_q - 16'd1;
     reg [11:0] publish_index_q;
 
     reg [15:0] query_buffer [0:HEAD_WIDTH-1];
-    reg [15:0] score_buffer [0:CONTEXT-1];
-    reg [31:0] exponential_buffer [0:CONTEXT-1];
-    reg [15:0] probability_buffer [0:CONTEXT-1];
+    reg [15:0] score_buffer [0:MAX_CONTEXT-1];
+    reg [31:0] exponential_buffer [0:MAX_CONTEXT-1];
+    reg [15:0] probability_buffer [0:MAX_CONTEXT-1];
     reg [15:0] output_buffer [0:OUTPUT_WORDS-1];
     reg [31:0] softmax_lanes [0:7];
     reg [31:0] softmax_half [0:3];
@@ -252,6 +276,7 @@ module ot_a3_qwen_gqa (
             kv_head_q <= 0;
             dimension_q <= 0;
             context_index_q <= 0;
+            context_length_q <= 0;
             publish_index_q <= 0;
             maximum_code_q <= 0;
             dot_accumulator_q <= 0;
@@ -294,7 +319,9 @@ module ot_a3_qwen_gqa (
                         exponential_count <= 0;
                         value_multiply_count <= 0;
                         saturation_count <= 0;
-                        if (cfg_context_length != CONTEXT) begin
+                        context_length_q <= cfg_context_length[15:0];
+                        if ((cfg_context_length < MIN_CONTEXT) ||
+                            (cfg_context_length > MAX_CONTEXT)) begin
                             failed <= 1'b1;
                             error_code <= ERR_CONFIG;
                             state <= S_FINISH;
@@ -367,7 +394,7 @@ module ot_a3_qwen_gqa (
                                     };
                                 dimension_q <= 0;
                                 dot_accumulator_q <= 0;
-                                if (context_index_q == CONTEXT-1) begin
+                                if (context_index_q == context_last) begin
                                     context_index_q <= 0;
                                     state <= S_EXP_REQ;
                                 end else begin
@@ -411,7 +438,7 @@ module ot_a3_qwen_gqa (
                             if (exp_error == 0 &&
                                 (context_index_q < 8 ||
                                  lane_add[33:32] == 0)) begin
-                                if (context_index_q == CONTEXT-1) begin
+                                if (context_index_q == context_last) begin
                                     state <= S_REDUCE_HALF;
                                 end else begin
                                     context_index_q <=
@@ -484,7 +511,7 @@ module ot_a3_qwen_gqa (
                             probability_bf16[15:0];
                         saturation_count <= saturation_count +
                             probability_bf16[16];
-                        if (context_index_q == CONTEXT-1) begin
+                        if (context_index_q == context_last) begin
                             context_index_q <= 0;
                             dimension_q <= 0;
                             value_accumulator_q <= 0;
@@ -511,7 +538,7 @@ module ot_a3_qwen_gqa (
                             error_code <= response_nonfinite
                                 ? ERR_INPUT : ERR_NUMERIC;
                             state <= S_FINISH;
-                        end else if (context_index_q == CONTEXT-1) begin
+                        end else if (context_index_q == context_last) begin
                             if (output_bf16[18:17] != 0) begin
                                 fail_numeric();
                             end else begin

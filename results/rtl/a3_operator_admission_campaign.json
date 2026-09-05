@@ -1,0 +1,698 @@
+{
+  "abi": {
+    "major": 3,
+    "minor": 0
+  },
+  "admission": {
+    "admitted_families": [
+      {
+        "family": 16,
+        "sub": 3
+      },
+      {
+        "family": 48,
+        "sub": 3
+      },
+      {
+        "family": 48,
+        "sub": 4
+      },
+      {
+        "family": 64,
+        "sub": 1
+      },
+      {
+        "family": 112,
+        "sub": 0
+      },
+      {
+        "family": 112,
+        "sub": 1
+      }
+    ],
+    "admitted_family_count": 6,
+    "capability_trapped_family_count": 0,
+    "governed_program_counters": [
+      32,
+      35,
+      38,
+      44,
+      56,
+      62,
+      70,
+      72
+    ],
+    "previously_capability_trapped_families": [
+      "DMA.SCATTER",
+      "ATTENTION.GQA",
+      "VECTOR.ADD",
+      "VECTOR.SILU_MUL",
+      "SELECTION.ARGMAX",
+      "SELECTION.TOKEN_APPEND"
+    ],
+    "still_refused": [
+      "VECTOR.SOFTMAX, checked in this campaign: an opcode with no datapath is still a CAPABILITY trap",
+      "any of the six, on an instance that has not bound its operand banks: cfg_extended_placement_valid low keeps the previous TRAP_CAPABILITY exactly, which is what leaves an unwired integration's behaviour unchanged"
+    ]
+  },
+  "aggregate": {
+    "admission_case_count": 19,
+    "admission_negative_case_count": 7,
+    "admission_positive_case_count": 12,
+    "admission_words_compared": 33093,
+    "admission_write_beats": 110595,
+    "append_case_count": 13,
+    "checks_per_simulator": 34990,
+    "silu_case_count": 5,
+    "silu_elements_compared": 1217
+  },
+  "contexts_covered": [
+    17,
+    19
+  ],
+  "log_sha256": {
+    "ot_a3_selection_token_append_yosys": "3f8f30c1863c10dab9abf24d157247ce532a0e52a6d8f331609d16c0c17046cc",
+    "ot_a3_vector_silu_mul_yosys": "79d1d621d3175d00e2df67713a1dce9ba523b211b60c947ab088bafc72e7f0bb",
+    "tb_a3_operator_admission_iverilog": "23708bf3359d4ff7293ca287173b244bd575cc3de47e3767308ed31aa5867ce9",
+    "tb_a3_operator_admission_verilator": "06498cf5a08d56eef32790bdde5be49b2e287d00adedf5525edbe99602e18d8c",
+    "tb_a3_operator_admission_verilator_compile": "a1325a3382fd84538d1dc4f171f4642c43b4f384d6ef95e2d37c9a97c15efbf7",
+    "tb_a3_selection_token_append_iverilog": "f4377328d66945d8c85e54d0747770a23f61f44eee71350c5c800ce2213e400b",
+    "tb_a3_selection_token_append_verilator": "a49750be82b40d9d57d03510784478b88d3a5887646c60300bab9f290aac9430",
+    "tb_a3_selection_token_append_verilator_compile": "3a55609416b2fb6545d083d2d1da75d9aeb448f0207b18aa936cb991dc30030c",
+    "tb_a3_vector_silu_mul_iverilog": "301a66e3c56916d101c040ae8a1f5e1543f00bfd228bf2c859ea9e1eab243944",
+    "tb_a3_vector_silu_mul_verilator": "b0917128ec06866f83b1ee3d039db095b88fcaf5e7f523bc86b13f0ff908a37f",
+    "tb_a3_vector_silu_mul_verilator_compile": "6a6501f56d82ec15614b2c021e088e363f4152e62cc980928ff5ae9d7e9e47df"
+  },
+  "normalized": {
+    "tb_a3_operator_admission": {
+      "cases": [
+        {
+          "eos": 0,
+          "fault": 0,
+          "index": 0,
+          "result": 1024,
+          "ties": 0,
+          "token": 0,
+          "trap": 0,
+          "verification_cycles": 61465,
+          "work": 1,
+          "writes": 20480
+        },
+        {
+          "eos": 0,
+          "fault": 0,
+          "index": 1,
+          "result": 1024,
+          "ties": 0,
+          "token": 0,
+          "trap": 0,
+          "verification_cycles": 61465,
+          "work": 1,
+          "writes": 20480
+        },
+        {
+          "eos": 0,
+          "fault": 0,
+          "index": 2,
+          "result": 4096,
+          "ties": 0,
+          "token": 0,
+          "trap": 0,
+          "verification_cycles": 327380,
+          "work": 69632,
+          "writes": 4096
+        },
+        {
+          "eos": 0,
+          "fault": 0,
+          "index": 3,
+          "result": 4096,
+          "ties": 0,
+          "token": 0,
+          "trap": 0,
+          "verification_cycles": 16401,
+          "work": 4096,
+          "writes": 4096
+        },
+        {
+          "eos": 0,
+          "fault": 0,
+          "index": 4,
+          "result": 12288,
+          "ties": 0,
+          "token": 0,
+          "trap": 0,
+          "verification_cycles": 1339352,
+          "work": 24576,
+          "writes": 12288
+        },
+        {
+          "eos": 0,
+          "fault": 0,
+          "index": 5,
+          "result": 4096,
+          "ties": 0,
+          "token": 0,
+          "trap": 0,
+          "verification_cycles": 16401,
+          "work": 4096,
+          "writes": 4096
+        },
+        {
+          "eos": 0,
+          "fault": 0,
+          "index": 6,
+          "result": 1024,
+          "ties": 0,
+          "token": 0,
+          "trap": 0,
+          "verification_cycles": 61465,
+          "work": 1,
+          "writes": 20480
+        },
+        {
+          "eos": 0,
+          "fault": 0,
+          "index": 7,
+          "result": 1024,
+          "ties": 0,
+          "token": 0,
+          "trap": 0,
+          "verification_cycles": 61465,
+          "work": 1,
+          "writes": 20480
+        },
+        {
+          "eos": 0,
+          "fault": 0,
+          "index": 8,
+          "result": 4096,
+          "ties": 0,
+          "token": 0,
+          "trap": 0,
+          "verification_cycles": 364630,
+          "work": 77824,
+          "writes": 4096
+        },
+        {
+          "eos": 0,
+          "fault": 0,
+          "index": 9,
+          "result": 1,
+          "ties": 2,
+          "token": 151645,
+          "trap": 0,
+          "verification_cycles": 455824,
+          "work": 151936,
+          "writes": 1
+        },
+        {
+          "eos": 1,
+          "fault": 0,
+          "index": 10,
+          "result": 1,
+          "ties": 0,
+          "token": 151645,
+          "trap": 0,
+          "verification_cycles": 20,
+          "work": 1,
+          "writes": 1
+        },
+        {
+          "eos": 0,
+          "fault": 0,
+          "index": 11,
+          "result": 1,
+          "ties": 0,
+          "token": 12345,
+          "trap": 0,
+          "verification_cycles": 20,
+          "work": 1,
+          "writes": 1
+        },
+        {
+          "eos": 0,
+          "fault": 1,
+          "index": 12,
+          "result": 1,
+          "ties": 0,
+          "token": 0,
+          "trap": 4,
+          "verification_cycles": 1,
+          "work": 151936,
+          "writes": 0
+        },
+        {
+          "eos": 0,
+          "fault": 1,
+          "index": 13,
+          "result": 1,
+          "ties": 0,
+          "token": 0,
+          "trap": 3,
+          "verification_cycles": 11,
+          "work": 151936,
+          "writes": 0
+        },
+        {
+          "eos": 0,
+          "fault": 1,
+          "index": 14,
+          "result": 1,
+          "ties": 0,
+          "token": 0,
+          "trap": 4,
+          "verification_cycles": 11,
+          "work": 151936,
+          "writes": 0
+        },
+        {
+          "eos": 0,
+          "fault": 1,
+          "index": 15,
+          "result": 1,
+          "ties": 0,
+          "token": 0,
+          "trap": 4,
+          "verification_cycles": 1,
+          "work": 151936,
+          "writes": 0
+        },
+        {
+          "eos": 0,
+          "fault": 1,
+          "index": 16,
+          "result": 4096,
+          "ties": 0,
+          "token": 0,
+          "trap": 3,
+          "verification_cycles": 18,
+          "work": 77824,
+          "writes": 0
+        },
+        {
+          "eos": 0,
+          "fault": 1,
+          "index": 17,
+          "result": 0,
+          "ties": 0,
+          "token": 0,
+          "trap": 8,
+          "verification_cycles": 19,
+          "work": 0,
+          "writes": 0
+        },
+        {
+          "eos": 0,
+          "fault": 1,
+          "index": 18,
+          "result": 0,
+          "ties": 0,
+          "token": 0,
+          "trap": 4,
+          "verification_cycles": 16,
+          "work": 0,
+          "writes": 0
+        }
+      ],
+      "geometry": {
+        "bank_words": 242050,
+        "case_words": 64,
+        "cases": 19,
+        "descriptor_records": 218,
+        "expected_words": 33093,
+        "index_words": 64,
+        "map_entries": 8,
+        "preload_words": 12291,
+        "view_slots": 5,
+        "view_words": 8
+      },
+      "pass": {
+        "cases": 19,
+        "checks": 33593,
+        "positive": 12,
+        "words": 33093
+      }
+    },
+    "tb_a3_selection_token_append": {
+      "cases": [
+        {
+          "appended": 1,
+          "capability": 0,
+          "eos": 0,
+          "error": 0,
+          "index": 0,
+          "out": 1,
+          "reads": 1,
+          "token": 12345,
+          "verification_cycles": 5
+        },
+        {
+          "appended": 1,
+          "capability": 0,
+          "eos": 1,
+          "error": 0,
+          "index": 1,
+          "out": 1,
+          "reads": 1,
+          "token": 151645,
+          "verification_cycles": 5
+        },
+        {
+          "appended": 1,
+          "capability": 0,
+          "eos": 1,
+          "error": 0,
+          "index": 2,
+          "out": 1,
+          "reads": 1,
+          "token": 151643,
+          "verification_cycles": 5
+        },
+        {
+          "appended": 1,
+          "capability": 0,
+          "eos": 0,
+          "error": 0,
+          "index": 3,
+          "out": 1,
+          "reads": 1,
+          "token": 151643,
+          "verification_cycles": 5
+        },
+        {
+          "appended": 1,
+          "capability": 0,
+          "eos": 2,
+          "error": 0,
+          "index": 4,
+          "out": 1,
+          "reads": 1,
+          "token": 12345,
+          "verification_cycles": 5
+        },
+        {
+          "appended": 1,
+          "capability": 0,
+          "eos": 1,
+          "error": 0,
+          "index": 5,
+          "out": 1,
+          "reads": 1,
+          "token": 151645,
+          "verification_cycles": 5
+        },
+        {
+          "appended": 1,
+          "capability": 0,
+          "eos": 0,
+          "error": 0,
+          "index": 6,
+          "out": 0,
+          "reads": 1,
+          "token": 777,
+          "verification_cycles": 5
+        },
+        {
+          "appended": 0,
+          "capability": 0,
+          "eos": 0,
+          "error": 4,
+          "index": 7,
+          "out": 0,
+          "reads": 1,
+          "token": 0,
+          "verification_cycles": 4
+        },
+        {
+          "appended": 0,
+          "capability": 1,
+          "eos": 0,
+          "error": 7,
+          "index": 8,
+          "out": 0,
+          "reads": 0,
+          "token": 0,
+          "verification_cycles": 1
+        },
+        {
+          "appended": 0,
+          "capability": 1,
+          "eos": 0,
+          "error": 7,
+          "index": 9,
+          "out": 0,
+          "reads": 0,
+          "token": 0,
+          "verification_cycles": 1
+        },
+        {
+          "appended": 0,
+          "capability": 1,
+          "eos": 0,
+          "error": 7,
+          "index": 10,
+          "out": 0,
+          "reads": 0,
+          "token": 0,
+          "verification_cycles": 1
+        },
+        {
+          "appended": 0,
+          "capability": 0,
+          "eos": 0,
+          "error": 7,
+          "index": 11,
+          "out": 0,
+          "reads": 0,
+          "token": 0,
+          "verification_cycles": 1
+        },
+        {
+          "appended": 0,
+          "capability": 0,
+          "eos": 0,
+          "error": 7,
+          "index": 12,
+          "out": 0,
+          "reads": 0,
+          "token": 0,
+          "verification_cycles": 1
+        }
+      ],
+      "geometry": {
+        "cases": 13
+      },
+      "pass": {
+        "cases": 13,
+        "checks": 130
+      }
+    },
+    "tb_a3_vector_silu_mul": {
+      "cases": [
+        {
+          "activation_saturations": 0,
+          "error": 0,
+          "index": 0,
+          "out": 1217,
+          "saturations": 1,
+          "verification_cycles": 129869,
+          "work": 2434
+        },
+        {
+          "activation_saturations": 0,
+          "error": 1,
+          "index": 1,
+          "out": 3,
+          "saturations": 0,
+          "verification_cycles": 133,
+          "work": 6
+        },
+        {
+          "activation_saturations": 0,
+          "error": 1,
+          "index": 2,
+          "out": 5,
+          "saturations": 0,
+          "verification_cycles": 219,
+          "work": 10
+        },
+        {
+          "activation_saturations": 0,
+          "error": 2,
+          "index": 3,
+          "out": 2,
+          "saturations": 0,
+          "verification_cycles": 129,
+          "work": 5
+        },
+        {
+          "activation_saturations": 0,
+          "error": 7,
+          "index": 4,
+          "out": 0,
+          "saturations": 0,
+          "verification_cycles": 1,
+          "work": 0
+        }
+      ],
+      "geometry": {
+        "cases": 5,
+        "elements": 1217
+      },
+      "pass": {
+        "cases": 5,
+        "checks": 1267,
+        "elements": 1217
+      }
+    }
+  },
+  "operands": {
+    "attention_query_key_value": "retained causal RTL results of shipped decode PCs 26, 29 and 17",
+    "prior_kv_context": "deterministic permutations of the authentic current row; not model history",
+    "residual_swiglu_logits": "seeded deterministic BF16 spread over the governed shapes; not checkpoint activations"
+  },
+  "oracles": {
+    "attention_gqa": "runtime/reference/tensor_accelerator_attention.py",
+    "dma_scatter": "byte-preserving row placement, computed here",
+    "independent_of_dut": true,
+    "selection_argmax": "greedy_lowest_token_id_argmax_v1, computed here",
+    "selection_token_append": "runtime/sim/engines/selection.py semantics",
+    "vector_add": "runtime/reference/tensor_accelerator_elementwise.py",
+    "vector_silu_mul": "runtime/reference/tensor_accelerator_elementwise.py"
+  },
+  "schema": "opentallas.rtl.a3_operator_admission_campaign.v1",
+  "scope": {
+    "authentic_prior_context_kv": false,
+    "bit_exact_against_independent_reference": true,
+    "checkpoint_residual_swiglu_logits": false,
+    "complete_layer": false,
+    "dual_simulator": true,
+    "exact_resolved_view_stream": true,
+    "exact_shipped_operator_records": true,
+    "fail_closed_matrix": true,
+    "model_token_generation": false,
+    "read_modify_write_placement": true,
+    "runtime_context_length": true,
+    "simulator_cycles_are_verification_cost_only": true,
+    "six_previously_capability_trapped_families_admitted": true,
+    "synthesizable_elaboration": true,
+    "tpot": false
+  },
+  "simulators_agree": true,
+  "source_sha256": {
+    "rtl/abi3/ot_a3_dma_index_mover.sv": "e254421fcba397e3db821c52b9acafaf3922af78653ab2d2e3029705ee166c64",
+    "rtl/abi3/ot_a3_engine_array.sv": "35d10a5aa17ef82ba21fe30e98482cac6391407e8a5250494e4ef0a802672a2a",
+    "rtl/abi3/ot_a3_engine_issue_bridge.sv": "473e3b852f4db9491386d1e62fc61d7b0fab1706e6c9531300d45928a417e61f",
+    "rtl/abi3/ot_a3_engine_pkg.sv": "1186eecdc80321e87e08c97fb8e1c9a1b078584d019353736d235bf5cc84d477",
+    "rtl/abi3/ot_a3_format_pkg.sv": "dbea89ef9c450d1b9ffda1e578f1685b3e33d3b6f400e43c1784ec022de9e7f0",
+    "rtl/abi3/ot_a3_fp32_div_rne.sv": "f3220311dd399b0218a9aa5828ad11c9e4f9121d2924b0678ef4b3f95a7e04c1",
+    "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv": "b1c0e01c663a353a25ea7056718b21b30636bedac4a84dc0cc1216dcbb03218e",
+    "rtl/abi3/ot_a3_mac_lane.sv": "abbfa2b96164190c7730407cface079c728769be65d3188c2ad78f81ed1bbe37",
+    "rtl/abi3/ot_a3_pkg.sv": "99cb99b3b5044ad669a5927455f50ca5fe2672c197c97770e1709e794e402e4e",
+    "rtl/abi3/ot_a3_qwen_gqa.sv": "9fad7a0839e5e4efba94b4e40ebf5f2ce1244424504a62ba8ee7698fc9c24422",
+    "rtl/abi3/ot_a3_selection_argmax.sv": "d6dfd8fb62d8b5715cd1a487b74a131c84eb4b73a33cfbbfe0af0919f135e543",
+    "rtl/abi3/ot_a3_selection_token_append.sv": "3fdd18591e159c3d8301dcd249628324e4ea1e32427baa445bfa7ab03996f227",
+    "rtl/abi3/ot_a3_vector_add.sv": "a6a6516da202ad4dc26bd8a25c4fdac4f5c5b00fe0a934f93db06e04be5baac9",
+    "rtl/abi3/ot_a3_vector_compress_project.sv": "e2c10b14c289b08732d5c1782dce092589804857beb610f8129973fc9f29fdf2",
+    "rtl/abi3/ot_a3_vector_convert.sv": "1811d097cc27a8a99fbe462c2e88407cf36a9fcd92169cf49b6648bec0841ff6",
+    "rtl/abi3/ot_a3_vector_hadamard.sv": "08ac916fc973f9c039eb251db20473a4e7c314b34fbe4f5b2254096b166b6162",
+    "rtl/abi3/ot_a3_vector_index_score.sv": "8071dc6997e61f3b692affc3334c58a6a8393c97e4ebc493f68a37236d44f5eb",
+    "rtl/abi3/ot_a3_vector_mhc_post.sv": "15a817e26affb1d090072d7061abbf92ab80d77bdce94e8d979a79a99a880071",
+    "rtl/abi3/ot_a3_vector_rms_norm.sv": "7c1d174a678d2cd3bc6301b049fffb11d56862224fbf140105ed2aee0bed6769",
+    "rtl/abi3/ot_a3_vector_rope.sv": "59cf5fa16c0079ef90e7a21fa051b44c1c5e9f7ce9df0db6df2e3bdd3019c5be",
+    "rtl/abi3/ot_a3_vector_scale.sv": "1059ca471191e42a2b1b17b29ddf4479c6a0f63cdf63d0d0c5df5d532eb977f4",
+    "rtl/abi3/ot_a3_vector_silu_mul.sv": "802be87ea7c75bf70a4a42397c549912c293602bb77c4b1a70a9ade8f0b593a4",
+    "rtl/ot_fp32_rne_pkg.sv": "39de679dd5f277d8a9cc2d5b6349eb1675e9397e64a8256bb1f53a34a054608c",
+    "rtl/ot_fp32_rsqrt_rne.sv": "74ef534d4e0f8f18a74b6df39c885c10e1a12c1ee9c07b9e7bb4d8be9ec90f9b",
+    "rtl/ot_ta_command_decoder.sv": "181fa72b55c77c41a4cbf368a395afdb3f40d3beea94b245f019eaff4f460908",
+    "rtl/ot_ta_rope_bf16_sram_engine.sv": "efa253668f42a3fc5cbac2f12bbe39ccaa8a3e6f1ac17a1e202c76fefe971369",
+    "rtl/test/tb_a3_operator_admission.sv": "5ea2cb5637a3f0c17748482f91485275259acf3f9a086f4944c2cb64be6e0f2b",
+    "rtl/test/tb_a3_selection_token_append.sv": "272bd6131a22f10ec708406a58c1f9895cfa1e6083c51ac94810ac8c368d2a8a",
+    "rtl/test/tb_a3_vector_silu_mul.sv": "f41f7e67551543debd76fae74ca2431104091cfda324dfdc11eaa1efdcaca81a",
+    "runtime/reference/formats.py": "74a3254c7a1dba9ad3bf07a5c793cb2ec1766f953b48ec4c782391f757290aa2",
+    "runtime/reference/tensor_accelerator_attention.py": "72153848bf51ef8a6f2a61456ffa222fbf37150de05305c1ea4bfbaf955abf68",
+    "runtime/reference/tensor_accelerator_elementwise.py": "e15b1855c30ad9a49fbcf1c9d7d1fd751e995e30fa21e98ce407e00511bf6f4d",
+    "runtime/sim/engines/selection.py": "751240f24f79e48a25ff055908fa82592ad74fd98d48c63e71624069feca1708",
+    "testdata/compiler/abi3_deployment/a3_descriptor.hex": "85263a2b33597ba63e82e783eef7436b1b5ea0786bf7c20e4817bbdbaee13dbd",
+    "testdata/compiler/abi3_deployment/a3_program.hex": "910a714f1eca1799df203b1330dd95f3cb6da2027569acce935729e13bcf463c",
+    "testdata/compiler/abi3_deployment/abi3_deployment_rtl_vectors.json": "e24f73e4510cf141b8b4b3fd2888ea0341efe07653578bb3b370845ab7733636",
+    "testdata/compiler/abi3_shipped_prefix/p3_expect.hex": "1cadfc3371d198704fc9f245e7d8e27b72b38e906eafa0cdbc576f1eb2f98327",
+    "tools/build_a3_operator_admission_vectors.py": "569fa3e868d94f185862d098b0e762ec497dbb7fade9bb9fed6f99321e7beed0",
+    "tools/build_a3_operator_unit_vectors.py": "1e641882bbdd6bb41d14f645b78983780a19491e76492483c1b630b8ceaa289c",
+    "tools/run_a3_operator_admission_rtl_campaign.py": "ec2c8f4637d026f3f637c6da10957618d19c69151e9fd5dd5ed63dd257eed808"
+  },
+  "status": "pass",
+  "synthesis_frontend": {
+    "note": "generic synthesizable elaboration of the two new datapaths only; no library mapping, PPA, token-latency or TPOT claim. The whole issue bridge does not elaborate under the pinned Yosys 0.68 for a reason that predates this campaign: the frontend rejects a non-constant procedural for-loop bound in rtl/ot_fp32_rne_pkg.sv reached through ot_a3_vector_index_score",
+    "tops": [
+      {
+        "check_problems": 0,
+        "top": "ot_a3_vector_silu_mul"
+      },
+      {
+        "check_problems": 0,
+        "top": "ot_a3_selection_token_append"
+      }
+    ]
+  },
+  "tools": {
+    "iverilog": {
+      "path": "/usr/bin/iverilog",
+      "sha256": "1ba67856249142771239573b5d51c7f6e4d67a1e7931a0d0fab56e0d473d2167",
+      "version": "Icarus Verilog version 11.0 (stable) ()"
+    },
+    "verilator": {
+      "path": "<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator",
+      "sha256": "fb2cc573b1055cf096c90e1efc9966fe56bdb4b265c83590cf2a49f7a0defcdf",
+      "version": "Verilator 5.050 2026-07-01 rev v5.050"
+    },
+    "vvp": {
+      "path": "/usr/bin/vvp",
+      "sha256": "075b114070eed3bc72e0e4559decf40520f3b693b1da9c94bba1defe8896966d"
+    },
+    "yosys": {
+      "path": "<HOME>/.local/opentallas-tools/yosys-0.68/bin/yosys",
+      "sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+    }
+  },
+  "unit_oracles": {
+    "independent_of_dut": true,
+    "silu_expected_bf16_sha256": "b62ff9e34b2dea3f76e535b489713f4274f891b541e48e7e6d1daec69caae8b9",
+    "silu_mul": "runtime/reference/tensor_accelerator_elementwise.py::qwen3_silu_mul_bf16",
+    "token_append": "runtime/sim/engines/selection.py::token_append"
+  },
+  "vector_sha256": {
+    "a3_operator_admission/bank.hex": "e5d657722244bb6e680aa3020492723fc4ee60b8858b3e2603113df8b9899156",
+    "a3_operator_admission/cases.hex": "232a95378004316198ca4f4e805129465eb0e3f12192be88be323a3a090efe93",
+    "a3_operator_admission/descriptors.hex": "f00899e1e9ecfba03f0ed94b2f3967e87047e729c7a4026c81665f0145ad44af",
+    "a3_operator_admission/expected.hex": "66082f3571d372cc92907865275a33acd18e81602446c91a1f7f44d27ccbb107",
+    "a3_operator_admission/index.hex": "53b72ddae6376d72462eaab4464eef2548eec252e836bdfecb78d84c8647d864",
+    "a3_operator_admission/index.json": "7a158259c3bdd43aa70b4df86bb835b597b1a019a00e2f9d10abcc32722c8250",
+    "a3_operator_admission/preload.hex": "fe86db3bd65f9b53f10aac7d17785bb890c44af3d2939b064cfdde1c21da3149",
+    "a3_operator_admission/views.hex": "5013081e066052f05cb8aa01735857ae1254329c3d612f09289ef2fceb218646",
+    "a3_operator_units/append_cases.hex": "1ff87442ce048d5829ad655dbf6394708049457e7750b4b72faafe63c23a59c7",
+    "a3_operator_units/index.json": "c2ed9527772d7ef32474f6881935b9b25c71802533765c95b31b17a5683f9d17",
+    "a3_operator_units/silu_cases.hex": "b8eb33d987f5e7cf66acee5ed647b3ffaaf5e2e162c54bcd07562b6f12d0b358",
+    "a3_operator_units/silu_expected.hex": "13f74f3cf2cee0157c786d97f5937f5deba84d94fbb6a5b59070becbbd7b9835",
+    "a3_operator_units/silu_gate.hex": "848ed3958f685b514dcee54be33c631582eb24af799da76c086d3524e109a231",
+    "a3_operator_units/silu_up.hex": "b8e3261c0def5944a14335a726375b1303bef909b34823322cb726c098dd6f00"
+  },
+  "verification_wall_seconds": {
+    "ot_a3_selection_token_append_yosys_elaboration": 0.020374596933834255,
+    "ot_a3_vector_silu_mul_yosys_elaboration": 12.485204400029033,
+    "tb_a3_operator_admission_iverilog_compile": 0.10926098900381476,
+    "tb_a3_operator_admission_iverilog_simulation": 1314.7736195599427,
+    "tb_a3_operator_admission_verilator_compile": 16.9319529379718,
+    "tb_a3_operator_admission_verilator_simulation": 15.181117982952856,
+    "tb_a3_selection_token_append_iverilog_compile": 0.006726225023157895,
+    "tb_a3_selection_token_append_iverilog_simulation": 0.005051785032264888,
+    "tb_a3_selection_token_append_verilator_compile": 4.557758830953389,
+    "tb_a3_selection_token_append_verilator_simulation": 0.001630420912988484,
+    "tb_a3_vector_silu_mul_iverilog_compile": 0.013484284048900008,
+    "tb_a3_vector_silu_mul_iverilog_simulation": 21.261831196025014,
+    "tb_a3_vector_silu_mul_verilator_compile": 7.9936053089331836,
+    "tb_a3_vector_silu_mul_verilator_simulation": 0.27496332791633904
+  }
+}

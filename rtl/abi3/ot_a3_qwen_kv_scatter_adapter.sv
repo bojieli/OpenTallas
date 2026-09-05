@@ -13,8 +13,20 @@
 // validates the physical ABI view's 2,048-element interleaved row stride and
 // 0/1,024 plane offset before mapping one selected plane into that compact
 // verification bank.  No token, logit, or attention result enters this block.
+//
+// The active context is a runtime length inside a compile-time bound, not the
+// constant 17 it began as.  A constant 17 admits exactly the first generated
+// token: the governed workload's three decode positions run at contexts 17,
+// 18 and 19, and the second and third were refused with a DESCRIPTOR trap.
+// The invariant that actually matters is preserved and still checked -- the
+// context is the index view's own resolved position plus one -- and the
+// bound is now the parameter pair below, with the same lower limit of eight
+// the attention datapath's eight-lane softmax reduction requires.
 // ---------------------------------------------------------------------------
-module ot_a3_qwen_kv_scatter_adapter (
+module ot_a3_qwen_kv_scatter_adapter #(
+    parameter integer MIN_CONTEXT = 8,
+    parameter integer MAX_CONTEXT = 32
+) (
     input  wire           clk,
     input  wire           rst_n,
     input  wire           start,
@@ -94,7 +106,7 @@ module ot_a3_qwen_kv_scatter_adapter (
     localparam [7:0] FMT_BF16 = 8'h10;
     localparam [7:0] FMT_FP32 = 8'h12;
     localparam [7:0] ERR_NONE = 8'd0;
-    localparam [31:0] ACTIVE_ROWS = 32'd17;
+
     localparam [31:0] KV_HEADS = 32'd8;
     localparam [31:0] QUERY_HEADS = 32'd32;
     localparam [31:0] HEAD_WIDTH = 32'd128;
@@ -443,6 +455,12 @@ module ot_a3_qwen_kv_scatter_adapter (
         (operator_record_q[639:608] != NO_ID) &&
         (operator_record_q[671:640] == numeric_id_q);
 
+    // The context the request declares must be an expressible length and
+    // must be the index view's own position plus one.  Neither alone.
+    wire context_bound_ok =
+        (context_q >= MIN_CONTEXT) && (context_q <= MAX_CONTEXT) &&
+        (context_q <= CACHE_ROWS);
+
     wire scatter_pc_ok =
         (((instruction_index_q == 32'd32) &&
           (instruction_source_q == 32'd11) &&
@@ -477,8 +495,7 @@ module ot_a3_qwen_kv_scatter_adapter (
         (instruction_major_q == FAMILY_DMA) &&
         (instruction_sub_q == DMA_SCATTER) &&
         scatter_operator_ok && scatter_views_ok && scatter_numeric_ok &&
-        (position_q == 32'd16) && (context_q == ACTIVE_ROWS) &&
-        (context_q == position_q + 32'd1) &&
+        context_bound_ok && (context_q == position_q + 32'd1) &&
         (view2_id_q == NO_ID) && (view3_id_q == NO_ID) &&
         (object2_q == NO_ID) && (object3_q == NO_ID);
 
@@ -522,8 +539,7 @@ module ot_a3_qwen_kv_scatter_adapter (
         (object1_q == object2_q);
     wire gqa_semantics_ok = gqa_instruction_ok && gqa_operator_ok &&
         gqa_views_ok && gqa_numeric_ok &&
-        (position_q == 32'd16) && (context_q == ACTIVE_ROWS) &&
-        (context_q == position_q + 32'd1);
+        context_bound_ok && (context_q == position_q + 32'd1);
 
     wire mover_idx_rd_en;
     wire [31:0] mover_idx_rd_addr;

@@ -7,7 +7,10 @@
 // admission handshake here; only that exact boundary starts arithmetic.  Any
 // integrity/descriptor/instruction refusal is returned unchanged and performs
 // no memory read or output write.
-module ot_a3_qwen_gqa_adapter (
+module ot_a3_qwen_gqa_adapter #(
+    parameter integer MIN_CONTEXT = 8,
+    parameter integer MAX_CONTEXT = 32
+) (
     input  wire           clk,
     input  wire           rst_n,
     input  wire           start,
@@ -106,7 +109,10 @@ module ot_a3_qwen_gqa_adapter (
     // At PC38 the validator reaches admission without issuing any of these
     // legacy DMA ports.  Tying responses low also makes an accidental opcode
     // transition unable to read application memory through this wrapper.
-    ot_a3_qwen_kv_scatter_adapter metadata_validator (
+    ot_a3_qwen_kv_scatter_adapter #(
+        .MIN_CONTEXT(MIN_CONTEXT),
+        .MAX_CONTEXT(MAX_CONTEXT)
+    ) metadata_validator (
         .clk(clk), .rst_n(rst_n), .start(state == S_VALIDATE_START),
         .instruction_record(instruction_record),
         .instruction_index(instruction_index),
@@ -158,7 +164,9 @@ module ot_a3_qwen_gqa_adapter (
     wire engine_out_valid;
     wire [31:0] engine_out_addr;
     wire [31:0] engine_out_data;
-    ot_a3_qwen_gqa engine (
+    ot_a3_qwen_gqa #(
+        .MAX_CONTEXT(MAX_CONTEXT)
+    ) engine (
         .clk(clk), .rst_n(rst_n), .start(state == S_ENGINE_START),
         .cfg_context_length(context_q), .cfg_query_base(query_base_q),
         .cfg_key_base(key_base_q), .cfg_value_base(value_base_q),

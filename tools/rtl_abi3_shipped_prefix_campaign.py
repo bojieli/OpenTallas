@@ -74,6 +74,16 @@ RTL_SOURCES = (
     "rtl/abi3/ot_a3_engine_array.sv",
     "rtl/abi3/ot_a3_vector_rms_norm.sv",
     "rtl/abi3/ot_a3_vector_rope.sv",
+    # The datapaths of the six operator families the issue bridge admits in
+    # addition to the original seven.  They are listed here because the bridge
+    # instantiates them unconditionally: an instance that has not bound its
+    # operand banks refuses those families at issue with the same
+    # TRAP_CAPABILITY it always gave, but the modules still have to elaborate.
+    "rtl/abi3/ot_a3_fp32_div_rne.sv",
+    "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv",
+    "rtl/abi3/ot_a3_qwen_gqa.sv",
+    "rtl/abi3/ot_a3_vector_silu_mul.sv",
+    "rtl/abi3/ot_a3_selection_token_append.sv",
     "rtl/abi3/ot_a3_engine_issue_bridge.sv",
 )
 TEST_SOURCES = (

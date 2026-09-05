@@ -2,10 +2,17 @@
 """Build independent exact vectors for the Qwen ABI 3.0 PC38 GQA RTL.
 
 The current query, key, and value row are retained causal RTL results.  No
-authentic earlier-token KV capture exists in the repository, so rows 0..15 are
-explicit deterministic permutations of the authentic row and are never called
-model history.  Expected PC38 words are produced by the independent scalar
-target-precision reference, not by the simulator kernel or the DUT.
+authentic earlier-token KV capture exists in the repository, so the earlier
+rows are explicit deterministic permutations of the authentic row and are
+never called model history.  Expected PC38 words are produced by the
+independent scalar target-precision reference, not by the simulator kernel or
+the DUT.
+
+The datapath's context length used to be a constant 17, which expressed
+exactly the first generated token.  The governed workload's three decode
+positions run at contexts 17, 18 and 19, so the positive cases now cover all
+three: one independent KV plane and one independently computed expected
+output per context, each with the authentic current row at its own position.
 """
 
 from __future__ import annotations
@@ -34,17 +41,38 @@ from tools import build_a3_qwen_kv_scatter_vectors as scatter  # noqa: E402
 OUTPUT_ROOT = ROOT / "testdata/rtl/a3_qwen_gqa"
 SCHEMA = "opentallas.rtl.a3_qwen_gqa_vectors.v1"
 CASE_WORDS = 32
-CONTEXT = 17
+# The three decode positions the governed workload runs, and the compile-time
+# bound the RTL buffers are sized to.
+CONTEXTS = (17, 18, 19)
+MAX_CONTEXT = max(CONTEXTS)
 QUERY_HEADS = 32
 KV_HEADS = 8
 HEAD_WIDTH = 128
 QUERY_WORDS = QUERY_HEADS * HEAD_WIDTH
 KV_ROW_WORDS = KV_HEADS * HEAD_WIDTH
-KV_WORDS = CONTEXT * KV_ROW_WORDS
+OUTPUT_WORDS = QUERY_HEADS * HEAD_WIDTH
 QUERY_BASE = 0
-KEY_BASE = QUERY_BASE + QUERY_WORDS
-VALUE_BASE = KEY_BASE + KV_WORDS
 OUTPUT_BASE = 0
+
+
+def plane_bases() -> dict[int, tuple[int, int]]:
+    """One independent key and value plane per context, packed in order."""
+
+    cursor = QUERY_BASE + QUERY_WORDS
+    bases: dict[int, tuple[int, int]] = {}
+    for context in CONTEXTS:
+        key_base = cursor
+        cursor += context * KV_ROW_WORDS
+        value_base = cursor
+        cursor += context * KV_ROW_WORDS
+        bases[context] = (key_base, value_base)
+    return bases
+
+
+PLANE_BASES = plane_bases()
+SOURCE_WORDS = (
+    QUERY_WORDS + 2 * KV_ROW_WORDS * sum(CONTEXTS)
+)
 
 TRAP_NONE = 0
 TRAP_INTEGRITY = 2
@@ -148,15 +176,17 @@ def authentic_activations() -> tuple[list[int], list[int], list[int]]:
     return selected["query"], selected["key"], selected["value"]
 
 
-def rows_from_current(current: list[int], *, value_plane: bool) -> list[list[int]]:
-    """Make 16 nonzero synthetic rows followed by the authentic current row."""
+def rows_from_current(
+    current: list[int], *, value_plane: bool, context: int
+) -> list[list[int]]:
+    """Make context-1 synthetic rows followed by the authentic current row."""
 
     current_heads = [
         current[head * HEAD_WIDTH : (head + 1) * HEAD_WIDTH]
         for head in range(KV_HEADS)
     ]
     rows: list[list[int]] = []
-    for row in range(CONTEXT - 1):
+    for row in range(context - 1):
         transformed: list[int] = []
         for head in range(KV_HEADS):
             source_head = current_heads[(head + row + (1 if value_plane else 0)) % KV_HEADS]
@@ -190,11 +220,16 @@ def reshape_kv(rows: list[list[int]]) -> list[list[list[int]]]:
 
 
 def expected_attention(
-    query: list[int], key_rows: list[list[int]], value_rows: list[list[int]]
+    query: list[int],
+    key_rows: list[list[int]],
+    value_rows: list[list[int]],
+    *,
+    context: int,
 ) -> list[int]:
+    position = context - 1
     snapshot = make_kv_snapshot(
         resource_id="qwen.layer0.kv",
-        generation=16,
+        generation=position,
         capacity=8192,
         key_values=reshape_kv(key_rows[:-1]),
         value_values=reshape_kv(value_rows[:-1]),
@@ -202,17 +237,17 @@ def expected_attention(
     prepared = prepare_kv_append(
         snapshot,
         transaction_id=0x4154544E00000011,
-        expected_generation=16,
-        position_start=16,
+        expected_generation=position,
+        position_start=position,
         key_values=reshape_kv(key_rows[-1:]),
         value_values=reshape_kv(value_rows[-1:]),
     )
     result = gqa_causal_attention_bf16(
         reshape_query(query), snapshot, prepared
     )
-    if result.accounting.score_multiplications != 69_632:
+    if result.accounting.score_multiplications != context * OUTPUT_WORDS:
         raise RuntimeError("independent score accounting changed")
-    if result.accounting.value_multiplications != 69_632:
+    if result.accounting.value_multiplications != context * OUTPUT_WORDS:
         raise RuntimeError("independent value accounting changed")
     return [
         code
@@ -221,21 +256,22 @@ def expected_attention(
     ]
 
 
-def success(*, stalls: bool) -> dict[str, int | bool]:
+def success(*, stalls: bool, context: int) -> dict[str, int | bool]:
     return {
         "failed": False,
         "trap_class": TRAP_NONE,
         "refusal_reason": REFUSAL_NONE,
         "records_checked": 7,
-        "memory_reads": 143_360,
-        "writes": 4_096,
-        "score_multiplies": 69_632,
-        "exponentials": 544,
-        "value_multiplies": 69_632,
+        "memory_reads": QUERY_WORDS + 2 * context * OUTPUT_WORDS,
+        "writes": OUTPUT_WORDS,
+        "score_multiplies": context * OUTPUT_WORDS,
+        "exponentials": context * QUERY_HEADS,
+        "value_multiplies": context * OUTPUT_WORDS,
         "saturations": 0,
         "gqa_executed": True,
         "compare_output": True,
         "stall_mode": int(stalls),
+        "context": context,
     }
 
 
@@ -249,6 +285,7 @@ def refusal(
     exponentials: int = 0,
     value_multiplies: int = 0,
     mutation: int = MUTATION_NONE,
+    context: int = CONTEXTS[0],
 ) -> dict[str, int | bool]:
     return {
         "failed": True,
@@ -265,6 +302,7 @@ def refusal(
         "compare_output": False,
         "stall_mode": 1,
         "mutation": mutation,
+        "context": context,
     }
 
 
@@ -277,6 +315,8 @@ def encoded_case(item: dict[str, Any]) -> list[int]:
     ids = profile["ids"]
     objects = profile["objects"]
     expected = item["expected"]
+    context = int(expected["context"])
+    key_base, value_base = PLANE_BASES[context]
     values = [0] * CASE_WORDS
     values[:28] = [
         38,
@@ -293,8 +333,8 @@ def encoded_case(item: dict[str, Any]) -> list[int]:
         int(objects["view2"]),
         int(objects["view3"]),
         int(objects["output"]),
-        16,
-        CONTEXT,
+        context - 1,
+        context,
         int(expected.get("mutation", MUTATION_NONE)),
         int(expected["stall_mode"]),
         int(expected["failed"]),
@@ -308,19 +348,42 @@ def encoded_case(item: dict[str, Any]) -> list[int]:
         int(expected["value_multiplies"]),
         int(expected["gqa_executed"]),
     ]
+    values[28] = key_base
+    values[29] = value_base
+    # The late-fault mutation fires on the last value multiply of its case.
+    values[30] = context * OUTPUT_WORDS - 1
     return [value & 0xFFFFFFFF for value in values]
 
 
 def build(output: Path = OUTPUT_ROOT) -> dict[str, Any]:
     rom, hbm = read_profile()
     query, current_key, current_value = authentic_activations()
-    key_rows = rows_from_current(current_key, value_plane=False)
-    value_rows = rows_from_current(current_value, value_plane=True)
-    expected = expected_attention(query, key_rows, value_rows)
+    key_planes: dict[int, list[list[int]]] = {}
+    value_planes: dict[int, list[list[int]]] = {}
+    expected_by_context: dict[int, list[int]] = {}
+    for context in CONTEXTS:
+        key_planes[context] = rows_from_current(
+            current_key, value_plane=False, context=context
+        )
+        value_planes[context] = rows_from_current(
+            current_value, value_plane=True, context=context
+        )
+        expected_by_context[context] = expected_attention(
+            query, key_planes[context], value_planes[context], context=context
+        )
 
+    first = CONTEXTS[0]
     cases = [
-        case("rom_pc38_gqa_exact", copy.deepcopy(rom), success(stalls=False)),
-        case("hbm_pc38_gqa_backpressure", copy.deepcopy(hbm), success(stalls=True)),
+        case(
+            "rom_pc38_gqa_exact",
+            copy.deepcopy(rom),
+            success(stalls=False, context=first),
+        ),
+        case(
+            "hbm_pc38_gqa_backpressure",
+            copy.deepcopy(hbm),
+            success(stalls=True, context=first),
+        ),
         case(
             "rom_pc38_late_value_nonfinite",
             copy.deepcopy(rom),
@@ -328,14 +391,26 @@ def build(output: Path = OUTPUT_ROOT) -> dict[str, Any]:
                 TRAP_ENGINE,
                 REFUSAL_ENGINE,
                 7,
-                memory_reads=143_360,
-                score_multiplies=69_632,
-                exponentials=544,
-                value_multiplies=69_632,
+                memory_reads=QUERY_WORDS + 2 * first * OUTPUT_WORDS,
+                score_multiplies=first * OUTPUT_WORDS,
+                exponentials=first * QUERY_HEADS,
+                value_multiplies=first * OUTPUT_WORDS,
                 mutation=MUTATION_LATE_VALUE_NONFINITE,
+                context=first,
             ),
         ),
     ]
+    # The second and third generated tokens: the same records, the same
+    # oracle, one more committed KV row each.  Under the previous constant
+    # context these were a DESCRIPTOR refusal and no arithmetic at all.
+    for context in CONTEXTS[1:]:
+        cases.append(
+            case(
+                f"rom_pc38_gqa_exact_context{context}",
+                copy.deepcopy(rom),
+                success(stalls=False, context=context),
+            )
+        )
 
     wrong_numeric = copy.deepcopy(hbm)
     descriptor = copy.deepcopy(wrong_numeric["decoded"]["numeric"])
@@ -377,10 +452,21 @@ def build(output: Path = OUTPUT_ROOT) -> dict[str, Any]:
         ),
         "source.hex": scatter.hex_lines(
             query
-            + [word for row in key_rows for word in row]
-            + [word for row in value_rows for word in row]
+            + [
+                word
+                for context in CONTEXTS
+                for plane in (key_planes[context], value_planes[context])
+                for row in plane
+                for word in row
+            ]
         ),
-        "expected.hex": scatter.hex_lines(expected),
+        "expected.hex": scatter.hex_lines(
+            [
+                word
+                for item in cases
+                for word in expected_by_context[int(item["expected"]["context"])]
+            ]
+        ),
     }
     for name in ("operator", "view0", "view1", "view2", "view3", "output", "numeric"):
         images[f"{name}.hex"] = scatter.hex_lines(
@@ -404,16 +490,25 @@ def build(output: Path = OUTPUT_ROOT) -> dict[str, Any]:
         "abi": {"major": 3, "minor": 0},
         "request": {
             "pc": 38,
-            "position_start": 16,
-            "context_length": CONTEXT,
+            "contexts": list(CONTEXTS),
+            "position_starts": [context - 1 for context in CONTEXTS],
             "query_shape": [1, QUERY_HEADS, HEAD_WIDTH],
-            "kv_shape": [CONTEXT, KV_HEADS, HEAD_WIDTH],
+            "kv_shapes": {
+                str(context): [context, KV_HEADS, HEAD_WIDTH]
+                for context in CONTEXTS
+            },
             "output_shape": [1, QUERY_HEADS, HEAD_WIDTH],
             "memory_bases": {
                 "query": QUERY_BASE,
-                "key": KEY_BASE,
-                "value": VALUE_BASE,
+                "planes": {
+                    str(context): {
+                        "key": PLANE_BASES[context][0],
+                        "value": PLANE_BASES[context][1],
+                    }
+                    for context in CONTEXTS
+                },
                 "output": OUTPUT_BASE,
+                "source_words": SOURCE_WORDS,
             },
         },
         "authentic_current_activations": {
@@ -423,23 +518,34 @@ def build(output: Path = OUTPUT_ROOT) -> dict[str, Any]:
         },
         "history": {
             "authentic": False,
-            "row_count": 16,
+            "row_counts": {
+                str(context): context - 1 for context in CONTEXTS
+            },
             "construction": (
                 "deterministic head rotation, element rotation, and reversal "
                 "of the authentic current key/value row"
             ),
-            "key_bf16_sha256": payload_digest(
-                [word for row in key_rows[:-1] for word in row]
-            ),
-            "value_bf16_sha256": payload_digest(
-                [word for row in value_rows[:-1] for word in row]
-            ),
+            "key_bf16_sha256": {
+                str(context): payload_digest(
+                    [word for row in key_planes[context][:-1] for word in row]
+                )
+                for context in CONTEXTS
+            },
+            "value_bf16_sha256": {
+                str(context): payload_digest(
+                    [word for row in value_planes[context][:-1] for word in row]
+                )
+                for context in CONTEXTS
+            },
         },
         "oracle": {
             "implementation": "runtime/reference/tensor_accelerator_attention.py",
             "independent_of_dut": True,
-            "expected_bf16_sha256": payload_digest(expected),
-            "word_count": len(expected),
+            "expected_bf16_sha256": {
+                str(context): payload_digest(expected_by_context[context])
+                for context in CONTEXTS
+            },
+            "word_count": OUTPUT_WORDS * len(cases),
         },
         "cases": [
             {
@@ -450,6 +556,18 @@ def build(output: Path = OUTPUT_ROOT) -> dict[str, Any]:
             }
             for item in cases
         ],
+        # The exact simulator PASS marker, derived here rather than pinned in
+        # the runner: 17 named per-case checks plus one per output word.
+        "expected_pass": {
+            "cases": len(cases),
+            "positive": sum(
+                1 for item in cases if item["expected"]["compare_output"]
+            ),
+            "words": OUTPUT_WORDS * sum(
+                1 for item in cases if item["expected"]["compare_output"]
+            ),
+            "checks": len(cases) * (17 + OUTPUT_WORDS),
+        },
         "claim_boundary": {
             "exact_rom_and_hbm_pc38_records": True,
             "exact_pc38_gqa_arithmetic": True,
@@ -459,6 +577,8 @@ def build(output: Path = OUTPUT_ROOT) -> dict[str, Any]:
             "output_backpressure_and_stability": True,
             "late_fault_zero_writes": True,
             "authentic_current_query_key_value": True,
+            "runtime_context_length": True,
+            "contexts_covered": list(CONTEXTS),
             "authentic_prior_context_kv": False,
             "complete_layer": False,
             "model_token_generation": False,

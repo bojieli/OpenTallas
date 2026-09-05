@@ -13,6 +13,29 @@
 // buffered arithmetic slice, MATMUL reuses the qualified ABI 3.0 MAC lane,
 // and RoPE is adapted to the unchanged qualified Qwen RoPE datapath.  The
 // sequencer continues to observe each original opcode and descriptor.
+//
+// Six further families are admitted, and each is one the governed Qwen decode
+// program actually issues -- VECTOR.ADD (PCs 44 and 62), VECTOR.SILU_MUL (PC
+// 56), DMA.SCATTER (PCs 32 and 35), ATTENTION.GQA (PC 38), SELECTION.ARGMAX
+// (PC 70) and SELECTION.TOKEN_APPEND (PC 72).  They share one admission walk
+// rather than one state chain each: the operator record is checked, every
+// bound TENSOR_VIEW is fetched in slot order into a per-slot register file,
+// the NUMERIC record is checked against the family's frozen contract digest,
+// and only then is the family's shape predicate evaluated over the captured
+// slots.  Nothing is guessed from a convenience field.
+//
+// These six differ from the original seven in *where their results go*, and
+// the difference is architectural rather than cosmetic.  The original seven
+// append: each writes at ``cfg_output_base + result_word_cursor`` and the
+// cursor then advances by the words it produced.  A scatter is a
+// read-modify-write into a KV plane that already exists, and the second
+// residual add writes back over the trunk object it read, so neither can be
+// placed by an append cursor without moving every later operator's base.
+// The six therefore use *mapped* placement: the base comes from the
+// descriptor's own primary object through ``cfg_map_object_N`` /
+// ``cfg_map_base_N``, the sequencer's resolved element offset selects the
+// plane inside it, and ``result_word_cursor`` is deliberately not advanced.
+// An object the map does not name is a DESCRIPTOR trap, never a guess.
 // Completion is returned only after the datapath finishes.
 // Every other opcode returns a precise CAPABILITY trap.  Malformed metadata
 // returns a DESCRIPTOR trap, and a datapath failure returns an ENGINE trap.
@@ -91,6 +114,48 @@ module ot_a3_engine_issue_bridge (
     input  wire [31:0]   cfg_rope_coefficient_base,
     input  wire [31:0]   cfg_output_base,
 
+    // Object-addressed placement for the six mapped families.  Each entry
+    // binds one ABI object id to its compact verification-bank base.  An
+    // object no entry names is refused; there is no default base.
+    //
+    // ``cfg_extended_placement_valid`` states that this *instantiation* has
+    // supplied that placement.  It is not a switch for turning correctness
+    // off: the six families have no operand addresses at all until a bank is
+    // bound to each object, so an instance that has not bound them has no
+    // capability for them, and says so with the same TRAP_CAPABILITY it gave
+    // before they were implemented.  An unconnected input reads as z or 0 and
+    // both take the else branch, so an integration that has not yet wired the
+    // banks keeps its previous behaviour exactly rather than acquiring a
+    // half-configured one.
+    input  wire          cfg_extended_placement_valid,
+    input  wire [31:0]   cfg_map_object_0,
+    input  wire [31:0]   cfg_map_base_0,
+    input  wire [31:0]   cfg_map_object_1,
+    input  wire [31:0]   cfg_map_base_1,
+    input  wire [31:0]   cfg_map_object_2,
+    input  wire [31:0]   cfg_map_base_2,
+    input  wire [31:0]   cfg_map_object_3,
+    input  wire [31:0]   cfg_map_base_3,
+    input  wire [31:0]   cfg_map_object_4,
+    input  wire [31:0]   cfg_map_base_4,
+    input  wire [31:0]   cfg_map_object_5,
+    input  wire [31:0]   cfg_map_base_5,
+    input  wire [31:0]   cfg_map_object_6,
+    input  wire [31:0]   cfg_map_base_6,
+    input  wire [31:0]   cfg_map_object_7,
+    input  wire [31:0]   cfg_map_base_7,
+
+    // The request's active context length, checked against the position the
+    // scatter and attention index views actually resolve to; the compact KV
+    // bank's fixed K-to-V plane stride in rows, which does not move as the
+    // context grows; and the bound GENERATION_POLICY with the authenticated
+    // request bound and the tokens already produced.
+    input  wire [31:0]   cfg_context_length,
+    input  wire [31:0]   cfg_kv_plane_rows,
+    input  wire [31:0]   cfg_generation_policy_id,
+    input  wire [31:0]   cfg_request_max_new_tokens,
+    input  wire [31:0]   cfg_generated_before,
+
     // Operand/result ports of the integrated engine array.
     output wire          m0_rd_en,
     output wire [31:0]   m0_rd_addr,
@@ -124,6 +189,15 @@ module ot_a3_engine_issue_bridge (
     output reg  [31:0]   rope_launch_count,
     output reg  [31:0]   dma_transfer_launch_count,
     output reg  [31:0]   matmul_launch_count,
+    output reg  [31:0]   vector_add_launch_count,
+    output reg  [31:0]   vector_silu_mul_launch_count,
+    output reg  [31:0]   dma_scatter_launch_count,
+    output reg  [31:0]   attention_gqa_launch_count,
+    output reg  [31:0]   selection_argmax_launch_count,
+    output reg  [31:0]   selection_token_append_launch_count,
+    output reg  [31:0]   selected_token,
+    output reg  [31:0]   selected_tie_multiplicity,
+    output reg  [7:0]    selected_eos_reason,
     output reg  [31:0]   capability_fault_count,
     output reg  [31:0]   descriptor_fault_count,
     output reg  [31:0]   engine_fault_count,
@@ -139,6 +213,7 @@ module ot_a3_engine_issue_bridge (
     localparam [15:0] DESC_TENSOR_VIEW = 16'h0002;
     localparam [15:0] DESC_NUMERIC = 16'h0003;
     localparam [15:0] DESC_OPERATOR = 16'h000a;
+    localparam [15:0] DESC_GENERATION_POLICY = 16'h000b;
     localparam [15:0] TRAP_NONE = 16'd0;
     localparam [15:0] TRAP_DESCRIPTOR = 16'd3;
     localparam [15:0] TRAP_CAPABILITY = 16'd4;
@@ -154,6 +229,14 @@ module ot_a3_engine_issue_bridge (
     localparam [7:0] VECTOR_RMS_NORM = 8'h00;
     localparam [7:0] VECTOR_HEAD_RMS_NORM = 8'h01;
     localparam [7:0] VECTOR_ROPE = 8'h02;
+    localparam [7:0] FAMILY_ATTENTION = 8'h40;
+    localparam [7:0] FAMILY_SELECTION = 8'h70;
+    localparam [7:0] DMA_SCATTER = 8'h03;
+    localparam [7:0] VECTOR_ADD = 8'h03;
+    localparam [7:0] VECTOR_SILU_MUL = 8'h04;
+    localparam [7:0] ATTENTION_GQA = 8'h01;
+    localparam [7:0] SELECTION_ARGMAX = 8'h00;
+    localparam [7:0] SELECTION_TOKEN_APPEND = 8'h01;
     localparam [7:0] FMT_U32 = 8'h04;
     localparam [7:0] FMT_I32 = 8'h05;
     localparam [7:0] FMT_BF16 = 8'h10;
@@ -177,6 +260,27 @@ module ot_a3_engine_issue_bridge (
         256'ha15a76a03cd9c4212365014f8ebb77b73f61872818463b77d5d93f776adc5075;
     localparam [255:0] CONTRACT_QWEN_ROPE_RAW =
         256'hcf36189f7564a37bc093ee69e108bdae3e75853a46b8efe51eabb1765c15ad34;
+    // The six admitted here.  Same little-endian raw form: comparing the
+    // descriptor bytes refuses a familiar dtype tuple carrying an unrelated
+    // contract, which is the fail-open hole this whole block exists to close.
+    // bf16_add_rne_v1
+    localparam [255:0] CONTRACT_BF16_ADD_RAW =
+        256'h090bde3d8e998a255f7ca88358c3c3d94a9b8da02141f5ba440a6cff6825973c;
+    // qwen3_silu_mul_bf16_v1
+    localparam [255:0] CONTRACT_QWEN_SILU_MUL_RAW =
+        256'hca5ac4642d9de6ef1d150b327b755569f8aeb3fe1c0e4f2b48b2350176b3f51e;
+    // greedy_lowest_token_id_argmax_v1
+    localparam [255:0] CONTRACT_ARGMAX_RAW =
+        256'h3a7c5eeca987ccb78dc04cc46ef10cad9227f9a3197c5b1f2173f5e56523df27;
+    // exact_token_append_eos_v1
+    localparam [255:0] CONTRACT_TOKEN_APPEND_RAW =
+        256'hfc3d3f9eeff351b981d65d175e5c80b5c253a298e4b7915fd9586f8b7c08708d;
+    // bf16_byte_preserving_state_v1
+    localparam [255:0] CONTRACT_KV_SCATTER_RAW =
+        256'h6fe100be19c00c87797983af8409335999bfd793cdcf3862af5ba6bdcc9bf355;
+    // qwen3_gqa_fp32_softmax_bf16_v1
+    localparam [255:0] CONTRACT_QWEN_GQA_RAW =
+        256'h81e12c87d89ead473983a0898c3fbfe08d7b0a3864b55fb1f0171a4698f53a62;
     localparam [31:0] QWEN_VOCABULARY = 32'd151936;
     localparam [31:0] DEEPSEEK_VOCABULARY = 32'd129280;
     localparam [31:0] EMBEDDING_WIDTH = 32'd4096;
@@ -184,6 +288,12 @@ module ot_a3_engine_issue_bridge (
     localparam [31:0] MAX_HEAD_ROWS = 32'd32;
     localparam [31:0] RMS_EPSILON = 32'h3586_37bd;
     localparam [31:0] TRANSFER_COPIES = 32'd4;
+    localparam [31:0] QUERY_HEADS = 32'd32;
+    localparam [31:0] KV_HEADS = 32'd8;
+    localparam [31:0] KV_PLANE_WORDS = KV_HEADS * HEAD_WIDTH;
+    localparam [31:0] KV_ROW_STRIDE = 32'd2 * KV_PLANE_WORDS;
+    localparam [31:0] GQA_SCALE_BITS = 32'h3db5_0000;
+    localparam [31:0] GQA_OUTPUT_WORDS = QUERY_HEADS * HEAD_WIDTH;
 
     localparam [3:0] S_IDLE        = 4'd0;
     localparam [3:0] S_OP_WAIT     = 4'd1;
@@ -195,6 +305,14 @@ module ot_a3_engine_issue_bridge (
     localparam [3:0] S_ENGINE_WAIT = 4'd7;
     localparam [3:0] S_RESPONSE    = 4'd8;
     localparam [3:0] S_RMS_INPUT_WAIT = 4'd9;
+    // The mapped families walk one shared admission path instead of one
+    // state chain each.
+    localparam [3:0] S_MAP_VIEW_WAIT   = 4'd10;
+    localparam [3:0] S_MAP_NUM_WAIT    = 4'd11;
+    localparam [3:0] S_MAP_POLICY_WAIT = 4'd12;
+    localparam [3:0] S_MAP_INDEX_ISSUE = 4'd13;
+    localparam [3:0] S_MAP_INDEX_WAIT  = 4'd14;
+    localparam [3:0] S_MAP_ADMIT       = 4'd15;
 
     reg [3:0] state;
     reg       response_fault;
@@ -235,6 +353,59 @@ module ot_a3_engine_issue_bridge (
     reg [31:0] matmul_weight_base_q;
     reg [31:0] numeric_profile_dtypes;
     reg [31:0] result_word_cursor;
+
+    // -- the six mapped families ----------------------------------------
+    reg        vector_add_q;
+    reg        vector_silu_mul_q;
+    reg        dma_scatter_q;
+    reg        attention_gqa_q;
+    reg        selection_argmax_q;
+    reg        selection_token_append_q;
+    wire       mapped_family_q = vector_add_q | vector_silu_mul_q |
+                                 dma_scatter_q | attention_gqa_q |
+                                 selection_argmax_q | selection_token_append_q;
+
+    // Per-slot capture of every bound TENSOR_VIEW record, filled by the shared
+    // admission walk in slot order.  Flat arrays rather than a packed struct:
+    // the pinned Yosys 0.68 frontend and Icarus 11 agree on these.
+    reg [5:0]  slot_bound;
+    reg [31:0] slot_view_id [0:5];
+    reg [7:0]  slot_dtype [0:5];
+    reg [7:0]  slot_rank [0:5];
+    reg [7:0]  slot_terms [0:5];
+    reg [31:0] slot_object [0:5];
+    reg [31:0] slot_permissions [0:5];
+    reg [31:0] slot_dim0 [0:5];
+    reg [31:0] slot_dim1 [0:5];
+    reg [31:0] slot_dim2 [0:5];
+    reg [31:0] slot_stride0 [0:5];
+    reg [31:0] slot_stride1 [0:5];
+    reg [31:0] slot_stride2 [0:5];
+    reg [31:0] slot_tail_dims [0:5];
+    reg [31:0] slot_tail_strides [0:5];
+    reg [2:0]  slot_cursor;
+
+    reg [31:0] op_input2;
+    reg [31:0] op_input3;
+    reg [31:0] mapped_element_count;
+    reg [31:0] mapped_left_base;
+    reg [31:0] mapped_right_base;
+    reg [31:0] mapped_third_base;
+    reg [31:0] mapped_index_base;
+    reg [31:0] mapped_output_base;
+    reg [31:0] mapped_prior_base;
+    reg [31:0] mapped_result_words;
+    reg [31:0] mapped_work_words;
+    reg [31:0] mapped_context;
+    reg [31:0] mapped_vocabulary;
+    reg [7:0]  mapped_dtype_a;
+    reg [31:0] observed_index_value;
+    reg        policy_ring_bound;
+    reg [7:0]  policy_selection_mode;
+    reg [15:0] policy_eos_count;
+    reg [31:0] policy_max_new_tokens;
+    reg [31:0] policy_vocabulary;
+    reg [31:0] policy_eos_token [0:7];
 
     function automatic descriptor_header_ok;
         input [1535:0] data;
@@ -562,6 +733,419 @@ module ot_a3_engine_issue_bridge (
         (desc_data[607:576] == 0) &&
         (desc_data[1023:768] == CONTRACT_QWEN_ROPE_RAW);
 
+
+    // ------------------------------------------------------------------
+    // The six mapped families: shared admission walk, per-family predicates.
+    // ------------------------------------------------------------------
+    function automatic integer cursor_as_integer;
+        input [2:0] value;
+        begin
+            cursor_as_integer = {29'd0, value};
+        end
+    endfunction
+
+    function automatic [2:0] next_bound_slot;
+        input [5:0] mask;
+        input [2:0] from_slot;
+        integer scan;
+        begin
+            // 6 means "no further bound slot".  Descending order leaves the
+            // smallest matching slot as the final assignment.
+            next_bound_slot = 3'd6;
+            for (scan = 5; scan >= 0; scan = scan - 1)
+                if ((scan > cursor_as_integer(from_slot)) && mask[scan])
+                    next_bound_slot = scan[2:0];
+        end
+    endfunction
+
+    function automatic [32:0] map_lookup;
+        input [31:0] object_id;
+        begin
+            // {found, base}.  Descending order lets entry 0 win a duplicate.
+            map_lookup = 33'd0;
+            if ((object_id != NO_ID) && (object_id == cfg_map_object_7))
+                map_lookup = {1'b1, cfg_map_base_7};
+            if ((object_id != NO_ID) && (object_id == cfg_map_object_6))
+                map_lookup = {1'b1, cfg_map_base_6};
+            if ((object_id != NO_ID) && (object_id == cfg_map_object_5))
+                map_lookup = {1'b1, cfg_map_base_5};
+            if ((object_id != NO_ID) && (object_id == cfg_map_object_4))
+                map_lookup = {1'b1, cfg_map_base_4};
+            if ((object_id != NO_ID) && (object_id == cfg_map_object_3))
+                map_lookup = {1'b1, cfg_map_base_3};
+            if ((object_id != NO_ID) && (object_id == cfg_map_object_2))
+                map_lookup = {1'b1, cfg_map_base_2};
+            if ((object_id != NO_ID) && (object_id == cfg_map_object_1))
+                map_lookup = {1'b1, cfg_map_base_1};
+            if ((object_id != NO_ID) && (object_id == cfg_map_object_0))
+                map_lookup = {1'b1, cfg_map_base_0};
+        end
+    endfunction
+
+    wire [5:0] expected_slot_mask =
+        attention_gqa_q ? 6'b011111
+      : (selection_argmax_q || selection_token_append_q) ? 6'b010001
+      : 6'b010011;
+
+    wire [2:0] next_slot_w = next_bound_slot(slot_bound, slot_cursor);
+    wire [31:0] next_slot_descriptor_id =
+        (next_slot_w == 3'd1) ? op_input1
+      : (next_slot_w == 3'd2) ? op_input2
+      : (next_slot_w == 3'd3) ? op_input3
+      : op_output0;
+
+    wire mapped_view_header_ok = descriptor_header_ok(
+        desc_data, desc_fault, DESC_TENSOR_VIEW, 32'd192, 32'd128
+    ) &&
+        (desc_view_layout == 8'd0) &&
+        (desc_view_terms <= 8'd4) &&
+        (desc_view_scale_object == NO_ID) &&
+        (desc_view_scale_block == 32'd0) &&
+        (desc_primary_object != NO_ID) &&
+        ((slot_cursor == 3'd4)
+            ? ((desc_permissions & 32'd2) != 32'd0)
+            : ((desc_permissions & 32'd1) != 32'd0)) &&
+        (desc_view_offset[63:32] == 32'd0);
+
+    // -- shape predicates over the captured slots ------------------------
+    wire [31:0] elementwise_width = slot_dim1[0];
+    wire elementwise_shape_ok =
+        (slot_dtype[0] == FMT_BF16) && (slot_dtype[1] == FMT_BF16) &&
+        (slot_dtype[4] == FMT_BF16) &&
+        (slot_rank[0] == 8'd2) && (slot_rank[1] == 8'd2) &&
+        (slot_rank[4] == 8'd2) &&
+        (elementwise_width != 32'd0) &&
+        (slot_dim1[1] == elementwise_width) &&
+        (slot_dim1[4] == elementwise_width) &&
+        (slot_dim2[0] == 32'd0) && (slot_dim2[1] == 32'd0) &&
+        (slot_dim2[4] == 32'd0) &&
+        (slot_tail_dims[0] == 32'd0) && (slot_tail_dims[1] == 32'd0) &&
+        (slot_tail_dims[4] == 32'd0) &&
+        (slot_stride0[0] == elementwise_width) &&
+        (slot_stride0[1] == elementwise_width) &&
+        (slot_stride0[4] == elementwise_width) &&
+        (slot_stride1[0] == 32'd1) && (slot_stride1[1] == 32'd1) &&
+        (slot_stride1[4] == 32'd1) &&
+        (slot_stride2[0] == 32'd0) && (slot_stride2[1] == 32'd0) &&
+        (slot_stride2[4] == 32'd0) &&
+        (slot_tail_strides[0] == 32'd0) && (slot_tail_strides[1] == 32'd0) &&
+        (slot_tail_strides[4] == 32'd0) &&
+        (captured_rank[0] == 8'd2) && (captured_axis[0] == 8'd0) &&
+        (captured_extent[0] == 32'd1) &&
+        (captured_rank[1] == 8'd2) && (captured_axis[1] == 8'd0) &&
+        (captured_extent[1] == 32'd1) &&
+        (captured_rank[4] == 8'd2) && (captured_axis[4] == 8'd0) &&
+        (captured_extent[4] == 32'd1);
+
+    wire [31:0] argmax_vocabulary = slot_dim0[0];
+    wire argmax_shape_ok =
+        ((slot_dtype[0] == FMT_BF16) || (slot_dtype[0] == FMT_FP32)) &&
+        (slot_rank[0] == 8'd1) && (slot_terms[0] == 8'd0) &&
+        (argmax_vocabulary != 32'd0) &&
+        (slot_dim1[0] == 32'd0) && (slot_dim2[0] == 32'd0) &&
+        (slot_tail_dims[0] == 32'd0) &&
+        (slot_stride0[0] == 32'd1) && (slot_stride1[0] == 32'd0) &&
+        (slot_stride2[0] == 32'd0) && (slot_tail_strides[0] == 32'd0) &&
+        (captured_rank[0] == 8'd1) && (captured_axis[0] == 8'd0) &&
+        (captured_extent[0] == argmax_vocabulary) &&
+        (slot_dtype[4] == FMT_U32) && (slot_rank[4] == 8'd1) &&
+        (slot_dim0[4] == 32'd1) && (slot_dim1[4] == 32'd0) &&
+        (slot_dim2[4] == 32'd0) && (slot_tail_dims[4] == 32'd0) &&
+        (slot_stride0[4] == 32'd1) && (slot_stride1[4] == 32'd0) &&
+        (slot_stride2[4] == 32'd0) && (slot_tail_strides[4] == 32'd0) &&
+        (captured_rank[4] == 8'd1) && (captured_axis[4] == 8'd0) &&
+        (captured_extent[4] == 32'd1);
+
+    wire token_append_shape_ok =
+        (slot_dtype[0] == FMT_U32) && (slot_rank[0] == 8'd1) &&
+        (slot_dim0[0] == 32'd1) && (slot_dim1[0] == 32'd0) &&
+        (slot_dim2[0] == 32'd0) && (slot_tail_dims[0] == 32'd0) &&
+        (slot_stride0[0] == 32'd1) && (slot_stride1[0] == 32'd0) &&
+        (slot_stride2[0] == 32'd0) && (slot_tail_strides[0] == 32'd0) &&
+        (captured_rank[0] == 8'd1) && (captured_axis[0] == 8'd0) &&
+        (captured_extent[0] == 32'd1) &&
+        (slot_dtype[4] == FMT_U32) && (slot_rank[4] == 8'd1) &&
+        (slot_dim0[4] == 32'd1) && (slot_dim1[4] == 32'd0) &&
+        (slot_dim2[4] == 32'd0) && (slot_tail_dims[4] == 32'd0) &&
+        (slot_stride0[4] == 32'd1) && (slot_stride1[4] == 32'd0) &&
+        (slot_stride2[4] == 32'd0) && (slot_tail_strides[4] == 32'd0) &&
+        (captured_rank[4] == 8'd1) && (captured_axis[4] == 8'd0) &&
+        (captured_extent[4] == 32'd1);
+
+    // One decode row of eight KV heads by 128 elements, presented as the
+    // second operand of a scatter or as the query of an attention.
+    function automatic head_row_view_ok;
+        input [7:0] dtype;
+        input [7:0] rank;
+        input [31:0] heads;
+        input [31:0] dim1;
+        input [31:0] dim2;
+        input [31:0] tail_dims;
+        input [31:0] stride0;
+        input [31:0] stride1;
+        input [31:0] stride2;
+        input [31:0] tail_strides;
+        begin
+            head_row_view_ok = (dtype == FMT_BF16) && (rank == 8'd3) &&
+                (dim1 == heads) && (dim2 == HEAD_WIDTH) &&
+                (tail_dims == 32'd0) &&
+                (stride0 == heads * HEAD_WIDTH) &&
+                (stride1 == HEAD_WIDTH) && (stride2 == 32'd1) &&
+                (tail_strides == 32'd0);
+        end
+    endfunction
+
+    // The interleaved KV cache plane: one context row is a key row of
+    // KV_PLANE_WORDS followed by a value row of the same width, so the row
+    // stride is twice the plane and the plane offset is 0 or KV_PLANE_WORDS.
+    function automatic kv_cache_view_ok;
+        input [7:0] dtype;
+        input [7:0] rank;
+        input [31:0] dim1;
+        input [31:0] dim2;
+        input [31:0] tail_dims;
+        input [31:0] stride0;
+        input [31:0] stride1;
+        input [31:0] stride2;
+        input [31:0] tail_strides;
+        begin
+            kv_cache_view_ok = (dtype == FMT_BF16) && (rank == 8'd3) &&
+                (dim1 == KV_HEADS) && (dim2 == HEAD_WIDTH) &&
+                (tail_dims == 32'd0) &&
+                (stride0 == KV_ROW_STRIDE) &&
+                (stride1 == HEAD_WIDTH) && (stride2 == 32'd1) &&
+                (tail_strides == 32'd0);
+        end
+    endfunction
+
+    function automatic index_element_view_ok;
+        input [7:0] dtype;
+        input [7:0] rank;
+        input [31:0] dim0;
+        input [31:0] dim1;
+        input [31:0] dim2;
+        input [31:0] tail_dims;
+        input [31:0] stride0;
+        input [31:0] stride1;
+        input [31:0] stride2;
+        input [31:0] tail_strides;
+        begin
+            index_element_view_ok = (dtype == FMT_U32) && (rank == 8'd1) &&
+                (dim0 != 32'd0) && (dim1 == 32'd0) && (dim2 == 32'd0) &&
+                (tail_dims == 32'd0) && (stride0 == 32'd1) &&
+                (stride1 == 32'd0) && (stride2 == 32'd0) &&
+                (tail_strides == 32'd0);
+        end
+    endfunction
+
+    wire scatter_plane_is_value = (captured_offset[4] == {32'd0, KV_PLANE_WORDS});
+    wire scatter_shape_ok =
+        index_element_view_ok(
+            slot_dtype[0], slot_rank[0], slot_dim0[0], slot_dim1[0],
+            slot_dim2[0], slot_tail_dims[0], slot_stride0[0],
+            slot_stride1[0], slot_stride2[0], slot_tail_strides[0]
+        ) &&
+        (captured_rank[0] == 8'd1) && (captured_axis[0] == 8'd0) &&
+        (captured_extent[0] == 32'd1) &&
+        head_row_view_ok(
+            slot_dtype[1], slot_rank[1], KV_HEADS, slot_dim1[1],
+            slot_dim2[1], slot_tail_dims[1], slot_stride0[1],
+            slot_stride1[1], slot_stride2[1], slot_tail_strides[1]
+        ) &&
+        (captured_rank[1] == 8'd3) && (captured_axis[1] == 8'd0) &&
+        (captured_extent[1] == 32'd1) && (captured_offset[1] == 64'd0) &&
+        kv_cache_view_ok(
+            slot_dtype[4], slot_rank[4], slot_dim1[4], slot_dim2[4],
+            slot_tail_dims[4], slot_stride0[4], slot_stride1[4],
+            slot_stride2[4], slot_tail_strides[4]
+        ) &&
+        (captured_rank[4] == 8'd3) && (captured_axis[4] == 8'd0) &&
+        (captured_extent[4] == slot_dim0[4]) &&
+        (slot_dim0[4] >= cfg_kv_plane_rows) &&
+        ((captured_offset[4] == 64'd0) || scatter_plane_is_value);
+
+    wire gqa_shape_ok =
+        head_row_view_ok(
+            slot_dtype[0], slot_rank[0], QUERY_HEADS, slot_dim1[0],
+            slot_dim2[0], slot_tail_dims[0], slot_stride0[0],
+            slot_stride1[0], slot_stride2[0], slot_tail_strides[0]
+        ) &&
+        (captured_rank[0] == 8'd3) && (captured_axis[0] == 8'd0) &&
+        (captured_extent[0] == 32'd1) && (captured_offset[0] == 64'd0) &&
+        kv_cache_view_ok(
+            slot_dtype[1], slot_rank[1], slot_dim1[1], slot_dim2[1],
+            slot_tail_dims[1], slot_stride0[1], slot_stride1[1],
+            slot_stride2[1], slot_tail_strides[1]
+        ) &&
+        (captured_offset[1] == 64'd0) &&
+        kv_cache_view_ok(
+            slot_dtype[2], slot_rank[2], slot_dim1[2], slot_dim2[2],
+            slot_tail_dims[2], slot_stride0[2], slot_stride1[2],
+            slot_stride2[2], slot_tail_strides[2]
+        ) &&
+        (captured_offset[2] == {32'd0, KV_PLANE_WORDS}) &&
+        (slot_object[1] == slot_object[2]) &&
+        (slot_dim0[1] == slot_dim0[2]) &&
+        (slot_dim0[1] >= cfg_kv_plane_rows) &&
+        index_element_view_ok(
+            slot_dtype[3], slot_rank[3], slot_dim0[3], slot_dim1[3],
+            slot_dim2[3], slot_tail_dims[3], slot_stride0[3],
+            slot_stride1[3], slot_stride2[3], slot_tail_strides[3]
+        ) &&
+        (captured_rank[3] == 8'd1) && (captured_axis[3] == 8'd0) &&
+        (captured_extent[3] == 32'd1) &&
+        head_row_view_ok(
+            slot_dtype[4], slot_rank[4], QUERY_HEADS, slot_dim1[4],
+            slot_dim2[4], slot_tail_dims[4], slot_stride0[4],
+            slot_stride1[4], slot_stride2[4], slot_tail_strides[4]
+        ) &&
+        (captured_rank[4] == 8'd3) && (captured_axis[4] == 8'd0) &&
+        (captured_extent[4] == 32'd1) && (captured_offset[4] == 64'd0);
+
+    wire mapped_shape_ok =
+        (vector_add_q || vector_silu_mul_q) ? elementwise_shape_ok
+      : selection_argmax_q ? argmax_shape_ok
+      : selection_token_append_q ? token_append_shape_ok
+      : dma_scatter_q ? scatter_shape_ok
+      : gqa_shape_ok;
+
+    // -- the frozen numeric contract of each admitted family --------------
+    wire [7:0] numeric_input_dtype = desc_data[519:512];
+    wire [7:0] numeric_second_dtype = desc_data[527:520];
+    wire [7:0] numeric_accumulator_dtype = desc_data[535:528];
+    wire [7:0] numeric_output_dtype = desc_data[543:536];
+    wire mapped_numeric_frame_ok = descriptor_header_ok(
+        desc_data, desc_fault, DESC_NUMERIC, 32'd128, 32'd64
+    ) &&
+        (numeric_accumulator_dtype == FMT_FP32) &&
+        (desc_data[551:544] == 8'd0) &&
+        (desc_data[559:552] == 8'd0) &&
+        (desc_data[567:560] == 8'd0) &&
+        (desc_data[575:568] == 8'd0) &&
+        (desc_data[607:576] == 32'd0) &&
+        (desc_data[671:640] == 32'd0) &&
+        (desc_data[703:672] == 32'd0) &&
+        (desc_data[767:704] == 64'd0);
+    wire mapped_numeric_ok = mapped_numeric_frame_ok &&
+        ((vector_add_q &&
+          (numeric_input_dtype == FMT_BF16) &&
+          (numeric_second_dtype == FMT_BF16) &&
+          (numeric_output_dtype == FMT_BF16) &&
+          (desc_data[639:608] == 32'd0) &&
+          (desc_data[1023:768] == CONTRACT_BF16_ADD_RAW)) ||
+         (vector_silu_mul_q &&
+          (numeric_input_dtype == FMT_BF16) &&
+          (numeric_second_dtype == FMT_BF16) &&
+          (numeric_output_dtype == FMT_BF16) &&
+          (desc_data[639:608] == 32'd0) &&
+          (desc_data[1023:768] == CONTRACT_QWEN_SILU_MUL_RAW)) ||
+         (selection_argmax_q &&
+          (numeric_input_dtype == slot_dtype[0]) &&
+          (numeric_second_dtype == slot_dtype[0]) &&
+          (numeric_output_dtype == FMT_U32) &&
+          (desc_data[639:608] == 32'd0) &&
+          (desc_data[1023:768] == CONTRACT_ARGMAX_RAW)) ||
+         (selection_token_append_q &&
+          (numeric_input_dtype == FMT_U32) &&
+          (numeric_second_dtype == FMT_U32) &&
+          (numeric_output_dtype == FMT_U32) &&
+          (desc_data[639:608] == 32'd0) &&
+          (desc_data[1023:768] == CONTRACT_TOKEN_APPEND_RAW)) ||
+         (dma_scatter_q &&
+          (((numeric_input_dtype == FMT_BF16) &&
+            (numeric_second_dtype == FMT_U32)) ||
+           ((numeric_input_dtype == FMT_U32) &&
+            (numeric_second_dtype == FMT_BF16))) &&
+          (numeric_output_dtype == FMT_BF16) &&
+          (desc_data[639:608] == 32'd0) &&
+          (desc_data[1023:768] == CONTRACT_KV_SCATTER_RAW)) ||
+         (attention_gqa_q &&
+          (numeric_input_dtype == FMT_BF16) &&
+          (numeric_second_dtype == FMT_BF16) &&
+          (numeric_output_dtype == FMT_BF16) &&
+          (desc_data[639:608] == GQA_SCALE_BITS) &&
+          (desc_data[1023:768] == CONTRACT_QWEN_GQA_RAW)));
+
+    // -- the bound GENERATION_POLICY record -------------------------------
+    wire policy_record_ok = descriptor_header_ok(
+        desc_data, desc_fault, DESC_GENERATION_POLICY, 32'd128, 32'd64
+    ) &&
+        (desc_data[527:520] == 8'd0) &&
+        (desc_data[543:528] <= 16'd8) &&
+        (desc_data[575:544] != 32'd0) &&
+        (desc_data[607:576] != 32'd0);
+
+    // -- operator-record admission for the mapped families ----------------
+    wire mapped_operator_frame_ok = descriptor_header_ok(
+        desc_data, desc_fault, DESC_OPERATOR, 32'd128, 32'd64
+    ) &&
+        (desc_data[519:512] == issue_family_q) &&
+        (desc_data[527:520] == issue_sub_q) &&
+        (desc_data[543:528] == 16'd0) &&
+        (desc_data[575:544] == NO_ID) &&
+        (desc_data[607:576] != NO_ID) &&
+        (desc_data[639:608] != NO_ID) &&
+        (desc_data[671:640] != NO_ID) &&
+        (desc_data[703:672] != NO_ID) &&
+        (desc_data[223:192] == desc_data[671:640]) &&
+        (desc_data[735:704] != NO_ID) &&
+        (desc_data[863:832] != NO_ID) &&
+        (desc_data[895:864] == NO_ID);
+    wire mapped_operator_arity_ok =
+        ((vector_add_q || vector_silu_mul_q || dma_scatter_q) &&
+         (desc_data[767:736] != NO_ID) &&
+         (desc_data[799:768] == NO_ID) &&
+         (desc_data[831:800] == NO_ID) &&
+         (desc_data[927:896] == NO_ID) && (desc_data[959:928] == NO_ID) &&
+         (desc_data[991:960] == NO_ID) && (desc_data[1023:992] == NO_ID)) ||
+        ((selection_argmax_q || selection_token_append_q) &&
+         (desc_data[767:736] == NO_ID) &&
+         (desc_data[799:768] == NO_ID) &&
+         (desc_data[831:800] == NO_ID) &&
+         (desc_data[927:896] == NO_ID) && (desc_data[959:928] == NO_ID) &&
+         (desc_data[991:960] == NO_ID) && (desc_data[1023:992] == NO_ID)) ||
+        (attention_gqa_q &&
+         (desc_data[767:736] != NO_ID) &&
+         (desc_data[799:768] != NO_ID) &&
+         (desc_data[831:800] != NO_ID) &&
+         (desc_data[927:896] == QUERY_HEADS / KV_HEADS) &&
+         (desc_data[959:928] == 32'd0) &&
+         (desc_data[991:960] == 32'd3) &&
+         (desc_data[1023:992] == 32'd1));
+    wire mapped_operator_ok = mapped_operator_frame_ok &&
+        mapped_operator_arity_ok &&
+        (captured_valid == expected_slot_mask);
+
+    // -- the base map, evaluated over the captured slots ------------------
+    wire [32:0] slot0_map = map_lookup(slot_object[0]);
+    wire [32:0] slot1_map = map_lookup(slot_object[1]);
+    wire [32:0] slot2_map = map_lookup(slot_object[2]);
+    wire [32:0] slot3_map = map_lookup(slot_object[3]);
+    wire [32:0] slot4_map = map_lookup(slot_object[4]);
+    wire mapped_bases_found =
+        slot0_map[32] && slot4_map[32] &&
+        (!expected_slot_mask[1] || slot1_map[32]) &&
+        (!expected_slot_mask[2] || slot2_map[32]) &&
+        (!expected_slot_mask[3] || slot3_map[32]);
+    wire [31:0] kv_plane_span = cfg_kv_plane_rows * KV_PLANE_WORDS;
+    wire [31:0] slot0_base = slot0_map[31:0] + captured_offset[0][31:0];
+    wire [31:0] slot1_base = slot1_map[31:0] + captured_offset[1][31:0];
+    wire [31:0] slot2_base = slot2_map[31:0] + kv_plane_span;
+    wire [31:0] slot3_base = slot3_map[31:0] + captured_offset[3][31:0];
+    wire [31:0] slot4_base = dma_scatter_q
+        ? (slot4_map[31:0] + (scatter_plane_is_value ? kv_plane_span : 32'd0))
+        : (slot4_map[31:0] + captured_offset[4][31:0]);
+    wire [31:0] mapped_index_slot_base =
+        attention_gqa_q ? slot3_base : slot0_base;
+
+    // The context the request declares must be the position the index view
+    // actually resolves to, plus one.  Neither is trusted alone.
+    wire mapped_context_ok =
+        (cfg_context_length != 32'd0) &&
+        (cfg_kv_plane_rows != 32'd0) &&
+        (cfg_context_length <= cfg_kv_plane_rows) &&
+        (observed_index_value + 32'd1 == cfg_context_length);
+
     integer slot;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -581,6 +1165,34 @@ module ot_a3_engine_issue_bridge (
             rope_q <= 1'b0;
             dma_transfer_q <= 1'b0;
             matmul_q <= 1'b0;
+            vector_add_q <= 1'b0;
+            vector_silu_mul_q <= 1'b0;
+            dma_scatter_q <= 1'b0;
+            attention_gqa_q <= 1'b0;
+            selection_argmax_q <= 1'b0;
+            selection_token_append_q <= 1'b0;
+            slot_bound <= 6'd0;
+            slot_cursor <= 3'd0;
+            op_input2 <= NO_ID;
+            op_input3 <= NO_ID;
+            mapped_element_count <= 32'd0;
+            mapped_left_base <= 32'd0;
+            mapped_right_base <= 32'd0;
+            mapped_third_base <= 32'd0;
+            mapped_index_base <= 32'd0;
+            mapped_output_base <= 32'd0;
+            mapped_prior_base <= 32'd0;
+            mapped_result_words <= 32'd0;
+            mapped_work_words <= 32'd0;
+            mapped_context <= 32'd0;
+            mapped_vocabulary <= 32'd0;
+            mapped_dtype_a <= 8'd0;
+            observed_index_value <= 32'hffff_ffff;
+            policy_ring_bound <= 1'b0;
+            policy_selection_mode <= 8'hff;
+            policy_eos_count <= 16'd0;
+            policy_max_new_tokens <= 32'd0;
+            policy_vocabulary <= 32'd0;
             captured_valid <= 6'd0;
             op_input0 <= NO_ID;
             op_input1 <= NO_ID;
@@ -606,6 +1218,15 @@ module ot_a3_engine_issue_bridge (
             rope_launch_count <= 32'd0;
             dma_transfer_launch_count <= 32'd0;
             matmul_launch_count <= 32'd0;
+            vector_add_launch_count <= 32'd0;
+            vector_silu_mul_launch_count <= 32'd0;
+            dma_scatter_launch_count <= 32'd0;
+            attention_gqa_launch_count <= 32'd0;
+            selection_argmax_launch_count <= 32'd0;
+            selection_token_append_launch_count <= 32'd0;
+            selected_token <= 32'd0;
+            selected_tie_multiplicity <= 32'd0;
+            selected_eos_reason <= 8'd0;
             capability_fault_count <= 32'd0;
             descriptor_fault_count <= 32'd0;
             engine_fault_count <= 32'd0;
@@ -613,7 +1234,23 @@ module ot_a3_engine_issue_bridge (
             last_response_family <= 8'd0;
             last_response_sub <= 8'd0;
             last_response_descriptor_id <= NO_ID;
+            for (slot = 0; slot < 8; slot = slot + 1)
+                policy_eos_token[slot] <= NO_ID;
             for (slot = 0; slot < 6; slot = slot + 1) begin
+                slot_view_id[slot] <= NO_ID;
+                slot_dtype[slot] <= 8'd0;
+                slot_rank[slot] <= 8'd0;
+                slot_terms[slot] <= 8'd0;
+                slot_object[slot] <= NO_ID;
+                slot_permissions[slot] <= 32'd0;
+                slot_dim0[slot] <= 32'd0;
+                slot_dim1[slot] <= 32'd0;
+                slot_dim2[slot] <= 32'd0;
+                slot_stride0[slot] <= 32'd0;
+                slot_stride1[slot] <= 32'd0;
+                slot_stride2[slot] <= 32'd0;
+                slot_tail_dims[slot] <= 32'd0;
+                slot_tail_strides[slot] <= 32'd0;
                 captured_id[slot] <= NO_ID;
                 captured_extent[slot] <= 32'd0;
                 captured_axis[slot] <= 8'd0;
@@ -635,6 +1272,34 @@ module ot_a3_engine_issue_bridge (
                 rope_q <= 1'b0;
                 dma_transfer_q <= 1'b0;
                 matmul_q <= 1'b0;
+                vector_add_q <= 1'b0;
+                vector_silu_mul_q <= 1'b0;
+                dma_scatter_q <= 1'b0;
+                attention_gqa_q <= 1'b0;
+                selection_argmax_q <= 1'b0;
+                selection_token_append_q <= 1'b0;
+                slot_bound <= 6'd0;
+                slot_cursor <= 3'd0;
+                op_input2 <= NO_ID;
+                op_input3 <= NO_ID;
+                mapped_element_count <= 32'd0;
+                mapped_left_base <= 32'd0;
+                mapped_right_base <= 32'd0;
+                mapped_third_base <= 32'd0;
+                mapped_index_base <= 32'd0;
+                mapped_output_base <= 32'd0;
+                mapped_prior_base <= 32'd0;
+                mapped_result_words <= 32'd0;
+                mapped_work_words <= 32'd0;
+                mapped_context <= 32'd0;
+                mapped_vocabulary <= 32'd0;
+                mapped_dtype_a <= 8'd0;
+                observed_index_value <= 32'hffff_ffff;
+                policy_ring_bound <= 1'b0;
+                policy_selection_mode <= 8'hff;
+                policy_eos_count <= 16'd0;
+                policy_max_new_tokens <= 32'd0;
+                policy_vocabulary <= 32'd0;
                 rms_input_base_q <= 32'd0;
                 rms_weight_base_q <= 32'd0;
                 rope_input_base_q <= 32'd0;
@@ -650,6 +1315,15 @@ module ot_a3_engine_issue_bridge (
                 rope_launch_count <= 32'd0;
                 dma_transfer_launch_count <= 32'd0;
                 matmul_launch_count <= 32'd0;
+                vector_add_launch_count <= 32'd0;
+                vector_silu_mul_launch_count <= 32'd0;
+                dma_scatter_launch_count <= 32'd0;
+                attention_gqa_launch_count <= 32'd0;
+                selection_argmax_launch_count <= 32'd0;
+                selection_token_append_launch_count <= 32'd0;
+                selected_token <= 32'd0;
+                selected_tie_multiplicity <= 32'd0;
+                selected_eos_reason <= 8'd0;
                 capability_fault_count <= 32'd0;
                 descriptor_fault_count <= 32'd0;
                 engine_fault_count <= 32'd0;
@@ -690,7 +1364,18 @@ module ot_a3_engine_issue_bridge (
                                     (issue_sub == VECTOR_HEAD_RMS_NORM) ||
                                     (issue_sub == VECTOR_ROPE))) ||
                                   ((issue_family == FAMILY_DMA) &&
-                                   (issue_sub == DMA_TRANSFER)))) begin
+                                   (issue_sub == DMA_TRANSFER)) ||
+                                  (cfg_extended_placement_valid &&
+                                   (((issue_family == FAMILY_VECTOR) &&
+                                     ((issue_sub == VECTOR_ADD) ||
+                                      (issue_sub == VECTOR_SILU_MUL))) ||
+                                    ((issue_family == FAMILY_DMA) &&
+                                     (issue_sub == DMA_SCATTER)) ||
+                                    ((issue_family == FAMILY_ATTENTION) &&
+                                     (issue_sub == ATTENTION_GQA)) ||
+                                    ((issue_family == FAMILY_SELECTION) &&
+                                     ((issue_sub == SELECTION_ARGMAX) ||
+                                      (issue_sub == SELECTION_TOKEN_APPEND))))))) begin
                                 // No speculative launch and no shape guess.
                                 response_fault <= 1'b1;
                                 response_trap <= TRAP_CAPABILITY;
@@ -715,6 +1400,29 @@ module ot_a3_engine_issue_bridge (
                                 matmul_q <=
                                     (issue_family == FAMILY_TENSOR) &&
                                     (issue_sub == TENSOR_MATMUL);
+                                vector_add_q <= cfg_extended_placement_valid &&
+                                    (issue_family == FAMILY_VECTOR) &&
+                                    (issue_sub == VECTOR_ADD);
+                                vector_silu_mul_q <=
+                                    cfg_extended_placement_valid &&
+                                    (issue_family == FAMILY_VECTOR) &&
+                                    (issue_sub == VECTOR_SILU_MUL);
+                                dma_scatter_q <= cfg_extended_placement_valid &&
+                                    (issue_family == FAMILY_DMA) &&
+                                    (issue_sub == DMA_SCATTER);
+                                attention_gqa_q <=
+                                    cfg_extended_placement_valid &&
+                                    (issue_family == FAMILY_ATTENTION) &&
+                                    (issue_sub == ATTENTION_GQA);
+                                selection_argmax_q <=
+                                    cfg_extended_placement_valid &&
+                                    (issue_family == FAMILY_SELECTION) &&
+                                    (issue_sub == SELECTION_ARGMAX);
+                                selection_token_append_q <=
+                                    cfg_extended_placement_valid &&
+                                    (issue_family == FAMILY_SELECTION) &&
+                                    (issue_sub == SELECTION_TOKEN_APPEND);
+                                observed_index_value <= 32'hffff_ffff;
                                 desc_req <= 1'b1;
                                 desc_id <= issue_descriptor_id;
                                 state <= S_OP_WAIT;
@@ -723,7 +1431,26 @@ module ot_a3_engine_issue_bridge (
                     end
 
                     S_OP_WAIT: begin
-                        if (desc_valid) begin
+                        if (desc_valid && mapped_family_q) begin
+                            // The six mapped families take the shared walk.
+                            if (!mapped_operator_ok) begin
+                                response_fault <= 1'b1;
+                                response_trap <= TRAP_DESCRIPTOR;
+                                state <= S_RESPONSE;
+                            end else begin
+                                op_numeric <= desc_data[671:640];
+                                op_input0 <= desc_data[735:704];
+                                op_input1 <= desc_data[767:736];
+                                op_input2 <= desc_data[799:768];
+                                op_input3 <= desc_data[831:800];
+                                op_output0 <= desc_data[863:832];
+                                slot_bound <= expected_slot_mask;
+                                slot_cursor <= 3'd0;
+                                desc_req <= 1'b1;
+                                desc_id <= desc_data[735:704];
+                                state <= S_MAP_VIEW_WAIT;
+                            end
+                        end else if (desc_valid) begin
                             if (!descriptor_header_ok(
                                     desc_data, desc_fault, DESC_OPERATOR,
                                     32'd128, 32'd64
@@ -858,6 +1585,165 @@ module ot_a3_engine_issue_bridge (
                         end
                     end
 
+
+                    // -- the shared admission walk of the six mapped
+                    // families.  Every bound view is fetched in slot order
+                    // into the slot register file; nothing about a slot is
+                    // inferred from another slot's record.
+                    S_MAP_VIEW_WAIT: begin
+                        if (desc_valid) begin
+                            if (!mapped_view_header_ok) begin
+                                response_fault <= 1'b1;
+                                response_trap <= TRAP_DESCRIPTOR;
+                                state <= S_RESPONSE;
+                            end else begin
+                                slot_view_id[slot_cursor] <= desc_id;
+                                slot_dtype[slot_cursor] <= desc_view_dtype;
+                                slot_rank[slot_cursor] <= desc_view_rank;
+                                slot_terms[slot_cursor] <= desc_view_terms;
+                                slot_object[slot_cursor] <= desc_primary_object;
+                                slot_permissions[slot_cursor] <= desc_permissions;
+                                slot_dim0[slot_cursor] <= desc_view_dim0;
+                                slot_dim1[slot_cursor] <= desc_view_dim1;
+                                slot_dim2[slot_cursor] <= desc_view_dim2;
+                                slot_stride0[slot_cursor] <= desc_view_stride0;
+                                slot_stride1[slot_cursor] <= desc_view_stride1;
+                                slot_stride2[slot_cursor] <= desc_view_stride2;
+                                slot_tail_dims[slot_cursor] <=
+                                    desc_view_dim3 | desc_view_dim4 |
+                                    desc_view_dim5;
+                                slot_tail_strides[slot_cursor] <=
+                                    desc_view_stride3 | desc_view_stride4 |
+                                    desc_view_stride5;
+                                if (next_slot_w == 3'd6) begin
+                                    desc_req <= 1'b1;
+                                    desc_id <= op_numeric;
+                                    state <= S_MAP_NUM_WAIT;
+                                end else begin
+                                    slot_cursor <= next_slot_w;
+                                    desc_req <= 1'b1;
+                                    desc_id <= next_slot_descriptor_id;
+                                end
+                            end
+                        end
+                    end
+
+                    S_MAP_NUM_WAIT: begin
+                        if (desc_valid) begin
+                            if (!mapped_numeric_ok) begin
+                                response_fault <= 1'b1;
+                                response_trap <= TRAP_DESCRIPTOR;
+                                state <= S_RESPONSE;
+                            end else begin
+                                numeric_profile_dtypes <= {
+                                    desc_data[535:528],
+                                    desc_data[543:536],
+                                    desc_data[527:520],
+                                    desc_data[519:512]
+                                };
+                                // The placement map is checked here, before
+                                // any operand address is formed, so an
+                                // instance with no bank bound to an object
+                                // performs no read at all.  A missing bank is
+                                // a capability this instance does not have,
+                                // not a malformed descriptor.
+                                if (!mapped_bases_found) begin
+                                    response_fault <= 1'b1;
+                                    response_trap <= TRAP_CAPABILITY;
+                                    state <= S_RESPONSE;
+                                end else if (!mapped_shape_ok) begin
+                                    response_fault <= 1'b1;
+                                    response_trap <= TRAP_DESCRIPTOR;
+                                    state <= S_RESPONSE;
+                                end else if (selection_token_append_q) begin
+                                    desc_req <= 1'b1;
+                                    desc_id <= cfg_generation_policy_id;
+                                    state <= S_MAP_POLICY_WAIT;
+                                end else if (dma_scatter_q ||
+                                             attention_gqa_q) begin
+                                    state <= S_MAP_INDEX_ISSUE;
+                                end else begin
+                                    state <= S_MAP_ADMIT;
+                                end
+                            end
+                        end
+                    end
+
+                    S_MAP_POLICY_WAIT: begin
+                        if (desc_valid) begin
+                            if (!policy_record_ok) begin
+                                response_fault <= 1'b1;
+                                response_trap <= TRAP_DESCRIPTOR;
+                                state <= S_RESPONSE;
+                            end else begin
+                                policy_selection_mode <= desc_data[519:512];
+                                policy_eos_count <= desc_data[543:528];
+                                policy_max_new_tokens <= desc_data[575:544];
+                                policy_vocabulary <= desc_data[607:576];
+                                policy_eos_token[0] <= desc_data[671:640];
+                                policy_eos_token[1] <= desc_data[703:672];
+                                policy_eos_token[2] <= desc_data[735:704];
+                                policy_eos_token[3] <= desc_data[767:736];
+                                policy_eos_token[4] <= desc_data[799:768];
+                                policy_eos_token[5] <= desc_data[831:800];
+                                policy_eos_token[6] <= desc_data[863:832];
+                                policy_eos_token[7] <= desc_data[895:864];
+                                policy_ring_bound <= 1'b1;
+                                state <= S_MAP_ADMIT;
+                            end
+                        end
+                    end
+
+                    // The scatter row and the attention context are the same
+                    // position, and the index view is the only architectural
+                    // statement of it.  It is read before either engine runs.
+                    S_MAP_INDEX_ISSUE: state <= S_MAP_INDEX_WAIT;
+
+                    S_MAP_INDEX_WAIT: begin
+                        observed_index_value <= m0_rd_data;
+                        state <= S_MAP_ADMIT;
+                    end
+
+                    S_MAP_ADMIT: begin
+                        if ((dma_scatter_q || attention_gqa_q) &&
+                            !mapped_context_ok) begin
+                            response_fault <= 1'b1;
+                            response_trap <= TRAP_DESCRIPTOR;
+                            state <= S_RESPONSE;
+                        end else begin
+                            mapped_left_base <= slot0_base;
+                            mapped_right_base <= slot1_base;
+                            mapped_third_base <= slot2_base;
+                            mapped_index_base <= mapped_index_slot_base;
+                            mapped_output_base <= slot4_base;
+                            mapped_prior_base <= slot4_base;
+                            mapped_context <= cfg_context_length;
+                            mapped_vocabulary <= argmax_vocabulary;
+                            mapped_dtype_a <= slot_dtype[0];
+                            mapped_element_count <=
+                                (vector_add_q || vector_silu_mul_q)
+                                ? elementwise_width
+                                : selection_argmax_q ? argmax_vocabulary
+                                : 32'd1;
+                            mapped_result_words <=
+                                (vector_add_q || vector_silu_mul_q)
+                                ? elementwise_width
+                                : dma_scatter_q ? KV_PLANE_WORDS
+                                : attention_gqa_q ? GQA_OUTPUT_WORDS
+                                : 32'd1;
+                            mapped_work_words <=
+                                vector_add_q ? elementwise_width
+                                : vector_silu_mul_q
+                                ? (32'd2 * elementwise_width)
+                                : selection_argmax_q ? argmax_vocabulary
+                                : attention_gqa_q
+                                ? (cfg_context_length * QUERY_HEADS *
+                                   HEAD_WIDTH)
+                                : 32'd1;
+                            state <= S_START;
+                        end
+                    end
+
                     S_SOURCE_WAIT: begin
                         if (desc_valid) begin
                             if (!input_view_common_ok ||
@@ -957,7 +1843,8 @@ module ot_a3_engine_issue_bridge (
                                 (engine_result_count != expected_result_count) ||
                                 (engine_work_count != expected_work_count)) begin
                                 response_fault <= 1'b1;
-                                response_trap <= TRAP_ENGINE;
+                                response_trap <= mapped_capability_refusal
+                                    ? TRAP_CAPABILITY : TRAP_ENGINE;
                             end else begin
                                 response_fault <= 1'b0;
                                 response_trap <= TRAP_NONE;
@@ -970,9 +1857,40 @@ module ot_a3_engine_issue_bridge (
                         if (response_fire) begin
                             if (!response_fault) begin
                                 real_launch_count <= real_launch_count + 1;
-                                result_word_cursor <=
-                                    result_word_cursor + expected_result_count;
-                                if (head_rms_norm_q)
+                                // Mapped placement does not append.  A
+                                // read-modify-write into a plane that already
+                                // exists must not move the cursor the
+                                // appending operators share.
+                                if (!mapped_family_q)
+                                    result_word_cursor <=
+                                        result_word_cursor +
+                                        expected_result_count;
+                                if (vector_add_q)
+                                    vector_add_launch_count <=
+                                        vector_add_launch_count + 1;
+                                else if (vector_silu_mul_q)
+                                    vector_silu_mul_launch_count <=
+                                        vector_silu_mul_launch_count + 1;
+                                else if (dma_scatter_q)
+                                    dma_scatter_launch_count <=
+                                        dma_scatter_launch_count + 1;
+                                else if (attention_gqa_q)
+                                    attention_gqa_launch_count <=
+                                        attention_gqa_launch_count + 1;
+                                else if (selection_argmax_q) begin
+                                    selection_argmax_launch_count <=
+                                        selection_argmax_launch_count + 1;
+                                    selected_token <= array_token;
+                                    selected_tie_multiplicity <=
+                                        array_tie_multiplicity;
+                                end
+                                else if (selection_token_append_q) begin
+                                    selection_token_append_launch_count <=
+                                        selection_token_append_launch_count + 1;
+                                    selected_token <= append_token;
+                                    selected_eos_reason <= append_eos_reason;
+                                end
+                                else if (head_rms_norm_q)
                                     head_rms_norm_launch_count <=
                                         head_rms_norm_launch_count + 1;
                                 else if (rope_q)
@@ -1046,6 +1964,63 @@ module ot_a3_engine_issue_bridge (
     wire [31:0] rms_saturation_count;
     wire [31:0] rms_work_count;
 
+    wire silu_a_rd_en;
+    wire [31:0] silu_a_rd_addr;
+    wire silu_b_rd_en;
+    wire [31:0] silu_b_rd_addr;
+    wire silu_out_we;
+    wire [31:0] silu_out_addr;
+    wire [31:0] silu_out_data;
+    wire silu_busy;
+    wire silu_done;
+    wire [7:0] silu_error_code;
+    wire [31:0] silu_result_count;
+    wire [31:0] silu_work_count;
+    wire [31:0] silu_saturation_count;
+    wire [31:0] silu_activation_saturation_count;
+
+    wire append_a_rd_en;
+    wire [31:0] append_a_rd_addr;
+    wire append_out_we;
+    wire [31:0] append_out_addr;
+    wire [31:0] append_out_data;
+    wire append_busy;
+    wire append_done;
+    wire [7:0] append_error_code;
+    wire append_refusal_capability;
+    wire [31:0] append_token;
+    wire [7:0] append_eos_reason;
+    wire [31:0] append_result_count;
+    wire [31:0] append_work_count;
+
+    wire gqa_mem_req_valid;
+    wire [31:0] gqa_mem_req_addr;
+    reg  gqa_mem_rsp_valid;
+    wire gqa_out_valid;
+    wire [31:0] gqa_out_addr;
+    wire [31:0] gqa_out_data;
+    wire gqa_busy;
+    wire gqa_done;
+    wire gqa_failed;
+    wire [7:0] gqa_error_code;
+    wire [31:0] gqa_memory_read_count;
+    wire [31:0] gqa_result_count;
+    wire [31:0] gqa_work_count;
+    wire [31:0] gqa_exponential_count;
+    wire [31:0] gqa_value_multiply_count;
+    wire [31:0] gqa_saturation_count;
+
+    // The attention engine speaks one-outstanding ready/valid; the operand
+    // bank answers one cycle after an enabled address.  The two are the same
+    // contract with different spellings, so the adaptation is exactly this
+    // one register and no queue.
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n)
+            gqa_mem_rsp_valid <= 1'b0;
+        else
+            gqa_mem_rsp_valid <= gqa_mem_req_valid & attention_gqa_q;
+    end
+
     wire rope_input_rd_en;
     wire [31:0] rope_input_rd_addr;
     wire rope_coefficient_rd_en;
@@ -1061,47 +2036,102 @@ module ot_a3_engine_issue_bridge (
     wire [31:0] rope_work_count;
 
     wire engine_done = rope_q ? rope_done
-        : rms_norm_q ? rms_done : array_done;
+        : rms_norm_q ? rms_done
+        : vector_silu_mul_q ? silu_done
+        : selection_token_append_q ? append_done
+        : attention_gqa_q ? gqa_done : array_done;
     assign engine_busy = rope_q ? rope_busy
-        : rms_norm_q ? rms_busy : array_busy;
+        : rms_norm_q ? rms_busy
+        : vector_silu_mul_q ? silu_busy
+        : selection_token_append_q ? append_busy
+        : attention_gqa_q ? gqa_busy : array_busy;
     assign engine_error_code = rope_q ? rope_error_code
-        : rms_norm_q ? rms_error_code : array_error_code;
+        : rms_norm_q ? rms_error_code
+        : vector_silu_mul_q ? silu_error_code
+        : selection_token_append_q ? append_error_code
+        : attention_gqa_q ? gqa_error_code : array_error_code;
     assign engine_result_count = rope_q ? rope_result_count
-        : rms_norm_q ? rms_result_count : array_result_count;
+        : rms_norm_q ? rms_result_count
+        : vector_silu_mul_q ? silu_result_count
+        : selection_token_append_q ? append_result_count
+        : attention_gqa_q ? gqa_result_count : array_result_count;
     assign engine_work_count = rope_q ? rope_work_count
-        : rms_norm_q ? rms_work_count : array_work_count;
-    wire [31:0] expected_result_count = rms_norm_q
-        ? (source_rows * source_trailing)
+        : rms_norm_q ? rms_work_count
+        : vector_silu_mul_q ? silu_work_count
+        : selection_token_append_q ? append_work_count
+        : attention_gqa_q ? gqa_work_count : array_work_count;
+    wire [31:0] expected_result_count = mapped_family_q
+        ? mapped_result_words
+        : rms_norm_q ? (source_rows * source_trailing)
         : rope_q ? (source_rows * source_trailing)
         : matmul_q ? source_rows
         : dma_transfer_q ? (TRANSFER_COPIES * EMBEDDING_WIDTH)
         : source_trailing;
-    wire [31:0] expected_work_count = rms_norm_q
-        ? (source_rows * source_trailing)
+    wire [31:0] expected_work_count = mapped_family_q
+        ? mapped_work_words
+        : rms_norm_q ? (source_rows * source_trailing)
         : rope_q ? (source_rows * source_trailing)
         : matmul_q ? (source_rows * source_trailing)
         : dma_transfer_q ? TRANSFER_COPIES : 32'd1;
 
-    assign m0_rd_en = rope_q ? rope_input_rd_en
-        : rms_norm_q ? rms_input_rd_en : array_m0_rd_en;
-    assign m0_rd_addr = rope_q ? rope_input_rd_addr
-        : rms_norm_q ? rms_input_rd_addr : array_m0_rd_addr;
+    // The index read the bridge itself performs before a scatter or an
+    // attention: the position is architecture, not configuration.
+    wire bridge_index_read = (state == S_MAP_INDEX_ISSUE);
+
+    assign m0_rd_en = bridge_index_read ? 1'b1
+        : rope_q ? rope_input_rd_en
+        : rms_norm_q ? rms_input_rd_en
+        : vector_silu_mul_q ? silu_a_rd_en
+        : selection_token_append_q ? append_a_rd_en
+        : attention_gqa_q ? gqa_mem_req_valid : array_m0_rd_en;
+    assign m0_rd_addr = bridge_index_read ? mapped_index_slot_base
+        : rope_q ? rope_input_rd_addr
+        : rms_norm_q ? rms_input_rd_addr
+        : vector_silu_mul_q ? silu_a_rd_addr
+        : selection_token_append_q ? append_a_rd_addr
+        : attention_gqa_q ? gqa_mem_req_addr : array_m0_rd_addr;
     assign m1_rd_en = rope_q ? rope_coefficient_rd_en
-        : rms_norm_q ? rms_weight_rd_en : array_m1_rd_en;
+        : rms_norm_q ? rms_weight_rd_en
+        : vector_silu_mul_q ? silu_b_rd_en
+        : (selection_token_append_q || attention_gqa_q) ? 1'b0
+        : array_m1_rd_en;
     assign m1_rd_addr = rope_q ? rope_coefficient_rd_addr
-        : rms_norm_q ? rms_weight_rd_addr : array_m1_rd_addr;
-    assign m2_rd_en = (rms_norm_q || rope_q) ? 1'b0 : array_m2_rd_en;
-    assign m2_rd_addr = (rms_norm_q || rope_q) ? 32'd0 : array_m2_rd_addr;
-    assign m3_rd_en = (rms_norm_q || rope_q) ? 1'b0 : array_m3_rd_en;
-    assign m3_rd_addr = (rms_norm_q || rope_q) ? 32'd0 : array_m3_rd_addr;
+        : rms_norm_q ? rms_weight_rd_addr
+        : vector_silu_mul_q ? silu_b_rd_addr
+        : (selection_token_append_q || attention_gqa_q) ? 32'd0
+        : array_m1_rd_addr;
+    assign m2_rd_en = (rms_norm_q || rope_q || mapped_family_q)
+        ? 1'b0 : array_m2_rd_en;
+    assign m2_rd_addr = (rms_norm_q || rope_q || mapped_family_q)
+        ? 32'd0 : array_m2_rd_addr;
+    assign m3_rd_en = (rms_norm_q || rope_q || mapped_family_q)
+        ? 1'b0 : array_m3_rd_en;
+    assign m3_rd_addr = (rms_norm_q || rope_q || mapped_family_q)
+        ? 32'd0 : array_m3_rd_addr;
     assign out_we = rope_q ? rope_out_we
-        : rms_norm_q ? rms_out_we : array_out_we;
+        : rms_norm_q ? rms_out_we
+        : vector_silu_mul_q ? silu_out_we
+        : selection_token_append_q ? append_out_we
+        : attention_gqa_q ? gqa_out_valid : array_out_we;
     assign out_addr = rope_q ? rope_out_addr
-        : rms_norm_q ? rms_out_addr : array_out_addr;
+        : rms_norm_q ? rms_out_addr
+        : vector_silu_mul_q ? silu_out_addr
+        : selection_token_append_q ? append_out_addr
+        : attention_gqa_q ? gqa_out_addr : array_out_addr;
     assign out_data = rope_q ? rope_out_data
-        : rms_norm_q ? rms_out_data : array_out_data;
-    assign m0_reads_result = rms_norm_q || rope_q || matmul_q;
-    assign m1_reads_result = rope_q || dma_transfer_q;
+        : rms_norm_q ? rms_out_data
+        : vector_silu_mul_q ? silu_out_data
+        : selection_token_append_q ? append_out_data
+        : attention_gqa_q ? gqa_out_data : array_out_data;
+    // The bridge's own index read and the scatter's index read address the
+    // index bank; every other mapped operand and result is a plane of the
+    // result bank the earlier operators produced.
+    assign m0_reads_result = bridge_index_read ? 1'b0
+        : (rms_norm_q || rope_q || matmul_q || vector_add_q ||
+           vector_silu_mul_q || selection_argmax_q ||
+           selection_token_append_q || attention_gqa_q);
+    assign m1_reads_result = rope_q || dma_transfer_q || vector_add_q ||
+        vector_silu_mul_q || dma_scatter_q;
     assign m1_reads_matmul_weight = matmul_q;
 
     wire [31:0] launch_index_base = dma_transfer_q
@@ -1172,22 +2202,132 @@ module ot_a3_engine_issue_bridge (
         .work_count(rope_work_count)
     );
 
+    ot_a3_vector_silu_mul silu_mul (
+        .clk(clk),
+        .rst_n(rst_n),
+        .start(engine_start & vector_silu_mul_q),
+        .cfg_count(mapped_element_count),
+        .cfg_gate_base(mapped_left_base),
+        .cfg_up_base(mapped_right_base),
+        .cfg_out_base(mapped_output_base),
+        .a_rd_en(silu_a_rd_en),
+        .a_rd_addr(silu_a_rd_addr),
+        .a_rd_data(m0_rd_data),
+        .b_rd_en(silu_b_rd_en),
+        .b_rd_addr(silu_b_rd_addr),
+        .b_rd_data(m1_rd_data),
+        .out_we(silu_out_we),
+        .out_addr(silu_out_addr),
+        .out_data(silu_out_data),
+        .busy(silu_busy),
+        .done(silu_done),
+        .error_code(silu_error_code),
+        .out_count(silu_result_count),
+        .saturation_count(silu_saturation_count),
+        .activation_saturation_count(silu_activation_saturation_count),
+        .work_count(silu_work_count)
+    );
+
+    ot_a3_selection_token_append token_append (
+        .clk(clk),
+        .rst_n(rst_n),
+        .start(engine_start & selection_token_append_q),
+        .cfg_token_base(mapped_left_base),
+        .cfg_ring_bound(policy_ring_bound),
+        .cfg_out_base(mapped_output_base),
+        .cfg_selection_mode(policy_selection_mode),
+        .cfg_eos_count(policy_eos_count),
+        .cfg_policy_max_new_tokens(policy_max_new_tokens),
+        .cfg_vocabulary(policy_vocabulary),
+        .cfg_eos_token_0(policy_eos_token[0]),
+        .cfg_eos_token_1(policy_eos_token[1]),
+        .cfg_eos_token_2(policy_eos_token[2]),
+        .cfg_eos_token_3(policy_eos_token[3]),
+        .cfg_eos_token_4(policy_eos_token[4]),
+        .cfg_eos_token_5(policy_eos_token[5]),
+        .cfg_eos_token_6(policy_eos_token[6]),
+        .cfg_eos_token_7(policy_eos_token[7]),
+        .cfg_request_max_new_tokens(cfg_request_max_new_tokens),
+        .cfg_generated_before(cfg_generated_before),
+        .a_rd_en(append_a_rd_en),
+        .a_rd_addr(append_a_rd_addr),
+        .a_rd_data(m0_rd_data),
+        .out_we(append_out_we),
+        .out_addr(append_out_addr),
+        .out_data(append_out_data),
+        .busy(append_busy),
+        .done(append_done),
+        .error_code(append_error_code),
+        .refusal_capability(append_refusal_capability),
+        .token(append_token),
+        .eos_reason(append_eos_reason),
+        .appended_count(append_work_count),
+        .out_count(append_result_count)
+    );
+
+    ot_a3_qwen_gqa gqa (
+        .clk(clk),
+        .rst_n(rst_n),
+        .start(engine_start & attention_gqa_q),
+        .cfg_context_length(mapped_context),
+        .cfg_query_base(mapped_left_base),
+        .cfg_key_base(mapped_right_base),
+        .cfg_value_base(mapped_third_base),
+        .cfg_output_base(mapped_output_base),
+        .mem_req_valid(gqa_mem_req_valid),
+        .mem_req_ready(1'b1),
+        .mem_req_addr(gqa_mem_req_addr),
+        .mem_rsp_valid(gqa_mem_rsp_valid),
+        .mem_rsp_data(m0_rd_data),
+        .out_valid(gqa_out_valid),
+        .out_ready(1'b1),
+        .out_addr(gqa_out_addr),
+        .out_data(gqa_out_data),
+        .busy(gqa_busy),
+        .done(gqa_done),
+        .failed(gqa_failed),
+        .error_code(gqa_error_code),
+        .memory_read_count(gqa_memory_read_count),
+        .output_write_count(gqa_result_count),
+        .score_multiply_count(gqa_work_count),
+        .exponential_count(gqa_exponential_count),
+        .value_multiply_count(gqa_value_multiply_count),
+        .saturation_count(gqa_saturation_count)
+    );
+
     ot_a3_engine_array engines (
         .clk(clk),
         .rst_n(rst_n),
-        .start(engine_start & !rms_norm_q & !rope_q),
-        .cfg_family(matmul_q ? FAMILY_TENSOR : FAMILY_DMA),
-        .cfg_sub(matmul_q ? TENSOR_MATMUL : DMA_GATHER),
+        .start(engine_start & !rms_norm_q & !rope_q &
+               !vector_silu_mul_q & !attention_gqa_q &
+               !selection_token_append_q),
+        .cfg_family(matmul_q ? FAMILY_TENSOR
+                  : vector_add_q ? FAMILY_VECTOR
+                  : selection_argmax_q ? FAMILY_SELECTION
+                  : FAMILY_DMA),
+        .cfg_sub(matmul_q ? TENSOR_MATMUL
+               : vector_add_q ? VECTOR_ADD
+               : selection_argmax_q ? SELECTION_ARGMAX
+               : dma_scatter_q ? DMA_SCATTER
+               : DMA_GATHER),
         .cfg_rows(matmul_q ? 16'd1 : 16'd0),
         .cfg_cols(matmul_q ? source_rows[15:0] : source_trailing[15:0]),
         .cfg_depth(matmul_q ? source_trailing[15:0] : 16'd0),
-        .cfg_count(expected_result_count),
-        .cfg_dtype_a(matmul_q ? FMT_BF16 : FMT_U32),
-        .cfg_dtype_b(source_dtype),
-        .cfg_a_base(matmul_q ? cfg_matmul_input_base : launch_index_base),
-        .cfg_b_base(matmul_q ? matmul_weight_base_q : launch_source_base),
-        .cfg_c_base(32'd0),
-        .cfg_out_base(launch_output_base),
+        .cfg_count(mapped_family_q
+                   ? mapped_element_count : expected_result_count),
+        .cfg_dtype_a((matmul_q || vector_add_q) ? FMT_BF16
+                   : selection_argmax_q ? mapped_dtype_a
+                   : FMT_U32),
+        .cfg_dtype_b(mapped_family_q ? FMT_BF16 : source_dtype),
+        .cfg_a_base(matmul_q ? cfg_matmul_input_base
+                  : mapped_family_q ? mapped_left_base
+                  : launch_index_base),
+        .cfg_b_base(matmul_q ? matmul_weight_base_q
+                  : mapped_family_q ? mapped_right_base
+                  : launch_source_base),
+        .cfg_c_base(dma_scatter_q ? mapped_prior_base : 32'd0),
+        .cfg_out_base(mapped_family_q
+                      ? mapped_output_base : launch_output_base),
         .cfg_scale_a(1'b0),
         .cfg_scale_b(1'b0),
         .cfg_block_a(16'd0),
@@ -1197,9 +2337,10 @@ module ot_a3_engine_issue_bridge (
         .cfg_scale_a_base(32'd0),
         .cfg_scale_b_base(32'd0),
         .cfg_slots(dma_transfer_q ? TRANSFER_COPIES : 32'd1),
-        .cfg_trailing(source_trailing),
-        .cfg_extent(dma_transfer_q ? 32'd1 : source_rows),
-        .cfg_input_valid(4'b0011),
+        .cfg_trailing(dma_scatter_q ? KV_PLANE_WORDS : source_trailing),
+        .cfg_extent(dma_scatter_q ? cfg_kv_plane_rows
+                  : dma_transfer_q ? 32'd1 : source_rows),
+        .cfg_input_valid(selection_argmax_q ? 4'b0001 : 4'b0011),
         .cfg_output_valid(2'b01),
         .cfg_input_dtypes({16'd0, source_dtype,
             matmul_q ? FMT_BF16 : FMT_U32}),
@@ -1289,5 +2430,13 @@ module ot_a3_engine_issue_bridge (
         .tie_multiplicity(array_tie_multiplicity)
     );
 
-    wire _unused_rope_saturation = &{1'b0, rope_saturation_count};
+    // A refused GENERATION_POLICY is a capability refusal, not a shape one.
+    wire mapped_capability_refusal =
+        selection_token_append_q && append_refusal_capability;
+
+    wire _unused_rope_saturation = &{1'b0, rope_saturation_count,
+        silu_saturation_count, silu_activation_saturation_count,
+        gqa_memory_read_count, gqa_exponential_count,
+        gqa_value_multiply_count, gqa_saturation_count, gqa_failed,
+        slot_view_id[0], slot_terms[1], mapped_vocabulary};
 endmodule

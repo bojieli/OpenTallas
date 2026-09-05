@@ -222,8 +222,18 @@ def validate_observed(
     ]
     if normalized != expected_observation(manifest):
         raise RuntimeError("simulator summaries differ from the vector manifest")
-    if passed != {"cases": 5, "positive": 2, "words": 8192, "checks": 20565}:
-        raise RuntimeError(f"simulator PASS summary differs: {passed}")
+    # The PASS marker is compared against the vector manifest's own derived
+    # expectation, not against a constant pinned here.  A pinned constant has
+    # to be edited whenever a case is added, and an edited constant is not
+    # evidence; the manifest derives it from the same rule the testbench
+    # counts by, so a case that silently stops being checked still fails.
+    expected_pass = {
+        key: int(value) for key, value in manifest["expected_pass"].items()
+    }
+    if passed != expected_pass:
+        raise RuntimeError(
+            f"simulator PASS summary differs: {passed} != {expected_pass}"
+        )
 
 
 def regenerate_and_compare(temporary: Path) -> dict[str, Any]:
@@ -243,6 +253,40 @@ def regenerate_and_compare(temporary: Path) -> dict[str, Any]:
         if (generated / filename).read_bytes() != (VECTOR_DIR / filename).read_bytes():
             raise RuntimeError(f"checked-in vector {filename} is not source-current")
     return json.loads((generated / "index.json").read_text())
+
+
+def aggregate(
+    manifest: dict[str, Any], observed: list[dict[str, int]]
+) -> dict[str, int]:
+    """Sum the observed per-case counters the manifest already predicted.
+
+    Every entry is a sum over the *observed* rows, which validate_observed has
+    already proved equal to the manifest's per-case expectation.  Nothing here
+    is a constant that a new case could silently leave stale.
+    """
+
+    output_words = int(manifest["request"]["output_shape"][1]) * int(
+        manifest["request"]["output_shape"][2]
+    )
+    positive = [item for item in observed if item["writes"] != 0]
+    return {
+        "case_count": len(observed),
+        "positive_case_count": len(positive),
+        "negative_case_count": len(observed) - len(positive),
+        "contexts_covered": list(manifest["request"]["contexts"]),
+        "computed_output_words_compared": sum(
+            output_words for _ in positive
+        ),
+        "atomic_sentinel_words_checked": output_words * (
+            len(observed) - len(positive)
+        ),
+        "memory_reads": sum(item["reads"] for item in observed),
+        "score_multiplications": sum(item["score"] for item in observed),
+        "exponential_evaluations": sum(item["exp"] for item in observed),
+        "value_multiplications": sum(item["value"] for item in observed),
+        "rtl_write_beats": sum(item["writes"] for item in observed),
+        "checks_per_simulator": int(manifest["expected_pass"]["checks"]),
+    }
 
 
 def campaign(output: Path) -> dict[str, Any]:
@@ -316,25 +360,14 @@ def campaign(output: Path) -> dict[str, Any]:
                 "simulator_cycles_are_verification_cost_only": True,
             },
             "boundary": {
+                "contexts_covered": list(manifest["request"]["contexts"]),
                 "previous_first_unsupported_pc": 38,
                 "new_first_unsupported_pc": 41,
                 "new_first_unsupported_opcode": "TENSOR.MATMUL",
                 "rom_operator_descriptor_id": 134,
                 "hbm_operator_descriptor_id": 137,
             },
-            "aggregate": {
-                "case_count": 5,
-                "positive_case_count": 2,
-                "negative_case_count": 3,
-                "computed_output_words_compared": 8192,
-                "atomic_sentinel_words_checked": 12288,
-                "memory_reads": 430080,
-                "score_multiplications": 208896,
-                "exponential_evaluations": 1632,
-                "value_multiplications": 208896,
-                "rtl_write_beats": 8192,
-                "checks_per_simulator": 20565,
-            },
+            "aggregate": aggregate(manifest, iverilog_cases),
             "activation_binding": manifest["authentic_current_activations"],
             "history_binding": manifest["history"],
             "oracle": manifest["oracle"],
@@ -386,8 +419,10 @@ def validate_retained(path: Path = DEFAULT_OUTPUT) -> list[str]:
         problems.append("campaign status differs")
     if value.get("boundary", {}).get("new_first_unsupported_pc") != 41:
         problems.append("next unsupported PC differs")
-    if value.get("aggregate", {}).get("computed_output_words_compared") != 8192:
+    if value.get("aggregate", {}).get("computed_output_words_compared") != 16384:
         problems.append("computed-word count differs")
+    if value.get("aggregate", {}).get("contexts_covered") != [17, 18, 19]:
+        problems.append("governed decode contexts are not all covered")
     for source, expected in value.get("source_sha256", {}).items():
         candidate = ROOT / source
         if not candidate.is_file() or sha256(candidate) != expected:
