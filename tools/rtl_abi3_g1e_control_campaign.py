@@ -457,9 +457,7 @@ EOS_LINE = re.compile(
     r"EOS selected_token=(\d+) selected_tie_multiplicity=(\d+) "
     r"selected_eos_reason=(\d+) engine_launches=(\d+)"
 )
-POSTCENSUS_LINE = re.compile(r"CENSUS classes=(\d+) instances=(\d+)")
-CENSUS_ROW = re.compile(r"CENSUS-ROW (\d+) (\d+) (\d+) (\d+)")
-EOS_LINE = re.compile(
+POSTEOS_LINE = re.compile(
     r"POSTEOS ran=(\d+) admitted=(\d+) trapped=(\d+) trap_class=(\d+) "
     r"issues=(\d+) cycles=(\d+)"
 )
@@ -858,6 +856,79 @@ def compose_record(
     return record
 
 
+def cost_measurement(records: list[dict[str, Any]]) -> dict[str, Any]:
+    """What the rung cost, and the estimate that measurement replaces.
+
+    The ladder table in docs/OPENTALLAS_REDESIGN_PLAN.md and section 11.5 of
+    docs/CHIP_ARCHITECTURE_DESIGN.md both carry ~3 h per store for this rung.
+    That figure is not adjusted anywhere by this tool; it is reported beside
+    the measurement, with the arithmetic that most likely produced it, because
+    an estimate replaced without saying what it was is a number nobody can
+    check.
+    """
+    per_store = {}
+    for record in records:
+        cost = record["cost"]
+        cycles = int(record["execution"]["simulated_cycles"])
+        seconds = float(cost.get("simulate_seconds") or 0.0) or 1e-9
+        rate = cycles / seconds
+        words = int(
+            record["injection"]["derivation"][
+                "golden_output_words_if_every_word_were_supplied"
+            ]
+        )
+        per_store[record["storage_class"]] = {
+            "golden_model_seconds": cost.get("golden_model_seconds"),
+            "elaborate_and_compile_seconds": cost.get(
+                "elaborate_and_compile_seconds"
+            ),
+            "simulate_seconds": cost.get("simulate_seconds"),
+            "run_seconds": cost.get("run_seconds"),
+            "end_to_end_seconds": round(
+                float(cost.get("golden_model_seconds") or 0)
+                + float(cost.get("elaborate_and_compile_seconds") or 0)
+                + float(cost.get("run_seconds") or 0),
+                2,
+            ),
+            "simulated_cycles": cycles,
+            "simulated_cycles_per_second": round(rate),
+            "hypothetical_seconds_if_every_output_word_were_injected": round(
+                words / rate
+            ),
+            "hypothetical_note": (
+                "a lower bound: one result-memory write cycle per word, "
+                f"{words:,} words, at this run's own measured rate. It is "
+                "reported because it is the arithmetic that most plausibly "
+                "produced the ~3 h estimate, not because this rung needs it -- "
+                "the RTL control plane can observe a result word only through "
+                "a PREDICATE, and this program declares none"
+            ),
+        }
+    total = round(sum(v["end_to_end_seconds"] for v in per_store.values()), 2)
+    return {
+        "measured_per_store": per_store,
+        "measured_all_stores_seconds": total,
+        "replaces": {
+            "figure": "~3 h per store",
+            "recorded_in": [
+                "docs/OPENTALLAS_REDESIGN_PLAN.md, the ladder table's G1e row",
+                "docs/CHIP_ARCHITECTURE_DESIGN.md section 11.5",
+                "configs/gates/redesign_gates.json, G1e's evaluator note",
+            ],
+            "also_reported_as": (
+                "3.10 h per store by the lane that built the injection "
+                "vehicle, which reported that conservative figure over an "
+                "optimistic 0.35 h form under R13"
+            ),
+            "measured_instead": total,
+            "not_edited_here": (
+                "no document or gate figure is changed by this tool; the "
+                "measurement is published beside the estimate"
+            ),
+        },
+    }
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, default=ARTIFACT)
@@ -962,6 +1033,7 @@ def main() -> int:
                 "any rate or cycle-accurate timing claim",
             ],
         },
+        "cost_measurement": cost_measurement(records),
         "records": records,
         "tools": tools,
         "git": git_identity(),
