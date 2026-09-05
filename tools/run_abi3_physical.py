@@ -1240,9 +1240,11 @@ def augment_design(
     did not run (or the flow errored) the corresponding field is absent and
     ``closed`` is false, so a partial record can never read as a result.
     """
-    if lanes is None and mac_per_cycle is None and not lane_regex:
-        return
-    design = record["design"]
+    # The closure verdict and the signal-integrity counts belong to EVERY
+    # routed record.  This used to return early when no lane argument was
+    # given, so five routed records -- the D4 baseline among them -- carried no
+    # verdict at all.  Lane-specific fields stay conditional below.
+    design = record.setdefault("design", {})
     pnr = record.get("place_and_route")
     synth = record.get("synthesis")
     sta = record.get("static_timing") or {}

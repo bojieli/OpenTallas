@@ -57,17 +57,40 @@
     "voltage_v": 0.7
   },
   "design": {
+    "antenna": 0,
+    "antenna_violating_nets": 0,
+    "antenna_violating_pins": 0,
+    "area_basis": "place_and_route.metrics.standard_cell_area_um2",
+    "area_um2": 845.509,
     "block": "reduction_s8_g2",
+    "cells": 7507,
+    "cells_basis": "place_and_route.metrics.standard_cell_count: routed netlist after timing repair and clock-tree synthesis, buffers included",
+    "clock_period_ns": 2.25,
     "clock_port": "clk",
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "closed_reason": "record predates the signal-integrity fields and its container report is not retained; closure cannot be asserted without a re-route",
+    "core_area_um2": 2240.22,
     "description": "Eight-source, two-group tagged deterministic reduction endpoint.",
+    "drc": 0,
     "false_path_from_ports": [
       "rst_n"
     ],
+    "fmax_basis": "place_and_route.metrics.fmax_hz (ORFS finish__timing__fmax)",
+    "fmax_hz": 455262000.0,
+    "hold_wns_ns": 0.0557746,
     "parameters": {
       "DATA_W": 32,
       "GROUPS": 2,
       "SOURCES": 8,
       "TAG_W": 16
+    },
+    "setup_wns_ns": 0.0534617,
+    "signal_integrity_clean": null,
+    "signal_integrity_violations": {
+      "max_cap_violations": null,
+      "max_fanout_violations": null,
+      "max_slew_violations": null
     },
     "sources": [
       {
@@ -76,7 +99,8 @@
         "size_bytes": 8276
       }
     ],
-    "top": "ot_reduction_endpoint"
+    "top": "ot_reduction_endpoint",
+    "utilization_fraction": 0.377423
   },
   "elapsed_seconds": 301.001,
   "expected_not_met": false,
