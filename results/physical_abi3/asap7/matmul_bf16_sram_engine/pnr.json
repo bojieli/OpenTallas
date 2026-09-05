@@ -68,13 +68,36 @@
     "voltage_v": 0.7
   },
   "design": {
+    "antenna": 0,
+    "antenna_violating_nets": 0,
+    "antenna_violating_pins": 0,
+    "area_basis": "place_and_route.metrics.standard_cell_area_um2",
+    "area_um2": 8348.44,
     "block": "ot_ta_matmul_bf16_sram_engine",
+    "cells": 65476,
+    "cells_basis": "place_and_route.metrics.standard_cell_count: routed netlist after timing repair and clock-tree synthesis, buffers included",
+    "clock_period_ns": 18.0,
     "clock_port": "clk",
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "closed_reason": "record predates the signal-integrity fields and its container report is not retained; closure cannot be asserted without a re-route",
+    "core_area_um2": 22975.9,
     "description": "ad-hoc block supplied on the command line",
+    "drc": 0,
     "false_path_from_ports": [
       "rst_n"
     ],
+    "fmax_basis": "place_and_route.metrics.fmax_hz (ORFS finish__timing__fmax)",
+    "fmax_hz": 57959000.0,
+    "hold_wns_ns": 0.0520449,
     "parameters": {},
+    "setup_wns_ns": 0.74642,
+    "signal_integrity_clean": null,
+    "signal_integrity_violations": {
+      "max_cap_violations": null,
+      "max_fanout_violations": null,
+      "max_slew_violations": null
+    },
     "sources": [
       {
         "path": "rtl/ot_fp32_rne_pkg.sv",
@@ -92,7 +115,8 @@
         "size_bytes": 21527
       }
     ],
-    "top": "ot_ta_matmul_bf16_sram_engine"
+    "top": "ot_ta_matmul_bf16_sram_engine",
+    "utilization_fraction": 0.363357
   },
   "elapsed_seconds": 2605.839,
   "expected_not_met": false,

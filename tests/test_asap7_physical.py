@@ -284,3 +284,34 @@ def test_result_archiver_includes_raw_mapped_netlist(monkeypatch, tmp_path):
     )
     assert "1_2_yosys.raw.v" in archived
     assert (tmp_path / "archive" / "case" / "artifacts" / "1_2_yosys.raw.v").is_file()
+
+
+def test_a_routed_record_with_slew_violations_is_not_closed(tmp_path):
+    """Signal-integrity violations refuse closure, and are named.
+
+    An LQ8 route at asap7 was recorded closed=true with 292 max-slew
+    violations because the driver read setup, hold, DRC and antenna from the
+    ORFS report and never the DRV block beside them.  The verdict must read
+    all three DRV counts and refuse to close on any nonzero one.
+    """
+    import json
+    from tools import run_abi3_physical as drv
+
+    metrics = {
+        "setup_wns_ns": 1.0, "hold_wns_ns": 0.1, "drc_errors": 0,
+        "antenna_violating_nets": 0, "antenna_violating_pins": 0,
+        "max_slew_violations": 292, "max_cap_violations": 0, "max_fanout_violations": 0,
+        "fmax_hz": 1e8, "standard_cell_count": 10, "standard_cell_area_um2": 1.0,
+        "core_area_um2": 2.0, "utilization_fraction": 0.5,
+    }
+    record = {
+        "status": drv.STATUS_PASS,
+        "place_and_route": {"metrics": metrics, "clock_period_ns": 16.0},
+        "design": {},
+    }
+    drv.augment_design(record, lanes=None, mac_per_cycle=None, evidence=[], lane_regex=None, netlists=[])
+    design = record["design"]
+    assert design["signal_integrity_violations"]["max_slew_violations"] == 292
+    assert design["signal_integrity_clean"] is False
+    assert design["closed"] is False
+    assert "max_slew_violations 292" in design["closed_reason"]
