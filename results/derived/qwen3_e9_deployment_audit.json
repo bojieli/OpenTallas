@@ -6,33 +6,13 @@
    "build/abi3/qwen3-8b-rom-e9",
    "build/abi3/qwen3-8b-hbm-e9"
   ],
-  "exit_code": 3,
+  "exit_code": 0,
   "shipped_allowlist": {}
  },
  "deployment_audit": {
   "allowlist": {},
   "allowlist_unused": [],
   "asymmetries": [
-   {
-    "allowlisted": false,
-    "cost_bearing": true,
-    "effect_x": null,
-    "enters": "MemorySystem.schedule",
-    "family": "attention",
-    "favours": "unknown",
-    "field": "bank_mask",
-    "hbm": {
-     "16": 36
-    },
-    "hbm_value": 16,
-    "justification": null,
-    "magnitude_x": null,
-    "rom": {
-     "0": 36
-    },
-    "rom_value": 0,
-    "why": "bank_mask selects banks/ports in MemorySystem.schedule; the direction is a property of the placement and is not derived by this audit"
-   },
    {
     "allowlisted": false,
     "cost_bearing": false,
@@ -52,26 +32,6 @@
     },
     "rom_value": 3,
     "why": "resource_bound is copied into the tile mapping and read by nothing that costs a cycle"
-   },
-   {
-    "allowlisted": false,
-    "cost_bearing": true,
-    "effect_x": null,
-    "enters": "MemorySystem.schedule",
-    "family": "dma",
-    "favours": "unknown",
-    "field": "bank_mask",
-    "hbm": {
-     "3": 74
-    },
-    "hbm_value": 3,
-    "justification": null,
-    "magnitude_x": null,
-    "rom": {
-     "0": 74
-    },
-    "rom_value": 0,
-    "why": "bank_mask selects banks/ports in MemorySystem.schedule; the direction is a property of the placement and is not derived by this audit"
    },
    {
     "allowlisted": false,
@@ -95,26 +55,6 @@
    },
    {
     "allowlisted": false,
-    "cost_bearing": true,
-    "effect_x": null,
-    "enters": "MemorySystem.schedule",
-    "family": "selection",
-    "favours": "unknown",
-    "field": "bank_mask",
-    "hbm": {
-     "8": 2
-    },
-    "hbm_value": 8,
-    "justification": null,
-    "magnitude_x": null,
-    "rom": {
-     "0": 2
-    },
-    "rom_value": 0,
-    "why": "bank_mask selects banks/ports in MemorySystem.schedule; the direction is a property of the placement and is not derived by this audit"
-   },
-   {
-    "allowlisted": false,
     "cost_bearing": false,
     "effect_x": 1.0,
     "enters": "nothing",
@@ -135,34 +75,6 @@
    },
    {
     "allowlisted": false,
-    "cost_bearing": true,
-    "effect_x": null,
-    "enters": "MemorySystem.schedule",
-    "family": "tensor",
-    "favours": "unknown",
-    "field": "bank_mask",
-    "hbm": {
-     "7": 254
-    },
-    "hbm_value": 7,
-    "justification": null,
-    "magnitude_x": null,
-    "rom": {
-     "1": 1,
-     "16": 36,
-     "2048": 36,
-     "32": 36,
-     "4": 1,
-     "4096": 36,
-     "512": 36,
-     "64": 36,
-     "8192": 36
-    },
-    "rom_value": 16,
-    "why": "bank_mask selects banks/ports in MemorySystem.schedule; the direction is a property of the placement and is not derived by this audit"
-   },
-   {
-    "allowlisted": false,
     "cost_bearing": false,
     "effect_x": 1.0,
     "enters": "nothing",
@@ -180,31 +92,6 @@
     },
     "rom_value": 1,
     "why": "resource_bound is copied into the tile mapping and read by nothing that costs a cycle"
-   },
-   {
-    "allowlisted": false,
-    "cost_bearing": true,
-    "effect_x": null,
-    "enters": "MemorySystem.schedule",
-    "family": "vector",
-    "favours": "unknown",
-    "field": "bank_mask",
-    "hbm": {
-     "8": 325
-    },
-    "hbm_value": 8,
-    "justification": null,
-    "magnitude_x": null,
-    "rom": {
-     "0": 180,
-     "1024": 36,
-     "128": 36,
-     "2": 1,
-     "256": 36,
-     "8": 36
-    },
-    "rom_value": 0,
-    "why": "bank_mask selects banks/ports in MemorySystem.schedule; the direction is a property of the placement and is not derived by this audit"
    },
    {
     "allowlisted": false,
@@ -229,7 +116,7 @@
   ],
   "basis": "SCHEDULE fields at lanes=1024, charged with the cycle model's own _compute_cycles",
   "column_group_spans_match": true,
-  "comparable": false,
+  "comparable": true,
   "families": {
    "attention": {
     "issued_work": {
@@ -2393,7 +2280,7 @@
     "SPAN_LAST_INDEX": 0,
     "SPAN_TOKENS": 1
    },
-   "root": "build/abi3/qwen3-8b-hbm-e9",
+   "root": "/home/ubuntu/OpenTallas/build/abi3/qwen3-8b-hbm-e9",
    "schedule_shapes": {
     "engine_family=112,tile_rows=1,tile_cols=1,tile_depth=1,issue_window=1": 1,
     "engine_family=16,tile_rows=1,tile_cols=64,tile_depth=1,issue_window=16": 1,
@@ -2812,7 +2699,7 @@
      "hbm": 0.0,
      "rom": 0.0
     },
-    "rom_operator_id": 74,
+    "rom_operator_id": 73,
     "schedule": {
      "issue_window": {
       "hbm": 16,
@@ -2874,7 +2761,7 @@
      "hbm": 0.9375,
      "rom": 0.9375
     },
-    "rom_operator_id": 80,
+    "rom_operator_id": 79,
     "schedule": {
      "issue_window": {
       "hbm": 2,
@@ -2932,7 +2819,7 @@
      "hbm": 0.984375,
      "rom": 0.984375
     },
-    "rom_operator_id": 88,
+    "rom_operator_id": 87,
     "schedule": {
      "issue_window": {
       "hbm": 2,
@@ -2990,7 +2877,7 @@
      "hbm": 0.9375,
      "rom": 0.9375
     },
-    "rom_operator_id": 96,
+    "rom_operator_id": 94,
     "schedule": {
      "issue_window": {
       "hbm": 2,
@@ -3048,7 +2935,7 @@
      "hbm": 0.984375,
      "rom": 0.984375
     },
-    "rom_operator_id": 103,
+    "rom_operator_id": 100,
     "schedule": {
      "issue_window": {
       "hbm": 2,
@@ -3114,7 +3001,7 @@
      "hbm": 7.938,
      "rom": 7.938
     },
-    "rom_operator_id": 111,
+    "rom_operator_id": 108,
     "schedule": {
      "issue_window": {
       "hbm": 2,
@@ -3184,7 +3071,7 @@
      "hbm": 7.938,
      "rom": 7.938
     },
-    "rom_operator_id": 118,
+    "rom_operator_id": 115,
     "schedule": {
      "issue_window": {
       "hbm": 2,
@@ -3246,7 +3133,7 @@
      "hbm": 0.9375,
      "rom": 0.9375
     },
-    "rom_operator_id": 127,
+    "rom_operator_id": 124,
     "schedule": {
      "issue_window": {
       "hbm": 16,
@@ -3320,7 +3207,7 @@
      "hbm": 0.0,
      "rom": 0.0
     },
-    "rom_operator_id": 134,
+    "rom_operator_id": 130,
     "schedule": {
      "issue_window": {
       "hbm": 16,
@@ -3382,7 +3269,7 @@
      "hbm": 0.998047,
      "rom": 0.998047
     },
-    "rom_operator_id": 142,
+    "rom_operator_id": 138,
     "schedule": {
      "issue_window": {
       "hbm": 16,
@@ -3440,7 +3327,7 @@
      "hbm": 0.998047,
      "rom": 0.998047
     },
-    "rom_operator_id": 149,
+    "rom_operator_id": 144,
     "schedule": {
      "issue_window": {
       "hbm": 16,
@@ -3514,7 +3401,7 @@
      "hbm": 0.0,
      "rom": 0.0
     },
-    "rom_operator_id": 157,
+    "rom_operator_id": 151,
     "schedule": {
      "issue_window": {
       "hbm": 16,
@@ -3592,7 +3479,7 @@
      "hbm": 0.0,
      "rom": 0.0
     },
-    "rom_operator_id": 165,
+    "rom_operator_id": 158,
     "schedule": {
      "issue_window": {
       "hbm": 16,
@@ -3654,7 +3541,7 @@
      "hbm": 0.998047,
      "rom": 0.998047
     },
-    "rom_operator_id": 172,
+    "rom_operator_id": 165,
     "schedule": {
      "issue_window": {
       "hbm": 16,
@@ -3728,7 +3615,7 @@
      "hbm": 0.0,
      "rom": 0.0
     },
-    "rom_operator_id": 179,
+    "rom_operator_id": 171,
     "schedule": {
      "issue_window": {
       "hbm": 16,
@@ -3790,7 +3677,7 @@
      "hbm": 0.998047,
      "rom": 0.998047
     },
-    "rom_operator_id": 186,
+    "rom_operator_id": 177,
     "schedule": {
      "issue_window": {
       "hbm": 16,
@@ -3848,7 +3735,7 @@
      "hbm": 0.998047,
      "rom": 0.998047
     },
-    "rom_operator_id": 193,
+    "rom_operator_id": 183,
     "schedule": {
      "issue_window": {
       "hbm": 16,
@@ -3914,7 +3801,7 @@
      "hbm": 128.0,
      "rom": 128.0
     },
-    "rom_operator_id": 200,
+    "rom_operator_id": 190,
     "schedule": {
      "issue_window": {
       "hbm": 16,
@@ -3992,7 +3879,7 @@
      "hbm": 0.0,
      "rom": 0.0
     },
-    "rom_operator_id": 207,
+    "rom_operator_id": 197,
     "schedule": {
      "issue_window": {
       "hbm": 16,
@@ -4054,7 +3941,7 @@
      "hbm": 0.0,
      "rom": 0.0
     },
-    "rom_operator_id": 215,
+    "rom_operator_id": 205,
     "schedule": {
      "issue_window": {
       "hbm": 1,
@@ -4112,7 +3999,7 @@
      "hbm": 0.0,
      "rom": 0.0
     },
-    "rom_operator_id": 222,
+    "rom_operator_id": 212,
     "schedule": {
      "issue_window": {
       "hbm": 1,
@@ -4169,7 +4056,7 @@
    "column_group_spans": [
     1024
    ],
-   "deployment_sha256": "49acf2d76eafdf960ef8300161d20fc451bc616666618b874168aa2320159bfc",
+   "deployment_sha256": "133afc13e1fcd2aade2e40530883c9986b0e920d99853990d9032fd777f26243",
    "effective_tensor_width_caps": [
     1024
    ],
@@ -4290,7 +4177,7 @@
      "payload_bytes_per_tile": 256.0,
      "row_tiles": 1,
      "schedule": {
-      "bank_mask": 0,
+      "bank_mask": 3,
       "issue_window": 4,
       "max_outstanding": 4,
       "noc_route_class": 0,
@@ -4365,7 +4252,7 @@
      "padding_work": 0,
      "row_tiles": 1,
      "schedule": {
-      "bank_mask": 1,
+      "bank_mask": 7,
       "issue_window": 16,
       "max_outstanding": 16,
       "noc_route_class": 0,
@@ -4507,7 +4394,7 @@
      "padding_work": 0,
      "row_tiles": 1,
      "schedule": {
-      "bank_mask": 16,
+      "bank_mask": 7,
       "issue_window": 16,
       "max_outstanding": 16,
       "noc_route_class": 0,
@@ -4582,7 +4469,7 @@
      "padding_work": 0,
      "row_tiles": 1,
      "schedule": {
-      "bank_mask": 32,
+      "bank_mask": 7,
       "issue_window": 16,
       "max_outstanding": 16,
       "noc_route_class": 0,
@@ -4651,13 +4538,13 @@
        "view_id": 72
       }
      },
-     "operator_id": 74,
+     "operator_id": 73,
      "output_waves": 1,
      "padding_fraction": 0.0,
      "padding_work": 0,
      "row_tiles": 1,
      "schedule": {
-      "bank_mask": 64,
+      "bank_mask": 7,
       "issue_window": 16,
       "max_outstanding": 16,
       "noc_route_class": 0,
@@ -4669,7 +4556,7 @@
       "tile_depth": 128,
       "tile_rows": 512
      },
-     "schedule_id": 73,
+     "schedule_id": 58,
      "schedule_tiles": 512,
      "tile_issue_cycles_per_issue": 32,
      "tiles": 32,
@@ -4700,7 +4587,7 @@
        ],
        "dtype": 16,
        "object_id": 55,
-       "view_id": 76
+       "view_id": 75
       },
       "in1": {
        "bytes": 256,
@@ -4709,7 +4596,7 @@
        ],
        "dtype": 16,
        "object_id": 8,
-       "view_id": 77
+       "view_id": 76
       },
       "out0": {
        "bytes": 8192,
@@ -4720,15 +4607,15 @@
        ],
        "dtype": 16,
        "object_id": 45,
-       "view_id": 78
+       "view_id": 77
       }
      },
-     "operator_id": 80,
+     "operator_id": 79,
      "padding_fraction": 0.9375,
      "padding_work": 61440,
      "row_tiles": 1,
      "schedule": {
-      "bank_mask": 128,
+      "bank_mask": 8,
       "issue_window": 2,
       "max_outstanding": 2,
       "noc_route_class": 0,
@@ -4740,7 +4627,7 @@
       "tile_depth": 1,
       "tile_rows": 512
      },
-     "schedule_id": 79,
+     "schedule_id": 78,
      "schedule_tiles": 2,
      "tiles": 2,
      "useful_work": 4096
@@ -4770,7 +4657,7 @@
        ],
        "dtype": 16,
        "object_id": 64,
-       "view_id": 83
+       "view_id": 82
       },
       "in1": {
        "bytes": 256,
@@ -4779,7 +4666,7 @@
        ],
        "dtype": 16,
        "object_id": 10,
-       "view_id": 84
+       "view_id": 83
       },
       "out0": {
        "bytes": 2048,
@@ -4789,16 +4676,16 @@
         128
        ],
        "dtype": 16,
-       "object_id": 85,
-       "view_id": 86
+       "object_id": 84,
+       "view_id": 85
       }
      },
-     "operator_id": 88,
+     "operator_id": 87,
      "padding_fraction": 0.984375,
      "padding_work": 64512,
      "row_tiles": 1,
      "schedule": {
-      "bank_mask": 256,
+      "bank_mask": 8,
       "issue_window": 2,
       "max_outstanding": 2,
       "noc_route_class": 0,
@@ -4810,7 +4697,7 @@
       "tile_depth": 1,
       "tile_rows": 512
      },
-     "schedule_id": 87,
+     "schedule_id": 86,
      "schedule_tiles": 2,
      "tiles": 2,
      "useful_work": 1024
@@ -4840,7 +4727,7 @@
        ],
        "dtype": 16,
        "object_id": 45,
-       "view_id": 91
+       "view_id": 90
       },
       "in1": {
        "bytes": 32768,
@@ -4851,7 +4738,7 @@
        ],
        "dtype": 18,
        "object_id": 27,
-       "view_id": 92
+       "view_id": 91
       },
       "out0": {
        "bytes": 8192,
@@ -4862,15 +4749,15 @@
        ],
        "dtype": 16,
        "object_id": 55,
-       "view_id": 93
+       "view_id": 92
       }
      },
-     "operator_id": 96,
+     "operator_id": 94,
      "padding_fraction": 0.9375,
      "padding_work": 61440,
      "row_tiles": 1,
      "schedule": {
-      "bank_mask": 0,
+      "bank_mask": 8,
       "issue_window": 2,
       "max_outstanding": 2,
       "noc_route_class": 0,
@@ -4882,7 +4769,7 @@
       "tile_depth": 1,
       "tile_rows": 512
      },
-     "schedule_id": 95,
+     "schedule_id": 78,
      "schedule_tiles": 2,
      "tiles": 2,
      "useful_work": 4096
@@ -4911,8 +4798,8 @@
         128
        ],
        "dtype": 16,
-       "object_id": 85,
-       "view_id": 99
+       "object_id": 84,
+       "view_id": 97
       },
       "in1": {
        "bytes": 8192,
@@ -4923,7 +4810,7 @@
        ],
        "dtype": 18,
        "object_id": 27,
-       "view_id": 100
+       "view_id": 98
       },
       "out0": {
        "bytes": 2048,
@@ -4934,15 +4821,15 @@
        ],
        "dtype": 16,
        "object_id": 64,
-       "view_id": 101
+       "view_id": 99
       }
      },
-     "operator_id": 103,
+     "operator_id": 100,
      "padding_fraction": 0.984375,
      "padding_work": 64512,
      "row_tiles": 1,
      "schedule": {
-      "bank_mask": 0,
+      "bank_mask": 8,
       "issue_window": 2,
       "max_outstanding": 2,
       "noc_route_class": 0,
@@ -4954,7 +4841,7 @@
       "tile_depth": 1,
       "tile_rows": 512
      },
-     "schedule_id": 102,
+     "schedule_id": 86,
      "schedule_tiles": 2,
      "tiles": 2,
      "useful_work": 1024
@@ -4984,7 +4871,7 @@
        ],
        "dtype": 4,
        "object_id": 23,
-       "view_id": 106
+       "view_id": 103
       },
       "in1": {
        "bytes": 2048,
@@ -4995,7 +4882,7 @@
        ],
        "dtype": 16,
        "object_id": 64,
-       "view_id": 107
+       "view_id": 104
       },
       "out0": {
        "bytes": 16908288,
@@ -5006,17 +4893,17 @@
        ],
        "dtype": 16,
        "object_id": 17,
-       "view_id": 108
+       "view_id": 105
       }
      },
-     "operator_id": 111,
+     "operator_id": 108,
      "padding_fraction": 0.0,
      "padding_work": 0,
      "payload_bytes": 2048,
      "payload_bytes_per_tile": 7.938,
      "row_tiles": 129,
      "schedule": {
-      "bank_mask": 0,
+      "bank_mask": 3,
       "issue_window": 2,
       "max_outstanding": 2,
       "noc_route_class": 0,
@@ -5028,7 +4915,7 @@
       "tile_depth": 1,
       "tile_rows": 512
      },
-     "schedule_id": 110,
+     "schedule_id": 107,
      "schedule_tiles": 258,
      "surface_bytes": 16908288,
      "tile_issue_cycles_per_issue": 258,
@@ -5061,7 +4948,7 @@
        ],
        "dtype": 4,
        "object_id": 23,
-       "view_id": 114
+       "view_id": 111
       },
       "in1": {
        "bytes": 2048,
@@ -5072,7 +4959,7 @@
        ],
        "dtype": 16,
        "object_id": 71,
-       "view_id": 115
+       "view_id": 112
       },
       "out0": {
        "bytes": 16908288,
@@ -5083,17 +4970,17 @@
        ],
        "dtype": 16,
        "object_id": 17,
-       "view_id": 116
+       "view_id": 113
       }
      },
-     "operator_id": 118,
+     "operator_id": 115,
      "padding_fraction": 0.0,
      "padding_work": 0,
      "payload_bytes": 2048,
      "payload_bytes_per_tile": 7.938,
      "row_tiles": 129,
      "schedule": {
-      "bank_mask": 0,
+      "bank_mask": 3,
       "issue_window": 2,
       "max_outstanding": 2,
       "noc_route_class": 0,
@@ -5105,7 +4992,7 @@
       "tile_depth": 1,
       "tile_rows": 512
      },
-     "schedule_id": 117,
+     "schedule_id": 114,
      "schedule_tiles": 258,
      "surface_bytes": 16908288,
      "tile_issue_cycles_per_issue": 258,
@@ -5138,7 +5025,7 @@
        ],
        "dtype": 16,
        "object_id": 55,
-       "view_id": 121
+       "view_id": 118
       },
       "in1": {
        "bytes": 16908288,
@@ -5149,7 +5036,7 @@
        ],
        "dtype": 16,
        "object_id": 17,
-       "view_id": 108
+       "view_id": 105
       },
       "in2": {
        "bytes": 16908288,
@@ -5160,7 +5047,7 @@
        ],
        "dtype": 16,
        "object_id": 17,
-       "view_id": 116
+       "view_id": 113
       },
       "in3": {
        "bytes": 4,
@@ -5169,7 +5056,7 @@
        ],
        "dtype": 4,
        "object_id": 23,
-       "view_id": 122
+       "view_id": 119
       },
       "out0": {
        "bytes": 8192,
@@ -5180,15 +5067,15 @@
        ],
        "dtype": 16,
        "object_id": 45,
-       "view_id": 123
+       "view_id": 120
       }
      },
-     "operator_id": 127,
+     "operator_id": 124,
      "padding_fraction": 0.9375,
      "padding_work": 503316480,
      "row_tiles": 1,
      "schedule": {
-      "bank_mask": 0,
+      "bank_mask": 16,
       "issue_window": 16,
       "max_outstanding": 16,
       "noc_route_class": 0,
@@ -5200,7 +5087,7 @@
       "tile_depth": 128,
       "tile_rows": 512
      },
-     "schedule_id": 125,
+     "schedule_id": 122,
      "schedule_tiles": 128,
      "tiles": 128,
      "useful_work": 33554432
@@ -5233,7 +5120,7 @@
        ],
        "dtype": 16,
        "object_id": 45,
-       "view_id": 130
+       "view_id": 127
       },
       "in1": {
        "bytes": 33554432,
@@ -5243,7 +5130,7 @@
        ],
        "dtype": 16,
        "object_id": 12,
-       "view_id": 131
+       "view_id": 128
       },
       "out0": {
        "bytes": 8192,
@@ -5253,16 +5140,16 @@
        ],
        "dtype": 16,
        "object_id": 55,
-       "view_id": 132
+       "view_id": 129
       }
      },
-     "operator_id": 134,
+     "operator_id": 130,
      "output_waves": 4,
      "padding_fraction": 0.0,
      "padding_work": 0,
      "row_tiles": 1,
      "schedule": {
-      "bank_mask": 512,
+      "bank_mask": 7,
       "issue_window": 16,
       "max_outstanding": 16,
       "noc_route_class": 0,
@@ -5274,7 +5161,7 @@
       "tile_depth": 128,
       "tile_rows": 512
      },
-     "schedule_id": 133,
+     "schedule_id": 66,
      "schedule_tiles": 2048,
      "tile_issue_cycles_per_issue": 128,
      "tiles": 128,
@@ -5304,7 +5191,7 @@
        ],
        "dtype": 16,
        "object_id": 36,
-       "view_id": 137
+       "view_id": 133
       },
       "in1": {
        "bytes": 8192,
@@ -5314,7 +5201,7 @@
        ],
        "dtype": 16,
        "object_id": 55,
-       "view_id": 138
+       "view_id": 134
       },
       "out0": {
        "bytes": 8192,
@@ -5324,15 +5211,15 @@
        ],
        "dtype": 16,
        "object_id": 45,
-       "view_id": 139
+       "view_id": 135
       }
      },
-     "operator_id": 142,
+     "operator_id": 138,
      "padding_fraction": 0.998047,
      "padding_work": 2093056,
      "row_tiles": 1,
      "schedule": {
-      "bank_mask": 0,
+      "bank_mask": 8,
       "issue_window": 16,
       "max_outstanding": 16,
       "noc_route_class": 0,
@@ -5344,7 +5231,7 @@
       "tile_depth": 1,
       "tile_rows": 512
      },
-     "schedule_id": 141,
+     "schedule_id": 137,
      "schedule_tiles": 64,
      "tiles": 64,
      "useful_work": 4096
@@ -5373,7 +5260,7 @@
        ],
        "dtype": 16,
        "object_id": 45,
-       "view_id": 145
+       "view_id": 141
       },
       "in1": {
        "bytes": 8192,
@@ -5382,7 +5269,7 @@
        ],
        "dtype": 16,
        "object_id": 13,
-       "view_id": 146
+       "view_id": 142
       },
       "out0": {
        "bytes": 8192,
@@ -5392,15 +5279,15 @@
        ],
        "dtype": 16,
        "object_id": 55,
-       "view_id": 147
+       "view_id": 143
       }
      },
-     "operator_id": 149,
+     "operator_id": 144,
      "padding_fraction": 0.998047,
      "padding_work": 2093056,
      "row_tiles": 1,
      "schedule": {
-      "bank_mask": 1024,
+      "bank_mask": 8,
       "issue_window": 16,
       "max_outstanding": 16,
       "noc_route_class": 0,
@@ -5412,7 +5299,7 @@
       "tile_depth": 1,
       "tile_rows": 512
      },
-     "schedule_id": 148,
+     "schedule_id": 48,
      "schedule_tiles": 64,
      "tiles": 64,
      "useful_work": 4096
@@ -5445,7 +5332,7 @@
        ],
        "dtype": 16,
        "object_id": 55,
-       "view_id": 152
+       "view_id": 147
       },
       "in1": {
        "bytes": 100663296,
@@ -5455,7 +5342,7 @@
        ],
        "dtype": 16,
        "object_id": 14,
-       "view_id": 153
+       "view_id": 148
       },
       "out0": {
        "bytes": 24576,
@@ -5464,17 +5351,17 @@
         12288
        ],
        "dtype": 16,
-       "object_id": 154,
-       "view_id": 155
+       "object_id": 149,
+       "view_id": 150
       }
      },
-     "operator_id": 157,
+     "operator_id": 151,
      "output_waves": 12,
      "padding_fraction": 0.0,
      "padding_work": 0,
      "row_tiles": 1,
      "schedule": {
-      "bank_mask": 2048,
+      "bank_mask": 7,
       "issue_window": 16,
       "max_outstanding": 16,
       "noc_route_class": 0,
@@ -5486,7 +5373,7 @@
       "tile_depth": 128,
       "tile_rows": 512
      },
-     "schedule_id": 156,
+     "schedule_id": 58,
      "schedule_tiles": 6144,
      "tile_issue_cycles_per_issue": 384,
      "tiles": 384,
@@ -5520,7 +5407,7 @@
        ],
        "dtype": 16,
        "object_id": 55,
-       "view_id": 160
+       "view_id": 154
       },
       "in1": {
        "bytes": 100663296,
@@ -5530,7 +5417,7 @@
        ],
        "dtype": 16,
        "object_id": 15,
-       "view_id": 161
+       "view_id": 155
       },
       "out0": {
        "bytes": 24576,
@@ -5539,17 +5426,17 @@
         12288
        ],
        "dtype": 16,
-       "object_id": 162,
-       "view_id": 163
+       "object_id": 156,
+       "view_id": 157
       }
      },
-     "operator_id": 165,
+     "operator_id": 158,
      "output_waves": 12,
      "padding_fraction": 0.0,
      "padding_work": 0,
      "row_tiles": 1,
      "schedule": {
-      "bank_mask": 4096,
+      "bank_mask": 7,
       "issue_window": 16,
       "max_outstanding": 16,
       "noc_route_class": 0,
@@ -5561,7 +5448,7 @@
       "tile_depth": 128,
       "tile_rows": 512
      },
-     "schedule_id": 164,
+     "schedule_id": 66,
      "schedule_tiles": 6144,
      "tile_issue_cycles_per_issue": 384,
      "tiles": 384,
@@ -5590,8 +5477,8 @@
         12288
        ],
        "dtype": 16,
-       "object_id": 154,
-       "view_id": 167
+       "object_id": 149,
+       "view_id": 160
       },
       "in1": {
        "bytes": 24576,
@@ -5600,8 +5487,8 @@
         12288
        ],
        "dtype": 16,
-       "object_id": 162,
-       "view_id": 168
+       "object_id": 156,
+       "view_id": 161
       },
       "out0": {
        "bytes": 24576,
@@ -5610,16 +5497,16 @@
         12288
        ],
        "dtype": 16,
-       "object_id": 169,
-       "view_id": 170
+       "object_id": 162,
+       "view_id": 163
       }
      },
-     "operator_id": 172,
+     "operator_id": 165,
      "padding_fraction": 0.998047,
      "padding_work": 6279168,
      "row_tiles": 1,
      "schedule": {
-      "bank_mask": 0,
+      "bank_mask": 8,
       "issue_window": 16,
       "max_outstanding": 16,
       "noc_route_class": 0,
@@ -5631,7 +5518,7 @@
       "tile_depth": 1,
       "tile_rows": 512
      },
-     "schedule_id": 141,
+     "schedule_id": 137,
      "schedule_tiles": 192,
      "tiles": 192,
      "useful_work": 12288
@@ -5663,8 +5550,8 @@
         12288
        ],
        "dtype": 16,
-       "object_id": 169,
-       "view_id": 175
+       "object_id": 162,
+       "view_id": 168
       },
       "in1": {
        "bytes": 100663296,
@@ -5674,7 +5561,7 @@
        ],
        "dtype": 16,
        "object_id": 16,
-       "view_id": 176
+       "view_id": 169
       },
       "out0": {
        "bytes": 8192,
@@ -5684,16 +5571,16 @@
        ],
        "dtype": 16,
        "object_id": 55,
-       "view_id": 177
+       "view_id": 170
       }
      },
-     "operator_id": 179,
+     "operator_id": 171,
      "output_waves": 4,
      "padding_fraction": 0.0,
      "padding_work": 0,
      "row_tiles": 1,
      "schedule": {
-      "bank_mask": 8192,
+      "bank_mask": 7,
       "issue_window": 16,
       "max_outstanding": 16,
       "noc_route_class": 0,
@@ -5705,7 +5592,7 @@
       "tile_depth": 128,
       "tile_rows": 512
      },
-     "schedule_id": 178,
+     "schedule_id": 58,
      "schedule_tiles": 6144,
      "tile_issue_cycles_per_issue": 384,
      "tiles": 384,
@@ -5735,7 +5622,7 @@
        ],
        "dtype": 16,
        "object_id": 45,
-       "view_id": 182
+       "view_id": 174
       },
       "in1": {
        "bytes": 8192,
@@ -5745,7 +5632,7 @@
        ],
        "dtype": 16,
        "object_id": 55,
-       "view_id": 183
+       "view_id": 175
       },
       "out0": {
        "bytes": 8192,
@@ -5755,15 +5642,15 @@
        ],
        "dtype": 16,
        "object_id": 36,
-       "view_id": 184
+       "view_id": 176
       }
      },
-     "operator_id": 186,
+     "operator_id": 177,
      "padding_fraction": 0.998047,
      "padding_work": 2093056,
      "row_tiles": 1,
      "schedule": {
-      "bank_mask": 0,
+      "bank_mask": 8,
       "issue_window": 16,
       "max_outstanding": 16,
       "noc_route_class": 0,
@@ -5775,7 +5662,7 @@
       "tile_depth": 1,
       "tile_rows": 512
      },
-     "schedule_id": 185,
+     "schedule_id": 48,
      "schedule_tiles": 64,
      "tiles": 64,
      "useful_work": 4096
@@ -5804,7 +5691,7 @@
        ],
        "dtype": 16,
        "object_id": 36,
-       "view_id": 189
+       "view_id": 180
       },
       "in1": {
        "bytes": 8192,
@@ -5813,7 +5700,7 @@
        ],
        "dtype": 16,
        "object_id": 2,
-       "view_id": 190
+       "view_id": 181
       },
       "out0": {
        "bytes": 8192,
@@ -5823,15 +5710,15 @@
        ],
        "dtype": 16,
        "object_id": 45,
-       "view_id": 191
+       "view_id": 182
       }
      },
-     "operator_id": 193,
+     "operator_id": 183,
      "padding_fraction": 0.998047,
      "padding_work": 2093056,
      "row_tiles": 1,
      "schedule": {
-      "bank_mask": 2,
+      "bank_mask": 8,
       "issue_window": 16,
       "max_outstanding": 16,
       "noc_route_class": 0,
@@ -5843,7 +5730,7 @@
       "tile_depth": 1,
       "tile_rows": 512
      },
-     "schedule_id": 192,
+     "schedule_id": 48,
      "schedule_tiles": 64,
      "tiles": 64,
      "useful_work": 4096
@@ -5873,7 +5760,7 @@
        ],
        "dtype": 4,
        "object_id": 23,
-       "view_id": 194
+       "view_id": 184
       },
       "in1": {
        "bytes": 67633152,
@@ -5883,7 +5770,7 @@
        ],
        "dtype": 16,
        "object_id": 45,
-       "view_id": 195
+       "view_id": 185
       },
       "out0": {
        "bytes": 8192,
@@ -5892,18 +5779,18 @@
         4096
        ],
        "dtype": 16,
-       "object_id": 196,
-       "view_id": 197
+       "object_id": 186,
+       "view_id": 187
       }
      },
-     "operator_id": 200,
+     "operator_id": 190,
      "padding_fraction": 0.0,
      "padding_work": 0,
      "payload_bytes": 8192,
      "payload_bytes_per_tile": 128.0,
      "row_tiles": 1,
      "schedule": {
-      "bank_mask": 0,
+      "bank_mask": 3,
       "issue_window": 16,
       "max_outstanding": 16,
       "noc_route_class": 0,
@@ -5915,7 +5802,7 @@
       "tile_depth": 1,
       "tile_rows": 1
      },
-     "schedule_id": 199,
+     "schedule_id": 189,
      "schedule_tiles": 64,
      "surface_bytes": 8192,
      "tile_issue_cycles_per_issue": 64,
@@ -5950,8 +5837,8 @@
         4096
        ],
        "dtype": 16,
-       "object_id": 196,
-       "view_id": 202
+       "object_id": 186,
+       "view_id": 192
       },
       "in1": {
        "bytes": 1244659712,
@@ -5961,7 +5848,7 @@
        ],
        "dtype": 16,
        "object_id": 3,
-       "view_id": 203
+       "view_id": 193
       },
       "out0": {
        "bytes": 303872,
@@ -5970,17 +5857,17 @@
         151936
        ],
        "dtype": 16,
-       "object_id": 204,
-       "view_id": 205
+       "object_id": 194,
+       "view_id": 195
       }
      },
-     "operator_id": 207,
+     "operator_id": 197,
      "output_waves": 149,
      "padding_fraction": 0.0,
      "padding_work": 0,
      "row_tiles": 1,
      "schedule": {
-      "bank_mask": 4,
+      "bank_mask": 7,
       "issue_window": 16,
       "max_outstanding": 16,
       "noc_route_class": 0,
@@ -5992,7 +5879,7 @@
       "tile_depth": 128,
       "tile_rows": 1
      },
-     "schedule_id": 206,
+     "schedule_id": 196,
      "schedule_tiles": 75968,
      "tile_issue_cycles_per_issue": 4768,
      "tiles": 4768,
@@ -6020,8 +5907,8 @@
         151936
        ],
        "dtype": 16,
-       "object_id": 204,
-       "view_id": 209
+       "object_id": 194,
+       "view_id": 199
       },
       "out0": {
        "bytes": 4,
@@ -6029,16 +5916,16 @@
         1
        ],
        "dtype": 4,
-       "object_id": 210,
-       "view_id": 211
+       "object_id": 200,
+       "view_id": 201
       }
      },
-     "operator_id": 215,
+     "operator_id": 205,
      "padding_fraction": 0.0,
      "padding_work": 0,
      "row_tiles": 1,
      "schedule": {
-      "bank_mask": 0,
+      "bank_mask": 8,
       "issue_window": 1,
       "max_outstanding": 1,
       "noc_route_class": 0,
@@ -6050,7 +5937,7 @@
       "tile_depth": 1,
       "tile_rows": 1
      },
-     "schedule_id": 213,
+     "schedule_id": 203,
      "schedule_tiles": 1,
      "tiles": 1,
      "useful_work": 1
@@ -6077,8 +5964,8 @@
         1
        ],
        "dtype": 4,
-       "object_id": 210,
-       "view_id": 218
+       "object_id": 200,
+       "view_id": 208
       },
       "out0": {
        "bytes": 4,
@@ -6086,16 +5973,16 @@
         1
        ],
        "dtype": 4,
-       "object_id": 219,
-       "view_id": 220
+       "object_id": 209,
+       "view_id": 210
       }
      },
-     "operator_id": 222,
+     "operator_id": 212,
      "padding_fraction": 0.0,
      "padding_work": 0,
      "row_tiles": 1,
      "schedule": {
-      "bank_mask": 0,
+      "bank_mask": 8,
       "issue_window": 1,
       "max_outstanding": 1,
       "noc_route_class": 0,
@@ -6107,7 +5994,7 @@
       "tile_depth": 1,
       "tile_rows": 1
      },
-     "schedule_id": 213,
+     "schedule_id": 203,
      "schedule_tiles": 1,
      "tiles": 1,
      "useful_work": 1
@@ -6126,7 +6013,7 @@
     "SPAN_LAST_INDEX": 0,
     "SPAN_TOKENS": 1
    },
-   "root": "build/abi3/qwen3-8b-rom-e9",
+   "root": "/home/ubuntu/OpenTallas/build/abi3/qwen3-8b-rom-e9",
    "schedule_shapes": {
     "engine_family=112,tile_rows=1,tile_cols=1,tile_depth=1,issue_window=1": 1,
     "engine_family=16,tile_rows=1,tile_cols=64,tile_depth=1,issue_window=16": 1,
@@ -6134,9 +6021,9 @@
     "engine_family=16,tile_rows=512,tile_cols=64,tile_depth=1,issue_window=4": 1,
     "engine_family=32,tile_rows=1,tile_cols=64,tile_depth=128,issue_window=16": 1,
     "engine_family=32,tile_rows=512,tile_cols=64,tile_depth=1,issue_window=16": 1,
-    "engine_family=32,tile_rows=512,tile_cols=64,tile_depth=128,issue_window=16": 7,
-    "engine_family=48,tile_rows=512,tile_cols=64,tile_depth=1,issue_window=16": 5,
-    "engine_family=48,tile_rows=512,tile_cols=64,tile_depth=1,issue_window=2": 4,
+    "engine_family=32,tile_rows=512,tile_cols=64,tile_depth=128,issue_window=16": 2,
+    "engine_family=48,tile_rows=512,tile_cols=64,tile_depth=1,issue_window=16": 2,
+    "engine_family=48,tile_rows=512,tile_cols=64,tile_depth=1,issue_window=2": 2,
     "engine_family=64,tile_rows=512,tile_cols=64,tile_depth=128,issue_window=16": 1
    },
    "static_walk": "complete",
@@ -6174,184 +6061,25 @@
    "work_per_lane_cycle": 265.371881609201,
    "work_units_per_mac": 2.0
   },
-  "unexplained_asymmetries": [
-   "attention.bank_mask",
-   "dma.bank_mask",
-   "selection.bank_mask",
-   "tensor.bank_mask",
-   "vector.bank_mask"
-  ],
-  "verdict": "NOT COMPARABLE: 5 further cost-bearing field(s) differ (bank_mask; see asymmetries); allowlist empty.  These are SCHEDULE fields, so no machine file can correct them; the deployments must be re-emitted under one SCHEDULE rule."
- },
- "deployment_audit_under_proposed_allowlist": {
-  "allowlist_unused": [],
-  "asymmetries": [
-   {
-    "allowlisted": true,
-    "effect_x": null,
-    "family": "attention",
-    "favours": "unknown",
-    "field": "bank_mask",
-    "hbm": {
-     "16": 36
-    },
-    "rom": {
-     "0": 36
-    }
-   },
-   {
-    "allowlisted": false,
-    "effect_x": 1.0,
-    "family": "attention",
-    "favours": "neither",
-    "field": "resource_bound",
-    "hbm": {
-     "64": 36
-    },
-    "rom": {
-     "3": 36
-    }
-   },
-   {
-    "allowlisted": true,
-    "effect_x": null,
-    "family": "dma",
-    "favours": "unknown",
-    "field": "bank_mask",
-    "hbm": {
-     "3": 74
-    },
-    "rom": {
-     "0": 74
-    }
-   },
-   {
-    "allowlisted": false,
-    "effect_x": 1.0,
-    "family": "dma",
-    "favours": "neither",
-    "field": "resource_bound",
-    "hbm": {
-     "8": 74
-    },
-    "rom": {
-     "3": 74
-    }
-   },
-   {
-    "allowlisted": true,
-    "effect_x": null,
-    "family": "selection",
-    "favours": "unknown",
-    "field": "bank_mask",
-    "hbm": {
-     "8": 2
-    },
-    "rom": {
-     "0": 2
-    }
-   },
-   {
-    "allowlisted": false,
-    "effect_x": 1.0,
-    "family": "selection",
-    "favours": "neither",
-    "field": "resource_bound",
-    "hbm": {
-     "8": 2
-    },
-    "rom": {
-     "6": 2
-    }
-   },
-   {
-    "allowlisted": true,
-    "effect_x": null,
-    "family": "tensor",
-    "favours": "unknown",
-    "field": "bank_mask",
-    "hbm": {
-     "7": 254
-    },
-    "rom": {
-     "1": 1,
-     "16": 36,
-     "2048": 36,
-     "32": 36,
-     "4": 1,
-     "4096": 36,
-     "512": 36,
-     "64": 36,
-     "8192": 36
-    }
-   },
-   {
-    "allowlisted": false,
-    "effect_x": 1.0,
-    "family": "tensor",
-    "favours": "neither",
-    "field": "resource_bound",
-    "hbm": {
-     "256": 254
-    },
-    "rom": {
-     "1": 254
-    }
-   },
-   {
-    "allowlisted": true,
-    "effect_x": null,
-    "family": "vector",
-    "favours": "unknown",
-    "field": "bank_mask",
-    "hbm": {
-     "8": 325
-    },
-    "rom": {
-     "0": 180,
-     "1024": 36,
-     "128": 36,
-     "2": 1,
-     "256": 36,
-     "8": 36
-    }
-   },
-   {
-    "allowlisted": false,
-    "effect_x": 1.0,
-    "family": "vector",
-    "favours": "neither",
-    "field": "resource_bound",
-    "hbm": {
-     "128": 325
-    },
-    "rom": {
-     "3": 325
-    }
-   }
-  ],
-  "column_group_spans_match": true,
-  "comparable": true,
-  "operator_asymmetries": [],
-  "operators_unmatched": {
-   "hbm": [],
-   "rom": []
-  },
   "unexplained_asymmetries": [],
-  "verdict": "COMPARABLE: 26 operators matched operator-for-operator with identical SCHEDULE fields in every family (55 fields compared); tiles per step equal in every family; 5 allowlisted difference(s), all cited.  The machine files alone decide the rate."
+  "verdict": "COMPARABLE: 26 operators matched operator-for-operator with identical SCHEDULE fields in every family (55 fields compared); tiles per step equal in every family.  The machine files alone decide the rate."
  },
  "deployments": {
   "hbm": {
    "backend": "hbm-sram-abi3",
    "capability_digest": "fa70dd44a1b532a99d103968b31b743bbed324d002fbe0214c9541fb1687e23d",
    "deployment_sha256": "cb9067f5fbf67f7df4212399aee6ba75ced4ca5c8f2dc8c1631372a4068cea2c",
+   "descriptor_count": 221,
+   "instruction_count": 74,
    "model_id": "qwen3-8b",
    "root": "build/abi3/qwen3-8b-hbm-e9"
   },
   "rom": {
    "backend": "rom.single_chip",
    "capability_digest": "5b5770fa766cd89d7a236a62722ef33d1db9f87be7403a8f8c55fc9ec8c8458e",
-   "deployment_sha256": "49acf2d76eafdf960ef8300161d20fc451bc616666618b874168aa2320159bfc",
+   "deployment_sha256": "133afc13e1fcd2aade2e40530883c9986b0e920d99853990d9032fd777f26243",
+   "descriptor_count": 215,
+   "instruction_count": 74,
    "model_id": "qwen3-8b",
    "root": "build/abi3/qwen3-8b-rom-e9"
   }
@@ -6367,13 +6095,8 @@
   "tensor_work_per_lane_cycle": 265.371881609201
  },
  "pair_id": "qwen3-8b__rom-e9__hbm-e9",
- "proposed_allowlist": {
-  "attention.bank_mask": "AM-C4 (docs/CHIP_ARCHITECTURE_DESIGN.md section 3.8; section 10.1 AM-C4; section 7.1 rows 1-2): bank_mask bit b = bank group b of the storage class of the operator's streamed operand, and the two chips stream from different stores -- mask-ROM banks on the ROM chip (configs/hardware/abi3_capability/rom_qwen3.json memory.rom.banks; RomProgramBuilder._bank_mask names the weight input's mask-ROM shards, 0 when the operator reads no ROM operand; checked by compiler/backends/rom/common/check.py rom_bank_mask), scratchpad staging bank groups 0-7 on the HBM chip (compiler/backends/hbm_sram/lower.py _ENGINE_REGIONS; plan.py _allocate_sram).  Caveat: runtime/cycle/model.py MemorySystem.schedule applies bank_mask to SRAM-class accesses only, so the ROM side's ROM-bank bits confine its scratchpad accesses to same-indexed SRAM banks -- a cycle-model semantics defect (a ROM-store mask applied to the scratchpad) that AM-C4 does not remove and that the AM-E9 re-emission does not fix.",
-  "dma.bank_mask": "AM-C4 (docs/CHIP_ARCHITECTURE_DESIGN.md section 3.8; section 10.1 AM-C4; section 7.1 rows 1-2): bank_mask bit b = bank group b of the storage class of the operator's streamed operand, and the two chips stream from different stores -- mask-ROM banks on the ROM chip (configs/hardware/abi3_capability/rom_qwen3.json memory.rom.banks; RomProgramBuilder._bank_mask names the weight input's mask-ROM shards, 0 when the operator reads no ROM operand; checked by compiler/backends/rom/common/check.py rom_bank_mask), scratchpad staging bank groups 0-7 on the HBM chip (compiler/backends/hbm_sram/lower.py _ENGINE_REGIONS; plan.py _allocate_sram).  Caveat: runtime/cycle/model.py MemorySystem.schedule applies bank_mask to SRAM-class accesses only, so the ROM side's ROM-bank bits confine its scratchpad accesses to same-indexed SRAM banks -- a cycle-model semantics defect (a ROM-store mask applied to the scratchpad) that AM-C4 does not remove and that the AM-E9 re-emission does not fix.",
-  "selection.bank_mask": "AM-C4 (docs/CHIP_ARCHITECTURE_DESIGN.md section 3.8; section 10.1 AM-C4; section 7.1 rows 1-2): bank_mask bit b = bank group b of the storage class of the operator's streamed operand, and the two chips stream from different stores -- mask-ROM banks on the ROM chip (configs/hardware/abi3_capability/rom_qwen3.json memory.rom.banks; RomProgramBuilder._bank_mask names the weight input's mask-ROM shards, 0 when the operator reads no ROM operand; checked by compiler/backends/rom/common/check.py rom_bank_mask), scratchpad staging bank groups 0-7 on the HBM chip (compiler/backends/hbm_sram/lower.py _ENGINE_REGIONS; plan.py _allocate_sram).  Caveat: runtime/cycle/model.py MemorySystem.schedule applies bank_mask to SRAM-class accesses only, so the ROM side's ROM-bank bits confine its scratchpad accesses to same-indexed SRAM banks -- a cycle-model semantics defect (a ROM-store mask applied to the scratchpad) that AM-C4 does not remove and that the AM-E9 re-emission does not fix.",
-  "tensor.bank_mask": "AM-C4 (docs/CHIP_ARCHITECTURE_DESIGN.md section 3.8; section 10.1 AM-C4; section 7.1 rows 1-2): bank_mask bit b = bank group b of the storage class of the operator's streamed operand, and the two chips stream from different stores -- mask-ROM banks on the ROM chip (configs/hardware/abi3_capability/rom_qwen3.json memory.rom.banks; RomProgramBuilder._bank_mask names the weight input's mask-ROM shards, 0 when the operator reads no ROM operand; checked by compiler/backends/rom/common/check.py rom_bank_mask), scratchpad staging bank groups 0-7 on the HBM chip (compiler/backends/hbm_sram/lower.py _ENGINE_REGIONS; plan.py _allocate_sram).  Caveat: runtime/cycle/model.py MemorySystem.schedule applies bank_mask to SRAM-class accesses only, so the ROM side's ROM-bank bits confine its scratchpad accesses to same-indexed SRAM banks -- a cycle-model semantics defect (a ROM-store mask applied to the scratchpad) that AM-C4 does not remove and that the AM-E9 re-emission does not fix.",
-  "vector.bank_mask": "AM-C4 (docs/CHIP_ARCHITECTURE_DESIGN.md section 3.8; section 10.1 AM-C4; section 7.1 rows 1-2): bank_mask bit b = bank group b of the storage class of the operator's streamed operand, and the two chips stream from different stores -- mask-ROM banks on the ROM chip (configs/hardware/abi3_capability/rom_qwen3.json memory.rom.banks; RomProgramBuilder._bank_mask names the weight input's mask-ROM shards, 0 when the operator reads no ROM operand; checked by compiler/backends/rom/common/check.py rom_bank_mask), scratchpad staging bank groups 0-7 on the HBM chip (compiler/backends/hbm_sram/lower.py _ENGINE_REGIONS; plan.py _allocate_sram).  Caveat: runtime/cycle/model.py MemorySystem.schedule applies bank_mask to SRAM-class accesses only, so the ROM side's ROM-bank bits confine its scratchpad accesses to same-indexed SRAM banks -- a cycle-model semantics defect (a ROM-store mask applied to the scratchpad) that AM-C4 does not remove and that the AM-E9 re-emission does not fix."
- },
- "rule": "AM-E9 (compiler/backends/schedule_rule.py): one SCHEDULE emission rule for both backends",
+ "proposed_allowlist": {},
+ "proposed_allowlist_note": "None.  AM-E9 v2 removes the ROM bank identity from SCHEDULE.bank_mask (runtime/cycle/model.py MemorySystem.schedule charges the field to the sram class alone, on both vehicles), so there is no SCHEDULE difference left to cite.  The one genuine storage-class allowlist is unchanged: WEIGHT_PATH_ALLOWLIST in tools/derive_cycle_machine.py (rom.arrays, rom.bytes_per_cycle_per_array, rom.transaction_bytes, rom.interleave_bytes), cited to docs/CHIP_ARCHITECTURE_DESIGN.md section 7.1 row 1 and [T2.1-27].",
+ "rule": "AM-E9 v2 (compiler/backends/schedule_rule.py): one SCHEDULE emission rule for both backends, bank_mask included -- one activation-buffer placement (STAGING_REGIONS / ENGINE_STAGING_REGIONS)",
  "schema": "opentallas.deployment_audit.v2"
 }
