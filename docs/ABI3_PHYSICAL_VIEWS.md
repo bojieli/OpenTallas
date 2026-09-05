@@ -37,7 +37,14 @@ Environment test: `tests/test_abi3_physical_env.py`
 > control plane appears below at all** — the routed blocks are the ABI 2.5
 > engines, the four W8.3 ABI 3.0 datapaths and the numeric probes, and the
 > reason the microsequencer is absent is [OI-43] in
-> `docs/UNIFIED_EXECUTION_CHECKLIST.md`. And no frequency, area or energy from a
+> `docs/UNIFIED_EXECUTION_CHECKLIST.md`. That sentence has one exception since
+> OI-43 closed: `results/physical_abi3/asap7/a3_microsequencer/pnr.json` routes
+> `ot_a3_microsequencer` at `STATE_COMPAT = 0` alone at asap7 — fetch/decode,
+> loop stack, event scoreboard and one view-resolver lane; no descriptor
+> store, no dependence table, no engine, no memory macro — which is the
+> control plane's front-end block, not the control plane, and its numbers are
+> read from that record and its `notes`, not from this document. And no
+> frequency, area or energy from a
 > 130 nm or predictive-7 nm open PDK may be scaled to N6/N5/N7/N4
 > (`docs/METHODOLOGY.md` §9).
 

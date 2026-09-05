@@ -1859,7 +1859,12 @@ lanes are a precondition for it, not the product. These items are the product.
   source digests and the compile-log line numbers differ. What this does
   **not** close: no control-plane block has been synthesised to a netlist or
   routed; elaboration is the front-end precondition, W9's physical gap and G2
-  stay open until a routed `microsequencer` block exists.
+  stay open until a routed `microsequencer` block exists. The front-end block
+  has since been routed on its own — `ot_a3_microsequencer` at
+  `STATE_COMPAT = 0`, `results/physical_abi3/asap7/a3_microsequencer/pnr.json`,
+  numbers and scope in that record's `notes` — and G2 stays open because its
+  evaluator now requires the datapath array and the memory system in the same
+  netlist (`configs/gates/redesign_gates.json`).
 
 - **OI-44 — the shared binary32 *adder* is the critical path, and it is a
   coding shape rather than a technology limit.** Measured on SKY130 HD
