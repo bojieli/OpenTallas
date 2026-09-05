@@ -472,18 +472,31 @@ def test_retained_campaign_is_current_and_states_the_simple_boundary() -> None:
         for item in retained["scope"]["does_not_establish"]
     )
     assert [site["pc"] for site in retained["fault_sites"]] == [32, 32, 13, 14]
-    assert [site["descriptor_id"] for site in retained["fault_sites"]] == [
-        111,
-        114,
-        368,
-        545,
-    ]
     assert [site["opcode"] for site in retained["fault_sites"]] == [
         "DMA.SCATTER",
         "DMA.SCATTER",
         "LINK.MULTICAST",
         "VECTOR.MHC",
     ]
+    # The boundary descriptor ids the campaign recorded, checked the same way
+    # the vector set's own are: against the identity derived from each
+    # bundle, never against four numbers written here.  They were 111, 114,
+    # 368 and 545, which is the pre-promotion lowering's numbering, and they
+    # went stale the moment the campaign was re-run against the promoted
+    # deployments -- a stale number being a valid number, nothing else could
+    # have caught it.
+    for index, site in enumerate(retained["fault_sites"]):
+        target = generator.TARGETS[index]
+        deployment = Deployment.read(ROOT / target.deployment)
+        identity = generator.certified_deployment_identity(target)
+        derived = generator.resolve_boundary(
+            deployment,
+            generator._kernel_ir_index(target, identity),
+            generator.BOUNDARY_IDENTITIES[index],
+            target_key=target.key,
+            observed_descriptor_id=int(site["descriptor_id"]),
+        )
+        assert derived.descriptor_id == site["descriptor_id"]
     assert retained["dma_gather_launch_count"] == 6
     assert retained["embedding_launch_count"] == 4
     assert retained["rms_norm_launch_count"] == 2
@@ -556,9 +569,29 @@ def test_retained_campaign_is_current_and_states_the_simple_boundary() -> None:
         26,
         29,
     ]
+    # Derived from each case's own bundle, exactly as the vector set's RoPE
+    # ids are.  These were [96, 103, 101, 107]: the ROM pair from
+    # qwen3-8b-rom-rowfold-v1 and the HBM pair from the pre-AM-E9 bundle, two
+    # generations of the lowering in one list, and both wrong for the promoted
+    # pair the campaign now runs.
     assert [
         operation["operator_descriptor_id"] for operation in retained["rope_operations"]
-    ] == [96, 103, 101, 107]
+    ] == [
+        generator.resolve_operator(
+            Deployment.read(ROOT / generator.TARGETS[case_index].deployment),
+            generator._kernel_ir_index(
+                generator.TARGETS[case_index],
+                generator.certified_deployment_identity(
+                    generator.TARGETS[case_index]
+                ),
+            ),
+            identity,
+            target_key=generator.TARGETS[case_index].key,
+            aux_0=generator.ROPE_AUX0[case_index],
+        ).descriptor_id
+        for case_index in (0, 1)
+        for identity in generator.ROPE_IDENTITIES
+    ]
     assert [
         (operation["row_count"], operation["row_width"])
         for operation in retained["rope_operations"]
