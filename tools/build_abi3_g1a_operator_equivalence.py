@@ -117,6 +117,16 @@ CAMPAIGN_VECTOR_INDEX = {
 }
 
 
+def _dig(body: Any, dotted: str) -> Any:
+    node = body
+    for part in dotted.split("."):
+        if isinstance(node, dict) and part in node:
+            node = node[part]
+        else:
+            return None
+    return node
+
+
 def sha256_file(path: Path) -> str:
     digest = hashlib.sha256()
     with path.open("rb") as handle:
@@ -377,6 +387,12 @@ def evidence() -> list[dict[str, Any]]:
                 for case, slot in sorted(named.items())
             }
 
+        # Did the campaign itself declare the tree it ran in?  Most of these
+        # bind source digests instead of a git block, which is a weaker claim
+        # and is reported as one rather than inherited silently by this rung.
+        record["declares_own_git_state"] = "git" in body
+        record["declared_worktree_dirty"] = _dig(body, "git.worktree_dirty")
+
         record["usable"] = (
             body.get("status") == "pass" and not drifted and "target" in record
         )
@@ -617,12 +633,38 @@ def build(output: Path) -> dict[str, Any]:
                     else "absent: no simulation of this lowering exists"
                 ),
                 "campaigns": [c["artifact"] for c in covering],
+                "underlying_campaign_provenance": [
+                    {
+                        "artifact": c["artifact"],
+                        "declares_own_git_state": c.get("declares_own_git_state"),
+                        "declared_worktree_dirty": c.get("declared_worktree_dirty"),
+                        "binds_every_source_digest_and_they_all_match": (
+                            c.get("drifted_source_count") == 0
+                        ),
+                        "bound_source_count": c.get("bound_source_count"),
+                        "note": (
+                            "this campaign does not declare the worktree it ran "
+                            "in; what binds it to committed bytes is that every "
+                            "source and vector digest it recorded still matches "
+                            "the tree, recomputed here"
+                        ) if not c.get("declares_own_git_state") else None,
+                    }
+                    for c in covering
+                ],
                 "campaigns_considered_and_refused": [
                     {"artifact": c["artifact"], "why": c.get("why_unusable")}
                     for c in campaigns if not c.get("usable")
                 ],
             },
-            "git": {"commit": commit, "worktree_dirty": dirty},
+            "git": {
+                "commit": commit,
+                "worktree_dirty": dirty,
+                "scope": (
+                    "the tree THIS artifact was derived in. It is not a claim "
+                    "about the tree each underlying RTL campaign ran in; see "
+                    "execution.underlying_campaign_provenance."
+                ),
+            },
             "coverage": {
                 "issued_class_count": len(classes),
                 "covered_class_count": len(covered),
