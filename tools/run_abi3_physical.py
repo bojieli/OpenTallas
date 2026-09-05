@@ -282,11 +282,32 @@ def tool_identity(path: Path, version_args: list[str]) -> dict[str, Any]:
 
 
 def git_identity() -> dict[str, Any]:
+    """Commit and cleanliness of the tree the sources are read from.
+
+    The flow writes its own records under ``results/`` inside the tree, so an
+    earlier run's untracked output must not mark a later run dirty; those
+    paths are listed separately.  Anything else -- a modified tracked file or
+    an untracked file outside ``results/`` -- is dirt, because it could be
+    source the record's commit does not describe.
+    """
     head = run(["git", "rev-parse", "HEAD"])
     status = run(["git", "status", "--porcelain"])
+    lines = [line for line in (status.stdout or "").splitlines() if line.strip()]
+
+    def untracked_result(line: str) -> bool:
+        return line.startswith("?? ") and line[3:].startswith("results/")
+
+    dirt = [line for line in lines if not untracked_result(line)]
     return {
         "commit": (head.stdout or "").strip() or None,
-        "worktree_dirty": bool((status.stdout or "").strip()),
+        "worktree_dirty": bool(dirt),
+        "worktree_status": dirt[:50],
+        "untracked_results": [line[3:] for line in lines if untracked_result(line)][:50],
+        "dirty_basis": (
+            "a tracked file modified or an untracked file outside results/; "
+            "untracked files under results/ (records the flow itself writes) "
+            "are listed in untracked_results and do not count"
+        ),
     }
 
 
