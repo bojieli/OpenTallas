@@ -1043,6 +1043,75 @@ def handoff_evidence(
     }
 
 
+def integrated_rate(campaign_body: dict[str, Any]) -> dict[str, Any]:
+    """The integrated vehicle's measured MAC rate, from its own two numbers.
+
+    Not a constant and not the plan's figure: the multiply-accumulates the run
+    executed, divided by the seconds its own MEASURE line says the simulation
+    took.  Both come from the same run, so the quotient is a measurement of
+    that run and nothing else.
+    """
+    macs = campaign_body.get("matmul_mac_count")
+    seconds = None
+    for case in campaign_body.get("cases") or []:
+        found = _g1b.measure_line(case.get("run_log", ""))
+        if found and found.get("sim_wall_s"):
+            seconds = float(found["sim_wall_s"])
+    if not isinstance(macs, int) or macs <= 0 or not seconds:
+        return {
+            "measured": False,
+            "why_not": (
+                "the integrated campaign states no positive MAC count or no "
+                "simulation wall time, so no rate can be measured from it"
+            ),
+        }
+    return {
+        "measured": True,
+        "mac_count": int(macs),
+        "simulation_wall_seconds": seconds,
+        "macs_per_second": round(macs / seconds, 1),
+        "source": (
+            "results/rtl/abi3_shipped_prefix_campaign.json: its own "
+            "matmul_mac_count and the sim_wall_s of its MEASURE line"
+        ),
+        "caveat": (
+            "this is the rate THAT run measured, on a machine other work was "
+            "sharing. Another run of the same vehicle on a quieter box "
+            "measures a higher one; the figure is reported with the run it "
+            "came from rather than as a property of the design"
+        ),
+    }
+
+
+def layer_arithmetic(facts: "ProgramFacts", loop: dict[str, Any]) -> dict[str, Any]:
+    """The layer body's multiply-accumulates, from each MATMUL's weight view."""
+    per_matmul = []
+    total = 0
+    for pc in loop["issue_pcs"]:
+        site = facts.issue_sites[pc]
+        if site["mnemonic"] != "TENSOR.MATMUL":
+            continue
+        weight = next(
+            (s for s in site["slots"] if s["slot"] == "input_view_1"), None
+        )
+        if weight is None or len(weight["declared_dims"]) != 2:
+            raise SystemExit(f"MATMUL at PC {pc} has no rank-2 weight view")
+        macs = weight["declared_dims"][0] * weight["declared_dims"][1]
+        total += macs
+        per_matmul.append(
+            {"pc": pc, "weight_shape": weight["declared_dims"], "mac_count": macs}
+        )
+    return {
+        "mac_count": total,
+        "per_matmul": per_matmul,
+        "note": (
+            "the projections of one invocation of the layer body, each from "
+            "its own resolved weight view. Attention's own arithmetic is not "
+            "in this figure, matching the cost the plan states for a layer"
+        ),
+    }
+
+
 def _establishes(records: list[dict[str, Any]]) -> list[str]:
     """What the rung established, computed from the records, never declared."""
     out: list[str] = []
@@ -1153,7 +1222,11 @@ def build(
     vectors = json.loads(
         (_g1b.PREFIX_VECTORS if vectors_path is None else Path(vectors_path)).read_text()
     )
+    campaign_body = json.loads(
+        (ROOT / _g1b.INTEGRATED_CAMPAIGN).read_text()
+    ) if (ROOT / _g1b.INTEGRATED_CAMPAIGN).is_file() else {}
     campaign = _g1b.integrated_evidence(campaign_path, vectors_path)
+    rate = integrated_rate(campaign_body)
     rerun = rerun_agreement(rerun_path, json.loads(
         (ROOT / _g1b.INTEGRATED_CAMPAIGN).read_text()
     ) if (ROOT / _g1b.INTEGRATED_CAMPAIGN).is_file() else {})
@@ -1204,6 +1277,30 @@ def build(
         handoff = handoff_evidence(
             campaign, facts, loop, vector_case, case_index, rerun
         )
+        arithmetic = layer_arithmetic(facts, loop)
+        outstanding = int(arithmetic["mac_count"]) * 2
+        handoff["what_the_missing_half_would_cost"] = {
+            "consecutive_layers_required": 2,
+            "mac_count_per_invocation": arithmetic["mac_count"],
+            "mac_count_for_two_consecutive_invocations": outstanding,
+            "per_matmul": arithmetic["per_matmul"],
+            "measured_integrated_rate": rate,
+            "seconds": (
+                round(outstanding / rate["macs_per_second"], 1)
+                if rate.get("measured") else None
+            ),
+            "hours": (
+                round(outstanding / rate["macs_per_second"] / 3600.0, 2)
+                if rate.get("measured") else None
+            ),
+            "note": (
+                "derived: the layer body's own multiply-accumulates, twice, "
+                "at the rate the integrated vehicle itself measured. It is "
+                "what the handoff half costs once the eleven operators the "
+                "bridge traps can be issued; it is not what this rung cost, "
+                "which is the control run above"
+            ),
+        }
         handoff["address_identity_across_the_layer_boundary"] = (
             address_identity
             if address_identity is not None

@@ -616,3 +616,42 @@ def test_the_handoff_records_whether_its_evidence_is_source_current(
                 "an unusable campaign must say why, or the red has no reason"
             )
         assert currency["fields_the_handoff_reads"]
+
+
+# --------------------------------------------------------------------------
+# The cost of the half that has not run is derived, not quoted.
+# --------------------------------------------------------------------------
+def test_the_layer_arithmetic_comes_from_the_weight_views(tool, context):
+    arithmetic = tool.layer_arithmetic(context["facts"], context["loop"])
+    assert arithmetic["mac_count"] == sum(
+        row["mac_count"] for row in arithmetic["per_matmul"]
+    )
+    assert arithmetic["per_matmul"]
+    literals = {
+        node.value
+        for node in ast.walk(ast.parse(TOOL.read_text()))
+        if isinstance(node, ast.Constant) and isinstance(node.value, int)
+    }
+    assert arithmetic["mac_count"] not in literals, (
+        "the layer's MAC count is written into the tool as a literal; it must "
+        "come from each MATMUL's own resolved weight view"
+    )
+
+
+def test_the_rate_is_a_quotient_of_the_runs_own_two_numbers(tool):
+    body = json.loads(
+        (ROOT / "results/rtl/abi3_shipped_prefix_campaign.json").read_text()
+    )
+    rate = tool.integrated_rate(body)
+    if not rate.get("measured"):
+        pytest.skip(rate.get("why_not"))
+    assert rate["macs_per_second"] == pytest.approx(
+        rate["mac_count"] / rate["simulation_wall_seconds"], rel=1e-6
+    )
+    assert rate["caveat"]
+
+
+def test_a_campaign_with_no_wall_time_measures_no_rate(tool):
+    rate = tool.integrated_rate({"matmul_mac_count": 1, "cases": []})
+    assert rate["measured"] is False
+    assert rate["why_not"]

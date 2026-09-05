@@ -647,6 +647,10 @@ def build(
     vectors = json.loads(
         (_g1b.PREFIX_VECTORS if vectors_path is None else Path(vectors_path)).read_text()
     )
+    campaign_body = json.loads(
+        (ROOT / _g1b.INTEGRATED_CAMPAIGN).read_text()
+    ) if (ROOT / _g1b.INTEGRATED_CAMPAIGN).is_file() else {}
+    rate = _g1c.integrated_rate(campaign_body)
     campaign = _g1b.integrated_evidence(campaign_path, vectors_path)
     rerun = _g1c.rerun_agreement(rerun_path, json.loads(
         (ROOT / _g1b.INTEGRATED_CAMPAIGN).read_text()
@@ -751,6 +755,41 @@ def build(
                         for site in head
                     ],
                     "arithmetic": arithmetic,
+                    "what_running_the_head_would_cost": {
+                        "mac_count": arithmetic["mac_count"],
+                        "measured_integrated_rate": rate,
+                        "seconds_whole": (
+                            round(arithmetic["mac_count"] / rate["macs_per_second"], 1)
+                            if rate.get("measured") else None
+                        ),
+                        "hours_whole": (
+                            round(
+                                arithmetic["mac_count"]
+                                / rate["macs_per_second"] / 3600.0,
+                                2,
+                            )
+                            if rate.get("measured") else None
+                        ),
+                        "hours_in_concurrent_row_shards": (
+                            round(
+                                arithmetic["mac_count"]
+                                / rate["macs_per_second"] / 3600.0
+                                / plan["shard_count"],
+                                2,
+                            )
+                            if rate.get("measured") and plan["shard_count"]
+                            else None
+                        ),
+                        "note": (
+                            "derived: the head's own multiply-accumulates at "
+                            "the rate the integrated vehicle itself measured. "
+                            "The shard figure is wall time with the shards "
+                            "run concurrently, which is exact because the "
+                            "shards share no accumulator -- see shard_plan. "
+                            "It is what the head would cost, not what this "
+                            "rung cost, which ran no head at all"
+                        ),
+                    },
                     "shard_plan": plan,
                     "shard_composition_check": shard_check,
                     "execution_measured": execution,
