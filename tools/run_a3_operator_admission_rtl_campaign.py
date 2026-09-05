@@ -472,15 +472,40 @@ def campaign(
         )
         manifests = {"admission": admission_manifest, "units": unit_manifest}
         arguments = plusargs(admission_vectors, UNIT_VECTORS)
+        # Geometry belongs to the vector set, not the testbench: the ROM
+        # admission set carries 218 descriptor records and the HBM set 224.
+        # The manifest's own numbers are passed in and the GEOMETRY line the
+        # run prints back is checked against the same manifest, so a
+        # disagreement is a refusal rather than a silently resized array.
+        geometry = admission_manifest["geometry"]
+        admission_overrides = {
+            "CASE_COUNT": int(admission_manifest["expected_pass"]["cases"]),
+            "DESC_RECORDS": int(geometry["descriptor_records"]),
+            "BANK_WORDS": int(geometry["bank_words"]),
+            "EXPECTED_WORDS": int(geometry["expected_words"]),
+            "PRELOAD_WORDS": int(geometry["preload_words"]),
+        }
 
         for bench in BENCHES:
             top = bench["top"]
             manifest_key, validator = VALIDATORS[top]
             sources = [str(ROOT / source) for source in bench["sources"]]
+            overrides = (
+                admission_overrides if top == "tb_a3_operator_admission" else {}
+            )
+            iverilog_parameters = [
+                f"-P{top}.{name}={value}" for name, value in overrides.items()
+            ]
+            verilator_parameters = [
+                f"-G{name}={value}" for name, value in overrides.items()
+            ]
 
             vvp_output = temporary / f"{top}.vvp"
             process, seconds = run(
-                [str(iverilog), "-g2012", "-s", top, "-o", str(vvp_output), *sources],
+                [
+                    str(iverilog), "-g2012", "-s", top, "-o", str(vvp_output),
+                    *iverilog_parameters, *sources,
+                ],
                 timeout=1800,
             )
             timing[f"{top}_iverilog_compile"] = seconds
@@ -504,7 +529,7 @@ def campaign(
                     str(verilator), "--binary", "--timing", "--top-module", top,
                     "--Mdir", str(verilator_dir), "-o", "sim", "-Wno-fatal",
                     "-Wno-WIDTHEXPAND", "-Wno-WIDTHTRUNC", "-Wno-MISINDENT",
-                    *sources,
+                    *verilator_parameters, *sources,
                 ],
                 timeout=1800,
             )

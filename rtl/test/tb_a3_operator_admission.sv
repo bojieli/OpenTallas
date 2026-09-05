@@ -18,16 +18,23 @@
 // written is byte-identical to what it was before.
 // ---------------------------------------------------------------------------
 module tb_a3_operator_admission;
-    localparam integer CASE_COUNT = 19;
+    // Geometry is a property of the VECTOR SET, not of the bridge, and the two
+    // Qwen lowerings do not share it: the ROM bundle's admission set carries
+    // 218 descriptor records and the HBM bundle's 224.  These are parameters
+    // so one testbench serves both, with the ROM values as defaults so a run
+    // that overrides nothing behaves exactly as before.  The campaign passes
+    // the vector manifest's own values and then checks the GEOMETRY line it
+    // gets back against that manifest, so a mismatch is a refusal.
+    parameter integer CASE_COUNT = 19;
     localparam integer CASE_WORDS = 64;
     localparam integer VIEW_SLOTS = 5;
     localparam integer VIEW_WORDS = 8;
     localparam integer MAP_ENTRIES = 8;
-    localparam integer DESC_RECORDS = 218;
-    localparam integer BANK_WORDS = 242050;
+    parameter integer DESC_RECORDS = 218;
+    parameter integer BANK_WORDS = 242050;
     localparam integer INDEX_WORDS = 64;
-    localparam integer EXPECTED_WORDS = 33093;
-    localparam integer PRELOAD_WORDS = 12291;
+    parameter integer EXPECTED_WORDS = 33093;
+    parameter integer PRELOAD_WORDS = 12291;
     localparam integer CASE_TIMEOUT = 4000000;
 
     reg clk = 1'b0;
@@ -42,13 +49,16 @@ module tb_a3_operator_admission;
     reg [31:0]   expected_mem [0:EXPECTED_WORDS-1];
     reg [31:0]   preload_mem [0:PRELOAD_WORDS-1];
 
-    reg [1023:0] cases_path;
-    reg [1023:0] views_path;
-    reg [1023:0] descriptors_path;
-    reg [1023:0] bank_path;
-    reg [1023:0] index_path;
-    reg [1023:0] expected_path;
-    reg [1023:0] preload_path;
+    // 512 characters, not 128: a 128-character register silently keeps only
+    // the TAIL of a longer path, so $readmemh fails on a truncated name and
+    // the run then reports a case mismatch instead of a load failure.
+    reg [4095:0] cases_path;
+    reg [4095:0] views_path;
+    reg [4095:0] descriptors_path;
+    reg [4095:0] bank_path;
+    reg [4095:0] index_path;
+    reg [4095:0] expected_path;
+    reg [4095:0] preload_path;
 
     // -- bridge interface ------------------------------------------------
     reg          clear;
