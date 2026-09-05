@@ -23,6 +23,23 @@
 // checkers, so the campaign can require the two simulators to have seen the
 // same thing even when what they saw was a defect.
 //
+// The harness is the management processor (docs/CHIP_ARCHITECTURE_DESIGN.md
+// sections 2.7, 9.2, section 13 item 12): it parses the four device images
+// itself, writes the program body and the descriptor records through the
+// design's host load path once per run, binds the sixteen request symbols
+// per case through the same path, and streams the program header through
+// the admission beat port.  The wrapper holds no image.
+//
+// The harness is also the engines (section 3.2 items 2-3, 11.5 L1-CP): every
+// accepted issue is recorded with its issue-record slot and completed after
+// a seeded pseudo-random delay, in a seeded pseudo-random order.  Plusargs
+// +run_ahead_seed=N, +run_ahead_max_delay=N and +run_ahead_reorder=0|1 are
+// the ones rtl/test/tb_a3_deployment.sv takes, and the completion model is
+// the same specification written a second time: xorshift32 seeded per case
+// with (seed ^ ((case_index + 1) * 0x9E3779B9)) | 1, delay 0 when max_delay
+// is 0 (the zero-run-ahead regression) else 1 + rand % max_delay, and with
+// reorder the completion drawn among the due ones by rand % count.
+//
 // Engine datapaths are out of scope, as in the sibling campaign: the golden
 // model runs recording no-op engines, so this correlates the instruction
 // stream and not the arithmetic.
@@ -44,6 +61,10 @@ constexpr unsigned kCaseStride = 40;
 constexpr unsigned kIssueStride = 3;
 constexpr unsigned kViewStride = 7;
 constexpr unsigned kPredicateStride = 3;
+constexpr unsigned kProgramWords = 4096;
+constexpr unsigned kDescWords = 8192;
+constexpr unsigned kSymbolsPerCase = 16;
+constexpr unsigned kMaxOutstanding = 32;
 // A whole DeepSeek prefill is 29,595 fetched instructions; the guard catches a
 // hang without mistaking a long real program for one.
 constexpr unsigned kRunGuard = 40000000u;
@@ -95,6 +116,8 @@ enum Site : int {
     kStateRows = 46,
     kSignalError = 47,
     kStateApplyOverflow = 48,
+    kIrsProtocol = 49,
+    kOutstandingAtDone = 50,
 };
 
 [[noreturn]] void fail(const std::string& message) {
@@ -113,6 +136,38 @@ std::vector<uint32_t> load_words(const char* path) {
     return words;
 }
 
+// A wide image: one row per line of `digits` hex digits, returned as the
+// row's 32-bit lanes in little-endian lane order (lane 0 is the lowest 32
+// bits, the last 8 digits of the line), which is the lane order the host
+// load path takes.
+std::vector<std::vector<uint32_t>> load_rows(const char* path, unsigned digits,
+                                             unsigned rows) {
+    std::ifstream stream(path);
+    if (!stream) fail(std::string("cannot open ") + path);
+    std::vector<std::vector<uint32_t>> image;
+    std::string token;
+    while (stream >> token) {
+        if (token.size() != digits)
+            fail(std::string("malformed row in ") + path);
+        std::vector<uint32_t> lanes(digits / 8, 0);
+        for (unsigned lane = 0; lane < digits / 8; ++lane) {
+            const std::string chunk =
+                token.substr(digits - 8 * (lane + 1), 8);
+            lanes[lane] = static_cast<uint32_t>(std::stoul(chunk, nullptr, 16));
+        }
+        image.push_back(lanes);
+    }
+    if (image.size() < rows) image.resize(rows, std::vector<uint32_t>(digits / 8, 0));
+    return image;
+}
+
+unsigned plusarg(const char* name, unsigned fallback) {
+    const std::string prefix = std::string("+") + name + "=";
+    const std::string found = Verilated::commandArgsPlusMatch(name);
+    if (found.size() <= prefix.size()) return fallback;
+    return static_cast<unsigned>(std::stoul(found.substr(prefix.size())));
+}
+
 class Model {
   public:
     Vot_a3_microsequencer_top dut;
@@ -128,17 +183,25 @@ class Model {
 
     void reset() {
         dut.rst_n = 0;
-        dut.header_start = 0;
+        dut.hdr_in_valid = 0;
+        dut.hdr_in_start = 0;
+        dut.hdr_in_word = 0;
+        dut.host_we = 0;
+        dut.host_sel = 0;
+        dut.host_row = 0;
+        dut.host_lane = 0;
+        dut.host_wdata = 0;
         dut.start = 0;
         dut.issue_ready = 1;
-        dut.cfg_header_base = 0;
+        dut.complete_valid = 0;
+        dut.complete_slot = 0;
+        dut.complete_fault = 0;
+        dut.complete_trap_class = 0;
         dut.cfg_program_base = 0;
         dut.cfg_instruction_count = 0;
         dut.cfg_entry_pc = 0;
         dut.cfg_desc_base = 0;
         dut.cfg_desc_count = 0;
-        dut.cfg_symbol_base = 0;
-        dut.cfg_symbol_mask = 0;
         dut.cfg_max_retired_work = 0;
         dut.cfg_state_count = 0;
         dut.predicate_read_valid = 0;
@@ -149,11 +212,99 @@ class Model {
         for (unsigned cycle = 0; cycle < 2; ++cycle) step();
     }
 
+    // One host write: one lane of one row, one cycle.
+    void host_write(unsigned sel, uint32_t row, unsigned lane, uint32_t data) {
+        dut.host_sel = sel;
+        dut.host_row = row;
+        dut.host_lane = lane;
+        dut.host_wdata = data;
+        dut.host_we = 1;
+        step();
+        dut.host_we = 0;
+    }
+
     // Deliberately unlike the Icarus LFSR: the consumer accepts on three cycles
     // out of five, offset by the case index, so neither simulator's issue
     // stream is checked under the other's stall pattern.
     bool ready_now(unsigned tick, unsigned salt) {
         return ((tick + salt) % 5) < 3;
+    }
+};
+
+// The stub engines: accepted issues waiting for their due tick.
+struct Pending {
+    bool valid = false;
+    uint32_t slot = 0;
+    uint64_t due = 0;
+    uint64_t order = 0;
+};
+
+struct StubEngines {
+    uint32_t prng = 1;
+    Pending entries[kMaxOutstanding];
+    unsigned count = 0;
+    uint64_t sequence = 0;
+    unsigned max_delay = 0;
+    bool reorder = false;
+
+    uint32_t draw() {
+        uint32_t x = prng;
+        x ^= x << 13;
+        x ^= x >> 17;
+        x ^= x << 5;
+        prng = x;
+        return x;
+    }
+
+    void seed(unsigned run_seed, unsigned case_index) {
+        prng = (run_seed ^ ((case_index + 1u) * 0x9E3779B9u)) | 1u;
+    }
+
+    // The completion to report this cycle, if any: among the entries whose
+    // due tick has passed, the oldest, or with reorder one drawn at random.
+    bool complete(uint64_t tick, uint32_t* slot) {
+        unsigned due_count = 0;
+        int oldest = -1;
+        for (unsigned e = 0; e < kMaxOutstanding; ++e) {
+            if (entries[e].valid && entries[e].due <= tick) {
+                ++due_count;
+                if (oldest < 0 || entries[e].order < entries[oldest].order)
+                    oldest = static_cast<int>(e);
+            }
+        }
+        if (due_count == 0) return false;
+        int chosen = oldest;
+        if (reorder) {
+            unsigned pick = draw() % due_count;
+            for (unsigned e = 0; e < kMaxOutstanding; ++e) {
+                if (entries[e].valid && entries[e].due <= tick) {
+                    if (pick == 0) {
+                        chosen = static_cast<int>(e);
+                        break;
+                    }
+                    --pick;
+                }
+            }
+        }
+        *slot = entries[chosen].slot;
+        entries[chosen].valid = false;
+        --count;
+        return true;
+    }
+
+    void accept(uint32_t slot, uint64_t tick) {
+        const unsigned delay = (max_delay == 0) ? 0u : 1u + (draw() % max_delay);
+        for (unsigned e = 0; e < kMaxOutstanding; ++e) {
+            if (!entries[e].valid) {
+                entries[e].valid = true;
+                entries[e].slot = slot;
+                entries[e].due = tick + delay;
+                entries[e].order = sequence++;
+                ++count;
+                return;
+            }
+        }
+        fail("stub engine has no free entry");
     }
 };
 
@@ -192,6 +343,19 @@ int main(int argc, char** argv) {
         load_words("a3_deployment_predicate.hex");
     const std::vector<uint32_t> meta = load_words("a3_deployment_meta.hex");
     if (meta.size() < 6) fail("a3_deployment_meta.hex is short");
+    // The host's copies of the device images.
+    const std::vector<std::vector<uint32_t>> image_program =
+        load_rows("a3_program.hex", 64, kProgramWords);
+    const std::vector<uint32_t> image_header = load_words("a3_header.hex");
+    const std::vector<std::vector<uint32_t>> image_desc =
+        load_rows("a3_descriptor.hex", 384, kDescWords);
+    const std::vector<uint32_t> image_symbol = load_words("a3_symbol.hex");
+
+    const unsigned run_seed = plusarg("run_ahead_seed", 0);
+    const unsigned run_max_delay = plusarg("run_ahead_max_delay", 0);
+    const unsigned run_reorder = plusarg("run_ahead_reorder", 0);
+    std::printf("RUN_AHEAD seed=%u max_delay=%u reorder=%u\n", run_seed,
+                run_max_delay, run_reorder);
 
     const unsigned case_count = meta[0];
     const unsigned expected_issue_total = meta[1];
@@ -229,6 +393,29 @@ int main(int argc, char** argv) {
     std::printf("PROFILE: ABI3 live-buffer state exclusion PASS\n");
     model.reset();
 
+    // -- load the two control stores through the host path, once ----------
+    // The whole concatenated image at its absolute rows, so the case words
+    // (program base, descriptor base) keep their meaning.
+    model.settle();
+    if (!model.dut.host_ready) fail("host path not ready before the load");
+    unsigned long host_writes = 0;
+    for (unsigned row = 0; row < kProgramWords; ++row)
+        for (unsigned lane = 0; lane < 8; ++lane) {
+            model.host_write(0, row, lane, image_program[row][lane]);
+            ++host_writes;
+        }
+    for (unsigned row = 0; row < kDescWords; ++row)
+        for (unsigned lane = 0; lane < 48; ++lane) {
+            model.host_write(1, row, lane, image_desc[row][lane]);
+            ++host_writes;
+        }
+    model.step();
+    if (model.dut.host_write_refused)
+        fail("a control-store write was refused during the load");
+    std::printf("HOST_LOAD program_rows=%u descriptor_rows=%u writes=%lu refused=%u\n",
+                kProgramWords, kDescWords, host_writes,
+                static_cast<unsigned>(model.dut.host_write_refused));
+
     unsigned total_issues = 0;
     unsigned total_views = 0;
     unsigned total_predicates = 0;
@@ -237,6 +424,7 @@ int main(int argc, char** argv) {
     unsigned signal_flag_cases = 0;
     unsigned apply_overflow_cases = 0;
     unsigned long checks = 0;
+    unsigned max_depth = 0;
 
     long deploy_index = -1;
     unsigned deploy_cases = 0;
@@ -244,15 +432,21 @@ int main(int argc, char** argv) {
     unsigned deploy_views = 0;
     unsigned deploy_predicates = 0;
     unsigned deploy_diverged = 0;
+    unsigned deploy_depth = 0;
 
     auto close_deployment = [&]() {
         if (deploy_cases > 0) {
             std::printf(
-                "DEPLOY %ld cases=%u diverged=%u issues=%u views=%u predicates=%u\n",
+                "DEPLOY %ld cases=%u diverged=%u issues=%u views=%u predicates=%u depth=%u\n",
                         deploy_index, deploy_cases, deploy_diverged,
-                        deploy_issues, deploy_views, deploy_predicates);
+                        deploy_issues, deploy_views, deploy_predicates,
+                        deploy_depth);
         }
     };
+
+    StubEngines engines;
+    engines.max_delay = run_max_delay;
+    engines.reorder = run_reorder != 0;
 
     for (unsigned index = 0; index < case_count; ++index) {
         const uint32_t* word = cases.data() + index * kCaseStride;
@@ -273,15 +467,32 @@ int main(int argc, char** argv) {
             deploy_views = 0;
             deploy_predicates = 0;
             deploy_diverged = 0;
+            deploy_depth = 0;
         }
         ++deploy_cases;
         CaseResult result;
 
-        // -- program header admission ---------------------------------
-        model.dut.cfg_header_base = word[6];
-        model.dut.header_start = 1;
-        model.step();
-        model.dut.header_start = 0;
+        // -- request symbols: sixteen 64-bit entries with bound bits --------
+        // The image holds 32-bit values; the high word is zero.
+        for (unsigned symbol = 0; symbol < kSymbolsPerCase; ++symbol) {
+            const size_t at = static_cast<size_t>(word[4]) + symbol;
+            const uint32_t value = at < image_symbol.size() ? image_symbol[at] : 0;
+            model.host_write(2, symbol, 0, value);
+            model.host_write(2, symbol, 1, 0);
+            model.host_write(2, symbol, 2, (word[5] >> symbol) & 1U);
+        }
+        if (model.dut.host_write_refused) fail("a symbol write was refused");
+
+        // -- program header admission: 64 beats through the port -----------
+        for (unsigned beat = 0; beat < 64; ++beat) {
+            const size_t at = static_cast<size_t>(word[6]) + beat;
+            model.dut.hdr_in_valid = 1;
+            model.dut.hdr_in_start = (beat == 0) ? 1 : 0;
+            model.dut.hdr_in_word = at < image_header.size() ? image_header[at] : 0;
+            model.step();
+        }
+        model.dut.hdr_in_valid = 0;
+        model.dut.hdr_in_start = 0;
         unsigned guard = 0;
         while (!model.dut.header_done && guard < 400) {
             model.step();
@@ -303,8 +514,6 @@ int main(int argc, char** argv) {
         model.dut.cfg_instruction_count = word[1];
         model.dut.cfg_desc_base = word[2];
         model.dut.cfg_desc_count = word[3];
-        model.dut.cfg_symbol_base = word[4];
-        model.dut.cfg_symbol_mask = word[5];
         model.dut.cfg_entry_pc = word[7];
         model.dut.cfg_max_retired_work = work;
         model.dut.cfg_state_count = word[34];
@@ -325,6 +534,11 @@ int main(int argc, char** argv) {
             predicates.size())
             fail("predicate image is short");
 
+        engines.seed(run_seed, index);
+        if (engines.count != 0)
+            fail("stub engine still holds an operation at case start");
+        unsigned case_completions = 0;
+
         model.dut.start = 1;
         model.step();
         model.dut.start = 0;
@@ -332,12 +546,21 @@ int main(int argc, char** argv) {
         unsigned seen = 0;
         unsigned views_seen = 0;
         unsigned predicates_seen = 0;
-        unsigned tick = 0;
+        uint64_t tick = 0;
         guard = 0;
         while (!model.dut.done && guard < kRunGuard) {
             model.dut.issue_ready = model.ready_now(tick, index) ? 1 : 0;
             model.dut.predicate_read_valid = 0;
             model.dut.predicate_read_trap_class = 0;
+            // The engines report at most one completion per cycle, of an
+            // operation accepted in an earlier cycle.
+            uint32_t completing = 0;
+            model.dut.complete_valid = 0;
+            if (engines.complete(tick, &completing)) {
+                model.dut.complete_valid = 1;
+                model.dut.complete_slot = completing;
+                ++case_completions;
+            }
             model.settle();
             if (model.dut.predicate_read_req) {
                 if (predicates_seen >= predicate_count) {
@@ -366,6 +589,7 @@ int main(int argc, char** argv) {
             const uint32_t sub = model.dut.issue_sub;
             const uint32_t descriptor = model.dut.issue_descriptor_id;
             const uint32_t issue_index = model.dut.issue_index;
+            const uint32_t issue_slot = model.dut.issue_slot;
             // The view port is an observation pulse, not a handshake: one
             // assertion is one resolved operand view.
             const bool view_fire = model.dut.view_valid;
@@ -376,6 +600,7 @@ int main(int argc, char** argv) {
             const uint64_t view_offset = model.dut.view_element_offset;
             const uint32_t view_rank = model.dut.view_rank;
             model.step();
+            if (fire) engines.accept(issue_slot, tick);
             ++tick;
             ++guard;
             if (view_fire && result.agreeing()) {
@@ -417,6 +642,8 @@ int main(int argc, char** argv) {
             ++total_issues;
             ++deploy_issues;
         }
+        model.dut.complete_valid = 0;
+        model.dut.issue_ready = 1;
         if (!model.dut.done) fail("transaction timeout");
 
         // Trap class first: when the RTL stops a program the golden model runs
@@ -459,8 +686,15 @@ int main(int argc, char** argv) {
         result.equal(kSignalError, model.dut.event_signal_error, 0U);
         result.equal(kStateApplyOverflow,
                      model.dut.state_apply_overflow, 0U);
+        // The engine side never completed a slot that held no operation,
+        // and done was asserted with nothing outstanding.
+        result.equal(kIrsProtocol, model.dut.irs_protocol_error, 0U);
+        result.equal(kOutstandingAtDone, model.dut.dbg_outstanding, 0U);
         if (model.dut.event_signal_error) ++signal_flag_cases;
         if (model.dut.state_apply_overflow) ++apply_overflow_cases;
+        const unsigned depth = model.dut.dbg_max_outstanding;
+        if (depth > deploy_depth) deploy_depth = depth;
+        if (depth > max_depth) max_depth = depth;
 
         checks += result.checks;
         if (!result.agreeing()) {
@@ -470,7 +704,7 @@ int main(int argc, char** argv) {
         std::printf(
             "CASE %u tag=%04x %s code=%d rtl=%llu golden=%llu issues=%u/%u "
             "views=%u/%u predicates=%u/%u fetched=%u retired=%u trap=%u "
-            "fault=%u sigerr=%u applyovf=%u\n",
+            "fault=%u sigerr=%u applyovf=%u depth=%u completions=%u\n",
             index, tag, result.agreeing() ? "OK" : "DIVERGE", result.code,
             static_cast<unsigned long long>(result.rtl),
             static_cast<unsigned long long>(result.golden), seen, issue_count,
@@ -478,7 +712,11 @@ int main(int argc, char** argv) {
             model.dut.count_fetched,
             model.dut.count_retired, model.dut.trap_class,
             model.dut.first_fault_instruction, model.dut.event_signal_error,
-            model.dut.state_apply_overflow);
+            model.dut.state_apply_overflow, depth, case_completions);
+        // Timing observation only (per simulator, never compared).
+        std::printf("STALLS case=%u wait=%u dep=%u\n", index,
+                    static_cast<unsigned>(model.dut.dbg_wait_stalls),
+                    static_cast<unsigned>(model.dut.dbg_dep_stalls));
         model.step();
     }
     close_deployment();
@@ -499,18 +737,19 @@ int main(int argc, char** argv) {
         std::printf(
             "PASS: ABI3 RTL deployment co-simulation deployments=%u cases=%u "
             "completions=%u issues=%u views=%u predicates=%u "
-            "signal_flag_cases=%u apply_overflow_cases=%u checks=%lu\n",
+            "signal_flag_cases=%u apply_overflow_cases=%u checks=%lu max_depth=%u\n",
             deployment_count, case_count, total_completions, total_issues,
             total_views, total_predicates, signal_flag_cases,
-            apply_overflow_cases, checks);
+            apply_overflow_cases, checks, max_depth);
         return 0;
     }
     std::printf(
         "FAIL: ABI3 RTL deployment co-simulation diverged_cases=%u of %u "
         "deployments=%u issues=%u views=%u predicates=%u "
-        "signal_flag_cases=%u apply_overflow_cases=%u checks=%lu\n",
+        "signal_flag_cases=%u apply_overflow_cases=%u checks=%lu max_depth=%u\n",
         diverged_cases, case_count, deployment_count, total_issues, total_views,
-        total_predicates, signal_flag_cases, apply_overflow_cases, checks);
+        total_predicates, signal_flag_cases, apply_overflow_cases, checks,
+        max_depth);
     std::cerr << "FAIL: the RTL and runtime.sim.device.Device disagree on a "
                  "shipped program\n";
     return 1;

@@ -9,17 +9,23 @@
 // and the existing engine array performs the real DMA copies before replying.
 //
 // The control plane is the design's own top, rtl/abi3/ot_a3_device_top.sv
-// (admission block, sequencer, descriptor base/bound/fault logic, symbol
-// addressing, host load path); this module wraps it with the preloaded
-// control stores it presents as abstract boundaries, the engine bridge and
-// array on its engine port, the bridge's own descriptor read port, and the
-// exact multicast witness.  Its module name, parameters and ports are
-// unchanged, so every campaign and vector set that drove it still does.
+// (admission block, asynchronous sequencer, descriptor base/bound/fault
+// logic, symbol file, host load path); this module wraps it with the
+// control stores and the issue-record payload it presents as abstract
+// boundaries, the engine bridge and array on its engine port through
+// rtl/test/a3_engine_completion_adapter.sv (the two-phase port to the
+// bridge's run-to-completion port, at depth 1), the bridge's own descriptor
+// read port, and the exact multicast witness.
+//
+// The program store, the descriptor store and the symbol file hold no image
+// and are loaded through the design's host path by the checker
+// (docs/CHIP_ARCHITECTURE_DESIGN.md section 13 item 12); the operand banks
+// and the multicast witness records below are engine verification memories,
+// not control stores, and stay preloaded.
 // ---------------------------------------------------------------------------
 module ot_a3_shipped_prefix_top #(
     parameter integer PROGRAM_WORDS = 4096,
     parameter integer DESC_WORDS = 8192,
-    parameter integer SYMBOL_WORDS = 2048,
     parameter integer INDEX_WORDS = 64,
     parameter integer SOURCE_WORDS = 65536,
     parameter integer RESULT_WORDS = 98304,
@@ -28,14 +34,22 @@ module ot_a3_shipped_prefix_top #(
 ) (
     input  wire        clk,
     input  wire        rst_n,
+
+    // -- host load path: program store, descriptor store, symbol file -----
+    input  wire        host_we,
+    input  wire [1:0]  host_sel,
+    input  wire [31:0] host_row,
+    input  wire [5:0]  host_lane,
+    input  wire [31:0] host_wdata,
+    output wire        host_ready,
+    output wire        host_write_refused,
+
     input  wire        start,
     input  wire [31:0] cfg_program_base,
     input  wire [31:0] cfg_instruction_count,
     input  wire [31:0] cfg_entry_pc,
     input  wire [31:0] cfg_desc_base,
     input  wire [31:0] cfg_desc_count,
-    input  wire [31:0] cfg_symbol_base,
-    input  wire [31:0] cfg_symbol_mask,
     input  wire [63:0] cfg_max_retired_work,
     input  wire [31:0] cfg_state_count,
     input  wire [31:0] cfg_index_base,
@@ -157,7 +171,7 @@ module ot_a3_shipped_prefix_top #(
 );
     reg [255:0]  program_mem [0:PROGRAM_WORDS-1];
     reg [1535:0] desc_mem [0:DESC_WORDS-1];
-    reg [31:0]   symbol_mem [0:SYMBOL_WORDS-1];
+    reg [511:0]  irs_payload_mem [0:ot_a3_pkg::A3_IRS_ENTRIES*8-1];
     reg [31:0]   index_mem [0:INDEX_WORDS-1];
     reg [31:0]   source_mem [0:SOURCE_WORDS-1];
     reg [31:0]   result_mem [0:RESULT_WORDS-1];
@@ -184,9 +198,6 @@ module ot_a3_shipped_prefix_top #(
     integer weight_file;
     integer weight_bytes_read;
     initial begin
-        $readmemh("a3_program.hex", program_mem);
-        $readmemh("a3_descriptor.hex", desc_mem);
-        $readmemh("a3_symbol.hex", symbol_mem);
         $readmemh("p3_index.hex", index_mem);
         $readmemh("p3_source.hex", source_mem);
         multicast_communication_record = 1536'd0;
@@ -305,9 +316,48 @@ module ot_a3_shipped_prefix_top #(
         end
     end
 
-    wire [31:0] sym_addr;
-    wire [31:0] sym_value = symbol_mem[sym_addr[19:0]];
+    // -- issue record store payload behind the device top's boundary ------
+    wire         irs_we;
+    wire [4:0]   irs_wslot;
+    wire [2:0]   irs_wlane;
+    wire [511:0] irs_wdata;
+    wire         irs_re;
+    wire [4:0]   irs_rslot;
+    wire [2:0]   irs_rlane;
+    reg  [511:0] irs_rdata;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            irs_rdata <= 512'd0;
+        end else begin
+            if (irs_we)
+                irs_payload_mem[{irs_wslot, irs_wlane}] <= irs_wdata;
+            if (irs_re)
+                irs_rdata <= irs_payload_mem[{irs_rslot, irs_rlane}];
+        end
+    end
 
+    // -- the sequencer's two-phase engine port ---------------------------
+    wire seq_issue_valid;
+    wire seq_issue_ready;
+    wire [7:0] seq_issue_family;
+    wire [7:0] seq_issue_sub;
+    wire [31:0] seq_issue_descriptor_id;
+    wire [31:0] seq_issue_index;
+    wire [4:0] seq_issue_slot;
+    wire seq_view_valid;
+    wire [31:0] seq_view_descriptor_id;
+    wire [2:0] seq_view_slot;
+    wire [31:0] seq_view_extent;
+    wire [7:0] seq_view_extent_axis;
+    wire [63:0] seq_view_element_offset;
+    wire [7:0] seq_view_rank;
+    wire [4:0] seq_view_irs_slot;
+    wire complete_valid;
+    wire [4:0] complete_slot;
+    wire complete_fault;
+    wire [15:0] complete_trap_class;
+
+    // -- the engine-side run-to-completion port, from the adapter ---------
     wire issue_valid;
     wire issue_ready;
     wire issue_fault;
@@ -316,6 +366,7 @@ module ot_a3_shipped_prefix_top #(
     wire [7:0] issue_sub;
     wire [31:0] issue_descriptor_id;
     wire [31:0] issue_index;
+    wire [31:0] issue_view_count;
     wire view_valid;
     wire [31:0] view_descriptor_id;
     wire [2:0] view_slot;
@@ -323,6 +374,47 @@ module ot_a3_shipped_prefix_top #(
     wire [7:0] view_extent_axis;
     wire [63:0] view_element_offset;
     wire [7:0] view_rank;
+
+    a3_engine_completion_adapter adapter (
+        .clk(clk),
+        .rst_n(rst_n),
+        .clear(start),
+        .issue_valid(seq_issue_valid),
+        .issue_ready(seq_issue_ready),
+        .issue_family(seq_issue_family),
+        .issue_sub(seq_issue_sub),
+        .issue_descriptor_id(seq_issue_descriptor_id),
+        .issue_index(seq_issue_index),
+        .issue_slot(seq_issue_slot),
+        .view_valid(seq_view_valid),
+        .view_descriptor_id(seq_view_descriptor_id),
+        .view_slot(seq_view_slot),
+        .view_extent(seq_view_extent),
+        .view_extent_axis(seq_view_extent_axis),
+        .view_element_offset(seq_view_element_offset),
+        .view_rank(seq_view_rank),
+        .view_irs_slot(seq_view_irs_slot),
+        .complete_valid(complete_valid),
+        .complete_slot(complete_slot),
+        .complete_fault(complete_fault),
+        .complete_trap_class(complete_trap_class),
+        .eng_issue_valid(issue_valid),
+        .eng_issue_ready(issue_ready),
+        .eng_issue_fault(issue_fault),
+        .eng_issue_trap_class(issue_trap_class),
+        .eng_issue_family(issue_family),
+        .eng_issue_sub(issue_sub),
+        .eng_issue_descriptor_id(issue_descriptor_id),
+        .eng_issue_index(issue_index),
+        .eng_issue_view_count(issue_view_count),
+        .eng_view_valid(view_valid),
+        .eng_view_descriptor_id(view_descriptor_id),
+        .eng_view_slot(view_slot),
+        .eng_view_extent(view_extent),
+        .eng_view_extent_axis(view_extent_axis),
+        .eng_view_element_offset(view_element_offset),
+        .eng_view_rank(view_rank)
+    );
 
     wire bridge_issue_ready;
     wire bridge_issue_fault;
@@ -333,7 +425,6 @@ module ot_a3_shipped_prefix_top #(
     reg multicast_start;
     reg multicast_inject_crc;
     reg [31:0] multicast_observed_views;
-    reg [31:0] views_at_last_response;
     reg [31:0] multicast_launch_count_q;
     reg [31:0] multicast_fault_count_q;
     wire multicast_busy;
@@ -380,21 +471,19 @@ module ot_a3_shipped_prefix_top #(
         .header_entrypoint_count(),
         .header_max_retired_work(),
         .header_entrypoint_descriptor(),
-        .host_we(1'b0),
-        .host_sel(1'b0),
-        .host_row(32'd0),
-        .host_lane(6'd0),
-        .host_wdata(32'd0),
-        .host_ready(),
-        .host_write_refused(),
+        .host_we(host_we),
+        .host_sel(host_sel),
+        .host_row(host_row),
+        .host_lane(host_lane),
+        .host_wdata(host_wdata),
+        .host_ready(host_ready),
+        .host_write_refused(host_write_refused),
         .start(start),
         .cfg_program_base(cfg_program_base),
         .cfg_instruction_count(cfg_instruction_count),
         .cfg_entry_pc(cfg_entry_pc),
         .cfg_desc_base(cfg_desc_base),
         .cfg_desc_count(cfg_desc_count),
-        .cfg_symbol_base(cfg_symbol_base),
-        .cfg_symbol_mask(cfg_symbol_mask),
         .cfg_max_retired_work(cfg_max_retired_work),
         .cfg_state_count(cfg_state_count),
         .busy(busy),
@@ -415,29 +504,41 @@ module ot_a3_shipped_prefix_top #(
         .dstore_wlane(dstore_wlane),
         .dstore_wdata(dstore_wdata),
         .dstore_rdata(dstore_rdata),
-        .sym_addr(sym_addr),
-        .sym_value(sym_value),
+        .irs_we(irs_we),
+        .irs_wslot(irs_wslot),
+        .irs_wlane(irs_wlane),
+        .irs_wdata(irs_wdata),
+        .irs_re(irs_re),
+        .irs_rslot(irs_rslot),
+        .irs_rlane(irs_rlane),
+        .irs_rdata(irs_rdata),
         .predicate_read_req(),
         .predicate_read_object_id(),
         .predicate_read_element_index(),
         .predicate_read_valid(1'b0),
         .predicate_read_value(1'b0),
         .predicate_read_trap_class(16'd0),
-        .issue_valid(issue_valid),
-        .issue_ready(issue_ready),
-        .issue_fault(issue_fault),
-        .issue_trap_class(issue_trap_class),
-        .issue_family(issue_family),
-        .issue_sub(issue_sub),
-        .issue_descriptor_id(issue_descriptor_id),
-        .issue_index(issue_index),
-        .view_valid(view_valid),
-        .view_descriptor_id(view_descriptor_id),
-        .view_slot(view_slot),
-        .view_extent(view_extent),
-        .view_extent_axis(view_extent_axis),
-        .view_element_offset(view_element_offset),
-        .view_rank(view_rank),
+        .issue_valid(seq_issue_valid),
+        .issue_ready(seq_issue_ready),
+        .issue_family(seq_issue_family),
+        .issue_sub(seq_issue_sub),
+        .issue_descriptor_id(seq_issue_descriptor_id),
+        .issue_index(seq_issue_index),
+        .issue_serial(),
+        .issue_slot(seq_issue_slot),
+        .issue_queue(),
+        .complete_valid(complete_valid),
+        .complete_slot(complete_slot),
+        .complete_fault(complete_fault),
+        .complete_trap_class(complete_trap_class),
+        .view_valid(seq_view_valid),
+        .view_descriptor_id(seq_view_descriptor_id),
+        .view_slot(seq_view_slot),
+        .view_extent(seq_view_extent),
+        .view_extent_axis(seq_view_extent_axis),
+        .view_element_offset(seq_view_element_offset),
+        .view_rank(seq_view_rank),
+        .view_irs_slot(seq_view_irs_slot),
         .count_views_resolved(count_views_resolved),
         .count_fetched(count_fetched),
         .count_retired(count_retired),
@@ -461,12 +562,17 @@ module ot_a3_shipped_prefix_top #(
         .dbg_decode_error(),
         .dbg_source_operation_id(),
         .dbg_wait_fault_event(),
-        .dbg_loop_action()
+        .dbg_loop_action(),
+        .dbg_outstanding(),
+        .dbg_max_outstanding(),
+        .dbg_dep_stalls(),
+        .dbg_wait_stalls(),
+        .irs_protocol_error()
     );
 
     // -- exact DeepSeek ROM wafer multicast ----------------------------
-    // LINK owns no tensor views.  Record the number actually observed since
-    // the preceding completion and make the adapter admit zero rather than
+    // LINK owns no tensor views.  Record the number the adapter replayed for
+    // this very issue and make the multicast adapter admit zero rather than
     // assuming it.  Every other LINK shape remains routed to the ordinary
     // bridge and receives its existing fail-closed CAPABILITY response.
     wire multicast_response_fire = exact_multicast_issue && issue_ready;
@@ -486,7 +592,6 @@ module ot_a3_shipped_prefix_top #(
             multicast_start <= 1'b0;
             multicast_inject_crc <= 1'b0;
             multicast_observed_views <= 32'd0;
-            views_at_last_response <= 32'd0;
             multicast_launch_count_q <= 32'd0;
             multicast_fault_count_q <= 32'd0;
             multicast_started_this_transaction <= 1'b0;
@@ -498,7 +603,6 @@ module ot_a3_shipped_prefix_top #(
             if (start) begin
                 multicast_issue_active <= 1'b0;
                 multicast_observed_views <= 32'd0;
-                views_at_last_response <= 32'd0;
                 multicast_launch_count_q <= 32'd0;
                 multicast_fault_count_q <= 32'd0;
                 multicast_started_this_transaction <= 1'b0;
@@ -510,8 +614,7 @@ module ot_a3_shipped_prefix_top #(
                 if (!multicast_issue_active && exact_multicast_issue) begin
                     multicast_issue_active <= 1'b1;
                     multicast_started_this_transaction <= 1'b1;
-                    multicast_observed_views <=
-                        count_views_resolved - views_at_last_response;
+                    multicast_observed_views <= issue_view_count;
                     // The endpoint is idle when this pulse is sampled.  One
                     // packet is corrupted and recovered through NAK/replay.
                     multicast_inject_crc <= 1'b1;
@@ -519,8 +622,6 @@ module ot_a3_shipped_prefix_top #(
                 end
                 if (multicast_done)
                     multicast_completed_seen <= 1'b1;
-                if (response_valid)
-                    views_at_last_response <= count_views_resolved;
                 if (multicast_response_fire) begin
                     multicast_issue_active <= 1'b0;
                     if (multicast_failed)

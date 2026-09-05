@@ -29,6 +29,8 @@ from runtime.abi3.constants import (
     InstructionFlag,
     Major,
     NO_ID,
+    Observation,
+    Ordering,
     Recovery,
     State,
     SubmissionFlag,
@@ -65,6 +67,7 @@ from runtime.sim.counters import CounterSet
 from runtime.sim.engine import EngineContext, EngineError, dispatch
 from runtime.sim.memory import DeviceMemory, MemoryError_, ViewResolver
 from runtime.sim.performance import HostPerformanceObservations, sample_process
+from runtime.sim.run_ahead import RunAheadPolicy, RunAheadState, queue_for
 from runtime.sim.weight_cache import DecodedWeightCache
 
 
@@ -294,9 +297,14 @@ class Device:
         on_issue: Any = None,
         decoded_weight_cache_bytes: int = 0,
         decoded_weight_cache_working_reserve_bytes: int = 64 << 20,
+        run_ahead: RunAheadPolicy | None = None,
     ) -> None:
         self.deployment = deployment
         self.capability = capability
+        # Seeded asynchronous completion (docs/CHIP_ARCHITECTURE_DESIGN.md
+        # section 3.2 items 2-3; runtime/sim/run_ahead.py).  None keeps the
+        # sequential accounting: every engine instruction retires at issue.
+        self.run_ahead = run_ahead
         self.report: VerificationReport | None = None
         if verify:
             self.report = require_admitted(deployment, capability)
@@ -720,7 +728,15 @@ class Device:
         )
         loops: dict[int, int] = {}
         pending: list[PendingCommit] = []
+        # The event scoreboard (section 3.6, AM-C10): ``signalled`` is the
+        # level a producer raises at its retirement; ``published`` is set
+        # only by a producer carrying SIGNAL_RELEASE and is what a wait under
+        # WAIT_ACQUIRE or ACQUIRE / ACQUIRE_RELEASE / SEQUENTIAL ordering
+        # requires.  Under a RunAheadPolicy a producer is *pending* between
+        # its issue and its completion and a wait on it stalls, never traps.
         signalled: set[int] = set()
+        published: set[int] = set()
+        run_ahead = RunAheadState(self.run_ahead) if self.run_ahead else None
         produced: list[int] = []
         selection: dict[str, Any] = {}
         # One token ring and one selection record per node.  Every node runs
@@ -753,18 +769,63 @@ class Device:
         pc = entry["first_instruction"]
         loop_stack: list[tuple[int, int, int]] = []  # (loop id, trip, body_start)
         retired = 0
+        # The issue serial (section 3.2 item 2): CONTROL retirements and
+        # engine issues in program order.  Without a policy it equals
+        # ``retired`` at every fetch; with one it runs ahead of ``retired`` by
+        # the operations still outstanding, and it is what the watchdog
+        # compares (section 3.2 item 6).
+        serial = 0
         fetched = 0
         predicated_off = 0
         fault: DeviceTrap | None = None
         completed = False
         work_bound = self.header.max_retired_work
 
+        def _signal(event_id: int, flags: int) -> None:
+            if event_id != NO_ID:
+                signalled.add(event_id)
+                if flags & InstructionFlag.SIGNAL_RELEASE:
+                    published.add(event_id)
+
+        def _complete(entry_: Any) -> None:
+            # An outstanding operation completes: it retires and signals.
+            nonlocal retired
+            _signal(entry_.event_id, entry_.flags)
+            retired += 1
+            counters.add("instructions.retired")
+
+        def _drain_due(now: int) -> None:
+            assert run_ahead is not None
+            while True:
+                entry_ = run_ahead.pop_due(now)
+                if entry_ is None:
+                    return
+                _complete(entry_)
+
+        def _drain_all() -> None:
+            # A drain (AM-C2: FENCE, COMPLETE, COUNTER_SNAPSHOT, RECOVERY; and
+            # the fault path): every outstanding operation completes.
+            if run_ahead is None:
+                return
+            while True:
+                entry_ = run_ahead.pop_any()
+                if entry_ is None:
+                    return
+                _complete(entry_)
+
+        def _drain_until_not_pending(event_id: int) -> None:
+            assert run_ahead is not None
+            while run_ahead.pending(event_id):
+                entry_ = run_ahead.pop_any()
+                assert entry_ is not None
+                _complete(entry_)
+
         try:
             while 0 <= pc < len(self.instructions):
                 instruction = self.instructions[pc]
                 fetched += 1
                 counters.add("instructions.fetched")
-                if retired > work_bound:
+                if serial > work_bound:
                     raise DeviceTrap(
                         f"retired work exceeded the verified bound {work_bound}",
                         TrapClass.TIMEOUT_OR_WATCHDOG,
@@ -785,22 +846,47 @@ class Device:
                         counters.add("instructions.predicated_off")
                         pc += 1
                         continue
-                # -- wait
+                # -- wait (section 3.6, AM-C10)
                 if instruction.wait_set_id != NO_ID:
                     wait = self.deployment.table.get(
                         instruction.wait_set_id, ExtendedDescriptorType.EVENT_WAIT_SET
                     )
                     counters.add("queue.wait_events")
+                    acquire = bool(instruction.flags & InstructionFlag.WAIT_ACQUIRE) or (
+                        int(wait.payload["ordering"])
+                        in (
+                            int(Ordering.ACQUIRE),
+                            int(Ordering.ACQUIRE_RELEASE),
+                            int(Ordering.SEQUENTIAL),
+                        )
+                    )
                     for slot in range(wait.payload["producer_count"]):
                         event = wait.payload[f"producer_{slot}"]
+                        if run_ahead is not None and run_ahead.pending(event):
+                            # Issued, not yet complete: the one case the
+                            # sequential model cannot exhibit, and a stall.
+                            _drain_until_not_pending(event)
                         if event not in signalled:
                             raise DeviceTrap(
                                 f"wait on event {event} that has not been signalled",
                                 TrapClass.INTERNAL_INVARIANT,
                                 pc,
                             )
+                        if acquire and event not in published:
+                            raise DeviceTrap(
+                                f"wait on event {event} that has not been "
+                                "published (acquire)",
+                                TrapClass.INTERNAL_INVARIANT,
+                                pc,
+                            )
                 family = Major(instruction.major)
                 if family is Major.CONTROL:
+                    if instruction.sub in (int(Control.FENCE), int(Control.COMPLETE)):
+                        # AM-C2: FENCE drains at its wait set's scope --
+                        # ENGINE for every shipped set and without a set --
+                        # and COMPLETE is an implicit SYSTEM drain.  On one
+                        # node both are "nothing outstanding".
+                        _drain_all()
                     try:
                         pc, done = self._execute_control(
                             instruction, pc, loops, loop_stack, symbols, counters
@@ -813,11 +899,11 @@ class Device:
                         if trap.instruction == NO_ID:
                             trap.instruction = pc
                         raise
-                    if instruction.signal_event_id != NO_ID:
-                        # Nothing in the wire format exempts CONTROL from
-                        # publishing an event; the asymmetry was accidental.
-                        signalled.add(instruction.signal_event_id)
+                    # Nothing in the wire format exempts CONTROL from
+                    # publishing an event; the asymmetry was accidental.
+                    _signal(instruction.signal_event_id, instruction.flags)
                     retired += 1
+                    serial += 1
                     counters.add("instructions.retired")
                     if done:
                         completed = True
@@ -825,6 +911,26 @@ class Device:
                     continue
                 # -- engine issue
                 counters.add("instructions.issued")
+                queue = 0
+                if run_ahead is not None:
+                    if (
+                        family is Major.OBSERVATION
+                        and instruction.sub == int(Observation.COUNTER_SNAPSHOT)
+                    ) or (
+                        family is Major.RECOVERY
+                        and instruction.sub in (int(Recovery.POISON), int(Recovery.DRAIN))
+                    ):
+                        # AM-C2: an ENGINE drain before the operation issues.
+                        _drain_all()
+                    queue = self._issue_queue(instruction, family)
+                    # Completions that fell due, then the outstanding bounds
+                    # (section 3.2 item 2): issue stalls, so the oldest or a
+                    # drawn operation completes until an entry is free.
+                    _drain_due(serial)
+                    while run_ahead.full() or run_ahead.queue_full(queue):
+                        entry_ = run_ahead.pop_any()
+                        assert entry_ is not None
+                        _complete(entry_)
                 try:
                     self._issue_nodes(
                         ctx,
@@ -840,10 +946,19 @@ class Device:
                     raise
                 if self.on_issue is not None:
                     self.on_issue(pc, instruction, family, ctx)
-                if instruction.signal_event_id != NO_ID:
-                    signalled.add(instruction.signal_event_id)
-                retired += 1
-                counters.add("instructions.retired")
+                if run_ahead is None:
+                    _signal(instruction.signal_event_id, instruction.flags)
+                    retired += 1
+                    counters.add("instructions.retired")
+                else:
+                    run_ahead.push(
+                        serial,
+                        pc,
+                        instruction.signal_event_id,
+                        int(instruction.flags),
+                        queue,
+                    )
+                serial += 1
                 if self.trace_enabled:
                     self.trace.append(
                         {
@@ -894,6 +1009,13 @@ class Device:
             return counters
 
         if fault is not None:
+            # Section 3.2 item 5: every outstanding operation has a lower
+            # serial than the faulting instruction (which was never issued
+            # here, or faulted synchronously at its own issue), so all of
+            # them complete and count before the transaction is closed.
+            _drain_all()
+            if run_ahead is not None:
+                counters.max("queue.max_occupancy", run_ahead.max_occupancy)
             counters.add("fault.traps")
             counters.add("fault.poisoned_transactions")
             # ADR-003 8.6: an abort discards prepared state. Clearing only the
@@ -920,6 +1042,11 @@ class Device:
                 wall_seconds=wall,
                 host_performance=host_performance_delta(),
             )
+
+        if run_ahead is not None:
+            # COMPLETE drained everything; only the timing counter is left.
+            assert not run_ahead.entries
+            counters.max("queue.max_occupancy", run_ahead.max_occupancy)
 
         # -- every node must have selected the same token
         if self.node_count > 1:
@@ -983,6 +1110,34 @@ class Device:
             wall_seconds=wall,
             host_performance=host_performance_delta(),
         )
+
+    # -- issue queue (section 3.8; rtl/abi3/ot_a3_pkg.sv a3_queue_base) ----
+    def _issue_queue(self, instruction: Instruction, family: Major) -> int:
+        index = 0
+        if family is Major.LINK:
+            descriptor = self.deployment.table.get(
+                instruction.descriptor_id, ExtendedDescriptorType.COMMUNICATION
+            )
+            index = int(descriptor.payload.get("virtual_channel", 0))
+        elif family in (
+            Major.DMA,
+            Major.TENSOR,
+            Major.VECTOR,
+            Major.ATTENTION,
+            Major.ROUTE,
+            Major.REDUCTION,
+            Major.SELECTION,
+        ):
+            operator = self.deployment.table.get(
+                instruction.descriptor_id, ExtendedDescriptorType.OPERATOR
+            )
+            schedule_id = int(operator.payload.get("schedule_id", NO_ID))
+            if schedule_id != NO_ID:
+                schedule = self.deployment.table.get(
+                    schedule_id, ExtendedDescriptorType.SCHEDULE
+                )
+                index = int(schedule.payload.get("queue_index", 0))
+        return queue_for(int(family), index)
 
     # -- control ----------------------------------------------------------
     def _execute_control(

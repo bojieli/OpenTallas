@@ -17,6 +17,9 @@ namespace {
 
 constexpr std::size_t kCases = 4;
 constexpr std::size_t kCaseStride = 80;
+constexpr std::size_t kProgramWords = 4096;
+constexpr std::size_t kDescWords = 8192;
+constexpr std::size_t kSymbolsPerCase = 16;
 constexpr std::size_t kIssueStride = 4;
 constexpr std::size_t kResultWords = 98304;
 constexpr std::size_t kMulticastParticipants = 256;
@@ -51,6 +54,31 @@ std::vector<std::uint32_t> read_hex(const std::string& path) {
     return words;
 }
 
+// A wide device image: one row per line of `digits` hex digits, as 32-bit
+// lanes in little-endian lane order (lane 0 is the last 8 digits), which is
+// the lane order the design's host load path takes.
+std::vector<std::vector<std::uint32_t>> read_rows(const std::string& path,
+                                                  std::size_t digits,
+                                                  std::size_t rows) {
+    std::ifstream input(path);
+    if (!input) throw std::runtime_error("cannot open " + path);
+    std::vector<std::vector<std::uint32_t>> image;
+    std::string line;
+    while (std::getline(input, line)) {
+        if (line.empty()) continue;
+        if (line.size() != digits)
+            throw std::runtime_error("malformed image row in " + path);
+        std::vector<std::uint32_t> lanes(digits / 8, 0);
+        for (std::size_t lane = 0; lane < digits / 8; ++lane)
+            lanes[lane] = static_cast<std::uint32_t>(
+                std::stoul(line.substr(digits - 8 * (lane + 1), 8), nullptr, 16));
+        image.push_back(lanes);
+    }
+    if (image.size() < rows)
+        image.resize(rows, std::vector<std::uint32_t>(digits / 8, 0));
+    return image;
+}
+
 struct Checker {
     std::uint64_t checks = 0;
     std::uint64_t failures = 0;
@@ -80,8 +108,11 @@ struct Model {
         dut.cfg_entry_pc = 0;
         dut.cfg_desc_base = 0;
         dut.cfg_desc_count = 0;
-        dut.cfg_symbol_base = 0;
-        dut.cfg_symbol_mask = 0;
+        dut.host_we = 0;
+        dut.host_sel = 0;
+        dut.host_row = 0;
+        dut.host_lane = 0;
+        dut.host_wdata = 0;
         dut.cfg_max_retired_work = 0;
         dut.cfg_state_count = 0;
         dut.cfg_index_base = 0;
@@ -136,6 +167,18 @@ struct Model {
         dut.rst_n = 1;
         for (int i = 0; i < 2; ++i) cycle([] {});
     }
+
+    // One write through the design's host load path: one lane of one row.
+    void host_write(unsigned sel, std::uint32_t row, unsigned lane,
+                    std::uint32_t data) {
+        dut.host_sel = sel;
+        dut.host_row = row;
+        dut.host_lane = lane;
+        dut.host_wdata = data;
+        dut.host_we = 1;
+        cycle([] {});
+        dut.host_we = 0;
+    }
 };
 
 }  // namespace
@@ -155,9 +198,29 @@ int main(int argc, char** argv) {
             expected.size() != 91136 || meta.size() != 26)
             throw std::runtime_error("shipped-prefix vector geometry mismatch");
 
+        // The host's copies of the control images (docs/CHIP_ARCHITECTURE_
+        // DESIGN.md section 13 item 12): written through the design's load
+        // path, never preloaded into the wrapper.
+        const auto image_program = read_rows("a3_program.hex", 64, kProgramWords);
+        const auto image_desc = read_rows("a3_descriptor.hex", 384, kDescWords);
+        const auto image_symbol = read_hex("a3_symbol.hex");
+
         Checker check;
         Model model;
         model.reset();
+        model.dut.eval();
+        check.equal("host ready before load", model.dut.host_ready, 1);
+        for (std::size_t row = 0; row < kProgramWords; ++row)
+            for (unsigned lane = 0; lane < 8; ++lane)
+                model.host_write(0, static_cast<std::uint32_t>(row), lane,
+                                 image_program[row][lane]);
+        for (std::size_t row = 0; row < kDescWords; ++row)
+            for (unsigned lane = 0; lane < 48; ++lane)
+                model.host_write(1, static_cast<std::uint32_t>(row), lane,
+                                 image_desc[row][lane]);
+        model.cycle([] {});
+        check.equal("no write refused during load",
+                    model.dut.host_write_refused, 0);
         check.equal("meta case count", meta[0], kCases);
         check.equal("meta case stride", meta[4], kCaseStride);
         check.equal("meta result memory", meta[7], kResultWords);
@@ -199,8 +262,16 @@ int main(int argc, char** argv) {
             model.dut.cfg_instruction_count = record[1];
             model.dut.cfg_desc_base = record[2];
             model.dut.cfg_desc_count = record[3];
-            model.dut.cfg_symbol_base = record[4];
-            model.dut.cfg_symbol_mask = record[5];
+            // the request's sixteen symbols, through the host path
+            for (unsigned symbol = 0; symbol < kSymbolsPerCase; ++symbol) {
+                const std::size_t at = record[4] + symbol;
+                model.host_write(2, symbol, 0,
+                                 at < image_symbol.size() ? image_symbol[at] : 0);
+                model.host_write(2, symbol, 1, 0);
+                model.host_write(2, symbol, 2, (record[5] >> symbol) & 1U);
+            }
+            check.equal("no symbol write refused",
+                        model.dut.host_write_refused, 0);
             model.dut.cfg_entry_pc = record[6];
             model.dut.cfg_max_retired_work =
                 (static_cast<std::uint64_t>(record[8]) << 32) | record[7];

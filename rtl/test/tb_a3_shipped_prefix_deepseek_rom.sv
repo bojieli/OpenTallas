@@ -34,8 +34,68 @@ module tb_a3_shipped_prefix_deepseek_rom;
     reg [31:0] cfg_entry_pc = 0;
     reg [31:0] cfg_desc_base = 0;
     reg [31:0] cfg_desc_count = 0;
-    reg [31:0] cfg_symbol_base = 0;
-    reg [31:0] cfg_symbol_mask = 0;
+    reg        host_we = 1'b0;
+    reg [1:0]  host_sel = 2'd0;
+    reg [31:0] host_row = 32'd0;
+    reg [5:0]  host_lane = 6'd0;
+    reg [31:0] host_wdata = 32'd0;
+    wire       host_ready;
+    wire       host_write_refused;
+    // The host's copies of the control images, written through the design's
+    // load path (docs/CHIP_ARCHITECTURE_DESIGN.md section 13 item 12).
+    reg [255:0]  image_program [0:4095];
+    reg [1535:0] image_desc    [0:8191];
+    reg [31:0]   image_symbol  [0:2047];
+    integer host_row_index;
+    integer host_lane_index;
+    integer host_symbol_index;
+    task host_write;
+        input [1:0]  sel;
+        input [31:0] row;
+        input [5:0]  lane;
+        input [31:0] data;
+        begin
+            host_sel = sel;
+            host_row = row;
+            host_lane = lane;
+            host_wdata = data;
+            host_we = 1'b1;
+            @(negedge clk);
+            host_we = 1'b0;
+        end
+    endtask
+    task host_load_images;
+        begin
+            $readmemh("a3_program.hex", image_program);
+            $readmemh("a3_descriptor.hex", image_desc);
+            $readmemh("a3_symbol.hex", image_symbol);
+            if (!host_ready) $fatal(1, "host path not ready before the load");
+            for (host_row_index = 0; host_row_index < 4096; host_row_index = host_row_index + 1)
+                for (host_lane_index = 0; host_lane_index < 8; host_lane_index = host_lane_index + 1)
+                    host_write(2'd0, host_row_index, host_lane_index[5:0],
+                               image_program[host_row_index][host_lane_index*32 +: 32]);
+            for (host_row_index = 0; host_row_index < 8192; host_row_index = host_row_index + 1)
+                for (host_lane_index = 0; host_lane_index < 48; host_lane_index = host_lane_index + 1)
+                    host_write(2'd1, host_row_index, host_lane_index[5:0],
+                               image_desc[host_row_index][host_lane_index*32 +: 32]);
+            @(negedge clk);
+            if (host_write_refused) $fatal(1, "a control-store write was refused");
+        end
+    endtask
+    task host_bind_symbols;
+        input [31:0] symbol_base;
+        input [31:0] symbol_mask;
+        begin
+            for (host_symbol_index = 0; host_symbol_index < 16; host_symbol_index = host_symbol_index + 1) begin
+                host_write(2'd2, host_symbol_index, 6'd0,
+                           image_symbol[symbol_base + host_symbol_index]);
+                host_write(2'd2, host_symbol_index, 6'd1, 32'd0);
+                host_write(2'd2, host_symbol_index, 6'd2,
+                           {31'd0, symbol_mask[host_symbol_index]});
+            end
+            if (host_write_refused) $fatal(1, "a symbol write was refused");
+        end
+    endtask
     reg [63:0] cfg_max_retired_work = 0;
     reg [31:0] cfg_state_count = 0;
     reg [31:0] cfg_index_base = 0;
@@ -98,8 +158,10 @@ module tb_a3_shipped_prefix_deepseek_rom;
         .cfg_program_base(cfg_program_base),
         .cfg_instruction_count(cfg_instruction_count),
         .cfg_entry_pc(cfg_entry_pc), .cfg_desc_base(cfg_desc_base),
-        .cfg_desc_count(cfg_desc_count), .cfg_symbol_base(cfg_symbol_base),
-        .cfg_symbol_mask(cfg_symbol_mask),
+        .cfg_desc_count(cfg_desc_count),
+        .host_we(host_we), .host_sel(host_sel), .host_row(host_row),
+        .host_lane(host_lane), .host_wdata(host_wdata),
+        .host_ready(host_ready), .host_write_refused(host_write_refused),
         .cfg_max_retired_work(cfg_max_retired_work),
         .cfg_state_count(cfg_state_count), .cfg_index_base(cfg_index_base),
         .cfg_source_base(cfg_source_base),
@@ -302,8 +364,6 @@ module tb_a3_shipped_prefix_deepseek_rom;
         cfg_instruction_count = record[1];
         cfg_desc_base = record[2];
         cfg_desc_count = record[3];
-        cfg_symbol_base = record[4];
-        cfg_symbol_mask = record[5];
         cfg_entry_pc = record[6];
         cfg_max_retired_work = {record[8], record[7]};
         cfg_state_count = record[9];
@@ -323,6 +383,8 @@ module tb_a3_shipped_prefix_deepseek_rom;
         repeat (4) @(negedge clk);
         rst_n = 1'b1;
         repeat (2) @(negedge clk);
+        host_load_images;
+        host_bind_symbols(record[4], record[5]);
         result_read_addr = record[13]; #1;
         check_equal("result initially unwritten", result_read_data,
                     32'hdead_beef);

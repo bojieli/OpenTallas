@@ -16,9 +16,24 @@
 //
 // The engine issue port is back-pressured from a free-running LFSR so the
 // sequence is checked under stalls, not only under a permanently ready
-// consumer.
+// consumer.  Every accepted issue is completed in the cycle after its
+// acceptance, oldest first (zero run-ahead: the asynchronous completion path
+// with immediate completion); the randomised run-ahead lives in the
+// deployment campaign.
+//
+// The checker is the management processor (docs/CHIP_ARCHITECTURE_DESIGN.md
+// section 13 item 12): it holds host-side copies of the four vector images,
+// writes the program and descriptor stores through the design's host load
+// path once, binds the sixteen request symbols per case through it, and
+// streams the program header through the admission beat port.
 // ---------------------------------------------------------------------------
 module tb_a3_microsequencer;
+    localparam integer PROGRAM_WORDS   = 2048;
+    localparam integer DESC_WORDS      = 4096;
+    localparam integer HEADER_WORDS    = 8192;
+    localparam integer SYMBOL_WORDS    = 2048;
+    localparam integer SYMBOLS_PER_CASE = 16;
+    localparam integer MAX_OUTSTANDING = 32;
     localparam integer CASE_MEM_WORDS  = 4096;
     localparam integer ISSUE_MEM_WORDS = 2048;
     localparam integer VIEW_MEM_WORDS  = 8192;
@@ -31,12 +46,19 @@ module tb_a3_microsequencer;
     reg [31:0] view_mem  [0:VIEW_MEM_WORDS-1];
     reg [31:0] meta_mem  [0:META_WORDS-1];
 
+    // Host-side copies of the four device images.
+    reg [255:0]  image_program [0:PROGRAM_WORDS-1];
+    reg [31:0]   image_header  [0:HEADER_WORDS-1];
+    reg [1535:0] image_desc    [0:DESC_WORDS-1];
+    reg [31:0]   image_symbol  [0:SYMBOL_WORDS-1];
+
     reg clk = 1'b0;
     reg rst_n = 1'b0;
     always #5 clk = ~clk;
 
-    reg        header_start = 1'b0;
-    reg [31:0] cfg_header_base = 32'd0;
+    reg        hdr_in_valid = 1'b0;
+    reg        hdr_in_start = 1'b0;
+    reg [31:0] hdr_in_word = 32'd0;
     wire       header_done;
     wire       header_legal;
     wire [3:0] header_error;
@@ -46,14 +68,20 @@ module tb_a3_microsequencer;
     wire [63:0] header_max_retired_work;
     wire [31:0] header_entrypoint_descriptor;
 
+    reg        host_we = 1'b0;
+    reg [1:0]  host_sel = 2'd0;
+    reg [31:0] host_row = 32'd0;
+    reg [5:0]  host_lane = 6'd0;
+    reg [31:0] host_wdata = 32'd0;
+    wire       host_ready;
+    wire       host_write_refused;
+
     reg        start = 1'b0;
     reg [31:0] cfg_program_base = 32'd0;
     reg [31:0] cfg_instruction_count = 32'd0;
     reg [31:0] cfg_entry_pc = 32'd0;
     reg [31:0] cfg_desc_base = 32'd0;
     reg [31:0] cfg_desc_count = 32'd0;
-    reg [31:0] cfg_symbol_base = 32'd0;
-    reg [31:0] cfg_symbol_mask = 32'd0;
     reg [63:0] cfg_max_retired_work = 64'd0;
     reg [31:0] cfg_state_count = 32'd0;
 
@@ -70,6 +98,16 @@ module tb_a3_microsequencer;
     wire [7:0]  issue_sub;
     wire [31:0] issue_descriptor_id;
     wire [31:0] issue_index;
+    wire [31:0] issue_serial;
+    wire [4:0]  issue_slot;
+    wire [4:0]  issue_queue;
+    reg         complete_valid = 1'b0;
+    reg  [4:0]  complete_slot = 5'd0;
+    wire [5:0]  dbg_outstanding;
+    wire [5:0]  dbg_max_outstanding;
+    wire [31:0] dbg_dep_stalls;
+    wire [31:0] dbg_wait_stalls;
+    wire        irs_protocol_error;
 
     wire        view_valid;
     wire [31:0] view_descriptor_id;
@@ -78,6 +116,7 @@ module tb_a3_microsequencer;
     wire [7:0]  view_extent_axis;
     wire [63:0] view_element_offset;
     wire [7:0]  view_rank;
+    wire [4:0]  view_irs_slot;
     wire [31:0] count_views_resolved;
 
     wire [31:0] count_fetched;
@@ -103,8 +142,9 @@ module tb_a3_microsequencer;
     ot_a3_microsequencer_top dut (
         .clk(clk),
         .rst_n(rst_n),
-        .header_start(header_start),
-        .cfg_header_base(cfg_header_base),
+        .hdr_in_valid(hdr_in_valid),
+        .hdr_in_start(hdr_in_start),
+        .hdr_in_word(hdr_in_word),
         .header_done(header_done),
         .header_legal(header_legal),
         .header_error(header_error),
@@ -113,14 +153,19 @@ module tb_a3_microsequencer;
         .header_entrypoint_count(header_entrypoint_count),
         .header_max_retired_work(header_max_retired_work),
         .header_entrypoint_descriptor(header_entrypoint_descriptor),
+        .host_we(host_we),
+        .host_sel(host_sel),
+        .host_row(host_row),
+        .host_lane(host_lane),
+        .host_wdata(host_wdata),
+        .host_ready(host_ready),
+        .host_write_refused(host_write_refused),
         .start(start),
         .cfg_program_base(cfg_program_base),
         .cfg_instruction_count(cfg_instruction_count),
         .cfg_entry_pc(cfg_entry_pc),
         .cfg_desc_base(cfg_desc_base),
         .cfg_desc_count(cfg_desc_count),
-        .cfg_symbol_base(cfg_symbol_base),
-        .cfg_symbol_mask(cfg_symbol_mask),
         .cfg_max_retired_work(cfg_max_retired_work),
         .cfg_state_count(cfg_state_count),
         .busy(busy),
@@ -141,6 +186,13 @@ module tb_a3_microsequencer;
         .issue_sub(issue_sub),
         .issue_descriptor_id(issue_descriptor_id),
         .issue_index(issue_index),
+        .issue_serial(issue_serial),
+        .issue_slot(issue_slot),
+        .issue_queue(issue_queue),
+        .complete_valid(complete_valid),
+        .complete_slot(complete_slot),
+        .complete_fault(1'b0),
+        .complete_trap_class(16'd0),
         .view_valid(view_valid),
         .view_descriptor_id(view_descriptor_id),
         .view_slot(view_slot),
@@ -148,6 +200,7 @@ module tb_a3_microsequencer;
         .view_extent_axis(view_extent_axis),
         .view_element_offset(view_element_offset),
         .view_rank(view_rank),
+        .view_irs_slot(view_irs_slot),
         .count_views_resolved(count_views_resolved),
         .count_fetched(count_fetched),
         .count_retired(count_retired),
@@ -167,8 +220,57 @@ module tb_a3_microsequencer;
         .count_state_bytes_written(count_state_bytes_written),
         .loop_depth(loop_depth),
         .event_signal_error(event_signal_error),
-        .state_apply_overflow(state_apply_overflow)
+        .state_apply_overflow(state_apply_overflow),
+        .dbg_outstanding(dbg_outstanding),
+        .dbg_max_outstanding(dbg_max_outstanding),
+        .dbg_dep_stalls(dbg_dep_stalls),
+        .dbg_wait_stalls(dbg_wait_stalls),
+        .irs_protocol_error(irs_protocol_error)
     );
+
+    // -- the stub engines: every accepted issue completes in the cycle
+    // -- after its acceptance, oldest first ------------------------------
+    reg [4:0] pend_slot [0:MAX_OUTSTANDING-1];
+    integer   pend_head;
+    integer   pend_tail;
+    integer   pend_count;
+    always @(posedge clk) begin
+        complete_valid <= 1'b0;
+        if (rst_n) begin
+            if (pend_count > 0) begin
+                complete_valid <= 1'b1;
+                complete_slot <= pend_slot[pend_head];
+                pend_head = (pend_head + 1) % MAX_OUTSTANDING;
+                pend_count = pend_count - 1;
+            end
+            if (issue_valid && issue_ready) begin
+                if (pend_count >= MAX_OUTSTANDING)
+                    $fatal(1, "stub engine overflow");
+                pend_slot[pend_tail] = issue_slot;
+                pend_tail = (pend_tail + 1) % MAX_OUTSTANDING;
+                pend_count = pend_count + 1;
+            end
+        end
+    end
+
+    // -- host load path: the management processor's writes ----------------
+    integer host_writes;
+    task host_write;
+        input [1:0]  sel;
+        input [31:0] row;
+        input [5:0]  lane;
+        input [31:0] data;
+        begin
+            host_sel = sel;
+            host_row = row;
+            host_lane = lane;
+            host_wdata = data;
+            host_we = 1'b1;
+            @(negedge clk);
+            host_we = 1'b0;
+            host_writes = host_writes + 1;
+        end
+    endtask
 
     // -- engine issue consumer with pseudo-random back-pressure ----------
     reg [15:0] lfsr = 16'hace1;
@@ -277,6 +379,9 @@ module tb_a3_microsequencer;
     integer base;
     integer guard;
     integer case_count;
+    integer row;
+    integer lane;
+    integer symbol_index;
 
     task check_equal;
         input [255:0] label;
@@ -297,6 +402,15 @@ module tb_a3_microsequencer;
         $readmemh("a3_issue.hex", issue_mem);
         $readmemh("a3_view.hex", view_mem);
         $readmemh("a3_meta.hex", meta_mem);
+        // the host's copies of the device images
+        $readmemh("a3_program.hex", image_program);
+        $readmemh("a3_header.hex", image_header);
+        $readmemh("a3_descriptor.hex", image_desc);
+        $readmemh("a3_symbol.hex", image_symbol);
+        pend_head = 0;
+        pend_tail = 0;
+        pend_count = 0;
+        host_writes = 0;
         total_issues = 0;
         total_traps = 0;
         total_programs = 0;
@@ -317,15 +431,43 @@ module tb_a3_microsequencer;
         rst_n = 1'b1;
         repeat (2) @(negedge clk);
 
+        // -- load the two control stores through the host path, once ----
+        if (!host_ready) $fatal(1, "host path not ready before the load");
+        for (row = 0; row < PROGRAM_WORDS; row = row + 1)
+            for (lane = 0; lane < 8; lane = lane + 1)
+                host_write(2'd0, row, lane[5:0], image_program[row][lane*32 +: 32]);
+        for (row = 0; row < DESC_WORDS; row = row + 1)
+            for (lane = 0; lane < 48; lane = lane + 1)
+                host_write(2'd1, row, lane[5:0], image_desc[row][lane*32 +: 32]);
+        @(negedge clk);
+        if (host_write_refused)
+            $fatal(1, "a control-store write was refused during the load");
+        $display("HOST_LOAD program_rows=%0d descriptor_rows=%0d writes=%0d refused=%0d",
+                 PROGRAM_WORDS, DESC_WORDS, host_writes, host_write_refused);
+
         for (case_index = 0; case_index < case_count; case_index = case_index + 1) begin
             base = case_index * CASE_STRIDE;
 
-            // -- program header admission ------------------------------
-            cfg_header_base = case_mem[base + 6];
-            @(negedge clk);
-            header_start = 1'b1;
-            @(negedge clk);
-            header_start = 1'b0;
+            // -- request symbols: sixteen 64-bit entries with bound bits --
+            for (symbol_index = 0; symbol_index < SYMBOLS_PER_CASE;
+                 symbol_index = symbol_index + 1) begin
+                host_write(2'd2, symbol_index, 6'd0,
+                           image_symbol[case_mem[base + 4] + symbol_index]);
+                host_write(2'd2, symbol_index, 6'd1, 32'd0);
+                host_write(2'd2, symbol_index, 6'd2,
+                           {31'd0, case_mem[base + 5][symbol_index]});
+            end
+            if (host_write_refused) $fatal(1, "a symbol write was refused");
+
+            // -- program header admission: 64 beats through the port -----
+            for (row = 0; row < 64; row = row + 1) begin
+                hdr_in_valid = 1'b1;
+                hdr_in_start = (row == 0);
+                hdr_in_word = image_header[case_mem[base + 6] + row];
+                @(negedge clk);
+            end
+            hdr_in_valid = 1'b0;
+            hdr_in_start = 1'b0;
             guard = 0;
             while (!header_done && guard < 400) begin
                 @(negedge clk);
@@ -354,8 +496,6 @@ module tb_a3_microsequencer;
                 cfg_instruction_count = case_mem[base + 1];
                 cfg_desc_base = case_mem[base + 2];
                 cfg_desc_count = case_mem[base + 3];
-                cfg_symbol_base = case_mem[base + 4];
-                cfg_symbol_mask = case_mem[base + 5];
                 cfg_entry_pc = case_mem[base + 7];
                 cfg_max_retired_work = {case_mem[base + 9], case_mem[base + 8]};
                 cfg_state_count = case_mem[base + 34];
@@ -427,6 +567,8 @@ module tb_a3_microsequencer;
                             {32'd0, case_mem[base + 33]});
                 check_equal("event single assignment", {63'd0, event_signal_error},
                             64'd0);
+                check_equal("irs protocol", {63'd0, irs_protocol_error}, 64'd0);
+                check_equal("outstanding at done", {58'd0, dbg_outstanding}, 64'd0);
                 @(negedge clk);
             end
         end

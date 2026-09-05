@@ -4,17 +4,19 @@
 ``rtl/abi3/ot_a3_device_top.sv`` presents its program and descriptor stores as
 abstract macro boundaries and writes them only through its ``host_*`` port,
 the management processor's load path of docs/CHIP_ARCHITECTURE_DESIGN.md
-section 3.4.  The control-plane campaigns preload those stores from the
-vector images, because their two checkers own reset and start timing and a
-serial load of the four-deployment image would be ~10k cycles inside timing
-they hash.  This bench is therefore the evidence that the path exists and
-works: ``rtl/test/tb_a3_device_top_host_load.sv`` starts with empty stores
-(the Qwen3-8B ROM case must trap), writes the deployment's program body and
+section 3.4, and its runtime symbol file the same way (section 3.3).  The
+control-plane campaigns load that path at their own geometry (section 13
+item 12); this bench is the focused evidence that the path itself works:
+``rtl/test/tb_a3_device_top_host_load.sv`` starts with empty stores (the
+Qwen3-8B ROM case must trap), writes the deployment's program body and
 descriptor records lane by lane through ``host_*`` at the vehicle defaults
-(PROGRAM_WORDS = 128, DESC_WORDS = 256), streams the header through the
-admission port, runs both entrypoints and requires every compared counter to
-equal the golden record, then requires a write offered while busy or past a
-store's end to be refused and to leave the store intact.
+(PROGRAM_WORDS = 128, DESC_WORDS = 256), binds the request symbols through
+the same port, streams the header through the admission port, runs both
+entrypoints with the bench completing every accepted issue in the next
+cycle and requires every compared counter to equal the golden record, then
+requires a write offered while busy, past a store's end, past a row's lanes,
+past the symbol file's entries or lanes, or to an unknown select to be
+refused and to leave the target intact.
 
 One checker, two simulators: Icarus, and Verilator built with ``--timing``
 from the same bench.  A run counts only if both print the same PASS marker
@@ -223,6 +225,8 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
             "program body and descriptor records written one 32-bit lane per "
             "cycle through host_* at the vehicle store geometry, relocated to "
             "row 0; no write refused; every row read back from the store model",
+            "request symbols bound through host_* (host_sel 2: value low word, "
+            "high word, bound bit), one lane per cycle",
             "program header streamed through the admission beat port; legality, "
             "trap class, instruction count, entrypoint count and declared "
             "maximum retired work against the golden record",
@@ -231,9 +235,14 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
             "iterations, branches, wait-set evaluations, issue pulses, view "
             "pulses, views-resolved counter and event_signal_error against "
             "the golden record",
-            "a write offered while busy, past the last row of each store, and "
-            "past the last lane: refused, reported, store intact; the refusal "
-            "flag clears on reset",
+            "a write offered while busy, past the last row of each store, past "
+            "the last lane, past the symbol file's sixteen entries or three "
+            "lanes, or to an unknown select: refused, reported, target intact; "
+            "the refusal flag clears on reset",
+            "every accepted engine issue is completed by the bench in the "
+            "next cycle through the completion port (zero run-ahead); the "
+            "issue record store reports no protocol error and nothing "
+            "outstanding at done",
         ],
         "marker": iverilog["marker"] if agree else None,
         "simulators_agree": agree,
@@ -246,13 +255,16 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
             ),
             "does_not_establish": {
                 "campaign_observation": (
-                    "the L1-CP campaigns preload the stores by $readmemh in the "
-                    "wrapper; their observation streams are compared by "
-                    "tools/rtl_abi3_deployment_campaign.py, not here"
+                    "the L1-CP campaigns load the same host path at their own "
+                    "geometry and compare the observation streams of all four "
+                    "deployments under two checkers "
+                    "(tools/rtl_abi3_deployment_campaign.py); this bench "
+                    "compares two Qwen3-8B ROM entrypoints under one checker"
                 ),
-                "symbol_file_load": (
-                    "the runtime symbol file is a combinational boundary of the "
-                    "device top and is not behind host_*"
+                "run_ahead": (
+                    "the bench completes every issue in the next cycle; the "
+                    "asynchronous completion path under delayed and reordered "
+                    "completions is the deployment campaign's run_ahead block"
                 ),
                 "checker_independence": (
                     "one checker under two simulators, not two independently "

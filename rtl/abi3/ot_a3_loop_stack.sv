@@ -16,10 +16,22 @@
 //   * trip == 0                          -> skip to body_end + 1, no push
 //   * otherwise                          -> push and enter the body
 //
-// The two ceiling divisions use one shared restoring divider rather than a
-// synthesized "/" so the block has a bounded, data-independent cost and no
-// combinational divider in the control path.  Depth is a capability field, not
-// an ABI field: four matches the capability the frozen fixture declares.
+// The two ceiling divisions go to the front end's one shared divider
+// (ot_a3_shared_divider, requester 0; docs/CHIP_ARCHITECTURE_DESIGN.md
+// section 3.5) rather than a synthesized "/" or a private unit, so the block
+// has a bounded, data-independent cost and no combinational divider in the
+// control path.  Depth is a capability field, not an ABI field: four matches
+// the capability the frozen fixture declares.
+//
+// The bound symbol arrives as the 64-bit value of the symbol file (section
+// 3.3).  The trip arithmetic is 32-bit, as the golden model's loop_trip_count
+// is on every shipped binding: a symbol-bounded loop whose bound value does
+// not fit 32 bits traps 4 at LOOP_SETUP (STRICTER: an implementation bound
+// recorded here, never reached by an admitted program).
+//
+// Seven combinational query ports (QUERY_PORTS), flat: port 0 serves the
+// predicate unit, ports 1..6 the six view-resolver lanes, so the lanes
+// resolve one instruction's views concurrently without arbitration.
 //
 // A LOOP_NEXT that names a loop other than the innermost open one is rejected
 // here (trap class 5).  The golden model uses the innermost open loop and
@@ -41,7 +53,8 @@ module ot_a3_loop_stack
     // program pins, and a block that only elaborates in a simulator is not an
     // implementable block.  [OI-43] docs/UNIFIED_EXECUTION_CHECKLIST.md
 #(
-    parameter integer DEPTH = ot_a3_pkg::A3_LOOP_DEPTH
+    parameter integer DEPTH = ot_a3_pkg::A3_LOOP_DEPTH,
+    parameter integer QUERY_PORTS = 7
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -61,7 +74,7 @@ module ot_a3_loop_stack
     input  wire [31:0] setup_body_start,
     input  wire [31:0] setup_body_end,
     input  wire [31:0] setup_bound_divisor,
-    input  wire [31:0] setup_symbol_value,
+    input  wire [63:0] setup_symbol_value,
     input  wire        setup_symbol_bound,
 
     output reg         busy,
@@ -71,14 +84,21 @@ module ot_a3_loop_stack
     output reg  [31:0] next_pc,
     output reg  [1:0]  action,          // 0 push, 1 skip, 2 iterate, 3 exit
 
-    input  wire [31:0] query_id,
-    output wire        query_active,
-    output wire [31:0] query_value,
-    output wire [31:0] query_trip,
+    // shared divider (requester 0 of ot_a3_shared_divider)
+    output reg         div_req,
+    output reg  [63:0] div_num,
+    output reg  [31:0] div_den,
+    input  wire        div_done,
+    input  wire [63:0] div_quot,
+
+    input  wire [QUERY_PORTS*32-1:0] query_id,
+    output wire [QUERY_PORTS-1:0]    query_active,
+    output wire [QUERY_PORTS*32-1:0] query_value,
+    output wire [QUERY_PORTS*32-1:0] query_trip,
     // Amendment A13 operands, cached at LOOP_SETUP (see the header note).
-    output wire        query_symbol_bounded,
-    output wire [31:0] query_divisor,
-    output wire [31:0] query_bound_value,
+    output wire [QUERY_PORTS-1:0]    query_symbol_bounded,
+    output wire [QUERY_PORTS*32-1:0] query_divisor,
+    output wire [QUERY_PORTS*32-1:0] query_bound_value,
 
     output reg  [31:0] iteration_count,
     output wire [3:0]  depth
@@ -121,84 +141,44 @@ module ot_a3_loop_stack
     reg [31:0] hold_divisor;
     reg [31:0] hold_symbol_value;
 
-    // -- shared restoring divider: quotient = floor(numerator / divisor) ----
-    reg         div_start;
-    reg  [33:0] div_numerator;
-    reg  [31:0] div_divisor;
-    reg  [33:0] div_shift;
-    reg  [33:0] div_remainder;
-    reg  [33:0] div_quotient;
-    reg  [5:0]  div_count;
-    reg         div_busy;
-    reg         div_done;
-    wire [33:0] div_trial = {div_remainder[32:0], div_shift[33]};
-
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
-            div_busy <= 1'b0;
-            div_done <= 1'b0;
-            div_shift <= 34'd0;
-            div_remainder <= 34'd0;
-            div_quotient <= 34'd0;
-            div_count <= 6'd0;
-        end else begin
-            div_done <= 1'b0;
-            if (div_start) begin
-                div_busy <= 1'b1;
-                div_shift <= div_numerator;
-                div_remainder <= 34'd0;
-                div_quotient <= 34'd0;
-                div_count <= 6'd34;
-            end else if (div_busy) begin
-                if (div_trial >= {2'b00, div_divisor}) begin
-                    div_remainder <= div_trial - {2'b00, div_divisor};
-                    div_quotient <= {div_quotient[32:0], 1'b1};
-                end else begin
-                    div_remainder <= div_trial;
-                    div_quotient <= {div_quotient[32:0], 1'b0};
-                end
-                div_shift <= {div_shift[32:0], 1'b0};
-                div_count <= div_count - 6'd1;
-                if (div_count == 6'd1) begin
-                    div_busy <= 1'b0;
-                    div_done <= 1'b1;
-                end
-            end
-        end
-    end
-
     // -- combinational queries ---------------------------------------------
-    reg        query_hit;
-    reg [31:0] query_hit_value;
-    reg [31:0] query_hit_trip;
-    reg        query_hit_symbolic;
-    reg [31:0] query_hit_divisor;
-    reg [31:0] query_hit_bound;
-    integer    q;
-    always @* begin
-        query_hit = 1'b0;
-        query_hit_value = 32'd0;
-        query_hit_trip = 32'd0;
-        query_hit_symbolic = 1'b0;
-        query_hit_divisor = 32'd1;
-        query_hit_bound = 32'd0;
-        for (q = 0; q < DEPTH; q = q + 1) begin
-            if ((q < stack_pointer) && (loop_id[q] == query_id)) begin
-                query_hit = 1'b1;
-                query_hit_value = loop_value[q];
-                query_hit_trip = loop_trip[q];
-                query_hit_symbolic = loop_symbolic[q];
-                query_hit_divisor = loop_divisor[q];
-                query_hit_bound = loop_bound[q];
+    genvar gq;
+    generate
+        for (gq = 0; gq < QUERY_PORTS; gq = gq + 1) begin : g_query
+            reg        hit;
+            reg [31:0] hit_value;
+            reg [31:0] hit_trip;
+            reg        hit_symbolic;
+            reg [31:0] hit_divisor;
+            reg [31:0] hit_bound;
+            integer    q;
+            always @* begin
+                hit = 1'b0;
+                hit_value = 32'd0;
+                hit_trip = 32'd0;
+                hit_symbolic = 1'b0;
+                hit_divisor = 32'd1;
+                hit_bound = 32'd0;
+                for (q = 0; q < DEPTH; q = q + 1) begin
+                    if ((q < stack_pointer) &&
+                        (loop_id[q] == query_id[gq*32 +: 32])) begin
+                        hit = 1'b1;
+                        hit_value = loop_value[q];
+                        hit_trip = loop_trip[q];
+                        hit_symbolic = loop_symbolic[q];
+                        hit_divisor = loop_divisor[q];
+                        hit_bound = loop_bound[q];
+                    end
+                end
             end
+            assign query_active[gq] = hit;
+            assign query_value[gq*32 +: 32] = hit_value;
+            assign query_trip[gq*32 +: 32] = hit_trip;
+            assign query_symbol_bounded[gq] = hit_symbolic;
+            assign query_divisor[gq*32 +: 32] = hit_divisor;
+            assign query_bound_value[gq*32 +: 32] = hit_bound;
         end
-    end
-    assign query_active = query_hit;
-    assign query_value = query_hit_value;
-    assign query_trip = query_hit_trip;
-    assign query_symbol_bounded = query_hit_symbolic;
-    assign query_divisor = query_hit_divisor;
-    assign query_bound_value = query_hit_bound;
+    endgenerate
     assign depth = stack_pointer;
 
     wire signed [32:0] constant_span =
@@ -223,9 +203,9 @@ module ot_a3_loop_stack
             action <= ACTION_PUSH;
             stack_pointer <= 4'd0;
             iteration_count <= 32'd0;
-            div_start <= 1'b0;
-            div_numerator <= 34'd0;
-            div_divisor <= 32'd1;
+            div_req <= 1'b0;
+            div_num <= 64'd0;
+            div_den <= 32'd1;
             hold_lower <= 32'd0;
             hold_upper <= 32'd0;
             hold_step <= 32'd1;
@@ -254,11 +234,11 @@ module ot_a3_loop_stack
         end else begin
             done <= 1'b0;
             trap_valid <= 1'b0;
-            div_start <= 1'b0;
 
             if (clear) begin
                 state <= S_IDLE;
                 busy <= 1'b0;
+                div_req <= 1'b0;
                 stack_pointer <= 4'd0;
                 iteration_count <= 32'd0;
             end else begin
@@ -284,7 +264,7 @@ module ot_a3_loop_stack
                                              setup_symbol_bound;
                             hold_divisor <= (setup_bound_divisor == 32'd0)
                                           ? 32'd1 : setup_bound_divisor;
-                            hold_symbol_value <= setup_symbol_value;
+                            hold_symbol_value <= setup_symbol_value[31:0];
                             if (setup_bound_kind == ot_a3_pkg::A3_SELECTOR_CONSTANT) begin
                                 state <= S_SPAN;
                             end else if (!setup_symbol_bound) begin
@@ -294,14 +274,22 @@ module ot_a3_loop_stack
                                 done <= 1'b1;
                                 trap_valid <= 1'b1;
                                 trap_class <= ot_a3_pkg::A3_TRAP_DESCRIPTOR;
+                            end else if (setup_symbol_value[63:32] != 32'd0) begin
+                                // STRICTER (implementation bound): a 64-bit
+                                // bound above 2^32 is outside the 32-bit trip
+                                // arithmetic of loop_trip_count.
+                                busy <= 1'b0;
+                                done <= 1'b1;
+                                trap_valid <= 1'b1;
+                                trap_class <= ot_a3_pkg::A3_TRAP_CAPABILITY;
                             end else begin
-                                div_start <= 1'b1;
-                                div_divisor <= (setup_bound_divisor == 32'd0)
-                                             ? 32'd1 : setup_bound_divisor;
-                                div_numerator <= {2'b00, setup_symbol_value} +
-                                                 {2'b00, (setup_bound_divisor == 32'd0)
-                                                       ? 32'd1 : setup_bound_divisor} -
-                                                 34'd1;
+                                div_req <= 1'b1;
+                                div_den <= (setup_bound_divisor == 32'd0)
+                                         ? 32'd1 : setup_bound_divisor;
+                                div_num <= {32'd0, setup_symbol_value[31:0]} +
+                                           {32'd0, (setup_bound_divisor == 32'd0)
+                                                 ? 32'd1 : setup_bound_divisor} -
+                                           64'd1;
                                 state <= S_BOUND;
                             end
                         end else if (next_valid) begin
@@ -330,7 +318,8 @@ module ot_a3_loop_stack
                     end
                     S_BOUND: begin
                         if (div_done) begin
-                            hold_bound <= div_quotient[31:0];
+                            div_req <= 1'b0;
+                            hold_bound <= div_quot[31:0];
                             state <= S_SPAN;
                         end
                     end
@@ -347,16 +336,17 @@ module ot_a3_loop_stack
                             trap_class <= ot_a3_pkg::A3_TRAP_INTERNAL;
                             state <= S_IDLE;
                         end else begin
-                                            div_start <= 1'b1;
-                            div_divisor <= hold_step;
-                            div_numerator <= {1'b0, span_value} +
-                                             {2'b00, hold_step} - 34'd1;
+                            div_req <= 1'b1;
+                            div_den <= hold_step;
+                            div_num <= {31'd0, span_value} +
+                                       {32'd0, hold_step} - 64'd1;
                             state <= S_TRIP;
                         end
                     end
                     S_TRIP: begin
                         if (div_done) begin
-                            hold_trip <= div_quotient[31:0];
+                            div_req <= 1'b0;
+                            hold_trip <= div_quot[31:0];
                             state <= S_CHECK;
                         end
                     end

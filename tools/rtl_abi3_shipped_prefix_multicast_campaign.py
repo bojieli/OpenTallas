@@ -42,7 +42,7 @@ TOOLS_ROOT = Path(
 )
 
 # Retained exact counts from the independent checkers below.
-EXPECTED_VERILATOR_CHECKS = 12_756_653
+EXPECTED_VERILATOR_CHECKS = 12_756_659
 EXPECTED_IVERILOG_CHECKS = 12_587_599
 
 RTL_SOURCES = (
@@ -57,9 +57,14 @@ RTL_SOURCES = (
     "rtl/abi3/ot_a3_pkg.sv",
     "rtl/abi3/ot_a3_instruction_decoder.sv",
     "rtl/abi3/ot_a3_program_header.sv",
+    "rtl/abi3/ot_a3_shared_divider.sv",
+    "rtl/abi3/ot_a3_symbol_file.sv",
     "rtl/abi3/ot_a3_loop_stack.sv",
     "rtl/abi3/ot_a3_view_resolver.sv",
+    "rtl/abi3/ot_a3_resolver_bank.sv",
     "rtl/abi3/ot_a3_event_scoreboard.sv",
+    "rtl/abi3/ot_a3_issue_record_store.sv",
+    "rtl/abi3/ot_a3_dependence_table.sv",
     "rtl/abi3/ot_a3_state_controller.sv",
     "rtl/abi3/ot_a3_microsequencer.sv",
     "rtl/abi3/ot_a3_device_top.sv",
@@ -85,6 +90,7 @@ RTL_SOURCES = (
 )
 TEST_SOURCES = (
     "rtl/test/a3_shipped_prefix_multicast_adapter_wrapper.sv",
+    "rtl/test/a3_engine_completion_adapter.sv",
     "rtl/test/a3_shipped_prefix_top.sv",
     "rtl/test/a3_shipped_prefix_harness.cpp",
     "rtl/test/tb_a3_shipped_prefix_deepseek_rom.sv",
@@ -393,6 +399,7 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
                 "--Mdir",
                 "obj_p3_multicast",
                 *rtl,
+                str(ROOT / "rtl/test/a3_engine_completion_adapter.sv"),
                 str(ROOT / "rtl/test/a3_shipped_prefix_multicast_adapter_wrapper.sv"),
                 str(ROOT / "rtl/test/a3_shipped_prefix_top.sv"),
                 str(ROOT / "rtl/test/a3_shipped_prefix_harness.cpp"),
@@ -415,6 +422,7 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
                 "-o",
                 "deepseek_rom_multicast.vvp",
                 *rtl,
+                str(ROOT / "rtl/test/a3_engine_completion_adapter.sv"),
                 str(ROOT / "rtl/test/a3_shipped_prefix_multicast_adapter_wrapper.sv"),
                 str(ROOT / "rtl/test/a3_shipped_prefix_top.sv"),
                 str(ROOT / "rtl/test/tb_a3_shipped_prefix_deepseek_rom.sv"),

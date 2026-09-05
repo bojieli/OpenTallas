@@ -32,6 +32,28 @@ so this campaign sets ``STATE_COMPAT=0``.  Compatibility state counters and
 ``state_apply_overflow`` are tied to zero; both checkers still observe them.
 ``event_signal_error`` is asserted from the admitted ABI event bounds.
 
+*The front end is asynchronous and the checkers are the engines.*  Every
+accepted issue is completed by the checker after a seeded pseudo-random
+delay, in a seeded pseudo-random order (docs/CHIP_ARCHITECTURE_DESIGN.md
+section 11.5, L1-CP: "engines active and randomised run-ahead").  The
+baseline pair runs at zero run-ahead -- every operation completes in the
+cycle after its acceptance -- and is the regression: its marker and every
+per-case observation must be exactly the retained ones.  ``--run-ahead-seeds``
+adds one Icarus + Verilator pair per seed at ``--run-ahead-max-delay`` cycles
+of completion delay (``--run-ahead-reorder`` draws the completion order too),
+and ``--deep-seed`` / ``--deep-max-delay`` one more pair with delays long
+enough to fill the issue record store.  Every pair must print the same marker
+and the same per-case projection as the baseline; the run-ahead depth reached
+(the issue record store's high-water mark) is recorded per case and per
+simulator and is the one field that is *not* required to agree, because the
+two checkers apply different acceptance patterns by design.
+
+*The checkers are the management processor.*  The wrapper holds no image and
+runs no $readmemh (section 13 item 12): each checker writes the program and
+descriptor stores through the design's host load path once, binds the
+sixteen request symbols per case through it, and streams the program header
+through the admission beat port.
+
 Tool identity is recorded, not assumed: the resolved executable path, its
 SHA-256 and its self-reported version go into the artifact, and a Verilator
 older than the pinned 5.050 or an Icarus older than 11.0 is refused.
@@ -69,9 +91,14 @@ RTL_SOURCES = (
     "rtl/abi3/ot_a3_pkg.sv",
     "rtl/abi3/ot_a3_instruction_decoder.sv",
     "rtl/abi3/ot_a3_program_header.sv",
+    "rtl/abi3/ot_a3_shared_divider.sv",
+    "rtl/abi3/ot_a3_symbol_file.sv",
     "rtl/abi3/ot_a3_loop_stack.sv",
     "rtl/abi3/ot_a3_view_resolver.sv",
+    "rtl/abi3/ot_a3_resolver_bank.sv",
     "rtl/abi3/ot_a3_event_scoreboard.sv",
+    "rtl/abi3/ot_a3_issue_record_store.sv",
+    "rtl/abi3/ot_a3_dependence_table.sv",
     "rtl/abi3/ot_a3_state_controller.sv",
     "rtl/abi3/ot_a3_microsequencer.sv",
     "rtl/abi3/ot_a3_device_top.sv",
@@ -92,15 +119,16 @@ CONTRACT_SOURCES = (
     "runtime/abi3/verifier.py",
     "runtime/driver.py",
     "runtime/sim/device.py",
+    "runtime/sim/run_ahead.py",
     "runtime/sim/memory.py",
 )
 TOOL_SOURCES = (
     "tools/build_abi3_deployment_rtl_vectors.py",
     "tools/rtl_abi3_deployment_campaign.py",
 )
-# Four are read by the DUT under the names rtl/test/a3_microsequencer_top.sv
-# hardcodes -- that top is shared with the microsequencer campaign and is not
-# forked for this one -- and five are read only by the checkers.
+# All nine are read by the checkers: the first four are the device images the
+# checkers load into the design through its host path (the wrapper holds no
+# image), the other five the golden observation they compare against.
 VECTOR_FILES = (
     "a3_program.hex",
     "a3_header.hex",
@@ -159,6 +187,8 @@ SITE_NAMES = {
     46: "state rows committed",
     47: "event signal error (A23/A24: zero on any admitted program)",
     48: "compatibility state apply overflow",
+    49: "issue record store protocol error (a completion of an empty slot)",
+    50: "operations outstanding at done",
 }
 
 CASE_RE = re.compile(
@@ -168,16 +198,38 @@ CASE_RE = re.compile(
     r"views=(?P<views>\d+)/(?P<views_expected>\d+) "
     r"predicates=(?P<predicates>\d+)/(?P<predicates_expected>\d+) "
     r"fetched=(?P<fetched>\d+) retired=(?P<retired>\d+) trap=(?P<trap>\d+) "
-    r"fault=(?P<fault>\d+) sigerr=(?P<sigerr>\d+) applyovf=(?P<applyovf>\d+)$",
+    r"fault=(?P<fault>\d+) sigerr=(?P<sigerr>\d+) applyovf=(?P<applyovf>\d+) "
+    r"depth=(?P<depth>\d+) completions=(?P<completions>\d+)$",
     re.MULTILINE,
 )
 DEPLOY_RE = re.compile(
     r"^DEPLOY (?P<index>\d+) cases=(?P<cases>\d+) diverged=(?P<diverged>\d+) "
     r"issues=(?P<issues>\d+) views=(?P<views>\d+) "
-    r"predicates=(?P<predicates>\d+)$",
+    r"predicates=(?P<predicates>\d+) depth=(?P<depth>\d+)$",
     re.MULTILINE,
 )
+STALLS_RE = re.compile(
+    r"^STALLS case=(?P<index>\d+) wait=(?P<wait>\d+) dep=(?P<dep>\d+)$",
+    re.MULTILINE,
+)
+HOST_LOAD_RE = re.compile(
+    r"^HOST_LOAD program_rows=(?P<program>\d+) descriptor_rows=(?P<desc>\d+) "
+    r"writes=(?P<writes>\d+) refused=(?P<refused>\d+)$",
+    re.MULTILINE,
+)
+RUN_AHEAD_RE = re.compile(
+    r"^RUN_AHEAD seed=(?P<seed>\d+) max_delay=(?P<max_delay>\d+) "
+    r"reorder=(?P<reorder>\d+)$",
+    re.MULTILINE,
+)
+MAX_DEPTH_RE = re.compile(r"max_depth=(\d+)")
 CHECKS_RE = re.compile(r"checks=(\d+)")
+# The front end's live bounds, read from the package so the artifact says
+# what the RTL held rather than restating it.
+LIVE_BOUND_RE = re.compile(
+    r"localparam\s+integer\s+(A3_EVENT_COUNT|A3_OUTSTANDING|A3_QUEUE_DEPTH|"
+    r"A3_QUEUE_COUNT|A3_IRS_ENTRIES|A3_DEP_RANGES)\s*=\s*(\w+)\s*;"
+)
 SIGNAL_FLAG_RE = re.compile(r"signal_flag_cases=(\d+)")
 APPLY_OVERFLOW_RE = re.compile(r"apply_overflow_cases=(\d+)")
 VERILATOR_VERSION_RE = re.compile(r"Verilator (\d+)\.(\d+)")
@@ -317,9 +369,22 @@ def parse_observation(log: str) -> dict[str, Any]:
             "rtl_first_fault": int(m.group("fault")),
             "rtl_event_signal_error": int(m.group("sigerr")),
             "rtl_state_apply_overflow": int(m.group("applyovf")),
+            # Timing, per simulator: the issue record store's high-water
+            # mark and the completions the checker's engines reported.
+            "run_ahead_depth": int(m.group("depth")),
+            "completions": int(m.group("completions")),
         }
         for m in CASE_RE.finditer(log)
     ]
+    stalls = {
+        int(m.group("index")): {
+            "wait_stall_cycles": int(m.group("wait")),
+            "dependence_stall_cycles": int(m.group("dep")),
+        }
+        for m in STALLS_RE.finditer(log)
+    }
+    for case in cases:
+        case.update(stalls.get(case["index"], {}))
     deployments = [
         {
             "deployment_index": int(m.group("index")),
@@ -328,12 +393,16 @@ def parse_observation(log: str) -> dict[str, Any]:
             "issues_compared": int(m.group("issues")),
             "views_compared": int(m.group("views")),
             "predicates_compared": int(m.group("predicates")),
+            "run_ahead_depth": int(m.group("depth")),
         }
         for m in DEPLOY_RE.finditer(log)
     ]
     checks = CHECKS_RE.search(log)
     signal_flags = SIGNAL_FLAG_RE.search(log)
     apply_overflow = APPLY_OVERFLOW_RE.search(log)
+    max_depth = MAX_DEPTH_RE.search(log)
+    host_load = HOST_LOAD_RE.search(log)
+    run_ahead = RUN_AHEAD_RE.search(log)
     return {
         "cases": cases,
         "deployments": deployments,
@@ -344,32 +413,82 @@ def parse_observation(log: str) -> dict[str, Any]:
         "apply_overflow_cases": (
             int(apply_overflow.group(1)) if apply_overflow else None
         ),
+        "max_run_ahead_depth": int(max_depth.group(1)) if max_depth else None,
+        "host_load": (
+            {key: int(value) for key, value in host_load.groupdict().items()}
+            if host_load
+            else None
+        ),
+        "run_ahead_reported": (
+            {key: int(value) for key, value in run_ahead.groupdict().items()}
+            if run_ahead
+            else None
+        ),
     }
+
+
+def run_ahead_plusargs(config: dict[str, Any]) -> list[str]:
+    """The checkers' plusargs for one run-ahead configuration."""
+    return [
+        f"+run_ahead_seed={int(config['seed'])}",
+        f"+run_ahead_max_delay={int(config['max_delay'])}",
+        f"+run_ahead_reorder={1 if config['reorder'] else 0}",
+    ]
+
+
+BASELINE_RUN_AHEAD = {"seed": 0, "max_delay": 0, "reorder": False}
 
 
 def simulator_case(
     name: str,
-    compile_command: list[str],
+    compile_command: list[str] | None,
     run_command: list[str],
     build: Path,
     marker: str,
+    run_ahead: dict[str, Any] | None = None,
+    compiled: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
-    compiled = run_stage(f"{name}.compile", compile_command, build, timeout=1800)
+    """Compile (once) and run one checker under one run-ahead configuration.
+
+    ``compiled`` carries a previous compile stage of the same binary so the
+    run-ahead pairs re-run the executable the baseline built rather than
+    rebuilding it; the compile log is kept once, on the baseline record.
+    """
+    config = dict(run_ahead or BASELINE_RUN_AHEAD)
+    if compiled is None:
+        assert compile_command is not None
+        compiled = run_stage(f"{name}.compile", compile_command, build, timeout=1800)
     executed: dict[str, Any] | None = None
     if compiled["returncode"] == 0:
-        executed = run_stage(f"{name}.run", run_command, build, timeout=7200)
+        executed = run_stage(
+            f"{name}.run",
+            [*run_command, *run_ahead_plusargs(config)],
+            build,
+            timeout=14400,
+        )
     log = compiled["log"] + (executed["log"] if executed else "")
     observation = parse_observation(executed["log"] if executed else "")
+    reported = observation["run_ahead_reported"]
+    configuration_echoed = reported is not None and (
+        reported["seed"] == int(config["seed"])
+        and reported["max_delay"] == int(config["max_delay"])
+        and reported["reorder"] == (1 if config["reorder"] else 0)
+    )
     passed = (
         compiled["returncode"] == 0
         and executed is not None
         and executed["returncode"] == 0
         and marker in executed["log"]
         and PROFILE_MARKER in executed["log"]
+        and configuration_echoed
+        and observation["host_load"] is not None
+        and observation["host_load"]["refused"] == 0
     )
     return {
         "name": name,
         "status": "pass" if passed else "fail",
+        "run_ahead": config,
+        "run_ahead_echoed_by_checker": configuration_echoed,
         "compile_command": compiled["command"],
         "compile_returncode": compiled["returncode"],
         "compile_log": compiled["log"],
@@ -386,9 +505,29 @@ def simulator_case(
         "checks": observation["checks"],
         "signal_flag_cases": observation["signal_flag_cases"],
         "apply_overflow_cases": observation["apply_overflow_cases"],
+        "max_run_ahead_depth": observation["max_run_ahead_depth"],
+        "host_load": observation["host_load"],
         "observed_cases": observation["cases"],
         "observed_deployments": observation["deployments"],
+        "_compiled": compiled,
     }
+
+
+OBSERVATION_KEYS = (
+    "index", "tag", "verdict", "divergence_code", "rtl_value",
+    "golden_value", "issues_compared", "views_compared",
+    "predicates_compared", "predicates_expected", "rtl_fetched",
+    "rtl_retired", "rtl_trap_class", "rtl_first_fault",
+    "rtl_event_signal_error", "rtl_state_apply_overflow",
+)
+
+
+def projection(entry: dict[str, Any]) -> list[tuple[Any, ...]]:
+    """One checker's observation of every case, without its timing fields."""
+    return [
+        tuple(case[key] for key in OBSERVATION_KEYS)
+        for case in entry["observed_cases"]
+    ]
 
 
 def compare_simulators(cases: list[dict[str, Any]]) -> dict[str, Any]:
@@ -398,24 +537,44 @@ def compare_simulators(cases: list[dict[str, Any]]) -> dict[str, Any]:
     both sides of it, and the same number of issues, views and data-dependent
     predicate reads reached before it.  Two engines agreeing on where the RTL
     stopped is what makes a divergence a finding rather than one simulator's
-    opinion.
+    opinion.  The run-ahead depth and the stall cycles are timing, per
+    simulator, and are deliberately outside the projection.
     """
-    keys = (
-        "index", "tag", "verdict", "divergence_code", "rtl_value",
-        "golden_value", "issues_compared", "views_compared",
-        "predicates_compared", "predicates_expected", "rtl_fetched",
-        "rtl_retired", "rtl_trap_class", "rtl_first_fault",
-        "rtl_event_signal_error", "rtl_state_apply_overflow",
-    )
-    projections = [
-        [tuple(case[key] for key in keys) for case in entry["observed_cases"]]
-        for entry in cases
-    ]
+    projections = [projection(entry) for entry in cases]
     agree = len(set(map(tuple, projections))) == 1 and bool(projections[0])
     return {
         "simulators_observed_the_same_cases": agree,
-        "compared_fields": list(keys),
+        "compared_fields": list(OBSERVATION_KEYS),
         "case_count_per_simulator": [len(p) for p in projections],
+    }
+
+
+def live_bounds() -> dict[str, Any]:
+    """The front end's bounds as rtl/abi3/ot_a3_pkg.sv holds them now.
+
+    The vector set records the bounds it was built against
+    (``rtl_implementation_bounds``); the RTL may only have widened since (AM-C1
+    took A3_EVENT_COUNT to 2,048), and a wider bound admits everything the
+    narrower one did.  Both are recorded so the artifact says which is which.
+    """
+    text = (ROOT / "rtl/abi3/ot_a3_pkg.sv").read_text(encoding="utf-8")
+    found: dict[str, Any] = {}
+    for name, value in LIVE_BOUND_RE.findall(text):
+        found[name] = int(value) if value.isdigit() else value
+    for name, value in list(found.items()):
+        if isinstance(value, str) and value in found:
+            found[name] = found[value]
+    return {
+        "source": "rtl/abi3/ot_a3_pkg.sv",
+        "values": found,
+        "note": (
+            "A3_EVENT_COUNT is the scoreboard's event space (AM-C1: 2,048); "
+            "A3_OUTSTANDING and A3_QUEUE_DEPTH are the per-die and per-queue "
+            "outstanding bounds at which issue stalls (section 3.2 item 2); "
+            "the capability records still publish max_event_id 1,023 because "
+            "they are certificate inputs of the bound deployments, so "
+            "re-publishing them is AM-C1's separate step"
+        ),
     }
 
 
@@ -492,9 +651,38 @@ def load_vectors() -> dict[str, Any]:
     return vectors
 
 
-def run(build_root: Path | None = None) -> dict[str, Any]:
+def run(
+    build_root: Path | None = None,
+    run_ahead: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    """The campaign: the zero-run-ahead baseline pair, then the run-ahead pairs.
+
+    ``run_ahead`` is ``{"seeds": [...], "max_delay": N, "reorder": bool,
+    "deep_seed": N | None, "deep_max_delay": N | None}``; None runs the
+    baseline only.
+    """
     vectors = load_vectors()
     marker = vectors["required_marker"]
+    run_ahead = dict(run_ahead or {})
+    configurations: list[dict[str, Any]] = []
+    for seed in run_ahead.get("seeds") or []:
+        configurations.append(
+            {
+                "label": f"seed_{seed}_delay_{run_ahead['max_delay']}",
+                "seed": int(seed),
+                "max_delay": int(run_ahead["max_delay"]),
+                "reorder": bool(run_ahead.get("reorder", False)),
+            }
+        )
+    if run_ahead.get("deep_seed") is not None:
+        configurations.append(
+            {
+                "label": f"deep_seed_{run_ahead['deep_seed']}_delay_{run_ahead['deep_max_delay']}",
+                "seed": int(run_ahead["deep_seed"]),
+                "max_delay": int(run_ahead["deep_max_delay"]),
+                "reorder": bool(run_ahead.get("reorder", False)),
+            }
+        )
 
     executables = {
         "iverilog": resolve("iverilog", None),
@@ -558,26 +746,54 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
         ]
         # The two builds use disjoint outputs, so compile and replay them in
         # parallel. Resolve in a fixed order to keep the retained JSON stable.
+        iverilog_run = [str(executables["vvp"]), "a3_deploy.vvp"]
+        verilator_run = ["./obj_a3_deploy/Vot_a3_microsequencer_top"]
         with ThreadPoolExecutor(max_workers=2) as pool:
             futures = [
                 pool.submit(
-                    simulator_case,
-                    "iverilog",
-                    iverilog_compile,
-                    [str(executables["vvp"]), "a3_deploy.vvp"],
-                    build,
-                    marker,
+                    simulator_case, "iverilog", iverilog_compile, iverilog_run,
+                    build, marker,
                 ),
                 pool.submit(
-                    simulator_case,
-                    "verilator",
-                    verilator_compile,
-                    ["./obj_a3_deploy/Vot_a3_microsequencer_top"],
-                    build,
-                    marker,
+                    simulator_case, "verilator", verilator_compile,
+                    verilator_run, build, marker,
                 ),
             ]
             cases = [future.result() for future in futures]
+        # The run-ahead pairs, one after the other, each pair in parallel,
+        # on the binaries the baseline built.
+        run_ahead_runs: list[dict[str, Any]] = []
+        for config in configurations:
+            with ThreadPoolExecutor(max_workers=2) as pool:
+                futures = [
+                    pool.submit(
+                        simulator_case, "iverilog", None, iverilog_run, build,
+                        marker, config, cases[0]["_compiled"],
+                    ),
+                    pool.submit(
+                        simulator_case, "verilator", None, verilator_run,
+                        build, marker, config, cases[1]["_compiled"],
+                    ),
+                ]
+                pair = [future.result() for future in futures]
+            for entry in pair:
+                entry.pop("_compiled", None)
+                entry.pop("compile_log", None)
+            run_ahead_runs.append(
+                {
+                    "label": config["label"],
+                    "seed": config["seed"],
+                    "max_delay": config["max_delay"],
+                    "reorder": config["reorder"],
+                    "cases": pair,
+                    "cross_simulator_agreement": compare_simulators(pair),
+                    "max_run_ahead_depth": max(
+                        (entry["max_run_ahead_depth"] or 0) for entry in pair
+                    ),
+                }
+            )
+        for entry in cases:
+            entry.pop("_compiled", None)
 
     sources = {
         path: sha256_file(ROOT / path)
@@ -594,6 +810,102 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
         )
 
     agreement = compare_simulators(cases)
+    # Rule 1: every run-ahead pair must observe exactly what the baseline
+    # observed, on every case, under both simulators; the site of any
+    # difference is named.
+    baseline_projection = projection(cases[0])
+    run_ahead_differences: list[dict[str, Any]] = []
+    for run_entry in run_ahead_runs:
+        for entry in run_entry["cases"]:
+            observed = projection(entry)
+            if observed == baseline_projection:
+                continue
+            for base_case, ra_case in zip(baseline_projection, observed):
+                for key, base_value, ra_value in zip(
+                    OBSERVATION_KEYS, base_case, ra_case
+                ):
+                    if base_value != ra_value:
+                        run_ahead_differences.append(
+                            {
+                                "run": run_entry["label"],
+                                "simulator": entry["name"],
+                                "case_index": base_case[0],
+                                "field": key,
+                                "baseline": base_value,
+                                "run_ahead": ra_value,
+                            }
+                        )
+                        break
+            if len(observed) != len(baseline_projection):
+                run_ahead_differences.append(
+                    {
+                        "run": run_entry["label"],
+                        "simulator": entry["name"],
+                        "case_index": None,
+                        "field": "case_count",
+                        "baseline": len(baseline_projection),
+                        "run_ahead": len(observed),
+                    }
+                )
+    run_ahead_block = {
+        "baseline": {
+            "seed": 0,
+            "max_delay": 0,
+            "reorder": False,
+            "meaning": (
+                "every accepted operation completes in the cycle after its "
+                "acceptance, oldest first: the zero-run-ahead regression of "
+                "the retained observation (rule 1)"
+            ),
+            "checks_per_simulator": [entry["checks"] for entry in cases],
+            "max_run_ahead_depth_per_simulator": [
+                entry["max_run_ahead_depth"] for entry in cases
+            ],
+            "marker_present_per_simulator": [
+                entry["marker_present"] for entry in cases
+            ],
+        },
+        "runs": run_ahead_runs,
+        "seeds": sorted({run_entry["seed"] for run_entry in run_ahead_runs}),
+        "seed_count": len({run_entry["seed"] for run_entry in run_ahead_runs}),
+        "max_run_ahead_exercised": max(
+            [run_entry["max_run_ahead_depth"] for run_entry in run_ahead_runs]
+            + [entry["max_run_ahead_depth"] or 0 for entry in cases]
+        ),
+        "checks_total": sum(
+            (entry["checks"] or 0)
+            for run_entry in run_ahead_runs
+            for entry in run_entry["cases"]
+        )
+        + sum((entry["checks"] or 0) for entry in cases),
+        "observation_identical_to_baseline": not run_ahead_differences,
+        "differences_from_baseline": run_ahead_differences,
+        "completion_model": (
+            "xorshift32 seeded per case with (seed ^ ((case_index + 1) * "
+            "0x9E3779B9)) | 1; delay 0 when max_delay is 0, else 1 + rand % "
+            "max_delay cycles after acceptance; with reorder the completion "
+            "reported each cycle is drawn by rand % count among the due "
+            "operations, else the oldest; written independently in "
+            "rtl/test/tb_a3_deployment.sv and rtl/test/a3_deployment_harness.cpp"
+        ),
+        "depth_is_per_simulator": (
+            "run_ahead_depth is the issue record store's high-water mark "
+            "(dbg_max_outstanding); it is timing, differs between the two "
+            "checkers' acceptance patterns by design, and is never required to "
+            "agree across simulators, only reported; the maximum over every "
+            "run and simulator is max_run_ahead_exercised"
+        ),
+        "counters_that_may_differ": [
+            "queue.max_occupancy (group 0x02, 0x0200000a): the RTL exposes it "
+            "as dbg_max_outstanding and the golden model writes it only under "
+            "a RunAheadPolicy; it is timing and is not compared",
+            "instructions.retired timing: counted at completion rather than "
+            "at issue (section 3.2 item 3); its value at done is identical "
+            "and is compared",
+            "wait and dependence stall cycles (dbg_wait_stalls, "
+            "dbg_dep_stalls): reported per case and simulator, never compared",
+        ],
+    }
     by_case: dict[int, dict[str, Any]] = {}
     for entry in cases[0]["observed_cases"]:
         by_case[entry["index"]] = entry
@@ -680,6 +992,15 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
     passed = (
         all(case["status"] == "pass" for case in cases)
         and agreement["simulators_observed_the_same_cases"]
+        and all(
+            entry["status"] == "pass"
+            and run_entry["cross_simulator_agreement"][
+                "simulators_observed_the_same_cases"
+            ]
+            for run_entry in run_ahead_runs
+            for entry in run_entry["cases"]
+        )
+        and not run_ahead_differences
     )
     return {
         "schema": "opentallas.rtl.abi3_deployment_campaign.v1",
@@ -770,6 +1091,37 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
         "correlated_cases": correlated,
         "divergences": divergences,
         "rtl_implementation_bounds": vectors["rtl_implementation_bounds"],
+        "rtl_live_bounds": live_bounds(),
+        "run_ahead": run_ahead_block,
+        "front_end": {
+            "issue_to_completion": "asynchronous (section 3.2 item 2)",
+            "retirement": "at completion without fault (section 3.2 item 3)",
+            "structures": [
+                "issue record store 32 entries, queues 23 x 16 "
+                "(rtl/abi3/ot_a3_issue_record_store.sv)",
+                "dependence table 32 entries x 4 ranges "
+                "(rtl/abi3/ot_a3_dependence_table.sv)",
+                "event scoreboard 2,048 x {pending, signalled, published}, "
+                "four read ports (rtl/abi3/ot_a3_event_scoreboard.sv, AM-C1, "
+                "AM-C10)",
+                "six resolver lanes on one shared divider "
+                "(rtl/abi3/ot_a3_resolver_bank.sv, "
+                "rtl/abi3/ot_a3_shared_divider.sv)",
+                "runtime symbol file 16 x 64-bit with bound bits, host-written "
+                "(rtl/abi3/ot_a3_symbol_file.sv)",
+            ],
+            "not_pipelined_across_instructions": (
+                "the front end resolves and issues one instruction at a time; "
+                "only issue to completion is asynchronous, so section 3.3's "
+                "per-stage occupancy is not claimed by this campaign"
+            ),
+        },
+        "host_load": {
+            "path": "ot_a3_device_top host_* (program store, descriptor store, "
+                    "symbol file) and hdr_in_* (program header)",
+            "wrapper_readmemh_of_control_images": False,
+            "per_simulator": [entry["host_load"] for entry in cases],
+        },
         "tools": tools,
         "git": git_identity(),
         "source_sha256": sources,
@@ -815,7 +1167,18 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
                 "rtl/abi3/ot_a3_pkg.sv declares, and each of those bounds is "
                 "now named by a capability field a deployment is admitted "
                 "against (amendments A22 and A23), so a program that does not "
-                "fit is refused at admission rather than discovered here"
+                "fit is refused at admission rather than discovered here",
+                "the front end is asynchronous: an engine operation leaves at "
+                "issue with a serial and an issue-record slot and is completed "
+                "by the checker's engines after a seeded delay, in a seeded "
+                "order; the observation stream (issues, views, predicate "
+                "reads, counters, retire counts, trap class, first fault) is "
+                "identical to the zero-run-ahead baseline on every case, "
+                "under both simulators, for every run in run_ahead.runs",
+                "the control stores and the symbol file are loaded through "
+                "the design's own host path by the checkers and the program "
+                "header through the admission beat port; the wrapper holds "
+                "no image and runs no $readmemh (section 13 item 12)"
             ],
             "does_not_establish": {
                 "checkpoint_bytes": "no checkpoint byte is read. The memory "
@@ -871,7 +1234,32 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
                 "raw Boolean response recorded by the golden Device run. The "
                 "campaign verifies the sequencer request address and branch "
                 "decision, but it does not connect that request to HBM, SRAM, "
-                "the selection engine, or the 32-node agreement logic"
+                "the selection engine, or the 32-node agreement logic",
+                "engine_faults_under_run_ahead": "the checker's engines never "
+                "fault, so the asynchronous fault path (section 3.2 item 5: "
+                "stop issue in the cycle a fault is reported, drain, restore "
+                "the counters from the faulting operation's snapshot) is "
+                "exercised only at depth 1 by the shipped-prefix campaign's "
+                "capability faults, not here",
+                "predicate_reads_under_run_ahead": "a BOOLEAN_OBJECT or "
+                "EOS_MEMBER read of an instruction after an outstanding "
+                "operation is requested before that operation completes; "
+                "under an engine fault of that operation the golden model "
+                "would never have made the read. The RTL cancels the request "
+                "at the fault; no case here faults, so the side effect is "
+                "stated, not observed",
+                "run_ahead_depth_on_the_shipped_programs": "the depth the "
+                "shipped programs reach is bounded by their own wait sets "
+                "(every engine instruction's successor waits on its event, "
+                "and a wait whose producer was re-issued on the current loop "
+                "trip stalls while it is pending, AM-C10) and by the "
+                "dependence table's conservative ranges, not by the 16-per-"
+                "queue and 32-per-die bounds; see run_ahead.max_run_ahead_"
+                "exercised for the depth reached and the per-case stall "
+                "cycles for why",
+                "frontier_streaming": "not implemented: every dependence "
+                "entry exposes frontier 0, so a consumer waits for its "
+                "producer's completion (section 3.6, non-architectural)"
             }
         },
         "limitations": [
@@ -906,6 +1294,20 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="overwrite an existing campaign artifact",
     )
+    parser.add_argument(
+        "--run-ahead-seeds",
+        default="",
+        help="comma-separated seeds; one Icarus + Verilator pair per seed "
+             "at --run-ahead-max-delay",
+    )
+    parser.add_argument("--run-ahead-max-delay", type=int, default=64)
+    parser.add_argument(
+        "--run-ahead-reorder",
+        action="store_true",
+        help="draw the completion order as well as the delay",
+    )
+    parser.add_argument("--deep-seed", type=int, default=None)
+    parser.add_argument("--deep-max-delay", type=int, default=1024)
     args = parser.parse_args(argv)
 
     if args.output.exists() and not args.force:
@@ -915,7 +1317,14 @@ def main(argv: list[str] | None = None) -> int:
         )
         return 2
 
-    summary = run(args.build_dir)
+    run_ahead = {
+        "seeds": [int(seed) for seed in args.run_ahead_seeds.split(",") if seed],
+        "max_delay": args.run_ahead_max_delay,
+        "reorder": args.run_ahead_reorder,
+        "deep_seed": args.deep_seed,
+        "deep_max_delay": args.deep_max_delay,
+    }
+    summary = run(args.build_dir, run_ahead)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(
         json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8"
@@ -942,6 +1351,22 @@ def main(argv: list[str] | None = None) -> int:
             f"{len(flagged)} case(s) -- see "
             "rtl_status_bits_observed_not_correlated"
         )
+    block = summary["run_ahead"]
+    for run_entry in block["runs"]:
+        print(
+            f"  run-ahead {run_entry['label']}: "
+            + ", ".join(
+                f"{entry['name']} {entry['status'].upper()} checks={entry['checks']} "
+                f"depth={entry['max_run_ahead_depth']}"
+                for entry in run_entry["cases"]
+            )
+        )
+    print(
+        f"  run-ahead seeds={block['seed_count']} "
+        f"max_depth={block['max_run_ahead_exercised']} "
+        f"checks_total={block['checks_total']} "
+        f"identical_to_baseline={block['observation_identical_to_baseline']}"
+    )
     print(f"abi3 deployment rtl campaign: {summary['status'].upper()} -> {args.output}")
     return 0 if summary["status"] == "pass" else 1
 

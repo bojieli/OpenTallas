@@ -1210,7 +1210,17 @@ def test_deployment_vector_set_reads_the_rtl_bounds_from_the_rtl() -> None:
 
     recorded = _deployment_vectors()["rtl_implementation_bounds"]
     assert recorded["source"] == "rtl/abi3/ot_a3_pkg.sv"
-    assert recorded["values"] == deployment_generator.rtl_bounds()
+    live = deployment_generator.rtl_bounds()
+    # The vector set records the bounds it was built against; the RTL may
+    # only have widened since (AM-C1 took A3_EVENT_COUNT from 1,024 to
+    # 2,048), and a wider bound admits everything the narrower one did, so
+    # the recorded demands and overruns stay meaningful.  The campaign
+    # artifact records the live bounds beside them (rtl_live_bounds).
+    for name, value in recorded["values"].items():
+        assert live[name] >= value, name
+    assert live["A3_EVENT_COUNT"] == 2048
+    for name in ("A3_LOOP_DEPTH", "A3_STATE_SLOTS", "A3_WAIT_PRODUCERS"):
+        assert live[name] == recorded["values"][name], name
 
 
 def test_deployment_depth_is_recorded_per_case_not_assumed() -> None:
@@ -1481,7 +1491,14 @@ def test_control_plane_rtl_carries_no_wildcard_package_import() -> None:
         "ot_a3_loop_stack",
         "ot_a3_state_controller",
         "ot_a3_view_resolver",
+        # the asynchronous front end (section 11.4 item 4, second half)
+        "ot_a3_shared_divider",
+        "ot_a3_symbol_file",
+        "ot_a3_issue_record_store",
+        "ot_a3_dependence_table",
+        "ot_a3_resolver_bank",
         "ot_a3_microsequencer",
+        "ot_a3_device_top",
         "ot_a3_collective_engine",
     ]
     assert synth_check.wildcard_imports(ROOT) == {}
@@ -1559,20 +1576,42 @@ def test_device_top_is_design_and_both_verification_tops_wrap_it() -> None:
     assert re.search(r"parameter integer PROGRAM_WORDS\s*=\s*128", body)
     assert re.search(r"parameter integer DESC_WORDS\s*=\s*256", body)
     assert re.search(r"parameter integer STATE_COMPAT\s*=\s*1", body)
-    for port in ("host_we", "host_ready", "host_write_refused", "pstore_rdata",
-                 "dstore_rdata", "sym_addr", "hdr_in_valid", "issue_ready",
+    for port in ("host_we", "host_sel", "host_ready", "host_write_refused",
+                 "pstore_rdata", "dstore_rdata", "irs_rdata", "hdr_in_valid",
+                 "issue_ready", "issue_serial", "issue_slot", "complete_valid",
+                 "complete_slot", "complete_fault", "view_irs_slot",
                  "predicate_read_valid"):
         assert re.search(rf"\b{port}\b", body), port
+    # The symbol file is behind the host path now (section 3.3), not a
+    # combinational boundary; the engine port has two phases (section 3.2).
+    for gone in ("sym_addr", "cfg_symbol_base", "cfg_symbol_mask",
+                 "issue_fault", "issue_trap_class"):
+        assert not re.search(rf"\b{gone}\b", body), gone
 
     for top in ("rtl/test/a3_microsequencer_top.sv", "rtl/test/a3_shipped_prefix_top.sv"):
+        raw = (ROOT / top).read_text(encoding="utf-8")
         text = "\n".join(
-            line
-            for line in (ROOT / top).read_text(encoding="utf-8").splitlines()
-            if not line.lstrip().startswith("//")
+            line for line in raw.splitlines() if not line.lstrip().startswith("//")
         )
         assert re.search(r"\bot_a3_device_top\s*#\(", text), top
         assert not re.search(r"\bot_a3_microsequencer\s*#\(", text), top
         assert not re.search(r"\bot_a3_program_header\s+\w+\s*\(", text), top
+        # Section 13 item 12: the control stores and the symbol file are
+        # loaded through the design's own host interface, never by the
+        # wrapper from the bench.
+        for image in ("a3_program.hex", "a3_header.hex", "a3_descriptor.hex",
+                      "a3_symbol.hex"):
+            assert f'$readmemh("{image}"' not in text, (top, image)
+        for port in ("host_we", "host_sel", "host_row", "host_lane", "host_wdata"):
+            assert re.search(rf"\b{port}\b", text), (top, port)
+    wrapper = "\n".join(
+        line
+        for line in (ROOT / "rtl/test/a3_microsequencer_top.sv")
+        .read_text(encoding="utf-8")
+        .splitlines()
+        if not line.lstrip().startswith("//")
+    )
+    assert "$readmemh" not in wrapper and "initial" not in wrapper
     for tool in (
         "tools/rtl_abi3_deployment_campaign.py",
         "tools/rtl_abi3_campaign.py",

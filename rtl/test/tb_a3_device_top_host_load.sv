@@ -3,14 +3,14 @@
 // The design's host load path, exercised end to end on the vehicle geometry.
 //
 // rtl/abi3/ot_a3_device_top.sv presents its program and descriptor stores as
-// abstract macro boundaries and writes them only through host_* -- the
-// management processor's path of docs/CHIP_ARCHITECTURE_DESIGN.md section
-// 3.4.  The control-plane campaigns preload those stores from the vector
-// images because their checkers own reset and start timing; this bench is
-// the test that the load path itself works, and it is deliberately run at
-// the vehicle defaults (PROGRAM_WORDS = 128, DESC_WORDS = 256: the 4 KiB
-// program store and 64 KiB descriptor store of section 11.2), which the
-// Qwen3-8B ROM deployment fits -- 74 instructions, 227 descriptor records.
+// abstract macro boundaries and writes them, and its runtime symbol file,
+// only through host_* -- the management processor's path of
+// docs/CHIP_ARCHITECTURE_DESIGN.md section 3.4.  The control-plane campaigns
+// load the same path at their own geometry; this bench is the focused test
+// of the path itself, deliberately run at the vehicle defaults
+// (PROGRAM_WORDS = 128, DESC_WORDS = 256: the 4 KiB program store and 64 KiB
+// descriptor store of section 11.2), which the Qwen3-8B ROM deployment fits
+// -- 74 instructions, 227 descriptor records.
 //
 //   1. With both stores empty (every row zero) the first Qwen3-8B ROM case
 //      must trap, not complete: the load path is load-bearing.
@@ -18,14 +18,19 @@
 //      written one 32-bit lane at a time through host_*, from the same
 //      source-bound images the campaigns read, relocated to row 0 of each
 //      store.  No write may be refused.
-//   3. The program header is streamed through the admission port; then both
-//      entrypoints of the deployment run against the loaded stores and every
-//      compared counter (fetched, retired, predicated off, issued, loop
-//      iterations, branches, wait-set evaluations), the issue and view pulse
-//      counts, the trap class and the completion decision must equal the
-//      golden record of testdata/compiler/abi3_deployment.
-//   4. A write offered while the transaction is busy, and one aimed past the
-//      end of a store, must be refused, reported, and leave the store intact.
+//   3. The request symbols are bound through host_* (host_sel 2: value low
+//      word, high word, bound bit), the program header is streamed through
+//      the admission port; then both entrypoints of the deployment run
+//      against the loaded stores and every compared counter (fetched,
+//      retired, predicated off, issued, loop iterations, branches, wait-set
+//      evaluations), the issue and view pulse counts, the trap class and the
+//      completion decision must equal the golden record of
+//      testdata/compiler/abi3_deployment.  The engines are the bench: every
+//      accepted issue completes in the cycle after its acceptance.
+//   4. A write offered while the transaction is busy, one aimed past the
+//      end of a store or past a row's lanes, and one aimed past the symbol
+//      file's sixteen entries or three lanes, must be refused, reported,
+//      and leave the target intact.
 //
 // The bench is one checker run under two simulators (Icarus, and Verilator
 // with --timing); the marker it prints is compared across both by
@@ -70,7 +75,7 @@ module tb_a3_device_top_host_load;
     wire [31:0] header_entrypoint_descriptor;
 
     reg         host_we = 1'b0;
-    reg         host_sel = 1'b0;
+    reg [1:0]   host_sel = 2'd0;
     reg [31:0]  host_row = 32'd0;
     reg [5:0]   host_lane = 6'd0;
     reg [31:0]  host_wdata = 32'd0;
@@ -83,8 +88,6 @@ module tb_a3_device_top_host_load;
     reg [31:0]  cfg_entry_pc = 32'd0;
     reg [31:0]  cfg_desc_base = 32'd0;
     reg [31:0]  cfg_desc_count = 32'd0;
-    reg [31:0]  cfg_symbol_base = 32'd0;
-    reg [31:0]  cfg_symbol_mask = 32'd0;
     reg [63:0]  cfg_max_retired_work = 64'd0;
     reg [31:0]  cfg_state_count = 32'd0;
 
@@ -107,8 +110,16 @@ module tb_a3_device_top_host_load;
     wire [5:0]    dstore_wlane;
     wire [31:0]   dstore_wdata;
     reg  [1535:0] dstore_rdata;
-    wire [31:0]  sym_addr;
-    wire [31:0]  sym_value = image_symbol[sym_addr[10:0]];
+    // the issue record store's payload macro
+    reg  [511:0]  irs_payload_mem [0:255];
+    wire          irs_we;
+    wire [4:0]    irs_wslot;
+    wire [2:0]    irs_wlane;
+    wire [511:0]  irs_wdata;
+    wire          irs_re;
+    wire [4:0]    irs_rslot;
+    wire [2:0]    irs_rlane;
+    reg  [511:0]  irs_rdata;
 
     wire        predicate_read_req;
     wire [31:0] predicate_read_object_id;
@@ -119,6 +130,13 @@ module tb_a3_device_top_host_load;
     wire [7:0]  issue_sub;
     wire [31:0] issue_descriptor_id;
     wire [31:0] issue_index;
+    wire [31:0] issue_serial;
+    wire [4:0]  issue_slot;
+    wire [4:0]  issue_queue;
+    reg         complete_valid = 1'b0;
+    reg  [4:0]  complete_slot = 5'd0;
+    wire [5:0]  dbg_outstanding;
+    wire        irs_protocol_error;
     wire        view_valid;
     wire [31:0] view_descriptor_id;
     wire [2:0]  view_slot;
@@ -173,6 +191,39 @@ module tb_a3_device_top_host_load;
         end
     end
 
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            irs_rdata <= 512'd0;
+        end else begin
+            if (irs_we)
+                irs_payload_mem[{irs_wslot, irs_wlane}] <= irs_wdata;
+            if (irs_re)
+                irs_rdata <= irs_payload_mem[{irs_rslot, irs_rlane}];
+        end
+    end
+
+    // -- the engines: every accepted issue completes in the next cycle -----
+    reg [4:0] pend_slot [0:31];
+    integer   pend_head = 0;
+    integer   pend_tail = 0;
+    integer   pend_count = 0;
+    always @(posedge clk) begin
+        complete_valid <= 1'b0;
+        if (rst_n) begin
+            if (pend_count > 0) begin
+                complete_valid <= 1'b1;
+                complete_slot <= pend_slot[pend_head];
+                pend_head = (pend_head + 1) % 32;
+                pend_count = pend_count - 1;
+            end
+            if (issue_valid) begin
+                pend_slot[pend_tail] = issue_slot;
+                pend_tail = (pend_tail + 1) % 32;
+                pend_count = pend_count + 1;
+            end
+        end
+    end
+
     ot_a3_device_top #(
         .PROGRAM_WORDS(PROGRAM_WORDS),
         .DESC_WORDS(DESC_WORDS),
@@ -204,8 +255,6 @@ module tb_a3_device_top_host_load;
         .cfg_entry_pc(cfg_entry_pc),
         .cfg_desc_base(cfg_desc_base),
         .cfg_desc_count(cfg_desc_count),
-        .cfg_symbol_base(cfg_symbol_base),
-        .cfg_symbol_mask(cfg_symbol_mask),
         .cfg_max_retired_work(cfg_max_retired_work),
         .cfg_state_count(cfg_state_count),
         .busy(busy),
@@ -226,8 +275,14 @@ module tb_a3_device_top_host_load;
         .dstore_wlane(dstore_wlane),
         .dstore_wdata(dstore_wdata),
         .dstore_rdata(dstore_rdata),
-        .sym_addr(sym_addr),
-        .sym_value(sym_value),
+        .irs_we(irs_we),
+        .irs_wslot(irs_wslot),
+        .irs_wlane(irs_wlane),
+        .irs_wdata(irs_wdata),
+        .irs_re(irs_re),
+        .irs_rslot(irs_rslot),
+        .irs_rlane(irs_rlane),
+        .irs_rdata(irs_rdata),
         .predicate_read_req(predicate_read_req),
         .predicate_read_object_id(predicate_read_object_id),
         .predicate_read_element_index(predicate_read_element_index),
@@ -238,12 +293,17 @@ module tb_a3_device_top_host_load;
         .predicate_read_trap_class(16'd0),
         .issue_valid(issue_valid),
         .issue_ready(1'b1),
-        .issue_fault(1'b0),
-        .issue_trap_class(16'd0),
         .issue_family(issue_family),
         .issue_sub(issue_sub),
         .issue_descriptor_id(issue_descriptor_id),
         .issue_index(issue_index),
+        .issue_serial(issue_serial),
+        .issue_slot(issue_slot),
+        .issue_queue(issue_queue),
+        .complete_valid(complete_valid),
+        .complete_slot(complete_slot),
+        .complete_fault(1'b0),
+        .complete_trap_class(16'd0),
         .view_valid(view_valid),
         .view_descriptor_id(view_descriptor_id),
         .view_slot(view_slot),
@@ -251,6 +311,7 @@ module tb_a3_device_top_host_load;
         .view_extent_axis(view_extent_axis),
         .view_element_offset(view_element_offset),
         .view_rank(view_rank),
+        .view_irs_slot(),
         .count_views_resolved(count_views_resolved),
         .count_fetched(count_fetched),
         .count_retired(count_retired),
@@ -274,7 +335,12 @@ module tb_a3_device_top_host_load;
         .dbg_decode_error(),
         .dbg_source_operation_id(),
         .dbg_wait_fault_event(),
-        .dbg_loop_action()
+        .dbg_loop_action(),
+        .dbg_outstanding(dbg_outstanding),
+        .dbg_max_outstanding(),
+        .dbg_dep_stalls(),
+        .dbg_wait_stalls(),
+        .irs_protocol_error(irs_protocol_error)
     );
 
     // -- issue / view pulse counters and a predicate-request watchdog -------
@@ -312,7 +378,7 @@ module tb_a3_device_top_host_load;
     integer host_writes;
     reg [31:0] lane_before;
 
-    task host_write(input sel, input [31:0] r, input [5:0] l, input [31:0] d);
+    task host_write(input [1:0] sel, input [31:0] r, input [5:0] l, input [31:0] d);
         begin
             host_sel = sel;
             host_row = r;
@@ -325,17 +391,29 @@ module tb_a3_device_top_host_load;
         end
     endtask
 
+    integer symbol_index;
+    task bind_symbols(input integer index);
+        begin
+            base = index * CASE_STRIDE;
+            for (symbol_index = 0; symbol_index < 16; symbol_index = symbol_index + 1) begin
+                host_write(2'd2, symbol_index, 6'd0,
+                           image_symbol[case_mem[base + 4] + symbol_index]);
+                host_write(2'd2, symbol_index, 6'd1, 32'd0);
+                host_write(2'd2, symbol_index, 6'd2,
+                           {31'd0, case_mem[base + 5][symbol_index]});
+            end
+        end
+    endtask
+
     task run_case(input integer index, input expect_loaded);
         begin
             base = index * CASE_STRIDE;
-            // Relocate to row 0 of each store; symbols stay at their image
-            // address because the symbol file is not behind the load path.
+            // Relocate to row 0 of each store; the symbols were bound
+            // through the same path before the call.
             cfg_program_base = 32'd0;
             cfg_instruction_count = case_mem[base + 1];
             cfg_desc_base = 32'd0;
             cfg_desc_count = case_mem[base + 3];
-            cfg_symbol_base = case_mem[base + 4];
-            cfg_symbol_mask = case_mem[base + 5];
             cfg_entry_pc = case_mem[base + 7];
             cfg_max_retired_work = {case_mem[base + 9], case_mem[base + 8]};
             cfg_state_count = case_mem[base + 34];
@@ -383,6 +461,8 @@ module tb_a3_device_top_host_load;
                             {32'd0, case_mem[base + 33]});
                 check_equal("event signal error", {63'd0, event_signal_error},
                             64'd0);
+                check_equal("irs protocol", {63'd0, irs_protocol_error}, 64'd0);
+                check_equal("outstanding at done", {58'd0, dbg_outstanding}, 64'd0);
             end else begin
                 // Empty stores: the transaction must stop at a trap and
                 // retire nothing.
@@ -427,6 +507,7 @@ module tb_a3_device_top_host_load;
             $fatal(1, "the Qwen3-8B ROM deployment does not fit the vehicle stores");
 
         // 1. Empty stores: the program must not run.
+        bind_symbols(0);
         run_case(0, 1'b0);
 
         // 2. Load the program body and the descriptor records, one lane at a
@@ -480,6 +561,7 @@ module tb_a3_device_top_host_load;
             check_equal("header max retired work", header_max_retired_work,
                         {case_mem[base + 37], case_mem[base + 36]});
             @(negedge clk);
+            bind_symbols(case_index);
             run_case(case_index, 1'b1);
         end
 
@@ -490,8 +572,7 @@ module tb_a3_device_top_host_load;
         cfg_instruction_count = case_mem[1];
         cfg_desc_base = 32'd0;
         cfg_desc_count = case_mem[3];
-        cfg_symbol_base = case_mem[4];
-        cfg_symbol_mask = case_mem[5];
+        bind_symbols(0);
         cfg_entry_pc = case_mem[7];
         cfg_max_retired_work = {case_mem[9], case_mem[8]};
         cfg_state_count = case_mem[34];
@@ -503,7 +584,7 @@ module tb_a3_device_top_host_load;
         @(negedge clk);
         check_equal("busy after start", {63'd0, busy}, 64'd1);
         check_equal("host not ready while busy", {63'd0, host_ready}, 64'd0);
-        host_write(1'b0, 32'd0, 6'd0, ~lane_before);
+        host_write(2'd0, 32'd0, 6'd0, ~lane_before);
         @(negedge clk);
         check_equal("busy write refused", {63'd0, host_write_refused}, 64'd1);
         check_equal("busy write dropped", {32'd0, program_store[0][31:0]},
@@ -523,7 +604,7 @@ module tb_a3_device_top_host_load;
         repeat (2) @(negedge clk);
         check_equal("refusal flag clears on reset", {63'd0, host_write_refused},
                     64'd0);
-        host_write(1'b0, PROGRAM_WORDS, 6'd0, 32'hdead_beef);
+        host_write(2'd0, PROGRAM_WORDS, 6'd0, 32'hdead_beef);
         @(negedge clk);
         check_equal("program row past end refused", {63'd0, host_write_refused},
                     64'd1);
@@ -531,7 +612,7 @@ module tb_a3_device_top_host_load;
         repeat (2) @(negedge clk);
         rst_n = 1'b1;
         repeat (2) @(negedge clk);
-        host_write(1'b1, DESC_WORDS, 6'd0, 32'hdead_beef);
+        host_write(2'd1, DESC_WORDS, 6'd0, 32'hdead_beef);
         @(negedge clk);
         check_equal("descriptor row past end refused",
                     {63'd0, host_write_refused}, 64'd1);
@@ -539,12 +620,38 @@ module tb_a3_device_top_host_load;
         repeat (2) @(negedge clk);
         rst_n = 1'b1;
         repeat (2) @(negedge clk);
-        host_write(1'b0, 32'd0, 6'd8, 32'hdead_beef);
+        host_write(2'd0, 32'd0, 6'd8, 32'hdead_beef);
         @(negedge clk);
         check_equal("program lane past end refused", {63'd0, host_write_refused},
                     64'd1);
         check_equal("program lane past end dropped", {32'd0, program_store[0][31:0]},
                     {32'd0, lane_before});
+        // The symbol file: a row past the sixteen entries, a lane past the
+        // three, and an unknown select are refused too.
+        rst_n = 1'b0;
+        repeat (2) @(negedge clk);
+        rst_n = 1'b1;
+        repeat (2) @(negedge clk);
+        host_write(2'd2, 32'd16, 6'd0, 32'hdead_beef);
+        @(negedge clk);
+        check_equal("symbol row past end refused", {63'd0, host_write_refused},
+                    64'd1);
+        rst_n = 1'b0;
+        repeat (2) @(negedge clk);
+        rst_n = 1'b1;
+        repeat (2) @(negedge clk);
+        host_write(2'd2, 32'd0, 6'd3, 32'hdead_beef);
+        @(negedge clk);
+        check_equal("symbol lane past end refused", {63'd0, host_write_refused},
+                    64'd1);
+        rst_n = 1'b0;
+        repeat (2) @(negedge clk);
+        rst_n = 1'b1;
+        repeat (2) @(negedge clk);
+        host_write(2'd3, 32'd0, 6'd0, 32'hdead_beef);
+        @(negedge clk);
+        check_equal("unknown select refused", {63'd0, host_write_refused},
+                    64'd1);
 
         if (failures == 0)
             $display("PASS: ABI3 device top host load vehicle_program_words=%0d vehicle_desc_words=%0d host_writes=%0d cases=%0d checks=%0d",

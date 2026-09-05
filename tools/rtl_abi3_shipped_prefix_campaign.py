@@ -35,7 +35,7 @@ ENGINE_CAMPAIGN = ROOT / "results/rtl/abi3_engine_campaign.json"
 ROPE_CAMPAIGN = ROOT / "results/tensor_accelerator/qwen3_rtl_rope_campaign.json"
 
 PINNED_VERILATOR_VERSION = "5.050"
-EXPECTED_INTEGRATED_CHECKS = 189_820
+EXPECTED_INTEGRATED_CHECKS = 189_826
 TOOLS_ROOT = Path(
     os.environ.get("OPENTALLAS_TOOL_ROOT", Path.home() / ".local/opentallas-tools")
 )
@@ -50,9 +50,14 @@ RTL_SOURCES = (
     "rtl/abi3/ot_a3_pkg.sv",
     "rtl/abi3/ot_a3_instruction_decoder.sv",
     "rtl/abi3/ot_a3_program_header.sv",
+    "rtl/abi3/ot_a3_shared_divider.sv",
+    "rtl/abi3/ot_a3_symbol_file.sv",
     "rtl/abi3/ot_a3_loop_stack.sv",
     "rtl/abi3/ot_a3_view_resolver.sv",
+    "rtl/abi3/ot_a3_resolver_bank.sv",
     "rtl/abi3/ot_a3_event_scoreboard.sv",
+    "rtl/abi3/ot_a3_issue_record_store.sv",
+    "rtl/abi3/ot_a3_dependence_table.sv",
     "rtl/abi3/ot_a3_state_controller.sv",
     "rtl/abi3/ot_a3_microsequencer.sv",
     "rtl/abi3/ot_a3_device_top.sv",
@@ -72,6 +77,7 @@ RTL_SOURCES = (
     "rtl/abi3/ot_a3_engine_issue_bridge.sv",
 )
 TEST_SOURCES = (
+    "rtl/test/a3_engine_completion_adapter.sv",
     "rtl/test/a3_shipped_prefix_top.sv",
     "rtl/test/a3_shipped_prefix_harness.cpp",
 )
@@ -560,6 +566,7 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
             "--Mdir",
             "obj_p3",
             *rtl,
+            str(ROOT / "rtl/test/a3_engine_completion_adapter.sv"),
             str(ROOT / "rtl/test/a3_shipped_prefix_top.sv"),
             str(ROOT / "rtl/test/a3_shipped_prefix_harness.cpp"),
             "-CFLAGS",

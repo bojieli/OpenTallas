@@ -15,6 +15,15 @@
 // which is where amendments A4 and A13 are checked -- the state
 // commit-or-discard decision, and the trap class and first faulting
 // instruction.
+//
+// The harness is the management processor (docs/CHIP_ARCHITECTURE_DESIGN.md
+// section 13 item 12): it parses the four device images itself, writes the
+// program and descriptor stores through the design's host load path once,
+// binds the sixteen request symbols per case through it, and streams the
+// program header through the admission beat port.  It is also the engines:
+// every accepted issue completes in the cycle after its acceptance, oldest
+// first (zero run-ahead; the randomised run-ahead lives in the deployment
+// campaign).
 // ---------------------------------------------------------------------------
 #include "Vot_a3_microsequencer_top.h"
 #include "verilated.h"
@@ -22,6 +31,7 @@
 #include <cstdint>
 #include <cstdio>
 #include <cstdlib>
+#include <deque>
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -31,6 +41,9 @@ namespace {
 
 constexpr unsigned kCaseStride = 35;
 constexpr unsigned kViewStride = 7;
+constexpr unsigned kProgramWords = 2048;
+constexpr unsigned kDescWords = 4096;
+constexpr unsigned kSymbolsPerCase = 16;
 
 [[noreturn]] void fail(const std::string& message) {
     std::cerr << "FAIL: " << message << "\n";
@@ -46,6 +59,29 @@ std::vector<uint32_t> load_words(const char* path) {
         words.push_back(static_cast<uint32_t>(std::stoul(token, nullptr, 16)));
     }
     return words;
+}
+
+// A wide image: one row per line of `digits` hex digits, as 32-bit lanes in
+// little-endian lane order (lane 0 is the last 8 digits of the line).
+std::vector<std::vector<uint32_t>> load_rows(const char* path, unsigned digits,
+                                             unsigned rows) {
+    std::ifstream stream(path);
+    if (!stream) fail(std::string("cannot open ") + path);
+    std::vector<std::vector<uint32_t>> image;
+    std::string token;
+    while (stream >> token) {
+        if (token.size() != digits)
+            fail(std::string("malformed row in ") + path);
+        std::vector<uint32_t> lanes(digits / 8, 0);
+        for (unsigned lane = 0; lane < digits / 8; ++lane) {
+            const std::string chunk =
+                token.substr(digits - 8 * (lane + 1), 8);
+            lanes[lane] = static_cast<uint32_t>(std::stoul(chunk, nullptr, 16));
+        }
+        image.push_back(lanes);
+    }
+    if (image.size() < rows) image.resize(rows, std::vector<uint32_t>(digits / 8, 0));
+    return image;
 }
 
 class Model {
@@ -64,17 +100,25 @@ class Model {
 
     void reset() {
         dut.rst_n = 0;
-        dut.header_start = 0;
+        dut.hdr_in_valid = 0;
+        dut.hdr_in_start = 0;
+        dut.hdr_in_word = 0;
+        dut.host_we = 0;
+        dut.host_sel = 0;
+        dut.host_row = 0;
+        dut.host_lane = 0;
+        dut.host_wdata = 0;
         dut.start = 0;
         dut.issue_ready = 1;
-        dut.cfg_header_base = 0;
+        dut.complete_valid = 0;
+        dut.complete_slot = 0;
+        dut.complete_fault = 0;
+        dut.complete_trap_class = 0;
         dut.cfg_program_base = 0;
         dut.cfg_instruction_count = 0;
         dut.cfg_entry_pc = 0;
         dut.cfg_desc_base = 0;
         dut.cfg_desc_count = 0;
-        dut.cfg_symbol_base = 0;
-        dut.cfg_symbol_mask = 0;
         dut.cfg_max_retired_work = 0;
         dut.cfg_state_count = 0;
         dut.predicate_read_valid = 0;
@@ -83,6 +127,16 @@ class Model {
         for (unsigned cycle = 0; cycle < 6; ++cycle) step();
         dut.rst_n = 1;
         for (unsigned cycle = 0; cycle < 2; ++cycle) step();
+    }
+
+    void host_write(unsigned sel, uint32_t row, unsigned lane, uint32_t data) {
+        dut.host_sel = sel;
+        dut.host_row = row;
+        dut.host_lane = lane;
+        dut.host_wdata = data;
+        dut.host_we = 1;
+        step();
+        dut.host_we = 0;
     }
 
     // A deliberately different stall pattern from the Icarus testbench: the
@@ -118,6 +172,12 @@ int main(int argc, char** argv) {
     const std::vector<uint32_t> views = load_words("a3_view.hex");
     const std::vector<uint32_t> meta = load_words("a3_meta.hex");
     if (meta.size() < 5) fail("a3_meta.hex is short");
+    const std::vector<std::vector<uint32_t>> image_program =
+        load_rows("a3_program.hex", 64, kProgramWords);
+    const std::vector<uint32_t> image_header = load_words("a3_header.hex");
+    const std::vector<std::vector<uint32_t>> image_desc =
+        load_rows("a3_descriptor.hex", 384, kDescWords);
+    const std::vector<uint32_t> image_symbol = load_words("a3_symbol.hex");
 
     const unsigned case_count = meta[0];
     const unsigned expected_issue_total = meta[1];
@@ -127,6 +187,27 @@ int main(int argc, char** argv) {
     Model model;
     Check check;
     model.reset();
+
+    // -- load the two control stores through the host path, once ----------
+    model.settle();
+    if (!model.dut.host_ready) fail("host path not ready before the load");
+    unsigned long host_writes = 0;
+    for (unsigned row = 0; row < kProgramWords; ++row)
+        for (unsigned lane = 0; lane < 8; ++lane) {
+            model.host_write(0, row, lane, image_program[row][lane]);
+            ++host_writes;
+        }
+    for (unsigned row = 0; row < kDescWords; ++row)
+        for (unsigned lane = 0; lane < 48; ++lane) {
+            model.host_write(1, row, lane, image_desc[row][lane]);
+            ++host_writes;
+        }
+    model.step();
+    if (model.dut.host_write_refused)
+        fail("a control-store write was refused during the load");
+    std::printf("HOST_LOAD program_rows=%u descriptor_rows=%u writes=%lu refused=%u\n",
+                kProgramWords, kDescWords, host_writes,
+                static_cast<unsigned>(model.dut.host_write_refused));
 
     unsigned total_issues = 0;
     unsigned total_views = 0;
@@ -138,11 +219,26 @@ int main(int argc, char** argv) {
         const uint32_t* word = cases.data() + index * kCaseStride;
         const uint32_t flags = word[10];
 
-        // -- program header admission ---------------------------------
-        model.dut.cfg_header_base = word[6];
-        model.dut.header_start = 1;
-        model.step();
-        model.dut.header_start = 0;
+        // -- request symbols: sixteen 64-bit entries with bound bits --------
+        for (unsigned symbol = 0; symbol < kSymbolsPerCase; ++symbol) {
+            const size_t at = static_cast<size_t>(word[4]) + symbol;
+            const uint32_t value = at < image_symbol.size() ? image_symbol[at] : 0;
+            model.host_write(2, symbol, 0, value);
+            model.host_write(2, symbol, 1, 0);
+            model.host_write(2, symbol, 2, (word[5] >> symbol) & 1U);
+        }
+        if (model.dut.host_write_refused) fail("a symbol write was refused");
+
+        // -- program header admission: 64 beats through the port -----------
+        for (unsigned beat = 0; beat < 64; ++beat) {
+            const size_t at = static_cast<size_t>(word[6]) + beat;
+            model.dut.hdr_in_valid = 1;
+            model.dut.hdr_in_start = (beat == 0) ? 1 : 0;
+            model.dut.hdr_in_word = at < image_header.size() ? image_header[at] : 0;
+            model.step();
+        }
+        model.dut.hdr_in_valid = 0;
+        model.dut.hdr_in_start = 0;
         unsigned guard = 0;
         while (!model.dut.header_done && guard < 400) {
             model.step();
@@ -169,8 +265,6 @@ int main(int argc, char** argv) {
         model.dut.cfg_instruction_count = word[1];
         model.dut.cfg_desc_base = word[2];
         model.dut.cfg_desc_count = word[3];
-        model.dut.cfg_symbol_base = word[4];
-        model.dut.cfg_symbol_mask = word[5];
         model.dut.cfg_entry_pc = word[7];
         model.dut.cfg_max_retired_work =
             (static_cast<uint64_t>(word[9]) << 32) | word[8];
@@ -188,17 +282,26 @@ int main(int argc, char** argv) {
         model.step();
         model.dut.start = 0;
 
+        std::deque<uint32_t> pending;
         unsigned seen = 0;
         unsigned views_seen = 0;
         unsigned tick = 0;
         guard = 0;
         while (!model.dut.done && guard < 400000) {
             model.dut.issue_ready = model.ready_now(tick, index) ? 1 : 0;
+            // the engines: complete the oldest accepted operation
+            model.dut.complete_valid = 0;
+            if (!pending.empty()) {
+                model.dut.complete_valid = 1;
+                model.dut.complete_slot = pending.front();
+                pending.pop_front();
+            }
             model.settle();
             const bool fire = model.dut.issue_valid && model.dut.issue_ready;
             const uint32_t family = model.dut.issue_family;
             const uint32_t sub = model.dut.issue_sub;
             const uint32_t descriptor = model.dut.issue_descriptor_id;
+            const uint32_t slot = model.dut.issue_slot;
             // The view port is an observation pulse, not a handshake: one
             // assertion is one resolved operand view.
             const bool view_fire = model.dut.view_valid;
@@ -209,6 +312,7 @@ int main(int argc, char** argv) {
             const uint64_t view_offset = model.dut.view_element_offset;
             const uint32_t view_rank = model.dut.view_rank;
             model.step();
+            if (fire) pending.push_back(slot);
             ++tick;
             ++guard;
             if (view_fire) {
@@ -238,6 +342,8 @@ int main(int argc, char** argv) {
             ++seen;
             ++total_issues;
         }
+        model.dut.complete_valid = 0;
+        model.dut.issue_ready = 1;
         if (!model.dut.done) fail("transaction timeout");
 
         check.equal("complete", index, model.dut.complete, (flags >> 2) & 1U);
@@ -275,6 +381,8 @@ int main(int argc, char** argv) {
                     model.dut.count_views_resolved, view_count);
         check.equal("event single assignment", index,
                     model.dut.event_signal_error, 0U);
+        check.equal("irs protocol", index, model.dut.irs_protocol_error, 0U);
+        check.equal("outstanding at done", index, model.dut.dbg_outstanding, 0U);
         model.step();
     }
 

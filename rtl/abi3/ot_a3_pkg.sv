@@ -183,8 +183,40 @@ package ot_a3_pkg;
     // (instructions, descriptors) and not in what the sequencer holds.
     localparam integer A3_LOOP_DEPTH   = 4;    // capability max_loop_depth
     localparam integer A3_STATE_SLOTS  = 16;   // capability max_state_resources (A22)
-    localparam integer A3_EVENT_COUNT  = 1024; // capability max_event_id + 1 (A23)
+    // AM-C1 (docs/CHIP_ARCHITECTURE_DESIGN.md section 10.1): the scoreboard
+    // holds 2,048 events x {pending, signalled, published}.  The four shipped
+    // capability records still publish max_event_id 1,023: they are
+    // certificate inputs of the bound deployments (the vector builder
+    // re-hashes them and refuses drift), so re-publishing them is AM-C1's
+    // separate capability step.  Until then the RTL bound is the wider one
+    // and every admitted program fits it by construction.
+    localparam integer A3_EVENT_COUNT  = 2048; // capability max_event_id + 1 (A23, AM-C1)
     localparam integer A3_WAIT_PRODUCERS = 12; // MAX_WAIT_PRODUCERS
+
+    // -- asynchronous front end (section 3.2 items 2-3, 3.6, 3.8; [T2.1-14],
+    // -- [T2.1-15]) ------------------------------------------------------
+    // An engine instruction leaves the front end at issue and completes
+    // asynchronously; at most A3_QUEUE_DEPTH outstanding per queue and
+    // A3_OUTSTANDING per die, with issue stalling at either bound.  The
+    // Issue Record Store has one entry per outstanding operation and the
+    // dependence table one entry of A3_DEP_RANGES byte ranges per IRS entry.
+    // The 23 queues are family x queue_index (section 3.8): tensor 4, vector
+    // 4, attention 2, reduction 2, route 1, selection 1, dma 4, link 4 (= the
+    // virtual channel), state 1; OBSERVATION and RECOVERY share the state
+    // queue.  Every value here is a hardware property of the shared front
+    // end, not a capability field: the capability's max_outstanding_per_queue
+    // bounds what a program may *require*, and the front end's bound is what
+    // it *provides* -- issue simply stalls until an entry frees.
+    localparam integer A3_OUTSTANDING  = 32;
+    localparam integer A3_QUEUE_DEPTH  = 16;
+    localparam integer A3_QUEUE_COUNT  = 23;
+    localparam integer A3_IRS_ENTRIES  = A3_OUTSTANDING;
+    localparam integer A3_DEP_RANGES   = 4;
+
+    // Host load path selects (ot_a3_device_top host_sel).
+    localparam [1:0] A3_HOST_SEL_PROGRAM    = 2'd0;
+    localparam [1:0] A3_HOST_SEL_DESCRIPTOR = 2'd1;
+    localparam [1:0] A3_HOST_SEL_SYMBOL     = 2'd2;
 
     // -- decoder error registry (block-local, mapped to trap classes) ---
     localparam [3:0] A3_ERR_NONE           = 4'd0;
@@ -213,7 +245,7 @@ package ot_a3_pkg;
                 A3_MAJOR_TENSOR:      a3_major_sub_bound = {1'b1, 8'h03};
                 A3_MAJOR_VECTOR:      a3_major_sub_bound = {1'b1, 8'h0c};
                 A3_MAJOR_ATTENTION:   a3_major_sub_bound = {1'b1, 8'h02};
-                A3_MAJOR_ROUTE:       a3_major_sub_bound = {1'b1, 8'h06};
+                A3_MAJOR_ROUTE:       a3_major_sub_bound = {1'b1, 8'h07};   // AM-E6
                 A3_MAJOR_REDUCTION:   a3_major_sub_bound = {1'b1, 8'h04};
                 A3_MAJOR_SELECTION:   a3_major_sub_bound = {1'b1, 8'h02};
                 A3_MAJOR_STATE:       a3_major_sub_bound = {1'b1, 8'h04};
@@ -272,6 +304,62 @@ package ot_a3_pkg;
                 A3_MAJOR_STATE:       a3_family_descriptor_type = A3_DESC_STATE;
                 A3_MAJOR_OBSERVATION: a3_family_descriptor_type = A3_DESC_COUNTER_CLASS;
                 default:              a3_family_descriptor_type = A3_DESC_NONE;
+            endcase
+        end
+    endfunction
+
+    // First queue of a family (section 3.8 table, in family order).
+    function automatic [4:0] a3_queue_base;
+        input [7:0] major;
+        begin
+            case (major)
+                A3_MAJOR_TENSOR:     a3_queue_base = 5'd0;
+                A3_MAJOR_VECTOR:     a3_queue_base = 5'd4;
+                A3_MAJOR_ATTENTION:  a3_queue_base = 5'd8;
+                A3_MAJOR_REDUCTION:  a3_queue_base = 5'd10;
+                A3_MAJOR_ROUTE:      a3_queue_base = 5'd12;
+                A3_MAJOR_SELECTION:  a3_queue_base = 5'd13;
+                A3_MAJOR_DMA:        a3_queue_base = 5'd14;
+                A3_MAJOR_LINK:       a3_queue_base = 5'd18;
+                default:             a3_queue_base = 5'd22;   // STATE, OBSERVATION, RECOVERY
+            endcase
+        end
+    endfunction
+
+    // Mask that folds a SCHEDULE queue_index (or a COMMUNICATION virtual
+    // channel) onto the family's queues: every family count is a power of
+    // two, so an index the capability admitted but the front end does not
+    // hold aliases onto a queue the family does hold.  Aliasing changes only
+    // where an operation waits for a free entry, never what it does.
+    function automatic [4:0] a3_queue_index_mask;
+        input [7:0] major;
+        begin
+            case (major)
+                A3_MAJOR_TENSOR,
+                A3_MAJOR_VECTOR,
+                A3_MAJOR_DMA,
+                A3_MAJOR_LINK:       a3_queue_index_mask = 5'd3;
+                A3_MAJOR_ATTENTION,
+                A3_MAJOR_REDUCTION:  a3_queue_index_mask = 5'd1;
+                default:             a3_queue_index_mask = 5'd0;
+            endcase
+        end
+    endfunction
+
+    // Bits per element of a tensor-view dtype, transcribed from
+    // runtime/abi3/constants.DTYPE_BITS.  An unregistered dtype cannot pass
+    // admission; it is sized at the widest element so a byte range built
+    // from it is never narrower than the truth.
+    function automatic [6:0] a3_dtype_bits;
+        input [7:0] dtype;
+        begin
+            case (dtype)
+                8'h00, 8'h01, 8'h20, 8'h21, 8'h31: a3_dtype_bits = 7'd8;
+                8'h02, 8'h03, 8'h10, 8'h11:        a3_dtype_bits = 7'd16;
+                8'h04, 8'h05, 8'h12:               a3_dtype_bits = 7'd32;
+                8'h06, 8'h07, 8'h13:               a3_dtype_bits = 7'd64;
+                8'h30:                             a3_dtype_bits = 7'd4;
+                default:                           a3_dtype_bits = 7'd64;
             endcase
         end
     endfunction

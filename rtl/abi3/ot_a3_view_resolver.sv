@@ -76,15 +76,38 @@
 // One 32x32 product is unavoidable -- ``selector_value * element_stride`` is
 // the A4 term itself -- so a single multiplier is shared between the offset
 // term, A18's ``n * d`` and ``n * tokens`` numerators, the axis test's
-// ``stride[a] * step`` and the ``iteration * bound_divisor`` product, evaluated
-// in successive cycles.  All of them are compared and accumulated at 64 bits,
-// so a product that does not fit in 32 fails the axis test rather than wrapping
-// into passing it.  The two divisions by ``u`` use one shared restoring divider
-// over a 64-bit numerator, the same structure ot_a3_loop_stack already uses for
-// ``bound_divisor``; a numerator and unit of one -- every view written before
-// A18 -- bypasses it entirely, so the A13 path costs exactly the cycles it
-// always did.  The block therefore has a bounded, data-independent cost and no
-// wide arithmetic in the caller's control path.
+// ``stride[a] * step``, the ``iteration * bound_divisor`` product and the
+// bounding-range products below, evaluated in successive cycles.  All of them
+// are compared and accumulated at 64 bits, so a product that does not fit in
+// 32 fails the axis test rather than wrapping into passing it.  The two
+// divisions by ``u`` go to the front end's one shared divider
+// (ot_a3_shared_divider; docs/CHIP_ARCHITECTURE_DESIGN.md section 3.5) through
+// the div_* request port; a numerator and unit of one -- every view written
+// before A18 -- bypasses it entirely, so the A13 path costs exactly the cycles
+// it always did.  The block therefore has a bounded, data-independent cost and
+// no wide arithmetic in the caller's control path.
+//
+// This block is one lane of the six-lane resolver bank (ot_a3_resolver_bank,
+// section 3.5).  Two things are new with the asynchronous front end:
+//
+//   * the symbol file is 64 bits wide (section 3.3).  A RUNTIME_SYMBOL term
+//     multiplies the low word first and, only when the high word is nonzero,
+//     takes a second pass on the same multiplier for ``(hi * stride) << 32``;
+//     every shipped binding fits 32 bits, so the second pass is never taken
+//     on a shipped program and the offset arithmetic is what it always was;
+//
+//   * a B stage after the extent (section 3.5 "B"): the bounding byte range
+//     of the resolved view for the dependence table (section 3.6), computed
+//     in *bits* so MXFP4's half-byte elements round outward -- lo =
+//     floor(offset x bits / 8), hi = ceil((offset x bits + span) / 8) with
+//     span = sum_i (dim_i - 1) x stride_i x bits + bits over the resolved
+//     dims (the clamped axis included), strides as the unsigned fields they
+//     are, and a range that does not fit 40 bits widened to the whole object
+//     rather than truncated.  The object is the descriptor header's
+//     primary_object_id and the write bit its WRITE permission; the scale
+//     object (payload byte 4) is reported beside it so the caller can enter
+//     it as a whole-object read range.  Conservative by construction: the
+//     range is never narrower than the bytes the engine may touch.
 // ---------------------------------------------------------------------------
 module ot_a3_view_resolver
     // The package is referenced by scope rather than wildcard-imported: a
@@ -104,6 +127,10 @@ module ot_a3_view_resolver
     /* verilator lint_off UNUSED */
     input  wire [1023:0] payload,
     /* verilator lint_on UNUSED */
+    // Descriptor header fields the B stage reports: primary_object_id (byte
+    // 16) and permissions (byte 32).
+    input  wire [31:0]   object_id,
+    input  wire [31:0]   permissions,
 
     output reg           busy,
     output reg           done,
@@ -120,6 +147,14 @@ module ot_a3_view_resolver
     output wire [7:0]    out_dtype,
     output wire [7:0]    out_term_count,
 
+    // B stage: the bounding byte range for the dependence table.
+    output wire [15:0]   out_object,
+    output wire          out_write,
+    output reg  [39:0]   out_lo,
+    output reg  [39:0]   out_hi,
+    output wire [31:0]   out_scale_object,
+    output wire          out_scale_valid,
+
     // Loop stack query port (combinational).
     output reg  [31:0]   loop_query_id,
     input  wire          loop_query_active,
@@ -128,10 +163,18 @@ module ot_a3_view_resolver
     input  wire [31:0]   loop_query_divisor,
     input  wire [31:0]   loop_query_bound_value,
 
-    // Runtime symbol file (combinational).
+    // Runtime symbol file (combinational, 64-bit).
     output reg  [3:0]    sym_index,
-    input  wire [31:0]   sym_value,
-    input  wire          sym_bound
+    input  wire [63:0]   sym_value,
+    input  wire          sym_bound,
+
+    // Shared divider request port.
+    output reg           div_req,
+    output reg  [63:0]   div_num,
+    output reg  [31:0]   div_den,
+    input  wire          div_done,
+    input  wire [63:0]   div_quot,
+    input  wire [63:0]   div_rem
 );
     // -- TENSOR_VIEW payload view (runtime/abi3/descriptors.TENSOR_VIEW_PAYLOAD)
     // dtype@0 rank@1 layout_class@2 dynamic_term_count@3, element_offset@16,
@@ -160,10 +203,45 @@ module ot_a3_view_resolver
     //: and every view written before this amendment.  It bypasses the divider.
     wire        view_identity    = (view_unit == 32'd1) && (view_numerator == 32'd1);
 
+    wire [31:0] view_scale_object = payload[63:32];
+
     assign out_rank        = view_rank;
     assign out_dtype       = view_dtype;
     assign out_term_count  = view_terms;
     assign out_extent_axis = view_extent_axis;
+    assign out_object      = object_id[15:0];
+    assign out_write       = permissions[1];     // Permission.WRITE
+    assign out_scale_object = view_scale_object;
+    assign out_scale_valid  = (view_scale_object != ot_a3_pkg::A3_NO_ID);
+
+    // dim[i] and stride[i] for the bounding-range walk (B stage).
+    reg [2:0]  b_axis;
+    reg [31:0] b_dim;
+    reg [31:0] b_stride;
+    always @* begin
+        case (b_axis)
+            3'd0: begin b_dim = payload[223:192]; b_stride = payload[415:384]; end
+            3'd1: begin b_dim = payload[255:224]; b_stride = payload[447:416]; end
+            3'd2: begin b_dim = payload[287:256]; b_stride = payload[479:448]; end
+            3'd3: begin b_dim = payload[319:288]; b_stride = payload[511:480]; end
+            3'd4: begin b_dim = payload[351:320]; b_stride = payload[543:512]; end
+            default: begin b_dim = payload[383:352]; b_stride = payload[575:544]; end
+        endcase
+    end
+    wire [31:0] b_dim_resolved = ({5'd0, b_axis} == view_extent_axis) ? out_extent : b_dim;
+    wire [6:0]  b_bits = ot_a3_pkg::a3_dtype_bits(view_dtype);
+    // log2(bits): 4 -> 2, 8 -> 3, 16 -> 4, 32 -> 5, 64 -> 6
+    wire [2:0]  b_shift = (b_bits == 7'd4)  ? 3'd2 :
+                          (b_bits == 7'd8)  ? 3'd3 :
+                          (b_bits == 7'd16) ? 3'd4 :
+                          (b_bits == 7'd32) ? 3'd5 : 3'd6;
+    reg  [69:0] b_span;              // sum (dim_i - 1) * stride_i, elements
+    wire [69:0] b_lo_bits   = {6'd0, out_element_offset} << b_shift;
+    wire [69:0] b_span_bits = (b_span + 70'd1) << b_shift;
+    wire [69:0] b_hi_bits   = b_lo_bits + b_span_bits + 70'd7;
+    wire [66:0] b_lo_bytes  = b_lo_bits[69:3];
+    wire [66:0] b_hi_bytes  = b_hi_bits[69:3];
+    wire        b_overflow  = (b_lo_bytes[66:40] != 27'd0) || (b_hi_bytes[66:40] != 27'd0);
 
     // dim[a] and stride[a] for the declared axis.  A13 read dim0 and stride0
     // because axis zero was the only axis it could clamp; the mux is the whole
@@ -231,24 +309,29 @@ module ot_a3_view_resolver
         endcase
     end
 
-    localparam [3:0] S_IDLE      = 4'd0;
-    localparam [3:0] S_SELECT    = 4'd1;
-    localparam [3:0] S_READ      = 4'd2;
-    localparam [3:0] S_OFFSET    = 4'd3;
-    localparam [3:0] S_BLOCK     = 4'd4;
-    localparam [3:0] S_NUM_STEP  = 4'd5;
-    localparam [3:0] S_DIV_STEP  = 4'd6;
-    localparam [3:0] S_AXIS_MUL  = 4'd7;
-    localparam [3:0] S_AXIS      = 4'd8;
-    localparam [3:0] S_REMAIN    = 4'd9;
-    localparam [3:0] S_SCALE     = 4'd10;
-    localparam [3:0] S_NUM_EXT   = 4'd11;
-    localparam [3:0] S_DIV_EXT   = 4'd12;
-    localparam [3:0] S_FOLD      = 4'd13;
-    localparam [3:0] S_FINISH    = 4'd14;
-    localparam [3:0] S_EDGE_READ = 4'd15;
+    localparam [4:0] S_IDLE      = 5'd0;
+    localparam [4:0] S_SELECT    = 5'd1;
+    localparam [4:0] S_READ      = 5'd2;
+    localparam [4:0] S_OFFSET    = 5'd3;
+    localparam [4:0] S_BLOCK     = 5'd4;
+    localparam [4:0] S_NUM_STEP  = 5'd5;
+    localparam [4:0] S_DIV_STEP  = 5'd6;
+    localparam [4:0] S_AXIS_MUL  = 5'd7;
+    localparam [4:0] S_AXIS      = 5'd8;
+    localparam [4:0] S_REMAIN    = 5'd9;
+    localparam [4:0] S_SCALE     = 5'd10;
+    localparam [4:0] S_NUM_EXT   = 5'd11;
+    localparam [4:0] S_DIV_EXT   = 5'd12;
+    localparam [4:0] S_FOLD      = 5'd13;
+    localparam [4:0] S_FINISH    = 5'd14;
+    localparam [4:0] S_EDGE_READ = 5'd15;
+    localparam [4:0] S_OFFSET_HI = 5'd16;
+    localparam [4:0] S_BOUND_MUL = 5'd17;
+    localparam [4:0] S_BOUND_ACC = 5'd18;
+    localparam [4:0] S_BOUND_END = 5'd19;
 
-    reg [3:0]  state;
+    reg [4:0]  state;
+    reg [31:0] sym_hi;           // high word of a RUNTIME_SYMBOL value
     reg [31:0] value;            // the selector's resolved value
     reg        value_is_loop;
     reg        loop_symbolic;
@@ -267,54 +350,6 @@ module ot_a3_view_resolver
     reg  [31:0] mul_b;
     reg  [63:0] product;
     wire [63:0] product_w = mul_a * mul_b;
-
-    // -- shared restoring divider: quotient = floor(numerator / divisor) ----
-    // The same structure ot_a3_loop_stack uses for ``bound_divisor``; A18's two
-    // divisions are both by ``extent_unit``, and a unit of one bypasses it.
-    reg         div_start;
-    reg  [63:0] div_numerator;
-    reg  [31:0] div_divisor;
-    reg  [63:0] div_shift;
-    reg  [63:0] div_remainder;
-    reg  [63:0] div_quotient;
-    reg  [6:0]  div_count;
-    reg         div_busy;
-    reg         div_done;
-    wire [63:0] div_trial = {div_remainder[62:0], div_shift[63]};
-
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
-            div_busy <= 1'b0;
-            div_done <= 1'b0;
-            div_shift <= 64'd0;
-            div_remainder <= 64'd0;
-            div_quotient <= 64'd0;
-            div_count <= 7'd0;
-        end else begin
-            div_done <= 1'b0;
-            if (div_start) begin
-                div_busy <= 1'b1;
-                div_shift <= div_numerator;
-                div_remainder <= 64'd0;
-                div_quotient <= 64'd0;
-                div_count <= 7'd64;
-            end else if (div_busy) begin
-                if (div_trial >= {32'd0, div_divisor}) begin
-                    div_remainder <= div_trial - {32'd0, div_divisor};
-                    div_quotient <= {div_quotient[62:0], 1'b1};
-                end else begin
-                    div_remainder <= div_trial;
-                    div_quotient <= {div_quotient[62:0], 1'b0};
-                end
-                div_shift <= {div_shift[62:0], 1'b0};
-                div_count <= div_count - 7'd1;
-                if (div_count == 7'd1) begin
-                    div_busy <= 1'b0;
-                    div_done <= 1'b1;
-                end
-            end
-        end
-    end
 
     // tokens = symbol_value - iteration * bound_divisor, evaluated wide and
     // signed so that an iteration past the extent is negative rather than
@@ -348,6 +383,7 @@ module ot_a3_view_resolver
             done <= 1'b1;
             fault <= 1'b1;
             trap_class <= class_value;
+            div_req <= 1'b0;
             state <= S_IDLE;
         end
     endtask
@@ -379,16 +415,21 @@ module ot_a3_view_resolver
             mul_a <= 32'd0;
             mul_b <= 32'd0;
             product <= 64'd0;
-            div_start <= 1'b0;
-            div_numerator <= 64'd0;
-            div_divisor <= 32'd1;
+            div_req <= 1'b0;
+            div_num <= 64'd0;
+            div_den <= 32'd1;
+            sym_hi <= 32'd0;
+            b_axis <= 3'd0;
+            b_span <= 70'd0;
+            out_lo <= 40'd0;
+            out_hi <= 40'd0;
         end else begin
             done <= 1'b0;
-            div_start <= 1'b0;
             if (clear) begin
                 state <= S_IDLE;
                 busy <= 1'b0;
                 fault <= 1'b0;
+                div_req <= 1'b0;
             end else begin
                 case (state)
                     S_IDLE: begin
@@ -484,9 +525,10 @@ module ot_a3_view_resolver
                                 // "view N: symbol S is unbound"
                                 fail_closed(ot_a3_pkg::A3_TRAP_MEMORY);
                             end else begin
-                                value <= sym_value;
+                                value <= sym_value[31:0];
                                 value_is_loop <= 1'b0;
-                                mul_a <= sym_value;
+                                sym_hi <= sym_value[63:32];
+                                mul_a <= sym_value[31:0];
                                 mul_b <= term_stride;
                                 state <= S_OFFSET;
                             end
@@ -498,6 +540,18 @@ module ot_a3_view_resolver
                     end
                     S_OFFSET: begin
                         product <= product_w;
+                        if (!value_is_loop && (sym_hi != 32'd0)) begin
+                            // Second pass for a symbol above 2^32: the high
+                            // word's product lands 32 bits up.
+                            mul_a <= sym_hi;
+                            state <= S_OFFSET_HI;
+                        end else begin
+                            state <= S_BLOCK;
+                        end
+                    end
+                    S_OFFSET_HI: begin
+                        out_element_offset <= out_element_offset + product;
+                        product <= {product_w[31:0], 32'd0};
                         state <= S_BLOCK;
                     end
                     S_BLOCK: begin
@@ -524,20 +578,21 @@ module ot_a3_view_resolver
                     end
                     S_NUM_STEP: begin
                         // product_w is numerator * bound_divisor this cycle.
-                        div_start <= 1'b1;
-                        div_numerator <= product_w;
-                        div_divisor <= view_unit;
+                        div_req <= 1'b1;
+                        div_num <= product_w;
+                        div_den <= view_unit;
                         state <= S_DIV_STEP;
                     end
                     S_DIV_STEP: begin
                         if (div_done) begin
-                            axis_step <= div_quotient;
+                            div_req <= 1'b0;
+                            axis_step <= div_quot;
                             // A unit that does not divide ``n * d`` means one
                             // iteration is not a whole number of this axis's
                             // elements, so the term walks nothing.
-                            unit_divides <= (div_remainder == 64'd0);
+                            unit_divides <= (div_rem == 64'd0);
                             if (edge_phase) begin
-                                if (div_remainder == 64'd0) begin
+                                if (div_rem == 64'd0) begin
                                     mul_a <= value;
                                     mul_b <= loop_divisor;
                                     state <= S_REMAIN;
@@ -604,17 +659,18 @@ module ot_a3_view_resolver
                     S_NUM_EXT: begin
                         // product_w is numerator * tokens this cycle; the same
                         // shared multiplier, one state later.
-                        div_start <= 1'b1;
-                        div_numerator <= product_w;
-                        div_divisor <= view_unit;
+                        div_req <= 1'b1;
+                        div_num <= product_w;
+                        div_den <= view_unit;
                         state <= S_DIV_EXT;
                     end
                     S_DIV_EXT: begin
                         if (div_done) begin
+                            div_req <= 1'b0;
                             // The bias is added after the division, because it
                             // is a count the operand carries whatever the
                             // request is rather than a scaling of it.
-                            axis_extent <= div_quotient + {32'd0, view_bias};
+                            axis_extent <= div_quot + {32'd0, view_bias};
                             state <= S_FOLD;
                         end
                     end
@@ -641,6 +697,39 @@ module ot_a3_view_resolver
                             out_extent <= remain;
                         else
                             out_extent <= view_dim_axis;
+                        b_axis <= 3'd0;
+                        b_span <= 70'd0;
+                        if (view_rank == 8'd0)
+                            state <= S_BOUND_END;
+                        else
+                            state <= S_BOUND_MUL;
+                    end
+                    // -- B stage: bounding byte range ----------------------
+                    S_BOUND_MUL: begin
+                        // (dim_i - 1) * stride_i for the resolved dims; an
+                        // empty axis contributes nothing.
+                        mul_a <= (b_dim_resolved == 32'd0) ? 32'd0
+                                                           : (b_dim_resolved - 32'd1);
+                        mul_b <= b_stride;
+                        state <= S_BOUND_ACC;
+                    end
+                    S_BOUND_ACC: begin
+                        b_span <= b_span + {6'd0, product_w};
+                        if ({5'd0, b_axis} + 8'd1 >= view_rank) begin
+                            state <= S_BOUND_END;
+                        end else begin
+                            b_axis <= b_axis + 3'd1;
+                            state <= S_BOUND_MUL;
+                        end
+                    end
+                    S_BOUND_END: begin
+                        if (b_overflow) begin
+                            out_lo <= 40'd0;
+                            out_hi <= {40{1'b1}};
+                        end else begin
+                            out_lo <= b_lo_bytes[39:0];
+                            out_hi <= b_hi_bytes[39:0];
+                        end
                         busy <= 1'b0;
                         done <= 1'b1;
                         fault <= 1'b0;

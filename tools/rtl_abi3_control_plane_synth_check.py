@@ -56,8 +56,9 @@ PACKAGES = {
     "ot_fp32_rne_pkg": "rtl/ot_fp32_rne_pkg.sv",
 }
 
-# The eight blocks [OI-43] names, each with the packages it references by
-# scope and the blocks it instantiates.  Order is dependency order.
+# The eight blocks [OI-43] names plus the asynchronous front end's five and
+# the device top, each with the packages it references by scope and the
+# blocks it instantiates.  Order is dependency order.
 BLOCKS: tuple[dict[str, Any], ...] = (
     {"top": "ot_a3_program_header", "packages": ["ot_a3_pkg"], "instantiates": []},
     {"top": "ot_a3_instruction_decoder", "packages": ["ot_a3_pkg"], "instantiates": []},
@@ -65,15 +66,50 @@ BLOCKS: tuple[dict[str, Any], ...] = (
     {"top": "ot_a3_loop_stack", "packages": ["ot_a3_pkg"], "instantiates": []},
     {"top": "ot_a3_state_controller", "packages": ["ot_a3_pkg"], "instantiates": []},
     {"top": "ot_a3_view_resolver", "packages": ["ot_a3_pkg"], "instantiates": []},
+    # The asynchronous front end (docs/CHIP_ARCHITECTURE_DESIGN.md section
+    # 11.4 item 4, second half): the shared divider, the symbol file, the
+    # six-lane resolver bank, the issue record store and the dependence table.
+    {"top": "ot_a3_shared_divider", "packages": ["ot_a3_pkg"], "instantiates": []},
+    {"top": "ot_a3_symbol_file", "packages": ["ot_a3_pkg"], "instantiates": []},
+    {"top": "ot_a3_issue_record_store", "packages": ["ot_a3_pkg"], "instantiates": []},
+    {"top": "ot_a3_dependence_table", "packages": ["ot_a3_pkg"], "instantiates": []},
+    {
+        "top": "ot_a3_resolver_bank",
+        "packages": ["ot_a3_pkg"],
+        "instantiates": ["ot_a3_view_resolver"],
+    },
     {
         "top": "ot_a3_microsequencer",
         "packages": ["ot_a3_pkg"],
         "instantiates": [
             "ot_a3_event_scoreboard",
             "ot_a3_instruction_decoder",
+            "ot_a3_shared_divider",
+            "ot_a3_symbol_file",
             "ot_a3_loop_stack",
             "ot_a3_state_controller",
             "ot_a3_view_resolver",
+            "ot_a3_resolver_bank",
+            "ot_a3_issue_record_store",
+            "ot_a3_dependence_table",
+        ],
+    },
+    {
+        "top": "ot_a3_device_top",
+        "packages": ["ot_a3_pkg"],
+        "instantiates": [
+            "ot_a3_program_header",
+            "ot_a3_event_scoreboard",
+            "ot_a3_instruction_decoder",
+            "ot_a3_shared_divider",
+            "ot_a3_symbol_file",
+            "ot_a3_loop_stack",
+            "ot_a3_state_controller",
+            "ot_a3_view_resolver",
+            "ot_a3_resolver_bank",
+            "ot_a3_issue_record_store",
+            "ot_a3_dependence_table",
+            "ot_a3_microsequencer",
         ],
     },
     {

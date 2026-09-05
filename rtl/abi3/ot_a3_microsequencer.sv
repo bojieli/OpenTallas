@@ -1,58 +1,88 @@
 `timescale 1ns/1ps
 // ---------------------------------------------------------------------------
-// ABI 3.0 deterministic microsequencer (feature bit 2).
+// ABI 3.0 deterministic microsequencer (feature bit 2), asynchronous front end.
 //
 // One transaction, in order, from an entrypoint's first instruction to
 // CONTROL.COMPLETE or to the first trap.  The stages are the ones the golden
 // model (runtime/sim/device.Device.run_transaction) executes per instruction,
-// in exactly its order, because the two must agree instruction for instruction:
+// in exactly its order, because the two must agree instruction for
+// instruction (docs/CHIP_ARCHITECTURE_DESIGN.md section 3.2, the cycle-level
+// contract; section 3.3's rows F D P L W R H I):
 //
-//   fetch      pc bound check, retired-work bound check, 32-byte record read
+//   fetch      pc bound check, watchdog (issue serial vs max_retired_work),
+//              32-byte record read
 //   decode     ot_a3_instruction_decoder: CRC32C and structural legality
-//   predicate  PREDICATE descriptor, optional inversion, skip without retire
-//   wait       EVENT_WAIT_SET descriptor, every producer signalled
-//   execute    control transfer, transactional state, or engine issue
-//   retire     signal publication, counters, next pc
+//   predicate  PREDICATE descriptor, optional inversion, skip without retire;
+//              a BOOLEAN_OBJECT / EOS_MEMBER read is checked RAW against the
+//              dependence table before it is requested
+//   wait       EVENT_WAIT_SET descriptor: every producer signalled (and
+//              published under acquire); stall while any is pending (AM-C10)
+//   execute    control transfer, transactional state, or an engine issue:
+//              descriptor fetch, SCHEDULE fetch for the queue, six views
+//              resolved concurrently by ot_a3_resolver_bank, the dependence
+//              check (two ranges per cycle), publication of the resolved
+//              views in slot order, then the issue handshake
+//   retire     CONTROL retires in the front end; an engine instruction
+//              retires when its completion is reported, in any order
 //
 // Ordering that is load-bearing for correlation:
 //   * a predicated-off instruction is fetched, never waits, never signals and
 //     never retires;
-//   * a control instruction never publishes its signal event -- only an
-//     engine-family instruction does;
-//   * the issued counter advances before the operation can fault, the retired
-//     counter only after it cannot;
+//   * the issued counter advances at dispatch, before the operation can
+//     fault; the retired counter advances only at a completion that carries
+//     no fault (section 3.2 item 3: instructions.retired counts at
+//     completion; retired_work is retirements at COMPLETE);
 //   * an engine issue is emitted only once the family's own precondition has
-//     passed, so a faulting STATE or RECOVERY.ABORT produces no issue event.
+//     passed, so a faulting STATE or RECOVERY.ABORT produces no issue event;
+//   * the resolved views of an instruction are published together, after
+//     the dependence check has passed and immediately before its issue
+//     handshake, tagged with its issue-record slot -- so no view of an
+//     instruction the golden model never reached is ever published, and the
+//     view and issue streams stay in program order at every run-ahead depth.
 //
-// Engine datapaths sit behind a ready/valid response interface carrying the
-// issued (family, subopcode, descriptor ID).  ``issue_ready`` is completion,
-// not mere queue acceptance: alongside it the engine may return a precise
-// fail-stop trap.  A successful response retires and publishes the signal;
-// a faulting response does neither.  The sequencer still owns no arithmetic.
-// Data-dependent BOOLEAN_OBJECT and EOS_MEMBER predicates use a separate
-// request/response port.  The memory/selection integration owns the read (and,
-// for a cluster, the node-consensus check); the sequencer owns only the
-// authenticated predicate descriptor and the resulting control decision.
+// The engine port has two phases (section 3.2 item 2).  Issue: issue_valid /
+// issue_ready is *queue acceptance*, with the serial, the IRS slot and the
+// queue beside the family, subopcode, descriptor and pc; at most one per
+// cycle; it stalls while A3_QUEUE_DEPTH operations are outstanding on the
+// queue or A3_OUTSTANDING on the die.  Completion: complete_valid names the
+// slot, in any order, one per cycle, with a fault bit and class.  Retirement
+// then signals the event (pending -> signalled -> published), releases the
+// dependence entry and counts.
 //
-// The one thing an engine cannot be handed as a raw descriptor ID is its
-// operands' *extents*, because amendments A4 and A13 make those a function of
-// the loop and symbol bindings live at the dispatch.  Before an OPERATOR-family
-// instruction issues, each operand tensor view it names is therefore resolved
-// by ot_a3_view_resolver against the open loops and the request's symbols, and
-// the resolved extent and element offset are published on the view port in
-// operand order (inputs 0..3 then outputs 0..1, skipping NO_ID).  Without A13 a
-// final block iteration would present the block size where the request has
-// fewer rows -- the failure the amendment exists to remove.
+// Faults (section 3.2 item 5).  A precise front-end trap (decode, predicate,
+// wait, loop, resolver, watchdog, TRAP, running off the body) is held until
+// nothing is outstanding: if an engine fault arrives first it wins, because
+// its serial is lower.  An asynchronous engine fault stops issue in the cycle
+// it is reported; the front end abandons the instruction in flight (cancels a
+// predicate read, clears the resolver bank), waits for every outstanding
+// operation to complete or fault, then restores the transaction counters
+// from the snapshot the faulting instruction wrote at its issue -- fetched,
+// issued, predicated off, views resolved, loop iterations, branches, wait
+// events, signals, retired -- so a FAILED transaction's counters equal the
+// golden model's, which stops at the faulting pc.  The snapshot lives in the
+// issue record store's payload (lane 6 of the entry), beside the resolved
+// views (lanes 0..5); the payload is a memory macro outside this block.
+// first_fault_instruction is the lowest issue serial among faulting
+// instructions.  Predicate reads already made for later instructions are a
+// real run-ahead side effect (reads only) and are not undone.
 //
-// Where this block is deliberately stricter than the golden model -- it may
-// assume a verified program, but it does not have to trust one -- the check is
-// marked STRICTER below.
+// Drains (AM-C2).  FENCE drains at ENGINE scope -- every shipped wait set
+// carries scope 0, and a FENCE without a wait set is ENGINE scope by the
+// amendment -- which on one node is "nothing outstanding"; COMPLETE,
+// OBSERVATION.COUNTER_SNAPSHOT and RECOVERY.DRAIN/POISON drain the same way.
+// The single-node top has no CLUSTER / SYSTEM traversal to add.
+//
+// Not in this block, recorded here so the report and the design agree: the
+// front end is not pipelined across instructions (section 3.3's four-cycle
+// occupancy is not claimed; only issue -> completion is asynchronous); the
+// instruction CRC is still checked at fetch (8 beats, section 3.4 moves it to
+// LOAD; kept because the host-load bench's empty-store case depends on it);
+// no predicate value cache; no node-band predication (AM-R4); frontier
+// streaming is frontier 0 (section 3.6, non-architectural).
+//
+// The package is referenced by scope, never wildcard-imported [OI-43].
 // ---------------------------------------------------------------------------
 module ot_a3_microsequencer
-    // The package is referenced by scope rather than wildcard-imported: a
-    // wildcard import is not accepted by every open synthesis front end this
-    // program pins, and a block that only elaborates in a simulator is not an
-    // implementable block.  [OI-43] docs/UNIFIED_EXECUTION_CHECKLIST.md
 #(
     // The four production-comparison deployments use ordinary live buffers
     // and contain no STATE descriptors or instructions.  Keeping the legacy
@@ -86,18 +116,17 @@ module ot_a3_microsequencer
     input  wire [255:0]  imem_data,
 
     // -- descriptor store (registered read, one cycle) -----------------
-    // 192 bytes: the 64-byte header plus both 64-byte payload blocks, because
-    // a TENSOR_VIEW's dynamic terms (payload offset 72) lie in the second.
-    output reg           desc_req,
-    output reg  [31:0]   desc_id,
+    output wire          desc_req,
+    output wire [31:0]   desc_id,
     input  wire          desc_valid,
     input  wire          desc_fault,
     input  wire [1535:0] desc_data,
 
-    // -- runtime symbol file (combinational read) ----------------------
-    output wire [3:0]    sym_index,
-    input  wire [31:0]   sym_value,
-    input  wire          sym_bound,
+    // -- runtime symbol file: host write port (section 3.3) ------------
+    input  wire          host_sym_we,
+    input  wire [3:0]    host_sym_index,
+    input  wire [1:0]    host_sym_lane,
+    input  wire [31:0]   host_sym_wdata,
 
     // -- data-dependent predicate result -------------------------------
     output reg           predicate_read_req,
@@ -107,20 +136,44 @@ module ot_a3_microsequencer
     input  wire          predicate_read_value,
     input  wire [15:0]   predicate_read_trap_class,
 
-    // -- engine issue --------------------------------------------------
-    output reg           issue_valid,
+    // -- engine issue: queue acceptance --------------------------------
+    // issue_valid is withdrawn in the cycle an engine fault is reported
+    // (section 3.2 item 5: an asynchronous fault stops issue in the cycle it
+    // is reported), so no operation after the faulting one is ever accepted.
+    output wire          issue_valid,
     input  wire          issue_ready,
-    input  wire          issue_fault,
-    input  wire [15:0]   issue_trap_class,
     output reg  [7:0]    issue_family,
     output reg  [7:0]    issue_sub,
     output reg  [31:0]   issue_descriptor_id,
     output reg  [31:0]   issue_index,
+    output reg  [31:0]   issue_serial,
+    output reg  [4:0]    issue_slot,
+    output reg  [4:0]    issue_queue,
+
+    // -- engine completion: any order, one per cycle -------------------
+    input  wire          complete_valid,
+    input  wire [4:0]    complete_slot,
+    input  wire          complete_fault,
+    input  wire [15:0]   complete_trap_class,
+
+    // -- issue record store payload (memory macro outside this block) --
+    // 32 entries x 8 lanes x 512 bits; lanes 0..5 hold the resolved views
+    // in slot order, lane 6 the counter snapshot at issue.  A read returns
+    // the lane one cycle later.
+    output reg           irs_we,
+    output reg  [4:0]    irs_wslot,
+    output reg  [2:0]    irs_wlane,
+    output reg  [511:0]  irs_wdata,
+    output reg           irs_re,
+    output reg  [4:0]    irs_rslot,
+    output reg  [2:0]    irs_rlane,
+    input  wire [511:0]  irs_rdata,
 
     // -- resolved tensor views (amendments A4, A13 and A18) ------------
     // One single-cycle pulse per operand view of the instruction about to
-    // issue, in operand order.  Observation only: it carries no back-pressure
-    // because it states what the issue already means.
+    // issue, in operand order, tagged with the issue-record slot it belongs
+    // to.  Observation only: it carries no back-pressure because it states
+    // what the issue already means.
     output reg           view_valid,
     output reg  [31:0]   view_descriptor_id,
     output reg  [2:0]    view_slot,
@@ -128,6 +181,7 @@ module ot_a3_microsequencer
     output reg  [7:0]    view_extent_axis,
     output reg  [63:0]   view_element_offset,
     output reg  [7:0]    view_rank,
+    output reg  [4:0]    view_irs_slot,
     output reg  [31:0]   count_views_resolved,
 
     // -- accounting ----------------------------------------------------
@@ -155,41 +209,58 @@ module ot_a3_microsequencer
     output wire [3:0]    dbg_decode_error,
     output wire [31:0]   dbg_source_operation_id,
     output wire [31:0]   dbg_wait_fault_event,
-    output wire [1:0]    dbg_loop_action
+    output wire [1:0]    dbg_loop_action,
+    output wire [5:0]    dbg_outstanding,
+    output wire [5:0]    dbg_max_outstanding,
+    output reg  [31:0]   dbg_dep_stalls,
+    output reg  [31:0]   dbg_wait_stalls,
+    output wire          irs_protocol_error
 );
     // -- stage encoding -------------------------------------------------
-    localparam [4:0] S_IDLE        = 5'd0;
-    localparam [4:0] S_CHECK_PC    = 5'd1;
-    localparam [4:0] S_FETCH_WAIT  = 5'd3;
-    localparam [4:0] S_DECODE_PUSH = 5'd4;
-    localparam [4:0] S_DECODE_WAIT = 5'd5;
-    localparam [4:0] S_PRED_REQ    = 5'd6;
-    localparam [4:0] S_PRED_WAIT   = 5'd7;
-    localparam [4:0] S_PRED_SYM    = 5'd8;
-    localparam [4:0] S_PRED_EVAL   = 5'd9;
-    localparam [4:0] S_WAIT_REQ    = 5'd10;
-    localparam [4:0] S_WAIT_WAIT   = 5'd11;
-    localparam [4:0] S_WAIT_EVAL   = 5'd12;
-    localparam [4:0] S_DISPATCH    = 5'd13;
-    localparam [4:0] S_LOOP_WAIT   = 5'd14;
-    localparam [4:0] S_LOOP_SYM    = 5'd15;
-    localparam [4:0] S_LOOP_OP     = 5'd16;
-    localparam [4:0] S_LOOP_DONE   = 5'd17;
-    localparam [4:0] S_ENG_WAIT    = 5'd18;
-    localparam [4:0] S_STATE_SYM   = 5'd19;
-    localparam [4:0] S_STATE_DONE  = 5'd20;
-    localparam [4:0] S_ISSUE       = 5'd21;
-    localparam [4:0] S_RETIRE      = 5'd22;
-    localparam [4:0] S_COMMIT      = 5'd23;
-    localparam [4:0] S_DISCARD     = 5'd24;
-    localparam [4:0] S_DONE        = 5'd25;
-    localparam [4:0] S_VIEW_SCAN   = 5'd26;
-    localparam [4:0] S_VIEW_WAIT   = 5'd27;
-    localparam [4:0] S_VIEW_RES    = 5'd28;
-    localparam [4:0] S_VIEW_EMIT   = 5'd29;
-    localparam [4:0] S_PRED_OBJECT = 5'd30;
+    localparam [5:0] S_IDLE          = 6'd0;
+    localparam [5:0] S_CHECK_PC      = 6'd1;
+    localparam [5:0] S_FETCH_WAIT    = 6'd2;
+    localparam [5:0] S_DECODE_PUSH   = 6'd3;
+    localparam [5:0] S_DECODE_WAIT   = 6'd4;
+    localparam [5:0] S_PRED_REQ      = 6'd5;
+    localparam [5:0] S_PRED_WAIT     = 6'd6;
+    localparam [5:0] S_PRED_SYM      = 6'd7;
+    localparam [5:0] S_PRED_EVAL     = 6'd8;
+    localparam [5:0] S_PRED_HAZARD   = 6'd9;
+    localparam [5:0] S_PRED_OBJECT   = 6'd10;
+    localparam [5:0] S_WAIT_REQ      = 6'd11;
+    localparam [5:0] S_WAIT_WAIT     = 6'd12;
+    localparam [5:0] S_WAIT_EVAL     = 6'd13;
+    localparam [5:0] S_DISPATCH      = 6'd14;
+    localparam [5:0] S_LOOP_WAIT     = 6'd15;
+    localparam [5:0] S_LOOP_SYM      = 6'd16;
+    localparam [5:0] S_LOOP_OP       = 6'd17;
+    localparam [5:0] S_LOOP_DONE     = 6'd18;
+    localparam [5:0] S_ENG_WAIT      = 6'd19;
+    localparam [5:0] S_SCHED_WAIT    = 6'd20;
+    localparam [5:0] S_RESOLVE       = 6'd21;
+    localparam [5:0] S_HAZARD        = 6'd22;
+    localparam [5:0] S_HAZARD_STALL  = 6'd23;
+    localparam [5:0] S_VIEW_PUB      = 6'd24;
+    localparam [5:0] S_ISSUE         = 6'd25;
+    localparam [5:0] S_STATE_SYM     = 6'd26;
+    localparam [5:0] S_STATE_DONE    = 6'd27;
+    localparam [5:0] S_DRAIN         = 6'd28;
+    localparam [5:0] S_TRAP_WAIT     = 6'd29;
+    localparam [5:0] S_FAULT_DRAIN   = 6'd30;
+    localparam [5:0] S_FAULT_READ    = 6'd31;
+    localparam [5:0] S_FAULT_WAIT    = 6'd32;
+    localparam [5:0] S_FAULT_APPLY   = 6'd33;
+    localparam [5:0] S_COMMIT        = 6'd34;
+    localparam [5:0] S_DISCARD       = 6'd35;
+    localparam [5:0] S_DONE          = 6'd36;
 
-    reg [4:0]  state;
+    // what a drain leads to
+    localparam [1:0] DRAIN_RETIRE   = 2'd0;   // FENCE: retire and publish
+    localparam [1:0] DRAIN_COMPLETE = 2'd1;   // COMPLETE
+    localparam [1:0] DRAIN_ISSUE    = 2'd2;   // OBSERVATION / RECOVERY: then issue
+
+    reg [5:0]  state;
     reg [31:0] pc;
     reg [31:0] instruction_count;
     reg [31:0] program_base;
@@ -197,6 +268,8 @@ module ot_a3_microsequencer
     reg [31:0] state_count;
     reg [255:0] record;
     reg        xact_clear;
+    reg [31:0] serial;            // program-order issue serial (section 3.2 item 2)
+    reg [1:0]  drain_next;
 
     // decoded instruction
     reg [7:0]  ins_major;
@@ -211,6 +284,22 @@ module ot_a3_microsequencer
     reg [511:0] pred_payload;
     reg [511:0] state_payload;
     reg [3:0]   sym_index_q;
+
+    // -- runtime symbol file ---------------------------------------------
+    wire [ot_a3_pkg::A3_SYMBOL_COUNT*64-1:0] sym_values;
+    wire [ot_a3_pkg::A3_SYMBOL_COUNT-1:0]    sym_bounds;
+    ot_a3_symbol_file symbols (
+        .clk(clk),
+        .rst_n(rst_n),
+        .host_we(host_sym_we),
+        .host_index(host_sym_index),
+        .host_lane(host_sym_lane),
+        .host_wdata(host_sym_wdata),
+        .file_values(sym_values),
+        .file_bound(sym_bounds)
+    );
+    wire [63:0] sym_value = sym_values[sym_index_q*64 +: 64];
+    wire        sym_bound = sym_bounds[sym_index_q];
 
     // -- instruction decoder --------------------------------------------
     reg         dec_in_valid;
@@ -255,6 +344,31 @@ module ot_a3_microsequencer
         .out_source_operation_id(dec_source_operation_id)
     );
 
+    // -- shared divider ---------------------------------------------------
+    wire        loop_div_req;
+    wire [63:0] loop_div_num;
+    wire [31:0] loop_div_den;
+    wire [5:0]  bank_div_req;
+    wire [6*64-1:0] bank_div_num;
+    wire [6*32-1:0] bank_div_den;
+    wire [6:0]  div_done;
+    wire [63:0] div_quot;
+    wire [63:0] div_rem;
+
+    ot_a3_shared_divider #(.REQUESTERS(7)) divider (
+        .clk(clk),
+        .rst_n(rst_n),
+        .clear(xact_clear),
+        .req({bank_div_req, loop_div_req}),
+        .num({bank_div_num, loop_div_num}),
+        .den({bank_div_den, loop_div_den}),
+        .grant(),
+        .busy(),
+        .done(div_done),
+        .quot(div_quot),
+        .rem(div_rem)
+    );
+
     // -- loop stack ------------------------------------------------------
     reg         loop_setup_valid;
     reg         loop_next_valid;
@@ -263,14 +377,15 @@ module ot_a3_microsequencer
     wire [15:0] loop_trap_class;
     wire [31:0] loop_next_pc;
     wire [1:0]  loop_action;
+    wire [31:0] loop_iteration_count;
     reg  [31:0] loop_query_id_q;
-    wire [31:0] loop_query_id;
-    wire        loop_query_active;
-    wire [31:0] loop_query_value;
-    wire [31:0] loop_query_trip;
-    wire        loop_query_symbol_bounded;
-    wire [31:0] loop_query_divisor;
-    wire [31:0] loop_query_bound_value;
+    wire [6*32-1:0] bank_loop_query_id;
+    wire [6:0]      loop_query_active;
+    wire [7*32-1:0] loop_query_value;
+    wire [7*32-1:0] loop_query_trip;
+    wire [6:0]      loop_query_symbol_bounded;
+    wire [7*32-1:0] loop_query_divisor;
+    wire [7*32-1:0] loop_query_bound_value;
     reg  [511:0] loop_payload;
 
     wire [7:0]  loop_bound_kind = loop_payload[15:8];
@@ -283,7 +398,7 @@ module ot_a3_microsequencer
     wire [31:0] loop_body_end   = loop_payload[287:256];
     wire [31:0] loop_divisor    = loop_payload[351:320];
 
-    ot_a3_loop_stack loops (
+    ot_a3_loop_stack #(.QUERY_PORTS(7)) loops (
         .clk(clk),
         .rst_n(rst_n),
         .clear(xact_clear),
@@ -307,19 +422,99 @@ module ot_a3_microsequencer
         .trap_class(loop_trap_class),
         .next_pc(loop_next_pc),
         .action(loop_action),
-        .query_id(loop_query_id),
+        .div_req(loop_div_req),
+        .div_num(loop_div_num),
+        .div_den(loop_div_den),
+        .div_done(div_done[0]),
+        .div_quot(div_quot),
+        .query_id({bank_loop_query_id, loop_query_id_q}),
         .query_active(loop_query_active),
         .query_value(loop_query_value),
         .query_trip(loop_query_trip),
         .query_symbol_bounded(loop_query_symbol_bounded),
         .query_divisor(loop_query_divisor),
         .query_bound_value(loop_query_bound_value),
-        .iteration_count(count_loop_iterations),
+        .iteration_count(loop_iteration_count),
         .depth(loop_depth)
     );
+    wire        pq_active = loop_query_active[0];
+    wire [31:0] pq_value  = loop_query_value[31:0];
+    wire [31:0] pq_trip   = loop_query_trip[31:0];
+
+    // -- issue record store ---------------------------------------------------
+    reg         irs_alloc_valid;
+    wire        irs_alloc_ready;
+    wire [4:0]  irs_free_slot;
+    reg  [4:0]  issue_slot_q;
+    reg  [4:0]  issue_queue_q;
+    wire        irs_retire_valid;
+    wire [4:0]  irs_retire_slot;
+    wire [31:0] irs_retire_serial;
+    wire [31:0] irs_retire_event_id;
+    wire        irs_retire_release;
+    wire        irs_retire_event_last;
+    wire        irs_retire_fault;
+    wire        irs_fault_valid;
+    wire [4:0]  irs_fault_slot;
+    wire [31:0] irs_fault_serial;
+    wire [31:0] irs_fault_pc;
+    wire [15:0] irs_fault_trap_class;
+    wire [5:0]  irs_outstanding;
+    wire [5:0]  irs_outstanding_with_event;
+    wire        irs_any_outstanding;
+
+    ot_a3_issue_record_store irs (
+        .clk(clk),
+        .rst_n(rst_n),
+        .clear(xact_clear),
+        .alloc_queue(issue_queue_q),
+        .alloc_ready(irs_alloc_ready),
+        .free_slot(irs_free_slot),
+        .alloc_valid(irs_alloc_valid),
+        .alloc_slot(issue_slot_q),
+        .alloc_serial(serial),
+        .alloc_pc(pc),
+        .alloc_event_id(ins_signal_event_id),
+        .alloc_release(ins_flags[ot_a3_pkg::A3_FLAG_SIGNAL_RELEASE]),
+        .complete_valid(complete_valid),
+        .complete_slot(complete_slot),
+        .complete_fault(complete_fault),
+        .complete_trap_class(complete_trap_class),
+        .retire_valid(irs_retire_valid),
+        .retire_slot(irs_retire_slot),
+        .retire_serial(irs_retire_serial),
+        .retire_event_id(irs_retire_event_id),
+        .retire_release(irs_retire_release),
+        .retire_event_last(irs_retire_event_last),
+        .retire_fault(irs_retire_fault),
+        .fault_valid(irs_fault_valid),
+        .fault_slot(irs_fault_slot),
+        .fault_serial(irs_fault_serial),
+        .fault_pc(irs_fault_pc),
+        .fault_trap_class(irs_fault_trap_class),
+        .outstanding(irs_outstanding),
+        .outstanding_with_event(irs_outstanding_with_event),
+        .any_outstanding(irs_any_outstanding),
+        .max_outstanding(dbg_max_outstanding),
+        .irs_protocol_error(irs_protocol_error)
+    );
+    assign dbg_outstanding = irs_outstanding;
+
+    // The issue handshake is withdrawn the moment a fault is reported: the
+    // registered first-fault record, and the completion carrying the fault in
+    // the cycle before that record exists.
+    reg issue_valid_q;
+    assign issue_valid = issue_valid_q && !irs_fault_valid &&
+                         !(complete_valid && complete_fault);
+
+    // a retirement that counts: no fault on it, and no fault recorded before it
+    wire retire_counts = irs_retire_valid && !irs_retire_fault && !irs_fault_valid;
+    wire retire_signals = irs_retire_valid && !irs_retire_fault &&
+                          (irs_retire_event_id != ot_a3_pkg::A3_NO_ID);
 
     // -- event scoreboard -------------------------------------------------
-    reg         evt_signal_valid;
+    reg         evt_issue_valid;
+    reg         evt_control_valid;
     reg         evt_wait_start;
     reg [511:0] evt_wait_payload;
     reg         evt_wait_acquire;
@@ -327,14 +522,24 @@ module ot_a3_microsequencer
     wire        evt_wait_ok;
     wire [15:0] evt_wait_trap_class;
     wire [31:0] evt_wait_fault_event;
+    wire        evt_wait_stalled;
+    wire [31:0] sb_signal_count;
+    wire [31:0] sb_wait_count;
 
     ot_a3_event_scoreboard events (
         .clk(clk),
         .rst_n(rst_n),
         .clear(xact_clear),
-        .signal_valid(evt_signal_valid),
-        .signal_event_id(ins_signal_event_id),
-        .signal_release(ins_flags[ot_a3_pkg::A3_FLAG_SIGNAL_RELEASE]),
+        .issue_valid(evt_issue_valid),
+        .issue_event_id(ins_signal_event_id),
+        .complete_valid(irs_retire_valid && !irs_retire_fault &&
+                        (irs_retire_event_id != ot_a3_pkg::A3_NO_ID)),
+        .complete_event_id(irs_retire_event_id),
+        .complete_release(irs_retire_release),
+        .complete_last(irs_retire_event_last),
+        .control_signal_valid(evt_control_valid),
+        .control_signal_event_id(ins_signal_event_id),
+        .control_signal_release(ins_flags[ot_a3_pkg::A3_FLAG_SIGNAL_RELEASE]),
         .signal_error(event_signal_error),
         .wait_start(evt_wait_start),
         .wait_payload(evt_wait_payload),
@@ -344,8 +549,9 @@ module ot_a3_microsequencer
         .wait_ok(evt_wait_ok),
         .wait_trap_class(evt_wait_trap_class),
         .wait_fault_event(evt_wait_fault_event),
-        .signal_count(count_signals),
-        .wait_count(count_wait_events)
+        .wait_stalled(evt_wait_stalled),
+        .signal_count(sb_signal_count),
+        .wait_count(sb_wait_count)
     );
 
     // -- state controller -------------------------------------------------
@@ -356,6 +562,11 @@ module ot_a3_microsequencer
     wire        st_op_ok;
     wire [15:0] st_op_trap_class;
     wire        st_apply_done;
+    wire [31:0] st_count_prepares;
+    wire [31:0] st_count_commits;
+    wire [31:0] st_count_discards;
+    wire [31:0] st_count_reads;
+    wire [31:0] st_count_generation_advances;
 
     generate
         if (STATE_COMPAT != 0) begin : g_state_compat
@@ -367,7 +578,7 @@ module ot_a3_microsequencer
                 .op_sub(ins_sub),
                 .op_descriptor_id(ins_descriptor_id),
                 .op_payload(state_payload),
-                .op_rows(sym_value),
+                .op_rows(sym_value[31:0]),
                 .op_rows_bound(sym_bound),
                 .op_done(st_op_done),
                 .op_ok(st_op_ok),
@@ -378,11 +589,11 @@ module ot_a3_microsequencer
                 .apply_busy(),
                 .apply_done(st_apply_done),
                 .apply_overflow(state_apply_overflow),
-                .count_prepares(count_state_prepares),
-                .count_commits(count_state_commits),
-                .count_discards(count_state_discards),
-                .count_reads(count_state_reads),
-                .count_generation_advances(count_state_generation_advances),
+                .count_prepares(st_count_prepares),
+                .count_commits(st_count_commits),
+                .count_discards(st_count_discards),
+                .count_reads(st_count_reads),
+                .count_generation_advances(st_count_generation_advances),
                 .count_commits_applied(count_state_commits_applied),
                 .count_rows_committed(count_state_rows_committed),
                 .count_bytes_written(count_state_bytes_written)
@@ -393,82 +604,134 @@ module ot_a3_microsequencer
             assign st_op_trap_class = ot_a3_pkg::A3_TRAP_CAPABILITY;
             assign st_apply_done = 1'b1;
             assign state_apply_overflow = 1'b0;
-            assign count_state_prepares = 32'd0;
-            assign count_state_commits = 32'd0;
-            assign count_state_discards = 32'd0;
-            assign count_state_reads = 32'd0;
-            assign count_state_generation_advances = 32'd0;
+            assign st_count_prepares = 32'd0;
+            assign st_count_commits = 32'd0;
+            assign st_count_discards = 32'd0;
+            assign st_count_reads = 32'd0;
+            assign st_count_generation_advances = 32'd0;
             assign count_state_commits_applied = 32'd0;
             assign count_state_rows_committed = 32'd0;
             assign count_state_bytes_written = 64'd0;
         end
     endgenerate
 
-    // -- tensor view resolution (A4 and A13) -------------------------------
-    // OPERATOR payload (runtime/abi3/descriptors.OPERATOR_PAYLOAD):
-    // input_view_{0..3} at byte 24, output_view_{0..1} at byte 40.
-    reg  [511:0]  op_payload;
-    reg  [1023:0] view_payload;
-    reg  [2:0]    view_next_slot;
-    reg           view_start;
+    // -- resolver bank -----------------------------------------------------
+    reg           bank_start;
+    reg           bank_abort;
+    wire          bank_desc_req;
+    wire [31:0]   bank_desc_id;
+    wire          bank_done;
+    wire          bank_fault;
+    wire [15:0]   bank_trap_class;
+    wire [5:0]    bank_slot_valid;
+    wire [6*32-1:0] bank_slot_descriptor_id;
+    wire [6*32-1:0] bank_slot_extent;
+    wire [6*8-1:0]  bank_slot_axis;
+    wire [6*64-1:0] bank_slot_offset;
+    wire [6*8-1:0]  bank_slot_rank;
+    wire [6*16-1:0] bank_slot_object;
+    wire [6*40-1:0] bank_slot_lo;
+    wire [6*40-1:0] bank_slot_hi;
+    wire [5:0]      bank_slot_write;
+    wire [6*32-1:0] bank_slot_scale_object;
+    wire [5:0]      bank_slot_scale_valid;
+    reg  [511:0]    op_payload;
 
-    reg [31:0] view_slot_id;
-    always @* begin
-        case (view_next_slot)
-            3'd0:    view_slot_id = op_payload[223:192];   // input_view_0
-            3'd1:    view_slot_id = op_payload[255:224];   // input_view_1
-            3'd2:    view_slot_id = op_payload[287:256];   // input_view_2
-            3'd3:    view_slot_id = op_payload[319:288];   // input_view_3
-            3'd4:    view_slot_id = op_payload[351:320];   // output_view_0
-            3'd5:    view_slot_id = op_payload[383:352];   // output_view_1
-            default: view_slot_id = ot_a3_pkg::A3_NO_ID;
-        endcase
-    end
+    ot_a3_resolver_bank bank (
+        .clk(clk),
+        .rst_n(rst_n),
+        .clear(xact_clear | bank_abort),
+        .start(bank_start),
+        .op_payload(op_payload),
+        .desc_req(bank_desc_req),
+        .desc_id(bank_desc_id),
+        .desc_valid(desc_valid),
+        .desc_fault(desc_fault),
+        .desc_data(desc_data),
+        .loop_query_id(bank_loop_query_id),
+        .loop_query_active(loop_query_active[6:1]),
+        .loop_query_value(loop_query_value[7*32-1:32]),
+        .loop_query_symbol_bounded(loop_query_symbol_bounded[6:1]),
+        .loop_query_divisor(loop_query_divisor[7*32-1:32]),
+        .loop_query_bound_value(loop_query_bound_value[7*32-1:32]),
+        .sym_values(sym_values),
+        .sym_bound(sym_bounds),
+        .div_req(bank_div_req),
+        .div_num(bank_div_num),
+        .div_den(bank_div_den),
+        .div_done(div_done[6:1]),
+        .div_quot(div_quot),
+        .div_rem(div_rem),
+        .busy(),
+        .done(bank_done),
+        .fault(bank_fault),
+        .trap_class(bank_trap_class),
+        .slot_valid(bank_slot_valid),
+        .slot_descriptor_id(bank_slot_descriptor_id),
+        .slot_extent(bank_slot_extent),
+        .slot_axis(bank_slot_axis),
+        .slot_offset(bank_slot_offset),
+        .slot_rank(bank_slot_rank),
+        .slot_object(bank_slot_object),
+        .slot_lo(bank_slot_lo),
+        .slot_hi(bank_slot_hi),
+        .slot_write(bank_slot_write),
+        .slot_scale_object(bank_slot_scale_object),
+        .slot_scale_valid(bank_slot_scale_valid)
+    );
 
-    wire view_active = (state == S_VIEW_SCAN) || (state == S_VIEW_WAIT) ||
-                       (state == S_VIEW_RES)  || (state == S_VIEW_EMIT);
+    // The bank owns the descriptor port while it resolves; the sequencer's
+    // own reads own it otherwise.  Only one of the two is ever in flight.
+    reg         seq_desc_req;
+    reg  [31:0] seq_desc_id;
+    wire        bank_owns_desc = (state == S_RESOLVE);
+    assign desc_req = bank_owns_desc ? bank_desc_req : seq_desc_req;
+    assign desc_id  = bank_owns_desc ? bank_desc_id  : seq_desc_id;
 
-    wire         res_done;
-    wire         res_fault;
-    wire [15:0]  res_trap_class;
-    wire [63:0]  res_element_offset;
-    wire [31:0]  res_extent;
-    wire [7:0]   res_extent_axis;
-    wire [7:0]   res_rank;
-    wire [31:0]  res_loop_query_id;
-    wire [3:0]   res_sym_index;
+    // -- dependence table ---------------------------------------------------
+    reg         dep_insert_valid;
+    reg  [15:0] dep_insert_object;
+    reg  [39:0] dep_insert_lo;
+    reg  [39:0] dep_insert_hi;
+    reg         dep_insert_write;
+    reg         dep_check0_valid;
+    reg  [15:0] dep_check0_object;
+    reg  [39:0] dep_check0_lo;
+    reg  [39:0] dep_check0_hi;
+    reg         dep_check0_write;
+    wire        dep_check0_conflict;
+    reg         dep_check1_valid;
+    reg  [15:0] dep_check1_object;
+    reg  [39:0] dep_check1_lo;
+    reg  [39:0] dep_check1_hi;
+    reg         dep_check1_write;
+    wire        dep_check1_conflict;
 
-    // The resolver owns the loop query and the symbol select while it walks a
-    // view's terms; the sequencer's own predicate, loop and state reads own
-    // them otherwise.  Only one of the two is ever in flight.
-    assign loop_query_id = view_active ? res_loop_query_id : loop_query_id_q;
-    assign sym_index     = view_active ? res_sym_index     : sym_index_q;
-
-    ot_a3_view_resolver view_resolver (
+    ot_a3_dependence_table deps (
         .clk(clk),
         .rst_n(rst_n),
         .clear(xact_clear),
-        .start(view_start),
-        .payload(view_payload),
-        .busy(),
-        .done(res_done),
-        .fault(res_fault),
-        .trap_class(res_trap_class),
-        .out_element_offset(res_element_offset),
-        .out_extent(res_extent),
-        .out_extent_axis(res_extent_axis),
-        .out_rank(res_rank),
-        .out_dtype(),
-        .out_term_count(),
-        .loop_query_id(res_loop_query_id),
-        .loop_query_active(loop_query_active),
-        .loop_query_value(loop_query_value),
-        .loop_query_symbol_bounded(loop_query_symbol_bounded),
-        .loop_query_divisor(loop_query_divisor),
-        .loop_query_bound_value(loop_query_bound_value),
-        .sym_index(res_sym_index),
-        .sym_value(sym_value),
-        .sym_bound(sym_bound)
+        .insert_valid(dep_insert_valid),
+        .insert_slot(issue_slot_q),
+        .insert_object(dep_insert_object),
+        .insert_lo(dep_insert_lo),
+        .insert_hi(dep_insert_hi),
+        .insert_write(dep_insert_write),
+        .check0_valid(dep_check0_valid),
+        .check0_object(dep_check0_object),
+        .check0_lo(dep_check0_lo),
+        .check0_hi(dep_check0_hi),
+        .check0_write(dep_check0_write),
+        .check0_conflict(dep_check0_conflict),
+        .check1_valid(dep_check1_valid),
+        .check1_object(dep_check1_object),
+        .check1_lo(dep_check1_lo),
+        .check1_hi(dep_check1_hi),
+        .check1_write(dep_check1_write),
+        .check1_conflict(dep_check1_conflict),
+        .release_valid(irs_retire_valid),
+        .release_slot(irs_retire_slot),
+        .dbg_ranges_used()
     );
 
     assign dbg_decode_error = dec_out_error;
@@ -482,9 +745,6 @@ module ot_a3_microsequencer
     wire [7:0]   desc_type_major    = desc_data[55:48];
     wire [31:0]  desc_payload_offset= desc_data[351:320];   // byte 40
     wire [511:0] desc_payload       = desc_data[1023:512];
-    // A TENSOR_VIEW payload is 128 bytes; a 64-byte prefix stops short of the
-    // dynamic terms, so view resolution reads both payload blocks.
-    wire [1023:0] desc_payload_wide = desc_data[1535:512];
     wire         desc_header_ok = !desc_fault &&
                                   (desc_magic == ot_a3_pkg::A3_DESCRIPTOR_MAGIC) &&
                                   (desc_type_major == ot_a3_pkg::A3_TYPE_MAJOR) &&
@@ -498,7 +758,7 @@ module ot_a3_microsequencer
     wire [31:0] pred_object_id  = pred_payload[159:128];
     wire [31:0] pred_element    = pred_payload[191:160];
 
-    wire [63:0] pred_left = {32'd0, sym_value};
+    wire [63:0] pred_left = sym_value;
     reg  pred_compare_result;
     always @* begin
         case (pred_comparison)
@@ -511,7 +771,7 @@ module ot_a3_microsequencer
         endcase
     end
 
-    wire [63:0] loop_left = {32'd0, loop_query_value};
+    wire [63:0] loop_left = {32'd0, pq_value};
     reg  loop_compare_result;
     always @* begin
         case (pred_comparison)
@@ -528,25 +788,184 @@ module ot_a3_microsequencer
     wire invert     = ins_flags[ot_a3_pkg::A3_FLAG_PREDICATE_INVERT];
     wire is_control = (ins_major == ot_a3_pkg::A3_MAJOR_CONTROL);
     wire [15:0] expected_type = ot_a3_pkg::a3_family_descriptor_type(ins_major);
-    wire work_exceeded = ({32'd0, count_retired} > work_bound);
+    // Watchdog: the issue serial against max_retired_work (section 3.2 item
+    // 6) -- the golden model's ``retired`` at every fetch is exactly the
+    // count of instructions it has retired in program order so far.
+    wire work_exceeded = ({32'd0, serial} > work_bound);
 
-    // Wire format section 3 gives *every* instruction a signal-event ID and
-    // exempts no family from publishing it; section 4 does not exempt CONTROL
-    // either.  runtime/sim/device.py publishes on the CONTROL path for exactly
-    // that reason ("Nothing in the wire format exempts CONTROL from publishing
-    // an event; the asymmetry was accidental"), and this block did not: it
-    // raised evt_signal_valid only in S_ISSUE, which no CONTROL instruction
-    // reaches.  A CONTROL.NOP that names an event is a real shape -- it is how
-    // a program publishes "everything before this point has retired" without
-    // dispatching work -- and the DeepSeek-V4-Flash wafer program uses it
-    // twice inside one layer.  Called from every CONTROL retirement.
-    task publish_signal;
+    // -- the instruction's dependence ranges -------------------------------
+    // Index 2s is view slot s (from the bank), 2s + 1 its scale object as a
+    // whole-object read, 12 and 13 the family ranges: the COMMUNICATION local
+    // range for LINK, the committed and prepared objects for STATE.
+    reg          use_bank;
+    reg  [1:0]   aux_valid;
+    reg  [15:0]  aux_object [0:1];
+    reg  [39:0]  aux_lo     [0:1];
+    reg  [39:0]  aux_hi     [0:1];
+    reg  [1:0]   aux_write;
+
+    reg  [13:0]  rng_valid;
+    reg  [15:0]  rng_object [0:13];
+    reg  [39:0]  rng_lo     [0:13];
+    reg  [39:0]  rng_hi     [0:13];
+    reg  [13:0]  rng_write;
+    integer rs;
+    always @* begin
+        for (rs = 0; rs < 6; rs = rs + 1) begin
+            rng_valid[2*rs]   = use_bank && bank_slot_valid[rs];
+            rng_object[2*rs]  = bank_slot_object[rs*16 +: 16];
+            rng_lo[2*rs]      = bank_slot_lo[rs*40 +: 40];
+            rng_hi[2*rs]      = bank_slot_hi[rs*40 +: 40];
+            rng_write[2*rs]   = bank_slot_write[rs];
+            rng_valid[2*rs+1] = use_bank && bank_slot_valid[rs] &&
+                                bank_slot_scale_valid[rs];
+            rng_object[2*rs+1] = bank_slot_scale_object[rs*32 +: 16];
+            rng_lo[2*rs+1]    = 40'd0;
+            rng_hi[2*rs+1]    = {40{1'b1}};
+            rng_write[2*rs+1] = 1'b0;
+        end
+        rng_valid[12]  = aux_valid[0];
+        rng_object[12] = aux_object[0];
+        rng_lo[12]     = aux_lo[0];
+        rng_hi[12]     = aux_hi[0];
+        rng_write[12]  = aux_write[0];
+        rng_valid[13]  = aux_valid[1];
+        rng_object[13] = aux_object[1];
+        rng_lo[13]     = aux_lo[1];
+        rng_hi[13]     = aux_hi[1];
+        rng_write[13]  = aux_write[1];
+    end
+
+    function automatic [3:0] lowest_bit;
+        input [13:0] mask;
+        integer b;
         begin
-            evt_signal_valid <= (ins_signal_event_id != ot_a3_pkg::A3_NO_ID);
+            lowest_bit = 4'd15;
+            for (b = 13; b >= 0; b = b - 1)
+                if (mask[b]) lowest_bit = b[3:0];
+        end
+    endfunction
+
+    reg  [13:0] hz_work;
+    reg         hz_acc;
+    reg         hz_retire_seen;     // a retirement landed since the scan began
+    wire [3:0]  hz_first  = lowest_bit(hz_work);
+    wire [13:0] hz_rest   = hz_work & ~(14'd1 << hz_first);
+    wire [3:0]  hz_second = lowest_bit(hz_rest);
+    wire        hz_conflict_now = hz_acc | dep_check0_conflict | dep_check1_conflict;
+
+    reg  [13:0] pub_work;
+    wire [3:0]  pub_first = lowest_bit(pub_work);
+
+    // COMMUNICATION payload (runtime/abi3/descriptors.COMMUNICATION_PAYLOAD)
+    wire [7:0]  comm_vc          = desc_payload[31:24];
+    wire [31:0] comm_local_obj   = desc_payload[159:128];
+    wire [63:0] comm_local_off   = desc_payload[255:192];
+    wire [63:0] comm_byte_extent = desc_payload[383:320];
+    wire [64:0] comm_local_end   = {1'b0, comm_local_off} + {1'b0, comm_byte_extent};
+    wire        comm_range_fits  = (comm_local_off[63:40] == 24'd0) &&
+                                   (comm_local_end[64:40] == 25'd0);
+    // SCHEDULE payload: queue_index at byte 1
+    wire [7:0]  sched_queue_index = desc_payload[15:8];
+    // STATE payload: committed (byte 8) and prepared (byte 12) objects
+    wire [31:0] state_committed_obj = state_payload[95:64];
+    wire [31:0] state_prepared_obj  = state_payload[127:96];
+    // OPERATOR payload: schedule_id at byte 20
+    wire [31:0] op_schedule_id = desc_payload[191:160];
+
+    // -- frozen counters after an asynchronous fault ----------------------
+    reg         frozen;
+    reg  [31:0] frozen_loop_iterations;
+    reg  [31:0] frozen_wait_events;
+    reg  [31:0] frozen_signals;
+    reg  [31:0] frozen_state_prepares;
+    reg  [31:0] frozen_state_commits;
+    reg  [31:0] frozen_state_discards;
+    reg  [31:0] frozen_state_reads;
+    reg  [31:0] frozen_state_advances;
+    assign count_loop_iterations = frozen ? frozen_loop_iterations : loop_iteration_count;
+    assign count_wait_events     = frozen ? frozen_wait_events : sb_wait_count;
+    assign count_signals         = frozen ? frozen_signals : sb_signal_count;
+    assign count_state_prepares  = frozen ? frozen_state_prepares : st_count_prepares;
+    assign count_state_commits   = frozen ? frozen_state_commits : st_count_commits;
+    assign count_state_discards  = frozen ? frozen_state_discards : st_count_discards;
+    assign count_state_reads     = frozen ? frozen_state_reads : st_count_reads;
+    assign count_state_generation_advances =
+        frozen ? frozen_state_advances : st_count_generation_advances;
+
+    // The counter snapshot an issue writes (payload lane 6).  The retired
+    // count it carries is the issue serial itself: every operation issued
+    // before this one has a lower serial and, if this one is the first to
+    // fault, will complete without fault, so at that fault the golden
+    // model's ``retired`` -- the instructions it retired in program order
+    // before stopping -- is exactly the serial.  Signals likewise carry the
+    // older outstanding producers that will still complete.
+    wire [31:0] snap_retired = serial;
+    wire [31:0] snap_signals = sb_signal_count + {26'd0, irs_outstanding_with_event} +
+                               (retire_signals ? 32'd1 : 32'd0) +
+                               (evt_control_valid ? 32'd1 : 32'd0);
+    wire [511:0] snapshot_word = {
+        pc,                                     // [511:480]
+        serial,                                 // [479:448]
+        st_count_generation_advances,           // [447:416]
+        st_count_reads,                         // [415:384]
+        st_count_discards,                      // [383:352]
+        st_count_commits,                       // [351:320]
+        st_count_prepares,                      // [319:288]
+        snap_retired,                           // [287:256]
+        snap_signals,                           // [255:224]
+        sb_wait_count,                          // [223:192]
+        count_branches,                         // [191:160]
+        loop_iteration_count,                   // [159:128]
+        count_views_resolved,                   // [127:96]
+        count_predicated_off,                   // [95:64]
+        count_issued,                           // [63:32]
+        count_fetched                           // [31:0]
+    };
+
+    // Issue handshake: the allocation, the pending mark and the snapshot
+    // write all land in the handshake cycle, so a completion reported in
+    // the very next cycle finds its entry.
+    wire issue_fire = (state == S_ISSUE) && issue_valid && issue_ready;
+    always @* begin
+        irs_alloc_valid = issue_fire;
+        evt_issue_valid = issue_fire && (ins_signal_event_id != ot_a3_pkg::A3_NO_ID);
+    end
+
+    // A CONTROL retirement, counted one cycle later through the same adder
+    // as engine completions (see the retirement block below).
+    reg ctl_retire_q;
+
+    // A pending precise trap, held until nothing is outstanding.
+    reg [15:0] pending_trap_class;
+    reg [31:0] pending_trap_index;
+
+    // -- tasks --------------------------------------------------------------
+    // CONTROL retirement: counts, publishes the signal event, advances the
+    // serial.  Called from every CONTROL retirement.
+    task retire_control;
+        begin
+            ctl_retire_q <= 1'b1;
+            serial <= serial + 32'd1;
+            evt_control_valid <= (ins_signal_event_id != ot_a3_pkg::A3_NO_ID);
         end
     endtask
 
+    // A precise front-end trap.  Applied at once when nothing is outstanding;
+    // otherwise held, because an outstanding operation that faults has the
+    // lower serial and wins (section 3.2 item 5).
     task raise_trap;
+        input [15:0] class_value;
+        input [31:0] fault_index;
+        begin
+            pending_trap_class <= class_value;
+            pending_trap_index <= fault_index;
+            predicate_read_req <= 1'b0;
+            state <= S_TRAP_WAIT;
+        end
+    endtask
+
+    task apply_trap;
         input [15:0] class_value;
         input [31:0] fault_index;
         begin
@@ -565,6 +984,57 @@ module ot_a3_microsequencer
         end
     endtask
 
+    // Abandon the instruction in flight for an asynchronous engine fault.
+    task abort_for_fault;
+        begin
+            predicate_read_req <= 1'b0;
+            bank_abort <= 1'b1;
+            issue_valid_q <= 1'b0;
+            state <= S_FAULT_DRAIN;
+        end
+    endtask
+
+    // Publish one resolved view: the port pulse and the payload write.
+    task publish_view;
+        input [2:0] s;
+        begin
+            view_valid <= 1'b1;
+            view_descriptor_id <= bank_slot_descriptor_id[s*32 +: 32];
+            view_slot <= s;
+            view_extent <= bank_slot_extent[s*32 +: 32];
+            view_extent_axis <= bank_slot_axis[s*8 +: 8];
+            view_element_offset <= bank_slot_offset[s*64 +: 64];
+            view_rank <= bank_slot_rank[s*8 +: 8];
+            view_irs_slot <= issue_slot_q;
+            count_views_resolved <= count_views_resolved + 32'd1;
+            irs_we <= 1'b1;
+            irs_wslot <= issue_slot_q;
+            irs_wlane <= s;
+            irs_wdata <= {
+                238'd0,
+                bank_slot_scale_valid[s],                 // [273]
+                bank_slot_scale_object[s*32 +: 32],       // [272:241]
+                bank_slot_write[s],                       // [240]
+                bank_slot_hi[s*40 +: 40],                 // [239:200]
+                bank_slot_lo[s*40 +: 40],                 // [199:160]
+                bank_slot_object[s*16 +: 16],             // [159:144]
+                bank_slot_rank[s*8 +: 8],                 // [143:136]
+                bank_slot_offset[s*64 +: 64],             // [135:72]
+                bank_slot_axis[s*8 +: 8],                 // [71:64]
+                bank_slot_extent[s*32 +: 32],             // [63:32]
+                bank_slot_descriptor_id[s*32 +: 32]       // [31:0]
+            };
+        end
+    endtask
+
+    // Whether the front end is in a state an asynchronous fault may abort.
+    wire abortable = (state != S_IDLE) && (state != S_DONE) &&
+                     (state != S_COMMIT) && (state != S_DISCARD) &&
+                     (state != S_TRAP_WAIT) &&
+                     (state != S_FAULT_DRAIN) && (state != S_FAULT_READ) &&
+                     (state != S_FAULT_WAIT) && (state != S_FAULT_APPLY);
+
+    integer j;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             state <= S_IDLE;
@@ -575,6 +1045,8 @@ module ot_a3_microsequencer
             state_count <= 32'd0;
             record <= 256'd0;
             xact_clear <= 1'b0;
+            serial <= 32'd0;
+            drain_next <= DRAIN_RETIRE;
             busy <= 1'b0;
             done <= 1'b0;
             complete <= 1'b0;
@@ -583,17 +1055,29 @@ module ot_a3_microsequencer
             first_fault_instruction <= ot_a3_pkg::A3_NO_ID;
             imem_req <= 1'b0;
             imem_index <= 32'd0;
-            desc_req <= 1'b0;
-            desc_id <= ot_a3_pkg::A3_NO_ID;
+            seq_desc_req <= 1'b0;
+            seq_desc_id <= ot_a3_pkg::A3_NO_ID;
             sym_index_q <= 4'd0;
             predicate_read_req <= 1'b0;
             predicate_read_object_id <= ot_a3_pkg::A3_NO_ID;
             predicate_read_element_index <= 32'd0;
-            issue_valid <= 1'b0;
+            issue_valid_q <= 1'b0;
             issue_family <= 8'd0;
             issue_sub <= 8'd0;
             issue_descriptor_id <= ot_a3_pkg::A3_NO_ID;
             issue_index <= ot_a3_pkg::A3_NO_ID;
+            issue_serial <= 32'd0;
+            issue_slot <= 5'd0;
+            issue_queue <= 5'd0;
+            issue_slot_q <= 5'd0;
+            issue_queue_q <= 5'd0;
+            irs_we <= 1'b0;
+            irs_wslot <= 5'd0;
+            irs_wlane <= 3'd0;
+            irs_wdata <= 512'd0;
+            irs_re <= 1'b0;
+            irs_rslot <= 5'd0;
+            irs_rlane <= 3'd0;
             view_valid <= 1'b0;
             view_descriptor_id <= ot_a3_pkg::A3_NO_ID;
             view_slot <= 3'd0;
@@ -601,17 +1085,44 @@ module ot_a3_microsequencer
             view_extent_axis <= 8'd0;
             view_element_offset <= 64'd0;
             view_rank <= 8'd0;
+            view_irs_slot <= 5'd0;
             count_views_resolved <= 32'd0;
             op_payload <= 512'd0;
-            view_payload <= 1024'd0;
-            view_next_slot <= 3'd0;
-            view_start <= 1'b0;
+            bank_start <= 1'b0;
+            bank_abort <= 1'b0;
+            use_bank <= 1'b0;
+            aux_valid <= 2'b00;
+            aux_write <= 2'b00;
+            for (j = 0; j < 2; j = j + 1) begin
+                aux_object[j] <= 16'd0;
+                aux_lo[j] <= 40'd0;
+                aux_hi[j] <= 40'd0;
+            end
+            hz_work <= 14'd0;
+            hz_acc <= 1'b0;
+            hz_retire_seen <= 1'b0;
+            pub_work <= 14'd0;
+            dep_insert_valid <= 1'b0;
+            dep_insert_object <= 16'd0;
+            dep_insert_lo <= 40'd0;
+            dep_insert_hi <= 40'd0;
+            dep_insert_write <= 1'b0;
+            dep_check0_valid <= 1'b0;
+            dep_check0_object <= 16'd0;
+            dep_check0_lo <= 40'd0;
+            dep_check0_hi <= 40'd0;
+            dep_check0_write <= 1'b0;
+            dep_check1_valid <= 1'b0;
+            dep_check1_object <= 16'd0;
+            dep_check1_lo <= 40'd0;
+            dep_check1_hi <= 40'd0;
+            dep_check1_write <= 1'b0;
             dec_in_valid <= 1'b0;
             loop_setup_valid <= 1'b0;
             loop_next_valid <= 1'b0;
             loop_query_id_q <= ot_a3_pkg::A3_NO_ID;
             loop_payload <= 512'd0;
-            evt_signal_valid <= 1'b0;
+            evt_control_valid <= 1'b0;
             evt_wait_start <= 1'b0;
             evt_wait_payload <= 512'd0;
             evt_wait_acquire <= 1'b0;
@@ -633,22 +1144,62 @@ module ot_a3_microsequencer
             count_predicated_off <= 32'd0;
             count_issued <= 32'd0;
             count_branches <= 32'd0;
+            pending_trap_class <= ot_a3_pkg::A3_TRAP_NONE;
+            pending_trap_index <= ot_a3_pkg::A3_NO_ID;
+            ctl_retire_q <= 1'b0;
+            frozen <= 1'b0;
+            frozen_loop_iterations <= 32'd0;
+            frozen_wait_events <= 32'd0;
+            frozen_signals <= 32'd0;
+            frozen_state_prepares <= 32'd0;
+            frozen_state_commits <= 32'd0;
+            frozen_state_discards <= 32'd0;
+            frozen_state_reads <= 32'd0;
+            frozen_state_advances <= 32'd0;
+            dbg_dep_stalls <= 32'd0;
+            dbg_wait_stalls <= 32'd0;
         end else begin
             done <= 1'b0;
             xact_clear <= 1'b0;
             imem_req <= 1'b0;
-            desc_req <= 1'b0;
+            seq_desc_req <= 1'b0;
             view_valid <= 1'b0;
-            view_start <= 1'b0;
+            irs_we <= 1'b0;
+            irs_re <= 1'b0;
+            bank_start <= 1'b0;
+            bank_abort <= 1'b0;
+            dep_insert_valid <= 1'b0;
+            dep_check0_valid <= 1'b0;
+            dep_check1_valid <= 1'b0;
             dec_in_valid <= 1'b0;
             loop_setup_valid <= 1'b0;
             loop_next_valid <= 1'b0;
-            evt_signal_valid <= 1'b0;
+            evt_control_valid <= 1'b0;
             evt_wait_start <= 1'b0;
             st_op_valid <= 1'b0;
             st_commit_all <= 1'b0;
             st_discard_all <= 1'b0;
+            ctl_retire_q <= 1'b0;
 
+            // -- retirements land independently of the front end ----------
+            // One adder for both sources of a retirement: a completion that
+            // counts and a CONTROL instruction retired by the front end in
+            // the previous cycle (the ctl_retire_q pulse), so neither can
+            // hide the other.
+            count_retired <= count_retired + (retire_counts ? 32'd1 : 32'd0) +
+                             (ctl_retire_q ? 32'd1 : 32'd0);
+            if (irs_retire_valid)
+                hz_retire_seen <= 1'b1;
+            if (evt_wait_stalled)
+                dbg_wait_stalls <= dbg_wait_stalls + 32'd1;
+
+            // An asynchronous engine fault stops issue in the cycle it is
+            // reported (section 3.2 item 5).  The record is sticky until the
+            // transaction clear, which lands one cycle after start: a fault
+            // left by the previous transaction is not this one's.
+            if (irs_fault_valid && abortable && !xact_clear) begin
+                abort_for_fault;
+            end else begin
             case (state)
                 S_IDLE: begin
                     if (start) begin
@@ -662,15 +1213,22 @@ module ot_a3_microsequencer
                         instruction_count <= cfg_instruction_count;
                         work_bound <= cfg_max_retired_work;
                         state_count <= cfg_state_count;
+                        serial <= 32'd0;
                         count_fetched <= 32'd0;
                         count_retired <= 32'd0;
                         count_predicated_off <= 32'd0;
                         count_issued <= 32'd0;
                         count_branches <= 32'd0;
                         count_views_resolved <= 32'd0;
+                        frozen <= 1'b0;
+                        dbg_dep_stalls <= 32'd0;
+                        dbg_wait_stalls <= 32'd0;
                         predicate_read_req <= 1'b0;
                         predicate_read_object_id <= ot_a3_pkg::A3_NO_ID;
                         predicate_read_element_index <= 32'd0;
+                        issue_valid_q <= 1'b0;
+                        use_bank <= 1'b0;
+                        aux_valid <= 2'b00;
                         xact_clear <= 1'b1;
                         if ((STATE_COMPAT == 0) &&
                             (cfg_state_count != 32'd0)) begin
@@ -686,6 +1244,8 @@ module ot_a3_microsequencer
 
                 // -- fetch ------------------------------------------------
                 S_CHECK_PC: begin
+                    use_bank <= 1'b0;
+                    aux_valid <= 2'b00;
                     if (pc >= instruction_count) begin
                         // Running off the authenticated body, or a control
                         // transfer that leaves it, is an illegal control flow.
@@ -735,8 +1295,8 @@ module ot_a3_microsequencer
                     if (!predicated) begin
                         state <= S_WAIT_REQ;
                     end else begin
-                        desc_req <= 1'b1;
-                        desc_id <= ins_predicate_id;
+                        seq_desc_req <= 1'b1;
+                        seq_desc_id <= ins_predicate_id;
                         state <= S_PRED_WAIT;
                     end
                 end
@@ -788,7 +1348,7 @@ module ot_a3_microsequencer
                             end
                         end
                         ot_a3_pkg::A3_PRED_COMPARE_LOOP: begin
-                            if (!loop_query_active) begin
+                            if (!pq_active) begin
                                 raise_trap(ot_a3_pkg::A3_TRAP_ILLEGAL, pc);
                             end else if (loop_compare_result ^ invert) begin
                                 state <= S_WAIT_REQ;
@@ -799,10 +1359,10 @@ module ot_a3_microsequencer
                             end
                         end
                         ot_a3_pkg::A3_PRED_LOOP_FIRST, ot_a3_pkg::A3_PRED_LOOP_LAST: begin
-                            if ((loop_query_active &&
+                            if ((pq_active &&
                                  ((pred_kind == ot_a3_pkg::A3_PRED_LOOP_FIRST)
-                                  ? (loop_query_value == 32'd0)
-                                  : (loop_query_value == (loop_query_trip - 32'd1))))
+                                  ? (pq_value == 32'd0)
+                                  : (pq_value == (pq_trip - 32'd1))))
                                 ^ invert) begin
                                 state <= S_WAIT_REQ;
                             end else begin
@@ -812,10 +1372,15 @@ module ot_a3_microsequencer
                             end
                         end
                         ot_a3_pkg::A3_PRED_BOOLEAN_OBJECT, ot_a3_pkg::A3_PRED_EOS_MEMBER: begin
-                            predicate_read_object_id <= pred_object_id;
-                            predicate_read_element_index <= pred_element;
-                            predicate_read_req <= 1'b1;
-                            state <= S_PRED_OBJECT;
+                            // The flag word goes through the dependence
+                            // table first (section 3.7): a read against an
+                            // outstanding write of the word waits for it.
+                            dep_check0_valid <= 1'b1;
+                            dep_check0_object <= pred_object_id[15:0];
+                            dep_check0_lo <= {6'd0, pred_element, 2'b00};
+                            dep_check0_hi <= {6'd0, pred_element, 2'b00} + 40'd4;
+                            dep_check0_write <= 1'b0;
+                            state <= S_PRED_HAZARD;
                         end
                         default: begin
                             // ENGINE_STATUS and ROUTE_VALID require an engine
@@ -824,6 +1389,18 @@ module ot_a3_microsequencer
                             raise_trap(ot_a3_pkg::A3_TRAP_CAPABILITY, pc);
                         end
                     endcase
+                end
+                S_PRED_HAZARD: begin
+                    // The check issued last cycle answers now.
+                    if (dep_check0_conflict) begin
+                        dep_check0_valid <= 1'b1;
+                        dbg_dep_stalls <= dbg_dep_stalls + 32'd1;
+                    end else begin
+                        predicate_read_object_id <= pred_object_id;
+                        predicate_read_element_index <= pred_element;
+                        predicate_read_req <= 1'b1;
+                        state <= S_PRED_OBJECT;
+                    end
                 end
                 S_PRED_OBJECT: begin
                     if (predicate_read_valid) begin
@@ -845,8 +1422,8 @@ module ot_a3_microsequencer
                     if (ins_wait_set_id == ot_a3_pkg::A3_NO_ID) begin
                         state <= S_DISPATCH;
                     end else begin
-                        desc_req <= 1'b1;
-                        desc_id <= ins_wait_set_id;
+                        seq_desc_req <= 1'b1;
+                        seq_desc_id <= ins_wait_set_id;
                         state <= S_WAIT_WAIT;
                     end
                 end
@@ -878,39 +1455,36 @@ module ot_a3_microsequencer
                         case (ins_sub)
                             ot_a3_pkg::A3_CONTROL_NOP,
                             ot_a3_pkg::A3_CONTROL_WAIT,
-                            ot_a3_pkg::A3_CONTROL_FENCE,
                             ot_a3_pkg::A3_CONTROL_ASSERT: begin
-                                count_retired <= count_retired + 32'd1;
-                                publish_signal;
+                                retire_control;
                                 pc <= pc + 32'd1;
                                 state <= S_CHECK_PC;
                             end
+                            ot_a3_pkg::A3_CONTROL_FENCE: begin
+                                // AM-C2: an ENGINE-scope drain -- the scope
+                                // byte of every shipped wait set, and the
+                                // amendment's default without one.
+                                drain_next <= DRAIN_RETIRE;
+                                state <= S_DRAIN;
+                            end
                             ot_a3_pkg::A3_CONTROL_BRANCH: begin
-                                count_retired <= count_retired + 32'd1;
+                                retire_control;
                                 count_branches <= count_branches + 32'd1;
-                                publish_signal;
                                 pc <= ins_control_id;
                                 state <= S_CHECK_PC;
                             end
                             ot_a3_pkg::A3_CONTROL_COMPLETE: begin
-                                count_retired <= count_retired + 32'd1;
-                                publish_signal;
-                                complete <= 1'b1;
-                                if (STATE_COMPAT != 0) begin
-                                    st_commit_all <= 1'b1;
-                                    state <= S_COMMIT;
-                                end else begin
-                                    // The program's final dependency fence
-                                    // already orders direct live-buffer writes.
-                                    state <= S_DONE;
-                                end
+                                // Implicit SYSTEM drain (AM-C2), then the
+                                // completion record.
+                                drain_next <= DRAIN_COMPLETE;
+                                state <= S_DRAIN;
                             end
                             ot_a3_pkg::A3_CONTROL_TRAP: begin
                                 raise_trap(ot_a3_pkg::A3_TRAP_ILLEGAL, pc);
                             end
                             ot_a3_pkg::A3_CONTROL_LOOP_SETUP: begin
-                                desc_req <= 1'b1;
-                                desc_id <= ins_control_id;
+                                seq_desc_req <= 1'b1;
+                                seq_desc_id <= ins_control_id;
                                 state <= S_LOOP_WAIT;
                             end
                             default: begin   // A3_CONTROL_LOOP_NEXT
@@ -920,14 +1494,18 @@ module ot_a3_microsequencer
                         endcase
                     end else begin
                         count_issued <= count_issued + 32'd1;
+                        issue_queue_q <= ot_a3_pkg::a3_queue_base(ins_major);
                         if ((ins_major == ot_a3_pkg::A3_MAJOR_RECOVERY) &&
                             (ins_sub == ot_a3_pkg::A3_RECOVERY_ABORT)) begin
                             raise_trap(ot_a3_pkg::A3_TRAP_INTERNAL, pc);
                         end else if (expected_type == ot_a3_pkg::A3_DESC_NONE) begin
-                            state <= S_ISSUE;
+                            // RECOVERY: POISON and DRAIN drain (AM-C2), then
+                            // issue as a recorded operation.
+                            drain_next <= DRAIN_ISSUE;
+                            state <= S_DRAIN;
                         end else begin
-                            desc_req <= 1'b1;
-                            desc_id <= ins_descriptor_id;
+                            seq_desc_req <= 1'b1;
+                            seq_desc_id <= ins_descriptor_id;
                             state <= S_ENG_WAIT;
                         end
                     end
@@ -970,8 +1548,7 @@ module ot_a3_microsequencer
                         if (loop_trap_valid) begin
                             raise_trap(loop_trap_class, pc);
                         end else begin
-                            count_retired <= count_retired + 32'd1;
-                            publish_signal;
+                            retire_control;
                             pc <= loop_next_pc;
                             state <= S_CHECK_PC;
                         end
@@ -998,61 +1575,142 @@ module ot_a3_microsequencer
                             // descriptor ID, so every operand view this
                             // operator names is resolved before the issue.
                             op_payload <= desc_payload;
-                            view_next_slot <= 3'd0;
-                            state <= S_VIEW_SCAN;
+                            use_bank <= 1'b1;
+                            if (op_schedule_id == ot_a3_pkg::A3_NO_ID) begin
+                                bank_start <= 1'b1;
+                                state <= S_RESOLVE;
+                            end else begin
+                                // Section 3.8: SCHEDULE.queue_index selects
+                                // the queue.
+                                seq_desc_req <= 1'b1;
+                                seq_desc_id <= op_schedule_id;
+                                state <= S_SCHED_WAIT;
+                            end
+                        end else if (expected_type == ot_a3_pkg::A3_DESC_COMMUNICATION) begin
+                            // LINK: the queue is the virtual channel; the
+                            // dependence range is the local object's range,
+                            // written conservatively for every LINK shape.
+                            issue_queue_q <= ot_a3_pkg::a3_queue_base(ins_major) +
+                                             ({3'd0, comm_vc[1:0]} &
+                                              ot_a3_pkg::a3_queue_index_mask(ins_major));
+                            aux_valid[0] <= 1'b1;
+                            aux_object[0] <= comm_local_obj[15:0];
+                            aux_lo[0] <= comm_range_fits ? comm_local_off[39:0] : 40'd0;
+                            aux_hi[0] <= comm_range_fits ? comm_local_end[39:0] : {40{1'b1}};
+                            aux_write[0] <= 1'b1;
+                            hz_work <= 14'd1 << 12;
+                            hz_acc <= 1'b0;
+                            hz_retire_seen <= 1'b0;
+                            state <= S_HAZARD;
+                        end else if ((ins_major == ot_a3_pkg::A3_MAJOR_OBSERVATION) &&
+                                     (ins_sub == 8'h00)) begin
+                            // OBSERVATION.COUNTER_SNAPSHOT is an ENGINE drain
+                            // (AM-C2).
+                            drain_next <= DRAIN_ISSUE;
+                            state <= S_DRAIN;
                         end else begin
-                            state <= S_ISSUE;
+                            hz_work <= 14'd0;
+                            hz_acc <= 1'b0;
+                            hz_retire_seen <= 1'b0;
+                            state <= S_HAZARD;
+                        end
+                    end
+                end
+                S_SCHED_WAIT: begin
+                    if (desc_valid) begin
+                        if (!desc_header_ok || (desc_type != ot_a3_pkg::A3_DESC_SCHEDULE)) begin
+                            // STRICTER: the verifier proves the OPERATOR's
+                            // schedule_id names a SCHEDULE.
+                            raise_trap(ot_a3_pkg::A3_TRAP_DESCRIPTOR, pc);
+                        end else begin
+                            issue_queue_q <= ot_a3_pkg::a3_queue_base(ins_major) +
+                                             ({3'd0, sched_queue_index[1:0]} &
+                                              ot_a3_pkg::a3_queue_index_mask(ins_major));
+                            bank_start <= 1'b1;
+                            state <= S_RESOLVE;
+                        end
+                    end
+                end
+                S_RESOLVE: begin
+                    if (bank_done) begin
+                        if (bank_fault) begin
+                            // The reference resolver raises rather than
+                            // resolving; so does this.
+                            raise_trap(bank_trap_class, pc);
+                        end else begin
+                            hz_work <= rng_valid;
+                            hz_acc <= 1'b0;
+                            hz_retire_seen <= 1'b0;
+                            state <= S_HAZARD;
                         end
                     end
                 end
 
-                // -- operand tensor views (A4 and A13) ---------------------
-                S_VIEW_SCAN: begin
-                    if (view_next_slot >= 3'd6) begin
-                        state <= S_ISSUE;
-                    end else if (view_slot_id == ot_a3_pkg::A3_NO_ID) begin
-                        view_next_slot <= view_next_slot + 3'd1;
+                // -- dependence check (section 3.6): two ranges per cycle --
+                S_HAZARD: begin
+                    if (hz_work != 14'd0) begin
+                        dep_check0_valid <= 1'b1;
+                        dep_check0_object <= rng_object[hz_first];
+                        dep_check0_lo <= rng_lo[hz_first];
+                        dep_check0_hi <= rng_hi[hz_first];
+                        dep_check0_write <= rng_write[hz_first];
+                        if (hz_rest != 14'd0) begin
+                            dep_check1_valid <= 1'b1;
+                            dep_check1_object <= rng_object[hz_second];
+                            dep_check1_lo <= rng_lo[hz_second];
+                            dep_check1_hi <= rng_hi[hz_second];
+                            dep_check1_write <= rng_write[hz_second];
+                            hz_work <= hz_rest & ~(14'd1 << hz_second);
+                        end else begin
+                            hz_work <= 14'd0;
+                        end
+                        hz_acc <= hz_acc | dep_check0_conflict | dep_check1_conflict;
+                    end else if (hz_conflict_now) begin
+                        dbg_dep_stalls <= dbg_dep_stalls + 32'd1;
+                        state <= S_HAZARD_STALL;
+                    end else if (irs_alloc_ready) begin
+                        // Reserve the entry: no other allocator exists, so
+                        // the lowest free entry stays free until the issue.
+                        issue_slot_q <= irs_free_slot;
+                        pub_work <= rng_valid;
+                        state <= S_VIEW_PUB;
+                    end
+                end
+                S_HAZARD_STALL: begin
+                    // A retirement released an entry -- now, or while the
+                    // scan that found the conflict was still running -- so
+                    // scan again.  Nothing outstanding means nothing to
+                    // conflict with, and the scan proves it.
+                    if (irs_retire_valid || hz_retire_seen || !irs_any_outstanding) begin
+                        hz_work <= rng_valid;
+                        hz_acc <= 1'b0;
+                        hz_retire_seen <= 1'b0;
+                        state <= S_HAZARD;
+                    end
+                end
+
+                // -- publish the resolved views and enter the ranges --------
+                S_VIEW_PUB: begin
+                    if (pub_work != 14'd0) begin
+                        dep_insert_valid <= 1'b1;
+                        dep_insert_object <= rng_object[pub_first];
+                        dep_insert_lo <= rng_lo[pub_first];
+                        dep_insert_hi <= rng_hi[pub_first];
+                        dep_insert_write <= rng_write[pub_first];
+                        if ((pub_first < 4'd12) && !pub_first[0])
+                            publish_view(pub_first[3:1]);
+                        pub_work <= pub_work & ~(14'd1 << pub_first);
                     end else begin
-                        desc_req <= 1'b1;
-                        desc_id <= view_slot_id;
-                        state <= S_VIEW_WAIT;
+                        issue_valid_q <= 1'b1;
+                        issue_family <= ins_major;
+                        issue_sub <= ins_sub;
+                        issue_descriptor_id <= ins_descriptor_id;
+                        issue_index <= pc;
+                        issue_serial <= serial;
+                        issue_slot <= issue_slot_q;
+                        issue_queue <= issue_queue_q;
+                        state <= S_ISSUE;
                     end
-                end
-                S_VIEW_WAIT: begin
-                    if (desc_valid) begin
-                        if (!desc_header_ok ||
-                            (desc_type != ot_a3_pkg::A3_DESC_TENSOR_VIEW)) begin
-                            raise_trap(ot_a3_pkg::A3_TRAP_DESCRIPTOR, pc);
-                        end else begin
-                            view_payload <= desc_payload_wide;
-                            view_descriptor_id <= desc_id;
-                            view_start <= 1'b1;
-                            state <= S_VIEW_RES;
-                        end
-                    end
-                end
-                S_VIEW_RES: begin
-                    if (res_done) begin
-                        if (res_fault) begin
-                            // The reference resolver raises rather than
-                            // resolving; so does this.
-                            raise_trap(res_trap_class, pc);
-                        end else begin
-                            view_valid <= 1'b1;
-                            view_slot <= view_next_slot;
-                            view_extent <= res_extent;
-                            view_extent_axis <= res_extent_axis;
-                            view_element_offset <= res_element_offset;
-                            view_rank <= res_rank;
-                            count_views_resolved <=
-                                count_views_resolved + 32'd1;
-                            state <= S_VIEW_EMIT;
-                        end
-                    end
-                end
-                S_VIEW_EMIT: begin
-                    view_next_slot <= view_next_slot + 3'd1;
-                    state <= S_VIEW_SCAN;
                 end
 
                 S_STATE_SYM: begin
@@ -1061,40 +1719,119 @@ module ot_a3_microsequencer
                 end
                 S_STATE_DONE: begin
                     if (st_op_done) begin
-                        if (!st_op_ok)
+                        if (!st_op_ok) begin
                             raise_trap(st_op_trap_class, pc);
-                        else
-                            state <= S_ISSUE;
-                    end
-                end
-                S_ISSUE: begin
-                    issue_valid <= 1'b1;
-                    issue_family <= ins_major;
-                    issue_sub <= ins_sub;
-                    issue_descriptor_id <= ins_descriptor_id;
-                    issue_index <= pc;
-                    if (issue_valid && issue_ready) begin
-                        issue_valid <= 1'b0;
-                        if (issue_fault) begin
-                            // Completion faults are architecturally precise:
-                            // the operation was issued, but it never retires
-                            // and its event is never published.
-                            raise_trap(
-                                (issue_trap_class == ot_a3_pkg::A3_TRAP_NONE)
-                                    ? ot_a3_pkg::A3_TRAP_ENGINE : issue_trap_class,
-                                pc
-                            );
                         end else begin
-                            evt_signal_valid <=
-                                (ins_signal_event_id != ot_a3_pkg::A3_NO_ID);
-                            state <= S_RETIRE;
+                            // Whole committed and prepared objects.
+                            aux_valid <= 2'b11;
+                            aux_object[0] <= state_committed_obj[15:0];
+                            aux_lo[0] <= 40'd0;
+                            aux_hi[0] <= {40{1'b1}};
+                            aux_write[0] <= 1'b1;
+                            aux_object[1] <= state_prepared_obj[15:0];
+                            aux_lo[1] <= 40'd0;
+                            aux_hi[1] <= {40{1'b1}};
+                            aux_write[1] <= 1'b1;
+                            hz_work <= 14'd3 << 12;
+                            hz_acc <= 1'b0;
+                            hz_retire_seen <= 1'b0;
+                            state <= S_HAZARD;
                         end
                     end
                 end
-                S_RETIRE: begin
-                    count_retired <= count_retired + 32'd1;
-                    pc <= pc + 32'd1;
-                    state <= S_CHECK_PC;
+
+                // -- issue handshake: queue acceptance ---------------------
+                S_ISSUE: begin
+                    if (issue_valid && issue_ready) begin
+                        issue_valid_q <= 1'b0;
+                        // The counter snapshot of this issue (payload lane 6).
+                        irs_we <= 1'b1;
+                        irs_wslot <= issue_slot_q;
+                        irs_wlane <= 3'd6;
+                        irs_wdata <= snapshot_word;
+                        serial <= serial + 32'd1;
+                        pc <= pc + 32'd1;
+                        state <= S_CHECK_PC;
+                    end
+                end
+
+                // -- drains (AM-C2) ------------------------------------------
+                S_DRAIN: begin
+                    if (!irs_any_outstanding) begin
+                        case (drain_next)
+                            DRAIN_RETIRE: begin
+                                retire_control;
+                                pc <= pc + 32'd1;
+                                state <= S_CHECK_PC;
+                            end
+                            DRAIN_COMPLETE: begin
+                                retire_control;
+                                complete <= 1'b1;
+                                if (STATE_COMPAT != 0) begin
+                                    st_commit_all <= 1'b1;
+                                    state <= S_COMMIT;
+                                end else begin
+                                    state <= S_DONE;
+                                end
+                            end
+                            default: begin
+                                hz_work <= 14'd0;
+                                hz_acc <= 1'b0;
+                                hz_retire_seen <= 1'b0;
+                                state <= S_HAZARD;
+                            end
+                        endcase
+                    end
+                end
+
+                // -- a precise trap, held behind outstanding work ------------
+                S_TRAP_WAIT: begin
+                    if (irs_fault_valid) begin
+                        // The outstanding operation's fault has the lower
+                        // serial and wins.
+                        abort_for_fault;
+                    end else if (!irs_any_outstanding) begin
+                        apply_trap(pending_trap_class, pending_trap_index);
+                    end
+                end
+
+                // -- an asynchronous engine fault ----------------------------
+                S_FAULT_DRAIN: begin
+                    if (!irs_any_outstanding) begin
+                        irs_re <= 1'b1;
+                        irs_rslot <= irs_fault_slot;
+                        irs_rlane <= 3'd6;
+                        state <= S_FAULT_READ;
+                    end
+                end
+                S_FAULT_READ: begin
+                    state <= S_FAULT_WAIT;
+                end
+                S_FAULT_WAIT: begin
+                    // irs_rdata presents the snapshot this cycle.
+                    count_fetched <= irs_rdata[31:0];
+                    count_issued <= irs_rdata[63:32];
+                    count_predicated_off <= irs_rdata[95:64];
+                    count_views_resolved <= irs_rdata[127:96];
+                    frozen_loop_iterations <= irs_rdata[159:128];
+                    count_branches <= irs_rdata[191:160];
+                    frozen_wait_events <= irs_rdata[223:192];
+                    frozen_signals <= irs_rdata[255:224];
+                    count_retired <= irs_rdata[287:256];
+                    frozen_state_prepares <= irs_rdata[319:288];
+                    frozen_state_commits <= irs_rdata[351:320];
+                    frozen_state_discards <= irs_rdata[383:352];
+                    frozen_state_reads <= irs_rdata[415:384];
+                    frozen_state_advances <= irs_rdata[447:416];
+                    frozen <= 1'b1;
+                    state <= S_FAULT_APPLY;
+                end
+                S_FAULT_APPLY: begin
+                    apply_trap(
+                        (irs_fault_trap_class == ot_a3_pkg::A3_TRAP_NONE)
+                            ? ot_a3_pkg::A3_TRAP_ENGINE : irs_fault_trap_class,
+                        irs_fault_pc
+                    );
                 end
 
                 // -- termination -------------------------------------------
@@ -1113,6 +1850,7 @@ module ot_a3_microsequencer
                 end
                 default: state <= S_IDLE;
             endcase
+            end
         end
     end
 endmodule

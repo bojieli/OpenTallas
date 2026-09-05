@@ -5,34 +5,50 @@
 // This is the module docs/CHIP_ARCHITECTURE_DESIGN.md section 11.4 item 4
 // names -- the design-side replacement for the verification tops
 // rtl/test/a3_microsequencer_top.sv and rtl/test/a3_shipped_prefix_top.sv,
-// which from this commit on are thin wrappers around it.  In this first form
-// the engines are still stubbed: the engine issue port, the predicate service
-// port and the resolved-view port are top-level ports, so the checker (or the
-// shipped-prefix engine bridge) that answered them before answers them now,
-// and the control plane crosses from testbench to design with zero change in
-// observation (section 11.6, gate L1-CP).  The asynchronous front end (issue
-// record store, dependence table, widened scoreboard, resolver bank, shared
-// divider) is the second half and is not here.
+// which are thin wrappers around it.  The engines are still stubbed: the
+// engine issue and completion ports, the predicate service port and the
+// resolved-view port are top-level ports, so the checker (or the
+// shipped-prefix engine bridge) that answers them answers them here.  The
+// control plane behind those ports is the asynchronous front end of section
+// 3.2: an engine instruction leaves at issue with a serial and an
+// issue-record-store slot and completes through the completion port in any
+// order, bounded by A3_QUEUE_DEPTH per queue and A3_OUTSTANDING per die,
+// ordered by the dependence table and the three-bit event scoreboard
+// (AM-C1), with six resolver lanes and one shared divider behind the
+// resolve stage.
 //
 // What is design and what is not.  Everything in this module is synthesisable
 // and owned by the design: the program-header admission block, the
-// microsequencer with its decoder, loop stack, scoreboard, predicate unit and
-// one view-resolver lane, the descriptor base/bound/fault logic of section
-// 3.4, the symbol-file addressing, and the host load path through which the
-// management processor writes the two control stores (section 3.4: "written
-// only by the management processor").  The stores themselves are presented as
-// abstract macro boundaries, the asap7 column of the vehicle memory plan
-// (section 11.2): a 4 KiB program store (vehicle default 128 rows x 32 B) and
-// a 64 KiB descriptor store (vehicle default 256 rows of which the RTL reads
-// the 192-byte record prefix), each a single synchronous port ganged from
-// 32-bit macros -- a read returns the whole row one cycle later, a write lands
-// one 32-bit lane.  Their geometry stays parametric because the L1-CP vector
-// image concatenates four deployments (2,763 program rows, 7,140 descriptor
-// rows) and DeepSeek-V4-Flash alone needs 1,312 instructions and 3,841
-// records: the campaigns override to 4096 / 8192 exactly as the shared
-// verification top always has.  No memory is loaded by this module: the
-// wrapper that owns the arrays preloads them (verification) or the management
-// processor writes them through host_* (design).
+// microsequencer with its decoder, loop stack, scoreboard, predicate unit,
+// resolver bank, issue record store and dependence table, the descriptor
+// base/bound/fault logic of section 3.4, the runtime symbol file (section
+// 3.3: sixteen 64-bit entries with bound bits, written per request by the
+// management processor), and the host load path through which the
+// management processor writes the two control stores and the symbol file
+// (section 3.4: "written only by the management processor"; section 9.2).
+// The stores themselves are presented as abstract macro boundaries, the
+// asap7 column of the vehicle memory plan (section 11.2): a 4 KiB program
+// store (vehicle default 128 rows x 32 B), a 64 KiB descriptor store
+// (vehicle default 256 rows of which the RTL reads the 192-byte record
+// prefix) and the issue record store's 512-byte payload macro (32 entries x
+// 8 lanes x 64 B: the six resolved views of the operation in operand order
+// and its counter snapshot), each a single synchronous port -- a read
+// returns the whole row one cycle later, a write lands one lane.  Their
+// geometry stays parametric because the L1-CP vector image concatenates four
+// deployments (2,763 program rows, 7,140 descriptor rows) and
+// DeepSeek-V4-Flash alone needs 1,312 instructions and 3,841 records: the
+// campaigns override to 4096 / 8192 exactly as the shared verification top
+// always has.  No memory is loaded by this module: the management processor
+// writes the stores and the symbol file through host_* (design) and the
+// wrapper that owns the arrays backs the boundaries (verification).
+//
+// The host load path selects.  host_sel = A3_HOST_SEL_PROGRAM (0): one
+// 32-bit lane (0..7) of one instruction row; A3_HOST_SEL_DESCRIPTOR (1): one
+// lane (0..47) of the 192-byte record prefix of one row;
+// A3_HOST_SEL_SYMBOL (2): symbol host_row[3:0], lane 0 = value[31:0], lane 1
+// = value[63:32], lane 2 = the bound bit in host_wdata[0].  A write while a
+// transaction runs, to an unknown select, past a store or past a row's
+// lanes is dropped and host_write_refused stays set until reset.
 //
 // The package is referenced by scope, never wildcard-imported [OI-43].
 // ---------------------------------------------------------------------------
@@ -66,15 +82,13 @@ module ot_a3_device_top #(
     output wire [63:0]   header_max_retired_work,
     output wire [31:0]   header_entrypoint_descriptor,
 
-    // -- host: control-store load path ---------------------------------
-    // One 32-bit lane of one row per cycle into the program store
-    // (host_sel = 0, lanes 0..7) or the descriptor store (host_sel = 1,
-    // lanes 0..47).  Accepted only while no transaction runs (host_ready);
-    // a write offered while busy or outside the store is dropped and
-    // host_write_refused stays set until reset, so a load that was not
-    // taken cannot pass for one that was.
+    // -- host: control-store and symbol-file load path -------------------
+    // One 32-bit lane of one row per cycle (see the header).  Accepted only
+    // while no transaction runs (host_ready); a write offered while busy or
+    // outside the target is dropped and host_write_refused stays set until
+    // reset, so a load that was not taken cannot pass for one that was.
     input  wire          host_we,
-    input  wire          host_sel,
+    input  wire [1:0]    host_sel,
     input  wire [31:0]   host_row,
     input  wire [5:0]    host_lane,
     input  wire [31:0]   host_wdata,
@@ -88,8 +102,6 @@ module ot_a3_device_top #(
     input  wire [31:0]   cfg_entry_pc,
     input  wire [31:0]   cfg_desc_base,
     input  wire [31:0]   cfg_desc_count,
-    input  wire [31:0]   cfg_symbol_base,
-    input  wire [31:0]   cfg_symbol_mask,
     input  wire [63:0]   cfg_max_retired_work,
     input  wire [31:0]   cfg_state_count,
 
@@ -121,11 +133,19 @@ module ot_a3_device_top #(
     output wire [31:0]   dstore_wdata,
     input  wire [1535:0] dstore_rdata,
 
-    // -- runtime symbol file boundary (combinational read) -------------
-    // sym_addr = cfg_symbol_base + symbol index; the bound bit is
-    // cfg_symbol_mask[index] and never leaves this module.
-    output wire [31:0]   sym_addr,
-    input  wire [31:0]   sym_value,
+    // -- issue record store payload boundary (one synchronous port) -----
+    // 32 entries x 8 lanes x 512 bits.  irs_we: lane irs_wlane of entry
+    // irs_wslot takes irs_wdata.  irs_re: irs_rdata presents lane irs_rlane
+    // of entry irs_rslot in the next cycle.  Lanes 0..5 are the resolved
+    // views in operand order, lane 6 the counter snapshot at issue.
+    output wire          irs_we,
+    output wire [4:0]    irs_wslot,
+    output wire [2:0]    irs_wlane,
+    output wire [511:0]  irs_wdata,
+    output wire          irs_re,
+    output wire [4:0]    irs_rslot,
+    output wire [2:0]    irs_rlane,
+    input  wire [511:0]  irs_rdata,
 
     // -- data-dependent predicate service ------------------------------
     output wire          predicate_read_req,
@@ -135,17 +155,28 @@ module ot_a3_device_top #(
     input  wire          predicate_read_value,
     input  wire [15:0]   predicate_read_trap_class,
 
-    // -- engine issue: ready is completion, not queue acceptance --------
+    // -- engine issue: ready is queue acceptance -------------------------
+    // The operation is outstanding from the handshake until its completion
+    // is reported on the completion port with the same slot.
     output wire          issue_valid,
     input  wire          issue_ready,
-    input  wire          issue_fault,
-    input  wire [15:0]   issue_trap_class,
     output wire [7:0]    issue_family,
     output wire [7:0]    issue_sub,
     output wire [31:0]   issue_descriptor_id,
     output wire [31:0]   issue_index,
+    output wire [31:0]   issue_serial,
+    output wire [4:0]    issue_slot,
+    output wire [4:0]    issue_queue,
+
+    // -- engine completion: any order, one per cycle -------------------
+    input  wire          complete_valid,
+    input  wire [4:0]    complete_slot,
+    input  wire          complete_fault,
+    input  wire [15:0]   complete_trap_class,
 
     // -- resolved operand tensor views (A4, A13, A18) -------------------
+    // Published in operand order immediately before the operation's issue
+    // handshake, tagged with its issue-record slot.
     output wire          view_valid,
     output wire [31:0]   view_descriptor_id,
     output wire [2:0]    view_slot,
@@ -153,6 +184,7 @@ module ot_a3_device_top #(
     output wire [7:0]    view_extent_axis,
     output wire [63:0]   view_element_offset,
     output wire [7:0]    view_rank,
+    output wire [4:0]    view_irs_slot,
     output wire [31:0]   count_views_resolved,
 
     // -- accounting -----------------------------------------------------
@@ -180,7 +212,12 @@ module ot_a3_device_top #(
     output wire [3:0]    dbg_decode_error,
     output wire [31:0]   dbg_source_operation_id,
     output wire [31:0]   dbg_wait_fault_event,
-    output wire [1:0]    dbg_loop_action
+    output wire [1:0]    dbg_loop_action,
+    output wire [5:0]    dbg_outstanding,
+    output wire [5:0]    dbg_max_outstanding,
+    output wire [31:0]   dbg_dep_stalls,
+    output wire [31:0]   dbg_wait_stalls,
+    output wire          irs_protocol_error
 );
     // -- program-header admission ----------------------------------------
     ot_a3_program_header header (
@@ -215,21 +252,27 @@ module ot_a3_device_top #(
     // write accepted while !busy can never contend with one; the port muxes
     // below still let a read win should that invariant ever be broken.
     assign host_ready = !busy;
-    wire host_program_write = host_we && !host_sel;
-    wire host_desc_write    = host_we &&  host_sel;
+    wire host_program_write = host_we && (host_sel == ot_a3_pkg::A3_HOST_SEL_PROGRAM);
+    wire host_desc_write    = host_we && (host_sel == ot_a3_pkg::A3_HOST_SEL_DESCRIPTOR);
+    wire host_symbol_write  = host_we && (host_sel == ot_a3_pkg::A3_HOST_SEL_SYMBOL);
     wire host_program_in_range = ({1'b0, host_row} < PROGRAM_ROWS) &&
                                  (host_lane < 6'd8);
     wire host_desc_in_range    = ({1'b0, host_row} < DESC_ROWS) &&
                                  (host_lane < 6'd48);
+    wire host_symbol_in_range  = (host_row < ot_a3_pkg::A3_SYMBOL_COUNT) &&
+                                 (host_lane < 6'd3);
     wire host_program_accept = host_program_write && host_ready &&
                                host_program_in_range;
     wire host_desc_accept    = host_desc_write && host_ready &&
                                host_desc_in_range;
+    wire host_symbol_accept  = host_symbol_write && host_ready &&
+                               host_symbol_in_range;
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n)
             host_write_refused <= 1'b0;
-        else if (host_we && !(host_program_accept || host_desc_accept))
+        else if (host_we &&
+                 !(host_program_accept || host_desc_accept || host_symbol_accept))
             host_write_refused <= 1'b1;
     end
 
@@ -285,11 +328,6 @@ module ot_a3_device_top #(
 
     wire [1535:0] desc_data = desc_fault ? 1536'd0 : dstore_rdata;
 
-    // -- runtime symbol file -------------------------------------------------
-    wire [3:0]  sym_index;
-    assign sym_addr = cfg_symbol_base + {28'd0, sym_index};
-    wire        sym_bound = cfg_symbol_mask[{1'b0, sym_index}];
-
     // -- the microsequencer ---------------------------------------------------
     ot_a3_microsequencer #(
         .STATE_COMPAT(STATE_COMPAT)
@@ -317,9 +355,10 @@ module ot_a3_device_top #(
         .desc_valid(desc_valid),
         .desc_fault(desc_fault),
         .desc_data(desc_data),
-        .sym_index(sym_index),
-        .sym_value(sym_value),
-        .sym_bound(sym_bound),
+        .host_sym_we(host_symbol_accept),
+        .host_sym_index(host_row[3:0]),
+        .host_sym_lane(host_lane[1:0]),
+        .host_sym_wdata(host_wdata),
         .predicate_read_req(predicate_read_req),
         .predicate_read_object_id(predicate_read_object_id),
         .predicate_read_element_index(predicate_read_element_index),
@@ -328,12 +367,25 @@ module ot_a3_device_top #(
         .predicate_read_trap_class(predicate_read_trap_class),
         .issue_valid(issue_valid),
         .issue_ready(issue_ready),
-        .issue_fault(issue_fault),
-        .issue_trap_class(issue_trap_class),
         .issue_family(issue_family),
         .issue_sub(issue_sub),
         .issue_descriptor_id(issue_descriptor_id),
         .issue_index(issue_index),
+        .issue_serial(issue_serial),
+        .issue_slot(issue_slot),
+        .issue_queue(issue_queue),
+        .complete_valid(complete_valid),
+        .complete_slot(complete_slot),
+        .complete_fault(complete_fault),
+        .complete_trap_class(complete_trap_class),
+        .irs_we(irs_we),
+        .irs_wslot(irs_wslot),
+        .irs_wlane(irs_wlane),
+        .irs_wdata(irs_wdata),
+        .irs_re(irs_re),
+        .irs_rslot(irs_rslot),
+        .irs_rlane(irs_rlane),
+        .irs_rdata(irs_rdata),
         .view_valid(view_valid),
         .view_descriptor_id(view_descriptor_id),
         .view_slot(view_slot),
@@ -341,6 +393,7 @@ module ot_a3_device_top #(
         .view_extent_axis(view_extent_axis),
         .view_element_offset(view_element_offset),
         .view_rank(view_rank),
+        .view_irs_slot(view_irs_slot),
         .count_views_resolved(count_views_resolved),
         .count_fetched(count_fetched),
         .count_retired(count_retired),
@@ -364,6 +417,11 @@ module ot_a3_device_top #(
         .dbg_decode_error(dbg_decode_error),
         .dbg_source_operation_id(dbg_source_operation_id),
         .dbg_wait_fault_event(dbg_wait_fault_event),
-        .dbg_loop_action(dbg_loop_action)
+        .dbg_loop_action(dbg_loop_action),
+        .dbg_outstanding(dbg_outstanding),
+        .dbg_max_outstanding(dbg_max_outstanding),
+        .dbg_dep_stalls(dbg_dep_stalls),
+        .dbg_wait_stalls(dbg_wait_stalls),
+        .irs_protocol_error(irs_protocol_error)
     );
 endmodule

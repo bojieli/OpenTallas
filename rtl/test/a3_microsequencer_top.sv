@@ -7,50 +7,47 @@
 // C++ harnesses under Verilator (rtl/test/a3_microsequencer_harness.cpp,
 // rtl/test/a3_deployment_harness.cpp) instantiate this module and read the
 // same generated vector files, so the two simulators exercise identical RTL
-// through independently written checkers.  Its port list and parameters are
-// the ones the checkers have always driven; what changed is that the
-// admission block, the sequencer, the descriptor base/bound/fault logic and
-// the symbol addressing now live in the design top, and this wrapper keeps
-// only what a testbench legitimately owns: the arrays, their preload, the
-// host-side header streaming, and the engine stub tie-offs.
+// through independently written checkers.
 //
-// Memory images are produced by tools/build_abi3_rtl_vectors.py directly from
-// real ABI 3.0 deployments built with runtime.abi3.builder.DeploymentBuilder:
+// This wrapper holds no image and runs no $readmemh
+// (docs/CHIP_ARCHITECTURE_DESIGN.md section 13 item 12).  The program store,
+// the descriptor store and the runtime symbol file are written through the
+// design's own host load path (host_*), and the program header is streamed
+// through the design's admission beat port (hdr_in_*), by the checker acting
+// as the management processor (sections 2.7 and 9.2).  What the wrapper
+// owns is exactly what a testbench legitimately owns: the arrays behind the
+// three store boundaries, and nothing that decides.
 //
-//   a3_program.hex     256-bit words: every program body, instruction records
-//   a3_header.hex       32-bit words: 64 per case, the 256-byte program header
-//   a3_descriptor.hex 1536-bit words: descriptor header + both payload blocks
-//   a3_symbol.hex       32-bit words: 16 runtime symbols per case
+// The store models are the synchronous single-port macros of the vehicle
+// memory plan (section 11.2): a read presents the row one cycle later and
+// holds it, a write lands one 32-bit lane.  The issue record store's payload
+// is the third such macro: 32 entries x 8 lanes x 512 bits (the vehicle's
+// 8 x 512 B is the sky130 column; the design's 32 entries are modelled here
+// so every outstanding operation has its own record), written one lane at a
+// time by the sequencer as it publishes an operation's resolved views and
+// its counter snapshot, read back by the sequencer only to freeze the
+// counters after an asynchronous engine fault.
 //
-// The descriptor image keeps the first 192 bytes of each record: the 64-byte
-// header plus both 64-byte payload blocks.  A 128-byte prefix was enough while
-// the sequencer only read control descriptors, but a TENSOR_VIEW payload is 128
-// bytes and its amendment-A4 dynamic terms start at payload offset 72, so view
-// resolution needs the second block.  Descriptor record CRC is still not
-// re-checked here; it belongs to a descriptor-admission block that owns whole
-// records.
-//
-// The store models below are the synchronous single-port macros of the
-// vehicle memory plan: a read presents the row one cycle later and holds it,
-// a write lands one 32-bit lane.  They are preloaded by $readmemh because the
-// checkers own reset and start timing; the design's host load path is
-// exercised by rtl/test/tb_a3_device_top_host_load.sv instead.
+// The engine port has two phases.  The checker accepts an issue
+// (issue_valid && issue_ready) and later reports its completion
+// (complete_valid with the slot the issue carried); every dispatchable
+// operation is a recording no-op on the checker side, completed after a
+// checker-chosen delay, in a checker-chosen order.
 // ---------------------------------------------------------------------------
 module ot_a3_microsequencer_top
     import ot_a3_pkg::*;
 #(
     parameter integer PROGRAM_WORDS = 2048,
-    parameter integer HEADER_WORDS  = 8192,
     parameter integer DESC_WORDS    = 4096,
-    parameter integer SYMBOL_WORDS  = 2048,
     parameter integer STATE_COMPAT  = 1
 ) (
     input  wire        clk,
     input  wire        rst_n,
 
-    // -- program header admission --------------------------------------
-    input  wire        header_start,
-    input  wire [31:0] cfg_header_base,
+    // -- program header admission (host stream) --------------------------
+    input  wire        hdr_in_valid,
+    input  wire        hdr_in_start,
+    input  wire [31:0] hdr_in_word,
     output wire        header_done,
     output wire        header_legal,
     output wire [3:0]  header_error,
@@ -60,6 +57,15 @@ module ot_a3_microsequencer_top
     output wire [63:0] header_max_retired_work,
     output wire [31:0] header_entrypoint_descriptor,
 
+    // -- host load path: program store, descriptor store, symbol file -----
+    input  wire        host_we,
+    input  wire [1:0]  host_sel,
+    input  wire [31:0] host_row,
+    input  wire [5:0]  host_lane,
+    input  wire [31:0] host_wdata,
+    output wire        host_ready,
+    output wire        host_write_refused,
+
     // -- transaction ----------------------------------------------------
     input  wire        start,
     input  wire [31:0] cfg_program_base,
@@ -67,8 +73,6 @@ module ot_a3_microsequencer_top
     input  wire [31:0] cfg_entry_pc,
     input  wire [31:0] cfg_desc_base,
     input  wire [31:0] cfg_desc_count,
-    input  wire [31:0] cfg_symbol_base,
-    input  wire [31:0] cfg_symbol_mask,
     input  wire [63:0] cfg_max_retired_work,
     input  wire [31:0] cfg_state_count,
 
@@ -87,13 +91,22 @@ module ot_a3_microsequencer_top
     input  wire        predicate_read_value,
     input  wire [15:0] predicate_read_trap_class,
 
-    // -- engine issue ---------------------------------------------------
+    // -- engine issue: queue acceptance -------------------------------
     input  wire        issue_ready,
     output wire        issue_valid,
     output wire [7:0]  issue_family,
     output wire [7:0]  issue_sub,
     output wire [31:0] issue_descriptor_id,
     output wire [31:0] issue_index,
+    output wire [31:0] issue_serial,
+    output wire [4:0]  issue_slot,
+    output wire [4:0]  issue_queue,
+
+    // -- engine completion: any order, one per cycle -----------------
+    input  wire        complete_valid,
+    input  wire [4:0]  complete_slot,
+    input  wire        complete_fault,
+    input  wire [15:0] complete_trap_class,
 
     // -- resolved operand tensor views (A4 and A13) ---------------------
     output wire        view_valid,
@@ -103,6 +116,7 @@ module ot_a3_microsequencer_top
     output wire [7:0]  view_extent_axis,
     output wire [63:0] view_element_offset,
     output wire [7:0]  view_rank,
+    output wire [4:0]  view_irs_slot,
     output wire [31:0] count_views_resolved,
 
     // -- accounting -----------------------------------------------------
@@ -124,58 +138,20 @@ module ot_a3_microsequencer_top
     output wire [63:0] count_state_bytes_written,
     output wire [3:0]  loop_depth,
     output wire        event_signal_error,
-    output wire        state_apply_overflow
+    output wire        state_apply_overflow,
+
+    // -- run-ahead observation ------------------------------------------
+    output wire [5:0]  dbg_outstanding,
+    output wire [5:0]  dbg_max_outstanding,
+    output wire [31:0] dbg_dep_stalls,
+    output wire [31:0] dbg_wait_stalls,
+    output wire        irs_protocol_error
 );
+    // The arrays behind the store boundaries.  Uninitialised: every row is
+    // whatever the host wrote through host_*, and nothing else.
     reg [255:0]  program_mem [0:PROGRAM_WORDS-1];
-    reg [31:0]   header_mem  [0:HEADER_WORDS-1];
     reg [1535:0] desc_mem    [0:DESC_WORDS-1];
-    reg [31:0]   symbol_mem  [0:SYMBOL_WORDS-1];
-
-    initial begin
-        $readmemh("a3_program.hex", program_mem);
-        $readmemh("a3_header.hex", header_mem);
-        $readmemh("a3_descriptor.hex", desc_mem);
-        $readmemh("a3_symbol.hex", symbol_mem);
-    end
-
-    // -- host-side header streaming --------------------------------------
-    // The management processor's job: 64 beats from the header image into
-    // the design's admission port, in_start with the first.
-    reg        header_active;
-    reg [6:0]  header_word;
-    reg [31:0] header_base;
-    reg        header_valid;
-    reg        header_first;
-    reg [31:0] header_data;
-    wire [31:0] header_next_addr = header_base + {25'd0, header_word} + 32'd1;
-
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
-            header_active <= 1'b0;
-            header_word <= 7'd0;
-            header_base <= 32'd0;
-            header_valid <= 1'b0;
-            header_first <= 1'b0;
-            header_data <= 32'd0;
-        end else begin
-            header_valid <= 1'b0;
-            header_first <= 1'b0;
-            if (header_start && !header_active) begin
-                header_active <= 1'b1;
-                header_word <= 7'd0;
-                header_base <= cfg_header_base;
-                header_valid <= 1'b1;
-                header_first <= 1'b1;
-                header_data <= header_mem[cfg_header_base[19:0]];
-            end else if (header_active) begin
-                header_valid <= 1'b1;
-                header_word <= header_word + 7'd1;
-                header_data <= header_mem[header_next_addr[19:0]];
-                if (header_word == 7'd62)
-                    header_active <= 1'b0;
-            end
-        end
-    end
+    reg [511:0]  irs_payload_mem [0:A3_IRS_ENTRIES*8-1];
 
     // -- program store: one synchronous port, 8 x 32-bit lanes ------------
     wire         pstore_en;
@@ -217,9 +193,26 @@ module ot_a3_microsequencer_top
         end
     end
 
-    // -- runtime symbol file (combinational read) ---------------------------
-    wire [31:0] sym_addr;
-    wire [31:0] sym_value = symbol_mem[sym_addr[19:0]];
+    // -- issue record store payload: one synchronous port, 512-bit lanes ---
+    wire         irs_we;
+    wire [4:0]   irs_wslot;
+    wire [2:0]   irs_wlane;
+    wire [511:0] irs_wdata;
+    wire         irs_re;
+    wire [4:0]   irs_rslot;
+    wire [2:0]   irs_rlane;
+    reg  [511:0] irs_rdata;
+
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            irs_rdata <= 512'd0;
+        end else begin
+            if (irs_we)
+                irs_payload_mem[{irs_wslot, irs_wlane}] <= irs_wdata;
+            if (irs_re)
+                irs_rdata <= irs_payload_mem[{irs_rslot, irs_rlane}];
+        end
+    end
 
     ot_a3_device_top #(
         .PROGRAM_WORDS(PROGRAM_WORDS),
@@ -228,9 +221,9 @@ module ot_a3_microsequencer_top
     ) device (
         .clk(clk),
         .rst_n(rst_n),
-        .hdr_in_valid(header_valid),
-        .hdr_in_start(header_first),
-        .hdr_in_word(header_data),
+        .hdr_in_valid(hdr_in_valid),
+        .hdr_in_start(hdr_in_start),
+        .hdr_in_word(hdr_in_word),
         .header_done(header_done),
         .header_legal(header_legal),
         .header_error(header_error),
@@ -239,22 +232,19 @@ module ot_a3_microsequencer_top
         .header_entrypoint_count(header_entrypoint_count),
         .header_max_retired_work(header_max_retired_work),
         .header_entrypoint_descriptor(header_entrypoint_descriptor),
-        // The stores are preloaded above; the host load path is idle here.
-        .host_we(1'b0),
-        .host_sel(1'b0),
-        .host_row(32'd0),
-        .host_lane(6'd0),
-        .host_wdata(32'd0),
-        .host_ready(),
-        .host_write_refused(),
+        .host_we(host_we),
+        .host_sel(host_sel),
+        .host_row(host_row),
+        .host_lane(host_lane),
+        .host_wdata(host_wdata),
+        .host_ready(host_ready),
+        .host_write_refused(host_write_refused),
         .start(start),
         .cfg_program_base(cfg_program_base),
         .cfg_instruction_count(cfg_instruction_count),
         .cfg_entry_pc(cfg_entry_pc),
         .cfg_desc_base(cfg_desc_base),
         .cfg_desc_count(cfg_desc_count),
-        .cfg_symbol_base(cfg_symbol_base),
-        .cfg_symbol_mask(cfg_symbol_mask),
         .cfg_max_retired_work(cfg_max_retired_work),
         .cfg_state_count(cfg_state_count),
         .busy(busy),
@@ -275,8 +265,14 @@ module ot_a3_microsequencer_top
         .dstore_wlane(dstore_wlane),
         .dstore_wdata(dstore_wdata),
         .dstore_rdata(dstore_rdata),
-        .sym_addr(sym_addr),
-        .sym_value(sym_value),
+        .irs_we(irs_we),
+        .irs_wslot(irs_wslot),
+        .irs_wlane(irs_wlane),
+        .irs_wdata(irs_wdata),
+        .irs_re(irs_re),
+        .irs_rslot(irs_rslot),
+        .irs_rlane(irs_rlane),
+        .irs_rdata(irs_rdata),
         .predicate_read_req(predicate_read_req),
         .predicate_read_object_id(predicate_read_object_id),
         .predicate_read_element_index(predicate_read_element_index),
@@ -285,17 +281,17 @@ module ot_a3_microsequencer_top
         .predicate_read_trap_class(predicate_read_trap_class),
         .issue_valid(issue_valid),
         .issue_ready(issue_ready),
-        // The standalone control-plane campaigns intentionally retain their
-        // recording consumer: the checker drives issue_ready and every
-        // dispatchable engine operation is a recording no-op.  The
-        // shipped-prefix integration top supplies the real engine response
-        // on these same ABI 3.0 sequencer ports.
-        .issue_fault(1'b0),
-        .issue_trap_class(16'd0),
         .issue_family(issue_family),
         .issue_sub(issue_sub),
         .issue_descriptor_id(issue_descriptor_id),
         .issue_index(issue_index),
+        .issue_serial(issue_serial),
+        .issue_slot(issue_slot),
+        .issue_queue(issue_queue),
+        .complete_valid(complete_valid),
+        .complete_slot(complete_slot),
+        .complete_fault(complete_fault),
+        .complete_trap_class(complete_trap_class),
         .view_valid(view_valid),
         .view_descriptor_id(view_descriptor_id),
         .view_slot(view_slot),
@@ -303,6 +299,7 @@ module ot_a3_microsequencer_top
         .view_extent_axis(view_extent_axis),
         .view_element_offset(view_element_offset),
         .view_rank(view_rank),
+        .view_irs_slot(view_irs_slot),
         .count_views_resolved(count_views_resolved),
         .count_fetched(count_fetched),
         .count_retired(count_retired),
@@ -326,6 +323,11 @@ module ot_a3_microsequencer_top
         .dbg_decode_error(),
         .dbg_source_operation_id(),
         .dbg_wait_fault_event(),
-        .dbg_loop_action()
+        .dbg_loop_action(),
+        .dbg_outstanding(dbg_outstanding),
+        .dbg_max_outstanding(dbg_max_outstanding),
+        .dbg_dep_stalls(dbg_dep_stalls),
+        .dbg_wait_stalls(dbg_wait_stalls),
+        .irs_protocol_error(irs_protocol_error)
     );
 endmodule
