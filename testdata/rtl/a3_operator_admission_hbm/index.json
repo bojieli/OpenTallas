@@ -1,0 +1,532 @@
+{
+  "abi": {
+    "major": 3,
+    "minor": 0
+  },
+  "admitted_families": [
+    {
+      "family": 16,
+      "sub": 3
+    },
+    {
+      "family": 48,
+      "sub": 3
+    },
+    {
+      "family": 48,
+      "sub": 4
+    },
+    {
+      "family": 64,
+      "sub": 1
+    },
+    {
+      "family": 112,
+      "sub": 0
+    },
+    {
+      "family": 112,
+      "sub": 1
+    }
+  ],
+  "cases": [
+    {
+      "context_length": 17,
+      "expected": {
+        "compare_base": 16384,
+        "compare_count": 1024,
+        "eos_reason": 0,
+        "fault": false,
+        "launch": 2,
+        "result_count": 1024,
+        "tie_multiplicity": 0,
+        "token": 0,
+        "trap_class": 0,
+        "work_count": 1,
+        "write_beats": 20480
+      },
+      "family": 16,
+      "name": "dma_scatter_key_position16",
+      "note": "read-modify-write into a pre-existing plane: the destination is republished from itself and only the indexed row changes",
+      "operator_descriptor_id": 118,
+      "pc": 32,
+      "sub": 3
+    },
+    {
+      "context_length": 17,
+      "expected": {
+        "compare_base": 35840,
+        "compare_count": 1024,
+        "eos_reason": 0,
+        "fault": false,
+        "launch": 2,
+        "result_count": 1024,
+        "tie_multiplicity": 0,
+        "token": 0,
+        "trap_class": 0,
+        "work_count": 1,
+        "write_beats": 20480
+      },
+      "family": 16,
+      "name": "dma_scatter_value_position16",
+      "note": "read-modify-write into a pre-existing plane: the destination is republished from itself and only the indexed row changes",
+      "operator_descriptor_id": 125,
+      "pc": 35,
+      "sub": 3
+    },
+    {
+      "context_length": 17,
+      "expected": {
+        "compare_base": 45056,
+        "compare_count": 4096,
+        "eos_reason": 0,
+        "fault": false,
+        "launch": 3,
+        "result_count": 4096,
+        "tie_multiplicity": 0,
+        "token": 0,
+        "trap_class": 0,
+        "work_count": 69632,
+        "write_beats": 4096
+      },
+      "family": 64,
+      "name": "attention_gqa_context17",
+      "note": "reads the rows the two scatters just wrote: an RTL-to-RTL handoff inside one operand bank",
+      "operator_descriptor_id": 136,
+      "pc": 38,
+      "sub": 1
+    },
+    {
+      "context_length": 17,
+      "expected": {
+        "compare_base": 45056,
+        "compare_count": 4096,
+        "eos_reason": 0,
+        "fault": false,
+        "launch": 0,
+        "result_count": 4096,
+        "tie_multiplicity": 0,
+        "token": 0,
+        "trap_class": 0,
+        "work_count": 4096,
+        "write_beats": 4096
+      },
+      "family": 48,
+      "name": "vector_add_attention_residual",
+      "note": "the attention projection lands in the same scratch object the query occupied, and the sum lands over the attention result",
+      "operator_descriptor_id": 150,
+      "pc": 44,
+      "sub": 3
+    },
+    {
+      "context_length": 17,
+      "expected": {
+        "compare_base": 77824,
+        "compare_count": 12288,
+        "eos_reason": 0,
+        "fault": false,
+        "launch": 1,
+        "result_count": 12288,
+        "tie_multiplicity": 0,
+        "token": 0,
+        "trap_class": 0,
+        "work_count": 24576,
+        "write_beats": 12288
+      },
+      "family": 48,
+      "name": "vector_silu_mul_swiglu",
+      "note": "qwen3_silu_mul_bf16_v1 at the governed intermediate width",
+      "operator_descriptor_id": 174,
+      "pc": 56,
+      "sub": 4
+    },
+    {
+      "context_length": 17,
+      "expected": {
+        "compare_base": 49152,
+        "compare_count": 4096,
+        "eos_reason": 0,
+        "fault": false,
+        "launch": 0,
+        "result_count": 4096,
+        "tie_multiplicity": 0,
+        "token": 0,
+        "trap_class": 0,
+        "work_count": 4096,
+        "write_beats": 4096
+      },
+      "family": 48,
+      "name": "vector_add_mlp_residual_read_modify_write",
+      "note": "writes back over the trunk object it read two operators earlier: mapped placement, not the append cursor",
+      "operator_descriptor_id": 186,
+      "pc": 62,
+      "sub": 3
+    },
+    {
+      "context_length": 19,
+      "expected": {
+        "compare_base": 18432,
+        "compare_count": 1024,
+        "eos_reason": 0,
+        "fault": false,
+        "launch": 2,
+        "result_count": 1024,
+        "tie_multiplicity": 0,
+        "token": 0,
+        "trap_class": 0,
+        "work_count": 1,
+        "write_beats": 20480
+      },
+      "family": 16,
+      "name": "dma_scatter_key_position18",
+      "note": "read-modify-write into a pre-existing plane: the destination is republished from itself and only the indexed row changes",
+      "operator_descriptor_id": 118,
+      "pc": 32,
+      "sub": 3
+    },
+    {
+      "context_length": 19,
+      "expected": {
+        "compare_base": 37888,
+        "compare_count": 1024,
+        "eos_reason": 0,
+        "fault": false,
+        "launch": 2,
+        "result_count": 1024,
+        "tie_multiplicity": 0,
+        "token": 0,
+        "trap_class": 0,
+        "work_count": 1,
+        "write_beats": 20480
+      },
+      "family": 16,
+      "name": "dma_scatter_value_position18",
+      "note": "read-modify-write into a pre-existing plane: the destination is republished from itself and only the indexed row changes",
+      "operator_descriptor_id": 125,
+      "pc": 35,
+      "sub": 3
+    },
+    {
+      "context_length": 19,
+      "expected": {
+        "compare_base": 45056,
+        "compare_count": 4096,
+        "eos_reason": 0,
+        "fault": false,
+        "launch": 3,
+        "result_count": 4096,
+        "tie_multiplicity": 0,
+        "token": 0,
+        "trap_class": 0,
+        "work_count": 77824,
+        "write_beats": 4096
+      },
+      "family": 64,
+      "name": "attention_gqa_context19",
+      "note": "reads the rows the two scatters just wrote: an RTL-to-RTL handoff inside one operand bank",
+      "operator_descriptor_id": 136,
+      "pc": 38,
+      "sub": 1
+    },
+    {
+      "context_length": 17,
+      "expected": {
+        "compare_base": 242048,
+        "compare_count": 1,
+        "eos_reason": 0,
+        "fault": false,
+        "launch": 4,
+        "result_count": 1,
+        "tie_multiplicity": 2,
+        "token": 151645,
+        "trap_class": 0,
+        "work_count": 151936,
+        "write_beats": 1
+      },
+      "family": 112,
+      "name": "selection_argmax_lowest_tied_id",
+      "note": "two logits hold the maximum; the frozen rule selects the lower token id and publishes the tie multiplicity",
+      "operator_descriptor_id": 211,
+      "pc": 70,
+      "sub": 0
+    },
+    {
+      "context_length": 17,
+      "expected": {
+        "compare_base": 242049,
+        "compare_count": 1,
+        "eos_reason": 1,
+        "fault": false,
+        "launch": 5,
+        "result_count": 1,
+        "tie_multiplicity": 0,
+        "token": 151645,
+        "trap_class": 0,
+        "work_count": 1,
+        "write_beats": 1
+      },
+      "family": 112,
+      "name": "selection_token_append_official_eos",
+      "note": "the selected id is in the policy's EOS set: OFFICIAL_EOS",
+      "operator_descriptor_id": 217,
+      "pc": 72,
+      "sub": 1
+    },
+    {
+      "context_length": 17,
+      "expected": {
+        "compare_base": 242049,
+        "compare_count": 1,
+        "eos_reason": 0,
+        "fault": false,
+        "launch": 5,
+        "result_count": 1,
+        "tie_multiplicity": 0,
+        "token": 12345,
+        "trap_class": 0,
+        "work_count": 1,
+        "write_beats": 1
+      },
+      "family": 112,
+      "name": "selection_token_append_continues",
+      "note": "not EOS and below the request bound: the session continues",
+      "operator_descriptor_id": 217,
+      "pc": 72,
+      "sub": 1
+    },
+    {
+      "context_length": 17,
+      "expected": {
+        "compare_base": 49152,
+        "compare_count": 64,
+        "eos_reason": 0,
+        "fault": true,
+        "launch": 6,
+        "result_count": 0,
+        "tie_multiplicity": 0,
+        "token": 0,
+        "trap_class": 4,
+        "work_count": 0,
+        "write_beats": 0
+      },
+      "family": 48,
+      "name": "capability_refusal_vector_softmax",
+      "note": "VECTOR.SOFTMAX still has no datapath and is still refused",
+      "operator_descriptor_id": 186,
+      "pc": 62,
+      "sub": 7
+    },
+    {
+      "context_length": 17,
+      "expected": {
+        "compare_base": 49152,
+        "compare_count": 64,
+        "eos_reason": 0,
+        "fault": true,
+        "launch": 6,
+        "result_count": 0,
+        "tie_multiplicity": 0,
+        "token": 0,
+        "trap_class": 3,
+        "work_count": 0,
+        "write_beats": 0
+      },
+      "family": 48,
+      "name": "descriptor_refusal_mutated_add_contract",
+      "note": "one flipped bit in the NUMERIC contract digest, valid CRC: the dtype tuple is still bf16/bf16/bf16 and it is still refused",
+      "operator_descriptor_id": 222,
+      "pc": 62,
+      "sub": 3
+    },
+    {
+      "context_length": 17,
+      "expected": {
+        "compare_base": 49152,
+        "compare_count": 64,
+        "eos_reason": 0,
+        "fault": true,
+        "launch": 6,
+        "result_count": 0,
+        "tie_multiplicity": 0,
+        "token": 0,
+        "trap_class": 4,
+        "work_count": 0,
+        "write_beats": 0
+      },
+      "family": 48,
+      "name": "capability_refusal_unmapped_output_object",
+      "note": "an object with no bank bound to it is a capability this instance does not have; no operand address is formed and no read happens",
+      "operator_descriptor_id": 186,
+      "pc": 62,
+      "sub": 3
+    },
+    {
+      "context_length": 17,
+      "expected": {
+        "compare_base": 49152,
+        "compare_count": 64,
+        "eos_reason": 0,
+        "fault": true,
+        "launch": 6,
+        "result_count": 0,
+        "tie_multiplicity": 0,
+        "token": 0,
+        "trap_class": 4,
+        "work_count": 0,
+        "write_beats": 0
+      },
+      "family": 48,
+      "name": "capability_refusal_placement_not_configured",
+      "note": "the same admitted instruction on an instance that has not bound its operand banks: the previous TRAP_CAPABILITY, unchanged, which is what keeps an unwired integration's behaviour exactly what it was",
+      "operator_descriptor_id": 186,
+      "pc": 62,
+      "sub": 3
+    },
+    {
+      "context_length": 17,
+      "expected": {
+        "compare_base": 45056,
+        "compare_count": 64,
+        "eos_reason": 0,
+        "fault": true,
+        "launch": 6,
+        "result_count": 0,
+        "tie_multiplicity": 0,
+        "token": 0,
+        "trap_class": 3,
+        "work_count": 0,
+        "write_beats": 0
+      },
+      "family": 64,
+      "name": "descriptor_refusal_gqa_context_disagrees_with_index",
+      "note": "the index view resolves to position 17 while the request declares context 17; the two must agree and neither is trusted alone",
+      "operator_descriptor_id": 136,
+      "pc": 38,
+      "sub": 1
+    },
+    {
+      "context_length": 17,
+      "expected": {
+        "compare_base": 242049,
+        "compare_count": 1,
+        "eos_reason": 0,
+        "fault": true,
+        "launch": 6,
+        "result_count": 0,
+        "tie_multiplicity": 0,
+        "token": 0,
+        "trap_class": 8,
+        "work_count": 0,
+        "write_beats": 0
+      },
+      "family": 112,
+      "name": "engine_refusal_token_outside_vocabulary",
+      "note": "a token outside the policy's vocabulary is not appended",
+      "operator_descriptor_id": 217,
+      "pc": 72,
+      "sub": 1
+    },
+    {
+      "context_length": 17,
+      "expected": {
+        "compare_base": 242049,
+        "compare_count": 1,
+        "eos_reason": 0,
+        "fault": true,
+        "launch": 6,
+        "result_count": 0,
+        "tie_multiplicity": 0,
+        "token": 0,
+        "trap_class": 4,
+        "work_count": 0,
+        "write_beats": 0
+      },
+      "family": 112,
+      "name": "capability_refusal_sampling_generation_policy",
+      "note": "a policy naming a sampling mode is a capability refusal: this device implements no sampling contract, and the refusal happens before the token object is read",
+      "operator_descriptor_id": 217,
+      "pc": 72,
+      "sub": 1
+    }
+  ],
+  "claim_boundary": {
+    "authentic_prior_context_kv": false,
+    "bit_exact_against_independent_reference": true,
+    "checkpoint_residual_swiglu_logits": false,
+    "complete_layer": false,
+    "exact_resolved_view_stream": true,
+    "exact_shipped_operator_records": true,
+    "fail_closed_matrix": true,
+    "model_token_generation": false,
+    "read_modify_write_placement": true,
+    "runtime_context_length": true,
+    "six_previously_capability_trapped_families_admitted": true,
+    "tpot": false
+  },
+  "deployment_sha256": "cb9067f5fbf67f7df4212399aee6ba75ced4ca5c8f2dc8c1631372a4068cea2c",
+  "expected_pass": {
+    "cases": 19,
+    "compared_words": 33093,
+    "negative": 7,
+    "positive": 12,
+    "write_beats": 110595
+  },
+  "geometry": {
+    "bank_words": 242050,
+    "case_words": 64,
+    "descriptor_records": 224,
+    "expected_words": 33093,
+    "index_words": 64,
+    "kv_plane_rows": 19,
+    "map_entries": 8,
+    "preload_words": 12291,
+    "view_slots": 5,
+    "view_words": 8,
+    "vocabulary": 151936
+  },
+  "governed_program_counters": [
+    32,
+    35,
+    38,
+    44,
+    56,
+    62,
+    70,
+    72
+  ],
+  "image_sha256": {
+    "bank.hex": "e5d657722244bb6e680aa3020492723fc4ee60b8858b3e2603113df8b9899156",
+    "cases.hex": "bc1d98ba69f5db9ef0238618fe1bbd7c96742c13ed0e44cd02cd2fc382e9a2ca",
+    "descriptors.hex": "9afb2cba8be6f7c95b7a638ae65d7823303baaf4e110d58ee6584d9c3f21788e",
+    "expected.hex": "66082f3571d372cc92907865275a33acd18e81602446c91a1f7f44d27ccbb107",
+    "index.hex": "53b72ddae6376d72462eaab4464eef2548eec252e836bdfecb78d84c8647d864",
+    "preload.hex": "fe86db3bd65f9b53f10aac7d17785bb890c44af3d2939b064cfdde1c21da3149",
+    "views.hex": "ec22dca39e21dbc67191533a97e8ee7602c1512ac546c54992f73cac2c9dd4dc"
+  },
+  "operands": {
+    "attention_query_key_value": "retained causal RTL results of shipped decode PCs 26, 29 and 17",
+    "prior_kv_context": "deterministic permutations of the authentic current row; not model history",
+    "residual_swiglu_logits": "seeded deterministic BF16 spread over the governed shapes; not checkpoint activations"
+  },
+  "oracles": {
+    "attention_gqa": "runtime/reference/tensor_accelerator_attention.py",
+    "dma_scatter": "byte-preserving row placement, computed here",
+    "independent_of_dut": true,
+    "selection_argmax": "greedy_lowest_token_id_argmax_v1, computed here",
+    "selection_token_append": "runtime/sim/engines/selection.py semantics",
+    "vector_add": "runtime/reference/tensor_accelerator_elementwise.py",
+    "vector_silu_mul": "runtime/reference/tensor_accelerator_elementwise.py"
+  },
+  "schema": "opentallas.rtl.a3_operator_admission_vectors.v1",
+  "target": "qwen3-8b-hbm-single-chip",
+  "upstream_dependency": {
+    "deployment_manifest": "testdata/compiler/abi3_deployment/abi3_deployment_rtl_vectors.json",
+    "deployment_manifest_sha256": "e24f73e4510cf141b8b4b3fd2888ea0341efe07653578bb3b370845ab7733636",
+    "descriptor_image": "testdata/compiler/abi3_deployment/a3_descriptor.hex",
+    "descriptor_image_sha256": "85263a2b33597ba63e82e783eef7436b1b5ea0786bf7c20e4817bbdbaee13dbd",
+    "prefix_expected": "testdata/compiler/abi3_shipped_prefix/p3_expect.hex",
+    "prefix_expected_sha256": "1cadfc3371d198704fc9f245e7d8e27b72b38e906eafa0cdbc576f1eb2f98327",
+    "program_image": "testdata/compiler/abi3_deployment/a3_program.hex",
+    "program_image_sha256": "910a714f1eca1799df203b1330dd95f3cb6da2027569acce935729e13bcf463c"
+  }
+}

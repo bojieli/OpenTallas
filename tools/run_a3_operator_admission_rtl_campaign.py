@@ -34,6 +34,25 @@ ROOT = Path(__file__).resolve().parents[1]
 ADMISSION_VECTORS = ROOT / "testdata/rtl/a3_operator_admission"
 UNIT_VECTORS = ROOT / "testdata/rtl/a3_operator_units"
 DEFAULT_OUTPUT = ROOT / "results/rtl/a3_operator_admission_campaign.json"
+
+# One campaign per Qwen lowering.  The bridge, the datapaths and the unit
+# benches are identical; the descriptor records the bridge is driven with are
+# not, so each storage class gets its own vector set, its own simulation and
+# its own artifact.  ``rom`` keeps the original paths so every artifact that
+# already binds them stays valid.
+DEFAULT_STORAGE_CLASS = "rom"
+
+
+def admission_vectors_for(storage_class: str) -> Path:
+    if storage_class == DEFAULT_STORAGE_CLASS:
+        return ADMISSION_VECTORS
+    return ROOT / f"testdata/rtl/a3_operator_admission_{storage_class}"
+
+
+def output_for(storage_class: str) -> Path:
+    if storage_class == DEFAULT_STORAGE_CLASS:
+        return DEFAULT_OUTPUT
+    return ROOT / f"results/rtl/a3_operator_admission_{storage_class}_campaign.json"
 PINNED_VERILATOR_VERSION = "5.050"
 PINNED_YOSYS_VERSION = "0.68"
 TOOLS_ROOT = Path(
@@ -391,26 +410,31 @@ VALIDATORS = {
 }
 
 
-def regenerate_and_compare(temporary: Path) -> tuple[dict[str, Any], dict[str, Any]]:
+def regenerate_and_compare(
+    temporary: Path, storage_class: str = DEFAULT_STORAGE_CLASS
+) -> tuple[dict[str, Any], dict[str, Any]]:
     python = shutil.which("python3") or "python3"
     manifests: dict[str, dict[str, Any]] = {}
-    for builder, directory, files, key in (
+    for builder, directory, files, key, extra in (
         (
             "tools/build_a3_operator_admission_vectors.py",
-            ADMISSION_VECTORS,
+            admission_vectors_for(storage_class),
             ADMISSION_FILES,
             "admission",
+            ["--storage-class", storage_class],
         ),
         (
             "tools/build_a3_operator_unit_vectors.py",
             UNIT_VECTORS,
             UNIT_FILES,
             "units",
+            [],
         ),
     ):
         generated = temporary / key
         process, _ = run(
-            [python, str(ROOT / builder), "--output", str(generated)], timeout=3600
+            [python, str(ROOT / builder), "--output", str(generated), *extra],
+            timeout=3600,
         )
         if process.returncode:
             raise RuntimeError(
@@ -423,7 +447,11 @@ def regenerate_and_compare(temporary: Path) -> tuple[dict[str, Any], dict[str, A
     return manifests["admission"], manifests["units"]
 
 
-def campaign(output: Path) -> dict[str, Any]:
+def campaign(
+    output: Path, storage_class: str = DEFAULT_STORAGE_CLASS
+) -> dict[str, Any]:
+    admission_vectors = admission_vectors_for(storage_class)
+    admission_prefix = admission_vectors.name
     iverilog, vvp, verilator, yosys = resolve_tools()
     tools = {
         "iverilog": tool_identity(iverilog, ["-V"], IVERILOG_RE, None, "Icarus"),
@@ -439,9 +467,11 @@ def campaign(output: Path) -> dict[str, Any]:
 
     with tempfile.TemporaryDirectory(prefix="a3-operator-admission-") as name:
         temporary = Path(name)
-        admission_manifest, unit_manifest = regenerate_and_compare(temporary)
+        admission_manifest, unit_manifest = regenerate_and_compare(
+            temporary, storage_class
+        )
         manifests = {"admission": admission_manifest, "units": unit_manifest}
-        arguments = plusargs(ADMISSION_VECTORS, UNIT_VECTORS)
+        arguments = plusargs(admission_vectors, UNIT_VECTORS)
 
         for bench in BENCHES:
             top = bench["top"]
@@ -623,8 +653,11 @@ def campaign(output: Path) -> dict[str, Any]:
             "source_sha256": {
                 str(path.relative_to(ROOT)): sha256(path) for path in source_paths
             },
+            "storage_class": storage_class,
+            "target": admission_manifest["target"],
+            "deployment_sha256": admission_manifest["deployment_sha256"],
             "vector_sha256": {
-                f"a3_operator_admission/{name}": sha256(ADMISSION_VECTORS / name)
+                f"{admission_prefix}/{name}": sha256(admission_vectors / name)
                 for name in ADMISSION_FILES
             }
             | {
@@ -667,15 +700,29 @@ def validate_retained(path: Path = DEFAULT_OUTPUT) -> list[str]:
 
 def parser() -> argparse.ArgumentParser:
     result = argparse.ArgumentParser(description=__doc__)
-    result.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
+    result.add_argument("--output", type=Path, default=None)
+    result.add_argument(
+        "--storage-class",
+        choices=["rom", "hbm"],
+        default=DEFAULT_STORAGE_CLASS,
+        help=(
+            "which Qwen lowering to drive the bridge with.  Evidence measured "
+            "on one lowering is not evidence about the other: their governed "
+            "descriptor ids are disjoint and their DMA.SCATTER numeric "
+            "profiles disagree under one contract digest."
+        ),
+    )
     return result
 
 
 def main() -> int:
     args = parser().parse_args()
-    result = campaign(args.output)
+    output = args.output or output_for(args.storage_class)
+    result = campaign(output, args.storage_class)
     print(
         "ABI3 operator-admission RTL campaign "
+        f"storage_class={args.storage_class} "
+        f"target={result['target']} "
         f"status={result['status']} "
         f"families={result['admission']['admitted_family_count']} "
         f"words={result['aggregate']['admission_words_compared']}"

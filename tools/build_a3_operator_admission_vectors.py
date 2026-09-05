@@ -71,7 +71,33 @@ from tools import build_a3_qwen_kv_scatter_vectors as scatter  # noqa: E402
 
 OUTPUT_ROOT = ROOT / "testdata/rtl/a3_operator_admission"
 SCHEMA = "opentallas.rtl.a3_operator_admission_vectors.v1"
-TARGET_KEY = "qwen3-8b-rom-single-chip"
+
+# The two Qwen lowerings this vehicle can be built for.  It was bound to the
+# ROM key alone, which left the HBM lowering with no operator evidence at all
+# and made rung G1a's hbm record an empty one.  The two lowerings are NOT
+# interchangeable -- their governed descriptor ids differ at every PC, and at
+# PCs 32/35 the DMA.SCATTER NUMERIC descriptor's input_dtype and
+# second_input_dtype are swapped under one identical contract digest -- so
+# each is built and simulated on its own bundle and neither borrows the
+# other's result.
+TARGETS = {
+    "rom": "qwen3-8b-rom-single-chip",
+    "hbm": "qwen3-8b-hbm-single-chip",
+}
+DEFAULT_STORAGE_CLASS = "rom"
+TARGET_KEY = TARGETS[DEFAULT_STORAGE_CLASS]
+
+
+def output_root_for(storage_class: str) -> Path:
+    """Where one storage class's vectors live.
+
+    ``rom`` keeps the original path so the retained ROM images and every
+    artifact that binds them stay exactly where they are.
+    """
+
+    if storage_class == DEFAULT_STORAGE_CLASS:
+        return OUTPUT_ROOT
+    return ROOT / f"testdata/rtl/a3_operator_admission_{storage_class}"
 
 CASE_WORDS = 64
 VIEW_SLOTS = 5
@@ -97,7 +123,6 @@ KV_PLANE_ROWS = 19
 ADD_WIDTH = 4096
 SILU_WIDTH = 12288
 VOCABULARY = 151936
-GENERATION_POLICY_ID = 21
 EOS_TOKEN = 151645
 
 # Compact verification-bank placement.  Each object of the governed program
@@ -196,12 +221,14 @@ class Spread:
         ]
 
 
-def retained_program() -> tuple[dict[str, Any], list[int], list[int], int, int]:
+def retained_program(
+    target_key: str = TARGET_KEY,
+) -> tuple[dict[str, Any], list[int], list[int], int, int]:
     manifest = json.loads(scatter.DEPLOYMENT_MANIFEST.read_text())
     descriptors = scatter.read_hex(scatter.DESCRIPTOR_IMAGE)
     programs = scatter.read_hex(scatter.PROGRAM_IMAGE)
     bases = scatter.deployment_bases(manifest)
-    descriptor_base, program_base = bases[TARGET_KEY]
+    descriptor_base, program_base = bases[target_key]
     return manifest, descriptors, programs, descriptor_base, program_base
 
 
@@ -233,6 +260,15 @@ class RetainedTable:
 
     def __contains__(self, descriptor_id: int) -> bool:
         return int(descriptor_id) in self._decoded
+
+    def ids_of_type(self, descriptor_type: Any) -> list[int]:
+        """Every descriptor id of one type, in ascending order."""
+
+        return sorted(
+            descriptor_id
+            for descriptor_id, descriptor in self._decoded.items()
+            if descriptor.descriptor_type == int(descriptor_type)
+        )
 
 
 def build_table(
@@ -324,24 +360,46 @@ def decode_argmax(codes: list[int]) -> tuple[int, int]:
 
 
 class Builder:
-    def __init__(self) -> None:
+    def __init__(self, storage_class: str = DEFAULT_STORAGE_CLASS) -> None:
+        if storage_class not in TARGETS:
+            raise SystemExit(
+                f"unknown storage class {storage_class!r}; known: "
+                f"{sorted(TARGETS)}"
+            )
+        self.storage_class = storage_class
+        self.target_key = TARGETS[storage_class]
         (
             self.manifest,
             descriptors,
             self.programs,
             self.descriptor_base,
             self.program_base,
-        ) = retained_program()
+        ) = retained_program(self.target_key)
         deployment = next(
             item
             for item in self.manifest["deployments"]
-            if item["key"] == TARGET_KEY
+            if item["key"] == self.target_key
         )
         self.deployment = deployment
         self.descriptor_count = int(deployment["descriptor_count"])
         self.table, self.records = build_table(
             descriptors, self.descriptor_base, self.descriptor_count
         )
+        # The GENERATION_POLICY record SELECTION.ARGMAX and
+        # SELECTION.TOKEN_APPEND run under, SEARCHED FOR in this deployment's
+        # own descriptor table rather than typed here.  It was the constant 21,
+        # which is the ROM lowering's id and is 219 on the HBM lowering; a
+        # typed id is a lowering artefact that silently binds one generation of
+        # one bundle.  Zero or more than one match is a refusal, not a guess.
+        policies = self.table.ids_of_type(ExtendedDescriptorType.GENERATION_POLICY)
+        if len(policies) != 1:
+            raise SystemExit(
+                f"{self.target_key}: the descriptor table carries "
+                f"{len(policies)} GENERATION_POLICY records {policies}; the "
+                "selection cases cannot be bound to a policy that cannot be "
+                "identified"
+            )
+        self.generation_policy_id = policies[0]
         self.resolver = ViewResolver(SimpleNamespace(table=self.table), None)
         self.symbols = self._symbols()
         self.bank = [0] * BANK_WORDS
@@ -358,7 +416,7 @@ class Builder:
         case = next(
             item
             for item in self.manifest["cases"]
-            if item.get("deployment") == TARGET_KEY
+            if item.get("deployment") == self.target_key
             and item.get("request") == "decode"
         )
         return {int(key): int(value) for key, value in case["symbols"].items()}
@@ -421,10 +479,12 @@ class Builder:
         compare_base: int,
         compare_words: list[int],
         preload: tuple[int, list[int]] | None = None,
-        generation_policy_id: int = GENERATION_POLICY_ID,
+        generation_policy_id: int | None = None,
         placement_valid: bool = True,
         note: str = "",
     ) -> None:
+        if generation_policy_id is None:
+            generation_policy_id = self.generation_policy_id
         if len(object_map) > MAP_ENTRIES:
             raise RuntimeError(f"{name}: object map exceeds {MAP_ENTRIES} entries")
         if len(views) > VIEW_SLOTS:
@@ -1329,14 +1389,19 @@ class Builder:
         return new_numeric_id, new_operator_id
 
     def _sampling_policy(self) -> int:
-        policy = self.table[GENERATION_POLICY_ID]
+        policy = self.table[self.generation_policy_id]
         payload = dict(policy.payload)
         payload["selection_mode"] = 1
         return self.add_synthetic(self._clone(policy, payload).encode())
 
 
-def build(output: Path = OUTPUT_ROOT) -> dict[str, Any]:
-    builder = Builder()
+def build(
+    output: Path | None = None,
+    storage_class: str = DEFAULT_STORAGE_CLASS,
+) -> dict[str, Any]:
+    if output is None:
+        output = output_root_for(storage_class)
+    builder = Builder(storage_class)
     builder.build_cases()
     output.mkdir(parents=True, exist_ok=True)
 
@@ -1358,7 +1423,7 @@ def build(output: Path = OUTPUT_ROOT) -> dict[str, Any]:
     manifest: dict[str, Any] = {
         "schema": SCHEMA,
         "abi": {"major": 3, "minor": 0},
-        "target": TARGET_KEY,
+        "target": builder.target_key,
         "deployment_sha256": builder.deployment["deployment_sha256"],
         "geometry": {
             "case_words": CASE_WORDS,
@@ -1465,19 +1530,42 @@ def build(output: Path = OUTPUT_ROOT) -> dict[str, Any]:
 
 def parser() -> argparse.ArgumentParser:
     result = argparse.ArgumentParser(description=__doc__)
-    result.add_argument("--output", type=Path, default=OUTPUT_ROOT)
+    result.add_argument("--output", type=Path, default=None)
+    result.add_argument(
+        "--storage-class",
+        choices=sorted(TARGETS),
+        default=DEFAULT_STORAGE_CLASS,
+        help=(
+            "which Qwen lowering to build against.  The two are not "
+            "interchangeable: their governed descriptor ids differ at every "
+            "PC, so each storage class gets its own vector set and its own "
+            "simulation."
+        ),
+    )
+    result.add_argument(
+        "--all",
+        action="store_true",
+        help="build every storage class in TARGETS",
+    )
     return result
 
 
 def main() -> int:
     args = parser().parse_args()
-    manifest = build(args.output)
-    print(
-        "built ABI3 operator-admission vectors "
-        f"cases={manifest['expected_pass']['cases']} "
-        f"positive={manifest['expected_pass']['positive']} "
-        f"words={manifest['expected_pass']['compared_words']}"
-    )
+    classes = sorted(TARGETS) if args.all else [args.storage_class]
+    if args.all and args.output is not None:
+        raise SystemExit("--all writes one directory per storage class; drop --output")
+    for storage_class in classes:
+        manifest = build(args.output, storage_class)
+        print(
+            "built ABI3 operator-admission vectors "
+            f"storage_class={storage_class} "
+            f"target={manifest['target']} "
+            f"deployment={manifest['deployment_sha256'][:12]} "
+            f"cases={manifest['expected_pass']['cases']} "
+            f"positive={manifest['expected_pass']['positive']} "
+            f"words={manifest['expected_pass']['compared_words']}"
+        )
     return 0
 
 
