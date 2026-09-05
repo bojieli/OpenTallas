@@ -170,7 +170,155 @@
       },
       "started_at": "2026-09-05T14:59:38.328312+00:00",
       "wall_seconds": 6087.705
-    }
+    },
+    "parent": {
+      "block_abstract_used": {
+        "lef_obstruction_layers": [
+          "M1",
+          "M2",
+          "M3",
+          "M4",
+          "M5",
+          "RVTN",
+          "RVTP"
+        ],
+        "lef_pins": 1794,
+        "lef_present": true,
+        "lef_size_um": [
+          280.194,
+          280.194
+        ],
+        "lib_cells": [
+          "ot_a3_lq8"
+        ],
+        "lib_pins": 1794,
+        "lib_present": true,
+        "lib_timing_arcs": 2777
+      },
+      "completed": false,
+      "completed_at": null,
+      "knobs": {
+        "clock_period_ns": 16.0,
+        "core_utilization": 20,
+        "macro_halo": "10 10",
+        "macro_placement": "GRID",
+        "parent_exports": [
+          "RTLMP_MAX_LEVEL=1",
+          "RTLMP_MIN_MACRO=1",
+          "RTLMP_MAX_MACRO=8",
+          "RTLMP_MIN_INST=1",
+          "RTLMP_MAX_INST=10000"
+        ],
+        "place_density": 0.6
+      },
+      "make": {
+        "command": null,
+        "container": "opentallas-t64-blocks-finish-1314838-1788626482",
+        "goal": "finish metadata-generate",
+        "log": null,
+        "log_sha256": null,
+        "log_tail": null,
+        "reconstructed": {
+          "basis": "the stage wall times, the produced files and the last log below are read from the kept work directory the flow itself wrote; nothing is carried over from a different run",
+          "client_bound_seconds": 10800,
+          "container_left_running": true,
+          "container_state": {
+            "exit_code": 0,
+            "finished_at": null,
+            "inspected": true,
+            "running": true,
+            "started_at": "2026-09-05T16:41:22.341420642Z"
+          },
+          "lost_fields": [
+            "command",
+            "returncode",
+            "wall_seconds",
+            "log",
+            "log_sha256",
+            "log_tail"
+          ],
+          "observed_at": "2026-09-05T19:46:16.616182+00:00",
+          "why": "the client process that ran this leg did not write its make block: it raised TypeError in the timeout path (subprocess.TimeoutExpired carries bytes even under text=True) after the client bound expired, before it wrote the container log and before it stopped the container"
+        },
+        "returncode": null,
+        "timed_out": true,
+        "wall_seconds": null
+      },
+      "parent": {
+        "last_log": {
+          "name": "5_1_grt.tmp.log",
+          "tail": "[INFO GRT-0001] Minimum degree: 2\n[INFO GRT-0002] Maximum degree: 33\n\n[INFO GRT-0053] Routing resources analysis:\n          Routing      Original      Derated      Resource\nLayer     Direction    Resources     Resources    Reduction (%)\n---------------------------------------------------------------\nM1         Vertical            0             0          0.00%\nM2         Horizontal   104449505      73943369          29.21%\nM3         Vertical     112109926      82552104          26.37%\nM4         Horizontal   89419437      66058399          26.13%\nM5         Vertical     81213985      59598234          26.62%\nM6         Horizontal   64760148      44289372          31.61%\nM7         Vertical     86627394      58359606          32.63%\n---------------------------------------------------------------\n\n[INFO GRT-0101] Running extra iterations to remove congestion.\n[INFO GRT-0102] Start extra iteration 1/30\n[INFO GRT-0102] Start extra iteration 2/30\n[INFO GRT-0102] Start extra iteration 3/30\n[INFO GRT-0102] Start extra iteration 4/30\n[INFO GRT-0102] Start extra iteration 5/30\n[INFO GRT-0102] Start extra iteration 6/30\n[INFO GRT-0102] Start extra iteration 7/30\n[INFO GRT-0102] Start extra iteration 8/30\n[INFO GRT-0102] Start extra iteration 9/30\n[INFO GRT-0102] Start extra iteration 10/30\n[INFO GRT-0102] Start extra iteration 11/30\n[INFO GRT-0102] Start extra iteration 12/30\n[INFO GRT-0102] Start extra iteration 13/30"
+        },
+        "logs": [
+          "1_1_yosys_canonicalize.log",
+          "1_2_yosys.log",
+          "1_synth.log",
+          "2_1_floorplan.log",
+          "2_2_floorplan_macro.log",
+          "2_3_floorplan_tapcell.log",
+          "2_4_floorplan_pdn.log",
+          "3_1_place_gp_skip_io.log",
+          "3_2_place_iop.log",
+          "3_3_place_gp.log",
+          "3_4_place_resized.log",
+          "3_5_place_dp.log",
+          "4_1_cts.log",
+          "5_1_grt.tmp.log"
+        ],
+        "metrics": null,
+        "produced": {
+          "1_2_yosys.v": {
+            "sha256": "fdec93a9d50e41351752dff86e995514978024bcbaa794566563de2529d8fc76",
+            "size_bytes": 2271961
+          },
+          "2_floorplan.odb": {
+            "sha256": "cf1693ab5cab418412bf53a23c12419ba1f666ff2d40aed1867f086431febb75",
+            "size_bytes": 797484012
+          },
+          "3_place.odb": {
+            "sha256": "bf5bf848a4cf8a6f99a425cb22ab929c9f16343e2360cf422825b841d0632bfa",
+            "size_bytes": 821145227
+          },
+          "4_cts.odb": {
+            "sha256": "7b1210b2ffd97b3befec9e0ec1fa36b6b5508bcfb04ee783b2ac57423a17a5e4",
+            "size_bytes": 821477637
+          }
+        },
+        "results_dir": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/tile/phys/work_blocks_m5/results/asap7/opentallas_a3_tile64_asap7/base",
+        "stage_wall_seconds": {
+          "1_1_yosys_canonicalize": 3.15,
+          "1_2_yosys": 11.74,
+          "1_synth": 1.26,
+          "2_1_floorplan": 4.85,
+          "2_2_floorplan_macro": 3.99,
+          "2_3_floorplan_tapcell": 2.59,
+          "2_4_floorplan_pdn": 65.69,
+          "3_1_place_gp_skip_io": 138.88,
+          "3_2_place_iop": 5.64,
+          "3_3_place_gp": 588.35,
+          "3_4_place_resized": 47.53,
+          "3_5_place_dp": 100.3,
+          "4_1_cts": 57.11
+        }
+      },
+      "record_rebuilt_at": "2026-09-05T19:46:17.905915+00:00",
+      "record_rebuilt_by": {
+        "commit": "6e09dcb4d8f34563d7fe210972f3d0823ee220f0",
+        "tool_sha256": "1ecf8406e7e7cd771bbea2e301af6efc27f80c576a038700c35879a8d7dba88d"
+      },
+      "started_at": "2026-09-05T16:41:22.341420642Z",
+      "started_at_basis": "the container's own StartedAt from docker inspect; the client that launched it died without recording its start",
+      "stopped_at": {
+        "last_log": {
+          "name": "5_1_grt.tmp.log",
+          "tail": "[INFO GRT-0001] Minimum degree: 2\n[INFO GRT-0002] Maximum degree: 33\n\n[INFO GRT-0053] Routing resources analysis:\n          Routing      Original      Derated      Resource\nLayer     Direction    Resources     Resources    Reduction (%)\n---------------------------------------------------------------\nM1         Vertical            0             0          0.00%\nM2         Horizontal   104449505      73943369          29.21%\nM3         Vertical     112109926      82552104          26.37%\nM4         Horizontal   89419437      66058399          26.13%\nM5         Vertical     81213985      59598234          26.62%\nM6         Horizontal   64760148      44289372          31.61%\nM7         Vertical     86627394      58359606          32.63%\n---------------------------------------------------------------\n\n[INFO GRT-0101] Running extra iterations to remove congestion.\n[INFO GRT-0102] Start extra iteration 1/30\n[INFO GRT-0102] Start extra iteration 2/30\n[INFO GRT-0102] Start extra iteration 3/30\n[INFO GRT-0102] Start extra iteration 4/30\n[INFO GRT-0102] Start extra iteration 5/30\n[INFO GRT-0102] Start extra iteration 6/30\n[INFO GRT-0102] Start extra iteration 7/30\n[INFO GRT-0102] Start extra iteration 8/30\n[INFO GRT-0102] Start extra iteration 9/30\n[INFO GRT-0102] Start extra iteration 10/30\n[INFO GRT-0102] Start extra iteration 11/30\n[INFO GRT-0102] Start extra iteration 12/30\n[INFO GRT-0102] Start extra iteration 13/30"
+        },
+        "make_target": "finish metadata-generate",
+        "timed_out": true
+      },
+      "wall_seconds": null
+    },
+    "parent_attempts": []
   },
   "mechanism": {
     "abstract": "scripts/generate_abstract.tcl: write_timing_model <block>_typ.lib and write_abstract_lef -bloat_occupied_layers <block>.lef from 6_final.odb with the extracted parasitics",
