@@ -351,6 +351,11 @@ def evaluate(gate: dict[str, Any]) -> dict[str, Any]:
                         + (f": {str(reason)[:120]}" if reason else "")
                     )
             if failing:
+                # Lead with a verdict that examined evidence; an artifact whose
+                # reason is that nothing was built is a weaker witness than one
+                # that compared two deployments and found them unequal.  The
+                # single-artifact path below sorts the same way.
+                failing.sort(key=lambda text: ("no deployment built" in text, text))
                 return _fail(
                     f"{len(failing)} of {len(paths)} artifact(s) fail "
                     f"{want['field']} == {want.get('equals')}: "

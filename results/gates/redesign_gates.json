@@ -23,7 +23,7 @@
       "kind": "terminal",
       "statement": "Measured TPOT against a FROZEN per-model budget, on a run that first passed G1.",
       "status": "fail",
-      "why": "6 of 6 rows fail (provisional budget): Qwen3-8B/rom: no correctness-qualified measurement; Qwen3-8B/hbm: no correctness-qualified measurement; DeepSeek-V4-Flash-0731/rom: no budget; ..."
+      "why": "6 of 6 rows fail (provisional budget): Qwen3-8B/rom: no correctness-qualified measurement; Qwen3-8B/hbm: no correctness-qualified measurement; DeepSeek-V4-Flash-0731/rom: no correctness-qualified measurement; ..."
     },
     {
       "fails_when": "Either exceeds its band.",
@@ -31,7 +31,7 @@
       "kind": "terminal",
       "statement": "The cycle model reproduces the measured block cycles of the RTL within a stated band, and the derived machine reproduces the analytical design point.",
       "status": "fail",
-      "why": "no artifact matches results/derived/*calibration*.json"
+      "why": "results/derived/qwen3_n5_design_target_calibration.json: calibration.block_cycles_within_band == False -- no measured cycles for: control_plane (see control_plane.why); section 11.5 boundary item unmet: unmeasured, model chain 39 vs design 120 (ratio 0.3250), technology.json#latency not re-derived"
     },
     {
       "fails_when": "One bit differs.",
@@ -87,7 +87,7 @@
       "kind": "comparison",
       "statement": "The compiled deployments hand neither side an advantage in tile shape, column group, tile depth or DMA tile count.",
       "status": "fail",
-      "why": "15 of 15 artifact(s) fail deployment_audit.comparable == True: results/derived/deepseek-v4-flash-0731__rom-n5-native-hbmkv-array-hybrid-x32__b200-sxm-x16-hybrid_machine_pair.json: NOT COMPARABLE: no deployment built -- rom: no compiled deepseek-v4-flash-0731 deployment is bound to configs/hardware/a; results/derived/deepseek-v4-flash-0731__rom-n5-native-hbmkv-wafer-tensor-x1__b200-sxm-x29-tensor_machine_pair.json: NOT COMPARABLE: no deployment built -- rom: no compiled deepseek-v4-flash-0731 deployment is bound to configs/hardware/a; ..."
+      "why": "15 of 15 artifact(s) fail deployment_audit.comparable == True: results/derived/qwen3-8b__rom-n5-native-hbmkv-wafer-tensor-x1__b200-sxm-x29-hybrid_machine_pair.json: NOT COMPARABLE: tensor tile_depth 2048 vs 128 (favours rom 16x), tile_rows 128 vs 64 (neutral at batch-1 decode), tile_c; results/derived/qwen3-8b__rom-n5-native-sramkv-array-pipeline-x5-romfill__b200-sxm-x3-tensor_machine_pair.json: NOT COMPARABLE: tensor tile_depth 2048 vs 128 (favours rom 1.091x), tile_rows 128 vs 64 (neutral at batch-1 decode), til; ..."
     },
     {
       "fails_when": "They disagree.",
