@@ -135,7 +135,8 @@ def macro_placement_tcl(work: Path, halo: str, lef: Path) -> str:
 
 def write_configs(work: Path, clock_period_ns: float, core_utilization: int, place_density: float,
                   halo: str, macro_placement: str | None = None,
-                  parent_exports: list[str] | None = None) -> dict[str, str]:
+                  parent_exports: list[str] | None = None,
+                  block_exports: list[str] | None = None) -> dict[str, str]:
     block_dir = work / BLOCK_TOP
     block_dir.mkdir(parents=True, exist_ok=True)
     (work / "constraint.sdc").write_text(sdc_text(clock_period_ns), encoding="utf-8")
@@ -201,6 +202,9 @@ def write_configs(work: Path, clock_period_ns: float, core_utilization: int, pla
         (work / "macro_placement.tcl").write_text(macro_placement_tcl(work, halo, lef), encoding="utf-8")
         parent.insert(-1, "export MACRO_PLACEMENT_TCL = /work/macro_placement.tcl")
     (work / "config.mk").write_text("\n".join(parent), encoding="utf-8")
+    for extra in block_exports or []:
+        key, _, value = extra.partition("=")
+        block.insert(-1, f"export {key.strip()} = {value.strip()}")
     (block_dir / "config.mk").write_text("\n".join(block), encoding="utf-8")
     return {"parent": "\n".join(parent), "block": "\n".join(block)}
 
@@ -338,6 +342,10 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--core-utilization", type=int, default=35)
     parser.add_argument("--place-density", type=float, default=0.60)
     parser.add_argument("--macro-halo", default="5 5")
+    parser.add_argument("--block-export", action="append", default=[], metavar="KEY=VALUE",
+                        help="an extra export in the block config.mk (repeatable), e.g. "
+                             "MAX_ROUTING_LAYER=M5 to leave the parent's PDN layers free of the "
+                             "abstract's obstructions; recorded with the leg")
     parser.add_argument("--parent-export", action="append", default=[], metavar="KEY=VALUE",
                         help="an extra export in the parent config.mk (repeatable), e.g. RTLMP_MAX_LEVEL=1: "
                              "the knobs of the pinned flow's own macro placer, recorded with the attempt")
@@ -389,7 +397,7 @@ def main(argv: list[str] | None = None) -> int:
     record.setdefault("target_clock_period_ns", args.clock_period_ns)
     record.setdefault("bound_seconds_per_leg", args.timeout_seconds)
     configs = write_configs(work, args.clock_period_ns, args.core_utilization, args.place_density,
-                            args.macro_halo, args.macro_placement, args.parent_export)
+                            args.macro_halo, args.macro_placement, args.parent_export, args.block_export)
     record["configs"] = configs
     record.setdefault("legs", {})
 
@@ -402,7 +410,9 @@ def main(argv: list[str] | None = None) -> int:
         make = (previous["make"] if args.record_only
                 else make_in_container(work, goal, work / "orfs_block.log", args.timeout_seconds))
         leg = {"started_at": started.isoformat(), "make": make, "block": leg_record(work, BLOCK_NICKNAME),
-               "abstract": abstract_summary(work)}
+               "abstract": abstract_summary(work),
+               "knobs": {"clock_period_ns": args.clock_period_ns, "core_utilization": args.core_utilization,
+                         "place_density": args.place_density, "block_exports": list(args.block_export)}}
         leg["completed"] = bool(leg["abstract"]["lef_present"] and leg["abstract"]["lib_present"]
                                 and make["returncode"] == 0)
         if not leg["completed"]:
