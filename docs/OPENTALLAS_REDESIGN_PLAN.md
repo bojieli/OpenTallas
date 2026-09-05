@@ -134,14 +134,61 @@ Replacing 106 artifact-shaped items. Each states a number, a comparison and a fa
 
 | gate | statement | fails when |
 | --- | --- | --- |
-| **G1 token** | the integrated RTL produces the oracle's token IDs for one governed workload on each of ROM and HBM | no RTL path reaches a token, which is today's state |
+| **G1 token** | the integrated RTL produces the oracle's token IDs for the governed workload on each of ROM and HBM, established compositionally over the closed verification ladder G1a–G1f | any rung fails, or the certificate does not bind every issued instance to a rung that proved it |
 | **G2 chip** | a routed netlist exists containing the datapath array, the memory system **and** the microsequencer, at one named PDK, DRC 0 and antenna 0 | any block of the control plane is absent |
-| **G3 speed** | measured TPOT against a **frozen** per-model budget, on a run that first passed G1 | TPOT exceeds budget, or no budget is frozen |
+| **G3 speed** | measured TPOT against a **frozen** per-model budget, composed from RTL-**measured** per-operator and per-boundary cycles over the issue trace G1e certified | TPOT exceeds budget, no budget is frozen, the cycles are not RTL-measured, or the trace is not certified |
 | **G4 fidelity** | the cycle model reproduces L1's measured block cycles within a stated band, and the derived machine reproduces L4's design point | either exceeds its band |
 
 **G3 is the gate the previous programme could not fail.** It is armed by a provisional
 budget from day one. A provisional budget that is wrong and fails loudly is worth more than
 a correct one that cannot fail.
+
+### The verification ladder under G1, and why it is not a whole-network run
+
+Measured on 2026-09-05, not estimated: the integrated RTL runs at **200,231 simulated
+cycles/s** and **5.0164 cycles per MAC** (`ot_a3_mac_lane` is a five-state sequential FSM),
+so MATMUL is 99.7 % of simulated time. One Qwen3-8B decode step is 7,573,110,784 MACs =
+**2.2 days**; the governed workload's 19 passes are 143,889,104,896 MACs = **41.7 days per
+storage class**. Width does not rescue it, and that was measured too: eight lanes deliver
+**1.14× lane-ops per CPU-second**, because a cycle-accurate simulator's cost tracks
+evaluated logic × cycles.
+
+No chip company verifies an accelerator that way. Pre-silicon sign-off rests on a
+**verification pyramid** — block-level equivalence against a reference model, then cluster,
+then system bring-up — with **coverage closure** as the sign-off criterion, and the full
+workload run on **emulation** (roughly 1–3 MHz for a design this size) or an **FPGA
+prototype** (10–100 MHz), four to five orders of magnitude faster than software RTL
+simulation. This project has neither an emulator nor a prototype board. It says so, and
+substitutes the thing that is actually sound: **composition**.
+
+Composition is valid when three things hold, and each is a rung:
+
+| rung | what it establishes | measured cost per store |
+| --- | --- | ---: |
+| **G1a** operator equivalence | every (family, shape, contract) class the decode program issues is bit-exact against golden, on real checkpoint weights, with nothing trapped as CAPABILITY | bounded by the largest operator |
+| **G1b** layer closure | one complete transformer layer, no golden value injected inside it — the operator *sequence*, the residual plumbing, the KV write and read | 1.34 h |
+| **G1c** composition | two layers with an RTL→RTL handoff, plus the loop property: exactly the model's layer count of structurally identical invocations | 2.69 h |
+| **G1d** head and token | final norm, LM head and argmax in RTL, emitting the oracle's first generated id | 1.08 h in four concurrent row shards |
+| **G1e** control end to end | all 19 passes through the real RTL control plane, engine results injected only at the engine boundary, issue trace equal to golden's element for element, EOS raised, post-EOS refused | ~3 h |
+| **G1f** reduced full run | the whole workload run whole at reduced dimension with nothing injected | minutes |
+
+G1b is the base case, G1c the inductive step, and the loop property closes the induction over
+all 36 layers — assume–guarantee reasoning, with the loop count and the structural identity
+of the invocations both mechanically checked rather than asserted. G1e supplies the factor
+usually hand-waved in a composition argument: that the RTL issues *the same sequence* the
+reference model does. It is affordable precisely because the control plane is 0.3 % of
+integrated cycles, so the workload's control is cheap even though its arithmetic is not —
+standard hybrid co-simulation, the real sequencer driving fetch, decode, view resolution,
+predicates, the loop and issue, while the datapath results come from the model whose
+bit-exactness G1a–G1d establish. G1f is the industry's small-config nightly regression.
+
+**About 6.8 h sequential per store, about 3 h wall with the independent legs concurrent,
+against 41.7 days for the run it replaces — and it is the harder gate**: six falsifiable
+rungs plus a mechanically derived certificate, against one boolean in one globbed file.
+
+What it does not establish is written into G1's `does_not_establish` and must stay there: a
+single uninterrupted full-dimension run, dual-simulator agreement on the integrated path,
+any rate, or silicon behaviour.
 
 ### Design gates
 
@@ -173,7 +220,9 @@ The critical path is **D1-D5 → G1 → G2 → G3**. G4, C1-C4 run alongside.
    Proved by D1-D5 against the untouched sequential reference.
 2. **Control plane to RTL.** The microsequencer and descriptor path, which G2 needs and
    which no physical result has ever contained.
-3. **Integration to a token.** G1, on the smallest governed workload, both storage classes.
+3. **Integration to a token.** G1's ladder on the governed workload, both storage classes:
+   operator equivalence, layer closure, the inductive step, the RTL-emitted token, the
+   certified control trace, and the reduced full run — then the composition certificate.
 4. **Chip-scale physical.** G2 at one named PDK; per-MAC figures for D4; no cross-node
    scaling.
 5. **Calibrate and re-anchor.** G4: the cycle model's block cycles against L1; the derived
