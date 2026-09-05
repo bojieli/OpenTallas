@@ -1,27 +1,75 @@
 {
-  "gate_count": 13,
+  "gate_count": 19,
   "gates": [
     {
-      "fails_when": "No RTL path reaches a token, or a token record covers only one storage class, or names no simulator, or its ids differ from the oracle's.",
+      "fails_when": "Any rung of the ladder fails, or the composition certificate does not bind every operator instance the workload issues to a rung that proved it.",
       "id": "G1",
       "kind": "terminal",
-      "statement": "The integrated RTL produces the oracle's token IDs for one governed workload, on each of ROM and HBM.",
+      "statement": "The integrated RTL produces the oracle's token IDs for the governed workload, on each of ROM and HBM, established compositionally over a closed verification ladder.",
       "status": "fail",
-      "why": "no artifact matches results/rtl/*token*.json"
+      "why": "7 of 7 requirement(s) unmet: G1a: no conforming record for storage class(es) ['rom', 'hbm']: results/rtl/abi3_g1a_operator_equivalence.json [rom; G1b: artifact results/rtl/abi3_g1b_layer_closure.json does not exist; G1c: artifact results/rtl/abi3_g1c_composition.json does not exist; ..."
+    },
+    {
+      "fails_when": "Any issued class is uncovered, any word differs, any family is still trapped as CAPABILITY, or the weights are not the real checkpoint.",
+      "id": "G1a",
+      "kind": "verification",
+      "statement": "Every operator equivalence class the governed decode program issues executes in the integrated RTL, from the real compiled program against the real checkpoint weights, and matches the golden model bit for bit.",
+      "status": "fail",
+      "why": "no conforming record for storage class(es) ['rom', 'hbm']: results/rtl/abi3_g1a_operator_equivalence.json [rom]: coverage.every_issued_class_covered is False, want True; coverage.uncovered_class_count is 9, want 0; equivalence.weights_are_real_checkpoint is False, want True; capability_trapped_family_count is 6, want 0; results/rtl/abi3_g1a_operator_equivalence.json [hbm]: execution.simulator absent -- nothing states that RTL ran; execution.simulated_cycles is 0, must be a positive int; execution.evidence_class 'absent: no simulation of this lowering exists' does not name RTL simulation; coverage.every_issued_class_covered is False, want True; coverage.uncovered_class_count is 16, want 0; equivalence.mismatched_words is None, want 0; equivalence.weights_are_real_checkpoint is False, want True; capability_trapped_family_count is 6, want 0"
+    },
+    {
+      "fails_when": "The layer is incomplete, any intermediate differs, or any intermediate was injected from the golden model.",
+      "id": "G1b",
+      "kind": "verification",
+      "statement": "One complete transformer layer executes end to end in the integrated RTL, bit-exact against the golden model at every intermediate, with no golden value injected inside the layer.",
+      "status": "fail",
+      "why": "artifact results/rtl/abi3_g1b_layer_closure.json does not exist"
+    },
+    {
+      "fails_when": "Any golden value crosses the layer boundary, the handoff differs, or the loop issues a different count or a non-identical invocation.",
+      "id": "G1c",
+      "kind": "verification",
+      "statement": "Two consecutive layers execute back to back with an RTL-to-RTL handoff, and the loop control issues exactly the model's layer count of structurally identical invocations.",
+      "status": "fail",
+      "why": "artifact results/rtl/abi3_g1c_composition.json does not exist"
+    },
+    {
+      "fails_when": "The emitted id differs from the oracle's, or the head was not executed in RTL.",
+      "id": "G1d",
+      "kind": "verification",
+      "statement": "The final normalisation, the LM head and argmax execute in the integrated RTL on the composed trunk output and emit the oracle's first generated token id, on each of ROM and HBM.",
+      "status": "fail",
+      "why": "artifact results/rtl/abi3_g1d_token.json does not exist"
+    },
+    {
+      "fails_when": "The traces diverge at any index, the pass count differs, EOS is not raised, the post-EOS instruction is admitted, or the control path was not the RTL's.",
+      "id": "G1e",
+      "kind": "verification",
+      "statement": "All 19 passes of the governed workload execute through the real RTL control plane, with engine results injected only at the engine boundary, and the RTL issue trace equals the golden model's element for element; OFFICIAL_EOS is raised and the post-EOS instruction refused.",
+      "status": "fail",
+      "why": "artifact results/rtl/abi3_g1e_control_end_to_end.json does not exist"
+    },
+    {
+      "fails_when": "Any operation is injected from the golden model, the reduced configuration is not structurally identical to the full one, or the emitted ids differ from the reduced oracle's.",
+      "id": "G1f",
+      "kind": "verification",
+      "statement": "The complete workload -- prefill, every layer, all generated tokens, EOS and the post-EOS refusal -- executes end to end in the RTL with nothing injected, on a structurally identical model at reduced dimension, and emits that model's oracle tokens.",
+      "status": "fail",
+      "why": "artifact results/rtl/abi3_g1f_reduced_end_to_end.json does not exist"
     },
     {
       "fails_when": "Any block of the ABI 3.0 control plane is absent from the physical results.",
       "id": "G2",
       "kind": "terminal",
       "statement": "A routed netlist exists containing the datapath array, the memory system AND the microsequencer, at one named PDK, with DRC 0 and antenna 0.",
-      "status": "fail",
-      "why": "10 routed block(s) and none holds microsequencer, datapath array and the memory system in one clean netlist: results/physical_abi3/asap7/a3_lane_pipelined/pnr.json: no microsequencer, no datapath array among its sources; no memory system (macro_count 0.0, need >= 1); results/physical_abi3/asap7/a3_lq8_array/pnr.json: no microsequencer among its sources; no memory system (macro_count 0.0, need >= 1); results/physical_abi3/asap7/a3_microsequencer/pnr.json: no datapath array among its sources; no memory system (macro_count 0.0, need >= 1); results/physical_abi3/asap7/a3_re8/pnr.json: no microsequencer, no datapath array among its sources; no memory system (macro_count 0.0, need >= 1); ..."
+      "status": "pass",
+      "why": "results/physical_abi3/asap7/a3_g2_cluster/pnr.json: one routed netlist with microsequencer, datapath array among its sources, 12 placed macro(s), DRC 0, antenna 0"
     },
     {
-      "fails_when": "TPOT exceeds the budget, OR no budget is frozen.",
+      "fails_when": "TPOT exceeds the budget, no budget is frozen, the cycles are not RTL-measured, or the trace is not certified by G1.",
       "id": "G3",
       "kind": "terminal",
-      "statement": "Measured TPOT against a FROZEN per-model budget, on a run that first passed G1.",
+      "statement": "Measured TPOT against a FROZEN per-model budget, composed from RTL-measured cycles over the issue trace G1 certified.",
       "status": "fail",
       "why": "6 of 6 rows fail (provisional budget): Qwen3-8B/rom: no correctness-qualified measurement; Qwen3-8B/hbm: no correctness-qualified measurement; DeepSeek-V4-Flash-0731/rom: no correctness-qualified measurement; ..."
     },
@@ -106,9 +154,9 @@
       "why": "2 of 2 artifact(s) state a floor; worst is 1.74x"
     }
   ],
-  "passing": 8,
+  "passing": 9,
   "plan": "docs/OPENTALLAS_REDESIGN_PLAN.md",
   "principle": "Absence of evidence is FAIL, never not_evaluable. The previous programme's TPOT gate had two states, not_evaluable and pass, with no reachable fail; it stayed not_evaluable for the life of the project while the machine drifted 44,000x from target. A gate that cannot fail is a note. Every gate below reports FAIL until evidence says otherwise.",
   "schema": "opentallas.gates.redesign_result.v1",
-  "terminal_passing": 0
+  "terminal_passing": 1
 }
