@@ -12,9 +12,9 @@
   ],
   "gate": "G1c",
   "generated_by": "tools/build_abi3_g1c_composition.py",
-  "generated_by_sha256": "81c4a1fefa80342c202139a459f65c6a7a3c61380d28daa998b2f2888d420cbf",
+  "generated_by_sha256": "1ae4f88d70153488a5b53179867c194884dec6f827402126492dd189448aa9d8",
   "git": {
-    "commit": "fd1ba26989776da1e1490eaf1ffd0fd5fc8e1e81",
+    "commit": "f2b3ee4181719244a2d7218cd7bca99958aca8ab",
     "dirty_paths": [],
     "scope": "the tree THIS artifact was derived in. It is not a claim about the tree either run happened in; see execution.control_plane_run and handoff.integrated_campaign for those.",
     "worktree_dirty": false
@@ -302,7 +302,7 @@
         "vehicle": "rtl/test/a3_shipped_prefix_top.sv"
       },
       "git": {
-        "commit": "fd1ba26989776da1e1490eaf1ffd0fd5fc8e1e81",
+        "commit": "f2b3ee4181719244a2d7218cd7bca99958aca8ab",
         "dirty_paths": [],
         "scope": "the tree THIS artifact was derived in. It is not a claim about the tree either run happened in; see execution.control_plane_run and handoff.integrated_campaign for those.",
         "worktree_dirty": false
@@ -460,7 +460,7 @@
           "measured_integrated_rate": {
             "caveat": "this is the rate THAT run measured, on a machine other work was sharing. Another run of the same vehicle on a quieter box measures a higher one; the figure is reported with the run it came from rather than as a property of the design",
             "mac_count": 50331648,
-            "macs_per_second": 34862.7,
+            "macs_per_second": 34862.6651298874,
             "measured": true,
             "simulation_wall_seconds": 1443.712,
             "source": "results/rtl/abi3_shipped_prefix_campaign.json: its own matmul_mac_count and the sim_wall_s of its MEASURE line"
@@ -524,7 +524,7 @@
               ]
             }
           ],
-          "seconds": 11068.4
+          "seconds": 11068.5
         },
         "what_would_turn_this_green": [
           "a run whose back edge retires at least twice, so a second invocation of the body consumes what the first produced",
@@ -2900,7 +2900,7 @@
         "vehicle": "rtl/test/a3_shipped_prefix_top.sv"
       },
       "git": {
-        "commit": "fd1ba26989776da1e1490eaf1ffd0fd5fc8e1e81",
+        "commit": "f2b3ee4181719244a2d7218cd7bca99958aca8ab",
         "dirty_paths": [],
         "scope": "the tree THIS artifact was derived in. It is not a claim about the tree either run happened in; see execution.control_plane_run and handoff.integrated_campaign for those.",
         "worktree_dirty": false
@@ -3058,7 +3058,7 @@
           "measured_integrated_rate": {
             "caveat": "this is the rate THAT run measured, on a machine other work was sharing. Another run of the same vehicle on a quieter box measures a higher one; the figure is reported with the run it came from rather than as a property of the design",
             "mac_count": 50331648,
-            "macs_per_second": 34862.7,
+            "macs_per_second": 34862.6651298874,
             "measured": true,
             "simulation_wall_seconds": 1443.712,
             "source": "results/rtl/abi3_shipped_prefix_campaign.json: its own matmul_mac_count and the sim_wall_s of its MEASURE line"
@@ -3122,7 +3122,7 @@
               ]
             }
           ],
-          "seconds": 11068.4
+          "seconds": 11068.5
         },
         "what_would_turn_this_green": [
           "a run whose back edge retires at least twice, so a second invocation of the body consumes what the first produced",
