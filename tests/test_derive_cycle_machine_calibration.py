@@ -406,6 +406,16 @@ def test_a_chain_record_is_refused_unless_both_simulators_agree(fresh):
     no_figure["boundary"]["cycles"] = None
     assert _boundary_measurement(no_figure)["measured"] is False
 
+    # A record that says of itself that it is not the boundary item 13 asks
+    # for is refused however well it passed.  results/rtl/abi3_boundary_control
+    # .json is exactly such a record: it measures the control half.
+    partial = copy.deepcopy(good)
+    partial["boundary"]["is_the_section_13_item_13_boundary"] = False
+    partial["boundary"]["why_not"] = "the control half only"
+    refused = _boundary_measurement(partial)
+    assert refused["measured"] is False
+    assert "control half" in refused["why"]
+
 
 def test_the_lane_fill_is_an_observation_not_a_ratio(fresh):
     b = fresh["calibration"]["boundary"]

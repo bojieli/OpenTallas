@@ -5524,6 +5524,16 @@ def _boundary_measurement(record: Mapping[str, Any] | None) -> dict[str, Any]:
         }
     status = record.get("status")
     boundary = record.get("boundary") or {}
+    if boundary.get("is_the_section_13_item_13_boundary") is False:
+        return {
+            "measured": False,
+            "rtl_measured_boundary_cycles": None,
+            "source": record.get("campaign"),
+            "why": (
+                "the record declares itself not the boundary section 13 item "
+                "13 asks for: " + str(boundary.get("why_not", "no reason given"))
+            ),
+        }
     per_sim = boundary.get("per_simulator") or []
     cycles = boundary.get("cycles")
     simulators = sorted({str(entry.get("simulator")) for entry in per_sim})
