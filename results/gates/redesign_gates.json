@@ -15,7 +15,7 @@
       "kind": "verification",
       "statement": "Every operator equivalence class the governed decode program issues executes in the integrated RTL, from the real compiled program against the real checkpoint weights, and matches the golden model bit for bit.",
       "status": "fail",
-      "why": "no conforming record for storage class(es) ['rom', 'hbm']: results/rtl/abi3_g1a_operator_equivalence.json [rom]: coverage.every_issued_class_covered is False, want True; coverage.uncovered_class_count is 5, want 0; equivalence.weights_are_real_checkpoint is False, want True; capability_trapped_family_count is 6, want 0; results/rtl/abi3_g1a_operator_equivalence.json [hbm]: coverage.every_issued_class_covered is False, want True; coverage.uncovered_class_count is 5, want 0; equivalence.weights_are_real_checkpoint is False, want True; capability_trapped_family_count is 6, want 0"
+      "why": "no conforming record for storage class(es) ['rom', 'hbm']: results/rtl/abi3_g1a_operator_equivalence.json [rom]: coverage.every_issued_class_covered is False, want True; coverage.uncovered_class_count is 4, want 0; equivalence.weights_are_real_checkpoint is False, want True; capability_trapped_family_count is 6, want 0; results/rtl/abi3_g1a_operator_equivalence.json [hbm]: coverage.every_issued_class_covered is False, want True; coverage.uncovered_class_count is 4, want 0; equivalence.weights_are_real_checkpoint is False, want True; capability_trapped_family_count is 6, want 0"
     },
     {
       "fails_when": "The layer is incomplete, any intermediate differs, or any intermediate was injected from the golden model.",
@@ -142,8 +142,8 @@
       "id": "C3",
       "kind": "comparison",
       "statement": "The cycle model and the analytical model find the same binding constraint.",
-      "status": "pass",
-      "why": "results/derived/qwen3_n5_design_target_reconciliation.json: targets.rom.binding_regime.same_regime == True and targets.hbm.binding_regime.same_regime == True"
+      "status": "fail",
+      "why": "1 artifact(s) matched results/derived/*reconciliation*.json and none has targets.rom.binding_regime.same_regime == True with targets.hbm.binding_regime.same_regime == True"
     },
     {
       "fails_when": "Any does.",
@@ -151,10 +151,10 @@
       "kind": "comparison",
       "statement": "No published run sits more than 100x above its own bandwidth floor.",
       "status": "pass",
-      "why": "2 of 2 artifact(s) state a floor; worst is 1.74x"
+      "why": "2 of 2 artifact(s) state a floor; worst is 1.11x"
     }
   ],
-  "passing": 10,
+  "passing": 9,
   "plan": "docs/OPENTALLAS_REDESIGN_PLAN.md",
   "principle": "Absence of evidence is FAIL, never not_evaluable. The previous programme's TPOT gate had two states, not_evaluable and pass, with no reachable fail; it stayed not_evaluable for the life of the project while the machine drifted 44,000x from target. A gate that cannot fail is a note. Every gate below reports FAIL until evidence says otherwise.",
   "schema": "opentallas.gates.redesign_result.v1",
