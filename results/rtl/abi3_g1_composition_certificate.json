@@ -22,9 +22,9 @@
  },
  "gate": "G1",
  "generated_by": "tools/build_abi3_g1_composition_certificate.py",
- "generated_by_sha256": "d404c4a810e6becc7e26655419ee4288d6bdec3e3b02594cf7bff5e8330a1ad2",
+ "generated_by_sha256": "fee569eb0664befd3c6e69322a4f61d3e52c5c323f8495fd3826b4a7c588ed9e",
  "git": {
-  "commit": "4d48236be9a8206127c3c03a84aaba0a774b06f4",
+  "commit": "fe97fdcf9aab999c3c2633b3a138fae58321dc4f",
   "dirty_paths": [],
   "scope": "the tree THIS certificate was derived in. Each rung artifact carries the tree ITS run happened in, under records[].git.",
   "worktree_dirty": false
@@ -36,7 +36,7 @@
   },
   "G1b": {
    "path": "results/rtl/abi3_g1b_layer_closure.json",
-   "sha256": "283da2ad6ecf3ac4a35e075a4aedb74c76d905ed05288941159b5ce5eff7df04"
+   "sha256": "c5d4dd8b417f4ef7062107d77a26bc4b5602d6bfaa8f5d1c051e16962462b414"
   },
   "G1c": {
    "path": "results/rtl/abi3_g1c_composition.json",
@@ -44,7 +44,7 @@
   },
   "G1d": {
    "path": "results/rtl/abi3_g1d_token.json",
-   "sha256": "324c8b23ff6e42be16584b505c7548b41bbdac454be1e1e6b3472043017a7d48"
+   "sha256": "10921aec60922fdd48afe6bd456bdbb3182fbd0a40cc3add0c79b487a676f02d"
   },
   "G1d_oracle": {
    "path": "results/abi3/qwen3_reference_oracle_eos.json",
@@ -64,7 +64,7 @@
   },
   "gate_spec": {
    "path": "configs/gates/redesign_gates.json",
-   "sha256": "23109cf09fb65db0a36655f7f6ac98506b33b3b4243b3c8d1b53152d46ad072c"
+   "sha256": "51d2909a17a4b594550297bfa4fc0b63c640720ec0add6981a694b3c613a934d"
   }
  },
  "records": [
