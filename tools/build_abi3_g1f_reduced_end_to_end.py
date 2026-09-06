@@ -859,7 +859,7 @@ def main() -> int:
                         f"{step}, so no reduced ABI 3.0 program exists for the "
                         f"{store} store"
                     ),
-                    "measured_by": "running " + " ".join(failing["argv"][1:3]),
+                    "measured_by": "running " + " ".join(failing["argv"][1:]),
                     "returncode": failing["returncode"],
                     "refusal": failing.get("stderr_tail") or failing.get("stdout_tail"),
                 }
@@ -1011,6 +1011,37 @@ def main() -> int:
                 },
                 "status": "fail",
                 "blocking_in_order": sorted(blockers, key=lambda b: b["order"]),
+                "what_would_make_this_rung_runnable": {
+                    "status": (
+                        "an inference drawn from the measurements in this "
+                        "record; it is not itself measured, and nothing here "
+                        "should be read as a result"
+                    ),
+                    "in_order": [
+                        "the compiler must admit a Qwen3 configuration other "
+                        "than the pinned 8B release: lowering.refusal_chain "
+                        "names the config digest pin, the field-by-field "
+                        "comparison behind it, and the frozen census, tensor "
+                        "total and layer count",
+                        "ot_a3_qwen_gqa must take its query-head count, KV-head "
+                        "count and head width the way it already takes "
+                        "MAX_CONTEXT -- as parameters of the verification "
+                        "instance -- together with the 1/sqrt(head_dim) scale "
+                        "code that goes with them",
+                        "ot_a3_vector_rms_norm must take its row width and the "
+                        "matching mean scale as parameters rather than "
+                        "selecting between two fixed profiles",
+                    ],
+                    "why_it_is_worth_doing": (
+                        "without the last two, the cheapest reduction this RTL "
+                        "can express keeps the whole attention block at full "
+                        "size, and rtl_expressible_alternative measures what "
+                        "that costs: more than a day per store at one layer, "
+                        "against the ten minutes the budget configuration was "
+                        "derived to hit.  A nightly regression that takes "
+                        "longer than a working day is not a nightly regression"
+                    ),
+                },
             }
         )
 
