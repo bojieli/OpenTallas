@@ -3,9 +3,10 @@
   "canonical_timestamp_policy": "no timestamp in canonical artifact",
   "claim_boundary": {
     "does_not_establish": [
-      "that the gate's pass count is wrong about the model: the decomposition study measures the SHIPPED program, and a different lowering of the same model could cut the workload differently",
+      "that the gate's position accounting is wrong about the model: the decomposition study measures the SHIPPED program, and a different lowering of the same model could cut the workload differently",
       "any engine result: every one was supplied",
-      "an RTL-emitted token, or an RTL-raised OFFICIAL_EOS",
+      "an RTL-emitted token, or an RTL-raised OFFICIAL_EOS: the EOS the device retires on is an injected engine result, so this rung establishes the control plane's response to one and not the engine's production of it",
+      "the MAX_NEW_TOKENS arm of session retirement: the design refuses on reason 2 by the same path, and no workload here stops on the token ceiling",
       "dual-simulator agreement: Icarus 11 cannot parse this vehicle's 64-bit weight window declarations",
       "any rate or cycle-accurate timing claim"
     ],
@@ -13,41 +14,42 @@
       "the ABI 3.0 control plane RTL issues the same sequence the reference model does, over every pass of the governed workload, on each of ROM and HBM, compared element for element with the first divergence recorded",
       "the injected values reach only the engine completion handshake and the result memory write port, re-derived from the RTL source by an audit that is required to refuse a spliced counter-example",
       "no engine ran: zero launches, zero engine work and zero weight reads, measured per pass",
+      "the design refuses a transaction offered after the official EOS -- before fetching an instruction, as a trap of class STATE_TRANSACTION, counted by the device itself -- and the same design admits that transaction when the injected completion's EOS byte is removed, which is the control that makes the refusal attributable to session retirement",
       "which host decompositions of the governed workload this deployment admits at all, executed rather than reasoned about, with the ones that do not reproduce the oracle's gold recorded with the tokens they produced instead"
     ]
   },
   "cost_measurement": {
-    "measured_all_stores_seconds": 1247.94,
+    "measured_all_stores_seconds": 1107.65,
     "measured_per_store": {
       "hbm": {
-        "elaborate_and_compile_seconds": 19.65,
-        "end_to_end_seconds": 599.26,
-        "golden_model_seconds": 37.93,
+        "elaborate_and_compile_seconds": 20.25,
+        "end_to_end_seconds": 569.69,
+        "golden_model_seconds": 25.4,
         "hypothetical_note": "a lower bound: one result-memory write cycle per word, 1,879,799,430 words, at this run's own measured rate. It is reported because it is the arithmetic that most plausibly produced the ~3 h estimate, not because this rung needs it -- the RTL control plane can observe a result word only through a PREDICATE, and this program declares none",
-        "hypothetical_seconds_if_every_output_word_were_injected": 6396,
-        "pass_decomposition_study_seconds": 536.62,
-        "run_seconds": 5.06,
-        "simulate_seconds": 2.311,
-        "simulated_cycles": 679236,
-        "simulated_cycles_per_second": 293914
+        "hypothetical_seconds_if_every_output_word_were_injected": 8668,
+        "pass_decomposition_study_seconds": 514.58,
+        "run_seconds": 9.46,
+        "simulate_seconds": 2.349,
+        "simulated_cycles": 509427,
+        "simulated_cycles_per_second": 216870
       },
       "rom": {
-        "elaborate_and_compile_seconds": 20.38,
-        "end_to_end_seconds": 648.68,
-        "golden_model_seconds": 45.58,
+        "elaborate_and_compile_seconds": 20.43,
+        "end_to_end_seconds": 537.96,
+        "golden_model_seconds": 27.62,
         "hypothetical_note": "a lower bound: one result-memory write cycle per word, 1,879,799,430 words, at this run's own measured rate. It is reported because it is the arithmetic that most plausibly produced the ~3 h estimate, not because this rung needs it -- the RTL control plane can observe a result word only through a PREDICATE, and this program declares none",
-        "hypothetical_seconds_if_every_output_word_were_injected": 6388,
-        "pass_decomposition_study_seconds": 577.67,
-        "run_seconds": 5.05,
-        "simulate_seconds": 2.308,
-        "simulated_cycles": 679220,
-        "simulated_cycles_per_second": 294289
+        "hypothetical_seconds_if_every_output_word_were_injected": 8528,
+        "pass_decomposition_study_seconds": 480.57,
+        "run_seconds": 9.34,
+        "simulate_seconds": 2.311,
+        "simulated_cycles": 509415,
+        "simulated_cycles_per_second": 220431
       }
     },
     "replaces": {
       "also_reported_as": "3.10 h per store by the lane that built the injection vehicle, which reported that conservative figure over an optimistic 0.35 h form under R13",
       "figure": "~3 h per store",
-      "measured_instead": 1247.94,
+      "measured_instead": 1107.65,
       "not_edited_here": "no document or gate figure is changed by this tool; the measurement is published beside the estimate",
       "recorded_in": [
         "docs/OPENTALLAS_REDESIGN_PLAN.md, the ladder table's G1e row",
@@ -58,7 +60,7 @@
   },
   "gate": "G1e (configs/gates/redesign_gates.json)",
   "git": {
-    "commit": "acf851838ea6415352027ed73274dd8635fa1bfd",
+    "commit": "f962b17c45adf41678979a03255e59b5eda28c43",
     "worktree_dirty": false
   },
   "records": [
@@ -66,13 +68,13 @@
       "checker_returncode": 0,
       "checks": 10441,
       "cost": {
-        "elaborate_and_compile_seconds": 20.38,
-        "golden_model_seconds": 45.58,
+        "elaborate_and_compile_seconds": 20.43,
+        "golden_model_seconds": 27.62,
         "host_writes": 425984,
         "passes": 3,
-        "run_seconds": 5.05,
-        "simulate_seconds": 2.308,
-        "simulated_cycles": 679220
+        "run_seconds": 9.34,
+        "simulate_seconds": 2.311,
+        "simulated_cycles": 509415
       },
       "deployment": {
         "admitted": true,
@@ -104,15 +106,40 @@
         },
         "how_both_fields_are_decided": {
           "measured_inputs": {
+            "negative_control_holds": true,
             "official_eos_encoding": 1,
-            "post_eos_probe_admitted": true,
+            "post_eos_probe_admitted": false,
             "post_eos_probe_ran": true,
-            "post_eos_probe_trapped": false,
+            "post_eos_probe_trap_class": 9,
+            "post_eos_probe_trapped": true,
+            "post_eos_refusals_after": 1,
+            "post_eos_refusals_before": 0,
             "real_engine_launches": 0,
-            "selected_eos_reason": 0
+            "selected_eos_reason": 0,
+            "session_eos_reason_before_the_probe": 1,
+            "session_retired_before_the_probe": true,
+            "state_transaction_trap_class": 9
+          },
+          "negative_control": {
+            "checker_returncode": 0,
+            "control_holds": true,
+            "eos_bytes_removed": 1,
+            "log_tail": "SS-RECORD index=2 entrypoint=1 generation=2 context=18 issues=691 views=2143 fetched=2104 retired=2104 loops=723 waits=689 cycles=169805\nCENSUS classes=26 instances=2073\nCENSUS-ROW 16 2 32 3\nCENSUS-ROW 16 2 190 3\nCENSUS-ROW 16 3 108 108\nCENSUS-ROW 16 3 115 108\nCENSUS-ROW 32 0 59 108\nCENSUS-ROW 32 0 67 108\nCENSUS-ROW 32 0 73 108\nCENSUS-ROW 32 0 130 108\nCENSUS-ROW 32 0 151 108\nCENSUS-ROW 32 0 158 108\nCENSUS-ROW 32 0 171 108\nCENSUS-ROW 32 0 197 3\nCENSUS-ROW 32 3 41 3\nCENSUS-ROW 48 0 50 108\nCENSUS-ROW 48 0 144 108\nCENSUS-ROW 48 0 183 3\nCENSUS-ROW 48 1 79 108\nCENSUS-ROW 48 1 87 108\nCENSUS-ROW 48 2 94 108\nCENSUS-ROW 48 2 100 108\nCENSUS-ROW 48 3 138 108\nCENSUS-ROW 48 3 177 108\nCENSUS-ROW 48 4 165 108\nCENSUS-ROW 64 1 124 108\nCENSUS-ROW 112 0 205 3\nCENSUS-ROW 112 1 212 3\nEOS selected_token=0 selected_tie_multiplicity=0 selected_eos_reason=0 engine_launches=0\nPOSTEOS ran=1 admitted=1 trapped=0 trap_class=0 issues=691 cycles=169805 retired_before=0 retired_reason=0 refusals_before=0 refusals_after=0\nGEOMETRY program_words=4096 desc_words=8192 index_words=64 source_words=256 result_words=4096 matmul_weight_bytes=0 result_injection=1\nTRACE compared=46866 equal=1 divergence_index=-1 queue_compared=48939 queue_equal=1 queue_divergence_index=-1\nINJECTION results=2073 words=0 engine_launches=0 engine_work=0 weight_halfwords=0\nCOST passes=3 cycles=679220 seconds=2.311 host_writes=425984\nPASS: ABI3 G1e control end to end passes=3 issues=2073 views=6429 elements=46866 injected=2073 checks=10441\n",
+            "meaning": "control_holds is true when the design, told nothing about an EOS, ADMITS the very transaction it refused when it was told.  That is what makes eos.post_eos_refused a measurement of the design's session retirement rather than of anything else in the vehicle",
+            "probe_admitted": true,
+            "probe_cycles": 169805,
+            "probe_issues": 691,
+            "probe_ran": true,
+            "probe_trap_class": 0,
+            "probe_trapped": false,
+            "ran": true,
+            "refusals": 0,
+            "session_retired_before_probe": false,
+            "trace_still_equals_golden": true,
+            "what_changed": "the EOS reason field of every injected completion that carried one, set to 0; nothing else in the vector set, and the same elaborated binary"
           },
           "official_eos_raised": "the integrated top's selected_eos_reason output equals OFFICIAL_EOS (1, read from runtime.abi3.records.EosReason) AND the run launched at least one real engine. The second half is not decoration: under result injection the EOS reason could only be a model value passed through, and a field that could be set by wiring an output with nothing having run is the exact defect this ladder was built to catch. Both halves come off the RTL run",
-          "post_eos_refused": "the post-EOS probe ran AND the RTL either refused to complete it or trapped it. Both come off the DUT's own done/complete/trapped outputs on the pass driven after the one that produced the official EOS",
+          "post_eos_refused": "five observations off the DUT of the probe run, plus a sixth condition that is a second run of the same design. The probe ran; ot_a3_device_top's session_retired output was already set when it was driven, and set on OFFICIAL_EOS; the transaction did not complete or trapped; the trap class is STATE_TRANSACTION (9, ABI 3.0 wire format section 8); and the device's own post-EOS refusal counter advanced by exactly one. The retirement half is not decoration, and its absence is what made the earlier form of this field a confounded measurement: no engine runs in this vehicle, so an EOS reaches the control plane only in the injected completion, and a design that was never told an EOS happened is not failing to refuse a post-EOS transaction when it admits one. The class and the counter separate this refusal from any other way a transaction could fail. The sixth observation is a NEGATIVE CONTROL on the design itself: the same elaborated vehicle, driven again on the same golden stream with the injected OFFICIAL_EOS byte removed and nothing else changed, must ADMIT the very transaction it refused. Without that, a refusal could be coming from anything in the vehicle; with it, the refusal is the session retirement and nothing else",
           "self_test": {
             "official_eos_raised": {
               "false_because_no_engine_ran": false,
@@ -122,7 +149,12 @@
             "passed": true,
             "post_eos_refused": {
               "false_when_the_design_completed_the_pass": false,
+              "false_when_the_design_refuses_without_being_told": false,
+              "false_when_the_design_was_never_retired": false,
+              "false_when_the_device_counted_no_refusal": false,
               "false_when_the_probe_did_not_run": false,
+              "false_when_the_retirement_was_not_the_official_eos": false,
+              "false_when_the_trap_is_not_the_state_class": false,
               "true_when_the_design_did_not_complete_it": true,
               "true_when_the_design_trapped_it": true
             },
@@ -130,6 +162,7 @@
             "why": "each derived EOS field is exercised against fabricated observations in both directions; a field pinned to a constant fails this and the campaign refuses to publish"
           }
         },
+        "how_post_eos_refusal_became_measurable": "IT WAS A REAL DESIGN GAP, AND ALSO A PROBE THAT WAS NOT DRIVING WHAT IT THOUGHT IT DROVE. ABI 3.0 requires the DEVICE to refuse: wire format section 12.5 -- the TOKEN_APPEND that commits the final allowed non-EOS token 'returns completion EOS reason MAX_NEW_TOKENS=2, and the device refuses every later transaction for that session' -- and operator conventions section 8 -- 'Both that reason and an official EOS retire the device session; host-only loop termination does not satisfy this operator contract'. runtime/sim/device.py implements it inside the device model (Session.finished -> STATE_TRANSACTION). rtl/abi3/ot_a3_device_top.sv did not implement it at all: it held no session-retirement state and its completion port carried no EOS reason byte, so the reason could not reach the control plane by any path. The probe was confounded by the same absence -- it drove a further pass at a design that had never been told an EOS happened, and read the admission as a refusal failure. Both halves are fixed together: the device latches retirement off the completion's EOS reason and refuses a later start before fetching anything, with trap class A3_TRAP_STATE (9); and the injected engine result now carries the completion record's EOS byte, which is a field of the result and therefore inside this rung's injection boundary, alongside the fault and trap class already carried there",
         "model_generated_token_ids": [
           3925,
           13,
@@ -145,25 +178,50 @@
           "refused_in_rtl": false,
           "rtl_probe": {
             "emitted": true,
+            "eos_reason_on_the_probe_results": 0,
             "in_the_compared_trace": false,
             "issues": 691,
             "shape": "one further pass, configured exactly as the last decode pass, with its own copy of that pass's engine results",
-            "why_not_in_the_trace": "the model refused this transaction, so it produced no golden for it; the probe asks only whether the RTL control plane refuses it too"
+            "why_not_in_the_trace": "the model refused this transaction, so it produced no golden for it; the probe asks only whether the RTL control plane refuses it too",
+            "why_zero": "the session is retired by the PREVIOUS pass's TOKEN_APPEND completion, whose injected result carries the OFFICIAL_EOS byte.  The probe's own results carry reason 0 so that it tests the retirement the design already holds rather than re-arming it"
           },
           "status": 1,
           "trap_class": 9,
-          "why": "the refusal is a host session-state refusal, taken before any instruction is fetched; it is not an act of the RTL control plane and this vehicle cannot measure it as one"
+          "why": "the reference half of the measurement.  The refusal is taken inside the DEVICE model, before any instruction is fetched, and returns trap class STATE_TRANSACTION -- which is what ABI 3.0 requires of a device: wire format section 12.5 says the TOKEN_APPEND that commits the final allowed non-EOS token 'returns completion EOS reason MAX_NEW_TOKENS=2, and the device refuses every later transaction for that session', and operator conventions section 8 says of that reason and of an official EOS that 'Both ... retire the device session; host-only loop termination does not satisfy this operator contract'.  refused_in_rtl is false because this field is the MODEL's refusal; the RTL control plane's own is measured separately by rtl_probe below, against ot_a3_device_top's session-retirement state"
         },
         "post_eos_probe_measured_in_rtl": {
-          "issues": 691,
+          "issues": 0,
           "meaning": "one further pass was driven into the RTL after the pass that produced the official EOS, configured exactly as the last decode pass. The reference model refuses such a transaction before fetching an instruction; what the RTL control plane does with it is measured here rather than argued. Its issues are not part of the compared trace",
+          "negative_control": {
+            "checker_returncode": 0,
+            "control_holds": true,
+            "eos_bytes_removed": 1,
+            "log_tail": "SS-RECORD index=2 entrypoint=1 generation=2 context=18 issues=691 views=2143 fetched=2104 retired=2104 loops=723 waits=689 cycles=169805\nCENSUS classes=26 instances=2073\nCENSUS-ROW 16 2 32 3\nCENSUS-ROW 16 2 190 3\nCENSUS-ROW 16 3 108 108\nCENSUS-ROW 16 3 115 108\nCENSUS-ROW 32 0 59 108\nCENSUS-ROW 32 0 67 108\nCENSUS-ROW 32 0 73 108\nCENSUS-ROW 32 0 130 108\nCENSUS-ROW 32 0 151 108\nCENSUS-ROW 32 0 158 108\nCENSUS-ROW 32 0 171 108\nCENSUS-ROW 32 0 197 3\nCENSUS-ROW 32 3 41 3\nCENSUS-ROW 48 0 50 108\nCENSUS-ROW 48 0 144 108\nCENSUS-ROW 48 0 183 3\nCENSUS-ROW 48 1 79 108\nCENSUS-ROW 48 1 87 108\nCENSUS-ROW 48 2 94 108\nCENSUS-ROW 48 2 100 108\nCENSUS-ROW 48 3 138 108\nCENSUS-ROW 48 3 177 108\nCENSUS-ROW 48 4 165 108\nCENSUS-ROW 64 1 124 108\nCENSUS-ROW 112 0 205 3\nCENSUS-ROW 112 1 212 3\nEOS selected_token=0 selected_tie_multiplicity=0 selected_eos_reason=0 engine_launches=0\nPOSTEOS ran=1 admitted=1 trapped=0 trap_class=0 issues=691 cycles=169805 retired_before=0 retired_reason=0 refusals_before=0 refusals_after=0\nGEOMETRY program_words=4096 desc_words=8192 index_words=64 source_words=256 result_words=4096 matmul_weight_bytes=0 result_injection=1\nTRACE compared=46866 equal=1 divergence_index=-1 queue_compared=48939 queue_equal=1 queue_divergence_index=-1\nINJECTION results=2073 words=0 engine_launches=0 engine_work=0 weight_halfwords=0\nCOST passes=3 cycles=679220 seconds=2.311 host_writes=425984\nPASS: ABI3 G1e control end to end passes=3 issues=2073 views=6429 elements=46866 injected=2073 checks=10441\n",
+            "meaning": "control_holds is true when the design, told nothing about an EOS, ADMITS the very transaction it refused when it was told.  That is what makes eos.post_eos_refused a measurement of the design's session retirement rather than of anything else in the vehicle",
+            "probe_admitted": true,
+            "probe_cycles": 169805,
+            "probe_issues": 691,
+            "probe_ran": true,
+            "probe_trap_class": 0,
+            "probe_trapped": false,
+            "ran": true,
+            "refusals": 0,
+            "session_retired_before_probe": false,
+            "trace_still_equals_golden": true,
+            "what_changed": "the EOS reason field of every injected completion that carried one, set to 0; nothing else in the vector set, and the same elaborated binary"
+          },
+          "negative_control_holds": true,
           "ran": true,
-          "rtl_admitted_the_pass": true,
-          "rtl_trapped": false,
-          "simulated_cycles": 169805,
-          "trap_class": 0
+          "refusals_after": 1,
+          "refusals_before": 0,
+          "rtl_admitted_the_pass": false,
+          "rtl_trapped": true,
+          "session_eos_reason_before": 1,
+          "session_retired_before": true,
+          "simulated_cycles": 0,
+          "trap_class": 9
         },
-        "post_eos_refused": false,
+        "post_eos_refused": true,
         "rtl_eos_observation": {
           "engine_launches": 0,
           "eos_reason_encoding": {
@@ -176,11 +234,11 @@
           "selected_tie_multiplicity": 0,
           "selected_token": 0
         },
-        "what_would_measure_them": [
+        "what_would_still_measure_more": [
           "OFFICIAL_EOS: issue SELECTION.TOKEN_APPEND to the real engine with the injected ARGMAX token, which needs the top to select injection per issue rather than by parameter",
-          "post-EOS refusal: a program that predicates its continuation on EOS_MEMBER, or a device-side session the RTL owns"
+          "the MAX_NEW_TOKENS retirement: the same device path refuses on reason 2 as well, and no workload in this campaign stops on the token ceiling, so only the OFFICIAL_EOS arm is exercised here"
         ],
-        "why_not_measured_in_rtl": "in the promoted lowering the EOS decision is an ENGINE result -- rtl/abi3/ot_a3_selection_token_append.sv raises OFFICIAL_EOS from the policy's EOS set -- and under result injection no engine is issued to, so an EOS raised here would be the model's value passed through. The post-EOS refusal is a host session-state refusal in runtime/sim/device.py:run_transaction, taken before an instruction is fetched; this deployment's program carries no STATE instruction and no EOS_MEMBER predicate, so its RTL control plane has nothing to refuse. Neither field is written as a constant: each is the conjunction of RTL observations recorded in how_both_fields_are_decided, and each is false because those observations are"
+        "why_official_eos_is_not_measured_in_rtl": "in the promoted lowering the EOS decision is an ENGINE result -- rtl/abi3/ot_a3_selection_token_append.sv raises OFFICIAL_EOS from the policy's EOS set -- and under result injection no engine is issued to, so an EOS raised here would be the model's value passed through. official_eos_raised is therefore false as a measurement of the ENGINE, and the engine measurement belongs to G1d, where a real argmax runs. It is not written as a constant: it is the conjunction of RTL observations recorded in how_both_fields_are_decided, and it is false because those observations are"
       },
       "execution": {
         "control_plane": "rtl/abi3/ot_a3_device_top.sv",
@@ -193,14 +251,14 @@
           "RESULT_WORDS": 4096,
           "SOURCE_WORDS": 256
         },
-        "simulated_cycles": 679220,
+        "simulated_cycles": 509415,
         "simulator": "verilator_cpp_executable",
         "simulator_version": "5.050",
         "vehicle": "rtl/test/a3_shipped_prefix_top.sv",
         "why_single_simulator": "the vehicle declares `parameter longint unsigned MATMUL_WEIGHT_BYTES` and imports a DPI function returning `longint unsigned`; Icarus 11 cannot parse either, measured at this commit and before it. G1's own scope already records this vehicle as Verilator-only"
       },
       "git": {
-        "commit": "acf851838ea6415352027ed73274dd8635fa1bfd",
+        "commit": "f962b17c45adf41678979a03255e59b5eda28c43",
         "worktree_dirty": false
       },
       "golden_vectors": {
@@ -238,12 +296,12 @@
             "sha256": "2ed4856ef6735442f3abed86e05d5ff42837e5d386b0f51cd8deb215afd0b87e"
           },
           "g1e_inject.txt": {
-            "bytes": 51078,
-            "sha256": "c3031c2c332c8adcfc90519ff56c0d3b29cb5569597398fc5478629c056cd20d"
+            "bytes": 55224,
+            "sha256": "b3baa3777e58b036feb08fcc6c8b47147d145b53d8025e882a6185e3820da06c"
           },
           "g1e_inject_probe.txt": {
-            "bytes": 17054,
-            "sha256": "200e3f6b3dc73a8f92ebba256263e2cf5d547b52b4e6343a12a95be88813b4a2"
+            "bytes": 18716,
+            "sha256": "bb729b3a5004bfb7519e1583091ef3165ade4526dc1b86f5c106ccba0730fa52"
           },
           "g1e_meta.hex": {
             "bytes": 162,
@@ -276,11 +334,13 @@
         },
         "sites": {
           "allowed_instance_ports": [
+            "eng_issue_eos_reason",
             "eng_issue_fault",
             "eng_issue_ready",
             "eng_issue_trap_class"
           ],
           "allowed_sinks": [
+            "engine_eos_reason",
             "engine_fault",
             "engine_ready",
             "engine_trap_class",
@@ -288,6 +348,7 @@
             "inj_completion_count",
             "inj_last_response_index",
             "injected_ready",
+            "issue_eos_reason",
             "issue_fault",
             "issue_ready",
             "issue_trap_class",
@@ -309,7 +370,7 @@
               "from": [
                 "inj_result_valid"
               ],
-              "line": 587,
+              "line": 610,
               "statement": "wire injected_ready = (ENABLE_RESULT_INJECTION != 0) && inj_result_valid"
             },
             {
@@ -317,7 +378,7 @@
               "from": [
                 "injected_ready"
               ],
-              "line": 592,
+              "line": 615,
               "statement": "wire engine_ready = (ENABLE_RESULT_INJECTION != 0) ? injected_ready : bridge_issue_ready"
             },
             {
@@ -326,7 +387,7 @@
                 "inj_result_fault",
                 "inj_result_valid"
               ],
-              "line": 594,
+              "line": 617,
               "statement": "wire engine_fault = (ENABLE_RESULT_INJECTION != 0) ? (inj_result_valid && inj_result_fault) : bridge_issue_fault"
             },
             {
@@ -334,15 +395,23 @@
               "from": [
                 "inj_result_trap_class"
               ],
-              "line": 596,
+              "line": 619,
               "statement": "wire [15:0] engine_trap_class = (ENABLE_RESULT_INJECTION != 0) ? inj_result_trap_class : bridge_issue_trap_class"
+            },
+            {
+              "drives": "engine_eos_reason",
+              "from": [
+                "inj_result_eos_reason"
+              ],
+              "line": 621,
+              "statement": "wire [7:0] engine_eos_reason = (ENABLE_RESULT_INJECTION != 0) ? inj_result_eos_reason : bridge_issue_eos_reason"
             },
             {
               "drives": "issue_ready",
               "from": [
                 "engine_ready"
               ],
-              "line": 598,
+              "line": 623,
               "statement": "assign issue_ready = exact_multicast_issue ? (multicast_issue_active && (multicast_done || multicast_failed)) : engine_ready"
             },
             {
@@ -350,7 +419,7 @@
               "from": [
                 "engine_fault"
               ],
-              "line": 601,
+              "line": 626,
               "statement": "assign issue_fault = exact_multicast_issue ? multicast_failed : engine_fault"
             },
             {
@@ -358,15 +427,23 @@
               "from": [
                 "engine_trap_class"
               ],
-              "line": 603,
+              "line": 628,
               "statement": "assign issue_trap_class = exact_multicast_issue ? multicast_trap_class : engine_trap_class"
+            },
+            {
+              "drives": "issue_eos_reason",
+              "from": [
+                "engine_eos_reason"
+              ],
+              "line": 630,
+              "statement": "assign issue_eos_reason = exact_multicast_issue ? 8'd0 : engine_eos_reason"
             },
             {
               "drives": "response_valid",
               "from": [
                 "issue_ready"
               ],
-              "line": 605,
+              "line": 632,
               "statement": "assign response_valid = issue_valid && issue_ready"
             },
             {
@@ -374,7 +451,7 @@
               "from": [
                 "issue_fault"
               ],
-              "line": 607,
+              "line": 634,
               "statement": "assign response_fault = issue_fault"
             },
             {
@@ -382,7 +459,7 @@
               "from": [
                 "issue_trap_class"
               ],
-              "line": 608,
+              "line": 635,
               "statement": "assign response_trap_class = issue_trap_class"
             },
             {
@@ -390,7 +467,7 @@
               "from": [
                 "issue_ready"
               ],
-              "line": 856,
+              "line": 888,
               "statement": "end else if (inj_issue_valid && issue_ready) begin inj_last_response_index <= issue_index"
             },
             {
@@ -398,7 +475,7 @@
               "from": [
                 "issue_ready"
               ],
-              "line": 879,
+              "line": 911,
               "statement": "wire multicast_response_fire = exact_multicast_issue && issue_ready"
             },
             {
@@ -406,7 +483,7 @@
               "from": [
                 "multicast_response_fire"
               ],
-              "line": 932,
+              "line": 964,
               "statement": "if (multicast_response_fire) begin multicast_issue_active <= 1'b0"
             },
             {
@@ -414,7 +491,7 @@
               "from": [
                 "multicast_issue_active"
               ],
-              "line": 956,
+              "line": 988,
               "statement": "wire multicast_source_read_ready_int = multicast_issue_active && multicast_source_ready_phase"
             },
             {
@@ -422,7 +499,7 @@
               "from": [
                 "multicast_source_read_ready_int"
               ],
-              "line": 1000,
+              "line": 1032,
               "statement": "else if (multicast_source_read_ready_int) multicast_source_ready_phase <= 1'b0"
             },
             {
@@ -430,7 +507,7 @@
               "from": [
                 "multicast_source_read_ready_int"
               ],
-              "line": 1005,
+              "line": 1037,
               "statement": "if (multicast_source_read_valid_int && !multicast_source_read_ready_int) multicast_source_stall_cycles_q <= multicast_source_stall_cycles_q + 32'd1"
             },
             {
@@ -438,7 +515,7 @@
               "from": [
                 "multicast_source_read_ready_int"
               ],
-              "line": 1009,
+              "line": 1041,
               "statement": "if (multicast_source_read_valid_int && multicast_source_read_ready_int) begin multicast_source_read_count_q <= multicast_source_read_count_q + 32'd1"
             },
             {
@@ -446,7 +523,7 @@
               "from": [
                 "multicast_source_read_count_q"
               ],
-              "line": 1013,
+              "line": 1045,
               "statement": "|| (multicast_source_read_offset_int >= 64'd65536) || (multicast_source_read_offset_int[15:2] != multicast_source_read_count_q[13:0])) begin multicast_source_response_data <= 32'd0"
             },
             {
@@ -454,7 +531,7 @@
               "from": [
                 "multicast_issue_active"
               ],
-              "line": 1045,
+              "line": 1077,
               "statement": "end end end end assign multicast_remote_write_ready = multicast_issue_active && (multicast_service_cycle[1:0] != 2'b00)"
             },
             {
@@ -462,7 +539,7 @@
               "from": [
                 "inj_write_en"
               ],
-              "line": 1184,
+              "line": 1216,
               "statement": "wire res_we = (ENABLE_RESULT_INJECTION != 0) ? inj_write_en : out_we"
             },
             {
@@ -470,7 +547,7 @@
               "from": [
                 "inj_write_addr"
               ],
-              "line": 1187,
+              "line": 1219,
               "statement": "wire [31:0] res_addr = (ENABLE_RESULT_INJECTION != 0) ? inj_write_addr : out_addr"
             },
             {
@@ -478,7 +555,7 @@
               "from": [
                 "inj_write_data"
               ],
-              "line": 1189,
+              "line": 1221,
               "statement": "wire [31:0] res_data = (ENABLE_RESULT_INJECTION != 0) ? inj_write_data : out_data"
             },
             {
@@ -486,7 +563,7 @@
               "from": [
                 "issue_ready"
               ],
-              "line": 1213,
+              "line": 1245,
               "statement": "end else begin if (inj_issue_valid && issue_ready) inj_completion_count <= inj_completion_count + 32'd1"
             },
             {
@@ -494,7 +571,7 @@
               "from": [
                 "res_we"
               ],
-              "line": 1273,
+              "line": 1305,
               "statement": "end if (res_we) begin output_write_count <= output_write_count + 32'd1"
             },
             {
@@ -503,7 +580,7 @@
                 "res_addr",
                 "res_data"
               ],
-              "line": 1276,
+              "line": 1308,
               "statement": "if (res_addr < RESULT_WORDS) result_mem[res_addr] <= res_data"
             },
             {
@@ -512,7 +589,7 @@
                 "multicast_remote_write_ready",
                 "res_we"
               ],
-              "line": 1280,
+              "line": 1312,
               "statement": "lticast_remote_write_ready))) writes_after_fault <= writes_after_fault + (res_we ? 32'd1 : 32'd0) + ((multicast_remote_write_valid && multicast_remote_write_ready) ? 32'd1 : 32'd0)"
             },
             {
@@ -521,7 +598,7 @@
                 "issue_fault",
                 "issue_ready"
               ],
-              "line": 1288,
+              "line": 1320,
               "statement": "if (issue_valid && issue_ready && issue_fault) fault_seen <= 1'b1"
             },
             {
@@ -529,7 +606,7 @@
               "from": [
                 "inj_last_response_index"
               ],
-              "line": 837,
+              "line": 869,
               "statement": "assign last_response_index = (ENABLE_RESULT_INJECTION != 0) ? inj_last_response_index : bridge_last_response_index"
             },
             {
@@ -537,7 +614,7 @@
               "from": [
                 "multicast_issue_active"
               ],
-              "line": 918,
+              "line": 950,
               "statement": "end else begin if (multicast_issue_active) multicast_service_cycle <= multicast_service_cycle + 32'd1"
             },
             {
@@ -545,7 +622,7 @@
               "from": [
                 "multicast_source_read_count_q"
               ],
-              "line": 963,
+              "line": 995,
               "statement": "assign multicast_source_read_count = multicast_source_read_count_q"
             },
             {
@@ -553,7 +630,7 @@
               "from": [
                 "multicast_source_stall_cycles_q"
               ],
-              "line": 965,
+              "line": 997,
               "statement": "assign multicast_source_stall_cycles = multicast_source_stall_cycles_q"
             },
             {
@@ -561,7 +638,7 @@
               "from": [
                 "multicast_remote_write_ready"
               ],
-              "line": 1026,
+              "line": 1058,
               "statement": "end if (multicast_remote_write_valid && !multicast_remote_write_ready) multicast_destination_stall_cycles_q <= multicast_destination_stall_cycles_q + 32'd1"
             },
             {
@@ -569,7 +646,7 @@
               "from": [
                 "multicast_remote_write_ready"
               ],
-              "line": 1031,
+              "line": 1063,
               "statement": " {8'd0, multicast_remote_write_offset[23:16]}) || (multicast_remote_write_data != multicast_expected_word( multicast_remote_write_offset[15:2]))) multicast_protocol_error_q <= 1'b1"
             },
             {
@@ -577,7 +654,7 @@
               "from": [
                 "multicast_destination_stall_cycles_q"
               ],
-              "line": 966,
+              "line": 998,
               "statement": "assign multicast_destination_stall_cycles = multicast_destination_stall_cycles_q"
             },
             {
@@ -585,7 +662,7 @@
               "from": [
                 "multicast_protocol_error_q"
               ],
-              "line": 970,
+              "line": 1002,
               "statement": "assign multicast_protocol_error = multicast_protocol_error_q"
             }
           ],
@@ -594,6 +671,7 @@
             "inj_result_valid",
             "inj_result_fault",
             "inj_result_trap_class",
+            "inj_result_eos_reason",
             "inj_write_en",
             "inj_write_addr",
             "inj_write_data"
@@ -610,7 +688,7 @@
               "from": [
                 "issue_ready"
               ],
-              "line": 555,
+              "line": 576,
               "port": "eng_issue_ready"
             },
             {
@@ -619,7 +697,7 @@
               "from": [
                 "issue_fault"
               ],
-              "line": 556,
+              "line": 577,
               "port": "eng_issue_fault"
             },
             {
@@ -628,8 +706,17 @@
               "from": [
                 "issue_trap_class"
               ],
-              "line": 557,
+              "line": 578,
               "port": "eng_issue_trap_class"
+            },
+            {
+              "class": "engine_completion_boundary",
+              "expression": "issue_eos_reason",
+              "from": [
+                "issue_eos_reason"
+              ],
+              "line": 579,
+              "port": "eng_issue_eos_reason"
             },
             {
               "class": "inert_exact_multicast_adapter",
@@ -637,7 +724,7 @@
               "from": [
                 "multicast_source_read_ready_int"
               ],
-              "line": 1114,
+              "line": 1146,
               "port": "source_read_ready"
             },
             {
@@ -646,7 +733,7 @@
               "from": [
                 "multicast_source_response_data"
               ],
-              "line": 1119,
+              "line": 1151,
               "port": "source_response_data"
             },
             {
@@ -655,13 +742,14 @@
               "from": [
                 "multicast_remote_write_ready"
               ],
-              "line": 1122,
+              "line": 1154,
               "port": "remote_write_ready"
             }
           ],
           "method": "every statement of the top that mentions a tainted signal is found, the signal it drives is added, and the closure is taken; a tainted signal outside the declared sink set refuses the audit",
           "outside_allowed_sinks": [],
           "reached": [
+            "engine_eos_reason",
             "engine_fault",
             "engine_ready",
             "engine_trap_class",
@@ -669,6 +757,7 @@
             "inj_completion_count",
             "inj_last_response_index",
             "injected_ready",
+            "issue_eos_reason",
             "issue_fault",
             "issue_ready",
             "issue_trap_class",
@@ -714,7 +803,7 @@
                 "from": [
                   "result_mem"
                 ],
-                "line": 399,
+                "line": 417,
                 "statement": "clear_word = clear_word + 1) result_mem[clear_word] = 32'hdead_beef"
               },
               {
@@ -722,7 +811,7 @@
                 "from": [
                   "result_mem"
                 ],
-                "line": 811,
+                "line": 843,
                 "statement": "if (predicate_mapped) begin predicate_read_value <= (result_mem[predicate_word_addr[31:0]] != 32'd0)"
               },
               {
@@ -730,7 +819,7 @@
                 "from": [
                   "result_mem"
                 ],
-                "line": 1223,
+                "line": 1255,
                 "statement": "end if (m0_rd_en) begin if (m0_reads_result && (m0_rd_addr < RESULT_WORDS)) m0_rd_data <= result_mem[m0_rd_addr]"
               },
               {
@@ -738,7 +827,7 @@
                 "from": [
                   "result_mem"
                 ],
-                "line": 1249,
+                "line": 1281,
                 "statement": "end end else if (m1_reads_result && (m1_rd_addr < RESULT_WORDS)) m1_rd_data <= result_mem[m1_rd_addr]"
               },
               {
@@ -746,7 +835,7 @@
                 "from": [
                   "result_mem"
                 ],
-                "line": 1290,
+                "line": 1322,
                 "statement": "end end assign result_read_data = (result_read_addr < RESULT_WORDS) ? result_mem[result_read_addr] : 32'd0"
               }
             ],
@@ -975,7 +1064,7 @@
                   "produced_tokens": [
                     3925
                   ],
-                  "seconds": 18.545,
+                  "seconds": 11.792,
                   "span_tokens": 16,
                   "status": 0,
                   "trap_class": 0
@@ -989,7 +1078,7 @@
                   "produced_tokens": [
                     13
                   ],
-                  "seconds": 12.176,
+                  "seconds": 7.568,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1003,13 +1092,13 @@
                   "produced_tokens": [
                     151645
                   ],
-                  "seconds": 12.077,
+                  "seconds": 7.034,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
                 }
               ],
-              "wall_seconds": 42.8
+              "wall_seconds": 26.39
             },
             {
               "completed_transactions": 4,
@@ -1035,7 +1124,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 16.416,
+                  "seconds": 10.718,
                   "span_tokens": 8,
                   "status": 0,
                   "trap_class": 0
@@ -1049,7 +1138,7 @@
                   "produced_tokens": [
                     3925
                   ],
-                  "seconds": 14.256,
+                  "seconds": 12.204,
                   "span_tokens": 8,
                   "status": 0,
                   "trap_class": 0
@@ -1063,7 +1152,7 @@
                   "produced_tokens": [
                     13
                   ],
-                  "seconds": 12.912,
+                  "seconds": 8.161,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1077,13 +1166,13 @@
                   "produced_tokens": [
                     151645
                   ],
-                  "seconds": 14.376,
+                  "seconds": 7.784,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
                 }
               ],
-              "wall_seconds": 57.96
+              "wall_seconds": 38.87
             },
             {
               "completed_transactions": 6,
@@ -1111,7 +1200,7 @@
                   "produced_tokens": [
                     311
                   ],
-                  "seconds": 15.106,
+                  "seconds": 10.964,
                   "span_tokens": 4,
                   "status": 0,
                   "trap_class": 0
@@ -1125,7 +1214,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 13.332,
+                  "seconds": 9.369,
                   "span_tokens": 4,
                   "status": 0,
                   "trap_class": 0
@@ -1139,7 +1228,7 @@
                   "produced_tokens": [
                     151667
                   ],
-                  "seconds": 12.426,
+                  "seconds": 9.561,
                   "span_tokens": 4,
                   "status": 0,
                   "trap_class": 0
@@ -1153,7 +1242,7 @@
                   "produced_tokens": [
                     3925
                   ],
-                  "seconds": 13.103,
+                  "seconds": 9.506,
                   "span_tokens": 4,
                   "status": 0,
                   "trap_class": 0
@@ -1167,7 +1256,7 @@
                   "produced_tokens": [
                     13
                   ],
-                  "seconds": 9.471,
+                  "seconds": 8.852,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1181,13 +1270,13 @@
                   "produced_tokens": [
                     151645
                   ],
-                  "seconds": 12.659,
+                  "seconds": 7.222,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
                 }
               ],
-              "wall_seconds": 76.1
+              "wall_seconds": 55.48
             },
             {
               "completed_transactions": 16,
@@ -1225,7 +1314,7 @@
                   "produced_tokens": [
                     67
                   ],
-                  "seconds": 10.443,
+                  "seconds": 8.419,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1239,7 +1328,7 @@
                   "produced_tokens": [
                     198
                   ],
-                  "seconds": 10.018,
+                  "seconds": 7.07,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1253,7 +1342,7 @@
                   "produced_tokens": [
                     2610
                   ],
-                  "seconds": 10.726,
+                  "seconds": 8.538,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1267,7 +1356,7 @@
                   "produced_tokens": [
                     311
                   ],
-                  "seconds": 12.394,
+                  "seconds": 9.236,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1281,7 +1370,7 @@
                   "produced_tokens": [
                     264
                   ],
-                  "seconds": 11.131,
+                  "seconds": 9.861,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1295,7 +1384,7 @@
                   "produced_tokens": [
                     979
                   ],
-                  "seconds": 12.149,
+                  "seconds": 10.673,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1309,7 +1398,7 @@
                   "produced_tokens": [
                     5005
                   ],
-                  "seconds": 11.038,
+                  "seconds": 9.729,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1323,7 +1412,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 11.314,
+                  "seconds": 11.142,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1337,7 +1426,7 @@
                   "produced_tokens": [
                     151644
                   ],
-                  "seconds": 11.314,
+                  "seconds": 10.855,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1351,7 +1440,7 @@
                   "produced_tokens": [
                     1406
                   ],
-                  "seconds": 11.373,
+                  "seconds": 10.647,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1365,7 +1454,7 @@
                   "produced_tokens": [
                     659
                   ],
-                  "seconds": 11.492,
+                  "seconds": 11.343,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1379,7 +1468,7 @@
                   "produced_tokens": [
                     151667
                   ],
-                  "seconds": 11.436,
+                  "seconds": 11.178,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1393,7 +1482,7 @@
                   "produced_tokens": [
                     198
                   ],
-                  "seconds": 13.244,
+                  "seconds": 11.331,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1407,7 +1496,7 @@
                   "produced_tokens": [
                     32313
                   ],
-                  "seconds": 9.771,
+                  "seconds": 10.082,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1421,7 +1510,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 13.257,
+                  "seconds": 11.389,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1435,13 +1524,13 @@
                   "produced_tokens": [
                     3925
                   ],
-                  "seconds": 11.464,
+                  "seconds": 10.852,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
                 }
               ],
-              "wall_seconds": 182.57
+              "wall_seconds": 162.35
             },
             {
               "completed_transactions": 16,
@@ -1479,7 +1568,7 @@
                   "produced_tokens": [
                     67
                   ],
-                  "seconds": 13.622,
+                  "seconds": 8.168,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1493,7 +1582,7 @@
                   "produced_tokens": [
                     198
                   ],
-                  "seconds": 10.041,
+                  "seconds": 9.71,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1507,7 +1596,7 @@
                   "produced_tokens": [
                     2610
                   ],
-                  "seconds": 10.009,
+                  "seconds": 11.099,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1521,7 +1610,7 @@
                   "produced_tokens": [
                     311
                   ],
-                  "seconds": 9.168,
+                  "seconds": 10.425,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1535,7 +1624,7 @@
                   "produced_tokens": [
                     264
                   ],
-                  "seconds": 10.579,
+                  "seconds": 11.188,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1549,7 +1638,7 @@
                   "produced_tokens": [
                     979
                   ],
-                  "seconds": 8.806,
+                  "seconds": 11.349,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1563,7 +1652,7 @@
                   "produced_tokens": [
                     5005
                   ],
-                  "seconds": 10.289,
+                  "seconds": 11.213,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1577,7 +1666,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 13.205,
+                  "seconds": 9.43,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1591,7 +1680,7 @@
                   "produced_tokens": [
                     151644
                   ],
-                  "seconds": 13.357,
+                  "seconds": 9.635,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1605,7 +1694,7 @@
                   "produced_tokens": [
                     1406
                   ],
-                  "seconds": 12.727,
+                  "seconds": 6.639,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1619,7 +1708,7 @@
                   "produced_tokens": [
                     659
                   ],
-                  "seconds": 12.717,
+                  "seconds": 7.736,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1633,7 +1722,7 @@
                   "produced_tokens": [
                     151667
                   ],
-                  "seconds": 9.688,
+                  "seconds": 11.363,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1647,7 +1736,7 @@
                   "produced_tokens": [
                     198
                   ],
-                  "seconds": 12.212,
+                  "seconds": 10.931,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1661,7 +1750,7 @@
                   "produced_tokens": [
                     32313
                   ],
-                  "seconds": 13.139,
+                  "seconds": 11.335,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1675,7 +1764,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 13.266,
+                  "seconds": 11.339,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1689,13 +1778,13 @@
                   "produced_tokens": [
                     3925
                   ],
-                  "seconds": 10.104,
+                  "seconds": 11.058,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
                 }
               ],
-              "wall_seconds": 182.94
+              "wall_seconds": 162.62
             }
           ],
           "deployment_sha256": "133afc13e1fcd2aade2e40530883c9986b0e920d99853990d9032fd777f26243",
@@ -1704,14 +1793,18 @@
             "anything about the RTL: no RTL is compiled, run or read here"
           ],
           "finding": "every pass of this deployment's program ends in SELECTION.ARGMAX and SELECTION.TOKEN_APPEND, so a pass that reads prompt positions without appending a token does not exist in this lowering. Cutting the prefill into more transactions therefore emits one token per chunk that the workload never generated, and at SPAN_TOKENS=1 the request's own MAX_NEW_TOKENS bound ends the session before the prompt is consumed. The measured consequence is that the workload's own submission sequence is the only decomposition of TA-QW-EOS-1 on this deployment that reproduces the oracle's gold, and it is the number the rung reports",
-          "gate_requires_passes": 19,
-          "marker": "PASS: ABI3 G1e pass decomposition store=rom cases=5 correct=1 max_transactions=3 max_forward_positions=18 positions=19 gate_requires=19 reachable=0",
+          "gate_requires_positions": {
+            "model_forward_passes": 18,
+            "positions_never_forward_passed": 1,
+            "workload_token_positions": 19
+          },
+          "marker": "PASS: ABI3 G1e pass decomposition store=rom cases=5 correct=1 max_transactions=3 max_forward_positions=18 positions=19 gate_requires={\"model_forward_passes\": 18, \"positions_never_forward_passed\": 1, \"workload_token_positions\": 19} reachable=1",
           "measured": {
             "correct_decomposition_count": 1,
             "correct_decompositions": [
               "workload_driver"
             ],
-            "gate_number_is_reachable": false,
+            "gate_accounting_is_reachable": true,
             "maximum_device_transactions_over_correct_decompositions": 3,
             "maximum_forward_passed_positions_over_correct_decompositions": 18,
             "positions_never_forward_passed": 1
@@ -1729,15 +1822,19 @@
             "runtime/abi3/verifier.py": "c7a5b0ec41164acaa622caa5029df3e8563747b95fa152a1fe5b88a2f0ad409d",
             "runtime/driver.py": "fd39cf300d675321445c0e14b17c5de19f6ea7800f32589fff5743a4cda8e32e",
             "runtime/sim/device.py": "5fe195429c88602e59eb58316d8c76f3423c573b0d9fe800a05bc4c91e70ab30",
-            "tools/build_abi3_g1e_pass_decomposition.py": "da692b7bd7c1dc23197b437f41d9db9befb441083dfecd74045ca474b472b07b"
+            "tools/build_abi3_g1e_pass_decomposition.py": "ea5cc5cb4d6e5845c7da29e75841c0e55fefb891a3436bfc916f5e97ac93c1ae"
           },
           "tool": "tools/build_abi3_g1e_pass_decomposition.py",
-          "wall_seconds": 577.67,
+          "wall_seconds": 480.57,
           "workload_digest": "ea35fc800cccd2839aa663cdf0e7806600948a26f0057d1ec7ec7bd31d007eaa"
         },
         "device_transactions": 3,
         "executed": 3,
-        "gate_requires": 19,
+        "gate_requires_positions": {
+          "model_forward_passes": 18,
+          "positions_never_forward_passed": 1,
+          "workload_token_positions": 19
+        },
         "gate_requires_read_from": "configs/gates/redesign_gates.json",
         "model_forward_passes": 18,
         "per_pass": [
@@ -1828,7 +1925,7 @@
         ],
         "positions_never_forward_passed": 1,
         "unit": "device transaction through the RTL control plane",
-        "why_not_the_gate_number": "measured, not argued. The RTL ran 3 device transactions because that is what the workload's own submission sequence is: one prefill transaction whose SPAN_TOKENS is 16 and covers every prompt position at once, then one decode transaction per further token. Whether the same workload could be cut into 19 transactions was not reasoned about, it was tried: 5 submission sequences were executed on the reference model, of which 1 reproduced the oracle's gold (workload_driver) and 4 did not (chunked_prefill_span_8, chunked_prefill_span_4, chunked_prefill_span_1, decode_entrypoint_per_position). The largest pass count over the sequences that reproduce the gold is 3, against the gate's 19; 18 of the workload's 19 token positions are forward-passed, and the last generated token -- the official EOS -- is never fed back, so it is a position of the sequence and not a pass of the model",
+        "why_not_the_gate_number": "measured, not argued. The RTL ran 3 device transactions because that is what the workload's own submission sequence is: one prefill transaction whose SPAN_TOKENS is 16 and covers every prompt position at once, then one decode transaction per further token. Whether the same workload could instead be cut into one transaction per token position -- the 19 the gate's withdrawn pass count asked for -- was not reasoned about, it was tried: 5 submission sequences were executed on the reference model, of which 1 reproduced the oracle's gold (workload_driver) and 4 did not (chunked_prefill_span_8, chunked_prefill_span_4, chunked_prefill_span_1, decode_entrypoint_per_position). The largest device-transaction count over the sequences that reproduce the gold is 3. The gate no longer asks for a transaction count -- it asks for the position accounting {\"model_forward_passes\": 18, \"positions_never_forward_passed\": 1, \"workload_token_positions\": 19}, which this measures: 18 of the workload's 19 token positions are forward-passed, and the last generated token -- the official EOS -- is never fed back, so it is a position of the sequence and not a pass of the model",
         "workload_token_positions": 19
       },
       "rung": "G1e",
@@ -1868,7 +1965,7 @@
           "independent_of_rtl": true,
           "module": "runtime.sim.device.Device",
           "view_resolution": "runtime.sim.memory.ViewResolver (the device's own)",
-          "wall_seconds": 45.58
+          "wall_seconds": 27.62
         },
         "uncompared_issue_fields": [
           "serial",
@@ -1889,13 +1986,13 @@
       "checker_returncode": 0,
       "checks": 10441,
       "cost": {
-        "elaborate_and_compile_seconds": 19.65,
-        "golden_model_seconds": 37.93,
+        "elaborate_and_compile_seconds": 20.25,
+        "golden_model_seconds": 25.4,
         "host_writes": 425984,
         "passes": 3,
-        "run_seconds": 5.06,
-        "simulate_seconds": 2.311,
-        "simulated_cycles": 679236
+        "run_seconds": 9.46,
+        "simulate_seconds": 2.349,
+        "simulated_cycles": 509427
       },
       "deployment": {
         "admitted": true,
@@ -1927,15 +2024,40 @@
         },
         "how_both_fields_are_decided": {
           "measured_inputs": {
+            "negative_control_holds": true,
             "official_eos_encoding": 1,
-            "post_eos_probe_admitted": true,
+            "post_eos_probe_admitted": false,
             "post_eos_probe_ran": true,
-            "post_eos_probe_trapped": false,
+            "post_eos_probe_trap_class": 9,
+            "post_eos_probe_trapped": true,
+            "post_eos_refusals_after": 1,
+            "post_eos_refusals_before": 0,
             "real_engine_launches": 0,
-            "selected_eos_reason": 0
+            "selected_eos_reason": 0,
+            "session_eos_reason_before_the_probe": 1,
+            "session_retired_before_the_probe": true,
+            "state_transaction_trap_class": 9
+          },
+          "negative_control": {
+            "checker_returncode": 0,
+            "control_holds": true,
+            "eos_bytes_removed": 1,
+            "log_tail": "S-RECORD index=2 entrypoint=1 generation=2 context=18 issues=691 views=2143 fetched=2104 retired=2104 loops=723 waits=689 cycles=169809\nCENSUS classes=26 instances=2073\nCENSUS-ROW 16 2 46 3\nCENSUS-ROW 16 2 198 3\nCENSUS-ROW 16 3 118 108\nCENSUS-ROW 16 3 125 108\nCENSUS-ROW 32 0 72 108\nCENSUS-ROW 32 0 79 108\nCENSUS-ROW 32 0 84 108\nCENSUS-ROW 32 0 142 108\nCENSUS-ROW 32 0 162 108\nCENSUS-ROW 32 0 168 108\nCENSUS-ROW 32 0 180 108\nCENSUS-ROW 32 0 204 3\nCENSUS-ROW 32 3 54 3\nCENSUS-ROW 48 0 64 108\nCENSUS-ROW 48 0 156 108\nCENSUS-ROW 48 0 192 3\nCENSUS-ROW 48 1 90 108\nCENSUS-ROW 48 1 97 108\nCENSUS-ROW 48 2 104 108\nCENSUS-ROW 48 2 110 108\nCENSUS-ROW 48 3 150 108\nCENSUS-ROW 48 3 186 108\nCENSUS-ROW 48 4 174 108\nCENSUS-ROW 64 1 136 108\nCENSUS-ROW 112 0 211 3\nCENSUS-ROW 112 1 217 3\nEOS selected_token=0 selected_tie_multiplicity=0 selected_eos_reason=0 engine_launches=0\nPOSTEOS ran=1 admitted=1 trapped=0 trap_class=0 issues=691 cycles=169809 retired_before=0 retired_reason=0 refusals_before=0 refusals_after=0\nGEOMETRY program_words=4096 desc_words=8192 index_words=64 source_words=256 result_words=4096 matmul_weight_bytes=0 result_injection=1\nTRACE compared=46866 equal=1 divergence_index=-1 queue_compared=48939 queue_equal=1 queue_divergence_index=-1\nINJECTION results=2073 words=0 engine_launches=0 engine_work=0 weight_halfwords=0\nCOST passes=3 cycles=679236 seconds=2.330 host_writes=425984\nPASS: ABI3 G1e control end to end passes=3 issues=2073 views=6429 elements=46866 injected=2073 checks=10441\n",
+            "meaning": "control_holds is true when the design, told nothing about an EOS, ADMITS the very transaction it refused when it was told.  That is what makes eos.post_eos_refused a measurement of the design's session retirement rather than of anything else in the vehicle",
+            "probe_admitted": true,
+            "probe_cycles": 169809,
+            "probe_issues": 691,
+            "probe_ran": true,
+            "probe_trap_class": 0,
+            "probe_trapped": false,
+            "ran": true,
+            "refusals": 0,
+            "session_retired_before_probe": false,
+            "trace_still_equals_golden": true,
+            "what_changed": "the EOS reason field of every injected completion that carried one, set to 0; nothing else in the vector set, and the same elaborated binary"
           },
           "official_eos_raised": "the integrated top's selected_eos_reason output equals OFFICIAL_EOS (1, read from runtime.abi3.records.EosReason) AND the run launched at least one real engine. The second half is not decoration: under result injection the EOS reason could only be a model value passed through, and a field that could be set by wiring an output with nothing having run is the exact defect this ladder was built to catch. Both halves come off the RTL run",
-          "post_eos_refused": "the post-EOS probe ran AND the RTL either refused to complete it or trapped it. Both come off the DUT's own done/complete/trapped outputs on the pass driven after the one that produced the official EOS",
+          "post_eos_refused": "five observations off the DUT of the probe run, plus a sixth condition that is a second run of the same design. The probe ran; ot_a3_device_top's session_retired output was already set when it was driven, and set on OFFICIAL_EOS; the transaction did not complete or trapped; the trap class is STATE_TRANSACTION (9, ABI 3.0 wire format section 8); and the device's own post-EOS refusal counter advanced by exactly one. The retirement half is not decoration, and its absence is what made the earlier form of this field a confounded measurement: no engine runs in this vehicle, so an EOS reaches the control plane only in the injected completion, and a design that was never told an EOS happened is not failing to refuse a post-EOS transaction when it admits one. The class and the counter separate this refusal from any other way a transaction could fail. The sixth observation is a NEGATIVE CONTROL on the design itself: the same elaborated vehicle, driven again on the same golden stream with the injected OFFICIAL_EOS byte removed and nothing else changed, must ADMIT the very transaction it refused. Without that, a refusal could be coming from anything in the vehicle; with it, the refusal is the session retirement and nothing else",
           "self_test": {
             "official_eos_raised": {
               "false_because_no_engine_ran": false,
@@ -1945,7 +2067,12 @@
             "passed": true,
             "post_eos_refused": {
               "false_when_the_design_completed_the_pass": false,
+              "false_when_the_design_refuses_without_being_told": false,
+              "false_when_the_design_was_never_retired": false,
+              "false_when_the_device_counted_no_refusal": false,
               "false_when_the_probe_did_not_run": false,
+              "false_when_the_retirement_was_not_the_official_eos": false,
+              "false_when_the_trap_is_not_the_state_class": false,
               "true_when_the_design_did_not_complete_it": true,
               "true_when_the_design_trapped_it": true
             },
@@ -1953,6 +2080,7 @@
             "why": "each derived EOS field is exercised against fabricated observations in both directions; a field pinned to a constant fails this and the campaign refuses to publish"
           }
         },
+        "how_post_eos_refusal_became_measurable": "IT WAS A REAL DESIGN GAP, AND ALSO A PROBE THAT WAS NOT DRIVING WHAT IT THOUGHT IT DROVE. ABI 3.0 requires the DEVICE to refuse: wire format section 12.5 -- the TOKEN_APPEND that commits the final allowed non-EOS token 'returns completion EOS reason MAX_NEW_TOKENS=2, and the device refuses every later transaction for that session' -- and operator conventions section 8 -- 'Both that reason and an official EOS retire the device session; host-only loop termination does not satisfy this operator contract'. runtime/sim/device.py implements it inside the device model (Session.finished -> STATE_TRANSACTION). rtl/abi3/ot_a3_device_top.sv did not implement it at all: it held no session-retirement state and its completion port carried no EOS reason byte, so the reason could not reach the control plane by any path. The probe was confounded by the same absence -- it drove a further pass at a design that had never been told an EOS happened, and read the admission as a refusal failure. Both halves are fixed together: the device latches retirement off the completion's EOS reason and refuses a later start before fetching anything, with trap class A3_TRAP_STATE (9); and the injected engine result now carries the completion record's EOS byte, which is a field of the result and therefore inside this rung's injection boundary, alongside the fault and trap class already carried there",
         "model_generated_token_ids": [
           3925,
           13,
@@ -1968,25 +2096,50 @@
           "refused_in_rtl": false,
           "rtl_probe": {
             "emitted": true,
+            "eos_reason_on_the_probe_results": 0,
             "in_the_compared_trace": false,
             "issues": 691,
             "shape": "one further pass, configured exactly as the last decode pass, with its own copy of that pass's engine results",
-            "why_not_in_the_trace": "the model refused this transaction, so it produced no golden for it; the probe asks only whether the RTL control plane refuses it too"
+            "why_not_in_the_trace": "the model refused this transaction, so it produced no golden for it; the probe asks only whether the RTL control plane refuses it too",
+            "why_zero": "the session is retired by the PREVIOUS pass's TOKEN_APPEND completion, whose injected result carries the OFFICIAL_EOS byte.  The probe's own results carry reason 0 so that it tests the retirement the design already holds rather than re-arming it"
           },
           "status": 1,
           "trap_class": 9,
-          "why": "the refusal is a host session-state refusal, taken before any instruction is fetched; it is not an act of the RTL control plane and this vehicle cannot measure it as one"
+          "why": "the reference half of the measurement.  The refusal is taken inside the DEVICE model, before any instruction is fetched, and returns trap class STATE_TRANSACTION -- which is what ABI 3.0 requires of a device: wire format section 12.5 says the TOKEN_APPEND that commits the final allowed non-EOS token 'returns completion EOS reason MAX_NEW_TOKENS=2, and the device refuses every later transaction for that session', and operator conventions section 8 says of that reason and of an official EOS that 'Both ... retire the device session; host-only loop termination does not satisfy this operator contract'.  refused_in_rtl is false because this field is the MODEL's refusal; the RTL control plane's own is measured separately by rtl_probe below, against ot_a3_device_top's session-retirement state"
         },
         "post_eos_probe_measured_in_rtl": {
-          "issues": 691,
+          "issues": 0,
           "meaning": "one further pass was driven into the RTL after the pass that produced the official EOS, configured exactly as the last decode pass. The reference model refuses such a transaction before fetching an instruction; what the RTL control plane does with it is measured here rather than argued. Its issues are not part of the compared trace",
+          "negative_control": {
+            "checker_returncode": 0,
+            "control_holds": true,
+            "eos_bytes_removed": 1,
+            "log_tail": "S-RECORD index=2 entrypoint=1 generation=2 context=18 issues=691 views=2143 fetched=2104 retired=2104 loops=723 waits=689 cycles=169809\nCENSUS classes=26 instances=2073\nCENSUS-ROW 16 2 46 3\nCENSUS-ROW 16 2 198 3\nCENSUS-ROW 16 3 118 108\nCENSUS-ROW 16 3 125 108\nCENSUS-ROW 32 0 72 108\nCENSUS-ROW 32 0 79 108\nCENSUS-ROW 32 0 84 108\nCENSUS-ROW 32 0 142 108\nCENSUS-ROW 32 0 162 108\nCENSUS-ROW 32 0 168 108\nCENSUS-ROW 32 0 180 108\nCENSUS-ROW 32 0 204 3\nCENSUS-ROW 32 3 54 3\nCENSUS-ROW 48 0 64 108\nCENSUS-ROW 48 0 156 108\nCENSUS-ROW 48 0 192 3\nCENSUS-ROW 48 1 90 108\nCENSUS-ROW 48 1 97 108\nCENSUS-ROW 48 2 104 108\nCENSUS-ROW 48 2 110 108\nCENSUS-ROW 48 3 150 108\nCENSUS-ROW 48 3 186 108\nCENSUS-ROW 48 4 174 108\nCENSUS-ROW 64 1 136 108\nCENSUS-ROW 112 0 211 3\nCENSUS-ROW 112 1 217 3\nEOS selected_token=0 selected_tie_multiplicity=0 selected_eos_reason=0 engine_launches=0\nPOSTEOS ran=1 admitted=1 trapped=0 trap_class=0 issues=691 cycles=169809 retired_before=0 retired_reason=0 refusals_before=0 refusals_after=0\nGEOMETRY program_words=4096 desc_words=8192 index_words=64 source_words=256 result_words=4096 matmul_weight_bytes=0 result_injection=1\nTRACE compared=46866 equal=1 divergence_index=-1 queue_compared=48939 queue_equal=1 queue_divergence_index=-1\nINJECTION results=2073 words=0 engine_launches=0 engine_work=0 weight_halfwords=0\nCOST passes=3 cycles=679236 seconds=2.330 host_writes=425984\nPASS: ABI3 G1e control end to end passes=3 issues=2073 views=6429 elements=46866 injected=2073 checks=10441\n",
+            "meaning": "control_holds is true when the design, told nothing about an EOS, ADMITS the very transaction it refused when it was told.  That is what makes eos.post_eos_refused a measurement of the design's session retirement rather than of anything else in the vehicle",
+            "probe_admitted": true,
+            "probe_cycles": 169809,
+            "probe_issues": 691,
+            "probe_ran": true,
+            "probe_trap_class": 0,
+            "probe_trapped": false,
+            "ran": true,
+            "refusals": 0,
+            "session_retired_before_probe": false,
+            "trace_still_equals_golden": true,
+            "what_changed": "the EOS reason field of every injected completion that carried one, set to 0; nothing else in the vector set, and the same elaborated binary"
+          },
+          "negative_control_holds": true,
           "ran": true,
-          "rtl_admitted_the_pass": true,
-          "rtl_trapped": false,
-          "simulated_cycles": 169809,
-          "trap_class": 0
+          "refusals_after": 1,
+          "refusals_before": 0,
+          "rtl_admitted_the_pass": false,
+          "rtl_trapped": true,
+          "session_eos_reason_before": 1,
+          "session_retired_before": true,
+          "simulated_cycles": 0,
+          "trap_class": 9
         },
-        "post_eos_refused": false,
+        "post_eos_refused": true,
         "rtl_eos_observation": {
           "engine_launches": 0,
           "eos_reason_encoding": {
@@ -1999,11 +2152,11 @@
           "selected_tie_multiplicity": 0,
           "selected_token": 0
         },
-        "what_would_measure_them": [
+        "what_would_still_measure_more": [
           "OFFICIAL_EOS: issue SELECTION.TOKEN_APPEND to the real engine with the injected ARGMAX token, which needs the top to select injection per issue rather than by parameter",
-          "post-EOS refusal: a program that predicates its continuation on EOS_MEMBER, or a device-side session the RTL owns"
+          "the MAX_NEW_TOKENS retirement: the same device path refuses on reason 2 as well, and no workload in this campaign stops on the token ceiling, so only the OFFICIAL_EOS arm is exercised here"
         ],
-        "why_not_measured_in_rtl": "in the promoted lowering the EOS decision is an ENGINE result -- rtl/abi3/ot_a3_selection_token_append.sv raises OFFICIAL_EOS from the policy's EOS set -- and under result injection no engine is issued to, so an EOS raised here would be the model's value passed through. The post-EOS refusal is a host session-state refusal in runtime/sim/device.py:run_transaction, taken before an instruction is fetched; this deployment's program carries no STATE instruction and no EOS_MEMBER predicate, so its RTL control plane has nothing to refuse. Neither field is written as a constant: each is the conjunction of RTL observations recorded in how_both_fields_are_decided, and each is false because those observations are"
+        "why_official_eos_is_not_measured_in_rtl": "in the promoted lowering the EOS decision is an ENGINE result -- rtl/abi3/ot_a3_selection_token_append.sv raises OFFICIAL_EOS from the policy's EOS set -- and under result injection no engine is issued to, so an EOS raised here would be the model's value passed through. official_eos_raised is therefore false as a measurement of the ENGINE, and the engine measurement belongs to G1d, where a real argmax runs. It is not written as a constant: it is the conjunction of RTL observations recorded in how_both_fields_are_decided, and it is false because those observations are"
       },
       "execution": {
         "control_plane": "rtl/abi3/ot_a3_device_top.sv",
@@ -2016,14 +2169,14 @@
           "RESULT_WORDS": 4096,
           "SOURCE_WORDS": 256
         },
-        "simulated_cycles": 679236,
+        "simulated_cycles": 509427,
         "simulator": "verilator_cpp_executable",
         "simulator_version": "5.050",
         "vehicle": "rtl/test/a3_shipped_prefix_top.sv",
         "why_single_simulator": "the vehicle declares `parameter longint unsigned MATMUL_WEIGHT_BYTES` and imports a DPI function returning `longint unsigned`; Icarus 11 cannot parse either, measured at this commit and before it. G1's own scope already records this vehicle as Verilator-only"
       },
       "git": {
-        "commit": "acf851838ea6415352027ed73274dd8635fa1bfd",
+        "commit": "f962b17c45adf41678979a03255e59b5eda28c43",
         "worktree_dirty": false
       },
       "golden_vectors": {
@@ -2061,12 +2214,12 @@
             "sha256": "34ef06a0121ce1eb12c4c9399f53853702d158e81ae06d01e7a0468e4c9880d9"
           },
           "g1e_inject.txt": {
-            "bytes": 51186,
-            "sha256": "9d0cea9e332e2067121429117bc07d4b2821b9c91568eab09e2aae8d6513fad2"
+            "bytes": 55332,
+            "sha256": "360f0b320d67d6fd440ee859e18839778db29d99bf545fee04370e9416e76185"
           },
           "g1e_inject_probe.txt": {
-            "bytes": 17090,
-            "sha256": "6726d7d8238185e88955d8d3c6ec03f089b80888e05c32fcd4f4cdbd90b89eec"
+            "bytes": 18752,
+            "sha256": "626220b6938a9f478e28ef9ce89a5bd6a92299ac50f0faaf279193b3fe90d9fe"
           },
           "g1e_meta.hex": {
             "bytes": 162,
@@ -2099,11 +2252,13 @@
         },
         "sites": {
           "allowed_instance_ports": [
+            "eng_issue_eos_reason",
             "eng_issue_fault",
             "eng_issue_ready",
             "eng_issue_trap_class"
           ],
           "allowed_sinks": [
+            "engine_eos_reason",
             "engine_fault",
             "engine_ready",
             "engine_trap_class",
@@ -2111,6 +2266,7 @@
             "inj_completion_count",
             "inj_last_response_index",
             "injected_ready",
+            "issue_eos_reason",
             "issue_fault",
             "issue_ready",
             "issue_trap_class",
@@ -2132,7 +2288,7 @@
               "from": [
                 "inj_result_valid"
               ],
-              "line": 587,
+              "line": 610,
               "statement": "wire injected_ready = (ENABLE_RESULT_INJECTION != 0) && inj_result_valid"
             },
             {
@@ -2140,7 +2296,7 @@
               "from": [
                 "injected_ready"
               ],
-              "line": 592,
+              "line": 615,
               "statement": "wire engine_ready = (ENABLE_RESULT_INJECTION != 0) ? injected_ready : bridge_issue_ready"
             },
             {
@@ -2149,7 +2305,7 @@
                 "inj_result_fault",
                 "inj_result_valid"
               ],
-              "line": 594,
+              "line": 617,
               "statement": "wire engine_fault = (ENABLE_RESULT_INJECTION != 0) ? (inj_result_valid && inj_result_fault) : bridge_issue_fault"
             },
             {
@@ -2157,15 +2313,23 @@
               "from": [
                 "inj_result_trap_class"
               ],
-              "line": 596,
+              "line": 619,
               "statement": "wire [15:0] engine_trap_class = (ENABLE_RESULT_INJECTION != 0) ? inj_result_trap_class : bridge_issue_trap_class"
+            },
+            {
+              "drives": "engine_eos_reason",
+              "from": [
+                "inj_result_eos_reason"
+              ],
+              "line": 621,
+              "statement": "wire [7:0] engine_eos_reason = (ENABLE_RESULT_INJECTION != 0) ? inj_result_eos_reason : bridge_issue_eos_reason"
             },
             {
               "drives": "issue_ready",
               "from": [
                 "engine_ready"
               ],
-              "line": 598,
+              "line": 623,
               "statement": "assign issue_ready = exact_multicast_issue ? (multicast_issue_active && (multicast_done || multicast_failed)) : engine_ready"
             },
             {
@@ -2173,7 +2337,7 @@
               "from": [
                 "engine_fault"
               ],
-              "line": 601,
+              "line": 626,
               "statement": "assign issue_fault = exact_multicast_issue ? multicast_failed : engine_fault"
             },
             {
@@ -2181,15 +2345,23 @@
               "from": [
                 "engine_trap_class"
               ],
-              "line": 603,
+              "line": 628,
               "statement": "assign issue_trap_class = exact_multicast_issue ? multicast_trap_class : engine_trap_class"
+            },
+            {
+              "drives": "issue_eos_reason",
+              "from": [
+                "engine_eos_reason"
+              ],
+              "line": 630,
+              "statement": "assign issue_eos_reason = exact_multicast_issue ? 8'd0 : engine_eos_reason"
             },
             {
               "drives": "response_valid",
               "from": [
                 "issue_ready"
               ],
-              "line": 605,
+              "line": 632,
               "statement": "assign response_valid = issue_valid && issue_ready"
             },
             {
@@ -2197,7 +2369,7 @@
               "from": [
                 "issue_fault"
               ],
-              "line": 607,
+              "line": 634,
               "statement": "assign response_fault = issue_fault"
             },
             {
@@ -2205,7 +2377,7 @@
               "from": [
                 "issue_trap_class"
               ],
-              "line": 608,
+              "line": 635,
               "statement": "assign response_trap_class = issue_trap_class"
             },
             {
@@ -2213,7 +2385,7 @@
               "from": [
                 "issue_ready"
               ],
-              "line": 856,
+              "line": 888,
               "statement": "end else if (inj_issue_valid && issue_ready) begin inj_last_response_index <= issue_index"
             },
             {
@@ -2221,7 +2393,7 @@
               "from": [
                 "issue_ready"
               ],
-              "line": 879,
+              "line": 911,
               "statement": "wire multicast_response_fire = exact_multicast_issue && issue_ready"
             },
             {
@@ -2229,7 +2401,7 @@
               "from": [
                 "multicast_response_fire"
               ],
-              "line": 932,
+              "line": 964,
               "statement": "if (multicast_response_fire) begin multicast_issue_active <= 1'b0"
             },
             {
@@ -2237,7 +2409,7 @@
               "from": [
                 "multicast_issue_active"
               ],
-              "line": 956,
+              "line": 988,
               "statement": "wire multicast_source_read_ready_int = multicast_issue_active && multicast_source_ready_phase"
             },
             {
@@ -2245,7 +2417,7 @@
               "from": [
                 "multicast_source_read_ready_int"
               ],
-              "line": 1000,
+              "line": 1032,
               "statement": "else if (multicast_source_read_ready_int) multicast_source_ready_phase <= 1'b0"
             },
             {
@@ -2253,7 +2425,7 @@
               "from": [
                 "multicast_source_read_ready_int"
               ],
-              "line": 1005,
+              "line": 1037,
               "statement": "if (multicast_source_read_valid_int && !multicast_source_read_ready_int) multicast_source_stall_cycles_q <= multicast_source_stall_cycles_q + 32'd1"
             },
             {
@@ -2261,7 +2433,7 @@
               "from": [
                 "multicast_source_read_ready_int"
               ],
-              "line": 1009,
+              "line": 1041,
               "statement": "if (multicast_source_read_valid_int && multicast_source_read_ready_int) begin multicast_source_read_count_q <= multicast_source_read_count_q + 32'd1"
             },
             {
@@ -2269,7 +2441,7 @@
               "from": [
                 "multicast_source_read_count_q"
               ],
-              "line": 1013,
+              "line": 1045,
               "statement": "|| (multicast_source_read_offset_int >= 64'd65536) || (multicast_source_read_offset_int[15:2] != multicast_source_read_count_q[13:0])) begin multicast_source_response_data <= 32'd0"
             },
             {
@@ -2277,7 +2449,7 @@
               "from": [
                 "multicast_issue_active"
               ],
-              "line": 1045,
+              "line": 1077,
               "statement": "end end end end assign multicast_remote_write_ready = multicast_issue_active && (multicast_service_cycle[1:0] != 2'b00)"
             },
             {
@@ -2285,7 +2457,7 @@
               "from": [
                 "inj_write_en"
               ],
-              "line": 1184,
+              "line": 1216,
               "statement": "wire res_we = (ENABLE_RESULT_INJECTION != 0) ? inj_write_en : out_we"
             },
             {
@@ -2293,7 +2465,7 @@
               "from": [
                 "inj_write_addr"
               ],
-              "line": 1187,
+              "line": 1219,
               "statement": "wire [31:0] res_addr = (ENABLE_RESULT_INJECTION != 0) ? inj_write_addr : out_addr"
             },
             {
@@ -2301,7 +2473,7 @@
               "from": [
                 "inj_write_data"
               ],
-              "line": 1189,
+              "line": 1221,
               "statement": "wire [31:0] res_data = (ENABLE_RESULT_INJECTION != 0) ? inj_write_data : out_data"
             },
             {
@@ -2309,7 +2481,7 @@
               "from": [
                 "issue_ready"
               ],
-              "line": 1213,
+              "line": 1245,
               "statement": "end else begin if (inj_issue_valid && issue_ready) inj_completion_count <= inj_completion_count + 32'd1"
             },
             {
@@ -2317,7 +2489,7 @@
               "from": [
                 "res_we"
               ],
-              "line": 1273,
+              "line": 1305,
               "statement": "end if (res_we) begin output_write_count <= output_write_count + 32'd1"
             },
             {
@@ -2326,7 +2498,7 @@
                 "res_addr",
                 "res_data"
               ],
-              "line": 1276,
+              "line": 1308,
               "statement": "if (res_addr < RESULT_WORDS) result_mem[res_addr] <= res_data"
             },
             {
@@ -2335,7 +2507,7 @@
                 "multicast_remote_write_ready",
                 "res_we"
               ],
-              "line": 1280,
+              "line": 1312,
               "statement": "lticast_remote_write_ready))) writes_after_fault <= writes_after_fault + (res_we ? 32'd1 : 32'd0) + ((multicast_remote_write_valid && multicast_remote_write_ready) ? 32'd1 : 32'd0)"
             },
             {
@@ -2344,7 +2516,7 @@
                 "issue_fault",
                 "issue_ready"
               ],
-              "line": 1288,
+              "line": 1320,
               "statement": "if (issue_valid && issue_ready && issue_fault) fault_seen <= 1'b1"
             },
             {
@@ -2352,7 +2524,7 @@
               "from": [
                 "inj_last_response_index"
               ],
-              "line": 837,
+              "line": 869,
               "statement": "assign last_response_index = (ENABLE_RESULT_INJECTION != 0) ? inj_last_response_index : bridge_last_response_index"
             },
             {
@@ -2360,7 +2532,7 @@
               "from": [
                 "multicast_issue_active"
               ],
-              "line": 918,
+              "line": 950,
               "statement": "end else begin if (multicast_issue_active) multicast_service_cycle <= multicast_service_cycle + 32'd1"
             },
             {
@@ -2368,7 +2540,7 @@
               "from": [
                 "multicast_source_read_count_q"
               ],
-              "line": 963,
+              "line": 995,
               "statement": "assign multicast_source_read_count = multicast_source_read_count_q"
             },
             {
@@ -2376,7 +2548,7 @@
               "from": [
                 "multicast_source_stall_cycles_q"
               ],
-              "line": 965,
+              "line": 997,
               "statement": "assign multicast_source_stall_cycles = multicast_source_stall_cycles_q"
             },
             {
@@ -2384,7 +2556,7 @@
               "from": [
                 "multicast_remote_write_ready"
               ],
-              "line": 1026,
+              "line": 1058,
               "statement": "end if (multicast_remote_write_valid && !multicast_remote_write_ready) multicast_destination_stall_cycles_q <= multicast_destination_stall_cycles_q + 32'd1"
             },
             {
@@ -2392,7 +2564,7 @@
               "from": [
                 "multicast_remote_write_ready"
               ],
-              "line": 1031,
+              "line": 1063,
               "statement": " {8'd0, multicast_remote_write_offset[23:16]}) || (multicast_remote_write_data != multicast_expected_word( multicast_remote_write_offset[15:2]))) multicast_protocol_error_q <= 1'b1"
             },
             {
@@ -2400,7 +2572,7 @@
               "from": [
                 "multicast_destination_stall_cycles_q"
               ],
-              "line": 966,
+              "line": 998,
               "statement": "assign multicast_destination_stall_cycles = multicast_destination_stall_cycles_q"
             },
             {
@@ -2408,7 +2580,7 @@
               "from": [
                 "multicast_protocol_error_q"
               ],
-              "line": 970,
+              "line": 1002,
               "statement": "assign multicast_protocol_error = multicast_protocol_error_q"
             }
           ],
@@ -2417,6 +2589,7 @@
             "inj_result_valid",
             "inj_result_fault",
             "inj_result_trap_class",
+            "inj_result_eos_reason",
             "inj_write_en",
             "inj_write_addr",
             "inj_write_data"
@@ -2433,7 +2606,7 @@
               "from": [
                 "issue_ready"
               ],
-              "line": 555,
+              "line": 576,
               "port": "eng_issue_ready"
             },
             {
@@ -2442,7 +2615,7 @@
               "from": [
                 "issue_fault"
               ],
-              "line": 556,
+              "line": 577,
               "port": "eng_issue_fault"
             },
             {
@@ -2451,8 +2624,17 @@
               "from": [
                 "issue_trap_class"
               ],
-              "line": 557,
+              "line": 578,
               "port": "eng_issue_trap_class"
+            },
+            {
+              "class": "engine_completion_boundary",
+              "expression": "issue_eos_reason",
+              "from": [
+                "issue_eos_reason"
+              ],
+              "line": 579,
+              "port": "eng_issue_eos_reason"
             },
             {
               "class": "inert_exact_multicast_adapter",
@@ -2460,7 +2642,7 @@
               "from": [
                 "multicast_source_read_ready_int"
               ],
-              "line": 1114,
+              "line": 1146,
               "port": "source_read_ready"
             },
             {
@@ -2469,7 +2651,7 @@
               "from": [
                 "multicast_source_response_data"
               ],
-              "line": 1119,
+              "line": 1151,
               "port": "source_response_data"
             },
             {
@@ -2478,13 +2660,14 @@
               "from": [
                 "multicast_remote_write_ready"
               ],
-              "line": 1122,
+              "line": 1154,
               "port": "remote_write_ready"
             }
           ],
           "method": "every statement of the top that mentions a tainted signal is found, the signal it drives is added, and the closure is taken; a tainted signal outside the declared sink set refuses the audit",
           "outside_allowed_sinks": [],
           "reached": [
+            "engine_eos_reason",
             "engine_fault",
             "engine_ready",
             "engine_trap_class",
@@ -2492,6 +2675,7 @@
             "inj_completion_count",
             "inj_last_response_index",
             "injected_ready",
+            "issue_eos_reason",
             "issue_fault",
             "issue_ready",
             "issue_trap_class",
@@ -2537,7 +2721,7 @@
                 "from": [
                   "result_mem"
                 ],
-                "line": 399,
+                "line": 417,
                 "statement": "clear_word = clear_word + 1) result_mem[clear_word] = 32'hdead_beef"
               },
               {
@@ -2545,7 +2729,7 @@
                 "from": [
                   "result_mem"
                 ],
-                "line": 811,
+                "line": 843,
                 "statement": "if (predicate_mapped) begin predicate_read_value <= (result_mem[predicate_word_addr[31:0]] != 32'd0)"
               },
               {
@@ -2553,7 +2737,7 @@
                 "from": [
                   "result_mem"
                 ],
-                "line": 1223,
+                "line": 1255,
                 "statement": "end if (m0_rd_en) begin if (m0_reads_result && (m0_rd_addr < RESULT_WORDS)) m0_rd_data <= result_mem[m0_rd_addr]"
               },
               {
@@ -2561,7 +2745,7 @@
                 "from": [
                   "result_mem"
                 ],
-                "line": 1249,
+                "line": 1281,
                 "statement": "end end else if (m1_reads_result && (m1_rd_addr < RESULT_WORDS)) m1_rd_data <= result_mem[m1_rd_addr]"
               },
               {
@@ -2569,7 +2753,7 @@
                 "from": [
                   "result_mem"
                 ],
-                "line": 1290,
+                "line": 1322,
                 "statement": "end end assign result_read_data = (result_read_addr < RESULT_WORDS) ? result_mem[result_read_addr] : 32'd0"
               }
             ],
@@ -2798,7 +2982,7 @@
                   "produced_tokens": [
                     3925
                   ],
-                  "seconds": 15.941,
+                  "seconds": 11.572,
                   "span_tokens": 16,
                   "status": 0,
                   "trap_class": 0
@@ -2812,7 +2996,7 @@
                   "produced_tokens": [
                     13
                   ],
-                  "seconds": 12.1,
+                  "seconds": 11.429,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -2826,13 +3010,13 @@
                   "produced_tokens": [
                     151645
                   ],
-                  "seconds": 13.873,
+                  "seconds": 10.666,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
                 }
               ],
-              "wall_seconds": 41.92
+              "wall_seconds": 33.67
             },
             {
               "completed_transactions": 4,
@@ -2858,7 +3042,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 13.142,
+                  "seconds": 12.221,
                   "span_tokens": 8,
                   "status": 0,
                   "trap_class": 0
@@ -2872,7 +3056,7 @@
                   "produced_tokens": [
                     3925
                   ],
-                  "seconds": 12.937,
+                  "seconds": 12.164,
                   "span_tokens": 8,
                   "status": 0,
                   "trap_class": 0
@@ -2886,7 +3070,7 @@
                   "produced_tokens": [
                     13
                   ],
-                  "seconds": 10.833,
+                  "seconds": 9.983,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -2900,13 +3084,13 @@
                   "produced_tokens": [
                     151645
                   ],
-                  "seconds": 10.627,
+                  "seconds": 11.393,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
                 }
               ],
-              "wall_seconds": 47.54
+              "wall_seconds": 45.76
             },
             {
               "completed_transactions": 6,
@@ -2934,7 +3118,7 @@
                   "produced_tokens": [
                     311
                   ],
-                  "seconds": 9.313,
+                  "seconds": 11.482,
                   "span_tokens": 4,
                   "status": 0,
                   "trap_class": 0
@@ -2948,7 +3132,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 9.155,
+                  "seconds": 8.574,
                   "span_tokens": 4,
                   "status": 0,
                   "trap_class": 0
@@ -2962,7 +3146,7 @@
                   "produced_tokens": [
                     151667
                   ],
-                  "seconds": 10.965,
+                  "seconds": 9.583,
                   "span_tokens": 4,
                   "status": 0,
                   "trap_class": 0
@@ -2976,7 +3160,7 @@
                   "produced_tokens": [
                     3925
                   ],
-                  "seconds": 10.57,
+                  "seconds": 10.486,
                   "span_tokens": 4,
                   "status": 0,
                   "trap_class": 0
@@ -2990,7 +3174,7 @@
                   "produced_tokens": [
                     13
                   ],
-                  "seconds": 7.372,
+                  "seconds": 11.01,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3004,13 +3188,13 @@
                   "produced_tokens": [
                     151645
                   ],
-                  "seconds": 10.638,
+                  "seconds": 11.475,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
                 }
               ],
-              "wall_seconds": 58.02
+              "wall_seconds": 62.61
             },
             {
               "completed_transactions": 16,
@@ -3048,7 +3232,7 @@
                   "produced_tokens": [
                     67
                   ],
-                  "seconds": 11.994,
+                  "seconds": 12.298,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3062,7 +3246,7 @@
                   "produced_tokens": [
                     198
                   ],
-                  "seconds": 10.739,
+                  "seconds": 7.443,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3076,7 +3260,7 @@
                   "produced_tokens": [
                     2610
                   ],
-                  "seconds": 11.167,
+                  "seconds": 11.191,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3090,7 +3274,7 @@
                   "produced_tokens": [
                     311
                   ],
-                  "seconds": 11.368,
+                  "seconds": 11.181,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3104,7 +3288,7 @@
                   "produced_tokens": [
                     264
                   ],
-                  "seconds": 11.314,
+                  "seconds": 11.337,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3118,7 +3302,7 @@
                   "produced_tokens": [
                     979
                   ],
-                  "seconds": 11.998,
+                  "seconds": 11.103,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3132,7 +3316,7 @@
                   "produced_tokens": [
                     5005
                   ],
-                  "seconds": 11.053,
+                  "seconds": 11.007,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3146,7 +3330,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 11.335,
+                  "seconds": 10.286,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3160,7 +3344,7 @@
                   "produced_tokens": [
                     151644
                   ],
-                  "seconds": 11.203,
+                  "seconds": 8.331,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3174,7 +3358,7 @@
                   "produced_tokens": [
                     1406
                   ],
-                  "seconds": 11.358,
+                  "seconds": 11.258,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3188,7 +3372,7 @@
                   "produced_tokens": [
                     659
                   ],
-                  "seconds": 11.1,
+                  "seconds": 8.167,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3202,7 +3386,7 @@
                   "produced_tokens": [
                     151667
                   ],
-                  "seconds": 11.248,
+                  "seconds": 11.499,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3216,7 +3400,7 @@
                   "produced_tokens": [
                     198
                   ],
-                  "seconds": 11.366,
+                  "seconds": 11.377,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3230,7 +3414,7 @@
                   "produced_tokens": [
                     32313
                   ],
-                  "seconds": 10.987,
+                  "seconds": 11.155,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3244,7 +3428,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 11.266,
+                  "seconds": 11.232,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3258,13 +3442,13 @@
                   "produced_tokens": [
                     3925
                   ],
-                  "seconds": 10.567,
+                  "seconds": 11.359,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
                 }
               ],
-              "wall_seconds": 180.07
+              "wall_seconds": 170.23
             },
             {
               "completed_transactions": 16,
@@ -3302,7 +3486,7 @@
                   "produced_tokens": [
                     67
                   ],
-                  "seconds": 12.246,
+                  "seconds": 10.904,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3316,7 +3500,7 @@
                   "produced_tokens": [
                     198
                   ],
-                  "seconds": 11.289,
+                  "seconds": 11.336,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3330,7 +3514,7 @@
                   "produced_tokens": [
                     2610
                   ],
-                  "seconds": 11.508,
+                  "seconds": 10.692,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3344,7 +3528,7 @@
                   "produced_tokens": [
                     311
                   ],
-                  "seconds": 10.974,
+                  "seconds": 10.992,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3358,7 +3542,7 @@
                   "produced_tokens": [
                     264
                   ],
-                  "seconds": 10.752,
+                  "seconds": 10.928,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3372,7 +3556,7 @@
                   "produced_tokens": [
                     979
                   ],
-                  "seconds": 10.535,
+                  "seconds": 10.49,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3386,7 +3570,7 @@
                   "produced_tokens": [
                     5005
                   ],
-                  "seconds": 11.264,
+                  "seconds": 7.799,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3400,7 +3584,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 10.221,
+                  "seconds": 8.785,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3414,7 +3598,7 @@
                   "produced_tokens": [
                     151644
                   ],
-                  "seconds": 11.256,
+                  "seconds": 11.11,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3428,7 +3612,7 @@
                   "produced_tokens": [
                     1406
                   ],
-                  "seconds": 10.041,
+                  "seconds": 10.965,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3442,7 +3626,7 @@
                   "produced_tokens": [
                     659
                   ],
-                  "seconds": 10.998,
+                  "seconds": 11.503,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3456,7 +3640,7 @@
                   "produced_tokens": [
                     151667
                   ],
-                  "seconds": 9.08,
+                  "seconds": 10.378,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3470,7 +3654,7 @@
                   "produced_tokens": [
                     198
                   ],
-                  "seconds": 10.578,
+                  "seconds": 9.904,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3484,7 +3668,7 @@
                   "produced_tokens": [
                     32313
                   ],
-                  "seconds": 11.272,
+                  "seconds": 9.214,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3498,7 +3682,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 11.254,
+                  "seconds": 11.396,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3512,13 +3696,13 @@
                   "produced_tokens": [
                     3925
                   ],
-                  "seconds": 10.696,
+                  "seconds": 11.22,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
                 }
               ],
-              "wall_seconds": 173.97
+              "wall_seconds": 167.62
             }
           ],
           "deployment_sha256": "cb9067f5fbf67f7df4212399aee6ba75ced4ca5c8f2dc8c1631372a4068cea2c",
@@ -3527,14 +3711,18 @@
             "anything about the RTL: no RTL is compiled, run or read here"
           ],
           "finding": "every pass of this deployment's program ends in SELECTION.ARGMAX and SELECTION.TOKEN_APPEND, so a pass that reads prompt positions without appending a token does not exist in this lowering. Cutting the prefill into more transactions therefore emits one token per chunk that the workload never generated, and at SPAN_TOKENS=1 the request's own MAX_NEW_TOKENS bound ends the session before the prompt is consumed. The measured consequence is that the workload's own submission sequence is the only decomposition of TA-QW-EOS-1 on this deployment that reproduces the oracle's gold, and it is the number the rung reports",
-          "gate_requires_passes": 19,
-          "marker": "PASS: ABI3 G1e pass decomposition store=hbm cases=5 correct=1 max_transactions=3 max_forward_positions=18 positions=19 gate_requires=19 reachable=0",
+          "gate_requires_positions": {
+            "model_forward_passes": 18,
+            "positions_never_forward_passed": 1,
+            "workload_token_positions": 19
+          },
+          "marker": "PASS: ABI3 G1e pass decomposition store=hbm cases=5 correct=1 max_transactions=3 max_forward_positions=18 positions=19 gate_requires={\"model_forward_passes\": 18, \"positions_never_forward_passed\": 1, \"workload_token_positions\": 19} reachable=1",
           "measured": {
             "correct_decomposition_count": 1,
             "correct_decompositions": [
               "workload_driver"
             ],
-            "gate_number_is_reachable": false,
+            "gate_accounting_is_reachable": true,
             "maximum_device_transactions_over_correct_decompositions": 3,
             "maximum_forward_passed_positions_over_correct_decompositions": 18,
             "positions_never_forward_passed": 1
@@ -3552,15 +3740,19 @@
             "runtime/abi3/verifier.py": "c7a5b0ec41164acaa622caa5029df3e8563747b95fa152a1fe5b88a2f0ad409d",
             "runtime/driver.py": "fd39cf300d675321445c0e14b17c5de19f6ea7800f32589fff5743a4cda8e32e",
             "runtime/sim/device.py": "5fe195429c88602e59eb58316d8c76f3423c573b0d9fe800a05bc4c91e70ab30",
-            "tools/build_abi3_g1e_pass_decomposition.py": "da692b7bd7c1dc23197b437f41d9db9befb441083dfecd74045ca474b472b07b"
+            "tools/build_abi3_g1e_pass_decomposition.py": "ea5cc5cb4d6e5845c7da29e75841c0e55fefb891a3436bfc916f5e97ac93c1ae"
           },
           "tool": "tools/build_abi3_g1e_pass_decomposition.py",
-          "wall_seconds": 536.62,
+          "wall_seconds": 514.58,
           "workload_digest": "ea35fc800cccd2839aa663cdf0e7806600948a26f0057d1ec7ec7bd31d007eaa"
         },
         "device_transactions": 3,
         "executed": 3,
-        "gate_requires": 19,
+        "gate_requires_positions": {
+          "model_forward_passes": 18,
+          "positions_never_forward_passed": 1,
+          "workload_token_positions": 19
+        },
         "gate_requires_read_from": "configs/gates/redesign_gates.json",
         "model_forward_passes": 18,
         "per_pass": [
@@ -3651,7 +3843,7 @@
         ],
         "positions_never_forward_passed": 1,
         "unit": "device transaction through the RTL control plane",
-        "why_not_the_gate_number": "measured, not argued. The RTL ran 3 device transactions because that is what the workload's own submission sequence is: one prefill transaction whose SPAN_TOKENS is 16 and covers every prompt position at once, then one decode transaction per further token. Whether the same workload could be cut into 19 transactions was not reasoned about, it was tried: 5 submission sequences were executed on the reference model, of which 1 reproduced the oracle's gold (workload_driver) and 4 did not (chunked_prefill_span_8, chunked_prefill_span_4, chunked_prefill_span_1, decode_entrypoint_per_position). The largest pass count over the sequences that reproduce the gold is 3, against the gate's 19; 18 of the workload's 19 token positions are forward-passed, and the last generated token -- the official EOS -- is never fed back, so it is a position of the sequence and not a pass of the model",
+        "why_not_the_gate_number": "measured, not argued. The RTL ran 3 device transactions because that is what the workload's own submission sequence is: one prefill transaction whose SPAN_TOKENS is 16 and covers every prompt position at once, then one decode transaction per further token. Whether the same workload could instead be cut into one transaction per token position -- the 19 the gate's withdrawn pass count asked for -- was not reasoned about, it was tried: 5 submission sequences were executed on the reference model, of which 1 reproduced the oracle's gold (workload_driver) and 4 did not (chunked_prefill_span_8, chunked_prefill_span_4, chunked_prefill_span_1, decode_entrypoint_per_position). The largest device-transaction count over the sequences that reproduce the gold is 3. The gate no longer asks for a transaction count -- it asks for the position accounting {\"model_forward_passes\": 18, \"positions_never_forward_passed\": 1, \"workload_token_positions\": 19}, which this measures: 18 of the workload's 19 token positions are forward-passed, and the last generated token -- the official EOS -- is never fed back, so it is a position of the sequence and not a pass of the model",
         "workload_token_positions": 19
       },
       "rung": "G1e",
@@ -3691,7 +3883,7 @@
           "independent_of_rtl": true,
           "module": "runtime.sim.device.Device",
           "view_resolution": "runtime.sim.memory.ViewResolver (the device's own)",
-          "wall_seconds": 37.93
+          "wall_seconds": 25.4
         },
         "uncompared_issue_fields": [
           "serial",
@@ -3714,10 +3906,10 @@
   "source_sha256": {
     "docs/TENSOR_ACCELERATOR_ABI_3_WIRE_FORMAT.md": "049134df9f17befcd6855f8277420bba44afd83677526d40288c2f6d0f435bd9",
     "rtl/abi3/ot_a3_dependence_table.sv": "3ac3172c508d277a3b28d0438161c012365bc26a3a7c97eee3d3f12bb2d12c05",
-    "rtl/abi3/ot_a3_device_top.sv": "b3e0fc07cd836ed53a0a29efc737dedcd3ef328871816552955af495656a4561",
+    "rtl/abi3/ot_a3_device_top.sv": "baf0397dfda94df9a69e6b4c15e8ed42c653265a6f292fc82689e56a729e11f8",
     "rtl/abi3/ot_a3_dma_index_mover.sv": "e254421fcba397e3db821c52b9acafaf3922af78653ab2d2e3029705ee166c64",
     "rtl/abi3/ot_a3_engine_array.sv": "35d10a5aa17ef82ba21fe30e98482cac6391407e8a5250494e4ef0a802672a2a",
-    "rtl/abi3/ot_a3_engine_issue_bridge.sv": "473e3b852f4db9491386d1e62fc61d7b0fab1706e6c9531300d45928a417e61f",
+    "rtl/abi3/ot_a3_engine_issue_bridge.sv": "e769729e615dc165a635bb37eeb25df0b32c7ec667a16863b2bc28f5975803d3",
     "rtl/abi3/ot_a3_engine_pkg.sv": "1186eecdc80321e87e08c97fb8e1c9a1b078584d019353736d235bf5cc84d477",
     "rtl/abi3/ot_a3_event_scoreboard.sv": "e5546f39afe3fdb6da17c189da94fc652aedcee583b3263b662a83c7b5e86b65",
     "rtl/abi3/ot_a3_format_pkg.sv": "dbea89ef9c450d1b9ffda1e578f1685b3e33d3b6f400e43c1784ec022de9e7f0",
@@ -3752,9 +3944,9 @@
     "rtl/ot_fp32_rsqrt_rne.sv": "74ef534d4e0f8f18a74b6df39c885c10e1a12c1ee9c07b9e7bb4d8be9ec90f9b",
     "rtl/ot_ta_command_decoder.sv": "181fa72b55c77c41a4cbf368a395afdb3f40d3beea94b245f019eaff4f460908",
     "rtl/ot_ta_rope_bf16_sram_engine.sv": "efa253668f42a3fc5cbac2f12bbe39ccaa8a3e6f1ac17a1e202c76fefe971369",
-    "rtl/test/a3_engine_completion_adapter.sv": "350b8a591cfa4e242880bffa5b7306f4b9ce58e12c4a7a3013ec99db85216c98",
-    "rtl/test/a3_g1e_control_harness.cpp": "3dfab395eb3b4f7ca770318dbf02086bf29a68908bdced032c57d4b02a33c32b",
-    "rtl/test/a3_shipped_prefix_top.sv": "0c17ea7fa2e3d3876f5befa7a452194b1a30779daa17f0206f1f12c1a03ad466",
+    "rtl/test/a3_engine_completion_adapter.sv": "7af21879c1a0cb1d047543ed65282f174db09e7319c6a8f8e17304437adb8fb2",
+    "rtl/test/a3_g1e_control_harness.cpp": "795ed17c1cc1519a872bd94dbee203cacda41d1f30372ee73a01814649263643",
+    "rtl/test/a3_shipped_prefix_top.sv": "d191ce5dc8cdc459faa979afa903f0cb372eb650dfd8433b5f5117cc04a46f09",
     "runtime/abi3/deployment.py": "e7aeac69a74590ded75ba34b603b23aa071f58ef7965e2f8f93d72a82dc35b61",
     "runtime/abi3/descriptors.py": "fd60c52ee2117016a8faa644cdaebe1e95ad003535576bec241f7d9c6018993e",
     "runtime/abi3/records.py": "18140e2a382dd4d515da33ccf2c5a08c203bcb36ae9e3e86747265346d4ad7ca",
@@ -3763,11 +3955,11 @@
     "runtime/sim/device.py": "5fe195429c88602e59eb58316d8c76f3423c573b0d9fe800a05bc4c91e70ab30",
     "runtime/sim/memory.py": "4c5fe565e07933f86f608902b1fbce5d92667d7036902f40e67e563b21c4f3f7",
     "tools/build_abi3_deployment_rtl_vectors.py": "c58b2b2d11d53414bdcba6c4dd78ec492015f6b877e806762f56cb1f9abce582",
-    "tools/build_abi3_g1e_control_vectors.py": "f2a9ebd73d4012c05b4de6cfdea7a827cd4aec0c175afb343df1ab3bb8d3312c",
-    "tools/build_abi3_g1e_pass_decomposition.py": "da692b7bd7c1dc23197b437f41d9db9befb441083dfecd74045ca474b472b07b",
-    "tools/rtl_abi3_g1e_control_campaign.py": "ebe6a570a478ad28b303df35bb5f425edc53d8b467cb68c6a61097ab59b13db5"
+    "tools/build_abi3_g1e_control_vectors.py": "b20ff304e1237ed66810ce269235dd61aa07c72cbdb7f073f74b6e1a59245e64",
+    "tools/build_abi3_g1e_pass_decomposition.py": "ea5cc5cb4d6e5845c7da29e75841c0e55fefb891a3436bfc916f5e97ac93c1ae",
+    "tools/rtl_abi3_g1e_control_campaign.py": "cafcfb4ac7f26577f3eb51fbb0e7ac4acf0dd532f76dfe344efd741675ce3874"
   },
-  "status": "fail",
+  "status": "pass",
   "tools": {
     "cxx": {
       "executable": "/usr/bin/x86_64-linux-gnu-g++-11",
