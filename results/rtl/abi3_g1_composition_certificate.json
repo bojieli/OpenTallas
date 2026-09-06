@@ -3,7 +3,7 @@
   "derived_mechanically": true,
   "every_issued_instance_covered": false,
   "token_ids_match_oracle": false,
-  "uncovered_instance_count": 1533
+  "uncovered_instance_count": 1095
  },
  "claim_boundary": {
   "does_not_establish": [
@@ -24,7 +24,7 @@
  "generated_by": "tools/build_abi3_g1_composition_certificate.py",
  "generated_by_sha256": "fee569eb0664befd3c6e69322a4f61d3e52c5c323f8495fd3826b4a7c588ed9e",
  "git": {
-  "commit": "8c3806b3ce8ad9c4b3a34ec113dc315faa3ca53f",
+  "commit": "9aea1a20c21d11482869024834ee8897a3af7e92",
   "dirty_paths": [],
   "scope": "the tree THIS certificate was derived in. Each rung artifact carries the tree ITS run happened in, under records[].git.",
   "worktree_dirty": false
@@ -32,19 +32,19 @@
  "inputs": {
   "G1a": {
    "path": "results/rtl/abi3_g1a_operator_equivalence.json",
-   "sha256": "5b3b363f405f809a9f2409d7a8f29523c92116497a32fda0678fb15cbc829a94"
+   "sha256": "02a3858ca4d2e9ed0be53de4534203ac9cc16f96b220fe2e171fd573f834f6bb"
   },
   "G1b": {
    "path": "results/rtl/abi3_g1b_layer_closure.json",
-   "sha256": "1de63dc73423598bd8aac68edc0edd795228756cced53ab4a2fcc9366aa6c917"
+   "sha256": "2882b199511743f662780978f8fa40cc13f6b142665569a16175ec2065143f3e"
   },
   "G1c": {
    "path": "results/rtl/abi3_g1c_composition.json",
-   "sha256": "4255e667a73832baac775a19b5dd7a233e8ade823745b67a5776acd2e2bf7a0f"
+   "sha256": "4d7bb6b41c676b48baa25499e0348f0905cbb8f3b06863839cb27b52c76b7d12"
   },
   "G1d": {
    "path": "results/rtl/abi3_g1d_token.json",
-   "sha256": "2042f17af7e9d0edfe6a0ec1f657d4028e4e0bb7614df19a997d3c9575e3cd71"
+   "sha256": "dbd71fa2360e9c2058d884e74be6643cf521dfb2596ad5d3fe5025856487d106"
   },
   "G1d_oracle": {
    "path": "results/abi3/qwen3_reference_oracle_eos.json",
@@ -52,11 +52,11 @@
   },
   "G1e": {
    "path": "results/rtl/abi3_g1e_control_end_to_end.json",
-   "sha256": "0267acb1ed0203d92f553a5ba394cd41a84b79f46fe6b766fdfb30e86e6e803f"
+   "sha256": "a539e48d1eda3d0a9337e0b139e0bcb488ee95c8a05325cee88b92b7229b9bee"
   },
   "G1f": {
    "path": "results/rtl/abi3_g1f_reduced_end_to_end.json",
-   "sha256": "ce0655f744847ab5f05624794a68939bd57b74f46d0b8ff3f7db2177b3f17775"
+   "sha256": "776b7bf74ca4341670a5edaa789536b0b0f26341d203afbf146782d8dacd406a"
   },
   "G1f_oracle": {
    "path": "results/abi3/qwen3_reduced_reference_oracle.json",
@@ -78,7 +78,7 @@
      "instances": 3,
      "mnemonic": "DMA.GATHER",
      "sub": 2,
-     "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [32, 190] of this deployment (133afc13e1fc) in a positive case"
+     "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [32, 190] of this deployment (6a06a4ea97f2) in a positive case"
     },
     {
      "covered": false,
@@ -88,7 +88,7 @@
      "instances": 3,
      "mnemonic": "DMA.GATHER",
      "sub": 2,
-     "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [32, 190] of this deployment (133afc13e1fc) in a positive case"
+     "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [32, 190] of this deployment (6a06a4ea97f2) in a positive case"
     },
     {
      "covered": true,
@@ -120,7 +120,7 @@
      "instances": 108,
      "mnemonic": "TENSOR.MATMUL",
      "sub": 0,
-     "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [59, 130, 171] of this deployment (133afc13e1fc) in a positive case"
+     "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [59, 130, 171] of this deployment (6a06a4ea97f2) in a positive case"
     },
     {
      "covered": true,
@@ -152,7 +152,7 @@
      "instances": 108,
      "mnemonic": "TENSOR.MATMUL",
      "sub": 0,
-     "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [59, 130, 171] of this deployment (133afc13e1fc) in a positive case"
+     "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [59, 130, 171] of this deployment (6a06a4ea97f2) in a positive case"
     },
     {
      "covered": false,
@@ -162,7 +162,7 @@
      "instances": 108,
      "mnemonic": "TENSOR.MATMUL",
      "sub": 0,
-     "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [151, 158] of this deployment (133afc13e1fc) in a positive case"
+     "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [151, 158] of this deployment (6a06a4ea97f2) in a positive case"
     },
     {
      "covered": false,
@@ -172,7 +172,7 @@
      "instances": 108,
      "mnemonic": "TENSOR.MATMUL",
      "sub": 0,
-     "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [151, 158] of this deployment (133afc13e1fc) in a positive case"
+     "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [151, 158] of this deployment (6a06a4ea97f2) in a positive case"
     },
     {
      "covered": false,
@@ -182,7 +182,7 @@
      "instances": 108,
      "mnemonic": "TENSOR.MATMUL",
      "sub": 0,
-     "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [59, 130, 171] of this deployment (133afc13e1fc) in a positive case"
+     "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [59, 130, 171] of this deployment (6a06a4ea97f2) in a positive case"
     },
     {
      "covered": false,
@@ -192,7 +192,7 @@
      "instances": 3,
      "mnemonic": "TENSOR.MATMUL",
      "sub": 0,
-     "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [197] of this deployment (133afc13e1fc) in a positive case"
+     "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [197] of this deployment (6a06a4ea97f2) in a positive case"
     },
     {
      "covered": true,
@@ -206,40 +206,43 @@
      "sub": 3
     },
     {
-     "covered": false,
-     "covered_by_rung": null,
+     "covered": true,
+     "covered_by_rung": "G1a",
      "descriptor_id": 50,
+     "equivalence_class_covered_by": "results/rtl/a3_operator_admission_campaign.json",
      "family": 48,
      "instances": 108,
      "mnemonic": "VECTOR.RMS_NORM",
-     "sub": 0,
-     "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [50, 144, 183] of this deployment (133afc13e1fc) in a positive case"
+     "numeric_contract_sha256": "999ef86bc4d4c36dfd57db84d49618af46bed2e6c1f0b1bf031a27b5b8c03fda",
+     "sub": 0
     },
     {
-     "covered": false,
-     "covered_by_rung": null,
+     "covered": true,
+     "covered_by_rung": "G1a",
      "descriptor_id": 144,
+     "equivalence_class_covered_by": "results/rtl/a3_operator_admission_campaign.json",
      "family": 48,
      "instances": 108,
      "mnemonic": "VECTOR.RMS_NORM",
-     "sub": 0,
-     "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [50, 144, 183] of this deployment (133afc13e1fc) in a positive case"
+     "numeric_contract_sha256": "999ef86bc4d4c36dfd57db84d49618af46bed2e6c1f0b1bf031a27b5b8c03fda",
+     "sub": 0
     },
     {
-     "covered": false,
-     "covered_by_rung": null,
+     "covered": true,
+     "covered_by_rung": "G1a",
      "descriptor_id": 183,
+     "equivalence_class_covered_by": "results/rtl/a3_operator_admission_campaign.json",
      "family": 48,
      "instances": 3,
      "mnemonic": "VECTOR.RMS_NORM",
-     "sub": 0,
-     "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [50, 144, 183] of this deployment (133afc13e1fc) in a positive case"
+     "numeric_contract_sha256": "999ef86bc4d4c36dfd57db84d49618af46bed2e6c1f0b1bf031a27b5b8c03fda",
+     "sub": 0
     },
     {
      "covered": true,
      "covered_by_rung": "G1a",
      "descriptor_id": 79,
-     "equivalence_class_covered_by": "results/rtl/abi3_shipped_prefix_campaign.json",
+     "equivalence_class_covered_by": "results/rtl/a3_operator_admission_campaign.json",
      "family": 48,
      "instances": 108,
      "mnemonic": "VECTOR.HEAD_RMS_NORM",
@@ -250,7 +253,7 @@
      "covered": true,
      "covered_by_rung": "G1a",
      "descriptor_id": 87,
-     "equivalence_class_covered_by": "results/rtl/abi3_shipped_prefix_campaign.json",
+     "equivalence_class_covered_by": "results/rtl/a3_operator_admission_campaign.json",
      "family": 48,
      "instances": 108,
      "mnemonic": "VECTOR.HEAD_RMS_NORM",
@@ -261,7 +264,7 @@
      "covered": true,
      "covered_by_rung": "G1a",
      "descriptor_id": 94,
-     "equivalence_class_covered_by": "results/rtl/abi3_shipped_prefix_campaign.json",
+     "equivalence_class_covered_by": "results/rtl/a3_operator_admission_campaign.json",
      "family": 48,
      "instances": 108,
      "mnemonic": "VECTOR.ROPE",
@@ -272,7 +275,7 @@
      "covered": true,
      "covered_by_rung": "G1a",
      "descriptor_id": 100,
-     "equivalence_class_covered_by": "results/rtl/abi3_shipped_prefix_campaign.json",
+     "equivalence_class_covered_by": "results/rtl/a3_operator_admission_campaign.json",
      "family": 48,
      "instances": 108,
      "mnemonic": "VECTOR.ROPE",
@@ -347,14 +350,14 @@
     }
    ],
    "certificate": {
-    "covered_instance_count": 1305,
+    "covered_instance_count": 1524,
     "derived_mechanically": true,
     "every_issued_instance_covered": false,
     "issued_instance_count": 2073,
     "token_ids_match_oracle": false,
-    "uncovered_instance_count": 768
+    "uncovered_instance_count": 549
    },
-   "deployment_sha256": "133afc13e1fcd2aade2e40530883c9986b0e920d99853990d9032fd777f26243",
+   "deployment_sha256": "6a06a4ea97f290326b448f4fcc8c654a9c32b61e707ca62ef070060daf9cc21b",
    "layer_loop": {
     "g1b_layer_complete": false,
     "g1b_mismatched_words": 0,
@@ -399,7 +402,7 @@
     }
    },
    "what_is_assumed_outside_the_ladder": [
-    "768 of 2073 issued instances are not in a class G1a proved bit-exact",
+    "549 of 2073 issued instances are not in a class G1a proved bit-exact",
     "the layer loop is not closed by G1b and G1c: g1b_layer_complete, g1c_handoff_rtl_to_rtl, g1c_no_golden_across_the_boundary",
     "the RTL emitted [] for the full configuration against the oracle's [3925]",
     "the RTL emitted [] for the reduced configuration against the oracle's [1073, 382, 93]"
@@ -545,40 +548,43 @@
      "sub": 3
     },
     {
-     "covered": false,
-     "covered_by_rung": null,
+     "covered": true,
+     "covered_by_rung": "G1a",
      "descriptor_id": 64,
+     "equivalence_class_covered_by": "results/rtl/a3_operator_admission_hbm_campaign.json",
      "family": 48,
      "instances": 108,
      "mnemonic": "VECTOR.RMS_NORM",
-     "sub": 0,
-     "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [64, 156, 192] of this deployment (cb9067f5fbf6) in a positive case"
+     "numeric_contract_sha256": "999ef86bc4d4c36dfd57db84d49618af46bed2e6c1f0b1bf031a27b5b8c03fda",
+     "sub": 0
     },
     {
-     "covered": false,
-     "covered_by_rung": null,
+     "covered": true,
+     "covered_by_rung": "G1a",
      "descriptor_id": 156,
+     "equivalence_class_covered_by": "results/rtl/a3_operator_admission_hbm_campaign.json",
      "family": 48,
      "instances": 108,
      "mnemonic": "VECTOR.RMS_NORM",
-     "sub": 0,
-     "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [64, 156, 192] of this deployment (cb9067f5fbf6) in a positive case"
+     "numeric_contract_sha256": "999ef86bc4d4c36dfd57db84d49618af46bed2e6c1f0b1bf031a27b5b8c03fda",
+     "sub": 0
     },
     {
-     "covered": false,
-     "covered_by_rung": null,
+     "covered": true,
+     "covered_by_rung": "G1a",
      "descriptor_id": 192,
+     "equivalence_class_covered_by": "results/rtl/a3_operator_admission_hbm_campaign.json",
      "family": 48,
      "instances": 3,
      "mnemonic": "VECTOR.RMS_NORM",
-     "sub": 0,
-     "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [64, 156, 192] of this deployment (cb9067f5fbf6) in a positive case"
+     "numeric_contract_sha256": "999ef86bc4d4c36dfd57db84d49618af46bed2e6c1f0b1bf031a27b5b8c03fda",
+     "sub": 0
     },
     {
      "covered": true,
      "covered_by_rung": "G1a",
      "descriptor_id": 90,
-     "equivalence_class_covered_by": "results/rtl/abi3_shipped_prefix_campaign.json",
+     "equivalence_class_covered_by": "results/rtl/a3_operator_admission_hbm_campaign.json",
      "family": 48,
      "instances": 108,
      "mnemonic": "VECTOR.HEAD_RMS_NORM",
@@ -589,7 +595,7 @@
      "covered": true,
      "covered_by_rung": "G1a",
      "descriptor_id": 97,
-     "equivalence_class_covered_by": "results/rtl/abi3_shipped_prefix_campaign.json",
+     "equivalence_class_covered_by": "results/rtl/a3_operator_admission_hbm_campaign.json",
      "family": 48,
      "instances": 108,
      "mnemonic": "VECTOR.HEAD_RMS_NORM",
@@ -600,7 +606,7 @@
      "covered": true,
      "covered_by_rung": "G1a",
      "descriptor_id": 104,
-     "equivalence_class_covered_by": "results/rtl/abi3_shipped_prefix_campaign.json",
+     "equivalence_class_covered_by": "results/rtl/a3_operator_admission_hbm_campaign.json",
      "family": 48,
      "instances": 108,
      "mnemonic": "VECTOR.ROPE",
@@ -611,7 +617,7 @@
      "covered": true,
      "covered_by_rung": "G1a",
      "descriptor_id": 110,
-     "equivalence_class_covered_by": "results/rtl/abi3_shipped_prefix_campaign.json",
+     "equivalence_class_covered_by": "results/rtl/a3_operator_admission_hbm_campaign.json",
      "family": 48,
      "instances": 108,
      "mnemonic": "VECTOR.ROPE",
@@ -686,12 +692,12 @@
     }
    ],
    "certificate": {
-    "covered_instance_count": 1308,
+    "covered_instance_count": 1527,
     "derived_mechanically": true,
     "every_issued_instance_covered": false,
     "issued_instance_count": 2073,
     "token_ids_match_oracle": false,
-    "uncovered_instance_count": 765
+    "uncovered_instance_count": 546
    },
    "deployment_sha256": "cb9067f5fbf67f7df4212399aee6ba75ced4ca5c8f2dc8c1631372a4068cea2c",
    "layer_loop": {
@@ -738,7 +744,7 @@
     }
    },
    "what_is_assumed_outside_the_ladder": [
-    "765 of 2073 issued instances are not in a class G1a proved bit-exact",
+    "546 of 2073 issued instances are not in a class G1a proved bit-exact",
     "the layer loop is not closed by G1b and G1c: g1b_layer_complete, g1c_handoff_rtl_to_rtl, g1c_no_golden_across_the_boundary",
     "the RTL emitted [] for the full configuration against the oracle's [3925]",
     "the RTL emitted [] for the reduced configuration against the oracle's [1073, 382, 93]"
