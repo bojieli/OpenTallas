@@ -487,16 +487,42 @@ def build(argv: list[str] | None = None) -> int:
     uncovered_total = sum(r["certificate"]["uncovered_instance_count"] for r in records)
     tokens = all(r["certificate"]["token_ids_match_oracle"] for r in records)
 
+    # Each of these is COMPUTED from what was actually read.  Writing them as
+    # literals would be the same defect the G1a tool was caught in: a field
+    # that reads true without anything having been checked.
     mechanical = {
-        "every_input_bound_by_sha256": True,
-        "population_read_from_g1e_trace_census": True,
+        "every_input_bound_by_sha256": all(
+            isinstance(v, Mapping)
+            and isinstance(v.get("sha256"), str)
+            and len(v["sha256"]) == 64
+            and (ROOT / str(v["path"])).is_file()
+            and sha256_of(ROOT / str(v["path"])) == v["sha256"]
+            for v in inputs.values()
+        ),
+        "population_read_from_g1e_trace_census": all(
+            r["population"]["from"].startswith(RUNG_ARTIFACTS["G1e"])
+            and r["certificate"]["issued_instance_count"] > 0
+            for r in records
+        ),
         "partition_is_exhaustive": all(
             r["certificate"]["covered_instance_count"]
             + r["certificate"]["uncovered_instance_count"]
             == r["certificate"]["issued_instance_count"]
             for r in records
         ),
-        "no_gate_field_supplied_by_hand": True,
+        # Every gate field is recomputed here from the per-instance attribution
+        # list, independently of the counters the partition returned.  A number
+        # typed in anywhere upstream disagrees with this sum and the field goes
+        # false.
+        "gate_fields_recompute_from_the_attribution_list": all(
+            r["certificate"]["uncovered_instance_count"]
+            == sum(a["instances"] for a in r["attribution"] if not a["covered"])
+            and r["certificate"]["covered_instance_count"]
+            == sum(a["instances"] for a in r["attribution"] if a["covered"])
+            and r["certificate"]["every_issued_instance_covered"]
+            == (sum(a["instances"] for a in r["attribution"] if not a["covered"]) == 0)
+            for r in records
+        ),
     }
     mechanical["holds"] = all(mechanical.values())
 
