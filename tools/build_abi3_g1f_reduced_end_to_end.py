@@ -686,6 +686,200 @@ def rtl_expressible_alternative(
     }
 
 
+#: The integrated rate section 11.7 corrected to on 2026-09-06, and the
+#: reason the correction matters here.  ``tools/build_qwen3_reduced_model.py``
+#: still derives its budget from 39,915 MACs/s, which was taken from the
+#: SIMULATION-ALONE CPU time of one run; the committed artifact records the
+#: whole run and gives 166,845 cycles/s at 5.00793 cycles/MAC, which is 33,316
+#: MACs/s.  Rule R13 says the optimistic form of a metric reported under two
+#: models is not evidence, so every cost this file states about the
+#: alternative it is deciding against is restated at the pessimistic rate and
+#: the disagreement with the budget block is named rather than smoothed over.
+CORRECTED_MACS_PER_SECOND = 33_316
+CORRECTED_RATE_SOURCE = (
+    "docs/CHIP_ARCHITECTURE_DESIGN.md section 11.7, 'Rate, corrected "
+    "2026-09-06': simulated_cycles 252,057,600 over run_cpu_seconds 1,510.73 "
+    "for 50,331,648 MACs"
+)
+
+
+def geometry_port_decision(alternative: dict[str, Any]) -> dict[str, Any]:
+    """The decision this rung's measurements force, and the argument for it.
+
+    Two courses are open once the probe has measured that the attention engine
+    has no geometry input and that the per-head normalisation refuses the
+    reduced width.  Either the engines gain the port, or the reduced
+    configuration is chosen to fit the geometry the engines already have.  The
+    second is the expedient one and this block does not take it.  Every clause
+    below is either a citation of the design document that governs the block
+    in question or an arithmetic restatement of a measurement in this same
+    record; nothing here is a preference.
+    """
+
+    one_layer = alternative["cost_at_one_layer"]["transactions_accounting"]
+    layers = alternative["cost_at_reduced_layer_count"]["transactions_accounting"]
+
+    def at_corrected(macs: int) -> dict[str, Any]:
+        seconds = macs / CORRECTED_MACS_PER_SECOND
+        return {
+            "macs": int(macs),
+            "seconds_per_storage_class": round(seconds, 1),
+            "hours_per_storage_class": round(seconds / 3600.0, 2),
+        }
+
+    return {
+        "question": (
+            "is the geometry port a design change worth making, or should the "
+            "reduced configuration be chosen to fit the geometry the engines "
+            "have?"
+        ),
+        "decision": "build the geometry port",
+        "decided_against": (
+            "choosing a reduced configuration that keeps hidden_size 4096, 32 "
+            "query heads, 8 KV heads and head_dim 128"
+        ),
+        "why_the_alternative_is_not_an_alternative": {
+            "what_can_still_move": alternative["dimensions_that_can_move"],
+            "what_cannot": alternative["dimensions_that_cannot_move"],
+            "cost_of_the_cheapest_such_configuration": {
+                "one_layer": at_corrected(one_layer["total_macs"]),
+                "reduced_layer_count": at_corrected(layers["total_macs"]),
+                "accounting": one_layer["note"],
+                "rate": CORRECTED_MACS_PER_SECOND,
+                "rate_source": CORRECTED_RATE_SOURCE,
+                "rate_disagreement": (
+                    "the budget block of this record and "
+                    "tools/build_qwen3_reduced_model.py still carry 39,915 "
+                    "MACs/s, the superseded optimistic form.  The figures "
+                    "here are the pessimistic form under R13; the constant "
+                    "itself is a debt this rung names and does not pay, "
+                    "because paying it regenerates "
+                    "results/abi3/qwen3_reduced_model_construction.json"
+                ),
+            },
+            "the_gate_says_minutes": (
+                "G1f's own note calls this rung 'the industry's small-config "
+                "regression ... run whole, nightly' and costs it in minutes.  "
+                "A configuration that cannot move the attention block costs "
+                "tens of hours per storage class even at ONE layer.  That is "
+                "not a cheaper way to satisfy the rung, it is a rung that "
+                "stays red for a reason the ladder can never retire, so the "
+                "two courses are not two options at different prices -- only "
+                "one of them ends with a rung that runs"
+            ),
+        },
+        "argued_against_section_4": [
+            {
+                "block": "ot_a3_vector_rms_norm",
+                "citation": "section 4.9, the vector engine's contract table",
+                "argument": (
+                    "the microprogram for qwen3_rmsnorm_fp32_bf16_v1 is "
+                    "'square; PAIRWISE_TREE row sum; DIVIDE BY WIDTH; + eps; "
+                    "exact-integer rsqrt; ...', and the fail-closed column "
+                    "beside it names exactly three refusals: eps_bits 0, order "
+                    "!= PAIRWISE_TREE, unknown digest.  Width is an operand of "
+                    "the microprogram and is not in the refusal set.  The "
+                    "block's ERR_SHAPE on a row width outside {4096, 128} is "
+                    "therefore a refusal section 4 does not authorise, and "
+                    "removing it returns the block to its specification rather "
+                    "than extending it"
+                ),
+            },
+            {
+                "block": "ot_a3_vector_rms_norm",
+                "citation": "the block's own port list",
+                "argument": (
+                    "the mechanism is already there: cfg_rows, cfg_cols and "
+                    "cfg_epsilon_bits are runtime inputs today.  "
+                    "cfg_epsilon_bits is the precedent -- a numeric constant of "
+                    "the contract already arrives as a runtime code instead of "
+                    "being frozen per model -- so delivering the reciprocal of "
+                    "the width the same way is applying the block's own "
+                    "existing convention, not adding a mechanism"
+                ),
+            },
+            {
+                "block": "ot_a3_qwen_gqa",
+                "citation": "section 2.1 row 7 [T2.1-7]",
+                "argument": (
+                    "the core's attention resource is specified as '64 head "
+                    "controllers'.  A 64-head-controller resource is the "
+                    "specification of a block that serves a VARIABLE head "
+                    "count; QUERY_HEADS = 32, KV_HEADS = 8 and HEAD_WIDTH = "
+                    "128 as localparams is a block that serves one.  The same "
+                    "row is marked 'both', and sections 1.1 and 4.15 require "
+                    "these engines to serve three models over 36 registered "
+                    "arithmetic pairs, each with one named datapath"
+                ),
+            },
+            {
+                "block": "ot_a3_qwen_gqa",
+                "citation": "section 2.1 row 31, the capability limits",
+                "argument": (
+                    "the capability record is the contract a program is "
+                    "admitted against, and it bounds instructions, "
+                    "descriptors, events, context positions, vocabulary, "
+                    "expert ids, topk and sessions.  It declares NO head-count "
+                    "and NO head-width limit, so a deployment with another "
+                    "head geometry is admissible by the device's own "
+                    "advertisement.  An engine that refuses it is refusing "
+                    "something the capability said it would serve; the honest "
+                    "courses are to serve it or to declare the limit, and "
+                    "declaring it would make the Qwen engine unable to serve "
+                    "the DeepSeek attention pairs the same row promises"
+                ),
+            },
+            {
+                "block": "ot_a3_qwen_gqa",
+                "citation": "rule R14, follow the consumer of the field",
+                "argument": (
+                    "the consumer of the head geometry is the attention "
+                    "engine.  A consumer that assumes a field instead of "
+                    "reading it is the defect, and where two courses are not "
+                    "cost-symmetric R14 takes the one that costs the ROM side: "
+                    "the port costs RTL work and a re-qualification of two "
+                    "engines, the fit costs nothing now and the rung later"
+                ),
+            },
+            {
+                "block": "ot_a3_qwen_gqa",
+                "citation": "the block's own header and MAX_CONTEXT",
+                "argument": (
+                    "the block has already made this move once, for the same "
+                    "reason: MAX_CONTEXT was a constant 17 that 'expressed "
+                    "exactly one generated token', and is now a parameter with "
+                    "cfg_context_length checked against [MIN_CONTEXT, "
+                    "MAX_CONTEXT] at start.  The head geometry is the same "
+                    "shape of change to the same block.  MIN_CONTEXT stays: "
+                    "the eight-lane softmax denominator is an ASSOCIATION, "
+                    "which section 4.9's fail-closed column does name"
+                ),
+            },
+        ],
+        "scope_in_measured_order": [
+            "the compiler's Qwen3 config-digest pin must admit a second "
+            "configuration.  It is blocking_in_order item 1 and neither RTL "
+            "change touches it, so neither engine change alone turns this rung "
+            "green",
+            "ot_a3_vector_rms_norm: replace the cfg_cols whitelist with the "
+            "bound its own buffer imposes and take the reciprocal-width code "
+            "as a runtime input the way cfg_epsilon_bits already is.  The two "
+            "existing profiles' codes do not change, so the qualification is "
+            "the existing directed cases re-run bit-identical plus new cases "
+            "at the reduced widths",
+            "ot_a3_qwen_gqa: promote QUERY_HEADS, KV_HEADS and HEAD_WIDTH to "
+            "parameters of the verification instance, as MAX_CONTEXT already "
+            "is, and take the 1/sqrt(head_dim) scale code as a runtime input "
+            "where SCALE_CODE is a localparam today",
+        ],
+        "status": (
+            "a decision argued from this record's measurements and from the "
+            "design document; the measurements are results, the decision is "
+            "not, and no field of this rung's gate turns on it"
+        ),
+    }
+
+
 def geometry_verdict(probe: dict[str, Any], reduced: dict[str, Any]) -> dict[str, Any]:
     """What the probe's measurements say about running the reduced model."""
 
@@ -907,6 +1101,7 @@ def main() -> int:
             }
         )
 
+        _alternative = rtl_expressible_alternative(full, reduced, probe)
         records.append(
             {
                 "storage_class": store,
@@ -968,9 +1163,8 @@ def main() -> int:
                     "backend": store_lowering,
                 },
                 "geometry": verdict,
-                "rtl_expressible_alternative": rtl_expressible_alternative(
-                    full, reduced, probe
-                ),
+                "rtl_expressible_alternative": _alternative,
+                "geometry_port_decision": geometry_port_decision(_alternative),
                 "probe": probe,
                 "injection": {
                     "golden_injected_operation_count": injected,
