@@ -8,19 +8,131 @@
   ],
   "gate": "G1b",
   "generated_by": "tools/build_abi3_g1b_layer_closure.py",
-  "generated_by_sha256": "841cecdaab5b86842a05eff08bc7bec65e94f4acc2caa28f59776bc6d40aa2fc",
+  "generated_by_sha256": "ad91f512b9fbfd53ea0f81fd33e7dd5b4efa7fb8c58ac75d85bc590198442982",
   "layer_definition": "one complete transformer layer, named by the certified Kernel IR: every engine issue the governed decode program makes whose OPERATOR descriptor's source_kernel_id points at a kernel whose kernel_id begins 'layer.0.'. The two lowerings are resolved independently; their descriptor IDs differ at every governed program counter and nothing measured on one is transferred to the other.",
   "placement_capacity": {
     "declared_entries": 32,
     "declared_entries_note": "counted from the bridge's port list. It is a DECLARATION, not a measurement, and nothing below is credited from it",
-    "measured_from": "results/rtl/abi3_shipped_prefix_campaign.json",
+    "measured_from": "results/rtl/a3_operator_admission_campaign.json",
     "measured_note": "the largest number of distinct ABI objects a passing campaign case bound into the bridge's table and resolved. Every one of that case's result words was compared against the golden write stream, address and value, so an object the bridge placed anywhere but at its own base would have failed the run",
-    "measured_simultaneous_objects": 13,
+    "measured_simultaneous_objects": 20,
+    "measurements": [
+      {
+        "artifact": "results/rtl/abi3_shipped_prefix_campaign.json",
+        "measured_simultaneous_objects": 0,
+        "usable": false,
+        "what_it_ran": "the integrated shipped-prefix vehicle, whose case binds every object its own program span names",
+        "why_unusable": "1 bound source(s) have drifted since it was recorded"
+      },
+      {
+        "artifact": "results/rtl/a3_operator_admission_campaign.json",
+        "cases_credited": [
+          "vector_rms_norm_attention_input",
+          "vector_head_rms_norm_query",
+          "vector_head_rms_norm_key",
+          "vector_rope_query",
+          "vector_rope_key",
+          "dma_scatter_key_position16",
+          "dma_scatter_value_position16",
+          "attention_gqa_context17",
+          "vector_add_attention_residual",
+          "vector_rms_norm_mlp_input",
+          "vector_silu_mul_swiglu",
+          "vector_add_mlp_residual_read_modify_write",
+          "vector_rms_norm_final",
+          "dma_scatter_key_position18",
+          "dma_scatter_value_position18",
+          "attention_gqa_context19",
+          "selection_argmax_lowest_tied_id",
+          "selection_token_append_official_eos",
+          "selection_token_append_continues"
+        ],
+        "measured_simultaneous_objects": 20,
+        "objects_resolved_and_compared": [
+          2,
+          4,
+          8,
+          10,
+          13,
+          17,
+          23,
+          27,
+          36,
+          45,
+          55,
+          64,
+          71,
+          84,
+          149,
+          156,
+          162,
+          194,
+          200,
+          209
+        ],
+        "storage_class": "rom",
+        "usable": true,
+        "what_it_ran": "the operator-admission bench, which instantiates this bridge whole and binds every entry it declares from the case record",
+        "why_unusable": null
+      },
+      {
+        "artifact": "results/rtl/a3_operator_admission_hbm_campaign.json",
+        "cases_credited": [
+          "vector_rms_norm_attention_input",
+          "vector_head_rms_norm_query",
+          "vector_head_rms_norm_key",
+          "vector_rope_query",
+          "vector_rope_key",
+          "dma_scatter_key_position16",
+          "dma_scatter_value_position16",
+          "attention_gqa_context17",
+          "vector_add_attention_residual",
+          "vector_rms_norm_mlp_input",
+          "vector_silu_mul_swiglu",
+          "vector_add_mlp_residual_read_modify_write",
+          "vector_rms_norm_final",
+          "dma_scatter_key_position18",
+          "dma_scatter_value_position18",
+          "attention_gqa_context19",
+          "selection_argmax_lowest_tied_id",
+          "selection_token_append_official_eos",
+          "selection_token_append_continues"
+        ],
+        "measured_simultaneous_objects": 20,
+        "objects_resolved_and_compared": [
+          1,
+          5,
+          6,
+          8,
+          13,
+          15,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          28,
+          36,
+          37,
+          38
+        ],
+        "storage_class": "hbm",
+        "usable": true,
+        "what_it_ran": "the operator-admission bench, which instantiates this bridge whole and binds every entry it declares from the case record",
+        "why_unusable": null
+      }
+    ],
+    "measurements_note": "every passing RTL campaign that drives THIS bridge module and publishes what its one object table held and resolved. The depth belongs to the module, so the deepest such run measures it; a missing, failing or drifted artifact contributes nothing and says why, which is a zero and never an unknown",
     "per_case": [
       {
         "case_index": 0,
         "case_name": "qwen3-8b-rom-single-chip/decode",
-        "case_passed_in_the_campaign": true,
+        "case_passed_in_the_campaign": false,
         "objects": [
           4,
           5,
@@ -46,7 +158,7 @@
       {
         "case_index": 1,
         "case_name": "qwen3-8b-hbm-single-chip/decode",
-        "case_passed_in_the_campaign": true,
+        "case_passed_in_the_campaign": false,
         "objects": [
           1,
           2,
@@ -72,7 +184,7 @@
       {
         "case_index": 2,
         "case_name": "deepseek-v4-flash-rom-wafer/decode",
-        "case_passed_in_the_campaign": true,
+        "case_passed_in_the_campaign": false,
         "objects": [
           334,
           344,
@@ -85,7 +197,7 @@
       {
         "case_index": 3,
         "case_name": "deepseek-v4-flash-hbm-cluster/decode",
-        "case_passed_in_the_campaign": true,
+        "case_passed_in_the_campaign": false,
         "objects": [
           236,
           237,
@@ -110,12 +222,12 @@
       "head_rms_input": {
         "note": "one shared object table serves every role; the per-role capacity is the table's measured depth",
         "object_keyed": true,
-        "slots": 13
+        "slots": 20
       },
       "head_rms_weight": {
         "note": "one shared object table serves every role; the per-role capacity is the table's measured depth",
         "object_keyed": true,
-        "slots": 13
+        "slots": 20
       },
       "index_base": {
         "note": "cfg_index_base is a single base advanced by the launch counter, shared by DMA.GATHER and TENSOR.EMBED_LOOKUP; it is not keyed by object",
@@ -125,42 +237,42 @@
       "mapped_family_operand": {
         "note": "one shared object table serves every role; the per-role capacity is the table's measured depth",
         "object_keyed": true,
-        "slots": 13
+        "slots": 20
       },
       "matmul_input": {
         "note": "one shared object table serves every role; the per-role capacity is the table's measured depth",
         "object_keyed": true,
-        "slots": 13
+        "slots": 20
       },
       "matmul_weight": {
         "note": "one shared object table serves every role; the per-role capacity is the table's measured depth",
         "object_keyed": true,
-        "slots": 13
+        "slots": 20
       },
       "result_object": {
         "note": "one shared object table serves every role; the per-role capacity is the table's measured depth",
         "object_keyed": true,
-        "slots": 13
+        "slots": 20
       },
       "rms_input": {
         "note": "one shared object table serves every role; the per-role capacity is the table's measured depth",
         "object_keyed": true,
-        "slots": 13
+        "slots": 20
       },
       "rms_weight": {
         "note": "one shared object table serves every role; the per-role capacity is the table's measured depth",
         "object_keyed": true,
-        "slots": 13
+        "slots": 20
       },
       "rope_coefficient": {
         "note": "one shared object table serves every role; the per-role capacity is the table's measured depth",
         "object_keyed": true,
-        "slots": 13
+        "slots": 20
       },
       "rope_input": {
         "note": "one shared object table serves every role; the per-role capacity is the table's measured depth",
         "object_keyed": true,
-        "slots": 13
+        "slots": 20
       }
     },
     "source": "rtl/abi3/ot_a3_engine_issue_bridge.sv",
@@ -188,8 +300,10 @@
             "commit": "c20919d3a3ff7ccef04eaf66c2b34f0ca930a25b",
             "worktree_dirty": false
           },
-          "drifted_source_count": 0,
-          "drifted_sources": [],
+          "drifted_source_count": 1,
+          "drifted_sources": [
+            "tools/build_abi3_shipped_prefix_vectors.py"
+          ],
           "evidence_class": "public_open_tool_rtl_simulation_composite",
           "expected_cases": [
             {
@@ -368,12 +482,12 @@
             "sha256": "2c8696111937aa85197cd2042dfed6cb3c5ef7f03fb80eba1fe3b93d40c1b87e"
           },
           "status": "pass",
-          "usable": true,
+          "usable": false,
           "vector_set_is_current": true,
           "vector_set_path": "testdata/compiler/abi3_shipped_prefix/abi3_shipped_prefix_vectors.json",
           "vector_set_sha256_declared": "9bfe26104715ba70728aaccc40b4b43bfed995e84d5e812e9e90d0dd2dbe3efd",
           "vector_set_sha256_on_disk": "9bfe26104715ba70728aaccc40b4b43bfed995e84d5e812e9e90d0dd2dbe3efd",
-          "why_unusable": null
+          "why_unusable": "1 bound source(s) have drifted since it was recorded"
         },
         "case_evidence": {
           "case_index": 0,
@@ -394,24 +508,136 @@
           },
           "observed_agrees_with_the_vector_set": true
         },
-        "evidence_class": "public_open_tool_rtl_simulation_composite",
-        "simulated_cycles": 252057600,
-        "simulated_cycles_scope": "the integrated run's own total, over all four cases of the one binary; the harness reports one cycle count for the run and this rung does not split it per lowering, so the same number appears in both records and must not be added across them",
-        "simulator": "verilator",
+        "evidence_class": "absent: no usable integrated RTL simulation of this lowering exists",
+        "simulated_cycles": null,
+        "simulated_cycles_scope": null,
+        "simulator": null,
         "vehicle": {
           "bridge": "rtl/abi3/ot_a3_engine_issue_bridge.sv",
           "bridge_sha256": "0be35e7fc669f34f8c7c9d6a0e12fe1b11c08b70bc138cab386173ee1b7c7f66",
           "placement_capacity": {
             "declared_entries": 32,
             "declared_entries_note": "counted from the bridge's port list. It is a DECLARATION, not a measurement, and nothing below is credited from it",
-            "measured_from": "results/rtl/abi3_shipped_prefix_campaign.json",
+            "measured_from": "results/rtl/a3_operator_admission_campaign.json",
             "measured_note": "the largest number of distinct ABI objects a passing campaign case bound into the bridge's table and resolved. Every one of that case's result words was compared against the golden write stream, address and value, so an object the bridge placed anywhere but at its own base would have failed the run",
-            "measured_simultaneous_objects": 13,
+            "measured_simultaneous_objects": 20,
+            "measurements": [
+              {
+                "artifact": "results/rtl/abi3_shipped_prefix_campaign.json",
+                "measured_simultaneous_objects": 0,
+                "usable": false,
+                "what_it_ran": "the integrated shipped-prefix vehicle, whose case binds every object its own program span names",
+                "why_unusable": "1 bound source(s) have drifted since it was recorded"
+              },
+              {
+                "artifact": "results/rtl/a3_operator_admission_campaign.json",
+                "cases_credited": [
+                  "vector_rms_norm_attention_input",
+                  "vector_head_rms_norm_query",
+                  "vector_head_rms_norm_key",
+                  "vector_rope_query",
+                  "vector_rope_key",
+                  "dma_scatter_key_position16",
+                  "dma_scatter_value_position16",
+                  "attention_gqa_context17",
+                  "vector_add_attention_residual",
+                  "vector_rms_norm_mlp_input",
+                  "vector_silu_mul_swiglu",
+                  "vector_add_mlp_residual_read_modify_write",
+                  "vector_rms_norm_final",
+                  "dma_scatter_key_position18",
+                  "dma_scatter_value_position18",
+                  "attention_gqa_context19",
+                  "selection_argmax_lowest_tied_id",
+                  "selection_token_append_official_eos",
+                  "selection_token_append_continues"
+                ],
+                "measured_simultaneous_objects": 20,
+                "objects_resolved_and_compared": [
+                  2,
+                  4,
+                  8,
+                  10,
+                  13,
+                  17,
+                  23,
+                  27,
+                  36,
+                  45,
+                  55,
+                  64,
+                  71,
+                  84,
+                  149,
+                  156,
+                  162,
+                  194,
+                  200,
+                  209
+                ],
+                "storage_class": "rom",
+                "usable": true,
+                "what_it_ran": "the operator-admission bench, which instantiates this bridge whole and binds every entry it declares from the case record",
+                "why_unusable": null
+              },
+              {
+                "artifact": "results/rtl/a3_operator_admission_hbm_campaign.json",
+                "cases_credited": [
+                  "vector_rms_norm_attention_input",
+                  "vector_head_rms_norm_query",
+                  "vector_head_rms_norm_key",
+                  "vector_rope_query",
+                  "vector_rope_key",
+                  "dma_scatter_key_position16",
+                  "dma_scatter_value_position16",
+                  "attention_gqa_context17",
+                  "vector_add_attention_residual",
+                  "vector_rms_norm_mlp_input",
+                  "vector_silu_mul_swiglu",
+                  "vector_add_mlp_residual_read_modify_write",
+                  "vector_rms_norm_final",
+                  "dma_scatter_key_position18",
+                  "dma_scatter_value_position18",
+                  "attention_gqa_context19",
+                  "selection_argmax_lowest_tied_id",
+                  "selection_token_append_official_eos",
+                  "selection_token_append_continues"
+                ],
+                "measured_simultaneous_objects": 20,
+                "objects_resolved_and_compared": [
+                  1,
+                  5,
+                  6,
+                  8,
+                  13,
+                  15,
+                  17,
+                  18,
+                  19,
+                  20,
+                  21,
+                  22,
+                  23,
+                  24,
+                  25,
+                  26,
+                  28,
+                  36,
+                  37,
+                  38
+                ],
+                "storage_class": "hbm",
+                "usable": true,
+                "what_it_ran": "the operator-admission bench, which instantiates this bridge whole and binds every entry it declares from the case record",
+                "why_unusable": null
+              }
+            ],
+            "measurements_note": "every passing RTL campaign that drives THIS bridge module and publishes what its one object table held and resolved. The depth belongs to the module, so the deepest such run measures it; a missing, failing or drifted artifact contributes nothing and says why, which is a zero and never an unknown",
             "per_case": [
               {
                 "case_index": 0,
                 "case_name": "qwen3-8b-rom-single-chip/decode",
-                "case_passed_in_the_campaign": true,
+                "case_passed_in_the_campaign": false,
                 "objects": [
                   4,
                   5,
@@ -437,7 +663,7 @@
               {
                 "case_index": 1,
                 "case_name": "qwen3-8b-hbm-single-chip/decode",
-                "case_passed_in_the_campaign": true,
+                "case_passed_in_the_campaign": false,
                 "objects": [
                   1,
                   2,
@@ -463,7 +689,7 @@
               {
                 "case_index": 2,
                 "case_name": "deepseek-v4-flash-rom-wafer/decode",
-                "case_passed_in_the_campaign": true,
+                "case_passed_in_the_campaign": false,
                 "objects": [
                   334,
                   344,
@@ -476,7 +702,7 @@
               {
                 "case_index": 3,
                 "case_name": "deepseek-v4-flash-hbm-cluster/decode",
-                "case_passed_in_the_campaign": true,
+                "case_passed_in_the_campaign": false,
                 "objects": [
                   236,
                   237,
@@ -501,12 +727,12 @@
               "head_rms_input": {
                 "note": "one shared object table serves every role; the per-role capacity is the table's measured depth",
                 "object_keyed": true,
-                "slots": 13
+                "slots": 20
               },
               "head_rms_weight": {
                 "note": "one shared object table serves every role; the per-role capacity is the table's measured depth",
                 "object_keyed": true,
-                "slots": 13
+                "slots": 20
               },
               "index_base": {
                 "note": "cfg_index_base is a single base advanced by the launch counter, shared by DMA.GATHER and TENSOR.EMBED_LOOKUP; it is not keyed by object",
@@ -516,42 +742,42 @@
               "mapped_family_operand": {
                 "note": "one shared object table serves every role; the per-role capacity is the table's measured depth",
                 "object_keyed": true,
-                "slots": 13
+                "slots": 20
               },
               "matmul_input": {
                 "note": "one shared object table serves every role; the per-role capacity is the table's measured depth",
                 "object_keyed": true,
-                "slots": 13
+                "slots": 20
               },
               "matmul_weight": {
                 "note": "one shared object table serves every role; the per-role capacity is the table's measured depth",
                 "object_keyed": true,
-                "slots": 13
+                "slots": 20
               },
               "result_object": {
                 "note": "one shared object table serves every role; the per-role capacity is the table's measured depth",
                 "object_keyed": true,
-                "slots": 13
+                "slots": 20
               },
               "rms_input": {
                 "note": "one shared object table serves every role; the per-role capacity is the table's measured depth",
                 "object_keyed": true,
-                "slots": 13
+                "slots": 20
               },
               "rms_weight": {
                 "note": "one shared object table serves every role; the per-role capacity is the table's measured depth",
                 "object_keyed": true,
-                "slots": 13
+                "slots": 20
               },
               "rope_coefficient": {
                 "note": "one shared object table serves every role; the per-role capacity is the table's measured depth",
                 "object_keyed": true,
-                "slots": 13
+                "slots": 20
               },
               "rope_input": {
                 "note": "one shared object table serves every role; the per-role capacity is the table's measured depth",
                 "object_keyed": true,
-                "slots": 13
+                "slots": 20
               }
             },
             "source": "rtl/abi3/ot_a3_engine_issue_bridge.sv",
@@ -562,7 +788,7 @@
         }
       },
       "git": {
-        "commit": "e6abd2fb1d42faa81c54e2177230c54c6bd608cd",
+        "commit": "1963b7172f33aa1b9fb9d67ab3b3432d72b43fc5",
         "dirty_paths": [],
         "scope": "the tree THIS artifact was derived in. It is not a claim about the tree the integrated campaign ran in; see execution.campaign.declared_git.",
         "worktree_dirty": false
@@ -637,9 +863,9 @@
             }
           ]
         },
-        "compared_words": 20480,
+        "compared_words": null,
         "complete": false,
-        "every_intermediate_compared": true,
+        "every_intermediate_compared": false,
         "fail_closed_boundary": {
           "descriptor_id": 108,
           "family": 16,
@@ -651,11 +877,11 @@
         },
         "golden_injected_breakdown": {
           "activation_operands_staged_instead_of_produced": 0,
-          "engine_results_injected_at_the_engine_boundary": 0,
+          "engine_results_injected_at_the_engine_boundary": null,
           "note": "the first is the harness's own injected_results counter; the second is every operand of an executed operator that names an object this layer writes and was not read from the address the producing operator wrote"
         },
-        "golden_injected_intermediate_count": 0,
-        "golden_injected_note": "measured from the harness's own injected_results counter and the PASS marker the run printed; the run that establishes this rung is the one in which the engine array computed",
+        "golden_injected_intermediate_count": null,
+        "golden_injected_note": "absent: no measured injection count exists, and this field is never defaulted to zero",
         "handoff": {
           "every_activation_operand_came_from_the_rtl": true,
           "golden_injected_operand_count": 0,
@@ -698,7 +924,7 @@
         "intermediate_coverage": {
           "case_compared_region_words": 15616,
           "compared_against": "the golden write stream, address and value, for every word the engines write; the retained image is compared as well and holds each object's last value",
-          "comparison_actually_happened": true,
+          "comparison_actually_happened": false,
           "distinct_objects_do_not_overlap": true,
           "each_operator_writes_a_non_empty_output": true,
           "holds": true,
@@ -1015,9 +1241,9 @@
           "note": "the program issues this layer body once per model layer through one loop; this rung establishes ONE invocation. That the loop issues the model's layer count of structurally identical invocations is rung G1c and is not claimed here.",
           "operators_per_invocation": 19
         },
-        "mismatched_words": 0,
-        "mismatched_words_note": null,
-        "operator_count": 8,
+        "mismatched_words": null,
+        "mismatched_words_note": "no words of this layer were compared under this lowering; a mismatch count over zero comparisons is not a zero mismatch count and is reported absent",
+        "operator_count": 0,
         "operator_count_meaning": "operators of this layer that executed in the integrated RTL and had every result word they wrote compared against the golden image",
         "operators_in_layer": 19,
         "placement_demand": {
@@ -1061,7 +1287,7 @@
               "role": "head_rms_input",
               "satisfiable": true,
               "short_by": 0,
-              "slots_the_bridge_declares": 13
+              "slots_the_bridge_declares": 20
             },
             {
               "distinct_objects_the_layer_needs": 2,
@@ -1073,7 +1299,7 @@
               "role": "head_rms_weight",
               "satisfiable": true,
               "short_by": 0,
-              "slots_the_bridge_declares": 13
+              "slots_the_bridge_declares": 20
             },
             {
               "distinct_objects_the_layer_needs": 10,
@@ -1093,7 +1319,7 @@
               "role": "mapped_family_operand",
               "satisfiable": true,
               "short_by": 0,
-              "slots_the_bridge_declares": 13
+              "slots_the_bridge_declares": 20
             },
             {
               "distinct_objects_the_layer_needs": 3,
@@ -1106,7 +1332,7 @@
               "role": "matmul_input",
               "satisfiable": true,
               "short_by": 0,
-              "slots_the_bridge_declares": 13
+              "slots_the_bridge_declares": 20
             },
             {
               "distinct_objects_the_layer_needs": 7,
@@ -1123,7 +1349,7 @@
               "role": "matmul_weight",
               "satisfiable": true,
               "short_by": 0,
-              "slots_the_bridge_declares": 13
+              "slots_the_bridge_declares": 20
             },
             {
               "distinct_objects_the_layer_needs": 7,
@@ -1140,7 +1366,7 @@
               "role": "result_object",
               "satisfiable": true,
               "short_by": 0,
-              "slots_the_bridge_declares": 13
+              "slots_the_bridge_declares": 20
             },
             {
               "distinct_objects_the_layer_needs": 2,
@@ -1152,7 +1378,7 @@
               "role": "rms_input",
               "satisfiable": true,
               "short_by": 0,
-              "slots_the_bridge_declares": 13
+              "slots_the_bridge_declares": 20
             },
             {
               "distinct_objects_the_layer_needs": 2,
@@ -1164,7 +1390,7 @@
               "role": "rms_weight",
               "satisfiable": true,
               "short_by": 0,
-              "slots_the_bridge_declares": 13
+              "slots_the_bridge_declares": 20
             },
             {
               "distinct_objects_the_layer_needs": 1,
@@ -1175,7 +1401,7 @@
               "role": "rope_coefficient",
               "satisfiable": true,
               "short_by": 0,
-              "slots_the_bridge_declares": 13
+              "slots_the_bridge_declares": 20
             },
             {
               "distinct_objects_the_layer_needs": 2,
@@ -1187,7 +1413,7 @@
               "role": "rope_input",
               "satisfiable": true,
               "short_by": 0,
-              "slots_the_bridge_declares": 13
+              "slots_the_bridge_declares": 20
             },
             {
               "distinct_objects_the_layer_needs": 23,
@@ -1220,13 +1446,13 @@
               ],
               "role": "__the whole span, through one table__",
               "satisfiable": false,
-              "short_by": 10,
-              "slots_the_bridge_declares": 13
+              "short_by": 3,
+              "slots_the_bridge_declares": 20
             }
           ],
           "route_note": "derived from the same demand-versus-capacity counts as the shortfall above; it is what this vehicle lacks, not a design",
           "route_to_completion": [
-            "place 23 distinct objects at once: the deepest table a run has resolved holds 13 (role __the whole span, through one table__); the bridge declares 32 entries, which is a declaration and not a measurement"
+            "place 23 distinct objects at once: the deepest table a run has resolved holds 20 (role __the whole span, through one table__); the bridge declares 32 entries, which is a declaration and not a measurement"
           ],
           "unattributed_operands": []
         },
@@ -1238,19 +1464,19 @@
                 "object_id": 23,
                 "role": "mapped_family_operand",
                 "slot": "input_view_0",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               },
               {
                 "object_id": 64,
                 "role": "mapped_family_operand",
                 "slot": "input_view_1",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               },
               {
                 "object_id": 17,
                 "role": "mapped_family_operand",
                 "slot": "output_view_0",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               }
             ],
             "kernel_id": "layer.0.attention.key_append",
@@ -1265,19 +1491,19 @@
                 "object_id": 23,
                 "role": "mapped_family_operand",
                 "slot": "input_view_0",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               },
               {
                 "object_id": 71,
                 "role": "mapped_family_operand",
                 "slot": "input_view_1",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               },
               {
                 "object_id": 17,
                 "role": "mapped_family_operand",
                 "slot": "output_view_0",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               }
             ],
             "kernel_id": "layer.0.attention.value_append",
@@ -1292,31 +1518,31 @@
                 "object_id": 55,
                 "role": "mapped_family_operand",
                 "slot": "input_view_0",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               },
               {
                 "object_id": 17,
                 "role": "mapped_family_operand",
                 "slot": "input_view_1",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               },
               {
                 "object_id": 17,
                 "role": "mapped_family_operand",
                 "slot": "input_view_2",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               },
               {
                 "object_id": 23,
                 "role": "mapped_family_operand",
                 "slot": "input_view_3",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               },
               {
                 "object_id": 45,
                 "role": "mapped_family_operand",
                 "slot": "output_view_0",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               }
             ],
             "kernel_id": "layer.0.attention.grouped_query",
@@ -1331,19 +1557,19 @@
                 "object_id": 45,
                 "role": "matmul_input",
                 "slot": "input_view_0",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               },
               {
                 "object_id": 12,
                 "role": "matmul_weight",
                 "slot": "input_view_1",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               },
               {
                 "object_id": 55,
                 "role": "result_object",
                 "slot": "output_view_0",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               }
             ],
             "kernel_id": "layer.0.attention.output_projection",
@@ -1358,19 +1584,19 @@
                 "object_id": 36,
                 "role": "mapped_family_operand",
                 "slot": "input_view_0",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               },
               {
                 "object_id": 55,
                 "role": "mapped_family_operand",
                 "slot": "input_view_1",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               },
               {
                 "object_id": 45,
                 "role": "mapped_family_operand",
                 "slot": "output_view_0",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               }
             ],
             "kernel_id": "layer.0.attention.residual_add",
@@ -1385,19 +1611,19 @@
                 "object_id": 45,
                 "role": "rms_input",
                 "slot": "input_view_0",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               },
               {
                 "object_id": 13,
                 "role": "rms_weight",
                 "slot": "input_view_1",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               },
               {
                 "object_id": 55,
                 "role": "result_object",
                 "slot": "output_view_0",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               }
             ],
             "kernel_id": "layer.0.feed_forward_norm",
@@ -1412,19 +1638,19 @@
                 "object_id": 55,
                 "role": "matmul_input",
                 "slot": "input_view_0",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               },
               {
                 "object_id": 14,
                 "role": "matmul_weight",
                 "slot": "input_view_1",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               },
               {
                 "object_id": 149,
                 "role": "result_object",
                 "slot": "output_view_0",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               }
             ],
             "kernel_id": "layer.0.feed_forward.gate_projection",
@@ -1439,19 +1665,19 @@
                 "object_id": 55,
                 "role": "matmul_input",
                 "slot": "input_view_0",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               },
               {
                 "object_id": 15,
                 "role": "matmul_weight",
                 "slot": "input_view_1",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               },
               {
                 "object_id": 156,
                 "role": "result_object",
                 "slot": "output_view_0",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               }
             ],
             "kernel_id": "layer.0.feed_forward.up_projection",
@@ -1466,19 +1692,19 @@
                 "object_id": 149,
                 "role": "mapped_family_operand",
                 "slot": "input_view_0",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               },
               {
                 "object_id": 156,
                 "role": "mapped_family_operand",
                 "slot": "input_view_1",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               },
               {
                 "object_id": 162,
                 "role": "mapped_family_operand",
                 "slot": "output_view_0",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               }
             ],
             "kernel_id": "layer.0.feed_forward.activation",
@@ -1493,19 +1719,19 @@
                 "object_id": 162,
                 "role": "matmul_input",
                 "slot": "input_view_0",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               },
               {
                 "object_id": 16,
                 "role": "matmul_weight",
                 "slot": "input_view_1",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               },
               {
                 "object_id": 55,
                 "role": "result_object",
                 "slot": "output_view_0",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               }
             ],
             "kernel_id": "layer.0.feed_forward.down_projection",
@@ -1520,19 +1746,19 @@
                 "object_id": 45,
                 "role": "mapped_family_operand",
                 "slot": "input_view_0",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               },
               {
                 "object_id": 55,
                 "role": "mapped_family_operand",
                 "slot": "input_view_1",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               },
               {
                 "object_id": 36,
                 "role": "mapped_family_operand",
                 "slot": "output_view_0",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               }
             ],
             "kernel_id": "layer.0.feed_forward.residual_add",
@@ -1542,9 +1768,10 @@
           }
         ],
         "why_not_complete": [
+          "the integrated campaign is not usable as evidence: 1 bound source(s) have drifted since it was recorded",
           "11 of the layer's 19 operators did not execute in the integrated RTL: PC 32 DMA.SCATTER (layer.0.attention.key_append), PC 35 DMA.SCATTER (layer.0.attention.value_append), PC 38 ATTENTION.GQA (layer.0.attention.grouped_query), PC 41 TENSOR.MATMUL (layer.0.attention.output_projection), PC 44 VECTOR.ADD (layer.0.attention.residual_add), PC 47 VECTOR.RMS_NORM (layer.0.feed_forward_norm), PC 50 TENSOR.MATMUL (layer.0.feed_forward.gate_projection), PC 53 TENSOR.MATMUL (layer.0.feed_forward.up_projection), PC 56 VECTOR.SILU_MUL (layer.0.feed_forward.activation), PC 59 TENSOR.MATMUL (layer.0.feed_forward.down_projection), PC 62 VECTOR.ADD (layer.0.feed_forward.residual_add)",
           "the vehicle fails closed at PC 32 DMA.SCATTER descriptor 108 with trap class 4; that is the first operator of the layer it does not run",
-          "placement role __the whole span, through one table__ must name 23 distinct objects for this layer and the deepest object table a run has been measured to resolve holds 13 (the bridge DECLARES 32 entries, which is a count of source text and is credited to nothing)"
+          "placement role __the whole span, through one table__ must name 23 distinct objects for this layer and the deepest object table a run has been measured to resolve holds 20 (the bridge DECLARES 32 entries, which is a count of source text and is credited to nothing)"
         ]
       },
       "storage_class": "rom",
@@ -1571,8 +1798,10 @@
             "commit": "c20919d3a3ff7ccef04eaf66c2b34f0ca930a25b",
             "worktree_dirty": false
           },
-          "drifted_source_count": 0,
-          "drifted_sources": [],
+          "drifted_source_count": 1,
+          "drifted_sources": [
+            "tools/build_abi3_shipped_prefix_vectors.py"
+          ],
           "evidence_class": "public_open_tool_rtl_simulation_composite",
           "expected_cases": [
             {
@@ -1751,12 +1980,12 @@
             "sha256": "2c8696111937aa85197cd2042dfed6cb3c5ef7f03fb80eba1fe3b93d40c1b87e"
           },
           "status": "pass",
-          "usable": true,
+          "usable": false,
           "vector_set_is_current": true,
           "vector_set_path": "testdata/compiler/abi3_shipped_prefix/abi3_shipped_prefix_vectors.json",
           "vector_set_sha256_declared": "9bfe26104715ba70728aaccc40b4b43bfed995e84d5e812e9e90d0dd2dbe3efd",
           "vector_set_sha256_on_disk": "9bfe26104715ba70728aaccc40b4b43bfed995e84d5e812e9e90d0dd2dbe3efd",
-          "why_unusable": null
+          "why_unusable": "1 bound source(s) have drifted since it was recorded"
         },
         "case_evidence": {
           "case_index": 1,
@@ -1777,24 +2006,136 @@
           },
           "observed_agrees_with_the_vector_set": true
         },
-        "evidence_class": "public_open_tool_rtl_simulation_composite",
-        "simulated_cycles": 252057600,
-        "simulated_cycles_scope": "the integrated run's own total, over all four cases of the one binary; the harness reports one cycle count for the run and this rung does not split it per lowering, so the same number appears in both records and must not be added across them",
-        "simulator": "verilator",
+        "evidence_class": "absent: no usable integrated RTL simulation of this lowering exists",
+        "simulated_cycles": null,
+        "simulated_cycles_scope": null,
+        "simulator": null,
         "vehicle": {
           "bridge": "rtl/abi3/ot_a3_engine_issue_bridge.sv",
           "bridge_sha256": "0be35e7fc669f34f8c7c9d6a0e12fe1b11c08b70bc138cab386173ee1b7c7f66",
           "placement_capacity": {
             "declared_entries": 32,
             "declared_entries_note": "counted from the bridge's port list. It is a DECLARATION, not a measurement, and nothing below is credited from it",
-            "measured_from": "results/rtl/abi3_shipped_prefix_campaign.json",
+            "measured_from": "results/rtl/a3_operator_admission_campaign.json",
             "measured_note": "the largest number of distinct ABI objects a passing campaign case bound into the bridge's table and resolved. Every one of that case's result words was compared against the golden write stream, address and value, so an object the bridge placed anywhere but at its own base would have failed the run",
-            "measured_simultaneous_objects": 13,
+            "measured_simultaneous_objects": 20,
+            "measurements": [
+              {
+                "artifact": "results/rtl/abi3_shipped_prefix_campaign.json",
+                "measured_simultaneous_objects": 0,
+                "usable": false,
+                "what_it_ran": "the integrated shipped-prefix vehicle, whose case binds every object its own program span names",
+                "why_unusable": "1 bound source(s) have drifted since it was recorded"
+              },
+              {
+                "artifact": "results/rtl/a3_operator_admission_campaign.json",
+                "cases_credited": [
+                  "vector_rms_norm_attention_input",
+                  "vector_head_rms_norm_query",
+                  "vector_head_rms_norm_key",
+                  "vector_rope_query",
+                  "vector_rope_key",
+                  "dma_scatter_key_position16",
+                  "dma_scatter_value_position16",
+                  "attention_gqa_context17",
+                  "vector_add_attention_residual",
+                  "vector_rms_norm_mlp_input",
+                  "vector_silu_mul_swiglu",
+                  "vector_add_mlp_residual_read_modify_write",
+                  "vector_rms_norm_final",
+                  "dma_scatter_key_position18",
+                  "dma_scatter_value_position18",
+                  "attention_gqa_context19",
+                  "selection_argmax_lowest_tied_id",
+                  "selection_token_append_official_eos",
+                  "selection_token_append_continues"
+                ],
+                "measured_simultaneous_objects": 20,
+                "objects_resolved_and_compared": [
+                  2,
+                  4,
+                  8,
+                  10,
+                  13,
+                  17,
+                  23,
+                  27,
+                  36,
+                  45,
+                  55,
+                  64,
+                  71,
+                  84,
+                  149,
+                  156,
+                  162,
+                  194,
+                  200,
+                  209
+                ],
+                "storage_class": "rom",
+                "usable": true,
+                "what_it_ran": "the operator-admission bench, which instantiates this bridge whole and binds every entry it declares from the case record",
+                "why_unusable": null
+              },
+              {
+                "artifact": "results/rtl/a3_operator_admission_hbm_campaign.json",
+                "cases_credited": [
+                  "vector_rms_norm_attention_input",
+                  "vector_head_rms_norm_query",
+                  "vector_head_rms_norm_key",
+                  "vector_rope_query",
+                  "vector_rope_key",
+                  "dma_scatter_key_position16",
+                  "dma_scatter_value_position16",
+                  "attention_gqa_context17",
+                  "vector_add_attention_residual",
+                  "vector_rms_norm_mlp_input",
+                  "vector_silu_mul_swiglu",
+                  "vector_add_mlp_residual_read_modify_write",
+                  "vector_rms_norm_final",
+                  "dma_scatter_key_position18",
+                  "dma_scatter_value_position18",
+                  "attention_gqa_context19",
+                  "selection_argmax_lowest_tied_id",
+                  "selection_token_append_official_eos",
+                  "selection_token_append_continues"
+                ],
+                "measured_simultaneous_objects": 20,
+                "objects_resolved_and_compared": [
+                  1,
+                  5,
+                  6,
+                  8,
+                  13,
+                  15,
+                  17,
+                  18,
+                  19,
+                  20,
+                  21,
+                  22,
+                  23,
+                  24,
+                  25,
+                  26,
+                  28,
+                  36,
+                  37,
+                  38
+                ],
+                "storage_class": "hbm",
+                "usable": true,
+                "what_it_ran": "the operator-admission bench, which instantiates this bridge whole and binds every entry it declares from the case record",
+                "why_unusable": null
+              }
+            ],
+            "measurements_note": "every passing RTL campaign that drives THIS bridge module and publishes what its one object table held and resolved. The depth belongs to the module, so the deepest such run measures it; a missing, failing or drifted artifact contributes nothing and says why, which is a zero and never an unknown",
             "per_case": [
               {
                 "case_index": 0,
                 "case_name": "qwen3-8b-rom-single-chip/decode",
-                "case_passed_in_the_campaign": true,
+                "case_passed_in_the_campaign": false,
                 "objects": [
                   4,
                   5,
@@ -1820,7 +2161,7 @@
               {
                 "case_index": 1,
                 "case_name": "qwen3-8b-hbm-single-chip/decode",
-                "case_passed_in_the_campaign": true,
+                "case_passed_in_the_campaign": false,
                 "objects": [
                   1,
                   2,
@@ -1846,7 +2187,7 @@
               {
                 "case_index": 2,
                 "case_name": "deepseek-v4-flash-rom-wafer/decode",
-                "case_passed_in_the_campaign": true,
+                "case_passed_in_the_campaign": false,
                 "objects": [
                   334,
                   344,
@@ -1859,7 +2200,7 @@
               {
                 "case_index": 3,
                 "case_name": "deepseek-v4-flash-hbm-cluster/decode",
-                "case_passed_in_the_campaign": true,
+                "case_passed_in_the_campaign": false,
                 "objects": [
                   236,
                   237,
@@ -1884,12 +2225,12 @@
               "head_rms_input": {
                 "note": "one shared object table serves every role; the per-role capacity is the table's measured depth",
                 "object_keyed": true,
-                "slots": 13
+                "slots": 20
               },
               "head_rms_weight": {
                 "note": "one shared object table serves every role; the per-role capacity is the table's measured depth",
                 "object_keyed": true,
-                "slots": 13
+                "slots": 20
               },
               "index_base": {
                 "note": "cfg_index_base is a single base advanced by the launch counter, shared by DMA.GATHER and TENSOR.EMBED_LOOKUP; it is not keyed by object",
@@ -1899,42 +2240,42 @@
               "mapped_family_operand": {
                 "note": "one shared object table serves every role; the per-role capacity is the table's measured depth",
                 "object_keyed": true,
-                "slots": 13
+                "slots": 20
               },
               "matmul_input": {
                 "note": "one shared object table serves every role; the per-role capacity is the table's measured depth",
                 "object_keyed": true,
-                "slots": 13
+                "slots": 20
               },
               "matmul_weight": {
                 "note": "one shared object table serves every role; the per-role capacity is the table's measured depth",
                 "object_keyed": true,
-                "slots": 13
+                "slots": 20
               },
               "result_object": {
                 "note": "one shared object table serves every role; the per-role capacity is the table's measured depth",
                 "object_keyed": true,
-                "slots": 13
+                "slots": 20
               },
               "rms_input": {
                 "note": "one shared object table serves every role; the per-role capacity is the table's measured depth",
                 "object_keyed": true,
-                "slots": 13
+                "slots": 20
               },
               "rms_weight": {
                 "note": "one shared object table serves every role; the per-role capacity is the table's measured depth",
                 "object_keyed": true,
-                "slots": 13
+                "slots": 20
               },
               "rope_coefficient": {
                 "note": "one shared object table serves every role; the per-role capacity is the table's measured depth",
                 "object_keyed": true,
-                "slots": 13
+                "slots": 20
               },
               "rope_input": {
                 "note": "one shared object table serves every role; the per-role capacity is the table's measured depth",
                 "object_keyed": true,
-                "slots": 13
+                "slots": 20
               }
             },
             "source": "rtl/abi3/ot_a3_engine_issue_bridge.sv",
@@ -1945,7 +2286,7 @@
         }
       },
       "git": {
-        "commit": "e6abd2fb1d42faa81c54e2177230c54c6bd608cd",
+        "commit": "1963b7172f33aa1b9fb9d67ab3b3432d72b43fc5",
         "dirty_paths": [],
         "scope": "the tree THIS artifact was derived in. It is not a claim about the tree the integrated campaign ran in; see execution.campaign.declared_git.",
         "worktree_dirty": false
@@ -2020,9 +2361,9 @@
             }
           ]
         },
-        "compared_words": 20480,
+        "compared_words": null,
         "complete": false,
-        "every_intermediate_compared": true,
+        "every_intermediate_compared": false,
         "fail_closed_boundary": {
           "descriptor_id": 118,
           "family": 16,
@@ -2034,11 +2375,11 @@
         },
         "golden_injected_breakdown": {
           "activation_operands_staged_instead_of_produced": 0,
-          "engine_results_injected_at_the_engine_boundary": 0,
+          "engine_results_injected_at_the_engine_boundary": null,
           "note": "the first is the harness's own injected_results counter; the second is every operand of an executed operator that names an object this layer writes and was not read from the address the producing operator wrote"
         },
-        "golden_injected_intermediate_count": 0,
-        "golden_injected_note": "measured from the harness's own injected_results counter and the PASS marker the run printed; the run that establishes this rung is the one in which the engine array computed",
+        "golden_injected_intermediate_count": null,
+        "golden_injected_note": "absent: no measured injection count exists, and this field is never defaulted to zero",
         "handoff": {
           "every_activation_operand_came_from_the_rtl": true,
           "golden_injected_operand_count": 0,
@@ -2081,7 +2422,7 @@
         "intermediate_coverage": {
           "case_compared_region_words": 15616,
           "compared_against": "the golden write stream, address and value, for every word the engines write; the retained image is compared as well and holds each object's last value",
-          "comparison_actually_happened": true,
+          "comparison_actually_happened": false,
           "distinct_objects_do_not_overlap": true,
           "each_operator_writes_a_non_empty_output": true,
           "holds": true,
@@ -2398,9 +2739,9 @@
           "note": "the program issues this layer body once per model layer through one loop; this rung establishes ONE invocation. That the loop issues the model's layer count of structurally identical invocations is rung G1c and is not claimed here.",
           "operators_per_invocation": 19
         },
-        "mismatched_words": 0,
-        "mismatched_words_note": null,
-        "operator_count": 8,
+        "mismatched_words": null,
+        "mismatched_words_note": "no words of this layer were compared under this lowering; a mismatch count over zero comparisons is not a zero mismatch count and is reported absent",
+        "operator_count": 0,
         "operator_count_meaning": "operators of this layer that executed in the integrated RTL and had every result word they wrote compared against the golden image",
         "operators_in_layer": 19,
         "placement_demand": {
@@ -2444,7 +2785,7 @@
               "role": "head_rms_input",
               "satisfiable": true,
               "short_by": 0,
-              "slots_the_bridge_declares": 13
+              "slots_the_bridge_declares": 20
             },
             {
               "distinct_objects_the_layer_needs": 2,
@@ -2456,7 +2797,7 @@
               "role": "head_rms_weight",
               "satisfiable": true,
               "short_by": 0,
-              "slots_the_bridge_declares": 13
+              "slots_the_bridge_declares": 20
             },
             {
               "distinct_objects_the_layer_needs": 10,
@@ -2476,7 +2817,7 @@
               "role": "mapped_family_operand",
               "satisfiable": true,
               "short_by": 0,
-              "slots_the_bridge_declares": 13
+              "slots_the_bridge_declares": 20
             },
             {
               "distinct_objects_the_layer_needs": 3,
@@ -2489,7 +2830,7 @@
               "role": "matmul_input",
               "satisfiable": true,
               "short_by": 0,
-              "slots_the_bridge_declares": 13
+              "slots_the_bridge_declares": 20
             },
             {
               "distinct_objects_the_layer_needs": 7,
@@ -2506,7 +2847,7 @@
               "role": "matmul_weight",
               "satisfiable": true,
               "short_by": 0,
-              "slots_the_bridge_declares": 13
+              "slots_the_bridge_declares": 20
             },
             {
               "distinct_objects_the_layer_needs": 7,
@@ -2523,7 +2864,7 @@
               "role": "result_object",
               "satisfiable": true,
               "short_by": 0,
-              "slots_the_bridge_declares": 13
+              "slots_the_bridge_declares": 20
             },
             {
               "distinct_objects_the_layer_needs": 2,
@@ -2535,7 +2876,7 @@
               "role": "rms_input",
               "satisfiable": true,
               "short_by": 0,
-              "slots_the_bridge_declares": 13
+              "slots_the_bridge_declares": 20
             },
             {
               "distinct_objects_the_layer_needs": 2,
@@ -2547,7 +2888,7 @@
               "role": "rms_weight",
               "satisfiable": true,
               "short_by": 0,
-              "slots_the_bridge_declares": 13
+              "slots_the_bridge_declares": 20
             },
             {
               "distinct_objects_the_layer_needs": 1,
@@ -2558,7 +2899,7 @@
               "role": "rope_coefficient",
               "satisfiable": true,
               "short_by": 0,
-              "slots_the_bridge_declares": 13
+              "slots_the_bridge_declares": 20
             },
             {
               "distinct_objects_the_layer_needs": 2,
@@ -2570,7 +2911,7 @@
               "role": "rope_input",
               "satisfiable": true,
               "short_by": 0,
-              "slots_the_bridge_declares": 13
+              "slots_the_bridge_declares": 20
             },
             {
               "distinct_objects_the_layer_needs": 23,
@@ -2603,13 +2944,13 @@
               ],
               "role": "__the whole span, through one table__",
               "satisfiable": false,
-              "short_by": 10,
-              "slots_the_bridge_declares": 13
+              "short_by": 3,
+              "slots_the_bridge_declares": 20
             }
           ],
           "route_note": "derived from the same demand-versus-capacity counts as the shortfall above; it is what this vehicle lacks, not a design",
           "route_to_completion": [
-            "place 23 distinct objects at once: the deepest table a run has resolved holds 13 (role __the whole span, through one table__); the bridge declares 32 entries, which is a declaration and not a measurement"
+            "place 23 distinct objects at once: the deepest table a run has resolved holds 20 (role __the whole span, through one table__); the bridge declares 32 entries, which is a declaration and not a measurement"
           ],
           "unattributed_operands": []
         },
@@ -2621,19 +2962,19 @@
                 "object_id": 15,
                 "role": "mapped_family_operand",
                 "slot": "input_view_0",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               },
               {
                 "object_id": 21,
                 "role": "mapped_family_operand",
                 "slot": "input_view_1",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               },
               {
                 "object_id": 38,
                 "role": "mapped_family_operand",
                 "slot": "output_view_0",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               }
             ],
             "kernel_id": "layer.0.attention.key_append",
@@ -2648,19 +2989,19 @@
                 "object_id": 15,
                 "role": "mapped_family_operand",
                 "slot": "input_view_0",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               },
               {
                 "object_id": 22,
                 "role": "mapped_family_operand",
                 "slot": "input_view_1",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               },
               {
                 "object_id": 38,
                 "role": "mapped_family_operand",
                 "slot": "output_view_0",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               }
             ],
             "kernel_id": "layer.0.attention.value_append",
@@ -2675,31 +3016,31 @@
                 "object_id": 20,
                 "role": "mapped_family_operand",
                 "slot": "input_view_0",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               },
               {
                 "object_id": 38,
                 "role": "mapped_family_operand",
                 "slot": "input_view_1",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               },
               {
                 "object_id": 38,
                 "role": "mapped_family_operand",
                 "slot": "input_view_2",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               },
               {
                 "object_id": 15,
                 "role": "mapped_family_operand",
                 "slot": "input_view_3",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               },
               {
                 "object_id": 19,
                 "role": "mapped_family_operand",
                 "slot": "output_view_0",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               }
             ],
             "kernel_id": "layer.0.attention.grouped_query",
@@ -2714,19 +3055,19 @@
                 "object_id": 19,
                 "role": "matmul_input",
                 "slot": "input_view_0",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               },
               {
                 "object_id": 7,
                 "role": "matmul_weight",
                 "slot": "input_view_1",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               },
               {
                 "object_id": 20,
                 "role": "result_object",
                 "slot": "output_view_0",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               }
             ],
             "kernel_id": "layer.0.attention.output_projection",
@@ -2741,19 +3082,19 @@
                 "object_id": 18,
                 "role": "mapped_family_operand",
                 "slot": "input_view_0",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               },
               {
                 "object_id": 20,
                 "role": "mapped_family_operand",
                 "slot": "input_view_1",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               },
               {
                 "object_id": 19,
                 "role": "mapped_family_operand",
                 "slot": "output_view_0",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               }
             ],
             "kernel_id": "layer.0.attention.residual_add",
@@ -2768,19 +3109,19 @@
                 "object_id": 19,
                 "role": "rms_input",
                 "slot": "input_view_0",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               },
               {
                 "object_id": 8,
                 "role": "rms_weight",
                 "slot": "input_view_1",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               },
               {
                 "object_id": 20,
                 "role": "result_object",
                 "slot": "output_view_0",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               }
             ],
             "kernel_id": "layer.0.feed_forward_norm",
@@ -2795,19 +3136,19 @@
                 "object_id": 20,
                 "role": "matmul_input",
                 "slot": "input_view_0",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               },
               {
                 "object_id": 9,
                 "role": "matmul_weight",
                 "slot": "input_view_1",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               },
               {
                 "object_id": 24,
                 "role": "result_object",
                 "slot": "output_view_0",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               }
             ],
             "kernel_id": "layer.0.feed_forward.gate_projection",
@@ -2822,19 +3163,19 @@
                 "object_id": 20,
                 "role": "matmul_input",
                 "slot": "input_view_0",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               },
               {
                 "object_id": 10,
                 "role": "matmul_weight",
                 "slot": "input_view_1",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               },
               {
                 "object_id": 25,
                 "role": "result_object",
                 "slot": "output_view_0",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               }
             ],
             "kernel_id": "layer.0.feed_forward.up_projection",
@@ -2849,19 +3190,19 @@
                 "object_id": 24,
                 "role": "mapped_family_operand",
                 "slot": "input_view_0",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               },
               {
                 "object_id": 25,
                 "role": "mapped_family_operand",
                 "slot": "input_view_1",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               },
               {
                 "object_id": 26,
                 "role": "mapped_family_operand",
                 "slot": "output_view_0",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               }
             ],
             "kernel_id": "layer.0.feed_forward.activation",
@@ -2876,19 +3217,19 @@
                 "object_id": 26,
                 "role": "matmul_input",
                 "slot": "input_view_0",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               },
               {
                 "object_id": 11,
                 "role": "matmul_weight",
                 "slot": "input_view_1",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               },
               {
                 "object_id": 20,
                 "role": "result_object",
                 "slot": "output_view_0",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               }
             ],
             "kernel_id": "layer.0.feed_forward.down_projection",
@@ -2903,19 +3244,19 @@
                 "object_id": 19,
                 "role": "mapped_family_operand",
                 "slot": "input_view_0",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               },
               {
                 "object_id": 20,
                 "role": "mapped_family_operand",
                 "slot": "input_view_1",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               },
               {
                 "object_id": 18,
                 "role": "mapped_family_operand",
                 "slot": "output_view_0",
-                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 13"
+                "why": "the span names 23 distinct objects through one table and the deepest table a run has resolved holds 20"
               }
             ],
             "kernel_id": "layer.0.feed_forward.residual_add",
@@ -2925,9 +3266,10 @@
           }
         ],
         "why_not_complete": [
+          "the integrated campaign is not usable as evidence: 1 bound source(s) have drifted since it was recorded",
           "11 of the layer's 19 operators did not execute in the integrated RTL: PC 32 DMA.SCATTER (layer.0.attention.key_append), PC 35 DMA.SCATTER (layer.0.attention.value_append), PC 38 ATTENTION.GQA (layer.0.attention.grouped_query), PC 41 TENSOR.MATMUL (layer.0.attention.output_projection), PC 44 VECTOR.ADD (layer.0.attention.residual_add), PC 47 VECTOR.RMS_NORM (layer.0.feed_forward_norm), PC 50 TENSOR.MATMUL (layer.0.feed_forward.gate_projection), PC 53 TENSOR.MATMUL (layer.0.feed_forward.up_projection), PC 56 VECTOR.SILU_MUL (layer.0.feed_forward.activation), PC 59 TENSOR.MATMUL (layer.0.feed_forward.down_projection), PC 62 VECTOR.ADD (layer.0.feed_forward.residual_add)",
           "the vehicle fails closed at PC 32 DMA.SCATTER descriptor 118 with trap class 4; that is the first operator of the layer it does not run",
-          "placement role __the whole span, through one table__ must name 23 distinct objects for this layer and the deepest object table a run has been measured to resolve holds 13 (the bridge DECLARES 32 entries, which is a count of source text and is credited to nothing)"
+          "placement role __the whole span, through one table__ must name 23 distinct objects for this layer and the deepest object table a run has been measured to resolve holds 20 (the bridge DECLARES 32 entries, which is a count of source text and is credited to nothing)"
         ]
       },
       "storage_class": "hbm",
