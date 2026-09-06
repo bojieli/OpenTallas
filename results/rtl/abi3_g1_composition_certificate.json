@@ -1,0 +1,753 @@
+{
+ "certificate": {
+  "derived_mechanically": true,
+  "every_issued_instance_covered": false,
+  "token_ids_match_oracle": false,
+  "uncovered_instance_count": 1533
+ },
+ "claim_boundary": {
+  "does_not_establish": [
+   "that an uncovered instance is wrong: it is unproven, which is a different and weaker statement, and the certificate says which",
+   "anything G1a did not measure. This tool re-reads G1a's coverage decision and cannot promote a class G1a called uncovered",
+   "a single uninterrupted full-dimension run, which G1's own does_not_establish declares out of scope"
+  ],
+  "establishes": "which of the operator instances the governed workload actually issues are in an equivalence class a rung proved, and which are not -- both counted from G1e's certified trace."
+ },
+ "derived_mechanically_because": {
+  "every_input_bound_by_sha256": true,
+  "gate_fields_recompute_from_the_attribution_list": true,
+  "holds": true,
+  "partition_is_exhaustive": true,
+  "population_read_from_g1e_trace_census": true
+ },
+ "gate": "G1",
+ "generated_by": "tools/build_abi3_g1_composition_certificate.py",
+ "generated_by_sha256": "d404c4a810e6becc7e26655419ee4288d6bdec3e3b02594cf7bff5e8330a1ad2",
+ "git": {
+  "commit": "4d48236be9a8206127c3c03a84aaba0a774b06f4",
+  "dirty_paths": [],
+  "scope": "the tree THIS certificate was derived in. Each rung artifact carries the tree ITS run happened in, under records[].git.",
+  "worktree_dirty": false
+ },
+ "inputs": {
+  "G1a": {
+   "path": "results/rtl/abi3_g1a_operator_equivalence.json",
+   "sha256": "ac6902d6777648afe584d8f10ed9c5fbea32434808bdf77d34e7f19e43d6b0e2"
+  },
+  "G1b": {
+   "path": "results/rtl/abi3_g1b_layer_closure.json",
+   "sha256": "283da2ad6ecf3ac4a35e075a4aedb74c76d905ed05288941159b5ce5eff7df04"
+  },
+  "G1c": {
+   "path": "results/rtl/abi3_g1c_composition.json",
+   "sha256": "594ce929dbc71c3b0e59128b1e0af62c043d186aea0d6b005cef6b68a9bc661a"
+  },
+  "G1d": {
+   "path": "results/rtl/abi3_g1d_token.json",
+   "sha256": "324c8b23ff6e42be16584b505c7548b41bbdac454be1e1e6b3472043017a7d48"
+  },
+  "G1d_oracle": {
+   "path": "results/abi3/qwen3_reference_oracle_eos.json",
+   "sha256": "d9c7dd222cff342f84ff34be3600f8b41c6c8c6c0280a523737fc53d1f20c6ec"
+  },
+  "G1e": {
+   "path": "results/rtl/abi3_g1e_control_end_to_end.json",
+   "sha256": "cea959e535573059202264f28c69ffeba39a32003fcc5311c500d1b3e95bbc60"
+  },
+  "G1f": {
+   "path": "results/rtl/abi3_g1f_reduced_end_to_end.json",
+   "sha256": "dd5a5f2bddda148754fd7403e6870ba712d0d12d6c43c2b8beee2fef9b6dc67a"
+  },
+  "G1f_oracle": {
+   "path": "results/abi3/qwen3_reduced_reference_oracle.json",
+   "sha256": "6cbcdd53ced4d4dc07d0109c67e007bd0ae6cadb540b2d5138769631337a9ca5"
+  },
+  "gate_spec": {
+   "path": "configs/gates/redesign_gates.json",
+   "sha256": "23109cf09fb65db0a36655f7f6ac98506b33b3b4243b3c8d1b53152d46ad072c"
+  }
+ },
+ "records": [
+  {
+   "attribution": [
+    {
+     "covered": false,
+     "covered_by_rung": null,
+     "descriptor_id": 32,
+     "family": 16,
+     "instances": 3,
+     "mnemonic": "DMA.GATHER",
+     "sub": 2,
+     "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [32, 190] of this deployment (133afc13e1fc) in a positive case"
+    },
+    {
+     "covered": false,
+     "covered_by_rung": null,
+     "descriptor_id": 190,
+     "family": 16,
+     "instances": 3,
+     "mnemonic": "DMA.GATHER",
+     "sub": 2,
+     "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [32, 190] of this deployment (133afc13e1fc) in a positive case"
+    },
+    {
+     "covered": true,
+     "covered_by_rung": "G1a",
+     "descriptor_id": 108,
+     "equivalence_class_covered_by": "results/rtl/a3_operator_admission_campaign.json",
+     "family": 16,
+     "instances": 108,
+     "mnemonic": "DMA.SCATTER",
+     "numeric_contract_sha256": "55f39bccbda65baf6238cfcd93d7bf9959330984af837979870cc019be00e16f",
+     "sub": 3
+    },
+    {
+     "covered": true,
+     "covered_by_rung": "G1a",
+     "descriptor_id": 115,
+     "equivalence_class_covered_by": "results/rtl/a3_operator_admission_campaign.json",
+     "family": 16,
+     "instances": 108,
+     "mnemonic": "DMA.SCATTER",
+     "numeric_contract_sha256": "55f39bccbda65baf6238cfcd93d7bf9959330984af837979870cc019be00e16f",
+     "sub": 3
+    },
+    {
+     "covered": false,
+     "covered_by_rung": null,
+     "descriptor_id": 59,
+     "family": 32,
+     "instances": 108,
+     "mnemonic": "TENSOR.MATMUL",
+     "sub": 0,
+     "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [59, 130, 171] of this deployment (133afc13e1fc) in a positive case"
+    },
+    {
+     "covered": true,
+     "covered_by_rung": "G1a",
+     "descriptor_id": 67,
+     "equivalence_class_covered_by": "results/rtl/abi3_shipped_prefix_campaign.json",
+     "family": 32,
+     "instances": 108,
+     "mnemonic": "TENSOR.MATMUL",
+     "numeric_contract_sha256": "7550dc6a773fd9d5773b46182887613fb777bb8e4f01652321c4d93ca0765aa1",
+     "sub": 0
+    },
+    {
+     "covered": true,
+     "covered_by_rung": "G1a",
+     "descriptor_id": 73,
+     "equivalence_class_covered_by": "results/rtl/abi3_shipped_prefix_campaign.json",
+     "family": 32,
+     "instances": 108,
+     "mnemonic": "TENSOR.MATMUL",
+     "numeric_contract_sha256": "7550dc6a773fd9d5773b46182887613fb777bb8e4f01652321c4d93ca0765aa1",
+     "sub": 0
+    },
+    {
+     "covered": false,
+     "covered_by_rung": null,
+     "descriptor_id": 130,
+     "family": 32,
+     "instances": 108,
+     "mnemonic": "TENSOR.MATMUL",
+     "sub": 0,
+     "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [59, 130, 171] of this deployment (133afc13e1fc) in a positive case"
+    },
+    {
+     "covered": false,
+     "covered_by_rung": null,
+     "descriptor_id": 151,
+     "family": 32,
+     "instances": 108,
+     "mnemonic": "TENSOR.MATMUL",
+     "sub": 0,
+     "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [151, 158] of this deployment (133afc13e1fc) in a positive case"
+    },
+    {
+     "covered": false,
+     "covered_by_rung": null,
+     "descriptor_id": 158,
+     "family": 32,
+     "instances": 108,
+     "mnemonic": "TENSOR.MATMUL",
+     "sub": 0,
+     "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [151, 158] of this deployment (133afc13e1fc) in a positive case"
+    },
+    {
+     "covered": false,
+     "covered_by_rung": null,
+     "descriptor_id": 171,
+     "family": 32,
+     "instances": 108,
+     "mnemonic": "TENSOR.MATMUL",
+     "sub": 0,
+     "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [59, 130, 171] of this deployment (133afc13e1fc) in a positive case"
+    },
+    {
+     "covered": false,
+     "covered_by_rung": null,
+     "descriptor_id": 197,
+     "family": 32,
+     "instances": 3,
+     "mnemonic": "TENSOR.MATMUL",
+     "sub": 0,
+     "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [197] of this deployment (133afc13e1fc) in a positive case"
+    },
+    {
+     "covered": true,
+     "covered_by_rung": "G1a",
+     "descriptor_id": 41,
+     "equivalence_class_covered_by": "results/rtl/abi3_shipped_prefix_campaign.json",
+     "family": 32,
+     "instances": 3,
+     "mnemonic": "TENSOR.EMBED_LOOKUP",
+     "numeric_contract_sha256": "d1ea2f18e0b161e19e17f465ced630e0af7d0de970dadd6776c685ab6539fbcc",
+     "sub": 3
+    },
+    {
+     "covered": false,
+     "covered_by_rung": null,
+     "descriptor_id": 50,
+     "family": 48,
+     "instances": 108,
+     "mnemonic": "VECTOR.RMS_NORM",
+     "sub": 0,
+     "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [50, 144, 183] of this deployment (133afc13e1fc) in a positive case"
+    },
+    {
+     "covered": false,
+     "covered_by_rung": null,
+     "descriptor_id": 144,
+     "family": 48,
+     "instances": 108,
+     "mnemonic": "VECTOR.RMS_NORM",
+     "sub": 0,
+     "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [50, 144, 183] of this deployment (133afc13e1fc) in a positive case"
+    },
+    {
+     "covered": false,
+     "covered_by_rung": null,
+     "descriptor_id": 183,
+     "family": 48,
+     "instances": 3,
+     "mnemonic": "VECTOR.RMS_NORM",
+     "sub": 0,
+     "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [50, 144, 183] of this deployment (133afc13e1fc) in a positive case"
+    },
+    {
+     "covered": true,
+     "covered_by_rung": "G1a",
+     "descriptor_id": 79,
+     "equivalence_class_covered_by": "results/rtl/abi3_shipped_prefix_campaign.json",
+     "family": 48,
+     "instances": 108,
+     "mnemonic": "VECTOR.HEAD_RMS_NORM",
+     "numeric_contract_sha256": "999ef86bc4d4c36dfd57db84d49618af46bed2e6c1f0b1bf031a27b5b8c03fda",
+     "sub": 1
+    },
+    {
+     "covered": true,
+     "covered_by_rung": "G1a",
+     "descriptor_id": 87,
+     "equivalence_class_covered_by": "results/rtl/abi3_shipped_prefix_campaign.json",
+     "family": 48,
+     "instances": 108,
+     "mnemonic": "VECTOR.HEAD_RMS_NORM",
+     "numeric_contract_sha256": "999ef86bc4d4c36dfd57db84d49618af46bed2e6c1f0b1bf031a27b5b8c03fda",
+     "sub": 1
+    },
+    {
+     "covered": true,
+     "covered_by_rung": "G1a",
+     "descriptor_id": 94,
+     "equivalence_class_covered_by": "results/rtl/abi3_shipped_prefix_campaign.json",
+     "family": 48,
+     "instances": 108,
+     "mnemonic": "VECTOR.ROPE",
+     "numeric_contract_sha256": "34ad155c76b1ab1ee5efb8463a85753eaebd08e169ee93c07ba364759f1836cf",
+     "sub": 2
+    },
+    {
+     "covered": true,
+     "covered_by_rung": "G1a",
+     "descriptor_id": 100,
+     "equivalence_class_covered_by": "results/rtl/abi3_shipped_prefix_campaign.json",
+     "family": 48,
+     "instances": 108,
+     "mnemonic": "VECTOR.ROPE",
+     "numeric_contract_sha256": "34ad155c76b1ab1ee5efb8463a85753eaebd08e169ee93c07ba364759f1836cf",
+     "sub": 2
+    },
+    {
+     "covered": true,
+     "covered_by_rung": "G1a",
+     "descriptor_id": 138,
+     "equivalence_class_covered_by": "results/rtl/a3_operator_admission_campaign.json",
+     "family": 48,
+     "instances": 108,
+     "mnemonic": "VECTOR.ADD",
+     "numeric_contract_sha256": "3c972568ff6c0a44baf54121a08d9b4ad9c3c35883a87c5f258a998e3dde0b09",
+     "sub": 3
+    },
+    {
+     "covered": true,
+     "covered_by_rung": "G1a",
+     "descriptor_id": 177,
+     "equivalence_class_covered_by": "results/rtl/a3_operator_admission_campaign.json",
+     "family": 48,
+     "instances": 108,
+     "mnemonic": "VECTOR.ADD",
+     "numeric_contract_sha256": "3c972568ff6c0a44baf54121a08d9b4ad9c3c35883a87c5f258a998e3dde0b09",
+     "sub": 3
+    },
+    {
+     "covered": true,
+     "covered_by_rung": "G1a",
+     "descriptor_id": 165,
+     "equivalence_class_covered_by": "results/rtl/a3_operator_admission_campaign.json",
+     "family": 48,
+     "instances": 108,
+     "mnemonic": "VECTOR.SILU_MUL",
+     "numeric_contract_sha256": "1ef5b3760135b2482b4f0e1cfeb3aef86955757b320b151defe69d2d64c45aca",
+     "sub": 4
+    },
+    {
+     "covered": true,
+     "covered_by_rung": "G1a",
+     "descriptor_id": 124,
+     "equivalence_class_covered_by": "results/rtl/a3_operator_admission_campaign.json",
+     "family": 64,
+     "instances": 108,
+     "mnemonic": "ATTENTION.GQA",
+     "numeric_contract_sha256": "623af598461a17f0b15fb564380a7b8de0bf3f8c89a0833947ad9ed8872ce181",
+     "sub": 1
+    },
+    {
+     "covered": true,
+     "covered_by_rung": "G1a",
+     "descriptor_id": 205,
+     "equivalence_class_covered_by": "results/rtl/a3_operator_admission_campaign.json",
+     "family": 112,
+     "instances": 3,
+     "mnemonic": "SELECTION.ARGMAX",
+     "numeric_contract_sha256": "27df2365e5f573211f5b7c19a3f92792ad0cf16ec44cc08db7cc87a9ec5e7c3a",
+     "sub": 0
+    },
+    {
+     "covered": true,
+     "covered_by_rung": "G1a",
+     "descriptor_id": 212,
+     "equivalence_class_covered_by": "results/rtl/a3_operator_admission_campaign.json",
+     "family": 112,
+     "instances": 3,
+     "mnemonic": "SELECTION.TOKEN_APPEND",
+     "numeric_contract_sha256": "8d70087c8b6f58d95f91b7e498a253c2b5805c5e175dd681b951f3ef9e3f3dfc",
+     "sub": 1
+    }
+   ],
+   "certificate": {
+    "covered_instance_count": 1305,
+    "derived_mechanically": true,
+    "every_issued_instance_covered": false,
+    "issued_instance_count": 2073,
+    "token_ids_match_oracle": false,
+    "uncovered_instance_count": 768
+   },
+   "deployment_sha256": "133afc13e1fcd2aade2e40530883c9986b0e920d99853990d9032fd777f26243",
+   "layer_loop": {
+    "g1b_layer_complete": false,
+    "g1b_mismatched_words": 0,
+    "g1b_no_golden_injected_inside_the_layer": true,
+    "g1c_handoff_rtl_to_rtl": false,
+    "g1c_invocations_structurally_identical": true,
+    "g1c_loop_count_matches_model_layers": true,
+    "g1c_no_golden_across_the_boundary": false,
+    "holds": false
+   },
+   "nothing_outside_the_ladder_assumed": false,
+   "population": {
+    "census_reconciles_with_the_compared_trace": true,
+    "deployment_is_the_one_g1a_inventoried": true,
+    "from": "results/rtl/abi3_g1e_control_end_to_end.json:records[].issue_census",
+    "refusals": [],
+    "trace_certified_equal_to_golden": true,
+    "what_it_is": "the (family, subopcode, descriptor id) instances the governed workload issued, counted from the RTL's own trace over every pass, not from the golden model"
+   },
+   "storage_class": "rom",
+   "tokens": {
+    "full_configuration": {
+     "agree": false,
+     "oracle": [
+      3925
+     ],
+     "oracle_path": "results/abi3/qwen3_reference_oracle_eos.json",
+     "rtl_emitted": [],
+     "rung": "G1d"
+    },
+    "note": "the ids compared are the ones each rung recorded the RTL as having emitted. The oracle's ids are read for comparison only and are never copied into the emitted field.",
+    "reduced_configuration": {
+     "agree": false,
+     "oracle": [
+      1073,
+      382,
+      93
+     ],
+     "oracle_path": "results/abi3/qwen3_reduced_reference_oracle.json",
+     "rtl_emitted": [],
+     "rung": "G1f"
+    }
+   },
+   "what_is_assumed_outside_the_ladder": [
+    "768 of 2073 issued instances are not in a class G1a proved bit-exact",
+    "the layer loop is not closed by G1b and G1c: g1b_layer_complete, g1c_handoff_rtl_to_rtl, g1c_no_golden_across_the_boundary",
+    "the RTL emitted [] for the full configuration against the oracle's [3925]",
+    "the RTL emitted [] for the reduced configuration against the oracle's [1073, 382, 93]"
+   ],
+   "workload_id": "TA-QW-EOS-1"
+  },
+  {
+   "attribution": [
+    {
+     "covered": true,
+     "covered_by_rung": "G1a",
+     "descriptor_id": 46,
+     "equivalence_class_covered_by": "results/rtl/abi3_shipped_prefix_campaign.json",
+     "family": 16,
+     "instances": 3,
+     "mnemonic": "DMA.GATHER",
+     "numeric_contract_sha256": "12a24197c80d3851cc5ea3e69915f7dbc926aa1c2ee795c8fe3af1a67677daee",
+     "sub": 2
+    },
+    {
+     "covered": false,
+     "covered_by_rung": null,
+     "descriptor_id": 198,
+     "family": 16,
+     "instances": 3,
+     "mnemonic": "DMA.GATHER",
+     "sub": 2,
+     "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [198] of this deployment (cb9067f5fbf6) in a positive case"
+    },
+    {
+     "covered": true,
+     "covered_by_rung": "G1a",
+     "descriptor_id": 118,
+     "equivalence_class_covered_by": "results/rtl/a3_operator_admission_hbm_campaign.json",
+     "family": 16,
+     "instances": 108,
+     "mnemonic": "DMA.SCATTER",
+     "numeric_contract_sha256": "55f39bccbda65baf6238cfcd93d7bf9959330984af837979870cc019be00e16f",
+     "sub": 3
+    },
+    {
+     "covered": true,
+     "covered_by_rung": "G1a",
+     "descriptor_id": 125,
+     "equivalence_class_covered_by": "results/rtl/a3_operator_admission_hbm_campaign.json",
+     "family": 16,
+     "instances": 108,
+     "mnemonic": "DMA.SCATTER",
+     "numeric_contract_sha256": "55f39bccbda65baf6238cfcd93d7bf9959330984af837979870cc019be00e16f",
+     "sub": 3
+    },
+    {
+     "covered": false,
+     "covered_by_rung": null,
+     "descriptor_id": 72,
+     "family": 32,
+     "instances": 108,
+     "mnemonic": "TENSOR.MATMUL",
+     "sub": 0,
+     "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [72, 142, 180] of this deployment (cb9067f5fbf6) in a positive case"
+    },
+    {
+     "covered": true,
+     "covered_by_rung": "G1a",
+     "descriptor_id": 79,
+     "equivalence_class_covered_by": "results/rtl/abi3_shipped_prefix_campaign.json",
+     "family": 32,
+     "instances": 108,
+     "mnemonic": "TENSOR.MATMUL",
+     "numeric_contract_sha256": "7550dc6a773fd9d5773b46182887613fb777bb8e4f01652321c4d93ca0765aa1",
+     "sub": 0
+    },
+    {
+     "covered": true,
+     "covered_by_rung": "G1a",
+     "descriptor_id": 84,
+     "equivalence_class_covered_by": "results/rtl/abi3_shipped_prefix_campaign.json",
+     "family": 32,
+     "instances": 108,
+     "mnemonic": "TENSOR.MATMUL",
+     "numeric_contract_sha256": "7550dc6a773fd9d5773b46182887613fb777bb8e4f01652321c4d93ca0765aa1",
+     "sub": 0
+    },
+    {
+     "covered": false,
+     "covered_by_rung": null,
+     "descriptor_id": 142,
+     "family": 32,
+     "instances": 108,
+     "mnemonic": "TENSOR.MATMUL",
+     "sub": 0,
+     "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [72, 142, 180] of this deployment (cb9067f5fbf6) in a positive case"
+    },
+    {
+     "covered": false,
+     "covered_by_rung": null,
+     "descriptor_id": 162,
+     "family": 32,
+     "instances": 108,
+     "mnemonic": "TENSOR.MATMUL",
+     "sub": 0,
+     "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [162, 168] of this deployment (cb9067f5fbf6) in a positive case"
+    },
+    {
+     "covered": false,
+     "covered_by_rung": null,
+     "descriptor_id": 168,
+     "family": 32,
+     "instances": 108,
+     "mnemonic": "TENSOR.MATMUL",
+     "sub": 0,
+     "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [162, 168] of this deployment (cb9067f5fbf6) in a positive case"
+    },
+    {
+     "covered": false,
+     "covered_by_rung": null,
+     "descriptor_id": 180,
+     "family": 32,
+     "instances": 108,
+     "mnemonic": "TENSOR.MATMUL",
+     "sub": 0,
+     "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [72, 142, 180] of this deployment (cb9067f5fbf6) in a positive case"
+    },
+    {
+     "covered": false,
+     "covered_by_rung": null,
+     "descriptor_id": 204,
+     "family": 32,
+     "instances": 3,
+     "mnemonic": "TENSOR.MATMUL",
+     "sub": 0,
+     "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [204] of this deployment (cb9067f5fbf6) in a positive case"
+    },
+    {
+     "covered": true,
+     "covered_by_rung": "G1a",
+     "descriptor_id": 54,
+     "equivalence_class_covered_by": "results/rtl/abi3_shipped_prefix_campaign.json",
+     "family": 32,
+     "instances": 3,
+     "mnemonic": "TENSOR.EMBED_LOOKUP",
+     "numeric_contract_sha256": "d1ea2f18e0b161e19e17f465ced630e0af7d0de970dadd6776c685ab6539fbcc",
+     "sub": 3
+    },
+    {
+     "covered": false,
+     "covered_by_rung": null,
+     "descriptor_id": 64,
+     "family": 48,
+     "instances": 108,
+     "mnemonic": "VECTOR.RMS_NORM",
+     "sub": 0,
+     "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [64, 156, 192] of this deployment (cb9067f5fbf6) in a positive case"
+    },
+    {
+     "covered": false,
+     "covered_by_rung": null,
+     "descriptor_id": 156,
+     "family": 48,
+     "instances": 108,
+     "mnemonic": "VECTOR.RMS_NORM",
+     "sub": 0,
+     "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [64, 156, 192] of this deployment (cb9067f5fbf6) in a positive case"
+    },
+    {
+     "covered": false,
+     "covered_by_rung": null,
+     "descriptor_id": 192,
+     "family": 48,
+     "instances": 3,
+     "mnemonic": "VECTOR.RMS_NORM",
+     "sub": 0,
+     "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [64, 156, 192] of this deployment (cb9067f5fbf6) in a positive case"
+    },
+    {
+     "covered": true,
+     "covered_by_rung": "G1a",
+     "descriptor_id": 90,
+     "equivalence_class_covered_by": "results/rtl/abi3_shipped_prefix_campaign.json",
+     "family": 48,
+     "instances": 108,
+     "mnemonic": "VECTOR.HEAD_RMS_NORM",
+     "numeric_contract_sha256": "999ef86bc4d4c36dfd57db84d49618af46bed2e6c1f0b1bf031a27b5b8c03fda",
+     "sub": 1
+    },
+    {
+     "covered": true,
+     "covered_by_rung": "G1a",
+     "descriptor_id": 97,
+     "equivalence_class_covered_by": "results/rtl/abi3_shipped_prefix_campaign.json",
+     "family": 48,
+     "instances": 108,
+     "mnemonic": "VECTOR.HEAD_RMS_NORM",
+     "numeric_contract_sha256": "999ef86bc4d4c36dfd57db84d49618af46bed2e6c1f0b1bf031a27b5b8c03fda",
+     "sub": 1
+    },
+    {
+     "covered": true,
+     "covered_by_rung": "G1a",
+     "descriptor_id": 104,
+     "equivalence_class_covered_by": "results/rtl/abi3_shipped_prefix_campaign.json",
+     "family": 48,
+     "instances": 108,
+     "mnemonic": "VECTOR.ROPE",
+     "numeric_contract_sha256": "34ad155c76b1ab1ee5efb8463a85753eaebd08e169ee93c07ba364759f1836cf",
+     "sub": 2
+    },
+    {
+     "covered": true,
+     "covered_by_rung": "G1a",
+     "descriptor_id": 110,
+     "equivalence_class_covered_by": "results/rtl/abi3_shipped_prefix_campaign.json",
+     "family": 48,
+     "instances": 108,
+     "mnemonic": "VECTOR.ROPE",
+     "numeric_contract_sha256": "34ad155c76b1ab1ee5efb8463a85753eaebd08e169ee93c07ba364759f1836cf",
+     "sub": 2
+    },
+    {
+     "covered": true,
+     "covered_by_rung": "G1a",
+     "descriptor_id": 150,
+     "equivalence_class_covered_by": "results/rtl/a3_operator_admission_hbm_campaign.json",
+     "family": 48,
+     "instances": 108,
+     "mnemonic": "VECTOR.ADD",
+     "numeric_contract_sha256": "3c972568ff6c0a44baf54121a08d9b4ad9c3c35883a87c5f258a998e3dde0b09",
+     "sub": 3
+    },
+    {
+     "covered": true,
+     "covered_by_rung": "G1a",
+     "descriptor_id": 186,
+     "equivalence_class_covered_by": "results/rtl/a3_operator_admission_hbm_campaign.json",
+     "family": 48,
+     "instances": 108,
+     "mnemonic": "VECTOR.ADD",
+     "numeric_contract_sha256": "3c972568ff6c0a44baf54121a08d9b4ad9c3c35883a87c5f258a998e3dde0b09",
+     "sub": 3
+    },
+    {
+     "covered": true,
+     "covered_by_rung": "G1a",
+     "descriptor_id": 174,
+     "equivalence_class_covered_by": "results/rtl/a3_operator_admission_hbm_campaign.json",
+     "family": 48,
+     "instances": 108,
+     "mnemonic": "VECTOR.SILU_MUL",
+     "numeric_contract_sha256": "1ef5b3760135b2482b4f0e1cfeb3aef86955757b320b151defe69d2d64c45aca",
+     "sub": 4
+    },
+    {
+     "covered": true,
+     "covered_by_rung": "G1a",
+     "descriptor_id": 136,
+     "equivalence_class_covered_by": "results/rtl/a3_operator_admission_hbm_campaign.json",
+     "family": 64,
+     "instances": 108,
+     "mnemonic": "ATTENTION.GQA",
+     "numeric_contract_sha256": "623af598461a17f0b15fb564380a7b8de0bf3f8c89a0833947ad9ed8872ce181",
+     "sub": 1
+    },
+    {
+     "covered": true,
+     "covered_by_rung": "G1a",
+     "descriptor_id": 211,
+     "equivalence_class_covered_by": "results/rtl/a3_operator_admission_hbm_campaign.json",
+     "family": 112,
+     "instances": 3,
+     "mnemonic": "SELECTION.ARGMAX",
+     "numeric_contract_sha256": "27df2365e5f573211f5b7c19a3f92792ad0cf16ec44cc08db7cc87a9ec5e7c3a",
+     "sub": 0
+    },
+    {
+     "covered": true,
+     "covered_by_rung": "G1a",
+     "descriptor_id": 217,
+     "equivalence_class_covered_by": "results/rtl/a3_operator_admission_hbm_campaign.json",
+     "family": 112,
+     "instances": 3,
+     "mnemonic": "SELECTION.TOKEN_APPEND",
+     "numeric_contract_sha256": "8d70087c8b6f58d95f91b7e498a253c2b5805c5e175dd681b951f3ef9e3f3dfc",
+     "sub": 1
+    }
+   ],
+   "certificate": {
+    "covered_instance_count": 1308,
+    "derived_mechanically": true,
+    "every_issued_instance_covered": false,
+    "issued_instance_count": 2073,
+    "token_ids_match_oracle": false,
+    "uncovered_instance_count": 765
+   },
+   "deployment_sha256": "cb9067f5fbf67f7df4212399aee6ba75ced4ca5c8f2dc8c1631372a4068cea2c",
+   "layer_loop": {
+    "g1b_layer_complete": false,
+    "g1b_mismatched_words": 0,
+    "g1b_no_golden_injected_inside_the_layer": true,
+    "g1c_handoff_rtl_to_rtl": false,
+    "g1c_invocations_structurally_identical": true,
+    "g1c_loop_count_matches_model_layers": true,
+    "g1c_no_golden_across_the_boundary": false,
+    "holds": false
+   },
+   "nothing_outside_the_ladder_assumed": false,
+   "population": {
+    "census_reconciles_with_the_compared_trace": true,
+    "deployment_is_the_one_g1a_inventoried": true,
+    "from": "results/rtl/abi3_g1e_control_end_to_end.json:records[].issue_census",
+    "refusals": [],
+    "trace_certified_equal_to_golden": true,
+    "what_it_is": "the (family, subopcode, descriptor id) instances the governed workload issued, counted from the RTL's own trace over every pass, not from the golden model"
+   },
+   "storage_class": "hbm",
+   "tokens": {
+    "full_configuration": {
+     "agree": false,
+     "oracle": [
+      3925
+     ],
+     "oracle_path": "results/abi3/qwen3_reference_oracle_eos.json",
+     "rtl_emitted": [],
+     "rung": "G1d"
+    },
+    "note": "the ids compared are the ones each rung recorded the RTL as having emitted. The oracle's ids are read for comparison only and are never copied into the emitted field.",
+    "reduced_configuration": {
+     "agree": false,
+     "oracle": [
+      1073,
+      382,
+      93
+     ],
+     "oracle_path": "results/abi3/qwen3_reduced_reference_oracle.json",
+     "rtl_emitted": [],
+     "rung": "G1f"
+    }
+   },
+   "what_is_assumed_outside_the_ladder": [
+    "765 of 2073 issued instances are not in a class G1a proved bit-exact",
+    "the layer loop is not closed by G1b and G1c: g1b_layer_complete, g1c_handoff_rtl_to_rtl, g1c_no_golden_across_the_boundary",
+    "the RTL emitted [] for the full configuration against the oracle's [3925]",
+    "the RTL emitted [] for the reduced configuration against the oracle's [1073, 382, 93]"
+   ],
+   "workload_id": "TA-QW-EOS-1"
+  }
+ ],
+ "roll_up": "the gate reads certificate.* at the top level; each store's own figures are under records[].certificate. uncovered_instance_count is the SUM over stores, so one store's uncovered instances cannot be hidden by the other's coverage.",
+ "schema": "opentallas.rtl.abi3_g1_composition_certificate.v1",
+ "status": "fail",
+ "workload_id": "TA-QW-EOS-1"
+}
