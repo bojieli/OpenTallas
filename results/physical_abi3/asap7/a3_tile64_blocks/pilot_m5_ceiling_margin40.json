@@ -1,0 +1,329 @@
+{
+  "bound_seconds_per_leg": 10800,
+  "campaign_id": "opentallas-abi3-tile64-blocks-pilot-v1",
+  "claim_boundary": {
+    "does_not_establish": {
+      "gate_g2": "the parent's macros are LQ8 abstracts, not the memory system; a G2 record needs the memory abstracts and the microsequencer in one routed netlist",
+      "tile_rtl": "the assembled netlist is the tile's control and datapath glue around the abstracts; its function is established by results/rtl/abi3_tile64.json, not by this pilot",
+      "timing": "the block's timing at 16 ns is the LQ8's own (previously 0.47 ns short); the parent's timing through the abstract's liberty is reported as the flow reports it"
+    },
+    "establishes": [
+      "whether the pinned ORFS BLOCKS mechanism hardens ot_a3_lq8 as an abstract and assembles ot_a3_tile64 from eight abstract instances, with the wall time of every stage that ran"
+    ]
+  },
+  "configs": {
+    "block": "export DESIGN_NICKNAME = opentallas_a3_tile64_asap7_ot_a3_lq8\nexport DESIGN_NAME = ot_a3_lq8\nexport PLATFORM = asap7\nexport VERILOG_FILES = /src/rtl/ot_fp32_rne_pkg.sv /src/rtl/abi3/ot_a3_lane_pkg.sv /src/rtl/abi3/ot_a3_lane_pipelined.sv /src/rtl/abi3/ot_a3_lq8.sv\nexport VERILOG_DEFINES = -DSYNTHESIS\nexport SDC_FILE = /work/ot_a3_lq8/constraint.sdc\nexport VERILOG_TOP_PARAMS = ACC_SLOTS 8 ADDER_STAGES 3 LANES 8\nexport CORE_UTILIZATION = 35\nexport CORE_ASPECT_RATIO = 1\nexport CORE_MARGIN = 2\nexport PLACE_DENSITY = 0.6\nexport PLACE_DENSITY_LB_ADDON = 0.05\nexport PLACE_PINS_ARGS = -annealing\nexport PDN_TCL = $(PLATFORM_DIR)/openRoad/pdn/BLOCK_grid_strategy.tcl\nexport ASAP7_USE_VT = RVT\nexport CORNER = TC\nexport SYNTH_REPEATABLE_BUILD = 1\nexport SYNTH_HIERARCHICAL = 0\nexport LEC_CHECK = 0\nexport TNS_END_PERCENT = 100\nexport SKIP_REPORT_METRICS = 0\nexport SLEW_MARGIN = 40\nexport MAX_ROUTING_LAYER = M5\n",
+    "parent": "export DESIGN_NICKNAME = opentallas_a3_tile64_asap7\nexport DESIGN_NAME = ot_a3_tile64\nexport PLATFORM = asap7\nexport VERILOG_FILES = /src/rtl/ot_fp32_rne_pkg.sv /src/rtl/abi3/ot_a3_lane_pkg.sv /src/rtl/abi3/ot_a3_tile64.sv\nexport VERILOG_DEFINES = -DSYNTHESIS\nexport SDC_FILE = /work/constraint.sdc\nexport BLOCKS = ot_a3_lq8\nexport SYNTH_HIERARCHICAL = 1\nexport VERILOG_TOP_PARAMS = ACC_SLOTS 8 ADDER_STAGES 3 LANES 8 LQ8S 8 STAGING_IN_TILE 0 LQ8_ABSTRACT 1\nexport CORE_UTILIZATION = 35\nexport CORE_ASPECT_RATIO = 1\nexport CORE_MARGIN = 2\nexport PLACE_DENSITY = 0.6\nexport PLACE_DENSITY_LB_ADDON = 0.05\nexport PLACE_PINS_ARGS = -annealing\nexport MACRO_PLACE_HALO = 5 5\nexport GND_NETS_VOLTAGES =\nexport PWR_NETS_VOLTAGES =\nexport ASAP7_USE_VT = RVT\nexport CORNER = TC\nexport SYNTH_REPEATABLE_BUILD = 1\nexport LEC_CHECK = 0\nexport TNS_END_PERCENT = 100\nexport SKIP_REPORT_METRICS = 0\nexport SLEW_MARGIN = 40\n"
+  },
+  "git": {
+    "commit": "f9e2cba2857c65fabe15219fb5dd27f86aeb221c",
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "legs": {
+    "block": {
+      "abstract": {
+        "lef_obstruction_layers": [
+          "M1",
+          "M2",
+          "M3",
+          "M4",
+          "M5",
+          "RVTN",
+          "RVTP"
+        ],
+        "lef_pins": 1794,
+        "lef_present": true,
+        "lef_size_um": [
+          280.194,
+          280.194
+        ],
+        "lib_cells": [
+          "ot_a3_lq8"
+        ],
+        "lib_pins": 1794,
+        "lib_present": true,
+        "lib_timing_arcs": 2777
+      },
+      "block": {
+        "last_log": {
+          "name": "generate_abstract.log",
+          "tail": "OpenROAD 26Q3-1510-g6cb3f2b704 \nFeatures included (+) or not (-): +GPU +GUI +Python\nThis program is licensed under the BSD-3 license. See the LICENSE file for details.\nComponents of this program may be licensed under more restrictive licenses which must be honored.\n[INFO ORD-0030] Using 32 thread(s).\nload_design 6_final.odb 6_final.sdc\nsource /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz\nread_db /work/results/asap7/opentallas_a3_tile64_asap7_ot_a3_lq8/base/6_final.odb\nread_sdc /work/results/asap7/opentallas_a3_tile64_asap7_ot_a3_lq8/base/6_final.sdc\nsource /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl\nread_spef /work/results/asap7/opentallas_a3_tile64_asap7_ot_a3_lq8/base/6_final.spef\nTook 32 seconds: read_spef /work/results/asap7/opentallas_a3_tile64_asap7_ot_a3_lq8/base/6_final.spef\nGenerating abstract views\nwrite_timing_model /work/results/asap7/opentallas_a3_tile64_asap7_ot_a3_lq8/base/ot_a3_lq8_typ.lib\nTook 63 seconds: write_timing_model /work/results/asap7/opentallas_a3_tile64_asap7_ot_a3_lq8/base/ot_a3_lq8_typ.lib\nwrite_abstract_lef -bloat_occupied_layers /work/results/asap7/opentallas_a3_tile64_asap7_ot_a3_lq8/base/ot_a3_lq8.lef\nTook 9 seconds: write_abstract_lef -bloat_occupied_layers /work/results/asap7/opentallas_a3_tile64_asap7_ot_a3_lq8/base/ot_a3_lq8.lef\nElapsed time: 1:47.25[h:]min:sec. CPU time: user 193.34 sys 36.54 (214%). Peak memory: 3520860KB."
+        },
+        "logs": [
+          "1_1_yosys_canonicalize.log",
+          "1_2_yosys.log",
+          "1_synth.log",
+          "2_1_floorplan.log",
+          "2_2_floorplan_macro.log",
+          "2_3_floorplan_tapcell.log",
+          "2_4_floorplan_pdn.log",
+          "3_1_place_gp_skip_io.log",
+          "3_2_place_iop.log",
+          "3_3_place_gp.log",
+          "3_4_place_resized.log",
+          "3_5_place_dp.log",
+          "4_1_cts.log",
+          "5_1_grt.log",
+          "5_2_route.log",
+          "5_3_fillcell.log",
+          "6_1_fill.log",
+          "6_1_merge.log",
+          "6_report.log",
+          "generate_abstract.log"
+        ],
+        "metrics": {
+          "antenna_violating_nets": null,
+          "available_keys": 438,
+          "core_area_um2": 76187.6,
+          "drc_errors": 0,
+          "final_cells": 239951,
+          "final_macro_area_um2": 0,
+          "final_macro_count": 0,
+          "final_stdcell_area_um2": 28047.9,
+          "flow_errors": {
+            "cts__flow__errors__count": 0,
+            "detailedplace__flow__errors__count": 0,
+            "detailedroute__flow__errors__count": 0,
+            "finish__flow__errors__count": 0,
+            "floorplan__flow__errors__count": 0,
+            "globalplace__flow__errors__count": 0,
+            "globalroute__flow__errors__count": 0,
+            "placeopt__flow__errors__count": 0,
+            "synth__flow__errors__count": 0
+          },
+          "fmax_hz": 137767000.0,
+          "hold_violations": 0,
+          "hold_ws_lib": 26.962,
+          "hold_ws_ns": 0.026962,
+          "macros": 0,
+          "max_cap_violations": 0,
+          "max_fanout_violations": 0,
+          "max_slew_violations": 1,
+          "metrics_source": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/pf_drv/work_blocks_m5_slew/logs/asap7/opentallas_a3_tile64_asap7_ot_a3_lq8/base/*.json (metadata.json absent: this leg's make goal does not run metadata-generate)",
+          "placed_cells": 236533,
+          "setup_violations": 0,
+          "setup_ws_lib": 8741.37,
+          "setup_ws_ns": 8.741370000000002,
+          "signal_integrity_clean": false,
+          "signal_integrity_reason": "1 max-slew violation(s)",
+          "synth_area_um2": 26699.1,
+          "synth_cells": 220341,
+          "utilization": null,
+          "wirelength_um": 1138063
+        },
+        "produced": {
+          "1_2_yosys.v": {
+            "sha256": "ee6561e73ad4aed01b569fac98b084ba040342751878283c11381043ae2b6311",
+            "size_bytes": 34398163
+          },
+          "2_floorplan.odb": {
+            "sha256": "64e3315cab6668f6eee2a261c32b20a5b54de47564ec4fe8c9afe1488e95a726",
+            "size_bytes": 134573070
+          },
+          "3_place.odb": {
+            "sha256": "405a8bf6a2967f6208c3e38317170fb0255b8935c67bb776cccb739111867e8b",
+            "size_bytes": 132325305
+          },
+          "4_cts.odb": {
+            "sha256": "6108950886f58c35dfcff9260c200dd02baa012703586daee0f4ba3b191679e3",
+            "size_bytes": 133035740
+          },
+          "5_route.odb": {
+            "sha256": "a8757b83c63b994a63c75a381897b0b2c4c45901ac23434946d27e56e1f6be17",
+            "size_bytes": 439598798
+          },
+          "6_final.def": {
+            "sha256": "dad0b9ad22f651beba2dd67d58a15bc72d7edec0a593e7e2c33bda60f1f0a2ff",
+            "size_bytes": 282082582
+          },
+          "6_final.gds": {
+            "sha256": "1dca68119ea742be8c20017dfab626a9c4c0fc655501ba4d9cd276a722376c91",
+            "size_bytes": 307573964
+          },
+          "6_final.odb": {
+            "sha256": "14fe6a717ee0e7b2efa034ab629a26293fcce1ba0b98e7ca6204b1d57c50620e",
+            "size_bytes": 439598798
+          },
+          "6_final.sdc": {
+            "sha256": "1281f73e27e472d50e3768f385d01e9886260c014fde487abeac305e6760f1eb",
+            "size_bytes": 241468
+          },
+          "6_final.v": {
+            "sha256": "0cd58611f42d68f1227c7bf71cf9dd7bb7fb7bdddd51b8643e91247844880625",
+            "size_bytes": 27997439
+          },
+          "ot_a3_lq8.lef": {
+            "sha256": "b8b715e413fcdf2aa5f4aee44bbdf5f0e746756357c0f3235c2b7220f9a46944",
+            "size_bytes": 290880
+          },
+          "ot_a3_lq8_typ.lib": {
+            "sha256": "6030f11e02a20ca4c52c13554b6da5ce93dfb683f52c2dd4f71a50583dd3ea26",
+            "size_bytes": 2166907
+          }
+        },
+        "results_dir": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/pf_drv/work_blocks_m5_slew/results/asap7/opentallas_a3_tile64_asap7_ot_a3_lq8/base",
+        "stage_wall_seconds": {
+          "1_1_yosys_canonicalize": 1.12,
+          "1_2_yosys": 1883.36,
+          "1_synth": 6.8,
+          "2_1_floorplan": 53.0,
+          "2_2_floorplan_macro": 1.69,
+          "2_3_floorplan_tapcell": 1.61,
+          "2_4_floorplan_pdn": 5.29,
+          "3_1_place_gp_skip_io": 295.9,
+          "3_2_place_iop": 1.89,
+          "3_3_place_gp": 998.68,
+          "3_4_place_resized": 128.25,
+          "3_5_place_dp": 169.12,
+          "4_1_cts": 177.03,
+          "5_1_grt": 954.04,
+          "5_2_route": 2518.83,
+          "5_3_fillcell": 7.29,
+          "6_1_fill": 3.9,
+          "6_1_merge": 18.22,
+          "6_report": 368.89,
+          "generate_abstract": 107.25
+        }
+      },
+      "completed": true,
+      "completed_at": "2026-09-06T17:54:43.110092+00:00",
+      "hardened": false,
+      "hardened_basis": "true only when the make goal returned 0, both abstract views exist, and the routed netlist the abstract was characterised from carries zero max-slew, max-cap and max-fanout violations",
+      "hardened_reason": "1 max-slew violation(s)",
+      "knobs": {
+        "block_exports": [
+          "MAX_ROUTING_LAYER=M5"
+        ],
+        "clock_period_ns": 16.0,
+        "core_utilization": 35,
+        "place_density": 0.6
+      },
+      "make": {
+        "command": "docker run --rm --name opentallas-t64-blocks-build_macros-3961899-1788709568 -v /tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/pf_drv/wt:/src:ro -v /tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/pf_drv/work_blocks_m5_slew:/work -w /OpenROAD-flow-scripts/flow openroad/orfs:latest bash -lc 'trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base build_macros'",
+        "container": "opentallas-t64-blocks-build_macros-3961899-1788709568",
+        "goal": "build_macros",
+        "log": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/pf_drv/work_blocks_m5_slew/orfs_block.log",
+        "log_sha256": "239f188c8fce6db98f146f09f3534c85fcd34b257a6a0e06fd4b593d67a86f31",
+        "log_tail": "This program is licensed under the BSD-3 license. See the LICENSE file for details.\nComponents of this program may be licensed under more restrictive licenses which must be honored.\n[INFO ORD-0030] Using 32 thread(s).\nload_design 6_final.odb 6_final.sdc\nsource /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz\nread_db /work/results/asap7/opentallas_a3_tile64_asap7_ot_a3_lq8/base/6_final.odb\nread_sdc /work/results/asap7/opentallas_a3_tile64_asap7_ot_a3_lq8/base/6_final.sdc\nsource /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl\nread_spef /work/results/asap7/opentallas_a3_tile64_asap7_ot_a3_lq8/base/6_final.spef\nTook 32 seconds: read_spef /work/results/asap7/opentallas_a3_tile64_asap7_ot_a3_lq8/base/6_final.spef\nGenerating abstract views\nwrite_timing_model /work/results/asap7/opentallas_a3_tile64_asap7_ot_a3_lq8/base/ot_a3_lq8_typ.lib\nTook 63 seconds: write_timing_model /work/results/asap7/opentallas_a3_tile64_asap7_ot_a3_lq8/base/ot_a3_lq8_typ.lib\nwrite_abstract_lef -bloat_occupied_layers /work/results/asap7/opentallas_a3_tile64_asap7_ot_a3_lq8/base/ot_a3_lq8.lef\nTook 9 seconds: write_abstract_lef -bloat_occupied_layers /work/results/asap7/opentallas_a3_tile64_asap7_ot_a3_lq8/base/ot_a3_lq8.lef\nElapsed time: 0:01.12[h:]min:sec. CPU time: user 1.08 sys 0.03 (99%). Peak memory: 85748KB.\nElapsed time: 31:23.36[h:]min:sec. CPU time: user 1911.06 sys 8.42 (101%). Peak memory: 4874148KB.\nElapsed time: 0:06.80[h:]min:sec. CPU time: user 6.40 sys 0.36 (99%). Peak memory: 730256KB.\nElapsed time: 0:53.00[h:]min:sec. CPU time: user 58.53 sys 1.86 (113%). Peak memory: 1174176KB.\nElapsed time: 0:01.69[h:]min:sec. CPU time: user 1.49 sys 0.21 (99%). Peak memory: 572104KB.\nElapsed time: 0:01.61[h:]min:sec. CPU time: user 1.46 sys 0.15 (99%). Peak memory: 438268KB.\nElapsed time: 0:05.29[h:]min:sec. CPU time: user 4.93 sys 0.35 (99%). Peak memory: 620540KB.\nElapsed time: 4:55.90[h:]min:sec. CPU time: user 1742.91 sys 1.66 (589%). Peak memory: 989592KB.\nElapsed time: 0:01.89[h:]min:sec. CPU time: user 1.66 sys 0.23 (99%). Peak memory: 608168KB.\nElapsed time: 16:38.68[h:]min:sec. CPU time: user 4465.78 sys 40.62 (451%). Peak memory: 2758080KB.\nElapsed time: 2:08.25[h:]min:sec. CPU time: user 162.01 sys 16.01 (138%). Peak memory: 1414616KB.\nElapsed time: 2:49.12[h:]min:sec. CPU time: user 195.83 sys 17.40 (126%). Peak memory: 1948996KB.\nElapsed time: 2:57.03[h:]min:sec. CPU time: user 265.98 sys 15.08 (158%). Peak memory: 2225024KB.\nElapsed time: 15:54.04[h:]min:sec. CPU time: user 3946.23 sys 70.65 (421%). Peak memory: 4568096KB.\nElapsed time: 41:58.83[h:]min:sec. CPU time: user 14057.18 sys 23.18 (559%). Peak memory: 31129148KB.\nElapsed time: 0:07.29[h:]min:sec. CPU time: user 6.56 sys 0.73 (99%). Peak memory: 1451164KB.\nElapsed time: 0:03.90[h:]min:sec. CPU time: user 3.18 sys 0.70 (99%). Peak memory: 917292KB.\nElapsed time: 6:08.89[h:]min:sec. CPU time: user 431.73 sys 32.63 (125%). Peak memory: 6810652KB.\nElapsed time: 0:18.22[h:]min:sec. CPU time: user 17.14 sys 1.01 (99%). Peak memory: 1655696KB.\nElapsed time: 1:47.25[h:]min:sec. CPU time: user 193.34 sys 36.54 (214%). Peak memory: 3520860KB.",
+        "returncode": 0,
+        "timed_out": false,
+        "wall_seconds": 7713.432
+      },
+      "started_at": "2026-09-06T15:46:08.415671+00:00",
+      "wall_seconds": 7714.694
+    }
+  },
+  "mechanism": {
+    "abstract": "scripts/generate_abstract.tcl: write_timing_model <block>_typ.lib and write_abstract_lef -bloat_occupied_layers <block>.lef from 6_final.odb with the extracted parasitics",
+    "makefile": "ORFS flow/Makefile: BLOCKS -> BLOCK_LEFS / BLOCK_TYP_LIBS under results/<platform>/<nickname>_<block>/<variant>/; GENERATE_ABSTRACT_RULE runs generate_abstract with DESIGN_CONFIG=dirname(DESIGN_CONFIG)/<block>/config.mk; build_macros hardens the blocks; the parent's synthesis reads the block liberty as ADDITIONAL_LIBS so the module is a blackbox (read_liberty -lib) and its Verilog body is ignored",
+    "parameters": "a liberty blackbox has no parameters, so the parent instantiates ot_a3_lq8 through the tile's LQ8_ABSTRACT = 1 generate branch (no overrides; the abstract is LANES 8, ADDER_STAGES 3, ACC_SLOTS 8 by the block's own defaults)"
+  },
+  "orfs": {
+    "image": "openroad/orfs:latest",
+    "image_id": "sha256:af971398d91e5d154ec40d3df26554efd8790107268a4c7f1e6bb8f222979d34",
+    "image_id_matches_pinned": true,
+    "tool_versions": [
+      "26Q3-1510-g6cb3f2b704 ",
+      "Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)"
+    ]
+  },
+  "purpose": "BLOCKS assembly pilot: can the pinned ORFS flow harden one LQ8 as an abstract and assemble a T64 from eight abstract instances, and how long does it take",
+  "schema_version": 1,
+  "signal_integrity_constraints": {
+    "basis": "explicit SDC signal-integrity constraints this route was repaired against; absent from a record means the SDC carried only set_max_fanout 32 and the liberty files' own max_transition limits",
+    "library_declares_fanout_limit": false,
+    "library_default_max_fanout": [
+      {
+        "default_max_fanout": null,
+        "liberty": "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "pin_max_fanout_count": 0
+      },
+      {
+        "default_max_fanout": null,
+        "liberty": "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "pin_max_fanout_count": 0
+      },
+      {
+        "default_max_fanout": null,
+        "liberty": "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "pin_max_fanout_count": 0
+      },
+      {
+        "default_max_fanout": null,
+        "liberty": "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "pin_max_fanout_count": 0
+      },
+      {
+        "default_max_fanout": null,
+        "liberty": "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "pin_max_fanout_count": 0
+      }
+    ],
+    "library_default_max_transition": [
+      {
+        "default_max_transition": 320.0,
+        "liberty": "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "pin_max_transition_count": 224
+      },
+      {
+        "default_max_transition": 320.0,
+        "liberty": "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "pin_max_transition_count": 37
+      },
+      {
+        "default_max_transition": 320.0,
+        "liberty": "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "pin_max_transition_count": 185
+      },
+      {
+        "default_max_transition": 320.0,
+        "liberty": "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "pin_max_transition_count": 94
+      },
+      {
+        "default_max_transition": 4000.0,
+        "liberty": "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "pin_max_transition_count": 158
+      }
+    ],
+    "max_fanout": 32,
+    "max_fanout_source": "driver default: the set_max_fanout every earlier record's SDC carried",
+    "max_transition_library_units": 320.0,
+    "max_transition_ns": 0.32,
+    "max_transition_source": "library: the smallest default_max_transition declared by the corner's liberty files, in the library time unit",
+    "sdc_lines": [
+      "set_max_fanout 32 [current_design]",
+      "set_max_transition 320 [current_design]"
+    ],
+    "slew_margin_basis": "ORFS SLEW_MARGIN, passed to repair_design -slew_margin at placement and after global routing: the repair targets (100 - margin)% of each pin's slew limit under estimated parasitics; the finish check keeps the full limit",
+    "slew_margin_percent": 40.0
+  },
+  "sources": {
+    "rtl/abi3/ot_a3_lane_pipelined.sv": {
+      "sha256": "35261aff19662d5de0fc18c073f5df2a8f399bae33d65897fb1e12563442f8ef"
+    },
+    "rtl/abi3/ot_a3_lane_pkg.sv": {
+      "sha256": "44694da13878488ee43610615fb92d13db9dc0c07367cef7814e90ee2da3200f"
+    },
+    "rtl/abi3/ot_a3_lq8.sv": {
+      "sha256": "0886f89443f3f708d6cc6b751dbb453105a20a8e9e5df09983ac7cbfb6f19415"
+    },
+    "rtl/abi3/ot_a3_tile64.sv": {
+      "sha256": "cc45109471a46c86a41b11f39fa66e543135da40f925d61e2cc1c0425d941b47"
+    },
+    "rtl/ot_fp32_rne_pkg.sv": {
+      "sha256": "39de679dd5f277d8a9cc2d5b6349eb1675e9397e64a8256bb1f53a34a054608c"
+    }
+  },
+  "status": "block_hardened",
+  "target_clock_period_ns": 16.0,
+  "tool_sha256": "6c9f16e6787633b26b47b8af0183d6487332730a1d38e202a92e4934c0dd7fa8",
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "corner": "TC",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "name": "asap7",
+    "platform": "asap7"
+  }
+}

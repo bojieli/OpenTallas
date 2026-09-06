@@ -120,3 +120,48 @@ def test_the_two_hardened_LQ8_abstracts_are_recorded_as_not_clean(work):
     assert got is not None
     assert got["max_slew_violations"] > 0
     assert got["signal_integrity_clean"] is False
+
+
+# ---------------------------------------------------------------------------
+# The repair the item asks for: set_max_transition from the corner's own
+# liberty plus ORFS SLEW_MARGIN, reaching BOTH the SDC and the config.mk.
+# ---------------------------------------------------------------------------
+
+
+def test_without_the_flags_the_sdc_is_what_every_earlier_record_carried():
+    """No flag given must change nothing: the earlier pilot records stay reproducible."""
+    text = pilot.sdc_text(16.0)
+    assert "set_max_fanout 32 [current_design]" in text
+    assert "set_max_transition" not in text
+
+
+def test_the_max_transition_limit_is_read_from_the_liberty_not_typed():
+    """`library` must resolve to the smallest default_max_transition the corner declares."""
+    view = pilot.PHYSICAL_VIEWS["asap7"]
+    corner = view["corners"][view["default_corner"]]
+    constraints = pilot.resolve_signal_integrity_constraints(view, corner, "library", "default", 40.0)
+    declared = [
+        e["default_max_transition"]
+        for e in constraints["library_default_max_transition"]
+        if e["default_max_transition"] is not None
+    ]
+    assert declared, "the corner's liberty files declare no default_max_transition"
+    assert constraints["max_transition_library_units"] == min(declared)
+    assert f"set_max_transition {min(declared):g} [current_design]" in pilot.sdc_text(16.0, constraints)
+
+
+def test_the_slew_margin_reaches_the_block_config_not_only_the_parent(tmp_path):
+    """SLEW_MARGIN is what repairs the extraction gap, and the BLOCK is the leg that routes."""
+    view = pilot.PHYSICAL_VIEWS["asap7"]
+    corner = view["corners"][view["default_corner"]]
+    constraints = pilot.resolve_signal_integrity_constraints(view, corner, "library", "default", 40.0)
+    configs = pilot.write_configs(tmp_path, 16.0, 35, 0.60, "5 5", constraints=constraints)
+    assert "export SLEW_MARGIN = 40" in configs["block"]
+    assert "export SLEW_MARGIN = 40" in configs["parent"]
+    assert "set_max_transition" in (tmp_path / pilot.BLOCK_TOP / "constraint.sdc").read_text()
+
+
+def test_no_margin_means_no_slew_margin_export(tmp_path):
+    configs = pilot.write_configs(tmp_path, 16.0, 35, 0.60, "5 5", constraints=None)
+    assert "SLEW_MARGIN" not in configs["block"]
+    assert "SLEW_MARGIN" not in configs["parent"]

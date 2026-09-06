@@ -49,6 +49,17 @@ import time
 from datetime import datetime, timezone
 from typing import Any
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+# The signal-integrity constraints are resolved by the SAME code the flat routes
+# use -- tools/run_abi3_physical.py -- so `--max-transition-ns library` reads the
+# limit out of the corner's own liberty files instead of anyone typing 320.  This
+# imports that resolver; it does not edit it.
+from run_abi3_physical import (  # noqa: E402
+    VIEWS as PHYSICAL_VIEWS,
+    resolve_signal_integrity_constraints,
+    signal_integrity_sdc_lines,
+)
+
 ROOT = Path(__file__).resolve().parents[1]
 ORFS_IMAGE = os.environ.get("OPENTALLAS_ORFS_IMAGE", "openroad/orfs:latest")
 ORFS_EXPECTED_IMAGE_ID = "sha256:af971398d91e5d154ec40d3df26554efd8790107268a4c7f1e6bb8f222979d34"
@@ -108,7 +119,14 @@ def orfs_identity() -> dict[str, Any]:
             "tool_versions": (proc2.stdout or "").strip().splitlines() if proc2 else []}
 
 
-def sdc_text(clock_period_ns: float) -> str:
+def sdc_text(clock_period_ns: float, constraints: dict[str, Any] | None = None) -> str:
+    """The SDC for one leg.
+
+    ``constraints`` is the block ``resolve_signal_integrity_constraints``
+    returns.  With ``None`` the ``set_max_*`` lines are exactly the single
+    ``set_max_fanout 32`` every earlier pilot record's SDC carried, so an
+    unconstrained run is byte-identical to the ones already on disk.
+    """
     period_lib = clock_period_ns / TIME_UNIT_NS
     return "\n".join([
         f"set clk_period {period_lib:g}",
@@ -117,7 +135,7 @@ def sdc_text(clock_period_ns: float) -> str:
         "set_input_delay [expr $clk_period * 0.2] -clock core_clk $non_clock_inputs",
         "set_output_delay [expr $clk_period * 0.2] -clock core_clk [all_outputs]",
         f"set_load {OUTPUT_LOAD_FF:g} [all_outputs]",
-        "set_max_fanout 32 [current_design]",
+        *signal_integrity_sdc_lines(constraints),
         "set_false_path -from [get_ports rst_n]",
         "",
     ])
@@ -145,11 +163,12 @@ def macro_placement_tcl(work: Path, halo: str, lef: Path) -> str:
 def write_configs(work: Path, clock_period_ns: float, core_utilization: int, place_density: float,
                   halo: str, macro_placement: str | None = None,
                   parent_exports: list[str] | None = None,
-                  block_exports: list[str] | None = None) -> dict[str, str]:
+                  block_exports: list[str] | None = None,
+                  constraints: dict[str, Any] | None = None) -> dict[str, str]:
     block_dir = work / BLOCK_TOP
     block_dir.mkdir(parents=True, exist_ok=True)
-    (work / "constraint.sdc").write_text(sdc_text(clock_period_ns), encoding="utf-8")
-    (block_dir / "constraint.sdc").write_text(sdc_text(clock_period_ns), encoding="utf-8")
+    (work / "constraint.sdc").write_text(sdc_text(clock_period_ns, constraints), encoding="utf-8")
+    (block_dir / "constraint.sdc").write_text(sdc_text(clock_period_ns, constraints), encoding="utf-8")
     parent = [
         f"export DESIGN_NICKNAME = {PARENT_NICKNAME}",
         f"export DESIGN_NAME = {PARENT_TOP}",
@@ -201,6 +220,15 @@ def write_configs(work: Path, clock_period_ns: float, core_utilization: int, pla
         "export SKIP_REPORT_METRICS = 0",
         "",
     ]
+    # ORFS SLEW_MARGIN: repair_design overfixes by this fraction of each pin's
+    # limit under ESTIMATED parasitics, which is what closes the gap to the
+    # finish check's EXTRACTED ones (rule R13; section 13 item 14).  The SDC
+    # line alone is close to a no-op on ASAP7 because the liberty already
+    # declares the same 320 ps.
+    if constraints and constraints.get("slew_margin_percent") is not None:
+        margin = f"export SLEW_MARGIN = {constraints['slew_margin_percent']:g}"
+        parent.insert(-1, margin)
+        block.insert(-1, margin)
     for extra in parent_exports or []:
         key, _, value = extra.partition("=")
         parent.insert(-1, f"export {key.strip()} = {value.strip()}")
@@ -473,6 +501,16 @@ def main(argv: list[str] | None = None) -> int:
                         help="place the eight abstracts explicitly instead of leaving them to the RTL-MP "
                              "macro placer: GRID places them on a regular grid inside the core with the "
                              "halo as the spacing (ORFS MACRO_PLACEMENT_TCL)")
+    parser.add_argument("--max-transition-ns", default=None, metavar="NS|library",
+                        help="put an explicit set_max_transition in both SDCs; 'library' takes the "
+                             "smallest default_max_transition the corner's own liberty files declare "
+                             "(ASAP7 RVT: 320 ps), read from those files, never typed here")
+    parser.add_argument("--max-fanout", default=None, metavar="N|default",
+                        help="replace the SDC's set_max_fanout 32 ('default' keeps 32 and records it)")
+    parser.add_argument("--slew-margin-percent", type=float, default=None,
+                        help="ORFS SLEW_MARGIN: repair_design overfixes slew by this percent of each "
+                             "pin's limit under estimated parasitics.  40 took the committed flat LQ8 "
+                             "route from 292 max-slew violations to 0 (section 13 item 14)")
     parser.add_argument("--timeout-seconds", type=int, default=3 * 3600)
     parser.add_argument("--reconstruct-make", metavar="CONTAINER", default=None,
                         help="with --record-only: rebuild a leg whose client died after the flow "
@@ -494,6 +532,11 @@ def main(argv: list[str] | None = None) -> int:
         work = ROOT / work
     work.mkdir(parents=True, exist_ok=True)
 
+    view = PHYSICAL_VIEWS[args.view]
+    constraints = resolve_signal_integrity_constraints(
+        view, view["corners"][view["default_corner"]],
+        args.max_transition_ns, args.max_fanout, args.slew_margin_percent)
+
     record: dict[str, Any] = {}
     if output.is_file():
         record = json.loads(output.read_text(encoding="utf-8"))
@@ -503,8 +546,15 @@ def main(argv: list[str] | None = None) -> int:
                                  "and assemble a T64 from eight abstract instances, and how long does it take")
     record.setdefault("view", {"name": "asap7", "evidence_class": "predictive academic PDK (not manufacturable)",
                                "platform": PLATFORM, "cell_library": "asap7sc7p5t_RVT", "corner": "TC"})
-    record.setdefault("git", git_identity())
-    record.setdefault("orfs", orfs_identity())
+    # Provenance is re-taken on every real run.  ``setdefault`` here meant a
+    # second run inherited the FIRST run's commit and source digests, which is
+    # the same class of defect as certifying a product you did not just build.
+    if args.record_only:
+        record.setdefault("git", git_identity())
+        record.setdefault("orfs", orfs_identity())
+    else:
+        record["git"] = git_identity()
+        record["orfs"] = orfs_identity()
     record.setdefault("mechanism", {
         "makefile": "ORFS flow/Makefile: BLOCKS -> BLOCK_LEFS / BLOCK_TYP_LIBS under results/<platform>/"
                     "<nickname>_<block>/<variant>/; GENERATE_ABSTRACT_RULE runs generate_abstract with "
@@ -517,15 +567,25 @@ def main(argv: list[str] | None = None) -> int:
                       "tile's LQ8_ABSTRACT = 1 generate branch (no overrides; the abstract is LANES 8, "
                       "ADDER_STAGES 3, ACC_SLOTS 8 by the block's own defaults)",
     })
-    record.setdefault("sources", {s: {"sha256": sha256_file(ROOT / s)} for s in sorted(set(BLOCK_SOURCES + PARENT_SOURCES))})
-    record.setdefault("target_clock_period_ns", args.clock_period_ns)
-    record.setdefault("bound_seconds_per_leg", args.timeout_seconds)
+    sources = {s: {"sha256": sha256_file(ROOT / s)} for s in sorted(set(BLOCK_SOURCES + PARENT_SOURCES))}
+    if args.record_only:
+        record.setdefault("sources", sources)
+        record.setdefault("target_clock_period_ns", args.clock_period_ns)
+        record.setdefault("bound_seconds_per_leg", args.timeout_seconds)
+        record.setdefault("signal_integrity_constraints", constraints)
+    else:
+        record["sources"] = sources
+        record["target_clock_period_ns"] = args.clock_period_ns
+        record["bound_seconds_per_leg"] = args.timeout_seconds
+        record["signal_integrity_constraints"] = constraints
+    record["tool_sha256"] = sha256_file(Path(__file__).resolve())
     if args.record_only and record.get("configs"):
         # A record-only pass must not write into the work directory: the flow may still be in it.
         configs = record["configs"]
     else:
         configs = write_configs(work, args.clock_period_ns, args.core_utilization, args.place_density,
-                                args.macro_halo, args.macro_placement, args.parent_export, args.block_export)
+                                args.macro_halo, args.macro_placement, args.parent_export, args.block_export,
+                                constraints)
     record["configs"] = configs
     record.setdefault("legs", {})
 
