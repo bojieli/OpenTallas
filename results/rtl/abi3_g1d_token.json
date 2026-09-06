@@ -12,9 +12,9 @@
   ],
   "gate": "G1d",
   "generated_by": "tools/build_abi3_g1d_token.py",
-  "generated_by_sha256": "43cdfc2af0972cd9cc9817e5b2a620c883706adbbada2bfdd3554460cb6cab9f",
+  "generated_by_sha256": "36405edb38b8d3be3a2c6ae613778f4f3929786afef94f3595b8fbbfd1cfe767",
   "git": {
-    "commit": "acf851838ea6415352027ed73274dd8635fa1bfd",
+    "commit": "da242233f41f4a3b607b8b658073d7ff3b9b3304",
     "dirty_paths": [],
     "scope": "the tree THIS artifact was derived in. It is not a claim about the tree either run happened in; see execution.control_plane_run and handoff.integrated_campaign for those.",
     "worktree_dirty": false
@@ -25,6 +25,46 @@
         "deployment_sha256": "133afc13e1fcd2aade2e40530883c9986b0e920d99853990d9032fd777f26243",
         "directory": "build/abi3/qwen3-8b-rom",
         "key": "qwen3-8b-rom-single-chip"
+      },
+      "eos": {
+        "generation_policy": {
+          "descriptor_id": 21,
+          "eos_token_ids": [
+            151645,
+            151643
+          ],
+          "source": "the deployment's own GENERATION_POLICY descriptor, not a token id written down here",
+          "vocabulary_size": 151936
+        },
+        "observation_source": "the MAPPED line the integrated harness printed for this case, in the run log of a campaign this rung found usable",
+        "official_eos_raised": false,
+        "official_eos_reason_value": 1,
+        "oracle_position_of_the_official_eos": {
+          "consequence": "the id this rung certifies and the id that raises the EOS are different generated positions, so one head execution cannot make both halves of this field true: the rung needs the head run at the position whose argmax selects an EOS token as well as at the position whose token it certifies",
+          "generated_token_ids": [
+            3925,
+            13,
+            151645
+          ],
+          "index_of_the_first_eos_token": 2,
+          "the_certified_token_is_also_the_eos": false,
+          "this_rung_compares_only_the_first_n": 1
+        },
+        "real_engine_launches_in_this_case": 10,
+        "run_launched_at_least_one_real_engine": true,
+        "selected_eos_reason_is_official_eos": false,
+        "selected_eos_reason_observed": null,
+        "selected_token_observed": null,
+        "site": {
+          "fetched_by_the_integrated_run": false,
+          "kernel_id": "token_append",
+          "mnemonic": "SELECTION.TOKEN_APPEND",
+          "note": "the only site in this program that can carry an EOS reason. The run fetched 33 instruction(s), so this site was never fetched",
+          "operator_descriptor_id": 212,
+          "pc": 72
+        },
+        "why": "official_eos_raised is the AND of an unmeasured half and a measured one. The engine half is satisfied: this case launched 10 real engine(s). The reason half is not measured, and an unmeasured half is false, never not_evaluable.",
+        "why_the_reason_is_unmeasured": "no run log of a usable campaign carries a MAPPED line for this case: rtl/test/a3_shipped_prefix_harness.cpp prints that line, and checks selected_eos_reason at all, only for a case carrying mapped placement, and the campaign reports cases_with_mapped_placement 0"
       },
       "execution": {
         "campaign": {
@@ -236,7 +276,7 @@
         "vehicle": "rtl/test/a3_shipped_prefix_top.sv"
       },
       "git": {
-        "commit": "acf851838ea6415352027ed73274dd8635fa1bfd",
+        "commit": "da242233f41f4a3b607b8b658073d7ff3b9b3304",
         "dirty_paths": [],
         "scope": "the tree THIS artifact was derived in. It is not a claim about the tree either run happened in; see execution.control_plane_run and handoff.integrated_campaign for those.",
         "worktree_dirty": false
@@ -612,6 +652,408 @@
             ]
           }
         ],
+        "runnable_leg": {
+          "derived_from": "the layer loop's back edge and the head sites' own PCs; no span bound is written down in this file",
+          "does_not_establish": "that the head ran, that any logit was computed or compared, or that the value the span would consume is the composed trunk output: no field of this rung moves because of this block",
+          "establishes": "that a single transaction entered at the head can reach these sites with every placement role satisfiable",
+          "result_bank": {
+            "a_fifth_case_fits_in_the_vehicle_as_elaborated": false,
+            "note": "the vehicle's result memory is one bank shared by every case at disjoint bases, so a new case's demand is added to what the committed cases already occupy. RESULT_WORDS is a parameter the campaign passes at elaboration from this very geometry, so this is a sizing statement, not a wall",
+            "vehicle_result_words": 98304,
+            "words_the_argmax_span_would_add": 160129,
+            "words_the_committed_cases_already_use": 91136
+          },
+          "spans": {
+            "through_argmax": {
+              "entry_pc": 65,
+              "every_role_satisfiable": true,
+              "instruction_count": 71,
+              "operand_count": 11,
+              "placement_demand": {
+                "every_role_satisfiable": true,
+                "output_objects": {
+                  "distinct_output_objects": 4,
+                  "note": "the layer writes its intermediates into fewer buffers than it has operators: an appending output cursor gives each write a fresh address, which is sound only while nothing reads the earlier contents of a reused object",
+                  "objects_written_more_than_once": {},
+                  "writes": 4
+                },
+                "per_role": [
+                  {
+                    "distinct_objects_the_layer_needs": 3,
+                    "object_keyed": false,
+                    "objects": [
+                      45,
+                      186,
+                      194
+                    ],
+                    "role": "appending_output",
+                    "satisfiable": true,
+                    "short_by": 2,
+                    "slots_the_bridge_declares": 1
+                  },
+                  {
+                    "distinct_objects_the_layer_needs": 1,
+                    "object_keyed": false,
+                    "objects": [
+                      45
+                    ],
+                    "role": "gather_source",
+                    "satisfiable": true,
+                    "short_by": 0,
+                    "slots_the_bridge_declares": 1
+                  },
+                  {
+                    "distinct_objects_the_layer_needs": 1,
+                    "object_keyed": false,
+                    "objects": [
+                      23
+                    ],
+                    "role": "index_base",
+                    "satisfiable": true,
+                    "short_by": 0,
+                    "slots_the_bridge_declares": 1
+                  },
+                  {
+                    "distinct_objects_the_layer_needs": 2,
+                    "object_keyed": true,
+                    "objects": [
+                      194,
+                      200
+                    ],
+                    "role": "mapped_family_operand",
+                    "satisfiable": true,
+                    "short_by": 0,
+                    "slots_the_bridge_declares": 8
+                  },
+                  {
+                    "distinct_objects_the_layer_needs": 1,
+                    "object_keyed": false,
+                    "objects": [
+                      186
+                    ],
+                    "role": "matmul_input",
+                    "satisfiable": true,
+                    "short_by": 0,
+                    "slots_the_bridge_declares": 1
+                  },
+                  {
+                    "distinct_objects_the_layer_needs": 1,
+                    "object_keyed": true,
+                    "objects": [
+                      3
+                    ],
+                    "role": "matmul_weight",
+                    "satisfiable": true,
+                    "short_by": 0,
+                    "slots_the_bridge_declares": 3
+                  },
+                  {
+                    "distinct_objects_the_layer_needs": 1,
+                    "object_keyed": false,
+                    "objects": [
+                      36
+                    ],
+                    "role": "rms_input",
+                    "satisfiable": true,
+                    "short_by": 0,
+                    "slots_the_bridge_declares": 1
+                  },
+                  {
+                    "distinct_objects_the_layer_needs": 1,
+                    "object_keyed": false,
+                    "objects": [
+                      2
+                    ],
+                    "role": "rms_weight",
+                    "satisfiable": true,
+                    "short_by": 0,
+                    "slots_the_bridge_declares": 1
+                  }
+                ],
+                "route_note": "derived from the same demand-versus-capacity counts as the shortfall above; it is what this vehicle lacks, not a design",
+                "route_to_completion": [],
+                "unattributed_operands": []
+              },
+              "result_bank_words_the_span_would_write": {
+                "per_output": [
+                  {
+                    "declared_dims": [
+                      512,
+                      4096
+                    ],
+                    "elements": 4096,
+                    "mnemonic": "VECTOR.RMS_NORM",
+                    "pc": 66,
+                    "resolved_dims": [
+                      1,
+                      4096
+                    ],
+                    "resolved_extent": 1,
+                    "resolved_on_axis": 0,
+                    "view_descriptor_id": 182
+                  },
+                  {
+                    "declared_dims": [
+                      1,
+                      4096
+                    ],
+                    "elements": 4096,
+                    "mnemonic": "DMA.GATHER",
+                    "pc": 68,
+                    "resolved_dims": [
+                      1,
+                      4096
+                    ],
+                    "resolved_extent": 1,
+                    "resolved_on_axis": 0,
+                    "view_descriptor_id": 187
+                  },
+                  {
+                    "declared_dims": [
+                      1,
+                      151936
+                    ],
+                    "elements": 151936,
+                    "mnemonic": "TENSOR.MATMUL",
+                    "pc": 69,
+                    "resolved_dims": [
+                      1,
+                      151936
+                    ],
+                    "resolved_extent": 1,
+                    "resolved_on_axis": 0,
+                    "view_descriptor_id": 195
+                  },
+                  {
+                    "declared_dims": [
+                      1
+                    ],
+                    "elements": 1,
+                    "mnemonic": "SELECTION.ARGMAX",
+                    "pc": 70,
+                    "resolved_dims": [
+                      1
+                    ],
+                    "resolved_extent": 1,
+                    "resolved_on_axis": 0,
+                    "view_descriptor_id": 201
+                  }
+                ],
+                "source": "testdata/compiler/abi3_deployment/a3_deployment_view.hex, the resolved-view stream runtime.sim.device.Device recorded for this case; one result word holds one element, which is what p3_expect.hex is and what the harness compares",
+                "words": 160129
+              },
+              "site_pcs": [
+                66,
+                68,
+                69,
+                70
+              ],
+              "unattributed_operand_count": 0
+            },
+            "through_the_eos_site": {
+              "entry_pc": 65,
+              "every_role_satisfiable": true,
+              "instruction_count": 73,
+              "operand_count": 13,
+              "placement_demand": {
+                "every_role_satisfiable": true,
+                "output_objects": {
+                  "distinct_output_objects": 5,
+                  "note": "the layer writes its intermediates into fewer buffers than it has operators: an appending output cursor gives each write a fresh address, which is sound only while nothing reads the earlier contents of a reused object",
+                  "objects_written_more_than_once": {},
+                  "writes": 5
+                },
+                "per_role": [
+                  {
+                    "distinct_objects_the_layer_needs": 3,
+                    "object_keyed": false,
+                    "objects": [
+                      45,
+                      186,
+                      194
+                    ],
+                    "role": "appending_output",
+                    "satisfiable": true,
+                    "short_by": 2,
+                    "slots_the_bridge_declares": 1
+                  },
+                  {
+                    "distinct_objects_the_layer_needs": 1,
+                    "object_keyed": false,
+                    "objects": [
+                      45
+                    ],
+                    "role": "gather_source",
+                    "satisfiable": true,
+                    "short_by": 0,
+                    "slots_the_bridge_declares": 1
+                  },
+                  {
+                    "distinct_objects_the_layer_needs": 1,
+                    "object_keyed": false,
+                    "objects": [
+                      23
+                    ],
+                    "role": "index_base",
+                    "satisfiable": true,
+                    "short_by": 0,
+                    "slots_the_bridge_declares": 1
+                  },
+                  {
+                    "distinct_objects_the_layer_needs": 3,
+                    "object_keyed": true,
+                    "objects": [
+                      194,
+                      200,
+                      209
+                    ],
+                    "role": "mapped_family_operand",
+                    "satisfiable": true,
+                    "short_by": 0,
+                    "slots_the_bridge_declares": 8
+                  },
+                  {
+                    "distinct_objects_the_layer_needs": 1,
+                    "object_keyed": false,
+                    "objects": [
+                      186
+                    ],
+                    "role": "matmul_input",
+                    "satisfiable": true,
+                    "short_by": 0,
+                    "slots_the_bridge_declares": 1
+                  },
+                  {
+                    "distinct_objects_the_layer_needs": 1,
+                    "object_keyed": true,
+                    "objects": [
+                      3
+                    ],
+                    "role": "matmul_weight",
+                    "satisfiable": true,
+                    "short_by": 0,
+                    "slots_the_bridge_declares": 3
+                  },
+                  {
+                    "distinct_objects_the_layer_needs": 1,
+                    "object_keyed": false,
+                    "objects": [
+                      36
+                    ],
+                    "role": "rms_input",
+                    "satisfiable": true,
+                    "short_by": 0,
+                    "slots_the_bridge_declares": 1
+                  },
+                  {
+                    "distinct_objects_the_layer_needs": 1,
+                    "object_keyed": false,
+                    "objects": [
+                      2
+                    ],
+                    "role": "rms_weight",
+                    "satisfiable": true,
+                    "short_by": 0,
+                    "slots_the_bridge_declares": 1
+                  }
+                ],
+                "route_note": "derived from the same demand-versus-capacity counts as the shortfall above; it is what this vehicle lacks, not a design",
+                "route_to_completion": [],
+                "unattributed_operands": []
+              },
+              "result_bank_words_the_span_would_write": {
+                "per_output": [
+                  {
+                    "declared_dims": [
+                      512,
+                      4096
+                    ],
+                    "elements": 4096,
+                    "mnemonic": "VECTOR.RMS_NORM",
+                    "pc": 66,
+                    "resolved_dims": [
+                      1,
+                      4096
+                    ],
+                    "resolved_extent": 1,
+                    "resolved_on_axis": 0,
+                    "view_descriptor_id": 182
+                  },
+                  {
+                    "declared_dims": [
+                      1,
+                      4096
+                    ],
+                    "elements": 4096,
+                    "mnemonic": "DMA.GATHER",
+                    "pc": 68,
+                    "resolved_dims": [
+                      1,
+                      4096
+                    ],
+                    "resolved_extent": 1,
+                    "resolved_on_axis": 0,
+                    "view_descriptor_id": 187
+                  },
+                  {
+                    "declared_dims": [
+                      1,
+                      151936
+                    ],
+                    "elements": 151936,
+                    "mnemonic": "TENSOR.MATMUL",
+                    "pc": 69,
+                    "resolved_dims": [
+                      1,
+                      151936
+                    ],
+                    "resolved_extent": 1,
+                    "resolved_on_axis": 0,
+                    "view_descriptor_id": 195
+                  },
+                  {
+                    "declared_dims": [
+                      1
+                    ],
+                    "elements": 1,
+                    "mnemonic": "SELECTION.ARGMAX",
+                    "pc": 70,
+                    "resolved_dims": [
+                      1
+                    ],
+                    "resolved_extent": 1,
+                    "resolved_on_axis": 0,
+                    "view_descriptor_id": 201
+                  },
+                  {
+                    "declared_dims": [
+                      1
+                    ],
+                    "elements": 1,
+                    "mnemonic": "SELECTION.TOKEN_APPEND",
+                    "pc": 72,
+                    "resolved_dims": [
+                      1
+                    ],
+                    "resolved_extent": 1,
+                    "resolved_on_axis": 0,
+                    "view_descriptor_id": 210
+                  }
+                ],
+                "source": "testdata/compiler/abi3_deployment/a3_deployment_view.hex, the resolved-view stream runtime.sim.device.Device recorded for this case; one result word holds one element, which is what p3_expect.hex is and what the harness compares",
+                "words": 160130
+              },
+              "site_pcs": [
+                66,
+                68,
+                69,
+                70,
+                72
+              ],
+              "unattributed_operand_count": 0
+            }
+          }
+        },
         "shard_composition_check": {
           "activation_provenance": "real BF16 embedding rows of width 4096, read through the deployment's own declared checkpoint segments. These are NOT the composed trunk output: the trunk cannot run in this vehicle, so no composed trunk output exists. What this measures is the exactness of the SHARD COMPOSITION at the head's real shape and on the real weights; it establishes nothing about the logits of the governed workload",
           "activations": [
@@ -834,6 +1276,46 @@
         "directory": "build/abi3/qwen3-8b-hbm-tokens",
         "key": "qwen3-8b-hbm-single-chip"
       },
+      "eos": {
+        "generation_policy": {
+          "descriptor_id": 219,
+          "eos_token_ids": [
+            151645,
+            151643
+          ],
+          "source": "the deployment's own GENERATION_POLICY descriptor, not a token id written down here",
+          "vocabulary_size": 151936
+        },
+        "observation_source": "the MAPPED line the integrated harness printed for this case, in the run log of a campaign this rung found usable",
+        "official_eos_raised": false,
+        "official_eos_reason_value": 1,
+        "oracle_position_of_the_official_eos": {
+          "consequence": "the id this rung certifies and the id that raises the EOS are different generated positions, so one head execution cannot make both halves of this field true: the rung needs the head run at the position whose argmax selects an EOS token as well as at the position whose token it certifies",
+          "generated_token_ids": [
+            3925,
+            13,
+            151645
+          ],
+          "index_of_the_first_eos_token": 2,
+          "the_certified_token_is_also_the_eos": false,
+          "this_rung_compares_only_the_first_n": 1
+        },
+        "real_engine_launches_in_this_case": 10,
+        "run_launched_at_least_one_real_engine": true,
+        "selected_eos_reason_is_official_eos": false,
+        "selected_eos_reason_observed": null,
+        "selected_token_observed": null,
+        "site": {
+          "fetched_by_the_integrated_run": false,
+          "kernel_id": "token_append",
+          "mnemonic": "SELECTION.TOKEN_APPEND",
+          "note": "the only site in this program that can carry an EOS reason. The run fetched 33 instruction(s), so this site was never fetched",
+          "operator_descriptor_id": 217,
+          "pc": 72
+        },
+        "why": "official_eos_raised is the AND of an unmeasured half and a measured one. The engine half is satisfied: this case launched 10 real engine(s). The reason half is not measured, and an unmeasured half is false, never not_evaluable.",
+        "why_the_reason_is_unmeasured": "no run log of a usable campaign carries a MAPPED line for this case: rtl/test/a3_shipped_prefix_harness.cpp prints that line, and checks selected_eos_reason at all, only for a case carrying mapped placement, and the campaign reports cases_with_mapped_placement 0"
+      },
       "execution": {
         "campaign": {
           "artifact": "results/rtl/abi3_shipped_prefix_campaign.json",
@@ -1044,7 +1526,7 @@
         "vehicle": "rtl/test/a3_shipped_prefix_top.sv"
       },
       "git": {
-        "commit": "acf851838ea6415352027ed73274dd8635fa1bfd",
+        "commit": "da242233f41f4a3b607b8b658073d7ff3b9b3304",
         "dirty_paths": [],
         "scope": "the tree THIS artifact was derived in. It is not a claim about the tree either run happened in; see execution.control_plane_run and handoff.integrated_campaign for those.",
         "worktree_dirty": false
@@ -1420,6 +1902,408 @@
             ]
           }
         ],
+        "runnable_leg": {
+          "derived_from": "the layer loop's back edge and the head sites' own PCs; no span bound is written down in this file",
+          "does_not_establish": "that the head ran, that any logit was computed or compared, or that the value the span would consume is the composed trunk output: no field of this rung moves because of this block",
+          "establishes": "that a single transaction entered at the head can reach these sites with every placement role satisfiable",
+          "result_bank": {
+            "a_fifth_case_fits_in_the_vehicle_as_elaborated": false,
+            "note": "the vehicle's result memory is one bank shared by every case at disjoint bases, so a new case's demand is added to what the committed cases already occupy. RESULT_WORDS is a parameter the campaign passes at elaboration from this very geometry, so this is a sizing statement, not a wall",
+            "vehicle_result_words": 98304,
+            "words_the_argmax_span_would_add": 160129,
+            "words_the_committed_cases_already_use": 91136
+          },
+          "spans": {
+            "through_argmax": {
+              "entry_pc": 65,
+              "every_role_satisfiable": true,
+              "instruction_count": 71,
+              "operand_count": 11,
+              "placement_demand": {
+                "every_role_satisfiable": true,
+                "output_objects": {
+                  "distinct_output_objects": 4,
+                  "note": "the layer writes its intermediates into fewer buffers than it has operators: an appending output cursor gives each write a fresh address, which is sound only while nothing reads the earlier contents of a reused object",
+                  "objects_written_more_than_once": {},
+                  "writes": 4
+                },
+                "per_role": [
+                  {
+                    "distinct_objects_the_layer_needs": 3,
+                    "object_keyed": false,
+                    "objects": [
+                      19,
+                      27,
+                      37
+                    ],
+                    "role": "appending_output",
+                    "satisfiable": true,
+                    "short_by": 2,
+                    "slots_the_bridge_declares": 1
+                  },
+                  {
+                    "distinct_objects_the_layer_needs": 1,
+                    "object_keyed": false,
+                    "objects": [
+                      19
+                    ],
+                    "role": "gather_source",
+                    "satisfiable": true,
+                    "short_by": 0,
+                    "slots_the_bridge_declares": 1
+                  },
+                  {
+                    "distinct_objects_the_layer_needs": 1,
+                    "object_keyed": false,
+                    "objects": [
+                      15
+                    ],
+                    "role": "index_base",
+                    "satisfiable": true,
+                    "short_by": 0,
+                    "slots_the_bridge_declares": 1
+                  },
+                  {
+                    "distinct_objects_the_layer_needs": 2,
+                    "object_keyed": true,
+                    "objects": [
+                      28,
+                      37
+                    ],
+                    "role": "mapped_family_operand",
+                    "satisfiable": true,
+                    "short_by": 0,
+                    "slots_the_bridge_declares": 8
+                  },
+                  {
+                    "distinct_objects_the_layer_needs": 1,
+                    "object_keyed": false,
+                    "objects": [
+                      27
+                    ],
+                    "role": "matmul_input",
+                    "satisfiable": true,
+                    "short_by": 0,
+                    "slots_the_bridge_declares": 1
+                  },
+                  {
+                    "distinct_objects_the_layer_needs": 1,
+                    "object_keyed": true,
+                    "objects": [
+                      14
+                    ],
+                    "role": "matmul_weight",
+                    "satisfiable": true,
+                    "short_by": 0,
+                    "slots_the_bridge_declares": 3
+                  },
+                  {
+                    "distinct_objects_the_layer_needs": 1,
+                    "object_keyed": false,
+                    "objects": [
+                      18
+                    ],
+                    "role": "rms_input",
+                    "satisfiable": true,
+                    "short_by": 0,
+                    "slots_the_bridge_declares": 1
+                  },
+                  {
+                    "distinct_objects_the_layer_needs": 1,
+                    "object_keyed": false,
+                    "objects": [
+                      13
+                    ],
+                    "role": "rms_weight",
+                    "satisfiable": true,
+                    "short_by": 0,
+                    "slots_the_bridge_declares": 1
+                  }
+                ],
+                "route_note": "derived from the same demand-versus-capacity counts as the shortfall above; it is what this vehicle lacks, not a design",
+                "route_to_completion": [],
+                "unattributed_operands": []
+              },
+              "result_bank_words_the_span_would_write": {
+                "per_output": [
+                  {
+                    "declared_dims": [
+                      512,
+                      4096
+                    ],
+                    "elements": 4096,
+                    "mnemonic": "VECTOR.RMS_NORM",
+                    "pc": 66,
+                    "resolved_dims": [
+                      1,
+                      4096
+                    ],
+                    "resolved_extent": 1,
+                    "resolved_on_axis": 0,
+                    "view_descriptor_id": 191
+                  },
+                  {
+                    "declared_dims": [
+                      1,
+                      4096
+                    ],
+                    "elements": 4096,
+                    "mnemonic": "DMA.GATHER",
+                    "pc": 68,
+                    "resolved_dims": [
+                      1,
+                      4096
+                    ],
+                    "resolved_extent": 1,
+                    "resolved_on_axis": 0,
+                    "view_descriptor_id": 195
+                  },
+                  {
+                    "declared_dims": [
+                      1,
+                      151936
+                    ],
+                    "elements": 151936,
+                    "mnemonic": "TENSOR.MATMUL",
+                    "pc": 69,
+                    "resolved_dims": [
+                      1,
+                      151936
+                    ],
+                    "resolved_extent": 1,
+                    "resolved_on_axis": 0,
+                    "view_descriptor_id": 202
+                  },
+                  {
+                    "declared_dims": [
+                      1
+                    ],
+                    "elements": 1,
+                    "mnemonic": "SELECTION.ARGMAX",
+                    "pc": 70,
+                    "resolved_dims": [
+                      1
+                    ],
+                    "resolved_extent": 1,
+                    "resolved_on_axis": 0,
+                    "view_descriptor_id": 207
+                  }
+                ],
+                "source": "testdata/compiler/abi3_deployment/a3_deployment_view.hex, the resolved-view stream runtime.sim.device.Device recorded for this case; one result word holds one element, which is what p3_expect.hex is and what the harness compares",
+                "words": 160129
+              },
+              "site_pcs": [
+                66,
+                68,
+                69,
+                70
+              ],
+              "unattributed_operand_count": 0
+            },
+            "through_the_eos_site": {
+              "entry_pc": 65,
+              "every_role_satisfiable": true,
+              "instruction_count": 73,
+              "operand_count": 13,
+              "placement_demand": {
+                "every_role_satisfiable": true,
+                "output_objects": {
+                  "distinct_output_objects": 5,
+                  "note": "the layer writes its intermediates into fewer buffers than it has operators: an appending output cursor gives each write a fresh address, which is sound only while nothing reads the earlier contents of a reused object",
+                  "objects_written_more_than_once": {},
+                  "writes": 5
+                },
+                "per_role": [
+                  {
+                    "distinct_objects_the_layer_needs": 3,
+                    "object_keyed": false,
+                    "objects": [
+                      19,
+                      27,
+                      37
+                    ],
+                    "role": "appending_output",
+                    "satisfiable": true,
+                    "short_by": 2,
+                    "slots_the_bridge_declares": 1
+                  },
+                  {
+                    "distinct_objects_the_layer_needs": 1,
+                    "object_keyed": false,
+                    "objects": [
+                      19
+                    ],
+                    "role": "gather_source",
+                    "satisfiable": true,
+                    "short_by": 0,
+                    "slots_the_bridge_declares": 1
+                  },
+                  {
+                    "distinct_objects_the_layer_needs": 1,
+                    "object_keyed": false,
+                    "objects": [
+                      15
+                    ],
+                    "role": "index_base",
+                    "satisfiable": true,
+                    "short_by": 0,
+                    "slots_the_bridge_declares": 1
+                  },
+                  {
+                    "distinct_objects_the_layer_needs": 3,
+                    "object_keyed": true,
+                    "objects": [
+                      28,
+                      36,
+                      37
+                    ],
+                    "role": "mapped_family_operand",
+                    "satisfiable": true,
+                    "short_by": 0,
+                    "slots_the_bridge_declares": 8
+                  },
+                  {
+                    "distinct_objects_the_layer_needs": 1,
+                    "object_keyed": false,
+                    "objects": [
+                      27
+                    ],
+                    "role": "matmul_input",
+                    "satisfiable": true,
+                    "short_by": 0,
+                    "slots_the_bridge_declares": 1
+                  },
+                  {
+                    "distinct_objects_the_layer_needs": 1,
+                    "object_keyed": true,
+                    "objects": [
+                      14
+                    ],
+                    "role": "matmul_weight",
+                    "satisfiable": true,
+                    "short_by": 0,
+                    "slots_the_bridge_declares": 3
+                  },
+                  {
+                    "distinct_objects_the_layer_needs": 1,
+                    "object_keyed": false,
+                    "objects": [
+                      18
+                    ],
+                    "role": "rms_input",
+                    "satisfiable": true,
+                    "short_by": 0,
+                    "slots_the_bridge_declares": 1
+                  },
+                  {
+                    "distinct_objects_the_layer_needs": 1,
+                    "object_keyed": false,
+                    "objects": [
+                      13
+                    ],
+                    "role": "rms_weight",
+                    "satisfiable": true,
+                    "short_by": 0,
+                    "slots_the_bridge_declares": 1
+                  }
+                ],
+                "route_note": "derived from the same demand-versus-capacity counts as the shortfall above; it is what this vehicle lacks, not a design",
+                "route_to_completion": [],
+                "unattributed_operands": []
+              },
+              "result_bank_words_the_span_would_write": {
+                "per_output": [
+                  {
+                    "declared_dims": [
+                      512,
+                      4096
+                    ],
+                    "elements": 4096,
+                    "mnemonic": "VECTOR.RMS_NORM",
+                    "pc": 66,
+                    "resolved_dims": [
+                      1,
+                      4096
+                    ],
+                    "resolved_extent": 1,
+                    "resolved_on_axis": 0,
+                    "view_descriptor_id": 191
+                  },
+                  {
+                    "declared_dims": [
+                      1,
+                      4096
+                    ],
+                    "elements": 4096,
+                    "mnemonic": "DMA.GATHER",
+                    "pc": 68,
+                    "resolved_dims": [
+                      1,
+                      4096
+                    ],
+                    "resolved_extent": 1,
+                    "resolved_on_axis": 0,
+                    "view_descriptor_id": 195
+                  },
+                  {
+                    "declared_dims": [
+                      1,
+                      151936
+                    ],
+                    "elements": 151936,
+                    "mnemonic": "TENSOR.MATMUL",
+                    "pc": 69,
+                    "resolved_dims": [
+                      1,
+                      151936
+                    ],
+                    "resolved_extent": 1,
+                    "resolved_on_axis": 0,
+                    "view_descriptor_id": 202
+                  },
+                  {
+                    "declared_dims": [
+                      1
+                    ],
+                    "elements": 1,
+                    "mnemonic": "SELECTION.ARGMAX",
+                    "pc": 70,
+                    "resolved_dims": [
+                      1
+                    ],
+                    "resolved_extent": 1,
+                    "resolved_on_axis": 0,
+                    "view_descriptor_id": 207
+                  },
+                  {
+                    "declared_dims": [
+                      1
+                    ],
+                    "elements": 1,
+                    "mnemonic": "SELECTION.TOKEN_APPEND",
+                    "pc": 72,
+                    "resolved_dims": [
+                      1
+                    ],
+                    "resolved_extent": 1,
+                    "resolved_on_axis": 0,
+                    "view_descriptor_id": 215
+                  }
+                ],
+                "source": "testdata/compiler/abi3_deployment/a3_deployment_view.hex, the resolved-view stream runtime.sim.device.Device recorded for this case; one result word holds one element, which is what p3_expect.hex is and what the harness compares",
+                "words": 160130
+              },
+              "site_pcs": [
+                66,
+                68,
+                69,
+                70,
+                72
+              ],
+              "unattributed_operand_count": 0
+            }
+          }
+        },
         "shard_composition_check": {
           "activation_provenance": "real BF16 embedding rows of width 4096, read through the deployment's own declared checkpoint segments. These are NOT the composed trunk output: the trunk cannot run in this vehicle, so no composed trunk output exists. What this measures is the exactness of the SHARD COMPOSITION at the head's real shape and on the real weights; it establishes nothing about the logits of the governed workload",
           "activations": [

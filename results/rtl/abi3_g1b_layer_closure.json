@@ -8,7 +8,7 @@
   ],
   "gate": "G1b",
   "generated_by": "tools/build_abi3_g1b_layer_closure.py",
-  "generated_by_sha256": "9a06a2dbc22abbc7de3141e213d6207db593909905166ab623cc45f998861caa",
+  "generated_by_sha256": "b28e2b98d6e34451edb5309dcf5e1c046706611274e912ba825fcd926a9d0a63",
   "layer_definition": "one complete transformer layer, named by the certified Kernel IR: every engine issue the governed decode program makes whose OPERATOR descriptor's source_kernel_id points at a kernel whose kernel_id begins 'layer.0.'. The two lowerings are resolved independently; their descriptor IDs differ at every governed program counter and nothing measured on one is transferred to the other.",
   "records": [
     {
@@ -252,6 +252,16 @@
                 "object_keyed": false,
                 "slots": 1
               },
+              "embedding_source": {
+                "note": "cfg_embedding_source_base is a single base advanced by embedding_launch_count * EMBEDDING_WIDTH, not keyed by object",
+                "object_keyed": false,
+                "slots": 1
+              },
+              "gather_source": {
+                "note": "cfg_source_base is a single base advanced by dma_gather_launch_count * cfg_source_launch_stride, not keyed by object",
+                "object_keyed": false,
+                "slots": 1
+              },
               "head_rms_input": {
                 "object_keyed": true,
                 "slots": 2
@@ -259,6 +269,11 @@
               "head_rms_weight": {
                 "object_keyed": true,
                 "slots": 2
+              },
+              "index_base": {
+                "note": "cfg_index_base is a single base advanced by the launch counter, shared by DMA.GATHER and TENSOR.EMBED_LOOKUP; it is not keyed by object",
+                "object_keyed": false,
+                "slots": 1
               },
               "mapped_family_operand": {
                 "object_keyed": true,
@@ -300,7 +315,7 @@
         }
       },
       "git": {
-        "commit": "acf851838ea6415352027ed73274dd8635fa1bfd",
+        "commit": "da242233f41f4a3b607b8b658073d7ff3b9b3304",
         "dirty_paths": [],
         "scope": "the tree THIS artifact was derived in. It is not a claim about the tree the integrated campaign ran in; see execution.campaign.declared_git.",
         "worktree_dirty": false
@@ -1483,6 +1498,16 @@
                 "object_keyed": false,
                 "slots": 1
               },
+              "embedding_source": {
+                "note": "cfg_embedding_source_base is a single base advanced by embedding_launch_count * EMBEDDING_WIDTH, not keyed by object",
+                "object_keyed": false,
+                "slots": 1
+              },
+              "gather_source": {
+                "note": "cfg_source_base is a single base advanced by dma_gather_launch_count * cfg_source_launch_stride, not keyed by object",
+                "object_keyed": false,
+                "slots": 1
+              },
               "head_rms_input": {
                 "object_keyed": true,
                 "slots": 2
@@ -1490,6 +1515,11 @@
               "head_rms_weight": {
                 "object_keyed": true,
                 "slots": 2
+              },
+              "index_base": {
+                "note": "cfg_index_base is a single base advanced by the launch counter, shared by DMA.GATHER and TENSOR.EMBED_LOOKUP; it is not keyed by object",
+                "object_keyed": false,
+                "slots": 1
               },
               "mapped_family_operand": {
                 "object_keyed": true,
@@ -1531,7 +1561,7 @@
         }
       },
       "git": {
-        "commit": "acf851838ea6415352027ed73274dd8635fa1bfd",
+        "commit": "da242233f41f4a3b607b8b658073d7ff3b9b3304",
         "dirty_paths": [],
         "scope": "the tree THIS artifact was derived in. It is not a claim about the tree the integrated campaign ran in; see execution.campaign.declared_git.",
         "worktree_dirty": false
