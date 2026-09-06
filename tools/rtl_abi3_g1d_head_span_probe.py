@@ -803,6 +803,33 @@ def build(argv: list[str] | None = None) -> int:
             arms[0]["targets"][t.key]["measured"] is not None for t in qwen
         )
     )
+    def _sum(rows: list[dict[str, Any] | None]) -> int:
+        return sum(row["cycles"] for row in rows if row is not None)
+
+    _cycles = {
+        "ladder": _sum(
+            [
+                entry["measured"]
+                for arm in arms
+                for entry in arm["targets"].values()
+            ]
+        ),
+        "positive_control_at_the_entry_probe_bound": _sum(
+            [entry["measured"] for entry in historical["targets"].values()]
+        ),
+        "attribution_control": _sum(
+            [
+                drop["measured"]
+                for entry in control["targets"].values()
+                for drop in entry["drops"]
+            ]
+        ),
+        "weight_view_admission_bracket": _sum(
+            [entry["measured"] for entry in bracket]
+        ),
+    }
+    _cycles["total"] = sum(_cycles.values())
+
     record = {
         "schema": SCHEMA,
         "status": "pass" if passed else "fail",
@@ -828,7 +855,7 @@ def build(argv: list[str] | None = None) -> int:
         "one_elaboration_for_every_arm": True,
         "probe_base_words": PROBE_BASE,
         "vector_set": {
-            "directory": prefix.canonical(str(prefix.VECTOR_DIR), ROOT),
+            "directory": str(prefix.VECTOR_DIR.relative_to(ROOT)),
             "manifest_sha256": prefix.sha256_file(prefix.VECTOR_JSON),
             "committed": prefix.VECTOR_DIR
             == ROOT / "testdata/compiler/abi3_shipped_prefix",
@@ -844,15 +871,8 @@ def build(argv: list[str] | None = None) -> int:
         "head_matmul": head,
         "tools": elaboration["tools"],
         "compile_returncode": elaboration["compile"]["returncode"],
-        "simulated_cycles": sum(
-            row["cycles"]
-            for arm in arms
-            for row in (
-                entry["measured"]
-                for entry in arm["targets"].values()
-                if entry["measured"] is not None
-            )
-        ),
+        "simulated_cycles": _cycles["total"],
+        "simulated_cycles_by_stage": _cycles,
         "git": _git_state(),
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
