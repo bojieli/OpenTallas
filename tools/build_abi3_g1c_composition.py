@@ -1197,7 +1197,12 @@ def integrated_rate(campaign_body: dict[str, Any]) -> dict[str, Any]:
         "measured": True,
         "mac_count": int(macs),
         "simulation_wall_seconds": seconds,
-        "macs_per_second": round(macs / seconds, 1),
+        # NOT rounded.  This field is checked against the quotient of the
+        # run's own two numbers at rel=1e-6, and at this magnitude rounding
+        # to one decimal can miss that band by more than it allows -- the
+        # check passed only when the rounding happened to fall the right
+        # way.  The artifact carries the quotient; presentation rounds.
+        "macs_per_second": macs / seconds,
         "source": (
             "results/rtl/abi3_shipped_prefix_campaign.json: its own "
             "matmul_mac_count and the sim_wall_s of its MEASURE line"
