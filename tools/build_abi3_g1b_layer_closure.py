@@ -641,6 +641,15 @@ OPERAND_ROLE = {
     ("VECTOR.SILU_MUL", "input_view_0"): "mapped_family_operand",
     ("VECTOR.SILU_MUL", "input_view_1"): "mapped_family_operand",
     ("VECTOR.SILU_MUL", "output_view_0"): "mapped_family_operand",
+    # The bridge's own port comment names six mapped families, and these two
+    # were missing from this map, so their operands fell through to
+    # ``unattributed_operands`` and the head span's mapped demand was not
+    # counted at all.  The reachability derivation attributes the same objects
+    # to the same role from the deployment's descriptors, independently.
+    ("SELECTION.ARGMAX", "input_view_0"): "mapped_family_operand",
+    ("SELECTION.ARGMAX", "output_view_0"): "mapped_family_operand",
+    ("SELECTION.TOKEN_APPEND", "input_view_0"): "mapped_family_operand",
+    ("SELECTION.TOKEN_APPEND", "output_view_0"): "mapped_family_operand",
 }
 
 # The two mapped operands that address the INDEX bank rather than a plane of
@@ -716,6 +725,16 @@ def placement_demand(
                     )
                     continue
             demand.setdefault(role, set()).add(int(slot["object_id"]))
+    # An appending cursor cannot express a buffer that is written twice, so
+    # the reuse set is what decides the output role and has to be known first.
+    writes: dict[int, list[int]] = {}
+    for operator in layer:
+        for slot in operator["slots"]:
+            if slot["slot"].startswith("output"):
+                writes.setdefault(int(slot["object_id"]), []).append(operator["pc"])
+    reused = {
+        object_id: pcs for object_id, pcs in writes.items() if len(pcs) > 1
+    }
     rows = []
     for role, objects in sorted(demand.items()):
         slots = int(capacity["roles"].get(role, {}).get("slots", 0))
@@ -728,18 +747,27 @@ def placement_demand(
                 "objects": sorted(objects),
                 "slots_the_bridge_declares": slots,
                 "short_by": max(0, len(objects) - slots),
-                "satisfiable": keyed and len(objects) <= slots,
+                # An unkeyed role is ONE base the harness drives, so it
+                # places exactly one object -- not zero.  Reading
+                # ``keyed and ...`` called every unkeyed role unplaceable
+                # even where the span named a single object, which would
+                # report a reachable span as blocked and is the wrong
+                # reason for a rung to be red.  The layer's unkeyed roles
+                # all name two or more objects, so this does not soften
+                # anything G1b says about the layer.
+                # The append cursor is not a slot that holds one object: it
+                # gives every write a fresh address, so it serves any number
+                # of outputs that are written ONCE, and cannot express an
+                # object written twice -- the append gives that object two
+                # addresses and no reader can name the right one.  Counting
+                # distinct outputs against "1 slot" called every multi-output
+                # span unplaceable, including spans with no reuse at all.
+                "satisfiable": (
+                    not reused if role == "appending_output"
+                    else len(objects) <= slots
+                ),
             }
         )
-    # An appending cursor cannot express a buffer that is written twice.
-    writes: dict[int, list[int]] = {}
-    for operator in layer:
-        for slot in operator["slots"]:
-            if slot["slot"].startswith("output"):
-                writes.setdefault(int(slot["object_id"]), []).append(operator["pc"])
-    reused = {
-        object_id: pcs for object_id, pcs in writes.items() if len(pcs) > 1
-    }
     # What would have to change for this vehicle to be able to run the layer
     # at all, expressed as counts against the bridge's own declaration.  It is
     # derived from the same two numbers as the shortfall, so it cannot drift
@@ -755,6 +783,15 @@ def placement_demand(
                         have=row["slots_the_bridge_declares"],
                         need=row["distinct_objects_the_layer_needs"])
             )
+        elif row["role"] == "appending_output":
+            route.append(
+                "place results by object rather than by the append cursor: "
+                "{n} of this span's buffers are written more than once "
+                "({objects}), and an append cursor gives such an object "
+                "several addresses".format(
+                    n=len(reused), objects=sorted(reused)
+                )
+            )
         else:
             route.append(
                 "make {role} object-addressed: it is one unkeyed base and the "
@@ -764,13 +801,6 @@ def placement_demand(
                     objects=row["objects"],
                 )
             )
-    if reused:
-        route.append(
-            "place results by object rather than by the append cursor: "
-            f"{len(reused)} of the layer's buffers are written more than once, "
-            "so an append cursor gives one object several addresses and no "
-            "object-keyed reader can name the right one"
-        )
     return {
         "per_role": rows,
         "route_to_completion": route,

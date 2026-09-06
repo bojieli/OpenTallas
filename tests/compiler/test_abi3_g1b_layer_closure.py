@@ -561,3 +561,113 @@ def test_an_append_replay_that_does_not_add_up_is_refused(tool):
     with pytest.raises(SystemExit) as error:
         tool.executed_span(case, [])
     assert "the placement replay is wrong" in str(error.value)
+
+
+# --------------------------------------------------------------------------
+# What an unkeyed base and an append cursor can and cannot place.
+#
+# Both predicates were once written as "unkeyed means unplaceable" and
+# "distinct outputs must fit in one slot", which called a span blocked whose
+# operands the vehicle can address perfectly well.  A rung that is red for a
+# reason that is not true is the failure this ladder exists to prevent, so
+# each predicate is pinned here in both directions.
+# --------------------------------------------------------------------------
+def _span(*operators):
+    """A minimal issue span: (pc, mnemonic, [(slot, object_id), ...])."""
+    return [
+        {"pc": pc, "mnemonic": mnemonic,
+         "slots": [{"slot": slot, "object_id": object_id}
+                   for slot, object_id in slots]}
+        for pc, mnemonic, slots in operators
+    ]
+
+
+def test_one_unkeyed_base_places_one_object_and_refuses_two(tool):
+    capacity = tool.placement_capacity()
+    assert capacity["roles"]["rms_input"]["object_keyed"] is False
+
+    one = tool.placement_demand(
+        _span((0, "VECTOR.RMS_NORM",
+               [("input_view_0", 40), ("input_view_1", 2),
+                ("output_view_0", 90)])),
+        capacity,
+    )
+    by_role = {row["role"]: row for row in one["per_role"]}
+    assert by_role["rms_input"]["satisfiable"] is True, (
+        "cfg_rms_input_base is one base the harness drives; a span that names "
+        "a single object is placeable through it"
+    )
+
+    two = tool.placement_demand(
+        _span((0, "VECTOR.RMS_NORM",
+               [("input_view_0", 40), ("input_view_1", 2),
+                ("output_view_0", 90)]),
+              (3, "VECTOR.RMS_NORM",
+               [("input_view_0", 41), ("input_view_1", 2),
+                ("output_view_0", 91)])),
+        capacity,
+    )
+    by_role = {row["role"]: row for row in two["per_role"]}
+    assert by_role["rms_input"]["satisfiable"] is False
+    assert by_role["rms_input"]["distinct_objects_the_layer_needs"] == 2
+
+
+def test_the_append_cursor_places_fresh_outputs_and_refuses_a_rewrite(tool):
+    capacity = tool.placement_capacity()
+    assert capacity["roles"]["appending_output"]["object_keyed"] is False
+
+    fresh = tool.placement_demand(
+        _span((0, "TENSOR.MATMUL",
+               [("input_view_0", 30), ("input_view_1", 3),
+                ("output_view_0", 90)]),
+              (3, "TENSOR.MATMUL",
+               [("input_view_0", 90), ("input_view_1", 3),
+                ("output_view_0", 91)])),
+        capacity,
+    )
+    by_role = {row["role"]: row for row in fresh["per_role"]}
+    assert by_role["appending_output"]["distinct_objects_the_layer_needs"] == 2
+    assert by_role["appending_output"]["satisfiable"] is True, (
+        "an append cursor gives every write a fresh address, so any number of "
+        "write-once buffers is placeable through it"
+    )
+    assert not fresh["output_objects"]["objects_written_more_than_once"]
+
+    rewritten = tool.placement_demand(
+        _span((0, "TENSOR.MATMUL",
+               [("input_view_0", 30), ("input_view_1", 3),
+                ("output_view_0", 90)]),
+              (3, "TENSOR.MATMUL",
+               [("input_view_0", 90), ("input_view_1", 3),
+                ("output_view_0", 90)])),
+        capacity,
+    )
+    by_role = {row["role"]: row for row in rewritten["per_role"]}
+    assert by_role["appending_output"]["satisfiable"] is False, (
+        "object 90 is written twice; the cursor gives it two addresses and no "
+        "reader can name the right one"
+    )
+    assert rewritten["output_objects"]["objects_written_more_than_once"] == {
+        "90": [0, 3]
+    }
+
+
+def test_the_two_selection_families_are_attributed_to_a_placement_role(tool):
+    """The bridge names six mapped families; all six must be in the map.
+
+    ``SELECTION.ARGMAX`` and ``SELECTION.TOKEN_APPEND`` were absent, so their
+    operands fell through to ``unattributed_operands`` and any span containing
+    the head counted no mapped demand at all.
+    """
+    for mnemonic in ("SELECTION.ARGMAX", "SELECTION.TOKEN_APPEND"):
+        for slot in ("input_view_0", "output_view_0"):
+            assert tool.OPERAND_ROLE[(mnemonic, slot)] == "mapped_family_operand"
+
+    demand = tool.placement_demand(
+        _span((70, "SELECTION.ARGMAX",
+               [("input_view_0", 194), ("output_view_0", 200)])),
+        tool.placement_capacity(),
+    )
+    assert not demand["unattributed_operands"]
+    by_role = {row["role"]: row for row in demand["per_role"]}
+    assert by_role["mapped_family_operand"]["objects"] == [194, 200]
