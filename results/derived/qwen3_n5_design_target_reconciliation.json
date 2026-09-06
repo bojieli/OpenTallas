@@ -2,25 +2,25 @@
   "anchor": {
     "batch_size": 1,
     "context_tokens": 8192,
-    "hbm_design": "Qwen3-8B/b200_sxm-x2-tensor",
+    "hbm_design": "Qwen3-8B/b200_sxm-x3-tensor",
     "model": "Qwen3-8B",
-    "rom_design": "Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4"
+    "rom_design": "Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill"
   },
   "combination_rule": "analytical step = max(memory_time, compute_time) / efficiencies.stage_balance x token_slots + link_latency + layer_fixed_latency, where memory_time = weight + kv for a shared memory path and max(weight, kv) for separate arrays.  The five component times do NOT sum to the step; the derived machines collapse each design point to one logical device, so token_slots and stage_balance are both inert on the cycle side.",
   "headline": {
-    "analytical_ratio": 5.6392842689793605,
-    "analytical_ratio_with_link_removed_from_both": 15.578685463090416,
-    "cycle_ratio": 4.086138668889815,
-    "cycle_ratio_with_analytical_link_added_to_both": 3.078270806345247,
-    "note": "Four numbers because the link term is expressible in one model and not the other, and it is 68% of the analytical ROM step and 12% of the analytical GPU step.  Compare cycle_ratio against analytical_ratio_with_link_removed_from_both -- those two are the like-for-like pair -- and read the other two as the effect of the term the cycle model cannot express."
+    "analytical_ratio": 5.04830632979099,
+    "analytical_ratio_with_link_removed_from_both": 4.290555324658991,
+    "cycle_ratio": 0.029398151547978337,
+    "cycle_ratio_with_analytical_link_added_to_both": 0.03433014370293201,
+    "note": "Four numbers because the link term is expressible in one model and not the other, and it is 2% of the analytical ROM step and 17% of the analytical GPU step.  Compare cycle_ratio against analytical_ratio_with_link_removed_from_both -- those two are the like-for-like pair -- and read the other two as the effect of the term the cycle model cannot express."
   },
   "runs": {
     "hbm": {
-      "capability_digest": "a65760fd5f344e1d80b5fa36bc7e04c2ba13406281477262bb1b500683881690",
+      "capability_digest": "a1ededd0d4a44cd904c540d85dd0cc9e31059debc3a57af1e82e2bab85f13204",
       "capability_technology_view": "n5_design_target",
       "cost_table": "configs/hardware/abi3_cost_n5_design_target_hbm_v1.json",
-      "cost_table_sha256": "ae8892bd9776459d4d746fb0b06ca0eab65229a77eb14b8980614f53c398ccd1",
-      "deployment_digest": "fdeb6458cc2eedb48bfc06dfb6ba2567ea6328bcc0d49944ce2e9721bfe155e1",
+      "cost_table_sha256": "efbd4fdbf29e9becaec56538834ca9e9fa9bed75904677ffd1008c146445e204",
+      "deployment_digest": "2dc82188779b0ad5292eac18a2f4ac5f2215e9e3f466102a2df70950ccd2a74d",
       "provenance_class": "assumed",
       "request_symbols": {
         "BATCH": 1,
@@ -35,11 +35,11 @@
       }
     },
     "rom": {
-      "capability_digest": "33926014ebe4f2ef8f7e1dbc5d37889fefe9527bbcc99cb5fbaf8505dbc8522d",
+      "capability_digest": "fbd88b89f01c6babfe4aed358c76a5f9a7f1411f7e71a6dc05dcb2d8565f3b37",
       "capability_technology_view": "n5_design_target",
       "cost_table": "configs/hardware/abi3_cost_n5_design_target_rom_v1.json",
-      "cost_table_sha256": "e33d45a2d798cf3c63cf120addeb2760961e31a8bc827aee6edac133d8ba1a03",
-      "deployment_digest": "8cc70fea7dd2d5c9537ba0e8e2ad0d6d3f6b12988ef26aab4b033c656223aef1",
+      "cost_table_sha256": "c3f7d07720c78e54788196e873129e4f9bbb26551569c61d53faf9cb962ad2bc",
+      "deployment_digest": "7140997cf20b0dbb2f8a7411a18a299aa45a5c2dbac801d44cfe44f56960059d",
       "provenance_class": "assumed",
       "request_symbols": {
         "BATCH": 1,
@@ -60,14 +60,14 @@
       "analytical": {
         "binding_constraint": "weight_read",
         "component_times_s": {
-          "compute": 6.115883235555556e-06,
-          "kv_read": 8.389632e-05,
+          "compute": 4.077255490370369e-06,
+          "kv_read": 5.593088e-05,
           "layer_fixed_latency": 6.818801530875491e-06,
-          "link_latency": 0.00017378304,
-          "weight_read": 0.0010511674311111112
+          "link_latency": 0.00017411071999999997,
+          "weight_read": 0.0007007782874074074
         },
-        "per_user_tokens_s": 693.5852718493809,
-        "step_time_s": 0.0014417837872098879
+        "per_user_tokens_s": 978.7441385422231,
+        "step_time_s": 0.0010217174853168838
       },
       "binding_regime": {
         "analytical_over_all_five_terms": "weight_read",
@@ -80,24 +80,24 @@
         "binding_constraint": "weight_read",
         "binding_constraint_rule": "argmax over the measured terms; the cycle model reports no binding constraint of its own",
         "clock_frequency_hz": 1000000000.0,
-        "per_user_tokens_s": 680.0884387005686,
-        "step_time_s": 0.001470397,
-        "total_cycles": 1470397
+        "per_user_tokens_s": 964.4754748353881,
+        "step_time_s": 0.001036833,
+        "total_cycles": 1036833
       },
-      "step_ratio_cycle_over_analytical": 1.0198457029715142,
+      "step_ratio_cycle_over_analytical": 1.0147942213971488,
       "terms": {
         "compute": {
-          "analytical_s": 6.115883235555556e-06,
-          "cycle_s": 0.000142468,
-          "cycle_tensor_only_s": 5.7764e-05,
+          "analytical_s": 4.077255490370369e-06,
+          "cycle_s": 0.000254995,
+          "cycle_tensor_only_s": 0.000173284,
           "note": "The tensor engine alone is the analytical term's counterpart; the analytical operation count has NO attention arithmetic and no other engine family.  cycle_s is every family, cycle_tensor_only_s is the comparable one.",
-          "ratio_cycle_over_analytical": 23.294754741513383
+          "ratio_cycle_over_analytical": 62.54084410512052
         },
         "kv_read": {
-          "analytical_s": 8.389632e-05,
-          "cycle_s": 0.00018645933010757188,
+          "analytical_s": 5.593088e-05,
+          "cycle_s": 0.00012496729372095635,
           "note": "The deployment moves 17661708732 read + 1223320580 written bytes through HBM, against the analytical kv_transfer_bytes_per_step 1208107008.",
-          "ratio_cycle_over_analytical": 2.2224971263050852
+          "ratio_cycle_over_analytical": 2.2343166015080818
         },
         "layer_fixed_latency": {
           "analytical_s": 6.818801530875491e-06,
@@ -106,61 +106,61 @@
           "ratio_cycle_over_analytical": null
         },
         "link_latency": {
-          "analytical_s": 0.00017378304,
+          "analytical_s": 0.00017411071999999997,
           "cycle_s": 0.0,
           "note": "STRUCTURALLY ZERO.  build_fabric returns None for TopologyClass.SINGLE_CHIP, so no cost-table value can put a single-chip run in this regime.  The derived machines are the design points collapsed to one logical device, which is the transformation that removes the fabric.",
           "ratio_cycle_over_analytical": 0.0
         },
         "weight_read": {
-          "analytical_s": 0.0010511674311111112,
-          "cycle_s": 0.0012229592792674282,
-          "note": "weights and KV share the HBM pool, so its 1409.419 us of occupancy is split by the architectural byte count: 16386630404 weight bytes of 18885029312 total.",
-          "ratio_cycle_over_analytical": 1.1634295765563518
+          "analytical_s": 0.0007007782874074074,
+          "cycle_s": 0.000819642070862377,
+          "note": "weights and KV share the HBM pool, so its 944.609 us of occupancy is split by the architectural byte count: 16386630404 weight bytes of 18885029312 total.",
+          "ratio_cycle_over_analytical": 1.1696168183159854
         }
       }
     },
     "rom": {
       "analytical": {
-        "binding_constraint": "link_latency",
+        "binding_constraint": "weight_read",
         "component_times_s": {
-          "compute": 5.570312088214652e-05,
-          "kv_read": 6.7117056e-05,
+          "compute": 0.00015861700976394524,
+          "kv_read": 4.6373329869023086e-05,
           "layer_fixed_latency": 6.818801530875491e-06,
-          "link_latency": 0.00017427456,
-          "weight_read": 3.446538879609746e-05
+          "link_latency": 4.836408888888888e-06,
+          "weight_read": 0.00017165966462610557
         },
-        "per_user_tokens_s": 3911.324512735987,
-        "step_time_s": 0.00025566786819754213
+        "per_user_tokens_s": 4941.000229848535,
+        "step_time_s": 0.00020238817111543724
       },
       "binding_regime": {
-        "analytical_over_all_five_terms": "link_latency",
-        "analytical_over_expressible_terms": "kv_read",
+        "analytical_over_all_five_terms": "weight_read",
+        "analytical_over_expressible_terms": "weight_read",
         "cycle": "kv_read",
         "rule": "The cycle model builds no fabric on SINGLE_CHIP and attributes no counter to fixed latency, so the two binding constraints are only comparable over the terms both models express: compute, weight_read and kv_read.",
-        "same_regime": true
+        "same_regime": false
       },
       "cycle": {
         "binding_constraint": "kv_read",
         "binding_constraint_rule": "argmax over the measured terms; the cycle model reports no binding constraint of its own",
         "clock_frequency_hz": 1000000000.0,
-        "per_user_tokens_s": 2778.935667639294,
-        "step_time_s": 0.00035985,
-        "total_cycles": 359850
+        "per_user_tokens_s": 28.353796173519108,
+        "step_time_s": 0.035268646,
+        "total_cycles": 35268646
       },
-      "step_ratio_cycle_over_analytical": 1.4074901259080448,
+      "step_ratio_cycle_over_analytical": 174.2623879924466,
       "terms": {
         "compute": {
-          "analytical_s": 5.570312088214652e-05,
-          "cycle_s": 0.000105308,
-          "cycle_tensor_only_s": 5.7764e-05,
+          "analytical_s": 0.00015861700976394524,
+          "cycle_s": 0.000254995,
+          "cycle_tensor_only_s": 0.000173284,
           "note": "The tensor engine alone is the analytical term's counterpart; the analytical operation count has NO attention arithmetic and no other engine family.  cycle_s is every family, cycle_tensor_only_s is the comparable one.",
-          "ratio_cycle_over_analytical": 1.8905224398971225
+          "ratio_cycle_over_analytical": 1.6076144694663268
         },
         "kv_read": {
-          "analytical_s": 6.7117056e-05,
-          "cycle_s": 0.00020794985625000002,
+          "analytical_s": 4.6373329869023086e-05,
+          "cycle_s": 0.035101965,
           "note": "The deployment moves 2508914688 read + 1222713344 written bytes through HBM, against the analytical kv_transfer_bytes_per_step 1208107008.",
-          "ratio_cycle_over_analytical": 3.0983161158022194
+          "ratio_cycle_over_analytical": 756.942947576593
         },
         "layer_fixed_latency": {
           "analytical_s": 6.818801530875491e-06,
@@ -169,16 +169,16 @@
           "ratio_cycle_over_analytical": null
         },
         "link_latency": {
-          "analytical_s": 0.00017427456,
+          "analytical_s": 4.836408888888888e-06,
           "cycle_s": 0.0,
           "note": "STRUCTURALLY ZERO.  build_fabric returns None for TopologyClass.SINGLE_CHIP, so no cost-table value can put a single-chip run in this regime.  The derived machines are the design points collapsed to one logical device, which is the transformation that removes the fabric.",
           "ratio_cycle_over_analytical": 0.0
         },
         "weight_read": {
-          "analytical_s": 3.446538879609746e-05,
-          "cycle_s": 3.45055e-05,
+          "analytical_s": 0.00017165966462610557,
+          "cycle_s": 0.000171782375,
           "note": "weights are in ROM and KV in HBM: two physically separate unit pools, so their occupancies are read off directly and overlap exactly as the analytical overlap_rule says.",
-          "ratio_cycle_over_analytical": 1.0011638111538461
+          "ratio_cycle_over_analytical": 1.0007148468695994
         }
       }
     }

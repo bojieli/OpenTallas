@@ -753,12 +753,12 @@
         "memory.sram.bytes"
       ],
       "emitted": {
-        "artifact": "results/derived/qwen3_n5_design_target_machine_pair.json",
-        "deployment_audit": "results/derived/qwen3_n5_design_target_deployment_audit.json",
-        "hbm_capability": "configs/hardware/abi3_capability/n5_design_target/hbm_sram_single_chip_n5_v1.json",
-        "hbm_cost_table": "configs/hardware/abi3_cost_n5_design_target_hbm_v1.json",
-        "rom_capability": "configs/hardware/abi3_capability/n5_design_target/rom_qwen3_n5_v1.json",
-        "rom_cost_table": "configs/hardware/abi3_cost_n5_design_target_rom_v1.json"
+        "artifact": "results/derived/qwen3-8b__rom-n5-native-hbmkv-array-tensor-x4__b200-sxm-x2-tensor_machine_pair.json",
+        "deployment_audit": "results/derived/qwen3-8b__rom-n5-native-hbmkv-array-tensor-x4__b200-sxm-x2-tensor_deployment_audit.json",
+        "hbm_capability": "configs/hardware/abi3_capability/n5_design_target/hbm_sram_single_chip_n5_design_target_qwen3-8b__rom-n5-native-hbmkv-array-tensor-x4__b200-sxm-x2-tensor_v1.json",
+        "hbm_cost_table": "configs/hardware/n5_design_target/abi3_cost_n5_design_target_qwen3-8b__rom-n5-native-hbmkv-array-tensor-x4__b200-sxm-x2-tensor_hbm_v1.json",
+        "rom_capability": "configs/hardware/abi3_capability/n5_design_target/rom_qwen3_n5_design_target_qwen3-8b__rom-n5-native-hbmkv-array-tensor-x4__b200-sxm-x2-tensor_v1.json",
+        "rom_cost_table": "configs/hardware/n5_design_target/abi3_cost_n5_design_target_qwen3-8b__rom-n5-native-hbmkv-array-tensor-x4__b200-sxm-x2-tensor_rom_v1.json"
       },
       "hbm_binding_constraint": "weight_read",
       "hbm_design": "Qwen3-8B/b200_sxm-x2-tensor",
@@ -797,7 +797,7 @@
       },
       "tensor_lanes": 1024,
       "why_this_cell": [
-        "the pair this generator was published with: array x4, KV in HBM, one token slot.  rom_qwen3 (SINGLE_CHIP) against hbm_sram_single_chip"
+        "the pair this generator was published with and the point gate G3's Qwen budget was frozen on until 2026-09-06: array x4, KV in HBM, one token slot.  rom_qwen3 (SINGLE_CHIP) against hbm_sram_single_chip.  It is named as a literal rather than as DEFAULT_ROM_DESIGN because the default moved off it (section 13 item 24) and the superseded point is kept in the matrix on its own merit -- the repository carries its capability shape, and the two cells side by side are what shows what the move did"
       ]
     },
     {
@@ -933,12 +933,12 @@
         "memory.sram.bytes"
       ],
       "emitted": {
-        "artifact": "results/derived/qwen3-8b__rom-n5-native-sramkv-array-pipeline-x5-romfill__b200-sxm-x3-tensor_machine_pair.json",
-        "deployment_audit": "results/derived/qwen3-8b__rom-n5-native-sramkv-array-pipeline-x5-romfill__b200-sxm-x3-tensor_deployment_audit.json",
-        "hbm_capability": "configs/hardware/abi3_capability/n5_design_target/hbm_sram_single_chip_n5_design_target_qwen3-8b__rom-n5-native-sramkv-array-pipeline-x5-romfill__b200-sxm-x3-tensor_v1.json",
-        "hbm_cost_table": "configs/hardware/n5_design_target/abi3_cost_n5_design_target_qwen3-8b__rom-n5-native-sramkv-array-pipeline-x5-romfill__b200-sxm-x3-tensor_hbm_v1.json",
-        "rom_capability": "configs/hardware/abi3_capability/n5_design_target/rom_qwen3_n5_design_target_qwen3-8b__rom-n5-native-sramkv-array-pipeline-x5-romfill__b200-sxm-x3-tensor_v1.json",
-        "rom_cost_table": "configs/hardware/n5_design_target/abi3_cost_n5_design_target_qwen3-8b__rom-n5-native-sramkv-array-pipeline-x5-romfill__b200-sxm-x3-tensor_rom_v1.json"
+        "artifact": "results/derived/qwen3_n5_design_target_machine_pair.json",
+        "deployment_audit": "results/derived/qwen3_n5_design_target_deployment_audit.json",
+        "hbm_capability": "configs/hardware/abi3_capability/n5_design_target/hbm_sram_single_chip_n5_v1.json",
+        "hbm_cost_table": "configs/hardware/abi3_cost_n5_design_target_hbm_v1.json",
+        "rom_capability": "configs/hardware/abi3_capability/n5_design_target/rom_qwen3_n5_v1.json",
+        "rom_cost_table": "configs/hardware/abi3_cost_n5_design_target_rom_v1.json"
       },
       "hbm_binding_constraint": "weight_read",
       "hbm_design": "Qwen3-8B/b200_sxm-x3-tensor",

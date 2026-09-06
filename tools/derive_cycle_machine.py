@@ -248,11 +248,32 @@ def allowlist_for(anchor: "Anchor") -> dict[str, str]:
     return {k: v + cite for k, v in out.items()}
 
 
-#: The pair this tool was first written around.  It keeps the emitted file
-#: names it was published with; every other pair is keyed on its own identity so
-#: a second cell cannot silently overwrite a first.
-DEFAULT_ROM_DESIGN = "Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4"
-DEFAULT_HBM_DESIGN = "Qwen3-8B/b200_sxm-x2-tensor"
+#: The design point the whole derivation chain is anchored to.  It keeps the
+#: emitted file names this tool was published with; every other pair is keyed
+#: on its own identity so a second cell cannot silently overwrite a first.
+#:
+#: MOVED 2026-09-06 (section 13 item 24) from
+#: ``Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4`` /
+#: ``Qwen3-8B/b200_sxm-x2-tensor``.  Gate G3's Qwen budget was re-frozen on the
+#: point below because the superseded one could not fail on the thesis: at
+#: HBMKV-array-tensor-x4 the mask ROM was 0.0% of the analytical step and
+#: setting its read time to ZERO left the step unchanged to six figures, so no
+#: ROM result of any kind could move the gate.  While ``DEFAULT_ROM_DESIGN``
+#: still named the superseded point, G3's budget and G4's calibration described
+#: DIFFERENT MACHINES -- the regime mismatch rule R10 exists to prevent -- and
+#: nothing could be composed across them.
+#:
+#: The ROM side is the study's own batch-1 recommendation
+#: (``analytical.json#design_selection.models[Qwen3-8B].batch_regimes[1]
+#: .recommended``), 5 x 815 = 4,075 mm2, binding constraint ``weight_read``.
+#: The GPU side is NOT chosen here: it is the artifact's own iso-area
+#: comparator for that ROM design
+#: (``analytical.json#comparisons[batch_size=1, rom_design=...]
+#: .iso_area_gpu_design``), b200_sxm-x3-tensor at 3 x 1,600 = 4,800 mm2 -- more
+#: silicon than the ROM part, so the iso-area convention is applied against
+#: this repository's thesis rather than for it (rule R14).
+DEFAULT_ROM_DESIGN = "Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill"
+DEFAULT_HBM_DESIGN = "Qwen3-8B/b200_sxm-x3-tensor"
 
 #: Base capability by (model, ROM topology_kind).  Only capacities, limits,
 #: features and numeric contracts come from it -- every timing parameter is
@@ -4475,9 +4496,15 @@ def artifact(anchor: Anchor, d: Derivation, comparability: Mapping[str, Any],
 #: entry states why it is here; the GPU comparator is never chosen here, it is
 #: always read from the artifact's own iso-area comparison.
 REPOSITORY_CELLS: tuple[tuple[str, str], ...] = (
-    (DEFAULT_ROM_DESIGN,
-     "the pair this generator was published with: array x4, KV in HBM, one "
-     "token slot.  rom_qwen3 (SINGLE_CHIP) against hbm_sram_single_chip"),
+    ("Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4",
+     "the pair this generator was published with and the point gate G3's Qwen "
+     "budget was frozen on until 2026-09-06: array x4, KV in HBM, one token "
+     "slot.  rom_qwen3 (SINGLE_CHIP) against hbm_sram_single_chip.  It is "
+     "named as a literal rather than as DEFAULT_ROM_DESIGN because the "
+     "default moved off it (section 13 item 24) and the superseded point is "
+     "kept in the matrix on its own merit -- the repository carries its "
+     "capability shape, and the two cells side by side are what shows what "
+     "the move did"),
     ("Qwen3-8B/ROM-N5-native-HBMKV-wafer-tensor-x1",
      "Qwen's wafer rung with KV in HBM and one token slot"),
     ("DSV4-Flash/ROM-N5-native-HBMKV-array-hybrid-x32",

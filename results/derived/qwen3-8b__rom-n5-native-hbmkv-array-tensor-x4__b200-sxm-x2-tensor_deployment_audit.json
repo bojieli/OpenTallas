@@ -183,7 +183,7 @@
         "rom": 608833536
       },
       "machine": {
-        "bytes_per_cycle": 95424.0,
+        "bytes_per_cycle": 475296.0,
         "rule": "a DMA operator costs tiles x max(ceil(bytes_transferred / tiles / bytes_per_cycle), tile_issue_cycles); at this rate every tile of these deployments is at the issue floor, so the DMA charge is the tile count",
         "tile_issue_cycles": 1
       },
@@ -259,9 +259,9 @@
       },
       "cycles": {
         "favours": "neither",
-        "hbm": 173280,
+        "hbm": 57760,
         "magnitude_x": 1.0,
-        "rom": 173280
+        "rom": 57760
       },
       "effective_tensor_width_caps": {
         "hbm": [
@@ -388,7 +388,7 @@
       },
       "tensor": {
         "column_groups": 1521,
-        "cycles": 173280,
+        "cycles": 57760,
         "issued_work": 7568101376,
         "operations": 254,
         "operators": 9,
@@ -633,7 +633,7 @@
         "col_tiles": 64,
         "column_group_span": 1024,
         "column_groups": 4,
-        "cycles_per_issue": 384,
+        "cycles_per_issue": 128,
         "depth_tiles": 32,
         "effective_tensor_width": 1024,
         "extent": {
@@ -708,7 +708,7 @@
         "col_tiles": 16,
         "column_group_span": 1024,
         "column_groups": 1,
-        "cycles_per_issue": 96,
+        "cycles_per_issue": 32,
         "depth_tiles": 32,
         "effective_tensor_width": 1024,
         "extent": {
@@ -783,7 +783,7 @@
         "col_tiles": 16,
         "column_group_span": 1024,
         "column_groups": 1,
-        "cycles_per_issue": 96,
+        "cycles_per_issue": 32,
         "depth_tiles": 32,
         "effective_tensor_width": 1024,
         "extent": {
@@ -1388,7 +1388,7 @@
         "col_tiles": 64,
         "column_group_span": 1024,
         "column_groups": 4,
-        "cycles_per_issue": 384,
+        "cycles_per_issue": 128,
         "depth_tiles": 32,
         "effective_tensor_width": 1024,
         "extent": {
@@ -1600,7 +1600,7 @@
         "col_tiles": 192,
         "column_group_span": 1024,
         "column_groups": 12,
-        "cycles_per_issue": 1152,
+        "cycles_per_issue": 384,
         "depth_tiles": 32,
         "effective_tensor_width": 1024,
         "extent": {
@@ -1675,7 +1675,7 @@
         "col_tiles": 192,
         "column_group_span": 1024,
         "column_groups": 12,
-        "cycles_per_issue": 1152,
+        "cycles_per_issue": 384,
         "depth_tiles": 32,
         "effective_tensor_width": 1024,
         "extent": {
@@ -1819,7 +1819,7 @@
         "col_tiles": 64,
         "column_group_span": 1024,
         "column_groups": 4,
-        "cycles_per_issue": 1152,
+        "cycles_per_issue": 384,
         "depth_tiles": 96,
         "effective_tensor_width": 1024,
         "extent": {
@@ -2106,7 +2106,7 @@
         "col_tiles": 2374,
         "column_group_span": 1024,
         "column_groups": 149,
-        "cycles_per_issue": 14304,
+        "cycles_per_issue": 4768,
         "depth_tiles": 32,
         "effective_tensor_width": 1024,
         "extent": {
@@ -2328,12 +2328,12 @@
   },
   "lanes": 1024,
   "machine": {
-    "capability": "configs/hardware/abi3_capability/n5_design_target/rom_qwen3_n5_design_target_qwen3-8b__rom-n5-native-sramkv-array-pipeline-x5-romfill__b200-sxm-x3-tensor_v1.json",
-    "cost_table": "configs/hardware/n5_design_target/abi3_cost_n5_design_target_qwen3-8b__rom-n5-native-sramkv-array-pipeline-x5-romfill__b200-sxm-x3-tensor_rom_v1.json",
-    "dma_bytes_per_cycle": 95424.0,
+    "capability": "configs/hardware/abi3_capability/n5_design_target/rom_qwen3_n5_design_target_qwen3-8b__rom-n5-native-hbmkv-array-tensor-x4__b200-sxm-x2-tensor_v1.json",
+    "cost_table": "configs/hardware/n5_design_target/abi3_cost_n5_design_target_qwen3-8b__rom-n5-native-hbmkv-array-tensor-x4__b200-sxm-x2-tensor_rom_v1.json",
+    "dma_bytes_per_cycle": 475296.0,
     "queue_depth": 8,
     "tensor_lanes": 1024,
-    "tensor_work_per_lane_cycle": 93.1932963683953
+    "tensor_work_per_lane_cycle": 265.371881609201
   },
   "operator_asymmetries": [],
   "operators": [
@@ -2545,8 +2545,8 @@
         "rom": 4
       },
       "cycles_per_issue": {
-        "hbm": 384,
-        "rom": 384
+        "hbm": 128,
+        "rom": 128
       },
       "effective_tensor_width": {
         "hbm": 1024,
@@ -2623,8 +2623,8 @@
         "rom": 1
       },
       "cycles_per_issue": {
-        "hbm": 96,
-        "rom": 96
+        "hbm": 32,
+        "rom": 32
       },
       "effective_tensor_width": {
         "hbm": 1024,
@@ -2701,8 +2701,8 @@
         "rom": 1
       },
       "cycles_per_issue": {
-        "hbm": 96,
-        "rom": 96
+        "hbm": 32,
+        "rom": 32
       },
       "effective_tensor_width": {
         "hbm": 1024,
@@ -3209,8 +3209,8 @@
         "rom": 4
       },
       "cycles_per_issue": {
-        "hbm": 384,
-        "rom": 384
+        "hbm": 128,
+        "rom": 128
       },
       "effective_tensor_width": {
         "hbm": 1024,
@@ -3403,8 +3403,8 @@
         "rom": 12
       },
       "cycles_per_issue": {
-        "hbm": 1152,
-        "rom": 1152
+        "hbm": 384,
+        "rom": 384
       },
       "effective_tensor_width": {
         "hbm": 1024,
@@ -3481,8 +3481,8 @@
         "rom": 12
       },
       "cycles_per_issue": {
-        "hbm": 1152,
-        "rom": 1152
+        "hbm": 384,
+        "rom": 384
       },
       "effective_tensor_width": {
         "hbm": 1024,
@@ -3617,8 +3617,8 @@
         "rom": 4
       },
       "cycles_per_issue": {
-        "hbm": 1152,
-        "rom": 1152
+        "hbm": 384,
+        "rom": 384
       },
       "effective_tensor_width": {
         "hbm": 1024,
@@ -3881,8 +3881,8 @@
         "rom": 149
       },
       "cycles_per_issue": {
-        "hbm": 14304,
-        "rom": 14304
+        "hbm": 4768,
+        "rom": 4768
       },
       "effective_tensor_width": {
         "hbm": 1024,
@@ -4070,7 +4070,7 @@
     "hbm": [],
     "rom": []
   },
-  "pair_id": "qwen3-8b__rom-n5-native-sramkv-array-pipeline-x5-romfill__b200-sxm-x3-tensor",
+  "pair_id": "qwen3-8b__rom-n5-native-hbmkv-array-tensor-x4__b200-sxm-x2-tensor",
   "reason": "comparable",
   "request_symbols": {
     "BATCH": 1,
@@ -4131,7 +4131,7 @@
       },
       "tensor": {
         "column_groups": 1521,
-        "cycles": 173280,
+        "cycles": 57760,
         "issued_work": 7568101376,
         "operations": 254,
         "operators": 9,
@@ -4376,7 +4376,7 @@
         "col_tiles": 64,
         "column_group_span": 1024,
         "column_groups": 4,
-        "cycles_per_issue": 384,
+        "cycles_per_issue": 128,
         "depth_tiles": 32,
         "effective_tensor_width": 1024,
         "extent": {
@@ -4451,7 +4451,7 @@
         "col_tiles": 16,
         "column_group_span": 1024,
         "column_groups": 1,
-        "cycles_per_issue": 96,
+        "cycles_per_issue": 32,
         "depth_tiles": 32,
         "effective_tensor_width": 1024,
         "extent": {
@@ -4526,7 +4526,7 @@
         "col_tiles": 16,
         "column_group_span": 1024,
         "column_groups": 1,
-        "cycles_per_issue": 96,
+        "cycles_per_issue": 32,
         "depth_tiles": 32,
         "effective_tensor_width": 1024,
         "extent": {
@@ -5131,7 +5131,7 @@
         "col_tiles": 64,
         "column_group_span": 1024,
         "column_groups": 4,
-        "cycles_per_issue": 384,
+        "cycles_per_issue": 128,
         "depth_tiles": 32,
         "effective_tensor_width": 1024,
         "extent": {
@@ -5343,7 +5343,7 @@
         "col_tiles": 192,
         "column_group_span": 1024,
         "column_groups": 12,
-        "cycles_per_issue": 1152,
+        "cycles_per_issue": 384,
         "depth_tiles": 32,
         "effective_tensor_width": 1024,
         "extent": {
@@ -5418,7 +5418,7 @@
         "col_tiles": 192,
         "column_group_span": 1024,
         "column_groups": 12,
-        "cycles_per_issue": 1152,
+        "cycles_per_issue": 384,
         "depth_tiles": 32,
         "effective_tensor_width": 1024,
         "extent": {
@@ -5562,7 +5562,7 @@
         "col_tiles": 64,
         "column_group_span": 1024,
         "column_groups": 4,
-        "cycles_per_issue": 1152,
+        "cycles_per_issue": 384,
         "depth_tiles": 96,
         "effective_tensor_width": 1024,
         "extent": {
@@ -5849,7 +5849,7 @@
         "col_tiles": 2374,
         "column_group_span": 1024,
         "column_groups": 149,
-        "cycles_per_issue": 14304,
+        "cycles_per_issue": 4768,
         "depth_tiles": 32,
         "effective_tensor_width": 1024,
         "extent": {
@@ -6075,16 +6075,16 @@
   "storage_classes_differ_as_expected": true,
   "tensor_parity_band": {
     "band": [
-      85.33333333333333,
-      128.0
+      256.0,
+      Infinity
     ],
     "cycles_per_full_depth_tile": {
-      "hbm": 3,
-      "rom": 3
+      "hbm": 1,
+      "rom": 1
     },
     "cycles_per_unit_depth": {
-      "hbm": 0.0234375,
-      "rom": 0.0234375
+      "hbm": 0.0078125,
+      "rom": 0.0078125
     },
     "favours": "neither",
     "hbm_tile_depth": 128,
@@ -6093,7 +6093,7 @@
     "parity": true,
     "rom_tile_depth": 128,
     "tile_issue_cycles": 1,
-    "work_per_lane_cycle": 93.1932963683953,
+    "work_per_lane_cycle": 265.371881609201,
     "work_units_per_mac": 2.0
   },
   "unexplained_asymmetries": [],
