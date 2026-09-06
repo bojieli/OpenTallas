@@ -1,0 +1,1966 @@
+{
+ "arms": [
+  {
+   "entry_and_bound": {
+    "qwen3-8b-hbm-single-chip": [
+     65,
+     71
+    ],
+    "qwen3-8b-rom-single-chip": [
+     65,
+     71
+    ]
+   },
+   "kind": "baseline",
+   "marker_present": true,
+   "returncode": 0,
+   "step": 0,
+   "targets": {
+    "qwen3-8b-hbm-single-chip": {
+     "measured": {
+      "capability": 0,
+      "case": 1,
+      "cycles": 240,
+      "entry": 65,
+      "fault": 66,
+      "fetched": 2,
+      "ic": 71,
+      "issued": 1,
+      "launches": 0,
+      "retired": 1,
+      "trap": 3
+     },
+     "placement_table": [
+      {
+       "base_words": 21248,
+       "object_id": 1
+      },
+      {
+       "base_words": 0,
+       "object_id": 2
+      },
+      {
+       "base_words": 16777216,
+       "object_id": 3
+      },
+      {
+       "base_words": 20971520,
+       "object_id": 4
+      },
+      {
+       "base_words": 25344,
+       "object_id": 5
+      },
+      {
+       "base_words": 25472,
+       "object_id": 6
+      },
+      {
+       "base_words": 15616,
+       "object_id": 17
+      },
+      {
+       "base_words": 15872,
+       "object_id": 18
+      },
+      {
+       "base_words": 19968,
+       "object_id": 19
+      },
+      {
+       "base_words": 24064,
+       "object_id": 20
+      },
+      {
+       "base_words": 28160,
+       "object_id": 21
+      },
+      {
+       "base_words": 29184,
+       "object_id": 22
+      },
+      {
+       "base_words": 30208,
+       "object_id": 23
+      }
+     ],
+     "placement_table_entry_count": 13,
+     "refused_instruction_views": [
+      {
+       "dims": [
+        512,
+        4096,
+        0,
+        0,
+        0,
+        0
+       ],
+       "dtype": 16,
+       "object_id": 18,
+       "rank": 2,
+       "role": "input_view_0",
+       "strides": [
+        4096,
+        1,
+        0,
+        0,
+        0,
+        0
+       ],
+       "view_descriptor_id": 189
+      },
+      {
+       "dims": [
+        4096,
+        0,
+        0,
+        0,
+        0,
+        0
+       ],
+       "dtype": 16,
+       "object_id": 13,
+       "rank": 1,
+       "role": "input_view_1",
+       "strides": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0
+       ],
+       "view_descriptor_id": 190
+      },
+      {
+       "dims": [
+        512,
+        4096,
+        0,
+        0,
+        0,
+        0
+       ],
+       "dtype": 16,
+       "object_id": 19,
+       "rank": 2,
+       "role": "output_view_0",
+       "strides": [
+        4096,
+        1,
+        0,
+        0,
+        0,
+        0
+       ],
+       "view_descriptor_id": 191
+      }
+     ],
+     "unplaced_objects_of_the_refusal": [
+      13
+     ]
+    },
+    "qwen3-8b-rom-single-chip": {
+     "measured": {
+      "capability": 0,
+      "case": 0,
+      "cycles": 240,
+      "entry": 65,
+      "fault": 66,
+      "fetched": 2,
+      "ic": 71,
+      "issued": 1,
+      "launches": 0,
+      "retired": 1,
+      "trap": 3
+     },
+     "placement_table": [
+      {
+       "base_words": 8448,
+       "object_id": 4
+      },
+      {
+       "base_words": 0,
+       "object_id": 5
+      },
+      {
+       "base_words": 16777216,
+       "object_id": 6
+      },
+      {
+       "base_words": 20971520,
+       "object_id": 7
+      },
+      {
+       "base_words": 12544,
+       "object_id": 8
+      },
+      {
+       "base_words": 12672,
+       "object_id": 10
+      },
+      {
+       "base_words": 0,
+       "object_id": 27
+      },
+      {
+       "base_words": 256,
+       "object_id": 36
+      },
+      {
+       "base_words": 4352,
+       "object_id": 45
+      },
+      {
+       "base_words": 8448,
+       "object_id": 55
+      },
+      {
+       "base_words": 12544,
+       "object_id": 64
+      },
+      {
+       "base_words": 13568,
+       "object_id": 71
+      },
+      {
+       "base_words": 14592,
+       "object_id": 84
+      }
+     ],
+     "placement_table_entry_count": 13,
+     "refused_instruction_views": [
+      {
+       "dims": [
+        512,
+        4096,
+        0,
+        0,
+        0,
+        0
+       ],
+       "dtype": 16,
+       "object_id": 36,
+       "rank": 2,
+       "role": "input_view_0",
+       "strides": [
+        4096,
+        1,
+        0,
+        0,
+        0,
+        0
+       ],
+       "view_descriptor_id": 180
+      },
+      {
+       "dims": [
+        4096,
+        0,
+        0,
+        0,
+        0,
+        0
+       ],
+       "dtype": 16,
+       "object_id": 2,
+       "rank": 1,
+       "role": "input_view_1",
+       "strides": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0
+       ],
+       "view_descriptor_id": 181
+      },
+      {
+       "dims": [
+        512,
+        4096,
+        0,
+        0,
+        0,
+        0
+       ],
+       "dtype": 16,
+       "object_id": 45,
+       "rank": 2,
+       "role": "output_view_0",
+       "strides": [
+        4096,
+        1,
+        0,
+        0,
+        0,
+        0
+       ],
+       "view_descriptor_id": 182
+      }
+     ],
+     "unplaced_objects_of_the_refusal": [
+      2
+     ]
+    }
+   },
+   "wall_seconds": 4.132
+  },
+  {
+   "entry_and_bound": {
+    "qwen3-8b-hbm-single-chip": [
+     65,
+     71
+    ],
+    "qwen3-8b-rom-single-chip": [
+     65,
+     71
+    ]
+   },
+   "kind": "add_the_refusal's_own_unplaced_objects",
+   "marker_present": true,
+   "returncode": 0,
+   "step": 1,
+   "targets": {
+    "qwen3-8b-hbm-single-chip": {
+     "measured": {
+      "capability": 0,
+      "case": 1,
+      "cycles": 33110,
+      "entry": 65,
+      "fault": 68,
+      "fetched": 4,
+      "ic": 71,
+      "issued": 2,
+      "launches": 1,
+      "retired": 3,
+      "trap": 3
+     },
+     "placement_table": [
+      {
+       "base_words": 21248,
+       "object_id": 1
+      },
+      {
+       "base_words": 0,
+       "object_id": 2
+      },
+      {
+       "base_words": 16777216,
+       "object_id": 3
+      },
+      {
+       "base_words": 20971520,
+       "object_id": 4
+      },
+      {
+       "base_words": 25344,
+       "object_id": 5
+      },
+      {
+       "base_words": 25472,
+       "object_id": 6
+      },
+      {
+       "base_words": 15616,
+       "object_id": 17
+      },
+      {
+       "base_words": 15872,
+       "object_id": 18
+      },
+      {
+       "base_words": 19968,
+       "object_id": 19
+      },
+      {
+       "base_words": 24064,
+       "object_id": 20
+      },
+      {
+       "base_words": 28160,
+       "object_id": 21
+      },
+      {
+       "base_words": 29184,
+       "object_id": 22
+      },
+      {
+       "base_words": 30208,
+       "object_id": 23
+      },
+      {
+       "base_words": 0,
+       "object_id": 13
+      }
+     ],
+     "placement_table_entry_count": 14,
+     "refused_instruction_views": [
+      {
+       "dims": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0
+       ],
+       "dtype": 4,
+       "object_id": 15,
+       "rank": 1,
+       "role": "input_view_0",
+       "strides": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0
+       ],
+       "view_descriptor_id": 193
+      },
+      {
+       "dims": [
+        8704,
+        4096,
+        0,
+        0,
+        0,
+        0
+       ],
+       "dtype": 16,
+       "object_id": 19,
+       "rank": 2,
+       "role": "input_view_1",
+       "strides": [
+        4096,
+        1,
+        0,
+        0,
+        0,
+        0
+       ],
+       "view_descriptor_id": 194
+      },
+      {
+       "dims": [
+        1,
+        4096,
+        0,
+        0,
+        0,
+        0
+       ],
+       "dtype": 16,
+       "object_id": 27,
+       "rank": 2,
+       "role": "output_view_0",
+       "strides": [
+        4096,
+        1,
+        0,
+        0,
+        0,
+        0
+       ],
+       "view_descriptor_id": 195
+      }
+     ],
+     "unplaced_objects_of_the_refusal": [
+      15,
+      27
+     ]
+    },
+    "qwen3-8b-rom-single-chip": {
+     "measured": {
+      "capability": 0,
+      "case": 0,
+      "cycles": 33110,
+      "entry": 65,
+      "fault": 68,
+      "fetched": 4,
+      "ic": 71,
+      "issued": 2,
+      "launches": 1,
+      "retired": 3,
+      "trap": 3
+     },
+     "placement_table": [
+      {
+       "base_words": 8448,
+       "object_id": 4
+      },
+      {
+       "base_words": 0,
+       "object_id": 5
+      },
+      {
+       "base_words": 16777216,
+       "object_id": 6
+      },
+      {
+       "base_words": 20971520,
+       "object_id": 7
+      },
+      {
+       "base_words": 12544,
+       "object_id": 8
+      },
+      {
+       "base_words": 12672,
+       "object_id": 10
+      },
+      {
+       "base_words": 0,
+       "object_id": 27
+      },
+      {
+       "base_words": 256,
+       "object_id": 36
+      },
+      {
+       "base_words": 4352,
+       "object_id": 45
+      },
+      {
+       "base_words": 8448,
+       "object_id": 55
+      },
+      {
+       "base_words": 12544,
+       "object_id": 64
+      },
+      {
+       "base_words": 13568,
+       "object_id": 71
+      },
+      {
+       "base_words": 14592,
+       "object_id": 84
+      },
+      {
+       "base_words": 0,
+       "object_id": 2
+      }
+     ],
+     "placement_table_entry_count": 14,
+     "refused_instruction_views": [
+      {
+       "dims": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0
+       ],
+       "dtype": 4,
+       "object_id": 23,
+       "rank": 1,
+       "role": "input_view_0",
+       "strides": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0
+       ],
+       "view_descriptor_id": 184
+      },
+      {
+       "dims": [
+        8256,
+        4096,
+        0,
+        0,
+        0,
+        0
+       ],
+       "dtype": 16,
+       "object_id": 45,
+       "rank": 2,
+       "role": "input_view_1",
+       "strides": [
+        4096,
+        1,
+        0,
+        0,
+        0,
+        0
+       ],
+       "view_descriptor_id": 185
+      },
+      {
+       "dims": [
+        1,
+        4096,
+        0,
+        0,
+        0,
+        0
+       ],
+       "dtype": 16,
+       "object_id": 186,
+       "rank": 2,
+       "role": "output_view_0",
+       "strides": [
+        4096,
+        1,
+        0,
+        0,
+        0,
+        0
+       ],
+       "view_descriptor_id": 187
+      }
+     ],
+     "unplaced_objects_of_the_refusal": [
+      23,
+      186
+     ]
+    }
+   },
+   "wall_seconds": 5.869
+  },
+  {
+   "entry_and_bound": {
+    "qwen3-8b-hbm-single-chip": [
+     65,
+     71
+    ],
+    "qwen3-8b-rom-single-chip": [
+     65,
+     71
+    ]
+   },
+   "kind": "add_the_refusal's_own_unplaced_objects",
+   "marker_present": true,
+   "returncode": 0,
+   "step": 2,
+   "targets": {
+    "qwen3-8b-hbm-single-chip": {
+     "measured": {
+      "capability": 0,
+      "case": 1,
+      "cycles": 45467,
+      "entry": 65,
+      "fault": 69,
+      "fetched": 5,
+      "ic": 71,
+      "issued": 3,
+      "launches": 2,
+      "retired": 4,
+      "trap": 3
+     },
+     "placement_table": [
+      {
+       "base_words": 21248,
+       "object_id": 1
+      },
+      {
+       "base_words": 0,
+       "object_id": 2
+      },
+      {
+       "base_words": 16777216,
+       "object_id": 3
+      },
+      {
+       "base_words": 20971520,
+       "object_id": 4
+      },
+      {
+       "base_words": 25344,
+       "object_id": 5
+      },
+      {
+       "base_words": 25472,
+       "object_id": 6
+      },
+      {
+       "base_words": 15616,
+       "object_id": 17
+      },
+      {
+       "base_words": 15872,
+       "object_id": 18
+      },
+      {
+       "base_words": 19968,
+       "object_id": 19
+      },
+      {
+       "base_words": 24064,
+       "object_id": 20
+      },
+      {
+       "base_words": 28160,
+       "object_id": 21
+      },
+      {
+       "base_words": 29184,
+       "object_id": 22
+      },
+      {
+       "base_words": 30208,
+       "object_id": 23
+      },
+      {
+       "base_words": 0,
+       "object_id": 13
+      },
+      {
+       "base_words": 0,
+       "object_id": 15
+      },
+      {
+       "base_words": 0,
+       "object_id": 27
+      }
+     ],
+     "placement_table_entry_count": 16,
+     "refused_instruction_views": [
+      {
+       "dims": [
+        1,
+        4096,
+        0,
+        0,
+        0,
+        0
+       ],
+       "dtype": 16,
+       "object_id": 27,
+       "rank": 2,
+       "role": "input_view_0",
+       "strides": [
+        4096,
+        1,
+        0,
+        0,
+        0,
+        0
+       ],
+       "view_descriptor_id": 200
+      },
+      {
+       "dims": [
+        151936,
+        4096,
+        0,
+        0,
+        0,
+        0
+       ],
+       "dtype": 16,
+       "object_id": 14,
+       "rank": 2,
+       "role": "input_view_1",
+       "strides": [
+        4096,
+        1,
+        0,
+        0,
+        0,
+        0
+       ],
+       "view_descriptor_id": 201
+      },
+      {
+       "dims": [
+        1,
+        151936,
+        0,
+        0,
+        0,
+        0
+       ],
+       "dtype": 16,
+       "object_id": 37,
+       "rank": 2,
+       "role": "output_view_0",
+       "strides": [
+        151936,
+        1,
+        0,
+        0,
+        0,
+        0
+       ],
+       "view_descriptor_id": 202
+      }
+     ],
+     "unplaced_objects_of_the_refusal": [
+      14,
+      37
+     ]
+    },
+    "qwen3-8b-rom-single-chip": {
+     "measured": {
+      "capability": 0,
+      "case": 0,
+      "cycles": 45467,
+      "entry": 65,
+      "fault": 69,
+      "fetched": 5,
+      "ic": 71,
+      "issued": 3,
+      "launches": 2,
+      "retired": 4,
+      "trap": 3
+     },
+     "placement_table": [
+      {
+       "base_words": 8448,
+       "object_id": 4
+      },
+      {
+       "base_words": 0,
+       "object_id": 5
+      },
+      {
+       "base_words": 16777216,
+       "object_id": 6
+      },
+      {
+       "base_words": 20971520,
+       "object_id": 7
+      },
+      {
+       "base_words": 12544,
+       "object_id": 8
+      },
+      {
+       "base_words": 12672,
+       "object_id": 10
+      },
+      {
+       "base_words": 0,
+       "object_id": 27
+      },
+      {
+       "base_words": 256,
+       "object_id": 36
+      },
+      {
+       "base_words": 4352,
+       "object_id": 45
+      },
+      {
+       "base_words": 8448,
+       "object_id": 55
+      },
+      {
+       "base_words": 12544,
+       "object_id": 64
+      },
+      {
+       "base_words": 13568,
+       "object_id": 71
+      },
+      {
+       "base_words": 14592,
+       "object_id": 84
+      },
+      {
+       "base_words": 0,
+       "object_id": 2
+      },
+      {
+       "base_words": 0,
+       "object_id": 23
+      },
+      {
+       "base_words": 0,
+       "object_id": 186
+      }
+     ],
+     "placement_table_entry_count": 16,
+     "refused_instruction_views": [
+      {
+       "dims": [
+        1,
+        4096,
+        0,
+        0,
+        0,
+        0
+       ],
+       "dtype": 16,
+       "object_id": 186,
+       "rank": 2,
+       "role": "input_view_0",
+       "strides": [
+        4096,
+        1,
+        0,
+        0,
+        0,
+        0
+       ],
+       "view_descriptor_id": 192
+      },
+      {
+       "dims": [
+        151936,
+        4096,
+        0,
+        0,
+        0,
+        0
+       ],
+       "dtype": 16,
+       "object_id": 3,
+       "rank": 2,
+       "role": "input_view_1",
+       "strides": [
+        4096,
+        1,
+        0,
+        0,
+        0,
+        0
+       ],
+       "view_descriptor_id": 193
+      },
+      {
+       "dims": [
+        1,
+        151936,
+        0,
+        0,
+        0,
+        0
+       ],
+       "dtype": 16,
+       "object_id": 194,
+       "rank": 2,
+       "role": "output_view_0",
+       "strides": [
+        151936,
+        1,
+        0,
+        0,
+        0,
+        0
+       ],
+       "view_descriptor_id": 195
+      }
+     ],
+     "unplaced_objects_of_the_refusal": [
+      3,
+      194
+     ]
+    }
+   },
+   "wall_seconds": 5.233
+  },
+  {
+   "entry_and_bound": {
+    "qwen3-8b-hbm-single-chip": [
+     65,
+     71
+    ],
+    "qwen3-8b-rom-single-chip": [
+     65,
+     71
+    ]
+   },
+   "kind": "add_the_refusal's_own_unplaced_objects",
+   "marker_present": true,
+   "returncode": 0,
+   "step": 3,
+   "targets": {
+    "qwen3-8b-hbm-single-chip": {
+     "measured": {
+      "capability": 0,
+      "case": 1,
+      "cycles": 45467,
+      "entry": 65,
+      "fault": 69,
+      "fetched": 5,
+      "ic": 71,
+      "issued": 3,
+      "launches": 2,
+      "retired": 4,
+      "trap": 3
+     },
+     "placement_table": [
+      {
+       "base_words": 21248,
+       "object_id": 1
+      },
+      {
+       "base_words": 0,
+       "object_id": 2
+      },
+      {
+       "base_words": 16777216,
+       "object_id": 3
+      },
+      {
+       "base_words": 20971520,
+       "object_id": 4
+      },
+      {
+       "base_words": 25344,
+       "object_id": 5
+      },
+      {
+       "base_words": 25472,
+       "object_id": 6
+      },
+      {
+       "base_words": 15616,
+       "object_id": 17
+      },
+      {
+       "base_words": 15872,
+       "object_id": 18
+      },
+      {
+       "base_words": 19968,
+       "object_id": 19
+      },
+      {
+       "base_words": 24064,
+       "object_id": 20
+      },
+      {
+       "base_words": 28160,
+       "object_id": 21
+      },
+      {
+       "base_words": 29184,
+       "object_id": 22
+      },
+      {
+       "base_words": 30208,
+       "object_id": 23
+      },
+      {
+       "base_words": 0,
+       "object_id": 13
+      },
+      {
+       "base_words": 0,
+       "object_id": 15
+      },
+      {
+       "base_words": 0,
+       "object_id": 27
+      },
+      {
+       "base_words": 0,
+       "object_id": 14
+      },
+      {
+       "base_words": 0,
+       "object_id": 37
+      }
+     ],
+     "placement_table_entry_count": 18,
+     "refused_instruction_views": [
+      {
+       "dims": [
+        1,
+        4096,
+        0,
+        0,
+        0,
+        0
+       ],
+       "dtype": 16,
+       "object_id": 27,
+       "rank": 2,
+       "role": "input_view_0",
+       "strides": [
+        4096,
+        1,
+        0,
+        0,
+        0,
+        0
+       ],
+       "view_descriptor_id": 200
+      },
+      {
+       "dims": [
+        151936,
+        4096,
+        0,
+        0,
+        0,
+        0
+       ],
+       "dtype": 16,
+       "object_id": 14,
+       "rank": 2,
+       "role": "input_view_1",
+       "strides": [
+        4096,
+        1,
+        0,
+        0,
+        0,
+        0
+       ],
+       "view_descriptor_id": 201
+      },
+      {
+       "dims": [
+        1,
+        151936,
+        0,
+        0,
+        0,
+        0
+       ],
+       "dtype": 16,
+       "object_id": 37,
+       "rank": 2,
+       "role": "output_view_0",
+       "strides": [
+        151936,
+        1,
+        0,
+        0,
+        0,
+        0
+       ],
+       "view_descriptor_id": 202
+      }
+     ],
+     "unplaced_objects_of_the_refusal": []
+    },
+    "qwen3-8b-rom-single-chip": {
+     "measured": {
+      "capability": 0,
+      "case": 0,
+      "cycles": 45467,
+      "entry": 65,
+      "fault": 69,
+      "fetched": 5,
+      "ic": 71,
+      "issued": 3,
+      "launches": 2,
+      "retired": 4,
+      "trap": 3
+     },
+     "placement_table": [
+      {
+       "base_words": 8448,
+       "object_id": 4
+      },
+      {
+       "base_words": 0,
+       "object_id": 5
+      },
+      {
+       "base_words": 16777216,
+       "object_id": 6
+      },
+      {
+       "base_words": 20971520,
+       "object_id": 7
+      },
+      {
+       "base_words": 12544,
+       "object_id": 8
+      },
+      {
+       "base_words": 12672,
+       "object_id": 10
+      },
+      {
+       "base_words": 0,
+       "object_id": 27
+      },
+      {
+       "base_words": 256,
+       "object_id": 36
+      },
+      {
+       "base_words": 4352,
+       "object_id": 45
+      },
+      {
+       "base_words": 8448,
+       "object_id": 55
+      },
+      {
+       "base_words": 12544,
+       "object_id": 64
+      },
+      {
+       "base_words": 13568,
+       "object_id": 71
+      },
+      {
+       "base_words": 14592,
+       "object_id": 84
+      },
+      {
+       "base_words": 0,
+       "object_id": 2
+      },
+      {
+       "base_words": 0,
+       "object_id": 23
+      },
+      {
+       "base_words": 0,
+       "object_id": 186
+      },
+      {
+       "base_words": 0,
+       "object_id": 3
+      },
+      {
+       "base_words": 0,
+       "object_id": 194
+      }
+     ],
+     "placement_table_entry_count": 18,
+     "refused_instruction_views": [
+      {
+       "dims": [
+        1,
+        4096,
+        0,
+        0,
+        0,
+        0
+       ],
+       "dtype": 16,
+       "object_id": 186,
+       "rank": 2,
+       "role": "input_view_0",
+       "strides": [
+        4096,
+        1,
+        0,
+        0,
+        0,
+        0
+       ],
+       "view_descriptor_id": 192
+      },
+      {
+       "dims": [
+        151936,
+        4096,
+        0,
+        0,
+        0,
+        0
+       ],
+       "dtype": 16,
+       "object_id": 3,
+       "rank": 2,
+       "role": "input_view_1",
+       "strides": [
+        4096,
+        1,
+        0,
+        0,
+        0,
+        0
+       ],
+       "view_descriptor_id": 193
+      },
+      {
+       "dims": [
+        1,
+        151936,
+        0,
+        0,
+        0,
+        0
+       ],
+       "dtype": 16,
+       "object_id": 194,
+       "rank": 2,
+       "role": "output_view_0",
+       "strides": [
+        151936,
+        1,
+        0,
+        0,
+        0,
+        0
+       ],
+       "view_descriptor_id": 195
+      }
+     ],
+     "unplaced_objects_of_the_refusal": []
+    }
+   },
+   "wall_seconds": 6.662
+  }
+ ],
+ "attribution": {
+  "final_refusal": {
+   "qwen3-8b-hbm-single-chip": {
+    "capability": 0,
+    "case": 1,
+    "cycles": 45467,
+    "entry": 65,
+    "fault": 69,
+    "fetched": 5,
+    "ic": 71,
+    "issued": 3,
+    "launches": 2,
+    "retired": 4,
+    "trap": 3
+   },
+   "qwen3-8b-rom-single-chip": {
+    "capability": 0,
+    "case": 0,
+    "cycles": 45467,
+    "entry": 65,
+    "fault": 69,
+    "fetched": 5,
+    "ic": 71,
+    "issued": 3,
+    "launches": 2,
+    "retired": 4,
+    "trap": 3
+   }
+  },
+  "first_refusal": {
+   "qwen3-8b-hbm-single-chip": {
+    "capability": 0,
+    "case": 1,
+    "cycles": 240,
+    "entry": 65,
+    "fault": 66,
+    "fetched": 2,
+    "ic": 71,
+    "issued": 1,
+    "launches": 0,
+    "retired": 1,
+    "trap": 3
+   },
+   "qwen3-8b-rom-single-chip": {
+    "capability": 0,
+    "case": 0,
+    "cycles": 240,
+    "entry": 65,
+    "fault": 66,
+    "fetched": 2,
+    "ic": 71,
+    "issued": 1,
+    "launches": 0,
+    "retired": 1,
+    "trap": 3
+   }
+  },
+  "objects_the_ladder_had_to_bind": {
+   "qwen3-8b-hbm-single-chip": [
+    13,
+    15,
+    27,
+    14,
+    37
+   ],
+   "qwen3-8b-rom-single-chip": [
+    2,
+    23,
+    186,
+    3,
+    194
+   ]
+  },
+  "the_final_refusal_is_not_placement": {
+   "qwen3-8b-hbm-single-chip": true,
+   "qwen3-8b-rom-single-chip": true
+  }
+ },
+ "attribution_control": {
+  "kind": "drop_each_added_object_in_turn",
+  "targets": {
+   "qwen3-8b-hbm-single-chip": {
+    "added_objects": [
+     13,
+     15,
+     27,
+     14,
+     37
+    ],
+    "at_least_one_moved_back": true,
+    "drops": [
+     {
+      "dropped_object_id": 13,
+      "measured": {
+       "capability": 0,
+       "case": 1,
+       "cycles": 240,
+       "entry": 65,
+       "fault": 66,
+       "fetched": 2,
+       "ic": 71,
+       "issued": 1,
+       "launches": 0,
+       "retired": 1,
+       "trap": 3
+      },
+      "measurement_unchanged": false,
+      "refusal_moved_back": true,
+      "wall_seconds": 5.752
+     },
+     {
+      "dropped_object_id": 15,
+      "measured": {
+       "capability": 0,
+       "case": 1,
+       "cycles": 45467,
+       "entry": 65,
+       "fault": 69,
+       "fetched": 5,
+       "ic": 71,
+       "issued": 3,
+       "launches": 2,
+       "retired": 4,
+       "trap": 3
+      },
+      "measurement_unchanged": true,
+      "refusal_moved_back": false,
+      "wall_seconds": 6.776
+     },
+     {
+      "dropped_object_id": 27,
+      "measured": {
+       "capability": 0,
+       "case": 1,
+       "cycles": 33110,
+       "entry": 65,
+       "fault": 68,
+       "fetched": 4,
+       "ic": 71,
+       "issued": 2,
+       "launches": 1,
+       "retired": 3,
+       "trap": 3
+      },
+      "measurement_unchanged": false,
+      "refusal_moved_back": true,
+      "wall_seconds": 5.996
+     },
+     {
+      "dropped_object_id": 14,
+      "measured": {
+       "capability": 0,
+       "case": 1,
+       "cycles": 45467,
+       "entry": 65,
+       "fault": 69,
+       "fetched": 5,
+       "ic": 71,
+       "issued": 3,
+       "launches": 2,
+       "retired": 4,
+       "trap": 3
+      },
+      "measurement_unchanged": true,
+      "refusal_moved_back": false,
+      "wall_seconds": 4.999
+     },
+     {
+      "dropped_object_id": 37,
+      "measured": {
+       "capability": 0,
+       "case": 1,
+       "cycles": 45467,
+       "entry": 65,
+       "fault": 69,
+       "fetched": 5,
+       "ic": 71,
+       "issued": 3,
+       "launches": 2,
+       "retired": 4,
+       "trap": 3
+      },
+      "measurement_unchanged": true,
+      "refusal_moved_back": false,
+      "wall_seconds": 5.947
+     }
+    ],
+    "objects_added_that_the_design_never_read": [
+     15,
+     14,
+     37
+    ],
+    "objects_the_design_consults": [
+     13,
+     27
+    ]
+   },
+   "qwen3-8b-rom-single-chip": {
+    "added_objects": [
+     2,
+     23,
+     186,
+     3,
+     194
+    ],
+    "at_least_one_moved_back": true,
+    "drops": [
+     {
+      "dropped_object_id": 2,
+      "measured": {
+       "capability": 0,
+       "case": 0,
+       "cycles": 240,
+       "entry": 65,
+       "fault": 66,
+       "fetched": 2,
+       "ic": 71,
+       "issued": 1,
+       "launches": 0,
+       "retired": 1,
+       "trap": 3
+      },
+      "measurement_unchanged": false,
+      "refusal_moved_back": true,
+      "wall_seconds": 5.752
+     },
+     {
+      "dropped_object_id": 23,
+      "measured": {
+       "capability": 0,
+       "case": 0,
+       "cycles": 45467,
+       "entry": 65,
+       "fault": 69,
+       "fetched": 5,
+       "ic": 71,
+       "issued": 3,
+       "launches": 2,
+       "retired": 4,
+       "trap": 3
+      },
+      "measurement_unchanged": true,
+      "refusal_moved_back": false,
+      "wall_seconds": 6.776
+     },
+     {
+      "dropped_object_id": 186,
+      "measured": {
+       "capability": 0,
+       "case": 0,
+       "cycles": 33110,
+       "entry": 65,
+       "fault": 68,
+       "fetched": 4,
+       "ic": 71,
+       "issued": 2,
+       "launches": 1,
+       "retired": 3,
+       "trap": 3
+      },
+      "measurement_unchanged": false,
+      "refusal_moved_back": true,
+      "wall_seconds": 5.996
+     },
+     {
+      "dropped_object_id": 3,
+      "measured": {
+       "capability": 0,
+       "case": 0,
+       "cycles": 45467,
+       "entry": 65,
+       "fault": 69,
+       "fetched": 5,
+       "ic": 71,
+       "issued": 3,
+       "launches": 2,
+       "retired": 4,
+       "trap": 3
+      },
+      "measurement_unchanged": true,
+      "refusal_moved_back": false,
+      "wall_seconds": 4.999
+     },
+     {
+      "dropped_object_id": 194,
+      "measured": {
+       "capability": 0,
+       "case": 0,
+       "cycles": 45467,
+       "entry": 65,
+       "fault": 69,
+       "fetched": 5,
+       "ic": 71,
+       "issued": 3,
+       "launches": 2,
+       "retired": 4,
+       "trap": 3
+      },
+      "measurement_unchanged": true,
+      "refusal_moved_back": false,
+      "wall_seconds": 5.947
+     }
+    ],
+    "objects_added_that_the_design_never_read": [
+     23,
+     3,
+     194
+    ],
+    "objects_the_design_consults": [
+     2,
+     186
+    ]
+   }
+  },
+  "why": "a refusal that walks forward as entries are added is only attributable to the table if removing an entry walks it back; this runs that direction"
+ },
+ "compile_returncode": 0,
+ "does_not_establish": [
+  "gate G1d: no arm runs the head on the composed trunk output and no arm compares a logit against golden",
+  "any numeric result: an added table entry binds an object at a declared base with nothing staged there",
+  "that the shipped vector set should bind these objects: the arms are a probe, and what they measure is what such a binding would and would not buy"
+ ],
+ "evidence_class": "public_open_tool_rtl_simulation",
+ "gate": "G1d (configs/gates/redesign_gates.json)",
+ "git": {
+  "commit": "49c8dd41cd0b5887681c54560be695aac5e609de",
+  "dirty_paths": [],
+  "scope": "the tree this campaign elaborated and ran from",
+  "worktree_dirty": false
+ },
+ "head_matmul": {
+  "qwen3-8b-hbm-single-chip": {
+   "coarsest_exact_row_partition": {
+    "largest_first_dimension_measured_to_launch": 4096,
+    "rows_per_shard": 2374,
+    "shards": 64,
+    "shards_times_rows_equals_output_rows": true,
+    "why": "the coarsest partition of the head's output rows into equal shards each of which is no wider than the largest weight-view first dimension this campaign MEASURED the bridge to launch.  Equal shards make the partition exact by construction: the shard count divides the row count, so the extents sum to the whole with no gap and no overlap"
+   },
+   "macs": 622329856,
+   "matmul_pc": 69,
+   "output_rows": 151936,
+   "reduction": 4096,
+   "weight_view_dims": [
+    151936,
+    4096
+   ]
+  },
+  "qwen3-8b-rom-single-chip": {
+   "coarsest_exact_row_partition": {
+    "largest_first_dimension_measured_to_launch": 4096,
+    "rows_per_shard": 2374,
+    "shards": 64,
+    "shards_times_rows_equals_output_rows": true,
+    "why": "the coarsest partition of the head's output rows into equal shards each of which is no wider than the largest weight-view first dimension this campaign MEASURED the bridge to launch.  Equal shards make the partition exact by construction: the shard count divides the row count, so the extents sum to the whole with no gap and no overlap"
+   },
+   "macs": 622329856,
+   "matmul_pc": 69,
+   "output_rows": 151936,
+   "reduction": 4096,
+   "weight_view_dims": [
+    151936,
+    4096
+   ]
+  }
+ },
+ "one_elaboration_for_every_arm": true,
+ "positive_control_at_the_entry_probe_bound": {
+  "kind": "the_entry_probe's_own_positive_control_bound",
+  "targets": {
+   "qwen3-8b-hbm-single-chip": {
+    "entry_pc": 65,
+    "instruction_count": 67,
+    "measured": {
+     "capability": 0,
+     "case": 1,
+     "cycles": 240,
+     "entry": 65,
+     "fault": 66,
+     "fetched": 2,
+     "ic": 67,
+     "issued": 1,
+     "launches": 0,
+     "retired": 1,
+     "trap": 3
+    }
+   },
+   "qwen3-8b-rom-single-chip": {
+    "entry_pc": 65,
+    "instruction_count": 67,
+    "measured": {
+     "capability": 0,
+     "case": 0,
+     "cycles": 240,
+     "entry": 65,
+     "fault": 66,
+     "fetched": 2,
+     "ic": 67,
+     "issued": 1,
+     "launches": 0,
+     "retired": 1,
+     "trap": 3
+    }
+   }
+  }
+ },
+ "probe_base_words": 0,
+ "schema": "opentallas.rtl.abi3_g1d_head_span_probe.v1",
+ "simulated_cycles": 84524216,
+ "simulated_cycles_by_stage": {
+  "attribution_control": 339502,
+  "ladder": 248568,
+  "positive_control_at_the_entry_probe_bound": 480,
+  "total": 84524216,
+  "weight_view_admission_bracket": 83935666
+ },
+ "simulator": "verilator_cpp_executable",
+ "spans": {
+  "qwen3-8b-hbm-single-chip": {
+   "derived_by": "the greatest entry from which the abstract machine of tools/build_abi3_vehicle_reachability.py reaches the fetch bound one past the site without a wait-set or loop-stack refusal",
+   "entry_pc": 65,
+   "instruction_count": 71,
+   "issued_pcs": [
+    66,
+    68,
+    69,
+    70
+   ],
+   "macs": 622329856,
+   "site_pc": 70
+  },
+  "qwen3-8b-rom-single-chip": {
+   "derived_by": "the greatest entry from which the abstract machine of tools/build_abi3_vehicle_reachability.py reaches the fetch bound one past the site without a wait-set or loop-stack refusal",
+   "entry_pc": 65,
+   "instruction_count": 71,
+   "issued_pcs": [
+    66,
+    68,
+    69,
+    70
+   ],
+   "macs": 622329856,
+   "site_pc": 70
+  }
+ },
+ "status": "pass",
+ "tools": {
+  "cxx": {
+   "executable": "/usr/bin/x86_64-linux-gnu-g++-11",
+   "executable_sha256": "2360901d864cf10bfd6296e261cb2c14053552a80377761ab07146ec9ec9a2c0",
+   "version": "g++ (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0"
+  },
+  "verilator": {
+   "executable": "<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator",
+   "executable_sha256": "fb2cc573b1055cf096c90e1efc9966fe56bdb4b265c83590cf2a49f7a0defcdf",
+   "version": "Verilator 5.050 2026-07-01 rev v5.050"
+  }
+ },
+ "vector_set": {
+  "case_record_stride": 139,
+  "committed": true,
+  "directory": "testdata/compiler/abi3_shipped_prefix",
+  "manifest_sha256": "a00ff94fd825231de5c7121ac10833cb4763a31fe36f11187730de8d2e592e82"
+ },
+ "vehicle": "rtl/test/a3_shipped_prefix_top.sv",
+ "weight_view_admission_bracket": [
+  {
+   "derived_macs_of_the_span": 16777216,
+   "entry_pc": 3,
+   "instruction_count": 12,
+   "issued_pcs": [
+    4,
+    8,
+    11
+   ],
+   "launched": true,
+   "measured": {
+    "capability": 0,
+    "case": 0,
+    "cycles": 83935666,
+    "entry": 3,
+    "fault": 12,
+    "fetched": 9,
+    "ic": 12,
+    "issued": 3,
+    "launches": 3,
+    "retired": 9,
+    "trap": 5
+   },
+   "site_pc": 11,
+   "target": "qwen3-8b-rom-single-chip",
+   "wall_seconds": 872.658,
+   "weight_view_dims": [
+    4096,
+    4096
+   ],
+   "weight_view_first_dimension": 4096
+  }
+ ],
+ "weight_views_in_the_program": [
+  {
+   "pc": 11,
+   "target": "qwen3-8b-rom-single-chip",
+   "weight_dims": [
+    4096,
+    4096
+   ],
+   "weight_object_id": 5,
+   "weight_view_descriptor_id": 54
+  },
+  {
+   "pc": 14,
+   "target": "qwen3-8b-rom-single-chip",
+   "weight_dims": [
+    1024,
+    4096
+   ],
+   "weight_object_id": 6,
+   "weight_view_descriptor_id": 63
+  },
+  {
+   "pc": 17,
+   "target": "qwen3-8b-rom-single-chip",
+   "weight_dims": [
+    1024,
+    4096
+   ],
+   "weight_object_id": 7,
+   "weight_view_descriptor_id": 70
+  },
+  {
+   "pc": 41,
+   "target": "qwen3-8b-rom-single-chip",
+   "weight_dims": [
+    4096,
+    4096
+   ],
+   "weight_object_id": 12,
+   "weight_view_descriptor_id": 128
+  },
+  {
+   "pc": 50,
+   "target": "qwen3-8b-rom-single-chip",
+   "weight_dims": [
+    12288,
+    4096
+   ],
+   "weight_object_id": 14,
+   "weight_view_descriptor_id": 148
+  },
+  {
+   "pc": 53,
+   "target": "qwen3-8b-rom-single-chip",
+   "weight_dims": [
+    12288,
+    4096
+   ],
+   "weight_object_id": 15,
+   "weight_view_descriptor_id": 155
+  },
+  {
+   "pc": 59,
+   "target": "qwen3-8b-rom-single-chip",
+   "weight_dims": [
+    4096,
+    12288
+   ],
+   "weight_object_id": 16,
+   "weight_view_descriptor_id": 169
+  },
+  {
+   "pc": 69,
+   "target": "qwen3-8b-rom-single-chip",
+   "weight_dims": [
+    151936,
+    4096
+   ],
+   "weight_object_id": 3,
+   "weight_view_descriptor_id": 193
+  },
+  {
+   "pc": 11,
+   "target": "qwen3-8b-hbm-single-chip",
+   "weight_dims": [
+    4096,
+    4096
+   ],
+   "weight_object_id": 2,
+   "weight_view_descriptor_id": 68
+  },
+  {
+   "pc": 14,
+   "target": "qwen3-8b-hbm-single-chip",
+   "weight_dims": [
+    1024,
+    4096
+   ],
+   "weight_object_id": 3,
+   "weight_view_descriptor_id": 76
+  },
+  {
+   "pc": 17,
+   "target": "qwen3-8b-hbm-single-chip",
+   "weight_dims": [
+    1024,
+    4096
+   ],
+   "weight_object_id": 4,
+   "weight_view_descriptor_id": 82
+  },
+  {
+   "pc": 41,
+   "target": "qwen3-8b-hbm-single-chip",
+   "weight_dims": [
+    4096,
+    4096
+   ],
+   "weight_object_id": 7,
+   "weight_view_descriptor_id": 140
+  },
+  {
+   "pc": 50,
+   "target": "qwen3-8b-hbm-single-chip",
+   "weight_dims": [
+    12288,
+    4096
+   ],
+   "weight_object_id": 9,
+   "weight_view_descriptor_id": 160
+  },
+  {
+   "pc": 53,
+   "target": "qwen3-8b-hbm-single-chip",
+   "weight_dims": [
+    12288,
+    4096
+   ],
+   "weight_object_id": 10,
+   "weight_view_descriptor_id": 166
+  },
+  {
+   "pc": 59,
+   "target": "qwen3-8b-hbm-single-chip",
+   "weight_dims": [
+    4096,
+    12288
+   ],
+   "weight_object_id": 11,
+   "weight_view_descriptor_id": 178
+  },
+  {
+   "pc": 69,
+   "target": "qwen3-8b-hbm-single-chip",
+   "weight_dims": [
+    151936,
+    4096
+   ],
+   "weight_object_id": 14,
+   "weight_view_descriptor_id": 201
+  }
+ ],
+ "what_this_measures": "how far the head span executes in the integrated shipped-prefix vehicle and what refuses it, with placement separated from geometry by a ladder of arms that differ only in the object placement table"
+}
