@@ -351,16 +351,36 @@ def test_the_control_plane_reached_the_instruction_that_ends_a_generation(
 
 
 def test_the_artifact_status_is_its_own_evidence(artifact: dict) -> None:
-    """The summary may not be greener than the records under it."""
-    passing = all(
-        record["trace"]["equals_golden"]
-        and record["injection"]["control_path_is_rtl"]
-        and all(
-            record["passes"][name] == value
-            for name, value in record["passes"]["gate_requires_positions"].items()
+    """The summary may be neither greener nor redder than its own gate.
+
+    Recomputed here from ``configs/gates/redesign_gates.json`` independently
+    of the campaign's own reader, so the two would have to go wrong the same
+    way to agree wrongly.
+    """
+    spec = json.loads(
+        (ROOT / "configs/gates/redesign_gates.json").read_text(encoding="utf-8")
+    )
+    gates = spec if isinstance(spec, list) else spec["gates"]
+    evaluator = next(g["evaluator"] for g in gates if g["id"] == "G1e")
+
+    def dotted(body, path):
+        node = body
+        for part in path.split("."):
+            if not isinstance(node, dict) or part not in node:
+                return object()
+            node = node[part]
+        return node
+
+    passing = len(artifact["records"]) == 2 and all(
+        all(
+            dotted(record, f["field"]) == f["equals"]
+            for f in evaluator["require_fields"]
         )
-        and record["eos"]["official_eos_raised"]
-        and record["eos"]["post_eos_refused"]
+        and all(
+            isinstance(dotted(record, f["field"]), int)
+            and dotted(record, f["field"]) >= f["at_least"]
+            for f in evaluator.get("require_min", [])
+        )
         for record in artifact["records"]
-    ) and len(artifact["records"]) == 2
+    )
     assert artifact["status"] == ("pass" if passing else "fail")

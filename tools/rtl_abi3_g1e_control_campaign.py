@@ -1017,6 +1017,66 @@ def run_store(
     }
 
 
+def g1e_gate_spec() -> dict[str, Any]:
+    """G1e's evaluator, out of the gate file.  Read, never restated."""
+    document = json.loads(
+        (ROOT / "configs/gates/redesign_gates.json").read_text(encoding="utf-8")
+    )
+    gates = document if isinstance(document, list) else document.get("gates", [])
+    for gate in gates:
+        if gate.get("id") == "G1e":
+            return dict(gate["evaluator"])
+    raise SystemExit(
+        "configs/gates/redesign_gates.json declares no G1e gate; this campaign "
+        "reports its own gate's verdict and will not invent one"
+    )
+
+
+class _Missing:
+    def __repr__(self) -> str:  # pragma: no cover - diagnostics only
+        return "<absent>"
+
+
+_MISSING = _Missing()
+
+
+def _dotted(body: Any, path: str) -> Any:
+    node = body
+    for part in path.split("."):
+        if not isinstance(node, dict) or part not in node:
+            return _MISSING
+        node = node[part]
+    return node
+
+
+def gate_verdict(records: list[dict[str, Any]]) -> bool:
+    """Does every record satisfy G1e's own declared fields?
+
+    Absence of a declared field is a FAIL, never a pass -- the same rule the
+    board's evaluator applies, applied here so the artifact and the board
+    cannot disagree about the rung they both describe.
+    """
+    spec = g1e_gate_spec()
+    required = spec.get("require_fields") or []
+    minimums = spec.get("require_min") or []
+    if not required:
+        raise SystemExit(
+            "G1e's evaluator declares no require_fields; this campaign reports "
+            "its own gate's verdict and will not invent one"
+        )
+    if not records:
+        return False
+    for record in records:
+        for field in required:
+            if _dotted(record, str(field["field"])) != field["equals"]:
+                return False
+        for field in minimums:
+            value = _dotted(record, str(field["field"]))
+            if not isinstance(value, int) or value < int(field["at_least"]):
+                return False
+    return True
+
+
 def compose_record(
     store: str,
     manifest: dict[str, Any],
@@ -1604,19 +1664,19 @@ def main() -> int:
         "rung": "G1e",
         "gate": "G1e (configs/gates/redesign_gates.json)",
         "workload_id": WORKLOAD_ID,
+        # The rung's verdict is the rung's GATE, read out of
+        # configs/gates/redesign_gates.json rather than restated here.  It was
+        # restated here, and the restatement went stale: it kept
+        # eos.official_eos_raised in the conjunction after the gate moved that
+        # measurement to G1d -- where a real argmax runs -- so this artifact
+        # would have reported `fail` over a record set its own gate passes.
+        # An artifact that is redder than its gate is as much a defect as one
+        # that is greener: both mean the record and the verdict were written
+        # by different hands.  gate_verdict() evaluates the gate's own
+        # require_fields and require_min against each record, and refuses if
+        # the gate declares none.
         "status": "pass"
-        if all(
-            record["trace"]["equals_golden"]
-            and record["injection"]["control_path_is_rtl"]
-            and all(
-                record["passes"][name] == value
-                for name, value in gate_required_positions().items()
-            )
-            and record["eos"]["official_eos_raised"]
-            and record["eos"]["post_eos_refused"]
-            for record in records
-        )
-        and len(records) == len(STORES)
+        if gate_verdict(records) and len(records) == len(STORES)
         else "fail",
         "what_ran": {
             "reference": "runtime.sim.device.Device, run by the workload's own "
