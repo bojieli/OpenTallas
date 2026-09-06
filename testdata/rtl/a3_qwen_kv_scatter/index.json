@@ -268,7 +268,7 @@
   "image_sha256": {
     "cases.hex": "cb5cf27b6145a5d62c2e10841b0fdbff1782a70a0f05661fcde3eb869d95df00",
     "instruction.hex": "a1d1ff76e87ea11f421d33104019ccd80a50839f939d90c99d6f32423906d97f",
-    "numeric.hex": "bea66168e390b8d8dd495e7e9669709caa21c40c08910c521ab3896252aa2df4",
+    "numeric.hex": "b9944253f854feb9036e0ea2fa19ebddd64fa77b0de51d6d6112d2b1fc39d306",
     "operator.hex": "e910ab77fe88f3c09e4e2276cca6521fd8f01ee81f724a3570b87bf0167f980b",
     "output.hex": "97aa8b2d7708b046450e2277b98ba0f88e4375e7fa95f475a8bad6a5d86467cc",
     "source.hex": "28c7a2a90b9089184b6262281d89c2fb26574259d24471bc612411a8ebcf6482",
@@ -513,17 +513,17 @@
         "deployment_dir": "build/abi3/qwen3-8b-rom",
         "deployment_identity_evidence": {
           "artifact": "results/abi3/rom_schedule_checks.json",
-          "artifact_sha256": "87da356bd8ecd47881888d8ec79e023ce9dd12da091a3f5821ce1a5688cdb0bb",
+          "artifact_sha256": "1ba09273ab84c471edcae4a0fb35482ccd0f3bfa5c04c70041a1800dccf7d9cf",
           "case": "qwen3-rom-single-chip"
         },
-        "deployment_sha256": "133afc13e1fcd2aade2e40530883c9986b0e920d99853990d9032fd777f26243",
+        "deployment_sha256": "6a06a4ea97f290326b448f4fcc8c654a9c32b61e707ca62ef070060daf9cc21b",
         "descriptor_count": 215,
-        "descriptor_table_sha256": "fb3b453895b729e5a11fa1a2dc63bae53714099f1df844bdf76a47a159d5c836",
+        "descriptor_table_sha256": "f15100f5f18b297ec0b43c7d5631e1d5094683ce92802c2117a6a36c5e4faaa0",
         "entrypoint_count": 2,
         "instruction_count": 74,
         "key": "qwen3-8b-rom-single-chip",
         "model_id": "qwen3-8b",
-        "program_sha256": "7443ff939ceeecfbab01514b41794821aa100ac9d6a426fa19469605d3c66c2f",
+        "program_sha256": "280f9cf88f0a92a13d9ec62c19f1dbf0a469c79d6d20e44ae1b9f16109c4ed60",
         "reproduce": "make abi3-rom-qwen-build",
         "rtl_bound_demands": {
           "A3_EVENT_COUNT": 27,
@@ -538,7 +538,7 @@
         "verifier_errors": []
       },
       "descriptor_sha256": {
-        "numeric": "8decd00f722c6ec05c10621837d9c78c82c42c9b75e60b7b6ec6e1ddfdde7fc0",
+        "numeric": "ff6735f854a664f72d3767a9097aafaec1d752339c2b30f3730c6a35e26fe6fc",
         "operator": "de3e7211b84c60ed8a539f4b5826116bc627daa580b6bc7d1824632859a31a97",
         "output": "dab34a72749cf4f37ecc9a512fd91d0492f23ce56aa994f93cb4e5f63ad4fe1c",
         "view0": "1969fd74261893e8db200e7f1d35f11f4e32c08dfa4a9884aedc3f0106f713c5",
@@ -582,17 +582,17 @@
         "deployment_dir": "build/abi3/qwen3-8b-rom",
         "deployment_identity_evidence": {
           "artifact": "results/abi3/rom_schedule_checks.json",
-          "artifact_sha256": "87da356bd8ecd47881888d8ec79e023ce9dd12da091a3f5821ce1a5688cdb0bb",
+          "artifact_sha256": "1ba09273ab84c471edcae4a0fb35482ccd0f3bfa5c04c70041a1800dccf7d9cf",
           "case": "qwen3-rom-single-chip"
         },
-        "deployment_sha256": "133afc13e1fcd2aade2e40530883c9986b0e920d99853990d9032fd777f26243",
+        "deployment_sha256": "6a06a4ea97f290326b448f4fcc8c654a9c32b61e707ca62ef070060daf9cc21b",
         "descriptor_count": 215,
-        "descriptor_table_sha256": "fb3b453895b729e5a11fa1a2dc63bae53714099f1df844bdf76a47a159d5c836",
+        "descriptor_table_sha256": "f15100f5f18b297ec0b43c7d5631e1d5094683ce92802c2117a6a36c5e4faaa0",
         "entrypoint_count": 2,
         "instruction_count": 74,
         "key": "qwen3-8b-rom-single-chip",
         "model_id": "qwen3-8b",
-        "program_sha256": "7443ff939ceeecfbab01514b41794821aa100ac9d6a426fa19469605d3c66c2f",
+        "program_sha256": "280f9cf88f0a92a13d9ec62c19f1dbf0a469c79d6d20e44ae1b9f16109c4ed60",
         "reproduce": "make abi3-rom-qwen-build",
         "rtl_bound_demands": {
           "A3_EVENT_COUNT": 27,
@@ -607,7 +607,7 @@
         "verifier_errors": []
       },
       "descriptor_sha256": {
-        "numeric": "8decd00f722c6ec05c10621837d9c78c82c42c9b75e60b7b6ec6e1ddfdde7fc0",
+        "numeric": "ff6735f854a664f72d3767a9097aafaec1d752339c2b30f3730c6a35e26fe6fc",
         "operator": "8e2a1d964ddc5c05858a13e107cc5ea2d74176eafabe3ecb40770a8d4d534ecc",
         "output": "0fbd48777d4a7b70250c679c62c1bcc516dfb0f6cc6f175be5eca8c641587478",
         "view0": "ab55d00566d691f2cbcf237a2e669688601f9497e0a9510d7e553c7b668515d3",
@@ -651,17 +651,17 @@
         "deployment_dir": "build/abi3/qwen3-8b-rom",
         "deployment_identity_evidence": {
           "artifact": "results/abi3/rom_schedule_checks.json",
-          "artifact_sha256": "87da356bd8ecd47881888d8ec79e023ce9dd12da091a3f5821ce1a5688cdb0bb",
+          "artifact_sha256": "1ba09273ab84c471edcae4a0fb35482ccd0f3bfa5c04c70041a1800dccf7d9cf",
           "case": "qwen3-rom-single-chip"
         },
-        "deployment_sha256": "133afc13e1fcd2aade2e40530883c9986b0e920d99853990d9032fd777f26243",
+        "deployment_sha256": "6a06a4ea97f290326b448f4fcc8c654a9c32b61e707ca62ef070060daf9cc21b",
         "descriptor_count": 215,
-        "descriptor_table_sha256": "fb3b453895b729e5a11fa1a2dc63bae53714099f1df844bdf76a47a159d5c836",
+        "descriptor_table_sha256": "f15100f5f18b297ec0b43c7d5631e1d5094683ce92802c2117a6a36c5e4faaa0",
         "entrypoint_count": 2,
         "instruction_count": 74,
         "key": "qwen3-8b-rom-single-chip",
         "model_id": "qwen3-8b",
-        "program_sha256": "7443ff939ceeecfbab01514b41794821aa100ac9d6a426fa19469605d3c66c2f",
+        "program_sha256": "280f9cf88f0a92a13d9ec62c19f1dbf0a469c79d6d20e44ae1b9f16109c4ed60",
         "reproduce": "make abi3-rom-qwen-build",
         "rtl_bound_demands": {
           "A3_EVENT_COUNT": 27,

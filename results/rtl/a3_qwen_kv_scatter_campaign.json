@@ -26,9 +26,9 @@
   },
   "log_sha256": {
     "iverilog": "d6b9e2b5eda5031a6d6d33e5f7c6bdf7cadf37a26e10eed9d972d96cc934f90f",
-    "verilator": "820949020b828c33ed1497b7e6e6cbfffa2a13d727099ffecaa77e7e3014d8c4",
-    "verilator_compile": "8ac25944b328576673c888ec1ca6a5732d3ad1343dbe19f066292a1d1efd96b4",
-    "yosys": "9441c42e50613f0e7d10fc9310ca60f4a50bc90ca245aaaa6e0b229b6a5075d0"
+    "verilator": "b1f831631fe3a55bdea05be64adc090a694b47d1f1585b148794b0ef80ab3a62",
+    "verilator_compile": "8cbf7599e35f606b3e4de2e14b3dd7ba403f5dbb2c5899e99e507b169134ac32",
+    "yosys": "89819eb072504fb42ff8decde620ad1aa2f5110614f5d0c933e005d925ceec2d"
   },
   "normalized_cases": [
     {
@@ -240,9 +240,9 @@
     "rtl/abi3/ot_a3_pkg.sv": "99cb99b3b5044ad669a5927455f50ca5fe2672c197c97770e1709e794e402e4e",
     "rtl/abi3/ot_a3_qwen_kv_scatter_adapter.sv": "f62947c739877e73fb65b44ce6412ea0b8796945432076a6155ab66946f865ac",
     "rtl/test/tb_a3_qwen_kv_scatter.sv": "661dcc9f9b7ae4441def2d96f9ff33a3099fd1c18018a87691bfc4de555438ad",
-    "testdata/compiler/abi3_deployment/a3_descriptor.hex": "85263a2b33597ba63e82e783eef7436b1b5ea0786bf7c20e4817bbdbaee13dbd",
+    "testdata/compiler/abi3_deployment/a3_descriptor.hex": "bcc3d5c79897f711ac42db414f041e58353e3e2f0c11e86c38eda023509add89",
     "testdata/compiler/abi3_deployment/a3_program.hex": "910a714f1eca1799df203b1330dd95f3cb6da2027569acce935729e13bcf463c",
-    "testdata/compiler/abi3_deployment/abi3_deployment_rtl_vectors.json": "e24f73e4510cf141b8b4b3fd2888ea0341efe07653578bb3b370845ab7733636",
+    "testdata/compiler/abi3_deployment/abi3_deployment_rtl_vectors.json": "339149f2437fed4c2e4502c303ef294aff6d2af1dc3c5284fc33e7f11527679e",
     "testdata/compiler/abi3_shipped_prefix/abi3_shipped_prefix_vectors.json": "9bfe26104715ba70728aaccc40b4b43bfed995e84d5e812e9e90d0dd2dbe3efd",
     "testdata/compiler/abi3_shipped_prefix/p3_expect.hex": "ad2838f3143c069b0a02bac3405b09169044fae6f75cdea2e1485507de8146c0",
     "testdata/compiler/abi3_shipped_prefix/p3_writes.hex": "af8be9b7044097a2a11cc5be1ab5beac2f66b4226b72b189f6de770a772d97c5",
@@ -289,9 +289,9 @@
   },
   "vector_sha256": {
     "cases.hex": "cb5cf27b6145a5d62c2e10841b0fdbff1782a70a0f05661fcde3eb869d95df00",
-    "index.json": "805ba8e0a0e10b5fa6065bf20f4dd532a2ea0a6b1fa1199d4d04779327db7560",
+    "index.json": "170a07fa77df7afe4c06a02d040e416c515c45477ace0cda5b11c0931b3c8d62",
     "instruction.hex": "a1d1ff76e87ea11f421d33104019ccd80a50839f939d90c99d6f32423906d97f",
-    "numeric.hex": "bea66168e390b8d8dd495e7e9669709caa21c40c08910c521ab3896252aa2df4",
+    "numeric.hex": "b9944253f854feb9036e0ea2fa19ebddd64fa77b0de51d6d6112d2b1fc39d306",
     "operator.hex": "e910ab77fe88f3c09e4e2276cca6521fd8f01ee81f724a3570b87bf0167f980b",
     "output.hex": "97aa8b2d7708b046450e2277b98ba0f88e4375e7fa95f475a8bad6a5d86467cc",
     "source.hex": "28c7a2a90b9089184b6262281d89c2fb26574259d24471bc612411a8ebcf6482",
@@ -301,10 +301,10 @@
     "view3.hex": "efcaebdc71dce84f8c3d69f61987c061e891f5319a5265ba6d9fa36802776d57"
   },
   "verification_wall_seconds": {
-    "iverilog_compile": 0.012691335985437036,
-    "iverilog_simulation": 1.3479967410676181,
-    "verilator_compile": 4.0878678989829496,
-    "verilator_simulation": 0.09812056308146566,
-    "yosys_elaboration": 0.4893497950397432
+    "iverilog_compile": 0.01565423095598817,
+    "iverilog_simulation": 1.3154891660669819,
+    "verilator_compile": 4.109615917084739,
+    "verilator_simulation": 0.09876388299744576,
+    "yosys_elaboration": 0.45434480998665094
   }
 }
