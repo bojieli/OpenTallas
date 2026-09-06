@@ -65,6 +65,7 @@ from compiler.ir.v3.kernel_ir import (
 from compiler.ir.v3.lowering import KERNEL_TO_ENGINE
 from runtime.abi3.constants import (
     Feature,
+    IntegrityMode,
     Link,
     Major,
     NO_ID,
@@ -1745,6 +1746,98 @@ def test_mutable_state_never_lives_in_rom(qwen_build, deepseek_build):
                 int(StorageClass.STATE),
                 int(StorageClass.HOST),
             }
+
+
+# ---------------------------------------------------------------------------
+# AM-C3 memory.sram_kv: where the KV arena physically lives
+# ---------------------------------------------------------------------------
+def _kv_object(deployment):
+    """The one direct-buffer KV object this lowering emitted."""
+    note = deployment.manifest()["notes"]["rom_lowering"]["direct_buffer_state"]
+    assert note["classes"] == ["kv_cache"]
+    objects = [
+        d
+        for d in deployment.table.descriptors()
+        if d.descriptor_type == ExtendedDescriptorType.MEMORY_OBJECT
+        and d.payload["size_bytes"] > 0
+        and d.permissions & int(Permission.WRITE)
+        and d.payload["integrity_mode"] == int(IntegrityMode.CRC_AND_ECC)
+    ]
+    assert len(objects) == 1, [d.descriptor_id for d in objects]
+    return note, objects[0]
+
+
+def _sram_kv_capability(arena_bytes: int, *, scratchpad: int = 1 << 20):
+    """A Qwen ROM capability that says its KV lives in SRAM, and how much."""
+    capability = qwen3_rom_capability(max_context_positions=16, vocabulary_size=32)
+    memory = {k: dict(v) for k, v in capability.memory.items()}
+    memory["sram"] = dict(memory["sram"], bytes=scratchpad + arena_bytes)
+    memory["sram_kv"] = {"bytes": arena_bytes}
+    return dataclasses.replace(capability, memory=memory)
+
+
+def test_without_the_signal_the_kv_arena_stays_in_hbm(qwen_build):
+    """Every shipped capability declares no sram_kv, and nothing moves.
+
+    This is the control for the two tests below: the placement is decided by
+    the capability and by nothing else, so a record that says nothing gets the
+    behaviour it always had.
+    """
+    deployment, _plan = qwen_build
+    note, obj = _kv_object(deployment)
+    assert note["storage_class"] == StorageClass.HBM.name
+    assert "sram_kv" not in note
+    assert obj.payload["storage_class"] == int(StorageClass.HBM)
+
+
+def test_the_capability_moves_the_kv_arena_into_sram(qwen_graph, qwen_build):
+    """Section 13 item 26: memory.sram_kv is the signal, and it is obeyed.
+
+    Section 2.8 names ``memory.sram_kv`` as the field an SRAMKV design point
+    differs by.  Before this, ``grep -r sram_kv runtime/ compiler/ configs/``
+    returned nothing and the backend placed the KV arena in HBM whatever the
+    design bought -- so a design point that buys no HBM at all was timed
+    moving its whole KV through one HBM channel.
+    """
+    hbm_deployment, _plan = qwen_build
+    _note, hbm_object = _kv_object(hbm_deployment)
+    arena = int(hbm_object.payload["size_bytes"])
+
+    capability = _sram_kv_capability(arena)
+    deployment, _plan = build_qwen3_rom_deployment(
+        qwen_graph, capability=capability
+    )
+    note, obj = _kv_object(deployment)
+    assert obj.payload["storage_class"] == int(StorageClass.SRAM)
+    assert obj.payload["size_bytes"] == arena
+    assert note["storage_class"] == StorageClass.SRAM.name
+    assert note["storage_class_by_class"] == {"kv_cache": StorageClass.SRAM.name}
+    assert note["sram_kv"]["signal"] == "capability.memory.sram_kv"
+    assert note["sram_kv"]["declared_bytes"] == arena
+    assert note["sram_kv"]["placed_bytes"] == arena
+    # The capacity proof charges it to SRAM, not to the session HBM pool.
+    footprint = deployment.manifest()["notes"]["memory_footprint"]
+    assert footprint["used"]["sram"] >= arena
+    assert footprint["session_bytes_in_hbm"] < arena
+    # And the authenticated program body is unchanged: this is a placement,
+    # not a lowering.  The header differs because it carries the capability
+    # digest, which is the point.
+    assert (split_program(deployment.program)[1]
+            == split_program(hbm_deployment.program)[1])
+
+
+def test_an_arena_too_small_for_the_kv_fails_closed(qwen_graph, qwen_build):
+    """A silent fallback to HBM is the defect, not the safe option.
+
+    A deployment that quietly put the KV back in HBM would produce exactly the
+    run item 26 exists because of -- a KV-bound step on a design that buys no
+    HBM -- and would report nothing while doing it.
+    """
+    _note, hbm_object = _kv_object(qwen_build[0])
+    arena = int(hbm_object.payload["size_bytes"])
+    capability = _sram_kv_capability(arena - 1)
+    with pytest.raises(RomLoweringError, match="does not fit alongside"):
+        build_qwen3_rom_deployment(qwen_graph, capability=capability)
 
 
 # ---------------------------------------------------------------------------

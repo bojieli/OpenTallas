@@ -606,10 +606,10 @@ def test_this_cells_collapsed_device_holds_its_design_points_capacity(pid):
     against the single-chip record's 103,079,215,104 and is refused before it
     can be timed.
     """
-    _anchor, _d, bodies, _paths, row = cell(pid)
-    for role, base_key, devices_key in (
-        ("rom_capability", "rom", "rom_devices"),
-        ("hbm_capability", "hbm", "hbm_devices"),
+    anchor, _d, bodies, _paths, row = cell(pid)
+    for role, base_key, devices_key, point, kv_store in (
+        ("rom_capability", "rom", "rom_devices", anchor.rom, anchor.rom_kv_store),
+        ("hbm_capability", "hbm", "hbm_devices", anchor.hbm, anchor.hbm_kv_store),
     ):
         base = json.loads(
             (REPO / row["base_capabilities"][base_key]).read_text()
@@ -621,12 +621,72 @@ def test_this_cells_collapsed_device_holds_its_design_points_capacity(pid):
                 continue
             if "bytes" not in base["memory"][klass]:
                 continue
-            expected = int(base["memory"][klass]["bytes"]) * devices
+            scaled = int(base["memory"][klass]["bytes"]) * devices
+            # A KV arena is the one capacity the collapse does NOT scale: the
+            # design point holds one of it for the session, and the base
+            # record was never sized for it.  Where the point puts KV in SRAM
+            # the arena is DECLARED SEPARATELY and added, and the next test
+            # checks the arena itself.
+            arena = int(emitted.get("sram_kv", {}).get("bytes", 0)) if (
+                klass == "sram" and kv_store == "sram") else 0
+            expected = scaled + arena
             assert emitted[klass]["bytes"] == expected, (
                 f"{pid}: {role} memory.{klass}.bytes is "
                 f"{emitted[klass]['bytes']}, but this cell collapses "
-                f"{devices} devices whose aggregate is {expected}"
+                f"{devices} devices whose aggregate is {scaled}"
+                + (f" plus a {arena}-byte declared SRAM KV arena" if arena
+                   else "")
             )
+
+
+@pytest.mark.parametrize("pid", PAIR_IDS)
+def test_a_cell_that_puts_kv_in_sram_declares_sram_that_holds_it(pid):
+    """Section 13 item 26: the derived SRAM must cover scratchpad AND KV.
+
+    The collapse used to scale the base record's scratchpad by device_count
+    and read ``kv_capacity_bytes`` nowhere, so the Qwen x5 SRAMKV point --
+    which provisions 1,207,959,552 bytes of SRAM KV -- was derived onto a
+    record declaring 671,088,640, exactly five copies of the base record's
+    128 MiB scratchpad.  Every SRAMKV cell was short, and no SRAM KV
+    placement could be admitted by any of them.
+
+    A cell whose point holds KV in HBM must declare no arena at all: an
+    unconditional arena would tell an HBMKV backend to move its KV.
+    """
+    anchor, _d, bodies, _paths, row = cell(pid)
+    for role, point, kv_store, devices_key in (
+        ("rom_capability", anchor.rom, anchor.rom_kv_store, "rom_devices"),
+        ("hbm_capability", anchor.hbm, anchor.hbm_kv_store, "hbm_devices"),
+    ):
+        memory = bodies[role]["memory"]
+        if kv_store != "sram":
+            assert "sram_kv" not in memory, (
+                f"{pid}: {role} holds KV in {kv_store!r} but declares an SRAM "
+                f"KV arena"
+            )
+            continue
+        provisioned = int(round(float(point["kv_capacity_bytes"])))
+        arena = int(memory["sram_kv"]["bytes"])
+        assert arena >= provisioned, (
+            f"{pid}: {role} declares a {arena}-byte SRAM KV arena against a "
+            f"design point that provisions {provisioned}"
+        )
+        base = json.loads(
+            (REPO / row["base_capabilities"][
+                "rom" if role == "rom_capability" else "hbm"]).read_text()
+        )
+        scratchpad = int(base["memory"]["sram"]["bytes"]) * int(row[devices_key])
+        assert int(memory["sram"]["bytes"]) >= scratchpad + provisioned, (
+            f"{pid}: {role} declares {memory['sram']['bytes']} bytes of SRAM "
+            f"against a {scratchpad}-byte scratchpad and a {provisioned}-byte "
+            f"KV store that must both fit in it"
+        )
+        # Every part is named, not just totalled.
+        parts = bodies[role]["derived_from"]["memory_capacity_provenance"]
+        kv = parts["parts"]["memory.sram.bytes"]["kv_arena"]
+        assert kv["design_point_kv_capacity_bytes"] == provisioned
+        assert kv["scratchpad_bytes"] == scratchpad
+        assert kv["bytes"] == arena
 
 
 @pytest.mark.parametrize("pid", PAIR_IDS)

@@ -1051,7 +1051,9 @@ def test_the_c2_gate_fails_on_the_audits_evidence_not_on_absence():
 # ---------------------------------------------------------------------------
 def _synthetic_run(*, cycles, clock, compute_cycles, tensor_cycles,
                    rom_busy, rom_units, hbm_busy, hbm_units,
-                   rom_bytes_read, hbm_read, hbm_written, weight_bytes_touched):
+                   rom_bytes_read, hbm_read, hbm_written, weight_bytes_touched,
+                   sram_busy=0, sram_units=128, sram_read=0, sram_written=0,
+                   kv_bytes_read=0):
     return {
         "timing": {
             "total_cycles": cycles, "clock_frequency_hz": clock,
@@ -1060,14 +1062,21 @@ def _synthetic_run(*, cycles, clock, compute_cycles, tensor_cycles,
         },
         "engines": {"tensor": {"compute_bound_cycles": tensor_cycles}},
         "memory": {
-            "rom": {"busy_cycles": rom_busy,
+            "rom": {"busy_cycles": rom_busy, "bytes_read": rom_bytes_read,
+                    "bytes_written": 0,
                     "structure": {"units": rom_units, "ports_per_unit": 1}},
-            "hbm": {"busy_cycles": hbm_busy,
+            "hbm": {"busy_cycles": hbm_busy, "bytes_read": hbm_read,
+                    "bytes_written": hbm_written,
                     "structure": {"units": hbm_units, "ports_per_unit": 1}},
+            "sram": {"busy_cycles": sram_busy, "bytes_read": sram_read,
+                     "bytes_written": sram_written,
+                     "structure": {"units": sram_units, "ports_per_unit": 1}},
         },
         "counters": {"architectural": {
             "rom.bytes_read": rom_bytes_read, "hbm.bytes_read": hbm_read,
             "hbm.bytes_written": hbm_written, "instructions.retired": 2104,
+            "sram.bytes_read": sram_read, "sram.bytes_written": sram_written,
+            "attention.kv_bytes_read": kv_bytes_read,
         }},
         "tiling": {"by_family": {"tensor": {
             "memory_traffic": {"bytes_touched": weight_bytes_touched}}}},
@@ -1102,6 +1111,90 @@ def _anchor_run():
         hbm_written=arch["hbm.bytes_written"],
         weight_bytes_touched=body["tiling"]["by_family"]["tensor"][
             "memory_traffic"]["bytes_touched"],
+        sram_busy=body["memory"]["sram"]["busy_cycles"],
+        sram_units=body["memory"]["sram"]["structure"]["units"],
+        sram_read=arch.get("sram.bytes_read", 0),
+        sram_written=arch.get("sram.bytes_written", 0),
+        kv_bytes_read=arch.get("attention.kv_bytes_read", 0),
+    )
+
+
+# ---------------------------------------------------------------------------
+# Section 13 item 26: the kv_store_mismatch guard, on the --reconcile path
+# ---------------------------------------------------------------------------
+def test_a_run_that_holds_kv_where_its_point_says_is_admitted(anchor):
+    """The positive half of the guard, on the anchor's own committed run."""
+    from tools.derive_cycle_machine import kv_placement
+
+    run = _anchor_run()
+    verdict = kv_placement(run, anchor.rom_kv_store)
+    assert verdict["exercised"] is True, verdict["refused_because"]
+    assert verdict["refused_because"] is None
+    assert verdict["bytes_read_from_declared_store"] >= verdict[
+        "kv_bytes_read_by_attention"] > 0
+
+
+def test_a_run_that_does_not_exercise_its_cells_kv_placement_is_refused(anchor):
+    """Section 13 item 26, second half: the rule the matrix had and this did not.
+
+    ``results/derived/n5_design_target_cycle_matrix.json`` refused all five
+    SRAMKV Qwen cells with step ``kv_store_mismatch`` -- "the qwen3-8b ROM
+    product stores KV in HBM, so this run does not exercise the design point's
+    KV placement and is not evidence for this cell" -- while ``--reconcile``
+    applied no such rule, so gate C3 read exactly the run the matrix rejected.
+    The rig here is that run's shape: the KV traffic in HBM while the point
+    says SRAM.
+    """
+    from tools.derive_cycle_machine import kv_placement, reconcile
+
+    run = _anchor_run()
+    arch = run["counters"]["architectural"]
+    kv = arch["attention.kv_bytes_read"]
+    # Move every KV byte back to HBM, which is where the compiled ROM product
+    # put it before the backend was given memory.sram_kv.
+    rigged = json.loads(json.dumps(run))
+    rigged["memory"]["sram"]["bytes_read"] = 3_850_244
+    rigged["memory"]["hbm"]["bytes_read"] = kv + 1
+    rigged["counters"]["architectural"]["sram.bytes_read"] = 3_850_244
+    rigged["counters"]["architectural"]["hbm.bytes_read"] = kv + 1
+
+    verdict = kv_placement(rigged, "sram")
+    assert verdict["exercised"] is False
+    assert "does not exercise the design point's KV placement" in verdict[
+        "refused_because"]
+    # The same run IS evidence for a cell whose point holds KV in HBM.
+    assert kv_placement(rigged, "hbm")["exercised"] is True
+
+    # And the refusal reaches the field gate C3 reads, whatever the regimes do.
+    report = reconcile(anchor, rigged, run)
+    regime = report["targets"]["rom"]["binding_regime"]
+    assert anchor.rom_kv_store == "sram"
+    assert regime["same_regime"] is False
+    assert regime["refused_because"] == verdict["refused_because"]
+
+
+def test_a_run_that_reads_no_kv_at_all_is_refused_rather_than_passed(anchor):
+    """Absence of evidence is FAIL, never a vacuous pass."""
+    from tools.derive_cycle_machine import kv_placement
+
+    rigged = json.loads(json.dumps(_anchor_run()))
+    rigged["counters"]["architectural"]["attention.kv_bytes_read"] = 0
+    for store in ("sram", "hbm"):
+        verdict = kv_placement(rigged, store)
+        assert verdict["exercised"] is False
+        assert "read 0 KV bytes" in verdict["refused_because"]
+
+
+def test_the_kv_term_is_read_off_the_store_the_point_names(anchor):
+    """It was read off HBM unconditionally, which an SRAMKV point makes wrong."""
+    from tools.derive_cycle_machine import _store_wall_seconds, reconcile
+
+    run = _anchor_run()
+    report = reconcile(anchor, run, run)
+    term = report["targets"]["rom"]["terms"]["kv_read"]
+    assert term["kv_store"] == anchor.rom_kv_store
+    assert term["cycle_s"] == pytest.approx(
+        _store_wall_seconds(run, anchor.rom_kv_store), rel=1e-12
     )
 
 
