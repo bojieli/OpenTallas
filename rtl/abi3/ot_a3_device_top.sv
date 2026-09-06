@@ -394,13 +394,22 @@ module ot_a3_device_top #(
     reg          refused_q;
     reg          refuse_done_q;
     reg  [31:0]  refused_count_q;
+    reg          start_q;
 
     wire completion_retires = complete_valid &&
         ((complete_eos_reason == A3_EOS_OFFICIAL) ||
          (complete_eos_reason == A3_EOS_MAX_NEW_TOKENS));
     // A start offered to a retired session, with the sequencer idle.  The
-    // sequencer never sees it.
-    wire refuse_start = start && session_retired_q && !seq_busy;
+    // sequencer never sees it.  The refusal is taken on the RISING EDGE of
+    // start, not on its level: the sequencer leaves S_IDLE on the first
+    // cycle it sees start and so takes one transaction however long start is
+    // held, and a refusal has to be the same one transaction -- one `done`
+    // pulse and one count -- or a held start would refuse the same
+    // transaction once per cycle.  ``seq_start`` stays the level the
+    // sequencer always had, so an unretired session behaves bit for bit as
+    // before.
+    wire start_edge   = start && !start_q;
+    wire refuse_start = start_edge && session_retired_q && !seq_busy;
     wire seq_start    = start && !session_retired_q;
 
     always @(posedge clk or negedge rst_n) begin
@@ -410,7 +419,9 @@ module ot_a3_device_top #(
             refused_q            <= 1'b0;
             refuse_done_q        <= 1'b0;
             refused_count_q      <= 32'd0;
+            start_q              <= 1'b0;
         end else begin
+            start_q       <= start;
             refuse_done_q <= 1'b0;
             if (completion_retires) begin
                 session_retired_q    <= 1'b1;
