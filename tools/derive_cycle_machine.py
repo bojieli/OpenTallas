@@ -4661,14 +4661,27 @@ def emit_cell(anchor: Anchor, config_dir: Path, artifact_dir: Path, *,
 
 CALIBRATION_SCHEMA = "opentallas.derived_cycle_machine.calibration.v1"
 
-#: docs/CHIP_ARCHITECTURE_DESIGN.md section 11.5, row "L3 / G4, C3, C4":
-#: "block cycles within +/-10 % of L1".
+#: +/-10 %.  The design document's section 11.5 used to carry a table row
+#: "L3 / G4, C3, C4" stating "block cycles within +/-10 % of L1"; commit
+#: 13e6a5a replaced that table with prose and the row no longer exists.  The
+#: band survives in the gate's own evaluator note
+#: (configs/gates/redesign_gates.json, G4: "docs/CHIP_ARCHITECTURE_DESIGN.md
+#: section 11.5, L3: +/-10 percent, boundary 120 cycles"), which is the
+#: contract and is not edited here.  ``CALIBRATION_BAND_SOURCE`` records
+#: where it is read from so the artifact cannot cite a row that is gone.
 CALIBRATION_BAND = (0.9, 1.1)
+CALIBRATION_BAND_SOURCE = (
+    "configs/gates/redesign_gates.json gate G4 evaluator.note (+/-10 percent); "
+    "docs/CHIP_ARCHITECTURE_DESIGN.md section 11.5 item 5 states the rung.  The "
+    "section 11.5 table row 'L3 / G4, C3, C4' the note cites was replaced by "
+    "prose at commit 13e6a5a and no longer exists"
+)
 
 DEFAULT_LANE_RECORD = "results/rtl/abi3_pipelined_lane.json"
 DEFAULT_LANE_GROUPS_RECORD = "results/rtl/abi3_pipelined_lane_groups.json"
 DEFAULT_LQ8_RECORD = "results/rtl/abi3_lq8.json"
 DEFAULT_CONTROL_PLANE_RECORD = "results/rtl/abi3_deployment_campaign.json"
+DEFAULT_BOUNDARY_CHAIN_RECORD = "results/rtl/abi3_boundary_chain.json"
 DEFAULT_RECONCILIATION = "results/derived/qwen3_n5_design_target_reconciliation.json"
 DEFAULT_CALIBRATION_OUT = "results/derived/qwen3_n5_design_target_calibration.json"
 DESIGN_DOC = "docs/CHIP_ARCHITECTURE_DESIGN.md"
@@ -4730,32 +4743,92 @@ def _doc_row(text: str, first_cell: str) -> list[str]:
 
 
 def design_boundary_rule(doc_text: str) -> dict[str, Any]:
-    """Read the design's boundary figure and the L3/G4 rung rule off the doc.
+    """Read the design's boundary statement and the L3 / G4 rung off the doc.
 
-    Both numbers are the design document's, not this tool's: section 2.1 row
-    33 states the per-boundary exposed latency and its band, and section 11.5
-    states what the L3 / G4 rung must reach.  They are parsed rather than
-    typed here so the artifact cannot drift from the document it cites.
+    Section 2.1 row 33 is the design's per-boundary statement and it is parsed
+    rather than typed here so the artifact cannot drift from the document it
+    cites.  The row has two forms and the tool must read both, because the
+    design changed it:
+
+    * before commit ``13e6a5a`` it asserted a figure and a band -- "**120
+      cycles** (band 107-137): control tree 8 + fill 36 + ..." -- and the
+      calibration compared the model's exposed chain with it;
+    * since ``13e6a5a`` it asserts none: "Dependent boundary | unmeasured;
+      neither historical 39 nor 120 cycles is calibrated; no frontier overlap
+      credited".  The design withdrew the number rather than defending it, and
+      section 11.5 item 5 and section 13 item 13 say the same thing.
+
+    In the second form there is no band for a model figure to sit inside, so
+    the *only* way the rung's boundary item can be met is an RTL-measured
+    boundary with ``technology.json#latency`` re-derived from it -- which is
+    exactly what section 13 item 13's acceptance says.  Absence is FAIL: a
+    withdrawn design figure does not make an unmeasured boundary passable.
+
+    Section 11.5's "L3 / G4, C3, C4" table row was replaced by prose in the
+    same commit; the rung text is taken from the numbered item that replaced
+    it, and its absence is refused rather than defaulted.
     """
     import re
 
     row33 = _doc_row(doc_text, "33")
-    m = re.search(r"\*\*(\d+) cycles\*\* \(band (\d+)[–-](\d+)\)", row33[2])
-    if not m:
+    asserted = re.search(r"\*\*(\d+) cycles\*\* \(band (\d+)[\u2013-](\d+)\)", row33[2])
+    withdrawn = re.search(
+        r"unmeasured; neither historical (\d+) nor (\d+) cycles is calibrated",
+        row33[2],
+    )
+    if asserted:
+        cycles, lo, hi = (int(asserted.group(i)) for i in (1, 2, 3))
+        design: dict[str, Any] = {
+            "design_states_a_figure": True,
+            "design_cycles_per_boundary": cycles,
+            "design_band": [lo, hi],
+            "design_decomposition": (
+                row33[2].split(":", 1)[1].split(";")[0].strip()
+                if ":" in row33[2] else ""
+            ),
+        }
+    elif withdrawn:
+        design = {
+            "design_states_a_figure": False,
+            "design_cycles_per_boundary": None,
+            "design_band": None,
+            "design_decomposition": "",
+            "design_withdrawn_figures_cycles": [
+                int(withdrawn.group(1)), int(withdrawn.group(2))
+            ],
+            "design_withdrawal_rule": (
+                "section 2.1 row 33 asserts no per-boundary figure: it states "
+                "the boundary unmeasured and names 39 and 120 as historical "
+                "numbers that are not calibrated.  With no asserted figure "
+                "there is no band a model number could sit inside, so the "
+                "boundary item of the L3 / G4 rung can be met only by an "
+                "RTL-measured boundary with technology.json#latency re-derived "
+                "from it (section 13 item 13's acceptance).  A design that "
+                "withdrew its number did not thereby make the boundary passable"
+            ),
+        }
+    else:
         raise DerivationError(
-            f"{DESIGN_DOC} section 2.1 row 33 no longer states '**N cycles** "
-            f"(band lo-hi)': {row33[2][:120]!r}"
+            f"{DESIGN_DOC} section 2.1 row 33 states neither '**N cycles** "
+            f"(band lo-hi)' nor 'unmeasured; neither historical A nor B cycles "
+            f"is calibrated': {row33[2][:160]!r}"
         )
-    cycles, lo, hi = (int(m.group(i)) for i in (1, 2, 3))
-    decomposition = row33[2].split(":", 1)[1].split(";")[0].strip() if ":" in row33[2] else ""
-    l3 = _doc_row(doc_text, "L3 / G4, C3, C4")
+    rung = [
+        line.strip() for line in doc_text.splitlines()
+        if line.lstrip().startswith("5. **L3/G4:**")
+    ]
+    if len(rung) != 1:
+        raise DerivationError(
+            f"{DESIGN_DOC} section 11.5: expected exactly one numbered item "
+            f"beginning '5. **L3/G4:**', found {len(rung)}; the rung rule the "
+            "calibration is judged against cannot be read off the document"
+        )
     return {
-        "design_cycles_per_boundary": cycles,
-        "design_band": [lo, hi],
-        "design_decomposition": decomposition,
+        **design,
         "design_source": f"{DESIGN_DOC} section 2.1 row 33: {row33[1]}",
-        "rung_rule": l3[3],
-        "rung_rule_source": f"{DESIGN_DOC} section 11.5 row '{l3[0]}' column 'number it must reach'",
+        "design_statement": row33[2],
+        "rung_rule": rung[0],
+        "rung_rule_source": f"{DESIGN_DOC} section 11.5 item 5",
     }
 
 
@@ -4965,70 +5038,294 @@ def calibrate_rate_record(
     return rows_out
 
 
-def calibrate_control_plane(record: Mapping[str, Any], sequencer: Any) -> dict[str, Any]:
-    """The L1-CP record against the model's sequencer cost -- if it can be.
+def _control_plane_steps(
+    *, fetched: int, predicated_off: int, issued: int, branches: int,
+    loop_iterations: int, wait_events: int,
+) -> tuple[list[Any], dict[str, int]]:
+    """The model's step list for one transaction's measured instruction mix.
 
-    The whole-transaction co-simulation records what the microsequencer
-    fetched, retired and issued per case and compares every issue and view
-    with the golden device, but neither the campaign tool nor its harness
-    counts clock cycles, so there is no per-transaction cycle count to divide
-    the model's sequencer charge by.  The model's front-end charge for the
-    recorded fetch count is written as the lower bound it is; the ratio is
-    ``null`` and the block is reported as unmeasured.
+    Every number here is an RTL counter the campaign compared with
+    ``runtime.sim.device.Device`` before it was printed, so the step list is
+    the program the RTL actually executed and not a description of it.  The
+    mapping onto the model's kinds is the model's own:
+
+      * ``count_predicated_off`` instructions are ``PREDICATE`` steps -- the
+        model charges ``fetch + predicate`` and no issue slot;
+      * ``count_branches`` are ``CONTROL`` / ``BRANCH`` and
+        ``count_loop_iterations`` are ``CONTROL`` / ``LOOP_NEXT``, which the
+        model charges ``issue + branch`` and ``issue + loop``;
+      * ``count_issued`` are engine steps;
+      * whatever is left of ``count_fetched`` is a control instruction the
+        model charges an issue slot and nothing else (``CONTROL`` / ``FENCE``
+        is that path).  ``LOOP_SETUP`` lives in this remainder and the model
+        would charge it ``sequencer.loop_cycles`` more, which is why the
+        caller reports a bound as well as a point value;
+      * ``count_wait_events`` instructions carry a wait set, attached to the
+        engine steps first because that is where the shipped programs put
+        them; the model charges ``sequencer.wait_check_cycles`` per such step.
+
+    Returns the steps and the mix, so the artifact can restate the mix it
+    built them from.
+    """
+    from runtime.cycle.model import TraceStep
+    from runtime.abi3.constants import Control
+
+    other = fetched - predicated_off - issued - branches - loop_iterations
+    if other < 0:
+        raise DerivationError(
+            f"the control-plane case reports {fetched} fetched instructions "
+            f"but {predicated_off} predicated off + {issued} issued + "
+            f"{branches} branches + {loop_iterations} loop iterations = "
+            f"{fetched - other}; the mix does not fit inside the fetch count"
+        )
+    if wait_events > issued + other + branches + loop_iterations:
+        raise DerivationError(
+            f"the control-plane case reports {wait_events} wait-set "
+            f"evaluations against {issued + other + branches + loop_iterations} "
+            "instructions that could carry one"
+        )
+    steps: list[Any] = []
+
+    def add(kind: str, **kw: Any) -> None:
+        steps.append(TraceStep(index=len(steps), kind=kind, node=0, **kw))
+
+    for _ in range(predicated_off):
+        add("PREDICATE")
+    # The wait sets go on the engine steps first, then spill onto the control
+    # instructions; the model charges the same wait check either way.
+    remaining_waits = wait_events
+    for _ in range(issued):
+        producers = (7,) if remaining_waits > 0 else ()
+        remaining_waits -= 1 if producers else 0
+        # ``family`` is deliberately outside the model's queue map: the RTL's
+        # engines are recording no-ops that complete in the cycle after
+        # acceptance and the issue record store's high-water mark on this run
+        # is 1, so no queue admission stall is possible on the RTL side and
+        # the model is charged on the path that has none.
+        add("ENGINE", family="observation", mnemonic="OBSERVATION.COUNTER_SNAPSHOT",
+            wait_producers=producers)
+    for _ in range(branches):
+        producers = (7,) if remaining_waits > 0 else ()
+        remaining_waits -= 1 if producers else 0
+        add("CONTROL", sub=int(Control.BRANCH), mnemonic="CONTROL.BRANCH",
+            wait_producers=producers)
+    for _ in range(loop_iterations):
+        producers = (7,) if remaining_waits > 0 else ()
+        remaining_waits -= 1 if producers else 0
+        add("CONTROL", sub=int(Control.LOOP_NEXT), mnemonic="CONTROL.LOOP_NEXT",
+            wait_producers=producers)
+    for _ in range(other):
+        producers = (7,) if remaining_waits > 0 else ()
+        remaining_waits -= 1 if producers else 0
+        add("CONTROL", sub=int(Control.FENCE), mnemonic="CONTROL.FENCE",
+            wait_producers=producers)
+    mix = {
+        "predicate_steps": predicated_off,
+        "engine_steps": issued,
+        "control_branch_steps": branches,
+        "control_loop_next_steps": loop_iterations,
+        "control_other_steps": other,
+        "steps_carrying_a_wait_set": wait_events,
+    }
+    return steps, mix
+
+
+def _control_plane_charge(steps: Sequence[Any], sequencer: Any) -> int:
+    """What ``CycleModel._time_steps`` charges the sequencer for these steps.
+
+    The returned value is the model's own ``seq_free`` -- the cycle the front
+    end is next free on after the last step -- produced by the model's code
+    on the step list above, not by a formula written here.
+    """
+    from collections import defaultdict
+
+    from runtime.cycle.model import CycleModel, MemorySystem
+
+    model = CycleModel.__new__(CycleModel)
+    model.sequencer = sequencer
+    seq_free, _end = model._time_steps(
+        list(steps), 0,
+        queues={}, engines={}, memory=MemorySystem.__new__(MemorySystem),
+        events={}, totals=defaultdict(int), counters=None, fabric=None,
+        fabric_timings=[], tiles_seen={}, node_id=0, node_count=1,
+    )
+    return int(seq_free)
+
+
+def calibrate_control_plane(record: Mapping[str, Any], sequencer: Any) -> dict[str, Any]:
+    """The L1-CP record against the model's sequencer cost.
+
+    The whole-transaction co-simulation runs the four shipped deployments'
+    programs through the real front end on two simulators and compares every
+    issue, every resolved view and every transaction counter with
+    ``runtime.sim.device.Device``.  Since section 13 item 13 it also counts
+    the transaction's **clock cycles** -- the span from the cycle after the
+    start pulse to the cycle ``done`` is asserted -- so the model's sequencer
+    charge finally has a measurement to be divided by.
+
+    The charge is the model's own: a step list built from the case's measured
+    instruction mix and handed to ``CycleModel._time_steps``.  Engine steps
+    are given a family outside the queue map because the RTL's engines are
+    recording no-ops completing in the cycle after acceptance and the issue
+    record store never held more than one operation on this run -- charging
+    the model a queue stall the RTL could not have had would be comparing two
+    different experiments.
+
+    Two ratios are emitted per case per simulator and **both** must be inside
+    the band:
+
+      ``transaction``           model charge over the whole measured span;
+      ``transaction_less_bench`` model charge over the span with the two
+                                cycle counts the checker itself caused --
+                                issue back-pressure and predicate service --
+                                removed.
+
+    Reporting only the second would be reading the metric in its optimistic
+    form; reporting only the first would charge the design for the bench.
+    Requiring both is the conservative reading and needs no choice between
+    them.
     """
     per_instruction = (
         sequencer.fetch_cycles + sequencer.decode_cycles + sequencer.issue_cycles
     )
     cases: list[dict[str, Any]] = []
-    cycle_fields = sorted(
-        k for sim in record.get("cases", []) for c in sim.get("observed_cases", [])
-        for k in c if "cycle" in k.lower()
-    )
+    rows: list[dict[str, Any]] = []
+    missing_cycles: list[str] = []
     for sim in record.get("cases", []):
         for c in sim.get("observed_cases", []):
             fetched = int(c["rtl_fetched"])
-            cases.append(_ratio_row(
-                block="control_plane",
-                quantity="transaction",
-                simulator=sim["name"],
-                case=int(c["index"]),
-                tag=c["tag"],
-                deployment_index=int(c["deployment_index"]),
-                phase=int(c["phase"]),
-                rtl_fetched=fetched,
-                rtl_retired=int(c["rtl_retired"]),
-                rtl_engine_issues=int(c["issues_compared"]),
-                rtl_predicates=int(c["predicates_compared"]),
-                verdict=c["verdict"],
-                rtl_cycles=None,
-                model_cycles=None,
-                model_front_end_cycles_lower_bound=fetched * per_instruction,
-                model_front_end_rule=(
-                    f"rtl_fetched x (sequencer.fetch_cycles {sequencer.fetch_cycles} "
-                    f"+ decode_cycles {sequencer.decode_cycles} + issue_cycles "
-                    f"{sequencer.issue_cycles}); waits, branch and loop cycles, "
-                    "queue and credit stalls are NOT included because the record "
-                    "carries no per-instruction trace to charge them from"
+            measured_cycles = c.get("rtl_transaction_cycles")
+            common = {
+                "block": "control_plane",
+                "simulator": sim["name"],
+                "case": int(c["index"]),
+                "tag": c["tag"],
+                "deployment_index": int(c["deployment_index"]),
+                "phase": int(c["phase"]),
+                "verdict": c["verdict"],
+            }
+            if measured_cycles is None:
+                missing_cycles.append(f"{sim['name']} case {c['index']}")
+                cases.append(_ratio_row(
+                    **common, quantity="transaction",
+                    rtl_cycles=None, model_cycles=None,
+                    rtl_fetched=fetched,
+                    model_front_end_cycles_lower_bound=fetched * per_instruction,
+                    why="the campaign record carries no cycle count for this case",
+                ))
+                continue
+            steps, mix = _control_plane_steps(
+                fetched=fetched,
+                predicated_off=int(c["rtl_predicated_off"]),
+                issued=int(c["rtl_issued"]),
+                branches=int(c["rtl_branches"]),
+                loop_iterations=int(c["rtl_loop_iterations"]),
+                wait_events=int(c["rtl_wait_events"]),
+            )
+            charge = _control_plane_charge(steps, sequencer)
+            # LOOP_SETUP is inside ``control_other_steps`` and the model would
+            # charge it ``loop_cycles`` more.  The RTL counts LOOP_NEXT
+            # executions only, so the setups are not separately observable;
+            # the upper bound charges every remaining control instruction as
+            # a setup, which is the widest the ambiguity can be.
+            charge_upper = charge + sequencer.loop_cycles * mix["control_other_steps"]
+            bench = (
+                int(c.get("issue_backpressure_cycles") or 0)
+                + int(c.get("predicate_service_cycles") or 0)
+            )
+            span_less_bench = max(1, int(measured_cycles) - bench)
+            shared = {
+                **common,
+                "rtl_transaction_cycles": int(measured_cycles),
+                "rtl_issue_backpressure_cycles": int(
+                    c.get("issue_backpressure_cycles") or 0
                 ),
-            ))
+                "rtl_predicate_service_cycles": int(
+                    c.get("predicate_service_cycles") or 0
+                ),
+                "rtl_wait_stall_cycles": c.get("wait_stall_cycles"),
+                "rtl_dependence_stall_cycles": c.get("dependence_stall_cycles"),
+                "rtl_fetched": fetched,
+                "rtl_retired": int(c["rtl_retired"]),
+                "instruction_mix": mix,
+                "model_cycles_upper_bound_all_loop_setups": charge_upper,
+                "model_rule": (
+                    "CycleModel._time_steps over a step list built from this "
+                    "case's own compared counters, with no engine queue "
+                    "(the RTL's stub engines complete in the cycle after "
+                    "acceptance and reached depth 1); the value is the "
+                    "model's seq_free after the last step"
+                ),
+            }
+            for quantity, rtl_cycles, definition in (
+                ("transaction", int(measured_cycles),
+                 "the whole measured span, start pulse to done"),
+                ("transaction_less_bench", span_less_bench,
+                 "the span with the checker's own issue back-pressure and "
+                 "predicate-service cycles removed"),
+            ):
+                row = _ratio_row(
+                    **shared, quantity=quantity, definition=definition,
+                    rtl_cycles=rtl_cycles, model_cycles=charge,
+                )
+                row["ratio_model_upper_over_rtl"] = (
+                    charge_upper / rtl_cycles if rtl_cycles else None
+                )
+                rows.append(row)
+                cases.append(row)
+    measured = bool(rows) and not missing_cycles
+    within = bool(rows) and all(
+        r["within_band"] for r in rows
+    ) and all(
+        r["ratio_model_upper_over_rtl"] is not None
+        and CALIBRATION_BAND[0] <= r["ratio_model_upper_over_rtl"] <= CALIBRATION_BAND[1]
+        for r in rows
+    )
+    if measured:
+        why = (
+            "measured: results/rtl/abi3_deployment_campaign.json records the "
+            "transaction's clock cycles per case per simulator (the CYCLES "
+            "line written independently by rtl/test/tb_a3_deployment.sv and "
+            "rtl/test/a3_deployment_harness.cpp), and the model's sequencer "
+            "charge for the same measured instruction mix is divided by them"
+        )
+    else:
+        why = (
+            "results/rtl/abi3_deployment_campaign.json carries no clock-cycle "
+            "count for: " + ", ".join(missing_cycles[:6])
+            + ("" if len(missing_cycles) <= 6 else " and others")
+            + ".  Re-run tools/rtl_abi3_deployment_campaign.py against a "
+            "checker that prints the per-case CYCLES line."
+        )
     return {
         "record_schema": record.get("schema"),
         "campaign": record.get("campaign"),
-        "measured": False,
-        "status": "unmeasured",
-        "why": (
-            "results/rtl/abi3_deployment_campaign.json records rtl_fetched, "
-            "rtl_retired, issues_compared, views_compared and predicates_compared "
-            "per case and no clock-cycle count of any kind (cycle-named fields "
-            f"present: {cycle_fields or 'none'}); rtl/test/tb_a3_deployment.sv and "
-            "rtl/test/a3_deployment_harness.cpp count checks, not cycles.  The "
-            "model's sequencer cost per transaction (issue_cycles x issued "
-            "instructions + waits) therefore has nothing measured to be divided "
-            "by, and the control plane contributes no ratio.  Measuring it needs "
-            "the campaign to print the cycle count from the transaction's first "
-            "fetch to its completion, per case, on both simulators."
+        "measured": measured,
+        "status": "measured" if measured else "unmeasured",
+        "all_within_band": within,
+        "why": why,
+        "band_rule": (
+            "both ratios of every case on every simulator must be inside "
+            f"[{CALIBRATION_BAND[0]}, {CALIBRATION_BAND[1]}], and so must the "
+            "upper bound that charges every unclassified control instruction "
+            "a LOOP_SETUP.  The two simulators are two experiments over the "
+            "same program -- they drive different issue back-pressure -- so "
+            "they are not required to agree with each other, only each with "
+            "the model"
         ),
         "sequencer_parameters": sequencer.to_dict(),
+        "model_front_end_rule": (
+            f"per non-predicated instruction: sequencer.fetch_cycles "
+            f"{sequencer.fetch_cycles} + decode_cycles {sequencer.decode_cycles} "
+            f"+ issue_cycles {sequencer.issue_cycles}, plus branch_cycles "
+            f"{sequencer.branch_cycles} on a BRANCH, loop_cycles "
+            f"{sequencer.loop_cycles} on a LOOP_NEXT and wait_check_cycles "
+            f"{sequencer.wait_check_cycles} on an instruction carrying a wait "
+            "set; a predicated-off instruction costs fetch_cycles + "
+            f"predicate_cycles {sequencer.predicate_cycles}.  Charged by "
+            "CycleModel._time_steps, not by this restatement of it"
+        ),
+        "ratio_count": len(rows),
         "cases": cases,
     }
 
@@ -5036,15 +5333,29 @@ def calibrate_control_plane(record: Mapping[str, Any], sequencer: Any) -> dict[s
 def calibrate_boundary(
     anchor: Anchor, *, engine: Any, sequencer: Any, memory: Any,
     clock_hz: float, doc_text: str, fill_observations: Sequence[Mapping[str, Any]],
+    chain_record: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
-    """The model's per-boundary charge against the design's 120 cycles.
+    """The measured dependent boundary, and what the model charges for one.
 
-    Unmeasured: no routed or simulated boundary structure -- tile sequencer,
-    K-block tree, mesh return / broadcast, completion tree -- exists in
-    results/rtl or results/physical_abi3, and the lane records' own
-    ``claim_boundary`` excludes integration and the K-block tree.  What CAN be
-    computed is what the model charges between two serially dependent engine
-    instructions, from ``_time_steps`` on a two-step dependent chain.
+    Section 3.6: "Measure a two-tile dependent chain including the last
+    result, mesh transfer, operand readiness, queue admission, and
+    acknowledged completion; then update G4 and ``technology.json``."  Section
+    13 item 13's acceptance is that measurement on both simulators, replacing
+    both the model's 39 and the design's historical 120, with
+    ``technology.json#latency`` re-derived from it and graded ``executed``.
+
+    Two things are computed here and they are kept apart on purpose:
+
+    * what the *model* charges between two serially dependent engine
+      instructions, from ``CycleModel._time_steps`` on a two-step chain -- an
+      assumption, and labelled one;
+    * what the *RTL* measured, read from ``chain_record`` if one exists.
+
+    With no record the boundary is unmeasured and the item FAILS on absence,
+    which is the house rule: absence of evidence is FAIL, never "not
+    evaluable".  Since commit 13e6a5a the design asserts no figure of its own
+    either, so there is no band a model number could sit inside and no reading
+    on which an unmeasured boundary passes.
     """
     from collections import defaultdict
 
@@ -5054,7 +5365,7 @@ def calibrate_boundary(
 
     rule = design_boundary_rule(doc_text)
     design = rule["design_cycles_per_boundary"]
-    lo, hi = rule["design_band"]
+    band = rule["design_band"]
 
     # Two dependent engine instructions: B waits on the event A signals.
     a = _calibration_step(1, 1, 1)
@@ -5096,22 +5407,55 @@ def calibrate_boundary(
     analytical_cycles = anchor.array_pass_boundary_s * clock_hz
     pfd = anchor.technology["latency"]["pipeline_fill_drain_s"]
     rederived = str(pfd.get("grade")) in {"derived", "executed", "measured"}
-    model_ratio = chain / design
-    fixed_ratio = engine.fixed_latency_cycles / design
-    within = lo <= chain <= hi
+
+    measurement = _boundary_measurement(chain_record)
+    measured = bool(measurement["measured"])
+    rtl_cycles = measurement["rtl_measured_boundary_cycles"]
+
+    model_ratio = (chain / design) if design else None
+    fixed_ratio = (engine.fixed_latency_cycles / design) if design else None
+    within = bool(band) and band[0] <= chain <= band[1]
+
+    # The item is met only on a measurement, and only when the technology
+    # constant the model's own boundary is derived from was re-derived from
+    # that measurement.  Neither half is optional.
+    rung_item_met = bool(measured and rederived)
+    if measured and not rederived:
+        decision = (
+            f"an RTL boundary of {rtl_cycles} cycles is recorded "
+            f"({measurement['source']}), but "
+            f"technology.json#latency.pipeline_fill_drain_s is still graded "
+            f"'{pfd.get('grade')}'.  Section 13 item 13's acceptance has two "
+            "halves and this is one of them; the item stays unmet until the "
+            "constant is re-derived from the measurement and graded 'executed'"
+        )
+    elif measured:
+        decision = (
+            f"met: the two-tile dependent chain measures {rtl_cycles} cycles "
+            f"({measurement['source']}) and "
+            "technology.json#latency.pipeline_fill_drain_s is graded "
+            f"'{pfd.get('grade')}', re-derived from it.  The measurement "
+            "replaces both the model's exposed chain and the design's "
+            "withdrawn historical figures"
+        )
+    else:
+        decision = (
+            "unmet, on absence: no RTL-measured dependent boundary exists "
+            f"({measurement['why']}).  The model's exposed chain is {chain} "
+            "cycles, which is an assumption and not a measurement, and since "
+            "commit 13e6a5a section 2.1 row 33 asserts no figure of its own, "
+            "so there is no band the model number could sit inside either.  "
+            "Absence of evidence is FAIL "
+            "(configs/gates/redesign_gates.json#principle), never "
+            "not_evaluable; and technology.json#latency.pipeline_fill_drain_s "
+            f"is graded '{pfd.get('grade')}'"
+        )
     return {
         **rule,
-        "measured": False,
-        "rtl_measured_boundary_cycles": None,
-        "why_unmeasured": (
-            "no routed or simulated boundary structure exists: results/rtl and "
-            "results/physical_abi3 hold the lane, the LQ8 block, the "
-            "microsequencer front end and the engines, and no tile sequencer, "
-            "K-block pairwise tree, mesh return / operand broadcast or completion "
-            "tree.  The lane records' claim_boundary.does_not_establish names "
-            "'integration' and 'k_block_tree' explicitly.  The 120-cycle figure "
-            "is a design statement (grade A in section 2.1), not a measurement."
-        ),
+        "measured": measured,
+        "rtl_measured_boundary_cycles": rtl_cycles,
+        "rtl_measurement": measurement,
+        "why_unmeasured": None if measured else measurement["why"],
         "model_exposed_chain_cycles": chain,
         "model_exposed_chain_rule": (
             "CycleModel._time_steps on two serially dependent engine instructions: "
@@ -5131,6 +5475,9 @@ def calibrate_boundary(
         ),
         "ratio_model_chain_over_design": model_ratio,
         "ratio_model_fixed_latency_over_design": fixed_ratio,
+        "ratio_model_chain_over_rtl_measured": (
+            chain / rtl_cycles if rtl_cycles else None
+        ),
         "model_chain_within_design_band": within,
         "technology_latency_rederived": rederived,
         "technology_latency_grade": {
@@ -5144,28 +5491,72 @@ def calibrate_boundary(
             "first_retire_cycle is the isolated lane's (or LQ8 block's) cycles "
             "from the start pulse to its first retirement, driven directly by "
             "the checker with no tile sequencer, staging SRAM or H-tree; it is "
-            "one component of the design's decomposition ('fill 36'), not a "
-            "boundary measurement, and it is not a block-cycle ratio.  The "
-            "model has no per-output retire time to compare it with; its "
-            "counterpart is the per-instruction fixed latency above."
+            "one component of a boundary, not a boundary measurement, and it "
+            "is not a block-cycle ratio.  The model has no per-output retire "
+            "time to compare it with; its counterpart is the per-instruction "
+            "fixed latency above."
         ),
-        "rung_item_met": False,
-        "rung_item_decision": (
-            "Section 11.5's rule for the L3 / G4 rung is quoted in rung_rule.  It "
-            "lists the boundary beside the block cycles, under the same +/-10 %, "
-            "as a number the rung must reach, and section 3.6 states 'Gate G4 "
-            "compares the RTL-measured boundary against this 120-cycle figure; "
-            "technology.json#latency must be re-derived from these structures or "
-            "the design's boundary shortened before G4 can pass at +/-10 %'.  The "
-            "rule therefore makes the boundary part of G4's band and it is FOLDED "
-            "into calibration.block_cycles_within_band.  It is unmet on every "
-            "reading: no RTL-measured boundary exists (absence is FAIL); the "
-            f"model's exposed chain is {chain} cycles against the design's {design} "
-            f"(ratio {model_ratio:.4f}, outside [{CALIBRATION_BAND[0]}, "
-            f"{CALIBRATION_BAND[1]}] and outside the design band [{lo}, {hi}]); "
-            "and technology.json#latency.pipeline_fill_drain_s is still graded "
-            f"'{pfd.get('grade')}', not re-derived from any RTL structure."
-        ),
+        "rung_item_met": rung_item_met,
+        "rung_item_decision": decision,
+    }
+
+
+def _boundary_measurement(record: Mapping[str, Any] | None) -> dict[str, Any]:
+    """What an RTL dependent-boundary record says, or why there is none.
+
+    The record is the two-tile chain campaign's artifact.  It counts only if
+    it passed, ran on both simulators, and the two agree on the boundary --
+    the same provenance spine every other rung carries.  Anything less is
+    unmeasured, and unmeasured is FAIL.
+    """
+    if record is None:
+        return {
+            "measured": False,
+            "rtl_measured_boundary_cycles": None,
+            "source": None,
+            "why": (
+                "no dependent-boundary record was supplied to the calibration "
+                "(--boundary-chain-record).  results/rtl holds the lane, the "
+                "LQ8 block, the T64 tile, the RE8 endpoint, the microsequencer "
+                "front end and the engines, and no artifact measures a "
+                "dependent chain across two tiles"
+            ),
+        }
+    status = record.get("status")
+    boundary = record.get("boundary") or {}
+    per_sim = boundary.get("per_simulator") or []
+    cycles = boundary.get("cycles")
+    simulators = sorted({str(entry.get("simulator")) for entry in per_sim})
+    if status != "pass":
+        why = f"the dependent-boundary record reports status {status!r}, not 'pass'"
+    elif len(simulators) < 2:
+        why = (
+            "the dependent-boundary record names "
+            f"{len(simulators)} simulator(s) ({', '.join(simulators) or 'none'}); "
+            "every rung in this programme carries both"
+        )
+    elif cycles is None:
+        why = "the dependent-boundary record carries no boundary.cycles figure"
+    elif not boundary.get("simulators_agree"):
+        why = (
+            "the two simulators do not agree on the measured boundary: "
+            f"{[entry.get('cycles') for entry in per_sim]}"
+        )
+    else:
+        return {
+            "measured": True,
+            "rtl_measured_boundary_cycles": int(cycles),
+            "source": record.get("campaign"),
+            "why": None,
+            "per_simulator": per_sim,
+            "decomposition": boundary.get("decomposition"),
+            "claim_boundary": record.get("claim_boundary"),
+        }
+    return {
+        "measured": False,
+        "rtl_measured_boundary_cycles": None,
+        "source": record.get("campaign"),
+        "why": why,
     }
 
 
@@ -5240,6 +5631,7 @@ def calibrate(
     rom_capability: Mapping[str, Any],
     doc_text: str,
     routed_records: Mapping[str, Mapping[str, Any]] | None = None,
+    boundary_chain: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """The ``calibration`` body: every ratio, both verdict fields, the rules."""
     from runtime.abi3.capability import Capability
@@ -5272,11 +5664,22 @@ def calibrate(
             slot["min"] = v if slot["min"] is None else min(slot["min"], v)
             slot["max"] = v if slot["max"] is None else max(slot["max"], v)
             slot["all_within_band"] = slot["all_within_band"] and r["within_band"]
+    # The control plane's ratios are kept out of ``ratios`` -- they have no
+    # adder-stage depth, so they belong in no per_depth row -- but they are
+    # inside the verdict exactly as the block ratios are.
+    cp_rows = [r for r in cp["cases"] if r.get("ratio_model_over_rtl") is not None]
+    cp_values = [r["ratio_model_over_rtl"] for r in cp_rows]
     per_block["control_plane"] = {
-        "ratios": 0, "min": None, "max": None, "all_within_band": False,
+        "ratios": len(cp_rows),
+        "min": min(cp_values) if cp_values else None,
+        "max": max(cp_values) if cp_values else None,
+        "all_within_band": bool(cp["all_within_band"]),
         "status": cp["status"],
     }
-    block_ratios_within = bool(ratios) and all(r["within_band"] for r in ratios)
+    block_ratios_within = (
+        bool(ratios) and all(r["within_band"] for r in ratios)
+        and bool(cp_rows) and bool(cp["all_within_band"])
+    )
     missing = [b for b in CALIBRATED_BLOCKS if per_block.get(b, {}).get("ratios", 0) == 0]
 
     fills = [
@@ -5290,6 +5693,7 @@ def calibrate(
     boundary = calibrate_boundary(
         anchor, engine=engine, sequencer=sequencer, memory=memory,
         clock_hz=clock_hz, doc_text=doc_text, fill_observations=fills,
+        chain_record=boundary_chain,
     )
     derived = calibrate_derived_machine(
         anchor, rom_table=rom_table, hbm_table=hbm_table,
@@ -5309,18 +5713,43 @@ def calibrate(
                 f"{r['ratio_model_over_rtl']:.4f}" for r in outside[:4]
             )
         )
+    cp_outside = [r for r in cp_rows if not r["within_band"]]
+    if cp_outside:
+        reasons.append(
+            f"{len(cp_outside)} of {len(cp_rows)} control-plane ratios outside "
+            f"[{lo}, {hi}]: "
+            + "; ".join(
+                f"{r['simulator']} case {r['case']} {r['quantity']} "
+                f"{r['ratio_model_over_rtl']:.4f} "
+                f"({r['model_cycles']} model over {r['rtl_cycles']} measured)"
+                for r in cp_outside[:2]
+            )
+        )
     if missing:
         reasons.append(
             "no measured cycles for: " + ", ".join(missing)
             + " (see control_plane.why)"
         )
     if not boundary["rung_item_met"]:
+        design_figure = boundary["design_cycles_per_boundary"]
         reasons.append(
-            "section 11.5 boundary item unmet: unmeasured, model chain "
-            f"{boundary['model_exposed_chain_cycles']} vs design "
-            f"{boundary['design_cycles_per_boundary']} (ratio "
-            f"{boundary['ratio_model_chain_over_design']:.4f}), "
-            "technology.json#latency not re-derived"
+            "section 11.5 boundary item unmet: "
+            + (
+                "RTL boundary "
+                f"{boundary['rtl_measured_boundary_cycles']} cycles measured"
+                if boundary["measured"] else "unmeasured"
+            )
+            + f", model chain {boundary['model_exposed_chain_cycles']} vs design "
+            + (
+                f"{design_figure}"
+                if design_figure is not None
+                else "no asserted figure (section 2.1 row 33 withdrew it)"
+            )
+            + (
+                ""
+                if boundary["technology_latency_rederived"]
+                else ", technology.json#latency not re-derived"
+            )
         )
     reason = (
         "; ".join(reasons) if reasons
@@ -5349,8 +5778,7 @@ def calibrate(
             "not_evaluable (configs/gates/redesign_gates.json#principle)."
         ),
         "reason": reason,
-        "band": {"low": lo, "high": hi,
-                 "source": f"{DESIGN_DOC} section 11.5 row 'L3 / G4, C3, C4'"},
+        "band": {"low": lo, "high": hi, "source": CALIBRATION_BAND_SOURCE},
         "block_ratios_within_band": block_ratios_within,
         "calibrated_blocks": list(CALIBRATED_BLOCKS),
         "blocks_without_measured_cycles": missing,
@@ -5461,6 +5889,7 @@ def calibration_input_paths(
     lq8_record: str = DEFAULT_LQ8_RECORD,
     control_plane_record: str = DEFAULT_CONTROL_PLANE_RECORD,
     reconciliation: str = DEFAULT_RECONCILIATION,
+    boundary_chain_record: str | None = None,
 ) -> dict[str, Path]:
     """Every file the calibration reads, by role; all are digested into the artifact."""
     tables = {
@@ -5469,12 +5898,17 @@ def calibration_input_paths(
         "rom_capability": REPO / f"configs/hardware/abi3_capability/{TECHNOLOGY_VIEW}/rom_qwen3_n5_v1.json",
         "hbm_capability": REPO / f"configs/hardware/abi3_capability/{TECHNOLOGY_VIEW}/hbm_sram_single_chip_n5_v1.json",
     }
+    chain = (
+        {"boundary_chain": REPO / boundary_chain_record}
+        if boundary_chain_record else {}
+    )
     return {
         "lane": REPO / lane_record,
         "lane_groups": REPO / lane_groups_record,
         "lq8": REPO / lq8_record,
         "control_plane": REPO / control_plane_record,
         "reconciliation": REPO / reconciliation,
+        **chain,
         "pair_artifact": REPO / "results/derived/qwen3_n5_design_target_machine_pair.json",
         "analytical": analytical,
         "technology": technology,
@@ -5517,6 +5951,7 @@ def run_calibration(anchor: Anchor, analytical: Path, technology: Path,
         rom_capability=load("rom_capability"),
         doc_text=paths["design_doc"].read_text(),
         routed_records=routed,
+        boundary_chain=load("boundary_chain") if "boundary_chain" in paths else None,
     )
 
 
@@ -5532,12 +5967,22 @@ def _print_calibration(body: Mapping[str, Any]) -> None:
               f"{r['ratio_model_over_rtl']:>10.6f} "
               f"{'in' if r['within_band'] else 'OUT'}")
     cp = cal["control_plane"]
-    print(f"control_plane: {cp['status']} -- {len(cp['cases'])} cases, no cycle count recorded")
+    cp_block = cal["per_block"]["control_plane"]
+    if cp_block["ratios"]:
+        print(
+            f"control_plane: {cp['status']} -- {cp_block['ratios']} ratios, "
+            f"min {cp_block['min']:.4f} max {cp_block['max']:.4f}, "
+            f"within band {cp_block['all_within_band']}"
+        )
+    else:
+        print(f"control_plane: {cp['status']} -- {len(cp['cases'])} cases, no cycle count recorded")
     b = cal["boundary"]
+    ratio = b["ratio_model_chain_over_design"]
     print(f"boundary: model chain {b['model_exposed_chain_cycles']} vs design "
           f"{b['design_cycles_per_boundary']} (band {b['design_band']}), ratio "
-          f"{b['ratio_model_chain_over_design']:.4f}, measured={b['measured']}, "
-          f"rung item met={b['rung_item_met']}")
+          + (f"{ratio:.4f}" if ratio is not None else "n/a")
+          + f", rtl measured={b['rtl_measured_boundary_cycles']}, "
+          f"measured={b['measured']}, rung item met={b['rung_item_met']}")
     d = cal["derived_machine"]
     print(f"derived machine: roof {d['rom_machine']['compute_roof_ops_s']:.10e} vs "
           f"anchor {d['anchor']['compute_roof_ops_s']:.10e}, relative error "
@@ -5592,6 +6037,12 @@ def main(argv: Sequence[str] | None = None) -> int:
     ap.add_argument("--lq8-record", default=DEFAULT_LQ8_RECORD)
     ap.add_argument("--control-plane-record", default=DEFAULT_CONTROL_PLANE_RECORD)
     ap.add_argument("--reconciliation", default=DEFAULT_RECONCILIATION)
+    ap.add_argument(
+        "--boundary-chain-record", default=DEFAULT_BOUNDARY_CHAIN_RECORD,
+        help="the RTL two-tile dependent-boundary campaign artifact (section 13 "
+             "item 13); omitted or absent leaves the boundary unmeasured, "
+             "which is a FAIL and not a not_evaluable",
+    )
     args = ap.parse_args(argv)
 
     config_dir = REPO / args.config_dir
@@ -5615,6 +6066,12 @@ def main(argv: Sequence[str] | None = None) -> int:
             lq8_record=args.lq8_record,
             control_plane_record=args.control_plane_record,
             reconciliation=args.reconciliation,
+            boundary_chain_record=(
+                args.boundary_chain_record
+                if args.boundary_chain_record
+                and (REPO / args.boundary_chain_record).exists()
+                else None
+            ),
         )
         out = REPO / args.calibration_out
         if args.check:

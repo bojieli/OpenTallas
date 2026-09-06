@@ -547,6 +547,13 @@ int main(int argc, char** argv) {
         unsigned views_seen = 0;
         unsigned predicates_seen = 0;
         uint64_t tick = 0;
+        // The transaction's clock cycles.  See the note in
+        // rtl/test/tb_a3_deployment.sv: tick is the count, and the two
+        // components below are this checker's own contribution to it.  They
+        // are observations, never compared -- the golden model has no clock,
+        // and the two checkers stall differently by design.
+        uint64_t cyc_issue_stall = 0;
+        uint64_t cyc_predicate_req = 0;
         guard = 0;
         while (!model.dut.done && guard < kRunGuard) {
             model.dut.issue_ready = model.ready_now(tick, index) ? 1 : 0;
@@ -562,6 +569,9 @@ int main(int argc, char** argv) {
                 ++case_completions;
             }
             model.settle();
+            if (model.dut.issue_valid && !model.dut.issue_ready)
+                ++cyc_issue_stall;
+            if (model.dut.predicate_read_req) ++cyc_predicate_req;
             if (model.dut.predicate_read_req) {
                 if (predicates_seen >= predicate_count) {
                     result.record(kPredicateOverflow, predicates_seen,
@@ -717,6 +727,20 @@ int main(int argc, char** argv) {
         std::printf("STALLS case=%u wait=%u dep=%u\n", index,
                     static_cast<unsigned>(model.dut.dbg_wait_stalls),
                     static_cast<unsigned>(model.dut.dbg_dep_stalls));
+        // The transaction's clock cycles, and the instruction mix the cycle
+        // model's sequencer charge is built from.  Every counter here was
+        // compared with the golden model above; the three cycle figures are
+        // this simulator's own and are compared with nothing.
+        std::printf("CYCLES case=%u total=%llu issue_stall=%llu "
+                    "predicate_req=%llu fetched=%u predicated_off=%u "
+                    "issued=%u branches=%u loops=%u waits=%u\n",
+                    index, static_cast<unsigned long long>(tick),
+                    static_cast<unsigned long long>(cyc_issue_stall),
+                    static_cast<unsigned long long>(cyc_predicate_req),
+                    model.dut.count_fetched, model.dut.count_predicated_off,
+                    model.dut.count_issued, model.dut.count_branches,
+                    model.dut.count_loop_iterations,
+                    model.dut.count_wait_events);
         model.step();
     }
     close_deployment();

@@ -212,6 +212,19 @@ STALLS_RE = re.compile(
     r"^STALLS case=(?P<index>\d+) wait=(?P<wait>\d+) dep=(?P<dep>\d+)$",
     re.MULTILINE,
 )
+# The transaction's clock cycles and the instruction mix behind them
+# (docs/CHIP_ARCHITECTURE_DESIGN.md section 13 item 13: "the control plane
+# records no cycles at all").  The three cycle figures are per simulator and
+# outside the cross-simulator projection; the six counters are compared with
+# the golden model inside each checker and are inside it.
+CYCLES_RE = re.compile(
+    r"^CYCLES case=(?P<index>\d+) total=(?P<total>\d+) "
+    r"issue_stall=(?P<issue_stall>\d+) predicate_req=(?P<predicate_req>\d+) "
+    r"fetched=(?P<fetched>\d+) predicated_off=(?P<predicated_off>\d+) "
+    r"issued=(?P<issued>\d+) branches=(?P<branches>\d+) "
+    r"loops=(?P<loops>\d+) waits=(?P<waits>\d+)$",
+    re.MULTILINE,
+)
 HOST_LOAD_RE = re.compile(
     r"^HOST_LOAD program_rows=(?P<program>\d+) descriptor_rows=(?P<desc>\d+) "
     r"writes=(?P<writes>\d+) refused=(?P<refused>\d+)$",
@@ -383,8 +396,35 @@ def parse_observation(log: str) -> dict[str, Any]:
         }
         for m in STALLS_RE.finditer(log)
     }
+    cycles = {
+        int(m.group("index")): {
+            "rtl_transaction_cycles": int(m.group("total")),
+            "issue_backpressure_cycles": int(m.group("issue_stall")),
+            "predicate_service_cycles": int(m.group("predicate_req")),
+            "rtl_predicated_off": int(m.group("predicated_off")),
+            "rtl_issued": int(m.group("issued")),
+            "rtl_branches": int(m.group("branches")),
+            "rtl_loop_iterations": int(m.group("loops")),
+            "rtl_wait_events": int(m.group("waits")),
+            "_fetched_on_cycles_line": int(m.group("fetched")),
+        }
+        for m in CYCLES_RE.finditer(log)
+    }
     for case in cases:
         case.update(stalls.get(case["index"], {}))
+        seen = cycles.get(case["index"])
+        if seen is not None:
+            # The CYCLES line republishes count_fetched.  A checker printing a
+            # different number on its two lines would be a defect in the
+            # checker, and a silent one: refuse rather than record it.
+            restated = seen.pop("_fetched_on_cycles_line")
+            if restated != case["rtl_fetched"]:
+                raise SystemExit(
+                    f"case {case['index']}: the CYCLES line reports "
+                    f"fetched={restated} where the CASE line reports "
+                    f"{case['rtl_fetched']}"
+                )
+            case.update(seen)
     deployments = [
         {
             "deployment_index": int(m.group("index")),
@@ -519,6 +559,13 @@ OBSERVATION_KEYS = (
     "predicates_compared", "predicates_expected", "rtl_fetched",
     "rtl_retired", "rtl_trap_class", "rtl_first_fault",
     "rtl_event_signal_error", "rtl_state_apply_overflow",
+    # The instruction mix, each already compared with the golden model inside
+    # both checkers (sites 18, 20, 21, 22, 36) and now also required to agree
+    # between them.  The cycle model's sequencer charge is built from these,
+    # so a projection that did not include them would let two simulators
+    # calibrate the control plane against different programs.
+    "rtl_predicated_off", "rtl_issued", "rtl_branches",
+    "rtl_loop_iterations", "rtl_wait_events",
 )
 
 
@@ -530,6 +577,81 @@ def projection(entry: dict[str, Any]) -> list[tuple[Any, ...]]:
     ]
 
 
+def control_plane_cycles(cases: list[dict[str, Any]]) -> dict[str, Any]:
+    """The transaction's clock cycles, per simulator, and what they mean.
+
+    Section 13 item 13's second half: "the control plane records no cycles at
+    all: L1-CP counts checks, fetches and retirements, never cycles, so its
+    rung cannot be calibrated until the campaign harness counts them."  This
+    is that count.  It is deliberately NOT a compared observation -- the two
+    checkers drive different issue back-pressure and different completion
+    patterns, so the two numbers are two experiments, and both are recorded.
+
+    The two components are the checker's own contribution to the total, so a
+    reader can say how much of the span is the design and how much is the
+    bench: ``issue_backpressure_cycles`` are cycles the front end held a valid
+    issue the checker refused, ``predicate_service_cycles`` cycles it waited
+    for the checker's Boolean answer.
+    """
+    per_simulator = [
+        {
+            "simulator": entry["name"],
+            "cases": [
+                {
+                    "index": case["index"],
+                    "tag": case["tag"],
+                    "rtl_transaction_cycles": case.get("rtl_transaction_cycles"),
+                    "issue_backpressure_cycles": case.get(
+                        "issue_backpressure_cycles"
+                    ),
+                    "predicate_service_cycles": case.get(
+                        "predicate_service_cycles"
+                    ),
+                    "wait_stall_cycles": case.get("wait_stall_cycles"),
+                    "dependence_stall_cycles": case.get("dependence_stall_cycles"),
+                    "rtl_fetched": case["rtl_fetched"],
+                    "rtl_retired": case["rtl_retired"],
+                    "rtl_issued": case.get("rtl_issued"),
+                    "rtl_predicated_off": case.get("rtl_predicated_off"),
+                    "rtl_branches": case.get("rtl_branches"),
+                    "rtl_loop_iterations": case.get("rtl_loop_iterations"),
+                    "rtl_wait_events": case.get("rtl_wait_events"),
+                }
+                for case in entry["observed_cases"]
+            ],
+        }
+        for entry in cases
+    ]
+    measured = all(
+        case["rtl_transaction_cycles"] is not None
+        for entry in per_simulator
+        for case in entry["cases"]
+    ) and bool(per_simulator)
+    return {
+        "measured": measured,
+        "definition": (
+            "clock cycles from the cycle after the transaction's start pulse "
+            "is deasserted to the cycle the design asserts done, counted "
+            "independently by each checker (tb_a3_deployment.sv's transaction "
+            "guard loop and a3_deployment_harness.cpp's tick) and printed on "
+            "the per-case CYCLES line"
+        ),
+        "not_compared_between_simulators": (
+            "the Icarus checker accepts an issue on an LFSR pattern and the "
+            "Verilator checker on three ticks in five offset by the case "
+            "index, and each answers predicate reads on its own edge, so the "
+            "two spans are two experiments over the same program.  Both are "
+            "recorded; neither is the other's regression"
+        ),
+        "consumed_by": (
+            "tools/derive_cycle_machine.py --calibrate, which divides the "
+            "cycle model's serial sequencer charge for the same instruction "
+            "mix by each of these spans (gate G4, section 11.5 rung L3)"
+        ),
+        "per_simulator": per_simulator,
+    }
+
+
 def compare_simulators(cases: list[dict[str, Any]]) -> dict[str, Any]:
     """Require the two simulators to have observed the same thing.
 
@@ -537,8 +659,11 @@ def compare_simulators(cases: list[dict[str, Any]]) -> dict[str, Any]:
     both sides of it, and the same number of issues, views and data-dependent
     predicate reads reached before it.  Two engines agreeing on where the RTL
     stopped is what makes a divergence a finding rather than one simulator's
-    opinion.  The run-ahead depth and the stall cycles are timing, per
-    simulator, and are deliberately outside the projection.
+    opinion.  The run-ahead depth, the stall cycles and the transaction's
+    clock cycles are timing, per simulator, and are deliberately outside the
+    projection: the two checkers apply different issue back-pressure and
+    completion patterns by design, so requiring their cycle counts to agree
+    would be requiring two different experiments to give one answer.
     """
     projections = [projection(entry) for entry in cases]
     agree = len(set(map(tuple, projections))) == 1 and bool(projections[0])
@@ -1122,6 +1247,7 @@ def run(
             "wrapper_readmemh_of_control_images": False,
             "per_simulator": [entry["host_load"] for entry in cases],
         },
+        "control_plane_cycles": control_plane_cycles(cases),
         "tools": tools,
         "git": git_identity(),
         "source_sha256": sources,

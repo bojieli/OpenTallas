@@ -487,6 +487,29 @@ module tb_a3_deployment;
     integer    deploy_predicates;
     integer    deploy_diverged;
 
+    // -- the transaction's clock cycles ---------------------------------
+    // L1-CP counted checks, fetches and retirements and never cycles, so the
+    // L3 calibration had nothing to divide the model's sequencer charge by
+    // (docs/CHIP_ARCHITECTURE_DESIGN.md section 13 item 13).  These three are
+    // that count, and nothing else changes: they are observations, never
+    // compared with the golden model, which has no clock.
+    //
+    //   cyc_total         clocks from the cycle after ``start`` is deasserted
+    //                     to the cycle ``done`` is observed -- the same
+    //                     definition the Verilator checker's ``tick`` has;
+    //   cyc_issue_stall   clocks in that window where the front end held a
+    //                     valid issue the checker's back-pressure refused;
+    //   cyc_predicate_req clocks in that window where the front end was
+    //                     waiting for the checker's Boolean answer.
+    //
+    // The last two are the checker's own contribution to the first.  The two
+    // checkers apply *different* back-pressure and completion patterns by
+    // design, so their cycle counts are not required to agree and are
+    // recorded per simulator.
+    integer    cyc_total;
+    integer    cyc_issue_stall;
+    integer    cyc_predicate_req;
+
     // -- engine issue consumer with pseudo-random back-pressure ----------
     // A real program is a long stream of issues; accepting on every cycle would
     // check the order but never the hold.
@@ -855,11 +878,18 @@ module tb_a3_deployment;
             @(negedge clk);
             start = 1'b0;
             guard = 0;
+            cyc_issue_stall = 0;
+            cyc_predicate_req = 0;
             while (!done && guard < RUN_GUARD) begin
                 @(negedge clk);
                 guard = guard + 1;
+                if (issue_valid && !issue_ready)
+                    cyc_issue_stall = cyc_issue_stall + 1;
+                if (predicate_read_req)
+                    cyc_predicate_req = cyc_predicate_req + 1;
             end
             if (!done) $fatal(1, "transaction timeout");
+            cyc_total = guard;
             capture = 1'b0;
 
             // Trap class first: when the RTL stops a program the golden model
@@ -960,6 +990,14 @@ module tb_a3_deployment;
             // behind an outstanding range.
             $display("STALLS case=%0d wait=%0d dep=%0d",
                      case_index, dbg_wait_stalls, dbg_dep_stalls);
+            // The transaction's clock cycles, and the instruction mix the
+            // cycle model's sequencer charge is built from.  Every counter
+            // here was compared with the golden model above; the three cycle
+            // figures are this simulator's own and are compared with nothing.
+            $display("CYCLES case=%0d total=%0d issue_stall=%0d predicate_req=%0d fetched=%0d predicated_off=%0d issued=%0d branches=%0d loops=%0d waits=%0d",
+                     case_index, cyc_total, cyc_issue_stall, cyc_predicate_req,
+                     count_fetched, count_predicated_off, count_issued,
+                     count_branches, count_loop_iterations, count_wait_events);
             @(negedge clk);
         end
         close_deployment;
