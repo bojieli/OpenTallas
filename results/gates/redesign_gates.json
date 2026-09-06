@@ -39,15 +39,15 @@
       "kind": "verification",
       "statement": "The final normalisation, the LM head and argmax execute in the integrated RTL on the composed trunk output and emit the oracle's first generated token id, on each of ROM and HBM.",
       "status": "fail",
-      "why": "no conforming record for storage class(es) ['rom', 'hbm']: results/rtl/abi3_g1d_token.json [rom]: oracle.agreement is False; token ids [] != oracle [3925]; head.final_norm_in_rtl is False, want True; head.lm_head_in_rtl is False, want True; head.argmax_in_rtl is False, want True; head.mismatched_logits is None, want 0; results/rtl/abi3_g1d_token.json [hbm]: oracle.agreement is False; token ids [] != oracle [3925]; head.final_norm_in_rtl is False, want True; head.lm_head_in_rtl is False, want True; head.argmax_in_rtl is False, want True; head.mismatched_logits is None, want 0"
+      "why": "no conforming record for storage class(es) ['rom', 'hbm']: results/rtl/abi3_g1d_token.json [rom]: oracle.agreement is False; token ids [] != oracle [3925]; head.final_norm_in_rtl is False, want True; head.lm_head_in_rtl is False, want True; head.argmax_in_rtl is False, want True; head.mismatched_logits is None, want 0; eos.official_eos_raised is None, want True; results/rtl/abi3_g1d_token.json [hbm]: oracle.agreement is False; token ids [] != oracle [3925]; head.final_norm_in_rtl is False, want True; head.lm_head_in_rtl is False, want True; head.argmax_in_rtl is False, want True; head.mismatched_logits is None, want 0; eos.official_eos_raised is None, want True"
     },
     {
-      "fails_when": "The traces diverge at any index, the pass count differs, EOS is not raised, the post-EOS instruction is admitted, or the control path was not the RTL's.",
+      "fails_when": "The traces diverge at any index, the position accounting differs, the EOS instruction pair is not issued in every pass, the post-EOS instruction is admitted, or the control path was not the RTL's.",
       "id": "G1e",
       "kind": "verification",
-      "statement": "All 19 passes of the governed workload execute through the real RTL control plane, with engine results injected only at the engine boundary, and the RTL issue trace equals the golden model's element for element; OFFICIAL_EOS is raised and the post-EOS instruction refused.",
+      "statement": "All of the governed workload's token positions are driven through the real RTL control plane, with engine results injected only at the engine boundary, and the RTL issue trace equals the golden model's element for element; the control plane issues the EOS instruction pair in every pass and refuses the post-EOS instruction.",
       "status": "fail",
-      "why": "no conforming record for storage class(es) ['rom', 'hbm']: results/rtl/abi3_g1e_control_end_to_end.json [rom]: passes.executed is 3, want 19; eos.official_eos_raised is False, want True; eos.post_eos_refused is False, want True; results/rtl/abi3_g1e_control_end_to_end.json [hbm]: passes.executed is 3, want 19; eos.official_eos_raised is False, want True; eos.post_eos_refused is False, want True"
+      "why": "no conforming record for storage class(es) ['rom', 'hbm']: results/rtl/abi3_g1e_control_end_to_end.json [rom]: eos.post_eos_refused is False, want True; results/rtl/abi3_g1e_control_end_to_end.json [hbm]: eos.post_eos_refused is False, want True"
     },
     {
       "fails_when": "Any operation is injected from the golden model, the reduced configuration is not structurally identical to the full one, or the emitted ids differ from the reduced oracle's.",
