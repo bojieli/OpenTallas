@@ -19,10 +19,10 @@
     "measurements": [
       {
         "artifact": "results/rtl/abi3_shipped_prefix_campaign.json",
-        "measured_simultaneous_objects": 0,
-        "usable": false,
+        "measured_simultaneous_objects": 13,
+        "usable": true,
         "what_it_ran": "the integrated shipped-prefix vehicle, whose case binds every object its own program span names",
-        "why_unusable": "1 bound source(s) have drifted since it was recorded"
+        "why_unusable": null
       },
       {
         "artifact": "results/rtl/a3_operator_admission_campaign.json",
@@ -132,7 +132,7 @@
       {
         "case_index": 0,
         "case_name": "qwen3-8b-rom-single-chip/decode",
-        "case_passed_in_the_campaign": false,
+        "case_passed_in_the_campaign": true,
         "objects": [
           4,
           5,
@@ -158,7 +158,7 @@
       {
         "case_index": 1,
         "case_name": "qwen3-8b-hbm-single-chip/decode",
-        "case_passed_in_the_campaign": false,
+        "case_passed_in_the_campaign": true,
         "objects": [
           1,
           2,
@@ -184,7 +184,7 @@
       {
         "case_index": 2,
         "case_name": "deepseek-v4-flash-rom-wafer/decode",
-        "case_passed_in_the_campaign": false,
+        "case_passed_in_the_campaign": true,
         "objects": [
           334,
           344,
@@ -197,7 +197,7 @@
       {
         "case_index": 3,
         "case_name": "deepseek-v4-flash-hbm-cluster/decode",
-        "case_passed_in_the_campaign": false,
+        "case_passed_in_the_campaign": true,
         "objects": [
           236,
           237,
@@ -281,13 +281,13 @@
   "records": [
     {
       "deployment": {
-        "deployment_sha256": "133afc13e1fcd2aade2e40530883c9986b0e920d99853990d9032fd777f26243",
+        "deployment_sha256": "6a06a4ea97f290326b448f4fcc8c654a9c32b61e707ca62ef070060daf9cc21b",
         "key": "qwen3-8b-rom-single-chip"
       },
       "execution": {
         "campaign": {
           "artifact": "results/rtl/abi3_shipped_prefix_campaign.json",
-          "artifact_sha256": "fcb1592760cde8d9a107995c0111f523e44ddf2d859c6d538e49f9bea09a8fc2",
+          "artifact_sha256": "e749f127b71f1d71724f1c2e8ab57d762b468f1fb8cb215a925c32a2400ce2a3",
           "bound_source_count": 60,
           "case_status": [
             {
@@ -297,13 +297,11 @@
             }
           ],
           "declared_git": {
-            "commit": "c20919d3a3ff7ccef04eaf66c2b34f0ca930a25b",
+            "commit": "82827ff64a24cba2cc88fed6cdb2abd8a5071e50",
             "worktree_dirty": false
           },
-          "drifted_source_count": 1,
-          "drifted_sources": [
-            "tools/build_abi3_shipped_prefix_vectors.py"
-          ],
+          "drifted_source_count": 0,
+          "drifted_sources": [],
           "evidence_class": "public_open_tool_rtl_simulation_composite",
           "expected_cases": [
             {
@@ -373,14 +371,14 @@
             "pages_evicted": 88,
             "refilled_bytes": 100663296,
             "result_words": 98304,
-            "sim_wall_s": 1423.7,
+            "sim_wall_s": 1443.712,
             "source_words": 65536,
             "trace_compared_elements": 0,
             "trace_divergence_index": -1,
             "trace_issues": 0,
             "trace_last_case_issues": 5,
             "trace_uncompared_fields": "none",
-            "wall_s": 1425.744,
+            "wall_s": 1445.773,
             "weight_image_bytes": 50331648,
             "window_cap_bytes": 8388608,
             "window_page_bytes": 1048576,
@@ -482,12 +480,12 @@
             "sha256": "2c8696111937aa85197cd2042dfed6cb3c5ef7f03fb80eba1fe3b93d40c1b87e"
           },
           "status": "pass",
-          "usable": false,
+          "usable": true,
           "vector_set_is_current": true,
           "vector_set_path": "testdata/compiler/abi3_shipped_prefix/abi3_shipped_prefix_vectors.json",
-          "vector_set_sha256_declared": "9bfe26104715ba70728aaccc40b4b43bfed995e84d5e812e9e90d0dd2dbe3efd",
-          "vector_set_sha256_on_disk": "9bfe26104715ba70728aaccc40b4b43bfed995e84d5e812e9e90d0dd2dbe3efd",
-          "why_unusable": "1 bound source(s) have drifted since it was recorded"
+          "vector_set_sha256_declared": "a00ff94fd825231de5c7121ac10833cb4763a31fe36f11187730de8d2e592e82",
+          "vector_set_sha256_on_disk": "a00ff94fd825231de5c7121ac10833cb4763a31fe36f11187730de8d2e592e82",
+          "why_unusable": null
         },
         "case_evidence": {
           "case_index": 0,
@@ -508,10 +506,10 @@
           },
           "observed_agrees_with_the_vector_set": true
         },
-        "evidence_class": "absent: no usable integrated RTL simulation of this lowering exists",
-        "simulated_cycles": null,
-        "simulated_cycles_scope": null,
-        "simulator": null,
+        "evidence_class": "public_open_tool_rtl_simulation_composite",
+        "simulated_cycles": 252057600,
+        "simulated_cycles_scope": "the integrated run's own total, over all four cases of the one binary; the harness reports one cycle count for the run and this rung does not split it per lowering, so the same number appears in both records and must not be added across them",
+        "simulator": "verilator",
         "vehicle": {
           "bridge": "rtl/abi3/ot_a3_engine_issue_bridge.sv",
           "bridge_sha256": "0be35e7fc669f34f8c7c9d6a0e12fe1b11c08b70bc138cab386173ee1b7c7f66",
@@ -524,10 +522,10 @@
             "measurements": [
               {
                 "artifact": "results/rtl/abi3_shipped_prefix_campaign.json",
-                "measured_simultaneous_objects": 0,
-                "usable": false,
+                "measured_simultaneous_objects": 13,
+                "usable": true,
                 "what_it_ran": "the integrated shipped-prefix vehicle, whose case binds every object its own program span names",
-                "why_unusable": "1 bound source(s) have drifted since it was recorded"
+                "why_unusable": null
               },
               {
                 "artifact": "results/rtl/a3_operator_admission_campaign.json",
@@ -637,7 +635,7 @@
               {
                 "case_index": 0,
                 "case_name": "qwen3-8b-rom-single-chip/decode",
-                "case_passed_in_the_campaign": false,
+                "case_passed_in_the_campaign": true,
                 "objects": [
                   4,
                   5,
@@ -663,7 +661,7 @@
               {
                 "case_index": 1,
                 "case_name": "qwen3-8b-hbm-single-chip/decode",
-                "case_passed_in_the_campaign": false,
+                "case_passed_in_the_campaign": true,
                 "objects": [
                   1,
                   2,
@@ -689,7 +687,7 @@
               {
                 "case_index": 2,
                 "case_name": "deepseek-v4-flash-rom-wafer/decode",
-                "case_passed_in_the_campaign": false,
+                "case_passed_in_the_campaign": true,
                 "objects": [
                   334,
                   344,
@@ -702,7 +700,7 @@
               {
                 "case_index": 3,
                 "case_name": "deepseek-v4-flash-hbm-cluster/decode",
-                "case_passed_in_the_campaign": false,
+                "case_passed_in_the_campaign": true,
                 "objects": [
                   236,
                   237,
@@ -788,7 +786,7 @@
         }
       },
       "git": {
-        "commit": "1963b7172f33aa1b9fb9d67ab3b3432d72b43fc5",
+        "commit": "5d82505cd5426923aed45870726187a1f41dd726",
         "dirty_paths": [],
         "scope": "the tree THIS artifact was derived in. It is not a claim about the tree the integrated campaign ran in; see execution.campaign.declared_git.",
         "worktree_dirty": false
@@ -863,9 +861,9 @@
             }
           ]
         },
-        "compared_words": null,
+        "compared_words": 20480,
         "complete": false,
-        "every_intermediate_compared": false,
+        "every_intermediate_compared": true,
         "fail_closed_boundary": {
           "descriptor_id": 108,
           "family": 16,
@@ -877,11 +875,11 @@
         },
         "golden_injected_breakdown": {
           "activation_operands_staged_instead_of_produced": 0,
-          "engine_results_injected_at_the_engine_boundary": null,
+          "engine_results_injected_at_the_engine_boundary": 0,
           "note": "the first is the harness's own injected_results counter; the second is every operand of an executed operator that names an object this layer writes and was not read from the address the producing operator wrote"
         },
-        "golden_injected_intermediate_count": null,
-        "golden_injected_note": "absent: no measured injection count exists, and this field is never defaulted to zero",
+        "golden_injected_intermediate_count": 0,
+        "golden_injected_note": "measured from the harness's own injected_results counter and the PASS marker the run printed; the run that establishes this rung is the one in which the engine array computed",
         "handoff": {
           "every_activation_operand_came_from_the_rtl": true,
           "golden_injected_operand_count": 0,
@@ -924,7 +922,7 @@
         "intermediate_coverage": {
           "case_compared_region_words": 15616,
           "compared_against": "the golden write stream, address and value, for every word the engines write; the retained image is compared as well and holds each object's last value",
-          "comparison_actually_happened": false,
+          "comparison_actually_happened": true,
           "distinct_objects_do_not_overlap": true,
           "each_operator_writes_a_non_empty_output": true,
           "holds": true,
@@ -1241,9 +1239,9 @@
           "note": "the program issues this layer body once per model layer through one loop; this rung establishes ONE invocation. That the loop issues the model's layer count of structurally identical invocations is rung G1c and is not claimed here.",
           "operators_per_invocation": 19
         },
-        "mismatched_words": null,
-        "mismatched_words_note": "no words of this layer were compared under this lowering; a mismatch count over zero comparisons is not a zero mismatch count and is reported absent",
-        "operator_count": 0,
+        "mismatched_words": 0,
+        "mismatched_words_note": null,
+        "operator_count": 8,
         "operator_count_meaning": "operators of this layer that executed in the integrated RTL and had every result word they wrote compared against the golden image",
         "operators_in_layer": 19,
         "placement_demand": {
@@ -1768,7 +1766,6 @@
           }
         ],
         "why_not_complete": [
-          "the integrated campaign is not usable as evidence: 1 bound source(s) have drifted since it was recorded",
           "11 of the layer's 19 operators did not execute in the integrated RTL: PC 32 DMA.SCATTER (layer.0.attention.key_append), PC 35 DMA.SCATTER (layer.0.attention.value_append), PC 38 ATTENTION.GQA (layer.0.attention.grouped_query), PC 41 TENSOR.MATMUL (layer.0.attention.output_projection), PC 44 VECTOR.ADD (layer.0.attention.residual_add), PC 47 VECTOR.RMS_NORM (layer.0.feed_forward_norm), PC 50 TENSOR.MATMUL (layer.0.feed_forward.gate_projection), PC 53 TENSOR.MATMUL (layer.0.feed_forward.up_projection), PC 56 VECTOR.SILU_MUL (layer.0.feed_forward.activation), PC 59 TENSOR.MATMUL (layer.0.feed_forward.down_projection), PC 62 VECTOR.ADD (layer.0.feed_forward.residual_add)",
           "the vehicle fails closed at PC 32 DMA.SCATTER descriptor 108 with trap class 4; that is the first operator of the layer it does not run",
           "placement role __the whole span, through one table__ must name 23 distinct objects for this layer and the deepest object table a run has been measured to resolve holds 20 (the bridge DECLARES 32 entries, which is a count of source text and is credited to nothing)"
@@ -1785,7 +1782,7 @@
       "execution": {
         "campaign": {
           "artifact": "results/rtl/abi3_shipped_prefix_campaign.json",
-          "artifact_sha256": "fcb1592760cde8d9a107995c0111f523e44ddf2d859c6d538e49f9bea09a8fc2",
+          "artifact_sha256": "e749f127b71f1d71724f1c2e8ab57d762b468f1fb8cb215a925c32a2400ce2a3",
           "bound_source_count": 60,
           "case_status": [
             {
@@ -1795,13 +1792,11 @@
             }
           ],
           "declared_git": {
-            "commit": "c20919d3a3ff7ccef04eaf66c2b34f0ca930a25b",
+            "commit": "82827ff64a24cba2cc88fed6cdb2abd8a5071e50",
             "worktree_dirty": false
           },
-          "drifted_source_count": 1,
-          "drifted_sources": [
-            "tools/build_abi3_shipped_prefix_vectors.py"
-          ],
+          "drifted_source_count": 0,
+          "drifted_sources": [],
           "evidence_class": "public_open_tool_rtl_simulation_composite",
           "expected_cases": [
             {
@@ -1871,14 +1866,14 @@
             "pages_evicted": 88,
             "refilled_bytes": 100663296,
             "result_words": 98304,
-            "sim_wall_s": 1423.7,
+            "sim_wall_s": 1443.712,
             "source_words": 65536,
             "trace_compared_elements": 0,
             "trace_divergence_index": -1,
             "trace_issues": 0,
             "trace_last_case_issues": 5,
             "trace_uncompared_fields": "none",
-            "wall_s": 1425.744,
+            "wall_s": 1445.773,
             "weight_image_bytes": 50331648,
             "window_cap_bytes": 8388608,
             "window_page_bytes": 1048576,
@@ -1980,12 +1975,12 @@
             "sha256": "2c8696111937aa85197cd2042dfed6cb3c5ef7f03fb80eba1fe3b93d40c1b87e"
           },
           "status": "pass",
-          "usable": false,
+          "usable": true,
           "vector_set_is_current": true,
           "vector_set_path": "testdata/compiler/abi3_shipped_prefix/abi3_shipped_prefix_vectors.json",
-          "vector_set_sha256_declared": "9bfe26104715ba70728aaccc40b4b43bfed995e84d5e812e9e90d0dd2dbe3efd",
-          "vector_set_sha256_on_disk": "9bfe26104715ba70728aaccc40b4b43bfed995e84d5e812e9e90d0dd2dbe3efd",
-          "why_unusable": "1 bound source(s) have drifted since it was recorded"
+          "vector_set_sha256_declared": "a00ff94fd825231de5c7121ac10833cb4763a31fe36f11187730de8d2e592e82",
+          "vector_set_sha256_on_disk": "a00ff94fd825231de5c7121ac10833cb4763a31fe36f11187730de8d2e592e82",
+          "why_unusable": null
         },
         "case_evidence": {
           "case_index": 1,
@@ -2006,10 +2001,10 @@
           },
           "observed_agrees_with_the_vector_set": true
         },
-        "evidence_class": "absent: no usable integrated RTL simulation of this lowering exists",
-        "simulated_cycles": null,
-        "simulated_cycles_scope": null,
-        "simulator": null,
+        "evidence_class": "public_open_tool_rtl_simulation_composite",
+        "simulated_cycles": 252057600,
+        "simulated_cycles_scope": "the integrated run's own total, over all four cases of the one binary; the harness reports one cycle count for the run and this rung does not split it per lowering, so the same number appears in both records and must not be added across them",
+        "simulator": "verilator",
         "vehicle": {
           "bridge": "rtl/abi3/ot_a3_engine_issue_bridge.sv",
           "bridge_sha256": "0be35e7fc669f34f8c7c9d6a0e12fe1b11c08b70bc138cab386173ee1b7c7f66",
@@ -2022,10 +2017,10 @@
             "measurements": [
               {
                 "artifact": "results/rtl/abi3_shipped_prefix_campaign.json",
-                "measured_simultaneous_objects": 0,
-                "usable": false,
+                "measured_simultaneous_objects": 13,
+                "usable": true,
                 "what_it_ran": "the integrated shipped-prefix vehicle, whose case binds every object its own program span names",
-                "why_unusable": "1 bound source(s) have drifted since it was recorded"
+                "why_unusable": null
               },
               {
                 "artifact": "results/rtl/a3_operator_admission_campaign.json",
@@ -2135,7 +2130,7 @@
               {
                 "case_index": 0,
                 "case_name": "qwen3-8b-rom-single-chip/decode",
-                "case_passed_in_the_campaign": false,
+                "case_passed_in_the_campaign": true,
                 "objects": [
                   4,
                   5,
@@ -2161,7 +2156,7 @@
               {
                 "case_index": 1,
                 "case_name": "qwen3-8b-hbm-single-chip/decode",
-                "case_passed_in_the_campaign": false,
+                "case_passed_in_the_campaign": true,
                 "objects": [
                   1,
                   2,
@@ -2187,7 +2182,7 @@
               {
                 "case_index": 2,
                 "case_name": "deepseek-v4-flash-rom-wafer/decode",
-                "case_passed_in_the_campaign": false,
+                "case_passed_in_the_campaign": true,
                 "objects": [
                   334,
                   344,
@@ -2200,7 +2195,7 @@
               {
                 "case_index": 3,
                 "case_name": "deepseek-v4-flash-hbm-cluster/decode",
-                "case_passed_in_the_campaign": false,
+                "case_passed_in_the_campaign": true,
                 "objects": [
                   236,
                   237,
@@ -2286,7 +2281,7 @@
         }
       },
       "git": {
-        "commit": "1963b7172f33aa1b9fb9d67ab3b3432d72b43fc5",
+        "commit": "5d82505cd5426923aed45870726187a1f41dd726",
         "dirty_paths": [],
         "scope": "the tree THIS artifact was derived in. It is not a claim about the tree the integrated campaign ran in; see execution.campaign.declared_git.",
         "worktree_dirty": false
@@ -2361,9 +2356,9 @@
             }
           ]
         },
-        "compared_words": null,
+        "compared_words": 20480,
         "complete": false,
-        "every_intermediate_compared": false,
+        "every_intermediate_compared": true,
         "fail_closed_boundary": {
           "descriptor_id": 118,
           "family": 16,
@@ -2375,11 +2370,11 @@
         },
         "golden_injected_breakdown": {
           "activation_operands_staged_instead_of_produced": 0,
-          "engine_results_injected_at_the_engine_boundary": null,
+          "engine_results_injected_at_the_engine_boundary": 0,
           "note": "the first is the harness's own injected_results counter; the second is every operand of an executed operator that names an object this layer writes and was not read from the address the producing operator wrote"
         },
-        "golden_injected_intermediate_count": null,
-        "golden_injected_note": "absent: no measured injection count exists, and this field is never defaulted to zero",
+        "golden_injected_intermediate_count": 0,
+        "golden_injected_note": "measured from the harness's own injected_results counter and the PASS marker the run printed; the run that establishes this rung is the one in which the engine array computed",
         "handoff": {
           "every_activation_operand_came_from_the_rtl": true,
           "golden_injected_operand_count": 0,
@@ -2422,7 +2417,7 @@
         "intermediate_coverage": {
           "case_compared_region_words": 15616,
           "compared_against": "the golden write stream, address and value, for every word the engines write; the retained image is compared as well and holds each object's last value",
-          "comparison_actually_happened": false,
+          "comparison_actually_happened": true,
           "distinct_objects_do_not_overlap": true,
           "each_operator_writes_a_non_empty_output": true,
           "holds": true,
@@ -2739,9 +2734,9 @@
           "note": "the program issues this layer body once per model layer through one loop; this rung establishes ONE invocation. That the loop issues the model's layer count of structurally identical invocations is rung G1c and is not claimed here.",
           "operators_per_invocation": 19
         },
-        "mismatched_words": null,
-        "mismatched_words_note": "no words of this layer were compared under this lowering; a mismatch count over zero comparisons is not a zero mismatch count and is reported absent",
-        "operator_count": 0,
+        "mismatched_words": 0,
+        "mismatched_words_note": null,
+        "operator_count": 8,
         "operator_count_meaning": "operators of this layer that executed in the integrated RTL and had every result word they wrote compared against the golden image",
         "operators_in_layer": 19,
         "placement_demand": {
@@ -3266,7 +3261,6 @@
           }
         ],
         "why_not_complete": [
-          "the integrated campaign is not usable as evidence: 1 bound source(s) have drifted since it was recorded",
           "11 of the layer's 19 operators did not execute in the integrated RTL: PC 32 DMA.SCATTER (layer.0.attention.key_append), PC 35 DMA.SCATTER (layer.0.attention.value_append), PC 38 ATTENTION.GQA (layer.0.attention.grouped_query), PC 41 TENSOR.MATMUL (layer.0.attention.output_projection), PC 44 VECTOR.ADD (layer.0.attention.residual_add), PC 47 VECTOR.RMS_NORM (layer.0.feed_forward_norm), PC 50 TENSOR.MATMUL (layer.0.feed_forward.gate_projection), PC 53 TENSOR.MATMUL (layer.0.feed_forward.up_projection), PC 56 VECTOR.SILU_MUL (layer.0.feed_forward.activation), PC 59 TENSOR.MATMUL (layer.0.feed_forward.down_projection), PC 62 VECTOR.ADD (layer.0.feed_forward.residual_add)",
           "the vehicle fails closed at PC 32 DMA.SCATTER descriptor 118 with trap class 4; that is the first operator of the layer it does not run",
           "placement role __the whole span, through one table__ must name 23 distinct objects for this layer and the deepest object table a run has been measured to resolve holds 20 (the bridge DECLARES 32 entries, which is a count of source text and is credited to nothing)"

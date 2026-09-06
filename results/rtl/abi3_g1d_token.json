@@ -14,7 +14,7 @@
   "generated_by": "tools/build_abi3_g1d_token.py",
   "generated_by_sha256": "50c1769f3ec562fcc043b21bdfdc3b015032b27b91050f610cda5d67ba5afbc9",
   "git": {
-    "commit": "34ae44728d1ec5f9dd1b84efec2127cc67f8e84e",
+    "commit": "5d82505cd5426923aed45870726187a1f41dd726",
     "dirty_paths": [],
     "scope": "the tree THIS artifact was derived in. It is not a claim about the tree either run happened in; see execution.control_plane_run and handoff.integrated_campaign for those.",
     "worktree_dirty": false
@@ -22,7 +22,7 @@
   "records": [
     {
       "deployment": {
-        "deployment_sha256": "133afc13e1fcd2aade2e40530883c9986b0e920d99853990d9032fd777f26243",
+        "deployment_sha256": "6a06a4ea97f290326b448f4fcc8c654a9c32b61e707ca62ef070060daf9cc21b",
         "directory": "build/abi3/qwen3-8b-rom",
         "key": "qwen3-8b-rom-single-chip"
       },
@@ -69,7 +69,7 @@
       "execution": {
         "campaign": {
           "artifact": "results/rtl/abi3_shipped_prefix_campaign.json",
-          "artifact_sha256": "fcb1592760cde8d9a107995c0111f523e44ddf2d859c6d538e49f9bea09a8fc2",
+          "artifact_sha256": "e749f127b71f1d71724f1c2e8ab57d762b468f1fb8cb215a925c32a2400ce2a3",
           "bound_source_count": 60,
           "case_status": [
             {
@@ -79,7 +79,7 @@
             }
           ],
           "declared_git": {
-            "commit": "c20919d3a3ff7ccef04eaf66c2b34f0ca930a25b",
+            "commit": "82827ff64a24cba2cc88fed6cdb2abd8a5071e50",
             "worktree_dirty": false
           },
           "drifted_source_count": 0,
@@ -153,14 +153,14 @@
             "pages_evicted": 88,
             "refilled_bytes": 100663296,
             "result_words": 98304,
-            "sim_wall_s": 1423.7,
+            "sim_wall_s": 1443.712,
             "source_words": 65536,
             "trace_compared_elements": 0,
             "trace_divergence_index": -1,
             "trace_issues": 0,
             "trace_last_case_issues": 5,
             "trace_uncompared_fields": "none",
-            "wall_s": 1425.744,
+            "wall_s": 1445.773,
             "weight_image_bytes": 50331648,
             "window_cap_bytes": 8388608,
             "window_page_bytes": 1048576,
@@ -265,8 +265,8 @@
           "usable": true,
           "vector_set_is_current": true,
           "vector_set_path": "testdata/compiler/abi3_shipped_prefix/abi3_shipped_prefix_vectors.json",
-          "vector_set_sha256_declared": "9bfe26104715ba70728aaccc40b4b43bfed995e84d5e812e9e90d0dd2dbe3efd",
-          "vector_set_sha256_on_disk": "9bfe26104715ba70728aaccc40b4b43bfed995e84d5e812e9e90d0dd2dbe3efd",
+          "vector_set_sha256_declared": "a00ff94fd825231de5c7121ac10833cb4763a31fe36f11187730de8d2e592e82",
+          "vector_set_sha256_on_disk": "a00ff94fd825231de5c7121ac10833cb4763a31fe36f11187730de8d2e592e82",
           "why_unusable": null
         },
         "evidence_class": "public_open_tool_rtl_simulation_composite",
@@ -276,7 +276,7 @@
         "vehicle": "rtl/test/a3_shipped_prefix_top.sv"
       },
       "git": {
-        "commit": "34ae44728d1ec5f9dd1b84efec2127cc67f8e84e",
+        "commit": "5d82505cd5426923aed45870726187a1f41dd726",
         "dirty_paths": [],
         "scope": "the tree THIS artifact was derived in. It is not a claim about the tree either run happened in; see execution.control_plane_run and handoff.integrated_campaign for those.",
         "worktree_dirty": false
@@ -306,11 +306,10 @@
         "compared_logits": 0,
         "entry_probe_observation": {
           "artifact": "results/rtl/abi3_vehicle_entry_probe.json",
-          "artifact_sha256": "5203660e99415d306d7e5f622d384010915582f19df5eb87522b8514ec3dd390",
-          "caveat": "this probe artifact declares a dirty worktree, so it is not source-bound evidence; it is cited as an observation only",
+          "artifact_sha256": "8be7ca8c8ed2d7fb78df5edbe2079754e5a11ec8671bec661934030a58e255fc",
           "declared_git": {
-            "commit": "2e327dd239f0e43c0dcc2badc9ff82a0868268ea",
-            "worktree_dirty": true
+            "commit": "82827ff64a24cba2cc88fed6cdb2abd8a5071e50",
+            "worktree_dirty": false
           },
           "head_sites_that_dispatched": [
             66
@@ -326,11 +325,11 @@
               "measured": {
                 "capability_faults": 0,
                 "dispatches_the_site": true,
-                "engine_launches": 1,
+                "engine_launches": 0,
                 "issued": 1,
-                "simulated_cycles": 33047,
-                "trap_class": 5,
-                "trap_pc": 67
+                "simulated_cycles": 240,
+                "trap_class": 3,
+                "trap_pc": 66
               },
               "predicted": {
                 "dispatches_the_site": true,
@@ -364,9 +363,9 @@
               "target": "qwen3-8b-rom-single-chip"
             }
           ],
-          "source_bound": false,
+          "source_bound": true,
           "status": "pass",
-          "vector_set_committed": false,
+          "vector_set_committed": true,
           "why_it_does_not_make_a_field_true": "a dispatch under a mid-program entry is not this rung's claim. G1d asks for the head to execute ON THE COMPOSED TRUNK OUTPUT and for its result to be compared: under a mid-program entry the vehicle's result memory holds its initialisation pattern, no trunk has run, and no word was compared against golden. The observation is recorded because it is a measurement and it bounds what is missing; it is not allowed to move a gate field"
         },
         "execution_measured": {
@@ -710,7 +709,7 @@
                     "role": "mapped_family_operand",
                     "satisfiable": true,
                     "short_by": 0,
-                    "slots_the_bridge_declares": 13
+                    "slots_the_bridge_declares": 20
                   },
                   {
                     "distinct_objects_the_layer_needs": 1,
@@ -721,7 +720,7 @@
                     "role": "matmul_input",
                     "satisfiable": true,
                     "short_by": 0,
-                    "slots_the_bridge_declares": 13
+                    "slots_the_bridge_declares": 20
                   },
                   {
                     "distinct_objects_the_layer_needs": 1,
@@ -732,7 +731,7 @@
                     "role": "matmul_weight",
                     "satisfiable": true,
                     "short_by": 0,
-                    "slots_the_bridge_declares": 13
+                    "slots_the_bridge_declares": 20
                   },
                   {
                     "distinct_objects_the_layer_needs": 3,
@@ -745,7 +744,7 @@
                     "role": "result_object",
                     "satisfiable": true,
                     "short_by": 0,
-                    "slots_the_bridge_declares": 13
+                    "slots_the_bridge_declares": 20
                   },
                   {
                     "distinct_objects_the_layer_needs": 1,
@@ -756,7 +755,7 @@
                     "role": "rms_input",
                     "satisfiable": true,
                     "short_by": 0,
-                    "slots_the_bridge_declares": 13
+                    "slots_the_bridge_declares": 20
                   },
                   {
                     "distinct_objects_the_layer_needs": 1,
@@ -767,7 +766,7 @@
                     "role": "rms_weight",
                     "satisfiable": true,
                     "short_by": 0,
-                    "slots_the_bridge_declares": 13
+                    "slots_the_bridge_declares": 20
                   },
                   {
                     "distinct_objects_the_layer_needs": 7,
@@ -785,7 +784,7 @@
                     "role": "__the whole span, through one table__",
                     "satisfiable": true,
                     "short_by": 0,
-                    "slots_the_bridge_declares": 13
+                    "slots_the_bridge_declares": 20
                   }
                 ],
                 "route_note": "derived from the same demand-versus-capacity counts as the shortfall above; it is what this vehicle lacks, not a design",
@@ -915,7 +914,7 @@
                     "role": "mapped_family_operand",
                     "satisfiable": true,
                     "short_by": 0,
-                    "slots_the_bridge_declares": 13
+                    "slots_the_bridge_declares": 20
                   },
                   {
                     "distinct_objects_the_layer_needs": 1,
@@ -926,7 +925,7 @@
                     "role": "matmul_input",
                     "satisfiable": true,
                     "short_by": 0,
-                    "slots_the_bridge_declares": 13
+                    "slots_the_bridge_declares": 20
                   },
                   {
                     "distinct_objects_the_layer_needs": 1,
@@ -937,7 +936,7 @@
                     "role": "matmul_weight",
                     "satisfiable": true,
                     "short_by": 0,
-                    "slots_the_bridge_declares": 13
+                    "slots_the_bridge_declares": 20
                   },
                   {
                     "distinct_objects_the_layer_needs": 3,
@@ -950,7 +949,7 @@
                     "role": "result_object",
                     "satisfiable": true,
                     "short_by": 0,
-                    "slots_the_bridge_declares": 13
+                    "slots_the_bridge_declares": 20
                   },
                   {
                     "distinct_objects_the_layer_needs": 1,
@@ -961,7 +960,7 @@
                     "role": "rms_input",
                     "satisfiable": true,
                     "short_by": 0,
-                    "slots_the_bridge_declares": 13
+                    "slots_the_bridge_declares": 20
                   },
                   {
                     "distinct_objects_the_layer_needs": 1,
@@ -972,7 +971,7 @@
                     "role": "rms_weight",
                     "satisfiable": true,
                     "short_by": 0,
-                    "slots_the_bridge_declares": 13
+                    "slots_the_bridge_declares": 20
                   },
                   {
                     "distinct_objects_the_layer_needs": 8,
@@ -991,7 +990,7 @@
                     "role": "__the whole span, through one table__",
                     "satisfiable": true,
                     "short_by": 0,
-                    "slots_the_bridge_declares": 13
+                    "slots_the_bridge_declares": 20
                   }
                 ],
                 "route_note": "derived from the same demand-versus-capacity counts as the shortfall above; it is what this vehicle lacks, not a design",
@@ -1270,19 +1269,19 @@
           "why_that_is_exact": "each output element's complete reduction over 4096 terms happens inside one shard, so no accumulator is split and no partial sum is ever re-associated. Sharding the REDUCTION axis instead would split accumulators and is what the falsification control below exercises"
         },
         "what_running_the_head_would_cost": {
-          "hours_in_concurrent_row_shards": 1.22,
-          "hours_whole": 4.89,
+          "hours_in_concurrent_row_shards": 1.24,
+          "hours_whole": 4.96,
           "mac_count": 622329856,
           "measured_integrated_rate": {
             "caveat": "this is the rate THAT run measured, on a machine other work was sharing. Another run of the same vehicle on a quieter box measures a higher one; the figure is reported with the run it came from rather than as a property of the design",
             "mac_count": 50331648,
-            "macs_per_second": 35352.7,
+            "macs_per_second": 34862.7,
             "measured": true,
-            "simulation_wall_seconds": 1423.7,
+            "simulation_wall_seconds": 1443.712,
             "source": "results/rtl/abi3_shipped_prefix_campaign.json: its own matmul_mac_count and the sim_wall_s of its MEASURE line"
           },
           "note": "derived: the head's own multiply-accumulates at the rate the integrated vehicle itself measured. The shard figure is wall time with the shards run concurrently, which is exact because the shards share no accumulator -- see shard_plan. It is what the head would cost, not what this rung cost, which ran no head at all",
-          "seconds_whole": 17603.5
+          "seconds_whole": 17850.9
         },
         "why_null": "mismatched_logits is null, not 0: zero logits were compared because the head never ran. Zero mismatches over zero comparisons is not evidence"
       },
@@ -1356,7 +1355,7 @@
       "execution": {
         "campaign": {
           "artifact": "results/rtl/abi3_shipped_prefix_campaign.json",
-          "artifact_sha256": "fcb1592760cde8d9a107995c0111f523e44ddf2d859c6d538e49f9bea09a8fc2",
+          "artifact_sha256": "e749f127b71f1d71724f1c2e8ab57d762b468f1fb8cb215a925c32a2400ce2a3",
           "bound_source_count": 60,
           "case_status": [
             {
@@ -1366,7 +1365,7 @@
             }
           ],
           "declared_git": {
-            "commit": "c20919d3a3ff7ccef04eaf66c2b34f0ca930a25b",
+            "commit": "82827ff64a24cba2cc88fed6cdb2abd8a5071e50",
             "worktree_dirty": false
           },
           "drifted_source_count": 0,
@@ -1440,14 +1439,14 @@
             "pages_evicted": 88,
             "refilled_bytes": 100663296,
             "result_words": 98304,
-            "sim_wall_s": 1423.7,
+            "sim_wall_s": 1443.712,
             "source_words": 65536,
             "trace_compared_elements": 0,
             "trace_divergence_index": -1,
             "trace_issues": 0,
             "trace_last_case_issues": 5,
             "trace_uncompared_fields": "none",
-            "wall_s": 1425.744,
+            "wall_s": 1445.773,
             "weight_image_bytes": 50331648,
             "window_cap_bytes": 8388608,
             "window_page_bytes": 1048576,
@@ -1552,8 +1551,8 @@
           "usable": true,
           "vector_set_is_current": true,
           "vector_set_path": "testdata/compiler/abi3_shipped_prefix/abi3_shipped_prefix_vectors.json",
-          "vector_set_sha256_declared": "9bfe26104715ba70728aaccc40b4b43bfed995e84d5e812e9e90d0dd2dbe3efd",
-          "vector_set_sha256_on_disk": "9bfe26104715ba70728aaccc40b4b43bfed995e84d5e812e9e90d0dd2dbe3efd",
+          "vector_set_sha256_declared": "a00ff94fd825231de5c7121ac10833cb4763a31fe36f11187730de8d2e592e82",
+          "vector_set_sha256_on_disk": "a00ff94fd825231de5c7121ac10833cb4763a31fe36f11187730de8d2e592e82",
           "why_unusable": null
         },
         "evidence_class": "public_open_tool_rtl_simulation_composite",
@@ -1563,7 +1562,7 @@
         "vehicle": "rtl/test/a3_shipped_prefix_top.sv"
       },
       "git": {
-        "commit": "34ae44728d1ec5f9dd1b84efec2127cc67f8e84e",
+        "commit": "5d82505cd5426923aed45870726187a1f41dd726",
         "dirty_paths": [],
         "scope": "the tree THIS artifact was derived in. It is not a claim about the tree either run happened in; see execution.control_plane_run and handoff.integrated_campaign for those.",
         "worktree_dirty": false
@@ -1593,11 +1592,10 @@
         "compared_logits": 0,
         "entry_probe_observation": {
           "artifact": "results/rtl/abi3_vehicle_entry_probe.json",
-          "artifact_sha256": "5203660e99415d306d7e5f622d384010915582f19df5eb87522b8514ec3dd390",
-          "caveat": "this probe artifact declares a dirty worktree, so it is not source-bound evidence; it is cited as an observation only",
+          "artifact_sha256": "8be7ca8c8ed2d7fb78df5edbe2079754e5a11ec8671bec661934030a58e255fc",
           "declared_git": {
-            "commit": "2e327dd239f0e43c0dcc2badc9ff82a0868268ea",
-            "worktree_dirty": true
+            "commit": "82827ff64a24cba2cc88fed6cdb2abd8a5071e50",
+            "worktree_dirty": false
           },
           "head_sites_that_dispatched": [
             66
@@ -1613,11 +1611,11 @@
               "measured": {
                 "capability_faults": 0,
                 "dispatches_the_site": true,
-                "engine_launches": 1,
+                "engine_launches": 0,
                 "issued": 1,
-                "simulated_cycles": 33047,
-                "trap_class": 5,
-                "trap_pc": 67
+                "simulated_cycles": 240,
+                "trap_class": 3,
+                "trap_pc": 66
               },
               "predicted": {
                 "dispatches_the_site": true,
@@ -1651,9 +1649,9 @@
               "target": "qwen3-8b-hbm-single-chip"
             }
           ],
-          "source_bound": false,
+          "source_bound": true,
           "status": "pass",
-          "vector_set_committed": false,
+          "vector_set_committed": true,
           "why_it_does_not_make_a_field_true": "a dispatch under a mid-program entry is not this rung's claim. G1d asks for the head to execute ON THE COMPOSED TRUNK OUTPUT and for its result to be compared: under a mid-program entry the vehicle's result memory holds its initialisation pattern, no trunk has run, and no word was compared against golden. The observation is recorded because it is a measurement and it bounds what is missing; it is not allowed to move a gate field"
         },
         "execution_measured": {
@@ -1997,7 +1995,7 @@
                     "role": "mapped_family_operand",
                     "satisfiable": true,
                     "short_by": 0,
-                    "slots_the_bridge_declares": 13
+                    "slots_the_bridge_declares": 20
                   },
                   {
                     "distinct_objects_the_layer_needs": 1,
@@ -2008,7 +2006,7 @@
                     "role": "matmul_input",
                     "satisfiable": true,
                     "short_by": 0,
-                    "slots_the_bridge_declares": 13
+                    "slots_the_bridge_declares": 20
                   },
                   {
                     "distinct_objects_the_layer_needs": 1,
@@ -2019,7 +2017,7 @@
                     "role": "matmul_weight",
                     "satisfiable": true,
                     "short_by": 0,
-                    "slots_the_bridge_declares": 13
+                    "slots_the_bridge_declares": 20
                   },
                   {
                     "distinct_objects_the_layer_needs": 3,
@@ -2032,7 +2030,7 @@
                     "role": "result_object",
                     "satisfiable": true,
                     "short_by": 0,
-                    "slots_the_bridge_declares": 13
+                    "slots_the_bridge_declares": 20
                   },
                   {
                     "distinct_objects_the_layer_needs": 1,
@@ -2043,7 +2041,7 @@
                     "role": "rms_input",
                     "satisfiable": true,
                     "short_by": 0,
-                    "slots_the_bridge_declares": 13
+                    "slots_the_bridge_declares": 20
                   },
                   {
                     "distinct_objects_the_layer_needs": 1,
@@ -2054,7 +2052,7 @@
                     "role": "rms_weight",
                     "satisfiable": true,
                     "short_by": 0,
-                    "slots_the_bridge_declares": 13
+                    "slots_the_bridge_declares": 20
                   },
                   {
                     "distinct_objects_the_layer_needs": 7,
@@ -2072,7 +2070,7 @@
                     "role": "__the whole span, through one table__",
                     "satisfiable": true,
                     "short_by": 0,
-                    "slots_the_bridge_declares": 13
+                    "slots_the_bridge_declares": 20
                   }
                 ],
                 "route_note": "derived from the same demand-versus-capacity counts as the shortfall above; it is what this vehicle lacks, not a design",
@@ -2202,7 +2200,7 @@
                     "role": "mapped_family_operand",
                     "satisfiable": true,
                     "short_by": 0,
-                    "slots_the_bridge_declares": 13
+                    "slots_the_bridge_declares": 20
                   },
                   {
                     "distinct_objects_the_layer_needs": 1,
@@ -2213,7 +2211,7 @@
                     "role": "matmul_input",
                     "satisfiable": true,
                     "short_by": 0,
-                    "slots_the_bridge_declares": 13
+                    "slots_the_bridge_declares": 20
                   },
                   {
                     "distinct_objects_the_layer_needs": 1,
@@ -2224,7 +2222,7 @@
                     "role": "matmul_weight",
                     "satisfiable": true,
                     "short_by": 0,
-                    "slots_the_bridge_declares": 13
+                    "slots_the_bridge_declares": 20
                   },
                   {
                     "distinct_objects_the_layer_needs": 3,
@@ -2237,7 +2235,7 @@
                     "role": "result_object",
                     "satisfiable": true,
                     "short_by": 0,
-                    "slots_the_bridge_declares": 13
+                    "slots_the_bridge_declares": 20
                   },
                   {
                     "distinct_objects_the_layer_needs": 1,
@@ -2248,7 +2246,7 @@
                     "role": "rms_input",
                     "satisfiable": true,
                     "short_by": 0,
-                    "slots_the_bridge_declares": 13
+                    "slots_the_bridge_declares": 20
                   },
                   {
                     "distinct_objects_the_layer_needs": 1,
@@ -2259,7 +2257,7 @@
                     "role": "rms_weight",
                     "satisfiable": true,
                     "short_by": 0,
-                    "slots_the_bridge_declares": 13
+                    "slots_the_bridge_declares": 20
                   },
                   {
                     "distinct_objects_the_layer_needs": 8,
@@ -2278,7 +2276,7 @@
                     "role": "__the whole span, through one table__",
                     "satisfiable": true,
                     "short_by": 0,
-                    "slots_the_bridge_declares": 13
+                    "slots_the_bridge_declares": 20
                   }
                 ],
                 "route_note": "derived from the same demand-versus-capacity counts as the shortfall above; it is what this vehicle lacks, not a design",
@@ -2557,19 +2555,19 @@
           "why_that_is_exact": "each output element's complete reduction over 4096 terms happens inside one shard, so no accumulator is split and no partial sum is ever re-associated. Sharding the REDUCTION axis instead would split accumulators and is what the falsification control below exercises"
         },
         "what_running_the_head_would_cost": {
-          "hours_in_concurrent_row_shards": 1.22,
-          "hours_whole": 4.89,
+          "hours_in_concurrent_row_shards": 1.24,
+          "hours_whole": 4.96,
           "mac_count": 622329856,
           "measured_integrated_rate": {
             "caveat": "this is the rate THAT run measured, on a machine other work was sharing. Another run of the same vehicle on a quieter box measures a higher one; the figure is reported with the run it came from rather than as a property of the design",
             "mac_count": 50331648,
-            "macs_per_second": 35352.7,
+            "macs_per_second": 34862.7,
             "measured": true,
-            "simulation_wall_seconds": 1423.7,
+            "simulation_wall_seconds": 1443.712,
             "source": "results/rtl/abi3_shipped_prefix_campaign.json: its own matmul_mac_count and the sim_wall_s of its MEASURE line"
           },
           "note": "derived: the head's own multiply-accumulates at the rate the integrated vehicle itself measured. The shard figure is wall time with the shards run concurrently, which is exact because the shards share no accumulator -- see shard_plan. It is what the head would cost, not what this rung cost, which ran no head at all",
-          "seconds_whole": 17603.5
+          "seconds_whole": 17850.9
         },
         "why_null": "mismatched_logits is null, not 0: zero logits were compared because the head never ran. Zero mismatches over zero comparisons is not evidence"
       },
