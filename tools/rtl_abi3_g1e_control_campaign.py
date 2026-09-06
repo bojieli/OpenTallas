@@ -25,6 +25,15 @@ RTL evidence class and a clean worktree -- plus the checker's own zero-launch,
 zero-engine-work and zero-weight-read observations, which are what say the
 control plane and not the datapath is what ran.
 
+**That the explanation of a red field is true.**  The rung measures three
+passes against the number G1e's specification names, and until now the gap was
+explained in prose.  ``tools/build_abi3_g1e_pass_decomposition.py`` executes
+the governed workload on the reference model under several submission
+sequences and reports which reproduce the oracle's gold, so the pass count is
+bounded by an experiment rather than by an argument.  The gate's own number is
+read out of ``configs/gates/redesign_gates.json``; nothing here types it and
+nothing here edits it.
+
 **That an absent measurement is not a pass.**  A field this vehicle cannot
 measure is written with the value it actually has and the reason it has it.
 G1e asks for two things this deployment's control plane never does -- raise
@@ -53,6 +62,11 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from runtime.abi3.constants import Major, Selection  # noqa: E402
+from runtime.abi3.records import EosReason  # noqa: E402
+from tools.build_abi3_g1e_pass_decomposition import (  # noqa: E402
+    gate_required_passes,
+)
 from tools.rtl_abi3_shipped_prefix_campaign import (  # noqa: E402
     PINNED_VERILATOR_VERSION,
     RTL_SOURCES,
@@ -70,6 +84,7 @@ ARTIFACT = ROOT / "results/rtl/abi3_g1e_control_end_to_end.json"
 TOP = "rtl/test/a3_shipped_prefix_top.sv"
 HARNESS = "rtl/test/a3_g1e_control_harness.cpp"
 BUILDER = "tools/build_abi3_g1e_control_vectors.py"
+DECOMPOSITION = "tools/build_abi3_g1e_pass_decomposition.py"
 WORKLOAD_ID = "TA-QW-EOS-1"
 
 TEST_SOURCES = (
@@ -79,6 +94,7 @@ TEST_SOURCES = (
 )
 TOOL_SOURCES = (
     BUILDER,
+    DECOMPOSITION,
     "tools/build_abi3_deployment_rtl_vectors.py",
     "tools/rtl_abi3_g1e_control_campaign.py",
 )
@@ -495,6 +511,139 @@ def build_vectors(store: str, out: Path, checkpoint: Path | None) -> dict[str, A
     return manifest
 
 
+def derive_official_eos_raised(
+    eos_observation: dict[str, Any], engine_launches: int
+) -> bool:
+    """Did the RTL raise OFFICIAL_EOS?  Two observations, both from the run.
+
+    The EOS reason alone is not enough and never was: under result injection
+    the selection engines are not issued to, so a reason appearing on that
+    output could only be a model value routed through the top.  Requiring a
+    real engine launch beside it is what makes the field impossible to set by
+    wiring an output up -- the failure this ladder found in its own G1a tool,
+    where a gate field was decided by the presence of a port name.
+    """
+    reason = eos_observation.get("selected_eos_reason")
+    return bool(
+        reason is not None
+        and int(reason) == int(EosReason.OFFICIAL_EOS)
+        and int(engine_launches) > 0
+    )
+
+
+def derive_post_eos_refused(probe: dict[str, Any]) -> bool:
+    """Did the RTL refuse the instruction after the official EOS?
+
+    A probe that did not run refuses nothing, and a pass the design completed
+    without trapping was admitted, not refused.  Both readings come off the
+    DUT's own done / complete / trapped outputs.
+    """
+    if not bool(probe.get("ran")):
+        return False
+    return bool(probe.get("rtl_trapped")) or not bool(
+        probe.get("rtl_admitted_the_pass")
+    )
+
+
+def eos_field_self_test() -> dict[str, Any]:
+    """Both derived fields must be falsifiable in both directions.
+
+    A field that cannot become true is not a measurement, and a field that
+    cannot become false is not one either.  This exercises each derivation
+    against fabricated observations and requires the value to follow them, so
+    a later change that nails either field to a constant fails here rather
+    than in the artifact.
+    """
+    official = {
+        "false_because_no_engine_ran": derive_official_eos_raised(
+            {"selected_eos_reason": int(EosReason.OFFICIAL_EOS)}, 0
+        ),
+        "false_because_the_reason_is_not_official": derive_official_eos_raised(
+            {"selected_eos_reason": int(EosReason.NONE)}, 7
+        ),
+        "true_when_a_real_engine_raised_it": derive_official_eos_raised(
+            {"selected_eos_reason": int(EosReason.OFFICIAL_EOS)}, 7
+        ),
+    }
+    refused = {
+        "false_when_the_probe_did_not_run": derive_post_eos_refused(
+            {"ran": False, "rtl_admitted_the_pass": False, "rtl_trapped": True}
+        ),
+        "false_when_the_design_completed_the_pass": derive_post_eos_refused(
+            {"ran": True, "rtl_admitted_the_pass": True, "rtl_trapped": False}
+        ),
+        "true_when_the_design_trapped_it": derive_post_eos_refused(
+            {"ran": True, "rtl_admitted_the_pass": False, "rtl_trapped": True}
+        ),
+        "true_when_the_design_did_not_complete_it": derive_post_eos_refused(
+            {"ran": True, "rtl_admitted_the_pass": False, "rtl_trapped": False}
+        ),
+    }
+    passed = (
+        official == {
+            "false_because_no_engine_ran": False,
+            "false_because_the_reason_is_not_official": False,
+            "true_when_a_real_engine_raised_it": True,
+        }
+        and refused == {
+            "false_when_the_probe_did_not_run": False,
+            "false_when_the_design_completed_the_pass": False,
+            "true_when_the_design_trapped_it": True,
+            "true_when_the_design_did_not_complete_it": True,
+        }
+    )
+    return {
+        "ran": True,
+        "passed": passed,
+        "official_eos_raised": official,
+        "post_eos_refused": refused,
+        "why": (
+            "each derived EOS field is exercised against fabricated "
+            "observations in both directions; a field pinned to a constant "
+            "fails this and the campaign refuses to publish"
+        ),
+    }
+
+
+def run_decomposition(store: str, out: Path, checkpoint: Path | None) -> dict[str, Any]:
+    """Measure which host decompositions of this workload the design admits.
+
+    G1e's pass count is the one field on this rung whose red value used to be
+    explained rather than measured.  ``tools/build_abi3_g1e_pass_decomposition``
+    runs the governed workload on the reference model under several submission
+    sequences and reports which of them reproduce the oracle's gold; the
+    maximum pass count over those is what the rung can honestly report against
+    the gate's number.  A study that will not run is a FAIL of this campaign,
+    not a missing section: an unmeasured explanation is exactly what it
+    replaces.
+    """
+    command = [
+        sys.executable,
+        str(ROOT / DECOMPOSITION),
+        "--store",
+        store,
+        "--output",
+        str(out),
+    ]
+    if checkpoint is not None:
+        command += ["--checkpoint", str(checkpoint)]
+    started = time.perf_counter()
+    result = subprocess.run(
+        command, cwd=ROOT, text=True, stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT, check=False,
+    )
+    seconds = time.perf_counter() - started
+    if result.returncode != 0:
+        raise SystemExit(
+            f"the pass-decomposition study for {store} failed:\n"
+            f"{result.stdout[-4000:]}"
+        )
+    study = json.loads(out.read_text(encoding="utf-8"))
+    study["campaign_wall_seconds"] = round(seconds, 2)
+    study["marker"] = result.stdout.strip().splitlines()[-1]
+    return study
+
+
 def run_store(
     store: str,
     manifest: dict[str, Any],
@@ -649,7 +798,11 @@ def run_store(
 
 
 def compose_record(
-    store: str, manifest: dict[str, Any], run: dict[str, Any], audit: dict[str, Any]
+    store: str,
+    manifest: dict[str, Any],
+    run: dict[str, Any],
+    audit: dict[str, Any],
+    study: dict[str, Any],
 ) -> dict[str, Any]:
     """One rung record, with every field the gate reads and nothing rounded."""
     counts = manifest["counts"]
@@ -663,12 +816,96 @@ def compose_record(
     # final generated token is never fed back, so it is a position of the
     # sequence and not a pass of the model.
     forward_passes = 0
+    positions_covered: list[dict[str, int]] = []
     for entry in manifest["passes"]:
         symbols = entry["symbols"]
-        forward_passes += int(symbols.get("0", symbols.get(0, 1)))
+        span = int(symbols.get("0", symbols.get(0, 1)))
+        start = int(symbols.get("1", symbols.get(1, 0)))
+        forward_passes += span
+        positions_covered.append(
+            {
+                "pass_index": int(entry["pass_index"]),
+                "entrypoint_id": int(entry["entrypoint_id"]),
+                "position_start": start,
+                "span_tokens": span,
+                "positions": list(range(start, start + span)),
+            }
+        )
     trace = run.get("trace", {})
     equal = bool(trace.get("equal")) and run.get("marker_present", False)
     divergence = trace.get("divergence_index")
+    gate_requires = int(study["gate_requires_passes"])
+    # How far the control plane got towards the EOS decision, counted from the
+    # RTL's own issue census rather than from anybody's reading of the program.
+    # SELECTION.TOKEN_APPEND is the instruction rtl/abi3/
+    # ot_a3_selection_token_append.sv answers, and it is the one that raises
+    # OFFICIAL_EOS; if the RTL never issued it the two red EOS fields would
+    # mean something quite different from what they mean here.
+    census_rows = run.get("issue_census", {}).get("rows", [])
+    def _selection(sub: int) -> int:
+        return sum(
+            int(row["instances"])
+            for row in census_rows
+            if int(row["family"]) == int(Major.SELECTION)
+            and int(row["sub"]) == int(sub)
+        )
+    argmax_issues = _selection(int(Selection.ARGMAX))
+    append_issues = _selection(int(Selection.TOKEN_APPEND))
+    eos_reach = {
+        "selection_argmax_issues": argmax_issues,
+        "selection_token_append_issues": append_issues,
+        "passes": device_transactions,
+        "issued_in_every_pass": (
+            device_transactions > 0
+            and append_issues == device_transactions
+            and argmax_issues == device_transactions
+        ),
+        "source": "the RTL's own issue census over every pass of this run",
+        "meaning": (
+            "the control plane fetched, decoded, resolved the operand views "
+            "of and issued SELECTION.ARGMAX and SELECTION.TOKEN_APPEND -- the "
+            "instruction pair that ends a generation -- in every pass. What "
+            "did not happen is the engine behind it running: under "
+            "ENABLE_RESULT_INJECTION the top ties the bridge's issue_valid "
+            "low, so ot_a3_selection_token_append.sv was never started and "
+            "raised nothing. official_eos_raised is false as a measurement of "
+            "the engine, not as an absence of the instruction"
+        ),
+    }
+    # The two EOS fields are DERIVED from what the run observed, never
+    # written as constants.  A constant cannot be falsified by a better run,
+    # and a field that a wiring change could flip without anything executing
+    # is the defect this programme exists to prevent -- so each is a
+    # conjunction of RTL observations, and each stays false here because the
+    # observations say so.
+    eos_observation = run.get("eos_observation", {})
+    eos_reason_observed = eos_observation.get("selected_eos_reason")
+    engine_launches = int(run.get("injection", {}).get("engine_launches", -1))
+    official_eos_raised = derive_official_eos_raised(
+        eos_observation, engine_launches
+    )
+    probe = run.get("post_eos_probe", {})
+    probe_ran = bool(probe.get("ran"))
+    probe_admitted = bool(probe.get("rtl_admitted_the_pass"))
+    probe_trapped = bool(probe.get("rtl_trapped"))
+    post_eos_refused = derive_post_eos_refused(probe)
+    correct = [c for c in study["cases"] if c["reproduces_gold"]]
+    wrong = [c for c in study["cases"] if not c["reproduces_gold"]]
+    decomposition_summary = (
+        f"{len(study['cases'])} submission sequences were executed on the "
+        f"reference model, of which {len(correct)} reproduced the oracle's "
+        f"gold ({', '.join(c['decomposition'] for c in correct) or 'none'}) "
+        f"and {len(wrong)} did not "
+        f"({', '.join(c['decomposition'] for c in wrong) or 'none'}). The "
+        "largest pass count over the sequences that reproduce the gold is "
+        f"{study['measured']['maximum_device_transactions_over_correct_decompositions']}"
+        f", against the gate's {gate_requires}; "
+        f"{study['measured']['maximum_forward_passed_positions_over_correct_decompositions']}"
+        f" of the workload's {workload_positions} token positions are "
+        "forward-passed, and the last generated token -- the official EOS -- "
+        "is never fed back, so it is a position of the sequence and not a "
+        "pass of the model"
+    )
     record = {
         "storage_class": store,
         "workload_id": WORKLOAD_ID,
@@ -739,26 +976,95 @@ def compose_record(
             "device_transactions": device_transactions,
             "model_forward_passes": forward_passes,
             "workload_token_positions": workload_positions,
-            "per_pass": run.get("passes", []),
-            "gate_requires": 19,
-            "why_not_19": (
-                "measured: the shipped Qwen deployment executes TA-QW-EOS-1 in "
-                f"{device_transactions} device transactions -- one prefill "
-                f"whose SPAN_TOKENS is {manifest['workload']['prompt_token_count']} "
-                "and covers every prompt position at once, then one decode per "
-                "further token. The workload's 19 token positions are 16 prompt "
-                "plus 3 generated; only 18 of them are ever forward-passed, "
-                "because the first generated token comes out of the prefill "
-                "pass and the last generated token (the official EOS) is never "
-                "fed back. No correct execution of this workload on this "
-                "deployment performs 19 passes, so the gate's field cannot be "
-                "satisfied by running it correctly; the number is not adjusted "
-                "here and the rung fails on it"
+            "positions_never_forward_passed": (
+                workload_positions - forward_passes
             ),
+            "positions_covered_per_pass": positions_covered,
+            "positions_covered_note": (
+                "SPAN_TOKENS and POSITION_START are the request symbols the "
+                "RTL's symbol file was loaded with for each pass, so this is "
+                "which of the workload's token positions the control plane "
+                "actually drove, not a count of transactions"
+            ),
+            "per_pass": run.get("passes", []),
+            "gate_requires": gate_requires,
+            "gate_requires_read_from": "configs/gates/redesign_gates.json",
+            "why_not_the_gate_number": (
+                f"measured, not argued. The RTL ran {device_transactions} "
+                "device transactions because that is what the workload's own "
+                "submission sequence is: one prefill transaction whose "
+                f"SPAN_TOKENS is "
+                f"{manifest['workload']['prompt_token_count']} and covers "
+                "every prompt position at once, then one decode transaction "
+                "per further token. Whether the same workload could be cut "
+                f"into {gate_requires} transactions was not reasoned about, it "
+                f"was tried: {decomposition_summary}"
+            ),
+            "decomposition_study": {
+                "artifact_schema": study.get("schema"),
+                "tool": DECOMPOSITION,
+                "reads_no_rtl": True,
+                "gate_requires_passes": study["gate_requires_passes"],
+                "measured": study["measured"],
+                "finding": study["finding"],
+                "does_not_establish": study["does_not_establish"],
+                "wall_seconds": study.get("wall_seconds"),
+                "deployment_sha256": study["deployment_sha256"],
+                "workload_digest": study["workload_digest"],
+                "oracle": study["oracle"],
+                "source_sha256": study["source_sha256"],
+                "cases": [
+                    {
+                        key: case[key]
+                        for key in (
+                            "decomposition",
+                            "statement",
+                            "device_transactions",
+                            "completed_transactions",
+                            "forward_passed_positions",
+                            "generated_token_ids",
+                            "reproduces_gold",
+                            "note",
+                            "wall_seconds",
+                            "transactions",
+                        )
+                    }
+                    for case in study["cases"]
+                ],
+                "marker": study.get("marker"),
+            },
         },
         "eos": {
-            "official_eos_raised": False,
-            "post_eos_refused": False,
+            "official_eos_raised": official_eos_raised,
+            "post_eos_refused": post_eos_refused,
+            "how_both_fields_are_decided": {
+                "official_eos_raised": (
+                    "the integrated top's selected_eos_reason output equals "
+                    f"OFFICIAL_EOS ({int(EosReason.OFFICIAL_EOS)}, read from "
+                    "runtime.abi3.records.EosReason) AND the run launched at "
+                    "least one real engine. The second half is not "
+                    "decoration: under result injection the EOS reason could "
+                    "only be a model value passed through, and a field that "
+                    "could be set by wiring an output with nothing having run "
+                    "is the exact defect this ladder was built to catch. Both "
+                    "halves come off the RTL run"
+                ),
+                "post_eos_refused": (
+                    "the post-EOS probe ran AND the RTL either refused to "
+                    "complete it or trapped it. Both come off the DUT's own "
+                    "done/complete/trapped outputs on the pass driven after "
+                    "the one that produced the official EOS"
+                ),
+                "measured_inputs": {
+                    "selected_eos_reason": eos_reason_observed,
+                    "official_eos_encoding": int(EosReason.OFFICIAL_EOS),
+                    "real_engine_launches": engine_launches,
+                    "post_eos_probe_ran": probe_ran,
+                    "post_eos_probe_admitted": probe_admitted,
+                    "post_eos_probe_trapped": probe_trapped,
+                },
+                "self_test": eos_field_self_test(),
+            },
             "model_stop_reason": manifest["model_run"]["stop_reason"],
             "model_generated_token_ids": manifest["model_run"]["generated_token_ids"],
             "post_eos_attempt": manifest["post_eos"],
@@ -787,6 +1093,7 @@ def compose_record(
                     "argued. Its issues are not part of the compared trace"
                 ),
             },
+            "control_plane_reached_the_eos_instruction": eos_reach,
             "why_not_measured_in_rtl": (
                 "in the promoted lowering the EOS decision is an ENGINE result "
                 "-- rtl/abi3/ot_a3_selection_token_append.sv raises "
@@ -797,8 +1104,10 @@ def compose_record(
                 "runtime/sim/device.py:run_transaction, taken before an "
                 "instruction is fetched; this deployment's program carries no "
                 "STATE instruction and no EOS_MEMBER predicate, so its RTL "
-                "control plane has nothing to refuse. Both fields are reported "
-                "false because this vehicle did not measure them"
+                "control plane has nothing to refuse. Neither field is written "
+                "as a constant: each is the conjunction of RTL observations "
+                "recorded in how_both_fields_are_decided, and each is false "
+                "because those observations are"
             ),
             "what_would_measure_them": [
                 "OFFICIAL_EOS: issue SELECTION.TOKEN_APPEND to the real engine "
@@ -877,8 +1186,12 @@ def cost_measurement(records: list[dict[str, Any]]) -> dict[str, Any]:
                 "golden_output_words_if_every_word_were_supplied"
             ]
         )
+        study_seconds = float(
+            record["passes"]["decomposition_study"].get("wall_seconds") or 0.0
+        )
         per_store[record["storage_class"]] = {
             "golden_model_seconds": cost.get("golden_model_seconds"),
+            "pass_decomposition_study_seconds": round(study_seconds, 2),
             "elaborate_and_compile_seconds": cost.get(
                 "elaborate_and_compile_seconds"
             ),
@@ -887,7 +1200,8 @@ def cost_measurement(records: list[dict[str, Any]]) -> dict[str, Any]:
             "end_to_end_seconds": round(
                 float(cost.get("golden_model_seconds") or 0)
                 + float(cost.get("elaborate_and_compile_seconds") or 0)
-                + float(cost.get("run_seconds") or 0),
+                + float(cost.get("run_seconds") or 0)
+                + study_seconds,
                 2,
             ),
             "simulated_cycles": cycles,
@@ -947,9 +1261,24 @@ def main() -> int:
     top_text = (ROOT / TOP).read_text(encoding="utf-8")
     audit = audit_injection(top_text)
     audit["self_test"] = audit_self_test(top_text)
+    fields = eos_field_self_test()
+    if not fields["passed"]:
+        raise SystemExit(
+            "the EOS field self test failed: at least one of "
+            "official_eos_raised and post_eos_refused no longer follows the "
+            "run's observations. A rung whose fields cannot move is not "
+            "evidence, and nothing is published:\n"
+            + json.dumps(fields, indent=2)
+        )
     if args.audit_only:
-        print(json.dumps(audit, indent=2))
-        return 0 if audit["clean"] and audit["self_test"]["refused_the_spliced_edge"] else 1
+        print(json.dumps({"injection": audit, "eos_fields": fields}, indent=2))
+        return (
+            0
+            if audit["clean"]
+            and audit["self_test"]["refused_the_spliced_edge"]
+            and fields["passed"]
+            else 1
+        )
 
     verilator = resolve(
         "verilator", TOOLS_ROOT / f"verilator-{PINNED_VERILATOR_VERSION}/bin/verilator"
@@ -967,10 +1296,13 @@ def main() -> int:
         for store in args.stores:
             vectors = root / f"vectors-{store}"
             manifest = build_vectors(store, vectors, args.checkpoint)
+            study = run_decomposition(
+                store, root / f"decomposition-{store}.json", args.checkpoint
+            )
             run = run_store(
                 store, manifest, vectors, root / f"build-{store}", verilator
             )
-            records.append(compose_record(store, manifest, run, audit))
+            records.append(compose_record(store, manifest, run, audit, study))
 
     source_paths = (*RTL_SOURCES, *TEST_SOURCES, *TOOL_SOURCES, *CONTRACT_SOURCES)
     body = {
@@ -983,7 +1315,7 @@ def main() -> int:
         if all(
             record["trace"]["equals_golden"]
             and record["injection"]["control_path_is_rtl"]
-            and record["passes"]["executed"] == 19
+            and record["passes"]["executed"] == gate_required_passes()
             and record["eos"]["official_eos_raised"]
             and record["eos"]["post_eos_refused"]
             for record in records
@@ -1024,8 +1356,16 @@ def main() -> int:
                 "spliced counter-example",
                 "no engine ran: zero launches, zero engine work and zero "
                 "weight reads, measured per pass",
+                "which host decompositions of the governed workload this "
+                "deployment admits at all, executed rather than reasoned "
+                "about, with the ones that do not reproduce the oracle's gold "
+                "recorded with the tokens they produced instead",
             ],
             "does_not_establish": [
+                "that the gate's pass count is wrong about the model: the "
+                "decomposition study measures the SHIPPED program, and a "
+                "different lowering of the same model could cut the workload "
+                "differently",
                 "any engine result: every one was supplied",
                 "an RTL-emitted token, or an RTL-raised OFFICIAL_EOS",
                 "dual-simulator agreement: Icarus 11 cannot parse this "
