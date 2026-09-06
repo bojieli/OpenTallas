@@ -17,15 +17,81 @@
         "analytical_over_all_five_terms": "weight_read",
         "analytical_over_expressible_terms": "weight_read",
         "cycle": "weight_read",
-        "rule": "The cycle model builds no fabric on SINGLE_CHIP and attributes no counter to fixed latency, so the two binding constraints are only comparable over the terms both models express: compute, weight_read and kv_read.",
+        "cycle_over_tensor_only_compute": "weight_read",
+        "kv_placement": {
+          "bytes_read_from_declared_store": 18906360252,
+          "declared_kv_store": "hbm",
+          "exercised": true,
+          "kv_bytes_read_by_attention": 1179795456,
+          "refused_because": null,
+          "rule": "the design point's kv_store names the store its KV lives in; the run exercises that placement only when the store delivered at least the KV bytes the attention engine read, and a run that read no KV exercises no placement at all",
+          "stores": {
+            "hbm": {
+              "busy_cycles": 181364998,
+              "bytes_read": 18906360252,
+              "bytes_written": 1223320580
+            },
+            "host": {
+              "busy_cycles": 75970,
+              "bytes_read": 303876,
+              "bytes_written": 303876
+            },
+            "rom": {
+              "busy_cycles": 0,
+              "bytes_read": 0,
+              "bytes_written": 0
+            },
+            "sram": {
+              "busy_cycles": 0,
+              "bytes_read": 0,
+              "bytes_written": 0
+            }
+          }
+        },
+        "refused_because": null,
+        "regimes_agree": true,
+        "rule": "The cycle model builds no fabric on SINGLE_CHIP and attributes no counter to fixed latency, so the two binding constraints are only comparable over the terms both models express: compute, weight_read and kv_read.  same_regime additionally requires that the run exercised the KV placement its own design point names; regimes_agree is the comparison alone.",
         "same_regime": true
       },
       "note": "recorded from the reconciliation artifact (gate C3); not part of this field's verdict",
       "rom": {
         "analytical_over_all_five_terms": "weight_read",
         "analytical_over_expressible_terms": "weight_read",
-        "cycle": "kv_read",
-        "rule": "The cycle model builds no fabric on SINGLE_CHIP and attributes no counter to fixed latency, so the two binding constraints are only comparable over the terms both models express: compute, weight_read and kv_read.",
+        "cycle": "compute",
+        "cycle_over_tensor_only_compute": "compute",
+        "kv_placement": {
+          "bytes_read_from_declared_store": 2438643716,
+          "declared_kv_store": "sram",
+          "exercised": true,
+          "kv_bytes_read_by_attention": 1179795456,
+          "refused_because": null,
+          "rule": "the design point's kv_store names the store its KV lives in; the run exercises that placement only when the store delivered at least the KV bytes the attention engine read, and a run that read no KV exercises no placement at all",
+          "stores": {
+            "hbm": {
+              "busy_cycles": 2638029,
+              "bytes_read": 74121216,
+              "bytes_written": 5316608
+            },
+            "host": {
+              "busy_cycles": 75970,
+              "bytes_read": 303876,
+              "bytes_written": 303876
+            },
+            "rom": {
+              "busy_cycles": 2748518,
+              "bytes_read": 16389925304,
+              "bytes_written": 0
+            },
+            "sram": {
+              "busy_cycles": 18209129,
+              "bytes_read": 2438643716,
+              "bytes_written": 1218003972
+            }
+          }
+        },
+        "refused_because": null,
+        "regimes_agree": false,
+        "rule": "The cycle model builds no fabric on SINGLE_CHIP and attributes no counter to fixed latency, so the two binding constraints are only comparable over the terms both models express: compute, weight_read and kv_read.  same_regime additionally requires that the run exercised the KV placement its own design point names; regimes_agree is the comparison alone.",
         "same_regime": false
       },
       "same_regime_both_targets": false,
@@ -1491,15 +1557,81 @@
           "analytical_over_all_five_terms": "weight_read",
           "analytical_over_expressible_terms": "weight_read",
           "cycle": "weight_read",
-          "rule": "The cycle model builds no fabric on SINGLE_CHIP and attributes no counter to fixed latency, so the two binding constraints are only comparable over the terms both models express: compute, weight_read and kv_read.",
+          "cycle_over_tensor_only_compute": "weight_read",
+          "kv_placement": {
+            "bytes_read_from_declared_store": 18906360252,
+            "declared_kv_store": "hbm",
+            "exercised": true,
+            "kv_bytes_read_by_attention": 1179795456,
+            "refused_because": null,
+            "rule": "the design point's kv_store names the store its KV lives in; the run exercises that placement only when the store delivered at least the KV bytes the attention engine read, and a run that read no KV exercises no placement at all",
+            "stores": {
+              "hbm": {
+                "busy_cycles": 181364998,
+                "bytes_read": 18906360252,
+                "bytes_written": 1223320580
+              },
+              "host": {
+                "busy_cycles": 75970,
+                "bytes_read": 303876,
+                "bytes_written": 303876
+              },
+              "rom": {
+                "busy_cycles": 0,
+                "bytes_read": 0,
+                "bytes_written": 0
+              },
+              "sram": {
+                "busy_cycles": 0,
+                "bytes_read": 0,
+                "bytes_written": 0
+              }
+            }
+          },
+          "refused_because": null,
+          "regimes_agree": true,
+          "rule": "The cycle model builds no fabric on SINGLE_CHIP and attributes no counter to fixed latency, so the two binding constraints are only comparable over the terms both models express: compute, weight_read and kv_read.  same_regime additionally requires that the run exercised the KV placement its own design point names; regimes_agree is the comparison alone.",
           "same_regime": true
         },
         "note": "recorded from the reconciliation artifact (gate C3); not part of this field's verdict",
         "rom": {
           "analytical_over_all_five_terms": "weight_read",
           "analytical_over_expressible_terms": "weight_read",
-          "cycle": "kv_read",
-          "rule": "The cycle model builds no fabric on SINGLE_CHIP and attributes no counter to fixed latency, so the two binding constraints are only comparable over the terms both models express: compute, weight_read and kv_read.",
+          "cycle": "compute",
+          "cycle_over_tensor_only_compute": "compute",
+          "kv_placement": {
+            "bytes_read_from_declared_store": 2438643716,
+            "declared_kv_store": "sram",
+            "exercised": true,
+            "kv_bytes_read_by_attention": 1179795456,
+            "refused_because": null,
+            "rule": "the design point's kv_store names the store its KV lives in; the run exercises that placement only when the store delivered at least the KV bytes the attention engine read, and a run that read no KV exercises no placement at all",
+            "stores": {
+              "hbm": {
+                "busy_cycles": 2638029,
+                "bytes_read": 74121216,
+                "bytes_written": 5316608
+              },
+              "host": {
+                "busy_cycles": 75970,
+                "bytes_read": 303876,
+                "bytes_written": 303876
+              },
+              "rom": {
+                "busy_cycles": 2748518,
+                "bytes_read": 16389925304,
+                "bytes_written": 0
+              },
+              "sram": {
+                "busy_cycles": 18209129,
+                "bytes_read": 2438643716,
+                "bytes_written": 1218003972
+              }
+            }
+          },
+          "refused_because": null,
+          "regimes_agree": false,
+          "rule": "The cycle model builds no fabric on SINGLE_CHIP and attributes no counter to fixed latency, so the two binding constraints are only comparable over the terms both models express: compute, weight_read and kv_read.  same_regime additionally requires that the run exercised the KV placement its own design point names; regimes_agree is the comparison alone.",
           "same_regime": false
         },
         "same_regime_both_targets": false,
@@ -6403,7 +6535,7 @@
   "gate": "G4",
   "generator": "tools/derive_cycle_machine.py --calibrate",
   "git": {
-    "commit": "82827ff64a24cba2cc88fed6cdb2abd8a5071e50",
+    "commit": "5901b7619c4c9346d88da951edf66cebec9fc9be",
     "dirty": false,
     "dirty_inputs": [],
     "dirty_paths": []
@@ -6413,10 +6545,10 @@
       "sha256": "51d2909a17a4b594550297bfa4fc0b63c640720ec0add6981a694b3c613a934d"
     },
     "configs/hardware/abi3_capability/n5_design_target/hbm_sram_single_chip_n5_v1.json": {
-      "sha256": "bf6db5953075a1befd7e2436c0c5566d7757b968ff505656ea919a8d42f3b8f1"
+      "sha256": "2848e7a3319aa76b7290ae2332905ca9e778eab8afafcc17df161cf3eaf5c2b2"
     },
     "configs/hardware/abi3_capability/n5_design_target/rom_qwen3_n5_v1.json": {
-      "sha256": "f55fd912cf4e37a9e88b2c52ddc24aa525fd3bc46178a71aabfa006b86580211"
+      "sha256": "bfad59798db19144cd17f9de709f9e235a30c2f9ebf604f3e987d0a59fedc73c"
     },
     "configs/hardware/abi3_cost_n5_design_target_hbm_v1.json": {
       "sha256": "58bc45ecfcaec92f02c67433eb7cab8a92e6a9aa4dee1a5c1b7b7a908090e687"
@@ -6428,13 +6560,13 @@
       "sha256": "7b1558f821f1f42bfde9b57a036ecec431718f3e68e072e46b37a24cbaacfa58"
     },
     "docs/CHIP_ARCHITECTURE_DESIGN.md": {
-      "sha256": "ce7ca226e6ddf8850a493305ab168f62830de8b8ce405346d6eb310e7e985571"
+      "sha256": "8d8667e7ca689f30b26768cab466308b874cb3e4be292c34beace9202643ab0e"
     },
     "results/derived/qwen3_n5_design_target_machine_pair.json": {
-      "sha256": "0bdde63ade200f31f71498be577a458f837915799612a279d517d542a59a99c7"
+      "sha256": "1ae819435cf5318bcd9dbf948a48b80fddf875b3bed6eb598ce4946e89bb4321"
     },
     "results/derived/qwen3_n5_design_target_reconciliation.json": {
-      "sha256": "13d615b934d63956712618c35ffaecb44c28c3ed45c9dd1c15386c815c8184b3"
+      "sha256": "a103c994bcbe5b36dfb27446c71f35db6756b0b649f81ed3da9aa54f3aafabdd"
     },
     "results/physical_abi3/asap7/a3_lane_pipelined/pnr.json": {
       "sha256": "eee87c1aeab04a47838ab4e58dc584ac91c90ecb7846b91c05b398cda2f270a7"
