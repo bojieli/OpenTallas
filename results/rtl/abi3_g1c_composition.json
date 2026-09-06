@@ -14,7 +14,7 @@
   "generated_by": "tools/build_abi3_g1c_composition.py",
   "generated_by_sha256": "9e73a2a14350d3ffbb6ed51601ed0833de0e5ee61fbe75b09fed6a78f6f43632",
   "git": {
-    "commit": "05a230bd06b64521cf8a68ebf9d74794ea2de3b6",
+    "commit": "8be37a02d1aecd3aae9e9c4f01c4963850b451d3",
     "dirty_paths": [],
     "scope": "the tree THIS artifact was derived in. It is not a claim about the tree either run happened in; see execution.control_plane_run and handoff.integrated_campaign for those.",
     "worktree_dirty": false
@@ -30,14 +30,14 @@
       "execution": {
         "control_plane": "rtl/abi3/ot_a3_device_top.sv",
         "control_plane_run": {
-          "artifact": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/reach_cd/g1e_rerun.json",
-          "artifact_sha256": "95c3d5a1bde58b346a221400c9759305d2374c6b201adc192d74f8b54396d7e5",
-          "bound_source_count": 53,
+          "artifact": "results/rtl/abi3_g1e_control_end_to_end.json",
+          "artifact_sha256": "cea959e535573059202264f28c69ffeba39a32003fcc5311c500d1b3e95bbc60",
+          "bound_source_count": 54,
           "census_agrees_with_the_run": true,
           "census_rows_from_the_trace_file": 26,
           "control_plane": "rtl/abi3/ot_a3_device_top.sv",
           "declared_git": {
-            "commit": "4b136d675640a42ee2cb9b1869e8d717ca48bc4f",
+            "commit": "acf851838ea6415352027ed73274dd8635fa1bfd",
             "worktree_dirty": false
           },
           "deployment_sha256": "133afc13e1fcd2aade2e40530883c9986b0e920d99853990d9032fd777f26243",
@@ -286,7 +286,7 @@
             "equals_golden": true,
             "golden_source": "runtime.sim.device.Device"
           },
-          "trace_file": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/reach_cd/g1e_build/build-rom/rtl_issue_trace.txt",
+          "trace_file": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/close_compose/g1e_build2/build-rom/rtl_issue_trace.txt",
           "trace_file_issue_count": 2073,
           "trace_file_sha256": "1ff54121c906ed18b21f42b7487ba230e05e9f0ac4f5a9c9bd26a7ed5afb9778",
           "usable": true,
@@ -302,7 +302,7 @@
         "vehicle": "rtl/test/a3_shipped_prefix_top.sv"
       },
       "git": {
-        "commit": "05a230bd06b64521cf8a68ebf9d74794ea2de3b6",
+        "commit": "8be37a02d1aecd3aae9e9c4f01c4963850b451d3",
         "dirty_paths": [],
         "scope": "the tree THIS artifact was derived in. It is not a claim about the tree either run happened in; see execution.control_plane_run and handoff.integrated_campaign for those.",
         "worktree_dirty": false
@@ -370,7 +370,7 @@
         "consecutive_layers_executed": 0,
         "consecutive_layers_required": 2,
         "evidence_currency": {
-          "an_independent_run_at_this_commit_agrees": true,
+          "an_independent_run_at_this_commit_agrees": null,
           "fields_the_handoff_reads": [
             "expected_cases/observed_cases: fetched, fault and trap class for this lowering's case",
             "operator_admission: which families the bridge trapped"
@@ -672,14 +672,12 @@
         "measured_from": "the RTL's own issue trace, dumped by rtl/test/a3_g1e_control_harness.cpp under OT_A3_TRACE_OUT during the G1e control run, and bound to that run by its own census",
         "model_layers": 36,
         "model_layers_source": {
-          "checkpoint_config": "/home/ubuntu/.cache/huggingface/hub/models--Qwen--Qwen3-8B/snapshots/b968826d9c46dd6066d109eabc6255188de91218/config.json",
-          "checkpoint_config_sha256": "f7c4eadfbbf522470667b797a3c89be2524832d2d599797248dc304fff447c30",
-          "from_checkpoint_config": 36,
+          "from_checkpoint_config": null,
           "from_kernel_ir": 36,
           "kernel_ir": "build/ir-v3/qwen3-8b/kernel_ir.v3.json",
           "kernel_ir_sha256": "62499454381d24641f8cedda00f049aff61b4aa96410fa3fe460e0044df567e6",
           "layers": 36,
-          "sources_agree": true
+          "sources_agree": null
         },
         "operators_per_invocation": [
           19
@@ -2630,14 +2628,14 @@
       "execution": {
         "control_plane": "rtl/abi3/ot_a3_device_top.sv",
         "control_plane_run": {
-          "artifact": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/reach_cd/g1e_rerun.json",
-          "artifact_sha256": "95c3d5a1bde58b346a221400c9759305d2374c6b201adc192d74f8b54396d7e5",
-          "bound_source_count": 53,
+          "artifact": "results/rtl/abi3_g1e_control_end_to_end.json",
+          "artifact_sha256": "cea959e535573059202264f28c69ffeba39a32003fcc5311c500d1b3e95bbc60",
+          "bound_source_count": 54,
           "census_agrees_with_the_run": true,
           "census_rows_from_the_trace_file": 26,
           "control_plane": "rtl/abi3/ot_a3_device_top.sv",
           "declared_git": {
-            "commit": "4b136d675640a42ee2cb9b1869e8d717ca48bc4f",
+            "commit": "acf851838ea6415352027ed73274dd8635fa1bfd",
             "worktree_dirty": false
           },
           "deployment_sha256": "cb9067f5fbf67f7df4212399aee6ba75ced4ca5c8f2dc8c1631372a4068cea2c",
@@ -2886,7 +2884,7 @@
             "equals_golden": true,
             "golden_source": "runtime.sim.device.Device"
           },
-          "trace_file": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/reach_cd/g1e_build/build-hbm/rtl_issue_trace.txt",
+          "trace_file": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/close_compose/g1e_build2/build-hbm/rtl_issue_trace.txt",
           "trace_file_issue_count": 2073,
           "trace_file_sha256": "72dab99c856d88e72a94bd501ad420236a99739841339aae33f27d1497ee4e16",
           "usable": true,
@@ -2902,7 +2900,7 @@
         "vehicle": "rtl/test/a3_shipped_prefix_top.sv"
       },
       "git": {
-        "commit": "05a230bd06b64521cf8a68ebf9d74794ea2de3b6",
+        "commit": "8be37a02d1aecd3aae9e9c4f01c4963850b451d3",
         "dirty_paths": [],
         "scope": "the tree THIS artifact was derived in. It is not a claim about the tree either run happened in; see execution.control_plane_run and handoff.integrated_campaign for those.",
         "worktree_dirty": false
@@ -2970,7 +2968,7 @@
         "consecutive_layers_executed": 0,
         "consecutive_layers_required": 2,
         "evidence_currency": {
-          "an_independent_run_at_this_commit_agrees": true,
+          "an_independent_run_at_this_commit_agrees": null,
           "fields_the_handoff_reads": [
             "expected_cases/observed_cases: fetched, fault and trap class for this lowering's case",
             "operator_admission: which families the bridge trapped"
@@ -3272,14 +3270,12 @@
         "measured_from": "the RTL's own issue trace, dumped by rtl/test/a3_g1e_control_harness.cpp under OT_A3_TRACE_OUT during the G1e control run, and bound to that run by its own census",
         "model_layers": 36,
         "model_layers_source": {
-          "checkpoint_config": "/home/ubuntu/.cache/huggingface/hub/models--Qwen--Qwen3-8B/snapshots/b968826d9c46dd6066d109eabc6255188de91218/config.json",
-          "checkpoint_config_sha256": "f7c4eadfbbf522470667b797a3c89be2524832d2d599797248dc304fff447c30",
-          "from_checkpoint_config": 36,
+          "from_checkpoint_config": null,
           "from_kernel_ir": 36,
           "kernel_ir": "build/ir-v3/qwen3-8b/kernel_ir.v3.json",
           "kernel_ir_sha256": "62499454381d24641f8cedda00f049aff61b4aa96410fa3fe460e0044df567e6",
           "layers": 36,
-          "sources_agree": true
+          "sources_agree": null
         },
         "operators_per_invocation": [
           19
@@ -5221,202 +5217,7 @@
       "workload_id": "TA-QW-EOS-1"
     }
   ],
-  "rerun_not_retained": {
-    "agreement": {
-      "capability_fault_count": {
-        "agree": true,
-        "rerun": 4,
-        "retained": 4
-      },
-      "expected_cases": {
-        "agree": true,
-        "rerun": [
-          {
-            "fault": 32,
-            "fetched": 33,
-            "index": 0,
-            "issued": 11,
-            "launches": 10,
-            "responses": 11,
-            "retired": 32,
-            "trap": 4,
-            "views": 33,
-            "words": 24832
-          },
-          {
-            "fault": 32,
-            "fetched": 33,
-            "index": 1,
-            "issued": 11,
-            "launches": 10,
-            "responses": 11,
-            "retired": 32,
-            "trap": 4,
-            "views": 33,
-            "words": 24832
-          },
-          {
-            "fault": 13,
-            "fetched": 14,
-            "index": 2,
-            "issued": 5,
-            "launches": 4,
-            "responses": 5,
-            "retired": 13,
-            "trap": 4,
-            "views": 11,
-            "words": 20736
-          },
-          {
-            "fault": 14,
-            "fetched": 15,
-            "index": 3,
-            "issued": 5,
-            "launches": 4,
-            "responses": 5,
-            "retired": 14,
-            "trap": 4,
-            "views": 17,
-            "words": 20736
-          }
-        ],
-        "retained": [
-          {
-            "fault": 32,
-            "fetched": 33,
-            "index": 0,
-            "issued": 11,
-            "launches": 10,
-            "responses": 11,
-            "retired": 32,
-            "trap": 4,
-            "views": 33,
-            "words": 24832
-          },
-          {
-            "fault": 32,
-            "fetched": 33,
-            "index": 1,
-            "issued": 11,
-            "launches": 10,
-            "responses": 11,
-            "retired": 32,
-            "trap": 4,
-            "views": 33,
-            "words": 24832
-          },
-          {
-            "fault": 13,
-            "fetched": 14,
-            "index": 2,
-            "issued": 5,
-            "launches": 4,
-            "responses": 5,
-            "retired": 13,
-            "trap": 4,
-            "views": 11,
-            "words": 20736
-          },
-          {
-            "fault": 14,
-            "fetched": 15,
-            "index": 3,
-            "issued": 5,
-            "launches": 4,
-            "responses": 5,
-            "retired": 14,
-            "trap": 4,
-            "views": 17,
-            "words": 20736
-          }
-        ]
-      },
-      "operator_admission": {
-        "agree": true,
-        "rerun": {
-          "capability_trapped_family_count": 6,
-          "cases_with_mapped_placement": 0,
-          "launches": {
-            "ATTENTION.GQA": 0,
-            "DMA.SCATTER": 0,
-            "SELECTION.ARGMAX": 0,
-            "SELECTION.TOKEN_APPEND": 0,
-            "VECTOR.ADD": 0,
-            "VECTOR.SILU_MUL": 0
-          },
-          "measured": true,
-          "reached_families": [],
-          "reached_family_count": 0,
-          "result_injection": false,
-          "trapped_families": [
-            "VECTOR.ADD",
-            "VECTOR.SILU_MUL",
-            "DMA.SCATTER",
-            "ATTENTION.GQA",
-            "SELECTION.ARGMAX",
-            "SELECTION.TOKEN_APPEND"
-          ],
-          "vector_generation": "mapped",
-          "vehicle": "rtl/test/a3_shipped_prefix_top.sv"
-        },
-        "retained": {
-          "capability_trapped_family_count": 6,
-          "cases_with_mapped_placement": 0,
-          "launches": {
-            "ATTENTION.GQA": 0,
-            "DMA.SCATTER": 0,
-            "SELECTION.ARGMAX": 0,
-            "SELECTION.TOKEN_APPEND": 0,
-            "VECTOR.ADD": 0,
-            "VECTOR.SILU_MUL": 0
-          },
-          "measured": true,
-          "reached_families": [],
-          "reached_family_count": 0,
-          "result_injection": false,
-          "trapped_families": [
-            "VECTOR.ADD",
-            "VECTOR.SILU_MUL",
-            "DMA.SCATTER",
-            "ATTENTION.GQA",
-            "SELECTION.ARGMAX",
-            "SELECTION.TOKEN_APPEND"
-          ],
-          "vector_generation": "mapped",
-          "vehicle": "rtl/test/a3_shipped_prefix_top.sv"
-        }
-      },
-      "real_engine_launch_count": {
-        "agree": true,
-        "rerun": 28,
-        "retained": 28
-      },
-      "result_word_count": {
-        "agree": true,
-        "rerun": 91136,
-        "retained": 91136
-      },
-      "simulated_cycles": {
-        "agree": true,
-        "rerun": 252057600,
-        "retained": 252057600
-      },
-      "status": {
-        "agree": true,
-        "rerun": "pass",
-        "retained": "pass"
-      }
-    },
-    "agrees_on_every_compared_field": true,
-    "artifact_sha256": "69e6990dc1d0a9b952d54cedacbf310807300ba9ffb910b39455cedc2daa4915",
-    "git": {
-      "commit": "a922ef3879325e2921a4da951d6ed3eb03333198",
-      "worktree_dirty": false
-    },
-    "vector_set_sha256": "28abd940ae1669e7de2858d7397031f84877974d53e2dcf6b5aee217dd065dec",
-    "what_it_is": "an independent execution of the same integrated campaign, run for this rung at this commit in a separately pinned worktree",
-    "why_not_retained": "it is not a file of this repository, so nothing in this rung is computed from it; it is recorded as agreement with the campaign the tree does hold"
-  },
+  "rerun_not_retained": null,
   "schema": "opentallas.rtl.g1c_composition.v1",
   "what_this_rung_is": "the inductive step of the ladder. G1b is the base case -- one layer. This rung is layer N to layer N+1 with an RTL-to-RTL handoff, plus the loop property that closes the induction over every layer of the model",
   "workload_id": "TA-QW-EOS-1"
