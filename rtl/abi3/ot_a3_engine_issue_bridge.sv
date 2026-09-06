@@ -648,9 +648,36 @@ module ot_a3_engine_issue_bridge (
         (desc_view_scale_block == 0) &&
         (desc_primary_object != NO_ID) &&
         ((desc_permissions & 32'd1) != 0);
+    // The element type of a dense-row source.  A ``TENSOR.EMBED_LOOKUP``
+    // table is BF16 and nothing else.  A plain ``DMA.GATHER`` used to be
+    // pinned to FP32 here, which was never a property of this design: the
+    // only gather the predicate had been written against was the shipped
+    // program's FP32 RoPE coefficient row at PC 1, and the constant froze
+    // that one instance into the admission rule.  ``ot_a3_dma_index_mover``
+    // -- the block every gathered element actually crosses -- carries no
+    // dtype port at all and says so in its own header ("Element width does
+    // not appear here.  Both operand images carry one element per 32-bit
+    // word, so a move is a word copy whatever the storage format is"), and
+    // ABI 3.0 section 7 gives ``GATHER`` an index view and a source with no
+    // dtype constraint.  The pin therefore refused the governed program's
+    // own PC 68, whose source row is BF16 under the SAME
+    // ``exact_index_select_v1`` contract digest PC 1 carries.
+    //
+    // Widening is not weakening, because the element type is still pinned
+    // three further ways and all three are equalities against this same
+    // captured ``source_dtype``: ``output_view_common_ok`` requires the
+    // destination view to carry it, ``numeric_common_ok`` requires the
+    // NUMERIC profile's output_dtype to carry it, and ``gather_numeric_ok``
+    // requires the profile's second_input_dtype to carry it.  What the two
+    // named codes do is keep the admitted set closed: an unrecognised
+    // storage code is still a TRAP_DESCRIPTOR rather than a word copy of
+    // something this design has never qualified.
     wire dense_row_source_ok = !rms_norm_q && !rope_q &&
         !dma_transfer_q && !matmul_q &&
-        (desc_view_dtype == (embedding_q ? FMT_BF16 : FMT_FP32)) &&
+        (embedding_q
+            ? (desc_view_dtype == FMT_BF16)
+            : ((desc_view_dtype == FMT_BF16) ||
+               (desc_view_dtype == FMT_FP32))) &&
         (desc_view_rank == 2) && (desc_view_terms == 0) &&
         (desc_view_dim0 != 0) && (desc_view_dim1 != 0) &&
         (desc_view_dim2 == 0) && (desc_view_dim3 == 0) &&

@@ -25,3 +25,12 @@ results/roofline/context_ladder/*/*/analytical.json
 # regenerated deterministically from the committed roofline artifacts by
 # `make speculative`; only their REPORT.md is committed, as above.
 results/roofline/speculative/*/analytical.json
+
+# The operator-admission campaign's projection-matrix image: 8,388,608 BF16
+# codes (42 MB per storage class) read from the pinned Qwen3-8B checkpoint at
+# the shard, offset and SHA-256 the deployment's own object record declares.
+# `tools/build_a3_operator_admission_vectors.py` re-derives it deterministically
+# and the campaign byte-compares it on every run exactly as it does the
+# committed images, so it is bound by content without being stored.
+testdata/rtl/a3_operator_admission/weights.hex
+testdata/rtl/a3_operator_admission_hbm/weights.hex

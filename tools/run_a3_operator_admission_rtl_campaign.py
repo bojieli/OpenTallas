@@ -151,6 +151,11 @@ ADMISSION_FILES = (
     "source.hex",
     "preload.hex",
     "expected.hex",
+    # The projection-matrix image.  It is regenerated and byte-compared here
+    # exactly like the committed images; it is simply not committed, because
+    # it is 8,388,608 checkpoint codes and is re-derived deterministically
+    # from the pinned checkpoint the deployment names.
+    "weights.hex",
     "index.json",
 )
 UNIT_FILES = (
@@ -253,6 +258,7 @@ def plusargs(admission: Path, units: Path) -> list[str]:
         f"+INDEX={admission / 'index.hex'}",
         f"+SOURCE={admission / 'source.hex'}",
         f"+PRELOAD={admission / 'preload.hex'}",
+        f"+WEIGHTS={admission / 'weights.hex'}",
         f"+EXPECTED={admission / 'expected.hex'}",
         f"+SILU_CASES={units / 'silu_cases.hex'}",
         f"+SILU_GATE={units / 'silu_gate.hex'}",
@@ -329,6 +335,7 @@ def validate_admission(result: dict[str, Any], manifest: dict[str, Any]) -> None
         "source_words": int(geometry["source_words"]),
         "expected_words": int(geometry["expected_words"]),
         "preload_words": int(geometry["preload_words"]),
+        "weight_words": int(geometry["weight_words"]),
     }
     if result["geometry"] != expected_geometry:
         raise RuntimeError(
@@ -600,6 +607,7 @@ def campaign(
             "SOURCE_WORDS": int(geometry["source_words"]),
             "EXPECTED_WORDS": int(geometry["expected_words"]),
             "PRELOAD_WORDS": int(geometry["preload_words"]),
+            "WEIGHT_WORDS": int(geometry["weight_words"]),
         }
 
         for bench in BENCHES:
@@ -740,10 +748,13 @@ def campaign(
                 "previously_capability_trapped_family_count": len(previously_trapped),
                 "object_keyed_families_also_issued": object_keyed,
                 "object_keyed_families_note": (
-                    "families the bridge already admitted, issued here because "
-                    "they resolve their operands through the SAME object table "
-                    "the six mapped families use and name objects the six never "
-                    "do; the placement block below is what they are for"
+                    "families outside the six, issued here because they "
+                    "resolve their operands through the SAME object table the "
+                    "six mapped families use and name objects the six never "
+                    "do; the placement block below is what they are for.  "
+                    "TENSOR.MATMUL and the two head-span forms were already "
+                    "admitted; the BF16 dense-row DMA.GATHER was not, and its "
+                    "admission is the one predicate this campaign widened"
                 ),
                 "governed_program_counters": admission_manifest[
                     "governed_program_counters"
@@ -752,16 +763,22 @@ def campaign(
                 "still_refused": [
                     "VECTOR.SOFTMAX, checked in this campaign: an opcode with "
                     "no datapath is still a CAPABILITY trap",
+                    "PC 68's DMA.GATHER is NO LONGER refused: it was, on a "
+                    "dense-row source dtype pinned to FP32 by the one "
+                    "gather the predicate had been written against, and it "
+                    "is issued as a passing case in this campaign now",
                     "the three MLP projections of the governed layer, PCs 50, "
                     "53 and 59, checked in this campaign: the admitted "
                     "TENSOR.MATMUL weight view is [n <= 4096, 4096] and theirs "
                     "are [12288, 4096], [12288, 4096] and [4096, 12288], so "
                     "each is a DESCRIPTOR trap and the three weight objects "
-                    "they name can be resolved by no run of this design",
-                    "the head span's DMA.GATHER, PC 68, checked in this "
-                    "campaign: its source row is BF16 and the bridge admits a "
-                    "dense-row gather source only in FP32, so the object it "
-                    "would publish is unreachable too",
+                    "they name can be resolved by no run of this design.  "
+                    "The refusal is the admission predicate's and not the "
+                    "datapath's -- ot_a3_mac_lane takes N and K on 16-bit "
+                    "ports, which 12288 fits, and ABI 3.0 section 2 bounds "
+                    "neither -- but widening a predicate is not evidence "
+                    "until a run pays for it, and each of the three is "
+                    "50.3 x 10^6 MACs against the admitted pair's 4.2",
                     "any of the six, on an instance that has not bound its "
                     "operand banks: cfg_extended_placement_valid low keeps the "
                     "previous TRAP_CAPABILITY exactly, which is what leaves an "

@@ -43,9 +43,24 @@ module tb_a3_operator_admission;
     // index bank, and before this bench had one the four object-keyed
     // families could not be issued here at all.
     parameter integer SOURCE_WORDS = 12544;
+    // The projection-matrix bank.  A TENSOR.MATMUL weight is read through m1
+    // with `m1_reads_matmul_weight` HIGH, which is neither the result bank
+    // nor the weight-side source bank, and before this bench had one the
+    // bridge's matmul path could not be issued here at all -- every read went
+    // out of bounds by construction.  It is a separate address space from the
+    // result bank on purpose: the ONE object table hands out a base and the
+    // reading port decides which memory that base indexes, which is what lets
+    // a weight object and a result object hold the same base value.
+    parameter integer WEIGHT_WORDS = 1;
     parameter integer EXPECTED_WORDS = 55877;
     parameter integer PRELOAD_WORDS = 12291;
-    localparam integer CASE_TIMEOUT = 4000000;
+    // A guard against a case that never retires, not a budget.  It was
+    // 4,000,000, which is under the 21,000,000 cycles one of the layer's own
+    // 1024 x 4096 projections takes at the sequential lane's measured 5.008
+    // cycles per MAC, so a real TENSOR.MATMUL would have been reported as a
+    // hang.  The bound is now above the largest operation this vector set
+    // issues with the same order of margin the old one had.
+    localparam integer CASE_TIMEOUT = 400000000;
 
     reg clk = 1'b0;
     reg rst_n = 1'b0;
@@ -57,6 +72,7 @@ module tb_a3_operator_admission;
     reg [31:0]   bank_mem [0:BANK_WORDS-1];
     reg [31:0]   index_mem [0:INDEX_WORDS-1];
     reg [31:0]   source_mem [0:SOURCE_WORDS-1];
+    reg [31:0]   weight_mem [0:WEIGHT_WORDS-1];
     reg [31:0]   expected_mem [0:EXPECTED_WORDS-1];
     reg [31:0]   preload_mem [0:PRELOAD_WORDS-1];
 
@@ -69,6 +85,7 @@ module tb_a3_operator_admission;
     reg [4095:0] bank_path;
     reg [4095:0] index_path;
     reg [4095:0] source_path;
+    reg [4095:0] weight_path;
     reg [4095:0] expected_path;
     reg [4095:0] preload_path;
 
@@ -393,11 +410,17 @@ module tb_a3_operator_admission;
             end
             if (m1_rd_en) begin
                 if (m1_reads_matmul_weight) begin
-                    // No projection matrix is staged in this vehicle, so a
-                    // TENSOR.MATMUL would read out of bounds and the run
-                    // would fail rather than read zeros silently.
-                    m1_rd_data <= 32'd0;
-                    read_oob <= 1'b1;
+                    // The projection matrix, addressed at its own object's
+                    // base in the weight bank.  A read past the staged image
+                    // is still a refusal rather than a silent zero, so a
+                    // vehicle that stages the wrong matrix fails as a load
+                    // error and not as a wrong number.
+                    if (m1_rd_addr < WEIGHT_WORDS)
+                        m1_rd_data <= weight_mem[m1_rd_addr];
+                    else begin
+                        m1_rd_data <= 32'd0;
+                        read_oob <= 1'b1;
+                    end
                 end else if (m1_reads_result) begin
                     if (m1_rd_addr < BANK_WORDS)
                         m1_rd_data <= bank_mem[m1_rd_addr];
@@ -416,7 +439,18 @@ module tb_a3_operator_admission;
                     end
                 end
             end
-            if (m2_rd_en || m3_rd_en)
+            // The two scale ports.  ot_a3_mac_lane drives both on every
+            // reduction step whatever cfg_scale_a/cfg_scale_b say, and the
+            // governed Qwen MATMUL descriptor declares both operands
+            // unscaled -- the bridge ties cfg_scale_a, cfg_scale_b and both
+            // scale bases to zero -- so the returned word is an
+            // architectural don't-care that the lane's own predicates never
+            // read.  Zero is therefore the right responder while a matmul is
+            // the operation in flight, and any OTHER family touching these
+            // ports is still a refusal.  This is the rule
+            // rtl/test/a3_shipped_prefix_top.sv already applies, written the
+            // same way and for the same reason.
+            if ((m2_rd_en || m3_rd_en) && !m1_reads_matmul_weight)
                 read_oob <= 1'b1;
             if (out_we) begin
                 observed_writes <= observed_writes + 1;
@@ -464,7 +498,8 @@ module tb_a3_operator_admission;
             !$value$plusargs("INDEX=%s", index_path) ||
             !$value$plusargs("SOURCE=%s", source_path) ||
             !$value$plusargs("EXPECTED=%s", expected_path) ||
-            !$value$plusargs("PRELOAD=%s", preload_path)) begin
+            !$value$plusargs("PRELOAD=%s", preload_path) ||
+            !$value$plusargs("WEIGHTS=%s", weight_path)) begin
             $fatal(1, "missing ABI3 operator-admission vector plusargs");
         end
         $readmemh(cases_path, case_mem);
@@ -475,12 +510,13 @@ module tb_a3_operator_admission;
         $readmemh(source_path, source_mem);
         $readmemh(expected_path, expected_mem);
         $readmemh(preload_path, preload_mem);
+        $readmemh(weight_path, weight_mem);
 
         $display(
-            "GEOMETRY cases=%0d case_words=%0d view_slots=%0d view_words=%0d map_entries=%0d map_base=%0d descriptor_records=%0d bank_words=%0d index_words=%0d source_words=%0d expected_words=%0d preload_words=%0d",
+            "GEOMETRY cases=%0d case_words=%0d view_slots=%0d view_words=%0d map_entries=%0d map_base=%0d descriptor_records=%0d bank_words=%0d index_words=%0d source_words=%0d expected_words=%0d preload_words=%0d weight_words=%0d",
             CASE_COUNT, CASE_WORDS, VIEW_SLOTS, VIEW_WORDS, MAP_ENTRIES,
             MAP_BASE, DESC_RECORDS, BANK_WORDS, INDEX_WORDS, SOURCE_WORDS,
-            EXPECTED_WORDS, PRELOAD_WORDS
+            EXPECTED_WORDS, PRELOAD_WORDS, WEIGHT_WORDS
         );
 
         repeat (4) @(posedge clk);

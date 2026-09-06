@@ -74,9 +74,13 @@ from runtime.reference.tensor_accelerator_elementwise import (  # noqa: E402
 from runtime.reference.tensor_accelerator_rmsnorm import (  # noqa: E402
     rms_norm_bf16,
 )
+from runtime.reference.tensor_accelerator_bf16 import (  # noqa: E402
+    dense_bf16_linear_bf16,
+)
 from runtime.reference.tensor_accelerator_rope import rope_bf16  # noqa: E402
 from runtime.sim.memory import ViewResolver  # noqa: E402
 from tools import build_a3_qwen_gqa_vectors as gqa  # noqa: E402
+from tools.build_abi3_deployment_rtl_vectors import TARGETS as RTL_TARGETS  # noqa: E402
 from tools import build_a3_qwen_kv_scatter_vectors as scatter  # noqa: E402
 
 
@@ -218,7 +222,15 @@ INDEX_WORDS = 64
 # RMSNorm gain, so the gain lands in the source bank the vehicle stages, at the
 # gain object's own base.  Two banks, one table: the bridge picks the bank from
 # the reading slot and the base from the object, exactly as its header says.
-BASE_SOURCE_RMS_GAIN_ATTENTION = 0
+# The dense row PC 68's DMA.GATHER selects.  ``cfg_source_base`` is a staged
+# base and is NOT keyed by object (the role table of docs/CHIP_ARCHITECTURE
+# _DESIGN.md section 13 item 27 says so), so a gather's source is a region
+# this vehicle sweeps rather than object 45's home in the result bank.  The
+# resolved index view names row 0, so the staged row sits at the front of
+# this bank.  What is staged there is checked, at build time, to be word for
+# word the PC 66 result the preceding case's RTL wrote into object 45.
+BASE_SOURCE_GATHER_ROW = 0
+BASE_SOURCE_RMS_GAIN_ATTENTION = BASE_SOURCE_GATHER_ROW + ADD_WIDTH
 BASE_SOURCE_RMS_GAIN_MLP = BASE_SOURCE_RMS_GAIN_ATTENTION + ADD_WIDTH
 BASE_SOURCE_RMS_GAIN_HEAD = BASE_SOURCE_RMS_GAIN_MLP + ADD_WIDTH
 BASE_SOURCE_HEAD_GAIN_QUERY = BASE_SOURCE_RMS_GAIN_HEAD + ADD_WIDTH
@@ -265,6 +277,7 @@ VECTOR_FILES = (
     "source.hex",
     "preload.hex",
     "expected.hex",
+    "weights.hex",
     "index.json",
 )
 
@@ -372,6 +385,83 @@ def retained_prefix_results(
             f"the retained shipped prefix carries no case for {target_key}"
         )
     return by_pc, source, placement
+
+
+def checkpoint_projection(
+    target_key: str, deployment: dict[str, Any], object_id: int,
+    *, rows: int, columns: int,
+) -> tuple[list[int], dict[str, Any]]:
+    """One complete layer-zero projection matrix, from the real checkpoint.
+
+    Nothing about this matrix is typed here.  The retained deployment record
+    names the directory and the digest of the deployment that produced the
+    program these vectors issue; that deployment's own object table names the
+    shard, the byte offset and the SHA-256 of every segment the object is
+    built from, and the first segment of a Qwen projection object is its
+    layer-zero matrix.  The bytes are re-read from the checkpoint and hashed
+    against the digest the deployment declared, so a checkpoint that is not
+    the one the program was compiled against is a build failure rather than a
+    different set of numbers.  The matrix is staged rather than committed:
+    8,388,608 bytes per projection is not a thing to put in Git, and the
+    campaign binds the staged image by SHA-256 instead.
+    """
+
+    root = ROOT / str(deployment["deployment_dir"])
+    record = json.loads((root / "deployment.json").read_text())
+    if str(record["deployment_sha256"]) != str(deployment["deployment_sha256"]):
+        raise SystemExit(
+            f"{root}/deployment.json is deployment "
+            f"{record['deployment_sha256'][:12]}, but the retained vector "
+            f"manifest binds {deployment['deployment_sha256'][:12]}"
+        )
+    objects = {int(item["object_id"]): item for item in record["objects"]}
+    if object_id not in objects:
+        raise SystemExit(f"deployment object {object_id} is not in its own table")
+    source = objects[object_id]["source"]
+    if source.get("kind") != "segments" or not source.get("segments"):
+        raise SystemExit(f"object {object_id} is not a segment-backed weight")
+    segment = source["segments"][0]
+    matrix_bytes = rows * columns * 2
+    if int(segment["bytes"]) != matrix_bytes:
+        raise SystemExit(
+            f"object {object_id} first segment carries {segment['bytes']} "
+            f"bytes; the resolved view says {rows} x {columns} BF16 = "
+            f"{matrix_bytes}"
+        )
+    checkpoint = None
+    for entry in RTL_TARGETS:
+        if getattr(entry, "key", None) == target_key:
+            checkpoint = Path(str(entry.checkpoint)).expanduser()
+    if checkpoint is None:
+        raise SystemExit(f"{target_key} names no checkpoint in the target table")
+    path = checkpoint / str(segment["path"])
+    offset = int(segment["offset"])
+    if offset + matrix_bytes > path.stat().st_size:
+        raise SystemExit("the selected matrix runs past its checkpoint shard")
+    with path.open("rb") as handle:
+        handle.seek(offset)
+        payload = handle.read(matrix_bytes)
+    if len(payload) != matrix_bytes:
+        raise SystemExit("the checkpoint returned a short matrix segment")
+    observed = hashlib.sha256(payload).hexdigest()
+    if observed != str(segment["sha256"]):
+        raise SystemExit(
+            f"object {object_id} layer-zero segment hashes {observed[:12]}, "
+            f"the deployment declares {str(segment['sha256'])[:12]}"
+        )
+    codes = list(struct.unpack(f"<{rows * columns}H", payload))
+    return codes, {
+        "object_id": object_id,
+        "shape": [rows, columns],
+        "dtype": "BF16",
+        "checkpoint": str(checkpoint),
+        "checkpoint_revision": checkpoint.name,
+        "shard": str(segment["path"]),
+        "segment_offset": offset,
+        "segment_bytes": matrix_bytes,
+        "segment_sha256": observed,
+        "every_code_consumed": True,
+    }
 
 
 def narrow_fp32_to_bf16_rne(code: int) -> int:
@@ -587,10 +677,17 @@ class Builder:
         # existing base moves.
         self.base_head_key = BASE_RING + self.ring_words
         self.base_rope_coefficient = self.base_head_key + KV_PLANE_WORDS
-        self.bank_words = self.base_rope_coefficient + 2 * HEAD_WIDTH
+        # The row PC 68's DMA.GATHER publishes: its own object, its own home.
+        self.base_head_gather = self.base_rope_coefficient + 2 * HEAD_WIDTH
+        self.bank_words = self.base_head_gather + ADD_WIDTH
         self.bank = [0] * self.bank_words
         self.initial_bank: list[int] = []
         self.source_bank = [0] * SOURCE_WORDS
+        # The projection-matrix bank: a third address space, indexed by the
+        # SAME object table, selected by the reading port rather than by the
+        # base.  It stays empty until a TENSOR.MATMUL case stages a matrix.
+        self.weight_bank: list[int] = []
+        self.weight_sources: list[dict[str, Any]] = []
         self.index_bank = list(range(INDEX_WORDS))
         self.cases: list[dict[str, Any]] = []
         self.expected_words: list[int] = []
@@ -922,6 +1019,8 @@ class Builder:
                 (PC_ROPE_KEY, "VECTOR.ROPE"),
                 (PC_RMS_NORM_MLP, "VECTOR.RMS_NORM"),
                 (PC_RMS_NORM_HEAD, "VECTOR.RMS_NORM"),
+                (PC_MATMUL_KEY, "TENSOR.MATMUL"),
+                (PC_MATMUL_VALUE, "TENSOR.MATMUL"),
                 (PC_MATMUL_GATE, "TENSOR.MATMUL"),
                 (PC_MATMUL_UP, "TENSOR.MATMUL"),
                 (PC_MATMUL_DOWN, "TENSOR.MATMUL"),
@@ -950,6 +1049,8 @@ class Builder:
         rope_key = objects(PC_ROPE_KEY)
         rms_mlp = objects(PC_RMS_NORM_MLP)
         rms_head = objects(PC_RMS_NORM_HEAD)
+        matmul_key = objects(PC_MATMUL_KEY)
+        matmul_value = objects(PC_MATMUL_VALUE)
         matmul_gate = objects(PC_MATMUL_GATE)
         matmul_up = objects(PC_MATMUL_UP)
         matmul_down = objects(PC_MATMUL_DOWN)
@@ -1004,6 +1105,21 @@ class Builder:
                 "the query and key head-norm and RoPE chain no longer lands in "
                 "the objects the attention and the scatters read"
             )
+        # The two projections this vehicle now issues in RTL read the trunk
+        # norm's own result and write the two objects the head norms and the
+        # scatters then read.  Both are facts about the shipped program, so a
+        # compiler that stops arranging them this way must rebuild the
+        # campaign rather than let it quietly test a different chain.
+        if matmul_key[0] != add_a[4] or matmul_value[0] != add_a[4]:
+            raise RuntimeError(
+                "the key and value projections no longer read the object the "
+                "attention-input RMSNorm writes"
+            )
+        if matmul_key[4] != scatter_key[1] or matmul_value[4] != scatter_value[1]:
+            raise RuntimeError(
+                "the key and value projections no longer write the objects "
+                "the head norms and the two scatters read"
+            )
         if rope_query[1] != rope_key[1]:
             raise RuntimeError("the two RoPEs no longer share one coefficient object")
         if len({
@@ -1012,8 +1128,40 @@ class Builder:
         }) != 5:
             raise RuntimeError("the five normalization gains are no longer distinct")
 
+        # The two layer-zero projection matrices, read from the checkpoint
+        # the deployment itself names and hashed against the digest that
+        # deployment declared.  Each is staged whole because the operation
+        # consumes every code in it.
+        weight_base: dict[int, int] = {}
+        for weight_pc, weight_slots in (
+            (PC_MATMUL_KEY, matmul_key),
+            (PC_MATMUL_VALUE, matmul_value),
+        ):
+            weight_view = next(
+                view
+                for view in operations[weight_pc]["views"]
+                if int(view["slot"]) == 1
+            )
+            rows, columns = (int(value) for value in weight_view["dims"])
+            codes, identity = checkpoint_projection(
+                self.target_key, self.deployment, weight_slots[1],
+                rows=rows, columns=columns,
+            )
+            identity["pc"] = weight_pc
+            weight_base[weight_slots[1]] = len(self.weight_bank)
+            self.weight_bank.extend(codes)
+            self.weight_sources.append(identity)
+
         object_base = {
             scatter_key[0]: 0,
+            # The projection matrices live in the weight bank; the object
+            # table hands out the base and `m1_reads_matmul_weight` decides
+            # which memory it indexes, which is the same one-table-two-banks
+            # rule the normalization gains already run under.
+            matmul_key[1]: weight_base[matmul_key[1]],
+            matmul_value[1]: weight_base[matmul_value[1]],
+            # The row the head span's gather publishes.
+            head_gather[4]: self.base_head_gather,
             scatter_key[1]: BASE_SCATTER_KEY_SOURCE,
             scatter_value[1]: BASE_SCATTER_VALUE_SOURCE,
             scatter_key[4]: BASE_KV,
@@ -1211,6 +1359,65 @@ class Builder:
             )
             self.bank[output_base : output_base + len(expected)] = expected
 
+        def matmul_case(
+            *, name: str, pc: int, slots: dict[int, int], note: str
+        ) -> None:
+            """One admitted TENSOR.MATMUL of the layer, on real weights.
+
+            The activation is whatever the case before it left in the input
+            object -- not a staged copy of it -- and the weight is the whole
+            layer-zero matrix the deployment's own object record points at in
+            the checkpoint.  The expectation is the independent scalar
+            reference's, and it is required to equal the shipped prefix's own
+            golden write stream for this program counter as well.
+            """
+
+            operation = operations[pc]
+            view = next(
+                item for item in operation["views"] if int(item["slot"]) == 1
+            )
+            rows, columns = (int(value) for value in view["dims"])
+            input_base = object_base[slots[0]]
+            output_base = object_base[slots[4]]
+            activation = self.bank[input_base : input_base + columns]
+            start = weight_base[slots[1]]
+            codes = self.weight_bank[start : start + rows * columns]
+            result = dense_bf16_linear_bf16(
+                (tuple(activation),),
+                tuple(
+                    tuple(codes[row * columns : (row + 1) * columns])
+                    for row in range(rows)
+                ),
+            )
+            expected = list(result.values[0])
+            self._require_golden(pc, pc, expected)
+            self.emit(
+                name=name,
+                pc=pc,
+                family=int(Major.TENSOR),
+                sub=int(Tensor.MATMUL),
+                operator_id=operation["operator_id"],
+                views=operation["views"],
+                object_map=shared(),
+                context_length=17,
+                kv_plane_rows=KV_PLANE_ROWS,
+                request_max_new_tokens=1,
+                generated_before=0,
+                expected_fault=False,
+                expected_trap=TRAP_NONE,
+                expected_result_count=rows,
+                expected_work_count=rows * columns,
+                expected_write_count=rows,
+                expected_token=0,
+                expected_tie_multiplicity=0,
+                expected_eos_reason=0,
+                expected_launch=LAUNCH_MATMUL,
+                compare_base=output_base,
+                compare_words=expected,
+                note=note,
+            )
+            self.bank[output_base : output_base + len(expected)] = expected
+
         def scatter_case(
             pc: int, position: int, source: list[int], rows: list[list[int]]
         ) -> None:
@@ -1307,11 +1514,16 @@ class Builder:
             )
             self.bank[BASE_SCRATCH_B : BASE_SCRATCH_B + ADD_WIDTH] = expected
 
-        # -- program order: normalize, rotate, scatter, attend, residual ----
-        # The layer as the shipped program orders it.  The three projections
-        # between PC 8 and PC 20 are TENSOR.MATMUL against 25 million
-        # checkpoint weights and are not run here; their outputs are the
-        # retained golden values, staged.  Everything else in this span is
+        # -- program order: normalize, project, rotate, scatter, attend -----
+        # The layer as the shipped program orders it.  Two of the three
+        # projections between PC 8 and PC 20 are now issued in RTL against the
+        # checkpoint's own layer-zero k_proj and v_proj -- 8,388,608 weight
+        # bytes each, every one consumed -- so the objects those operations
+        # name are objects this design RESOLVES rather than objects it merely
+        # places.  The query projection at PC 11 is not issued: its weight is
+        # [4096, 4096] and costs 16.8 x 10^6 MACs against the pair's 8.4, and
+        # nothing in the span needs a third weight object.  Its output stays
+        # the retained golden value, staged.  Everything else in this span is
         # issued, and every operator below reads what the operator before it
         # WROTE.
         norm_case(
@@ -1329,6 +1541,28 @@ class Builder:
                 "the embedding row the shipped PC 4 wrote, normalized by the "
                 "real checkpoint gain the retained source bank carries, "
                 "against that program counter's own golden write stream"
+            ),
+        )
+        matmul_case(
+            name="tensor_matmul_key_projection",
+            pc=PC_MATMUL_KEY,
+            slots=matmul_key,
+            note=(
+                "the trunk norm's own RTL result against the real checkpoint "
+                "k_proj of layer zero, read from the shard the deployment's "
+                "object record names and hashed against the digest it "
+                "declares; the 1,024 words it writes are compared against the "
+                "shipped prefix's golden for this same program counter"
+            ),
+        )
+        matmul_case(
+            name="tensor_matmul_value_projection",
+            pc=PC_MATMUL_VALUE,
+            slots=matmul_value,
+            note=(
+                "the same activation object and a second weight object "
+                "through the same table: v_proj of layer zero, and the object "
+                "the value scatter reads next"
             ),
         )
         norm_case(
@@ -1539,6 +1773,64 @@ class Builder:
                 "same table, seeded for the same reason as PC 47's"
             ),
         )
+
+        # ------------------------------------------------- the head gather
+        # PC 68 selects the current row out of the residual history.  Two
+        # facts about this vehicle are stated rather than softened.  First,
+        # the row is read from the STAGED source region, not from object 45's
+        # home in the result bank, because `cfg_source_base` is not keyed by
+        # object; the row staged there is required here to be word for word
+        # what the PC 66 case's RTL just wrote into object 45, so the operand
+        # is that result and not a different one.  Second, the resolved index
+        # view names row 0 and the index image answers its own ordinal, so
+        # the row the design selects is the row this bank stages at 0.
+        gather_source_row = list(
+            self.bank[
+                object_base[rms_head[4]] : object_base[rms_head[4]] + ADD_WIDTH
+            ]
+        )
+        self.source_bank[
+            BASE_SOURCE_GATHER_ROW : BASE_SOURCE_GATHER_ROW + ADD_WIDTH
+        ] = gather_source_row
+        gather_operation = operations[PC_HEAD_GATHER]
+        gather_output_view = next(
+            item for item in gather_operation["views"] if int(item["slot"]) == 4
+        )
+        if [int(value) for value in gather_output_view["dims"]] != [1, ADD_WIDTH]:
+            raise RuntimeError("PC 68 no longer publishes one model-width row")
+        self.emit(
+            name="dma_gather_head_row_select",
+            pc=PC_HEAD_GATHER,
+            family=int(Major.DMA),
+            sub=int(Dma.GATHER),
+            operator_id=gather_operation["operator_id"],
+            views=gather_operation["views"],
+            object_map=shared(),
+            context_length=17,
+            kv_plane_rows=KV_PLANE_ROWS,
+            request_max_new_tokens=1,
+            generated_before=0,
+            expected_fault=False,
+            expected_trap=TRAP_NONE,
+            expected_result_count=ADD_WIDTH,
+            expected_work_count=1,
+            expected_write_count=ADD_WIDTH,
+            expected_token=0,
+            expected_tie_multiplicity=0,
+            expected_eos_reason=0,
+            expected_launch=LAUNCH_GATHER,
+            compare_base=self.base_head_gather,
+            compare_words=gather_source_row,
+            note=(
+                "a BF16 dense-row DMA.GATHER under exact_index_select_v1, "
+                "the same contract digest the shipped FP32 gather at PC 1 "
+                "carries: a byte-preserving row copy, compared word by word "
+                "at the result object's own base"
+            ),
+        )
+        self.bank[
+            self.base_head_gather : self.base_head_gather + ADD_WIDTH
+        ] = gather_source_row
 
         # -- the second generated token: contexts 18 and 19 --------------------
         last = KV_PLANE_ROWS - 1
@@ -1870,17 +2162,23 @@ class Builder:
         self.bank[BASE_TOKEN] = ordinary
 
         # ---------------------------------------------------- what bounds it
-        # The four operators below are shipped instructions of the governed
+        # The three operators below are shipped instructions of the governed
         # program that this bridge does not admit, and each is issued here so
         # the refusal is a measurement rather than a reading of the source.
-        # They matter to the placement question directly: their weight and
-        # result objects are objects of the layer's own 23, and an object no
+        # They were four.  The fourth was the head span's DMA.GATHER at PC 68,
+        # refused because `dense_row_source_ok` pinned a non-embedding
+        # gather's source to FP32; that pin was an artefact of the one gather
+        # the predicate had been written against and not a property of this
+        # design -- `ot_a3_dma_index_mover` has no dtype port at all -- and
+        # PC 68 is now issued as a PASSING case above rather than refused
+        # here.  What remains is the three MLP projections, whose weight
+        # objects are objects of the layer's own 23, and an object no
         # admitted operator can name is one no run of this design can ever
         # resolve.  The bases bound to the three refused weight objects are
         # the halfword bases they would occupy in a projection-matrix bank
-        # this vehicle does not stage; nothing reads them, and they are here
-        # so the refusal is attributable to the view SHAPE and not to an
-        # unplaced object.
+        # this vehicle does not stage for them; nothing reads them, and they
+        # are here so the refusal is attributable to the view SHAPE and not
+        # to an unplaced object.
         refused_matmul_map = dict(object_base)
         refused_matmul_map[matmul_gate[1]] = 0
         refused_matmul_map[matmul_up[1]] = 12288 * ADD_WIDTH
@@ -1923,36 +2221,6 @@ class Builder:
                 ),
             )
 
-        self.emit(
-            name="descriptor_refusal_bf16_dense_row_gather",
-            pc=PC_HEAD_GATHER,
-            family=int(Major.DMA),
-            sub=int(Dma.GATHER),
-            operator_id=operations[PC_HEAD_GATHER]["operator_id"],
-            views=operations[PC_HEAD_GATHER]["views"],
-            object_map=shared(),
-            context_length=17,
-            kv_plane_rows=KV_PLANE_ROWS,
-            request_max_new_tokens=1,
-            generated_before=0,
-            expected_fault=True,
-            expected_trap=TRAP_DESCRIPTOR,
-            expected_result_count=0,
-            expected_work_count=0,
-            expected_write_count=0,
-            expected_token=0,
-            expected_tie_multiplicity=0,
-            expected_eos_reason=0,
-            expected_launch=LAUNCH_NONE,
-            compare_base=BASE_TRUNK,
-            compare_words=untouched_trunk,
-            note=(
-                "the head span's gather reads a BF16 row of the residual "
-                "history; the bridge admits a dense-row DMA.GATHER source "
-                "only in FP32, so this shipped instruction is refused and the "
-                "object it would have written can be reached by no run"
-            ),
-        )
 
     # -- helpers ------------------------------------------------------------
     def _require_golden(
@@ -2114,6 +2382,12 @@ def build(
         "bank.hex": scatter.hex_lines(builder.initial_bank),
         "index.hex": scatter.hex_lines(builder.index_bank),
         "source.hex": scatter.hex_lines(builder.source_bank),
+        # The projection matrices.  Deterministically re-derived from the
+        # pinned checkpoint by this builder and bound by SHA-256 below, and
+        # deliberately not committed: 8,388,608 codes is not a thing to put
+        # in Git, and the campaign regenerates and byte-compares it on every
+        # run exactly as it does the committed images.
+        "weights.hex": scatter.hex_lines(builder.weight_bank or [0]),
         "preload.hex": scatter.hex_lines(builder.preload_words or [0]),
         "expected.hex": scatter.hex_lines(builder.expected_words),
     }
@@ -2137,6 +2411,7 @@ def build(
             "bank_words": builder.bank_words,
             "index_words": INDEX_WORDS,
             "source_words": SOURCE_WORDS,
+            "weight_words": max(len(builder.weight_bank), 1),
             "descriptor_records": builder.next_synthetic_id,
             "expected_words": len(builder.expected_words),
             "preload_words": max(len(builder.preload_words), 1),
@@ -2174,9 +2449,21 @@ def build(
                 "BF16 by the same round-to-nearest-even the datapath performs"
             ),
             "attention_projections": (
-                "the query, key and value projections are the retained golden "
-                "outputs of PCs 11, 14 and 17; those three TENSOR.MATMULs are "
-                "not issued in this vehicle"
+                "the key and value projections at PCs 14 and 17 are ISSUED "
+                "here, in RTL, against the real checkpoint k_proj and v_proj "
+                "of layer zero -- the shard, offset and SHA-256 the "
+                "deployment's own object record declares, re-read and "
+                "re-hashed at build time, every code consumed -- and their "
+                "1,024-word results are required to equal the shipped "
+                "prefix's golden write stream for those same program "
+                "counters.  The query projection at PC 11 is not issued and "
+                "its output is the retained golden value, staged"
+            ),
+            "head_gather_source_row": (
+                "the row PC 68 selects is staged in the source bank because "
+                "cfg_source_base is not keyed by object; the staged row is "
+                "required at build time to be word for word the PC 66 result "
+                "the preceding case's RTL wrote into object 45"
             ),
         },
         "oracles": {
@@ -2191,11 +2478,14 @@ def build(
                 "runtime/reference/tensor_accelerator_rmsnorm.py"
             ),
             "vector_rope": "runtime/reference/tensor_accelerator_rope.py",
+            "tensor_matmul": "runtime/reference/tensor_accelerator_bf16.py",
+            "dma_gather": "byte-preserving row selection, computed here",
             "independent_of_dut": True,
             "cross_checked_against_the_retained_golden_write_stream": sorted(
-                PREFIX_REPLAY_PCS
+                set(PREFIX_REPLAY_PCS) | {PC_MATMUL_KEY, PC_MATMUL_VALUE}
             ),
         },
+        "checkpoint_weights": builder.weight_sources,
         "cases": [
             {
                 "name": item["name"],
@@ -2238,7 +2528,16 @@ def build(
             "object_keyed_families_issued_through_one_shared_table": True,
             "real_checkpoint_normalization_gains": False,
             "three_of_five_normalization_gains_are_checkpoint": True,
+            # Two of the layer's seven TENSOR.MATMULs are issued, on the
+            # checkpoint's own layer-zero k_proj and v_proj.  Five are not:
+            # PC 11 and PC 41 are admitted and simply cost 16.8 x 10^6 MACs
+            # each with no object this run needs, and PCs 50, 53 and 59 are
+            # refused by the weight-view predicate.  "issued" therefore stays
+            # false and the count is stated instead.
             "layer_matmuls_issued": False,
+            "layer_matmuls_issued_count": 2,
+            "layer_matmul_count": 7,
+            "real_checkpoint_projection_weights": True,
             "runtime_context_length": True,
             "read_modify_write_placement": True,
             "fail_closed_matrix": True,
