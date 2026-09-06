@@ -3,6 +3,7 @@
   "canonical_timestamp_policy": "no timestamp in canonical artifact",
   "claim_boundary": {
     "does_not_establish": [
+      "that the gate's pass count is wrong about the model: the decomposition study measures the SHIPPED program, and a different lowering of the same model could cut the workload differently",
       "any engine result: every one was supplied",
       "an RTL-emitted token, or an RTL-raised OFFICIAL_EOS",
       "dual-simulator agreement: Icarus 11 cannot parse this vehicle's 64-bit weight window declarations",
@@ -11,39 +12,42 @@
     "establishes": [
       "the ABI 3.0 control plane RTL issues the same sequence the reference model does, over every pass of the governed workload, on each of ROM and HBM, compared element for element with the first divergence recorded",
       "the injected values reach only the engine completion handshake and the result memory write port, re-derived from the RTL source by an audit that is required to refuse a spliced counter-example",
-      "no engine ran: zero launches, zero engine work and zero weight reads, measured per pass"
+      "no engine ran: zero launches, zero engine work and zero weight reads, measured per pass",
+      "which host decompositions of the governed workload this deployment admits at all, executed rather than reasoned about, with the ones that do not reproduce the oracle's gold recorded with the tokens they produced instead"
     ]
   },
   "cost_measurement": {
-    "measured_all_stores_seconds": 118.73,
+    "measured_all_stores_seconds": 1182.22,
     "measured_per_store": {
       "hbm": {
-        "elaborate_and_compile_seconds": 20.4,
-        "end_to_end_seconds": 58.19,
-        "golden_model_seconds": 32.69,
+        "elaborate_and_compile_seconds": 19.84,
+        "end_to_end_seconds": 586.35,
+        "golden_model_seconds": 33.9,
         "hypothetical_note": "a lower bound: one result-memory write cycle per word, 1,879,799,430 words, at this run's own measured rate. It is reported because it is the arithmetic that most plausibly produced the ~3 h estimate, not because this rung needs it -- the RTL control plane can observe a result word only through a PREDICATE, and this program declares none",
-        "hypothetical_seconds_if_every_output_word_were_injected": 6457,
-        "run_seconds": 5.1,
-        "simulate_seconds": 2.333,
+        "hypothetical_seconds_if_every_output_word_were_injected": 6365,
+        "pass_decomposition_study_seconds": 527.58,
+        "run_seconds": 5.03,
+        "simulate_seconds": 2.3,
         "simulated_cycles": 679236,
-        "simulated_cycles_per_second": 291143
+        "simulated_cycles_per_second": 295320
       },
       "rom": {
-        "elaborate_and_compile_seconds": 20.51,
-        "end_to_end_seconds": 60.54,
-        "golden_model_seconds": 34.94,
+        "elaborate_and_compile_seconds": 19.75,
+        "end_to_end_seconds": 595.87,
+        "golden_model_seconds": 33.3,
         "hypothetical_note": "a lower bound: one result-memory write cycle per word, 1,879,799,430 words, at this run's own measured rate. It is reported because it is the arithmetic that most plausibly produced the ~3 h estimate, not because this rung needs it -- the RTL control plane can observe a result word only through a PREDICATE, and this program declares none",
-        "hypothetical_seconds_if_every_output_word_were_injected": 6435,
-        "run_seconds": 5.09,
-        "simulate_seconds": 2.325,
+        "hypothetical_seconds_if_every_output_word_were_injected": 6399,
+        "pass_decomposition_study_seconds": 537.77,
+        "run_seconds": 5.05,
+        "simulate_seconds": 2.312,
         "simulated_cycles": 679220,
-        "simulated_cycles_per_second": 292138
+        "simulated_cycles_per_second": 293780
       }
     },
     "replaces": {
       "also_reported_as": "3.10 h per store by the lane that built the injection vehicle, which reported that conservative figure over an optimistic 0.35 h form under R13",
       "figure": "~3 h per store",
-      "measured_instead": 118.73,
+      "measured_instead": 1182.22,
       "not_edited_here": "no document or gate figure is changed by this tool; the measurement is published beside the estimate",
       "recorded_in": [
         "docs/OPENTALLAS_REDESIGN_PLAN.md, the ladder table's G1e row",
@@ -54,7 +58,7 @@
   },
   "gate": "G1e (configs/gates/redesign_gates.json)",
   "git": {
-    "commit": "794078a463e7791de33b1f900932566e34bc72ff",
+    "commit": "afc09421a50e7545759bd35e9a2142cb41b6039b",
     "worktree_dirty": false
   },
   "records": [
@@ -62,12 +66,12 @@
       "checker_returncode": 0,
       "checks": 10441,
       "cost": {
-        "elaborate_and_compile_seconds": 20.51,
-        "golden_model_seconds": 34.94,
+        "elaborate_and_compile_seconds": 19.75,
+        "golden_model_seconds": 33.3,
         "host_writes": 425984,
         "passes": 3,
-        "run_seconds": 5.09,
-        "simulate_seconds": 2.325,
+        "run_seconds": 5.05,
+        "simulate_seconds": 2.312,
         "simulated_cycles": 679220
       },
       "deployment": {
@@ -90,6 +94,42 @@
         "target_key": "qwen3-8b-rom-single-chip"
       },
       "eos": {
+        "control_plane_reached_the_eos_instruction": {
+          "issued_in_every_pass": true,
+          "meaning": "the control plane fetched, decoded, resolved the operand views of and issued SELECTION.ARGMAX and SELECTION.TOKEN_APPEND -- the instruction pair that ends a generation -- in every pass. What did not happen is the engine behind it running: under ENABLE_RESULT_INJECTION the top ties the bridge's issue_valid low, so ot_a3_selection_token_append.sv was never started and raised nothing. official_eos_raised is false as a measurement of the engine, not as an absence of the instruction",
+          "passes": 3,
+          "selection_argmax_issues": 3,
+          "selection_token_append_issues": 3,
+          "source": "the RTL's own issue census over every pass of this run"
+        },
+        "how_both_fields_are_decided": {
+          "measured_inputs": {
+            "official_eos_encoding": 1,
+            "post_eos_probe_admitted": true,
+            "post_eos_probe_ran": true,
+            "post_eos_probe_trapped": false,
+            "real_engine_launches": 0,
+            "selected_eos_reason": 0
+          },
+          "official_eos_raised": "the integrated top's selected_eos_reason output equals OFFICIAL_EOS (1, read from runtime.abi3.records.EosReason) AND the run launched at least one real engine. The second half is not decoration: under result injection the EOS reason could only be a model value passed through, and a field that could be set by wiring an output with nothing having run is the exact defect this ladder was built to catch. Both halves come off the RTL run",
+          "post_eos_refused": "the post-EOS probe ran AND the RTL either refused to complete it or trapped it. Both come off the DUT's own done/complete/trapped outputs on the pass driven after the one that produced the official EOS",
+          "self_test": {
+            "official_eos_raised": {
+              "false_because_no_engine_ran": false,
+              "false_because_the_reason_is_not_official": false,
+              "true_when_a_real_engine_raised_it": true
+            },
+            "passed": true,
+            "post_eos_refused": {
+              "false_when_the_design_completed_the_pass": false,
+              "false_when_the_probe_did_not_run": false,
+              "true_when_the_design_did_not_complete_it": true,
+              "true_when_the_design_trapped_it": true
+            },
+            "ran": true,
+            "why": "each derived EOS field is exercised against fabricated observations in both directions; a field pinned to a constant fails this and the campaign refuses to publish"
+          }
+        },
         "model_generated_token_ids": [
           3925,
           13,
@@ -140,7 +180,7 @@
           "OFFICIAL_EOS: issue SELECTION.TOKEN_APPEND to the real engine with the injected ARGMAX token, which needs the top to select injection per issue rather than by parameter",
           "post-EOS refusal: a program that predicates its continuation on EOS_MEMBER, or a device-side session the RTL owns"
         ],
-        "why_not_measured_in_rtl": "in the promoted lowering the EOS decision is an ENGINE result -- rtl/abi3/ot_a3_selection_token_append.sv raises OFFICIAL_EOS from the policy's EOS set -- and under result injection no engine is issued to, so an EOS raised here would be the model's value passed through. The post-EOS refusal is a host session-state refusal in runtime/sim/device.py:run_transaction, taken before an instruction is fetched; this deployment's program carries no STATE instruction and no EOS_MEMBER predicate, so its RTL control plane has nothing to refuse. Both fields are reported false because this vehicle did not measure them"
+        "why_not_measured_in_rtl": "in the promoted lowering the EOS decision is an ENGINE result -- rtl/abi3/ot_a3_selection_token_append.sv raises OFFICIAL_EOS from the policy's EOS set -- and under result injection no engine is issued to, so an EOS raised here would be the model's value passed through. The post-EOS refusal is a host session-state refusal in runtime/sim/device.py:run_transaction, taken before an instruction is fetched; this deployment's program carries no STATE instruction and no EOS_MEMBER predicate, so its RTL control plane has nothing to refuse. Neither field is written as a constant: each is the conjunction of RTL observations recorded in how_both_fields_are_decided, and each is false because those observations are"
       },
       "execution": {
         "control_plane": "rtl/abi3/ot_a3_device_top.sv",
@@ -160,7 +200,7 @@
         "why_single_simulator": "the vehicle declares `parameter longint unsigned MATMUL_WEIGHT_BYTES` and imports a DPI function returning `longint unsigned`; Icarus 11 cannot parse either, measured at this commit and before it. G1's own scope already records this vehicle as Verilator-only"
       },
       "git": {
-        "commit": "794078a463e7791de33b1f900932566e34bc72ff",
+        "commit": "afc09421a50e7545759bd35e9a2142cb41b6039b",
         "worktree_dirty": false
       },
       "golden_vectors": {
@@ -909,9 +949,796 @@
         "stop_reason": "eos"
       },
       "passes": {
+        "decomposition_study": {
+          "artifact_schema": "opentallas.rtl.abi3_g1e_pass_decomposition.v1",
+          "cases": [
+            {
+              "completed_transactions": 3,
+              "decomposition": "workload_driver",
+              "device_transactions": 3,
+              "forward_passed_positions": 18,
+              "generated_token_ids": [
+                3925,
+                13,
+                151645
+              ],
+              "note": "stop_reason=eos",
+              "reproduces_gold": true,
+              "statement": "the workload's own submission sequence: one prefill transaction spanning every prompt position, then one decode transaction per further token, exactly as runtime.driver.GenerationDriver.generate issues it",
+              "transactions": [
+                {
+                  "entrypoint_id": 0,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 0,
+                  "position_start": 0,
+                  "produced_tokens": [
+                    3925
+                  ],
+                  "seconds": 11.5,
+                  "span_tokens": 16,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 1,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 1,
+                  "position_start": 16,
+                  "produced_tokens": [
+                    13
+                  ],
+                  "seconds": 11.319,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 1,
+                  "eos_reason": 1,
+                  "message": "",
+                  "phase": 1,
+                  "position_start": 17,
+                  "produced_tokens": [
+                    151645
+                  ],
+                  "seconds": 10.934,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                }
+              ],
+              "wall_seconds": 33.75
+            },
+            {
+              "completed_transactions": 4,
+              "decomposition": "chunked_prefill_span_8",
+              "device_transactions": 4,
+              "forward_passed_positions": 18,
+              "generated_token_ids": [
+                271,
+                3925,
+                13,
+                151645
+              ],
+              "note": "",
+              "reproduces_gold": false,
+              "statement": "the prompt in prefill transactions of SPAN_TOKENS=8, then one decode transaction per further token",
+              "transactions": [
+                {
+                  "entrypoint_id": 0,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 0,
+                  "position_start": 0,
+                  "produced_tokens": [
+                    271
+                  ],
+                  "seconds": 11.573,
+                  "span_tokens": 8,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 0,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 0,
+                  "position_start": 8,
+                  "produced_tokens": [
+                    3925
+                  ],
+                  "seconds": 11.388,
+                  "span_tokens": 8,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 1,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 1,
+                  "position_start": 16,
+                  "produced_tokens": [
+                    13
+                  ],
+                  "seconds": 10.666,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 1,
+                  "eos_reason": 1,
+                  "message": "",
+                  "phase": 1,
+                  "position_start": 17,
+                  "produced_tokens": [
+                    151645
+                  ],
+                  "seconds": 11.273,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                }
+              ],
+              "wall_seconds": 44.9
+            },
+            {
+              "completed_transactions": 6,
+              "decomposition": "chunked_prefill_span_4",
+              "device_transactions": 6,
+              "forward_passed_positions": 18,
+              "generated_token_ids": [
+                311,
+                271,
+                151667,
+                3925,
+                13,
+                151645
+              ],
+              "note": "",
+              "reproduces_gold": false,
+              "statement": "the prompt in prefill transactions of SPAN_TOKENS=4, then one decode transaction per further token",
+              "transactions": [
+                {
+                  "entrypoint_id": 0,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 0,
+                  "position_start": 0,
+                  "produced_tokens": [
+                    311
+                  ],
+                  "seconds": 11.207,
+                  "span_tokens": 4,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 0,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 0,
+                  "position_start": 4,
+                  "produced_tokens": [
+                    271
+                  ],
+                  "seconds": 11.289,
+                  "span_tokens": 4,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 0,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 0,
+                  "position_start": 8,
+                  "produced_tokens": [
+                    151667
+                  ],
+                  "seconds": 10.823,
+                  "span_tokens": 4,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 0,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 0,
+                  "position_start": 12,
+                  "produced_tokens": [
+                    3925
+                  ],
+                  "seconds": 10.383,
+                  "span_tokens": 4,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 1,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 1,
+                  "position_start": 16,
+                  "produced_tokens": [
+                    13
+                  ],
+                  "seconds": 11.407,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 1,
+                  "eos_reason": 1,
+                  "message": "",
+                  "phase": 1,
+                  "position_start": 17,
+                  "produced_tokens": [
+                    151645
+                  ],
+                  "seconds": 11.295,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                }
+              ],
+              "wall_seconds": 66.41
+            },
+            {
+              "completed_transactions": 16,
+              "decomposition": "chunked_prefill_span_1",
+              "device_transactions": 16,
+              "forward_passed_positions": 16,
+              "generated_token_ids": [
+                67,
+                198,
+                2610,
+                311,
+                264,
+                979,
+                5005,
+                271,
+                151644,
+                1406,
+                659,
+                151667,
+                198,
+                32313,
+                271,
+                3925
+              ],
+              "note": "the chunk at position 15 ended the session with eos_reason=2 after 16 of 16 prompt positions: every pass of this program appends a token, so the request's own MAX_NEW_TOKENS bound is reached while the prompt is still being read",
+              "reproduces_gold": false,
+              "statement": "the prompt in prefill transactions of SPAN_TOKENS=1, then one decode transaction per further token",
+              "transactions": [
+                {
+                  "entrypoint_id": 0,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 0,
+                  "position_start": 0,
+                  "produced_tokens": [
+                    67
+                  ],
+                  "seconds": 10.914,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 0,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 0,
+                  "position_start": 1,
+                  "produced_tokens": [
+                    198
+                  ],
+                  "seconds": 11.243,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 0,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 0,
+                  "position_start": 2,
+                  "produced_tokens": [
+                    2610
+                  ],
+                  "seconds": 11.359,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 0,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 0,
+                  "position_start": 3,
+                  "produced_tokens": [
+                    311
+                  ],
+                  "seconds": 9.294,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 0,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 0,
+                  "position_start": 4,
+                  "produced_tokens": [
+                    264
+                  ],
+                  "seconds": 11.538,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 0,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 0,
+                  "position_start": 5,
+                  "produced_tokens": [
+                    979
+                  ],
+                  "seconds": 11.845,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 0,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 0,
+                  "position_start": 6,
+                  "produced_tokens": [
+                    5005
+                  ],
+                  "seconds": 11.407,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 0,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 0,
+                  "position_start": 7,
+                  "produced_tokens": [
+                    271
+                  ],
+                  "seconds": 11.044,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 0,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 0,
+                  "position_start": 8,
+                  "produced_tokens": [
+                    151644
+                  ],
+                  "seconds": 11.366,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 0,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 0,
+                  "position_start": 9,
+                  "produced_tokens": [
+                    1406
+                  ],
+                  "seconds": 11.502,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 0,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 0,
+                  "position_start": 10,
+                  "produced_tokens": [
+                    659
+                  ],
+                  "seconds": 10.529,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 0,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 0,
+                  "position_start": 11,
+                  "produced_tokens": [
+                    151667
+                  ],
+                  "seconds": 11.429,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 0,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 0,
+                  "position_start": 12,
+                  "produced_tokens": [
+                    198
+                  ],
+                  "seconds": 11.407,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 0,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 0,
+                  "position_start": 13,
+                  "produced_tokens": [
+                    32313
+                  ],
+                  "seconds": 11.381,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 0,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 0,
+                  "position_start": 14,
+                  "produced_tokens": [
+                    271
+                  ],
+                  "seconds": 11.421,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 0,
+                  "eos_reason": 2,
+                  "message": "",
+                  "phase": 0,
+                  "position_start": 15,
+                  "produced_tokens": [
+                    3925
+                  ],
+                  "seconds": 11.14,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                }
+              ],
+              "wall_seconds": 178.83
+            },
+            {
+              "completed_transactions": 16,
+              "decomposition": "decode_entrypoint_per_position",
+              "device_transactions": 16,
+              "forward_passed_positions": 16,
+              "generated_token_ids": [
+                67,
+                198,
+                2610,
+                311,
+                264,
+                979,
+                5005,
+                271,
+                151644,
+                1406,
+                659,
+                151667,
+                198,
+                32313,
+                271,
+                3925
+              ],
+              "note": "the transaction at position 15 ended the session with eos_reason=2 after 16 of 16 prompt positions",
+              "reproduces_gold": false,
+              "statement": "no prefill transaction at all: every prompt position submitted singly through the decode entrypoint, then one decode transaction per further token",
+              "transactions": [
+                {
+                  "entrypoint_id": 1,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 1,
+                  "position_start": 0,
+                  "produced_tokens": [
+                    67
+                  ],
+                  "seconds": 12.613,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 1,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 1,
+                  "position_start": 1,
+                  "produced_tokens": [
+                    198
+                  ],
+                  "seconds": 11.265,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 1,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 1,
+                  "position_start": 2,
+                  "produced_tokens": [
+                    2610
+                  ],
+                  "seconds": 11.315,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 1,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 1,
+                  "position_start": 3,
+                  "produced_tokens": [
+                    311
+                  ],
+                  "seconds": 11.366,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 1,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 1,
+                  "position_start": 4,
+                  "produced_tokens": [
+                    264
+                  ],
+                  "seconds": 11.285,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 1,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 1,
+                  "position_start": 5,
+                  "produced_tokens": [
+                    979
+                  ],
+                  "seconds": 11.395,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 1,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 1,
+                  "position_start": 6,
+                  "produced_tokens": [
+                    5005
+                  ],
+                  "seconds": 9.149,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 1,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 1,
+                  "position_start": 7,
+                  "produced_tokens": [
+                    271
+                  ],
+                  "seconds": 11.357,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 1,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 1,
+                  "position_start": 8,
+                  "produced_tokens": [
+                    151644
+                  ],
+                  "seconds": 11.243,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 1,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 1,
+                  "position_start": 9,
+                  "produced_tokens": [
+                    1406
+                  ],
+                  "seconds": 11.328,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 1,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 1,
+                  "position_start": 10,
+                  "produced_tokens": [
+                    659
+                  ],
+                  "seconds": 11.352,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 1,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 1,
+                  "position_start": 11,
+                  "produced_tokens": [
+                    151667
+                  ],
+                  "seconds": 11.181,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 1,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 1,
+                  "position_start": 12,
+                  "produced_tokens": [
+                    198
+                  ],
+                  "seconds": 10.972,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 1,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 1,
+                  "position_start": 13,
+                  "produced_tokens": [
+                    32313
+                  ],
+                  "seconds": 11.083,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 1,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 1,
+                  "position_start": 14,
+                  "produced_tokens": [
+                    271
+                  ],
+                  "seconds": 11.287,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 1,
+                  "eos_reason": 2,
+                  "message": "",
+                  "phase": 1,
+                  "position_start": 15,
+                  "produced_tokens": [
+                    3925
+                  ],
+                  "seconds": 11.225,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                }
+              ],
+              "wall_seconds": 179.42
+            }
+          ],
+          "deployment_sha256": "133afc13e1fcd2aade2e40530883c9986b0e920d99853990d9032fd777f26243",
+          "does_not_establish": [
+            "that no other deployment of this model could execute the workload in a different number of passes; this measures the shipped program, not the model",
+            "anything about the RTL: no RTL is compiled, run or read here"
+          ],
+          "finding": "every pass of this deployment's program ends in SELECTION.ARGMAX and SELECTION.TOKEN_APPEND, so a pass that reads prompt positions without appending a token does not exist in this lowering. Cutting the prefill into more transactions therefore emits one token per chunk that the workload never generated, and at SPAN_TOKENS=1 the request's own MAX_NEW_TOKENS bound ends the session before the prompt is consumed. The measured consequence is that the workload's own submission sequence is the only decomposition of TA-QW-EOS-1 on this deployment that reproduces the oracle's gold, and it is the number the rung reports",
+          "gate_requires_passes": 19,
+          "marker": "PASS: ABI3 G1e pass decomposition store=rom cases=5 correct=1 max_transactions=3 max_forward_positions=18 positions=19 gate_requires=19 reachable=0",
+          "measured": {
+            "correct_decomposition_count": 1,
+            "correct_decompositions": [
+              "workload_driver"
+            ],
+            "gate_number_is_reachable": false,
+            "maximum_device_transactions_over_correct_decompositions": 3,
+            "maximum_forward_passed_positions_over_correct_decompositions": 18,
+            "positions_never_forward_passed": 1
+          },
+          "oracle": {
+            "generated_token_ids": [
+              3925,
+              13,
+              151645
+            ],
+            "path": "results/abi3/qwen3_reference_oracle_eos.json"
+          },
+          "reads_no_rtl": true,
+          "source_sha256": {
+            "runtime/abi3/verifier.py": "c7a5b0ec41164acaa622caa5029df3e8563747b95fa152a1fe5b88a2f0ad409d",
+            "runtime/driver.py": "fd39cf300d675321445c0e14b17c5de19f6ea7800f32589fff5743a4cda8e32e",
+            "runtime/sim/device.py": "5fe195429c88602e59eb58316d8c76f3423c573b0d9fe800a05bc4c91e70ab30",
+            "tools/build_abi3_g1e_pass_decomposition.py": "da692b7bd7c1dc23197b437f41d9db9befb441083dfecd74045ca474b472b07b"
+          },
+          "tool": "tools/build_abi3_g1e_pass_decomposition.py",
+          "wall_seconds": 537.77,
+          "workload_digest": "ea35fc800cccd2839aa663cdf0e7806600948a26f0057d1ec7ec7bd31d007eaa"
+        },
         "device_transactions": 3,
         "executed": 3,
         "gate_requires": 19,
+        "gate_requires_read_from": "configs/gates/redesign_gates.json",
         "model_forward_passes": 18,
         "per_pass": [
           {
@@ -954,8 +1781,54 @@
             "wait_events": 689
           }
         ],
+        "positions_covered_note": "SPAN_TOKENS and POSITION_START are the request symbols the RTL's symbol file was loaded with for each pass, so this is which of the workload's token positions the control plane actually drove, not a count of transactions",
+        "positions_covered_per_pass": [
+          {
+            "entrypoint_id": 0,
+            "pass_index": 0,
+            "position_start": 0,
+            "positions": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15
+            ],
+            "span_tokens": 16
+          },
+          {
+            "entrypoint_id": 1,
+            "pass_index": 1,
+            "position_start": 16,
+            "positions": [
+              16
+            ],
+            "span_tokens": 1
+          },
+          {
+            "entrypoint_id": 1,
+            "pass_index": 2,
+            "position_start": 17,
+            "positions": [
+              17
+            ],
+            "span_tokens": 1
+          }
+        ],
+        "positions_never_forward_passed": 1,
         "unit": "device transaction through the RTL control plane",
-        "why_not_19": "measured: the shipped Qwen deployment executes TA-QW-EOS-1 in 3 device transactions -- one prefill whose SPAN_TOKENS is 16 and covers every prompt position at once, then one decode per further token. The workload's 19 token positions are 16 prompt plus 3 generated; only 18 of them are ever forward-passed, because the first generated token comes out of the prefill pass and the last generated token (the official EOS) is never fed back. No correct execution of this workload on this deployment performs 19 passes, so the gate's field cannot be satisfied by running it correctly; the number is not adjusted here and the rung fails on it",
+        "why_not_the_gate_number": "measured, not argued. The RTL ran 3 device transactions because that is what the workload's own submission sequence is: one prefill transaction whose SPAN_TOKENS is 16 and covers every prompt position at once, then one decode transaction per further token. Whether the same workload could be cut into 19 transactions was not reasoned about, it was tried: 5 submission sequences were executed on the reference model, of which 1 reproduced the oracle's gold (workload_driver) and 4 did not (chunked_prefill_span_8, chunked_prefill_span_4, chunked_prefill_span_1, decode_entrypoint_per_position). The largest pass count over the sequences that reproduce the gold is 3, against the gate's 19; 18 of the workload's 19 token positions are forward-passed, and the last generated token -- the official EOS -- is never fed back, so it is a position of the sequence and not a pass of the model",
         "workload_token_positions": 19
       },
       "rung": "G1e",
@@ -995,7 +1868,7 @@
           "independent_of_rtl": true,
           "module": "runtime.sim.device.Device",
           "view_resolution": "runtime.sim.memory.ViewResolver (the device's own)",
-          "wall_seconds": 34.94
+          "wall_seconds": 33.3
         },
         "uncompared_issue_fields": [
           "serial",
@@ -1016,12 +1889,12 @@
       "checker_returncode": 0,
       "checks": 10441,
       "cost": {
-        "elaborate_and_compile_seconds": 20.4,
-        "golden_model_seconds": 32.69,
+        "elaborate_and_compile_seconds": 19.84,
+        "golden_model_seconds": 33.9,
         "host_writes": 425984,
         "passes": 3,
-        "run_seconds": 5.1,
-        "simulate_seconds": 2.333,
+        "run_seconds": 5.03,
+        "simulate_seconds": 2.3,
         "simulated_cycles": 679236
       },
       "deployment": {
@@ -1044,6 +1917,42 @@
         "target_key": "qwen3-8b-hbm-single-chip"
       },
       "eos": {
+        "control_plane_reached_the_eos_instruction": {
+          "issued_in_every_pass": true,
+          "meaning": "the control plane fetched, decoded, resolved the operand views of and issued SELECTION.ARGMAX and SELECTION.TOKEN_APPEND -- the instruction pair that ends a generation -- in every pass. What did not happen is the engine behind it running: under ENABLE_RESULT_INJECTION the top ties the bridge's issue_valid low, so ot_a3_selection_token_append.sv was never started and raised nothing. official_eos_raised is false as a measurement of the engine, not as an absence of the instruction",
+          "passes": 3,
+          "selection_argmax_issues": 3,
+          "selection_token_append_issues": 3,
+          "source": "the RTL's own issue census over every pass of this run"
+        },
+        "how_both_fields_are_decided": {
+          "measured_inputs": {
+            "official_eos_encoding": 1,
+            "post_eos_probe_admitted": true,
+            "post_eos_probe_ran": true,
+            "post_eos_probe_trapped": false,
+            "real_engine_launches": 0,
+            "selected_eos_reason": 0
+          },
+          "official_eos_raised": "the integrated top's selected_eos_reason output equals OFFICIAL_EOS (1, read from runtime.abi3.records.EosReason) AND the run launched at least one real engine. The second half is not decoration: under result injection the EOS reason could only be a model value passed through, and a field that could be set by wiring an output with nothing having run is the exact defect this ladder was built to catch. Both halves come off the RTL run",
+          "post_eos_refused": "the post-EOS probe ran AND the RTL either refused to complete it or trapped it. Both come off the DUT's own done/complete/trapped outputs on the pass driven after the one that produced the official EOS",
+          "self_test": {
+            "official_eos_raised": {
+              "false_because_no_engine_ran": false,
+              "false_because_the_reason_is_not_official": false,
+              "true_when_a_real_engine_raised_it": true
+            },
+            "passed": true,
+            "post_eos_refused": {
+              "false_when_the_design_completed_the_pass": false,
+              "false_when_the_probe_did_not_run": false,
+              "true_when_the_design_did_not_complete_it": true,
+              "true_when_the_design_trapped_it": true
+            },
+            "ran": true,
+            "why": "each derived EOS field is exercised against fabricated observations in both directions; a field pinned to a constant fails this and the campaign refuses to publish"
+          }
+        },
         "model_generated_token_ids": [
           3925,
           13,
@@ -1094,7 +2003,7 @@
           "OFFICIAL_EOS: issue SELECTION.TOKEN_APPEND to the real engine with the injected ARGMAX token, which needs the top to select injection per issue rather than by parameter",
           "post-EOS refusal: a program that predicates its continuation on EOS_MEMBER, or a device-side session the RTL owns"
         ],
-        "why_not_measured_in_rtl": "in the promoted lowering the EOS decision is an ENGINE result -- rtl/abi3/ot_a3_selection_token_append.sv raises OFFICIAL_EOS from the policy's EOS set -- and under result injection no engine is issued to, so an EOS raised here would be the model's value passed through. The post-EOS refusal is a host session-state refusal in runtime/sim/device.py:run_transaction, taken before an instruction is fetched; this deployment's program carries no STATE instruction and no EOS_MEMBER predicate, so its RTL control plane has nothing to refuse. Both fields are reported false because this vehicle did not measure them"
+        "why_not_measured_in_rtl": "in the promoted lowering the EOS decision is an ENGINE result -- rtl/abi3/ot_a3_selection_token_append.sv raises OFFICIAL_EOS from the policy's EOS set -- and under result injection no engine is issued to, so an EOS raised here would be the model's value passed through. The post-EOS refusal is a host session-state refusal in runtime/sim/device.py:run_transaction, taken before an instruction is fetched; this deployment's program carries no STATE instruction and no EOS_MEMBER predicate, so its RTL control plane has nothing to refuse. Neither field is written as a constant: each is the conjunction of RTL observations recorded in how_both_fields_are_decided, and each is false because those observations are"
       },
       "execution": {
         "control_plane": "rtl/abi3/ot_a3_device_top.sv",
@@ -1114,7 +2023,7 @@
         "why_single_simulator": "the vehicle declares `parameter longint unsigned MATMUL_WEIGHT_BYTES` and imports a DPI function returning `longint unsigned`; Icarus 11 cannot parse either, measured at this commit and before it. G1's own scope already records this vehicle as Verilator-only"
       },
       "git": {
-        "commit": "794078a463e7791de33b1f900932566e34bc72ff",
+        "commit": "afc09421a50e7545759bd35e9a2142cb41b6039b",
         "worktree_dirty": false
       },
       "golden_vectors": {
@@ -1863,9 +2772,796 @@
         "stop_reason": "eos"
       },
       "passes": {
+        "decomposition_study": {
+          "artifact_schema": "opentallas.rtl.abi3_g1e_pass_decomposition.v1",
+          "cases": [
+            {
+              "completed_transactions": 3,
+              "decomposition": "workload_driver",
+              "device_transactions": 3,
+              "forward_passed_positions": 18,
+              "generated_token_ids": [
+                3925,
+                13,
+                151645
+              ],
+              "note": "stop_reason=eos",
+              "reproduces_gold": true,
+              "statement": "the workload's own submission sequence: one prefill transaction spanning every prompt position, then one decode transaction per further token, exactly as runtime.driver.GenerationDriver.generate issues it",
+              "transactions": [
+                {
+                  "entrypoint_id": 0,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 0,
+                  "position_start": 0,
+                  "produced_tokens": [
+                    3925
+                  ],
+                  "seconds": 11.55,
+                  "span_tokens": 16,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 1,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 1,
+                  "position_start": 16,
+                  "produced_tokens": [
+                    13
+                  ],
+                  "seconds": 11.211,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 1,
+                  "eos_reason": 1,
+                  "message": "",
+                  "phase": 1,
+                  "position_start": 17,
+                  "produced_tokens": [
+                    151645
+                  ],
+                  "seconds": 11.314,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                }
+              ],
+              "wall_seconds": 34.08
+            },
+            {
+              "completed_transactions": 4,
+              "decomposition": "chunked_prefill_span_8",
+              "device_transactions": 4,
+              "forward_passed_positions": 18,
+              "generated_token_ids": [
+                271,
+                3925,
+                13,
+                151645
+              ],
+              "note": "",
+              "reproduces_gold": false,
+              "statement": "the prompt in prefill transactions of SPAN_TOKENS=8, then one decode transaction per further token",
+              "transactions": [
+                {
+                  "entrypoint_id": 0,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 0,
+                  "position_start": 0,
+                  "produced_tokens": [
+                    271
+                  ],
+                  "seconds": 11.32,
+                  "span_tokens": 8,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 0,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 0,
+                  "position_start": 8,
+                  "produced_tokens": [
+                    3925
+                  ],
+                  "seconds": 12.47,
+                  "span_tokens": 8,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 1,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 1,
+                  "position_start": 16,
+                  "produced_tokens": [
+                    13
+                  ],
+                  "seconds": 11.219,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 1,
+                  "eos_reason": 1,
+                  "message": "",
+                  "phase": 1,
+                  "position_start": 17,
+                  "produced_tokens": [
+                    151645
+                  ],
+                  "seconds": 11.146,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                }
+              ],
+              "wall_seconds": 46.16
+            },
+            {
+              "completed_transactions": 6,
+              "decomposition": "chunked_prefill_span_4",
+              "device_transactions": 6,
+              "forward_passed_positions": 18,
+              "generated_token_ids": [
+                311,
+                271,
+                151667,
+                3925,
+                13,
+                151645
+              ],
+              "note": "",
+              "reproduces_gold": false,
+              "statement": "the prompt in prefill transactions of SPAN_TOKENS=4, then one decode transaction per further token",
+              "transactions": [
+                {
+                  "entrypoint_id": 0,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 0,
+                  "position_start": 0,
+                  "produced_tokens": [
+                    311
+                  ],
+                  "seconds": 9.287,
+                  "span_tokens": 4,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 0,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 0,
+                  "position_start": 4,
+                  "produced_tokens": [
+                    271
+                  ],
+                  "seconds": 9.264,
+                  "span_tokens": 4,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 0,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 0,
+                  "position_start": 8,
+                  "produced_tokens": [
+                    151667
+                  ],
+                  "seconds": 10.662,
+                  "span_tokens": 4,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 0,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 0,
+                  "position_start": 12,
+                  "produced_tokens": [
+                    3925
+                  ],
+                  "seconds": 8.576,
+                  "span_tokens": 4,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 1,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 1,
+                  "position_start": 16,
+                  "produced_tokens": [
+                    13
+                  ],
+                  "seconds": 11.332,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 1,
+                  "eos_reason": 1,
+                  "message": "",
+                  "phase": 1,
+                  "position_start": 17,
+                  "produced_tokens": [
+                    151645
+                  ],
+                  "seconds": 9.172,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                }
+              ],
+              "wall_seconds": 58.3
+            },
+            {
+              "completed_transactions": 16,
+              "decomposition": "chunked_prefill_span_1",
+              "device_transactions": 16,
+              "forward_passed_positions": 16,
+              "generated_token_ids": [
+                67,
+                198,
+                2610,
+                311,
+                264,
+                979,
+                5005,
+                271,
+                151644,
+                1406,
+                659,
+                151667,
+                198,
+                32313,
+                271,
+                3925
+              ],
+              "note": "the chunk at position 15 ended the session with eos_reason=2 after 16 of 16 prompt positions: every pass of this program appends a token, so the request's own MAX_NEW_TOKENS bound is reached while the prompt is still being read",
+              "reproduces_gold": false,
+              "statement": "the prompt in prefill transactions of SPAN_TOKENS=1, then one decode transaction per further token",
+              "transactions": [
+                {
+                  "entrypoint_id": 0,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 0,
+                  "position_start": 0,
+                  "produced_tokens": [
+                    67
+                  ],
+                  "seconds": 12.274,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 0,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 0,
+                  "position_start": 1,
+                  "produced_tokens": [
+                    198
+                  ],
+                  "seconds": 10.554,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 0,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 0,
+                  "position_start": 2,
+                  "produced_tokens": [
+                    2610
+                  ],
+                  "seconds": 11.127,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 0,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 0,
+                  "position_start": 3,
+                  "produced_tokens": [
+                    311
+                  ],
+                  "seconds": 10.987,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 0,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 0,
+                  "position_start": 4,
+                  "produced_tokens": [
+                    264
+                  ],
+                  "seconds": 11.186,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 0,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 0,
+                  "position_start": 5,
+                  "produced_tokens": [
+                    979
+                  ],
+                  "seconds": 11.935,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 0,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 0,
+                  "position_start": 6,
+                  "produced_tokens": [
+                    5005
+                  ],
+                  "seconds": 10.883,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 0,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 0,
+                  "position_start": 7,
+                  "produced_tokens": [
+                    271
+                  ],
+                  "seconds": 11.187,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 0,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 0,
+                  "position_start": 8,
+                  "produced_tokens": [
+                    151644
+                  ],
+                  "seconds": 11.51,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 0,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 0,
+                  "position_start": 9,
+                  "produced_tokens": [
+                    1406
+                  ],
+                  "seconds": 11.316,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 0,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 0,
+                  "position_start": 10,
+                  "produced_tokens": [
+                    659
+                  ],
+                  "seconds": 11.244,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 0,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 0,
+                  "position_start": 11,
+                  "produced_tokens": [
+                    151667
+                  ],
+                  "seconds": 11.211,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 0,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 0,
+                  "position_start": 12,
+                  "produced_tokens": [
+                    198
+                  ],
+                  "seconds": 11.339,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 0,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 0,
+                  "position_start": 13,
+                  "produced_tokens": [
+                    32313
+                  ],
+                  "seconds": 11.451,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 0,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 0,
+                  "position_start": 14,
+                  "produced_tokens": [
+                    271
+                  ],
+                  "seconds": 10.97,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 0,
+                  "eos_reason": 2,
+                  "message": "",
+                  "phase": 0,
+                  "position_start": 15,
+                  "produced_tokens": [
+                    3925
+                  ],
+                  "seconds": 11.29,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                }
+              ],
+              "wall_seconds": 180.47
+            },
+            {
+              "completed_transactions": 16,
+              "decomposition": "decode_entrypoint_per_position",
+              "device_transactions": 16,
+              "forward_passed_positions": 16,
+              "generated_token_ids": [
+                67,
+                198,
+                2610,
+                311,
+                264,
+                979,
+                5005,
+                271,
+                151644,
+                1406,
+                659,
+                151667,
+                198,
+                32313,
+                271,
+                3925
+              ],
+              "note": "the transaction at position 15 ended the session with eos_reason=2 after 16 of 16 prompt positions",
+              "reproduces_gold": false,
+              "statement": "no prefill transaction at all: every prompt position submitted singly through the decode entrypoint, then one decode transaction per further token",
+              "transactions": [
+                {
+                  "entrypoint_id": 1,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 1,
+                  "position_start": 0,
+                  "produced_tokens": [
+                    67
+                  ],
+                  "seconds": 12.385,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 1,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 1,
+                  "position_start": 1,
+                  "produced_tokens": [
+                    198
+                  ],
+                  "seconds": 11.231,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 1,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 1,
+                  "position_start": 2,
+                  "produced_tokens": [
+                    2610
+                  ],
+                  "seconds": 11.103,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 1,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 1,
+                  "position_start": 3,
+                  "produced_tokens": [
+                    311
+                  ],
+                  "seconds": 11.26,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 1,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 1,
+                  "position_start": 4,
+                  "produced_tokens": [
+                    264
+                  ],
+                  "seconds": 11.366,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 1,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 1,
+                  "position_start": 5,
+                  "produced_tokens": [
+                    979
+                  ],
+                  "seconds": 11.096,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 1,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 1,
+                  "position_start": 6,
+                  "produced_tokens": [
+                    5005
+                  ],
+                  "seconds": 10.962,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 1,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 1,
+                  "position_start": 7,
+                  "produced_tokens": [
+                    271
+                  ],
+                  "seconds": 11.139,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 1,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 1,
+                  "position_start": 8,
+                  "produced_tokens": [
+                    151644
+                  ],
+                  "seconds": 10.979,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 1,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 1,
+                  "position_start": 9,
+                  "produced_tokens": [
+                    1406
+                  ],
+                  "seconds": 11.31,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 1,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 1,
+                  "position_start": 10,
+                  "produced_tokens": [
+                    659
+                  ],
+                  "seconds": 11.249,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 1,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 1,
+                  "position_start": 11,
+                  "produced_tokens": [
+                    151667
+                  ],
+                  "seconds": 11.549,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 1,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 1,
+                  "position_start": 12,
+                  "produced_tokens": [
+                    198
+                  ],
+                  "seconds": 11.274,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 1,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 1,
+                  "position_start": 13,
+                  "produced_tokens": [
+                    32313
+                  ],
+                  "seconds": 11.38,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 1,
+                  "eos_reason": 0,
+                  "message": "",
+                  "phase": 1,
+                  "position_start": 14,
+                  "produced_tokens": [
+                    271
+                  ],
+                  "seconds": 9.094,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                },
+                {
+                  "entrypoint_id": 1,
+                  "eos_reason": 2,
+                  "message": "",
+                  "phase": 1,
+                  "position_start": 15,
+                  "produced_tokens": [
+                    3925
+                  ],
+                  "seconds": 6.866,
+                  "span_tokens": 1,
+                  "status": 0,
+                  "trap_class": 0
+                }
+              ],
+              "wall_seconds": 174.25
+            }
+          ],
+          "deployment_sha256": "cb9067f5fbf67f7df4212399aee6ba75ced4ca5c8f2dc8c1631372a4068cea2c",
+          "does_not_establish": [
+            "that no other deployment of this model could execute the workload in a different number of passes; this measures the shipped program, not the model",
+            "anything about the RTL: no RTL is compiled, run or read here"
+          ],
+          "finding": "every pass of this deployment's program ends in SELECTION.ARGMAX and SELECTION.TOKEN_APPEND, so a pass that reads prompt positions without appending a token does not exist in this lowering. Cutting the prefill into more transactions therefore emits one token per chunk that the workload never generated, and at SPAN_TOKENS=1 the request's own MAX_NEW_TOKENS bound ends the session before the prompt is consumed. The measured consequence is that the workload's own submission sequence is the only decomposition of TA-QW-EOS-1 on this deployment that reproduces the oracle's gold, and it is the number the rung reports",
+          "gate_requires_passes": 19,
+          "marker": "PASS: ABI3 G1e pass decomposition store=hbm cases=5 correct=1 max_transactions=3 max_forward_positions=18 positions=19 gate_requires=19 reachable=0",
+          "measured": {
+            "correct_decomposition_count": 1,
+            "correct_decompositions": [
+              "workload_driver"
+            ],
+            "gate_number_is_reachable": false,
+            "maximum_device_transactions_over_correct_decompositions": 3,
+            "maximum_forward_passed_positions_over_correct_decompositions": 18,
+            "positions_never_forward_passed": 1
+          },
+          "oracle": {
+            "generated_token_ids": [
+              3925,
+              13,
+              151645
+            ],
+            "path": "results/abi3/qwen3_reference_oracle_eos.json"
+          },
+          "reads_no_rtl": true,
+          "source_sha256": {
+            "runtime/abi3/verifier.py": "c7a5b0ec41164acaa622caa5029df3e8563747b95fa152a1fe5b88a2f0ad409d",
+            "runtime/driver.py": "fd39cf300d675321445c0e14b17c5de19f6ea7800f32589fff5743a4cda8e32e",
+            "runtime/sim/device.py": "5fe195429c88602e59eb58316d8c76f3423c573b0d9fe800a05bc4c91e70ab30",
+            "tools/build_abi3_g1e_pass_decomposition.py": "da692b7bd7c1dc23197b437f41d9db9befb441083dfecd74045ca474b472b07b"
+          },
+          "tool": "tools/build_abi3_g1e_pass_decomposition.py",
+          "wall_seconds": 527.58,
+          "workload_digest": "ea35fc800cccd2839aa663cdf0e7806600948a26f0057d1ec7ec7bd31d007eaa"
+        },
         "device_transactions": 3,
         "executed": 3,
         "gate_requires": 19,
+        "gate_requires_read_from": "configs/gates/redesign_gates.json",
         "model_forward_passes": 18,
         "per_pass": [
           {
@@ -1908,8 +3604,54 @@
             "wait_events": 689
           }
         ],
+        "positions_covered_note": "SPAN_TOKENS and POSITION_START are the request symbols the RTL's symbol file was loaded with for each pass, so this is which of the workload's token positions the control plane actually drove, not a count of transactions",
+        "positions_covered_per_pass": [
+          {
+            "entrypoint_id": 0,
+            "pass_index": 0,
+            "position_start": 0,
+            "positions": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15
+            ],
+            "span_tokens": 16
+          },
+          {
+            "entrypoint_id": 1,
+            "pass_index": 1,
+            "position_start": 16,
+            "positions": [
+              16
+            ],
+            "span_tokens": 1
+          },
+          {
+            "entrypoint_id": 1,
+            "pass_index": 2,
+            "position_start": 17,
+            "positions": [
+              17
+            ],
+            "span_tokens": 1
+          }
+        ],
+        "positions_never_forward_passed": 1,
         "unit": "device transaction through the RTL control plane",
-        "why_not_19": "measured: the shipped Qwen deployment executes TA-QW-EOS-1 in 3 device transactions -- one prefill whose SPAN_TOKENS is 16 and covers every prompt position at once, then one decode per further token. The workload's 19 token positions are 16 prompt plus 3 generated; only 18 of them are ever forward-passed, because the first generated token comes out of the prefill pass and the last generated token (the official EOS) is never fed back. No correct execution of this workload on this deployment performs 19 passes, so the gate's field cannot be satisfied by running it correctly; the number is not adjusted here and the rung fails on it",
+        "why_not_the_gate_number": "measured, not argued. The RTL ran 3 device transactions because that is what the workload's own submission sequence is: one prefill transaction whose SPAN_TOKENS is 16 and covers every prompt position at once, then one decode transaction per further token. Whether the same workload could be cut into 19 transactions was not reasoned about, it was tried: 5 submission sequences were executed on the reference model, of which 1 reproduced the oracle's gold (workload_driver) and 4 did not (chunked_prefill_span_8, chunked_prefill_span_4, chunked_prefill_span_1, decode_entrypoint_per_position). The largest pass count over the sequences that reproduce the gold is 3, against the gate's 19; 18 of the workload's 19 token positions are forward-passed, and the last generated token -- the official EOS -- is never fed back, so it is a position of the sequence and not a pass of the model",
         "workload_token_positions": 19
       },
       "rung": "G1e",
@@ -1949,7 +3691,7 @@
           "independent_of_rtl": true,
           "module": "runtime.sim.device.Device",
           "view_resolution": "runtime.sim.memory.ViewResolver (the device's own)",
-          "wall_seconds": 32.69
+          "wall_seconds": 33.9
         },
         "uncompared_issue_fields": [
           "serial",
@@ -2022,7 +3764,8 @@
     "runtime/sim/memory.py": "4c5fe565e07933f86f608902b1fbce5d92667d7036902f40e67e563b21c4f3f7",
     "tools/build_abi3_deployment_rtl_vectors.py": "c58b2b2d11d53414bdcba6c4dd78ec492015f6b877e806762f56cb1f9abce582",
     "tools/build_abi3_g1e_control_vectors.py": "f2a9ebd73d4012c05b4de6cfdea7a827cd4aec0c175afb343df1ab3bb8d3312c",
-    "tools/rtl_abi3_g1e_control_campaign.py": "b331ca32c81b25637fa0d55a7370e78112a53c6a6ad54edd0071a10c2df1efab"
+    "tools/build_abi3_g1e_pass_decomposition.py": "da692b7bd7c1dc23197b437f41d9db9befb441083dfecd74045ca474b472b07b",
+    "tools/rtl_abi3_g1e_control_campaign.py": "ebe6a570a478ad28b303df35bb5f425edc53d8b467cb68c6a61097ab59b13db5"
   },
   "status": "fail",
   "tools": {
