@@ -17,37 +17,37 @@
     ]
   },
   "cost_measurement": {
-    "measured_all_stores_seconds": 1182.22,
+    "measured_all_stores_seconds": 1247.94,
     "measured_per_store": {
       "hbm": {
-        "elaborate_and_compile_seconds": 19.84,
-        "end_to_end_seconds": 586.35,
-        "golden_model_seconds": 33.9,
+        "elaborate_and_compile_seconds": 19.65,
+        "end_to_end_seconds": 599.26,
+        "golden_model_seconds": 37.93,
         "hypothetical_note": "a lower bound: one result-memory write cycle per word, 1,879,799,430 words, at this run's own measured rate. It is reported because it is the arithmetic that most plausibly produced the ~3 h estimate, not because this rung needs it -- the RTL control plane can observe a result word only through a PREDICATE, and this program declares none",
-        "hypothetical_seconds_if_every_output_word_were_injected": 6365,
-        "pass_decomposition_study_seconds": 527.58,
-        "run_seconds": 5.03,
-        "simulate_seconds": 2.3,
+        "hypothetical_seconds_if_every_output_word_were_injected": 6396,
+        "pass_decomposition_study_seconds": 536.62,
+        "run_seconds": 5.06,
+        "simulate_seconds": 2.311,
         "simulated_cycles": 679236,
-        "simulated_cycles_per_second": 295320
+        "simulated_cycles_per_second": 293914
       },
       "rom": {
-        "elaborate_and_compile_seconds": 19.75,
-        "end_to_end_seconds": 595.87,
-        "golden_model_seconds": 33.3,
+        "elaborate_and_compile_seconds": 20.38,
+        "end_to_end_seconds": 648.68,
+        "golden_model_seconds": 45.58,
         "hypothetical_note": "a lower bound: one result-memory write cycle per word, 1,879,799,430 words, at this run's own measured rate. It is reported because it is the arithmetic that most plausibly produced the ~3 h estimate, not because this rung needs it -- the RTL control plane can observe a result word only through a PREDICATE, and this program declares none",
-        "hypothetical_seconds_if_every_output_word_were_injected": 6399,
-        "pass_decomposition_study_seconds": 537.77,
+        "hypothetical_seconds_if_every_output_word_were_injected": 6388,
+        "pass_decomposition_study_seconds": 577.67,
         "run_seconds": 5.05,
-        "simulate_seconds": 2.312,
+        "simulate_seconds": 2.308,
         "simulated_cycles": 679220,
-        "simulated_cycles_per_second": 293780
+        "simulated_cycles_per_second": 294289
       }
     },
     "replaces": {
       "also_reported_as": "3.10 h per store by the lane that built the injection vehicle, which reported that conservative figure over an optimistic 0.35 h form under R13",
       "figure": "~3 h per store",
-      "measured_instead": 1182.22,
+      "measured_instead": 1247.94,
       "not_edited_here": "no document or gate figure is changed by this tool; the measurement is published beside the estimate",
       "recorded_in": [
         "docs/OPENTALLAS_REDESIGN_PLAN.md, the ladder table's G1e row",
@@ -58,7 +58,7 @@
   },
   "gate": "G1e (configs/gates/redesign_gates.json)",
   "git": {
-    "commit": "afc09421a50e7545759bd35e9a2142cb41b6039b",
+    "commit": "acf851838ea6415352027ed73274dd8635fa1bfd",
     "worktree_dirty": false
   },
   "records": [
@@ -66,12 +66,12 @@
       "checker_returncode": 0,
       "checks": 10441,
       "cost": {
-        "elaborate_and_compile_seconds": 19.75,
-        "golden_model_seconds": 33.3,
+        "elaborate_and_compile_seconds": 20.38,
+        "golden_model_seconds": 45.58,
         "host_writes": 425984,
         "passes": 3,
         "run_seconds": 5.05,
-        "simulate_seconds": 2.312,
+        "simulate_seconds": 2.308,
         "simulated_cycles": 679220
       },
       "deployment": {
@@ -200,7 +200,7 @@
         "why_single_simulator": "the vehicle declares `parameter longint unsigned MATMUL_WEIGHT_BYTES` and imports a DPI function returning `longint unsigned`; Icarus 11 cannot parse either, measured at this commit and before it. G1's own scope already records this vehicle as Verilator-only"
       },
       "git": {
-        "commit": "afc09421a50e7545759bd35e9a2142cb41b6039b",
+        "commit": "acf851838ea6415352027ed73274dd8635fa1bfd",
         "worktree_dirty": false
       },
       "golden_vectors": {
@@ -975,7 +975,7 @@
                   "produced_tokens": [
                     3925
                   ],
-                  "seconds": 11.5,
+                  "seconds": 18.545,
                   "span_tokens": 16,
                   "status": 0,
                   "trap_class": 0
@@ -989,7 +989,7 @@
                   "produced_tokens": [
                     13
                   ],
-                  "seconds": 11.319,
+                  "seconds": 12.176,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1003,13 +1003,13 @@
                   "produced_tokens": [
                     151645
                   ],
-                  "seconds": 10.934,
+                  "seconds": 12.077,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
                 }
               ],
-              "wall_seconds": 33.75
+              "wall_seconds": 42.8
             },
             {
               "completed_transactions": 4,
@@ -1035,7 +1035,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 11.573,
+                  "seconds": 16.416,
                   "span_tokens": 8,
                   "status": 0,
                   "trap_class": 0
@@ -1049,7 +1049,7 @@
                   "produced_tokens": [
                     3925
                   ],
-                  "seconds": 11.388,
+                  "seconds": 14.256,
                   "span_tokens": 8,
                   "status": 0,
                   "trap_class": 0
@@ -1063,7 +1063,7 @@
                   "produced_tokens": [
                     13
                   ],
-                  "seconds": 10.666,
+                  "seconds": 12.912,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1077,13 +1077,13 @@
                   "produced_tokens": [
                     151645
                   ],
-                  "seconds": 11.273,
+                  "seconds": 14.376,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
                 }
               ],
-              "wall_seconds": 44.9
+              "wall_seconds": 57.96
             },
             {
               "completed_transactions": 6,
@@ -1111,7 +1111,7 @@
                   "produced_tokens": [
                     311
                   ],
-                  "seconds": 11.207,
+                  "seconds": 15.106,
                   "span_tokens": 4,
                   "status": 0,
                   "trap_class": 0
@@ -1125,7 +1125,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 11.289,
+                  "seconds": 13.332,
                   "span_tokens": 4,
                   "status": 0,
                   "trap_class": 0
@@ -1139,7 +1139,7 @@
                   "produced_tokens": [
                     151667
                   ],
-                  "seconds": 10.823,
+                  "seconds": 12.426,
                   "span_tokens": 4,
                   "status": 0,
                   "trap_class": 0
@@ -1153,7 +1153,7 @@
                   "produced_tokens": [
                     3925
                   ],
-                  "seconds": 10.383,
+                  "seconds": 13.103,
                   "span_tokens": 4,
                   "status": 0,
                   "trap_class": 0
@@ -1167,7 +1167,7 @@
                   "produced_tokens": [
                     13
                   ],
-                  "seconds": 11.407,
+                  "seconds": 9.471,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1181,13 +1181,13 @@
                   "produced_tokens": [
                     151645
                   ],
-                  "seconds": 11.295,
+                  "seconds": 12.659,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
                 }
               ],
-              "wall_seconds": 66.41
+              "wall_seconds": 76.1
             },
             {
               "completed_transactions": 16,
@@ -1225,7 +1225,7 @@
                   "produced_tokens": [
                     67
                   ],
-                  "seconds": 10.914,
+                  "seconds": 10.443,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1239,7 +1239,7 @@
                   "produced_tokens": [
                     198
                   ],
-                  "seconds": 11.243,
+                  "seconds": 10.018,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1253,7 +1253,7 @@
                   "produced_tokens": [
                     2610
                   ],
-                  "seconds": 11.359,
+                  "seconds": 10.726,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1267,7 +1267,7 @@
                   "produced_tokens": [
                     311
                   ],
-                  "seconds": 9.294,
+                  "seconds": 12.394,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1281,7 +1281,7 @@
                   "produced_tokens": [
                     264
                   ],
-                  "seconds": 11.538,
+                  "seconds": 11.131,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1295,7 +1295,7 @@
                   "produced_tokens": [
                     979
                   ],
-                  "seconds": 11.845,
+                  "seconds": 12.149,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1309,7 +1309,7 @@
                   "produced_tokens": [
                     5005
                   ],
-                  "seconds": 11.407,
+                  "seconds": 11.038,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1323,7 +1323,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 11.044,
+                  "seconds": 11.314,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1337,7 +1337,7 @@
                   "produced_tokens": [
                     151644
                   ],
-                  "seconds": 11.366,
+                  "seconds": 11.314,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1351,7 +1351,7 @@
                   "produced_tokens": [
                     1406
                   ],
-                  "seconds": 11.502,
+                  "seconds": 11.373,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1365,7 +1365,7 @@
                   "produced_tokens": [
                     659
                   ],
-                  "seconds": 10.529,
+                  "seconds": 11.492,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1379,7 +1379,7 @@
                   "produced_tokens": [
                     151667
                   ],
-                  "seconds": 11.429,
+                  "seconds": 11.436,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1393,7 +1393,7 @@
                   "produced_tokens": [
                     198
                   ],
-                  "seconds": 11.407,
+                  "seconds": 13.244,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1407,7 +1407,7 @@
                   "produced_tokens": [
                     32313
                   ],
-                  "seconds": 11.381,
+                  "seconds": 9.771,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1421,7 +1421,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 11.421,
+                  "seconds": 13.257,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1435,13 +1435,13 @@
                   "produced_tokens": [
                     3925
                   ],
-                  "seconds": 11.14,
+                  "seconds": 11.464,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
                 }
               ],
-              "wall_seconds": 178.83
+              "wall_seconds": 182.57
             },
             {
               "completed_transactions": 16,
@@ -1479,7 +1479,7 @@
                   "produced_tokens": [
                     67
                   ],
-                  "seconds": 12.613,
+                  "seconds": 13.622,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1493,7 +1493,7 @@
                   "produced_tokens": [
                     198
                   ],
-                  "seconds": 11.265,
+                  "seconds": 10.041,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1507,7 +1507,7 @@
                   "produced_tokens": [
                     2610
                   ],
-                  "seconds": 11.315,
+                  "seconds": 10.009,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1521,7 +1521,7 @@
                   "produced_tokens": [
                     311
                   ],
-                  "seconds": 11.366,
+                  "seconds": 9.168,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1535,7 +1535,7 @@
                   "produced_tokens": [
                     264
                   ],
-                  "seconds": 11.285,
+                  "seconds": 10.579,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1549,7 +1549,7 @@
                   "produced_tokens": [
                     979
                   ],
-                  "seconds": 11.395,
+                  "seconds": 8.806,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1563,7 +1563,7 @@
                   "produced_tokens": [
                     5005
                   ],
-                  "seconds": 9.149,
+                  "seconds": 10.289,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1577,7 +1577,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 11.357,
+                  "seconds": 13.205,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1591,7 +1591,7 @@
                   "produced_tokens": [
                     151644
                   ],
-                  "seconds": 11.243,
+                  "seconds": 13.357,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1605,7 +1605,7 @@
                   "produced_tokens": [
                     1406
                   ],
-                  "seconds": 11.328,
+                  "seconds": 12.727,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1619,7 +1619,7 @@
                   "produced_tokens": [
                     659
                   ],
-                  "seconds": 11.352,
+                  "seconds": 12.717,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1633,7 +1633,7 @@
                   "produced_tokens": [
                     151667
                   ],
-                  "seconds": 11.181,
+                  "seconds": 9.688,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1647,7 +1647,7 @@
                   "produced_tokens": [
                     198
                   ],
-                  "seconds": 10.972,
+                  "seconds": 12.212,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1661,7 +1661,7 @@
                   "produced_tokens": [
                     32313
                   ],
-                  "seconds": 11.083,
+                  "seconds": 13.139,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1675,7 +1675,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 11.287,
+                  "seconds": 13.266,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1689,13 +1689,13 @@
                   "produced_tokens": [
                     3925
                   ],
-                  "seconds": 11.225,
+                  "seconds": 10.104,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
                 }
               ],
-              "wall_seconds": 179.42
+              "wall_seconds": 182.94
             }
           ],
           "deployment_sha256": "133afc13e1fcd2aade2e40530883c9986b0e920d99853990d9032fd777f26243",
@@ -1732,7 +1732,7 @@
             "tools/build_abi3_g1e_pass_decomposition.py": "da692b7bd7c1dc23197b437f41d9db9befb441083dfecd74045ca474b472b07b"
           },
           "tool": "tools/build_abi3_g1e_pass_decomposition.py",
-          "wall_seconds": 537.77,
+          "wall_seconds": 577.67,
           "workload_digest": "ea35fc800cccd2839aa663cdf0e7806600948a26f0057d1ec7ec7bd31d007eaa"
         },
         "device_transactions": 3,
@@ -1868,7 +1868,7 @@
           "independent_of_rtl": true,
           "module": "runtime.sim.device.Device",
           "view_resolution": "runtime.sim.memory.ViewResolver (the device's own)",
-          "wall_seconds": 33.3
+          "wall_seconds": 45.58
         },
         "uncompared_issue_fields": [
           "serial",
@@ -1889,12 +1889,12 @@
       "checker_returncode": 0,
       "checks": 10441,
       "cost": {
-        "elaborate_and_compile_seconds": 19.84,
-        "golden_model_seconds": 33.9,
+        "elaborate_and_compile_seconds": 19.65,
+        "golden_model_seconds": 37.93,
         "host_writes": 425984,
         "passes": 3,
-        "run_seconds": 5.03,
-        "simulate_seconds": 2.3,
+        "run_seconds": 5.06,
+        "simulate_seconds": 2.311,
         "simulated_cycles": 679236
       },
       "deployment": {
@@ -2023,7 +2023,7 @@
         "why_single_simulator": "the vehicle declares `parameter longint unsigned MATMUL_WEIGHT_BYTES` and imports a DPI function returning `longint unsigned`; Icarus 11 cannot parse either, measured at this commit and before it. G1's own scope already records this vehicle as Verilator-only"
       },
       "git": {
-        "commit": "afc09421a50e7545759bd35e9a2142cb41b6039b",
+        "commit": "acf851838ea6415352027ed73274dd8635fa1bfd",
         "worktree_dirty": false
       },
       "golden_vectors": {
@@ -2798,7 +2798,7 @@
                   "produced_tokens": [
                     3925
                   ],
-                  "seconds": 11.55,
+                  "seconds": 15.941,
                   "span_tokens": 16,
                   "status": 0,
                   "trap_class": 0
@@ -2812,7 +2812,7 @@
                   "produced_tokens": [
                     13
                   ],
-                  "seconds": 11.211,
+                  "seconds": 12.1,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -2826,13 +2826,13 @@
                   "produced_tokens": [
                     151645
                   ],
-                  "seconds": 11.314,
+                  "seconds": 13.873,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
                 }
               ],
-              "wall_seconds": 34.08
+              "wall_seconds": 41.92
             },
             {
               "completed_transactions": 4,
@@ -2858,7 +2858,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 11.32,
+                  "seconds": 13.142,
                   "span_tokens": 8,
                   "status": 0,
                   "trap_class": 0
@@ -2872,7 +2872,7 @@
                   "produced_tokens": [
                     3925
                   ],
-                  "seconds": 12.47,
+                  "seconds": 12.937,
                   "span_tokens": 8,
                   "status": 0,
                   "trap_class": 0
@@ -2886,7 +2886,7 @@
                   "produced_tokens": [
                     13
                   ],
-                  "seconds": 11.219,
+                  "seconds": 10.833,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -2900,13 +2900,13 @@
                   "produced_tokens": [
                     151645
                   ],
-                  "seconds": 11.146,
+                  "seconds": 10.627,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
                 }
               ],
-              "wall_seconds": 46.16
+              "wall_seconds": 47.54
             },
             {
               "completed_transactions": 6,
@@ -2934,7 +2934,7 @@
                   "produced_tokens": [
                     311
                   ],
-                  "seconds": 9.287,
+                  "seconds": 9.313,
                   "span_tokens": 4,
                   "status": 0,
                   "trap_class": 0
@@ -2948,7 +2948,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 9.264,
+                  "seconds": 9.155,
                   "span_tokens": 4,
                   "status": 0,
                   "trap_class": 0
@@ -2962,7 +2962,7 @@
                   "produced_tokens": [
                     151667
                   ],
-                  "seconds": 10.662,
+                  "seconds": 10.965,
                   "span_tokens": 4,
                   "status": 0,
                   "trap_class": 0
@@ -2976,7 +2976,7 @@
                   "produced_tokens": [
                     3925
                   ],
-                  "seconds": 8.576,
+                  "seconds": 10.57,
                   "span_tokens": 4,
                   "status": 0,
                   "trap_class": 0
@@ -2990,7 +2990,7 @@
                   "produced_tokens": [
                     13
                   ],
-                  "seconds": 11.332,
+                  "seconds": 7.372,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3004,13 +3004,13 @@
                   "produced_tokens": [
                     151645
                   ],
-                  "seconds": 9.172,
+                  "seconds": 10.638,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
                 }
               ],
-              "wall_seconds": 58.3
+              "wall_seconds": 58.02
             },
             {
               "completed_transactions": 16,
@@ -3048,7 +3048,7 @@
                   "produced_tokens": [
                     67
                   ],
-                  "seconds": 12.274,
+                  "seconds": 11.994,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3062,7 +3062,7 @@
                   "produced_tokens": [
                     198
                   ],
-                  "seconds": 10.554,
+                  "seconds": 10.739,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3076,7 +3076,7 @@
                   "produced_tokens": [
                     2610
                   ],
-                  "seconds": 11.127,
+                  "seconds": 11.167,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3090,7 +3090,7 @@
                   "produced_tokens": [
                     311
                   ],
-                  "seconds": 10.987,
+                  "seconds": 11.368,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3104,7 +3104,7 @@
                   "produced_tokens": [
                     264
                   ],
-                  "seconds": 11.186,
+                  "seconds": 11.314,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3118,7 +3118,7 @@
                   "produced_tokens": [
                     979
                   ],
-                  "seconds": 11.935,
+                  "seconds": 11.998,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3132,7 +3132,7 @@
                   "produced_tokens": [
                     5005
                   ],
-                  "seconds": 10.883,
+                  "seconds": 11.053,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3146,7 +3146,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 11.187,
+                  "seconds": 11.335,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3160,7 +3160,7 @@
                   "produced_tokens": [
                     151644
                   ],
-                  "seconds": 11.51,
+                  "seconds": 11.203,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3174,7 +3174,7 @@
                   "produced_tokens": [
                     1406
                   ],
-                  "seconds": 11.316,
+                  "seconds": 11.358,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3188,7 +3188,7 @@
                   "produced_tokens": [
                     659
                   ],
-                  "seconds": 11.244,
+                  "seconds": 11.1,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3202,7 +3202,7 @@
                   "produced_tokens": [
                     151667
                   ],
-                  "seconds": 11.211,
+                  "seconds": 11.248,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3216,7 +3216,7 @@
                   "produced_tokens": [
                     198
                   ],
-                  "seconds": 11.339,
+                  "seconds": 11.366,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3230,7 +3230,7 @@
                   "produced_tokens": [
                     32313
                   ],
-                  "seconds": 11.451,
+                  "seconds": 10.987,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3244,7 +3244,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 10.97,
+                  "seconds": 11.266,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3258,13 +3258,13 @@
                   "produced_tokens": [
                     3925
                   ],
-                  "seconds": 11.29,
+                  "seconds": 10.567,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
                 }
               ],
-              "wall_seconds": 180.47
+              "wall_seconds": 180.07
             },
             {
               "completed_transactions": 16,
@@ -3302,7 +3302,7 @@
                   "produced_tokens": [
                     67
                   ],
-                  "seconds": 12.385,
+                  "seconds": 12.246,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3316,7 +3316,7 @@
                   "produced_tokens": [
                     198
                   ],
-                  "seconds": 11.231,
+                  "seconds": 11.289,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3330,7 +3330,7 @@
                   "produced_tokens": [
                     2610
                   ],
-                  "seconds": 11.103,
+                  "seconds": 11.508,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3344,7 +3344,7 @@
                   "produced_tokens": [
                     311
                   ],
-                  "seconds": 11.26,
+                  "seconds": 10.974,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3358,7 +3358,7 @@
                   "produced_tokens": [
                     264
                   ],
-                  "seconds": 11.366,
+                  "seconds": 10.752,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3372,7 +3372,7 @@
                   "produced_tokens": [
                     979
                   ],
-                  "seconds": 11.096,
+                  "seconds": 10.535,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3386,7 +3386,7 @@
                   "produced_tokens": [
                     5005
                   ],
-                  "seconds": 10.962,
+                  "seconds": 11.264,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3400,7 +3400,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 11.139,
+                  "seconds": 10.221,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3414,7 +3414,7 @@
                   "produced_tokens": [
                     151644
                   ],
-                  "seconds": 10.979,
+                  "seconds": 11.256,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3428,7 +3428,7 @@
                   "produced_tokens": [
                     1406
                   ],
-                  "seconds": 11.31,
+                  "seconds": 10.041,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3442,7 +3442,7 @@
                   "produced_tokens": [
                     659
                   ],
-                  "seconds": 11.249,
+                  "seconds": 10.998,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3456,7 +3456,7 @@
                   "produced_tokens": [
                     151667
                   ],
-                  "seconds": 11.549,
+                  "seconds": 9.08,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3470,7 +3470,7 @@
                   "produced_tokens": [
                     198
                   ],
-                  "seconds": 11.274,
+                  "seconds": 10.578,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3484,7 +3484,7 @@
                   "produced_tokens": [
                     32313
                   ],
-                  "seconds": 11.38,
+                  "seconds": 11.272,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3498,7 +3498,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 9.094,
+                  "seconds": 11.254,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3512,13 +3512,13 @@
                   "produced_tokens": [
                     3925
                   ],
-                  "seconds": 6.866,
+                  "seconds": 10.696,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
                 }
               ],
-              "wall_seconds": 174.25
+              "wall_seconds": 173.97
             }
           ],
           "deployment_sha256": "cb9067f5fbf67f7df4212399aee6ba75ced4ca5c8f2dc8c1631372a4068cea2c",
@@ -3555,7 +3555,7 @@
             "tools/build_abi3_g1e_pass_decomposition.py": "da692b7bd7c1dc23197b437f41d9db9befb441083dfecd74045ca474b472b07b"
           },
           "tool": "tools/build_abi3_g1e_pass_decomposition.py",
-          "wall_seconds": 527.58,
+          "wall_seconds": 536.62,
           "workload_digest": "ea35fc800cccd2839aa663cdf0e7806600948a26f0057d1ec7ec7bd31d007eaa"
         },
         "device_transactions": 3,
@@ -3691,7 +3691,7 @@
           "independent_of_rtl": true,
           "module": "runtime.sim.device.Device",
           "view_resolution": "runtime.sim.memory.ViewResolver (the device's own)",
-          "wall_seconds": 33.9
+          "wall_seconds": 37.93
         },
         "uncompared_issue_fields": [
           "serial",

@@ -8,7 +8,7 @@
   ],
   "gate": "G1b",
   "generated_by": "tools/build_abi3_g1b_layer_closure.py",
-  "generated_by_sha256": "8c76e8f91161cef7294b38e44f98b2ddca0c5de8c7deb1eb53eb54c8f5ee9b76",
+  "generated_by_sha256": "9a06a2dbc22abbc7de3141e213d6207db593909905166ab623cc45f998861caa",
   "layer_definition": "one complete transformer layer, named by the certified Kernel IR: every engine issue the governed decode program makes whose OPERATOR descriptor's source_kernel_id points at a kernel whose kernel_id begins 'layer.0.'. The two lowerings are resolved independently; their descriptor IDs differ at every governed program counter and nothing measured on one is transferred to the other.",
   "records": [
     {
@@ -300,7 +300,7 @@
         }
       },
       "git": {
-        "commit": "dd7d32d979ad77393bd6b36dd474d0967b555f8c",
+        "commit": "acf851838ea6415352027ed73274dd8635fa1bfd",
         "dirty_paths": [],
         "scope": "the tree THIS artifact was derived in. It is not a claim about the tree the integrated campaign ran in; see execution.campaign.declared_git.",
         "worktree_dirty": false
@@ -907,13 +907,12 @@
           ],
           "route_note": "derived from the same demand-versus-capacity counts as the shortfall above; it is what this vehicle lacks, not a design",
           "route_to_completion": [
-            "make appending_output object-addressed: it is one unkeyed base and the layer needs 7 distinct objects ([45, 55, 64, 71, 84, 149, 156])",
+            "place results by object rather than by the append cursor: 4 of this span's buffers are written more than once ([17, 45, 55, 64]), and an append cursor gives such an object several addresses",
             "widen mapped_family_operand from 8 to at least 10 object slots",
             "make matmul_input object-addressed: it is one unkeyed base and the layer needs 3 distinct objects ([45, 55, 162])",
             "widen matmul_weight from 3 to at least 7 object slots",
             "make rms_input object-addressed: it is one unkeyed base and the layer needs 2 distinct objects ([36, 45])",
-            "make rms_weight object-addressed: it is one unkeyed base and the layer needs 2 distinct objects ([4, 13])",
-            "place results by object rather than by the append cursor: 4 of the layer's buffers are written more than once, so an append cursor gives one object several addresses and no object-keyed reader can name the right one"
+            "make rms_weight object-addressed: it is one unkeyed base and the layer needs 2 distinct objects ([4, 13])"
           ],
           "unattributed_operands": []
         },
@@ -1532,7 +1531,7 @@
         }
       },
       "git": {
-        "commit": "dd7d32d979ad77393bd6b36dd474d0967b555f8c",
+        "commit": "acf851838ea6415352027ed73274dd8635fa1bfd",
         "dirty_paths": [],
         "scope": "the tree THIS artifact was derived in. It is not a claim about the tree the integrated campaign ran in; see execution.campaign.declared_git.",
         "worktree_dirty": false
@@ -2139,13 +2138,12 @@
           ],
           "route_note": "derived from the same demand-versus-capacity counts as the shortfall above; it is what this vehicle lacks, not a design",
           "route_to_completion": [
-            "make appending_output object-addressed: it is one unkeyed base and the layer needs 7 distinct objects ([19, 20, 21, 22, 23, 24, 25])",
+            "place results by object rather than by the append cursor: 4 of this span's buffers are written more than once ([19, 20, 21, 38]), and an append cursor gives such an object several addresses",
             "widen mapped_family_operand from 8 to at least 10 object slots",
             "make matmul_input object-addressed: it is one unkeyed base and the layer needs 3 distinct objects ([19, 20, 26])",
             "widen matmul_weight from 3 to at least 7 object slots",
             "make rms_input object-addressed: it is one unkeyed base and the layer needs 2 distinct objects ([18, 19])",
-            "make rms_weight object-addressed: it is one unkeyed base and the layer needs 2 distinct objects ([1, 8])",
-            "place results by object rather than by the append cursor: 4 of the layer's buffers are written more than once, so an append cursor gives one object several addresses and no object-keyed reader can name the right one"
+            "make rms_weight object-addressed: it is one unkeyed base and the layer needs 2 distinct objects ([1, 8])"
           ],
           "unattributed_operands": []
         },

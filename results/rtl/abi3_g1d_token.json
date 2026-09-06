@@ -14,7 +14,7 @@
   "generated_by": "tools/build_abi3_g1d_token.py",
   "generated_by_sha256": "43cdfc2af0972cd9cc9817e5b2a620c883706adbbada2bfdd3554460cb6cab9f",
   "git": {
-    "commit": "05a230bd06b64521cf8a68ebf9d74794ea2de3b6",
+    "commit": "acf851838ea6415352027ed73274dd8635fa1bfd",
     "dirty_paths": [],
     "scope": "the tree THIS artifact was derived in. It is not a claim about the tree either run happened in; see execution.control_plane_run and handoff.integrated_campaign for those.",
     "worktree_dirty": false
@@ -236,7 +236,7 @@
         "vehicle": "rtl/test/a3_shipped_prefix_top.sv"
       },
       "git": {
-        "commit": "05a230bd06b64521cf8a68ebf9d74794ea2de3b6",
+        "commit": "acf851838ea6415352027ed73274dd8635fa1bfd",
         "dirty_paths": [],
         "scope": "the tree THIS artifact was derived in. It is not a claim about the tree either run happened in; see execution.control_plane_run and handoff.integrated_campaign for those.",
         "worktree_dirty": false
@@ -1044,7 +1044,7 @@
         "vehicle": "rtl/test/a3_shipped_prefix_top.sv"
       },
       "git": {
-        "commit": "05a230bd06b64521cf8a68ebf9d74794ea2de3b6",
+        "commit": "acf851838ea6415352027ed73274dd8635fa1bfd",
         "dirty_paths": [],
         "scope": "the tree THIS artifact was derived in. It is not a claim about the tree either run happened in; see execution.control_plane_run and handoff.integrated_campaign for those.",
         "worktree_dirty": false
@@ -1637,202 +1637,7 @@
       "workload_id": "TA-QW-EOS-1"
     }
   ],
-  "rerun_not_retained": {
-    "agreement": {
-      "capability_fault_count": {
-        "agree": true,
-        "rerun": 4,
-        "retained": 4
-      },
-      "expected_cases": {
-        "agree": true,
-        "rerun": [
-          {
-            "fault": 32,
-            "fetched": 33,
-            "index": 0,
-            "issued": 11,
-            "launches": 10,
-            "responses": 11,
-            "retired": 32,
-            "trap": 4,
-            "views": 33,
-            "words": 24832
-          },
-          {
-            "fault": 32,
-            "fetched": 33,
-            "index": 1,
-            "issued": 11,
-            "launches": 10,
-            "responses": 11,
-            "retired": 32,
-            "trap": 4,
-            "views": 33,
-            "words": 24832
-          },
-          {
-            "fault": 13,
-            "fetched": 14,
-            "index": 2,
-            "issued": 5,
-            "launches": 4,
-            "responses": 5,
-            "retired": 13,
-            "trap": 4,
-            "views": 11,
-            "words": 20736
-          },
-          {
-            "fault": 14,
-            "fetched": 15,
-            "index": 3,
-            "issued": 5,
-            "launches": 4,
-            "responses": 5,
-            "retired": 14,
-            "trap": 4,
-            "views": 17,
-            "words": 20736
-          }
-        ],
-        "retained": [
-          {
-            "fault": 32,
-            "fetched": 33,
-            "index": 0,
-            "issued": 11,
-            "launches": 10,
-            "responses": 11,
-            "retired": 32,
-            "trap": 4,
-            "views": 33,
-            "words": 24832
-          },
-          {
-            "fault": 32,
-            "fetched": 33,
-            "index": 1,
-            "issued": 11,
-            "launches": 10,
-            "responses": 11,
-            "retired": 32,
-            "trap": 4,
-            "views": 33,
-            "words": 24832
-          },
-          {
-            "fault": 13,
-            "fetched": 14,
-            "index": 2,
-            "issued": 5,
-            "launches": 4,
-            "responses": 5,
-            "retired": 13,
-            "trap": 4,
-            "views": 11,
-            "words": 20736
-          },
-          {
-            "fault": 14,
-            "fetched": 15,
-            "index": 3,
-            "issued": 5,
-            "launches": 4,
-            "responses": 5,
-            "retired": 14,
-            "trap": 4,
-            "views": 17,
-            "words": 20736
-          }
-        ]
-      },
-      "operator_admission": {
-        "agree": true,
-        "rerun": {
-          "capability_trapped_family_count": 6,
-          "cases_with_mapped_placement": 0,
-          "launches": {
-            "ATTENTION.GQA": 0,
-            "DMA.SCATTER": 0,
-            "SELECTION.ARGMAX": 0,
-            "SELECTION.TOKEN_APPEND": 0,
-            "VECTOR.ADD": 0,
-            "VECTOR.SILU_MUL": 0
-          },
-          "measured": true,
-          "reached_families": [],
-          "reached_family_count": 0,
-          "result_injection": false,
-          "trapped_families": [
-            "VECTOR.ADD",
-            "VECTOR.SILU_MUL",
-            "DMA.SCATTER",
-            "ATTENTION.GQA",
-            "SELECTION.ARGMAX",
-            "SELECTION.TOKEN_APPEND"
-          ],
-          "vector_generation": "mapped",
-          "vehicle": "rtl/test/a3_shipped_prefix_top.sv"
-        },
-        "retained": {
-          "capability_trapped_family_count": 6,
-          "cases_with_mapped_placement": 0,
-          "launches": {
-            "ATTENTION.GQA": 0,
-            "DMA.SCATTER": 0,
-            "SELECTION.ARGMAX": 0,
-            "SELECTION.TOKEN_APPEND": 0,
-            "VECTOR.ADD": 0,
-            "VECTOR.SILU_MUL": 0
-          },
-          "measured": true,
-          "reached_families": [],
-          "reached_family_count": 0,
-          "result_injection": false,
-          "trapped_families": [
-            "VECTOR.ADD",
-            "VECTOR.SILU_MUL",
-            "DMA.SCATTER",
-            "ATTENTION.GQA",
-            "SELECTION.ARGMAX",
-            "SELECTION.TOKEN_APPEND"
-          ],
-          "vector_generation": "mapped",
-          "vehicle": "rtl/test/a3_shipped_prefix_top.sv"
-        }
-      },
-      "real_engine_launch_count": {
-        "agree": true,
-        "rerun": 28,
-        "retained": 28
-      },
-      "result_word_count": {
-        "agree": true,
-        "rerun": 91136,
-        "retained": 91136
-      },
-      "simulated_cycles": {
-        "agree": true,
-        "rerun": 252057600,
-        "retained": 252057600
-      },
-      "status": {
-        "agree": true,
-        "rerun": "pass",
-        "retained": "pass"
-      }
-    },
-    "agrees_on_every_compared_field": true,
-    "artifact_sha256": "69e6990dc1d0a9b952d54cedacbf310807300ba9ffb910b39455cedc2daa4915",
-    "git": {
-      "commit": "a922ef3879325e2921a4da951d6ed3eb03333198",
-      "worktree_dirty": false
-    },
-    "vector_set_sha256": "28abd940ae1669e7de2858d7397031f84877974d53e2dcf6b5aee217dd065dec",
-    "what_it_is": "an independent execution of the same integrated campaign, run for this rung at this commit in a separately pinned worktree",
-    "why_not_retained": "it is not a file of this repository, so nothing in this rung is computed from it; it is recorded as agreement with the campaign the tree does hold"
-  },
+  "rerun_not_retained": null,
   "schema": "opentallas.rtl.g1d_token.v1",
   "what_this_rung_is": "the rung where an RTL-emitted token id first exists: the final normalisation, the LM head and the argmax executing in the integrated RTL on the composed trunk output",
   "workload_id": "TA-QW-EOS-1"
