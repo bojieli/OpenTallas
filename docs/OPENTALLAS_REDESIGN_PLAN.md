@@ -163,7 +163,7 @@ substitutes the thing that is actually sound: **composition**.
 
 Composition is valid when three things hold, and each is a rung:
 
-| rung | what it establishes | measured cost per store |
+| rung | what it establishes | **projected** cost per store |
 | --- | --- | ---: |
 | **G1a** operator equivalence | every (family, shape, contract) class the decode program issues is bit-exact against golden, on real checkpoint weights, with nothing trapped as CAPABILITY | bounded by the largest operator |
 | **G1b** layer closure | one complete transformer layer, no golden value injected inside it — the operator *sequence*, the residual plumbing, the KV write and read | 1.34 h |
@@ -171,6 +171,8 @@ Composition is valid when three things hold, and each is a rung:
 | **G1d** head and token | final norm, LM head and argmax in RTL, emitting the oracle's first generated id | 1.08 h in four concurrent row shards |
 | **G1e** control end to end | all 19 passes through the real RTL control plane, engine results injected only at the engine boundary, issue trace equal to golden's element for element, EOS raised, post-EOS refused | ~3 h |
 | **G1f** reduced full run | the whole workload run whole at reduced dimension with nothing injected | minutes |
+
+The cost column is a **projection** from the measured 39,915 MACs/s and each rung's own MAC count, not a measurement of the rung. Only G1e has been executed end to end and timed: **1,247.94 s across both stores** (ROM 648.68 s, HBM 599.26 s), of which the rung's own simulation is 2.31 s and the bulk is the pass-decomposition study. Corrected 2026-09-06 — the column was labelled "measured", which it was not.
 
 G1b is the base case, G1c the inductive step, and the loop property closes the induction over
 all 36 layers — assume–guarantee reasoning, with the loop count and the structural identity

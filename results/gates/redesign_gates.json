@@ -55,7 +55,7 @@
       "kind": "verification",
       "statement": "The complete workload -- prefill, every layer, all generated tokens, EOS and the post-EOS refusal -- executes end to end in the RTL with nothing injected, on a structurally identical model at reduced dimension, and emits that model's oracle tokens.",
       "status": "fail",
-      "why": "no conforming record for storage class(es) ['rom', 'hbm']: results/rtl/abi3_g1f_reduced_end_to_end.json [rom]: oracle.agreement is False; token ids [] != oracle [1073, 382, 93]; results/rtl/abi3_g1f_reduced_end_to_end.json [hbm]: oracle.agreement is False; token ids [] != oracle [1073, 382, 93]"
+      "why": "no conforming record for storage class(es) ['rom', 'hbm']: results/rtl/abi3_g1f_reduced_end_to_end.json [rom]: oracle.agreement is False; token ids [] != oracle [1073, 382, 93]; injection.end_to_end_operations_executed is 0, want >= 1; results/rtl/abi3_g1f_reduced_end_to_end.json [hbm]: oracle.agreement is False; token ids [] != oracle [1073, 382, 93]; injection.end_to_end_operations_executed is 0, want >= 1"
     },
     {
       "fails_when": "Any block of the ABI 3.0 control plane is absent from the physical results.",

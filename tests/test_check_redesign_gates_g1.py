@@ -370,3 +370,38 @@ def test_the_rollup_requires_every_rung_the_spec_defines():
     rungs = sorted(g["id"] for g in body["gates"] if g["id"].startswith("G1") and g["id"] != "G1")
     assert sorted(ev["requires"]) == rungs, "a rung exists that the roll-up does not require"
     assert ev.get("certificate"), "the roll-up composes nothing"
+
+
+def test_a_rung_cannot_pass_because_nothing_ran(repo):
+    """G1f's declared fields all passed on a run of zero operations.
+
+    configuration.reduced and structurally_identical_to_full are properties of
+    a config file, and golden_injected_operation_count == 0 is satisfied
+    vacuously by executing nothing at all.  A rung green because nothing ran is
+    the not_evaluable defect wearing a lab coat, so the spec requires at least
+    one end-to-end operation.
+    """
+    ev = _spec_gate("G1f")["evaluator"]
+    mins = {m["field"]: m["at_least"] for m in ev.get("require_min", [])}
+    assert "injection.end_to_end_operations_executed" in mins, (
+        "G1f can be satisfied by a run that executed nothing"
+    )
+    assert mins["injection.end_to_end_operations_executed"] >= 1
+
+
+def test_every_rung_requires_something_to_have_executed():
+    """The provenance spine already demands positive simulated_cycles.
+
+    This pins that no rung is exempt, so a future rung cannot be added whose
+    fields are all satisfiable by an artifact describing an empty run.
+    """
+    body = json.loads((ROOT / "configs/gates/redesign_gates.json").read_text())
+    for gate in body["gates"]:
+        if not gate["id"].startswith("G1") or gate["id"] == "G1":
+            continue
+        ev = gate["evaluator"]
+        assert ev["type"] == "rtl_records", gate["id"]
+        # the shared spine in _rtl_record_problems requires
+        # execution.simulated_cycles > 0 for every rung; assert the rung did
+        # not opt out by declaring a different evaluator type.
+        assert ev.get("require_storage_classes"), gate["id"]
