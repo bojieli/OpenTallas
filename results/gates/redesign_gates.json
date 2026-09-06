@@ -7,7 +7,7 @@
       "kind": "terminal",
       "statement": "The integrated RTL produces the oracle's token IDs for the governed workload, on each of ROM and HBM, established compositionally over a closed verification ladder.",
       "status": "fail",
-      "why": "9 of 10 requirement(s) unmet: G1a: no conforming record for storage class(es) ['rom', 'hbm']: results/rtl/abi3_g1a_operator_equivalence.json [rom; G1b: no conforming record for storage class(es) ['rom', 'hbm']: results/rtl/abi3_g1b_layer_closure.json [rom]: laye; G1c: no conforming record for storage class(es) ['rom', 'hbm']: results/rtl/abi3_g1c_composition.json [rom]: handof; ..."
+      "why": "8 of 10 requirement(s) unmet: G1a: no conforming record for storage class(es) ['rom', 'hbm']: results/rtl/abi3_g1a_operator_equivalence.json [rom; G1b: no conforming record for storage class(es) ['rom', 'hbm']: results/rtl/abi3_g1b_layer_closure.json [rom]: laye; G1c: no conforming record for storage class(es) ['rom', 'hbm']: results/rtl/abi3_g1c_composition.json [rom]: handof; ..."
     },
     {
       "fails_when": "Any issued class is uncovered, any word differs, any family is still trapped as CAPABILITY, or the weights are not the real checkpoint.",
@@ -46,8 +46,8 @@
       "id": "G1e",
       "kind": "verification",
       "statement": "All of the governed workload's token positions are driven through the real RTL control plane, with engine results injected only at the engine boundary, and the RTL issue trace equals the golden model's element for element; the control plane issues the EOS instruction pair in every pass and refuses the post-EOS instruction.",
-      "status": "fail",
-      "why": "no conforming record for storage class(es) ['rom', 'hbm']: results/rtl/abi3_g1e_control_end_to_end.json [rom]: eos.post_eos_refused is False, want True; results/rtl/abi3_g1e_control_end_to_end.json [hbm]: eos.post_eos_refused is False, want True"
+      "status": "pass",
+      "why": "conforming records on rom (results/rtl/abi3_g1e_control_end_to_end.json), hbm (results/rtl/abi3_g1e_control_end_to_end.json)"
     },
     {
       "fails_when": "Any operation is injected from the golden model, the reduced configuration is not structurally identical to the full one, or the emitted ids differ from the reduced oracle's.",
@@ -154,7 +154,7 @@
       "why": "2 of 2 artifact(s) state a floor; worst is 1.74x"
     }
   ],
-  "passing": 9,
+  "passing": 10,
   "plan": "docs/OPENTALLAS_REDESIGN_PLAN.md",
   "principle": "Absence of evidence is FAIL, never not_evaluable. The previous programme's TPOT gate had two states, not_evaluable and pass, with no reachable fail; it stayed not_evaluable for the life of the project while the machine drifted 44,000x from target. A gate that cannot fail is a note. Every gate below reports FAIL until evidence says otherwise.",
   "schema": "opentallas.gates.redesign_result.v1",
