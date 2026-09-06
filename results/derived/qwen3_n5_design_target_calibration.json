@@ -357,12 +357,12 @@
       "rtl_measurement": {
         "measured": false,
         "rtl_measured_boundary_cycles": null,
-        "source": null,
-        "why": "no dependent-boundary record was supplied to the calibration (--boundary-chain-record).  results/rtl holds the lane, the LQ8 block, the T64 tile, the RE8 endpoint, the microsequencer front end and the engines, and no artifact measures a dependent chain across two tiles"
+        "source": "rtl3_abi3_boundary_chain",
+        "why": "the record declares itself not the boundary section 13 item 13 asks for: this record is a STRUCTURAL probe, not a boundary measurement.  The two-tile dependent chain cannot be simulated yet because two of the five terms of section 3.6 have no RTL: a partial COLLECTOR driving ot_a3_tree_endpoint_fp32's leaf port from ot_a3_tile64's partial port, and a RECEIVER writing a tree root into a consumer tile's activation FIFO and advancing its act_ready_kblocks.  Measured on both elaborators against the vehicle results/rtl/abi3_tile64.json qualified the tile in: part_we, op_retire, act_wr_en are internal nets of ot_a3_tile64_top and cannot be connected to from outside, while tree_in_leaf, tree_in_valid, tree_out_data are ports -- the reduction endpoint's operands are driven by the CHECKER, over partials the checker captured, which is what abi3_tile64.json's own claim_boundary.does_not_establish.tree_span records.  A boundary measured on a chain whose two missing blocks were improvised for the measurement would be a measurement of the improvisation, and section 13 item 13 forbids exactly that shape of number"
       },
-      "rung_item_decision": "unmet, on absence: no RTL-measured dependent boundary exists (no dependent-boundary record was supplied to the calibration (--boundary-chain-record).  results/rtl holds the lane, the LQ8 block, the T64 tile, the RE8 endpoint, the microsequencer front end and the engines, and no artifact measures a dependent chain across two tiles).  The model's exposed chain is 39 cycles, which is an assumption and not a measurement, and since commit 13e6a5a section 2.1 row 33 asserts no figure of its own, so there is no band the model number could sit inside either.  Absence of evidence is FAIL (configs/gates/redesign_gates.json#principle), never not_evaluable; and technology.json#latency.pipeline_fill_drain_s is graded 'assumed'",
+      "rung_item_decision": "unmet, on absence: no RTL-measured dependent boundary exists (the record declares itself not the boundary section 13 item 13 asks for: this record is a STRUCTURAL probe, not a boundary measurement.  The two-tile dependent chain cannot be simulated yet because two of the five terms of section 3.6 have no RTL: a partial COLLECTOR driving ot_a3_tree_endpoint_fp32's leaf port from ot_a3_tile64's partial port, and a RECEIVER writing a tree root into a consumer tile's activation FIFO and advancing its act_ready_kblocks.  Measured on both elaborators against the vehicle results/rtl/abi3_tile64.json qualified the tile in: part_we, op_retire, act_wr_en are internal nets of ot_a3_tile64_top and cannot be connected to from outside, while tree_in_leaf, tree_in_valid, tree_out_data are ports -- the reduction endpoint's operands are driven by the CHECKER, over partials the checker captured, which is what abi3_tile64.json's own claim_boundary.does_not_establish.tree_span records.  A boundary measured on a chain whose two missing blocks were improvised for the measurement would be a measurement of the improvisation, and section 13 item 13 forbids exactly that shape of number).  The model's exposed chain is 39 cycles, which is an assumption and not a measurement, and since commit 13e6a5a section 2.1 row 33 asserts no figure of its own, so there is no band the model number could sit inside either.  Absence of evidence is FAIL (configs/gates/redesign_gates.json#principle), never not_evaluable; and technology.json#latency.pipeline_fill_drain_s is graded 'assumed'",
       "rung_item_met": false,
-      "rung_rule": "5. **L3/G4:** calibrated block and full dependent-boundary cycles. The datapath blocks calibrate to within 0.1 % over 108 ratios. The **control plane now contributes 32 ratios and every one is 0.041\u20130.049**: the model's sequencer charges 7,724 cycles of front end for a Qwen decode token where the RTL takes **170,031**, measured on both simulators since 2026-09-06 (\u00a713 item 13, \u00a73.3). The dependent boundary remains unmeasured and \u00a72.1 row 33 asserts no figure of its own, so it can be met only by an RTL measurement with `technology.json#latency` re-derived from it; neither 39 nor 120 cycles may be treated as measured. C2 parity includes schedule geometry; re-emit both programs and rerun it after changes.",
+      "rung_rule": "5. **L3/G4:** calibrated block and full dependent-boundary cycles. The datapath blocks calibrate to within 0.1 % over 108 ratios. The **control plane now contributes 32 ratios and every one is 0.041\u20130.049**: the model's sequencer charges 7,724 cycles of front end for a Qwen decode token where the RTL takes **170,031**, measured on both simulators since 2026-09-06 (\u00a713 item 13, \u00a73.3). The dependent boundary remains unmeasured and \u00a72.1 row 33 asserts no figure of its own, so it can be met only by an RTL measurement with `technology.json#latency` re-derived from it; neither 39 nor 120 cycles may be treated as measured. **The chain that measurement needs cannot be built from RE8 and T64 alone** \u2014 the collector between a tile's partial port and the reduction endpoint, and the receiver between a tree root and a consumer tile's activation FIFO, have no RTL, which both elaborators confirm in `results/rtl/abi3_boundary_chain.json` (\u00a713 item 13). C2 parity includes schedule geometry; re-emit both programs and rerun it after changes.",
       "rung_rule_source": "docs/CHIP_ARCHITECTURE_DESIGN.md section 11.5 item 5",
       "technology_latency_grade": {
         "pipeline_fill_drain_s": {
@@ -372,7 +372,7 @@
         }
       },
       "technology_latency_rederived": false,
-      "why_unmeasured": "no dependent-boundary record was supplied to the calibration (--boundary-chain-record).  results/rtl holds the lane, the LQ8 block, the T64 tile, the RE8 endpoint, the microsequencer front end and the engines, and no artifact measures a dependent chain across two tiles"
+      "why_unmeasured": "the record declares itself not the boundary section 13 item 13 asks for: this record is a STRUCTURAL probe, not a boundary measurement.  The two-tile dependent chain cannot be simulated yet because two of the five terms of section 3.6 have no RTL: a partial COLLECTOR driving ot_a3_tree_endpoint_fp32's leaf port from ot_a3_tile64's partial port, and a RECEIVER writing a tree root into a consumer tile's activation FIFO and advancing its act_ready_kblocks.  Measured on both elaborators against the vehicle results/rtl/abi3_tile64.json qualified the tile in: part_we, op_retire, act_wr_en are internal nets of ot_a3_tile64_top and cannot be connected to from outside, while tree_in_leaf, tree_in_valid, tree_out_data are ports -- the reduction endpoint's operands are driven by the CHECKER, over partials the checker captured, which is what abi3_tile64.json's own claim_boundary.does_not_establish.tree_span records.  A boundary measured on a chain whose two missing blocks were improvised for the measurement would be a measurement of the improvisation, and section 13 item 13 forbids exactly that shape of number"
     },
     "calibrated_blocks": [
       "lane",
@@ -6397,39 +6397,20 @@
         "within_band": true
       }
     ],
-    "reason": "32 of 32 control-plane ratios outside [0.9, 1.1]: iverilog case 0 transaction 0.0454 (7724 model over 170022 measured); iverilog case 0 transaction_less_bench 0.0455 (7724 model over 169805 measured); section 11.5 boundary item unmet: unmeasured, model chain 39 vs design no asserted figure (section 2.1 row 33 withdrew it), technology.json#latency not re-derived",
+    "reason": "32 of 32 control-plane ratios outside [0.9, 1.1]: iverilog case 0 transaction 0.0454 (7724 model over 170022 measured); iverilog case 0 transaction_less_bench 0.0455 (7724 model over 169805 measured); section 11.5 boundary item unmet: unmeasured (rtl3_abi3_boundary_chain: see boundary.why_unmeasured), model chain 39 vs design no asserted figure (section 2.1 row 33 withdrew it), technology.json#latency not re-derived",
     "verdict_rule": "block_cycles_within_band = (every block-cycle ratio inside the band) AND (every block in calibrated_blocks contributed a measured ratio) AND (the boundary item of section 11.5's L3 / G4 rule is met).  derived_machine_reproduces_anchor = the emitted machines' compute roof and compute time reproduce the analytical artifact within 1e-9 relative.  Absence of a measurement is FAIL, never not_evaluable (configs/gates/redesign_gates.json#principle)."
   },
   "gate": "G4",
   "generator": "tools/derive_cycle_machine.py --calibrate",
   "git": {
-    "commit": "46ea5d163e993de245a9178f0d44068e54c3be32",
-    "dirty": true,
+    "commit": "3b65e2fdad9a2173b3898c99a4d1b131ea0b53b9",
+    "dirty": false,
     "dirty_inputs": [],
-    "dirty_paths": [
-      "ompiler/backends/rom/common/program.py",
-      "results/abi3/rom_schedule_checks.json",
-      "results/physical_abi3/asap7/a3_microsequencer/pnr_artifacts/",
-      "testdata/compiler/abi3_deployment/a3_descriptor.hex",
-      "testdata/compiler/abi3_deployment/a3_header.hex",
-      "testdata/compiler/abi3_deployment/abi3_deployment_rtl_vectors.json",
-      "testdata/rtl/a3_qwen_kv_scatter/cases.hex",
-      "testdata/rtl/a3_qwen_kv_scatter/index.json",
-      "testdata/rtl/a3_qwen_kv_scatter/instruction.hex",
-      "testdata/rtl/a3_qwen_kv_scatter/numeric.hex",
-      "testdata/rtl/a3_qwen_kv_scatter/operator.hex",
-      "testdata/rtl/a3_qwen_kv_scatter/output.hex",
-      "testdata/rtl/a3_qwen_kv_scatter/view0.hex",
-      "testdata/rtl/a3_qwen_kv_scatter/view1.hex",
-      "testdata/rtl/a3_qwen_kv_scatter/view3.hex",
-      "tests/compiler/test_abi3_g1b_layer_closure.py",
-      "tools/build_abi3_g1b_layer_closure.py",
-      "tools/build_abi3_shipped_prefix_vectors.py"
-    ]
+    "dirty_paths": []
   },
   "inputs": {
     "configs/gates/redesign_gates.json": {
-      "sha256": "23109cf09fb65db0a36655f7f6ac98506b33b3b4243b3c8d1b53152d46ad072c"
+      "sha256": "51d2909a17a4b594550297bfa4fc0b63c640720ec0add6981a694b3c613a934d"
     },
     "configs/hardware/abi3_capability/n5_design_target/hbm_sram_single_chip_n5_v1.json": {
       "sha256": "d3c99313d9ef836be7aafcb6b30954bd86e6995ec03e3a53f19eb5dc4eeeb216"
@@ -6447,7 +6428,7 @@
       "sha256": "7b1558f821f1f42bfde9b57a036ecec431718f3e68e072e46b37a24cbaacfa58"
     },
     "docs/CHIP_ARCHITECTURE_DESIGN.md": {
-      "sha256": "b35b81350d84d4abd60791ced801337d935a090fb76bba7aaa7358aeaf87aeed"
+      "sha256": "7ed660d14fbab83ed6597e4b421d36abd32f411061e2631826fa2d4ef0b3f258"
     },
     "results/derived/qwen3_n5_design_target_machine_pair.json": {
       "sha256": "10d1fe4cc4ecdf3b80b1306bbd3fc82af963ade96ef37d7ebfcd4c0d6c31841e"
@@ -6466,6 +6447,9 @@
     },
     "results/roofline/n5_vs_b200/analytical.json": {
       "sha256": "dbf5e47fb3bd4fb91bf478ed7c29ddf8c02ca8662b005d1e1ccbbc81ae849c76"
+    },
+    "results/rtl/abi3_boundary_chain.json": {
+      "sha256": "4caa96c6c63f78a26e6e6285681e9e4e2bf463f0a2bcf5d2e16ae1f562b75058"
     },
     "results/rtl/abi3_deployment_campaign.json": {
       "sha256": "a233cef49a7b9ffff22bd24732bc821ace8ca5c0bbd72ad186464e9b2b521ab6"
