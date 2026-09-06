@@ -267,8 +267,14 @@
     {
       "field": "memory.sram.bytes",
       "hbm": 3892314112,
-      "rom": 8589934592,
+      "rom": 10401087488,
       "why": "capacity, not bandwidth.  The weight STORE differs by construction -- that is the comparison -- and no capacity resolves to a machine parameter"
+    },
+    {
+      "field": "memory.sram_kv.bytes",
+      "hbm": null,
+      "rom": 1811152896,
+      "why": "the KV STORE differs by construction: this side's design point holds KV in SRAM and the other's holds it in HBM, which is the AM-C3 field section 2.8 names.  A capacity, not a rate; the KV rate difference is separately cited in the KV-path allowlist"
     }
   ],
   "declared_asymmetries_note": "assert_comparable compares the parameters MachineModel resolves and nothing else.  These declared fields differ between the two emitted records, reach no cost-table parameter, and are listed so that a reader can see what the assertion does NOT cover.  limits.max_context_positions is the one exception: it bounds what the pair can be asked rather than how fast it runs, so both records are harmonised to the smaller of the two bases.",
@@ -371,8 +377,14 @@
       {
         "field": "memory.sram.bytes",
         "hbm": 3892314112,
-        "rom": 8589934592,
+        "rom": 10401087488,
         "why": "capacity, not bandwidth.  The weight STORE differs by construction -- that is the comparison -- and no capacity resolves to a machine parameter"
+      },
+      {
+        "field": "memory.sram_kv.bytes",
+        "hbm": null,
+        "rom": 1811152896,
+        "why": "the KV STORE differs by construction: this side's design point holds KV in SRAM and the other's holds it in HBM, which is the AM-C3 field section 2.8 names.  A capacity, not a rate; the KV rate difference is separately cited in the KV-path allowlist"
       }
     ],
     "execution_format": "w4a8",
@@ -403,6 +415,8 @@
     "rom_role_hbm_channels": 1,
     "rom_role_sram_bytes_s_achieved": 148992000000000.0,
     "rom_role_sram_bytes_s_target": 148988114278487.34,
+    "rom_sram_kv_arena_bytes": 1811152896,
+    "rom_sram_scratchpad_bytes": 8589934592,
     "rom_token_slots": 1.0,
     "rom_weight_read_bytes_s_achieved": 5910528000000000.0,
     "rom_weight_read_bytes_s_target": 5914169672277128.0,
@@ -1681,6 +1695,13 @@
       "note": "The analytical term is 2.256934e-07 s per layer built from four primitives; only the array-pass boundary has a cycle-model counterpart, and the cycle model charges it per engine INSTRUCTION, not per layer.  The layer barrier (3.5e-08 s per layer, 1.505 us per token) has no counterpart on a single chip at all.",
       "role": "both",
       "term": "layer_fixed_latency"
+    },
+    {
+      "kind": "kv_arena_over_design_provision",
+      "note": "the design point provisions 1381646336 bytes of SRAM KV at its priced context of 200000 positions, but this record admits 262144 positions (limits.max_context_positions, the smaller of the two base records), which is 1811152896 bytes at 6909 bytes per position.  The arena is declared at the larger so that a deployment compiled for the context this record advertises fits it; the excess is capacity the design point did not buy and is reported here rather than hidden in a total.",
+      "relative": 0.3108657757117954,
+      "role": "rom",
+      "term": "kv_capacity"
     }
   ],
   "schema": "opentallas.derived_cycle_machine.v1"

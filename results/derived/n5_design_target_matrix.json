@@ -217,7 +217,8 @@
         "limits.max_loop_trip",
         "memory.rom.bytes",
         "memory.hbm.bytes",
-        "memory.sram.bytes"
+        "memory.sram.bytes",
+        "memory.sram_kv.bytes"
       ],
       "emitted": {
         "artifact": "results/derived/deepseek-v4-flash-0731__rom-n5-native-sramkv-array-hybrid-x30__b200-sxm-x15-hybrid_machine_pair.json",
@@ -241,6 +242,7 @@
         "granularity",
         "integer_quantisation",
         "interleave_granularity",
+        "kv_arena_over_design_provision",
         "shared_roof_handicap",
         "slot_serialisation",
         "structurally_inexpressible",
@@ -311,7 +313,8 @@
         "features",
         "memory.rom.bytes",
         "memory.hbm.bytes",
-        "memory.sram.bytes"
+        "memory.sram.bytes",
+        "memory.sram_kv.bytes"
       ],
       "emitted": {
         "artifact": "results/derived/deepseek-v4-flash-0731__rom-n5-native-sramkv-wafer-tensor-x1-romfill__b200-sxm-x29-tensor_machine_pair.json",
@@ -335,6 +338,7 @@
         "granularity",
         "integer_quantisation",
         "interleave_granularity",
+        "kv_arena_over_design_provision",
         "shared_roof_handicap",
         "slot_serialisation",
         "structurally_inexpressible",
@@ -572,7 +576,8 @@
         "limits.max_loop_trip",
         "memory.rom.bytes",
         "memory.hbm.bytes",
-        "memory.sram.bytes"
+        "memory.sram.bytes",
+        "memory.sram_kv.bytes"
       ],
       "emitted": {
         "artifact": "results/derived/deepseek-v4-pro-0813__rom-n5-native-sramkv-array-tensor-x155__b200-sxm-x79-tensor_machine_pair.json",
@@ -662,7 +667,8 @@
         "limits.max_loop_trip",
         "memory.rom.bytes",
         "memory.hbm.bytes",
-        "memory.sram.bytes"
+        "memory.sram.bytes",
+        "memory.sram_kv.bytes"
       ],
       "emitted": {
         "artifact": "results/derived/deepseek-v4-pro-0813__rom-n5-native-sramkv-wafer-hybrid-x3__b200-sxm-x87-tensor_machine_pair.json",
@@ -930,7 +936,8 @@
         "features",
         "memory.rom.bytes",
         "memory.hbm.bytes",
-        "memory.sram.bytes"
+        "memory.sram.bytes",
+        "memory.sram_kv.bytes"
       ],
       "emitted": {
         "artifact": "results/derived/qwen3_n5_design_target_machine_pair.json",
@@ -954,6 +961,7 @@
         "granularity",
         "integer_quantisation",
         "interleave_granularity",
+        "kv_arena_over_design_provision",
         "shared_roof_handicap",
         "slot_serialisation",
         "structurally_inexpressible",
@@ -1025,7 +1033,8 @@
         "features",
         "memory.rom.bytes",
         "memory.hbm.bytes",
-        "memory.sram.bytes"
+        "memory.sram.bytes",
+        "memory.sram_kv.bytes"
       ],
       "emitted": {
         "artifact": "results/derived/qwen3-8b__rom-n5-native-sramkv-array-pipeline-x6-romfill__b200-sxm-x3-tensor_machine_pair.json",
@@ -1049,6 +1058,7 @@
         "granularity",
         "integer_quantisation",
         "interleave_granularity",
+        "kv_arena_over_design_provision",
         "shared_roof_handicap",
         "slot_serialisation",
         "structurally_inexpressible",
@@ -1118,7 +1128,8 @@
         "features",
         "memory.rom.bytes",
         "memory.hbm.bytes",
-        "memory.sram.bytes"
+        "memory.sram.bytes",
+        "memory.sram_kv.bytes"
       ],
       "emitted": {
         "artifact": "results/derived/qwen3-8b__rom-n5-native-sramkv-array-pipeline-x7-romfill__b200-sxm-x4-tensor_machine_pair.json",
@@ -1142,6 +1153,7 @@
         "granularity",
         "integer_quantisation",
         "interleave_granularity",
+        "kv_arena_over_design_provision",
         "shared_roof_handicap",
         "slot_serialisation",
         "structurally_inexpressible",
@@ -1211,7 +1223,8 @@
         "features",
         "memory.rom.bytes",
         "memory.hbm.bytes",
-        "memory.sram.bytes"
+        "memory.sram.bytes",
+        "memory.sram_kv.bytes"
       ],
       "emitted": {
         "artifact": "results/derived/qwen3-8b__rom-n5-native-sramkv-array-pipeline-x8-romfill__b200-sxm-x4-tensor_machine_pair.json",
@@ -1235,6 +1248,7 @@
         "granularity",
         "integer_quantisation",
         "interleave_granularity",
+        "kv_arena_over_design_provision",
         "shared_roof_handicap",
         "slot_serialisation",
         "structurally_inexpressible",
@@ -1304,7 +1318,8 @@
         "features",
         "memory.rom.bytes",
         "memory.hbm.bytes",
-        "memory.sram.bytes"
+        "memory.sram.bytes",
+        "memory.sram_kv.bytes"
       ],
       "emitted": {
         "artifact": "results/derived/qwen3-8b__rom-n5-native-sramkv-wafer-tensor-x1-romfill__b200-sxm-x29-hybrid_machine_pair.json",
@@ -1328,6 +1343,7 @@
         "granularity",
         "integer_quantisation",
         "interleave_granularity",
+        "kv_arena_over_design_provision",
         "shared_roof_handicap",
         "slot_serialisation",
         "structurally_inexpressible",

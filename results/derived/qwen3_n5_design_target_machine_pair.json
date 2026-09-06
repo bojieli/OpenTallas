@@ -273,8 +273,14 @@
     {
       "field": "memory.sram.bytes",
       "hbm": 402653184,
-      "rom": 671088640,
+      "rom": 1888485376,
       "why": "capacity, not bandwidth.  The weight STORE differs by construction -- that is the comparison -- and no capacity resolves to a machine parameter"
+    },
+    {
+      "field": "memory.sram_kv.bytes",
+      "hbm": null,
+      "rom": 1217396736,
+      "why": "the KV STORE differs by construction: this side's design point holds KV in SRAM and the other's holds it in HBM, which is the AM-C3 field section 2.8 names.  A capacity, not a rate; the KV rate difference is separately cited in the KV-path allowlist"
     }
   ],
   "declared_asymmetries_note": "assert_comparable compares the parameters MachineModel resolves and nothing else.  These declared fields differ between the two emitted records, reach no cost-table parameter, and are listed so that a reader can see what the assertion does NOT cover.  limits.max_context_positions is the one exception: it bounds what the pair can be asked rather than how fast it runs, so both records are harmonised to the smaller of the two bases.",
@@ -707,7 +713,7 @@
         "SPAN_LAST_INDEX": 0,
         "SPAN_TOKENS": 1
       },
-      "root": "build/abi3/qwen3-8b-hbm-e9",
+      "root": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/cl_26/wt/build/abi3/qwen3-8b-hbm-e9",
       "schedule_shapes": {
         "engine_family=112,tile_rows=1,tile_cols=1,tile_depth=1,issue_window=1": 1,
         "engine_family=16,tile_rows=1,tile_cols=64,tile_depth=1,issue_window=16": 1,
@@ -841,7 +847,7 @@
         "SPAN_LAST_INDEX": 0,
         "SPAN_TOKENS": 1
       },
-      "root": "build/abi3/qwen3-8b-rom-e9",
+      "root": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/cl_26/wt/build/abi3/qwen3-8b-rom-e9",
       "schedule_shapes": {
         "engine_family=112,tile_rows=1,tile_cols=1,tile_depth=1,issue_window=1": 1,
         "engine_family=16,tile_rows=1,tile_cols=64,tile_depth=1,issue_window=16": 1,
@@ -957,8 +963,14 @@
       {
         "field": "memory.sram.bytes",
         "hbm": 402653184,
-        "rom": 671088640,
+        "rom": 1888485376,
         "why": "capacity, not bandwidth.  The weight STORE differs by construction -- that is the comparison -- and no capacity resolves to a machine parameter"
+      },
+      {
+        "field": "memory.sram_kv.bytes",
+        "hbm": null,
+        "rom": 1217396736,
+        "why": "the KV STORE differs by construction: this side's design point holds KV in SRAM and the other's holds it in HBM, which is the AM-C3 field section 2.8 names.  A capacity, not a rate; the KV rate difference is separately cited in the KV-path allowlist"
       }
     ],
     "execution_format": "bf16",
@@ -989,6 +1001,8 @@
     "rom_role_hbm_channels": 1,
     "rom_role_sram_bytes_s_achieved": 26112000000000.0,
     "rom_role_sram_bytes_s_target": 26051763188284.723,
+    "rom_sram_kv_arena_bytes": 1217396736,
+    "rom_sram_scratchpad_bytes": 671088640,
     "rom_token_slots": 5.0,
     "rom_weight_read_bytes_s_achieved": 95424000000000.0,
     "rom_weight_read_bytes_s_target": 95429935481236.8,
@@ -2267,6 +2281,13 @@
       "note": "The analytical term is 1.894112e-07 s per layer built from four primitives; only the array-pass boundary has a cycle-model counterpart, and the cycle model charges it per engine INSTRUCTION, not per layer.  The layer barrier (3.5e-08 s per layer, 1.260 us per token) has no counterpart on a single chip at all.",
       "role": "both",
       "term": "layer_fixed_latency"
+    },
+    {
+      "kind": "kv_arena_over_design_provision",
+      "note": "the design point provisions 1207959552 bytes of SRAM KV at its priced context of 8192 positions, but this record admits 8256 positions (limits.max_context_positions, the smaller of the two base records), which is 1217396736 bytes at 147456 bytes per position.  The arena is declared at the larger so that a deployment compiled for the context this record advertises fits it; the excess is capacity the design point did not buy and is reported here rather than hidden in a total.",
+      "relative": 0.0078125,
+      "role": "rom",
+      "term": "kv_capacity"
     }
   ],
   "schema": "opentallas.derived_cycle_machine.v1"

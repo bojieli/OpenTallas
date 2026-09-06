@@ -24,6 +24,29 @@
     ],
     "design_point": "Qwen3-8B/b200_sxm-x3-tensor",
     "generator": "tools/derive_cycle_machine.py",
+    "memory_capacity_provenance": {
+      "device_count": 3,
+      "kv_store": "hbm",
+      "parts": {
+        "memory.hbm.bytes": {
+          "base_bytes": 103079215104,
+          "base_source": "configs/hardware/abi3_capability/hbm_sram_single_chip.json#memory.hbm.bytes",
+          "device_count": 3,
+          "emitted_bytes": 309237645312,
+          "kv_arena": null,
+          "scaled_bytes": 309237645312
+        },
+        "memory.sram.bytes": {
+          "base_bytes": 134217728,
+          "base_source": "configs/hardware/abi3_capability/hbm_sram_single_chip.json#memory.sram.bytes",
+          "device_count": 3,
+          "emitted_bytes": 402653184,
+          "kv_arena": null,
+          "scaled_bytes": 402653184
+        }
+      },
+      "rule": "Every base capacity is one base device's, so the collapse to one logical device multiplies it by device_count.  A KV arena is the exception: the design point holds ONE of it for the session, so when its kv_store is 'sram' the SRAM capacity is the scaled scratchpad PLUS points[ROLE].kv_capacity_bytes, and memory.sram_kv names the second part.  The parts add because the consumer of memory.sram.bytes -- runtime/abi3/verifier.py _verify_address_map -- charges one space for every SRAM object the deployment declares."
+    },
     "note": "technology_view n5_design_target is deliberately outside runtime/cycle/machine.py CHARACTERIZED_TECHNOLOGY_VIEWS, so every structural count this record advertises is graded `assumed` with no code change, and every run against it prints the not-a-performance-claim note.  topology_class is forced to SINGLE_CHIP because the derivation collapses the design point's devices into one logical device; this record is a MACHINE for that collapsed device and is not the deployment target of a multi-node backend."
   },
   "engines": {

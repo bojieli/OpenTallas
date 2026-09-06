@@ -251,8 +251,14 @@
     {
       "field": "memory.sram.bytes",
       "hbm": 10603200512,
-      "rom": 41607495680,
+      "rom": 51463506944,
       "why": "capacity, not bandwidth.  The weight STORE differs by construction -- that is the comparison -- and no capacity resolves to a machine parameter"
+    },
+    {
+      "field": "memory.sram_kv.bytes",
+      "hbm": null,
+      "rom": 9856011264,
+      "why": "the KV STORE differs by construction: this side's design point holds KV in SRAM and the other's holds it in HBM, which is the AM-C3 field section 2.8 names.  A capacity, not a rate; the KV rate difference is separately cited in the KV-path allowlist"
     }
   ],
   "declared_asymmetries_note": "assert_comparable compares the parameters MachineModel resolves and nothing else.  These declared fields differ between the two emitted records, reach no cost-table parameter, and are listed so that a reader can see what the assertion does NOT cover.  limits.max_context_positions is the one exception: it bounds what the pair can be asked rather than how fast it runs, so both records are harmonised to the smaller of the two bases.",
@@ -339,8 +345,14 @@
       {
         "field": "memory.sram.bytes",
         "hbm": 10603200512,
-        "rom": 41607495680,
+        "rom": 51463506944,
         "why": "capacity, not bandwidth.  The weight STORE differs by construction -- that is the comparison -- and no capacity resolves to a machine parameter"
+      },
+      {
+        "field": "memory.sram_kv.bytes",
+        "hbm": null,
+        "rom": 9856011264,
+        "why": "the KV STORE differs by construction: this side's design point holds KV in SRAM and the other's holds it in HBM, which is the AM-C3 field section 2.8 names.  A capacity, not a rate; the KV rate difference is separately cited in the KV-path allowlist"
       }
     ],
     "execution_format": "w4a8",
@@ -371,6 +383,8 @@
     "rom_role_hbm_channels": 1,
     "rom_role_sram_bytes_s_achieved": 1062784000000000.0,
     "rom_role_sram_bytes_s_target": 1062810716657153.6,
+    "rom_sram_kv_arena_bytes": 9856011264,
+    "rom_sram_scratchpad_bytes": 41607495680,
     "rom_token_slots": 1.0,
     "rom_weight_read_bytes_s_achieved": 2.590216e+16,
     "rom_weight_read_bytes_s_target": 2.590214740316767e+16,
