@@ -32,13 +32,17 @@ if str(REPO) not in sys.path:
 
 from tools.derive_cycle_machine import (  # noqa: E402
     DEFAULT_ANALYTICAL,
+    DEFAULT_HBM_DESIGN,
+    DEFAULT_ROM_DESIGN,
     DEFAULT_TECHNOLOGY,
     DEPLOYMENT_AUDIT_ALLOWLIST,
     FAMILIES,
+    KV_PATH_ALLOWLIST,
     SCHEDULE_TILE_FIELDS,
     SHIPPED_DEPLOYMENTS,
     TECHNOLOGY_VIEW,
     WEIGHT_PATH_ALLOWLIST,
+    allowlist_for,
     assert_comparable,
     audit_deployments,
     build,
@@ -49,8 +53,14 @@ from tools.derive_cycle_machine import (  # noqa: E402
     tensor_parity_band,
 )
 
-ROM_DESIGN = "Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4"
-HBM_DESIGN = "Qwen3-8B/b200_sxm-x2-tensor"
+#: Taken from the generator, never re-typed.  These tests judge the files the
+#: generator emits, and the emitted files live at the anchor's paths, so a
+#: literal here can only ever disagree with the thing under test -- which is
+#: how the anchor move of section 13 item 24 was caught by twelve red tests
+#: rather than by one.  The anchor's own identity is checked against the
+#: analytical artifact in ``test_the_anchor_is_the_published_headline_pair``.
+ROM_DESIGN = DEFAULT_ROM_DESIGN
+HBM_DESIGN = DEFAULT_HBM_DESIGN
 
 ROM_TABLE = REPO / f"configs/hardware/abi3_cost_{TECHNOLOGY_VIEW}_rom_v1.json"
 HBM_TABLE = REPO / f"configs/hardware/abi3_cost_{TECHNOLOGY_VIEW}_hbm_v1.json"
@@ -145,18 +155,38 @@ def test_matrix_check_reads_the_files_the_c2_gate_reads(tmp_path):
 # ---------------------------------------------------------------------------
 # 2.  D1: the two machines are one machine outside the weight path
 # ---------------------------------------------------------------------------
-def test_the_two_machines_differ_only_inside_the_weight_path(emitted):
+def test_the_two_machines_differ_only_inside_the_weight_path(anchor, emitted):
+    """...and inside the KV path exactly when the two points disagree on it.
+
+    ``allowlist_for`` is the set the generator itself asserts against, and it
+    is anchor-dependent: the weight-path entries always apply, the KV-path
+    entries only when ``points[ROM].kv_store != points[GPU].kv_store``.  The
+    test reads that function rather than a fixed set, because a fixed set is
+    either too narrow (it fails on a legitimate anchor) or too wide (it hides
+    a divergence on an anchor that cannot have one) -- and asserts the
+    conditional itself, so the KV entries cannot be permitted on an anchor
+    whose two points agree.
+    """
+    allowlist = allowlist_for(anchor)
     report = assert_comparable(
         emitted["rom_capability"], ROM_TABLE,
         emitted["hbm_capability"], HBM_TABLE,
+        allowlist=allowlist,
     )
     assert report["parameters_compared"] == 114
-    assert set(report["permitted_differences"]) <= set(WEIGHT_PATH_ALLOWLIST)
+    assert set(report["permitted_differences"]) <= set(allowlist)
+    assert set(WEIGHT_PATH_ALLOWLIST) <= set(allowlist)
+    kv_split = anchor.rom_kv_store != anchor.hbm_kv_store
+    assert (set(KV_PATH_ALLOWLIST) <= set(allowlist)) is kv_split, (
+        "the KV-path allowlist must apply exactly when the two design points "
+        f"disagree on kv_store (rom {anchor.rom_kv_store!r}, hbm "
+        f"{anchor.hbm_kv_store!r})"
+    )
     # Every allowlist entry must actually be used.  An allowlist that permits
     # more than the emit needs is an allowlist that will one day hide a real
     # divergence.
     assert report["allowlist_unused"] == [], (
-        "the weight-path allowlist permits differences the emit does not "
+        "the allowlist permits differences the emit does not "
         f"make: {report['allowlist_unused']}"
     )
 
@@ -193,7 +223,7 @@ def test_the_capabilities_declare_identical_engine_blocks(emitted):
     assert len(lanes) == 1, f"every family must carry one lane count, got {lanes}"
 
 
-def test_shared_parameters_resolve_from_the_same_origin(emitted):
+def test_shared_parameters_resolve_from_the_same_origin(anchor, emitted):
     """A value that agrees today but arrives from two places diverges tomorrow.
 
     The shipped pair has exactly this defect: ``rom_qwen3`` advertises no SRAM
@@ -203,6 +233,7 @@ def test_shared_parameters_resolve_from_the_same_origin(emitted):
     report = assert_comparable(
         emitted["rom_capability"], ROM_TABLE,
         emitted["hbm_capability"], HBM_TABLE,
+        allowlist=allowlist_for(anchor),
     )
     # assert_comparable raises on a split origin; reaching here proves none.
     assert report["identical"], "no parameters were compared"
@@ -268,15 +299,37 @@ def test_every_family_carries_the_one_analytical_arithmetic_roof(emitted):
 
 
 def test_rom_weight_path_reproduces_the_analytical_rom_bandwidth(anchor, emitted):
+    """Exact but for the one integer the cost table is allowed to round.
+
+    ``rom.bytes_per_cycle_per_array`` must be a whole number of bytes per
+    cycle, so the reproduction can only ever be exact to that rounding.  The
+    band is COMPUTED from the rounding rather than typed: rounding to nearest
+    moves the rate by at most half a byte per cycle per array, so the relative
+    error is bounded by ``0.5 / exact_bytes_per_cycle_per_array``.  A typed
+    tolerance is tuned to one anchor and silently either passes a real error or
+    fails a legal rounding on the next one -- the previous 2e-5 was the first,
+    and it failed on the anchor move of section 13 item 24 for no defect.
+    """
     table = emitted["rom_cost_table"]
     arrays = _param(table, "rom.arrays.default")
     bpc = _param(table, "rom.bytes_per_cycle_per_array")
     clock = _param(table, "clock.frequency_hz")
     achieved = arrays * bpc * clock
-    assert achieved == pytest.approx(anchor.rom_weight_read_bytes_s, rel=2e-5), (
-        "the derived ROM array no longer delivers the design point's "
-        "peak_weight_read_bytes_s"
+    target = anchor.rom_weight_read_bytes_s
+    exact_bpc = target / (arrays * clock)
+    assert bpc == round(exact_bpc), (
+        f"rom.bytes_per_cycle_per_array {bpc} is not {exact_bpc} rounded"
     )
+    bound = 0.5 / exact_bpc
+    assert abs(achieved - target) / target <= bound + 1e-15, (
+        "the derived ROM array no longer delivers the design point's "
+        f"peak_weight_read_bytes_s: {achieved} against {target}, relative "
+        f"error {abs(achieved - target) / target:.3e} over the rounding bound "
+        f"{bound:.3e}"
+    )
+    # ...and the rounding is declared, not silent.
+    kinds = {(r["term"], r["kind"]) for r in emitted["artifact"]["residuals"]}
+    assert ("weight_read", "integer_quantisation") in kinds
     # The burst must be an exact multiple of the per-cycle rate, or the cycle
     # model's ceil() silently throws bandwidth away.
     assert _param(table, "rom.transaction_bytes") % bpc == 0
@@ -292,12 +345,36 @@ def test_hbm_channel_rate_is_shared_and_reproduces_both_design_points(
         "differ"
     )
     clock = _param(rom_t, "clock.frequency_hz")
-    assert _param(rom_t, "hbm.channels.default") * bpc * clock == pytest.approx(
-        anchor.rom_kv_read_bytes_s, rel=1e-12
-    )
     assert _param(hbm_t, "hbm.channels.default") * bpc * clock == pytest.approx(
         anchor.hbm_memory_bytes_s, rel=1e-12
     )
+    # The ROM side's KV rate is carried by whichever store the design point
+    # says holds KV.  Asserting the HBM product unconditionally would pass only
+    # on an HBMKV point and would say nothing at all on an SRAMKV one -- and
+    # the anchor moved from one to the other (section 13 item 24).
+    if anchor.rom_kv_store == "hbm":
+        assert _param(rom_t, "hbm.channels.default") * bpc * clock == (
+            pytest.approx(anchor.rom_kv_read_bytes_s, rel=1e-12)
+        )
+    else:
+        assert anchor.rom_kv_store == "sram", anchor.rom_kv_store
+        ports = (
+            _param(rom_t, "sram.banks.default")
+            * _param(rom_t, "sram.ports_per_bank.default")
+        )
+        rate = ports * _param(rom_t, "sram.bytes_per_cycle_per_port") * clock
+        # The port rate is an integer number of bytes per cycle, so the
+        # reproduction is exact only to that quantisation; the artifact
+        # declares the residual and this is its band.
+        assert rate == pytest.approx(anchor.rom_kv_read_bytes_s, rel=3e-3), (
+            "the derived SRAM port pool no longer delivers the design point's "
+            "KV read rate"
+        )
+        assert _param(rom_t, "hbm.channels.default") == 1, (
+            "a design point that buys no HBM (area_fractions.hbm_phy 0.0) must "
+            "declare the one inert channel the cost-table schema requires, not "
+            "a provisioned pool"
+        )
     tx = _param(rom_t, "hbm.transaction_bytes")
     assert tx / bpc == int(tx / bpc), "the HBM burst must quantise losslessly"
 
@@ -346,10 +423,11 @@ def test_capability_technology_view_is_outside_the_characterized_set(emitted):
         assert view not in CHARACTERIZED_TECHNOLOGY_VIEWS
 
 
-def test_both_machines_report_an_assumed_provenance_class(emitted):
+def test_both_machines_report_an_assumed_provenance_class(anchor, emitted):
     report = assert_comparable(
         emitted["rom_capability"], ROM_TABLE,
         emitted["hbm_capability"], HBM_TABLE,
+        allowlist=allowlist_for(anchor),
     )
     assert report["rom_provenance_classes"] == ["assumed"]
     assert report["hbm_provenance_classes"] == ["assumed"]
@@ -359,14 +437,80 @@ def test_both_machines_report_an_assumed_provenance_class(emitted):
 # 4.  D5: the anchor is the pair the headline comes from
 # ---------------------------------------------------------------------------
 def test_the_anchor_is_the_published_headline_pair(anchor, emitted):
+    """The anchor is the study's own choice on both sides, not this repo's.
+
+    Checked against ``analytical.json`` rather than against literals: the ROM
+    side must be the study's batch-1 recommendation for the model, and the GPU
+    side must be the artifact's OWN iso-area comparator for that ROM design.
+    Gate G3's budget is frozen on the same pair, so a literal here would let
+    the two drift apart silently -- which is exactly what section 13 item 24
+    records happening.
+    """
+    body = json.loads((REPO / DEFAULT_ANALYTICAL).read_text())
+    model = next(
+        m for m in body["design_selection"]["models"] if m["model"] == "Qwen3-8B"
+    )
+    recommended = next(
+        r["recommended"]["design"] for r in model["batch_regimes"]
+        if int(r["batch_size"]) == 1
+    )
+    assert ROM_DESIGN == recommended, (
+        f"the anchor's ROM side {ROM_DESIGN} is not the study's own batch-1 "
+        f"recommendation {recommended}"
+    )
+    iso = next(
+        c["iso_area_gpu_design"] for c in body["comparisons"]
+        if int(c.get("batch_size", -1)) == 1 and c["rom_design"] == ROM_DESIGN
+    )
+    assert HBM_DESIGN == iso, (
+        f"the anchor's GPU side {HBM_DESIGN} is not the artifact's own "
+        f"iso-area comparator {iso} for that ROM design"
+    )
+
     art = emitted["artifact"]["anchor"]
     assert art["rom_design"] == ROM_DESIGN
     assert art["hbm_design"] == HBM_DESIGN
-    assert art["published_ratio"] == pytest.approx(5.6392842689793605, rel=1e-12)
-    assert art["iso_area"], "the anchor must be within 2 percent of iso-area"
-    assert anchor.rom["token_slots"] == 1.0 and anchor.hbm["token_slots"] == 1.0, (
-        "the aggregation to one logical device is only exact at token_slots = 1"
+    assert art["published_ratio"] == pytest.approx(
+        anchor.rom["per_user_tokens_s"] / anchor.hbm["per_user_tokens_s"],
+        rel=1e-12,
     )
+    # The iso-area convention picks N GPU dies so the silicon MATCHES, and the
+    # comparator is the artifact's own.  It does not always land within 2%: at
+    # this anchor it is 4,800 mm2 against 4,075, so the study spends 17.8% MORE
+    # silicon on the comparator than on the ROM part.  What must never happen
+    # is the other direction -- a comparator with LESS silicon flatters the
+    # thesis, and rule R14 says take the choice that costs the ROM side.  The
+    # exact-iso flag is recorded either way and read here rather than asserted.
+    assert art["iso_area"] is (abs(art["iso_area_ratio"] - 1) < 0.02)
+    assert art["iso_area_ratio"] <= 1.0 + 1e-12, (
+        f"the comparator has LESS silicon than the ROM part "
+        f"({art['hbm_area_mm2']} against {art['rom_area_mm2']} mm2); the "
+        "iso-area convention would then be applied FOR the thesis, which R14 "
+        "forbids"
+    )
+    # The collapse of N devices into one logical device divides every RATE by
+    # the point's own token_slots.  At one slot that division is the identity;
+    # above one slot it is a real modelling step, and the artifact must DECLARE
+    # it rather than let a reader assume the aggregate was carried whole.
+    slots = anchor.rom["token_slots"]
+    assert anchor.hbm["token_slots"] == 1.0
+    if slots > 1.0:
+        residual = next(
+            (r for r in emitted["artifact"]["residuals"]
+             if r["kind"] == "slot_serialisation"), None,
+        )
+        assert residual is not None, (
+            f"the ROM point traverses {slots:g} slots, so the collapse divides "
+            "its aggregate rates; the artifact must carry the "
+            "slot_serialisation residual that says so"
+        )
+        assert f"{slots:g} slot" in residual["note"]
+    assert anchor.rom_weight_read_bytes_s == pytest.approx(
+        anchor.rom_peak_weight_read_bytes_s / slots, rel=1e-12
+    )
+    # ...and the collapse is checked against the point's own published times,
+    # not assumed, by the generator itself.
+    anchor.assert_collapse_is_exact()
 
 
 def test_the_artifact_names_every_inexpressible_term(emitted):
@@ -545,7 +689,28 @@ def test_the_audit_catches_the_shipped_pairs_tile_shape_divergence(shipped_audit
     tensor = report["families"]["tensor"]
     assert tensor["useful_work"]["rom"] == tensor["useful_work"]["hbm"]
     assert tensor["cycles"]["favours"] == "rom"
-    assert tensor["cycles"]["magnitude_x"] == pytest.approx(2.0, rel=1e-2)
+    # The total contraction advantage is the COMPOSITION of the two
+    # cost-bearing tile differences: the column-group cap (the effective
+    # tensor width) times the reduction-depth quantisation the parity band
+    # reports.  Asserting the product rather than a number keeps the claim
+    # true across an anchor move: at the superseded point the depth term was
+    # exactly 1.0 by coincidence of the rate and the total was the width's
+    # 2.0x; at this anchor the depth term is 1.091x and the total is 2.181x.
+    depth_band = report["tensor_parity_band"]
+    assert tensor["cycles"]["magnitude_x"] == pytest.approx(
+        cols["effect_x"] * depth_band["magnitude_x"], rel=1e-9
+    ), (
+        "the contraction advantage is no longer the column-group cap times "
+        "the depth quantisation; one of the two is being counted twice or not "
+        "at all"
+    )
+    if depth_band["parity"]:
+        assert depth["favours"] == "neither"
+    else:
+        assert depth["favours"] == depth_band["favours"] == "rom", (
+            "the reduction depth now moves the charge and the direction is "
+            "not the ROM side's: that is a bigger finding than this test"
+        )
     for key in ("tensor.tile_depth", "tensor.tile_rows", "tensor.tile_cols",
                 "tensor.issue_window"):
         assert key in report["unexplained_asymmetries"]
@@ -603,23 +768,49 @@ def test_the_audit_names_the_shipped_pairs_dma_tile_count_asymmetry(shipped_audi
 
 
 def test_the_parity_band_is_reported_for_the_pairs_actual_depths(shipped_audit, emitted):
-    """The tensor parity is a coincidence of the rate, and the audit says where."""
+    """The tensor parity is a coincidence of the rate, and the audit says where.
+
+    The audit must report the band for the PAIR'S OWN depths at the MACHINE'S
+    OWN rate -- not a band recorded once and carried.  At the superseded
+    HBMKV-array-tensor-x4 anchor the rate was 265.372 and the (2048, 128) pair
+    sat inside [256.0, 273.067), so the two depths cost the same per unit of
+    depth.  At the re-frozen SRAMKV-array-pipeline-x5-romfill anchor the rate
+    is 93.193 and the band is [93.091, 95.256): parity is GONE and the shape
+    now favours the ROM side by 44/2048 against 3/128 = 1.0909x.  That is the
+    finding this test exists to surface, so it is asserted, not smoothed.
+    """
     band = shipped_audit["tensor_parity_band"]
     assert (band["rom_tile_depth"], band["hbm_tile_depth"]) == (2048, 128)
     rate = emitted["rom_cost_table"]["parameters"][
         "engine.tensor.work_per_lane_cycle"
     ]["value"]
     assert band["work_per_lane_cycle"] == rate
-    assert band["band"] == pytest.approx(list(TENSOR_PARITY_BAND), rel=1e-12)
-    assert band["parity"] is True and band["favours"] == "neither"
-    assert band["cycles_per_full_depth_tile"] == {"rom": 16, "hbm": 1}
+    # The band is a fact about the two depths and the rate, recomputed here
+    # from the same primitive the audit used, so a band carried from a
+    # previous anchor cannot pass.
+    fresh = tensor_parity_band(2048, 128, rate)
+    assert band["band"] == pytest.approx(fresh["band"], rel=1e-12)
+    assert rate >= band["band"][0] and rate < band["band"][1]
+    k_rom = band["cycles_per_full_depth_tile"]["rom"]
+    k_hbm = band["cycles_per_full_depth_tile"]["hbm"]
+    assert k_rom == math.ceil(2048 * band["work_units_per_mac"] / rate)
+    assert k_hbm == math.ceil(128 * band["work_units_per_mac"] / rate)
+    assert band["parity"] is ((k_rom / 2048) == (k_hbm / 128))
+    if not band["parity"]:
+        assert band["favours"] == ("rom" if k_rom / 2048 < k_hbm / 128 else "hbm")
+        assert band["magnitude_x"] == pytest.approx(
+            max(k_rom / 2048, k_hbm / 128) / min(k_rom / 2048, k_hbm / 128)
+        )
     # ...and the same function says which side wins outside the band.
     below = tensor_parity_band(2048, 128, 240.0)
     assert below["parity"] is False and below["favours"] == "rom"
     assert below["magnitude_x"] == pytest.approx(32 / 18)
     assert 240.0 >= below["band"][0] and 240.0 < below["band"][1]
+    # Equal depths are at parity at ANY rate, which is what the pair the C2
+    # gate actually binds (the AM-E9 v2 lowering, 128 against 128) relies on.
     same = tensor_parity_band(128, 128, rate)
-    assert same["parity"] is True and same["band"] == [pytest.approx(256.0), math.inf]
+    assert same["parity"] is True and same["favours"] == "neither"
+    assert same["band"][0] <= rate < same["band"][1]
 
 
 def _params_from_cycle_artifact(body):
@@ -883,6 +1074,37 @@ def _synthetic_run(*, cycles, clock, compute_cycles, tensor_cycles,
     }
 
 
+#: The counters of the anchor's own committed ROM cycle run
+#: (``results/derived/n5_design_target_cycle/qwen3_n5_design_target_rom_run.json``,
+#: batch 1 at POSITION_START 8000).  They are read from the record rather than
+#: typed so that a re-timed anchor cannot leave these tests asserting against a
+#: run nobody took.
+ANCHOR_ROM_RUN = (
+    REPO / "results/derived/n5_design_target_cycle"
+    / "qwen3_n5_design_target_rom_run.json"
+)
+
+
+def _anchor_run():
+    body = json.loads(ANCHOR_ROM_RUN.read_text())
+    arch = body["counters"]["architectural"]
+    return _synthetic_run(
+        cycles=body["timing"]["total_cycles"],
+        clock=body["timing"]["clock_frequency_hz"],
+        compute_cycles=body["timing"]["compute_cycles"],
+        tensor_cycles=body["engines"]["tensor"]["compute_bound_cycles"],
+        rom_busy=body["memory"]["rom"]["busy_cycles"],
+        rom_units=body["memory"]["rom"]["structure"]["units"],
+        hbm_busy=body["memory"]["hbm"]["busy_cycles"],
+        hbm_units=body["memory"]["hbm"]["structure"]["units"],
+        rom_bytes_read=arch["rom.bytes_read"],
+        hbm_read=arch["hbm.bytes_read"],
+        hbm_written=arch["hbm.bytes_written"],
+        weight_bytes_touched=body["tiling"]["by_family"]["tensor"][
+            "memory_traffic"]["bytes_touched"],
+    )
+
+
 def test_store_wall_time_divides_busy_cycles_by_units_and_ports():
     """busy_cycles is summed over units, so a per-term wall clock must divide."""
     from tools.derive_cycle_machine import _store_wall_seconds
@@ -899,12 +1121,7 @@ def test_store_wall_time_divides_busy_cycles_by_units_and_ports():
 def test_reconciliation_reports_a_structurally_zero_link_term(anchor):
     from tools.derive_cycle_machine import reconcile
 
-    run = _synthetic_run(
-        cycles=359850, clock=1e9, compute_cycles=105308, tensor_cycles=57764,
-        rom_busy=552088, rom_units=16, hbm_busy=33271977, hbm_units=160,
-        rom_bytes_read=15145273784, hbm_read=2508914688,
-        hbm_written=1222713344, weight_bytes_touched=16386630404,
-    )
+    run = _anchor_run()
     report = reconcile(anchor, run, run)
     rom = report["targets"]["rom"]
     assert rom["terms"]["link_latency"]["cycle_s"] == 0.0
@@ -920,15 +1137,16 @@ def test_reconciliation_reports_a_structurally_zero_link_term(anchor):
 def test_headline_offers_the_like_for_like_ratio_pair(anchor):
     from tools.derive_cycle_machine import reconcile
 
-    run = _synthetic_run(
-        cycles=359850, clock=1e9, compute_cycles=105308, tensor_cycles=57764,
-        rom_busy=552088, rom_units=16, hbm_busy=33271977, hbm_units=160,
-        rom_bytes_read=15145273784, hbm_read=2508914688,
-        hbm_written=1222713344, weight_bytes_touched=16386630404,
-    )
+    run = _anchor_run()
     report = reconcile(anchor, run, run)
     head = report["headline"]
-    assert head["analytical_ratio"] == pytest.approx(5.6392842689793605, rel=1e-12)
+    assert head["analytical_ratio"] == pytest.approx(
+        anchor.hbm["step_time_s"] / anchor.rom["step_time_s"], rel=1e-12
+    )
+    assert head["analytical_ratio"] == pytest.approx(
+        anchor.rom["per_user_tokens_s"] / anchor.hbm["per_user_tokens_s"],
+        rel=1e-12,
+    )
     # Removing the link term from both analytical steps is the comparison the
     # cycle model can actually be held to.
     rom_link = anchor.rom["component_times_s"]["link_latency"]
@@ -939,31 +1157,44 @@ def test_headline_offers_the_like_for_like_ratio_pair(anchor):
     )
 
 
+#: The three analytical terms the cycle model also expresses.  ``link_latency``
+#: is structurally absent on a single chip and ``layer_fixed_latency`` reaches
+#: the step only through WAIT dependencies, so neither may enter the comparison.
+EXPRESSIBLE_TERMS = ("compute", "weight_read", "kv_read")
+
+
 def test_binding_regime_is_compared_only_over_expressible_terms(anchor):
     """D6's headline test, made checkable.
 
-    The analytical ROM point is link_latency-bound and the cycle model has no
-    link term on a single chip, so comparing the two binding constraints
-    directly is a category error.  Over the three terms both models express,
-    the analytical ROM point is kv_read-bound and the analytical GPU point is
-    weight_read-bound; those are the claims the cycle model can be held to.
+    The cycle model has no link term on a single chip, so comparing the two
+    binding constraints over all five analytical terms is a category error.
+    The comparison is made over the three terms both models express, and this
+    test computes that argmax from the anchor's own published component times
+    rather than naming a term: at the superseded HBMKV-array-tensor-x4 point
+    the two answers differed (link_latency over five terms, kv_read over
+    three), and at the re-frozen SRAMKV-array-pipeline-x5-romfill point they
+    coincide on weight_read.  A test that named either one would have to be
+    re-typed on every anchor move, which is how it would come to be wrong.
     """
     from tools.derive_cycle_machine import reconcile
 
-    run = _synthetic_run(
-        cycles=359850, clock=1e9, compute_cycles=105308, tensor_cycles=57764,
-        rom_busy=552088, rom_units=16, hbm_busy=33271977, hbm_units=160,
-        rom_bytes_read=15145273784, hbm_read=2508914688,
-        hbm_written=1222713344, weight_bytes_touched=16386630404,
-    )
+    run = _anchor_run()
     report = reconcile(anchor, run, run)
-    rom = report["targets"]["rom"]["binding_regime"]
-    assert rom["analytical_over_all_five_terms"] == "link_latency"
-    assert rom["analytical_over_expressible_terms"] == "kv_read"
-    assert "link_latency" not in {rom["analytical_over_expressible_terms"],
-                                  rom["cycle"]}
-    hbm = report["targets"]["hbm"]["binding_regime"]
-    assert hbm["analytical_over_expressible_terms"] == "weight_read"
+    for role, point in (("rom", anchor.rom), ("hbm", anchor.hbm)):
+        regime = report["targets"][role]["binding_regime"]
+        times = point["component_times_s"]
+        assert regime["analytical_over_all_five_terms"] == max(
+            times, key=lambda k: times[k]
+        )
+        assert regime["analytical_over_expressible_terms"] == max(
+            EXPRESSIBLE_TERMS, key=lambda k: times[k]
+        )
+        assert "link_latency" not in {
+            regime["analytical_over_expressible_terms"], regime["cycle"]
+        }
+        assert "layer_fixed_latency" not in {
+            regime["analytical_over_expressible_terms"], regime["cycle"]
+        }
 
 
 def _tensor_cycles(depth: int, tile_depth: int, rate: float,
@@ -982,45 +1213,68 @@ def _tensor_cycles(depth: int, tile_depth: int, rate: float,
     return cycles
 
 
-#: ``ceil(2048*2/w) == 16 * ceil(128*2/w)`` holds only on this half-open
-#: interval.  Below it the two deployments cost the same for a different
-#: reason; above it they diverge and the ROM side is always the cheaper.
-TENSOR_PARITY_BAND = (256.0, 4096.0 / 15.0)
+#: The rate at which ``ceil(2048*2/w) == 16 * ceil(128*2/w)`` -- the two
+#: shipped tile depths costing the same per unit of depth -- was true, and the
+#: half-open band around it.  It is the SUPERSEDED anchor's rate, kept as a
+#: fixed point of the arithmetic: the parity was a coincidence of that rate and
+#: the anchor has since moved off it (section 13 item 24).  Nothing reads it as
+#: the current machine's band.
+SUPERSEDED_PARITY_RATE = 265.371881609201
+SUPERSEDED_PARITY_BAND = (256.0, 4096.0 / 15.0)
 
 
 def test_the_two_deployments_cost_the_same_tensor_work_only_inside_a_narrow_band(
     emitted,
 ):
-    """The pair's tensor comparability is a coincidence, and it is a fragile one.
+    """The pair's tensor comparability was a coincidence, and it has expired.
 
-    The compiled ROM deployment carries ``tile_depth`` 2,048 and the HBM one
-    128.  Per unit of contraction work those two shapes cost the same number of
-    cycles only while ``ceil(2048 * work_units_per_mac / rate)`` equals
+    The shipped ROM deployment (``qwen3-8b-rom-rowfold-v1``) carries
+    ``tile_depth`` 2,048 and the HBM one 128.  Per unit of contraction work
+    those two shapes cost the same number of cycles only while
+    ``ceil(2048 * work_units_per_mac / rate)`` equals
     ``16 * ceil(128 * work_units_per_mac / rate)``, which is true on a band
-    about 6.7% wide.  The derived machine happens to sit inside it.
+    about 6.7% wide around 265.372 -- the SUPERSEDED anchor's tensor rate.
 
-    Outside the band the two deployments are NOT charged alike for identical
-    arithmetic, and the direction is not neutral: at rate 240 the ROM
-    deployment costs 0.5625x the HBM one for the same work.  That is a 1.78x
-    advantage handed to the ROM side by a schedule shape, exactly the class of
-    defect ``assert_comparable`` exists to remove from the machine files -- so
-    it must not be allowed to reappear from the deployment side unremarked.
+    The anchor moved to the point gate G3's budget is frozen on, the derived
+    rate fell to 93.193, and the pair LEFT that band.  This test therefore no
+    longer asserts parity: it asserts that the loss of parity is quantified and
+    directed, which is what the test was written for.  "The two deployments are
+    NOT charged alike for identical arithmetic, and the direction is not
+    neutral ... it must not be allowed to reappear from the deployment side
+    unremarked."  It has reappeared; here is the number.
     """
 
     rate = emitted["rom_cost_table"]["parameters"][
         "engine.tensor.work_per_lane_cycle"
     ]["value"]
-    low, high = TENSOR_PARITY_BAND
-    assert low <= rate < high, (
-        f"the derived tensor rate {rate} has left the parity band "
-        f"[{low}, {high}); the ROM and HBM deployments no longer cost the same "
-        "for identical tensor work, and the audit does not test tile_depth"
-    )
-
     depth = 4096
     rom = _tensor_cycles(depth, 2048, rate)
     hbm = _tensor_cycles(depth, 128, rate)
-    assert rom == hbm, (rate, rom, hbm)
+    band = tensor_parity_band(2048, 128, rate)
+    assert (rom == hbm) is band["parity"], (
+        "the parity band disagrees with the cycle arithmetic it describes"
+    )
+    if band["parity"]:
+        assert rom == hbm, (rate, rom, hbm)
+    else:
+        assert band["favours"] == "rom" and rom < hbm, (
+            f"at rate {rate} the {2048}/{128} depth pair favours "
+            f"{band['favours']} by {band['magnitude_x']}x; a shape advantage "
+            "that has changed direction is a bigger finding than this test"
+        )
+        assert hbm / rom == pytest.approx(band["magnitude_x"], rel=1e-12)
+
+    # The superseded rate is still the fixed point of the arithmetic, and it
+    # is checked so that "the band moved" can never be confused with "the
+    # arithmetic moved".
+    low, high = SUPERSEDED_PARITY_BAND
+    old_band = tensor_parity_band(2048, 128, SUPERSEDED_PARITY_RATE)
+    assert old_band["parity"] is True and old_band["favours"] == "neither"
+    assert old_band["band"] == pytest.approx([low, high], rel=1e-12)
+    assert (
+        _tensor_cycles(depth, 2048, SUPERSEDED_PARITY_RATE)
+        == _tensor_cycles(depth, 128, SUPERSEDED_PARITY_RATE)
+    )
 
     # And the fragility itself, so nobody reads the equality as structural.
     outside = _tensor_cycles(depth, 2048, 240.0), _tensor_cycles(depth, 128, 240.0)

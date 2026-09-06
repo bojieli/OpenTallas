@@ -47,6 +47,8 @@ if str(REPO) not in sys.path:
 from tools.derive_cycle_machine import (  # noqa: E402
     _resolve_all,
     DEFAULT_ANALYTICAL,
+    DEFAULT_HBM_DESIGN,
+    DEFAULT_ROM_DESIGN,
     DEFAULT_TECHNOLOGY,
     FAMILIES,
     KV_PATH_ALLOWLIST,
@@ -576,8 +578,8 @@ def test_each_cell_has_its_own_four_files():
 def test_the_default_pair_keeps_the_paths_it_was_published_at():
     anchor = load_anchor(
         REPO / DEFAULT_ANALYTICAL, REPO / DEFAULT_TECHNOLOGY,
-        rom_design="Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4",
-        hbm_design="Qwen3-8B/b200_sxm-x2-tensor",
+        rom_design=DEFAULT_ROM_DESIGN,
+        hbm_design=DEFAULT_HBM_DESIGN,
         batch_size=1, context_tokens=8192,
     )
     rom_base, hbm_base = base_capabilities(anchor)

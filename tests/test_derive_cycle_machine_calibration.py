@@ -36,6 +36,9 @@ from tools.derive_cycle_machine import (  # noqa: E402
     CALIBRATION_BAND_SOURCE,
     CALIBRATION_SCHEMA,
     DEFAULT_ANALYTICAL,
+    DEFAULT_BOUNDARY_CHAIN_RECORD,
+    DEFAULT_HBM_DESIGN,
+    DEFAULT_ROM_DESIGN,
     DEFAULT_CALIBRATION_OUT,
     DEFAULT_TECHNOLOGY,
     DESIGN_DOC,
@@ -50,8 +53,11 @@ from tools.derive_cycle_machine import (  # noqa: E402
     run_calibration,
 )
 
-ROM_DESIGN = "Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4"
-HBM_DESIGN = "Qwen3-8B/b200_sxm-x2-tensor"
+#: Taken from the generator, never re-typed: the calibration artifact is
+#: emitted at the generator's own anchor, so a literal here can only
+#: disagree with the file under test.  See section 13 item 24.
+ROM_DESIGN = DEFAULT_ROM_DESIGN
+HBM_DESIGN = DEFAULT_HBM_DESIGN
 ANALYTICAL = REPO / DEFAULT_ANALYTICAL
 TECHNOLOGY = REPO / DEFAULT_TECHNOLOGY
 ARTIFACT = REPO / DEFAULT_CALIBRATION_OUT
@@ -67,9 +73,22 @@ def anchor():
     )
 
 
+#: The calibration reads the boundary-chain record when it exists, exactly as
+#: ``main()`` does.  Leaving it out of the fixture built a DIFFERENT artifact
+#: from the one the CLI emits, so ``test_the_artifact_reproduces_from_its_inputs``
+#: could never pass once results/rtl/abi3_boundary_chain.json landed -- the
+#: test compared the on-disk artifact against a calibration nobody runs.
+def _cli_records():
+    chain = REPO / DEFAULT_BOUNDARY_CHAIN_RECORD
+    return (
+        {"boundary_chain_record": DEFAULT_BOUNDARY_CHAIN_RECORD}
+        if chain.exists() else {}
+    )
+
+
 @pytest.fixture(scope="module")
 def paths():
-    return calibration_input_paths(ANALYTICAL, TECHNOLOGY)
+    return calibration_input_paths(ANALYTICAL, TECHNOLOGY, **_cli_records())
 
 
 @pytest.fixture(scope="module")
@@ -81,7 +100,7 @@ def loaded(paths):
 
 @pytest.fixture(scope="module")
 def fresh(anchor):
-    return run_calibration(anchor, ANALYTICAL, TECHNOLOGY)
+    return run_calibration(anchor, ANALYTICAL, TECHNOLOGY, **_cli_records())
 
 
 def _calibrate(anchor, loaded, **overrides):
@@ -343,8 +362,18 @@ def test_the_boundary_is_read_off_the_design_document(loaded):
         design_boundary_rule("| 33 | something else |\n")
 
 
-def test_the_boundary_is_unmeasured_and_folded_into_the_verdict(fresh):
-    """No chain record exists, so the item FAILS on absence and says why."""
+def test_the_boundary_is_unmeasured_and_folded_into_the_verdict(anchor, fresh):
+    """The item FAILS, and it fails for the reason the CLI's inputs give.
+
+    Two distinct absences reach the same verdict and the test exercises both,
+    because they are not the same claim.  With NO chain record the reason is
+    that none was passed; with the record the CLI actually passes
+    (``results/rtl/abi3_boundary_chain.json``) the reason is the record's own
+    self-declaration -- it is a STRUCTURAL probe, and two of the five terms of
+    section 3.6 have no RTL at all.  Asserting only the first would have let
+    the record land and the test go on describing a tree that no longer had
+    that shape.
+    """
     b = fresh["calibration"]["boundary"]
     assert b["measured"] is False
     assert b["rtl_measured_boundary_cycles"] is None
@@ -357,9 +386,21 @@ def test_the_boundary_is_unmeasured_and_folded_into_the_verdict(fresh):
     assert b["technology_latency_rederived"] is False
     assert b["rung_item_met"] is False
     assert "unmet, on absence" in b["rung_item_decision"]
-    assert "--boundary-chain-record" in b["why_unmeasured"]
     assert fresh["calibration"]["block_cycles_within_band"] is False
     assert "boundary item unmet" in fresh["calibration"]["reason"]
+
+    if _cli_records():
+        assert b["rtl_measurement"]["source"] == "rtl3_abi3_boundary_chain"
+        assert "STRUCTURAL probe" in b["why_unmeasured"]
+        assert "not a boundary measurement" in b["why_unmeasured"]
+    else:
+        assert "--boundary-chain-record" in b["why_unmeasured"]
+
+    # ...and with no record at all, the reason is the absence of the record.
+    absent = run_calibration(anchor, ANALYTICAL, TECHNOLOGY)["calibration"]
+    assert absent["boundary"]["measured"] is False
+    assert "--boundary-chain-record" in absent["boundary"]["why_unmeasured"]
+    assert absent["block_cycles_within_band"] is False
 
 
 def test_a_chain_record_is_refused_unless_both_simulators_agree(fresh):
