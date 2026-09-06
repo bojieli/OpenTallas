@@ -27,18 +27,18 @@
       "storage_class": "rom",
       "batch_size": 1,
       "context_tokens": 8192,
-      "analytical_per_user_tokens_s": 3911.3245,
-      "budget_tpot_s": 0.000255669,
-      "derivation": "1 / 3911.3245 = 255.669 us; design point Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4, 4 x 815 mm2, link_latency bound"
+      "analytical_per_user_tokens_s": 4941.000229848535,
+      "budget_tpot_s": 0.00020238817111543724,
+      "derivation": "1 / 4941.0002 = 202.388 us; design point Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill, 5 x 815 = 4,075 mm2, binding constraint weight_read. This is the design the study's own selection rule recommends at batch 1 (analytical.json#design_selection.models[Qwen3-8B].batch_regimes[batch_size=1].recommended), and it is chosen here because the mask ROM is 84.8% of its step rather than 0.0%: the gate can now fail on the thesis it exists to test."
     },
     {
       "model": "Qwen3-8B",
       "storage_class": "hbm",
       "batch_size": 1,
       "context_tokens": 8192,
-      "analytical_per_user_tokens_s": 693.5853,
-      "budget_tpot_s": 0.001441784,
-      "derivation": "1 / 693.5853 = 1441.784 us; comparator Qwen3-8B/b200_sxm-x2-tensor, 2 x 1600 mm2, weight_read bound"
+      "analytical_per_user_tokens_s": 978.7441385422231,
+      "budget_tpot_s": 0.0010217174853168838,
+      "derivation": "1 / 978.7441 = 1,021.717 us; comparator Qwen3-8B/b200_sxm-x3-tensor, 3 x 1,600 = 4,800 mm2, weight_read bound. The comparator uses MORE silicon than the ROM part (4,800 against 4,075), so the iso-area convention is applied against this thesis rather than for it."
     },
     {
       "model": "DeepSeek-V4-Flash-0731",
@@ -76,5 +76,29 @@
       "budget_tpot_s": 0.001339062285059822,
       "derivation": "1 / 746.7913 = 1339.062 us at the context the study prices (1,000,000); comparator DSV4-Pro/b200_sxm-x87-tensor"
     }
-  ]
+  ],
+  "superseded_qwen_rows_2026_09_06": {
+    "why": "The Qwen rows were re-frozen on 2026-09-06 because the design point they named cannot fail on the thesis. At Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4 the component times are weight_read 34.465 us, kv_read 67.117, compute 55.703, link 174.275, fixed 6.819, and the overlap rule is max(weight, kv, compute)/0.9 + link + fixed. kv_read dominates the max, so setting weight_read to ZERO leaves the step at 255.668 us to six figures, and ROM would have to become 1.947x SLOWER before the term is visible at all. The frozen budget was 68.2% NVLink all-reduce, 29.2% HBM KV read, 2.7% fixed latency and 0.0% mask ROM: a gate on the ROM thesis that no ROM result of any kind could move. Verified by recomputation, not inferred.",
+    "rows": [
+      {
+        "model": "Qwen3-8B",
+        "storage_class": "rom",
+        "batch_size": 1,
+        "context_tokens": 8192,
+        "analytical_per_user_tokens_s": 3911.3245,
+        "budget_tpot_s": 0.000255669,
+        "derivation": "1 / 3911.3245 = 255.669 us; design point Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4, 4 x 815 mm2, link_latency bound"
+      },
+      {
+        "model": "Qwen3-8B",
+        "storage_class": "hbm",
+        "batch_size": 1,
+        "context_tokens": 8192,
+        "analytical_per_user_tokens_s": 693.5853,
+        "budget_tpot_s": 0.001441784,
+        "derivation": "1 / 693.5853 = 1441.784 us; comparator Qwen3-8B/b200_sxm-x2-tensor, 2 x 1600 mm2, weight_read bound"
+      }
+    ]
+  },
+  "re_freeze_note": "Re-frozen 2026-09-06 on the Qwen rows only, and the change makes the gate HARDER, not easier. The headline moves 5.639x -> 5.048x, the unmeasurable inter-die link term drops from 174.3 us (68.2% of the step) to 4.8 us (2.4%), and mask-ROM read time goes from 0.0% of the step to 84.8% -- from an unfalsifiable gate to one a slow ROM array fails. The superseded rows are kept above rather than deleted. The DeepSeek rows are unchanged: a claim that their control-plane cost falsifies them was checked and its attribution found wrong, so nothing there is re-frozen on it."
 }

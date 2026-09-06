@@ -79,7 +79,7 @@
       "kind": "terminal",
       "statement": "The cycle model reproduces the measured block cycles of the RTL within a stated band, and the derived machine reproduces the analytical design point.",
       "status": "fail",
-      "why": "results/derived/qwen3_n5_design_target_calibration.json: calibration.block_cycles_within_band == False -- 32 of 32 control-plane ratios outside [0.9, 1.1]: iverilog case 0 transaction 0.0454 (7724 model over 170022 measured); iverilog case 0 transaction_less_bench 0.0455 (7724 model over 169805 measured); section 11.5 boundary item unmet: unmeasured, model chain 39 vs design no asserted figure (section 2.1 row 33 withdrew it), technology.json#latency not re-derived"
+      "why": "results/derived/qwen3_n5_design_target_calibration.json: calibration.block_cycles_within_band == False -- 32 of 32 control-plane ratios outside [0.9, 1.1]: iverilog case 0 transaction 0.0454 (7724 model over 170022 measured); iverilog case 0 transaction_less_bench 0.0455 (7724 model over 169805 measured); section 11.5 boundary item unmet: unmeasured (rtl3_abi3_boundary_chain: see boundary.why_unmeasured), model chain 39 vs design no asserted figure (section 2.1 row 33 withdrew it), technology.json#latency not re-derived"
     },
     {
       "fails_when": "One bit differs.",
