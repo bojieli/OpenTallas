@@ -12,11 +12,17 @@
 // checker requires real_launch_count and engine_work_count to read zero, and
 // that is the evidence that what ran was the control plane.
 //
-// What is injected, and where it can reach.  Three inputs carry model values:
-// inj_result_valid / inj_result_fault / inj_result_trap_class, which the top
-// muxes into the engine port's completion handshake, and inj_write_en /
+// What is injected, and where it can reach.  Four inputs carry the engine
+// completion the design would otherwise compute -- inj_result_valid /
+// inj_result_fault / inj_result_trap_class / inj_result_eos_reason, which the
+// top muxes into the engine port's completion handshake -- and three carry
+// the result words a PREDICATE could read back: inj_write_en /
 // inj_write_addr / inj_write_data, which the top muxes into the result
-// memory's write port.  Nothing else in this file drives a design input that
+// memory's write port.  The EOS reason is a field of the completion record
+// (ABI 3.0 wire format section 7, byte 108), so it belongs to the completion
+// and not beside it; SELECTION.TOKEN_APPEND is the only operator that
+// publishes a non-zero one, and ot_a3_device_top latches its session
+// retirement from it.  Nothing else in this file drives a design input that
 // fetch, decode, view resolution, predicate evaluation, the loop stack, the
 // wait set or issue can observe: the per-pass configuration is the request's
 // own (program base, instruction count, descriptor base and count, the

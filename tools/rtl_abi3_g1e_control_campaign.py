@@ -128,9 +128,10 @@ STORES = ("rom", "hbm")
 # ---------------------------------------------------------------------------
 # The injection-site audit
 # ---------------------------------------------------------------------------
-# The three inputs that carry a model value into the design, and the only two
-# places the top is permitted to take them.  The sink names are the top's own
-# signals; the audit follows the fanout and refuses anything else.
+# The inputs that carry a model value into the design -- four completion
+# fields and three result-memory write fields -- and the only two places the
+# top is permitted to take them.  The sink names are the top's own signals;
+# the audit follows the fanout and refuses anything else.
 INJECTED_INPUTS = (
     "inj_result_valid",
     "inj_result_fault",
@@ -146,7 +147,7 @@ INJECTED_INPUTS = (
 )
 MEMORY = "result_mem"
 # The engine port's completion handshake: the boundary itself.  A real
-# engine's ready/fault/trap_class drives exactly these signals.
+# engine's ready/fault/trap_class/eos_reason drives exactly these signals.
 COMPLETION_HANDSHAKE = {
     "injected_ready",
     "engine_ready",
@@ -183,7 +184,8 @@ OBSERVATION_ONLY = {
 ALLOWED_SINKS = COMPLETION_HANDSHAKE | RESULT_MEMORY_WRITE_PORT | OBSERVATION_ONLY
 MULTICAST_PREFIX = "multicast_"
 # The only design inputs an injected value is permitted to reach through a
-# module instantiation: the completion adapter's engine-side completion.
+# module instantiation: the completion adapter's engine-side completion, all
+# four fields of it.
 ALLOWED_INSTANCE_PORTS = {
     "eng_issue_ready",
     "eng_issue_fault",
@@ -543,9 +545,11 @@ def derive_official_eos_raised(
 def derive_post_eos_refused(probe: dict[str, Any]) -> bool:
     """Did the RTL refuse the instruction after the official EOS?
 
-    Five observations, all of them off the DUT, and every one of them
-    necessary.  The first three are what the earlier form of this field
-    lacked and the reason it read a confounded measurement as a design gap.
+    Six conditions.  Five are observations off the DUT of the probe run
+    itself; the sixth is a second run of the same design.  Every one is
+    necessary, and the second and third are what the earlier form of this
+    field lacked -- the reason it read a confounded measurement as a design
+    gap.
 
     * The probe ran.  A probe that did not run refuses nothing.
     * The design was RETIRED when the probe was driven -- ``session_retired``
@@ -565,6 +569,12 @@ def derive_post_eos_refused(probe: dict[str, Any]) -> bool:
       device's own count of post-EOS refusals advanced by exactly one.  A
       transaction that failed for some unrelated reason is not this refusal,
       and the counter is what distinguishes the two.
+    * And the design-level NEGATIVE CONTROL held: the same elaborated binary,
+      driven again on the same golden stream with the injected OFFICIAL_EOS
+      byte removed and nothing else changed, ADMITTED the transaction it
+      refused.  Without it a refusal could be coming from anything in the
+      vehicle; with it, the refusal is the session retirement and nothing
+      else.  ``negative_control()`` runs it and this reads its verdict.
     """
     if not bool(probe.get("ran")):
         return False
@@ -1107,10 +1117,12 @@ def compose_record(
         f"gold ({', '.join(c['decomposition'] for c in correct) or 'none'}) "
         f"and {len(wrong)} did not "
         f"({', '.join(c['decomposition'] for c in wrong) or 'none'}). The "
-        "largest pass count over the sequences that reproduce the gold is "
+        "largest device-transaction count over the sequences that reproduce "
+        "the gold is "
         f"{study['measured']['maximum_device_transactions_over_correct_decompositions']}"
-        ", against the gate's position accounting "
-        f"{json.dumps(gate_requires, sort_keys=True)}; "
+        ". The gate no longer asks for a transaction count -- it asks for the "
+        "position accounting "
+        f"{json.dumps(gate_requires, sort_keys=True)}, which this measures: "
         f"{study['measured']['maximum_forward_passed_positions_over_correct_decompositions']}"
         f" of the workload's {workload_positions} token positions are "
         "forward-passed, and the last generated token -- the official EOS -- "
@@ -1200,6 +1212,11 @@ def compose_record(
             "per_pass": run.get("passes", []),
             "gate_requires_positions": gate_requires,
             "gate_requires_read_from": "configs/gates/redesign_gates.json",
+            # Kept, and still populated, although the gate's withdrawn pass
+            # count is what it was written for: the question "could this
+            # workload have been cut into one transaction per token position"
+            # is the one the study answers, and the answer stays interesting
+            # after the requirement that asked it was corrected.
             "why_not_the_gate_number": (
                 f"measured, not argued. The RTL ran {device_transactions} "
                 "device transactions because that is what the workload's own "
@@ -1207,9 +1224,10 @@ def compose_record(
                 f"SPAN_TOKENS is "
                 f"{manifest['workload']['prompt_token_count']} and covers "
                 "every prompt position at once, then one decode transaction "
-                "per further token. Whether the same workload could be cut "
-                f"into {gate_requires['workload_token_positions']} "
-                "transactions was not reasoned about, it "
+                "per further token. Whether the same workload could instead "
+                "be cut into one transaction per token position -- the "
+                f"{gate_requires['workload_token_positions']} the gate's "
+                "withdrawn pass count asked for -- was not reasoned about, it "
                 f"was tried: {decomposition_summary}"
             ),
             "decomposition_study": {
@@ -1262,8 +1280,9 @@ def compose_record(
                     "halves come off the RTL run"
                 ),
                 "post_eos_refused": (
-                    "six observations, all off the DUT, plus a control run on "
-                    "the same design. The probe ran; "
+                    "five observations off the DUT of the probe run, plus a "
+                    "sixth condition that is a second run of the same design. "
+                    "The probe ran; "
                     "ot_a3_device_top's session_retired output was already "
                     "set when it was driven, and set on OFFICIAL_EOS; the "
                     "transaction did not complete or trapped; the trap class "
@@ -1645,10 +1664,10 @@ def main() -> int:
                 "recorded with the tokens they produced instead",
             ],
             "does_not_establish": [
-                "that the gate's pass count is wrong about the model: the "
-                "decomposition study measures the SHIPPED program, and a "
-                "different lowering of the same model could cut the workload "
-                "differently",
+                "that the gate's position accounting is wrong about the "
+                "model: the decomposition study measures the SHIPPED program, "
+                "and a different lowering of the same model could cut the "
+                "workload differently",
                 "any engine result: every one was supplied",
                 "an RTL-emitted token, or an RTL-raised OFFICIAL_EOS: the "
                 "EOS the device retires on is an injected engine result, so "

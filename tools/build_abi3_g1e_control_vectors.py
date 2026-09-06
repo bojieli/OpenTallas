@@ -45,7 +45,17 @@ Emitted, per storage class, into ``--output``:
   descriptor (``Device._issue_queue``), so it can be compared; it is emitted
   as a separate file so the gate-compared field set stays exactly the one the
   shipped harness declares, and the queue comparison is reported beside it.
-* ``g1e_inject.txt`` -- the injected engine results, in issue order.
+* ``g1e_inject.txt`` -- the injected engine results, in issue order: per
+  issue the completion's fault, trap class and EOS reason byte, and the
+  result words a PREDICATE could read back.  The EOS reason is a field of
+  the completion record (wire format section 7, byte 108) and is carried
+  here for that reason: a completion supplied at the engine result
+  boundary that omits it leaves the control plane unable to know a
+  session was retired, which is a boundary supplied incompletely rather
+  than a design that fails to refuse.
+* ``g1e_inject_probe.txt`` -- the post-EOS probe's own result stream,
+  with EOS reason 0 on every completion so the probe tests the
+  retirement the design already holds rather than re-arming it.
 * ``g1e_vectors.json`` -- the manifest: source digests, the workload and
   oracle identity, per-pass records, and the measurements this file makes.
 """
