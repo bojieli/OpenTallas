@@ -125,6 +125,15 @@ PREFIX_VECTORS = PREFIX_DIR / "abi3_shipped_prefix_vectors.json"
 INTEGRATED_CAMPAIGN = "results/rtl/abi3_shipped_prefix_campaign.json"
 BRIDGE = ROOT / "rtl/abi3/ot_a3_engine_issue_bridge.sv"
 INTEGRATED_TOP = ROOT / "rtl/test/a3_shipped_prefix_top.sv"
+# Every other campaign that drives THIS bridge and publishes what its object
+# table held.  The table's depth is a property of the bridge, not of the
+# vehicle that instantiates it, so a passing run of the same module measures
+# it wherever that run happened -- but only if the module and the vehicle are
+# the ones on disk, which is checked per artifact below.
+ADMISSION_CAMPAIGNS = (
+    "results/rtl/a3_operator_admission_campaign.json",
+    "results/rtl/a3_operator_admission_hbm_campaign.json",
+)
 
 # The two storage classes G1b requires, and the deployment each one names.
 STORAGE_CLASSES = {
@@ -555,8 +564,86 @@ def integrated_evidence(
 # --------------------------------------------------------------------------
 # The vehicle's placement surface, counted from its own port list.
 # --------------------------------------------------------------------------
+def admission_measurements() -> list[dict[str, Any]]:
+    """What the operator-admission campaigns measured of the same table.
+
+    The integrated vehicle can only bind the objects ITS OWN program span
+    names, which is why the depth it measures is a property of that span
+    rather than of the bridge.  The operator-admission bench drives the same
+    bridge module, unmodified, with a case record that carries every entry the
+    bridge declares, so a run there can bind and resolve more.  Three things
+    are required of such an artifact and each is checked here rather than
+    trusted: the campaign passed, the bridge and the vehicle it names are the
+    files on disk, and the number it publishes is not larger than the table
+    that run actually bound.  Anything else contributes zero with a reason.
+    """
+
+    rows: list[dict[str, Any]] = []
+    bridge_digest = sha256_file(BRIDGE)
+    for relative in ADMISSION_CAMPAIGNS:
+        path = ROOT / relative
+        row: dict[str, Any] = {
+            "artifact": relative,
+            "measured_simultaneous_objects": 0,
+            "usable": False,
+            "why_unusable": None,
+            "what_it_ran": (
+                "the operator-admission bench, which instantiates this bridge "
+                "whole and binds every entry it declares from the case record"
+            ),
+        }
+        rows.append(row)
+        if not path.is_file():
+            row["why_unusable"] = "the artifact does not exist"
+            continue
+        try:
+            value = json.loads(path.read_text())
+        except (OSError, json.JSONDecodeError) as exc:
+            row["why_unusable"] = f"the artifact cannot be read: {exc}"
+            continue
+        placement = value.get("placement") or {}
+        reasons: list[str] = []
+        if value.get("status") != "pass":
+            reasons.append(f"its status is {value.get('status')!r}")
+        if not placement:
+            reasons.append("it publishes no placement measurement")
+        if placement.get("bridge_sha256") != bridge_digest:
+            reasons.append(
+                "it was measured on a different revision of the bridge"
+            )
+        vehicle = placement.get("vehicle")
+        vehicle_path = ROOT / vehicle if vehicle else None
+        if (
+            vehicle_path is None
+            or not vehicle_path.is_file()
+            or sha256_file(vehicle_path) != placement.get("vehicle_sha256")
+        ):
+            reasons.append("its vehicle is missing or has moved since the run")
+        depth = placement.get("measured_simultaneous_objects")
+        bound = placement.get("table_entries_bound")
+        if not isinstance(depth, int) or depth <= 0:
+            reasons.append("it measures no positive depth")
+        elif not isinstance(bound, int) or depth > bound:
+            reasons.append(
+                "it claims to have resolved more objects than it bound"
+            )
+        row["storage_class"] = value.get("storage_class")
+        row["cases_credited"] = placement.get("cases_credited")
+        row["objects_resolved_and_compared"] = placement.get(
+            "objects_resolved_and_compared"
+        )
+        if reasons:
+            row["why_unusable"] = "; ".join(reasons)
+            continue
+        row["usable"] = True
+        row["measured_simultaneous_objects"] = int(depth)
+    return rows
+
+
 def placement_capacity(
-    vectors: dict[str, Any], campaign: dict[str, Any]
+    vectors: dict[str, Any],
+    campaign: dict[str, Any],
+    others: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     """How many distinct objects the vehicle is MEASURED to place at once.
 
@@ -609,10 +696,31 @@ def placement_capacity(
                 "case_passed_in_the_campaign": bool(usable and agrees),
             }
         )
-    measured = max(
+    integrated = max(
         [row["objects_bound_and_named"] for row in per_case
          if row["case_passed_in_the_campaign"]] or [0]
     )
+    measurements: list[dict[str, Any]] = [
+        {
+            "artifact": INTEGRATED_CAMPAIGN,
+            "measured_simultaneous_objects": integrated,
+            "usable": bool(usable),
+            "why_unusable": None if usable else campaign.get("why_unusable"),
+            "what_it_ran": (
+                "the integrated shipped-prefix vehicle, whose case binds every "
+                "object its own program span names"
+            ),
+        }
+    ]
+    measurements.extend(
+        admission_measurements() if others is None else others
+    )
+    best = max(
+        (row for row in measurements if row["usable"]),
+        key=lambda row: row["measured_simultaneous_objects"],
+        default=None,
+    )
+    measured = 0 if best is None else int(best["measured_simultaneous_objects"])
     return {
         "source": "rtl/abi3/ot_a3_engine_issue_bridge.sv",
         "source_sha256": sha256_file(BRIDGE),
@@ -622,13 +730,21 @@ def placement_capacity(
             "measurement, and nothing below is credited from it"
         ),
         "measured_simultaneous_objects": measured,
-        "measured_from": INTEGRATED_CAMPAIGN,
+        "measured_from": INTEGRATED_CAMPAIGN if best is None else best["artifact"],
         "measured_note": (
             "the largest number of distinct ABI objects a passing campaign "
             "case bound into the bridge's table and resolved. Every one of "
             "that case's result words was compared against the golden write "
             "stream, address and value, so an object the bridge placed "
             "anywhere but at its own base would have failed the run"
+        ),
+        "measurements": measurements,
+        "measurements_note": (
+            "every passing RTL campaign that drives THIS bridge module and "
+            "publishes what its one object table held and resolved. The depth "
+            "belongs to the module, so the deepest such run measures it; a "
+            "missing, failing or drifted artifact contributes nothing and says "
+            "why, which is a zero and never an unknown"
         ),
         "per_case": per_case,
         "roles": {

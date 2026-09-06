@@ -129,6 +129,8 @@ ORACLE_SOURCES = (
     "runtime/reference/formats.py",
     "runtime/reference/tensor_accelerator_attention.py",
     "runtime/reference/tensor_accelerator_elementwise.py",
+    "runtime/reference/tensor_accelerator_rmsnorm.py",
+    "runtime/reference/tensor_accelerator_rope.py",
     "runtime/sim/engines/selection.py",
     "tools/build_a3_operator_admission_vectors.py",
     "tools/build_a3_operator_unit_vectors.py",
@@ -138,6 +140,7 @@ ORACLE_SOURCES = (
     "testdata/compiler/abi3_deployment/a3_program.hex",
     "testdata/compiler/abi3_shipped_prefix/p3_expect.hex",
     "testdata/compiler/abi3_shipped_prefix/p3_writes.hex",
+    "testdata/compiler/abi3_shipped_prefix/p3_source.hex",
 )
 ADMISSION_FILES = (
     "cases.hex",
@@ -145,6 +148,7 @@ ADMISSION_FILES = (
     "descriptors.hex",
     "bank.hex",
     "index.hex",
+    "source.hex",
     "preload.hex",
     "expected.hex",
     "index.json",
@@ -247,6 +251,7 @@ def plusargs(admission: Path, units: Path) -> list[str]:
         f"+DESCRIPTORS={admission / 'descriptors.hex'}",
         f"+BANK={admission / 'bank.hex'}",
         f"+INDEX={admission / 'index.hex'}",
+        f"+SOURCE={admission / 'source.hex'}",
         f"+PRELOAD={admission / 'preload.hex'}",
         f"+EXPECTED={admission / 'expected.hex'}",
         f"+SILU_CASES={units / 'silu_cases.hex'}",
@@ -317,9 +322,11 @@ def validate_admission(result: dict[str, Any], manifest: dict[str, Any]) -> None
         "view_slots": int(geometry["view_slots"]),
         "view_words": int(geometry["view_words"]),
         "map_entries": int(geometry["map_entries"]),
+        "map_base": int(geometry["map_base"]),
         "descriptor_records": int(geometry["descriptor_records"]),
         "bank_words": int(geometry["bank_words"]),
         "index_words": int(geometry["index_words"]),
+        "source_words": int(geometry["source_words"]),
         "expected_words": int(geometry["expected_words"]),
         "preload_words": int(geometry["preload_words"]),
     }
@@ -354,6 +361,113 @@ def validate_admission(result: dict[str, Any], manifest: dict[str, Any]) -> None
         raise RuntimeError("admission positive case count differs")
     if passed["words"] != int(manifest["expected_pass"]["compared_words"]):
         raise RuntimeError("admission compared-word count differs")
+
+
+# The six families the bridge answered with TRAP_CAPABILITY before this
+# campaign existed, as the (family, subopcode) pairs the vector manifest
+# reports.  The campaign now also issues four object-keyed families the bridge
+# already admitted -- they are here to bind and resolve objects the six never
+# name -- so "admitted" is a larger set than "no longer trapped", and the two
+# are kept apart rather than merged into one growing count.
+PREVIOUSLY_CAPABILITY_TRAPPED = (
+    {"family": 0x10, "sub": 0x03},  # DMA.SCATTER
+    {"family": 0x30, "sub": 0x03},  # VECTOR.ADD
+    {"family": 0x30, "sub": 0x04},  # VECTOR.SILU_MUL
+    {"family": 0x40, "sub": 0x01},  # ATTENTION.GQA
+    {"family": 0x70, "sub": 0x00},  # SELECTION.ARGMAX
+    {"family": 0x70, "sub": 0x01},  # SELECTION.TOKEN_APPEND
+)
+
+BRIDGE = ROOT / "rtl/abi3/ot_a3_engine_issue_bridge.sv"
+ADMISSION_TOP = ROOT / "rtl/test/tb_a3_operator_admission.sv"
+
+
+def placement_measurement(
+    result: dict[str, Any], manifest: dict[str, Any]
+) -> dict[str, Any]:
+    """How deep a placement table this run actually bound AND resolved.
+
+    The bridge places every operand and every result of every family through
+    one object table, so the capacity question a transformer layer asks is not
+    per role: it is how many distinct objects ONE binding of that table can
+    name at once.  This counts it from the run, and only from the run.
+
+    A group is a set of cases carrying byte-identical table contents, so every
+    object in it was resident at every one of that group's resolutions.  An
+    object is counted only when it is (a) bound in that group's table and (b)
+    named by an operand or result view of a case in the group that the
+    simulator reported as issued with no fault, with the write-beat count the
+    vector set declared, and whose whole result region was then compared word
+    by word against the expectation at its own address.  An entry no operand
+    named is bound and NOT counted: a table can be filled with anything, and
+    filling it is not evidence that the design resolved it.
+    """
+
+    rows = {int(row["index"]): row for row in result["cases"]}
+    groups: dict[tuple[tuple[int, int], ...], list[tuple[int, dict[str, Any]]]] = {}
+    for index, case in enumerate(manifest["cases"]):
+        key = tuple(
+            sorted((int(key), int(value)) for key, value in case["object_map"].items())
+        )
+        groups.setdefault(key, []).append((index, case))
+
+    best: dict[str, Any] | None = None
+    for key, members in groups.items():
+        bound = {object_id for object_id, _ in key}
+        resolved: set[int] = set()
+        credited: list[str] = []
+        for index, case in members:
+            row = rows.get(index)
+            expected = case["expected"]
+            if (
+                row is None
+                or row["fault"]
+                or row["trap"]
+                or not case["placement_valid"]
+                or int(expected["compare_count"]) <= 0
+                or row["writes"] != int(expected["write_beats"])
+                or row["result"] != int(expected["result_count"])
+            ):
+                continue
+            resolved |= {int(value) for value in case["objects_named"]}
+            credited.append(case["name"])
+        counted = sorted(resolved & bound)
+        record = {
+            "cases_credited": credited,
+            "measured_simultaneous_objects": len(counted),
+            "objects_bound": sorted(bound),
+            "objects_resolved_and_compared": counted,
+            "table_entries_bound": len(bound),
+        }
+        if (
+            best is None
+            or record["measured_simultaneous_objects"]
+            > best["measured_simultaneous_objects"]
+        ):
+            best = record
+    if best is None:
+        raise RuntimeError("the admission run carried no case to measure")
+    return {
+        "bridge": str(BRIDGE.relative_to(ROOT)),
+        "bridge_sha256": sha256(BRIDGE),
+        "definition": (
+            "the largest number of distinct ABI objects one byte-identical "
+            "binding of the bridge's object table held while the design "
+            "resolved every one of them, on cases that issued without fault, "
+            "wrote the declared number of beats and had their whole result "
+            "region compared word by word at its own address"
+        ),
+        "simulators": ["iverilog", "verilator"],
+        "vector_format_entries": int(manifest["geometry"]["map_entries"]),
+        "vector_format_entries_note": (
+            "how many entries the CASE RECORD can carry, echoed by the run's "
+            "own GEOMETRY line and checked against the vector manifest. It is "
+            "a bound on the measurement below, never a substitute for it"
+        ),
+        "vehicle": str(ADMISSION_TOP.relative_to(ROOT)),
+        "vehicle_sha256": sha256(ADMISSION_TOP),
+        **best,
+    }
 
 
 def validate_silu(result: dict[str, Any], manifest: dict[str, Any]) -> None:
@@ -483,6 +597,7 @@ def campaign(
             "CASE_COUNT": int(admission_manifest["expected_pass"]["cases"]),
             "DESC_RECORDS": int(geometry["descriptor_records"]),
             "BANK_WORDS": int(geometry["bank_words"]),
+            "SOURCE_WORDS": int(geometry["source_words"]),
             "EXPECTED_WORDS": int(geometry["expected_words"]),
             "PRELOAD_WORDS": int(geometry["preload_words"]),
         }
@@ -592,6 +707,14 @@ def campaign(
             )
         ]
         admitted = admission_manifest["admitted_families"]
+        previously_trapped = [dict(entry) for entry in PREVIOUSLY_CAPABILITY_TRAPPED]
+        missing = [entry for entry in previously_trapped if entry not in admitted]
+        if missing:
+            raise RuntimeError(
+                "the campaign issues no positive case for the previously "
+                f"capability-trapped families {missing}"
+            )
+        object_keyed = [entry for entry in admitted if entry not in previously_trapped]
         result: dict[str, Any] = {
             "schema": "opentallas.rtl.a3_operator_admission_campaign.v1",
             "status": "pass",
@@ -613,6 +736,15 @@ def campaign(
                 ],
                 "admitted_families": admitted,
                 "admitted_family_count": len(admitted),
+                "previously_capability_trapped_families_admitted": previously_trapped,
+                "previously_capability_trapped_family_count": len(previously_trapped),
+                "object_keyed_families_also_issued": object_keyed,
+                "object_keyed_families_note": (
+                    "families the bridge already admitted, issued here because "
+                    "they resolve their operands through the SAME object table "
+                    "the six mapped families use and name objects the six never "
+                    "do; the placement block below is what they are for"
+                ),
                 "governed_program_counters": admission_manifest[
                     "governed_program_counters"
                 ],
@@ -620,12 +752,25 @@ def campaign(
                 "still_refused": [
                     "VECTOR.SOFTMAX, checked in this campaign: an opcode with "
                     "no datapath is still a CAPABILITY trap",
+                    "the three MLP projections of the governed layer, PCs 50, "
+                    "53 and 59, checked in this campaign: the admitted "
+                    "TENSOR.MATMUL weight view is [n <= 4096, 4096] and theirs "
+                    "are [12288, 4096], [12288, 4096] and [4096, 12288], so "
+                    "each is a DESCRIPTOR trap and the three weight objects "
+                    "they name can be resolved by no run of this design",
+                    "the head span's DMA.GATHER, PC 68, checked in this "
+                    "campaign: its source row is BF16 and the bridge admits a "
+                    "dense-row gather source only in FP32, so the object it "
+                    "would publish is unreachable too",
                     "any of the six, on an instance that has not bound its "
                     "operand banks: cfg_extended_placement_valid low keeps the "
                     "previous TRAP_CAPABILITY exactly, which is what leaves an "
                     "unwired integration's behaviour unchanged",
                 ],
             },
+            "placement": placement_measurement(
+                normalized["tb_a3_operator_admission"], admission_manifest
+            ),
             "aggregate": {
                 "admission_case_count": admission_manifest["expected_pass"]["cases"],
                 "admission_positive_case_count": admission_manifest[
@@ -707,10 +852,28 @@ def validate_retained(path: Path = DEFAULT_OUTPUT) -> list[str]:
     problems: list[str] = []
     if value.get("status") != "pass":
         problems.append("campaign status differs")
-    if value.get("admission", {}).get("admitted_family_count") != 6:
+    admission = value.get("admission", {})
+    if admission.get("previously_capability_trapped_family_count") != 6:
         problems.append("six operator families are not admitted")
+    if [
+        entry
+        for entry in (dict(item) for item in PREVIOUSLY_CAPABILITY_TRAPPED)
+        if entry not in (admission.get("admitted_families") or [])
+    ]:
+        problems.append("a previously capability-trapped family has no case")
     if value.get("admission", {}).get("capability_trapped_family_count") != 0:
         problems.append("a governed family is still capability-trapped")
+    placement = value.get("placement") or {}
+    if not isinstance(placement.get("measured_simultaneous_objects"), int) or (
+        placement["measured_simultaneous_objects"] <= 0
+    ):
+        problems.append("the retained campaign measures no placement depth")
+    elif placement["measured_simultaneous_objects"] > placement.get(
+        "table_entries_bound", 0
+    ):
+        problems.append(
+            "the measured placement depth exceeds the table the run bound"
+        )
     if value.get("contexts_covered") != [17, 19]:
         problems.append("the governed decode contexts are not covered")
     for source, expected in value.get("source_sha256", {}).items():

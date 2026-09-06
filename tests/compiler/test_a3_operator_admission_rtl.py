@@ -27,6 +27,14 @@ GOVERNED_FAMILIES = [
     {"family": 0x70, "sub": 0x01},  # SELECTION.TOKEN_APPEND
 ]
 
+# The families the bridge already admitted, issued by this campaign for the
+# placement question rather than the admission one.
+OBJECT_KEYED_FAMILIES = [
+    {"family": 0x30, "sub": 0x00},  # VECTOR.RMS_NORM
+    {"family": 0x30, "sub": 0x01},  # VECTOR.HEAD_RMS_NORM
+    {"family": 0x30, "sub": 0x02},  # VECTOR.ROPE
+]
+
 
 def test_vectors_are_byte_exact_and_source_current() -> None:
     with tempfile.TemporaryDirectory() as name:
@@ -44,8 +52,18 @@ def test_vectors_are_byte_exact_and_source_current() -> None:
 
     assert manifest["schema"] == admission.SCHEMA
     assert unit_manifest["schema"] == units.SCHEMA
-    assert manifest["admitted_families"] == GOVERNED_FAMILIES
-    assert manifest["governed_program_counters"] == [32, 35, 38, 44, 56, 62, 70, 72]
+    # The six are all there, and they are no longer all of it: the campaign
+    # now also issues the four object-keyed families the bridge already
+    # admitted, which is how it binds and resolves objects the six never name.
+    for entry in GOVERNED_FAMILIES:
+        assert entry in manifest["admitted_families"]
+    assert [
+        entry for entry in manifest["admitted_families"]
+        if entry not in GOVERNED_FAMILIES
+    ] == OBJECT_KEYED_FAMILIES
+    assert manifest["governed_program_counters"] == [
+        8, 20, 23, 26, 29, 32, 35, 38, 44, 47, 56, 62, 66, 70, 72
+    ]
 
 
 def test_every_governed_family_has_a_positive_case_at_its_own_program_counter() -> None:
@@ -53,7 +71,8 @@ def test_every_governed_family_has_a_positive_case_at_its_own_program_counter() 
     positive = [item for item in manifest["cases"] if not item["expected"]["fault"]]
     covered = {(item["family"], item["sub"]) for item in positive}
     assert covered == {
-        (entry["family"], entry["sub"]) for entry in GOVERNED_FAMILIES
+        (entry["family"], entry["sub"])
+        for entry in GOVERNED_FAMILIES + OBJECT_KEYED_FAMILIES
     }
     # The three decode positions the governed workload runs need contexts 17
     # and 19 to be expressible; a constant 17 made the later ones a refusal.
@@ -70,7 +89,7 @@ def test_fail_closed_matrix_is_present_and_distinct() -> None:
         for item in manifest["cases"]
         if item["expected"]["fault"]
     }
-    assert len(refusals) == 7
+    assert len(refusals) == 11
     assert refusals["capability_refusal_vector_softmax"]["trap_class"] == 4
     assert refusals["descriptor_refusal_mutated_add_contract"]["trap_class"] == 3
     assert refusals["capability_refusal_unmapped_output_object"]["trap_class"] == 4
@@ -83,6 +102,17 @@ def test_fail_closed_matrix_is_present_and_distinct() -> None:
     )
     assert refusals["engine_refusal_token_outside_vocabulary"]["trap_class"] == 8
     assert refusals["capability_refusal_sampling_generation_policy"]["trap_class"] == 4
+    # Four shipped instructions of the governed program that this bridge does
+    # not admit at all.  They are measured rather than read out of the source,
+    # because what they bound is what bounds the placement measurement: the
+    # objects these operators name can be resolved by no run of this design.
+    for name in (
+        "descriptor_refusal_mlp_gate_projection_weight_view",
+        "descriptor_refusal_mlp_up_projection_weight_view",
+        "descriptor_refusal_mlp_down_projection_weight_view",
+        "descriptor_refusal_bf16_dense_row_gather",
+    ):
+        assert refusals[name]["trap_class"] == 3
     for expected in refusals.values():
         assert expected["write_beats"] == 0
 
@@ -123,14 +153,21 @@ def test_retained_dual_simulator_campaign_is_source_current() -> None:
     result = json.loads(RESULT.read_text())
     assert result["status"] == "pass"
     assert result["simulators_agree"]
-    assert result["admission"]["admitted_families"] == GOVERNED_FAMILIES
+    assert (
+        result["admission"]["previously_capability_trapped_families_admitted"]
+        == GOVERNED_FAMILIES
+    )
+    assert result["admission"]["previously_capability_trapped_family_count"] == 6
+    assert result["admission"]["object_keyed_families_also_issued"] == (
+        OBJECT_KEYED_FAMILIES
+    )
     assert result["admission"]["capability_trapped_family_count"] == 0
     assert result["contexts_covered"] == [17, 19]
     aggregate = result["aggregate"]
-    assert aggregate["admission_case_count"] == 19
-    assert aggregate["admission_positive_case_count"] == 12
-    assert aggregate["admission_negative_case_count"] == 7
-    assert aggregate["admission_words_compared"] == 33_093
+    assert aggregate["admission_case_count"] == 30
+    assert aggregate["admission_positive_case_count"] == 19
+    assert aggregate["admission_negative_case_count"] == 11
+    assert aggregate["admission_words_compared"] == 55_877
     assert aggregate["silu_elements_compared"] == 1_217
     assert aggregate["append_case_count"] == 13
     scope = result["scope"]
@@ -140,3 +177,52 @@ def test_retained_dual_simulator_campaign_is_source_current() -> None:
     assert scope["fail_closed_matrix"]
     assert scope["model_token_generation"] is False
     assert scope["tpot"] is False
+    assert scope["layer_matmuls_issued"] is False
+
+
+def test_the_placement_depth_is_measured_and_not_declared() -> None:
+    """What the campaign publishes about the bridge's one object table.
+
+    The number that matters to G1a and G1b is how many distinct objects ONE
+    binding of that table held while the design resolved every one of them.
+    Three things make it a measurement rather than a declaration, and each is
+    checked here: it counts only objects some case's operands actually named,
+    it counts only cases the simulators reported as issued with no fault and
+    whose whole result region was compared, and it can never exceed the table
+    the run bound.
+    """
+
+    result = json.loads(RESULT.read_text())
+    manifest = json.loads((ADMISSION_ROOT / "index.json").read_text())
+    placement = result["placement"]
+    by_name = {item["name"]: item for item in manifest["cases"]}
+
+    resolved = placement["objects_resolved_and_compared"]
+    bound = placement["objects_bound"]
+    assert placement["measured_simultaneous_objects"] == len(resolved)
+    assert set(resolved) <= set(bound)
+    assert placement["table_entries_bound"] == len(bound)
+    assert placement["measured_simultaneous_objects"] <= placement[
+        "vector_format_entries"
+    ]
+    assert placement["bridge"] == "rtl/abi3/ot_a3_engine_issue_bridge.sv"
+
+    credited = placement["cases_credited"]
+    assert credited, "a measurement with no case behind it is not a measurement"
+    named: set[int] = set()
+    for name in credited:
+        case = by_name[name]
+        assert case["expected"]["fault"] is False
+        assert case["placement_valid"] is True
+        assert case["expected"]["compare_count"] > 0
+        # Every credited case ran under the SAME table, or "simultaneous"
+        # would mean nothing.
+        assert case["object_map"] == by_name[credited[0]]["object_map"]
+        named |= {int(value) for value in case["objects_named"]}
+    assert sorted(named & set(bound)) == resolved
+
+    # A refused case binds the table and resolves nothing out of it, which is
+    # the distinction the whole field turns on.
+    for name, case in by_name.items():
+        if case["expected"]["fault"]:
+            assert name not in credited

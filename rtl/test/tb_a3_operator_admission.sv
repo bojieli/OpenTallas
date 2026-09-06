@@ -25,15 +25,25 @@ module tb_a3_operator_admission;
     // that overrides nothing behaves exactly as before.  The campaign passes
     // the vector manifest's own values and then checks the GEOMETRY line it
     // gets back against that manifest, so a mismatch is a refusal.
-    parameter integer CASE_COUNT = 19;
-    localparam integer CASE_WORDS = 64;
+    parameter integer CASE_COUNT = 30;
+    localparam integer CASE_WORDS = 128;
     localparam integer VIEW_SLOTS = 5;
     localparam integer VIEW_WORDS = 8;
-    localparam integer MAP_ENTRIES = 8;
+    // One entry per placement port the bridge declares.  It was 8, and eight
+    // was a property of this bench and not of the design: the bridge has
+    // always had 32 and the other 24 were tied to NO_ID here, so no run could
+    // ever bind more than eight objects at once no matter what it issued.
+    localparam integer MAP_ENTRIES = 32;
+    localparam integer MAP_BASE = 64;
     parameter integer DESC_RECORDS = 218;
-    parameter integer BANK_WORDS = 242050;
+    parameter integer BANK_WORDS = 243330;
     localparam integer INDEX_WORDS = 64;
-    parameter integer EXPECTED_WORDS = 33093;
+    // The weight-side operand bank.  A normalization gain is read through m1
+    // with `m1_reads_result` low, which is neither the result bank nor the
+    // index bank, and before this bench had one the four object-keyed
+    // families could not be issued here at all.
+    parameter integer SOURCE_WORDS = 12544;
+    parameter integer EXPECTED_WORDS = 55877;
     parameter integer PRELOAD_WORDS = 12291;
     localparam integer CASE_TIMEOUT = 4000000;
 
@@ -46,6 +56,7 @@ module tb_a3_operator_admission;
     reg [1535:0] desc_mem [0:DESC_RECORDS-1];
     reg [31:0]   bank_mem [0:BANK_WORDS-1];
     reg [31:0]   index_mem [0:INDEX_WORDS-1];
+    reg [31:0]   source_mem [0:SOURCE_WORDS-1];
     reg [31:0]   expected_mem [0:EXPECTED_WORDS-1];
     reg [31:0]   preload_mem [0:PRELOAD_WORDS-1];
 
@@ -57,6 +68,7 @@ module tb_a3_operator_admission;
     reg [4095:0] descriptors_path;
     reg [4095:0] bank_path;
     reg [4095:0] index_path;
+    reg [4095:0] source_path;
     reg [4095:0] expected_path;
     reg [4095:0] preload_path;
 
@@ -221,57 +233,60 @@ module tb_a3_operator_admission;
         .cfg_place_base_6(cfg_map_base[6]),
         .cfg_place_object_7(cfg_map_object[7]),
         .cfg_place_base_7(cfg_map_base[7]),
-        // This bench binds the eight entries its vector format
-        // carries; the rest of the bridge's table is empty, which is
-        // a refusal for any object they would have to place.
-        .cfg_place_object_8(32'hffff_ffff),
-        .cfg_place_base_8(32'd0),
-        .cfg_place_object_9(32'hffff_ffff),
-        .cfg_place_base_9(32'd0),
-        .cfg_place_object_10(32'hffff_ffff),
-        .cfg_place_base_10(32'd0),
-        .cfg_place_object_11(32'hffff_ffff),
-        .cfg_place_base_11(32'd0),
-        .cfg_place_object_12(32'hffff_ffff),
-        .cfg_place_base_12(32'd0),
-        .cfg_place_object_13(32'hffff_ffff),
-        .cfg_place_base_13(32'd0),
-        .cfg_place_object_14(32'hffff_ffff),
-        .cfg_place_base_14(32'd0),
-        .cfg_place_object_15(32'hffff_ffff),
-        .cfg_place_base_15(32'd0),
-        .cfg_place_object_16(32'hffff_ffff),
-        .cfg_place_base_16(32'd0),
-        .cfg_place_object_17(32'hffff_ffff),
-        .cfg_place_base_17(32'd0),
-        .cfg_place_object_18(32'hffff_ffff),
-        .cfg_place_base_18(32'd0),
-        .cfg_place_object_19(32'hffff_ffff),
-        .cfg_place_base_19(32'd0),
-        .cfg_place_object_20(32'hffff_ffff),
-        .cfg_place_base_20(32'd0),
-        .cfg_place_object_21(32'hffff_ffff),
-        .cfg_place_base_21(32'd0),
-        .cfg_place_object_22(32'hffff_ffff),
-        .cfg_place_base_22(32'd0),
-        .cfg_place_object_23(32'hffff_ffff),
-        .cfg_place_base_23(32'd0),
-        .cfg_place_object_24(32'hffff_ffff),
-        .cfg_place_base_24(32'd0),
-        .cfg_place_object_25(32'hffff_ffff),
-        .cfg_place_base_25(32'd0),
-        .cfg_place_object_26(32'hffff_ffff),
-        .cfg_place_base_26(32'd0),
-        .cfg_place_object_27(32'hffff_ffff),
-        .cfg_place_base_27(32'd0),
-        .cfg_place_object_28(32'hffff_ffff),
-        .cfg_place_base_28(32'd0),
-        .cfg_place_object_29(32'hffff_ffff),
-        .cfg_place_base_29(32'd0),
-        .cfg_place_object_30(32'hffff_ffff),
-        .cfg_place_base_30(32'd0),
-        .cfg_place_object_31(32'hffff_ffff),
-        .cfg_place_base_31(32'd0),
+        // Every entry the bridge declares is bound from the case
+        // record now.  The comment this replaces said the bench
+        // bound eight and left the rest empty, "which is a refusal
+        // for any object they would have to place" -- true, and it
+        // meant the vehicle could not express a span that names
+        // more than eight objects, whatever the design could do.
+        .cfg_place_object_8(cfg_map_object[8]),
+        .cfg_place_base_8(cfg_map_base[8]),
+        .cfg_place_object_9(cfg_map_object[9]),
+        .cfg_place_base_9(cfg_map_base[9]),
+        .cfg_place_object_10(cfg_map_object[10]),
+        .cfg_place_base_10(cfg_map_base[10]),
+        .cfg_place_object_11(cfg_map_object[11]),
+        .cfg_place_base_11(cfg_map_base[11]),
+        .cfg_place_object_12(cfg_map_object[12]),
+        .cfg_place_base_12(cfg_map_base[12]),
+        .cfg_place_object_13(cfg_map_object[13]),
+        .cfg_place_base_13(cfg_map_base[13]),
+        .cfg_place_object_14(cfg_map_object[14]),
+        .cfg_place_base_14(cfg_map_base[14]),
+        .cfg_place_object_15(cfg_map_object[15]),
+        .cfg_place_base_15(cfg_map_base[15]),
+        .cfg_place_object_16(cfg_map_object[16]),
+        .cfg_place_base_16(cfg_map_base[16]),
+        .cfg_place_object_17(cfg_map_object[17]),
+        .cfg_place_base_17(cfg_map_base[17]),
+        .cfg_place_object_18(cfg_map_object[18]),
+        .cfg_place_base_18(cfg_map_base[18]),
+        .cfg_place_object_19(cfg_map_object[19]),
+        .cfg_place_base_19(cfg_map_base[19]),
+        .cfg_place_object_20(cfg_map_object[20]),
+        .cfg_place_base_20(cfg_map_base[20]),
+        .cfg_place_object_21(cfg_map_object[21]),
+        .cfg_place_base_21(cfg_map_base[21]),
+        .cfg_place_object_22(cfg_map_object[22]),
+        .cfg_place_base_22(cfg_map_base[22]),
+        .cfg_place_object_23(cfg_map_object[23]),
+        .cfg_place_base_23(cfg_map_base[23]),
+        .cfg_place_object_24(cfg_map_object[24]),
+        .cfg_place_base_24(cfg_map_base[24]),
+        .cfg_place_object_25(cfg_map_object[25]),
+        .cfg_place_base_25(cfg_map_base[25]),
+        .cfg_place_object_26(cfg_map_object[26]),
+        .cfg_place_base_26(cfg_map_base[26]),
+        .cfg_place_object_27(cfg_map_object[27]),
+        .cfg_place_base_27(cfg_map_base[27]),
+        .cfg_place_object_28(cfg_map_object[28]),
+        .cfg_place_base_28(cfg_map_base[28]),
+        .cfg_place_object_29(cfg_map_object[29]),
+        .cfg_place_base_29(cfg_map_base[29]),
+        .cfg_place_object_30(cfg_map_object[30]),
+        .cfg_place_base_30(cfg_map_base[30]),
+        .cfg_place_object_31(cfg_map_object[31]),
+        .cfg_place_base_31(cfg_map_base[31]),
         .cfg_context_length(cfg_context_length),
         .cfg_kv_plane_rows(cfg_kv_plane_rows),
         .cfg_generation_policy_id(cfg_generation_policy_id),
@@ -378,6 +393,9 @@ module tb_a3_operator_admission;
             end
             if (m1_rd_en) begin
                 if (m1_reads_matmul_weight) begin
+                    // No projection matrix is staged in this vehicle, so a
+                    // TENSOR.MATMUL would read out of bounds and the run
+                    // would fail rather than read zeros silently.
                     m1_rd_data <= 32'd0;
                     read_oob <= 1'b1;
                 end else if (m1_reads_result) begin
@@ -388,8 +406,10 @@ module tb_a3_operator_admission;
                         read_oob <= 1'b1;
                     end
                 end else begin
-                    if (m1_rd_addr < INDEX_WORDS)
-                        m1_rd_data <= index_mem[m1_rd_addr];
+                    // The weight-side operand bank: a normalization gain,
+                    // addressed at its own object's base.
+                    if (m1_rd_addr < SOURCE_WORDS)
+                        m1_rd_data <= source_mem[m1_rd_addr];
                     else begin
                         m1_rd_data <= 32'd0;
                         read_oob <= 1'b1;
@@ -442,6 +462,7 @@ module tb_a3_operator_admission;
             !$value$plusargs("DESCRIPTORS=%s", descriptors_path) ||
             !$value$plusargs("BANK=%s", bank_path) ||
             !$value$plusargs("INDEX=%s", index_path) ||
+            !$value$plusargs("SOURCE=%s", source_path) ||
             !$value$plusargs("EXPECTED=%s", expected_path) ||
             !$value$plusargs("PRELOAD=%s", preload_path)) begin
             $fatal(1, "missing ABI3 operator-admission vector plusargs");
@@ -451,14 +472,15 @@ module tb_a3_operator_admission;
         $readmemh(descriptors_path, desc_mem);
         $readmemh(bank_path, bank_mem);
         $readmemh(index_path, index_mem);
+        $readmemh(source_path, source_mem);
         $readmemh(expected_path, expected_mem);
         $readmemh(preload_path, preload_mem);
 
         $display(
-            "GEOMETRY cases=%0d case_words=%0d view_slots=%0d view_words=%0d map_entries=%0d descriptor_records=%0d bank_words=%0d index_words=%0d expected_words=%0d preload_words=%0d",
+            "GEOMETRY cases=%0d case_words=%0d view_slots=%0d view_words=%0d map_entries=%0d map_base=%0d descriptor_records=%0d bank_words=%0d index_words=%0d source_words=%0d expected_words=%0d preload_words=%0d",
             CASE_COUNT, CASE_WORDS, VIEW_SLOTS, VIEW_WORDS, MAP_ENTRIES,
-            DESC_RECORDS, BANK_WORDS, INDEX_WORDS, EXPECTED_WORDS,
-            PRELOAD_WORDS
+            MAP_BASE, DESC_RECORDS, BANK_WORDS, INDEX_WORDS, SOURCE_WORDS,
+            EXPECTED_WORDS, PRELOAD_WORDS
         );
 
         repeat (4) @(posedge clk);
@@ -478,8 +500,10 @@ module tb_a3_operator_admission;
             cfg_generated_before = case_mem[base + 8];
             for (slot_index = 0; slot_index < MAP_ENTRIES;
                  slot_index = slot_index + 1) begin
-                cfg_map_object[slot_index] = case_mem[base + 24 + 2*slot_index];
-                cfg_map_base[slot_index] = case_mem[base + 25 + 2*slot_index];
+                cfg_map_object[slot_index] =
+                    case_mem[base + MAP_BASE + 2*slot_index];
+                cfg_map_base[slot_index] =
+                    case_mem[base + MAP_BASE + 1 + 2*slot_index];
             end
 
             @(negedge clk);
@@ -584,12 +608,26 @@ module tb_a3_operator_admission;
             check_equal("launch_token_append",
                         selection_token_append_launch_count,
                         (case_mem[base + 18] == 5) ? 1 : 0);
-            check_equal("launch_legacy_gather", dma_gather_launch_count, 0);
-            check_equal("launch_legacy_matmul", matmul_launch_count, 0);
-            check_equal("launch_legacy_rms", rms_norm_launch_count, 0);
-            check_equal("launch_legacy_rope", rope_launch_count, 0);
-            check_equal("launch_legacy_embed", embedding_launch_count, 0);
-            check_equal("launch_legacy_transfer", dma_transfer_launch_count, 0);
+            // Every launch counter the bridge publishes is checked against
+            // the one family this case declares.  The six that were checked
+            // here before were checked against a constant zero, which was
+            // right while this bench issued only the six mapped families and
+            // would have silently admitted a wrong family the moment it
+            // issued anything else.
+            check_equal("launch_rms", rms_norm_launch_count,
+                        (case_mem[base + 18] == 7) ? 1 : 0);
+            check_equal("launch_head_rms", head_rms_norm_launch_count,
+                        (case_mem[base + 18] == 8) ? 1 : 0);
+            check_equal("launch_rope", rope_launch_count,
+                        (case_mem[base + 18] == 9) ? 1 : 0);
+            check_equal("launch_matmul", matmul_launch_count,
+                        (case_mem[base + 18] == 10) ? 1 : 0);
+            check_equal("launch_gather", dma_gather_launch_count,
+                        (case_mem[base + 18] == 11) ? 1 : 0);
+            check_equal("launch_embed", embedding_launch_count,
+                        (case_mem[base + 18] == 12) ? 1 : 0);
+            check_equal("launch_transfer", dma_transfer_launch_count,
+                        (case_mem[base + 18] == 13) ? 1 : 0);
             if (case_mem[base + 18] == 4) begin
                 check_equal("token", selected_token, case_mem[base + 14]);
                 check_equal("tie_multiplicity", selected_tie_multiplicity,

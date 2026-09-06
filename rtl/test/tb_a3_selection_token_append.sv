@@ -28,7 +28,11 @@ module tb_a3_selection_token_append;
     always #5 clk = ~clk;
 
     reg [31:0] case_mem [0:CASE_COUNT*CASE_WORDS-1];
-    reg [1023:0] cases_path;
+    // 512 characters, not 128: a 128-character register silently keeps
+    // only the TAIL of a longer path, so $readmemh fails on a truncated
+    // name and the run then reports a case mismatch or a timeout instead
+    // of a load failure. The same fix ot_a3 operator-admission carries.
+    reg [4095:0] cases_path;
 
     reg [31:0] token_word;
     reg [31:0] ring_word;

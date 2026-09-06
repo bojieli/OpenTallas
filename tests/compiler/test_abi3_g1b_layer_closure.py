@@ -423,6 +423,81 @@ def _campaign(vectors_path, tool, usable=True):
     }
 
 
+def test_a_second_campaign_measures_the_same_table_and_is_checked(tool):
+    """Another passing run of the SAME bridge deepens the measurement.
+
+    The integrated vehicle can only bind the objects its own program span
+    names, so the depth it reaches is a fact about that span.  The bridge is
+    the same module wherever it is instantiated, so a passing run elsewhere
+    measures the same table -- but only if it really is the same module, only
+    if it passed, and only up to the table it actually bound.  Each of those
+    is checked here in both directions.
+    """
+
+    vectors = json.loads(VECTORS.read_text())
+    shallow = {"usable": True, "observed_cases": _observed_cases(VECTORS)}
+    baseline = tool.placement_capacity(vectors, shallow, others=[])
+
+    deeper = {
+        "artifact": "results/rtl/a3_operator_admission_campaign.json",
+        "measured_simultaneous_objects": baseline[
+            "measured_simultaneous_objects"
+        ] + 5,
+        "usable": True,
+        "why_unusable": None,
+    }
+    widened = tool.placement_capacity(vectors, shallow, others=[deeper])
+    assert widened["measured_simultaneous_objects"] == (
+        baseline["measured_simultaneous_objects"] + 5
+    )
+    assert widened["measured_from"] == deeper["artifact"]
+    for role in widened["roles"].values():
+        if role["object_keyed"]:
+            assert role["slots"] == widened["measured_simultaneous_objects"]
+
+    # The same number, on an artifact that is not usable, must move nothing.
+    refused = dict(deeper, usable=False, why_unusable="its status is 'fail'")
+    unchanged = tool.placement_capacity(vectors, shallow, others=[refused])
+    assert unchanged["measured_simultaneous_objects"] == (
+        baseline["measured_simultaneous_objects"]
+    )
+    assert unchanged["measured_from"] == tool.INTEGRATED_CAMPAIGN
+    assert any(
+        row["why_unusable"] for row in unchanged["measurements"]
+        if not row["usable"]
+    ), "an unusable measurement must say why rather than be silent"
+
+
+def test_an_admission_artifact_is_refused_unless_it_names_this_bridge(tool, tmp_path):
+    """The falsification: a fabricated deep measurement must not be credited."""
+
+    fabricated = tmp_path / "fabricated.json"
+    fabricated.write_text(json.dumps({
+        "status": "pass",
+        "storage_class": "rom",
+        "placement": {
+            "measured_simultaneous_objects": 999,
+            "table_entries_bound": 999,
+            "bridge_sha256": "0" * 64,
+            "vehicle": "rtl/test/tb_a3_operator_admission.sv",
+            "vehicle_sha256": "0" * 64,
+        },
+    }))
+    original = tool.ADMISSION_CAMPAIGNS
+    try:
+        tool.ADMISSION_CAMPAIGNS = (
+            str(fabricated.relative_to(tool.ROOT))
+            if fabricated.is_relative_to(tool.ROOT) else str(fabricated),
+        )
+        rows = tool.admission_measurements()
+    finally:
+        tool.ADMISSION_CAMPAIGNS = original
+    assert len(rows) == 1
+    assert rows[0]["usable"] is False
+    assert rows[0]["measured_simultaneous_objects"] == 0
+    assert "different revision of the bridge" in rows[0]["why_unusable"]
+
+
 def test_the_declared_port_count_is_recorded_but_never_credited(tool):
     vectors = json.loads(VECTORS.read_text())
     text = BRIDGE.read_text()
@@ -450,7 +525,10 @@ def test_the_declared_port_count_is_recorded_but_never_credited(tool):
 
 def test_with_no_usable_campaign_the_measured_capacity_is_zero(tool):
     vectors = json.loads(VECTORS.read_text())
-    capacity = tool.placement_capacity(vectors, {"usable": False})
+    # ``others=[]`` is "no other campaign measured this table either", which is
+    # the state this test is about.  The default reads the operator-admission
+    # campaigns from disk, and those are a different question, tested below.
+    capacity = tool.placement_capacity(vectors, {"usable": False}, others=[])
     assert capacity["measured_simultaneous_objects"] == 0
     assert all(
         role["slots"] == 0

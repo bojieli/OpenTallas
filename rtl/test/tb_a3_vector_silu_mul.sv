@@ -33,10 +33,14 @@ module tb_a3_vector_silu_mul;
     reg [31:0] gate_image [0:ELEMENTS-1];
     reg [31:0] up_image [0:ELEMENTS-1];
 
-    reg [1023:0] cases_path;
-    reg [1023:0] gate_path;
-    reg [1023:0] up_path;
-    reg [1023:0] expected_path;
+    // 512 characters, not 128: a 128-character register silently keeps
+    // only the TAIL of a longer path, so $readmemh fails on a truncated
+    // name and the run then reports a case mismatch or a timeout instead
+    // of a load failure. The same fix ot_a3 operator-admission carries.
+    reg [4095:0] cases_path;
+    reg [4095:0] gate_path;
+    reg [4095:0] up_path;
+    reg [4095:0] expected_path;
 
     reg [31:0] cfg_count;
     wire        a_rd_en;

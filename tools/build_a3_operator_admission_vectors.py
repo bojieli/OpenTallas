@@ -47,7 +47,14 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from runtime.abi3.constants import Dma, Major, NO_ID, Selection, Vector  # noqa: E402
+from runtime.abi3.constants import (  # noqa: E402
+    Dma,
+    Major,
+    NO_ID,
+    Selection,
+    Tensor,
+    Vector,
+)
 from runtime.abi3.descriptors import (  # noqa: E402
     Descriptor,
     DESCRIPTOR_HEADER,
@@ -64,6 +71,10 @@ from runtime.reference.tensor_accelerator_elementwise import (  # noqa: E402
     bf16_add_rne,
     qwen3_silu_mul_bf16,
 )
+from runtime.reference.tensor_accelerator_rmsnorm import (  # noqa: E402
+    rms_norm_bf16,
+)
+from runtime.reference.tensor_accelerator_rope import rope_bf16  # noqa: E402
 from runtime.sim.memory import ViewResolver  # noqa: E402
 from tools import build_a3_qwen_gqa_vectors as gqa  # noqa: E402
 from tools import build_a3_qwen_kv_scatter_vectors as scatter  # noqa: E402
@@ -99,12 +110,19 @@ def output_root_for(storage_class: str) -> Path:
         return OUTPUT_ROOT
     return ROOT / f"testdata/rtl/a3_operator_admission_{storage_class}"
 
-CASE_WORDS = 64
+CASE_WORDS = 128
 VIEW_SLOTS = 5
 VIEW_WORDS = 8
-MAP_ENTRIES = 8
+# One entry per port of the bridge's object placement table.  It was 8, which
+# is not a property of the design -- the bridge declares 32 -- but of this
+# vector format, and it capped the number of objects any run could bind at
+# once well below what a transformer layer names.  The map moves to word
+# MAP_BASE so the 32 (object, base) pairs do not collide with the scalar
+# fields, and CASE_WORDS grows with it.
+MAP_ENTRIES = 32
+MAP_BASE = 64
 
-# The governed decode program counters of the six families.
+# The governed decode program counters of the six mapped families.
 PC_SCATTER_KEY = 32
 PC_SCATTER_VALUE = 35
 PC_GQA = 38
@@ -113,6 +131,45 @@ PC_SILU_MUL = 56
 PC_ADD_MLP = 62
 PC_ARGMAX = 70
 PC_TOKEN_APPEND = 72
+
+# The governed decode program counters of the four object-keyed families the
+# bridge already admitted.  They are here for one reason: every one of them
+# resolves its operands through the SAME object table the six mapped families
+# use, so a case that issues one of them binds and resolves objects the six
+# never name.  The layer's placement demand is a demand on that one table, and
+# only a run that binds and resolves the objects can measure its depth.
+PC_RMS_NORM_ATTENTION = 8
+PC_HEAD_RMS_QUERY = 20
+PC_HEAD_RMS_KEY = 23
+PC_ROPE_QUERY = 26
+PC_ROPE_KEY = 29
+PC_RMS_NORM_MLP = 47
+PC_RMS_NORM_HEAD = 66
+# Three program counters of the same layer, and one of the head span, whose
+# operand views this bridge does not admit at all.  They are issued here as
+# fail-closed cases because the answer matters to the placement measurement:
+# an object that no admitted operator can name is an object no run can ever
+# resolve, and that is a bound on the table depth any campaign can reach.
+PC_MATMUL_GATE = 50
+PC_MATMUL_UP = 53
+PC_MATMUL_DOWN = 59
+PC_HEAD_GATHER = 68
+# The prefix PCs whose retained golden write stream this campaign replays.
+# PCs 47 and 66 are NOT among them: the shipped prefix stops at PC 32, so
+# their RMSNorm gains are not in the retained source bank and their operands
+# are a seeded spread with only the scalar oracle behind them.
+PC_ROPE_COEFFICIENT_GATHER = 1
+PC_EMBED_LOOKUP = 4
+PC_MATMUL_QUERY = 11
+PC_MATMUL_KEY = 14
+PC_MATMUL_VALUE = 17
+PREFIX_REPLAY_PCS = (
+    PC_RMS_NORM_ATTENTION,
+    PC_HEAD_RMS_QUERY,
+    PC_HEAD_RMS_KEY,
+    PC_ROPE_QUERY,
+    PC_ROPE_KEY,
+)
 
 QUERY_HEADS = 32
 KV_HEADS = 8
@@ -156,6 +213,18 @@ BASE_RING = BASE_TOKEN + 1
 BANK_WORDS = BASE_RING + 1
 INDEX_WORDS = 64
 
+# The four object-keyed families the bridge already admitted read a weight-side
+# operand that is NOT in the result bank: `m1_reads_result` is low for a
+# RMSNorm gain, so the gain lands in the source bank the vehicle stages, at the
+# gain object's own base.  Two banks, one table: the bridge picks the bank from
+# the reading slot and the base from the object, exactly as its header says.
+BASE_SOURCE_RMS_GAIN_ATTENTION = 0
+BASE_SOURCE_RMS_GAIN_MLP = BASE_SOURCE_RMS_GAIN_ATTENTION + ADD_WIDTH
+BASE_SOURCE_RMS_GAIN_HEAD = BASE_SOURCE_RMS_GAIN_MLP + ADD_WIDTH
+BASE_SOURCE_HEAD_GAIN_QUERY = BASE_SOURCE_RMS_GAIN_HEAD + ADD_WIDTH
+BASE_SOURCE_HEAD_GAIN_KEY = BASE_SOURCE_HEAD_GAIN_QUERY + HEAD_WIDTH
+SOURCE_WORDS = BASE_SOURCE_HEAD_GAIN_KEY + HEAD_WIDTH
+
 TRAP_NONE = 0
 TRAP_DESCRIPTOR = 3
 TRAP_CAPABILITY = 4
@@ -168,6 +237,24 @@ LAUNCH_GQA = 3
 LAUNCH_ARGMAX = 4
 LAUNCH_TOKEN_APPEND = 5
 LAUNCH_NONE = 6
+LAUNCH_RMS_NORM = 7
+LAUNCH_HEAD_RMS_NORM = 8
+LAUNCH_ROPE = 9
+LAUNCH_MATMUL = 10
+LAUNCH_GATHER = 11
+LAUNCH_EMBED = 12
+LAUNCH_TRANSFER = 13
+
+# Which of an operator's resolved views name an ABI object the bridge places
+# through the table, per family.  Everything is object-keyed now except the
+# three staged REGIONS the vehicle sweeps by launch counter -- a gather's index
+# and source and an embedding's table -- and those are named here rather than
+# assumed, so a case that used one could never be counted as placing an object.
+UNKEYED_SLOTS: dict[tuple[int, int], tuple[int, ...]] = {
+    (int(Major.DMA), int(Dma.GATHER)): (0, 1),
+    (int(Major.DMA), int(Dma.TRANSFER)): (0, 1),
+    (int(Major.TENSOR), int(Tensor.EMBED_LOOKUP)): (0, 1),
+}
 
 VECTOR_FILES = (
     "cases.hex",
@@ -175,6 +262,7 @@ VECTOR_FILES = (
     "descriptors.hex",
     "bank.hex",
     "index.hex",
+    "source.hex",
     "preload.hex",
     "expected.hex",
     "index.json",
@@ -226,6 +314,78 @@ class Spread:
             self.code(low_exponent=low_exponent, high_exponent=high_exponent)
             for _ in range(count)
         ]
+
+
+PREFIX_SOURCE = scatter.PREFIX_ROOT / "p3_source.hex"
+
+
+def retained_prefix_results(
+    target_key: str,
+) -> tuple[dict[int, list[int]], list[int], dict[int, int]]:
+    """The shipped prefix's golden write stream, source bank and placement.
+
+    The four object-keyed families this campaign adds are replayed against the
+    prefix's OWN retained evidence rather than against a seeded spread: each
+    operator's input is the golden value the preceding operator wrote, its
+    weight-side operand is the real checkpoint gain in the retained source
+    bank, and its expected result is the golden write stream's own words for
+    that program counter.  The expectation is nevertheless COMPUTED here by the
+    independent scalar reference and then required to equal the retained
+    golden; a disagreement is a refusal, not a preference for either.
+
+    The witness is checked the way ``build_a3_qwen_kv_scatter_vectors.build``
+    checks it -- schema, a passing integrated replay, and the digest of every
+    image this function reads -- so a stale or edited upstream artifact refuses
+    the build instead of silently changing what "authentic" means.
+    """
+
+    prefix = json.loads(scatter.PREFIX_MANIFEST.read_text())
+    campaign = json.loads(scatter.PREFIX_CAMPAIGN.read_text())
+    if (
+        prefix.get("schema") != "opentallas.rtl.abi3_shipped_prefix_vectors.v1"
+        or campaign.get("status") != "pass"
+        or not campaign.get("integrated_replay_passed")
+        or campaign["vector_set"]["sha256"] != sha256_file(scatter.PREFIX_MANIFEST)
+        or sha256_file(scatter.PREFIX_WRITES)
+        != prefix["image_sha256"]["p3_writes.hex"]
+        or sha256_file(PREFIX_SOURCE) != prefix["image_sha256"]["p3_source.hex"]
+    ):
+        raise RuntimeError("retained upstream RTL result witness is not current")
+
+    words = scatter.prefix_write_values()
+    source = scatter.read_hex(PREFIX_SOURCE)
+    cursor = 0
+    by_pc: dict[int, list[int]] = {}
+    placement: dict[int, int] = {}
+    for case in prefix["cases"]:
+        count = int(case["expected"]["result_words"])
+        if case["deployment"] == target_key:
+            for pc, (start, length) in scatter.operation_word_ranges(case).items():
+                by_pc[int(pc)] = words[cursor + start : cursor + start + length]
+            placement = {
+                int(entry["object_id"]): int(entry["base_words"])
+                for entry in case["bank_mapping"]["object_placement"]
+            }
+        cursor += count
+    if not by_pc or not placement:
+        raise RuntimeError(
+            f"the retained shipped prefix carries no case for {target_key}"
+        )
+    return by_pc, source, placement
+
+
+def narrow_fp32_to_bf16_rne(code: int) -> int:
+    """The exact FP32 -> BF16 round-to-nearest-even the RoPE datapath performs.
+
+    Written out rather than imported so the coefficient the oracle sees is
+    derived here from the same FP32 words the bank hands the RTL.
+    """
+
+    low = code & 0xFFFF
+    high = (code >> 16) & 0xFFFF
+    if low > 0x8000 or (low == 0x8000 and (high & 1)):
+        high += 1
+    return high & 0xFFFF
 
 
 def retained_program(
@@ -421,15 +581,27 @@ class Builder:
         self.ring_offset = int(ring_view["element_offset"])
         self.ring_words = self.ring_offset + int(ring_view["extent"])
         self.ring_slot = BASE_RING + self.ring_offset
-        self.bank_words = BASE_RING + self.ring_words
+        # The two regions the object-keyed families add to the result bank: the
+        # rotated key object PC 23 writes and PC 29 reads, and the FP32
+        # coefficient row PC 26 and PC 29 both read.  They are appended so no
+        # existing base moves.
+        self.base_head_key = BASE_RING + self.ring_words
+        self.base_rope_coefficient = self.base_head_key + KV_PLANE_WORDS
+        self.bank_words = self.base_rope_coefficient + 2 * HEAD_WIDTH
         self.bank = [0] * self.bank_words
         self.initial_bank: list[int] = []
+        self.source_bank = [0] * SOURCE_WORDS
         self.index_bank = list(range(INDEX_WORDS))
         self.cases: list[dict[str, Any]] = []
         self.expected_words: list[int] = []
         self.extra_records: dict[int, bytes] = {}
         self.preload_words: list[int] = []
         self.next_synthetic_id = self.descriptor_count
+        (
+            self.prefix_results,
+            self.prefix_source,
+            self.prefix_placement,
+        ) = retained_prefix_results(self.target_key)
 
     # -- retained request bindings -----------------------------------------
     def _symbols(self) -> dict[int, int]:
@@ -518,6 +690,14 @@ class Builder:
                 "operator_descriptor_id": operator_id,
                 "views": views,
                 "object_map": dict(object_map),
+                "objects_named": sorted(
+                    {
+                        int(view["object_id"])
+                        for view in views
+                        if int(view["slot"])
+                        not in UNKEYED_SLOTS.get((int(family), int(sub)), ())
+                    }
+                ),
                 "context_length": context_length,
                 "kv_plane_rows": kv_plane_rows,
                 "generation_policy_id": generation_policy_id,
@@ -591,11 +771,11 @@ class Builder:
             entries = sorted(item["object_map"].items())
             for slot in range(MAP_ENTRIES):
                 if slot < len(entries):
-                    values[24 + 2 * slot] = entries[slot][0]
-                    values[25 + 2 * slot] = entries[slot][1]
+                    values[MAP_BASE + 2 * slot] = entries[slot][0]
+                    values[MAP_BASE + 1 + 2 * slot] = entries[slot][1]
                 else:
-                    values[24 + 2 * slot] = 0xFFFFFFFF
-                    values[25 + 2 * slot] = 0
+                    values[MAP_BASE + 2 * slot] = 0xFFFFFFFF
+                    values[MAP_BASE + 1 + 2 * slot] = 0
             words.extend(value & 0xFFFFFFFF for value in values)
         return words
 
@@ -648,8 +828,13 @@ class Builder:
             key_rows[row] = [0] * KV_PLANE_WORDS
             value_rows[row] = [0] * KV_PLANE_WORDS
 
+        # The trunk activation is no longer a seeded row: it is the embedding
+        # lookup's own golden output, so the RMSNorm this campaign now issues
+        # at PC 8 reads what the shipped program's PC 4 wrote.
+        trunk = list(self.prefix_results[PC_EMBED_LOOKUP])
+        if len(trunk) != ADD_WIDTH:
+            raise RuntimeError("the retained embedding row is not one model row")
         spread = Spread(0x5150_4F54_414C_4C41)
-        trunk = spread.row(ADD_WIDTH, low_exponent=118, high_exponent=130)
         attention_projection = spread.row(
             ADD_WIDTH, low_exponent=118, high_exponent=130
         )
@@ -661,6 +846,12 @@ class Builder:
         # take the lower id, and a tie that is never present cannot prove it.
         logits[EOS_TOKEN] = 0x4300
         logits[EOS_TOKEN + 7] = 0x4300
+        # The two RMSNorm gains the shipped prefix does not reach.  PCs 47 and
+        # 66 lie past the prefix's PC-32 boundary, so their checkpoint gains
+        # are not in the retained source bank; these are a seeded spread and
+        # the campaign says so.  Their oracle is the same scalar reference.
+        mlp_norm_gain = spread.row(ADD_WIDTH, low_exponent=118, high_exponent=130)
+        head_norm_gain = spread.row(ADD_WIDTH, low_exponent=118, high_exponent=130)
 
         for row in range(KV_PLANE_ROWS):
             start = BASE_KV + row * KV_PLANE_WORDS
@@ -668,14 +859,38 @@ class Builder:
             start = BASE_KV + (KV_PLANE_ROWS + row) * KV_PLANE_WORDS
             self.bank[start : start + KV_PLANE_WORDS] = value_rows[row]
         self.bank[
-            BASE_SCATTER_KEY_SOURCE : BASE_SCATTER_KEY_SOURCE + KV_PLANE_WORDS
-        ] = current_key
-        self.bank[
             BASE_SCATTER_VALUE_SOURCE : BASE_SCATTER_VALUE_SOURCE + KV_PLANE_WORDS
         ] = current_value
-        # Scratch A holds the RoPE'd query when the attention runs.
-        self.bank[BASE_SCRATCH_A : BASE_SCRATCH_A + ADD_WIDTH] = query
+        # Scratch A starts as the query PROJECTION, not the RoPE'd query: the
+        # head RMSNorm at PC 20 and the RoPE at PC 26 now run in this vehicle
+        # and produce the RoPE'd query themselves, into this same object.  The
+        # key source object likewise starts as the key projection, which PC 23
+        # and PC 29 turn into the key the scatter then moves.
+        self.bank[BASE_SCRATCH_A : BASE_SCRATCH_A + ADD_WIDTH] = list(
+            self.prefix_results[PC_MATMUL_QUERY]
+        )
+        self.bank[
+            BASE_SCATTER_KEY_SOURCE : BASE_SCATTER_KEY_SOURCE + KV_PLANE_WORDS
+        ] = list(self.prefix_results[PC_MATMUL_KEY])
+        if list(self.prefix_results[PC_MATMUL_VALUE]) != list(current_value):
+            raise RuntimeError(
+                "the retained value projection and the authentic value row "
+                "disagree; one of the two extractions is wrong"
+            )
         self.bank[BASE_TRUNK : BASE_TRUNK + ADD_WIDTH] = trunk
+        # The FP32 coefficient row PC 1's gather published, read by both RoPEs.
+        coefficient_fp32 = list(
+            self.prefix_results[PC_ROPE_COEFFICIENT_GATHER]
+        )
+        if len(coefficient_fp32) != 2 * HEAD_WIDTH:
+            raise RuntimeError("the retained RoPE coefficient row changed shape")
+        self.bank[
+            self.base_rope_coefficient : self.base_rope_coefficient
+            + 2 * HEAD_WIDTH
+        ] = coefficient_fp32
+        coefficient_bf16 = [
+            narrow_fp32_to_bf16_rne(code) for code in coefficient_fp32
+        ]
         self.bank[BASE_SILU_GATE : BASE_SILU_GATE + SILU_WIDTH] = silu_gate
         self.bank[BASE_SILU_UP : BASE_SILU_UP + SILU_WIDTH] = silu_up
         self.bank[BASE_LOGITS : BASE_LOGITS + VOCABULARY] = logits
@@ -700,6 +915,17 @@ class Builder:
                 (PC_ADD_MLP, "VECTOR.ADD"),
                 (PC_ARGMAX, "SELECTION.ARGMAX"),
                 (PC_TOKEN_APPEND, "SELECTION.TOKEN_APPEND"),
+                (PC_RMS_NORM_ATTENTION, "VECTOR.RMS_NORM"),
+                (PC_HEAD_RMS_QUERY, "VECTOR.HEAD_RMS_NORM"),
+                (PC_HEAD_RMS_KEY, "VECTOR.HEAD_RMS_NORM"),
+                (PC_ROPE_QUERY, "VECTOR.ROPE"),
+                (PC_ROPE_KEY, "VECTOR.ROPE"),
+                (PC_RMS_NORM_MLP, "VECTOR.RMS_NORM"),
+                (PC_RMS_NORM_HEAD, "VECTOR.RMS_NORM"),
+                (PC_MATMUL_GATE, "TENSOR.MATMUL"),
+                (PC_MATMUL_UP, "TENSOR.MATMUL"),
+                (PC_MATMUL_DOWN, "TENSOR.MATMUL"),
+                (PC_HEAD_GATHER, "DMA.GATHER"),
             )
         }
 
@@ -717,6 +943,17 @@ class Builder:
         add_b = objects(PC_ADD_MLP)
         argmax = objects(PC_ARGMAX)
         append = objects(PC_TOKEN_APPEND)
+        rms_attention = objects(PC_RMS_NORM_ATTENTION)
+        head_rms_query = objects(PC_HEAD_RMS_QUERY)
+        head_rms_key = objects(PC_HEAD_RMS_KEY)
+        rope_query = objects(PC_ROPE_QUERY)
+        rope_key = objects(PC_ROPE_KEY)
+        rms_mlp = objects(PC_RMS_NORM_MLP)
+        rms_head = objects(PC_RMS_NORM_HEAD)
+        matmul_gate = objects(PC_MATMUL_GATE)
+        matmul_up = objects(PC_MATMUL_UP)
+        matmul_down = objects(PC_MATMUL_DOWN)
+        head_gather = objects(PC_HEAD_GATHER)
 
         # The reuse this campaign exists to place correctly.  Each is a fact
         # about the shipped program, so an assertion is the right way to hold
@@ -738,6 +975,42 @@ class Builder:
             raise RuntimeError("the scatters no longer write the attention's cache")
         if attention[1] != attention[2]:
             raise RuntimeError("PC 38 key and value views name different objects")
+        # The same kind of fact for the four object-keyed families, and it is
+        # the reason they are worth issuing here: their operands are the SAME
+        # objects the six mapped families read and write, through the same
+        # table, so the span's placement demand is one demand and not ten.
+        if (
+            rms_attention[0] != add_a[0]
+            or rms_attention[4] != add_a[4]
+            or rms_head[0] != add_a[0]
+            or rms_head[4] != add_a[4]
+            or rms_mlp[0] != add_a[4]
+            or rms_mlp[4] != add_a[1]
+        ):
+            raise RuntimeError(
+                "the layer's three RMSNorms no longer read and write the trunk "
+                "and scratch objects the residual adds use"
+            )
+        if (
+            head_rms_query[0] != add_a[1]
+            or head_rms_query[4] != add_a[4]
+            or head_rms_key[0] != scatter_key[1]
+            or rope_query[0] != head_rms_query[4]
+            or rope_query[4] != head_rms_query[0]
+            or rope_key[0] != head_rms_key[4]
+            or rope_key[4] != head_rms_key[0]
+        ):
+            raise RuntimeError(
+                "the query and key head-norm and RoPE chain no longer lands in "
+                "the objects the attention and the scatters read"
+            )
+        if rope_query[1] != rope_key[1]:
+            raise RuntimeError("the two RoPEs no longer share one coefficient object")
+        if len({
+            rms_attention[1], rms_mlp[1], rms_head[1],
+            head_rms_query[1], head_rms_key[1],
+        }) != 5:
+            raise RuntimeError("the five normalization gains are no longer distinct")
 
         object_base = {
             scatter_key[0]: 0,
@@ -753,10 +1026,190 @@ class Builder:
             argmax[0]: BASE_LOGITS,
             argmax[4]: BASE_TOKEN,
             append[4]: BASE_RING,
+            head_rms_key[4]: self.base_head_key,
+            rope_query[1]: self.base_rope_coefficient,
+            # The five normalization gains are read through m1 with
+            # `m1_reads_result` low, so their bases are addresses in the
+            # SOURCE bank rather than the result bank.  One table, two banks:
+            # the object decides the base and the reading slot decides which
+            # memory that base indexes, which is exactly what lets object 4
+            # and object 55 hold the same base value without colliding.
+            rms_attention[1]: BASE_SOURCE_RMS_GAIN_ATTENTION,
+            rms_mlp[1]: BASE_SOURCE_RMS_GAIN_MLP,
+            rms_head[1]: BASE_SOURCE_RMS_GAIN_HEAD,
+            head_rms_query[1]: BASE_SOURCE_HEAD_GAIN_QUERY,
+            head_rms_key[1]: BASE_SOURCE_HEAD_GAIN_KEY,
         }
+        if len(object_base) > MAP_ENTRIES:
+            raise RuntimeError(
+                f"the span names {len(object_base)} objects and the vector "
+                f"format carries {MAP_ENTRIES} table entries"
+            )
 
         def submap(*object_ids: int) -> dict[int, int]:
             return {value: object_base[value] for value in object_ids}
+
+        def shared() -> dict[int, int]:
+            """The one table every admitted case in this campaign runs under.
+
+            The bridge places every operand and every result of every family
+            through one 32-entry table, so the question a layer asks of it is
+            not "can this role name its objects" but "can ONE binding name all
+            of the span's objects at once".  Every positive case therefore
+            carries the same table -- the whole set, identical word for word --
+            and the objects it resolves out of that table are the objects its
+            own operands name.  A per-case submap would have made each case
+            pass while leaving the union unmeasured, which is the shortfall
+            that keeps G1a and G1b red.
+            """
+
+            return dict(object_base)
+
+        # The five gains, staged into the source bank at their objects' bases.
+        # Three are the real checkpoint gains the shipped prefix retained; two
+        # are the seeded spread, because the prefix stops before their program
+        # counters.
+        for gain_object, gain_words in (
+            (rms_attention[1], list(self.prefix_source[
+                self.prefix_placement[rms_attention[1]]
+                : self.prefix_placement[rms_attention[1]] + ADD_WIDTH
+            ])),
+            (head_rms_query[1], list(self.prefix_source[
+                self.prefix_placement[head_rms_query[1]]
+                : self.prefix_placement[head_rms_query[1]] + HEAD_WIDTH
+            ])),
+            (head_rms_key[1], list(self.prefix_source[
+                self.prefix_placement[head_rms_key[1]]
+                : self.prefix_placement[head_rms_key[1]] + HEAD_WIDTH
+            ])),
+            (rms_mlp[1], mlp_norm_gain),
+            (rms_head[1], head_norm_gain),
+        ):
+            base = object_base[gain_object]
+            self.source_bank[base : base + len(gain_words)] = gain_words
+        gains = {
+            gain_object: list(
+                self.source_bank[
+                    object_base[gain_object] : object_base[gain_object] + width
+                ]
+            )
+            for gain_object, width in (
+                (rms_attention[1], ADD_WIDTH),
+                (head_rms_query[1], HEAD_WIDTH),
+                (head_rms_key[1], HEAD_WIDTH),
+                (rms_mlp[1], ADD_WIDTH),
+                (rms_head[1], ADD_WIDTH),
+            )
+        }
+
+        def norm_case(
+            *,
+            name: str,
+            pc: int,
+            mnemonic: str,
+            sub: int,
+            rows: int,
+            width: int,
+            input_base: int,
+            output_base: int,
+            gain_object: int,
+            golden_pc: int | None,
+            note: str,
+        ) -> None:
+            """One VECTOR.RMS_NORM or VECTOR.HEAD_RMS_NORM of the layer."""
+
+            operation = operations[pc]
+            source = self.bank[input_base : input_base + rows * width]
+            result = rms_norm_bf16(
+                tuple(
+                    tuple(source[row * width : (row + 1) * width])
+                    for row in range(rows)
+                ),
+                gains[gain_object],
+            )
+            expected = [code for row in result.values for code in row]
+            self._require_golden(pc, golden_pc, expected)
+            self.emit(
+                name=name,
+                pc=pc,
+                family=int(Major.VECTOR),
+                sub=sub,
+                operator_id=operation["operator_id"],
+                views=operation["views"],
+                object_map=shared(),
+                context_length=17,
+                kv_plane_rows=KV_PLANE_ROWS,
+                request_max_new_tokens=1,
+                generated_before=0,
+                expected_fault=False,
+                expected_trap=TRAP_NONE,
+                expected_result_count=rows * width,
+                expected_work_count=rows * width,
+                expected_write_count=rows * width,
+                expected_token=0,
+                expected_tie_multiplicity=0,
+                expected_eos_reason=0,
+                expected_launch=(
+                    LAUNCH_HEAD_RMS_NORM
+                    if sub == int(Vector.HEAD_RMS_NORM)
+                    else LAUNCH_RMS_NORM
+                ),
+                compare_base=output_base,
+                compare_words=expected,
+                note=note,
+            )
+            self.bank[output_base : output_base + len(expected)] = expected
+
+        def rope_case(
+            *,
+            name: str,
+            pc: int,
+            rows: int,
+            input_base: int,
+            output_base: int,
+            golden_pc: int,
+            note: str,
+        ) -> None:
+            operation = operations[pc]
+            source = self.bank[input_base : input_base + rows * HEAD_WIDTH]
+            heads = tuple(
+                tuple(source[row * HEAD_WIDTH : (row + 1) * HEAD_WIDTH])
+                for row in range(rows)
+            )
+            result = rope_bf16(
+                heads,
+                heads,
+                coefficient_bf16[:HEAD_WIDTH],
+                coefficient_bf16[HEAD_WIDTH:],
+            )
+            expected = [code for row in result.query_values for code in row]
+            self._require_golden(pc, golden_pc, expected)
+            self.emit(
+                name=name,
+                pc=pc,
+                family=int(Major.VECTOR),
+                sub=int(Vector.ROPE),
+                operator_id=operation["operator_id"],
+                views=operation["views"],
+                object_map=shared(),
+                context_length=17,
+                kv_plane_rows=KV_PLANE_ROWS,
+                request_max_new_tokens=1,
+                generated_before=0,
+                expected_fault=False,
+                expected_trap=TRAP_NONE,
+                expected_result_count=rows * HEAD_WIDTH,
+                expected_work_count=rows * HEAD_WIDTH,
+                expected_write_count=rows * HEAD_WIDTH,
+                expected_token=0,
+                expected_tie_multiplicity=0,
+                expected_eos_reason=0,
+                expected_launch=LAUNCH_ROPE,
+                compare_base=output_base,
+                compare_words=expected,
+                note=note,
+            )
+            self.bank[output_base : output_base + len(expected)] = expected
 
         def scatter_case(
             pc: int, position: int, source: list[int], rows: list[list[int]]
@@ -781,11 +1234,7 @@ class Builder:
                 sub=int(Dma.SCATTER),
                 operator_id=operation["operator_id"],
                 views=operation["views"],
-                object_map=submap(
-                    int(slots[0]["object_id"]),
-                    int(slots[1]["object_id"]),
-                    int(slots[4]["object_id"]),
-                ),
+                object_map=shared(),
                 context_length=position + 1,
                 kv_plane_rows=KV_PLANE_ROWS,
                 request_max_new_tokens=1,
@@ -834,12 +1283,7 @@ class Builder:
                 sub=1,
                 operator_id=operation["operator_id"],
                 views=operation["views"],
-                object_map=submap(
-                    int(slots[0]["object_id"]),
-                    int(slots[1]["object_id"]),
-                    int(slots[3]["object_id"]),
-                    int(slots[4]["object_id"]),
-                ),
+                object_map=shared(),
                 context_length=context,
                 kv_plane_rows=KV_PLANE_ROWS,
                 request_max_new_tokens=1,
@@ -863,7 +1307,101 @@ class Builder:
             )
             self.bank[BASE_SCRATCH_B : BASE_SCRATCH_B + ADD_WIDTH] = expected
 
-        # -- program order: scatter, attend, residual, SwiGLU, residual ------
+        # -- program order: normalize, rotate, scatter, attend, residual ----
+        # The layer as the shipped program orders it.  The three projections
+        # between PC 8 and PC 20 are TENSOR.MATMUL against 25 million
+        # checkpoint weights and are not run here; their outputs are the
+        # retained golden values, staged.  Everything else in this span is
+        # issued, and every operator below reads what the operator before it
+        # WROTE.
+        norm_case(
+            name="vector_rms_norm_attention_input",
+            pc=PC_RMS_NORM_ATTENTION,
+            mnemonic="VECTOR.RMS_NORM",
+            sub=int(Vector.RMS_NORM),
+            rows=1,
+            width=ADD_WIDTH,
+            input_base=BASE_TRUNK,
+            output_base=BASE_SCRATCH_B,
+            gain_object=rms_attention[1],
+            golden_pc=PC_RMS_NORM_ATTENTION,
+            note=(
+                "the embedding row the shipped PC 4 wrote, normalized by the "
+                "real checkpoint gain the retained source bank carries, "
+                "against that program counter's own golden write stream"
+            ),
+        )
+        norm_case(
+            name="vector_head_rms_norm_query",
+            pc=PC_HEAD_RMS_QUERY,
+            mnemonic="VECTOR.HEAD_RMS_NORM",
+            sub=int(Vector.HEAD_RMS_NORM),
+            rows=QUERY_HEADS,
+            width=HEAD_WIDTH,
+            input_base=BASE_SCRATCH_A,
+            output_base=BASE_SCRATCH_B,
+            gain_object=head_rms_query[1],
+            golden_pc=PC_HEAD_RMS_QUERY,
+            note=(
+                "32 query heads normalized per head by the real checkpoint "
+                "head gain; the result lands over the object the trunk norm "
+                "just wrote, which is a rewrite an append cursor cannot place"
+            ),
+        )
+        norm_case(
+            name="vector_head_rms_norm_key",
+            pc=PC_HEAD_RMS_KEY,
+            mnemonic="VECTOR.HEAD_RMS_NORM",
+            sub=int(Vector.HEAD_RMS_NORM),
+            rows=KV_HEADS,
+            width=HEAD_WIDTH,
+            input_base=BASE_SCATTER_KEY_SOURCE,
+            output_base=self.base_head_key,
+            gain_object=head_rms_key[1],
+            golden_pc=PC_HEAD_RMS_KEY,
+            note="8 key heads, the second real checkpoint head gain",
+        )
+        rope_case(
+            name="vector_rope_query",
+            pc=PC_ROPE_QUERY,
+            rows=QUERY_HEADS,
+            input_base=BASE_SCRATCH_B,
+            output_base=BASE_SCRATCH_A,
+            golden_pc=PC_ROPE_QUERY,
+            note=(
+                "reads the head norm's own result and the FP32 coefficient "
+                "row PC 1's gather published, and writes back into the object "
+                "the query projection occupied"
+            ),
+        )
+        rope_case(
+            name="vector_rope_key",
+            pc=PC_ROPE_KEY,
+            rows=KV_HEADS,
+            input_base=self.base_head_key,
+            output_base=BASE_SCATTER_KEY_SOURCE,
+            golden_pc=PC_ROPE_KEY,
+            note=(
+                "the same coefficient object, a second shape: one object read "
+                "by two operators at two extents through one base"
+            ),
+        )
+        # What the two RoPEs just produced is what the attention and the key
+        # scatter read next.  They are no longer staged: this run computed
+        # them, and if it computed anything else the campaign refuses here
+        # rather than quietly testing a different activation.
+        if (
+            self.bank[BASE_SCRATCH_A : BASE_SCRATCH_A + ADD_WIDTH] != list(query)
+            or self.bank[
+                BASE_SCATTER_KEY_SOURCE : BASE_SCATTER_KEY_SOURCE + KV_PLANE_WORDS
+            ]
+            != list(current_key)
+        ):
+            raise RuntimeError(
+                "the rotated query and key this vehicle produced are not the "
+                "authentic activations the attention campaign binds"
+            )
+
         scatter_case(PC_SCATTER_KEY, 16, current_key, key_rows)
         scatter_case(PC_SCATTER_VALUE, 16, current_value, value_rows)
         attention_case(16, None)
@@ -878,7 +1416,7 @@ class Builder:
             sub=int(Vector.ADD),
             operator_id=operations[PC_ADD_ATTENTION]["operator_id"],
             views=operations[PC_ADD_ATTENTION]["views"],
-            object_map=submap(add_a[0], add_a[1], add_a[4]),
+            object_map=shared(),
             context_length=17,
             kv_plane_rows=KV_PLANE_ROWS,
             request_max_new_tokens=1,
@@ -905,6 +1443,24 @@ class Builder:
         )
         self.bank[BASE_SCRATCH_B : BASE_SCRATCH_B + ADD_WIDTH] = mid
 
+        norm_case(
+            name="vector_rms_norm_mlp_input",
+            pc=PC_RMS_NORM_MLP,
+            mnemonic="VECTOR.RMS_NORM",
+            sub=int(Vector.RMS_NORM),
+            rows=1,
+            width=ADD_WIDTH,
+            input_base=BASE_SCRATCH_B,
+            output_base=BASE_SCRATCH_A,
+            gain_object=rms_mlp[1],
+            golden_pc=None,
+            note=(
+                "the residual sum the previous case produced, normalized by a "
+                "gain object the shipped prefix never reaches: the gain is a "
+                "seeded spread and only the scalar reference stands behind it"
+            ),
+        )
+
         gated = self._reference_silu(silu_gate, silu_up)
         self.emit(
             name="vector_silu_mul_swiglu",
@@ -913,7 +1469,7 @@ class Builder:
             sub=int(Vector.SILU_MUL),
             operator_id=operations[PC_SILU_MUL]["operator_id"],
             views=operations[PC_SILU_MUL]["views"],
-            object_map=submap(silu[0], silu[1], silu[4]),
+            object_map=shared(),
             context_length=17,
             kv_plane_rows=KV_PLANE_ROWS,
             request_max_new_tokens=1,
@@ -941,7 +1497,7 @@ class Builder:
             sub=int(Vector.ADD),
             operator_id=operations[PC_ADD_MLP]["operator_id"],
             views=operations[PC_ADD_MLP]["views"],
-            object_map=submap(add_b[0], add_b[1], add_b[4]),
+            object_map=shared(),
             context_length=17,
             kv_plane_rows=KV_PLANE_ROWS,
             request_max_new_tokens=1,
@@ -966,6 +1522,24 @@ class Builder:
         self.bank[BASE_SCRATCH_A : BASE_SCRATCH_A + ADD_WIDTH] = list(mlp_projection)
         self.bank[BASE_TRUNK : BASE_TRUNK + ADD_WIDTH] = trunk_after
 
+        norm_case(
+            name="vector_rms_norm_final",
+            pc=PC_RMS_NORM_HEAD,
+            mnemonic="VECTOR.RMS_NORM",
+            sub=int(Vector.RMS_NORM),
+            rows=1,
+            width=ADD_WIDTH,
+            input_base=BASE_TRUNK,
+            output_base=BASE_SCRATCH_B,
+            gain_object=rms_head[1],
+            golden_pc=None,
+            note=(
+                "the head span's norm, on the trunk object the MLP residual "
+                "wrote back over: a fifth distinct gain object through the "
+                "same table, seeded for the same reason as PC 47's"
+            ),
+        )
+
         # -- the second generated token: contexts 18 and 19 --------------------
         last = KV_PLANE_ROWS - 1
         scatter_case(PC_SCATTER_KEY, last, current_key, key_rows)
@@ -983,7 +1557,7 @@ class Builder:
             sub=int(Selection.ARGMAX),
             operator_id=operations[PC_ARGMAX]["operator_id"],
             views=operations[PC_ARGMAX]["views"],
-            object_map=submap(argmax[0], argmax[4]),
+            object_map=shared(),
             context_length=17,
             kv_plane_rows=KV_PLANE_ROWS,
             request_max_new_tokens=1,
@@ -1017,7 +1591,7 @@ class Builder:
             sub=int(Selection.TOKEN_APPEND),
             operator_id=operations[PC_TOKEN_APPEND]["operator_id"],
             views=operations[PC_TOKEN_APPEND]["views"],
-            object_map=append_map,
+            object_map=shared(),
             context_length=17,
             kv_plane_rows=KV_PLANE_ROWS,
             request_max_new_tokens=1,
@@ -1045,7 +1619,7 @@ class Builder:
             sub=int(Selection.TOKEN_APPEND),
             operator_id=operations[PC_TOKEN_APPEND]["operator_id"],
             views=operations[PC_TOKEN_APPEND]["views"],
-            object_map=append_map,
+            object_map=shared(),
             context_length=17,
             kv_plane_rows=KV_PLANE_ROWS,
             request_max_new_tokens=3,
@@ -1295,7 +1869,115 @@ class Builder:
         )
         self.bank[BASE_TOKEN] = ordinary
 
+        # ---------------------------------------------------- what bounds it
+        # The four operators below are shipped instructions of the governed
+        # program that this bridge does not admit, and each is issued here so
+        # the refusal is a measurement rather than a reading of the source.
+        # They matter to the placement question directly: their weight and
+        # result objects are objects of the layer's own 23, and an object no
+        # admitted operator can name is one no run of this design can ever
+        # resolve.  The bases bound to the three refused weight objects are
+        # the halfword bases they would occupy in a projection-matrix bank
+        # this vehicle does not stage; nothing reads them, and they are here
+        # so the refusal is attributable to the view SHAPE and not to an
+        # unplaced object.
+        refused_matmul_map = dict(object_base)
+        refused_matmul_map[matmul_gate[1]] = 0
+        refused_matmul_map[matmul_up[1]] = 12288 * ADD_WIDTH
+        refused_matmul_map[matmul_down[1]] = 2 * 12288 * ADD_WIDTH
+        for name, pc, weights in (
+            ("gate", PC_MATMUL_GATE, matmul_gate),
+            ("up", PC_MATMUL_UP, matmul_up),
+            ("down", PC_MATMUL_DOWN, matmul_down),
+        ):
+            self.emit(
+                name=f"descriptor_refusal_mlp_{name}_projection_weight_view",
+                pc=pc,
+                family=int(Major.TENSOR),
+                sub=int(Tensor.MATMUL),
+                operator_id=operations[pc]["operator_id"],
+                views=operations[pc]["views"],
+                object_map=refused_matmul_map,
+                context_length=17,
+                kv_plane_rows=KV_PLANE_ROWS,
+                request_max_new_tokens=1,
+                generated_before=0,
+                expected_fault=True,
+                expected_trap=TRAP_DESCRIPTOR,
+                expected_result_count=0,
+                expected_work_count=0,
+                expected_write_count=0,
+                expected_token=0,
+                expected_tie_multiplicity=0,
+                expected_eos_reason=0,
+                expected_launch=LAUNCH_NONE,
+                compare_base=BASE_TRUNK,
+                compare_words=untouched_trunk,
+                note=(
+                    "the admitted TENSOR.MATMUL weight view is [n <= 4096, "
+                    "4096]; this one is "
+                    f"{operations[pc]['views'][1]['dims']!r} and the operator "
+                    "is refused before a single weight halfword is read, so "
+                    "object "
+                    f"{weights[1]} is placed by the table and never resolved"
+                ),
+            )
+
+        self.emit(
+            name="descriptor_refusal_bf16_dense_row_gather",
+            pc=PC_HEAD_GATHER,
+            family=int(Major.DMA),
+            sub=int(Dma.GATHER),
+            operator_id=operations[PC_HEAD_GATHER]["operator_id"],
+            views=operations[PC_HEAD_GATHER]["views"],
+            object_map=shared(),
+            context_length=17,
+            kv_plane_rows=KV_PLANE_ROWS,
+            request_max_new_tokens=1,
+            generated_before=0,
+            expected_fault=True,
+            expected_trap=TRAP_DESCRIPTOR,
+            expected_result_count=0,
+            expected_work_count=0,
+            expected_write_count=0,
+            expected_token=0,
+            expected_tie_multiplicity=0,
+            expected_eos_reason=0,
+            expected_launch=LAUNCH_NONE,
+            compare_base=BASE_TRUNK,
+            compare_words=untouched_trunk,
+            note=(
+                "the head span's gather reads a BF16 row of the residual "
+                "history; the bridge admits a dense-row DMA.GATHER source "
+                "only in FP32, so this shipped instruction is refused and the "
+                "object it would have written can be reached by no run"
+            ),
+        )
+
     # -- helpers ------------------------------------------------------------
+    def _require_golden(
+        self, pc: int, golden_pc: int | None, expected: list[int]
+    ) -> None:
+        """The scalar reference and the retained golden must agree, or refuse.
+
+        The expectation this campaign compares the RTL against is always the
+        one the independent reference computed here from the staged operands.
+        Where the shipped prefix also ran the operator, its golden write
+        stream is a second, independently produced answer, and the two are
+        required to be identical.  A disagreement is a build failure: it means
+        either the staging or one of the two models is wrong, and there is no
+        version of that in which the campaign should keep going.
+        """
+
+        if golden_pc is None:
+            return
+        golden = list(self.prefix_results[golden_pc])
+        if golden != list(expected):
+            raise RuntimeError(
+                f"PC {pc}: the scalar reference and the retained golden write "
+                f"stream of PC {golden_pc} disagree"
+            )
+
     def _loops_at(self, pc: int) -> dict[int, int]:
         loops: dict[int, int] = {}
         for index in range(pc):
@@ -1431,6 +2113,7 @@ def build(
         "descriptors.hex": scatter.hex_lines(builder.descriptor_image(), 1536),
         "bank.hex": scatter.hex_lines(builder.initial_bank),
         "index.hex": scatter.hex_lines(builder.index_bank),
+        "source.hex": scatter.hex_lines(builder.source_bank),
         "preload.hex": scatter.hex_lines(builder.preload_words or [0]),
         "expected.hex": scatter.hex_lines(builder.expected_words),
     }
@@ -1450,8 +2133,10 @@ def build(
             "view_slots": VIEW_SLOTS,
             "view_words": VIEW_WORDS,
             "map_entries": MAP_ENTRIES,
+            "map_base": MAP_BASE,
             "bank_words": builder.bank_words,
             "index_words": INDEX_WORDS,
+            "source_words": SOURCE_WORDS,
             "descriptor_records": builder.next_synthetic_id,
             "expected_words": len(builder.expected_words),
             "preload_words": max(len(builder.preload_words), 1),
@@ -1476,6 +2161,23 @@ def build(
                 "seeded deterministic BF16 spread over the governed shapes; not "
                 "checkpoint activations"
             ),
+            "normalization_gains": (
+                "the PC 8, PC 20 and PC 23 gains are the real checkpoint gains "
+                "the retained shipped-prefix source bank carries, at their own "
+                "objects' bases; the PC 47 and PC 66 gains are a seeded spread "
+                "because the shipped prefix stops at PC 32 and never staged "
+                "them"
+            ),
+            "rope_coefficients": (
+                "the FP32 coefficient row the shipped PC 1 gather published, "
+                "taken from the retained golden write stream and narrowed to "
+                "BF16 by the same round-to-nearest-even the datapath performs"
+            ),
+            "attention_projections": (
+                "the query, key and value projections are the retained golden "
+                "outputs of PCs 11, 14 and 17; those three TENSOR.MATMULs are "
+                "not issued in this vehicle"
+            ),
         },
         "oracles": {
             "vector_add": "runtime/reference/tensor_accelerator_elementwise.py",
@@ -1484,7 +2186,15 @@ def build(
             "selection_argmax": "greedy_lowest_token_id_argmax_v1, computed here",
             "selection_token_append": "runtime/sim/engines/selection.py semantics",
             "dma_scatter": "byte-preserving row placement, computed here",
+            "vector_rms_norm": "runtime/reference/tensor_accelerator_rmsnorm.py",
+            "vector_head_rms_norm": (
+                "runtime/reference/tensor_accelerator_rmsnorm.py"
+            ),
+            "vector_rope": "runtime/reference/tensor_accelerator_rope.py",
             "independent_of_dut": True,
+            "cross_checked_against_the_retained_golden_write_stream": sorted(
+                PREFIX_REPLAY_PCS
+            ),
         },
         "cases": [
             {
@@ -1495,6 +2205,16 @@ def build(
                 "operator_descriptor_id": item["operator_descriptor_id"],
                 "context_length": item["context_length"],
                 "expected": item["expected"],
+                # The table this case binds, and the objects its own operands
+                # resolve out of it.  The second list is not the first: an
+                # entry that no operand names is bound and not resolved, and
+                # the campaign counts only what a case actually resolved.
+                "object_map": {
+                    str(key): value
+                    for key, value in sorted(item["object_map"].items())
+                },
+                "objects_named": item["objects_named"],
+                "placement_valid": item["placement_valid"],
                 "note": item["note"],
             }
             for item in builder.cases
@@ -1515,6 +2235,10 @@ def build(
             "exact_resolved_view_stream": True,
             "bit_exact_against_independent_reference": True,
             "six_previously_capability_trapped_families_admitted": True,
+            "object_keyed_families_issued_through_one_shared_table": True,
+            "real_checkpoint_normalization_gains": False,
+            "three_of_five_normalization_gains_are_checkpoint": True,
+            "layer_matmuls_issued": False,
             "runtime_context_length": True,
             "read_modify_write_placement": True,
             "fail_closed_matrix": True,
@@ -1535,6 +2259,10 @@ def build(
             "program_image_sha256": sha256_file(scatter.PROGRAM_IMAGE),
             "prefix_expected": str(scatter.PREFIX_EXPECT.relative_to(ROOT)),
             "prefix_expected_sha256": sha256_file(scatter.PREFIX_EXPECT),
+            "prefix_writes": str(scatter.PREFIX_WRITES.relative_to(ROOT)),
+            "prefix_writes_sha256": sha256_file(scatter.PREFIX_WRITES),
+            "prefix_source": str(PREFIX_SOURCE.relative_to(ROOT)),
+            "prefix_source_sha256": sha256_file(PREFIX_SOURCE),
         },
     }
     manifest["image_sha256"] = {
