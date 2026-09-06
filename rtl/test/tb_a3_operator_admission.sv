@@ -181,6 +181,7 @@ module tb_a3_operator_admission;
         .issue_ready(issue_ready),
         .issue_fault(issue_fault),
         .issue_trap_class(issue_trap_class),
+        .issue_eos_reason(),
         .issue_family(issue_family),
         .issue_sub(issue_sub),
         .issue_descriptor_id(issue_descriptor_id),

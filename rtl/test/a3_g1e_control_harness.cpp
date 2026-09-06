@@ -328,6 +328,10 @@ struct Result {
     std::uint32_t pc = 0;
     std::uint32_t fault = 0;
     std::uint32_t trap_class = 0;
+    // The completion record's EOS reason byte (wire format section 7, byte
+    // 108).  It is part of the engine RESULT, so a vehicle that injects
+    // results at the engine boundary has to inject this one too.
+    std::uint32_t eos_reason = 0;
     std::vector<std::pair<std::uint32_t, std::uint32_t>> words;
 };
 
@@ -348,7 +352,8 @@ std::vector<Result> read_results(const std::string& path) {
             Result record;
             std::uint64_t count = 0;
             if (!(fields >> record.family >> record.sub >> record.descriptor_id >>
-                  record.pc >> record.fault >> record.trap_class >> count))
+                  record.pc >> record.fault >> record.trap_class >>
+                  record.eos_reason >> count))
                 throw std::runtime_error("malformed RESULT line in " + path);
             remaining = count;
             out.push_back(std::move(record));
@@ -448,6 +453,7 @@ struct Model {
         dut.inj_result_valid = 0;
         dut.inj_result_fault = 0;
         dut.inj_result_trap_class = 0;
+        dut.inj_result_eos_reason = 0;
         dut.inj_write_en = 0;
         dut.inj_write_addr = 0;
         dut.inj_write_data = 0;
@@ -677,6 +683,7 @@ int main(int argc, char** argv) {
                 model.dut.inj_result_valid = 0;
                 model.dut.inj_result_fault = 0;
                 model.dut.inj_result_trap_class = 0;
+                model.dut.inj_result_eos_reason = 0;
                 if (!model.dut.rst_n || !model.dut.inj_issue_valid) {
                     model.dut.eval();
                     return;
@@ -718,6 +725,7 @@ int main(int argc, char** argv) {
                     model.dut.inj_result_valid = 1;
                     model.dut.inj_result_fault = answer.fault;
                     model.dut.inj_result_trap_class = answer.trap_class;
+                    model.dut.inj_result_eos_reason = answer.eos_reason;
                     injected_serving = false;
                     ++injected_at;
                 }
@@ -855,11 +863,28 @@ int main(int argc, char** argv) {
         // the same configuration is driven once more with its own result
         // stream, and what the design does is reported.  Its issues are not
         // added to the compared trace.
+        //
+        // WHAT THE PROBE HAS TO ESTABLISH FIRST.  A design cannot refuse a
+        // post-EOS transaction unless it has been told the EOS happened, and
+        // in this vehicle no engine runs, so the EOS reaches the control
+        // plane only as part of the injected completion -- the completion
+        // record's own byte 108, injected at the engine RESULT boundary with
+        // the fault and trap class that were always injected there.  The
+        // device's ``session_retired`` output is therefore sampled BEFORE
+        // the probe is driven and reported beside its outcome: a probe run
+        // against a session the design does not consider retired measures
+        // nothing about refusal, and the campaign is required to read this
+        // field rather than assume it.
         bool probe_ran = false;
         bool probe_admitted = false;
         std::uint32_t probe_trap_class = 0;
         std::uint64_t probe_issue_count = 0;
         std::uint64_t probe_cycles = 0;
+        const bool retired_before_probe = model.dut.session_retired != 0;
+        const std::uint32_t retired_reason_before_probe =
+            model.dut.session_eos_reason;
+        const std::uint32_t refusals_before_probe =
+            model.dut.count_transactions_refused_post_eos;
         if (probe_present) {
             const std::uint32_t* record = &cases[passes * kCaseStride];
             model.dut.cfg_program_base = record[0];
@@ -884,6 +909,7 @@ int main(int argc, char** argv) {
                 model.dut.inj_result_valid = 0;
                 model.dut.inj_result_fault = 0;
                 model.dut.inj_result_trap_class = 0;
+                model.dut.inj_result_eos_reason = 0;
                 if (!model.dut.rst_n || !model.dut.inj_issue_valid) {
                     model.dut.eval();
                     return;
@@ -894,6 +920,11 @@ int main(int argc, char** argv) {
                 }
                 if (!probe_serving) probe_serving = true;
                 model.dut.inj_result_valid = 1;
+                model.dut.inj_result_fault = probe_results[probe_at].fault;
+                model.dut.inj_result_trap_class =
+                    probe_results[probe_at].trap_class;
+                model.dut.inj_result_eos_reason =
+                    probe_results[probe_at].eos_reason;
                 probe_serving = false;
                 ++probe_at;
                 model.dut.eval();
@@ -914,7 +945,17 @@ int main(int argc, char** argv) {
             total_cycles += guard;
             check.equal("post-EOS probe reached a definite outcome",
                         model.dut.done ? 1 : 0, 1);
-            check.equal("post-EOS probe issue count", probe_at, probe_issues);
+            // A refusal is taken BEFORE any instruction is fetched -- that is
+            // what the reference model does and what "the device refuses
+            // every later transaction for that session" means -- so a refused
+            // probe issues nothing and an admitted one runs the whole pass.
+            // Anything between the two is neither, and this catches it.  The
+            // earlier form of this check required the full issue count
+            // unconditionally, which is an assertion that the design ADMITS
+            // the probe, written into the checker that was supposed to be
+            // asking whether it does.
+            check.equal("post-EOS probe issue count", probe_at,
+                        probe_admitted ? probe_issues : std::uint64_t{0});
         }
         // The issue census, taken from the RTL's own trace.  G1's composition
         // certificate is required to be derived mechanically from this rung's
@@ -957,7 +998,12 @@ int main(int argc, char** argv) {
                   << " trapped=" << (model.dut.trapped ? 1 : 0)
                   << " trap_class=" << probe_trap_class
                   << " issues=" << probe_issue_count
-                  << " cycles=" << probe_cycles << "\n";
+                  << " cycles=" << probe_cycles
+                  << " retired_before=" << (retired_before_probe ? 1 : 0)
+                  << " retired_reason=" << retired_reason_before_probe
+                  << " refusals_before=" << refusals_before_probe
+                  << " refusals_after="
+                  << model.dut.count_transactions_refused_post_eos << "\n";
 
         check.equal("every golden result consumed", injected_at, injected.size());
         check.equal("injected words written", injected_words_written,

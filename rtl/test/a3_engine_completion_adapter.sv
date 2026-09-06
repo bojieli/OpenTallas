@@ -58,12 +58,17 @@ module a3_engine_completion_adapter (
     output reg  [4:0]  complete_slot,
     output reg         complete_fault,
     output reg  [15:0] complete_trap_class,
+    // The completion record's EOS reason byte, carried from the engine
+    // beside the fault and class it already carried.  SELECTION.TOKEN_APPEND
+    // is the only operator that publishes a non-zero one.
+    output reg  [7:0]  complete_eos_reason,
 
     // -- engine side: run-to-completion port ---------------------------
     output reg         eng_issue_valid,
     input  wire        eng_issue_ready,
     input  wire        eng_issue_fault,
     input  wire [15:0] eng_issue_trap_class,
+    input  wire [7:0]  eng_issue_eos_reason,
     output reg  [7:0]  eng_issue_family,
     output reg  [7:0]  eng_issue_sub,
     output reg  [31:0] eng_issue_descriptor_id,
@@ -110,6 +115,7 @@ module a3_engine_completion_adapter (
             complete_slot <= 5'd0;
             complete_fault <= 1'b0;
             complete_trap_class <= 16'd0;
+            complete_eos_reason <= 8'd0;
             eng_issue_valid <= 1'b0;
             eng_issue_family <= 8'd0;
             eng_issue_sub <= 8'd0;
@@ -190,6 +196,7 @@ module a3_engine_completion_adapter (
                             complete_slot <= held_slot;
                             complete_fault <= eng_issue_fault;
                             complete_trap_class <= eng_issue_trap_class;
+                            complete_eos_reason <= eng_issue_eos_reason;
                             state <= S_GAP;
                         end
                     end

@@ -50,6 +50,19 @@
 // transaction runs, to an unknown select, past a store or past a row's
 // lanes is dropped and host_write_refused stays set until reset.
 //
+// Session retirement is design, and it is the device's.  ABI 3.0 wire format
+// section 12.5: the TOKEN_APPEND that commits the final allowed non-EOS token
+// "returns completion EOS reason MAX_NEW_TOKENS=2, and the device refuses
+// every later transaction for that session".  Operator conventions section 8
+// says the same of an official EOS, and says why it cannot be left to the
+// driver: "Both that reason and an official EOS retire the device session;
+// host-only loop termination does not satisfy this operator contract".  This
+// module holds that state.  The completion port carries the completion
+// record's EOS reason byte; a completion reporting OFFICIAL_EOS or
+// MAX_NEW_TOKENS latches `session_retired` until reset, and a `start` offered
+// afterwards never reaches the sequencer -- nothing is fetched, decoded or
+// issued, and the transaction ends as a trap of class A3_TRAP_STATE.
+//
 // The package is referenced by scope, never wildcard-imported [OI-43].
 // ---------------------------------------------------------------------------
 module ot_a3_device_top #(
@@ -112,6 +125,13 @@ module ot_a3_device_top #(
     output wire [15:0]   trap_class,
     output wire [31:0]   first_fault_instruction,
 
+    // -- session retirement (observation) --------------------------------
+    // Set once a completion reported OFFICIAL_EOS or MAX_NEW_TOKENS and held
+    // until reset; every later transaction on this session is refused.
+    output wire          session_retired,
+    output wire [7:0]    session_eos_reason,
+    output wire [31:0]   count_transactions_refused_post_eos,
+
     // -- program store boundary (one synchronous port) ------------------
     // pstore_en && !pstore_we: pstore_rdata presents row pstore_addr in the
     // next cycle and holds it until the next read.  pstore_en && pstore_we:
@@ -173,6 +193,13 @@ module ot_a3_device_top #(
     input  wire [4:0]    complete_slot,
     input  wire          complete_fault,
     input  wire [15:0]   complete_trap_class,
+    // The completion record's EOS reason byte (wire format section 7, byte
+    // 108: NONE=0, OFFICIAL_EOS=1, MAX_NEW_TOKENS=2, ...).  SELECTION.
+    // TOKEN_APPEND publishes it; the operator conventions (section 8) say
+    // OFFICIAL_EOS and MAX_NEW_TOKENS "retire the device session", and that
+    // "host-only loop termination does not satisfy this operator contract",
+    // so the reason has to reach the control plane and not only the host.
+    input  wire [7:0]    complete_eos_reason,
 
     // -- resolved operand tensor views (A4, A13, A18) -------------------
     // Published in operand order immediately before the operation's issue
@@ -328,24 +355,113 @@ module ot_a3_device_top #(
 
     wire [1535:0] desc_data = desc_fault ? 1536'd0 : dstore_rdata;
 
+    // -- session retirement, and the refusal the ABI requires --------------
+    // ABI 3.0 wire format section 12.5: the TOKEN_APPEND that commits the
+    // final allowed non-EOS token "returns completion EOS reason
+    // MAX_NEW_TOKENS=2, and the device refuses every later transaction for
+    // that session".  Operator conventions section 8 says the same of an
+    // official EOS -- "Both that reason and an official EOS retire the
+    // device session; host-only loop termination does not satisfy this
+    // operator contract".  THE DEVICE, not the host: a refusal taken in the
+    // driver satisfies neither sentence, and runtime/sim/device.py takes its
+    // one (Device.run_transaction, Session.finished -> STATE_TRANSACTION)
+    // inside the device model for exactly that reason.  This is the control
+    // plane's half of it.
+    //
+    // Retirement is latched off the completion port -- the engine result
+    // boundary -- because that is where the reason is published, and it is
+    // held until reset because a session cannot be un-retired.  A start
+    // offered afterwards never reaches the sequencer: nothing is fetched,
+    // nothing is decoded, nothing is issued, and the transaction completes
+    // as a trap of class A3_TRAP_STATE (9, "state transaction"), which is
+    // the class runtime/abi3/constants.py names for it and the class the
+    // reference model returns.
+    //
+    // runtime.abi3.records.EosReason, cited by value exactly as
+    // rtl/abi3/ot_a3_selection_token_append.sv cites it.
+    localparam [7:0] A3_EOS_OFFICIAL        = 8'd1;
+    localparam [7:0] A3_EOS_MAX_NEW_TOKENS  = 8'd2;
+
+    wire         seq_busy;
+    wire         seq_done;
+    wire         seq_complete;
+    wire         seq_trapped;
+    wire [15:0]  seq_trap_class;
+    wire [31:0]  seq_first_fault_instruction;
+
+    reg          session_retired_q;
+    reg  [7:0]   session_eos_reason_q;
+    reg          refused_q;
+    reg          refuse_done_q;
+    reg  [31:0]  refused_count_q;
+
+    wire completion_retires = complete_valid &&
+        ((complete_eos_reason == A3_EOS_OFFICIAL) ||
+         (complete_eos_reason == A3_EOS_MAX_NEW_TOKENS));
+    // A start offered to a retired session, with the sequencer idle.  The
+    // sequencer never sees it.
+    wire refuse_start = start && session_retired_q && !seq_busy;
+    wire seq_start    = start && !session_retired_q;
+
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            session_retired_q    <= 1'b0;
+            session_eos_reason_q <= 8'd0;
+            refused_q            <= 1'b0;
+            refuse_done_q        <= 1'b0;
+            refused_count_q      <= 32'd0;
+        end else begin
+            refuse_done_q <= 1'b0;
+            if (completion_retires) begin
+                session_retired_q    <= 1'b1;
+                session_eos_reason_q <= complete_eos_reason;
+            end
+            if (refuse_start) begin
+                refused_q       <= 1'b1;
+                refuse_done_q   <= 1'b1;
+                refused_count_q <= refused_count_q + 32'd1;
+            end else if (seq_start) begin
+                refused_q <= 1'b0;
+            end
+        end
+    end
+
+    assign session_retired    = session_retired_q;
+    assign session_eos_reason = session_eos_reason_q;
+    assign count_transactions_refused_post_eos = refused_count_q;
+
+    // The transaction outputs are the sequencer's, except on a refused
+    // transaction, where they are the refusal: never complete, always
+    // trapped, class 9, and no faulting instruction because none was
+    // fetched.  ``done`` is the sequencer's one-cycle pulse or the
+    // refusal's, and they cannot coincide: the sequencer is idle whenever a
+    // refusal is taken.
+    assign busy      = seq_busy;
+    assign done      = seq_done | refuse_done_q;
+    assign complete  = refused_q ? 1'b0 : seq_complete;
+    assign trapped   = refused_q ? 1'b1 : seq_trapped;
+    assign trap_class = refused_q ? ot_a3_pkg::A3_TRAP_STATE : seq_trap_class;
+    assign first_fault_instruction =
+        refused_q ? ot_a3_pkg::A3_NO_ID : seq_first_fault_instruction;
+
     // -- the microsequencer ---------------------------------------------------
     ot_a3_microsequencer #(
         .STATE_COMPAT(STATE_COMPAT)
     ) sequencer (
         .clk(clk),
         .rst_n(rst_n),
-        .start(start),
+        .start(seq_start),
         .cfg_program_base(cfg_program_base),
         .cfg_instruction_count(cfg_instruction_count),
         .cfg_entry_pc(cfg_entry_pc),
         .cfg_max_retired_work(cfg_max_retired_work),
         .cfg_state_count(cfg_state_count),
-        .busy(busy),
-        .done(done),
-        .complete(complete),
-        .trapped(trapped),
-        .trap_class(trap_class),
-        .first_fault_instruction(first_fault_instruction),
+        .busy(seq_busy),
+        .done(seq_done),
+        .complete(seq_complete),
+        .trapped(seq_trapped),
+        .trap_class(seq_trap_class),
+        .first_fault_instruction(seq_first_fault_instruction),
         .imem_req(imem_req),
         .imem_index(imem_index),
         .imem_valid(imem_valid),

@@ -107,6 +107,10 @@ module ot_a3_microsequencer_top
     input  wire [4:0]  complete_slot,
     input  wire        complete_fault,
     input  wire [15:0] complete_trap_class,
+    // The completion record's EOS reason byte.  This vehicle drives no
+    // selection engine, so its checkers leave it at zero and the device's
+    // session never retires; the port exists so the boundary is complete.
+    input  wire [7:0]  complete_eos_reason,
 
     // -- resolved operand tensor views (A4 and A13) ---------------------
     output wire        view_valid,
@@ -292,6 +296,10 @@ module ot_a3_microsequencer_top
         .complete_slot(complete_slot),
         .complete_fault(complete_fault),
         .complete_trap_class(complete_trap_class),
+        .complete_eos_reason(complete_eos_reason),
+        .session_retired(),
+        .session_eos_reason(),
+        .count_transactions_refused_post_eos(),
         .view_valid(view_valid),
         .view_descriptor_id(view_descriptor_id),
         .view_slot(view_slot),

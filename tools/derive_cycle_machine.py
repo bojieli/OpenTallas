@@ -5747,7 +5747,17 @@ def calibrate(
             + (
                 "RTL boundary "
                 f"{boundary['rtl_measured_boundary_cycles']} cycles measured"
-                if boundary["measured"] else "unmeasured"
+                if boundary["measured"]
+                else "unmeasured"
+                + (
+                    # A record that declares itself not the boundary names the
+                    # reason; carry its source into the board's line so the
+                    # failure is specific rather than a bare absence.
+                    f" ({boundary['rtl_measurement']['source']}: see "
+                    "boundary.why_unmeasured)"
+                    if boundary["rtl_measurement"].get("source")
+                    else ""
+                )
             )
             + f", model chain {boundary['model_exposed_chain_cycles']} vs design "
             + (

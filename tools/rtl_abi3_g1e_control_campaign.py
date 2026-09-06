@@ -62,10 +62,10 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from runtime.abi3.constants import Major, Selection  # noqa: E402
+from runtime.abi3.constants import Major, Selection, TrapClass  # noqa: E402
 from runtime.abi3.records import EosReason  # noqa: E402
 from tools.build_abi3_g1e_pass_decomposition import (  # noqa: E402
-    gate_required_passes,
+    gate_required_positions,
 )
 from tools.rtl_abi3_shipped_prefix_campaign import (  # noqa: E402
     PINNED_VERILATOR_VERSION,
@@ -135,6 +135,11 @@ INJECTED_INPUTS = (
     "inj_result_valid",
     "inj_result_fault",
     "inj_result_trap_class",
+    # The completion record's EOS reason byte (wire format section 7, byte
+    # 108).  It is a field of the engine RESULT, injected at the same
+    # boundary and through the same completion handshake as the fault and
+    # the trap class, and it is audited with them.
+    "inj_result_eos_reason",
     "inj_write_en",
     "inj_write_addr",
     "inj_write_data",
@@ -147,9 +152,11 @@ COMPLETION_HANDSHAKE = {
     "engine_ready",
     "engine_fault",
     "engine_trap_class",
+    "engine_eos_reason",
     "issue_ready",
     "issue_fault",
     "issue_trap_class",
+    "issue_eos_reason",
 }
 # The result memory's write port, and the memory it writes.
 RESULT_MEMORY_WRITE_PORT = {"res_we", "res_addr", "res_data", MEMORY}
@@ -181,6 +188,7 @@ ALLOWED_INSTANCE_PORTS = {
     "eng_issue_ready",
     "eng_issue_fault",
     "eng_issue_trap_class",
+    "eng_issue_eos_reason",
 }
 IDENTIFIER = re.compile(r"[A-Za-z_][A-Za-z0-9_]*")
 
@@ -475,7 +483,8 @@ EOS_LINE = re.compile(
 )
 POSTEOS_LINE = re.compile(
     r"POSTEOS ran=(\d+) admitted=(\d+) trapped=(\d+) trap_class=(\d+) "
-    r"issues=(\d+) cycles=(\d+)"
+    r"issues=(\d+) cycles=(\d+) retired_before=(\d+) retired_reason=(\d+) "
+    r"refusals_before=(\d+) refusals_after=(\d+)"
 )
 PASS_RECORD = re.compile(
     r"PASS-RECORD index=(\d+) entrypoint=(\d+) generation=(\d+) context=(\d+) "
@@ -534,15 +543,55 @@ def derive_official_eos_raised(
 def derive_post_eos_refused(probe: dict[str, Any]) -> bool:
     """Did the RTL refuse the instruction after the official EOS?
 
-    A probe that did not run refuses nothing, and a pass the design completed
-    without trapping was admitted, not refused.  Both readings come off the
-    DUT's own done / complete / trapped outputs.
+    Five observations, all of them off the DUT, and every one of them
+    necessary.  The first three are what the earlier form of this field
+    lacked and the reason it read a confounded measurement as a design gap.
+
+    * The probe ran.  A probe that did not run refuses nothing.
+    * The design was RETIRED when the probe was driven -- ``session_retired``
+      sampled off ot_a3_device_top in the cycle before the start pulse.  A
+      design that has not been told an EOS happened is not refusing a
+      post-EOS transaction when it admits one; it is answering a different
+      question, and reading that answer as a refusal failure is reading a
+      probe defect as a design gap.
+    * The reason it retired on is ``OFFICIAL_EOS``.  This field is about the
+      transaction after the OFFICIAL end of stream; a session retired by the
+      MAX_NEW_TOKENS stop is also refused by the ABI, and is also refused by
+      this design, but it is not what this field claims.
+    * The transaction did not complete, or trapped.
+    * It trapped as ``STATE_TRANSACTION`` -- trap class 9, the class ABI 3.0
+      wire format section 8 registers for a state transaction and the class
+      ``runtime/sim/device.py`` returns from ``Session.finished`` -- and the
+      device's own count of post-EOS refusals advanced by exactly one.  A
+      transaction that failed for some unrelated reason is not this refusal,
+      and the counter is what distinguishes the two.
     """
     if not bool(probe.get("ran")):
         return False
-    return bool(probe.get("rtl_trapped")) or not bool(
-        probe.get("rtl_admitted_the_pass")
-    )
+    if not bool(probe.get("session_retired_before")):
+        return False
+    if int(probe.get("session_eos_reason_before") or 0) != int(
+        EosReason.OFFICIAL_EOS
+    ):
+        return False
+    if not (
+        bool(probe.get("rtl_trapped"))
+        or not bool(probe.get("rtl_admitted_the_pass"))
+    ):
+        return False
+    if int(probe.get("trap_class") or 0) != int(TrapClass.STATE_TRANSACTION):
+        return False
+    before = probe.get("refusals_before")
+    after = probe.get("refusals_after")
+    if before is None or after is None:
+        return False
+    if int(after) - int(before) != 1:
+        return False
+    # And the design-level control: the same vehicle, the same stream with the
+    # injected OFFICIAL_EOS byte removed, ADMITS the probe.  Without this the
+    # field cannot distinguish a session-retirement refusal from a vehicle
+    # that refuses the probe for some unrelated reason.
+    return bool(probe.get("negative_control_holds"))
 
 
 def eos_field_self_test() -> dict[str, Any]:
@@ -565,18 +614,58 @@ def eos_field_self_test() -> dict[str, Any]:
             {"selected_eos_reason": int(EosReason.OFFICIAL_EOS)}, 7
         ),
     }
+    retired = {
+        "session_retired_before": True,
+        "session_eos_reason_before": int(EosReason.OFFICIAL_EOS),
+        "refusals_before": 0,
+        "refusals_after": 1,
+        "trap_class": int(TrapClass.STATE_TRANSACTION),
+        "negative_control_holds": True,
+    }
     refused = {
         "false_when_the_probe_did_not_run": derive_post_eos_refused(
-            {"ran": False, "rtl_admitted_the_pass": False, "rtl_trapped": True}
+            {**retired, "ran": False, "rtl_admitted_the_pass": False,
+             "rtl_trapped": True}
         ),
         "false_when_the_design_completed_the_pass": derive_post_eos_refused(
-            {"ran": True, "rtl_admitted_the_pass": True, "rtl_trapped": False}
+            {**retired, "ran": True, "rtl_admitted_the_pass": True,
+             "rtl_trapped": False, "refusals_after": 0,
+             "trap_class": 0}
+        ),
+        "false_when_the_design_was_never_retired": derive_post_eos_refused(
+            {**retired, "ran": True, "session_retired_before": False,
+             "session_eos_reason_before": int(EosReason.NONE),
+             "rtl_admitted_the_pass": False, "rtl_trapped": True}
+        ),
+        "false_when_the_retirement_was_not_the_official_eos": (
+            derive_post_eos_refused(
+                {**retired, "ran": True,
+                 "session_eos_reason_before": int(EosReason.MAX_NEW_TOKENS),
+                 "rtl_admitted_the_pass": False, "rtl_trapped": True}
+            )
+        ),
+        "false_when_the_trap_is_not_the_state_class": derive_post_eos_refused(
+            {**retired, "ran": True, "rtl_admitted_the_pass": False,
+             "rtl_trapped": True,
+             "trap_class": int(TrapClass.CAPABILITY_OR_RESOURCE)}
+        ),
+        "false_when_the_device_counted_no_refusal": derive_post_eos_refused(
+            {**retired, "ran": True, "rtl_admitted_the_pass": False,
+             "rtl_trapped": True, "refusals_after": 0}
+        ),
+        "false_when_the_design_refuses_without_being_told": (
+            derive_post_eos_refused(
+                {**retired, "ran": True, "rtl_admitted_the_pass": False,
+                 "rtl_trapped": True, "negative_control_holds": False}
+            )
         ),
         "true_when_the_design_trapped_it": derive_post_eos_refused(
-            {"ran": True, "rtl_admitted_the_pass": False, "rtl_trapped": True}
+            {**retired, "ran": True, "rtl_admitted_the_pass": False,
+             "rtl_trapped": True}
         ),
         "true_when_the_design_did_not_complete_it": derive_post_eos_refused(
-            {"ran": True, "rtl_admitted_the_pass": False, "rtl_trapped": False}
+            {**retired, "ran": True, "rtl_admitted_the_pass": False,
+             "rtl_trapped": False}
         ),
     }
     passed = (
@@ -588,6 +677,11 @@ def eos_field_self_test() -> dict[str, Any]:
         and refused == {
             "false_when_the_probe_did_not_run": False,
             "false_when_the_design_completed_the_pass": False,
+            "false_when_the_design_was_never_retired": False,
+            "false_when_the_retirement_was_not_the_official_eos": False,
+            "false_when_the_trap_is_not_the_state_class": False,
+            "false_when_the_device_counted_no_refusal": False,
+            "false_when_the_design_refuses_without_being_told": False,
             "true_when_the_design_trapped_it": True,
             "true_when_the_design_did_not_complete_it": True,
         }
@@ -642,6 +736,96 @@ def run_decomposition(store: str, out: Path, checkpoint: Path | None) -> dict[st
     study["campaign_wall_seconds"] = round(seconds, 2)
     study["marker"] = result.stdout.strip().splitlines()[-1]
     return study
+
+
+EOS_RESULT_LINE = re.compile(
+    r"^RESULT (\d+) (\d+) (\d+) (\d+) (\d+) (\d+) (\d+) (\d+)$"
+)
+
+
+def negative_control(build: Path, admitted_run: subprocess.CompletedProcess) -> dict[str, Any]:
+    """Re-run the SAME vehicle with the injected OFFICIAL_EOS byte removed.
+
+    The only edit is the EOS reason field of the injected completions: every
+    other byte of the stream, the program, the descriptors, the symbols and
+    the probe are the ones the measured run used.  A design whose refusal
+    comes from its session retirement admits this one; a design that refuses
+    it is refusing for some other reason, and the field would be measuring
+    that reason instead.
+    """
+    stream = build / "g1e_inject.txt"
+    original = stream.read_text(encoding="utf-8")
+    stripped_lines = []
+    stripped = 0
+    for line in original.splitlines():
+        match = EOS_RESULT_LINE.match(line)
+        if match and match.group(7) != "0":
+            fields = line.split()
+            fields[7] = "0"
+            line = " ".join(fields)
+            stripped += 1
+        stripped_lines.append(line)
+    if stripped == 0:
+        return {
+            "ran": False,
+            "why": (
+                "the golden result stream carries no non-zero EOS reason, so "
+                "there is nothing to remove and no control to run.  That is "
+                "itself a defect: this workload's gold ends in the official "
+                "EOS and its TOKEN_APPEND completion must carry it"
+            ),
+        }
+    started = time.perf_counter()
+    try:
+        stream.write_text("\n".join(stripped_lines) + "\n", encoding="utf-8")
+        result = subprocess.run(
+            ["./obj_g1e/Vot_a3_shipped_prefix_top"],
+            cwd=build, text=True, stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT, check=False,
+            env={**os.environ, "OT_A3_G1E_DIR": str(build)},
+        )
+    finally:
+        stream.write_text(original, encoding="utf-8")
+    seconds = time.perf_counter() - started
+    posteos = POSTEOS_LINE.search(result.stdout)
+    trace = TRACE_LINE.search(result.stdout)
+    return {
+        "ran": True,
+        "seconds": round(seconds, 3),
+        "eos_bytes_removed": stripped,
+        "what_changed": (
+            "the EOS reason field of every injected completion that carried "
+            "one, set to 0; nothing else in the vector set, and the same "
+            "elaborated binary"
+        ),
+        "checker_returncode": result.returncode,
+        "probe_ran": bool(posteos and posteos.group(1) == "1"),
+        "probe_admitted": bool(posteos and posteos.group(2) == "1"),
+        "probe_trapped": bool(posteos and posteos.group(3) == "1"),
+        "probe_trap_class": int(posteos.group(4)) if posteos else None,
+        "probe_issues": int(posteos.group(5)) if posteos else None,
+        "probe_cycles": int(posteos.group(6)) if posteos else None,
+        "session_retired_before_probe": bool(posteos and posteos.group(7) == "1"),
+        "refusals": (
+            int(posteos.group(10)) - int(posteos.group(9)) if posteos else None
+        ),
+        "trace_still_equals_golden": bool(trace and trace.group(2) == "1"),
+        "control_holds": bool(
+            posteos
+            and posteos.group(1) == "1"
+            and posteos.group(2) == "1"
+            and posteos.group(7) == "0"
+            and int(posteos.group(10)) == int(posteos.group(9))
+        ),
+        "meaning": (
+            "control_holds is true when the design, told nothing about an "
+            "EOS, ADMITS the very transaction it refused when it was told.  "
+            "That is what makes eos.post_eos_refused a measurement of the "
+            "design's session retirement rather than of anything else in the "
+            "vehicle"
+        ),
+        "log_tail": canonical(result.stdout[-1500:], build),
+    }
 
 
 def run_store(
@@ -708,6 +892,20 @@ def run_store(
     )
     run_seconds = time.perf_counter() - started
     stdout = run_result.stdout
+
+    # -- the design-level negative control ------------------------------
+    # eos.post_eos_refused is a claim about the DESIGN, so it is falsified
+    # against the design and not only against the derivation.  The same
+    # elaborated vehicle is driven a second time on the same golden stream
+    # with one byte removed: the OFFICIAL_EOS on the TOKEN_APPEND's injected
+    # completion.  If the design still refuses the probe, the refusal is not
+    # coming from the session retirement and the field is measuring something
+    # else; the campaign requires the control to be ADMITTED.  This is the
+    # experiment the previous form of the rung effectively ran by accident --
+    # it injected no EOS reason at all, the design admitted the probe, and
+    # the field read that admission as a design gap.
+    control = negative_control(build, run_result)
+    run_seconds += control.pop("seconds", 0.0)
 
     marker = MARKER.search(stdout)
     trace = TRACE_LINE.search(stdout)
@@ -790,6 +988,18 @@ def run_store(
             "trap_class": int(posteos.group(4)) if posteos else None,
             "issues": int(posteos.group(5)) if posteos else 0,
             "simulated_cycles": int(posteos.group(6)) if posteos else 0,
+            # Sampled off ot_a3_device_top's own session-retirement outputs
+            # in the cycle before the probe was driven.  Without these the
+            # probe cannot say what it measured: a design asked to refuse a
+            # post-EOS transaction, having never been told an EOS happened,
+            # is right to admit it, and the earlier form of this field read
+            # that admission as a design gap.
+            "session_retired_before": bool(posteos and posteos.group(7) == "1"),
+            "session_eos_reason_before": int(posteos.group(8)) if posteos else None,
+            "refusals_before": int(posteos.group(9)) if posteos else None,
+            "refusals_after": int(posteos.group(10)) if posteos else None,
+            "negative_control_holds": bool(control.get("control_holds")),
+            "negative_control": control,
         },
         "passes": passes,
         "compile_command": canonical(" ".join(compile_command), build),
@@ -834,7 +1044,7 @@ def compose_record(
     trace = run.get("trace", {})
     equal = bool(trace.get("equal")) and run.get("marker_present", False)
     divergence = trace.get("divergence_index")
-    gate_requires = int(study["gate_requires_passes"])
+    gate_requires = dict(study["gate_requires_positions"])
     # How far the control plane got towards the EOS decision, counted from the
     # RTL's own issue census rather than from anybody's reading of the program.
     # SELECTION.TOKEN_APPEND is the instruction rtl/abi3/
@@ -899,7 +1109,8 @@ def compose_record(
         f"({', '.join(c['decomposition'] for c in wrong) or 'none'}). The "
         "largest pass count over the sequences that reproduce the gold is "
         f"{study['measured']['maximum_device_transactions_over_correct_decompositions']}"
-        f", against the gate's {gate_requires}; "
+        ", against the gate's position accounting "
+        f"{json.dumps(gate_requires, sort_keys=True)}; "
         f"{study['measured']['maximum_forward_passed_positions_over_correct_decompositions']}"
         f" of the workload's {workload_positions} token positions are "
         "forward-passed, and the last generated token -- the official EOS -- "
@@ -987,7 +1198,7 @@ def compose_record(
                 "actually drove, not a count of transactions"
             ),
             "per_pass": run.get("passes", []),
-            "gate_requires": gate_requires,
+            "gate_requires_positions": gate_requires,
             "gate_requires_read_from": "configs/gates/redesign_gates.json",
             "why_not_the_gate_number": (
                 f"measured, not argued. The RTL ran {device_transactions} "
@@ -997,14 +1208,15 @@ def compose_record(
                 f"{manifest['workload']['prompt_token_count']} and covers "
                 "every prompt position at once, then one decode transaction "
                 "per further token. Whether the same workload could be cut "
-                f"into {gate_requires} transactions was not reasoned about, it "
+                f"into {gate_requires['workload_token_positions']} "
+                "transactions was not reasoned about, it "
                 f"was tried: {decomposition_summary}"
             ),
             "decomposition_study": {
                 "artifact_schema": study.get("schema"),
                 "tool": DECOMPOSITION,
                 "reads_no_rtl": True,
-                "gate_requires_passes": study["gate_requires_passes"],
+                "gate_requires_positions": study["gate_requires_positions"],
                 "measured": study["measured"],
                 "finding": study["finding"],
                 "does_not_establish": study["does_not_establish"],
@@ -1050,10 +1262,30 @@ def compose_record(
                     "halves come off the RTL run"
                 ),
                 "post_eos_refused": (
-                    "the post-EOS probe ran AND the RTL either refused to "
-                    "complete it or trapped it. Both come off the DUT's own "
-                    "done/complete/trapped outputs on the pass driven after "
-                    "the one that produced the official EOS"
+                    "six observations, all off the DUT, plus a control run on "
+                    "the same design. The probe ran; "
+                    "ot_a3_device_top's session_retired output was already "
+                    "set when it was driven, and set on OFFICIAL_EOS; the "
+                    "transaction did not complete or trapped; the trap class "
+                    f"is STATE_TRANSACTION ("
+                    f"{int(TrapClass.STATE_TRANSACTION)}, ABI 3.0 wire format "
+                    "section 8); and the device's own post-EOS refusal "
+                    "counter advanced by exactly one. The retirement half is "
+                    "not decoration, and its absence is what made the earlier "
+                    "form of this field a confounded measurement: no engine "
+                    "runs in this vehicle, so an EOS reaches the control "
+                    "plane only in the injected completion, and a design that "
+                    "was never told an EOS happened is not failing to refuse "
+                    "a post-EOS transaction when it admits one. The class and "
+                    "the counter separate this refusal from any other way a "
+                    "transaction could fail. The sixth observation is a "
+                    "NEGATIVE CONTROL on the design itself: the same "
+                    "elaborated vehicle, driven again on the same golden "
+                    "stream with the injected OFFICIAL_EOS byte removed and "
+                    "nothing else changed, must ADMIT the very transaction it "
+                    "refused. Without that, a refusal could be coming from "
+                    "anything in the vehicle; with it, the refusal is the "
+                    "session retirement and nothing else"
                 ),
                 "measured_inputs": {
                     "selected_eos_reason": eos_reason_observed,
@@ -1062,7 +1294,23 @@ def compose_record(
                     "post_eos_probe_ran": probe_ran,
                     "post_eos_probe_admitted": probe_admitted,
                     "post_eos_probe_trapped": probe_trapped,
+                    "post_eos_probe_trap_class": probe.get("trap_class"),
+                    "state_transaction_trap_class": int(
+                        TrapClass.STATE_TRANSACTION
+                    ),
+                    "session_retired_before_the_probe": probe.get(
+                        "session_retired_before"
+                    ),
+                    "session_eos_reason_before_the_probe": probe.get(
+                        "session_eos_reason_before"
+                    ),
+                    "post_eos_refusals_before": probe.get("refusals_before"),
+                    "post_eos_refusals_after": probe.get("refusals_after"),
+                    "negative_control_holds": probe.get(
+                        "negative_control_holds"
+                    ),
                 },
+                "negative_control": probe.get("negative_control"),
                 "self_test": eos_field_self_test(),
             },
             "model_stop_reason": manifest["model_run"]["stop_reason"],
@@ -1094,27 +1342,53 @@ def compose_record(
                 ),
             },
             "control_plane_reached_the_eos_instruction": eos_reach,
-            "why_not_measured_in_rtl": (
+            "why_official_eos_is_not_measured_in_rtl": (
                 "in the promoted lowering the EOS decision is an ENGINE result "
                 "-- rtl/abi3/ot_a3_selection_token_append.sv raises "
                 "OFFICIAL_EOS from the policy's EOS set -- and under result "
                 "injection no engine is issued to, so an EOS raised here would "
-                "be the model's value passed through. The post-EOS refusal is "
-                "a host session-state refusal in "
-                "runtime/sim/device.py:run_transaction, taken before an "
-                "instruction is fetched; this deployment's program carries no "
-                "STATE instruction and no EOS_MEMBER predicate, so its RTL "
-                "control plane has nothing to refuse. Neither field is written "
-                "as a constant: each is the conjunction of RTL observations "
-                "recorded in how_both_fields_are_decided, and each is false "
-                "because those observations are"
+                "be the model's value passed through. official_eos_raised is "
+                "therefore false as a measurement of the ENGINE, and the "
+                "engine measurement belongs to G1d, where a real argmax runs. "
+                "It is not written as a constant: it is the conjunction of RTL "
+                "observations recorded in how_both_fields_are_decided, and it "
+                "is false because those observations are"
             ),
-            "what_would_measure_them": [
+            "how_post_eos_refusal_became_measurable": (
+                "IT WAS A REAL DESIGN GAP, AND ALSO A PROBE THAT WAS NOT "
+                "DRIVING WHAT IT THOUGHT IT DROVE. ABI 3.0 requires the "
+                "DEVICE to refuse: wire format section 12.5 -- the "
+                "TOKEN_APPEND that commits the final allowed non-EOS token "
+                "'returns completion EOS reason MAX_NEW_TOKENS=2, and the "
+                "device refuses every later transaction for that session' -- "
+                "and operator conventions section 8 -- 'Both that reason and "
+                "an official EOS retire the device session; host-only loop "
+                "termination does not satisfy this operator contract'. "
+                "runtime/sim/device.py implements it inside the device model "
+                "(Session.finished -> STATE_TRANSACTION). "
+                "rtl/abi3/ot_a3_device_top.sv did not implement it at all: it "
+                "held no session-retirement state and its completion port "
+                "carried no EOS reason byte, so the reason could not reach the "
+                "control plane by any path. The probe was confounded by the "
+                "same absence -- it drove a further pass at a design that had "
+                "never been told an EOS happened, and read the admission as a "
+                "refusal failure. Both halves are fixed together: the device "
+                "latches retirement off the completion's EOS reason and "
+                "refuses a later start before fetching anything, with trap "
+                "class A3_TRAP_STATE (9); and the injected engine result now "
+                "carries the completion record's EOS byte, which is a field of "
+                "the result and therefore inside this rung's injection "
+                "boundary, alongside the fault and trap class already carried "
+                "there"
+            ),
+            "what_would_still_measure_more": [
                 "OFFICIAL_EOS: issue SELECTION.TOKEN_APPEND to the real engine "
                 "with the injected ARGMAX token, which needs the top to select "
                 "injection per issue rather than by parameter",
-                "post-EOS refusal: a program that predicates its continuation "
-                "on EOS_MEMBER, or a device-side session the RTL owns",
+                "the MAX_NEW_TOKENS retirement: the same device path refuses "
+                "on reason 2 as well, and no workload in this campaign stops "
+                "on the token ceiling, so only the OFFICIAL_EOS arm is "
+                "exercised here",
             ],
         },
         "injection": {
@@ -1315,7 +1589,10 @@ def main() -> int:
         if all(
             record["trace"]["equals_golden"]
             and record["injection"]["control_path_is_rtl"]
-            and record["passes"]["executed"] == gate_required_passes()
+            and all(
+                record["passes"][name] == value
+                for name, value in gate_required_positions().items()
+            )
             and record["eos"]["official_eos_raised"]
             and record["eos"]["post_eos_refused"]
             for record in records
@@ -1356,6 +1633,12 @@ def main() -> int:
                 "spliced counter-example",
                 "no engine ran: zero launches, zero engine work and zero "
                 "weight reads, measured per pass",
+                "the design refuses a transaction offered after the official "
+                "EOS -- before fetching an instruction, as a trap of class "
+                "STATE_TRANSACTION, counted by the device itself -- and the "
+                "same design admits that transaction when the injected "
+                "completion's EOS byte is removed, which is the control that "
+                "makes the refusal attributable to session retirement",
                 "which host decompositions of the governed workload this "
                 "deployment admits at all, executed rather than reasoned "
                 "about, with the ones that do not reproduce the oracle's gold "
@@ -1367,7 +1650,13 @@ def main() -> int:
                 "different lowering of the same model could cut the workload "
                 "differently",
                 "any engine result: every one was supplied",
-                "an RTL-emitted token, or an RTL-raised OFFICIAL_EOS",
+                "an RTL-emitted token, or an RTL-raised OFFICIAL_EOS: the "
+                "EOS the device retires on is an injected engine result, so "
+                "this rung establishes the control plane's response to one "
+                "and not the engine's production of it",
+                "the MAX_NEW_TOKENS arm of session retirement: the design "
+                "refuses on reason 2 by the same path, and no workload here "
+                "stops on the token ceiling",
                 "dual-simulator agreement: Icarus 11 cannot parse this "
                 "vehicle's 64-bit weight window declarations",
                 "any rate or cycle-accurate timing claim",

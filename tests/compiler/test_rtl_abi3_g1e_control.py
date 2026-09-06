@@ -188,11 +188,52 @@ def test_the_golden_reproduces_the_oracle(artifact: dict) -> None:
 def test_a_field_the_run_did_not_measure_carries_its_reason(artifact: dict) -> None:
     for record in artifact["records"]:
         eos = record["eos"]
-        if not (eos["official_eos_raised"] and eos["post_eos_refused"]):
-            assert eos["why_not_measured_in_rtl"].strip()
-            assert eos["what_would_measure_them"]
-        if record["passes"]["executed"] != record["passes"]["gate_requires"]:
+        if not eos["official_eos_raised"]:
+            assert eos["why_official_eos_is_not_measured_in_rtl"].strip()
+            assert eos["what_would_still_measure_more"]
+        required = record["passes"]["gate_requires_positions"]
+        if any(
+            record["passes"][name] != value for name, value in required.items()
+        ):
             assert record["passes"]["why_not_the_gate_number"].strip()
+
+
+def test_the_post_eos_refusal_carries_its_design_level_control(
+    artifact: dict,
+) -> None:
+    """A refusal is only a post-EOS refusal if the design admits without one.
+
+    ``eos.post_eos_refused`` is a claim about ot_a3_device_top's session
+    retirement, and a vehicle can refuse a transaction for reasons that have
+    nothing to do with it.  The campaign therefore re-runs the SAME
+    elaborated binary on the SAME golden stream with one byte removed -- the
+    OFFICIAL_EOS on the TOKEN_APPEND's injected completion -- and requires
+    that run to admit the probe.  A true field without that control would be
+    unattributable, so the control is asserted here rather than trusted.
+    """
+    for record in artifact["records"]:
+        eos = record["eos"]
+        probe = record["eos"]["how_both_fields_are_decided"]["measured_inputs"]
+        control = eos["how_both_fields_are_decided"]["negative_control"]
+        if not eos["post_eos_refused"]:
+            continue
+        assert probe["session_retired_before_the_probe"] is True
+        assert probe["post_eos_probe_trapped"] is True
+        assert probe["post_eos_probe_admitted"] is False
+        assert probe["post_eos_probe_trap_class"] == 9
+        assert (
+            probe["post_eos_refusals_after"]
+            - probe["post_eos_refusals_before"]
+        ) == 1
+        assert control["ran"] is True
+        assert control["eos_bytes_removed"] >= 1
+        assert control["control_holds"] is True
+        # The control is the same design saying yes when it was not told.
+        assert control["probe_admitted"] is True
+        assert control["session_retired_before_probe"] is False
+        assert control["refusals"] == 0
+        # And it is the same run in every other respect.
+        assert control["trace_still_equals_golden"] is True
 
 
 def test_a_red_pass_count_carries_the_experiment_that_bounds_it(
@@ -210,7 +251,7 @@ def test_a_red_pass_count_carries_the_experiment_that_bounds_it(
     for record in artifact["records"]:
         passes = record["passes"]
         study = passes["decomposition_study"]
-        assert study["gate_requires_passes"] == passes["gate_requires"]
+        assert study["gate_requires_positions"] == passes["gate_requires_positions"]
         cases = study["cases"]
         assert len(cases) >= 2, "one submission sequence is not a comparison"
         correct = [case for case in cases if case["reproduces_gold"]]
@@ -227,9 +268,16 @@ def test_a_red_pass_count_carries_the_experiment_that_bounds_it(
         assert passes["executed"] <= measured[
             "maximum_device_transactions_over_correct_decompositions"
         ]
-        assert measured["gate_number_is_reachable"] == (
-            measured["maximum_device_transactions_over_correct_decompositions"]
-            == passes["gate_requires"]
+        required = passes["gate_requires_positions"]
+        assert measured["gate_accounting_is_reachable"] == (
+            passes["workload_token_positions"]
+            == required["workload_token_positions"]
+            and measured[
+                "maximum_forward_passed_positions_over_correct_decompositions"
+            ]
+            == required["model_forward_passes"]
+            and measured["positions_never_forward_passed"]
+            == required["positions_never_forward_passed"]
         )
         # Every sequence that failed must say what it produced instead: a
         # case recorded only as "wrong" is an assertion again.
@@ -307,7 +355,10 @@ def test_the_artifact_status_is_its_own_evidence(artifact: dict) -> None:
     passing = all(
         record["trace"]["equals_golden"]
         and record["injection"]["control_path_is_rtl"]
-        and record["passes"]["executed"] == record["passes"]["gate_requires"]
+        and all(
+            record["passes"][name] == value
+            for name, value in record["passes"]["gate_requires_positions"].items()
+        )
         and record["eos"]["official_eos_raised"]
         and record["eos"]["post_eos_refused"]
         for record in artifact["records"]

@@ -72,7 +72,7 @@ for _thread_variable in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THR
     os.environ.setdefault(_thread_variable, "8")
 
 from runtime.abi3.capability import Capability  # noqa: E402
-from runtime.abi3.constants import Major, NO_ID  # noqa: E402
+from runtime.abi3.constants import Major, NO_ID, Selection  # noqa: E402
 from runtime.abi3.deployment import Deployment  # noqa: E402
 from runtime.abi3.descriptors import (  # noqa: E402
     ExtendedDescriptorType,
@@ -245,6 +245,11 @@ class PassRecorder:
                     "status": int(result.status),
                     "complete": bool(result.status == 0),
                     "trap_class": int(result.trap_class),
+                    # The completion record's EOS reason byte (wire format
+                    # section 7, byte 108).  The device model publishes it
+                    # from SELECTION.TOKEN_APPEND, which is the only operator
+                    # the ABI gives one (operator conventions section 8).
+                    "eos_reason": int(result.eos_reason),
                     "message": str(result.message or ""),
                     "first_fault": int(result.first_fault_instruction),
                     "fetched": int(result.fetched),
@@ -264,6 +269,40 @@ class PassRecorder:
 
     def __exit__(self, *exc: object) -> None:
         self.device.run_transaction = self._original  # type: ignore[method-assign]
+
+
+def _eos_reason_by_issue(record: dict[str, Any]) -> dict[int, int]:
+    """Which issue of a pass carries the completion's EOS reason, and which.
+
+    ABI 3.0 operator conventions section 8: ``TOKEN_APPEND`` "validates
+    against the bound GENERATION_POLICY, tests the EOS set" and returns the
+    reason; ``ARGMAX`` does not, and no other operator does.  The device
+    model agrees -- ``runtime/sim/device.py`` sets the transaction's
+    ``eos_reason`` from the selection result of a TOKEN_APPEND -- so the
+    reason belongs to the pass's LAST ``SELECTION.TOKEN_APPEND`` issue and to
+    no other.  Returning it keyed by issue index, rather than per pass, is
+    what lets the injected result stream carry it at exactly the completion
+    the RTL should latch its session retirement from: a reason attached to
+    any other completion would retire the session at the wrong instant, and
+    one attached to the pass as a whole could not be injected at the engine
+    boundary at all.
+    """
+    reason = int(record.get("eos_reason", 0))
+    if reason == 0:
+        return {}
+    appends = [
+        index
+        for index, issue in enumerate(record["issues"])
+        if int(issue["family"]) == int(Major.SELECTION)
+        and int(issue["sub"]) == int(Selection.TOKEN_APPEND)
+    ]
+    if not appends:
+        raise SystemExit(
+            f"the model reported EOS reason {reason} for a pass that issued no "
+            "SELECTION.TOKEN_APPEND; the reason has no completion to ride on "
+            "and the injected result stream cannot carry it"
+        )
+    return {appends[-1]: reason}
 
 
 def _output_words(device: Device, entry: dict[str, Any], symbols: dict[int, int]) -> int:
@@ -375,9 +414,20 @@ def run_golden(
         "refused_by": "runtime.sim.device.Device.run_transaction (Session.finished)",
         "refused_in_rtl": False,
         "why": (
-            "the refusal is a host session-state refusal, taken before any "
-            "instruction is fetched; it is not an act of the RTL control "
-            "plane and this vehicle cannot measure it as one"
+            "the reference half of the measurement.  The refusal is taken "
+            "inside the DEVICE model, before any instruction is fetched, and "
+            "returns trap class STATE_TRANSACTION -- which is what ABI 3.0 "
+            "requires of a device: wire format section 12.5 says the "
+            "TOKEN_APPEND that commits the final allowed non-EOS token "
+            "'returns completion EOS reason MAX_NEW_TOKENS=2, and the device "
+            "refuses every later transaction for that session', and operator "
+            "conventions section 8 says of that reason and of an official EOS "
+            "that 'Both ... retire the device session; host-only loop "
+            "termination does not satisfy this operator contract'.  "
+            "refused_in_rtl is false because this field is the MODEL's "
+            "refusal; the RTL control plane's own is measured separately by "
+            "rtl_probe below, against ot_a3_device_top's session-retirement "
+            "state"
         ),
     }
 
@@ -470,7 +520,8 @@ def emit(golden: dict[str, Any], out: Path) -> dict[str, Any]:
         view_base = total_views
         pass_views = 0
         pass_output_words = 0
-        for issue in record["issues"]:
+        eos_by_issue = _eos_reason_by_issue(record)
+        for issue_index, issue in enumerate(record["issues"]):
             fields = [
                 issue["family"],
                 issue["sub"],
@@ -497,7 +548,8 @@ def emit(golden: dict[str, Any], out: Path) -> dict[str, Any]:
                 words = _observable_words(device, issue, observable_index)
             result_lines.append(
                 f"RESULT {issue['family']} {issue['sub']} "
-                f"{issue['descriptor_id']} {issue['pc']} 0 0 {len(words)}"
+                f"{issue['descriptor_id']} {issue['pc']} 0 0 "
+                f"{eos_by_issue.get(issue_index, 0)} {len(words)}"
             )
             for address, data in words:
                 result_lines.append(f"WORD {address} {data}")
@@ -554,6 +606,7 @@ def emit(golden: dict[str, Any], out: Path) -> dict[str, Any]:
                 "symbols": record["symbols"],
                 "complete": record["complete"],
                 "trap_class": record["trap_class"],
+                "eos_reason": record["eos_reason"],
                 "fetched": record["fetched"],
                 "retired": record["retired"],
                 "predicated_off": record["predicated_off"],
@@ -578,12 +631,17 @@ def emit(golden: dict[str, Any], out: Path) -> dict[str, Any]:
     # admitted it or refused it.
     last = passes[-1]
     probe_lines = [
-        "# the post-EOS probe's engine results: the last decode pass's, again"
+        "# the post-EOS probe's engine results: the last decode pass's, again",
+        "# with EOS reason 0 on every one of them.  The session was retired by",
+        "# the PREVIOUS pass's TOKEN_APPEND; a probe that re-injected that",
+        "# reason would be re-arming the state it is testing, and a design",
+        "# that refuses the probe must refuse it on the retirement it already",
+        "# holds.",
     ]
     for issue in last["issues"]:
         probe_lines.append(
             f"RESULT {issue['family']} {issue['sub']} "
-            f"{issue['descriptor_id']} {issue['pc']} 0 0 0"
+            f"{issue['descriptor_id']} {issue['pc']} 0 0 0 0"
         )
     probe_case = list(case_words[-CASE_STRIDE:])
     probe_case[25] = len(passes)          # pass index
@@ -735,6 +793,14 @@ def emit(golden: dict[str, Any], out: Path) -> dict[str, Any]:
                     "the model refused this transaction, so it produced no "
                     "golden for it; the probe asks only whether the RTL "
                     "control plane refuses it too"
+                ),
+                "eos_reason_on_the_probe_results": 0,
+                "why_zero": (
+                    "the session is retired by the PREVIOUS pass's "
+                    "TOKEN_APPEND completion, whose injected result carries "
+                    "the OFFICIAL_EOS byte.  The probe's own results carry "
+                    "reason 0 so that it tests the retirement the design "
+                    "already holds rather than re-arming it"
                 ),
             },
         },

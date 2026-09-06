@@ -57,6 +57,16 @@ module ot_a3_engine_issue_bridge (
     output wire          issue_ready,
     output wire          issue_fault,
     output wire [15:0]   issue_trap_class,
+    // The completion record's EOS reason byte for THIS completion (wire
+    // format section 7, byte 108).  Valid with issue_ready and non-zero only
+    // on a clean SELECTION.TOKEN_APPEND, which is the only operator the ABI
+    // gives one (operator conventions section 8).  ``selected_eos_reason``
+    // below is the sticky register a checker reads at the end of a run; this
+    // is the per-completion value the control plane latches its session
+    // retirement from, and the two are not interchangeable -- the sticky one
+    // updates a cycle late and would retire the session on the wrong
+    // completion.
+    output wire [7:0]    issue_eos_reason,
     input  wire [7:0]    issue_family,
     input  wire [7:0]    issue_sub,
     input  wire [31:0]   issue_descriptor_id,
@@ -429,6 +439,9 @@ module ot_a3_engine_issue_bridge (
     assign issue_ready = (state == S_RESPONSE);
     assign issue_fault = response_fault;
     assign issue_trap_class = response_trap;
+    assign issue_eos_reason =
+        ((state == S_RESPONSE) && !response_fault && selection_token_append_q)
+            ? append_eos_reason : 8'd0;
 
     // Descriptor fields shared by the three view checks.
     wire [7:0] desc_view_dtype = desc_data[519:512];

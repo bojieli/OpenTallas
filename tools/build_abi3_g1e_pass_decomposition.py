@@ -25,9 +25,14 @@ Four things are deliberate.
 ABI request, and the measurement stands or falls on the reference model, which
 G1a-G1d bind to the RTL elsewhere.
 
-**The gate's own number is read from the gate.**  ``gate_requires`` below comes
-out of ``configs/gates/redesign_gates.json``; nothing here hand-types it, and
-nothing here edits it.
+**The gate's own numbers are read from the gate.**  ``gate_requires_positions``
+below comes out of ``configs/gates/redesign_gates.json``; nothing here
+hand-types it, and nothing here edits it.  It used to read the single field
+``passes.executed``, which the gate withdrew when its own defect was
+corrected -- 19 is the workload's TOKEN-POSITION count, not a pass count --
+and this tool went on reading the withdrawn field, so it refused to run at
+all and the rung it feeds could not be regenerated.  It now reads the three
+position fields the gate requires, and refuses if any of them is absent.
 
 **Failure is data.**  A decomposition that traps, that ends the session early
 or that emits a token the workload never generated is recorded with what it
@@ -91,20 +96,45 @@ SOURCE_FILES = (
 )
 
 
-def gate_required_passes() -> int:
-    """The pass count G1e's own specification names.  Read, never typed."""
+# What G1e's specification requires of the pass accounting, by field name.
+# It required ``passes.executed == 19`` until the spec was corrected: 19 is
+# the workload's TOKEN-POSITION count, not a pass count, and the requirement
+# is now the position accounting below -- strictly more than a raw pass count
+# ever pinned.  This tool reads whichever of these the gate declares and
+# refuses to invent any of them; a gate that declares none of them is a gate
+# this tool cannot report against, which is a failure and not a default.
+GATE_POSITION_FIELDS = (
+    "passes.workload_token_positions",
+    "passes.model_forward_passes",
+    "passes.positions_never_forward_passed",
+)
+
+
+def gate_required_positions() -> dict[str, int]:
+    """The position accounting G1e's own specification names.  Read, never typed."""
     document = json.loads((ROOT / GATES_PATH).read_text(encoding="utf-8"))
     gates = document if isinstance(document, list) else document.get("gates", [])
+    required: dict[str, int] = {}
     for gate in gates:
         if gate.get("id") != "G1e":
             continue
         for field in gate["evaluator"]["require_fields"]:
-            if field.get("field") == "passes.executed":
-                return int(field["equals"])
-    raise SystemExit(
-        f"{GATES_PATH} declares no G1e passes.executed field; this tool "
-        "reports the gate's own number and will not invent one"
-    )
+            name = field.get("field")
+            if name in GATE_POSITION_FIELDS:
+                required[name.split(".", 1)[1]] = int(field["equals"])
+    missing = [
+        name.split(".", 1)[1]
+        for name in GATE_POSITION_FIELDS
+        if name.split(".", 1)[1] not in required
+    ]
+    if missing:
+        raise SystemExit(
+            f"{GATES_PATH} declares no G1e "
+            + ", ".join(f"passes.{name}" for name in missing)
+            + " field; this tool reports the gate's own numbers and will not "
+            "invent one"
+        )
+    return required
 
 
 class Tally:
@@ -443,7 +473,7 @@ def main() -> int:
     wall = time.perf_counter() - started
 
     correct = [c for c in cases if c["reproduces_gold"]]
-    required = gate_required_passes()
+    required = gate_required_positions()
     maximum = max((c["device_transactions"] for c in correct), default=0)
     max_forward = max((c["forward_passed_positions"] for c in correct), default=0)
 
@@ -460,7 +490,7 @@ def main() -> int:
         },
         "prompt_token_count": len(prompt),
         "workload_token_positions": positions,
-        "gate_requires_passes": required,
+        "gate_requires_positions": required,
         "gate_requires_read_from": GATES_PATH,
         "measured": {
             "correct_decomposition_count": len(correct),
@@ -470,7 +500,15 @@ def main() -> int:
                 max_forward
             ),
             "positions_never_forward_passed": positions - max_forward,
-            "gate_number_is_reachable": maximum == required,
+            # The gate's accounting, checked against the decompositions that
+            # actually reproduce the oracle's gold.  A decomposition that
+            # emits the wrong tokens does not get to satisfy it.
+            "gate_accounting_is_reachable": (
+                positions == required["workload_token_positions"]
+                and max_forward == required["model_forward_passes"]
+                and positions - max_forward
+                == required["positions_never_forward_passed"]
+            ),
         },
         "finding": (
             "every pass of this deployment's program ends in SELECTION.ARGMAX "
@@ -505,8 +543,9 @@ def main() -> int:
         "PASS: ABI3 G1e pass decomposition "
         f"store={args.store} cases={len(cases)} correct={len(correct)} "
         f"max_transactions={maximum} max_forward_positions={max_forward} "
-        f"positions={positions} gate_requires={required} "
-        f"reachable={int(maximum == required)}"
+        f"positions={positions} "
+        f"gate_requires={json.dumps(required, sort_keys=True)} "
+        f"reachable={int(payload['measured']['gate_accounting_is_reachable'])}"
     )
     return 0
 

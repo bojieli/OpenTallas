@@ -192,6 +192,15 @@ module ot_a3_shipped_prefix_top #(
     output wire [31:0] selected_token,
     output wire [31:0] selected_tie_multiplicity,
     output wire [7:0]  selected_eos_reason,
+    // -- the device's session retirement, straight off ot_a3_device_top ---
+    // ABI 3.0 wire format section 12.5 and operator conventions section 8:
+    // an official EOS or the MAX_NEW_TOKENS stop retires the DEVICE session
+    // and the device refuses every later transaction for it.  These three
+    // are observation of the control plane's own state and its own count of
+    // the transactions it refused; nothing here drives the sequencer.
+    output wire        session_retired,
+    output wire [7:0]  session_eos_reason,
+    output wire [31:0] count_transactions_refused_post_eos,
     output wire [31:0] multicast_launch_count,
     output wire [31:0] multicast_fault_count,
     output wire [31:0] capability_fault_count,
@@ -285,6 +294,15 @@ module ot_a3_shipped_prefix_top #(
     input  wire        inj_result_valid,
     input  wire        inj_result_fault,
     input  wire [15:0] inj_result_trap_class,
+    // The injected completion's EOS reason byte.  The completion record
+    // carries one (wire format section 7, byte 108) and SELECTION.
+    // TOKEN_APPEND is the operator that sets it, so a completion supplied at
+    // the engine RESULT boundary has to carry it or the boundary is
+    // under-supplied: the control plane would be asked to refuse a post-EOS
+    // transaction having never been told an EOS happened.  It is a result,
+    // not a control input -- it reaches the same completion port every other
+    // injected field reaches and nothing else.
+    input  wire [7:0]  inj_result_eos_reason,
     input  wire        inj_write_en,
     input  wire [31:0] inj_write_addr,
     input  wire [31:0] inj_write_data,
@@ -509,12 +527,14 @@ module ot_a3_shipped_prefix_top #(
     wire [4:0] complete_slot;
     wire complete_fault;
     wire [15:0] complete_trap_class;
+    wire [7:0] complete_eos_reason;
 
     // -- the engine-side run-to-completion port, from the adapter ---------
     wire issue_valid;
     wire issue_ready;
     wire issue_fault;
     wire [15:0] issue_trap_class;
+    wire [7:0] issue_eos_reason;
     wire [7:0] issue_family;
     wire [7:0] issue_sub;
     wire [31:0] issue_descriptor_id;
@@ -551,10 +571,12 @@ module ot_a3_shipped_prefix_top #(
         .complete_slot(complete_slot),
         .complete_fault(complete_fault),
         .complete_trap_class(complete_trap_class),
+        .complete_eos_reason(complete_eos_reason),
         .eng_issue_valid(issue_valid),
         .eng_issue_ready(issue_ready),
         .eng_issue_fault(issue_fault),
         .eng_issue_trap_class(issue_trap_class),
+        .eng_issue_eos_reason(issue_eos_reason),
         .eng_issue_family(issue_family),
         .eng_issue_sub(issue_sub),
         .eng_issue_descriptor_id(issue_descriptor_id),
@@ -572,6 +594,7 @@ module ot_a3_shipped_prefix_top #(
     wire bridge_issue_ready;
     wire bridge_issue_fault;
     wire [15:0] bridge_issue_trap_class;
+    wire [7:0] bridge_issue_eos_reason;
     wire exact_multicast_issue = (ENABLE_EXACT_MULTICAST != 0) && issue_valid &&
         (issue_family == 8'h90) && (issue_sub == 8'd3);
     reg multicast_issue_active;
@@ -596,6 +619,8 @@ module ot_a3_shipped_prefix_top #(
         ? (inj_result_valid && inj_result_fault) : bridge_issue_fault;
     wire [15:0] engine_trap_class = (ENABLE_RESULT_INJECTION != 0)
         ? inj_result_trap_class : bridge_issue_trap_class;
+    wire [7:0] engine_eos_reason = (ENABLE_RESULT_INJECTION != 0)
+        ? inj_result_eos_reason : bridge_issue_eos_reason;
     assign issue_ready = exact_multicast_issue
         ? (multicast_issue_active && (multicast_done || multicast_failed))
         : engine_ready;
@@ -603,6 +628,8 @@ module ot_a3_shipped_prefix_top #(
         ? multicast_failed : engine_fault;
     assign issue_trap_class = exact_multicast_issue
         ? multicast_trap_class : engine_trap_class;
+    // The multicast witness appends no token, so it publishes no EOS reason.
+    assign issue_eos_reason = exact_multicast_issue ? 8'd0 : engine_eos_reason;
 
     assign response_valid = issue_valid && issue_ready;
     assign response_fault = issue_fault;
@@ -701,6 +728,11 @@ module ot_a3_shipped_prefix_top #(
         .complete_slot(complete_slot),
         .complete_fault(complete_fault),
         .complete_trap_class(complete_trap_class),
+        .complete_eos_reason(complete_eos_reason),
+        .session_retired(session_retired),
+        .session_eos_reason(session_eos_reason),
+        .count_transactions_refused_post_eos(
+            count_transactions_refused_post_eos),
         .view_valid(seq_view_valid),
         .view_descriptor_id(seq_view_descriptor_id),
         .view_slot(seq_view_slot),
@@ -1307,6 +1339,7 @@ module ot_a3_shipped_prefix_top #(
         .issue_ready(bridge_issue_ready),
         .issue_fault(bridge_issue_fault),
         .issue_trap_class(bridge_issue_trap_class),
+        .issue_eos_reason(bridge_issue_eos_reason),
         .issue_family(issue_family),
         .issue_sub(issue_sub),
         .issue_descriptor_id(issue_descriptor_id),
