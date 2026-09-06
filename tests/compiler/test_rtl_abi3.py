@@ -1181,14 +1181,21 @@ def test_deployment_vector_set_names_the_programs_this_program_ships() -> None:
         assert shipped[key]["deployment_sha256"] == identity.deployment_sha256
         assert shipped[key]["deployment_identity_evidence"] == identity.record()
 
+    # The AM-E9 v2 promotion (e6da961) put one SCHEDULE-emission rule on both
+    # backends: the ROM lowering stopped over-emitting SCHEDULE descriptors
+    # (Qwen 26 -> 14, wafer 378 -> 107) and the HBM lowering started emitting
+    # the ones it had been missing (Qwen +6, DeepSeek +18).  Every count below
+    # is the shipped vector set's own, and each equals the independent
+    # certificate for the same deployment -- results/abi3/rom_schedule_checks.json
+    # and results/abi3/hbm_{qwen,deepseek}_deployment_certificate.json.
     assert shipped["qwen3-8b-rom-single-chip"]["instruction_count"] == 74
-    assert shipped["qwen3-8b-rom-single-chip"]["descriptor_count"] == 236
+    assert shipped["qwen3-8b-rom-single-chip"]["descriptor_count"] == 215
     assert shipped["qwen3-8b-hbm-single-chip"]["instruction_count"] == 74
-    assert shipped["qwen3-8b-hbm-single-chip"]["descriptor_count"] == 215
-    assert shipped["deepseek-v4-flash-rom-wafer"]["instruction_count"] == 1312
-    assert shipped["deepseek-v4-flash-rom-wafer"]["descriptor_count"] == 3841
-    assert shipped["deepseek-v4-flash-hbm-cluster"]["instruction_count"] == 1267
-    assert shipped["deepseek-v4-flash-hbm-cluster"]["descriptor_count"] == 3272
+    assert shipped["qwen3-8b-hbm-single-chip"]["descriptor_count"] == 221
+    assert shipped["deepseek-v4-flash-rom-wafer"]["instruction_count"] == 1323
+    assert shipped["deepseek-v4-flash-rom-wafer"]["descriptor_count"] == 3134
+    assert shipped["deepseek-v4-flash-hbm-cluster"]["instruction_count"] == 1286
+    assert shipped["deepseek-v4-flash-hbm-cluster"]["descriptor_count"] == 3305
     for entry in shipped.values():
         assert entry["admitted"], (entry["key"], entry["verifier_errors"])
 
