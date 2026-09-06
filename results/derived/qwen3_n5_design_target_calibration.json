@@ -6403,13 +6403,12 @@
   "gate": "G4",
   "generator": "tools/derive_cycle_machine.py --calibrate",
   "git": {
-    "commit": "b0736b69ff4e53a8891c0833d332c39779812bc6",
+    "commit": "46ea5d163e993de245a9178f0d44068e54c3be32",
     "dirty": true,
     "dirty_inputs": [],
     "dirty_paths": [
       "ompiler/backends/rom/common/program.py",
       "results/abi3/rom_schedule_checks.json",
-      "results/derived/qwen3_n5_design_target_calibration.json",
       "results/physical_abi3/asap7/a3_microsequencer/pnr_artifacts/",
       "testdata/compiler/abi3_deployment/a3_descriptor.hex",
       "testdata/compiler/abi3_deployment/a3_header.hex",
@@ -6424,7 +6423,6 @@
       "testdata/rtl/a3_qwen_kv_scatter/view1.hex",
       "testdata/rtl/a3_qwen_kv_scatter/view3.hex",
       "tests/compiler/test_abi3_g1b_layer_closure.py",
-      "tests/compiler/test_rtl_abi3_g1e_control.py",
       "tools/build_abi3_g1b_layer_closure.py",
       "tools/build_abi3_shipped_prefix_vectors.py"
     ]
@@ -6449,7 +6447,7 @@
       "sha256": "7b1558f821f1f42bfde9b57a036ecec431718f3e68e072e46b37a24cbaacfa58"
     },
     "docs/CHIP_ARCHITECTURE_DESIGN.md": {
-      "sha256": "0527bf6caa3ecf83d991b838f0ce40dfc098a2cc11916b44aeeb2f26823feaad"
+      "sha256": "b35b81350d84d4abd60791ced801337d935a090fb76bba7aaa7358aeaf87aeed"
     },
     "results/derived/qwen3_n5_design_target_machine_pair.json": {
       "sha256": "10d1fe4cc4ecdf3b80b1306bbd3fc82af963ade96ef37d7ebfcd4c0d6c31841e"
