@@ -190,8 +190,12 @@ def evaluate(gate: dict[str, Any], board: list[dict[str, Any]] | None = None) ->
                             f"{cert}: {req['field']} is {got!r}, want {req.get('equals')!r}"
                         )
         if failing:
+            # The certificate contributes one requirement per certificate_requires
+            # entry, not one in total, so the denominator has to count them.  It
+            # read "9 of 7" while three certificate fields were failing.
+            total = len(required) + len(ev.get("certificate_requires", []) if cert else [])
             return _fail(
-                f"{len(failing)} of {len(required) + (1 if cert else 0)} requirement(s) unmet: "
+                f"{len(failing)} of {total} requirement(s) unmet: "
                 + "; ".join(failing[:3])
                 + ("; ..." if len(failing) > 3 else "")
             )
