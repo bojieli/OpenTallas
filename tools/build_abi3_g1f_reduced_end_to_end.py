@@ -724,9 +724,10 @@ def geometry_verdict(probe: dict[str, Any], reduced: dict[str, Any]) -> dict[str
             "refused": refused_cases,
             "why_it_matters": (
                 "a checker that only ever prints one verdict measures nothing; "
-                "this one admits four cases and refuses two, including one "
-                "reduced case it admits and one it refuses, so an admission "
-                "and a refusal are distinguishable outcomes of the same run"
+                "the counts above are this run's own, and they include a "
+                "reduced case that is admitted and a reduced case that is "
+                "refused, so an admission and a refusal are distinguishable "
+                "outcomes of the same run rather than the only outcome it has"
             ),
         },
         "positive_controls_admitted": controls,
