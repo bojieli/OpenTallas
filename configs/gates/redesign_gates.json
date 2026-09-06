@@ -195,19 +195,23 @@
           {
             "field": "head.mismatched_logits",
             "equals": 0
+          },
+          {
+            "field": "eos.official_eos_raised",
+            "equals": true
           }
         ],
         "oracle": "results/abi3/qwen3_reference_oracle_eos.json",
         "oracle_token_field": "results.TA-QW-EOS-1.generated_token_ids",
         "oracle_token_count": 1,
-        "note": "Rung of the RTL verification ladder (docs/CHIP_ARCHITECTURE_DESIGN.md section 11.5). Every rung carries the same provenance spine: a named simulator, a positive simulated_cycles, an evidence_class naming RTL simulation, and a clean worktree, for EACH of rom and hbm. 622,329,856 MACs; 4.33 h whole, or 1.08 h wall in four concurrent row shards, which is how the chip itself computes it. This rung is where an RTL-emitted token id first exists. The oracle's token ids are nested at results.<workload>.generated_token_ids, not at the top level; the field path is spelled out here because a gate that fails for the wrong reason is a gate nobody trusts."
+        "note": "Rung of the RTL verification ladder (docs/CHIP_ARCHITECTURE_DESIGN.md section 11.5). Every rung carries the same provenance spine: a named simulator, a positive simulated_cycles, an evidence_class naming RTL simulation, and a clean worktree, for EACH of rom and hbm. 622,329,856 MACs; 4.33 h whole, or 1.08 h wall in four concurrent row shards, which is how the chip itself computes it. This rung is where an RTL-emitted token id first exists. The oracle's token ids are nested at results.<workload>.generated_token_ids, not at the top level; the field path is spelled out here because a gate that fails for the wrong reason is a gate nobody trusts. GAINED 2026-09-06: `eos.official_eos_raised` moved here from G1e. It requires the integrated top's selected_eos_reason to equal OFFICIAL_EOS **and** the run to have launched at least one real engine -- the second half is not decoration, it is what stops a wired output standing in for a computation. G1e cannot make that measurement because its whole design excludes engines; this rung runs a real argmax, so it can."
       }
     },
     {
       "id": "G1e",
       "kind": "verification",
-      "statement": "All 19 passes of the governed workload execute through the real RTL control plane, with engine results injected only at the engine boundary, and the RTL issue trace equals the golden model's element for element; OFFICIAL_EOS is raised and the post-EOS instruction refused.",
-      "fails_when": "The traces diverge at any index, the pass count differs, EOS is not raised, the post-EOS instruction is admitted, or the control path was not the RTL's.",
+      "statement": "All of the governed workload's token positions are driven through the real RTL control plane, with engine results injected only at the engine boundary, and the RTL issue trace equals the golden model's element for element; the control plane issues the EOS instruction pair in every pass and refuses the post-EOS instruction.",
+      "fails_when": "The traces diverge at any index, the position accounting differs, the EOS instruction pair is not issued in every pass, the post-EOS instruction is admitted, or the control path was not the RTL's.",
       "evaluator": {
         "type": "rtl_records",
         "artifact": "results/rtl/abi3_g1e_control_end_to_end.json",
@@ -226,11 +230,19 @@
             "equals": null
           },
           {
-            "field": "passes.executed",
+            "field": "passes.workload_token_positions",
             "equals": 19
           },
           {
-            "field": "eos.official_eos_raised",
+            "field": "passes.model_forward_passes",
+            "equals": 18
+          },
+          {
+            "field": "passes.positions_never_forward_passed",
+            "equals": 1
+          },
+          {
+            "field": "eos.control_plane_reached_the_eos_instruction.issued_in_every_pass",
             "equals": true
           },
           {
@@ -252,7 +264,7 @@
             "at_least": 1
           }
         ],
-        "note": "Rung of the RTL verification ladder (docs/CHIP_ARCHITECTURE_DESIGN.md section 11.5). Every rung carries the same provenance spine: a named simulator, a positive simulated_cycles, an evidence_class naming RTL simulation, and a clean worktree, for EACH of rom and hbm. ~3 h per store: the control plane is 0.3% of integrated cycles, so the whole workload's CONTROL is affordable even though its arithmetic is not. This is standard hybrid co-simulation -- the real sequencer fetches, decodes, resolves views, checks predicates, drives the loop and issues, while the datapath results come from the model whose bit-exactness G1a-G1d establish. It is the factor usually hand-waved in a composition argument, and it is checked here element for element."
+        "note": "Rung of the RTL verification ladder (docs/CHIP_ARCHITECTURE_DESIGN.md section 11.5). Every rung carries the same provenance spine: a named simulator, a positive simulated_cycles, an evidence_class naming RTL simulation, and a clean worktree, for EACH of rom and hbm. ~3 h per store: the control plane is 0.3% of integrated cycles, so the whole workload's CONTROL is affordable even though its arithmetic is not. This is standard hybrid co-simulation -- the real sequencer fetches, decodes, resolves views, checks predicates, drives the loop and issues, while the datapath results come from the model whose bit-exactness G1a-G1d establish. It is the factor usually hand-waved in a composition argument, and it is checked here element for element. CORRECTED 2026-09-06, and the defect was mine. This rung required `passes.executed == 19`, which no correct execution of TA-QW-EOS-1 can satisfy: 19 is the workload's TOKEN-POSITION count (16 prompt + 3 generated), not a pass count, and the two are not the same thing because every pass of this lowering ends in SELECTION.ARGMAX + SELECTION.TOKEN_APPEND -- a pass that reads prompt positions without appending a token does not exist in this program. Five host decompositions were executed on the reference model on each store; only the workload's own submission sequence reproduces the oracle's gold, and it is 3 device transactions covering 18 forward-passed positions, the 19th being the official EOS which is never fed back. Chunking the prefill emits the wrong tokens (four at SPAN_TOKENS 8, six at 4, sixteen at 1). The requirement is now the POSITION accounting the artifact measures -- 19 workload positions, 18 forward-passed, exactly 1 never forward-passed -- which pins strictly more than a raw count ever did. The EOS half moved for a different reason. `eos.official_eos_raised` asks whether the ENGINE raised OFFICIAL_EOS, and this rung's whole design excludes engines: under result injection the top ties the bridge's issue_valid low, so the field could only ever have been a model value passed through -- a field settable by wiring an output with nothing having run, which is the exact defect this ladder exists to catch. The tool is right to keep it false. This rung now requires what it CAN measure -- that the control plane fetched, decoded, resolved the operand views of and ISSUED the EOS instruction pair in every pass -- and the engine measurement moves to G1d, where a real argmax runs."
       }
     },
     {
