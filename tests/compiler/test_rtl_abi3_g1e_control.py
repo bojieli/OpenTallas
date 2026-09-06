@@ -24,6 +24,8 @@ from pathlib import Path
 
 import pytest
 
+from runtime.abi3.constants import Major, Selection
+
 ROOT = Path(__file__).resolve().parents[2]
 ARTIFACT = ROOT / "results/rtl/abi3_g1e_control_end_to_end.json"
 TOP = ROOT / "rtl/test/a3_shipped_prefix_top.sv"
@@ -190,7 +192,114 @@ def test_a_field_the_run_did_not_measure_carries_its_reason(artifact: dict) -> N
             assert eos["why_not_measured_in_rtl"].strip()
             assert eos["what_would_measure_them"]
         if record["passes"]["executed"] != record["passes"]["gate_requires"]:
-            assert record["passes"]["why_not_19"].strip()
+            assert record["passes"]["why_not_the_gate_number"].strip()
+
+
+def test_a_red_pass_count_carries_the_experiment_that_bounds_it(
+    artifact: dict,
+) -> None:
+    """The reason a red field is red must be measured, not written down.
+
+    A rung is allowed to fail.  What it is not allowed to do is explain the
+    failure in prose nobody can check, which is what this field used to be.
+    The study has to have executed real submission sequences, the gate's own
+    number has to have come out of the gate, and the number the record
+    reports has to be the largest one any sequence that reproduces the
+    oracle's gold achieved -- not a smaller one that happens to be true.
+    """
+    for record in artifact["records"]:
+        passes = record["passes"]
+        study = passes["decomposition_study"]
+        assert study["gate_requires_passes"] == passes["gate_requires"]
+        cases = study["cases"]
+        assert len(cases) >= 2, "one submission sequence is not a comparison"
+        correct = [case for case in cases if case["reproduces_gold"]]
+        wrong = [case for case in cases if not case["reproduces_gold"]]
+        assert correct, "no sequence reproduced the gold; the study proved nothing"
+        assert wrong, (
+            "every sequence reproduced the gold, so the study cannot "
+            "distinguish a design limit from an untried alternative"
+        )
+        measured = study["measured"]
+        assert measured["maximum_device_transactions_over_correct_decompositions"] == max(
+            case["device_transactions"] for case in correct
+        )
+        assert passes["executed"] <= measured[
+            "maximum_device_transactions_over_correct_decompositions"
+        ]
+        assert measured["gate_number_is_reachable"] == (
+            measured["maximum_device_transactions_over_correct_decompositions"]
+            == passes["gate_requires"]
+        )
+        # Every sequence that failed must say what it produced instead: a
+        # case recorded only as "wrong" is an assertion again.
+        for case in wrong:
+            assert case["generated_token_ids"] != study["oracle"][
+                "generated_token_ids"
+            ]
+            assert case["transactions"], "a failed sequence with no record of it"
+
+
+def test_both_eos_fields_follow_the_run_rather_than_a_constant(
+    artifact: dict,
+) -> None:
+    """Neither EOS field may be a literal, and the tool must prove it.
+
+    G1a's own tool decided a gate field by grepping source text, so wiring a
+    port would have turned it green with nothing having run.  These two
+    fields are conjunctions of run observations, and the campaign carries a
+    self test that moves each of them in both directions; if that self test
+    were removed or nailed down, this fails.
+    """
+    for record in artifact["records"]:
+        eos = record["eos"]
+        decided = eos["how_both_fields_are_decided"]
+        inputs = decided["measured_inputs"]
+        assert eos["official_eos_raised"] == (
+            inputs["selected_eos_reason"] == inputs["official_eos_encoding"]
+            and inputs["real_engine_launches"] > 0
+        )
+        assert eos["post_eos_refused"] == (
+            bool(inputs["post_eos_probe_ran"])
+            and (
+                bool(inputs["post_eos_probe_trapped"])
+                or not bool(inputs["post_eos_probe_admitted"])
+            )
+        )
+        self_test = decided["self_test"]
+        assert self_test["ran"] and self_test["passed"]
+        assert self_test["official_eos_raised"]["true_when_a_real_engine_raised_it"]
+        assert not self_test["official_eos_raised"]["false_because_no_engine_ran"]
+        assert self_test["post_eos_refused"]["true_when_the_design_trapped_it"]
+        assert not self_test["post_eos_refused"][
+            "false_when_the_design_completed_the_pass"
+        ]
+
+
+def test_the_control_plane_reached_the_instruction_that_ends_a_generation(
+    artifact: dict,
+) -> None:
+    """A false official_eos_raised must say which half of it was false.
+
+    "The engine did not run" and "the instruction was never issued" are very
+    different failures, and the census distinguishes them.  The count comes
+    off the RTL's own issue trace, so it cannot be satisfied by the program
+    merely containing the instruction.
+    """
+    for record in artifact["records"]:
+        reach = record["eos"]["control_plane_reached_the_eos_instruction"]
+        census = {
+            (row["family"], row["sub"]): row["instances"]
+            for row in record["issue_census"]["rows"]
+        }
+        family = int(Major.SELECTION)
+        assert reach["selection_token_append_issues"] == census.get(
+            (family, int(Selection.TOKEN_APPEND)), 0
+        )
+        assert reach["selection_argmax_issues"] == census.get(
+            (family, int(Selection.ARGMAX)), 0
+        )
+        assert reach["passes"] == record["passes"]["executed"]
 
 
 def test_the_artifact_status_is_its_own_evidence(artifact: dict) -> None:
@@ -198,7 +307,7 @@ def test_the_artifact_status_is_its_own_evidence(artifact: dict) -> None:
     passing = all(
         record["trace"]["equals_golden"]
         and record["injection"]["control_path_is_rtl"]
-        and record["passes"]["executed"] == 19
+        and record["passes"]["executed"] == record["passes"]["gate_requires"]
         and record["eos"]["official_eos_raised"]
         and record["eos"]["post_eos_refused"]
         for record in artifact["records"]
