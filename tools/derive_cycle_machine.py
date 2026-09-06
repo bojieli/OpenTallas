@@ -2179,6 +2179,122 @@ def capability(d: Derivation, role: str, base: Mapping[str, Any],
     sram["banks"] = int(d.shared["sram.banks.default"].value)
     sram["ports"] = int(d.shared["sram.ports_per_bank.default"].value)
     memory["sram"] = sram
+    # -- the KV store, when the design point buys it in SRAM ---------------
+    # The loop above scales every base capacity by the device count, which is
+    # the right rule for a SCRATCHPAD -- N devices carry N scratchpads -- and
+    # the WRONG one for a KV arena.  A pipelined design point holds ONE KV
+    # cache for the session, sized by ``kv_capacity_bytes``, and the base
+    # record was never sized for it: ``rom_qwen3.json`` declares the 128 MiB
+    # scratchpad and nothing else, so the scaled figure is device_count x
+    # 128 MiB and reaches 1.125 GiB at no device count the study publishes
+    # (x5 gives 640 MiB, x6 768 MiB, x7 896 MiB, x8 1 GiB).  A capability
+    # derived that way declares a machine that cannot hold the KV of the very
+    # design point it is derived from, and the SRAM KV placement is refused by
+    # ``runtime/abi3/verifier.py`` (_verify_address_map: every SRAM object is
+    # checked against ``memory.sram.bytes``) before anything can be timed.
+    #
+    # So when this role's point holds KV in SRAM, the emitted SRAM capacity is
+    # the scratchpad the base record declares (scaled by the collapse) PLUS
+    # the KV the point provisions, and both parts are named.  The consumer of
+    # ``memory.sram.bytes`` is that verifier check, and it charges ONE space
+    # for every SRAM object, so the two parts add rather than max: an arena
+    # sized to the KV alone would leave the activation buffers nowhere to go.
+    # ``memory.sram_kv`` is the AM-C3 field section 2.8 names as the one an
+    # SRAMKV point differs by; it says how much of that space is the KV arena
+    # and is what tells a backend to place the arena there at all.
+    #
+    # This is still a capacity and never a rate: ``_resolve_all`` resolves no
+    # capacity, and ``sram_kv`` is not a key ``MachineModel`` reads.  The SRAM
+    # *rate* for this case is derived separately, from the point's own KV term
+    # (see sram.bytes_per_cycle_per_port in derive()).
+    point = A.rom if role == "rom" else A.hbm
+    kv_store = A.rom_kv_store if role == "rom" else A.hbm_kv_store
+    kv_arena_bytes: int | None = None
+    kv_arena: dict[str, Any] = {}
+    if kv_store == "sram":
+        scratchpad_bytes = int(sram.get("bytes", 0))
+        provisioned = int(round(float(point["kv_capacity_bytes"])))
+        resident = int(round(float(point.get("resident_kv_bytes",
+                                             provisioned))))
+        if resident > provisioned:
+            raise DerivationError(
+                f"points[{role.upper()}].kv_store is 'sram' but its "
+                f"resident_kv_bytes {resident} exceeds the "
+                f"kv_capacity_bytes {provisioned} it provisions; the point "
+                f"does not fit its own KV store, so no capability can be "
+                f"derived that hosts it"
+            )
+        # Two lower bounds, and the arena is the larger.
+        #
+        # (1) What the design point BUYS: kv_capacity_bytes, at the one
+        #     context the study prices this model at.
+        # (2) What this record ADMITS: limits.max_context_positions positions
+        #     of the same store.  A machine that advertises N positions and
+        #     cannot hold N positions of KV is not a machine -- its own
+        #     deployment is refused by the capacity proof before it can be
+        #     timed -- and the two numbers are not the same one: the Qwen ROM
+        #     base record admits 8,256 positions where the study prices 8,192,
+        #     so the KV the compiled deployment declares is 1.0078x the KV the
+        #     point provisions.  The per-position figure is rounded UP, which
+        #     costs the store, because kv_capacity_bytes is an exact KV need
+        #     on some points and an SRAM area budget on others and only the
+        #     first divides exactly.
+        positions_priced = int(A.context_tokens)
+        positions_admitted = int(limits.get("max_context_positions",
+                                            positions_priced))
+        per_position = -(-provisioned // max(positions_priced, 1))
+        admitted_bytes = per_position * positions_admitted
+        kv_arena_bytes = max(provisioned, admitted_bytes)
+        bound_by = ("design_point_kv_capacity_bytes"
+                    if kv_arena_bytes == provisioned
+                    else "record_max_context_positions")
+        if kv_arena_bytes > provisioned:
+            d.residuals.append({
+                "term": "kv_capacity",
+                "role": role,
+                "kind": "kv_arena_over_design_provision",
+                "relative": kv_arena_bytes / provisioned - 1.0,
+                "note": (
+                    f"the design point provisions {provisioned} bytes of SRAM "
+                    f"KV at its priced context of {positions_priced} "
+                    f"positions, but this record admits "
+                    f"{positions_admitted} positions "
+                    f"(limits.max_context_positions, the smaller of the two "
+                    f"base records), which is {admitted_bytes} bytes at "
+                    f"{per_position} bytes per position.  The arena is "
+                    f"declared at the larger so that a deployment compiled "
+                    f"for the context this record advertises fits it; the "
+                    f"excess is capacity the design point did not buy and is "
+                    f"reported here rather than hidden in a total."
+                ),
+            })
+        sram = dict(sram)
+        sram["bytes"] = scratchpad_bytes + kv_arena_bytes
+        memory["sram"] = sram
+        memory["sram_kv"] = {
+            "banks": int(d.shared["sram.banks.default"].value),
+            "bytes": kv_arena_bytes,
+            "ports": int(d.shared["sram.ports_per_bank.default"].value),
+        }
+        kv_arena = {
+            "bound_by": bound_by,
+            "bytes": kv_arena_bytes,
+            "bytes_at_record_admitted_positions": admitted_bytes,
+            "bytes_per_position": per_position,
+            "design_point_kv_capacity_bytes": provisioned,
+            "design_point_resident_kv_bytes": resident,
+            "positions_admitted": positions_admitted,
+            "positions_priced": positions_priced,
+            "scratchpad_bytes": scratchpad_bytes,
+            "source": (
+                f"{A.analytical_path}#points"
+                f"[{A.rom_design if role == 'rom' else A.hbm_design}]"
+                f".kv_capacity_bytes, and this record's own "
+                f"limits.max_context_positions"
+            ),
+        }
+        d.facts[f"{role}_sram_kv_arena_bytes"] = kv_arena_bytes
+        d.facts[f"{role}_sram_scratchpad_bytes"] = scratchpad_bytes
     hbm = dict(memory.get("hbm", {}))
     hbm["channels"] = int(d.parameters(role)["hbm.channels.default"].value)
     memory["hbm"] = hbm
@@ -2206,7 +2322,41 @@ def capability(d: Derivation, role: str, base: Mapping[str, Any],
             "topology_class", "limits.max_nodes",
         ] + scaled_capacities + ([] if context_positions is None
              else ["limits.max_context_positions"])
-          + (["memory.rom.arrays", "memory.rom.banks"] if role == "rom" else []),
+          + (["memory.rom.arrays", "memory.rom.banks"] if role == "rom" else [])
+          + ([] if kv_arena_bytes is None
+             else ["memory.sram.bytes", "memory.sram_kv"]),
+        "memory_capacity_provenance": {
+            "rule": (
+                "Every base capacity is one base device's, so the collapse to "
+                "one logical device multiplies it by device_count.  A KV "
+                "arena is the exception: the design point holds ONE of it for "
+                "the session, so when its kv_store is 'sram' the SRAM "
+                "capacity is the scaled scratchpad PLUS "
+                "points[ROLE].kv_capacity_bytes, and memory.sram_kv names the "
+                "second part.  The parts add because the consumer of "
+                "memory.sram.bytes -- runtime/abi3/verifier.py "
+                "_verify_address_map -- charges one space for every SRAM "
+                "object the deployment declares."
+            ),
+            "device_count": devices,
+            "kv_store": kv_store,
+            "parts": {
+                f"memory.{klass}.bytes": {
+                    "base_bytes": int(base["memory"][klass]["bytes"]),
+                    "base_source": (
+                        (base_path or "") + f"#memory.{klass}.bytes"),
+                    "device_count": devices,
+                    "scaled_bytes": int(base["memory"][klass]["bytes"]) * max(
+                        devices, 1),
+                    "kv_arena": (
+                        kv_arena if (klass == "sram" and kv_arena) else None),
+                    "emitted_bytes": int(memory[klass]["bytes"]),
+                }
+                for klass in ("rom", "hbm", "sram")
+                if isinstance(base.get("memory", {}).get(klass), dict)
+                and "bytes" in base["memory"][klass]
+            },
+        },
         "note": (
             "technology_view n5_design_target is deliberately outside "
             "runtime/cycle/machine.py CHARACTERIZED_TECHNOLOGY_VIEWS, so every "
@@ -4048,6 +4198,80 @@ def _store_wall_seconds(run: Mapping[str, Any], klass: str) -> float:
     return stats["busy_cycles"] / max(units, 1) / run["timing"]["clock_frequency_hz"]
 
 
+def kv_placement(run: Mapping[str, Any], kv_store: str) -> dict[str, Any]:
+    """Did this run actually exercise the KV placement its design point names?
+
+    Section 13 item 26.  ``results/derived/n5_design_target_cycle_matrix.json``
+    already refused all five SRAMKV Qwen cells with step ``kv_store_mismatch``
+    -- "the qwen3-8b ROM product stores KV in HBM, so this run does not
+    exercise the design point's KV placement and is not evidence for this
+    cell" -- but that rule existed only as a string inside the artifact it
+    produced.  ``--matrix`` applied it and ``--reconcile`` did not, so the
+    headline reconciliation published exactly the run the matrix rejected and
+    gate C3 read it.  This is that rule, as code, on the reconcile path.
+
+    It is a MEASUREMENT and not a source reading: the architectural counter
+    ``attention.kv_bytes_read`` says how many KV bytes the run's attention
+    engine read, and ``memory.<store>.bytes_read`` says how many bytes came
+    out of the store the design point places KV in.  A run whose named store
+    did not deliver at least the KV it consumed did not hold KV there.
+
+    A run that read no KV at all does not exercise the placement either, and
+    is refused rather than passed by vacuity.
+    """
+    counters = run.get("counters", {}).get("architectural", {})
+    kv_bytes = int(counters.get("attention.kv_bytes_read", 0) or 0)
+    stores = {
+        klass: {
+            "bytes_read": int((run.get("memory", {}).get(klass) or {})
+                              .get("bytes_read", 0) or 0),
+            "bytes_written": int((run.get("memory", {}).get(klass) or {})
+                                 .get("bytes_written", 0) or 0),
+            "busy_cycles": int((run.get("memory", {}).get(klass) or {})
+                               .get("busy_cycles", 0) or 0),
+        }
+        for klass in ("hbm", "sram", "rom", "host")
+        if run.get("memory", {}).get(klass)
+    }
+    delivered = stores.get(kv_store, {}).get("bytes_read", 0)
+    out: dict[str, Any] = {
+        "declared_kv_store": kv_store,
+        "kv_bytes_read_by_attention": kv_bytes,
+        "bytes_read_from_declared_store": delivered,
+        "stores": stores,
+        "rule": (
+            "the design point's kv_store names the store its KV lives in; the "
+            "run exercises that placement only when the store delivered at "
+            "least the KV bytes the attention engine read, and a run that "
+            "read no KV exercises no placement at all"
+        ),
+    }
+    if kv_bytes <= 0:
+        out["exercised"] = False
+        out["refused_because"] = (
+            "the run's attention engine read 0 KV bytes, so it does not "
+            f"exercise this cell's {kv_store!r} KV placement and is not "
+            "evidence for it"
+        )
+        return out
+    if delivered < kv_bytes:
+        busy = ", ".join(
+            f"{k} {v['busy_cycles']:,}" for k, v in sorted(stores.items())
+        )
+        out["exercised"] = False
+        out["refused_because"] = (
+            f"the design point holds KV in {kv_store.upper()} but the "
+            f"deployment read only {delivered:,} bytes from it against the "
+            f"{kv_bytes:,} KV bytes the attention engine consumed (store busy "
+            f"cycles: {busy}): this run does not exercise the design point's "
+            f"KV placement and is not evidence for this cell"
+        )
+        return out
+    out["exercised"] = True
+    out["refused_because"] = None
+    return out
+
+
 def reconcile(anchor: Anchor, rom_run: Mapping[str, Any],
               hbm_run: Mapping[str, Any]) -> dict[str, Any]:
     """Put the analytical five terms and the measured cycle terms side by side.
@@ -4096,6 +4320,8 @@ def reconcile(anchor: Anchor, rom_run: Mapping[str, Any],
         ct = point["component_times_s"]
         rom_wall = _store_wall_seconds(run, "rom")
         hbm_wall = _store_wall_seconds(run, "hbm")
+        role_kv_store = A.rom_kv_store if role == "rom" else A.hbm_kv_store
+        placement = kv_placement(run, role_kv_store)
         counters = run["counters"]["architectural"]
         weight_bytes = counters.get("rom.bytes_read") or 0
         if role == "hbm":
@@ -4116,11 +4342,19 @@ def reconcile(anchor: Anchor, rom_run: Mapping[str, Any],
             )
         else:
             measured_weight = rom_wall
-            measured_kv = hbm_wall
+            # The KV term is read off the store the DESIGN POINT places KV in,
+            # not off HBM unconditionally.  Reading it off HBM was correct for
+            # every HBMKV point and silently wrong for an SRAMKV one: with the
+            # KV arena in SRAM, HBM carries only the residue and the reported
+            # kv_read term would be that residue rather than the KV.
+            kv_klass = role_kv_store if role_kv_store in ("sram", "hbm") else "hbm"
+            measured_kv = _store_wall_seconds(run, kv_klass)
             weight_store_note = (
-                "weights are in ROM and KV in HBM: two physically separate "
-                "unit pools, so their occupancies are read off directly and "
-                "overlap exactly as the analytical overlap_rule says."
+                f"weights are in ROM and KV in {kv_klass.upper()} "
+                f"(points[ROM].kv_store is {role_kv_store!r}): two physically "
+                "separate unit pools, so their occupancies are read off "
+                "directly and overlap exactly as the analytical overlap_rule "
+                "says."
             )
         terms = {
             "compute": {
@@ -4145,13 +4379,22 @@ def reconcile(anchor: Anchor, rom_run: Mapping[str, Any],
             "kv_read": {
                 "analytical_s": ct["kv_read"],
                 "cycle_s": measured_kv,
+                "kv_store": role_kv_store,
                 "note": (
                     "The deployment moves "
                     f"{counters.get('hbm.bytes_read', 0)} read + "
                     f"{counters.get('hbm.bytes_written', 0)} written bytes "
-                    "through HBM, against the analytical "
-                    f"kv_transfer_bytes_per_step "
-                    f"{point['kv_transfer_bytes_per_step']:.0f}."
+                    "through HBM and "
+                    f"{counters.get('sram.bytes_read', 0)} read + "
+                    f"{counters.get('sram.bytes_written', 0)} written through "
+                    "SRAM, against the analytical kv_transfer_bytes_per_step "
+                    f"{point['kv_transfer_bytes_per_step']:.0f}.  The term is "
+                    f"the whole occupancy of the store this point names "
+                    f"({role_kv_store.upper()}); that store also carries the "
+                    "activation working set, so the term is an UPPER bound on "
+                    "the KV time and the over-attribution runs against the "
+                    "side whose store it is.  The attention engine read "
+                    f"{counters.get('attention.kv_bytes_read', 0)} KV bytes."
                 ),
             },
             "link_latency": {
@@ -4199,6 +4442,17 @@ def reconcile(anchor: Anchor, rom_run: Mapping[str, Any],
             {k: v for k, v in measurable.items() if k != "link_latency"},
             key=lambda k: measurable[k],
         )
+        # Reported, not used.  terms.compute.cycle_s is every engine family;
+        # terms.compute.cycle_tensor_only_s is the counterpart of the
+        # analytical operation count, which carries no attention arithmetic
+        # and no other family.  The argmax above uses the whole-device figure,
+        # so the next question a reader has is whether the verdict survives
+        # the narrower one.  It is answered here rather than left to be
+        # recomputed by hand.
+        tensor_only = dict(measurable)
+        tensor_only.pop("link_latency", None)
+        tensor_only["compute"] = terms["compute"]["cycle_tensor_only_s"]
+        cycle_binding_tensor_only = max(tensor_only, key=lambda k: tensor_only[k])
         out["targets"][role] = {
             "analytical": {
                 "step_time_s": point["step_time_s"],
@@ -4221,12 +4475,26 @@ def reconcile(anchor: Anchor, rom_run: Mapping[str, Any],
                 "analytical_over_all_five_terms": point["binding_constraint"],
                 "analytical_over_expressible_terms": analytical_expressible_binding,
                 "cycle": cycle_binding,
-                "same_regime": analytical_expressible_binding == cycle_binding,
+                # A run that does not exercise its own cell's KV placement is
+                # not evidence about that cell's regime, so it cannot make
+                # this field true.  The matrix campaign already refused such
+                # runs; this path refused nothing until now.
+                "kv_placement": placement,
+                "cycle_over_tensor_only_compute": cycle_binding_tensor_only,
+                "regimes_agree": analytical_expressible_binding == cycle_binding,
+                "same_regime": (
+                    analytical_expressible_binding == cycle_binding
+                    and bool(placement["exercised"])
+                ),
+                "refused_because": placement["refused_because"],
                 "rule": (
                     "The cycle model builds no fabric on SINGLE_CHIP and "
                     "attributes no counter to fixed latency, so the two "
                     "binding constraints are only comparable over the terms "
-                    "both models express: compute, weight_read and kv_read."
+                    "both models express: compute, weight_read and kv_read.  "
+                    "same_regime additionally requires that the run exercised "
+                    "the KV placement its own design point names; regimes_"
+                    "agree is the comparison alone."
                 ),
             },
             "terms": terms,
@@ -4319,7 +4587,7 @@ def declared_asymmetries(rom_cap: Mapping[str, Any],
             "why": ("advertised feature sets of the two base capabilities; no "
                     "feature bit reaches a cost-table parameter"),
         })
-    for cls in ("rom", "hbm", "sram"):
+    for cls in ("rom", "hbm", "sram", "sram_kv"):
         r = (rom_cap.get("memory", {}) or {}).get(cls, {}) or {}
         h = (hbm_cap.get("memory", {}) or {}).get(cls, {}) or {}
         if r.get("bytes") != h.get("bytes"):
@@ -4328,7 +4596,14 @@ def declared_asymmetries(rom_cap: Mapping[str, Any],
                 "rom": r.get("bytes"), "hbm": h.get("bytes"),
                 "why": ("capacity, not bandwidth.  The weight STORE differs by "
                         "construction -- that is the comparison -- and no "
-                        "capacity resolves to a machine parameter"),
+                        "capacity resolves to a machine parameter"
+                        if cls != "sram_kv" else
+                        "the KV STORE differs by construction: this side's "
+                        "design point holds KV in SRAM and the other's holds "
+                        "it in HBM, which is the AM-C3 field section 2.8 "
+                        "names.  A capacity, not a rate; the KV rate "
+                        "difference is separately cited in the KV-path "
+                        "allowlist"),
             })
     return out
 

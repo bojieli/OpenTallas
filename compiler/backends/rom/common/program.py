@@ -154,9 +154,20 @@ DIRECT_BUFFER_STATE_CLASSES = frozenset(
 
 
 def _is_direct_buffer_state(state_class: str) -> bool:
-    """Whether ``state_class`` lowers as an ordinary mutable HBM object."""
+    """Whether ``state_class`` lowers as an ordinary mutable buffer object."""
 
     return str(state_class) in DIRECT_BUFFER_STATE_CLASSES
+
+
+#: The direct-buffer state classes that ARE the KV cache.  ``memory.sram_kv``
+#: (AM-C3, section 2.8) says this device's KV lives in SRAM rather than HBM,
+#: and it moves exactly these; ``compressor_window`` is a compressor history,
+#: not KV, and stays where it was.
+KV_STATE_CLASSES = frozenset({"compressed_kv", "kv_cache", "kv_window"})
+
+
+def _is_kv_state(state_class: str) -> bool:
+    return str(state_class) in KV_STATE_CLASSES
 
 #: Integer operand types.  These carry indices and identifiers, never values a
 #: broadcast could share between heads.
@@ -1193,6 +1204,16 @@ class RomLowering:
         self._buffer_size: dict[str, int] = {}
         self._buffer_liveness_report: dict[str, Any] = {}
         self._sram_used = 0
+        # AM-C3 ``memory.sram_kv``: the capability's own statement that this
+        # device holds its KV arena in SRAM, and how many bytes of the SRAM
+        # space are reserved for it.  Absent -- which is every shipped record
+        # today -- the arena stays in HBM exactly as before.  Nothing here
+        # reads a design point or a model name: the deployment is told by the
+        # capability it compiles against, which is the only thing it may read.
+        _sram_kv = dict(capability.memory.get("sram_kv", {}) or {})
+        self._sram_kv_bytes = int(_sram_kv.get("bytes", 0) or 0)
+        self._sram_kv_used = 0
+        self._sram_kv_groups: dict[str, int] = {}
         self._numeric_cache: dict[tuple[Any, ...], int] = {}
         self._schedule_cache: dict[tuple[int, int], int] = {}
         self._counter_cache: dict[int, int] = {}
@@ -2451,6 +2472,38 @@ class RomLowering:
         self._state_owner = owner
         return order
 
+    def _direct_state_storage(self, state_class: str, size_bytes: int,
+                              group_key: str) -> StorageClass:
+        """Where a direct-buffer state group physically lives.
+
+        HBM, which is what every shipped ROM capability describes, unless the
+        capability itself declares ``memory.sram_kv`` -- the AM-C3 field
+        section 2.8 names as the one an SRAMKV design point differs by.  When
+        it is declared, the KV groups go to SRAM and are charged against the
+        arena the capability reserves.
+
+        It is a hard error, not a fallback, when the KV does not fit the
+        declared arena: a deployment that silently put the KV back in HBM
+        would produce exactly the run this whole item exists because of -- one
+        that reports a KV-bound step for a design that buys no HBM at all --
+        and it would report nothing while doing it.
+        """
+
+        if not (self._sram_kv_bytes and _is_kv_state(state_class)):
+            return StorageClass.HBM
+        if self._sram_kv_used + size_bytes > self._sram_kv_bytes:
+            raise RomLoweringError(
+                f"the capability declares memory.sram_kv "
+                f"{self._sram_kv_bytes} bytes of SRAM KV arena, but state "
+                f"group {group_key!r} ({state_class}, {size_bytes} bytes) "
+                f"does not fit alongside the {self._sram_kv_used} bytes "
+                f"already placed there; the KV of this deployment needs "
+                f"{self._sram_kv_used + size_bytes} bytes"
+            )
+        self._sram_kv_used += size_bytes
+        self._sram_kv_groups[group_key] = size_bytes
+        return StorageClass.SRAM
+
     @staticmethod
     def _direct_state_source(state: StateResource, size_bytes: int) -> ObjectSource:
         """Materialise a direct buffer's declared fresh-session sentinel."""
@@ -2552,7 +2605,8 @@ class RomLowering:
             if _is_direct_buffer_state(members[0].state_class):
                 source = self._direct_state_source(members[0], total)
                 direct = self.builder.memory_object(
-                    storage_class=StorageClass.HBM,
+                    storage_class=self._direct_state_storage(
+                        members[0].state_class, total, group_key),
                     size_bytes=total,
                     source=source,
                     permissions=int(Permission.READ | Permission.WRITE),
@@ -9132,11 +9186,30 @@ class RomLowering:
             "tile_mapping_owner": "schedule_descriptor",
         }
         if self._direct_state_groups:
-            builder.notes["rom_lowering"]["direct_buffer_state"] = {
+            note = {
                 "classes": sorted(set(self._direct_state_groups.values())),
                 "physical_groups": len(self._direct_state_groups),
                 "storage_class": StorageClass.HBM.name,
             }
+            if self._sram_kv_bytes:
+                # The note used to name HBM unconditionally, which was true
+                # of every record that existed when it was written and would
+                # have been a false statement about this one.  It now reports
+                # the placement the lowering actually made, per class.
+                note["storage_class_by_class"] = {
+                    cls: (StorageClass.SRAM.name if _is_kv_state(cls)
+                          else StorageClass.HBM.name)
+                    for cls in sorted(set(self._direct_state_groups.values()))
+                }
+                note["sram_kv"] = {
+                    "declared_bytes": self._sram_kv_bytes,
+                    "groups": dict(sorted(self._sram_kv_groups.items())),
+                    "placed_bytes": self._sram_kv_used,
+                    "signal": "capability.memory.sram_kv",
+                }
+                if self._sram_kv_used:
+                    note["storage_class"] = StorageClass.SRAM.name
+            builder.notes["rom_lowering"]["direct_buffer_state"] = note
         return builder.finish()
 
 
