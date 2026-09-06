@@ -79,12 +79,12 @@
       "deployment": "qwen3-8b-rom-single-chip",
       "deployment_identity_evidence": {
         "artifact": "results/abi3/rom_schedule_checks.json",
-        "artifact_sha256": "87da356bd8ecd47881888d8ec79e023ce9dd12da091a3f5821ce1a5688cdb0bb",
+        "artifact_sha256": "1ba09273ab84c471edcae4a0fb35482ccd0f3bfa5c04c70041a1800dccf7d9cf",
         "case": "qwen3-rom-single-chip"
       },
-      "deployment_sha256": "133afc13e1fcd2aade2e40530883c9986b0e920d99853990d9032fd777f26243",
+      "deployment_sha256": "6a06a4ea97f290326b448f4fcc8c654a9c32b61e707ca62ef070060daf9cc21b",
       "descriptor_derivation": {
-        "descriptor_table_sha256": "fb3b453895b729e5a11fa1a2dc63bae53714099f1df844bdf76a47a159d5c836",
+        "descriptor_table_sha256": "f15100f5f18b297ec0b43c7d5631e1d5094683ce92802c2117a6a36c5e4faaa0",
         "kernel_ir": "build/ir-v3/qwen3-8b/kernel_ir.v3.json",
         "kernel_ir_graph_id": "84bb97dd1243553f170fde014c15c76c6adf0b80f0ef3bdad27a015577b6c24b",
         "kernel_ir_sha256": "62499454381d24641f8cedda00f049aff61b4aa96410fa3fe460e0044df567e6",
@@ -105,14 +105,14 @@
               "accumulator_dtype": 18,
               "epsilon_bits": 0,
               "flags": 0,
-              "input_dtype": 16,
+              "input_dtype": 4,
               "nan_policy": 0,
               "output_dtype": 16,
               "reduction_order": 0,
               "rounding_mode": 0,
               "saturate": 0,
               "scale_bits": 0,
-              "second_input_dtype": 4
+              "second_input_dtype": 16
             },
             "resolution": "unique",
             "role": "boundary.DMA.SCATTER",
@@ -3797,12 +3797,12 @@
       "deployment": "deepseek-v4-flash-rom-wafer",
       "deployment_identity_evidence": {
         "artifact": "results/abi3/rom_schedule_checks.json",
-        "artifact_sha256": "87da356bd8ecd47881888d8ec79e023ce9dd12da091a3f5821ce1a5688cdb0bb",
+        "artifact_sha256": "1ba09273ab84c471edcae4a0fb35482ccd0f3bfa5c04c70041a1800dccf7d9cf",
         "case": "deepseek-v4-flash-rom-wafer"
       },
-      "deployment_sha256": "233494df7adfccb77e84a9b39652a614c9f6dc86c887103a6dd199af454909e1",
+      "deployment_sha256": "a187b4d7cae7a21b97068db583311c1b9fdcbdcb9f4fae5e88b05d4e05c7b723",
       "descriptor_derivation": {
-        "descriptor_table_sha256": "96acf863888f2fdc5d4527a067ea3c77686d9e896da3859815f73c58d23f100e",
+        "descriptor_table_sha256": "47f149ea6813439ce6b3d780ca8e92f64181ba83f82f5bac3eac0dc0bd2f28a8",
         "kernel_ir": "build/ir-v3/deepseek-v4-flash-0731/kernel_ir.v3.json",
         "kernel_ir_graph_id": "6c281c3b7f1bcf3366b9e572c553b6bddae8d13a6ac8056676a2a70166898834",
         "kernel_ir_sha256": "b92fadb125d43e451b3aa39669489671efe7e07bd3d8612169ebaaec067ac034",
@@ -5245,66 +5245,11 @@
     "does_not_establish": [
       "that a descriptor ID is stable across lowerings; it is not, and the per-case derivations record different IDs for the two Qwen lowerings at all eight governed PCs",
       "that a fail-stop boundary descriptor resolves uniquely.  Where the record says resolution equivalence_class the deployment holds byte-identical descriptors that no identity can separate, and the observed ID is checked for membership of that class only",
-      "any property of an operation the prefix does not execute, including the numeric contract of the boundary descriptor named in numeric_contract_disagreements"
+      "any property of an operation the prefix does not execute, including the numeric contract of the boundary descriptor named in numeric_contract_disagreements",
+      "that a numeric profile is CORRECT, only that it agrees with the views its own descriptor binds; profile_slot_disagreements is a self-consistency measurement, and a profile can be self-consistent and still name the wrong contract"
     ],
-    "numeric_contract_disagreements": [
-      {
-        "contract_sha256": "55f39bccbda65baf6238cfcd93d7bf9959330984af837979870cc019be00e16f",
-        "differing_fields": [
-          "input_dtype",
-          "second_input_dtype"
-        ],
-        "executed": false,
-        "finding": "one contract digest, two numeric contracts: the digest does not bind the fields listed in differing_fields",
-        "per_target": [
-          {
-            "descriptor_id": 108,
-            "kernel_declared_input_dtypes": [
-              16,
-              4
-            ],
-            "numeric_profile_id": 106,
-            "numeric_signature": {
-              "accumulator_dtype": 18,
-              "epsilon_bits": 0,
-              "flags": 0,
-              "input_dtype": 16,
-              "nan_policy": 0,
-              "output_dtype": 16,
-              "reduction_order": 0,
-              "rounding_mode": 0,
-              "saturate": 0,
-              "scale_bits": 0,
-              "second_input_dtype": 4
-            },
-            "target": "qwen3-8b-rom-single-chip"
-          },
-          {
-            "descriptor_id": 118,
-            "kernel_declared_input_dtypes": [
-              16,
-              4
-            ],
-            "numeric_profile_id": 116,
-            "numeric_signature": {
-              "accumulator_dtype": 18,
-              "epsilon_bits": 0,
-              "flags": 0,
-              "input_dtype": 4,
-              "nan_policy": 0,
-              "output_dtype": 16,
-              "reduction_order": 0,
-              "rounding_mode": 0,
-              "saturate": 0,
-              "scale_bits": 0,
-              "second_input_dtype": 16
-            },
-            "target": "qwen3-8b-hbm-single-chip"
-          }
-        ],
-        "role": "boundary.DMA.SCATTER"
-      }
-    ]
+    "numeric_contract_disagreements": [],
+    "profile_slot_disagreements": []
   },
   "dma_gather_launch_count": 6,
   "dma_transfer_launch_count": 2,
@@ -5336,12 +5281,12 @@
   },
   "input_deployment_vectors": {
     "images": {
-      "a3_descriptor.hex": "85263a2b33597ba63e82e783eef7436b1b5ea0786bf7c20e4817bbdbaee13dbd",
+      "a3_descriptor.hex": "bcc3d5c79897f711ac42db414f041e58353e3e2f0c11e86c38eda023509add89",
       "a3_program.hex": "910a714f1eca1799df203b1330dd95f3cb6da2027569acce935729e13bcf463c",
       "a3_symbol.hex": "aefea5f803c69340757eed992d1f3e691d4ca2f0b610256864a5bf1d0f757f38"
     },
     "path": "testdata/compiler/abi3_deployment/abi3_deployment_rtl_vectors.json",
-    "sha256": "e24f73e4510cf141b8b4b3fd2888ea0341efe07653578bb3b370845ab7733636"
+    "sha256": "339149f2437fed4c2e4502c303ef294aff6d2af1dc3c5284fc33e7f11527679e"
   },
   "matmul_launch_count": 6,
   "matmul_mac_count": 50331648,
